@@ -25,9 +25,21 @@ build/Release
 
 # Dependency directory
 node_modules
+/typings
 
 # Optional npm cache directory
 .npm
 
 # Optional REPL history
 .node_repl_history
+
+# Transpiled output
+src/**/*.js
+src/**/*.js.map
+
+tests/unit/**/*.js
+tests/unit/**/*.js.map
+
+samples/**/*.js
+samples/**/*.js.map
+!samples/**/config.js
