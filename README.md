@@ -34,4 +34,4 @@ or a virtual directory in IIS pointing to this folder. Either way works by simpl
 the samples folder aftarwards. 
 
 ## Contributing
-[Coding Guidelines](/Infragistics/zero-blocks/wiki/Coding-guidelines-for-Zero-Blocks)
+[Coding Guidelines](../../wiki/Coding-guidelines-for-Zero-Blocks)
