@@ -32,3 +32,6 @@ The repo doesn't include a server by default - use your preffered. Can be the li
 [Angular 2 Guide](https://angular.io/docs/ts/latest/quickstart.html#!#package-json) or a simple node server.js
 or a virtual directory in IIS pointing to this folder. Either way works by simple opening html files from
 the samples folder aftarwards. 
+
+## Contributing
+[Coding Guidelines](/Infragistics/zero-blocks/wiki/Coding-guidelines-for-Zero-Blocks)
