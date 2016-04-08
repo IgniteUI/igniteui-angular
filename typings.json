@@ -1,0 +1,7 @@
+{
+  "ambientDependencies": {
+    "es6-shim": "registry:dt/es6-shim#0.31.2+20160215162030",
+    "hammerjs": "registry:dt/hammerjs#2.0.4+20160103211821",
+    "jasmine": "registry:dt/jasmine#2.2.0+20160308082659"
+  }
+}

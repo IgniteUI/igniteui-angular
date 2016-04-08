@@ -1,0 +1,106 @@
+/* Main Navigation Drawer state styles */
+.ig-nav-drawer {
+    box-sizing: border-box;
+    min-height: 100%;
+    z-index: 999;
+    max-width: 90%;
+    overflow-x: hidden;
+    background-color: #DADEE4;
+    padding: 0.7em;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 300px;
+    height: 100%;
+    /*transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);*/
+    /* use full syntax, iOS Safari won't work with transition: width .3s ease-in, transform .3s ease-in; shorthand */
+    transition-property: width, transform;
+    transition-duration: 0.25s, 0.25s;
+    transition-timing-function: ease-in, ease-in;
+    transition-delay: 0s, 0s;
+    box-shadow: 2px 2px 2px 1px rgba(80, 80, 80, 0.1);
+}  
+
+.ig-nav-drawer.collapsed {
+    transform: translate3d(-300px,0px,0px);
+    -webkit-transform: translate3d(-300px,0px,0px);    
+}
+ 
+.ig-nav-drawer.right {
+    left: auto;
+    right: 0;
+    box-shadow: -2px -2px 2px 1px rgba(80, 80, 80, 0.1);
+}
+.ig-nav-drawer.collapsed.right {
+    transform: translate3d(300px,0px,0px);
+    -webkit-transform: translate3d(300px,0px,0px);
+}
+
+.ig-nav-drawer.mini {
+    width: 60px;
+    transition-duration: 0.2s, 0.2s;
+}
+
+.ig-nav-drawer.pinned {
+    position: relative;
+    box-shadow: none; 
+}
+.ig-nav-drawer.pinned.collapsed {
+    transform: none;
+    -webkit-transform: none;
+    width: 0;      
+    padding: 0;
+    overflow: hidden;
+}
+    
+/* Utility class for active pan */
+.ig-nav-drawer.panning {
+    overflow-x:hidden;
+    transition: none;      
+}
+
+.style-dummy {
+    height: 0;
+    background: none;
+    box-shadow: none;
+    transition: none;
+    visibility: hidden; /* potentially don't use this? */
+}
+
+.ig-nav-drawer-overlay.panning {
+    transform: translate3d(0,0,0); /* try layer creation manually in advance for opacity */
+    transition: none;
+}
+    .ig-nav-drawer-overlay.hidden.panning {
+        visibility: visible;    
+    }
+
+/* Navigation Drawer overlay styles */
+.ig-nav-drawer-overlay {
+    opacity: 1;
+    background-color: rgba(136,136,136,0.5);
+   
+   
+    transition-property: opacity, visibility;
+    /* opacity must match drawer transition, step over visibility to reduce animation cost */
+    transition-duration: 0.25s, 0.25s;
+    transition-timing-function: ease-in, step-start;
+    transition-delay: 0s, 0s;
+    
+    position:absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    visibility: visible;
+}
+.ig-nav-drawer-overlay.hidden {
+    transition-timing-function: ease-in, step-end;
+    /* use visibility so opacity can be animated */
+    visibility: hidden; 
+    opacity: 0;
+}
+.ig-nav-drawer-overlay.pinned {
+    display: none;            
+}
