@@ -4,11 +4,12 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "npm run typings && npm prune",
-    "start": "npm run watch",
+    "start": "npm run build && concurrently \"npm run watch\" \"npm run lite\" ",
     "pretest": "npm run build",
     "build": "node node_modules/typescript/bin/tsc",
     "watch": "node node_modules/typescript/bin/tsc -w",
     "test": "karma start tests/karma.conf.js",
+    "lite": "lite-server",
     "typings": "node node_modules/typings/dist/bin.js install"
   },
   "dependencies": {
@@ -22,11 +23,13 @@
     "zone.js": "^0.6.9"
   },
   "devDependencies": {
+    "concurrently": "^2.0.0",
     "gulp-watch": "^4.3.5",
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.19",
     "karma-chrome-launcher": "^0.2.2",
     "karma-jasmine": "^0.2.2",
+    "lite-server": "^2.2.0",
     "typescript": "^1.8.7",
     "typings": "^0.7.8"
   }
