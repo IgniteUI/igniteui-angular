@@ -1,7 +1,9 @@
-import { Component, Input, ElementRef, OnInit, OnDestroy, 
+import { Component, Input, ElementRef, OnInit, OnDestroy,
  AfterContentInit } from 'angular2/core';
 import { BrowserDomAdapter } from 'angular2/platform/browser';
 import { HammerGesturesManager } from '../core/core';
+
+declare var module: any;
 
 // The `<ig-list>` component is a list container for 1..n `<ig-item>` tags.
 @Component({
@@ -16,17 +18,15 @@ import { HammerGesturesManager } from '../core/core';
             overflow: hidden;
         }
     `],
-    template: `
-        <div class="ig-list-inner">
-          <ng-content></ng-content>
-        </div>
-     `
+    moduleId: module.id, // commonJS standard
+    templateUrl: 'list-content.html'
 })
 
 export class List {
+    private _innerStyle: string = "ig-list-inner";
 }
 
-// The `<ig-item>` directive is a container intended for row items in 
+// The `<ig-item>` directive is a container intended for row items in
 // a `<ig-list>` container.
 @Component({
     selector: 'ig-item',
@@ -81,10 +81,8 @@ export class List {
             color: red;
         }
     `],
-    template: `
-    <div class="ig-item-inner">
-      <ng-content></ng-content>
-    </div>`
+    moduleId: module.id, // commonJS standard
+    templateUrl: 'list-content.html'
 })
 
 export class Item implements AfterContentInit, OnInit, OnDestroy {
@@ -93,6 +91,7 @@ export class Item implements AfterContentInit, OnInit, OnDestroy {
     private _offset: number = 0;
     private _panOffset: number = 40;
     private _panOptions: Array<Object> = null;
+    private _innerStyle: string = "ig-item-inner";
 
     @Input() set href(value: string) {
         this._href = value;
@@ -106,75 +105,20 @@ export class Item implements AfterContentInit, OnInit, OnDestroy {
         return this._href;
     }
 
-    constructor(private _el: ElementRef, private _dom: BrowserDomAdapter, 
+    constructor(private _el: ElementRef, private _dom: BrowserDomAdapter,
         private _touchManager: HammerGesturesManager) {
     }
 
     ngAfterContentInit(): any {
-        this._content = this._dom.querySelector(this._el.nativeElement,
-            ".ig-item-inner");
-
-        console.log(this._panOptions);
-
-        if (this._href) {
-            this._createLink();
-        }
-
-        if (this._panOptions) {
-            this._createOptions();
-        }
-    }
-
-    private _createLink(): void {
-        let text = this._dom.getText(this._content);
-        let template: string = `<a href="${this._href}">${text}</a>`;
-
-        this._dom.setInnerHTML(this._content, template);
-    }
-
-    private _createOptions(): void {
-        let text: string = this._dom.getText(this._content);
-        let button: {name: string, label: string, icon: string } = {
-            name: "",
-            label: "",
-            icon: ""
-        };
-
-        let buttonTemplate: string = `
-            <button class="ig-icon-button ig-${button.icon}" 
-                    aria-label="${button.label}" 
-                    (click)="removeItem(index)">
-              <i ig-icon>${button.name}</i>
-            </button>
-        `;
-
-
-        let template: string = `
-            <button class="ig-icon-button ig-delete" aria-label="Delete" 
-                    (click)="removeItem(index)">
-              <i ig-icon>delete</i>
-            </button>
-            ${text}
-            <button class="ig-icon-button ig-recycle" aria-label="Recycle" 
-                    (click)="recycle(index)">
-              <i ig-icon>recycle</i>
-            </button>
-            <button class="ig-icon-button ig-eat" aria-label="Eat" 
-                   (click)="eat(index)">
-              <i ig-icon>eat</i>
-            </button>
-        `;
-
-
-        this._dom.setInnerHTML(this._content, template);
+         this._content = this._el.nativeElement.firstChild;
     }
 
     private _addEventListeners() {
-        this._touchManager.addEventListener(this._el.nativeElement, "panstart", 
+        this._touchManager.addEventListener(this._el.nativeElement, "panstart",
             this.panstart);
-        this._touchManager.addEventListener(this._el.nativeElement, "panmove", 
+        this._touchManager.addEventListener(this._el.nativeElement, "panmove",
             this.pan);
-        this._touchManager.addEventListener(this._el.nativeElement, "panend", 
+        this._touchManager.addEventListener(this._el.nativeElement, "panend",
             this.panEnd);
     }
 
@@ -194,20 +138,20 @@ export class Item implements AfterContentInit, OnInit, OnDestroy {
             return;
         }*/
 
-        let width: number = 
+        let width: number =
             parseInt(this._dom.getComputedStyle(this._content)["width"], 10);
         let newOffset: number = this._offset + ev.deltaX;
         let borderWidth: number = width - this._panOffset;
         let target: EventTarget = ev.srcEvent.target;
 
-        if (newOffset < -borderWidth || 
+        if (newOffset < -borderWidth ||
             newOffset > borderWidth) {
-            /*this._dom.setStyle(target, "left", newOffset > 0 ? 
+            /*this._dom.setStyle(target, "left", newOffset > 0 ?
                 borderWidth : -borderWidth + "px");*/
 
             return;
         }
-  
+
         this._dom.setStyle(target, "left", newOffset + "px");
     }
 
@@ -224,7 +168,7 @@ export class Item implements AfterContentInit, OnInit, OnDestroy {
 
         if (borderWidth - offset < 10 || borderWidth - offset < -10) {
             this._dom.setStyle(target, "left", borderWidth + "px");
-            console.log(borderWidth);      
+            console.log(borderWidth);
         }*/
     }
 
@@ -237,7 +181,7 @@ export class Item implements AfterContentInit, OnInit, OnDestroy {
     }
 }
 
-// The `<ig-header>` directive is a header intended for row items in 
+// The `<ig-header>` directive is a header intended for row items in
 // a `<ig-list>` container.
 @Component({
     selector: 'ig-header',
@@ -250,12 +194,10 @@ export class Item implements AfterContentInit, OnInit, OnDestroy {
             background: gray;
         }
     `],
-    template: `
-    <div class="ig-header-inner">
-      <ng-content></ng-content>
-    </div>`
+    moduleId: module.id, // commonJS standard
+    templateUrl: 'list-content.html'
 })
 
 export class Header {
-
+    private _innerStyle: string = "ig-header-inner";
 }
