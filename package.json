@@ -9,7 +9,7 @@
     "build": "node node_modules/typescript/bin/tsc",
     "watch": "node node_modules/typescript/bin/tsc -w",
     "test": "karma start tests/karma.conf.js",
-    "lite": "lite-server",
+    "lite": "lite-server -c tools/bs-config.js",
     "typings": "node node_modules/typings/dist/bin.js install"
   },
   "dependencies": {

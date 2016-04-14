@@ -17,21 +17,25 @@ From the root folder run:
 npm install
 ``` 
 
-In case your editor cannot auto-compile the TypeScript files (VS, VS Code, others with plugins) 
-there's a configured npm command in place to run the compiler in watch mode:
+Demos can be run using either the [lite server](https://github.com/johnpapa/lite-server):
 ```
 npm start
-/// OR
-npm run watch
-``` 
-This will compile all TypeScript files per the `tsconfig.json` setup and continue watching for 
-file changes and recompile accordingly. 
+```
+or by pointing a server of your choosing to the root directory of the repo (e.g. Virtual Directory in IIS pointing to this folder). 
+Either way works by simply opening html files from the samples folder (`samples/index.html`) afterwards. 
+The start script will also build and watch TypeScript files. For other options use the commands below.
 
-## Running samples
-The repo doesn't include a server by default - use your preffered. Can be the lite server from the 
-[Angular 2 Guide](https://angular.io/docs/ts/latest/quickstart.html#!#package-json) or a simple node server.js
-or a virtual directory in IIS pointing to this folder. Either way works by simple opening html files from
-the samples folder aftarwards. 
+## Build
+
+In case your editor cannot auto-compile the TypeScript files (VS, VS Code, others with plugins) 
+there's a configured npm command in place to run the compiler:
+```
+npm run build
+/// OR in watch mode
+npm run watch
+```
+This will compile all TypeScript files per the `tsconfig.json` setup and optionally continue watching for 
+file changes and recompile accordingly. 
 
 ## Contributing
 [Coding Guidelines](../../wiki/Coding-guidelines-for-Zero-Blocks)
