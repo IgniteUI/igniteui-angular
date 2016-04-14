@@ -34,12 +34,17 @@ node_modules
 .node_repl_history
 
 # Transpiled output
+gulpfile.js*
+
+samples/**/*.js
+samples/**/*.js.map
+!samples/**/config.js
+
 src/**/*.js
 src/**/*.js.map
 
 tests/unit/**/*.js
 tests/unit/**/*.js.map
 
-samples/**/*.js
-samples/**/*.js.map
-!samples/**/config.js
+tools/**/*.js
+tools/**/*.js.map
