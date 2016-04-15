@@ -1,7 +1,14 @@
 {
   "ambientDependencies": {
     "es6-shim": "registry:dt/es6-shim#0.31.2+20160215162030",
+    "gulp": "registry:dt/gulp#3.8.0+20160316155526",
+    "gulp-autoprefixer": "registry:dt/gulp-autoprefixer#0.0.0+20160316155526",
+    "gulp-sass": "registry:dt/gulp-sass#0.0.0+20160316155526",
+    "gulp-sourcemaps": "registry:dt/gulp-sourcemaps#0.0.0+20160316155526",
     "hammerjs": "registry:dt/hammerjs#2.0.4+20160103211821",
-    "jasmine": "registry:dt/jasmine#2.2.0+20160308082659"
+    "jasmine": "registry:dt/jasmine#2.2.0+20160308082659",
+    "node": "registry:dt/node#4.0.0+20160412142033",
+    "orchestrator": "registry:dt/orchestrator#0.0.0+20160316155526",
+    "q": "registry:dt/q#0.0.0+20160323171452"
   }
 }

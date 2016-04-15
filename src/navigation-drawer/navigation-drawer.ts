@@ -16,7 +16,6 @@ declare var module: any;
         TODO: try https://github.com/angular/angular/issues/2991 ??
     */
     moduleId: module.id, // commonJS standard
-    styleUrls: ['navigation-drawer.css'],
     templateUrl: 'navigation-drawer.html',
     providers: [HammerGesturesManager]
 })
