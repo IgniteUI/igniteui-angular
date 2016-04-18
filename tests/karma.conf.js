@@ -41,10 +41,21 @@ module.exports = function(config){
 		frameworks: ['jasmine'],
 
 		browsers : ['Chrome'],
+        
+        preprocessors: {
+            // source files, that you wanna generate coverage for
+            // do not include tests or libraries
+            // (these files will be instrumented by Istanbul)
+            'src/**/*.js': ['coverage']
+        },
+    
+        reporters: ['mocha', 'coverage'],
 
 		plugins : [
                     'karma-chrome-launcher',
-                    'karma-jasmine'
+                    'karma-jasmine',
+                    'karma-mocha-reporter',
+                    'karma-coverage'
                     // ,
                     // 'karma-junit-reporter'
                     ],

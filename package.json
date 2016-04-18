@@ -32,9 +32,11 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-watch": "^4.3.5",
     "jasmine-core": "^2.4.1",
-    "karma": "^0.13.19",
+    "karma": "^0.13.22",
     "karma-chrome-launcher": "^0.2.2",
+    "karma-coverage": "^0.5.5",
     "karma-jasmine": "^0.2.2",
+    "karma-mocha-reporter": "^2.0.1",
     "lite-server": "^2.2.0",
     "typescript": "^1.8.10",
     "typings": "^0.7.8"
