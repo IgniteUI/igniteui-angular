@@ -6,6 +6,10 @@ module.exports = function(config){
 		files : [
             // 1. Load libraries
             // IE required polyfills, in this exact order
+            'node_modules/zone.js/dist/zone.js',
+            'node_modules/zone.js/dist/long-stack-trace-zone.js',
+            'node_modules/zone.js/dist/jasmine-patch.js',
+      
             "node_modules/es6-shim/es6-shim.min.js",
             "node_modules/systemjs/dist/system-polyfills.js",
 
@@ -13,6 +17,7 @@ module.exports = function(config){
             "node_modules/systemjs/dist/system.src.js",
             "node_modules/rxjs/bundles/Rx.js",
             "node_modules/angular2/bundles/angular2.dev.js",
+            "node_modules/hammerjs/hammer.js",
             'tests/karma-test-shim.js',
             
             { pattern: 'node_modules/angular2/**/*.js', included: false, watched: false },
