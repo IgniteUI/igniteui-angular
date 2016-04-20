@@ -11,13 +11,6 @@ declare var module: any;
     host: {
         'role': 'list'
     },
-    styles: [`
-        :host .ig-list-inner {
-            width: 100px;
-            background: lightgreen;
-            overflow: hidden;
-        }
-    `],
     moduleId: module.id, // commonJS standard
     templateUrl: 'list-content.html'
 })
@@ -34,53 +27,6 @@ export class List {
         'role': 'listitem'
     },
     providers: [BrowserDomAdapter, HammerGesturesManager],
-    styles: [`
-        :host .ig-item-inner {
-            width: 100px;
-            background: lightblue;
-            position: relative;
-        }
-
-        :host-context a {
-            -moz-border-radius: 5px;
-            -webkit-border-radius: 5px;
-            border-radius: 5px;
-            display: inline-block;
-            padding: 10px 25px 10px 10px;
-            position: relative;
-            text-decoration: none;
-        }
-
-        :host-context a:before, :host-context a:after {
-            border-right: 2px solid;
-            content: '';
-            display: block;
-            height: 8px;
-            margin-top: -6px;
-            position: absolute;
-            -moz-transform: rotate(135deg);
-            -o-transform: rotate(135deg);
-            -webkit-transform: rotate(135deg);
-            transform: rotate(135deg);
-            right: 10px;
-            top: 50%;
-            width: 0;
-        }
-
-        :host-context a:after {
-            margin-top: -1px;
-            -moz-transform: rotate(45deg);
-            -o-transform: rotate(45deg);
-            -webkit-transform: rotate(45deg);
-            transform: rotate(45deg);
-        }
-
-        :host-context a:hover, :host-context a:focus,
-        :host-context :hover:before, :host-context a:hover:after,
-        :host-context a:focus:before, :host-context a:focus:after {
-            color: red;
-        }
-    `],
     moduleId: module.id, // commonJS standard
     templateUrl: 'list-content.html'
 })
@@ -189,11 +135,6 @@ export class Item implements AfterContentInit, OnInit, OnDestroy {
         'role': 'listitemheader'
     },
     providers: [BrowserDomAdapter],
-    styles: [`
-        :host-context .ig-header-inner {
-            background: gray;
-        }
-    `],
     moduleId: module.id, // commonJS standard
     templateUrl: 'list-content.html'
 })
