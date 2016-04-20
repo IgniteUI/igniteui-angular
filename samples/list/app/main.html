@@ -1,0 +1,37 @@
+<ig-list> 
+    <ig-item *ngFor="#navItem of navItems; #index = index" [options]="options">
+      {{navItem.text}} 
+    </ig-item> 
+</ig-list>
+
+<ig-list> 
+  <ig-item [href]="'http://google.com/'">Google</ig-item> 
+  <ig-item [href]="'http://youtube.com/'">YouTube</ig-item> 
+  <ig-item [href]="'http://facebook.com/'">Facebook</ig-item> 
+</ig-list>
+
+<ig-list> 
+  <ig-header>Mildly Sweet</ig-header> 
+  <ig-item>Red Delicious</ig-item> 
+  <ig-item>Ambrosia</ig-item> 
+  <ig-item>Rome</ig-item> 
+ 
+  <ig-header>Sweet</ig-header> 
+  <ig-item>Golden Delicious</ig-item> 
+  <ig-item>Cosmic Crisp</ig-item> 
+  <ig-item>Pinova</ig-item> 
+ 
+  <ig-header>Super Sweet</ig-header> 
+  <ig-item>Gala</ig-item> 
+  <ig-item>Fuji</ig-item> 
+  <ig-item>Kiku</ig-item> 
+</ig-list> 
+
+<ig-list> 
+  <ig-item *ngFor="#navItem of navItems; #index = index"> 
+    {{navItem.text}} 
+    <button ig-button class="ig-icon-button ig-delete" aria-label="Delete" (click)="removeItem(index)">
+      <i ig-icon>delete</i>
+    </button>
+  </ig-item> 
+</ig-list>
