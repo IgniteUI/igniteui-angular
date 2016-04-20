@@ -23,6 +23,7 @@ module.exports = function(config){
             { pattern: 'node_modules/angular2/**/*.js', included: false, watched: false },
             { pattern: 'node_modules/rxjs/**/*.js', included: false, watched: false },
             { pattern: 'src/**/*', included: false, watched: false },
+            { pattern: 'dist/**/*.css'},
 			//'src/navigation-drawer.js',
 			//'tests/unit/utils.js',
             
@@ -37,6 +38,7 @@ module.exports = function(config){
         ],
 
 		autoWatch : true,
+		// singleRun : true,
 
 		frameworks: ['jasmine'],
 

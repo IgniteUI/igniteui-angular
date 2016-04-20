@@ -208,7 +208,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
      * Get the Drawer width for specific state. Will attempt to evaluate requested state and cache.
      * @param mini Request mini width instead
      */
-    private getExpectedWidth (mini?: boolean) : number {
+    protected getExpectedWidth (mini?: boolean) : number {
         if (mini) {
             if (!this._hasMimiTempl) {
                 return 0;
