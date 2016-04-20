@@ -1,0 +1,19 @@
+
+/* sample styling */
+.sample-content {
+    padding-left:60px;
+}
+
+button {
+    line-height: 1.3rem;
+    font-family: "Open sans",Helvetica,Arial,sans-serif;
+    border: none;
+    transition: .2s ease-in-out all;
+    background-color: #DADEE4;
+}
+    button:hover {
+        background-color: #76C4F8
+    }
+    button:active {
+        background-color: #00bcff;
+    }
