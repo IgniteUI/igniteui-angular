@@ -1,67 +1,88 @@
 /* List styles */
+$primary-color: #444;
+$primary-bg: #f4f4f4;
 
+/* list component */
 ig-list {
     overflow: hidden;
+
+    .ig-list-inner {
+        /*background: lightgreen;*/
+        background-color: $primary-bg;
+        overflow: hidden;
+    }
+
+    a {
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        display: inline-block;
+        padding: 10px 25px 10px 10px;
+        position: relative;
+        text-decoration: none;
+    }
+
+    a:before, a:after {
+        border-right: 2px solid;
+        content: '';
+        display: block;
+        height: 8px;
+        margin-top: -6px;
+        position: absolute;
+        -moz-transform: rotate(135deg);
+        -o-transform: rotate(135deg);
+        -webkit-transform: rotate(135deg);
+        transform: rotate(135deg);
+        right: 10px;
+        top: 50%;
+        width: 0;
+    }
+
+    a:after {
+        margin-top: -1px;
+        -moz-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    a:hover, a:focus,
+    :hover:before, a:hover:after,
+    a:focus:before, a:focus:after {
+        color: green;
+    }
 }
 
 /* header component */
-.ig-header-inner {
-    color: #000;
-    background: #f4f4f4;
-    padding: 3px 5px 2px 3px;
+ig-header {
+    overflow: hidden;
+
+    .ig-header-inner {
+        /*color: #000;
+        background: #f4f4f4;
+        padding: 3px 5px 2px 3px;*/
+        color: $primary-color;
+        background-color: #efeff4;
+        padding: 8px;
+        border-bottom: 1px solid #c8c7cc;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
 }
 
 /* item component */
-.ig-item-inner {
-    background: #fafafa;
-    position: relative;
-    padding-left: 7px;
-    border-bottom: 1px solid #c8c7cc;
-    word-wrap: break-word;
-}
-
-/* list component */
-.ig-list-inner {
-    background: lightgreen;
+ig-item {
     overflow: hidden;
-}
+    display: list-item;
+    list-style-type: none;
 
-a {
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    display: inline-block;
-    padding: 10px 25px 10px 10px;
-    position: relative;
-    text-decoration: none;
-}
-
-a:before, a:after {
-    border-right: 2px solid;
-    content: '';
-    display: block;
-    height: 8px;
-    margin-top: -6px;
-    position: absolute;
-    -moz-transform: rotate(135deg);
-    -o-transform: rotate(135deg);
-    -webkit-transform: rotate(135deg);
-    transform: rotate(135deg);
-    right: 10px;
-    top: 50%;
-    width: 0;
-}
-
-a:after {
-    margin-top: -1px;
-    -moz-transform: rotate(45deg);
-    -o-transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
-}
-
-a:hover, a:focus,
-:hover:before, a:hover:after,
-a:focus:before, a:focus:after {
-    color: green;
+    .ig-item-inner {
+        /*padding-left: 7px;*/
+        background: #fff;
+        color: $primary-color;
+        position: relative;
+        padding: 8px 16px;
+        border-bottom: 1px solid #c8c7cc;
+        word-wrap: break-word;
+    }
 }
