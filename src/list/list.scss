@@ -1,15 +1,19 @@
 /* List styles */
-$primary-color: #444;
-$primary-bg: #f4f4f4;
+$default-color: #444;
+$default-bg: #eee;
+$default-header-bg: #efeff4;
+$default-item-bg: #fff;
+$default-border-bottom: 1px solid #c8c7cc;
+$rotate45:  rotate(45deg);
+$rotate135:  rotate(135deg);
+$item-hover-bg: #fdfdfd;
+$item-active-bg: #fbfbfb;
 
 /* list component */
 ig-list {
-    overflow: hidden;
 
     .ig-list-inner {
-        /*background: lightgreen;*/
-        background-color: $primary-bg;
-        overflow: hidden;
+        background-color: $default-bg;
     }
 
     a {
@@ -29,21 +33,24 @@ ig-list {
         height: 8px;
         margin-top: -6px;
         position: absolute;
-        -moz-transform: rotate(135deg);
-        -o-transform: rotate(135deg);
-        -webkit-transform: rotate(135deg);
-        transform: rotate(135deg);
         right: 10px;
         top: 50%;
         width: 0;
     }
 
+    a:before {
+        -moz-transform: $rotate135;
+        -o-transform: $rotate135;
+        -webkit-transform: $rotate135;
+        transform: $rotate135;
+    }
+
     a:after {
         margin-top: -1px;
-        -moz-transform: rotate(45deg);
-        -o-transform: rotate(45deg);
-        -webkit-transform: rotate(45deg);
-        transform: rotate(45deg);
+        -moz-transform: $rotate45;
+        -o-transform: $rotate45;
+        -webkit-transform: $rotate45;
+        transform: $rotate45;
     }
 
     a:hover, a:focus,
@@ -55,34 +62,39 @@ ig-list {
 
 /* header component */
 ig-header {
-    overflow: hidden;
 
     .ig-header-inner {
-        /*color: #000;
-        background: #f4f4f4;
-        padding: 3px 5px 2px 3px;*/
-        color: $primary-color;
-        background-color: #efeff4;
+        color: $default-color;
+        background-color: $default-header-bg;
         padding: 8px;
-        border-bottom: 1px solid #c8c7cc;
+        border-bottom: $default-border-bottom;
         letter-spacing: 1px;
         text-transform: uppercase;
     }
 }
 
 /* item component */
-ig-item {
-    overflow: hidden;
+ig-item {    
     display: list-item;
     list-style-type: none;
 
     .ig-item-inner {
-        /*padding-left: 7px;*/
-        background: #fff;
-        color: $primary-color;
+        background-color: $default-item-bg;
+        color: $default-color;
         position: relative;
         padding: 8px 16px;
-        border-bottom: 1px solid #c8c7cc;
+        border-bottom: $default-border-bottom;
         word-wrap: break-word;
     }
+
+    .ig-item-inner:hover{
+        background-color: $item-hover-bg;
+    }
+    .ig-item-inner:active{
+        background-color: $item-active-bg;
+    }
+}
+
+ig-item, ig-header, ig-list, ig-list .ig-list-inner {
+    overflow: hidden;
 }
