@@ -18,6 +18,7 @@ module.exports = function(config){
             "node_modules/rxjs/bundles/Rx.js",
             "node_modules/angular2/bundles/angular2.dev.js",
             "node_modules/hammerjs/hammer.js",
+            "node_modules/hammer-simulator/index.js",
             'tests/karma-test-shim.js',
             
             { pattern: 'node_modules/angular2/**/*.js', included: false, watched: false },
@@ -38,6 +39,7 @@ module.exports = function(config){
         ],
 
 		autoWatch : true,
+        
 		// singleRun : true,
 
 		frameworks: ['jasmine'],

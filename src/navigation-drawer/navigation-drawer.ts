@@ -155,13 +155,12 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     
     ngOnChanges(changes: {[propName: string]: SimpleChange}) {
         // simple settings can come from attribute set (rather than binding), make sure boolean props are converted
-        
         if (changes['enableGestures'] && changes['enableGestures'].currentValue !== undefined) {
-            this.enableGestures = this.enableGestures && this.enableGestures.toString() === "true";
+            this.enableGestures = !!(this.enableGestures && this.enableGestures.toString() === "true");
             this.ensureEvents();
         }            
         if (changes['pin'] && changes['pin'].currentValue !== undefined) {
-            this.pin = this.pin && this.pin.toString() === "true";
+            this.pin = !!(this.pin && this.pin.toString() === "true");
             this.ensureDrawerHeight();
             if (this.pin) {
                 this.touchManager.destroy();
