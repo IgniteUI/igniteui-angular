@@ -68,21 +68,44 @@ export class Item implements AfterContentInit, OnInit, OnDestroy {
             this.panEnd);
     }
 
+    private getLeftPosition = () => {
+        return parseInt(this._dom.getStyle(this._content, "left"), 10);
+    }
+
+    private cancelEvent = (ev: HammerInput) => {
+        return !ev.target.classList.contains(this._innerStyle) ||
+        ev.direction == Hammer.DIRECTION_RIGHT && this.getLeftPosition() > 0;        
+    }
+
     private panstart = (ev: HammerInput) => {
         /*if (!ev.additionalEvent) {
             return;
         }*/
 
-        let offset = parseInt(this._dom.getStyle(this._content, "left"), 10);
-        if (offset) {
-            this._offset = offset;
-        }
+        if (this.cancelEvent(ev)) return;
+
+        let left = this.getLeftPosition();
+
+        if (left < 0) {
+            this._offset = left;
+        } else if (ev.direction == Hammer.DIRECTION_LEFT && left > 0) {
+            this._dom.setStyle(this._content, "left", "0px");
+            this._offset = 0;
+        }    
+            
     }
 
     private pan = (ev: HammerInput) => {
         /*if (!ev.additionalEvent) {
             return;
         }*/
+
+        if (this.cancelEvent(ev)) return;
+
+        if (ev.direction == Hammer.DIRECTION_LEFT && this.getLeftPosition() > 0) {
+            this._dom.setStyle(this._content, "left", "0px");
+            this._offset = 0;
+        }
 
         let width: number =
             parseInt(this._dom.getComputedStyle(this._content)["width"], 10);
@@ -116,6 +139,11 @@ export class Item implements AfterContentInit, OnInit, OnDestroy {
             this._dom.setStyle(target, "left", borderWidth + "px");
             console.log(borderWidth);
         }*/
+
+        if (this.getLeftPosition() > 0) {
+            this._dom.setStyle(this._content, "left", "0px");
+            this._offset = 0;
+        }         
     }
 
     ngOnInit() {
