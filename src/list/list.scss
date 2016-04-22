@@ -77,6 +77,7 @@ ig-header {
 ig-item {    
     display: list-item;
     list-style-type: none;
+    position: relative;
 
     .ig-item-inner {
         background-color: $default-item-bg;
@@ -85,14 +86,63 @@ ig-item {
         padding: 8px 16px;
         border-bottom: $default-border-bottom;
         word-wrap: break-word;
+
+        z-index: 2;
     }
 
     .ig-item-inner:hover{
-        background-color: $item-hover-bg;
+        background-color: $item-hover-bg;        
     }
     .ig-item-inner:active{
         background-color: $item-active-bg;
     }
+
+    .options{
+        position: absolute;
+        top: 0;
+        right: 0;        
+        height: 100%;
+
+        button{
+            height: 100%;
+        }
+
+        /*bootstrap button styles*/
+
+        .btn {
+            display: inline-block;
+            padding: .375rem 1rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            border: 1px solid transparent;
+            /*border-radius: .25rem;*/
+            color: #fff;
+        }
+
+        .btn-success {
+            background-color: #5cb85c;
+            border-color: #5cb85c;
+        }
+
+        .btn-danger {
+            background-color: #d9534f;
+            border-color: #d9534f;
+        }
+
+        .btn-info {
+            background-color: #5bc0de;
+            border-color: #5bc0de;
+        }       
+    }    
 }
 
 ig-item, ig-header, ig-list, ig-list .ig-list-inner {

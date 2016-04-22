@@ -1,3 +1,8 @@
 <div class="{{_innerStyle}}">
-  <ng-content></ng-content>
+  <ng-content></ng-content>  
+</div>
+<div *ngIf="_panOptions" class="options">
+    <button class="btn btn-success"> OK </button>
+    <button class="btn btn-danger"> Cancel </button>
+    <button class="btn btn-info"> More info </button>
 </div>
