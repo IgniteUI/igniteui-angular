@@ -6,8 +6,8 @@
     "postinstall": "npm run typings && npm prune",
     "start": "npm run build && concurrently \"npm run watch\" \"npm run lite\" ",
     "pretest": "npm run build",
-    "build": "node node_modules/typescript/bin/tsc && gulp build.css",
-    "watch": "concurrently \"node_modules/typescript/bin/tsc -w\" \"gulp build.css:watch\" ",
+    "build": "gulp build",
+    "watch": "gulp watch",
     "test": "karma start tests/karma.conf.js",
     "lite": "lite-server -c tools/bs-config.js",
     "typings": "node node_modules/typings/dist/bin.js install"
@@ -30,6 +30,7 @@
     "gulp-concat": "^2.6.0",
     "gulp-sass": "^2.2.0",
     "gulp-sourcemaps": "^1.6.0",
+    "gulp-typescript": "^2.13.0",
     "gulp-watch": "^4.3.5",
     "hammer-simulator": "git+https://github.com/hammerjs/simulator.git",
     "jasmine-core": "^2.4.1",
@@ -39,6 +40,7 @@
     "karma-jasmine": "^0.2.2",
     "karma-mocha-reporter": "^2.0.1",
     "lite-server": "^2.2.0",
+    "ts-node": "^0.7.2",
     "typescript": "^1.8.10",
     "typings": "^0.7.8"
   }
