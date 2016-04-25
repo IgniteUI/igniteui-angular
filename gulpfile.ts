@@ -26,32 +26,34 @@ gulp.task("build.js", function () {
     .pipe(gulp.dest("."));
 });
 
-gulp.task("build.css", (done: any) => {
-    return gulp.src(["src/**/*.scss"])
+gulp.task("build.css", ["build.css.dev"], (done: any) => {
+    return gulp.src(["src/themes/*.scss"])
         .pipe(sourcemaps.init())
-        .pipe(sass())
-        
-        // per https://github.com/sindresorhus/gulp-autoprefixer/issues/8#issuecomment-59741781
-        // Write sourcemap inline.
-        .pipe(sourcemaps.write())
-        
-        // Reinitialise sourcemaps, loading inline sourcemap.
-        .pipe(sourcemaps.init({loadMaps: true}))
+        .pipe(sass({
+            includePaths: ["src/**/*.scss"],
+        }))        
         .pipe(autoprefixer({
 			browsers: ["last 2 versions"],
 			cascade: false
-		}))
-        
-        // save dev version
-        .pipe(concat("zero-blocks.dev.css"))
-        
-        // save source map separately 
-        .pipe(sourcemaps.write("./"))
-        .pipe(gulp.dest("./dist"))
-        
-        .pipe(concat("zero-blocks.css"))
+		}))  
         .pipe(cleanCSS())
+        .pipe(sourcemaps.write())
         .pipe(gulp.dest("./dist")); 
+});
+
+gulp.task("build.css.dev", (done: any) => {
+    return gulp.src(["src/themes/*.scss"])
+        .pipe(sourcemaps.init())
+        .pipe(sass({
+            includePaths: ["src/**/*.scss"],
+        }))        
+        .pipe(autoprefixer({
+			browsers: ["last 2 versions"],
+			cascade: false
+		}))        
+        // // save source map separately 
+        .pipe(sourcemaps.write("./"))
+        .pipe(gulp.dest("./dist/dev"))
 });
 
 /**
