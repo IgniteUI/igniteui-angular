@@ -191,7 +191,9 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
      */
     private setDrawerWidth (width: string) {
         window.requestAnimationFrame(() => {
-            this.renderer.setElementStyle(this.drawer, "width", width);
+            if(this.drawer) {
+                this.renderer.setElementStyle(this.drawer, "width", width);                
+            }
         });
     }
     

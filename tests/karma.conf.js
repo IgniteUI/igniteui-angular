@@ -1,22 +1,24 @@
 module.exports = function(config){
-	config.set({
-
+    var options = {
+        
 		basePath : '../',
 
 		files : [
             // 1. Load libraries
-            // IE required polyfills, in this exact order
-            'node_modules/zone.js/dist/zone.js',
-            'node_modules/zone.js/dist/long-stack-trace-zone.js',
-            'node_modules/zone.js/dist/jasmine-patch.js',
+            // 'node_modules/zone.js/dist/zone.js',
+            // 'node_modules/zone.js/dist/long-stack-trace-zone.js',
+            //'node_modules/zone.js/dist/jasmine-patch.js',
       
+            // IE required polyfills, in this exact order
             "node_modules/es6-shim/es6-shim.min.js",
             "node_modules/systemjs/dist/system-polyfills.js",
-
+            
             "node_modules/angular2/bundles/angular2-polyfills.js",
             "node_modules/systemjs/dist/system.src.js",
             "node_modules/rxjs/bundles/Rx.js",
             "node_modules/angular2/bundles/angular2.dev.js",
+            
+            
             "node_modules/hammerjs/hammer.js",
             "node_modules/hammer-simulator/index.js",
             'tests/karma-test-shim.js',
@@ -24,7 +26,7 @@ module.exports = function(config){
             { pattern: 'node_modules/angular2/**/*.js', included: false, watched: false },
             { pattern: 'node_modules/rxjs/**/*.js', included: false, watched: false },
             { pattern: 'src/**/*', included: false, watched: false },
-            { pattern: 'dist/**/*.css'},
+            { pattern: 'dist/zero-blocks.css'},
 			//'src/navigation-drawer.js',
 			//'tests/unit/utils.js',
             
@@ -38,13 +40,21 @@ module.exports = function(config){
             'node_modules/angular2/**/*spec.js'
         ],
 
-		autoWatch : true,
+        // swap with singleRun to keep the runner active to debug errors
+		// autoWatch : true,
         
-		// singleRun : true,
+		singleRun : true,
 
 		frameworks: ['jasmine'],
 
 		browsers : ['Chrome'],
+        
+        customLaunchers: {
+            Chrome_travis_ci: {
+                    base: "Chrome",
+                    flags: ["--no-sandbox"]
+            }
+        },
         
         preprocessors: {
             // source files, that you wanna generate coverage for
@@ -68,6 +78,21 @@ module.exports = function(config){
 			outputFile: 'test_out/unit.xml',
 			suite: 'unit'
 		}*/
-
-	});
+        
+        coverageReporter: {
+            // specify a common output directory
+            dir: 'coverage',
+            reporters: [
+                // reporters not supporting the `file` property
+                { type: 'html', subdir: 'report-html' },
+                { type: 'lcov', subdir: 'report-lcov' }
+            ]
+        }
+	};
+    
+    if (process.env.TRAVIS) {
+        options.browsers = ["Chrome_travis_ci"];
+    }
+    
+	config.set(options);
 };
