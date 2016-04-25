@@ -24,7 +24,7 @@ module.exports = function(config){
             { pattern: 'node_modules/angular2/**/*.js', included: false, watched: false },
             { pattern: 'node_modules/rxjs/**/*.js', included: false, watched: false },
             { pattern: 'src/**/*', included: false, watched: false },
-            { pattern: 'dist/**/*.css'},
+            { pattern: 'dist/zero-blocks.css'},
 			//'src/navigation-drawer.js',
 			//'tests/unit/utils.js',
             
@@ -38,9 +38,10 @@ module.exports = function(config){
             'node_modules/angular2/**/*spec.js'
         ],
 
-		autoWatch : true,
+        // swap with singleRun to keep the runner active to debug errors
+		// autoWatch : true,
         
-		// singleRun : true,
+		singleRun : true,
 
 		frameworks: ['jasmine'],
 
@@ -68,6 +69,15 @@ module.exports = function(config){
 			outputFile: 'test_out/unit.xml',
 			suite: 'unit'
 		}*/
-
+        
+        coverageReporter: {
+            // specify a common output directory
+            dir: 'coverage',
+            reporters: [
+                // reporters not supporting the `file` property
+                { type: 'html', subdir: 'report-html' },
+                { type: 'lcov', subdir: 'report-lcov' }
+            ]
+        }
 	});
 };
