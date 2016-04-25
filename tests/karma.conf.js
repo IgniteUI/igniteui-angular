@@ -6,6 +6,10 @@ module.exports = function(config){
 		files : [
             // 1. Load libraries
             // IE required polyfills, in this exact order
+            'node_modules/zone.js/dist/zone.js',
+            'node_modules/zone.js/dist/long-stack-trace-zone.js',
+            'node_modules/zone.js/dist/jasmine-patch.js',
+      
             "node_modules/es6-shim/es6-shim.min.js",
             "node_modules/systemjs/dist/system-polyfills.js",
 
@@ -13,11 +17,14 @@ module.exports = function(config){
             "node_modules/systemjs/dist/system.src.js",
             "node_modules/rxjs/bundles/Rx.js",
             "node_modules/angular2/bundles/angular2.dev.js",
+            "node_modules/hammerjs/hammer.js",
+            "node_modules/hammer-simulator/index.js",
             'tests/karma-test-shim.js',
             
             { pattern: 'node_modules/angular2/**/*.js', included: false, watched: false },
             { pattern: 'node_modules/rxjs/**/*.js', included: false, watched: false },
             { pattern: 'src/**/*', included: false, watched: false },
+            { pattern: 'dist/**/*.css'},
 			//'src/navigation-drawer.js',
 			//'tests/unit/utils.js',
             
@@ -32,14 +39,27 @@ module.exports = function(config){
         ],
 
 		autoWatch : true,
+        
+		// singleRun : true,
 
 		frameworks: ['jasmine'],
 
 		browsers : ['Chrome'],
+        
+        preprocessors: {
+            // source files, that you wanna generate coverage for
+            // do not include tests or libraries
+            // (these files will be instrumented by Istanbul)
+            'src/**/*.js': ['coverage']
+        },
+    
+        reporters: ['mocha', 'coverage'],
 
 		plugins : [
                     'karma-chrome-launcher',
-                    'karma-jasmine'
+                    'karma-jasmine',
+                    'karma-mocha-reporter',
+                    'karma-coverage'
                     // ,
                     // 'karma-junit-reporter'
                     ],
