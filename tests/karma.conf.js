@@ -1,6 +1,6 @@
 module.exports = function(config){
-	config.set({
-
+    var options = {
+        
 		basePath : '../',
 
 		files : [
@@ -47,6 +47,13 @@ module.exports = function(config){
 
 		browsers : ['Chrome'],
         
+        customLaunchers: {
+            Chrome_travis_ci: {
+                    base: "Chrome",
+                    flags: ["--no-sandbox"]
+            }
+        },
+        
         preprocessors: {
             // source files, that you wanna generate coverage for
             // do not include tests or libraries
@@ -79,5 +86,11 @@ module.exports = function(config){
                 { type: 'lcov', subdir: 'report-lcov' }
             ]
         }
-	});
+	};
+    
+    if (process.env.TRAVIS) {
+        options.browsers = ["Chrome_travis_ci"];
+    }
+    
+	config.set(options);
 };
