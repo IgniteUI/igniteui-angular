@@ -7,6 +7,7 @@
     "start": "npm run build && concurrently \"npm run watch\" \"npm run lite\" ",
     "pretest": "npm run build",
     "build": "gulp build",
+    "bundle": "gulp bundle && gulp cleanup",
     "watch": "gulp watch",
     "test": "karma start tests/karma.conf.js",
     "lite": "lite-server -c tools/bs-config.js",
@@ -25,10 +26,12 @@
   "devDependencies": {
     "concurrently": "^2.0.0",
     "coveralls": "^2.11.9",
+    "del": "^2.2.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-clean-css": "^2.0.6",
     "gulp-concat": "^2.6.0",
+    "gulp-inline-ng2-template": "^1.1.4",
     "gulp-sass": "^2.2.0",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-typescript": "^2.13.0",
@@ -41,8 +44,11 @@
     "karma-jasmine": "^0.2.2",
     "karma-mocha-reporter": "^2.0.1",
     "lite-server": "^2.2.0",
+    "merge-stream": "^1.0.0",
+    "systemjs-builder": "^0.15.15",
     "ts-node": "^0.7.2",
     "typescript": "^1.8.10",
-    "typings": "^0.7.8"
+    "typings": "^0.7.8",
+    "vinyl-paths": "^2.1.0"
   }
 }
