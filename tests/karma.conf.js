@@ -4,23 +4,28 @@ module.exports = function(config){
 		basePath : '../',
 
 		files : [
-            // 1. Load libraries
-            // 'node_modules/zone.js/dist/zone.js',
-            // 'node_modules/zone.js/dist/long-stack-trace-zone.js',
-            //'node_modules/zone.js/dist/jasmine-patch.js',
-      
-            // IE required polyfills, in this exact order
-            "node_modules/es6-shim/es6-shim.min.js",
-            "node_modules/systemjs/dist/system-polyfills.js",
+            // System.js for module loading
+            'node_modules/systemjs/dist/system-polyfills.js',
+            'node_modules/systemjs/dist/system.src.js',
+
+            // Polyfills
+            'node_modules/es6-shim/es6-shim.js',
+
+            // Reflect and Zone.js
+            'node_modules/reflect-metadata/Reflect.js',
+            'node_modules/zone.js/dist/zone.js',
+            'node_modules/zone.js/dist/jasmine-patch.js',
+            'node_modules/zone.js/dist/async-test.js',
+            'node_modules/zone.js/dist/fake-async-test.js',
             
-            "node_modules/angular2/bundles/angular2-polyfills.js",
-            "node_modules/systemjs/dist/system.src.js",
+            // Angular and RxJS
             "node_modules/rxjs/bundles/Rx.js",
             "node_modules/angular2/bundles/angular2.dev.js",
             
-            
+            // Hammer
             "node_modules/hammerjs/hammer.js",
             "node_modules/hammer-simulator/index.js",
+            
             'tests/karma-test-shim.js',
             
             { pattern: 'node_modules/angular2/**/*.js', included: false, watched: false },

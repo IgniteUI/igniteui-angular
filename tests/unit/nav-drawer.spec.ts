@@ -1,5 +1,5 @@
 // modeled after https://github.com/angular/angular/blob/cee2318110eeea115e5f6fc5bfc814cbaa7d90d8/modules/angular2/test/common/directives/ng_for_spec.ts
-import { it, iit, describe, expect, inject, injectAsync, beforeEachProviders, fakeAsync, tick, TestComponentBuilder, ComponentFixture} from 'angular2/testing';
+import { it, iit, describe, expect, inject, async, beforeEachProviders, fakeAsync, tick, TestComponentBuilder, ComponentFixture} from 'angular2/testing';
 import {Component, ViewChild} from 'angular2/core';
 import * as Infragistics from '../../src/main';
 
@@ -9,7 +9,7 @@ declare var Simulator: any;
 export function main() {
     describe('Infragistics Angular2 Navigation Drawer', function() {
         it('should initialize without DI service',
-         injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+         async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
            var template = '<ig-nav-drawer></ig-nav-drawer>';
            return tcb.overrideTemplate(TestComponent, template)
                .createAsync(TestComponent)
@@ -17,10 +17,10 @@ export function main() {
                  expect(fixture.debugElement.children[0].componentInstance).toBeAnInstanceOf(Infragistics.NavigationDrawer);
                  expect(fixture.debugElement.children[0].componentInstance.state).toBeNull();
                });
-         }));
+         })));
          
          it('should initialize with DI service',
-           injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<ig-nav-drawer></ig-nav-drawer>';
                 return tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
@@ -36,10 +36,10 @@ export function main() {
                     console.log(reason);
                     return Promise.reject(reason);
                 });
-         }));
+         })));
          
         it('should properly initialize all elements and properties',
-           injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<ig-nav-drawer></ig-nav-drawer>';
                 return tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
@@ -55,10 +55,10 @@ export function main() {
                     console.log(reason);
                     return Promise.reject(reason);
                 });
-         }));
+         })));
          
         it('should attach events and register to nav service and detach on destroy',
-           injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<ig-nav-drawer id="testNav" ></ig-nav-drawer>';
                 return tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
@@ -78,10 +78,10 @@ export function main() {
                     console.log(reason);
                     return Promise.reject(reason);
                 });
-         }));
+         })));
                   
         it('should open and close with API calls',
-           injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<ig-nav-drawer></ig-nav-drawer>';
                 return tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
@@ -109,10 +109,10 @@ export function main() {
                     console.log(reason);
                     return Promise.reject(reason);
                 });
-        }));
+        })));
          
         it('async API calls should resolve Promise and emit events',
-           injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<ig-nav-drawer></ig-nav-drawer>',
                    fixture: ComponentFixture,
                    resolver, drawer,
@@ -160,10 +160,10 @@ export function main() {
             
             // to be resolved at the end of the promise chain
             return result;
-         }));
+         })));
          
         it('should properly initialize with min temaplte',
-            injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+            async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
                 var template = '<ig-nav-drawer><ig-drawer-content></ig-drawer-content><ig-drawer-mini-content></ig-drawer-mini-content></ig-nav-drawer>';
                 return tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
@@ -176,10 +176,10 @@ export function main() {
                     console.log(reason);
                     return Promise.reject(reason);
                 });
-        }));
+        })));
         
         it('should set pin, gestures options',
-            injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+            async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
                 var template = '<ig-nav-drawer [pin]="pin" [enableGestures]="enableGestures"></ig-nav-drawer>';
                 return tcb.overrideTemplate(TestComponentPin, template)
                 .createAsync(TestComponentPin)
@@ -199,10 +199,10 @@ export function main() {
                     console.log(reason);
                     return Promise.reject(reason);
                 });
-        }));
+        })));
         
         it('should toggle on edge swipe gesture',
-           injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<ig-nav-drawer></ig-nav-drawer>', resolver,
                 result = new Promise<any>( resolve => {
                     resolver = (value?: any) => {
@@ -240,10 +240,10 @@ export function main() {
                     return Promise.reject(reason);
                 });
                 return result;
-         }));
+         })));
          
          it('should toggle on edge pan gesture',
-           injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<ig-nav-drawer></ig-nav-drawer>', resolver,
                 result = new Promise<any>( resolve => {
                     resolver = (value?: any) => {
@@ -297,10 +297,10 @@ export function main() {
                     return Promise.reject(reason);
                 });
                 return result;
-         }));
+         })));
          
         it('should update edge zone with mini width',
-           injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<ig-nav-drawer [miniWidth]="drawerMiniWidth" ><ig-drawer-content></ig-drawer-content><ig-drawer-mini-content></ig-drawer-mini-content></ig-nav-drawer>';
                 return tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
@@ -320,10 +320,10 @@ export function main() {
                     console.log(reason);
                     return Promise.reject(reason);
                 });
-         }));
+         })));
          
         it('should update width from css or property',
-           injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = `<ig-nav-drawer [miniWidth]="drawerMiniWidth" [width]="drawerWidth">
                                     <ig-drawer-content></ig-drawer-content>
                                     <ig-drawer-mini-content></ig-drawer-mini-content>
@@ -360,7 +360,7 @@ export function main() {
                     return Promise.reject(reason);
                 });
                 return result;
-         }));
+         })));
     });
 }
 
