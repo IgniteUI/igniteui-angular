@@ -1,5 +1,8 @@
 # Zero Blocks -  Infragistics Angular2 Components
 
+[![Build Status](https://travis-ci.org/Infragistics/zero-blocks.svg?branch=master)](https://travis-ci.org/Infragistics/zero-blocks)
+[![Coverage Status](https://coveralls.io/repos/github/Infragistics/zero-blocks/badge.svg?branch=master)](https://coveralls.io/github/Infragistics/zero-blocks?branch=master)
+
 Components and supporting directives built with TypeScript and [Angular 2](https://angular.io/) 
 including samples and tests. Source files under the `src` folder.
 

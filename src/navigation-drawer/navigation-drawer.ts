@@ -155,13 +155,12 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     
     ngOnChanges(changes: {[propName: string]: SimpleChange}) {
         // simple settings can come from attribute set (rather than binding), make sure boolean props are converted
-        
         if (changes['enableGestures'] && changes['enableGestures'].currentValue !== undefined) {
-            this.enableGestures = this.enableGestures && this.enableGestures.toString() === "true";
+            this.enableGestures = !!(this.enableGestures && this.enableGestures.toString() === "true");
             this.ensureEvents();
         }            
         if (changes['pin'] && changes['pin'].currentValue !== undefined) {
-            this.pin = this.pin && this.pin.toString() === "true";
+            this.pin = !!(this.pin && this.pin.toString() === "true");
             this.ensureDrawerHeight();
             if (this.pin) {
                 this.touchManager.destroy();
@@ -192,7 +191,9 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
      */
     private setDrawerWidth (width: string) {
         window.requestAnimationFrame(() => {
-            this.renderer.setElementStyle(this.drawer, "width", width);
+            if(this.drawer) {
+                this.renderer.setElementStyle(this.drawer, "width", width);                
+            }
         });
     }
     
@@ -208,7 +209,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
      * Get the Drawer width for specific state. Will attempt to evaluate requested state and cache.
      * @param mini Request mini width instead
      */
-    private getExpectedWidth (mini?: boolean) : number {
+    protected getExpectedWidth (mini?: boolean) : number {
         if (mini) {
             if (!this._hasMimiTempl) {
                 return 0;

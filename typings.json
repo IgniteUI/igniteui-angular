@@ -5,8 +5,10 @@
     "gulp-autoprefixer": "registry:dt/gulp-autoprefixer#0.0.0+20160316155526",
     "gulp-sass": "registry:dt/gulp-sass#0.0.0+20160316155526",
     "gulp-sourcemaps": "registry:dt/gulp-sourcemaps#0.0.0+20160316155526",
+    "gulp-typescript": "registry:dt/gulp-typescript#0.0.0+20160317120654",
     "hammerjs": "registry:dt/hammerjs#2.0.4+20160103211821",
     "jasmine": "registry:dt/jasmine#2.2.0+20160308082659",
+    "merge-stream": "registry:dt/merge-stream#1.0.0+20160313224417",
     "node": "registry:dt/node#4.0.0+20160412142033",
     "orchestrator": "registry:dt/orchestrator#0.0.0+20160316155526",
     "q": "registry:dt/q#0.0.0+20160323171452"
