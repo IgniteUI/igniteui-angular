@@ -16,7 +16,7 @@ import * as Infragistics from '../../../src/main';
 })
 
 export class AppComponent {
-    tabItems: Array<Object> = [
+    datasource: Array<Object> = [
         { text: "Nav1", link: "#" },
         { text: "Nav2", link: "#" },
         { text: "Nav3", link: "#" },

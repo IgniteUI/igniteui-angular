@@ -19,38 +19,40 @@ export class Tab implements AfterContentInit, OnInit, OnDestroy {
     private _content: HTMLElement = null;
     private _itemStyle: string = "ig-tab-inner";
     private _isSelected: boolean = false;
-    private _element: ElementRef = null;
-
-    tabbar: TabBar = null;
+    private _element: HTMLElement = null;
 
     constructor(private _el: ElementRef, private _dom: BrowserDomAdapter) {
         this._element = _el.nativeElement;
         this._element.classList.add("col-4");
 
         if(this._isSelected) {
-            this._itemStyle += " selected";
-        }
+            this._element.classList.add("selected");            
+        }        
     }
 
     ngAfterContentInit(): any {
         this._content = this._el.nativeElement.firstChild;
     }
 
-    private _addEventListeners() {
-        //debugger;
+    ngOnInit() {        
     }
 
-    ngOnInit() {
-        this._addEventListeners();
-    }
     ngOnDestroy() {
         //debugger;
     }
 
     tabClick() {
-        var divInner;
+        this.select();        
+    }
+
+    private select() {
         this._isSelected = true;
         this._element.classList.add("selected");
+    }
+
+    private deselect() {
+        this._isSelected = false;
+        this._element.classList.remove("selected");
     }
 }
 
@@ -74,6 +76,8 @@ export class TabBar {
     private _columnCount: number = 1;
     private _position: string = "Top";
 
+    tabs: Tab[];
+
     constructor(private _el: ElementRef, private _dom: BrowserDomAdapter) {
         _el.nativeElement.classList.add("tabbar-" + this._position.toLowerCase());
     }
@@ -81,6 +85,18 @@ export class TabBar {
     @Input() set tabItems(tabItems: Array<Object>) {
         this._tabItems = tabItems;
         this._columnCount = this.getColumnCount();
+    }
+
+    select(index: number) {
+
+    }
+
+    deselect(index: number) {
+
+    }
+
+    deselectAll() {
+
     }
 
     private getColumnCount() : number {
@@ -99,3 +115,50 @@ export class TabBar {
         return result;
     }
 }
+
+/*
+@Component({
+  selector: 'ig-tabbar',
+  template: `
+    <ul>
+      <li *ngFor="let tab of tabs" (click)="selectTab(tab)">
+        {{tab.tabTitle}}
+      </li>
+    </ul>
+    <ng-content></ng-content>
+  `,
+})
+export class TabBar {
+  tabs: Tab[] = [];
+
+  selectTab(tab: Tab) {
+    this.tabs.forEach((tab) => {
+      tab.active = false;
+    });
+    tab.active = true;
+  }
+
+  addTab(tab: Tab) {
+    if (this.tabs.length === 0) {
+      tab.active = true;
+    }
+    this.tabs.push(tab);
+  }
+}
+
+@Component({
+  selector: 'ig-tab',
+  template: `
+    <div [hidden]="!active">
+      <ng-content></ng-content>
+    </div>
+  `
+})
+export class Tab {
+
+  @Input() tabTitle: string;
+
+  constructor(tabs:Tabs) {
+    tabs.addTab(this);
+  }
+}*/

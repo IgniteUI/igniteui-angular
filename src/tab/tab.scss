@@ -49,10 +49,10 @@ ig-tab {
         text-transform: uppercase;
         font-weight: 500;
         box-sizing: border-box;
-        text-overflow: ellipsis;
-
-        &.selected {
-            border-bottom: 4px solid blue;
-        }
+        text-overflow: ellipsis;        
     }
+
+    &.selected .ig-tab-inner {
+            border-bottom: 4px solid #0099ff;
+        }
 }
