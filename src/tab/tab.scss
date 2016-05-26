@@ -1,12 +1,44 @@
-ig-tab-bar {
-    .ig-tab-inner {
-        width: 100%;
-        background-color: green;
+ig-tab-bar {   
+
+    .ig-tabbar-inner {
+        width: 100%;    
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;    
+    }
+
+    &.tabbar-top .ig-tabbar-inner{
+        border-top: 0;
+    }
+    &.tabbar-bottom .ig-tabbar-inner{
+        border-bottom: 0;
     }
 }
 
 ig-tab {
-    .ig-tab-item-inner {
+    display: inline-block;    
+    text-align: center;
+
+    &.col-2 {
+        width: 50%;
+    }
+
+    &.col-3 {
+        width: 33%;
+    }
+
+    &.col-3:last-of-type {
+        width: 34%;
+    }
+
+    &.col-4 {
+        width: 25%;
+    }
+
+    &.col-5 {
+        width: 20%;
+    }
+
+    .ig-tab-inner {
         font-size: 14px;
         text-align: center;
         line-height: 24px;
@@ -15,10 +47,12 @@ ig-tab {
         white-space: nowrap;
         position: relative;
         text-transform: uppercase;
-        float: left;
         font-weight: 500;
         box-sizing: border-box;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        text-overflow: ellipsis;        
     }
+
+    &.selected .ig-tab-inner {
+            border-bottom: 4px solid #0099ff;
+        }
 }
