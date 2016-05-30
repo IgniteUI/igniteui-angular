@@ -11,7 +11,8 @@ import * as Infragistics from '../../../src/main';
         Infragistics.Header,
         Infragistics.Item,
         Infragistics.List,
-        Infragistics.TabBar
+        Infragistics.TabBar,
+        Infragistics.Tab
     ]
 })
 

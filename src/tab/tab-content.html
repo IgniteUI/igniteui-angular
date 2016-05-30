@@ -1,3 +1,3 @@
-<div class="{{_itemStyle}}" (click)="tabClick()">
-  <ng-content></ng-content>
+<div class={{_itemStyle}} [class.selected]="isSelected" ngClass="col-{{columnCount}}" (click)="select()">
+	<ng-content></ng-content>
 </div>

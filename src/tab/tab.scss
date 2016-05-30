@@ -1,9 +1,10 @@
-ig-tab-bar {   
+ig-tab-bar {
 
     .ig-tabbar-inner {
         width: 100%;    
         border-top: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;    
+        border-bottom: 1px solid #ccc;
+        overflow: auto;
     }
 
     &.tabbar-top .ig-tabbar-inner{
@@ -17,6 +18,7 @@ ig-tab-bar {
 ig-tab {
     display: inline-block;    
     text-align: center;
+    float: left;
 
     &.col-2 {
         width: 50%;
@@ -50,9 +52,10 @@ ig-tab {
         font-weight: 500;
         box-sizing: border-box;
         text-overflow: ellipsis;        
-    }
 
-    &.selected .ig-tab-inner {
+        &.selected {
             border-bottom: 4px solid #0099ff;
+            color: #0099ff;
         }
+    }    
 }
