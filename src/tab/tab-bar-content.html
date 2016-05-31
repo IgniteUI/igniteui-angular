@@ -1,3 +1,10 @@
-<div class={{_itemStyle}}>
-	<ng-content></ng-content>
+
+<div class="{{_itemStyle}} tabbar-top">
+	<ul>
+		<li *ngFor="let tab of tabs" [class.selected]="tab.isSelected" (click)="selectTab(tab)" ngClass="col-{{getColumns()}}">
+			<div ngClass="tab-icon {{tab.icon}}"></div>
+			<div ngClass="tab-label">{{tab.label}}</div>
+		</li>
+	</ul>	
 </div>
+<ng-content></ng-content>

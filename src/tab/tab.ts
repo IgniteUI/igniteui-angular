@@ -10,12 +10,17 @@ declare var module: any;
 })
 
 export class TabBar {
-    private _itemStyle: string = "ig-tabbar-inner";
+    private _itemStyle: string = "ig-tabBar-inner";
     tabs: Tab[] = [];    
 
     add(tab: Tab) {
         this.tabs.push(tab);
         this.tabs.forEach((tab) => { tab.columnCount = this.getColumns(); });
+    }
+
+    selectTab(tab: Tab) {
+        this.tabs.forEach((tab) => { tab.isSelected = false; });
+        tab.isSelected = true;
     }
 
     getColumns() {
@@ -33,18 +38,23 @@ export class TabBar {
 })
 
 export class Tab {
-private _itemStyle: string = "ig-tab-inner";
-private isSelected: boolean = false;
-private tabbar: TabBar = null;
-private columnCount: number = 0;
+    private _itemStyle: string = "ig-tab-inner";    
+    private _tabBar: TabBar = null;
 
-  constructor(tabbar:TabBar) {
-    this.tabbar = tabbar;
-    tabbar.add(this);
-  }
+    isSelected: boolean = false;
+    // Indirectly defines the width of the tab
+    columnCount: number = 0;
 
-    select() {    
-        this.tabbar.tabs.forEach((tab) => { tab.isSelected = false; });
-        this.isSelected = true;
-    }
+    @Input() label: string;
+
+    @Input() icon: string;
+
+      constructor(tabBar: TabBar) {
+        this._tabBar = tabBar;
+        tabBar.add(this);
+      }
+
+      select() {    
+        this._tabBar.selectTab(this);
+      }
 }

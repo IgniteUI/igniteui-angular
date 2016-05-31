@@ -1,61 +1,72 @@
 ig-tab-bar {
 
-    .ig-tabbar-inner {
+    .ig-tabBar-inner {
         width: 100%;    
         border-top: 1px solid #ccc;
         border-bottom: 1px solid #ccc;
         overflow: auto;
     }
 
-    &.tabbar-top .ig-tabbar-inner{
+    .tabbar-top.ig-tabBar-inner{
         border-top: 0;
     }
-    &.tabbar-bottom .ig-tabbar-inner{
+    .tabbar-bottom.ig-tabBar-inner{
         border-bottom: 0;
+    }
+
+    ul {
+        margin: 0;
+        padding: 0;
+
+        li{
+            font-size: 14px;
+            text-align: center;
+            line-height: 24px;
+            padding: 12px 24px;
+            list-style: none;
+            display: inline-block;
+            cursor: pointer;
+            white-space: nowrap;
+            position: relative;
+            text-transform: uppercase;
+            box-sizing: border-box;
+            text-overflow: ellipsis;
+
+            &.selected {
+                border-bottom: 4px solid #0099ff;
+                color: #0099ff;
+            }
+
+            &.col-2 {
+                width: 50%;
+            }
+
+            &.col-3 {
+                width: 33%;
+            }
+
+            &.col-3:last-of-type {
+                width: 34%;
+            }
+
+            &.col-4 {
+                width: 25%;
+            }
+
+            &.col-5 {
+                width: 20%;
+            }
+        }
     }
 }
 
 ig-tab {
-    display: inline-block;    
-    text-align: center;
-    float: left;
-
-    &.col-2 {
-        width: 50%;
-    }
-
-    &.col-3 {
-        width: 33%;
-    }
-
-    &.col-3:last-of-type {
-        width: 34%;
-    }
-
-    &.col-4 {
-        width: 25%;
-    }
-
-    &.col-5 {
-        width: 20%;
-    }
 
     .ig-tab-inner {
-        font-size: 14px;
-        text-align: center;
-        line-height: 24px;
-        padding: 12px 24px;
-        cursor: pointer;
-        white-space: nowrap;
-        position: relative;
-        text-transform: uppercase;
-        font-weight: 500;
-        box-sizing: border-box;
-        text-overflow: ellipsis;        
+        display: none;
 
         &.selected {
-            border-bottom: 4px solid #0099ff;
-            color: #0099ff;
+            display: block;
         }
     }    
 }
