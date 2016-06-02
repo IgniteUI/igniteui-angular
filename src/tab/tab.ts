@@ -1,5 +1,4 @@
-import { Component, Input } from 'angular2/core';
-
+import { Component, Input, ElementRef, ViewChild, AfterViewInit  } from 'angular2/core';
 
 declare var module: any;
 
@@ -9,9 +8,23 @@ declare var module: any;
   templateUrl: 'tab-bar-content.html'
 })
 
-export class TabBar {
-    private _itemStyle: string = "ig-tabBar-inner";
-    tabs: Tab[] = [];    
+export class TabBar implements AfterViewInit  {
+    @ViewChild('unorderedList') _tabList: ElementRef;
+
+    private _itemStyle: string = "ig-tab-bar-inner";
+
+    _element: ElementRef;
+    tabs: Tab[] = [];
+
+    @Input() alignment: string = "top";
+
+    constructor(element: ElementRef) {
+        this._element = element;
+    }
+
+    ngAfterViewInit() {
+         this.tabs.forEach((tab) => { tab.setHeight(this.getHeight() - this.getTabListHeight()) } );
+    }
 
     add(tab: Tab) {
         this.tabs.push(tab);
@@ -26,6 +39,18 @@ export class TabBar {
     getColumns() {
         return this.tabs.length > 5 ? 5 : this.tabs.length ;
     }
+
+    getHeight() {
+        return this._element.nativeElement.offsetHeight;
+    }
+
+    getTabListHeight() {
+        if(this._tabList) {
+            return this._tabList.nativeElement.offsetHeight;
+        }
+        
+        return 0;
+    }
 }
 
 @Component({
@@ -37,10 +62,14 @@ export class TabBar {
    }
 })
 
-export class Tab {
-    private _itemStyle: string = "ig-tab-inner";    
-    private _tabBar: TabBar = null;
+export class Tab  {
+    @ViewChild('wrapper') wrapper: ElementRef;
 
+    private _itemStyle: string = "ig-tab-inner";    
+    private _tabBar: TabBar;
+
+    height : number;
+    _element: ElementRef;
     isSelected: boolean = false;
     // Indirectly defines the width of the tab
     columnCount: number = 0;
@@ -49,12 +78,17 @@ export class Tab {
 
     @Input() icon: string;
 
-      constructor(tabBar: TabBar) {
+      constructor(tabBar: TabBar, element: ElementRef) {
         this._tabBar = tabBar;
-        tabBar.add(this);
+        this._element = element;
+        tabBar.add(this);        
       }
 
       select() {    
         this._tabBar.selectTab(this);
+      }
+
+      setHeight(height: number){
+        this.wrapper.nativeElement.style.height = height + "px";
       }
 }

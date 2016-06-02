@@ -1,28 +1,51 @@
 ig-tab-bar {
 
-    .ig-tabBar-inner {
-        width: 100%;    
-        border-top: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;
-        overflow: auto;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+
+    .ig-tab-bar-inner {
+        width: 100%;        
+        overflow: auto;    
     }
 
-    .tabbar-top.ig-tabBar-inner{
+    .tab-bar-top.ig-tab-bar-inner{
         border-top: 0;
+        top: 0;
+
+        li.selected {
+            border-bottom: 4px solid #0099ff;
+            padding-bottom: 1px;           
+        }
     }
-    .tabbar-bottom.ig-tabBar-inner{
-        border-bottom: 0;
+    .tab-bar-bottom.ig-tab-bar-inner {
+            height: 100%;
+
+         ul{
+            border-bottom: 0;
+            bottom: 0;
+            position: absolute;
+            bottom: 0;
+
+            li.selected {
+                border-top: 4px solid #0099ff;
+                padding-top: 1px;    
+            }
+        }
     }
 
     ul {
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
         margin: 0;
         padding: 0;
+        width: 100%;
 
         li{
             font-size: 14px;
             text-align: center;
             line-height: 24px;
-            padding: 12px 24px;
+            padding: 5px 10px;
             list-style: none;
             display: inline-block;
             cursor: pointer;
@@ -33,7 +56,6 @@ ig-tab-bar {
             text-overflow: ellipsis;
 
             &.selected {
-                border-bottom: 4px solid #0099ff;
                 color: #0099ff;
             }
 
@@ -56,6 +78,19 @@ ig-tab-bar {
             &.col-5 {
                 width: 20%;
             }
+
+            .tab-icon {
+                height: 32px;
+                width: 32px;                
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .tab-label {
+                font-size: 12px;
+                line-height: 12px;
+                padding-top: 5px;
+            }
         }
     }
 }
@@ -64,6 +99,7 @@ ig-tab {
 
     .ig-tab-inner {
         display: none;
+        overflow: auto;
 
         &.selected {
             display: block;
