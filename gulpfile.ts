@@ -28,8 +28,8 @@ var tsProject = ts.createProject('tsconfig.json', {
           
 gulp.task("build", ["build.css", "build.js"]);  
 
-gulp.task("bundle", ["bundle.src", "build.css"], function () {
-     // move typings and js to dist
+gulp.task("bundle", ["bundle.src", "build.css", "bundle.README"], function() {
+     // move typings, js to dist
     return gulp.src('./zero-blocks/**/*')
         .pipe(gulp.dest('./dist'));
 });
@@ -126,6 +126,15 @@ gulp.task("build.css.dev", (done: any) => {
         .pipe(sourcemaps.write("./"))
         .pipe(gulp.dest("./dist/dev"))
 });
+
+/**
+ * README.md
+ */
+
+gulp.task("bundle.README", function() {
+    return gulp.src('./README.md')
+        .pipe(gulp.dest('./dist'));
+})
 
 /**
  * Watchers

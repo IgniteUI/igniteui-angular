@@ -1,5 +1,5 @@
 <ig-list>
-    <ig-item *ngFor="#navItem of navItems; #index = index" [options]="options">
+    <ig-item *ngFor="let navItem of navItems; let index = index" [options]="options">
       {{navItem.text}}
     </ig-item>
 </ig-list>
@@ -28,7 +28,7 @@
 </ig-list>
 
 <ig-list>
-  <ig-item *ngFor="#navItem of navItems; #index = index">
+  <ig-item *ngFor="let navItem of navItems; let index = index">
     {{navItem.text}}
     <button ig-button class="ig-icon-button ig-delete" aria-label="Delete" (click)="removeItem(index)">
       <i ig-icon>delete</i>
