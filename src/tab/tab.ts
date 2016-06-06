@@ -23,7 +23,13 @@ export class TabBar implements AfterViewInit  {
     }
 
     ngAfterViewInit() {
-         this.tabs.forEach((tab) => { tab.setHeight(this.getHeight() - this.getTabListHeight()) } );
+        this.tabs.forEach((tab) => { 
+            let tabListHeight = this.getTabListHeight();
+            tab.setHeight(this.getHeight() - tabListHeight);
+            if(this.alignment == "top") {
+                tab.setMargin(tabListHeight);
+            }
+        } );         
     }
 
     add(tab: Tab) {
@@ -67,11 +73,13 @@ export class Tab  {
 
     private _itemStyle: string = "ig-tab-inner";    
     private _tabBar: TabBar;
+    // changes and updates accordingly applied to the tab. 
+    private _changesCount: number = 0;
 
     height : number;
     _element: ElementRef;
     isSelected: boolean = false;
-    // Indirectly defines the width of the tab
+    // Indirectly defines the width of the tab.
     columnCount: number = 0;
 
     @Input() label: string;
@@ -90,5 +98,9 @@ export class Tab  {
 
       setHeight(height: number){
         this.wrapper.nativeElement.style.height = height + "px";
+      }
+
+      setMargin(margin: number){
+        this.wrapper.nativeElement.style.marginTop = margin + "px";
       }
 }

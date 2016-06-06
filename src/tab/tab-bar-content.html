@@ -1,15 +1,11 @@
 
 <div class="{{_itemStyle}} tab-bar-{{alignment}}">
-	<ul #unorderedList *ngIf="alignment === 'top'">
-		<li *ngFor="let tab of tabs" [class.selected]="tab.isSelected" (click)="selectTab(tab)" ngClass="col-{{getColumns()}}">
-			<div ngClass="tab-icon {{tab.icon}}"></div>
-			<div ngClass="tab-label">{{tab.label}}</div>
-		</li>
-	</ul>
 	<ng-content></ng-content>
-	<ul #unorderedList *ngIf="alignment === 'bottom'">
+	<ul #unorderedList >
 		<li *ngFor="let tab of tabs" [class.selected]="tab.isSelected" (click)="selectTab(tab)" ngClass="col-{{getColumns()}}">
-			<div ngClass="tab-icon {{tab.icon}}"></div>
+			<div ngClass="tab-icon {{tab.icon}}">
+				<span [class.hidden]="tab._changesCount == 0" class="badge">{{tab._changesCount}}</span>
+			</div>
 			<div ngClass="tab-label">{{tab.label}}</div>
 		</li>
 	</ul>

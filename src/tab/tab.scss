@@ -10,8 +10,11 @@ ig-tab-bar {
     }
 
     .tab-bar-top.ig-tab-bar-inner{
-        border-top: 0;
-        top: 0;
+
+        ul{
+            top: 0;
+            border-top: 0;
+        }
 
         li.selected {
             border-bottom: 4px solid #0099ff;
@@ -23,9 +26,7 @@ ig-tab-bar {
 
          ul{
             border-bottom: 0;
-            bottom: 0;
-            position: absolute;
-            bottom: 0;
+            bottom: 0;            
 
             li.selected {
                 border-top: 4px solid #0099ff;
@@ -40,6 +41,7 @@ ig-tab-bar {
         margin: 0;
         padding: 0;
         width: 100%;
+        position: absolute;
 
         li{
             font-size: 14px;
@@ -84,6 +86,30 @@ ig-tab-bar {
                 width: 32px;                
                 margin-left: auto;
                 margin-right: auto;
+                position: relative;
+
+                .badge {
+                    height: 16px;
+                    display: inline-block;
+                    color: #fff;
+                    background-color: #dd524d;
+                    line-height: 16px;
+                    margin-left: -40%;
+                    font-size: 12px;                    
+                    position: absolute;
+                    top: 0;                    
+                    left: 0;
+                    border-radius: 50%;
+                    padding: 2px 5px 2px 5px;
+
+                    &::before, &::after {
+                        
+                    }
+
+                    &.hidden{
+                        display: none;
+                    }
+                }
             }
 
             .tab-label {
