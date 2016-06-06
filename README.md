@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/Infragistics/zero-blocks.svg?branch=master)](https://travis-ci.org/Infragistics/zero-blocks)
 [![Coverage Status](https://coveralls.io/repos/github/Infragistics/zero-blocks/badge.svg?branch=master)](https://coveralls.io/github/Infragistics/zero-blocks?branch=master)
 [![NPM version](https://img.shields.io/npm/v/zero-blocks.svg?style=flat)](https://www.npmjs.com/package/zero-blocks)
-[![Issue Stats](http://issuestats.com/github/Infragistics/zero-blocks/badge/pr)](http://issuestats.com/github/Infragistics/zero-blocks)
+[![Issue Stats](http://issuestats.com/github/Infragistics/zero-blocks/badge/pr?style=flat)](http://issuestats.com/github/Infragistics/zero-blocks)
 
 Components and supporting directives built with TypeScript and [Angular 2](https://angular.io/) 
 including samples and tests. Source files under the `src` folder.
