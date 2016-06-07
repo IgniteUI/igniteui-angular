@@ -14,45 +14,7 @@
         <!-- expand + mini templates -->
         <ig-drawer-content>
             <h1> Drawer Title <button ig-nav-close="test"> X </button></h1>
-            <div *ngFor="#navItem of navItems"><img src="http://www.infragistics.com/assets/images/favicon.ico" width='16' /> <a href="{{navItem.link}}"> {{navItem.text}} </a></div>
-
-            <ig-list> 
-              <ig-item [href]="'http://google.com/'">Google</ig-item> 
-              <ig-item [href]="'http://youtube.com/'">YouTube</ig-item> 
-              <ig-item [href]="'http://facebook.com/'">Facebook</ig-item> 
-            </ig-list>
-
-            <ig-list>
-                     <ig-item *ngFor="#navItem of navItems">
-                         {{navItem.text}}
-                     </ig-item>
-                </ig-list>
-
-                <ig-list> 
-                  <ig-header>Mildly Sweet</ig-header> 
-                  <ig-item>Red Delicious</ig-item> 
-                  <ig-item>Ambrosia</ig-item> 
-                  <ig-item>Rome</ig-item> 
-                 
-                  <ig-header>Sweet</ig-header> 
-                  <ig-item>Golden Delicious</ig-item> 
-                  <ig-item>Cosmic Crisp</ig-item> 
-                  <ig-item>Pinova</ig-item> 
-                 
-                  <ig-header>Super Sweet</ig-header> 
-                  <ig-item>Gala</ig-item> 
-                  <ig-item>Fuji</ig-item> 
-                  <ig-item>Kiku</ig-item> 
-                </ig-list> 
-
-                <ig-list> 
-                  <ig-item *ngFor="#navItem of navItems; #index = index"> 
-                    {{navItem.text}} 
-                    <button ig-button class="ig-icon-button ig-delete" aria-label="Delete" (click)="removeItem(index)">
-                      <i ig-icon>delete</i>
-                    </button>
-                  </ig-item> 
-                </ig-list>
+            <div *ngFor="let navItem of navItems"><img src="http://www.infragistics.com/assets/images/favicon.ico" width='16' /> <a href="{{navItem.link}}"> {{navItem.text}} </a></div>
         </ig-drawer-content>
     </ig-nav-drawer>
     
@@ -94,12 +56,6 @@
     </label>             
     <div id="log" *ngIf="showEventLog">
             <p> Events: </p>
-            <div *ngFor="#ev of log">{{ev}}</div>
+            <div *ngFor="let ev of log">{{ev}}</div>
     </div>
-
-    <ig-list> 
-          <ig-item *ngFor="#navItem of navItems; #index = index" [options]="options">
-            {{navItem.text}} 
-          </ig-item> 
-        </ig-list>
 </div>

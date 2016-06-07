@@ -38,7 +38,7 @@ gulpfile.js*
 
 samples/**/*.js
 samples/**/*.js.map
-!samples/**/config.js
+!samples/**/*.config.js
 
 src/**/*.js
 src/**/*.js.map
