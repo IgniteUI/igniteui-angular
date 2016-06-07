@@ -1,5 +1,5 @@
-import {Component, Input, Inject, SimpleChange, ElementRef, EventEmitter, Output, Renderer, OnInit, OnDestroy, OnChanges, Optional} from 'angular2/core';
-import {AnimationBuilder} from 'angular2/src/animate/animation_builder';
+import {Component, Input, Inject, SimpleChange, ElementRef, EventEmitter, Output, Renderer, OnInit, OnDestroy, OnChanges, Optional} from '@angular/core';
+// import {AnimationBuilder} from 'angular2/src/animate/animation_builder'; TODO
 import {HammerGesturesManager, BaseComponent} from '../core/core';
 import {NavigationService, ToggleView} from '../core/navigation';
 
@@ -123,7 +123,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     constructor(
         @Inject(ElementRef) private elementRef: ElementRef,
         @Optional() private state: NavigationService,
-        private animate: AnimationBuilder,
+        // private animate: AnimationBuilder, TODO
         protected renderer:Renderer,
         private touchManager: HammerGesturesManager) 
     {

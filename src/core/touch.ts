@@ -5,9 +5,7 @@
 //     supports(eventName: string): boolean;
 // }
 // This can allow
-
-import {NgZone} from 'angular2/src/core/zone/ng_zone';
-import {Injectable} from 'angular2/core';
+import {Injectable, NgZone} from '@angular/core';
 
 const EVENT_SUFFIX: string = "precise";
 
