@@ -18,17 +18,17 @@ module.exports = function(config){
             'node_modules/zone.js/dist/async-test.js',
             'node_modules/zone.js/dist/fake-async-test.js',
             
-            // Angular and RxJS
+            // RxJS bundle
             "node_modules/rxjs/bundles/Rx.js",
-            "node_modules/angular2/bundles/angular2.dev.js",
             
             // Hammer
             "node_modules/hammerjs/hammer.js",
             "node_modules/hammer-simulator/index.js",
             
+            {pattern: 'tests/systemjs.config.js', included: false, watched: false},
             'tests/karma-test-shim.js',
             
-            { pattern: 'node_modules/angular2/**/*.js', included: false, watched: false },
+            { pattern: 'node_modules/@angular/**/*.js', included: false, watched: false },
             { pattern: 'node_modules/rxjs/**/*.js', included: false, watched: false },
             { pattern: 'src/**/*', included: false, watched: false },
             { pattern: 'dist/zero-blocks.css'},
@@ -42,7 +42,7 @@ module.exports = function(config){
             
         // list of files to exclude
         exclude: [
-            'node_modules/angular2/**/*spec.js'
+            'node_modules/@angular/**/*spec.js'
         ],
 
         // swap with singleRun to keep the runner active to debug errors
