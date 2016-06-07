@@ -9,7 +9,7 @@ module.exports = function(config){
             'node_modules/systemjs/dist/system.src.js',
 
             // Polyfills
-            'node_modules/es6-shim/es6-shim.js',
+            'node_modules/core-js/client/shim.min.js',
 
             // Reflect and Zone.js
             'node_modules/reflect-metadata/Reflect.js',
