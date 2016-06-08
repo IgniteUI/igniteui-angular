@@ -81,6 +81,11 @@ ig-tab-bar {
                 width: 20%;
             }
 
+            &.disabled {
+                opacity: 0.5;
+                cursor: default;
+            }
+
             .tab-icon {
                 height: 32px;
                 width: 32px;                

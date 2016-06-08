@@ -2,7 +2,7 @@
 <div class="{{_itemStyle}} tab-bar-{{alignment}}">
 	<ng-content></ng-content>
 	<ul #unorderedList >
-		<li *ngFor="let tab of tabs" [class.selected]="tab.isSelected" (click)="selectTab(tab)" ngClass="col-{{getColumns()}}">
+		<li *ngFor="let tab of tabs" [class.selected]="tab.isSelected" [class.disabled]="tab.isDisabled" (click)="selectTab(tab)" ngClass="col-{{getColumns()}}">
 			<div ngClass="tab-icon {{tab.icon}}">
 				<span [class.hidden]="tab._changesCount == 0" class="badge">{{tab._changesCount}}</span>
 			</div>

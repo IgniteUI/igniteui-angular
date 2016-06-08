@@ -38,6 +38,10 @@ export class TabBar implements AfterViewInit  {
     }
 
     selectTab(tab: Tab) {
+        if(tab.isDisabled) {
+            return;
+        }
+
         this.tabs.forEach((tab) => { tab.isSelected = false; });
         tab.isSelected = true;
     }
@@ -79,12 +83,17 @@ export class Tab  {
     height : number;
     _element: ElementRef;
     isSelected: boolean = false;
+    get isDisabled(): boolean { 
+        return this.disabled !== undefined;
+    }
+
     // Indirectly defines the width of the tab.
     columnCount: number = 0;
 
     @Input() label: string;
-
     @Input() icon: string;
+    @Input() disabled: boolean;
+    
 
       constructor(tabBar: TabBar, element: ElementRef) {
         this._tabBar = tabBar;
@@ -92,7 +101,7 @@ export class Tab  {
         tabBar.add(this);        
       }
 
-      select() {    
+      select() {
         this._tabBar.selectTab(this);
       }
 
