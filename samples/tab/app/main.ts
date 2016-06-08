@@ -3,15 +3,16 @@ import * as Infragistics from '../../../src/main';
 
 @Component({
     selector: 'sample-app',
-    styleUrls: ["app/main.css"],
-    templateUrl: "app/main.html",
+    moduleId: module.id, // commonJS standard
+    templateUrl: "main.html",
     directives: [
         Infragistics.Button,
         Infragistics.Icon,
         Infragistics.Header,
         Infragistics.Item,
         Infragistics.List,
-        Infragistics.TabBar
+        Infragistics.TabBar,
+        Infragistics.Tab
     ]
 })
 

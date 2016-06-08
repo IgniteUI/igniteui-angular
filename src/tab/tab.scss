@@ -1,58 +1,134 @@
-ig-tab-bar {   
+ig-tab-bar {
 
-    .ig-tabbar-inner {
-        width: 100%;    
+        position: absolute;
+        width: 100%;
+        height: 100%;
+
+    .ig-tab-bar-inner {
+        width: 100%;        
+        overflow: auto;    
+    }
+
+    .tab-bar-top.ig-tab-bar-inner{
+
+        ul{
+            top: 0;
+            border-top: 0;
+        }
+
+        li.selected {
+            border-bottom: 4px solid #0099ff;
+            padding-bottom: 1px;           
+        }
+    }
+    .tab-bar-bottom.ig-tab-bar-inner {
+            height: 100%;
+
+         ul{
+            border-bottom: 0;
+            bottom: 0;            
+
+            li.selected {
+                border-top: 4px solid #0099ff;
+                padding-top: 1px;    
+            }
+        }
+    }
+
+    ul {
         border-top: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;    
-    }
+        border-bottom: 1px solid #ccc;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        position: absolute;
 
-    &.tabbar-top .ig-tabbar-inner{
-        border-top: 0;
-    }
-    &.tabbar-bottom .ig-tabbar-inner{
-        border-bottom: 0;
+        li{
+            font-size: 14px;
+            text-align: center;
+            line-height: 24px;
+            padding: 5px 10px;
+            list-style: none;
+            display: inline-block;
+            cursor: pointer;
+            white-space: nowrap;
+            position: relative;
+            text-transform: uppercase;
+            box-sizing: border-box;
+            text-overflow: ellipsis;
+
+            &.selected {
+                color: #0099ff;
+            }
+
+            &.col-2 {
+                width: 50%;
+            }
+
+            &.col-3 {
+                width: 33%;
+            }
+
+            &.col-3:last-of-type {
+                width: 34%;
+            }
+
+            &.col-4 {
+                width: 25%;
+            }
+
+            &.col-5 {
+                width: 20%;
+            }
+
+            .tab-icon {
+                height: 32px;
+                width: 32px;                
+                margin-left: auto;
+                margin-right: auto;
+                position: relative;
+
+                .badge {
+                    height: 16px;
+                    display: inline-block;
+                    color: #fff;
+                    background-color: #dd524d;
+                    line-height: 16px;
+                    margin-left: -40%;
+                    font-size: 12px;                    
+                    position: absolute;
+                    top: 0;                    
+                    left: 0;
+                    border-radius: 50%;
+                    padding: 2px 5px 2px 5px;
+
+                    &::before, &::after {
+                        
+                    }
+
+                    &.hidden{
+                        display: none;
+                    }
+                }
+            }
+
+            .tab-label {
+                font-size: 12px;
+                line-height: 12px;
+                padding-top: 5px;
+            }
+        }
     }
 }
 
 ig-tab {
-    display: inline-block;    
-    text-align: center;
-
-    &.col-2 {
-        width: 50%;
-    }
-
-    &.col-3 {
-        width: 33%;
-    }
-
-    &.col-3:last-of-type {
-        width: 34%;
-    }
-
-    &.col-4 {
-        width: 25%;
-    }
-
-    &.col-5 {
-        width: 20%;
-    }
 
     .ig-tab-inner {
-        font-size: 14px;
-        text-align: center;
-        line-height: 24px;
-        padding: 12px 24px;
-        cursor: pointer;
-        white-space: nowrap;
-        position: relative;
-        text-transform: uppercase;
-        font-weight: 500;
-        box-sizing: border-box;
-        text-overflow: ellipsis;        
-    }
+        display: none;
+        overflow: auto;
 
-    &.selected .ig-tab-inner {
-            border-bottom: 4px solid #0099ff;
+        &.selected {
+            display: block;
         }
+    }    
 }
