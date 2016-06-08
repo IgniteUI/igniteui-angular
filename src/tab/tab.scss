@@ -56,6 +56,7 @@ ig-tab-bar {
             text-transform: uppercase;
             box-sizing: border-box;
             text-overflow: ellipsis;
+            float: left;
 
             &.selected {
                 color: #0099ff;
@@ -92,6 +93,13 @@ ig-tab-bar {
                 margin-left: auto;
                 margin-right: auto;
                 position: relative;
+
+                &.icon-more {
+                    font-size: 30px;
+                    line-height: 15px;
+                    color: #0099ff;
+                    background: none;
+                }
 
                 .badge {
                     height: 16px;

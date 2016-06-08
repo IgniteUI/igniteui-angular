@@ -11,9 +11,13 @@ declare var module: any;
 export class TabBar implements AfterViewInit  {
     @ViewChild('unorderedList') _tabList: ElementRef;
 
+    private _maxNumberTabsDisplayed: number = 5;
     private _itemStyle: string = "ig-tab-bar-inner";
+    private _element: ElementRef;
+    private get _visibleTabs(): Tab[] {
+        return this.tabs.length > this._maxNumberTabsDisplayed ? this.tabs.filter(t => t.index < this._maxNumberTabsDisplayed - 1) : this.tabs;
+    }
 
-    _element: ElementRef;
     tabs: Tab[] = [];
 
     @Input() alignment: string = "top";
@@ -46,8 +50,12 @@ export class TabBar implements AfterViewInit  {
         tab.isSelected = true;
     }
 
+    selectTabMore() {
+        alert("Tab More is clicked");
+    }
+
     getColumns() {
-        return this.tabs.length > 5 ? 5 : this.tabs.length ;
+        return this.tabs.length > this._maxNumberTabsDisplayed ? this._maxNumberTabsDisplayed : this.tabs.length ;
     }
 
     getHeight() {
@@ -79,9 +87,10 @@ export class Tab  {
     private _tabBar: TabBar;
     // changes and updates accordingly applied to the tab. 
     private _changesCount: number = 0;
+    private _element: ElementRef;
 
-    height : number;
-    _element: ElementRef;
+    index: number;
+    height: number;    
     isSelected: boolean = false;
     get isDisabled(): boolean { 
         return this.disabled !== undefined;
@@ -98,7 +107,8 @@ export class Tab  {
       constructor(tabBar: TabBar, element: ElementRef) {
         this._tabBar = tabBar;
         this._element = element;
-        tabBar.add(this);        
+        tabBar.add(this);
+        this.index = tabBar.tabs.length - 1;      
       }
 
       select() {
