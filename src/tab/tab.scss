@@ -1,3 +1,6 @@
+$ig-light-blue: #0099ff;
+$badge-background-color: #dd524d;
+
 ig-tab-bar {
 
         position: absolute;
@@ -17,7 +20,7 @@ ig-tab-bar {
         }
 
         li.selected {
-            border-bottom: 4px solid #0099ff;
+            border-bottom: 4px solid $ig-light-blue;
             padding-bottom: 1px;           
         }
     }
@@ -29,7 +32,7 @@ ig-tab-bar {
             bottom: 0;            
 
             li.selected {
-                border-top: 4px solid #0099ff;
+                border-top: 4px solid $ig-light-blue;
                 padding-top: 1px;    
             }
         }
@@ -42,9 +45,9 @@ ig-tab-bar {
         padding: 0;
         width: 100%;
         position: absolute;
+        color: #555;
 
         li{
-            font-size: 14px;
             text-align: center;
             line-height: 24px;
             padding: 5px 10px;
@@ -59,7 +62,7 @@ ig-tab-bar {
             float: left;
 
             &.selected {
-                color: #0099ff;
+                color: $ig-light-blue;
             }
 
             &.col-2 {
@@ -97,7 +100,7 @@ ig-tab-bar {
                 &.icon-more {
                     font-size: 30px;
                     line-height: 15px;
-                    color: #0099ff;
+                    color: $ig-light-blue;
                     background: none;
                 }
 
@@ -105,7 +108,7 @@ ig-tab-bar {
                     height: 16px;
                     display: inline-block;
                     color: #fff;
-                    background-color: #dd524d;
+                    background-color: $badge-background-color;
                     line-height: 16px;
                     margin-left: -40%;
                     font-size: 12px;                    
@@ -114,10 +117,6 @@ ig-tab-bar {
                     left: 0;
                     border-radius: 50%;
                     padding: 2px 5px 2px 5px;
-
-                    &::before, &::after {
-                        
-                    }
 
                     &.hidden{
                         display: none;
@@ -129,6 +128,8 @@ ig-tab-bar {
                 font-size: 12px;
                 line-height: 12px;
                 padding-top: 5px;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
         }
     }

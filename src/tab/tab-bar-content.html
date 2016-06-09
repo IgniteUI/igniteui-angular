@@ -2,13 +2,13 @@
 <div class="{{_itemStyle}} tab-bar-{{alignment}}">
 	<ng-content></ng-content>
 	<ul #unorderedList >
-		<li *ngFor="let tab of _visibleTabs" [class.selected]="tab.isSelected" [class.disabled]="tab.isDisabled" (click)="selectTab(tab)" ngClass="col-{{getColumns()}}">
+		<li *ngFor="let tab of _visibleTabs" [class.selected]="tab.isSelected" [class.disabled]="tab.isDisabled" (click)="select(_visibleTabs.indexOf(tab))" ngClass="col-{{_getColumns()}}">
 			<div ngClass="tab-icon {{tab.icon}}">
 				<span [class.hidden]="tab._changesCount == 0" class="badge">{{tab._changesCount}}</span>
 			</div>
 			<div ngClass="tab-label">{{tab.label}}</div>
 		</li>
-		<li *ngIf="tabs.length > 5" (click)="selectTabMore()" ngClass="col-{{getColumns()}}">
+		<li *ngIf="tabs.length > 5" (click)="_selectTabMore()" ngClass="col-{{_getColumns()}}">
 			<div ngClass="tab-icon icon-more">...
 				<!-- <span [class.hidden]="tab._changesCount == 0" class="badge">{{tab._changesCount}}</span> -->
 			</div>
