@@ -75,7 +75,7 @@ gulp.task("bundle.src", ["build.src"], function () {
             '*': '*.js'
         },
         meta: {
-            'angular2/*': {
+            '@angular/*': {
                 build: false
             }
         }

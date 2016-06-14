@@ -1,6 +1,8 @@
 // modeled after https://github.com/angular/angular/blob/cee2318110eeea115e5f6fc5bfc814cbaa7d90d8/modules/angular2/test/common/directives/ng_for_spec.ts
-import { it, iit, describe, expect, inject, async, beforeEachProviders, fakeAsync, tick, TestComponentBuilder, ComponentFixture} from 'angular2/testing';
-import {Component, ViewChild} from 'angular2/core';
+import { it, iit, describe, expect, inject, async, beforeEachProviders, fakeAsync, tick } from '@angular/core/testing';
+import { TestComponentBuilder, ComponentFixture } from '@angular/compiler/testing';
+
+import {Component, ViewChild} from '@angular/core';
 import * as Infragistics from '../../src/main';
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
@@ -13,7 +15,7 @@ export function main() {
            var template = '<ig-nav-drawer></ig-nav-drawer>';
            return tcb.overrideTemplate(TestComponent, template)
                .createAsync(TestComponent)
-               .then((fixture: ComponentFixture) => {
+               .then((fixture ) => {
                  expect(fixture.debugElement.children[0].componentInstance).toBeAnInstanceOf(Infragistics.NavigationDrawer);
                  expect(fixture.debugElement.children[0].componentInstance.state).toBeNull();
                });
@@ -24,7 +26,7 @@ export function main() {
               var template = '<ig-nav-drawer></ig-nav-drawer>';
                 return tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
-                .then((fixture: ComponentFixture) => {
+                .then((fixture) => {
                     //http://stackoverflow.com/a/36444489
                     expect(fixture.componentInstance.viewChild).toBeUndefined();
                     fixture.detectChanges();
@@ -43,7 +45,7 @@ export function main() {
               var template = '<ig-nav-drawer></ig-nav-drawer>';
                 return tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
-                .then((fixture: ComponentFixture) => {
+                .then((fixture) => {
                     fixture.detectChanges();
                     
                     expect(fixture.componentInstance.viewChild.drawer).toHaveCssClass("ig-nav-drawer");
@@ -62,7 +64,7 @@ export function main() {
               var template = '<ig-nav-drawer id="testNav" ></ig-nav-drawer>';
                 return tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
-                .then((fixture: ComponentFixture) => {
+                .then((fixture) => {
                     fixture.detectChanges();
                     var state:Infragistics.NavigationService = fixture.componentInstance.viewChild.state,
                         touchManager = fixture.componentInstance.viewChild.touchManager;
@@ -85,7 +87,7 @@ export function main() {
               var template = '<ig-nav-drawer></ig-nav-drawer>';
                 return tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
-                .then((fixture: ComponentFixture) => {
+                .then((fixture) => {
                     fixture.detectChanges();
                     let drawer: Infragistics.NavigationDrawer = fixture.componentInstance.viewChild;
                     expect(drawer.isOpen).toBeFalsy();
@@ -114,7 +116,7 @@ export function main() {
         it('async API calls should resolve Promise and emit events',
            async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<ig-nav-drawer></ig-nav-drawer>',
-                   fixture: ComponentFixture,
+                   fixture: ComponentFixture<any>,
                    resolver, drawer,
                    result = new Promise<any>( resolve => {
                         resolver = (value?: any) => {
@@ -167,7 +169,7 @@ export function main() {
                 var template = '<ig-nav-drawer><ig-drawer-content></ig-drawer-content><ig-drawer-mini-content></ig-drawer-mini-content></ig-nav-drawer>';
                 return tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
-                .then((fixture: ComponentFixture) => {
+                .then((fixture) => {
                     fixture.detectChanges();
                     
                     expect(fixture.componentInstance.viewChild.animateWidth).toBeTruthy();
@@ -183,7 +185,7 @@ export function main() {
                 var template = '<ig-nav-drawer [pin]="pin" [enableGestures]="enableGestures"></ig-nav-drawer>';
                 return tcb.overrideTemplate(TestComponentPin, template)
                 .createAsync(TestComponentPin)
-                .then((fixture: ComponentFixture) => {
+                .then((fixture) => {
                     fixture.detectChanges();
                     
                     expect(fixture.componentInstance.viewChild.pin).toBe(true);
@@ -211,7 +213,7 @@ export function main() {
                 } );
                 tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
-                .then((fixture: ComponentFixture) => {
+                .then((fixture) => {
                     fixture.detectChanges();
                     expect(fixture.componentInstance.viewChild.isOpen).toEqual(false);
                     //https://github.com/hammerjs/hammer.js/issues/779
@@ -252,7 +254,7 @@ export function main() {
                 } );
                 tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
-                .then((fixture: ComponentFixture) => {
+                .then((fixture) => {
                     fixture.detectChanges();
                     let navDrawer = fixture.componentInstance.viewChild;
                     expect(navDrawer.isOpen).toEqual(false);
@@ -304,7 +306,7 @@ export function main() {
               var template = '<ig-nav-drawer [miniWidth]="drawerMiniWidth" ><ig-drawer-content></ig-drawer-content><ig-drawer-mini-content></ig-drawer-mini-content></ig-nav-drawer>';
                 return tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
-                .then((fixture: ComponentFixture) => {
+                .then((fixture) => {
                     fixture.detectChanges();
                     let drawer: Infragistics.NavigationDrawer = fixture.componentInstance.viewChild;
                     
@@ -336,7 +338,7 @@ export function main() {
                 tcb.overrideTemplate(TestComponentDI, template)
                 //.overrideDirective(TestComponentDI, Infragistics.NavigationDrawer, TestDrawer)
                 .createAsync(TestComponentDI)
-                .then((fixture: ComponentFixture) => {
+                .then((fixture) => {
                     fixture.detectChanges();
                     expect(fixture.componentInstance.viewChild.getExpectedWidth()).toBe(300);
                     expect(fixture.componentInstance.viewChild.getExpectedWidth(true)).toBe(60);

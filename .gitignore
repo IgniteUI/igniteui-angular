@@ -38,7 +38,7 @@ gulpfile.js*
 
 samples/**/*.js
 samples/**/*.js.map
-!samples/**/config.js
+!samples/**/*.config.js
 
 src/**/*.js
 src/**/*.js.map
@@ -56,3 +56,4 @@ dist/**/*.d.ts
 !dist/bundles/*
 dist/bundles/zero-blocks.dev.js
 !dist/package.json
+dist/README.md
