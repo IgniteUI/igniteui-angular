@@ -1,6 +1,6 @@
 import { Component, Input, ElementRef, OnInit, OnDestroy,
- AfterContentInit } from 'angular2/core';
-import { BrowserDomAdapter } from 'angular2/platform/browser';
+ AfterContentInit } from '@angular/core';
+import { getDOM } from '@angular/platform-browser/src/dom/dom_adapter';
 import { HammerGesturesManager } from '../core/core';
 
 declare var module: any;
@@ -26,12 +26,13 @@ export class List {
     host: {
         'role': 'listitem'
     },
-    providers: [BrowserDomAdapter, HammerGesturesManager],
+    providers: [HammerGesturesManager],
     moduleId: module.id, // commonJS standard
     templateUrl: 'list-content.html'
 })
 
 export class Item implements AfterContentInit, OnInit, OnDestroy {
+    private _dom;
     private _href: string = null;
     private _content: HTMLElement = null;
     private _offset: number = 0;
@@ -51,8 +52,7 @@ export class Item implements AfterContentInit, OnInit, OnDestroy {
         return this._href;
     }
 
-    constructor(private _el: ElementRef, private _dom: BrowserDomAdapter,
-        private _touchManager: HammerGesturesManager) {
+    constructor(private _el: ElementRef, private _touchManager: HammerGesturesManager) {
     }
 
     ngAfterContentInit(): any {
@@ -147,6 +147,7 @@ export class Item implements AfterContentInit, OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this._dom = getDOM();
         this._addEventListeners();
     }
 
@@ -162,7 +163,6 @@ export class Item implements AfterContentInit, OnInit, OnDestroy {
     host: {
         'role': 'listitemheader'
     },
-    providers: [BrowserDomAdapter],
     moduleId: module.id, // commonJS standard
     templateUrl: 'list-content.html'
 })

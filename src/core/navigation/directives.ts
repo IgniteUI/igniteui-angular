@@ -1,4 +1,4 @@
-import {Directive, HostListener, Input} from 'angular2/core';
+import {Directive, HostListener, Input} from '@angular/core';
 import {NavigationService} from './nav-service';
 
 // TODO: (style) NavToggleDirective, igNavToggle selector ?

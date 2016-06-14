@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, ViewChild, AfterViewInit  } from 'angular2/core';
+import { Component, Input, ElementRef, ViewChild, AfterViewInit  } from '@angular/core';
 
 declare var module: any;
 

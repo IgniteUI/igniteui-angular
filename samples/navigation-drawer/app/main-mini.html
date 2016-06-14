@@ -14,12 +14,12 @@
         <!-- expand + mini templates -->
         <ig-drawer-content>
             <h1> Drawer Title <button ig-nav-close="test"> X </button></h1>
-            <div *ngFor="#navItem of navItems"><img src="http://www.infragistics.com/assets/images/favicon.ico" width='16' /> <a href="{{navItem.link}}"> {{navItem.text}} </a></div>
+            <div *ngFor="let navItem of navItems"><img src="http://www.infragistics.com/assets/images/favicon.ico" width='16' /> <a href="{{navItem.link}}"> {{navItem.text}} </a></div>
         </ig-drawer-content>
         <!--  <ig-drawer-mini-content *ngIf="miniTemplate"> https://github.com/angular/angular/issues/6303 -->
         <ig-drawer-mini-content>
             <span class="hamburger" ig-nav-toggle="test" > &#9776; </span>
-            <div *ngFor="#navItem of navItems"><img src="http://www.infragistics.com/assets/images/favicon.ico" width='16' /></div>
+            <div *ngFor="let navItem of navItems"><img src="http://www.infragistics.com/assets/images/favicon.ico" width='16' /></div>
         </ig-drawer-mini-content>
     </ig-nav-drawer>
         
@@ -61,6 +61,6 @@
     </label>             
     <div id="log" *ngIf="showEventLog">
             <p> Events: </p>
-            <div *ngFor="#ev of log">{{ev}}</div>
+            <div *ngFor="let ev of log">{{ev}}</div>
     </div>
 </div>

@@ -1,4 +1,4 @@
-import {Component, ViewChild} from 'angular2/core';
+import {Component, ViewChild} from '@angular/core';
 import * as Infragistics from '../../../src/main';
 
 @Component({

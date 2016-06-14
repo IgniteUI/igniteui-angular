@@ -1,5 +1,5 @@
-import {Renderer, Input} from 'angular2/core';
-import { DOM } from 'angular2/platform/common_dom'; //this apprarently only works propery in Dart https://github.com/angular/angular/issues/6904
+import {Renderer, Input} from '@angular/core';
+import { getDOM } from '@angular/platform-browser/src/dom/dom_adapter'; //this apprarently only works propery in Dart https://github.com/angular/angular/issues/6904
 // TODO: Consider measuring util with Ruler https://github.com/angular/angular/issues/6515
 
 /**
