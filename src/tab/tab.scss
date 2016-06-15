@@ -2,14 +2,15 @@ $ig-light-blue: #0099ff;
 $badge-background-color: #dd524d;
 
 ig-tab-bar {
-
-        position: absolute;
+        
         width: 100%;
         height: 100%;
+        display: block;
 
     .ig-tab-bar-inner {
-        width: 100%;        
-        overflow: auto;    
+        width: 100%;
+        height: 100%;
+        position: absolute;
     }
 
     .tab-bar-top.ig-tab-bar-inner{

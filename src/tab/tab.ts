@@ -41,10 +41,12 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
     }
 
     ngAfterViewInit() {
+        var self = this;
+
         this.tabs.forEach((tab) => { 
-            let tabListHeight = this._getTabListHeight();
-            tab.setHeight(this._getHeight() - tabListHeight);
-            if(this.alignment == "top") {
+            let tabListHeight = self._getTabListHeight();
+            tab.setHeight(self._getHeight() - tabListHeight);
+            if(self.alignment == "top") {
                 tab.setMargin(tabListHeight);
             }
         });             
