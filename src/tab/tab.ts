@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, ViewChild, AfterViewInit  } from '@angular/core';
+import { Component, Input, ElementRef, ViewChild, AfterViewInit, AfterContentInit } from '@angular/core';
 
 declare var module: any;
 
@@ -8,7 +8,7 @@ declare var module: any;
   templateUrl: 'tab-bar-content.html'
 })
 
-export class TabBar implements AfterViewInit  {
+export class TabBar implements AfterViewInit, AfterContentInit  {
     @ViewChild('unorderedList') _tabList: ElementRef;
 
     private _maxNumberTabsDisplayed: number = 5;
@@ -20,12 +20,24 @@ export class TabBar implements AfterViewInit  {
 
     tabs: Tab[] = [];
     selectedTab: Tab;
-    selectedIndex: number;
+    selectedIndex: number = 0;
 
     @Input() alignment: string = "top";
 
     constructor(element: ElementRef) {
-        this._element = element;
+        this._element = element;        
+    }
+
+    ngAfterContentInit() {
+        // initial selection
+        if(!this.selectedTab) {
+            var selectableTabs = this.tabs.filter((tab) => !tab.isDisabled),
+            tab = selectableTabs[0];
+
+            if(tab) {
+                this.select(tab.index);
+            }            
+        }    
     }
 
     ngAfterViewInit() {
@@ -35,7 +47,7 @@ export class TabBar implements AfterViewInit  {
             if(this.alignment == "top") {
                 tab.setMargin(tabListHeight);
             }
-        });         
+        });             
     }
 
     add(tab: Tab) {
@@ -73,7 +85,7 @@ export class TabBar implements AfterViewInit  {
             return;
         }
 
-        this.tabs.forEach((tab) => { tab.isSelected = false; });
+        this.tabs.forEach((tab) => { tab.deselect(); });
         tab.isSelected = true;
 
         this.selectedIndex = index;
@@ -114,7 +126,7 @@ export class TabBar implements AfterViewInit  {
    }
 })
 
-export class Tab  {
+export class Tab {
     @ViewChild('wrapper') wrapper: ElementRef;
 
     private _itemStyle: string = "ig-tab-inner";    
@@ -149,6 +161,10 @@ export class Tab  {
         this._tabBar.select(this.index);
       }
 
+      deselect() {
+        this.isSelected = false;
+      }
+
       setHeight(height: number){
         this.wrapper.nativeElement.style.height = height + "px";
       }
@@ -156,8 +172,4 @@ export class Tab  {
       setMargin(margin: number){
         this.wrapper.nativeElement.style.marginTop = margin + "px";
       }
-
-      return {
-        select: this.select
-      };
 }
