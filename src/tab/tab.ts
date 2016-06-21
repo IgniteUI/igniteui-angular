@@ -155,8 +155,16 @@ export class Tab {
       constructor(tabBar: TabBar, element: ElementRef) {
         this._tabBar = tabBar;
         this._element = element;
-        tabBar.add(this);
-        this.index = tabBar.tabs.length - 1;      
+        this._tabBar.add(this);
+        this.index = this._tabBar.tabs.length - 1;
+      }
+
+      click() {
+        if(this.href) {
+
+            } else {
+                this.select();
+            }        
       }
 
       select() {

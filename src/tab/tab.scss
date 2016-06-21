@@ -147,3 +147,7 @@ ig-tab {
         }
     }    
 }
+
+ div[ig-tab-view] {
+    display:none;
+}
