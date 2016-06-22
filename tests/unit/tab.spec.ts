@@ -10,46 +10,12 @@ declare var Simulator: any;
 
 export function main() {
     describe('Infragistics Angular2 Tab Bar', function() {
-         /*it('should initialize without DI service',
-         async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
-           var template = '<ig-tab-bar></ig-tab-bar>';
-           return tcb.overrideTemplate(TestComponent, template)
-               .createAsync(TestComponent)
-               .then((fixture ) => {
-                 expect(fixture.debugElement.children[0].componentInstance).toBeAnInstanceOf(Infragistics.TabBar);
-                 expect(fixture.debugElement.children[0].componentInstance.state).toBeNull();
-               });
-         })));*/
-
-
-         /*it('should initialize with DI service',
-           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
-              var template = '<ig-nav-drawer></ig-nav-drawer>';
-                return tcb.overrideTemplate(TestComponentDI, template)
-                .createAsync(TestComponentDI)
-                .then((fixture) => {
-                    //http://stackoverflow.com/a/36444489
-                    expect(fixture.componentInstance.viewChild).toBeUndefined();
-                    fixture.detectChanges();
-                    
-                    expect(fixture.componentInstance.viewChild).toBeDefined();
-                    expect(fixture.componentInstance.viewChild).toBeAnInstanceOf(Infragistics.NavigationDrawer);
-                    expect(fixture.componentInstance.viewChild.state).toBeAnInstanceOf(Infragistics.NavigationService);
-                }).catch (reason => {
-                    console.log(reason);
-                    return Promise.reject(reason);
-                });
-         })));*/
-
-         it('should initialize with DI service',
+         it('should initialize without DI service',
            async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<ig-tab-bar></ig-tab-bar>';
                 return tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
-                .then((fixture) => {
-                    expect(fixture.componentInstance.viewChild).toBeUndefined();
-                    fixture.detectChanges();
-                    
+                .then((fixture) => {                  
                     expect(fixture.componentInstance.viewChild).toBeDefined();
                     expect(fixture.componentInstance.viewChild).toBeAnInstanceOf(Infragistics.TabBar);
                     //expect(fixture.componentInstance.viewChild.state).toBeAnInstanceOf(Infragistics.NavigationService);
@@ -86,19 +52,3 @@ class TestComponentPin extends TestComponentDI {
      //pin: boolean = true;
      //enableGestures: string = "";
 }
-
-// import {ElementRef, Optional, Inject, Renderer} from 'angular2/core';
-// import { HammerGesturesManager } from '../../src/core/touch';
-// class TestDrawer extends Infragistics.NavigationDrawer {
-//     constructor(
-//         @Inject(ElementRef) elementRef: ElementRef,
-//         @Optional() state: Infragistics.NavigationService,
-//         protected renderer:Renderer,
-//         touchManager: HammerGesturesManager) 
-//     {
-//         super(elementRef, state, null, renderer, touchManager);
-//     }
-//     public getExpectedWidth (mini?: boolean) : number {
-//         return super.getExpectedWidth(mini);
-//     };
-// }

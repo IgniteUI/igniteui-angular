@@ -28,8 +28,8 @@ export function main() {
                 .createAsync(TestComponentDI)
                 .then((fixture) => {
                     //http://stackoverflow.com/a/36444489
-                    expect(fixture.componentInstance.viewChild).toBeUndefined();
-                    fixture.detectChanges();
+                    //expect(fixture.componentInstance.viewChild).toBeUndefined();
+                    //fixture.detectChanges();
                     
                     expect(fixture.componentInstance.viewChild).toBeDefined();
                     expect(fixture.componentInstance.viewChild).toBeAnInstanceOf(Infragistics.NavigationDrawer);

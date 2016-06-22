@@ -161,7 +161,7 @@ export class Tab {
 
       click() {
         if(this.href) {
-
+                // TODO - href implementation. Priority over nested content
             } else {
                 this.select();
             }        
