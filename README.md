@@ -42,5 +42,11 @@ npm run watch
 This will compile all TypeScript files per the `tsconfig.json` setup and optionally continue watching for 
 file changes and recompile accordingly. 
 
+## NPM Package
+
+You can include Zero Blocks in your project as a depencency using the NPM package.
+
+`npm install zero-blocks --save-dev`
+
 ## Contributing
 [Coding Guidelines](../../wiki/Coding-guidelines-for-Zero-Blocks)
