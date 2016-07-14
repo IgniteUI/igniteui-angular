@@ -1,5 +1,6 @@
 // modeled after https://github.com/angular/angular/blob/cee2318110eeea115e5f6fc5bfc814cbaa7d90d8/modules/angular2/test/common/directives/ng_for_spec.ts
-import { it, iit, describe, expect, inject, async, beforeEachProviders, fakeAsync, tick } from '@angular/core/testing';
+import { expect } from "@angular/platform-browser/testing";
+import { it, iit, describe, inject, async, beforeEachProviders, fakeAsync, tick } from '@angular/core/testing';
 import { TestComponentBuilder, ComponentFixture } from '@angular/compiler/testing';
 
 import {Component, ViewChild} from '@angular/core';
@@ -16,8 +17,9 @@ export function main() {
            return tcb.overrideTemplate(TestComponent, template)
                .createAsync(TestComponent)
                .then((fixture ) => {
-                 //expect(fixture.debugElement.children[0].componentInstance).toBeAnInstanceOf(Infragistics.NavigationDrawer);
-                 //expect(fixture.debugElement.children[0].componentInstance.state).toBeNull();
+                //debugger;
+                 expect(fixture.debugElement.children[0].componentInstance).toBeAnInstanceOf(Infragistics.NavigationDrawer);
+                 expect(fixture.debugElement.children[0].componentInstance.state).toBeNull();
                });
          })));
          
@@ -29,9 +31,9 @@ export function main() {
                 .then((fixture) => {
                     //http://stackoverflow.com/a/36444489
                     //expect(fixture.componentInstance.viewChild).toBeUndefined();
-                    //fixture.detectChanges();
+                    fixture.detectChanges();
                     
-                    //expect(fixture.componentInstance.viewChild).toBeDefined();
+                    expect(fixture.componentInstance.viewChild).toBeDefined();
                     //expect(fixture.componentInstance.viewChild).toBeAnInstanceOf(Infragistics.NavigationDrawer);
                     //expect(fixture.componentInstance.viewChild.state).toBeAnInstanceOf(Infragistics.NavigationService);
                 }).catch (reason => {
@@ -51,7 +53,7 @@ export function main() {
                     //expect(fixture.componentInstance.viewChild.drawer).toHaveCssClass("ig-nav-drawer");
                     //expect(fixture.componentInstance.viewChild.overlay).toHaveCssClass("ig-nav-drawer-overlay");
                     //expect(fixture.componentInstance.viewChild.styleDummy).toHaveCssClass("style-dummy");
-                    //expect(fixture.componentInstance.viewChild.animateWidth).toBeFalsy();
+                    expect(fixture.componentInstance.viewChild.animateWidth).toBeFalsy();
                     
                 }).catch (reason => {
                     console.log(reason);
@@ -69,12 +71,12 @@ export function main() {
                     var state:Infragistics.NavigationService = fixture.componentInstance.viewChild.state,
                         touchManager = fixture.componentInstance.viewChild.touchManager;
 
-                    //expect(state.get("testNav")).toBeDefined();
+                    expect(state.get("testNav")).toBeDefined();
                     //expect(touchManager.getManagerForElement(document)).toBeAnInstanceOf(Hammer.Manager);
                     
                     fixture.destroy();
-                    //expect(state.get("testNav")).toBeUndefined();
-                    //expect(touchManager.getManagerForElement(document)).toBe(null);
+                    expect(state.get("testNav")).toBeUndefined();
+                    expect(touchManager.getManagerForElement(document)).toBe(null);
                     
                 }).catch (reason => {
                     console.log(reason);
@@ -172,7 +174,7 @@ export function main() {
                 .then((fixture) => {
                     fixture.detectChanges();
                     
-                    //expect(fixture.componentInstance.viewChild.animateWidth).toBeTruthy();
+                    expect(fixture.componentInstance.viewChild.animateWidth).toBeTruthy();
                     //expect(fixture.debugElement.query((x) => { return x.nativeNode.nodeName === "ASIDE";}).nativeElement).toHaveCssClass("mini");
                 }).catch (reason => {
                     console.log(reason);
@@ -188,14 +190,14 @@ export function main() {
                 .then((fixture) => {
                     fixture.detectChanges();
                     
-                    //expect(fixture.componentInstance.viewChild.pin).toBe(true);
+                    expect(fixture.componentInstance.viewChild.pin).toBe(true);
                     //expect(fixture.debugElement.query((x) => { return x.nativeNode.nodeName === "ASIDE";}).nativeElement).toHaveCssClass("pinned");
                     
-                    //expect(fixture.componentInstance.viewChild.enableGestures).toBe(false);
+                    expect(fixture.componentInstance.viewChild.enableGestures).toBe(false);
                     
                     fixture.componentInstance.enableGestures = "true";
                     fixture.detectChanges();
-                    //expect(fixture.componentInstance.viewChild.enableGestures).toBe(true);
+                    expect(fixture.componentInstance.viewChild.enableGestures).toBe(true);
                     
                 }).catch (reason => {
                     console.log(reason);
@@ -218,10 +220,10 @@ export function main() {
                     expect(fixture.componentInstance.viewChild.isOpen).toEqual(false);
                     //https://github.com/hammerjs/hammer.js/issues/779
                     
-                    // Simulator.gestures.swipe(fixture.debugElement.children[0].nativeElement, { duration: 300, deltaX: 400, deltaY: 0 }, function() {                        
-                    //     expect(fixture.componentInstance.viewChild.isOpen).toEqual(true);
-                    //     resolver();
-                    // });
+                    /*Simulator.gestures.swipe(fixture.debugElement.children[0].nativeElement, { duration: 300, deltaX: 400, deltaY: 0 }, function() {                        
+                         expect(fixture.componentInstance.viewChild.isOpen).toEqual(true);
+                         resolver();
+                    });*/
                     
                     // can't get simulator to toggle the handlers
                     
@@ -257,7 +259,7 @@ export function main() {
                 .then((fixture) => {
                     fixture.detectChanges();
                     let navDrawer = fixture.componentInstance.viewChild;
-                    /*expect(navDrawer.isOpen).toEqual(false);
+                    expect(navDrawer.isOpen).toEqual(false);
                     
                     // not from edge
                     navDrawer.panstart({ pointerType: "touch", deltaX: 20, center: { x: 80, y: 10 }, distance: 10 });
@@ -266,12 +268,12 @@ export function main() {
                     
                     // not enough distance
                     navDrawer.panstart({ pointerType: "touch", deltaX: 20, center: { x: 10, y: 10 }, distance: 10 });
-                    expect(navDrawer.drawer).toHaveCssClass("panning");
+                    //expect(navDrawer.drawer).toHaveCssClass("panning");
                     navDrawer.pan({ pointerType: "touch", deltaX: 20, center: { x: 10, y: 10 }, distance: 10 });
                     
                     // must wait for raf to test for pan position
                     window.requestAnimationFrame(() => {
-                        expect(navDrawer.drawer).toHaveCssStyle({transform: "translate3d(-280px, 0px, 0px)"});
+                        //expect(navDrawer.drawer).toHaveCssStyle({transform: "translate3d(-280px, 0px, 0px)"});
                         navDrawer.panEnd({ pointerType: "touch", deltaX: 20, center: { x: 10, y: 10 }, distance: 10 });
                         expect(navDrawer.isOpen).toEqual(false, "should ignore too short pan");
                         
@@ -291,8 +293,7 @@ export function main() {
                         expect(navDrawer.isOpen).toEqual(false);
                         
                         resolver();
-                    });
-                   */
+                    });                   
                     
                 }).catch (reason => {
                     console.log(reason);
@@ -340,22 +341,22 @@ export function main() {
                 .createAsync(TestComponentDI)
                 .then((fixture) => {
                     fixture.detectChanges();
-                    //expect(fixture.componentInstance.viewChild.getExpectedWidth()).toBe(300);
-                    ///expect(fixture.componentInstance.viewChild.getExpectedWidth(true)).toBe(60);
+                    expect(fixture.componentInstance.viewChild.getExpectedWidth()).toBe(300);
+                    expect(fixture.componentInstance.viewChild.getExpectedWidth(true)).toBe(60);
                     
                     fixture.componentInstance.drawerMiniWidth = "80px";
                     fixture.componentInstance.drawerWidth = "250px";
                     fixture.detectChanges();
-                    //expect(fixture.componentInstance.viewChild.getExpectedWidth()).toBe(250);
-                    //expect(fixture.componentInstance.viewChild.getExpectedWidth(true)).toBe(80);
+                    expect(fixture.componentInstance.viewChild.getExpectedWidth()).toBe(250);
+                    expect(fixture.componentInstance.viewChild.getExpectedWidth(true)).toBe(80);
                     
                     fixture.componentInstance.viewChild.open();
                     fixture.componentInstance.drawerWidth = "350px";
                     fixture.detectChanges();
-                    //window.requestAnimationFrame(() => {        
+                    window.requestAnimationFrame(() => {        
                         //expect(fixture.componentInstance.viewChild.drawer).toHaveCssStyle({width: "350px"});
-                        //resolver();
-                    //});
+                        resolver();
+                    });
                     
                 }).catch (reason => {
                     console.log(reason);
