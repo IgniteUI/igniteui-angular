@@ -37,7 +37,7 @@
     "gulp-inline-ng2-template": "2.0.4",
     "gulp-sass": "^2.2.0",
     "gulp-sourcemaps": "^1.6.0",
-    "gulp-typescript": "^2.13.0",
+    "gulp-typescript": "^2.13.6",
     "gulp-watch": "^4.3.5",
     "hammer-simulator": "git+https://github.com/hammerjs/simulator.git",
     "jasmine-core": "^2.4.1",

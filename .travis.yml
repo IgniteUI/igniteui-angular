@@ -8,7 +8,7 @@ before_install:
   - sleep 3
 before_script:
   - npm install -g gulp
-  - npm install
+  - tsc --project tsconfig.json
 script:
   - npm test
   - cat ./coverage/report-lcov/lcov.info | coveralls
