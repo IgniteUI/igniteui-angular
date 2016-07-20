@@ -50,7 +50,7 @@ export class Item {
     @ViewChild('wrapper') wrapper: ElementRef;
 
     private _VISIBLE_AREA_ON_FULL_PAN = 40; // in pixels
-    //private _initialDirection: number;
+    private _initialLeft: number = null;
     private _element: ElementRef = null;
     private _href: string = null;
     private _panOptions: Array<Object> = null;
@@ -68,6 +68,12 @@ export class Item {
         return this.wrapper.nativeElement.offsetLeft;
     }
     set left(value: number) { 
+        value +="";
+
+        if(value.indexOf("px") == -1) {
+            value += "px";
+        }
+
         this.wrapper.nativeElement.style.left = value;
     }
 
@@ -99,45 +105,24 @@ export class Item {
     }
 
     private cancelEvent = (ev: HammerInput) => {
-        return this.left > 0;
+        return this.left > 0 || this._initialLeft == null;
     }
 
     private panStart = (ev: HammerInput) => {  
-        //this._initialDirection = ev.direction;
+        this._initialLeft = this.left;
     }
 
     private panMove = (ev: HammerInput) => {
-        if (this.cancelEvent(ev)) return;
+        var newLeft;
+        console.log(this.left + ", " + ev.deltaX);
 
-        console.log(ev.offsetDirection + ", " + ev.direction + ", " + this.left + ", " + ev.deltaX);
+        if (this.cancelEvent(ev))
+        { return;}
 
-        //if(ev.direction === ev.offsetDirection) { //this._initialDirection) {
-            switch(ev.direction) {
-            case Hammer.DIRECTION_LEFT:
-                if(this.left > this.maxLeft) {
-                    this.left = ev.deltaX + "px";
-                }                
-                break;
-            case Hammer.DIRECTION_RIGHT:
-                if(this.left < 0) {
-                    this.left = this.maxLeft + ev.deltaX + "px";
-                }                
-                break;
-            }    
-       /* } else {
-            switch(ev.direction) {
-            case Hammer.DIRECTION_LEFT:
-                if(this.left > this.maxLeft && ev.deltaX < 0) {
-                    this.left = this.left - ev.deltaX + "px";
-                }                
-                break;
-            case Hammer.DIRECTION_RIGHT:
-                //if(this.left < 0) {
-                    //this.left = this.maxLeft + ev.deltaX + "px";
-                //}                
-                break;
-            }
-        }  */         
+        newLeft = this._initialLeft + ev.deltaX;
+        newLeft = newLeft > 0 ? 0 : newLeft < this.maxLeft ? this.maxLeft : newLeft;
+
+        this.left = newLeft;        
     }
 
     private panEnd = (ev: HammerInput) => {
@@ -147,7 +132,7 @@ export class Item {
             this.magneticGrip();
         }
 
-        //this._initialDirection = null;
+        this._initialLeft = null;
     }
 
     private magneticGrip = () => {
@@ -166,6 +151,6 @@ export class Item {
     }
 
     private leftMagneticGrip = () => {
-        this.left = this.maxLeft + "px";
+        this.left = this.maxLeft;
     }
 }
