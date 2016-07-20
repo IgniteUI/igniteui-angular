@@ -1,3 +1,5 @@
+/// <reference path="../../typings/globals/hammerjs/index.d.ts" />
+
 import {Component, Input, Inject, SimpleChange, ElementRef, EventEmitter, Output, Renderer, OnInit, OnDestroy, OnChanges, Optional} from '@angular/core';
 // import {AnimationBuilder} from 'angular2/src/animate/animation_builder'; TODO
 import {HammerGesturesManager, BaseComponent} from '../core/core';
@@ -31,7 +33,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     };
     private _resolveOpen: (value?: any | PromiseLike<any>) => void;
     private _resolveClose: (value?: any | PromiseLike<any>) => void;
-    
+
 
     private _drawer : any;
     private get drawer(): HTMLElement {
@@ -55,62 +57,62 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
         }
         return this._styleDummy;
     }
-    
+
     /** Pan animation properties */
     private _panning: boolean = false;
     private _panStartWidth: number;
     private _panLimit: number;
     private _previousDeltaX: number;
-    
+
     /**
      * Property to decide whether to change width or translate the drawer from pan gesture.
-     * @protected 
+     * @protected
      */
     protected get animateWidth(): boolean {
         return this.pin || this._hasMimiTempl;
     }
-    
+
     private _maxEdgeZone: number = 50;
     /**
      * Used for touch gestures (swipe and pan). Defaults to 50 (in px) and is extended to at least 110% of the mini template width if available.
      * @protected
      */
     protected maxEdgeZone: number = this._maxEdgeZone;
-    
+
     /** ID of the component */
     @Input() public id: string;
-    
+
     /**
      * Position of the Navigation Drawer. Can be "left"(default) or "right". Only has effect when not pinned.
      */
     @Input() public position: string = "left";
-    
+
     /**
      * Enables the use of touch gestures to manipulate the drawer - such as swipe/pan from edge to open, swipe toggle and pan drag.
      */
     @Input() public enableGestures: boolean = true;
-    
-    /** State of the drawer. */       
+
+    /** State of the drawer. */
     @Input() public isOpen: boolean = false;
-    
+
     /** Pinned state of the drawer. Currently only support  */
     @Input() public pin: boolean = false;
-    
+
     /** Minimum device width required for automatic pin to be toggled. Deafult is 1024, can be set to falsy value to ignore. */
     @Input() public pinThreshold: number = 1024;
-    
+
     /**
      * Width of the drawer in its open state. Defaults to 300px based on the `.ig-nav-drawer` style.
      * Can be used to override or dynamically modify the width.
      */
     @Input() public width: string;
-    
+
     /**
      * Width of the drawer in its mini state. Defaults to 60px based on the `.ig-nav-drawer.mini` style.
      * Can be used to override or dynamically modify the width.
      */
     @Input() public miniWidth: string;
-    
+
     /** Event fired as the Navigation Drawer is about to open. */
     @Output() opening = new EventEmitter();
     /** Event fired when the Navigation Drawer has opened. */
@@ -119,17 +121,17 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     @Output() closing = new EventEmitter();
     /** Event fired when the Navigation Drawer has closed. */
     @Output() closed = new EventEmitter();
-    
+
     constructor(
         @Inject(ElementRef) private elementRef: ElementRef,
         @Optional() private state: NavigationService,
         // private animate: AnimationBuilder, TODO
         protected renderer:Renderer,
-        private touchManager: HammerGesturesManager) 
+        private touchManager: HammerGesturesManager)
     {
         super(renderer);
     }
-    
+
     ngOnInit() {
         // DOM and @Input()-s initialized
         if (this.state) {
@@ -143,22 +145,22 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
         // need to set height without absolute positioning
         this.ensureDrawerHeight();
         this.ensureEvents();
-        
-        // TODO: apply platform-safe Ruler from http://plnkr.co/edit/81nWDyreYMzkunihfRgX?p=preview 
+
+        // TODO: apply platform-safe Ruler from http://plnkr.co/edit/81nWDyreYMzkunihfRgX?p=preview
         // (https://github.com/angular/angular/issues/6515), blocked by https://github.com/angular/angular/issues/6904
     }
-    
+
     ngOnDestroy() {
         this.touchManager.destroy();
         this.state.remove(this.id)
     }
-    
+
     ngOnChanges(changes: {[propName: string]: SimpleChange}) {
         // simple settings can come from attribute set (rather than binding), make sure boolean props are converted
         if (changes['enableGestures'] && changes['enableGestures'].currentValue !== undefined) {
             this.enableGestures = !!(this.enableGestures && this.enableGestures.toString() === "true");
             this.ensureEvents();
-        }            
+        }
         if (changes['pin'] && changes['pin'].currentValue !== undefined) {
             this.pin = !!(this.pin && this.pin.toString() === "true");
             this.ensureDrawerHeight();
@@ -168,11 +170,11 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
                 this.ensureEvents();
             }
         }
-        
+
         if (changes['width'] && this.isOpen) {
             this.setDrawerWidth(changes['width'].currentValue);
         }
-        
+
         if (changes['miniWidth']) {
             if (!this.isOpen) {
                 this.setDrawerWidth(changes['miniWidth'].currentValue);
@@ -180,11 +182,11 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             this.updateEdgeZone();
         }
     }
-    
+
     private getWindowWidth() {
         return (window.innerWidth > 0) ? window.innerWidth : screen.width;
     }
-    
+
     /**
      * Sets the drawer width.
      * @param width Width to set, must be valid CSS size string.
@@ -192,11 +194,11 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     private setDrawerWidth (width: string) {
         window.requestAnimationFrame(() => {
             if(this.drawer) {
-                this.renderer.setElementStyle(this.drawer, "width", width);                
+                this.renderer.setElementStyle(this.drawer, "width", width);
             }
         });
     }
-    
+
     protected ensureDrawerHeight () {
         if (this.pin) {
             // TODO: nested in content?
@@ -204,7 +206,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             this.renderer.setElementStyle(this.drawer, "height", window.innerHeight + "px");
         }
     }
-    
+
     /**
      * Get the Drawer width for specific state. Will attempt to evaluate requested state and cache.
      * @param mini Request mini width instead
@@ -244,14 +246,14 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             }
         }
     }
-    
+
     /**
      * Get current Drawer width.
      */
     private getDrawerWidth () : number {
             return this.drawer.offsetWidth;
     }
-    
+
     private ensureEvents() {
         // set listeners for swipe/pan only if needed, but just once
         if (this.enableGestures && !this.pin && !this._swipeAttached) {
@@ -260,27 +262,27 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             //this.renderer.listen(document, "swipe", this.swipe);
             this.touchManager.addGlobalEventListener("document", "swipe", this.swipe);
             this._swipeAttached = true;
-            
+
             //this.renderer.listen(document, "panstart", this.panstart);
-            //this.renderer.listen(document, "pan", this.pan);                
+            //this.renderer.listen(document, "pan", this.pan);
             this.touchManager.addGlobalEventListener("document", "panstart", this.panstart);
             this.touchManager.addGlobalEventListener("document", "panmove", this.pan);
             this.touchManager.addGlobalEventListener("document", "panend", this.panEnd);
         }
     }
-    
+
     private updateEdgeZone() {
         if (this._hasMimiTempl) {
             this.maxEdgeZone = Math.max(this._maxEdgeZone, this.getExpectedWidth(true) * 1.1);
         }
     }
-            
+
     private swipe = (evt: HammerInput) => { //use lambda to keep class scope (http://stackoverflow.com/questions/18423410/typescript-retain-scope-in-event-listener)
         // TODO: Could also force input type: http://stackoverflow.com/a/27108052
         if(!this.enableGestures || evt.pointerType !== "touch") {
             return;
         }
-        
+
         // HammerJS swipe is horizontal-only by default, don't check deltaY
         var deltaX, startPosition;
         if (this.position === "right") {
@@ -291,7 +293,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             deltaX = evt.deltaX;
             startPosition = evt.center.x - evt.distance;
         }
-        
+
         //only accept closing swipe (ignoring minEdgeZone) when the drawer is expanded:
         if ((this.isOpen && deltaX < 0) ||
             // positive deltaX from the edge:
@@ -299,44 +301,44 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             this.toggle(true);
         }
     }
-    
+
     private panstart = (evt: HammerInput) => { // TODO: test code
         if(!this.enableGestures || this.pin || evt.pointerType !== "touch") {
             return;
         }
         var startPosition = this.position === "right" ? this.getWindowWidth() - (evt.center.x + evt.distance) : evt.center.x - evt.distance;
-        
+
         // cache width during animation, flag to allow further handling
         if(this.isOpen || (startPosition < this.maxEdgeZone)) {
-            
+
             this._panning = true;
             this._panStartWidth =  this.getExpectedWidth(!this.isOpen);
             this._panLimit = this.getExpectedWidth(this.isOpen);
-            
+
             this.renderer.setElementClass(this.overlay, "panning", true);
             this.renderer.setElementClass(this.drawer, "panning", true);
         }
     }
-    
+
     private pan = (evt: HammerInput) => {
         // TODO: input.deltaX = prevDelta.x + (center.x - offset.x); get actual delta (not total session one) from event?
-        // pan WILL also fire after a full swipe, only resize on flag         
+        // pan WILL also fire after a full swipe, only resize on flag
         if (!this._panning) {
             return;
-        }            
-        var right: boolean = this.position === "right", 
+        }
+        var right: boolean = this.position === "right",
             // when on the right use inverse of deltaX
             deltaX = right ? -evt.deltaX : evt.deltaX,
             visibleWidth, newX,
             percent;
-        
+
         visibleWidth = this._panStartWidth + deltaX;
-        
-        
-        if(this.isOpen && deltaX < 0) {            
+
+
+        if(this.isOpen && deltaX < 0) {
             // when visibleWidth hits limit - stop animating
             if (visibleWidth <= this._panLimit)  return;
-            
+
             if (this.animateWidth) {
                 percent = (visibleWidth - this._panLimit) / (this._panStartWidth - this._panLimit);
                 newX = visibleWidth;
@@ -345,11 +347,11 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
                 newX = evt.deltaX;
             }
             this.setXSize(newX, percent.toPrecision(2));
-            
-        } else if (!this.isOpen && deltaX > 0){            
+
+        } else if (!this.isOpen && deltaX > 0){
             // when visibleWidth hits limit - stop animating
             if (visibleWidth >= this._panLimit) return;
-            
+
             if (this.animateWidth) {
                  percent = (visibleWidth - this._panStartWidth) / (this._panLimit - this._panStartWidth);
                  newX = visibleWidth;
@@ -360,14 +362,14 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             this.setXSize(newX, percent.toPrecision(2));
         }
     }
-    
+
     private panEnd = (evt: HammerInput) => {
         if(this._panning) {
             var deltaX = this.position === "right" ? -evt.deltaX : evt.deltaX,
                 visibleWidth: number = this._panStartWidth + deltaX;
             this.resetPan();
-            
-            // check if pan brought the drawer to 50% 
+
+            // check if pan brought the drawer to 50%
             if (this.isOpen && visibleWidth <= this._panStartWidth/2 ) {
                 this.close(true);
             } else if (!this.isOpen && visibleWidth >= this._panLimit/2) {
@@ -376,7 +378,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             this._panStartWidth = null;
         }
     }
-    
+
     private resetPan() {
         this._panning = false;
         /* styles fail to apply when set on parent due to extra attributes, prob ng bug */
@@ -384,7 +386,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
         this.renderer.setElementClass(this.drawer, "panning", false);
         this.setXSize(0, "");
     }
-    
+
     /**
      * Sets the absolute position or width in case the drawer doesn't change position.
      * @param x the number pixels to translate on the X axis or the width to set. 0 width will clear the style instead.
@@ -404,7 +406,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             }
         });
     }
-    
+
     /**
      * Toggle the open state of the Navigation Drawer.
      * @param fireEvents Optional flag determining whether events should be fired or not.
@@ -417,7 +419,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             return this.open(fireEvents);
         }
     }
-    
+
     /**
      * Open the Navigation Drawer. Has no effect if already opened.
      * @param fireEvents Optional flag determining whether events should be fired or not.
@@ -432,17 +434,17 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             this.opening.emit("opening");
         }
         this.isOpen = true;
-        
+
        // TODO: Switch to animate API when available
         // var animationCss = this.animate.css();
         //     animationCss
         //         .setStyles({'width':'50px'}, {'width':'400px'})
         //         .start(this.elementRef.nativeElement)
         //         .onComplete(() => animationCss.setToStyles({'width':'auto'}).start(this.elementRef.nativeElement));
-        
+
         this.elementRef.nativeElement.addEventListener("transitionend", this.toggleOpenedEvent, false);
         this.setDrawerWidth(this.width);
-        
+
         return new Promise<any>( resolve => {
             this._resolveOpen = (value?: any) => {
                 resolve(value);
@@ -452,7 +454,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             };
         } );
     }
-    
+
     private toggleOpenedEvent = (evt?) => {
         this.elementRef.nativeElement.removeEventListener("transitionend", this.toggleOpenedEvent, false);
         this._resolveOpen("opened");
@@ -464,8 +466,8 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
         this._resolveClose("closed");
         delete this._resolveClose;
     }
-    
-    
+
+
     /**
      * Close the Navigation Drawer. Has no effect if already closed.
      * @param fireEvents Optional flag determining whether events should be fired or not.
@@ -476,15 +478,15 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             return;
         }
         this.resetPan();
-        
+
         if (fireEvents) {
             this.closing.emit("closing");
         }
-        
+
         this.isOpen = false;
         this.setDrawerWidth(this._hasMimiTempl ? this.miniWidth : "");
         this.elementRef.nativeElement.addEventListener("transitionend", this.toggleClosedEvent, false);
-                
+
         return new Promise<any>( resolve => {
             this._resolveClose = (value?: any) => {
                 resolve(value);

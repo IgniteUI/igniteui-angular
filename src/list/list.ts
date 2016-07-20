@@ -1,3 +1,5 @@
+/// <reference path="../../typings/globals/hammerjs/index.d.ts" />
+
 import { Component, Renderer, Input, ElementRef, ViewChild } from '@angular/core';
 import { HammerGesturesManager } from '../core/core';
 
@@ -78,14 +80,14 @@ export class Item {
     }
 
     private getLeftPosition = () => {
-        let lp = parseInt(this.wrapper.nativeElement.offsetLeft, 10); 
+        let lp = parseInt(this.wrapper.nativeElement.offsetLeft, 10);
 
         return lp;
     }
 
     private cancelEvent = (ev: HammerInput) => {
         return !ev.target.classList.contains(this._innerStyle) ||
-        ev.direction == Hammer.DIRECTION_RIGHT && this.getLeftPosition() > 0;        
+        ev.direction == Hammer.DIRECTION_RIGHT && this.getLeftPosition() > 0;
     }
 
     private panStart = (ev: HammerInput) => {
@@ -100,10 +102,10 @@ export class Item {
         if (left < 0) {
             this._offset = left;
         } else if (ev.direction == Hammer.DIRECTION_LEFT && left > 0) {
-            this.wrapper.nativeElement.style.left = 0; 
+            this.wrapper.nativeElement.style.left = 0;
             this._offset = 0;
-        }    
-            
+        }
+
     }
 
     private panMove = (ev: HammerInput) => {
@@ -116,7 +118,7 @@ export class Item {
         console.log(this.getLeftPosition());
 
         if (ev.direction == Hammer.DIRECTION_LEFT && this.getLeftPosition() > 0) {
-            this.wrapper.nativeElement.style.left = 0;             
+            this.wrapper.nativeElement.style.left = 0;
             this._offset = 0;
         }
 
@@ -133,13 +135,13 @@ export class Item {
             return;
         }
 
-        this.wrapper.nativeElement.style.left = newOffset + "px"; 
+        this.wrapper.nativeElement.style.left = newOffset + "px";
     }
 
     private panEnd = (ev: HammerInput) => {
         if (this.getLeftPosition() > 0) {
-            this.wrapper.nativeElement.style.left = 0; 
+            this.wrapper.nativeElement.style.left = 0;
             this._offset = 0;
-        }         
+        }
     }
 }
