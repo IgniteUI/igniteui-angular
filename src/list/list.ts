@@ -3,6 +3,7 @@ import { HammerGesturesManager } from '../core/core';
 
 declare var module: any;
 
+// ====================== LIST ================================
 // The `<ig-list>` component is a list container for 1..n `<ig-item>` tags.
 @Component({
     selector: 'ig-list',
@@ -17,7 +18,7 @@ export class List {
     private _innerStyle: string = "ig-list-inner";
 }
 
-
+// ====================== HEADER ================================
 // The `<ig-header>` directive is a header intended for row items in
 // a `<ig-list>` container.
 @Component({
@@ -33,6 +34,7 @@ export class Header {
     private _innerStyle: string = "ig-header-inner";
 }
 
+// ====================== ITEM ================================
 // The `<ig-item>` directive is a container intended for row items in
 // a `<ig-list>` container.
 @Component({
@@ -47,12 +49,31 @@ export class Header {
 export class Item {
     @ViewChild('wrapper') wrapper: ElementRef;
 
+    private _VISIBLE_AREA_ON_FULL_PAN = 40; // in pixels
+    //private _initialDirection: number;
     private _element: ElementRef = null;
     private _href: string = null;
-    private _offset: number = 0;
-    private _panOffset: number = 40;
     private _panOptions: Array<Object> = null;
     private _innerStyle: string = "ig-item-inner";
+
+    get width() { 
+        if(this._element) {
+            return this._element.nativeElement.offsetWidth;
+        } else {
+            return 0;
+        }        
+    }
+
+    get left() {
+        return this.wrapper.nativeElement.offsetLeft;
+    }
+    set left(value: number) { 
+        this.wrapper.nativeElement.style.left = value;
+    }
+
+    get maxLeft() {
+        return - this.width + this._VISIBLE_AREA_ON_FULL_PAN;
+    }
 
     @Input() set href(value: string) {
         this._href = value;
@@ -77,69 +98,74 @@ export class Item {
         renderer.listen(this._element.nativeElement, 'panend', (event) => { this.panEnd(event); });
     }
 
-    private getLeftPosition = () => {
-        let lp = parseInt(this.wrapper.nativeElement.offsetLeft, 10); 
-
-        return lp;
-    }
-
     private cancelEvent = (ev: HammerInput) => {
-        return !ev.target.classList.contains(this._innerStyle) ||
-        ev.direction == Hammer.DIRECTION_RIGHT && this.getLeftPosition() > 0;        
+        return this.left > 0;
     }
 
-    private panStart = (ev: HammerInput) => {
-        /*if (!ev.additionalEvent) {
-            return;
-        }*/
-
-        if (this.cancelEvent(ev)) return;
-
-        let left = this.getLeftPosition();
-
-        if (left < 0) {
-            this._offset = left;
-        } else if (ev.direction == Hammer.DIRECTION_LEFT && left > 0) {
-            this.wrapper.nativeElement.style.left = 0; 
-            this._offset = 0;
-        }    
-            
+    private panStart = (ev: HammerInput) => {  
+        //this._initialDirection = ev.direction;
     }
 
     private panMove = (ev: HammerInput) => {
-        /*if (!ev.additionalEvent) {
-            return;
-        }*/
-
         if (this.cancelEvent(ev)) return;
 
-        console.log(this.getLeftPosition());
+        console.log(ev.offsetDirection + ", " + ev.direction + ", " + this.left + ", " + ev.deltaX);
 
-        if (ev.direction == Hammer.DIRECTION_LEFT && this.getLeftPosition() > 0) {
-            this.wrapper.nativeElement.style.left = 0;             
-            this._offset = 0;
-        }
-
-        let width: number = parseInt(this.wrapper.nativeElement.offsetWidth, 10),
-            newOffset: number = this._offset + ev.deltaX,
-            borderWidth: number = width - this._panOffset,
-            target: EventTarget = ev.srcEvent.target;
-
-        if (newOffset < -borderWidth ||
-            newOffset > borderWidth) {
-            /*this._dom.setStyle(target, "left", newOffset > 0 ?
-                borderWidth : -borderWidth + "px");*/
-
-            return;
-        }
-
-        this.wrapper.nativeElement.style.left = newOffset + "px"; 
+        //if(ev.direction === ev.offsetDirection) { //this._initialDirection) {
+            switch(ev.direction) {
+            case Hammer.DIRECTION_LEFT:
+                if(this.left > this.maxLeft) {
+                    this.left = ev.deltaX + "px";
+                }                
+                break;
+            case Hammer.DIRECTION_RIGHT:
+                if(this.left < 0) {
+                    this.left = this.maxLeft + ev.deltaX + "px";
+                }                
+                break;
+            }    
+       /* } else {
+            switch(ev.direction) {
+            case Hammer.DIRECTION_LEFT:
+                if(this.left > this.maxLeft && ev.deltaX < 0) {
+                    this.left = this.left - ev.deltaX + "px";
+                }                
+                break;
+            case Hammer.DIRECTION_RIGHT:
+                //if(this.left < 0) {
+                    //this.left = this.maxLeft + ev.deltaX + "px";
+                //}                
+                break;
+            }
+        }  */         
     }
 
     private panEnd = (ev: HammerInput) => {
-        if (this.getLeftPosition() > 0) {
-            this.wrapper.nativeElement.style.left = 0; 
-            this._offset = 0;
-        }         
+        if (this.left > 0) {
+            this.rightMagneticGrip();           
+        } else {
+            this.magneticGrip();
+        }
+
+        //this._initialDirection = null;
+    }
+
+    private magneticGrip = () => {
+        var left = this.left,
+            halfWidth = this.width / 2;
+
+        if(halfWidth && left < 0 && -left > halfWidth) {
+            this.leftMagneticGrip();
+        } else {
+            this.rightMagneticGrip();
+        }
+    }
+
+    private rightMagneticGrip = () => {
+        this.left = 0;
+    }
+
+    private leftMagneticGrip = () => {
+        this.left = this.maxLeft + "px";
     }
 }

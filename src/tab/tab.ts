@@ -14,7 +14,7 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
     private _maxNumberTabsDisplayed: number = 5;
     private _itemStyle: string = "ig-tab-bar-inner";
     private _element: ElementRef;
-    private get _visibleTabs(): Tab[] {
+    private get _visibleTabs() {
         return this.tabs.length > this._maxNumberTabsDisplayed ? this.tabs.filter(t => t.index < this._maxNumberTabsDisplayed - 1) : this.tabs;
     }
 
@@ -140,7 +140,7 @@ export class Tab {
     index: number;
     height: number;    
     isSelected: boolean = false;
-    get isDisabled(): boolean { 
+    get isDisabled() { 
         return this.disabled !== undefined;
     }
 
