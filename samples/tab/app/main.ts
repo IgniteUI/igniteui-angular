@@ -1,3 +1,4 @@
+/// <reference path="../../../typings/globals/node/index.d.ts" />
 import {Component, ViewChild} from '@angular/core';
 import * as Infragistics from '../../../src/main';
 
