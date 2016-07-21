@@ -68,13 +68,13 @@ export class Item {
         return this.wrapper.nativeElement.offsetLeft;
     }
     set left(value: number) { 
-        value +="";
+        var val = value + "";
 
-        if(value.indexOf("px") == -1) {
-            value += "px";
+        if(val.indexOf("px") == -1) {
+            val += "px";
         }
 
-        this.wrapper.nativeElement.style.left = value;
+        this.wrapper.nativeElement.style.left = val;
     }
 
     get maxLeft() {
@@ -114,8 +114,7 @@ export class Item {
 
     private panMove = (ev: HammerInput) => {
         var newLeft;
-        console.log(this.left + ", " + ev.deltaX);
-
+        
         if (this.cancelEvent(ev))
         { return;}
 
