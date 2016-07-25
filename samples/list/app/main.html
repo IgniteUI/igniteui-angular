@@ -1,4 +1,5 @@
-<ig-list>
+<input id="searchbox" />
+<ig-list searchBoxId="searchbox">
     <ig-item *ngFor="let navItem of navItems; let index = index" [options]="options">
       {{navItem.text}}
     </ig-item>
@@ -11,7 +12,7 @@
 </ig-list>
 
 <ig-list>
-  <ig-header>Mildly Sweet</ig-header>
+  <ig-header>Mildly Sweet</ig-header>                                                                                                           
   <ig-item>Red Delicious</ig-item>
   <ig-item>Ambrosia</ig-item>
   <ig-item>Rome</ig-item>
@@ -25,8 +26,8 @@
 <ig-list>
   <ig-item *ngFor="let navItem of navItems; let index = index">
     {{navItem.text}}
-    <button ig-button class="ig-icon-button ig-delete" aria-label="Delete" (click)="removeItem(index)">
+    <!-- <button ig-button class="ig-icon-button ig-delete" aria-label="Delete" (click)="removeItem(index)">
       <i ig-icon>delete</i>
-    </button>
+    </button> -->
   </ig-item>
 </ig-list>

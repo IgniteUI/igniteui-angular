@@ -15,17 +15,14 @@ import * as Infragistics from '../../../src/main';
 })
 
 export class AppComponent {
-    navItems: Array<Object> = [{
-        text: "Nav1", link: "#"
-    }, {
-            text: "Nav2", link: "#"
-        }, {
-            text: "Nav3", link: "#"
-        }, {
-            text: "Nav4", link: "#"
-        }];
+    navItems: Array<Object> = [
+    { text: "Nav1", link: "#" }, 
+    { text: "Nav2", link: "#" }, 
+    { text: "Nav3", link: "#" }, 
+    { text: "Nav4", link: "#" }
+        ];
 
-    options: Array<Object> = [{
+    /*options: Array<Object> = [{
         name: "delete",
         icon: "ig-delete",
         label: "Delete",
@@ -33,23 +30,25 @@ export class AppComponent {
         handler: function() {
             console.log("delete");
         }
-    }, {
-            name: "recycle",
-            icon: "ig-recycle",
-            label: "Recycle",
-            position: "left",
-            handler: function() {
-                console.log("recycle");
-            }
-        }, {
-            name: "eat",
-            icon: "ig-eat",
-            label: "eat",
-            position: "right",
-            handler: function() {
-                console.log("eat");
-            }
-        }];
+    }, 
+    {
+        name: "recycle",
+        icon: "ig-recycle",
+        label: "Recycle",
+        position: "left",
+        handler: function() {
+            console.log("recycle");
+        }
+    }, 
+    {
+        name: "eat",
+        icon: "ig-eat",
+        label: "eat",
+        position: "right",
+        handler: function() {
+            console.log("eat");
+        }
+    }];
 
     removeItem(index) {
         let newNavItems: Array<Object> = this.navItems.filter((v, i) => i !== index);
@@ -62,5 +61,5 @@ export class AppComponent {
 
     eat(index) {
         alert("eat " + index);
-    }
+    }*/
 }

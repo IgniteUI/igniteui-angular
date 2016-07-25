@@ -19,7 +19,6 @@ export function main() {
            return tcb.overrideTemplate(TestComponent, template)
                .createAsync(TestComponent)
                .then((fixture ) => {
-                //debugger;
                  //expect(fixture.debugElement.children[0].componentInstance).toBeAnInstanceOf(Infragistics.NavigationDrawer);
                  expect(fixture.debugElement.children[0].componentInstance.state).toBeNull();
                });

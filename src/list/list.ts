@@ -1,4 +1,4 @@
-import { Component, Renderer, Input, ElementRef, ViewChild } from '@angular/core';
+import { Component, Renderer, Input, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { HammerGesturesManager } from '../core/core';
 
 declare var module: any;
@@ -14,8 +14,31 @@ declare var module: any;
     templateUrl: 'list-content.html'
 })
 
-export class List {
+export class List implements AfterViewInit {
     private _innerStyle: string = "ig-list-inner";
+    private inputSearchBox: ElementRef;
+
+    @Input() searchBoxId: string;
+
+    constructor() {
+        
+    }
+
+    ngAfterViewInit() {
+        var self = this;
+        if(this.searchBoxId) {
+            this.inputSearchBox = document.getElementById(this.searchBoxId);
+            this.inputSearchBox.addEventListener("input", function() {
+                    self.filter();
+                });
+        }
+    }
+
+    filter() {
+        var text = this.inputSearchBox.value;
+
+        // TODO - implement filtering
+    }
 }
 
 // ====================== HEADER ================================
@@ -81,11 +104,11 @@ export class Item {
         return - this.width + this._VISIBLE_AREA_ON_FULL_PAN;
     }
 
-    @Input() set href(value: string) {
+    @Input() href(value: string) {
         this._href = value;
     }
 
-    @Input() set options(options: Array<Object>) {
+    @Input() options(options: Array<Object>) {
         this._panOptions = options;
     }
 
@@ -104,15 +127,15 @@ export class Item {
         renderer.listen(this._element.nativeElement, 'panend', (event) => { this.panEnd(event); });
     }
 
-    private cancelEvent = (ev: HammerInput) => {
+    private cancelEvent(ev: HammerInput) {
         return this.left > 0 || this._initialLeft == null;
     }
 
-    private panStart = (ev: HammerInput) => {  
+    private panStart(ev: HammerInput) {  
         this._initialLeft = this.left;
     }
 
-    private panMove = (ev: HammerInput) => {
+    private panMove(ev: HammerInput) {
         var newLeft;
         
         if (this.cancelEvent(ev))
@@ -124,7 +147,7 @@ export class Item {
         this.left = newLeft;        
     }
 
-    private panEnd = (ev: HammerInput) => {
+    private panEnd(ev: HammerInput) {
         if (this.left > 0) {
             this.rightMagneticGrip();           
         } else {
@@ -134,7 +157,7 @@ export class Item {
         this._initialLeft = null;
     }
 
-    private magneticGrip = () => {
+    private magneticGrip() {
         var left = this.left,
             halfWidth = this.width / 2;
 
@@ -145,11 +168,11 @@ export class Item {
         }
     }
 
-    private rightMagneticGrip = () => {
+    private rightMagneticGrip() {
         this.left = 0;
     }
 
-    private leftMagneticGrip = () => {
+    private leftMagneticGrip() {
         this.left = this.maxLeft;
     }
 }
