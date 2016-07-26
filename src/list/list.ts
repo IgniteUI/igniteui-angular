@@ -16,7 +16,7 @@ declare var module: any;
 
 export class List implements AfterViewInit {
     private _innerStyle: string = "ig-list-inner";
-    private inputSearchBox: ElementRef;
+    private _inputSearchBox: HTMLElement;
 
     @Input() searchBoxId: string;
 
@@ -27,15 +27,15 @@ export class List implements AfterViewInit {
     ngAfterViewInit() {
         var self = this;
         if(this.searchBoxId) {
-            this.inputSearchBox = document.getElementById(this.searchBoxId);
-            this.inputSearchBox.addEventListener("input", function() {
+            this._inputSearchBox = document.getElementById(this.searchBoxId);
+            this._inputSearchBox.addEventListener("input", function() {
                     self.filter();
                 });
         }
     }
 
     filter() {
-        var text = this.inputSearchBox.value;
+        var text = (<HTMLInputElement>this._inputSearchBox).value;
 
         // TODO - implement filtering
     }
@@ -75,8 +75,6 @@ export class Item {
     private _VISIBLE_AREA_ON_FULL_PAN = 40; // in pixels
     private _initialLeft: number = null;
     private _element: ElementRef = null;
-    private _href: string = null;
-    private _panOptions: Array<Object> = null;
     private _innerStyle: string = "ig-item-inner";
 
     get width() { 
@@ -104,17 +102,8 @@ export class Item {
         return - this.width + this._VISIBLE_AREA_ON_FULL_PAN;
     }
 
-    @Input() href(value: string) {
-        this._href = value;
-    }
-
-    @Input() options(options: Array<Object>) {
-        this._panOptions = options;
-    }
-
-    get href(): string {
-        return this._href;
-    }
+    @Input() href: string;
+    @Input() options: Array<Object>
 
     constructor(private element: ElementRef, renderer: Renderer) {
         this._element = element;
