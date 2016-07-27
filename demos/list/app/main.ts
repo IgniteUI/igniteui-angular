@@ -6,8 +6,8 @@ import * as Infragistics from '../../../src/main';
     styleUrls: ["app/main.css"],
     templateUrl: "app/main.html",
     directives: [
-        Infragistics.Button,
-        Infragistics.Icon,
+        //Infragistics.Button,
+        //Infragistics.Icon,
         Infragistics.Header,
         Infragistics.Item,
         Infragistics.List

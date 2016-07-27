@@ -3,7 +3,7 @@ import {Component, ViewChild} from '@angular/core';
 import * as Infragistics from '../../../src/main';
 
 @Component({
-    selector: 'sample-app',
+    selector: 'demo-app',
     moduleId: module.id, // commonJS standard
     templateUrl: "main.html",
     directives: [

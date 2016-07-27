@@ -23,7 +23,7 @@ let AppComponent = class AppComponent {
 };
 AppComponent = __decorate([
     core_1.Component({
-        selector: 'sample-app',
+        selector: 'demo-app',
         moduleId: module.id,
         templateUrl: "main.html",
         directives: [
