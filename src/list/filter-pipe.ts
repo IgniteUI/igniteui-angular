@@ -9,7 +9,7 @@ export class ContainsPipe{
 		var result = value;
 
 		result = value.filter((item) => {
-				var innerText = item.element.nativeElement.innerText,
+				var innerText = item.element.nativeElement.textContent,
 					expression = innerText.indexOf(pattern) > -1;
 
 				if(!isCaseSensitive) {

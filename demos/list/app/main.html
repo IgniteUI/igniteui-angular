@@ -1,12 +1,12 @@
 <input id="searchbox" />
-<ig-list >
+<ig-list searchBoxId="searchbox">
     <ig-header>Filtered List</ig-header>     
     <ig-item *ngFor="let navItem of navItems; let index = index" [options]="options">
       {{navItem.text}}
     </ig-item>
 </ig-list>
 
-<ig-list searchBoxId="searchbox">
+<ig-list >
   <ig-header>Href List</ig-header>     
   <ig-item [href]="'http://google.com/'">Google</ig-item>
   <ig-item [href]="'http://youtube.com/'">YouTube</ig-item>

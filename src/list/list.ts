@@ -22,10 +22,11 @@ export class List implements AfterContentInit {
     private _innerStyle: string = "ig-list-inner";
     private _inputSearchBox: HTMLElement;
 
+    isCaseSensitiveFiltering: boolean = false;
+
     @Input() searchBoxId: string;
 
-    constructor() {
-        
+    constructor() {        
     }
 
     ngAfterContentInit() {
@@ -38,15 +39,11 @@ export class List implements AfterContentInit {
         }
     }
 
-    filter(isCaseSensitive: boolean) {
+    filter() {
         var searchText = (<HTMLInputElement>this._inputSearchBox).value,
             metConditionFunction = (item) => { item.hidden = false; }, 
-            overdueConditionFunction = (item) => { item.hidden = true; };
-        
-        console.log(searchText);
+            overdueConditionFunction = (item) => { item.hidden = true; };        
 
-        var result = new ContainsPipe().transform(this.items, searchText, isCaseSensitive, metConditionFunction, overdueConditionFunction);
-
-        console.log(result);
+        var result = new ContainsPipe().transform(this.items, searchText, this.isCaseSensitive, metConditionFunction, overdueConditionFunction);
     }
 }
