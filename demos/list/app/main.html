@@ -1,17 +1,20 @@
-<ig-list>
+<input id="searchbox" />
+<ig-list searchBoxId="searchbox">
+    <ig-header>Filtered List</ig-header>     
     <ig-item *ngFor="let navItem of navItems; let index = index" [options]="options">
       {{navItem.text}}
     </ig-item>
 </ig-list>
 
-<ig-list>
+<ig-list >
+  <ig-header>Href List</ig-header>     
   <ig-item [href]="'http://google.com/'">Google</ig-item>
   <ig-item [href]="'http://youtube.com/'">YouTube</ig-item>
   <ig-item [href]="'http://facebook.com/'">Facebook</ig-item>
 </ig-list>
 
 <ig-list>
-  <ig-header>Mildly Sweet</ig-header>
+  <ig-header>Mildly Sweet</ig-header>                                                                                                           
   <ig-item>Red Delicious</ig-item>
   <ig-item>Ambrosia</ig-item>
   <ig-item>Rome</ig-item>
@@ -21,12 +24,12 @@
   <ig-item>Cosmic Crisp</ig-item>
   <ig-item>Pinova</ig-item>
 </ig-list>
-
+<h3>Non-header List</h3>
 <ig-list>
   <ig-item *ngFor="let navItem of navItems; let index = index">
     {{navItem.text}}
-    <button ig-button class="ig-icon-button ig-delete" aria-label="Delete" (click)="removeItem(index)">
+    <!-- <button ig-button class="ig-icon-button ig-delete" aria-label="Delete" (click)="removeItem(index)">
       <i ig-icon>delete</i>
-    </button>
+    </button> -->
   </ig-item>
 </ig-list>

@@ -22,7 +22,7 @@ var tsProject = ts.createProject('tsconfig.json', {
     }),
     source = "./src/**/*.ts",
     tsSources: Array<string> = [
-        "./samples/**/*.ts",
+        "./demos/**/*.ts",
         "./tests/**/*.ts",
         "./tools/**/*.ts"].concat(source);
           

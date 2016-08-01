@@ -4,18 +4,8 @@
 const platform_browser_dynamic_1 = require('@angular/platform-browser-dynamic');
 const main_1 = require('./main');
 // multi-app boot
-function Start(app) {
-    switch (app) {
-        case "mini":
-            platform_browser_dynamic_1.bootstrap(main_1.AppComponentMini);
-            break;
-        case "pin":
-            platform_browser_dynamic_1.bootstrap(main_1.AppComponentPin);
-            break;
-        default:
-            platform_browser_dynamic_1.bootstrap(main_1.AppComponent);
-            break;
-    }
+function Start() {
+    platform_browser_dynamic_1.bootstrap(main_1.AppComponent);
 }
 exports.Start = Start;
 

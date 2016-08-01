@@ -16,9 +16,22 @@ export function main() {
                 return tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
                 .then((fixture) => {                  
-                    //expect(fixture.componentInstance.viewChild).toBeDefined();
+                    expect(fixture.componentInstance.viewChild).toBeDefined();
                     //expect(fixture.componentInstance.viewChild).toBeAnInstanceOf(Infragistics.TabBar);
-                    //expect(fixture.componentInstance.viewChild.state).toBeAnInstanceOf(Infragistics.NavigationService);
+                }).catch (reason => {
+                    console.log(reason);
+                    return Promise.reject(reason);
+                });
+         })));
+
+         it('should initialize ig-tab',
+           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+              var template = '<ig-tab-bar><ig-tab label="Tab 1">Content of Tab 1</ig-tab><ig-tab label="Tab 2">Content of Tab 2</ig-tab></ig-tab-bar>';
+                return tcb.overrideTemplate(TestComponentDI, template)
+                .createAsync(TestComponentDI)
+                .then((fixture) => {           
+                    debugger;       
+                    expect(fixture.componentInstance.viewChild).toBeDefined();                    
                 }).catch (reason => {
                     console.log(reason);
                     return Promise.reject(reason);

@@ -12,7 +12,7 @@ export = {
                     
                     if (req.url === "/") {
                         res.writeHead(302, {
-                            'Location': '/samples/index.html'
+                            'Location': '/demos/index.html'
                         });
                         res.end();
                     }
