@@ -8,13 +8,13 @@ declare var module: any;
 // The `<ig-header>` directive is a header intended for row items in
 // a `<ig-list>` container.
 @Component({
-    selector: 'ig-header',
+    selector: 'ig-list-header',
     host: { 'role': 'listitemheader' },
     moduleId: module.id, // commonJS standard
     templateUrl: 'list-content.html'
 })
 
-export class Header {
+export class ListHeader {
     private _innerStyle: string = "ig-header-inner";
 }
 
@@ -22,13 +22,13 @@ export class Header {
 // The `<ig-item>` directive is a container intended for row items in
 // a `<ig-list>` container.
 @Component({
-    selector: 'ig-item',
+    selector: 'ig-list-item',
     host: { 'role': 'listitem' },
     moduleId: module.id, // commonJS standard
     templateUrl: 'list-content.html'
 })
 
-export class Item {
+export class ListItem {
     @ViewChild('wrapper') wrapper: ElementRef;
 
     private _VISIBLE_AREA_ON_FULL_PAN = 40; // in pixels

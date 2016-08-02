@@ -12,12 +12,18 @@ export function main() {
     describe('Infragistics Angular2 List', function() {
          it('should initialize ig-list',
            async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
-              var template = '<ig-list></ig-list>';
+              var template = '<ig-list><ig-header></ig-header><ig-item></ig-item></ig-list>';
                 return tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
                 .then((fixture) => {                   
-                    //expect(fixture.componentInstance.viewChild).toBeDefined();
-                    //expect(fixture.componentInstance.viewChild).toBeAnInstanceOf(Infragistics.List);
+                    expect(fixture.componentInstance.viewChild).toBeDefined();
+                    expect(fixture.componentInstance.viewChild instanceof Infragistics.List).toBe(true);
+
+                    var header = fixture.debugElement.children[0].componentInstance;
+                    console.log(header);
+
+                    expect(header instanceof Infragistics.List).toBe(true);
+                    expect(fixture.componentInstance.viewChild instanceof Infragistics.List).toBe(true);
                 }).catch (reason => {
                     console.log(reason);
                     return Promise.reject(reason);

@@ -29,9 +29,9 @@ AppComponent = __decorate([
         directives: [
             Infragistics.Button,
             Infragistics.Icon,
-            Infragistics.Header,
-            Infragistics.Item,
-            Infragistics.List,
+            //Infragistics.Header,
+            //Infragistics.Item,
+            //Infragistics.List,
             Infragistics.TabBar,
             Infragistics.Tab
         ]

@@ -9,9 +9,9 @@ import * as Infragistics from '../../../src/main';
     directives: [
         Infragistics.Button,
         Infragistics.Icon,
-        Infragistics.Header,
-        Infragistics.Item,
-        Infragistics.List,
+        //Infragistics.Header,
+        //Infragistics.Item,
+        //Infragistics.List,
         Infragistics.TabBar,
         Infragistics.Tab
     ]

@@ -1,35 +1,35 @@
 <input id="searchbox" />
 <ig-list searchBoxId="searchbox" (filtered)="filteredHandler($event)">
-    <ig-header>Filtered List</ig-header>     
-    <ig-item *ngFor="let navItem of navItems; let index = index" [options]="options">
+    <ig-list-header>Filtered List</ig-list-header>     
+    <ig-list-item *ngFor="let navItem of navItems; let index = index" [options]="options">
       {{navItem.text}}
-    </ig-item>
+    </ig-list-item>
 </ig-list>
 
 <ig-list >
-  <ig-header>Href List</ig-header>     
-  <ig-item [href]="'http://google.com/'">Google</ig-item>
-  <ig-item [href]="'http://youtube.com/'">YouTube</ig-item>
-  <ig-item [href]="'http://facebook.com/'">Facebook</ig-item>
+  <ig-list-header>Href List</ig-list-header>     
+  <ig-list-item [href]="'http://google.com/'">Google</ig-list-item>
+  <ig-list-item [href]="'http://youtube.com/'">YouTube</ig-list-item>
+  <ig-list-item [href]="'http://facebook.com/'">Facebook</ig-list-item>
 </ig-list>
 
 <ig-list>
-  <ig-header>Mildly Sweet</ig-header>                                                                                                           
-  <ig-item>Red Delicious</ig-item>
-  <ig-item>Ambrosia</ig-item>
-  <ig-item>Rome</ig-item>
+  <ig-list-header>Mildly Sweet</ig-list-header>                                                                                                           
+  <ig-list-item>Red Delicious</ig-list-item>
+  <ig-list-item>Ambrosia</ig-list-item>
+  <ig-list-item>Rome</ig-list-item>
 
-  <ig-header>Sweet</ig-header>
-  <ig-item>Golden Delicious</ig-item>
-  <ig-item>Cosmic Crisp</ig-item>
-  <ig-item>Pinova</ig-item>
+  <ig-list-header>Sweet</ig-list-header>
+  <ig-list-item>Golden Delicious</ig-list-item>
+  <ig-list-item>Cosmic Crisp</ig-list-item>
+  <ig-list-item>Pinova</ig-list-item>
 </ig-list>
 <h3>Non-header List</h3>
 <ig-list>
-  <ig-item *ngFor="let navItem of navItems; let index = index">
+  <ig-list-item *ngFor="let navItem of navItems; let index = index">
     {{navItem.text}}
     <!-- <button ig-button class="ig-icon-button ig-delete" aria-label="Delete" (click)="removeItem(index)">
       <i ig-icon>delete</i>
     </button> -->
-  </ig-item>
+  </ig-list-item>
 </ig-list>

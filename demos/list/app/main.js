@@ -29,8 +29,8 @@ AppComponent = __decorate([
         styleUrls: ["app/main.css"],
         templateUrl: "app/main.html",
         directives: [
-            Infragistics.Header,
-            Infragistics.Item,
+            Infragistics.ListHeader,
+            Infragistics.ListItem,
             Infragistics.List,
         ]
     }), 
