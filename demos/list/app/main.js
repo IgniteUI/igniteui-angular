@@ -19,6 +19,9 @@ let AppComponent = class AppComponent {
             { text: "Nav4", link: "#" }
         ];
     }
+    filteredHandler(args) {
+        console.log(args);
+    }
 };
 AppComponent = __decorate([
     core_1.Component({
@@ -28,7 +31,7 @@ AppComponent = __decorate([
         directives: [
             Infragistics.Header,
             Infragistics.Item,
-            Infragistics.List
+            Infragistics.List,
         ]
     }), 
     __metadata('design:paramtypes', [])

@@ -1,4 +1,4 @@
-import { Component, Renderer, Input, ElementRef, ViewChild, AfterViewInit, ViewChildren } from '@angular/core';
+import { Component, Directive, Renderer, Input, ElementRef, ViewChild, AfterViewInit, ViewChildren, ViewContainerRef, ComponentResolver } from '@angular/core';
 import { HammerGesturesManager } from '../core/core';
 import { List } from './list';
 
@@ -126,3 +126,29 @@ export class Item {
         this.left = this.maxLeft;
     }
 }
+
+/*
+@Directive({
+   selector: 'ig-item-option',
+})
+export class ListItemOption {
+  @Input() src: string;
+  
+  constructor(private vcRef: ViewContainerRef, private resolver: ComponentResolver, html: string) {
+  }
+  
+  ngOnChanges() {
+    if (!this.src) return;
+    
+    const metadata = new ComponentMetadata({
+        selector: 'dynamic-html',
+        template: this.src,
+    });
+    createComponentFactory(this.resolver, metadata)
+      .then(factory => {
+        const injector = ReflectiveInjector.fromResolvedProviders([], this.vcRef.parentInjector);
+        this.vcRef.createComponent(factory, 0, injector, []);
+      });
+  }
+}
+*/

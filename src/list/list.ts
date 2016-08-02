@@ -1,4 +1,4 @@
-import { Component, Renderer, Input, ElementRef, ViewChild, AfterContentInit, ContentChildren, QueryList } from '@angular/core';
+import { Component, Renderer, Input, Output, ElementRef, ViewChild, AfterContentInit, ContentChildren, QueryList, EventEmitter } from '@angular/core';
 //import { HammerGesturesManager } from '../core/core';
 import { ContainsPipe } from './filter-pipe';
 import { Item } from './items';
@@ -25,6 +25,8 @@ export class List implements AfterContentInit {
     isCaseSensitiveFiltering: boolean = false;
 
     @Input() searchBoxId: string;
+    @Output() filtering = new EventEmitter();
+    @Output() filtered = new EventEmitter();
 
     constructor() {        
     }
@@ -34,16 +36,26 @@ export class List implements AfterContentInit {
         if(this.searchBoxId) {
             this._inputSearchBox = document.getElementById(this.searchBoxId);
             this._inputSearchBox.addEventListener("input", function() {
-                    self.filter(false);
+                    self.filter();
                 });
         }
     }
 
     filter() {
-        var searchText = (<HTMLInputElement>this._inputSearchBox).value,
-            metConditionFunction = (item) => { item.hidden = false; }, 
-            overdueConditionFunction = (item) => { item.hidden = true; };        
+        var searchText, result, metConditionFunction, overdueConditionFunction;
 
-        var result = new ContainsPipe().transform(this.items, searchText, this.isCaseSensitive, metConditionFunction, overdueConditionFunction);
+        this.filtering.emit({
+
+        });
+
+        searchText = (<HTMLInputElement>this._inputSearchBox).value;        
+        metConditionFunction = (item) => { item.hidden = false; }, 
+        overdueConditionFunction = (item) => { item.hidden = true; };        
+
+        var result = new ContainsPipe().transform(this.items, searchText, this.isCaseSensitiveFiltering, metConditionFunction, overdueConditionFunction);
+
+        this.filtered.emit({
+            result: result
+        });
     }
 }
