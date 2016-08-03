@@ -34,6 +34,22 @@ export function main() {
                 });
          })));
 
+         it('should initialize ig-list with search input attached',
+           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+              var template = '<input id="searchInput"/><ig-list searchInputId="searchInput"></ig-list>';
+                return tcb.overrideTemplate(ListTestComponent, template)
+                .createAsync(ListTestComponent)
+                .then((fixture) => {                    
+                    expect(fixture.componentInstance.viewChild).toBeDefined();
+                    fixture.detectChanges();
+                    expect(fixture.componentInstance.viewChild._searchInputElement instanceof HTMLInputElement).toBe(true);
+                    expect(fixture.componentInstance.viewChild.searchInputId).toBe("searchInput");
+                }).catch (reason => {
+                    console.log(reason);
+                    return Promise.reject(reason);
+                });
+         })));
+
          it('should filter properly',
            async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<ig-list><ig-list-item>Item 1</ig-list-item><ig-list-item>Item 2</ig-list-item><ig-list-item>Item 3</ig-list-item></ig-list>';
@@ -54,8 +70,8 @@ export function main() {
 
                     expect(visibleItems.length).toBe(3);
                     
-                    fixture.componentInstance.viewChild._inputSearchBox = document.createElement('input');
-                    fixture.componentInstance.viewChild._inputSearchBox.value = "1";
+                    fixture.componentInstance.viewChild._searchInputElement = document.createElement('input');
+                    fixture.componentInstance.viewChild._searchInputElement.value = "1";
                     fixture.detectChanges();
 
                     fixture.componentInstance.viewChild.filter();
@@ -82,8 +98,6 @@ export function main() {
 })
 class ListTestComponent {
      @ViewChild(Infragistics.List) public viewChild: Infragistics.List;
-     //@ContentChildren(Infragistics.ListItem) items: QueryList<Infragistics.ListItem>;
-     //@ContentChildren(Infragistics.ListHeader) headers: QueryList<Infragistics.ListHeader>;
 }
 
 @Component({

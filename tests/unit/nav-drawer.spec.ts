@@ -19,7 +19,7 @@ export function main() {
            return tcb.overrideTemplate(TestComponent, template)
                .createAsync(TestComponent)
                .then((fixture ) => {
-                 //expect(fixture.debugElement.children[0].componentInstance).toBeAnInstanceOf(Infragistics.NavigationDrawer);
+                 expect(fixture.debugElement.children[0].componentInstance instanceof Infragistics.NavigationDrawer).toBeTruthy();
                  expect(fixture.debugElement.children[0].componentInstance.state).toBeNull();
                });
          })));
@@ -35,8 +35,8 @@ export function main() {
                     fixture.detectChanges();
                     
                     expect(fixture.componentInstance.viewChild).toBeDefined();
-                    //expect(fixture.componentInstance.viewChild).toBeAnInstanceOf(Infragistics.NavigationDrawer);
-                    //expect(fixture.componentInstance.viewChild.state).toBeAnInstanceOf(Infragistics.NavigationService);
+                    expect(fixture.componentInstance.viewChild instanceof Infragistics.NavigationDrawer).toBeTruthy();
+                    expect(fixture.componentInstance.viewChild.state instanceof Infragistics.NavigationService).toBeTruthy();
                 }).catch (reason => {
                     console.log(reason);
                     return Promise.reject(reason);
@@ -73,7 +73,7 @@ export function main() {
                         touchManager = fixture.componentInstance.viewChild.touchManager;
 
                     expect(state.get("testNav")).toBeDefined();
-                    //expect(touchManager.getManagerForElement(document)).toBeAnInstanceOf(Hammer.Manager);
+                    expect(touchManager.getManagerForElement(document) instanceof Hammer.Manager).toBeTruthy();
                     
                     fixture.destroy();
                     expect(state.get("testNav")).toBeUndefined();
@@ -191,14 +191,14 @@ export function main() {
                 .then((fixture) => {
                     fixture.detectChanges();
                     
-                    expect(fixture.componentInstance.viewChild.pin).toBe(true);
+                    expect(fixture.componentInstance.viewChild.pin).toBeTruthy();
                     //expect(fixture.debugElement.query((x) => { return x.nativeNode.nodeName === "ASIDE";}).nativeElement).toHaveCssClass("pinned");
                     
                     expect(fixture.componentInstance.viewChild.enableGestures).toBe(false);
                     
                     fixture.componentInstance.enableGestures = "true";
                     fixture.detectChanges();
-                    expect(fixture.componentInstance.viewChild.enableGestures).toBe(true);
+                    expect(fixture.componentInstance.viewChild.enableGestures).toBeTruthy();
                     
                 }).catch (reason => {
                     console.log(reason);
