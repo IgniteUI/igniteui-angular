@@ -1,7 +1,7 @@
 import { Component, Renderer, Input, Output, ElementRef, ViewChild, AfterContentInit, ContentChildren, QueryList, EventEmitter } from '@angular/core';
 //import { HammerGesturesManager } from '../core/core';
 import { ContainsPipe } from './filter-pipe';
-import { ListItem } from './items';
+import { ListItem, ListHeader } from './items';
 
 declare var module: any;
 
@@ -12,17 +12,23 @@ declare var module: any;
     host: { 'role': 'list' },
     pipes: [ ContainsPipe ],
     moduleId: module.id, // commonJS standard
-    directives: [ListItem],
+    directives: [ListItem, ListHeader],
     templateUrl: 'list-content.html'
 })
 
 export class List implements AfterContentInit {
+    //@ContentChildren(ListItem) _items: QueryList<ListItem>;
     @ContentChildren(ListItem) items: QueryList<ListItem>;
+    @ContentChildren(ListHeader) headers: QueryList<ListHeader>;
 
     private _innerStyle: string = "ig-list-inner";
     private _inputSearchBox: HTMLElement;
 
     isCaseSensitiveFiltering: boolean = false;
+
+    /*get items() { 
+        return this._items; 
+    }*/
 
     @Input() searchBoxId: string;
     @Output() filtering = new EventEmitter();

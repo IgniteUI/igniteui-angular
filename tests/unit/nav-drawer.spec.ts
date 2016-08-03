@@ -167,7 +167,7 @@ export function main() {
             return result;
          })));
          
-        it('should properly initialize with min temaplte',
+        it('should properly initialize with min template',
             async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
                 var template = '<ig-nav-drawer><ig-drawer-content></ig-drawer-content><ig-drawer-mini-content></ig-drawer-mini-content></ig-nav-drawer>';
                 return tcb.overrideTemplate(TestComponentDI, template)
