@@ -31,7 +31,7 @@ export function main() {
                 .createAsync(TestComponentDI)
                 .then((fixture) => {
                     //http://stackoverflow.com/a/36444489
-                    //expect(fixture.componentInstance.viewChild).toBeUndefined();
+                    //expect(fixture.componentInstance.viewChild).toBeUndefined(); // commented after RC4 was released
                     fixture.detectChanges();
                     
                     expect(fixture.componentInstance.viewChild).toBeDefined();
@@ -51,9 +51,9 @@ export function main() {
                 .then((fixture) => {
                     fixture.detectChanges();
                     
-                    //expect(fixture.componentInstance.viewChild.drawer).toHaveCssClass("ig-nav-drawer");
-                    //expect(fixture.componentInstance.viewChild.overlay).toHaveCssClass("ig-nav-drawer-overlay");
-                    //expect(fixture.componentInstance.viewChild.styleDummy).toHaveCssClass("style-dummy");
+                    expect(fixture.componentInstance.viewChild.drawer.classList).toContain("ig-nav-drawer");
+                    expect(fixture.componentInstance.viewChild.overlay.classList).toContain("ig-nav-drawer-overlay");
+                    expect(fixture.componentInstance.viewChild.styleDummy.classList).toContain("style-dummy");
                     expect(fixture.componentInstance.viewChild.animateWidth).toBeFalsy();
                     
                 }).catch (reason => {
@@ -176,7 +176,7 @@ export function main() {
                     fixture.detectChanges();
                     
                     expect(fixture.componentInstance.viewChild.animateWidth).toBeTruthy();
-                    //expect(fixture.debugElement.query((x) => { return x.nativeNode.nodeName === "ASIDE";}).nativeElement).toHaveCssClass("mini");
+                    expect(fixture.debugElement.query((x) => { return x.nativeNode.nodeName === "ASIDE";}).nativeElement.classList).toContain("mini");
                 }).catch (reason => {
                     console.log(reason);
                     return Promise.reject(reason);
@@ -192,7 +192,7 @@ export function main() {
                     fixture.detectChanges();
                     
                     expect(fixture.componentInstance.viewChild.pin).toBeTruthy();
-                    //expect(fixture.debugElement.query((x) => { return x.nativeNode.nodeName === "ASIDE";}).nativeElement).toHaveCssClass("pinned");
+                    expect(fixture.debugElement.query((x) => { return x.nativeNode.nodeName === "ASIDE";}).nativeElement.classList).toContain("pinned");
                     
                     expect(fixture.componentInstance.viewChild.enableGestures).toBe(false);
                     
@@ -269,12 +269,12 @@ export function main() {
                     
                     // not enough distance
                     navDrawer.panstart({ pointerType: "touch", deltaX: 20, center: { x: 10, y: 10 }, distance: 10 });
-                    //expect(navDrawer.drawer).toHaveCssClass("panning");
+                    expect(navDrawer.drawer.classList).toContain("panning");
                     navDrawer.pan({ pointerType: "touch", deltaX: 20, center: { x: 10, y: 10 }, distance: 10 });
                     
                     // must wait for raf to test for pan position
                     window.requestAnimationFrame(() => {
-                        //expect(navDrawer.drawer).toHaveCssStyle({transform: "translate3d(-280px, 0px, 0px)"});
+                        expect(navDrawer.drawer.style.transform).toBe("translate3d(-280px, 0px, 0px)");
                         navDrawer.panEnd({ pointerType: "touch", deltaX: 20, center: { x: 10, y: 10 }, distance: 10 });
                         expect(navDrawer.isOpen).toEqual(false, "should ignore too short pan");
                         
@@ -355,7 +355,7 @@ export function main() {
                     fixture.componentInstance.drawerWidth = "350px";
                     fixture.detectChanges();
                     window.requestAnimationFrame(() => {        
-                        //expect(fixture.componentInstance.viewChild.drawer).toHaveCssStyle({width: "350px"});
+                        expect(fixture.componentInstance.viewChild.drawer.style.width).toBe("350px");
                         resolver();
                     });
                     
@@ -393,19 +393,3 @@ class TestComponentPin extends TestComponentDI {
      pin: boolean = true;
      enableGestures: string = "";
 }
-
-// import {ElementRef, Optional, Inject, Renderer} from 'angular2/core';
-// import { HammerGesturesManager } from '../../src/core/touch';
-// class TestDrawer extends Infragistics.NavigationDrawer {
-//     constructor(
-//         @Inject(ElementRef) elementRef: ElementRef,
-//         @Optional() state: Infragistics.NavigationService,
-//         protected renderer:Renderer,
-//         touchManager: HammerGesturesManager) 
-//     {
-//         super(elementRef, state, null, renderer, touchManager);
-//     }
-//     public getExpectedWidth (mini?: boolean) : number {
-//         return super.getExpectedWidth(mini);
-//     };
-// }

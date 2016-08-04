@@ -16,18 +16,18 @@ export function main() {
                 .createAsync(ListTestComponent)
                 .then((fixture) => {                    
                     expect(fixture.componentInstance.viewChild).toBeDefined();
-                    expect(fixture.componentInstance.viewChild instanceof Infragistics.List).toBe(true);
+                    expect(fixture.componentInstance.viewChild instanceof Infragistics.List).toBeTruthy();
                     expect(fixture.componentInstance.viewChild.items).toBeUndefined();
                     expect(fixture.componentInstance.viewChild.headers).toBeUndefined();
                     fixture.detectChanges();
 
-                    expect(fixture.componentInstance.viewChild.items instanceof QueryList).toBe(true);
+                    expect(fixture.componentInstance.viewChild.items instanceof QueryList).toBeTruthy();
                     expect(fixture.componentInstance.viewChild.items.length).toBe(1);
-                    expect(fixture.componentInstance.viewChild.items.first instanceof Infragistics.ListItem).toBe(true);
+                    expect(fixture.componentInstance.viewChild.items.first instanceof Infragistics.ListItem).toBeTruthy();
 
-                    expect(fixture.componentInstance.viewChild.headers instanceof QueryList).toBe(true);
+                    expect(fixture.componentInstance.viewChild.headers instanceof QueryList).toBeTruthy();
                     expect(fixture.componentInstance.viewChild.headers.length).toBe(1);
-                    expect(fixture.componentInstance.viewChild.headers.first instanceof Infragistics.ListHeader).toBe(true);
+                    expect(fixture.componentInstance.viewChild.headers.first instanceof Infragistics.ListHeader).toBeTruthy();
                 }).catch (reason => {
                     console.log(reason);
                     return Promise.reject(reason);
@@ -42,7 +42,7 @@ export function main() {
                 .then((fixture) => {                    
                     expect(fixture.componentInstance.viewChild).toBeDefined();
                     fixture.detectChanges();
-                    expect(fixture.componentInstance.viewChild._searchInputElement instanceof HTMLInputElement).toBe(true);
+                    expect(fixture.componentInstance.viewChild._searchInputElement instanceof HTMLInputElement).toBeTruthy();
                     expect(fixture.componentInstance.viewChild.searchInputId).toBe("searchInput");
                 }).catch (reason => {
                     console.log(reason);
@@ -63,7 +63,7 @@ export function main() {
                     items = fixture.componentInstance.viewChild.items.toArray();
 
                     for (let item of items) {
-                        expect(item instanceof Infragistics.ListItem).toBe(true);
+                        expect(item instanceof Infragistics.ListItem).toBeTruthy();
                     }
 
                     visibleItems = items.filter((listItem) => { return !listItem.hidden; });
@@ -79,12 +79,42 @@ export function main() {
 
                     visibleItems = items.filter((listItem) => { return !listItem.hidden; });
                     expect(visibleItems.length).toBe(1);
-                    expect(visibleItems[0] instanceof Infragistics.ListItem).toBe(true);                 
+                    expect(visibleItems[0] instanceof Infragistics.ListItem).toBeTruthy();
                 }).catch (reason => {
                     console.log(reason);
                     return Promise.reject(reason);
                 });
          })));
+
+         it('should set/get properly layout properties: width, left, maxLeft',
+           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+              var template = '<div #wrapper><ig-list><ig-list-item></ig-list-item></ig-list></div>';
+                return tcb.overrideTemplate(ListTestComponent, template)
+                .createAsync(ListTestComponent)
+                .then((fixture) => {       
+                    var item, visibleAreaOnFullPan , testWidth = 400, testLeft = -100;
+                    fixture.componentInstance.wrapper.nativeElement.style.width = testWidth + "px";
+                    fixture.detectChanges();
+                    expect(fixture.componentInstance.viewChild.items.length).toBe(1);
+
+                    item = fixture.componentInstance.viewChild.items.first;
+                    visibleAreaOnFullPan = item._VISIBLE_AREA_ON_FULL_PAN;
+
+                    expect(item instanceof Infragistics.ListItem).toBeTruthy();
+                    expect(item.width).toBe(testWidth);
+                    expect(item.left).toBe(0);
+                    expect(item.maxLeft).toBe(visibleAreaOnFullPan - testWidth);
+
+                    item.left = testLeft;
+                    expect(item.left).toBe(testLeft);
+
+                }).catch (reason => {
+                    console.log(reason);
+                    return Promise.reject(reason);
+                });
+         })));
+
+         // end of tests
     });
 }
 
@@ -98,6 +128,7 @@ export function main() {
 })
 class ListTestComponent {
      @ViewChild(Infragistics.List) public viewChild: Infragistics.List;
+     @ViewChild("wrapper") public wrapper: HTMLElement;
 }
 
 @Component({
