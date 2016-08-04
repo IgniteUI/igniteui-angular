@@ -1,30 +1,29 @@
-import { Component, Renderer, Input, Output, ElementRef, ViewChild, AfterContentInit, ContentChildren, QueryList, EventEmitter } from '@angular/core';
-//import { HammerGesturesManager } from '../core/core';
+import { Component, Input, Output, AfterContentInit, ContentChildren, QueryList, EventEmitter } from '@angular/core';
 import { ContainsPipe } from './filter-pipe';
-import { Item } from './items';
+import { ListItem, ListHeader } from './items';
 
 declare var module: any;
 
-// ====================== LIST ================================
-// The `<ig-list>` component is a list container for 1..n `<ig-item>` tags.
 @Component({
     selector: 'ig-list',
     host: { 'role': 'list' },
     pipes: [ ContainsPipe ],
     moduleId: module.id, // commonJS standard
-    directives: [Item],
+    directives: [ListItem, ListHeader],
     templateUrl: 'list-content.html'
 })
 
 export class List implements AfterContentInit {
-    @ContentChildren(Item) items: QueryList<Item>;
+    //@ContentChildren(ListItem) _items: QueryList<ListItem>;
+    @ContentChildren(ListItem) items: QueryList<ListItem>;
+    @ContentChildren(ListHeader) headers: QueryList<ListHeader>;
 
     private _innerStyle: string = "ig-list-inner";
-    private _inputSearchBox: HTMLElement;
+    private _searchInputElement: HTMLElement;
 
     isCaseSensitiveFiltering: boolean = false;
 
-    @Input() searchBoxId: string;
+    @Input() searchInputId: string;
     @Output() filtering = new EventEmitter();
     @Output() filtered = new EventEmitter();
 
@@ -33,29 +32,33 @@ export class List implements AfterContentInit {
 
     ngAfterContentInit() {
         var self = this;
-        if(this.searchBoxId) {
-            this._inputSearchBox = document.getElementById(this.searchBoxId);
-            this._inputSearchBox.addEventListener("input", function() {
+        if(this.searchInputId) {
+            this._searchInputElement = document.getElementById(this.searchInputId);
+            if(this._searchInputElement) {
+                this._searchInputElement.addEventListener("input", function() {
                     self.filter();
                 });
+            }            
         }
     }
 
     filter() {
         var searchText, result, metConditionFunction, overdueConditionFunction;
 
-        this.filtering.emit({
+        if(this._searchInputElement) {
+            this.filtering.emit({
+                // TODO: cancel filtering
+            });
 
-        });
+            searchText = (<HTMLInputElement>this._searchInputElement).value;        
+            metConditionFunction = (item) => { item.hidden = false; }, 
+            overdueConditionFunction = (item) => { item.hidden = true; };        
 
-        searchText = (<HTMLInputElement>this._inputSearchBox).value;        
-        metConditionFunction = (item) => { item.hidden = false; }, 
-        overdueConditionFunction = (item) => { item.hidden = true; };        
+            var result = new ContainsPipe().transform(this.items, searchText, this.isCaseSensitiveFiltering, metConditionFunction, overdueConditionFunction);
 
-        var result = new ContainsPipe().transform(this.items, searchText, this.isCaseSensitiveFiltering, metConditionFunction, overdueConditionFunction);
-
-        this.filtered.emit({
-            result: result
-        });
+            this.filtered.emit({
+                result: result
+            });
+        }        
     }
 }

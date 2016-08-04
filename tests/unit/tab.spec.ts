@@ -30,7 +30,7 @@ export function main() {
                 return tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
                 .then((fixture) => {           
-                    debugger;       
+                    //debugger;       
                     expect(fixture.componentInstance.viewChild).toBeDefined();                    
                 }).catch (reason => {
                     console.log(reason);

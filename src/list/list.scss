@@ -61,7 +61,7 @@ ig-list {
 }
 
 /* header component */
-ig-header {
+ig-list-header {
 
     .ig-header-inner {
         color: $default-color;
@@ -74,7 +74,7 @@ ig-header {
 }
 
 /* item component */
-ig-item {    
+ig-list-item {    
     display: list-item;
     list-style-type: none;
     position: relative;
@@ -145,6 +145,6 @@ ig-item {
     }    
 }
 
-ig-item, ig-header, ig-list, ig-list .ig-list-inner {
+ig-list-item, ig-list-header, ig-list, ig-list .ig-list-inner {
     overflow: hidden;
 }
