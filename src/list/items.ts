@@ -33,14 +33,13 @@ export class ListItem {
 
     private _VISIBLE_AREA_ON_FULL_PAN = 40; // in pixels
     private _initialLeft: number = null;
-    private _element: ElementRef;
     private _innerStyle: string = "ig-item-inner";
 
     hidden: boolean;
 
     get width() { 
-        if(this._element) {
-            return this._element.nativeElement.offsetWidth;
+        if(this.element) {
+            return this.element.nativeElement.offsetWidth;
         } else {
             return 0;
         }        
@@ -66,15 +65,14 @@ export class ListItem {
     @Input() href: string;
     @Input() options: Array<Object>
 
-    constructor(private element: ElementRef, renderer: Renderer) {
-        this._element = element;
-        this._addEventListeners(renderer);
+    constructor(public element: ElementRef, private _renderer: Renderer) {
+        this._addEventListeners();
     }
 
-    private _addEventListeners(renderer: Renderer) {
-        renderer.listen(this._element.nativeElement, 'panstart', (event) => { this.panStart(event); });
-        renderer.listen(this._element.nativeElement, 'panmove', (event) => { this.panMove(event); });
-        renderer.listen(this._element.nativeElement, 'panend', (event) => { this.panEnd(event); });
+    private _addEventListeners() {
+        this._renderer.listen(this.element.nativeElement, 'panstart', (event) => { this.panStart(event); });
+        this._renderer.listen(this.element.nativeElement, 'panmove', (event) => { this.panMove(event); });
+        this._renderer.listen(this.element.nativeElement, 'panend', (event) => { this.panEnd(event); });
     }
 
     private cancelEvent(ev: HammerInput) {

@@ -1,4 +1,4 @@
-import { Component, Input, Output, AfterContentInit, ContentChildren, QueryList, EventEmitter } from '@angular/core';
+import { Component, Input, Output, AfterContentInit, ContentChildren, QueryList, EventEmitter, Renderer } from '@angular/core';
 import { ContainsPipe } from './filter-pipe';
 import { ListItem, ListHeader } from './items';
 
@@ -14,7 +14,6 @@ declare var module: any;
 })
 
 export class List implements AfterContentInit {
-    //@ContentChildren(ListItem) _items: QueryList<ListItem>;
     @ContentChildren(ListItem) items: QueryList<ListItem>;
     @ContentChildren(ListHeader) headers: QueryList<ListHeader>;
 
@@ -27,7 +26,7 @@ export class List implements AfterContentInit {
     @Output() filtering = new EventEmitter();
     @Output() filtered = new EventEmitter();
 
-    constructor() {        
+    constructor(private _renderer: Renderer) {        
     }
 
     ngAfterContentInit() {
@@ -35,9 +34,7 @@ export class List implements AfterContentInit {
         if(this.searchInputId) {
             this._searchInputElement = document.getElementById(this.searchInputId);
             if(this._searchInputElement) {
-                this._searchInputElement.addEventListener("input", function() {
-                    self.filter();
-                });
+                this._renderer.listen(this._searchInputElement, 'input', this.filter.bind(this));
             }            
         }
     }
