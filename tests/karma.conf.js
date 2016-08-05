@@ -48,7 +48,7 @@ module.exports = function(config){
         // swap with singleRun to keep the runner active to debug errors
 		// autoWatch : true,
         
-		singleRun : false,
+		singleRun : true,
 
 		frameworks: ['jasmine'],
 
