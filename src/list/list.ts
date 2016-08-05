@@ -40,22 +40,25 @@ export class List implements AfterContentInit {
     }
 
     filter() {
-        var searchText, result, metConditionFunction, overdueConditionFunction;
+        var searchText, result, metConditionFunction, overdueConditionFunction, 
+            filteringArgs, filteredArgs ;
 
         if(this._searchInputElement) {
-            this.filtering.emit({
-                // TODO: cancel filtering
-            });
+            filteringArgs = { cancel: false };
+            this.filtering.emit(filteringArgs);
+
+            if(filteringArgs.cancel) { 
+                return; 
+            }
 
             searchText = (<HTMLInputElement>this._searchInputElement).value;        
             metConditionFunction = (item) => { item.hidden = false; }, 
             overdueConditionFunction = (item) => { item.hidden = true; };        
 
-            var result = new ContainsPipe().transform(this.items, searchText, this.isCaseSensitiveFiltering, metConditionFunction, overdueConditionFunction);
+            result = new ContainsPipe().transform(this.items, searchText, this.isCaseSensitiveFiltering, metConditionFunction, overdueConditionFunction);
 
-            this.filtered.emit({
-                result: result
-            });
+            filteredArgs = { result: result }
+            this.filtered.emit(filteredArgs);
         }        
     }
 }

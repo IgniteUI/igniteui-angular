@@ -21,6 +21,11 @@ export class AppComponent {
             { text: "Nav4", link: "#" }
         ];
 
+    filteringHandler(args) {
+        //args.cancel = true;
+        console.log(args);
+    }
+
     filteredHandler(args) {
         console.log(args);
     }
