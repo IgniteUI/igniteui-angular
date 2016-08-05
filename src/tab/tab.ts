@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, ViewChild, AfterViewInit, AfterContentInit } from '@angular/core';
+import { Component, Input, Output, ElementRef, ViewChild, AfterViewInit, AfterContentInit, EventEmitter } from '@angular/core';
 
 declare var module: any;
 
@@ -13,7 +13,6 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
 
     private _maxNumberTabsDisplayed: number = 5;
     private _itemStyle: string = "ig-tab-bar-inner";
-    private _element: ElementRef;
     private get _visibleTabs() {
         return this.tabs.length > this._maxNumberTabsDisplayed ? this.tabs.filter(t => t.index < this._maxNumberTabsDisplayed - 1) : this.tabs;
     }
@@ -24,8 +23,9 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
 
     @Input() alignment: string = "top";
 
-    constructor(element: ElementRef) {
-        this._element = element;        
+    @Output() selectTab = new EventEmitter();
+
+    constructor(private _element: ElementRef) {
     }
 
     ngAfterContentInit() {
@@ -82,7 +82,6 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
 
         tab = this.tabs[index];
 
-
         if(tab.isDisabled) {
             return;
         }
@@ -92,6 +91,8 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
 
         this.selectedIndex = index;
         this.selectedTab = tab;
+
+        this.selectTab.emit({ index: index, tab: tab });
     }
 
     private _selectTabMore() {
@@ -131,11 +132,8 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
 export class Tab {
     @ViewChild('wrapper') wrapper: ElementRef;
 
-    private _itemStyle: string = "ig-tab-inner";    
-    private _tabBar: TabBar;
-    // changes and updates accordingly applied to the tab. 
-    private _changesCount: number = 0;
-    private _element: ElementRef;
+    private _itemStyle: string = "ig-tab-inner";     
+    private _changesCount: number = 0; // changes and updates accordingly applied to the tab.
 
     index: number;
     height: number;    
@@ -150,36 +148,34 @@ export class Tab {
     @Input() label: string;
     @Input() icon: string;
     @Input() disabled: boolean;
-    @Input() href: string;   // TODO - need to be disccussed
+    @Input() href: string;   // TODO - need to be disccussed    
 
-      constructor(tabBar: TabBar, element: ElementRef) {
-        this._tabBar = tabBar;
-        this._element = element;
+    constructor(private _tabBar: TabBar, private _element: ElementRef) {
         this._tabBar.add(this);
         this.index = this._tabBar.tabs.length - 1;
-      }
+    }
 
-      click() {
+    click() {
         if(this.href) {
                 // TODO - href implementation. Priority over nested content
-            } else {
-                this.select();
-            }        
-      }
+        } 
 
-      select() {
-        this._tabBar.select(this.index);
-      }
+        this.select();                  
+    }
 
-      deselect() {
+    select() {
+        this._tabBar.select(this.index);        
+    }
+
+    deselect() {
         this.isSelected = false;
-      }
+    }
 
-      setHeight(height: number){
+    setHeight(height: number){
         this.wrapper.nativeElement.style.height = height + "px";
-      }
+    }
 
-      setMargin(margin: number){
+    setMargin(margin: number){
         this.wrapper.nativeElement.style.marginTop = margin + "px";
-      }
+    }
 }

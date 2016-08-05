@@ -109,14 +109,14 @@ export function main() {
                       items = list.items.toArray();                      
                       visibleItems = items.filter((listItem) => { return !listItem.hidden; });
 
-                      expect(fixture.componentInstance.viewChild.items.length).toBe(3);
+                      expect(list.items.length).toBe(3);
                       expect(visibleItems.length).toBe(3);
 
                       list._searchInputElement = document.createElement('input');
                       list._searchInputElement.value = "2";
 
                       fixture.detectChanges();
-                      fixture.componentInstance.viewChild.filter();
+                      list.filter();
 
                       fixture.detectChanges();                      
                       visibleItems = items.filter((listItem) => { return !listItem.hidden; }); 
@@ -126,7 +126,7 @@ export function main() {
 
                       // clear the filter
                       list._searchInputElement.value = "";                      
-                      fixture.componentInstance.viewChild.filter();
+                      list.filter();
 
                       fixture.detectChanges();
 

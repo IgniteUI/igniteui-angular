@@ -13,11 +13,10 @@ export function main() {
          it('should initialize ig-tab',
            async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<ig-tab-bar></ig-tab-bar>';
-                return tcb.overrideTemplate(TestComponentDI, template)
-                .createAsync(TestComponentDI)
+                return tcb.overrideTemplate(TabBarTestComponent, template)
+                .createAsync(TabBarTestComponent)
                 .then((fixture) => {                  
-                    expect(fixture.componentInstance.viewChild).toBeDefined();
-                    //expect(fixture.componentInstance.viewChild).toBeAnInstanceOf(Infragistics.TabBar);
+
                 }).catch (reason => {
                     console.log(reason);
                     return Promise.reject(reason);
@@ -27,11 +26,10 @@ export function main() {
          it('should initialize ig-tab',
            async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<ig-tab-bar><ig-tab label="Tab 1">Content of Tab 1</ig-tab><ig-tab label="Tab 2">Content of Tab 2</ig-tab></ig-tab-bar>';
-                return tcb.overrideTemplate(TestComponentDI, template)
-                .createAsync(TestComponentDI)
+                return tcb.overrideTemplate(TabBarTestComponent, template)
+                .createAsync(TabBarTestComponent)
                 .then((fixture) => {           
-                    //debugger;       
-                    expect(fixture.componentInstance.viewChild).toBeDefined();                    
+                
                 }).catch (reason => {
                     console.log(reason);
                     return Promise.reject(reason);
@@ -43,25 +41,25 @@ export function main() {
 @Component({
     selector: 'test-cmp',
     template: '<div></div>', //"Component 'TestComponent' must have either 'template' or 'templateUrl' set."
-    directives: [Infragistics.TabBar]
+    directives: [
+        Infragistics.TabBar,
+        Infragistics.Tab
+    ]
 })
-class TestComponent {
+class TabBarTestComponent {
      @ViewChild(Infragistics.TabBar) public viewChild: Infragistics.TabBar;
 }
 
 @Component({
     selector: 'test-cmp', 
     template: '<div></div>', //"Component 'TestComponent' must have either 'template' or 'templateUrl' set."
-    //providers: [Infragistics.NavigationService],
-    directives: [Infragistics.TabBar]
+    directives: [Infragistics.Tab]
 })
-class TestComponentDI {
-     //drawerMiniWidth: number;
-     //drawerWidth: number;
-     @ViewChild(Infragistics.TabBar) public viewChild: Infragistics.TabBar;
+class TabTestComponent {
+     @ViewChild(Infragistics.TabBar) public viewChild: Infragistics.Tab;
 }
 
-class TestComponentPin extends TestComponentDI {
+//class TestComponentPin extends TestComponentDI {
      //pin: boolean = true;
      //enableGestures: string = "";
-}
+//}

@@ -18,10 +18,15 @@ import * as Infragistics from '../../../src/main';
 })
 
 export class AppComponent {
-    datasource: Array<Object> = [
+    /*datasource: Array<Object> = [
         { text: "Nav1", link: "#" },
         { text: "Nav2", link: "#" },
         { text: "Nav3", link: "#" },
         { text: "Nav4", link: "#" }
-      ];
+      ];*/
+
+      selectTab(args) {
+        console.log("index: " + args.index);
+        console.log("tab: " + args.tab);
+      }
 }
