@@ -17,9 +17,41 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
         return this.tabs.length > this._maxNumberTabsDisplayed ? this.tabs.filter(t => t.index < this._maxNumberTabsDisplayed - 1) : this.tabs;
     }
 
+    private get _height() {
+        return this._element.nativeElement.offsetHeight;
+    }
+
+    private get _columns() {
+        return this.tabs.length > this._maxNumberTabsDisplayed ? this._maxNumberTabsDisplayed : this.tabs.length ;
+    }
+
+    private get tabListHeight() {
+        if(this._tabList) {
+            return this._tabList.nativeElement.offsetHeight;
+        }
+        
+        return 0;
+    }
+
     tabs: Tab[] = [];
-    selectedTab: Tab;
-    selectedIndex: number = 0;
+
+    get selectedTab() {
+        var selectedTabs = this.tabs.filter((tab) => tab.isSelected);
+
+        if(selectedTabs.length == 0) {
+            return undefined;
+        } else {
+            return selectedTabs[selectedTabs.length - 1];
+        }
+    }
+
+    get selectedIndex() {
+        if(this.selectedTab) {
+            return this.selectedTab.index;
+        }
+
+        return undefined;
+    }
 
     @Input() alignment: string = "top";
 
@@ -36,7 +68,7 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
 
             if(tab) {
                 this.select(tab.index);
-            }            
+            }
         }    
     }
 
@@ -44,17 +76,17 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
         var self = this;
 
         this.tabs.forEach((tab) => { 
-            let tabListHeight = self._getTabListHeight();
-            tab.setHeight(self._getHeight() - tabListHeight);
+            let tabListHeight = self.tabListHeight;
+            tab.height = self._height - tabListHeight;
             if(self.alignment == "top") {
-                tab.setMargin(tabListHeight);
+                tab.margin = tabListHeight;
             }
         });             
     }
 
     add(tab: Tab) {
         this.tabs.push(tab);
-        this.tabs.forEach((tab) => { tab.columnCount = this._getColumns(); });
+        this.tabs.forEach((tab) => { tab.columnCount = this._columns; });
     }
 
     remove(index: number) {
@@ -89,30 +121,25 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
         this.tabs.forEach((tab) => { tab.deselect(); });
         tab.isSelected = true;
 
-        this.selectedIndex = index;
-        this.selectedTab = tab;
-
         this.selectTab.emit({ index: index, tab: tab });
+    }
+
+    deselect(index: number) {
+        var tab;
+
+        if(!this._validateTabIndex(index)) {
+            return;
+        }
+
+        tab = this.tabs[index];
+
+        if(!tab.isDisabled && tab.isSelected) {
+            tab.isSelected = false;
+        }        
     }
 
     private _selectTabMore() {
         alert("Tab More is clicked");
-    }
-
-    private _getColumns() {
-        return this.tabs.length > this._maxNumberTabsDisplayed ? this._maxNumberTabsDisplayed : this.tabs.length ;
-    }
-
-    private _getHeight() {
-        return this._element.nativeElement.offsetHeight;
-    }
-
-    private _getTabListHeight() {
-        if(this._tabList) {
-            return this._tabList.nativeElement.offsetHeight;
-        }
-        
-        return 0;
     }
 
     private _validateTabIndex(index) {
@@ -136,10 +163,30 @@ export class Tab {
     private _changesCount: number = 0; // changes and updates accordingly applied to the tab.
 
     index: number;
-    height: number;    
     isSelected: boolean = false;
+
     get isDisabled() { 
         return this.disabled !== undefined;
+    }
+
+    set isDisabled(value: boolean) { 
+        this.disabled = value;
+    }
+
+    get height() {
+        return this.wrapper.nativeElement.style.height;
+    }
+
+    set height(value: number){
+        this.wrapper.nativeElement.style.height = value + "px";
+    }
+
+    get margin(){
+        return this.wrapper.nativeElement.style.marginTop;
+    }
+
+    set margin(value: number){
+        this.wrapper.nativeElement.style.marginTop = value + "px";
     }
 
     // Indirectly defines the width of the tab.
@@ -155,27 +202,15 @@ export class Tab {
         this.index = this._tabBar.tabs.length - 1;
     }
 
-    click() {
+    select() {
         if(this.href) {
                 // TODO - href implementation. Priority over nested content
         } 
 
-        this.select();                  
-    }
-
-    select() {
         this._tabBar.select(this.index);        
     }
 
     deselect() {
-        this.isSelected = false;
-    }
-
-    setHeight(height: number){
-        this.wrapper.nativeElement.style.height = height + "px";
-    }
-
-    setMargin(margin: number){
-        this.wrapper.nativeElement.style.marginTop = margin + "px";
+        this._tabBar.deselect(this.index);
     }
 }

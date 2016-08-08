@@ -12,12 +12,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 const core_1 = require('@angular/core');
 const Infragistics = require('../../../src/main');
 let AppComponent = class AppComponent {
-    /*datasource: Array<Object> = [
-        { text: "Nav1", link: "#" },
-        { text: "Nav2", link: "#" },
-        { text: "Nav3", link: "#" },
-        { text: "Nav4", link: "#" }
-      ];*/
     selectTab(args) {
         console.log("index: " + args.index);
         console.log("tab: " + args.tab);
@@ -29,11 +23,8 @@ AppComponent = __decorate([
         moduleId: module.id,
         templateUrl: "main.html",
         directives: [
-            Infragistics.Button,
-            Infragistics.Icon,
-            //Infragistics.Header,
-            //Infragistics.Item,
-            //Infragistics.List,
+            //Infragistics.Button,
+            //Infragistics.Icon,
             Infragistics.TabBar,
             Infragistics.Tab
         ]
