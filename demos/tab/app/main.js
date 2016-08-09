@@ -14,7 +14,8 @@ const Infragistics = require('../../../src/main');
 let AppComponent = class AppComponent {
     selectTab(args) {
         console.log("index: " + args.index);
-        console.log("tab: " + args.tab);
+        console.log(args.tab);
+        //args.tab._tabBar.remove(args.tab.index);
     }
 };
 AppComponent = __decorate([

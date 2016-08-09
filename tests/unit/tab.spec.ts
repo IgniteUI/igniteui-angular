@@ -143,6 +143,44 @@ export function main() {
                 });
          })));
 
+        it('should remove tab',
+           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+                var template = '<ig-tab-bar><ig-tab></ig-tab><ig-tab></ig-tab><ig-tab></ig-tab><ig-tab></ig-tab></ig-tab-bar>';
+                return tcb.overrideTemplate(TabBarTestComponent, template)
+                .createAsync(TabBarTestComponent)
+                .then((fixture) => { 
+                    var tabBar = fixture.componentInstance.viewChild, 
+                    tabs = tabBar.tabs,
+                    lastTab;
+
+                    expect(tabs.length).toBe(4);
+
+                    // remove tab outside the range
+                    tabBar.remove(5);
+
+                    fixture.detectChanges();
+                    expect(tabs.length).toBe(4);
+
+                    lastTab = tabs[tabs.length - 1];
+                    tabBar.remove(lastTab.index);
+
+                    fixture.detectChanges();
+                    expect(tabs.length).toBe(3);
+                    expect(tabs.indexOf(lastTab)).toBe(-1); // the tab is removed and is not part of the tab array
+
+                    tabBar.remove(0);
+
+                    fixture.detectChanges();
+                    expect(tabs.length).toBe(2);
+                    expect(tabs[0].index).toBe(0);
+                    expect(tabs[1].index).toBe(1);
+
+                }).catch (reason => {
+                    console.log(reason);
+                    return Promise.reject(reason);
+                });
+         })));
+
          // end of tests
     });
 }

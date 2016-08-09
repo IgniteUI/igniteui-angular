@@ -14,7 +14,7 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
     private _maxNumberTabsDisplayed: number = 5;
     private _itemStyle: string = "ig-tab-bar-inner";
     private get _visibleTabs() {
-        return this.tabs.length > this._maxNumberTabsDisplayed ? this.tabs.filter(t => t.index < this._maxNumberTabsDisplayed - 1) : this.tabs;
+        return this.tabs.length > this._maxNumberTabsDisplayed ? this.tabs.filter(tab => tab.index < this._maxNumberTabsDisplayed - 1) : this.tabs;
     }
 
     private get _height() {
@@ -106,7 +106,7 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
     }
 
     select(index: number) {
-        var tab;
+        var tab, self = this;
 
         if(!this._validateTabIndex(index)) {
             return;
@@ -118,7 +118,12 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
             return;
         }
 
-        this.tabs.forEach((tab) => { tab.deselect(); });
+        this.tabs.forEach((tab) => { 
+            if(tab.index != index) {
+                self.deselect(tab.index); 
+            }            
+        });
+
         tab.isSelected = true;
 
         this.selectTab.emit({ index: index, tab: tab });
@@ -162,8 +167,11 @@ export class Tab {
     private _itemStyle: string = "ig-tab-inner";     
     private _changesCount: number = 0; // changes and updates accordingly applied to the tab.
 
-    index: number;
     isSelected: boolean = false;
+
+    get index() {
+        return this._tabBar.tabs.indexOf(this);
+    }    
 
     get isDisabled() { 
         return this.disabled !== undefined;
@@ -199,7 +207,6 @@ export class Tab {
 
     constructor(private _tabBar: TabBar, private _element: ElementRef) {
         this._tabBar.add(this);
-        this.index = this._tabBar.tabs.length - 1;
     }
 
     select() {
