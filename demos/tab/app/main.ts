@@ -15,10 +15,13 @@ import * as Infragistics from '../../../src/main';
 })
 
 export class AppComponent {
+    //@ViewChild('tabBar') tabBar: TabBar;
 
       selectTab(args) {
         console.log("index: " + args.index);
         console.log(args.tab);
         //args.tab._tabBar.remove(args.tab.index);
       }
+
+      //this.tabBar.alignment = "bottom";
 }

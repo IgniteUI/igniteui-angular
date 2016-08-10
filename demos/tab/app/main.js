@@ -12,6 +12,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 const core_1 = require('@angular/core');
 const Infragistics = require('../../../src/main');
 let AppComponent = class AppComponent {
+    //@ViewChild('tabBar') tabBar: TabBar;
     selectTab(args) {
         console.log("index: " + args.index);
         console.log(args.tab);

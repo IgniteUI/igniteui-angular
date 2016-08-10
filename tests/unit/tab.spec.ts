@@ -40,8 +40,7 @@ export function main() {
                 .createAsync(TabBarTestComponent)
                 .then((fixture) => { 
                     var tabBar = fixture.componentInstance.viewChild;
-                    expect(tabBar.alignment).toBe("top");                 
-                    //expect(tabBar.selectedIndex).toBe(0);             
+                    expect(tabBar.alignment).toBe("top"); 
                     expect(tabBar.selectedIndex).toBeUndefined();       
                     expect(tabBar.tabs[0].isDisabled).toBeFalsy();
                     expect(tabBar.tabs[1].isDisabled).toBeFalsy();
@@ -181,6 +180,70 @@ export function main() {
                 });
          })));
 
+        it('should calculate height and marginTop on top alignment',
+           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+                var template = '<div #wrapperDiv><ig-tab-bar><ig-tab label="Tab 1">Content of Tab 1</ig-tab><ig-tab label="Tab 2">Content of Tab 2</ig-tab></ig-tab-bar></div>';
+                return tcb.overrideTemplate(TabBarTestComponent, template)
+                .createAsync(TabBarTestComponent)
+                .then((fixture) => { 
+                    var tabBar = fixture.componentInstance.viewChild,
+                        tab1 = tabBar.tabs[0],
+                        tab2 = tabBar.tabs[1],
+                        testWrapperHeight = 600;
+
+                    fixture.componentInstance.wrapperDiv.nativeElement.style.height = testWrapperHeight + "px";
+                    fixture.componentInstance.wrapperDiv.nativeElement.style.position = "relative";
+
+                    expect(tabBar.alignment).toBe("top");
+                    expect(tab1.marginTop).toBeFalsy();
+                    expect(tab2.marginTop).toBeFalsy();
+                    expect(tab1.height).toBeFalsy();
+                    expect(tab2.height).toBeFalsy();
+
+                    fixture.detectChanges();
+                    expect(tabBar.alignment).toBe("top");
+                    expect(tab1.marginTop).toBe(tabBar.tabListHeight + "px");
+                    expect(tab2.marginTop).toBe(tabBar.tabListHeight + "px");
+                    expect(tab1.height).toBe(testWrapperHeight - tabBar.tabListHeight + "px");
+                    expect(tab2.height).toBe(testWrapperHeight - tabBar.tabListHeight + "px");
+
+                }).catch (reason => {
+                    console.log(reason);
+                    return Promise.reject(reason);
+                });
+         })));
+
+        it('should calculate height and marginTop on bottom alignment',
+           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+                var template = '<div #wrapperDiv><ig-tab-bar alignment="bottom"><ig-tab label="Tab 1">Content of Tab 1</ig-tab><ig-tab label="Tab 2">Content of Tab 2</ig-tab></ig-tab-bar></div>';
+                return tcb.overrideTemplate(TabBarTestComponent, template)
+                .createAsync(TabBarTestComponent)
+                .then((fixture) => { 
+                    var tabBar = fixture.componentInstance.viewChild,
+                        tab1 = tabBar.tabs[0],
+                        tab2 = tabBar.tabs[1],
+                        testWrapperHeight = 600;
+
+                    fixture.componentInstance.wrapperDiv.nativeElement.style.height = testWrapperHeight + "px";
+                    fixture.componentInstance.wrapperDiv.nativeElement.style.position = "relative";
+
+                    expect(tabBar.alignment).toBe("top");
+                    expect(tab1.marginTop).toBeFalsy();
+                    expect(tab2.marginTop).toBeFalsy();
+                    expect(tab1.height).toBeFalsy();
+                    expect(tab2.height).toBeFalsy();
+
+                    fixture.detectChanges();
+                    expect(tabBar.alignment).toBe("bottom");
+                    expect(tab1.marginTop).toBe("0px");
+                    expect(tab2.marginTop).toBe("0px");
+                    expect(tab1.height).toBe(testWrapperHeight - tabBar.tabListHeight + "px");
+                    expect(tab2.height).toBe(testWrapperHeight - tabBar.tabListHeight + "px");
+                }).catch (reason => {
+                    console.log(reason);
+                    return Promise.reject(reason);
+                });
+         })));
          // end of tests
     });
 }
@@ -195,6 +258,7 @@ export function main() {
 })
 class TabBarTestComponent {
      @ViewChild(Infragistics.TabBar) public viewChild: Infragistics.TabBar;
+     @ViewChild("wrapperDiv") public wrapperDiv: HTMLElement;
 }
 
 @Component({

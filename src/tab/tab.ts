@@ -79,7 +79,9 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
             let tabListHeight = self.tabListHeight;
             tab.height = self._height - tabListHeight;
             if(self.alignment == "top") {
-                tab.margin = tabListHeight;
+                tab.marginTop = tabListHeight;
+            } else if(self.alignment == "bottom") {
+                tab.marginTop = 0;
             }
         });             
     }
@@ -189,11 +191,11 @@ export class Tab {
         this.wrapper.nativeElement.style.height = value + "px";
     }
 
-    get margin(){
+   get marginTop(){
         return this.wrapper.nativeElement.style.marginTop;
     }
 
-    set margin(value: number){
+    set marginTop(value: number){
         this.wrapper.nativeElement.style.marginTop = value + "px";
     }
 
