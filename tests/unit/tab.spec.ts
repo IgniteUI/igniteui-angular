@@ -10,7 +10,7 @@ declare var Simulator: any;
 
 export function main() {
     describe('Infragistics Angular2 Tab Bar', function() { 
-         it('should initialize ig-tab-bar and ig-tabs',
+         /*it('should initialize ig-tab-bar and ig-tabs',
            async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<ig-tab-bar><ig-tab></ig-tab><ig-tab></ig-tab></ig-tab-bar>';
                 return tcb.overrideTemplate(TabBarTestComponent, template)
@@ -243,7 +243,7 @@ export function main() {
                     console.log(reason);
                     return Promise.reject(reason);
                 });
-         })));
+         })));*/
          // end of tests
     });
 }
