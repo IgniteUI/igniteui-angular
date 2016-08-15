@@ -42,7 +42,7 @@ export class Carousel implements OnDestroy {
     private _destroyed: boolean;
     private _total: number;
 
-    constructor(private element_ref: ElementRef, private renderer: Renderer) {
+    constructor(public element_ref: ElementRef, private renderer: Renderer) {
         this._total = 0;
         this._addEventListeners(renderer);
     }
@@ -60,6 +60,14 @@ export class Carousel implements OnDestroy {
 
     public get current(): number {
         return !this._current_slide ? 0 : this._current_slide.index;
+    }
+
+    public get isPlaying(): boolean {
+        return this._playing;
+    }
+
+    public get isDestroyed(): boolean {
+        return this._destroyed;
     }
 
 

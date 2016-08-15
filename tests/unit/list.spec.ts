@@ -1,6 +1,8 @@
 // modeled after https://github.com/angular/angular/blob/cee2318110eeea115e5f6fc5bfc814cbaa7d90d8/modules/angular2/test/common/directives/ng_for_spec.ts
-import { it, iit, describe, expect, inject, async, beforeEachProviders, fakeAsync, tick } from '@angular/core/testing';
-import { TestComponentBuilder, ComponentFixture } from '@angular/compiler/testing';
+/// <reference path="../../typings/globals/jasmine/index.d.ts" />
+/// <reference path="../../typings/globals/es6-shim/index.d.ts" />
+
+import { TestComponentBuilder, ComponentFixture, inject, async, tick } from '@angular/core/testing';
 import {Component, ViewChild, ContentChildren, QueryList} from '@angular/core';
 import * as Infragistics from '../../src/main';
 
@@ -14,7 +16,7 @@ export function main() {
               var template = '<ig-list><ig-list-header></ig-list-header><ig-list-item></ig-list-item></ig-list>';
                 return tcb.overrideTemplate(ListTestComponent, template)
                 .createAsync(ListTestComponent)
-                .then((fixture) => {                    
+                .then((fixture) => {
                     expect(fixture.componentInstance.viewChild).toBeDefined();
                     expect(fixture.componentInstance.viewChild instanceof Infragistics.List).toBeTruthy();
                     expect(fixture.componentInstance.viewChild.items).toBeUndefined();
@@ -39,7 +41,7 @@ export function main() {
               var template = '<input id="searchInput"/><ig-list searchInputId="searchInput"></ig-list>';
                 return tcb.overrideTemplate(ListTestComponent, template)
                 .createAsync(ListTestComponent)
-                .then((fixture) => {                    
+                .then((fixture) => {
                     expect(fixture.componentInstance.viewChild).toBeDefined();
                     fixture.detectChanges();
                     expect(fixture.componentInstance.viewChild._searchInputElement instanceof HTMLInputElement).toBeTruthy();
@@ -55,7 +57,7 @@ export function main() {
               var template = '<ig-list><ig-list-item>Item 1</ig-list-item><ig-list-item>Item 2</ig-list-item><ig-list-item>Item 3</ig-list-item></ig-list>';
                 return tcb.overrideTemplate(ListTestComponent, template)
                 .createAsync(ListTestComponent)
-                .then((fixture) => {                    
+                .then((fixture) => {
                     var items, visibleItems;
 
                     fixture.detectChanges();
@@ -69,7 +71,7 @@ export function main() {
                     visibleItems = items.filter((listItem) => { return !listItem.hidden; });
 
                     expect(visibleItems.length).toBe(3);
-                    
+
                     fixture.componentInstance.viewChild._searchInputElement = document.createElement('input');
                     fixture.componentInstance.viewChild._searchInputElement.value = "1";
                     fixture.detectChanges();
@@ -91,7 +93,7 @@ export function main() {
               var template = '<div #wrapper><ig-list><ig-list-item></ig-list-item></ig-list></div>';
                 return tcb.overrideTemplate(ListTestComponent, template)
                 .createAsync(ListTestComponent)
-                .then((fixture) => {       
+                .then((fixture) => {
                     var item, visibleAreaOnFullPan , testWidth = 400, testLeft = -100;
                     fixture.componentInstance.wrapper.nativeElement.style.width = testWidth + "px";
                     fixture.detectChanges();
@@ -122,8 +124,8 @@ export function main() {
     selector: 'test-cmp',
     template: '<div></div>', //"Component 'TestComponent' must have either 'template' or 'templateUrl' set."
     directives: [
-        Infragistics.List, 
-        Infragistics.ListItem, 
+        Infragistics.List,
+        Infragistics.ListItem,
         Infragistics.ListHeader]
 })
 class ListTestComponent {
@@ -132,7 +134,7 @@ class ListTestComponent {
 }
 
 @Component({
-    selector: 'test-cmp', 
+    selector: 'test-cmp',
     template: '<div></div>', //"Component 'TestComponent' must have either 'template' or 'templateUrl' set."
     directives: [Infragistics.ListHeader]
 })
@@ -141,7 +143,7 @@ class ListHeaderTestComponent {
 }
 
 @Component({
-    selector: 'test-cmp', 
+    selector: 'test-cmp',
     template: '<div></div>', //"Component 'TestComponent' must have either 'template' or 'templateUrl' set."
     directives: [Infragistics.ListItem]
 })

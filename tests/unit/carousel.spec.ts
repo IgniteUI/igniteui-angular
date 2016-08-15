@@ -1,8 +1,8 @@
+/// <reference path="../../typings/globals/jasmine/index.d.ts" />
 /// <reference path="../../typings/globals/es6-shim/index.d.ts" />
 
 
-import { it, iit, describe, expect, inject, async, beforeEachProviders } from '@angular/core/testing';
-import { TestComponentBuilder, ComponentFixture } from '@angular/compiler/testing';
+import { inject, TestComponentBuilder, ComponentFixture } from '@angular/core/testing';
 import {Component, ViewChild, ContentChildren, QueryList} from '@angular/core';
 import * as Infragistics from '../../src/main';
 
@@ -44,7 +44,7 @@ export function main() {
 
                 fixture.componentInstance.viewChild.ngOnDestroy();
                 fixture.detectChanges();
-                expect(fixture.componentInstance.viewChild._destroyed).toBe(true);
+                expect(fixture.componentInstance.viewChild.isDestroyed).toBe(true);
 
                 done();
             });
@@ -62,12 +62,12 @@ export function main() {
                 fixture.componentInstance.viewChild.next();
                 fixture.componentInstance.viewChild.next();
                 fixture.detectChanges();
-                expect(fixture.componentInstance.viewChild._current_slide.index).toBe(lastSlide.index);
+                expect(fixture.componentInstance.viewChild.current).toBe(lastSlide.index);
 
                 fixture.componentInstance.viewChild.prev();
                 fixture.componentInstance.viewChild.prev();
                 fixture.detectChanges();
-                expect(fixture.componentInstance.viewChild._current_slide.index).toBe(firstSlide.index);
+                expect(fixture.componentInstance.viewChild.current).toBe(firstSlide.index);
 
                 done();
             });
@@ -101,13 +101,13 @@ export function main() {
 
                 fixture.detectChanges();
 
-                let currentSlide = fixture.componentInstance.viewChild._current_slide;
+                let currentSlide = fixture.componentInstance.viewChild.get(fixture.componentInstance.viewChild.current);
                 fixture.componentInstance.viewChild.remove(currentSlide);
 
                 fixture.detectChanges();
                 expect(fixture.componentInstance.viewChild.slides.length).toBe(1);
 
-                currentSlide = fixture.componentInstance.viewChild._current_slide;
+                currentSlide = fixture.componentInstance.viewChild.get(fixture.componentInstance.viewChild.current);
                 fixture.componentInstance.viewChild.remove(currentSlide);
 
                 fixture.detectChanges();
@@ -131,10 +131,10 @@ export function main() {
 
                 fixture.componentInstance.viewChild.stop();
                 fixture.detectChanges();
-                expect(fixture.componentInstance.viewChild._playing).toBe(false);
+                expect(fixture.componentInstance.viewChild.isPlaying).toBe(false);
 
                 fixture.componentInstance.viewChild.next();
-                let currentSlide = fixture.componentInstance.viewChild._current_slide;
+                let currentSlide = fixture.componentInstance.viewChild.get(fixture.componentInstance.viewChild.current);
                 fixture.detectChanges();
                 expect(fixture.componentInstance.viewChild.get(1)).toBe(currentSlide);
 
@@ -160,12 +160,12 @@ export function main() {
                 expect(carousel.slideChanged.emit).toHaveBeenCalledWith(carousel);
 
                 spyOn(carousel.slideAdded, 'emit');
-                carousel.add(carousel._current_slide);
+                carousel.add(carousel.get(carousel.current));
                 fixture.detectChanges();
                 expect(carousel.slideAdded.emit).toHaveBeenCalledWith(carousel);
 
                 spyOn(carousel.slideRemoved, 'emit');
-                carousel.remove(carousel._current_slide);
+                carousel.remove(carousel.get(carousel.current));
                 fixture.detectChanges();
                 expect(carousel.slideRemoved.emit).toHaveBeenCalledWith(carousel);
 
