@@ -1,0 +1,163 @@
+.ig-carousel {
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+.ig-carousel-indicators {
+    position: absolute;
+    text-align: center;
+    list-style: none;
+    z-index: 10;
+    left: 25%;
+    right: 25%;
+    bottom: 25%;
+
+    li {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        margin: 1px;
+        text-indent: -9999px;
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0);
+        border: 1px solid #fff;
+        border-radius: 10px;
+    }
+
+    .active {
+        color: #fff;
+        background: #fff;
+        width: 12px;
+        height: 12px;
+        border-radius: 10px;
+    }
+}
+
+.ig-carousel-inner {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+
+    .item {
+        position: relative;
+        display: none;
+        -webkit-transition: .5s ease-in-out left;
+        -o-transition:  .5s ease-in-out left;
+        transition: .5s ease-in-out left;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        -webkit-perspective: 1000px;
+        perspective: 1000px;
+
+        .next,
+        .prev,
+        .next.left,
+        .prev.right,
+        .active.right,
+        .active.left, {
+            left: 0;
+            transform: translate3d(100%, 0, 0);
+        }
+    }
+
+    .active,
+    .next,
+    .prev {
+        display: block;
+    }
+
+    .next,
+    .prev {
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+
+    .next {
+        left: 100%;
+    }
+
+    .prev {
+        left: -100%;
+    }
+}
+
+.ig-carousel-control {
+    position: absolute;
+    display: block;
+    padding: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .5);
+    color: #fff;
+    font-size: 26px;
+
+    :hover {
+        background-color: rgba(255, 255, 255, .5);
+        cursor: pointer;
+    }
+
+    span {
+        padding: 10px;
+    }
+}
+
+.left {
+    left: 0;
+}
+
+.right {
+    right: 0;
+}
+
+
+.ig-goUp {
+    animation: goUp 1s ease both;
+}
+.ig-goDown {
+    animation: goDown 1s ease both;
+}
+
+.ig-goLeft {
+    animation: goLeft 1s ease both;
+}
+
+.ig-goRight {
+    animation: goRight 1s ease both;
+}
+
+.ig-fade {
+    animation: fade 3s ease both;
+}
+
+
+@keyframes fade {
+    0% {
+        opacity: .25;
+
+    }
+    50% {
+        opacity: 1;
+
+    }
+    100% {
+        opacity: .0;
+
+    }
+}
+
+@keyframes goUp {
+    from { transform: translateY(100%); }
+}
+
+@keyframes goDown {
+    from { transform: translateY(-100%); }
+}
+
+@keyframes goLeft {
+    from { transform: translateX(-100%); }
+}
+
+@keyframes goRight {
+    from { transform: translateX(100%); }
+}

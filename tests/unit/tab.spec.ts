@@ -1,6 +1,9 @@
 // modeled after https://github.com/angular/angular/blob/cee2318110eeea115e5f6fc5bfc814cbaa7d90d8/modules/angular2/test/common/directives/ng_for_spec.ts
-import { it, iit, describe, expect, inject, async, beforeEachProviders, fakeAsync, tick } from '@angular/core/testing';
-import { TestComponentBuilder, ComponentFixture } from '@angular/compiler/testing';
+/// <reference path="../../typings/globals/jasmine/index.d.ts" />
+/// <reference path="../../typings/globals/es6-shim/index.d.ts" />
+
+import { inject, async, fakeAsync, tick } from '@angular/core/testing';
+import { TestComponentBuilder, ComponentFixture } from '@angular/core/testing';
 
 import {Component, ViewChild} from '@angular/core';
 import * as Infragistics from '../../src/main';
@@ -15,7 +18,7 @@ export function main() {
               var template = '<ig-tab-bar></ig-tab-bar>';
                 return tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
-                .then((fixture) => {                  
+                .then((fixture) => {
                     expect(fixture.componentInstance.viewChild).toBeDefined();
                     //expect(fixture.componentInstance.viewChild).toBeAnInstanceOf(Infragistics.TabBar);
                 }).catch (reason => {
@@ -29,9 +32,9 @@ export function main() {
               var template = '<ig-tab-bar><ig-tab label="Tab 1">Content of Tab 1</ig-tab><ig-tab label="Tab 2">Content of Tab 2</ig-tab></ig-tab-bar>';
                 return tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
-                .then((fixture) => {           
-                    //debugger;       
-                    expect(fixture.componentInstance.viewChild).toBeDefined();                    
+                .then((fixture) => {
+                    //debugger;
+                    expect(fixture.componentInstance.viewChild).toBeDefined();
                 }).catch (reason => {
                     console.log(reason);
                     return Promise.reject(reason);
@@ -50,7 +53,7 @@ class TestComponent {
 }
 
 @Component({
-    selector: 'test-cmp', 
+    selector: 'test-cmp',
     template: '<div></div>', //"Component 'TestComponent' must have either 'template' or 'templateUrl' set."
     //providers: [Infragistics.NavigationService],
     directives: [Infragistics.TabBar]
