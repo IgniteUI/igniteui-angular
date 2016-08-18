@@ -1,7 +1,9 @@
 // modeled after https://github.com/angular/angular/blob/cee2318110eeea115e5f6fc5bfc814cbaa7d90d8/modules/angular2/test/common/directives/ng_for_spec.ts
-import { it, describe, expect, inject, async, beforeEachProviders, fakeAsync, tick, TestBed } from '@angular/core/testing';
-import { TestComponentBuilder, ComponentFixture } from '@angular/compiler/testing';
-import { Component, ViewChild, ContentChildren, QueryList } from '@angular/core';
+/// <reference path="../../typings/globals/jasmine/index.d.ts" />
+/// <reference path="../../typings/globals/es6-shim/index.d.ts" />
+
+import { TestComponentBuilder, ComponentFixture, inject, async, tick } from '@angular/core/testing';
+import {Component, ViewChild, ContentChildren, QueryList} from '@angular/core';
 import * as Infragistics from '../../src/main';
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
@@ -9,26 +11,25 @@ declare var Simulator: any;
 
 export function main() {
     describe('Infragistics Angular2 List', function() {
-         /*it('should initialize ig-list with item and header',
+         it('should initialize ig-list with item and header',
            async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<ig-list><ig-list-header></ig-list-header><ig-list-item></ig-list-item></ig-list>';
                 return tcb.overrideTemplate(ListTestComponent, template)
                 .createAsync(ListTestComponent)
-                .then((fixture) => {   
-                    var list = fixture.componentInstance.viewChild;                 
-                    expect(list).toBeDefined();
-                    expect(list instanceof Infragistics.List).toBeTruthy();
-                    expect(list.items).toBeUndefined();
-                    expect(list.headers).toBeUndefined();
+                .then((fixture) => {
+                    expect(fixture.componentInstance.viewChild).toBeDefined();
+                    expect(fixture.componentInstance.viewChild instanceof Infragistics.List).toBeTruthy();
+                    expect(fixture.componentInstance.viewChild.items).toBeUndefined();
+                    expect(fixture.componentInstance.viewChild.headers).toBeUndefined();
                     fixture.detectChanges();
 
-                    expect(list.items instanceof QueryList).toBeTruthy();
-                    expect(list.items.length).toBe(1);
-                    expect(list.items.first instanceof Infragistics.ListItem).toBeTruthy();
+                    expect(fixture.componentInstance.viewChild.items instanceof QueryList).toBeTruthy();
+                    expect(fixture.componentInstance.viewChild.items.length).toBe(1);
+                    expect(fixture.componentInstance.viewChild.items.first instanceof Infragistics.ListItem).toBeTruthy();
 
-                    expect(list.headers instanceof QueryList).toBeTruthy();
-                    expect(list.headers.length).toBe(1);
-                    expect(list.headers.first instanceof Infragistics.ListHeader).toBeTruthy();
+                    expect(fixture.componentInstance.viewChild.headers instanceof QueryList).toBeTruthy();
+                    expect(fixture.componentInstance.viewChild.headers.length).toBe(1);
+                    expect(fixture.componentInstance.viewChild.headers.first instanceof Infragistics.ListHeader).toBeTruthy();
                 }).catch (reason => {
                     console.log(reason);
                     return Promise.reject(reason);
@@ -41,16 +42,10 @@ export function main() {
                 return tcb.overrideTemplate(ListTestComponent, template)
                 .createAsync(ListTestComponent)
                 .then((fixture) => {
-                    var inputElement,
-                        list = fixture.componentInstance.viewChild;                 
-                    expect(list).toBeDefined();
+                    expect(fixture.componentInstance.viewChild).toBeDefined();
                     fixture.detectChanges();
-
-                    inputElement = document.getElementById(list.searchInputId);
-
-                    expect(list._searchInputElement instanceof HTMLInputElement).toBeTruthy();
-                    expect(list._searchInputElement).toBe(inputElement);
-                    expect(list.searchInputId).toBe("searchInput");
+                    expect(fixture.componentInstance.viewChild._searchInputElement instanceof HTMLInputElement).toBeTruthy();
+                    expect(fixture.componentInstance.viewChild.searchInputId).toBe("searchInput");
                 }).catch (reason => {
                     console.log(reason);
                     return Promise.reject(reason);
@@ -62,13 +57,12 @@ export function main() {
               var template = '<ig-list><ig-list-item>Item 1</ig-list-item><ig-list-item>Item 2</ig-list-item><ig-list-item>Item 3</ig-list-item></ig-list>';
                 return tcb.overrideTemplate(ListTestComponent, template)
                 .createAsync(ListTestComponent)
-                .then((fixture) => {                    
-                    var items, visibleItems,
-                      list = fixture.componentInstance.viewChild;
+                .then((fixture) => {
+                    var items, visibleItems;
 
                     fixture.detectChanges();
-                    expect(list.items.length).toBe(3);
-                    items = list.items.toArray();
+                    expect(fixture.componentInstance.viewChild.items.length).toBe(3);
+                    items = fixture.componentInstance.viewChild.items.toArray();
 
                     for (let item of items) {
                         expect(item instanceof Infragistics.ListItem).toBeTruthy();
@@ -77,12 +71,12 @@ export function main() {
                     visibleItems = items.filter((listItem) => { return !listItem.hidden; });
 
                     expect(visibleItems.length).toBe(3);
-                    
-                    list._searchInputElement = document.createElement('input');
-                    list._searchInputElement.value = "1";
+
+                    fixture.componentInstance.viewChild._searchInputElement = document.createElement('input');
+                    fixture.componentInstance.viewChild._searchInputElement.value = "1";
                     fixture.detectChanges();
 
-                    list.filter();
+                    fixture.componentInstance.viewChild.filter();
                     fixture.detectChanges();
 
                     visibleItems = items.filter((listItem) => { return !listItem.hidden; });
@@ -94,72 +88,18 @@ export function main() {
                 });
          })));
 
-         it('should emit filter events',
-           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
-            var template = '<ig-list (filteringHendler)="filtering($event)"><ig-list-item>Item 1</ig-list-item><ig-list-item>Item 2</ig-list-item><ig-list-item>Item 3</ig-list-item></ig-list>';
-                return tcb.overrideTemplate(ListTestComponent, template)
-                .createAsync(ListTestComponent)
-                .then((fixture) => {
-                      var items, visibleItems,
-                          list = fixture.componentInstance.viewChild;
-                      spyOn(list.filtering, 'emit');
-                      spyOn(list.filtered, 'emit');
-
-                      fixture.detectChanges();
-                      items = list.items.toArray();                      
-                      visibleItems = items.filter((listItem) => { return !listItem.hidden; });
-
-                      expect(list.items.length).toBe(3);
-                      expect(visibleItems.length).toBe(3);
-
-                      list._searchInputElement = document.createElement('input');
-                      list._searchInputElement.value = "2";
-
-                      fixture.detectChanges();
-                      list.filter();
-
-                      fixture.detectChanges();                      
-                      visibleItems = items.filter((listItem) => { return !listItem.hidden; }); 
-                      expect(visibleItems.length).toBe(1);
-                      expect(list.filtering.emit).toHaveBeenCalledWith({ cancel: false });
-                      expect(list.filtered.emit).toHaveBeenCalledWith({ result: [visibleItems[0]] });
-
-                      // clear the filter
-                      list._searchInputElement.value = "";                      
-                      list.filter();
-
-                      fixture.detectChanges();
-
-                      // Testing the filter canceling
-                      list.filteringHendler = (args: any) => { args.cancel = true; };
-                      list._searchInputElement.value = "3";
-
-                      fixture.detectChanges();                      
-                      visibleItems = items.filter((listItem) => { return !listItem.hidden; }); 
-                      expect(visibleItems.length).toBe(3);
-                      expect(list.filtering.emit).toHaveBeenCalledWith({ cancel: false });
-                      expect(list.filtered.emit).not.toHaveBeenCalledWith({ result: [visibleItems[0]] });
-                }).catch (reason => {
-                    console.log(reason);
-                    return Promise.reject(reason);
-                });
-         })));
-
          it('should set/get properly layout properties: width, left, maxLeft',
            async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<div #wrapper><ig-list><ig-list-item></ig-list-item></ig-list></div>';
                 return tcb.overrideTemplate(ListTestComponent, template)
                 .createAsync(ListTestComponent)
-                .then((fixture) => {       
-                    var item, visibleAreaOnFullPan, 
-                    testWidth = 400, testLeft = -100,
-                    list = fixture.componentInstance.viewChild;
-
+                .then((fixture) => {
+                    var item, visibleAreaOnFullPan , testWidth = 400, testLeft = -100;
                     fixture.componentInstance.wrapper.nativeElement.style.width = testWidth + "px";
                     fixture.detectChanges();
-                    expect(list.items.length).toBe(1);
+                    expect(fixture.componentInstance.viewChild.items.length).toBe(1);
 
-                    item = list.items.first;
+                    item = fixture.componentInstance.viewChild.items.first;
                     visibleAreaOnFullPan = item._VISIBLE_AREA_ON_FULL_PAN;
 
                     expect(item instanceof Infragistics.ListItem).toBeTruthy();
@@ -169,11 +109,12 @@ export function main() {
 
                     item.left = testLeft;
                     expect(item.left).toBe(testLeft);
+
                 }).catch (reason => {
                     console.log(reason);
                     return Promise.reject(reason);
                 });
-         })));*/
+         })));
 
          // end of tests
     });
@@ -183,8 +124,8 @@ export function main() {
     selector: 'test-cmp',
     template: '<div></div>', //"Component 'TestComponent' must have either 'template' or 'templateUrl' set."
     directives: [
-        Infragistics.List, 
-        Infragistics.ListItem, 
+        Infragistics.List,
+        Infragistics.ListItem,
         Infragistics.ListHeader]
 })
 class ListTestComponent {
@@ -193,7 +134,7 @@ class ListTestComponent {
 }
 
 @Component({
-    selector: 'test-cmp', 
+    selector: 'test-cmp',
     template: '<div></div>', //"Component 'TestComponent' must have either 'template' or 'templateUrl' set."
     directives: [Infragistics.ListHeader]
 })
@@ -202,7 +143,7 @@ class ListHeaderTestComponent {
 }
 
 @Component({
-    selector: 'test-cmp', 
+    selector: 'test-cmp',
     template: '<div></div>', //"Component 'TestComponent' must have either 'template' or 'templateUrl' set."
     directives: [Infragistics.ListItem]
 })

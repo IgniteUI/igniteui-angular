@@ -36,8 +36,8 @@ node_modules
 # Transpiled output
 gulpfile.js*
 
-samples/**/*.js
-samples/**/*.js.map
+demos/**/*.js
+demos/**/*.js.map
 !samples/**/*.config.js
 
 src/**/*.js
