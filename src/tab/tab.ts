@@ -25,7 +25,7 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
         return this.tabs.length > this._maxNumberTabsDisplayed ? this._maxNumberTabsDisplayed : this.tabs.length ;
     }
 
-    private get tabListHeight() {
+    get tabListHeight() {
         if(this._tabList) {
             return this._tabList.nativeElement.offsetHeight;
         }

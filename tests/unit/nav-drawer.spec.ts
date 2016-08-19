@@ -187,16 +187,18 @@ export function main() {
                 return tcb.overrideTemplate(TestComponentPin, template)
                 .createAsync(TestComponentPin)
                 .then((fixture) => {
+                    var navDrawer = fixture.componentInstance.viewChild;
+
                     fixture.detectChanges();
 
-                    expect(fixture.componentInstance.viewChild.pin).toBeTruthy();
+                    expect(navDrawer.pin).toBeTruthy();
                     expect(fixture.debugElement.query((x) => { return x.nativeNode.nodeName === "ASIDE";}).nativeElement.classList).toContain("pinned");
 
-                    expect(fixture.componentInstance.viewChild.enableGestures).toBe(false);
+                    expect(navDrawer.enableGestures).toBe(false);
 
                     fixture.componentInstance.enableGestures = "true";
                     fixture.detectChanges();
-                    expect(fixture.componentInstance.viewChild.enableGestures).toBeTruthy();
+                    expect(navDrawer.enableGestures).toBeTruthy();
 
                 }).catch (reason => {
                     console.log(reason);
@@ -215,8 +217,10 @@ export function main() {
                 tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
                 .then((fixture) => {
+                    var navDrawer: Infragistics.NavigationDrawer = fixture.componentInstance.viewChild;
+
                     fixture.detectChanges();
-                    expect(fixture.componentInstance.viewChild.isOpen).toEqual(false);
+                    expect(navDrawer.isOpen).toEqual(false);
                     //https://github.com/hammerjs/hammer.js/issues/779
 
                     /*Simulator.gestures.swipe(fixture.debugElement.children[0].nativeElement, { duration: 300, deltaX: 400, deltaY: 0 }, function() {
@@ -226,15 +230,15 @@ export function main() {
 
                     // can't get simulator to toggle the handlers
 
-                    fixture.componentInstance.viewChild.swipe({ pointerType: "touch", deltaX: 20, center: { x: 80, y: 10 }, distance: 10 });
-                    expect(fixture.componentInstance.viewChild.isOpen).toEqual(false, "should ignore swipes too far away from the edge");
+                    navDrawer.swipe(<HammerInput>{ pointerType: "touch", deltaX: 20, center: { x: 80, y: 10 }, distance: 10 });
+                    expect(navDrawer.isOpen).toEqual(false, "should ignore swipes too far away from the edge");
 
 
-                    fixture.componentInstance.viewChild.swipe({ pointerType: "touch", deltaX: 20, center: {x: 10, y: 10}, distance: 10});
-                    expect(fixture.componentInstance.viewChild.isOpen).toEqual(true);
+                    navDrawer.swipe(<HammerInput>{ pointerType: "touch", deltaX: 20, center: {x: 10, y: 10}, distance: 10});
+                    expect(navDrawer.isOpen).toEqual(true);
 
-                    fixture.componentInstance.viewChild.swipe({ pointerType: "touch", deltaX: -20, center: {x: 80, y: 10}, distance: 10});
-                    expect(fixture.componentInstance.viewChild.isOpen).toEqual(false);
+                    navDrawer.swipe(<HammerInput>{ pointerType: "touch", deltaX: -20, center: {x: 80, y: 10}, distance: 10});
+                    expect(navDrawer.isOpen).toEqual(false);
 
                     resolver();
 
@@ -256,39 +260,45 @@ export function main() {
                 tcb.overrideTemplate(TestComponentDI, template)
                 .createAsync(TestComponentDI)
                 .then((fixture) => {
+                    let hammerInput;
                     fixture.detectChanges();
                     let navDrawer = fixture.componentInstance.viewChild;
                     expect(navDrawer.isOpen).toEqual(false);
 
                     // not from edge
-                    navDrawer.panstart({ pointerType: "touch", deltaX: 20, center: { x: 80, y: 10 }, distance: 10 });
-                    navDrawer.panEnd({ pointerType: "touch", deltaX: 20, center: { x: 80, y: 10 }, distance: 10 });
+                    hammerInput = <HammerInput>{ pointerType: "touch", deltaX: 20, center: { x: 80, y: 10 }, distance: 10 };
+                    navDrawer.panstart(hammerInput);
+                    navDrawer.panEnd(hammerInput);
                     expect(navDrawer.isOpen).toEqual(false, "should ignore pan too far away from the edge");
 
                     // not enough distance
-                    navDrawer.panstart({ pointerType: "touch", deltaX: 20, center: { x: 10, y: 10 }, distance: 10 });
+                    hammerInput = <HammerInput>{ pointerType: "touch", deltaX: 20, center: { x: 10, y: 10 }, distance: 10 };
+                    navDrawer.panstart(hammerInput);
                     expect(navDrawer.drawer.classList).toContain("panning");
-                    navDrawer.pan({ pointerType: "touch", deltaX: 20, center: { x: 10, y: 10 }, distance: 10 });
+                    navDrawer.pan(hammerInput);
 
                     // must wait for raf to test for pan position
                     window.requestAnimationFrame(() => {
                         expect(navDrawer.drawer.style.transform).toBe("translate3d(-280px, 0px, 0px)");
-                        navDrawer.panEnd({ pointerType: "touch", deltaX: 20, center: { x: 10, y: 10 }, distance: 10 });
+                        navDrawer.panEnd(<HammerInput>{ pointerType: "touch", deltaX: 20, center: { x: 10, y: 10 }, distance: 10 });
                         expect(navDrawer.isOpen).toEqual(false, "should ignore too short pan");
 
                         //valid pan
-                        navDrawer.panstart({ pointerType: "touch", deltaX: 200, center: { x: 10, y: 10 }, distance: 200 });
-                        navDrawer.panEnd({ pointerType: "touch", deltaX: 200, center: { x: 10, y: 10 }, distance: 200 });
+                        hammerInput = <HammerInput>{ pointerType: "touch", deltaX: 200, center: { x: 10, y: 10 }, distance: 200 };
+                        navDrawer.panstart(hammerInput);
+                        navDrawer.panEnd(hammerInput);
                         expect(navDrawer.isOpen).toEqual(true);
 
                         // not enough distance, closing
-                        navDrawer.panstart({ pointerType: "touch", deltaX: -100, center: { x: 200, y: 10 }, distance: 100 });
-                        navDrawer.panEnd({ pointerType: "touch", deltaX: -100, center: { x: 200, y: 10 }, distance: 100 });
+                        hammerInput = <HammerInput>{ pointerType: "touch", deltaX: -100, center: { x: 200, y: 10 }, distance: 100 };
+                        navDrawer.panstart(hammerInput);
+                        navDrawer.panEnd(hammerInput);
                         expect(navDrawer.isOpen).toEqual(true, "should ignore too short pan");
 
                         // close
-                        navDrawer.panstart({ pointerType: "touch", deltaX: -200, center: { x: 250, y: 10 }, distance: 200 });
-                        navDrawer.panEnd({ pointerType: "touch", deltaX: -200, center: { x: 250, y: 10 }, distance: 200 });
+                        hammerInput = <HammerInput>{ pointerType: "touch", deltaX: -200, center: { x: 250, y: 10 }, distance: 200 };
+                        navDrawer.panstart(hammerInput);
+                        navDrawer.panEnd(hammerInput);
                         expect(navDrawer.isOpen).toEqual(false);
 
                         resolver();
@@ -343,7 +353,7 @@ export function main() {
                     expect(fixture.componentInstance.viewChild.getExpectedWidth()).toBe(300);
                     expect(fixture.componentInstance.viewChild.getExpectedWidth(true)).toBe(60);
 
-                    fixture.componentInstance.drawerMiniWidth = "80px";
+                    fixture.componentInstance.drawerMiniWidth = 80;
                     fixture.componentInstance.drawerWidth = "250px";
                     fixture.detectChanges();
                     expect(fixture.componentInstance.viewChild.getExpectedWidth()).toBe(250);
@@ -383,7 +393,7 @@ class TestComponent {
 })
 class TestComponentDI {
      drawerMiniWidth: number;
-     drawerWidth: number;
+     drawerWidth: string;
      @ViewChild(Infragistics.NavigationDrawer) public viewChild: Infragistics.NavigationDrawer;
 }
 

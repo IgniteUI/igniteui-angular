@@ -8,39 +8,36 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var Infragistics = require('../../../src/main');
-var AppComponent = (function () {
-    function AppComponent() {
-        this.navItems = [
+/// <reference path="../../../typings/globals/node/index.d.ts" />
+const core_1 = require('@angular/core');
+const Infragistics = require('../../../src/main');
+let AppComponent = class AppComponent {
+    constructor() {
+        this.datasource = [
             { text: "Nav1", link: "#" },
             { text: "Nav2", link: "#" },
             { text: "Nav3", link: "#" },
             { text: "Nav4", link: "#" }
         ];
     }
-    AppComponent.prototype.filteringHandler = function (args) {
-        //args.cancel = true;
-        console.log(args);
-    };
-    AppComponent.prototype.filteredHandler = function (args) {
-        console.log(args);
-    };
-    AppComponent = __decorate([
-        core_1.Component({
-            selector: 'sample-app',
-            styleUrls: ["app/main.css"],
-            templateUrl: "app/main.html",
-            directives: [
-                Infragistics.ListHeader,
-                Infragistics.ListItem,
-                Infragistics.List,
-            ]
-        }), 
-        __metadata('design:paramtypes', [])
-    ], AppComponent);
-    return AppComponent;
-}());
+};
+AppComponent = __decorate([
+    core_1.Component({
+        selector: 'sample-app',
+        moduleId: module.id,
+        templateUrl: "main.html",
+        directives: [
+            Infragistics.Button,
+            Infragistics.Icon,
+            Infragistics.Header,
+            Infragistics.Item,
+            Infragistics.List,
+            Infragistics.TabBar,
+            Infragistics.Tab
+        ]
+    }), 
+    __metadata('design:paramtypes', [])
+], AppComponent);
 exports.AppComponent = AppComponent;
 
 //# sourceMappingURL=main.js.map

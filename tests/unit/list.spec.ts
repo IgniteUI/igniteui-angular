@@ -16,69 +16,74 @@ export function main() {
               var template = '<ig-list><ig-list-header></ig-list-header><ig-list-item></ig-list-item></ig-list>';
                 return tcb.overrideTemplate(ListTestComponent, template)
                 .createAsync(ListTestComponent)
-                .then((fixture) => {
-                    expect(fixture.componentInstance.viewChild).toBeDefined();
-                    expect(fixture.componentInstance.viewChild instanceof Infragistics.List).toBeTruthy();
-                    expect(fixture.componentInstance.viewChild.items).toBeUndefined();
-                    expect(fixture.componentInstance.viewChild.headers).toBeUndefined();
+                .then((fixture) => {   
+                    var list = fixture.componentInstance.viewChild; 
+
+                    expect(list).toBeDefined();
+                    expect(list instanceof Infragistics.List).toBeTruthy();
+                    expect(list.items).toBeUndefined();
+                    expect(list.headers).toBeUndefined();
+
                     fixture.detectChanges();
-
-                    expect(fixture.componentInstance.viewChild.items instanceof QueryList).toBeTruthy();
-                    expect(fixture.componentInstance.viewChild.items.length).toBe(1);
-                    expect(fixture.componentInstance.viewChild.items.first instanceof Infragistics.ListItem).toBeTruthy();
-
-                    expect(fixture.componentInstance.viewChild.headers instanceof QueryList).toBeTruthy();
-                    expect(fixture.componentInstance.viewChild.headers.length).toBe(1);
-                    expect(fixture.componentInstance.viewChild.headers.first instanceof Infragistics.ListHeader).toBeTruthy();
+                    expect(list.items instanceof QueryList).toBeTruthy();
+                    expect(list.items.length).toBe(1);
+                    expect(list.items.first instanceof Infragistics.ListItem).toBeTruthy();
+                    expect(list.headers instanceof QueryList).toBeTruthy();
+                    expect(list.headers.length).toBe(1);
+                    expect(list.headers.first instanceof Infragistics.ListHeader).toBeTruthy();
                 }).catch (reason => {
                     console.log(reason);
                     return Promise.reject(reason);
                 });
          })));
-
          it('should initialize ig-list with search input attached',
            async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<input id="searchInput"/><ig-list searchInputId="searchInput"></ig-list>';
                 return tcb.overrideTemplate(ListTestComponent, template)
                 .createAsync(ListTestComponent)
                 .then((fixture) => {
-                    expect(fixture.componentInstance.viewChild).toBeDefined();
+                    var inputElement,
+                        list = fixture.componentInstance.viewChild;
+
+                    expect(list).toBeDefined();
                     fixture.detectChanges();
-                    expect(fixture.componentInstance.viewChild._searchInputElement instanceof HTMLInputElement).toBeTruthy();
-                    expect(fixture.componentInstance.viewChild.searchInputId).toBe("searchInput");
+
+                    inputElement = document.getElementById(list.searchInputId);
+                    expect(list.searchInputElement instanceof HTMLInputElement).toBeTruthy();
+                    expect(list.searchInputElement).toBe(inputElement);
+                    expect(list.searchInputId).toBe("searchInput");
                 }).catch (reason => {
                     console.log(reason);
                     return Promise.reject(reason);
                 });
          })));
-
          it('should filter properly',
            async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<ig-list><ig-list-item>Item 1</ig-list-item><ig-list-item>Item 2</ig-list-item><ig-list-item>Item 3</ig-list-item></ig-list>';
                 return tcb.overrideTemplate(ListTestComponent, template)
                 .createAsync(ListTestComponent)
-                .then((fixture) => {
-                    var items, visibleItems;
+                .then((fixture) => {                    
+                    var items, visibleItems,
+                      list = fixture.componentInstance.viewChild;
 
                     fixture.detectChanges();
-                    expect(fixture.componentInstance.viewChild.items.length).toBe(3);
-                    items = fixture.componentInstance.viewChild.items.toArray();
+                    expect(list.items.length).toBe(3);
+                    items = list.items.toArray();
 
                     for (let item of items) {
                         expect(item instanceof Infragistics.ListItem).toBeTruthy();
                     }
 
                     visibleItems = items.filter((listItem) => { return !listItem.hidden; });
-
                     expect(visibleItems.length).toBe(3);
+                    
+                    list.searchInputElement = document.createElement('input');
+                    list.searchInputElement.value = "1";
 
-                    fixture.componentInstance.viewChild._searchInputElement = document.createElement('input');
-                    fixture.componentInstance.viewChild._searchInputElement.value = "1";
                     fixture.detectChanges();
+                    list.filter();
 
-                    fixture.componentInstance.viewChild.filter();
                     fixture.detectChanges();
-
                     visibleItems = items.filter((listItem) => { return !listItem.hidden; });
                     expect(visibleItems.length).toBe(1);
                     expect(visibleItems[0] instanceof Infragistics.ListItem).toBeTruthy();
@@ -87,29 +92,94 @@ export function main() {
                     return Promise.reject(reason);
                 });
          })));
+         it('should emit filter events',
+           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+            var template = '<ig-list><ig-list-item>Item 1</ig-list-item><ig-list-item>Item 2</ig-list-item><ig-list-item>Item 3</ig-list-item></ig-list>';
+                return tcb.overrideTemplate(ListTestComponent, template)
+                .createAsync(ListTestComponent)
+                .then((fixture) => {
+                      var items, visibleItems,
+                          list = fixture.componentInstance.viewChild;
 
+                      spyOn(list.filtering, 'emit');
+                      spyOn(list.filtered, 'emit');
+
+                      fixture.detectChanges();
+                      items = list.items.toArray();                      
+                      visibleItems = items.filter((listItem) => { return !listItem.hidden; });
+                      expect(list.items.length).toBe(3);
+                      expect(visibleItems.length).toBe(3);
+
+                      list.searchInputElement = document.createElement('input');
+                      list.searchInputElement.value = "2";
+                      list.filter();
+
+                      fixture.detectChanges();                      
+                      visibleItems = items.filter((listItem) => { return !listItem.hidden; }); 
+                      expect(visibleItems.length).toBe(1);
+                      expect(list.filtering.emit).toHaveBeenCalledWith({ cancel: false });
+                      expect(list.filtered.emit).toHaveBeenCalledWith({ result: [visibleItems[0]] });                      
+                }).catch (reason => {
+                    console.log(reason);
+                    return Promise.reject(reason);
+                });
+         })));
+         /*it('should cancel emitted filter events',
+           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+            var template = '<ig-list (filtering)="filteringHandler($event)"><ig-list-item>Item 1</ig-list-item><ig-list-item>Item 2</ig-list-item><ig-list-item>Item 3</ig-list-item></ig-list>';
+                return tcb.overrideTemplate(ListTestComponent, template)
+                .createAsync(ListTestComponent)
+                .then((fixture) => {
+                      var items, visibleItems,
+                          list = fixture.componentInstance.viewChild;
+
+                      spyOn(list.filtering, 'emit');
+                      spyOn(list.filtered, 'emit');
+
+                      fixture.detectChanges();
+                      items = list.items.toArray();                      
+                      visibleItems = items.filter((listItem) => { return !listItem.hidden; });
+                      expect(list.items.length).toBe(3);
+                      expect(visibleItems.length).toBe(3);
+                      
+                      list.searchInputElement = document.createElement('input');
+                      fixture.filteringHandler = (args: any) => { debugger; args.cancel = true; };
+                      list.searchInputElement.value = "3";
+                      fixture.detectChanges(); 
+                      list.filter();
+                      fixture.detectChanges();        
+
+                      visibleItems = items.filter((listItem) => { return !listItem.hidden; }); 
+                      expect(visibleItems.length).toBe(3);
+                      expect(list.filtering.emit).toHaveBeenCalledWith({ cancel: false });
+                      expect(list.filtered.emit).not.toHaveBeenCalledWith({ result: [visibleItems[0]] });
+                }).catch (reason => {
+                    console.log(reason);
+                    return Promise.reject(reason);
+                });
+         })));*/
          it('should set/get properly layout properties: width, left, maxLeft',
            async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<div #wrapper><ig-list><ig-list-item></ig-list-item></ig-list></div>';
                 return tcb.overrideTemplate(ListTestComponent, template)
                 .createAsync(ListTestComponent)
-                .then((fixture) => {
-                    var item, visibleAreaOnFullPan , testWidth = 400, testLeft = -100;
+                .then((fixture) => {       
+                    var item, visibleAreaOnFullPan, 
+                    testWidth = 400, testLeft = -100,
+                    list = fixture.componentInstance.viewChild;
+
                     fixture.componentInstance.wrapper.nativeElement.style.width = testWidth + "px";
+
                     fixture.detectChanges();
-                    expect(fixture.componentInstance.viewChild.items.length).toBe(1);
-
-                    item = fixture.componentInstance.viewChild.items.first;
+                    expect(list.items.length).toBe(1);
+                    item = list.items.first;
                     visibleAreaOnFullPan = item._VISIBLE_AREA_ON_FULL_PAN;
-
                     expect(item instanceof Infragistics.ListItem).toBeTruthy();
                     expect(item.width).toBe(testWidth);
                     expect(item.left).toBe(0);
                     expect(item.maxLeft).toBe(visibleAreaOnFullPan - testWidth);
-
                     item.left = testLeft;
                     expect(item.left).toBe(testLeft);
-
                 }).catch (reason => {
                     console.log(reason);
                     return Promise.reject(reason);
@@ -124,17 +194,19 @@ export function main() {
     selector: 'test-cmp',
     template: '<div></div>', //"Component 'TestComponent' must have either 'template' or 'templateUrl' set."
     directives: [
-        Infragistics.List,
-        Infragistics.ListItem,
+        Infragistics.List, 
+        Infragistics.ListItem, 
         Infragistics.ListHeader]
 })
 class ListTestComponent {
-     @ViewChild(Infragistics.List) public viewChild: Infragistics.List;
-     @ViewChild("wrapper") public wrapper: HTMLElement;
+     @ViewChild(Infragistics.List) viewChild: Infragistics.List;
+     @ViewChild("wrapper") wrapper;
+
+     public filteringHandler: Function;
 }
 
 @Component({
-    selector: 'test-cmp',
+    selector: 'test-cmp', 
     template: '<div></div>', //"Component 'TestComponent' must have either 'template' or 'templateUrl' set."
     directives: [Infragistics.ListHeader]
 })
@@ -143,7 +215,7 @@ class ListHeaderTestComponent {
 }
 
 @Component({
-    selector: 'test-cmp',
+    selector: 'test-cmp', 
     template: '<div></div>', //"Component 'TestComponent' must have either 'template' or 'templateUrl' set."
     directives: [Infragistics.ListItem]
 })

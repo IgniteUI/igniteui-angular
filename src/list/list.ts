@@ -18,12 +18,12 @@ export class List implements AfterContentInit {
     @ContentChildren(ListHeader) headers: QueryList<ListHeader>;
 
     private _innerStyle: string = "ig-list-inner";
-    private _searchInputElement: HTMLElement;
 
+    searchInputElement: HTMLInputElement;
     isCaseSensitiveFiltering: boolean = false;
 
     @Input() searchInputId: string;
-    @Output() filtering = new EventEmitter();
+    @Output() filtering = new EventEmitter(false); // synchronous event emitter
     @Output() filtered = new EventEmitter();
 
     constructor(private _renderer: Renderer) {        
@@ -32,9 +32,9 @@ export class List implements AfterContentInit {
     ngAfterContentInit() {
         var self = this;
         if(this.searchInputId) {
-            this._searchInputElement = document.getElementById(this.searchInputId);
-            if(this._searchInputElement) {
-                this._renderer.listen(this._searchInputElement, 'input', this.filter.bind(this));
+            this.searchInputElement = <HTMLInputElement>document.getElementById(this.searchInputId);
+            if(this.searchInputElement) {
+                this._renderer.listen(this.searchInputElement, 'input', this.filter.bind(this));
             }            
         }
     }
@@ -43,15 +43,17 @@ export class List implements AfterContentInit {
         var searchText, result, metConditionFunction, overdueConditionFunction, 
             filteringArgs, filteredArgs ;
 
-        if(this._searchInputElement) {
+        if(this.searchInputElement) {
             filteringArgs = { cancel: false };
+
+
             this.filtering.emit(filteringArgs);
 
             if(filteringArgs.cancel) { 
                 return; 
             }
 
-            searchText = (<HTMLInputElement>this._searchInputElement).value;        
+            searchText = (<HTMLInputElement>this.searchInputElement).value;        
             metConditionFunction = (item) => { item.hidden = false; }, 
             overdueConditionFunction = (item) => { item.hidden = true; };        
 
