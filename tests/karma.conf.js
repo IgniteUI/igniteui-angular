@@ -68,7 +68,7 @@ module.exports = function(config){
             'src/**/*.js': ['coverage']
         },
     
-        reporters: ['_mocha', 'coverage'],
+        reporters: ['mocha', 'coverage'],
 
 		plugins : [
                     'karma-chrome-launcher',
