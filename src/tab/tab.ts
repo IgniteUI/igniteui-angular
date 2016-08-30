@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, ViewChild, AfterViewInit, AfterContentInit } from '@angular/core';
+import { Component, Input, Output, ElementRef, ViewChild, AfterViewInit, AfterContentInit, EventEmitter } from '@angular/core';
 
 declare var module: any;
 
@@ -13,19 +13,51 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
 
     private _maxNumberTabsDisplayed: number = 5;
     private _itemStyle: string = "ig-tab-bar-inner";
-    private _element: ElementRef;
     private get _visibleTabs() {
-        return this.tabs.length > this._maxNumberTabsDisplayed ? this.tabs.filter(t => t.index < this._maxNumberTabsDisplayed - 1) : this.tabs;
+        return this.tabs.length > this._maxNumberTabsDisplayed ? this.tabs.filter(tab => tab.index < this._maxNumberTabsDisplayed - 1) : this.tabs;
+    }
+
+    private get _height() {
+        return this._element.nativeElement.offsetHeight;
+    }
+
+    private get _columns() {
+        return this.tabs.length > this._maxNumberTabsDisplayed ? this._maxNumberTabsDisplayed : this.tabs.length ;
+    }
+
+    get tabListHeight() {
+        if(this._tabList) {
+            return this._tabList.nativeElement.offsetHeight;
+        }
+        
+        return 0;
     }
 
     tabs: Tab[] = [];
-    selectedTab: Tab;
-    selectedIndex: number = 0;
+
+    get selectedTab() {
+        var selectedTabs = this.tabs.filter((tab) => tab.isSelected);
+
+        if(selectedTabs.length == 0) {
+            return undefined;
+        } else {
+            return selectedTabs[selectedTabs.length - 1];
+        }
+    }
+
+    get selectedIndex() {
+        if(this.selectedTab) {
+            return this.selectedTab.index;
+        }
+
+        return undefined;
+    }
 
     @Input() alignment: string = "top";
 
-    constructor(element: ElementRef) {
-        this._element = element;        
+    @Output() selectTab = new EventEmitter();
+
+    constructor(private _element: ElementRef) {
     }
 
     ngAfterContentInit() {
@@ -36,7 +68,7 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
 
             if(tab) {
                 this.select(tab.index);
-            }            
+            }
         }    
     }
 
@@ -44,17 +76,19 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
         var self = this;
 
         this.tabs.forEach((tab) => { 
-            let tabListHeight = self._getTabListHeight();
-            tab.setHeight(self._getHeight() - tabListHeight);
+            let tabListHeight = self.tabListHeight;
+            tab.height = self._height - tabListHeight;
             if(self.alignment == "top") {
-                tab.setMargin(tabListHeight);
+                tab.marginTop = tabListHeight;
+            } else if(self.alignment == "bottom") {
+                tab.marginTop = 0;
             }
         });             
     }
 
     add(tab: Tab) {
         this.tabs.push(tab);
-        this.tabs.forEach((tab) => { tab.columnCount = this._getColumns(); });
+        this.tabs.forEach((tab) => { tab.columnCount = this._columns; });
     }
 
     remove(index: number) {
@@ -74,6 +108,30 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
     }
 
     select(index: number) {
+        var tab, self = this;
+
+        if(!this._validateTabIndex(index)) {
+            return;
+        }
+
+        tab = this.tabs[index];
+
+        if(tab.isDisabled) {
+            return;
+        }
+
+        this.tabs.forEach((tab) => { 
+            if(tab.index != index) {
+                self.deselect(tab.index); 
+            }            
+        });
+
+        tab.isSelected = true;
+
+        this.selectTab.emit({ index: index, tab: tab });
+    }
+
+    deselect(index: number) {
         var tab;
 
         if(!this._validateTabIndex(index)) {
@@ -82,36 +140,13 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
 
         tab = this.tabs[index];
 
-
-        if(tab.isDisabled) {
-            return;
-        }
-
-        this.tabs.forEach((tab) => { tab.deselect(); });
-        tab.isSelected = true;
-
-        this.selectedIndex = index;
-        this.selectedTab = tab;
+        if(!tab.isDisabled && tab.isSelected) {
+            tab.isSelected = false;
+        }        
     }
 
     private _selectTabMore() {
         alert("Tab More is clicked");
-    }
-
-    private _getColumns() {
-        return this.tabs.length > this._maxNumberTabsDisplayed ? this._maxNumberTabsDisplayed : this.tabs.length ;
-    }
-
-    private _getHeight() {
-        return this._element.nativeElement.offsetHeight;
-    }
-
-    private _getTabListHeight() {
-        if(this._tabList) {
-            return this._tabList.nativeElement.offsetHeight;
-        }
-        
-        return 0;
     }
 
     private _validateTabIndex(index) {
@@ -131,17 +166,37 @@ export class TabBar implements AfterViewInit, AfterContentInit  {
 export class Tab {
     @ViewChild('wrapper') wrapper: ElementRef;
 
-    private _itemStyle: string = "ig-tab-inner";    
-    private _tabBar: TabBar;
-    // changes and updates accordingly applied to the tab. 
-    private _changesCount: number = 0;
-    private _element: ElementRef;
+    private _itemStyle: string = "ig-tab-inner";     
+    private _changesCount: number = 0; // changes and updates accordingly applied to the tab.
 
-    index: number;
-    height: number;    
     isSelected: boolean = false;
+
+    get index() {
+        return this._tabBar.tabs.indexOf(this);
+    }    
+
     get isDisabled() { 
         return this.disabled !== undefined;
+    }
+
+    set isDisabled(value: boolean) { 
+        this.disabled = value;
+    }
+
+    get height() {
+        return this.wrapper.nativeElement.style.height;
+    }
+
+    set height(value: number){
+        this.wrapper.nativeElement.style.height = value + "px";
+    }
+
+   get marginTop(){
+        return this.wrapper.nativeElement.style.marginTop;
+    }
+
+    set marginTop(value: number){
+        this.wrapper.nativeElement.style.marginTop = value + "px";
     }
 
     // Indirectly defines the width of the tab.
@@ -150,36 +205,21 @@ export class Tab {
     @Input() label: string;
     @Input() icon: string;
     @Input() disabled: boolean;
-    @Input() href: string;   // TODO - need to be disccussed
+    @Input() href: string;   // TODO - need to be disccussed    
 
-      constructor(tabBar: TabBar, element: ElementRef) {
-        this._tabBar = tabBar;
-        this._element = element;
+    constructor(private _tabBar: TabBar, private _element: ElementRef) {
         this._tabBar.add(this);
-        this.index = this._tabBar.tabs.length - 1;
-      }
+    }
 
-      click() {
+    select() {
         if(this.href) {
                 // TODO - href implementation. Priority over nested content
-            } else {
-                this.select();
-            }        
-      }
+        } 
 
-      select() {
-        this._tabBar.select(this.index);
-      }
+        this._tabBar.select(this.index);        
+    }
 
-      deselect() {
-        this.isSelected = false;
-      }
-
-      setHeight(height: number){
-        this.wrapper.nativeElement.style.height = height + "px";
-      }
-
-      setMargin(margin: number){
-        this.wrapper.nativeElement.style.marginTop = margin + "px";
-      }
+    deselect() {
+        this._tabBar.deselect(this.index);
+    }
 }

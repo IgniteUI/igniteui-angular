@@ -1,5 +1,5 @@
 import { Component, Input, Output, AfterContentInit, ContentChildren, QueryList, EventEmitter, Renderer } from '@angular/core';
-import { ContainsPipe } from './filter-pipe';
+import { FilterPipe, FilterOptions } from './filter-pipe';
 import { ListItem, ListHeader } from './items';
 
 declare var module: any;
@@ -7,23 +7,32 @@ declare var module: any;
 @Component({
     selector: 'ig-list',
     host: { 'role': 'list' },
-    pipes: [ ContainsPipe ],
+    pipes: [ FilterPipe ],
     moduleId: module.id, // commonJS standard
-    directives: [ListItem, ListHeader],
+    directives: [ ListItem, ListHeader ],
     templateUrl: 'list-content.html'
 })
 
 export class List implements AfterContentInit {
-    @ContentChildren(ListItem) items: QueryList<ListItem>;
+    @ContentChildren(ListItem) declarativeItems: QueryList<ListItem>; // TODO - merge them all
     @ContentChildren(ListHeader) headers: QueryList<ListHeader>;
 
     private _innerStyle: string = "ig-list-inner";
-    private _searchInputElement: HTMLElement;
+    private _items: ListItem[];
 
+    searchInputElement: HTMLInputElement;
     isCaseSensitiveFiltering: boolean = false;
+    get items() : ListItem[] {
+        if(!this._items && this.declarativeItems) {
+            this._items = this.declarativeItems.toArray();
+        }
+
+        return this._items;
+    }
 
     @Input() searchInputId: string;
-    @Output() filtering = new EventEmitter();
+    @Input() filterOptions: FilterOptions;
+    @Output() filtering = new EventEmitter(false); // synchronous event emitter
     @Output() filtered = new EventEmitter();
 
     constructor(private _renderer: Renderer) {        
@@ -32,30 +41,36 @@ export class List implements AfterContentInit {
     ngAfterContentInit() {
         var self = this;
         if(this.searchInputId) {
-            this._searchInputElement = document.getElementById(this.searchInputId);
-            if(this._searchInputElement) {
-                this._renderer.listen(this._searchInputElement, 'input', this.filter.bind(this));
+            this.searchInputElement = <HTMLInputElement>document.getElementById(this.searchInputId);
+            if(this.searchInputElement) {
+                this._renderer.listen(this.searchInputElement, 'input', this.filter.bind(this));
             }            
-        }
+        }        
+    }
+
+    add(item: ListItem) {
+        this.items.push(item);
     }
 
     filter() {
-        var searchText, result, metConditionFunction, overdueConditionFunction;
+        var inputValue, result, filteringArgs, filteredArgs, items;
 
-        if(this._searchInputElement) {
-            this.filtering.emit({
-                // TODO: cancel filtering
-            });
+        if(this.searchInputElement) {
+            filteringArgs = { cancel: false };
 
-            searchText = (<HTMLInputElement>this._searchInputElement).value;        
-            metConditionFunction = (item) => { item.hidden = false; }, 
-            overdueConditionFunction = (item) => { item.hidden = true; };        
+            this.filtering.emit(filteringArgs);
 
-            var result = new ContainsPipe().transform(this.items, searchText, this.isCaseSensitiveFiltering, metConditionFunction, overdueConditionFunction);
+            if(filteringArgs.cancel) { // TODO - implmenet cancel
+                return; 
+            }            
 
-            this.filtered.emit({
-                result: result
-            });
+            this.filterOptions = this.filterOptions || new FilterOptions();
+            this.filterOptions.items = this.filterOptions.items || this.items;
+            inputValue = (<HTMLInputElement>this.searchInputElement).value;
+            result = new FilterPipe().transform(this.filterOptions, inputValue);
+
+            filteredArgs = { result: result }
+            this.filtered.emit(filteredArgs);
         }        
     }
 }

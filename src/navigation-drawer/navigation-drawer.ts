@@ -34,16 +34,15 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     private _resolveOpen: (value?: any | PromiseLike<any>) => void;
     private _resolveClose: (value?: any | PromiseLike<any>) => void;
 
-
     private _drawer : any;
-    private get drawer(): HTMLElement {
+    get drawer(): HTMLElement {
         if (!this._drawer) {
             this._drawer = this.getChild("." + this.css["drawer"]);
         }
         return this._drawer;
     }
     private _overlay: any;
-    private get overlay() {
+    get overlay() {
         if (!this._overlay) {
             this._overlay = this.getChild("." + this.css["overlay"]);
         }
@@ -51,7 +50,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     }
 
     private _styleDummy: any;
-    private get styleDummy() {
+    get styleDummy() {
         if (!this._styleDummy) {
             this._styleDummy = this.getChild("." + this.css["styleDummy"]);
         }
@@ -66,18 +65,48 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
 
     /**
      * Property to decide whether to change width or translate the drawer from pan gesture.
-     * @protected
      */
-    protected get animateWidth(): boolean {
+    public get hasAnimateWidth(): boolean {
         return this.pin || this._hasMimiTempl;
     }
 
     private _maxEdgeZone: number = 50;
     /**
      * Used for touch gestures (swipe and pan). Defaults to 50 (in px) and is extended to at least 110% of the mini template width if available.
-     * @protected
+     * @protected set method
      */
-    protected maxEdgeZone: number = this._maxEdgeZone;
+    public get maxEdgeZone() {
+        return this._maxEdgeZone;
+    }
+
+    protected set_maxEdgeZone(value: number) {
+        this._maxEdgeZone = value;
+    }
+
+    /**
+     * Get the Drawer width for specific state. Will attempt to evaluate requested state and cache.
+     */
+    public get expectedWidth() {
+        return this.getExpectedWidth(false);
+    }
+
+    /**
+     * Get the Drawer mini width for specific state. Will attempt to evaluate requested state and cache.
+     */
+    public get expectedMiniWidth() {
+        return this.getExpectedWidth(true);
+    }
+
+    public get touchManager() {
+        return this._touchManager;
+    }
+
+    /**
+     * Exposes optional navigation service 
+     */
+    public get state(){
+        return this._state;
+    }
 
     /** ID of the component */
     @Input() public id: string;
@@ -124,18 +153,18 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
 
     constructor(
         @Inject(ElementRef) private elementRef: ElementRef,
-        @Optional() private state: NavigationService,
+        @Optional() private _state: NavigationService,
         // private animate: AnimationBuilder, TODO
         protected renderer:Renderer,
-        private touchManager: HammerGesturesManager)
+        private _touchManager: HammerGesturesManager)
     {
         super(renderer);
     }
 
     ngOnInit() {
         // DOM and @Input()-s initialized
-        if (this.state) {
-            this.state.add(this.id,this);
+        if (this._state) {
+            this._state.add(this.id,this);
         }
         this._hasMimiTempl = this.getChild("ig-drawer-mini-content") !== null;
         this.updateEdgeZone();
@@ -151,8 +180,8 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     }
 
     ngOnDestroy() {
-        this.touchManager.destroy();
-        this.state.remove(this.id)
+        this._touchManager.destroy();
+        this._state.remove(this.id)
     }
 
     ngOnChanges(changes: {[propName: string]: SimpleChange}) {
@@ -165,7 +194,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             this.pin = !!(this.pin && this.pin.toString() === "true");
             this.ensureDrawerHeight();
             if (this.pin) {
-                this.touchManager.destroy();
+                this._touchManager.destroy();
             } else {
                 this.ensureEvents();
             }
@@ -260,20 +289,23 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             // Built-in manager handler(L20887) causes endless loop and max stack exception. https://github.com/angular/angular/issues/6993
             // Use ours for now (until beta.10):
             //this.renderer.listen(document, "swipe", this.swipe);
-            this.touchManager.addGlobalEventListener("document", "swipe", this.swipe);
+            this._touchManager.addGlobalEventListener("document", "swipe", this.swipe);
             this._swipeAttached = true;
 
             //this.renderer.listen(document, "panstart", this.panstart);
             //this.renderer.listen(document, "pan", this.pan);
-            this.touchManager.addGlobalEventListener("document", "panstart", this.panstart);
-            this.touchManager.addGlobalEventListener("document", "panmove", this.pan);
-            this.touchManager.addGlobalEventListener("document", "panend", this.panEnd);
+            this._touchManager.addGlobalEventListener("document", "panstart", this.panstart);
+            this._touchManager.addGlobalEventListener("document", "panmove", this.pan);
+            this._touchManager.addGlobalEventListener("document", "panend", this.panEnd);
         }
     }
 
     private updateEdgeZone() {
+        var maxValue;
+
         if (this._hasMimiTempl) {
-            this.maxEdgeZone = Math.max(this._maxEdgeZone, this.getExpectedWidth(true) * 1.1);
+            maxValue = Math.max(this._maxEdgeZone, this.getExpectedWidth(true) * 1.1);
+            this.set_maxEdgeZone(maxValue);
         }
     }
 
@@ -339,7 +371,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             // when visibleWidth hits limit - stop animating
             if (visibleWidth <= this._panLimit)  return;
 
-            if (this.animateWidth) {
+            if (this.hasAnimateWidth) {
                 percent = (visibleWidth - this._panLimit) / (this._panStartWidth - this._panLimit);
                 newX = visibleWidth;
             } else {
@@ -352,7 +384,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             // when visibleWidth hits limit - stop animating
             if (visibleWidth >= this._panLimit) return;
 
-            if (this.animateWidth) {
+            if (this.hasAnimateWidth) {
                  percent = (visibleWidth - this._panStartWidth) / (this._panLimit - this._panStartWidth);
                  newX = visibleWidth;
             } else {
@@ -395,7 +427,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     private setXSize (x: number, opacity?: string) {
         // Angular polyfills patches window.requestAnimationFrame, but switch to DomAdapter API (TODO)
         window.requestAnimationFrame(() => {
-            if (this.animateWidth) {
+            if (this.hasAnimateWidth) {
                 this.setDrawerWidth(x ? Math.abs(x) + "px" : "");
             } else {
                 this.renderer.setElementStyle(this.drawer, "transform", x ? "translate3d(" + x + "px,0,0)" : "");
