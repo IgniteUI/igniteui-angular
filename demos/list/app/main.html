@@ -1,7 +1,7 @@
 <input id="searchbox" />
-<ig-list searchInputId="searchbox" (filtered)="filteredHandler($event)">
+<ig-list searchInputId="searchbox" (filtered)="filteredHandler($event)" (filtering)="filteringHandler($event)" [filterOptions]="filterOptions">
     <ig-list-header>Filtered List</ig-list-header>     
-    <ig-list-item *ngFor="let navItem of navItems; let index = index" [options]="options">
+    <ig-list-item *ngFor="let navItem of navItems; let index = index" [filteringValue]="navItem.key" [options]="options">
       {{navItem.text}}
     </ig-list-item>
 </ig-list>

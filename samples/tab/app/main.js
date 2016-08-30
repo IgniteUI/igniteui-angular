@@ -9,33 +9,35 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 /// <reference path="../../../typings/globals/node/index.d.ts" />
-var core_1 = require('@angular/core');
-var Infragistics = require('../../../src/main');
-var AppComponent = (function () {
-    function AppComponent() {
+const core_1 = require('@angular/core');
+const Infragistics = require('../../../src/main');
+let AppComponent = class AppComponent {
+    constructor() {
+        this.datasource = [
+            { text: "Nav1", link: "#" },
+            { text: "Nav2", link: "#" },
+            { text: "Nav3", link: "#" },
+            { text: "Nav4", link: "#" }
+        ];
     }
-    //@ViewChild('tabBar') tabBar: TabBar;
-    AppComponent.prototype.selectTab = function (args) {
-        console.log("index: " + args.index);
-        console.log(args.tab);
-        //args.tab._tabBar.remove(args.tab.index);
-    };
-    AppComponent = __decorate([
-        core_1.Component({
-            selector: 'demo-app',
-            moduleId: module.id,
-            templateUrl: "main.html",
-            directives: [
-                //Infragistics.Button,
-                //Infragistics.Icon,
-                Infragistics.TabBar,
-                Infragistics.Tab
-            ]
-        }), 
-        __metadata('design:paramtypes', [])
-    ], AppComponent);
-    return AppComponent;
-}());
+};
+AppComponent = __decorate([
+    core_1.Component({
+        selector: 'sample-app',
+        moduleId: module.id,
+        templateUrl: "main.html",
+        directives: [
+            Infragistics.Button,
+            Infragistics.Icon,
+            Infragistics.Header,
+            Infragistics.Item,
+            Infragistics.List,
+            Infragistics.TabBar,
+            Infragistics.Tab
+        ]
+    }), 
+    __metadata('design:paramtypes', [])
+], AppComponent);
 exports.AppComponent = AppComponent;
 
 //# sourceMappingURL=main.js.map

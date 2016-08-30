@@ -8,34 +8,50 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-const core_1 = require('@angular/core');
-const Infragistics = require('../../../src/main');
-let AppComponent = class AppComponent {
-    constructor() {
+var core_1 = require('@angular/core');
+var Infragistics = require('../../../src/main');
+var filter_pipe_1 = require('../../../src/list/filter-pipe');
+var AppComponent = (function () {
+    function AppComponent() {
         this.navItems = [
-            { text: "Nav1", link: "#" },
-            { text: "Nav2", link: "#" },
-            { text: "Nav3", link: "#" },
-            { text: "Nav4", link: "#" }
+            { key: "1", text: "Nav1", link: "#" },
+            { key: "2", text: "Nav2", link: "#" },
+            { key: "3", text: "Nav3", link: "#" },
+            { key: "4", text: "Nav4", link: "#" }
         ];
     }
-    filteredHandler(args) {
+    Object.defineProperty(AppComponent.prototype, "filterOptions", {
+        get: function () {
+            var fo = new filter_pipe_1.FilterOptions();
+            fo.matchFn = function (filteringValue, inputValue) { return filteringValue.indexOf(inputValue.toLowerCase()) > -1; }; // "contains" behavior
+            fo.formatter = function (text) { return text.toLowerCase(); };
+            return fo;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    AppComponent.prototype.filteringHandler = function (args) {
+        //args.cancel = true;
         console.log(args);
-    }
-};
-AppComponent = __decorate([
-    core_1.Component({
-        selector: 'sample-app',
-        styleUrls: ["app/main.css"],
-        templateUrl: "app/main.html",
-        directives: [
-            Infragistics.ListHeader,
-            Infragistics.ListItem,
-            Infragistics.List,
-        ]
-    }), 
-    __metadata('design:paramtypes', [])
-], AppComponent);
+    };
+    AppComponent.prototype.filteredHandler = function (args) {
+        console.log(args);
+    };
+    AppComponent = __decorate([
+        core_1.Component({
+            selector: 'sample-app',
+            styleUrls: ["app/main.css"],
+            templateUrl: "app/main.html",
+            directives: [
+                Infragistics.ListHeader,
+                Infragistics.ListItem,
+                Infragistics.List,
+            ]
+        }), 
+        __metadata('design:paramtypes', [])
+    ], AppComponent);
+    return AppComponent;
+}());
 exports.AppComponent = AppComponent;
 
 //# sourceMappingURL=main.js.map

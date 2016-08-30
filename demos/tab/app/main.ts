@@ -7,21 +7,21 @@ import * as Infragistics from '../../../src/main';
     moduleId: module.id, // commonJS standard
     templateUrl: "main.html",
     directives: [
-        Infragistics.Button,
-        Infragistics.Icon,
-        //Infragistics.Header,
-        //Infragistics.Item,
-        //Infragistics.List,
+        //Infragistics.Button,
+        //Infragistics.Icon,
         Infragistics.TabBar,
         Infragistics.Tab
     ]
 })
 
 export class AppComponent {
-    datasource: Array<Object> = [
-        { text: "Nav1", link: "#" },
-        { text: "Nav2", link: "#" },
-        { text: "Nav3", link: "#" },
-        { text: "Nav4", link: "#" }
-      ];
+    //@ViewChild('tabBar') tabBar: TabBar;
+
+      selectTab(args) {
+        console.log("index: " + args.index);
+        console.log(args.tab);
+        //args.tab._tabBar.remove(args.tab.index);
+      }
+
+      //this.tabBar.alignment = "bottom";
 }

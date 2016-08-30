@@ -1,4 +1,9 @@
 "use strict";
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,10 +13,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-const core_1 = require('@angular/core');
-const Infragistics = require('../../../src/main');
-let AppComponent = class AppComponent {
-    constructor() {
+var core_1 = require('@angular/core');
+var Infragistics = require('../../../src/main');
+var AppComponent = (function () {
+    function AppComponent() {
         this.navItems = [{
                 text: "Nav1", link: "#"
             }, {
@@ -37,7 +42,7 @@ let AppComponent = class AppComponent {
         this.showToggle = true;
         this.log = new Array();
     }
-    logEvent(event) {
+    AppComponent.prototype.logEvent = function (event) {
         this.log.push(event);
         if (event === "closing") {
             // this will cause change detection, potentially run outside of angular
@@ -46,102 +51,108 @@ let AppComponent = class AppComponent {
         if (event === "opening") {
             this.open = true;
         }
-    }
-    testToggle() {
-        this.viewChild.toggle().then((value) => {
-            this.logEvent("API call resolved: " + value);
+    };
+    AppComponent.prototype.testToggle = function () {
+        var _this = this;
+        this.viewChild.toggle().then(function (value) {
+            _this.logEvent("API call resolved: " + value);
         });
-    }
-    removeItem(index) {
-        let newNavItems = this.navItems.filter((v, i) => i !== index);
+    };
+    AppComponent.prototype.removeItem = function (index) {
+        var newNavItems = this.navItems.filter(function (v, i) { return i !== index; });
         this.navItems = newNavItems;
-    }
-    recycle(index) {
+    };
+    AppComponent.prototype.recycle = function (index) {
         alert("recycle " + index);
-    }
-    eat(index) {
+    };
+    AppComponent.prototype.eat = function (index) {
         alert("eat " + index);
-    }
-};
-__decorate([
-    core_1.ViewChild(Infragistics.NavigationDrawer), 
-    __metadata('design:type', Infragistics.NavigationDrawer)
-], AppComponent.prototype, "viewChild", void 0);
-AppComponent = __decorate([
-    core_1.Component({
-        selector: 'sample-app',
-        providers: [Infragistics.NavigationService],
-        styleUrls: ["app/main.css"],
-        templateUrl: "app/main.html",
-        directives: [
-            Infragistics.NavigationDrawer,
-            Infragistics.NavigationToggle,
-            Infragistics.NavigationClose
-        ]
-    }), 
-    __metadata('design:paramtypes', [])
-], AppComponent);
+    };
+    __decorate([
+        core_1.ViewChild(Infragistics.NavigationDrawer), 
+        __metadata('design:type', Infragistics.NavigationDrawer)
+    ], AppComponent.prototype, "viewChild", void 0);
+    AppComponent = __decorate([
+        core_1.Component({
+            selector: 'sample-app',
+            providers: [Infragistics.NavigationService],
+            styleUrls: ["app/main.css"],
+            templateUrl: "app/main.html",
+            directives: [
+                Infragistics.NavigationDrawer,
+                Infragistics.NavigationToggle,
+                Infragistics.NavigationClose
+            ]
+        }), 
+        __metadata('design:paramtypes', [])
+    ], AppComponent);
+    return AppComponent;
+}());
 exports.AppComponent = AppComponent;
 /**
  * Pin demo
  */
-let AppComponentPin = class AppComponentPin extends AppComponent {
-    constructor() {
-        super();
+var AppComponentPin = (function (_super) {
+    __extends(AppComponentPin, _super);
+    function AppComponentPin() {
+        _super.call(this);
         this.open = true;
         this.pin = true;
         //sample config
         this.showPinToggle = true;
         this.showPositions = false;
     }
-};
-AppComponentPin = __decorate([
-    core_1.Component({
-        selector: 'sample-app',
-        providers: [Infragistics.NavigationService],
-        styleUrls: ["app/main.css"],
-        templateUrl: "app/main.html",
-        directives: [
-            Infragistics.NavigationDrawer,
-            Infragistics.NavigationToggle,
-            Infragistics.NavigationClose
-        ]
-    }), 
-    __metadata('design:paramtypes', [])
-], AppComponentPin);
+    AppComponentPin = __decorate([
+        core_1.Component({
+            selector: 'sample-app',
+            providers: [Infragistics.NavigationService],
+            styleUrls: ["app/main.css"],
+            templateUrl: "app/main.html",
+            directives: [
+                Infragistics.NavigationDrawer,
+                Infragistics.NavigationToggle,
+                Infragistics.NavigationClose
+            ]
+        }), 
+        __metadata('design:paramtypes', [])
+    ], AppComponentPin);
+    return AppComponentPin;
+}(AppComponent));
 exports.AppComponentPin = AppComponentPin;
 /**
  * Mini demo
  */
-let AppComponentMini = class AppComponentMini extends AppComponent {
+var AppComponentMini = (function (_super) {
+    __extends(AppComponentMini, _super);
     /**
      * Main app component for the mini Navigation Drawer sample.
      * Can't reuse template with other samples because ngIf on the mini template selector won't work
      * Setup for future: Have mini content and show mini width input only on this sample.
      * See https://github.com/angular/angular/issues/6303
      */
-    constructor() {
-        super();
+    function AppComponentMini() {
+        _super.call(this);
         //sample config
         this.showMiniWidth = true;
         this.miniTemplate = true;
         this.showToggle = false;
     }
-};
-AppComponentMini = __decorate([
-    core_1.Component({
-        selector: 'sample-app',
-        providers: [Infragistics.NavigationService],
-        styleUrls: ["app/main.css"],
-        templateUrl: "app/main-mini.html",
-        directives: [
-            Infragistics.NavigationDrawer,
-            Infragistics.NavigationToggle,
-            Infragistics.NavigationClose
-        ]
-    }), 
-    __metadata('design:paramtypes', [])
-], AppComponentMini);
+    AppComponentMini = __decorate([
+        core_1.Component({
+            selector: 'sample-app',
+            providers: [Infragistics.NavigationService],
+            styleUrls: ["app/main.css"],
+            templateUrl: "app/main-mini.html",
+            directives: [
+                Infragistics.NavigationDrawer,
+                Infragistics.NavigationToggle,
+                Infragistics.NavigationClose
+            ]
+        }), 
+        __metadata('design:paramtypes', [])
+    ], AppComponentMini);
+    return AppComponentMini;
+}(AppComponent));
 exports.AppComponentMini = AppComponentMini;
 
 //# sourceMappingURL=main.js.map
