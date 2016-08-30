@@ -38,7 +38,7 @@ export class Carousel implements OnDestroy {
     private _interval: number;
     private _lastInterval: any;
     private _playing: boolean;
-    private _current_slide: Slide;
+    private _currentSlide: Slide;
     private _destroyed: boolean;
     private _total: number;
 
@@ -59,7 +59,7 @@ export class Carousel implements OnDestroy {
     }
 
     public get current(): number {
-        return !this._current_slide ? 0 : this._current_slide.index;
+        return !this._currentSlide ? 0 : this._currentSlide.index;
     }
 
     public get isPlaying(): boolean {
@@ -101,7 +101,7 @@ export class Carousel implements OnDestroy {
         this._total -= 1;
 
         if (!this.total) {
-            this._current_slide = null;
+            this._currentSlide = null;
             return;
         }
 
@@ -118,8 +118,8 @@ export class Carousel implements OnDestroy {
             direction = new_index > this.current ? Direction.NEXT : Direction.PREV;
         }
 
-        if (slide && slide !== this._current_slide) {
-            this.move_to(slide, direction);
+        if (slide && slide !== this._currentSlide) {
+            this._moveTo(slide, direction);
         }
     }
 
@@ -160,7 +160,7 @@ export class Carousel implements OnDestroy {
         }
     }
 
-    private move_to(slide: Slide, direction: Direction) {
+    private _moveTo(slide: Slide, direction: Direction) {
         if (this._destroyed) {
             return;
         }
@@ -168,12 +168,12 @@ export class Carousel implements OnDestroy {
         slide.direction = direction;
         slide.active = true;
 
-        if (this._current_slide) {
-            this._current_slide.direction = direction;
-            this._current_slide.active = false;
+        if (this._currentSlide) {
+            this._currentSlide.direction = direction;
+            this._currentSlide.active = false;
         }
 
-        this._current_slide = slide;
+        this._currentSlide = slide;
 
         this.slideChanged.emit(this);
         this._restartInterval();
