@@ -14,7 +14,7 @@ declare var module: any;
     templateUrl: 'list-content.html'
 })
 
-export class ListHeader {
+export class ListHeader { // TODO - add to parent on onInit
     private _innerStyle: string = "ig-header-inner";
 }
 
@@ -28,7 +28,7 @@ export class ListHeader {
     templateUrl: 'list-content.html'
 })
 
-export class ListItem {
+export class ListItem { // TODO - add to parent on onInit
     @ViewChild('wrapper') wrapper: ElementRef;
 
     private _VISIBLE_AREA_ON_FULL_PAN = 40; // in pixels
@@ -59,11 +59,12 @@ export class ListItem {
     }
 
     get maxLeft() {
-        return - this.width + this._VISIBLE_AREA_ON_FULL_PAN;
+        return -this.width + this._VISIBLE_AREA_ON_FULL_PAN;
     }
 
     @Input() href: string;
     @Input() options: Array<Object>
+    @Input() filteringValue: string;
 
     constructor(public element: ElementRef, private _renderer: Renderer) {
         this._addEventListeners();
