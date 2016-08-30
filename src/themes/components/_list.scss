@@ -1,0 +1,30 @@
+.list {
+    padding: 0;
+    margin: $list-margin;
+    &__header {
+        color: $list-header-color;
+        font-size: $list-header-font-size;
+        font-weight: $list-header-font-weight;
+        height: $list-header-height;
+        line-height: $list-header-line-height;
+    }
+    &__item {
+        position: relative;
+        display: flex;
+        flex-flow: column wrap;
+        justify-content: center;
+        color: $list-item-color;
+        list-style-type: none;
+        font-size: $list-item-font-size;
+    }
+    &__item--single-line {
+        height: $list-item-height;
+    }
+    &__item--two-line {
+        height: $list-item-tl-height;
+        :nth-child(n+2) {
+            color: $list-item-tl-sl-color;
+            font-size: $list-item-tl-sl-font-size;
+        }
+    }
+}
