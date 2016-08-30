@@ -24,9 +24,6 @@ export class AppComponent {
 
     get filterOptions() {
         let fo = new FilterOptions();
-        fo.matchFn = (filteringValue: string, inputValue: string) => { return filteringValue.indexOf(inputValue.toLowerCase()) > -1; }; // "contains" behavior
-        fo.formatter = (text: string) => { return text.toLowerCase(); };
-
         return fo;
     }    
 
