@@ -3,7 +3,7 @@
 /// <reference path="../../typings/globals/es6-shim/index.d.ts" />
 
 import { TestComponentBuilder, ComponentFixture, inject, async, tick } from '@angular/core/testing';
-import {Component, ViewChild, ContentChildren, QueryList} from '@angular/core';
+import { Component, ViewChild, ContentChildren } from '@angular/core';
 import * as Infragistics from '../../src/main';
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
@@ -21,16 +21,18 @@ export function main() {
 
                     expect(list).toBeDefined();
                     expect(list instanceof Infragistics.List).toBeTruthy();
-                    expect(list.items).toBeUndefined();
-                    expect(list.headers).toBeUndefined();
+                    expect(list.items instanceof Array).toBeTruthy();
+                    expect(list.items.length).toBe(0);
+                    expect(list.headers instanceof Array).toBeTruthy();
+                    expect(list.headers.length).toBe(0);
 
                     fixture.detectChanges();
                     expect(list.items instanceof Array).toBeTruthy();
                     expect(list.items.length).toBe(1);
                     expect(list.items[0] instanceof Infragistics.ListItem).toBeTruthy();
-                    expect(list.headers instanceof QueryList).toBeTruthy();
+                    expect(list.headers instanceof Array).toBeTruthy();
                     expect(list.headers.length).toBe(1);
-                    expect(list.headers.first instanceof Infragistics.ListHeader).toBeTruthy();
+                    expect(list.headers[0] instanceof Infragistics.ListHeader).toBeTruthy();
                 }).catch (reason => {
                     console.log(reason);
                     return Promise.reject(reason);
@@ -57,7 +59,7 @@ export function main() {
                     return Promise.reject(reason);
                 });
          })));
-         /*it('should filter properly',
+         it('should filter properly',
            async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
               var template = '<ig-list><ig-list-item>Item 1</ig-list-item><ig-list-item>Item 2</ig-list-item><ig-list-item>Item 3</ig-list-item></ig-list>';
                 return tcb.overrideTemplate(ListTestComponent, template)
@@ -91,7 +93,7 @@ export function main() {
                     console.log(reason);
                     return Promise.reject(reason);
                 });
-         })));*/
+         })));
          /*it('should emit filter events',
            async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
             var template = '<ig-list><ig-list-item>Item 1</ig-list-item><ig-list-item>Item 2</ig-list-item><ig-list-item>Item 3</ig-list-item></ig-list>';
@@ -143,7 +145,7 @@ export function main() {
                       expect(visibleItems.length).toBe(3);
                       
                       list.searchInputElement = document.createElement('input');
-                      fixture.filteringHandler = (args: any) => { debugger; args.cancel = true; };
+                      fixture.filteringHandler = (args: any) => { args.cancel = true; };
                       list.searchInputElement.value = "3";
                       fixture.detectChanges(); 
                       list.filter();

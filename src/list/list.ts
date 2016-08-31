@@ -13,22 +13,14 @@ declare var module: any;
     templateUrl: 'list-content.html'
 })
 
-export class List implements AfterContentInit {
-    @ContentChildren(ListItem) declarativeItems: QueryList<ListItem>; // TODO - merge them all
-    @ContentChildren(ListHeader) headers: QueryList<ListHeader>;
-
+export class List implements AfterContentInit { 
     private _innerStyle: string = "ig-list-inner";
     private _items: ListItem[];
 
     searchInputElement: HTMLInputElement;
     isCaseSensitiveFiltering: boolean = false;
-    get items() : ListItem[] {
-        if(!this._items && this.declarativeItems) {
-            this._items = this.declarativeItems.toArray();
-        }
-
-        return this._items;
-    }
+    items: ListItem[] = [];
+    headers: ListHeader[] = [];
 
     @Input() searchInputId: string;
     @Input() filterOptions: FilterOptions;
@@ -48,8 +40,12 @@ export class List implements AfterContentInit {
         }        
     }
 
-    add(item: ListItem) {
+    addItem(item: ListItem) {
         this.items.push(item);
+    }
+
+    addHeader(header: ListHeader) {
+        this.headers.push(header);
     }
 
     filter() {
@@ -60,7 +56,7 @@ export class List implements AfterContentInit {
 
             this.filtering.emit(filteringArgs);
 
-            if(filteringArgs.cancel) { // TODO - implmenet cancel
+            if(filteringArgs.cancel) { // TODO - implement cancel
                 return; 
             }            
 

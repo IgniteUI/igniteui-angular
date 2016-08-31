@@ -23,8 +23,6 @@ var AppComponent = (function () {
     Object.defineProperty(AppComponent.prototype, "filterOptions", {
         get: function () {
             var fo = new filter_pipe_1.FilterOptions();
-            fo.matchFn = function (filteringValue, inputValue) { return filteringValue.indexOf(inputValue.toLowerCase()) > -1; }; // "contains" behavior
-            fo.formatter = function (text) { return text.toLowerCase(); };
             return fo;
         },
         enumerable: true,
