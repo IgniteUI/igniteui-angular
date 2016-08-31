@@ -2,106 +2,97 @@ $ig-light-blue: #0099ff;
 $badge-background-color: #dd524d;
 
 ig-tab-bar {
-        
-        width: 100%;
-        height: 100%;
-        display: block;
-
+    display: block;
+    height: 100%;
     .ig-tab-bar-inner {
-        width: 100%;
-        height: 100%;
         position: absolute;
-    }
-
-    .tab-bar-top.ig-tab-bar-inner{
-
-        ul{
-            top: 0;
-            border-top: 0;
+        &.tab-bar-top {
+            ul {
+                top: 0;
+                border-top: none;
+                box-shadow: 0px 2px 4px 0px rgba(72, 72, 72, 0.10);
+            }
         }
-
-        li.selected {
-            border-bottom: 4px solid $ig-light-blue;
-            padding-bottom: 1px;           
-        }
-    }
-    .tab-bar-bottom.ig-tab-bar-inner {
-            height: 100%;
-
-         ul{
-            border-bottom: 0;
-            bottom: 0;            
-
-            li.selected {
-                border-top: 4px solid $ig-light-blue;
-                padding-top: 1px;    
+        &.tab-bar-bottom {
+            ul {
+                bottom: 0;
+                border-bottom: none;
+                box-shadow: 0px -2px 4px 0px rgba(72, 72, 72, 0.10);
             }
         }
     }
-
     ul {
-        border-top: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;
+        position: absolute;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        border-top: 1px solid rgba(72, 72, 72, 0.15);
+        border-bottom: 1px solid rgba(72, 72, 72, 0.15);
+        width: 100%;
+        height: 56px;
         margin: 0;
         padding: 0;
-        width: 100%;
-        position: absolute;
-        color: #555;
-
-        li{
-            text-align: center;
-            line-height: 24px;
-            padding: 5px 10px;
-            list-style: none;
-            display: inline-block;
-            cursor: pointer;
-            white-space: nowrap;
+        background: #444;
+        overflow: hidden;
+        li {
             position: relative;
+            display: flex;
+            flex-flow: column wrap;
+            align-items: center;
+            min-width: 80px;
+            max-width: 168px;
+            list-style: none;
+            text-align: center;
+            cursor: pointer;
             text-transform: uppercase;
-            box-sizing: border-box;
+            white-space: nowrap;
             text-overflow: ellipsis;
-            float: left;
-
-            &.selected {
-                color: $ig-light-blue;
-            }
-
-            &.col-2 {
-                width: 50%;
-            }
-
-            &.col-3 {
-                width: 33%;
-            }
-
-            &.col-3:last-of-type {
-                width: 34%;
-            }
-
-            &.col-4 {
-                width: 25%;
-            }
-
-            &.col-5 {
-                width: 20%;
-            }
-
-            &.disabled {
-                opacity: 0.5;
-                cursor: default;
+            .tab-color {
+                display: table;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
+                height: 56px;
+                &:after {
+                    top: 50%;
+                    left: 50%;
+                    content: '';
+                    transform: translateY(-50%);
+                    width: 25px;
+                    height: 25px;
+                    margin-top: -25px;
+                    margin-left: 0;
+                    border-radius: 50%;
+                    transform: scale(0);
+                    position:absolute;
+                }
+                &--1:after {
+                    background-color: #0e7a6c;
+                }
+                &--2:after {
+                    background: #475b64;
+                }
+                &--3:after {
+                    background: #6e4a45;
+                }
+                &--4:after {
+                    background: #9c736f;
+                }
             }
 
             .tab-icon {
-                height: 32px;
-                width: 32px;                
-                margin-left: auto;
-                margin-right: auto;
+                height: 24px;
+                width: 24px;                
                 position: relative;
-
+                z-index: 1;
+                opacity: .85;
                 &.icon-more {
                     font-size: 30px;
                     line-height: 15px;
-                    color: $ig-light-blue;
+                    color: #fff;
                     background: none;
                 }
 
@@ -126,28 +117,59 @@ ig-tab-bar {
             }
 
             .tab-label {
+                color: white;
                 font-size: 12px;
                 line-height: 12px;
+                transform: scale(1);
                 padding-top: 5px;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                z-index: 1;
+            }
+            &.selected {
+                .tab-icon {
+                    opacity: 1;
+                    // transform: translateY(-2px);
+                    transition: all .25s ease-in;
+                }
+                .tab-label {
+                    // font-size: 14px;
+                    // line-height: 14px;
+                    // padding-top: 2px;
+                    // transition: all .25s ease-in-out;
+                }
+                .tab-color:after {
+                    animation: selected .8s ease forwards;
+                }
+            }
+
+            &.disabled {
+                opacity: 0.5;
+                cursor: default;
             }
         }
+        
     }
 }
 
 ig-tab {
-
     .ig-tab-inner {
         display: none;
         overflow: auto;
-
         &.selected {
             display: block;
         }
-    }    
+        &::-webkit-scrollbar { 
+            display: none;
+        }
+    }
 }
 
  div[ig-tab-view] {
     display:none;
+}
+
+@keyframes selected {
+	from {transform:scale(0) }
+	to { transform:scale(44.5) }
 }

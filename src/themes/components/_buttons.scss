@@ -40,7 +40,6 @@
       box-shadow: $button-raised-focus-shadow;
     }
   }
-
   &--fab {
     display: flex;
     align-items: center;
@@ -59,11 +58,9 @@
       background-color: $button-focus-background;
     }
   }
-
   &--fab__icon {
     color: $button-raised-color;
   }
-
   &--disabled {
     color: $button-disabled-color;
     background: $button-disabled-background;
