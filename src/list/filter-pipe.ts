@@ -54,17 +54,17 @@ export class FilterOptions {
 	};
 
 	// function - formats the original text before matching process
-	// Default behavior - returns the unchanged text
+	// Default behavior - returns text to lower case
 	formatter(text: string) { 
-		return text; 
+		return text.toLowerCase();
 	};	
 
 	// function - determines whether the item met the condition
 	// filteringValue - text value the should be tested
 	// inputValue - text value from input that condition is based on
-	// Default behavior - always met the condition
+	// Default behavior - "contains"
 	matchFn(filteringValue: string, inputValue: string) { 
-		return true; 
+		return filteringValue.indexOf(inputValue.toLowerCase()) > -1;
 	};	
 
 	// function - executed on each item that met the condition

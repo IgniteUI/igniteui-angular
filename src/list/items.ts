@@ -1,4 +1,4 @@
-import { Component, Directive, Renderer, Input, ElementRef, ViewChild, AfterViewInit, ViewChildren, ViewContainerRef, ComponentResolver } from '@angular/core';
+import { Component, Directive, Renderer, Input, ElementRef, ViewChild, AfterViewInit, OnInit, ViewChildren, ViewContainerRef, ComponentResolver, Inject, forwardRef } from '@angular/core';
 import { HammerGesturesManager } from '../core/core';
 import { List } from './list';
 
@@ -14,8 +14,15 @@ declare var module: any;
     templateUrl: 'list-content.html'
 })
 
-export class ListHeader { // TODO - add to parent on onInit
+export class ListHeader implements OnInit { 
     private _innerStyle: string = "ig-header-inner";
+
+    constructor(@Inject(forwardRef(() => List)) private list:List) {
+    }
+
+    public ngOnInit() {
+        this.list.addHeader(this);
+    }
 }
 
 // ====================== ITEM ================================
@@ -28,7 +35,7 @@ export class ListHeader { // TODO - add to parent on onInit
     templateUrl: 'list-content.html'
 })
 
-export class ListItem { // TODO - add to parent on onInit
+export class ListItem implements OnInit { 
     @ViewChild('wrapper') wrapper: ElementRef;
 
     private _VISIBLE_AREA_ON_FULL_PAN = 40; // in pixels
@@ -66,8 +73,12 @@ export class ListItem { // TODO - add to parent on onInit
     @Input() options: Array<Object>
     @Input() filteringValue: string;
 
-    constructor(public element: ElementRef, private _renderer: Renderer) {
+    constructor(@Inject(forwardRef(() => List)) private list:List, public element: ElementRef, private _renderer: Renderer) {
         this._addEventListeners();
+    }
+
+    public ngOnInit() {
+        this.list.addItem(this);
     }
 
     private _addEventListeners() {
