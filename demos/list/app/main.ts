@@ -15,6 +15,10 @@ import { FilterOptions } from '../../../src/list/filter-pipe';
 })
 
 export class AppComponent {
+    @ViewChild("#cancelInput") cancelInput;
+
+    filteringProperty; // default is text, because of the default filteringValue of the list
+
     private navItems: Array<Object> = [
             { key:"1", text: "Nav1", link: "#" }, 
             { key:"2", text: "Nav2", link: "#" }, 
@@ -22,13 +26,14 @@ export class AppComponent {
             { key:"4", text: "Nav4", link: "#" }
         ];
 
+    // exists only if you want to override some default behavior of filtering
     get filterOptions() {
         let fo = new FilterOptions();
         return fo;
     }    
 
     filteringHandler(args) {
-        //args.cancel = true;
+        args.cancel = this.cancelInput.checked;
         console.log(args);
     }
 

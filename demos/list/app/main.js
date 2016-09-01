@@ -21,6 +21,7 @@ var AppComponent = (function () {
         ];
     }
     Object.defineProperty(AppComponent.prototype, "filterOptions", {
+        // exists only if you want to override some default behavior of filtering
         get: function () {
             var fo = new filter_pipe_1.FilterOptions();
             return fo;
@@ -29,12 +30,16 @@ var AppComponent = (function () {
         configurable: true
     });
     AppComponent.prototype.filteringHandler = function (args) {
-        //args.cancel = true;
+        args.cancel = this.cancelInput.checked;
         console.log(args);
     };
     AppComponent.prototype.filteredHandler = function (args) {
         console.log(args);
     };
+    __decorate([
+        core_1.ViewChild("#cancelInput"), 
+        __metadata('design:type', Object)
+    ], AppComponent.prototype, "cancelInput", void 0);
     AppComponent = __decorate([
         core_1.Component({
             selector: 'sample-app',

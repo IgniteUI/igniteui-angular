@@ -94,7 +94,7 @@ export function main() {
                     return Promise.reject(reason);
                 });
          })));
-         /*it('should emit filter events',
+         it('should emit filter events',
            async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
             var template = '<ig-list><ig-list-item>Item 1</ig-list-item><ig-list-item>Item 2</ig-list-item><ig-list-item>Item 3</ig-list-item></ig-list>';
                 return tcb.overrideTemplate(ListTestComponent, template)
@@ -125,7 +125,7 @@ export function main() {
                     console.log(reason);
                     return Promise.reject(reason);
                 });
-         })));*/
+         })));
          /*it('should cancel emitted filter events',
            async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
             var template = '<ig-list (filtering)="filteringHandler($event)"><ig-list-item>Item 1</ig-list-item><ig-list-item>Item 2</ig-list-item><ig-list-item>Item 3</ig-list-item></ig-list>';
@@ -139,13 +139,13 @@ export function main() {
                       spyOn(list.filtered, 'emit');
 
                       fixture.detectChanges();
-                      items = list.items.toArray();                      
+                      items = list.items;                      
                       visibleItems = items.filter((listItem) => { return !listItem.hidden; });
                       expect(list.items.length).toBe(3);
                       expect(visibleItems.length).toBe(3);
                       
                       list.searchInputElement = document.createElement('input');
-                      fixture.filteringHandler = (args: any) => { args.cancel = true; };
+                      fixture.componentInstance.filteringHandler = (args: any) => { args.cancel = true; };
                       list.searchInputElement.value = "3";
                       fixture.detectChanges(); 
                       list.filter();

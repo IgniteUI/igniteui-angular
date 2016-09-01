@@ -18,7 +18,6 @@ export class List implements AfterContentInit {
     private _items: ListItem[];
 
     searchInputElement: HTMLInputElement;
-    isCaseSensitiveFiltering: boolean = false;
     items: ListItem[] = [];
     headers: ListHeader[] = [];
 
@@ -56,7 +55,7 @@ export class List implements AfterContentInit {
 
             this.filtering.emit(filteringArgs);
 
-            if(filteringArgs.cancel) { // TODO - implement cancel
+            if(filteringArgs.cancel) {
                 return; 
             }            
 
