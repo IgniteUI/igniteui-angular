@@ -9,14 +9,14 @@ ig-tab-bar {
         &.tab-bar-top {
             ul {
                 top: 0;
-                border-top: none;
+                // border-top: none;
                 box-shadow: 0px 2px 4px 0px rgba(72, 72, 72, 0.10);
             }
         }
         &.tab-bar-bottom {
             ul {
                 bottom: 0;
-                border-bottom: none;
+                // border-bottom: none;
                 box-shadow: 0px -2px 4px 0px rgba(72, 72, 72, 0.10);
             }
         }
@@ -26,8 +26,8 @@ ig-tab-bar {
         display: flex;
         justify-content: space-around;
         align-items: center;
-        border-top: 1px solid rgba(72, 72, 72, 0.15);
-        border-bottom: 1px solid rgba(72, 72, 72, 0.15);
+        // border-top: 1px solid rgba(72, 72, 72, 0.15);
+        // border-bottom: 1px solid rgba(72, 72, 72, 0.15);
         width: 100%;
         height: 56px;
         margin: 0;
@@ -85,10 +85,11 @@ ig-tab-bar {
 
             .tab-icon {
                 height: 24px;
-                width: 24px;                
+                width: 24px;        
                 position: relative;
                 z-index: 1;
-                opacity: .85;
+                opacity: .50;
+                color: #fff;
                 &.icon-more {
                     font-size: 30px;
                     line-height: 15px;
@@ -125,11 +126,12 @@ ig-tab-bar {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 z-index: 1;
+                opacity: .50;
             }
             &.selected {
                 .tab-icon {
                     opacity: 1;
-                    // transform: translateY(-2px);
+                    transform: translateY(-2px);
                     transition: all .25s ease-in;
                 }
                 .tab-label {
@@ -137,6 +139,7 @@ ig-tab-bar {
                     // line-height: 14px;
                     // padding-top: 2px;
                     // transition: all .25s ease-in-out;
+                    opacity: 1;
                 }
                 .tab-color:after {
                     animation: selected .8s ease forwards;
