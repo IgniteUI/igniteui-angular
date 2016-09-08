@@ -1,18 +1,18 @@
-
-<div class="{{_itemStyle}} tab-bar-{{alignment}}">
+<div class="{{_itemStyle}}">
 	<ng-content></ng-content>
-	<ul #unorderedList >
-		<li *ngFor="let tab of _visibleTabs" [class.selected]="tab.isSelected" [class.disabled]="tab.isDisabled" (click)="tab.select()">
+	<ul #unorderedList class="{{_itemStyle}}__menu {{_itemStyle}}__menu--{{alignment}}">
+		<li class="{{_itemStyle}}__menu-item" *ngFor="let tab of _visibleTabs" [class.ig-tab-bar-inner__menu-item--selected]="tab.isSelected" [class.ig-tab-bar-inner__menu-item--disabled]="tab.isDisabled" (click)="tab.select()" >
 			<div ngClass="tab-icon">
 				<i class="material-icons">{{tab.icon}}</i>
-				<span [class.hidden]="tab._changesCount == 0" class="badge">{{tab._changesCount}}</span>
+				<span [class.tab-icon__badge--hidden]="tab._changesCount == 0" class="tab-icon__badge">{{tab._changesCount}}</span>
 			</div>
 			<div ngClass="tab-label">{{tab.label}}</div>
 			<div ngClass="tab-color tab-color--{{tab.color}}"></div>
 		</li>
-		<li *ngIf="tabs.length > 5" (click)="_selectTabMore()">
-			<div ngClass="tab-icon icon-more">...
-				<!-- <span [class.hidden]="tab._changesCount == 0" class="badge">{{tab._changesCount}}</span> -->
+		<li class="{{_itemStyle}}__menu-item" *ngIf="tabs.length > 5" (click)="_selectTabMore()">
+			<div ngClass="tab-icon">
+				<i class="material-icons">more_horiz</i>
+				 <!--<span [class.hidden]="tab._changesCount == 0" class="badge">{{tab._changesCount}}</span> -->
 			</div>
 			<div ngClass="tab-label">More</div>
 		</li>
