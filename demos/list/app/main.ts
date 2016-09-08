@@ -15,7 +15,7 @@ import { FilterOptions } from '../../../src/list/filter-pipe';
 })
 
 export class AppComponent {
-    @ViewChild("#cancelInput") cancelInput;
+    @ViewChild("cancelInput") cancelInput;
 
     filteringProperty; // default is text, because of the default filteringValue of the list
 
@@ -33,7 +33,7 @@ export class AppComponent {
     }    
 
     filteringHandler(args) {
-        args.cancel = this.cancelInput.checked;
+        args.cancel = this.cancelInput.nativeElement.checked;
         console.log(args);
     }
 

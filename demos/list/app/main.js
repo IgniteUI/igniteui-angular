@@ -30,14 +30,14 @@ var AppComponent = (function () {
         configurable: true
     });
     AppComponent.prototype.filteringHandler = function (args) {
-        args.cancel = this.cancelInput.checked;
+        args.cancel = this.cancelInput.nativeElement.checked;
         console.log(args);
     };
     AppComponent.prototype.filteredHandler = function (args) {
         console.log(args);
     };
     __decorate([
-        core_1.ViewChild("#cancelInput"), 
+        core_1.ViewChild("cancelInput"), 
         __metadata('design:type', Object)
     ], AppComponent.prototype, "cancelInput", void 0);
     AppComponent = __decorate([

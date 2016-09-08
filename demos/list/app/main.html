@@ -3,14 +3,14 @@
     <input id="searchbox" />
     <ig-list searchInputId="searchbox" (filtered)="filteredHandler($event)" (filtering)="filteringHandler($event)" [filterOptions]="filterOptions">
         <ig-list-header>Filtered List</ig-list-header>     
-        <ig-list-item *ngFor="let navItem of navItems; let index = index" [filteringValue]="navItem[filteringPorperty]" [options]="options">
+        <ig-list-item *ngFor="let navItem of navItems; let index = index" [filteringValue]="navItem[filteringProperty]" [options]="options">
           {{navItem.text}} (Key:{{navItem.key}})
         </ig-list-item>
     </ig-list>
   </div>
   <div style="width: 42%; float: left; padding: 4%">
     <label for="cancelInput">Cancel filtering</label>
-    <input type="checkbox" id="cancelInput"/><br><br>
+    <input #cancelInput type="checkbox"/><br><br>
     <div>Filtering item property</div>
     <label for="filterKey">Key</label>
       <input type="radio" name="filteringValue" id="filterKey" (click)="filteringProperty='key'" /><br>
