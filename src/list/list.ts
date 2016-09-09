@@ -32,7 +32,10 @@ export class List implements AfterContentInit {
     ngAfterContentInit() {
         var self = this;
         if(this.searchInputId) {
-            this.searchInputElement = <HTMLInputElement>document.getElementById(this.searchInputId);
+            if(!this.searchInputElement) {
+                this.searchInputElement = this.getFilterInputElement(this.searchInputId);
+            }
+            
             if(this.searchInputElement) {
                 this._renderer.listen(this.searchInputElement, 'input', this.filter.bind(this));
             }            
@@ -67,5 +70,9 @@ export class List implements AfterContentInit {
             filteredArgs = { result: result }
             this.filtered.emit(filteredArgs);
         }        
+    }
+
+    private getFilterInputElement(id: string) {
+        return <HTMLInputElement>document.getElementById(id);
     }
 }
