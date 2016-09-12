@@ -1,0 +1,287 @@
+/* ==========================================================================
+   Zero Blocks Variables
+   ========================================================================== */
+/**
+ * Table of Contents:
+ *
+ *  1. Colors
+ *  2. Badges
+ *  3. Buttons
+ *  TODO: 4. Cards
+ *  TODO: 5. Collapsible
+ *  TODO: 6. Chips
+ *  TODO: 7. Date Picker
+ *  TODO: 8. Dropdown
+ *  9. Fonts
+ *  10. Forms
+ *  11. Global
+ *  TODO: 12. Navigation Bar
+ *  TODO: 13. Navigation Drawer
+ *  TODO: 14. Slider
+ *  TODO: 15. Spinners | Loaders
+ *  TODO: 16. Tabs
+ *  TODO: 17. Tables
+ *  TODO: 18. Toasts
+ *  19. Typography
+ *  TODO: 20. Flow Text
+ *  TODO: 21. Collections
+ *  TODO: 22. Progress Bar
+ *  23. Lists
+ */
+
+
+/* 1. Colors
+   ========================================================================== */
+
+// Base Palette To Chose Colors From
+$rich-black: #0b3c49;
+$byzantium: #731963;
+$vivid-cerise: #e41c77;
+$white: #fff;
+$yellow-orange: #fbb13c;
+$ocean-blue: #0375be;
+
+// Main App Colors
+$primary-color: $ocean-blue !default;
+$secondary-color: $byzantium !default;
+$accent-color: $yellow-orange !default;
+$success-color: #4CAF50 !default;
+$error-color: #F44336 !default;
+
+// Color Palette
+$primary-color-50: gen-color($primary-color, 50);
+$primary-color-100: gen-color($primary-color, 100);
+$primary-color-200: gen-color($primary-color, 200);
+$primary-color-300: gen-color($primary-color, 300);
+$primary-color-400: gen-color($primary-color, 400);
+$primary-color-500: $primary-color;
+$primary-color-600: gen-color($primary-color, 600);
+$primary-color-700: gen-color($primary-color, 700);
+$primary-color-800: gen-color($primary-color, 800);
+$primary-color-900: gen-color($primary-color, 900);
+$primary-color-A100: gen-color($primary-color, 'A100');
+$primary-color-A200: gen-color($primary-color, 'A200');
+$primary-color-A400: gen-color($primary-color, 'A400');
+$primary-color-A700: gen-color($primary-color, 'A700');
+
+$secondary-color-50: gen-color($secondary-color, 50);
+$secondary-color-100: gen-color($secondary-color, 100);
+$secondary-color-200: gen-color($secondary-color, 200);
+$secondary-color-300: gen-color($secondary-color, 300);
+$secondary-color-400: gen-color($secondary-color, 400);
+$secondary-color-500: $secondary-color;
+$secondary-color-600: gen-color($secondary-color, 600);
+$secondary-color-700: gen-color($secondary-color, 700);
+$secondary-color-800: gen-color($secondary-color, 800);
+$secondary-color-900: gen-color($secondary-color, 900);
+$secondary-color-A100: gen-color($secondary-color, 'A100');
+$secondary-color-A200: gen-color($secondary-color, 'A200');
+$secondary-color-A400: gen-color($secondary-color, 'A400');
+$secondary-color-A700: gen-color($secondary-color, 'A700');
+
+$accent-color-50: gen-color($accent-color, 50);
+$accent-color-100: gen-color($accent-color, 100);
+$accent-color-200: gen-color($accent-color, 200);
+$accent-color-300: gen-color($accent-color, 300);
+$accent-color-400: gen-color($accent-color, 400);
+$accent-color-500: $accent-color;
+$accent-color-600: gen-color($accent-color, 600);
+$accent-color-700: gen-color($accent-color, 700);
+$accent-color-800: gen-color($accent-color, 800);
+$accent-color-900: gen-color($accent-color, 900);
+$accent-color-A100: gen-color($accent-color, 'A100');
+$accent-color-A200: gen-color($accent-color, 'A200');
+$accent-color-A400: gen-color($accent-color, 'A400');
+$accent-color-A700: gen-color($accent-color, 'A700');
+
+/* 2. Badges
+   ========================================================================== */
+
+$badge-bg-color: $secondary-color !default;
+
+/* 3. Buttons
+   ========================================================================== */
+
+// Shared Styles
+$button-border: none !default;
+$button-radius: 2px !default;
+$button-focus-background: darken($primary-color, 5%) !default;
+$button-font-size: 1rem !default;
+$button-color: #484848 !default;
+$button-font-weight: normal !default;
+$button-width: 88px !default;
+$button-height: 36px !default;
+$button-padding: .375rem 1rem !default;
+
+// Disabled Styles
+$button-disabled-background: none !default;
+$button-disabled-color: #AEAEAE;
+
+// Raised Buttons
+$button-raised-background: $primary-color !default;
+$button-raised-color: #fff !default;
+$button-raised-shadow: 0 2px 4px 0 rgba(72, 72, 72, 0.5) !default;
+$button-raised-focus-shadow: 0px 3px 2px 0px rgba(0,0,0,0.03), 0px 7px 8px 0px rgba(88,88,88,0.50) !default;
+
+// Flat Buttons
+$button-flat-color: $primary-color !default;
+$button-flat-color-disabled: #AEAEAE !default;
+$button-flat-hover-background: #F0F0F0 !default;
+$button-flat-focus-background: #D1D1D1 !default;
+
+// Floating Buttons
+$button-floating-width: 56px;
+$button-floating-height: $button-floating-width;
+$button-floating-shadow: 0px 2px 4px 0px rgba(72, 72, 72, 0.50);
+$button-floating-hover-shadow: 0px 4px 8px 0px rgba(72, 72, 72, 0.50);
+$button-floating-radius: 50% 50%;
+$button-floating-background: $primary-color;
+
+/* 9. Fonts
+   ========================================================================== */
+$titillium-font-path: '../../fonts/titillium/' !default;
+
+/* 10. Forms
+   ========================================================================== */
+// Text Inputs + Textarea
+$input-min-height: 4.375rem !default;
+$input-font-size: 1rem !default;
+$input-color: #484848 !default;
+$input-caret-color: $primary-color;
+$input-line-height: 1.875rem !default;
+$input-border-color: rgba(117, 117, 117, .5) !default;
+$input-border: 1px solid $input-border-color !default;
+$input-border-error: 2px solid $error-color;
+$input-border-success: 2px solid $success-color;
+$input-border-color-focus: $primary-color !default;
+$input-border-focus: 2px solid $input-border-color-focus !default;
+$input-background: #fff !default;
+$input-transition: all .2s ease-in !default;
+$input-placeholder-color: $input-border-color;
+
+$input-error-color:  $error-color !default;
+$input-success-color: $success-color !default;
+$input-disabled-color: #D1D1D1 !default;
+$input-disabled-solid-color: $input-disabled-color !default;
+
+$label-color: #757575 !default;
+$label-focus-color: $primary-color !default;
+$label-active-color: #D1D1D1 !default;
+$label-font-size: 1rem !default;
+$label-focus-font-size: .75rem !default;
+
+// Radio Buttons
+$radio-fill-color: $primary-color !default;
+$radio-empty-color: #757575 !default;
+$radio-border: 2px solid $radio-fill-color !default;
+$radio-width: 20px !default;
+$radio-height: $radio-width !default;
+$radio-radius: 50% 50% !default;
+
+// Switches
+$switch-background: #757575 !default;
+$switch-active-background: rgba($radio-fill-color, .5);
+$switch-color: transparent !default;
+$switch-radius: 100px !default;
+$switch-width: 35px !default;
+$switch-height: 14px !default;
+$switch-label-width: 20px !default;
+$switch-label-height: $switch-label-width !default;
+$switch-shadow: 0 2px 4px 0 rgba(72, 72, 72, 0.50);
+$switch-disabled-shadow: 0 1px 2px 0 rgba(72, 72, 72, 0.50) !default;
+$switch-margin: 20px 0 !default;
+
+// Checkboxes
+$checkbox-width: 20px !default;
+$checkbox-height: $checkbox-width !default;
+$checkbox-label-padding: 35px !default;
+$checkbox-radius: 2px !default;
+$checkbox-tick-width: 9px !default;
+$checkbox-tick-height: 15px !default;
+$checkbox-tick-color: $white !default;
+
+/* 11. Global
+   ========================================================================== */
+
+// Media Query Ranges
+$small-screen-up: 601px !default;
+$medium-screen-up: 767px !default;
+$large-screen-up: 1025px !default;
+$small-screen: 600px !default;
+$medium-screen: 768px !default;
+$large-screen: 1024px !default;
+
+$medium-and-up: "only screen and (min-width : #{$small-screen-up})" !default;
+$large-and-up: "only screen and (min-width : #{$medium-screen-up})" !default;
+$small-and-down: "only screen and (max-width : #{$small-screen})" !default;
+$medium-and-down: "only screen and (max-width : #{$medium-screen})" !default;
+$medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})" !default;
+
+/* 19. Typography
+   ========================================================================== */
+
+// off-black
+$off-black: #484848;
+
+// paragraph
+$paragraph-line-height-desktop: 1.375rem !default;
+$paragraph-line-height-phone: 1.25rem !default;
+
+// H1
+$h1-font-size-desktop: 3rem !default;
+$h1-line-height-desktop: 3.375rem !default;
+$h1-font-size-tablet: 2.5rem !default;
+$h1-line-height-tablet: 2.8125rem !default;
+$h1-font-size-phone: 2rem !default;
+$h1-line-height-phone: 2.5rem !default;
+
+// H2
+$h2-font-size-desktop: 2.25rem !default;
+$h2-line-height-desktop: 2.8125rem !default;
+$h2-font-size-tablet: 2rem !default;
+$h2-line-height-tablet: 2.5rem !default;
+$h2-font-size-phone: 1.625rem !default;
+$h2-line-height-phone: 1.875rem !default;
+
+// H3
+$h3-font-size-desktop: 1.75rem !default;
+$h3-line-height-desktop: 2.1875rem !default;
+$h3-font-size-tablet: 1.5rem !default;
+$h3-line-height-tablet: 1.875rem !default;
+$h3-font-size-phone: 1.375rem !default;
+$h3-line-height-phone: 1.5625rem !default;
+
+// H4
+$h4-font-size-desktop: 1.125rem !default;
+$h4-line-height-desktop: 1.375rem !default;
+$h4-font-size-tablet: 1.125rem !default;
+$h4-line-height-tablet: 1.375rem !default;
+$h4-font-size-phone: 1.125rem !default;
+$h4-line-height-phone: 1.25rem !default;
+
+// Blockquote
+$blockquote-font-size-desktop: 1.5rem !default;
+$blockquote-line-height-desktop: 2.1875rem !default;
+$blockquote-font-size-tablet: 1.5rem !default;
+$blockquote-line-height-tablet: 2.1875rem !default;
+$blockquote-font-size-phone: 1.25rem !default;
+$blockquote-line-height-phone: 1.5625rem !default;
+
+/* 23. List
+   ========================================================================== */
+$list-margin: 8px 16px !default;
+
+$list-header-color: $primary-color !default;
+$list-header-font-size: .8125rem !default;
+$list-header-font-weight: normal !default;
+$list-header-height: 48px !default;
+$list-header-line-height: 48px !default;
+
+$list-item-color: #484848 !default;
+$list-item-height: 48px !default;
+$list-item-line-height: 48px !default;
+$list-item-font-size: 1rem !default;
+
+$list-item-tl-sl-font-size: .875rem !default;
+$list-item-tl-height: 72px !default;
+$list-item-tl-sl-color: #757575 !default;
