@@ -21,6 +21,7 @@
     'common',
     'compiler',
     'core',
+    'forms',
     'http',
     'platform-browser',
     'platform-browser-dynamic',
@@ -45,12 +46,12 @@
     packages: packages
   }
   System.config(config);
-  
+
   //https://github.com/systemjs/systemjs/blob/master/docs/system-api.md
   System.import('app/boot')
     .then(function(module) {
         // swap main component per sample
         module.Start(global.sample || "");
     }, console.error.bind(console));
-    
+
 })(this);
