@@ -2,14 +2,15 @@
     -webkit-text-fill-color: $input-placeholder-color;
 }
 
-.ig-input {
+.ig-form-input {
 	display: block;
 	position: relative;
 	min-height: $input-min-height;
-	label {
-		display: block;
+	padding: 10px 0;
+
+	@include e(label) {
 		position: absolute;
-		top: 5px;
+		top: 15px;
 		font-size: $input-font-size;
 		color: $label-color;
 		transition: $input-transition;
@@ -17,7 +18,8 @@
         cursor: text;
 		pointer-events: none;
 	}
-	input {
+
+	@include e(input) {
 		outline: none;
 		border: none;
 		border-bottom: $input-border;
@@ -26,47 +28,51 @@
 		line-height: $input-line-height;
 		color: $input-caret-color;
 		-webkit-text-fill-color: $input-color;
-	}
-	input:focus {
-		border-bottom: $input-border-focus;
-	}
-	label.active,
-	input:focus ~ label {
-		top: -15px;
-		font-size: $label-focus-font-size;
-		color: $label-focus-color;
-	}
-	input:not(:focus) ~ label {
-		color: $label-color;
-	}
-	// Handle info message
-	&:after {
-		content: attr(data-extra);
-		position: absolute;
-		padding-top: 35px;
-        top: 0;
-        left: 0;
-		font-size: $label-focus-font-size;
-	}
-	
-	// Handle error style
-	&--error input,
-	&--error input:focus {
-		color: $input-error-color;
-		border-bottom: $input-border-error;
-	}
-	&--error label,
-	&--error:after {
-		color: $input-error-color !important;
+		&:focus {
+			border-bottom: $input-border-focus;
+		}
 	}
 
-	// Handle success style
-	&--success input,
-	&--success input:focus {
-		color: $input-success-color;
-		border-bottom: $input-border-success;
+	@include m(active) {
+		
 	}
-	&--success:after {
-		color: $input-success-color !important;
-	}
+	// label.active,
+	// input:focus ~ label {
+	// 	top: -15px;
+	// 	font-size: $label-focus-font-size;
+	// 	color: $label-focus-color;
+	// }
+	// input:not(:focus) ~ label {
+	// 	color: $label-color;
+	// }
+	// // Handle info message
+	// &:after {
+	// 	content: attr(data-extra);
+	// 	position: absolute;
+	// 	padding-top: 35px;
+    //     top: 0;
+    //     left: 0;
+	// 	font-size: $label-focus-font-size;
+	// }
+	
+	// // Handle error style
+	// &--error input,
+	// &--error input:focus {
+	// 	color: $input-error-color;
+	// 	border-bottom: $input-border-error;
+	// }
+	// &--error label,
+	// &--error:after {
+	// 	color: $input-error-color !important;
+	// }
+
+	// // Handle success style
+	// &--success input,
+	// &--success input:focus {
+	// 	color: $input-success-color;
+	// 	border-bottom: $input-border-success;
+	// }
+	// &--success:after {
+	// 	color: $input-success-color !important;
+	// }
 }
