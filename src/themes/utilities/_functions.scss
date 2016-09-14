@@ -1,5 +1,23 @@
-// TODO: add credits to mcg
+// Pixels to Relative Values
+// @access public
+// @param {number|string} $pixels - Size in pixels
+// @param {number|string} $context - Size in pixels
+@function em($pixels, $context: $browser-context) {
+  @if (unitless($pixels)) {
+    $pixels: $pixels * 1px;
+  }
 
+  @if (unitless($context)) {
+    $context: $context * 1px;
+  }
+
+  @return ($pixels / $context) * 1em;
+}
+
+// Generate Color Variations
+// @access public
+// @param {string} $color - Source color
+// @param {number|string} $saturation - Target color variation
 @function gen-color($color, $saturation) {
     @if($saturation == 50) {
         @return lighten(saturate($color, 10.4), 37.7);
@@ -28,4 +46,19 @@
     } @else if ($saturation == 'A700') {
         @return darken(saturate($color, 10.4), 16.6);
     }
+}
+
+// Retrieve color from palette map
+// @access public
+// @param {Map} $palette - Source palette map
+// @param {string} $saturation - Target color from palette
+@function palette($color, $variant: 500) {
+    $palette: $colors;
+    
+    @if map-exists($palette)
+    and map-key-exists($palette, $color) 
+    and map-key-exists($color, $variant) {
+        @return map-get(map-get($palette, $color), $variant);
+    }
+    @return #fff;
 }
