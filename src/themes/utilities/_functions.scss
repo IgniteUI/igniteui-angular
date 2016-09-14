@@ -61,4 +61,19 @@
         @return map-get(map-get($palette, $color), $variant);
     }
     @return #fff;
+    
+}
+
+
+// Set text color based on background color
+// @access public
+// @param {String} $bgcolor - Background color
+@function set-color($bgcolor) {
+
+  @if (lightness($bgcolor) > 50) {
+    @return #333; // Lighter backgorund, return dark color
+  } @else {
+    @return #fff; // Darker background, return light color
+  }
+
 }

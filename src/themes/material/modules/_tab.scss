@@ -1,13 +1,6 @@
 $badge-background-color: #dd524d;
 $tab-bar-background: #444;
 
-@function set-tab-color($color) {
-  @if (lightness($color) > 50) {
-    @return #333; // Lighter backgorund, return dark color
-  } @else {
-    @return #fff; // Darker background, return light color
-  }
-}
 
 ig-tab-bar {
     display: block;
@@ -24,7 +17,7 @@ ig-tab-bar {
             margin: 0;
             padding: 0;
             background: $tab-bar-background; //experimental
-            color: set-tab-color($tab-bar-background); //experimental
+            color: set-color($tab-bar-background); //experimental
             overflow: hidden;
         }
         &__menu-item {
