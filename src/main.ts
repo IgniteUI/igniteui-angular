@@ -9,3 +9,4 @@ export * from './list/list'
 export * from './list/items'
 export * from './tab/tab'
 export * from './carousel/carousel'
+export * from './input/input';
