@@ -1,0 +1,19 @@
+<div class="ig-input">
+    <label class="ig-input" [attr.for]="id">
+        <ng-content></ng-content>
+    </label>
+    <textarea #input
+        class="ig-input"
+        [id]="id"
+        [attr.name]="name"
+        [disabled]="disabled"
+        [required]="required"
+        [attr.tabindex]="tabindex"
+        [placeholder]="placeholder"
+        [cols]="cols"
+        [rows]="rows"
+        [(ngModel)]="value"
+        (focus)="_onFocus($event)"
+        (blur)="_onBlur($event)">
+    </textarea>
+</div>
