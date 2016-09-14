@@ -16,14 +16,6 @@
     }
 }
 
-@mixin user-select {
-  -webkit-user-select: none; /* webkit (safari, chrome) browsers */
-  -moz-user-select: none; /* mozilla browsers */
-  -khtml-user-select: none; /* webkit (konqueror) browsers */
-  -ms-user-select: none; /* IE10+ */
-  user-select: none;
-}
-
 @mixin hide-default {
   position: absolute;
   opacity: 0;

@@ -3,6 +3,7 @@
     "es6-shim": "registry:dt/es6-shim#0.31.2+20160215162030",
     "gulp": "registry:dt/gulp#3.8.0+20160316155526",
     "gulp-autoprefixer": "registry:dt/gulp-autoprefixer#0.0.0+20160316155526",
+    "gulp-plumber": "registry:dt/gulp-plumber#0.0.0+20160316155526",
     "gulp-sass": "registry:dt/gulp-sass#0.0.0+20160316155526",
     "gulp-sourcemaps": "registry:dt/gulp-sourcemaps#0.0.0+20160316155526",
     "gulp-typescript": "registry:dt/gulp-typescript#0.0.0+20160317120654",
