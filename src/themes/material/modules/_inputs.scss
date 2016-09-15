@@ -3,57 +3,34 @@
 }
 
 .ig-form-input {
-	display: block;
-	position: relative;
-	min-height: $input-min-height;
-	padding: 10px 0;
+	@extend %ig-input-display;
 
 	@include e(label) {
-		position: absolute;
-		top: 15px;
-		font-size: $input-font-size;
-		color: $label-color;
-		transition: $input-transition;
-		user-select: none;
-        cursor: text;
-		pointer-events: none;
+		@extend %ig-form-label;
 	}
 
 	@include e(input) {
-		outline: none;
-		border: none;
-		border-bottom: $input-border;
-		font-family: 'Titillium Web', sans-serif;
-		font-size: $input-font-size;
-		line-height: $input-line-height;
-		color: $input-caret-color;
-		-webkit-text-fill-color: $input-color;
+		@extend %ig-form-input;
+		
 		&:focus {
-			border-bottom: $input-border-focus;
+			@extend %ig-form-input--active;
 		}
 	}
 
 	@include m(active) {
+		@extend %ig-input-display;
+
+		@include e(label) {
+			@extend %ig-form-label;
+			@extend %ig-form-label--active;
+		}
 		
+		@include e(input) {
+			@extend %ig-form-input;
+			@extend %ig-form-input--active;
+		}
 	}
-	// label.active,
-	// input:focus ~ label {
-	// 	top: -15px;
-	// 	font-size: $label-focus-font-size;
-	// 	color: $label-focus-color;
-	// }
-	// input:not(:focus) ~ label {
-	// 	color: $label-color;
-	// }
-	// // Handle info message
-	// &:after {
-	// 	content: attr(data-extra);
-	// 	position: absolute;
-	// 	padding-top: 35px;
-    //     top: 0;
-    //     left: 0;
-	// 	font-size: $label-focus-font-size;
-	// }
+
 	
 	// // Handle error style
 	// &--error input,

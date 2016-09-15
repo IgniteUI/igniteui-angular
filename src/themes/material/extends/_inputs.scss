@@ -1,0 +1,39 @@
+%ig-input-display {
+    display: block;
+    position: relative;
+    margin: 15px 0;
+    min-height: 35px;
+}
+
+%ig-form-label {
+    display: block;
+    position: absolute;
+    top: 5px;
+    font-size: $input-font-size;
+    color: $label-color;
+    cursor: text;
+    user-select: none;
+    pointer-events: none;
+    transition: $input-transition;
+}
+
+%ig-form-input {
+    outline: none;
+    border: none;
+    border-bottom: $input-border;
+    font-family: 'Titillium Web', sans-serif;
+    font-size: $input-font-size;
+    line-height: $input-line-height;
+    color: $input-caret-color;
+    -webkit-text-fill-color: $input-color;
+}
+
+%ig-form-input--active {
+    border-bottom: $input-border-focus;
+}
+
+%ig-form-label--active {
+    top: -12px;
+    font-size: 12px;
+    color: $label-focus-color;
+}

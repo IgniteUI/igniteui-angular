@@ -1,21 +1,3 @@
-// Block Element
-// @access public
-// @param {String} $element - Element's name
-@mixin e($element) {
-    &__#{$element} {
-        @content;
-    }
-}
-
-// Block Modifier
-// @access public
-// @param {String} $modifier - Modifier's name
-@mixin m($modifier) {
-    &--#{$modifier} {
-        @content;
-    }
-}
-
 @mixin hide-default {
   position: absolute;
   opacity: 0;

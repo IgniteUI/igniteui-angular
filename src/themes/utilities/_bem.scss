@@ -1,0 +1,75 @@
+$elementSeparator: '__';
+$subElementSeparator: '-';
+$modifierSeparator: '--';
+
+@function containsModifier($selector) {
+    $selector: selectorToString($selector);
+    @if str-index($selector, $modifierSeparator) {
+        @return true;
+    } @else {
+        @return false;
+    }
+}
+
+@function selectorToString($selector) {
+    $selector: inspect($selector); //cast to string
+    $selector: str-slice($selector, 2, -2); //remove brackets
+    @return $selector;
+}
+
+@function getBlock($selector) {
+    $selector: selectorToString($selector);
+    $modifierStart: str-index($selector, $modifierSeparator) - 1;
+    @return str-slice($selector, 0, $modifierStart);
+}
+
+@mixin b($block) {
+    .#{$block} {
+        @content;
+    }
+}
+
+@mixin e($element, $sub-element: false) {
+    $selector: &;
+
+    @if containsModifier($selector) {
+
+        $block: getBlock($selector);
+
+        @if $sub-element == false {
+            @at-root {
+                #{$selector} {
+                    #{$block+$elementSeparator+$element} {
+                        @content;
+                    }
+                }
+            }
+        } @else if $sub-element == true {
+            @at-root {
+                #{$selector+$subElementSeparator+$element} {
+                    @content;
+                }
+            }
+        }
+    } @else {
+        @if $sub-element == false {
+            @at-root {
+                #{$selector+$elementSeparator+$element} {
+                    @content;
+                }
+            }
+        } @else if $sub-element == true {
+            #{$selector+$subElementSeparator+$element} {
+                @content;
+            }
+        }
+    }
+}
+
+@mixin m($modifier) {
+    @at-root {
+        #{&}#{$modifierSeparator+$modifier} {
+            @content;
+        }
+    }
+}
