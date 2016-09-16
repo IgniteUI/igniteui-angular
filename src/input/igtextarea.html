@@ -1,9 +1,9 @@
-<div class="ig-form-input">
-    <label class="ig-form-input__label" [attr.for]="id">
-        <ng-content></ng-content>
-    </label>
+<div class="ig-form-group"
+    [class.ig-form-group--filled]="value"
+    [class.ig-form-group--focused]="focused"
+    [class.ig-form-group--placeholder]="placeholder">
     <textarea #input
-        class="ig-input-input__textarea"
+        class="ig-form-group__textarea"
         [id]="id"
         [attr.name]="name"
         [disabled]="disabled"
@@ -16,4 +16,7 @@
         (focus)="_onFocus($event)"
         (blur)="_onBlur($event)">
     </textarea>
+    <label class="ig-form-group__label" [attr.for]="id">
+        <ng-content></ng-content>
+    </label>
 </div>

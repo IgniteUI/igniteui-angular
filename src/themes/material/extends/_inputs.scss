@@ -10,6 +10,7 @@
 }
 
 %ig-form-label {
+    display: block;
     position: absolute;
     overflow: hidden;
     top: 0;
@@ -88,4 +89,8 @@
 
 %ig-form-label--error {
     color: $error-color;
+}
+
+%ig-textarea {
+    resize: none;
 }

@@ -6,8 +6,8 @@
 // new - always import base and utilities first
 @import 'base/index';
 @import 'utilities/index';
-// contains all theme specifics
 @import 'material/manifest';
+// contains all theme specifics
 
 
 // old way of importing each individual module sass file

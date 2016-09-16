@@ -1,4 +1,4 @@
-@include b(ig-form-input) {
+@include b(ig-form-group) {
 	@extend %ig-input-display;
 
 	@include e(label) {
@@ -26,6 +26,11 @@
 				@extend %ig-form-label--error;
 			}
 		}
+	}
+
+	@include e(textarea) {
+		@extend .ig-form-group__input;
+		@extend %ig-textarea;
 	}
 
 	@include m(placeholder) {
