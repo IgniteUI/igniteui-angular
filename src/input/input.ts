@@ -39,7 +39,6 @@ class BaseInput implements ControlValueAccessor {
     private _value: any = "";
     private _focused: boolean = false;
 
-
     @Output('blur') _blur = new EventEmitter();
     @Output('focus') _focus = new EventEmitter();
 
@@ -68,7 +67,6 @@ class BaseInput implements ControlValueAccessor {
     get focused() {
         return this._focused;
     }
-
 
     _onFocus(event) {
         this._focused = true;
