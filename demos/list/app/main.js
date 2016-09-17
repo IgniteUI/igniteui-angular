@@ -8,11 +8,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var Infragistics = require('../../../src/main');
-var filter_pipe_1 = require('../../../src/list/filter-pipe');
-var AppComponent = (function () {
-    function AppComponent() {
+const core_1 = require('@angular/core');
+const Infragistics = require('../../../src/main');
+const filter_pipe_1 = require('../../../src/list/filter-pipe');
+let AppComponent = class AppComponent {
+    constructor() {
         this.navItems = [
             { key: "1", text: "Nav1", link: "#" },
             { key: "2", text: "Nav2", link: "#" },
@@ -20,36 +20,31 @@ var AppComponent = (function () {
             { key: "4", text: "Nav4", link: "#" }
         ];
     }
-    Object.defineProperty(AppComponent.prototype, "filterOptions", {
-        get: function () {
-            var fo = new filter_pipe_1.FilterOptions();
-            return fo;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    AppComponent.prototype.filteringHandler = function (args) {
+    get filterOptions() {
+        let fo = new filter_pipe_1.FilterOptions();
+        return fo;
+    }
+    filteringHandler(args) {
         //args.cancel = true;
         console.log(args);
-    };
-    AppComponent.prototype.filteredHandler = function (args) {
+    }
+    filteredHandler(args) {
         console.log(args);
-    };
-    AppComponent = __decorate([
-        core_1.Component({
-            selector: 'sample-app',
-            styleUrls: ["app/main.css"],
-            templateUrl: "app/main.html",
-            directives: [
-                Infragistics.ListHeader,
-                Infragistics.ListItem,
-                Infragistics.List,
-            ]
-        }), 
-        __metadata('design:paramtypes', [])
-    ], AppComponent);
-    return AppComponent;
-}());
+    }
+};
+AppComponent = __decorate([
+    core_1.Component({
+        selector: 'sample-app',
+        styleUrls: ["app/main.css"],
+        templateUrl: "app/main.html",
+        directives: [
+            Infragistics.ListHeader,
+            Infragistics.ListItem,
+            Infragistics.List,
+        ]
+    }), 
+    __metadata('design:paramtypes', [])
+], AppComponent);
 exports.AppComponent = AppComponent;
 
 //# sourceMappingURL=main.js.map

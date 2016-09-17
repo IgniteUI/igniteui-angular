@@ -14,7 +14,7 @@ declare var module: any;
 })
 
 export class List implements AfterContentInit { 
-    private _innerStyle: string = "ig-list-inner";
+    private _innerStyle: string = "ig-list";
     private _items: ListItem[];
 
     searchInputElement: HTMLInputElement;

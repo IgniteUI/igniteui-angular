@@ -15,7 +15,7 @@ declare var module: any;
 })
 
 export class ListHeader implements OnInit { 
-    private _innerStyle: string = "ig-header-inner";
+    private _innerStyle: string = "ig-list__header";
 
     constructor(@Inject(forwardRef(() => List)) private list:List) {
     }
@@ -40,7 +40,7 @@ export class ListItem implements OnInit {
 
     private _VISIBLE_AREA_ON_FULL_PAN = 40; // in pixels
     private _initialLeft: number = null;
-    private _innerStyle: string = "ig-item-inner";
+    private _innerStyle: string = "ig-list__item";
 
     hidden: boolean;
 

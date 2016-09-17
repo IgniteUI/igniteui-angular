@@ -1,0 +1,48 @@
+%ig-list {
+    background-color: $list-background;
+    overflow: hidden;
+    &:after {
+        content: '';
+        display: block;
+        height: 1px;
+        width: 100%;
+        margin-left: 16px;
+        background: darken($white, 10%);
+    }
+}
+
+%ig-list-item-display {
+    display: list-item;
+    position: relative;
+    list-style-type: none;
+}
+
+%ig-list-header {
+    color: $list-header-color;
+    background-color: $list-header-background;
+    font-size: $list-header-font-size;
+    font-weight: $list-header-font-weight;
+    height: $list-header-height;
+    line-height: $list-header-line-height;
+    padding: $list-item-padding;
+    user-select: none;
+}
+
+%ig-list-item {
+    display: flex;
+    position: relative;
+    flex-flow: column wrap;
+    justify-content: center;
+    padding: $list-item-padding;
+    height: $list-item-height;
+    line-height: $list-item-line-height;
+    font-size: $list-item-font-size;
+    color: $list-item-color;
+    background-color: $list-item-background;
+    z-index: 2;
+}
+
+%ig-list-item--active {
+    background-color: $list-item-active-background;
+    box-shadow: $list-item-active-shadow;
+}

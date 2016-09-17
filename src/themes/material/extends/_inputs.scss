@@ -1,0 +1,96 @@
+%ig-input-display {
+    display: block;
+    position: relative;
+    margin: 20px 0;
+    padding: 0 5px;
+    min-height: 40px;
+    ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+        color: $label-color;
+    }
+}
+
+%ig-form-label {
+    display: block;
+    position: absolute;
+    overflow: hidden;
+    top: 0;
+    transform-origin: bottom left;
+    font-size: $input-font-size;
+    line-height: $input-line-height;
+    color: $label-color;
+    cursor: text;
+    user-select: none;
+    pointer-events: none;
+    backface-visibility: hidden;
+    transition: transform .3s ease-in-out,
+    scale .3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    color .3s ease-in-out;
+}
+
+%ig-form-label--float {
+    color: $label-active-color;
+    transform: translateY(-20px) scale(.75);
+}
+
+%ig-form-label--filled {
+    color: $label-active-color;
+}
+
+%ig-form-label--focused {
+    color: $label-focus-color;
+    transform: translateY(-20px) scale(.75);
+}
+
+%ig-form-input {
+    outline: none;
+    border: none;
+    border-bottom: $input-border;
+    color: $input-color;
+    background: transparent;
+    font-size: $input-font-size;
+    line-height: $input-line-height;
+    width: 100%;
+}
+
+%ig-form-input--focused {
+    border-bottom: $input-border-focus;
+}
+
+%ig-form-input--disabled {
+    user-select: none;
+    cursor: not-allowed;
+    -webkit-text-fill-color: $input-disabled-color;
+    border-bottom: 1px dotted rgba(117, 117, 117, .5);
+}
+
+%ig-form-label--disabled {
+    color: lighten($label-color, 80%);
+}
+
+%ig-form-input--success {
+    border-bottom: $input-border-success;
+}
+
+%ig-form-label--success {
+    color: $success-color;
+}
+
+%ig-form-input--warn {
+    border-bottom: $input-border-warn;
+}
+
+%ig-form-label--warn {
+    color: $warn-color;
+}
+
+%ig-form-input--error {
+    border-bottom: $input-border-error;
+}
+
+%ig-form-label--error {
+    color: $error-color;
+}
+
+%ig-textarea {
+    resize: none;
+}

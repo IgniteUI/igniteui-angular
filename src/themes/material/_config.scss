@@ -47,52 +47,57 @@ $secondary-color: $byzantium !default;
 $accent-color: $yellow-orange !default;
 $success-color: #4CAF50 !default;
 $error-color: #F44336 !default;
+$warn-color: orange;
 
 // Color Palette
-$primary-color-50: gen-color($primary-color, 50);
-$primary-color-100: gen-color($primary-color, 100);
-$primary-color-200: gen-color($primary-color, 200);
-$primary-color-300: gen-color($primary-color, 300);
-$primary-color-400: gen-color($primary-color, 400);
-$primary-color-500: $primary-color;
-$primary-color-600: gen-color($primary-color, 600);
-$primary-color-700: gen-color($primary-color, 700);
-$primary-color-800: gen-color($primary-color, 800);
-$primary-color-900: gen-color($primary-color, 900);
-$primary-color-A100: gen-color($primary-color, 'A100');
-$primary-color-A200: gen-color($primary-color, 'A200');
-$primary-color-A400: gen-color($primary-color, 'A400');
-$primary-color-A700: gen-color($primary-color, 'A700');
+$colors: (
+    primary: (
+        100: gen-color($primary-color, 50),
+        200: gen-color($primary-color, 100),
+        300: gen-color($primary-color, 300),
+        400: gen-color($primary-color, 400),
+        500: $primary-color,
+        600: gen-color($primary-color, 600),
+        700: gen-color($primary-color, 700),
+        800: gen-color($primary-color, 800),
+        900: gen-color($primary-color, 900),
+        A100: gen-color($primary-color, 'A100'),
+        A200: gen-color($primary-color, 'A200'),
+        A400: gen-color($primary-color, 'A400'),
+        A700: gen-color($primary-color, 'A700'),
+    ),
+    secondary: (
+        100: gen-color($secondary-color, 50),
+        200: gen-color($secondary-color, 100),
+        300: gen-color($secondary-color, 300),
+        400: gen-color($secondary-color, 400),
+        500: $secondary-color,
+        600: gen-color($secondary-color, 600),
+        700: gen-color($secondary-color, 700),
+        800: gen-color($secondary-color, 800),
+        900: gen-color($secondary-color, 900),
+        A100: gen-color($secondary-color, 'A100'),
+        A200: gen-color($secondary-color, 'A200'),
+        A400: gen-color($secondary-color, 'A400'),
+        A700: gen-color($secondary-color, 'A700'),
+    ),
+    accent: (
+        100: gen-color($accent-color, 50),
+        200: gen-color($accent-color, 100),
+        300: gen-color($accent-color, 300),
+        400: gen-color($accent-color, 400),
+        500: $accent-color,
+        600: gen-color($accent-color, 600),
+        700: gen-color($accent-color, 700),
+        800: gen-color($accent-color, 800),
+        900: gen-color($accent-color, 900),
+        A100: gen-color($accent-color, 'A100'),
+        A200: gen-color($accent-color, 'A200'),
+        A400: gen-color($accent-color, 'A400'),
+        A700: gen-color($accent-color, 'A700'),
+    )
+);
 
-$secondary-color-50: gen-color($secondary-color, 50);
-$secondary-color-100: gen-color($secondary-color, 100);
-$secondary-color-200: gen-color($secondary-color, 200);
-$secondary-color-300: gen-color($secondary-color, 300);
-$secondary-color-400: gen-color($secondary-color, 400);
-$secondary-color-500: $secondary-color;
-$secondary-color-600: gen-color($secondary-color, 600);
-$secondary-color-700: gen-color($secondary-color, 700);
-$secondary-color-800: gen-color($secondary-color, 800);
-$secondary-color-900: gen-color($secondary-color, 900);
-$secondary-color-A100: gen-color($secondary-color, 'A100');
-$secondary-color-A200: gen-color($secondary-color, 'A200');
-$secondary-color-A400: gen-color($secondary-color, 'A400');
-$secondary-color-A700: gen-color($secondary-color, 'A700');
-
-$accent-color-50: gen-color($accent-color, 50);
-$accent-color-100: gen-color($accent-color, 100);
-$accent-color-200: gen-color($accent-color, 200);
-$accent-color-300: gen-color($accent-color, 300);
-$accent-color-400: gen-color($accent-color, 400);
-$accent-color-500: $accent-color;
-$accent-color-600: gen-color($accent-color, 600);
-$accent-color-700: gen-color($accent-color, 700);
-$accent-color-800: gen-color($accent-color, 800);
-$accent-color-900: gen-color($accent-color, 900);
-$accent-color-A100: gen-color($accent-color, 'A100');
-$accent-color-A200: gen-color($accent-color, 'A200');
-$accent-color-A400: gen-color($accent-color, 'A400');
-$accent-color-A700: gen-color($accent-color, 'A700');
 
 /* 2. Badges
    ========================================================================== */
@@ -139,7 +144,7 @@ $button-floating-background: $primary-color;
 
 /* 9. Fonts
    ========================================================================== */
-$titillium-font-path: '../../fonts/titillium/' !default;
+$titillium-font-path: '../fonts/titillium/' !default;
 
 /* 10. Forms
    ========================================================================== */
@@ -148,11 +153,12 @@ $input-min-height: 4.375rem !default;
 $input-font-size: 1rem !default;
 $input-color: #484848 !default;
 $input-caret-color: $primary-color;
-$input-line-height: 1.875rem !default;
+$input-line-height: 1.5em !default;
 $input-border-color: rgba(117, 117, 117, .5) !default;
 $input-border: 1px solid $input-border-color !default;
-$input-border-error: 2px solid $error-color;
 $input-border-success: 2px solid $success-color;
+$input-border-warn: 2px solid $warn-color;
+$input-border-error: 2px solid $error-color;
 $input-border-color-focus: $primary-color !default;
 $input-border-focus: 2px solid $input-border-color-focus !default;
 $input-background: #fff !default;
@@ -161,13 +167,13 @@ $input-placeholder-color: $input-border-color;
 
 $input-error-color:  $error-color !default;
 $input-success-color: $success-color !default;
-$input-disabled-color: #D1D1D1 !default;
+$input-disabled-color: lighten($input-color, 25%) !default;
 $input-disabled-solid-color: $input-disabled-color !default;
 
 $label-color: #757575 !default;
 $label-focus-color: $primary-color !default;
-$label-active-color: #D1D1D1 !default;
-$label-font-size: 1rem !default;
+$label-active-color: lighten($label-color, 20%) !default;
+$label-font-size: 1em !default;
 $label-focus-font-size: .75rem !default;
 
 // Radio Buttons
@@ -270,18 +276,25 @@ $blockquote-line-height-phone: 1.5625rem !default;
 /* 23. List
    ========================================================================== */
 $list-margin: 8px 16px !default;
+$list-background: darken($white, 5%);
 
 $list-header-color: $primary-color !default;
+$list-header-background: $white;
 $list-header-font-size: .8125rem !default;
 $list-header-font-weight: normal !default;
 $list-header-height: 48px !default;
 $list-header-line-height: 48px !default;
 
 $list-item-color: #484848 !default;
+$list-item-background: #fff;
 $list-item-height: 48px !default;
 $list-item-line-height: 48px !default;
 $list-item-font-size: 1rem !default;
+$list-item-padding: 8px 16px;
+$list-item-active-background: darken(#fff, 1%);
+$list-item-active-shadow: 4px 0px 6px -3px rgba(167,167,167,0.3);
 
 $list-item-tl-sl-font-size: .875rem !default;
 $list-item-tl-height: 72px !default;
 $list-item-tl-sl-color: #757575 !default;
+/* Rectangle: */
