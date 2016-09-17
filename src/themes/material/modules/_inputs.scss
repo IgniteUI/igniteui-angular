@@ -20,10 +20,17 @@
 				@extend %ig-form-label--success;
 			}
 		}
-		&.ng-invalid:not(form) {
+		&.ng-invalid.ng-touched,
+		&.ng-invalid:not(form).ng-touched {
 			@extend %ig-form-input--error;
 			~ label {
 				@extend %ig-form-label--error;
+			}
+		}
+		&.ng-warning {
+			@extend %ig-form-input--warn;
+			~ label {
+				@extend %ig-form-label--warn;
 			}
 		}
 	}
