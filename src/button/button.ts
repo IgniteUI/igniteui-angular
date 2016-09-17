@@ -1,9 +1,11 @@
-import { Directive, Component } from '@angular/core';
+import { Directive, Component, Input, Output, ElementRef, ViewChild } from '@angular/core';
 
 @Component({
     selector: 'ig-button',
-    template: `<span class="ig-button-wrapper"><ng-content></ng-content></span>`
+    moduleId: module.id, // commonJS standard
+    templateUrl: 'button.html' 
 })
 
 export class Button {
+    @ViewChild('igButton') _button: ElementRef;
 }
