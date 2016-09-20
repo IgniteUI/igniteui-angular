@@ -27,7 +27,6 @@ let nextId = 0;
 //       while extending the children with custom decorated properties
 
 class BaseInput implements ControlValueAccessor {
-
     @ViewChild("input") nativeInput: ElementRef;
 
     @Input() id: string = `ig-input-${nextId++}`;
