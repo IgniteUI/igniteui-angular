@@ -8,15 +8,5 @@
     "experimentalDecorators": true,
     "removeComments": false,
     "noImplicitAny": false
-  },
-  // https://github.com/typings/typings/issues/151#issue-130558101
-  // https://github.com/Microsoft/TypeScript/issues/7369
-  // if exclude doesn't work with current TS compiler, manually delete the browser typings
-  "exclude": [
-    "node_modules",
-    "dist",
-    "typings/browser",
-    "typings/browser.d.ts",
-    "zero-blocks"
-  ]
+  }
 }

@@ -1,0 +1,79 @@
+// Pixels to Relative Values
+// @access public
+// @param {number|string} $pixels - Size in pixels
+// @param {number|string} $context - Size in pixels
+@function em($pixels, $context: $browser-context) {
+  @if (unitless($pixels)) {
+    $pixels: $pixels * 1px;
+  }
+
+  @if (unitless($context)) {
+    $context: $context * 1px;
+  }
+
+  @return ($pixels / $context) * 1em;
+}
+
+// Generate Color Variations
+// @access public
+// @param {string} $color - Source color
+// @param {number|string} $saturation - Target color variation
+@function gen-color($color, $saturation) {
+    @if($saturation == 50) {
+        @return lighten(saturate($color, 10.4), 37.7);
+    } @else if ($saturation == 100) {
+        @return lighten(desaturate($color, 10.4), 31.8);
+    } @else if ($saturation == 200) {
+        @return lighten(desaturate($color, 17), 18.7);
+    } @else if ($saturation == 300) {
+        @return lighten(desaturate($color, 20.9), 9.1);
+    } @else if ($saturation == 400) {
+        @return lighten(desaturate($color, 6.6), 4.1);
+    } @else if ($saturation == 600) {
+        @return darken(desaturate($color, 12.4), 3.1);
+    } @else if ($saturation == 700) {
+        @return darken(desaturate($color, 24.5), 7.8);
+    } @else if ($saturation == 800) {
+        @return darken(desaturate($color, 23.2), 11.7);
+    } @else if ($saturation == 900) {
+        @return darken(desaturate($color, 16.1), 17);
+    } @else if ($saturation == 'A100') {
+        @return lighten(saturate($color, 10.4), 16.7);
+    } @else if ($saturation == 'A200') {
+        @return lighten(saturate($color, 10.4), 7.7);
+    } @else if ($saturation == 'A400') {
+        @return darken(saturate($color, 10.4), 3.9);
+    } @else if ($saturation == 'A700') {
+        @return darken(saturate($color, 10.4), 16.6);
+    }
+}
+
+// Retrieve color from palette map
+// @access public
+// @param {Map} $palette - Source palette map
+// @param {string} $saturation - Target color from palette
+@function palette($color, $variant: 500) {
+    $palette: $colors;
+    
+    @if map-exists($palette)
+    and map-key-exists($palette, $color) 
+    and map-key-exists($color, $variant) {
+        @return map-get(map-get($palette, $color), $variant);
+    }
+    @return #fff;
+    
+}
+
+
+// Set text color based on background color
+// @access public
+// @param {String} $bgcolor - Background color
+@function set-color($bgcolor) {
+
+  @if (lightness($bgcolor) > 50) {
+    @return #333; // Lighter backgorund, return dark color
+  } @else {
+    @return #fff; // Darker background, return light color
+  }
+
+}

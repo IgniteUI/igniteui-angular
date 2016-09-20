@@ -1,10 +1,3 @@
-// TODO: Can add as EventManagerPlugin with special events (pan.ig or pan.precise) like:
-// import { EventManagerPlugin } from './event_manager';
-// export declare class HammerGesturesPluginCommon extends EventManagerPlugin {
-//     constructor();
-//     supports(eventName: string): boolean;
-// }
-// This can allow
 /// <reference path="../../typings/globals/hammerjs/index.d.ts" />
 
 import {Injectable, NgZone} from '@angular/core';

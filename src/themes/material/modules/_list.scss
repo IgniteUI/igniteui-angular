@@ -1,0 +1,21 @@
+@include b(ig-list) {
+    @extend %ig-list;
+    
+    @include e(header) {
+        @extend %ig-list-header;
+    }
+
+    @include e(item) {
+        @extend %ig-list-item;
+        &:active {
+            @extend %ig-list-item--active;
+        }
+    }
+
+    // style the wrapping component elements
+    @at-root {
+        ig-list-item {
+            @extend %ig-list-item-display;
+        }
+    }
+}

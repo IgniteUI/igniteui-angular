@@ -1,0 +1,13 @@
+<div>
+    <label [attr.for]="id"><ng-content></ng-content></label>
+    <input type="radio" #radio
+        [attr.id]="id"
+        [attr.name]="name"
+        [attr.value]="value"
+        [attr.tabindex]="tabindex"
+        [disabled]="disabled"
+        [checked]="checked"
+        (change)="onChange($event)"
+        (focus)="onFocus($event)"
+        (blur)="onBlur($event)"/>
+</div>
