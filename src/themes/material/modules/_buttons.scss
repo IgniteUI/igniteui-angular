@@ -1,0 +1,69 @@
+.btn-container {
+  margin-bottom: 20px;
+}
+
+.ig-button {
+  display: inline-block;
+  padding: $button-padding;
+  font-size: $button-font-size;
+  font-weight: $button-font-weight;
+  color: $button-color;
+  border: $button-border;  
+  border-radius: $button-radius;
+  -webkit-tap-highlight-color: transparent;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  text-align: center;
+  &--flat {
+    min-width: 88px;
+    &:hover {
+      background-color: $button-flat-hover-background;
+    } 
+    &:focus,
+    &:active {
+      background-color: $button-flat-focus-background;
+    }
+  }
+  &--raised {
+    min-width: 88px;
+    color: $button-raised-color;
+    background-color: $button-raised-background;
+    box-shadow: $button-raised-shadow;
+    &:hover {
+      box-shadow: $button-raised-shadow;
+    }
+    &:focus,
+    &:active {
+      background-color: $button-focus-background;
+      box-shadow: $button-raised-focus-shadow;
+    }
+  }
+  &--fab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: $button-floating-width;
+    height: $button-floating-height;
+    background-color: $button-floating-background;
+    box-shadow: $button-floating-shadow;
+    border: $button-border;
+    border-radius: $button-floating-radius;
+    &:hover {
+      box-shadow: $button-floating-hover-shadow;
+    }
+    &:focus,
+    &:active {
+      background-color: $button-focus-background;
+    }
+  }
+  &--fab__icon {
+    color: $button-raised-color;
+  }
+  &--disabled {
+    color: $button-disabled-color;
+    background: $button-disabled-background;
+    cursor: default;
+  }
+}

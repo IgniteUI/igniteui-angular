@@ -1,25 +1,23 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-	<title>Zero Blocks Demos</title>
-	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
-	<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600" rel="stylesheet" type="text/css">
-	<style>
-		body {
-			font-family: "Open sans",Helvetica,Arial,sans-serif;
-		}
-	</style>
+    <base href="/demos">
+    <meta charset="UTF-8">
+    <title>Zero Blocks Demos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/node_modules/core-js/client/shim.min.js"></script>
+    <script src="/node_modules/zone.js/dist/zone.js"></script>
+    <script src="/node_modules/reflect-metadata/Reflect.js"></script>
+    <script src="/node_modules/systemjs/dist/system.src.js"></script>
+    <script src="/node_modules/hammerjs/hammer.js"></script>
+    <link rel="stylesheet" href="../dist/zero-blocks.css">
+    <!-- 2. Configure SystemJS -->
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('app').catch(function(err){ console.error(err); });
+    </script>
 </head>
-
-<!-- 3. Display the application -->
 <body>
-	<h1>Zero Blocks Demos</h1>
-    <ul>
-        <li><a href="./navigation-drawer/index.html">Navigation Drawer</a></li>
-        <li><a href="./list/index.html">List</a></li>
-		<li><a href="./tab/index.html">Tab</a></li>
-		<li><a href="./carousel/index.html">Carousel</a></li>
-    </ul>
+    <sample-app>Loading...</sample-app>
 </body>
 </html>

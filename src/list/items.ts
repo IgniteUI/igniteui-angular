@@ -1,8 +1,9 @@
-import { Component, Directive, Renderer, Input, ElementRef, ViewChild, AfterViewInit, OnInit, ViewChildren, ViewContainerRef, ComponentResolver, Inject, forwardRef } from '@angular/core';
-import { HammerGesturesManager } from '../core/core';
+import { Component, Directive, Renderer, Input, ElementRef, ViewChild, AfterViewInit, OnInit, ViewChildren, ViewContainerRef, Inject, forwardRef } from '@angular/core';
+import { CommonModule } from "@angular/common";
+import { HammerGesturesManager } from '../core/touch';
 import { List } from './list';
 
-declare var module: any;
+//declare var module: any;
 
 // ====================== HEADER ================================
 // The `<ig-header>` directive is a header intended for row items in
@@ -14,7 +15,7 @@ declare var module: any;
     templateUrl: 'list-content.html'
 })
 
-export class ListHeader implements OnInit { 
+export class ListHeader implements OnInit {
     private _innerStyle: string = "ig-header-inner";
 
     constructor(@Inject(forwardRef(() => List)) private list:List) {
@@ -35,7 +36,7 @@ export class ListHeader implements OnInit {
     templateUrl: 'list-content.html'
 })
 
-export class ListItem implements OnInit { 
+export class ListItem implements OnInit {
     @ViewChild('wrapper') wrapper: ElementRef;
 
     private _VISIBLE_AREA_ON_FULL_PAN = 40; // in pixels
@@ -44,18 +45,18 @@ export class ListItem implements OnInit {
 
     hidden: boolean;
 
-    get width() { 
+    get width() {
         if(this.element) {
             return this.element.nativeElement.offsetWidth;
         } else {
             return 0;
-        }        
+        }
     }
 
     get left() {
         return this.wrapper.nativeElement.offsetLeft;
     }
-    set left(value: number) { 
+    set left(value: number) {
         var val = value + "";
 
         if(val.indexOf("px") == -1) {
@@ -91,25 +92,25 @@ export class ListItem implements OnInit {
         return this.left > 0 || this._initialLeft == null;
     }
 
-    private panStart(ev: HammerInput) {  
+    private panStart(ev: HammerInput) {
         this._initialLeft = this.left;
     }
 
-    private panMove(ev: HammerInput) {
+   private panMove(ev: HammerInput) {
         var newLeft;
-        
+
         if (this.cancelEvent(ev))
         { return;}
 
         newLeft = this._initialLeft + ev.deltaX;
         newLeft = newLeft > 0 ? 0 : newLeft < this.maxLeft ? this.maxLeft : newLeft;
 
-        this.left = newLeft;        
+        this.left = newLeft;
     }
 
     private panEnd(ev: HammerInput) {
         if (this.left > 0) {
-            this.rightMagneticGrip();           
+            this.rightMagneticGrip();
         } else {
             this.magneticGrip();
         }
@@ -136,29 +137,3 @@ export class ListItem implements OnInit {
         this.left = this.maxLeft;
     }
 }
-
-/*
-@Directive({
-   selector: 'ig-item-option',
-})
-export class ListItemOption {
-  @Input() src: string;
-  
-  constructor(private vcRef: ViewContainerRef, private resolver: ComponentResolver, html: string) {
-  }
-  
-  ngOnChanges() {
-    if (!this.src) return;
-    
-    const metadata = new ComponentMetadata({
-        selector: 'dynamic-html',
-        template: this.src,
-    });
-    createComponentFactory(this.resolver, metadata)
-      .then(factory => {
-        const injector = ReflectiveInjector.fromResolvedProviders([], this.vcRef.parentInjector);
-        this.vcRef.createComponent(factory, 0, injector, []);
-      });
-  }
-}
-*/

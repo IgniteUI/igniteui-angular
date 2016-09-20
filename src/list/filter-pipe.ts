@@ -8,11 +8,11 @@ import { ListItem } from './items';
 export class FilterPipe{
 	transform(
 				// options - initial settings of filter functionality
-				options: FilterOptions, 
+				options: FilterOptions,
 				// inputValue - text value from input that condition is based on
 				inputValue: string) {
 
-		var result = [];		
+		var result = [];
 
 		if(!options.items || !options.items.length) {
 			return;
@@ -23,8 +23,8 @@ export class FilterPipe{
 
 			if(match) {
 				if(options.metConditionFn) {
-					options.metConditionFn(item);						
-				}						
+					options.metConditionFn(item);
+				}
 			} else {
 				if (options.overdueConditionFn) {
 					options.overdueConditionFn(item);
@@ -32,7 +32,7 @@ export class FilterPipe{
 			}
 
 			return match;
-		});			
+		});
 
 		return result;
 	}
@@ -50,32 +50,32 @@ export class FilterOptions {
 	// function - select the element which text will be test to match the condition
 	// default behavior - gets the native elemnt of the item
 	elementSelector(item: ListItem) {
-		return item.element.nativeElement; 
+		return item.element.nativeElement;
 	};
 
 	// function - formats the original text before matching process
 	// Default behavior - returns text to lower case
-	formatter(text: string) { 
+	formatter(text: string) {
 		return text.toLowerCase();
-	};	
+	};
 
 	// function - determines whether the item met the condition
 	// filteringValue - text value the should be tested
 	// inputValue - text value from input that condition is based on
 	// Default behavior - "contains"
-	matchFn(filteringValue: string, inputValue: string) { 
+	matchFn(filteringValue: string, inputValue: string) {
 		return filteringValue.indexOf(inputValue.toLowerCase()) > -1;
-	};	
+	};
 
 	// function - executed on each item that met the condition
-	// Default behavior - shows item if hidden 
-	metConditionFn(item: ListItem) { 
-		item.hidden = false; 
+	// Default behavior - shows item if hidden
+	metConditionFn(item: ListItem) {
+		item.hidden = false;
 	};
 
 	// function - executed on each item that does not met the condition
 	// Default behavior - hides item
-	overdueConditionFn(item: ListItem) { 
-		item.hidden = true; 
+	overdueConditionFn(item: ListItem) {
+		item.hidden = true;
 	};
 }

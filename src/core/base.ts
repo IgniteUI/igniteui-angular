@@ -7,12 +7,12 @@ import { getDOM } from '@angular/platform-browser/src/dom/dom_adapter'; //this a
  */
 export class BaseComponent {
     /**
-     * Should be overriden with @Input() as metadata [field] cannot be extended though iheritance 
+     * Should be overriden with @Input() as metadata [field] cannot be extended though iheritance
      * https://github.com/angular/angular/issues/5415
      */
     public id: string;
     constructor(protected renderer: Renderer) { }
-       
+
     /**
      * Get child element by selector.
      * Replacement for `elementRef.nativeElement.querySelector`
