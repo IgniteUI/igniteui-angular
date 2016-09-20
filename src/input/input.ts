@@ -1,33 +1,24 @@
 import {
     Component,
-    Provider,
     Input,
     Output,
     EventEmitter,
     NgModule,
-    ModuleWithProviders,
     ViewChild,
-    OnChanges,
     ElementRef,
-    forwardRef,
-    AfterContentInit
+    forwardRef
 } from "@angular/core";
-import {
-    NG_VALUE_ACCESSOR,
-    ControlValueAccessor,
-    FormsModule
-} from "@angular/forms";
+import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from "@angular/forms";
 
 
 const noop = () => {};
 
 export function MakeProvider(type: any) {
-    return new Provider(
-        NG_VALUE_ACCESSOR, {
-            useExisting: forwardRef(() => type),
-            multi: true
-        }
-    );
+    return {
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => type),
+        multi: true
+    };
 }
 
 let nextId = 0;
@@ -36,14 +27,8 @@ let nextId = 0;
 //       while extending the children with custom decorated properties
 
 class BaseInput implements ControlValueAccessor {
-    private _value: any = "";
-    private _focused: boolean = false;
 
-
-    @Output('blur') _blur = new EventEmitter();
-    @Output('focus') _focus = new EventEmitter();
-
-    @ViewChild("input") _inputElement: ElementRef;
+    @ViewChild("input") nativeInput: ElementRef;
 
     @Input() id: string = `ig-input-${nextId++}`;
     @Input() name: string = null;
@@ -53,35 +38,31 @@ class BaseInput implements ControlValueAccessor {
     @Input() tabindex: number = null;
 
 
-    get value(): any {
+    focused: boolean = false;
+
+    protected _value: any;
+
+
+    @Input() get value() {
         return this._value;
     }
 
-    @Input()
-    set value(val: any) {
-        if (val !== this._value) {
+    set value(val) {
+        if (val != this._value) {
             this._value = val;
-            this._onChangeCallback(val);
+            this._onChangeCallback(this._value);
         }
     }
 
-    get focused() {
-        return this._focused;
+    onFocus(event) {
+        this.focused = true;
     }
 
-
-    _onFocus(event) {
-        this._focused = true;
-        this._focus.emit(event);
-    }
-
-    _onBlur(event) {
-        this._focused = false;
+    onBlur(event) {
+        this.focused = false;
         this._onTouchedCallback();
-        this._blur.emit(event);
     }
 
-    /** ControlValueAccessor interface */
 
     private _onTouchedCallback: () => void = noop;
     private _onChangeCallback: (_: any) => void = noop;
@@ -90,9 +71,7 @@ class BaseInput implements ControlValueAccessor {
     registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 
     writeValue(val: any) {
-        if (val !== this._value) {
-            this._value = val;
-        }
+        this._value = val;
     }
 }
 
@@ -134,10 +113,4 @@ export class TextArea extends BaseInput {
     exports: [TextInput, PasswordInput, TextArea]
 })
 export class IgInputModule {
-    static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: IgInputModule,
-            providers: []
-        };
-    }
 }

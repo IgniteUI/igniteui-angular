@@ -1,19 +1,20 @@
-<div class="ig-input">
-    <label class="ig-input" [attr.for]="id">
-        <ng-content></ng-content>
-    </label>
+<div class="ig-form-group"
+    [class.ig-form-group--filled]="value"
+    [class.ig-form-group--focused]="focused"
+    [class.ig-form-group--placeholder]="placeholder">
     <textarea #input
-        class="ig-input"
-        [id]="id"
+        class="ig-form-group__textarea"
+        [attr.id]="id"
         [attr.name]="name"
+        [attr.tabindex]="tabindex"
         [disabled]="disabled"
         [required]="required"
-        [attr.tabindex]="tabindex"
         [placeholder]="placeholder"
-        [cols]="cols"
-        [rows]="rows"
         [(ngModel)]="value"
-        (focus)="_onFocus($event)"
-        (blur)="_onBlur($event)">
+        (focus)="onFocus($event)"
+        (blur)="onBlur($event)">
     </textarea>
+    <label class="ig-form-group__label" [attr.for]="id">
+        <ng-content></ng-content>
+    </label>
 </div>

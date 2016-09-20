@@ -47,6 +47,7 @@ $secondary-color: $byzantium !default;
 $accent-color: $yellow-orange !default;
 $success-color: #4CAF50 !default;
 $error-color: #F44336 !default;
+$warn-color: orange;
 
 // Color Palette
 $colors: (
@@ -152,11 +153,12 @@ $input-min-height: 4.375rem !default;
 $input-font-size: 1rem !default;
 $input-color: #484848 !default;
 $input-caret-color: $primary-color;
-$input-line-height: 1.875rem !default;
+$input-line-height: 1.5em !default;
 $input-border-color: rgba(117, 117, 117, .5) !default;
 $input-border: 1px solid $input-border-color !default;
-$input-border-error: 2px solid $error-color;
 $input-border-success: 2px solid $success-color;
+$input-border-warn: 2px solid $warn-color;
+$input-border-error: 2px solid $error-color;
 $input-border-color-focus: $primary-color !default;
 $input-border-focus: 2px solid $input-border-color-focus !default;
 $input-background: #fff !default;
@@ -165,13 +167,13 @@ $input-placeholder-color: $input-border-color;
 
 $input-error-color:  $error-color !default;
 $input-success-color: $success-color !default;
-$input-disabled-color: #D1D1D1 !default;
+$input-disabled-color: lighten($input-color, 25%) !default;
 $input-disabled-solid-color: $input-disabled-color !default;
 
 $label-color: #757575 !default;
 $label-focus-color: $primary-color !default;
-$label-active-color: #D1D1D1 !default;
-$label-font-size: 1rem !default;
+$label-active-color: lighten($label-color, 20%) !default;
+$label-font-size: 1em !default;
 $label-focus-font-size: .75rem !default;
 
 // Radio Buttons
@@ -274,18 +276,25 @@ $blockquote-line-height-phone: 1.5625rem !default;
 /* 23. List
    ========================================================================== */
 $list-margin: 8px 16px !default;
+$list-background: darken($white, 5%);
 
 $list-header-color: $primary-color !default;
+$list-header-background: $white;
 $list-header-font-size: .8125rem !default;
 $list-header-font-weight: normal !default;
 $list-header-height: 48px !default;
 $list-header-line-height: 48px !default;
 
 $list-item-color: #484848 !default;
+$list-item-background: #fff;
 $list-item-height: 48px !default;
 $list-item-line-height: 48px !default;
 $list-item-font-size: 1rem !default;
+$list-item-padding: 8px 16px;
+$list-item-active-background: darken(#fff, 1%);
+$list-item-active-shadow: 4px 0px 6px -3px rgba(167,167,167,0.3);
 
 $list-item-tl-sl-font-size: .875rem !default;
 $list-item-tl-height: 72px !default;
 $list-item-tl-sl-color: #757575 !default;
+/* Rectangle: */

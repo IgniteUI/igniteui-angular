@@ -1,8 +1,4 @@
-*::-webkit-input-placeholder {
-    -webkit-text-fill-color: $input-placeholder-color;
-}
-
-.ig-form-input {
+@include b(ig-form-group) {
 	@extend %ig-input-display;
 
 	@include e(label) {
@@ -11,45 +7,65 @@
 
 	@include e(input) {
 		@extend %ig-form-input;
-		
 		&:focus {
-			@extend %ig-form-input--active;
+			@extend %ig-form-input--focused;
+		}
+		&:disabled {
+			@extend %ig-form-input--disabled;
+		}
+		&.ng-valid[required],
+		&.ng-valid.required  {
+			@extend %ig-form-input--success;
+			~ label {
+				@extend %ig-form-label--success;
+			}
+		}
+		&.ng-invalid.ng-touched,
+		&.ng-invalid:not(form).ng-touched {
+			@extend %ig-form-input--error;
+			~ label {
+				@extend %ig-form-label--error;
+			}
+		}
+		&.ng-warning {
+			@extend %ig-form-input--warn;
+			~ label {
+				@extend %ig-form-label--warn;
+			}
 		}
 	}
 
-	@include m(active) {
+	@include e(textarea) {
+		@extend .ig-form-group__input;
+		@extend %ig-textarea;
+	}
+
+	@include m(placeholder) {
+		@include e(label) {
+			@extend %ig-form-label--float;
+		}
+	}
+
+	@include m(filled) {
 		@extend %ig-input-display;
 
 		@include e(label) {
 			@extend %ig-form-label;
-			@extend %ig-form-label--active;
+			@extend %ig-form-label--filled;
+			@extend %ig-form-label--float;
 		}
 		
 		@include e(input) {
 			@extend %ig-form-input;
-			@extend %ig-form-input--active;
 		}
 	}
 
-	
-	// // Handle error style
-	// &--error input,
-	// &--error input:focus {
-	// 	color: $input-error-color;
-	// 	border-bottom: $input-border-error;
-	// }
-	// &--error label,
-	// &--error:after {
-	// 	color: $input-error-color !important;
-	// }
+	@include m(focused) {
+		@extend %ig-input-display;
 
-	// // Handle success style
-	// &--success input,
-	// &--success input:focus {
-	// 	color: $input-success-color;
-	// 	border-bottom: $input-border-success;
-	// }
-	// &--success:after {
-	// 	color: $input-success-color !important;
-	// }
+		@include e(label) {
+			@extend %ig-form-label;
+			@extend %ig-form-label--focused;
+		}
+	}
 }

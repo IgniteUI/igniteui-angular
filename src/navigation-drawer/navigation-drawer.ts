@@ -2,7 +2,8 @@
 
 import {Component, Input, Inject, SimpleChange, ElementRef, EventEmitter, Output, Renderer, OnInit, OnDestroy, OnChanges, Optional} from '@angular/core';
 // import {AnimationBuilder} from 'angular2/src/animate/animation_builder'; TODO
-import {HammerGesturesManager, BaseComponent} from '../core/core';
+import { BaseComponent } from '../core/base';
+import { HammerGesturesManager } from "../core/touch";
 import {NavigationService, ToggleView} from '../core/navigation';
 
 // cover for transpiler error
@@ -102,7 +103,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     }
 
     /**
-     * Exposes optional navigation service 
+     * Exposes optional navigation service
      */
     public get state(){
         return this._state;

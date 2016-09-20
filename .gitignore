@@ -38,16 +38,10 @@ gulpfile.js*
 
 demos/**/*.js
 demos/**/*.js.map
-!samples/**/*.config.js
 
 src/**/*.js
 src/**/*.js.map
 
-tests/unit/**/*.js
-tests/unit/**/*.js.map
-
-tools/**/*.js
-tools/**/*.js.map
 
 dist/dev
 dist/**/*.js

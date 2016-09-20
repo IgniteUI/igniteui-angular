@@ -1,14 +1,25 @@
-import { Component, HostBinding, ElementRef, Renderer, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { HammerGesturesManager } from '../core/core';
+import {
+    NgModule,
+    Component,
+    HostBinding,
+    ElementRef,
+    Renderer,
+    OnInit,
+    OnDestroy,
+    Input,
+    Output,
+    EventEmitter
+} from '@angular/core';
+import { CommonModule } from "@angular/common";
+import { HammerGesturesManager } from '../core/touch';
 
-declare var module: any;
 
 export enum Direction {NONE, NEXT, PREV}
 
 @Component({
     selector: 'ig-carousel',
     moduleId: module.id,
-    templateUrl: 'carousel-content.html',
+    templateUrl: 'carousel.html',
 })
 
 export class Carousel implements OnDestroy {
@@ -153,7 +164,7 @@ export class Carousel implements OnDestroy {
     }
 
     public stop() {
-        if (!this.pause) {
+        if (this.pause) {
             this._playing = false;
             this.carouselPaused.emit(this);
             this._resetInterval();
@@ -242,7 +253,7 @@ export class Carousel implements OnDestroy {
 @Component({
     selector: 'ig-slide',
     moduleId: module.id,
-    templateUrl: 'slide-content.html'
+    templateUrl: 'slide.html'
 })
 
 export class Slide implements OnInit, OnDestroy {
@@ -261,4 +272,12 @@ export class Slide implements OnInit, OnDestroy {
     public ngOnDestroy() {
         this.carousel.remove(this);
     }
+}
+
+@NgModule({
+    declarations: [Carousel, Slide],
+    imports: [CommonModule],
+    exports: [Carousel, Slide]
+})
+export class CarouselModule {
 }
