@@ -2,7 +2,7 @@ sudo: required
 dist: trusty
 language: node_js
 node_js:
-  - "5"
+- '5'
 before_install:
   - export CHROME_BIN=/usr/bin/google-chrome
   - export DISPLAY=:99.0
@@ -13,7 +13,23 @@ before_install:
   - sudo dpkg -i google-chrome*.deb
   - sleep 3
 before_script:
-  - npm install -g gulp
+- npm install -g gulp
 script:
-  - npm test
-  - cat ./coverage/report-lcov/lcov.info | coveralls
+- npm test
+- cat ./coverage/report-lcov/lcov.info | coveralls
+
+before_deploy:
+# move to dist
+- cd dist
+# update package versions
+- npm version "${TRAVIS_TAG}" --no-git-tag-version --save
+
+deploy:
+  provider: npm
+  skip_cleanup: true
+  email: igniteui@infragistics.com
+  api_key:
+    secure: UvQG2jKbNOUsKoN2XEj1zMhehq14ZUtXnSFGFH7XcryVo5GNVfzeqzTouRmbEAxn9XvfwyZP+QLwQAFBggIdfXhld/CDrxJ6mTTl+b3kp055XVIJuRwgYfs2w+VusUxZlJpkq5t1sdPa19q/Xd6ITiUgVllymZu3udFe/3LP29UPvg4V5iAIOxUCBkIWvAcvygt9NvBe1B51PbfhBemiK4LvV88t8AGipF3dd5YTjs0M4f6+P97ehdjJUkr8WG2VcIui7ER9fGrkc/KmybglxygWV65WPJC6vsqxIpB0QSLGSSbvbDoagnbuxOmizrvFabZFO7hfwcEUR/1VneiRjjLNUeMiIF/1WVGAcPVVJKm8ABIzRtk8Vuj8QR79SAhXNdF2wvd/lVnb0CkcWjJhpRwq1dKIh7CX+/tmGzhubKUYaDCqKeNIAPVZIiehcELsTizW/99RoJq03IIbbNJnAD1qUO7PCW9dCWIGgF7p5UNPb7Mo7x/vVcEgh/NHLorVx+p7dqAWi2OGiSdq+ZU6ZtCgNKNYJHaJXaYdwALGktKfJkiuNYJ+3/o7tM8ruXhimmZ5h5olzlyk4kPK9OCfWPR7HLzWpjy5BFiQS+ZPgIL0z1/6I/qqs59bXGHAE9UABTyvc4mM32mSnJ7xsnKxuxefHayOdRvVB/CeJmA14rk=
+  on:
+    tags: true
+    repo: Infragistics/zero-blocks
