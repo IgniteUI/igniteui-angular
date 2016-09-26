@@ -13,7 +13,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from "@angular/f
 
 const noop = () => {};
 
-export function MakeProvider(type: any) {
+function MakeProvider(type: any) {
     return {
         provide: NG_VALUE_ACCESSOR,
         useExisting: forwardRef(() => type),
