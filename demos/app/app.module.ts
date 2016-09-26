@@ -3,7 +3,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
 
 import {
-    IgInputModule, CarouselModule , CheckboxModule,
+    IgInputModule, CarouselModule , CheckboxModule, SwitchModule,
     IgRadioModule , TabBarModule , ListModule
 } from "../../src/main";
 
@@ -24,6 +24,7 @@ import { routing } from "./app.routing";
         IgInputModule,
         CarouselModule,
         CheckboxModule,
+        SwitchModule,
         IgRadioModule,
         TabBarModule,
         ListModule,
