@@ -14,8 +14,8 @@ import { ListItem, ListHeader } from './items';
     templateUrl: 'list-content.html'
 })
 
-export class List implements AfterContentInit {
-    private _innerStyle: string = "ig-list-inner";
+export class List implements AfterContentInit { 
+    private _innerStyle: string = "ig-list";
     private _items: ListItem[];
 
     searchInputElement: HTMLInputElement;
