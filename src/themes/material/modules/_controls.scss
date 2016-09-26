@@ -1,0 +1,117 @@
+@include b(ig-control) {
+    // Save the reference to this block element
+    // in a variable for scoped access
+    $block: &;
+
+    // Radio control styles
+    @include e(radio) {
+        //hide default radio control
+        @include hide-default;
+        
+        ~ #{$block}__label {
+            @extend %radio-lbl-display;
+        }
+
+        &:not(:checked) ~ #{$block}__label:before {
+            @extend %radio-lbl-notchecked--before;
+        }
+        
+        &:not(:checked) ~ #{$block}__label:after {
+            @extend %radio-lbl-notchecked--after;
+        }
+
+        &:checked ~ #{$block}__label:before {
+            @extend %radio-lbl-checked--before;
+        }
+
+        &:checked ~ #{$block}__label:after {
+            @extend %radio-lbl-checked--after;
+        }
+
+        &:disabled ~ #{$block}__label {
+            @extend %radio-lbl--disabled;
+        }
+
+        &:disabled:checked ~ #{$block}__label:before {
+            @extend %radio-lbl-checked--disabled-before;
+        }
+
+        &:disabled:checked ~ #{$block}__label:after {
+            @extend %radio-lbl-checked--disabled-after;
+        }
+
+        &:disabled:not(:checked) ~ #{$block}__label:after {
+            @extend %radio-lbl-notchecked--disabled-after;
+        }
+    }
+    
+    // Checkbox control styles
+    @include e(cbx) {
+        @include hide-default;
+
+        ~ #{$block}__label {
+            @extend %cbx-lbl-display;
+        }
+
+        &:not(:checked) ~ #{$block}__label:before {
+            @extend %cbx-lbl-notchecked-before;
+        }
+
+        &:not(:checked) ~ #{$block}__label:after {
+            @extend %cbx-lbl-notchecked-after;
+        }
+
+        &:checked ~ #{$block}__label:before {
+            @extend %cbx-lbl-checked-before;
+        }
+
+        &:checked ~ #{$block}__label:after {
+            @extend %cbx-lbl-checked-after;
+        }
+
+        &:disabled ~ #{$block}__label {
+            @extend %cbx-lbl-disabled;
+        }
+
+        &:disabled:checked ~ #{$block}__label:before {
+            @extend %cbx-lbl-checked--disabled-before;
+        }
+
+        &:disabled:checked ~ #{$block}__label:after {
+            @extend %cbx-lbl-checked--disabled-after;
+        }
+
+        &:disabled:not(:checked) ~ #{$block}__label:before {
+            @extend %cbx-lbl-notchecked--disabled-before;
+        }
+
+        &:disabled:not(:checked) ~ #{$block}__label:after {
+            @extend %cbx-lbl-notchecked--disabled-after;
+        }
+
+        &:indeterminate ~ #{$block}__label:before {
+            
+        }
+
+        &:indeterminate ~ #{$block}__label:after {
+            @extend %cbx-lbl--indeterminate-after;
+        }
+    }
+
+    // Switch control styles
+    @include e(switch) {
+        @include hide-default;
+
+        ~ #{$block}__label {
+            @extend %switch-lbl-display;
+        }
+
+        &:checked ~ #{$block}__label {
+            @extend %switch-lbl--on;
+        }
+        
+        &:disabled ~ #{$block}__label {
+            @extend %switch-lbl--disabled;
+        }
+    }
+}
