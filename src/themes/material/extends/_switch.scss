@@ -1,0 +1,43 @@
+%switch-lbl-display {
+    display: block;
+    position: relative;
+    margin: $switch-margin;
+    width: $switch-width;
+    height: $switch-height;
+    background-color: $switch-background;
+    color: transparent;
+    border-radius: $switch-radius;
+    cursor: pointer;
+    transition: $input-transition;
+    user-select: none;
+    &:after {
+        display: block;
+        position: absolute;
+		content: '';
+        width: $switch-label-width;
+		height: $switch-label-height;
+		top: -3px;
+		left: -1px;
+		border-radius: $switch-radius;
+		background: $white;
+		box-shadow: $switch-shadow;
+		transition: $input-transition;
+    }
+}
+
+%switch-lbl--on {
+    background-color: $switch-active-background;
+    &:after {
+        left: 16px;
+        background: $radio-fill-color;
+    }
+}
+
+%switch-lbl--disabled {
+    background: #F0F0F0;
+    pointer-events: none;
+    &:after {
+        background: #D1D1D1;
+        box-shadow: $switch-disabled-shadow;
+    }
+}

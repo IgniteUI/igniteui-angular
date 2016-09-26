@@ -5,6 +5,7 @@ import { FormsModule } from "@angular/forms";
 import { IgInputModule } from "../../src/input/input";
 import { CarouselModule } from "../../src/carousel/carousel";
 import { CheckboxModule } from "../../src/checkbox/checkbox";
+import { SwitchModule } from "../../src/switch/switch";
 import { IgRadioModule } from "../../src/radio/radio";
 import { TabBarModule } from "../../src/tabbar/tab";
 import { ListModule } from "../../src/list/list";
@@ -26,6 +27,7 @@ import { routing } from "./app.routing";
         IgInputModule,
         CarouselModule,
         CheckboxModule,
+        SwitchModule,
         IgRadioModule,
         TabBarModule,
         ListModule,
