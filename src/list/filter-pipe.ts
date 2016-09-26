@@ -38,8 +38,8 @@ export class FilterPipe{
 	}
 
 	// Get text from filteringValue if exists or from textContent of DOM element
-	private get_filteringValue(item: ListItem, elementSelector: any) : string {
-		return item.filteringValue ? item.filteringValue : elementSelector(item).textContent;
+    private get_filteringValue(item: ListItem, elementSelector: any): string {
+        return item.filteringValue ? item.filteringValue : elementSelector ? elementSelector(item).textContent : item;
 	}
 }
 

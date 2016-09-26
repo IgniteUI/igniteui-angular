@@ -51,27 +51,27 @@ export class List implements AfterContentInit {
         this.headers.push(header);
     }
 
-    filter() {
-        var inputValue, result, filteringArgs, filteredArgs, items;
+    //filter() {
+    //    var inputValue, result, filteringArgs, filteredArgs, items;
 
-        if (this.searchInputElement) {
-            filteringArgs = { cancel: false };
+    //    if (this.searchInputElement) {
+    //        filteringArgs = { cancel: false };
 
-            this.filtering.emit(filteringArgs);
+    //        this.filtering.emit(filteringArgs);
 
-            if (filteringArgs.cancel) {
-                return;
-            }
+    //        if (filteringArgs.cancel) {
+    //            return;
+    //        }
 
-            this.filterOptions = this.filterOptions || new FilterOptions();
-            this.filterOptions.items = this.filterOptions.items || this.items;
-            inputValue = (<HTMLInputElement>this.searchInputElement).value;
-            result = new FilterPipe().transform(this.filterOptions, inputValue);
+    //        this.filterOptions = this.filterOptions || new FilterOptions();
+    //        this.filterOptions.items = this.filterOptions.items || this.items;
+    //        inputValue = (<HTMLInputElement>this.searchInputElement).value;
+    //        result = new FilterPipe().transform(this.filterOptions, inputValue);
 
-            filteredArgs = { result: result }
-            this.filtered.emit(filteredArgs);
-        }
-    }
+    //        filteredArgs = { result: result }
+    //        this.filtered.emit(filteredArgs);
+    //    }
+    //}
 
     private getFilterInputElement(id: string) {
         return <HTMLInputElement>document.getElementById(id);
