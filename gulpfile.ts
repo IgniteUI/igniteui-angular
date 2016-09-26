@@ -30,7 +30,7 @@ var tsProject = ts.createProject('tsconfig.json', {
 gulp.task("build", ["build.css", "build.js", "build.fonts"]);
 
 
-gulp.task("bundle", ["bundle.src", "build.css", "bundle.README"], () => {
+gulp.task("bundle", ["bundle.src", "build.css", "build.fonts", "bundle.README"], () => {
     return gulp.src("./zero-blocks/**/*")
         .pipe(gulp.dest("./dist"));
 });

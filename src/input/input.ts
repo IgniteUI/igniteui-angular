@@ -13,7 +13,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from "@angular/f
 
 const noop = () => {};
 
-export function MakeProvider(type: any) {
+function MakeProvider(type: any) {
     return {
         provide: NG_VALUE_ACCESSOR,
         useExisting: forwardRef(() => type),
@@ -26,7 +26,7 @@ let nextId = 0;
 // TODO: Figure out a way to inherit decorated properties
 //       while extending the children with custom decorated properties
 
-class BaseInput implements ControlValueAccessor {
+export class BaseInput implements ControlValueAccessor {
     @ViewChild("input") nativeInput: ElementRef;
 
     @Input() id: string = `ig-input-${nextId++}`;
