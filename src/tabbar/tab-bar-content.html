@@ -1,8 +1,8 @@
 
-<div class="{{_itemStyle}} tab-bar-{{alignment}}">
+<div class="{{_itemStyle}}">
 	<ng-content></ng-content>
-	<ul #unorderedList >
-		<li *ngFor="let tab of _visibleTabs" [class.selected]="tab.isSelected" [class.disabled]="tab.isDisabled" (click)="tab.select()" ngClass="col-{{_columns}}">
+	<ul #unorderedList class="{{_itemStyle}}__menu {{_itemStyle}}__menu--{{alignment}}">
+		<li *ngFor="let tab of _visibleTabs" class="{{_itemStyle}}__menu-item" [class.selected]="tab.isSelected" [class.disabled]="tab.isDisabled" (click)="tab.select()" ngClass="col-{{_columns}}">
 			<div ngClass="tab-icon {{tab.icon}}">
 				<span [class.hidden]="tab._changesCount == 0" class="badge">{{tab._changesCount}}</span>
 			</div>

@@ -1,11 +1,11 @@
 $badge-background-color: #dd524d;
 $tab-bar-background: #444;
 
-
 ig-tab-bar {
     display: block;
-    height: 100%;
     .ig-tab-bar-inner {
+        width: 100%;
+        height: 100%;
         position: absolute;
         &__menu {
             position: absolute;
