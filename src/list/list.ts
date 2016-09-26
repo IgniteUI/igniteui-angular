@@ -14,34 +14,36 @@ import { ListItem, ListHeader } from './items';
     templateUrl: 'list-content.html'
 })
 
-export class List implements AfterContentInit { 
+export class List
+    //implements AfterContentInit
+    { 
     private _innerStyle: string = "ig-list";
     private _items: ListItem[];
 
-    searchInputElement: HTMLInputElement;
+    //searchInputElement: HTMLInputElement;
     items: ListItem[] = [];
     headers: ListHeader[] = [];
 
-    @Input() searchInputId: string;
-    @Input() filterOptions: FilterOptions;
+    //@Input() searchInputId: string;
+    //@Input() filterOptions: FilterOptions;
     @Output() filtering = new EventEmitter(false); // synchronous event emitter
     @Output() filtered = new EventEmitter();
 
     constructor(private _renderer: Renderer) {
     }
 
-    ngAfterContentInit() {
-        var self = this;
-        if (this.searchInputId) {
-            if (!this.searchInputElement) {
-                this.searchInputElement = this.getFilterInputElement(this.searchInputId);
-            }
+    //ngAfterContentInit() {
+    //    var self = this;
+    //    if (this.searchInputId) {
+    //        if (!this.searchInputElement) {
+    //            this.searchInputElement = this.getFilterInputElement(this.searchInputId);
+    //        }
 
-            if (this.searchInputElement) {
-                this._renderer.listen(this.searchInputElement, 'input', this.filter.bind(this));
-            }
-        }
-    }
+    //        if (this.searchInputElement) {
+    //            this._renderer.listen(this.searchInputElement, 'input', this.filter.bind(this));
+    //        }
+    //    }
+    //}
 
     addItem(item: ListItem) {
         this.items.push(item);
@@ -73,9 +75,9 @@ export class List implements AfterContentInit {
     //    }
     //}
 
-    private getFilterInputElement(id: string) {
-        return <HTMLInputElement>document.getElementById(id);
-    }
+    //private getFilterInputElement(id: string) {
+    //    return <HTMLInputElement>document.getElementById(id);
+    //}
 }
 
 @NgModule({
