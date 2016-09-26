@@ -170,7 +170,7 @@ export class Tab {
     private _changesCount: number = 0; // changes and updates accordingly applied to the tab.
 
     isSelected: boolean = false;
-
+    
     get index() {
         return this._tabBar.tabs.indexOf(this);
     }
@@ -206,6 +206,7 @@ export class Tab {
     @Input() icon: string;
     @Input() disabled: boolean;
     @Input() href: string;   // TODO - need to be disccussed
+    @Input() color: string;
 
     constructor(private _tabBar: TabBar, private _element: ElementRef) {
         this._tabBar.add(this);
