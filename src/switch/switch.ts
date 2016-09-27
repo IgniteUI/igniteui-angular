@@ -12,7 +12,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from "@angular/forms";
 const noop = () => {};
 let nextId = 0;
 
-function MakeProvider(type: any) {
+export function MakeProvider(type: any) {
     return {
         provide: NG_VALUE_ACCESSOR,
         useExisting: forwardRef(() => type),
@@ -21,15 +21,15 @@ function MakeProvider(type: any) {
 }
 
 @Component({
-    selector: "ig-checkbox",
+    selector: "ig-switch",
     moduleId: module.id,
-    templateUrl: "checkbox.html",
-    providers: [MakeProvider(IgCheckbox)]
+    templateUrl: "switch.html",
+    providers: [MakeProvider(IgSwitch)]
 })
-export class IgCheckbox implements ControlValueAccessor {
+export class IgSwitch implements ControlValueAccessor {
 
     @Input() value: any;
-    @Input() id: string = `ig-checkbox-${nextId++}`;
+    @Input() id: string = `ig-switch-${nextId++}`;
     @Input() name: string;
     @Input() disabled: boolean = false;
     @Input() tabindex: number = null;
@@ -79,7 +79,7 @@ export class IgCheckbox implements ControlValueAccessor {
 
 
 @NgModule({
-    declarations: [IgCheckbox],
-    exports: [IgCheckbox]
+    declarations: [IgSwitch],
+    exports: [IgSwitch]
 })
-export class CheckboxModule {}
+export class SwitchModule {}

@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { IgInputModule } from "../../src/input/input";
 import { CheckboxModule } from "../../src/checkbox/checkbox";
+import { SwitchModule } from "../../src/switch/switch";
 import { IgRadioModule } from "../../src/radio/radio";
 
 @Component({
@@ -19,7 +20,11 @@ import { IgRadioModule } from "../../src/radio/radio";
         <h3>Checkbox</h3>
         <ig-checkbox [(ngModel)]="user.registered">Registered</ig-checkbox>
         <p><code>Selected value = {{ user.registered || false}}</code></p>
-
+        
+        <h3>Switch</h3>
+        <ig-switch [(ngModel)]="user.subscribed">Subscribed</ig-switch>
+        <p><code>Selected value = {{ user.subscribed || false}}</code></p>
+        
         <h3>Radio</h3>
         <ig-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" name="group" [(ngModel)]="user.favouriteVarName">{{item}}</ig-radio>
         <p><code>Selected value = {{ user.favouriteVarName || ''}}</code></p>
@@ -36,6 +41,7 @@ export class InputSampleComponent {
         password: '1337s3cr3t',
         comment: "N/A",
         registered: true,
+        subscribed: false,
         favouriteVarName: 'Foo'
     };
 }

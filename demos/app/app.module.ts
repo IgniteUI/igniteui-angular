@@ -2,12 +2,10 @@ import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
 
-import { IgInputModule } from "../../src/input/input";
-import { CarouselModule } from "../../src/carousel/carousel";
-import { CheckboxModule } from "../../src/checkbox/checkbox";
-import { IgRadioModule } from "../../src/radio/radio";
-import { TabBarModule } from "../../src/tabbar/tab";
-import { ListModule } from "../../src/list/list";
+import {
+    IgInputModule, CarouselModule , CheckboxModule, SwitchModule,
+    IgRadioModule , TabBarModule , ListModule
+} from "../../src/main";
 
 import { AppComponent } from "./app.component";
 import { InputSampleComponent } from "./inputsample.component";
@@ -26,6 +24,7 @@ import { routing } from "./app.routing";
         IgInputModule,
         CarouselModule,
         CheckboxModule,
+        SwitchModule,
         IgRadioModule,
         TabBarModule,
         ListModule,

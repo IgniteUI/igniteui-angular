@@ -24,6 +24,9 @@ before_deploy:
 # update package versions
 - npm version "${TRAVIS_TAG}" --no-git-tag-version --save
 
+# copy readme
+- cp ../README.md README.md
+
 deploy:
   provider: npm
   skip_cleanup: true
