@@ -72,7 +72,7 @@ export class ListItem implements OnInit {
 
     @Input() href: string;
     @Input() options: Array<Object>
-    @Input() filteringValue: string;
+    //@Input() filteringValue: string;
 
     constructor(@Inject(forwardRef(() => List)) private list:List, public element: ElementRef, private _renderer: Renderer) {
         this._addEventListeners();

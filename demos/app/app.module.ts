@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
-
+import { FilterPipe } from '../../src/list/filter-pipe';
 import {
     IgInputModule, CarouselModule , CheckboxModule, SwitchModule,
     IgRadioModule , TabBarModule , ListModule
@@ -35,7 +35,8 @@ import { routing } from "./app.routing";
         InputSampleComponent,
         CarouselSampleComponent,
         TabBarSampleComponent,
-        ListSampleComponent
+        ListSampleComponent,
+        FilterPipe
     ],
     bootstrap: [
         AppComponent

@@ -6,10 +6,10 @@ import { FilterPipe, FilterOptions } from '../../src/list/filter-pipe';
     selector: "list-sample",
     template: `
         <input #filterInput (input)="inputHandler($event)" />
-        <ig-list #filteredList (filtered)="filteredHandler($event)" (filtering)="filteringHandler($event)">
+        <ig-list (filtered)="filteredHandler($event)" (filtering)="filteringHandler($event)">
             <ig-list-header>Filtered List</ig-list-header>
-            <ig-list-item *ngFor="let navItem of navItems; let index = index" [filteringValue]="navItem.key" [options]="options">
-            {{navItem.text}}
+            <ig-list-item *ngFor="let item of navItems | filter: fo: filteringValue" [options]="options">
+                {{item.text}}
             </ig-list-item>
         </ig-list>
         <br >
@@ -40,7 +40,9 @@ import { FilterPipe, FilterOptions } from '../../src/list/filter-pipe';
 })
 export class ListSampleComponent {    
     @ViewChild('filterInput') filterInput: ElementRef;
-    @ViewChild('filteredList') filteredList: ElementRef;
+
+    private fo = new FilterOptions();
+    private filteringValue = "";
 
     private navItems: Array<Object> = [
             { key:"1", text: "Nav1", link: "#" },
@@ -49,11 +51,11 @@ export class ListSampleComponent {
             { key:"4", text: "Nav4", link: "#" }
         ];
 
-    public inputHandler = function (args) {
-        var flItems = this.filteredList.items;
-        var fo = new FilterOptions();
-        fo.items = flItems;
-        flItems = new FilterPipe().transform(fo, args.target.value);
+    public inputHandler = function (args) {        
+        this.fo.items = this.navItems;
+        this.fo.key = "text";        
+        this.filteringValue = args.target.value;
+        //this.navItems = new FilterPipe().transform(this.fo, args.target.value);
     }.bind(this);
 
     private filteringHandler = function(args) {
