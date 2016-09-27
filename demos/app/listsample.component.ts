@@ -1,19 +1,19 @@
 import { Component, ViewChild, ElementRef } from "@angular/core";
 import { ListModule } from "../../src/list/list";
-import { FilterOptions } from '../../src/list/filter-pipe';
+import { FilterModule, FilterOptions } from '../../src/list/filter';
 
 @Component({
     selector: "list-sample",
     template: `
-        <input #filterInput1 (input)="inputHandler1($event)" />
+        <input [(ngModel)]="search1" />
         <ig-list (filtered)="filteredHandler($event)" (filtering)="filteringHandler($event)">
             <ig-list-header>Data Source Filtered List</ig-list-header>
-            <ig-list-item *ngFor="let item of navItems | filter: fo: filteringValue" [options]="options">
+            <ig-list-item *ngFor="let item of navItems | filter: fo: search1" [options]="options">
                 {{item.text}}
             </ig-list-item>
         </ig-list>
-        <input #filterInput2 (input)="inputHandler2($event)" />
-        <ig-list>
+        <input [(ngModel)]="search2" />
+        <ig-list filter>
             <ig-list-header>Declarative Fitered List</ig-list-header>
             <ig-list-header>Mildly Sweet</ig-list-header>
             <ig-list-item>Red Delicious</ig-list-item>
@@ -33,10 +33,8 @@ import { FilterOptions } from '../../src/list/filter-pipe';
     `
 })
 export class ListSampleComponent {    
-    @ViewChild('filterInput1') filterInput: ElementRef;
-
-    private fo = new FilterOptions();
-    private filteringValue = "";
+    search1: string;
+    search2: string;
 
     private navItems: Array<Object> = [
             { key:"1", text: "Nav1", link: "#" },
@@ -45,11 +43,12 @@ export class ListSampleComponent {
             { key:"4", text: "Nav4", link: "#" }
         ];
 
-    public inputHandler1 = function (args) {        
-        this.fo.items = this.navItems;
-        this.fo.key = "text";        
-        this.filteringValue = args.target.value;
-    }.bind(this);
+    get fo() {
+        var _fo = new FilterOptions();
+        _fo.key = "text";
+        return _fo;
+    }
+
 
     private filteringHandler = function(args) {
         args.cancel = true;

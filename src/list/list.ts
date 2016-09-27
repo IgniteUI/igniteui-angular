@@ -1,7 +1,7 @@
-import { Component, Input, Output, AfterContentInit, ContentChildren, QueryList, EventEmitter, Renderer, NgModule, OnInit, ViewChild, Inject, forwardRef, ElementRef } from '@angular/core';
+import { Component, Input, AfterContentInit, ContentChildren, QueryList, Renderer, NgModule, OnInit, ViewChild, Inject, forwardRef, ElementRef } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { HammerGesturesManager } from '../core/touch';
-import { FilterPipe, FilterOptions } from './filter-pipe';
+import { FilterModule } from './filter';
 
 // ====================== LIST ================================
 // The `<ig-list>` directive is a list container for items and headers 
@@ -14,16 +14,11 @@ import { FilterPipe, FilterOptions } from './filter-pipe';
 
 export class List { 
     private _innerStyle: string = "ig-list";
-    //private _items: ListItem[];
 
     items: ListItem[] = [];
-    headers: ListHeader[] = [];
+    headers: ListHeader[] = [];    
 
-    @Output() filtering = new EventEmitter(false); // synchronous event emitter
-    @Output() filtered = new EventEmitter();
-
-    constructor(private _renderer: Renderer) {
-    }
+    constructor() { }
 
     addItem(item: ListItem) {
         this.items.push(item);
@@ -47,8 +42,7 @@ export class List {
 export class ListHeader implements OnInit {
     private _innerStyle: string = "ig-list__header";
 
-    constructor( @Inject(forwardRef(() => List)) private list: List) {
-    }
+    constructor( @Inject(forwardRef(() => List)) private list: List) { }
 
     public ngOnInit() {
         this.list.addHeader(this);

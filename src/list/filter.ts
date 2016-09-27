@@ -1,4 +1,13 @@
-import { Pipe, PipeTransform  } from "@angular/core";
+import { Directive, Pipe, PipeTransform, NgModule, Output, EventEmitter } from "@angular/core";
+import { CommonModule } from "@angular/common";
+
+@Directive({
+    selector: 'filter',
+})
+export class FilterDirective {
+    @Output() filtering = new EventEmitter(false); // synchronous event emitter
+    @Output() filtered = new EventEmitter();
+}
 
 @Pipe({
     name: "filter",
@@ -17,6 +26,10 @@ export class FilterPipe implements PipeTransform {
 
         if (!items || !items.length) {
             return;
+        }
+
+        if (!inputValue) {
+            inputValue = "";
         }
 
         result = items.filter((item: Object) => {
@@ -75,11 +88,17 @@ export class FilterOptions {
 
 	// function - executed after matching each item
 	// Default behavior - none
-    metConditionFn() {        
-	};
+    metConditionFn() { };
 
 	// function - executed after NOT matching each item
 	// Default behavior - none
-    overdueConditionFn() {
-	};
+    overdueConditionFn() { };
+}
+
+@NgModule({
+    declarations: [FilterDirective, FilterPipe],
+    imports: [CommonModule],
+    exports: [FilterDirective, FilterPipe]
+})
+export class FilterModule {
 }
