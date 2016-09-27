@@ -1,5 +1,5 @@
-<template>
-    <span #igButton class="ig-button">
-        <ng-content></ng-content>
-    </span>
-</template>
+<span #igButton class="ig-button ig-button--{{type}}"
+     [attr.disabled]="disabled"
+     [class.ig-button--disabled]="isDisabled">
+    <ng-content></ng-content>
+</span>

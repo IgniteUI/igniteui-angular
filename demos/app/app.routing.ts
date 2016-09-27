@@ -6,6 +6,7 @@ import { InputSampleComponent } from "./inputsample.component";
 import { CarouselSampleComponent } from "./carouselsample.component";
 import { TabBarSampleComponent } from "./tabbarsample.component";
 import { ListSampleComponent } from "./listsample.component";
+import { ButtonsSampleComponent } from "./buttonssample.component";
 
 const appRoutes: Routes = [
     {
@@ -19,6 +20,10 @@ const appRoutes: Routes = [
     {
         path: "tabbar",
         component: TabBarSampleComponent
+    },
+    {
+        path: "buttons",
+        component: ButtonsSampleComponent
     },
     {
         path: "list",
