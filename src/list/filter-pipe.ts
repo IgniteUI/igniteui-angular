@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform  } from "@angular/core";
-//import { ListItem } from './items';
 
 @Pipe({
     name: "filter",
@@ -16,19 +15,12 @@ export class FilterPipe implements PipeTransform {
 
 		var result = [];
 
-		//if(!options.items || !options.items.length) {
-		//	return;
-  //      }
-
         if (!items || !items.length) {
             return;
         }
 
-        //result = options.items.filter((item: Object) => {
         result = items.filter((item: Object) => {
-            let match = options.matchFn(options.formatter(
-                //this.get_filteringValue(item, options.elementSelector)), inputValue);
-                this.get_value(item, options.key)), inputValue);
+            let match = options.matchFn(options.formatter(this.get_value(item, options.key)), inputValue);
 
 			if(match) {
 				if(options.metConditionFn) {
@@ -64,17 +56,8 @@ export class FilterPipe implements PipeTransform {
 }
 
 export class FilterOptions {
-	// List item collection that will be filtered
-    //public items: Object[];
-
     // item property, which value should be used for filtering
     public key: string;
-
-	// function - select the element which text will be test to match the condition
-	// default behavior - gets the native elemnt of the item
-	//elementSelector(item: ListItem) {
-	//	return item.element.nativeElement;
-	//};
 
 	// function - formats the original text before matching process
 	// Default behavior - returns text to lower case
@@ -90,17 +73,13 @@ export class FilterOptions {
 		return filteringValue.indexOf(inputValue.toLowerCase()) > -1;
 	};
 
-	// function - executed on each item that met the condition
-	// Default behavior - shows item if hidden
+	// function - executed after matching each item
+	// Default behavior - none
     metConditionFn() {        
-        //item.hidden = false;        
-        //item.element.nativeElement.style.display = "";
 	};
 
-	// function - executed on each item that does not met the condition
-	// Default behavior - hides item
+	// function - executed after NOT matching each item
+	// Default behavior - none
     overdueConditionFn() {
-        //item.hidden = true;
-        //item.element.nativeElement.style.display = "none";
 	};
 }
