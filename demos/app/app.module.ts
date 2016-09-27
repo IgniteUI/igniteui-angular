@@ -43,5 +43,4 @@ import { routing } from "./app.routing";
         AppComponent
     ]
 })
->>>>>>> dev
 export class AppModule {}
