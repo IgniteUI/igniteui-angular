@@ -64,6 +64,6 @@
   &--disabled {
     color: $button-disabled-color;
     background: $button-disabled-background;
-    cursor: default;
+    pointer-events: none;
   }
 }

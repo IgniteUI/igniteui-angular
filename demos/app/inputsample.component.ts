@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { IgInputModule } from "../../src/input/input";
+import { IgInput } from "../../src/input/input";
 import { CheckboxModule } from "../../src/checkbox/checkbox";
 import { SwitchModule } from "../../src/switch/switch";
 import { IgRadioModule } from "../../src/radio/radio";
@@ -9,13 +9,15 @@ import { IgRadioModule } from "../../src/radio/radio";
     selector: "input-sample",
     template:`
         <h3>Text Inputs</h3>
-        <ig-text [(ngModel)]="user.name">Username</ig-text>
+
+        <input type="text" igInput [(ngModel)]="user.name" />
+
         <p><code>Selected value = {{ user.name || ''}}</code></p>
 
-        <ig-password [placeholder]="placeholder" [(ngModel)]="user.password">Password</ig-password>
+        <input type="password" igInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
         <p><code>Selected value = {{ user.password || ''}}</code></p>
 
-        <ig-textarea [placeholder]="placeholder" [(ngModel)]="user.comment">Comment</ig-textarea>
+        <textarea placeholder="{{placeholder}}" igInput [(ngModel)]="user.comment"></textarea>
         <p><code>Selected value = {{ user.comment || ''}}</code></p>
 
         <h3>Checkbox</h3>
