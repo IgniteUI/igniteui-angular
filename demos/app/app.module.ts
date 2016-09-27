@@ -1,10 +1,9 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
-import { FilterModule } from '../../src/list/filter';
 
 import {
-    IgInputModule, CarouselModule , CheckboxModule, SwitchModule,
+    IgInput, CarouselModule , CheckboxModule, SwitchModule,
     IgRadioModule , TabBarModule , ListModule, ButtonModule
 } from "../../src/main";
 
@@ -17,11 +16,11 @@ import { ButtonsSampleComponent } from "./buttonssample.component";
 
 import { routing } from "./app.routing";
 
+
 @NgModule({
     imports: [
         BrowserModule,
         FormsModule,
-        IgInputModule,
         CarouselModule,
         CheckboxModule,
         SwitchModule,
@@ -29,10 +28,10 @@ import { routing } from "./app.routing";
         TabBarModule,
         ListModule,
         ButtonModule,
-        FilterModule,
         routing
     ],
     declarations: [
+        IgInput,
         AppComponent,
         InputSampleComponent,
         CarouselSampleComponent,
