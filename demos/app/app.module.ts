@@ -4,7 +4,7 @@ import { FormsModule } from "@angular/forms";
 
 import {
     IgInputModule, CarouselModule , CheckboxModule, SwitchModule,
-    IgRadioModule , TabBarModule , ListModule
+    IgRadioModule , TabBarModule , ListModule, ButtonModule
 } from "../../src/main";
 
 import { AppComponent } from "./app.component";
@@ -12,7 +12,7 @@ import { InputSampleComponent } from "./inputsample.component";
 import { CarouselSampleComponent } from "./carouselsample.component";
 import { TabBarSampleComponent } from "./tabbarsample.component";
 import { ListSampleComponent } from "./listsample.component";
-
+import { ButtonsSampleComponent } from "./buttonssample.component";
 
 import { routing } from "./app.routing";
 
@@ -28,6 +28,7 @@ import { routing } from "./app.routing";
         IgRadioModule,
         TabBarModule,
         ListModule,
+        ButtonModule,
         routing
     ],
     declarations: [
@@ -35,7 +36,8 @@ import { routing } from "./app.routing";
         InputSampleComponent,
         CarouselSampleComponent,
         TabBarSampleComponent,
-        ListSampleComponent
+        ListSampleComponent,
+        ButtonsSampleComponent
     ],
     bootstrap: [
         AppComponent
