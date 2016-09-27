@@ -4,7 +4,7 @@ import { FormsModule } from "@angular/forms";
 
 import {
     IgInputModule, CarouselModule , CheckboxModule, SwitchModule,
-    IgRadioModule , TabBarModule , ListModule
+    IgRadioModule , TabBarModule , ListModule, Label
 } from "../../src/main";
 
 import { AppComponent } from "./app.component";
@@ -35,7 +35,8 @@ import { routing } from "./app.routing";
         InputSampleComponent,
         CarouselSampleComponent,
         TabBarSampleComponent,
-        ListSampleComponent
+        ListSampleComponent,
+        Label
     ],
     bootstrap: [
         AppComponent

@@ -1,4 +1,6 @@
 import {
+    Directive,
+    Renderer,
     Component,
     Input,
     Output,
@@ -10,6 +12,7 @@ import {
 } from "@angular/core";
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from "@angular/forms";
 
+import { Label } from "../main";
 
 const noop = () => {};
 
@@ -104,6 +107,15 @@ export class PasswordInput extends BaseInput {
 export class TextArea extends BaseInput {
 }
 
+// @Directive({
+//     selector: '[igLabel2]'
+// })
+// export class Label2 {
+//     constructor(el: ElementRef, renderer: Renderer){
+//         console.log(el.nativeElement);
+//         renderer.setElementClass(el.nativeElement, 'ig-form-group__label', true);
+//     }
+// }
 
 /** Export as module */
 @NgModule({

@@ -9,17 +9,18 @@ import {
 @Directive({
     selector: '[igLabel]'
 })
-
 export class Label {
     constructor(el: ElementRef, renderer: Renderer){
-        renderer.setElementClass(el, 'ig-form-label', false)
+        console.log(el.nativeElement);
+        renderer.setElementClass(el.nativeElement, 'ig-form-group__label', true);
     }
 }
 
-/** Export as module */
-@NgModule({
-    exports: [Label]
-})
+// /** Export as module */
+// @NgModule({
+//     declarations: [Label],
+//     exports: [Label]
+// })
 
-export class IgLabelModule {
-}
+// export class IgLabelModule {
+// }
