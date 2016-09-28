@@ -10,6 +10,7 @@ import { Component } from "@angular/core";
             <a routerLink="/tabbar">TabBar</a>
             <a routerLink="/list">List</a>
             <a routerLink="/buttons">Buttons</a>
+            <a routerLink="/avatar">Avatar</a>
         </nav>
         <router-outlet></router-outlet>
     `

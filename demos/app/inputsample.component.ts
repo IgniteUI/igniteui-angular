@@ -4,16 +4,18 @@ import { CheckboxModule } from "../../src/checkbox/checkbox";
 import { SwitchModule } from "../../src/switch/switch";
 import { IgRadioModule } from "../../src/radio/radio";
 
+
 @Component({
     selector: "input-sample",
     template:`
         <h3>Text Inputs</h3>
 
         <input type="text" igInput [(ngModel)]="user.name" />
+        <label igLabel>some text</label>
+
         <p><code>Selected value = {{ user.name || ''}}</code></p>
 
-        <input id="pass" type="password" igInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
-        <label for="pass">Password</label>
+        <input type="password" igInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
         <p><code>Selected value = {{ user.password || ''}}</code></p>
 
         <textarea placeholder="{{placeholder}}" igInput [(ngModel)]="user.comment"></textarea>
@@ -33,6 +35,9 @@ import { IgRadioModule } from "../../src/radio/radio";
 
         <h4>Data model</h4>
         <pre>{{ user | json }}</pre>
+
+        <h3>Labels</h3>
+        <label igLabel>Label me!</label>
     `
 })
 export class InputSampleComponent {
