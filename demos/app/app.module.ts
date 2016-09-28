@@ -8,6 +8,7 @@ import {
     IgRadioModule , TabBarModule , ListModule, ButtonModule, Label
 
 } from "../../src/main";
+import { FilterPipe } from "../../src/list/filter-pipe";
 
 import { FilterPipe } from "../../src/list/filter-pipe";
 import { AppComponent } from "./app.component";
@@ -35,6 +36,7 @@ import { routing } from "./app.routing";
     ],
     declarations: [
         IgInput,
+        FilterPipe,
         AppComponent,
         InputSampleComponent,
         CarouselSampleComponent,
