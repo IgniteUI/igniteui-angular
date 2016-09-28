@@ -1,7 +1,6 @@
 import { Component, Input, AfterContentInit, ContentChildren, QueryList, Renderer, NgModule, OnInit, ViewChild, Inject, forwardRef, ElementRef } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { HammerGesturesManager } from '../core/touch';
-import { FilterModule } from './filter';
 
 // ====================== LIST ================================
 // The `<ig-list>` directive is a list container for items and headers 

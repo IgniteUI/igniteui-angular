@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef } from "@angular/core";
 import { ListModule } from "../../src/list/list";
-import { FilterModule, FilterOptions } from '../../src/list/filter';
+import { FilterModule, FilterOptions } from '../../src/directives/filter';
 
 @Component({
     selector: "list-sample",
@@ -51,7 +51,7 @@ export class ListSampleComponent {
     }
     
     private filteringHandler = function(args) {
-        args.cancel = true;
+        //args.cancel = true;
         console.log(args);
     }
 

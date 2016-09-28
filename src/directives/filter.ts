@@ -1,6 +1,6 @@
 import { Directive, Pipe, PipeTransform, NgModule, Output, EventEmitter, ElementRef, Renderer, Input, Host, Optional, ContentChildren, OnChanges, SimpleChanges } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { List, ListItem } from "./list"
+import { List, ListItem } from "../list/list";
 
 @Directive({
     selector: '[filter]',
@@ -12,10 +12,10 @@ export class FilterDirective implements OnChanges {
     @Input("filter") inputValue: string;
     @ContentChildren(ListItem) items: any;
 
-    list: List;
+    parent: any;
 
     constructor( @Optional() @Host() parent: List) {
-        this.list = parent;
+        this.parent = parent;
 
         this.inputValue = this.inputValue || "";
     }
@@ -27,22 +27,31 @@ export class FilterDirective implements OnChanges {
     }
 
     filter() {
+        var args = { cancel: false };
+        this.filtering.emit(args);
+
+        if (args.cancel) {
+            return;
+        }
+
         var pipe = new FilterPipe();
         var fo = new FilterOptions();
 
-        fo.get_value = (item: Object) => {
+        fo.get_value = (item: any) => {
             return item.element.nativeElement.textContent.trim();
         };
 
-        fo.metConditionFn = (item: Object) => {
+        fo.metConditionFn = (item: any) => {
             item.element.nativeElement.hidden = false;
         };
 
-        fo.overdueConditionFn = (item: Object) => {
+        fo.overdueConditionFn = (item: any) => {
             item.element.nativeElement.hidden = true;
         };
 
         var filtered = pipe.transform(this.items.toArray(), fo, this.inputValue);
+
+        this.filtering.emit({ result: filtered });
     }
 }
 
@@ -69,7 +78,7 @@ export class FilterPipe implements PipeTransform {
             inputValue = "";
         }
 
-        result = items.filter((item: Object) => {
+        result = items.filter((item: any) => {
             let match = options.matchFn(options.formatter(options.get_value(item, options.key)), inputValue);
 
 			if(match) {
@@ -97,7 +106,7 @@ export class FilterOptions {
     // item - single item of the list to be filtered
     // key - property name of item, which value should be tested
     // Default behavior - returns "key"- named property value of item 
-    public get_value(item: Object, key: string): string {
+    public get_value(item: any, key: string): string {
         var result: string = "";
 
         if (key) {
@@ -129,11 +138,11 @@ export class FilterOptions {
 
 	// Function - executed after matching test for every matched item
 	// Default behavior - none
-    metConditionFn(item: Object) { };
+    metConditionFn(item: any) { };
 
 	// Function - executed for every NOT matched item after matching test
 	// Default behavior - none
-    overdueConditionFn(item: Object) { };
+    overdueConditionFn(item: any) { };
 }
 
 @NgModule({
