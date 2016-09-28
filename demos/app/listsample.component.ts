@@ -24,7 +24,7 @@ import { FilterModule, FilterOptions } from '../../src/list/filter';
             <ig-list-item>Golden Delicious</ig-list-item>
             <ig-list-item>Cosmic Crisp</ig-list-item>
             <ig-list-item>Pinova</ig-list-item>
-        </ig-list>     
+        </ig-list>
         <h3>Non-header List</h3>
         <ig-list>
         <ig-list-item *ngFor="let navItem of navItems; let index = index">
@@ -33,7 +33,7 @@ import { FilterModule, FilterOptions } from '../../src/list/filter';
         </ig-list>
     `
 })
-export class ListSampleComponent {    
+export class ListSampleComponent {
     search1: string;
     search2: string;
 
