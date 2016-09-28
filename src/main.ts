@@ -13,3 +13,4 @@ export * from './checkbox/checkbox';
 export * from './radio/radio';
 export * from './label/label';
 export * from './switch/switch';
+export * from './avatar/avatar';

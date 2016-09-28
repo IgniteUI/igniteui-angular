@@ -11,7 +11,6 @@ import {
 })
 export class Label {
     constructor(el: ElementRef, renderer: Renderer){
-        console.log(el.nativeElement);
         renderer.setElementClass(el.nativeElement, 'ig-form-group__label', true);
     }
 }

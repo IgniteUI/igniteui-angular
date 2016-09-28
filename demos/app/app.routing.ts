@@ -7,6 +7,7 @@ import { CarouselSampleComponent } from "./carouselsample.component";
 import { TabBarSampleComponent } from "./tabbarsample.component";
 import { ListSampleComponent } from "./listsample.component";
 import { ButtonsSampleComponent } from "./buttonssample.component";
+import { AvatarSampleComponent } from "./avatarsample.component";
 
 const appRoutes: Routes = [
     {
@@ -31,9 +32,13 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/inputs',
+        redirectTo: '/avatar',
         pathMatch: 'full'
     },
+    {
+        path: "avatar",
+        component: AvatarSampleComponent
+    }
 ];
 
 

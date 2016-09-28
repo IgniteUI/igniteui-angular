@@ -5,7 +5,8 @@ import { FormsModule } from "@angular/forms";
 import {
 
     IgInput, CarouselModule , CheckboxModule, SwitchModule,
-    IgRadioModule , TabBarModule , ListModule, ButtonModule, Label
+    IgRadioModule , TabBarModule , ListModule, ButtonModule, Label,
+    AvatarModule
 
 } from "../../src/main";
 import { FilterPipe } from "../../src/list/filter-pipe";
@@ -15,6 +16,7 @@ import { CarouselSampleComponent } from "./carouselsample.component";
 import { TabBarSampleComponent } from "./tabbarsample.component";
 import { ListSampleComponent } from "./listsample.component";
 import { ButtonsSampleComponent } from "./buttonssample.component";
+import { AvatarSampleComponent } from "./avatarsample.component";
 
 import { routing } from "./app.routing";
 
@@ -30,6 +32,7 @@ import { routing } from "./app.routing";
         TabBarModule,
         ListModule,
         ButtonModule,
+        AvatarModule,
         routing
     ],
     declarations: [
@@ -42,6 +45,7 @@ import { routing } from "./app.routing";
         ListSampleComponent,
         Label,
         ButtonsSampleComponent,
+        AvatarSampleComponent,
         FilterPipe
     ],
     bootstrap: [

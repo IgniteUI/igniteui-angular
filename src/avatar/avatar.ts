@@ -7,7 +7,7 @@ import {
     Input,
     Output,
 } from '@angular/core';
-
+import { CommonModule } from "@angular/common";
 
 @Component({
     selector: 'ig-avatar',
@@ -17,14 +17,15 @@ import {
 
 export class Avatar {
     @Input() hasLabel: boolean = false;
-    public text: string = '';
+    @Input() text: string;
+    @Input() source: string;
+    public imageSource: string = '';
 
     constructor(public element_ref: ElementRef, private renderer: Renderer) {
         this._addEventListeners(renderer);
 
         if(element_ref.nativeElement.text !== null){
-            this.hasLabel = true;
-            this.text = element_ref.nativeElement.text;
+
         }
     }
 
@@ -35,6 +36,7 @@ export class Avatar {
 
 @NgModule({
     declarations: [Avatar],
+    imports: [CommonModule],
     exports: [Avatar]
 })
 export class AvatarModule {
