@@ -9,8 +9,6 @@ import {
 
 } from "../../src/main";
 import { FilterPipe } from "../../src/list/filter-pipe";
-
-import { FilterPipe } from "../../src/list/filter-pipe";
 import { AppComponent } from "./app.component";
 import { InputSampleComponent } from "./inputsample.component";
 import { CarouselSampleComponent } from "./carouselsample.component";
