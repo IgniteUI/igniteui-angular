@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
+import { FilterModule } from '../../src/list/filter';
 
 import {
 
@@ -9,7 +10,7 @@ import {
     AvatarModule
 
 } from "../../src/main";
-import { FilterPipe } from "../../src/list/filter-pipe";
+
 import { AppComponent } from "./app.component";
 import { InputSampleComponent } from "./inputsample.component";
 import { CarouselSampleComponent } from "./carouselsample.component";
@@ -33,11 +34,11 @@ import { routing } from "./app.routing";
         ListModule,
         ButtonModule,
         AvatarModule,
+        FilterModule,
         routing
     ],
     declarations: [
         IgInput,
-        FilterPipe,
         AppComponent,
         InputSampleComponent,
         CarouselSampleComponent,
@@ -45,8 +46,7 @@ import { routing } from "./app.routing";
         ListSampleComponent,
         Label,
         ButtonsSampleComponent,
-        AvatarSampleComponent,
-        FilterPipe
+        AvatarSampleComponent
     ],
     bootstrap: [
         AppComponent
