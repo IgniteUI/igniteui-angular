@@ -15,12 +15,3 @@ export class Label {
         renderer.setElementClass(el.nativeElement, 'ig-form-group__label', true);
     }
 }
-
-// /** Export as module */
-// @NgModule({
-//     declarations: [Label],
-//     exports: [Label]
-// })
-
-// export class IgLabelModule {
-// }

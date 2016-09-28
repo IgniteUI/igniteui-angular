@@ -9,6 +9,7 @@ import {
 
 } from "../../src/main";
 
+import { FilterPipe } from "../../src/list/filter-pipe";
 import { AppComponent } from "./app.component";
 import { InputSampleComponent } from "./inputsample.component";
 import { CarouselSampleComponent } from "./carouselsample.component";
@@ -40,7 +41,8 @@ import { routing } from "./app.routing";
         TabBarSampleComponent,
         ListSampleComponent,
         Label,
-        ButtonsSampleComponent
+        ButtonsSampleComponent,
+        FilterPipe
     ],
     bootstrap: [
         AppComponent

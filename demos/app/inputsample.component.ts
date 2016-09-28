@@ -11,6 +11,7 @@ import { IgRadioModule } from "../../src/radio/radio";
         <h3>Text Inputs</h3>
 
         <input type="text" igInput [(ngModel)]="user.name" />
+        <label igLabel>some text</label>
 
         <p><code>Selected value = {{ user.name || ''}}</code></p>
 
