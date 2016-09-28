@@ -6,14 +6,15 @@ import { FilterModule, FilterOptions } from '../../src/list/filter';
     selector: "list-sample",
     template: `
         <input [(ngModel)]="search1" />
-        <ig-list (filtered)="filteredHandler($event)" (filtering)="filteringHandler($event)">
+        <ig-list>
             <ig-list-header>Data Source Filtered List</ig-list-header>
             <ig-list-item *ngFor="let item of navItems | filter: fo: search1" [options]="options">
                 {{item.text}}
             </ig-list-item>
         </ig-list>
+        <br>
         <input [(ngModel)]="search2" />
-        <ig-list filter>
+        <ig-list [filter]="search2" (filtered)="filteredHandler($event)" (filtering)="filteringHandler($event)">
             <ig-list-header>Declarative Fitered List</ig-list-header>
             <ig-list-header>Mildly Sweet</ig-list-header>
             <ig-list-item>Red Delicious</ig-list-item>

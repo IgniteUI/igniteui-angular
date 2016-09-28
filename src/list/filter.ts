@@ -1,12 +1,22 @@
-import { Directive, Pipe, PipeTransform, NgModule, Output, EventEmitter } from "@angular/core";
+import { Directive, Pipe, PipeTransform, NgModule, Output, EventEmitter, ElementRef, Renderer, Input, AfterViewInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
 @Directive({
-    selector: 'filter',
+    selector: '[filter]',
 })
-export class FilterDirective {
+export class FilterDirective implements AfterViewInit {
     @Output() filtering = new EventEmitter(false); // synchronous event emitter
     @Output() filtered = new EventEmitter();
+
+    @Input() filter: string;
+
+    constructor(private element: ElementRef, private renderer: Renderer) {
+        
+    }
+
+    ngAfterViewInit() {
+
+    }
 }
 
 @Pipe({
