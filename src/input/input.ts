@@ -8,9 +8,9 @@ import {
 @Directive({
     selector: '[igInput]',
     host: {
-        '[class.ig-form-group--filled]': 'filled',
-        '[class.ig-form-group--focused]': 'focused',
-        '[class.ig-form-group--placeholder]': 'placeholder'
+        '[class.ig-input--filled]': 'filled',
+        '[class.ig-input--focused]': 'focused',
+        '[class.ig-input--placeholder]': 'placeholder'
     }
 })
 export class IgInput {

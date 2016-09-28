@@ -10,10 +10,10 @@ import { IgRadioModule } from "../../src/radio/radio";
         <h3>Text Inputs</h3>
 
         <input type="text" igInput [(ngModel)]="user.name" />
-
         <p><code>Selected value = {{ user.name || ''}}</code></p>
 
-        <input type="password" igInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
+        <input id="pass" type="password" igInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
+        <label for="pass">Password</label>
         <p><code>Selected value = {{ user.password || ''}}</code></p>
 
         <textarea placeholder="{{placeholder}}" igInput [(ngModel)]="user.comment"></textarea>
