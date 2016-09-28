@@ -4,7 +4,6 @@ import {
     HostListener
 } from "@angular/core";
 
-
 @Directive({
     selector: '[igInput]',
     host: {
@@ -33,6 +32,7 @@ export class IgInput {
         let value = this.el.nativeElement.value;
         return value && (value !== '');
     }
+
 
     get placeholder() {
         return this.el.nativeElement.getAttribute('placeholder') && !this.filled;
