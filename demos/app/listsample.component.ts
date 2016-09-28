@@ -49,8 +49,7 @@ export class ListSampleComponent {
         _fo.key = "text";
         return _fo;
     }
-
-
+    
     private filteringHandler = function(args) {
         args.cancel = true;
         console.log(args);
