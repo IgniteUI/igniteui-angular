@@ -1,13 +1,12 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
-import { FilterPipe } from '../../src/list/filter-pipe';
+import { FilterModule } from '../../src/list/filter';
 
 import {
     IgInput, CarouselModule , CheckboxModule, SwitchModule,
     IgRadioModule , TabBarModule , ListModule, ButtonModule
 } from "../../src/main";
-import { FilterPipe } from "../../src/list/filter-pipe";
 
 import { AppComponent } from "./app.component";
 import { InputSampleComponent } from "./inputsample.component";
@@ -30,18 +29,17 @@ import { routing } from "./app.routing";
         TabBarModule,
         ListModule,
         ButtonModule,
+        FilterModule,
         routing
     ],
     declarations: [
         IgInput,
-        FilterPipe,
         AppComponent,
         InputSampleComponent,
         CarouselSampleComponent,
         TabBarSampleComponent,
         ListSampleComponent,
-        ButtonsSampleComponent,
-        FilterPipe
+        ButtonsSampleComponent
     ],
     bootstrap: [
         AppComponent
