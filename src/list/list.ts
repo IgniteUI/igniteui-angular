@@ -11,13 +11,19 @@ import { HammerGesturesManager } from '../core/touch';
     templateUrl: 'list-content.html'
 })
 
-export class List { 
+export class List implements AfterContentInit{ 
     private _innerStyle: string = "ig-list";
 
     items: ListItem[] = [];
     headers: ListHeader[] = [];    
 
-    constructor() { }
+    constructor(private element: ElementRef) {
+        
+    }
+
+    ngAfterContentInit() {
+        this.element.nativeElement.ngComponent = this;
+    }
 
     addItem(item: ListItem) {
         this.items.push(item);

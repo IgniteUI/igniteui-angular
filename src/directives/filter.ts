@@ -1,23 +1,32 @@
-import { Directive, Pipe, PipeTransform, NgModule, Output, EventEmitter, ElementRef, Renderer, Input, Host, Optional, ContentChildren, OnChanges, SimpleChanges } from "@angular/core";
+import { Directive, Pipe, PipeTransform, NgModule, Output, EventEmitter, ElementRef, Renderer, Input, OnChanges, SimpleChanges, AfterViewInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { List, ListItem } from "../list/list";
 
 @Directive({
     selector: '[filter]',
 })
-export class FilterDirective implements OnChanges {
+export class FilterDirective implements OnChanges, AfterViewInit {
     @Output() filtering = new EventEmitter(false); // synchronous event emitter
     @Output() filtered = new EventEmitter();
 
     @Input("filter") inputValue: string;
-    @ContentChildren(ListItem) items: any;
+    @Input() filterOptions: FilterOptions;
+    items: Array<any>;
 
-    parent: any;
-
-    constructor( @Optional() @Host() parent: List) {
-        this.parent = parent;
-
+    constructor(private element: ElementRef, renderer: Renderer) {
         this.inputValue = this.inputValue || "";
+    }
+
+    ngAfterViewInit() {
+        if (this.items) {
+            return;
+        }
+
+        // get items from options or ngComponent which is a workaround to bind component to element
+        if (this.filterOptions && this.filterOptions.items) {
+            this.items = this.filterOptions.items;
+        } else if (this.element.nativeElement.ngComponent && this.element.nativeElement.ngComponent.items) {
+            this.items = this.element.nativeElement.ngComponent.items;
+        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -35,24 +44,10 @@ export class FilterDirective implements OnChanges {
         }
 
         var pipe = new FilterPipe();
-        var fo = new FilterOptions();
 
-        fo.get_value = (item: any) => {
-            return item.element.nativeElement.textContent.trim();
-        };
-
-        fo.metConditionFn = (item: any) => {
-            item.element.nativeElement.hidden = false;
-        };
-
-        fo.overdueConditionFn = (item: any) => {
-            item.element.nativeElement.hidden = true;
-        };
-
-        var filtered = pipe.transform(this.items.toArray(), fo, this.inputValue);
-
+        var filtered = pipe.transform(this.items, this.filterOptions, this.inputValue);
         this.filtering.emit({ result: filtered });
-    }
+    }   
 }
 
 @Pipe({
@@ -62,7 +57,7 @@ export class FilterDirective implements OnChanges {
 
 export class FilterPipe implements PipeTransform {
     transform(
-                items: Object[],
+                items: Array<any>,
 				// options - initial settings of filter functionality
 				options: FilterOptions,
 				// inputValue - text value from input that condition is based on
@@ -76,6 +71,10 @@ export class FilterPipe implements PipeTransform {
 
         if (!inputValue) {
             inputValue = "";
+        }
+
+        if (options.items) {
+            items = options.items;
         }
 
         result = items.filter((item: any) => {
@@ -102,21 +101,20 @@ export class FilterOptions {
     // Item property, which value should be used for filtering
     public key: string;
 
+    // Represent items of the list. Can be used to override the default items of the pipe.
+    public items: Array<any>;
+
     // Function - get value to be tested from the item
     // item - single item of the list to be filtered
     // key - property name of item, which value should be tested
-    // Default behavior - returns "key"- named property value of item 
+    // Default behavior - returns "key"- named property value of item if key si provided, otherwise textContent of the item's html element
     public get_value(item: any, key: string): string {
         var result: string = "";
 
         if (key) {
             result = item[key];
         } else {
-            var objKeys = Object.keys(item);
-
-            if (objKeys.length) {
-                result = item[objKeys[0]];
-            }
+            return item.element.nativeElement.textContent.trim();
         }
 
         return result;
@@ -137,12 +135,20 @@ export class FilterOptions {
 	};
 
 	// Function - executed after matching test for every matched item
-	// Default behavior - none
-    metConditionFn(item: any) { };
+	// Default behavior - shows the item
+    metConditionFn(item: any) {
+        if (item.element && item.element.nativeElement) {
+            item.element.nativeElement.hidden = false;
+        }        
+    };
 
 	// Function - executed for every NOT matched item after matching test
-	// Default behavior - none
-    overdueConditionFn(item: any) { };
+	// Default behavior - hides the item
+    overdueConditionFn(item: any) {
+        if (item.element && item.element.nativeElement) {
+            item.element.nativeElement.hidden = true;
+        }  
+    };
 }
 
 @NgModule({

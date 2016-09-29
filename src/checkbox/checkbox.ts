@@ -41,7 +41,7 @@ export class IgCheckbox implements ControlValueAccessor {
     protected _value: any;
 
     focused: boolean = false;
-    checked: boolean = false;
+    @Input() checked: boolean = false;
 
     onChange(event) {
         if (this.disabled) {
