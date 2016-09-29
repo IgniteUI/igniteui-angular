@@ -1,6 +1,4 @@
-/// <reference path="../../typings/globals/hammerjs/index.d.ts" />
-
-import {Component, Input, Inject, SimpleChange, ElementRef, EventEmitter, Output, Renderer, OnInit, OnDestroy, OnChanges, Optional} from '@angular/core';
+import {Component, Input, Inject, SimpleChange, ElementRef, EventEmitter, Output, Renderer, OnInit, OnDestroy, OnChanges, Optional , NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 // import {AnimationBuilder} from 'angular2/src/animate/animation_builder'; TODO
 import { BaseComponent } from '../core/base';
 import { HammerGesturesManager } from "../core/touch";
@@ -529,4 +527,13 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             };
         } );
     }
+}
+
+
+@NgModule({
+    declarations: [NavigationDrawer],
+    exports: [NavigationDrawer],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class NavigationDrawerModule {
 }

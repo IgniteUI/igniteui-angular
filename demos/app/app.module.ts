@@ -7,7 +7,7 @@ import {
 
     IgInput, CarouselModule , CheckboxModule, SwitchModule,
     IgRadioModule , TabBarModule , ListModule, ButtonModule, Label,
-    AvatarModule
+    AvatarModule, NavigationDrawerModule
 
 } from "../../src/main";
 
@@ -18,6 +18,7 @@ import { TabBarSampleComponent } from "./tabbarsample.component";
 import { ListSampleComponent } from "./listsample.component";
 import { ButtonsSampleComponent } from "./buttonssample.component";
 import { AvatarSampleComponent } from "./avatarsample.component";
+import { NavDrawerSampleComponent } from "./navdrawersample.component";
 
 import { routing } from "./app.routing";
 
@@ -35,6 +36,7 @@ import { routing } from "./app.routing";
         ButtonModule,
         AvatarModule,
         FilterModule,
+        NavigationDrawerModule,
         routing
     ],
     declarations: [
@@ -46,7 +48,8 @@ import { routing } from "./app.routing";
         ListSampleComponent,
         Label,
         ButtonsSampleComponent,
-        AvatarSampleComponent
+        AvatarSampleComponent,
+        NavDrawerSampleComponent
     ],
     bootstrap: [
         AppComponent
