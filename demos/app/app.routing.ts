@@ -8,7 +8,6 @@ import { TabBarSampleComponent } from "./tabbarsample.component";
 import { ListSampleComponent } from "./listsample.component";
 import { ButtonsSampleComponent } from "./buttonssample.component";
 import { AvatarSampleComponent } from "./avatarsample.component";
-import { NavDrawerSampleComponent } from "./navdrawersample.component";
 
 const appRoutes: Routes = [
     {
@@ -30,10 +29,6 @@ const appRoutes: Routes = [
     {
         path: "list",
         component: ListSampleComponent
-    },
-    {
-        path: "navigation-drawer",
-        component: NavDrawerSampleComponent
     },
     {
         path: '',

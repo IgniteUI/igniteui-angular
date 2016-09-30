@@ -1,4 +1,4 @@
-import { NgModule } from "@angular/core";
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
 import { FilterModule } from '../../src/directives/filter';
@@ -7,7 +7,7 @@ import {
 
     IgInput, CarouselModule , CheckboxModule, SwitchModule,
     IgRadioModule , TabBarModule , ListModule, ButtonModule, Label,
-    AvatarModule, NavigationDrawerModule
+    AvatarModule
 
 } from "../../src/main";
 
@@ -18,7 +18,7 @@ import { TabBarSampleComponent } from "./tabbarsample.component";
 import { ListSampleComponent } from "./listsample.component";
 import { ButtonsSampleComponent } from "./buttonssample.component";
 import { AvatarSampleComponent } from "./avatarsample.component";
-import { NavDrawerSampleComponent } from "./navdrawersample.component";
+import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
 
 import { routing } from "./app.routing";
 
@@ -36,7 +36,7 @@ import { routing } from "./app.routing";
         ButtonModule,
         AvatarModule,
         FilterModule,
-        NavigationDrawerModule,
+        NavDrawerSampleModule,
         routing
     ],
     declarations: [
@@ -48,8 +48,7 @@ import { routing } from "./app.routing";
         ListSampleComponent,
         Label,
         ButtonsSampleComponent,
-        AvatarSampleComponent,
-        NavDrawerSampleComponent
+        AvatarSampleComponent
     ],
     bootstrap: [
         AppComponent
