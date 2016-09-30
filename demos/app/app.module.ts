@@ -1,13 +1,12 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
-import { FilterModule } from '../../src/directives/filter';
 
 import {
 
     IgInput, CarouselModule , CheckboxModule, SwitchModule,
     IgRadioModule , TabBarModule , ListModule, ButtonModule, Label,
-    AvatarModule
+    AvatarModule, FilterModule
 
 } from "../../src/main";
 
