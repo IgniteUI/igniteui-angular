@@ -180,21 +180,25 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     ngAfterViewInit() {
         // wait for template and ng-content to be ready
         this._hasMimiTempl = this.getChild(".ig-drawer-mini-content") !== null;
-        this.updateEdgeZone();
-        if (this.pinThreshold && this.getWindowWidth() > this.pinThreshold) {
-            this.pin = true;
-        }
+        setTimeout(() => {
+            this.updateEdgeZone();
+            if (this.pinThreshold && this.getWindowWidth() > this.pinThreshold) {
+                this.pin = true;
+            }
+        }, 0);
+
         // need to set height without absolute positioning
         this.ensureDrawerHeight();
         this.ensureEvents();
-
         // TODO: apply platform-safe Ruler from http://plnkr.co/edit/81nWDyreYMzkunihfRgX?p=preview
         // (https://github.com/angular/angular/issues/6515), blocked by https://github.com/angular/angular/issues/6904
     }
 
     ngOnDestroy() {
         this._touchManager.destroy();
-        this._state.remove(this.id)
+        if (this._state) {
+            this._state.remove(this.id)
+        }
     }
 
     ngOnChanges(changes: {[propName: string]: SimpleChange}) {

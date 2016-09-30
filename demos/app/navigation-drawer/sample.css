@@ -1,9 +1,5 @@
 
 /* sample styling */
-.sample-content {
-    padding-left:60px;
-}
-
 #log {
     height:400px;
     background-color:#e3e3e3;
@@ -61,3 +57,9 @@ pin-sample {
     pin-sample .sample-content.pin.full {
         padding-left:0px;
     }
+
+/* Mini sample */
+mini-sample {
+    display: block;
+    padding-left:60px;
+}
