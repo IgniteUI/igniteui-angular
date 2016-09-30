@@ -47,7 +47,7 @@ export class List implements AfterContentInit{
 export class ListHeader implements OnInit {
     private _innerStyle: string = "ig-list__header";
 
-    constructor( @Inject(forwardRef(() => List)) private list: List) { }
+    constructor( @Inject(forwardRef(() => List)) private list: List, public element: ElementRef) { }
 
     public ngOnInit() {
         this.list.addHeader(this);

@@ -1,10 +1,10 @@
-import { Directive, Pipe, PipeTransform, NgModule, Output, EventEmitter, ElementRef, Renderer, Input, OnChanges, SimpleChanges, AfterViewInit } from "@angular/core";
+import { Directive, Pipe, PipeTransform, NgModule, Output, EventEmitter, ElementRef, Renderer, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
 @Directive({
     selector: '[filter]',
 })
-export class FilterDirective implements OnChanges, AfterViewInit {
+export class FilterDirective implements OnChanges {
     @Output() filtering = new EventEmitter(false); // synchronous event emitter
     @Output() filtered = new EventEmitter();
 
@@ -16,27 +16,26 @@ export class FilterDirective implements OnChanges, AfterViewInit {
         this.inputValue = this.inputValue || "";
     }
 
-    ngAfterViewInit() {
-        if (this.items) {
-            return;
-        }
+    ngOnChanges(changes: SimpleChanges) {
+        // Detect only changes of input value
+        if (changes["inputValue"] || changes["filterOptions"] && changes["filterOptions"].currentValue.items) {
+            this.filter();
+        }    
+    }
 
+    filter() {
         // get items from options or ngComponent which is a workaround to bind component to element
         if (this.filterOptions && this.filterOptions.items) {
             this.items = this.filterOptions.items;
         } else if (this.element.nativeElement.ngComponent && this.element.nativeElement.ngComponent.items) {
             this.items = this.element.nativeElement.ngComponent.items;
         }
-    }
 
-    ngOnChanges(changes: SimpleChanges) {
-        if (this.items) {
-            this.filter();
-        }    
-    }
+        if (!this.items) {
+            return;
+        }
 
-    filter() {
-        var args = { cancel: false };
+        var args = { cancel: false, items: this.items };
         this.filtering.emit(args);
 
         if (args.cancel) {
@@ -46,7 +45,7 @@ export class FilterDirective implements OnChanges, AfterViewInit {
         var pipe = new FilterPipe();
 
         var filtered = pipe.transform(this.items, this.filterOptions, this.inputValue);
-        this.filtering.emit({ result: filtered });
+        this.filtered.emit({ filteredItems: filtered });
     }   
 }
 
