@@ -6,9 +6,6 @@ import { NavigationDrawerModule, NavigationDrawer, NavigationService } from "../
     selector: 'nav-sample',
     styleUrls: ["sample.css"],
     template: `
-        <a routerLink="./"> Default sample </a>
-        <a routerLink="./pin"> Pin sample </a>
-        <a routerLink="./mini"> Mini sample</a>
         <router-outlet></router-outlet>
     `,
     providers: [NavigationService],
@@ -17,20 +14,18 @@ import { NavigationDrawerModule, NavigationDrawer, NavigationService } from "../
 export class NavDrawerSampleComponent {}
 
 @Component({
-    moduleId: module.id, // commonJS standard
+    moduleId: module.id,
     selector: "main-sample",
-    templateUrl: "main.html",
-    providers: [NavigationService]
+    templateUrl: "main.html"
 })
 export class MainDrawerSampleComponent {
-        navItems: Array<Object> = [{
-        text: "Nav1", link: "#"
+    navItems: Array<Object> = [{
+        text: "Default sample", link: "/navigation-drawer"
     },{
-        text: "Nav2", link: "#"
+        // router seems pretty confused how relative works.. "./pin" would generate "/navigation-drawer/mini/pin" under the "/navigation-drawer/mini" sample... 
+        text: "Pin sample", link: "/navigation-drawer/pin"
     },{
-        text: "Nav3", link: "#"
-    },{
-        text: "Nav4", link: "#"
+        text: "Mini sample", link: "/navigation-drawer/mini"
     }];
 
     pin: boolean = false;
@@ -72,10 +67,9 @@ export class MainDrawerSampleComponent {
  * Pin demo
  */
 @Component({
-    moduleId: module.id, // commonJS standard
+    moduleId: module.id,
     selector: "pin-sample",
-    templateUrl: "main.html",
-    providers: [NavigationService]
+    templateUrl: "main.html"
 })
 export class PinNavDrawerSampleComponent extends MainDrawerSampleComponent {
     constructor() {
@@ -93,18 +87,11 @@ export class PinNavDrawerSampleComponent extends MainDrawerSampleComponent {
  * Mini demo
  */
 @Component({
-    moduleId: module.id, // commonJS standard
+    moduleId: module.id,
     selector: "mini-sample",
-    templateUrl: "main-mini.html",
-    providers: [NavigationService]
+    templateUrl: "main.html"
 })
 export class MiniNavDrawerSampleComponent extends MainDrawerSampleComponent {
-    /**
-     * Main app component for the mini Navigation Drawer sample.
-     * Can't reuse template with other samples because ngIf on the mini template selector won't work
-     * Setup for future: Have mini content and show mini width input only on this sample.
-     * See https://github.com/angular/angular/issues/6303 
-     */
     constructor() {
         super();
         

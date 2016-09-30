@@ -12,10 +12,14 @@
     [miniWidth]="drawerMiniWidth">
     
         <!-- expand + mini templates -->
-        <ig-drawer-content>
+        <div class="ig-drawer-content">
             <h1> Drawer Title <button ig-nav-close="test"> X </button></h1>
-            <div *ngFor="let navItem of navItems"><img src="http://www.infragistics.com/assets/images/favicon.ico" width='16' /> <a href="{{navItem.link}}"> {{navItem.text}} </a></div>
-        </ig-drawer-content>
+            <div *ngFor="let navItem of navItems"><img src="http://www.infragistics.com/assets/images/favicon.ico" width='16' /> <a routerLink="{{navItem.link}}"> {{navItem.text}} </a></div>
+        </div>
+        <div *ngIf="miniTemplate" class="ig-drawer-mini-content">
+            <span class="hamburger" ig-nav-toggle="test" > &#9776; </span>
+            <div *ngFor="let navItem of navItems"><img src="http://www.infragistics.com/assets/images/favicon.ico" width='16' /></div>
+        </div>
     </ig-nav-drawer>
     
 <div class="sample-content" [class.full]="pin && !open" [class.pin]="pin">     

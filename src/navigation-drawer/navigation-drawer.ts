@@ -1,4 +1,4 @@
-import {Component, Input, Inject, SimpleChange, ElementRef, EventEmitter, Output, Renderer, OnInit, OnDestroy, OnChanges, Optional , NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {Component, Input, Inject, SimpleChange, ElementRef, EventEmitter, Output, Renderer, OnInit, OnDestroy, OnChanges, Optional, AfterViewInit, NgModule} from '@angular/core';
 // import {AnimationBuilder} from 'angular2/src/animate/animation_builder'; TODO
 import { BaseComponent } from '../core/base';
 import { HammerGesturesManager } from "../core/touch";
@@ -10,6 +10,16 @@ declare var module: any;
 
 /**
  * Navigation Drawer component supports collapsible side navigation container.
+ * Usage:
+ * ```
+ * <ig-nav-drawer id="ID" (event output bindings) [input bindings]>
+ *  <div class="ig-drawer-content">
+ *   <!-- expanded template -->
+ *  </div>
+ * </ig-nav-drawer>
+ * ```
+ * Can also include an optional `<div class="ig-drawer-mini-content">`.
+ * ID required to register with NavigationService allow directives to target the control. 
  */
 @Component({
     selector: 'ig-nav-drawer',
@@ -20,7 +30,7 @@ declare var module: any;
     templateUrl: 'navigation-drawer.html',
     providers: [HammerGesturesManager]
 })
-export class NavigationDrawer extends BaseComponent implements ToggleView, OnInit, OnDestroy, OnChanges  {
+export class NavigationDrawer extends BaseComponent implements ToggleView, OnInit, AfterViewInit, OnDestroy, OnChanges  {
     private _hasMimiTempl: boolean = false;
     private _swipeAttached: boolean = false;
     private _widthCache: {width: number, miniWidth: number} = {width: null, miniWidth: null};
@@ -165,7 +175,11 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
         if (this._state) {
             this._state.add(this.id,this);
         }
-        this._hasMimiTempl = this.getChild("ig-drawer-mini-content") !== null;
+    }
+
+    ngAfterViewInit() {
+        // wait for template and ng-content to be ready
+        this._hasMimiTempl = this.getChild(".ig-drawer-mini-content") !== null;
         this.updateEdgeZone();
         if (this.pinThreshold && this.getWindowWidth() > this.pinThreshold) {
             this.pin = true;
@@ -532,8 +546,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
 
 @NgModule({
     declarations: [NavigationDrawer],
-    exports: [NavigationDrawer],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    exports: [NavigationDrawer]
 })
 export class NavigationDrawerModule {
 }
