@@ -32,17 +32,16 @@ export class Avatar {
     @Input() bgColor: string;
     @Input() elementWidth: number = 60;
     @Input() textColor: string = 'white';
-    public imageSource: string = '';
 
-    get srcImage() {
+    public get srcImage() {
         return this.wrapper.nativeElement.src;
     }
 
-    set srcImage(value: string) {
+    public set srcImage(value: string) {
         this.wrapper.nativeElement.src = value;
     }
 
-    get isRounded() : boolean{
+    private get isRounded() : boolean{
         return this.roundShape.toUpperCase() === "TRUE" ? true : false;
     }
 
@@ -56,12 +55,12 @@ export class Avatar {
         }
 
         if(this.initials){
-            var src = this.generateAvatar(this.elementWidth);
+            var src = this.generateCanvas(this.elementWidth);
             this.wrapper.nativeElement.src = src;
         }
     }
 
-    generateAvatar(size){
+    private generateCanvas(size){
         var canvas = document.createElement('canvas');
         canvas.width = size;
         canvas.height = size;

@@ -30,11 +30,11 @@ import { IgRadioModule } from "../../src/radio/radio";
 
         <h3>Checkbox</h3>
         <ig-checkbox [(ngModel)]="user.registered">Registered</ig-checkbox>
-        <p><code>Selected value = {{ user.registered || false}}</code></p>
+        <p><code>Selected value = {{ user.registered }}</code></p>
 
         <h3>Switch</h3>
         <ig-switch [(ngModel)]="user.subscribed">Subscribed</ig-switch>
-        <p><code>Selected value = {{ user.subscribed || false}}</code></p>
+        <p><code>Selected value = {{ user.subscribed }}</code></p>
 
         <h3>Radio</h3>
         <ig-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" name="group" [(ngModel)]="user.favouriteVarName">{{item}}</ig-radio>
