@@ -63,7 +63,6 @@ export class ListSampleComponent {
              item.element.nativeElement.hidden = false;
          };
 
-
          fo.overdueConditionFn = function (item: any) {
              item.element.nativeElement.hidden = true;
          };    
