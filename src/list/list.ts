@@ -1,7 +1,6 @@
 import { Component, Input, AfterContentInit, ContentChildren, QueryList, Renderer, NgModule, OnInit, ViewChild, Inject, forwardRef, ElementRef } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { HammerGesturesManager } from '../core/touch';
-import { FilterModule } from './filter';
 
 // ====================== LIST ================================
 // The `<ig-list>` directive is a list container for items and headers 
@@ -12,13 +11,19 @@ import { FilterModule } from './filter';
     templateUrl: 'list-content.html'
 })
 
-export class List { 
+export class List implements AfterContentInit{ 
     private _innerStyle: string = "ig-list";
 
     items: ListItem[] = [];
     headers: ListHeader[] = [];    
 
-    constructor() { }
+    constructor(private element: ElementRef) {
+        
+    }
+
+    ngAfterContentInit() {
+        this.element.nativeElement.ngComponent = this;
+    }
 
     addItem(item: ListItem) {
         this.items.push(item);
@@ -42,7 +47,7 @@ export class List {
 export class ListHeader implements OnInit {
     private _innerStyle: string = "ig-list__header";
 
-    constructor( @Inject(forwardRef(() => List)) private list: List) { }
+    constructor( @Inject(forwardRef(() => List)) private list: List, public element: ElementRef) { }
 
     public ngOnInit() {
         this.list.addHeader(this);
