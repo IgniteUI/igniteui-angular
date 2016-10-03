@@ -1,4 +1,4 @@
-import {Component, Input, Inject, SimpleChange, ElementRef, EventEmitter, Output, Renderer, OnInit, OnDestroy, OnChanges, Optional, AfterViewInit, NgModule} from '@angular/core';
+import {Component, Input, Inject, SimpleChange, ElementRef, EventEmitter, Output, Renderer, OnInit, OnDestroy, OnChanges, Optional, AfterContentInit, NgModule} from '@angular/core';
 // import {AnimationBuilder} from 'angular2/src/animate/animation_builder'; TODO
 import { BaseComponent } from '../core/base';
 import { HammerGesturesManager } from "../core/touch";
@@ -38,6 +38,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
         "drawer" : "ig-nav-drawer",
         "overlay" : "ig-nav-drawer-overlay",
         "mini" : "mini",
+        "miniProjection" : ".ig-drawer-mini-content",
         "styleDummy" : "style-dummy"
     };
     private _resolveOpen: (value?: any | PromiseLike<any>) => void;
@@ -177,15 +178,13 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
         }
     }
 
-    ngAfterViewInit() {
+    ngAfterContentInit() {
         // wait for template and ng-content to be ready
-        this._hasMimiTempl = this.getChild(".ig-drawer-mini-content") !== null;
-        setTimeout(() => {
-            this.updateEdgeZone();
-            if (this.pinThreshold && this.getWindowWidth() > this.pinThreshold) {
-                this.pin = true;
-            }
-        }, 0);
+        this._hasMimiTempl = this.getChild(this.css["miniProjection"]) !== null;
+        this.updateEdgeZone();
+        if (this.pinThreshold && this.getWindowWidth() > this.pinThreshold) {
+            this.pin = true;
+        }
 
         // need to set height without absolute positioning
         this.ensureDrawerHeight();
