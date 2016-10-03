@@ -1,6 +1,8 @@
 @include b(ig-avatar){
-    
-    @include m(rounded) {
+    @extend %avatar-display;
 
+    @include m(rounded) {
+        @extend %avatar-display;
+        @extend %avatar--rounded;
     }
 }
