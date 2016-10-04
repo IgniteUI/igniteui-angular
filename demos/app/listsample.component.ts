@@ -15,7 +15,7 @@ import { FilterModule, FilterOptions } from '../../src/directives/filter';
         <h4>Declarative Fitered List</h4>
         <ig-checkbox [checked]="true" #checkbox>Perform filtering</ig-checkbox>   
         <input [(ngModel)]="search2" />
-        <ig-list [filter]="search2" (filtered)="filteredHandler($event)" (filtering)="filteringHandler($event)" [filterOptions]="fo2">
+        <ig-list [filter]="search2" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)" [filterOptions]="fo2">
             <ig-list-header>Mildly Sweet</ig-list-header>
             <ig-list-item>Red Delicious</ig-list-item>
             <ig-list-item>Ambrosia</ig-list-item>
