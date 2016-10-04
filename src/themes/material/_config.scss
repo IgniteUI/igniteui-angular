@@ -104,7 +104,7 @@ $colors: (
 /* 2. Badges
    ========================================================================== */
 
-$badge-bg-color: $secondary-color !default;
+$badge-background-color: $secondary-color !default;
 
 /* 3. Buttons
    ========================================================================== */
@@ -119,6 +119,7 @@ $button-font-weight: normal !default;
 $button-width: em(88px) !default;
 $button-height: em(36px) !default;
 $button-padding: em(6px) em(16px) !default;
+$button-transition: all 0.2s ease !default;
 
 // Disabled Styles
 $button-disabled-background: none !default;
@@ -129,6 +130,16 @@ $button-raised-background: $primary-color !default;
 $button-raised-color: #fff !default;
 $button-raised-shadow: 0 2px 4px 0 rgba(72, 72, 72, 0.5) !default;
 $button-raised-focus-shadow: 0px 3px 2px 0px rgba(0,0,0,0.03), 0px 7px 8px 0px rgba(88,88,88,0.50) !default;
+
+
+// Gradient Buttons
+$button-gradient-color-1: $vivid-cerise;
+$button-gradient-color-2: $secondary-color;
+$button-gradient-background: linear-gradient(to bottom right, $button-gradient-color-1, $button-gradient-color-2);
+$button-focus-gradient: linear-gradient(to bottom right, darken($button-gradient-color-1, 5%), darken($button-gradient-color-2, 5%));
+$button-gradient-color: #fff !default;
+$button-gradient-shadow: 0 4px 10px -2px darken(transparentize($button-gradient-color-2, .20), 2%) !default;
+$button-gradient-focus-shadow: 0 6px 12px -1px darken(transparentize($button-gradient-color-2, .25), 5%) !default;
 
 // Flat Buttons
 $button-flat-color: $primary-color !default;
@@ -141,7 +152,7 @@ $button-floating-width: em(56px);
 $button-floating-height: $button-floating-width;
 $button-floating-shadow: 0px 2px 4px 0px rgba(72, 72, 72, 0.50);
 $button-floating-hover-shadow: 0px 4px 8px 0px rgba(72, 72, 72, 0.50);
-$button-floating-radius: 50% 50%;
+$button-floating-radius: 50%;
 $button-floating-background: $primary-color;
 
 /* 9. Fonts
@@ -224,6 +235,11 @@ $large-and-up: "only screen and (min-width : #{$medium-screen-up})" !default;
 $small-and-down: "only screen and (max-width : #{$small-screen})" !default;
 $medium-and-down: "only screen and (max-width : #{$medium-screen})" !default;
 $medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})" !default;
+
+
+/* 16. Bottom navigation bar / Tabs
+   ========================================================================== */
+$tab-bar-background: #fff;
 
 /* 19. Typography
    ========================================================================== */

@@ -1,0 +1,7 @@
+@include b(ig-badge) {
+    @extend %ig-badge-display;
+
+    @include m(hidden) {
+        @extend %ig-badge--hidden;
+    }
+}
