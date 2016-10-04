@@ -11,7 +11,7 @@ const EVENT_SUFFIX: string = "precise";
  */
 @Injectable()
 export class HammerGesturesManager {
-    private _hammerManagers: Array<{ element: HTMLElement, manager: HammerManager; }> = [];
+    private _hammerManagers: Array<{ element: EventTarget, manager: HammerManager; }> = [];
 
     /**
      * Event option defaults for each recognizer, see http://hammerjs.github.io/api/ for API listing.
@@ -116,7 +116,7 @@ export class HammerGesturesManager {
      * manager.setManagerOption(myElem, "pan", { pointers: 1 });
      * ```
      */
-    setManagerOption(element: HTMLElement, event: string, options: any) {
+    setManagerOption(element: EventTarget, event: string, options: any) {
         var manager = this.getManagerForElement(element);
         manager.get(event).set(options);
     }
@@ -126,7 +126,7 @@ export class HammerGesturesManager {
      *
      * @param element The DOM element used to create the manager on.
      */
-    addManagerForElement(element: HTMLElement, manager: HammerManager) {
+    addManagerForElement(element: EventTarget, manager: HammerManager) {
         this._hammerManagers.push({element: element, manager: manager});
     }
 
@@ -135,7 +135,7 @@ export class HammerGesturesManager {
      *
      * @param element The DOM element used to create the manager on.
      */
-    getManagerForElement(element: HTMLElement) : HammerManager {
+    getManagerForElement(element: EventTarget) : HammerManager {
         var result =  this._hammerManagers.filter(function (value, index, array) {
             return value.element === element;
         });

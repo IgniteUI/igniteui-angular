@@ -476,7 +476,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             this.resetPan();
         }
         if (this.isOpen) {
-            return;
+            return Promise.resolve();
         }        
         if (fireEvents) {
             this.opening.emit("opening");
@@ -526,7 +526,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             this.resetPan();
         }
         if (!this.isOpen) {
-            return;
+            return Promise.resolve();
         }
         if (fireEvents) {
             this.closing.emit("closing");

@@ -34,12 +34,6 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
         });
 
         it('should initialize without DI service', async(() => {
-            var template = '<ig-nav-drawer></ig-nav-drawer>';
-            TestBed.overrideComponent(TestComponent, {
-            set: {
-                template: template
-            }});
-            // compile after overrides https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 let fixture = TestBed.createComponent(TestComponent);
                 fixture.detectChanges();
@@ -49,12 +43,6 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
          }));
          
          it('should initialize with DI service', async(() => {
-            var template = '<ig-nav-drawer></ig-nav-drawer>';
-            TestBed.overrideComponent(TestComponentDI, {
-            set: {
-                template: template
-            }});
-            // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 let fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
@@ -66,12 +54,6 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
         }));
          
         it('should properly initialize all elements and properties', async(() => {
-            var template = '<ig-nav-drawer></ig-nav-drawer>';
-            TestBed.overrideComponent(TestComponentDI, {
-            set: {
-                template: template
-            }});
-            // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 let fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
@@ -114,12 +96,6 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
          }));
                   
         it('should open and close with API calls', async(() => {
-            var template = '<ig-nav-drawer></ig-nav-drawer>';
-            TestBed.overrideComponent(TestComponentDI, {
-            set: {
-                template: template
-            }});
-            // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 let fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
@@ -148,18 +124,13 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
         }));
          
         it('async API calls should resolve Promise and emit events', async(() => {
-              var template = '<ig-nav-drawer></ig-nav-drawer>',
-                   fixture: ComponentFixture<TestComponentDI>,
+              var fixture: ComponentFixture<TestComponentDI>,
                    resolver, drawer,
                    result = new Promise<any>( resolve => {
                         resolver = (value?: any) => {
                             resolve(value);
                         };
                     } );
-                TestBed.overrideComponent(TestComponentDI, {
-                set: {
-                    template: template
-                }});
                 // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
                 TestBed.compileComponents().then(() => {
                     fixture = TestBed.createComponent(TestComponentDI);
@@ -246,19 +217,13 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
         }));
         
         it('should toggle on edge swipe gesture', done => {
-            var template = '<ig-nav-drawer></ig-nav-drawer>',
-                fixture: ComponentFixture<TestComponentDI>,
+            var fixture: ComponentFixture<TestComponentDI>,
                 resolver, drawer,
                 result = new Promise<any>( resolve => {
                     resolver = (value?: any) => {
                         resolve(value);
                     };
                 } );
-            TestBed.overrideComponent(TestComponentDI, {
-            set: {
-                template: template
-            }});
-            // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
@@ -291,13 +256,8 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
          it('should toggle on edge pan gesture', done => {
             let navDrawer;
-            var template = '<ig-nav-drawer></ig-nav-drawer>',
-                fixture: ComponentFixture<TestComponentDI>;
-            TestBed.overrideComponent(TestComponentDI, {
-            set: {
-                template: template
-            }});
-            // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
+            var fixture: ComponentFixture<TestComponentDI>;
+
             // Using bare minimum of timeouts, jasmine.DEFAULT_TIMEOUT_INTERVAL can be modified only in beforeEach
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentDI);
@@ -416,7 +376,7 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
 @Component({
     selector: 'test-cmp',
-    template: '<div></div>',
+    template: '<ig-nav-drawer></ig-nav-drawer>',
 })
 class TestComponent {
      @ViewChild(Infragistics.NavigationDrawer) public viewChild: Infragistics.NavigationDrawer;
@@ -424,7 +384,7 @@ class TestComponent {
 
 @Component({
     selector: 'test-cmp', 
-    template: '<div></div>',
+    template: '<ig-nav-drawer></ig-nav-drawer>',
     providers: [Infragistics.NavigationService]
 })
 class TestComponentDI {

@@ -27,7 +27,7 @@
     <span class="hamburger" ig-nav-toggle="test" *ngIf="showToggle"> &#9776; </span>
     
     <div>
-            <button ig-nav-toggle="test"> Toggle </button>
+        <button ig-nav-toggle="test"> Toggle </button>
         <button ig-nav-close="test"> Close </button>
     </div>
     
@@ -35,7 +35,7 @@
     <button (click)="testToggle()"> Toggle method on ViewChild</button>
     
     <div template="ngIf showGestureToggle">
-        <button (click)="gestures = !gestures;"> Toggle enableGestures</button>
+        <label><input type="checkbox" [(ngModel)]="gestures" /> Gestures enabled </label>
     </div>
     
     <div template="ngIf showPositions">

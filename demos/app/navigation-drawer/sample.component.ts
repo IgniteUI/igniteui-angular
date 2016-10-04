@@ -80,6 +80,7 @@ export class PinNavDrawerSampleComponent extends MainDrawerSampleComponent {
         //sample config
         this.showPinToggle = true;
         this.showPositions = false;
+        this.showGestureToggle = false;
     }
 }
 
