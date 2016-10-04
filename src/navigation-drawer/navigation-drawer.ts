@@ -30,7 +30,7 @@ declare var module: any;
     templateUrl: 'navigation-drawer.html',
     providers: [HammerGesturesManager]
 })
-export class NavigationDrawer extends BaseComponent implements ToggleView, OnInit, AfterViewInit, OnDestroy, OnChanges  {
+export class NavigationDrawer extends BaseComponent implements ToggleView, OnInit, AfterContentInit, OnDestroy, OnChanges  {
     private _hasMimiTempl: boolean = false;
     private _swipeAttached: boolean = false;
     private _widthCache: {width: number, miniWidth: number} = {width: null, miniWidth: null};
@@ -341,7 +341,6 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             deltaX = evt.deltaX;
             startPosition = evt.center.x - evt.distance;
         }
-
         //only accept closing swipe (ignoring minEdgeZone) when the drawer is expanded:
         if ((this.isOpen && deltaX < 0) ||
             // positive deltaX from the edge:
@@ -358,7 +357,6 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
 
         // cache width during animation, flag to allow further handling
         if(this.isOpen || (startPosition < this.maxEdgeZone)) {
-
             this._panning = true;
             this._panStartWidth =  this.getExpectedWidth(!this.isOpen);
             this._panLimit = this.getExpectedWidth(this.isOpen);
@@ -444,7 +442,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
         // Angular polyfills patches window.requestAnimationFrame, but switch to DomAdapter API (TODO)
         window.requestAnimationFrame(() => {
             if (this.hasAnimateWidth) {
-                this.setDrawerWidth(x ? Math.abs(x) + "px" : "");
+                this.renderer.setElementStyle(this.drawer, "width", x ? Math.abs(x) + "px" : "");
             } else {
                 this.renderer.setElementStyle(this.drawer, "transform", x ? "translate3d(" + x + "px,0,0)" : "");
                 this.renderer.setElementStyle(this.drawer, "-webkit-transform",  x ? "translate3d(" +x + "px,0,0)" : "");
@@ -474,10 +472,12 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
      * @return Promise that is resolved once the operation completes.
      */
     public open(fireEvents?: boolean): Promise<any> {
+        if (this._panning) {
+            this.resetPan();
+        }
         if (this.isOpen) {
             return;
-        }
-        this.resetPan();
+        }        
         if (fireEvents) {
             this.opening.emit("opening");
         }
@@ -522,11 +522,12 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
      * @return Promise that is resolved once the operation completes.
      */
     public close(fireEvents?: boolean): Promise<any> {
+        if (this._panning) {
+            this.resetPan();
+        }
         if (!this.isOpen) {
             return;
         }
-        this.resetPan();
-
         if (fireEvents) {
             this.closing.emit("closing");
         }

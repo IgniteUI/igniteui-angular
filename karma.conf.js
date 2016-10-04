@@ -36,6 +36,8 @@ module.exports = function(config) {
       'node_modules/core-js/client/shim.js',
       'node_modules/reflect-metadata/Reflect.js',
 
+      'node_modules/hammer-simulator/index.js',
+
       // zone.js
       'node_modules/zone.js/dist/zone.js',
       'node_modules/zone.js/dist/long-stack-trace-zone.js',
@@ -67,6 +69,7 @@ module.exports = function(config) {
       {pattern: appBase + '**/*.html', included: false, watched: true},
       {pattern: appBase + '**/*.css', included: false, watched: true},
       {pattern: testBase + "**/*.html", included: false, watched: true},
+      "dist/zero-blocks.css",
 
       // Paths for debugging with source maps in dev tools
       {pattern: appSrcBase + '**/*.ts', included: false, watched: false},
