@@ -20,18 +20,17 @@ import { CommonModule } from "@angular/common";
     // },
     styles: [`.rounded {
                 border-radius: 50%;
-            }
-            `]
+            }`]
 })
 export class Avatar {
     @ViewChild('image') wrapper: ElementRef;
     @Input() initials: string;
     @Input() source: string;
     @Input() roundShape: string = "false";
-    @Input() cornerRadius: string;
     @Input() bgColor: string;
-    @Input() elementWidth: number = 60;
+    @Input() width: number = 60;
     @Input() textColor: string = 'white';
+    protected fontname = "Titillium Web";
 
     public get srcImage() {
         return this.wrapper.nativeElement.src;
@@ -50,12 +49,8 @@ export class Avatar {
     }
 
     ngAfterViewInit() {
-        if(this.cornerRadius){
-            this.wrapper.nativeElement.style.borderRadius = this.cornerRadius;
-        }
-
         if(this.initials){
-            var src = this.generateCanvas(this.elementWidth);
+            var src = this.generateCanvas(this.width);
             this.wrapper.nativeElement.src = src;
         }
     }
@@ -73,7 +68,7 @@ export class Avatar {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.textAlign = "center";
         ctx.fillStyle = this.textColor;
-        ctx.font = fontSize + "px monospace";
+        ctx.font = fontSize + `px ${this.fontname}`;
         ctx.shadowColor = "black";
                         ctx.shadowOffsetX = 0;
                         ctx.shadowOffsetY = 0;
