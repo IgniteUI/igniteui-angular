@@ -9,7 +9,9 @@
         (change)="onChange($event)"
         (focus)="onFocus($event)"
         (blur)="onBlur($event)">
-    <label class="ig-control__label" [attr.for]="id">
+    <span class="ig-control__text">
         <ng-content></ng-content>
+    </span>
+    <label class="ig-control__label" [attr.for]="id">
     </label>
 </div>
