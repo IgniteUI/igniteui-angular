@@ -5,7 +5,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { Component, ViewChildren } from "@angular/core";
 import { By } from "@angular/platform-browser";
-import { IgRadio } from "./radio";
+import { IgRadio } from './radio';
 
 describe('IgRadio', function() {
 
@@ -39,13 +39,21 @@ describe('IgRadio', function() {
         fixture.detectChanges();
 
         let radios = fixture.componentInstance.radios.toArray();
-        fixture.detectChanges();
-
 
         expect(radios.length).toEqual(3);
-        expect(radios[0].checked).toBe(true);
-        fixture.detectChanges();
-        expect(fixture.componentInstance.user.favouriteVarName).toEqual("Foo");
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(radios[0].checked).toBe(true);
+
+            radios[1].nativeRadio.nativeElement.dispatchEvent(new Event('change'));
+            fixture.detectChanges();
+            fixture.whenStable().then(() => {
+                expect(radios[1].checked).toBe(true);
+                expect(radios[0].checked).toBe(false);
+                expect(fixture.componentInstance.selected).toEqual('Bar');
+            });
+        });
     });
 });
 
@@ -55,13 +63,11 @@ class InitRadio {}
 
 @Component({
     template: `
-    <ig-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" name="group" [(ngModel)]="user.favouriteVarName">{{item}}</ig-radio>
+    <ig-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" name="group" [(ngModel)]="selected">{{item}}</ig-radio>
     `
 })
 class RadioWithModel {
     @ViewChildren(IgRadio) radios;
 
-    user = {
-        favouriteVarName: 'Foo'
-    };
+    selected = "Foo";
 }
