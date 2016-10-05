@@ -10,7 +10,7 @@ export class FilterDirective implements OnChanges {
 
     @Input("filter") inputValue: string;
     @Input() filterOptions: FilterOptions;
-    items: Array<any>;
+    //items: Array<any>;
 
     constructor(private element: ElementRef, renderer: Renderer) {
         this.inputValue = this.inputValue || "";
@@ -25,17 +25,19 @@ export class FilterDirective implements OnChanges {
 
     filter() {
         // get items from options or ngComponent which is a workaround to bind component to element
-        if (this.filterOptions && this.filterOptions.items) {
-            this.items = this.filterOptions.items;
-        } else if (this.element.nativeElement.ngComponent && this.element.nativeElement.ngComponent.items) {
-            this.items = this.element.nativeElement.ngComponent.items;
-        }
+        //if (this.filterOptions && this.filterOptions.items) {
+        //    this.items = this.filterOptions.items;
+        //} else if (this.element.nativeElement.ngComponent && this.element.nativeElement.ngComponent.items) {
+        //    this.items = this.element.nativeElement.ngComponent.items;
+        //}
 
-        if (!this.items) {
+
+
+        if (!this.filterOptions.items) {
             return;
         }
 
-        var args = { cancel: false, items: this.items };
+        var args = { cancel: false, items: this.filterOptions.items };
         this.filtering.emit(args);
 
         if (args.cancel) {
@@ -44,7 +46,7 @@ export class FilterDirective implements OnChanges {
 
         var pipe = new FilterPipe();
 
-        var filtered = pipe.transform(this.items, this.filterOptions, this.inputValue);
+        var filtered = pipe.transform(this.filterOptions.items, this.filterOptions, this.inputValue);
         this.filtered.emit({ filteredItems: filtered });
     }   
 }
@@ -99,7 +101,7 @@ export class FilterOptions {
     // Item property, which value should be used for filtering
     public key: string;
 
-    // Represent items of the list. Can be used to override the default items of the pipe.
+    // Represent items of the list. It should be used to handle decalaratevely defined widgets
     public items: Array<any>;
 
     // Function - get value to be tested from the item
