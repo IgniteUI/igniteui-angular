@@ -33,6 +33,7 @@ export class IgCheckbox implements ControlValueAccessor {
     @Input() name: string;
     @Input() disabled: boolean = false;
     @Input() tabindex: number = null;
+    @Input() checked: boolean = false;
 
     @Output() change = new EventEmitter();
 
@@ -40,8 +41,7 @@ export class IgCheckbox implements ControlValueAccessor {
 
     protected _value: any;
 
-    focused: boolean = false;
-    checked: boolean = false;
+    focused: boolean = false;   
 
     onChange(event) {
         if (this.disabled) {

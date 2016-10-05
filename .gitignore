@@ -46,6 +46,7 @@ src/**/*.js.map
 dist/dev
 dist/**/*.js
 dist/**/*.d.ts
+dist/*.css
 !dist/**/*.css
 !dist/bundles/*
 dist/bundles/zero-blocks.dev.js

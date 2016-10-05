@@ -6,16 +6,16 @@ import { FilterModule, FilterOptions } from '../../src/directives/filter';
     selector: "list-sample",
     template: `
         <input [(ngModel)]="search1" />
+        <h4>Data Source Filtered List</h4>
         <ig-list>
-            <ig-list-header>Data Source Filtered List</ig-list-header>
-            <ig-list-item *ngFor="let item of navItems | filter: fo: search1" [options]="options">
+            <ig-list-item *ngFor="let item of navItems | filter: fo1: search1" [options]="options">
                 {{item.text}}
             </ig-list-item>
-        </ig-list>
-        <br>
+        </ig-list>        
+        <h4>Declarative Fitered List</h4>
+        <ig-checkbox [checked]="true" #checkbox>Perform filtering</ig-checkbox>   
         <input [(ngModel)]="search2" />
-        <ig-list [filter]="search2" (filtered)="filteredHandler($event)" (filtering)="filteringHandler($event)">
-            <ig-list-header>Declarative Fitered List</ig-list-header>
+        <ig-list [filter]="search2" (filtered)="filteredHandler($event)" (filtering)="filteringHandler($event)" [filterOptions]="fo2">
             <ig-list-header>Mildly Sweet</ig-list-header>
             <ig-list-item>Red Delicious</ig-list-item>
             <ig-list-item>Ambrosia</ig-list-item>
@@ -34,6 +34,8 @@ import { FilterModule, FilterOptions } from '../../src/directives/filter';
     `
 })
 export class ListSampleComponent {
+    @ViewChild("checkbox") checkbox: any;
+
     search1: string;
     search2: string;
 
@@ -44,14 +46,33 @@ export class ListSampleComponent {
             { key:"4", text: "Nav4", link: "#" }
         ];
 
-    get fo() {
+    get fo1() {
         var _fo = new FilterOptions();
         _fo.key = "text";
         return _fo;
     }
-    
+
+    get fo2() {
+        var fo = new FilterOptions();
+
+        fo.get_value = function (item: any) {
+            return item.element.nativeElement.textContent.trim();
+        };
+
+         fo.metConditionFn = function (item: any) {
+             item.element.nativeElement.hidden = false;
+         };
+
+
+         fo.overdueConditionFn = function (item: any) {
+             item.element.nativeElement.hidden = true;
+         };    
+
+        return fo;
+    }
+
     private filteringHandler = function(args) {
-        //args.cancel = true;
+        args.cancel = !this.checkbox.checked;
         console.log(args);
     }
 

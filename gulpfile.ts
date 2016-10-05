@@ -96,8 +96,8 @@ gulp.task("bundle.src", ["build.src"], () => {
 
 gulp.task("build.css", ["build.css.dev"], () => {
     return gulp.src(["src/themes/*.scss"])
-        .pipe(sourcemaps.init())
         .pipe(plumber())
+        .pipe(sourcemaps.init())
         .pipe(sass({
             includePaths: ["src/**/*.scss"],
         }))
@@ -107,14 +107,15 @@ gulp.task("build.css", ["build.css.dev"], () => {
         }))
         .pipe(cleanCSS())
         .pipe(sourcemaps.write())
+        .pipe(plumber.stop())
         .pipe(gulp.dest("./dist"));
 });
 
 
 gulp.task("build.css.dev", () => {
-    return gulp.src(["src/themes/*.scss"])
-        .pipe(sourcemaps.init())
+    gulp.src(["src/themes/*.scss"])
         .pipe(plumber())
+        .pipe(sourcemaps.init())
         .pipe(sass({
             includePaths: ["src/**/*.scss"],
         }))
@@ -123,6 +124,7 @@ gulp.task("build.css.dev", () => {
             cascade: false
         }))
         .pipe(sourcemaps.write("./"))
+        .pipe(plumber.stop())
         .pipe(gulp.dest("./dist/dev"))
 });
 
