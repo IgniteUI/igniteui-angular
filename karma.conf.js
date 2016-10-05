@@ -86,7 +86,7 @@ module.exports = function(config) {
 
     exclude: [],
     preprocessors: {
-      'src/**/!(*spec).js' : ['coverage']
+      'src/**/!(*.spec).js' : ['coverage']
     },
     reporters: ['mocha', 'coverage'],
 

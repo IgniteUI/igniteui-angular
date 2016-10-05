@@ -7,17 +7,10 @@ interface IListChild
     index: number;
 }
 
-enum ListChidrenRoles
-{
-    Header,
-    Item
-}
-
 // ====================== LIST ================================
 // The `<ig-list>` directive is a list container for items and headers 
 @Component({
     selector: 'ig-list',
-    //host: { 'role': 'list' },
     moduleId: module.id, // commonJS standard
     templateUrl: 'list-content.html'
 })
@@ -45,42 +38,12 @@ export class List implements AfterContentInit{
         this.element.nativeElement.ngComponent = this;
     }
 
-    addItem(item: ListItem) {
-        this.items.push(item);
-    }
-
-    //removeItem(item: ListItem) {
-        //var index = this.items.indexOf(item);
-        //this.items.splice(item.index, 1);
-        //this._total -= 1;
-
-        //if (!this.total) {
-        //    this._currentSlide = null;
-        //    return;
-        //}
-
-        //for (let i = 0; i < this.total; i++) {
-        //    this.slides[i].index = i;
-        //}
-
-        //this.slideRemoved.emit(this);
-    //}
-
     removeChild(index: number) {
         this.children.splice(index, 1);
-
-        //for (let i = index; i < this.children.length; i++) {
-        //    this.children[i].index = i;
-        //}
-    }
-
-    addHeader(header: ListHeader) {
-        this.headers.push(header);
     }
 
     addChild(child: IListChild) {
         this.children.push(child);
-        //child.index = this.children.length - 1;
     }
 }
 
@@ -89,7 +52,6 @@ export class List implements AfterContentInit{
 // a `<ig-list>` container.
 @Component({
     selector: 'ig-list-header',
-    //host: { 'role': 'listheader' },
     moduleId: module.id, // commonJS standard
     templateUrl: 'list-content.html'
 })
@@ -103,7 +65,6 @@ export class ListHeader implements OnInit, IListChild {
     constructor( @Inject(forwardRef(() => List)) private list: List, public element: ElementRef) { }
 
     public ngOnInit() {
-        //this.list.addHeader(this);
         this.list.addChild(this);
     }
 }
@@ -113,7 +74,6 @@ export class ListHeader implements OnInit, IListChild {
 // a `<ig-list>` container.
 @Component({
     selector: 'ig-list-item',
-    //host: { 'role': 'listitem' },
     moduleId: module.id, // commonJS standard
     templateUrl: 'list-content.html'
 })
