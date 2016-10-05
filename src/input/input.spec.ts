@@ -37,21 +37,21 @@ describe('IgInput', function() {
         expect(inputEl.getAttribute('id')).toBe('username');
         expect(inputEl.getAttribute('placeholder')).toBe(fixture.componentInstance.placeholder);
 
-        expect(inputEl.classList.contains('ig-form-group--placeholder')).toBe(true);
-        expect(inputEl.classList.contains('ig-form-group--focused')).toBe(false);
+        expect(inputEl.classList.contains('ig-form-group__input--placeholder')).toBe(true);
+        expect(inputEl.classList.contains('ig-form-group__input--focused')).toBe(false);
 
         inputEl.dispatchEvent(new Event('focus'));
         inputEl.value = 'test';
         fixture.detectChanges();
 
-        expect(inputEl.classList.contains('ig-form-group--placeholder')).toBe(false);
-        expect(inputEl.classList.contains('ig-form-group--filled')).toBe(true);
-        expect(inputEl.classList.contains('ig-form-group--focused')).toBe(true);
+        expect(inputEl.classList.contains('ig-form-group__input--placeholder')).toBe(false);
+        expect(inputEl.classList.contains('ig-form-group__input--filled')).toBe(true);
+        expect(inputEl.classList.contains('ig-form-group__input--focused')).toBe(true);
 
         inputEl.dispatchEvent(new Event('blur'));
         fixture.detectChanges();
 
-        expect(inputEl.classList.contains('ig-form-group--focused')).toBe(false);
+        expect(inputEl.classList.contains('ig-form-group__input--focused')).toBe(false);
 
     });
 

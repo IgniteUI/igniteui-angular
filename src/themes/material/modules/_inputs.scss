@@ -1,18 +1,47 @@
 @include b(ig-form-group) {
+
 	@extend %ig-input-display;
 
-	@include e(label) {
+	label {
 		@extend %ig-form-label;
 	}
 
 	@include e(input) {
 		@extend %ig-form-input;
+
+		@include m(filled) {
+			@extend %ig-form-input;
+
+			~ label {
+				@extend %ig-form-label--filled;
+				@extend %ig-form-label--float;
+			}
+		}
+
+		@include m(focused) {
+			@extend %ig-form-input;
+
+			~ label {
+				@extend %ig-form-label--focused;
+			}
+		}
+
+		@include m(placeholder) {
+			@extend %ig-form-input;
+
+			~ label {
+				@extend %ig-form-label--float;	
+			}
+		}
+
 		&:focus {
 			@extend %ig-form-input--focused;
 		}
+		
 		&:disabled {
 			@extend %ig-form-input--disabled;
 		}
+		
 		&.ng-valid[required],
 		&.ng-valid.required  {
 			@extend %ig-form-input--success;
@@ -20,6 +49,7 @@
 				@extend %ig-form-label--success;
 			}
 		}
+		
 		&.ng-invalid.ng-touched,
 		&.ng-invalid:not(form).ng-touched {
 			@extend %ig-form-input--error;
@@ -27,6 +57,7 @@
 				@extend %ig-form-label--error;
 			}
 		}
+		
 		&.ng-warning {
 			@extend %ig-form-input--warn;
 			~ label {
@@ -38,34 +69,5 @@
 	@include e(textarea) {
 		@extend .ig-form-group__input;
 		@extend %ig-textarea;
-	}
-
-	@include m(placeholder) {
-		@include e(label) {
-			@extend %ig-form-label--float;
-		}
-	}
-
-	@include m(filled) {
-		@extend %ig-input-display;
-
-		@include e(label) {
-			@extend %ig-form-label;
-			@extend %ig-form-label--filled;
-			@extend %ig-form-label--float;
-		}
-		
-		@include e(input) {
-			@extend %ig-form-input;
-		}
-	}
-
-	@include m(focused) {
-		@extend %ig-input-display;
-
-		@include e(label) {
-			@extend %ig-form-label;
-			@extend %ig-form-label--focused;
-		}
 	}
 }

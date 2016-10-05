@@ -29,7 +29,6 @@
  *  23. Lists
  */
 
-
 /* 1. Colors
    ========================================================================== */
 
@@ -48,6 +47,9 @@ $accent-color: $yellow-orange !default;
 $success-color: #4CAF50 !default;
 $error-color: #F44336 !default;
 $warn-color: orange;
+
+// off-black
+$off-black: #484848;
 
 // Color Palette
 $colors: (
@@ -102,7 +104,7 @@ $colors: (
 /* 2. Badges
    ========================================================================== */
 
-$badge-bg-color: $secondary-color !default;
+$badge-background-color: $secondary-color !default;
 
 /* 3. Buttons
    ========================================================================== */
@@ -111,12 +113,13 @@ $badge-bg-color: $secondary-color !default;
 $button-border: none !default;
 $button-radius: 2px !default;
 $button-focus-background: darken($primary-color, 5%) !default;
-$button-font-size: 1rem !default;
+$button-font-size: em(16px) !default;
 $button-color: #484848 !default;
 $button-font-weight: normal !default;
-$button-width: 88px !default;
-$button-height: 36px !default;
-$button-padding: .375rem 1rem !default;
+$button-width: em(88px) !default;
+$button-height: em(36px) !default;
+$button-padding: em(6px) em(16px) !default;
+$button-transition: all 0.2s ease !default;
 
 // Disabled Styles
 $button-disabled-background: none !default;
@@ -128,6 +131,16 @@ $button-raised-color: #fff !default;
 $button-raised-shadow: 0 2px 4px 0 rgba(72, 72, 72, 0.5) !default;
 $button-raised-focus-shadow: 0px 3px 2px 0px rgba(0,0,0,0.03), 0px 7px 8px 0px rgba(88,88,88,0.50) !default;
 
+
+// Gradient Buttons
+$button-gradient-color-1: $vivid-cerise;
+$button-gradient-color-2: $secondary-color;
+$button-gradient-background: linear-gradient(to bottom right, $button-gradient-color-1, $button-gradient-color-2);
+$button-focus-gradient: linear-gradient(to bottom right, darken($button-gradient-color-1, 5%), darken($button-gradient-color-2, 5%));
+$button-gradient-color: #fff !default;
+$button-gradient-shadow: 0 4px 10px -2px darken(transparentize($button-gradient-color-2, .20), 2%) !default;
+$button-gradient-focus-shadow: 0 6px 12px -1px darken(transparentize($button-gradient-color-2, .25), 5%) !default;
+
 // Flat Buttons
 $button-flat-color: $primary-color !default;
 $button-flat-color-disabled: #AEAEAE !default;
@@ -135,11 +148,11 @@ $button-flat-hover-background: #F0F0F0 !default;
 $button-flat-focus-background: #D1D1D1 !default;
 
 // Floating Buttons
-$button-floating-width: 56px;
+$button-floating-width: em(56px);
 $button-floating-height: $button-floating-width;
 $button-floating-shadow: 0px 2px 4px 0px rgba(72, 72, 72, 0.50);
 $button-floating-hover-shadow: 0px 4px 8px 0px rgba(72, 72, 72, 0.50);
-$button-floating-radius: 50% 50%;
+$button-floating-radius: 50%;
 $button-floating-background: $primary-color;
 
 /* 9. Fonts
@@ -149,11 +162,11 @@ $titillium-font-path: '../dist/fonts/titillium/' !default;
 /* 10. Forms
    ========================================================================== */
 // Text Inputs + Textarea
-$input-min-height: 4.375rem !default;
-$input-font-size: 1rem !default;
+$input-min-height: em(70px) !default;
+$input-font-size: em(16px) !default;
 $input-color: #484848 !default;
 $input-caret-color: $primary-color;
-$input-line-height: 1.5em !default;
+$input-line-height: em(24px) !default;
 $input-border-color: rgba(117, 117, 117, .5) !default;
 $input-border: 1px solid $input-border-color !default;
 $input-border-success: 2px solid $success-color;
@@ -173,8 +186,8 @@ $input-disabled-solid-color: $input-disabled-color !default;
 $label-color: #757575 !default;
 $label-focus-color: $primary-color !default;
 $label-active-color: lighten($label-color, 20%) !default;
-$label-font-size: 1em !default;
-$label-focus-font-size: .75rem !default;
+$label-font-size: em(16px) !default;
+$label-focus-font-size: em(12px) !default;
 
 // Radio Buttons
 $radio-fill-color: $primary-color !default;
@@ -195,7 +208,7 @@ $switch-label-width: 20px !default;
 $switch-label-height: $switch-label-width !default;
 $switch-shadow: 0 2px 4px 0 rgba(72, 72, 72, 0.50);
 $switch-disabled-shadow: 0 1px 2px 0 rgba(72, 72, 72, 0.50) !default;
-$switch-margin: 20px 0 !default;
+$switch-margin: 0 16px !default;
 
 // Checkboxes
 $checkbox-width: 20px !default;
@@ -223,55 +236,57 @@ $small-and-down: "only screen and (max-width : #{$small-screen})" !default;
 $medium-and-down: "only screen and (max-width : #{$medium-screen})" !default;
 $medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})" !default;
 
+
+/* 16. Bottom navigation bar / Tabs
+   ========================================================================== */
+$tab-bar-background: #fff;
+
 /* 19. Typography
    ========================================================================== */
 
-// off-black
-$off-black: #484848;
-
 // paragraph
-$paragraph-line-height-desktop: 1.375rem !default;
-$paragraph-line-height-phone: 1.25rem !default;
+$paragraph-line-height-desktop: em(22px) !default;
+$paragraph-line-height-phone: em(20px) !default;
 
 // H1
-$h1-font-size-desktop: 3rem !default;
-$h1-line-height-desktop: 3.375rem !default;
-$h1-font-size-tablet: 2.5rem !default;
-$h1-line-height-tablet: 2.8125rem !default;
-$h1-font-size-phone: 2rem !default;
-$h1-line-height-phone: 2.5rem !default;
+$h1-font-size-desktop: em(48px) !default;
+$h1-line-height-desktop: em(54px) !default;
+$h1-font-size-tablet: em(40px) !default;
+$h1-line-height-tablet: em(45px) !default;
+$h1-font-size-phone: em(32px) !default;
+$h1-line-height-phone: em(40px) !default;
 
 // H2
-$h2-font-size-desktop: 2.25rem !default;
-$h2-line-height-desktop: 2.8125rem !default;
-$h2-font-size-tablet: 2rem !default;
-$h2-line-height-tablet: 2.5rem !default;
-$h2-font-size-phone: 1.625rem !default;
-$h2-line-height-phone: 1.875rem !default;
+$h2-font-size-desktop: em(36px) !default;
+$h2-line-height-desktop: em(45px) !default;
+$h2-font-size-tablet: em(32px) !default;
+$h2-line-height-tablet: em(40px) !default;
+$h2-font-size-phone: em(26px) !default;
+$h2-line-height-phone: em(30px) !default;
 
 // H3
-$h3-font-size-desktop: 1.75rem !default;
-$h3-line-height-desktop: 2.1875rem !default;
-$h3-font-size-tablet: 1.5rem !default;
-$h3-line-height-tablet: 1.875rem !default;
-$h3-font-size-phone: 1.375rem !default;
-$h3-line-height-phone: 1.5625rem !default;
+$h3-font-size-desktop: em(28px) !default;
+$h3-line-height-desktop: em(35px) !default;
+$h3-font-size-tablet: em(24px) !default;
+$h3-line-height-tablet: em(30px) !default;
+$h3-font-size-phone: em(22px) !default;
+$h3-line-height-phone: em(25px) !default;
 
 // H4
-$h4-font-size-desktop: 1.125rem !default;
-$h4-line-height-desktop: 1.375rem !default;
-$h4-font-size-tablet: 1.125rem !default;
-$h4-line-height-tablet: 1.375rem !default;
-$h4-font-size-phone: 1.125rem !default;
-$h4-line-height-phone: 1.25rem !default;
+$h4-font-size-desktop: em(18px) !default;
+$h4-line-height-desktop: em(22px) !default;
+$h4-font-size-tablet: em(18px) !default;
+$h4-line-height-tablet: em(22px) !default;
+$h4-font-size-phone: em(22px) !default;
+$h4-line-height-phone: em(20px) !default;
 
 // Blockquote
-$blockquote-font-size-desktop: 1.5rem !default;
-$blockquote-line-height-desktop: 2.1875rem !default;
-$blockquote-font-size-tablet: 1.5rem !default;
-$blockquote-line-height-tablet: 2.1875rem !default;
-$blockquote-font-size-phone: 1.25rem !default;
-$blockquote-line-height-phone: 1.5625rem !default;
+$blockquote-font-size-desktop: em(24px) !default;
+$blockquote-line-height-desktop: em(35px) !default;
+$blockquote-font-size-tablet: em(24px) !default;
+$blockquote-line-height-tablet: em(35px) !default;
+$blockquote-font-size-phone: em(20px) !default;
+$blockquote-line-height-phone: em(25px) !default;
 
 /* 23. List
    ========================================================================== */
@@ -280,21 +295,21 @@ $list-background: darken($white, 5%);
 
 $list-header-color: $primary-color !default;
 $list-header-background: $white;
-$list-header-font-size: .8125rem !default;
+$list-header-font-size: em(13px) !default;
 $list-header-font-weight: normal !default;
-$list-header-height: 48px !default;
-$list-header-line-height: 48px !default;
+$list-header-height: em(48px) !default;
+$list-header-line-height: em(48px) !default;
 
 $list-item-color: #484848 !default;
 $list-item-background: #fff;
-$list-item-height: 48px !default;
-$list-item-line-height: 48px !default;
-$list-item-font-size: 1rem !default;
+$list-item-height: em(48px) !default;
+$list-item-line-height: em(48px) !default;
+$list-item-font-size: em(16px) !default;
 $list-item-padding: 8px 16px;
 $list-item-active-background: darken(#fff, 1%);
 $list-item-active-shadow: 4px 0px 6px -3px rgba(167,167,167,0.3);
 
-$list-item-tl-sl-font-size: .875rem !default;
-$list-item-tl-height: 72px !default;
+$list-item-tl-sl-font-size: em(14px) !default;
+$list-item-tl-height: em(72px) !default;
 $list-item-tl-sl-color: #757575 !default;
 /* Rectangle: */
