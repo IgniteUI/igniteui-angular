@@ -216,7 +216,7 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
             });
         }));
         
-        it('should toggle on edge swipe gesture', done => {
+        xit('should toggle on edge swipe gesture', done => {
             var fixture: ComponentFixture<TestComponentDI>,
                 resolver, drawer,
                 result = new Promise<any>( resolve => {
@@ -254,7 +254,7 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
             });
          });
 
-         it('should toggle on edge pan gesture', done => {
+         xit('should toggle on edge pan gesture', done => {
             let navDrawer;
             var fixture: ComponentFixture<TestComponentDI>;
 
