@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "license": "MIT",
     "scripts": {
-        "postinstall": "npm typings install && npm prune",
+        "postinstall": "npm run typings install && npm prune",
         "start": "npm run build && concurrently \"npm run watch\" \"npm run lite\"",
         "pretest": "npm run build",
         "build": "gulp build",
