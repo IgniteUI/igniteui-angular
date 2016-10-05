@@ -41,7 +41,7 @@ export class IgCheckbox implements ControlValueAccessor {
 
     protected _value: any;
 
-    focused: boolean = false;   
+    focused: boolean = false;
 
     onChange(event) {
         if (this.disabled) {
@@ -67,7 +67,7 @@ export class IgCheckbox implements ControlValueAccessor {
             return;
         }
         this._value = value;
-        this.checked = this._value;
+        this.checked = !!this._value;
     }
 
     private _onTouchedCallback: () => void = noop;

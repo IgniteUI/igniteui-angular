@@ -4,7 +4,7 @@
         [attr.name]="name"
         [attr.value]="value"
         [attr.tabindex]="tabindex"
-        [disabled]="disabled"
+        [attr.disabled]="disabled ? true : null"
         [checked]="checked"
         (change)="onChange($event)"
         (focus)="onFocus($event)"

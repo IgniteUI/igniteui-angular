@@ -1,0 +1,8 @@
+<div #modal
+    tabindex="-1"
+    [ngStyle]="{ display: isOpen ? 'block' : 'none' }"
+    (click)="closeOnClick ? close() : 0">
+    <div class="modal-inner">
+        <ng-content></ng-content>
+    <div>
+</div>

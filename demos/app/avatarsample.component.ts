@@ -60,7 +60,7 @@ import { AvatarModule, Avatar } from "../../src/avatar/avatar";
                         </ig-avatar>
                     </td>
                     <td>
-                        <ig-avatar initials="PP" size="medium" roundShape="true"
+                        <ig-avatar initials="PP" size="medium" roundShape="false"
                             bgColor="paleturquoise">
                         </ig-avatar>
                     </td>

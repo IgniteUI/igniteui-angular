@@ -22,9 +22,6 @@ export enum Size { SMALL, MEDIUM, LARGE };
     //     '[class]': '"ig-avatar--" + _size'
     // },
     styles: [`
-            .rounded {
-                border-radius: 50%;
-            }
             .ig-avatar--small {
                 width: 45px;
                 height: 45px;
@@ -37,7 +34,7 @@ export enum Size { SMALL, MEDIUM, LARGE };
                 width: 75px;
                 height: 75px;
             }
-            .ig-avatar--empty{
+            .ig-avatar--empty {
                 text-align:center;
                 background-color: lightgray;
                 vertical-align: middle;

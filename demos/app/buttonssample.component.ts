@@ -6,15 +6,25 @@ import { ButtonModule } from "../../src/button/button";
     template: `
         <h1>Buttons</h1>
         <div>
-            <ig-button type="raised">Raised</ig-button>  
-        </div>
-        <br>
-        <div>
             <ig-button type="flat">Flat</ig-button>
         </div>
         <br>
         <div>
-            <ig-button type="raised" disabled="true">Disabled</ig-button>
+            <ig-button type="raised">Raised</ig-button>  
+        </div>
+        <br>
+        <div>
+            <ig-button type="gradient">Gradient</ig-button>
+        </div>
+        <br>
+        <div>
+            <ig-button type="raised" disabled>Disabled</ig-button>
+        </div>
+        <br>
+        <div>
+            <ig-button type="fab">
+                <i class="material-icons">alarm_add</i>
+            </ig-button>
         </div>
     `
 })
