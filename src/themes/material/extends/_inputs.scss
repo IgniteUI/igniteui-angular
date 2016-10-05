@@ -2,7 +2,6 @@
     display: block;
     position: relative;
     margin: 20px 0;
-    padding: 0 5px;
     min-height: 40px;
     ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
         color: $label-color;
@@ -93,4 +92,10 @@
 
 %ig-textarea {
     resize: none;
+}
+
+%ig-search-input {
+    padding: 12px 0;
+    border-bottom: none;
+    box-shadow: 0px 1px 4px 0px rgba(152,152,152,0.50);
 }

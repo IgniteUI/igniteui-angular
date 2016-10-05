@@ -5,7 +5,9 @@ import { FilterModule, FilterOptions } from '../../src/directives/filter';
 @Component({
     selector: "list-sample",
     template: `
-        <input [(ngModel)]="search1" />
+        <div class="ig-form-group">
+            <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
+        </div>
         <h4>Data Source Filtered List</h4>
         <ig-list>
             <ig-list-item *ngFor="let item of navItems | filter: fo1: search1" [options]="options">
@@ -14,7 +16,9 @@ import { FilterModule, FilterOptions } from '../../src/directives/filter';
         </ig-list>        
         <h4>Declarative Fitered List</h4>
         <ig-checkbox [checked]="true" #checkbox>Perform filtering</ig-checkbox>   
-        <input [(ngModel)]="search2" />
+        <div class="ig-form-group">
+            <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search2" />
+        </div>
         <ig-list [filter]="search2" (filtered)="filteredHandler($event)" (filtering)="filteringHandler($event)" [filterOptions]="fo2">
             <ig-list-header>Mildly Sweet</ig-list-header>
             <ig-list-item>Red Delicious</ig-list-item>

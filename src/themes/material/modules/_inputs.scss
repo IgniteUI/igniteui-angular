@@ -34,6 +34,11 @@
 			}
 		}
 
+		@include m(search) {
+			@extend %ig-form-input;
+			@extend %ig-search-input;
+		}
+
 		&:focus {
 			@extend %ig-form-input--focused;
 		}
@@ -42,7 +47,7 @@
 			@extend %ig-form-input--disabled;
 		}
 		
-		&.ng-valid[required],
+		&.ng-valid[required].ng-touched,
 		&.ng-valid.required  {
 			@extend %ig-form-input--success;
 			~ label {
