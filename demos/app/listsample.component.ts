@@ -8,7 +8,7 @@ import { FilterModule, FilterOptions } from '../../src/directives/filter';
         <input [(ngModel)]="search1" />
         <h4>Data Source Filtered List</h4>
         <ig-list>
-            <ig-list-item *ngFor="let item of navItems | filter: fo1: search1" [options]="options">
+            <ig-list-item *ngFor="let item of navItems | filter: fo1: search1">
                 {{item.text}}
             </ig-list-item>
         </ig-list>        
@@ -60,11 +60,11 @@ export class ListSampleComponent {
         };
 
          fo.metConditionFn = function (item: any) {
-             item.element.nativeElement.hidden = false;
+             item.hidden = false;
          };
 
          fo.overdueConditionFn = function (item: any) {
-             item.element.nativeElement.hidden = true;
+             item.hidden = true;
          };    
 
         return fo;

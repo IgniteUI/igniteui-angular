@@ -55,12 +55,11 @@ export class FilterDirective implements OnChanges {
 })
 
 export class FilterPipe implements PipeTransform {
-    transform(
-                items: Array<any>,
-				// options - initial settings of filter functionality
-				options: FilterOptions,
-				// inputValue - text value from input that condition is based on
-				inputValue: string) {
+    transform(  items: Array<any>,
+			    // options - initial settings of filter functionality
+			    options: FilterOptions,
+			    // inputValue - text value from input that condition is based on
+			    inputValue: string) {
 
 		var result = [];
 
@@ -136,16 +135,16 @@ export class FilterOptions {
 	// Function - executed after matching test for every matched item
 	// Default behavior - shows the item
     metConditionFn(item: any) {
-        if (item.element && item.element.nativeElement) {
-            item.element.nativeElement.hidden = false;
+        if (item.hasOwnProperty("hidden")) {
+            item.hidden = false;
         }        
     };
 
 	// Function - executed for every NOT matched item after matching test
 	// Default behavior - hides the item
     overdueConditionFn(item: any) {
-        if (item.element && item.element.nativeElement) {
-            item.element.nativeElement.hidden = true;
+        if (item.hasOwnProperty("hidden")) {
+            item.hidden = true;
         }  
     };
 }
