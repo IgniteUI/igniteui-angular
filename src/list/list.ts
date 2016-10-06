@@ -1,4 +1,4 @@
-import { Component, Input, AfterContentInit, ContentChildren, QueryList, Renderer, NgModule, OnInit, OnDestroy, ViewChild, Inject, forwardRef, ElementRef } from '@angular/core';
+import { Component, Input, ContentChildren, QueryList, Renderer, NgModule, OnInit, OnDestroy, ViewChild, Inject, forwardRef, ElementRef } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { HammerGesturesManager } from '../core/touch';
 
@@ -15,7 +15,7 @@ interface IListChild
     templateUrl: 'list-content.html'
 })
 
-export class List implements AfterContentInit{ 
+export class List { 
     private _innerStyle: string = "ig-list";
 
     children: IListChild[] = [];
@@ -32,10 +32,6 @@ export class List implements AfterContentInit{
     }
 
     constructor(private element: ElementRef) {        
-    }
-
-    ngAfterContentInit() {
-        this.element.nativeElement.ngComponent = this;
     }
 
     removeChild(index: number) {

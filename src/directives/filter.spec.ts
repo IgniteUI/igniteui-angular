@@ -71,80 +71,50 @@ describe("Filter", function () {
 
         expect(list.items.length).toBe(4);
     });
+
+    it('should emit filter events on declaratively created list', () => {
+        let visibleItems,
+            fixture = TestBed.createComponent(DeclarativeListTestComponent),
+            list = fixture.componentInstance.list,
+            logInput = fixture.componentInstance.logInput;
+
+        fixture.detectChanges();
+        visibleItems = list.items.filter((listItem) => { return !(<ListItem>listItem).hidden; });
+        expect(list.items.length).toBe(3);
+        expect(visibleItems.length).toBe(3);
+
+        logInput.nativeElement.value = "";
+        fixture.componentInstance.filterValue = "2";
+        fixture.detectChanges();
+
+        visibleItems = list.items.filter((listItem) => { return !(<ListItem>listItem).hidden; });
+        expect(visibleItems.length).toBe(1);
+
+        expect(logInput.nativeElement.value).toBe("filtering;filtered;");
+    });
+
+    it('should cancel filtering on declaratively created list', () => {
+        let visibleItems,
+            fixture = TestBed.createComponent(DeclarativeListTestComponent),
+            list = fixture.componentInstance.list,
+            logInput = fixture.componentInstance.logInput;
+
+        fixture.detectChanges();
+        visibleItems = list.items.filter((listItem) => { return !(<ListItem>listItem).hidden; });
+        expect(list.items.length).toBe(3);
+        expect(visibleItems.length).toBe(3);
+
+        logInput.nativeElement.value = "";
+        fixture.componentInstance.isCanceled = true;
+        fixture.componentInstance.filterValue = "3";
+        fixture.detectChanges();
+
+        visibleItems = list.items.filter((listItem) => { return !(<ListItem>listItem).hidden; });
+        expect(visibleItems.length).toBe(3);
+
+        expect(logInput.nativeElement.value).toBe("filtering;");
+    });
 });
-
-
-//export function main() {
-//    describe('Infragistics Angular2 List', function() {        
-//         it('should emit filter events',
-//           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
-//            var template = '<ig-list><ig-list-item>Item 1</ig-list-item><ig-list-item>Item 2</ig-list-item><ig-list-item>Item 3</ig-list-item></ig-list>';
-//                return tcb.overrideTemplate(ListTestComponent, template)
-//                .createAsync(ListTestComponent)
-//                .then((fixture) => {
-//                      var items, visibleItems,
-//                          list = fixture.componentInstance.viewChild;
-
-//                      spyOn(list.filtering, 'emit');
-//                      spyOn(list.filtered, 'emit');
-
-//                      fixture.detectChanges();
-//                      items = list.items;
-//                      visibleItems = items.filter((listItem) => { return !listItem.hidden; });
-//                      expect(list.items.length).toBe(3);
-//                      expect(visibleItems.length).toBe(3);
-
-//                      list.searchInputElement = document.createElement('input');
-//                      list.searchInputElement.value = "2";
-//                      list.filter();
-
-//                      fixture.detectChanges();
-//                      visibleItems = items.filter((listItem) => { return !listItem.hidden; });
-//                      expect(visibleItems.length).toBe(1);
-//                      expect(list.filtering.emit).toHaveBeenCalledWith({ cancel: false });
-//                      expect(list.filtered.emit).toHaveBeenCalledWith({ result: [visibleItems[0]] });
-//                }).catch (reason => {
-//                    console.log(reason);
-//                    return Promise.reject(reason);
-//                });
-//         })));
-//         /*it('should cancel emitted filter events',
-//           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
-//            var template = '<ig-list (filtering)="filteringHandler($event)"><ig-list-item>Item 1</ig-list-item><ig-list-item>Item 2</ig-list-item><ig-list-item>Item 3</ig-list-item></ig-list>';
-//                return tcb.overrideTemplate(ListTestComponent, template)
-//                .createAsync(ListTestComponent)
-//                .then((fixture) => {
-//                      var items, visibleItems,
-//                          list = fixture.componentInstance.viewChild;
-
-//                      spyOn(list.filtering, 'emit');
-//                      spyOn(list.filtered, 'emit');
-
-//                      fixture.detectChanges();
-//                      items = list.items;
-//                      visibleItems = items.filter((listItem) => { return !listItem.hidden; });
-//                      expect(list.items.length).toBe(3);
-//                      expect(visibleItems.length).toBe(3);
-
-//                      list.searchInputElement = document.createElement('input');
-//                      fixture.componentInstance.filteringHandler = (args: any) => { args.cancel = true; };
-//                      list.searchInputElement.value = "3";
-//                      fixture.detectChanges();
-//                      list.filter();
-//                      fixture.detectChanges();
-
-//                      visibleItems = items.filter((listItem) => { return !listItem.hidden; });
-//                      expect(visibleItems.length).toBe(3);
-//                      expect(list.filtering.emit).toHaveBeenCalledWith({ cancel: false });
-//                      expect(list.filtered.emit).not.toHaveBeenCalledWith({ result: [visibleItems[0]] });
-//                }).catch (reason => {
-//                    console.log(reason);
-//                    return Promise.reject(reason);
-//                });
-//         })));*///         
-//         // end of tests
-//    });
-//}
 
 @Component({
     template: `<ig-list [filter]="filterValue" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)" [filterOptions]="fo">
@@ -152,16 +122,19 @@ describe("Filter", function () {
                     <ig-list-item>Item 1</ig-list-item>
                     <ig-list-item>Item 2</ig-list-item>
                     <ig-list-item>Item 3</ig-list-item>
-                </ig-list>`
+                </ig-list>
+                <input #logInput />`
 })
 class DeclarativeListTestComponent {
     filterValue: string = "";
     isCanceled: boolean = false;
 
     @ViewChild(List) list: List;
+    @ViewChild("logInput") logInput: any;
 
     get fo() {
         var options = new FilterOptions();
+        options.items = this.list.items;
 
         options.get_value = function (item: any) {
             return item.element.nativeElement.textContent.trim();
@@ -178,13 +151,13 @@ class DeclarativeListTestComponent {
         return options;
     }
 
-    protected filteringHandler = function (args) {
+    filteringHandler = function (args) {
         args.cancel = this.isCanceled;
-        //console.log(args);
+        this.logInput.nativeElement.value += "filtering;";
     }
 
-    protected filteredHandler = function (args) {
-        //console.log(args);
+    filteredHandler = function (args) {
+        this.logInput.nativeElement.value += "filtered;";
     }
 }
 

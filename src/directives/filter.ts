@@ -10,7 +10,6 @@ export class FilterDirective implements OnChanges {
 
     @Input("filter") inputValue: string;
     @Input() filterOptions: FilterOptions;
-    //items: Array<any>;
 
     constructor(private element: ElementRef, renderer: Renderer) {
         this.inputValue = this.inputValue || "";
@@ -18,21 +17,12 @@ export class FilterDirective implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         // Detect only changes of input value
-        if (changes["inputValue"] || changes["filterOptions"] && changes["filterOptions"].currentValue.items) {
+        if (changes["inputValue"]) { // || changes["filterOptions"] && changes["filterOptions"].currentValue.items) {
             this.filter();
         }    
     }
 
     filter() {
-        // get items from options or ngComponent which is a workaround to bind component to element
-        //if (this.filterOptions && this.filterOptions.items) {
-        //    this.items = this.filterOptions.items;
-        //} else if (this.element.nativeElement.ngComponent && this.element.nativeElement.ngComponent.items) {
-        //    this.items = this.element.nativeElement.ngComponent.items;
-        //}
-
-
-
         if (!this.filterOptions.items) {
             return;
         }
@@ -113,8 +103,8 @@ export class FilterOptions {
 
         if (key) {
             result = item[key];
-        } else {
-            return item.element.nativeElement.textContent.trim();
+        } else if (item.element && item.element.nativeElement) {
+            result = item.element.nativeElement.textContent.trim();
         }
 
         return result;
