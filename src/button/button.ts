@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 export class IgButton {
     @ViewChild('igButton') _button: ElementRef;
 
-    @Input() type: string;
+    @Input() type: string = "flat";
     @Input() disabled: boolean;
 
     get isDisabled() {

@@ -114,4 +114,8 @@
             @extend %switch-lbl--disabled;
         }
     }
+
+    @include e(text) {
+        padding-right: 16px;
+    }
 }

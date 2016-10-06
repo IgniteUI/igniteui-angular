@@ -31,52 +31,52 @@ import { AvatarModule, Avatar } from "../../src/avatar/avatar";
                         </ig-avatar>
                     </td>
                     <td>
-                        <ig-avatar initials="RK" bgColor="lightgreen">
+                        <ig-avatar initials="RK" bgColor="#fbb13c">
                         </ig-avatar>
                     </td>
                     <td>
-                        <ig-avatar initials="AA" bgColor="pink" roundShape="true">
+                        <ig-avatar initials="AA" bgColor="#731963" roundShape="true">
                         </ig-avatar>
                     </td>
                     <td>
-                        <ig-avatar roundShape="true">
+                        <ig-avatar roundShape="true" icon="person" bgColor="#0375be" data-init="SS">
                         </ig-avatar>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <ig-avatar initials="ZK" width="100" roundShape="true"
-                            bgColor="lightgreen" >
+                            bgColor="#ff6978">
                         </ig-avatar>
                     </td>
                     <td>
                         <ig-avatar initials="HA" width="100" size="potatos"
-                            bgColor="paleturquoise" >
+                            bgColor="#340068">
                         </ig-avatar>
                     </td>
                     <td>
-                        <ig-avatar initials="PP" width="100" color="lightyellow"
-                            roundShape="false" bgColor="lightcoral" >
+                        <ig-avatar initials="PP" width="100" color="black" 
+                            roundShape="false" bgColor="#94feed">
                         </ig-avatar>
                     </td>
                     <td>
                         <ig-avatar initials="PP" size="medium" roundShape="false"
-                            bgColor="paleturquoise">
+                            bgColor="#e41c77">
                         </ig-avatar>
                     </td>
                     <td>
-                        <ig-avatar initials="ZK" size="large"
-                            bgColor="paleturquoise">
+                        <ig-avatar initials="ZK" size="large" roundShape="true"
+                            bgColor="#484848">
                         </ig-avatar>
                     </td>
                     <td>
-                        <ig-avatar>
+                        <ig-avatar color="gray">
                         </ig-avatar>
                     </td>
                 </tr>
             </table>
         </div>
-        <button (click)="changeLink()">Change Image</button>
+        <ig-button type="raised" (click)="changeLink()">Change Image</ig-button>
     `
 })
 export class AvatarSampleComponent {
@@ -84,9 +84,9 @@ export class AvatarSampleComponent {
     // Collection of avatars
     @ViewChildren(Avatar) avatar;
     initials: string = 'ZK';
-    bgColor: string = 'lightblue';
+    bgColor: string = '#0375be';
     src: string = '';
-    roundShape: string = "false";
+    roundShape: string = "true";
 
     constructor(){
         //this.setImageSource();

@@ -1,0 +1,27 @@
+%ig-ripple {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: inherit;
+    border-radius: 100%;
+    background: currentColor;
+    opacity: 0.2;
+    transform: scale(0);
+    transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+    pointer-events: none;
+    user-select: none;
+     -webkit-mask-image: -webkit-radial-gradient(circle, white, black);
+}
+
+%ig-ripple-held {
+    opacity: 0.4;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+
+%ig-ripple-done {
+    opacity: 0.0;
+}

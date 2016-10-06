@@ -22,3 +22,18 @@
   background: -webkit-linear-gradient(legacy-direction($direction), $color-stops);
   background: linear-gradient($direction, $color-stops);
 }
+
+@mixin clearfix() {
+    & {
+        *zoom: 1;
+    }
+
+    &:before, &:after {
+        content: "";
+        display: table;
+    }
+
+    &:after {
+        clear: both;
+    }
+}

@@ -122,8 +122,9 @@ $button-padding: em(6px) em(16px) !default;
 $button-transition: all 0.2s ease !default;
 
 // Disabled Styles
-$button-disabled-background: none !default;
-$button-disabled-color: #AEAEAE;
+$button-disabled-background: #F0F0F0 !default;
+$button-disabled-color: #AEAEAE !default;
+$button-disabled-shadow: none;
 
 // Raised Buttons
 $button-raised-background: $primary-color !default;

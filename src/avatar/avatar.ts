@@ -17,29 +17,7 @@ export enum Size { SMALL, MEDIUM, LARGE };
 @Component({
     selector: 'ig-avatar',
     moduleId: module.id,
-    templateUrl: 'avatar.html',
-    // host:{
-    //     '[class]': '"ig-avatar--" + _size'
-    // },
-    styles: [`
-            .ig-avatar--small {
-                width: 45px;
-                height: 45px;
-            }
-            .ig-avatar--medium {
-                width: 60px;
-                height: 60px;
-            }
-            .ig-avatar--large {
-                width: 75px;
-                height: 75px;
-            }
-            .ig-avatar--empty {
-                text-align:center;
-                background-color: lightgray;
-                vertical-align: middle;
-            }
-            `]
+    templateUrl: 'avatar.html'
 })
 export class Avatar {
     @ViewChild('image') image: ElementRef;
@@ -51,6 +29,7 @@ export class Avatar {
     protected fontname = "Titillium Web";
     private _size: string;
     private _bgColor: string;
+    private _icon: string = "android";
     public SizeEnum = Size;
 
     get size() : string{
@@ -90,6 +69,15 @@ export class Avatar {
         return this.roundShape.toUpperCase() === "TRUE" ? true : false;
     }
 
+    @Input("icon")
+    public get icon(): string {
+        return this._icon;
+    }
+
+    public set icon(value: string) {
+        this._icon = value;
+    }
+
     constructor(public element_ref: ElementRef, private renderer: Renderer) {
         this._addEventListeners(renderer);
     }
@@ -115,10 +103,6 @@ export class Avatar {
         ctx.textAlign = "center";
         ctx.fillStyle = this.color;
         ctx.font = fontSize + `px ${this.fontname}`;
-        ctx.shadowColor = "black";
-                        ctx.shadowOffsetX = 0;
-                        ctx.shadowOffsetY = 0;
-                        ctx.shadowBlur = 4;
         ctx.fillText(this.initials.toUpperCase(), size / 2,
             size - (size / 2) + (fontSize / 3));
 

@@ -1,7 +1,3 @@
-@include b(btn-container) {
-  margin-bottom: 20px;
-}
-
 @include b(ig-button) {
   @extend %button-display;
 

@@ -1,6 +1,7 @@
 %button-display {
     display: inline-block;
-    min-width: 88px;
+    min-width: $button-width;
+    min-height: $button-height;
     padding: $button-padding;
     font-size: $button-font-size;
     font-weight: $button-font-weight;
@@ -16,6 +17,7 @@
 }
 
 %button-flat {
+    color: $primary-color;
     &:hover {
         background: $button-flat-hover-background;
     }
@@ -84,4 +86,6 @@
     color: $button-disabled-color;
     background: $button-disabled-background;
     pointer-events: none; 
+    box-shadow: $button-disabled-shadow;
+    opacity: 0.9;
 }
