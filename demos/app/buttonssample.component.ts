@@ -4,7 +4,7 @@ import { ButtonModule } from "../../src/button/button";
 @Component({
     selector: "button-sample",
     template: `
-        <h1>Buttons</h1>
+        <h3>Buttons</h3>
         <div>
             <ig-button type="flat">Flat</ig-button>
         </div>

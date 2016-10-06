@@ -5,6 +5,7 @@ import { FilterModule, FilterOptions } from '../../src/directives/filter';
 @Component({
     selector: "list-sample",
     template: `
+        <h3>Lists</h3>
         <div class="ig-form-group">
             <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
         </div>
