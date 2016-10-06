@@ -1,0 +1,62 @@
+<ig-nav-drawer id="test"
+    (opened)="logEvent($event)" 
+    (closed)="logEvent($event)"
+    (opening)="logEvent($event)" 
+    (closing)="logEvent($event)"
+    [position]="position"
+    pinThreshold=""
+    [pin]="pin"
+    [enableGestures]='gestures'
+    [isOpen]="open"
+    [width]="drawerWidth"
+    [miniWidth]="drawerMiniWidth">
+    
+        <!-- expand + mini templates -->
+        <div class="ig-drawer-content">
+            <h1> Drawer Title <button ig-nav-close="test"> X </button></h1>
+            <div *ngFor="let navItem of navItems"><img src="http://www.infragistics.com/assets/images/favicon.ico" width='16' /> <a routerLink="{{navItem.link}}"> {{navItem.text}} </a></div>
+        </div>
+        <div *ngIf="miniTemplate" class="ig-drawer-mini-content">
+            <span class="hamburger" ig-nav-toggle="test" > &#9776; </span>
+            <div *ngFor="let navItem of navItems"><img src="http://www.infragistics.com/assets/images/favicon.ico" width='16' /></div>
+        </div>
+    </ig-nav-drawer>
+    
+<div class="sample-content" [class.full]="pin && !open" [class.pin]="pin">     
+    
+    <span class="hamburger" ig-nav-toggle="test" *ngIf="showToggle"> &#9776; </span>
+    
+    <div>
+        <button ig-nav-toggle="test"> Toggle </button>
+        <button ig-nav-close="test"> Close </button>
+    </div>
+    
+    <button (click)="open = !open;"> Toggle opened</button>
+    <button (click)="testToggle()"> Toggle method on ViewChild</button>
+    
+    <div template="ngIf showGestureToggle">
+        <label><input type="checkbox" [(ngModel)]="gestures" /> Gestures enabled </label>
+    </div>
+    
+    <div template="ngIf showPositions">
+        <button (click)="position = 'left';"> Left</button>
+        <button (click)="position = 'right';"> Right</button>
+    </div>
+    
+    <div template="ngIf showPinToggle">
+        <button (click)="pin = true;"> pin</button>
+        <button (click)="pin = false;"> unpin</button>
+    </div>
+    
+    <label>
+        Width: <input type='text' [(ngModel)]="drawerWidth" placeholder="Expanded width (300px)"/>
+    </label>    
+    
+    <label *ngIf="showMiniWidth">
+        Mini width: <input type='text' [(ngModel)]="drawerMiniWidth" placeholder="Mini width (60px)"/>    
+    </label>             
+    <div id="log" *ngIf="showEventLog">
+            <p> Events: </p>
+            <div *ngFor="let ev of log">{{ev}}</div>
+    </div>
+</div>

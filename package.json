@@ -3,16 +3,16 @@
     "version": "0.1.0",
     "license": "MIT",
     "scripts": {
-        "postinstall": "typings install && npm prune",
+        "postinstall": "npm run typings install && npm prune",
         "start": "npm run build && concurrently \"npm run watch\" \"npm run lite\"",
         "pretest": "npm run build",
         "build": "gulp build",
         "bundle": "gulp bundle && gulp cleanup",
         "watch": "gulp watch",
         "lite": "lite-server",
-        "test-dev": "tsc && concurrently \"tsc -w\" \"karma start karma.conf.js\"",
-        "test": "tsc && karma start karma.conf.js --single-run",
-        "typings": "typings"
+        "test-dev": "concurrently \"npm run watch\" \"karma start karma.conf.js\"",
+        "test": "karma start karma.conf.js --single-run",
+        "typings": "node node_modules/typings/dist/bin.js"
     },
     "dependencies": {
         "@angular/common": "2.0.0",

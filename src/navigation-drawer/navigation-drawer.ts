@@ -1,6 +1,4 @@
-/// <reference path="../../typings/globals/hammerjs/index.d.ts" />
-
-import {Component, Input, Inject, SimpleChange, ElementRef, EventEmitter, Output, Renderer, OnInit, OnDestroy, OnChanges, Optional} from '@angular/core';
+import {Component, Input, Inject, SimpleChange, ElementRef, EventEmitter, Output, Renderer, OnInit, OnDestroy, OnChanges, Optional, AfterContentInit, NgModule} from '@angular/core';
 // import {AnimationBuilder} from 'angular2/src/animate/animation_builder'; TODO
 import { BaseComponent } from '../core/base';
 import { HammerGesturesManager } from "../core/touch";
@@ -12,6 +10,16 @@ declare var module: any;
 
 /**
  * Navigation Drawer component supports collapsible side navigation container.
+ * Usage:
+ * ```
+ * <ig-nav-drawer id="ID" (event output bindings) [input bindings]>
+ *  <div class="ig-drawer-content">
+ *   <!-- expanded template -->
+ *  </div>
+ * </ig-nav-drawer>
+ * ```
+ * Can also include an optional `<div class="ig-drawer-mini-content">`.
+ * ID required to register with NavigationService allow directives to target the control. 
  */
 @Component({
     selector: 'ig-nav-drawer',
@@ -22,7 +30,7 @@ declare var module: any;
     templateUrl: 'navigation-drawer.html',
     providers: [HammerGesturesManager]
 })
-export class NavigationDrawer extends BaseComponent implements ToggleView, OnInit, OnDestroy, OnChanges  {
+export class NavigationDrawer extends BaseComponent implements ToggleView, OnInit, AfterContentInit, OnDestroy, OnChanges  {
     private _hasMimiTempl: boolean = false;
     private _swipeAttached: boolean = false;
     private _widthCache: {width: number, miniWidth: number} = {width: null, miniWidth: null};
@@ -30,6 +38,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
         "drawer" : "ig-nav-drawer",
         "overlay" : "ig-nav-drawer-overlay",
         "mini" : "mini",
+        "miniProjection" : ".ig-drawer-mini-content",
         "styleDummy" : "style-dummy"
     };
     private _resolveOpen: (value?: any | PromiseLike<any>) => void;
@@ -167,22 +176,28 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
         if (this._state) {
             this._state.add(this.id,this);
         }
-        this._hasMimiTempl = this.getChild("ig-drawer-mini-content") !== null;
+    }
+
+    ngAfterContentInit() {
+        // wait for template and ng-content to be ready
+        this._hasMimiTempl = this.getChild(this.css["miniProjection"]) !== null;
         this.updateEdgeZone();
         if (this.pinThreshold && this.getWindowWidth() > this.pinThreshold) {
             this.pin = true;
         }
+
         // need to set height without absolute positioning
         this.ensureDrawerHeight();
         this.ensureEvents();
-
         // TODO: apply platform-safe Ruler from http://plnkr.co/edit/81nWDyreYMzkunihfRgX?p=preview
         // (https://github.com/angular/angular/issues/6515), blocked by https://github.com/angular/angular/issues/6904
     }
 
     ngOnDestroy() {
         this._touchManager.destroy();
-        this._state.remove(this.id)
+        if (this._state) {
+            this._state.remove(this.id)
+        }
     }
 
     ngOnChanges(changes: {[propName: string]: SimpleChange}) {
@@ -326,7 +341,6 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             deltaX = evt.deltaX;
             startPosition = evt.center.x - evt.distance;
         }
-
         //only accept closing swipe (ignoring minEdgeZone) when the drawer is expanded:
         if ((this.isOpen && deltaX < 0) ||
             // positive deltaX from the edge:
@@ -343,7 +357,6 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
 
         // cache width during animation, flag to allow further handling
         if(this.isOpen || (startPosition < this.maxEdgeZone)) {
-
             this._panning = true;
             this._panStartWidth =  this.getExpectedWidth(!this.isOpen);
             this._panLimit = this.getExpectedWidth(this.isOpen);
@@ -429,7 +442,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
         // Angular polyfills patches window.requestAnimationFrame, but switch to DomAdapter API (TODO)
         window.requestAnimationFrame(() => {
             if (this.hasAnimateWidth) {
-                this.setDrawerWidth(x ? Math.abs(x) + "px" : "");
+                this.renderer.setElementStyle(this.drawer, "width", x ? Math.abs(x) + "px" : "");
             } else {
                 this.renderer.setElementStyle(this.drawer, "transform", x ? "translate3d(" + x + "px,0,0)" : "");
                 this.renderer.setElementStyle(this.drawer, "-webkit-transform",  x ? "translate3d(" +x + "px,0,0)" : "");
@@ -459,10 +472,12 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
      * @return Promise that is resolved once the operation completes.
      */
     public open(fireEvents?: boolean): Promise<any> {
-        if (this.isOpen) {
-            return;
+        if (this._panning) {
+            this.resetPan();
         }
-        this.resetPan();
+        if (this.isOpen) {
+            return Promise.resolve();
+        }        
         if (fireEvents) {
             this.opening.emit("opening");
         }
@@ -507,11 +522,12 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
      * @return Promise that is resolved once the operation completes.
      */
     public close(fireEvents?: boolean): Promise<any> {
-        if (!this.isOpen) {
-            return;
+        if (this._panning) {
+            this.resetPan();
         }
-        this.resetPan();
-
+        if (!this.isOpen) {
+            return Promise.resolve();
+        }
         if (fireEvents) {
             this.closing.emit("closing");
         }
@@ -529,4 +545,12 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             };
         } );
     }
+}
+
+
+@NgModule({
+    declarations: [NavigationDrawer],
+    exports: [NavigationDrawer]
+})
+export class NavigationDrawerModule {
 }
