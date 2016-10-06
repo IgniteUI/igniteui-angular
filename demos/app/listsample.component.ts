@@ -5,12 +5,14 @@ import { FilterModule, FilterOptions } from '../../src/directives/filter';
 @Component({
     selector: "list-sample",
     styles: [
-        '.wrapper { width:33%; display:inline-block; float: left }'
+        '.wrapper { width:33%; display:inline-block; float: left; padding: 10px}'
     ],
     template: `
         <div class="wrapper">            
             <h4>Data Source Filtered List</h4>
-            <input [(ngModel)]="search1" />
+            <div class="ig-form-group">
+                <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
+            </div>
             <ig-list>
                 <ig-list-item *ngFor="let item of navItems | filter: fo1: search1">
                     {{item.text}}
@@ -20,7 +22,9 @@ import { FilterModule, FilterOptions } from '../../src/directives/filter';
         <div class="wrapper">
             <h4>Declarative Fitered List</h4>
             <ig-checkbox [checked]="true" #checkbox>Perform filtering</ig-checkbox>   
-            <input [(ngModel)]="search2" />
+            <div class="ig-form-group">
+                <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search2" />
+            </div>
             <ig-list #declarativeList [filter]="search2" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)" [filterOptions]="fo2">
                 <ig-list-header>Mildly Sweet</ig-list-header>
                 <ig-list-item>Red Delicious</ig-list-item>
