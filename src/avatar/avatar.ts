@@ -7,40 +7,86 @@ import {
     OnInit,
     Input,
     Output,
-    ViewChild
+    ViewChild,
+    HostBinding
 } from '@angular/core';
 import { CommonModule } from "@angular/common";
+
+export enum Size { SMALL, MEDIUM, LARGE };
 
 @Component({
     selector: 'ig-avatar',
     moduleId: module.id,
     templateUrl: 'avatar.html',
     // host:{
-
+    //     '[class]': '"ig-avatar--" + _size'
     // },
-    styles: [`.rounded {
-                border-radius: 50%;
-            }`]
+    styles: [`
+            .ig-avatar--small {
+                width: 45px;
+                height: 45px;
+            }
+            .ig-avatar--medium {
+                width: 60px;
+                height: 60px;
+            }
+            .ig-avatar--large {
+                width: 75px;
+                height: 75px;
+            }
+            .ig-avatar--empty {
+                text-align:center;
+                background-color: lightgray;
+                vertical-align: middle;
+            }
+            `]
 })
 export class Avatar {
-    @ViewChild('image') wrapper: ElementRef;
+    @ViewChild('image') image: ElementRef;
+
     @Input() initials: string;
-    @Input() source: string;
+    @Input() src: string;
     @Input() roundShape: string = "false";
-    @Input() bgColor: string;
-    @Input() width: number = 60;
-    @Input() textColor: string = 'white';
+    @Input() color: string = 'white';
     protected fontname = "Titillium Web";
+    private _size: string;
+    private _bgColor: string;
+    public SizeEnum = Size;
+
+    get size() : string{
+        return this._size === undefined ? "small" : this._size;
+    }
+
+    @Input("size")
+    set size(value: string){
+        var sizeType = this.SizeEnum[value.toUpperCase()];
+
+        if(sizeType === undefined){
+            this._size = "small";
+        } else {
+            this._size = value;
+        }
+    }
+
+    get bgColor(): string {
+        return this._bgColor;
+    }
+
+    @Input("bgColor")
+    set bgColor(value: string) {
+        var color = value === "" ? "lightgrey" : value;
+        this._bgColor = color;
+    }
 
     public get srcImage() {
-        return this.wrapper.nativeElement.src;
+        return this.image ? this.image.nativeElement.src : "";
     }
 
     public set srcImage(value: string) {
-        this.wrapper.nativeElement.src = value;
+        this.image.nativeElement.src = value;
     }
 
-    private get isRounded() : boolean{
+    get isRounded() : boolean {
         return this.roundShape.toUpperCase() === "TRUE" ? true : false;
     }
 
@@ -49,9 +95,9 @@ export class Avatar {
     }
 
     ngAfterViewInit() {
-        if(this.initials){
-            var src = this.generateCanvas(this.width);
-            this.wrapper.nativeElement.src = src;
+        if(this.initials && this.image){
+            var src = this.generateCanvas(parseInt(this.image.nativeElement.width));
+            this.image.nativeElement.src = src;
         }
     }
 
@@ -67,7 +113,7 @@ export class Avatar {
 
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.textAlign = "center";
-        ctx.fillStyle = this.textColor;
+        ctx.fillStyle = this.color;
         ctx.font = fontSize + `px ${this.fontname}`;
         ctx.shadowColor = "black";
                         ctx.shadowOffsetX = 0;
