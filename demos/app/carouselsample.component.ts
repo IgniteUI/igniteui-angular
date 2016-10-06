@@ -6,7 +6,7 @@ import { CarouselModule } from "../../src/carousel/carousel";
     selector: "carousel-sample",
     template:`
         <h3>Carousel</h3>
-        <div style="width: 600px;">
+        <div style="width: 100%;">
             <ig-carousel [interval]="interval" [pause]="pause" [loop]="loop">
                 <ig-slide *ngFor="let slide of slides;" [active]="slide.active">
                     <img [src]="slide.image">
@@ -27,10 +27,10 @@ export class CarouselSampleComponent {
 
     addNewSlide() {
         this.slides.push(
-            {image: "https://unsplash.it/600"},
-            {image: "https://unsplash.it/601"},
-            {image: "https://unsplash.it/602"},
-            {image: "https://unsplash.it/603"}
+            {image: "https://unsplash.it/g/1170/300"},
+            {image: "https://unsplash.it/g/1171/300"},
+            {image: "https://unsplash.it/g/1172/300"},
+            {image: "https://unsplash.it/g/1173/300"}
         );
     }
 }

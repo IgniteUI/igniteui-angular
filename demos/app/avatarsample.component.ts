@@ -65,7 +65,7 @@ import { AvatarModule, Avatar } from "../../src/avatar/avatar";
                         </ig-avatar>
                     </td>
                     <td>
-                        <ig-avatar initials="ZK" size="large"
+                        <ig-avatar initials="ZK" size="large" roundShape="true"
                             bgColor="#484848">
                         </ig-avatar>
                     </td>
