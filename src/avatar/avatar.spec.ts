@@ -26,16 +26,17 @@ describe('Avatar', function(){
     });
 });
 
-@Component({ template: `<ig-avatar></ig-avatar>`})
+@Component({ template: `<ig-avatar initials="PP" size="medium" roundShape="false"
+                            bgColor="paleturquoise">
+                        </ig-avatar>`})
 class InitAvatar {
 
 }
 
-@Component({ template: `<ig-avatar [source]="source"
+@Component({ template: `<ig-avatar [initials]="initials" [bgColor]="bgColor"
     [roundShape]="roundShape"></ig-avatar>`})
 class AvatarWithAttribs {
     initials: string = 'ZK';
     bgColor: string = 'lightblue';
-    source: string = 'https://unsplash.it/60/60?image=55';
     roundShape: string = "false";
 }
