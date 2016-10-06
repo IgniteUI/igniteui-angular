@@ -1,45 +1,49 @@
 import { Component, ViewChild, ElementRef } from "@angular/core";
-import { ListModule } from "../../src/list/list";
+import { ListModule, List } from "../../src/list/list";
 import { FilterModule, FilterOptions } from '../../src/directives/filter';
 
 @Component({
     selector: "list-sample",
+    styles: [
+        '.wrapper { width:33%; display:inline-block; float: left }'
+    ],
     template: `
-        <h3>Lists</h3>
-        <div class="ig-form-group">
-            <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
+        <div class="wrapper">            
+            <h4>Data Source Filtered List</h4>
+            <input [(ngModel)]="search1" />
+            <ig-list>
+                <ig-list-item *ngFor="let item of navItems | filter: fo1: search1">
+                    {{item.text}}
+                </ig-list-item>
+            </ig-list>        
         </div>
-        <h4>Data Source Filtered List</h4>
-        <ig-list>
-            <ig-list-item *ngFor="let item of navItems | filter: fo1: search1" [options]="options">
-                {{item.text}}
+        <div class="wrapper">
+            <h4>Declarative Fitered List</h4>
+            <ig-checkbox [checked]="true" #checkbox>Perform filtering</ig-checkbox>   
+            <input [(ngModel)]="search2" />
+            <ig-list #declarativeList [filter]="search2" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)" [filterOptions]="fo2">
+                <ig-list-header>Mildly Sweet</ig-list-header>
+                <ig-list-item>Red Delicious</ig-list-item>
+                <ig-list-item>Ambrosia</ig-list-item>
+                <ig-list-item>Rome</ig-list-item>
+                <ig-list-header>Sweet</ig-list-header>
+                <ig-list-item>Golden Delicious</ig-list-item>
+                <ig-list-item>Cosmic Crisp</ig-list-item>
+                <ig-list-item>Pinova</ig-list-item>
+            </ig-list>
+        </div>
+        <div class="wrapper">
+            <h4>Non-header List</h4>
+            <ig-list>
+            <ig-list-item *ngFor="let navItem of navItems; let index = index">
+                {{navItem.text}}
             </ig-list-item>
-        </ig-list>        
-        <h4>Declarative Fitered List</h4>
-        <ig-checkbox [checked]="true" #checkbox>Perform filtering</ig-checkbox>   
-        <div class="ig-form-group">
-            <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search2" />
-        </div>
-        <ig-list [filter]="search2" (filtered)="filteredHandler($event)" (filtering)="filteringHandler($event)" [filterOptions]="fo2">
-            <ig-list-header>Mildly Sweet</ig-list-header>
-            <ig-list-item>Red Delicious</ig-list-item>
-            <ig-list-item>Ambrosia</ig-list-item>
-            <ig-list-item>Rome</ig-list-item>
-            <ig-list-header>Sweet</ig-list-header>
-            <ig-list-item>Golden Delicious</ig-list-item>
-            <ig-list-item>Cosmic Crisp</ig-list-item>
-            <ig-list-item>Pinova</ig-list-item>
-        </ig-list>
-        <h3>Non-header List</h3>
-        <ig-list>
-        <ig-list-item *ngFor="let navItem of navItems; let index = index">
-            {{navItem.text}}
-        </ig-list-item>
-        </ig-list>
-    `
+            </ig-list>
+        </div>`
 })
 export class ListSampleComponent {
     @ViewChild("checkbox") checkbox: any;
+    @ViewChild("declarativeList") declarativeList: any;
 
     search1: string;
     search2: string;
@@ -60,17 +64,18 @@ export class ListSampleComponent {
     get fo2() {
         var fo = new FilterOptions();
 
+        fo.items = this.declarativeList.items;
+
         fo.get_value = function (item: any) {
             return item.element.nativeElement.textContent.trim();
         };
 
          fo.metConditionFn = function (item: any) {
-             item.element.nativeElement.hidden = false;
+             item.hidden = false;
          };
 
-
          fo.overdueConditionFn = function (item: any) {
-             item.element.nativeElement.hidden = true;
+             item.hidden = true;
          };    
 
         return fo;

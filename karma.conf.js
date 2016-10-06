@@ -47,6 +47,7 @@ module.exports = function(config) {
       'node_modules/zone.js/dist/async-test.js',
       'node_modules/zone.js/dist/fake-async-test.js',
 
+      // styles
       'dist/zero-blocks.css',
 
       // RxJs

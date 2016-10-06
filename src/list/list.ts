@@ -1,36 +1,45 @@
-import { Component, Input, AfterContentInit, ContentChildren, QueryList, Renderer, NgModule, OnInit, ViewChild, Inject, forwardRef, ElementRef } from '@angular/core';
+import { Component, Input, ContentChildren, QueryList, Renderer, NgModule, OnInit, OnDestroy, ViewChild, Inject, forwardRef, ElementRef } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { HammerGesturesManager } from '../core/touch';
+
+interface IListChild
+{
+    index: number;
+}
 
 // ====================== LIST ================================
 // The `<ig-list>` directive is a list container for items and headers 
 @Component({
     selector: 'ig-list',
-    host: { 'role': 'list' },
     moduleId: module.id, // commonJS standard
     templateUrl: 'list-content.html'
 })
 
-export class List implements AfterContentInit{ 
+export class List { 
     private _innerStyle: string = "ig-list";
 
-    items: ListItem[] = [];
-    headers: ListHeader[] = [];    
-
-    constructor(private element: ElementRef) {
-        
+    children: IListChild[] = [];
+    get items() {
+        return this.children.filter((item: IListChild) => {
+            return item instanceof ListItem;
+        });
     }
 
-    ngAfterContentInit() {
-        this.element.nativeElement.ngComponent = this;
+    get headers() {
+        return this.children.filter((header: IListChild) => {
+            return header instanceof ListHeader;
+        });
     }
 
-    addItem(item: ListItem) {
-        this.items.push(item);
+    constructor(private element: ElementRef) {        
     }
 
-    addHeader(header: ListHeader) {
-        this.headers.push(header);
+    removeChild(index: number) {
+        this.children.splice(index, 1);
+    }
+
+    addChild(child: IListChild) {
+        this.children.push(child);
     }
 }
 
@@ -39,18 +48,20 @@ export class List implements AfterContentInit{
 // a `<ig-list>` container.
 @Component({
     selector: 'ig-list-header',
-    host: { 'role': 'listitemheader' },
     moduleId: module.id, // commonJS standard
     templateUrl: 'list-content.html'
 })
 
-export class ListHeader implements OnInit {
+export class ListHeader implements OnInit, IListChild {
     private _innerStyle: string = "ig-list__header";
+    get index(): number {
+        return this.list.children.indexOf(this);
+    }
 
     constructor( @Inject(forwardRef(() => List)) private list: List, public element: ElementRef) { }
 
     public ngOnInit() {
-        this.list.addHeader(this);
+        this.list.addChild(this);
     }
 }
 
@@ -59,19 +70,21 @@ export class ListHeader implements OnInit {
 // a `<ig-list>` container.
 @Component({
     selector: 'ig-list-item',
-    host: { 'role': 'listitem' },
     moduleId: module.id, // commonJS standard
     templateUrl: 'list-content.html'
 })
 
-export class ListItem implements OnInit {
+export class ListItem implements OnInit, OnDestroy, IListChild {
     @ViewChild('wrapper') wrapper: ElementRef;
 
     private _VISIBLE_AREA_ON_FULL_PAN = 40; // in pixels
     private _initialLeft: number = null;
     private _innerStyle: string = "ig-list__item";
 
-    hidden: boolean;
+    hidden: boolean = false;
+    get index(): number {
+        return this.list.children.indexOf(this);
+    }
 
     get width() {
         if (this.element) {
@@ -106,7 +119,12 @@ export class ListItem implements OnInit {
     }
 
     public ngOnInit() {
-        this.list.addItem(this);
+        //this.list.addItem(this);
+        this.list.addChild(this);
+    }
+
+    public ngOnDestroy() {
+        this.list.removeChild(this.index);
     }
 
     private _addEventListeners() {

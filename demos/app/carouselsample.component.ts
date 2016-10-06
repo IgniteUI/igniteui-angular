@@ -1,7 +1,6 @@
 import { Component } from "@angular/core";
 import { CarouselModule } from "../../src/carousel/carousel";
 
-
 @Component({
     selector: "carousel-sample",
     template:`
