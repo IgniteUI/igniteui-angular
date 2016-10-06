@@ -1,0 +1,65 @@
+
+/* sample styling */
+#log {
+    height:400px;
+    background-color:#e3e3e3;
+    overflow-y: scroll;
+    padding: .5em;
+    font-size: small;
+}
+
+.hamburger {
+    font-weight: bold;
+    font-size: 1.3rem;
+    color: #4F4F4F;
+    cursor: pointer;
+}
+
+button {
+    line-height: 1.3rem;
+    font-family: "Open sans",Helvetica,Arial,sans-serif;
+    border: none;
+    transition: .2s ease-in-out all;
+    background-color: #DADEE4;
+}
+    button:hover {
+        background-color: #76C4F8
+    }
+    button:active {
+        background-color: #00bcff;
+    }
+    
+ig-drawer-content h1{
+    margin: 0;
+    padding: .5em 0;
+    text-align: center;
+}
+    
+ig-drawer-content div{
+    text-decoration: none;
+    margin: 2px 0 0 0;
+    padding: .5em .5em .5em .7em;
+}
+
+/* Pin sample */
+pin-sample {
+    display: block;
+    position: relative;
+    width: 100%;
+}
+    pin-sample .ig-nav-drawer.pinned {
+        position: absolute;
+    }
+    pin-sample .sample-content.pin {
+        padding-left:300px;
+        transition: padding .25s ease-in;
+    }
+    pin-sample .sample-content.pin.full {
+        padding-left:0px;
+    }
+
+/* Mini sample */
+mini-sample {
+    display: block;
+    padding-left:60px;
+}
