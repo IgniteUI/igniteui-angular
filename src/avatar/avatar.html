@@ -1,4 +1,6 @@
 <div>
-    <img #image *ngIf="src || initials" src="{{src}}" class="ig-avatar--{{size}}" [class.ig-avatar--rounded]="isRounded" [style.backgroundColor]="bgColor" />
-    <i *ngIf="!src && !initials" class="material-icons ig-avatar--{{size}} ig-avatar--empty" >more_horiz</i>
+    <img #image *ngIf="src || initials" src="{{src}}" class="ig-avatar--image ig-avatar--{{size}}" [class.ig-avatar--rounded]="isRounded" [style.backgroundColor]="bgColor" />
+    <span *ngIf="!src && !initials" class="ig-avatar--{{size}} ig-avatar--icon" [class.ig-avatar--rounded]="isRounded" [style.backgroundColor]="bgColor" [style.color]="color">
+        <i class="material-icons">{{icon}}</i>
+    </span>
 </div>

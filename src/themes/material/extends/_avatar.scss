@@ -1,8 +1,36 @@
 %avatar-display {
-    max-width: em(48px, 16px);
-    max-height: em(48px, 16px);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 %avatar--rounded {
     border-radius: 50% 50%;
+}
+
+%avatar--small {
+    width: em(48px, 16px);
+    height: em(48px, 16px);
+}
+
+%avatar--medium {
+    width: em(60px, 16px);
+    height: em(60px, 16px);
+}
+
+%avatar--large {
+    width: em(72px, 16px);
+    height: em(72px, 16px);
+}
+
+%avatar--icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: lightgray;
+}
+
+%avatar--image {
+    background-color: transparent !important;
 }
