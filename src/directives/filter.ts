@@ -10,7 +10,6 @@ export class FilterDirective implements OnChanges {
 
     @Input("filter") inputValue: string;
     @Input() filterOptions: FilterOptions;
-    items: Array<any>;
 
     constructor(private element: ElementRef, renderer: Renderer) {
         this.inputValue = this.inputValue || "";
@@ -18,24 +17,17 @@ export class FilterDirective implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         // Detect only changes of input value
-        if (changes["inputValue"] || changes["filterOptions"] && changes["filterOptions"].currentValue.items) {
+        if (changes["inputValue"]) { // || changes["filterOptions"] && changes["filterOptions"].currentValue.items) {
             this.filter();
         }    
     }
 
     filter() {
-        // get items from options or ngComponent which is a workaround to bind component to element
-        if (this.filterOptions && this.filterOptions.items) {
-            this.items = this.filterOptions.items;
-        } else if (this.element.nativeElement.ngComponent && this.element.nativeElement.ngComponent.items) {
-            this.items = this.element.nativeElement.ngComponent.items;
-        }
-
-        if (!this.items) {
+        if (!this.filterOptions.items) {
             return;
         }
 
-        var args = { cancel: false, items: this.items };
+        var args = { cancel: false, items: this.filterOptions.items };
         this.filtering.emit(args);
 
         if (args.cancel) {
@@ -44,7 +36,7 @@ export class FilterDirective implements OnChanges {
 
         var pipe = new FilterPipe();
 
-        var filtered = pipe.transform(this.items, this.filterOptions, this.inputValue);
+        var filtered = pipe.transform(this.filterOptions.items, this.filterOptions, this.inputValue);
         this.filtered.emit({ filteredItems: filtered });
     }   
 }
@@ -55,12 +47,11 @@ export class FilterDirective implements OnChanges {
 })
 
 export class FilterPipe implements PipeTransform {
-    transform(
-                items: Array<any>,
-				// options - initial settings of filter functionality
-				options: FilterOptions,
-				// inputValue - text value from input that condition is based on
-				inputValue: string) {
+    transform(  items: Array<any>,
+			    // options - initial settings of filter functionality
+			    options: FilterOptions,
+			    // inputValue - text value from input that condition is based on
+			    inputValue: string) {
 
 		var result = [];
 
@@ -100,7 +91,7 @@ export class FilterOptions {
     // Item property, which value should be used for filtering
     public key: string;
 
-    // Represent items of the list. Can be used to override the default items of the pipe.
+    // Represent items of the list. It should be used to handle decalaratevely defined widgets
     public items: Array<any>;
 
     // Function - get value to be tested from the item
@@ -112,8 +103,8 @@ export class FilterOptions {
 
         if (key) {
             result = item[key];
-        } else {
-            return item.element.nativeElement.textContent.trim();
+        } else if (item.element && item.element.nativeElement) {
+            result = item.element.nativeElement.textContent.trim();
         }
 
         return result;
@@ -136,16 +127,16 @@ export class FilterOptions {
 	// Function - executed after matching test for every matched item
 	// Default behavior - shows the item
     metConditionFn(item: any) {
-        if (item.element && item.element.nativeElement) {
-            item.element.nativeElement.hidden = false;
+        if (item.hasOwnProperty("hidden")) {
+            item.hidden = false;
         }        
     };
 
 	// Function - executed for every NOT matched item after matching test
 	// Default behavior - hides the item
     overdueConditionFn(item: any) {
-        if (item.element && item.element.nativeElement) {
-            item.element.nativeElement.hidden = true;
+        if (item.hasOwnProperty("hidden")) {
+            item.hidden = true;
         }  
     };
 }
