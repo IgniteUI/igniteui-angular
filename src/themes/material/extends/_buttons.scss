@@ -12,6 +12,7 @@
     text-transform: uppercase;
     cursor: pointer;
     user-select: none;
+    outline: none;
     -webkit-tap-highlight-color: transparent;
     transition: $button-transition;
 }
