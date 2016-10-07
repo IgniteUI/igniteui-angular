@@ -76,7 +76,7 @@ import { AvatarModule, Avatar } from "../../src/avatar/avatar";
                 </tr>
             </table>
         </div>
-        <ig-button type="raised" (click)="changeLink()">Change Image</ig-button>
+        <span igButton="raised" (click)="changeLink()">Change Image</span>
     `
 })
 export class AvatarSampleComponent {

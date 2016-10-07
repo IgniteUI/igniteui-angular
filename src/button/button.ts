@@ -1,15 +1,30 @@
-import { Directive, Component, Input, Output, ElementRef, ViewChild, NgModule } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, Renderer, NgModule } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 
-@Component({
-    selector: 'ig-button',
-    moduleId: module.id, // commonJS standard
-    templateUrl: 'button.html'
+@Directive({
+    selector: '[igButton]',
+    host: {'role': 'button'}
 })
 export class IgButton {
-    @ViewChild('igButton') _button: ElementRef;
+    private _type: string = 'flat';
+    private _cssClass: string = 'ig-button';
+    private _el: ElementRef;
+    private _renderer: Renderer;
 
-    @Input() type: string = "flat";
+    constructor(private el: ElementRef, private renderer: Renderer) {
+        this._el = el;
+        this._renderer = renderer;
+    }
+
+    @Input('igButton') set type(value: string) {
+        this._type = value || this._type;
+    }
+
+    get type() {
+        return this._type;
+    }
+
     @Input() disabled: boolean;
 
     get isDisabled() {
@@ -19,6 +34,15 @@ export class IgButton {
     set isDisabled(value: boolean) {
         this.disabled = value;
     }
+
+    setButtonStyles(el: ElementRef, renderer: Renderer) {
+        renderer.setElementClass(el.nativeElement, `${this._cssClass}--${this._type}`, true);
+        renderer.setElementClass(el.nativeElement, `${this._cssClass}--disabled`, this.isDisabled);
+    }
+
+    ngAfterContentInit() {
+        this.setButtonStyles(this._el, this._renderer);
+    }
 }
 
 @NgModule({
@@ -26,6 +50,4 @@ export class IgButton {
     imports: [CommonModule],
     exports: [IgButton]
 })
-export class ButtonModule {
-
-}
+export class ButtonModule {}
