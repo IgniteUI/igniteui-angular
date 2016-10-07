@@ -84,6 +84,8 @@ describe("Filter", function () {
         expect(visibleItems.length).toBe(3);
 
         logInput.nativeElement.value = "";
+        fixture.componentInstance.filteredArgs = undefined;
+        fixture.componentInstance.filteringArgs = undefined;
         fixture.componentInstance.filterValue = "2";
         fixture.detectChanges();
 
@@ -91,6 +93,18 @@ describe("Filter", function () {
         expect(visibleItems.length).toBe(1);
 
         expect(logInput.nativeElement.value).toBe("filtering;filtered;");
+        expect(fixture.componentInstance.filteringArgs).toBeDefined();
+        expect(fixture.componentInstance.filteringArgs["cancel"]).toBeDefined();
+        expect(fixture.componentInstance.filteringArgs["cancel"]).toBeFalsy();
+        expect(fixture.componentInstance.filteringArgs["items"]).toBeDefined();
+        expect(fixture.componentInstance.filteringArgs["items"] instanceof Array).toBeTruthy();
+        expect(fixture.componentInstance.filteringArgs["items"].length).toBe(3);
+
+        expect(fixture.componentInstance.filteredArgs).toBeDefined();
+        expect(fixture.componentInstance.filteredArgs["filteredItems"]).toBeDefined();
+        expect(fixture.componentInstance.filteredArgs["filteredItems"] instanceof Array).toBeTruthy();
+        expect(fixture.componentInstance.filteredArgs["filteredItems"].length).toBe(1);
+        expect(fixture.componentInstance.filteredArgs["filteredItems"][0]).toBe(visibleItems[0]);
     });
 
     it('should cancel filtering on declaratively created list', () => {
@@ -105,14 +119,24 @@ describe("Filter", function () {
         expect(visibleItems.length).toBe(3);
 
         logInput.nativeElement.value = "";
+        fixture.componentInstance.filteredArgs = undefined;
+        fixture.componentInstance.filteringArgs = undefined;
         fixture.componentInstance.isCanceled = true;
-        fixture.componentInstance.filterValue = "3";
+        fixture.componentInstance.filterValue = "2";
         fixture.detectChanges();
 
         visibleItems = list.items.filter((listItem) => { return !(<ListItem>listItem).hidden; });
         expect(visibleItems.length).toBe(3);
 
         expect(logInput.nativeElement.value).toBe("filtering;");
+        expect(fixture.componentInstance.filteringArgs).toBeDefined();
+        expect(fixture.componentInstance.filteringArgs["cancel"]).toBeDefined();
+        expect(fixture.componentInstance.filteringArgs["cancel"]).toBeTruthy();
+        expect(fixture.componentInstance.filteringArgs["items"]).toBeDefined();
+        expect(fixture.componentInstance.filteringArgs["items"] instanceof Array).toBeTruthy();
+        expect(fixture.componentInstance.filteringArgs["items"].length).toBe(3);
+
+        expect(fixture.componentInstance.filteredArgs).toBeUndefined();
     });
 });
 
@@ -128,6 +152,8 @@ describe("Filter", function () {
 class DeclarativeListTestComponent {
     filterValue: string = "";
     isCanceled: boolean = false;
+    filteringArgs: Object;
+    filteredArgs: Object;
 
     @ViewChild(List) list: List;
     @ViewChild("logInput") logInput: any;
@@ -136,17 +162,17 @@ class DeclarativeListTestComponent {
         var options = new FilterOptions();
         options.items = this.list.items;
 
-        options.get_value = function (item: any) {
-            return item.element.nativeElement.textContent.trim();
-        };
+        //options.get_value = function (item: any) {
+        //    return item.element.nativeElement.textContent.trim();
+        //};
 
-        options.metConditionFn = function (item: any) {
-            item.hidden = false;
-        };
+        //options.metConditionFn = function (item: any) {
+        //    item.hidden = false;
+        //};
 
-        options.overdueConditionFn = function (item: any) {
-            item.hidden = true;
-        };
+        //options.overdueConditionFn = function (item: any) {
+        //    item.hidden = true;
+        //};
 
         return options;
     }
@@ -154,10 +180,12 @@ class DeclarativeListTestComponent {
     filteringHandler = function (args) {
         args.cancel = this.isCanceled;
         this.logInput.nativeElement.value += "filtering;";
+        this.filteringArgs = args;
     }
 
     filteredHandler = function (args) {
         this.logInput.nativeElement.value += "filtered;";
+        this.filteredArgs = args;
     }
 }
 
