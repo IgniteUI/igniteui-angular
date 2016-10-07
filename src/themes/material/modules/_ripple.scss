@@ -1,3 +1,32 @@
-@include b(ig-ripple) {
-    @extend %ig-ripple;
+.ripple {
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    overflow: hidden;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.4);
+    transform: scale(0);
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+    pointer-events: none;
+}
+
+.rippleEffect {
+    overflow: hidden;
+    animation: rippleDrop .6s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.rippleHost {
+    position: relative;
+    overflow: hidden;
+}
+
+@keyframes rippleDrop {
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
 }

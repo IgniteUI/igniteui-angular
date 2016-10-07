@@ -1,5 +1,5 @@
 %button-display {
-    display: inline-block;
+    display: block;
     min-width: $button-width;
     min-height: $button-height;
     padding: $button-padding;
@@ -95,7 +95,7 @@
     cursor: pointer;
     outline: none;
     border: none;
-    background-color: transparent;
+    background: transparent;
     transition: $button-transition;
     user-select: none;
     &:hover {

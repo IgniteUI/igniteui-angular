@@ -1,7 +1,6 @@
 import { Component } from "@angular/core";
 import { TabBarModule } from "../../src/tabbar/tab";
 
-
 @Component({
     selector: "tabbar-sample",
     template: `
