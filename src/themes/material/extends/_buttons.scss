@@ -70,6 +70,7 @@
     box-shadow: $button-floating-shadow;
     border: $button-border;
     border-radius: $button-floating-radius;
+    outline: none;
     &:hover {
       box-shadow: $button-floating-hover-shadow;
     }
@@ -81,6 +82,29 @@
 
 %button-fab-icon {
     color: $button-raised-color;
+}
+
+%button-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: em(24px, 16px);
+    width: em(28px, 16px);
+    height: em(28px, 16px);
+    border-radius: 50%;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    transition: $button-transition;
+    user-select: none;
+    &:hover {
+        background: $button-flat-hover-background;
+    }
+    &:focus,
+    &:active {
+        background: $button-flat-focus-background;
+    }
 }
 
 %button-disabled {

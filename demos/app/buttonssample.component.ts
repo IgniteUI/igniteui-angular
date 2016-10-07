@@ -26,6 +26,17 @@ import { ButtonModule } from "../../src/button/button";
                 <i class="material-icons">alarm_add</i>
             </a>
         </div>
+        <div style="display: flex; flex-wrap: row; padding: 10px 0">
+            <a igButton="icon">
+                <i class="material-icons">search</i>
+            </a>
+            <a igButton="icon">
+                <i class="material-icons">favorite</i>
+            </a>
+            <a igButton="icon">
+                <i class="material-icons">more_vert</i>
+            </a>
+        </div>
     `
 })
 

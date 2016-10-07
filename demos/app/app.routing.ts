@@ -32,7 +32,7 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/avatar',
+        redirectTo: '/buttons',
         pathMatch: 'full'
     },
     {
