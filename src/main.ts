@@ -2,7 +2,6 @@
  * Public API facet
  */
 export * from './core/navigation';
-export * from './directives/filter';
 
 export * from './navigation-drawer/navigation-drawer';
 export * from './icon/icon';
@@ -19,3 +18,4 @@ export * from './avatar/avatar';
 export * from './layout/layout';
 export * from './modal/modal';
 export * from './directives/filter';
+export * from './directives/ripple';
