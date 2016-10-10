@@ -53,6 +53,35 @@ describe("List", function () {
         item.left = testLeft;
         expect(item.left).toBe(testLeft);
     });
+
+    it('should calculate properly item index', () => {
+        let fixture = TestBed.createComponent(ListTestComponent),
+            list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        expect(list.children instanceof Array).toBeTruthy();
+        expect(list.items instanceof Array).toBeTruthy();
+        expect(list.headers instanceof Array).toBeTruthy();
+
+        expect(list.children.length).toBe(4);
+        expect(list.items.length).toBe(3);
+        expect(list.headers.length).toBe(1);
+
+        for (let i = 0; i < list.children.length; i++) {
+            expect(list.children[i].index).toBe(i);
+        }
+
+        list.addChild(new ListItem(list, null, null));
+        fixture.detectChanges();
+
+        expect(list.children.length).toBe(5);
+        expect(list.items.length).toBe(4);
+        expect(list.headers.length).toBe(1);
+
+        for (let i = 0; i < list.children.length; i++) {
+            expect(list.children[i].index).toBe(i);
+        }
+    });
 });
 
 @Component({
@@ -69,22 +98,3 @@ class ListTestComponent {
      @ViewChild(List) list: List;
      @ViewChild("wrapper") wrapper;
 }
-
-@Component({
-    template: '<div></div>'
-})
-class ListHeaderTestComponent {
-     @ViewChild(ListHeader) public viewChild: ListHeader;
-}
-
-@Component({
-    template: '<div></div>'
-})
-class ListItemTestComponent {
-     @ViewChild(ListItem) public viewChild: ListItem;
-}
-
-//class TestComponentPin extends TestComponentDI {
-     //pin: boolean = true;
-     //enableGestures: string = "";
-//}

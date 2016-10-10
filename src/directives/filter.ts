@@ -17,7 +17,7 @@ export class FilterDirective implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         // Detect only changes of input value
-        if (changes["inputValue"]) { // || changes["filterOptions"] && changes["filterOptions"].currentValue.items) {
+        if (changes["inputValue"]) {
             this.filter();
         }    
     }
