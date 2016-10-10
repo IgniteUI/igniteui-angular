@@ -5,12 +5,16 @@ import { CommonModule } from '@angular/common';
     selector: '[igRipple]',
 })
 class RippleDirective {
-    private _wrap: HTMLElement;
+    private _centered: boolean = false;
 
     container: HTMLElement;
-    @Input('igRipple') rippleColor: string;
+    
     @Input() duration: number = 400;
-
+    @Input('igRippleCentered') set centered(value: boolean) {
+        this._centered = value || this.centered;
+    }
+    @Input('igRipple') rippleColor: string;
+    
     @HostListener('mousedown', ['$event'])
     onClick(event) {
         this._ripple(event);
@@ -21,7 +25,7 @@ class RippleDirective {
     }
 
     _ripple(event) {
-        this.container.classList.add('rippleHost');
+        this.container.classList.add('ig-ripple-host');
         let parent = this.container.parentElement;
 
         let posX = this.container.offsetLeft;
@@ -29,10 +33,10 @@ class RippleDirective {
         let width = this.container.offsetWidth;
         let height = this.container.offsetHeight;
 
+        // !! should create ripple specific instance of wrap
         let wrap = document.createElement('span');
-        this._wrap = wrap;
 
-        wrap.classList.add('ripple');
+        wrap.classList.add('ig-ripple-host__ripple');
 
         this.container.appendChild(wrap);
 
@@ -49,13 +53,21 @@ class RippleDirective {
         wrap.style.height = `${height}px`;
         wrap.style.top = `${y}px`;
         wrap.style.left = `${x}px`;
+
+        if(this._centered) {
+            wrap.style.top = `0`;
+            wrap.style.left = `0`;
+        }
+
         if (this.rippleColor) {
             wrap.style.background = this.rippleColor;
         }
 
-        wrap.classList.add('rippleEffect');
+        wrap.classList.add('ig-ripple-host__ripple--animate');
         this.container.addEventListener('animationend', (ev)=> {
-            this.container.classList.remove('rippleHost');
+            this.container.classList.remove('ig-ripple-host');
+            // !! should remove only ripple specific instance of the wrapper
+            // to avoid canceling any other active animations !!
             wrap.remove();
         }, false);
     }
