@@ -1,3 +1,11 @@
-@include b(ig-ripple) {
-    @extend %ig-ripple;
+@include b(ig-ripple-host) {
+    @extend %ig-ripple-wrapper;
+    
+    @include e(ripple) {
+        @extend %ig-ripple-display;
+
+        @include m(animate) {
+            @extend %ig-ripple-animation;
+        }
+    }
 }

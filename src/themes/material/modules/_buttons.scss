@@ -21,8 +21,12 @@
     @extend %button-fab;
   }
 
+
+  @include m(icon){
+    @extend %button-icon;
+  }
+
   @include m(disabled) {
-    @extend %button-display;
     @extend %button-disabled;
   }
 }

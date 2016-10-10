@@ -1,5 +1,6 @@
 %button-display {
-    display: inline-block;
+    position: relative;
+    display: block;
     min-width: $button-width;
     min-height: $button-height;
     padding: $button-padding;
@@ -60,16 +61,20 @@
 
 %button-fab {
     display: flex;
-    align-items: center;
+    position: relative;
     justify-content: center;
+    align-items: center;
     color: $button-raised-color;
     min-width: 1px;
     width: $button-floating-width;
     height: $button-floating-height;
     background: $button-floating-background;
-    box-shadow: $button-floating-shadow;
     border: $button-border;
     border-radius: $button-floating-radius;
+    outline: none;
+    // hack to allow circular overflow in chrome ...
+    filter: drop-shadow(0 0 0 rgba(255, 255, 255, 1));
+    box-shadow: $button-floating-shadow;
     &:hover {
       box-shadow: $button-floating-hover-shadow;
     }
@@ -81,6 +86,31 @@
 
 %button-fab-icon {
     color: $button-raised-color;
+}
+
+%button-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: em(24px, 16px);
+    width: em(28px, 16px);
+    height: em(28px, 16px);
+    border-radius: 50%;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    background: transparent;
+    transition: $button-transition;
+    user-select: none;
+    // another hack to allow circular overflow in chrome ...
+    -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
+    &:hover {
+        background: $button-flat-hover-background;
+    }
+    &:focus,
+    &:active {
+        background: $button-flat-focus-background;
+    }
 }
 
 %button-disabled {
