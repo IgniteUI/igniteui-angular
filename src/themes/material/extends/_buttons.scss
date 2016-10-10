@@ -114,9 +114,9 @@
 }
 
 %button-disabled {
-    color: $button-disabled-color;
-    background: $button-disabled-background;
-    pointer-events: none; 
-    box-shadow: $button-disabled-shadow;
-    opacity: 0.9;
+    color: $button-disabled-color !important;
+    background: $button-disabled-background !important;
+    pointer-events: none !important; 
+    box-shadow: $button-disabled-shadow !important;
+    opacity: 0.9 !important;
 }
