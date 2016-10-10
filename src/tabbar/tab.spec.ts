@@ -1,38 +1,34 @@
-//// modeled after https://github.com/angular/angular/blob/cee2318110eeea115e5f6fc5bfc814cbaa7d90d8/modules/angular2/test/common/directives/ng_for_spec.ts
-///// <reference path="../../typings/globals/jasmine/index.d.ts" />
-///// <reference path="../../typings/globals/es6-shim/index.d.ts" />
+import { async, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { TabBar, Tab, TabBarModule } from './tab';
+import { Component, ViewChild, ContentChildren } from '@angular/core';
 
-//import { inject, async, fakeAsync, tick } from '@angular/core/testing';
-//import { TestComponentBuilder, ComponentFixture } from '@angular/core/testing';
+describe("List", function () {
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            imports: [TabBarModule],
+            declarations: [TabBarTestComponent]
+        })
+            .compileComponents();
+    }));
 
-//import {Component, ViewChild} from '@angular/core';
-//import * as Infragistics from '../../src/main';
+    it('should initialize ig-tab-bar and ig-tabs', () => {
+        let fixture = TestBed.createComponent(TabBarTestComponent),
+            tabbar = fixture.componentInstance.tabbar;
 
-//// HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
-//declare var Simulator: any;
+        fixture.detectChanges();
+        expect(tabbar).toBeDefined();
+        expect(tabbar instanceof TabBar).toBeTruthy();
+        expect(tabbar.tabs instanceof Array).toBeTruthy();
+        expect(tabbar.tabs.length).toBe(3);
 
-//export function main() {
-//    describe('Infragistics Angular2 Tab Bar', function() {
-//         it('should initialize ig-tab-bar and ig-tabs',
-//           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
-//              var template = '<ig-tab-bar><ig-tab></ig-tab><ig-tab></ig-tab></ig-tab-bar>';
-//                return tcb.overrideTemplate(TabBarTestComponent, template)
-//                .createAsync(TabBarTestComponent)
-//                .then((fixture) => {
-//                    var tabBar = fixture.componentInstance.viewChild,
-//                        tabs = tabBar.tabs;
-//                    expect(tabBar).toBeDefined();
-//                    expect(tabBar instanceof Infragistics.TabBar).toBeTruthy();
-//                    expect(tabs.length).toBe(2);
-//                    fixture.detectChanges();
-//                    expect(tabs instanceof Array).toBeTruthy();
-//                    expect(tabs[0] instanceof Infragistics.Tab).toBeTruthy();
-//                    expect(tabs[1] instanceof Infragistics.Tab).toBeTruthy();
-//                }).catch (reason => {
-//                    console.log(reason);
-//                    return Promise.reject(reason);
-//                });
-//         })));
+        for (let i = 0; i < tabbar.tabs.length; i++) {
+            expect(tabbar.tabs[i] instanceof Tab).toBeTruthy();
+        }
+    });
+
+});
+
 //         it('should initialize default values of properties',
 //           async(inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
 //                var template = '<ig-tab-bar><ig-tab></ig-tab><ig-tab></ig-tab></ig-tab-bar>';
@@ -208,31 +204,30 @@
 //         })));
 //         // end of tests
 //    });
-//}
-
-//@Component({
-//    selector: 'test-cmp',
-//    template: '<div></div>', //"Component 'TestComponent' must have either 'template' or 'templateUrl' set."
-//    directives: [
-//        Infragistics.TabBar,
-//        Infragistics.Tab
-//    ]
-//})
-//class TabBarTestComponent {
-//     @ViewChild(Infragistics.TabBar) viewChild: Infragistics.TabBar;
-//     @ViewChild("wrapperDiv") wrapperDiv;
-//}
-
-//@Component({
-//    selector: 'test-cmp',
-//    template: '<div></div>', //"Component 'TestComponent' must have either 'template' or 'templateUrl' set."
-//    directives: [Infragistics.Tab]
-//})
-//class TabTestComponent {
-//     @ViewChild(Infragistics.TabBar) viewChild: Infragistics.Tab;
-//}
-
-////class TestComponentPin extends TestComponentDI {
-//     //pin: boolean = true;
-//     //enableGestures: string = "";
-////}
+@Component({
+    template: `<ig-tab-bar alignment="bottom">
+                <ig-tab label="Tab 1" icon="library_music">
+                    <h1>Tab 1 Content</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </ig-tab>
+                <ig-tab label="Tab 2" icon="video_library">
+                    <h1>Tab 2 Content</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </ig-tab>
+                <ig-tab label="Tab 3" icon="library_books">
+                    <h1>Tab 3 Content</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                        Vivamus vitae malesuada odio. Praesent ante lectus, porta a eleifend vel, sodales eu nisl. 
+                        Vivamus sit amet purus eu lectus cursus rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat. 
+                        Vivamus risus ipsum, pharetra a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper nunc. 
+                        Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam.
+                         Nullam elementum, libero vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. 
+                        In hendrerit, sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo. 
+                        Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.
+                    </p>
+                </ig-tab>
+            </ig-tab-bar>`
+})
+class TabBarTestComponent {
+    @ViewChild(TabBar) tabbar: TabBar;    
+}

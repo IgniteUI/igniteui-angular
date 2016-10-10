@@ -87,7 +87,7 @@ export class ListItem implements OnInit, OnDestroy, IListChild {
     }
 
     get width() {
-        if (this.element) {
+        if (this.element && this.element.nativeElement) {
             return this.element.nativeElement.offsetWidth;
         } else {
             return 0;
@@ -119,7 +119,6 @@ export class ListItem implements OnInit, OnDestroy, IListChild {
     }
 
     public ngOnInit() {
-        //this.list.addItem(this);
         this.list.addChild(this);
     }
 
@@ -128,9 +127,11 @@ export class ListItem implements OnInit, OnDestroy, IListChild {
     }
 
     private _addEventListeners() {
-        this._renderer.listen(this.element.nativeElement, 'panstart', (event) => { this.panStart(event); });
-        this._renderer.listen(this.element.nativeElement, 'panmove', (event) => { this.panMove(event); });
-        this._renderer.listen(this.element.nativeElement, 'panend', (event) => { this.panEnd(event); });
+        if (this._renderer) {
+            this._renderer.listen(this.element.nativeElement, 'panstart', (event) => { this.panStart(event); });
+            this._renderer.listen(this.element.nativeElement, 'panmove', (event) => { this.panMove(event); });
+            this._renderer.listen(this.element.nativeElement, 'panend', (event) => { this.panEnd(event); });
+        }        
     }
 
     private cancelEvent(ev: HammerInput) {

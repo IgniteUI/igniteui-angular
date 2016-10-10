@@ -1,6 +1,5 @@
 import { Component, Input, Output, ElementRef, ViewChild, AfterViewInit, AfterContentInit, EventEmitter, NgModule } from '@angular/core';
 import { CommonModule } from "@angular/common";
-//declare var module: any;
 
 @Component({
     selector: 'ig-tab-bar',
