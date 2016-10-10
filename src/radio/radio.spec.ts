@@ -34,7 +34,7 @@ describe('IgRadio', function() {
         expect(nativeLabel.textContent.trim()).toEqual('Radio');
     });
 
-    it('Binding to ngModel', () => {
+    it('Binding to ngModel', async(() => {
         let fixture = TestBed.createComponent(RadioWithModel);
         fixture.detectChanges();
 
@@ -49,12 +49,13 @@ describe('IgRadio', function() {
             radios[1].nativeRadio.nativeElement.dispatchEvent(new Event('change'));
             fixture.detectChanges();
             fixture.whenStable().then(() => {
+                fixture.detectChanges();
                 expect(radios[1].checked).toBe(true);
                 expect(radios[0].checked).toBe(false);
                 expect(fixture.componentInstance.selected).toEqual('Bar');
             });
         });
-    });
+    }));
 });
 
 
