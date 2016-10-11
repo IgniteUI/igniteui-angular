@@ -5,37 +5,37 @@ import { ButtonModule } from "../../src/button/button";
     selector: "button-sample",
     template: `
         <h3>Buttons</h3>
-        <div style="width: 120px; margin: 10px">
+        <div>
             <span igButton="flat" igRipple>Flat</span>
         </div>
         <br>
-        <div style="width: 120px; margin: 10px">
+        <div>
             <span igButton="raised" igRipple>Raised</span>  
         </div>
         <br>
-        <div style="width: 120px; margin: 10px">
+        <div>
             <span igButton="raised" igButtonColor="#FBB13C" igButtonBackground="#340068" igRipple="white">Raised</span>  
         </div>
         <br>
-        <div style="width: 120px; margin: 10px">
+        <div>
             <span igButton="raised" igButtonColor="yellow" igButtonBackground="black" igRipple="yellow">Test</span>
         </div>
         <br>
-        <div style="width: 120px; margin: 10px">
+        <div>
             <span igButton="gradient" igRipple>Gradient</span>
         </div>
         <br>
-        <div style="width: 120px; margin: 10px">
+        <div>
             <span igButton="raised" disabled>Disabled</span>
         </div>
         <br>
-        <div style="margin: 10px; margin: 10px">
+        <div>
             <span igButton="fab" igRipple="black">
                 <i class="material-icons">add</i>
             </span>
         </div>
         <br>
-        <div style="margin: 10px; margin: 10px">
+        <div>
             <span igButton="fab" igButtonColor="#484848" igButtonBackground="white" igRipple="#484848">
                 <i class="material-icons">edit</i>
             </span>

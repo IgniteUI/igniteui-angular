@@ -3,9 +3,5 @@
     
     @include e(ripple) {
         @extend %ig-ripple-display;
-
-        @include m(animate) {
-            @extend %ig-ripple-animation;
-        }
     }
 }

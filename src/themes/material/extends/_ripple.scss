@@ -20,15 +20,3 @@
     position: relative;
     overflow: hidden;
 }
-
-%ig-ripple-animation {
-    animation: rippleDrop 1s cubic-bezier(0.25, 0.8, 0.25, 1);
-    z-index: 1;
-}
-
-@keyframes rippleDrop {
-  100% {
-    transform: scale(2);
-    opacity: 0;
-  }
-}

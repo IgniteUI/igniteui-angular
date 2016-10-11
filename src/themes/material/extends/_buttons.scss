@@ -1,6 +1,6 @@
 %button-display {
     position: relative;
-    display: block;
+    display: inline-block;
     min-width: $button-width;
     min-height: $button-height;
     padding: $button-padding;
@@ -16,6 +16,7 @@
     outline: none;
     -webkit-tap-highlight-color: transparent;
     transition: $button-transition;
+    overflow: hidden;
 }
 
 %button-flat {
@@ -102,6 +103,7 @@
     background: transparent;
     transition: $button-transition;
     user-select: none;
+    -webkit-tap-highlight-color: transparent;
     // another hack to allow circular overflow in chrome ...
     -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
     &:hover {

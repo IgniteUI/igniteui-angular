@@ -1,6 +1,7 @@
 import { Component, ViewChild, ElementRef } from "@angular/core";
 import { ListModule, List } from "../../src/list/list";
 import { FilterModule, FilterOptions } from '../../src/directives/filter';
+import { IgRippleModule } from '../../src/directives/ripple';
 
 @Component({
     selector: "list-sample",
@@ -14,7 +15,7 @@ import { FilterModule, FilterOptions } from '../../src/directives/filter';
                 <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
             </div>
             <ig-list>
-                <ig-list-item *ngFor="let item of navItems | filter: fo1: search1">
+                <ig-list-item igRipple="pink" igRippleTarget=".ig-list__item" *ngFor="let item of navItems | filter: fo1: search1">
                     {{item.text}}
                 </ig-list-item>
             </ig-list>        
