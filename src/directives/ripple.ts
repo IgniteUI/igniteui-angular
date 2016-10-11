@@ -5,18 +5,22 @@ import { CommonModule } from '@angular/common';
     selector: '[igRipple]',
 })
 class RippleDirective {
+
     private _centered: boolean = false;
+    private _remaining: number = 0;
 
-    container: HTMLElement;
+    protected container: HTMLElement;
 
-    @Input() duration: number = 400;
+    @Input("igRippleTarget") rippleTarget: string = "";
+
     @Input('igRippleCentered') set centered(value: boolean) {
         this._centered = value || this.centered;
     }
     @Input('igRipple') rippleColor: string;
+    @Input('igRippleDuration') rippleDuration: number = 1000;
 
     @HostListener('mousedown', ['$event'])
-    onClick(event) {
+    onMouseDown(event) {
         this._ripple(event);
     }
 
@@ -25,20 +29,22 @@ class RippleDirective {
     }
 
     _ripple(event) {
-        let parent, posX, posY, width,
-            height, x, y, wrap;
+        let target, x, y, rippler, rectBounds;
 
-        parent = this.container.parentElement;
-        posX = this.container.offsetLeft;
-        posY = this.container.offsetTop;
-        width = this.container.offsetWidth;
-        height = this.container.offsetHeight;
+        if (this.rippleTarget) {
+            target = this.container.querySelector(this.rippleTarget) || this.container;
+        } else {
+            target = this.container;
+        }
 
-        this.renderer.setElementClass(this.container, 'ig-ripple-host', true);
+        rectBounds = target.getBoundingClientRect();
 
-        wrap = this.renderer.createElement(this.container, 'span');
+        let {top, left, width, height} = rectBounds;
 
-        this.renderer.setElementClass(wrap, 'ig-ripple-host__ripple', true);
+
+        this.renderer.setElementClass(target, 'ig-ripple-host', true);
+        rippler = this.renderer.createElement(target, 'span');
+        this.renderer.setElementClass(rippler, 'ig-ripple-host__ripple', true);
 
         if (width >= height) {
             height = width;
@@ -46,32 +52,38 @@ class RippleDirective {
             width = height;
         }
 
-        x = event.pageX - posX - width / 2;
-        y = event.pageY - posY - height / 2;
+        x = event.pageX - left - width / 2;
+        y = event.pageY - top - height / 2;
 
-        this.renderer.setElementStyle(wrap, 'width', `${width}px`);
-        this.renderer.setElementStyle(wrap, 'height', `${height}px`);
-        this.renderer.setElementStyle(wrap, 'top', `${y}px`);
-        this.renderer.setElementStyle(wrap, 'left', `${x}px`);
+        this.renderer.setElementStyle(rippler, 'width', `${width}px`);
+        this.renderer.setElementStyle(rippler, 'height', `${height}px`);
+        this.renderer.setElementStyle(rippler, 'top', `${y}px`);
+        this.renderer.setElementStyle(rippler, 'left', `${x}px`);
 
         if(this._centered) {
-            this.renderer.setElementStyle(wrap, 'top', '0');
-            this.renderer.setElementStyle(wrap, 'left', '0');
+            this.renderer.setElementStyle(rippler, 'top', '0');
+            this.renderer.setElementStyle(rippler, 'left', '0');
         }
 
         if (this.rippleColor) {
-            this.renderer.setElementStyle(wrap, 'background', this.rippleColor);
+            this.renderer.setElementStyle(rippler, 'background', this.rippleColor);
         }
 
-        let cb_handler = (ev) => {
-            this.renderer.setElementClass(this.container, 'ig-ripple-host', false);
-            wrap.remove();
+        let FRAMES = [
+            {opacity: 1, transform: 'scale(0)'},
+            {opacity: 0, transform: 'scale(2)'},
+        ];
+
+        let animation = rippler.animate(FRAMES, this.rippleDuration);
+        this._remaining++;
+
+        animation.onfinish = (ev?) => {
+            target.removeChild(rippler);
+            this._remaining--;
+            if (this._remaining <= 0) {
+                this.renderer.setElementClass(target, 'ig-ripple-host', false);
+            }
         };
-
-        this.renderer.setElementClass(wrap, 'ig-ripple-host__ripple--animate', true);
-
-        this.container.addEventListener('animationend', cb_handler, false);
-        this.container.removeEventListener('animationend', cb_handler, false);
     }
 }
 
