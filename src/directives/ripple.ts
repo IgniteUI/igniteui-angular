@@ -19,6 +19,7 @@ class RippleDirective {
     @Input('igRipple') rippleColor: string;
     @Input('igRippleDuration') rippleDuration: number = 600;
 
+
     @HostListener('mousedown', ['$event'])
     onMouseDown(event) {
         this._ripple(event);
