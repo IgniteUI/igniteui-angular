@@ -19,6 +19,7 @@ script:
 - cat ./coverage/report-lcov/lcov.info | coveralls
 
 before_deploy:
+- npm run bundle
 # move to dist
 - cd dist
 # update package versions
