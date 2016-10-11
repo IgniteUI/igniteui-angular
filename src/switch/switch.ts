@@ -12,7 +12,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from "@angular/forms";
 const noop = () => {};
 let nextId = 0;
 
-export function MakeProvider(type: any) {
+function MakeProvider(type: any) {
     return {
         provide: NG_VALUE_ACCESSOR,
         useExisting: forwardRef(() => type),

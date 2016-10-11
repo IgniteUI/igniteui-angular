@@ -16,15 +16,17 @@ var concat = require('gulp-concat'),
 var Builder = require('systemjs-builder');
 
 var tsProject = ts.createProject('tsconfig.json', {
-    typescript: tsc
-}),
+        typescript: tsc
+    }),
     tsProdProject = ts.createProject('tsconfig.json', {
+        typescript: tsc,
         declaration: true
     }),
     source = './src/**/*.ts',
     tsSources: Array<string> = [
         "./demos/**/*.ts"
-        ].concat(source);
+    ].concat(source),
+    specFilesNegate = '!./src/**/*.spec.ts';
 
 
 gulp.task("build", ["build.css", "build.js", "build.fonts"]);
@@ -56,7 +58,7 @@ gulp.task("build.js", () => {
 
 gulp.task("build.src", () => {
 
-    var tsResult = gulp.src(["./typings/index.d.ts"].concat(source), { base: "./src"})
+    var tsResult = gulp.src(["./typings/index.d.ts"].concat(source, specFilesNegate), { base: "./src"})
         .pipe(inlineNg2Template({ useRelativePaths: true, base: "/src/*"}))
         .pipe(sourcemaps.init())
         .pipe(ts(tsProdProject));
