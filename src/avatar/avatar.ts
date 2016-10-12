@@ -13,6 +13,7 @@ import {
 import { CommonModule } from "@angular/common";
 
 export enum Size { SMALL, MEDIUM, LARGE };
+export enum Type { ICON = 0, INITIALS = 1, IMAGE = 2 };
 
 @Component({
     selector: 'ig-avatar',
@@ -21,16 +22,18 @@ export enum Size { SMALL, MEDIUM, LARGE };
 })
 export class Avatar {
     @ViewChild('image') image: ElementRef;
-
     @Input() initials: string;
     @Input() src: string;
     @Input() roundShape: string = "false";
     @Input() color: string = 'white';
+
     protected fontname = "Titillium Web";
     private _size: string;
     private _bgColor: string;
     private _icon: string = "android";
+    private _avatarType: number;
     public SizeEnum = Size;
+    public TypeEnum = Type;
 
     get size() : string{
         return this._size === undefined ? "small" : this._size;
@@ -43,7 +46,25 @@ export class Avatar {
         if(sizeType === undefined){
             this._size = "small";
         } else {
-            this._size = value;
+            this._size = value.toLowerCase();
+        }
+    }
+
+    get type() : Type {
+        return this._avatarType === undefined ? Type.ICON : this._avatarType;
+    }
+
+    @Input("type")
+    set type(value: Type) {
+        var intValue = parseInt(value.toString())
+        this._avatarType = Type.ICON;
+
+        if (intValue && this.TypeEnum[intValue]) {
+            this._avatarType = intValue;
+        }
+
+        if (!intValue && this.TypeEnum[value.toString().toUpperCase()]) {
+            this._avatarType = this.TypeEnum[value.toString().toUpperCase()];
         }
     }
 
@@ -84,21 +105,20 @@ export class Avatar {
 
     ngAfterViewInit() {
         if(this.initials && this.image){
-            var src = this.generateCanvas(parseInt(this.image.nativeElement.width));
+            var src = this.generateInitials(parseInt(this.image.nativeElement.width));
             this.image.nativeElement.src = src;
         }
     }
 
-    private generateCanvas(size){
-        var canvas = document.createElement('canvas');
+    private generateInitials(size){
+        var canvas = document.createElement('canvas'),
+            fontSize = size / 2, ctx;
+
         canvas.width = size;
         canvas.height = size;
 
-        var fontSize = size / 2;
-
-        var ctx = canvas.getContext('2d');
+        ctx = canvas.getContext('2d');
         ctx.fillStyle = this.bgColor;
-
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.textAlign = "center";
         ctx.fillStyle = this.color;
