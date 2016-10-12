@@ -4,7 +4,7 @@ import { Component } from "@angular/core";
     selector: 'sample-app',
     template:`
         <h1 style="text-align: center">Zero Blocks Samples</h1>
-        <nav style="width: 100%; display: flex; justify-content: center;">
+        <nav style="display: flex; justify-content: center; flex-wrap: wrap">
             <span igButton routerLink="/inputs">Inputs</span>
             <span igButton routerLink="/carousel">Carousel</span>
             <span igButton routerLink="/tabbar">TabBar</span>

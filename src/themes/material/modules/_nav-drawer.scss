@@ -1,45 +1,42 @@
 /* Main Navigation Drawer state styles */
 
-$background: #DADEE4;
-$overlay: rgba(136,136,136,0.5);
-$shadow: rgba(80, 80, 80, 0.1);
+$background: #fff;
+$overlay: rgba(72, 72, 72, 0.5);
 
-.ig-nav-drawer {
-    box-sizing: border-box;
-    min-height: 100%;
-    z-index: 999;
+@include b(ig-nav-drawer) {
+    position: fixed;
+    width: em(300px);
+    height: 100%;
     max-width: 90%;
+    min-height: 100%;
     overflow-x: hidden;
     background-color: $background;
-    padding: 0.7em;
-    position: fixed;
-    left: 0;
     top: 0;
     bottom: 0;
-    width: 300px;
-    height: 100%;
+    left: 0;
+    z-index: 999;
     /*transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);*/
     /* use full syntax, iOS Safari won't work with transition: width .3s ease-in, transform .3s ease-in; shorthand */
     transition-property: width, transform;
     transition-duration: 0.25s, 0.25s;
-    transition-timing-function: ease-in, ease-in;
+    transition-timing-function: ease-in-out, ease-in;
     transition-delay: 0s, 0s;
-    box-shadow: 2px 2px 2px 1px $shadow;
+    box-shadow: $elevate-16;
     
     /* states */
-    
     &.collapsed {
-        transform: translate3d(-300px,0px,0px);    
+        transform: translate3d(-300px,0px,0px);
+        box-shadow: none;
     }
     
     &.right {
         left: auto;
         right: 0;
-        box-shadow: -2px -2px 2px 1px $shadow;
     }
     
     &.collapsed.right {
         transform: translate3d(300px,0px,0px);
+        box-shadow: none;
     }
     
     &.mini {
@@ -58,7 +55,7 @@ $shadow: rgba(80, 80, 80, 0.1);
         padding: 0;
         overflow: hidden;
     }
-}  
+}
     
 /* Utility classes for active pan */
 .ig-nav-drawer.panning {
@@ -83,13 +80,10 @@ $shadow: rgba(80, 80, 80, 0.1);
     visibility: hidden; /* potentially don't use this? */
 }
 
-
-
 /* Navigation Drawer overlay styles */
 .ig-nav-drawer-overlay {
     opacity: 1;
     background-color: $overlay;
-   
    
     transition-property: opacity, visibility;
     /* opacity must match drawer transition, step over visibility to reduce animation cost */
@@ -105,7 +99,7 @@ $shadow: rgba(80, 80, 80, 0.1);
     visibility: visible;
     
     &.hidden {
-        transition-timing-function: ease-in, step-end;
+        transition-timing-function: ease-in-out, step-end;
         /* use visibility so opacity can be animated */
         visibility: hidden; 
         opacity: 0;

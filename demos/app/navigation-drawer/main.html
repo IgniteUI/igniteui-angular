@@ -10,22 +10,19 @@
     [isOpen]="open"
     [width]="drawerWidth"
     [miniWidth]="drawerMiniWidth">
-    
         <!-- expand + mini templates -->
         <div class="ig-drawer-content">
-            <h1> Drawer Title <button ig-nav-close="test"> X </button></h1>
+            <h3>Drawer Title</h3>
             <div *ngFor="let navItem of navItems"><img src="http://www.infragistics.com/assets/images/favicon.ico" width='16' /> <a routerLink="{{navItem.link}}"> {{navItem.text}} </a></div>
         </div>
         <div *ngIf="miniTemplate" class="ig-drawer-mini-content">
             <span class="hamburger" ig-nav-toggle="test" > &#9776; </span>
             <div *ngFor="let navItem of navItems"><img src="http://www.infragistics.com/assets/images/favicon.ico" width='16' /></div>
         </div>
-    </ig-nav-drawer>
+</ig-nav-drawer>
     
 <div class="sample-content" [class.full]="pin && !open" [class.pin]="pin">     
-    
     <span class="hamburger" ig-nav-toggle="test" *ngIf="showToggle"> &#9776; </span>
-    
     <div>
         <button ig-nav-toggle="test"> Toggle </button>
         <button ig-nav-close="test"> Close </button>
@@ -56,7 +53,7 @@
         Mini width: <input type='text' [(ngModel)]="drawerMiniWidth" placeholder="Mini width (60px)"/>    
     </label>             
     <div id="log" *ngIf="showEventLog">
-            <p> Events: </p>
-            <div *ngFor="let ev of log">{{ev}}</div>
+        <p> Events: </p>
+        <div *ngFor="let ev of log">{{ev}}</div>
     </div>
 </div>

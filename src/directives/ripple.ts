@@ -17,7 +17,8 @@ class RippleDirective {
         this._centered = value || this.centered;
     }
     @Input('igRipple') rippleColor: string;
-    @Input('igRippleDuration') rippleDuration: number = 1000;
+    @Input('igRippleDuration') rippleDuration: number = 600;
+
 
     @HostListener('mousedown', ['$event'])
     onMouseDown(event) {
@@ -70,7 +71,7 @@ class RippleDirective {
         }
 
         let FRAMES = [
-            {opacity: 1, transform: 'scale(0)'},
+            {opacity: 0.5, transform: 'scale(0)'},
             {opacity: 0, transform: 'scale(2)'},
         ];
 
