@@ -13,7 +13,6 @@ import {
 import { CommonModule } from "@angular/common";
 
 export enum Size { SMALL, MEDIUM, LARGE };
-export enum Type { ICON = 0, INITIALS = 1, IMAGE = 2 };
 
 @Component({
     selector: 'ig-avatar',
@@ -31,9 +30,7 @@ export class Avatar {
     private _size: string;
     private _bgColor: string;
     private _icon: string = "android";
-    private _avatarType: number;
     public SizeEnum = Size;
-    public TypeEnum = Type;
 
     get size() : string{
         return this._size === undefined ? "small" : this._size;
@@ -47,24 +44,6 @@ export class Avatar {
             this._size = "small";
         } else {
             this._size = value.toLowerCase();
-        }
-    }
-
-    get type() : Type {
-        return this._avatarType === undefined ? Type.ICON : this._avatarType;
-    }
-
-    @Input("type")
-    set type(value: Type) {
-        var intValue = parseInt(value.toString())
-        this._avatarType = Type.ICON;
-
-        if (intValue && this.TypeEnum[intValue]) {
-            this._avatarType = intValue;
-        }
-
-        if (!intValue && this.TypeEnum[value.toString().toUpperCase()]) {
-            this._avatarType = this.TypeEnum[value.toString().toUpperCase()];
         }
     }
 

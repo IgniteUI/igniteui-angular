@@ -73,10 +73,6 @@ import { AvatarModule, Avatar } from "../../src/avatar/avatar";
                         <ig-avatar color="gray">
                         </ig-avatar>
                     </td>
-                    <td>
-                        <ig-avatar color="gray" type="image">
-                        </ig-avatar>
-                    </td>
                 </tr>
             </table>
         </div>
