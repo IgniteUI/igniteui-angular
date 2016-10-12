@@ -32,7 +32,7 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/buttons',
+        redirectTo: '/navigation-drawer',
         pathMatch: 'full'
     },
     {
@@ -40,6 +40,5 @@ const appRoutes: Routes = [
         component: AvatarSampleComponent
     }
 ];
-
 
 export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);
