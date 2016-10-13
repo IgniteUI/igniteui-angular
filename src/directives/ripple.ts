@@ -1,44 +1,51 @@
-import { Directive, Input, ElementRef, NgModule, HostListener } from '@angular/core';
+import { Directive, Input, Renderer, ElementRef, NgModule, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Directive({
     selector: '[igRipple]',
 })
 class RippleDirective {
-    private _centered: boolean = false;
 
-    container: HTMLElement;
-    
-    @Input() duration: number = 400;
+    private _centered: boolean = false;
+    private _remaining: number = 0;
+
+    protected container: HTMLElement;
+
+    @Input("igRippleTarget") rippleTarget: string = "";
+
     @Input('igRippleCentered') set centered(value: boolean) {
         this._centered = value || this.centered;
     }
     @Input('igRipple') rippleColor: string;
-    
+    @Input('igRippleDuration') rippleDuration: number = 600;
+
+
     @HostListener('mousedown', ['$event'])
-    onClick(event) {
+    onMouseDown(event) {
         this._ripple(event);
     }
 
-    constructor(protected el: ElementRef) {
+    constructor(protected el: ElementRef, protected renderer: Renderer) {
         this.container = el.nativeElement;
     }
 
     _ripple(event) {
-        this.container.classList.add('ig-ripple-host');
-        let parent = this.container.parentElement;
+        let target, x, y, rippler, rectBounds;
 
-        let posX = this.container.offsetLeft;
-        let posY = this.container.offsetTop;
-        let width = this.container.offsetWidth;
-        let height = this.container.offsetHeight;
+        if (this.rippleTarget) {
+            target = this.container.querySelector(this.rippleTarget) || this.container;
+        } else {
+            target = this.container;
+        }
 
-        // !! should create ripple specific instance of wrap
-        let wrap = document.createElement('span');
+        rectBounds = target.getBoundingClientRect();
 
-        wrap.classList.add('ig-ripple-host__ripple');
+        let {top, left, width, height} = rectBounds;
 
-        this.container.appendChild(wrap);
+
+        this.renderer.setElementClass(target, 'ig-ripple-host', true);
+        rippler = this.renderer.createElement(target, 'span');
+        this.renderer.setElementClass(rippler, 'ig-ripple-host__ripple', true);
 
         if (width >= height) {
             height = width;
@@ -46,30 +53,38 @@ class RippleDirective {
             width = height;
         }
 
-        let x = event.pageX - posX - width / 2;
-        let y = event.pageY - posY - height / 2;
+        x = event.pageX - left - width / 2;
+        y = event.pageY - top - height / 2;
 
-        wrap.style.width = `${width}px`;
-        wrap.style.height = `${height}px`;
-        wrap.style.top = `${y}px`;
-        wrap.style.left = `${x}px`;
+        this.renderer.setElementStyle(rippler, 'width', `${width}px`);
+        this.renderer.setElementStyle(rippler, 'height', `${height}px`);
+        this.renderer.setElementStyle(rippler, 'top', `${y}px`);
+        this.renderer.setElementStyle(rippler, 'left', `${x}px`);
 
         if(this._centered) {
-            wrap.style.top = `0`;
-            wrap.style.left = `0`;
+            this.renderer.setElementStyle(rippler, 'top', '0');
+            this.renderer.setElementStyle(rippler, 'left', '0');
         }
 
         if (this.rippleColor) {
-            wrap.style.background = this.rippleColor;
+            this.renderer.setElementStyle(rippler, 'background', this.rippleColor);
         }
 
-        wrap.classList.add('ig-ripple-host__ripple--animate');
-        this.container.addEventListener('animationend', (ev)=> {
-            this.container.classList.remove('ig-ripple-host');
-            // !! should remove only ripple specific instance of the wrapper
-            // to avoid canceling any other active animations !!
-            wrap.remove();
-        }, false);
+        let FRAMES = [
+            {opacity: 0.5, transform: 'scale(0)'},
+            {opacity: 0, transform: 'scale(2)'},
+        ];
+
+        let animation = rippler.animate(FRAMES, this.rippleDuration);
+        this._remaining++;
+
+        animation.onfinish = (ev?) => {
+            target.removeChild(rippler);
+            this._remaining--;
+            if (this._remaining <= 0) {
+                this.renderer.setElementClass(target, 'ig-ripple-host', false);
+            }
+        };
     }
 }
 

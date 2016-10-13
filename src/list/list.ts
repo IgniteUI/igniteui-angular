@@ -2,7 +2,7 @@ import { Component, Input, ContentChildren, QueryList, Renderer, NgModule, OnIni
 import { CommonModule } from "@angular/common";
 import { HammerGesturesManager } from '../core/touch';
 
-interface IListChild
+export interface IListChild
 {
     index: number;
 }

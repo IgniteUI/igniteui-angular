@@ -100,6 +100,108 @@ $colors: (
     )
 );
 
+/* 2. Material Elevations / Shadows
+   ========================================================================== */
+
+$elevate-1: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
+            0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+            0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+
+$elevate-2: 0px 1px 5px 0px rgba(0, 0, 0, 0.2),
+            0px 2px 2px 0px rgba(0, 0, 0, 0.14),
+            0px 3px 1px -2px rgba(0, 0, 0, 0.12);
+
+$elevate-3: 0px 1px 8px 0px rgba(0, 0, 0, 0.2),
+            0px 3px 4px 0px rgba(0, 0, 0, 0.14),
+            0px 3px 3px -2px rgba(0, 0, 0, 0.12);
+
+$elevate-4: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+            0px 4px 5px 0px rgba(0, 0, 0, 0.14),
+            0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+
+$elevate-5: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
+            0px 5px 8px 0px rgba(0, 0, 0, 0.14),
+            0px 1px 14px 0px rgba(0, 0, 0, 0.12);
+
+$elevate-6: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
+            0px 6px 10px 0px rgba(0, 0, 0, 0.14),
+            0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+
+$elevate-7: 0px 4px 5px -2px rgba(0, 0, 0, 0.2),
+            0px 7px 10px 1px rgba(0, 0, 0, 0.14),
+            0px 2px 16px 1px rgba(0, 0, 0, 0.12);
+
+$elevate-8: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
+            0px 8px 10px 1px rgba(0, 0, 0, 0.14),
+            0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+
+$elevate-8-up: 0px -5px 5px -3px rgba(0, 0, 0, 0.2),
+            0px -8px 10px 1px rgba(0, 0, 0, 0.14),
+            0px -3px 14px 2px rgba(0, 0, 0, 0.12);
+
+$elevate-9: 0px 5px 6px -3px rgba(0, 0, 0, 0.2),
+            0px 9px 12px 1px rgba(0, 0, 0, 0.14),
+            0px 3px 16px 2px rgba(0, 0, 0, 0.12);
+
+$elevate-10: 0px 6px 6px -3px rgba(0, 0, 0, 0.2),
+             0px 10px 14px 1px rgba(0, 0, 0, 0.14),
+             0px 4px 18px 3px rgba(0, 0, 0, 0.12);
+
+$elevate-11: 0px 6px 7px -4px rgba(0, 0, 0, 0.2),
+             0px 11px 15px 1px rgba(0, 0, 0, 0.14),
+             0px 4px 20px 3px rgba(0, 0, 0, 0.12);
+
+$elevate-12: 0px 7px 8px -4px rgba(0, 0, 0, 0.2),
+             0px 12px 17px 2px rgba(0, 0, 0, 0.14),
+             0px 5px 22px 4px rgba(0, 0, 0, 0.12);
+
+$elevate-13: 0px 7px 8px -4px rgba(0, 0, 0, 0.2),
+             0px 13px 19px 2px rgba(0, 0, 0, 0.14),
+             0px 5px 24px 4px rgba(0, 0, 0, 0.12);
+
+$elevate-14: 0px 7px 9px -4px rgba(0, 0, 0, 0.2),
+             0px 14px 21px 2px rgba(0, 0, 0, 0.14),
+             0px 5px 26px 4px rgba(0, 0, 0, 0.12);
+
+$elevate-15: 0px 8px 9px -5px rgba(0, 0, 0, 0.2),
+             0px 15px 22px 2px rgba(0, 0, 0, 0.14),
+             0px 6px 28px 5px rgba(0, 0, 0, 0.12);
+
+$elevate-16: 0px 8px 10px -5px rgba(0, 0, 0, 0.2),
+             0px 16px 24px 2px rgba(0, 0, 0, 0.14),
+             0px 6px 30px 5px rgba(0, 0, 0, 0.12);
+
+$elevate-17: 0px 8px 11px -5px rgba(0, 0, 0, 0.2),
+             0px 17px 26px 2px rgba(0, 0, 0, 0.14),
+             0px 6px 32px 5px rgba(0, 0, 0, 0.12);
+
+$elevate-18: 0px 9px 11px -5px rgba(0, 0, 0, 0.2),
+             0px 18px 28px 2px rgba(0, 0, 0, 0.14),
+             0px 7px 34px 6px rgba(0, 0, 0, 0.12);
+
+$elevate-19: 0px 9px 12px -6px rgba(0, 0, 0, 0.2),
+             0px 19px 29px 2px rgba(0, 0, 0, 0.14),
+             0px 7px 36px 6px rgba(0, 0, 0, 0.12);
+
+$elevate-20: 0px 10px 13px -6px rgba(0, 0, 0, 0.2),
+             0px 20px 31px 3px rgba(0, 0, 0, 0.14),
+             0px 8px 38px 7px rgba(0, 0, 0, 0.12);
+
+$elevate-21: 0px 10px 13px -6px rgba(0, 0, 0, 0.2),
+             0px 21px 33px 3px rgba(0, 0, 0, 0.14),
+             0px 8px 40px 7px rgba(0, 0, 0, 0.12);
+
+$elevate-22: 0px 10px 14px -6px rgba(0, 0, 0, 0.2),
+             0px 22px 35px 3px rgba(0, 0, 0, 0.14),
+             0px 8px 42px 7px rgba(0, 0, 0, 0.12);
+
+$elevate-23: 0px 11px 14px -7px rgba(0, 0, 0, 0.2),
+             0px 23px 36px 3px rgba(0, 0, 0, 0.14),
+             0px 9px 44px 8px rgba(0, 0, 0, 0.12);
+
+$elevate-24: 0px 11px 15px -7px rgba(0, 0, 0, 0.2),
+             0px 24px 38px 3px rgba(0, 0, 0, 0.14),
+             0px 9px 46px 8px rgba(0, 0, 0, 0.12);
 
 /* 2. Badges
    ========================================================================== */
@@ -119,7 +221,7 @@ $button-font-weight: normal !default;
 $button-width: em(88px) !default;
 $button-height: em(36px) !default;
 $button-padding: em(6px) em(16px) !default;
-$button-transition: all 0.2s ease !default;
+$button-transition: all 0.2s ease-out 0s !default;
 
 // Disabled Styles
 $button-disabled-background: #F0F0F0 !default;
@@ -129,8 +231,8 @@ $button-disabled-shadow: none;
 // Raised Buttons
 $button-raised-background: $primary-color !default;
 $button-raised-color: #fff !default;
-$button-raised-shadow: 0 2px 4px 0 rgba(72, 72, 72, 0.5) !default;
-$button-raised-focus-shadow: 0px 3px 2px 0px rgba(0,0,0,0.03), 0px 7px 8px 0px rgba(88,88,88,0.50) !default;
+$button-raised-shadow: $elevate-2 !default;
+$button-raised-focus-shadow: $elevate-8 !default;
 
 
 // Gradient Buttons
@@ -151,10 +253,10 @@ $button-flat-focus-background: #D1D1D1 !default;
 // Floating Buttons
 $button-floating-width: em(56px);
 $button-floating-height: $button-floating-width;
-$button-floating-shadow: 0px 2px 4px 0px rgba(72, 72, 72, 0.50);
-$button-floating-hover-shadow: 0px 4px 8px 0px rgba(72, 72, 72, 0.50);
-$button-floating-radius: 50%;
-$button-floating-background: $primary-color;
+$button-floating-shadow: $elevate-6 !default;
+$button-floating-hover-shadow: $elevate-12 !default;
+$button-floating-radius: 50% !default;
+$button-floating-background: $primary-color !default;
 
 /* 9. Fonts
    ========================================================================== */
@@ -207,8 +309,8 @@ $switch-width: 35px !default;
 $switch-height: 14px !default;
 $switch-label-width: 20px !default;
 $switch-label-height: $switch-label-width !default;
-$switch-shadow: 0 2px 4px 0 rgba(72, 72, 72, 0.50);
-$switch-disabled-shadow: 0 1px 2px 0 rgba(72, 72, 72, 0.50) !default;
+$switch-shadow: $elevate-1;
+$switch-disabled-shadow: $elevate-1;
 $switch-margin: 0 16px !default;
 
 // Checkboxes
@@ -314,3 +416,6 @@ $list-item-tl-sl-font-size: em(14px) !default;
 $list-item-tl-height: em(72px) !default;
 $list-item-tl-sl-color: #757575 !default;
 /* Rectangle: */
+
+/* 24. Elevation
+   ========================================================================== */

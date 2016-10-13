@@ -21,11 +21,11 @@ export enum Size { SMALL, MEDIUM, LARGE };
 })
 export class Avatar {
     @ViewChild('image') image: ElementRef;
-
     @Input() initials: string;
     @Input() src: string;
     @Input() roundShape: string = "false";
     @Input() color: string = 'white';
+
     protected fontname = "Titillium Web";
     private _size: string;
     private _bgColor: string;
@@ -43,7 +43,7 @@ export class Avatar {
         if(sizeType === undefined){
             this._size = "small";
         } else {
-            this._size = value;
+            this._size = value.toLowerCase();
         }
     }
 
@@ -84,21 +84,20 @@ export class Avatar {
 
     ngAfterViewInit() {
         if(this.initials && this.image){
-            var src = this.generateCanvas(parseInt(this.image.nativeElement.width));
+            var src = this.generateInitials(parseInt(this.image.nativeElement.width));
             this.image.nativeElement.src = src;
         }
     }
 
-    private generateCanvas(size){
-        var canvas = document.createElement('canvas');
+    private generateInitials(size){
+        var canvas = document.createElement('canvas'),
+            fontSize = size / 2, ctx;
+
         canvas.width = size;
         canvas.height = size;
 
-        var fontSize = size / 2;
-
-        var ctx = canvas.getContext('2d');
+        ctx = canvas.getContext('2d');
         ctx.fillStyle = this.bgColor;
-
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.textAlign = "center";
         ctx.fillStyle = this.color;
