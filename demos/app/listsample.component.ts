@@ -15,7 +15,7 @@ import { IgRippleModule } from '../../src/directives/ripple';
                 <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
             </div>
             <ig-list>
-                <ig-list-item igRipple="pink" igRippleTarget=".ig-list__item" *ngFor="let item of navItems | filter: fo1: search1">
+                <ig-list-item igRipple="pink" igRippleTarget=".ig-list__item" *ngFor="let item of navItems | filter: fo1">
                     {{item.text}}
                 </ig-list-item>
             </ig-list>        
@@ -26,7 +26,7 @@ import { IgRippleModule } from '../../src/directives/ripple';
             <div class="ig-form-group">
                 <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search2" />
             </div>
-            <ig-list #declarativeList [filter]="search2" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)" [filterOptions]="fo2">
+            <ig-list #declarativeList [filter]="fo2" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)">
                 <ig-list-header>Mildly Sweet</ig-list-header>
                 <ig-list-item>Red Delicious</ig-list-item>
                 <ig-list-item>Ambrosia</ig-list-item>
@@ -63,27 +63,29 @@ export class ListSampleComponent {
     get fo1() {
         var _fo = new FilterOptions();
         _fo.key = "text";
+        _fo.inputValue = this.search1;
         return _fo;
     }
 
     get fo2() {
-        var fo = new FilterOptions();
+        var _fo = new FilterOptions();
 
-        fo.items = this.declarativeList.items;
+        _fo.items = this.declarativeList.items;
+        _fo.inputValue = this.search2;
 
-        fo.get_value = function (item: any) {
+        _fo.get_value = function (item: any) {
             return item.element.nativeElement.textContent.trim();
         };
 
-         fo.metConditionFn = function (item: any) {
+        _fo.metConditionFn = function (item: any) {
              item.hidden = false;
          };
 
-         fo.overdueConditionFn = function (item: any) {
+        _fo.overdueConditionFn = function (item: any) {
              item.hidden = true;
          };    
 
-        return fo;
+        return _fo;
     }
 
     private filteringHandler = function(args) {
