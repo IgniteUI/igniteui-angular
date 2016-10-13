@@ -8,21 +8,23 @@ export class FilterDirective implements OnChanges {
     @Output() filtering = new EventEmitter(false); // synchronous event emitter
     @Output() filtered = new EventEmitter();
 
-    @Input("filter") inputValue: string;
-    @Input() filterOptions: FilterOptions;
+    @Input("filter") filterOptions: FilterOptions;
 
     constructor(private element: ElementRef, renderer: Renderer) {
-        this.inputValue = this.inputValue || "";
     }
 
     ngOnChanges(changes: SimpleChanges) {
         // Detect only changes of input value
-        if (changes["inputValue"]) {
+        if (changes["filterOptions"] &&
+            changes["filterOptions"].currentValue &&
+            changes["filterOptions"].currentValue["inputValue"] !== undefined &&
+            changes["filterOptions"].previousValue &&
+            changes["filterOptions"].currentValue["inputValue"] !== changes["filterOptions"].previousValue["inputValue"]) {
             this.filter();
         }    
     }
 
-    filter() {
+    private filter() {
         if (!this.filterOptions.items) {
             return;
         }
@@ -32,11 +34,11 @@ export class FilterDirective implements OnChanges {
 
         if (args.cancel) {
             return;
-        }
+        }        
 
         var pipe = new FilterPipe();
 
-        var filtered = pipe.transform(this.filterOptions.items, this.filterOptions, this.inputValue);
+        var filtered = pipe.transform(this.filterOptions.items, this.filterOptions);
         this.filtered.emit({ filteredItems: filtered });
     }   
 }
@@ -47,20 +49,14 @@ export class FilterDirective implements OnChanges {
 })
 
 export class FilterPipe implements PipeTransform {
-    transform(  items: Array<any>,
-			    // options - initial settings of filter functionality
-			    options: FilterOptions,
-			    // inputValue - text value from input that condition is based on
-			    inputValue: string) {
+    transform(items: Array<any>,
+        // options - initial settings of filter functionality
+        options: FilterOptions) {
 
-		var result = [];
+        var result = [];
 
         if (!items || !items.length) {
             return;
-        }
-
-        if (!inputValue) {
-            inputValue = "";
         }
 
         if (options.items) {
@@ -68,26 +64,29 @@ export class FilterPipe implements PipeTransform {
         }
 
         result = items.filter((item: any) => {
-            let match = options.matchFn(options.formatter(options.get_value(item, options.key)), inputValue);
+            let match = options.matchFn(options.formatter(options.get_value(item, options.key)), options.inputValue);
 
-			if(match) {
-				if(options.metConditionFn) {
+            if (match) {
+                if (options.metConditionFn) {
                     options.metConditionFn(item);
-				}
-			} else {
-				if (options.overdueConditionFn) {
+                }
+            } else {
+                if (options.overdueConditionFn) {
                     options.overdueConditionFn(item);
-				}
-			}
+                }
+            }
 
-			return match;
-		});
+            return match;
+        });
 
-		return result;
-	}    
+        return result;
+    }    
 }
 
 export class FilterOptions {
+    // Input text value that will be used as a filtering pattern (matching condition is based on it)
+    public inputValue: string = "";
+
     // Item property, which value should be used for filtering
     public key: string;
 
@@ -102,7 +101,7 @@ export class FilterOptions {
         var result: string = "";
 
         if (key) {
-            result = item[key];
+            result = item[key].toString();
         } else if (item.element && item.element.nativeElement) {
             result = item.element.nativeElement.textContent.trim();
         }
@@ -121,7 +120,7 @@ export class FilterOptions {
 	// inputValue - text value from input that condition is based on
     // Default behavior - "contains"
     matchFn(valueToTest: string, inputValue: string): boolean {
-        return valueToTest.indexOf(inputValue.toLowerCase()) > -1;
+        return valueToTest.indexOf(inputValue && inputValue.toLowerCase() || "") > -1;
 	};
 
 	// Function - executed after matching test for every matched item

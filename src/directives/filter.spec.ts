@@ -141,7 +141,7 @@ describe("Filter", function () {
 });
 
 @Component({
-    template: `<ig-list [filter]="filterValue" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)" [filterOptions]="fo">
+    template: `<ig-list [filter]="fo" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)" >
                     <ig-list-header>Header</ig-list-header>
                     <ig-list-item>Item 1</ig-list-item>
                     <ig-list-item>Item 2</ig-list-item>
@@ -150,7 +150,7 @@ describe("Filter", function () {
                 <input #logInput />`
 })
 class DeclarativeListTestComponent {
-    filterValue: string = "";
+    filterValue: string;
     isCanceled: boolean = false;
     filteringArgs: Object;
     filteredArgs: Object;
@@ -161,18 +161,7 @@ class DeclarativeListTestComponent {
     get fo() {
         var options = new FilterOptions();
         options.items = this.list.items;
-
-        //options.get_value = function (item: any) {
-        //    return item.element.nativeElement.textContent.trim();
-        //};
-
-        //options.metConditionFn = function (item: any) {
-        //    item.hidden = false;
-        //};
-
-        //options.overdueConditionFn = function (item: any) {
-        //    item.hidden = true;
-        //};
+        options.inputValue = this.filterValue;
 
         return options;
     }
@@ -191,13 +180,13 @@ class DeclarativeListTestComponent {
 
 @Component({
     template: `<ig-list>
-                 <ig-list-item *ngFor="let item of dataSourceItems | filter: fo: filterValue">
+                 <ig-list-item *ngFor="let item of dataSourceItems | filter: fo">
                     {{item.text}}
                  </ig-list-item>
               </ig-list>`
 })
 class DynamicListTestComponent {
-    filterValue: string = "";
+    filterValue: string;
     isCanceled: boolean = false;
 
     @ViewChild(List) list: List;
@@ -211,6 +200,7 @@ class DynamicListTestComponent {
 
     get fo() {
         var options = new FilterOptions();
+        options.inputValue = this.filterValue;
         options.key = "text";
         return options;
     }
