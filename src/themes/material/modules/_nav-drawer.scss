@@ -1,8 +1,4 @@
 /* Main Navigation Drawer state styles */
-
-$background: #fff;
-$overlay: rgba(72, 72, 72, 0.5);
-
 @include b(ig-nav-drawer) {
     position: fixed;
     width: em(300px);
@@ -10,7 +6,7 @@ $overlay: rgba(72, 72, 72, 0.5);
     max-width: 90%;
     min-height: 100%;
     overflow-x: hidden;
-    background-color: $background;
+    background-color: #fff;
     top: 0;
     bottom: 0;
     left: 0;
@@ -83,7 +79,7 @@ $overlay: rgba(72, 72, 72, 0.5);
 /* Navigation Drawer overlay styles */
 .ig-nav-drawer-overlay {
     opacity: 1;
-    background-color: $overlay;
+    background-color: $overlay-color;
    
     transition-property: opacity, visibility;
     /* opacity must match drawer transition, step over visibility to reduce animation cost */
