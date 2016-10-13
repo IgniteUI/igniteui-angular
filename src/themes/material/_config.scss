@@ -47,6 +47,7 @@ $accent-color: $yellow-orange !default;
 $success-color: #4CAF50 !default;
 $error-color: #F44336 !default;
 $warn-color: orange;
+$overlay-color: rgba(72, 72, 72, 0.5);
 
 // off-black
 $off-black: #484848;
@@ -417,5 +418,12 @@ $list-item-tl-height: em(72px) !default;
 $list-item-tl-sl-color: #757575 !default;
 /* Rectangle: */
 
-/* 24. Elevation
+/* 24. Modal
    ========================================================================== */
+
+$modal-transition: all .4s ease-in;
+$modal-width: em(400px);
+$modal-margin: 10% auto;
+$modal-padding: 5px 25px 10px 10px;
+$modal-background: $white;
+
