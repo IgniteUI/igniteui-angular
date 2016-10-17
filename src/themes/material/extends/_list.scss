@@ -34,8 +34,8 @@
     flex-flow: column wrap;
     justify-content: center;
     padding: $list-item-padding;
-    height: $list-item-height;
-    line-height: $list-item-line-height;
+    min-height: $list-item-height;
+    // line-height: $list-item-line-height;
     font-size: $list-item-font-size;
     color: $list-item-color;
     background-color: $list-item-background;
