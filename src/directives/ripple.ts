@@ -42,6 +42,10 @@ class RippleDirective {
 
         let {top, left, width, height} = rectBounds;
 
+        // Take into account viewport scroll
+        top += window.scrollY;
+        left += window.scrollX;
+
 
         this.renderer.setElementClass(target, 'ig-ripple-host', true);
         rippler = this.renderer.createElement(target, 'span');
