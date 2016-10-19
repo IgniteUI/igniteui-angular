@@ -12,6 +12,7 @@ import { Component } from "@angular/core";
             <span igButton routerLink="/buttons">Buttons</span>
             <span igButton routerLink="/avatar">Avatar</span>
             <span igButton routerLink="/navigation-drawer">Navigation Drawer</span>
+            <span igButton routerLink="/navbar">Navbar</span>
         </nav>
         <router-outlet></router-outlet>
     `
