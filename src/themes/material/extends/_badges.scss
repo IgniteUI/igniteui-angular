@@ -31,6 +31,13 @@
     stroke: #ffffff;
 }
 
+%text {
+    fill: white;
+    font-size: 9;
+    font-family: monospace;
+    text-anchor: middle;
+}
+
 %circle-warn {
     @extend %circle;
     fill: $warn-color;
