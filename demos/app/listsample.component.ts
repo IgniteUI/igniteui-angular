@@ -41,7 +41,9 @@ import { IgRippleModule } from '../../src/directives/ripple';
             <h4>Non-header List</h4>
             <ig-list>
             <ig-list-item *ngFor="let navItem of navItems; let index = index">
-                {{navItem.text}}
+                <div>
+                    {{navItem.text}}
+                </div>
             </ig-list-item>
             </ig-list>
         </div>`
