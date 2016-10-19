@@ -10,11 +10,11 @@ import { ButtonModule } from "../../src/button/button";
         </div>
         <br>
         <div style="margin: 0 20px">
-            <span igButton="raised" igRipple="white">Raised</span>  
+            <span igButton="raised" igRipple="white">Raised</span>
         </div>
         <br>
         <div style="margin: 0 20px">
-            <span igButton="raised" igButtonColor="#FBB13C" igButtonBackground="#340068" igRipple="white">Raised Custom</span>  
+            <span igButton="raised" igButtonColor="#FBB13C" igButtonBackground="#340068" igRipple="white">Raised Custom</span>
         </div>
         <br>
         <div style="margin: 0 20px">
@@ -26,7 +26,7 @@ import { ButtonModule } from "../../src/button/button";
         </div>
         <br>
         <div style="margin: 0 20px">
-            <span igButton="raised" disabled>Disabled</span>
+            <span igButton="raised" [disabled]="true">Disabled</span>
         </div>
         <br>
         <div style="margin: 0 20px">
