@@ -25,28 +25,28 @@ export class Badge {
     private _iconBdg: string;
     public TypeEnum = Type;
 
-    get type() : string{
+    get type(): string {
         return this._type === undefined ? "default" : this._type;
     }
 
     @Input("type")
-    set type(value: string){
+    set type(value: string) {
         var sizeType = this.TypeEnum[value.toUpperCase()];
 
-        if(sizeType === undefined){
+        if (sizeType === undefined) {
             this._type = "default";
         } else {
             this._type = value.toLowerCase();
         }
     }
 
-    get value() : string{
+    get value(): string {
         return this._value === undefined ? "-" : this._value;
     }
 
     @Input("value")
-    set value(value: string){
-        if(value === undefined){
+    set value(value: string) {
+        if (value === undefined) {
             this._value = "-";
         } else {
             this._value = value;
@@ -65,29 +65,29 @@ export class Badge {
     setClasses() {
         var classes = {};
 
-        switch(this.TypeEnum[this._type.toUpperCase()]){
+        switch (this.TypeEnum[this._type.toUpperCase()]) {
             case Type.DEFAULT:
-                classes =  {
+                classes = {
                     "ig-badge--default": true
                 };
                 break;
             case Type.INFO:
-                classes =  {
+                classes = {
                     "ig-badge--info": true
                 };
                 break;
             case Type.SUCCESS:
-                classes =  {
+                classes = {
                     "ig-badge--success": true
                 };
                 break;
             case Type.WARNING:
-                classes =  {
+                classes = {
                     "ig-badge--warning": true
                 };
                 break;
             case Type.ERROR:
-                classes =  {
+                classes = {
                     "ig-badge--error": true
                 };
                 break;

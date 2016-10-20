@@ -1,4 +1,4 @@
-import { Component,  ViewChild, QueryList, ViewChildren } from "@angular/core";
+import { Component, ViewChild, QueryList, ViewChildren } from "@angular/core";
 import { AvatarModule, Avatar } from "../../src/avatar/avatar";
 import { BadgeModule, Badge } from "../../src/badge/badge";
 
@@ -9,7 +9,7 @@ import { BadgeModule, Badge } from "../../src/badge/badge";
             padding: 5px;
         }
     `],
-    template:`
+    template: `
         <h3>Avatars</h3>
         <div style="width: 600px;">
             <table>
@@ -93,12 +93,12 @@ export class AvatarSampleComponent {
     src: string = '';
     roundShape: string = "true";
 
-    constructor(){
+    constructor() {
         //this.setImageSource();
         this.setImageSource();
     }
 
-    setImageSource(){
+    setImageSource() {
         this.src = "https://unsplash.it/60/60?image=" + Math.floor((Math.random() * 50) + 1);
     }
 
@@ -106,7 +106,7 @@ export class AvatarSampleComponent {
         //this.avatar.srcImage = "https://unsplash.it/60/60?image=" + Math.floor((Math.random() * 50) + 1);
 
         // for more avatars
-        for(let each of this.avatar.toArray()){
+        for (let each of this.avatar.toArray()) {
             each.srcImage = "https://unsplash.it/60/60?image=" + Math.floor((Math.random() * 50) + 1);
         }
     }

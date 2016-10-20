@@ -1,4 +1,4 @@
-import{
+import {
     async,
     TestBed
 } from '@angular/core/testing';
@@ -7,7 +7,7 @@ import { By } from '@angular/platform-browser';
 import { BadgeModule, Badge } from './badge';
 
 
-describe('Badge', function(){
+describe('Badge', function () {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -17,7 +17,7 @@ describe('Badge', function(){
                 Badge
             ]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     it('Initializes badge ', () => {
@@ -58,17 +58,17 @@ describe('Badge', function(){
     });
 });
 
-@Component({ template: `<ig-badge type="error" value="z"></ig-badge>`})
+@Component({ template: `<ig-badge type="error" value="z"></ig-badge>` })
 class InitBadge {
     @ViewChild(Badge) badge: Badge;
 }
 
-@Component({ template: `<ig-badge></ig-badge>`})
+@Component({ template: `<ig-badge></ig-badge>` })
 class InitBadgeWithDefaults {
     @ViewChild(Badge) badge: Badge;
 }
 
-@Component({ template: `<ig-badge iconBdg="person"></ig-badge>`})
+@Component({ template: `<ig-badge iconBdg="person"></ig-badge>` })
 class InitBadgeWithIcon {
     @ViewChild(Badge) badge: Badge;
 }
