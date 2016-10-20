@@ -18,6 +18,7 @@ import { ListSampleComponent } from "./listsample.component";
 import { ButtonsSampleComponent } from "./buttonssample.component";
 import { AvatarSampleComponent } from "./avatarsample.component";
 import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
+import { NavbarSampleModule } from "./navbar/sample.module";
 
 import { routing } from "./app.routing";
 
@@ -36,6 +37,7 @@ import { routing } from "./app.routing";
         AvatarModule,
         FilterModule,
         NavDrawerSampleModule,
+        NavbarSampleModule,
         IgRippleModule,
         routing,
         BadgeModule
