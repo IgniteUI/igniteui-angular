@@ -1,5 +1,6 @@
-import { Component,  ViewChild, QueryList, ViewChildren } from "@angular/core";
+import { Component, ViewChild, QueryList, ViewChildren } from "@angular/core";
 import { AvatarModule, Avatar } from "../../src/avatar/avatar";
+import { BadgeModule, Badge } from "../../src/badge/badge";
 
 @Component({
     selector: "avatar-sample",
@@ -8,7 +9,7 @@ import { AvatarModule, Avatar } from "../../src/avatar/avatar";
             padding: 5px;
         }
     `],
-    template:`
+    template: `
         <h3>Avatars</h3>
         <div style="width: 600px;">
             <table>
@@ -47,21 +48,25 @@ import { AvatarModule, Avatar } from "../../src/avatar/avatar";
                     <td>
                         <ig-avatar initials="ZK" width="100" roundShape="true"
                             bgColor="#ff6978">
+                            <ig-badge type="error" value="z"></ig-badge>
                         </ig-avatar>
                     </td>
                     <td>
                         <ig-avatar initials="HA" width="100" size="potatos"
                             bgColor="#340068">
+                            <ig-badge type="info"></ig-badge>
                         </ig-avatar>
                     </td>
                     <td>
-                        <ig-avatar initials="PP" width="100" color="black"
+                        <ig-avatar initials="PP" width="100" color="black" icon="person"
                             roundShape="false" bgColor="#94feed">
+                            <ig-badge iconBdg="person"></ig-badge>
                         </ig-avatar>
                     </td>
                     <td>
                         <ig-avatar initials="PP" size="medium" roundShape="false"
                             bgColor="#e41c77">
+                            <ig-badge></ig-badge>
                         </ig-avatar>
                     </td>
                     <td>
@@ -88,12 +93,12 @@ export class AvatarSampleComponent {
     src: string = '';
     roundShape: string = "true";
 
-    constructor(){
+    constructor() {
         //this.setImageSource();
         this.setImageSource();
     }
 
-    setImageSource(){
+    setImageSource() {
         this.src = "https://unsplash.it/60/60?image=" + Math.floor((Math.random() * 50) + 1);
     }
 
@@ -101,7 +106,7 @@ export class AvatarSampleComponent {
         //this.avatar.srcImage = "https://unsplash.it/60/60?image=" + Math.floor((Math.random() * 50) + 1);
 
         // for more avatars
-        for(let each of this.avatar.toArray()){
+        for (let each of this.avatar.toArray()) {
             each.srcImage = "https://unsplash.it/60/60?image=" + Math.floor((Math.random() * 50) + 1);
         }
     }

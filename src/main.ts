@@ -20,3 +20,4 @@ export * from './modal/modal';
 export * from './navbar/navbar';
 export * from './directives/filter';
 export * from './directives/ripple';
+export * from './badge/badge';
