@@ -20,14 +20,17 @@
     background: $tab-bar-background;
     color: set-color($tab-bar-background);
     overflow: hidden;
+    z-index: 8;
 }
 
 %tabbar-menu--top {
+    bottom: inherit;
     top: 0;
     box-shadow: $elevate-8;
 }
 
 %tabbar-menu--bottom {
+    top: inherit;
     bottom: 0;
     box-shadow: $elevate-8-up;
 }
@@ -49,6 +52,7 @@
     text-overflow: ellipsis;
     user-select: none;
     overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
 }
 
 %tabbar-menu-item--disabled {

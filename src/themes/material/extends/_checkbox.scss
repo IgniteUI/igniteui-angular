@@ -8,6 +8,7 @@
     color: $input-color;
     padding-left: $checkbox-label-padding;
     user-select: none;
+    -webkit-tap-highlight-color: transparent;
     &:before {
         transform: translateZ(0);
         transition: $input-transition;
