@@ -6,7 +6,7 @@ import { IgRippleModule } from '../../src/directives/ripple';
 @Component({
     selector: "list-sample",
     styles: [
-        '.wrapper { width:33%; display:inline-block; float: left; padding: 10px}'
+        '.wrapper { width:33%; display:inline-block; float: left; padding: 10px; height: 600px; border: 1px solid lightgray; overflow: auto;}'
     ],
     template: `
         <div class="wrapper">            
