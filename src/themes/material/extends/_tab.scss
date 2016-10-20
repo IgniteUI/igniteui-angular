@@ -20,6 +20,7 @@
     background: $tab-bar-background;
     color: set-color($tab-bar-background);
     overflow: hidden;
+    z-index: 8;
 }
 
 %tabbar-menu--top {
@@ -49,6 +50,7 @@
     text-overflow: ellipsis;
     user-select: none;
     overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
 }
 
 %tabbar-menu-item--disabled {
