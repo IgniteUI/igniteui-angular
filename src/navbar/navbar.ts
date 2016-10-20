@@ -1,20 +1,18 @@
 import { Component, Input, NgModule } from '@angular/core';
-
 import { HammerGesturesManager } from "../core/touch";
 import { Location } from '@angular/common';
-
 import { ButtonModule } from "../../src/button/button";
 
 @Component({
     selector: "ig-navbar",
     moduleId: module.id, 
     templateUrl: "navbar.html",
-    styleUrls: [ "navbar.scss" ],
     providers: [HammerGesturesManager]
 })
 export class Navbar {
     
     @Input() title: string;
+    @Input('icon') icon: string;
 
     constructor(private _location: Location) {
     }

@@ -1,13 +1,11 @@
-<nav class="navbar">
-    <span class="navbar-back-button" [class.navbar-back-disabled]="canGoBack()"> 
-        <button igButton (click)="navigateBack($event)">
-            <i class="material-icons">arrow_back</i>
+<nav class="ig-navbar">
+	<span class="ig-navbar__left-btn" [class.ig-navbar__left-btn--disabled]="canGoBack()"> 
+        <button igButton="icon" (click)="navigateBack($event)">
+            <i class="material-icons">{{ icon }}</i>
         </button>
     </span>
-    <span class="navbar-title">
-        <h1>
-            {{ title }}
-        </h1>
+	<span>
+        <h1 class="ig-navbar__title">{{ title }}</h1>
     </span>
-    <ng-content></ng-content>
+	<ng-content></ng-content>
 </nav>

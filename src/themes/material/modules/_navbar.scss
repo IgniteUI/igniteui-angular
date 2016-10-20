@@ -1,0 +1,17 @@
+@include b(ig-navbar) {
+    $block: &;
+
+    @extend %ig-navbar-display;
+    
+    @include e(left-btn) {
+        @extend %ig-navbar-left-btn;
+
+        @include m(disabled) {
+            @extend %ig-navbar-left-btn--disabled;
+        }
+    }
+
+    @include e(title) {
+        @extend %ig-navbar-title;
+    }
+}
