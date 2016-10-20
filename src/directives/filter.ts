@@ -55,7 +55,7 @@ export class FilterPipe implements PipeTransform {
 
         var result = [];
 
-        if (!items || !items.length) {
+        if (!items || !items.length || !options) {
             return;
         }
 

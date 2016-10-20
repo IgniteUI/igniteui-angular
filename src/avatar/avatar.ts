@@ -32,15 +32,15 @@ export class Avatar {
     private _icon: string = "android";
     public SizeEnum = Size;
 
-    get size() : string{
+    get size(): string {
         return this._size === undefined ? "small" : this._size;
     }
 
     @Input("size")
-    set size(value: string){
+    set size(value: string) {
         var sizeType = this.SizeEnum[value.toUpperCase()];
 
-        if(sizeType === undefined){
+        if (sizeType === undefined) {
             this._size = "small";
         } else {
             this._size = value.toLowerCase();
@@ -65,7 +65,7 @@ export class Avatar {
         this.image.nativeElement.src = value;
     }
 
-    get isRounded() : boolean {
+    get isRounded(): boolean {
         return this.roundShape.toUpperCase() === "TRUE" ? true : false;
     }
 
@@ -83,13 +83,13 @@ export class Avatar {
     }
 
     ngAfterViewInit() {
-        if(this.initials && this.image){
+        if (this.initials && this.image) {
             var src = this.generateInitials(parseInt(this.image.nativeElement.width));
             this.image.nativeElement.src = src;
         }
     }
 
-    private generateInitials(size){
+    private generateInitials(size) {
         var canvas = document.createElement('canvas'),
             fontSize = size / 2, ctx;
 
