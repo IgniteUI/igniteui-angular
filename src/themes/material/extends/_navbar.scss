@@ -12,6 +12,7 @@
     background: $background-color;
     color: set-color($background-color);
     box-shadow: $elevate-4;
+    z-index: 4;
 }
 
 %ig-navbar-left-btn {

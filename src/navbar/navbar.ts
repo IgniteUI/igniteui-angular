@@ -26,6 +26,10 @@ export class Navbar {
     navigateBack($event) {
         this._location.back();
     }
+
+    hasIcon() {
+        return this.icon != undefined;
+    }
 }
 
 

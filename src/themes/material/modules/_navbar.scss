@@ -1,6 +1,4 @@
 @include b(ig-navbar) {
-    $block: &;
-
     @extend %ig-navbar-display;
     
     @include e(left-btn) {
