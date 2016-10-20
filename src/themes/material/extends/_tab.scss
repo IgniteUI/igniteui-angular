@@ -24,11 +24,13 @@
 }
 
 %tabbar-menu--top {
+    bottom: inherit;
     top: 0;
     box-shadow: $elevate-8;
 }
 
 %tabbar-menu--bottom {
+    top: inherit;
     bottom: 0;
     box-shadow: $elevate-8-up;
 }
