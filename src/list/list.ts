@@ -130,7 +130,8 @@ export class ListItem implements OnInit, OnDestroy, IListChild {
     }
 
     private _addEventListeners() {
-        if (this._renderer) {
+        // Do not attach pan events if there is no options - no need to pan the item
+        if (this._renderer && this.options) {
             this._renderer.listen(this.element.nativeElement, 'panstart', (event) => { this.panStart(event); });
             this._renderer.listen(this.element.nativeElement, 'panmove', (event) => { this.panMove(event); });
             this._renderer.listen(this.element.nativeElement, 'panend', (event) => { this.panEnd(event); });
