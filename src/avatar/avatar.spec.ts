@@ -1,4 +1,4 @@
-import{
+import {
     async,
     TestBed
 } from '@angular/core/testing';
@@ -7,7 +7,7 @@ import { By } from '@angular/platform-browser';
 import { AvatarModule, Avatar } from './avatar';
 
 
-describe('Avatar', function(){
+describe('Avatar', function () {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -18,7 +18,7 @@ describe('Avatar', function(){
                 InitImageAvatar
             ]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     it('Initializes avatar with initials', () => {
@@ -69,14 +69,16 @@ describe('Avatar', function(){
     });
 });
 
-@Component({ template: `<ig-avatar initials="PP" size="medium" roundShape="false"
+@Component({
+    template: `<ig-avatar initials="PP" size="medium" roundShape="false"
                             bgColor="paleturquoise">
                         </ig-avatar>`})
 class InitAvatar {
     @ViewChild(Avatar) avatar: Avatar;
 }
 
-@Component({ template: `<ig-avatar [initials]="initials" [bgColor]="bgColor" size="small"
+@Component({
+    template: `<ig-avatar [initials]="initials" [bgColor]="bgColor" size="small"
     [roundShape]="roundShape"></ig-avatar>`})
 class AvatarWithAttribs {
     @ViewChild(Avatar) avatar: Avatar;
@@ -86,7 +88,8 @@ class AvatarWithAttribs {
     roundShape: string = "true";
 }
 
-@Component({ template: `<ig-avatar roundShape="false" icon="person"
+@Component({
+    template: `<ig-avatar roundShape="false" icon="person"
                             bgColor="#0375be" size="someIncorectSize">
                         </ig-avatar>`})
 class InitIconAvatar {
@@ -94,7 +97,8 @@ class InitIconAvatar {
 }
 
 
-@Component({ template: `<ig-avatar roundShape="true" bgColor="#0375be" size="large"
+@Component({
+    template: `<ig-avatar roundShape="true" bgColor="#0375be" size="large"
                             [src]="source">
                         </ig-avatar>`})
 class InitImageAvatar {

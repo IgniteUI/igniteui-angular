@@ -6,7 +6,7 @@ import { IgRippleModule } from '../../src/directives/ripple';
     selector: "tabbar-sample",
     template: `
         <h3>TabBar</h3>
-        <ig-tab-bar igRipple igRippleTarget="ul" alignment="bottom">
+        <ig-tab-bar alignment="bottom">
             <ig-tab label="Tab 1" icon="library_music">
             <h1>Tab 1 Content</h1>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula. Donec consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus. Vestibulum urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra lacus. Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id lacus a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula a arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula diam. Mauris vel quam at velit venenatis vulputate in quis nisl.</p>

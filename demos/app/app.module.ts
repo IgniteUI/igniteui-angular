@@ -6,7 +6,7 @@ import {
 
     IgInput, CarouselModule , CheckboxModule, SwitchModule,
     IgRadioModule , TabBarModule , ListModule, ButtonModule, Label,
-    AvatarModule, FilterModule, IgRippleModule
+    AvatarModule, FilterModule, IgRippleModule, BadgeModule
 
 } from "../../src/main";
 
@@ -39,7 +39,8 @@ import { routing } from "./app.routing";
         NavDrawerSampleModule,
         NavbarSampleModule,
         IgRippleModule,
-        routing
+        routing,
+        BadgeModule
     ],
     declarations: [
         IgInput,
