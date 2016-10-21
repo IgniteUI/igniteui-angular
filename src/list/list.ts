@@ -116,11 +116,14 @@ export class ListItem implements OnInit, OnDestroy, IListChild {
     @Input() options: Array<Object>
 
     constructor( @Inject(forwardRef(() => List)) private list: List, public element: ElementRef, private _renderer: Renderer) {
-        this._addEventListeners();        
+        
     }
 
     public ngOnInit() {
         this.list.addChild(this);
+
+        this._addEventListeners();        
+
         // Fix for default value of touch-action: none, set by Hammer.js
         this.element.nativeElement.style.touchAction = "inherit";
     }
