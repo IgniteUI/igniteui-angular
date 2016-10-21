@@ -6,6 +6,15 @@
 		@extend %ig-form-label;
 	}
 
+	@include e(clear) {
+		@extend %ig-input-clear;
+
+		@include m(hidden) {
+			@extend %ig-input-clear;
+			@extend %ig-input-clear--hidden;
+		}
+	}
+
 	@include e(input) {
 		@extend %ig-form-input;
 
@@ -37,6 +46,10 @@
 		@include m(search) {
 			@extend %ig-form-input;
 			@extend %ig-search-input;
+
+			~ label {
+				@extend %ig-search-label;
+			}
 		}
 
 		&:focus {

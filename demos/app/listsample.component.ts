@@ -13,6 +13,12 @@ import { IgRippleModule } from '../../src/directives/ripple';
             <h4>Data Source Filtered List</h4>
             <div class="ig-form-group">
                 <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
+                <label igLabel>
+                    <i class="material-icons">search</i>
+                </label> 
+                <span class="ig-form-group__clear--hidden">
+                    <i class="material-icons">clear</i>
+                </span>
             </div>
             <ig-list>
                 <ig-list-item igRipple="pink" igRippleTarget=".ig-list__item" *ngFor="let item of navItems | filter: fo1">
@@ -25,6 +31,12 @@ import { IgRippleModule } from '../../src/directives/ripple';
             <ig-checkbox [checked]="true" #checkbox>Perform filtering</ig-checkbox>   
             <div class="ig-form-group">
                 <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search2" />
+                <label igLabel>
+                    <i class="material-icons">search</i>
+                </label> 
+                <span class="ig-form-group__clear--hidden">
+                    <i class="material-icons">clear</i>
+                </span>
             </div>
             <ig-list #declarativeList [filter]="fo2" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)">
                 <ig-list-header>Mildly Sweet</ig-list-header>
@@ -56,11 +68,11 @@ export class ListSampleComponent {
     search2: string;
 
     private navItems: Array<Object> = [
-            { key:"1", text: "<h1>Hi world</h1>This is some very long shit <br> hello world", link: "#" },
-            { key:"2", text: "Nav2", link: "#" },
-            { key:"3", text: "Nav3", link: "#" },
-            { key:"4", text: "Nav4", link: "#" }
-        ];
+        { key: "1", text: "<h1>Hi world</h1>This is some very long shit <br> hello world", link: "#" },
+        { key: "2", text: "Nav2", link: "#" },
+        { key: "3", text: "Nav3", link: "#" },
+        { key: "4", text: "Nav4", link: "#" }
+    ];
 
     get fo1() {
         var _fo = new FilterOptions();
@@ -80,23 +92,23 @@ export class ListSampleComponent {
         };
 
         _fo.metConditionFn = function (item: any) {
-             item.hidden = false;
-         };
+            item.hidden = false;
+        };
 
         _fo.overdueConditionFn = function (item: any) {
-             item.hidden = true;
-         };    
+            item.hidden = true;
+        };
 
         return _fo;
     }
 
-    private filteringHandler = function(args) {
+    private filteringHandler = function (args) {
         args.cancel = !this.checkbox.checked;
         console.log(args);
     }
 
-    private filteredHandler = function(args) {
+    private filteredHandler = function (args) {
         console.log(args);
     }
 
- }
+}
