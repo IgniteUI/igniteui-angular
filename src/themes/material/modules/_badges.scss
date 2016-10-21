@@ -1,8 +1,6 @@
 @include b(ig-badge){
     // @extend %ig-badge-display;
     @include e(circle) {
-        fill: red;
-        stroke: blue;
         stroke-width: 2;
     }
     @include e(text) {
@@ -34,5 +32,9 @@
     @include m(error) {
         // @extend %ig-badge-display;
         @extend %badge--error !optional;
+    }
+
+    @include m(hidden) {
+        @extend %ig-badge--hidden;
     }
 }
