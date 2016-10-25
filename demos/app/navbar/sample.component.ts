@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { NavbarModule, Navbar } from "../../../src/main";
 
-const CURRENT_VIEW: string = "Zero block samples";
+const CURRENT_VIEW: string = "Ignite UI JS Blocks Samples";
 
 @Component({
     moduleId: module.id,

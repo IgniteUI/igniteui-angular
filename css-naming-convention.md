@@ -1,6 +1,6 @@
-# Zero Blocks CSS Naming Convention
+# Ignite UI JS Blocks CSS Naming Convention
 
-Zero Blocks uses the Two Dashes style of the [BEM naming convention](https://en.bem.info/methodology/naming-convention/) for CSS classes.
+Ignite UI JS Blocks uses the Two Dashes style of the [BEM naming convention](https://en.bem.info/methodology/naming-convention/) for CSS classes.
 
 Naming Convention:
 

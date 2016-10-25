@@ -1,4 +1,4 @@
-# Zero Blocks -  Infragistics Angular2 Components
+# Ignite UI JS Blocks -  Infragistics Angular2 Components
 
 [![Build Status](https://travis-ci.org/Infragistics/igniteui-js-blocks.svg?branch=master)](https://travis-ci.org/Infragistics/igniteui-js-blocks)
 [![Coverage Status](https://coveralls.io/repos/github/Infragistics/igniteui-js-blocks/badge.svg?branch=master)](https://coveralls.io/github/Infragistics/igniteui-js-blocks?branch=master)
@@ -43,9 +43,9 @@ file changes and recompile accordingly.
 
 ## NPM Package
 
-You can include Zero Blocks in your project as a depencency using the NPM package.
+You can include Ignite UI JS Blocks in your project as a depencency using the NPM package.
 
-`npm install zero-blocks --save-dev`
+`npm install igniteui-js-blocks --save-dev`
 
 ## Contributing
 [Coding Guidelines](../../wiki/Coding-guidelines-for-Zero-Blocks)
