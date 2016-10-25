@@ -13,12 +13,6 @@ import { IgRippleModule } from '../../src/directives/ripple';
             <h4>Data Source Filtered List</h4>
             <div class="ig-form-group">
                 <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
-                <label igLabel>
-                    <i class="material-icons">search</i>
-                </label> 
-                <span class="ig-form-group__clear--hidden">
-                    <i class="material-icons">clear</i>
-                </span>
             </div>
             <ig-list>
                 <ig-list-item igRipple="pink" igRippleTarget=".ig-list__item" *ngFor="let item of navItems | filter: fo1">
@@ -31,16 +25,10 @@ import { IgRippleModule } from '../../src/directives/ripple';
             <ig-checkbox [checked]="true" #checkbox>Perform filtering</ig-checkbox>   
             <div class="ig-form-group">
                 <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search2" />
-                <label igLabel>
-                    <i class="material-icons">search</i>
-                </label> 
-                <span class="ig-form-group__clear--hidden">
-                    <i class="material-icons">clear</i>
-                </span>
             </div>
             <ig-list #declarativeList [filter]="fo2" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)">
                 <ig-list-header>Mildly Sweet</ig-list-header>
-                <ig-list-item>Red Delicious</ig-list-item>
+                <ig-list-item [options]="{}">Red Delicious</ig-list-item>
                 <ig-list-item>Ambrosia</ig-list-item>
                 <ig-list-item>Rome</ig-list-item>
                 <ig-list-header>Sweet</ig-list-header>
@@ -50,9 +38,9 @@ import { IgRippleModule } from '../../src/directives/ripple';
             </ig-list>
         </div>
         <div class="wrapper">
-            <h4>Non-header List</h4>
+            <h4>Non-header List with options</h4>
             <ig-list>
-            <ig-list-item *ngFor="let navItem of navItems; let index = index">
+            <ig-list-item *ngFor="let navItem of navItems; let index = index" [options]="options">
                 <div>
                     {{navItem.text}}
                 </div>
@@ -66,13 +54,14 @@ export class ListSampleComponent {
 
     search1: string;
     search2: string;
+    options: Object = {};
 
     private navItems: Array<Object> = [
-        { key: "1", text: "<h1>Hi world</h1>This is some very long shit <br> hello world", link: "#" },
-        { key: "2", text: "Nav2", link: "#" },
-        { key: "3", text: "Nav3", link: "#" },
-        { key: "4", text: "Nav4", link: "#" }
-    ];
+            { key:"1", text: "<h1>Hi world</h1>This is some very long string <br> hello world", link: "#" },
+            { key:"2", text: "Nav2", link: "#" },
+            { key:"3", text: "Nav3", link: "#" },
+            { key:"4", text: "Nav4", link: "#" }
+        ];
 
     get fo1() {
         var _fo = new FilterOptions();
@@ -92,23 +81,23 @@ export class ListSampleComponent {
         };
 
         _fo.metConditionFn = function (item: any) {
-            item.hidden = false;
-        };
+             item.hidden = false;
+         };
 
         _fo.overdueConditionFn = function (item: any) {
-            item.hidden = true;
-        };
+             item.hidden = true;
+         };    
 
         return _fo;
     }
 
-    private filteringHandler = function (args) {
+    private filteringHandler = function(args) {
         args.cancel = !this.checkbox.checked;
         console.log(args);
     }
 
-    private filteredHandler = function (args) {
+    private filteredHandler = function(args) {
         console.log(args);
     }
 
-}
+ }

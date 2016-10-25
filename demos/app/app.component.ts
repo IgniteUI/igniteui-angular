@@ -3,7 +3,7 @@ import { Component } from "@angular/core";
 @Component({
     selector: 'sample-app',
     template:`
-        <h1 style="text-align: center">Zero Blocks Samples</h1>
+        <h1 style="text-align: center">Ignite UI JS Blocks Samples</h1>
         <nav style="display: flex; justify-content: center; flex-wrap: wrap">
             <span igButton routerLink="/inputs">Inputs</span>
             <span igButton routerLink="/carousel">Carousel</span>
