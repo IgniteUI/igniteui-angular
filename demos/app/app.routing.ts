@@ -33,7 +33,7 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/navbar',
+        redirectTo: '/list',
         pathMatch: 'full'
     },
     {

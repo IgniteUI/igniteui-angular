@@ -2,7 +2,6 @@
     position: relative;
     display: inline-block;
     min-width: $button-width;
-    min-height: $button-height;
     padding: $button-padding;
     font-size: $button-font-size;
     font-weight: $button-font-weight;
@@ -115,6 +114,23 @@
     &:active {
         background: $button-icon-focus-background;
     }
+}
+
+%button-navbar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: em(24px, 16px);
+    width: em(24px, 16px);
+    height: em(24px, 16px);
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    background: transparent;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
 }
 
 %button-disabled {

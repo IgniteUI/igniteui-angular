@@ -1,14 +1,6 @@
 %ig-list {
     background-color: $list-background;
     overflow: hidden;
-    &:after {
-        content: '';
-        display: block;
-        height: 1px;
-        width: 100%;
-        margin-left: 16px;
-        background: darken($white, 10%);
-    }
 }
 
 %ig-list-item-display {
