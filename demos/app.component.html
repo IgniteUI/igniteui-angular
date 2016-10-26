@@ -1,0 +1,51 @@
+<div class="row" style="margin-top: 15em">
+    <div class="whiteContainer col-sm-12 col-lg-9">
+        <div style="width: 50%">
+            <span class="midContentHeading">One by one</span><br>
+            <span class="midContent">Explore the components and directives we’re working on</span><br><br>
+            <div style="width: 50%; float: left;">
+                <span class="titles">components</span><br>
+                <nav>
+                    <ul class="nav-list">
+                        <li><a><span igButton routerLink="/switch">Switch</span></a></li> 
+                        <li><a><span igButton routerLink="/carousel">Carousel</span></a></li> 
+                        <li><a><span igButton routerLink="/tabbar">TabBar</span></a></li> 
+                        <li><a><span igButton routerLink="/list">List</span></a></li> 
+                        <li><a><span igButton routerLink="/buttons">Buttons</span></a></li> 
+                        <li><a><span igButton routerLink="/avatar">Avatar</span></a></li> 
+                        <li><a><span igButton routerLink="/navigation-drawer">Navigation Drawer</span></a></li> 
+                    </ul>
+                </nav>
+            </div>
+            <div style="width: 50%; float: right;">
+                <span class="titles">directives</span><br>
+                <nav>
+                    <ul class="nav-list">
+                        <li><a><span igButton routerLink="/list">filter</span></a></li> 
+                        <li><a><span igButton routerLink="/buttons">ripple</span></a></li> 
+                        <li><a><span igButton routerLink="/buttons">button</span></a></li> 
+                        <li><a><span igButton routerLink="/switch">input</span></a></li> 
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <router-outlet></router-outlet>
+    </div>
+</div>
+<div class="row" style="margin-top: 5em; margin-bottom: 5em;">
+    <div class="col-sm-12 col-lg-9 codebox">             
+        <div class="tabs">
+            <div>
+                <span style="font-weigh: bold;">Code Sample</span>
+                <span style="float: right;" (click)="changeContent($event)">HTML</span>
+                <span style="float: right; margin-right: 20px" (click)="changeContent($event)">TS</span>
+            </div>
+            <div style="margin-top:20px;">
+                <pre style="border: 0px; background-color: #ffffff;">
+                    <code class="language-html">
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </div>
+</div>
