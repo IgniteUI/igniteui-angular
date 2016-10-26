@@ -12,22 +12,29 @@ Current list of controls include:
 
 #### Feature status:
 
-| *Components*      | Status              | Docs                                                     |/| *Directives*      | Status        | Docs                                                      |
-|-------------------|---------------------|----------------------------------------------------------|-|-------------------|---------------|-----------------------------------------------------------|
-| avatar            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |-| button            |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
-| badge             |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |-| filter            |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
-| carousel          |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |-| ripple            |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
-| list              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |-| input             |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
-| navbar            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |-| label             |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
-| tabbar            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |-| layout            |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
-| dialog            |     Initial version | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |-| icon              |       Planned | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
-| navigation drawer |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |-|                   |               |                                                           |
-| radio             |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |-|                   |               |                                                           |
-| checkbox          |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |-|                   |               |                                                           |
-| switch            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |-|                   |               |                                                           |
-| scroll            |             Planned | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |-|                   |               |                                                           |
+| *Components*      | Status              | Docs                                                     | | *Directives*      | Status        | Docs                                                      |
+|-------------------|---------------------|----------------------------------------------------------| :-: |-------------------|---------------|-----------------------------------------------------------|
+| avatar            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) | | button            |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
+| badge             |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) | | filter            |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
+| carousel          |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) | | ripple            |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
+| list              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) | | input             |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
+| navbar            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) | | label             |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
+| tabbar            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) | | layout            |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
+| dialog            |     Initial version | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) | | icon              |       Planned | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
+| navigation drawer |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) | |                   |               |                                                           |
+| radio             |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) | |                   |               |                                                           |
+| checkbox          |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) | |                   |               |                                                           |
+| switch            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) | |                   |               |                                                           |
+| scroll            |             Planned | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) | |                   |               |                                                           |
 
 
+| Heading 1 | Heading 2 | Heading 3 |
+| :- | -: | :-: |
+| Left column | Middle column | Right column|
+| Left-Aligned Text | Right-Aligned Text | Centered Text|
+| 200 | 200 | 200 |
+| 20.000 | 20.000 | 20.000|
+| 2.000.000 | 2.000.000 | 2.000.000 |
 
 ## Setup
 From the root folder run:
