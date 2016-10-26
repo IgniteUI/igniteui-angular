@@ -41,7 +41,7 @@ export class Badge {
     }
 
     get value(): string {
-        return this._value === undefined ? "-" : this._value;
+        return this._value === undefined ? "?" : this._value;
     }
 
     @Input("value")
@@ -53,7 +53,7 @@ export class Badge {
         }
     }
 
-    @Input("iconBdg")
+    @Input("icon")
     public get iconBdg(): string {
         return this._iconBdg;
     }
@@ -68,27 +68,27 @@ export class Badge {
         switch (this.TypeEnum[this._type.toUpperCase()]) {
             case Type.DEFAULT:
                 classes = {
-                    "ig-badge--default": true
+                    "ig-badge__circle--default": true
                 };
                 break;
             case Type.INFO:
                 classes = {
-                    "ig-badge--info": true
+                    "ig-badge__circle--info": true
                 };
                 break;
             case Type.SUCCESS:
                 classes = {
-                    "ig-badge--success": true
+                    "ig-badge__circle--success": true
                 };
                 break;
             case Type.WARNING:
                 classes = {
-                    "ig-badge--warning": true
+                    "ig-badge__circle--warning": true
                 };
                 break;
             case Type.ERROR:
                 classes = {
-                    "ig-badge--error": true
+                    "ig-badge__circle--error": true
                 };
                 break;
         }

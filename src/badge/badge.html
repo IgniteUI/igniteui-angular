@@ -1,9 +1,6 @@
-<div>
-	<svg *ngIf="!iconBdg" height="18" width="18" [ngClass]="setClasses()">
-		<circle class="ig-badge__circle" cx="9" cy="9" r="8" />
-		<text text-anchor="middle" x="50%" y="50%" dy="0.35em" fill="white" font-size="9" font-family="monospace">{{value}}</text>
-	</svg>
-	<span *ngIf="iconBdg" style="background-color:green; color:white;" class="ig-badge--icon">
-        <i class="material-icons">{{iconBdg}}</i>
-    </span>
+<div class="ig-badge">
+	<div class="ig-badge__circle" [ngClass]="setClasses()">
+		<span *ngIf="!iconBdg">{{value}}</span>
+		<i *ngIf="iconBdg" class="material-icons">{{iconBdg}}</i>
+	</div>
 </div>
