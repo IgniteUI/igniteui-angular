@@ -28,7 +28,7 @@ import { IgRippleModule } from '../../src/directives/ripple';
             </div>
             <ig-list #declarativeList [filter]="fo2" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)">
                 <ig-list-header>Mildly Sweet</ig-list-header>
-                <ig-list-item>Red Delicious</ig-list-item>
+                <ig-list-item [options]="{}">Red Delicious</ig-list-item>
                 <ig-list-item>Ambrosia</ig-list-item>
                 <ig-list-item>Rome</ig-list-item>
                 <ig-list-header>Sweet</ig-list-header>
@@ -38,9 +38,9 @@ import { IgRippleModule } from '../../src/directives/ripple';
             </ig-list>
         </div>
         <div class="wrapper">
-            <h4>Non-header List</h4>
+            <h4>Non-header List with options</h4>
             <ig-list>
-            <ig-list-item *ngFor="let navItem of navItems; let index = index">
+            <ig-list-item *ngFor="let navItem of navItems; let index = index" [options]="options">
                 <div>
                     {{navItem.text}}
                 </div>
@@ -54,9 +54,10 @@ export class ListSampleComponent {
 
     search1: string;
     search2: string;
+    options: Object = {};
 
     private navItems: Array<Object> = [
-            { key:"1", text: "<h1>Hi world</h1>This is some very long shit <br> hello world", link: "#" },
+            { key:"1", text: "<h1>Hi world</h1>This is some very long string <br> hello world", link: "#" },
             { key:"2", text: "Nav2", link: "#" },
             { key:"3", text: "Nav3", link: "#" },
             { key:"4", text: "Nav4", link: "#" }

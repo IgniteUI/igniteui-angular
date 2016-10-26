@@ -1,7 +1,7 @@
 # Ignite UI JS Blocks -  Infragistics Angular2 Components
 
-[![Build Status](https://travis-ci.org/Infragistics/igniteui-js-blocks.svg?branch=master)](https://travis-ci.org/Infragistics/igniteui-js-blocks)
-[![Coverage Status](https://coveralls.io/repos/github/Infragistics/igniteui-js-blocks/badge.svg?branch=master)](https://coveralls.io/github/Infragistics/igniteui-js-blocks?branch=master)
+[![Build Status](https://travis-ci.org/IgniteUI/igniteui-js-blocks.svg?branch=master)](https://travis-ci.org/IgniteUI/igniteui-js-blocks)
+[![Coverage Status](https://coveralls.io/repos/github/IgniteUI/igniteui-js-blocks/badge.svg?branch=master)](https://coveralls.io/github/IgniteUI/igniteui-js-blocks?branch=master)
 [![NPM version](https://img.shields.io/npm/v/zero-blocks.svg?style=flat)](https://www.npmjs.com/package/zero-blocks)
 
 Components and supporting directives built with TypeScript and [Angular 2](https://angular.io/)
