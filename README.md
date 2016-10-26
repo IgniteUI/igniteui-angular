@@ -10,7 +10,7 @@ including samples and tests. Source files under the `src` folder.
 Current list of controls include:
 
 | *Components*          | Status              | Docs                                                     |     | *Directives*          | Status        | Docs                                                      |
-| :-                    | :-:                 | :-:                                                      | :-: | :-:                   | :-:           | :-:                                                       |
+| :-:                   | :-:                 | :-:                                                      | :-: | :-:                   | :-:           | :-:                                                       |
 | **avatar**            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     | **button**            |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
 | **badge**             |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     | **filter**            |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
 | **carousel**          |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     | **ripple**            |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
