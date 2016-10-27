@@ -43,7 +43,7 @@ export class InputSampleComponent {
     ngOnInit() {
         this._el.nativeElement.querySelector("code").classList = 'language-html';
         this._el.nativeElement.querySelector("code").innerText = this.markup;
-        Prism.highlightAll();
+        //Prism.highlightAll();
     }
 
     changeContent(args) {
@@ -54,7 +54,7 @@ export class InputSampleComponent {
             this._el.nativeElement.querySelector("code").classList = 'language-html';
             this._el.nativeElement.querySelector("code").innerText = this.markup;
         }
-        Prism.highlightAll();
+        //Prism.highlightAll();
     }
 
 }

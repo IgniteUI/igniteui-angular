@@ -2,18 +2,18 @@ import { ModuleWithProviders } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
 import { AppComponent } from "./app.component";
-import { InputSampleComponent } from "./inputsample.component";
-import { CarouselSampleComponent } from "./carouselsample.component";
-import { TabBarSampleComponent } from "./tabbarsample.component";
-import { ListSampleComponent } from "./listsample.component";
-import { ButtonsSampleComponent } from "./buttonssample.component";
-import { AvatarSampleComponent } from "./avatarsample.component";
-import { NavbarSampleComponent } from "./navbar/sample.component";
+import { SwitchSampleComponent } from "./inputs/switchsample.component";
+import { CarouselSampleComponent } from "./carousel/carouselsample.component";
+import { TabBarSampleComponent } from "./tabbar/tabbarsample.component";
+import { ListSampleComponent } from "./list/listsample.component";
+import { ButtonsSampleComponent } from "./button/buttonssample.component";
+import { AvatarSampleComponent } from "./avatar/avatarsample.component";
+//import { NavbarSampleComponent } from "./app/navbar/sample.component";
 
 const appRoutes: Routes = [
     {
         path: "inputs",
-        component: InputSampleComponent
+        component: SwitchSampleComponent
     },
     {
         path: "carousel",
@@ -40,10 +40,10 @@ const appRoutes: Routes = [
         path: "avatar",
         component: AvatarSampleComponent
     },
-    {
-        path: "navbar",
-        component: NavbarSampleComponent
-    }
+    //{
+    //    path: "navbar",
+    //    component: NavbarSampleComponent
+    //}
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);
