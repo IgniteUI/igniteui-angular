@@ -16,6 +16,7 @@ import { BadgeModule, Badge } from "../../src/badge/badge";
                 <tr>
                     <td>
                         <ig-avatar [src]="src" [roundShape]="roundShape">
+                            <ig-badge type="warn" value="8"></ig-badge>
                         </ig-avatar>
                     </td>
                     <td>
