@@ -211,9 +211,11 @@ $badge-height: $badge-width;
 $badge-bg-color-default: $secondary-color !default;
 $badge-border: 2px solid $white;
 $badge-border-color: $white;
-$badge-border-radius: 50% 50%;
+$badge-border-radius-default: 4px;
+$badge-border-radius-circle: ($badge-width / 2);
 $badge-font-size: em(10px);
 $badge-font-weight: 600;
+$badge-shadow: $elevate-1;
 
 /* 3. Buttons
    ========================================================================== */

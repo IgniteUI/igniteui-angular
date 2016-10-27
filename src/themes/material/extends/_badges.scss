@@ -2,6 +2,8 @@
     position: absolute;
     bottom: 0;
     right: 0;
+    max-width: 100%;
+    text-overflow: ellipsis;
 }
 
 %igx-badge--default {
@@ -15,14 +17,23 @@
     color: $badge-border-color;
     background-color: $badge-bg-color-default;
     border: $badge-border;
-    border-radius: $badge-border-radius;
     line-height: 0;
-    padding: 2px;
+    border-radius: $badge-border-radius-default;
+    box-shadow: $badge-shadow;
     overflow: hidden;
-    box-shadow: $elevate-1;
     i {
         font-size: em(12px, 10px);
+        font-weight: $badge-font-weight;
     }
+}
+
+%igx-badge-value {
+    white-space: nowrap;
+    padding: 0 3px;
+}
+
+%igx-badge--circle {
+    border-radius: $badge-border-radius-circle;
 }
 
 %igx-circle--success {

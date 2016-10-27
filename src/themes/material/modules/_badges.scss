@@ -3,13 +3,14 @@
 
     @include e(circle) {
         @extend %igx-badge--default;
-        
-        @include m(info) {
-            @extend %igx-badge--info;
+        @extend %igx-badge--circle;
+
+        @include e(value, true) {
+            @extend %igx-badge-value;
         }
 
-        @include m(icon) {
-            @extend %igx-badge--default;
+        @include m(info) {
+            @extend %igx-badge--info;
         }
 
         @include m(success) {
