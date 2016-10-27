@@ -49,7 +49,7 @@ import { BadgeModule, Badge } from "../../src/badge/badge";
                     <td>
                         <ig-avatar initials="ZK" width="100" roundShape="true"
                             bgColor="#ff6978">
-                            <ig-badge type="error" value="22"></ig-badge>
+                            <ig-badge type="error" value="222"></ig-badge>
                         </ig-avatar>
                     </td>
                     <td>

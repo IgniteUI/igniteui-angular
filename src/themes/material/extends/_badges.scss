@@ -1,7 +1,7 @@
 %igx-badge-display {
     position: absolute;
-    bottom: 0;
-    right: 0;
+    bottom: -3px;
+    right: -3px;
     max-width: 100%;
     text-overflow: ellipsis;
 }
@@ -25,6 +25,8 @@
         font-size: em(12px, 10px);
         font-weight: $badge-font-weight;
     }
+    // transform: scale(0);
+    // animation: scale-in .25s ease-in forwards;
 }
 
 %igx-badge-value {
@@ -54,4 +56,10 @@
 
 %igx-badge--hidden {
     visibility: hidden;
+}
+
+@keyframes scale-in {
+    100% {
+        transform: scale(1);
+    }
 }

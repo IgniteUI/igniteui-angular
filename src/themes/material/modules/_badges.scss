@@ -24,9 +24,8 @@
         @include m(error) {
             @extend %igx-circle--error;
         }
-
-        @include m(hidden) {
-            @extend %igx-badge--hidden;
-        }
+    }
+    @include m(hidden) {
+        @extend %igx-badge--hidden;
     }
 }
