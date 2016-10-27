@@ -4,6 +4,7 @@
     @include e(circle) {
         @extend %igx-badge--default;
         @extend %igx-badge--circle;
+        // @extend %igx-badge--scale-in;
 
         @include e(value, true) {
             @extend %igx-badge-value;
