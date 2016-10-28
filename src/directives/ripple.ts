@@ -79,7 +79,10 @@ class RippleDirective {
             {opacity: 0, transform: 'scale(2)'},
         ];
 
-        let animation = rippler.animate(FRAMES, this.rippleDuration);
+        let animation = rippler.animate(FRAMES, {
+            duration: this.rippleDuration,
+            fill: 'forwards'
+        })
         this._remaining++;
 
         animation.onfinish = (ev?) => {
