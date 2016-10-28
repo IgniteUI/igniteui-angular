@@ -27,8 +27,8 @@ describe('Badge', function () {
 
         expect(badge.value).toBeTruthy();
         expect(badge.type).toBeTruthy();
-        expect(fixture.elementRef.nativeElement.getElementsByTagName("svg")[0].classList.contains("ig-badge--error")).toBeTruthy();
-        expect(fixture.elementRef.nativeElement.getElementsByTagName("text")[0].textContent === "z").toBeTruthy();
+        expect(fixture.elementRef.nativeElement.getElementsByTagName("div")[0].classList.contains("ig-badge")).toBeTruthy();
+        expect(fixture.elementRef.nativeElement.getElementsByClassName("ig-badge__circle")[0].textContent == 22).toBeTruthy();
     });
 
     it('Initializes badge defaults', () => {
@@ -37,28 +37,25 @@ describe('Badge', function () {
         let badge = fixture.componentInstance.badge;
 
         // Add to test some style checks
-        expect(fixture.elementRef.nativeElement.getElementsByTagName("svg")[0].getAttributeNS(null, "height") === "18").toBeTruthy();
-        expect(fixture.elementRef.nativeElement.getElementsByTagName("svg")[0].getAttributeNS(null, "width") === "18").toBeTruthy();
-        expect(fixture.elementRef.nativeElement.getElementsByTagName("text")[0].textContent === "-").toBeTruthy();
-        expect(fixture.elementRef.nativeElement.getElementsByTagName("span").length === 0).toBeTruthy();
+        expect(fixture.elementRef.nativeElement.getElementsByTagName("span")[0].textContent == "?").toBeTruthy();
+        expect(fixture.elementRef.nativeElement.getElementsByTagName("i").length === 0).toBeTruthy();
     });
 
     it('Initializes badge with icon', () => {
         let fixture = TestBed.createComponent(InitBadgeWithIcon);
         fixture.detectChanges();
         let badge = fixture.componentInstance.badge;
-        let spanElement = fixture.elementRef.nativeElement.getElementsByTagName("span");
+        let divContainer = fixture.elementRef.nativeElement.querySelectorAll("div.ig-badge__circle");
 
+        expect(divContainer).toBeTruthy();
         expect(badge.iconBdg === "person").toBeTruthy();
-        expect(badge.type === "").toBeTruthy();
-        expect(spanElement).toBeTruthy();
-        expect(spanElement[0].classList.contains("ig-badge--icon")).toBeTruthy();
-        expect(spanElement[0].style.backgroundColor === "green").toBeTruthy();
-        expect(spanElement[0].style.color === "white").toBeTruthy();
+        expect(badge.type === "info").toBeTruthy();
+        expect(badge.value === "?").toBeTruthy();
+        expect(divContainer[0].classList.contains("ig-badge__circle--info")).toBeTruthy();
     });
 });
 
-@Component({ template: `<ig-badge type="error" value="z"></ig-badge>` })
+@Component({ template: `<ig-badge type="error" value="22"></ig-badge>` })
 class InitBadge {
     @ViewChild(Badge) badge: Badge;
 }
@@ -68,7 +65,7 @@ class InitBadgeWithDefaults {
     @ViewChild(Badge) badge: Badge;
 }
 
-@Component({ template: `<ig-badge iconBdg="person"></ig-badge>` })
+@Component({ template: `<ig-badge icon="person" type="info"></ig-badge>` })
 class InitBadgeWithIcon {
     @ViewChild(Badge) badge: Badge;
 }

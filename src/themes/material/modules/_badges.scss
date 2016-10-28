@@ -1,40 +1,32 @@
 @include b(ig-badge){
-    // @extend %ig-badge-display;
+    @extend %igx-badge-display;
+
     @include e(circle) {
-        stroke-width: 2;
-    }
-    @include e(text) {
-    }
+        @extend %igx-badge--default;
+        @extend %igx-badge--circle;
+        // @extend %igx-badge--scale-in;
 
-    @include m(default) {
-        // @extend %ig-badge-display !optional;
-        @extend %badge--default !optional;
-    }
+        @include e(value, true) {
+            @extend %igx-badge-value;
+        }
 
-    @include m(info) {
-        // @extend %ig-badge-display;
-        @extend %badge--info !optional;
-        @include e(circle) {
-            fill: blue;
+        @include m(info) {
+            @extend %igx-badge--info;
+        }
+
+        @include m(success) {
+            @extend %igx-circle--success;
+        }
+
+        @include m(warning) {
+            @extend %igx-circle--warn;
+        }
+
+        @include m(error) {
+            @extend %igx-circle--error;
         }
     }
-
-    @include m(successsmall) {
-        // @extend %ig-badge-display;
-        @extend %badge--success !optional;
-    }
-
-    @include m(warning) {
-        // @extend %ig-badge-display;
-        @extend %badge--warning !optional;
-    }
-
-    @include m(error) {
-        // @extend %ig-badge-display;
-        @extend %badge--error !optional;
-    }
-
     @include m(hidden) {
-        @extend %ig-badge--hidden;
+        @extend %igx-badge--hidden;
     }
 }

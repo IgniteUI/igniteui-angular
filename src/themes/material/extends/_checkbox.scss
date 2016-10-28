@@ -2,7 +2,7 @@
     display: inline-block;
     position: relative;
     cursor: pointer;
-    height: $checkbox-height;
+    min-height: $checkbox-height;
     line-height: $checkbox-height;
     font-size: $input-font-size;
     color: $input-color;

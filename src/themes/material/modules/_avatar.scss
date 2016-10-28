@@ -1,33 +1,34 @@
+// Component styling
 @include b(ig-avatar){
-    @extend %avatar-display;
+    @extend %igx-avatar-display;
 
     @include m(rounded) {
-        @extend %avatar-display;
-        @extend %avatar--rounded;
+        @extend %igx-avatar-display;
+        @extend %igx-avatar--rounded;
     }
 
     @include m(small) {
-        @extend %avatar-display;
-        @extend %avatar--small;
+        @extend %igx-avatar-display;
+        @extend %igx-avatar--small;
     }
 
     @include m(medium) {
-        @extend %avatar-display;
-        @extend %avatar--medium;
+        @extend %igx-avatar-display;
+        @extend %igx-avatar--medium;
     }
 
     @include m(large) {
-        @extend %avatar-display;
-        @extend %avatar--large;
+        @extend %igx-avatar-display;
+        @extend %igx-avatar--large;
     }
 
     @include m(icon) {
-        @extend %avatar-display;
-        @extend %avatar--icon;
+        @extend %igx-avatar-display;
+        @extend %igx-avatar--icon;
     }
 
     @include m(image) {
-        @extend %avatar-display;
-        @extend %avatar--image; 
+        @extend %igx-avatar-display;
+        @extend %igx-avatar--image;
     }
 }

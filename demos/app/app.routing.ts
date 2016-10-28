@@ -33,7 +33,7 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/list',
+        redirectTo: '/avatar',
         pathMatch: 'full'
     },
     {
