@@ -52,6 +52,7 @@ describe('Badge', function () {
         expect(badge.iconBdg === "person").toBeTruthy();
         expect(badge.type === "info").toBeTruthy();
         expect(badge.value === "?").toBeTruthy();
+        expect(fixture.elementRef.nativeElement.getElementsByTagName("div")[0].classList.contains("ig-badge__position--top-left")).toBeTruthy();
         expect(divContainer[0].classList.contains("ig-badge__circle--info")).toBeTruthy();
     });
 });
@@ -66,7 +67,7 @@ class InitBadgeWithDefaults {
     @ViewChild(Badge) badge: Badge;
 }
 
-@Component({ template: `<ig-badge icon="person" type="info"></ig-badge>` })
+@Component({ template: `<ig-badge icon="person" type="info" position="top-left"></ig-badge>` })
 class InitBadgeWithIcon {
     @ViewChild(Badge) badge: Badge;
 }
