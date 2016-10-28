@@ -60,4 +60,5 @@ You can include Ignite UI JS Blocks in your project as a depencency using the NP
 ## Contributing
 [Coding Guidelines](../../wiki/Coding-guidelines-for-Zero-Blocks)
 
-
+## Demo App
+[Warehouse Picklist App] (https://github.com/rkaraivanov/demoapp)
