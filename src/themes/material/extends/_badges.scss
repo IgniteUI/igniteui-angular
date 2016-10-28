@@ -17,7 +17,7 @@
     color: $badge-border-color;
     background-color: $badge-bg-color-default;
     border: $badge-border;
-    line-height: 0;
+    line-height: 2px;
     border-radius: $badge-border-radius-default;
     box-shadow: $badge-shadow;
     overflow: hidden;
@@ -29,7 +29,7 @@
 
 %igx-badge-value {
     white-space: nowrap;
-    padding: 0 3px;
+    padding: 0 2px;
 }
 
 %igx-badge--circle {
