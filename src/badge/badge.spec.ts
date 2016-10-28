@@ -27,6 +27,7 @@ describe('Badge', function () {
 
         expect(badge.value).toBeTruthy();
         expect(badge.type).toBeTruthy();
+        expect(fixture.elementRef.nativeElement.getElementsByTagName("div")[0].classList.contains("ig-badge__position--bottom-left")).toBeTruthy();
         expect(fixture.elementRef.nativeElement.getElementsByTagName("div")[0].classList.contains("ig-badge")).toBeTruthy();
         expect(fixture.elementRef.nativeElement.getElementsByClassName("ig-badge__circle")[0].textContent == 22).toBeTruthy();
     });
@@ -36,7 +37,7 @@ describe('Badge', function () {
         fixture.detectChanges();
         let badge = fixture.componentInstance.badge;
 
-        // Add to test some style checks
+        expect(fixture.elementRef.nativeElement.getElementsByTagName("div")[0].classList.contains("ig-badge__position--bottom-right")).toBeTruthy();
         expect(fixture.elementRef.nativeElement.getElementsByTagName("span")[0].textContent == "?").toBeTruthy();
         expect(fixture.elementRef.nativeElement.getElementsByTagName("i").length === 0).toBeTruthy();
     });
@@ -51,11 +52,12 @@ describe('Badge', function () {
         expect(badge.iconBdg === "person").toBeTruthy();
         expect(badge.type === "info").toBeTruthy();
         expect(badge.value === "?").toBeTruthy();
+        expect(fixture.elementRef.nativeElement.getElementsByTagName("div")[0].classList.contains("ig-badge__position--top-left")).toBeTruthy();
         expect(divContainer[0].classList.contains("ig-badge__circle--info")).toBeTruthy();
     });
 });
 
-@Component({ template: `<ig-badge type="error" value="22"></ig-badge>` })
+@Component({ template: `<ig-badge type="error" value="22" position="bottom-left"></ig-badge>` })
 class InitBadge {
     @ViewChild(Badge) badge: Badge;
 }
@@ -65,7 +67,7 @@ class InitBadgeWithDefaults {
     @ViewChild(Badge) badge: Badge;
 }
 
-@Component({ template: `<ig-badge icon="person" type="info"></ig-badge>` })
+@Component({ template: `<ig-badge icon="person" type="info" position="top-left"></ig-badge>` })
 class InitBadgeWithIcon {
     @ViewChild(Badge) badge: Badge;
 }
