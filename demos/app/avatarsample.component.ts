@@ -49,19 +49,19 @@ import { BadgeModule, Badge } from "../../src/badge/badge";
                     <td>
                         <ig-avatar initials="ZK" width="100" roundShape="true"
                             bgColor="#ff6978">
-                            <ig-badge type="error" value="222"></ig-badge>
+                            <ig-badge type="error" value="222" position="bottom-left"></ig-badge>
                         </ig-avatar>
                     </td>
                     <td>
                         <ig-avatar initials="HA" width="100" size="potatos"
                             bgColor="#340068">
-                            <ig-badge type="info"></ig-badge>
+                            <ig-badge type="info" position="top-right"></ig-badge>
                         </ig-avatar>
                     </td>
                     <td>
                         <ig-avatar initials="PP" width="100" color="black" icon="person"
                             roundShape="false" bgColor="#94feed">
-                            <ig-badge icon="link"></ig-badge>
+                            <ig-badge icon="link" position="invalid"></ig-badge>
                         </ig-avatar>
                     </td>
                     <td>
@@ -73,6 +73,7 @@ import { BadgeModule, Badge } from "../../src/badge/badge";
                     <td>
                         <ig-avatar initials="ZK" size="large" roundShape="true"
                             bgColor="#484848">
+                            <ig-badge type="success" icon="done" position="top-left"></ig-badge>
                         </ig-avatar>
                     </td>
                     <td>
