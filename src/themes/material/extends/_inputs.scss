@@ -21,14 +21,12 @@
     user-select: none;
     pointer-events: none;
     backface-visibility: hidden;
-    transition: transform .3s ease-in-out,
-    scale .3s cubic-bezier(0.25, 0.8, 0.25, 1),
-    color .3s ease-in-out;
+    transition: all .3s ease-in-out;
 }
 
 %ig-form-label--float {
     color: $label-active-color;
-    transform: translateY(-20px) scale(.75);
+    transform: translate3d(0, -20px, 0) scale(.75);
 }
 
 %ig-form-label--filled {
@@ -37,7 +35,7 @@
 
 %ig-form-label--focused {
     color: $label-focus-color;
-    transform: translateY(-20px) scale(.75);
+    transform: translate3d(0, -20px, 0) scale(.75);
 }
 
 %ig-form-input {
