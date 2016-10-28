@@ -109,9 +109,7 @@
     		padding-top: 59px;
 			width: 294px;
 			height: 605px;
-			margin-right: 100px;
-    		margin-top: -238px;
-			float: right;
+    		margin-top: -74px;
 		}
 		.screen {
 			width: 274px;
@@ -182,9 +180,8 @@
 			min-width: 0;
 			min-height: 0;			
 		}
-		.nav-list li span:active{
-			font-weight: bold;
-			color: #ff6978;
+		.nav-list li.selected span{
+			font-weight: bold;			
 		}
 		.nav-list li span:hover{
 			font-weight: bold;
@@ -204,6 +201,7 @@
 			font-size: 26px;
 			font-weight: 300;
 			color: #ff6978;
+            text-align: left;
 		}
             .appButton, .logo-wrapper, .github-wrapper {
                 display: inline-block;
@@ -221,22 +219,37 @@
             section .text-content {
                 padding-left: 30px;
             }
-
+            select.dropdown-menu {
+                right: 0;
+                left: initial;
+            }
+            .ig-tab-bar-inner {
+                position: static;
+            }
+            .ig-tab-bar-inner__menu {
+                margin-left: -15px;
+            }
        @media (max-width: 767px) {
             .ig-jumbotron {
                 padding: 10%;
             }
             section {
-                    margin-top: 5em;
+                margin-top: 10em;
             }
 
             .samsung-phones-image {
                 margin-top: -80px;
-                margin-bottom: 0; 
+                margin-bottom: 40px; 
             }
-
+            .phone,  
+            .screen,
+            #mobileDiv > div {
+                background: none;
+                width: 100%;
+            }
             .phone {
-                margin-right: 0;
+                margin: 0;
+                padding: 0;
             }
         }
 	</style>
