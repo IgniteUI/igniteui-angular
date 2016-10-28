@@ -1,7 +1,7 @@
 import { Component, Input, NgModule } from '@angular/core';
 import { HammerGesturesManager } from "../core/touch";
 import { Location } from '@angular/common';
-import { ButtonModule } from "../../src/button/button";
+import { ButtonModule } from "../button/button";
 
 @Component({
     selector: "ig-navbar",
