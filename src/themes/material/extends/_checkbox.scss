@@ -1,4 +1,4 @@
-%cbx-lbl-display {
+%igx-cbx-lbl-display {
     display: inline-block;
     position: relative;
     cursor: pointer;
@@ -9,8 +9,8 @@
     padding-left: $checkbox-label-padding;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
+    transform: translateZ(0);
     &:before {
-        transform: translateZ(0);
         transition: $input-transition;
     }
     &:before,
@@ -23,19 +23,17 @@
     }
 }
 
-%cbx-lbl-notchecked-before {
+%igx-cbx-lbl-notchecked-before {
     width: $checkbox-tick-width;
     height: $checkbox-tick-height;
     border: none;
-    top: 1px;
-    left: 0;
-    -webkit-transform: rotateZ(37deg) translate3d(0, 0, 0);
-    transform: rotateZ(37deg) scale(.1);
-    -webkit-transform-origin: 20% 40%;
-    transform-origin: 100% 100%;
+    top: -2px;
+    left: 2px;
+    transform-origin: 20% 100%;
+    transform: rotateZ(0) scale(.1);
 }
 
-%cbx-lbl-notchecked-after {
+%igx-cbx-lbl-notchecked-after {
     width: $checkbox-width;
     height: $checkbox-height;
     background: none;
@@ -43,56 +41,50 @@
     z-index: 0;
 }
 
-%cbx-lbl-checked-before {
-    top: 1px;
-    left: 0;
+%igx-cbx-lbl-checked-before {
     width: $checkbox-tick-width;
     height: $checkbox-tick-height;
+    top: -2px;
+    left: 2px;
     border-bottom: 2px solid $checkbox-tick-color;
     border-right: 2px solid $checkbox-tick-color;
-    z-index: 1;
-    backface-visibility: hidden;
+    transform-origin: 20% 100%;
     transform: rotateZ(37deg) scale(1);
-    -webkit-transform-origin: 100% 100%;
-    transform-origin: 100% 100%;
+    z-index: 1;
 }
 
-%cbx-lbl-checked-after {
+%igx-cbx-lbl-checked-after {
     width: $checkbox-width;
     height: $checkbox-height;
     background-color: $radio-fill-color;
     border: 2px solid $radio-fill-color;
 }
 
-%cbx-lbl-disabled {
+%igx-cbx-lbl-disabled {
     color: #d1d1d1;
     pointer-events: none;
 }
 
-%cbx-lbl-checked--disabled-before {
+%igx-cbx-lbl-checked--disabled-before {
     background-color: transparent;
 }
 
-%cbx-lbl-checked--disabled-after {
+%igx-cbx-lbl-checked--disabled-after {
     background-color: $input-disabled-solid-color;
     border-color: $input-disabled-solid-color;
 }
 
-%cbx-lbl-notchecked--disabled-before {
+%igx-cbx-lbl-notchecked--disabled-before {
     background-color: transparent;
     border: 2px solid transparent;
 }
 
-%cbx-lbl-notchecked--disabled-after {
+%igx-cbx-lbl-notchecked--disabled-after {
     border-color: $input-disabled-solid-color;
     background-color: transparent;
 }
 
-%cbx-lbl--indeterminate-before {
-
-}
-
-%cbx-lbl--indeterminate-after {
+%igx-cbx-lbl--indeterminate-after {
     width: $checkbox-width;
     height: $checkbox-height;
     background-color: $radio-fill-color;

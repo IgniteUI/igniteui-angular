@@ -1,15 +1,15 @@
 @include b(ig-navbar) {
-    @extend %ig-navbar-display;
+    @extend %igx-navbar-display;
     
     @include e(left-btn) {
-        @extend %ig-navbar-left-btn;
+        @extend %igx-navbar-left-btn;
 
         @include m(disabled) {
-            @extend %ig-navbar-left-btn--disabled;
+            @extend %igx-navbar-left-btn--disabled;
         }
     }
 
     @include e(title) {
-        @extend %ig-navbar-title;
+        @extend %igx-navbar-title;
     }
 }
