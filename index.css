@@ -1,0 +1,228 @@
+@font-face {
+    font-family: TitilliumWeb;
+    src: url(demos/resources/TitilliumWeb-Light.ttf);
+}
+@font-face {
+    font-family: TitilliumWeb-Thin;
+    src: url(demos/resources/Titillium-web.thin.ttf);
+}
+body{
+    font-family: TitilliumWeb;	
+    font-style: normal;
+    font-stretch: normal;
+}
+    .ig-container, .nav-list, .screen, .nav-list li span {
+        padding: 0;
+    }
+h1 {
+    /*width: 427px;*/
+    font-size: 42px;
+    font-weight: 300;
+    line-height: 1.14;
+    color: rgba(255, 255, 255, 0.87);
+}
+h2 {
+    /*width: 442px;*/
+    font-size: 22px;
+    font-weight: normal;
+    line-height: 1.45;
+    color: #ffffff;
+}
+    section {
+        margin-top: 10em
+    }
+ul {
+    position: absolute !important;
+}
+.wholeContent{
+    background-color: #eeeeee;
+}
+.midContentHeading{
+    font-size: 38px;
+    font-weight: 300;
+    line-height: 1.21;
+    color: #ff6978;
+}
+.midContent {
+    font-family: TitilliumWeb-Thin;
+    font-size: 22px;
+    font-weight: 100;
+    line-height: 1.45;
+    color: #757575;
+}
+.whiteContainer {
+    padding: 15px;
+    background-color: #ffffff;
+    box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.19);
+    float: none;
+}
+footer {
+    background-color: #272727;
+    height: 150px;
+    position: relative;
+    clear:both;
+    padding-top:20px;
+}
+.componentTitle{
+    font-family: TitilliumWeb-Thin;
+    font-size: 34px;
+    font-weight: 100;
+    color: #0375be;
+}
+.componentDesc{
+    font-family: TitilliumWeb;
+    font-size: 18px;
+    font-weight: 300;
+    color: #757575;
+}
+.phone {
+    background: 			
+        url('demos/images/phone.png') no-repeat;
+    position: relative;
+    padding-left: 10px;
+    padding-top: 59px;
+    width: 294px;
+    height: 605px;
+    margin-top: -74px;
+}
+.screen {
+    width: 274px;
+    height: 490px;
+    background: url('demos/images/reflection.png') no-repeat;
+    background-position: -2px -10px;
+    background-color: #fafafa;
+    position: relative;
+}
+.ig-tab-inner {
+    padding: 15px;
+    padding-top: 20px;
+}	
+.ig-tab-bar-inner__menu{
+    background: none;
+}
+#mobileDiv > div {
+    padding: 25px 15px;
+    background: url('demos/images/status-bar.png') repeat-x;
+}
+.appButton{
+    width: 193px;
+    height: 37px;
+    border-radius: 2px;
+    padding: 6px 15px 6px 15px;
+    background-color: #ff6978;
+    box-shadow: 0 8px 12px 0 rgba(173, 173, 173, 0.38);
+    font-size: 16px;
+    font-weight: normal;
+    color: #ffffff;
+}
+.codebox {
+    /*width: 800px;*/
+    height: 610px;
+    background-color: #ffffff;
+    box-shadow: 0 6px 16px 0 rgba(72, 72, 72, 0.17);
+    padding: 0px;
+    /*left: 12.5%;*/
+}
+.tabs{
+    font-size: 16px;
+    text-align: left;
+    color: #484848;
+    padding: 12px 31px;
+    height: 49px;
+    border-bottom: solid 2px #ff6978;
+}
+.ig-jumbotron{
+    background: url(demos/images/header-image2.png) no-repeat scroll top !important;
+    color: rgba(255, 255, 255, 0.87);
+    height: 497px;
+    padding: 3% 35% 0% 20%;
+}
+    .row, header.ig-jumbotron {
+        margin: 0;
+    }
+.nav-list {
+    list-style-type: none;
+}
+.nav-list li span {
+    font-family: TitilliumWeb-Thin;
+    font-size: 22px;
+    font-weight: 100;
+    font-style: normal;
+    font-stretch: normal;
+    text-transform: lowercase;
+    color: #757575;
+    min-width: 0;
+    min-height: 0;			
+}
+.nav-list li.selected span{
+    font-weight: bold;			
+}
+.nav-list li span:hover{
+    font-weight: bold;
+    color: #ff6978;
+    background: none;
+}
+.logo-wrapper, .github-wrapper{
+    width: 50%;
+}
+.logo-wrapper{
+    float:left;
+}
+.github-wrapper{
+    text-align: right;
+}
+.titles{
+    font-size: 26px;
+    font-weight: 300;
+    color: #ff6978;
+    text-align: left;
+}
+    .appButton, .logo-wrapper, .github-wrapper {
+        display: inline-block;
+    }
+    .appButton {
+        margin: 1%;
+    }
+    .samsung-phones-image {
+        margin-top: -100px; 
+        margin-bottom: -100px; 
+        margin-left: -20px; 
+        float: right;
+    }
+
+    section .text-content {
+        padding-left: 30px;
+    }
+    select.dropdown-menu {
+        right: 0;
+        left: initial;
+    }
+    .ig-tab-bar-inner {
+        position: static;
+    }
+    .ig-tab-bar-inner__menu {
+        margin-left: -15px;
+    }
+@media (max-width: 767px) {
+    .ig-jumbotron {
+        padding: 10%;
+    }
+    section {
+        margin-top: 10em;
+    }
+
+    .samsung-phones-image {
+        margin-top: -80px;
+        margin-bottom: 40px; 
+    }
+    .phone,  
+    .screen,
+    #mobileDiv > div {
+        background: none;
+        width: 100%;
+    }
+    .phone {
+        margin: 0;
+        padding: 0;
+    }
+}

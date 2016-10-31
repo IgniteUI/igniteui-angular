@@ -11,11 +11,11 @@ import { BadgeModule, Badge } from "../../src/badge/badge";
     `],
     template: `
     <div id="phoneContainer" class="phone">
-        <div id="mobileDiv" class="screen">
-            <div>
-                <h3>Avatars</h3>
-                <div style="width: 600px;">
-                    <table>
+    <div id="mobileDiv" class="screen">
+        <div>
+            <span class="componentTitle">Avatar</span><br>
+            <span class="componentDesc">A directive that displays an image or text as an avatar.</span><br><br>
+                <table>
                         <tr>
                             <td>
                                 <ig-avatar [src]="src" [roundShape]="roundShape">
@@ -29,6 +29,8 @@ import { BadgeModule, Badge } from "../../src/badge/badge";
                                 <ig-avatar src="https://unsplash.it/60/60?image=55">
                                 </ig-avatar>
                             </td>
+                        </tr>
+                        <tr>
                             <td>
                                 <ig-avatar src="https://unsplash.it/60/60?image=55" [initials]="initials"
                                     [bgColor]="bgColor" [roundShape]="roundShape">
@@ -42,12 +44,12 @@ import { BadgeModule, Badge } from "../../src/badge/badge";
                                 <ig-avatar initials="AA" bgColor="#731963" roundShape="true">
                                 </ig-avatar>
                             </td>
+                        </tr>
+                        <tr>
                             <td>
                                 <ig-avatar roundShape="true" icon="person" bgColor="#0375be" data-init="SS">
                                 </ig-avatar>
                             </td>
-                        </tr>
-                        <tr>
                             <td>
                                 <ig-avatar initials="ZK" width="100" roundShape="true"
                                     bgColor="#ff6978">
@@ -60,6 +62,8 @@ import { BadgeModule, Badge } from "../../src/badge/badge";
                                     <ig-badge type="info"></ig-badge>
                                 </ig-avatar>
                             </td>
+                        </tr>
+                        <tr>
                             <td>
                                 <ig-avatar initials="PP" width="100" color="black" icon="person"
                                     roundShape="false" bgColor="#94feed">
@@ -77,14 +81,18 @@ import { BadgeModule, Badge } from "../../src/badge/badge";
                                     bgColor="#484848">
                                 </ig-avatar>
                             </td>
+                        </tr>
+                        <tr>
                             <td>
                                 <ig-avatar color="gray">
                                 </ig-avatar>
                             </td>
+                            <td>
+                                <span igButton="raised" (click)="changeLink()">Change Image</span>
+                            </td>
                         </tr>
+
                     </table>
-                </div>
-                <span igButton="raised" (click)="changeLink()">Change Image</span>
             </div>
         </div>
     </div>

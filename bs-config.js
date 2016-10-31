@@ -4,11 +4,11 @@ module.exports = {
     server: {
         middleware: {
             2: {
-                route: "index.html",
+                route: "demos/index.html",
                 handle: function (req, res, next) {
                     if (req.url === "/") {
                         res.writeHead(302, {
-                            "Location": "index.html"
+                            "Location": "demos/index.html"
                         });
                         res.end();
                     }

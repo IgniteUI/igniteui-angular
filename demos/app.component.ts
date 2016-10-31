@@ -3,53 +3,7 @@ import { Component, ElementRef, ViewChild, ViewChildren, QueryList } from "@angu
 @Component({
     selector: 'sample-app',
     templateUrl: 'demos/app.component.html',
-    styles: [`
-        .samples-container{
-            margin-top: 15em;
-        }
-        .samples-container .whiteContainer > div:last-of-type {
-            padding: 0;
-        }
-        .code-container {
-            margin-top: 5em; 
-            margin-bottom: 5em; 
-            overflow: auto
-        }
-        .samples-container .text-content, 
-        .component-links,
-        .directive-links {
-            width: 50%;
-        }
-        .component-links {
-            float: left;
-        }
-        .directive-links {
-            float: right;
-        }
-        .codebox .header .title {
-            font-weight: bold;
-        }
-        .codebox .header .html,
-        .codebox .header .ts {
-            float: right;
-            cursor: pointer;
-        }
-        .codebox .header .ts {
-            margin-right: 20px;
-        }
-        .codebox .content {
-            margin-top:20px;
-        }
-        .codebox .content pre {
-            border: 0; 
-            background-color: #fff;
-        }
-        @media (max-width: 767px) {
-            .samples-container {
-                margin-top: 5em;
-            }            
-        }
-        `]
+    styleUrls: ['demos/app.component.css']
 })
 export class AppComponent {
     private _el: ElementRef;
@@ -93,7 +47,7 @@ export class AppComponent {
     ngOnInit() {
         this.code.nativeElement.classList = 'language-html';
         this.code.nativeElement.innerText = this.markup;
-        //Prism.highlightAll();
+        Prism.highlightAll();
     }
 
     changeContent(args) {
@@ -104,7 +58,7 @@ export class AppComponent {
             this.code.nativeElement.classList = 'language-html';
             this.code.nativeElement.innerText = this.markup;
         }
-        //Prism.highlightAll();
+        Prism.highlightAll();
     }
 
     navItemClick(args) {
