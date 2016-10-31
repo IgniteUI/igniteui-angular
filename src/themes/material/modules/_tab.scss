@@ -12,44 +12,44 @@ ig-tab {
 }
 
 @include b(ig-tab-bar-inner) {
-    @extend %tabbar-inner-display;
+    @extend %igx-tabbar-inner-display;
 
     @include b(tab-icon) {
-        @extend %tab-icon;
+        @extend %igx-tab-icon;
     }
 
     @include b(tab-label) {
-        @extend %tab-label;
+        @extend %igx-tab-label;
     }
 
     @include e(menu) {
-        @extend %tabbar-menu;
+        @extend %igx-tabbar-menu;
 
         @include e(item, true) {
-            @extend %tabbar-menu-item;
+            @extend %igx-tabbar-menu-item;
 
             @include m(selected) {
 
                 @include b(tab-icon) {
-                    @extend %tab-icon--selected;
+                    @extend %igx-tab-icon--selected;
                 }
 
                 @include b(tab-label) {
-                    @extend %tab-label--selected;
+                    @extend %igx-tab-label--selected;
                 }
             }
 
             @include m(disabled) {
-                @extend %tabbar-menu-item--disabled;
+                @extend %igx-tabbar-menu-item--disabled;
             }
         }
 
         @include m(top) {
-            @extend %tabbar-menu--top;
+            @extend %igx-tabbar-menu--top;
         }
 
         @include m(bottom) {
-            @extend %tabbar-menu--bottom;
+            @extend %igx-tabbar-menu--bottom;
         }
     }
 }
