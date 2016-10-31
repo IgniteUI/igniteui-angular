@@ -1,4 +1,4 @@
-<div class="ig-badge" [ngClass]="setPosition()">
+<div [ngClass]="setPosition()">
 	<div class="ig-badge__circle" [ngClass]="setClasses()">
 		<span *ngIf="!iconBdg" class="ig-badge__circle-value">{{value}}</span>
 		<i *ngIf="iconBdg" class="material-icons ig-badge__circle-value">{{iconBdg}}</i>

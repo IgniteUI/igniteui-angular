@@ -44,7 +44,7 @@ export class Badge {
     }
 
     get position(): string {
-        return this._position === undefined ? "bottom-right" : this._position;
+        return this._position === undefined ? "top-right" : this._position;
     }
 
     @Input("position")
@@ -52,7 +52,7 @@ export class Badge {
         var positionType = this.PositionEnum[value.replace("-","_").toUpperCase()];
 
         if (positionType === undefined) {
-            this._position = "bottom-right";
+            this._position = "top-right";
         } else {
             this._position = value.toLowerCase();
         }
@@ -120,22 +120,22 @@ export class Badge {
         switch (this.PositionEnum[this.position.replace("-","_").toUpperCase()]) {
             case Position.BOTTOM_LEFT:
                 className = {
-                    "ig-badge__position--bottom-left": true
+                    "ig-badge--bottom-left": true
                 };
                 break;
             case Position.BOTTOM_RIGHT:
                 className = {
-                    "ig-badge__position--bottom-right": true
+                    "ig-badge--bottom-right": true
                 };
                 break;
             case Position.TOP_LEFT:
                 className = {
-                    "ig-badge__position--top-left": true
+                    "ig-badge--top-left": true
                 };
                 break;
             case Position.TOP_RIGHT:
                 className = {
-                    "ig-badge__position--top-right": true
+                    "ig-badge--top-right": true
                 };
                 break;
         }

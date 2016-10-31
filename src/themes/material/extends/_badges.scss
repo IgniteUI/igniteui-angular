@@ -1,9 +1,6 @@
 %igx-badge-display {
     position: absolute;
-    bottom: -5px;
-    right: -5px;
     max-width: 100%;
-    text-overflow: ellipsis;
 }
 
 %igx-badge--default {
@@ -54,6 +51,26 @@
 
 %igx-badge--hidden {
     visibility: hidden;
+}
+
+%igx-badge-pos-tl {
+    top: -5px;
+    left: -5px;
+}
+
+%igx-badge-pos-tr {
+    top: -5px;
+    right: -5px;
+}
+
+%igx-badge-pos-bl {
+    bottom: -5px;
+    left: -5px;
+}
+
+%igx-badge-pos-br {
+    bottom: -5px;
+    right: -5px;
 }
 
 %igx-badge--scale-in {

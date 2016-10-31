@@ -27,8 +27,7 @@ describe('Badge', function () {
 
         expect(badge.value).toBeTruthy();
         expect(badge.type).toBeTruthy();
-        expect(fixture.elementRef.nativeElement.getElementsByTagName("div")[0].classList.contains("ig-badge__position--bottom-left")).toBeTruthy();
-        expect(fixture.elementRef.nativeElement.getElementsByTagName("div")[0].classList.contains("ig-badge")).toBeTruthy();
+        expect(fixture.elementRef.nativeElement.getElementsByTagName("div")[0].classList.contains("ig-badge--bottom-left")).toBeTruthy();
         expect(fixture.elementRef.nativeElement.getElementsByClassName("ig-badge__circle")[0].textContent == 22).toBeTruthy();
     });
 
@@ -37,7 +36,7 @@ describe('Badge', function () {
         fixture.detectChanges();
         let badge = fixture.componentInstance.badge;
 
-        expect(fixture.elementRef.nativeElement.getElementsByTagName("div")[0].classList.contains("ig-badge__position--bottom-right")).toBeTruthy();
+        expect(fixture.elementRef.nativeElement.getElementsByTagName("div")[0].classList.contains("ig-badge--top-right")).toBeTruthy();
         expect(fixture.elementRef.nativeElement.getElementsByTagName("span")[0].textContent == "?").toBeTruthy();
         expect(fixture.elementRef.nativeElement.getElementsByTagName("i").length === 0).toBeTruthy();
     });
@@ -52,7 +51,7 @@ describe('Badge', function () {
         expect(badge.iconBdg === "person").toBeTruthy();
         expect(badge.type === "info").toBeTruthy();
         expect(badge.value === "?").toBeTruthy();
-        expect(fixture.elementRef.nativeElement.getElementsByTagName("div")[0].classList.contains("ig-badge__position--top-left")).toBeTruthy();
+        expect(fixture.elementRef.nativeElement.getElementsByTagName("div")[0].classList.contains("ig-badge--top-left")).toBeTruthy();
         expect(divContainer[0].classList.contains("ig-badge__circle--info")).toBeTruthy();
     });
 });

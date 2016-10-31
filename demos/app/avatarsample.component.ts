@@ -67,13 +67,13 @@ import { BadgeModule, Badge } from "../../src/badge/badge";
                     <td>
                         <ig-avatar initials="PP" size="medium" roundShape="false"
                             bgColor="#e41c77">
-                            <ig-badge type="success" icon="done"></ig-badge>
+                            <ig-badge type="success" icon="done" position="bottom-right"></ig-badge>
                         </ig-avatar>
                     </td>
                     <td>
                         <ig-avatar initials="ZK" size="large" roundShape="true"
                             bgColor="#484848">
-                            <ig-badge type="success" icon="done" position="top-left"></ig-badge>
+                            <ig-badge type="success" icon="done" position="top-right"></ig-badge>
                         </ig-avatar>
                     </td>
                     <td>
