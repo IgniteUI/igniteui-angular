@@ -1,14 +1,6 @@
 %ig-list {
     background-color: $list-background;
     overflow: hidden;
-    &:after {
-        content: '';
-        display: block;
-        height: 1px;
-        width: 100%;
-        margin-left: 16px;
-        background: darken($white, 10%);
-    }
 }
 
 %ig-list-item-display {
@@ -18,6 +10,8 @@
 }
 
 %ig-list-header {
+    display: flex;
+    align-items: center;
     color: $list-header-color;
     background-color: $list-header-background;
     font-size: $list-header-font-size;
@@ -35,7 +29,6 @@
     justify-content: center;
     padding: $list-item-padding;
     min-height: $list-item-height;
-    // line-height: $list-item-line-height;
     font-size: $list-item-font-size;
     color: $list-item-color;
     background-color: $list-item-background;

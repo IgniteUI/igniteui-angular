@@ -6,19 +6,19 @@ import {
 
     IgInput, CarouselModule , CheckboxModule, SwitchModule,
     IgRadioModule , TabBarModule , ListModule, ButtonModule, Label,
-    AvatarModule, FilterModule, IgRippleModule
+    AvatarModule, FilterModule, IgRippleModule, BadgeModule
 
 } from "../src/main";
 
 import { AppComponent } from "./app.component";
 import { SwitchSampleComponent } from "./inputs/switchsample.component";
-import { RadioSampleComponent } from "./inputs/radiosample.component";
 import { CarouselSampleComponent } from "./carousel/carouselsample.component";
 import { TabBarSampleComponent } from "./tabbar/tabbarsample.component";
 import { ListSampleComponent } from "./list/listsample.component";
 import { ButtonsSampleComponent } from "./button/buttonssample.component";
 import { AvatarSampleComponent } from "./avatar/avatarsample.component";
 import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
+//import { NavbarSampleModule } from "./app/navbar/sample.module";
 
 import { routing } from "./app.routing";
 
@@ -37,14 +37,15 @@ import { routing } from "./app.routing";
         AvatarModule,
         FilterModule,
         NavDrawerSampleModule,
+        //NavbarSampleModule,
         IgRippleModule,
-        routing
+        routing,
+        BadgeModule
     ],
     declarations: [
         IgInput,
         AppComponent,
         SwitchSampleComponent,
-        RadioSampleComponent,
         CarouselSampleComponent,
         TabBarSampleComponent,
         ListSampleComponent,

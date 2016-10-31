@@ -1,5 +1,38 @@
-@include b(ig-badge) {
-    @extend %ig-badge-display;
+@include b(ig-badge){
+    // @extend %ig-badge-display;
+    @include e(circle) {
+        stroke-width: 2;
+    }
+    @include e(text) {
+    }
+
+    @include m(default) {
+        // @extend %ig-badge-display !optional;
+        @extend %badge--default !optional;
+    }
+
+    @include m(info) {
+        // @extend %ig-badge-display;
+        @extend %badge--info !optional;
+        @include e(circle) {
+            fill: blue;
+        }
+    }
+
+    @include m(successsmall) {
+        // @extend %ig-badge-display;
+        @extend %badge--success !optional;
+    }
+
+    @include m(warning) {
+        // @extend %ig-badge-display;
+        @extend %badge--warning !optional;
+    }
+
+    @include m(error) {
+        // @extend %ig-badge-display;
+        @extend %badge--error !optional;
+    }
 
     @include m(hidden) {
         @extend %ig-badge--hidden;

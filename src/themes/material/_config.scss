@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Zero Blocks Variables
+   Ignite UI JS Blocks Variables
    ========================================================================== */
 /**
  * Table of Contents:
@@ -136,9 +136,9 @@ $elevate-8: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
             0px 8px 10px 1px rgba(0, 0, 0, 0.14),
             0px 3px 14px 2px rgba(0, 0, 0, 0.12);
 
-$elevate-8-up: 0px -5px 5px -3px rgba(0, 0, 0, 0.2),
-            0px -8px 10px 1px rgba(0, 0, 0, 0.14),
-            0px -3px 14px 2px rgba(0, 0, 0, 0.12);
+$elevate-8-up: 0px -2px 4px -1px rgba(0, 0, 0, 0.14),
+            0px -4px 5px 0px rgba(0, 0, 0, 0.14),
+            0px -1px 10px 0px rgba(0, 0, 0, 0.12);
 
 $elevate-9: 0px 5px 6px -3px rgba(0, 0, 0, 0.2),
             0px 9px 12px 1px rgba(0, 0, 0, 0.14),
@@ -220,8 +220,8 @@ $button-font-size: em(16px) !default;
 $button-color: #484848 !default;
 $button-font-weight: normal !default;
 $button-width: em(88px) !default;
-$button-height: em(36px) !default;
-$button-padding: em(6px) em(16px) !default;
+$button-height: em(40px) !default;
+$button-padding: em(8px) em(16px) !default;
 $button-transition: all 0.2s ease-out 0s !default;
 
 // Disabled Styles
@@ -259,9 +259,13 @@ $button-floating-hover-shadow: $elevate-12 !default;
 $button-floating-radius: 50% !default;
 $button-floating-background: $primary-color !default;
 
+// Icon Buttons
+$button-icon-hover-background: rgba(240, 240, 240, .5);
+$button-icon-focus-background: rgba(209, 209, 209, .5);
+
 /* 9. Fonts
    ========================================================================== */
-$titillium-font-path: '../dist/fonts/titillium/' !default;
+$titillium-font-path: 'fonts/titillium/' !default;
 
 /* 10. Forms
    ========================================================================== */

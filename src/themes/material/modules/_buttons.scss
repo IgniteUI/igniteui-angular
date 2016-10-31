@@ -26,6 +26,10 @@
     @extend %button-icon;
   }
 
+  @include m(navbar){
+    @extend %button-navbar;
+  }
+
   @include m(disabled) {
     @extend %button-disabled;
   }

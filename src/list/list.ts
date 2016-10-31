@@ -78,6 +78,7 @@ export class ListItem implements OnInit, OnDestroy, IListChild {
     @ViewChild('wrapper') wrapper: ElementRef;
 
     private _VISIBLE_AREA_ON_FULL_PAN = 40; // in pixels
+    private _FRACTION_OF_WIDTH_TO_TRIGGER_GRIP = 0.5; // as a fraction of the item width
     private _initialLeft: number = null;
     private _innerStyle: string = "ig-list__item";
 
@@ -115,19 +116,25 @@ export class ListItem implements OnInit, OnDestroy, IListChild {
     @Input() options: Array<Object>
 
     constructor( @Inject(forwardRef(() => List)) private list: List, public element: ElementRef, private _renderer: Renderer) {
-        this._addEventListeners();
+        
     }
 
     public ngOnInit() {
         this.list.addChild(this);
+
+        this._addEventListeners();        
+
+        // Fix for default value of touch-action: none, set by Hammer.js
+        this.element.nativeElement.style.touchAction = "inherit";
     }
 
     public ngOnDestroy() {
-        this.list.removeChild(this.index);
+        this.list.removeChild(this.index);        
     }
 
     private _addEventListeners() {
-        if (this._renderer) {
+        // Do not attach pan events if there is no options - no need to pan the item
+        if (this._renderer && this.options) {
             this._renderer.listen(this.element.nativeElement, 'panstart', (event) => { this.panStart(event); });
             this._renderer.listen(this.element.nativeElement, 'panmove', (event) => { this.panMove(event); });
             this._renderer.listen(this.element.nativeElement, 'panend', (event) => { this.panEnd(event); });
@@ -166,9 +173,9 @@ export class ListItem implements OnInit, OnDestroy, IListChild {
 
     private magneticGrip() {
         var left = this.left,
-            halfWidth = this.width / 2;
+            partialWidth = this.width * this._FRACTION_OF_WIDTH_TO_TRIGGER_GRIP;
 
-        if (halfWidth && left < 0 && -left > halfWidth) {
+        if (partialWidth && left < 0 && -left > partialWidth) {
             this.leftMagneticGrip();
         } else {
             this.rightMagneticGrip();

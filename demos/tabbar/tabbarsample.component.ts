@@ -6,9 +6,9 @@ import { Component } from "@angular/core";
     <div id="phoneContainer" class="phone">
         <div id="mobileDiv" class="screen">
             <div>
+                <div class="componentTitle">TabBar</div><br>
                 <ig-tab-bar igRipple igRippleTarget="ul" alignment="bottom">
-                    <ig-tab label="Tab 1" icon="library_music">
-                        <span class="componentTitle">TabBar</span><br>
+                    <ig-tab label="Tab 1" icon="library_music">                        
                         <span class="componentDesc">IgTabBar allow you to tabulate your content. It provides flexible ways to manage and navigate through your tabularized data. </span><br>
                         </ig-tab>
                     <ig-tab label="Tab 2" icon="video_library">

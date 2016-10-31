@@ -3,4 +3,5 @@
     <span *ngIf="!src && !initials" class="ig-avatar--{{size}} ig-avatar--icon" [class.ig-avatar--rounded]="isRounded" [style.backgroundColor]="bgColor" [style.color]="color">
         <i class="material-icons">{{icon}}</i>
     </span>
+    <ng-content></ng-content>
 </div>
