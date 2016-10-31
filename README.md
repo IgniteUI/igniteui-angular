@@ -61,4 +61,4 @@ You can include Ignite UI JS Blocks in your project as a depencency using the NP
 [Coding Guidelines](../../wiki/Coding-guidelines-for-Zero-Blocks)
 
 ## Demo App
-[Warehouse Picklist App] (https://github.com/rkaraivanov/demoapp)
+[Warehouse Picklist App] (https://github.com/IgniteUI/warehouse-js-blocks)
