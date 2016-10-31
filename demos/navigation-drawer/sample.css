@@ -1,9 +1,7 @@
 
 /* sample styling */
 #log {
-    height:400px;
-    background-color:#e3e3e3;
-    overflow-y: scroll;
+    overflow-y: no-scroll;
     padding: .5em;
     font-size: small;
 }

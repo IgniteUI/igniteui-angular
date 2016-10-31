@@ -1,0 +1,78 @@
+<div class="samples-container">
+    <div class="whiteContainer row col-sm-push-1 col-sm-11 col-lg-push-2 col-lg-10">
+        <div class="col-sm-6">
+            <p>
+                <span class="midContentHeading">One by one</span><br>
+                <span class="midContent">Explore the components and directives we’re working on</span>
+            </p>
+            <div class="component-links hidden-xs">
+                <span class="titles">components</span><br>
+                <nav>
+                    <ul class="nav-list" (click)="navItemClick($event)">
+                        <li #item ><a><span igButton routerLink="/inputs">Switch</span></a></li> 
+                        <li #item ><a><span igButton routerLink="/carousel">Carousel</span></a></li> 
+                        <li #item ><a><span igButton routerLink="/tabbar">TabBar</span></a></li> 
+                        <li #item ><a><span igButton routerLink="/list">List</span></a></li> 
+                        <li #item ><a><span igButton routerLink="/buttons">Buttons</span></a></li> 
+                        <li #item ><a><span igButton routerLink="/avatar">Avatar</span></a></li> 
+                        <li #item ><a><span igButton routerLink="/navigation-drawer">Navigation Drawer</span></a></li> 
+                    </ul>
+                </nav>
+            </div>
+            <div class="directive-links hidden-xs">
+                <span class="titles">directives</span><br>
+                <nav>
+                    <ul class="nav-list" (click)="navItemClick($event)">
+                        <li #item><a><span igButton routerLink="/list">filter</span></a></li> 
+                        <li #item><a><span igButton routerLink="/buttons">ripple</span></a></li> 
+                        <li #item><a><span igButton routerLink="/buttons">button</span></a></li> 
+                        <li #item><a><span igButton routerLink="/inputs">input</span></a></li> 
+                    </ul>
+                </nav>
+            </div>
+            <div class="visible-xs">
+                <br />
+                <div class="dropdown">
+                    <button igButton class="btn btn-primary dropdown-toggle appButton" type="button" data-toggle="dropdown">
+                        Pick a samples
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-header titles" igButton>components</li>
+                        <li><a><span igButton routerLink="/inputs">Switch</span></a></li>
+                        <li><a><span igButton routerLink="/carousel">Carousel</span></a></li>
+                        <li><a><span igButton routerLink="/tabbar">TabBar</span></a></li>
+                        <li><a><span igButton routerLink="/list">List</span></a></li>
+                        <li><a><span igButton routerLink="/buttons">Buttons</span></a></li>
+                        <li><a><span igButton routerLink="/avatar">Avatar</span></a></li>
+                        <li><a><span igButton routerLink="/navigation-drawer">Navigation Drawer</span></a></li>
+                        <li class="dropdown-header titles" igButton>directives</li>
+                        <li><a><span igButton routerLink="/list">filter</span></a></li>
+                        <li><a><span igButton routerLink="/buttons">ripple</span></a></li>
+                        <li><a><span igButton routerLink="/buttons">button</span></a></li>
+                        <li><a><span igButton routerLink="/inputs">input</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <router-outlet class="col-sm-6"></router-outlet>
+        </div>        
+    </div>
+</div>
+<div class="code-container">
+    <div class="col-sm-10 col-sm-push-1 col-lg-push-2 col-lg-8 codebox">             
+        <div class="tabs">
+            <div class="header">
+                <span class="title">Code Sample</span>
+                <span class="html" (click)="changeContent($event)">HTML</span>
+                <span class="ts" (click)="changeContent($event)">TS</span>
+            </div>
+            <div class="content">
+                <pre>
+                    <code #code class="language-html"></code>
+                </pre>
+            </div>
+        </div>
+    </div>
+</div>

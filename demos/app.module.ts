@@ -8,17 +8,17 @@ import {
     IgRadioModule , TabBarModule , ListModule, ButtonModule, Label,
     AvatarModule, FilterModule, IgRippleModule, BadgeModule
 
-} from "../../src/main";
+} from "../src/main";
 
 import { AppComponent } from "./app.component";
-import { InputSampleComponent } from "./inputsample.component";
-import { CarouselSampleComponent } from "./carouselsample.component";
-import { TabBarSampleComponent } from "./tabbarsample.component";
-import { ListSampleComponent } from "./listsample.component";
-import { ButtonsSampleComponent } from "./buttonssample.component";
-import { AvatarSampleComponent } from "./avatarsample.component";
+import { SwitchSampleComponent } from "./inputs/switchsample.component";
+import { CarouselSampleComponent } from "./carousel/carouselsample.component";
+import { TabBarSampleComponent } from "./tabbar/tabbarsample.component";
+import { ListSampleComponent } from "./list/listsample.component";
+import { ButtonsSampleComponent } from "./button/buttonssample.component";
+import { AvatarSampleComponent } from "./avatar/avatarsample.component";
 import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
-import { NavbarSampleModule } from "./navbar/sample.module";
+//import { NavbarSampleModule } from "./app/navbar/sample.module";
 
 import { routing } from "./app.routing";
 
@@ -37,7 +37,7 @@ import { routing } from "./app.routing";
         AvatarModule,
         FilterModule,
         NavDrawerSampleModule,
-        NavbarSampleModule,
+        //NavbarSampleModule,
         IgRippleModule,
         routing,
         BadgeModule
@@ -45,7 +45,7 @@ import { routing } from "./app.routing";
     declarations: [
         IgInput,
         AppComponent,
-        InputSampleComponent,
+        SwitchSampleComponent,
         CarouselSampleComponent,
         TabBarSampleComponent,
         ListSampleComponent,
