@@ -65,11 +65,11 @@
         <div class="tabs">
             <div class="header">
                 <span class="title">Code Sample</span>
-                <span class="html" (click)="changeContent($event)">HTML</span>
-                <span class="ts" (click)="changeContent($event)">TS</span>
+                <span class="html" (click)="changeContent($event)">TS</span>
+                <span class="ts" (click)="changeContent($event)">HTML</span>
             </div>
             <div class="content">
-                <pre>
+                <pre style="overflow-x: hidden;">
                     <code #code class="language-html"></code>
                 </pre>
             </div>

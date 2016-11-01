@@ -5,24 +5,9 @@ import { IgRippleModule } from '../../src/directives/ripple';
 
 @Component({
     selector: "list-sample",
-    template: `
-    <div id="phoneContainer" class="phone">
-        <div id="mobileDiv" class="screen">
-            <div>
-                <span class="componentTitle">List</span><br>
-                <span class="componentDesc">A component that displays filtered items retrieved from a data source.</span><br>           
-                    <div class="ig-form-group">
-                        <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
-                    </div>
-                    <ig-list>
-                        <ig-list-item igRipple="pink" igRippleTarget=".ig-list__item" *ngFor="let item of navItems | filter: fo1">
-                            {{item.text}}
-                        </ig-list-item>
-                    </ig-list>     
-            </div>
-        </div>
-    </div>`
+    templateUrl: 'demos/list/listsample.component.html'
 })
+
 export class ListSampleComponent {
     @ViewChild("checkbox") checkbox: any;
     @ViewChild("declarativeList") declarativeList: any;
