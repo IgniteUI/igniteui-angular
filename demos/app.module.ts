@@ -11,7 +11,11 @@ import {
 } from "../src/main";
 
 import { AppComponent } from "./app.component";
-import { SwitchSampleComponent } from "./inputs/switchsample.component";
+import { SwitchSampleComponent } from "./switch/switchsample.component";
+import { RadioSampleComponent } from "./radio/radiosample.component";
+import { FilterSampleComponent } from "./filter/filtersample.component";
+import { RippleSampleComponent } from "./ripple/ripplesample.component";
+import { InputsSampleComponent } from "./inputs/inputssample.component";
 import { CarouselSampleComponent } from "./carousel/carouselsample.component";
 import { TabBarSampleComponent } from "./tabbar/tabbarsample.component";
 import { ListSampleComponent } from "./list/listsample.component";
@@ -49,6 +53,10 @@ import { routing } from "./app.routing";
         CarouselSampleComponent,
         TabBarSampleComponent,
         ListSampleComponent,
+        InputsSampleComponent,
+        FilterSampleComponent,
+        RippleSampleComponent,
+        RadioSampleComponent,
         Label,
         ButtonsSampleComponent,
         AvatarSampleComponent

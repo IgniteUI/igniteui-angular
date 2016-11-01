@@ -2,15 +2,15 @@
     <div id="mobileDiv" class="screen">
         <div>
             <span class="componentTitle">List</span><br>
-            <span class="componentDesc">A component that displays filtered items retrieved from a data source.</span><br>           
-                <div class="ig-form-group">
-                    <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
-                </div>
-                <ig-list>
-                    <ig-list-item igRipple="pink" igRippleTarget=".ig-list__item" *ngFor="let item of navItems | filter: fo1">
-                        {{item.text}}
-                    </ig-list-item>
-                </ig-list>     
+            <span class="componentDesc">A component that displays items that can be declared or retrieved from a data source.</span><br><br>         
+            <ig-list #declarativeList>
+                <ig-list-header>Mildly Sweet</ig-list-header>
+                <ig-list-item>Red Delicious</ig-list-item>
+                <ig-list-item>Ambrosia</ig-list-item>
+                <ig-list-item>Rome</ig-list-item>
+                <ig-list-item>Golden Delicious</ig-list-item>
+                <ig-list-item>Cosmic Crisp</ig-list-item>
+            </ig-list>    
         </div>
     </div>
 </div>
