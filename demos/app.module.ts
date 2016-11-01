@@ -4,8 +4,8 @@ import { FormsModule } from "@angular/forms";
 
 import {
 
-    IgInput, CarouselModule , CheckboxModule, SwitchModule,
-    IgRadioModule , TabBarModule , ListModule, ButtonModule, Label,
+    IgInput, CarouselModule , CheckboxModule, SwitchModule, IgLayout,
+    IgRadioModule, TabBarModule, ListModule, ButtonModule, Label,
     AvatarModule, FilterModule, IgRippleModule, BadgeModule
 
 } from "../src/main";
@@ -13,6 +13,7 @@ import {
 import { AppComponent } from "./app.component";
 import { SwitchSampleComponent } from "./switch/switchsample.component";
 import { RadioSampleComponent } from "./radio/radiosample.component";
+import { LayoutSampleComponent } from "./layout/layoutsample.component";
 import { FilterSampleComponent } from "./filter/filtersample.component";
 import { RippleSampleComponent } from "./ripple/ripplesample.component";
 import { InputsSampleComponent } from "./inputs/inputssample.component";
@@ -43,6 +44,7 @@ import { routing } from "./app.routing";
         NavDrawerSampleModule,
         //NavbarSampleModule,
         IgRippleModule,
+        IgLayout,
         routing,
         BadgeModule
     ],
@@ -54,6 +56,7 @@ import { routing } from "./app.routing";
         TabBarSampleComponent,
         ListSampleComponent,
         InputsSampleComponent,
+        LayoutSampleComponent,
         FilterSampleComponent,
         RippleSampleComponent,
         RadioSampleComponent,

@@ -7,6 +7,7 @@ import { RippleSampleComponent } from "./ripple/ripplesample.component";
 import { FilterSampleComponent } from "./filter/filtersample.component";
 import { RadioSampleComponent } from "./radio/radiosample.component";
 import { InputsSampleComponent } from "./inputs/inputssample.component";
+import { LayoutSampleComponent } from "./layout/layoutsample.component";
 import { CarouselSampleComponent } from "./carousel/carouselsample.component";
 import { TabBarSampleComponent } from "./tabbar/tabbarsample.component";
 import { ListSampleComponent } from "./list/listsample.component";
@@ -56,10 +57,10 @@ const appRoutes: Routes = [
          path: "ripple",
          component: RippleSampleComponent
     },
-    // {
-    //     path: "layout",
-    //     component: ButtonsSampleComponent
-    // },
+    {
+         path: "layout",
+         component: LayoutSampleComponent
+     },
      {
          path: "inputs",
          component: InputsSampleComponent
