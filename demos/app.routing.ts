@@ -37,11 +37,6 @@ const appRoutes: Routes = [
         component: ListSampleComponent
     },
     {
-        path: '',
-        redirectTo: '/',
-        pathMatch: 'full'
-    },
-    {
         path: "avatar",
         component: AvatarSampleComponent
     },
