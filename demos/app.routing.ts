@@ -34,10 +34,10 @@ const appRoutes: Routes = [
     },
     {
         path: "list",
-        component: ListSampleComponent
+        component: ListSampleComponent,
     },
     {
-        path: '',
+        path: '**',
         redirectTo: '/list',
         pathMatch: 'full'
     },
