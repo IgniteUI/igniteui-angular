@@ -13,6 +13,12 @@ import { IgRippleModule } from '../../src/directives/ripple';
             <h4>Data Source Filtered List</h4>
             <div class="ig-form-group">
                 <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
+                <label igLabel>
+                    <i class="material-icons">search</i>
+                </label>
+                <span class="ig-form-group__clear--hidden">
+                    <i class="material-icons">clear</i>
+                </span>
             </div>
             <ig-list>
                 <ig-list-item igRipple="pink" igRippleTarget=".ig-list__item" *ngFor="let item of navItems | filter: fo1">
@@ -25,6 +31,12 @@ import { IgRippleModule } from '../../src/directives/ripple';
             <ig-checkbox [checked]="true" #checkbox>Perform filtering</ig-checkbox>   
             <div class="ig-form-group">
                 <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search2" />
+                <label igLabel>
+                    <i class="material-icons">search</i>
+                </label>
+                <span class="ig-form-group__clear--hidden">
+                    <i class="material-icons">clear</i>
+                </span>
             </div>
             <ig-list #declarativeList [filter]="fo2" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)">
                 <ig-list-header>Mildly Sweet</ig-list-header>
