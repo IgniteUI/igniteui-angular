@@ -37,6 +37,11 @@ const appRoutes: Routes = [
         component: ListSampleComponent
     },
     {
+        path: '',
+        redirectTo: '/switch',
+        pathMatch: 'full'
+    },
+    {
         path: "avatar",
         component: AvatarSampleComponent
     },
