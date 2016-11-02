@@ -37,11 +37,6 @@ const appRoutes: Routes = [
         component: ListSampleComponent,
     },
     {
-        path: '**',
-        redirectTo: '/list',
-        pathMatch: 'full'
-    },
-    {
         path: "avatar",
         component: AvatarSampleComponent
     },
@@ -64,7 +59,12 @@ const appRoutes: Routes = [
      {
          path: "inputs",
          component: InputsSampleComponent
-     }
+     },
+     {
+        path: '**',
+        redirectTo: '/',
+        pathMatch: 'full'
+    },
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);
