@@ -1,15 +1,16 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <base href="/demos">
+    <base href="./demos">
     <meta charset="UTF-8">
     <title>IgniteUI JS Blocks</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="/node_modules/core-js/client/shim.min.js"></script>
-    <script src="/node_modules/zone.js/dist/zone.js"></script>
-    <script src="/node_modules/reflect-metadata/Reflect.js"></script>
-    <script src="/node_modules/systemjs/dist/system.src.js"></script>
-    <script src="/node_modules/hammerjs/hammer.js"></script>
+	<script src="https://rawgit.com/web-animations/web-animations-js/master/web-animations.min.js"></script>
+    <script src="https://unpkg.com/core-js/client/shim.min.js"></script>
+    <script src="https://unpkg.com/zone.js/dist/zone.js"></script>
+    <script src="https://unpkg.com/reflect-metadata/Reflect.js"></script>
+    <script src="https://unpkg.com/systemjs/dist/system.src.js"></script>
+    <script src="https://unpkg.com/hammerjs/hammer.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-typescript.min.js"></script>
     <link rel="stylesheet" href="../dist/zero-blocks.css">
@@ -23,7 +24,7 @@
     <!-- 2. Configure SystemJS -->
     <script src="systemjs.config.js"></script>
     <script>
-        System.import('app').catch(function(err){ console.error(err); });
+        System.import('app/main.ts').catch(function(err){ console.error(err); });
     </script>
 </head>
 <!-- 3. Display the application -->

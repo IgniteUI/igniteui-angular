@@ -6,12 +6,17 @@
   System.config({
     paths: {
       // paths serve as alias
-      'npm:': 'node_modules/'
+      'npm:': 'https://unpkg.com/'
+    },
+    meta: {
+      'typescript': {
+        'exports': 'ts'
+      }
     },
     // map tells the System loader where to look for things
     map: {
       // our app is within the demos/app folder
-      app: 'demos/',
+      app: 'demos',
       // angular bundles
       '@angular/core': 'npm:@angular/core/bundles/core.umd.js',
       '@angular/common': 'npm:@angular/common/bundles/common.umd.js',
@@ -23,24 +28,36 @@
       '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
       // other libraries
       'rxjs':                       'npm:rxjs',
-      'angular2-in-memory-web-api': 'npm:angular2-in-memory-web-api'
+      'angular2-in-memory-web-api': 'npm:angular2-in-memory-web-api',
+      'ts':                         'npm:plugin-typescript@4.0.10/lib/plugin.js',
+      'typescript':                 'npm:typescript@2.0.2/lib/typescript.js',
+      'zero-blocks': 'npm:zero-blocks'
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {
       app: {
-        main: './main.js',
-        defaultExtension: 'js'
+        defaultExtension: 'ts'
       },
       rxjs: {
         defaultExtension: 'js'
       },
-      "src/": {
-        defaultExtension: 'js'
-      },
+      // "src/": {
+      //   defaultExtension: 'js'
+      // },
       'angular2-in-memory-web-api': {
         main: './index.js',
         defaultExtension: 'js'
+      },
+      'zero-blocks': {
+        defaultExtension: 'js'
       }
+    },
+    transpiler: 'ts',
+    typescriptOptions: {
+      "target": "es5",
+      "module": "commonjs",
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
     }
   });
 })(this);
