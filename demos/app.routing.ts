@@ -21,11 +21,6 @@ const appRoutes: Routes = [
         component: SwitchSampleComponent
     },
     {
-        path: "igniteui-js-blocks",
-        redirectTo: '/',
-        pathMatch: 'full'
-    },
-    {
         path: "radio",
         component: RadioSampleComponent
     },
