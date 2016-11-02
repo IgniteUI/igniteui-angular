@@ -3,21 +3,7 @@ import { CarouselModule } from "../../src/carousel/carousel";
 
 @Component({
     selector: "carousel-sample",
-    template:`
-<div id="phoneContainer" class="phone">
-    <div id="mobileDiv" class="screen">
-        <div style="width: 100%;">
-            <span class="componentTitle">Carousel</span><br>
-            <span class="componentDesc">Allows you to cycle thorugh photos or other content as in a slideshow.</span><br><br>
-            <ig-carousel [interval]="interval" [pause]="pause" [loop]="loop">
-                <ig-slide *ngFor="let slide of slides;" [active]="slide.active">
-                    <img [src]="slide.image">
-                </ig-slide>
-            </ig-carousel>
-        </div>
-    </div>
-</div>
-    `
+    templateUrl: 'demos/carousel/carouselsample.component.html'
 })
 export class CarouselSampleComponent {
     slides: Array<any> = [];
@@ -26,7 +12,7 @@ export class CarouselSampleComponent {
     loop = true;
 
     constructor() {
-            this.addNewSlide();
+        this.addNewSlide();
     }
 
     addNewSlide() {

@@ -3,7 +3,7 @@ import { IgRadioModule } from "../../src/radio/radio";
 
 @Component({
     selector: "radio-sample",
-    templateUrl: "demos/inputs/radiosample.component.html"
+    templateUrl: "demos/radio/radiosample.component.html"
 })
 export class RadioSampleComponent {
     placeholder = "Please enter a value";

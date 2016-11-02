@@ -1,0 +1,26 @@
+<div id="phoneContainer" class="phone">
+    <div id="mobileDiv" class="screen">
+        <div>
+            <span class="componentTitle">Inputs</span><br>
+            <span class="componentDesc">Lets the user enters data through various inputs.</span>
+            <div class="ig-form-group">
+                <label igLabel>Username</label><br>
+                <input type="text" igInput [(ngModel)]="user.name" />
+                <span>value = {{ user.name || ''}}</span>
+            </div>
+            <div class="ig-form-group">
+                <label igLabel>Password</label><br>
+                <input type="password" igInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
+                <span>value = {{ user.password || ''}}</span>
+            </div>
+            <div class="ig-form-group">
+                <label igLabel>Textarea</label><br>
+                <textarea placeholder="{{placeholder}}" igInput [(ngModel)]="user.comment"></textarea>
+                <span>value = {{ user.comment || ''}}</span>
+            </div>
+            <ig-checkbox [(ngModel)]="user.registered">Registered</ig-checkbox>
+            <span>value = {{ user.registered }}</span>
+            <label igLabel>Label me!</label>
+        </div>
+    </div>
+</div>

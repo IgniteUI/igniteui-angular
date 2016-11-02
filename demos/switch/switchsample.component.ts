@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 
 @Component({
     selector: "switch-sample",
-    templateUrl: "demos/inputs/switchsample.component.html"
+    templateUrl: "demos/switch/switchsample.component.html"
 })
 export class SwitchSampleComponent {
     placeholder = "Please enter a value";
