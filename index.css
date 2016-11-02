@@ -1,10 +1,18 @@
 @font-face {
     font-family: TitilliumWeb;
-    src: url(demos/resources/TitilliumWeb-Light.ttf);
+    src: url(https://unpkg.com/zero-blocks@0.2.0-PreRelease.0/fonts/titillium/TitilliumWeb-Regular.ttf);
 }
 @font-face {
-    font-family: TitilliumWeb-Thin;
-    src: url(demos/resources/Titillium-web.thin.ttf);
+    font-family: TitilliumWeb-SemiBold;
+    src: url(https://unpkg.com/zero-blocks@0.2.0-PreRelease.0/fonts/titillium/TitilliumWeb-SemiBold.ttf);
+}
+@font-face {
+    font-family: TitilliumWeb-Light;
+    src: url(https://unpkg.com/zero-blocks@0.2.0-PreRelease.0/fonts/titillium/TitilliumWeb-Light.ttf);
+}
+@font-face {
+    font-family: TitilliumWeb-Bold;
+    src: url(https://unpkg.com/zero-blocks@0.2.0-PreRelease.0/fonts/titillium/TitilliumWeb-Bold.ttf);
 }
 body{
     font-family: TitilliumWeb;	
@@ -47,7 +55,7 @@ ul {
     color: #ff6978;
 }
 .midContent {
-    font-family: TitilliumWeb-Thin;
+    font-family: TitilliumWeb-Light;
     font-size: 22px;
     font-weight: 100;
     line-height: 1.45;
@@ -78,7 +86,7 @@ footer {
     float: right;
 }
 .componentTitle{
-    font-family: TitilliumWeb-Thin;
+    font-family: TitilliumWeb-Light;
     font-size: 34px;
     font-weight: 100;
     color: #0375be;
@@ -152,9 +160,6 @@ div.code-container{
     height: 497px;
     padding: 3% 20% 0% 20%;
 }
-.logo-wrapper::after{
-    content: "BETA' !important;
-}
 .row, header.ig-jumbotron {
     margin: 0;
 }
@@ -162,7 +167,7 @@ div.code-container{
     list-style-type: none;
 }
 .nav-list li span {
-    font-family: TitilliumWeb-Thin;
+    font-family: TitilliumWeb-Light;
     font-size: 22px;
     font-weight: 100;
     font-style: normal;
