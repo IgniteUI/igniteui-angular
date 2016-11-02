@@ -48,27 +48,17 @@ export class CarouselSampleComponent {
            this.markup = `
 <ig-avatar [src]="src" [roundShape]="roundShape">
 </ig-avatar>
-<ig-avatar [src]="src">
-</ig-avatar>
-<ig-avatar src="https://unsplash.it/60/60?image=55">
-</ig-avatar>
 <ig-avatar src="https://unsplash.it/60/60?image=55" [initials]="initials"
     [bgColor]="bgColor" [roundShape]="roundShape">
-</ig-avatar>
-<ig-avatar initials="RK" bgColor="#fbb13c">
 </ig-avatar>
 <ig-avatar initials="AA" bgColor="#731963" roundShape="true">
 </ig-avatar>
 <ig-avatar roundShape="true" icon="person" bgColor="#0375be" data-init="SS">
 </ig-avatar>
-<ig-avatar initials="ZK" width="100" roundShape="true"
+<ig-avatar initials="ZK" width="100" roundShape="true" size="potatos"
     bgColor="#ff6978">
     <ig-badge type="error" value="z"></ig-badge>
-</ig-avatar>
-<ig-avatar initials="HA" width="100" size="potatos"
-    bgColor="#340068">
-    <ig-badge type="info"></ig-badge>
-</ig-avatar>
+</ig-avatar>    
 <ig-avatar initials="PP" width="100" color="black" icon="person"
     roundShape="false" bgColor="#94feed">
     <ig-badge iconBdg="person"></ig-badge>
@@ -79,8 +69,6 @@ export class CarouselSampleComponent {
 </ig-avatar>
 <ig-avatar initials="ZK" size="large" roundShape="true"
     bgColor="#484848">
-</ig-avatar>
-<ig-avatar color="gray">
 </ig-avatar>
 <span igButton="raised" (click)="changeLink()">Change Image</span>`
       

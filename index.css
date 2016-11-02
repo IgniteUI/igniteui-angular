@@ -11,9 +11,12 @@ body{
     font-style: normal;
     font-stretch: normal;
 }
-    .ig-container, .nav-list, .screen, .nav-list li span {
-        padding: 0;
-    }
+.ig-container, .nav-list, .screen, .nav-list li span {
+    padding: 0;
+}
+div.ig-container div.row > div {
+    top: 20px;
+}
 h1 {
     /*width: 427px;*/
     font-size: 42px;
@@ -61,7 +64,18 @@ footer {
     height: 150px;
     position: relative;
     clear:both;
-    padding-top:20px;
+    padding-top:20px 20% 0 20%;
+    font-size: 10px;
+    font-weight: 600;
+    text-align: left;
+    color: #a1a1a1;
+}
+.footer-igniteui-link{
+    width: 88px;
+    height: 29px;
+}
+.footer-ig-link{
+    float: right;
 }
 .componentTitle{
     font-family: TitilliumWeb-Thin;
@@ -105,7 +119,6 @@ footer {
     background: url('demos/images/status-bar.png') repeat-x;
 }
 .appButton{
-    width: 193px;
     height: 37px;
     border-radius: 2px;
     padding: 6px 15px 6px 15px;
@@ -116,12 +129,14 @@ footer {
     color: #ffffff;
 }
 .codebox {
-    /*width: 800px;*/
     height: 610px;
     background-color: #ffffff;
     box-shadow: 0 6px 16px 0 rgba(72, 72, 72, 0.17);
     padding: 0px;
-    /*left: 12.5%;*/
+    overflow-y: auto;
+}
+div.code-container{
+    overflow: hidden !important;
 }
 .tabs{
     font-size: 16px;
@@ -135,11 +150,14 @@ footer {
     background: url(demos/images/header-image2.png) no-repeat scroll top !important;
     color: rgba(255, 255, 255, 0.87);
     height: 497px;
-    padding: 3% 35% 0% 20%;
+    padding: 3% 20% 0% 20%;
 }
-    .row, header.ig-jumbotron {
-        margin: 0;
-    }
+.logo-wrapper::after{
+    content: "BETA' !important;
+}
+.row, header.ig-jumbotron {
+    margin: 0;
+}
 .nav-list {
     list-style-type: none;
 }
@@ -156,6 +174,10 @@ footer {
 }
 .nav-list li.selected span{
     font-weight: bold;			
+}
+.footer-github-link{
+    width: 70px;
+    height: 32px;
 }
 .nav-list li span:hover{
     font-weight: bold;
