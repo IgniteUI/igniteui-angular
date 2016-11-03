@@ -1,5 +1,5 @@
 import { Component, ViewChild, ViewEncapsulation } from "@angular/core";
-import { NavigationDrawerModule, NavigationDrawer, NavigationService } from "../../src/main";
+import { NavigationDrawerModule, NavigationDrawer, NavigationService } from "zero-blocks/main";
 
 @Component({
     moduleId: module.id, // commonJS standard

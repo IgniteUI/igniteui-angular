@@ -1,6 +1,6 @@
 import { Component, ViewChild, QueryList, ViewChildren } from "@angular/core";
-import { AvatarModule, Avatar } from "../../src/avatar/avatar";
-import { BadgeModule, Badge } from "../../src/badge/badge";
+import { AvatarModule, Avatar } from "zero-blocks/main";
+import { BadgeModule, Badge } from "zero-blocks/main";
 
 @Component({
     selector: "avatar-sample",

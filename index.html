@@ -1,19 +1,22 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <base href="/demos">
+    <base href="./">
     <meta charset="UTF-8">
     <title>IgniteUI JS Blocks</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="/node_modules/core-js/client/shim.min.js"></script>
-    <script src="/node_modules/zone.js/dist/zone.js"></script>
-    <script src="/node_modules/reflect-metadata/Reflect.js"></script>
-    <script src="/node_modules/systemjs/dist/system.src.js"></script>
-    <script src="/node_modules/hammerjs/hammer.js"></script>
-	<script src="demos/lib/prism.js"></script>
-	<link rel="stylesheet" href="demos/lib/prism.css">
-    <link rel="stylesheet" href="../dist/zero-blocks.css">
-    
+	<script src="https://rawgit.com/web-animations/web-animations-js/master/web-animations.min.js"></script>
+    <script src="https://unpkg.com/core-js/client/shim.min.js"></script>
+    <script src="https://unpkg.com/zone.js/dist/zone.js"></script>
+    <script src="https://unpkg.com/reflect-metadata/Reflect.js"></script>
+    <script src="https://unpkg.com/systemjs/dist/system.src.js"></script>
+    <script src="https://unpkg.com/hammerjs/hammer.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-typescript.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/zero-blocks@0.2.0-PreRelease.0/zero-blocks.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
+	<link rel="stylesheet" href="https://unpkg.com/zero-blocks@0.2.0-PreRelease.0/fonts/material-icons.css">
+	
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link type="text/css" rel="stylesheet" href="index.css">
@@ -22,7 +25,7 @@
     <!-- 2. Configure SystemJS -->
     <script src="systemjs.config.js"></script>
     <script>
-        System.import('app').catch(function(err){ console.error(err); });
+        System.import('app/main.ts').catch(function(err){ console.error(err); });
     </script>
 </head>
 <!-- 3. Display the application -->
@@ -56,8 +59,8 @@
 						<span class="midContentHeading">Blocks in action.</span><br>
 						<span class="midContent">Take a look at the sample application we’ve developed to get a taste of what you can build with IgniteUI Blocks. </span><br><br>
 						<div class="buttons">
-							<div class="appButton" igButton="raised" (click)="changeLink()">PREVIEW IN BROWSER</div>
-							<div class="appButton" igButton="raised" (click)="changeLink()">DOWNLOAD AS APP</div>
+							<a href="https://igniteui.github.io/warehouse-js-blocks/" target="_blank"><div class="appButton" igButton="raised" (click)="changeLink()">PREVIEW IN BROWSER</div></a>
+							<a href="https://github.com/IgniteUI/warehouse-js-blocks" target="_blank"><div class="appButton" igButton="raised" (click)="changeLink()">DOWNLOAD AS APP</div></a>
 						</div>
 					</div>
 				</div>
@@ -68,7 +71,7 @@
 		<footer>
 			<div class="ig-container">
 				<div class="row">
-					<div class="col-sm-12">
+					<div class="col-xs-2 col-xs-push-5">
 						<a href="http://www.igniteui.com/" target="_blank"><img class="github-link" src="demos/images/github-link.png"></a>
 					</div>
 				</div>

@@ -8,7 +8,7 @@ import {
     IgRadioModule, TabBarModule, ListModule, ButtonModule, Label,
     AvatarModule, FilterModule, IgRippleModule, BadgeModule
 
-} from "../src/main";
+} from "zero-blocks/main";
 
 import { AppComponent } from "./app.component";
 import { SwitchSampleComponent } from "./switch/switchsample.component";

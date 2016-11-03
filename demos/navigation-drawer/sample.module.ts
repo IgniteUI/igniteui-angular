@@ -3,7 +3,7 @@ import { CommonModule }   from '@angular/common';
 import { FormsModule } from "@angular/forms";
 import { Routes, RouterModule } from '@angular/router';
 
-import { NavigationDrawerModule, NavigationClose, NavigationToggle } from "../../src/main";
+import { NavigationDrawerModule, NavigationClose, NavigationToggle } from "zero-blocks/main";
 import { NavDrawerSampleComponent, MainDrawerSampleComponent, PinNavDrawerSampleComponent, MiniNavDrawerSampleComponent } from './sample.component';
 
 const routes: Routes = [

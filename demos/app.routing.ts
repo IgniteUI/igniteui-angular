@@ -38,7 +38,7 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/list',
+        redirectTo: '/switch',
         pathMatch: 'full'
     },
     {

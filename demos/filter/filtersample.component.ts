@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from "@angular/core";
-import { ListModule, List } from "../../src/list/list";
-import { FilterModule, FilterOptions } from '../../src/directives/filter';
-import { IgRippleModule } from '../../src/directives/ripple';
+import { ListModule, List } from "zero-blocks/main";
+import { FilterModule, FilterOptions } from "zero-blocks/main";
+import { IgRippleModule } from "zero-blocks/main";
 
 @Component({
     templateUrl: 'demos/filter/filtersample.component.html'
