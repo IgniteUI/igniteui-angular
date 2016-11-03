@@ -19,9 +19,8 @@ import { ButtonsSampleComponent } from "./buttonssample.component";
 import { AvatarSampleComponent } from "./avatarsample.component";
 import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
 import { NavbarSampleModule } from "./navbar/sample.module";
-
+import { ModalSampleModule } from "./modal/sample.module";
 import { routing } from "./app.routing";
-
 
 @NgModule({
     imports: [
@@ -38,12 +37,13 @@ import { routing } from "./app.routing";
         FilterModule,
         NavDrawerSampleModule,
         NavbarSampleModule,
+        ModalSampleModule,
         IgRippleModule,
         routing,
-        BadgeModule
+        BadgeModule,        
+        IgInput
     ],
     declarations: [
-        IgInput,
         AppComponent,
         InputSampleComponent,
         CarouselSampleComponent,

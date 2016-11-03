@@ -9,6 +9,7 @@ import { ListSampleComponent } from "./listsample.component";
 import { ButtonsSampleComponent } from "./buttonssample.component";
 import { AvatarSampleComponent } from "./avatarsample.component";
 import { NavbarSampleComponent } from "./navbar/sample.component";
+import { ModalSampleComponent } from "./modal/sample.component";
 
 const appRoutes: Routes = [
     {
@@ -43,6 +44,10 @@ const appRoutes: Routes = [
     {
         path: "navbar",
         component: NavbarSampleComponent
+    },
+    {
+        path: "modal",
+        component: ModalSampleComponent
     }
 ];
 

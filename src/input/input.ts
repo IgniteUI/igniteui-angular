@@ -1,7 +1,8 @@
 import {
     Directive,
     ElementRef,
-    HostListener
+    HostListener,
+    NgModule
 } from "@angular/core";
 
 @Directive({
@@ -13,7 +14,7 @@ import {
         '[class.ig-form-group__input--placeholder]': 'placeholder'
     }
 })
-export class IgInput {
+export class IgInputClass {
 
     focused: boolean;
 
@@ -39,3 +40,9 @@ export class IgInput {
         return this.el.nativeElement.getAttribute('placeholder') && !this.filled;
     }
 }
+
+@NgModule({
+    declarations: [IgInputClass],
+    exports: [IgInputClass]
+})
+export class IgInput {}
