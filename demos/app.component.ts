@@ -44,20 +44,20 @@ export class InputSampleComponent {
     }
 
     ngOnInit() {
-        this.code.nativeElement.classList = 'language-html';
-        this.code.nativeElement.innerText = this.markup;
+        this.code.nativeElement.className = 'language-html';
+        this.code.nativeElement.textContent = this.markup;
         Prism.highlightAll();
     }
 
     changeContent(args) {
        if(args.currentTarget.textContent == "TS") {
-            this.code.nativeElement.classList = 'language-typescript';
-            this.code.nativeElement.innerText = this.typescriptCode;
+            this.code.nativeElement.className = 'language-typescript';
+            this.code.nativeElement.textContent = this.typescriptCode;
         } else {
-            this.code.nativeElement.classList = 'language-html';
-            this.code.nativeElement.innerText = this.markup;
+            this.code.nativeElement.className = 'language-html';
+            this.code.nativeElement.textContent = this.markup;
         }
-        Prism.highlightAll();
+       Prism.highlightAll();
     }
 
     navItemClick(args) {
@@ -77,12 +77,12 @@ export class InputSampleComponent {
         args.target.parentElement.parentElement.className = "selected";
 
         // handle code tabs
-        var widgetName = args.target.innerText;
+        var widgetName = args.target.textContent;
 
         var code = new CodeHandler().getCode(widgetName);
         this.markup = code.markup;
         this.typescriptCode = code.ts;
-        this.code.nativeElement.innerText = this.markup;
+        this.code.nativeElement.textContent = this.markup;
         Prism.highlightAll();
     } 
 }
