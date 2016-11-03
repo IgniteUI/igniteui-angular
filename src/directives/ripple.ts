@@ -1,5 +1,4 @@
 import { Directive, Input, Renderer, ElementRef, NgModule, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Directive({
     selector: '[igRipple]',
@@ -30,7 +29,10 @@ class RippleDirective {
     }
 
     _ripple(event) {
-        let target, x, y, rippler, rectBounds;
+        let target, top, left, radius,
+            rippleEl, rectBounds;
+
+        event.stopPropagation();
 
         if (this.rippleTarget) {
             target = this.container.querySelector(this.rippleTarget) || this.container;
@@ -40,38 +42,27 @@ class RippleDirective {
 
         rectBounds = target.getBoundingClientRect();
 
-        let {top, left, width, height} = rectBounds;
-
-        // Take into account viewport scroll
-        top += window.scrollY;
-        left += window.scrollX;
-
-
         this.renderer.setElementClass(target, 'ig-ripple-host', true);
-        rippler = this.renderer.createElement(target, 'span');
-        this.renderer.setElementClass(rippler, 'ig-ripple-host__ripple', true);
+        rippleEl = this.renderer.createElement(target, 'span');
+        this.renderer.setElementClass(rippleEl, 'ig-ripple-host__ripple', true);
 
-        if (width >= height) {
-            height = width;
-        } else {
-            width = height;
-        }
+        radius = Math.max(rectBounds.width, rectBounds.height);
 
-        x = event.pageX - left - width / 2;
-        y = event.pageY - top - height / 2;
+        left = event.pageX - rectBounds.left - radius / 2 - document.body.scrollLeft;
+        top = event.pageY - rectBounds.top - radius / 2 - document.body.scrollTop;
 
-        this.renderer.setElementStyle(rippler, 'width', `${width}px`);
-        this.renderer.setElementStyle(rippler, 'height', `${height}px`);
-        this.renderer.setElementStyle(rippler, 'top', `${y}px`);
-        this.renderer.setElementStyle(rippler, 'left', `${x}px`);
+        this.renderer.setElementStyle(rippleEl, 'width', `${radius}px`);
+        this.renderer.setElementStyle(rippleEl, 'height', `${radius}px`);
+        this.renderer.setElementStyle(rippleEl, 'top', `${top}px`);
+        this.renderer.setElementStyle(rippleEl, 'left', `${left}px`);
 
         if(this._centered) {
-            this.renderer.setElementStyle(rippler, 'top', '0');
-            this.renderer.setElementStyle(rippler, 'left', '0');
+            this.renderer.setElementStyle(rippleEl, 'top', '0');
+            this.renderer.setElementStyle(rippleEl, 'left', '0');
         }
 
         if (this.rippleColor) {
-            this.renderer.setElementStyle(rippler, 'background', this.rippleColor);
+            this.renderer.setElementStyle(rippleEl, 'background', this.rippleColor);
         }
 
         let FRAMES = [
@@ -79,14 +70,14 @@ class RippleDirective {
             {opacity: 0, transform: 'scale(2)'},
         ];
 
-        let animation = rippler.animate(FRAMES, {
+        let animation = rippleEl.animate(FRAMES, {
             duration: this.rippleDuration,
             fill: 'forwards'
         })
         this._remaining++;
 
         animation.onfinish = (ev?) => {
-            target.removeChild(rippler);
+            target.removeChild(rippleEl);
             this._remaining--;
             if (this._remaining <= 0) {
                 this.renderer.setElementClass(target, 'ig-ripple-host', false);
@@ -97,7 +88,6 @@ class RippleDirective {
 
 @NgModule({
     declarations: [RippleDirective],
-    imports: [CommonModule],
     exports: [RippleDirective]
 })
 export class IgRippleModule { }
