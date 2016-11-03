@@ -13,6 +13,7 @@ import {
 import { CommonModule } from "@angular/common";
 
 export enum Type { DEFAULT, INFO, SUCCESS, WARNING, ERROR }
+export enum Position { TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }
 
 @Component({
     selector: 'ig-badge',
@@ -23,7 +24,9 @@ export class Badge {
     private _type: string = "";
     private _value: string;
     private _iconBdg: string;
+    private _position;
     public TypeEnum = Type;
+    public PositionEnum = Position;
 
     get type(): string {
         return this._type === undefined ? "default" : this._type;
@@ -40,8 +43,23 @@ export class Badge {
         }
     }
 
+    get position(): string {
+        return this._position === undefined ? "top-right" : this._position;
+    }
+
+    @Input("position")
+    set position(value: string) {
+        var positionType = this.PositionEnum[value.replace("-","_").toUpperCase()];
+
+        if (positionType === undefined) {
+            this._position = "top-right";
+        } else {
+            this._position = value.toLowerCase();
+        }
+    }
+
     get value(): string {
-        return this._value === undefined ? "-" : this._value;
+        return this._value === undefined ? "?" : this._value;
     }
 
     @Input("value")
@@ -53,7 +71,7 @@ export class Badge {
         }
     }
 
-    @Input("iconBdg")
+    @Input("icon")
     public get iconBdg(): string {
         return this._iconBdg;
     }
@@ -68,32 +86,61 @@ export class Badge {
         switch (this.TypeEnum[this._type.toUpperCase()]) {
             case Type.DEFAULT:
                 classes = {
-                    "ig-badge--default": true
+                    "ig-badge__circle--default": true
                 };
                 break;
             case Type.INFO:
                 classes = {
-                    "ig-badge--info": true
+                    "ig-badge__circle--info": true
                 };
                 break;
             case Type.SUCCESS:
                 classes = {
-                    "ig-badge--success": true
+                    "ig-badge__circle--success": true
                 };
                 break;
             case Type.WARNING:
                 classes = {
-                    "ig-badge--warning": true
+                    "ig-badge__circle--warning": true
                 };
                 break;
             case Type.ERROR:
                 classes = {
-                    "ig-badge--error": true
+                    "ig-badge__circle--error": true
                 };
                 break;
         }
 
         return classes;
+    }
+
+    setPosition() {
+        var className = {};
+
+        switch (this.PositionEnum[this.position.replace("-","_").toUpperCase()]) {
+            case Position.BOTTOM_LEFT:
+                className = {
+                    "ig-badge--bottom-left": true
+                };
+                break;
+            case Position.BOTTOM_RIGHT:
+                className = {
+                    "ig-badge--bottom-right": true
+                };
+                break;
+            case Position.TOP_LEFT:
+                className = {
+                    "ig-badge--top-left": true
+                };
+                break;
+            case Position.TOP_RIGHT:
+                className = {
+                    "ig-badge--top-right": true
+                };
+                break;
+        }
+
+        return className;
     }
 }
 

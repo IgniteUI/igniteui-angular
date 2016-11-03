@@ -1,14 +1,15 @@
-%ig-input-display {
+%igx-input-display {
     display: block;
     position: relative;
     margin: 20px 0;
     min-height: 40px;
+    transform: translateZ(0);
     ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
         color: $label-color;
     }
 }
 
-%ig-form-label {
+%igx-form-label {
     display: block;
     position: absolute;
     overflow: hidden;
@@ -21,26 +22,24 @@
     user-select: none;
     pointer-events: none;
     backface-visibility: hidden;
-    transition: transform .3s ease-in-out,
-    scale .3s cubic-bezier(0.25, 0.8, 0.25, 1),
-    color .3s ease-in-out;
+    transition: all .3s ease-in-out;
 }
 
-%ig-form-label--float {
+%igx-form-label--float {
     color: $label-active-color;
-    transform: translateY(-20px) scale(.75);
+    transform: translate3d(0, -20px, 0) scale(.75);
 }
 
-%ig-form-label--filled {
+%igx-form-label--filled {
     color: $label-active-color;
 }
 
-%ig-form-label--focused {
+%igx-form-label--focused {
     color: $label-focus-color;
-    transform: translateY(-20px) scale(.75);
+    transform: translate3d(0, -20px, 0) scale(.75);
 }
 
-%ig-form-input {
+%igx-form-input {
     outline: none;
     border: none;
     border-bottom: $input-border;
@@ -51,64 +50,64 @@
     width: 100%;
 }
 
-%ig-form-input--focused {
+%igx-form-input--focused {
     border-bottom: $input-border-focus;
 }
 
-%ig-form-input--disabled {
+%igx-form-input--disabled {
     user-select: none;
     cursor: not-allowed;
     -webkit-text-fill-color: $input-disabled-color;
     border-bottom: 1px dotted rgba(117, 117, 117, .5);
 }
 
-%ig-form-label--disabled {
+%igx-form-label--disabled {
     color: lighten($label-color, 80%);
 }
 
-%ig-form-input--success {
+%igx-form-input--success {
     border-bottom: $input-border-success;
 }
 
-%ig-form-label--success {
+%igx-form-label--success {
     color: $success-color;
 }
 
-%ig-form-input--warn {
+%igx-form-input--warn {
     border-bottom: $input-border-warn;
 }
 
-%ig-form-label--warn {
+%igx-form-label--warn {
     color: $warn-color;
 }
 
-%ig-form-input--error {
+%igx-form-input--error {
     border-bottom: $input-border-error;
 }
 
-%ig-form-label--error {
+%igx-form-label--error {
     color: $error-color;
 }
 
-%ig-textarea {
+%igx-textarea {
     resize: none;
 }
 
-%ig-search-input {
+%igx-search-input {
     padding: 12px 12px 12px 64px;
     border-bottom: none;
     box-shadow: $elevate-2;
     font-size: em(16px);
 }
 
-%ig-input-clear,
-%ig-search-label {
+%igx-input-clear,
+%igx-search-label {
     max-height: 100%;
     padding: 12px 16px;
     color: #484848;
 }
 
-%ig-input-clear {
+%igx-input-clear {
     position: absolute;
     visibility: visible;
     top: 0;
@@ -116,7 +115,7 @@
     cursor: pointer;
 }
 
-%ig-input-clear--hidden {
+%igx-input-clear--hidden {
     visibility: hidden;
     pointer-events: none;
 }

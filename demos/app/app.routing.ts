@@ -34,7 +34,7 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/list',
+        redirectTo: '/inputs',
         pathMatch: 'full'
     },
     {

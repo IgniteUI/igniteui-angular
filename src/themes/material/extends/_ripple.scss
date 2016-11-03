@@ -1,4 +1,4 @@
-%ig-ripple-display {
+%igx-ripple-display {
     display: inline-block;
     position: absolute;
     will-change: opacity, transform;
@@ -17,6 +17,6 @@
     transform: translate3d(0,0,0);
 }
 
-%ig-ripple-wrapper {
+%igx-ripple-wrapper {
     overflow: hidden;
 }

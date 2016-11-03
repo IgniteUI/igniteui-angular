@@ -1,4 +1,4 @@
-%modal-display {
+%igx-modal-display {
     position: fixed;
     top: 0;
     right: 0;
@@ -10,7 +10,7 @@
     transition: $modal-transition;
 }
 
-%modal-window {
+%igx-modal-window {
     position: relative;
     width: $modal-width;
     margin: $modal-margin;
