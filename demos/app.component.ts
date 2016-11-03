@@ -1,10 +1,10 @@
-import { Component, ElementRef, ViewChild, ViewChildren, QueryList } from "@angular/core";
+import { Component, ElementRef, ViewChild, ViewChildren, QueryList, Input } from "@angular/core";
 import { CodeHandler } from "./code-handler.component";
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'sample-app',
-    templateUrl: 'demos/app.component.html',
-    styleUrls: ['demos/app.component.css']
+    templateUrl: 'demos/app.component.html'
 })
 
 export class AppComponent {
@@ -14,17 +14,12 @@ export class AppComponent {
 
     @ViewChildren("item") items;
     @ViewChild("code") code;
-
-    constructor(private el: ElementRef) {
+    
+    constructor(private el: ElementRef, private router: Router) {
         this._el = el;
-        this.markup = `
-<span class="componentTitle">Switch</span><br>
-<span class="componentDesc">A component that lets the user toggle between checked and unchecked states.</span><br><br>
-<ig-switch [(ngModel)]="user.subscribed"></ig-switch>
-<ig-switch [(ngModel)]="!user.subscribed"></ig-switch>`;
+        this.markup = '<span class="componentTitle">Switch</span><span class="componentDesc">A component that lets the user toggle between checked and unchecked states.</span><br><br><ig-switch [(ngModel)]="user.subscribed"></ig-switch><ig-switch [(ngModel)]="!user.subscribed"></ig-switch>';
         this.typescriptCode = `
 import { Component } from "@angular/core";
-
 @Component({
     selector: "input-sample",
     templateUrl: "demos/inputs/inputsample.component.html"
@@ -44,13 +39,14 @@ export class InputSampleComponent {
     }
 
     ngOnInit() {
+        // this.setOptionRoute('switch');
         this.code.nativeElement.classList = 'language-html';
         this.code.nativeElement.innerText = this.markup;
         Prism.highlightAll();
     }
 
     changeContent(args) {
-       if(args.currentTarget.textContent == "TS") {
+        if (args.currentTarget.textContent == "TS") {
             this.code.nativeElement.classList = 'language-typescript';
             this.code.nativeElement.innerText = this.typescriptCode;
         } else {
@@ -62,27 +58,34 @@ export class InputSampleComponent {
 
     navItemClick(args) {
         // UX
-        if (args.target.tagName.toLowerCase() != "span") {
+        let target = args.target.tagName.toLowerCase();
+
+        if (target !== "span" && target !== "select") {
             return;
         }
+        
+        if(args.target.value) {
+            this.setOptionRoute(args.target.value);
+        }
 
-        var items = this.items.toArray();
+        let items = this.items.toArray();
 
-        for (let i = 0; i < items.length; i++)
-        {
+        for (let i = 0; i < items.length; i++) {
             let item = items[i];
             item.nativeElement.className = "";
         }
-
-        args.target.parentElement.parentElement.className = "selected";
-
+        args.target.parentElement.parentElement.className = "active";
+        
         // handle code tabs
-        var widgetName = args.target.innerText;
+        let widgetName = args.target.dataset.demo ? args.target.dataset.demo : args.target.value;
 
-        var code = new CodeHandler().getCode(widgetName);
+        let code = new CodeHandler().getCode(widgetName);
         this.markup = code.markup;
         this.typescriptCode = code.ts;
         this.code.nativeElement.innerText = this.markup;
         Prism.highlightAll();
-    } 
+    }
+    setOptionRoute(route: string) {
+        this.router.navigateByUrl(route);
+    }
 }
