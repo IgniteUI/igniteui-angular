@@ -6,7 +6,7 @@ import {
 
     IgInput, CarouselModule , CheckboxModule, SwitchModule,
     IgRadioModule , TabBarModule , ListModule, ButtonModule, Label,
-    AvatarModule, FilterModule, IgRippleModule, BadgeModule
+    AvatarModule, FilterModule, IgRippleModule, BadgeModule, IgProgressBarModule
 
 } from "../../src/main";
 
@@ -19,6 +19,7 @@ import { ButtonsSampleComponent } from "./buttonssample.component";
 import { AvatarSampleComponent } from "./avatarsample.component";
 import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
 import { NavbarSampleModule } from "./navbar/sample.module";
+import { ProgressbarSampleComponent } from "./progressbarsample.component";
 
 import { routing } from "./app.routing";
 
@@ -40,7 +41,8 @@ import { routing } from "./app.routing";
         NavbarSampleModule,
         IgRippleModule,
         routing,
-        BadgeModule
+        BadgeModule,
+        IgProgressBarModule
     ],
     declarations: [
         IgInput,
@@ -51,7 +53,8 @@ import { routing } from "./app.routing";
         ListSampleComponent,
         Label,
         ButtonsSampleComponent,
-        AvatarSampleComponent
+        AvatarSampleComponent,
+        ProgressbarSampleComponent
     ],
     bootstrap: [
         AppComponent
