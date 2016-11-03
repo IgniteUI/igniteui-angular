@@ -1,91 +1,69 @@
 import { Component, ElementRef, ViewChild, ViewChildren, QueryList, Input } from "@angular/core";
 import { CodeHandler } from "./code-handler.component";
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'sample-app',
-    templateUrl: 'demos/app.component.html'
+    templateUrl: 'demos/app.component.html',
+    providers: [CodeHandler]
 })
 
 export class AppComponent {
-    private _el: ElementRef;
     private markup: string;
     private typescriptCode: string;
 
     @ViewChildren("item") items;
     @ViewChild("code") code;
-    
-    constructor(private el: ElementRef, private router: Router) {
-        this._el = el;
-        this.markup = '<span class="componentTitle">Switch</span><span class="componentDesc">A component that lets the user toggle between checked and unchecked states.</span><br><br><ig-switch [(ngModel)]="user.subscribed"></ig-switch><ig-switch [(ngModel)]="!user.subscribed"></ig-switch>';
-        this.typescriptCode = `
-import { Component } from "@angular/core";
-@Component({
-    selector: "input-sample",
-    templateUrl: "demos/inputs/inputsample.component.html"
-})
-export class InputSampleComponent {
-    placeholder = "Please enter a value";
 
-    user = {
-        name: 'John Doe',
-        password: '1337s3cr3t',
-        comment: "N/A",
-        registered: true,
-        subscribed: false,
-        favouriteVarName: 'Foo'
-    };
-}`
+    constructor(private el: ElementRef, private router: Router, private codeHandler: CodeHandler) {
+        this.codeHandler = new CodeHandler();
     }
 
     ngOnInit() {
-        // this.setOptionRoute('switch');
-        this.code.nativeElement.classList = 'language-html';
-        this.code.nativeElement.innerText = this.markup;
-        Prism.highlightAll();
+        this.populateCodeContainer(this.codeHandler.getCode('switch'));
+        console.log(this.markup);
     }
 
-    changeContent(args) {
+    public changeContent(args) {
         if (args.currentTarget.textContent == "TS") {
             this.code.nativeElement.classList = 'language-typescript';
             this.code.nativeElement.innerText = this.typescriptCode;
         } else {
-            this.code.nativeElement.classList = 'language-html';
+            this.code.nativeElement.classList = 'language-markup';
             this.code.nativeElement.innerText = this.markup;
         }
         Prism.highlightAll();
     }
 
-    navItemClick(args) {
+    public navItemClick(args) {
         // UX
-        let target = args.target.tagName.toLowerCase();
+        let target = args.target.tagName.toLowerCase(),
+            items = this.items.toArray(),
+            widgetName = args.target.dataset.demo ? args.target.dataset.demo : args.target.value;
 
-        if (target !== "span" && target !== "select") {
-            return;
-        }
-        
-        if(args.target.value) {
-            this.setOptionRoute(args.target.value);
-        }
-
-        let items = this.items.toArray();
+        if (target !== "span" && target !== "select") return;
+        if (target === "select") this.setOptionRoute(args.target.value);
 
         for (let i = 0; i < items.length; i++) {
             let item = items[i];
-            item.nativeElement.className = "";
+            item.nativeElement.className = "active";
         }
         args.target.parentElement.parentElement.className = "active";
-        
         // handle code tabs
-        let widgetName = args.target.dataset.demo ? args.target.dataset.demo : args.target.value;
+        this.populateCodeContainer(this.codeHandler.getCode(widgetName));
+    }
 
-        let code = new CodeHandler().getCode(widgetName);
+    private setOptionRoute(route: string) {
+        this.router.navigateByUrl(route);
+    }
+
+    private populateCodeContainer(code: any) {
         this.markup = code.markup;
         this.typescriptCode = code.ts;
+        this.code.nativeElement.classList = 'language-markup';
         this.code.nativeElement.innerText = this.markup;
-        Prism.highlightAll();
-    }
-    setOptionRoute(route: string) {
-        this.router.navigateByUrl(route);
+
+        // Prism.highlight(this.markup, Prism.languages.markup);
+        // Prism.highlightAll();
     }
 }
