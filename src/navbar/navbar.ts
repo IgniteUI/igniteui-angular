@@ -32,7 +32,6 @@ export class Navbar {
     }
 }
 
-
 @NgModule({
     imports: [ButtonModule],
     declarations: [Navbar],
