@@ -3,7 +3,7 @@
         Alert with one action button and message
     </h3>
 
-    <button igButton="raised" igButtonColor="white" igButtonBackground="red" igRipple="white" (click)="alert.open()">
+    <button igButton="raised" igButtonColor="white" igButtonBackground="#F44336" igRipple="white" (click)="alert.open()">
         Alert
     </button>
 
@@ -15,7 +15,7 @@
         Dialog with two action buttons and message
     </h3>
 
-    <button igButton="raised" igButtonColor="white" igButtonBackground="green" igRipple="white" (click)="dialog.open()">
+    <button igButton="raised" igButtonColor="white" igButtonBackground="#4CAF50" igRipple="white" (click)="dialog.open()">
         Dialog
     </button>
 
@@ -23,8 +23,7 @@
         action1ButtonLabel="Cancel"
         (onAction1Select)="dialog.close()"
         action2ButtonLabel="OK" 
-        action2ButtonColor="darkblue"
-        action2ButtonRipple="lightblue"
+        action2ButtonRipple="#4CAF50"
         (onAction2Select)="onDialogOKSelected($event)"
         message="Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?">
     </ig-modal>
@@ -33,7 +32,7 @@
         Form with two action buttons and custom message
     </h3>
 
-    <button igButton="raised" igButtonColor="white" igButtonBackground="blue" igRipple="white" (click)="form.open()">
+    <button igButton="raised" igButtonColor="white" igButtonBackground="#0375be" igRipple="white" (click)="form.open()">
         Form
     </button>
 
@@ -41,7 +40,7 @@
         action1ButtonLabel="Cancel"
         (onAction1Select)="form.close()"
         action2ButtonLabel="Sign In"
-        action2ButtonBackgroundColor="green"
+        action2ButtonBackgroundColor="#0375be"
         action2ButtonColor="white"
         backgroundClick="true">
         <div class="ig-form-group">
