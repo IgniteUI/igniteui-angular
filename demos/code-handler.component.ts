@@ -1,5 +1,3 @@
-import { } from "@angular/core";
-
 export class CodeHandler {
     markup: string;
     typescriptCode: string;
@@ -7,15 +5,13 @@ export class CodeHandler {
     getCode(widgetName: string) {
         switch (widgetName) {
             case "carousel":
-                this.markup = `
-<ig-carousel [interval]="interval" [pause]="pause" [loop]="loop">
+                this.markup = 
+`<ig-carousel [interval]="interval" [pause]="pause" [loop]="loop">
     <ig-slide *ngFor="let slide of slides;" [active]="slide.active">
         <img [src]="slide.image">
     </ig-slide>
-</ig-carousel>
-            `
-                this.typescriptCode = `
-import { Component } from "@angular/core";
+</ig-carousel>`
+this.typescriptCode = `import { Component } from "@angular/core";
 import { CarouselModule } from "../../src/carousel/carousel";
 
 @Component({
@@ -43,8 +39,8 @@ export class CarouselSampleComponent {
 }`
                 break;
             case "avatar":
-                this.markup = `
-<ig-avatar [src]="src" [roundShape]="roundShape">
+                this.markup = 
+`<ig-avatar [src]="src" [roundShape]="roundShape">
 </ig-avatar>
 <ig-avatar src="https://unsplash.it/60/60?image=55" [initials]="initials"
     [bgColor]="bgColor" [roundShape]="roundShape">
@@ -70,8 +66,8 @@ export class CarouselSampleComponent {
 </ig-avatar>
 <span igButton="raised" (click)="changeLink()">Change Image</span>`
 
-                this.typescriptCode = `
-import { Component, ViewChild, QueryList, ViewChildren } from "@angular/core";
+                this.typescriptCode = 
+`import { Component, ViewChild, QueryList, ViewChildren } from "@angular/core";
 import { AvatarModule, Avatar } from "../../src/avatar/avatar";
 import { BadgeModule, Badge } from "../../src/badge/badge";
 
@@ -103,29 +99,31 @@ export class AvatarSampleComponent {
 }`
                 break;
             case "tabbar":
-                this.markup = `
-<ig-tab-bar igRipple igRippleTarget="ul" alignment="bottom">
+                this.markup = 
+`<ig-tab-bar igRipple igRippleTarget="ul" alignment="bottom">
     <ig-tab label="Tab 1" icon="library_music">                        
-        <span class="componentDesc">IgTabBar allow you to tabulate your content. It provides flexible ways to manage and navigate through your tabularized data. </span><br>
-        </ig-tab>
+        <span class="componentDesc">IgTabBar allow you to tabulate your content. It provides flexible ways to manage and navigate through your tabularized data.</span>
+    </ig-tab>
     <ig-tab label="Tab 2" icon="video_library">
-        <p>You can style each tab with a material icon as demosntrated below.</ig-tab>
+        <p>You can style each tab with a material icon as demosntrated below.
+    </ig-tab>
     <ig-tab label="Tab 3" icon="library_books">
         <p>Attaching to click events allow you to customize the way your TabBar is working.
     </ig-tab>
 </ig-tab-bar>`
-                this.typescriptCode = `
-import { Component } from "@angular/core";
+                this.typescriptCode = 
+`import { Component } from "@angular/core";
 
 @Component({
     selector: "tabbar-sample",
     templateUrl: 'tabbarsample.component.html'
 })
+
 export class TabBarSampleComponent { }`
                 break;
             case "list":
-                this.markup = `
-<div class="ig-form-group">
+                this.markup = 
+`<div class="ig-form-group">
     <input class="ig-form-group__input--search" placeholder="Search List" />
 </div>
 <ig-list #declarativeList>
@@ -134,10 +132,9 @@ export class TabBarSampleComponent { }`
     <ig-list-item>Rome</ig-list-item>
     <ig-list-item>Golden Delicious</ig-list-item>
     <ig-list-item>Cosmic Crisp</ig-list-item>
-</ig-list>      
-            `
-                this.typescriptCode = `
-import { Component, ViewChild, ElementRef } from "@angular/core";
+</ig-list>`
+                this.typescriptCode = 
+`import { Component, ViewChild, ElementRef } from "@angular/core";
 import { ListModule, List } from "../../src/list/list";
 import { IgRippleModule } from '../../src/directives/ripple';
 
@@ -156,12 +153,11 @@ export class ListSampleComponent {
             { key:"3", text: "Nav3", link: "#" },
             { key:"4", text: "Nav4", link: "#" }
         ];
- }
-`
+}`
                 break;
             case "button":
-                this.markup = `
-<span igButton="flat" igRipple>Flat</span><br>
+                this.markup = 
+`<span igButton="flat" igRipple>Flat</span>
 <span igButton="raised" igRipple="white">Raised</span>  
 <span igButton="raised" igButtonColor="#FBB13C" igButtonBackground="#340068" igRipple="white">Raised Custom</span> 
 <span igButton="raised" igButtonColor="yellow" igButtonBackground="black" igRipple="yellow">Raised Custom</span> 
@@ -180,8 +176,7 @@ export class ListSampleComponent {
 <span igButton="icon" igRipple igRippleCentered="true">
     <i class="material-icons">more_vert</i>
 </span>`
-                this.typescriptCode = `
-import { Component } from "@angular/core";
+this.typescriptCode = `import { Component } from "@angular/core";
 import { ButtonModule } from "../../src/button/button";
 
 @Component({
@@ -192,13 +187,12 @@ import { ButtonModule } from "../../src/button/button";
 export class ButtonsSampleComponent { }`
                 break;
             case "switch":
-                this.markup = `
-<ig-switch [(ngModel)]="user.subscribed"></ig-switch>
+                this.markup = 
+`<ig-switch [(ngModel)]="user.subscribed"></ig-switch>
 <ig-switch [(ngModel)]="!user.subscribed"></ig-switch>
-<p>Selected value = {{ user.subscribed }}</p>
-            `
-                this.typescriptCode = `
-import { Component } from "@angular/core";
+<p>Selected value = {{ user.subscribed }}</p>`
+                this.typescriptCode = 
+`import { Component } from "@angular/core";
 
 @Component({
     selector: "switch-sample",
@@ -215,32 +209,31 @@ export class SwitchSampleComponent {
         subscribed: false,
         favouriteVarName: 'Foo'
     };
-    
 }`
                 break;
             case "input":
-                this.markup = `
-<div class="ig-form-group">
-    <label igLabel>Username</label><br>
+                this.markup = 
+`<div class="ig-form-group">
+    <label igLabel>Username</label>
     <input type="text" igInput [(ngModel)]="user.name" />
     <span>value = {{ user.name || ''}}</span>
 </div>
 <div class="ig-form-group">
-    <label igLabel>Password</label><br>
+    <label igLabel>Password</label>
     <input type="password" igInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
     <span>value = {{ user.password || ''}}</span>
 </div>
 <div class="ig-form-group">
-    <label igLabel>Textarea</label><br>
+    <label igLabel>Textarea</label>
     <textarea placeholder="{{placeholder}}" igInput [(ngModel)]="user.comment"></textarea>
     <span>value = {{ user.comment || ''}}</span>
 </div>
 <ig-checkbox [(ngModel)]="user.registered">Registered</ig-checkbox>
 <span>value = {{ user.registered }}</span>
-<label igLabel>Label me!</label>
-            `
-                this.typescriptCode = `
-import { Component } from "@angular/core";
+<label igLabel>Label me!</label>`
+
+                this.typescriptCode = 
+`import { Component } from "@angular/core";
 
 @Component({
     selector: "inputs-sample",
@@ -256,19 +249,18 @@ export class InputsSampleComponent {
         registered: true,
         subscribed: false,
         favouriteVarName: 'Foo'
-    };
-    
+    }; 
 }`
                 break;
             case "radio":
-                this.markup = `
-<span class="componentTitle">Radio</span><br>
-<span class="componentDesc">A component that collects user input from radio buttons.</span><br><br>
+                this.markup = 
+`<span class="componentTitle">Radio</span>
+<span class="componentDesc">A component that collects user input from radio buttons.</span>
 <ig-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" name="group" [(ngModel)]="user.favouriteVarName">{{item}}</ig-radio>
-<p>Selected value = {{ user.favouriteVarName || ''}}</p>
-            `
-                this.typescriptCode = `
-import { Component } from "@angular/core";
+<p>Selected value = {{ user.favouriteVarName || ''}}</p>`
+
+                this.typescriptCode = 
+`import { Component } from "@angular/core";
 import { IgRadioModule } from "../../src/radio/radio";
 
 @Component({
@@ -289,11 +281,11 @@ export class RadioSampleComponent {
 }`
                 break;
             case "ripple":
-                this.markup = `
-<ig-tab-bar igRipple igRippleTarget="ul" alignment="bottom">
+                this.markup = 
+`<ig-tab-bar igRipple igRippleTarget="ul" alignment="bottom">
     <ig-tab label="Tab 1" icon="library_music">                        
-        <span class="componentDesc">Ripple directive can be applied basically to every element, <span igRipple>even this span !</span> to enable glamourous ripple effect on click, like the tabs below. Explore the other tabs as well.</span><br>
-        </ig-tab>
+        <span class="componentDesc">Ripple directive can be applied basically to every element, <span igRipple>even this span !</span> to enable glamourous ripple effect on click, like the tabs below. Explore the other tabs as well.</span>
+    </ig-tab>
     <ig-tab label="Tab 2" icon="video_library">
         <ig-list #declarativeList>
             <ig-list-header>Mildly Sweet</ig-list-header>
@@ -304,29 +296,30 @@ export class RadioSampleComponent {
             <ig-list-item igRipple igRippleTarget="div.ig-list__item">Cosmic Crisp</ig-list-item>
         </ig-list>
     </ig-tab>
-</ig-tab-bar>
-            `
-                this.typescriptCode = `
-import { Component } from "@angular/core";
+</ig-tab-bar>`
+
+                this.typescriptCode = 
+`import { Component } from "@angular/core";
 
 @Component({
     templateUrl: 'demos/ripple/ripplesample.component.html'
 })
 export class RippleSampleComponent { }`
                 break;
+
             case "filter":
-                this.markup = `
-<div class="ig-form-group">
+                this.markup = 
+`<div class="ig-form-group">
     <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
 </div>
 <ig-list>
     <ig-list-item igRipple="pink" igRippleTarget=".ig-list__item" *ngFor="let item of navItems | filter: fo1">
         {{item.text}}
     </ig-list-item>
-</ig-list>   
-            `
-                this.typescriptCode = `
-import { Component, ViewChild, ElementRef } from "@angular/core";
+</ig-list>`
+
+                this.typescriptCode = 
+`import { Component, ViewChild, ElementRef } from "@angular/core";
 import { ListModule, List } from "../../src/list/list";
 import { FilterModule, FilterOptions } from '../../src/directives/filter';
 import { IgRippleModule } from '../../src/directives/ripple';
@@ -367,12 +360,12 @@ export class FilterSampleComponent {
         };
 
         _fo.metConditionFn = function (item: any) {
-             item.hidden = false;
-         };
+            item.hidden = false;
+        };
 
         _fo.overdueConditionFn = function (item: any) {
-             item.hidden = true;
-         };    
+            item.hidden = true;
+        };    
 
         return _fo;
     }
@@ -386,8 +379,7 @@ export class FilterSampleComponent {
         console.log(args);
     }
 
- }
-`
+}`
                 break;
             default:
                 this.markup = ``;
@@ -399,5 +391,4 @@ export class FilterSampleComponent {
             "ts": this.typescriptCode
         };
     }
-
 }

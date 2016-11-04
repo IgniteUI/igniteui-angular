@@ -1,0 +1,16 @@
+.code-snipet {
+    margin: 0 -20px -20px -20px;
+}
+
+pre[class*=language-] {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 30px;
+    background: transparent;
+    font-size: 13px;
+}
+
+.line-numbers .line-numbers-row {
+    border-right: none !important;
+    width: 10px;
+}

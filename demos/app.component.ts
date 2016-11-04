@@ -15,7 +15,7 @@ export class AppComponent {
     @ViewChildren("item") items;
     @ViewChild("code") code;
 
-    constructor(private el: ElementRef, private router: Router, private codeHandler: CodeHandler) {
+    constructor(private router: Router, private codeHandler: CodeHandler) {
         this.codeHandler = new CodeHandler();
     }
 
@@ -63,7 +63,11 @@ export class AppComponent {
         this.code.nativeElement.classList = 'language-markup';
         this.code.nativeElement.innerText = this.markup;
 
-        // Prism.highlight(this.markup, Prism.languages.markup);
-        // Prism.highlightAll();
+        Prism.hooks.add('before-highlight', env => {
+            env.element.innerHTML = env.element.innerHTML.replace(/<br\s*\/?>/g,'\n');
+            env.code = env.element.textContent;
+        });
+
+        Prism.highlightAll();
     }
 }
