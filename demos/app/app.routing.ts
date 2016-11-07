@@ -9,11 +9,8 @@ import { ListSampleComponent } from "./listsample.component";
 import { ButtonsSampleComponent } from "./buttonssample.component";
 import { AvatarSampleComponent } from "./avatarsample.component";
 import { NavbarSampleComponent } from "./navbar/sample.component";
-<<<<<<< HEAD
 import { ProgressbarSampleComponent } from "./progressbarsample.component";
-=======
 import { ModalSampleComponent } from "./modal/sample.component";
->>>>>>> fc0c81ad4e2055b196b72d20cbab499aea260ecd
 
 const appRoutes: Routes = [
     {
@@ -50,13 +47,10 @@ const appRoutes: Routes = [
         component: NavbarSampleComponent
     },
     {
-<<<<<<< HEAD
         path: "progressbar",
         component: ProgressbarSampleComponent
-=======
         path: "modal",
         component: ModalSampleComponent
->>>>>>> fc0c81ad4e2055b196b72d20cbab499aea260ecd
     }
 ];
 

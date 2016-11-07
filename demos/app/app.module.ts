@@ -45,13 +45,10 @@ import { routing } from "./app.routing";
         ModalSampleModule,
         IgRippleModule,
         routing,
-<<<<<<< HEAD
         BadgeModule,
         IgProgressBarModule
-=======
-        BadgeModule,        
+        BadgeModule,
         IgInput
->>>>>>> fc0c81ad4e2055b196b72d20cbab499aea260ecd
     ],
     declarations: [
         AppComponent,
