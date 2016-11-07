@@ -19,10 +19,13 @@ import { ButtonsSampleComponent } from "./buttonssample.component";
 import { AvatarSampleComponent } from "./avatarsample.component";
 import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
 import { NavbarSampleModule } from "./navbar/sample.module";
+<<<<<<< HEAD
 import { ProgressbarSampleComponent } from "./progressbarsample.component";
 
+=======
+import { ModalSampleModule } from "./modal/sample.module";
+>>>>>>> fc0c81ad4e2055b196b72d20cbab499aea260ecd
 import { routing } from "./app.routing";
-
 
 @NgModule({
     imports: [
@@ -39,13 +42,18 @@ import { routing } from "./app.routing";
         FilterModule,
         NavDrawerSampleModule,
         NavbarSampleModule,
+        ModalSampleModule,
         IgRippleModule,
         routing,
+<<<<<<< HEAD
         BadgeModule,
         IgProgressBarModule
+=======
+        BadgeModule,        
+        IgInput
+>>>>>>> fc0c81ad4e2055b196b72d20cbab499aea260ecd
     ],
     declarations: [
-        IgInput,
         AppComponent,
         InputSampleComponent,
         CarouselSampleComponent,
