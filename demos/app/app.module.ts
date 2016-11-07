@@ -6,7 +6,7 @@ import {
 
     IgInput, CarouselModule , CheckboxModule, SwitchModule,
     IgRadioModule , TabBarModule , ListModule, ButtonModule, Label,
-    AvatarModule, FilterModule, IgRippleModule, BadgeModule
+    AvatarModule, FilterModule, IgRippleModule, BadgeModule, IgxIconModule
 
 } from "../../src/main";
 
@@ -20,6 +20,7 @@ import { AvatarSampleComponent } from "./avatarsample.component";
 import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
 import { NavbarSampleModule } from "./navbar/sample.module";
 import { ModalSampleModule } from "./modal/sample.module";
+import { IconSampleModule } from "./icon/sample.module";
 import { routing } from "./app.routing";
 
 @NgModule({
@@ -38,10 +39,12 @@ import { routing } from "./app.routing";
         NavDrawerSampleModule,
         NavbarSampleModule,
         ModalSampleModule,
+        IconSampleModule,
         IgRippleModule,
         routing,
         BadgeModule,        
-        IgInput
+        IgInput,
+        IgxIconModule
     ],
     declarations: [
         AppComponent,
