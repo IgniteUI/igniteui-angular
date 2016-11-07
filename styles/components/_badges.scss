@@ -1,0 +1,25 @@
+.badge
+{
+  padding        : 2px 5px 1px 4px;
+  position       : absolute;
+  font-size      : 10px;
+  font-weight    : 400;
+  text-transform : uppercase;
+  &.beta
+  {
+    left          : calc(100% + 5px);
+    top           : 50%;
+    background    : #fff;
+    color         : $primary-color;
+  }
+
+  &.preview
+  {
+    left             : calc(100% + 10px);
+    top              : calc(50% - 7px);
+    background-image : linear-gradient(105deg, #e41c77, #fbb13c);
+    color            : #fff;
+  }
+}
+
+

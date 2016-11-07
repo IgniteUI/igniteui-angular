@@ -1,0 +1,19 @@
+.btn
+{
+  padding         : em(7) em(15);
+  border-radius   : em(2);
+  border          : none;
+  background      : $primary-color;
+  font-size       : 16px;
+  font-family     : Titillium Web;
+  color           : #fff;
+  font-style      : normal;
+  background-clip : padding-box;
+  box-shadow      : 0 8px 12px 0 rgba(173, 173, 173, 0.38);
+  cursor           : pointer;
+  @include transition(background .3s ease);
+  &:hover
+  {
+    background : darken($primary-color, 5%);
+  }
+}

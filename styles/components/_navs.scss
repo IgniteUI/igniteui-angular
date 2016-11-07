@@ -1,0 +1,125 @@
+.nav-list
+{
+  li
+  {
+    padding  : em(10);
+    position : relative;
+    &:hover
+    {
+      color      : $dark-gray-color;
+      background : #eee;
+    }
+  }
+  a
+  {
+    text-decoration : none;
+    color           : $light-gray-color;
+    font-size       : em(23);
+    font-weight     : 100;
+    position        : relative;
+    @include transition(color .3s ease);
+  }
+  .active
+  {
+    font-weight : 600;
+    color       : $primary-color;
+    &:hover
+    {
+      color : $primary-color;
+    }
+  }
+}
+
+.tabs
+{
+  .active
+  {
+    color : $primary-color;
+    &:hover
+    {
+      color : $primary-color;
+    }
+  }
+  a
+  {
+    ~ a
+    {
+      margin-left : em(10);
+    }
+    @include transition(color .3s ease);
+    cursor          : pointer;
+    text-decoration : none;
+    font-weight     : 600;
+    color           : $dark-gray-color;
+    &:hover
+    {
+      color : lighten($primary-color, 10%);
+    }
+  }
+}
+
+/* DROPDOWN START */
+
+.dropdown
+{
+  @include flex(1);
+  display  : none;
+  position : relative;
+  &:before
+  {
+    position       : absolute;
+    content        : "";
+    top            : calc(50% - 4px);
+    right          : 15px;
+    z-index        : 2;
+    width          : 0;
+    height         : 0;
+    border-style   : solid;
+    border-width   : 8px 5.5px 0 5.5px;
+    border-color   : #fff transparent transparent transparent;
+    pointer-events : none;
+  }
+
+  select
+  {
+    padding            : 7px 15px;
+    width              : 100%;
+    background         : $primary-color;
+    color              : #fff;
+    border             : none;
+    box-shadow         : none;
+    -webkit-appearance : none; /* need for Safari */
+    text-overflow      : ""; /* nedd for firefox */
+    text-indent        : 0.01px; /* nedd for firefox */
+    -moz-appearance    : none; /* nedd for firefox */
+    border-radius      : em(2);
+    font-size          : 16px;
+    font-family        : Titillium Web;
+    position           : relative;
+    z-index            : 1;
+  }
+  option
+  {
+    background : #fff;
+    color      : $dark-gray-color;
+    padding    : em(10);
+  }
+
+  option[disabled]
+  {
+    display : none;
+  }
+
+  optgroup
+  {
+    color      : $primary-color;
+    background : #fff;
+  }
+
+  select:focus
+  {
+    outline : none;
+  }
+}
+
+
