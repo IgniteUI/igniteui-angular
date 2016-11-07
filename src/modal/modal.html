@@ -1,6 +1,7 @@
 <div #modal
     tabindex="-1"
-    [ngStyle]="{ display: isOpen ? 'block' : 'none' }"
+    class="ig-modal"
+    [class.ig-modal--hidden]="!isOpen"
     (click)="onModalClicked($event)">
     <div #modalWindow class="ig-modal__window">
         <div class="ig-modal__window-title">

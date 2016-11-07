@@ -6,8 +6,12 @@
     bottom: 0;
     background: $overlay-color;
     opacity: 1;
-    z-index: 9999;
-    transition: $modal-transition;
+    z-index: 24;
+    animation: fade-in .2s ease-out, steps(1, end) backwards;
+}
+
+%igx-modal--hidden {
+    display: none;
 }
 
 %igx-modal-window {
@@ -21,8 +25,7 @@
     border-radius: 2px;
     background: $modal-background;
     box-shadow: $elevate-24;
-    opacity: 1;
-    animation: slide-in .25s ease-out backwards;
+    animation: slide-in .2s ease-out backwards;
 }
 
 %igx-modal-title {
@@ -53,7 +56,12 @@
 
 @keyframes slide-in {
     0% {
-        opacity: 0;
         transform: translate3d(-50%, 0%, 0);
+    }
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
     }
 }
