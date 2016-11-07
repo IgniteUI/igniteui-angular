@@ -49,6 +49,8 @@ const appRoutes: Routes = [
     {
         path: "progressbar",
         component: ProgressbarSampleComponent
+    },
+    {
         path: "modal",
         component: ModalSampleComponent
     }

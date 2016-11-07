@@ -99,6 +99,7 @@ export class IgProgressBar implements AfterViewInit, OnChanges {
 
     private draw(ctx:CanvasRenderingContext2D, percentValue:number) {
         ctx.beginPath();
+        // ctx.translate(150,150);
         ctx.arc(120, 120, 70, -(Math.PI / 2), ((Math.PI * 2) * percentValue / 100) - Math.PI / 2, false);
         ctx.stroke();
     }
