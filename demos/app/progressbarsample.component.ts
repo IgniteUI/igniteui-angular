@@ -20,7 +20,7 @@ import { IgProgressBarModule } from "../../src/progressbar/progressbar.component
         <ig-progressbar [striped]="true" [animated]="true" [value]="currentValue">
             <b>{{currentValue}}%</b>
         </ig-progressbar>
-        <ig-progressbar></ig-progressbar>
+        <ig-progressbar [value]="currentValue" data-percent="currentValue" [circeler]="true"></ig-progressbar>
     `,
 })
 
