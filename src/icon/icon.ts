@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, NgModule, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, NgModule, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,12 +8,14 @@ import { CommonModule } from '@angular/common';
 })
 
 export class IgxIcon {
+	@ViewChild('icon') themeIcon: ElementRef;
+
 	private font: string = 'material';
 	private active: string = 'true';
 	private iconColor: string;
 	private iconName: string;
 
-    constructor(private el: ElementRef) {}
+    constructor(public el: ElementRef) {}
 
 	@Input('fontSet') set fontSet(value: string) {
 		this.font = value || this.font;
