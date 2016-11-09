@@ -3,7 +3,6 @@
     position: relative;
     margin: 20px 0;
     min-height: 40px;
-    transform: translateZ(0);
     ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
         color: $label-color;
     }
@@ -21,13 +20,14 @@
     cursor: text;
     user-select: none;
     pointer-events: none;
-    backface-visibility: hidden;
-    transition: all .3s ease-in-out;
+    transform: translate3d(0,0,0);
+    transition: transform .25s ease-out;
+    -webkit-font-smoothing: antialiased;
 }
 
 %igx-form-label--float {
     color: $label-active-color;
-    transform: translate3d(0, -20px, 0) scale(.75);
+    transform: translateY(-20px) perspective(1000px) translateZ(-300px);
 }
 
 %igx-form-label--filled {
@@ -36,7 +36,7 @@
 
 %igx-form-label--focused {
     color: $label-focus-color;
-    transform: translate3d(0, -20px, 0) scale(.75);
+    transform: translateY(-20px) perspective(1000px) translateZ(-300px);
 }
 
 %igx-form-input {

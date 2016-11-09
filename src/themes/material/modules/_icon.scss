@@ -1,0 +1,7 @@
+@include b(igx-icon) {
+    @extend %igx-icon-display;
+
+    @include m(inactive) {
+        @extend %igx-icon--inactive;
+    }
+}

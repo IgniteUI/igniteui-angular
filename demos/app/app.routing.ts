@@ -11,6 +11,7 @@ import { AvatarSampleComponent } from "./avatarsample.component";
 import { NavbarSampleComponent } from "./navbar/sample.component";
 import { ProgressbarSampleComponent } from "./progressbarsample.component";
 import { ModalSampleComponent } from "./modal/sample.component";
+import { IconSampleComponent } from "./icon/sample.component";
 
 const appRoutes: Routes = [
     {
@@ -35,7 +36,7 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/inputs',
+        redirectTo: '/icon',
         pathMatch: 'full'
     },
     {
@@ -53,6 +54,10 @@ const appRoutes: Routes = [
     {
         path: "modal",
         component: ModalSampleComponent
+    },
+    {
+        path: "icon",
+        component: IconSampleComponent
     }
 ];
 
