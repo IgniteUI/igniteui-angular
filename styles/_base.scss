@@ -1,0 +1,137 @@
+body
+{
+  background  : #eee;
+  font-family : 'Titillium Web', sans-serif;
+  overflow-x  : hidden;
+}
+
+/* Reset your elements box model with ease. */
+
+*,
+*:after,
+*:before
+{
+  @include box-sizing(border-box);
+}
+
+/* Site wrapper */
+.wrapper
+{
+  max-width : 980px;
+  padding   : 0 20px;
+  margin    : 0 auto;
+}
+
+.fork
+{
+  text-transform  : uppercase;
+  display         : flex;
+  align-items     : center;
+  text-decoration : none;
+  @include transition(opacity .3s ease);
+  span
+  {
+    margin-right : em(5);
+    color        : #fff;
+  }
+  &:hover
+  {
+    opacity : .75;
+  }
+}
+
+/* Typography */
+
+h1
+{
+  font-size   : em(40);
+  font-weight : 300;
+  line-height : 1.2;
+}
+
+h2
+{
+  font-size   : em(23);
+  line-height : 1.6;
+  font-weight : 300;
+}
+
+h3
+{
+  color       : $primary-color;
+  font-size   : em(24);
+  line-height : 1.6;
+  font-weight : 400;
+}
+
+.mobile-subheader
+{
+  color       : #999;
+  font-size   : em(16);
+  line-height : 1.6;
+  font-weight : 400;
+  margin      : em(10) 0;
+}
+
+
+.section-wrap
+{
+  .componentTitle
+  {
+    font-size     : em(34);
+    font-weight   : 100;
+    color         : #0375be;
+    margin-bottom : 20px;
+  }
+  .componentDesc
+  {
+    font-size     : 18px;
+    font-weight   : 300;
+    color         : #757575;
+    margin-bottom : 20px;
+    line-height   : 28px;
+  }
+  .component-wrap
+  {
+    margin-bottom : 20px;
+    ig-switch,
+    ig-radio
+    {
+      margin-bottom : em(10);
+      display       : block;
+    }
+  }
+}
+
+
+::-moz-selection
+{ /* Code for Firefox */
+  color      : #000;
+  background : lighten($primary-color, 20%);
+}
+
+::selection
+{
+  color      : #000;
+  background : lighten($primary-color, 20%);
+}
+
+.logo
+{
+  position : relative;
+  display  : inline-block;
+  height   : em(97);
+  h1
+  {
+    display : none;
+  }
+}
+
+img
+{
+  -webkit-user-select : none;
+  -khtml-user-select  : none;
+  -moz-user-select    : none;
+  -o-user-select      : none;
+  user-select         : none;
+}

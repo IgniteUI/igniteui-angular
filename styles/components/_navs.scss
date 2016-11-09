@@ -4,11 +4,6 @@
   {
     padding  : em(10);
     position : relative;
-    &:hover
-    {
-      color      : $dark-gray-color;
-      background : #eee;
-    }
   }
   a
   {
@@ -17,16 +12,25 @@
     font-size       : em(23);
     font-weight     : 100;
     position        : relative;
+    cursor          : pointer;
     @include transition(color .3s ease);
+    &:hover
+    {
+      color : $sec-color;
+    }
   }
   .active
   {
-    font-weight : 600;
-    color       : $primary-color;
-    &:hover
-    {
-      color : $primary-color;
+    a {
+      color        : $sec-color;
+      border-left  : 1px solid $sec-color;
+      padding-left : em(5);
+      &:hover
+      {
+        color : $sec-color;
+      }
     }
+
   }
 }
 

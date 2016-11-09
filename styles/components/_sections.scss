@@ -49,9 +49,9 @@
 
 .phon-image
 {
-  top   : em(-62);
+  top   : em(-86);
   right : 0;
-  width: em(298);
+  width : em(298);
 }
 
 .section-message
@@ -162,18 +162,22 @@
 
 .preview-container
 {
-  position : relative;
-  z-index  : 2;
-  width    : em(272);
-  height   : em(475);
-  left     : 10px; /*  This is ins pixels for IE10 */
-  top      : em(10);
-  padding  : em(10);
+  position   : relative;
+  overflow-x : hidden;
+  overflow-y : auto;
+  z-index    : 2;
+  width      : 278px;
+  height     : 477px;
+  left       : 5px;
+  top        : -7px;
+  padding    : em(10) em(10) 0 em(10);
 }
 
-
-
-
+.ig-list__header,
+.ig-list__item
+{
+  padding : 0;
+}
 
 
 
