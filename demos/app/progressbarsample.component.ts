@@ -33,7 +33,7 @@ import { IgProgressBarModule } from "../../src/progressbar/progressbar.component
             </ig-progressbar>
         </div>
         <div class="progress-container-circular">
-            <ig-progressbar [circeler]="true" [max]="200" (onProgressChanged)="f($event)" [value]='currentValue'></ig-progressbar>
+            <ig-progressbar [circeler]="true" [max]="200" (onProgressChanged)="f($event)" [value]="currentValue"></ig-progressbar>
         </div>
     `,
     styles: [
@@ -60,7 +60,7 @@ export class ProgressbarSampleComponent {
     }
 
     private generateNewProgressValues() {
-        let value = this.randomIntFromInterval(this.currentValue, 100);
+        let value = this.randomIntFromInterval(this.currentValue, 300);
 
         this.currentValue = value;
     }

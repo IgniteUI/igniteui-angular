@@ -73,45 +73,50 @@ export class IgProgressBar implements AfterViewInit, OnChanges {
             }
         }
         if(this._svg_circle) {
-            this._percentage = this.getPercentValue();
-            // this._progress =
+            // Validate percentage value to be between [0...100]
+            this._percentage = getValueInRange(this.getPercentValue(), 100);
 
             if(changes.value){
-                let progressValue = 0;
+                // Validate values to be between [0...max]
                 this.value = getValueInRange(changes.value.previousValue, this.max);
+                let validatePrevValue = getValueInRange(changes.value.previousValue, this.max);
+                let validateCurrValue = getValueInRange(changes.value.currentValue, this.max);
                 // Get passed value in percent
                 this._valueInPercent = convertValueInPercent(this.value, this.max);
                 // Get previous value in percent
-                let prevInPercent = convertValueInPercent(changes.value.previousValue, this.max);
+                let prevValInPercent = convertValueInPercent(validatePrevValue, this.max);
                 // Get current value in percent
-                let currInPercent = convertValueInPercent(changes.value.currentValue, this.max);
+                let currValInPercent = convertValueInPercent(validateCurrValue, this.max);
 
-                // Change progress bar value
+                // Change progress bar percent value
                 let timer = setInterval(function() {
-                    if(this._valueInPercent >= currInPercent) {
+                    if(this._valueInPercent >= currValInPercent) {
                         clearInterval(timer);
 
+                        // Object that passed to the event
                         let changedValues = {
-                            currentValue: currInPercent,
-                            previousValue: prevInPercent
+                            currentValue: currValInPercent,
+                            previousValue: prevValInPercent
                         }
 
                         this.onProgressChanged.emit(changedValues);
                         this.renderer.setElementStyle(this._svg_circle.nativeElement, 'strokeDashoffset', this._percentage);
                     } else {
-                        // Update progress value
+                        // Update progress bar percent value
                         this._valueInPercent++;
                     }
                 }.bind(this), this._interval);
 
+                // Set frames for the animation
                 let FRAMES = [{
-                    strokeDashoffset: this.getProgress(prevInPercent),
-                    strokeOpacity: (prevInPercent / 100) + .2
+                    strokeDashoffset: this.getProgress(prevValInPercent),
+                    strokeOpacity: (prevValInPercent / 100) + .2
                 }, {
                     strokeDashoffset: this.getProgress(this._percentage),
                     strokeOpacity: (this._percentage / 100) + .2
                 }];
 
+                // Animate the svg
                 this._svg_circle.nativeElement.animate(FRAMES, {
                     duration: (this._percentage * this._interval) + 400,
                     fill: 'forwards',

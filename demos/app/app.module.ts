@@ -48,12 +48,12 @@ import { routing } from "./app.routing";
         IgRippleModule,
         routing,
         BadgeModule,
-        IgProgressBarModule
-        BadgeModule,
-        IgInput
+        IgProgressBarModule,
         BadgeModule,
         IgInput,
-        IgxIconModule
+        BadgeModule,
+        IgInput,
+        // IgxIconModule
     ],
     declarations: [
         AppComponent,
