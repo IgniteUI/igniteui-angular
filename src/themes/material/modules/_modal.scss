@@ -3,5 +3,24 @@
     
     @include e(window) {
         @extend %igx-modal-window;
+
+        @include e(title, true) {
+            @extend %igx-modal-title;
+        }
+        
+        @include e(content, true) {
+            @extend %igx-modal-content;
+        }
+
+        @include e(actions, true) {
+            @extend %igx-modal-actions;
+            button ~ button {
+                margin-left: 8px;
+            }
+        }
+    }
+
+    @include m(hidden) {
+        @extend %igx-modal--hidden;
     }
 }

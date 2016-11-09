@@ -6,7 +6,7 @@ import { ButtonModule } from "../../src/button/button";
     template: `
         <h3>Buttons</h3>
         <div style="margin: 0 20px">
-            <span igButton="flat" igRipple>Flat</span>
+            <button igButton="flat" igRipple>Flat</button>
         </div>
         <br>
         <div style="margin: 0 20px">
@@ -14,7 +14,7 @@ import { ButtonModule } from "../../src/button/button";
         </div>
         <br>
         <div style="margin: 0 20px">
-            <span igButton="raised" igButtonColor="#FBB13C" igButtonBackground="#340068" igRipple="white">Raised Custom</span>
+            <button igButton="raised" igButtonColor="#FBB13C" igButtonBackground="#340068" igRipple="white">Raised Custom</button>
         </div>
         <br>
         <div style="margin: 0 20px">
@@ -36,9 +36,9 @@ import { ButtonModule } from "../../src/button/button";
         </div>
         <br>
         <div style="margin: 0 20px">
-            <span igButton="fab" igButtonColor="#484848" igButtonBackground="white" igRipple="#484848">
+            <button type="button" igButton="fab" igButtonColor="#484848" igButtonBackground="white" igRipple="#484848">
                 <i class="material-icons">edit</i>
-            </span>
+            </button>
         </div>
         <div style="display: flex; flex-wrap: row; padding: 10px 0">
             <span igButton="icon" igRipple igRippleCentered="true">

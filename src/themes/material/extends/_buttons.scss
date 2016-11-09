@@ -7,7 +7,7 @@
     font-weight: $button-font-weight;
     text-align: center;
     color: $button-color;
-    border: $button-border;  
+    border: $button-border;
     border-radius: $button-radius;
     text-transform: uppercase;
     cursor: pointer;
@@ -19,6 +19,7 @@
 }
 
 %igx-button--flat {
+    background: transparent;
     color: $secondary-color;
     &:hover {
         background: $button-flat-hover-background;
@@ -34,13 +35,13 @@
     background: $button-raised-background;
     box-shadow: $button-raised-shadow;
     &:hover {
-      background: $button-focus-background;
-      box-shadow: $button-raised-shadow;
+        background: $button-focus-background;
+        box-shadow: $button-raised-shadow;
     }
     &:focus,
     &:active {
-      background: $button-focus-background;
-      box-shadow: $button-raised-focus-shadow;
+        background: $button-focus-background;
+        box-shadow: $button-raised-focus-shadow;
     }
 }
 
@@ -56,14 +57,17 @@
     &:active {
         background: $button-focus-gradient;
         box-shadow: $button-gradient-focus-shadow;
-    }    
+    }
 }
 
 %igx-button--round {
+    $block: &;
+    
+    position: relative;
     display: flex;
+    flex-direction: row nowrap;
     justify-content: center;
     align-items: center;
-    position: relative;
     border: $button-border;
     border-radius: $button-round-radius;
     outline: none;
@@ -73,6 +77,17 @@
     -webkit-tap-highlight-color: transparent;
     // hack to allow circular overflow in chrome ...
     filter: drop-shadow(0 0 0 rgba(255, 255, 255, 1));
+
+    // reset for safari's inability to handle flex in buttons
+    @at-root {
+        button#{$block} {
+            display: initial;
+            * {
+                display: flex;
+                justify-content: center;
+            }
+        }
+    }
 }
 
 %igx-button--fab {
@@ -82,11 +97,11 @@
     background: $button-floating-background;
     box-shadow: $button-floating-shadow;
     &:hover {
-      box-shadow: $button-floating-hover-shadow;
+        box-shadow: $button-floating-hover-shadow;
     }
     &:focus,
     &:active {
-      background: $button-focus-background;
+        background: $button-focus-background;
     }
 }
 
@@ -115,7 +130,7 @@
 %igx-button--disabled {
     color: $button-disabled-color !important;
     background: $button-disabled-background !important;
-    pointer-events: none !important; 
+    pointer-events: none !important;
     box-shadow: $button-disabled-shadow !important;
-    opacity: 0.9 !important;
+    opacity: 0.8 !important;
 }

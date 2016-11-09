@@ -440,9 +440,26 @@ $list-item-tl-sl-color: #757575 !default;
 /* 24. Modal
    ========================================================================== */
 
-$modal-transition: all .4s ease-in;
-$modal-width: em(400px);
-$modal-margin: 10% auto;
-$modal-padding: 5px 25px 10px 10px;
+$modal-transition: background .25s ease-out;
+$modal-max-width: em(400px);
+$modal-min-width: em(280px);
+$modal-padding: em(12px, 16px) em(24px, 16px);
 $modal-background: $white;
+$modal-border-radius: 2px;
 
+$modal-title-font-size: em(20px, 16px);
+$modal-title-line-height: em(16px, 16px);
+$modal-title-padding: em(12px) 0;
+$modal-title-padding-top: em(12px);
+$modal-title-padding-bottom: em(10px);
+$modal-title-font-weight: 600;
+
+
+$modal-message-font-size: em(16px, 16px);
+$modal-message-line-height: em(18px, 16px);
+$modal-message-padding-top: em(10px);
+$modal-message-padding-bottom: em(12px);
+$modal-message-font-weight: 400;
+
+$modal-actions-padding: em(8px);
+$modal-actions-margin: 0 em(-24px, 16px) em(-12px, 16px) em(-24px, 16px);

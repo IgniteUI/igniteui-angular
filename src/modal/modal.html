@@ -1,11 +1,12 @@
 <div #modal
     tabindex="-1"
-    [ngStyle]="{ display: isOpen ? 'block' : 'none' }"
+    class="ig-modal"
+    [class.ig-modal--hidden]="!isOpen"
     (click)="onModalClicked($event)">
     <div #modalWindow class="ig-modal__window">
         <div class="ig-modal__window-title">
             {{ title }}
-        <div>
+        </div>
         <div class="ig-modal__window-content">
             <div *ngIf="message">{{ message }}</div>
             <ng-content *ngIf="!message"></ng-content>

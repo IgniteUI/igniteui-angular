@@ -6,15 +6,62 @@
     bottom: 0;
     background: $overlay-color;
     opacity: 1;
-    z-index: 9999;
-    transition: $modal-transition;
+    z-index: 24;
+    animation: fade-in .2s ease-out, steps(1, end) backwards;
+}
+
+%igx-modal--hidden {
+    display: none;
 }
 
 %igx-modal-window {
-    position: relative;
-    width: $modal-width;
-    margin: $modal-margin;
+    position: absolute;
+    max-width: $modal-max-width;
+    min-width: $modal-min-width;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
     padding: $modal-padding;
+    border-radius: 2px;
     background: $modal-background;
     box-shadow: $elevate-24;
+    animation: slide-in .2s ease-out backwards;
+}
+
+%igx-modal-title {
+    color: $off-black;
+    font-size: $modal-title-font-size;
+    line-height: $modal-title-line-height;
+    padding-top: $modal-title-padding-top;
+    padding-bottom: $modal-title-padding-bottom;
+    font-weight: $modal-title-font-weight;
+}
+
+%igx-modal-content {
+    color: gray;
+    font-size: $modal-message-font-size;
+    line-height: $modal-message-line-height;
+    padding-top: $modal-message-padding-top;
+    padding-bottom: $modal-message-padding-bottom;
+}
+
+%igx-modal-actions {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    padding: $modal-actions-padding;
+    margin: $modal-actions-margin;
+}
+
+
+@keyframes slide-in {
+    0% {
+        transform: translate3d(-50%, 0%, 0);
+    }
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
 }
