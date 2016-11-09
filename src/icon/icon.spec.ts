@@ -26,7 +26,7 @@ describe('Icon', () => {
         fixture.detectChanges();
         
         expect(icon.getActive).toBeTruthy();
-        expect(icon.getColor).toBeFalsy();
+        expect(icon.getIconColor).toBeFalsy();
         expect(icon.getIconName).toBeFalsy();
         expect(icon.getFontSet).toEqual('material');
         expect(icon.el.nativeElement.getElementsByClassName('igx-icon')).toBeTruthy();
@@ -48,6 +48,7 @@ describe('Icon', () => {
         let icon = fixture.componentInstance.icon;
         fixture.detectChanges();
 
+        expect(icon.getIconColor).toEqual('red');
         expect(icon.el.nativeElement.style.color).toEqual('red');
     });
 
