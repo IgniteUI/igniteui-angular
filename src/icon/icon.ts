@@ -26,7 +26,8 @@ export class IgxIcon {
 	}
 
 	@Input('color') set color(value: string) {
-		this.el.nativeElement.style.color = value;
+		this.iconColor = value;
+		this.el.nativeElement.style.color = this.iconColor;
 	}
 
 	@Input('name') set name(value: string) {
@@ -45,8 +46,8 @@ export class IgxIcon {
 		}
 	}
 
-	get getColor(): string {
-		return this.el.nativeElement.style.background;
+	get getIconColor(): string {
+		return this.iconColor;
 	}
 
 	get getIconName(): string {
