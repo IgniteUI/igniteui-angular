@@ -420,10 +420,18 @@
   @include justify-content(flex-end);
 }
 
+.justify-content-start {
+  @include justify-content(flex-start);
+}
+
 .base-line-bottom {
   @include align-items(flex-end);
 }
 
 .base-line-center {
   @include align-items(center);
+}
+
+.flex-wrap {
+  @include flex-wrap(wrap);
 }
