@@ -1,12 +1,13 @@
 .progress-linear {
         width: 100%;
-        height: 20px;
+        height: 30%;
         background-color: #F0F8FF;
         border: 1px solid black;
         border-radius: 5px;
 }
     .progress-bar {
-                height: 100%
+        height: 100%;
+        width: 100%;
     }
         .progress-bar-danger {
             background-color: #d9534f;
@@ -52,10 +53,10 @@
 }
 
 /*The svg circle adjusts based on the width of its container*/
-.progress-container {
-  width: 46px;
-  height: 46px;
-}
+/*.progress-container {
+  width: 100px;
+  height: 100px;
+}*/
 
 .progress-circular {
   width: 100%;
