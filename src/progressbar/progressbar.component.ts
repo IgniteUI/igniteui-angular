@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
         <div *ngIf="!circeler" class="progress-linear"
             [class.progress-animated]="animated"
             [class.progress-striped]="striped">
-            <div class="progress-bar progress-bar{{type ? '-' + type : ''}}"
+            <div #linearBar class="progress-bar progress-bar{{type ? '-' + type : ''}}"
                 aria-valuemin="0"
                 [attr.aria-valuemax]="max"
                 [attr.aria-valuenow]="getValue()"
@@ -36,7 +36,7 @@ import { CommonModule } from '@angular/common';
                 </linearGradient>
             </defs>
             <circle #circle class="progress-circular__circle" cx="50" cy="50" r="46" id="blue-halo"/>
-            <text #text class="progress-circular__text" id="myTimer" text-anchor="middle" x="50" y="60">{{value}}%</text>
+            <text #text class="progress-circular__text" id="myTimer" text-anchor="middle" x="50" y="60">{{_valueInPercent}}%</text>
         </svg>
     `,
     styleUrls: [ 'stylesheet.css' ]
@@ -50,6 +50,9 @@ export class IgProgressBar implements AfterViewInit, OnChanges {
 
     @ViewChild('circle') private _svg_circle: ElementRef;
     @ViewChild('text') private _svg_text: ElementRef;
+    @ViewChild('linearBar') private _linear_bar: ElementRef;
+
+    @Input() private _valueInPercent: number = 0;
 
     @Input() max: number = 100;
     @Input() animated: boolean = false;
@@ -64,6 +67,11 @@ export class IgProgressBar implements AfterViewInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
+        if(this._linear_bar) {
+            if(changes.value) {
+                this.onProgressChanged.emit(changes);
+            }
+        }
         if(this._svg_circle) {
             this._percentage = this.getPercentValue();
             // this._progress =
@@ -71,23 +79,34 @@ export class IgProgressBar implements AfterViewInit, OnChanges {
             if(changes.value){
                 let progressValue = 0;
                 this.value = getValueInRange(changes.value.previousValue, this.max);
+                // Get passed value in percent
+                this._valueInPercent = convertValueInPercent(this.value, this.max);
+                // Get previous value in percent
+                let prevInPercent = convertValueInPercent(changes.value.previousValue, this.max);
+                // Get current value in percent
+                let currInPercent = convertValueInPercent(changes.value.currentValue, this.max);
 
                 // Change progress bar value
                 let timer = setInterval(function() {
-                    if(this.value >= changes.value.currentValue) {
+                    if(this._valueInPercent >= currInPercent) {
                         clearInterval(timer);
 
-                        this.onProgressChanged.emit(changes);
-                        this._svg_circle.nativeElement.style.strokeDashoffset = this.getProgress(this._percentage);
+                        let changedValues = {
+                            currentValue: currInPercent,
+                            previousValue: prevInPercent
+                        }
+
+                        this.onProgressChanged.emit(changedValues);
+                        this.renderer.setElementStyle(this._svg_circle.nativeElement, 'strokeDashoffset', this._percentage);
                     } else {
                         // Update progress value
-                        this.value++;
+                        this._valueInPercent++;
                     }
                 }.bind(this), this._interval);
 
                 let FRAMES = [{
-                    strokeDashoffset: this.getProgress(changes.value.previousValue),
-                    strokeOpacity: (changes.value.previousValue / 100) + .2
+                    strokeDashoffset: this.getProgress(prevInPercent),
+                    strokeOpacity: (prevInPercent / 100) + .2
                 }, {
                     strokeDashoffset: this.getProgress(this._percentage),
                     strokeOpacity: (this._percentage / 100) + .2
@@ -114,7 +133,7 @@ export class IgProgressBar implements AfterViewInit, OnChanges {
     }
 
     public getPercentValue() {
-        return 100 * this.getValue() / this.max;
+        return convertValueInPercent(this.value, this.max);
     }
 
     private getProgress(percentage:number) {
@@ -124,6 +143,10 @@ export class IgProgressBar implements AfterViewInit, OnChanges {
 
 export function getValueInRange(value: number, max: number, min = 0): number {
     return Math.max(Math.min(value, max), min);
+}
+
+export function convertValueInPercent(value: number, max: number) {
+     return Math.floor(100 * value / max);
 }
 
 @NgModule({

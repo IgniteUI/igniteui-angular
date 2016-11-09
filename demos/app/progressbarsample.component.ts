@@ -28,12 +28,12 @@ import { IgProgressBarModule } from "../../src/progressbar/progressbar.component
             </ig-progressbar>
         </div>
         <div class="progress-container-linear">
-            <ig-progressbar [striped]="true" [animated]="true" [value]="currentValue">
+            <ig-progressbar [striped]="true" (onProgressChange)="change($event)" [animated]="true" [value]="currentValue">
                 <b>{{currentValue}}%</b>
             </ig-progressbar>
         </div>
         <div class="progress-container-circular">
-            <ig-progressbar [circeler]="true" (onProgressChanged)="f($event)" [value]='currentValue'></ig-progressbar>
+            <ig-progressbar [circeler]="true" [max]="200" (onProgressChanged)="f($event)" [value]='currentValue'></ig-progressbar>
         </div>
     `,
     styles: [
@@ -72,5 +72,9 @@ export class ProgressbarSampleComponent {
 
     f(evt) {
         console.log(evt);
+    }
+
+    change(evt) {
+        console.log("evt");
     }
 }
