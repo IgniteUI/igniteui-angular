@@ -26,47 +26,76 @@ import { CommonModule } from '@angular/common';
                 <ng-content></ng-content>
             </div>
         </div>
-        <div *ngIf="circeler" class="progress-circeler">
-            <canvas #canvas
-                    class="progress-bar"
-                    [width]="width"
-                    [height]="height"
-                    aria-valuemin="0"
-                    [attr.aria-valuemax]="max"
-                    [attr.aria-valuenow]="getValue()"></canvas>
+        <div #get *ngIf="circeler" class="progress-container">
+            <svg #svg class="progress-circular" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <defs>
+                    <linearGradient id="linear" x1="-10%" y1="0%" x2="50%" y2="150%">
+                    <stop offset="0%"   stop-color="#0375BE"/>
+                    <stop offset="100%" stop-color="cyan"/>
+                    </linearGradient>
+                </defs>
+                <circle #circle class="progress-circular__circle" cx="50" cy="50" r="46" id="blue-halo"/>
+                <text #text class="progress-circular__text" id="myTimer" text-anchor="middle" x="50" y="60">0%</text>
+            </svg>
         </div>
     `,
     styleUrls: [ 'stylesheet.css' ]
 })
 export class IgProgressBar implements AfterViewInit, OnChanges {
-    @ViewChild('canvas') _canvas: ElementRef;
+    private _radius: number = 0;
+    private _circumference: number = 0;
+    private _interval: number = 15;
+    private _percentage = 0;
+    private _progress = 0;
+
+    @ViewChild('circle') private _svg_circle: ElementRef;
+    @ViewChild('text') private _svg_text: ElementRef;
 
     @Input() max: number = 100;
     @Input() animated: boolean = false;
     @Input() striped: boolean = false;
     @Input() type: string = 'default';
     @Input() circeler: boolean = false;
-    @Input() value = 0;
-    @Input() width = 240;
-    @Input() height = 240;
+    @Input() value: number = 0;
 
-    constructor(private elementRef: ElementRef){
+    constructor(private elementRef: ElementRef, private renderer: Renderer){
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if(this._canvas) {
-            var ctx =  this._canvas.nativeElement.getContext('2d');
+        if(this._svg_circle) {
+            this._percentage = this.getPercentValue();
+            this._progress = this._circumference - (this._percentage * this._circumference / 100);
 
-            if(changes.value) {
-                ctx.clearRect(0, 0, this.width, this.height);
-                this.draw(ctx, this.getPercentValue());
-            }
+            let progressValue = 0;
+            let timer = setInterval(function() {
+                if(progressValue >= changes.value.currentValue) {
+                    clearInterval(timer);
+                }
+
+                this._svg_text.nativeElement.textContent = progressValue++ + '%';
+            }.bind(this), this._interval);
+
+            let FRAMES = [{
+                strokeDashoffset: this._circumference,
+                strokeOpacity: .2
+            }, {
+                strokeDashoffset: this._progress,
+                strokeOpacity: (this._percentage / 100) + .2
+            }];
+
+            this._svg_circle.nativeElement.animate(FRAMES, {
+                duration: (this._percentage * this._interval) + 400,
+                fill: 'forwards',
+                easing: 'ease-out'
+            })
         }
     }
 
     ngAfterViewInit() {
-        if(this._canvas) {
-            this.renderCircelerProgressBar(this._canvas);
+        if(this._svg_circle) {
+            this._radius = parseInt(this._svg_circle.nativeElement.getAttribute('r'));
+            this._circumference = 2 * Math.PI * this._radius;
+            // this._angle_increment = this._circumference / 360;
         }
     }
 
@@ -77,33 +106,6 @@ export class IgProgressBar implements AfterViewInit, OnChanges {
     public getPercentValue() {
         return 100 * this.getValue() / this.max;
     }
-
-    private renderCircelerProgressBar(elementRef: ElementRef) {
-        var el = elementRef.nativeElement;
-		var ctx = el.getContext('2d');
-
-		ctx.beginPath();
-		ctx.strokeStyle = '#337ab7';
-		ctx.lineCap = 'square';
-		ctx.closePath();
-		ctx.fill();
-		ctx.lineWidth = 10.0;
-
-		var imd = ctx.getImageData(0, 0, 240, 240);
-        ctx.putImageData(imd, 0, 0);
-
-        this.draw(ctx, this.getPercentValue());
-
-        ctx.stroke();
-    }
-
-    private draw(ctx:CanvasRenderingContext2D, percentValue:number) {
-        ctx.beginPath();
-        // ctx.translate(150,150);
-        ctx.arc(120, 120, 70, -(Math.PI / 2), ((Math.PI * 2) * percentValue / 100) - Math.PI / 2, false);
-        ctx.stroke();
-    }
-
 }
 
 export function getValueInRange(value: number, max: number, min = 0): number {
