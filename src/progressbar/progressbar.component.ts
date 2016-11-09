@@ -66,7 +66,7 @@ export class IgProgressBar implements AfterViewInit, OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         if(this._svg_circle) {
             this._percentage = this.getPercentValue();
-            this._progress = this._circumference - (this._percentage * this._circumference / 100);
+            // this._progress =
 
             if(changes.value){
                 let progressValue = 0;
@@ -77,12 +77,8 @@ export class IgProgressBar implements AfterViewInit, OnChanges {
                     if(this.value >= changes.value.currentValue) {
                         clearInterval(timer);
 
-                        // var changedValues = {
-                        //     previousValue: changes.value.previousValue,
-                        //     currentValue: changes.value.currentValue
-                        // }
-
                         this.onProgressChanged.emit(changes);
+                        this._svg_circle.nativeElement.style.strokeDashoffset = this.getProgress(this._percentage);
                     } else {
                         // Update progress value
                         this.value++;
@@ -90,10 +86,10 @@ export class IgProgressBar implements AfterViewInit, OnChanges {
                 }.bind(this), this._interval);
 
                 let FRAMES = [{
-                    strokeDashoffset: this._circumference,
-                    strokeOpacity: .2
+                    strokeDashoffset: this.getProgress(changes.value.previousValue),
+                    strokeOpacity: (changes.value.previousValue / 100) + .2
                 }, {
-                    strokeDashoffset: this._progress,
+                    strokeDashoffset: this.getProgress(this._percentage),
                     strokeOpacity: (this._percentage / 100) + .2
                 }];
 
@@ -119,6 +115,10 @@ export class IgProgressBar implements AfterViewInit, OnChanges {
 
     public getPercentValue() {
         return 100 * this.getValue() / this.max;
+    }
+
+    private getProgress(percentage:number) {
+        return this._circumference - (percentage * this._circumference / 100);
     }
 }
 
