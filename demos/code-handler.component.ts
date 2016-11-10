@@ -292,21 +292,10 @@ export class RadioSampleComponent {
             break;
     case "ripple":
         this.markup = `
-<ig-tab-bar igRipple igRippleTarget="ul" alignment="bottom">
-    <ig-tab label="Tab 1" icon="library_music">                        
-        <span class="componentDesc">Ripple directive can be applied basically to every element, <span igRipple>even this span !</span> to enable glamourous ripple effect on click, like the tabs below. Explore the other tabs as well.</span><br>
-        </ig-tab>
-    <ig-tab label="Tab 2" icon="video_library">
-        <ig-list #declarativeList>
-            <ig-list-header>Mildly Sweet</ig-list-header>
-            <ig-list-item igRipple igRippleTarget="div.ig-list__item">Red Delicious</ig-list-item>
-            <ig-list-item igRipple igRippleTarget="div.ig-list__item">Ambrosia</ig-list-item>
-            <ig-list-item igRipple igRippleTarget="div.ig-list__item">Rome</ig-list-item>
-            <ig-list-item igRipple igRippleTarget="div.ig-list__item">Golden Delicious</ig-list-item>
-            <ig-list-item igRipple igRippleTarget="div.ig-list__item">Cosmic Crisp</ig-list-item>
-        </ig-list>
-    </ig-tab>
-</ig-tab-bar>
+            <span igButton="gradient" igRipple="white">Gradient</span><br>
+            <span igButton="fab" igButtonColor="#484848" igButtonBackground="white" igRipple="#484848"><br>
+                <i class="material-icons">edit</i>
+            </span>
             `
         this.typescriptCode = `
 import { Component } from "@angular/core";
