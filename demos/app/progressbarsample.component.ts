@@ -6,34 +6,31 @@ import { IgProgressBarModule } from "../../src/progressbar/progressbar.component
     template: `
         <button type="button" class="btn btn-sm btn-default" (click)="generateNewProgressValues()">Generate New Values</button>
         <div class="progress-container-linear">
-            <ig-progressbar [striped]="false" [animated]="false" [value]="currentValue" [max]="200">
-            </ig-progressbar>
+            <ig-linear-bar [striped]="false" [animated]="false" [value]="currentValue" [max]="200">
+            </ig-linear-bar>
         </div>
         <div class="progress-container-linear">
-            <ig-progressbar type="danger" [striped]="false" [animated]="true" [value]="currentValue">
-            </ig-progressbar>
+            <ig-linear-bar type="danger" [striped]="false" [animated]="true" [value]="currentValue">
+            </ig-linear-bar>
         </div>
         <div class="progress-container-linear">
-            <ig-progressbar type="warning" [animated]="true" [value]="20">-
-            </ig-progressbar>
+            <ig-linear-bar type="warning" [animated]="true" [value]="20">
+            </ig-linear-bar>
         </div>
         <div class="progress-container-linear">
-            <ig-progressbar type="info" [striped]="false" [animated]="true" [value]="currentValue">
-                <b>{{currentValue}}%</b>
-            </ig-progressbar>
+            <ig-linear-bar type="info" [striped]="false" [animated]="true" [value]="currentValue">
+            </ig-linear-bar>
         </div>
         <div class="progress-container-linear">
-            <ig-progressbar type="success" striped="true" animated="true" [value]="currentValue">
-                <b>{{currentValue}}%</b>
-            </ig-progressbar>
+            <ig-linear-bar type="success" striped="true" animated="true" [value]="currentValue">
+            </ig-linear-bar>
         </div>
         <div class="progress-container-linear">
-            <ig-progressbar [striped]="true" (onProgressChange)="change($event)" [animated]="true" [value]="currentValue">
-                <b>{{currentValue}}%</b>
-            </ig-progressbar>
+            <ig-linear-bar [striped]="true" [max]="200" (onProgressChanged)="change($event)" [animated]="true" [value]="currentValue">
+            </ig-linear-bar>
         </div>
         <div class="progress-container-circular">
-            <ig-progressbar [circeler]="true" [max]="200" (onProgressChanged)="f($event)" [value]="currentValue"></ig-progressbar>
+            <ig-circular-bar [max]="200" (onProgressChanged)="f($event)" [value]="currentValue"></ig-circular-bar>
         </div>
     `,
     styles: [
@@ -60,7 +57,7 @@ export class ProgressbarSampleComponent {
     }
 
     private generateNewProgressValues() {
-        let value = this.randomIntFromInterval(this.currentValue, 300);
+        let value = this.randomIntFromInterval(this.currentValue, 100);
 
         this.currentValue = value;
     }
@@ -75,6 +72,6 @@ export class ProgressbarSampleComponent {
     }
 
     change(evt) {
-        console.log("evt");
+        console.log(evt);
     }
 }

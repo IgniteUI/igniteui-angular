@@ -1,0 +1,12 @@
+<div class="progress-linear"
+    [class.progress-animated]="animated"
+    [class.progress-striped]="striped">
+    <div #linearBar class="progress-bar progress-bar{{type ? '-' + type : ''}}"
+        aria-valuemin="0"
+        [attr.aria-valuemax]="max"
+        [attr.aria-valuenow]="getValue()"
+        [style.width.%]="_valueInPercent || getPercentValue()">
+        <b>{{_valueInPercent || getPercentValue()}}%</b>
+        <ng-content></ng-content>
+    </div>
+</div>
