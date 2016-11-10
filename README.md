@@ -23,7 +23,8 @@ Current list of controls include:
 | **checkbox**          |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
 | **switch**            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
 | **scroll**            |             Planned | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
-
+| **progress bar**            |             Planned | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
+| **snackbar**            |             Planned | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
 ## Setup
 From the root folder run:
 
