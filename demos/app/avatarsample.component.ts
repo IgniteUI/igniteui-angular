@@ -1,6 +1,6 @@
 import { Component, ViewChild, QueryList, ViewChildren } from "@angular/core";
 import { AvatarModule, Avatar } from "../../src/avatar/avatar";
-import { BadgeModule, Badge } from "../../src/badge/badge";
+import { IgxBadgeModule, IgxBadge } from "../../src/badge/badge";
 
 @Component({
     selector: "avatar-sample",
@@ -16,7 +16,7 @@ import { BadgeModule, Badge } from "../../src/badge/badge";
                 <tr>
                     <td>
                         <ig-avatar [src]="src" [roundShape]="roundShape">
-                            <ig-badge type="warning" value="8"></ig-badge>
+                            <igx-badge type="warning" value="8"></igx-badge>
                         </ig-avatar>
                     </td>
                     <td>
@@ -49,31 +49,31 @@ import { BadgeModule, Badge } from "../../src/badge/badge";
                     <td>
                         <ig-avatar initials="ZK" width="100" roundShape="true"
                             bgColor="#ff6978">
-                            <ig-badge type="error" value="222" position="bottom-left"></ig-badge>
+                            <igx-badge type="error" value="222" position="bottom-left"></igx-badge>
                         </ig-avatar>
                     </td>
                     <td>
                         <ig-avatar initials="HA" width="100" size="potatos"
                             bgColor="#340068">
-                            <ig-badge type="info" position="top-right"></ig-badge>
+                            <igx-badge type="info" position="top-right"></igx-badge>
                         </ig-avatar>
                     </td>
                     <td>
                         <ig-avatar initials="PP" width="100" color="black" icon="person"
                             roundShape="false" bgColor="#94feed">
-                            <ig-badge icon="link" position="invalid"></ig-badge>
+                            <igx-badge icon="link" position="invalid"></igx-badge>
                         </ig-avatar>
                     </td>
                     <td>
                         <ig-avatar initials="PP" size="medium" roundShape="false"
                             bgColor="#e41c77">
-                            <ig-badge type="success" icon="done" position="bottom-right"></ig-badge>
+                            <igx-badge type="success" icon="done" position="bottom-right"></igx-badge>
                         </ig-avatar>
                     </td>
                     <td>
                         <ig-avatar initials="ZK" size="large" roundShape="true"
                             bgColor="#484848">
-                            <ig-badge type="success" icon="done" position="top-right"></ig-badge>
+                            <igx-badge type="success" icon="done" position="top-right"></igx-badge>
                         </ig-avatar>
                     </td>
                     <td>

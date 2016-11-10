@@ -1,14 +1,5 @@
-import {
-    NgModule,
-    Directive,
-    Component,
-    ElementRef,
-    Renderer,
-    OnInit,
-    Input,
-    Output,
-    ViewChild,
-    HostBinding
+import { NgModule, Directive, Component, ElementRef, Renderer, OnInit, Input,
+        Output, ViewChild, HostBinding
 } from '@angular/core';
 import { CommonModule } from "@angular/common";
 
@@ -16,11 +7,11 @@ export enum Type { DEFAULT, INFO, SUCCESS, WARNING, ERROR }
 export enum Position { TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }
 
 @Component({
-    selector: 'ig-badge',
+    selector: 'igx-badge',
     moduleId: module.id,
     templateUrl: 'badge.html'
 })
-export class Badge {
+export class IgxBadge {
     private _type: string = "";
     private _value: string;
     private _iconBdg: string;
@@ -86,27 +77,27 @@ export class Badge {
         switch (this.TypeEnum[this._type.toUpperCase()]) {
             case Type.DEFAULT:
                 classes = {
-                    "ig-badge__circle--default": true
+                    "igx-badge__circle--default": true
                 };
                 break;
             case Type.INFO:
                 classes = {
-                    "ig-badge__circle--info": true
+                    "igx-badge__circle--info": true
                 };
                 break;
             case Type.SUCCESS:
                 classes = {
-                    "ig-badge__circle--success": true
+                    "igx-badge__circle--success": true
                 };
                 break;
             case Type.WARNING:
                 classes = {
-                    "ig-badge__circle--warning": true
+                    "igx-badge__circle--warning": true
                 };
                 break;
             case Type.ERROR:
                 classes = {
-                    "ig-badge__circle--error": true
+                    "igx-badge__circle--error": true
                 };
                 break;
         }
@@ -120,22 +111,22 @@ export class Badge {
         switch (this.PositionEnum[this.position.replace("-","_").toUpperCase()]) {
             case Position.BOTTOM_LEFT:
                 className = {
-                    "ig-badge--bottom-left": true
+                    "igx-badge--bottom-left": true
                 };
                 break;
             case Position.BOTTOM_RIGHT:
                 className = {
-                    "ig-badge--bottom-right": true
+                    "igx-badge--bottom-right": true
                 };
                 break;
             case Position.TOP_LEFT:
                 className = {
-                    "ig-badge--top-left": true
+                    "igx-badge--top-left": true
                 };
                 break;
             case Position.TOP_RIGHT:
                 className = {
-                    "ig-badge--top-right": true
+                    "igx-badge--top-right": true
                 };
                 break;
         }
@@ -145,9 +136,9 @@ export class Badge {
 }
 
 @NgModule({
-    declarations: [Badge],
+    declarations: [IgxBadge],
     imports: [CommonModule],
-    exports: [Badge]
+    exports: [IgxBadge]
 })
-export class BadgeModule {
+export class IgxBadgeModule {
 }

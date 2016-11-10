@@ -6,7 +6,7 @@ import {
 
     IgInput, CarouselModule , CheckboxModule, SwitchModule,
     IgRadioModule , TabBarModule , ListModule, ButtonModule, Label,
-    AvatarModule, FilterModule, IgRippleModule, BadgeModule, IgxIconModule
+    AvatarModule, FilterModule, IgRippleModule, IgxBadgeModule, IgxIconModule
 
 } from "../../src/main";
 
@@ -42,7 +42,7 @@ import { routing } from "./app.routing";
         IconSampleModule,
         IgRippleModule,
         routing,
-        BadgeModule,        
+        IgxBadgeModule,
         IgInput,
         IgxIconModule
     ],
