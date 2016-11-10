@@ -21,3 +21,4 @@ export * from './navbar/navbar';
 export * from './directives/filter';
 export * from './directives/ripple';
 export * from './badge/badge';
+export * from './snackbar/snackbar.component';

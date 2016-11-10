@@ -1,7 +1,6 @@
 import { ModuleWithProviders } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
-import { AppComponent } from "./app.component";
 import { InputSampleComponent } from "./inputsample.component";
 import { CarouselSampleComponent } from "./carouselsample.component";
 import { TabBarSampleComponent } from "./tabbarsample.component";
@@ -11,6 +10,7 @@ import { AvatarSampleComponent } from "./avatarsample.component";
 import { NavbarSampleComponent } from "./navbar/sample.component";
 import { ModalSampleComponent } from "./modal/sample.component";
 import { IconSampleComponent } from "./icon/sample.component";
+import { IgxSnackbarSampleComponent } from "./snackbar/sample.component";
 
 const appRoutes: Routes = [
     {
@@ -45,6 +45,10 @@ const appRoutes: Routes = [
     {
         path: "navbar",
         component: NavbarSampleComponent
+    },
+    {
+        path: "snackbar",
+        component: IgxSnackbarSampleComponent
     },
     {
         path: "modal",
