@@ -66,7 +66,7 @@ export class IgxSnackbar {
      * @type {EventEmitter}
      */
     @Output()
-    public onAction?: EventEmitter = new EventEmitter();
+    public onAction? = new EventEmitter();
 
     private _intevalId;
 
