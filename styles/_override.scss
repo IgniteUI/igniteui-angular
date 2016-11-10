@@ -128,17 +128,6 @@ pre[class*=language-]
     margin  : 5px 5px 5px 0;
     display : block;
   }
-
-  #log
-  {
-    overflow-y : auto;
-    padding    : .5em;
-    font-size  : small;
-    overflow-x : hidden;
-    max-height : 141px;
-    background : #fffceb;;
-    border     : em(1) solid #ddd;
-  }
 }
 
 .ripple-wrapper
@@ -208,4 +197,11 @@ pre[class*=language-]
 .ig-button--gradient
 {
   max-height : 32px;
+}
+
+.ig-button, .ig-button--flat, .ig-button--gradient, .ig-button--raised
+{
+  max-width     : 100%;
+  width         : 100%;
+  margin-bottom : em(10);
 }

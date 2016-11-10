@@ -47,17 +47,5 @@
             <button (click)="pin = true;"> pin</button>
             <button (click)="pin = false;"> unpin</button>
         </div>
-
-        <label>
-            Width: <input type='text' [(ngModel)]="drawerWidth" placeholder="Expanded width (300px)"/>
-        </label>
-
-        <label *ngIf="showMiniWidth">
-            Mini width: <input type='text' [(ngModel)]="drawerMiniWidth" placeholder="Mini width (60px)"/>
-        </label>
-        <div id="log" *ngIf="showEventLog">
-            <p> Events: </p>
-            <div *ngFor="let ev of log">{{ev}}</div>
-        </div>
     </div>
 
