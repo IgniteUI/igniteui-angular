@@ -3,7 +3,7 @@
 import { NgModule } from "@angular/core";
 
 import { AvatarModule } from "./avatar/avatar";
-import { BadgeModule } from "./badge/badge";
+import { IgxBadgeModule } from "./badge/badge";
 import { CarouselModule } from "./carousel/carousel";
 import { CheckboxModule } from "./checkbox/checkbox";
 import { IgxIconModule } from "./icon/icon";
@@ -18,7 +18,7 @@ import { TabBarModule } from "./tabbar/tab";
 @NgModule({
     imports: [
         AvatarModule,
-        BadgeModule,
+        IgxBadgeModule,
         CarouselModule,
         CheckboxModule,
         IgxIconModule,
@@ -32,7 +32,7 @@ import { TabBarModule } from "./tabbar/tab";
     ],
     exports: [
         AvatarModule,
-        BadgeModule,
+        IgxBadgeModule,
         CarouselModule,
         CheckboxModule,
         IgxIconModule,

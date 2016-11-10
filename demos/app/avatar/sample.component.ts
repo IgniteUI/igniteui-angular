@@ -1,6 +1,6 @@
 import { Component, ViewChild, QueryList, ViewChildren } from "@angular/core";
 import { AvatarModule, Avatar } from "../../../src/avatar/avatar";
-import { BadgeModule, Badge } from "../../../src/badge/badge";
+import { IgxBadgeModule, IgxBadge } from "../../../src/badge/badge";
 
 @Component({
     selector: "avatar-sample",
