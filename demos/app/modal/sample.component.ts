@@ -11,7 +11,7 @@ import { IgInput } from "../../../src/main";
 })
 export class ModalSampleComponent implements OnInit {
     ngOnInit() {
-    
+
     }
 
     onDialogOKSelected(args) {
