@@ -1,6 +1,7 @@
 /**
  * Public API facet
  */
+export * from "./modules";
 export * from './core/navigation';
 
 export * from './navigation-drawer/navigation-drawer';
@@ -21,4 +22,7 @@ export * from './navbar/navbar';
 export * from './directives/filter';
 export * from './directives/ripple';
 export * from './badge/badge';
+<<<<<<< HEAD
 export * from './progressbar/progressbar.component';
+=======
+>>>>>>> f5d31f3de95c0e3f230fdb0cb55074c3dd063752

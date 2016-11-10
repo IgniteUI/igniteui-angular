@@ -1,18 +1,10 @@
 import { Component } from "@angular/core";
-import { CarouselModule } from "../../src/carousel/carousel";
+import { CarouselModule } from "../../../src/carousel/carousel";
 
 @Component({
     selector: "carousel-sample",
-    template:`
-        <h3>Carousel</h3>
-        <div style="width: 100%;">
-            <ig-carousel [interval]="interval" [pause]="pause" [loop]="loop">
-                <ig-slide *ngFor="let slide of slides;" [active]="slide.active">
-                    <img [src]="slide.image">
-                </ig-slide>
-            </ig-carousel>
-        </div>
-    `
+    moduleId: module.id,
+    templateUrl: './sample.component.html'
 })
 export class CarouselSampleComponent {
     slides: Array<any> = [];

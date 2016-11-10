@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
 
+<<<<<<< HEAD
 import {
 
     IgInput, CarouselModule , CheckboxModule, SwitchModule,
@@ -13,14 +14,17 @@ import {
 >>>>>>> f7fadc6096d923eabbdfa81963c1180b7970efbb
 
 } from "../../src/main";
+=======
+import { IgxComponentsModule, IgxDirectivesModule } from "../../src/main";
+>>>>>>> f5d31f3de95c0e3f230fdb0cb55074c3dd063752
 
 import { AppComponent } from "./app.component";
-import { InputSampleComponent } from "./inputsample.component";
-import { CarouselSampleComponent } from "./carouselsample.component";
-import { TabBarSampleComponent } from "./tabbarsample.component";
-import { ListSampleComponent } from "./listsample.component";
-import { ButtonsSampleComponent } from "./buttonssample.component";
-import { AvatarSampleComponent } from "./avatarsample.component";
+import { InputSampleModule } from "./input/sample.module";
+import { CarouselSampleModule } from "./carousel/sample.module";
+import { TabBarSampleModule } from "./tabbar/sample.module";
+import { ListSampleModule } from "./list/sample.module";
+import { ButtonSampleModule } from "./button/sample.module";
+import { AvatarSampleModule } from "./avatar/sample.module";
 import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
 import { NavbarSampleModule } from "./navbar/sample.module";
 import { ProgressbarSampleComponent } from "./progressbarsample.component";
@@ -32,18 +36,19 @@ import { routing } from "./app.routing";
     imports: [
         BrowserModule,
         FormsModule,
-        CarouselModule,
-        CheckboxModule,
-        SwitchModule,
-        IgRadioModule,
-        TabBarModule,
-        ListModule,
-        ButtonModule,
-        AvatarModule,
-        FilterModule,
+        routing,
+        IgxComponentsModule,
+        IgxDirectivesModule,
+        InputSampleModule,
+        CarouselSampleModule,
+        TabBarSampleModule,
+        ListSampleModule,
+        ButtonSampleModule,
+        AvatarSampleModule,
         NavDrawerSampleModule,
         NavbarSampleModule,
         ModalSampleModule,
+<<<<<<< HEAD
         IconSampleModule,
         IgRippleModule,
         routing,
@@ -65,6 +70,12 @@ import { routing } from "./app.routing";
         ButtonsSampleComponent,
         AvatarSampleComponent,
         ProgressbarSampleComponent
+=======
+        IconSampleModule
+    ],
+    declarations: [
+        AppComponent,
+>>>>>>> f5d31f3de95c0e3f230fdb0cb55074c3dd063752
     ],
     bootstrap: [
         AppComponent

@@ -2,12 +2,12 @@ import { ModuleWithProviders } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
 import { AppComponent } from "./app.component";
-import { InputSampleComponent } from "./inputsample.component";
-import { CarouselSampleComponent } from "./carouselsample.component";
-import { TabBarSampleComponent } from "./tabbarsample.component";
-import { ListSampleComponent } from "./listsample.component";
-import { ButtonsSampleComponent } from "./buttonssample.component";
-import { AvatarSampleComponent } from "./avatarsample.component";
+import { InputSampleComponent } from "./input/sample.component";
+import { CarouselSampleComponent } from "./carousel/sample.component";
+import { TabBarSampleComponent } from "./tabbar/sample.component";
+import { ListSampleComponent } from "./list/sample.component";
+import { ButtonsSampleComponent } from "./button/sample.component";
+import { AvatarSampleComponent } from "./avatar/sample.component";
 import { NavbarSampleComponent } from "./navbar/sample.component";
 import { ProgressbarSampleComponent } from "./progressbarsample.component";
 import { ModalSampleComponent } from "./modal/sample.component";
