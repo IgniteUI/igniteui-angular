@@ -1,6 +1,7 @@
 /**
  * Public API facet
  */
+export * from "./modules";
 export * from './core/navigation';
 
 export * from './navigation-drawer/navigation-drawer';
