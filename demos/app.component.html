@@ -9,7 +9,7 @@
                 <nav class="nav-list nav-components">
                     <h3>Components</h3>
                     <ul (click)="navItemClick($event)">
-                        <li #item><a><span data-demo="switch" routerLink="/switch">Switch</span></a></li>
+                        <li #item class="active"><a><span data-demo="switch" routerLink="/switch">Switch</span></a></li>
                         <li #item><a><span data-demo="radio" routerLink="/radio">Radio</span></a></li>
                         <li #item><a><span data-demo="carousel" routerLink="/carousel">Carousel</span></a></li>
                         <li #item><a><span data-demo="tabbar" routerLink="/tabbar">Tabbar</span></a></li>
@@ -21,7 +21,7 @@
                 <nav class="nav-list nav-directives">
                     <h3>Directives</h3>
                     <ul (click)="navItemClick($event)">
-                        <li #item><a><span data-demo="filter" routerLink="/list">filter</span></a></li>
+                        <li #item><a><span data-demo="filter" routerLink="/filter">filter</span></a></li>
                         <li #item><a><span data-demo="ripple" routerLink="/ripple">ripple</span></a></li>
                         <li #item><a><span data-demo="button" routerLink="/buttons">button</span></a></li>
                         <li #item><a><span data-demo="input" routerLink="/inputs">input</span></a></li>
@@ -42,8 +42,8 @@
                     <optgroup label="Directives">
                         <option #item value="filter">filter</option>
                         <option #item value="ripple">ripple</option>
-                        <option #item value="button">button</option>
-                        <option #item value="input">input</option>
+                        <option #item value="buttons">button</option>
+                        <option #item value="inputs">input</option>
                     </optgroup>
                 </select>
                 </div>
@@ -61,8 +61,8 @@
         <header class="flex-container main-header code-section-header justify-content-b">
             <h4>Code Sample</h4>
             <nav class="tabs">
-                <a (click)="changeContent($event)" class="selected">HTML</a>
-                <a (click)="changeContent($event)" class="">TS</a>
+                <a #tab (click)="changeContent($event)" class="active">HTML</a>
+                <a #tab (click)="changeContent($event)">TS</a>
             </nav>
         </header>
         <div class="code-snipet">
