@@ -22,12 +22,14 @@ while the content of the <ig-radio> tag is what gets displayed in the label asso
 
 ##You can assign unique id's by using the 'id' property and use the 'name' property to group buttons together.
 
-##The rest of the properties are also standard and control the tabIndex and disabled attributes of the input element that gets rendered:
+##The rest of the properties are also standard and control the tabIndex, disabled and checked attributes of the input element that gets rendered:
 ```html
 <ig-radio
     id="{{user.id}}"
     value="{{user.manHours}}"
-    tabIndex="50"
+    [tabIndex]="50"
+    [disabled]="false"
+    [checked]="false"
     [(ngModel)]="user.favouriteVarName">
     {{item}}
 </ig-radio>
