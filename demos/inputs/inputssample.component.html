@@ -4,20 +4,21 @@
 
 <div class="flex-column flex-wrap space-wrapper justify-content-start">
     <div class="ig-form-group">
-        <label igLabel>Username</label>
         <input type="text" igInput [(ngModel)]="user.name" />
+        <label igLabel>Username</label>
         <span>value = {{ user.name || ''}}</span>
     </div>
 
+
     <div class="ig-form-group">
-        <label igLabel>Password</label>
         <input type="password" igInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
+        <label igLabel>Password</label>
         <span>value = {{ user.password || ''}}</span>
     </div>
 
     <div class="ig-form-group">
-        <label igLabel>Textarea</label>
         <textarea placeholder="{{placeholder}}" igInput [(ngModel)]="user.comment"></textarea>
+        <label igLabel>Textarea</label>
         <span>value = {{ user.comment || ''}}</span>
     </div>
 
