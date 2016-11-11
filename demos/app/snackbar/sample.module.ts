@@ -1,8 +1,8 @@
-import { NgModule } from "@angular/core";
+import { NgModule } from '@angular/core';
 
-import { IgxXSnackbarModule } from "../../../src/main";
+import { IgxXSnackbarModule } from '../../../src/main';
 import { IgxSnackbarSampleComponent } from './sample.component';
-import { ButtonModule } from "../../../src/button/button";
+import { ButtonModule } from '../../../src/button/button';
 
 @NgModule({
     imports: [

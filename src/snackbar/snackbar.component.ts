@@ -1,7 +1,7 @@
-import { Component, NgModule, Input, Output, EventEmitter } from "@angular/core";
-import { HammerGesturesManager } from "../core/touch";
-import { ButtonModule } from "../button/button";
-import { CommonModule } from "@angular/common";
+import { Component, NgModule, Input, Output, EventEmitter } from '@angular/core';
+import { HammerGesturesManager } from '../core/touch';
+import { ButtonModule } from '../button/button';
+import { CommonModule } from '@angular/common';
 
 /**
  * IgxSnackbar provides feedback about an operation by showing brief message at the bottom of the screen on mobile
@@ -13,12 +13,12 @@ import { CommonModule } from "@angular/common";
  * ```
  **/
 @Component({
-    selector: "ig-snackbar",
+    selector: 'ig-snackbar',
     moduleId: module.id,
     styleUrls: [
-        "snackbar.component.scss"
+        'snackbar.component.scss'
     ],
-    templateUrl: "snackbar.component.html",
+    templateUrl: 'snackbar.component.html',
     providers: [HammerGesturesManager]
 })
 export class IgxSnackbar {

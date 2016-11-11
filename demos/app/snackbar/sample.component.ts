@@ -1,11 +1,11 @@
-import { Component, OnInit } from "@angular/core";
-import { IgxSnackbar } from "../../../src/snackbar/snackbar.component";
+import { Component, OnInit } from '@angular/core';
+import { IgxSnackbar } from '../../../src/snackbar/snackbar.component';
 
 @Component({
     moduleId: module.id,
-    selector: "snackbar-sample",
-    styleUrls: ["sample.component.css"],
-    templateUrl: "sample.component.html",
+    selector: 'snackbar-sample',
+    styleUrls: ['sample.component.css'],
+    templateUrl: 'sample.component.html',
 })
 export class IgxSnackbarSampleComponent implements OnInit {
     color: string;
@@ -14,8 +14,8 @@ export class IgxSnackbarSampleComponent implements OnInit {
     private _colors: Array<string>;
 
     ngOnInit() {
-        this.color = "#000";
-        this.actionName = "Undo";
+        this.color = '#000';
+        this.actionName = 'Undo';
         this._colors = [];
     }
 
