@@ -7,10 +7,14 @@
     </div>
     <div template="ngIf navigation">
         <a class="left ig-carousel-control" (click)="prev()" [hidden]="!slides.length">
-            <span>Prev</span>
+            <span>
+                <i class="material-icons">navigate_before</i>
+            </span>
         </a>
         <a class="right ig-carousel-control" (click)="next()" [hidden]="!slides.length">
-            <span>Next</span>
+            <span>
+                <i class="material-icons">navigate_next</i>
+            </span>
         </a>
     </div>
 </div>

@@ -35,7 +35,7 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/icon',
+        redirectTo: '/carousel',
         pathMatch: 'full'
     },
     {
