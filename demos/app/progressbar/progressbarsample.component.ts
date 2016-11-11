@@ -1,5 +1,5 @@
-import { Component } from "@angular/core";
-import { IgProgressBarModule } from "../../src/progressbar/progressbar.component";
+import { Component, NgModule } from "@angular/core";
+import { IgProgressBarModule } from "../../../src/main";
 
 @Component({
     selector: "progressbar-sample",
