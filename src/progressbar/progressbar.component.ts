@@ -67,11 +67,11 @@ export abstract class BaseProgress {
 
 @Component({
     moduleId: module.id,
-    selector: 'ig-linear-bar',
+    selector: 'igx-linear-bar',
     templateUrl: 'templates/linear-bar.component.html',
     styleUrls: [ 'styles/linear-bar.style.css' ]
 })
-export class IgLinearProgressBar extends BaseProgress implements OnChanges {
+export class IgxLinearProgressBar extends BaseProgress implements OnChanges {
     private _interval: number = 15;
 
     @ViewChild('linearBar') private _linear_bar: ElementRef;
@@ -102,11 +102,11 @@ export class IgLinearProgressBar extends BaseProgress implements OnChanges {
 
 @Component({
     moduleId: module.id,
-    selector: 'ig-circular-bar',
+    selector: 'igx-circular-bar',
     templateUrl: 'templates/circular-bar.component.html',
     styleUrls: [ 'styles/circular-bar.style.css' ]
 })
-export class IgCircularProgressBar extends BaseProgress implements AfterViewInit, OnChanges {
+export class IgxCircularProgressBar extends BaseProgress implements AfterViewInit, OnChanges {
     private _radius: number = 0;
     private _circumference: number = 0;
     private _interval: number = 15;
@@ -178,8 +178,8 @@ export function convertValueInPercent(value: number, max: number) {
 
 @NgModule({
     imports: [ CommonModule],
-    declarations: [IgLinearProgressBar, IgCircularProgressBar],
-    exports: [IgLinearProgressBar, IgCircularProgressBar]
+    declarations: [IgxLinearProgressBar, IgxCircularProgressBar],
+    exports: [IgxLinearProgressBar, IgxCircularProgressBar]
 })
-export class IgProgressBarModule {
+export class IgxProgressBarModule {
 }

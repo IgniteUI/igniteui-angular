@@ -1,36 +1,36 @@
 import { Component, NgModule } from "@angular/core";
-import { IgProgressBarModule } from "../../../src/main";
+import { IgxProgressBarModule } from "../../../src/main";
 
 @Component({
     selector: "progressbar-sample",
     template: `
         <button type="button" class="btn btn-sm btn-default" (click)="generateNewProgressValues()">Generate New Values</button>
         <div class="progress-container-linear">
-            <ig-linear-bar [striped]="false" [value]="currentValue" [max]="200">
-            </ig-linear-bar>
+            <igx-linear-bar [striped]="false" [value]="currentValue" [max]="200">
+            </igx-linear-bar>
         </div>
         <div class="progress-container-linear">
-            <ig-linear-bar type="danger" [striped]="false" [value]="currentValue">
-            </ig-linear-bar>
+            <igx-linear-bar type="danger" [striped]="false" [value]="currentValue">
+            </igx-linear-bar>
         </div>
         <div class="progress-container-linear">
-            <ig-linear-bar type="warning" [value]="20">
-            </ig-linear-bar>
+            <igx-linear-bar type="warning" [value]="20">
+            </igx-linear-bar>
         </div>
         <div class="progress-container-linear">
-            <ig-linear-bar type="info" [striped]="false" [value]="currentValue">
-            </ig-linear-bar>
+            <igx-linear-bar type="info" [striped]="false" [value]="currentValue">
+            </igx-linear-bar>
         </div>
         <div class="progress-container-linear">
-            <ig-linear-bar type="success" striped="true"[value]="currentValue">
-            </ig-linear-bar>
+            <igx-linear-bar type="success" striped="true"[value]="currentValue">
+            </igx-linear-bar>
         </div>
         <div class="progress-container-linear">
-            <ig-linear-bar [striped]="true" [max]="100" (onProgressChanged)="change($event)" [value]="currentValue">
-            </ig-linear-bar>
+            <igx-linear-bar [striped]="true" [max]="100" (onProgressChanged)="change($event)" [value]="currentValue">
+            </igx-linear-bar>
         </div>
         <div class="progress-container-circular">
-            <ig-circular-bar [max]="200" (onProgressChanged)="f($event)" [value]="currentValue"></ig-circular-bar>
+            <igx-circular-bar (onProgressChanged)="f($event)" [value]="currentValue"></igx-circular-bar>
         </div>
     `,
     styles: [
@@ -57,7 +57,7 @@ export class ProgressbarSampleComponent {
     }
 
     private generateNewProgressValues() {
-        let value = this.randomIntFromInterval(this.currentValue, 300);
+        let value = this.randomIntFromInterval(this.currentValue, 100);
 
         this.currentValue = value;
     }

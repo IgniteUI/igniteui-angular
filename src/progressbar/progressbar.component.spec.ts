@@ -4,15 +4,15 @@ import {
 } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { IgCircularProgressBar, IgLinearProgressBar } from './progressbar.component'
+import { IgxCircularProgressBar, IgxLinearProgressBar } from './progressbar.component'
 
 describe('IgProgressBar', function() {
    beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InitProgressBar,
-                IgCircularProgressBar,
-                IgLinearProgressBar
+                IgxCircularProgressBar,
+                IgxLinearProgressBar
             ]
         })
         .compileComponents();
@@ -146,8 +146,8 @@ describe('IgProgressBar UI Logic', function() {
         TestBed.configureTestingModule({
             declarations: [
                 SetValueProgressBar,
-                IgCircularProgressBar,
-                IgLinearProgressBar,
+                IgxCircularProgressBar,
+                IgxLinearProgressBar,
             ]
         })
         .compileComponents();
@@ -171,17 +171,17 @@ describe('IgProgressBar UI Logic', function() {
     // });
 });
 
-@Component({ template: `<ig-linear-bar></ig-linear-bar>` })
+@Component({ template: `<igx-linear-bar></igx-linear-bar>` })
 class InitProgressBar{
-    @ViewChild(IgLinearProgressBar) progressbar: IgLinearProgressBar;
+    @ViewChild(IgxLinearProgressBar) progressbar: IgxLinearProgressBar;
 }
 
 @Component({ template: `<div #wrapper>
-                            <ig-linear-bar [value]="value">
-                            </ig-linear-bar>
+                            <igx-linear-bar [value]="value">
+                            </igx-linear-bar>
                         </div>` })
 class SetValueProgressBar{
-    @ViewChild(IgLinearProgressBar) progressbar: IgLinearProgressBar;
+    @ViewChild(IgxLinearProgressBar) progressbar: IgxLinearProgressBar;
     @ViewChild("wrapper") wrapper;
 
     value: number = 30;
