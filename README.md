@@ -17,13 +17,13 @@ Current list of controls include:
 | **list**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     | **input**             |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
 | **navbar**            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     | **label**             |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
 | **tabbar**            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     | **layout**            |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
-| **dialog**            |     Initial version | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/modal/README.md) |     | **icon**              |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
+| **dialog**            |     Initial version | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/modal/README.md) |     | |     |                                                           |
 | **navigation drawer** |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
 | **radio**             |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
 | **checkbox**          |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
 | **switch**            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
 | **scroll**            |             Planned | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
-
+| **icon**              |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)       |     |                       |               |                                                           |
 ## Setup
 From the root folder run:
 
