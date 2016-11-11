@@ -2,7 +2,7 @@
 <h1 class="componentTitle">Filter</h1>
 <p class="componentDesc">A directive that allows to do filtering, for example on the list as below.</p>
 <div class="ig-form-group">
-    <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
+    <input id="filter" class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
 </div>
 <ig-list>
     <ig-list-item igRipple="pink" igRippleTarget=".ig-list__item" *ngFor="let item of navItems | filter: fo1">

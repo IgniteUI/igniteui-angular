@@ -14,17 +14,25 @@ export class AppComponent {
 
     @ViewChildren("item") items;
     @ViewChild("code") code;
-
+    @ViewChildren("tab") tabs;
+    
     constructor(private router: Router, private codeHandler: CodeHandler) {
         this.codeHandler = new CodeHandler();
     }
 
     ngOnInit() {
         this.populateCodeContainer(this.codeHandler.getCode('switch'));
-        console.log(this.markup);
     }
 
     public changeContent(args) {
+        let tabs = this.tabs._results;
+
+        for (let tab of tabs) {
+            tab.nativeElement.className = '';
+        }
+
+        args.currentTarget.className = "active";
+
         if (args.currentTarget.textContent == "TS") {
             this.code.nativeElement.classList = 'language-typescript';
             this.code.nativeElement.innerText = this.typescriptCode;
@@ -32,6 +40,7 @@ export class AppComponent {
             this.code.nativeElement.classList = 'language-markup';
             this.code.nativeElement.innerText = this.markup;
         }
+        
         Prism.highlightAll();
     }
 
@@ -46,8 +55,9 @@ export class AppComponent {
 
         for (let i = 0; i < items.length; i++) {
             let item = items[i];
-            item.nativeElement.className = "active";
+            item.nativeElement.className = "";
         }
+
         args.target.parentElement.parentElement.className = "active";
         // handle code tabs
         this.populateCodeContainer(this.codeHandler.getCode(widgetName));
@@ -56,6 +66,7 @@ export class AppComponent {
     private setOptionRoute(route: string) {
         this.router.navigateByUrl(route);
     }
+    
 
     private populateCodeContainer(code: any) {
         this.markup = code.markup;
