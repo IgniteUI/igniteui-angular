@@ -21,10 +21,10 @@
   }
   .active
   {
-    a {
-      color        : $sec-color;
-      border-left  : 1px solid $sec-color;
-      padding-left : em(5);
+    a
+    {
+      color       : $sec-color;
+      font-weight : 400;
       &:hover
       {
         color : $sec-color;

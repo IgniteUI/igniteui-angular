@@ -1,13 +1,13 @@
-%button-display {
-    position: relative;
+%igx-button-display {
     display: inline-block;
+    position: relative;
     min-width: $button-width;
     padding: $button-padding;
     font-size: $button-font-size;
     font-weight: $button-font-weight;
     text-align: center;
     color: $button-color;
-    border: $button-border;  
+    border: $button-border;
     border-radius: $button-radius;
     text-transform: uppercase;
     cursor: pointer;
@@ -15,13 +15,12 @@
     outline: none;
     -webkit-tap-highlight-color: transparent;
     overflow: hidden;
-    &:hover {
-        transition: $button-transition;
-    }
+    transition: $button-transition;
 }
 
-%button-flat {
-    color: $primary-color;
+%igx-button--flat {
+    background: transparent;
+    color: $secondary-color;
     &:hover {
         background: $button-flat-hover-background;
     }
@@ -31,22 +30,22 @@
     }
 }
 
-%button-raised {
+%igx-button--raised {
     color: $button-raised-color;
     background: $button-raised-background;
     box-shadow: $button-raised-shadow;
     &:hover {
-      background: $button-focus-background;
-      box-shadow: $button-raised-shadow;
+        background: $button-focus-background;
+        box-shadow: $button-raised-shadow;
     }
     &:focus,
     &:active {
-      background: $button-focus-background;
-      box-shadow: $button-raised-focus-shadow;
+        background: $button-focus-background;
+        box-shadow: $button-raised-focus-shadow;
     }
 }
 
-%button-gradient {
+%igx-button--gradient {
     color: $button-gradient-color;
     background: $button-gradient-background;
     box-shadow: $button-gradient-shadow;
@@ -58,54 +57,59 @@
     &:active {
         background: $button-focus-gradient;
         box-shadow: $button-gradient-focus-shadow;
-    }    
+    }
 }
 
-%button-fab {
-    display: flex;
+%igx-button--round {
+    $block: &;
+    
     position: relative;
+    display: flex;
+    flex-direction: row nowrap;
     justify-content: center;
     align-items: center;
-    color: $button-raised-color;
-    min-width: 1px;
-    width: $button-floating-width;
-    height: $button-floating-height;
-    background: $button-floating-background;
     border: $button-border;
-    border-radius: $button-floating-radius;
+    border-radius: $button-round-radius;
     outline: none;
+    cursor: pointer;
+    transition: $button-transition;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
     // hack to allow circular overflow in chrome ...
     filter: drop-shadow(0 0 0 rgba(255, 255, 255, 1));
+
+    // reset for safari's inability to handle flex in buttons
+    @at-root {
+        button#{$block} {
+            display: initial;
+            * {
+                display: flex;
+                justify-content: center;
+            }
+        }
+    }
+}
+
+%igx-button--fab {
+    width: $button-floating-width;
+    height: $button-floating-height;
+    color: $button-raised-color;
+    background: $button-floating-background;
     box-shadow: $button-floating-shadow;
     &:hover {
-      box-shadow: $button-floating-hover-shadow;
+        box-shadow: $button-floating-hover-shadow;
     }
     &:focus,
     &:active {
-      background: $button-focus-background;
+        background: $button-focus-background;
     }
 }
 
-%button-fab-icon {
-    color: $button-raised-color;
-}
-
-%button-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: em(24px, 16px);
-    width: em(28px, 16px);
-    height: em(28px, 16px);
-    border-radius: 50%;
-    cursor: pointer;
-    outline: none;
-    border: none;
+%igx-button--icon {
+    width: $button-icon-width;
+    height: $button-icon-width;
+    font-size: $button-icon-font-size;
     background: transparent;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    // another hack to allow circular overflow in chrome ...
-    -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
     &:hover {
         transition: $button-transition;
         background: $button-icon-hover-background;
@@ -116,27 +120,17 @@
     }
 }
 
-%button-navbar {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    font-size: em(24px, 16px);
-    width: em(24px, 16px);
-    height: em(24px, 16px);
+%igx-button--navbar {
+    width: $button-navbar-width;
+    height: $button-navbar-height;
+    font-size: $button-icon-font-size;
     padding: 0;
-    cursor: pointer;
-    outline: none;
-    border: none;
-    background: transparent;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
 }
 
-%button-disabled {
+%igx-button--disabled {
     color: $button-disabled-color !important;
     background: $button-disabled-background !important;
-    pointer-events: none !important; 
+    pointer-events: none !important;
     box-shadow: $button-disabled-shadow !important;
-    opacity: 0.9 !important;
+    opacity: 0.8 !important;
 }

@@ -1,15 +1,15 @@
-%ig-list {
+%igx-list {
     background-color: $list-background;
     overflow: hidden;
 }
 
-%ig-list-item-display {
+%igx-list-item-display {
     display: list-item;
     position: relative;
     list-style-type: none;
 }
 
-%ig-list-header {
+%igx-list-header {
     display: flex;
     align-items: center;
     color: $list-header-color;
@@ -22,7 +22,7 @@
     user-select: none;
 }
 
-%ig-list-item {
+%igx-list-item {
     display: flex;
     position: relative;
     flex-flow: column wrap;
@@ -35,7 +35,7 @@
     z-index: 2;
 }
 
-%ig-list-item--active {
+%igx-list-item--active {
     background-color: $list-item-active-background;
     box-shadow: $list-item-active-shadow;
 }

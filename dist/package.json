@@ -1,7 +1,7 @@
 {
-  "name": "zero-blocks",
+  "name": "igniteui-js-blocks",
   "version": "0.1.0",
-  "description": "Infragistics Angular2 Components and supporting directives built with TypeScript and Angular 2",
+  "description": "Infragistics mobile-first Angular2 native components and supporting directives built with TypeScript",
   "author": "Infragistics",
   "license": "MIT",
   "peerDependencies": {
@@ -19,13 +19,13 @@
   },  
   "repository": {
     "type": "git",
-    "url": "https://github.com/Infragistics/zero-blocks"
+    "url": "https://github.com/IgniteUI/igniteui-js-blocks"
   },
     "bugs": {
-    "url": "https://github.com/Infragistics/zero-blocks/issues"
+    "url": "https://github.com/IgniteUI/igniteui-js-blocks/issues"
   },
   "keywords": [
-    "zero-blocks",
+    "igniteui-js-blocks",
     "angular2"
   ]
 }

@@ -1,21 +1,21 @@
 @include b(ig-list) {
-    @extend %ig-list;
+    @extend %igx-list;
     
     @include e(header) {
-        @extend %ig-list-header;
+        @extend %igx-list-header;
     }
 
     @include e(item) {
-        @extend %ig-list-item;
+        @extend %igx-list-item;
         &:active {
-            @extend %ig-list-item--active;
+            @extend %igx-list-item--active;
         }
     }
 
     // style the wrapping component elements
     @at-root {
         ig-list-item {
-            @extend %ig-list-item-display;
+            @extend %igx-list-item-display;
         }
     }
 }

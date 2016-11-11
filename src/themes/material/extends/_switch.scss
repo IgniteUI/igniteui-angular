@@ -1,4 +1,4 @@
-%switch-lbl-display {
+%igx-switch-lbl-display {
     display: inline-block;
     position: relative;
     width: $switch-width;
@@ -24,7 +24,7 @@
     }
 }
 
-%switch-lbl--on {
+%igx-switch-lbl--on {
     background-color: $switch-active-background;
     &:after {
         left: 16px;
@@ -32,7 +32,7 @@
     }
 }
 
-%switch-lbl--disabled {
+%igx-switch-lbl--disabled {
     background: #F0F0F0;
     pointer-events: none;
     &:after {

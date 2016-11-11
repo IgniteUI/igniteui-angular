@@ -10,11 +10,23 @@
   font-style      : normal;
   background-clip : padding-box;
   box-shadow      : 0 8px 12px 0 rgba(173, 173, 173, 0.38);
-  cursor           : pointer;
+  cursor          : pointer;
   @include transition(background .3s ease);
   &:hover
   {
     background : darken($primary-color, 5%);
   }
 }
+
+.special-position
+{
+  position : absolute;
+  bottom   : em(15);
+  right    : em(15);
+  span
+  {
+    margin : em(5) 0;
+  }
+}
+
 

@@ -6,92 +6,92 @@ input:-webkit-autofill {
 
 @include b(ig-form-group) {
 
-	@extend %ig-input-display;
+	@extend %igx-input-display;
 
 	label {
-		@extend %ig-form-label;
+		@extend %igx-form-label;
 	}
 
 	@include e(clear) {
-		@extend %ig-input-clear;
+		@extend %igx-input-clear;
 
 		@include m(hidden) {
-			@extend %ig-input-clear;
-			@extend %ig-input-clear--hidden;
+			@extend %igx-input-clear;
+			@extend %igx-input-clear--hidden;
 		}
 	}
 
 	@include e(input) {
-		@extend %ig-form-input;
+		@extend %igx-form-input;
 
 		@include m(filled) {
-			@extend %ig-form-input;
+			@extend %igx-form-input;
 
 			~ label {
-				@extend %ig-form-label--filled;
-				@extend %ig-form-label--float;
+				@extend %igx-form-label--filled;
+				@extend %igx-form-label--float;
 			}
 		}
 
 		@include m(focused) {
-			@extend %ig-form-input;
+			@extend %igx-form-input;
 
 			~ label {
-				@extend %ig-form-label--focused;
+				@extend %igx-form-label--focused;
 			}
 		}
 
 		@include m(placeholder) {
-			@extend %ig-form-input;
+			@extend %igx-form-input;
 
 			~ label {
-				@extend %ig-form-label--float;	
+				@extend %igx-form-label--float;	
 			}
 		}
 
 		@include m(search) {
-			@extend %ig-form-input;
-			@extend %ig-search-input;
+			@extend %igx-form-input;
+			@extend %igx-search-input;
 
 			~ label {
-				@extend %ig-search-label;
+				@extend %igx-search-label;
 			}
 		}
 
 		&:focus {
-			@extend %ig-form-input--focused;
+			@extend %igx-form-input--focused;
 		}
 		
 		&:disabled {
-			@extend %ig-form-input--disabled;
+			@extend %igx-form-input--disabled;
 		}
 		
 		&.ng-valid[required].ng-touched,
 		&.ng-valid.required  {
-			@extend %ig-form-input--success;
+			@extend %igx-form-input--success;
 			~ label {
-				@extend %ig-form-label--success;
+				@extend %igx-form-label--success;
 			}
 		}
 		
 		&.ng-invalid.ng-touched,
 		&.ng-invalid:not(form).ng-touched {
-			@extend %ig-form-input--error;
+			@extend %igx-form-input--error;
 			~ label {
-				@extend %ig-form-label--error;
+				@extend %igx-form-label--error;
 			}
 		}
 		
 		&.ng-warning {
-			@extend %ig-form-input--warn;
+			@extend %igx-form-input--warn;
 			~ label {
-				@extend %ig-form-label--warn;
+				@extend %igx-form-label--warn;
 			}
 		}
 	}
 
 	@include e(textarea) {
 		@extend .ig-form-group__input;
-		@extend %ig-textarea;
+		@extend %igx-textarea;
 	}
 }
