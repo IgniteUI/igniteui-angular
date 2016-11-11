@@ -34,10 +34,7 @@
   },
   "devDependencies": {
     "concurrently": "^2.2.0",
-    "lite-server": "^2.2.2",
-    "typescript": "^2.0.2",
-    "typings": "^1.3.2",
-    "hammer-simulator": "git+https://github.com/hammerjs/simulator.git",
+    "coveralls": "^2.11.14",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
@@ -49,18 +46,22 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-typescript": "^2.13.6",
     "gulp-watch": "^4.3.9",
+    "hammer-simulator": "git+https://github.com/hammerjs/simulator.git",
     "jasmine-core": "~2.4.1",
-    "coveralls": "^2.11.14",
     "karma": "^1.2.0",
     "karma-chrome-launcher": "^0.2.3",
     "karma-coverage": "^1.1.1",
-    "karma-mocha-reporter": "^2.2.0",
     "karma-jasmine": "^0.3.8",
+    "karma-mocha-reporter": "^2.2.0",
+    "lite-server": "^2.2.2",
     "material-design-icons": "^3.0.1",
     "merge-stream": "^1.0.0",
+    "prismjs": "^1.5.1",
+    "rimraf": "^2.4.3",
     "systemjs-builder": "0.15.31",
     "ts-node": "1.3.0",
-    "vinyl-paths": "^2.1.0",
-    "rimraf": "^2.4.3"
+    "typescript": "^2.0.2",
+    "typings": "^1.3.2",
+    "vinyl-paths": "^2.1.0"
   }
 }

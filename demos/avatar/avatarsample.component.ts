@@ -13,7 +13,6 @@ import { BadgeModule, Badge } from "zero-blocks/main";
 
 })
 export class AvatarSampleComponent {
-    //@ViewChild(Avatar) avatar: Avatar;
     // Collection of avatars
     @ViewChildren(Avatar) avatar;
     initials: string = 'ZK';
@@ -27,15 +26,15 @@ export class AvatarSampleComponent {
     }
 
     setImageSource() {
-        this.src = "https://unsplash.it/60/60?image=" + Math.floor((Math.random() * 50) + 1);
+        this.src = "http://lorempixel.com/300/300/people/" + Math.floor((Math.random() * 10) + 1);
     }
 
     public changeLink() {
-        //this.avatar.srcImage = "https://unsplash.it/60/60?image=" + Math.floor((Math.random() * 50) + 1);
-
         // for more avatars
         for (let each of this.avatar.toArray()) {
-            each.srcImage = "https://unsplash.it/60/60?image=" + Math.floor((Math.random() * 50) + 1);
+            if(each.src) {
+                each.srcImage = "http://lorempixel.com/300/300/people/" + Math.floor((Math.random() * 10) + 1);
+            }
         }
     }
 }

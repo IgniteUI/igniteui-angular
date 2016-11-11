@@ -40,31 +40,37 @@ export class CarouselSampleComponent {
                 break;
             case "avatar":
                 this.markup = 
-`<ig-avatar [src]="src" [roundShape]="roundShape">
+`<ig-avatar src="http://lorempixel.com/300/300/people/6/" roundShape="false">
+    <ig-badge type="error" icon="favorite" position="bottom-right"></ig-badge>
 </ig-avatar>
-<ig-avatar src="https://unsplash.it/60/60?image=55" [initials]="initials"
-    [bgColor]="bgColor" [roundShape]="roundShape">
+
+<ig-avatar src="http://lorempixel.com/300/300/people/9/" roundShape="true">
+    <ig-badge type="error" icon="done" type="success"></ig-badge>
 </ig-avatar>
-<ig-avatar initials="AA" bgColor="#731963" roundShape="true">
+
+<ig-avatar initials="RK" bgColor="#fbb13c"> </ig-avatar>
+
+<ig-avatar initials="ZK" bgColor="#731963" roundShape="true"></ig-avatar>
+
+<ig-avatar roundShape="true" icon="person" bgColor="#0375be" data-init="SS"></ig-avatar>
+
+<ig-avatar color="gray"></ig-avatar>
+
+<ig-avatar initials="HA" width="100" size="potatos" bgColor="#340068">
+    <ig-badge type="info" icon="camera"></ig-badge>
 </ig-avatar>
-<ig-avatar roundShape="true" icon="person" bgColor="#0375be" data-init="SS">
+
+<ig-avatar initials="PP" width="100" color="black" icon="person" roundShape="false" bgColor="#94feed">
+    <ig-badge iconBdg="person" value="7281" position="bottom-left"></ig-badge>
 </ig-avatar>
-<ig-avatar initials="ZK" width="100" roundShape="true" size="potatos"
-    bgColor="#ff6978">
-    <ig-badge type="error" value="z"></ig-badge>
-</ig-avatar>    
-<ig-avatar initials="PP" width="100" color="black" icon="person"
-    roundShape="false" bgColor="#94feed">
-    <ig-badge iconBdg="person"></ig-badge>
+
+<ig-avatar src="http://66.media.tumblr.com/avatar_af166f12c520_128.png" size="medium" roundShape="true" bgColor="#e41c77">
+    <ig-badge position="top-left" type="error" icon="build"></ig-badge>
 </ig-avatar>
-<ig-avatar initials="PP" size="medium" roundShape="false"
-    bgColor="#e41c77">
-    <ig-badge></ig-badge>
-</ig-avatar>
-<ig-avatar initials="ZK" size="large" roundShape="true"
-    bgColor="#484848">
-</ig-avatar>
-<span igButton="raised" (click)="changeLink()">Change Image</span>`
+
+<ig-avatar size="medium" src="http://fotouser.miarroba.st/99545357/300/sonic-kun.jpg" roundShape="true" bgColor="#484848">
+    <ig-badge position="bottom-right" type="info" icon="timer"></ig-badge>
+</ig-avatar>`
 
                 this.typescriptCode = 
 `import { Component, ViewChild, QueryList, ViewChildren } from "@angular/core";
@@ -86,14 +92,17 @@ export class AvatarSampleComponent {
         this.setImageSource();
     }
 
+    // Not used in example
     setImageSource() {
-        this.src = "https://unsplash.it/60/60?image=" + Math.floor((Math.random() * 50) + 1);
+        this.src = "http://lorempixel.com/300/300/people/" + Math.floor((Math.random() * 10) + 1);
     }
 
+    // Not used in example
     public changeLink() {
-        // for more avatars
         for (let each of this.avatar.toArray()) {
-            each.srcImage = "https://unsplash.it/60/60?image=" + Math.floor((Math.random() * 50) + 1);
+            if(each.src) {
+                each.srcImage = "http://lorempixel.com/300/300/people/" + Math.floor((Math.random() * 10) + 1);
+            }
         }
     }
 }`
@@ -190,7 +199,7 @@ export class ButtonsSampleComponent { }`
                 this.markup = 
 `<ig-switch [(ngModel)]="user.subscribed"></ig-switch>
 <ig-switch [(ngModel)]="!user.subscribed"></ig-switch>
-<p>Selected value = {{ user.subscribed }}</p>`
+<span>Selected value = {{ user.subscribed }}</span>`
                 this.typescriptCode = 
 `import { Component } from "@angular/core";
 
@@ -213,24 +222,33 @@ export class SwitchSampleComponent {
                 break;
             case "input":
                 this.markup = 
-`<div class="ig-form-group">
-    <label igLabel>Username</label>
+`<!--Text Input-->
+<div class="ig-form-group">
     <input type="text" igInput [(ngModel)]="user.name" />
-    <span>value = {{ user.name || ''}}</span>
+    <label igLabel>Username</label>
 </div>
+<span>value = {{ user.name || ''}}</span>
+
+<!--Password Input-->
 <div class="ig-form-group">
-    <label igLabel>Password</label>
     <input type="password" igInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
-    <span>value = {{ user.password || ''}}</span>
+    <label igLabel>Password</label>
 </div>
+<span>value = {{ user.password || ''}}</span>
+
+<!--Textarea Input-->
 <div class="ig-form-group">
-    <label igLabel>Textarea</label>
     <textarea placeholder="{{placeholder}}" igInput [(ngModel)]="user.comment"></textarea>
-    <span>value = {{ user.comment || ''}}</span>
+    <label igLabel>Textarea</label>
 </div>
+<span>value = {{ user.comment || ''}}</span>
+
+<!--Checkbox-->
 <ig-checkbox [(ngModel)]="user.registered">Registered</ig-checkbox>
 <span>value = {{ user.registered }}</span>
-<label igLabel>Label me!</label>`
+
+<!--Label-->
+<label igLabel>Sample Label!</label>`
 
                 this.typescriptCode = 
 `import { Component } from "@angular/core";
@@ -254,10 +272,8 @@ export class InputsSampleComponent {
                 break;
             case "radio":
                 this.markup = 
-`<span class="componentTitle">Radio</span>
-<span class="componentDesc">A component that collects user input from radio buttons.</span>
-<ig-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" name="group" [(ngModel)]="user.favouriteVarName">{{item}}</ig-radio>
-<p>Selected value = {{ user.favouriteVarName || ''}}</p>`
+`<ig-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" name="group" [(ngModel)]="user.favouriteVarName">{{item}}</ig-radio>
+<span>Selected value = {{ user.favouriteVarName || ''}}</span>`
 
                 this.typescriptCode = 
 `import { Component } from "@angular/core";

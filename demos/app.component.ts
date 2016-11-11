@@ -2,6 +2,9 @@ import { Component, ElementRef, ViewChild, ViewChildren, QueryList, Input } from
 import { CodeHandler } from "./code-handler.component";
 import { Router } from '@angular/router';
 
+
+declare var Prism: any;
+
 @Component({
     selector: 'sample-app',
     templateUrl: 'demos/app.component.html',

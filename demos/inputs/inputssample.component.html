@@ -1,30 +1,40 @@
 
 <h1 class="componentTitle">Inputs</h1>
-<p class="componentDesc">Lets the user enters data through various inputs.</p>
+<p class="componentDesc">Lets the user enter data through various inputs.</p>
 
 <div class="flex-column flex-wrap space-wrapper justify-content-start">
-    <div class="ig-form-group">
-        <input type="text" igInput [(ngModel)]="user.name" />
-        <label igLabel>Username</label>
+    <div>
+        <div class="ig-form-group">
+            <input type="text" igInput [(ngModel)]="user.name" />
+            <label igLabel>Username</label>
+        </div>
         <span>value = {{ user.name || ''}}</span>
     </div>
-
-
-    <div class="ig-form-group">
-        <input type="password" igInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
-        <label igLabel>Password</label>
+    <br>
+    <br>
+    <div>
+        <div class="ig-form-group">
+            <input type="password" igInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
+            <label igLabel>Password</label>
+        </div>
         <span>value = {{ user.password || ''}}</span>
     </div>
-
-    <div class="ig-form-group">
-        <textarea placeholder="{{placeholder}}" igInput [(ngModel)]="user.comment"></textarea>
-        <label igLabel>Textarea</label>
+    <br>
+    <br>
+    <div>
+        <div class="ig-form-group">
+            <textarea placeholder="{{placeholder}}" igInput [(ngModel)]="user.comment"></textarea>
+            <label igLabel>Textarea</label>
+        </div>
         <span>value = {{ user.comment || ''}}</span>
     </div>
-
+    <br>
+    <br>
     <ig-checkbox [(ngModel)]="user.registered">Registered</ig-checkbox>
+    <br>
     <br>
     <div>value = {{ user.registered }}</div>
     <br>
-    <label igLabel>Label me!</label>
+    <br>
+    <label igLabel>Sample Label!</label>
 </div>

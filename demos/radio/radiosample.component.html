@@ -3,4 +3,4 @@
 <div class="component-wrap">
     <ig-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" name="group" [(ngModel)]="user.favouriteVarName">{{item}}</ig-radio>
 </div>
-<p>Selected value = {{ user.favouriteVarName || ''}}</p>
+<span>Selected value = {{ user.favouriteVarName || ''}}</span>
