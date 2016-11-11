@@ -4,14 +4,15 @@ import {
 } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { IgProgressBarModule, IgProgressBar } from './progressbar.component'
+import { IgCircularProgressBar, IgLinearProgressBar } from './progressbar.component'
 
 describe('IgProgressBar', function() {
    beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InitProgressBar,
-                IgProgressBar
+                IgCircularProgressBar,
+                IgLinearProgressBar
             ]
         })
         .compileComponents();
@@ -25,12 +26,10 @@ describe('IgProgressBar', function() {
         let progress = fixture.componentInstance.progressbar;
 
         const defaultMaxValue = 100,
-            defaultAnimation = false,
             defaultStriped = false,
             defaultType = 'default';
 
             expect(progress.max).toBe(defaultMaxValue);
-            expect(progress.animated).toBe(defaultAnimation);
             expect(progress.striped).toBe(defaultStriped);
             expect(progress.type).toBe(defaultType);
     });
@@ -147,7 +146,8 @@ describe('IgProgressBar UI Logic', function() {
         TestBed.configureTestingModule({
             declarations: [
                 SetValueProgressBar,
-                IgProgressBar,
+                IgCircularProgressBar,
+                IgLinearProgressBar,
             ]
         })
         .compileComponents();
@@ -171,17 +171,17 @@ describe('IgProgressBar UI Logic', function() {
     // });
 });
 
-@Component({ template: `<ig-progressbar></ig-progressbar>` })
+@Component({ template: `<ig-linear-bar></ig-linear-bar>` })
 class InitProgressBar{
-    @ViewChild(IgProgressBar) progressbar: IgProgressBar;
+    @ViewChild(IgLinearProgressBar) progressbar: IgLinearProgressBar;
 }
 
 @Component({ template: `<div #wrapper>
-                            <ig-progressbar [value]="value">
-                            </ig-progressbar>
+                            <ig-linear-bar [value]="value">
+                            </ig-linear-bar>
                         </div>` })
 class SetValueProgressBar{
-    @ViewChild(IgProgressBar) progressbar: IgProgressBar;
+    @ViewChild(IgLinearProgressBar) progressbar: IgLinearProgressBar;
     @ViewChild("wrapper") wrapper;
 
     value: number = 30;

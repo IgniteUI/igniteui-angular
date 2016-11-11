@@ -14,8 +14,6 @@ import {
 import { CommonModule } from '@angular/common';
 
 export abstract class BaseProgress {
-    // protected prevValueInPercent: number;
-    // protected currValInPercent: number;
     protected _valueInPercent: number;
     protected _prevValue: number;
     protected _currValue: number;
@@ -58,11 +56,11 @@ export abstract class BaseProgress {
     }
 
 
-    protected getValue() {
+    public getValue() {
         return getValueInRange(this.value, this.max);
     }
 
-    protected getPercentValue() {
+    public getPercentValue() {
         return convertValueInPercent(this.getValue(), this.max);
     }
 }
@@ -81,7 +79,6 @@ export class IgLinearProgressBar extends BaseProgress implements OnChanges {
     @Input() protected _valueInPercent: number = 0;
 
     @Input() max: number = 100;
-    @Input() animated: boolean = false;
     @Input() striped: boolean = false;
     @Input() type: string = 'default';
     @Input() value: number = 0;
@@ -101,14 +98,6 @@ export class IgLinearProgressBar extends BaseProgress implements OnChanges {
             }
         }
     }
-
-    // public getValue() {
-    //     return getValueInRange(this.value, this.max);
-    // }
-
-    // public getPercentValue() {
-    //     return convertValueInPercent(this.getValue(), this.max);
-    // }
 }
 
 @Component({
