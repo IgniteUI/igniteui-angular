@@ -1,0 +1,249 @@
+.section-wrap
+{
+  box-shadow    : 0 8px 25px 0 rgba(0, 0, 0, 0.19);
+  background    : #fff;
+  min-height    : em(280);
+  margin-bottom : em(220);
+  position      : relative;
+  padding       : em(20);
+  h1
+  {
+    color : $primary-color;
+  }
+  h2
+  {
+    font-weight : 100;
+    color       : $light-gray-color;
+    strong
+    {
+      color       : #666;
+      font-weight : 400;
+    }
+  }
+}
+
+.section-img
+{
+  position : absolute;
+  flex     : 1;
+  z-index  : 2;
+}
+
+.reflection-image
+{
+  z-index        : 3;
+  top            : em(-53);
+  left           : em(5);
+  pointer-events : none;
+  filter         : progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/reflection.png', sizingMethod='scale');
+  background     : none !important;
+}
+
+.phons-image
+{
+  top        : em(-100);
+  left       : em(-28);
+  filter     : progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/phones.png', sizingMethod='scale');
+  background : none !important;
+}
+
+.phon-image
+{
+  top   : em(-86);
+  right : 0;
+  width : em(298);
+}
+
+.section-message
+{
+  position : relative;
+  right    : 0;
+  flex     : 1;
+}
+
+.section-from-left
+{
+  padding-left : em(400);
+  position     : relative;
+  z-index      : 1;
+  button
+  {
+    margin-right : em(10);
+    &:last-of-type
+    {
+      margin-right : 0;
+    }
+  }
+  .buttons-wrap
+  {
+    @include justify-content(flex-end);
+  }
+
+  &:before,
+  &:after
+  {
+    content    : "";
+    position   : absolute;
+    height     : 100%;
+    width      : em(99999);
+    background : #fff;
+  }
+
+  &:before
+  {
+    right      : 100%;
+    top        : 0;
+    box-shadow : 0 8px 25px 0 rgba(0, 0, 0, 0.19);
+    z-index    : 0;
+  }
+
+  &:after
+  {
+    right   : 90%;
+    top     : 0;
+    z-index : 1;
+  }
+}
+
+.section-from-right
+{
+  padding-right : em(370);
+  position      : relative;
+  z-index       : 1;
+
+  .section-message
+  {
+    header
+    {
+      margin-bottom : em(20);
+    }
+  }
+
+  &:before,
+  &:after
+  {
+    content    : "";
+    position   : absolute;
+    height     : 100%;
+    width      : em(99999);
+    background : #fff;
+  }
+
+  &:before
+  {
+    left       : 100%;
+    top        : 0;
+    box-shadow : 0 8px 25px 0 rgba(0, 0, 0, 0.19);
+    z-index    : 0;
+  }
+
+  &:after
+  {
+    left    : 90%;
+    top     : 0;
+    z-index : 1;
+  }
+}
+
+.nav-components
+{
+  min-width : em(260);
+}
+
+.phon-preview
+{
+  width    : em(293);
+  height   : em(606);
+  position : absolute;
+  right    : 0;
+  flex     : 1;
+  z-index  : 2;
+}
+
+.preview-container
+{
+  position   : relative;
+  overflow-x : hidden;
+  overflow-y : auto;
+  z-index    : 2;
+  width      : 278px;
+  height     : 477px;
+  left       : 5px;
+  top        : -7px;
+  padding    : em(10) em(10) 0 em(10);
+}
+
+.ig-list__header,
+.ig-list__item
+{
+  padding : 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

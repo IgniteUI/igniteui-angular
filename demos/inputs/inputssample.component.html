@@ -1,0 +1,29 @@
+
+<h1 class="componentTitle">Inputs</h1>
+<p class="componentDesc">Lets the user enters data through various inputs.</p>
+
+<div class="flex-column flex-wrap space-wrapper justify-content-start">
+    <div class="ig-form-group">
+        <label igLabel>Username</label>
+        <input type="text" igInput [(ngModel)]="user.name" />
+        <span>value = {{ user.name || ''}}</span>
+    </div>
+
+    <div class="ig-form-group">
+        <label igLabel>Password</label>
+        <input type="password" igInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
+        <span>value = {{ user.password || ''}}</span>
+    </div>
+
+    <div class="ig-form-group">
+        <label igLabel>Textarea</label>
+        <textarea placeholder="{{placeholder}}" igInput [(ngModel)]="user.comment"></textarea>
+        <span>value = {{ user.comment || ''}}</span>
+    </div>
+
+    <ig-checkbox [(ngModel)]="user.registered">Registered</ig-checkbox>
+    <br>
+    <div>value = {{ user.registered }}</div>
+    <br>
+    <label igLabel>Label me!</label>
+</div>

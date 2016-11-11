@@ -1,0 +1,55 @@
+.main-footer
+{
+  padding    : em(30);
+  background : $dark-gray-color;
+  min-height : $footer-def-height;
+  > div
+  {
+    min-height : $footer-def-height;
+    height     : $footer-def-height;
+  }
+  .fork
+  {
+    margin : 0 auto;
+    width  : em(160);
+  }
+  small
+  {
+    font-size : em(10);
+    color     : #a1a1a1;
+    margin    : 0 em(20) em(6) em(20);
+  }
+}
+
+/* Logo's */
+.smll-z-logo,
+.smll-ig-logo,
+.small-ing
+{
+  overflow          : hidden;
+  display           : block;
+  background-repeat : no-repeat;
+}
+
+.smll-z-logo
+{
+  width  : em(56);
+  height : em(30);
+}
+
+.smll-ig-logo
+{
+  width  : em(89);
+  height : em(30);
+  img
+  {
+    width  : 100%;
+    height : auto;
+  }
+}
+
+.small-ing
+{
+  width  : em(139);
+  height : em(20);
+}

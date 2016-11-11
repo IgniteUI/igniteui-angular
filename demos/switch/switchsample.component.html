@@ -1,0 +1,7 @@
+<h1 class="componentTitle">Switch</h1>
+<p class="componentDesc">A component that lets the user toggle between checked and unchecked states.</p>
+<div class="component-wrap">
+    <ig-switch [(ngModel)]="user.subscribed"></ig-switch>
+    <ig-switch [(ngModel)]="!user.subscribed"></ig-switch>
+</div>
+<span>Selected value = {{ user.subscribed }}</span>

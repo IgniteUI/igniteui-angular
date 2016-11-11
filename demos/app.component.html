@@ -1,0 +1,72 @@
+<div class="samples-container">
+    <section class="section-wrap flex-container justify-content-b section-from-right">
+        <article class="section-message flex-column justify-content-b">
+            <header>
+                <h1>One by one.</h1>
+                <h2>Explore the components and directives we’re working on.</h2>
+            </header>
+            <div class="flex-container">
+                <nav class="nav-list nav-components">
+                    <h3>Components</h3>
+                    <ul (click)="navItemClick($event)">
+                        <li #item><a><span data-demo="switch" routerLink="/switch">Switch</span></a></li>
+                        <li #item><a><span data-demo="radio" routerLink="/radio">Radio</span></a></li>
+                        <li #item><a><span data-demo="carousel" routerLink="/carousel">Carousel</span></a></li>
+                        <li #item><a><span data-demo="tabbar" routerLink="/tabbar">Tabbar</span></a></li>
+                        <li #item><a><span data-demo="list" routerLink="/list">List</span></a></li>
+                        <li #item><a><span data-demo="avatar" routerLink="/avatar">Avatar</span></a></li>
+                        <li #item><a><span data-demo="navdrawer" routerLink="/navigation-drawer">Navigation Drawer</span></a></li>
+                    </ul>
+                </nav>
+                <nav class="nav-list nav-directives">
+                    <h3>Directives</h3>
+                    <ul (click)="navItemClick($event)">
+                        <li #item><a><span data-demo="filter" routerLink="/list">filter</span></a></li>
+                        <li #item><a><span data-demo="ripple" routerLink="/ripple">ripple</span></a></li>
+                        <li #item><a><span data-demo="button" routerLink="/buttons">button</span></a></li>
+                        <li #item><a><span data-demo="input" routerLink="/inputs">input</span></a></li>
+                    </ul>
+                </nav>
+                <div class="dropdown">
+                    <select id="dd-components" (change)="navItemClick($event)" autofocus>
+                    <!--<option disabled selected>Switch</option>-->
+                    <optgroup label="Components">
+                        <option #item value="switch" selected>Switch</option>
+                        <option #item value="carousel">Carousel</option>
+                        <option #item value="tabbar">TabBar</option>
+                        <option #item value="list">List</option>
+                        <option #item value="buttons">Buttons</option>
+                        <option #item value="avatar">Avatar</option>
+                        <option #item value="navigation-drawer">Navigation Drawer</option>
+                    </optgroup>
+                    <optgroup label="Directives">
+                        <option #item value="filter">filter</option>
+                        <option #item value="ripple">ripple</option>
+                        <option #item value="button">button</option>
+                        <option #item value="input">input</option>
+                    </optgroup>
+                </select>
+                </div>
+            </div>
+        </article>
+        <div class="phon-preview">
+            <img class="section-img phon-image" src="./demos/images/phone.png" alt="">
+            <img class="section-img reflection-image" src="./demos/images/reflection.png" alt="">
+            <div class="preview-container">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </section>
+    <section class="section-wrap">
+        <header class="flex-container main-header code-section-header justify-content-b">
+            <h4>Code Sample</h4>
+            <nav class="tabs">
+                <a (click)="changeContent($event)" class="selected">HTML</a>
+                <a (click)="changeContent($event)" class="">TS</a>
+            </nav>
+        </header>
+        <div class="code-snipet">
+        <pre class="line-numbers"><code #code class="language-*"></code></pre>
+        </div>
+    </section>
+</div>

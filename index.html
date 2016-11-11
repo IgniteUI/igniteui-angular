@@ -1,0 +1,196 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<base href="./">
+	<title>IgniteUI JS Blocks</title>
+	<!--Meta Tags Begin-->
+	<meta charset="UTF-8">
+	<meta name="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1">
+	<!--Meta Tags End-->
+	<!--Scripts Begin-->
+	<script src="https://rawgit.com/web-animations/web-animations-js/master/web-animations.min.js"></script>
+	<script src="https://unpkg.com/core-js/client/shim.min.js"></script>
+	<script src="https://unpkg.com/zone.js/dist/zone.js"></script>
+	<script src="https://unpkg.com/reflect-metadata/Reflect.js"></script>
+	<script src="https://unpkg.com/systemjs/dist/system.src.js"></script>
+	<script src="https://unpkg.com/hammerjs/hammer.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/plugins/line-numbers/prism-line-numbers.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-typescript.min.js"></script>
+	<!--Scripts End-->
+	<!--Styles Begin-->
+	<link rel="stylesheet" href="https://unpkg.com/zero-blocks@0.2.0-PreRelease.0/fonts/material-icons.css">
+	<link rel="stylesheet" href="https://unpkg.com/zero-blocks@0.2.0-PreRelease.0/zero-blocks.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/plugins/line-numbers/prism-line-numbers.css">
+	<link rel="stylesheet" href="./styles/gh-pages.css">
+	<!--Styles End-->
+	<!-- 2. Configure SystemJS -->
+	<script src="systemjs.config.js"></script>
+	<script>
+        System.import('app/main.ts').catch(function(err){ console.error(err); });
+    </script>
+</head>
+
+<body>
+	<!--Header Begins-->
+	<div class="header-bkg">
+		<div class="wrapper flex-column">
+			<header class="flex-container main-header justify-content-b">
+				<a class="logo" href="#">
+					<svg width="198" height="97" viewBox="0 0 198 97" xmlns="http://www.w3.org/2000/svg">
+						<g fill="#FFF" fill-rule="evenodd">
+							<path d="M32 81.2h2v15h-2M14 7.3c.6.3.7 1 .5 1.4-.3.4-1 .6-1.4.3L.7 2C.2 1.6 0 1 .3.5.5 0 1 0 1.6.2l12.5 7zM32 35V20h2v15h-2M52.8 68.8l12.5 7.4-1 1.7-12.5-7.5 1-1.8M33.4 57.2l-1 1.7 1-1.8M1.7 38.2L14 45.7l-1 1.7L.7 40l1-1.8M52.3 46.5l-.5-1 12.4-7.3 1 1.7L53 47.2l-1-1.7"
+							/>
+							<path d="M32.5 57.2l1 1.7-1-1.8M13 68.8l.6.8-.5-.8h.2l1 1.6L1.5 78 .6 76" />
+							<path d="M14 68.7l19.5 11.6L46 87.8l-1 1.7L32.5 82 13 70.4.7 63l1-1.7" />
+							<path d="M32.4 80.3l.6.8-.7-.7L52 68.7l12.4-7.4 1 1.7L53 70.4 33.5 82l-.5-1 .6 1-12.7 7.5-1-1.7M1 54l-.4-1L13 45.8 32.5 34 45 26.8l1 1.6-12.5 7.5-19.3 11.5-12.6 7.5-1-1.8"
+							/>
+							<path d="M33.4 34l-.5 1 .4-1 19.4 11.7-.5.8.5-.8L65.3 53l-1 1.8-12.5-7.4.5-1-.5 1-19.3-11.6.5-1-.5 1L20 28.4l1-1.7M1 16l.6-1 12.6 7.6-1 1.7L.5 16.8l1-1.7"
+							/>
+							<path d="M12.6 69.6V8.2c0-.5.5-1 1-1 .6 0 1 .5 1 1v76.1c0 .5-.4 1-1 1-.5 0-1-.5-1-1V69.6zM0 62.2V1c0-.4.6-1 1-1 .7 0 1 .6 1 1v74.2c0 .6-.3 1-1 1-.4 0-1-.4-1-1v-13zM51.3 69.6v-38h2v53h-2"
+							/>
+							<path d="M21 87.7l12.5 7.5h-1L45 87.7l7-4L64.2 76l-.5.8V39l.5.8L52 32.4l-7-4-12.5-7.6h1L21 28.2l-6.8 4L1.7 40l.5-.8v38l-.5-1L14 83.6l7 4.2zM.7 77.7c-.3 0-.5-.4-.5-.8V39c0-.4.2-.7.5-1l12.5-7.4 7-4L32.4 19h1L46 26.7l7 4 12.3 7.5c.3.3.5.6.5 1v38c0 .3-.2.7-.5.8L53 85.3l-7 4L33.6 97h-1L20 89.2l-7-4L.7 77.7z"
+							/>
+							<text font-family="Titillium Web" font-size="45" font-weight="500">
+								<tspan x="73.4" y="78">Blocks</tspan>
+							</text>
+							<text font-family="Titillium Web" font-size="12" font-weight="500">
+								<tspan x="76" y="40">IgniteUI JS</tspan>
+							</text>
+						</g>
+					</svg>
+					<h1>Igniete JS Blocks</h1>
+					<span class="badge beta">BETA</span>
+				</a>
+				<a href="#" class="fork">
+					<span>Fork on GitHub</span>
+					<svg class="svg-icon github" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32.58 31.77">
+						<path d="M16.29,0a16.29,16.29,0,0,0-5.15,31.75c.81.15,1.11-.35,1.11-.79s0-1.41,0-2.77C7.7,29.18,6.74,26,6.74,26a4.31,4.31,0,0,0-1.81-2.38c-1.48-1,.11-1,.11-1a3.42,3.42,0,0,1,2.5,1.68,3.47,3.47,0,0,0,4.74,1.35,3.48,3.48,0,0,1,1-2.18C9.7,23.08,5.9,21.68,5.9,15.44a6.3,6.3,0,0,1,1.68-4.37,5.86,5.86,0,0,1,.16-4.31s1.37-.44,4.48,1.67a15.44,15.44,0,0,1,8.16,0c3.11-2.11,4.48-1.67,4.48-1.67A5.85,5.85,0,0,1,25,11.07a6.29,6.29,0,0,1,1.67,4.37c0,6.26-3.81,7.63-7.44,8a3.89,3.89,0,0,1,1.11,3c0,2.18,0,3.93,0,4.47s.29.94,1.12.78A16.29,16.29,0,0,0,16.29,0Z"
+						/>
+					</svg>
+				</a>
+			</header>
+			<div class="banner-message">
+				<h1>Angular 2 development. One block at a time.</h1>
+				<h2>Open source, mobile-first, pure Angular 2 components with sheer performance power. Kickstart your new, jQuery-free project
+					focused on phone, tablet or Progressive web apps with speed and simplicity.</h2>
+			</div>
+		</div>
+	</div>
+	<!--Header Ends-->
+	<!--Main Content Begins-->
+	<div class="wrapper">
+		<section class="section-wrap section-from-left flex-container">
+			<img class="section-img phons-image" src="./demos/images/phones.png" alt="">
+			<article class="section-message flex-column justify-content-b">
+				<header>
+					<h1>Blocks in action</h1>
+					<h2>Take a look at the sample application we’ve developed to get a taste of what you can build with <strong>IgniteUI Blocks</strong>.</h2>
+				</header>
+				<div class="flex-container buttons-wrap">
+					<button class="btn primary-btn" igButton="raised" (click)="changeLink()">PREVIEW IN BROWSER</button>
+				</div>
+			</article>
+		</section>
+		<sample-app>Loading...</sample-app>
+	</div>
+	<!--Main Content ENDS-->
+	<!--<div class="wholeContent">-->
+	<!--Header Begins-->
+	<!--
+        <header class="row ig-jumbotron">
+		    <div class="row">
+			    <div class="logo-wrapper">
+				    <a href="http://www.igniteui.com/" target="_blank"><img class="BlocksLogo" src="demos/images/blocks-logo.png"></a>
+			    </div>
+			    <div class="github-wrapper">
+				    <a href="http://www.igniteui.com/" target="_blank"><img class="github-link" src="demos/images/github-link.png"></a>
+			    </div>
+		    </div>
+				
+		    <div class="row">
+			    <div>
+				    <h1>Angular 2 development. One block at a time.</h1>
+				    <h2>IgniteUI Blocks - an open source, mobile optimised, pure Angular 2 set of components and directives.</h2>
+			    </div>
+		    </div>
+        </header>-->
+	<!--<div class="ig-container">
+			<section>
+				<div class="whiteContainer row col-sm-11 col-lg-10">
+					<div class="col-xs-12 col-sm-6">
+						<img src="demos/images/warehouse-app-preview-on-galaxy-2.png" class="samsung-phones-image">
+					</div>
+					<div class="col-xs-12 col-sm-6 text-content">
+						<span class="midContentHeading">Blocks in action.</span><br>
+						<span class="midContent">Take a look at the sample application we’ve developed to get a taste of what you can build with IgniteUI Blocks. </span><br><br>
+						<div class="buttons">
+							<a href="https://igniteui.github.io/warehouse-js-blocks/" target="_blank"><div class="appButton" igButton="raised" (click)="changeLink()">PREVIEW IN BROWSER</div></a>
+							<a href="https://github.com/IgniteUI/warehouse-js-blocks" target="_blank"><div class="appButton" igButton="raised" (click)="changeLink()">DOWNLOAD AS APP</div></a>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<sample-app>Loading...</sample-app>
+		</div>-->
+	<!--<footer>
+			<div class="ig-container">
+				<div class="row">
+					<div class="col-xs-2 col-xs-push-5">
+						<a href="http://www.igniteui.com/" target="_blank"><img class="github-link" src="demos/images/github-link.png"></a>
+					</div>
+				</div>
+			</div>
+		</footer>-->
+	<!--</div>-->
+	<!--Footer Begins-->
+	<footer class="main-footer">
+		<div class="wrapper flex-column justify-content-b">
+			<a href="#" class="fork">
+				<span>Fork on GitHub</span>
+				<svg class="svg-icon github" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32.58 31.77">
+					<path d="M16.29,0a16.29,16.29,0,0,0-5.15,31.75c.81.15,1.11-.35,1.11-.79s0-1.41,0-2.77C7.7,29.18,6.74,26,6.74,26a4.31,4.31,0,0,0-1.81-2.38c-1.48-1,.11-1,.11-1a3.42,3.42,0,0,1,2.5,1.68,3.47,3.47,0,0,0,4.74,1.35,3.48,3.48,0,0,1,1-2.18C9.7,23.08,5.9,21.68,5.9,15.44a6.3,6.3,0,0,1,1.68-4.37,5.86,5.86,0,0,1,.16-4.31s1.37-.44,4.48,1.67a15.44,15.44,0,0,1,8.16,0c3.11-2.11,4.48-1.67,4.48-1.67A5.85,5.85,0,0,1,25,11.07a6.29,6.29,0,0,1,1.67,4.37c0,6.26-3.81,7.63-7.44,8a3.89,3.89,0,0,1,1.11,3c0,2.18,0,3.93,0,4.47s.29.94,1.12.78A16.29,16.29,0,0,0,16.29,0Z"
+					/>
+				</svg>
+			</a>
+			<div class="logos-wrap flex-container justify-content-b base-line-center">
+				<div class="flex-container group-logos base-line-bottom">
+					<span class="smll-z-logo">
+                        <svg viewBox="0 0 198 97" xmlns="http://www.w3.org/2000/svg">
+                        <g fill="#FFF" fill-rule="evenodd">
+                            <path d="M32 81.2h2v15h-2M14 7.3c.6.3.7 1 .5 1.4-.3.4-1 .6-1.4.3L.7 2C.2 1.6 0 1 .3.5.5 0 1 0 1.6.2l12.5 7zM32 35V20h2v15h-2M52.8 68.8l12.5 7.4-1 1.7-12.5-7.5 1-1.8M33.4 57.2l-1 1.7 1-1.8M1.7 38.2L14 45.7l-1 1.7L.7 40l1-1.8M52.3 46.5l-.5-1 12.4-7.3 1 1.7L53 47.2l-1-1.7"/>
+                            <path d="M32.5 57.2l1 1.7-1-1.8M13 68.8l.6.8-.5-.8h.2l1 1.6L1.5 78 .6 76"/>
+                            <path d="M14 68.7l19.5 11.6L46 87.8l-1 1.7L32.5 82 13 70.4.7 63l1-1.7"/>
+                            <path d="M32.4 80.3l.6.8-.7-.7L52 68.7l12.4-7.4 1 1.7L53 70.4 33.5 82l-.5-1 .6 1-12.7 7.5-1-1.7M1 54l-.4-1L13 45.8 32.5 34 45 26.8l1 1.6-12.5 7.5-19.3 11.5-12.6 7.5-1-1.8"/>
+                            <path d="M33.4 34l-.5 1 .4-1 19.4 11.7-.5.8.5-.8L65.3 53l-1 1.8-12.5-7.4.5-1-.5 1-19.3-11.6.5-1-.5 1L20 28.4l1-1.7M1 16l.6-1 12.6 7.6-1 1.7L.5 16.8l1-1.7"/>
+                            <path d="M12.6 69.6V8.2c0-.5.5-1 1-1 .6 0 1 .5 1 1v76.1c0 .5-.4 1-1 1-.5 0-1-.5-1-1V69.6zM0 62.2V1c0-.4.6-1 1-1 .7 0 1 .6 1 1v74.2c0 .6-.3 1-1 1-.4 0-1-.4-1-1v-13zM51.3 69.6v-38h2v53h-2"/>
+                            <path d="M21 87.7l12.5 7.5h-1L45 87.7l7-4L64.2 76l-.5.8V39l.5.8L52 32.4l-7-4-12.5-7.6h1L21 28.2l-6.8 4L1.7 40l.5-.8v38l-.5-1L14 83.6l7 4.2zM.7 77.7c-.3 0-.5-.4-.5-.8V39c0-.4.2-.7.5-1l12.5-7.4 7-4L32.4 19h1L46 26.7l7 4 12.3 7.5c.3.3.5.6.5 1v38c0 .3-.2.7-.5.8L53 85.3l-7 4L33.6 97h-1L20 89.2l-7-4L.7 77.7z"/>
+                            <text font-family="Titillium Web" font-size="45" font-weight="500">
+                                <tspan x="73.4" y="78">Blocks</tspan>
+                            </text>
+                            <text font-family="Titillium Web" font-size="12" font-weight="500">
+                                <tspan x="76" y="40">IgniteUI JS</tspan>
+                            </text>
+                        </g>
+                    </svg>
+                    </span>
+					<small>is a proud part of </small>
+					<a target="_blank" class="smll-ig-logo" href="http://www.igniteui.com/">
+						<img src="./demos/images/igUIlogo.png" alt="">
+					</a>
+				</div>
+				<div>
+					<a target="_blank" class="small-ing" href="http://www.infragistics.com/">
+						<img src="./demos/images/iglogo.svg" alt="">
+					</a>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!--Footer Ends-->
+</body>
+
+</html>
