@@ -1,0 +1,13 @@
+%igx-icon-display {
+    display: inline-block;
+    position: relative;
+    font-size: em(24px, 16px);
+    i {
+        font-size: inherit;
+    }
+}
+
+%igx-icon--inactive {
+    color: lighten($input-disabled-solid-color, 25%);
+    opacity: .8;
+}

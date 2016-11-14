@@ -31,7 +31,8 @@
       'angular2-in-memory-web-api': 'npm:angular2-in-memory-web-api',
       'ts':                         'npm:plugin-typescript@4.0.10/lib/plugin.js',
       'typescript':                 'npm:typescript@2.0.2/lib/typescript.js',
-      'zero-blocks': 'npm:zero-blocks'
+      'prism':                      'npm:prismjs@1.5.1',
+      'zero-blocks':                'npm:zero-blocks'
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {
@@ -49,6 +50,9 @@
         defaultExtension: 'js'
       },
       'zero-blocks': {
+        defaultExtension: 'js'
+      },
+      'prism': {
         defaultExtension: 'js'
       }
     },

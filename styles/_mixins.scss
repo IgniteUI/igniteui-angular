@@ -1,0 +1,45 @@
+/*
+  =========================================
+  Box Sizing
+  Reset your elements box model with ease.
+  =========================================
+*/
+
+@mixin box-sizing($box-model) {
+  -webkit-box-sizing: $box-model; // Safari <= 5
+  -moz-box-sizing: $box-model; // Firefox <= 19
+  box-sizing: $box-model;
+}
+
+
+/*
+  ===========================================================
+  Font Size
+  Set a rem font size with pixel fallback.
+  ===========================================================
+*/
+
+@function em($pixels, $context: 16px) {
+  @if (unitless($pixels)) {
+    $pixels: $pixels * 1px;
+  }
+  @if (unitless($context)) {
+    $context: $context * 1px;
+  }
+  @return ($pixels / $context) * 1em;
+}
+
+/*
+  ===========================================================
+  Transitions
+  ===========================================================
+*/
+@mixin transition($args...) {
+  -webkit-transition: $args;
+  -moz-transition: $args;
+  -ms-transition: $args;
+  -o-transition: $args;
+  transition: $args;
+
+  /* example  @include transition(color .3s ease); */
+}

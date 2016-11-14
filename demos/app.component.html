@@ -1,78 +1,71 @@
 <div class="samples-container">
-    <div class="whiteContainer row col-sm-push-1 col-sm-11 col-lg-push-2 col-lg-10">
-        <div class="col-sm-6">
-            <p>
-                <span class="midContentHeading">One by one</span><br>
-                <span class="midContent">Explore the components and directives we’re working on</span>
-            </p>
-            <div class="component-links hidden-xs">
-                <span class="titles">components</span><br>
-                <nav>
-                    <ul class="nav-list" (click)="navItemClick($event)">
-                        <li #item ><a><span igButton routerLink="/switch">switch</span></a></li> 
-                        <li #item ><a><span igButton routerLink="/radio">radio</span></a></li> 
-                        <li #item ><a><span igButton routerLink="/carousel">carousel</span></a></li> 
-                        <li #item ><a><span igButton routerLink="/tabbar">tabbar</span></a></li> 
-                        <li #item ><a><span igButton routerLink="/list">list</span></a></li> 
-                        <li #item ><a><span igButton routerLink="/avatar">avatar</span></a></li> 
+    <section class="section-wrap flex-container justify-content-b section-from-right">
+        <article class="section-message flex-column justify-content-b">
+            <header>
+                <h1>One by one.</h1>
+                <h2>Explore the components and directives we’re working on.</h2>
+            </header>
+            <div class="flex-container">
+                <nav class="nav-list nav-components">
+                    <h3>Components</h3>
+                    <ul (click)="navItemClick($event)">
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="switch" routerLink="/switch">Switch</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="radio" routerLink="/radio">Radio</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="carousel" routerLink="/carousel">Carousel</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="tabbar" routerLink="/tabbar">Tabbar</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="list" routerLink="/list">List</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="avatar" routerLink="/avatar">Avatar</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="navdrawer" routerLink="/navigation-drawer">Navigation Drawer</span></a></li>
                     </ul>
                 </nav>
-            </div>
-            <div class="directive-links hidden-xs">
-                <span class="titles">directives</span><br>
-                <nav>
-                    <ul class="nav-list" (click)="navItemClick($event)">
-                        <li #item><a><span igButton routerLink="/filter">filter</span></a></li> 
-                        <li #item><a><span igButton routerLink="/ripple">ripple</span></a></li> 
-                        <li #item><a><span igButton routerLink="/buttons">button</span></a></li> 
-                        <li #item><a><span igButton routerLink="/inputs">input</span></a></li> 
-                        <li #item><a><span igButton routerLink="/layout">layout</span></a></li> 
+                <nav class="nav-list nav-directives">
+                    <h3>Directives</h3>
+                    <ul (click)="navItemClick($event)">
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="filter" routerLink="/filter">filter</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="ripple" routerLink="/ripple">ripple</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="buttons" routerLink="/buttons">button</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="inputs" routerLink="/inputs">input</span></a></li>
                     </ul>
                 </nav>
-            </div>
-            <div class="visible-xs">
-                <br />
                 <div class="dropdown">
-                    <button igButton class="btn btn-primary dropdown-toggle appButton" type="button" data-toggle="dropdown">
-                        Pick a samples
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown-header titles" igButton>components</li>
-                        <li><a><span igButton routerLink="/switch">Switch</span></a></li>
-                        <li><a><span igButton routerLink="/radio">Radio</span></a></li>
-                        <li><a><span igButton routerLink="/carousel">Carousel</span></a></li>
-                        <li><a><span igButton routerLink="/tabbar">TabBar</span></a></li>
-                        <li><a><span igButton routerLink="/list">List</span></a></li>
-                        <li><a><span igButton routerLink="/avatar">Avatar</span></a></li>
-                        <li class="dropdown-header titles" igButton>directives</li>
-                        <li><a><span igButton routerLink="/filter">filter</span></a></li>
-                        <li><a><span igButton routerLink="/ripple">ripple</span></a></li>
-                        <li><a><span igButton routerLink="/buttons">button</span></a></li>
-                        <li><a><span igButton routerLink="/inputs">input</span></a></li>
-                        <li><a><span igButton routerLink="/layout">layout</span></a></li>
-                    </ul>
+                    <select id="dd-components" (change)="navItemClick($event)" autofocus>
+                    <optgroup label="Components">
+                        <option #item value="switch" [selected]="isActiveRoute('/switch')">Switch</option>
+                        <option #item value="carousel" [selected]="isActiveRoute('/carousel')">Carousel</option>
+                        <option #item value="tabbar" [selected]="isActiveRoute('/tabbar')">TabBar</option>
+                        <option #item value="list" [selected]="isActiveRoute('/list')">List</option>
+                        <option #item value="buttons" [selected]="isActiveRoute('/buttons')">Buttons</option>
+                        <option #item value="avatar" [selected]="isActiveRoute('/avatar')">Avatar</option>
+                        <option #item value="navigation-drawer" [selected]="isActiveRoute('/navigation-drawer')">Navigation Drawer</option>
+                    </optgroup>
+                    <optgroup label="Directives">
+                        <option #item value="filter" [selected]="isActiveRoute('/filter')">filter</option>
+                        <option #item value="ripple" [selected]="isActiveRoute('/ripple')">ripple</option>
+                        <option #item value="buttons" [selected]="isActiveRoute('/buttons')">button</option>
+                        <option #item value="inputs" [selected]="isActiveRoute('/inputs')">input</option>
+                    </optgroup>
+                </select>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-6">
-            <router-outlet class="col-sm-6"></router-outlet>
-        </div>        
-    </div>
-</div>
-<div class="code-container">
-    <div class="col-sm-10 col-sm-push-1 col-lg-push-2 col-lg-8 codebox">             
-        <div class="tabs">
-            <div class="header">
-                <span class="title">Code Sample</span>
-                <span class="html" (click)="changeContent($event)">TS</span>
-                <span class="ts" (click)="changeContent($event)">HTML</span>
-            </div>
-            <div class="content">
-                <pre style="overflow-x: hidden;">
-                    <code #code class="language-html"></code>
-                </pre>
+        </article>
+        <div class="phon-preview">
+            <img class="section-img phon-image" src="./demos/images/phone.png" alt="">
+            <img class="section-img reflection-image" src="./demos/images/reflection.png" alt="">
+            <div class="preview-container">
+                <router-outlet></router-outlet>
             </div>
         </div>
-    </div>
+    </section>
+    <section class="section-wrap">
+        <header class="flex-container main-header code-section-header justify-content-b">
+            <h4>Code Sample</h4>
+            <nav class="tabs">
+                <a #tab (click)="changeContent($event)" class="active">HTML</a>
+                <a #tab (click)="changeContent($event)">TS</a>
+            </nav>
+        </header>
+        <div class="code-snipet">
+        <pre class="line-numbers"><code #code class="language-*"></code></pre>
+        </div>
+    </section>
 </div>

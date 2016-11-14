@@ -1,26 +1,40 @@
-<div id="phoneContainer" class="phone">
-    <div id="mobileDiv" class="screen">
-        <div>
-            <span class="componentTitle">Inputs</span><br>
-            <span class="componentDesc">Lets the user enters data through various inputs.</span>
-            <div class="ig-form-group">
-                <label igLabel>Username</label><br>
-                <input type="text" igInput [(ngModel)]="user.name" />
-                <span>value = {{ user.name || ''}}</span>
-            </div>
-            <div class="ig-form-group">
-                <label igLabel>Password</label><br>
-                <input type="password" igInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
-                <span>value = {{ user.password || ''}}</span>
-            </div>
-            <div class="ig-form-group">
-                <label igLabel>Textarea</label><br>
-                <textarea placeholder="{{placeholder}}" igInput [(ngModel)]="user.comment"></textarea>
-                <span>value = {{ user.comment || ''}}</span>
-            </div>
-            <ig-checkbox [(ngModel)]="user.registered">Registered</ig-checkbox>
-            <span>value = {{ user.registered }}</span>
-            <label igLabel>Label me!</label>
+
+<h1 class="componentTitle">Inputs</h1>
+<p class="componentDesc">Lets the user enter data through various inputs.</p>
+
+<div class="flex-column flex-wrap space-wrapper justify-content-start">
+    <div>
+        <div class="ig-form-group">
+            <input type="text" igInput [(ngModel)]="user.name" />
+            <label igLabel>Username</label>
         </div>
+        <span>value = {{ user.name || ''}}</span>
     </div>
+    <br>
+    <br>
+    <div>
+        <div class="ig-form-group">
+            <input type="password" igInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
+            <label igLabel>Password</label>
+        </div>
+        <span>value = {{ user.password || ''}}</span>
+    </div>
+    <br>
+    <br>
+    <div>
+        <div class="ig-form-group">
+            <textarea placeholder="{{placeholder}}" igInput [(ngModel)]="user.comment"></textarea>
+            <label igLabel>Textarea</label>
+        </div>
+        <span>value = {{ user.comment || ''}}</span>
+    </div>
+    <br>
+    <br>
+    <ig-checkbox [(ngModel)]="user.registered">Registered</ig-checkbox>
+    <br>
+    <br>
+    <div>value = {{ user.registered }}</div>
+    <br>
+    <br>
+    <label igLabel>Sample Label!</label>
 </div>
