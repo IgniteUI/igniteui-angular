@@ -9,41 +9,40 @@
                 <nav class="nav-list nav-components">
                     <h3>Components</h3>
                     <ul (click)="navItemClick($event)">
-                        <li #item class="active"><a><span data-demo="switch" routerLink="/switch">Switch</span></a></li>
-                        <li #item><a><span data-demo="radio" routerLink="/radio">Radio</span></a></li>
-                        <li #item><a><span data-demo="carousel" routerLink="/carousel">Carousel</span></a></li>
-                        <li #item><a><span data-demo="tabbar" routerLink="/tabbar">Tabbar</span></a></li>
-                        <li #item><a><span data-demo="list" routerLink="/list">List</span></a></li>
-                        <li #item><a><span data-demo="avatar" routerLink="/avatar">Avatar</span></a></li>
-                        <li #item><a><span data-demo="navdrawer" routerLink="/navigation-drawer">Navigation Drawer</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="switch" routerLink="/switch">Switch</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="radio" routerLink="/radio">Radio</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="carousel" routerLink="/carousel">Carousel</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="tabbar" routerLink="/tabbar">Tabbar</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="list" routerLink="/list">List</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="avatar" routerLink="/avatar">Avatar</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="navdrawer" routerLink="/navigation-drawer">Navigation Drawer</span></a></li>
                     </ul>
                 </nav>
                 <nav class="nav-list nav-directives">
                     <h3>Directives</h3>
                     <ul (click)="navItemClick($event)">
-                        <li #item><a><span data-demo="filter" routerLink="/filter">filter</span></a></li>
-                        <li #item><a><span data-demo="ripple" routerLink="/ripple">ripple</span></a></li>
-                        <li #item><a><span data-demo="button" routerLink="/buttons">button</span></a></li>
-                        <li #item><a><span data-demo="input" routerLink="/inputs">input</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="filter" routerLink="/filter">filter</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="ripple" routerLink="/ripple">ripple</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="buttons" routerLink="/buttons">button</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="inputs" routerLink="/inputs">input</span></a></li>
                     </ul>
                 </nav>
                 <div class="dropdown">
                     <select id="dd-components" (change)="navItemClick($event)" autofocus>
-                    <!--<option disabled selected>Switch</option>-->
                     <optgroup label="Components">
-                        <option #item value="switch" selected>Switch</option>
-                        <option #item value="carousel">Carousel</option>
-                        <option #item value="tabbar">TabBar</option>
-                        <option #item value="list">List</option>
-                        <option #item value="buttons">Buttons</option>
-                        <option #item value="avatar">Avatar</option>
-                        <option #item value="navigation-drawer">Navigation Drawer</option>
+                        <option #item value="switch" [selected]="isActiveRoute('/switch')">Switch</option>
+                        <option #item value="carousel" [selected]="isActiveRoute('/carousel')">Carousel</option>
+                        <option #item value="tabbar" [selected]="isActiveRoute('/tabbar')">TabBar</option>
+                        <option #item value="list" [selected]="isActiveRoute('/list')">List</option>
+                        <option #item value="buttons" [selected]="isActiveRoute('/buttons')">Buttons</option>
+                        <option #item value="avatar" [selected]="isActiveRoute('/avatar')">Avatar</option>
+                        <option #item value="navigation-drawer" [selected]="isActiveRoute('/navigation-drawer')">Navigation Drawer</option>
                     </optgroup>
                     <optgroup label="Directives">
-                        <option #item value="filter">filter</option>
-                        <option #item value="ripple">ripple</option>
-                        <option #item value="buttons">button</option>
-                        <option #item value="inputs">input</option>
+                        <option #item value="filter" [selected]="isActiveRoute('/filter')">filter</option>
+                        <option #item value="ripple" [selected]="isActiveRoute('/ripple')">ripple</option>
+                        <option #item value="buttons" [selected]="isActiveRoute('/buttons')">button</option>
+                        <option #item value="inputs" [selected]="isActiveRoute('/inputs')">input</option>
                     </optgroup>
                 </select>
                 </div>

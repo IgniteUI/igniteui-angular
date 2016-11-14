@@ -132,18 +132,15 @@ gulp.task("build.css.dev", () => {
 
 gulp.task("build.gh-pages.css", () => {
     return gulp.src("styles/gh-pages.scss")
-        .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(sass({
             includePaths: ["styles/**/*.scss"],
         }))
         .pipe(autoprefixer({
-            browsers: ["last 2 versions"],
-            cascade: false
+            browsers: ["last 2 versions"]
         }))
         .pipe(cleanCSS())
-        .pipe(sourcemaps.write())
-        .pipe(plumber.stop())
+        .pipe(sourcemaps.write("./"))
         .pipe(gulp.dest("styles"));
 });
 

@@ -60,6 +60,8 @@
     position : relative;
     width    : 100%;
     height   : auto;
+    border: 1px solid $primary-color;
+    border-radius: 2px;
   }
 
   .preview-container
@@ -69,7 +71,7 @@
     min-height : 40px;
     left       : 0;
     top        : 0;
-    padding    : 0 0 em(65) 0;
+    padding    : em(16) em(16) em(65) em(16);
 
   }
 

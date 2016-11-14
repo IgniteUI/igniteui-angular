@@ -1,3 +1,10 @@
+.preloader {
+  color: $primary-color;
+  margin: 50px auto;
+  text-align: center;
+  font-size: em(18);
+}
+
 .section-wrap
 {
   box-shadow    : 0 8px 25px 0 rgba(0, 0, 0, 0.19);

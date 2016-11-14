@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild, ViewChildren, QueryList, Input } from "@angular/core";
 import { CodeHandler } from "./code-handler.component";
 import { Router } from '@angular/router';
-
+import { Location } from '@angular/common';
 
 declare var Prism: any;
 
@@ -19,12 +19,20 @@ export class AppComponent {
     @ViewChild("code") code;
     @ViewChildren("tab") tabs;
     
-    constructor(private router: Router, private codeHandler: CodeHandler) {
+    constructor(private router: Router, private location: Location, private codeHandler: CodeHandler) {
         this.codeHandler = new CodeHandler();
     }
 
     ngOnInit() {
-        this.populateCodeContainer(this.codeHandler.getCode('switch'));
+        let currentUrl = this.location.path(),
+            target = currentUrl.substring(1, currentUrl.length);
+
+        if(currentUrl == '') {
+            this.populateCodeContainer(this.codeHandler.getCode('switch'));
+            return;
+        }
+
+        this.populateCodeContainer(this.codeHandler.getCode(target));
     }
 
     public changeContent(args) {
@@ -55,13 +63,7 @@ export class AppComponent {
 
         if (target !== "span" && target !== "select") return;
         if (target === "select") this.setOptionRoute(args.target.value);
-
-        for (let i = 0; i < items.length; i++) {
-            let item = items[i];
-            item.nativeElement.className = "";
-        }
-
-        args.target.parentElement.parentElement.className = "active";
+        
         // handle code tabs
         this.populateCodeContainer(this.codeHandler.getCode(widgetName));
     }
@@ -83,5 +85,9 @@ export class AppComponent {
         });
 
         Prism.highlightAll();
+    }
+
+    isActiveRoute(route: string) {
+        return route == this.location.path();
     }
 }

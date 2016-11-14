@@ -164,7 +164,7 @@ export class ListSampleComponent {
         ];
 }`
                 break;
-            case "button":
+            case "buttons":
                 this.markup = 
 `<span igButton="flat" igRipple>Flat</span>
 <span igButton="raised" igRipple="white">Raised</span>  
@@ -220,7 +220,7 @@ export class SwitchSampleComponent {
     };
 }`
                 break;
-            case "input":
+            case "inputs":
                 this.markup = 
 `<!--Text Input-->
 <div class="ig-form-group">
