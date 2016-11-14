@@ -29,7 +29,7 @@ var tsProject = ts.createProject('tsconfig.json', {
     specFilesNegate = '!./src/**/*.spec.ts';
 
 
-gulp.task("build", ["build.css", "build.js", "build.fonts"]);
+gulp.task("build", ["build.css","build.gh-pages.css", "build.js", "build.fonts"]);
 
 
 gulp.task("bundle", ["bundle.src", "build.css", "build.fonts", "bundle.README"], () => {
@@ -130,6 +130,19 @@ gulp.task("build.css.dev", () => {
         .pipe(gulp.dest("./dist/dev"))
 });
 
+gulp.task("build.gh-pages.css", () => {
+    return gulp.src("styles/gh-pages.scss")
+        .pipe(sourcemaps.init())
+        .pipe(sass({
+            includePaths: ["styles/**/*.scss"],
+        }))
+        .pipe(autoprefixer({
+            browsers: ["last 2 versions"]
+        }))
+        .pipe(cleanCSS())
+        .pipe(sourcemaps.write("./"))
+        .pipe(gulp.dest("styles"));
+});
 
 /**
  * Fonts
@@ -161,6 +174,7 @@ gulp.task("watch", [
 
 gulp.task("build.css:watch", () => {
     gulp.watch("src/**/*.scss", ["build.css"]);
+    gulp.watch("styles/**/*.scss", ["build.gh-pages.css"]);
 });
 
 gulp.task("build.js:watch", () => {

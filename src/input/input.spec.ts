@@ -10,10 +10,12 @@ import { IgInput } from './input';
 describe('IgInput', function() {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
+            imports: [
+                IgInput
+            ],
             declarations: [
                 InitInput,
-                InputWithAttribs,
-                IgInput
+                InputWithAttribs
             ]
         })
         .compileComponents();

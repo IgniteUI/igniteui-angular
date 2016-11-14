@@ -1,19 +1,19 @@
-%tab-wrapper-display {
+%igx-tab-wrapper-display {
     display: block;
 }
 
-%tabbar-inner-display {
+%igx-tabbar-inner-display {
     width: 100%;
     position: absolute;
 }
 
-%tabbar-menu {
+%igx-tabbar-menu {
     position: fixed;
     display: flex;
     justify-content: space-around;
     align-items: center;
     width: 100%;
-    height: 56px;
+    height: em(56px, 16px);
     margin: 0;
     padding: 0;
     background: $tab-bar-background;
@@ -22,19 +22,19 @@
     z-index: 8;
 }
 
-%tabbar-menu--top {
+%igx-tabbar-menu--top {
     bottom: inherit;
     top: 0;
     box-shadow: $elevate-8;
 }
 
-%tabbar-menu--bottom {
+%igx-tabbar-menu--bottom {
     top: inherit;
     bottom: 0;
     box-shadow: $elevate-8-up;
 }
 
-%tabbar-menu-item {
+%igx-tabbar-menu-item {
     display: flex;
     position: relative;
     flex-flow: column wrap;
@@ -54,18 +54,18 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-%tabbar-menu-item--disabled {
+%igx-tabbar-menu-item--disabled {
     opacity: 0.5;
     cursor: default;
 }
 
-%active-tab {
+%igx-active-tab {
     opacity: 1;
-    color: $primary-color;
-    transition: all .25s ease-in; 
+    color: $secondary-color;
+    transition: all .25s ease-out; 
 }
 
-%tab-label {
+%igx-tab-label {
     max-width: 168px;
     padding-top: 5px;
     font-size: 12px;
@@ -77,14 +77,14 @@
     opacity: .75;
 }
 
-%tab-icon {
+%igx-tab-icon {
     position: relative;
     height: 24px;
     z-index: 1;
     opacity: .75;
 }
 
-%tab-label--selected,
-%tab-icon--selected {
-    @extend %active-tab;
+%igx-tab-label--selected,
+%igx-tab-icon--selected {
+    @extend %igx-active-tab;
 }

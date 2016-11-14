@@ -1,5 +1,3 @@
-/// <reference path="../../typings/globals/hammerjs/index.d.ts" />
-
 import {Injectable, NgZone} from '@angular/core';
 
 const EVENT_SUFFIX: string = "precise";

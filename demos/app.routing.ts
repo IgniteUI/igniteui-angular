@@ -13,7 +13,7 @@ import { TabBarSampleComponent } from "./tabbar/tabbarsample.component";
 import { ListSampleComponent } from "./list/listsample.component";
 import { ButtonsSampleComponent } from "./button/buttonssample.component";
 import { AvatarSampleComponent } from "./avatar/avatarsample.component";
-//import { NavbarSampleComponent } from "./app/navbar/sample.component";
+// import { NavbarSampleComponent } from "./app/navbar/sample.component";
 
 const appRoutes: Routes = [
     {

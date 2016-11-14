@@ -1,0 +1,26 @@
+.header-bkg
+{
+  background    : url("../../demos/images/bkg.jpg") no-repeat scroll top;
+  min-height    : 500px;
+  padding-top   : em(40);
+  margin-bottom : em(150);
+}
+
+.banner-message
+{
+  color         : #fff;
+  max-width     : 60%;
+  margin-bottom : em(70);
+}
+
+.main-header
+{
+  margin-bottom : em(70);
+}
+
+.code-section-header
+{
+  border-bottom : 2px solid $primary-color;
+  padding       : em(20);
+  margin        : em(-20) em(-20) 0 em(-20);
+}

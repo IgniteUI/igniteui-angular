@@ -1,31 +1,43 @@
-<div id="phoneContainer" class="phone">
-    <div id="mobileDiv" class="screen">
-        <div>
-            <span class="componentTitle">Button</span><br>
-            <span class="componentDesc">A directive that applies button functionality to an element.</span><br><br>
-            <span igButton="flat" igRipple>Flat</span><br>
-            <span igButton="raised" igRipple="white">Raised</span>  
-            <span igButton="raised" igButtonColor="#FBB13C" igButtonBackground="#340068" igRipple="white">Raised Custom</span> 
-            <span igButton="raised" igButtonColor="yellow" igButtonBackground="black" igRipple="yellow">Raised Custom</span> 
-            <span igButton="gradient" igRipple="white">Gradient</span>
-            <span igButton="raised" disabled>Disabled</span>
-            <div style="display: flex; flex-wrap: row; padding: 10px 10px">
-                <span igButton="fab" igRipple="white"><i class="material-icons">add</i></span>
-                <span igButton="fab" igButtonColor="#484848" igButtonBackground="white" igRipple="#484848">
-                    <i class="material-icons">edit</i>
-                </span>
-            </div>
-            <div style="display: flex; flex-wrap: row; padding: 10px 0">
-                <span igButton="icon" igRipple igRippleCentered="true">
-                    <i class="material-icons">search</i>
-                </span>
-                <span igButton="icon" igRipple igButtonColor="#E41C77" igRippleCentered="true">
-                    <i class="material-icons">favorite</i>
-                </span>
-                <span igButton="icon" igRipple igRippleCentered="true">
-                    <i class="material-icons">more_vert</i>
-                </span>
-            </div>
-        </div>
+<h1 class="componentTitle">Button</h1>
+<p class="componentDesc">A directive that applies button functionality to an element.</p>
+
+<div class="flex-column  space-wrapper justify-content-start">
+
+    <div class="flex-container flex-wrap justify-content-b">
+        <button igButton="flat" igRipple>Flat</button>
+
+        <button igButton="raised" igRipple="white">Raised</button>
+
+        <button igButton="raised" igButtonColor="#FBB13C" igButtonBackground="#340068" igRipple="white">Raised Custom</button>
+
+        <button igButton="gradient" igRipple="white">Gradient Button</button>
+
+        <button igButton="raised" [disabled]="true">Disabled</button>
+    </div>
+
+    <div class="special-position flex-column">
+        <span igButton="fab" igButtonColor="#484848" igButtonBackground="white" igRipple="#484848">
+            <i class="material-icons">edit</i>
+        </span>
+
+        <span igButton="fab" igRipple="white">
+            <i class="material-icons">add</i>
+        </span>
+    </div>
+
+    <div class="flex-container">
+        <span igButton="icon" igRipple igRippleCentered="true">
+            <i class="material-icons">search</i>
+        </span>
+
+        <span igButton="icon" igRipple igButtonColor="#E41C77" igRippleCentered="true">
+            <i class="material-icons">favorite</i>
+        </span>
+
+            <span igButton="icon" igRipple igRippleCentered="true">
+            <i class="material-icons">more_vert</i>
+        </span>
     </div>
 </div>
+
+

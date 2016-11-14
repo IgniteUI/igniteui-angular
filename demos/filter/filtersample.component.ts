@@ -15,10 +15,10 @@ export class FilterSampleComponent {
     search2: string;
 
     private navItems: Array<Object> = [
-            { key:"1", text: "Nav1", link: "#" },
-            { key:"2", text: "Nav2", link: "#" },
-            { key:"3", text: "Nav3", link: "#" },
-            { key:"4", text: "Nav4", link: "#" }
+            { key:"1", text: "List Item One", link: "#" },
+            { key:"2", text: "List Item Two", link: "#" },
+            { key:"3", text: "List Item Three", link: "#" },
+            { key:"4", text: "List Item Four", link: "#" }
         ];
 
     get fo1() {
