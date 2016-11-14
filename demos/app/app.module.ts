@@ -13,7 +13,7 @@ import { ButtonSampleModule } from "./button/sample.module";
 import { AvatarSampleModule } from "./avatar/sample.module";
 import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
 import { NavbarSampleModule } from "./navbar/sample.module";
-import { ModalSampleModule } from "./modal/sample.module";
+import { DialogSampleModule } from "./dialog/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
 import { IgxSnackbarSampleModule } from "./snackbar/sample.module";
 import { routing } from "./app.routing";
@@ -34,7 +34,7 @@ import { routing } from "./app.routing";
         NavDrawerSampleModule,
         NavbarSampleModule,
         IgxSnackbarSampleModule,
-        ModalSampleModule,
+        DialogSampleModule,
         IconSampleModule
     ],
     declarations: [

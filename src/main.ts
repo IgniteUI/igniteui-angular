@@ -17,7 +17,7 @@ export * from './label/label';
 export * from './switch/switch';
 export * from './avatar/avatar';
 export * from './layout/layout';
-export * from './modal/modal';
+export * from './dialog/dialog';
 export * from './navbar/navbar';
 export * from './directives/filter';
 export * from './directives/ripple';

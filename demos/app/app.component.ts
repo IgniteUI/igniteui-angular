@@ -13,7 +13,7 @@ import { Component } from "@angular/core";
             <span igButton routerLink="/avatar">Avatar</span>
             <span igButton routerLink="/navigation-drawer">Navigation Drawer</span>
             <span igButton routerLink="/navbar">Navbar</span>
-            <span igButton routerLink="/modal">Modal</span>
+            <span igButton routerLink="/dialog">Dialog</span>
             <span igButton routerLink="/icon">Icon</span>
             <span igButton routerLink="/snackbar">Snackbar</span>
         </nav>

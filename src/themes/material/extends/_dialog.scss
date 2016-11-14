@@ -1,0 +1,67 @@
+%igx-dialog-display {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background: $overlay-color;
+    opacity: 1;
+    z-index: 24;
+    animation: fade-in .2s ease-out, steps(1, end) backwards;
+}
+
+%igx-dialog--hidden {
+    display: none;
+}
+
+%igx-dialog-window {
+    position: absolute;
+    max-width: $dialog-max-width;
+    min-width: $dialog-min-width;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    padding: $dialog-padding;
+    border-radius: 2px;
+    background: $dialog-background;
+    box-shadow: $elevate-24;
+    animation: slide-in .2s ease-out backwards;
+}
+
+%igx-dialog-title {
+    color: $off-black;
+    font-size: $dialog-title-font-size;
+    line-height: $dialog-title-line-height;
+    padding-top: $dialog-title-padding-top;
+    padding-bottom: $dialog-title-padding-bottom;
+    font-weight: $dialog-title-font-weight;
+}
+
+%igx-dialog-content {
+    color: gray;
+    font-size: $dialog-message-font-size;
+    line-height: $dialog-message-line-height;
+    padding-top: $dialog-message-padding-top;
+    padding-bottom: $dialog-message-padding-bottom;
+}
+
+%igx-dialog-actions {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    padding: $dialog-actions-padding;
+    margin: $dialog-actions-margin;
+}
+
+
+@keyframes slide-in {
+    0% {
+        transform: translate3d(-50%, 0%, 0);
+    }
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+}

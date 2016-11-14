@@ -1,20 +1,20 @@
 import { NgModule } from "@angular/core";
 
-import { ModalModule } from "../../../src/main";
+import { DialogModule } from "../../../src/main";
 import { ButtonModule } from "../../../src/main";
 import { IgRippleModule } from "../../../src/main";
 import { IgInput } from "../../../src/main";
-import { ModalSampleComponent } from "./sample.component";
+import { DialogSampleComponent } from "./sample.component";
 
 @NgModule({
     imports: [
-        ModalModule,
+        DialogModule,
         ButtonModule,
         IgRippleModule,
         IgInput  
     ],
     declarations: [
-        ModalSampleComponent
+        DialogSampleComponent
     ]
 })
-export class ModalSampleModule {}
+export class DialogSampleModule {}

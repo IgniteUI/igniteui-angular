@@ -1,24 +1,24 @@
 import { Component, OnInit } from "@angular/core";
-import { ModalModule, Modal } from "../../../src/main";
+import { DialogModule, Dialog } from "../../../src/main";
 import { ButtonModule } from "../../../src/main";
 import { IgInput } from "../../../src/main";
 
 @Component({
     moduleId: module.id,
-    selector: "modal-sample",
+    selector: "dialog-sample",
     styleUrls: ["sample.css"],
     templateUrl: "sample.html",
 })
-export class ModalSampleComponent implements OnInit {
+export class DialogSampleComponent implements OnInit {
     ngOnInit() {
 
     }
 
     onDialogOKSelected(args) {
         // args.event - event
-        // args.modal - modal
+        // args.dialog - dialog
 
         // perform OK action
-        args.modal.close();
+        args.dialog.close();
     };
 }
