@@ -15,6 +15,7 @@ import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
 import { NavbarSampleModule } from "./navbar/sample.module";
 import { ModalSampleModule } from "./modal/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
+import { IgxSnackbarSampleModule } from "./snackbar/sample.module";
 import { routing } from "./app.routing";
 
 @NgModule({
@@ -32,6 +33,7 @@ import { routing } from "./app.routing";
         AvatarSampleModule,
         NavDrawerSampleModule,
         NavbarSampleModule,
+        IgxSnackbarSampleModule,
         ModalSampleModule,
         IconSampleModule
     ],

@@ -18,6 +18,7 @@ Current list of controls include:
 | **navbar**            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     | **label**             |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
 | **tabbar**            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     | **layout**            |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks)  |
 | **dialog**            |     Initial version | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/modal/README.md) |||           |                                                           |
+| **snackbar**          |     Initial version | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/snackbar/README.md) |||        |                                                           |
 | **navigation drawer** |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
 | **radio**             |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
 | **checkbox**          |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
