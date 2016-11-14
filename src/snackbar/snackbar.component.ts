@@ -15,9 +15,6 @@ import { CommonModule } from '@angular/common';
 @Component({
     selector: 'ig-snackbar',
     moduleId: module.id,
-    styleUrls: [
-        'snackbar.component.scss'
-    ],
     templateUrl: 'snackbar.component.html',
     providers: [HammerGesturesManager]
 })
@@ -54,11 +51,11 @@ export class IgxSnackbar {
     public displayTime: number = 10000;
 
     /**
-     * The name of the IgxSnackbar component action
+     * The text of the IgxSnackbar component action
      * @type {string}
      */
     @Input()
-    public actionName?: string;
+    public actionText?: string;
 
     /**
      * The event that will thrown when the action is executed,
@@ -66,7 +63,7 @@ export class IgxSnackbar {
      * @type {EventEmitter}
      */
     @Output()
-    public onAction? = new EventEmitter();
+    public onAction = new EventEmitter();
 
     private _intevalId;
 
@@ -103,5 +100,5 @@ export class IgxSnackbar {
     declarations: [IgxSnackbar],
     exports: [IgxSnackbar]
 })
-export class IgxXSnackbarModule {
+export class IgxSnackbarModule {
 }
