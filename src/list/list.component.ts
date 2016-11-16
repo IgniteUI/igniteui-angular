@@ -8,30 +8,30 @@ export interface IListChild
 }
 
 // ====================== LIST ================================
-// The `<ig-list>` directive is a list container for items and headers 
+// The `<igx-list>` directive is a list container for items and headers
 @Component({
-    selector: 'ig-list',
+    selector: 'igx-list',
     moduleId: module.id, // commonJS standard
-    templateUrl: 'list-content.html'
+    templateUrl: 'list-content.component.html'
 })
 
-export class List { 
+export class IgxList {
     private _innerStyle: string = "ig-list";
 
     children: IListChild[] = [];
     get items() {
         return this.children.filter((item: IListChild) => {
-            return item instanceof ListItem;
+            return item instanceof IgxListItem;
         });
     }
 
     get headers() {
         return this.children.filter((header: IListChild) => {
-            return header instanceof ListHeader;
+            return header instanceof IgxListHeader;
         });
     }
 
-    constructor(private element: ElementRef) {        
+    constructor(private element: ElementRef) {
     }
 
     removeChild(index: number) {
@@ -44,21 +44,21 @@ export class List {
 }
 
 // ====================== HEADER ================================
-// The `<ig-header>` directive is a header intended for row items in
-// a `<ig-list>` container.
+// The `<igx-header>` directive is a header intended for row items in
+// a `<igx-list>` container.
 @Component({
-    selector: 'ig-list-header',
+    selector: 'igx-list-header',
     moduleId: module.id, // commonJS standard
-    templateUrl: 'list-content.html'
+    templateUrl: 'list-content.component.html'
 })
 
-export class ListHeader implements OnInit, IListChild {
+export class IgxListHeader implements OnInit, IListChild {
     private _innerStyle: string = "ig-list__header";
     get index(): number {
         return this.list.children.indexOf(this);
     }
 
-    constructor( @Inject(forwardRef(() => List)) private list: List, public element: ElementRef) { }
+    constructor( @Inject(forwardRef(() => IgxList)) private list: IgxList, public element: ElementRef) { }
 
     public ngOnInit() {
         this.list.addChild(this);
@@ -66,15 +66,15 @@ export class ListHeader implements OnInit, IListChild {
 }
 
 // ====================== ITEM ================================
-// The `<ig-item>` directive is a container intended for row items in
-// a `<ig-list>` container.
+// The `<igx-item>` directive is a container intended for row items in
+// a `<igx-list>` container.
 @Component({
-    selector: 'ig-list-item',
+    selector: 'igx-list-item',
     moduleId: module.id, // commonJS standard
-    templateUrl: 'list-content.html'
+    templateUrl: 'list-content.component.html'
 })
 
-export class ListItem implements OnInit, OnDestroy, IListChild {
+export class IgxListItem implements OnInit, OnDestroy, IListChild {
     @ViewChild('wrapper') wrapper: ElementRef;
 
     private _VISIBLE_AREA_ON_FULL_PAN = 40; // in pixels
@@ -115,21 +115,21 @@ export class ListItem implements OnInit, OnDestroy, IListChild {
     @Input() href: string;
     @Input() options: Array<Object>
 
-    constructor( @Inject(forwardRef(() => List)) private list: List, public element: ElementRef, private _renderer: Renderer) {
-        
+    constructor( @Inject(forwardRef(() => IgxList)) private list: IgxList, public element: ElementRef, private _renderer: Renderer) {
+
     }
 
     public ngOnInit() {
         this.list.addChild(this);
 
-        this._addEventListeners();        
+        this._addEventListeners();
 
         // Fix for default value of touch-action: none, set by Hammer.js
         this.element.nativeElement.style.touchAction = "inherit";
     }
 
     public ngOnDestroy() {
-        this.list.removeChild(this.index);        
+        this.list.removeChild(this.index);
     }
 
     private _addEventListeners() {
@@ -138,7 +138,7 @@ export class ListItem implements OnInit, OnDestroy, IListChild {
             this._renderer.listen(this.element.nativeElement, 'panstart', (event) => { this.panStart(event); });
             this._renderer.listen(this.element.nativeElement, 'panmove', (event) => { this.panMove(event); });
             this._renderer.listen(this.element.nativeElement, 'panend', (event) => { this.panEnd(event); });
-        }        
+        }
     }
 
     private cancelEvent(ev: HammerInput) {
@@ -192,9 +192,9 @@ export class ListItem implements OnInit, OnDestroy, IListChild {
 }
 
 @NgModule({
-    declarations: [List, ListItem, ListHeader],
+    declarations: [IgxList, IgxListItem, IgxListHeader],
     imports: [CommonModule],
-    exports: [List, ListItem, ListHeader]
+    exports: [IgxList, IgxListItem, IgxListHeader]
 })
-export class ListModule {
+export class IgxListModule {
 }

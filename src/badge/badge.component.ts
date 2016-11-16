@@ -9,7 +9,7 @@ export enum Position { TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }
 @Component({
     selector: 'igx-badge',
     moduleId: module.id,
-    templateUrl: 'badge.html'
+    templateUrl: 'badge.component.html'
 })
 export class IgxBadge {
     private _type: string = "";

@@ -10,7 +10,7 @@ With the ig-modal you can create **alerts**, **dialogs** and **custom dialogs**
 ##Alerts are done by adding title, message and button label.
 
 ```html
-<ig-modal #alert 
+<ig-modal #alert
     title="Alert"
     message="Your email has been sent successfully!"
     action1ButtonLabel="OK" (onAction1Select)="alert.close()">
@@ -26,8 +26,8 @@ You can attach to the action select event `(onAction1Select)="alert.close()"`
 ##Dialogs are done by adding another button.
 
 ```html
-<ig-modal #dialog 
-    title="Confirmation" 
+<ig-modal #dialog
+    title="Confirmation"
     message="Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?"
     action1ButtonLabel="Cancel"
     (onAction1Select)="dialog.close()"
@@ -53,7 +53,7 @@ You can access all properties of the button component with the following attribu
 When you are using Custom Dialogs you don't have a message property set.
 
 ```HTML
-<ig-modal #form 
+<ig-modal #form
     title="Sign In"
     action1ButtonLabel="Cancel"
     (onAction1Select)="form.close()"
@@ -63,11 +63,11 @@ When you are using Custom Dialogs you don't have a message property set.
     backgroundClick="true">
     <div class="ig-form-group">
         <input type="text" igInput />
-        <label igLabel>Username</label>
+        <label igxLabel>Username</label>
     </div>
     <div class="ig-form-group">
         <input type="password" igInput />
-        <label igLabel>Password</label>
+        <label igxLabel>Password</label>
     </div>
 </ig-modal>
 ```

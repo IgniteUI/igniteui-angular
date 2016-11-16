@@ -1,16 +1,16 @@
 import { Component, Input, NgModule } from '@angular/core';
 import { HammerGesturesManager } from "../core/touch";
 import { Location } from '@angular/common';
-import { ButtonModule } from "../button/button";
+import { IgxButtonModule } from "../button/button.directive";
 
 @Component({
-    selector: "ig-navbar",
-    moduleId: module.id, 
-    templateUrl: "navbar.html",
+    selector: "igx-navbar",
+    moduleId: module.id,
+    templateUrl: "navbar.component.html",
     providers: [HammerGesturesManager]
 })
-export class Navbar {
-    
+export class IgxNavbar {
+
     @Input() title: string;
     @Input('icon') icon: string;
 
@@ -33,9 +33,9 @@ export class Navbar {
 }
 
 @NgModule({
-    imports: [ButtonModule],
-    declarations: [Navbar],
-    exports: [Navbar]
+    imports: [IgxButtonModule],
+    declarations: [IgxNavbar],
+    exports: [IgxNavbar]
 })
-export class NavbarModule {
+export class IgxNavbarModule {
 }

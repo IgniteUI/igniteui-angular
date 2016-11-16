@@ -1,6 +1,6 @@
 import { Component, ViewChild, QueryList, ViewChildren } from "@angular/core";
-import { AvatarModule, Avatar } from "../../../src/avatar/avatar";
-import { IgxBadgeModule, IgxBadge } from "../../../src/badge/badge";
+import { IgxAvatarModule, IgxAvatar } from "../../../src/avatar/avatar.component";
+import { IgxBadgeModule, IgxBadge } from "../../../src/badge/badge.component";
 
 @Component({
     selector: "avatar-sample",
@@ -15,7 +15,7 @@ import { IgxBadgeModule, IgxBadge } from "../../../src/badge/badge";
 export class AvatarSampleComponent {
     //@ViewChild(Avatar) avatar: Avatar;
     // Collection of avatars
-    @ViewChildren(Avatar) avatar;
+    @ViewChildren(IgxAvatar) avatar;
     initials: string = 'ZK';
     bgColor: string = '#0375be';
     src: string = '';

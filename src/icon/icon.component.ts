@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 @Component({
 	selector: 'igx-icon',
 	moduleId: module.id,
-	templateUrl: 'icon.html'
+	templateUrl: 'icon.component.html'
 })
 
 export class IgxIcon {
@@ -20,7 +20,7 @@ export class IgxIcon {
 	@Input('fontSet') set fontSet(value: string) {
 		this.font = value || this.font;
 	}
-	
+
 	@Input('isActive') set isActive(value: string) {
 		this.active = value || this.active;
 	}

@@ -22,12 +22,12 @@ function MakeProvider(type: any) {
 }
 
 @Component({
-    selector: 'ig-radio',
+    selector: 'igx-radio',
     moduleId: module.id,
-    templateUrl: 'radio.html',
-    providers: [MakeProvider(IgRadio)]
+    templateUrl: 'radio.component.html',
+    providers: [MakeProvider(IgxRadio)]
 })
-export class IgRadio implements ControlValueAccessor {
+export class IgxRadio implements ControlValueAccessor {
 
     @Input() value: any;
 
@@ -81,7 +81,7 @@ export class IgRadio implements ControlValueAccessor {
 }
 
 @NgModule({
-    declarations: [IgRadio],
-    exports: [IgRadio]
+    declarations: [IgxRadio],
+    exports: [IgxRadio]
 })
-export class IgRadioModule {}
+export class IgxRadioModule {}

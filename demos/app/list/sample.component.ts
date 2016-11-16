@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from "@angular/core";
-import { ListModule, List } from "../../../src/list/list";
-import { FilterModule, FilterOptions } from '../../../src/directives/filter';
-import { IgRippleModule } from '../../../src/directives/ripple';
+import { IgxListModule, IgxList } from "../../../src/list/list.component";
+import { IgxFilterModule, IgxFilterOptions } from '../../../src/directives/filter.directive';
+import { IgxRippleModule } from '../../../src/directives/ripple.directive';
 
 @Component({
     selector: "list-sample",
@@ -27,14 +27,14 @@ export class ListSampleComponent {
         ];
 
     get fo1() {
-        var _fo = new FilterOptions();
+        var _fo = new IgxFilterOptions();
         _fo.key = "text";
         _fo.inputValue = this.search1;
         return _fo;
     }
 
     get fo2() {
-        var _fo = new FilterOptions();
+        var _fo = new IgxFilterOptions();
 
         _fo.items = this.declarativeList.items;
         _fo.inputValue = this.search2;
@@ -56,11 +56,9 @@ export class ListSampleComponent {
 
     private filteringHandler = function(args) {
         args.cancel = !this.checkbox.checked;
-        console.log(args);
     }
 
     private filteredHandler = function(args) {
-        console.log(args);
     }
 
  }

@@ -4,7 +4,7 @@ import {
 } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { IgxBadgeModule, IgxBadge } from './badge';
+import { IgxBadgeModule, IgxBadge } from './badge.component';
 
 
 describe('Badge', function () {

@@ -21,15 +21,15 @@ function MakeProvider(type: any) {
 }
 
 @Component({
-    selector: "ig-checkbox",
+    selector: "igx-checkbox",
     moduleId: module.id,
-    templateUrl: "checkbox.html",
-    providers: [MakeProvider(IgCheckbox)]
+    templateUrl: "checkbox.component.html",
+    providers: [MakeProvider(IgxCheckbox)]
 })
-export class IgCheckbox implements ControlValueAccessor {
+export class IgxCheckbox implements ControlValueAccessor {
 
     @Input() value: any;
-    @Input() id: string = `ig-checkbox-${nextId++}`;
+    @Input() id: string = `igx-checkbox-${nextId++}`;
     @Input() name: string;
     @Input() disabled: boolean = false;
     @Input() tabindex: number = null;
@@ -79,7 +79,7 @@ export class IgCheckbox implements ControlValueAccessor {
 
 
 @NgModule({
-    declarations: [IgCheckbox],
-    exports: [IgCheckbox]
+    declarations: [IgxCheckbox],
+    exports: [IgxCheckbox]
 })
-export class CheckboxModule {}
+export class IgxCheckboxModule {}

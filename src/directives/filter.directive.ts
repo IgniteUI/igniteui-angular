@@ -2,13 +2,13 @@ import { Directive, Pipe, PipeTransform, NgModule, Output, EventEmitter, Element
 import { CommonModule } from "@angular/common";
 
 @Directive({
-    selector: '[filter]',
+    selector: '[igxFilter]',
 })
-export class FilterDirective implements OnChanges {
+export class IgxFilterDirective implements OnChanges {
     @Output() filtering = new EventEmitter(false); // synchronous event emitter
     @Output() filtered = new EventEmitter();
 
-    @Input("filter") filterOptions: FilterOptions;
+    @Input("igxFilter") filterOptions: IgxFilterOptions;
 
     constructor(private element: ElementRef, renderer: Renderer) {
     }
@@ -21,7 +21,7 @@ export class FilterDirective implements OnChanges {
             changes["filterOptions"].previousValue &&
             changes["filterOptions"].currentValue["inputValue"] !== changes["filterOptions"].previousValue["inputValue"]) {
             this.filter();
-        }    
+        }
     }
 
     private filter() {
@@ -34,13 +34,13 @@ export class FilterDirective implements OnChanges {
 
         if (args.cancel) {
             return;
-        }        
+        }
 
-        var pipe = new FilterPipe();
+        var pipe = new IgxFilterPipe();
 
         var filtered = pipe.transform(this.filterOptions.items, this.filterOptions);
         this.filtered.emit({ filteredItems: filtered });
-    }   
+    }
 }
 
 @Pipe({
@@ -48,10 +48,10 @@ export class FilterDirective implements OnChanges {
     pure: false
 })
 
-export class FilterPipe implements PipeTransform {
+export class IgxFilterPipe implements PipeTransform {
     transform(items: Array<any>,
         // options - initial settings of filter functionality
-        options: FilterOptions) {
+        options: IgxFilterOptions) {
 
         var result = [];
 
@@ -80,10 +80,10 @@ export class FilterPipe implements PipeTransform {
         });
 
         return result;
-    }    
+    }
 }
 
-export class FilterOptions {
+export class IgxFilterOptions {
     // Input text value that will be used as a filtering pattern (matching condition is based on it)
     public inputValue: string = "";
 
@@ -128,7 +128,7 @@ export class FilterOptions {
     metConditionFn(item: any) {
         if (item.hasOwnProperty("hidden")) {
             item.hidden = false;
-        }        
+        }
     };
 
 	// Function - executed for every NOT matched item after matching test
@@ -136,14 +136,14 @@ export class FilterOptions {
     overdueConditionFn(item: any) {
         if (item.hasOwnProperty("hidden")) {
             item.hidden = true;
-        }  
+        }
     };
 }
 
 @NgModule({
-    declarations: [FilterDirective, FilterPipe],
+    declarations: [IgxFilterDirective, IgxFilterPipe],
     imports: [CommonModule],
-    exports: [FilterDirective, FilterPipe]
+    exports: [IgxFilterDirective, IgxFilterPipe]
 })
-export class FilterModule {
+export class IgxFilterModule {
 }

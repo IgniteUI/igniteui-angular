@@ -1,22 +1,22 @@
 import { Directive, Input, Renderer, ElementRef, NgModule, HostListener } from '@angular/core';
 
 @Directive({
-    selector: '[igRipple]',
+    selector: '[igxRipple]',
 })
-class RippleDirective {
+class IgxRippleDirective {
 
     private _centered: boolean = false;
     private _remaining: number = 0;
 
     protected container: HTMLElement;
 
-    @Input("igRippleTarget") rippleTarget: string = "";
+    @Input("igxRippleTarget") rippleTarget: string = "";
 
-    @Input('igRippleCentered') set centered(value: boolean) {
+    @Input('igxRippleCentered') set centered(value: boolean) {
         this._centered = value || this.centered;
     }
-    @Input('igRipple') rippleColor: string;
-    @Input('igRippleDuration') rippleDuration: number = 600;
+    @Input('igxRipple') rippleColor: string;
+    @Input('igxRippleDuration') rippleDuration: number = 600;
 
 
     @HostListener('mousedown', ['$event'])
@@ -87,7 +87,7 @@ class RippleDirective {
 }
 
 @NgModule({
-    declarations: [RippleDirective],
-    exports: [RippleDirective]
+    declarations: [IgxRippleDirective],
+    exports: [IgxRippleDirective]
 })
-export class IgRippleModule { }
+export class IgxRippleModule { }

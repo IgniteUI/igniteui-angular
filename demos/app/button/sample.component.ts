@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { ButtonModule } from "../../../src/button/button";
+import { IgxButtonModule } from "../../../src/button/button.directive";
 
 @Component({
     selector: "button-sample",

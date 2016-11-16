@@ -12,19 +12,19 @@
             <ng-content *ngIf="!message"></ng-content>
         </div>
         <div class="ig-modal__window-actions">
-            <button *ngIf="action1ButtonLabel" 
-                igButton="{{ action1ButtonType }}"
-                igButtonColor="{{ action1ButtonColor }}"
-                igButtonBackground="{{ action1ButtonBackgroundColor }}" 
-                igRipple="{{ action1ButtonRipple }}"
+            <button *ngIf="action1ButtonLabel"
+                igxButton="{{ action1ButtonType }}"
+                igxButtonColor="{{ action1ButtonColor }}"
+                igxButtonBackground="{{ action1ButtonBackgroundColor }}"
+                igxRipple="{{ action1ButtonRipple }}"
                 (click)="onInternalAction1Select($event)">
                 {{ action1ButtonLabel }}
             </button>
-            <button *ngIf="action2ButtonLabel" 
-                igButton="{{ action2ButtonType }}"
-                igButtonColor="{{ action2ButtonColor }}"
-                igButtonBackground="{{ action2ButtonBackgroundColor }}" 
-                igRipple="{{ action2ButtonRipple }}"
+            <button *ngIf="action2ButtonLabel"
+                igxButton="{{ action2ButtonType }}"
+                igxButtonColor="{{ action2ButtonColor }}"
+                igxButtonBackground="{{ action2ButtonBackgroundColor }}"
+                igxRipple="{{ action2ButtonRipple }}"
                 (click)="onInternalAction2Select($event)">
                 {{ action2ButtonLabel }}
             </button>
