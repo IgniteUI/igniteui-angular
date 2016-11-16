@@ -1,46 +1,71 @@
 .ig-carousel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column nowrap;
     position: relative;
     transform-style: preserve-3d;
     outline: none;
 }
 
 .ig-carousel-indicators {
-    position: absolute;
-    text-align: center;
+    position: fixed;
     list-style: none;
     z-index: 10;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 10px;
+    bottom: 0;
     padding: 0;
-
+    opacity: .85;
     li {
+        position: relative;
         display: inline-block;
         width: 12px;
         height: 12px;
-        margin: 1px;
+        margin: 5px;
         text-indent: -9999px;
         cursor: pointer;
-        background-color: rgba(0, 0, 0, 0);
+        background-color: rgba(255,255,255, .2);
         border: 1px solid #fff;
-        border-radius: 10px;
+        border-radius: 50%;
+        transition: scale .25s ease-out;
+        box-shadow:  0px 1px 3px 0px rgba(0, 0, 0, 0.2),
+            0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+            0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+        &:after {
+            content: '';
+            position: absolute;
+            top: -1px;
+            bottom: 0;
+            left: -1px;
+            right: 0;
+            width: inherit;
+            height: inherit;
+            border-radius: inherit;
+            background: #fff;
+            transform: scale(0);
+        }
+        &:hover {
+            transform: scale(1.3);
+            /*&:after {
+                transform: scale(.5);
+            }*/
+        }
+        @media only screen and (max-width: 600px) {
+            display: none;
+        }
     }
 
     .active {
-        color: #fff;
-        background: #fff;
-        width: 12px;
-        height: 12px;
-        border-radius: 10px;
+        &:after {
+            animation: scale-in .4s ease-out both;
+        }
     }
 }
 
 .ig-carousel-inner {
     position: relative;
     width: 100%;
-    height: 250px;
+    height: inherit;
     overflow: hidden;
-
     .item {
         position: relative;
         display: none;
@@ -63,7 +88,6 @@
         }
         img {
             width: 100%;
-            height: 100%;
         }
     }
 
@@ -91,21 +115,28 @@
 
 .ig-carousel-control {
     position: absolute;
-    display: block;
-    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 46px;
+    height: 46px;
     top: 50%;
     transform: translateY(-50%);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, .5);
     color: #fff;
-    font-size: 26px;
-
-    :hover {
-        background-color: rgba(255, 255, 255, .5);
-        cursor: pointer;
-    }
-
+    cursor: pointer;
+    background-color: rgba(255,255,255,.3);
+    margin: 0 16px;
+    border-radius: 50%;
+    box-shadow:  0px 1px 3px 0px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+    0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+    transition: opacity .25s ease-out;
     span {
-        padding: 10px;
+        display: flex;
+        align-items: center;
+    }
+    &:hover {
+        opacity: .7;
     }
 }
 
@@ -167,4 +198,13 @@
 
 @keyframes goRight {
     from { transform: translateX(100%); }
+}
+
+@keyframes scale-in {
+    60% {
+        transform: scale(1.3);
+    }
+    100% {
+        transform: scale(1);
+    }
 }

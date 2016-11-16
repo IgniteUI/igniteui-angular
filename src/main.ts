@@ -22,3 +22,4 @@ export * from './navbar/navbar.component';
 export * from './directives/filter.directive';
 export * from './directives/ripple.directive';
 export * from './badge/badge.component';
+export * from './snackbar/snackbar.component';

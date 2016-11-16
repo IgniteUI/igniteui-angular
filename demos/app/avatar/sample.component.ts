@@ -22,20 +22,19 @@ export class AvatarSampleComponent {
     roundShape: string = "true";
 
     constructor() {
-        //this.setImageSource();
         this.setImageSource();
     }
 
     setImageSource() {
-        this.src = "https://unsplash.it/60/60?image=" + Math.floor((Math.random() * 50) + 1);
+        this.src = "http://lorempixel.com/300/300/people/" + Math.floor((Math.random() * 5) + 1);
     }
 
     public changeLink() {
-        //this.avatar.srcImage = "https://unsplash.it/60/60?image=" + Math.floor((Math.random() * 50) + 1);
-
         // for more avatars
         for (let each of this.avatar.toArray()) {
-            each.srcImage = "https://unsplash.it/60/60?image=" + Math.floor((Math.random() * 50) + 1);
+            if(each.src) {
+                each.srcImage = "http://lorempixel.com/300/300/people/" + Math.floor((Math.random() * 10) + 1);
+            }
         }
     }
 }
