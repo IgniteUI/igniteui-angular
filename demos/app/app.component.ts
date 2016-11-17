@@ -5,16 +5,17 @@ import { Component } from "@angular/core";
     template:`
         <h1 style="text-align: center">Ignite UI JS Blocks Samples</h1>
         <nav style="display: flex; justify-content: center; flex-wrap: wrap">
-            <span igButton routerLink="/inputs">Inputs</span>
-            <span igButton routerLink="/carousel">Carousel</span>
-            <span igButton routerLink="/tabbar">TabBar</span>
-            <span igButton routerLink="/list">List</span>
-            <span igButton routerLink="/buttons">Buttons</span>
-            <span igButton routerLink="/avatar">Avatar</span>
-            <span igButton routerLink="/navigation-drawer">Navigation Drawer</span>
-            <span igButton routerLink="/navbar">Navbar</span>
-            <span igButton routerLink="/modal">Modal</span>
-            <span igButton routerLink="/icon">Icon</span>
+            <span igxButton routerLink="/inputs">Inputs</span>
+            <span igxButton routerLink="/carousel">Carousel</span>
+            <span igxButton routerLink="/tabbar">TabBar</span>
+            <span igxButton routerLink="/list">List</span>
+            <span igxButton routerLink="/buttons">Buttons</span>
+            <span igxButton routerLink="/avatar">Avatar</span>
+            <span igxButton routerLink="/navigation-drawer">Navigation Drawer</span>
+            <span igxButton routerLink="/navbar">Navbar</span>
+            <span igxButton routerLink="/modal">Modal</span>
+            <span igxButton routerLink="/icon">Icon</span>
+            <span igxButton routerLink="/snackbar">Snackbar</span>
         </nav>
         <router-outlet></router-outlet>
     `
