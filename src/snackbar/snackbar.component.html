@@ -1,4 +1,4 @@
 <div class="ig-snackbar" *ngIf="isVisible">
-    <span>{{ message }}</span>
-    <button *ngIf="actionText" igButton="flat" (click)="_triggerAction(snackbar)">{{ actionText }}</button>
+    <span class="igx-snackbar__message">{{ message }}</span>
+    <button class="igx-snackbar__button" *ngIf="actionText" igxButton="flat" igxButtonBackground="transparent" (click)="_triggerAction(snackbar)">{{ actionText }}</button>
 </div>
