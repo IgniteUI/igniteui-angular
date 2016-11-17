@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
 
+
 import { IgxComponentsModule, IgxDirectivesModule } from "../../src/main";
 
 import { AppComponent } from "./app.component";
@@ -16,6 +17,7 @@ import { NavbarSampleModule } from "./navbar/sample.module";
 import { ModalSampleModule } from "./modal/sample.module";
 import { ProgressBarSampleModule } from "./progressbar/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
+import { IgxSnackbarSampleModule } from "./snackbar/sample.module";
 import { routing } from "./app.routing";
 
 @NgModule({
@@ -33,7 +35,11 @@ import { routing } from "./app.routing";
         AvatarSampleModule,
         NavDrawerSampleModule,
         NavbarSampleModule,
+<<<<<<< HEAD
         ProgressBarSampleModule,
+=======
+        IgxSnackbarSampleModule,
+>>>>>>> 35ae2fc00575475f9f660c8096787fc5fc35911b
         ModalSampleModule,
         IconSampleModule,
     ],

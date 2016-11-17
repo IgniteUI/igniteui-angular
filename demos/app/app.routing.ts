@@ -1,7 +1,6 @@
 import { ModuleWithProviders } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
-import { AppComponent } from "./app.component";
 import { InputSampleComponent } from "./input/sample.component";
 import { CarouselSampleComponent } from "./carousel/sample.component";
 import { TabBarSampleComponent } from "./tabbar/sample.component";
@@ -12,6 +11,7 @@ import { NavbarSampleComponent } from "./navbar/sample.component";
 import { ProgressbarSampleComponent } from "./progressbar/progressbarsample.component";
 import { ModalSampleComponent } from "./modal/sample.component";
 import { IconSampleComponent } from "./icon/sample.component";
+import { IgxSnackbarSampleComponent } from "./snackbar/sample.component";
 
 const appRoutes: Routes = [
     {
@@ -36,7 +36,7 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/icon',
+        redirectTo: '/carousel',
         pathMatch: 'full'
     },
     {
@@ -48,8 +48,13 @@ const appRoutes: Routes = [
         component: NavbarSampleComponent
     },
     {
+<<<<<<< HEAD
         path: "progressbar",
         component: ProgressbarSampleComponent
+=======
+        path: "snackbar",
+        component: IgxSnackbarSampleComponent
+>>>>>>> 35ae2fc00575475f9f660c8096787fc5fc35911b
     },
     {
         path: "modal",

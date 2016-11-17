@@ -1,4 +1,4 @@
-@include b(ig-badge){
+@include b(igx-badge){
     @extend %igx-badge-display;
 
     @include e(circle) {

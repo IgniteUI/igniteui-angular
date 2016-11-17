@@ -3,7 +3,7 @@
         Alert with one action button and message
     </h3>
 
-    <button igButton="raised" igButtonColor="white" igButtonBackground="#F44336" igRipple="white" (click)="alert.open()">
+    <button igxButton="raised" igxButtonColor="white" igxButtonBackground="#F44336" igxRipple="white" (click)="alert.open()">
         Alert
     </button>
 
@@ -15,14 +15,14 @@
         Dialog with two action buttons and message
     </h3>
 
-    <button igButton="raised" igButtonColor="white" igButtonBackground="#4CAF50" igRipple="white" (click)="dialog.open()">
+    <button igxButton="raised" igxButtonColor="white"igxButtonBackground="#4CAF50" igxRipple="white" (click)="dialog.open()">
         Dialog
     </button>
 
-    <ig-modal #dialog title="Confirmation" 
+    <ig-modal #dialog title="Confirmation"
         action1ButtonLabel="Cancel"
         (onAction1Select)="dialog.close()"
-        action2ButtonLabel="OK" 
+        action2ButtonLabel="OK"
         action2ButtonRipple="#4CAF50"
         (onAction2Select)="onDialogOKSelected($event)"
         message="Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?">
@@ -32,7 +32,7 @@
         Form with two action buttons and custom message
     </h3>
 
-    <button igButton="raised" igButtonColor="white" igButtonBackground="#0375be" igRipple="white" (click)="form.open()">
+    <button igxButton="raised" igxButtonColor="white" igxButtonBackground="#0375be" igRipple="white" (click)="form.open()">
         Form
     </button>
 
@@ -45,11 +45,11 @@
         backgroundClick="true">
         <div class="ig-form-group">
             <input type="text" igInput />
-            <label igLabel>Username</label>
+            <label igxLabel>Username</label>
         </div>
         <div class="ig-form-group">
             <input type="password" igInput />
-            <label igLabel>Password</label>
+            <label igxLabel>Password</label>
         </div>
     </ig-modal>
 </div>
