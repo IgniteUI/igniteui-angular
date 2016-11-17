@@ -44,7 +44,7 @@ export class IgxFilterDirective implements OnChanges {
 }
 
 @Pipe({
-    name: "filter",
+    name: "igxFilter",
     pure: false
 })
 

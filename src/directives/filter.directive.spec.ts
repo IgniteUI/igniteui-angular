@@ -141,11 +141,11 @@ describe("Filter", function () {
 });
 
 @Component({
-    template: `<igx-list [filter]="fo" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)" >
-                    <igx-list-header>Header</ig-list-header>
-                    <igx-list-item>Item 1</ig-list-item>
-                    <igx-list-item>Item 2</ig-list-item>
-                    <igx-list-item>Item 3</ig-list-item>
+    template: `<igx-list [igxFilter]="fo" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)" >
+                    <igx-list-header>Header</igx-list-header>
+                    <igx-list-item>Item 1</igx-list-item>
+                    <igx-list-item>Item 2</igx-list-item>
+                    <igx-list-item>Item 3</igx-list-item>
                 </igx-list>
                 <input #logInput />`
 })
@@ -180,7 +180,7 @@ class DeclarativeListTestComponent {
 
 @Component({
     template: `<igx-list>
-                 <igx-list-item *ngFor="let item of dataSourceItems | filter: fo">
+                 <igx-list-item *ngFor="let item of dataSourceItems | igxFilter: fo">
                     {{item.text}}
                  </igx-list-item>
               </igx-list>`
