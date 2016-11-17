@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ModalModule, Modal } from "../../../src/main";
-import { ButtonModule } from "../../../src/main";
-import { IgInput } from "../../../src/main";
+import { IgxButtonModule } from "../../../src/main";
+import { IgxInput } from "../../../src/main";
 
 @Component({
     moduleId: module.id,

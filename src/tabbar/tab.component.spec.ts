@@ -1,28 +1,28 @@
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TabBar, Tab, TabBarModule } from './tab';
+import { IgxTabBar, IgxTab, IgxTabBarModule } from './tab.component';
 import { Component, ViewChild, ContentChildren } from '@angular/core';
 
 describe("List", function () {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [TabBarModule],
+            imports: [IgxTabBarModule],
             declarations: [TabBarTestComponent, BottomTabBarTestComponent]
         })
             .compileComponents();
     }));
 
-    it('should initialize ig-tab-bar and ig-tabs', () => {
+    it('should initialize igx-tab-bar and igx-tabs', () => {
         let fixture = TestBed.createComponent(TabBarTestComponent),
             tabbar = fixture.componentInstance.tabbar;
 
         expect(tabbar).toBeDefined();
-        expect(tabbar instanceof TabBar).toBeTruthy();
+        expect(tabbar instanceof IgxTabBar).toBeTruthy();
         expect(tabbar.tabs instanceof Array).toBeTruthy();
         expect(tabbar.tabs.length).toBe(3);
 
         for (let i = 0; i < tabbar.tabs.length; i++) {
-            expect(tabbar.tabs[i] instanceof Tab).toBeTruthy();
+            expect(tabbar.tabs[i] instanceof IgxTab).toBeTruthy();
         }
     });
 
@@ -51,7 +51,7 @@ describe("List", function () {
             //expect(tabs[tabIndex].icon).toBe("icon" + (tabIndex + 1));
             //expect(tabs[tabIndex].icon).toBe("icon" + (tabIndex + 1));
         };
-        
+
         checkTabProperties(0);
         checkTabProperties(1);
     });
@@ -183,63 +183,63 @@ describe("List", function () {
 @Component({
     template: `
         <div #wrapperDiv>
-            <ig-tab-bar>
-                <ig-tab label="Tab 1" icon="library_music">
+            <igx-tab-bar>
+                <igx-tab label="Tab 1" icon="library_music">
                     <h1>Tab 1 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </ig-tab>
-                <ig-tab label="Tab 2" icon="video_library">
+                </igx-tab>
+                <igx-tab label="Tab 2" icon="video_library">
                     <h1>Tab 2 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </ig-tab>
-                <ig-tab label="Tab 3" icon="library_books">
+                </igx-tab>
+                <igx-tab label="Tab 3" icon="library_books">
                     <h1>Tab 3 Content</h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                        Vivamus vitae malesuada odio. Praesent ante lectus, porta a eleifend vel, sodales eu nisl. 
-                        Vivamus sit amet purus eu lectus cursus rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat. 
-                        Vivamus risus ipsum, pharetra a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper nunc. 
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Vivamus vitae malesuada odio. Praesent ante lectus, porta a eleifend vel, sodales eu nisl.
+                        Vivamus sit amet purus eu lectus cursus rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat.
+                        Vivamus risus ipsum, pharetra a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper nunc.
                         Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam.
-                         Nullam elementum, libero vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. 
-                        In hendrerit, sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo. 
+                         Nullam elementum, libero vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa.
+                        In hendrerit, sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo.
                         Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.
                     </p>
-                </ig-tab>
-            </ig-tab-bar>
+                </igx-tab>
+            </igx-tab-bar>
         </div>`
 })
 class TabBarTestComponent {
-    @ViewChild(TabBar) tabbar: TabBar;
+    @ViewChild(IgxTabBar) tabbar: IgxTabBar;
     @ViewChild("wrapperDiv") wrapperDiv: any;
 }
 
 @Component({
     template: `
         <div #wrapperDiv>
-            <ig-tab-bar alignment="bottom">
-                <ig-tab label="Tab 1" icon="library_music">
+            <igx-tab-bar alignment="bottom">
+                <igx-tab label="Tab 1" icon="library_music">
                     <h1>Tab 1 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </ig-tab>
-                <ig-tab label="Tab 2" icon="video_library">
+                </igx-tab>
+                <igx-tab label="Tab 2" icon="video_library">
                     <h1>Tab 2 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </ig-tab>
-                <ig-tab label="Tab 3" icon="library_books">
+                </igx-tab>
+                <igx-tab label="Tab 3" icon="library_books">
                     <h1>Tab 3 Content</h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                        Vivamus vitae malesuada odio. Praesent ante lectus, porta a eleifend vel, sodales eu nisl. 
-                        Vivamus sit amet purus eu lectus cursus rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat. 
-                        Vivamus risus ipsum, pharetra a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper nunc. 
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Vivamus vitae malesuada odio. Praesent ante lectus, porta a eleifend vel, sodales eu nisl.
+                        Vivamus sit amet purus eu lectus cursus rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat.
+                        Vivamus risus ipsum, pharetra a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper nunc.
                         Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam.
-                         Nullam elementum, libero vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. 
-                        In hendrerit, sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo. 
+                         Nullam elementum, libero vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa.
+                        In hendrerit, sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo.
                         Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.
                     </p>
-                </ig-tab>
-            </ig-tab-bar>
+                </igx-tab>
+            </igx-tab-bar>
         </div>`
 })
 class BottomTabBarTestComponent {
-    @ViewChild(TabBar) tabbar: TabBar;
+    @ViewChild(IgxTabBar) tabbar: IgxTabBar;
     @ViewChild("wrapperDiv") wrapperDiv: any;
 }

@@ -21,12 +21,12 @@ function MakeProvider(type: any) {
 }
 
 @Component({
-    selector: "ig-switch",
+    selector: "igx-switch",
     moduleId: module.id,
-    templateUrl: "switch.html",
-    providers: [MakeProvider(IgSwitch)]
+    templateUrl: "switch.component.html",
+    providers: [MakeProvider(IgxSwitch)]
 })
-export class IgSwitch implements ControlValueAccessor {
+export class IgxSwitch implements ControlValueAccessor {
 
     @Input() value: any;
     @Input() id: string = `ig-switch-${nextId++}`;
@@ -79,7 +79,7 @@ export class IgSwitch implements ControlValueAccessor {
 
 
 @NgModule({
-    declarations: [IgSwitch],
-    exports: [IgSwitch]
+    declarations: [IgxSwitch],
+    exports: [IgxSwitch]
 })
-export class SwitchModule {}
+export class IgxSwitchModule {}

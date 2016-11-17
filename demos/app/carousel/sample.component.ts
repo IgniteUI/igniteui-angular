@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { CarouselModule } from "../../../src/carousel/carousel";
+import { IgxCarouselModule } from "../../../src/carousel/carousel.component";
 
 @Component({
     selector: "carousel-sample",

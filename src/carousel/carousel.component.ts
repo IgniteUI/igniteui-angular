@@ -17,12 +17,12 @@ import { HammerGesturesManager } from '../core/touch';
 export enum Direction {NONE, NEXT, PREV}
 
 @Component({
-    selector: 'ig-carousel',
+    selector: 'igx-carousel',
     moduleId: module.id,
-    templateUrl: 'carousel.html',
+    templateUrl: 'carousel.component.html',
 })
 
-export class Carousel implements OnDestroy {
+export class IgxCarousel implements OnDestroy {
 
     @Input() loop: boolean = true;
     @Input() pause: boolean = true;
@@ -216,11 +216,11 @@ export class Carousel implements OnDestroy {
         // Swipe events
 
         renderer.listen(this.element_ref.nativeElement, 'swipeleft', (event) => {
-            this.next();
+            this.prev();
         });
 
         renderer.listen(this.element_ref.nativeElement, 'swiperight', (event) => {
-            this.prev();
+            this.next();
         });
 
         // Tap
@@ -251,7 +251,7 @@ export class Carousel implements OnDestroy {
 }
 
 @Component({
-    selector: 'ig-slide',
+    selector: 'igx-slide',
     moduleId: module.id,
     templateUrl: 'slide.html'
 })
@@ -260,10 +260,10 @@ export class Slide implements OnInit, OnDestroy {
     @Input() index: number;
     @Input() direction: Direction;
 
-    @HostBinding('class.igx-slide--active')
+    @HostBinding('class.active')
     @Input() active: boolean;
 
-    constructor(private carousel: Carousel, private element_ref: ElementRef, private renderer: Renderer) {}
+    constructor(private carousel: IgxCarousel, private element_ref: ElementRef) {}
 
     public ngOnInit() {
         this.carousel.add(this);
@@ -275,9 +275,9 @@ export class Slide implements OnInit, OnDestroy {
 }
 
 @NgModule({
-    declarations: [Carousel, Slide],
+    declarations: [IgxCarousel, Slide],
     imports: [CommonModule],
-    exports: [Carousel, Slide]
+    exports: [IgxCarousel, Slide]
 })
-export class CarouselModule {
+export class IgxCarouselModule {
 }

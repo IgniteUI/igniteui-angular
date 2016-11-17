@@ -1,29 +1,20 @@
-import {
-    NgModule,
-    Directive,
-    Component,
-    ElementRef,
-    Renderer,
-    OnInit,
-    Input,
-    Output,
-    ViewChild,
-    HostBinding
+import { NgModule, Directive, Component, ElementRef, Renderer,
+    OnInit, Input, Output, ViewChild, HostBinding
 } from '@angular/core';
 import { CommonModule } from "@angular/common";
 
 export enum Size { SMALL, MEDIUM, LARGE };
 
 @Component({
-    selector: 'ig-avatar',
+    selector: 'igx-avatar',
     moduleId: module.id,
-    templateUrl: 'avatar.html'
+    templateUrl: 'avatar.component.html'
 })
-export class Avatar {
+export class IgxAvatar {
     @ViewChild('image') image: ElementRef;
     @Input() initials: string;
     @Input() src: string;
-    @Input() roundShape: string = "false";
+    @Input("roundShape") roundShape: string = "false";
     @Input() color: string = 'white';
 
     protected fontname = "Titillium Web";
@@ -114,9 +105,9 @@ export class Avatar {
 }
 
 @NgModule({
-    declarations: [Avatar],
+    declarations: [IgxAvatar],
     imports: [CommonModule],
-    exports: [Avatar]
+    exports: [IgxAvatar]
 })
-export class AvatarModule {
+export class IgxAvatarModule {
 }

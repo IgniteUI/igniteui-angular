@@ -4,14 +4,14 @@ import {
 } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { IgInput } from './input';
+import { IgxInput } from './input.directive';
 
 
-describe('IgInput', function() {
+describe('IgxInput', function() {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
-                IgInput
+                IgxInput
             ],
             declarations: [
                 InitInput,
@@ -59,11 +59,11 @@ describe('IgInput', function() {
 
 });
 
-@Component({ template: `<input type="text" igInput />` })
+@Component({ template: `<input type="text" igx-input />` })
 class InitInput {
 }
 
-@Component({ template: `<input id="username" placeholder="{{placeholder}}" igInput name="username" />`})
+@Component({ template: `<input id="username" placeholder="{{placeholder}}" igx-input name="username" />`})
 class InputWithAttribs {
     placeholder = "Please enter a name";
 }

@@ -1,8 +1,8 @@
 <h3>Carousel</h3>
-<div>
-    <ig-carousel [interval]="interval" [pause]="pause" [loop]="loop">
-        <ig-slide *ngFor="let slide of slides;" [active]="slide.active">
+<div style="width: 100%;">
+    <igx-carousel [interval]="interval" [pause]="pause" [loop]="loop">
+        <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
             <img [src]="slide.image">
-        </ig-slide>
-    </ig-carousel>
+        </igx-slide>
+    </igx-carousel>
 </div>

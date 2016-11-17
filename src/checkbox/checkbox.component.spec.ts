@@ -5,16 +5,16 @@ import {
 import { Component, ViewChild } from "@angular/core";
 import { FormsModule } from '@angular/forms';
 import { By } from "@angular/platform-browser";
-import { IgCheckbox } from "./checkbox";
+import { IgxCheckbox } from "./checkbox.component";
 
-describe('IgCheckbox', function() {
+describe('IgxCheckbox', function() {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InitCheckbox,
                 CheckboxSimple,
                 CheckboxDisabled,
-                IgCheckbox
+                IgxCheckbox
             ],
             imports: [FormsModule]
         })
@@ -101,19 +101,19 @@ describe('IgCheckbox', function() {
     });
 });
 
-@Component({ template: `<ig-checkbox>Init</ig-checkbox>`})
+@Component({ template: `<igx-checkbox>Init</igx-checkbox>`})
 class InitCheckbox {}
 
-@Component({ template: `<ig-checkbox #cb [(ngModel)]="subscribed" [checked]="subscribed">Simple</ig-checkbox>`})
+@Component({ template: `<igx-checkbox #cb [(ngModel)]="subscribed" [checked]="subscribed">Simple</igx-checkbox>`})
 class CheckboxSimple {
-    @ViewChild('cb') cb: IgCheckbox;
+    @ViewChild('cb') cb: IgxCheckbox;
 
     subscribed: boolean = false;
 }
 
-@Component({ template: `<ig-checkbox #cb [(ngModel)]="subscribed" [checked]="subscribed" [disabled]="true">Disabled</ig-checkbox>`})
+@Component({ template: `<igx-checkbox #cb [(ngModel)]="subscribed" [checked]="subscribed" [disabled]="true">Disabled</igx-checkbox>`})
 class CheckboxDisabled {
-    @ViewChild('cb') cb: IgCheckbox;
+    @ViewChild('cb') cb: IgxCheckbox;
 
     subscribed: boolean = false;
 }

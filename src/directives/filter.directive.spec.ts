@@ -1,14 +1,14 @@
 import { async, TestBed, ComponentFixtureAutoDetect } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { HammerGesturesManager } from '../core/touch';
-import { List, ListHeader, ListItem, ListModule } from '../list/list';
-import { FilterDirective, FilterPipe, FilterOptions, FilterModule } from './filter';
+import { IgxList, IgxListHeader, IgxListItem, IgxListModule } from '../list/list.component';
+import { IgxFilterDirective, IgxFilterPipe, IgxFilterOptions, IgxFilterModule } from './filter.directive';
 import { Component, ViewChild, ContentChildren } from '@angular/core';
 
 describe("Filter", function () {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [FilterModule, ListModule],
+            imports: [IgxFilterModule, IgxListModule],
             declarations: [DeclarativeListTestComponent, DynamicListTestComponent],
             providers: [
                 { provide: ComponentFixtureAutoDetect, useValue: true }
@@ -27,10 +27,10 @@ describe("Filter", function () {
             items = list.items;
 
             for (let item of items) {
-                expect(item instanceof ListItem).toBeTruthy();
+                expect(item instanceof IgxListItem).toBeTruthy();
             }
 
-            visibleItems = items.filter((listItem) => { return !listItem.hidden; });            
+            visibleItems = items.filter((listItem) => { return !listItem.hidden; });
             expect(visibleItems.length).toBe(3);
 
             fixture.componentInstance.filterValue = "1";
@@ -38,7 +38,7 @@ describe("Filter", function () {
 
             visibleItems = items.filter((listItem) => { return !listItem.hidden; });
             expect(visibleItems.length).toBe(1);
-            expect(visibleItems[0] instanceof ListItem).toBeTruthy();
+            expect(visibleItems[0] instanceof IgxListItem).toBeTruthy();
 
             fixture.componentInstance.filterValue = "";
             fixture.detectChanges();
@@ -55,16 +55,16 @@ describe("Filter", function () {
         expect(list.items.length).toBe(4);
 
         for (let item of list.items) {
-            expect(item instanceof ListItem).toBeTruthy();
+            expect(item instanceof IgxListItem).toBeTruthy();
         }
-                
+
         expect(list.items.length).toBe(4);
 
         fixture.componentInstance.filterValue = "1";
         fixture.detectChanges();
-        
+
         expect(list.items.length).toBe(1);
-        expect(list.items[0] instanceof ListItem).toBeTruthy();
+        expect(list.items[0] instanceof IgxListItem).toBeTruthy();
 
         fixture.componentInstance.filterValue = "";
         fixture.detectChanges();
@@ -79,7 +79,7 @@ describe("Filter", function () {
             logInput = fixture.componentInstance.logInput;
 
         fixture.detectChanges();
-        visibleItems = list.items.filter((listItem) => { return !(<ListItem>listItem).hidden; });
+        visibleItems = list.items.filter((listItem) => { return !(<IgxListItem>listItem).hidden; });
         expect(list.items.length).toBe(3);
         expect(visibleItems.length).toBe(3);
 
@@ -89,7 +89,7 @@ describe("Filter", function () {
         fixture.componentInstance.filterValue = "2";
         fixture.detectChanges();
 
-        visibleItems = list.items.filter((listItem) => { return !(<ListItem>listItem).hidden; });
+        visibleItems = list.items.filter((listItem) => { return !(<IgxListItem>listItem).hidden; });
         expect(visibleItems.length).toBe(1);
 
         expect(logInput.nativeElement.value).toBe("filtering;filtered;");
@@ -114,7 +114,7 @@ describe("Filter", function () {
             logInput = fixture.componentInstance.logInput;
 
         fixture.detectChanges();
-        visibleItems = list.items.filter((listItem) => { return !(<ListItem>listItem).hidden; });
+        visibleItems = list.items.filter((listItem) => { return !(<IgxListItem>listItem).hidden; });
         expect(list.items.length).toBe(3);
         expect(visibleItems.length).toBe(3);
 
@@ -125,7 +125,7 @@ describe("Filter", function () {
         fixture.componentInstance.filterValue = "2";
         fixture.detectChanges();
 
-        visibleItems = list.items.filter((listItem) => { return !(<ListItem>listItem).hidden; });
+        visibleItems = list.items.filter((listItem) => { return !(<IgxListItem>listItem).hidden; });
         expect(visibleItems.length).toBe(3);
 
         expect(logInput.nativeElement.value).toBe("filtering;");
@@ -141,12 +141,12 @@ describe("Filter", function () {
 });
 
 @Component({
-    template: `<ig-list [filter]="fo" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)" >
-                    <ig-list-header>Header</ig-list-header>
-                    <ig-list-item>Item 1</ig-list-item>
-                    <ig-list-item>Item 2</ig-list-item>
-                    <ig-list-item>Item 3</ig-list-item>
-                </ig-list>
+    template: `<igx-list [igxFilter]="fo" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)" >
+                    <igx-list-header>Header</igx-list-header>
+                    <igx-list-item>Item 1</igx-list-item>
+                    <igx-list-item>Item 2</igx-list-item>
+                    <igx-list-item>Item 3</igx-list-item>
+                </igx-list>
                 <input #logInput />`
 })
 class DeclarativeListTestComponent {
@@ -155,11 +155,11 @@ class DeclarativeListTestComponent {
     filteringArgs: Object;
     filteredArgs: Object;
 
-    @ViewChild(List) list: List;
+    @ViewChild(IgxList) list: IgxList;
     @ViewChild("logInput") logInput: any;
 
     get fo() {
-        var options = new FilterOptions();
+        var options = new IgxFilterOptions();
         options.items = this.list.items;
         options.inputValue = this.filterValue;
 
@@ -179,17 +179,17 @@ class DeclarativeListTestComponent {
 }
 
 @Component({
-    template: `<ig-list>
-                 <ig-list-item *ngFor="let item of dataSourceItems | filter: fo">
+    template: `<igx-list>
+                 <igx-list-item *ngFor="let item of dataSourceItems | igxFilter: fo">
                     {{item.text}}
-                 </ig-list-item>
-              </ig-list>`
+                 </igx-list-item>
+              </igx-list>`
 })
 class DynamicListTestComponent {
     filterValue: string;
     isCanceled: boolean = false;
 
-    @ViewChild(List) list: List;
+    @ViewChild(IgxList) list: IgxList;
 
     protected dataSourceItems: Array<Object> = [
         { key: "1", text: "Nav1" },
@@ -199,7 +199,7 @@ class DynamicListTestComponent {
     ];
 
     get fo() {
-        var options = new FilterOptions();
+        var options = new IgxFilterOptions();
         options.inputValue = this.filterValue;
         options.key = "text";
         return options;

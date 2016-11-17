@@ -4,7 +4,7 @@ import {
 } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { IgxIconModule, IgxIcon } from './icon';
+import { IgxIconModule, IgxIcon } from './icon.component';
 
 
 describe('Icon', () => {
@@ -24,7 +24,7 @@ describe('Icon', () => {
         let fixture = TestBed.createComponent(InitIcon);
         let icon = fixture.componentInstance.icon;
         fixture.detectChanges();
-        
+
         expect(icon.getActive).toBeTruthy();
         expect(icon.getIconColor).toBeFalsy();
         expect(icon.getIconName).toBeFalsy();
@@ -37,7 +37,7 @@ describe('Icon', () => {
         let fixture = TestBed.createComponent(InitMaterialIcon);
         let icon = fixture.componentInstance.icon;
         fixture.detectChanges();
-        
+
         expect(icon.themeIcon.nativeElement.classList.contains('material-icons')).toBeTruthy();
         expect(icon.themeIcon.nativeElement.innerText).toEqual('home');
 
@@ -58,7 +58,7 @@ describe('Icon', () => {
             iconContainers = icon.el.nativeElement.getElementsByClassName('igx-icon');
 
         fixture.detectChanges();
-        
+
         expect(icon.getActive).toBeFalsy();
         expect(iconContainers[0].classList.contains('igx-icon--inactive')).toBeTruthy();
     });
