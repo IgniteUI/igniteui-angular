@@ -6,11 +6,11 @@ import { Directive, HostBinding, Input, NgModule } from '@angular/core';
 })
 export class IgxLayoutDirective {
 
-    @Input() dir: string = "row";
-    @Input() reverse: boolean = false;
-    @Input() wrap: string = "nowrap";
-    @Input() justify: string = "flex-start";
-    @Input() itemAlign: string = "flex-start";
+    @Input("igxLayoutDir") dir: string = "row";
+    @Input("igxLayoutReverse") reverse: boolean = false;
+    @Input("igxLayoutWrap") wrap: string = "nowrap";
+    @Input("igxLayoutJustify") justify: string = "flex-start";
+    @Input("igxLayoutItemAlign") itemAlign: string = "flex-start";
 
     @HostBinding('style.display') display = 'flex';
     @HostBinding('style.flex-wrap') get flexwrap() { return this.wrap; }
@@ -30,13 +30,17 @@ export class IgxLayoutDirective {
     selector: '[igxFlex]'
 })
 export class IgxFlexDirective {
-    @Input() grow: number = 1;
-    @Input() shrink: number = 1;
-    @Input() flex: string;
-    @Input() order: number = 0;
+    @Input("igxFlexGrow") grow: number = 1;
+    @Input("igxFlexShrink") shrink: number = 1;
+    @Input("igxFlex") flex: string = "";
+    @Input("igxFlexOrder") order: number = 0;
+
 
     @HostBinding('style.flex')
     get style() {
+        if (this.flex) {
+            return `${this.flex}`;
+        }
         return `${this.grow} ${this.shrink}`;
     }
 
