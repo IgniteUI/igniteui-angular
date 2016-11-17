@@ -1,6 +1,6 @@
 import { Component, NgModule, Input, Output, EventEmitter } from '@angular/core';
 import { HammerGesturesManager } from '../core/touch';
-import { ButtonModule } from '../button/button';
+import { IgxButtonModule } from '../button/button.directive';
 import { CommonModule } from '@angular/common';
 
 /**
@@ -8,12 +8,12 @@ import { CommonModule } from '@angular/common';
  * and lower left on larger devices. IgxSnackbar will appear above all
  * other elements on screen and only one can be displayed at a time.
  * ```
- * <ig-snackbar (event output bindings) [input bindings]>
- * </ig-snackbar>
+ * <igx-snackbar (event output bindings) [input bindings]>
+ * </igx-snackbar>
  * ```
  **/
 @Component({
-    selector: 'ig-snackbar',
+    selector: 'igx-snackbar',
     moduleId: module.id,
     templateUrl: 'snackbar.component.html',
     providers: [HammerGesturesManager]
@@ -96,7 +96,7 @@ export class IgxSnackbar {
 }
 
 @NgModule({
-    imports: [ButtonModule, CommonModule],
+    imports: [IgxButtonModule, CommonModule],
     declarations: [IgxSnackbar],
     exports: [IgxSnackbar]
 })

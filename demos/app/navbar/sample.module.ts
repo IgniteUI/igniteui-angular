@@ -1,11 +1,11 @@
 import { NgModule } from "@angular/core";
 
-import { NavbarModule } from "../../../src/main";
+import { IgxNavbarModule } from "../../../src/main";
 import { NavbarSampleComponent } from './sample.component';
 
 @NgModule({
     imports: [
-        NavbarModule,
+        IgxNavbarModule,
     ],
     declarations: [
         NavbarSampleComponent,
