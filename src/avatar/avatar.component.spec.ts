@@ -27,8 +27,8 @@ describe('Avatar', function () {
         let avatar = fixture.componentInstance.avatar;
 
         expect(avatar.image).toBeTruthy();
-        expect(avatar.image.nativeElement.classList.contains("igx-avatar--image")).toBeTruthy();
-        expect(avatar.image.nativeElement.classList.contains("igx-avatar--medium")).toBeTruthy();
+        expect(avatar.image.nativeElement.classList.contains("ig-avatar--image")).toBeTruthy();
+        expect(avatar.image.nativeElement.classList.contains("ig-avatar--medium")).toBeTruthy();
         expect(avatar.isRounded).toBeFalsy();
     });
 
@@ -38,20 +38,20 @@ describe('Avatar', function () {
         let avatar = fixture.componentInstance.avatar;
 
         expect(avatar.image).toBeTruthy();
-        expect(avatar.image.nativeElement.classList.contains("igx-avatar--image")).toBeTruthy();
-        expect(avatar.image.nativeElement.classList.contains("igx-avatar--small")).toBeTruthy();
+        expect(avatar.image.nativeElement.classList.contains("ig-avatar--image")).toBeTruthy();
+        expect(avatar.image.nativeElement.classList.contains("ig-avatar--small")).toBeTruthy();
         expect(avatar.isRounded).toBeTruthy();
     });
     it('Initializes icon avatar', () => {
         let fixture = TestBed.createComponent(InitIconAvatar);
         fixture.detectChanges();
         let avatar = fixture.componentInstance.avatar,
-            spanEl = avatar.element_ref.nativeElement.getElementsByClassName("igx-avatar--icon");
+            spanEl = avatar.element_ref.nativeElement.getElementsByClassName("ig-avatar--icon");
 
         expect(avatar.image === undefined).toBeTruthy();
         expect(avatar.srcImage === "").toBeTruthy();
         expect(spanEl).toBeTruthy();
-        expect(spanEl[0].classList.contains("igx-avatar--small")).toBeTruthy();
+        expect(spanEl[0].classList.contains("ig-avatar--small")).toBeTruthy();
         expect(spanEl[0].classList.length === 2).toBeTruthy();
         expect(avatar.isRounded).toBeFalsy();
     });
@@ -63,7 +63,7 @@ describe('Avatar', function () {
 
         expect(avatar.image).toBeTruthy();
         expect(avatar.srcImage.length !== 0).toBeTruthy();
-        expect(avatar.image.nativeElement.classList.contains("igx-avatar--large")).toBeTruthy();
+        expect(avatar.image.nativeElement.classList.contains("ig-avatar--large")).toBeTruthy();
         expect(avatar.image.nativeElement.classList.length === 3).toBeTruthy();
         expect(avatar.isRounded).toBeTruthy();
     });
