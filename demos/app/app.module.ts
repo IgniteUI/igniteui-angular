@@ -35,11 +35,8 @@ import { routing } from "./app.routing";
         AvatarSampleModule,
         NavDrawerSampleModule,
         NavbarSampleModule,
-<<<<<<< HEAD
         ProgressBarSampleModule,
-=======
         IgxSnackbarSampleModule,
->>>>>>> 35ae2fc00575475f9f660c8096787fc5fc35911b
         ModalSampleModule,
         IconSampleModule,
     ],

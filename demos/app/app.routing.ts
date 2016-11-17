@@ -48,13 +48,12 @@ const appRoutes: Routes = [
         component: NavbarSampleComponent
     },
     {
-<<<<<<< HEAD
         path: "progressbar",
         component: ProgressbarSampleComponent
-=======
+    },
+    {
         path: "snackbar",
         component: IgxSnackbarSampleComponent
->>>>>>> 35ae2fc00575475f9f660c8096787fc5fc35911b
     },
     {
         path: "modal",

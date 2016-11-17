@@ -9,20 +9,12 @@ import { IgxCheckboxModule } from "./checkbox/checkbox.component";
 import { IgxIconModule } from "./icon/icon.component";
 import { IgxListModule } from "./list/list.component";
 import { ModalModule } from "./modal/modal";
-<<<<<<< HEAD
-import { NavbarModule } from "./navbar/navbar";
-import { NavigationDrawerModule } from "./navigation-drawer/navigation-drawer";
-import { IgRadioModule} from "./radio/radio";
-import { SwitchModule} from "./switch/switch";
-import { TabBarModule } from "./tabbar/tab";
 import { IgxProgressBarModule } from "./progressbar/progressbar.component"
-=======
 import { IgxNavbarModule } from "./navbar/navbar.component";
 import { NavigationDrawerModule } from "./navigation-drawer/navigation-drawer.component";
 import { IgxRadioModule} from "./radio/radio.component";
 import { IgxSwitchModule} from "./switch/switch.component";
 import { IgxTabBarModule } from "./tabbar/tab.component";
->>>>>>> 35ae2fc00575475f9f660c8096787fc5fc35911b
 
 @NgModule({
     imports: [
@@ -35,16 +27,10 @@ import { IgxTabBarModule } from "./tabbar/tab.component";
         ModalModule,
         IgxNavbarModule,
         NavigationDrawerModule,
-<<<<<<< HEAD
-        IgRadioModule,
-        SwitchModule,
-        TabBarModule,
         IgxProgressBarModule
-=======
         IgxRadioModule,
         IgxSwitchModule,
         IgxTabBarModule
->>>>>>> 35ae2fc00575475f9f660c8096787fc5fc35911b
     ],
     exports: [
         IgxAvatarModule,
@@ -56,16 +42,10 @@ import { IgxTabBarModule } from "./tabbar/tab.component";
         ModalModule,
         IgxNavbarModule,
         NavigationDrawerModule,
-<<<<<<< HEAD
-        IgRadioModule,
-        SwitchModule,
-        TabBarModule,
         IgxProgressBarModule
-=======
         IgxRadioModule,
         IgxSwitchModule,
         IgxTabBarModule
->>>>>>> 35ae2fc00575475f9f660c8096787fc5fc35911b
     ]
 })
 export class IgxComponentsModule {}
