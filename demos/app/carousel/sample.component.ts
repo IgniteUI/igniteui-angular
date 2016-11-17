@@ -18,10 +18,10 @@ export class CarouselSampleComponent {
 
     addNewSlide() {
         this.slides.push(
-            {image: "http://lorempixel.com/1170/300/nature/1/"},
-            {image: "http://lorempixel.com/1170/300/nature/2/"},
-            {image: "http://lorempixel.com/1170/300/nature/3/"},
-            {image: "http://lorempixel.com/1170/300/nature/5/"}
+            {image: "http://lorempixel.com/1170/400/nature/1/"},
+            {image: "http://lorempixel.com/1170/400/nature/2/"},
+            {image: "http://lorempixel.com/1170/400/nature/3/"},
+            {image: "http://lorempixel.com/1170/400/nature/5/"}
         );
     }
 }

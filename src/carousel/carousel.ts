@@ -216,11 +216,11 @@ export class Carousel implements OnDestroy {
         // Swipe events
 
         renderer.listen(this.element_ref.nativeElement, 'swipeleft', (event) => {
-            this.prev();
+            this.next();
         });
 
         renderer.listen(this.element_ref.nativeElement, 'swiperight', (event) => {
-            this.next();
+            this.prev();
         });
 
         // Tap
@@ -260,10 +260,10 @@ export class Slide implements OnInit, OnDestroy {
     @Input() index: number;
     @Input() direction: Direction;
 
-    @HostBinding('class.active')
+    @HostBinding('class.igx-slide--active')
     @Input() active: boolean;
 
-    constructor(private carousel: Carousel, private element_ref: ElementRef) {}
+    constructor(private carousel: Carousel, private element_ref: ElementRef, private renderer: Renderer) {}
 
     public ngOnInit() {
         this.carousel.add(this);
