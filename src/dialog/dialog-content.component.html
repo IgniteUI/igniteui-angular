@@ -13,18 +13,18 @@
         </div>
         <div class="igx-dialog__window-actions">
             <button *ngIf="leftButtonLabel" 
-                igButton="{{ leftButtonType }}"
-                igButtonColor="{{ leftButtonColor }}"
-                igButtonBackground="{{ leftButtonBackgroundColor }}" 
-                igRipple="{{ leftButtonRipple }}"
+                igxButton="{{ leftButtonType }}"
+                igxButtonColor="{{ leftButtonColor }}"
+                igxButtonBackground="{{ leftButtonBackgroundColor }}" 
+                igxRipple="{{ leftButtonRipple }}"
                 (click)="onInternalLeftButtonSelect($event)">
                 {{ leftButtonLabel }}
             </button>
             <button *ngIf="rightButtonLabel" 
-                igButton="{{ rightButtonType }}"
-                igButtonColor="{{ rightButtonColor }}"
-                igButtonBackground="{{ rightButtonBackgroundColor }}" 
-                igRipple="{{ rightButtonRipple }}"
+                igxButton="{{ rightButtonType }}"
+                igxButtonColor="{{ rightButtonColor }}"
+                igxButtonBackground="{{ rightButtonBackgroundColor }}" 
+                igxRipple="{{ rightButtonRipple }}"
                 (click)="onInternalRightButtonSelect($event)">
                 {{ rightButtonLabel }}
             </button>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { DialogModule, Dialog } from "../../../src/main";
+import { IgxDialogModule, IgxDialog } from "../../../src/main";
 import { IgxButtonModule } from "../../../src/main";
 import { IgxInput } from "../../../src/main";
 
@@ -7,7 +7,7 @@ import { IgxInput } from "../../../src/main";
     moduleId: module.id,
     selector: "dialog-sample",
     styleUrls: ["sample.css"],
-    templateUrl: "sample.html",
+    templateUrl: "sample.component.html",
 })
 export class DialogSampleComponent implements OnInit {
     ngOnInit() {

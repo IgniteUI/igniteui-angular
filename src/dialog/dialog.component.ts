@@ -1,14 +1,14 @@
 import { Component, ViewChild, Input, Output, EventEmitter, ElementRef, NgModule, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ButtonModule } from "../button/button";
-import { IgRippleModule } from "../directives/ripple";
+import { IgxButtonModule } from "../button/button.directive";
+import { IgxRippleModule } from "../directives/ripple.directive";
 
 @Component({
     selector: 'igx-dialog',
     moduleId: module.id,
-    templateUrl: 'dialog.html'
+    templateUrl: 'dialog-content.component.html'
 })
-export class Dialog {
+export class IgxDialog {
     private static readonly DIALOG_CLASS = "igx-dialog";
     private _isOpen = false;
 
@@ -49,7 +49,7 @@ export class Dialog {
         
         this._isOpen = true;
         this.onOpen.emit(this);
-        this.dialogEl.nativeElement.classList.add(Dialog.DIALOG_CLASS);
+        this.dialogEl.nativeElement.classList.add(IgxDialog.DIALOG_CLASS);
     }
 
     close() {
@@ -59,12 +59,12 @@ export class Dialog {
 
         this._isOpen = false;
         this.onClose.emit(this);
-        this.dialogEl.nativeElement.classList.remove(Dialog.DIALOG_CLASS);
+        this.dialogEl.nativeElement.classList.remove(IgxDialog.DIALOG_CLASS);
     }
 
     private onDialogSelected(event) {
         if (this.isOpen && this.closeOnOutsideSelect &&
-            event.target.classList.contains(Dialog.DIALOG_CLASS)) {
+            event.target.classList.contains(IgxDialog.DIALOG_CLASS)) {
             this.close();
         }
     }
@@ -79,8 +79,8 @@ export class Dialog {
 }
 
 @NgModule({
-    declarations: [Dialog],
-    exports: [Dialog],
-    imports: [CommonModule, ButtonModule, IgRippleModule]
+    declarations: [IgxDialog],
+    exports: [IgxDialog],
+    imports: [CommonModule, IgxButtonModule, IgxRippleModule]
 })
-export class DialogModule {}
+export class IgxDialogModule {}
