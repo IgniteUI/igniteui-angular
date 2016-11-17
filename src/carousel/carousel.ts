@@ -16,15 +16,48 @@ import { HammerGesturesManager } from '../core/touch';
 
 export enum Direction {NONE, NEXT, PREV}
 
+/**
+ * A carousel component is used to browse or navigate through a collection of slides - galeries of images,
+ * cards, on-boarding tutorials or page-based interfaces. It can be used as a seperate fullscreen element
+ * or inside another component
+ *
+ * ```
+ * <igx-carousel (event output bindings) [input bindigns] >
+ *     ....
+ * </igx-carousel>
+ * ```
+ * @export
+ * @class IgxCarousel
+ * @implements {OnDestroy}
+ */
+
 @Component({
     selector: 'ig-carousel',
     moduleId: module.id,
     templateUrl: 'carousel.html',
 })
 
-export class Carousel implements OnDestroy {
+export class IgxCarousel implements OnDestroy {
 
+    /**
+     * Sets whether the carousel should loop back to the first slide
+     * after reaching the last slide.
+     *
+     * Default value is true
+     *
+     * @type {boolean}
+     * @memberOf Carousel
+     */
     @Input() loop: boolean = true;
+
+    /**
+     * Sets whether the carousel can pause the slide transitions.
+     *
+     * Default value is true
+     *
+     * @type {boolean}
+     * @memberOf Carousel
+     */
     @Input() pause: boolean = true;
 
     get interval(): number {
@@ -37,14 +70,67 @@ export class Carousel implements OnDestroy {
         this._restartInterval();
     }
 
+    /**
+     * Controls whether the carousel should render the left/right navigation buttons.
+     *
+     * Default value is true
+     *
+     * @type {boolean}
+     * @memberOf Carousel
+     */
     @Input() navigation: boolean = true;
 
+    /**
+     * An event that is emitted after a slide transition has happened.
+     * Provides a reference to the IgxCarousel as an event argument.
+     *
+     * @type {EventEmitter}
+     * @memberOf Carousel
+     */
     @Output() slideChanged = new EventEmitter();
+
+    /**
+     * An event that is emitted after a slide has been added to the carousel.
+     * Provides a reference to the IgxCarousel as an event argument.
+     *
+     * @type {EventEmitter}
+     * @memberOf Carousel
+     */
     @Output() slideAdded = new EventEmitter();
+
+    /**
+     * An event that is emitted after a slide has been removed from the carousel.
+     * Provides a reference to the IgxCarousel as an event argument.
+     *
+     * @type {EventEmitter}
+     * @memberOf Carousel
+     */
     @Output() slideRemoved = new EventEmitter();
+
+    /**
+     * An event that is emitted after the carousel has been paused.
+     * Provides a reference to the IgxCarousel as an event argument.
+     *
+     * @type {EventEmitter}
+     * @memberOf Carousel
+     */
     @Output() carouselPaused = new EventEmitter();
+
+    /**
+     * An event that is emitted after the carousel has resumed transitioning between slides.
+     * Provides a reference to the IgxCarousel as an event argument.
+     *
+     * @type {EventEmitter}
+     * @memberOf Carousel
+     */
     @Output() carouselPlaying = new EventEmitter();
 
+    /**
+     * The collection of slides currently in the carousel
+     *
+     * @type {Array<Slide>}
+     * @memberOf Carousel
+     */
     public  slides: Array<Slide> = [];
     private _interval: number;
     private _lastInterval: any;
@@ -65,23 +151,58 @@ export class Carousel implements OnDestroy {
         }
     }
 
+    /**
+     * The total number of slides in the carousel.
+     *
+     * @readonly
+     * @type {number}
+     * @memberOf Carousel
+     */
     public get total(): number {
         return this._total;
     }
 
+    /**
+     * The index of the slide being currently shown.
+     *
+     * @readonly
+     * @type {number}
+     * @memberOf Carousel
+     */
     public get current(): number {
         return !this._currentSlide ? 0 : this._currentSlide.index;
     }
 
+    /**
+     * Returns the state of the carousel - paused or playing.
+     *
+     * @readonly
+     * @type {boolean}
+     * @memberOf Carousel
+     */
     public get isPlaying(): boolean {
         return this._playing;
     }
 
+    /**
+     * Whether the carousel is destroyed, i.e. `ngOnDestroy` has been called.
+     *
+     * @readonly
+     * @type {boolean}
+     * @memberOf Carousel
+     */
     public get isDestroyed(): boolean {
         return this._destroyed;
     }
 
-
+    /**
+     * Returns the slide corresponding to the provided index or null.
+     *
+     * @param {number} index
+     * @returns {Slide}
+     *
+     * @memberOf Carousel
+     */
     public get(index: number): Slide {
         for (let each of this.slides) {
             if (each.index === index) {
@@ -90,6 +211,13 @@ export class Carousel implements OnDestroy {
         }
     }
 
+    /**
+     * Adds a new slide to the carousel.
+     *
+     * @param {Slide} slide
+     *
+     * @memberOf Carousel
+     */
     public add(slide: Slide) {
         slide.index = this.total;
         this.slides.push(slide);
@@ -107,6 +235,14 @@ export class Carousel implements OnDestroy {
         this.slideAdded.emit(this);
     }
 
+    /**
+     * Removes the given slide from the carousel.
+     *
+     * @param {Slide} slide
+     * @returns
+     *
+     * @memberOf Carousel
+     */
     public remove(slide: Slide) {
         this.slides.splice(slide.index, 1);
         this._total -= 1;
@@ -123,6 +259,14 @@ export class Carousel implements OnDestroy {
         this.slideRemoved.emit(this);
     }
 
+    /**
+     * Kicks in a transition for a given slide with a given direction.
+     *
+     * @param {Slide} slide
+     * @param {Direction} [direction=Direction.NONE]
+     *
+     * @memberOf Carousel
+     */
     public select(slide: Slide, direction: Direction = Direction.NONE) {
         let new_index = slide.index;
         if (direction === Direction.NONE) {
@@ -134,6 +278,13 @@ export class Carousel implements OnDestroy {
         }
     }
 
+    /**
+     * Transitions to the next slide in the carousel.
+     *
+     * @returns
+     *
+     * @memberOf Carousel
+     */
     public next() {
         let index = (this.current + 1) % this.total;
 
@@ -144,6 +295,13 @@ export class Carousel implements OnDestroy {
         return this.select(this.get(index), Direction.NEXT);
     }
 
+    /**
+     * Transitions to the previous slide in the carousel.
+     *
+     * @returns
+     *
+     * @memberOf Carousel
+     */
     public prev() {
         let index = this.current - 1 < 0 ?
             this.total - 1 : this.current - 1;
@@ -155,6 +313,13 @@ export class Carousel implements OnDestroy {
         return this.select(this.get(index), Direction.PREV);
     }
 
+    /**
+     * Resumes playing of the carousel if in paused state.
+     * No-op otherwise.
+     *
+     *
+     * @memberOf Carousel
+     */
     public play() {
         if (!this._playing) {
             this._playing = true;
@@ -163,6 +328,13 @@ export class Carousel implements OnDestroy {
         }
     }
 
+    /**
+     * Stops slide transitions if the `pause` options is set to `true`.
+     * No-op otherwise.
+     *
+     *
+     * @memberOf Carousel
+     */
     public stop() {
         if (this.pause) {
             this._playing = false;
@@ -250,14 +422,43 @@ export class Carousel implements OnDestroy {
 
 }
 
+/**
+ * A slide component that usually holds an image and/or a caption text.
+ * IgxSlide is usually a child component of an IgxCarousel.
+ *
+ * ```
+ * <igx-slide [input bindings] >
+ *    <ng-content></ng-content>
+ * </igx-slide>
+ * ```
+ *
+ * @export
+ * @class IgxSlide
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ */
 @Component({
     selector: 'ig-slide',
     moduleId: module.id,
     templateUrl: 'slide.html'
 })
 
-export class Slide implements OnInit, OnDestroy {
+export class IgxSlide implements OnInit, OnDestroy {
+
+    /**
+     * The current index of the slide inside the carousel
+     *
+     * @type {number}
+     * @memberOf Slide
+     */
     @Input() index: number;
+
+    /**
+     * The target direction for the slide
+     *
+     * @type {Direction}
+     * @memberOf Slide
+     */
     @Input() direction: Direction;
 
     @HostBinding('class.active')

@@ -5,7 +5,7 @@ import {
 import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import { HammerGesturesManager } from '../core/touch';
-import {Carousel, Slide, CarouselModule} from './carousel';
+import {IgxCarousel, IgxSlide, CarouselModule} from './carousel';
 
 
 function dispatchEv(element: HTMLElement, eventType: string) {
@@ -32,8 +32,8 @@ describe("Carousel", function() {
 
         fixture.detectChanges();
         expect(instance.carousel).toBeDefined();
-        expect(instance.carousel instanceof Carousel).toBe(true);
-        expect(instance.carousel.slides[0] instanceof Slide).toBe(true);
+        expect(instance.carousel instanceof IgxCarousel).toBe(true);
+        expect(instance.carousel.slides[0] instanceof IgxSlide).toBe(true);
 
         expect(instance.carousel.slides instanceof Array).toBe(true);
         expect(instance.carousel.loop).toBe(true);
@@ -237,7 +237,7 @@ describe("Carousel", function() {
 })
 class CarouselTestComponent {
 
-    @ViewChild('carousel') carousel: Carousel;
+    @ViewChild('carousel') carousel: IgxCarousel;
 
     loop = true;
     pause = true;

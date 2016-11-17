@@ -1,4 +1,4 @@
-import { Directive, Input, Renderer, ElementRef, NgModule, HostListener } from '@angular/core';
+import { Directive, Input, Renderer, ElementRef, NgModule, HostListener, NgZone } from '@angular/core';
 
 @Directive({
     selector: '[igRipple]',
@@ -21,10 +21,10 @@ class RippleDirective {
 
     @HostListener('mousedown', ['$event'])
     onMouseDown(event) {
-        this._ripple(event);
+        this.zone.runOutsideAngular(() => this._ripple(event));
     }
 
-    constructor(protected el: ElementRef, protected renderer: Renderer) {
+    constructor(protected el: ElementRef, protected renderer: Renderer, private zone: NgZone) {
         this.container = el.nativeElement;
     }
 
