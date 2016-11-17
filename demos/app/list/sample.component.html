@@ -10,7 +10,7 @@
         </span>
     </div>
     <igx-list>
-        <igx-list-item igxRipple="pink" igxRippleTarget=".ig-list__item" *ngFor="let item of navItems | filter: fo1">
+        <igx-list-item igxRipple="pink" igxRippleTarget=".ig-list__item" *ngFor="let item of navItems | igxFilter: fo1">
             {{item.text}}
         </igx-list-item>
     </igx-list>
