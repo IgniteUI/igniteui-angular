@@ -13,7 +13,7 @@ describe("List", function () {
             .compileComponents();
     }));
 
-    it('should initialize ig-list with item and header', () => {
+    it('should initialize igx-list with item and header', () => {
         let fixture = TestBed.createComponent(ListTestComponent),
             list = fixture.componentInstance.list;
 
@@ -87,10 +87,10 @@ describe("List", function () {
 @Component({
     template: `<div #wrapper>
                     <igx-list>
-                        <igx-list-header>Header</ig-list-header>
-                        <igx-list-item>Item 1</ig-list-item>
-                        <igx-list-item>Item 2</ig-list-item>
-                        <igx-list-item>Item 3</ig-list-item>
+                        <igx-list-header>Header</igx-list-header>
+                        <igx-list-item>Item 1</igx-list-item>
+                        <igx-list-item>Item 2</igx-list-item>
+                        <igx-list-item>Item 3</igx-list-item>
                     </igx-list>
                 </div>`
 })

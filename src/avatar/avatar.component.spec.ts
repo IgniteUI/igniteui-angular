@@ -70,7 +70,7 @@ describe('Avatar', function () {
 });
 
 @Component({
-    template: `<igx-avatar initials="PP" size="medium" round-shape="false"
+    template: `<igx-avatar initials="PP" size="medium" roundShape="false"
                             bgColor="paleturquoise">
                         </igx-avatar>`})
 class InitAvatar {
@@ -79,7 +79,7 @@ class InitAvatar {
 
 @Component({
     template: `<igx-avatar [initials]="initials" [bgColor]="bgColor" size="small"
-    [round-shape]="roundShape"></igx-avatar>`})
+    [roundShape]="roundShape"></igx-avatar>`})
 class AvatarWithAttribs {
     @ViewChild(IgxAvatar) avatar: IgxAvatar;
 
@@ -89,7 +89,7 @@ class AvatarWithAttribs {
 }
 
 @Component({
-    template: `<igx-avatar round-shape="false" icon="person"
+    template: `<igx-avatar roundShape="false" icon="person"
                             bgColor="#0375be" size="someIncorectSize">
                         </igx-avatar>`})
 class InitIconAvatar {
@@ -98,7 +98,7 @@ class InitIconAvatar {
 
 
 @Component({
-    template: `<igx-avatar round-shape="true" bgColor="#0375be" size="large"
+    template: `<igx-avatar roundShape="true" bgColor="#0375be" size="large"
                             [src]="source">
                         </igx-avatar>`})
 class InitImageAvatar {

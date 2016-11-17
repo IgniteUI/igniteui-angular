@@ -15,6 +15,7 @@ import { Component } from "@angular/core";
             <span igxButton routerLink="/navbar">Navbar</span>
             <span igxButton routerLink="/modal">Modal</span>
             <span igxButton routerLink="/icon">Icon</span>
+            <span igxButton routerLink="/snackbar">Snackbar</span>
         </nav>
         <router-outlet></router-outlet>
     `

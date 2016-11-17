@@ -14,7 +14,7 @@ export class IgxAvatar {
     @ViewChild('image') image: ElementRef;
     @Input() initials: string;
     @Input() src: string;
-    @Input("round-shape") roundShape: string = "false";
+    @Input("roundShape") roundShape: string = "false";
     @Input() color: string = 'white';
 
     protected fontname = "Titillium Web";
@@ -42,7 +42,7 @@ export class IgxAvatar {
         return this._bgColor;
     }
 
-    @Input("bg-color")
+    @Input("bgColor")
     set bgColor(value: string) {
         var color = value === "" ? "lightgrey" : value;
         this._bgColor = color;
