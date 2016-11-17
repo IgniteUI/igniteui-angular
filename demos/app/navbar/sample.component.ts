@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { NavbarModule, Navbar } from "../../../src/main";
+import { IgxNavbarModule, IgxNavbar } from "../../../src/main";
 
 const CURRENT_VIEW: string = "Ignite UI JS Blocks Samples";
 
