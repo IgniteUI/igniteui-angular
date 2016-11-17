@@ -24,8 +24,8 @@ Current list of controls include:
 | **checkbox**          |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
 | **switch**            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
 | **scroll**            |             Planned | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
-| **liner bar**            |             Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
-| **circular bar**            |             Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
+| **liner progress bar**            |             Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
+| **circular progress bar**            |             Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
 | **snackbar**            |             Planned | [Readme](https://github.com/IgniteUI/igniteui-js-blocks) |     |                       |               |                                                           |
 | **icon**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/tree/master/src/icon/README.md)|               |                                                           |
 
