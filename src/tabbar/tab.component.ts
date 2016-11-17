@@ -2,12 +2,12 @@ import { Component, Input, Output, ElementRef, ViewChild, AfterViewInit, AfterCo
 import { CommonModule } from "@angular/common";
 
 @Component({
-    selector: 'ig-tab-bar',
+    selector: 'igx-tab-bar',
     moduleId: module.id, // commonJS standard
-    templateUrl: 'tab-bar-content.html'
+    templateUrl: 'tab-bar-content.component.html'
 })
 
-export class TabBar implements AfterViewInit, AfterContentInit {
+export class IgxTabBar implements AfterViewInit, AfterContentInit {
     @ViewChild('unorderedList') _tabList: ElementRef;
 
     private _maxNumberTabsDisplayed: number = 5;
@@ -32,7 +32,7 @@ export class TabBar implements AfterViewInit, AfterContentInit {
         return 0;
     }
 
-    tabs: Tab[] = [];
+    tabs: IgxTab[] = [];
 
     get selectedTab() {
         var selectedTabs = this.tabs.filter((tab) => tab.isSelected);
@@ -85,7 +85,7 @@ export class TabBar implements AfterViewInit, AfterContentInit {
         });
     }
 
-    add(tab: Tab) {
+    add(tab: IgxTab) {
         this.tabs.push(tab);
         this.tabs.forEach((tab) => { tab.columnCount = this._columns; });
     }
@@ -154,22 +154,22 @@ export class TabBar implements AfterViewInit, AfterContentInit {
 }
 
 @Component({
-    selector: 'ig-tab',
+    selector: 'igx-tab',
     moduleId: module.id, // commonJS standard
-    templateUrl: 'tab-content.html',
+    templateUrl: 'tab-content.component.html',
     host: {
         '[class]': '"col-" + columnCount'
     }
 })
 
-export class Tab {
+export class IgxTab {
     @ViewChild('wrapper') wrapper: ElementRef;
 
     private _itemStyle: string = "ig-tab-inner";
     private _changesCount: number = 0; // changes and updates accordingly applied to the tab.
 
     isSelected: boolean = false;
-    
+
     get index() {
         return this._tabBar.tabs.indexOf(this);
     }
@@ -207,7 +207,7 @@ export class Tab {
     @Input() href: string;   // TODO - need to be disccussed
     @Input() color: string;
 
-    constructor(private _tabBar: TabBar, private _element: ElementRef) {
+    constructor(private _tabBar: IgxTabBar, private _element: ElementRef) {
         this._tabBar.add(this);
     }
 
@@ -225,9 +225,9 @@ export class Tab {
 }
 
 @NgModule({
-    declarations: [TabBar, Tab],
+    declarations: [IgxTabBar, IgxTab],
     imports: [CommonModule],
-    exports: [TabBar, Tab]
+    exports: [IgxTabBar, IgxTab]
 })
-export class TabBarModule {
+export class IgxTabBarModule {
 }

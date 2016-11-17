@@ -6,7 +6,7 @@ import {
 } from "@angular/core";
 
 @Directive({
-    selector: '[igInput]',
+    selector: '[igx-input]',
     host: {
         '[class.ig-form-group__input]': 'true',
         '[class.ig-form-group__input--filled]': 'filled',
@@ -14,7 +14,7 @@ import {
         '[class.ig-form-group__input--placeholder]': 'placeholder'
     }
 })
-export class IgInputClass {
+export class IgxInputClass {
 
     focused: boolean;
 
@@ -42,7 +42,7 @@ export class IgInputClass {
 }
 
 @NgModule({
-    declarations: [IgInputClass],
-    exports: [IgInputClass]
+    declarations: [IgxInputClass],
+    exports: [IgxInputClass]
 })
-export class IgInput {}
+export class IgxInput {}

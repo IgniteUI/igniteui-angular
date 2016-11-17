@@ -2,9 +2,9 @@ import { Directive, HostBinding, Input, NgModule } from '@angular/core';
 
 
 @Directive({
-    selector: '[layout]'
+    selector: '[igxLayout]'
 })
-export class LayoutDirective {
+export class IgxLayoutDirective {
 
     @Input() dir: string = "row";
     @Input() reverse: boolean = false;
@@ -27,9 +27,9 @@ export class LayoutDirective {
 }
 
 @Directive({
-    selector: '[flex]'
+    selector: '[igxFlex]'
 })
-export class FlexDirective {
+export class IgxFlexDirective {
     @Input() grow: number = 1;
     @Input() shrink: number = 1;
     @Input() flex: string;
@@ -47,7 +47,7 @@ export class FlexDirective {
 }
 
 @NgModule({
-    declarations: [LayoutDirective, FlexDirective],
-    exports: [FlexDirective, LayoutDirective]
+    declarations: [IgxLayoutDirective, IgxFlexDirective],
+    exports: [IgxFlexDirective, IgxLayoutDirective]
 })
-export class IgLayout {}
+export class IgxLayout {}

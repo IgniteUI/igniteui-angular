@@ -19,7 +19,7 @@ declare var module: any;
  * </ig-nav-drawer>
  * ```
  * Can also include an optional `<div class="ig-drawer-mini-content">`.
- * ID required to register with NavigationService allow directives to target the control. 
+ * ID required to register with NavigationService allow directives to target the control.
  */
 @Component({
     selector: 'ig-nav-drawer',
@@ -27,7 +27,7 @@ declare var module: any;
         TODO: try https://github.com/angular/angular/issues/2991 ??
     */
     moduleId: module.id, // commonJS standard
-    templateUrl: 'navigation-drawer.html',
+    templateUrl: 'navigation-drawer.component.html',
     providers: [HammerGesturesManager]
 })
 export class NavigationDrawer extends BaseComponent implements ToggleView, OnInit, AfterContentInit, OnDestroy, OnChanges  {
@@ -477,7 +477,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
         }
         if (this.isOpen) {
             return Promise.resolve();
-        }        
+        }
         if (fireEvents) {
             this.opening.emit("opening");
         }

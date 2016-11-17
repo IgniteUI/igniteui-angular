@@ -5,7 +5,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { Component, ViewChildren } from "@angular/core";
 import { By } from "@angular/platform-browser";
-import { IgRadio } from './radio';
+import { IgxRadio } from './radio.component';
 
 describe('IgRadio', function() {
 
@@ -14,7 +14,7 @@ describe('IgRadio', function() {
             declarations: [
                 InitRadio,
                 RadioWithModel,
-                IgRadio
+                IgxRadio
             ],
             imports: [FormsModule]
         })
@@ -59,16 +59,16 @@ describe('IgRadio', function() {
 });
 
 
-@Component({ template: `<ig-radio>Radio</ig-radio>` })
+@Component({ template: `<igx-radio>Radio</igx-radio>` })
 class InitRadio {}
 
 @Component({
     template: `
-    <ig-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" name="group" [(ngModel)]="selected">{{item}}</ig-radio>
+    <igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" name="group" [(ngModel)]="selected">{{item}}</igx-radio>
     `
 })
 class RadioWithModel {
-    @ViewChildren(IgRadio) radios;
+    @ViewChildren(IgxRadio) radios;
 
     selected = "Foo";
 }

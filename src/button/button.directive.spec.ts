@@ -4,16 +4,16 @@ import {
 } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { IgButton } from './button';
+import { IgxButton } from './button.directive';
 
 
-describe('IgButton', function() {
+describe('IgxButton', function() {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InitButton,
                 ButtonWithAttribs,
-                IgButton
+                IgxButton
             ]
         })
         .compileComponents();
@@ -55,7 +55,7 @@ describe('IgButton', function() {
 
 @Component({
     template:
-    `<span igButton="flat" igRipple="white">
+    `<span igxButton="flat" igx-ripple="white">
         <i class="material-icons">add</i>
     </span>`
 })
@@ -64,7 +64,7 @@ class InitButton {
 
 @Component({
     template:
-    `<span igButton="raised" [igButtonColor]="foreground" [igButtonBackground]="background" [disabled]="isDisabled">Test</span>`
+    `<span igxButton="raised" [igxButtonColor]="foreground" [igxButtonBackground]="background" [disabled]="isDisabled">Test</span>`
 })
 class ButtonWithAttribs {
     isDisabled = true;

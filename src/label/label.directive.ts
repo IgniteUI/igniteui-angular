@@ -7,16 +7,16 @@ import {
 } from '@angular/core';
 
 @Directive({
-    selector: '[igLabel]'
+    selector: '[igxLabel]'
 })
-export class Label {
+export class IgxLabel {
     constructor(el: ElementRef, renderer: Renderer){
         renderer.setElementClass(el.nativeElement, 'ig-form-group__label', true);
     }
 }
 
 @NgModule({
-    declarations: [Label],
-    exports: [Label]
+    declarations: [IgxLabel],
+    exports: [IgxLabel]
 })
-export class LabelModule {}
+export class IgxLabelModule {}

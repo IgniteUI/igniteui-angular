@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 
 import { IgxSnackbarModule } from '../../../src/main';
 import { IgxSnackbarSampleComponent } from './sample.component';
-import { ButtonModule } from '../../../src/button/button';
+import { IgxButtonModule } from '../../../src/button/button.directive';
 
 @NgModule({
     imports: [
         IgxSnackbarModule,
-        ButtonModule
+        IgxButtonModule
     ],
     declarations: [
         IgxSnackbarSampleComponent,

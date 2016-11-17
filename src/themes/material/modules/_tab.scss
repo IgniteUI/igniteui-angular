@@ -1,11 +1,11 @@
-ig-tab {
+igx-tab {
     .ig-tab-inner {
         display: none;
         overflow: auto;
         &.selected {
             display: block;
         }
-        &::-webkit-scrollbar { 
+        &::-webkit-scrollbar {
             display: none;
         }
     }

@@ -105,8 +105,8 @@ describe('IgxSnackbar', () => {
 });
 @Component({
     selector: 'snackbar-test-component',
-    template: `<ig-snackbar #snackbar [actionText]="text">
-               </ig-snackbar>`
+    template: `<igx-snackbar #snackbar [actionText]="text">
+               </igx-snackbar>`
 })
 class SnackbarIntializeTestComponent {
     text: string;

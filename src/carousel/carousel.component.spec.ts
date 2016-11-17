@@ -5,7 +5,7 @@ import {
 import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import { HammerGesturesManager } from '../core/touch';
-import {Carousel, Slide, CarouselModule} from './carousel';
+import {IgxCarousel, Slide, IgxCarouselModule} from './carousel.component';
 
 
 function dispatchEv(element: HTMLElement, eventType: string) {
@@ -17,7 +17,7 @@ function dispatchEv(element: HTMLElement, eventType: string) {
 describe("Carousel", function() {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [CarouselModule],
+            imports: [IgxCarouselModule],
             declarations: [CarouselTestComponent]
         })
         .compileComponents();
@@ -32,7 +32,7 @@ describe("Carousel", function() {
 
         fixture.detectChanges();
         expect(instance.carousel).toBeDefined();
-        expect(instance.carousel instanceof Carousel).toBe(true);
+        expect(instance.carousel instanceof IgxCarousel).toBe(true);
         expect(instance.carousel.slides[0] instanceof Slide).toBe(true);
 
         expect(instance.carousel.slides instanceof Array).toBe(true);
@@ -229,15 +229,15 @@ describe("Carousel", function() {
 
 @Component({
     template: `
-        <ig-carousel #carousel [loop]="loop" [pause]="pause" [interval]="interval">
-            <ig-slide></ig-slide>
-            <ig-slide></ig-slide>
-        </ig-carousel>
+        <igx-carousel #carousel [loop]="loop" [pause]="pause" [interval]="interval">
+            <igx-slide></igx-slide>
+            <igx-slide></igx-slide>
+        </igx-carousel>
     `
 })
 class CarouselTestComponent {
 
-    @ViewChild('carousel') carousel: Carousel;
+    @ViewChild('carousel') carousel: IgxCarousel;
 
     loop = true;
     pause = true;

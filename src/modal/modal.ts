@@ -1,14 +1,14 @@
 import { Component, ViewChild, Input, Output, EventEmitter, ElementRef, NgModule, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ButtonModule } from "../button/button";
-import { IgRippleModule } from "../directives/ripple";
+import { IgxButtonModule } from "../button/button.directive";
+import { IgxRippleModule } from "../directives/ripple.directive";
 
 @Component({
     selector: 'ig-modal',
     moduleId: module.id,
     templateUrl: 'modal.html'
 })
-export class Modal {    
+export class Modal {
     @Input() title: string = "";
     @Input() message: string = "";
 
@@ -41,7 +41,7 @@ export class Modal {
         if (this.isOpen) {
             return;
         }
-        
+
         this.isOpen = true;
         this.onOpen.emit(this);
         this.modalEl.nativeElement.classList.add(this.modalClass);
@@ -76,6 +76,6 @@ export class Modal {
 @NgModule({
     declarations: [Modal],
     exports: [Modal],
-    imports: [CommonModule, ButtonModule, IgRippleModule]
+    imports: [CommonModule, IgxButtonModule, IgxRippleModule]
 })
 export class ModalModule {}
