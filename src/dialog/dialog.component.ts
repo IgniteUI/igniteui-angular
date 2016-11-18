@@ -9,8 +9,10 @@ import { IgxRippleModule } from "../directives/ripple.directive";
     templateUrl: 'dialog-content.component.html'
 })
 export class IgxDialog {
+    private static NEXT_ID: number = 1;
     private static readonly DIALOG_CLASS = "igx-dialog";
     private _isOpen = false;
+    private _titleId: string;
 
     @Input()
     get isOpen() {
@@ -34,6 +36,22 @@ export class IgxDialog {
 
     @Input() closeOnOutsideSelect: boolean = false;
 
+    @Input()
+    get role() {
+        if (this.leftButtonLabel != "" && this.rightButtonLabel != "") {
+            return  "dialog";
+        } else if (this.leftButtonLabel != "" || this.rightButtonLabel != "") {
+            return  "alertdialog";
+        } else {
+            return "alert";
+        }
+    }
+
+    @Input()
+    get titleId() {
+        return this._titleId;
+    }
+
     @Output() onOpen = new EventEmitter();
     @Output() onClose = new EventEmitter();
 
@@ -41,6 +59,10 @@ export class IgxDialog {
     @Output() onRightButtonSelect = new EventEmitter();    
 
     @ViewChild('dialog') dialogEl: ElementRef;
+
+    constructor() {
+        this._titleId = IgxDialog.NEXT_ID++ + "_title";
+    }
 
     open() {
         if (this.isOpen) {
