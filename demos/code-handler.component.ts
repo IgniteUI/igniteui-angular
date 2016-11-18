@@ -40,36 +40,93 @@ export class CarouselSampleComponent {
                 break;
             case "avatar":
                 this.markup = 
-`<ig-avatar src="http://lorempixel.com/300/300/people/6/" roundShape="false">
-    <ig-badge type="error" icon="favorite" position="bottom-right"></ig-badge>
+`<ig-avatar 
+    src="http://lorempixel.com/300/300/people/6/" 
+    roundShape="false">
+    <ig-badge 
+        type="error" 
+        icon="favorite" 
+        position="bottom-right">
+    </ig-badge>
 </ig-avatar>
 
-<ig-avatar src="http://lorempixel.com/300/300/people/9/" roundShape="true">
-    <ig-badge type="error" icon="done" type="success"></ig-badge>
+<ig-avatar 
+    src="http://lorempixel.com/300/300/people/9/" 
+    roundShape="true">
+    <ig-badge 
+        type="error" 
+        icon="done" 
+        type="success">
+    </ig-badge>
 </ig-avatar>
 
-<ig-avatar initials="RK" bgColor="#fbb13c"> </ig-avatar>
+<ig-avatar 
+    initials="RK"  
+    bgColor="#fbb13c">
+</ig-avatar>
 
-<ig-avatar initials="ZK" bgColor="#731963" roundShape="true"></ig-avatar>
+<ig-avatar 
+    initials="ZK"
+    bgColor="#731963"
+    roundShape="true">
+</ig-avatar>
 
-<ig-avatar roundShape="true" icon="person" bgColor="#0375be" data-init="SS"></ig-avatar>
+<ig-avatar 
+    roundShape="true"
+    icon="person"
+    bgColor="#0375be"
+    data-init="SS">
+</ig-avatar>
 
 <ig-avatar color="gray"></ig-avatar>
 
-<ig-avatar initials="HA" width="100" size="potatos" bgColor="#340068">
-    <ig-badge type="info" icon="camera"></ig-badge>
+<ig-avatar 
+    initials="HA" 
+    width="100" 
+    size="potatos" 
+    bgColor="#340068">
+    <ig-badge 
+        type="info" 
+        icon="camera">
+    </ig-badge>
 </ig-avatar>
 
-<ig-avatar initials="PP" width="100" color="black" icon="person" roundShape="false" bgColor="#94feed">
-    <ig-badge iconBdg="person" value="7281" position="bottom-left"></ig-badge>
+<ig-avatar 
+    initials="PP" 
+    width="100" 
+    color="black" 
+    icon="person" 
+    roundShape="false" 
+    bgColor="#94feed">
+    <ig-badge 
+        iconBdg="person" 
+        value="7281" 
+        position="bottom-left">
+    </ig-badge>
 </ig-avatar>
 
-<ig-avatar src="http://66.media.tumblr.com/avatar_af166f12c520_128.png" size="medium" roundShape="true" bgColor="#e41c77">
-    <ig-badge position="top-left" type="error" icon="build"></ig-badge>
+<ig-avatar 
+    src="http://66.media.tumblr.com/avatar_af166f12c520_128.png" 
+    size="medium" 
+    roundShape="true" 
+    bgColor="#e41c77">
+    <ig-badge 
+        position="top-left" 
+        type="error" 
+        icon="build">
+    </ig-badge>
 </ig-avatar>
 
-<ig-avatar size="medium" src="http://fotouser.miarroba.st/99545357/300/sonic-kun.jpg" roundShape="true" bgColor="#484848">
-    <ig-badge position="bottom-right" type="info" icon="timer"></ig-badge>
+<ig-avatar 
+    src="http://fotouser.miarroba.st/99545357/300/sonic-kun.jpg"
+    size="medium"
+    roundShape="true" 
+    bgColor="#484848">
+    <ig-badge 
+        position="bottom-right" 
+        type="info" 
+        icon="timer">
+    </ig-badge>
 </ig-avatar>`
 
                 this.typescriptCode = 
@@ -111,7 +168,8 @@ export class AvatarSampleComponent {
                 this.markup = 
 `<ig-tab-bar igRipple igRippleTarget="ul" alignment="bottom">
     <ig-tab label="Tab 1" icon="library_music">                        
-        <span class="componentDesc">IgTabBar allow you to tabulate your content. It provides flexible ways to manage and navigate through your tabularized data.</span>
+        <span class="componentDesc">IgTabBar allow you to tabulate your content. 
+        It provides flexible ways to manage and navigate through your tabularized data.</span>
     </ig-tab>
     <ig-tab label="Tab 2" icon="video_library">
         <p>You can style each tab with a material icon as demosntrated below.
@@ -272,7 +330,11 @@ export class InputsSampleComponent {
                 break;
             case "radio":
                 this.markup = 
-`<ig-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" name="group" [(ngModel)]="user.favouriteVarName">{{item}}</ig-radio>
+`<ig-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" 
+    value="{{item}}" name="group" 
+    [(ngModel)]="user.favouriteVarName">
+    {{item}}
+</ig-radio>
 <span>Selected value = {{ user.favouriteVarName || ''}}</span>`
 
                 this.typescriptCode = 

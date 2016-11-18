@@ -45,11 +45,11 @@ export class AppComponent {
         args.currentTarget.className = "active";
 
         if (args.currentTarget.textContent == "TS") {
-            this.code.nativeElement.classList = 'language-typescript';
-            this.code.nativeElement.innerText = this.typescriptCode;
+            this.code.nativeElement.className = 'language-typescript';
+            this.code.nativeElement.textContent = this.typescriptCode;
         } else {
-            this.code.nativeElement.classList = 'language-markup';
-            this.code.nativeElement.innerText = this.markup;
+            this.code.nativeElement.className = 'language-markup';
+            this.code.nativeElement.textContent = this.markup;
         }
         
         Prism.highlightAll();
@@ -76,8 +76,8 @@ export class AppComponent {
     private populateCodeContainer(code: any) {
         this.markup = code.markup;
         this.typescriptCode = code.ts;
-        this.code.nativeElement.classList = 'language-markup';
-        this.code.nativeElement.innerText = this.markup;
+        this.code.nativeElement.className = 'language-markup';
+        this.code.nativeElement.textContent = this.markup;
 
         Prism.hooks.add('before-highlight', env => {
             env.element.innerHTML = env.element.innerHTML.replace(/<br\s*\/?>/g,'\n');
