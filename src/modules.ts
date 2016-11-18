@@ -8,7 +8,7 @@ import { IgxCarouselModule } from "./carousel/carousel.component";
 import { IgxCheckboxModule } from "./checkbox/checkbox.component";
 import { IgxIconModule } from "./icon/icon.component";
 import { IgxListModule } from "./list/list.component";
-import { ModalModule } from "./modal/modal";
+import { IgxDialogModule } from "./dialog/dialog.component";
 import { IgxProgressBarModule } from "./progressbar/progressbar.component"
 import { IgxNavbarModule } from "./navbar/navbar.component";
 import { NavigationDrawerModule } from "./navigation-drawer/navigation-drawer.component";
@@ -24,10 +24,10 @@ import { IgxTabBarModule } from "./tabbar/tab.component";
         IgxCheckboxModule,
         IgxIconModule,
         IgxListModule,
-        ModalModule,
+        IgxDialogModule,
         IgxNavbarModule,
         NavigationDrawerModule,
-        IgxProgressBarModule
+        IgxProgressBarModule,
         IgxRadioModule,
         IgxSwitchModule,
         IgxTabBarModule
@@ -39,10 +39,10 @@ import { IgxTabBarModule } from "./tabbar/tab.component";
         IgxCheckboxModule,
         IgxIconModule,
         IgxListModule,
-        ModalModule,
+        IgxDialogModule,
         IgxNavbarModule,
         NavigationDrawerModule,
-        IgxProgressBarModule
+        IgxProgressBarModule,
         IgxRadioModule,
         IgxSwitchModule,
         IgxTabBarModule
