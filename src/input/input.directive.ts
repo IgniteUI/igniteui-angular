@@ -6,7 +6,7 @@ import {
 } from "@angular/core";
 
 @Directive({
-    selector: '[igx-input]',
+    selector: '[igxInput]',
     host: {
         '[class.ig-form-group__input]': 'true',
         '[class.ig-form-group__input--filled]': 'filled',
