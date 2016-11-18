@@ -125,7 +125,9 @@ export class ListItem implements OnInit, OnDestroy, IListChild {
         this._addEventListeners();        
 
         // Fix for default value of touch-action: none, set by Hammer.js
-        this.element.nativeElement.style.touchAction = "inherit";
+        this.element.nativeElement.style.touchAction = "initial";
+        this.element.nativeElement.style.userSelect = "initial";
+        this.element.nativeElement.style.webkitUserDrag = "initial";
     }
 
     public ngOnDestroy() {
@@ -138,6 +140,7 @@ export class ListItem implements OnInit, OnDestroy, IListChild {
             this._renderer.listen(this.element.nativeElement, 'panstart', (event) => { this.panStart(event); });
             this._renderer.listen(this.element.nativeElement, 'panmove', (event) => { this.panMove(event); });
             this._renderer.listen(this.element.nativeElement, 'panend', (event) => { this.panEnd(event); });
+            //this._renderer.listen(this.element.nativeElement, 'swipeleft', (event) => { this.leftMagneticGrip(); });
         }        
     }
 
