@@ -1,4 +1,4 @@
-<div class="modal-sample">
+<div class="dialog-sample">
     <h3>
         Alert with one action button and message
     </h3>
@@ -7,9 +7,9 @@
         Alert
     </button>
 
-    <ig-modal #alert title="Notification" message="Your email has been sent successfully!"
-        action1ButtonLabel="OK" (onAction1Select)="alert.close()">
-    </ig-modal>
+    <igx-dialog #alert title="Notification" message="Your email has been sent successfully!"
+        leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()">
+    </igx-dialog>
 
     <h3>
         Dialog with two action buttons and message
@@ -19,14 +19,14 @@
         Dialog
     </button>
 
-    <ig-modal #dialog title="Confirmation"
-        action1ButtonLabel="Cancel"
-        (onAction1Select)="dialog.close()"
-        action2ButtonLabel="OK"
-        action2ButtonRipple="#4CAF50"
-        (onAction2Select)="onDialogOKSelected($event)"
+    <igx-dialog #dialog title="Confirmation" 
+        leftButtonLabel="Cancel"
+        (onLeftButtonSelect)="dialog.close()"
+        rightButtonLabel="OK" 
+        rightButtonRipple="#4CAF50"
+        (onRightButtonSelect)="onDialogOKSelected($event)"
         message="Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?">
-    </ig-modal>
+    </igx-dialog>
 
     <h3>
         Form with two action buttons and custom message
@@ -36,12 +36,12 @@
         Form
     </button>
 
-    <ig-modal #form title="Sign In"
-        action1ButtonLabel="Cancel"
-        (onAction1Select)="form.close()"
-        action2ButtonLabel="Sign In"
-        action2ButtonBackgroundColor="#0375be"
-        action2ButtonColor="white"
+    <igx-dialog #form title="Sign In"
+        leftButtonLabel="Cancel"
+        (onLeftButtonSelect)="form.close()"
+        rightButtonLabel="Sign In"
+        rightButtonBackgroundColor="#0375be"
+        rightButtonColor="white"
         backgroundClick="true">
         <div class="ig-form-group">
             <input type="text" igxInput />
@@ -51,5 +51,5 @@
             <input type="password" igxInput />
             <label igxLabel>Password</label>
         </div>
-    </ig-modal>
+    </igx-dialog>
 </div>
