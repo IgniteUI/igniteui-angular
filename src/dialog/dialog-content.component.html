@@ -3,8 +3,11 @@
     class="igx-dialog"
     [class.igx-dialog--hidden]="!isOpen"
     (click)="onDialogSelected($event)">
-    <div #dialogWindow class="igx-dialog__window">
-        <div class="igx-dialog__window-title">
+    <div #dialogWindow 
+        class="igx-dialog__window" 
+        [attr.role]="role" 
+        [attr.aria-labelledby]="titleId">
+        <div [attr.id]="titleId" class="igx-dialog__window-title">
             {{ title }}
         </div>
         <div class="igx-dialog__window-content">
