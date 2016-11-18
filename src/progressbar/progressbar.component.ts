@@ -7,7 +7,6 @@ import {
     ViewChild,
     Renderer,
     OnChanges,
-    SimpleChanges,
     Output,
     EventEmitter
 } from '@angular/core';
@@ -89,10 +88,10 @@ export class IgxLinearProgressBar extends BaseProgress implements OnChanges {
         super();
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes) {
         if(this._linear_bar) {
             if(changes.value){
-                super.instantiateValAnimation(changes.value.previousValue, changes.value.currentValue, this.max);
+                super.instantiateValAnimation(changes.previousValue, changes.value.currentValue, this.max);
 
                 super.startAnimation(this._interval);
             }
@@ -108,7 +107,7 @@ export class IgxLinearProgressBar extends BaseProgress implements OnChanges {
 })
 export class IgxCircularProgressBar extends BaseProgress implements AfterViewInit, OnChanges {
     private _radius: number = 0;
-    private _circumference: number = 0;
+    private _circumference: number = 289;
     private _interval: number = 15;
     private _percentage = 0;
     private _progress = 0;
@@ -127,7 +126,7 @@ export class IgxCircularProgressBar extends BaseProgress implements AfterViewIni
         super();
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes) {
         if(this._svg_circle) {
             // Validate percentage value to be between [0...100]
             this._percentage = getValueInRange(super.getPercentValue(), 100);
