@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { CarouselModule } from "../../../src/carousel/carousel";
+import { IgxCarouselModule } from "../../../src/carousel/carousel.component";
 
 @Component({
     selector: "carousel-sample",
@@ -18,10 +18,10 @@ export class CarouselSampleComponent {
 
     addNewSlide() {
         this.slides.push(
-            {image: "https://unsplash.it/g/1170/300"},
-            {image: "https://unsplash.it/g/1171/300"},
-            {image: "https://unsplash.it/g/1172/300"},
-            {image: "https://unsplash.it/g/1173/300"}
+            {image: "http://lorempixel.com/1170/300/nature/1/"},
+            {image: "http://lorempixel.com/1170/300/nature/2/"},
+            {image: "http://lorempixel.com/1170/300/nature/3/"},
+            {image: "http://lorempixel.com/1170/300/nature/5/"}
         );
     }
 }

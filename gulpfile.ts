@@ -33,13 +33,13 @@ gulp.task("build", ["build.css", "build.js", "build.fonts"]);
 
 
 gulp.task("bundle", ["bundle.src", "build.css", "build.fonts", "bundle.README"], () => {
-    return gulp.src("./zero-blocks/**/*")
+    return gulp.src("./igniteui-js-blocks/**/*")
         .pipe(gulp.dest("./dist"));
 });
 
 
 gulp.task("cleanup", () => {
-    return gulp.src("./zero-blocks")
+    return gulp.src("./igniteui-js-blocks")
         .pipe(vinylPaths(del));
 });
 
@@ -64,8 +64,8 @@ gulp.task("build.src", () => {
         .pipe(ts(tsProdProject));
 
     return merge(
-        tsResult.js.pipe(sourcemaps.write()).pipe(gulp.dest("./zero-blocks")),
-        tsResult.dts.pipe(gulp.dest("./zero-blocks"))
+        tsResult.js.pipe(sourcemaps.write()).pipe(gulp.dest("./igniteui-js-blocks")),
+        tsResult.dts.pipe(gulp.dest("./igniteui-js-blocks"))
     );
 });
 
@@ -82,11 +82,11 @@ gulp.task("bundle.src", ["build.src"], () => {
         }
     });
 
-    return builder.trace('zero-blocks/main').then(trees => {
+    return builder.trace('igniteui-js-blocks/main').then(trees => {
         console.log('tree resolved');
         return Promise.all([
-            builder.bundle(trees, './dist/bundles/zero-blocks.dev.js'),
-            builder.bundle(trees, './dist/bundles/zero-blocks.min.js', { minify: true })
+            builder.bundle(trees, './dist/bundles/igniteui-js-blocks.dev.js'),
+            builder.bundle(trees, './dist/bundles/igniteui-js-blocks.min.js', { minify: true })
         ]);
     });
 });

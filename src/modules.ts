@@ -2,75 +2,78 @@
 
 import { NgModule } from "@angular/core";
 
-import { AvatarModule } from "./avatar/avatar";
-import { BadgeModule } from "./badge/badge";
-import { CarouselModule } from "./carousel/carousel";
-import { CheckboxModule } from "./checkbox/checkbox";
-import { IgxIconModule } from "./icon/icon";
-import { ListModule } from "./list/list";
-import { ModalModule } from "./modal/modal";
-import { NavbarModule } from "./navbar/navbar";
-import { NavigationDrawerModule } from "./navigation-drawer/navigation-drawer";
-import { IgRadioModule} from "./radio/radio";
-import { SwitchModule} from "./switch/switch";
-import { TabBarModule } from "./tabbar/tab";
+import { IgxAvatarModule } from "./avatar/avatar.component";
+import { IgxBadgeModule } from "./badge/badge.component";
+import { IgxCarouselModule } from "./carousel/carousel.component";
+import { IgxCheckboxModule } from "./checkbox/checkbox.component";
+import { IgxIconModule } from "./icon/icon.component";
+import { IgxListModule } from "./list/list.component";
+import { IgxDialogModule } from "./dialog/dialog.component";
+import { IgxProgressBarModule } from "./progressbar/progressbar.component"
+import { IgxNavbarModule } from "./navbar/navbar.component";
+import { NavigationDrawerModule } from "./navigation-drawer/navigation-drawer.component";
+import { IgxRadioModule} from "./radio/radio.component";
+import { IgxSwitchModule} from "./switch/switch.component";
+import { IgxTabBarModule } from "./tabbar/tab.component";
 
 @NgModule({
     imports: [
-        AvatarModule,
-        BadgeModule,
-        CarouselModule,
-        CheckboxModule,
+        IgxAvatarModule,
+        IgxBadgeModule,
+        IgxCarouselModule,
+        IgxCheckboxModule,
         IgxIconModule,
-        ListModule,
-        ModalModule,
-        NavbarModule,
+        IgxListModule,
+        IgxDialogModule,
+        IgxNavbarModule,
         NavigationDrawerModule,
-        IgRadioModule,
-        SwitchModule,
-        TabBarModule
+        IgxProgressBarModule,
+        IgxRadioModule,
+        IgxSwitchModule,
+        IgxTabBarModule
     ],
     exports: [
-        AvatarModule,
-        BadgeModule,
-        CarouselModule,
-        CheckboxModule,
+        IgxAvatarModule,
+        IgxBadgeModule,
+        IgxCarouselModule,
+        IgxCheckboxModule,
         IgxIconModule,
-        ListModule,
-        ModalModule,
-        NavbarModule,
+        IgxListModule,
+        IgxDialogModule,
+        IgxNavbarModule,
         NavigationDrawerModule,
-        IgRadioModule,
-        SwitchModule,
-        TabBarModule
+        IgxProgressBarModule,
+        IgxRadioModule,
+        IgxSwitchModule,
+        IgxTabBarModule
     ]
 })
 export class IgxComponentsModule {}
 
 
-import { ButtonModule } from "./button/button";
-import { IgInput } from "./input/input";
-import { FilterModule } from "./directives/filter";
-import { IgRippleModule } from "./directives/ripple";
-import { LabelModule } from "./label/label";
-import { IgLayout } from "./layout/layout";
+import { IgxButtonModule } from "./button/button.directive";
+import { IgxInput } from "./input/input.directive";
+import { IgxFilterModule } from "./directives/filter.directive";
+import { IgxRippleModule } from "./directives/ripple.directive";
+import { IgxLabelModule } from "./label/label.directive";
+import { IgxLayout } from "./layout/layout.directive";
 
 @NgModule({
     imports: [
-        ButtonModule,
-        IgInput,
-        FilterModule,
-        IgRippleModule,
-        LabelModule,
-        IgLayout
+        IgxButtonModule,
+        IgxInput,
+        IgxFilterModule,
+        IgxRippleModule,
+        IgxLabelModule,
+        IgxLayout
     ],
     exports: [
-        ButtonModule,
-        IgInput,
-        FilterModule,
-        IgRippleModule,
-        LabelModule,
-        IgLayout
+        IgxButtonModule,
+        IgxInput,
+        IgxFilterModule,
+        IgxRippleModule,
+        IgxLabelModule,
+        IgxLayout
     ]
 })
 export class IgxDirectivesModule {}

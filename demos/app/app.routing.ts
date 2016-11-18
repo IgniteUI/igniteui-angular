@@ -1,7 +1,6 @@
 import { ModuleWithProviders } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
-import { AppComponent } from "./app.component";
 import { InputSampleComponent } from "./input/sample.component";
 import { CarouselSampleComponent } from "./carousel/sample.component";
 import { TabBarSampleComponent } from "./tabbar/sample.component";
@@ -9,8 +8,10 @@ import { ListSampleComponent } from "./list/sample.component";
 import { ButtonsSampleComponent } from "./button/sample.component";
 import { AvatarSampleComponent } from "./avatar/sample.component";
 import { NavbarSampleComponent } from "./navbar/sample.component";
-import { ModalSampleComponent } from "./modal/sample.component";
+import { DialogSampleComponent } from "./dialog/sample.component";
+import { ProgressbarSampleComponent } from "./progressbar/progressbarsample.component";
 import { IconSampleComponent } from "./icon/sample.component";
+import { IgxSnackbarSampleComponent } from "./snackbar/sample.component";
 
 const appRoutes: Routes = [
     {
@@ -35,7 +36,7 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/icon',
+        redirectTo: '/carousel',
         pathMatch: 'full'
     },
     {
@@ -47,8 +48,16 @@ const appRoutes: Routes = [
         component: NavbarSampleComponent
     },
     {
-        path: "modal",
-        component: ModalSampleComponent
+        path: "progressbar",
+        component: ProgressbarSampleComponent
+    },
+    {
+        path: "snackbar",
+        component: IgxSnackbarSampleComponent
+    },
+    {
+        path: "dialog",
+        component: DialogSampleComponent
     },
     {
         path: "icon",
