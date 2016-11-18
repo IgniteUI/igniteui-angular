@@ -1,19 +1,19 @@
 <h3>Text Inputs</h3>
 
 <div class="ig-form-group">
-    <input type="text" igx-input [(ngModel)]="user.name" />
+    <input type="text" igxInput [(ngModel)]="user.name" />
     <label igxLabel>Username</label>
 </div>
 <p><code>Selected value = {{ user.name || ''}}</code></p>
 
 <div class="ig-form-group">
-    <input type="password" igx-input placeholder="{{placeholder}}" [(ngModel)]="user.password" />
+    <input type="password" igxInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
     <label igxLabel>Password</label>
 </div>
 <p><code>Selected value = {{ user.password || ''}}</code></p>
 
 <div class="ig-form-group">
-    <textarea placeholder="{{placeholder}}" igx-input [(ngModel)]="user.comment"></textarea>
+    <textarea placeholder="{{placeholder}}" igxInput [(ngModel)]="user.comment"></textarea>
     <label igxLabel>Textarea</label>
 </div>
 <p><code>Selected value = {{ user.comment || ''}}</code></p>

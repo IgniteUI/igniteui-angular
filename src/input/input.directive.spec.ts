@@ -59,11 +59,11 @@ describe('IgxInput', function() {
 
 });
 
-@Component({ template: `<input type="text" igx-input />` })
+@Component({ template: `<input type="text" igxInput />` })
 class InitInput {
 }
 
-@Component({ template: `<input id="username" placeholder="{{placeholder}}" igx-input name="username" />`})
+@Component({ template: `<input id="username" placeholder="{{placeholder}}" igxInput name="username" />`})
 class InputWithAttribs {
     placeholder = "Please enter a name";
 }

@@ -73,6 +73,8 @@ module.exports = function(config) {
       {pattern: appBase + '**/*.css', included: false, watched: true},
       {pattern: testBase + "**/*.html", included: false, watched: true},
       "dist/zero-blocks.css",
+      "src/progressbar/styles/circular-bar.style.css",
+      "src/progressbar/styles/linear-bar.style.css",
 
       // Paths for debugging with source maps in dev tools
       {pattern: appSrcBase + '**/*.ts', included: false, watched: false},

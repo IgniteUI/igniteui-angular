@@ -9,6 +9,7 @@ import { ButtonsSampleComponent } from "./button/sample.component";
 import { AvatarSampleComponent } from "./avatar/sample.component";
 import { NavbarSampleComponent } from "./navbar/sample.component";
 import { DialogSampleComponent } from "./dialog/sample.component";
+import { ProgressbarSampleComponent } from "./progressbar/progressbarsample.component";
 import { IconSampleComponent } from "./icon/sample.component";
 import { IgxSnackbarSampleComponent } from "./snackbar/sample.component";
 
@@ -45,6 +46,10 @@ const appRoutes: Routes = [
     {
         path: "navbar",
         component: NavbarSampleComponent
+    },
+    {
+        path: "progressbar",
+        component: ProgressbarSampleComponent
     },
     {
         path: "snackbar",
