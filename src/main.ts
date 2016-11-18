@@ -18,6 +18,7 @@ export * from './switch/switch.component';
 export * from './avatar/avatar.component';
 export * from './layout/layout.directive';
 export * from './dialog/dialog.component';
+export * from './progressbar/progressbar.component';
 export * from './navbar/navbar.component';
 export * from './directives/filter.directive';
 export * from './directives/ripple.directive';

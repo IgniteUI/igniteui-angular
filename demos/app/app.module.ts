@@ -15,6 +15,7 @@ import { AvatarSampleModule } from "./avatar/sample.module";
 import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
 import { NavbarSampleModule } from "./navbar/sample.module";
 import { DialogSampleModule } from "./dialog/sample.module";
+import { ProgressBarSampleModule } from "./progressbar/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
 import { IgxSnackbarSampleModule } from "./snackbar/sample.module";
 import { routing } from "./app.routing";
@@ -34,9 +35,10 @@ import { routing } from "./app.routing";
         AvatarSampleModule,
         NavDrawerSampleModule,
         NavbarSampleModule,
+        ProgressBarSampleModule,
         IgxSnackbarSampleModule,
         DialogSampleModule,
-        IconSampleModule
+        IconSampleModule,
     ],
     declarations: [
         AppComponent,
