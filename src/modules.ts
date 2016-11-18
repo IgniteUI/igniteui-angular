@@ -27,7 +27,7 @@ import { IgxTabBarModule } from "./tabbar/tab.component";
         IgxDialogModule,
         IgxNavbarModule,
         NavigationDrawerModule,
-        IgxProgressBarModule
+        IgxProgressBarModule,
         IgxRadioModule,
         IgxSwitchModule,
         IgxTabBarModule
@@ -42,7 +42,7 @@ import { IgxTabBarModule } from "./tabbar/tab.component";
         IgxDialogModule,
         IgxNavbarModule,
         NavigationDrawerModule,
-        IgxProgressBarModule
+        IgxProgressBarModule,
         IgxRadioModule,
         IgxSwitchModule,
         IgxTabBarModule
