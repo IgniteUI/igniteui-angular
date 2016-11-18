@@ -39,7 +39,7 @@ describe('Icon', () => {
         fixture.detectChanges();
         
         expect(icon.themeIcon.nativeElement.classList.contains('material-icons')).toBeTruthy();
-        expect(icon.themeIcon.nativeElement.innerText).toEqual('home');
+        expect(icon.themeIcon.nativeElement.textContent).toEqual('home');
 
     });
 
