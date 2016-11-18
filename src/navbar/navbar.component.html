@@ -1,6 +1,6 @@
 <nav class="ig-navbar">
-	<span class="ig-navbar__left-btn" [class.ig-navbar__left-btn--disabled]="canGoBack() || !hasIcon()"> 
-        <button igButton="navbar" (click)="navigateBack($event)">
+	<span class="ig-navbar__left-btn" [class.ig-navbar__left-btn--disabled]="canGoBack() || !hasIcon()">
+        <button igxButton="navbar" (click)="navigateBack($event)">
             <i class="material-icons">{{ icon }}</i>
         </button>
     </span>
