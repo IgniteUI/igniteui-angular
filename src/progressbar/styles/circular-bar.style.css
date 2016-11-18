@@ -1,0 +1,44 @@
+/*The svg circle adjusts based on the width of its container*/
+/*.progress-container {
+  width: 100px;
+  height: 100px;
+}*/
+
+.progress-circular {
+  width: 100%;
+  height: 100%;
+
+  /*&__circle {
+    fill: transparent;
+    stroke: url(#linear);
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-dashoffset: 289;
+    stroke-dasharray: 289;
+    transform-origin: 50% 50%;
+    transform: rotate(-90deg);
+  }
+
+  &__text {
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 2em;
+    fill: url(#linear);
+  }*/
+}
+
+.progress-circular__circle {
+    fill: transparent;
+    stroke: url(#linear);
+    stroke-width: 6;
+    stroke-linecap: square;
+    stroke-dashoffset: 289;
+    stroke-dasharray: 289;
+    transform-origin: 50% 50%;
+    transform: rotate(-90deg);
+}
+
+.progress-circular__text {
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 2em;
+    fill: #484848;
+}
