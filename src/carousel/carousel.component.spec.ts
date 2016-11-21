@@ -190,8 +190,8 @@ describe("Carousel", function() {
         carouselNative = fixture.componentInstance.carousel.element_ref.nativeElement;
         carousel = fixture.componentInstance.carousel;
 
-        prevNav = carouselNative.querySelector('a.left');
-        nextNav = carouselNative.querySelector('a.right');
+        prevNav = carouselNative.querySelector('a.ig-carousel__arrow--prev');
+        nextNav = carouselNative.querySelector('a.ig-carousel__arrow--next');
 
         spyOn(carousel, 'prev');
         dispatchEv(prevNav, 'click');

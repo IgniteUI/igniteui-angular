@@ -1,19 +1,19 @@
 <div tabindex="1" (mouseenter)="stop()" (mouseleave)="play()" (keydown)="($event)" class="ig-carousel">
-    <ul class="ig-carousel-indicators" [hidden]="slides.length <= 1">
+    <ul class="ig-carousel__indicators" [hidden]="slides.length <= 1">
         <li *ngFor="let slide of slides" [class.active]="slide.active === true" (click)="select(slide)"></li>
     </ul>
-    <div class="ig-carousel-inner">
+    <div class="ig-carousel__inner">
         <ng-content></ng-content>
     </div>
     <div template="ngIf navigation">
-        <a class="left ig-carousel-control" (click)="prev()" [hidden]="!slides.length">
+        <a class="ig-carousel__arrow--prev" (click)="prev()" [hidden]="!slides.length">
             <span>
-                <i class="material-icons">navigate_before</i>
+                <i class="material-icons">arrow_back</i>
             </span>
         </a>
-        <a class="right ig-carousel-control" (click)="next()" [hidden]="!slides.length">
+        <a class="ig-carousel__arrow--next" (click)="next()" [hidden]="!slides.length">
             <span>
-                <i class="material-icons">navigate_next</i>
+                <i class="material-icons">arrow_forward</i>
             </span>
         </a>
     </div>
