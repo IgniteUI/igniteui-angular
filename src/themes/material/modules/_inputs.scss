@@ -4,7 +4,8 @@ input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px white inset;
 }
 
-@include b(ig-form-group) {
+@include b(igx-form-group) {
+	$block: &;
 
 	@extend %igx-input-display;
 
@@ -91,7 +92,7 @@ input:-webkit-autofill {
 	}
 
 	@include e(textarea) {
-		@extend .ig-form-group__input;
+		@extend #{$block}__input;
 		@extend %igx-textarea;
 	}
 }
