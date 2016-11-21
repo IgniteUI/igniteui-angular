@@ -1,7 +1,4 @@
-import { Component, OnInit } from "@angular/core";
-import { IgxDialogModule, IgxDialog } from "../../../src/main";
-import { IgxButtonModule } from "../../../src/main";
-import { IgxInput } from "../../../src/main";
+import { Component } from "@angular/core";
 
 @Component({
     moduleId: module.id,
@@ -9,11 +6,7 @@ import { IgxInput } from "../../../src/main";
     styleUrls: ["sample.css"],
     templateUrl: "sample.component.html",
 })
-export class DialogSampleComponent implements OnInit {
-    ngOnInit() {
-
-    }
-
+export class DialogSampleComponent {
     onDialogOKSelected(args) {
         // args.event - event
         // args.dialog - dialog

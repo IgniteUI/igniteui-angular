@@ -30,7 +30,7 @@
     fill: transparent;
     stroke: url(#linear);
     stroke-width: 6;
-    stroke-linecap: square;
+    stroke-linecap: round;
     stroke-dashoffset: 289;
     stroke-dasharray: 289;
     transform-origin: 50% 50%;
