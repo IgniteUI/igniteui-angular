@@ -6,7 +6,7 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
 describe('IgxSnackbar', () => {
     beforeEach(async(() => {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000;
         TestBed.configureTestingModule({
             imports: [
                 IgxSnackbarModule
@@ -28,7 +28,7 @@ describe('IgxSnackbar', () => {
 
             expect(fixture.componentInstance.snackbar.message).toBeUndefined();
             expect(fixture.componentInstance.snackbar.actionText).toBeUndefined();
-            expect(fixture.componentInstance.snackbar.displayTime).toBe(10000);
+            expect(fixture.componentInstance.snackbar.displayTime).toBe(4000);
             expect(fixture.componentInstance.snackbar.autoHide).toBeTruthy();
             expect(fixture.componentInstance.snackbar.isVisible).toBeFalsy();
             expect(fixture.componentInstance.snackbar.actionText).toBeUndefined();
