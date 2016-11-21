@@ -33,27 +33,26 @@ describe("List", function () {
         expect(list.headers[0] instanceof IgxListHeader).toBeTruthy();
     });
 
-    // Z.K width getter could be item.element.nativeElement.lastElementChild.offsetWidth
-    // it('should set/get properly layout properties: width, left, maxLeft', () => {
-    //     let fixture = TestBed.createComponent(ListTestComponent),
-    //         item, visibleAreaOnFullPan,
-    //         testWidth = 400, testLeft = -100,
-    //         list = fixture.componentInstance.list;
-    //     fixture.detectChanges();
+     it('should set/get properly layout properties: width, left, maxLeft', () => {
+         let fixture = TestBed.createComponent(ListTestComponent),
+             item, visibleAreaOnFullPan,
+             testWidth = 400, testLeft = -100,
+             list = fixture.componentInstance.list;
+         fixture.detectChanges();
 
-    //     fixture.componentInstance.wrapper.nativeElement.style.width = testWidth + "px";
+         fixture.componentInstance.wrapper.nativeElement.style.width = testWidth + "px";
 
-    //     fixture.detectChanges();
-    //     expect(list.items.length).toBe(3);
-    //     item = list.items[0];
-    //     visibleAreaOnFullPan = item._VISIBLE_AREA_ON_FULL_PAN;
-    //     expect(item instanceof IgxListItem).toBeTruthy();
-    //     expect(item.width).toBe(testWidth);
-    //     expect(item.left).toBe(0);
-    //     expect(item.maxLeft).toBe(visibleAreaOnFullPan - testWidth);
-    //     item.left = testLeft;
-    //     expect(item.left).toBe(testLeft);
-    // });
+         fixture.detectChanges();
+         expect(list.items.length).toBe(3);
+         item = list.items[0];
+         visibleAreaOnFullPan = item._VISIBLE_AREA_ON_FULL_PAN;
+         expect(item instanceof IgxListItem).toBeTruthy();
+         expect(item.width).toBe(testWidth);
+         expect(item.left).toBe(0);
+         expect(item.maxLeft).toBe(visibleAreaOnFullPan - testWidth);
+         item.left = testLeft;
+         expect(item.left).toBe(testLeft);
+     });
 
     it('should calculate properly item index', () => {
         let fixture = TestBed.createComponent(ListTestComponent),
