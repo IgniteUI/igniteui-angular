@@ -4,7 +4,7 @@
 		<li *ngFor="let tab of _visibleTabs" class="{{_itemStyle}}__menu-item" [class.ig-tab-bar-inner__menu-item--selected]="tab.isSelected" [class.ig-tab-bar-inner__menu-item--disabled]="tab.isDisabled" (click)="tab.select()" >
 			<div ngClass="tab-icon">
 				<i class="material-icons">{{tab.icon}}</i>
-				<span [class.ig-badge--hidden]="tab._changesCount == 0" class="ig-badge">{{tab._changesCount}}</span>
+				<span [class.igx-badge--hidden]="tab._changesCount == 0" class="igx-badge">{{tab._changesCount}}</span>
 			</div>
 			<div ngClass="tab-label">{{tab.label}}</div>
 			<div ngClass="tab-color tab-color--{{tab.color}}"></div>
