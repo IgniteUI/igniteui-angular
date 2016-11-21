@@ -91,7 +91,7 @@ export class IgxLinearProgressBar extends BaseProgress implements OnChanges {
     ngOnChanges(changes) {
         if(this._linear_bar) {
             if(changes.value){
-                super.instantiateValAnimation(changes.previousValue, changes.value.currentValue, this.max);
+                super.instantiateValAnimation(changes.value.previousValue, changes.value.currentValue, this.max);
 
                 super.startAnimation(this._interval);
             }
