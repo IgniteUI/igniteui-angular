@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Component, ViewChild, DebugElement } from '@angular/core';
+import { Component, ViewChild, DebugElement, ElementRef } from '@angular/core';
 
 import { IgxDialog, IgxDialogModule } from './dialog.component';
 
-fdescribe("Dialog", function () {
+describe("Dialog", function () {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [IgxDialogModule],
@@ -12,7 +12,7 @@ fdescribe("Dialog", function () {
         }).compileComponents();
     }));
 
-    fit("Should set dialog title.", () => {
+    it("Should set dialog title.", () => {
         let fixture = TestBed.createComponent(Alert),
             dialog = fixture.componentInstance.dialog,
             expectedTitle = "alert";
@@ -24,7 +24,7 @@ fdescribe("Dialog", function () {
         expect(titleDebugElement.nativeElement.textContent.trim()).toEqual(expectedTitle);
     });
 
-    fit("Should set dialog message.", () => {
+    it("Should set dialog message.", () => {
         let fixture = TestBed.createComponent(Alert),
             dialog = fixture.componentInstance.dialog,
             expectedMessage = "message";
@@ -36,7 +36,7 @@ fdescribe("Dialog", function () {
         expect(messageDebugElement.nativeElement.textContent.trim()).toEqual(expectedMessage);
     });
 
-    fit("Should set custom modal message.", () => {
+    it("Should set custom modal message.", () => {
         let fixture = TestBed.createComponent(CustomDialog),
             dialog = fixture.componentInstance.dialog;
 
@@ -48,7 +48,7 @@ fdescribe("Dialog", function () {
         expect(messageNativeElement.getElementsByClassName("custom-dialog__content-input").length).toEqual(1);
     });
 
-    fit("Should set left and right button properties.", () => {
+    it("Should set left and right button properties.", () => {
         let fixture = TestBed.createComponent(Dialog),
             dialog = fixture.componentInstance.dialog;
         
@@ -67,7 +67,7 @@ fdescribe("Dialog", function () {
         expect(dialog.rightButtonRipple).toEqual("white");
     });
 
-    fit("Should execute open/close methods.", () => {
+    it("Should execute open/close methods.", () => {
         let fixture = TestBed.createComponent(Alert),
             dialog = fixture.componentInstance.dialog;
 
@@ -83,7 +83,7 @@ fdescribe("Dialog", function () {
         testDialogIsOpen(fixture.debugElement, dialog, false);
     });
 
-    fit("Should set closeOnOutsideSelect.", () => {
+    it("Should set closeOnOutsideSelect.", () => {
         let fixture = TestBed.createComponent(Alert),
             dialog = fixture.componentInstance.dialog;
 
@@ -105,7 +105,7 @@ fdescribe("Dialog", function () {
         testDialogIsOpen(fixture.debugElement, dialog, true);
     });
     
-    fit("Should test events.", () => {
+    it("Should test events.", () => {
         let fixture = TestBed.createComponent(Dialog),
             dialog = fixture.componentInstance.dialog;
         
@@ -136,10 +136,22 @@ fdescribe("Dialog", function () {
         expect(dialog.onRightButtonSelect.emit).toHaveBeenCalled();
     });
 
-/*
-    fit("Should test ARIA attributes.", () => {
+    it("Should set ARIA attributes.", () => {
+        let alertFixture = TestBed.createComponent(Alert),
+            alert = alertFixture.componentInstance.dialog;
 
-    });*/
+        alertFixture.detectChanges();
+        expect(alert.role).toEqual("alertdialog");
+
+        let dialogFixture = TestBed.createComponent(Dialog),
+            dialog = dialogFixture.componentInstance.dialog;
+
+        dialogFixture.detectChanges();
+        expect(dialog.role).toEqual("dialog");
+        let titleWrapper = dialogFixture.debugElement.query(By.css(".igx-dialog__window-title")),
+            dialogWindow = dialogFixture.debugElement.query(By.css(".igx-dialog__window"));
+        expect(titleWrapper.attributes["id"]).toEqual(dialogWindow.attributes["aria-labelledby"]);
+    });
 
     function testDialogIsOpen(debugElement: DebugElement, dialog: IgxDialog, isOpen: boolean) {
         let dialogDebugElement = debugElement.query(By.css(".igx-dialog"));
@@ -164,7 +176,8 @@ fdescribe("Dialog", function () {
                             <igx-dialog #dialog 
                                 title="alert" 
                                 message="message" 
-                                closeOnOutsideSelect="true">
+                                closeOnOutsideSelect="true"
+                                leftButtonLabel="OK">
                             </igx-dialog>
                         </div>` })
 class Alert {
