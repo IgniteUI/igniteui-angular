@@ -8,10 +8,10 @@ import {
 @Directive({
     selector: '[igxInput]',
     host: {
-        '[class.ig-form-group__input]': 'true',
-        '[class.ig-form-group__input--filled]': 'filled',
-        '[class.ig-form-group__input--focused]': 'focused',
-        '[class.ig-form-group__input--placeholder]': 'placeholder'
+        '[class.igx-form-group__input]': 'true',
+        '[class.igx-form-group__input--filled]': 'filled',
+        '[class.igx-form-group__input--focused]': 'focused',
+        '[class.igx-form-group__input--placeholder]': 'placeholder'
     }
 })
 export class IgxInputClass {

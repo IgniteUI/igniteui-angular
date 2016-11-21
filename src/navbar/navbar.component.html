@@ -1,11 +1,11 @@
-<nav class="ig-navbar">
-	<span class="ig-navbar__left-btn" [class.ig-navbar__left-btn--disabled]="canGoBack() || !hasIcon()">
+<nav class="igx-navbar">
+	<span class="igx-navbar__left-btn" [class.ig-navbar__left-btn--disabled]="canGoBack() || !hasIcon()">
         <button igxButton="navbar" (click)="navigateBack($event)">
             <i class="material-icons">{{ icon }}</i>
         </button>
     </span>
 	<span>
-        <h1 class="ig-navbar__title">{{ title }}</h1>
+        <h1 class="igx-navbar__title">{{ title }}</h1>
     </span>
 	<ng-content></ng-content>
 </nav>

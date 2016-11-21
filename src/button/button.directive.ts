@@ -8,7 +8,7 @@ import { Directive, ElementRef, Input, Renderer, NgModule, OnInit } from '@angul
 })
 export class IgxButton {
     private _type: string = 'flat';
-    private _cssClass: string = 'ig-button';
+    private _cssClass: string = 'igx-button';
     private _color: string;
     private _backgroundColor: string;
 

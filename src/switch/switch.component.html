@@ -1,5 +1,5 @@
-<div class="ig-control">
-    <input class="ig-control__switch" #checkbox type="checkbox"
+<div class="igx-control">
+    <input class="igx-control__switch" #checkbox type="checkbox"
         [attr.id]="id"
         [attr.name]="name"
         [attr.value]="value"
@@ -9,9 +9,9 @@
         (change)="onChange($event)"
         (focus)="onFocus($event)"
         (blur)="onBlur($event)">
-    <span class="ig-control__text">
+    <span class="igx-control__text">
         <ng-content></ng-content>
     </span>
-    <label class="ig-control__label" [attr.for]="id">
+    <label class="igx-control__label" [attr.for]="id">
     </label>
 </div>

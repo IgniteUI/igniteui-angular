@@ -1,5 +1,5 @@
 igx-tab {
-    .ig-tab-inner {
+    .igx-tab-inner {
         display: none;
         overflow: auto;
         &.selected {
@@ -11,7 +11,7 @@ igx-tab {
     }
 }
 
-@include b(ig-tab-bar-inner) {
+@include b(igx-tab-bar-inner) {
     @extend %igx-tabbar-inner-display;
 
     @include b(tab-icon) {

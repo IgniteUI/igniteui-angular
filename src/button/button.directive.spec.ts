@@ -23,7 +23,7 @@ describe('IgxButton', function() {
         let fixture = TestBed.createComponent(InitButton);
         fixture.detectChanges();
 
-        expect(fixture.debugElement.query(By.css('span.ig-button--flat'))).toBeTruthy();
+        expect(fixture.debugElement.query(By.css('span.igx-button--flat'))).toBeTruthy();
         expect(fixture.debugElement.query(By.css('i.material-icons'))).toBeTruthy();
     });
 
@@ -34,13 +34,13 @@ describe('IgxButton', function() {
         let button = fixture.debugElement.query(By.css('span')).nativeElement;
 
         expect(button).toBeTruthy();
-        expect(button.classList.contains('ig-button--raised')).toBe(true);
-        expect(button.classList.contains('ig-button--disabled')).toBe(true);
+        expect(button.classList.contains('igx-button--raised')).toBe(true);
+        expect(button.classList.contains('igx-button--disabled')).toBe(true);
 
         fixture.componentInstance.isDisabled = false;
         fixture.detectChanges();
 
-        expect(button.classList.contains('ig-button--disabled')).toBe(false);
+        expect(button.classList.contains('igx-button--disabled')).toBe(false);
         expect(button.style.color).toEqual('white');
         expect(button.style.background).toEqual('black');
 
