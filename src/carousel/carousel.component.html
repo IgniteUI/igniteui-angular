@@ -1,17 +1,17 @@
-<div tabindex="1" (mouseenter)="stop()" (mouseleave)="play()" (keydown)="($event)" class="ig-carousel">
+<div tabindex="10" aria-label="Carousel" (mouseenter)="stop()" (mouseleave)="play()" (keydown)="($event)" class="ig-carousel">
     <ul class="ig-carousel-indicators" [hidden]="slides.length <= 1">
-        <li *ngFor="let slide of slides" [class.active]="slide.active === true" (click)="select(slide)"></li>
+        <li *ngFor="let slide of slides" [attr.aria-label]="setAriaLabel(slide)" [attr.aria-selected]="slide.active" [class.active]="slide.active === true" (click)="select(slide)"></li>
     </ul>
-    <div class="ig-carousel-inner">
+    <div class="ig-carousel-inner" role="list">
         <ng-content></ng-content>
     </div>
     <div template="ngIf navigation">
-        <a class="left ig-carousel-control" (click)="prev()" [hidden]="!slides.length">
+        <a role="button" tabindex="2" class="left ig-carousel-control" (click)="prev()" [hidden]="!slides.length">
             <span>
                 <i class="material-icons">navigate_before</i>
             </span>
         </a>
-        <a class="right ig-carousel-control" (click)="next()" [hidden]="!slides.length">
+        <a role="button" tabindex="3" class="right ig-carousel-control" (click)="next()" [hidden]="!slides.length">
             <span>
                 <i class="material-icons">navigate_next</i>
             </span>
