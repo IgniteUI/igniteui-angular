@@ -1,0 +1,11 @@
+@include b(igx-snackbar) {
+    @extend %igx-snackbar-display;
+
+    @include e(message) {
+        @extend %igx-snackbar-message;
+    }
+
+    @include e(button) {
+        @extend %igx-snackbar-button;
+    }
+}

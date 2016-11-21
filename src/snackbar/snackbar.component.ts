@@ -48,7 +48,7 @@ export class IgxSnackbar {
      * @type {number}
      */
     @Input()
-    public displayTime: number = 10000;
+    public displayTime: number = 4000;
 
     /**
      * The text of the IgxSnackbar component action

@@ -3,3 +3,8 @@
     height: 250px;
     border: 1px solid black;
 }
+
+.snackbar-container {
+    overflow: hidden;
+    height: fit-content;
+}

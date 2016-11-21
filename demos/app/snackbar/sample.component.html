@@ -3,7 +3,9 @@
 
 <button igxButton="flat" (click)="changeColor(snackbar)">Change color</button>
 
+<div class="snackbar-container">
 <igx-snackbar #snackbar
              [message]="message"
              [actionText]="actionName"
              (onAction)="undoColorChange(snackbar)"></igx-snackbar>
+</div>
