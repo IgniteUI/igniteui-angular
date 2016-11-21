@@ -1,5 +1,5 @@
 // Component styling
-@include b(ig-avatar){
+@include b(igx-avatar){
     @extend %igx-avatar-display;
 
     @include m(rounded) {

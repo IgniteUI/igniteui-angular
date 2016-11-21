@@ -1,4 +1,4 @@
-@include b(ig-list) {
+@include b(igx-list) {
     @extend %igx-list;
     
     @include e(header) {
@@ -14,7 +14,7 @@
 
     // style the wrapping component elements
     @at-root {
-        ig-list-item {
+        igx-list-item {
             @extend %igx-list-item-display;
         }
     }

@@ -1,4 +1,4 @@
-@include b(ig-navbar) {
+@include b(igx-navbar) {
     @extend %igx-navbar-display;
     
     @include e(left-btn) {

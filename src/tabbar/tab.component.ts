@@ -11,7 +11,7 @@ export class IgxTabBar implements AfterViewInit, AfterContentInit {
     @ViewChild('unorderedList') _tabList: ElementRef;
 
     private _maxNumberTabsDisplayed: number = 5;
-    private _itemStyle: string = "ig-tab-bar-inner";
+    private _itemStyle: string = "igx-tab-bar-inner";
     private get _visibleTabs() {
         return this.tabs.length > this._maxNumberTabsDisplayed ? this.tabs.filter(tab => tab.index < this._maxNumberTabsDisplayed - 1) : this.tabs;
     }
@@ -165,7 +165,7 @@ export class IgxTabBar implements AfterViewInit, AfterContentInit {
 export class IgxTab {
     @ViewChild('wrapper') wrapper: ElementRef;
 
-    private _itemStyle: string = "ig-tab-inner";
+    private _itemStyle: string = "igx-tab-inner";
     private _changesCount: number = 0; // changes and updates accordingly applied to the tab.
 
     isSelected: boolean = false;

@@ -32,6 +32,7 @@ export class IgxSnackbarSampleComponent implements OnInit {
 
         this.message = 'Changed color to ' + this.color;
         snackbar.show();
+        console.log(this._colors);
     }
 
     undoColorChange(snackbar) {

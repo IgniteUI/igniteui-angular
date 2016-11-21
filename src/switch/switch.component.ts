@@ -29,7 +29,7 @@ function MakeProvider(type: any) {
 export class IgxSwitch implements ControlValueAccessor {
 
     @Input() value: any;
-    @Input() id: string = `ig-switch-${nextId++}`;
+    @Input() id: string = `igx-switch-${nextId++}`;
     @Input() name: string;
     @Input() disabled: boolean = false;
     @Input() tabindex: number = null;

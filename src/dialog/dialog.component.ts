@@ -71,7 +71,6 @@ export class IgxDialog {
         
         this._isOpen = true;
         this.onOpen.emit(this);
-        this.dialogEl.nativeElement.classList.add(IgxDialog.DIALOG_CLASS);
     }
 
     close() {
@@ -81,7 +80,6 @@ export class IgxDialog {
 
         this._isOpen = false;
         this.onClose.emit(this);
-        this.dialogEl.nativeElement.classList.remove(IgxDialog.DIALOG_CLASS);
     }
 
     private onDialogSelected(event) {
@@ -96,7 +94,7 @@ export class IgxDialog {
     }
 
     private onInternalRightButtonSelect(event) {
-        this.onLeftButtonSelect.emit({ dialog: this, event: event });
+        this.onRightButtonSelect.emit({ dialog: this, event: event });
     }
 }
 
