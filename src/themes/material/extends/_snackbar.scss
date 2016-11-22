@@ -1,0 +1,43 @@
+%igx-snackbar-display {
+    position: relative;
+    bottom: 0;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    min-height: $snackbar-height;
+    padding: $snackbar-padding;
+    background: $snackbar-background;
+    color: $snackbar-text-color;
+    animation: bottom-slide-in .35s cubic-bezier(0.0, 0.0, 0.2, 1),
+               bottom-slide-out .2s 3.8s cubic-bezier(0.4, 0.0, 1, 1);
+}
+
+%igx-snackbar-message {
+    font-size: $snackbar-font-size;
+}
+
+%igx-snackbar-button {
+    line-height: em(16px);
+}
+
+@keyframes bottom-slide-in {
+    0% {
+        transform: translateY(100%);
+        color: rgba(255,255,255,0);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+
+@keyframes bottom-slide-out {
+    100% {
+        transform: translateY(100%);
+        color: rgba(255,255,255,0);
+    }
+    0% {
+        transform: translateY(0);
+    }
+}
