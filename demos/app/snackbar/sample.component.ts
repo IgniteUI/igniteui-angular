@@ -14,7 +14,7 @@ export class IgxSnackbarSampleComponent implements OnInit {
     private _colors: Array<string>;
 
     ngOnInit() {
-        this.color = '#000';
+        this.color = 'mediumpurple';
         this.actionName = 'Undo';
         this._colors = [];
     }
@@ -26,18 +26,22 @@ export class IgxSnackbarSampleComponent implements OnInit {
         for (var i = 0; i < 6; i++ ) {
             color += characters[Math.floor(Math.random() * 16)];
         }
-
+        
         this._colors.push(this.color);
         this.color = color;
 
         this.message = 'Changed color to ' + this.color;
         snackbar.show();
-        console.log(this._colors);
     }
 
     undoColorChange(snackbar) {
         this.color = this._colors.pop();
 
         snackbar.hide();
+    }
+
+    onAnimation(evt) {
+        let message = evt.fromState == 'void' ? 'Sliding snackbar IN' : 'Sliding snackbar OUT';
+        console.log(message);
     }
 }
