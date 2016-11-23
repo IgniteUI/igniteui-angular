@@ -1,11 +1,24 @@
 <div class="color-holder" [style.backgroundColor]="color">
+    <h2 igxLabel>Click the button bellow to change my color.</h2>
 </div>
 
-<button igxButton="flat" (click)="changeColor(snackbar)">Change color</button>
 
 <div class="snackbar-container">
-<igx-snackbar #snackbar
-             [message]="message"
-             [actionText]="actionName"
-             (onAction)="undoColorChange(snackbar)"></igx-snackbar>
+    
+    <div class="color-btn">
+        <button 
+            igxButton="fab"
+            igxButtonBackground="mediumpurple"
+            igxButtonColor="white"
+            (click)="changeColor(snackbar)">
+            <i class="material-icons">format_paint</i>
+        </button>
+    </div>
+
+    <igx-snackbar #snackbar 
+                (animationStarted)="onAnimation($event)"
+                (animationDone)="onAnimation($event)"
+                [message]="message"
+                [actionText]="actionName"
+                (onAction)="undoColorChange(snackbar)"></igx-snackbar>
 </div>

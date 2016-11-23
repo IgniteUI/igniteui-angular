@@ -1,6 +1,5 @@
 %igx-snackbar-display {
     position: relative;
-    bottom: 0;
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
@@ -9,8 +8,7 @@
     padding: $snackbar-padding;
     background: $snackbar-background;
     color: $snackbar-text-color;
-    animation: bottom-slide-in .35s cubic-bezier(0.0, 0.0, 0.2, 1),
-               bottom-slide-out .2s 3.8s cubic-bezier(0.4, 0.0, 1, 1);
+    backface-visibility: hidden;
 }
 
 %igx-snackbar-message {
@@ -18,26 +16,18 @@
 }
 
 %igx-snackbar-button {
-    line-height: em(16px);
-}
-
-@keyframes bottom-slide-in {
-    0% {
-        transform: translateY(100%);
-        color: rgba(255,255,255,0);
-    }
-    100% {
-        transform: translateY(0);
-    }
-}
-
-
-@keyframes bottom-slide-out {
-    100% {
-        transform: translateY(100%);
-        color: rgba(255,255,255,0);
-    }
-    0% {
-        transform: translateY(0);
+    background: transparent;
+    color: $secondary-color;
+    border: 0;
+    line-height: $snackbar-button-line-height;
+    margin-left: $snackbar-button-left-margin;
+    text-transform: uppercase;
+    user-select: none;
+    font-weight: 600;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    transition: color .2s ease;
+    &:hover {
+        color: lighten($secondary-color, 15%);
     }
 }

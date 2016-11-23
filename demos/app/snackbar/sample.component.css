@@ -1,10 +1,32 @@
 .color-holder {
-    width: 250px;
-    height: 250px;
-    border: 1px solid black;
+    margin: 16px;
+    height: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: rgba(255,255,255, 90);
+    text-shadow: 0px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+            0px 4px 5px 0px rgba(0, 0, 0, 0.14),
+            0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+    transition: background .35s cubic-bezier(0.0, 0.0, 0.2, 1);
+    
+}
+[igxButton] {
+    filter: none;
 }
 
+h2 {
+    padding: 16px;
+}
+.color-btn {
+    position: relative;
+    margin: 16px;
+    margin-left: calc(100% - 72px);
+}
 .snackbar-container {
-    overflow: hidden;
-    height: fit-content;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
 }

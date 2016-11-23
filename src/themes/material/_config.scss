@@ -471,8 +471,9 @@ $dialog-actions-margin: 0 em(-24px, 16px) em(-12px, 16px) em(-24px, 16px);
 
 $snackbar-height: em(48px);
 $snackbar-padding: em(7px) em(24px);
-$snackbar-button-left-margin: em(48px);
+$snackbar-button-left-margin: em(24px);
 $snackbar-font-size: em(14px);
 $snackbar-background: $off-black;
 $snackbar-text-color: $white;
 $snackbar-button-text-color: $secondary-color;
+$snackbar-button-line-height: em(16px);
