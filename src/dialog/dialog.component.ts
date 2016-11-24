@@ -1,4 +1,5 @@
 import { Component, ViewChild, Input, Output, EventEmitter, ElementRef, NgModule, OnInit } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IgxButtonModule } from "../button/button.directive";
 import { IgxRippleModule } from "../directives/ripple.directive";
@@ -6,17 +7,37 @@ import { IgxRippleModule } from "../directives/ripple.directive";
 @Component({
     selector: 'igx-dialog',
     moduleId: module.id,
-    templateUrl: 'dialog-content.component.html'
+    templateUrl: 'dialog-content.component.html',
+    animations: [
+        trigger('flyInOut', [
+            state('open', style({
+                transform: 'translate(-50%, -50%)'
+            })),
+            transition('void => open', animate('.2s ease-out')),
+            transition('open => void', [
+                animate('.2s ease-in', style({
+                    transform: 'translate(-50%, -100%)'
+                }))
+            ])
+        ]),
+        trigger('fadeInOut', [
+            state('open', style({
+                opacity: 1
+            })),
+            transition('void <=> open', animate('.2s ease-in-out'))
+        ])
+    ]
 })
 export class IgxDialog {
     private static NEXT_ID: number = 1;
     private static readonly DIALOG_CLASS = "igx-dialog";
     private _isOpen = false;
     private _titleId: string;
+    private state: string;
 
     @Input()
     get isOpen() {
-        return  this._isOpen;
+        return this._isOpen;
     }
 
     @Input() title: string = "";
@@ -69,7 +90,7 @@ export class IgxDialog {
             return;
         }
         
-        this._isOpen = true;
+        this.toggleState('open');
         this.onOpen.emit(this);
     }
 
@@ -78,7 +99,7 @@ export class IgxDialog {
             return;
         }
 
-        this._isOpen = false;
+        this.toggleState(null);
         this.onClose.emit(this);
     }
 
@@ -95,6 +116,11 @@ export class IgxDialog {
 
     private onInternalRightButtonSelect(event) {
         this.onRightButtonSelect.emit({ dialog: this, event: event });
+    }
+
+    private toggleState(state: string): void {
+        this.state = state;
+        this._isOpen = state == 'open' ?  true : false;
     }
 }
 
