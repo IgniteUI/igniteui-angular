@@ -36,7 +36,7 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/inputs',
+        redirectTo: '/snackbar',
         pathMatch: 'full'
     },
     {

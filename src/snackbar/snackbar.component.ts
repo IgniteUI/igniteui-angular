@@ -1,6 +1,6 @@
 import { Component, NgModule, Input, Output, EventEmitter } from '@angular/core';
+import {  trigger, state, style, transition, animate, AnimationTransitionEvent } from '@angular/core';
 import { HammerGesturesManager } from '../core/touch';
-import { IgxButtonModule } from '../button/button.directive';
 import { CommonModule } from '@angular/common';
 
 /**
@@ -16,6 +16,41 @@ import { CommonModule } from '@angular/common';
     selector: 'igx-snackbar',
     moduleId: module.id,
     templateUrl: 'snackbar.component.html',
+    animations: [
+        trigger('slideInOut', [
+            state('in', style({
+                transform: 'translateY(0)',
+                color: 'rgba(255,255,255,1)'
+            })),
+            transition('void => *', [
+                style({
+                    transform: 'translateY(100%)'
+                }),
+                animate('.35s cubic-bezier(0.0, 0.0, 0.2, 1)')
+            ]),
+            transition('* => void',[
+                animate('.2s cubic-bezier(0.4, 0.0, 1, 1)', style({
+                    transform: 'translateY(100%)'
+                }))
+            ])
+        ]),
+        trigger('fadeInOut', [
+            state('in', style({
+                opacity: 1
+            })),
+            transition('void => *', [
+                style({
+                    opacity: 0
+                }),
+                animate('.35s ease-out')
+            ]),
+            transition('* => void',[
+                animate('.2s ease-out', style({
+                    opacity: 0
+                }))
+            ])            
+        ])
+    ],
     providers: [HammerGesturesManager]
 })
 export class IgxSnackbar {
@@ -48,7 +83,7 @@ export class IgxSnackbar {
      * @type {number}
      */
     @Input()
-    public displayTime: number = 10000;
+    public displayTime: number = 4000;
 
     /**
      * The text of the IgxSnackbar component action
@@ -58,7 +93,7 @@ export class IgxSnackbar {
     public actionText?: string;
 
     /**
-     * The event that will thrown when the action is executed,
+     * The event that will be thrown when the action is executed,
      * provides reference to the IgxSnackbar component as argument
      * @type {EventEmitter}
      */
@@ -93,10 +128,32 @@ export class IgxSnackbar {
     private _triggerAction(): void {
         this.onAction.emit(this);
     }
+
+    /**
+     * The event that will be thrown when the snackbar animation starts
+     * @type {EventEmitter<AnimationTransitionEvent>}
+     */
+    @Output() animationStarted = new EventEmitter<AnimationTransitionEvent>();
+    private snackbarAnimationStarted(evt?: AnimationTransitionEvent): void {
+        if(evt.fromState == 'void') {
+            this.animationStarted.emit(evt);
+        }
+    };
+
+    /**
+     * The event that will be thrown when the snackbar animation ends
+     * @type {EventEmitter<AnimationTransitionEvent>}
+     */
+    @Output() animationDone = new EventEmitter<AnimationTransitionEvent>();
+    private snackbarAnimationDone(evt?: AnimationTransitionEvent): void {
+        if(evt.fromState == 'show') {
+            this.animationDone.emit(evt);
+        }
+    };
 }
 
 @NgModule({
-    imports: [IgxButtonModule, CommonModule],
+    imports: [CommonModule],
     declarations: [IgxSnackbar],
     exports: [IgxSnackbar]
 })
