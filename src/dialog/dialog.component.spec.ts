@@ -11,17 +11,18 @@ describe("Dialog", function () {
             declarations: [Alert, Dialog, CustomDialog]
         }).compileComponents();
     }));
-
     it("Should set dialog title.", () => {
         let fixture = TestBed.createComponent(Alert),
             dialog = fixture.componentInstance.dialog,
             expectedTitle = "alert";
         
+        dialog.open();
         fixture.detectChanges();
         
         expect(dialog.title).toEqual(expectedTitle);
         let titleDebugElement = fixture.debugElement.query(By.css(".igx-dialog__window-title"));
         expect(titleDebugElement.nativeElement.textContent.trim()).toEqual(expectedTitle);
+        dialog.close();
     });
 
     it("Should set dialog message.", () => {
@@ -29,6 +30,7 @@ describe("Dialog", function () {
             dialog = fixture.componentInstance.dialog,
             expectedMessage = "message";
 
+        dialog.open();
         fixture.detectChanges();
 
         expect(dialog.message).toEqual(expectedMessage);
@@ -39,7 +41,8 @@ describe("Dialog", function () {
     it("Should set custom modal message.", () => {
         let fixture = TestBed.createComponent(CustomDialog),
             dialog = fixture.componentInstance.dialog;
-
+        
+        dialog.open();
         fixture.detectChanges();
 
         let messageDebugElement = fixture.debugElement.query(By.css(".igx-dialog__window-content")),
@@ -54,6 +57,7 @@ describe("Dialog", function () {
         
         fixture.detectChanges();
 
+        dialog.open();
         expect(dialog.leftButtonLabel).toEqual("left button");
         expect(dialog.leftButtonType).toEqual("raised");
         expect(dialog.leftButtonColor).toEqual("black");
@@ -70,7 +74,7 @@ describe("Dialog", function () {
     it("Should execute open/close methods.", () => {
         let fixture = TestBed.createComponent(Alert),
             dialog = fixture.componentInstance.dialog;
-
+        
         fixture.detectChanges();
         testDialogIsOpen(fixture.debugElement, dialog, false);
 
@@ -87,13 +91,10 @@ describe("Dialog", function () {
         let fixture = TestBed.createComponent(Alert),
             dialog = fixture.componentInstance.dialog;
 
-        fixture.detectChanges();
-        
         dialog.open();
-        fixture.componentInstance.dialog.dialogEl.nativeElement.click();      
-
         fixture.detectChanges();
 
+        fixture.componentInstance.dialog.dialogEl.nativeElement.click();
         testDialogIsOpen(fixture.debugElement, dialog, false);
 
         dialog.closeOnOutsideSelect = false;
@@ -109,43 +110,46 @@ describe("Dialog", function () {
         let fixture = TestBed.createComponent(Dialog),
             dialog = fixture.componentInstance.dialog;
         
-        fixture.detectChanges();
 
         spyOn(dialog.onOpen, "emit");
         dialog.open();
+        dialog.close();
         fixture.detectChanges();
         expect(dialog.onOpen.emit).toHaveBeenCalledWith(dialog);
 
         spyOn(dialog.onClose, "emit");
+        dialog.open();
         dialog.close();
         fixture.detectChanges();
         expect(dialog.onClose.emit).toHaveBeenCalledWith(dialog);
 
+        dialog.open();
+        fixture.detectChanges();
         let buttons = fixture.debugElement.nativeElement.querySelectorAll("button"),
             leftButton = buttons[0],
             rightButton = buttons[1];
-
+        
         spyOn(dialog.onLeftButtonSelect, "emit");
         dispatchEvent(leftButton, "click");
-        fixture.detectChanges();
         expect(dialog.onLeftButtonSelect.emit).toHaveBeenCalled();
         
         spyOn(dialog.onRightButtonSelect, "emit");
         dispatchEvent(rightButton, "click");
-        fixture.detectChanges();
         expect(dialog.onRightButtonSelect.emit).toHaveBeenCalled();
     });
 
     it("Should set ARIA attributes.", () => {
         let alertFixture = TestBed.createComponent(Alert),
             alert = alertFixture.componentInstance.dialog;
-
+        
+        alert.open();
         alertFixture.detectChanges();
         expect(alert.role).toEqual("alertdialog");
 
         let dialogFixture = TestBed.createComponent(Dialog),
             dialog = dialogFixture.componentInstance.dialog;
 
+        dialog.open();
         dialogFixture.detectChanges();
         expect(dialog.role).toEqual("dialog");
         let titleWrapper = dialogFixture.debugElement.query(By.css(".igx-dialog__window-title")),
@@ -155,13 +159,6 @@ describe("Dialog", function () {
 
     function testDialogIsOpen(debugElement: DebugElement, dialog: IgxDialog, isOpen: boolean) {
         let dialogDebugElement = debugElement.query(By.css(".igx-dialog"));
-        let dialogClassList = dialogDebugElement.nativeElement.classList;
-        let dialogClassListContainsDialogHidden = dialogClassList.contains("igx-dialog--hidden");
-        if (isOpen) {
-            expect(dialogClassListContainsDialogHidden).toBeFalsy();
-        } else {
-            expect(dialogClassListContainsDialogHidden).toBeTruthy();
-        }
 
         expect(dialog.isOpen).toEqual(isOpen);        
     }
