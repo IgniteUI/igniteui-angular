@@ -291,7 +291,7 @@ describe('IgLinearBar UI Logic', function() {
 
         fixture.detectChanges();
 
-        let progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement.getElementsByClassName('class=[progress-linear__bar--*]')[0];
+        let progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement.querySelectorAll('[class*="progress-linear__bar--"]')[0];
 
         expect(progressBarElem.style.width).toBe(expectedValue + '%');
         expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe(expectedValue.toString());
@@ -304,7 +304,7 @@ describe('IgLinearBar UI Logic', function() {
 
         fixture.detectChanges();
 
-        let progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement.getElementsByClassName('progress-linear__bar--*')[0];
+        let progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement.querySelectorAll('[class*="progress-linear__bar--"]')[0];
 
         expect(progressBarElem.style.width).toBe(expectedValue + '%');
 
@@ -318,7 +318,7 @@ describe('IgLinearBar UI Logic', function() {
         let fixture = TestBed.createComponent(SetValueAboveValuesLinearBar);
         fixture.detectChanges();
 
-        let progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement.getElementsByClassName('progress-linear__bar--*')[0];
+        let progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement.querySelectorAll('[class*="progress-linear__bar--"]')[0];
 
         expect(progressBarElem.style.width).toBe('100%');
     });
@@ -327,7 +327,7 @@ describe('IgLinearBar UI Logic', function() {
         let fixture = TestBed.createComponent(linearBar);
         fixture.detectChanges();
 
-        let progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement.getElementsByClassName('progress-linear__bar--*')[0];
+        let progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement.querySelectorAll('[class*="progress-linear__bar--"]')[0];
 
         expect(progressBarElem.classList.contains('progress-linear__bar--default')).toBeTruthy();
 
@@ -341,7 +341,7 @@ describe('IgLinearBar UI Logic', function() {
         let fixture = TestBed.createComponent(linearBar);
         fixture.detectChanges();
 
-        let progressElem = fixture.componentInstance.linerBar.elementRef.nativeElement.getElementsByClassName('progress-linear__bar--*')[0];
+        let progressElem = fixture.componentInstance.linerBar.elementRef.nativeElement.getElementsByClassName('progress-linear')[0];
 
         expect(progressElem.classList.contains('progress-linear--striped')).toBeFalsy();
 
@@ -356,7 +356,7 @@ describe('IgLinearBar UI Logic', function() {
         fixture.detectChanges();
 
         let progressElem = fixture.componentInstance.linerBar.elementRef.nativeElement.getElementsByClassName('progress-linear')[0];
-        let progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement.getElementsByClassName('progress-linear__bar--*')[0];
+        let progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement.querySelectorAll('[class*="progress-linear__bar--"]')[0];
 
         fixture.componentInstance.striped = true;
         fixture.detectChanges();
