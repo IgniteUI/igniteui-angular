@@ -36,7 +36,7 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/snackbar',
+        redirectTo: '/progressbar',
         pathMatch: 'full'
     },
     {
