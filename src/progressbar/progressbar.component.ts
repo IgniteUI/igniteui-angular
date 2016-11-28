@@ -67,8 +67,7 @@ export abstract class BaseProgress {
 @Component({
     moduleId: module.id,
     selector: 'igx-linear-bar',
-    templateUrl: 'templates/linear-bar.component.html',
-    styleUrls: [ 'styles/linear-bar.style.css' ]
+    templateUrl: 'templates/linear-bar.component.html'
 })
 export class IgxLinearProgressBar extends BaseProgress implements OnChanges {
     private _interval: number = 15;
@@ -102,8 +101,7 @@ export class IgxLinearProgressBar extends BaseProgress implements OnChanges {
 @Component({
     moduleId: module.id,
     selector: 'igx-circular-bar',
-    templateUrl: 'templates/circular-bar.component.html',
-    styleUrls: [ 'styles/circular-bar.style.css' ]
+    templateUrl: 'templates/circular-bar.component.html'
 })
 export class IgxCircularProgressBar extends BaseProgress implements AfterViewInit, OnChanges {
     private _radius: number = 0;

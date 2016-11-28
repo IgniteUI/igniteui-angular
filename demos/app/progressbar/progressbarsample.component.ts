@@ -4,7 +4,12 @@ import { IgxProgressBarModule } from "../../../src/main";
 @Component({
     selector: "progressbar-sample",
     template: `
-        <button type="button" class="btn btn-sm btn-default" (click)="generateNewProgressValues()">Generate New Values</button>
+        <h3>Progress Bars</h3>
+        <div class="button-container">
+            <button igxButton="fab" igxRipple="" (click)="generateNewProgressValues()">
+                <i class="material-icons">refresh</i>
+            </button>
+        </div>
         <div class="progress-container-linear">
             <igx-linear-bar [striped]="false" [value]="currentValue" [max]="200">
             </igx-linear-bar>
@@ -35,12 +40,21 @@ import { IgxProgressBarModule } from "../../../src/main";
     `,
     styles: [
         `.progress-container-circular {
-            width: 100px;
-            height: 100px;
+            width: 150px;
+            height: 150px;
+            padding: 16px;
         }
         .progress-container-linear {
-            width: 50%;
+            width: 100%;
             height: 50px;
+            padding: 16px;
+        }
+        .button-container {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            padding: 16px;
+            z-index: 24;
         }
         `
     ]
