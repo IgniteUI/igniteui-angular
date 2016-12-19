@@ -75,6 +75,13 @@
     height: 100%;
 }
 
+%progress-circular-innercircle {
+    stroke-width: 4;
+    fill: transparent;
+    stroke: $primary-color;
+    stroke-opacity: .1;
+}
+
 %progress-circular-circle {
     fill: transparent;
     stroke: url(#linear);
