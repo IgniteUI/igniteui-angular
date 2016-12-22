@@ -19,11 +19,12 @@ export class IgxBadge {
     public TypeEnum = Type;
     public PositionEnum = Position;
 
+    @Input()
     get type(): string {
         return this._type === undefined ? "default" : this._type;
     }
 
-    @Input("type")
+
     set type(value: string) {
         var sizeType = this.TypeEnum[value.toUpperCase()];
 
@@ -34,11 +35,12 @@ export class IgxBadge {
         }
     }
 
+    @Input()
     get position(): string {
         return this._position === undefined ? "top-right" : this._position;
     }
 
-    @Input("position")
+
     set position(value: string) {
         var positionType = this.PositionEnum[value.replace("-","_").toUpperCase()];
 
@@ -49,11 +51,12 @@ export class IgxBadge {
         }
     }
 
+    @Input()
     get value(): string {
         return this._value === undefined ? "?" : this._value;
     }
 
-    @Input("value")
+
     set value(value: string) {
         if (value === undefined) {
             this._value = "-";
