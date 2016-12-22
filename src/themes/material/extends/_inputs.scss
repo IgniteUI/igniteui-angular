@@ -97,8 +97,14 @@
     background: $white;
     padding: 12px 12px 12px 64px;
     border-bottom: none;
-    box-shadow: $elevate-2;
+    border-radius: 2px;
     font-size: em(16px);
+    box-shadow: $elevate-2;
+    transition: box-shadow .2s ease;
+    &:hover,
+    &:focus {
+        box-shadow: $elevate-5;
+    }
 }
 
 %igx-input-clear,

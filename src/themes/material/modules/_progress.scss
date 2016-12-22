@@ -43,6 +43,10 @@
 @include b(progress-circular) {
     @extend %progress-circular-display;
 
+    @include e(innercircle) {
+        @extend %progress-circular-innercircle;
+    }
+
     @include e(circle) {
         @extend %progress-circular-circle;
     }
