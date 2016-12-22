@@ -23,11 +23,12 @@ export class IgxAvatar {
     private _icon: string = "android";
     public SizeEnum = Size;
 
+    @Input()
     get size(): string {
         return this._size === undefined ? "small" : this._size;
     }
 
-    @Input("size")
+
     set size(value: string) {
         var sizeType = this.SizeEnum[value.toUpperCase()];
 
@@ -38,11 +39,12 @@ export class IgxAvatar {
         }
     }
 
+    @Input()
     get bgColor(): string {
         return this._bgColor;
     }
 
-    @Input("bgColor")
+
     set bgColor(value: string) {
         var color = value === "" ? "lightgrey" : value;
         this._bgColor = color;
@@ -60,7 +62,7 @@ export class IgxAvatar {
         return this.roundShape.toUpperCase() === "TRUE" ? true : false;
     }
 
-    @Input("icon")
+    @Input()
     public get icon(): string {
         return this._icon;
     }
