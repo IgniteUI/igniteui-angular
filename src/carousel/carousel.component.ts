@@ -63,11 +63,12 @@ export class IgxCarousel implements OnDestroy {
      */
     @Input() pause: boolean = true;
 
+    @Input()
     get interval(): number {
         return this._interval;
     }
 
-    @Input("interval")
+
     set interval(value: number) {
         this._interval = +value;
         this._restartInterval();
