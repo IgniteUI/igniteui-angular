@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { CarouselModule } from "../../src/carousel/carousel";
+import { IgxCarouselModule } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "carousel-sample",

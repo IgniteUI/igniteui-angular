@@ -20,15 +20,15 @@
                 </a>
             </nav>
             <div *ngIf="miniTemplate" class="ig-drawer-mini-content flex-column justify-content-start base-line-center">
-                <div class="hamburger" ig-nav-toggle="test" > &#9776; </div>
+                <div class="hamburger" igxNavToggle="test" > &#9776; </div>
                 <div *ngFor="let navItem of navItems"><img src="http://www.infragistics.com/assets/images/favicon.ico" width='16' /></div>
             </div>
     </ig-nav-drawer>
     <div class="sample-content" [class.full]="pin && !open" [class.pin]="pin">
-        <span class="hamburger" ig-nav-toggle="test" *ngIf="showToggle"> &#9776; </span>
+        <span class="hamburger" igxNavToggle="test" *ngIf="showToggle"> &#9776; </span>
         <div>
-            <button ig-nav-toggle="test"> Toggle </button>
-            <button ig-nav-close="test"> Close </button>
+            <button igxNavToggle="test"> Toggle </button>
+            <button igxNavClose="test"> Close </button>
         </div>
 
         <button (click)="open = !open;"> Toggle opened</button>

@@ -1,6 +1,6 @@
 <h1 class="componentTitle">Radio</h1>
 <p class="componentDesc">A component that collects user input from radio buttons.</p>
 <div class="component-wrap">
-    <ig-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" name="group" [(ngModel)]="user.favouriteVarName">{{item}}</ig-radio>
+    <igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" name="group" [(ngModel)]="user.favouriteVarName">{{item}}</igx-radio>
 </div>
 <span>Selected value = {{ user.favouriteVarName || ''}}</span>

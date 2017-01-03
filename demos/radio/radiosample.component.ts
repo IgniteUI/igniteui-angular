@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { IgRadioModule } from "../../src/radio/radio";
+import { IgxRadioModule } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "radio-sample",

@@ -1,14 +1,17 @@
+// import { IgxComponentsModule, IgxDirectivesModule } from '../src/main';
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
 
-import {
+// import {
 
-    IgInput, CarouselModule , CheckboxModule, SwitchModule, IgLayout,
-    IgRadioModule, TabBarModule, ListModule, ButtonModule, Label,
-    AvatarModule, FilterModule, IgRippleModule, BadgeModule
+//     IgInput, CarouselModule , CheckboxModule, SwitchModule, IgLayout,
+//     IgRadioModule, TabBarModule, ListModule, ButtonModule, Label,
+//     AvatarModule, FilterModule, IgRippleModule, BadgeModule
 
-} from "zero-blocks/main";
+// } from "zero-blocks/main";
+
+import { IgxComponentsModule, IgxDirectivesModule } from "igniteui-js-blocks/main";
 
 import { AppComponent } from "./app.component";
 import { SwitchSampleComponent } from "./switch/switchsample.component";
@@ -32,24 +35,26 @@ import { routing } from "./app.routing";
     imports: [
         BrowserModule,
         FormsModule,
-        CarouselModule,
-        CheckboxModule,
-        SwitchModule,
-        IgRadioModule,
-        TabBarModule,
-        ListModule,
-        ButtonModule,
-        AvatarModule,
-        FilterModule,
+        IgxComponentsModule,
+        IgxDirectivesModule,
+        // CarouselModule,
+        // CheckboxModule,
+        // SwitchModule,
+        // IgRadioModule,
+        // TabBarModule,
+        // ListModule,
+        // ButtonModule,
+        // AvatarModule,
+        // FilterModule,
         NavDrawerSampleModule,
         //NavbarSampleModule,
-        IgRippleModule,
-        IgLayout,
+        // IgRippleModule,
+        // IgLayout,
         routing,
-        BadgeModule
+        // BadgeModule
     ],
     declarations: [
-        IgInput,
+        // IgInput,
         AppComponent,
         SwitchSampleComponent,
         CarouselSampleComponent,
@@ -60,7 +65,7 @@ import { routing } from "./app.routing";
         FilterSampleComponent,
         RippleSampleComponent,
         RadioSampleComponent,
-        Label,
+        // Label,
         ButtonsSampleComponent,
         AvatarSampleComponent
     ],

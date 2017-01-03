@@ -4,37 +4,37 @@
 
 <div class="flex-column flex-wrap space-wrapper justify-content-start">
     <div>
-        <div class="ig-form-group">
-            <input type="text" igInput [(ngModel)]="user.name" />
-            <label igLabel>Username</label>
+        <div class="igx-form-group">
+            <input type="text" igxInput [(ngModel)]="user.name" />
+            <label igxLabel>Username</label>
         </div>
         <span>value = {{ user.name || ''}}</span>
     </div>
     <br>
     <br>
     <div>
-        <div class="ig-form-group">
-            <input type="password" igInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
-            <label igLabel>Password</label>
+        <div class="igx-form-group">
+            <input type="password" igxInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
+            <label igxLabel>Password</label>
         </div>
         <span>value = {{ user.password || ''}}</span>
     </div>
     <br>
     <br>
     <div>
-        <div class="ig-form-group">
-            <textarea placeholder="{{placeholder}}" igInput [(ngModel)]="user.comment"></textarea>
-            <label igLabel>Textarea</label>
+        <div class="igx-form-group">
+            <textarea placeholder="{{placeholder}}" igxInput [(ngModel)]="user.comment"></textarea>
+            <label igxLabel>Textarea</label>
         </div>
         <span>value = {{ user.comment || ''}}</span>
     </div>
     <br>
     <br>
-    <ig-checkbox [(ngModel)]="user.registered">Registered</ig-checkbox>
+    <igx-checkbox [(ngModel)]="user.registered">Registered</igx-checkbox>
     <br>
     <br>
     <div>value = {{ user.registered }}</div>
     <br>
     <br>
-    <label igLabel>Sample Label!</label>
+    <label igxLabel>Sample Label!</label>
 </div>
