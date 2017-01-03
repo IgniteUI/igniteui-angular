@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from "@angular/core";
-import { ListModule, List } from "../../src/list/list";
+import { IgxListModule, IgxList } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "list-sample",

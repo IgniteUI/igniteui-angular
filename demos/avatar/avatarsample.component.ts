@@ -1,6 +1,6 @@
 import { Component, ViewChild, QueryList, ViewChildren } from "@angular/core";
-import { AvatarModule, Avatar } from "zero-blocks/main";
-import { BadgeModule, Badge } from "zero-blocks/main";
+import { IgxAvatarModule, IgxAvatar } from "igniteui-js-blocks/main";
+import { IgxBadgeModule, IgxBadge } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "avatar-sample",
@@ -14,7 +14,7 @@ import { BadgeModule, Badge } from "zero-blocks/main";
 })
 export class AvatarSampleComponent {
     // Collection of avatars
-    @ViewChildren(Avatar) avatar;
+    @ViewChildren(IgxAvatar) avatar;
     initials: string = 'ZK';
     bgColor: string = '#0375be';
     src: string = '';

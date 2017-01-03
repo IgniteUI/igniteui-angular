@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from "@angular/core";
-import { ListModule, List } from "zero-blocks/main";
-import { FilterModule, FilterOptions } from "zero-blocks/main";
-import { IgRippleModule } from "zero-blocks/main";
+import { IgxListModule, IgxList } from "igniteui-js-blocks/main";
+import { IgxFilterModule, IgxFilterOptions } from "igniteui-js-blocks/main";
+import { IgxRippleModule } from "igniteui-js-blocks/main";
 
 @Component({
     templateUrl: 'demos/filter/filtersample.component.html'
@@ -22,14 +22,14 @@ export class FilterSampleComponent {
         ];
 
     get fo1() {
-        var _fo = new FilterOptions();
+        var _fo = new IgxFilterOptions();
         _fo.key = "text";
         _fo.inputValue = this.search1;
         return _fo;
     }
 
     get fo2() {
-        var _fo = new FilterOptions();
+        var _fo = new IgxFilterOptions();
 
         _fo.items = this.declarativeList.items;
         _fo.inputValue = this.search2;
@@ -44,7 +44,7 @@ export class FilterSampleComponent {
 
         _fo.overdueConditionFn = function (item: any) {
              item.hidden = true;
-         };    
+         };
 
         return _fo;
     }

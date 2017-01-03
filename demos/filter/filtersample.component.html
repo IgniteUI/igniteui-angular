@@ -1,17 +1,17 @@
 
 <h1 class="componentTitle">Filter</h1>
 <p class="componentDesc">A directive that allows to do filtering, for example on the list as below.</p>
-<div class="ig-form-group">
-    <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
-    <label igLabel>
+<div class="igx-form-group">
+    <input class="igx-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
+    <label igxLabel>
         <i class="material-icons">search</i>
     </label>
-    <span class="ig-form-group__clear--hidden">
+    <span class="igx-form-group__clear--hidden">
         <i class="material-icons">clear</i>
     </span>
 </div>
-<ig-list>
-    <ig-list-item igRipple="pink" igRippleTarget=".ig-list__item" *ngFor="let item of navItems | filter: fo1">
+<igx-list>
+    <igx-list-item igxRipple="pink" ixgRippleTarget=".igx-list__item" *ngFor="let item of navItems | igxFilter: fo1">
         {{item.text}}
-    </ig-list-item>
-</ig-list>
+    </igx-list-item>
+</igx-list>
