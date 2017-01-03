@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/IgniteUI/igniteui-js-blocks.svg?branch=master)](https://travis-ci.org/IgniteUI/igniteui-js-blocks)
 [![Coverage Status](https://coveralls.io/repos/github/IgniteUI/igniteui-js-blocks/badge.svg?branch=master)](https://coveralls.io/github/IgniteUI/igniteui-js-blocks?branch=master)
-[![NPM version](https://img.shields.io/npm/v/zero-blocks.svg?style=flat)](https://www.npmjs.com/package/zero-blocks)
+[![NPM version](https://img.shields.io/npm/v/igniteui-js-blocks.svg?style=flat)](https://www.npmjs.com/package/zero-blocks)
 
 **Note:** as of January 3rd 2017 the license for this project has changed from MIT to Apache 2.0. For more information about these licenses please click [here](http://choosealicense.com/licenses/)
 
