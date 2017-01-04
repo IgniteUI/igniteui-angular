@@ -1,18 +1,6 @@
-// import { IgxComponentsModule, IgxDirectivesModule } from '../src/main';
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
-
-// import {
-
-//     IgInput, CarouselModule , CheckboxModule, SwitchModule, IgLayout,
-//     IgRadioModule, TabBarModule, ListModule, ButtonModule, Label,
-//     AvatarModule, FilterModule, IgRippleModule, BadgeModule
-
-// } from "zero-blocks/main";
-
-import { IgxComponentsModule, IgxDirectivesModule } from "igniteui-js-blocks/main";
-
 import { AppComponent } from "./app.component";
 import { SwitchSampleComponent } from "./switch/switchsample.component";
 import { RadioSampleComponent } from "./radio/radiosample.component";
@@ -26,9 +14,8 @@ import { ListSampleComponent } from "./list/listsample.component";
 import { ButtonsSampleComponent } from "./button/buttonssample.component";
 import { AvatarSampleComponent } from "./avatar/avatarsample.component";
 import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
-//import { NavbarSampleModule } from "./app/navbar/sample.module";
-
 import { routing } from "./app.routing";
+import { IgxComponentsModule, IgxDirectivesModule } from "igniteui-js-blocks/main";
 
 
 @NgModule({
@@ -37,24 +24,10 @@ import { routing } from "./app.routing";
         FormsModule,
         IgxComponentsModule,
         IgxDirectivesModule,
-        // CarouselModule,
-        // CheckboxModule,
-        // SwitchModule,
-        // IgRadioModule,
-        // TabBarModule,
-        // ListModule,
-        // ButtonModule,
-        // AvatarModule,
-        // FilterModule,
         NavDrawerSampleModule,
-        //NavbarSampleModule,
-        // IgRippleModule,
-        // IgLayout,
-        routing,
-        // BadgeModule
+        routing
     ],
     declarations: [
-        // IgInput,
         AppComponent,
         SwitchSampleComponent,
         CarouselSampleComponent,
@@ -65,7 +38,6 @@ import { routing } from "./app.routing";
         FilterSampleComponent,
         RippleSampleComponent,
         RadioSampleComponent,
-        // Label,
         ButtonsSampleComponent,
         AvatarSampleComponent
     ],

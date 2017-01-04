@@ -80,12 +80,12 @@ pre[class*=language-]
 }
 
 /* Tabs */
-.ig-tab-bar-inner
+.igx-tab-bar-inner
 {
   position : static;
 }
 
-.ig-tab-bar-inner__menu
+.igx-tab-bar-inner__menu
 {
   position : absolute;
   left     : 0;
@@ -132,7 +132,7 @@ pre[class*=language-]
 
 .ripple-wrapper
 {
-  ig-list-item
+  igx-list-item
   {
     cursor : pointer;
   }
@@ -144,7 +144,7 @@ pre[class*=language-]
   display       : block;
 }
 
-.ig-drawer-content
+.igx-drawer-content
 {
   padding : 0 em(16);
   .in-menu-item
@@ -167,24 +167,23 @@ pre[class*=language-]
 .space-wrapper
 {
   > span,
-  ig-avatar
+  igx-avatar
   {
-    margin : em(10) em(5);
+    margin : em(7);
   }
-  padding-bottom : em(40);
 }
 
-.ig-drawer-mini-content
+.igx-drawer-mini-content
 {
   padding-top : em(20);
 }
 
-.ig-nav-drawer.pinned
+.igx-nav-drawer.pinned
 {
   height : auto !important;
 }
 
-.ig-form-group
+.igx-form-group
 {
   margin : em(10) 0;
   &:first-of-type
@@ -193,13 +192,13 @@ pre[class*=language-]
   }
 }
 
-.ig-button--raised,
-.ig-button--gradient
+.igx-button--raised,
+.igx-button--gradient
 {
   max-height : 32px;
 }
 
-.ig-button, .ig-button--flat, .ig-button--gradient, .ig-button--raised
+.igx-button, .igx-button--flat, .igx-button--gradient, .igx-button--raised
 {
   max-width     : 100%;
   width         : 100%;
