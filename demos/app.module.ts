@@ -14,6 +14,9 @@ import { ListSampleComponent } from "./list/listsample.component";
 import { ButtonsSampleComponent } from "./button/buttonssample.component";
 import { AvatarSampleComponent } from "./avatar/avatarsample.component";
 import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
+import { NavbarSampleComponent } from "./navbar/navbarsample.component";
+import { DialogSampleComponent } from "./dialog/dialogsample.component";
+import { ProgressbarSampleComponent } from "./progressbar/progressbar.component";
 import { routing } from "./app.routing";
 import { IgxComponentsModule, IgxDirectivesModule } from "igniteui-js-blocks/main";
 
@@ -39,7 +42,10 @@ import { IgxComponentsModule, IgxDirectivesModule } from "igniteui-js-blocks/mai
         RippleSampleComponent,
         RadioSampleComponent,
         ButtonsSampleComponent,
-        AvatarSampleComponent
+        AvatarSampleComponent,
+        NavbarSampleComponent,
+        DialogSampleComponent,
+        ProgressbarSampleComponent
     ],
     bootstrap: [
         AppComponent
