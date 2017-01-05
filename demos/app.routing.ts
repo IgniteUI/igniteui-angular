@@ -13,7 +13,9 @@ import { TabBarSampleComponent } from "./tabbar/tabbarsample.component";
 import { ListSampleComponent } from "./list/listsample.component";
 import { ButtonsSampleComponent } from "./button/buttonssample.component";
 import { AvatarSampleComponent } from "./avatar/avatarsample.component";
-// import { NavbarSampleComponent } from "./app/navbar/sample.component";
+import { NavbarSampleComponent } from "./navbar/navbarsample.component";
+import { DialogSampleComponent } from "./dialog/dialogsample.component";
+import { ProgressbarSampleComponent } from "./progressbar/progressbar.component";
 
 const appRoutes: Routes = [
     {
@@ -64,7 +66,19 @@ const appRoutes: Routes = [
      {
          path: "inputs",
          component: InputsSampleComponent
-     }
+     },
+     {
+         path: "navbar",
+         component: NavbarSampleComponent
+     },
+     {
+        path: "dialog",
+        component: DialogSampleComponent
+    },
+    {
+        path: "progressbar",
+        component: ProgressbarSampleComponent
+    }
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);

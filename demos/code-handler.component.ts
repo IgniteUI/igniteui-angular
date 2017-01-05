@@ -6,13 +6,13 @@ export class CodeHandler {
         switch (widgetName) {
             case "carousel":
                 this.markup = 
-`<ig-carousel [interval]="interval" [pause]="pause" [loop]="loop">
-    <ig-slide *ngFor="let slide of slides;" [active]="slide.active">
+`<igx-carousel [interval]="interval" [pause]="pause" [loop]="loop">
+    <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
         <img [src]="slide.image">
-    </ig-slide>
-</ig-carousel>`
+    </igx-slide>
+</igx-carousel>`
 this.typescriptCode = `import { Component } from "@angular/core";
-import { CarouselModule } from "../../src/carousel/carousel";
+import { IgxCarouselModule } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "carousel-sample",
@@ -40,99 +40,98 @@ export class CarouselSampleComponent {
                 break;
             case "avatar":
                 this.markup = 
-`<ig-avatar 
+`<igx-avatar 
     src="http://lorempixel.com/300/300/people/6/" 
     roundShape="false">
-    <ig-badge 
+    <igx-badge 
         type="error" 
         icon="favorite" 
         position="bottom-right">
-    </ig-badge>
-</ig-avatar>
+    </igx-badge>
+</igx-avatar>
 
-<ig-avatar 
+<igx-avatar 
     src="http://lorempixel.com/300/300/people/9/" 
     roundShape="true">
-    <ig-badge 
+    <igx-badge 
         type="error" 
         icon="done" 
         type="success">
-    </ig-badge>
-</ig-avatar>
+    </igx-badge>
+</igx-avatar>
 
-<ig-avatar 
+<igx-avatar 
     initials="RK"  
     bgColor="#fbb13c">
-</ig-avatar>
+</igx-avatar>
 
-<ig-avatar 
+<igx-avatar 
     initials="ZK"
     bgColor="#731963"
     roundShape="true">
-</ig-avatar>
+</igx-avatar>
 
-<ig-avatar 
+<igx-avatar 
     roundShape="true"
     icon="person"
     bgColor="#0375be"
     data-init="SS">
-</ig-avatar>
+</igx-avatar>
 
-<ig-avatar color="gray"></ig-avatar>
+<igx-avatar color="gray"></igx-avatar>
 
-<ig-avatar 
+<igx-avatar 
     initials="HA" 
     width="100" 
     size="potatos" 
     bgColor="#340068">
-    <ig-badge 
+    <igx-badge 
         type="info" 
         icon="camera">
-    </ig-badge>
-</ig-avatar>
+    </igx-badge>
+</igx-avatar>
 
-<ig-avatar 
+<igx-avatar 
     initials="PP" 
     width="100" 
     color="black" 
     icon="person" 
     roundShape="false" 
     bgColor="#94feed">
-    <ig-badge 
+    <igx-badge 
         iconBdg="person" 
         value="7281" 
         position="bottom-left">
-    </ig-badge>
-</ig-avatar>
+    </igx-badge>
+</igx-avatar>
 
-<ig-avatar 
+<igx-avatar 
     src="http://66.media.tumblr.com/avatar_af166f12c520_128.png" 
     size="medium" 
     roundShape="true" 
     bgColor="#e41c77">
-    <ig-badge 
+    <igx-badge 
         position="top-left" 
         type="error" 
         icon="build">
-    </ig-badge>
-</ig-avatar>
+    </igx-badge>
+</igx-avatar>
 
-<ig-avatar 
+<igx-avatar 
     src="http://fotouser.miarroba.st/99545357/300/sonic-kun.jpg"
     size="medium"
     roundShape="true" 
     bgColor="#484848">
-    <ig-badge 
+    <igx-badge 
         position="bottom-right" 
         type="info" 
         icon="timer">
-    </ig-badge>
-</ig-avatar>`
+    </igx-badge>
+</igx-avatar>`
 
                 this.typescriptCode = 
 `import { Component, ViewChild, QueryList, ViewChildren } from "@angular/core";
-import { AvatarModule, Avatar } from "../../src/avatar/avatar";
-import { BadgeModule, Badge } from "../../src/badge/badge";
+import { IgxAvatarModule, IgxBadgeModule } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "avatar-sample",
@@ -166,20 +165,21 @@ export class AvatarSampleComponent {
                 break;
             case "tabbar":
                 this.markup = 
-`<ig-tab-bar igRipple igRippleTarget="ul" alignment="bottom">
-    <ig-tab label="Tab 1" icon="library_music">                        
+`<igx-tab-bar igxRipple igxRippleTarget="ul" alignment="bottom">
+    <igx-tab label="Tab 1" icon="library_music">                        
         <span class="componentDesc">IgTabBar allow you to tabulate your content. 
         It provides flexible ways to manage and navigate through your tabularized data.</span>
-    </ig-tab>
-    <ig-tab label="Tab 2" icon="video_library">
+    </igx-tab>
+    <igx-tab label="Tab 2" icon="video_library">
         <p>You can style each tab with a material icon as demosntrated below.
-    </ig-tab>
-    <ig-tab label="Tab 3" icon="library_books">
+    </igx-tab>
+    <igx-tab label="Tab 3" icon="library_books">
         <p>Attaching to click events allow you to customize the way your TabBar is working.
-    </ig-tab>
-</ig-tab-bar>`
+    </igx-tab>
+</igx-tab-bar>`
                 this.typescriptCode = 
 `import { Component } from "@angular/core";
+import { IgxTabBarModule } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "tabbar-sample",
@@ -190,20 +190,19 @@ export class TabBarSampleComponent { }`
                 break;
             case "list":
                 this.markup = 
-`<div class="ig-form-group">
-    <input class="ig-form-group__input--search" placeholder="Search List" />
+`<div class="igx-form-group">
+    <input class="igx-form-group__input--search" placeholder="Search List" />
 </div>
-<ig-list #declarativeList>
-    <ig-list-item [options]="{}">Red Delicious</ig-list-item>
-    <ig-list-item>Ambrosia</ig-list-item>
-    <ig-list-item>Rome</ig-list-item>
-    <ig-list-item>Golden Delicious</ig-list-item>
-    <ig-list-item>Cosmic Crisp</ig-list-item>
-</ig-list>`
+<igx-list #declarativeList>
+    <igx-list-item [options]="{}">Red Delicious</igx-list-item>
+    <igx-list-item>Ambrosia</igx-list-item>
+    <igx-list-item>Rome</igx-list-item>
+    <igx-list-item>Golden Delicious</igx-list-item>
+    <igx-list-item>Cosmic Crisp</igx-list-item>
+</igx-list>`
                 this.typescriptCode = 
 `import { Component, ViewChild, ElementRef } from "@angular/core";
-import { ListModule, List } from "../../src/list/list";
-import { IgRippleModule } from '../../src/directives/ripple';
+import { IgxListModule, IgxRippleModule, IgxListModule } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "list-sample",
@@ -224,27 +223,27 @@ export class ListSampleComponent {
                 break;
             case "buttons":
                 this.markup = 
-`<span igButton="flat" igRipple>Flat</span>
-<span igButton="raised" igRipple="white">Raised</span>  
-<span igButton="raised" igButtonColor="#FBB13C" igButtonBackground="#340068" igRipple="white">Raised Custom</span> 
-<span igButton="raised" igButtonColor="yellow" igButtonBackground="black" igRipple="yellow">Raised Custom</span> 
-<span igButton="gradient" igRipple="white">Gradient</span>
-<span igButton="raised" disabled>Disabled</span>
-<span igButton="fab" igRipple="white"><i class="material-icons">add</i></span>
-<span igButton="fab" igButtonColor="#484848" igButtonBackground="white" igRipple="#484848">
+`<span igxButton="flat" igxRipple>Flat</span>
+<span igxButton="raised" igxRipple="white">Raised</span>  
+<span igxButton="raised" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="white">Raised Custom</span> 
+<span igxButton="raised" igxButtonColor="yellow" igxButtonBackground="black" igxRipple="yellow">Raised Custom</span> 
+<span igxButton="gradient" igxRipple="white">Gradient</span>
+<span igxButton="raised" disabled>Disabled</span>
+<span igxButton="fab" igxRipple="white"><i class="material-icons">add</i></span>
+<span igxButton="fab" igxButtonColor="#484848" igxButtonBackground="white" igxRipple="#484848">
     <i class="material-icons">edit</i>
 </span>
-<span igButton="icon" igRipple igRippleCentered="true">
+<span igxButton="icon" igxRipple igxRippleCentered="true">
     <i class="material-icons">search</i>
 </span>
-<span igButton="icon" igRipple igButtonColor="#E41C77" igRippleCentered="true">
+<span igxButton="icon" igxRipple igxButtonColor="#E41C77" igxRippleCentered="true">
     <i class="material-icons">favorite</i>
 </span>
-<span igButton="icon" igRipple igRippleCentered="true">
+<span igxButton="icon" igxRipple igxRippleCentered="true">
     <i class="material-icons">more_vert</i>
 </span>`
 this.typescriptCode = `import { Component } from "@angular/core";
-import { ButtonModule } from "../../src/button/button";
+import { IgxButtonModule } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "button-sample",
@@ -255,11 +254,12 @@ export class ButtonsSampleComponent { }`
                 break;
             case "switch":
                 this.markup = 
-`<ig-switch [(ngModel)]="user.subscribed"></ig-switch>
-<ig-switch [(ngModel)]="!user.subscribed"></ig-switch>
+`<igx-switch [(ngModel)]="user.subscribed"></igx-switch>
+<igx-switch [(ngModel)]="!user.subscribed"></igx-switch>
 <span>Selected value = {{ user.subscribed }}</span>`
                 this.typescriptCode = 
 `import { Component } from "@angular/core";
+import { IgxSwitchModule } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "switch-sample",
@@ -281,28 +281,28 @@ export class SwitchSampleComponent {
             case "inputs":
                 this.markup = 
 `<!--Text Input-->
-<div class="ig-form-group">
+<div class="igx-form-group">
     <input type="text" igInput [(ngModel)]="user.name" />
     <label igLabel>Username</label>
 </div>
 <span>value = {{ user.name || ''}}</span>
 
 <!--Password Input-->
-<div class="ig-form-group">
+<div class="igx-form-group">
     <input type="password" igInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
     <label igLabel>Password</label>
 </div>
 <span>value = {{ user.password || ''}}</span>
 
 <!--Textarea Input-->
-<div class="ig-form-group">
+<div class="igx-form-group">
     <textarea placeholder="{{placeholder}}" igInput [(ngModel)]="user.comment"></textarea>
     <label igLabel>Textarea</label>
 </div>
 <span>value = {{ user.comment || ''}}</span>
 
 <!--Checkbox-->
-<ig-checkbox [(ngModel)]="user.registered">Registered</ig-checkbox>
+<igx-checkbox [(ngModel)]="user.registered">Registered</igx-checkbox>
 <span>value = {{ user.registered }}</span>
 
 <!--Label-->
@@ -310,6 +310,7 @@ export class SwitchSampleComponent {
 
                 this.typescriptCode = 
 `import { Component } from "@angular/core";
+import { IgxInput, IgxLabelModule, IgxCheckboxModule } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "inputs-sample",
@@ -330,16 +331,16 @@ export class InputsSampleComponent {
                 break;
             case "radio":
                 this.markup = 
-`<ig-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" 
+`<igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" 
     value="{{item}}" name="group" 
     [(ngModel)]="user.favouriteVarName">
     {{item}}
-</ig-radio>
+</igx-radio>
 <span>Selected value = {{ user.favouriteVarName || ''}}</span>`
 
                 this.typescriptCode = 
 `import { Component } from "@angular/core";
-import { IgRadioModule } from "../../src/radio/radio";
+import { IgxRadioModule } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "radio-sample",
@@ -360,24 +361,25 @@ export class RadioSampleComponent {
                 break;
             case "ripple":
                 this.markup = 
-`<ig-tab-bar igRipple igRippleTarget="ul" alignment="bottom">
-    <ig-tab label="Tab 1" icon="library_music">                        
-        <span class="componentDesc">Ripple directive can be applied basically to every element, <span igRipple>even this span !</span> to enable glamourous ripple effect on click, like the tabs below. Explore the other tabs as well.</span>
-    </ig-tab>
-    <ig-tab label="Tab 2" icon="video_library">
-        <ig-list #declarativeList>
-            <ig-list-header>Mildly Sweet</ig-list-header>
-            <ig-list-item igRipple igRippleTarget="div.ig-list__item">Red Delicious</ig-list-item>
-            <ig-list-item igRipple igRippleTarget="div.ig-list__item">Ambrosia</ig-list-item>
-            <ig-list-item igRipple igRippleTarget="div.ig-list__item">Rome</ig-list-item>
-            <ig-list-item igRipple igRippleTarget="div.ig-list__item">Golden Delicious</ig-list-item>
-            <ig-list-item igRipple igRippleTarget="div.ig-list__item">Cosmic Crisp</ig-list-item>
-        </ig-list>
-    </ig-tab>
-</ig-tab-bar>`
+`<igx-tab-bar igxRipple igxRippleTarget="ul" alignment="bottom">
+    <igx-tab label="Tab 1" icon="library_music">                        
+        <span class="componentDesc">Ripple directive can be applied basically to every element, <span igxRipple>even this span !</span> to enable glamourous ripple effect on click, like the tabs below. Explore the other tabs as well.</span>
+    </igx-tab>
+    <igx-tab label="Tab 2" icon="video_library">
+        <igx-list #declarativeList>
+            <igx-list-header>Mildly Sweet</igx-list-header>
+            <igx-list-item igxRipple igxRippleTarget="div.igx-list__item">Red Delicious</igx-list-item>
+            <igx-list-item igxRipple igxRippleTarget="div.igx-list__item">Ambrosia</igx-list-item>
+            <igx-list-item igxRipple igxRippleTarget="div.igx-list__item">Rome</igx-list-item>
+            <igx-list-item igxRipple igxRippleTarget="div.igx-list__item">Golden Delicious</igx-list-item>
+            <igx-list-item igxRipple igxRippleTarget="div.igx-list__item">Cosmic Crisp</igx-list-item>
+        </igx-list>
+    </igx-tab>
+</igx-tab-bar>`
 
                 this.typescriptCode = 
 `import { Component } from "@angular/core";
+import { IgxRippleModule } from "igniteui-js-blocks/main";
 
 @Component({
     templateUrl: 'demos/ripple/ripplesample.component.html'
@@ -387,20 +389,18 @@ export class RippleSampleComponent { }`
 
             case "filter":
                 this.markup = 
-`<div class="ig-form-group">
-    <input class="ig-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
+`<div class="igx-form-group">
+    <input class="igx-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
 </div>
-<ig-list>
-    <ig-list-item igRipple="pink" igRippleTarget=".ig-list__item" *ngFor="let item of navItems | filter: fo1">
+<igx-list>
+    <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item" *ngFor="let item of navItems | filter: fo1">
         {{item.text}}
-    </ig-list-item>
-</ig-list>`
+    </igx-list-item>
+</igx-list>`
 
                 this.typescriptCode = 
 `import { Component, ViewChild, ElementRef } from "@angular/core";
-import { ListModule, List } from "../../src/list/list";
-import { FilterModule, FilterOptions } from '../../src/directives/filter';
-import { IgRippleModule } from '../../src/directives/ripple';
+import { IgxFilterModule, IgxListModule, IgxRippleModule } from "igniteui-js-blocks/main";
 
 @Component({
     templateUrl: 'demos/filter/filtersample.component.html'
@@ -457,6 +457,178 @@ export class FilterSampleComponent {
         console.log(args);
     }
 
+}`
+                break;
+            case "navbar":
+                this.markup = 
+`<igx-navbar [title]="currentView" icon="arrow_back"></igx-navbar>`
+                this.typescriptCode = 
+`import { Component, OnInit } from "@angular/core";
+import { IgxNavbarModule } from 'igniteui-js-blocks/main';
+
+const CURRENT_VIEW: string = "Ignite UI JS Blocks";
+
+@Component({
+    selector: 'navbar-sample',
+    templateUrl: 'demos/navbar/navbarsample.component.html'
+})
+
+export class NavbarSampleComponent implements OnInit {
+    currentView: string;
+
+    ngOnInit() {
+        this.currentView = CURRENT_VIEW;
+    }
+}`
+                break;
+
+            case "dialog":
+                this.markup = 
+`<div class="dialog-sample">
+    <h1 class="componentTitle">Dialog</h1>
+    <p class="componentDesc">
+        Alert with one action button and message
+    </p>
+    <button igxButton="raised" 
+            igxButtonColor="white" 
+            igxButtonBackground="#F44336" 
+            igxRipple="white" (click)="alert.open()"
+            >Alert
+    </button>
+
+    <igx-dialog #alert title="Notification" message="Your email has been sent successfully!"
+        leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()">
+    </igx-dialog>
+    <br>
+    <br>
+    <p class="componentDesc">
+        Dialog with two action buttons and message
+    </p>
+
+    <button igxButton="raised" 
+            igxButtonColor="white"
+            igxButtonBackground="#4CAF50" 
+            igxRipple="white" 
+            (click)="dialog.open()"
+            >Dialog
+    </button>
+
+    <igx-dialog #dialog title="Confirmation" 
+        leftButtonLabel="Cancel"
+        (onLeftButtonSelect)="dialog.close()"
+        rightButtonLabel="OK" 
+        rightButtonRipple="#4CAF50"
+        (onRightButtonSelect)="onDialogOKSelected($event)"
+        message="Are you sure you want to delete this email?">
+    </igx-dialog>
+    <br>
+    <br>
+    <p class="componentDesc">
+        Form with two action buttons and custom message
+    </p>
+
+    <button igxButton="raised"
+            igxButtonColor="white" 
+            igxButtonBackground="#0375be" 
+            igxRipple="white" 
+            (click)="form.open()"
+            >Form
+    </button>
+
+    <igx-dialog #form title="Sign In"
+        leftButtonLabel="Cancel"
+        (onLeftButtonSelect)="form.close()"
+        rightButtonLabel="Sign In"
+        rightButtonBackgroundColor="#0375be"
+        rightButtonColor="white"
+        backgroundClick="true"
+        closeOnOutsideSelect="true">
+        <div class="igx-form-group">
+            <input type="text" igxInput />
+            <label igxLabel>Username</label>
+        </div>
+        <div class="igx-form-group">
+            <input type="password" igxInput />
+            <label igxLabel>Password</label>
+        </div>
+    </igx-dialog>
+</div>`
+                this.typescriptCode = 
+`import { Component } from "@angular/core";
+import { IgxDialogModule } from "igniteui-js-blocks/main";
+
+@Component({
+    selector: "dialog-sample",
+    templateUrl: "demos/dialog/dialogsample.component.html",
+})
+export class DialogSampleComponent {
+    onDialogOKSelected(args) {
+        args.dialog.close();
+    };
+}`
+                break;
+
+            case "progressbar":
+                this.markup = 
+`<div class="progress-container-linear">
+    <igx-linear-bar [striped]="false" [value]="currentValue" [max]="200">
+    </igx-linear-bar>
+</div>
+
+<div class="progress-container-linear">
+    <igx-linear-bar type="danger" [striped]="false" [value]="currentValue">
+    </igx-linear-bar>
+</div>
+
+<div class="progress-container-linear">
+    <igx-linear-bar type="warning" [value]="20">
+    </igx-linear-bar>
+</div>
+
+<div class="progress-container-linear">
+    <igx-linear-bar type="success" striped="true" [value]="currentValue">
+    </igx-linear-bar>
+</div>
+
+<div class="progress-container-circular">
+    <igx-circular-bar (onProgressChanged)="f($event)" [value]="currentValue">
+    </igx-circular-bar>
+</div>`
+                this.typescriptCode = 
+`import { Component } from '@angular/core';
+import { IgxProgressBarModule } from 'igniteui-js-blocks/main';
+
+@Component({
+    selector: 'progressbar-sample',
+    templateUrl: 'demos/progressbar/progressbar.component.html'
+})
+export class ProgressbarSampleComponent {
+
+    public currentValue: number;
+    public type: string;
+
+    constructor() {
+        this.currentValue = 26;
+    }
+
+    private generateNewProgressValues() {
+        let value = this.randomIntFromInterval(this.currentValue, 100);
+
+        this.currentValue = value;
+    }
+
+    private randomIntFromInterval(min:number,max:number)
+    {
+        return Math.floor(Math.random()*(max-min+1)+min);
+    }
+
+    f(evt) {
+        console.log(evt);
+    }
+
+    change(evt) {
+        console.log(evt);
+    }
 }`
                 break;
             default:

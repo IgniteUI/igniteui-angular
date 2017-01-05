@@ -204,3 +204,35 @@ pre[class*=language-]
   width         : 100%;
   margin-bottom : em(10);
 }
+
+
+.navbar-descr {
+  position: relative;
+  padding-top: 55px;
+}
+
+.igx-navbar {
+  position: absolute;
+  margin-left: -16px;
+
+  h1 {
+    font-family: "Titillium Web", sans-serif;
+    font-size: 18px;
+    color: #fff;
+    font-weight: 600;
+  }
+}
+
+.dialog-sample button {
+  width: initial;
+}
+
+.igx-dialog {
+  position: absolute;
+}
+
+.igx-dialog__window {
+  width: 246px;
+  max-width: 246px;
+  min-width: 246px;
+}
