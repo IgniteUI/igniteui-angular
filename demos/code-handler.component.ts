@@ -12,7 +12,7 @@ export class CodeHandler {
     </igx-slide>
 </igx-carousel>`
 this.typescriptCode = `import { Component } from "@angular/core";
-import { IgxCarouselModule } from "../../src/carousel/carousel";
+import { IgxCarouselModule } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "carousel-sample",
@@ -131,8 +131,7 @@ export class CarouselSampleComponent {
 
                 this.typescriptCode = 
 `import { Component, ViewChild, QueryList, ViewChildren } from "@angular/core";
-import { AvatarModule, Avatar } from "../../src/avatar/avatar";
-import { BadgeModule, Badge } from "../../src/badge/badge";
+import { IgxAvatarModule, IgxBadgeModule } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "avatar-sample",
@@ -180,6 +179,7 @@ export class AvatarSampleComponent {
 </igx-tab-bar>`
                 this.typescriptCode = 
 `import { Component } from "@angular/core";
+import { IgxTabBarModule } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "tabbar-sample",
@@ -202,8 +202,7 @@ export class TabBarSampleComponent { }`
 </igx-list>`
                 this.typescriptCode = 
 `import { Component, ViewChild, ElementRef } from "@angular/core";
-import { ListModule, List } from "../../src/list/list";
-import { igxRippleModule } from '../../src/directives/ripple';
+import { IgxListModule, IgxRippleModule, IgxListModule } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "list-sample",
@@ -244,7 +243,7 @@ export class ListSampleComponent {
     <i class="material-icons">more_vert</i>
 </span>`
 this.typescriptCode = `import { Component } from "@angular/core";
-import { ButtonModule } from "../../src/button/button";
+import { IgxButtonModule } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "button-sample",
@@ -260,6 +259,7 @@ export class ButtonsSampleComponent { }`
 <span>Selected value = {{ user.subscribed }}</span>`
                 this.typescriptCode = 
 `import { Component } from "@angular/core";
+import { IgxSwitchModule } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "switch-sample",
@@ -310,6 +310,7 @@ export class SwitchSampleComponent {
 
                 this.typescriptCode = 
 `import { Component } from "@angular/core";
+import { IgxInput, IgxLabelModule, IgxCheckboxModule } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "inputs-sample",
@@ -339,7 +340,7 @@ export class InputsSampleComponent {
 
                 this.typescriptCode = 
 `import { Component } from "@angular/core";
-import { IgxRadioModule } from "../../src/radio/radio";
+import { IgxRadioModule } from "igniteui-js-blocks/main";
 
 @Component({
     selector: "radio-sample",
@@ -378,6 +379,7 @@ export class RadioSampleComponent {
 
                 this.typescriptCode = 
 `import { Component } from "@angular/core";
+import { IgxRippleModule } from "igniteui-js-blocks/main";
 
 @Component({
     templateUrl: 'demos/ripple/ripplesample.component.html'
@@ -398,9 +400,7 @@ export class RippleSampleComponent { }`
 
                 this.typescriptCode = 
 `import { Component, ViewChild, ElementRef } from "@angular/core";
-import { ListModule, List } from "../../src/list/list";
-import { FilterModule, FilterOptions } from '../../src/directives/filter';
-import { igxRippleModule } from '../../src/directives/ripple';
+import { IgxFilterModule, IgxListModule, IgxRippleModule } from "igniteui-js-blocks/main";
 
 @Component({
     templateUrl: 'demos/filter/filtersample.component.html'
