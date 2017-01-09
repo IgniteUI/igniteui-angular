@@ -13,7 +13,7 @@
     cursor: pointer;
 }
 
-button {
+.nav-sample-btn {
     display: flex;
     text-align: center;
     justify-content: center;

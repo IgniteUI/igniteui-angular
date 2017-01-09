@@ -27,21 +27,21 @@
     <div class="sample-content" [class.full]="pin && !open" [class.pin]="pin">
         <span class="hamburger" igxNavToggle="test" *ngIf="showToggle"> &#9776; </span>
         <div>
-            <button igxNavToggle="test" > Toggle </button>
-            <button igxNavClose="test"> Close </button>
+            <button igxNavToggle="test" class="nav-sample-btn" > Toggle </button>
+            <button igxNavClose="test" class="nav-sample-btn" > Close </button>
         </div>
 
-        <button (click)="open = !open;"> Toggle opened</button>
-        <button (click)="testToggle()"> Toggle method on ViewChild</button>
+        <button (click)="open = !open;" class="nav-sample-btn"> Toggle opened</button>
+        <button (click)="testToggle()" class="nav-sample-btn"> Toggle method on ViewChild</button>
 
         <div template="ngIf showPositions">
-            <button (click)="position = 'left';"> Left</button>
-            <button (click)="position = 'right';"> Right</button>
+            <button (click)="position = 'left';" class="nav-sample-btn"> Left</button>
+            <button (click)="position = 'right';" class="nav-sample-btn"> Right</button>
         </div>
 
         <div template="ngIf showPinToggle">
-            <button (click)="pin = true;"> pin</button>
-            <button (click)="pin = false;"> unpin</button>
+            <button (click)="pin = true;" class="nav-sample-btn"> pin</button>
+            <button (click)="pin = false;" class="nav-sample-btn"> unpin</button>
         </div>
     </div>
 
