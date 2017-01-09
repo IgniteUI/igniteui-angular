@@ -3,7 +3,7 @@ import { CommonModule }   from '@angular/common';
 import { FormsModule } from "@angular/forms";
 import { Routes, RouterModule } from '@angular/router';
 
-import { NavigationDrawerModule, NavigationClose, NavigationToggle } from "igniteui-js-blocks/main";
+import { NavigationDrawerModule, NavigationClose, NavigationToggle, IgxNavbarModule } from "igniteui-js-blocks/main";
 import { NavDrawerSampleComponent, MainDrawerSampleComponent, PinNavDrawerSampleComponent, MiniNavDrawerSampleComponent } from './sample.component';
 
 const routes: Routes = [

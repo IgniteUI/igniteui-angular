@@ -1,7 +1,7 @@
-<h1 class="componentTitle">Carousel</h1><br>
-<p class="componentDesc">Allows you to cycle thorugh photos or other content as in a slideshow.</p><br><br>
-<igx-carousel [interval]="interval" [pause]="pause" [loop]="loop">
+<igx-carousel [interval]="interval" [pause]="pause" [loop]="loop" class="sample-carousel">
     <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
         <img [src]="slide.image">
     </igx-slide>
 </igx-carousel>
+<h1 class="componentTitle">Carousel</h1><br>
+<p class="componentDesc">Allows you to cycle thorugh photos or other content as in a slideshow.</p><br><br>
