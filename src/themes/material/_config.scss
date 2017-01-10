@@ -27,6 +27,8 @@
  *  TODO: 21. Collections
  *  TODO: 22. Progress Bar
  *  23. Lists
+ *  24. Dialog
+ *  25. Snackbar
  */
 
 /* 1. Colors
@@ -463,3 +465,15 @@ $dialog-message-font-weight: 400;
 
 $dialog-actions-padding: em(8px);
 $dialog-actions-margin: 0 em(-24px, 16px) em(-12px, 16px) em(-24px, 16px);
+
+/* 25. Snackbar
+   ========================================================================== */
+
+$snackbar-height: em(48px);
+$snackbar-padding: em(7px) em(24px);
+$snackbar-button-left-margin: em(24px);
+$snackbar-font-size: em(14px);
+$snackbar-background: $off-black;
+$snackbar-text-color: $white;
+$snackbar-button-text-color: $secondary-color;
+$snackbar-button-line-height: em(16px);

@@ -5,9 +5,8 @@
     left: 0;
     bottom: 0;
     background: $overlay-color;
-    opacity: 1;
     z-index: 24;
-    animation: fade-in .2s ease-out, steps(1, end) backwards;
+    opacity: 0;
 }
 
 %igx-dialog--hidden {
@@ -20,12 +19,11 @@
     min-width: $dialog-min-width;
     top: 50%;
     left: 50%;
-    transform: translate3d(-50%, -50%, 0);
+    transform: translate(-50%, 0);
     padding: $dialog-padding;
     border-radius: 2px;
     background: $dialog-background;
     box-shadow: $elevate-24;
-    animation: slide-in .2s ease-out backwards;
 }
 
 %igx-dialog-title {
@@ -51,17 +49,4 @@
     justify-content: flex-end;
     padding: $dialog-actions-padding;
     margin: $dialog-actions-margin;
-}
-
-
-@keyframes slide-in {
-    0% {
-        transform: translate3d(-50%, 0%, 0);
-    }
-}
-
-@keyframes fade-in {
-    0% {
-        opacity: 0;
-    }
 }

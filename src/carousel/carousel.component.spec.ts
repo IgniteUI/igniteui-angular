@@ -154,30 +154,30 @@ describe("Carousel", function() {
 
         let carousel = fixture.componentInstance.carousel;
 
-        spyOn(carousel.slideChanged, 'emit');
+        spyOn(carousel.onSlideChanged, 'emit');
         carousel.next();
         fixture.detectChanges();
-        expect(carousel.slideChanged.emit).toHaveBeenCalledWith(carousel);
+        expect(carousel.onSlideChanged.emit).toHaveBeenCalledWith(carousel);
 
-        spyOn(carousel.slideAdded, 'emit');
+        spyOn(carousel.onSlideAdded, 'emit');
         carousel.add(carousel.get(carousel.current));
         fixture.detectChanges();
-        expect(carousel.slideAdded.emit).toHaveBeenCalledWith(carousel);
+        expect(carousel.onSlideAdded.emit).toHaveBeenCalledWith(carousel);
 
-        spyOn(carousel.slideRemoved, 'emit');
+        spyOn(carousel.onSlideRemoved, 'emit');
         carousel.remove(carousel.get(carousel.current));
         fixture.detectChanges();
-        expect(carousel.slideRemoved.emit).toHaveBeenCalledWith(carousel);
+        expect(carousel.onSlideRemoved.emit).toHaveBeenCalledWith(carousel);
 
-        spyOn(carousel.carouselPaused, 'emit');
+        spyOn(carousel.onCarouselPaused, 'emit');
         carousel.stop();
         fixture.detectChanges();
-        expect(carousel.carouselPaused.emit).toHaveBeenCalledWith(carousel);
+        expect(carousel.onCarouselPaused.emit).toHaveBeenCalledWith(carousel);
 
-        spyOn(carousel.carouselPlaying, 'emit');
+        spyOn(carousel.onCarouselPlaying, 'emit');
         carousel.play();
         fixture.detectChanges();
-        expect(carousel.carouselPlaying.emit).toHaveBeenCalledWith(carousel);
+        expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledWith(carousel);
     });
 
     it('Carousel click handlers', () => {
@@ -190,8 +190,8 @@ describe("Carousel", function() {
         carouselNative = fixture.componentInstance.carousel.element_ref.nativeElement;
         carousel = fixture.componentInstance.carousel;
 
-        prevNav = carouselNative.querySelector('a.left');
-        nextNav = carouselNative.querySelector('a.right');
+        prevNav = carouselNative.querySelector('a.igx-carousel__arrow--prev');
+        nextNav = carouselNative.querySelector('a.igx-carousel__arrow--next');
 
         spyOn(carousel, 'prev');
         dispatchEv(prevNav, 'click');

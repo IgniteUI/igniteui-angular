@@ -1,0 +1,100 @@
+@include b(igx-carousel) {
+    @extend %igx-carousel-display;
+
+    @include e(inner) {
+       @extend %igx-carousel-slide-wrapper;
+
+       /*@include m(active) {
+           @extend %igx-carousel-slide--active;
+       }*/
+    }
+
+    @include e(indicators){
+        @extend %igx-carousel-indicators;
+    }
+
+    @include e(arrow) {
+        @extend %igx-carousel-arrow;
+
+        @include m(prev) {
+            @extend %igx-carousel-arrow;
+            @extend %igx-carousel-arrow--prev;
+                    
+            &:hover {
+                @extend %igx-carousel-arrow--hover;
+            }
+        }
+
+        @include m(next) {
+            @extend %igx-carousel-arrow;
+            @extend %igx-carousel-arrow--next;
+                    
+            &:hover {
+                @extend %igx-carousel-arrow--hover;
+            }
+        }
+    }
+}
+
+.ig-goUp {
+    animation: goUp 1s ease both;
+}
+.ig-goDown {
+    animation: goDown 1s ease both;
+}
+
+.ig-goLeft {
+    animation: goLeft 1s ease both;
+}
+
+.ig-goRight {
+    animation: goRight 1s ease both;
+}
+
+.ig-fade {
+    animation: fade 3s ease both;
+}
+
+@include b(igx-slide) {
+    @extend %igx-carousel-slide;
+}
+
+@keyframes goUp {
+    from { transform: translateY(100%); }
+}
+
+@keyframes goDown {
+    from { transform: translateY(-100%); }
+}
+
+@keyframes goLeft {
+    from { transform: translateX(-100%); }
+}
+
+@keyframes goRight {
+    from { transform: translateX(100%); }
+}
+
+@keyframes scale-in {
+    80% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes fade {
+    0% {
+        opacity: .25;
+
+    }
+    50% {
+        opacity: 1;
+
+    }
+    100% {
+        opacity: .0;
+
+    }
+}

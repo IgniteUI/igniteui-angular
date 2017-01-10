@@ -11,7 +11,7 @@ import {
 })
 export class IgxLabel {
     constructor(el: ElementRef, renderer: Renderer){
-        renderer.setElementClass(el.nativeElement, 'ig-form-group__label', true);
+        renderer.setElementClass(el.nativeElement, 'igx-form-group__label', true);
     }
 }
 

@@ -1,0 +1,57 @@
+@include b(progress-linear){
+    @extend %progress-linear-display;
+
+    @include e(bar) {
+        @extend %progressbar-display;
+    
+        @include m(default) {
+            @extend %progressbar-display;
+            @extend %progressbar--default;
+        }
+
+        @include m(danger) {
+            @extend %progressbar-display;
+            @extend %progressbar--danger;
+        }
+
+        @include m(warning) {
+            @extend %progressbar-display;
+            @extend %progressbar--warning;
+        }
+
+        @include m(info) {
+            @extend %progressbar-display;
+            @extend %progressbar--info;
+        }
+
+        @include m(success) {
+            @extend %progressbar-display;
+            @extend %progressbar--success;
+        }
+    }
+
+    @include m(striped) {
+        @extend %progressbar--striped;
+    }
+
+    @include e(value) {
+        @extend %progress-linear-value;
+    }
+}
+
+
+@include b(progress-circular) {
+    @extend %progress-circular-display;
+
+    @include e(innercircle) {
+        @extend %progress-circular-innercircle;
+    }
+
+    @include e(circle) {
+        @extend %progress-circular-circle;
+    }
+
+    @include e(text) {
+        @extend %progress-circular-text;
+    }
+}

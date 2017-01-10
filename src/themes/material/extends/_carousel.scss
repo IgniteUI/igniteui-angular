@@ -1,0 +1,122 @@
+%igx-carousel-display {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column nowrap;
+    transform-style: preserve-3d;
+    outline: none;
+}
+
+%igx-carousel-slide-wrapper {
+    position: relative;
+    width: 100%;
+    height: inherit;
+    overflow: hidden;
+    .active {
+        display: block;
+    }
+}
+
+%igx-carousel-arrow {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 46px;
+    height: 46px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    cursor: pointer;
+    background-color: rgba(255,255,255,.3);
+    margin: 0 16px;
+    border-radius: 50%;
+    box-shadow:  0px 1px 3px 0px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+    0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+    transition: opacity .25s ease-out;
+    span {
+        display: flex;
+        align-items: center;
+    }
+}
+
+%igx-carousel-arrow--hover {
+    opacity: .7;
+}
+
+%igx-carousel-arrow--next {
+    right: 0;
+}
+
+%igx-carousel-arrow--prev {
+    left: 0;
+}
+
+%igx-carousel-indicators {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    list-style: none;
+    z-index: 10;
+    bottom: 0;
+    padding: 0;
+    margin: 16px 0;
+    opacity: .85;
+    li {
+        position: relative;
+        width: 12px;
+        height: 12px;
+        margin: 0 5px;
+        text-indent: -9999px;
+        cursor: pointer;
+        border: 1px solid #fff;
+        border-radius: 50%;
+        background-color: rgba(255,255,255, .2);
+        transition: transform .15s ease-out;
+        box-shadow:  0px 1px 3px 0px rgba(0, 0, 0, 0.2),
+            0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+            0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+        &:after {
+            content: '';
+            position: absolute;
+            top: -1px;
+            bottom: 0;
+            left: -1px;
+            right: 0;
+            width: inherit;
+            height: inherit;
+            border-radius: inherit;
+            background: #fff;
+            transform: scale(0);
+        }
+        &:hover {
+            transform: scale(1.2);
+        }
+    }
+
+    .active {
+        &:after {
+            animation: scale-in .3s ease-out forwards;
+        }
+    }
+}
+
+
+%igx-carousel-slide {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: none;
+    transition: .5s ease-in-out left;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+%igx-carousel-slide img {
+    width: inherit;
+    height: inherit;
+    transform: scale(1.01);
+}

@@ -1,7 +1,7 @@
-ig-snackbar
+igx-snackbar
 --------------------
 
-**ig-snackbar** provides feedback about an operation by showing brief message at the bottom of the screen on mobile and lower left on larger devices. IgxSnackbar will appear above all  other elements on screen and only one can be displayed at a time.
+**igx-snackbar** provides feedback about an operation by showing brief message at the bottom of the screen on mobile and lower left on larger devices. IgxSnackbar will appear above all  other elements on screen and only one can be displayed at a time.
 
 #Usage
 
@@ -10,9 +10,9 @@ ig-snackbar
 ```html
 <button (click)="snackbar.show()">Show snackbar</button>
 
-<ig-snackbar #snackbar
+<igx-snackbar #snackbar
             message="This is a simple snackbar!">
-</ig-snackbar>
+</igx-snackbar>
 ```
 
 You can be more descriptive and set message `message="This is a simple snackbar!"`.
@@ -25,11 +25,11 @@ You can show the snacbar by using `snacbar.show()` method.
 ```html
 <button (click)="snackbar.show()">Show snackbar</button>
 
-<ig-snackbar #snackbar
+<igx-snackbar #snackbar
              message="This is a snackbar with a button and action!"
              actionName="Dismiss"
              (onAction)="snackbar.hide()">
-</ig-snackbar>
+</igx-snackbar>
 ```
 
 You can set the title of the button by setting `actionName="Dissmis"`;

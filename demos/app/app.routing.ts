@@ -36,7 +36,7 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/carousel',
+        redirectTo: '/progressbar',
         pathMatch: 'full'
     },
     {

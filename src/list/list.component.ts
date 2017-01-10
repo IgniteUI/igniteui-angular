@@ -16,7 +16,7 @@ export interface IListChild
 })
 
 export class IgxList {
-    private _innerStyle: string = "ig-list";
+    private _innerStyle: string = "igx-list";
 
     children: IListChild[] = [];
     get items() {
@@ -53,7 +53,7 @@ export class IgxList {
 })
 
 export class IgxListHeader implements OnInit, IListChild {
-    private _innerStyle: string = "ig-list__header";
+    private _innerStyle: string = "igx-list__header";
     get index(): number {
         return this.list.children.indexOf(this);
     }
@@ -80,7 +80,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     private _VISIBLE_AREA_ON_FULL_PAN = 40; // in pixels
     private _FRACTION_OF_WIDTH_TO_TRIGGER_GRIP = 0.5; // as a fraction of the item width
     private _initialLeft: number = null;
-    private _innerStyle: string = "ig-list__item";
+    private _innerStyle: string = "igx-list__item";
 
     hidden: boolean = false;
     get index(): number {
