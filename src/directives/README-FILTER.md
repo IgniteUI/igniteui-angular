@@ -7,7 +7,7 @@ _Directives_
 _Filters a datasource or items in list-based widget._
 
 ### More Info
-Filter pipe can be used to filter data source of list-base widgets, like list, tabbar, carousel, etc. igxFilter can be applied as a pipe or as a directive.  
+igxFilter can be used to filter data source of list-base widgets, like list, tabbar, carousel, etc. It can be applied as a pipe or as a directive.  
 igxFilter is not coupled to any specific widget and it can filters any  widget that represent list of items.  
 The widgets that cannot use igxFilter are those which purpose is more visual, than data representative. _Example: avatar, checkbox, progressbas, etc._
 
