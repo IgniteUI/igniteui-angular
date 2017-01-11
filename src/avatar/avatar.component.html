@@ -1,4 +1,4 @@
-<div class="igx-avatar" role="avatar" aria-label="avatar">
+<div class="igx-avatar" aria-label="avatar">
     <img #image *ngIf="src || initials" src="{{src}}" class="igx-avatar--image igx-avatar--{{size}}" [class.igx-avatar--rounded]="isRounded"
         [style.backgroundColor]="bgColor" [attr.role]="role" />
     <span *ngIf="!src && !initials" class="igx-avatar--{{size}} igx-avatar--icon" [class.igx-avatar--rounded]="isRounded"
