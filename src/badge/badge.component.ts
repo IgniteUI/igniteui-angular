@@ -74,6 +74,11 @@ export class IgxBadge {
         this._iconBdg = value;
     }
 
+    @Input()
+    get role() {
+        return this._type + "badge";
+    }
+
     setClasses() {
         var classes = {};
 

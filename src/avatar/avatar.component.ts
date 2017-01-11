@@ -71,6 +71,17 @@ export class IgxAvatar {
         this._icon = value;
     }
 
+    @Input()
+    get role() {
+        if (this.initials){
+            return "initials";
+        } else if (this.image){
+            return "image";
+        } else {
+            return "icon";
+        }
+    }
+
     constructor(public element_ref: ElementRef, private renderer: Renderer) {
         this._addEventListeners(renderer);
     }

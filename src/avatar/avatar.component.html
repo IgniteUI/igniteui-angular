@@ -1,6 +1,8 @@
-<div class="igx-avatar">
-    <img #image *ngIf="src || initials" src="{{src}}" class="igx-avatar--image igx-avatar--{{size}}" [class.igx-avatar--rounded]="isRounded" [style.backgroundColor]="bgColor" />
-    <span *ngIf="!src && !initials" class="igx-avatar--{{size}} igx-avatar--icon" [class.igx-avatar--rounded]="isRounded" [style.backgroundColor]="bgColor" [style.color]="color">
+<div class="igx-avatar" role="avatar" aria-label="avatar">
+    <img #image *ngIf="src || initials" src="{{src}}" class="igx-avatar--image igx-avatar--{{size}}" [class.igx-avatar--rounded]="isRounded"
+        [style.backgroundColor]="bgColor" [attr.role]="role" />
+    <span *ngIf="!src && !initials" class="igx-avatar--{{size}} igx-avatar--icon" [class.igx-avatar--rounded]="isRounded"
+            [style.backgroundColor]="bgColor" [style.color]="color" role="icon">
         <i class="material-icons">{{icon}}</i>
     </span>
     <ng-content></ng-content>
