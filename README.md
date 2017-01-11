@@ -64,7 +64,9 @@ You can include Ignite UI JS Blocks in your project as a depencency using the NP
 `npm install igniteui-js-blocks --save-dev`
 
 ## Contributing
-[Coding Guidelines](../../wiki/Coding-guidelines-for-Zero-Blocks)
+[Coding Guidelines](../../wiki//Coding-guidelines-for-Ignite-UI-JS-Blocks)
+
+[General Naming Guidelines](../../wiki//General-Naming-Guidelines-for-Ignite-UI-JS-Blocks)
 
 ## Demo App
 [Warehouse Picklist App] (https://github.com/IgniteUI/warehouse-js-blocks)
