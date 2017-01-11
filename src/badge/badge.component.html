@@ -1,6 +1,6 @@
 <div [ngClass]="setPosition()">
-	<div class="igx-badge__circle" [ngClass]="setClasses()">
-		<span *ngIf="!iconBdg" class="igx-badge__circle-value">{{value}}</span>
-		<i *ngIf="iconBdg" class="material-icons igx-badge__circle-value">{{iconBdg}}</i>
+	<div class="igx-badge__circle" [ngClass]="setClasses()" aria-label="badge" [attr.role]="role">
+		<span *ngIf="!iconBdg" class="igx-badge__circle-value" role="icon">{{value}}</span>
+		<i *ngIf="iconBdg" class="material-icons igx-badge__circle-value" role="icon">{{iconBdg}}</i>
 	</div>
 </div>
