@@ -26,7 +26,7 @@ Current list of controls include:
 | **checkbox**          |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/checkbox/README.md)     |     |               |               |                                                                                                       |
 | **switch**            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/switch/README.md)       |     |               |               |                                                                                                       |
 | **scroll**            |             Planned | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/scroll/README.md)       |     |               |               |                                                                                                       |
-| **liner progress**    |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/progressbar/README.md)  |     |               |               |                                                                                                       |
+| **linear progress**    |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/progressbar/README.md)  |     |               |               |                                                                                                       |
 | **circular progress** |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/progressbar/README.md)  |     |               |               |                                                                                                       |
 | **icon**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/tree/master/src/icon/README.md)         |     |               |               |                                                                                                       |
 
@@ -64,7 +64,9 @@ You can include Ignite UI JS Blocks in your project as a depencency using the NP
 `npm install igniteui-js-blocks --save-dev`
 
 ## Contributing
-[Coding Guidelines](../../wiki/Coding-guidelines-for-Zero-Blocks)
+[Coding Guidelines](../../wiki//Coding-guidelines-for-Ignite-UI-JS-Blocks)
+
+[General Naming Guidelines](../../wiki//General-Naming-Guidelines-for-Ignite-UI-JS-Blocks)
 
 ## Demo App
 [Warehouse Picklist App] (https://github.com/IgniteUI/warehouse-js-blocks)
