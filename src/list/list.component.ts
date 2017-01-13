@@ -12,7 +12,10 @@ export interface IListChild
 @Component({
     selector: 'igx-list',
     moduleId: module.id, // commonJS standard
-    templateUrl: 'list-content.component.html'
+    templateUrl: 'list-content.component.html',
+    host: {
+        'role': "list"
+    },
 })
 
 export class IgxList {
@@ -49,7 +52,11 @@ export class IgxList {
 @Component({
     selector: 'igx-list-header',
     moduleId: module.id, // commonJS standard
-    templateUrl: 'list-content.component.html'
+    templateUrl: 'list-content.component.html',
+    host: {
+        'role': "separator",
+        '[attr.aria-label]': "getText()"
+    },
 })
 
 export class IgxListHeader implements OnInit, IListChild {
@@ -63,6 +70,10 @@ export class IgxListHeader implements OnInit, IListChild {
     public ngOnInit() {
         this.list.addChild(this);
     }
+
+    getText() {
+        return this.element.nativeElement.textContent;
+    }
 }
 
 // ====================== ITEM ================================
@@ -71,7 +82,11 @@ export class IgxListHeader implements OnInit, IListChild {
 @Component({
     selector: 'igx-list-item',
     moduleId: module.id, // commonJS standard
-    templateUrl: 'list-content.component.html'
+    templateUrl: 'list-content.component.html',
+    host: {
+        'role': "listitem",
+        '[attr.aria-label]': "getText()"
+    },
 })
 
 export class IgxListItem implements OnInit, OnDestroy, IListChild {
@@ -130,6 +145,10 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
 
     public ngOnDestroy() {
         this.list.removeChild(this.index);
+    }
+
+    getText() {
+        return this.element.nativeElement.textContent;
     }
 
     private _addEventListeners() {

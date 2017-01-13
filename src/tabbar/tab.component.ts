@@ -158,7 +158,6 @@ export class IgxTabBar implements AfterViewInit, AfterContentInit {
     moduleId: module.id, // commonJS standard
     templateUrl: 'tab-content.component.html',
     host: {
-        '[class]': '"col-" + columnCount',
         'role': "tabpanel"
     }
 })
