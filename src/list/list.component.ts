@@ -124,8 +124,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
 
         this._addEventListeners();
 
-        // Fix for default value of touch-action: none, set by Hammer.js
-        this.element.nativeElement.style.touchAction = "inherit";
+        this.element.nativeElement.style.touchAction = "pan-y";
     }
 
     public ngOnDestroy() {
