@@ -54,8 +54,7 @@ export class IgxList {
     moduleId: module.id, // commonJS standard
     templateUrl: 'list-content.component.html',
     host: {
-        'role': "separator",
-        '[attr.aria-label]': "getText()"
+        'role': "separator"
     },
 })
 
@@ -69,10 +68,7 @@ export class IgxListHeader implements OnInit, IListChild {
 
     public ngOnInit() {
         this.list.addChild(this);
-    }
-
-    getText() {
-        return this.element.nativeElement.textContent;
+        this.element.nativeElement.setAttribute('aria-label', this.element.nativeElement.textContent.trim());
     }
 }
 
@@ -84,8 +80,7 @@ export class IgxListHeader implements OnInit, IListChild {
     moduleId: module.id, // commonJS standard
     templateUrl: 'list-content.component.html',
     host: {
-        'role': "listitem",
-        '[attr.aria-label]': "getText()"
+        'role': "listitem"
     },
 })
 
@@ -131,13 +126,13 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     @Input() options: Array<Object>
 
     constructor( @Inject(forwardRef(() => IgxList)) private list: IgxList, public element: ElementRef, private _renderer: Renderer) {
-
     }
 
     public ngOnInit() {
         this.list.addChild(this);
 
         this._addEventListeners();
+        this.element.nativeElement.setAttribute('aria-label', this.element.nativeElement.textContent.trim());
 
         // Fix for default value of touch-action: none, set by Hammer.js
         this.element.nativeElement.style.touchAction = "inherit";
@@ -145,10 +140,6 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
 
     public ngOnDestroy() {
         this.list.removeChild(this.index);
-    }
-
-    getText() {
-        return this.element.nativeElement.textContent;
     }
 
     private _addEventListeners() {
