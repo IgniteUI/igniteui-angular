@@ -30,6 +30,10 @@ export class IgxSwitch implements ControlValueAccessor {
 
     @Input() value: any;
     @Input() id: string = `igx-switch-${nextId++}`;
+    @Input()
+        get labelId() {
+            return this.id + "_label";
+        }
     @Input() name: string;
     @Input() disabled: boolean = false;
     @Input() tabindex: number = null;
