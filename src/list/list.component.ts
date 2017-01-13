@@ -134,8 +134,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
         this._addEventListeners();
         this.element.nativeElement.setAttribute('aria-label', this.element.nativeElement.textContent.trim());
 
-        // Fix for default value of touch-action: none, set by Hammer.js
-        this.element.nativeElement.style.touchAction = "inherit";
+        this.element.nativeElement.style.touchAction = "pan-y";
     }
 
     public ngOnDestroy() {
