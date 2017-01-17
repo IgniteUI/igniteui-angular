@@ -12,7 +12,10 @@ export interface IListChild
 @Component({
     selector: 'igx-list',
     moduleId: module.id, // commonJS standard
-    templateUrl: 'list-content.component.html'
+    templateUrl: 'list-content.component.html',
+    host: {
+        'role': "list"
+    },
 })
 
 export class IgxList {
@@ -49,7 +52,10 @@ export class IgxList {
 @Component({
     selector: 'igx-list-header',
     moduleId: module.id, // commonJS standard
-    templateUrl: 'list-content.component.html'
+    templateUrl: 'list-content.component.html',
+    host: {
+        'role': "separator"
+    },
 })
 
 export class IgxListHeader implements OnInit, IListChild {
@@ -62,6 +68,7 @@ export class IgxListHeader implements OnInit, IListChild {
 
     public ngOnInit() {
         this.list.addChild(this);
+        this.element.nativeElement.setAttribute('aria-label', this.element.nativeElement.textContent.trim());
     }
 }
 
@@ -71,7 +78,10 @@ export class IgxListHeader implements OnInit, IListChild {
 @Component({
     selector: 'igx-list-item',
     moduleId: module.id, // commonJS standard
-    templateUrl: 'list-content.component.html'
+    templateUrl: 'list-content.component.html',
+    host: {
+        'role': "listitem"
+    },
 })
 
 export class IgxListItem implements OnInit, OnDestroy, IListChild {
@@ -116,13 +126,13 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     @Input() options: Array<Object>
 
     constructor( @Inject(forwardRef(() => IgxList)) private list: IgxList, public element: ElementRef, private _renderer: Renderer) {
-
     }
 
     public ngOnInit() {
         this.list.addChild(this);
 
         this._addEventListeners();
+        this.element.nativeElement.setAttribute('aria-label', this.element.nativeElement.textContent.trim());
 
         this.element.nativeElement.style.touchAction = "pan-y";
     }
