@@ -1,9 +1,9 @@
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxTabBar, IgxTabPanel, IgxTabBarModule } from './tab.component';
+import { IgxTabBar, IgxTabPanel, IgxTab, IgxTabBarModule } from './tab.component';
 import { Component, ViewChild, ContentChildren } from '@angular/core';
 
-describe("List", function () {
+describe("TabBar", function () {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [IgxTabBarModule],
@@ -12,17 +12,24 @@ describe("List", function () {
             .compileComponents();
     }));
 
-    it('should initialize igx-tab-bar and igx-tabs', () => {
+    it('should initialize igx-tab-bar, igx-tab-panel and igx-tab', () => {
         let fixture = TestBed.createComponent(TabBarTestComponent),
             tabbar = fixture.componentInstance.tabbar;
 
         expect(tabbar).toBeDefined();
         expect(tabbar instanceof IgxTabBar).toBeTruthy();
-        expect(tabbar.tabbarContainers instanceof Array).toBeTruthy();
-        expect(tabbar.tabbarContainers.length).toBe(3);
+        expect(tabbar.tabPanels instanceof Array).toBeTruthy();
+        expect(tabbar.tabPanels.length).toBe(3);
 
-        for (let i = 0; i < tabbar.tabbarContainers.length; i++) {
-            expect(tabbar.tabbarContainers[i] instanceof IgxTabPanel).toBeTruthy();
+        for (let i = 0; i < tabbar.tabPanels.length; i++) {
+            expect(tabbar.tabPanels[i] instanceof IgxTabPanel).toBeTruthy();
+        }
+
+        expect(tabbar.tabs instanceof Array).toBeTruthy();
+        expect(tabbar.tabs.length).toBe(3);
+
+        for (let i = 0; i < tabbar.tabs.length; i++) {
+            expect(tabbar.tabs[i] instanceof IgxTab).toBeTruthy();
         }
     });
 
@@ -32,18 +39,18 @@ describe("List", function () {
 
         expect(tabbar.alignment).toBe("top");
         expect(tabbar.selectedIndex).toBeUndefined();
-        expect(tabbar.tabbarContainers[0].isDisabled).toBeFalsy();
-        expect(tabbar.tabbarContainers[1].isDisabled).toBeFalsy();
+        expect(tabbar.tabs[0].isDisabled).toBeFalsy();
+        expect(tabbar.tabs[1].isDisabled).toBeFalsy();
         fixture.detectChanges();
         expect(tabbar.selectedIndex).toBe(0);
-        expect(tabbar.selectedTab).toBe(tabbar.tabbarContainers[0]);
+        expect(tabbar.selectedTab).toBe(tabbar.tabPanels[0]);
     });
 
     it('should initialize set/get properties', () => {
         let checkTabProperties,
             fixture = TestBed.createComponent(TabBarTestComponent),
             tabbar = fixture.componentInstance.tabbar,
-            tabs = tabbar.tabbarContainers;
+            tabs = tabbar.tabPanels;
 
         fixture.detectChanges();
         checkTabProperties = (tabIndex) => {
@@ -59,7 +66,7 @@ describe("List", function () {
     it('should select/deselect tabs', () => {
         let fixture = TestBed.createComponent(TabBarTestComponent),
             tabbar = fixture.componentInstance.tabbar,
-            tabs = tabbar.tabbarContainers,
+            tabs = tabbar.tabs,
             tab1 = tabs[0],
             tab2 = tabs[1];
 
@@ -109,7 +116,7 @@ describe("List", function () {
     it('should remove tab', () => {
         let fixture = TestBed.createComponent(TabBarTestComponent),
             tabbar = fixture.componentInstance.tabbar,
-            tabs = tabbar.tabbarContainers,
+            tabs = tabbar.tabPanels,
             lastTab;
 
         expect(tabs.length).toBe(3);
@@ -135,8 +142,8 @@ describe("List", function () {
         let fixture = TestBed.createComponent(TabBarTestComponent),
             tabbar = fixture.componentInstance.tabbar,
             wrapper = fixture.componentInstance.wrapperDiv,
-            tab1 = tabbar.tabbarContainers[0],
-            tab2 = tabbar.tabbarContainers[1],
+            tab1 = tabbar.tabPanels[0],
+            tab2 = tabbar.tabPanels[1],
             testWrapperHeight = 600;
 
         wrapper.nativeElement.style.height = testWrapperHeight + "px";
@@ -159,8 +166,8 @@ describe("List", function () {
         let fixture = TestBed.createComponent(BottomTabBarTestComponent),
             tabbar = fixture.componentInstance.tabbar,
             wrapper = fixture.componentInstance.wrapperDiv,
-            tab1 = tabbar.tabbarContainers[0],
-            tab2 = tabbar.tabbarContainers[1],
+            tab1 = tabbar.tabPanels[0],
+            tab2 = tabbar.tabPanels[1],
             testWrapperHeight = 600;
 
         wrapper.nativeElement.style.height = testWrapperHeight + "px";
@@ -184,15 +191,15 @@ describe("List", function () {
     template: `
         <div #wrapperDiv>
             <igx-tab-bar>
-                <igx-tab label="Tab 1" icon="library_music">
+                <igx-tab-panel label="Tab 1" icon="library_music">
                     <h1>Tab 1 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </igx-tab>
-                <igx-tab label="Tab 2" icon="video_library">
+                </igx-tab-panel>
+                <igx-tab-panel label="Tab 2" icon="video_library">
                     <h1>Tab 2 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </igx-tab>
-                <igx-tab label="Tab 3" icon="library_books">
+                </igx-tab-panel>
+                <igx-tab-panel label="Tab 3" icon="library_books">
                     <h1>Tab 3 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                         Vivamus vitae malesuada odio. Praesent ante lectus, porta a eleifend vel, sodales eu nisl.
@@ -203,7 +210,7 @@ describe("List", function () {
                         In hendrerit, sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo.
                         Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.
                     </p>
-                </igx-tab>
+                </igx-tab-panel>
             </igx-tab-bar>
         </div>`
 })
@@ -216,15 +223,15 @@ class TabBarTestComponent {
     template: `
         <div #wrapperDiv>
             <igx-tab-bar alignment="bottom">
-                <igx-tab label="Tab 1" icon="library_music">
+                <igx-tab-panel label="Tab 1" icon="library_music">
                     <h1>Tab 1 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </igx-tab>
-                <igx-tab label="Tab 2" icon="video_library">
+                </igx-tab-panel>
+                <igx-tab-panel label="Tab 2" icon="video_library">
                     <h1>Tab 2 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </igx-tab>
-                <igx-tab label="Tab 3" icon="library_books">
+                </igx-tab-panel>
+                <igx-tab-panel label="Tab 3" icon="library_books">
                     <h1>Tab 3 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                         Vivamus vitae malesuada odio. Praesent ante lectus, porta a eleifend vel, sodales eu nisl.
@@ -235,7 +242,7 @@ class TabBarTestComponent {
                         In hendrerit, sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo.
                         Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.
                     </p>
-                </igx-tab>
+                </igx-tab-panel>
             </igx-tab-bar>
         </div>`
 })
