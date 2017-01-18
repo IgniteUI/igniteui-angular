@@ -1,6 +1,6 @@
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxTabBar, IgxTab, IgxTabBarModule } from './tab.component';
+import { IgxTabBar, IgxTabPanel, IgxTabBarModule } from './tab.component';
 import { Component, ViewChild, ContentChildren } from '@angular/core';
 
 describe("List", function () {
@@ -18,11 +18,11 @@ describe("List", function () {
 
         expect(tabbar).toBeDefined();
         expect(tabbar instanceof IgxTabBar).toBeTruthy();
-        expect(tabbar.tabs instanceof Array).toBeTruthy();
-        expect(tabbar.tabs.length).toBe(3);
+        expect(tabbar.tabbarContainers instanceof Array).toBeTruthy();
+        expect(tabbar.tabbarContainers.length).toBe(3);
 
-        for (let i = 0; i < tabbar.tabs.length; i++) {
-            expect(tabbar.tabs[i] instanceof IgxTab).toBeTruthy();
+        for (let i = 0; i < tabbar.tabbarContainers.length; i++) {
+            expect(tabbar.tabbarContainers[i] instanceof IgxTabPanel).toBeTruthy();
         }
     });
 
@@ -32,18 +32,18 @@ describe("List", function () {
 
         expect(tabbar.alignment).toBe("top");
         expect(tabbar.selectedIndex).toBeUndefined();
-        expect(tabbar.tabs[0].isDisabled).toBeFalsy();
-        expect(tabbar.tabs[1].isDisabled).toBeFalsy();
+        expect(tabbar.tabbarContainers[0].isDisabled).toBeFalsy();
+        expect(tabbar.tabbarContainers[1].isDisabled).toBeFalsy();
         fixture.detectChanges();
         expect(tabbar.selectedIndex).toBe(0);
-        expect(tabbar.selectedTab).toBe(tabbar.tabs[0]);
+        expect(tabbar.selectedTab).toBe(tabbar.tabbarContainers[0]);
     });
 
     it('should initialize set/get properties', () => {
         let checkTabProperties,
             fixture = TestBed.createComponent(TabBarTestComponent),
             tabbar = fixture.componentInstance.tabbar,
-            tabs = tabbar.tabs;
+            tabs = tabbar.tabbarContainers;
 
         fixture.detectChanges();
         checkTabProperties = (tabIndex) => {
@@ -59,7 +59,7 @@ describe("List", function () {
     it('should select/deselect tabs', () => {
         let fixture = TestBed.createComponent(TabBarTestComponent),
             tabbar = fixture.componentInstance.tabbar,
-            tabs = tabbar.tabs,
+            tabs = tabbar.tabbarContainers,
             tab1 = tabs[0],
             tab2 = tabs[1];
 
@@ -109,7 +109,7 @@ describe("List", function () {
     it('should remove tab', () => {
         let fixture = TestBed.createComponent(TabBarTestComponent),
             tabbar = fixture.componentInstance.tabbar,
-            tabs = tabbar.tabs,
+            tabs = tabbar.tabbarContainers,
             lastTab;
 
         expect(tabs.length).toBe(3);
@@ -135,8 +135,8 @@ describe("List", function () {
         let fixture = TestBed.createComponent(TabBarTestComponent),
             tabbar = fixture.componentInstance.tabbar,
             wrapper = fixture.componentInstance.wrapperDiv,
-            tab1 = tabbar.tabs[0],
-            tab2 = tabbar.tabs[1],
+            tab1 = tabbar.tabbarContainers[0],
+            tab2 = tabbar.tabbarContainers[1],
             testWrapperHeight = 600;
 
         wrapper.nativeElement.style.height = testWrapperHeight + "px";
@@ -159,8 +159,8 @@ describe("List", function () {
         let fixture = TestBed.createComponent(BottomTabBarTestComponent),
             tabbar = fixture.componentInstance.tabbar,
             wrapper = fixture.componentInstance.wrapperDiv,
-            tab1 = tabbar.tabs[0],
-            tab2 = tabbar.tabs[1],
+            tab1 = tabbar.tabbarContainers[0],
+            tab2 = tabbar.tabbarContainers[1],
             testWrapperHeight = 600;
 
         wrapper.nativeElement.style.height = testWrapperHeight + "px";

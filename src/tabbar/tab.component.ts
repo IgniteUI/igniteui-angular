@@ -13,7 +13,7 @@ export class IgxTabBar implements AfterViewInit, AfterContentInit {
     private _maxNumberTabsDisplayed: number = 5;
     private _itemStyle: string = "igx-tab-bar-inner";
     private get _visibleTabs() {
-        return this.tabs.length > this._maxNumberTabsDisplayed ? this.tabs.filter(tab => tab.index < this._maxNumberTabsDisplayed - 1) : this.tabs;
+        return this.tabbarContainers.length > this._maxNumberTabsDisplayed ? this.tabbarContainers.filter(container => container.index < this._maxNumberTabsDisplayed - 1) : this.tabbarContainers;
     }
 
     private get _height() {
@@ -21,7 +21,7 @@ export class IgxTabBar implements AfterViewInit, AfterContentInit {
     }
 
     private get _columns() {
-        return this.tabs.length > this._maxNumberTabsDisplayed ? this._maxNumberTabsDisplayed : this.tabs.length;
+        return this.tabbarContainers.length > this._maxNumberTabsDisplayed ? this._maxNumberTabsDisplayed : this.tabbarContainers.length;
     }
 
     get tabListHeight() {
@@ -32,15 +32,16 @@ export class IgxTabBar implements AfterViewInit, AfterContentInit {
         return 0;
     }
 
+    tabbarContainers: IgxTabPanel[] = [];
     tabs: IgxTab[] = [];
 
     get selectedTab() {
-        var selectedTabs = this.tabs.filter((tab) => tab.isSelected);
+        var selectedContainers = this.tabbarContainers.filter((container) => container.isSelected);
 
-        if (selectedTabs.length == 0) {
+        if (selectedContainers.length == 0) {
             return undefined;
         } else {
-            return selectedTabs[selectedTabs.length - 1];
+            return selectedContainers[selectedContainers.length - 1];
         }
     }
 
@@ -74,7 +75,7 @@ export class IgxTabBar implements AfterViewInit, AfterContentInit {
     ngAfterViewInit() {
         var self = this;
 
-        this.tabs.forEach((tab) => {
+        this.tabbarContainers.forEach((tab) => {
             let tabListHeight = self.tabListHeight;
             tab.height = self._height - tabListHeight;
             if (self.alignment == "top") {
@@ -85,9 +86,10 @@ export class IgxTabBar implements AfterViewInit, AfterContentInit {
         });
     }
 
-    add(tab: IgxTab) {
-        this.tabs.push(tab);
-        this.tabs.forEach((tab) => { tab.columnCount = this._columns; });
+    add(container: IgxTabPanel) {
+        this.tabbarContainers.push(container);
+        this.tabbarContainers.forEach((container) => { container.columnCount = this._columns; });
+        this.tabs.push(new IgxTab());
     }
 
     remove(index: number) {
@@ -97,13 +99,13 @@ export class IgxTabBar implements AfterViewInit, AfterContentInit {
             return;
         }
 
-        tab = this.tabs[index];
+        tab = this.tabbarContainers[index];
 
         if (tab.isSelected) {
             tab.isSelected = false;
         }
 
-        this.tabs.splice(index, 1);
+        this.tabbarContainers.splice(index, 1);
     }
 
     select(index: number) {
@@ -149,21 +151,23 @@ export class IgxTabBar implements AfterViewInit, AfterContentInit {
     }
 
     private _validateTabIndex(index) {
-        return index <= this.tabs.length - 1 && index >= 0;
+        return index <= this.tabbarContainers.length - 1 && index >= 0;
     }
 }
 
+//========================================================== IgxTabbarContainer ================================================
+
 @Component({
-    selector: 'igx-tab',
+    selector: 'igx-tab-panel',
     moduleId: module.id, // commonJS standard
-    templateUrl: 'tab-content.component.html',
+    templateUrl: 'tab-panel.component.html',
     host: {
         'role': "tabpanel"
     }
 })
 
-export class IgxTab {
-    @ViewChild('tabwrapper') wrapper: ElementRef;
+export class IgxTabPanel {
+    @ViewChild('tab_panel_container') _wrapper: ElementRef;
 
     private _itemStyle: string = "igx-tab-inner";
     private _changesCount: number = 0; // changes and updates accordingly applied to the tab.
@@ -171,7 +175,7 @@ export class IgxTab {
     isSelected: boolean = false;
 
     get index() {
-        return this._tabBar.tabs.indexOf(this);
+        return this._tabBar.tabbarContainers.indexOf(this);
     }
 
     get isDisabled() {
@@ -183,19 +187,19 @@ export class IgxTab {
     }
 
     get height() {
-        return this.wrapper.nativeElement.style.height;
+        return this._wrapper.nativeElement.style.height;
     }
 
     set height(value: number) {
-        this.wrapper.nativeElement.style.height = value + "px";
+        this._wrapper.nativeElement.style.height = value + "px";
     }
 
     get marginTop() {
-        return this.wrapper.nativeElement.style.marginTop;
+        return this._wrapper.nativeElement.style.marginTop;
     }
 
     set marginTop(value: number) {
-        this.wrapper.nativeElement.style.marginTop = value + "px";
+        this._wrapper.nativeElement.style.marginTop = value + "px";
     }
 
     // Indirectly defines the width of the tab.
@@ -204,7 +208,6 @@ export class IgxTab {
     @Input() label: string;
     @Input() icon: string;
     @Input() disabled: boolean;
-    @Input() href: string;   // TODO - need to be disccussed
     @Input() color: string;
 
     constructor(private _tabBar: IgxTabBar, private _element: ElementRef) {
@@ -212,10 +215,6 @@ export class IgxTab {
     }
 
     select() {
-        if (this.href) {
-            // TODO - href implementation. Priority over nested content
-        }
-
         this._tabBar.select(this.index);
     }
 
@@ -224,10 +223,31 @@ export class IgxTab {
     }
 }
 
+//========================================================== IgxTab ================================================
+
+@Component({
+    selector: 'igx-tab',
+    moduleId: module.id, // commonJS standard
+    templateUrl: 'tab.component.html',
+    host: {
+        'role': "tab"
+    }
+})
+
+export class IgxTab {
+    @Input() label: string;
+    @Input() icon: string;
+    @Input() color: string;
+
+    index: number;
+    isDisabled: boolean;
+    isSelected: boolean;
+}
+
 @NgModule({
-    declarations: [IgxTabBar, IgxTab],
+    declarations: [IgxTabBar, IgxTabPanel, IgxTab],
     imports: [CommonModule],
-    exports: [IgxTabBar, IgxTab]
+    exports: [IgxTabBar, IgxTabPanel, IgxTab]
 })
 export class IgxTabBarModule {
 }
