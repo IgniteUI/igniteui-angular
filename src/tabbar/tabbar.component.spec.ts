@@ -1,6 +1,6 @@
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxTabBar, IgxTabPanel, IgxTab, IgxTabBarModule } from './tab.component';
+import { IgxTabBar, IgxTabPanel, IgxTab, IgxTabBarModule } from './tabbar.component';
 import { Component, ViewChild, ContentChildren } from '@angular/core';
 
 describe("TabBar", function () {
@@ -43,7 +43,7 @@ describe("TabBar", function () {
         expect(tabbar.tabs[1].isDisabled).toBeFalsy();
         fixture.detectChanges();
         expect(tabbar.selectedIndex).toBe(0);
-        expect(tabbar.selectedTab).toBe(tabbar.tabPanels[0]);
+        expect(tabbar.selectedTab).toBe(tabbar.tabs[0]);
     });
 
     it('should initialize set/get properties', () => {
