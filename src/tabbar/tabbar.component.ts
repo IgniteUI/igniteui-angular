@@ -38,10 +38,8 @@ export class IgxTabBar implements AfterViewInit, AfterContentInit {
     get selectedTab(): IgxTab {
         var selectedTabs = this.tabs.filter((tab) => tab.isSelected);
 
-        if (selectedTabs.length == 0) {
-            return undefined;
-        } else {
-            // insurance in case selectedTabs.length > 1
+        if (selectedTabs.length) {
+            // insurance in case selectedTabs.length > 1 - take the last selected
             return selectedTabs[selectedTabs.length - 1];
         }
     }
@@ -206,12 +204,12 @@ export class IgxTabPanel {
         this.relatedTab.icon = value;
     };
 
-    @Input() set disabled(value: boolean) {
-        this.relatedTab.isDisabled !== undefined;
-    };
-
     @Input() set color(value: string) {
         this.relatedTab.color = value;
+    };
+
+    @Input() set disabled(value: boolean) {
+        this.relatedTab.isDisabled = value !== undefined;
     };
 
     constructor(private _tabBar: IgxTabBar, private _element: ElementRef) {
