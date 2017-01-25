@@ -1,10 +1,6 @@
-<!--<div *ngFor="let tab of _visibleTabs" class="{{_itemStyle}}__menu-item" [class.igx-tab-bar-inner__menu-item--selected]="tab.isSelected"
-    [attr.aria-disabled]="tab.isDisabled" [attr.aria-selected]="tab.isSelected" [class.igx-tab-bar-inner__menu-item--disabled]="tab.isDisabled"
-    (click)="tab.select()" role="tab" [attr.aria-label]="tab.label">-->
-    <div ngClass="tab-icon">
-        <i class="material-icons">{{icon}}</i>
-        <span [class.igx-badge--hidden]="_changesCount == 0" class="igx-badge">{{_changesCount}}</span>
-    </div>
-    <div ngClass="tab-label">{{label}}</div>
-    <div ngClass="tab-color tab-color--{{color}}"></div>
-<!--</div>-->
+<div ngClass="tab-icon">
+    <i class="material-icons">{{icon}}</i>
+    <span [class.igx-badge--hidden]="_changesCount == 0" class="igx-badge">{{_changesCount}}</span>
+</div>
+<div ngClass="tab-label">{{label}}</div>
+<div ngClass="tab-color tab-color--{{color}}"></div>

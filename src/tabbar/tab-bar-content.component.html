@@ -1,10 +1,8 @@
-<div class="{{_itemStyle}}">
-    <div>
-        <ng-content></ng-content>
-    </div>	
-    <div #tablist class="{{_itemStyle}}__menu {{_itemStyle}}__menu--{{alignment}}" role="tablist" aria-orientation="horizontal">
-        <igx-tab *ngFor="let tab of tabs" [class.igx-tab-bar-inner__menu-item--selected]="tab.isSelected"
-        [attr.aria-disabled]="tab.isDisabled" [attr.aria-selected]="tab.isSelected" [class.igx-tab-bar-inner__menu-item--disabled]="tab.isDisabled"
-        (click)="tab.select()" role="tab" [attr.aria-label]="tab.label"></igx-tab>
-    </div>
+<div>
+    <ng-content></ng-content>
+</div>	
+<div #tablist class="{{_itemStyle}}__menu {{_itemStyle}}__menu--{{alignment}}" role="tablist" aria-orientation="horizontal">
+    <igx-tab *ngFor="let tab of _visibleTabs" [class.igx-tab-bar-inner__menu-item--selected]="tab.isSelected"
+    [attr.aria-disabled]="tab.isDisabled" [attr.aria-selected]="tab.isSelected" [class.igx-tab-bar-inner__menu-item--disabled]="tab.isDisabled"
+    (click)="tab.select()" role="tab" [attr.aria-label]="tab.label"></igx-tab>
 </div>
