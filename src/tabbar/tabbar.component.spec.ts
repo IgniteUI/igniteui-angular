@@ -50,17 +50,28 @@ describe("TabBar", function () {
         let checkTabProperties,
             fixture = TestBed.createComponent(TabBarTestComponent),
             tabbar = fixture.componentInstance.tabbar,
-            tabs = tabbar.tabPanels;
+            tabs = tabbar.tabs,
+            panels = tabbar.tabPanels,
+            icons = ["library_music", "video_library", "library_books"];
+
+        for (let i = 0; i < tabs.length; i++) {
+            expect(tabs[i].label).toBeUndefined();
+            expect(tabs[i].icon).toBeUndefined();
+
+            expect(panels[i].label).toBeUndefined();
+            expect(panels[i].icon).toBeUndefined();
+        }
 
         fixture.detectChanges();
-        checkTabProperties = (tabIndex) => {
-            expect(tabs[tabIndex].label).toBe("Tab " + (tabIndex + 1));
-            //expect(tabs[tabIndex].icon).toBe("icon" + (tabIndex + 1));
-            //expect(tabs[tabIndex].icon).toBe("icon" + (tabIndex + 1));
-        };
 
-        checkTabProperties(0);
-        checkTabProperties(1);
+        for (let i = 0; i < tabs.length; i++) {
+            expect(tabs[i].label).toBe("Tab " + (i + 1));
+            expect(tabs[i].icon).toBe(icons[i]);
+
+            // The panels should not be able to provide those properties - they are tab's properties
+            expect(panels[i].label).toBeUndefined();
+            expect(panels[i].icon).toBeUndefined();
+        }
     });
 
     it('should select/deselect tabs', () => {
