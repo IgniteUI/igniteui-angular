@@ -12,6 +12,7 @@ import { DialogSampleComponent } from "./dialog/sample.component";
 import { ProgressbarSampleComponent } from "./progressbar/progressbarsample.component";
 import { IconSampleComponent } from "./icon/sample.component";
 import { IgxSnackbarSampleComponent } from "./snackbar/sample.component";
+import { IgxCardSampleComponent } from "./card/sample.component";
 
 const appRoutes: Routes = [
     {
@@ -62,6 +63,10 @@ const appRoutes: Routes = [
     {
         path: "icon",
         component: IconSampleComponent
+    },
+    {
+        path: "card",
+        component: IgxCardSampleComponent
     }
 ];
 

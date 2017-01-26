@@ -1,0 +1,52 @@
+<div>
+    <div class="card-list-container">
+        <igx-list>
+            <igx-list-item *ngFor="let visioner of visioners">
+                <igx-card (click)="handleCardClick(visioner)">
+                    <igx-card-header>
+                        <igx-avatar [src]="visioner.avatarUrl" roundShape="true">
+                            <h3>{{ visioner.name }}</h3>
+                        </igx-avatar>
+                    </igx-card-header>
+
+                    <img width="100%" [src]="visioner.imageUrl">
+
+                    <igx-card-content>
+                        <p>
+                            {{ visioner.about }}
+                        </p>
+                    </igx-card-content>
+
+                    <igx-card-actions>
+                        <button igxButton (click)="openUrl(visioner.facebook)">Like</button>
+                        <button igxButton (click)="openUrl(visioner.twitter)">Share</button>
+                    </igx-card-actions>
+                </igx-card>
+            </igx-list-item>
+        </igx-list>
+    </div>
+
+
+    <div class="selected-visioner">
+        <igx-card (click)="handleCardClick(visioner)">
+            <igx-card-header>
+                <igx-avatar [src]="selectedVisioner.avatarUrl" roundShape="true">
+                    <h3>{{ selectedVisioner.name }}</h3>
+                </igx-avatar>
+            </igx-card-header>
+
+            <img width="100%" [src]="selectedVisioner.imageUrl">
+
+            <igx-card-content>
+                <p>
+                    {{ selectedVisioner.about }}
+                </p>
+            </igx-card-content>
+
+            <igx-card-actions>
+                <button igxButton (click)="openUrl(selectedVisioner.facebook)">Like</button>
+                <button igxButton (click)="openUrl(selectedVisioner.twitter)">Share</button>
+            </igx-card-actions>
+        </igx-card>
+    </div>
+</div>
