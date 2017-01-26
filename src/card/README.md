@@ -8,7 +8,7 @@ igx-card
 ##Simple Card
 
 ```html
-<igx-card (click)="handleCardClick(visioner)">
+<igx-card>
     <igx-card-header>
         <igx-avatar src="http://localhost/images/elon-musk-avatar.jpg" roundShape="true">
             <h3>Elon Musk</h3>
