@@ -23,7 +23,18 @@ export class ListSampleComponent {
             { key:"1", text: "<h1>Hi world</h1>This is some very long string <br> hello world", link: "#" },
             { key:"2", text: "Nav2", link: "#" },
             { key:"3", text: "Nav3", link: "#" },
-            { key:"4", text: "Nav4", link: "#" }
+            { key:"4", text: "Nav4", link: "#" },
+            { key:"5", text: "Nav5", link: "#" },
+            { key:"6", text: "Nav6", link: "#" },
+            { key:"7", text: "Nav7", link: "#" },
+            { key:"8", text: "Nav8", link: "#" },
+            { key:"9", text: "Nav9", link: "#" },
+            { key:"10", text: "Nav10", link: "#" },
+            { key:"11", text: "Nav11", link: "#" },
+            { key:"12", text: "Nav12", link: "#" },
+            { key:"13", text: "Nav13", link: "#" },
+            { key:"14", text: "Nav14", link: "#" },
+            { key:"15", text: "Nav15", link: "#" }
         ];
 
     get fo1() {
@@ -61,4 +72,18 @@ export class ListSampleComponent {
     private filteredHandler = function(args) {
     }
 
+    private onLeftPan(args) {
+        console.log("Left pan fired.");
+        console.log(args);
+    }
+
+    private onRightPan(args) {
+        console.log("Right pan fired.");
+        console.log(args);
+    }
+
+    private onPanStateChange(args) {
+        console.log("Pan state fired.");
+        console.log(args);
+    }
  }
