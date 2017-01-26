@@ -216,33 +216,25 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
             });
         }));
         
-        xit('should toggle on edge swipe gesture', done => {
+        it('should toggle on edge swipe gesture', (done) => {
             var fixture: ComponentFixture<TestComponentDI>,
-                resolver, drawer,
-                result = new Promise<any>( resolve => {
-                    resolver = (value?: any) => {
-                        resolve(value);
-                    };
-                } );
+                resolver, drawer;
+
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
                 expect(fixture.componentInstance.viewChild.isOpen).toEqual(false);
                 
                 //timeouts are +50 on the gesture to allow the swipe to be detected and triggered after the touches:
-
-                Simulator.gestures.swipe(document.body, { pos: [80, 10], duration: 100, deltaX: 250, deltaY: 0 });
-                return Observable.timer(150).toPromise();
+                return swipe(document.body, 80, 10, 100, 250, 0);
             })
             .then(function() {
                 expect(fixture.componentInstance.viewChild.isOpen).toEqual(false, "should ignore swipes too far away from the edge");
-                Simulator.gestures.swipe(document.body, { pos: [10, 10], duration: 150, deltaX: 250, deltaY: 0 });
-                return Observable.timer(200).toPromise();
+                return swipe(document.body, 10, 10, 150, 250, 0);
             })
             .then(function() {
                 expect(fixture.componentInstance.viewChild.isOpen).toEqual(true);
-                Simulator.gestures.swipe(document.body, { pos: [180, 10], duration: 150, deltaX: -180, deltaY: 0 });
-                return Observable.timer(200).toPromise();
+                return swipe(document.body, 180, 10, 150, -180, 0);
             })
             .then(function() {
                 expect(fixture.componentInstance.viewChild.isOpen).toEqual(false);
@@ -252,9 +244,9 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
                 console.log(reason);
                 done();
             });
-         });
+         }, 10000);
 
-         xit('should toggle on edge pan gesture', done => {
+         it('should toggle on edge pan gesture', (done) => {
             let navDrawer;
             var fixture: ComponentFixture<TestComponentDI>;
 
@@ -263,33 +255,30 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
                 fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
                 navDrawer = fixture.componentInstance.viewChild;
-
+                
                 expect(fixture.componentInstance.viewChild.isOpen).toEqual(false);
 
-                // not enough distance,  150 seems to be the minimum for hammer to register a pan event midpoint
-                Simulator.gestures.pan(document.body, { pos: [10, 10], duration: 150, deltaX: 20, deltaY: 0 });
-                return Observable.timer(100).toPromise();
-            })
+                var listener = navDrawer.renderer.listen(document.body, "panmove", () => {
+                    // mid gesture
+                    expect(navDrawer.drawer.classList).toContain("panning");
+                    expect(navDrawer.drawer.style.transform).toMatch(/translate3d\(-2\d\dpx, 0px, 0px\)/, "Drawer should be moving with the pan");
+                    listener();
+                })
+
+                return pan(document.body, 10, 10, 150, 20, 0);
+            })            
             .then(function() {
-                //mid gesture:
-                expect(navDrawer.drawer.classList).toContain("panning");
-                expect(navDrawer.drawer.style.transform).toMatch(/translate3d\(-2\d\dpx, 0px, 0px\)/, "Drawer should be moving with the pan");
-                return Observable.timer(50).toPromise();
-            }).then(function() {
                 expect(navDrawer.isOpen).toEqual(false, "should ignore too short pan");
-                //valid pan
-                Simulator.gestures.pan(document.body, { pos: [10, 10], duration: 100, deltaX: 200, deltaY: 0 });
-                return Observable.timer(100).toPromise();
+                // valid pan
+                return pan(document.body, 10, 10, 100, 200, 0);
             }).then(function() {
                 expect(navDrawer.isOpen).toEqual(true, "should open on valid pan");
                 // not enough distance, closing
-                Simulator.gestures.pan(document.body, { pos: [200, 10], duration: 100, deltaX: -100, deltaY: 0 });
-                return Observable.timer(100).toPromise();
+                return pan(document.body, 200, 10, 100, -20, 0);
             }).then(function() {
                 expect(navDrawer.isOpen).toEqual(true, "should remain open on too short pan");
                 // close
-                Simulator.gestures.pan(document.body, { pos: [250, 10], duration: 100, deltaX: -200, deltaY: 0 });
-                return Observable.timer(100).toPromise();
+                return pan(document.body, 250, 10, 100, -200, 0);
             }).then(function() {
                 expect(navDrawer.isOpen).toEqual(false, "should close on valid pan");
                 done();
@@ -297,7 +286,7 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
                 console.log(reason);
                 done();
             });
-         });
+         }, 10000);
          
         it('should update edge zone with mini width', async(() => {
             var template = '<ig-nav-drawer [miniWidth]="drawerMiniWidth" ><div class="ig-drawer-content"></div><div class="ig-drawer-mini-content"></div></ig-nav-drawer>',
@@ -370,9 +359,39 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
                 console.log(reason);
                 return Promise.reject(reason);
             });
-         });
-    });
+        });
 
+        function swipe(element, posX, posY, duration, deltaX, deltaY) {
+            var swipeOptions = { 
+                pos: [posX, posY], 
+                duration: duration, 
+                deltaX: deltaX, 
+                deltaY: deltaY 
+            };
+
+            return new Promise(function(resolve, reject) {
+                Simulator.gestures.swipe(element, swipeOptions, function() {
+                    resolve();
+                });
+            })
+        }
+
+        function pan(element, posX, posY, duration, deltaX, deltaY) {
+            var swipeOptions = { 
+                pos: [posX, posY], 
+                duration: duration, 
+                deltaX: deltaX, 
+                deltaY: deltaY 
+            };
+
+            return new Promise(function(resolve, reject) {
+                Simulator.gestures.pan(element, swipeOptions, function() {
+                    resolve();
+                });
+            })
+        }
+    }); 
+   
 
 @Component({
     selector: 'test-cmp',
