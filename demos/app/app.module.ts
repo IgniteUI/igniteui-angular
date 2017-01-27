@@ -18,6 +18,7 @@ import { DialogSampleModule } from "./dialog/sample.module";
 import { ProgressBarSampleModule } from "./progressbar/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
 import { IgxSnackbarSampleModule } from "./snackbar/sample.module";
+import { IgxCardSampleModule } from "./card/sample.module";
 import { routing } from "./app.routing";
 
 @NgModule({
@@ -39,6 +40,7 @@ import { routing } from "./app.routing";
         IgxSnackbarSampleModule,
         DialogSampleModule,
         IconSampleModule,
+        IgxCardSampleModule,
     ],
     declarations: [
         AppComponent,

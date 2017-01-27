@@ -1,0 +1,11 @@
+.card-list-container {
+    width: 600px;
+    height: 600px;
+    overflow-y: scroll;
+    display: inline-block;
+}
+
+.selected-visioner {
+    display: inline-block;
+    width: 700px;
+}

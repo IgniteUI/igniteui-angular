@@ -29,6 +29,7 @@ Current list of controls include:
 | **linear progress**    |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/progressbar/README.md)  |     |               |               |                                                                                                       |
 | **circular progress** |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/progressbar/README.md)  |     |               |               |                                                                                                       |
 | **icon**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/tree/master/src/icon/README.md)         |     |               |               |                                                                                                       |
+| **card**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/card/README.md)         |     |               |               |                                                                                                       |
 
 ## Setup
 From the root folder run:
