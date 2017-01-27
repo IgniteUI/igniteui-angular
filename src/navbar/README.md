@@ -1,7 +1,7 @@
 igx-navbar
 ----------
 
-**igx-snackbar** is position on top and represents current state and enables a user defined action.
+**igx-navbar** is position on top and represents current state and enables a user defined action.
 
 #Usage
 
