@@ -16,7 +16,7 @@ import { IgxRadioModule} from "./radio/radio.component";
 import { IgxSwitchModule} from "./switch/switch.component";
 import { IgxTabBarModule } from "./tabbar/tabbar.component";
 import { IgxCardModule } from "./card/card.component";
-import {IgxSnackbar} from "./snackbar/snackbar.component";
+import { IgxSnackbarModule } from "./snackbar/snackbar.component";
 
 @NgModule({
     imports: [
@@ -33,7 +33,8 @@ import {IgxSnackbar} from "./snackbar/snackbar.component";
         IgxRadioModule,
         IgxSwitchModule,
         IgxTabBarModule,
-        IgxCardModule
+        IgxCardModule,
+        IgxSnackbarModule
     ],
     exports: [
         IgxAvatarModule,
@@ -49,7 +50,7 @@ import {IgxSnackbar} from "./snackbar/snackbar.component";
         IgxRadioModule,
         IgxSwitchModule,
         IgxTabBarModule,
-        IgxSnackbar
+        IgxSnackbarModule
     ]
 })
 export class IgxComponentsModule {}
