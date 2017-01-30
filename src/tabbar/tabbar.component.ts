@@ -34,17 +34,20 @@ export class IgxTabBar implements AfterViewInit {
     }
    
     get selectedTab(): IgxTab {
-        var selectedTabs = this.tabs.filter((tab) => tab.isSelected);
+        if (this.tabs) {
+            var selectedTabs = this.tabs.filter((tab) => tab.isSelected);
 
-        if (selectedTabs.length) {
-            // insurance in case selectedTabs.length > 1 - take the last selected
-            return selectedTabs[selectedTabs.length - 1];
+            if (selectedTabs.length) {
+                // insurance in case selectedTabs.length > 1 - take the last selected
+                return selectedTabs[selectedTabs.length - 1];
+            }
         }
-        return null;
     }
 
-    get selectedIndex() : number {
-        return this.selectedTab ? this.selectedTab.index : undefined;
+    get selectedIndex(): number {
+        if (this.selectedTab) {
+            return this.selectedTab.index;
+        }        
     }
 
     @Input() alignment: string = "top";    
@@ -146,7 +149,7 @@ export class IgxTabPanel implements AfterViewInit {
         //tab.label = this.label;
         //tab.isDisabled = this.disabled;
 
-        this.cdr.detectChanges();
+        //this.cdr.detectChanges();
     }
 
     select() {
@@ -186,11 +189,19 @@ export class IgxTab {
     }
 
     select() {
+        if (this.isDisabled) {
+            return;
+        }
+
         this.isSelected = true;
         this.selectTab.emit({ tab: this });
     }
 
     deselect() {
+        if (this.isDisabled) {
+            return;
+        }
+
         this.isSelected = false;
         this.deselectTab.emit({ tab: this });
     }
