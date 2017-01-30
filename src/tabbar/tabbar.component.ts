@@ -1,4 +1,4 @@
-import { Component, Input, Output, ElementRef, ViewChild, ViewChildren, QueryList, ContentChildren, AfterViewInit, AfterContentInit, EventEmitter, NgModule, forwardRef } from '@angular/core';
+import { Component, Input, Output, ElementRef, ViewChild, ViewChildren, QueryList, ContentChildren, AfterViewInit, AfterContentInit, EventEmitter, NgModule, forwardRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from "@angular/common";
 
 @Component({
@@ -14,6 +14,8 @@ export class IgxTabBar implements AfterViewInit {
 
     private _INITIALLY_DISPLAYED_TABS_COUNT: number = 5;
     private _itemStyle: string = "igx-tab-bar-inner";
+
+    //_tabToCreate: IgxTab[];
 
     //private get _visibleTabs() {
     //    return this.tabs.length > this._INITIALLY_DISPLAYED_TABS_COUNT ? this.tabs.filter(tab => tab.index < this._INITIALLY_DISPLAYED_TABS_COUNT - 1) : this.tabs.toArray();
@@ -32,12 +34,12 @@ export class IgxTabBar implements AfterViewInit {
     }
    
     get selectedTab(): IgxTab {
-        //var selectedTabs = this.tabs.filter((tab) => tab.isSelected);
+        var selectedTabs = this.tabs.filter((tab) => tab.isSelected);
 
-        //if (selectedTabs.length) {
-        //    // insurance in case selectedTabs.length > 1 - take the last selected
-        //    return selectedTabs[selectedTabs.length - 1];
-        //}
+        if (selectedTabs.length) {
+            // insurance in case selectedTabs.length > 1 - take the last selected
+            return selectedTabs[selectedTabs.length - 1];
+        }
         return null;
     }
 
@@ -56,6 +58,7 @@ export class IgxTabBar implements AfterViewInit {
         this.tabPanels.forEach((panel) => {
             let tabListHeight = self.tabListHeight;
             panel.height = self._height - tabListHeight;
+
             if (self.alignment == "top") {
                 panel.marginTop = tabListHeight;
             } else if (self.alignment == "bottom") {
@@ -64,14 +67,14 @@ export class IgxTabBar implements AfterViewInit {
         });
 
         // initial selection
-        //if (!this.selectedTab) {
-        //    var selectableTabs = this.tabs.filter((tab) => !tab.isDisabled),
-        //        tab = selectableTabs[0];
+        if (!this.selectedTab) {
+            var selectableTabs = this.tabs.filter((tab) => !tab.isDisabled),
+                tab = selectableTabs[0];
 
-        //    if (tab) {
-        //        tab.select();
-        //    }
-        //}
+            if (tab) {
+                tab.select();
+            }
+        }
     }
 }
 
@@ -87,7 +90,7 @@ export class IgxTabBar implements AfterViewInit {
     }
 })
 
-export class IgxTabPanel {
+export class IgxTabPanel implements AfterViewInit {
     @ViewChild('tab_panel_container') _wrapper: ElementRef;
 
     private _itemStyle: string = "igx-tab-panel-inner";
@@ -120,24 +123,34 @@ export class IgxTabPanel {
             this._wrapper.nativeElement.style.marginTop = value + "px";
         }
     }
-    
-    //@Input() set label(value: string) {
-    //    //this._tabBar.tabs[this.index].label = value;
-    //};
 
-    //@Input() set icon(value: string) {
-    //    //this._tabBar.tabs[this.index].icon = value;
-    //};
+    @Input() label: string;
+    @Input() icon: string;
+    @Input() color: string;
+    @Input() disabled: boolean;
 
-    //@Input() set color(value: string) {
-    //    //this._tabBar.tabs[this.index].color = value;
-    //};
+    constructor(private _tabBar: IgxTabBar, private _element: ElementRef, private cdr: ChangeDetectorRef) {
+        //let tab = new IgxTab(_tabBar, null);
+        //tab.color = this.color;
+        //tab.icon = this.icon;
+        //tab.label = this.label;
+        //tab.isDisabled = this.disabled;
+        //_tabBar._tabToCreate.push(tab);
+    }
 
-    //@Input() set disabled(value: boolean) {
-    //    //this._tabBar.tabs[this.index].isDisabled = value !== undefined;
-    //};
+    ngAfterViewInit() {
+        let tab: IgxTab = this._tabBar.tabs.toArray()[this.index];
 
-    constructor(private _tabBar: IgxTabBar, private _element: ElementRef) {
+        //tab.color = this.color;
+        //tab.icon = this.icon;
+        //tab.label = this.label;
+        //tab.isDisabled = this.disabled;
+
+        this.cdr.detectChanges();
+    }
+
+    select() {
+        this._tabBar.tabs.toArray()[this.index].select();
     }
 }
 

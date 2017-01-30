@@ -1,7 +1,7 @@
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxTabBar, IgxTabPanel, IgxTab, IgxTabBarModule } from './tabbar.component';
-import { Component, ViewChild, ContentChildren } from '@angular/core';
+import { Component, ViewChild, ContentChildren, QueryList } from '@angular/core';
 
 describe("TabBar", function () {
     beforeEach(async(() => {
@@ -14,22 +14,28 @@ describe("TabBar", function () {
 
     it('should initialize igx-tab-bar, igx-tab-panel and igx-tab', () => {
         let fixture = TestBed.createComponent(TabBarTestComponent),
-            tabbar = fixture.componentInstance.tabbar;
+            tabbar = fixture.componentInstance.tabbar;        
+
+        expect(tabbar).toBeDefined();
+        expect(tabbar.tabPanels).toBeUndefined();
+        expect(tabbar.tabs).toBeUndefined();
+
+        fixture.detectChanges();
 
         expect(tabbar).toBeDefined();
         expect(tabbar instanceof IgxTabBar).toBeTruthy();
-        expect(tabbar.tabPanels instanceof Array).toBeTruthy();
+        expect(tabbar.tabPanels instanceof QueryList).toBeTruthy();
         expect(tabbar.tabPanels.length).toBe(3);
 
         for (let i = 0; i < tabbar.tabPanels.length; i++) {
-            expect(tabbar.tabPanels[i] instanceof IgxTabPanel).toBeTruthy();
+            expect(tabbar.tabPanels.toArray()[i] instanceof IgxTabPanel).toBeTruthy();
         }
 
-        expect(tabbar.tabs instanceof Array).toBeTruthy();
+        expect(tabbar.tabs instanceof QueryList).toBeTruthy();
         expect(tabbar.tabs.length).toBe(3);
 
         for (let i = 0; i < tabbar.tabs.length; i++) {
-            expect(tabbar.tabs[i] instanceof IgxTab).toBeTruthy();
+            expect(tabbar.tabs.toArray()[i] instanceof IgxTab).toBeTruthy();
         }
     });
 
@@ -91,32 +97,20 @@ describe("TabBar", function () {
         fixture.detectChanges();
         expect(tabbar.selectedIndex).toBe(1);
         expect(tabbar.selectedTab).toBe(tab2);
-        tabbar.select(0);
+        tab1.select();
 
-        fixture.detectChanges();
-        expect(tabbar.selectedIndex).toBe(0);
-        expect(tabbar.selectedTab).toBe(tab1);
-
-        // selected index is out of the range
-        tabbar.select(3);
         fixture.detectChanges();
         expect(tabbar.selectedIndex).toBe(0);
         expect(tabbar.selectedTab).toBe(tab1);
 
         // select disabled tab
         tab2.isDisabled = true;
-        tabbar.select(1);
+        tab2.select();
 
         fixture.detectChanges();
         expect(tabbar.selectedIndex).toBe(0);
         expect(tabbar.selectedTab).toBe(tab1);
 
-        // deselected index is out of the range
-        tabbar.deselect(3);
-
-        fixture.detectChanges();
-        expect(tabbar.selectedIndex).toBe(0);
-        expect(tabbar.selectedTab).toBe(tab1);
         tab1.deselect();
 
         fixture.detectChanges();
@@ -124,30 +118,30 @@ describe("TabBar", function () {
         expect(tabbar.selectedTab).toBeFalsy();
     });
 
-    it('should remove tab', () => {
-        let fixture = TestBed.createComponent(TabBarTestComponent),
-            tabbar = fixture.componentInstance.tabbar,
-            tabs = tabbar.tabPanels,
-            lastTab;
+    //it('should remove tab', () => {
+    //    let fixture = TestBed.createComponent(TabBarTestComponent),
+    //        tabbar = fixture.componentInstance.tabbar,
+    //        tabs = tabbar.tabPanels,
+    //        lastTab;
 
-        expect(tabs.length).toBe(3);
-        // remove tab outside the range
-        tabbar.remove(5);
+    //    expect(tabs.length).toBe(3);
+    //    // remove tab outside the range
+    //    tabbar.remove(5);
 
-        fixture.detectChanges();
-        expect(tabs.length).toBe(3);
-        lastTab = tabs[tabs.length - 1];
-        tabbar.remove(lastTab.index);
+    //    fixture.detectChanges();
+    //    expect(tabs.length).toBe(3);
+    //    lastTab = tabs[tabs.length - 1];
+    //    tabbar.remove(lastTab.index);
 
-        fixture.detectChanges();
-        expect(tabs.length).toBe(2);
-        expect(tabs.indexOf(lastTab)).toBe(-1); // the tab is removed and is not part of the tab array
-        tabbar.remove(0);
+    //    fixture.detectChanges();
+    //    expect(tabs.length).toBe(2);
+    //    expect(tabs.indexOf(lastTab)).toBe(-1); // the tab is removed and is not part of the tab array
+    //    tabbar.remove(0);
 
-        fixture.detectChanges();
-        expect(tabs.length).toBe(1);
-        expect(tabs[0].index).toBe(0);
-    });
+    //    fixture.detectChanges();
+    //    expect(tabs.length).toBe(1);
+    //    expect(tabs[0].index).toBe(0);
+    //});
 
     it('should calculate height and marginTop on top alignment', () => {
         let fixture = TestBed.createComponent(TabBarTestComponent),
