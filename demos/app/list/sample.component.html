@@ -40,7 +40,8 @@
 </div>
 <div class="wrapper">
     <h4>Non-header List with options</h4>
-    <igx-list>
+    <igx-list [allowRightPanning]="true" [allowLeftPanning]="true" 
+        (onLeftPan)="onLeftPan($event)" (onRightPan)="onRightPan($event)" (onPanStateChange)="onPanStateChange($event)">
     <igx-list-item *ngFor="let navItem of navItems; let index = index" [options]="options">
         <div>
             {{navItem.text}}
