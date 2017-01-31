@@ -57,7 +57,7 @@ describe('Avatar', function () {
         expect(avatar.isRounded).toBeFalsy();
 
         // For ARIA
-        expect(spanEl[0].getAttribute("role") === "icon").toBeTruthy();
+        expect(spanEl[0].getAttribute("aria-roledescription") === "icon type avatar").toBeTruthy();
         expect(avatar.element_ref.nativeElement.getElementsByTagName("div")[0].getAttribute("aria-label") === "avatar").toBeTruthy();
     });
 
@@ -73,8 +73,8 @@ describe('Avatar', function () {
         expect(avatar.isRounded).toBeTruthy();
 
         // For ARIA
-        expect(avatar.image.nativeElement.getAttribute("role") === "image").toBeTruthy();
-        expect(avatar.role === "image").toBeTruthy();
+        expect(avatar.image.nativeElement.getAttribute("aria-roledescription") === "image type avatar").toBeTruthy();
+        expect(avatar.roleDescription === "image type avatar").toBeTruthy();
         expect(avatar.element_ref.nativeElement.getElementsByTagName("div")[0].getAttribute("aria-label") === "avatar").toBeTruthy();
     });
 
@@ -83,8 +83,8 @@ describe('Avatar', function () {
         fixture.detectChanges();
         let avatar = fixture.componentInstance.avatar;
 
-        expect(avatar.image.nativeElement.getAttribute("role") === "initials").toBeTruthy();
-        expect(avatar.role === "initials").toBeTruthy();
+        expect(avatar.image.nativeElement.getAttribute("aria-roledescription") === "initials type avatar").toBeTruthy();
+        expect(avatar.roleDescription === "initials type avatar").toBeTruthy();
         expect(avatar.element_ref.nativeElement.getElementsByTagName("div")[0].getAttribute("aria-label") === "avatar").toBeTruthy();
     });
 });

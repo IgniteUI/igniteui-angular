@@ -62,9 +62,8 @@ describe('Badge', function () {
         let badge = fixture.componentInstance.badge;
         let divContainer = fixture.elementRef.nativeElement.querySelectorAll("div.igx-badge__circle");
 
-        expect(badge.role === "successbadge").toBeTruthy();
-        expect(divContainer[0].getAttribute("role") === "successbadge").toBeTruthy();
-        expect(divContainer[0].getElementsByTagName("i")[0].getAttribute("role") === "icon").toBeTruthy();
+        expect(badge.roleDescription === "success type badge with icon type person").toBeTruthy();
+        expect(divContainer[0].getAttribute("aria-roledescription") === "success type badge with icon type person").toBeTruthy();
     });
 });
 
