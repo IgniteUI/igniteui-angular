@@ -15,7 +15,7 @@ export class IgxTabBar implements AfterViewInit, AfterContentChecked {
     //private _INITIALLY_DISPLAYED_TABS_COUNT: number = 5;
     private _itemStyle: string = "igx-tab-bar-inner";
 
-    selectedIndex: number;
+    selectedIndex: number = -1;
 
     //private get _visibleTabs() {
     //    return this.tabs.length > this._INITIALLY_DISPLAYED_TABS_COUNT ? this.tabs.filter(tab => tab.index < this._INITIALLY_DISPLAYED_TABS_COUNT - 1) : this.tabs.toArray();
@@ -48,18 +48,6 @@ export class IgxTabBar implements AfterViewInit, AfterContentChecked {
     }
 
     ngAfterContentChecked() {
-        //var self = this;
-
-        //this.panels.forEach((panel) => {
-        //    let tabListHeight = self.tabListHeight;
-        //    panel.height = self._height - tabListHeight;
-
-        //    if (self.alignment == "top") {
-        //        panel.marginTop = tabListHeight;
-        //    } else if (self.alignment == "bottom") {
-        //        panel.marginTop = 0;
-        //    }
-        //});
 
         this.panels.forEach((panel) => {
             let tabListHeight = this.tabListHeight;
@@ -71,21 +59,12 @@ export class IgxTabBar implements AfterViewInit, AfterContentChecked {
                 panel.marginTop = 0;
             }
         });
-
-        //if (!this.selectedTab) {
-        //    let selectablePanels = this.panels.filter((panel) => !panel.isDisabled),
-        //        panel = selectablePanels[0];
-
-        //    if (panel) {
-        //        panel.select();
-        //    }
-        //}
     }
 
     ngAfterViewInit() {            
 
         // initial selection
-        //setTimeout(() => {
+        setTimeout(() => {
             if (!this.selectedTab) {
                 var selectableTabs = this.tabs.filter((tab) => !tab.isDisabled),
                     tab = selectableTabs[0];
@@ -94,7 +73,7 @@ export class IgxTabBar implements AfterViewInit, AfterContentChecked {
                     tab.select();
                 }
             }
-        //}, 0);
+        }, 0);
     }
 
 
@@ -128,8 +107,6 @@ export class IgxTabBar implements AfterViewInit, AfterContentChecked {
 })
 
 export class IgxTabPanel {
-    //@ViewChild('tab_panel_container') _panelTemplateContainer: ElementRef;
-
     private _itemStyle: string = "igx-tab-panel-inner";
 
     isSelected: boolean = false;
@@ -142,47 +119,9 @@ export class IgxTabPanel {
         }        
     }
 
-    //private getPanelTemplateContainerStyle() {
-    //    if (this._panelTemplateContainer && this._panelTemplateContainer.nativeElement) {
-    //        return this._panelTemplateContainer.nativeElement.style;
-    //    }
-    //}
-
     get index() {
         return this._tabBar.panels.toArray().indexOf(this);
     }    
-
-    //get height() {
-    //    var style = this.getPanelTemplateContainerStyle();
-
-    //    if (style) {
-    //        return style.height;
-    //    }        
-    //}
-
-    //set height(value: number) {
-    //    var style = this.getPanelTemplateContainerStyle();
-
-    //    if (style) {
-    //        style.height = value + "px";
-    //    }
-    //}
-
-    //get marginTop() {
-    //    var style = this.getPanelTemplateContainerStyle();
-
-    //    if (style) {
-    //        return style.marginTop;
-    //    }
-    //}
-
-    //set marginTop(value: number) {
-    //    var style = this.getPanelTemplateContainerStyle();
-
-    //    if (style) {
-    //        style.marginTop = value + "px";
-    //    }
-    //}
     
     @Input() label: string;
     @Input() icon: string;
@@ -193,7 +132,7 @@ export class IgxTabPanel {
     }
 
     select() {
-        if (this.isDisabled && this._tabBar.selectedIndex == this.index) {
+        if (this.isDisabled || this._tabBar.selectedIndex == this.index) {
             return;
         }
 
@@ -202,7 +141,8 @@ export class IgxTabPanel {
     }
 
     deselect() {
-        if (this.isDisabled) {
+        // Cannot deselect the selected tab - this will mean that there will be not selected tab left
+        if (this.isDisabled || this._tabBar.selectedTab.index == this.index) {
             return;
         }
 
@@ -219,20 +159,11 @@ export class IgxTabPanel {
     templateUrl: 'tab.component.html',
     host: {
         'role': "tab",
-        'class': "igx-tab-inner__menu-item",
-        //'(click)': "select()",
-        //'[attr.aria-disabled]': "isDisabled",
-        //'[attr.aria-selected]': "isSelected",
-        //'[attr.aria-label]': "label",
-        //'[class.igx-tab-bar-inner__menu-item--selected]': "isSelected",
-        //'[class.igx-tab-bar-inner__menu-item--disabled]': "isDisabled"
+        'class': "igx-tab-inner__menu-item"
     }
 })
 
 export class IgxTab {
-    //@Input() label: string;
-    //@Input() icon: string;
-    //@Input() color: string;
     @Input() relatedPanel: IgxTabPanel;
 
     private _changesCount: number = 0; // changes and updates accordingly applied to the tab.       
@@ -256,10 +187,6 @@ export class IgxTab {
 
         return false;
     };
-
-    //get relatedPanel(): IgxTabPanel {
-    //    return this._tabBar.panels.toArray()[this.index];
-    //}    
 
     get index(): number {
         return this._tabBar.tabs.toArray().indexOf(this);
