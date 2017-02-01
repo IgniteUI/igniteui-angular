@@ -1,17 +1,15 @@
 <div>
     <ng-content></ng-content>
 </div>	
-<div #tablist class="{{_itemStyle}}__menu {{_itemStyle}}__menu--{{alignment}}" role="tablist" aria-orientation="horizontal">
-    <igx-tab *ngFor="let panel of tabPanels" 
-             [label]="panel.label"
-             [icon]="panel.icon"
-             [color]="panel.color"
-             [isDisabled]="disabled"
-             [class.igx-tab-bar-inner__menu-item--selected]="panel.isSelected" 
+<div  #tablist class="{{_itemStyle}}__menu {{_itemStyle}}__menu--{{alignment}}" role="tablist" aria-orientation="horizontal">
+    <igx-tab *ngFor="let panel of panels"
+             [attr.aria-label]= "panel.label"
+             [attr.aria-disabled]="panel.isDisabled"
+             [attr.aria-selected]="panel.isSelected"
+             [class.igx-tab-bar-inner__menu-item--selected]="panel.isSelected"
              [class.igx-tab-bar-inner__menu-item--disabled]="panel.isDisabled"
-             [attr.aria-disabled]="panel.isDisabled" 
-             [attr.aria-selected]="panel.isSelected" 
-             [attr.aria-label]="panel.label"
+             [relatedPanel]="panel"
+             (click)= "panel.select()"     
              role="tab" >
     </igx-tab>
 </div>

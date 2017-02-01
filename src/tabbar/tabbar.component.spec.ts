@@ -107,30 +107,28 @@ describe("TabBar", function () {
         expect(tabbar.selectedTab).toBe(tab1);
         tab2.select();
 
-        // TODO: update next asserts
+        fixture.detectChanges();
+        expect(tabbar.selectedIndex).toBe(1);
+        expect(tabbar.selectedTab).toBe(tab2);
+        tab1.select();
 
-        //fixture.detectChanges();
-        //expect(tabbar.selectedIndex).toBe(1);
-        //expect(tabbar.selectedTab).toBe(tab2);
-        //tab1.select();
+        fixture.detectChanges();
+        expect(tabbar.selectedIndex).toBe(0);
+        expect(tabbar.selectedTab).toBe(tab1);
 
-        //fixture.detectChanges();
-        //expect(tabbar.selectedIndex).toBe(0);
-        //expect(tabbar.selectedTab).toBe(tab1);
+        // select disabled tab
+        tab2.isDisabled = true;
+        tab2.select();
 
-        //// select disabled tab
-        //tab2.isDisabled = true;
-        //tab2.select();
+        fixture.detectChanges();
+        expect(tabbar.selectedIndex).toBe(0);
+        expect(tabbar.selectedTab).toBe(tab1);
 
-        //fixture.detectChanges();
-        //expect(tabbar.selectedIndex).toBe(0);
-        //expect(tabbar.selectedTab).toBe(tab1);
+        tab1.deselect();
 
-        //tab1.deselect();
-
-        //fixture.detectChanges();
-        //expect(tabbar.selectedIndex).toBeFalsy();
-        //expect(tabbar.selectedTab).toBeFalsy();
+        fixture.detectChanges();
+        expect(tabbar.selectedIndex).toBeFalsy();
+        expect(tabbar.selectedTab).toBeFalsy();
     });
 
     //it('should remove tab', () => {
