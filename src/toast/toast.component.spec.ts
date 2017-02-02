@@ -5,7 +5,7 @@ import {By} from "@angular/platform-browser";
 
 var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
-fdescribe('IgxToast', () => {
+describe('IgxToast', () => {
     beforeEach(async(() => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000;
         TestBed.configureTestingModule({
@@ -22,7 +22,7 @@ fdescribe('IgxToast', () => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = oldTimeout;
     });
 
-    fit('should properly initialize properties', async(() => {
+    it('should properly initialize properties', async(() => {
         TestBed.compileComponents().then(() => {
             let fixture = TestBed.createComponent(ToastIntializeTestComponent);
             fixture.detectChanges();
@@ -40,7 +40,7 @@ fdescribe('IgxToast', () => {
         });
     }));
 
-    fit('should change toast position to middle', async(() => {
+    it('should change toast position to middle', async(() => {
         TestBed.compileComponents().then(() => {
             let fixture = TestBed.createComponent(ToastIntializeTestComponent);
             fixture.componentInstance.toast.position = IgxToastPosition.Middle;
@@ -54,7 +54,7 @@ fdescribe('IgxToast', () => {
         });
     }));
 
-    fit('should change toast position to top', async(() => {
+    it('should change toast position to top', async(() => {
         TestBed.compileComponents().then(() => {
             let fixture = TestBed.createComponent(ToastIntializeTestComponent);
             fixture.componentInstance.toast.position = IgxToastPosition.Top;
@@ -68,7 +68,7 @@ fdescribe('IgxToast', () => {
         });
     }));
 
-    fit('should change toast position something else should be undefined', async(() => {
+    it('should change toast position something else should be undefined', async(() => {
         TestBed.compileComponents().then(() => {
             let fixture = TestBed.createComponent(ToastIntializeTestComponent);
             fixture.componentInstance.toast.position = 5;
@@ -85,7 +85,7 @@ fdescribe('IgxToast', () => {
         });
     }));
 
-    fit('should auto hide 10 seconds after is open', (done) => {
+    it('should auto hide 10 seconds after is open', (done) => {
         TestBed.compileComponents().then(() => {
             let fixture = TestBed.createComponent(ToastIntializeTestComponent);
             fixture.detectChanges();
@@ -108,7 +108,7 @@ fdescribe('IgxToast', () => {
         });
     });
 
-    fit('should not auto hide seconds after is open', (done) => {
+    it('should not auto hide seconds after is open', (done) => {
         TestBed.compileComponents().then(() => {
             let fixture = TestBed.createComponent(ToastIntializeTestComponent);
             fixture.detectChanges();
