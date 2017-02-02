@@ -102,6 +102,8 @@ export class IgxTabBar implements AfterViewInit, AfterContentChecked {
     templateUrl: 'tab-panel.component.html',
     host: {
         'role': "tabpanel",
+        '[id]': "'igx-tab-panel-' + index",
+        '[attr.aria-labelledby]': "'igx-tab-' + index",
         '[class.selected]': "isSelected"
     }
 })
