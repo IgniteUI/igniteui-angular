@@ -38,7 +38,7 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/progressbar',
+        redirectTo: '/card',
         pathMatch: 'full'
     },
     {
