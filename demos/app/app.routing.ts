@@ -13,6 +13,7 @@ import { ProgressbarSampleComponent } from "./progressbar/progressbarsample.comp
 import { IconSampleComponent } from "./icon/sample.component";
 import { IgxSnackbarSampleComponent } from "./snackbar/sample.component";
 import { IgxCardSampleComponent } from "./card/sample.component";
+import {IgxToastSampleComponent} from "./toast/sample.component";
 
 const appRoutes: Routes = [
     {
@@ -37,7 +38,7 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/progressbar',
+        redirectTo: '/card',
         pathMatch: 'full'
     },
     {
@@ -55,6 +56,10 @@ const appRoutes: Routes = [
     {
         path: "snackbar",
         component: IgxSnackbarSampleComponent
+    },
+    {
+        path: "toast",
+        component: IgxToastSampleComponent
     },
     {
         path: "dialog",

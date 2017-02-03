@@ -11,6 +11,60 @@ export class IgxCardSampleComponent implements OnInit {
 
     public selectedVisioner: Visioner;
 
+    private nyc = {
+        title: 'New York City',
+        subtitle: 'City in New York',
+        media: {
+            image: 'demos/app/card/images/media/ny.jpg'
+        },
+        content: 'New York City comprises 5 boroughs sitting where the Hudson River meets the Atlantic Ocean. At its core is Manhattan, a densely populated borough that’s among the world’s major commercial, financial and cultural centers.'
+    }
+
+    private forest = {
+        title: 'The Ice Forest',
+        media: {
+            image: 'demos/app/card/images/media/the_red_ice_forest.jpg'
+        }
+    }
+
+    private yosemite = {
+        title: 'Incipient Dawn',
+        subtitle: 'Yosemite National Park',
+        media: {
+            image: 'demos/app/card/images/media/yosemite.jpg'
+        }
+    }
+
+    private rosberg = {
+        title: 'Nico Rosberg',
+        subtitle: 'Racing Driver',
+        content: 'Nico Erik Rosberg is a German former Formula One racing driver and current Formula One World Champion who drove for Williams F1 and Mercedes AMG Petronas under the German flag.'
+    }
+
+    private monuments = {
+        media: {
+            image: 'demos/app/card/images/media/monuments.jpg'
+        }   
+    }
+
+    private audi = {
+        avatar: 'demos/app/card/images/avatars/rupert_stadler.jpg',
+        title: 'Rupert Stadler',
+        subtitle: 'January 30, 2017',
+        media: {
+            image: 'demos/app/card/images/media/audi_tt.jpg'
+        }
+    }
+
+    private alicia = {
+        avatar: 'demos/app/card/images/avatars/alicia_keys.jpg',
+        title: 'HERE',
+        subtitle: 'by Alicia Keys',
+        media: {
+            image: 'demos/app/card/images/media/here_media.jpg'
+        }
+    }
+
     public ngOnInit(): void {
         this.visioners = [
             new Visioner("Bill Gates",

@@ -1,0 +1,8 @@
+<igx-toast #toast
+    message="Something happened"
+    [position]="toastPosition"
+    (onShowing)="onShowing($event)">
+</igx-toast>
+
+<button igxButton (click)="toast.show()">Show</button>
+<button igxButton (click)="toast.hide()">Hide</button>
