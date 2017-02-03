@@ -25,3 +25,4 @@ export * from './directives/ripple.directive';
 export * from './badge/badge.component';
 export * from './snackbar/snackbar.component';
 export * from './card/card.component';
+export * from './toast/toast.component';
