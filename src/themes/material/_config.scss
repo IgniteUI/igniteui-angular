@@ -308,6 +308,9 @@ $card-heading-compact-padding: em(16px, 16px);
 $card-content-padding: em(16px, 16px);
 $card-actions-padding: em(8px, 16px);
 
+
+// Transitions
+$card-transitions: box-shadow 0.3s cubic-bezier(.25,.8,.25,1);
 /* 9. Fonts
    ========================================================================== */
 $titillium-font-path: 'fonts/titillium/' !default;
