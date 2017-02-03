@@ -1,24 +1,21 @@
-import { NgModule, Component, Input, Output, ElementRef, ViewChild, ViewChildren, QueryList, ContentChildren, AfterViewInit, EventEmitter, forwardRef, ChangeDetectorRef } from '@angular/core';
+import { NgModule, Component, Input, Output, ElementRef, ViewChild, ViewChildren, QueryList, ContentChildren, AfterViewInit, AfterContentChecked, EventEmitter, forwardRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from "@angular/common";
 
 @Component({
     selector: 'igx-tab-bar',
     moduleId: module.id, // commonJS standard
-    templateUrl: 'tab-bar-content.component.html',
-    //host: {
-    //    '(selectTab)': 'selectedTabHandler($event)'
-    //}
+    templateUrl: 'tab-bar-content.component.html'
 })
 
-export class IgxTabBar implements AfterViewInit {
+export class IgxTabBar implements AfterViewInit, AfterContentChecked {
     @ViewChild('tablist') _tabList: ElementRef;
     @ViewChildren(forwardRef(() => IgxTab)) tabs: QueryList<IgxTab>;
-    @ContentChildren(forwardRef(() =>IgxTabPanel)) tabPanels: QueryList<IgxTabPanel>;
+    @ContentChildren(forwardRef(() =>IgxTabPanel)) panels: QueryList<IgxTabPanel>;
 
-    private _INITIALLY_DISPLAYED_TABS_COUNT: number = 5;
+    //private _INITIALLY_DISPLAYED_TABS_COUNT: number = 5;
     private _itemStyle: string = "igx-tab-bar-inner";
 
-    selectedIndex: number;
+    selectedIndex: number = -1;
 
     //private get _visibleTabs() {
     //    return this.tabs.length > this._INITIALLY_DISPLAYED_TABS_COUNT ? this.tabs.filter(tab => tab.index < this._INITIALLY_DISPLAYED_TABS_COUNT - 1) : this.tabs.toArray();
@@ -44,53 +41,56 @@ export class IgxTabBar implements AfterViewInit {
 
     @Input() alignment: string = "top";    
 
-    @Output() selectTab = new EventEmitter();
-    @Output() deselectTab = new EventEmitter();
+    @Output() onTabSelected = new EventEmitter();
+    @Output() onTabDeselected = new EventEmitter();
 
     constructor(private _element: ElementRef) {
     }
 
-    ngAfterViewInit() {
-        var self = this;
+    ngAfterContentChecked() {
 
-        this.tabPanels.forEach((panel) => {
-            let tabListHeight = self.tabListHeight;
-            panel.height = self._height - tabListHeight;
+        this.panels.forEach((panel) => {
+            let tabListHeight = this.tabListHeight;
+            panel.height = this._height - tabListHeight;
 
-            if (self.alignment == "top") {
+            if (this.alignment == "top") {
                 panel.marginTop = tabListHeight;
-            } else if (self.alignment == "bottom") {
+            } else if (this.alignment == "bottom") {
                 panel.marginTop = 0;
             }
         });
+    }
+
+    ngAfterViewInit() {            
 
         // initial selection
-        if (!this.selectedTab) {
-            var selectableTabs = this.tabs.filter((tab) => !tab.isDisabled),
-                tab = selectableTabs[0];
+        setTimeout(() => {
+            if (!this.selectedTab) {
+                var selectableTabs = this.tabs.filter((tab) => !tab.isDisabled),
+                    tab = selectableTabs[0];
 
-            if (tab) {
-                tab.select();
+                if (tab) {
+                    tab.select();
+                }
             }
-        }
+        }, 0);
     }
 
-    selectedTabCallback(tab: IgxTab) {
-        let selectedIndex = tab.index;
 
-        this.selectedIndex = selectedIndex;
+    selectedTabCallback(selectedIndex: number) {
+        this.selectedIndex = selectedIndex;               
 
-        this.selectTab.emit({ tab: tab });       
-
-        this.tabs.forEach((t) => {
-            if (t.index != selectedIndex) {
-                t.deselect();                
+        this.panels.forEach((p) => {
+            if (p.index != selectedIndex) {
+                p.deselect();                
             }
         });
+
+        this.onTabSelected.emit({ tab: this.tabs[selectedIndex], panel: this.panels[selectedIndex] });
     }
 
-    deselectedTabCallback(tab: IgxTab) {
-        this.deselectTab.emit({ tab: tab });
+    deselectedTabCallback(index: number) {
+        this.onTabDeselected.emit({ tab: this.tabs[index], panel: this.panels[index] });
     }
 }
 
@@ -102,71 +102,54 @@ export class IgxTabBar implements AfterViewInit {
     templateUrl: 'tab-panel.component.html',
     host: {
         'role': "tabpanel",
+        '[id]': "'igx-tab-panel-' + index",
+        '[attr.aria-labelledby]': "'igx-tab-' + index",
         '[class.selected]': "isSelected"
     }
 })
 
-export class IgxTabPanel implements AfterViewInit {
-    @ViewChild('tab_panel_container') _wrapper: ElementRef;
-
+export class IgxTabPanel {
     private _itemStyle: string = "igx-tab-panel-inner";
+
     isSelected: boolean = false;
+    height: number | string;
+    marginTop: number | string;
 
-    get index() {
-        return this._tabBar.tabPanels.toArray().indexOf(this);
-    }    
-
-    get height() {
-        if (this._wrapper && this._wrapper.nativeElement) {
-            return this._wrapper.nativeElement.style.height;
+    get relatedTab(): IgxTab {
+        if (this._tabBar.tabs) {
+            return this._tabBar.tabs.toArray()[this.index];
         }        
     }
 
-    set height(value: number) {
-        if (this._wrapper && this._wrapper.nativeElement) {
-            this._wrapper.nativeElement.style.height = value + "px";
-        }
-    }
-
-    get marginTop() {
-        if (this._wrapper && this._wrapper.nativeElement) {
-            return this._wrapper.nativeElement.style.marginTop;
-        }
-    }
-
-    set marginTop(value: number) {
-        if (this._wrapper && this._wrapper.nativeElement) {
-            this._wrapper.nativeElement.style.marginTop = value + "px";
-        }
-    }
-
+    get index() {
+        return this._tabBar.panels.toArray().indexOf(this);
+    }    
+    
     @Input() label: string;
     @Input() icon: string;
     @Input() color: string;
-    @Input() disabled: boolean;
+    @Input() isDisabled: boolean;
 
-    constructor(private _tabBar: IgxTabBar, private _element: ElementRef, private cdr: ChangeDetectorRef) {
-        //let tab = new IgxTab(_tabBar, null);
-        //tab.color = this.color;
-        //tab.icon = this.icon;
-        //tab.label = this.label;
-        //tab.isDisabled = this.disabled;
+    constructor(private _tabBar: IgxTabBar, private _element: ElementRef) {
     }
 
-    ngAfterViewInit() {
-        let tab: IgxTab;
+    select() {
+        if (this.isDisabled || this._tabBar.selectedIndex == this.index) {
+            return;
+        }
 
-        if (this._tabBar.tabs)
-        {
-            //tab = this._tabBar.tabs.toArray()[this.index];
+        this.isSelected = true;
+        this._tabBar.selectedTabCallback(this.index);
+    }
 
-            //tab.color = this.color;
-            //tab.icon = this.icon;
-            //tab.label = this.label;
-            //tab.isDisabled = this.disabled;
+    deselect() {
+        // Cannot deselect the selected tab - this will mean that there will be not selected tab left
+        if (this.isDisabled || this._tabBar.selectedTab.index == this.index) {
+            return;
+        }
 
-            //this.cdr.detectChanges();
-        }         
+        this.isSelected = false;
+        this._tabBar.deselectedTabCallback(this.index);
     }
 }
 
@@ -178,24 +161,34 @@ export class IgxTabPanel implements AfterViewInit {
     templateUrl: 'tab.component.html',
     host: {
         'role': "tab",
-        'class': "igx-tab-inner__menu-item",
-        '(click)': "select()"
+        'class': "igx-tab-inner__menu-item"
     }
 })
 
 export class IgxTab {
-    @Input() label: string;
-    @Input() icon: string;
-    @Input() color: string;
-    @Input() isDisabled: boolean;
+    @Input() relatedPanel: IgxTabPanel;
 
-    //label: string;
-    //icon: string;
-    //color: string;
-    //isDisabled: boolean;
-    isSelected: boolean;   
+    private _changesCount: number = 0; // changes and updates accordingly applied to the tab.       
 
-    private _changesCount: number = 0; // changes and updates accordingly applied to the tab.
+    get isDisabled(): boolean {
+        var panel = this.relatedPanel;
+
+        if (panel) {
+            return panel.isDisabled;
+        }
+
+        return false;
+    }
+
+    get isSelected(): boolean {
+        var panel = this.relatedPanel;
+
+        if(panel) {
+            return panel.isSelected;
+        }           
+
+        return false;
+    };
 
     get index(): number {
         return this._tabBar.tabs.toArray().indexOf(this);
@@ -205,21 +198,11 @@ export class IgxTab {
     }
 
     select() {
-        if (this.isDisabled && this._tabBar.selectedIndex == this.index) {
-            return;
-        }
-
-        this.isSelected = true;
-        this._tabBar.selectedTabCallback(this);
+        this.relatedPanel.select();
     }
 
     deselect() {
-        if (this.isDisabled) {
-            return;
-        }
-
-        this.isSelected = false;
-        this._tabBar.deselectedTabCallback(this); 
+        this.relatedPanel.deselect(); 
     }
 }
 
