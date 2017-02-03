@@ -8,7 +8,7 @@
         box-shadow: $card-shadow-hover;
     }
 
-    transition: box-shadow 0.25s ease;
+    transition: $card-transitions;
 }
 
 %igx-card-header {
@@ -42,7 +42,7 @@
 }
 
 %igx-card-content {
-    flex: 1 0 inherit;
+    flex: 1 0 100%;
     padding: $card-content-padding;
 }
 
@@ -76,7 +76,7 @@
 %igx-card-actions-bgroup {
     display: flex;
     flex-flow: row nowrap;
-    [igxButton="flat"] ~ [igxButton="flat"] {
+    [igxButton] ~ [igxButton] {
         margin-left: 8px;
     }
 }
