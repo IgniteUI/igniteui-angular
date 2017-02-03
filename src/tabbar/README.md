@@ -11,7 +11,7 @@ IgxTabBar provides two observable collections (QueryLists): one with panels and 
 The children components of the IgxTabBar are: 
 
 
--  *IgxTabPanel* - represent the wrapper of the content need to be displayed
+-  *IgxTabPanel* - represents the wrapper of the content need to be displayed
 - *IgxTab* - button that triggers displaying of the associated panel
 
 Each tab (IgxTab) is related to particular panel (IgxTabPanel). When tab is clicked, the associated panel is selected and visualized into a single container.
@@ -28,46 +28,50 @@ Only one panel can be selected at a time. Always one panel should be selected.
 - `onTabSelected` - Fired when new tab is selected
 - `onTabDeselected` - Fired when tab is deselected
 
-
 ----------
 
 #IgxTabPanel
 
 #### Category
-_Components_
+_Child components_
 
 ## Description
-_Child component of IgxTabBar, that represent the container of the content need to be displayed._
+_Child component of IgxTabBar, that represents the container of the content need to be displayed._
 
 
 ## Properties
 - `isSelected` - Determines whether the panel is selected
 - `isDisabled` - Determines whether the panel is disabled
 - `index` - Gets the index of a panel in the panel collection
-- `relatedTab` - Get the tab associated with a panel
-
+- `relatedTab` - Get the tab, associated with the panel
+- `label` - defines the label on the associated tab
+- `icon` - defines the icon on the associated tab
+- `color` - defines the color on the associated tab
 
 ## Methods
 
+- `select` - select the panel and the associated tab
+- `deselect` - deselect the panel and the associated tab
 
 ----------
 
 #IgxTab
 
 #### Category
-_Components_
+_Child components_
 
 ## Description
-_Child component of IgxTabBar, that represent the button that triggers displaying of the associated panel._
-
+_Child component of IgxTabBar, that represents the button that triggers displaying of the associated panel._
 
 ## Properties
-
+- `isDisabled` - Determines whether the tab is disabled
+- `isSelected` - Determines whether the tab is selected
+- `index` - Gets the index of a tab in the tab collection
+- `relatedPanel` - Get the panel, associated with the tab
 
 ## Methods
-
-
-
+- `select` - select the tab and the associated panel
+- `deselect` - deselect the tab and the associated panel
 
 ----------
 ## Usage
