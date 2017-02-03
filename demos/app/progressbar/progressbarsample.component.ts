@@ -67,7 +67,7 @@ export class ProgressbarSampleComponent {
 
     constructor() {
         this.currentValue = 0;
-        // this.generateNewProgressValues();
+        this.generateNewProgressValues();
     }
 
     private generateNewProgressValues() {
