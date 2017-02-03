@@ -1,0 +1,96 @@
+%igx-card-display {
+    display: flex;
+    flex-flow: row wrap;
+    box-shadow: $card-shadow;
+    overflow: hidden;
+    border-radius: $card-border-radius;
+    &:hover {
+        box-shadow: $card-shadow-hover;
+    }
+
+    transition: $card-transitions;
+}
+
+%igx-card-header {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    flex: 1 0 auto;
+    padding: $card-heading-padding;
+}
+
+%igx-card-header--compact {
+    padding: $card-heading-compact-padding;
+}
+
+%igx-card-header-title {
+    flex: 1 0 100%;
+    font-size: $card-title-fontSize;
+    line-height: $card-title-line-height;
+    margin: 0;
+}
+
+%igx-card-header-title--small {
+    font-size: $card-subtitle-fontSize;
+}
+
+%igx-card-header-subtitle {
+    color: $card-subtitle-color;
+    font-size: $card-subtitle-fontSize;
+    line-height: $card-subtitle-line-height;
+    margin: 0;
+}
+
+%igx-card-content {
+    flex: 1 0 100%;
+    padding: $card-content-padding;
+}
+
+%igx-card-content-text {
+    margin: 0;
+    color: $card-content-color;
+    font-size: $card-content-fontSize;
+    line-height: $card-content-lineHeight;
+}
+
+%igx-card-media {
+    width: auto;
+    margin-right: auto;
+    order: -1;
+}
+
+%igx-card-media--right {
+    width: auto;
+    margin-left: auto;
+    order: 9999;
+}
+
+%igx-card-actions {
+    display: flex;
+    flex-flow: row wrap;
+    flex: 1 0 auto;
+    padding: $card-actions-padding;
+    max-height: 56px;
+}
+
+%igx-card-actions-bgroup {
+    display: flex;
+    flex-flow: row nowrap;
+    [igxButton] ~ [igxButton] {
+        margin-left: 8px;
+    }
+}
+
+%igx-card-actions-igroup {
+    display: flex;
+    flex-flow: row nowrap;
+    color: rgba(0,0,0,.54);
+}
+
+%igx-card-actions-igroup--start {
+    margin-right: auto;
+}
+
+%igx-card-actions-igroup--end {
+    margin-left: auto;
+}

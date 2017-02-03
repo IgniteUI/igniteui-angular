@@ -1,0 +1,80 @@
+@include b(igx-card) {
+    @extend %igx-card-display;
+
+    igx-card-header {
+
+        @extend %igx-card-header;
+        
+        @include b(igx-card-header) {
+
+            @include e(title) {
+                @extend %igx-card-header-title;
+
+                @include m(small) {
+                    @extend %igx-card-header-title;
+                    @extend %igx-card-header-title--small;
+                }
+            }
+            
+            @include e(subtitle) {
+                @extend %igx-card-header-subtitle;
+            }
+
+            @include e(tgroup) {
+                margin: 0 16px;
+            }
+            
+            @include m(compact) {
+                @extend %igx-card-header--compact;
+            }
+        }
+
+        &.compact {
+            @extend %igx-card-header--compact;
+        }
+    }
+
+    igx-card-content {
+        @extend %igx-card-content;
+
+        @include b(igx-card-content) {
+            
+            @include e(text) {
+                @extend %igx-card-content-text;
+            }
+        }
+    }
+
+    igx-card-actions {
+        @extend %igx-card-actions;
+        
+        @include b(igx-card-actions) {
+
+            @include e(igroup) {
+                @extend %igx-card-actions-igroup;
+
+                @include m(start) {
+                    @extend %igx-card-actions-igroup;
+                    @extend %igx-card-actions-igroup--start;
+                }
+                
+                @include m(end) {
+                    @extend %igx-card-actions-igroup;
+                    @extend %igx-card-actions-igroup--end;
+                }
+            }
+
+            @include e(bgroup) {
+                @extend %igx-card-actions-bgroup;
+            }
+        }
+    }
+
+    @include e(media) {
+        @extend %igx-card-media;
+
+        @include m(right) {
+            @extend %igx-card-media--right;
+        }
+    }
+}
