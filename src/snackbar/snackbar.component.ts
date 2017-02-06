@@ -79,7 +79,7 @@ export class IgxSnackbar {
     /**
      * The duration of time span in ms which the IgxSnackbar component will be visible
      * after it is being shown.
-     * Default value is 10000
+     * Default value is 4000
      * @type {number}
      */
     @Input()
