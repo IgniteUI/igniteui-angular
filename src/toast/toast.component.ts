@@ -1,5 +1,6 @@
-import {Component, NgModule, Input, EventEmitter, Output} from "@angular/core";
-import {CommonModule} from "@angular/common";
+import { Component, NgModule, Input, EventEmitter, Output } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { trigger, state, style, transition, animate, AnimationTransitionEvent } from '@angular/core';
 
 /**
  * IgxToast provides information and warning messages. They could not be dismissed, are non-interactive and can appear
@@ -13,12 +14,24 @@ import {CommonModule} from "@angular/common";
     selector: "igx-toast",
     moduleId: module.id,
     templateUrl: "toast.component.html",
+    animations: [
+        trigger('showHide', [
+            state('visible', style({
+                opacity: 1
+            })),
+            transition('void <=> visible', animate('.25s ease'))])
+    ],
+    host: {
+        role: "alert"
+    }
 })
 export class IgxToast {
+    private state: string = null;
+
     public readonly CSS_CLASSES = {
-        IGX_TOAST_MIDDLE: "igx-toast__middle",
-        IGX_TOAST_BOTTOM: "igx-toast__bottom",
-        IGX_TOAST_TOP: "igx-toast__top"
+        IGX_TOAST_MIDDLE: "igx-toast--middle",
+        IGX_TOAST_BOTTOM: "igx-toast--bottom",
+        IGX_TOAST_TOP: "igx-toast--top"
     };
 
     /**
@@ -96,11 +109,13 @@ export class IgxToast {
      * if autoHide is enabled
      */
     public show(): void {
+        this.state = "visible";
+
         clearInterval(this._intevalId);
         this.onShowing.emit(this);
         this.isVisible = true;
 
-        if(this.autoHide) {
+        if (this.autoHide) {
             this._intevalId = setInterval(() => {
                 this.hide();
             }, this.displayTime);
@@ -113,30 +128,32 @@ export class IgxToast {
      * Hides the IgxToast component
      */
     public hide(): void {
+        this.state = null;
+        
         this.onHiding.emit(this);
         this.isVisible = false;
         this.onHidden.emit(this);
+
         clearInterval(this._intevalId);
     }
 
     private _mapPositionToClassName(): any {
-        debugger;
-        if(this.position == IgxToastPosition.Top) {
+        if (this.position == IgxToastPosition.Top) {
             return this.CSS_CLASSES.IGX_TOAST_TOP;
         }
 
-        if(this.position == IgxToastPosition.Middle) {
+        if (this.position == IgxToastPosition.Middle) {
             return this.CSS_CLASSES.IGX_TOAST_MIDDLE;
         }
 
-        if(this.position == IgxToastPosition.Bottom) {
+        if (this.position == IgxToastPosition.Bottom) {
             return this.CSS_CLASSES.IGX_TOAST_BOTTOM;
         }
     }
 }
 
 /**
- * Enumeration for toeast position
+ * Enumeration for toast position
  * Can be:
  * Bottom
  * Middle
@@ -145,7 +162,7 @@ export class IgxToast {
 export enum IgxToastPosition {
     Bottom,
     Middle,
-    Top,
+    Top
 }
 
 @NgModule({
@@ -153,4 +170,4 @@ export enum IgxToastPosition {
     declarations: [IgxToast],
     exports: [IgxToast]
 })
-export class IgxToastModule {}
+export class IgxToastModule { }
