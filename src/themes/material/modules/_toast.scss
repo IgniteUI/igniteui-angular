@@ -1,0 +1,15 @@
+@include b(igx-toast) {
+    @extend %igx-toast-display;
+    @include m(top) {
+        @extend %igx-toast-display;
+        @extend %igx-toast--top;
+    }
+    @include m(middle) {
+        @extend %igx-toast-display;
+        @extend %igx-toast--middle;
+    }
+    @include m(bottom) {
+        @extend %igx-toast-display;
+        @extend %igx-toast--bottom;
+    }
+}

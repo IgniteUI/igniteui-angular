@@ -1,11 +1,13 @@
 import { NgModule } from "@angular/core";
 
-import { IgxToastModule } from "../../../src/main";
+import { IgxToastModule, IgxButtonModule, IgxRippleModule } from "../../../src/main";
 import { IgxToastSampleComponent } from './sample.component';
 
 @NgModule({
     imports: [
-        IgxToastModule
+        IgxToastModule,
+        IgxButtonModule,
+        IgxRippleModule
     ],
     declarations: [
         IgxToastSampleComponent,
