@@ -8,9 +8,9 @@ import {IgxToastPosition} from "../../../src/toast/toast.component";
 })
 export class IgxToastSampleComponent {
     @Input()
-    public toastPosition: IgxToastPosition = IgxToastPosition.Top;
+    public toastPosition: IgxToastPosition = IgxToastPosition.Bottom;
 
     public onShowing(): void {
-        console.log("Toast is showing")
+        console.log("Toast is showing!")
     }
 }
