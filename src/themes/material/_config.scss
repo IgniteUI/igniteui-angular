@@ -315,8 +315,8 @@ $tab-bar-background: #fff;
 /* 18. Toasts
    ========================================================================== */
 
-$toast-width: 42px;
-$toast-padding: em(16px, 16px) em(16px, 16px);
+$toast-width: 52px;
+$toast-padding: em(16px, 16px) em(24px, 16px);
 $toast-color: $white;
 $toast-background: rgba(0, 0, 0, .54);
 $toast-border-radius: ($toast-width / 2);
