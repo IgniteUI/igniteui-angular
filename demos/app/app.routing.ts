@@ -38,7 +38,7 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/card',
+        redirectTo: '/toast',
         pathMatch: 'full'
     },
     {
