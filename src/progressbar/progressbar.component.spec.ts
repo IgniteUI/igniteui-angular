@@ -372,7 +372,7 @@ describe('IgLinearBar UI Logic', function() {
     });
 });
 
-fdescribe('IgCircularBar UI Logic', function() {
+describe('IgCircularBar UI Logic', function() {
    beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -384,7 +384,7 @@ fdescribe('IgCircularBar UI Logic', function() {
         .compileComponents();
     }));
 
-    fit('accepts and respond to value', () => {
+    it('accepts and respond to value', () => {
         let fixture = TestBed.createComponent(CircularBar);
 
         let expectedValue = 30;
@@ -401,7 +401,7 @@ fdescribe('IgCircularBar UI Logic', function() {
         expect(progressBarElem.children[3].classList.value).toBe("progress-circular__text");
     });
 
-    fit('accepts a max value and respond to max changes', () => {
+    it('accepts a max value and respond to max changes', () => {
         let fixture = TestBed.createComponent(CircularBar);
 
         let expectedValue = 30;
@@ -422,7 +422,7 @@ fdescribe('IgCircularBar UI Logic', function() {
         expect(progressBarElem.children[3].classList.value).toBe("progress-circular__text");
     });
 
-    fit('accepts a value and max value above default values', () => {
+    it('accepts a value and max value above default values', () => {
         let fixture = TestBed.createComponent(SetValueAboveValuesCircularBar);
         fixture.detectChanges();
 
