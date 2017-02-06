@@ -115,7 +115,7 @@ describe("TabBar", function () {
         expect(tabbar.selectedIndex).toBe(0);
         expect(tabbar.selectedTab).toBe(tab1);
 
-        //tab1.isSelected = false;
+        //tab1.deselect();
 
         //fixture.detectChanges();
         //// Cannot deselect the only selected tab without provideing other selection, so the last selected tab will remain selected
