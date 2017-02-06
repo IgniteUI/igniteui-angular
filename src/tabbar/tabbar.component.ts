@@ -83,7 +83,7 @@ export class IgxTabBar implements AfterViewInit, AfterContentChecked {
 
         this.panels.forEach((p) => {
             if (p.index != selectedIndex) {
-                p.deselect();                
+                p._deselect();                
             }
         });
 
@@ -143,7 +143,7 @@ export class IgxTabPanel {
         this._tabBar._selectedTabCallback(this.index);
     }
 
-    deselect() {
+    _deselect() {
         // Cannot deselect the selected tab - this will mean that there will be not selected tab left
         if (this.isDisabled || this._tabBar.selectedTab.index == this.index) {
             return;
@@ -200,10 +200,6 @@ export class IgxTab {
 
     select() {
         this.relatedPanel.select();
-    }
-
-    deselect() {
-        this.relatedPanel.deselect(); 
     }
 }
 

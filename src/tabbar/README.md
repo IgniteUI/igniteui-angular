@@ -11,18 +11,18 @@ IgxTabBar provides two observable collections (QueryLists): one with panels and 
 The children components of the IgxTabBar are: 
 
 
--  *IgxTabPanel* - represents the wrapper of the content need to be displayed
+-  *IgxTabPanel* - represents the wrapper of the content that needs to be displayed
 - *IgxTab* - button that triggers displaying of the associated panel
 
 Each tab (IgxTab) is related to particular panel (IgxTabPanel). When tab is clicked, the associated panel is selected and visualized into a single container.
-Only one panel can be selected at a time. Always one panel should be selected.
+There should always be a selected tab. Only one tab can be selected at a time.
 
 ## Properties
 - `tabs` - Observable collection of all IgxTab view children
 - `panels` - Observable collection of all IgxTabPanel content children
 - `selectedIndex` - Gets the index of selected tab/panel in the respective collection. Default value: -1
 - `selectedTab` - Gets the selected IgxTab in the tabbar based on `selectedIndex`
-- `alignment` - Determines where is placed tab list of tabbar. Allowed values: "top" | "bottom". Default value: "top"
+- `alignment` - Gets/sets the tab list alignment. Allowed values: "top" | "bottom". Default value: "top"
 
 ## Events
 - `onTabSelected` - Fired when new tab is selected
@@ -44,14 +44,13 @@ _Child component of IgxTabBar, that represents the container of the content need
 - `isDisabled` - Determines whether the panel is disabled
 - `index` - Gets the index of a panel in the panel collection
 - `relatedTab` - Get the tab, associated with the panel
-- `label` - defines the label on the associated tab
-- `icon` - defines the icon on the associated tab
-- `color` - defines the color on the associated tab
+- `label` - Defines the label on the associated tab
+- `icon` - Defines the icon on the associated tab
+- `color` - Defines the color on the associated tab
 
 ## Methods
 
-- `select` - select the panel and the associated tab
-- `deselect` - deselect the panel and the associated tab
+- `select` - Select the panel and the associated tab
 
 ----------
 
@@ -70,8 +69,7 @@ _Child component of IgxTabBar, that represents the button that triggers displayi
 - `relatedPanel` - Get the panel, associated with the tab
 
 ## Methods
-- `select` - select the tab and the associated panel
-- `deselect` - deselect the tab and the associated panel
+- `select` - Select the tab and the associated panel
 
 ----------
 ## Usage
