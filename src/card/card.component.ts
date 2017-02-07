@@ -6,10 +6,7 @@ import {IgxButtonModule} from "../button/button.directive";
  * IgxCardHeader is container for the card header
  */
 @Directive({
-    selector: "igx-card-header",
-    host: {
-        role: "header"
-    }
+    selector: "igx-card-header"
 })
 export class IgxCardHeader{}
 
@@ -17,10 +14,7 @@ export class IgxCardHeader{}
  * IgxCardContent is container for the card content
  */
 @Directive({
-    selector: "igx-card-content",
-    host: {
-        role: "content"
-    }
+    selector: "igx-card-content"
 })
 export class IgxCardContent{}
 
