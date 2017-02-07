@@ -1,6 +1,8 @@
 import { NgModule, Component, Input, Output, ElementRef, ViewChild, ViewChildren, QueryList, ContentChildren, AfterViewInit, AfterContentChecked, EventEmitter, forwardRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from "@angular/common";
 
+type TabbarAlignments = "top" | "bottom";
+
 @Component({
     selector: 'igx-tab-bar',
     moduleId: module.id, // commonJS standard
@@ -13,19 +15,18 @@ export class IgxTabBar implements AfterViewInit, AfterContentChecked {
     @ContentChildren(forwardRef(() =>IgxTabPanel)) panels: QueryList<IgxTabPanel>;
 
     //private _INITIALLY_DISPLAYED_TABS_COUNT: number = 5;
-    private _itemStyle: string = "igx-tab-bar-inner";
-
-    selectedIndex: number = -1;
-
     //private get _visibleTabs() {
     //    return this.tabs.length > this._INITIALLY_DISPLAYED_TABS_COUNT ? this.tabs.filter(tab => tab.index < this._INITIALLY_DISPLAYED_TABS_COUNT - 1) : this.tabs.toArray();
     //}
+    private _itemStyle: string = "igx-tab-bar-inner";
+
+    selectedIndex: number = -1;    
 
     private get _height() {
         return this._element.nativeElement.offsetHeight;
     }
 
-    get tabListHeight() {
+    private get _tabListHeight() {
         if (this._tabList) {
             return this._tabList.nativeElement.offsetHeight;
         }
@@ -39,7 +40,7 @@ export class IgxTabBar implements AfterViewInit, AfterContentChecked {
         }
     }    
 
-    @Input() alignment: string = "top";    
+    @Input() alignment: TabbarAlignments = "top";    
 
     @Output() onTabSelected = new EventEmitter();
     @Output() onTabDeselected = new EventEmitter();
@@ -50,7 +51,7 @@ export class IgxTabBar implements AfterViewInit, AfterContentChecked {
     ngAfterContentChecked() {
 
         this.panels.forEach((panel) => {
-            let tabListHeight = this.tabListHeight;
+            let tabListHeight = this._tabListHeight;
             panel.height = this._height - tabListHeight;
 
             if (this.alignment == "top") {
@@ -77,19 +78,19 @@ export class IgxTabBar implements AfterViewInit, AfterContentChecked {
     }
 
 
-    selectedTabCallback(selectedIndex: number) {
+    _selectedTabCallback(selectedIndex: number) {
         this.selectedIndex = selectedIndex;               
 
         this.panels.forEach((p) => {
             if (p.index != selectedIndex) {
-                p.deselect();                
+                p._deselect();                
             }
         });
 
         this.onTabSelected.emit({ tab: this.tabs[selectedIndex], panel: this.panels[selectedIndex] });
     }
 
-    deselectedTabCallback(index: number) {
+    _deselectedTabCallback(index: number) {
         this.onTabDeselected.emit({ tab: this.tabs[index], panel: this.panels[index] });
     }
 }
@@ -139,17 +140,17 @@ export class IgxTabPanel {
         }
 
         this.isSelected = true;
-        this._tabBar.selectedTabCallback(this.index);
+        this._tabBar._selectedTabCallback(this.index);
     }
 
-    deselect() {
+    _deselect() {
         // Cannot deselect the selected tab - this will mean that there will be not selected tab left
         if (this.isDisabled || this._tabBar.selectedTab.index == this.index) {
             return;
         }
 
         this.isSelected = false;
-        this._tabBar.deselectedTabCallback(this.index);
+        this._tabBar._deselectedTabCallback(this.index);
     }
 }
 
@@ -199,10 +200,6 @@ export class IgxTab {
 
     select() {
         this.relatedPanel.select();
-    }
-
-    deselect() {
-        this.relatedPanel.deselect(); 
     }
 }
 
