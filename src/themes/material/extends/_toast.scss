@@ -3,7 +3,7 @@
     position: fixed;
     text-align: center;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
     min-width: $toast-width;
     margin: em(42px, 16px) auto;
     padding: $toast-padding;
@@ -22,7 +22,7 @@
 
 %igx-toast--middle {
     top: 50%;
-    transform: transformY(-50%);
+    transform: translate3d(-50%, -50%, 0);
 }
 
 %igx-toast--bottom {
