@@ -4,5 +4,5 @@
     (onShowing)="onShowing($event)">
 </igx-toast>
 
-<button igxButton="raised" igxRipple="white" (click)="toast.show()">Show Toast</button>
+<button igxButton="raised" igxRipple="white" (click)="toast.show()" [disabled]="toast.isVisible">Show Toast</button>
 <button igxButton="raised" igxRipple="white" (click)="toast.hide()" [disabled]="!toast.isVisible">Hide Toast</button>
