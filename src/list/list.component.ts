@@ -23,17 +23,20 @@ export class IgxList {
     private _innerStyle: string = "igx-list";
 
     children: IListChild[] = [];
-    get items() {
-        return this.children.filter((item: IListChild) => {
-            return item instanceof IgxListItem;
-        });
-    }
+    items: IgxListItem[] = [];
+    headers: IgxListHeader[] = [];
 
-    get headers() {
-        return this.children.filter((header: IListChild) => {
-            return header instanceof IgxListHeader;
-        });
-    }
+    //get items() {
+    //    return this.children.filter((item: IListChild) => {
+    //        return item instanceof IgxListItem;
+    //    });
+    //}
+
+    //get headers() {
+    //    return this.children.filter((header: IListChild) => {
+    //        return header instanceof IgxListHeader;
+    //    });
+    //}
 
     @Input() allowLeftPanning: boolean = false;
     @Input() allowRightPanning: boolean = false;
@@ -46,11 +49,27 @@ export class IgxList {
     }
 
     removeChild(index: number) {
+        let child: IListChild = this.children[index];
+
         this.children.splice(index, 1);
+
+        if (child instanceof IgxListItem) {
+            let itemIndex = this.items.indexOf(child);
+            this.items.splice(itemIndex, 1);
+        } else if (child instanceof IgxListHeader) {
+            let headerIndex = this.headers.indexOf(child);
+            this.headers.splice(headerIndex, 1);
+        }
     }
 
     addChild(child: IListChild) {
         this.children.push(child);
+
+        if (child instanceof IgxListItem) {
+            this.items.push(child);
+        } else if (child instanceof IgxListHeader) {
+            this.headers.push(child);
+        }
     }
 }
 
