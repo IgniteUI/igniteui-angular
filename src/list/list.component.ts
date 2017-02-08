@@ -26,18 +26,6 @@ export class IgxList {
     items: IgxListItem[] = [];
     headers: IgxListHeader[] = [];
 
-    //get items() {
-    //    return this.children.filter((item: IListChild) => {
-    //        return item instanceof IgxListItem;
-    //    });
-    //}
-
-    //get headers() {
-    //    return this.children.filter((header: IListChild) => {
-    //        return header instanceof IgxListHeader;
-    //    });
-    //}
-
     @Input() allowLeftPanning: boolean = false;
     @Input() allowRightPanning: boolean = false;
 
