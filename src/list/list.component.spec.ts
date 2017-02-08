@@ -85,6 +85,32 @@ describe("List", function () {
         }
     });
 
+    it('should add/remove item/header', () => {
+        let item, header,
+            fixture = TestBed.createComponent(ListTestComponent),
+            list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        expect(list.children.length).toBe(4);
+        expect(list.headers.length).toBe(1);
+        expect(list.items.length).toBe(3);
+
+        item = new IgxListItem(list, null, null);
+        header = new IgxListHeader(list, null);
+
+        list.addChild(header);
+        list.addChild(item);    
+        expect(list.children.length).toBe(6);
+        expect(list.headers.length).toBe(2);
+        expect(list.items.length).toBe(4);
+        
+        list.removeChild(header.index);
+        list.removeChild(item.index);
+        expect(list.children.length).toBe(4);
+        expect(list.headers.length).toBe(1);
+        expect(list.items.length).toBe(3);
+    });
+
     it('Should pan right and pan left.', (done) => {
         var fixture, list: IgxList, item: IgxListItem, 
             itemNativeElement, itemHeight, itemWidth;
