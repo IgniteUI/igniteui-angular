@@ -1,7 +1,7 @@
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxTabBar, IgxTabPanel, IgxTab, IgxTabBarModule } from './tabbar.component';
-import { Component, ViewChild, ContentChildren, QueryList } from '@angular/core';
+import { Component, ViewChild, ContentChildren, QueryList, AfterViewChecked, AfterContentChecked } from '@angular/core';
 
 describe("TabBar", function () {
     beforeEach(async(() => {
@@ -50,16 +50,27 @@ describe("TabBar", function () {
         expect(tabbar.selectedIndex).toBe(-1);
         expect(tabbar.selectedTab).toBeUndefined();
 
-        fixture.detectChanges();
+        //fixture.componentInstance.ngAfterContentChecked = function () {
+        //    tabs = tabbar.tabs.toArray();
+        //}
 
-        tabs = tabbar.tabs.toArray();
-        expect(tabs[0].isDisabled).toBeFalsy();
-        expect(tabs[1].isDisabled).toBeFalsy();        
-        
-        setTimeout(function () {
+        fixture.componentInstance.ngAfterViewChecked = function () {
             expect(tabbar.selectedIndex).toBe(0);
             expect(tabbar.selectedTab).toBe(tabs[0]);
-        }, 0);
+        }
+
+        fixture.detectChanges();
+
+        //tabs = tabbar.tabs.toArray();
+        expect(tabs[0].isDisabled).toBeFalsy();
+        expect(tabs[1].isDisabled).toBeFalsy();        
+
+        
+        
+        //setTimeout(function () {
+        //    expect(tabbar.selectedIndex).toBe(0);
+        //    expect(tabbar.selectedTab).toBe(tabs[0]);
+        //}, 100);
         
     });
 
@@ -208,9 +219,15 @@ describe("TabBar", function () {
             </igx-tab-bar>
         </div>`
 })
-class TabBarTestComponent {
+class TabBarTestComponent implements AfterViewChecked, AfterContentChecked {
     @ViewChild(IgxTabBar) tabbar: IgxTabBar;
     @ViewChild("wrapperDiv") wrapperDiv: any;
+
+    ngAfterViewChecked() {
+    }
+
+    ngAfterContentChecked() {
+    }
 }
 
 @Component({
