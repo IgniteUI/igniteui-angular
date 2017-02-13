@@ -50,28 +50,16 @@ describe("TabBar", function () {
         expect(tabbar.selectedIndex).toBe(-1);
         expect(tabbar.selectedTab).toBeUndefined();
 
-        //fixture.componentInstance.ngAfterContentChecked = function () {
-        //    tabs = tabbar.tabs.toArray();
-        //}
-
-        fixture.componentInstance.ngAfterViewChecked = function () {
+        fixture.componentInstance.tabSelectedHandler = function () {
             expect(tabbar.selectedIndex).toBe(0);
             expect(tabbar.selectedTab).toBe(tabs[0]);
         }
 
         fixture.detectChanges();
 
-        //tabs = tabbar.tabs.toArray();
+        tabs = tabbar.tabs.toArray();
         expect(tabs[0].isDisabled).toBeFalsy();
-        expect(tabs[1].isDisabled).toBeFalsy();        
-
-        
-        
-        //setTimeout(function () {
-        //    expect(tabbar.selectedIndex).toBe(0);
-        //    expect(tabbar.selectedTab).toBe(tabs[0]);
-        //}, 100);
-        
+        expect(tabs[1].isDisabled).toBeFalsy();
     });
 
     it('should initialize set/get properties', () => {
@@ -98,16 +86,17 @@ describe("TabBar", function () {
             tabs, tab1: IgxTab, tab2: IgxTab;
 
         expect(tabbar.selectedIndex).toBe(-1);
+        fixture.componentInstance.tabSelectedHandler = function () {
+            expect(tabbar.selectedIndex).toBe(0);
+            expect(tabbar.selectedTab).toBe(tab1);
+        }
 
         fixture.detectChanges();
         tabs = tabbar.tabs.toArray();
         tab1 = tabs[0];
         tab2 = tabs[1];
 
-        setTimeout(function () {
-            expect(tabbar.selectedIndex).toBe(0);
-            expect(tabbar.selectedTab).toBe(tab1);
-        }, 0);
+        fixture.componentInstance.tabSelectedHandler = function () { };
         
         tab2.select();
         fixture.detectChanges();
@@ -195,7 +184,7 @@ describe("TabBar", function () {
 @Component({
     template: `
         <div #wrapperDiv>
-            <igx-tab-bar>
+            <igx-tab-bar (onTabSelected)="tabSelectedHandler($event)">
                 <igx-tab-panel label="Tab 1" icon="library_music">
                     <h1>Tab 1 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
@@ -219,14 +208,11 @@ describe("TabBar", function () {
             </igx-tab-bar>
         </div>`
 })
-class TabBarTestComponent implements AfterViewChecked, AfterContentChecked {
+class TabBarTestComponent {
     @ViewChild(IgxTabBar) tabbar: IgxTabBar;
     @ViewChild("wrapperDiv") wrapperDiv: any;
 
-    ngAfterViewChecked() {
-    }
-
-    ngAfterContentChecked() {
+    tabSelectedHandler(args) {
     }
 }
 
