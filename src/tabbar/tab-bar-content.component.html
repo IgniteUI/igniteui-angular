@@ -8,8 +8,8 @@
              [attr.aria-disabled]="panel.isDisabled"
              [attr.aria-selected]="panel.isSelected"
              [attr.aria-controls]="'igx-tab-panel-'+ panel.index"
-             [class.igx-tab-bar-inner__menu-item--selected]="panel.isSelected"
-             [class.igx-tab-bar-inner__menu-item--disabled]="panel.isDisabled"
+             [class.igx-tab-bar__menu-item--selected]="panel.isSelected"
+             [class.igx-tab-bar__menu-item--disabled]="panel.isDisabled"
              [relatedPanel]="panel"
              (click)= "panel.select()"     
              role="tab" >
