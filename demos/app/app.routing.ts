@@ -38,7 +38,7 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/toast',
+        redirectTo: '/tabbar',
         pathMatch: 'full'
     },
     {
