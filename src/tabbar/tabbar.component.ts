@@ -1,4 +1,4 @@
-import { NgModule, Component, Input, Output, ElementRef, ViewChild, ViewChildren, QueryList, ContentChildren, AfterViewInit, AfterContentInit, EventEmitter, forwardRef, ChangeDetectorRef } from '@angular/core';
+import { NgModule, Component, Input, Output, ElementRef, ViewChild, ViewChildren, QueryList, ContentChildren, AfterViewInit, AfterContentInit, EventEmitter, forwardRef } from '@angular/core';
 import { CommonModule } from "@angular/common";
 
 type TabbarAlignments = "top" | "bottom";
@@ -106,12 +106,13 @@ export class IgxTabBar implements AfterViewInit, AfterContentInit {
 @Component({
     selector: 'igx-tab-panel',
     moduleId: module.id, // commonJS standard
-    templateUrl: 'tab-panel.component.html',
+    templateUrl: "tab-panel.component.html",
     host: {
         'role': "tabpanel",
         '[id]': "'igx-tab-panel-' + index",
         '[attr.aria-labelledby]': "'igx-tab-' + index",
-        '[class.selected]': "isSelected"
+        '[class.selected]': "isSelected",
+        '[hidden]': "!isSelected"
     }
 })
 
@@ -125,19 +126,19 @@ export class IgxTabPanel {
     get relatedTab(): IgxTab {
         if (this._tabBar.tabs) {
             return this._tabBar.tabs.toArray()[this.index];
-        }        
+        }
     }
 
     get index() {
         return this._tabBar.panels.toArray().indexOf(this);
-    }    
-    
+    }
+
     @Input() label: string;
     @Input() icon: string;
     @Input() color: string;
-    @Input() isDisabled: boolean;      
+    @Input() isDisabled: boolean;
 
-    constructor(private _tabBar: IgxTabBar, private _element: ElementRef) {
+    constructor(private _tabBar: IgxTabBar) {
     }
 
     select() {
