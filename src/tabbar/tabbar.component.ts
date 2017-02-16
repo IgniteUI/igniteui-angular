@@ -21,8 +21,7 @@ export class IgxTabBar implements AfterViewInit, AfterContentInit {
     //private get _visibleTabs() {
     //    return this.tabs.length > this._INITIALLY_DISPLAYED_TABS_COUNT ? this.tabs.filter(tab => tab.index < this._INITIALLY_DISPLAYED_TABS_COUNT - 1) : this.tabs.toArray();
     //}
-
-    private _itemStyle: string = "igx-tab-bar-inner";
+    private _itemStyle: string = "igx-tab-bar";
 
     selectedIndex: number = -1;    
 
@@ -109,10 +108,12 @@ export class IgxTabBar implements AfterViewInit, AfterContentInit {
     templateUrl: "tab-panel.component.html",
     host: {
         'role': "tabpanel",
-        '[id]': "'igx-tab-panel-' + index",
+        '[id]': "'igx-tab-bar__panel-' + index",
         '[attr.aria-labelledby]': "'igx-tab-' + index",
         '[class.selected]': "isSelected",
-        '[hidden]': "!isSelected"
+        '[hidden]': "!isSelected",
+        '[class.igx-tab-bar__panel]': '!isSelected',
+        '[class.igx-tab-bar__panel--selected]': "isSelected"
     }
 })
 
@@ -135,7 +136,6 @@ export class IgxTabPanel {
 
     @Input() label: string;
     @Input() icon: string;
-    @Input() color: string;
     @Input() isDisabled: boolean;
 
     constructor(private _tabBar: IgxTabBar) {
@@ -159,7 +159,7 @@ export class IgxTabPanel {
     templateUrl: 'tab.component.html',
     host: {
         'role': "tab",
-        'class': "igx-tab-inner__menu-item"
+        'class': "igx-tab-bar__menu-item"
     }
 })
 
