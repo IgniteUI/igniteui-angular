@@ -1,7 +1,5 @@
-import { NgModule, Component, Input, Output, ElementRef, ViewChild, ViewChildren, QueryList, ContentChildren, AfterViewInit, /*AfterContentInit,*/ EventEmitter, forwardRef } from '@angular/core';
+import { NgModule, Component, Input, Output, ElementRef, ViewChild, ViewChildren, QueryList, ContentChildren, AfterViewInit, EventEmitter, forwardRef } from '@angular/core';
 import { CommonModule } from "@angular/common";
-
-//type TabbarAlignments = "top" | "bottom";
 
 @Component({
     selector: 'igx-tab-bar',
@@ -12,58 +10,25 @@ import { CommonModule } from "@angular/common";
     }
 })
 
-export class IgxTabBar implements AfterViewInit /*, AfterContentInit*/ {
-    //@ViewChild('tablist') _tabList: ElementRef;
+export class IgxTabBar implements AfterViewInit {
     @ViewChildren(forwardRef(() => IgxTab)) tabs: QueryList<IgxTab>;
     @ContentChildren(forwardRef(() =>IgxTabPanel)) panels: QueryList<IgxTabPanel>;
 
-    //private _INITIALLY_DISPLAYED_TABS_COUNT: number = 5;
-    //private get _visibleTabs() {
-    //    return this.tabs.length > this._INITIALLY_DISPLAYED_TABS_COUNT ? this.tabs.filter(tab => tab.index < this._INITIALLY_DISPLAYED_TABS_COUNT - 1) : this.tabs.toArray();
-    //}
     private _itemStyle: string = "igx-tab-bar";
 
     selectedIndex: number = -1;    
-
-    //private get _height() {
-    //    return this._element.nativeElement.offsetHeight;
-    //}
-
-    //private get _tabListHeight() {
-    //    if (this._tabList) {
-    //        return this._tabList.nativeElement.offsetHeight;
-    //    }
-
-    //    return 0;
-    //}
    
     get selectedTab(): IgxTab {
         if (this.tabs && this.selectedIndex != undefined) {
             return this.tabs.toArray()[this.selectedIndex];
         }
-    }    
-
-    //@Input() alignment: TabbarAlignments = "top";    
+    }      
 
     @Output() onTabSelected = new EventEmitter();
     @Output() onTabDeselected = new EventEmitter();
 
     constructor(private _element: ElementRef) {
     }
-
-    //ngAfterContentInit() {
-
-        //this.panels.forEach((panel) => {
-        //    let tabListHeight = this._tabListHeight;
-        //    panel.height = this._height - tabListHeight;
-
-        //    if (this.alignment == "top") {
-        //        panel.marginTop = tabListHeight;
-        //    } else if (this.alignment == "bottom") {
-        //        panel.marginTop = 0;
-        //    }
-        //});        
-    //}
 
     ngAfterViewInit() {
         // initial selection
@@ -116,11 +81,9 @@ export class IgxTabBar implements AfterViewInit /*, AfterContentInit*/ {
 })
 
 export class IgxTabPanel {
-    private _itemStyle: string = "igx-tab-panel-inner";
+    private _itemStyle: string = "igx-tab-panel";
 
     isSelected: boolean = false;
-    //height: number | string;
-    //marginTop: number | string;
 
     get relatedTab(): IgxTab {
         if (this._tabBar.tabs) {
@@ -172,8 +135,6 @@ export class IgxTab {
         if (panel) {
             return panel.isDisabled;
         }
-
-        return false;
     }
 
     get isSelected(): boolean {
@@ -182,8 +143,6 @@ export class IgxTab {
         if(panel) {
             return panel.isSelected;
         }           
-
-        return false;
     };
 
     get index(): number {
