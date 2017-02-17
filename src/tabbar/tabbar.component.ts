@@ -1,7 +1,7 @@
-import { NgModule, Component, Input, Output, ElementRef, ViewChild, ViewChildren, QueryList, ContentChildren, AfterViewInit, AfterContentInit, EventEmitter, forwardRef } from '@angular/core';
+import { NgModule, Component, Input, Output, ElementRef, ViewChild, ViewChildren, QueryList, ContentChildren, AfterViewInit, /*AfterContentInit,*/ EventEmitter, forwardRef } from '@angular/core';
 import { CommonModule } from "@angular/common";
 
-type TabbarAlignments = "top" | "bottom";
+//type TabbarAlignments = "top" | "bottom";
 
 @Component({
     selector: 'igx-tab-bar',
@@ -12,8 +12,8 @@ type TabbarAlignments = "top" | "bottom";
     }
 })
 
-export class IgxTabBar implements AfterViewInit, AfterContentInit {
-    @ViewChild('tablist') _tabList: ElementRef;
+export class IgxTabBar implements AfterViewInit /*, AfterContentInit*/ {
+    //@ViewChild('tablist') _tabList: ElementRef;
     @ViewChildren(forwardRef(() => IgxTab)) tabs: QueryList<IgxTab>;
     @ContentChildren(forwardRef(() =>IgxTabPanel)) panels: QueryList<IgxTabPanel>;
 
@@ -25,17 +25,17 @@ export class IgxTabBar implements AfterViewInit, AfterContentInit {
 
     selectedIndex: number = -1;    
 
-    private get _height() {
-        return this._element.nativeElement.offsetHeight;
-    }
+    //private get _height() {
+    //    return this._element.nativeElement.offsetHeight;
+    //}
 
-    private get _tabListHeight() {
-        if (this._tabList) {
-            return this._tabList.nativeElement.offsetHeight;
-        }
+    //private get _tabListHeight() {
+    //    if (this._tabList) {
+    //        return this._tabList.nativeElement.offsetHeight;
+    //    }
 
-        return 0;
-    }
+    //    return 0;
+    //}
    
     get selectedTab(): IgxTab {
         if (this.tabs && this.selectedIndex != undefined) {
@@ -43,7 +43,7 @@ export class IgxTabBar implements AfterViewInit, AfterContentInit {
         }
     }    
 
-    @Input() alignment: TabbarAlignments = "top";    
+    //@Input() alignment: TabbarAlignments = "top";    
 
     @Output() onTabSelected = new EventEmitter();
     @Output() onTabDeselected = new EventEmitter();
@@ -51,29 +51,29 @@ export class IgxTabBar implements AfterViewInit, AfterContentInit {
     constructor(private _element: ElementRef) {
     }
 
-    ngAfterContentInit() {
+    //ngAfterContentInit() {
 
-        this.panels.forEach((panel) => {
-            let tabListHeight = this._tabListHeight;
-            panel.height = this._height - tabListHeight;
+        //this.panels.forEach((panel) => {
+        //    let tabListHeight = this._tabListHeight;
+        //    panel.height = this._height - tabListHeight;
 
-            if (this.alignment == "top") {
-                panel.marginTop = tabListHeight;
-            } else if (this.alignment == "bottom") {
-                panel.marginTop = 0;
-            }
-        });        
-    }
+        //    if (this.alignment == "top") {
+        //        panel.marginTop = tabListHeight;
+        //    } else if (this.alignment == "bottom") {
+        //        panel.marginTop = 0;
+        //    }
+        //});        
+    //}
 
     ngAfterViewInit() {
         // initial selection
         setTimeout(() => {
             if (this.selectedIndex == -1) {
-                let selectableTabs = this.tabs.filter((tab) => !tab.isDisabled),
-                    tab = selectableTabs[0];
+                let selectablePanels = this.panels.filter((panel) => !panel.isDisabled),
+                    panel = selectablePanels[0];
 
-                if (tab) {
-                    tab.select();
+                if (panel) {
+                    panel.select();
                 }
             }
         }, 0);
@@ -110,8 +110,6 @@ export class IgxTabBar implements AfterViewInit, AfterContentInit {
         'role': "tabpanel",
         '[id]': "'igx-tab-bar__panel-' + index",
         '[attr.aria-labelledby]': "'igx-tab-' + index",
-        '[class.selected]': "isSelected",
-        '[hidden]': "!isSelected",
         '[class.igx-tab-bar__panel]': '!isSelected',
         '[class.igx-tab-bar__panel--selected]': "isSelected"
     }
@@ -121,8 +119,8 @@ export class IgxTabPanel {
     private _itemStyle: string = "igx-tab-panel-inner";
 
     isSelected: boolean = false;
-    height: number | string;
-    marginTop: number | string;
+    //height: number | string;
+    //marginTop: number | string;
 
     get relatedTab(): IgxTab {
         if (this._tabBar.tabs) {

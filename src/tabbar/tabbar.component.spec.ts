@@ -46,7 +46,7 @@ describe("TabBar", function () {
             tabbar = fixture.componentInstance.tabbar,
             tabs;
 
-        expect(tabbar.alignment).toBe("top");
+        //expect(tabbar.alignment).toBe("top");
         expect(tabbar.selectedIndex).toBe(-1);
         expect(tabbar.selectedTab).toBeUndefined();
 
@@ -126,59 +126,59 @@ describe("TabBar", function () {
         expect(tab2.isSelected).toBeFalsy();
     });
 
-    it('should calculate height and marginTop on top alignment', () => {
-        let fixture = TestBed.createComponent(TabBarTestComponent),
-            tabbar = fixture.componentInstance.tabbar,
-            wrapper = fixture.componentInstance.wrapperDiv,
-            panels, panel1, panel2, tabListHeight,
-            testWrapperHeight = 600;
+    //it('should calculate height and marginTop on top alignment', () => {
+    //    let fixture = TestBed.createComponent(TabBarTestComponent),
+    //        tabbar = fixture.componentInstance.tabbar,
+    //        wrapper = fixture.componentInstance.wrapperDiv,
+    //        panels, panel1, panel2, tabListHeight,
+    //        testWrapperHeight = 600;
 
-        wrapper.nativeElement.style.height = testWrapperHeight + "px";
-        wrapper.nativeElement.style.position = "relative";
-        expect(tabbar.alignment).toBe("top");
+    //    wrapper.nativeElement.style.height = testWrapperHeight + "px";
+    //    wrapper.nativeElement.style.position = "relative";
+    //    expect(tabbar.alignment).toBe("top");
 
-        fixture.detectChanges();
+    //    fixture.detectChanges();
 
-        panels = tabbar.panels.toArray();
-        panel1 = panels[0];
-        panel2 = panels[1];
-        tabListHeight = tabbar._tabList.nativeElement.offsetHeight;
+    //    panels = tabbar.panels.toArray();
+    //    panel1 = panels[0];
+    //    panel2 = panels[1];
+    //    tabListHeight = tabbar._tabList.nativeElement.offsetHeight;
 
-        expect(tabbar.alignment).toBe("top");
+    //    expect(tabbar.alignment).toBe("top");
 
-        // TODO - should be adapt to work after styling is done by Simeon
-        //expect(panel1.marginTop).toBe(tabListHeight);
-        //expect(panel2.marginTop).toBe(tabListHeight);
-        //expect(panel1.height).toBe(testWrapperHeight - tabListHeight + "px");
-        //expect(panel2.height).toBe(testWrapperHeight - tabListHeight + "px");
-    });
+    //    // TODO - should be adapt to work after styling is done by Simeon
+    //    //expect(panel1.marginTop).toBe(tabListHeight);
+    //    //expect(panel2.marginTop).toBe(tabListHeight);
+    //    //expect(panel1.height).toBe(testWrapperHeight - tabListHeight + "px");
+    //    //expect(panel2.height).toBe(testWrapperHeight - tabListHeight + "px");
+    //});
 
-    it('should calculate height and marginTop on bottom alignment', () => {
-        let fixture = TestBed.createComponent(BottomTabBarTestComponent),
-            tabbar = fixture.componentInstance.tabbar,
-            wrapper = fixture.componentInstance.wrapperDiv,
-            panels, panel1, panel2, tabListHeight,
-            testWrapperHeight = 600;
+    //it('should calculate height and marginTop on bottom alignment', () => {
+    //    let fixture = TestBed.createComponent(BottomTabBarTestComponent),
+    //        tabbar = fixture.componentInstance.tabbar,
+    //        wrapper = fixture.componentInstance.wrapperDiv,
+    //        panels, panel1, panel2, tabListHeight,
+    //        testWrapperHeight = 600;
 
-        wrapper.nativeElement.style.height = testWrapperHeight + "px";
-        wrapper.nativeElement.style.position = "relative";
-        expect(tabbar.alignment).toBe("top");
+    //    wrapper.nativeElement.style.height = testWrapperHeight + "px";
+    //    wrapper.nativeElement.style.position = "relative";
+    //    expect(tabbar.alignment).toBe("top");
 
-        fixture.detectChanges();
+    //    fixture.detectChanges();
 
-        panels = tabbar.panels.toArray();
-        panel1 = panels[0];
-        panel2 = panels[1];
-        tabListHeight = tabbar._tabList.nativeElement.offsetHeight;
+    //    panels = tabbar.panels.toArray();
+    //    panel1 = panels[0];
+    //    panel2 = panels[1];
+    //    tabListHeight = tabbar._tabList.nativeElement.offsetHeight;
 
-        expect(tabbar.alignment).toBe("bottom");
-        expect(panel1.marginTop).toBe(0);
-        expect(panel2.marginTop).toBe(0);
+    //    expect(tabbar.alignment).toBe("bottom");
+    //    expect(panel1.marginTop).toBe(0);
+    //    expect(panel2.marginTop).toBe(0);
 
-        // TODO - should be adapt to work after styling is done by Simeon
-        //expect(panel1.height).toBe(testWrapperHeight - tabListHeight + "px");
-        //expect(panel2.height).toBe(testWrapperHeight - tabListHeight + "px");
-    });
+    //    // TODO - should be adapt to work after styling is done by Simeon
+    //    //expect(panel1.height).toBe(testWrapperHeight - tabListHeight + "px");
+    //    //expect(panel2.height).toBe(testWrapperHeight - tabListHeight + "px");
+    //});
 });
 
 @Component({
