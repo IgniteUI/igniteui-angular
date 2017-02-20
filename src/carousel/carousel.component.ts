@@ -139,7 +139,7 @@ export class IgxCarousel implements OnDestroy {
      * @type {Array<Slide>}
      * @memberOf IgxCarousel
      */
-    public  slides: Array<IgxSlide> = [];
+    public slides: Array<IgxSlide> = [];
     private _interval: number;
     private _lastInterval: any;
     private _playing: boolean;

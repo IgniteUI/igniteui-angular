@@ -1,7 +1,7 @@
 import { async, TestBed, ComponentFixtureAutoDetect } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { HammerGesturesManager } from '../core/touch';
-import { IgxList, IgxListHeader, IgxListItem, IgxListModule } from '../list/list.component';
+import { IgxList, IgxListItem, IgxListModule } from '../list/list.component';
 import { IgxFilterDirective, IgxFilterPipe, IgxFilterOptions, IgxFilterModule } from './filter.directive';
 import { Component, ViewChild, ContentChildren } from '@angular/core';
 
@@ -142,7 +142,7 @@ describe("Filter", function () {
 
 @Component({
     template: `<igx-list [igxFilter]="fo" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)" >
-                    <igx-list-header>Header</igx-list-header>
+                    <igx-list-item [isHeader]="true">Header</igx-list-item>
                     <igx-list-item>Item 1</igx-list-item>
                     <igx-list-item>Item 2</igx-list-item>
                     <igx-list-item>Item 3</igx-list-item>
