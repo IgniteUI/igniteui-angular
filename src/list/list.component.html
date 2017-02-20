@@ -1,0 +1,18 @@
+<div class="{{_innerStyle}}">
+  <ng-content></ng-content>
+  <div *ngIf="children.length === 0 && !hasNoItemsTemplate"
+      class="igx-list__no-items">
+      <img style="width:60px;" alt="{{ noItemsMessage }}"
+        class="igx-list_no-items-img"
+        src="{{ noItemsImgSrc }}" />
+      <div class="igx-list_no-items-text">{{  noItemsMessage }}</div>
+      <button igxButton="raised" igxRipple="white"
+          class="igx-list_default-no-items-button"
+          (click)="onNoItemsButtonClicked($event)">
+            {{ noItemsButtonText }}
+      </button>
+  </div>
+  <ng-content *ngIf="children.length === 0 && hasNoItemsTemplate" 
+    select=".igx-list__custom-no-items">
+  </ng-content>
+</div>
