@@ -108,7 +108,7 @@ export class IgxTabPanel {
         }
 
         this.isSelected = true;
-        this._tabBar.onTabSelected.emit({ tab: this._tabBar.tabs[this.index], panel: this });
+        this._tabBar.onTabSelected.emit({ tab: this._tabBar.tabs.toArray()[this.index], panel: this });
     }
 }
 
