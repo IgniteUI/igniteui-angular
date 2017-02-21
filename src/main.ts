@@ -7,6 +7,7 @@ export * from './core/navigation';
 export * from './navigation-drawer/navigation-drawer.component';
 export * from './icon/icon.component';
 export * from './button/button.directive';
+export * from './buttonGroup/buttonGroup.component';
 export * from './list/list.component';
 export * from './tabbar/tabbar.component';
 export * from './carousel/carousel.component';

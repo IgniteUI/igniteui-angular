@@ -1,0 +1,11 @@
+<div class="igx-buttongroup" role="group">
+    <button *ngFor="let button of values" type="button" 
+        [igxButton]="button.type"
+        [igxButtonColor]="button.color"
+        [igxButtonBackground]="button.bgcolor"
+        >
+            {{button?.label}}
+            <i *ngIf="button.icon" class="material-icons">{{button.icon}}</i>
+    </button>
+    <ng-content></ng-content>
+</div>
