@@ -10,7 +10,6 @@ _IgxTabBar represents a single content area with multiple panels, each associate
 IgxTabBar provides two observable collections (QueryLists): one with panels and one with related tabs. 
 The children components of the IgxTabBar are: 
 
-
 -  *IgxTabPanel* - represents the wrapper of the content that needs to be displayed
 - *IgxTab* - button that triggers displaying of the associated panel
 
@@ -22,7 +21,6 @@ There should always be a selected tab. Only one tab can be selected at a time.
 - `panels` - Observable collection of all IgxTabPanel content children
 - `selectedIndex` - Gets the index of selected tab/panel in the respective collection. Default value: -1
 - `selectedTab` - Gets the selected IgxTab in the tabbar based on `selectedIndex`
-- `alignment` - Gets/sets the tab list alignment. Allowed values: "top" | "bottom". Default value: "top"
 
 ## Events
 - `onTabSelected` - Fired when new tab is selected
@@ -38,7 +36,6 @@ _Child components_
 ## Description
 _Child component of IgxTabBar, that represents the container of the content need to be displayed._
 
-
 ## Properties
 - `isSelected` - Determines whether the panel is selected
 - `isDisabled` - Determines whether the panel is disabled
@@ -46,7 +43,6 @@ _Child component of IgxTabBar, that represents the container of the content need
 - `relatedTab` - Get the tab, associated with the panel
 - `label` - Defines the label on the associated tab
 - `icon` - Defines the icon on the associated tab
-- `color` - Defines the color on the associated tab
 
 ## Methods
 
@@ -74,7 +70,7 @@ _Child component of IgxTabBar, that represents the button that triggers displayi
 ----------
 ## Usage
 
-    <igx-tab-bar alignment="bottom">
+    <igx-tab-bar>
 		<igx-tab-panel label="Tab 1">
     		<h1>Tab 1 Content</h1>
     		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
