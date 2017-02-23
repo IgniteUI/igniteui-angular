@@ -1,0 +1,19 @@
+<div>
+    <h3>Task</h3>
+    <div>name: {{task.title}}</div>
+    <div>completed: {{task.percentCompleted}}</div>
+</div>
+
+<input type="text" [(ngModel)]="task.title">
+<input type="text" [(ngModel)]="task.percentCompleted">
+
+<div style="width: 70%; padding: 10px 15px; margin: 0 auto;">
+    <igx-range #range
+               [(ngModel)]="task.percentCompleted">
+    </igx-range>
+</div>
+
+<div style="width: 70%; padding: 10px 15px; margin: 0 auto;">
+    <igx-range #range2 [type]="sliderType" [lowerValue]="10" [upperValue]="15" [lowerBound]="0"  [upperBound]="100" [maxValue]="70" [minValue]="20">
+    </igx-range>
+</div>

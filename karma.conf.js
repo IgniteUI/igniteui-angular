@@ -75,6 +75,7 @@ module.exports = function(config) {
       "dist/zero-blocks.css",
       "src/progressbar/styles/circular-bar.style.css",
       "src/progressbar/styles/linear-bar.style.css",
+      "src/range/range.component.css",
 
       // Paths for debugging with source maps in dev tools
       {pattern: appSrcBase + '**/*.ts', included: false, watched: false},

@@ -21,6 +21,7 @@ import { IgxSnackbarSampleModule } from "./snackbar/sample.module";
 import {IgxToastSampleModule} from "./toast/sample.module";
 import { IgxCardSampleModule } from "./card/sample.module";
 import { routing } from "./app.routing";
+import {IgxRangeSampleModule} from "./range/sample.module";
 
 @NgModule({
     imports: [
@@ -43,6 +44,7 @@ import { routing } from "./app.routing";
         DialogSampleModule,
         IconSampleModule,
         IgxCardSampleModule,
+        IgxRangeSampleModule,
     ],
     declarations: [
         AppComponent,

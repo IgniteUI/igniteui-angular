@@ -14,6 +14,7 @@ import { IconSampleComponent } from "./icon/sample.component";
 import { IgxSnackbarSampleComponent } from "./snackbar/sample.component";
 import { IgxCardSampleComponent } from "./card/sample.component";
 import {IgxToastSampleComponent} from "./toast/sample.component";
+import {IgxRangeSampleComponent} from "./range/sample.component";
 
 const appRoutes: Routes = [
     {
@@ -38,7 +39,7 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: '/toast',
+        redirectTo: '/range',
         pathMatch: 'full'
     },
     {
@@ -72,6 +73,10 @@ const appRoutes: Routes = [
     {
         path: "card",
         component: IgxCardSampleComponent
+    },
+    {
+        path: "range",
+        component: IgxRangeSampleComponent
     }
 ];
 
