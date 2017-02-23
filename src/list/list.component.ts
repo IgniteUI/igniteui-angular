@@ -56,18 +56,18 @@ export class IgxList {
     @Input() allowRightPanning: boolean = false;
 
     @Input() hasNoItemsTemplate: boolean = false;
-    @Input() noItemsImgSrc: string = "https://actlearnlead.files.wordpress.com/2012/12/empty-box.jpg";
-    @Input() noItemsMessage: string = "No items.";
-    @Input() noItemsButtonText: string = "Add";
+    @Input() emptyListImage: string;
+    @Input() emptyListMessage: string = "No items";
+    @Input() emptyListButtonText: string = "Add";
 
-    @Output() noItemsButtonOnClick = new EventEmitter();
+    @Output() emptyListButtonClick = new EventEmitter();
 
     @Output() onLeftPan = new EventEmitter();
     @Output() onRightPan = new EventEmitter();
     @Output() onPanStateChange = new EventEmitter();
 
-    private onNoItemsButtonClicked(event) {
-        this.noItemsButtonOnClick.emit({ list: this, event: event });
+    private onEmptyListButtonClicked(event) {
+        this.emptyListButtonClick.emit({ list: this, event: event });
     }
 
     constructor(private element: ElementRef) {

@@ -12,6 +12,22 @@
         }
     }
 
+    @include e(empty) {
+        @extend %igx-list-empty;
+
+        @include b(image) {
+            @extend %igx-list-empty-image;
+        }
+
+        @include b(message) {
+            @extend %igx-list-empty-message;
+        }
+
+        @include m(custom) {
+            @extend %igx-list-empty;
+        }
+    } 
+
     // style the wrapping component elements
     @at-root {
         igx-list-item {

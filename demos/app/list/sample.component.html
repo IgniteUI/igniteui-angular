@@ -1,5 +1,6 @@
 <div class="wrapper" style="position: relative">
-    <h4>List with no items</h4>
+   
+   <h4>List with no items</h4>
     <div class="igx-form-group" [hidden]="fruits.length === 0">
         <input #searchFruits class="igx-form-group__input--search" placeholder="Search List" [(ngModel)]="fruitsSearch" />
         <label igxLabel>
@@ -10,8 +11,9 @@
         </span>
     </div>
     <igx-list [hidden]="fruitsFilteredItemsCount === 0"
-        noItemsMessage="No fruits." 
-        (noItemsButtonOnClick)="addFruitDialog.open()"
+        emptyListMessage="No fruits."
+        emptyListImage="../../demos/app/list/images/empty.png"
+        (emptyListButtonClick)="addFruitDialog.open()"
         [igxFilter]="fruitsFilterOptions" (filtered)="fruitsFiltered($event)">
         <igx-list-item *ngFor="let fruit of fruits">
             <div [attr.data-fruit-id]="fruit.id">
@@ -22,9 +24,12 @@
             </div>
         </igx-list-item>
     </igx-list>
+
+
     <div [hidden]="fruitsFilteredItemsCount > 0 || searchFruits.value === ''">
         No filtered items.
     </div>
+
     <igx-dialog #addFruitDialog title="Add Fruit"
         leftButtonLabel="Cancel"
         (onLeftButtonSelect)="addFruitDialog.close()"
@@ -39,7 +44,8 @@
             <label igxLabel>Fruit Name</label>
         </div>
     </igx-dialog>
-    <button *ngIf="fruits.length > 0" igxButton="fab" igxButtonColor="white" 
+
+    <button igxButton="fab" igxButtonColor="white" 
         igxButtonBackground="#0375be" igRipple="white" (click)="addFruitDialog.open()"
         style="position:absolute; bottom: 10px; right: 10px">
         <i class="material-icons">add</i>
@@ -79,6 +85,7 @@
     </igx-list-item>
     </igx-list>
 </div>
+
 <div class="wrapper">
     <h4>Data Source Filtered List</h4>
     <div class="igx-form-group">
@@ -97,13 +104,14 @@
         </igx-list-item>
     </igx-list>
 </div>
+
 <div class="wrapper">
     <h4>List with custom no items template</h4>
     <igx-list hasNoItemsTemplate="true">
         <igx-list-item *ngFor="let fruit of fruits">
             {{ fruit.name }}
         </igx-list-item>
-        <div class="igx-list__custom-no-items">
+        <div class="igx-list__empty--custom">
             No items, bruh.
         </div>
     </igx-list>
