@@ -1,6 +1,27 @@
 %igx-list {
     background-color: $list-background;
+    height: 100%;
     overflow: hidden;
+}
+
+%igx-list-empty {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    height: inherit;
+}
+
+%igx-list-empty-image {
+    width: auto;
+    max-height: 120px;
+}
+
+%igx-list-empty-message {
+    text-align: center;
+    color: set-color($list-background);
+    padding: em(16, 16);
+    z-index: 1;
 }
 
 %igx-list-item-display {
