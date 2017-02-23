@@ -38,11 +38,6 @@ const appRoutes: Routes = [
         component: ListSampleComponent
     },
     {
-        path: '',
-        redirectTo: '/range',
-        pathMatch: 'full'
-    },
-    {
         path: "avatar",
         component: AvatarSampleComponent
     },

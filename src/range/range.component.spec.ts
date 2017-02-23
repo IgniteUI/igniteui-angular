@@ -4,7 +4,7 @@ import {Component, ViewChild} from "@angular/core";
 
 declare var Simulator: any;
 
-fdescribe('IgxRange', () => {
+describe('IgxRange', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -39,7 +39,6 @@ fdescribe('IgxRange', () => {
     it("should have lower value equal to lower bound when lower value is not set and slider type is DOUBLE_HORIZONTAL", () => {
         let fixture = TestBed.createComponent(RangeIntializeTestComponent);
         fixture.componentInstance.range.type = SliderType.DOUBLE_HORIZONTAL;
-        debugger;
         fixture.detectChanges();
 
         expect(fixture.componentInstance.range.lowerValue)
@@ -183,7 +182,7 @@ fdescribe('IgxRange', () => {
         expect(fixture.componentInstance.range.upperBound).toBeGreaterThan(fixture.componentInstance.range.lowerBound);
     });
 
-    it('Should pan right and pan left.', (done) => {
+   it('should move thumb range to value 60', (done) => {
         let fixture,
             range: IgxRange;
         TestBed.compileComponents().then(() => {
