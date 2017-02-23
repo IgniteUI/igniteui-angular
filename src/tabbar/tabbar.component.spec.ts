@@ -1,7 +1,7 @@
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxTabBar, IgxTabPanel, IgxTab, IgxTabBarModule } from './tabbar.component';
-import { Component, ViewChild, ContentChildren, QueryList } from '@angular/core';
+import { Component, ViewChild, ContentChildren, QueryList, AfterViewChecked, AfterContentChecked } from '@angular/core';
 
 describe("TabBar", function () {
     beforeEach(async(() => {
@@ -15,7 +15,7 @@ describe("TabBar", function () {
     it('should initialize igx-tab-bar, igx-tab-panel and igx-tab', () => {
         let fixture = TestBed.createComponent(TabBarTestComponent),
             tabbar = fixture.componentInstance.tabbar,
-            panels, tabs;
+            panels: IgxTabPanel[], tabs: IgxTab[];
 
         fixture.detectChanges();
 
@@ -29,6 +29,7 @@ describe("TabBar", function () {
 
         for (let i = 0; i < tabbar.panels.length; i++) {
             expect(panels[i] instanceof IgxTabPanel).toBeTruthy();
+            expect(panels[i].relatedTab).toBe(tabs[i]);
         }
 
         expect(tabbar.tabs instanceof QueryList).toBeTruthy();
@@ -36,6 +37,7 @@ describe("TabBar", function () {
 
         for (let i = 0; i < tabbar.tabs.length; i++) {
             expect(tabs[i] instanceof IgxTab).toBeTruthy();
+            expect(tabs[i].relatedPanel).toBe(panels[i]);
         }
     });
 
@@ -44,21 +46,19 @@ describe("TabBar", function () {
             tabbar = fixture.componentInstance.tabbar,
             tabs;
 
-        expect(tabbar.alignment).toBe("top");
         expect(tabbar.selectedIndex).toBe(-1);
         expect(tabbar.selectedTab).toBeUndefined();
+
+        fixture.componentInstance.tabSelectedHandler = function () {
+            expect(tabbar.selectedIndex).toBe(0);
+            expect(tabbar.selectedTab).toBe(tabs[0]);
+        }
 
         fixture.detectChanges();
 
         tabs = tabbar.tabs.toArray();
         expect(tabs[0].isDisabled).toBeFalsy();
-        expect(tabs[1].isDisabled).toBeFalsy();        
-        
-        setTimeout(function () {
-            expect(tabbar.selectedIndex).toBe(0);
-            expect(tabbar.selectedTab).toBe(tabs[0]);
-        }, 0);
-        
+        expect(tabs[1].isDisabled).toBeFalsy();
     });
 
     it('should initialize set/get properties', () => {
@@ -85,122 +85,51 @@ describe("TabBar", function () {
             tabs, tab1: IgxTab, tab2: IgxTab;
 
         expect(tabbar.selectedIndex).toBe(-1);
+        fixture.componentInstance.tabSelectedHandler = function () {
+            expect(tabbar.selectedIndex).toBe(0);
+            expect(tabbar.selectedTab).toBe(tab1);
+        }
 
         fixture.detectChanges();
         tabs = tabbar.tabs.toArray();
         tab1 = tabs[0];
         tab2 = tabs[1];
 
-        setTimeout(function () {
-            expect(tabbar.selectedIndex).toBe(0);
-            expect(tabbar.selectedTab).toBe(tab1);
-        }, 0);
+        fixture.componentInstance.tabSelectedHandler = function () { };
         
         tab2.select();
-
         fixture.detectChanges();
+
         expect(tabbar.selectedIndex).toBe(1);
         expect(tabbar.selectedTab).toBe(tab2);
-        tab1.select();
+        expect(tabbar.selectedIndex).toBe(1);
+        expect(tab2.isSelected).toBeTruthy();
+        expect(tab1.isSelected).toBeFalsy();
 
+        tab1.select();
         fixture.detectChanges();
+
         expect(tabbar.selectedIndex).toBe(0);
         expect(tabbar.selectedTab).toBe(tab1);
+        expect(tab1.isSelected).toBeTruthy();
+        expect(tab2.isSelected).toBeFalsy();
 
         // select disabled tab
         tab2.relatedPanel.isDisabled = true;
         tab2.select();
-
         fixture.detectChanges();
+
         expect(tabbar.selectedIndex).toBe(0);
         expect(tabbar.selectedTab).toBe(tab1);
-
-        //tab1.isSelected = false;
-
-        //fixture.detectChanges();
-        //// Cannot deselect the only selected tab without provideing other selection, so the last selected tab will remain selected
-        //expect(tabbar.selectedIndex).toBe(0);
-        //expect(tabbar.selectedTab).toBe(tab1);
-    });
-
-    //it('should remove tab', () => {
-    //    let fixture = TestBed.createComponent(TabBarTestComponent),
-    //        tabbar = fixture.componentInstance.tabbar,
-    //        tabs = tabbar.tabPanels,
-    //        lastTab;
-
-    //    expect(tabs.length).toBe(3);
-    //    // remove tab outside the range
-    //    tabbar.remove(5);
-
-    //    fixture.detectChanges();
-    //    expect(tabs.length).toBe(3);
-    //    lastTab = tabs[tabs.length - 1];
-    //    tabbar.remove(lastTab.index);
-
-    //    fixture.detectChanges();
-    //    expect(tabs.length).toBe(2);
-    //    expect(tabs.indexOf(lastTab)).toBe(-1); // the tab is removed and is not part of the tab array
-    //    tabbar.remove(0);
-
-    //    fixture.detectChanges();
-    //    expect(tabs.length).toBe(1);
-    //    expect(tabs[0].index).toBe(0);
-    //});
-
-    it('should calculate height and marginTop on top alignment', () => {
-        let fixture = TestBed.createComponent(TabBarTestComponent),
-            tabbar = fixture.componentInstance.tabbar,
-            wrapper = fixture.componentInstance.wrapperDiv,
-            panels, panel1, panel2,
-            testWrapperHeight = 600;
-
-        wrapper.nativeElement.style.height = testWrapperHeight + "px";
-        wrapper.nativeElement.style.position = "relative";
-        expect(tabbar.alignment).toBe("top");
-
-        fixture.detectChanges();
-
-        panels = tabbar.panels.toArray();
-        panel1 = panels[0];
-        panel2 = panels[1];
-
-        expect(tabbar.alignment).toBe("top");
-        //expect(panel1.marginTop).toBe(tabbar.tabListHeight + "px");
-        //expect(panel2.marginTop).toBe(tabbar.tabListHeight + "px");
-        //expect(tab1.height).toBe(testWrapperHeight - tabbar.tabListHeight + "px");
-        //expect(tab2.height).toBe(testWrapperHeight - tabbar.tabListHeight + "px");
-    });
-
-    it('should calculate height and marginTop on bottom alignment', () => {
-        let fixture = TestBed.createComponent(BottomTabBarTestComponent),
-            tabbar = fixture.componentInstance.tabbar,
-            wrapper = fixture.componentInstance.wrapperDiv,
-            panels, panel1, panel2,
-            testWrapperHeight = 600;
-
-        wrapper.nativeElement.style.height = testWrapperHeight + "px";
-        wrapper.nativeElement.style.position = "relative";
-        expect(tabbar.alignment).toBe("top");
-
-        fixture.detectChanges();
-
-        panels = tabbar.panels.toArray();
-        panel1 = panels[0];
-        panel2 = panels[1];
-
-        expect(tabbar.alignment).toBe("bottom");
-        expect(panel1.marginTop).toBe(0);
-        expect(panel2.marginTop).toBe(0);
-        //expect(tab1.height).toBe(testWrapperHeight - tabbar.tabListHeight + "px");
-        //expect(tab2.height).toBe(testWrapperHeight - tabbar.tabListHeight + "px");
+        expect(tab1.isSelected).toBeTruthy();
+        expect(tab2.isSelected).toBeFalsy();
     });
 });
 
 @Component({
     template: `
         <div #wrapperDiv>
-            <igx-tab-bar>
+            <igx-tab-bar (onTabSelected)="tabSelectedHandler($event)">
                 <igx-tab-panel label="Tab 1" icon="library_music">
                     <h1>Tab 1 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
@@ -227,6 +156,9 @@ describe("TabBar", function () {
 class TabBarTestComponent {
     @ViewChild(IgxTabBar) tabbar: IgxTabBar;
     @ViewChild("wrapperDiv") wrapperDiv: any;
+
+    tabSelectedHandler(args) {
+    }
 }
 
 @Component({

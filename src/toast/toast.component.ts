@@ -15,19 +15,19 @@ import { trigger, state, style, transition, animate, AnimationTransitionEvent } 
     moduleId: module.id,
     templateUrl: "toast.component.html",
     animations: [
-        trigger('showHide', [
-            state('visible', style({
+        trigger('animate', [
+            state('show', style({
                 opacity: 1
             })),
-            transition('void <=> visible', animate('.25s ease'))])
+            transition('* => show', animate('.20s ease')),
+            transition('show => *', animate('.40s ease-out'))
+        ])
     ],
     host: {
         role: "alert"
     }
 })
 export class IgxToast {
-    private state: string = null;
-
     public readonly CSS_CLASSES = {
         IGX_TOAST_MIDDLE: "igx-toast--middle",
         IGX_TOAST_BOTTOM: "igx-toast--bottom",
@@ -109,8 +109,6 @@ export class IgxToast {
      * if autoHide is enabled
      */
     public show(): void {
-        this.state = "visible";
-
         clearInterval(this._intevalId);
         this.onShowing.emit(this);
         this.isVisible = true;
@@ -128,8 +126,6 @@ export class IgxToast {
      * Hides the IgxToast component
      */
     public hide(): void {
-        this.state = null;
-        
         this.onHiding.emit(this);
         this.isVisible = false;
         this.onHidden.emit(this);
