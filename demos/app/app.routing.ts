@@ -41,6 +41,7 @@ const appRoutes: Routes = [
     {
         path: "list",
         component: ListSampleComponent
+    },
     {
         path: "avatar",
         component: AvatarSampleComponent
