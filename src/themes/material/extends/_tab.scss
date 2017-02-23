@@ -1,10 +1,9 @@
-%igx-tab-wrapper-display {
-    display: block;
+%igx-tab-panel {
+    display: none;
 }
 
-%igx-tabbar-inner-display {
-    width: 100%;
-    position: absolute;
+%igx-tab-panel--selected {
+    display: block;
 }
 
 %igx-tabbar-menu {
@@ -43,14 +42,13 @@
     min-width: 80px;
     flex-grow: 1;
     height: 100%;
-    list-style: none;
-    text-align: center;
     cursor: pointer;
     text-transform: uppercase;
     white-space: nowrap;
     text-overflow: ellipsis;
     user-select: none;
     overflow: hidden;
+    padding: 0 16px;
     -webkit-tap-highlight-color: transparent;
 }
 

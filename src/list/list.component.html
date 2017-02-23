@@ -1,0 +1,16 @@
+<div class="{{_innerStyle}}">
+  <ng-content></ng-content>
+
+  <section *ngIf="children.length === 0 && !hasNoItemsTemplate" class="igx-list__empty">
+    <img class="image" alt="{{ emptyListMessage }} image." src="{{ emptyListImage }}" />
+
+    <article class="message">
+      <p>{{ emptyListMessage }}</p>
+      <button igxButton="raised" igxRipple="white" (click)="onEmptyListButtonClicked($event)">{{ emptyListButtonText }}</button>
+    </article>
+  </section>
+
+  <ng-content *ngIf="children.length === 0 && hasNoItemsTemplate" select=".igx-list__empty--custom">
+  </ng-content>
+
+</div>

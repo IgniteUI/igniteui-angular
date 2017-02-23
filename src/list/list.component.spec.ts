@@ -1,8 +1,8 @@
 import { async, TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { HammerGesturesManager } from '../core/touch';
-import { IgxList, IgxListHeader, IgxListItem, IgxListModule, IgxListPanState } from './list.component';
-import { Component, ViewChild, ContentChildren } from '@angular/core';
+import { IgxList, IgxListItem, IgxListModule, IgxListPanState } from './list.component';
+import { Component, ViewChild, ContentChildren, QueryList } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
 declare var Simulator: any;
@@ -12,7 +12,8 @@ describe("List", function () {
         TestBed.configureTestingModule({
             imports: [IgxListModule],
             declarations: [ListTestComponent, ListWithPanningAllowed,
-                ListWithLeftPanningAllowed, ListWithRightPanningAllowed]
+                ListWithLeftPanningAllowed, ListWithRightPanningAllowed,
+                ListWithNoItems, ListWithCustomNoItemsTemplate]
         }).compileComponents();
     }));
 
@@ -33,7 +34,7 @@ describe("List", function () {
         expect(list.items[0] instanceof IgxListItem).toBeTruthy();
         expect(list.headers instanceof Array).toBeTruthy();
         expect(list.headers.length).toBe(1);
-        expect(list.headers[0] instanceof IgxListHeader).toBeTruthy();
+        expect(list.headers[0] instanceof IgxListItem).toBeTruthy();
     });
 
      it('should set/get properly layout properties: width, left, maxLeft', () => {
@@ -61,7 +62,7 @@ describe("List", function () {
             list = fixture.componentInstance.list;
         fixture.detectChanges();
 
-        expect(list.children instanceof Array).toBeTruthy();
+        expect(list.children instanceof QueryList).toBeTruthy();
         expect(list.items instanceof Array).toBeTruthy();
         expect(list.headers instanceof Array).toBeTruthy();
 
@@ -70,18 +71,8 @@ describe("List", function () {
         expect(list.headers.length).toBe(1);
 
         for (let i = 0; i < list.children.length; i++) {
-            expect(list.children[i].index).toBe(i);
-        }
-
-        list.addChild(new IgxListItem(list, null, null));
-        fixture.detectChanges();
-
-        expect(list.children.length).toBe(5);
-        expect(list.items.length).toBe(4);
-        expect(list.headers.length).toBe(1);
-
-        for (let i = 0; i < list.children.length; i++) {
-            expect(list.children[i].index).toBe(i);
+            var item: IgxListItem = list.children.find((child => ( child.index === i)));
+            expect(item.index).toBe(i);
         }
     });
 
@@ -94,6 +85,8 @@ describe("List", function () {
             list = fixture.componentInstance.list;
 
             fixture.detectChanges();
+            return fixture.whenStable();
+        }).then(function() {
 
             item = list.items[0] as IgxListItem;
             itemNativeElement = item.element.nativeElement;
@@ -136,7 +129,8 @@ describe("List", function () {
             list = fixture.componentInstance.list;
 
             fixture.detectChanges();
-
+            return fixture.whenStable();
+        }).then(function() {
             item = list.items[0] as IgxListItem;
             itemNativeElement = item.element.nativeElement;
             itemHeight = item.element.nativeElement.offsetHeight;
@@ -172,7 +166,8 @@ describe("List", function () {
             list = fixture.componentInstance.list;
 
             fixture.detectChanges();
-            
+            return fixture.whenStable();
+        }).then(function() {            
             item = list.items[0] as IgxListItem;
             itemNativeElement = item.element.nativeElement;
             itemHeight = item.element.nativeElement.offsetHeight;
@@ -198,6 +193,45 @@ describe("List", function () {
             done();
         });
     }, 5000);
+
+    it("Should have default no items template.", () => {
+        let fixture = TestBed.createComponent(ListWithNoItems),
+            list = fixture.componentInstance.list,
+            listNoItemsImgSrc = "https://example.com/noitems.png",
+            listNoItemsMessage = "Custom no items message.",
+            listNoItemsButtonText = "Custom Button Text";
+
+        fixture.detectChanges();
+
+        expect(list.hasNoItemsTemplate).toBeFalsy();
+        expect(list.emptyListImage).toBe(listNoItemsImgSrc);
+        expect(list.emptyListMessage).toBe(listNoItemsMessage);
+        expect(list.emptyListButtonText).toBe(listNoItemsButtonText);
+
+        let noItemsImgDebugEl = fixture.debugElement.query(By.css(".image"));
+        expect(noItemsImgDebugEl.nativeElement.getAttributeNode("src").value).toBe(listNoItemsImgSrc);
+
+        let noItemsTextDebugEl = fixture.debugElement.query(By.css(".message > p"));
+        expect(noItemsTextDebugEl.nativeElement.textContent.trim()).toBe(listNoItemsMessage);
+
+        let noItemsButtonDebugEl = fixture.debugElement.query(By.css("button"));
+        expect(noItemsButtonDebugEl.nativeElement.textContent.trim()).toEqual(listNoItemsButtonText);
+
+        spyOn(list.emptyListButtonClick, "emit");
+        noItemsButtonDebugEl.nativeElement.click();
+        expect(list.emptyListButtonClick.emit).toHaveBeenCalled();
+    })
+
+    it("Should have custom no items template.", () => {
+        let fixture = TestBed.createComponent(ListWithCustomNoItemsTemplate),
+            list = fixture.componentInstance.list,
+            listCustomNoItemsTemplateContent = "Custom no items message.";
+
+        fixture.detectChanges();
+        expect(list.hasNoItemsTemplate).toBeTruthy();
+        let noItemsTemplateDebugEl = fixture.debugElement.query(By.css(".igx-list__empty--custom"));
+        expect(noItemsTemplateDebugEl.nativeElement.textContent.trim()).toEqual(listCustomNoItemsTemplateContent);
+    })
 
     function panRight(item, itemHeight, itemWidth, duration) {
         var panOptions = { 
@@ -233,7 +267,7 @@ describe("List", function () {
 @Component({
     template: `<div #wrapper>
                     <igx-list>
-                        <igx-list-header>Header</igx-list-header>
+                        <igx-list-item [isHeader]="true">Header</igx-list-item>
                         <igx-list-item>Item 1</igx-list-item>
                         <igx-list-item>Item 2</igx-list-item>
                         <igx-list-item>Item 3</igx-list-item>
@@ -281,5 +315,31 @@ class ListWithRightPanningAllowed {
             </div>`
 })
 class ListWithLeftPanningAllowed {
+    @ViewChild(IgxList) list: IgxList;
+}
+
+@Component({
+    template: `<div #wrapper>
+                <igx-list [hasNoItemsTemplate]="false"
+                    emptyListMessage="Custom no items message."
+                    emptyListImage="https://example.com/noitems.png"
+                    emptyListButtonText="Custom Button Text">
+                </igx-list>
+            </div>`
+})
+class ListWithNoItems {
+    @ViewChild(IgxList) list: IgxList;
+}
+
+@Component({
+    template: `<div #wrapper>
+                <igx-list [hasNoItemsTemplate]="true">
+                    <div class="igx-list__empty--custom">
+                        Custom no items message.
+                    </div>
+                </igx-list>
+            </div>`
+})
+class ListWithCustomNoItemsTemplate {
     @ViewChild(IgxList) list: IgxList;
 }

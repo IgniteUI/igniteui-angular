@@ -1,115 +1,103 @@
-import { Component, Input, Output, ContentChildren, QueryList, Renderer,
-     NgModule, OnInit, OnDestroy, ViewChild, Inject, forwardRef, ElementRef, EventEmitter } from '@angular/core';
+import { Component, Input, Output, ContentChildren, QueryList, Renderer, HostBinding,
+     NgModule, OnInit, OnDestroy, ViewChild, Inject, forwardRef, ElementRef, EventEmitter, AfterContentInit } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { HammerGesturesManager } from '../core/touch';
+import { IgxButtonModule } from "../button/button.directive";
+import { IgxRippleModule } from "../directives/ripple.directive";
 
-export interface IListChild
-{
+export interface IListChild {
     index: number;
 }
+
+export enum IgxListPanState { NONE, LEFT, RIGHT };
 
 // ====================== LIST ================================
 // The `<igx-list>` directive is a list container for items and headers
 @Component({
     selector: 'igx-list',
-    moduleId: module.id, // commonJS standard
-    templateUrl: 'list-content.component.html',
+    moduleId: module.id,
+    templateUrl: 'list.component.html',
     host: {
         'role': "list"
-    },
+    }
 })
-
 export class IgxList {
     private _innerStyle: string = "igx-list";
 
-    children: IListChild[] = [];
-    get items() {
-        return this.children.filter((item: IListChild) => {
-            return item instanceof IgxListItem;
-        });
-    }
+    @ContentChildren(forwardRef(() => IgxListItem)) children: QueryList<IgxListItem>;
 
-    get headers() {
-        return this.children.filter((header: IListChild) => {
-            return header instanceof IgxListHeader;
-        });
+    get items(): IgxListItem[] {
+        let items: IgxListItem[] = [];
+        if (this.children !== undefined) {
+            for (let child of this.children.toArray()) {
+                if (!child.isHeader) {
+                    items.push(child);
+                }
+            }
+        }
+
+        return items;
+    }
+    
+    get headers(): IgxListItem[] {
+        let headers: IgxListItem[] = [];
+        if (this.children !== undefined) {
+            for (let child of this.children.toArray()) {
+                if (child.isHeader) {
+                    headers.push(child);
+                }
+            }
+        }
+
+        return headers;
     }
 
     @Input() allowLeftPanning: boolean = false;
     @Input() allowRightPanning: boolean = false;
 
+    @Input() hasNoItemsTemplate: boolean = false;
+    @Input() emptyListImage: string;
+    @Input() emptyListMessage: string = "No items";
+    @Input() emptyListButtonText: string = "Add";
+
+    @Output() emptyListButtonClick = new EventEmitter();
+
     @Output() onLeftPan = new EventEmitter();
     @Output() onRightPan = new EventEmitter();
     @Output() onPanStateChange = new EventEmitter();
 
+    private onEmptyListButtonClicked(event) {
+        this.emptyListButtonClick.emit({ list: this, event: event });
+    }
+
     constructor(private element: ElementRef) {
     }
-
-    removeChild(index: number) {
-        this.children.splice(index, 1);
-    }
-
-    addChild(child: IListChild) {
-        this.children.push(child);
-    }
 }
-
-// ====================== HEADER ================================
-// The `<igx-header>` directive is a header intended for row items in
-// a `<igx-list>` container.
-@Component({
-    selector: 'igx-list-header',
-    moduleId: module.id, // commonJS standard
-    templateUrl: 'list-content.component.html',
-    host: {
-        'role': "separator"
-    },
-})
-
-export class IgxListHeader implements OnInit, IListChild {
-    private _innerStyle: string = "igx-list__header";
-    get index(): number {
-        return this.list.children.indexOf(this);
-    }
-
-    constructor( @Inject(forwardRef(() => IgxList)) private list: IgxList, public element: ElementRef) { }
-
-    public ngOnInit() {
-        this.list.addChild(this);
-        this.element.nativeElement.setAttribute('aria-label', this.element.nativeElement.textContent.trim());
-    }
-}
-
-export enum IgxListPanState { NONE, LEFT, RIGHT };
 
 // ====================== ITEM ================================
 // The `<igx-item>` directive is a container intended for row items in
 // a `<igx-list>` container.
 @Component({
     selector: 'igx-list-item',
-    moduleId: module.id, // commonJS standard
-    templateUrl: 'list-content.component.html',
-    host: {
-        'role': "listitem"
-    },
+    moduleId: module.id,
+    templateUrl: 'list-item.component.html'
 })
-
 export class IgxListItem implements OnInit, OnDestroy, IListChild {
     @ViewChild('wrapper') wrapper: ElementRef;
 
     private _panState: IgxListPanState = IgxListPanState.NONE;
     private _FRACTION_OF_WIDTH_TO_TRIGGER_GRIP = 0.5; // as a fraction of the item width
-    private _innerStyle: string = "igx-list__item";
+    private _innerStyle: string = "";
     private _previousPanDeltaX = 0;
 
-    hidden: boolean = false;
+    hidden: boolean = false;    
 
     get panState(): IgxListPanState {
         return  this._panState;
     }
 
     get index(): number {
-        return this.list.children.indexOf(this);
+        return this.list.children.toArray().indexOf(this);
     }
 
     get width() {
@@ -141,23 +129,30 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
         return this.width;
     }
 
+    @HostBinding('attr.role') role;
+    @Input() isHeader: boolean = false;
     @Input() href: string;
     @Input() options: Array<Object>
 
-    constructor( @Inject(forwardRef(() => IgxList)) private list: IgxList, public element: ElementRef, private _renderer: Renderer) {
+    constructor(@Inject(forwardRef(() => IgxList)) private list: IgxList, public element: ElementRef, private _renderer: Renderer) {
     }
 
     public ngOnInit() {
-        this.list.addChild(this);
+        if (this.isHeader) {
+            this._innerStyle = "igx-list__header";
+            this.role = "separator";
+        } else {
+            this._innerStyle = "igx-list__item";
+            this.role = "listitem";
 
-        this._addEventListeners();
-        this.element.nativeElement.setAttribute('aria-label', this.element.nativeElement.textContent.trim());
+            this._addEventListeners();
+            this.element.nativeElement.style.touchAction = "pan-y";
+        }
 
-        this.element.nativeElement.style.touchAction = "pan-y";
+        this.element.nativeElement.setAttribute('aria-label', this.element.nativeElement.textContent.trim());        
     }
 
     public ngOnDestroy() {
-        this.list.removeChild(this.index);
     }
 
     private _addEventListeners() {
@@ -192,7 +187,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
         }
         
         this._previousPanDeltaX = ev.deltaX;
-    } 
+    }
 
     private panEnd(ev: HammerInput) {
         var oldPanState = this._panState;
@@ -235,9 +230,9 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
 }
 
 @NgModule({
-    declarations: [IgxList, IgxListItem, IgxListHeader],
-    imports: [CommonModule],
-    exports: [IgxList, IgxListItem, IgxListHeader]
+    declarations: [IgxList, IgxListItem],
+    imports: [CommonModule, IgxButtonModule, IgxRippleModule],
+    exports: [IgxList, IgxListItem]
 })
 export class IgxListModule {
 }

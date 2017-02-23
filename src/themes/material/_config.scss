@@ -369,7 +369,7 @@ $blockquote-line-height-phone: em(25px) !default;
    ========================================================================== */
 
 $list-margin: 8px 16px !default;
-$list-background: darken($white, 5%);
+$list-background: $white;
 $list-header-color: $secondary-color !default;
 $list-header-background: $white;
 $list-header-font-size: em(13px) !default;
