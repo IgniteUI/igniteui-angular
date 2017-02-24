@@ -1,11 +1,11 @@
 <span>Multiple Selection</span>
 <div style="margin: 20px;">
-    <igx-buttongroup [multiSelection]="multi" [values]="buttons">
+    <igx-buttongroup [multiSelection]="multi" [values]="buttons" disabled=true>
     </igx-buttongroup>
 </div><br />
 <span>Single Selection</span>
 <div style="margin: 20px;">
-    <igx-buttongroup [multiSelection]="!multi" [values]="buttons">
+    <igx-buttongroup [multiSelection]="!multi" [values]="buttons" (onUnselect)="onSelect($event)" (onSelect)="onSelect($event)">
     </igx-buttongroup>
 </div><br />
 <span>Vertical alignment</span>

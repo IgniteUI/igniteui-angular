@@ -7,6 +7,7 @@ interface IButton {
     type?: string,
     ripple?: string,
     label?: string,
+    disabled?: boolean
     selected?: boolean,
     color?: string,
     bgcolor?: string,
@@ -17,6 +18,7 @@ class Button {
     private type: string;
     private ripple: string;
     private label: string;
+    private disabled: boolean;
     private selected: boolean;
     private color: string;
     private bgcolor: string;
@@ -27,6 +29,7 @@ class Button {
         this.ripple = obj.ripple || 'orange';
         this.label = obj.label || 'Button label';
         this.selected = obj.selected || false;
+        this.disabled = obj.disabled || false;
         this.color = obj.color || '#484848';
         this.bgcolor = obj.bgcolor || 'white';
         this.icon = obj.icon || 'home';
@@ -45,14 +48,20 @@ export class ButtonGroupSampleComponent implements OnInit  {
 
     constructor() {}
     private buttons: Array<Button>;
-    
+    onSelect(args) {
+        console.log(args.index + " is selected")
+    }
+    onUnselect(args) {
+        console.log(args.index + " is deselected")
+    }
     public ngOnInit(): void {
 
         this.buttons = [
             new Button({
                 type: 'raised',
                 label: 'Euro',
-                selected: true,
+                selected: false,
+                disabled: false
             //    icon: 'mdi-currency-eur'
             }),
             new Button({

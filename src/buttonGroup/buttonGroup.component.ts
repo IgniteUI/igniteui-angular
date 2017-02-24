@@ -1,4 +1,4 @@
-import { Component, Directive, Input, NgModule, ElementRef, QueryList, ViewChildren, Inject, forwardRef, AfterViewInit, Renderer } from '@angular/core';
+import { Component, Directive, Input, Output, NgModule, EventEmitter, ElementRef, QueryList, ViewChildren, Inject, forwardRef, AfterViewInit, Renderer } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { IgxRippleModule } from "../../src/directives/ripple.directive";
 import { IgxButtonModule, IgxButton } from "../button/button.directive";
@@ -14,16 +14,19 @@ export enum ButtonGroupAlignment { horizontal, vertical };
     styleUrls: ['buttongroup.component.css'],
     host: {
         'role': "group",
-        '[class.igx-button-group-vertical]': '_isVertical'
+        '[class.igx-button-group-vertical]': '_isVertical',
+        '[class.igx-button-group-selected]': 'selectedIndexes.length > 0',
+        '[class.igx-button-group-disabled]': '_isDisabled'
     },
 })
 
 export class IgxButtonGroup implements AfterViewInit {
     @ViewChildren(IgxButton) buttons: QueryList<IgxButtonGroup>;
     @Input() multiSelection: boolean = false;
-    @Input() disabled: boolean = false;
     @Input() values: any;
-      
+    @Input() set disabled(val: boolean) {
+        this._isDisabled = val;
+    }
     @Input() set alignment (value: ButtonGroupAlignment) {
         this._isVertical = value == ButtonGroupAlignment.vertical;
     }
@@ -31,11 +34,14 @@ export class IgxButtonGroup implements AfterViewInit {
     // get alignment(): ButtonGroupAlignment {
     //     return this.alignment;
     // }
-
-    private _innerStyle: string = "igx-button-group";
+    private _cssClass: string = 'igx-button-group';
     private _isVertical:Boolean;
-    
+    private _isDisabled:Boolean;
+
     public selectedIndexes: Array<number> = [];
+    
+    @Output() onSelect = new EventEmitter();
+    @Output() onUnselect = new EventEmitter();
 
     constructor(private _el: ElementRef, private _renderer: Renderer) {
     }
@@ -59,7 +65,9 @@ export class IgxButtonGroup implements AfterViewInit {
         var buttonElement = this.buttons.toArray()[index]._el.nativeElement;
         this.selectedIndexes.push(index);
         buttonElement.setAttribute("data-selected", true);
+        this.onSelect.emit({ button: this.buttons.toArray()[index], index: index });
         
+        // deselect other buttons if multiSelection is not enabled
         if(!this.multiSelection && this.selectedIndexes.length > 0) {
             this.buttons.forEach((b, i) => {
                 if(i != index && this.selectedIndexes.indexOf(i) != -1) {
@@ -73,6 +81,7 @@ export class IgxButtonGroup implements AfterViewInit {
          var buttonElement = this.buttons.toArray()[index]._el.nativeElement;
          this.selectedIndexes.splice(this.selectedIndexes.indexOf(index), 1);
          buttonElement.setAttribute("data-selected", false);
+         this.onUnselect.emit({ button: this.buttons.toArray()[index], index: index });
     }
     
     ngAfterViewInit() {
