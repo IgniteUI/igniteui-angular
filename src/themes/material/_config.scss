@@ -19,7 +19,7 @@
  *  11. Global
  *  TODO: 12. Navigation Bar
  *  TODO: 13. Navigation Drawer
- *  TODO: 14. Slider
+ *  14. Range (Slider)
  *  TODO: 15. Spinners | Loaders
  *  TODO: 16. Tabs
  *  TODO: 17. Tables
@@ -307,10 +307,43 @@ $small-and-down: "only screen and (max-width : #{$small-screen})" !default;
 $medium-and-down: "only screen and (max-width : #{$medium-screen})" !default;
 $medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})" !default;
 
+/* 11. Range (Slider)
+   ========================================================================== */
+
+// General
+$range-height: 48px;
+
+// Range Track
+$range-track-color: rgba(0,0,0,.32);
+$range-track-fill-color: $secondary-color;
+$range-track-height: 2px;
+
+// Range Ticks
+$range-tick-height: 2px;
+$range-tick-color: $white;
+
+// Range Thumb
+$range-thumb-width: 14px;
+$range-thumb-height: $range-thumb-width;
+$range-thumb-radius: $range-thumb-width/2;
+$range-thumb-color: $yellow-orange;
+
+// Range Label
+$range-label-width: 28px;
+$range-label-height: $range-label-width;
+$range-label-radius: $range-label-width/2;
+$range-label-font-size: em(11px);
+$range-label-font-color: $off-black;
+$range-label-background: $yellow-orange;
+
+// Start Modifier
+$range-background--start: $white;
+
+
 /* 16. Bottom navigation bar / Tabs
    ========================================================================== */
 
-$tab-bar-background: #fff;
+$tab-bar-background: $white;
 
 /* 18. Toasts
    ========================================================================== */

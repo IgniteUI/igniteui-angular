@@ -1,9 +1,10 @@
 import {
     Component, NgModule, Input, ElementRef, ViewChild, OnInit, AfterViewInit, forwardRef
 } from "@angular/core";
-import {CommonModule} from "@angular/common";
-import {HammerGesturesManager} from "../core/touch";
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
+import { CommonModule } from "@angular/common";
+import { HammerGesturesManager } from "../core/touch";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import 'rxjs/add/operator/debounceTime';
 
 export enum SliderType {
     SINGLE_HORIZONTAL,
@@ -17,7 +18,7 @@ enum SliderHandle {
     TO
 }
 
-const noop = () => {};
+const noop = () => { };
 
 function MakeProvider(type: any) {
     return {
@@ -31,7 +32,6 @@ function MakeProvider(type: any) {
     selector: "igx-range",
     moduleId: module.id,
     templateUrl: "range.component.html",
-    styleUrls: ["range.component.css"],
     providers: [HammerGesturesManager, MakeProvider(IgxRange)]
 })
 export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
@@ -49,8 +49,9 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     private fromPercent: number = 0;
     private toPercent: number = 0;
     private hasViewInit: boolean = false;
+    private timer;
 
-    public isActiveLabel: boolean = true;
+    public isActiveLabel: boolean = false;
 
     /**
      *
@@ -182,7 +183,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     public set lowerValue(value: number) {
         this._lowerValue = value;
 
-        if(this.isMulti && this.hasViewInit) {
+        if (this.isMulti && this.hasViewInit) {
             this.positionHandlesAndUpdateTrack();
         }
     }
@@ -203,7 +204,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         this._upperValue = value;
         this._onChangeCallback(this._upperValue);
 
-        if(this.hasViewInit) {
+        if (this.hasViewInit) {
             this.positionHandlesAndUpdateTrack();
         }
     }
@@ -276,6 +277,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
 
         // Find the closest handle
         this.setActiveHandle();
+        this.toggleActiveClass($event);
 
         // Update To/From Values
         this.setValues();
@@ -320,25 +322,18 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         }
     }
 
-    private clearActiveClass() {
-        setTimeout(() => {
-            this.isActiveLabel = false;
-        }, this.thumbLabelVisibilityDuration);
-    }
+    private toggleActiveClass(e) {
+        if (e.type == 'panstart' || e.type == 'tap') {
+            clearInterval(this.timer);
+            this.isActiveLabel = true;
+        }
 
-    private toggleActiveClass(handle: ElementRef) {
-        this.isActiveLabel = true;
-        handle.nativeElement.classList.add("active");
-
-        this.clearActiveClass();
-    }
-
-    private panStart($event) {
-        this.isActiveLabel = true;
-    }
-
-    private panEnd($event) {
-        this.clearActiveClass();
+        if (e.type == 'panend' || e.type == 'tap') {
+            this.timer = setInterval(
+                () => this.isActiveLabel = false,
+                this.thumbLabelVisibilityDuration
+            );
+        }
     }
 
     private closestTo(goal: number, positions: Array<number>): number {
@@ -414,7 +409,6 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
 
     public positionHandle(handle: ElementRef, position: number) {
         handle.nativeElement.style.left = `${this.valueToFraction(position) * 100}%`;
-        this.toggleActiveClass(handle);
     }
 
     private formatValue(value: number) {
@@ -442,7 +436,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     writeValue(value: any): void {
-        if(!isNaN(value)) {
+        if (!isNaN(value)) {
             this.upperValue = parseFloat(value);
 
             return;
