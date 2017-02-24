@@ -204,22 +204,22 @@ describe("List", function () {
         fixture.detectChanges();
 
         expect(list.hasNoItemsTemplate).toBeFalsy();
-        expect(list.noItemsImgSrc).toBe(listNoItemsImgSrc);
-        expect(list.noItemsMessage).toBe(listNoItemsMessage);
-        expect(list.noItemsButtonText).toBe(listNoItemsButtonText);
+        expect(list.emptyListImage).toBe(listNoItemsImgSrc);
+        expect(list.emptyListMessage).toBe(listNoItemsMessage);
+        expect(list.emptyListButtonText).toBe(listNoItemsButtonText);
 
-        let noItemsImgDebugEl = fixture.debugElement.query(By.css(".igx-list_no-items-img"));
+        let noItemsImgDebugEl = fixture.debugElement.query(By.css(".image"));
         expect(noItemsImgDebugEl.nativeElement.getAttributeNode("src").value).toBe(listNoItemsImgSrc);
 
-        let noItemsTextDebugEl = fixture.debugElement.query(By.css(".igx-list_no-items-text"));
+        let noItemsTextDebugEl = fixture.debugElement.query(By.css(".message > p"));
         expect(noItemsTextDebugEl.nativeElement.textContent.trim()).toBe(listNoItemsMessage);
 
-        let noItemsButtonDebugEl = fixture.debugElement.query(By.css(".igx-list_default-no-items-button"));
+        let noItemsButtonDebugEl = fixture.debugElement.query(By.css("button"));
         expect(noItemsButtonDebugEl.nativeElement.textContent.trim()).toEqual(listNoItemsButtonText);
 
-        spyOn(list.noItemsButtonOnClick, "emit");
+        spyOn(list.emptyListButtonClick, "emit");
         noItemsButtonDebugEl.nativeElement.click();
-        expect(list.noItemsButtonOnClick.emit).toHaveBeenCalled();
+        expect(list.emptyListButtonClick.emit).toHaveBeenCalled();
     })
 
     it("Should have custom no items template.", () => {
@@ -229,7 +229,7 @@ describe("List", function () {
 
         fixture.detectChanges();
         expect(list.hasNoItemsTemplate).toBeTruthy();
-        let noItemsTemplateDebugEl = fixture.debugElement.query(By.css(".igx-list__custom-no-items"));
+        let noItemsTemplateDebugEl = fixture.debugElement.query(By.css(".igx-list__empty--custom"));
         expect(noItemsTemplateDebugEl.nativeElement.textContent.trim()).toEqual(listCustomNoItemsTemplateContent);
     })
 
@@ -321,9 +321,9 @@ class ListWithLeftPanningAllowed {
 @Component({
     template: `<div #wrapper>
                 <igx-list [hasNoItemsTemplate]="false"
-                    noItemsMessage="Custom no items message."
-                    noItemsImgSrc="https://example.com/noitems.png"
-                    noItemsButtonText="Custom Button Text">
+                    emptyListMessage="Custom no items message."
+                    emptyListImage="https://example.com/noitems.png"
+                    emptyListButtonText="Custom Button Text">
                 </igx-list>
             </div>`
 })
@@ -334,7 +334,7 @@ class ListWithNoItems {
 @Component({
     template: `<div #wrapper>
                 <igx-list [hasNoItemsTemplate]="true">
-                    <div class="igx-list__custom-no-items">
+                    <div class="igx-list__empty--custom">
                         Custom no items message.
                     </div>
                 </igx-list>

@@ -1,8 +1,18 @@
+<span>Multiple Selection</span>
 <div style="margin: 20px;">
     <igx-buttongroup [multiSelection]="multi" [values]="buttons">
-        <!--<button type="button" igxButton="fab" igxButtonColor="#484848" igxButtonBackground="white" igxRipple="#484848">
-            <i class="material-icons">edit</i>
-        </button>-->
-        <button igxButton="raised" igxLabel="somelabel" igxRipple>Declarative</button>
     </igx-buttongroup>
-</div>
+</div><br />
+<span>Single Selection</span>
+<div style="margin: 20px;">
+    <igx-buttongroup [multiSelection]="!multi" [values]="buttons">
+    </igx-buttongroup>
+</div><br />
+<span>Vertical alignment</span>
+<div style="margin: 20px;">
+    <igx-buttongroup multiSelection="false" [values]="buttons" [alignment]="alignment">
+    </igx-buttongroup>
+</div><br />
+<!--<button type="button" igxButton="fab" igxButtonColor="#484848" igxButtonBackground="white" igxRipple="#484848">
+    <i class="material-icons">edit</i>
+</button>-->

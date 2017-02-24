@@ -19,6 +19,7 @@ import { IgxCardModule } from "./card/card.component";
 import { IgxSnackbarModule } from "./snackbar/snackbar.component";
 import { IgxToastModule } from "./toast/toast.component";
 import { IgxButtonGroupModule } from "./buttonGroup/buttonGroup.component";
+import { IgxRangeModule } from "./range/range.component";
 
 @NgModule({
     imports: [
@@ -39,6 +40,7 @@ import { IgxButtonGroupModule } from "./buttonGroup/buttonGroup.component";
         IgxSnackbarModule,
         IgxToastModule,
         IgxButtonGroupModule
+        IgxRangeModule,
     ],
     exports: [
         IgxAvatarModule,
@@ -56,7 +58,8 @@ import { IgxButtonGroupModule } from "./buttonGroup/buttonGroup.component";
         IgxTabBarModule,
         IgxSnackbarModule,
         IgxToastModule,
-        IgxButtonGroupModule
+        IgxButtonGroupModule,
+        IgxRangeModule
     ]
 })
 export class IgxComponentsModule {}

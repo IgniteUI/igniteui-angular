@@ -1,7 +1,9 @@
-import { Component, Directive, Input, NgModule, ElementRef, QueryList, ViewChildren, AfterViewInit } from '@angular/core';
+import { Component, Directive, Input, NgModule, ElementRef, QueryList, ViewChildren, Inject, forwardRef, AfterViewInit, Renderer } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { IgxRippleModule } from "../../src/directives/ripple.directive";
 import { IgxButtonModule, IgxButton } from "../button/button.directive";
+
+export enum ButtonGroupAlignment { horizontal, vertical };
 
 // ====================== BUTTON GROUP ================================
 // The `<igx-buttonGroup>` component is a  container for buttons
@@ -9,46 +11,82 @@ import { IgxButtonModule, IgxButton } from "../button/button.directive";
     selector: 'igx-buttongroup',
     moduleId: module.id, // commonJS standard
     templateUrl: 'buttongroup-content.component.html',
+    styleUrls: ['buttongroup.component.css'],
     host: {
         'role': "group",
-        '(click)': "selectButton($event)"
+        '[class.igx-button-group-vertical]': '_isVertical'
     },
 })
 
 export class IgxButtonGroup implements AfterViewInit {
-    private _innerStyle: string = "igx-buttonGroup";
-    @ViewChildren(IgxButton) buttonCollection: QueryList<IgxButton>;
+    @ViewChildren(IgxButton) buttons: QueryList<IgxButtonGroup>;
     @Input() multiSelection: boolean = false;
     @Input() disabled: boolean = false;
-    @Input() public values: any;
-    
-    // public selectedButtons: Array<IgxButton> = [];
-
-    constructor(private element: ElementRef) {
-        // this.selectedButtons = [];
+    @Input() values: any;
+      
+    @Input() set alignment (value: ButtonGroupAlignment) {
+        this._isVertical = value == ButtonGroupAlignment.vertical;
     }
 
-    selectButton(event) {
-        // debugger;
-        // this.selectedButtons.push(button);
-        // alert("hey");
-        console.log(event.target);
-    }
-
-    // public _clickHandler(args, owner) {
-    //     if(!!args.target.attributes["igxButton"]) {
-    //         debugger;
-    //         this.selectButton(<IgxButton>args.target);
-    //     }
+    // get alignment(): ButtonGroupAlignment {
+    //     return this.alignment;
     // }
+
+    private _innerStyle: string = "igx-button-group";
+    private _isVertical:Boolean;
+    
+    public selectedIndexes: Array<number> = [];
+
+    constructor(private _el: ElementRef, private _renderer: Renderer) {
+    }
+
+    _clickHandler(event, i) {
+         if(this.selectedIndexes.indexOf(i) != -1) {
+            this.deselectButton(i);
+        } else {
+            this.selectButton(i);
+        }
+    }
+
+    get selectedButtons(): Array<IgxButtonGroup> {
+        return this.buttons.filter((b, i) => {
+            return this.selectedIndexes.indexOf(i) != -1;
+        })
+
+    } 
+
+    selectButton(index: number) {
+        var buttonElement = this.buttons.toArray()[index]._el.nativeElement;
+        this.selectedIndexes.push(index);
+        buttonElement.setAttribute("data-selected", true);
+        
+        if(!this.multiSelection && this.selectedIndexes.length > 0) {
+            this.buttons.forEach((b, i) => {
+                if(i != index && this.selectedIndexes.indexOf(i) != -1) {
+                    this.deselectButton(i);
+                }
+            })
+        }
+    }
+
+    deselectButton(index: number) {
+         var buttonElement = this.buttons.toArray()[index]._el.nativeElement;
+         this.selectedIndexes.splice(this.selectedIndexes.indexOf(index), 1);
+         buttonElement.setAttribute("data-selected", false);
+    }
     
     ngAfterViewInit() {
-        // debugger;
+        // initial selection
+        this.buttons.forEach((button, index) => {
+            if(!button.disabled && button._el.nativeElement.getAttribute("data-selected") === 'true') {
+                this.selectButton(index);
+            }
+        });
     }
 }
 
 @NgModule({
-    declarations: [IgxButtonGroup],
+    declarations: [IgxButtonGroup, IgxButtonGroup],
     imports: [IgxButtonModule, CommonModule, IgxRippleModule],
     exports: [IgxButtonGroup]
 })
