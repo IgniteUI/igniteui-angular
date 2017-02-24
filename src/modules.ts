@@ -39,7 +39,7 @@ import { IgxRangeModule } from "./range/range.component";
         IgxCardModule,
         IgxSnackbarModule,
         IgxToastModule,
-        IgxButtonGroupModule
+        IgxButtonGroupModule,
         IgxRangeModule,
     ],
     exports: [
