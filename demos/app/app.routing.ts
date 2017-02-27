@@ -6,6 +6,7 @@ import { CarouselSampleComponent } from "./carousel/sample.component";
 import { TabBarSampleComponent, CustomContentComponent } from "./tabbar/sample.component";
 import { ListSampleComponent } from "./list/sample.component";
 import { ButtonsSampleComponent } from "./button/sample.component";
+import { ButtonGroupSampleComponent } from "./buttonGroup/sample.component";
 import { AvatarSampleComponent } from "./avatar/sample.component";
 import { NavbarSampleComponent } from "./navbar/sample.component";
 import { DialogSampleComponent } from "./dialog/sample.component";
@@ -37,6 +38,10 @@ const appRoutes: Routes = [
     {
         path: "buttons",
         component: ButtonsSampleComponent
+    },
+    {
+        path: "buttonGroup",
+        component: ButtonGroupSampleComponent
     },
     {
         path: "list",

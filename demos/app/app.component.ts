@@ -10,6 +10,7 @@ import { Component } from "@angular/core";
             <span igxButton routerLink="/tabbar">TabBar</span>
             <span igxButton routerLink="/list">List</span>
             <span igxButton routerLink="/buttons">Buttons</span>
+            <span igxButton routerLink="/buttonGroup">ButtonGroup</span>
             <span igxButton routerLink="/avatar">Avatar</span>
             <span igxButton routerLink="/navigation-drawer">Navigation Drawer</span>
             <span igxButton routerLink="/navbar">Navbar</span>

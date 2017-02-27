@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, AfterViewInit } from "@angular/core";
 import { IgxButtonModule } from "../../../src/button/button.directive";
 
 @Component({
@@ -6,4 +6,9 @@ import { IgxButtonModule } from "../../../src/button/button.directive";
     moduleId: module.id,
     templateUrl: './sample.component.html'
 })
-export class ButtonsSampleComponent { }
+export class ButtonsSampleComponent {
+
+        ngAfterViewInit() {
+        debugger;
+    }
+}
