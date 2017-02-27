@@ -11,6 +11,7 @@ import { CarouselSampleModule } from "./carousel/sample.module";
 import { TabBarSampleModule } from "./tabbar/sample.module";
 import { ListSampleModule } from "./list/sample.module";
 import { ButtonSampleModule } from "./button/sample.module";
+import { ButtonGroupSampleModule } from './buttonGroup/sample.module';
 import { AvatarSampleModule } from "./avatar/sample.module";
 import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
 import { NavbarSampleModule } from "./navbar/sample.module";
@@ -36,6 +37,7 @@ import { DataOperationsSampleModule } from "./data-operations/sample.module";
         TabBarSampleModule,
         ListSampleModule,
         ButtonSampleModule,
+        ButtonGroupSampleModule,
         AvatarSampleModule,
         NavDrawerSampleModule,
         NavbarSampleModule,

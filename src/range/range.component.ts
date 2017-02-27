@@ -1,10 +1,9 @@
 import {
-    Component, NgModule, Input, ElementRef, ViewChild, OnInit, AfterViewInit, forwardRef
+    Component, NgModule, Input, ElementRef, ViewChild, OnInit, AfterViewInit, forwardRef, Renderer
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { HammerGesturesManager } from "../core/touch";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import 'rxjs/add/operator/debounceTime';
 
 export enum SliderType {
     SINGLE_HORIZONTAL,
@@ -53,6 +52,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
 
     public isActiveLabel: boolean = false;
 
+    constructor(private renderer: Renderer) {}
     /**
      *
      * @type {number}
@@ -224,6 +224,9 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     @ViewChild("track")
     private track: ElementRef;
 
+    @ViewChild("ticks")
+    private ticks: ElementRef;
+
     @ViewChild("thumbFrom")
     private thumbFrom: ElementRef;
 
@@ -253,6 +256,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     public ngAfterViewInit() {
         this.hasViewInit = true;
         this.positionHandlesAndUpdateTrack();
+        this.setTickInterval();
     }
 
     private positionHandlesAndUpdateTrack() {
@@ -262,7 +266,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
             this.positionHandle(this.thumbTo, this.upperValue);
             this.positionHandle(this.thumbFrom, this.lowerValue);
         }
-
+        
         this.updateTrack();
     }
 
@@ -321,6 +325,32 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
             console.warn('No handles close upperValue pointer!');
         }
     }
+
+    private setTickInterval() {
+		let interval = this.stepRange > 1 ? 100 / this.stepRange : null;
+        // CONSIDER
+        // Use the renderer to style all elements of the range component?
+        this.renderer.setElementStyle(this.ticks.nativeElement, 'background', this.generateTickMarks('white', interval));
+        
+        // OTHERWISE uncomment below
+        // this.ticks.nativeElement.style.backround = this.generateTickMarks('white', interval);
+	}
+
+    protected generateTickMarks(color:string, interval:number) {
+		return `repeating-linear-gradient(
+			${'to left'},
+			${color},
+			${color} 1.5px,
+			transparent 1.5px,
+			transparent ${interval}%
+		), repeating-linear-gradient(
+			${'to right'},
+			${color},
+			${color} 1.5px,
+			transparent 1.5px,
+			transparent ${interval}%
+		)`
+	}
 
     private toggleActiveClass(e) {
         if (e.type == 'panstart' || e.type == 'tap') {
