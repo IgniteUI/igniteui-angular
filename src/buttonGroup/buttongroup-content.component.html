@@ -1,0 +1,16 @@
+<div class="igx-button-group" role="group">
+    <button *ngFor="let button of values; let i = 'index'" type="button"
+        (click)="_clickHandler($event, i)"
+        [attr.data-selected]="button.selected"
+        [disabled]="button.disabled"
+        [igxButton]="button.type"
+        [igxButtonColor]="button.color"
+        [igxButtonBackground]="button.bgcolor"
+        [igxLabel]="button.label"
+        [igxRipple]="button.ripple"
+        [class.igx-button--selected]="selectedIndexes.indexOf(i) != -1">
+            {{button.label}}
+            <i *ngIf="button.icon" class="material-icons">{{button.icon}}</i>
+    </button>
+    <ng-content></ng-content>
+</div>
