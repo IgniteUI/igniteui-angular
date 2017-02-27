@@ -10,7 +10,7 @@ With the igx-dialog you can create **alerts**, **dialogs** and **custom dialogs*
 ##Alerts are done by adding title, message and button label.
 
 ```html
-<igx-dialog #alert 
+<igx-dialog #alert
     title="Alert"
     message="Your email has been sent successfully!"
     leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()">
@@ -26,8 +26,8 @@ You can attach to the left button select event `(onLeftButtonSelect)="alert.clos
 ##Dialogs are done by adding another button.
 
 ```html
-<igx-dialog #dialog 
-    title="Confirmation" 
+<igx-dialog #dialog
+    title="Confirmation"
     message="Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?"
     leftButtonLabel="Cancel"
     (onLeftButtonSelect)="dialog.close()"
@@ -53,7 +53,7 @@ You can access all properties of the button component with the following attribu
 When you are using Custom Dialogs you don't have a message property set.
 
 ```HTML
-<igx-dialog #form 
+<igx-dialog #form
     title="Sign In"
     leftButtonLabel="Cancel"
     (onLeftButtonSelect)="form.close()"
@@ -72,4 +72,4 @@ When you are using Custom Dialogs you don't have a message property set.
 </igx-dialog>
 ```
 
-You can make the dialog dimissible `closeOnOutsideSelect="true"``
+You can make the dialog dismissible `closeOnOutsideSelect="true"``

@@ -18,7 +18,10 @@ import { DialogSampleModule } from "./dialog/sample.module";
 import { ProgressBarSampleModule } from "./progressbar/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
 import { IgxSnackbarSampleModule } from "./snackbar/sample.module";
+import {IgxToastSampleModule} from "./toast/sample.module";
+import { IgxCardSampleModule } from "./card/sample.module";
 import { routing } from "./app.routing";
+import {IgxRangeSampleModule} from "./range/sample.module";
 
 @NgModule({
     imports: [
@@ -37,8 +40,11 @@ import { routing } from "./app.routing";
         NavbarSampleModule,
         ProgressBarSampleModule,
         IgxSnackbarSampleModule,
+        IgxToastSampleModule,
         DialogSampleModule,
         IconSampleModule,
+        IgxCardSampleModule,
+        IgxRangeSampleModule,
     ],
     declarations: [
         AppComponent,

@@ -22,6 +22,7 @@ export class IgxAvatar {
     private _bgColor: string;
     private _icon: string = "android";
     public SizeEnum = Size;
+    public roleDescription: string;
 
     @Input()
     get size(): string {
@@ -79,6 +80,20 @@ export class IgxAvatar {
         if (this.initials && this.image) {
             var src = this.generateInitials(parseInt(this.image.nativeElement.width));
             this.image.nativeElement.src = src;
+        }
+    }
+
+    ngAfterContentChecked(){
+        this.roleDescription = this.getRole();
+    }
+
+    private getRole() {
+        if (this.initials){
+            return "initials type avatar";
+        } else if (this.src){
+            return "image type avatar";
+        } else {
+            return "icon type avatar";
         }
     }
 

@@ -1,17 +1,17 @@
 <div class="igx-control">
-    <input class="igx-control__switch" #checkbox type="checkbox"
+    <input class="igx-control__switch" #checkbox type="checkbox" role="checkbox"
         [attr.id]="id"
         [attr.name]="name"
         [attr.value]="value"
         [attr.tabindex]="tabindex"
         [disabled]="disabled"
         [checked]="checked"
+        [attr.aria-checked]="checked"
+        [attr.aria-labelledby]="labelId"
         (change)="onChange($event)"
         (focus)="onFocus($event)"
         (blur)="onBlur($event)">
-    <span class="igx-control__text">
-        <ng-content></ng-content>
+    <span class="igx-control__text" [attr.id]="labelId"><ng-content></ng-content>
     </span>
-    <label class="igx-control__label" [attr.for]="id">
-    </label>
+    <label class ="igx-control__label" [attr.for]="id"></label>
 </div>

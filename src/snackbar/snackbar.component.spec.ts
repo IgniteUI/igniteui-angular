@@ -38,7 +38,7 @@ describe('IgxSnackbar', () => {
         });
     }));
 
-    it('should auto hide 10 seconds after is open', (done) => {
+    it('should auto hide 1 seconds after is open', (done) => {
         TestBed.compileComponents().then(() => {
             let fixture = TestBed.createComponent(SnackbarIntializeTestComponent);
             fixture.detectChanges();

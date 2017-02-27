@@ -1,67 +1,76 @@
-import { Component, Input, ContentChildren, QueryList, Renderer, NgModule, OnInit, OnDestroy, ViewChild, Inject, forwardRef, ElementRef } from '@angular/core';
+import { Component, Input, Output, ContentChildren, QueryList, Renderer, HostBinding,
+     NgModule, OnInit, OnDestroy, ViewChild, Inject, forwardRef, ElementRef, EventEmitter, AfterContentInit } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { HammerGesturesManager } from '../core/touch';
+import { IgxButtonModule } from "../button/button.directive";
+import { IgxRippleModule } from "../directives/ripple.directive";
 
-export interface IListChild
-{
+export interface IListChild {
     index: number;
 }
+
+export enum IgxListPanState { NONE, LEFT, RIGHT };
 
 // ====================== LIST ================================
 // The `<igx-list>` directive is a list container for items and headers
 @Component({
     selector: 'igx-list',
-    moduleId: module.id, // commonJS standard
-    templateUrl: 'list-content.component.html'
+    moduleId: module.id,
+    templateUrl: 'list.component.html',
+    host: {
+        'role': "list"
+    }
 })
-
 export class IgxList {
     private _innerStyle: string = "igx-list";
 
-    children: IListChild[] = [];
-    get items() {
-        return this.children.filter((item: IListChild) => {
-            return item instanceof IgxListItem;
-        });
+    @ContentChildren(forwardRef(() => IgxListItem)) children: QueryList<IgxListItem>;
+
+    get items(): IgxListItem[] {
+        let items: IgxListItem[] = [];
+        if (this.children !== undefined) {
+            for (let child of this.children.toArray()) {
+                if (!child.isHeader) {
+                    items.push(child);
+                }
+            }
+        }
+
+        return items;
+    }
+    
+    get headers(): IgxListItem[] {
+        let headers: IgxListItem[] = [];
+        if (this.children !== undefined) {
+            for (let child of this.children.toArray()) {
+                if (child.isHeader) {
+                    headers.push(child);
+                }
+            }
+        }
+
+        return headers;
     }
 
-    get headers() {
-        return this.children.filter((header: IListChild) => {
-            return header instanceof IgxListHeader;
-        });
+    @Input() allowLeftPanning: boolean = false;
+    @Input() allowRightPanning: boolean = false;
+
+    @Input() hasNoItemsTemplate: boolean = false;
+    @Input() emptyListImage: string;
+    @Input() emptyListMessage: string = "No items";
+    @Input() emptyListButtonText: string = "Add";
+
+    @Output() emptyListButtonClick = new EventEmitter();
+
+    @Output() onLeftPan = new EventEmitter();
+    @Output() onRightPan = new EventEmitter();
+    @Output() onPanStateChange = new EventEmitter();
+
+    private onEmptyListButtonClicked(event) {
+        this.emptyListButtonClick.emit({ list: this, event: event });
     }
 
     constructor(private element: ElementRef) {
-    }
-
-    removeChild(index: number) {
-        this.children.splice(index, 1);
-    }
-
-    addChild(child: IListChild) {
-        this.children.push(child);
-    }
-}
-
-// ====================== HEADER ================================
-// The `<igx-header>` directive is a header intended for row items in
-// a `<igx-list>` container.
-@Component({
-    selector: 'igx-list-header',
-    moduleId: module.id, // commonJS standard
-    templateUrl: 'list-content.component.html'
-})
-
-export class IgxListHeader implements OnInit, IListChild {
-    private _innerStyle: string = "igx-list__header";
-    get index(): number {
-        return this.list.children.indexOf(this);
-    }
-
-    constructor( @Inject(forwardRef(() => IgxList)) private list: IgxList, public element: ElementRef) { }
-
-    public ngOnInit() {
-        this.list.addChild(this);
     }
 }
 
@@ -70,21 +79,25 @@ export class IgxListHeader implements OnInit, IListChild {
 // a `<igx-list>` container.
 @Component({
     selector: 'igx-list-item',
-    moduleId: module.id, // commonJS standard
-    templateUrl: 'list-content.component.html'
+    moduleId: module.id,
+    templateUrl: 'list-item.component.html'
 })
-
 export class IgxListItem implements OnInit, OnDestroy, IListChild {
     @ViewChild('wrapper') wrapper: ElementRef;
 
-    private _VISIBLE_AREA_ON_FULL_PAN = 40; // in pixels
+    private _panState: IgxListPanState = IgxListPanState.NONE;
     private _FRACTION_OF_WIDTH_TO_TRIGGER_GRIP = 0.5; // as a fraction of the item width
-    private _initialLeft: number = null;
-    private _innerStyle: string = "igx-list__item";
+    private _innerStyle: string = "";
+    private _previousPanDeltaX = 0;
 
-    hidden: boolean = false;
+    hidden: boolean = false;    
+
+    get panState(): IgxListPanState {
+        return  this._panState;
+    }
+
     get index(): number {
-        return this.list.children.indexOf(this);
+        return this.list.children.toArray().indexOf(this);
     }
 
     get width() {
@@ -109,92 +122,117 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     }
 
     get maxLeft() {
-        return -this.width + this._VISIBLE_AREA_ON_FULL_PAN;
+        return -this.width;
     }
 
+    get maxRight() {
+        return this.width;
+    }
+
+    @HostBinding('attr.role') role;
+    @Input() isHeader: boolean = false;
     @Input() href: string;
     @Input() options: Array<Object>
 
-    constructor( @Inject(forwardRef(() => IgxList)) private list: IgxList, public element: ElementRef, private _renderer: Renderer) {
-
+    constructor(@Inject(forwardRef(() => IgxList)) private list: IgxList, public element: ElementRef, private _renderer: Renderer) {
     }
 
     public ngOnInit() {
-        this.list.addChild(this);
+        if (this.isHeader) {
+            this._innerStyle = "igx-list__header";
+            this.role = "separator";
+        } else {
+            this._innerStyle = "igx-list__item";
+            this.role = "listitem";
 
-        this._addEventListeners();
+            this._addEventListeners();
+            this.element.nativeElement.style.touchAction = "pan-y";
+        }
 
-        // Fix for default value of touch-action: none, set by Hammer.js
-        this.element.nativeElement.style.touchAction = "inherit";
+        this.element.nativeElement.setAttribute('aria-label', this.element.nativeElement.textContent.trim());        
     }
 
     public ngOnDestroy() {
-        this.list.removeChild(this.index);
     }
 
     private _addEventListeners() {
         // Do not attach pan events if there is no options - no need to pan the item
-        if (this._renderer && this.options) {
+        if (this._renderer && this.options && (this.list.allowLeftPanning || this.list.allowRightPanning)) {
             this._renderer.listen(this.element.nativeElement, 'panstart', (event) => { this.panStart(event); });
             this._renderer.listen(this.element.nativeElement, 'panmove', (event) => { this.panMove(event); });
             this._renderer.listen(this.element.nativeElement, 'panend', (event) => { this.panEnd(event); });
         }
     }
 
-    private cancelEvent(ev: HammerInput) {
-        return this.left > 0 || this._initialLeft == null;
-    }
-
     private panStart(ev: HammerInput) {
-        this._initialLeft = this.left;
+        this._previousPanDeltaX = 0;
     }
 
     private panMove(ev: HammerInput) {
-        var newLeft;
-
-        if (this.cancelEvent(ev))
-        { return; }
-
-        newLeft = this._initialLeft + ev.deltaX;
-        newLeft = newLeft > 0 ? 0 : newLeft < this.maxLeft ? this.maxLeft : newLeft;
-
-        this.left = newLeft;
+        var isPanningToLeft = this.left + ev.deltaX < this.left;
+        if (isPanningToLeft) {
+            this.left += ev.deltaX - this._previousPanDeltaX;
+            if (this.list.allowRightPanning && !this.list.allowLeftPanning && this.left < 0) {
+                this.left = 0;
+            } else if (this.left < this.maxLeft) {
+                this.left = this.maxLeft;
+            }
+        } else if (!isPanningToLeft) {
+            this.left += ev.deltaX - this._previousPanDeltaX;
+            if (this.list.allowLeftPanning && !this.list.allowRightPanning && this.left > 0) {
+                this.left = 0;
+            } else if (this.left > this.maxRight) {
+                this.left = this.maxRight;
+            }
+        }
+        
+        this._previousPanDeltaX = ev.deltaX;
     }
 
     private panEnd(ev: HammerInput) {
+        var oldPanState = this._panState;
+
+        this.performMagneticGrip();
+
+        if (oldPanState != this._panState) {
+            this.list.onPanStateChange.emit({ oldState: oldPanState, newState: this._panState, item: this});
+            if (this._panState == IgxListPanState.LEFT) {
+                this.list.onLeftPan.emit(this);
+            } else if(this._panState == IgxListPanState.RIGHT) {
+                this.list.onRightPan.emit(this);
+            }
+        }
+
+        this._previousPanDeltaX = 0;
+    }
+
+    private performMagneticGrip() {        
+        var widthTriggeringGrip = this.width * this._FRACTION_OF_WIDTH_TO_TRIGGER_GRIP;
+        var currentState = this.list
         if (this.left > 0) {
-            this.rightMagneticGrip();
+            if (this.left > widthTriggeringGrip) {
+                this.left = this.maxRight;
+                this._panState = IgxListPanState.RIGHT;
+            } else {                
+                this.left = 0;
+                this._panState = IgxListPanState.NONE;
+            }
         } else {
-            this.magneticGrip();
+            if (-this.left > widthTriggeringGrip) {
+                this.left = this.maxLeft;
+                this._panState = IgxListPanState.LEFT;
+            } else {                
+                this.left = 0;
+                this._panState = IgxListPanState.NONE;
+            }
         }
-
-        this._initialLeft = null;
-    }
-
-    private magneticGrip() {
-        var left = this.left,
-            partialWidth = this.width * this._FRACTION_OF_WIDTH_TO_TRIGGER_GRIP;
-
-        if (partialWidth && left < 0 && -left > partialWidth) {
-            this.leftMagneticGrip();
-        } else {
-            this.rightMagneticGrip();
-        }
-    }
-
-    private rightMagneticGrip() {
-        this.left = 0;
-    }
-
-    private leftMagneticGrip() {
-        this.left = this.maxLeft;
     }
 }
 
 @NgModule({
-    declarations: [IgxList, IgxListItem, IgxListHeader],
-    imports: [CommonModule],
-    exports: [IgxList, IgxListItem, IgxListHeader]
+    declarations: [IgxList, IgxListItem],
+    imports: [CommonModule, IgxButtonModule, IgxRippleModule],
+    exports: [IgxList, IgxListItem]
 })
 export class IgxListModule {
 }

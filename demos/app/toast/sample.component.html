@@ -1,0 +1,8 @@
+<igx-toast #toast
+    message="This message will self-destruct in 4 seconds."
+    [position]="toastPosition"
+    (onShowing)="onShowing($event)">
+</igx-toast>
+
+<button igxButton="raised" igxRipple="white" (click)="toast.show()" [disabled]="toast.isVisible">Show Toast</button>
+<button igxButton="raised" igxRipple="white" (click)="toast.hide()" [disabled]="!toast.isVisible">Hide Toast</button>

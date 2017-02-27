@@ -17,6 +17,9 @@ import { Component } from "@angular/core";
             <span igxButton routerLink="/progressbar">Progressbar</span>
             <span igxButton routerLink="/icon">Icon</span>
             <span igxButton routerLink="/snackbar">Snackbar</span>
+            <span igxButton routerLink="/toast">Toast</span>
+            <span igxButton routerLink="/card">Card</span>
+            <span igxButton routerLink="/range">Range</span>
         </nav>
         <router-outlet></router-outlet>
     `
