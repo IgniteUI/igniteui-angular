@@ -20,6 +20,7 @@ import { Component } from "@angular/core";
             <span igxButton routerLink="/toast">Toast</span>
             <span igxButton routerLink="/card">Card</span>
             <span igxButton routerLink="/range">Range</span>
+            <span igxButton routerLink="/data-operations">Data Operations</span>
         </nav>
         <router-outlet></router-outlet>
     `
