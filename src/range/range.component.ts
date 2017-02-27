@@ -224,6 +224,9 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     @ViewChild("track")
     private track: ElementRef;
 
+    @ViewChild("ticks")
+    private ticks: ElementRef;
+
     @ViewChild("thumbFrom")
     private thumbFrom: ElementRef;
 
@@ -253,6 +256,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     public ngAfterViewInit() {
         this.hasViewInit = true;
         this.positionHandlesAndUpdateTrack();
+        this.setTickInterval();
     }
 
     private positionHandlesAndUpdateTrack() {
@@ -262,7 +266,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
             this.positionHandle(this.thumbTo, this.upperValue);
             this.positionHandle(this.thumbFrom, this.lowerValue);
         }
-
+        
         this.updateTrack();
     }
 
@@ -321,6 +325,27 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
             console.warn('No handles close upperValue pointer!');
         }
     }
+
+    private setTickInterval() {
+		let interval = this.stepRange > 1 ? 100 / this.stepRange : null;
+		this.ticks.nativeElement.style.background = this.generateTickImage('white', interval);
+	}
+
+    private generateTickImage(color:string, step:number) {
+		return `repeating-linear-gradient(
+			${'to left'},
+			${color},
+			${color} 1.5px,
+			transparent 1.5px,
+			transparent ${step}%
+		), repeating-linear-gradient(
+			${'to right'},
+			${color},
+			${color} 1.5px,
+			transparent 1.5px,
+			transparent ${step}%
+		)`
+	}
 
     private toggleActiveClass(e) {
         if (e.type == 'panstart' || e.type == 'tap') {
