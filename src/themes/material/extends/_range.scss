@@ -24,8 +24,8 @@
 %igx-range-track-ticks {
     position: absolute;
     width: 100%;
-    height: $range-tick-height;
-    background-size: 100% $range-tick-height;
+    height: $range-track-height;
+    background-size: 100% $range-track-height;
     opacity: .85;
     transition: opacity .2s ease;
     z-index: 1;
@@ -48,7 +48,7 @@
     width: $range-thumb-width;
     height: $range-thumb-height;
     margin-left: -$range-thumb-width/2;
-    top: -$range-thumb-width/2;
+    top: -$range-thumb-height/2;
 }
 
 %igx-thumb-label {

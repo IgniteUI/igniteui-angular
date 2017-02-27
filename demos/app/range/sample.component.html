@@ -7,13 +7,13 @@
 <input type="text" [(ngModel)]="task.title">
 <input type="text" [(ngModel)]="task.percentCompleted">
 
-<div style="width: 70%; padding: 10px 15px; margin: 0 auto;">
+<div style="width: 70%; margin: 20px auto;">
     <igx-range #range
                [(ngModel)]="task.percentCompleted">
     </igx-range>
 </div>
 
-<div style="width: 70%; padding: 10px 15px; margin: 0 auto;">
-    <igx-range #range2 [type]="sliderType" [lowerValue]="10" [upperValue]="15" [lowerBound]="0"  [upperBound]="100" [maxValue]="70" [minValue]="20">
+<div style="width: 70%; margin: 20px auto;">
+    <igx-range #range2 [type]="sliderType" [lowerValue]="30" [upperValue]="60" [lowerBound]="10"  [upperBound]="90" [minValue]="0" [maxValue]="100" [stepRange]="10">
     </igx-range>
 </div>
