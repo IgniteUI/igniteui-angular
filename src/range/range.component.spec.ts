@@ -1,6 +1,6 @@
-import {TestBed, async} from '@angular/core/testing';
-import {IgxRange, IgxRangeModule, SliderType} from './range.component';
-import {Component, ViewChild} from "@angular/core";
+import { TestBed, async } from '@angular/core/testing';
+import { IgxRange, IgxRangeModule, SliderType } from './range.component';
+import { Component, ViewChild } from "@angular/core";
 
 declare var Simulator: any;
 
@@ -182,7 +182,7 @@ describe('IgxRange', () => {
         expect(fixture.componentInstance.range.upperBound).toBeGreaterThan(fixture.componentInstance.range.lowerBound);
     });
 
-   it('should move thumb range to value 60', (done) => {
+    it('should move thumb range to value 60', (done) => {
         let fixture,
             range: IgxRange;
         TestBed.compileComponents().then(() => {
@@ -217,6 +217,20 @@ describe('IgxRange', () => {
             });
         });
     }
+
+    it('should draw tick marks', () => {
+        let fixture = TestBed.createComponent(RangeIntializeTestComponent),
+            ticks = fixture.nativeElement.querySelector('.igx-range__track-ticks');
+            
+            // Range steps <= 1. No marks should be drawn;
+            expect(ticks.style.background).toBeFalsy();
+            
+            // Range steps > 1. Should draw tick marks;
+            fixture.componentInstance.range.stepRange = 10;
+            fixture.detectChanges();
+            
+            expect(ticks.style.background).toBeTruthy();
+    });
 });
 @Component({
     selector: "range-test-component",

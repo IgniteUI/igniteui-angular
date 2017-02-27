@@ -1,10 +1,9 @@
 import {
-    Component, NgModule, Input, ElementRef, ViewChild, OnInit, AfterViewInit, forwardRef
+    Component, NgModule, Input, ElementRef, ViewChild, OnInit, AfterViewInit, forwardRef, Renderer
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { HammerGesturesManager } from "../core/touch";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import 'rxjs/add/operator/debounceTime';
 
 export enum SliderType {
     SINGLE_HORIZONTAL,
@@ -53,6 +52,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
 
     public isActiveLabel: boolean = false;
 
+    constructor(private renderer: Renderer) {}
     /**
      *
      * @type {number}
@@ -328,22 +328,27 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
 
     private setTickInterval() {
 		let interval = this.stepRange > 1 ? 100 / this.stepRange : null;
-		this.ticks.nativeElement.style.background = this.generateTickImage('white', interval);
+        // CONSIDER
+        // Use the renderer to style all elements of the range component?
+        this.renderer.setElementStyle(this.ticks.nativeElement, 'background', this.generateTickMarks('white', interval));
+        
+        // OTHERWISE uncomment below
+        // this.ticks.nativeElement.style.backround = this.generateTickMarks('white', interval);
 	}
 
-    private generateTickImage(color:string, step:number) {
+    protected generateTickMarks(color:string, interval:number) {
 		return `repeating-linear-gradient(
 			${'to left'},
 			${color},
 			${color} 1.5px,
 			transparent 1.5px,
-			transparent ${step}%
+			transparent ${interval}%
 		), repeating-linear-gradient(
 			${'to right'},
 			${color},
 			${color} 1.5px,
 			transparent 1.5px,
-			transparent ${step}%
+			transparent ${interval}%
 		)`
 	}
 
