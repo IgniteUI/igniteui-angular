@@ -22,7 +22,7 @@
  *  14. Range (Slider)
  *  TODO: 15. Spinners | Loaders
  *  TODO: 16. Tabs
- *  TODO: 17. Tables
+ *  TODO: 17. Grid
  *  18. Toasts
  *  19. Typography
  *  TODO: 20. Flow Text
@@ -31,6 +31,7 @@
  *  23. Lists
  *  24. Dialog
  *  25. Snackbar
+ *  26. Button Group
  */
 
 
@@ -163,7 +164,7 @@ $button-font-weight: normal !default;
 $button-width: em(88px) !default;
 $button-height: em(40px) !default;
 $button-padding: em(8px) em(16px) !default;
-$button-transition: all 0.25s ease-out 0s !default;
+$button-transition: all 0.25s ease-out !default;
 $button-round-radius: 50% !default;
 // Disabled Styles
 $button-disabled-background: #F0F0F0 !default;
@@ -457,3 +458,27 @@ $snackbar-background: $off-black;
 $snackbar-text-color: $white;
 $snackbar-button-text-color: $secondary-color;
 $snackbar-button-line-height: em(16px);
+
+
+/* 26. Button Group
+   ========================================================================== */
+// Group layout
+$bgroup-radius: 2px;
+$bgroup-shadow: $elevate-2;
+
+// Item style
+$bgroup-item-minWidth: 24px;
+$bgroup-item-minHeight: 24px;
+$bgroup-item-color: rgba(0, 0, 0, .38);
+$bgroup-item-border-thickness: 1px;
+$bgroup-item-border: transparent;
+$bgroup-item-font-weight: 600;
+$bgroup-item-background: $white;
+
+// Item style selected
+$bgroup-item-color-selected: rgba(0, 0, 0, .54);
+$bgroup-item-background-selected: #C8C8C8;
+$bgroup-item-border-selected: darken(#C8C8C8, 4%);
+
+// Margin between item elements
+$bgroup-items-margin: em(10px, 16px);
