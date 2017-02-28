@@ -33,6 +33,7 @@ Current list of controls include:
 | **card**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/card/README.md)         |     |               |               |                                                                                                       |
 | **grid**              |           Planned | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/README.md)         |     |               |               |                                                                                                       |
 | **range**              |           In development | Not available         |     |               |               |                                                                                                       |
+| **buttonGroup**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/buttonGroup/README.md)      |               |               |                                                                                                       |
 ## Setup
 From the root folder run:
 
