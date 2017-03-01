@@ -14,32 +14,32 @@ describe('Unit testing FilteringCondition', () => {
         // contains
         expect(fc.contains("test123", "esT"))
             .toBeFalsy("contains ignoreCase: false");
-        expect(fc.contains("test123", {search: "esT", ignoreCase: true}))
+        expect(fc.contains("test123", "esT", true))
             .toBeTruthy("contains ignoreCase: true");
         // does not contain
-        expect(fc.doesNotContain("test123", {search: "esT"}))
+        expect(fc.doesNotContain("test123", "esT"))
             .toBeTruthy("doesNotContain ignoreCase: false");
-        expect(fc.doesNotContain("test123", {search: "esT", ignoreCase: true}))
+        expect(fc.doesNotContain("test123", "esT", true))
             .toBeFalsy("doesNotContain ignoreCase: true");
         // startsWith
-        expect(fc.startsWith("test123", {search: "TesT"}))
+        expect(fc.startsWith("test123", "TesT"))
             .toBeFalsy("startsWith ignoreCase: false");
-        expect(fc.startsWith("test123", {search: "TesT", ignoreCase: true}))
+        expect(fc.startsWith("test123", "TesT", true))
             .toBeTruthy("startsWith ignoreCase: true");
         // endsWith
-        expect(fc.endsWith("test123", {search: "T123"}))
+        expect(fc.endsWith("test123", "T123"))
             .toBeFalsy("endsWith ignoreCase: false");
-        expect(fc.endsWith("test123", {search: "sT123", ignoreCase: true}))
+        expect(fc.endsWith("test123", "sT123", true))
             .toBeTruthy("endsWith ignoreCase: true");
         // equals
-        expect(fc.equals("test123", {search: "Test123"}))
+        expect(fc.equals("test123", "Test123"))
             .toBeFalsy();
-        expect(fc.equals("test123", {search: "Test123", ignoreCase: true}))
+        expect(fc.equals("test123", "Test123", true))
             .toBeTruthy();
         // doesNotEqual
-        expect(fc.doesNotEqual("test123", {search: "Test123"}))
+        expect(fc.doesNotEqual("test123", "Test123"))
             .toBeTruthy("doesNotEqual ignoreCase: false");
-        expect(fc.doesNotEqual("test123", {search: "Test123", ignoreCase: true}))
+        expect(fc.doesNotEqual("test123", "Test123", true))
             .toBeFalsy("doesNotEqual ignoreCase: true");
         // empty
         expect(!fc.empty("test") && fc.empty(null) && fc.empty(undefined))
@@ -56,23 +56,23 @@ describe('Unit testing FilteringCondition', () => {
     });
     it("tests number conditions", () => {
         var fn = FilteringCondition.number;
-        expect(fn.doesNotEqual(1, {search: 2}) && !fn.doesNotEqual(1, {search: 1}))
+        expect(fn.doesNotEqual(1, 2) && !fn.doesNotEqual(1, 1))
             .toBeTruthy("doesNotEqual");
         expect(fn.empty(null))
             .toBeTruthy("empty");
-        expect(!fn.equals(1, {search: 2}) && fn.equals(1, {search: 1}))
+        expect(!fn.equals(1, 2) && fn.equals(1, 1))
             .toBeTruthy("equals");
-        expect(!fn.greaterThan(1, {search: 2}) && fn.greaterThan(2, {search: 1}))
+        expect(!fn.greaterThan(1, 2) && fn.greaterThan(2, 1))
             .toBeTruthy("greaterThan");
-        expect(!fn.greaterThanOrEqualTo(1, {search: 2}) && !fn.greaterThanOrEqualTo(1, {search: 2}) &&
-                fn.greaterThanOrEqualTo(1, {search: 1}))
+        expect(!fn.greaterThanOrEqualTo(1, 2) && !fn.greaterThanOrEqualTo(1, 2) &&
+                fn.greaterThanOrEqualTo(1, 1))
             .toBeTruthy("greaterThanOrEqualTo");
-        expect(fn.lessThan(1, {search: 2}) && !fn.lessThan(2, {search: 2}) && 
-                !fn.lessThan(3, {search: 2}))
+        expect(fn.lessThan(1, 2) && !fn.lessThan(2, 2) && 
+                !fn.lessThan(3, 2))
             .toBeTruthy("lessThan");
-        expect(fn.lessThanOrEqualTo(1, {search: 2}) && 
-                fn.lessThanOrEqualTo(1, {search: 1}) &&
-                !fn.lessThanOrEqualTo(3, {search: 2}))
+        expect(fn.lessThanOrEqualTo(1, 2) && 
+                fn.lessThanOrEqualTo(1, 1) &&
+                !fn.lessThanOrEqualTo(3, 2))
             .toBeTruthy("lessThanOrEqualTo");
         expect(fn.notEmpty(1))
             .toBeTruthy("notEmpty");
@@ -92,17 +92,17 @@ describe('Unit testing FilteringCondition', () => {
             nextMonth = ( d => new Date(d.setMonth(d.getMonth() + 1)) )(new Date),
             lastYear = ( d => new Date(d.setFullYear(d.getFullYear() - 1)) )(new Date),
             nextYear = ( d => new Date(d.setFullYear(d.getFullYear() + 1)) )(new Date);
-        expect(fd.after(now, {search:yesterday}) && !fd.after(now, {search:nextYear}))
+        expect(fd.after(now, yesterday) && !fd.after(now, nextYear))
             .toBeTruthy("after");
-        expect(fd.before(yesterday, {search:now}) && !fd.before(now, {search:lastYear}))
+        expect(fd.before(yesterday, now) && !fd.before(now, lastYear))
             .toBeTruthy("before");
-        expect(fd.doesNotEqual(now, {search: yesterday}) && fd.doesNotEqual(now, {search: yesterday}))
+        expect(fd.doesNotEqual(now, yesterday) && fd.doesNotEqual(now, yesterday))
             .toBeTruthy("doesNotEqual");
         expect(fd.empty(null) && fd.empty(undefined) && !fd.empty(now))
             .toBeTruthy("empty");
         expect(!fd.notEmpty(null) && !fd.notEmpty(undefined) && fd.notEmpty(now))
             .toBeTruthy("notEmpty");
-        expect(fd.equals(now, {search: cnow}) && !fd.equals(now, {search: yesterday}))
+        expect(fd.equals(now, cnow) && !fd.equals(now, yesterday))
             .toBeTruthy("equals");
         expect(!fd.lastMonth(now) && fd.lastMonth(lastMonth))
             .toBeTruthy("lastMonth");

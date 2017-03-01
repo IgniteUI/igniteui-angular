@@ -59,8 +59,8 @@ export class SortingStrategy implements ISortingStrategy {
                             data[0] && (typeof data[0][key] === "string" || data[0][key] === null || data[0][key] === undefined): 
                             false,
             reverse = (expression.dir === SortingDirection.Desc? -1 : 1),
-            cmpFunc = expression.compareFunction;
-            cmpFunc = cmpFunc || function(obj1, obj2) {
+            //cmpFunc = expression.compareFunction;
+            cmpFunc = function(obj1, obj2) {
                 return self.compareObjects(obj1, obj2, key, reverse, ignoreCase);
             };
         return this.arraySort(data, cmpFunc);

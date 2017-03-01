@@ -11,6 +11,13 @@ import {PagingState, PagingError} from "./paging-state.interface";
 
 import {DataState} from "./data-state.interface";
 
+export enum DataType {
+    String,
+    Number,
+    Boolean,
+    Date
+}
+
 export class DataUtil {
     static mergeDefaultProperties(target: Object, defaults: Object) {
         if (!defaults) {
@@ -29,29 +36,28 @@ export class DataUtil {
             });
         return target;
     }
-    static getFilteringConditionsByDataType(dataType: "string" | "number" | "boolean" | "date"| string): Array<string> {
-        var conditions = FilteringCondition[dataType];
-        if (!conditions) {
-            return undefined;
+    static getFilteringConditionsByDataType(dataType: DataType): Array<string> {
+        var dt:string;
+        switch(dataType) {
+            case DataType.String:
+                dt = "string";
+            break;
+            case DataType.Number:
+                dt = "number";
+            break;
+            case DataType.Boolean:
+                dt = "boolean";
+            break;
+            case DataType.Date:
+                dt = "date";
+            break;
         }
-        return Object.keys(conditions);
+        return Object.keys(FilteringCondition[dt]);
     }
     static sort<T> (data: T[], state: SortingState): T[] {
-        if (!state || !state.expressions) {
-            return data;
-        }
         // set defaults
-        state.expressionDefaults = DataUtil.mergeDefaultProperties(state.expressionDefaults, 
-                                        SortingStateDefaults.expressionDefaults);
         DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
         // apply default settings for each sorting expression(if not set)
-        state.expressions.forEach((expr: SortingExpression) => {
-            expr.ignoreCase = expr.ignoreCase === undefined ? 
-                            (state.expressionDefaults || {}).ignoreCase: expr.ignoreCase;
-        });
-        if (!state.strategy) {
-            return data;
-        }
         return state.strategy.sort(data, state.expressions);
     }
     static page<T> (data: T[], state: PagingState): T[] {
@@ -84,18 +90,8 @@ export class DataUtil {
     }
     static filter<T> (data: T[],
                     state: FilteringState): T[] {
-        if (!state || !state.expressions) {
-            return data;
-        }
-        // set defaults
-        state.expressionDefaults = DataUtil.mergeDefaultProperties(state.expressionDefaults, 
-                                        SortingStateDefaults.expressionDefaults);
         // set defaults
         DataUtil.mergeDefaultProperties(state, filteringStateDefaults);
-        state.expressions.forEach((expr) => {
-            expr.ignoreCase = expr.ignoreCase === undefined ?
-                            (state.expressionDefaults || {}).ignoreCase: expr.ignoreCase;
-        });
         if (!state.strategy) {
             return data;
         }
@@ -116,64 +112,4 @@ export class DataUtil {
         }
         return data;
     }
-    /* CRUD operations */
-    // access data records
-    static getIndexOfRecord (data: any[], record: Object): number {
-        data = data || [];
-        return data.indexOf(record);
-    }
-    static getRecordByIndex (data: any[], index: number) {
-        if (index < 0 || !data) {
-            return undefined;
-        }
-        data = data || [];
-        return data[index];
-    }
-    static getRecordInfoByKeyValue (data: any[], fieldName: string, value: any): {index: number, record: Object} {
-        data = data || [];
-        var len = data.length, i, res = {index: -1, record: undefined};
-        for (i = 0; i < len; i++) {
-            if (data[i][fieldName] === value) {
-                return {
-                    index: i,
-                    record: data[i]
-                };
-            }
-        }
-        return res;
-    }
-    static addRecord (data: any[], record: Object, at?: number): boolean {
-        if (!data) {
-            return false;
-        }
-        if (at === null || at === undefined) {
-            data.push(record);
-        } else {
-            data.splice(at, 0, record);
-        }
-        return true;
-    }
-    static deleteRecord(data: any[], record: Object): boolean {
-        var index:number = this.getIndexOfRecord(data, record);
-        if (index < -1) {
-            return false;
-        }
-        return DataUtil.deleteRecordByIndex(data, index);
-    }
-    static deleteRecordByIndex(data: any[], index: number): boolean {
-        if (!data || index < 0 || index >= data.length || !data[index]) {
-            return false;
-        }
-        data.splice(index, 1);
-        return true;
-    }
-    static updateRecordByIndex(data: any[], index: number, record: Object): boolean {
-        var foundRec = this.getRecordByIndex(data, index);
-        if (!foundRec) {
-            return false;
-        }
-        Object.assign(foundRec, record);
-        return true;
-    }
 }
-

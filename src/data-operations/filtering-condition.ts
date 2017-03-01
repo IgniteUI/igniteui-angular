@@ -49,56 +49,42 @@ function getDateParts(date: Date, dateFormat?: string):
     return res;
 }
 
-export declare type FilteringConditionArgs = {
-                                                            search?; 
-                                                            ignoreCase?: boolean;
-                                                            record?; 
-                                                            index?: number,
-                                                            settings?: any
-                                                        };
-
 export var FilteringCondition = {
     string: {
-        contains: function (target: string, args: FilteringConditionArgs) : boolean
+        contains: function (target: string, searchVal: string, ignoreCase?: boolean) : boolean
         {
-            args = args || {};
-            var search = applyIgnoreCase(args.search, args.ignoreCase);
-            target = applyIgnoreCase(target, args.ignoreCase);
+            var search = applyIgnoreCase(searchVal, ignoreCase);
+            target = applyIgnoreCase(target, ignoreCase);
             return target.indexOf(search) !== -1;
         },
-        startsWith: function (target: string, args: FilteringConditionArgs) : boolean
+        startsWith: function (target: string, searchVal: string, ignoreCase?: boolean) : boolean
         {
-            args = args || {};
-            var search = applyIgnoreCase(args.search, args.ignoreCase);
-            target = applyIgnoreCase(target, args.ignoreCase);
+            var search = applyIgnoreCase(searchVal, ignoreCase);
+            target = applyIgnoreCase(target, ignoreCase);
             return target.startsWith(search);
         },
-        endsWith: function (target: string, args: FilteringConditionArgs) : boolean
+        endsWith: function (target: string, searchVal: string, ignoreCase?: boolean) : boolean
         {
-            args = args || {};
-            var search = applyIgnoreCase(args.search, args.ignoreCase);
-            target = applyIgnoreCase(target, args.ignoreCase);
+            var search = applyIgnoreCase(searchVal, ignoreCase);
+            target = applyIgnoreCase(target, ignoreCase);
             return target.endsWith(search);
         },
-        doesNotContain: function (target: string, args: FilteringConditionArgs) : boolean
+        doesNotContain: function (target: string, searchVal: string, ignoreCase?: boolean) : boolean
         {
-            args = args || {};
-            var search = applyIgnoreCase(args.search, args.ignoreCase);
-            target = applyIgnoreCase(target, args.ignoreCase);
+            var search = applyIgnoreCase(searchVal, ignoreCase);
+            target = applyIgnoreCase(target, ignoreCase);
             return target.indexOf(search) === -1;
         },
-        equals: function (target: string, args: FilteringConditionArgs) : boolean
+        equals: function (target: string, searchVal: string, ignoreCase?: boolean) : boolean
         {
-            args = args || {};
-            var search = applyIgnoreCase(args.search, args.ignoreCase);
-            target = applyIgnoreCase(target, args.ignoreCase);
+            var search = applyIgnoreCase(searchVal, ignoreCase);
+            target = applyIgnoreCase(target, ignoreCase);
             return target === search;
         },
-        doesNotEqual: function (target: string, args: FilteringConditionArgs) : boolean
+        doesNotEqual: function (target: string, searchVal: string, ignoreCase?: boolean) : boolean
         {
-            args = args || {};
-            var search = applyIgnoreCase(args.search, args.ignoreCase);
-            target = applyIgnoreCase(target, args.ignoreCase);
+            var search = applyIgnoreCase(searchVal, ignoreCase);
+            target = applyIgnoreCase(target, ignoreCase);
             return target !== search;
         },
         null: function (target: string) : boolean
@@ -119,35 +105,29 @@ export var FilteringCondition = {
         }
     },
     number: {
-        equals: function (target: number, args: FilteringConditionArgs) : boolean
+        equals: function (target: number, searchVal: number) : boolean
         {
-            args = args || {};
-            return target === args.search;
+            return target === searchVal;
         },
-        doesNotEqual: function (target: number, args: FilteringConditionArgs) : boolean
+        doesNotEqual: function (target: number, searchVal: number) : boolean
         {
-            args = args || {};
-            return target !== args.search;
+            return target !== searchVal;
         },
-        greaterThan: function (target: number, args: FilteringConditionArgs) : boolean
+        greaterThan: function (target: number, searchVal: number) : boolean
         {
-            args = args || {};
-            return target > args.search;
+            return target > searchVal;
         },
-        lessThan: function (target: number, args: FilteringConditionArgs) : boolean
+        lessThan: function (target: number, searchVal: number) : boolean
         {
-            args = args || {};
-            return target < args.search;
+            return target < searchVal;
         },
-        greaterThanOrEqualTo: function (target: number, args: FilteringConditionArgs) : boolean
+        greaterThanOrEqualTo: function (target: number, searchVal: number) : boolean
         {
-            args = args || {};
-            return target >= args.search;
+            return target >= searchVal;
         },
-        lessThanOrEqualTo: function (target: number, args: FilteringConditionArgs) : boolean
+        lessThanOrEqualTo: function (target: number, searchVal: number) : boolean
         {
-            args = args || {};
-            return target <= args.search;
+            return target <= searchVal;
         },
         null: function (target: number) : boolean
         {
@@ -187,20 +167,17 @@ export var FilteringCondition = {
         }
     },
     date: {
-        equals: function (target: Date, args: FilteringConditionArgs) : boolean {
-            args = args || {};
-            return +target === +args.search;
+        equals: function (target: Date, searchVal: Date) : boolean {
+            return +target === +searchVal;
         },
-        doesNotEqual: function (target: Date, args: FilteringConditionArgs) : boolean {
-            return !FilteringCondition.date.equals(target, args);
+        doesNotEqual: function (target: Date, searchVal: Date) : boolean {
+            return !FilteringCondition.date.equals(target, searchVal);
         },
-        before: function (target: Date, args: FilteringConditionArgs) : boolean {
-            args = args || {};
-            return target < args.search;
+        before: function (target: Date, searchVal: Date) : boolean {
+            return target < searchVal;
         },
-        after: function (target: Date, args: FilteringConditionArgs) : boolean {
-            args = args || {};
-            return target > args.search;
+        after: function (target: Date, searchVal: Date) : boolean {
+            return target > searchVal;
         },
         today: function (target: Date) : boolean {
             var d = getDateParts(target, "yMd"), 

@@ -48,11 +48,6 @@ export class FilteringStrategy implements IFilteringStrategy {
     findMatch(rec: Object, expr: FilteringExpression, index: number): boolean {
         var cond = expr.condition,
             val = rec[expr.fieldName];
-        return cond(val, {
-            ignoreCase: expr.ignoreCase,
-            search: expr.searchVal,
-            index: index,
-            record: rec
-        });
+        return cond(val, expr.searchVal, expr.ignoreCase);
     }
 }

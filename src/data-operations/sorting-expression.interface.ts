@@ -10,5 +10,4 @@ export interface SortingExpression {
    fieldName: string;
    dir: SortingDirection;
    ignoreCase?: boolean;
-   compareFunction?: Function;
 }

@@ -122,4 +122,51 @@ describe('Unit testing DataContainer', () => {
         expect(dc.state.paging.metadata.error)
             .toEqual(PagingError.None);
     });
+
+    // test CRUD operations
+        it("tests `addRecord`", () => {
+            var record = {
+                number: -1
+            };
+            dc.addRecord(record);
+            expect(dc.data).toBeTruthy();
+            expect(dc.data.length).toBe(6);
+            expect(dc.data[5]).toEqual(record);
+            // add at specific position
+            record = {number: -2};
+            dc.addRecord(record, 0);
+            expect(dc.data.length).toBe(7);
+            expect(dc.data[0]).toEqual(record);
+        });
+        it ("tests `deleteRecord`", () => {
+            var record = data[0],
+            // remove first element
+                res = dc.deleteRecord(record);
+            expect(res).toBeTruthy();
+            expect(dc.data.length).toBe(4);
+            expect(helper.getValuesForColumn(dc.data, "number"))
+                .toEqual([1, 2, 3, 4]);
+        });
+        it ("tests `deleteRecordByIndex`", () => {
+            // remove first element
+            var res = dc.deleteRecordByIndex(0);
+            expect(res).toBeTruthy();
+            expect(dc.data.length).toBe(4);
+            expect(helper.getValuesForColumn(dc.data, "number"))
+                .toEqual([1, 2, 3, 4]);
+        });
+        it ("tests `updateRecordByIndex`", () => {
+            var recordCopy = Object.assign({}, data[0]),
+                res = dc.updateRecordByIndex(0, {number: -1});
+            recordCopy["number"] = -1;
+            expect(dc.data[0]).toEqual(recordCopy);
+        });
+        it ("tests `getRecordInfoByKeyValue`", () => {
+            var recordInfo = dc.getRecordInfoByKeyValue("number", 0);
+            expect(recordInfo.index === 0 && recordInfo.record === dc.data[0])
+                .toBeTruthy("tests getRecordInfoByKeyValue('number', 0)");
+            recordInfo = dc.getRecordInfoByKeyValue("number", -1);
+            expect(recordInfo.index === -1 && recordInfo.record === undefined)
+                .toBeTruthy("tests getRecordInfoByKeyValue('number', -1)");
+        });
 });

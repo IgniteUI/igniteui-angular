@@ -7,7 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { By } from "@angular/platform-browser";
 import { TestHelper} from "./test-util/test-helper.spec";
 
-import {    DataUtil, 
+import {    DataUtil,
+            DataType,
             DataState,
             SortingState, SortingExpression, SortingDirection,
             FilteringState, FilteringLogic, FilteringExpression, FilteringStrategy, FilteringCondition,
@@ -53,22 +54,6 @@ function testSort() {
             expect(helper.getValuesForColumn(res, "number"))
                 .toEqual([1, 3, 0, 2, 4]);
         });
-        // test custom sorting
-        it ('sorts using custom sorting function', () => {
-            var key = "number",
-                se0:SortingExpression = {
-                    fieldName: key,
-                    dir: SortingDirection.Asc,
-                    // sorting descending
-                    compareFunction: function (obj1, obj2) {
-                        var a = obj1[key], b = obj2[key];
-                        return b - a;
-                    }
-                },
-            res = DataUtil.sort(data, {expressions: [se0]});
-            expect(helper.getValuesForColumn(res, "number"))
-                .toEqual(helper.generateArray(4, 0));
-        });
         it ("sorts as applying default setting ignoreCase to false", () => {
             data[4]["string"] = data[4]["string"].toUpperCase();
             var se0:SortingExpression = {
@@ -76,26 +61,16 @@ function testSort() {
                     dir: SortingDirection.Desc
                 },
                 res = DataUtil.sort(data, {
-                    expressions: [se0], 
-                    expressionDefaults: {ignoreCase: false}
+                    expressions: [se0]
                 });
             expect(helper.getValuesForColumn(res, "number"))
                 .toEqual([3, 2, 1, 0, 4], "expressionDefaults.ignoreCase = false");
             se0.ignoreCase = true;
             res = DataUtil.sort(data, {
-                    expressions: [se0],
-                    expressionDefaults: {ignoreCase: false}
+                    expressions: [se0]
                 });
             expect(helper.getValuesForColumn(res, "number"))
                 .toEqual(helper.generateArray(4, 0));
-        });
-        it('sorts without setting SortingState', () => {
-            var res = DataUtil.sort(data, null);
-            expect(helper.getValuesForColumn(res, "number"))
-                .toEqual(helper.generateArray(0, 4));
-            res = DataUtil.sort(data, {expressions: []});
-            expect(helper.getValuesForColumn(res, "number"))
-                .toEqual(helper.generateArray(0, 4));
         });
     });
 }
@@ -194,12 +169,6 @@ function testFilter() {
             expect(helper.getValuesForColumn(res, "number"))
                     .toEqual([0, 2]);
         });
-        it("tests filtering without setting filtering expressions or filtering data state", () => {
-            var res = DataUtil.filter(data, null);
-            expect(res).toEqual(data, "filter(data, null)");
-            res = DataUtil.filter(data, {expressions: null});
-            expect(res).toEqual(data, "filter(data, {expressions: null})");
-        });
     });
 }
 /* //Test filtering */
@@ -276,85 +245,8 @@ function testProcess() {
         });
     });
 }
-
-function testCRUDMethods () {
-    var data:Array<any> = [],
-        helper:TestHelper = new TestHelper();
-    beforeEach(async(() => {
-        data = helper.generateData();
-    }));
-    describe("test CRUD methods", () => {
-        // test CRUD operations
-        it("tests `addRecord`", () => {
-            var record = {
-                number: -1
-            },
-            res = DataUtil.addRecord(data, record);
-            expect(res).toBeTruthy();
-            expect(data.length).toBe(6);
-            expect(data[5]).toEqual(record);
-            // add at specific position
-            record = {number: -2};
-            res = DataUtil.addRecord(data, record, 0);
-            expect(res).toBeTruthy();
-            expect(data.length).toBe(7);
-            expect(data[0]).toEqual(record);
-        });
-        it ("tests `deleteRecord`", () => {
-            var record = data[0],
-            // remove first element
-                res = DataUtil.deleteRecord(data, record);
-            expect(res).toBeTruthy();
-            expect(data.length).toBe(4);
-            expect(helper.getValuesForColumn(data, "number"))
-                .toEqual([1, 2, 3, 4]);
-        });
-        it ("tests `deleteRecordByIndex`", () => {
-            // remove first element
-            var res = DataUtil.deleteRecordByIndex(data, 0);
-            expect(res).toBeTruthy();
-            expect(data.length).toBe(4);
-            expect(helper.getValuesForColumn(data, "number"))
-                .toEqual([1, 2, 3, 4]);
-        });
-        it ("tests `updateRecordByIndex`", () => {
-            var recordCopy = Object.assign({}, data[0]),
-                res = DataUtil.updateRecordByIndex(data, 0, {number: -1});
-            expect(res).toBe(true);
-            recordCopy["number"] = -1;
-            expect(data[0]).toEqual(recordCopy);
-        });
-        // test accessing data records
-        it ("tests `getIndexOfRecord`", () => {
-            var record = data[0];
-            expect(DataUtil.getIndexOfRecord(data, record))
-                .toBe(0);
-            expect(DataUtil.getIndexOfRecord(data, {}))
-                .toBe(-1);
-        });
-        it("tests `getRecordByIndex`", () => {
-            var rec = DataUtil.getRecordByIndex(data, 0);
-            expect(rec).toBe(data[0]);
-            expect(DataUtil.getRecordByIndex(data, -1))
-                .toBeUndefined();
-        });
-        it("tests `getRecordInfoByKeyValue`", () => {
-            expect(DataUtil.getRecordInfoByKeyValue(data, "number", 1))
-                .toEqual({
-                    index: 1,
-                    record: data[1]
-                });
-            expect(DataUtil.getRecordInfoByKeyValue(data, "number", -1))
-                .toEqual({
-                    index: -1,
-                    record: undefined
-                });
-        });
-    });
-}
 /* //Test paging */
 describe('Unit testing DataUtil', () => {
-    testCRUDMethods();
     testSort();
     testFilter();
     testPage();
@@ -363,24 +255,22 @@ describe('Unit testing DataUtil', () => {
     // test helper function getFilteringConditionsByDataType 
     it("tests getFilteringConditionsByDataType", () => {
         var helper = new TestHelper(),
-            res = DataUtil.getFilteringConditionsByDataType(null),
             stringCond = Object.keys(FilteringCondition["string"]),
             numberCond = Object.keys(FilteringCondition["number"]),
             booleanCond = Object.keys(FilteringCondition["boolean"]),
             dateCond = Object.keys(FilteringCondition["date"]);
-        expect(res).toBeUndefined("getFilteringConditionsByDataType(null)");
         
         expect(
-            helper.isSuperset(DataUtil.getFilteringConditionsByDataType("string"), stringCond))
+            helper.isSuperset(DataUtil.getFilteringConditionsByDataType(DataType.String), stringCond))
                 .toBeTruthy("string filtering conditions");
         expect(
-            helper.isSuperset(DataUtil.getFilteringConditionsByDataType("number"), numberCond))
+            helper.isSuperset(DataUtil.getFilteringConditionsByDataType(DataType.Number), numberCond))
                 .toBeTruthy("number filtering conditions");
         expect(
-            helper.isSuperset(DataUtil.getFilteringConditionsByDataType("boolean"), booleanCond))
+            helper.isSuperset(DataUtil.getFilteringConditionsByDataType(DataType.Boolean), booleanCond))
                 .toBeTruthy("boolean filtering conditions");
         expect(
-            helper.isSuperset(DataUtil.getFilteringConditionsByDataType("date"), dateCond))
+            helper.isSuperset(DataUtil.getFilteringConditionsByDataType(DataType.Date), dateCond))
                 .toBeTruthy("date filtering conditions");
     })
     

@@ -30,8 +30,7 @@ export class DataService extends BehaviorSubject<DataContainer> {
             .map(function (response) {
                 return (<DataContainer>{
                     data: response.value,
-                    transformedData: response.value,
-                    total: parseInt(response["@odata.count"], 10)
+                    transformedData: response.value
                 });
             });
     }
@@ -105,7 +104,7 @@ export class DataOperationsSampleComponent implements OnInit, DoCheck {
         
         
         this.localData = this.helper.generateData(100000, 5);// generates 10 rows with 5 columns in each row
-        this.dataContainer = new DataContainer(this.localData, this.localData.length);
+        this.dataContainer = new DataContainer(this.localData);
         this.listData.keys = this.helper.columns.map(col => {return col.name;});
         this.dataContainer.state = {
           paging: {
@@ -180,8 +179,8 @@ export class DataOperationsSampleComponent implements OnInit, DoCheck {
     }
     // filtering
     getFilteringConditions(colType: string) {
-      var conds:Array<any> = DataUtil.getFilteringConditionsByDataType(colType);
-      conds.unshift(null);
+      var conds:Array<any> = Object.keys(FilteringCondition[colType]);
+      conds.unshift(null);// add default filtering condition - not selected with value null
       return conds;
     }
     isFilteringConditionSelected(columnKey: string, filteringCond: string): boolean {

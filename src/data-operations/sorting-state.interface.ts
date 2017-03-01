@@ -2,16 +2,10 @@ import { SortingExpression, SortingDirection } from "./sorting-expression.interf
 import {ISortingStrategy, SortingStrategy} from "./sorting-strategy";
 
 export const SortingStateDefaults = {
-    strategy: new SortingStrategy(),
-    expressionDefaults: { 
-        ignoreCase: true
-    }
+    strategy: new SortingStrategy()
 }
 
 export interface SortingState {
     expressions: SortingExpression[];
     strategy?: ISortingStrategy;
-    expressionDefaults?: {
-        ignoreCase?: boolean 
-    };
 }
