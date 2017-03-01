@@ -105,20 +105,75 @@ export class DataUtil {
         if (!state) {
             return data;
         }
-        var f:FilteringState, s: SortingState, p: PagingState;
-        f = state.filtering;
-        if (f && f.expressions && f.expressions.length) {
-            data = DataUtil.filter(data, f);
+        if (state.filtering) {
+            data = DataUtil.filter(data, state.filtering);
         }
-        s = state.sorting;
-        if (s && s.expressions && s.expressions.length) {
-            data = DataUtil.sort(data, s);
+        if (state.sorting) {
+            data = DataUtil.sort(data, state.sorting);
         }
-        p = state.paging;
-        if (p && p.recordsPerPage) {
-            data = DataUtil.page(data, p);
+        if (state.paging) {
+            data = DataUtil.page(data, state.paging);
         }
         return data;
+    }
+    /* CRUD operations */
+    // access data records
+    static getIndexOfRecord (data: any[], record: Object): number {
+        data = data || [];
+        return data.indexOf(record);
+    }
+    static getRecordByIndex (data: any[], index: number) {
+        if (index < 0 || !data) {
+            return undefined;
+        }
+        data = data || [];
+        return data[index];
+    }
+    static getRecordInfoByKeyValue (data: any[], fieldName: string, value: any): {index: number, record: Object} {
+        data = data || [];
+        var len = data.length, i, res = {index: -1, record: undefined};
+        for (i = 0; i < len; i++) {
+            if (data[i][fieldName] === value) {
+                return {
+                    index: i,
+                    record: data[i]
+                };
+            }
+        }
+        return res;
+    }
+    static addRecord (data: any[], record: Object, at?: number): boolean {
+        if (!data) {
+            return false;
+        }
+        if (at === null || at === undefined) {
+            data.push(record);
+        } else {
+            data.splice(at, 0, record);
+        }
+        return true;
+    }
+    static deleteRecord(data: any[], record: Object): boolean {
+        var index:number = this.getIndexOfRecord(data, record);
+        if (index < -1) {
+            return false;
+        }
+        return DataUtil.deleteRecordByIndex(data, index);
+    }
+    static deleteRecordByIndex(data: any[], index: number): boolean {
+        if (!data || index < 0 || index >= data.length || !data[index]) {
+            return false;
+        }
+        data.splice(index, 1);
+        return true;
+    }
+    static updateRecordByIndex(data: any[], index: number, record: Object): boolean {
+        var foundRec = this.getRecordByIndex(data, index);
+        if (!foundRec) {
+            return false;
+        }
+        Object.assign(foundRec, record);
+        return true;
     }
 }
 

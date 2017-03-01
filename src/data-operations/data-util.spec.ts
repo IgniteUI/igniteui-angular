@@ -276,8 +276,85 @@ function testProcess() {
         });
     });
 }
+
+function testCRUDMethods () {
+    var data:Array<any> = [],
+        helper:TestHelper = new TestHelper();
+    beforeEach(async(() => {
+        data = helper.generateData();
+    }));
+    describe("test CRUD methods", () => {
+        // test CRUD operations
+        it("tests `addRecord`", () => {
+            var record = {
+                number: -1
+            },
+            res = DataUtil.addRecord(data, record);
+            expect(res).toBeTruthy();
+            expect(data.length).toBe(6);
+            expect(data[5]).toEqual(record);
+            // add at specific position
+            record = {number: -2};
+            res = DataUtil.addRecord(data, record, 0);
+            expect(res).toBeTruthy();
+            expect(data.length).toBe(7);
+            expect(data[0]).toEqual(record);
+        });
+        it ("tests `deleteRecord`", () => {
+            var record = data[0],
+            // remove first element
+                res = DataUtil.deleteRecord(data, record);
+            expect(res).toBeTruthy();
+            expect(data.length).toBe(4);
+            expect(helper.getValuesForColumn(data, "number"))
+                .toEqual([1, 2, 3, 4]);
+        });
+        it ("tests `deleteRecordByIndex`", () => {
+            // remove first element
+            var res = DataUtil.deleteRecordByIndex(data, 0);
+            expect(res).toBeTruthy();
+            expect(data.length).toBe(4);
+            expect(helper.getValuesForColumn(data, "number"))
+                .toEqual([1, 2, 3, 4]);
+        });
+        it ("tests `updateRecordByIndex`", () => {
+            var recordCopy = Object.assign({}, data[0]),
+                res = DataUtil.updateRecordByIndex(data, 0, {number: -1});
+            expect(res).toBe(true);
+            recordCopy["number"] = -1;
+            expect(data[0]).toEqual(recordCopy);
+        });
+        // test accessing data records
+        it ("tests `getIndexOfRecord`", () => {
+            var record = data[0];
+            expect(DataUtil.getIndexOfRecord(data, record))
+                .toBe(0);
+            expect(DataUtil.getIndexOfRecord(data, {}))
+                .toBe(-1);
+        });
+        it("tests `getRecordByIndex`", () => {
+            var rec = DataUtil.getRecordByIndex(data, 0);
+            expect(rec).toBe(data[0]);
+            expect(DataUtil.getRecordByIndex(data, -1))
+                .toBeUndefined();
+        });
+        it("tests `getRecordInfoByKeyValue`", () => {
+            expect(DataUtil.getRecordInfoByKeyValue(data, "number", 1))
+                .toEqual({
+                    index: 1,
+                    record: data[1]
+                });
+            expect(DataUtil.getRecordInfoByKeyValue(data, "number", -1))
+                .toEqual({
+                    index: -1,
+                    record: undefined
+                });
+        });
+    });
+}
 /* //Test paging */
 describe('Unit testing DataUtil', () => {
+    testCRUDMethods();
     testSort();
     testFilter();
     testPage();

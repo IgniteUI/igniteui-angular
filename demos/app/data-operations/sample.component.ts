@@ -118,22 +118,6 @@ export class DataOperationsSampleComponent implements OnInit, DoCheck {
     }
     ngDoCheck() {
     }
-    deleteRecord() {
-        var ind = this.dataContainer.data.length - 1;
-        if (ind >= 0) {
-            this.dataContainer.deleteRecordByIndex(ind);
-        }
-    }
-    addRecord() {
-        //this.dataContainer.addRecord(this.helper.(this.data.keys, this.data.rows.length));
-        this.dataContainer.process();
-    }
-    reset() {
-        this.dataContainer.process();
-    }
-    reload() {
-        this.dataContainer.process();
-    }
     // sorting
     changeSortDirection (columnKey) {
       var dir:SortingDirection = this.getSortingDirection(columnKey),
