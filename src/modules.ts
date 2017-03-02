@@ -57,6 +57,7 @@ import { IgxFilterModule } from "./directives/filter.directive";
 import { IgxRippleModule } from "./directives/ripple.directive";
 import { IgxLabelModule } from "./label/label.directive";
 import { IgxLayout } from "./layout/layout.directive";
+import { IgxDragDropModule } from "./directives/dragdrop.directive";
 
 @NgModule({
     imports: [
@@ -65,7 +66,8 @@ import { IgxLayout } from "./layout/layout.directive";
         IgxFilterModule,
         IgxRippleModule,
         IgxLabelModule,
-        IgxLayout
+        IgxLayout,
+        IgxDragDropModule
     ],
     exports: [
         IgxButtonModule,
@@ -73,7 +75,8 @@ import { IgxLayout } from "./layout/layout.directive";
         IgxFilterModule,
         IgxRippleModule,
         IgxLabelModule,
-        IgxLayout
+        IgxLayout,
+        IgxDragDropModule
     ]
 })
 export class IgxDirectivesModule {}

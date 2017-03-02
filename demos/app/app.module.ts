@@ -1,3 +1,4 @@
+import { GridSampleModule } from './grid/sample.module';
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
@@ -39,6 +40,7 @@ import { routing } from "./app.routing";
         IgxSnackbarSampleModule,
         DialogSampleModule,
         IconSampleModule,
+        GridSampleModule
     ],
     declarations: [
         AppComponent,

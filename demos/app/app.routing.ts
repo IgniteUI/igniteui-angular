@@ -1,3 +1,4 @@
+import { GridSampleComponent } from './grid/sample.component';
 import { ModuleWithProviders } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
@@ -62,6 +63,10 @@ const appRoutes: Routes = [
     {
         path: "icon",
         component: IconSampleComponent
+    },
+    {
+        path: "grid",
+        component: GridSampleComponent
     }
 ];
 
