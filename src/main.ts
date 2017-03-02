@@ -4,6 +4,20 @@
 export * from "./modules";
 export * from './core/navigation';
 
+// export data-operations
+export * from "./data-operations/filtering-expression.interface";
+export * from "./data-operations/filtering-condition";
+export * from "./data-operations/filtering-state.interface";
+export * from "./data-operations/filtering-strategy";
+export * from "./data-operations/sorting-expression.interface";
+export * from "./data-operations/sorting-state.interface";
+export * from "./data-operations/sorting-strategy";
+export * from "./data-operations/stable-sorting-strategy";
+export * from "./data-operations/paging-state.interface";
+export * from "./data-operations/data-state.interface";
+export * from "./data-operations/data-util";
+export * from "./data-operations/data-container";
+
 export * from './navigation-drawer/navigation-drawer.component';
 export * from './icon/icon.component';
 export * from './button/button.directive';

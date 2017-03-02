@@ -16,6 +16,7 @@ import { IgxSnackbarSampleComponent } from "./snackbar/sample.component";
 import { IgxCardSampleComponent } from "./card/sample.component";
 import {IgxToastSampleComponent} from "./toast/sample.component";
 import {IgxRangeSampleComponent} from "./range/sample.component";
+import {DataOperationsSampleComponent} from "./data-operations/sample.component";
 
 const appRoutes: Routes = [
     {
@@ -82,6 +83,10 @@ const appRoutes: Routes = [
     {
         path: "range",
         component: IgxRangeSampleComponent
+    },
+    {
+        path: "data-operations",
+        component: DataOperationsSampleComponent
     }
 ];
 
