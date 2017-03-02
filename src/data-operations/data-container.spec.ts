@@ -11,7 +11,7 @@ import {FilteringCondition} from "./filtering-condition";
 import {SortingExpression, SortingDirection} from "./sorting-expression.interface";
 import {DataUtil} from "./data-util";
 import {PagingError, PagingState} from "./paging-state.interface";
-import {DataContainer} from "./data-container";
+import {DataContainer, DataAccess} from "./data-container";
 import {SortingState} from "./sorting-state.interface";
 import { FilteringState } from "./filtering-state.interface";
 
@@ -168,5 +168,17 @@ describe('Unit testing DataContainer', () => {
             recordInfo = dc.getRecordInfoByKeyValue("number", -1);
             expect(recordInfo.index === -1 && recordInfo.record === undefined)
                 .toBeTruthy("tests getRecordInfoByKeyValue('number', -1)");
+        });
+        it ("tests `getIndexOfRecord`", () => {
+            var index = dc.getIndexOfRecord(data[1]);
+            expect(index).toBe(1, "original data");
+            index = dc.getIndexOfRecord(data[0], DataAccess.TransformedData);
+            expect(index).toBe(0, "transformed data");
+        });
+        it ("tests `getRecordByIndex`", () => {
+            var rec = dc.getRecordByIndex(0);
+            expect(rec).toBe(data[0], "original data");
+            rec = dc.getRecordByIndex(0, DataAccess.TransformedData);
+            expect(rec).toBe(dc.transformedData[0], "transformed data");
         });
 });

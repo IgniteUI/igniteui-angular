@@ -2,46 +2,31 @@ import { FilteringExpression, FilteringLogic } from "./filtering-expression.inte
 import { FilteringCondition } from "./filtering-condition";
 import { FilteringState } from "./filtering-state.interface";
 import { IFilteringStrategy, FilteringStrategy } from "./filtering-strategy";
-
 import { SortingExpression, SortingDirection } from "./sorting-expression.interface";
 import {SortingState} from "./sorting-state.interface";
 import {ISortingStrategy, SortingStrategy} from "./sorting-strategy";
-
 import {PagingState, PagingError} from "./paging-state.interface";
-
 import { RecordInfo } from "./record-info.interface";
 import {DataState} from "./data-state.interface";
 import {DataUtil} from "./data-util";
-
-
 
 export enum DataAccess {
     OriginalData,
     TransformedData
 }
-
-/**
- * 
- */
 export class DataContainer {
-    /**
-     * 
-     */
-    data: any[];
+    public data: any[];
     /**
      * processed data
      */
-    transformedData: any[];
-    /**
-     * 
-     */
-    state: DataState = {
+    public transformedData: any[];
+    public state: DataState = {
     };
     constructor (data: any[] = []) {
         this.data = data;
         this.transformedData = data;
     }
-    process(state?: DataState): DataContainer {
+    public process(state?: DataState): DataContainer {
         if (state) {
             this.state = state;
         }
@@ -51,21 +36,29 @@ export class DataContainer {
         return this;
     }
     protected accessData (dataAccess: DataAccess) {
-        var res;
+        let res;
         switch(dataAccess) {
             case DataAccess.OriginalData:
-               res = this.data;
-               break;
+            res = this.data;
+            break;
             case DataAccess.TransformedData:
-                res = this.transformedData;
-                break;
+            res = this.transformedData;
+            break;
         }
         return res;
     }
     // CRUD operations
     // access data records
-    getRecordInfoByKeyValue (fieldName: string, value: any, dataAccess: DataAccess = DataAccess.OriginalData): RecordInfo {
-        var data = this.accessData(dataAccess),
+    public getIndexOfRecord (record: Object, dataAccess: DataAccess = DataAccess.OriginalData): number {
+        let data = this.accessData(dataAccess);
+        return data.indexOf(record);
+    }
+    public getRecordByIndex (index: number, dataAccess: DataAccess = DataAccess.OriginalData): Object {
+        let data = this.accessData(dataAccess);
+        return data[index];
+    }
+    public getRecordInfoByKeyValue (fieldName: string, value: any, dataAccess: DataAccess = DataAccess.OriginalData): RecordInfo {
+        let data = this.accessData(dataAccess),
             len = data.length, i,
             res:RecordInfo = {index: -1, record: undefined};
         for (i = 0; i < len; i++) {
@@ -77,28 +70,27 @@ export class DataContainer {
         }
         return res;
     }
-    addRecord (record: Object, at?: number, dataAccess: DataAccess = DataAccess.OriginalData): void {
-        var data = this.accessData(dataAccess);
+    public addRecord (record: Object, at?: number): void {
+        let data = this.accessData(DataAccess.OriginalData);
         if (at === null || at === undefined) {
             data.push(record);
         } else {
             data.splice(at, 0, record);
         }
     }
-    deleteRecord(record: Object, dataAccess: DataAccess = DataAccess.OriginalData): boolean {
-        var data = this.accessData(dataAccess),
-            index = data.indexOf(record);
-        return this.deleteRecordByIndex(index, dataAccess);
+    public deleteRecord(record: Object): boolean {
+        let index: number = this.getIndexOfRecord(record, DataAccess.OriginalData);
+        return this.deleteRecordByIndex(index);
     }
-    deleteRecordByIndex(index: number, dataAccess: DataAccess = DataAccess.OriginalData): boolean {
-        var data = this.accessData(dataAccess);
+    public deleteRecordByIndex(index: number): boolean {
+        let data = this.accessData(DataAccess.OriginalData);
         return data.splice(index, 1).length === 1;
     }
-    updateRecordByIndex(index: number, newProperties: Object, dataAccess: DataAccess = DataAccess.OriginalData): Object {
-        var data = this.accessData(dataAccess),
-            foundRec = data[index];
+    public updateRecordByIndex(index: number, newProperties: Object): Object {
+        let dataAccess: DataAccess = DataAccess.OriginalData,
+            foundRec = this.getRecordByIndex(index, dataAccess);
         if (!foundRec) {
-            return false;
+            return undefined;
         }
         return Object.assign(foundRec, newProperties);
     }
