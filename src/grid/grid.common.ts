@@ -74,7 +74,7 @@ export class IgxColumnSortingDirective {
     }
 
     @HostListener("click", ["$event"])
-    protected onClick(event) {
+    protected onClick(event: Event): void {
         if (this.column.sortable) {
             this.direction = ++this.direction > SortDirection.desc ? SortDirection.none : this.direction;
             this.onSort.emit(<ISortEvent> {
@@ -100,9 +100,9 @@ export class IgxCellBodyComponent {
     @Input() public row: any;
 
     constructor(public viewContainer: ViewContainerRef) {}
-    public ngOnInit() {
-        let view = this.viewContainer.createEmbeddedView(this.column.bodyTemplate, {
-            $implicit: this.column,
+    public ngOnInit(): void {
+        this.viewContainer.createEmbeddedView(this.column.bodyTemplate, {
+            "$implicit": this.column,
             item: this.item,
             row: this.row,
             rowIndex: this.rowIndex,
@@ -122,9 +122,9 @@ export class IgxCellHeaderComponent {
 
     constructor(public viewContainer: ViewContainerRef) {}
 
-    public ngOnInit() {
-        let view = this.viewContainer.createEmbeddedView(this.column.headerTemplate, {
-            $implicit: this.column,
+    public ngOnInit(): void {
+        this.viewContainer.createEmbeddedView(this.column.headerTemplate, {
+            "$implicit": this.column,
             colIndex: this.colIndex
         });
     }
@@ -166,7 +166,7 @@ export class IgxColumnFilteringComponent {
     @Input() public hidden: boolean = true;
     @Output() protected onFilter = new EventEmitter<IFilteredEvent>();
 
-    protected filterData(event) {
+    protected filterData(event): void {
         this.onFilter.emit(<IFilteredEvent> {
             column: this.column,
             value: event.target.value,

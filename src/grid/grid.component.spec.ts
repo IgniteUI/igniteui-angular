@@ -1,9 +1,6 @@
 import { Component, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
-import { By } from "@angular/platform-browser";
 import { FilteringCondition } from "../data-operations/filtering-condition";
-import { IgxColumnComponent } from "./column.component";
-import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective} from "./grid.common";
 import { IgxGridComponent, IgxGridModule } from "./grid.component";
 
 describe("IgxGrid", () => {
@@ -147,6 +144,12 @@ describe("IgxGrid", () => {
         let grid = fixture.componentInstance.grid;
         let data = fixture.componentInstance.data;
 
+        // Column API
+        expect(grid.getColumnByIndex(0)).toEqual(grid.columns[0]);
+        expect(grid.getColumnByIndex(1000)).toBeFalsy();
+        expect(grid.getColumnByField("ID")).toEqual(grid.columns[0]);
+        expect(grid.getColumnByField("Not Here")).toBeFalsy();
+
         fixture.detectChanges();
 
         let newRow = {ID: 4, Name: "Test String"};
@@ -155,7 +158,7 @@ describe("IgxGrid", () => {
         grid.addRow(newRow);
         fixture.detectChanges();
 
-        expect(data.length).toEqual(4, "New row added to datasource");
+        expect(data.length).toEqual(4, "New row added to data container");
         expect(gridElement.querySelectorAll("tbody > tr").length).toEqual(4, "New row is rendered in the grid");
         expect(gridElement.querySelector("tbody > tr:last-child > td:last-child").textContent).toMatch("Test String");
 
@@ -163,14 +166,14 @@ describe("IgxGrid", () => {
         grid.deleteRow(3);
         fixture.detectChanges();
 
-        expect(data.length).toEqual(3, "Row removed from the datasource");
+        expect(data.length).toEqual(3, "Row removed from the data container");
         expect(gridElement.querySelectorAll("tbody > tr").length).toEqual(3, "Row is removed from the grid");
         expect(gridElement.querySelector("tbody > tr:last-child > td:last-child").textContent).not.toMatch("Test String");
 
         grid.addRow(newRow);
         fixture.detectChanges();
 
-        expect(data.length).toEqual(4, "New row added to datasource");
+        expect(data.length).toEqual(4, "New row added to data container");
         expect(gridElement.querySelectorAll("tbody > tr").length).toEqual(4, "New row is rendered in the grid");
         expect(gridElement.querySelector("tbody > tr:last-child > td:last-child").textContent).toMatch("Test String");
 
@@ -178,14 +181,14 @@ describe("IgxGrid", () => {
         grid.deleteRow("3");
         fixture.detectChanges();
 
-        expect(data.length).toEqual(3, "Row removed from the datasource");
+        expect(data.length).toEqual(3, "Row removed from the data container");
         expect(gridElement.querySelectorAll("tbody > tr").length).toEqual(3, "Row is removed from the grid");
         expect(gridElement.querySelector("tbody > tr:last-child > td:last-child").textContent).not.toMatch("Test String");
 
         grid.addRow(newRow);
         fixture.detectChanges();
 
-        expect(data.length).toEqual(4, "New row added to datasource");
+        expect(data.length).toEqual(4, "New row added to data container");
         expect(gridElement.querySelectorAll("tbody > tr").length).toEqual(4, "New row is rendered in the grid");
         expect(gridElement.querySelector("tbody > tr:last-child > td:last-child").textContent).toMatch("Test String");
 
@@ -355,6 +358,7 @@ describe("IgxGrid", () => {
         let grid = fixture.componentInstance.grid;
         grid.columns[0].filtering = true;
         grid.columns[0].filteringCondition = FilteringCondition.number.equals;
+        grid.columns[0].dataType = 1;
 
         fixture.detectChanges();
 

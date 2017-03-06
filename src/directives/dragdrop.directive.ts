@@ -30,7 +30,7 @@ export class IgxDraggableDirective implements OnInit, OnDestroy {
     @HostBinding("draggable") public draggable: boolean;
 
     @HostListener("dragstart", ["$event"])
-    protected onDragStart(event) {
+    protected onDragStart(event: DragEvent): void {
         if (this.dragClass) {
             this._renderer.setElementClass(this._elementRef.nativeElement,
                 this.dragClass, true);
@@ -40,7 +40,7 @@ export class IgxDraggableDirective implements OnInit, OnDestroy {
     }
 
     @HostListener("dragend", ["$event"])
-    protected onDragEnd(event) {
+    protected onDragEnd(event: DragEvent): void {
         event.preventDefault();
         if (this.dragClass) {
             this._renderer.setElementClass(this._elementRef.nativeElement,
@@ -50,11 +50,11 @@ export class IgxDraggableDirective implements OnInit, OnDestroy {
 
     constructor(private _elementRef: ElementRef, private _renderer: Renderer) {}
 
-    public ngOnInit() {
+    public ngOnInit(): void {
         this.draggable = true;
     }
 
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
         this.draggable = false;
     }
 }
@@ -71,7 +71,7 @@ export class IgxDroppableDirective {
     @Output() public onDrop = new EventEmitter<IgxDropEvent>();
 
     @HostListener("dragenter", ["$event"])
-    protected onDragEnter(event) {
+    protected onDragEnter(event: DragEvent): void {
         if (this.dropClass) {
             this._renderer.setElementClass(this._elementRef.nativeElement,
                 this.dropClass, true);
@@ -79,7 +79,7 @@ export class IgxDroppableDirective {
     }
 
     @HostListener("dragleave", ["$event"])
-    protected onDragLeave(event) {
+    protected onDragLeave(event: DragEvent): void {
         if (this.dropClass) {
             this._renderer.setElementClass(this._elementRef.nativeElement,
                 this.dropClass, false);
@@ -87,7 +87,7 @@ export class IgxDroppableDirective {
     }
 
     @HostListener("dragover", ["$event"])
-    protected onDragOver(event) {
+    protected onDragOver(event: DragEvent): boolean {
         if (event.preventDefault) {
             event.preventDefault();
         }
@@ -96,7 +96,7 @@ export class IgxDroppableDirective {
     }
 
     @HostListener("drop", ["$event"])
-    protected onDragDrop(event) {
+    protected onDragDrop(event: DragEvent): void {
         if (event.stopPropagation) {
             event.stopPropagation();
         }
@@ -105,7 +105,7 @@ export class IgxDroppableDirective {
             this._renderer.setElementClass(this._elementRef.nativeElement,
                 this.dropClass, false);
         }
-        let eventData = JSON.parse(event.dataTransfer.getData("data"));
+        let eventData: any = JSON.parse(event.dataTransfer.getData("data"));
         this.onDrop.emit(<IgxDropEvent> {
             dragData: eventData,
             dropData: this.data,

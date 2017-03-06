@@ -1,14 +1,16 @@
-import { IgxGridModule, IgxGrid } from '../../../src/grid/grid.component';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { FilteringCondition } from "../../../src/data-operations/filtering-condition";
+import { DataAccess } from "../../../src/data-operations/data-container";
+import { IgxGridComponent } from "../../../src/grid/grid.component";
+import { Component, ViewChild } from "@angular/core";
 
 @Component({
     moduleId: module.id,
-    selector: 'grid-sample',
-    templateUrl: 'sample.component.html',
+    selector: "grid-sample",
+    templateUrl: "sample.component.html",
 })
 export class GridSampleComponent {
 
-    @ViewChild(IgxGrid) grid: IgxGrid;
+    @ViewChild(IgxGridComponent) grid: IgxGridComponent;
 
     data = [{
         "id": 1,
@@ -715,7 +717,7 @@ export class GridSampleComponent {
 
 
     columnsToRender = [
-        'id', 'first_name', 'last_name', 'email', 'gender', 'ip_address'
+        "id", "first_name", "last_name", "email", "gender", "ip_address"
     ];
 
     selectionData: any;
@@ -724,58 +726,55 @@ export class GridSampleComponent {
     row;
     column;
 
-    asap(event) {
-      event.column.filtering = true;
-      event.column.sortable = true;
-      if (event.column.index % 2) {
-        event.column.hidden = true;
-      }
-    }
     addNewEntry() {
         this.grid.addRow({
           id: 1000,
           first_name: this.newEntry,
-          last_name: '',
-          email: '',
-          gender: '',
-          ip_address: ''
+          last_name: "",
+          email: "",
+          gender: "",
+          ip_address: ""
         });
-        this.newEntry = '';
+        this.newEntry = "";
     }
 
-    g() {
+    addNewEntryOutsideGrid() {
       let newRecord = {
           id: 1000,
           first_name: this.newEntry2,
-          last_name: '',
-          email: '',
-          gender: '',
-          ip_address: ''
+          last_name: "",
+          email: "",
+          gender: "",
+          ip_address: ""
         };
         this.data.push(newRecord);
-        this.newEntry2 = '';
+        this.newEntry2 = "";
       }
 
-    f(data) {
+    onSelection(data) {
         this.selectionData = data;
+    }
+
+    log(event) {
+      console.log(event);
     }
 
     onChange(val, key) {
         this.grid.columns.forEach((col) => {
-            if (col.field == key) {
+            if (col.field === key) {
                 col.hidden = val;
             }
         });
     }
 
-    grr() {
+    enablePaging() {
       this.grid.paging = !this.grid.paging;
     }
 
     delete() {
       if (this.row) {
-        var ds = this.grid.dataSource,
-          r = ds.getRecordByIndex(this.row, ds.transformedData);
+        var ds = this.grid.dataContainer,
+          r = ds.getRecordByIndex(this.row, DataAccess.TransformedData);
         this.grid.deleteRow(r || this.row);
       } else {
         this.grid.deleteRow(this.data.length - 1);

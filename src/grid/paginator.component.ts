@@ -40,7 +40,7 @@ export class IgxPaginatorComponent {
         return this.currentPage === 0;
     }
 
-    public paginate(page: number) {
+    public paginate(page: number): void {
         this.onPageChange.emit(<IgxPaginatorEvent> {
             currentPage: page,
             perPage: this.perPage

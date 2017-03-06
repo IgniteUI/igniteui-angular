@@ -2,7 +2,7 @@
     <h4>Type in something and press Enter to add it to the grid [through Grid API call]</h4>
     <input igxInput type="text" [(ngModel)]="newEntry" (keyup.enter)="addNewEntry()" />
     <h4>Type in something and press Enter to add it to the grid [outside of Grid API call]</h4>
-    <input igxInput type="text" [(ngModel)]="newEntry2" (keyup.enter)="g()" />
+    <input igxInput type="text" [(ngModel)]="newEntry2" (keyup.enter)="addNewEntryOutsideGrid()" />
     <h4>Select which columns to hide</h4>
     <igx-checkbox *ngFor="let col of grid.columns"
         [(ngModel)]="col.hidden"
@@ -17,7 +17,7 @@
 </div>
 
 <div style="margin: 20px; width: 400px;">
-    <button igxButton="raised" (click)="grr()">Paging - {{ grid.paging }}</button>
+    <button igxButton="raised" (click)="enablePaging()">Paging - {{ grid.paging }}</button>
     <h4>Rows per page (should we dynamically re-render the grid?)</h4>
     <input igxInput type="text" (change)="grid.rowsPerPage = $event.target.value">
 </div>
@@ -32,9 +32,9 @@
 </div>
 
 
-<!--<div style="margin: 20px;">
+<div style="margin: 20px;">
     <h4>Rows rendered currently: {{ grid.dataSource.dataView.length }}</h4>
-    <igx-grid (onCellSelection)="f($event)" (onRowSelection)="f($event)" [data]="data" [paging]="false" [rowsPerPage]="10">
+    <igx-grid (onCellSelection)="onSelection($event)" (onRowSelection)="onSelection($event)" [data]="data" [paging]="false" [rowsPerPage]="10">
         <igx-column *ngFor="let col of columnsToRender"
             [width]="'15%'"
             [editable]="col =='first_name' || col == 'last_name'"
@@ -45,32 +45,4 @@
         >
         </igx-column>
     </igx-grid>
-</div>-->
-<div style="margin: 20px;">
-    <h4>Rows rendered currently: {{ grid.dataSource.dataView.length }}</h4>
-    <igx-grid (onCellSelection)="f($event)" (onRowSelection)="f($event)" [data]="data" [paging]="false" [rowsPerPage]="10" [autoGenerate]="true"
-        (onColumnInit)="asap($event)"
-    >
-    </igx-grid>
 </div>
-<!--
-
-<div style="margin: 20px;">
-    <igx-grid [data]="data">
-        <igx-column field="first_name" header="First Name"></igx-column>
-        <igx-column field="last_name" header="Last Name"></igx-column>
-        <igx-column field="gender" header="Gender" [width]="'150px'">
-            <template igxCell let-item="item">
-                <igx-checkbox [checked]="item.toLowerCase() == 'female'">Is Female?</igx-checkbox>
-                <igx-avatar [initials]="item[0]"></igx-avatar>
-            </template>
-        </igx-column>
-        <igx-column field="ip_address" header="IP Address">
-            <template igxCell let-item="item">
-                <div style="position: relative;">
-                    <igx-badge value="{{ item }}"></igx-badge>
-                </div>
-            </template>
-        </igx-column>
-    </igx-grid>
-</div>-->
