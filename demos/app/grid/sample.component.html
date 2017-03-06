@@ -33,8 +33,8 @@
 
 
 <div style="margin: 20px;">
-    <h4>Rows rendered currently: {{ grid.dataSource.dataView.length }}</h4>
-    <igx-grid (onCellSelection)="onSelection($event)" (onRowSelection)="onSelection($event)" [data]="data" [paging]="false" [rowsPerPage]="10">
+    <h4>Rows rendered currently: {{ grid.dataContainer.transformedData.length }}</h4>
+    <igx-grid (onCellSelection)="onSelection($event)" (onRowSelection)="onSelection($event)" [data]="data" [paging]="true" [rowsPerPage]="15">
         <igx-column *ngFor="let col of columnsToRender"
             [width]="'15%'"
             [editable]="col =='first_name' || col == 'last_name'"
