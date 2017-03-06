@@ -1,17 +1,29 @@
-import { Component } from "@angular/core";
+import { Component, NgModule } from "@angular/core";
 import { IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
     selector: "tabbar-sample",
     moduleId: module.id,
-    templateUrl: './sample.component.html'
+    templateUrl: 'sample.component.html'
 })
 export class TabBarSampleComponent {
 
-    private navItems: Array<Object> = [
-            { key:"1", text: "<h1>Hi world</h1>This is some very long string <br> hello world", link: "#" },
-            { key:"2", text: "Nav2", link: "#" },
-            { key:"3", text: "Nav3", link: "#" },
-            { key:"4", text: "Nav4", link: "#" }
-        ];
+    constructor(private router: Router) { }
+
+    route(event) {
+        if (event.panel.index == 2) {
+            this.router.navigate(['/tabbar', { outlets: { 'tabPanelOutlet': ['tabbarInnerPath'] } }]);
+        }            
+    }
+}
+
+@Component({
+    selector: "custom-content",
+    moduleId: module.id,
+    templateUrl: 'template.html'
+})
+
+export class CustomContentComponent {
+
 }

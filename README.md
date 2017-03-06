@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/IgniteUI/igniteui-js-blocks.svg?branch=master)](https://travis-ci.org/IgniteUI/igniteui-js-blocks)
 [![Coverage Status](https://coveralls.io/repos/github/IgniteUI/igniteui-js-blocks/badge.svg?branch=master)](https://coveralls.io/github/IgniteUI/igniteui-js-blocks?branch=master)
-[![NPM version](https://img.shields.io/npm/v/igniteui-js-blocks.svg?style=flat)](https://www.npmjs.com/package/zero-blocks)
+[![NPM version](https://img.shields.io/npm/v/igniteui-js-blocks.svg?style=flat)](https://www.npmjs.com/package/igniteui-js-blocks)
 
 **Note:** as of January 3rd 2017 the license for this project has changed from MIT to Apache 2.0. For more information about these licenses please click [here](http://choosealicense.com/licenses/)
 
@@ -19,17 +19,21 @@ Current list of controls include:
 | **list**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/list/README.md)         |     | **input**     |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/input/README.md)              |
 | **navbar**            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/navbar/README.md)       |     | **label**     |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/label/README.md)              |
 | **tabbar**            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/tabbar/README.md)       |     | **layout**    |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/layout/README.md)             |
-| **dialog**            |     Initial version | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/dialog/README.md)       |     |               |               |                                                                                                       |
-| **snackbar**          |     Initial version | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/snackbar/README.md)     |     |               |               |                                                                                                       |
+| **dialog**            |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/dialog/README.md)       |     |               |               |                                                                                                       |
+| **snackbar**          |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/snackbar/README.md)     |     |               |               |                                                                                                       |
+| **toast**             |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/toast/README.md)     |     |               |               |                                                                                                       |
 | **navigation drawer** |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/navdrawer/README.md)    |     |               |               |                                                                                                       |
 | **radio**             |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/radio/README.md)        |     |               |               |                                                                                                       |
 | **checkbox**          |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/checkbox/README.md)     |     |               |               |                                                                                                       |
 | **switch**            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/switch/README.md)       |     |               |               |                                                                                                       |
 | **scroll**            |             Planned | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/scroll/README.md)       |     |               |               |                                                                                                       |
-| **liner progress**    |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/progressbar/README.md)  |     |               |               |                                                                                                       |
+| **linear progress**    |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/progressbar/README.md)  |     |               |               |                                                                                                       |
 | **circular progress** |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/progressbar/README.md)  |     |               |               |                                                                                                       |
 | **icon**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/tree/master/src/icon/README.md)         |     |               |               |                                                                                                       |
-
+| **card**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/card/README.md)         |     |               |               |                                                                                                       |
+| **grid**              |           Planned | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/README.md)         |     |               |               |                                                                                                       |
+| **range**              |           In development | Not available         |     |               |               |                                                                                                       |
+| **buttonGroup**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/buttonGroup/README.md)      |               |               |                                                                                                       |
 ## Setup
 From the root folder run:
 

@@ -1,0 +1,30 @@
+%igx-toast-display {
+    display: block;
+    position: fixed;
+    text-align: center;
+    left: 50%;
+    transform: translate3d(-50%, 0, 0);
+    min-width: $toast-width;
+    margin: em(42px, 16px) auto;
+    padding: $toast-padding;
+    background-color: $toast-background;
+    border-radius: $toast-border-radius;
+    color: $toast-color;
+    font-size: $toast-font-size;
+    line-height: $toast-line-height;
+    opacity: 0;
+    z-index: 999999;
+}
+
+%igx-toast--top {
+    top: 0;
+}
+
+%igx-toast--middle {
+    top: 50%;
+    transform: translate3d(-50%, -50%, 0);
+}
+
+%igx-toast--bottom {
+    bottom: 0;
+}

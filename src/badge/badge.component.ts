@@ -74,6 +74,20 @@ export class IgxBadge {
         this._iconBdg = value;
     }
 
+    get roleDescription() {
+        var message;
+
+        if (this._iconBdg){
+            message = this._type + " type badge with icon type " + this._iconBdg;
+        } else if (this._value) {
+            message = this._type + " badge type with value " + this._value;
+        } else {
+            message = this._type + " badge type without value";
+        }
+
+        return message;
+    }
+
     setClasses() {
         var classes = {};
 

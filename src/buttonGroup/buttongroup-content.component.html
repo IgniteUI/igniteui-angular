@@ -1,0 +1,21 @@
+<div class="igx-button-group" role="group"
+[class.igx-button-group--vertical]="_isVertical"
+[class.igx-button-group--disabled]="_isDisabled">
+
+    <span class="igx-button-group__item" *ngFor="let button of values; let i = 'index'" type="button"
+        (click)="_clickHandler($event, i)"
+        igxButton="flat"
+        [attr.data-selected]="button.selected"
+        [disabled]="disabled || button.disabled"
+        [igxButtonColor]="button.color"
+        [igxButtonBackground]="button.bgcolor"
+        [igxLabel]="button.label"
+        [igxRipple]="button.ripple"
+        [class.igx-button-group__item--selected]="selectedIndexes.indexOf(i) != -1">
+        <div class="igx-button-group__item-content">
+            <i *ngIf="button.icon" class="material-icons">{{button.icon}}</i>
+            <span *ngIf="button.label">{{button.label}}</span>
+        </div>
+    </span>
+    
+</div>

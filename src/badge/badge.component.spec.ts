@@ -14,7 +14,8 @@ describe('Badge', function () {
                 InitBadge,
                 InitBadgeWithDefaults,
                 InitBadgeWithIcon,
-                IgxBadge
+                IgxBadge,
+                InitBadgeWithIconARIA
             ]
         })
             .compileComponents();
@@ -54,6 +55,16 @@ describe('Badge', function () {
         expect(fixture.elementRef.nativeElement.getElementsByTagName("div")[0].classList.contains("igx-badge--top-left")).toBeTruthy();
         expect(divContainer[0].classList.contains("igx-badge__circle--info")).toBeTruthy();
     });
+
+    it('Initializes badge with icon ARIA', () => {
+        let fixture = TestBed.createComponent(InitBadgeWithIconARIA);
+        fixture.detectChanges();
+        let badge = fixture.componentInstance.badge;
+        let divContainer = fixture.elementRef.nativeElement.querySelectorAll("div.igx-badge__circle");
+
+        expect(badge.roleDescription === "success type badge with icon type person").toBeTruthy();
+        expect(divContainer[0].getAttribute("aria-roledescription") === "success type badge with icon type person").toBeTruthy();
+    });
 });
 
 @Component({ template: `<igx-badge type="error" value="22" position="bottom-left"></igx-badge>` })
@@ -68,5 +79,10 @@ class InitBadgeWithDefaults {
 
 @Component({ template: `<igx-badge icon="person" type="info" position="top-left"></igx-badge>` })
 class InitBadgeWithIcon {
+    @ViewChild(IgxBadge) badge: IgxBadge;
+}
+
+@Component({ template: `<igx-badge icon="person" type="success"></igx-badge>` })
+class InitBadgeWithIconARIA {
     @ViewChild(IgxBadge) badge: IgxBadge;
 }

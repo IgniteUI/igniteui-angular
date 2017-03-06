@@ -10,6 +10,7 @@ import { Component } from "@angular/core";
             <span igxButton routerLink="/tabbar">TabBar</span>
             <span igxButton routerLink="/list">List</span>
             <span igxButton routerLink="/buttons">Buttons</span>
+            <span igxButton routerLink="/buttonGroup">ButtonGroup</span>
             <span igxButton routerLink="/avatar">Avatar</span>
             <span igxButton routerLink="/navigation-drawer">Navigation Drawer</span>
             <span igxButton routerLink="/navbar">Navbar</span>
@@ -18,6 +19,10 @@ import { Component } from "@angular/core";
             <span igxButton routerLink="/icon">Icon</span>
             <span igxButton routerLink="/snackbar">Snackbar</span>
             <span igxButton routerLink="/grid">Grid</span>
+            <span igxButton routerLink="/toast">Toast</span>
+            <span igxButton routerLink="/card">Card</span>
+            <span igxButton routerLink="/range">Range</span>
+            <span igxButton routerLink="/data-operations">Data Operations</span>
         </nav>
         <router-outlet></router-outlet>
     `

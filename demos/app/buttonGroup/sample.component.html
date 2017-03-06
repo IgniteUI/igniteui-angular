@@ -1,0 +1,32 @@
+<section class="container">
+    <article class="sample">
+        <h4>Exclusive Selection | Horizontal</h4>
+        <igx-buttongroup [multiSelection]="!multi" [values]="alignOptions" (onUnselect)="onSelect($event)" (onSelect)="onSelect($event)">
+        </igx-buttongroup>
+    </article>
+
+    <article class="sample">
+        <h4>Multiple Selection | Horizontal</h4>
+        <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="false">
+        </igx-buttongroup>
+    </article>
+
+    <article class="sample">
+        <h4>Multiple Selection | Horizontal Disabled</h4>
+        <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="true">
+        </igx-buttongroup>
+    </article>
+
+    <article class="sample">
+        <h4>Exclusive Selection | Vertical</h4>
+        <igx-buttongroup [multiSelection]="false" [values]="cities" [alignment]="alignment">
+        </igx-buttongroup>
+    </article>
+
+    <article class="sample">
+        <h4>Mutliple Selection | Vertical</h4>
+        <igx-buttongroup [multiSelection]="true" [values]="borders" [alignment]="alignment">
+        </igx-buttongroup>
+    </article>
+
+</section>

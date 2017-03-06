@@ -1,0 +1,16 @@
+.cards-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
+
+.cards-column {
+    display: flex;
+    flex-flow: column wrap;
+}
+
+.card-wrapper {
+    max-width: 346px;
+    min-width: 300px;
+    margin: 21px;
+}

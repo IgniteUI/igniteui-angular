@@ -12,6 +12,7 @@ import { CarouselSampleModule } from "./carousel/sample.module";
 import { TabBarSampleModule } from "./tabbar/sample.module";
 import { ListSampleModule } from "./list/sample.module";
 import { ButtonSampleModule } from "./button/sample.module";
+import { ButtonGroupSampleModule } from './buttonGroup/sample.module';
 import { AvatarSampleModule } from "./avatar/sample.module";
 import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
 import { NavbarSampleModule } from "./navbar/sample.module";
@@ -19,7 +20,11 @@ import { DialogSampleModule } from "./dialog/sample.module";
 import { ProgressBarSampleModule } from "./progressbar/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
 import { IgxSnackbarSampleModule } from "./snackbar/sample.module";
+import {IgxToastSampleModule} from "./toast/sample.module";
+import { IgxCardSampleModule } from "./card/sample.module";
 import { routing } from "./app.routing";
+import {IgxRangeSampleModule} from "./range/sample.module";
+import { DataOperationsSampleModule } from "./data-operations/sample.module";
 
 @NgModule({
     imports: [
@@ -33,14 +38,19 @@ import { routing } from "./app.routing";
         TabBarSampleModule,
         ListSampleModule,
         ButtonSampleModule,
+        ButtonGroupSampleModule,
         AvatarSampleModule,
         NavDrawerSampleModule,
         NavbarSampleModule,
         ProgressBarSampleModule,
         IgxSnackbarSampleModule,
+        IgxToastSampleModule,
         DialogSampleModule,
         IconSampleModule,
-        GridSampleModule
+        GridSampleModule,
+        IgxCardSampleModule,
+        IgxRangeSampleModule,
+        DataOperationsSampleModule
     ],
     declarations: [
         AppComponent,

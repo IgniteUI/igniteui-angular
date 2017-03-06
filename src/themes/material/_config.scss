@@ -1,13 +1,15 @@
 /* ==========================================================================
    Ignite UI JS Blocks Variables
    ========================================================================== */
+
+
 /**
  * Table of Contents:
  *
  *  1. Colors
  *  2. Badges
  *  3. Buttons
- *  TODO: 4. Cards
+ *  4. Cards
  *  TODO: 5. Collapsible
  *  TODO: 6. Chips
  *  TODO: 7. Date Picker
@@ -17,11 +19,11 @@
  *  11. Global
  *  TODO: 12. Navigation Bar
  *  TODO: 13. Navigation Drawer
- *  TODO: 14. Slider
+ *  14. Range (Slider)
  *  TODO: 15. Spinners | Loaders
  *  TODO: 16. Tabs
- *  TODO: 17. Tables
- *  TODO: 18. Toasts
+ *  TODO: 17. Grid
+ *  18. Toasts
  *  19. Typography
  *  TODO: 20. Flow Text
  *  TODO: 21. Collections
@@ -29,7 +31,9 @@
  *  23. Lists
  *  24. Dialog
  *  25. Snackbar
+ *  26. Button Group
  */
+
 
 /* 1. Colors
    ========================================================================== */
@@ -41,7 +45,6 @@ $vivid-cerise: #e41c77;
 $white: #fff;
 $yellow-orange: #fbb13c;
 $ocean-blue: #0375be;
-
 // Main App Colors
 $primary-color: $ocean-blue !default;
 $secondary-color: $vivid-cerise !default;
@@ -50,164 +53,93 @@ $success-color: #4CAF50 !default;
 $error-color: #F44336 !default;
 $warn-color: orange;
 $overlay-color: rgba(72, 72, 72, 0.5);
-
 // off-black
 $off-black: #484848;
-
 // Color Palette
-$colors: (
-    primary: (
-        100: gen-color($primary-color, 50),
-        200: gen-color($primary-color, 100),
-        300: gen-color($primary-color, 300),
-        400: gen-color($primary-color, 400),
-        500: $primary-color,
-        600: gen-color($primary-color, 600),
-        700: gen-color($primary-color, 700),
-        800: gen-color($primary-color, 800),
-        900: gen-color($primary-color, 900),
-        A100: gen-color($primary-color, 'A100'),
-        A200: gen-color($primary-color, 'A200'),
-        A400: gen-color($primary-color, 'A400'),
-        A700: gen-color($primary-color, 'A700'),
-    ),
-    secondary: (
-        100: gen-color($secondary-color, 50),
-        200: gen-color($secondary-color, 100),
-        300: gen-color($secondary-color, 300),
-        400: gen-color($secondary-color, 400),
-        500: $secondary-color,
-        600: gen-color($secondary-color, 600),
-        700: gen-color($secondary-color, 700),
-        800: gen-color($secondary-color, 800),
-        900: gen-color($secondary-color, 900),
-        A100: gen-color($secondary-color, 'A100'),
-        A200: gen-color($secondary-color, 'A200'),
-        A400: gen-color($secondary-color, 'A400'),
-        A700: gen-color($secondary-color, 'A700'),
-    ),
-    accent: (
-        100: gen-color($accent-color, 50),
-        200: gen-color($accent-color, 100),
-        300: gen-color($accent-color, 300),
-        400: gen-color($accent-color, 400),
-        500: $accent-color,
-        600: gen-color($accent-color, 600),
-        700: gen-color($accent-color, 700),
-        800: gen-color($accent-color, 800),
-        900: gen-color($accent-color, 900),
-        A100: gen-color($accent-color, 'A100'),
-        A200: gen-color($accent-color, 'A200'),
-        A400: gen-color($accent-color, 'A400'),
-        A700: gen-color($accent-color, 'A700'),
-    )
-);
+$colors: ( primary: ( 100: gen-color($primary-color, 50), 200: gen-color($primary-color, 100), 300: gen-color($primary-color, 300), 400: gen-color($primary-color, 400), 500: $primary-color, 600: gen-color($primary-color, 600), 700: gen-color($primary-color, 700), 800: gen-color($primary-color, 800), 900: gen-color($primary-color, 900), A100: gen-color($primary-color, 'A100'), A200: gen-color($primary-color, 'A200'), A400: gen-color($primary-color, 'A400'), A700: gen-color($primary-color, 'A700'), ), secondary: ( 100: gen-color($secondary-color, 50), 200: gen-color($secondary-color, 100), 300: gen-color($secondary-color, 300), 400: gen-color($secondary-color, 400), 500: $secondary-color, 600: gen-color($secondary-color, 600), 700: gen-color($secondary-color, 700), 800: gen-color($secondary-color, 800), 900: gen-color($secondary-color, 900), A100: gen-color($secondary-color, 'A100'), A200: gen-color($secondary-color, 'A200'), A400: gen-color($secondary-color, 'A400'), A700: gen-color($secondary-color, 'A700'), ), accent: ( 100: gen-color($accent-color, 50), 200: gen-color($accent-color, 100), 300: gen-color($accent-color, 300), 400: gen-color($accent-color, 400), 500: $accent-color, 600: gen-color($accent-color, 600), 700: gen-color($accent-color, 700), 800: gen-color($accent-color, 800), 900: gen-color($accent-color, 900), A100: gen-color($accent-color, 'A100'), A200: gen-color($accent-color, 'A200'), A400: gen-color($accent-color, 'A400'), A700: gen-color($accent-color, 'A700'), ));
 
 /* 2. Material Elevations / Shadows
    ========================================================================== */
 
 $elevate-1: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
-            0px 1px 1px 0px rgba(0, 0, 0, 0.14),
-            0px 2px 1px -1px rgba(0, 0, 0, 0.12);
-
+0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+0px 2px 1px -1px rgba(0, 0, 0, 0.12);
 $elevate-2: 0px 1px 5px 0px rgba(0, 0, 0, 0.2),
-            0px 2px 2px 0px rgba(0, 0, 0, 0.14),
-            0px 3px 1px -2px rgba(0, 0, 0, 0.12);
-
+0px 2px 2px 0px rgba(0, 0, 0, 0.14),
+0px 3px 1px -2px rgba(0, 0, 0, 0.12);
 $elevate-3: 0px 1px 8px 0px rgba(0, 0, 0, 0.2),
-            0px 3px 4px 0px rgba(0, 0, 0, 0.14),
-            0px 3px 3px -2px rgba(0, 0, 0, 0.12);
-
+0px 3px 4px 0px rgba(0, 0, 0, 0.14),
+0px 3px 3px -2px rgba(0, 0, 0, 0.12);
 $elevate-4: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
-            0px 4px 5px 0px rgba(0, 0, 0, 0.14),
-            0px 1px 10px 0px rgba(0, 0, 0, 0.12);
-
+0px 4px 5px 0px rgba(0, 0, 0, 0.14),
+0px 1px 10px 0px rgba(0, 0, 0, 0.12);
 $elevate-5: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
-            0px 5px 8px 0px rgba(0, 0, 0, 0.14),
-            0px 1px 14px 0px rgba(0, 0, 0, 0.12);
-
+0px 5px 8px 0px rgba(0, 0, 0, 0.14),
+0px 1px 14px 0px rgba(0, 0, 0, 0.12);
 $elevate-6: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
-            0px 6px 10px 0px rgba(0, 0, 0, 0.14),
-            0px 1px 18px 0px rgba(0, 0, 0, 0.12);
-
+0px 6px 10px 0px rgba(0, 0, 0, 0.14),
+0px 1px 18px 0px rgba(0, 0, 0, 0.12);
 $elevate-7: 0px 4px 5px -2px rgba(0, 0, 0, 0.2),
-            0px 7px 10px 1px rgba(0, 0, 0, 0.14),
-            0px 2px 16px 1px rgba(0, 0, 0, 0.12);
-
+0px 7px 10px 1px rgba(0, 0, 0, 0.14),
+0px 2px 16px 1px rgba(0, 0, 0, 0.12);
 $elevate-8: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
-            0px 8px 10px 1px rgba(0, 0, 0, 0.14),
-            0px 3px 14px 2px rgba(0, 0, 0, 0.12);
-
+0px 8px 10px 1px rgba(0, 0, 0, 0.14),
+0px 3px 14px 2px rgba(0, 0, 0, 0.12);
 $elevate-8-up: 0px -2px 4px -1px rgba(0, 0, 0, 0.14),
-            0px -4px 5px 0px rgba(0, 0, 0, 0.14),
-            0px -1px 10px 0px rgba(0, 0, 0, 0.12);
-
+0px -4px 5px 0px rgba(0, 0, 0, 0.14),
+0px -1px 10px 0px rgba(0, 0, 0, 0.12);
 $elevate-9: 0px 5px 6px -3px rgba(0, 0, 0, 0.2),
-            0px 9px 12px 1px rgba(0, 0, 0, 0.14),
-            0px 3px 16px 2px rgba(0, 0, 0, 0.12);
-
+0px 9px 12px 1px rgba(0, 0, 0, 0.14),
+0px 3px 16px 2px rgba(0, 0, 0, 0.12);
 $elevate-10: 0px 6px 6px -3px rgba(0, 0, 0, 0.2),
-             0px 10px 14px 1px rgba(0, 0, 0, 0.14),
-             0px 4px 18px 3px rgba(0, 0, 0, 0.12);
-
+0px 10px 14px 1px rgba(0, 0, 0, 0.14),
+0px 4px 18px 3px rgba(0, 0, 0, 0.12);
 $elevate-11: 0px 6px 7px -4px rgba(0, 0, 0, 0.2),
-             0px 11px 15px 1px rgba(0, 0, 0, 0.14),
-             0px 4px 20px 3px rgba(0, 0, 0, 0.12);
-
+0px 11px 15px 1px rgba(0, 0, 0, 0.14),
+0px 4px 20px 3px rgba(0, 0, 0, 0.12);
 $elevate-12: 0px 7px 8px -4px rgba(0, 0, 0, 0.2),
-             0px 12px 17px 2px rgba(0, 0, 0, 0.14),
-             0px 5px 22px 4px rgba(0, 0, 0, 0.12);
-
+0px 12px 17px 2px rgba(0, 0, 0, 0.14),
+0px 5px 22px 4px rgba(0, 0, 0, 0.12);
 $elevate-13: 0px 7px 8px -4px rgba(0, 0, 0, 0.2),
-             0px 13px 19px 2px rgba(0, 0, 0, 0.14),
-             0px 5px 24px 4px rgba(0, 0, 0, 0.12);
-
+0px 13px 19px 2px rgba(0, 0, 0, 0.14),
+0px 5px 24px 4px rgba(0, 0, 0, 0.12);
 $elevate-14: 0px 7px 9px -4px rgba(0, 0, 0, 0.2),
-             0px 14px 21px 2px rgba(0, 0, 0, 0.14),
-             0px 5px 26px 4px rgba(0, 0, 0, 0.12);
-
+0px 14px 21px 2px rgba(0, 0, 0, 0.14),
+0px 5px 26px 4px rgba(0, 0, 0, 0.12);
 $elevate-15: 0px 8px 9px -5px rgba(0, 0, 0, 0.2),
-             0px 15px 22px 2px rgba(0, 0, 0, 0.14),
-             0px 6px 28px 5px rgba(0, 0, 0, 0.12);
-
+0px 15px 22px 2px rgba(0, 0, 0, 0.14),
+0px 6px 28px 5px rgba(0, 0, 0, 0.12);
 $elevate-16: 0px 8px 10px -5px rgba(0, 0, 0, 0.2),
-             0px 16px 24px 2px rgba(0, 0, 0, 0.14),
-             0px 6px 30px 5px rgba(0, 0, 0, 0.12);
-
+0px 16px 24px 2px rgba(0, 0, 0, 0.14),
+0px 6px 30px 5px rgba(0, 0, 0, 0.12);
 $elevate-17: 0px 8px 11px -5px rgba(0, 0, 0, 0.2),
-             0px 17px 26px 2px rgba(0, 0, 0, 0.14),
-             0px 6px 32px 5px rgba(0, 0, 0, 0.12);
-
+0px 17px 26px 2px rgba(0, 0, 0, 0.14),
+0px 6px 32px 5px rgba(0, 0, 0, 0.12);
 $elevate-18: 0px 9px 11px -5px rgba(0, 0, 0, 0.2),
-             0px 18px 28px 2px rgba(0, 0, 0, 0.14),
-             0px 7px 34px 6px rgba(0, 0, 0, 0.12);
-
+0px 18px 28px 2px rgba(0, 0, 0, 0.14),
+0px 7px 34px 6px rgba(0, 0, 0, 0.12);
 $elevate-19: 0px 9px 12px -6px rgba(0, 0, 0, 0.2),
-             0px 19px 29px 2px rgba(0, 0, 0, 0.14),
-             0px 7px 36px 6px rgba(0, 0, 0, 0.12);
-
+0px 19px 29px 2px rgba(0, 0, 0, 0.14),
+0px 7px 36px 6px rgba(0, 0, 0, 0.12);
 $elevate-20: 0px 10px 13px -6px rgba(0, 0, 0, 0.2),
-             0px 20px 31px 3px rgba(0, 0, 0, 0.14),
-             0px 8px 38px 7px rgba(0, 0, 0, 0.12);
-
+0px 20px 31px 3px rgba(0, 0, 0, 0.14),
+0px 8px 38px 7px rgba(0, 0, 0, 0.12);
 $elevate-21: 0px 10px 13px -6px rgba(0, 0, 0, 0.2),
-             0px 21px 33px 3px rgba(0, 0, 0, 0.14),
-             0px 8px 40px 7px rgba(0, 0, 0, 0.12);
-
+0px 21px 33px 3px rgba(0, 0, 0, 0.14),
+0px 8px 40px 7px rgba(0, 0, 0, 0.12);
 $elevate-22: 0px 10px 14px -6px rgba(0, 0, 0, 0.2),
-             0px 22px 35px 3px rgba(0, 0, 0, 0.14),
-             0px 8px 42px 7px rgba(0, 0, 0, 0.12);
-
+0px 22px 35px 3px rgba(0, 0, 0, 0.14),
+0px 8px 42px 7px rgba(0, 0, 0, 0.12);
 $elevate-23: 0px 11px 14px -7px rgba(0, 0, 0, 0.2),
-             0px 23px 36px 3px rgba(0, 0, 0, 0.14),
-             0px 9px 44px 8px rgba(0, 0, 0, 0.12);
-
+0px 23px 36px 3px rgba(0, 0, 0, 0.14),
+0px 9px 44px 8px rgba(0, 0, 0, 0.12);
 $elevate-24: 0px 11px 15px -7px rgba(0, 0, 0, 0.2),
-             0px 24px 38px 3px rgba(0, 0, 0, 0.14),
-             0px 9px 46px 8px rgba(0, 0, 0, 0.12);
+0px 24px 38px 3px rgba(0, 0, 0, 0.14),
+0px 9px 46px 8px rgba(0, 0, 0, 0.12);
 
 /* 2. Badges
    ========================================================================== */
+
 $badge-width: 22px;
 $badge-height: $badge-width;
 $badge-bg-color-default: $secondary-color !default;
@@ -232,21 +164,17 @@ $button-font-weight: normal !default;
 $button-width: em(88px) !default;
 $button-height: em(40px) !default;
 $button-padding: em(8px) em(16px) !default;
-$button-transition: all 0.25s ease-out 0s !default;
+$button-transition: all 0.25s ease-out !default;
 $button-round-radius: 50% !default;
-
 // Disabled Styles
 $button-disabled-background: #F0F0F0 !default;
 $button-disabled-color: #AEAEAE !default;
 $button-disabled-shadow: none;
-
 // Raised Buttons
 $button-raised-background: $secondary-color !default;
 $button-raised-color: $white !default;
 $button-raised-shadow: $elevate-2 !default;
 $button-raised-focus-shadow: $elevate-8 !default;
-
-
 // Gradient Buttons
 $button-gradient-color-1: $yellow-orange;
 $button-gradient-color-2: $secondary-color;
@@ -255,37 +183,62 @@ $button-focus-gradient: linear-gradient(to bottom right, darken($button-gradient
 $button-gradient-color: #fff !default;
 $button-gradient-shadow: 0 4px 10px -2px darken(transparentize($button-gradient-color-2, .20), 20%) !default;
 $button-gradient-focus-shadow: 0 6px 12px -1px darken(transparentize($button-gradient-color-2, .25), 25%) !default;
-
 // Flat Buttons
 $button-flat-color: $secondary-color !default;
 $button-flat-color-disabled: #AEAEAE !default;
 $button-flat-hover-background: #F0F0F0 !default;
 $button-flat-focus-background: #D1D1D1 !default;
-
 // Floating Buttons
 $button-floating-width: em(56px);
 $button-floating-height: $button-floating-width;
 $button-floating-shadow: $elevate-6 !default;
-$button-floating-hover-shadow: $elevate-12 !default;;
+$button-floating-hover-shadow: $elevate-12 !default;
+;
 $button-floating-background: $secondary-color !default;
-
 // Icon Buttons
 $button-icon-width: em(28px, 16px);
 $button-icon-height: $button-icon-width;
 $button-icon-hover-background: rgba(240, 240, 240, .5);
 $button-icon-focus-background: rgba(209, 209, 209, .5);
 $button-icon-font-size: em(24px, 16px);
-
 // Navbar Buttons 
 $button-navbar-width: em(24px, 16px);
 $button-navbar-height: $button-navbar-width;
 
+/* 4. Cards
+   ========================================================================== */
+
+// Genaral
+$card-border-radius: 2px;
+// Colors
+$card-content-color: #757575;
+$card-subtitle-color: #757575;
+// Shadows
+$card-shadow: $elevate-2;
+$card-shadow-hover: $elevate-8;
+// Font Sizes
+$card-title-fontSize: em(24px, 16px);
+$card-title-line-height: em(24px, 16px);
+$card-subtitle-fontSize: em(14px, 16px);
+$card-subtitle-line-height: em(24px, 16px);
+$card-content-fontSize: em(14px, 16px);
+$card-content-lineHeight: (20px, 16px);
+// Padding & Margin
+$card-heading-padding: em(24px, 16px) em(16px, 16px) em(16px, 16px) em(16px, 16px);
+$card-heading-compact-padding: em(16px, 16px);
+$card-content-padding: em(16px, 16px);
+$card-actions-padding: em(8px, 16px);
+// Transitions
+$card-transitions: box-shadow 0.3s cubic-bezier(.25, .8, .25, 1);
+
 /* 9. Fonts
    ========================================================================== */
+
 $titillium-font-path: 'fonts/titillium/' !default;
 
 /* 10. Forms
    ========================================================================== */
+
 // Text Inputs + Textarea
 $input-min-height: em(70px) !default;
 $input-font-size: em(16px) !default;
@@ -302,18 +255,15 @@ $input-border-focus: 2px solid $input-border-color-focus !default;
 $input-background: #fff !default;
 $input-transition: all .2s ease-in !default;
 $input-placeholder-color: $input-border-color;
-
-$input-error-color:  $error-color !default;
+$input-error-color : $error-color !default;
 $input-success-color: $success-color !default;
 $input-disabled-color: lighten($input-color, 25%) !default;
 $input-disabled-solid-color: $input-disabled-color !default;
-
 $label-color: #757575 !default;
 $label-focus-color: $secondary-color !default;
 $label-active-color: lighten($label-color, 20%) !default;
 $label-font-size: em(16px) !default;
 $label-focus-font-size: em(12px) !default;
-
 // Radio Buttons
 $radio-fill-color: $secondary-color !default;
 $radio-empty-color: #757575 !default;
@@ -321,7 +271,6 @@ $radio-border: 2px solid $radio-fill-color !default;
 $radio-width: 20px !default;
 $radio-height: $radio-width !default;
 $radio-radius: 50% 50% !default;
-
 // Switches
 $switch-background: #757575 !default;
 $switch-active-background: rgba($radio-fill-color, .5);
@@ -334,7 +283,6 @@ $switch-label-height: $switch-label-width !default;
 $switch-shadow: $elevate-1;
 $switch-disabled-shadow: $elevate-1;
 $switch-margin: 0 16px !default;
-
 // Checkboxes
 $checkbox-width: 20px !default;
 $checkbox-height: $checkbox-width !default;
@@ -354,17 +302,59 @@ $large-screen-up: 1025px !default;
 $small-screen: 600px !default;
 $medium-screen: 768px !default;
 $large-screen: 1024px !default;
-
 $medium-and-up: "only screen and (min-width : #{$small-screen-up})" !default;
 $large-and-up: "only screen and (min-width : #{$medium-screen-up})" !default;
 $small-and-down: "only screen and (max-width : #{$small-screen})" !default;
 $medium-and-down: "only screen and (max-width : #{$medium-screen})" !default;
 $medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})" !default;
 
+/* 11. Range (Slider)
+   ========================================================================== */
+
+// General
+$range-height: 48px;
+
+// Range Track
+$range-track-color: rgba(0,0,0,.32);
+$range-track-fill-color: $primary-color;
+$range-track-height: 2px;
+
+// Range Ticks
+$range-tick-color: $white;
+
+// Range Thumb
+$range-thumb-width: 14px;
+$range-thumb-height: $range-thumb-width;
+$range-thumb-radius: $range-thumb-width/2;
+$range-thumb-color: $yellow-orange;
+
+// Range Label
+$range-label-width: 28px;
+$range-label-height: $range-label-width;
+$range-label-radius: $range-label-width/2;
+$range-label-font-size: em(11px);
+$range-label-font-color: $off-black;
+$range-label-background: $yellow-orange;
+
+// Start Modifier
+$range-background--start: $white;
+
 
 /* 16. Bottom navigation bar / Tabs
    ========================================================================== */
-$tab-bar-background: #fff;
+
+$tab-bar-background: $white;
+
+/* 18. Toasts
+   ========================================================================== */
+
+$toast-width: 52px;
+$toast-padding: em(16px, 16px) em(24px, 16px);
+$toast-color: $white;
+$toast-background: rgba(0, 0, 0, .54);
+$toast-border-radius: ($toast-width / 2);
+$toast-font-size: em(14px, 16px);
+$toast-line-height: em(24px, 16px);
 
 /* 19. Typography
    ========================================================================== */
@@ -372,7 +362,6 @@ $tab-bar-background: #fff;
 // paragraph
 $paragraph-line-height-desktop: em(22px) !default;
 $paragraph-line-height-phone: em(20px) !default;
-
 // H1
 $h1-font-size-desktop: em(48px) !default;
 $h1-line-height-desktop: em(54px) !default;
@@ -380,7 +369,6 @@ $h1-font-size-tablet: em(40px) !default;
 $h1-line-height-tablet: em(45px) !default;
 $h1-font-size-phone: em(32px) !default;
 $h1-line-height-phone: em(40px) !default;
-
 // H2
 $h2-font-size-desktop: em(36px) !default;
 $h2-line-height-desktop: em(45px) !default;
@@ -388,7 +376,6 @@ $h2-font-size-tablet: em(32px) !default;
 $h2-line-height-tablet: em(40px) !default;
 $h2-font-size-phone: em(26px) !default;
 $h2-line-height-phone: em(30px) !default;
-
 // H3
 $h3-font-size-desktop: em(28px) !default;
 $h3-line-height-desktop: em(35px) !default;
@@ -396,7 +383,6 @@ $h3-font-size-tablet: em(24px) !default;
 $h3-line-height-tablet: em(30px) !default;
 $h3-font-size-phone: em(22px) !default;
 $h3-line-height-phone: em(25px) !default;
-
 // H4
 $h4-font-size-desktop: em(18px) !default;
 $h4-line-height-desktop: em(22px) !default;
@@ -404,7 +390,6 @@ $h4-font-size-tablet: em(18px) !default;
 $h4-line-height-tablet: em(22px) !default;
 $h4-font-size-phone: em(22px) !default;
 $h4-line-height-phone: em(20px) !default;
-
 // Blockquote
 $blockquote-font-size-desktop: em(24px) !default;
 $blockquote-line-height-desktop: em(35px) !default;
@@ -415,16 +400,15 @@ $blockquote-line-height-phone: em(25px) !default;
 
 /* 23. List
    ========================================================================== */
-$list-margin: 8px 16px !default;
-$list-background: darken($white, 5%);
 
+$list-margin: 8px 16px !default;
+$list-background: $white;
 $list-header-color: $secondary-color !default;
 $list-header-background: $white;
 $list-header-font-size: em(13px) !default;
 $list-header-font-weight: normal !default;
 $list-header-height: em(48px) !default;
 $list-header-line-height: em(48px) !default;
-
 $list-item-color: #484848 !default;
 $list-item-background: #fff;
 $list-item-height: em(48px) !default;
@@ -432,12 +416,13 @@ $list-item-line-height: em(48px) !default;
 $list-item-font-size: em(16px) !default;
 $list-item-padding: 8px 16px;
 $list-item-active-background: darken(#fff, 1%);
-$list-item-active-shadow: 4px 0px 6px -3px rgba(167,167,167,0.3);
-
+$list-item-active-shadow: 4px 0px 6px -3px rgba(167, 167, 167, 0.3);
 $list-item-tl-sl-font-size: em(14px) !default;
 $list-item-tl-height: em(72px) !default;
 $list-item-tl-sl-color: #757575 !default;
+
 /* Rectangle: */
+
 
 /* 24. Dialog
    ========================================================================== */
@@ -448,21 +433,17 @@ $dialog-min-width: em(280px);
 $dialog-padding: em(12px, 16px) em(24px, 16px);
 $dialog-background: $white;
 $dialog-border-radius: 2px;
-
 $dialog-title-font-size: em(20px, 16px);
 $dialog-title-line-height: em(16px, 16px);
 $dialog-title-padding: em(12px) 0;
 $dialog-title-padding-top: em(12px);
 $dialog-title-padding-bottom: em(10px);
 $dialog-title-font-weight: 600;
-
-
 $dialog-message-font-size: em(16px, 16px);
 $dialog-message-line-height: em(18px, 16px);
 $dialog-message-padding-top: em(10px);
 $dialog-message-padding-bottom: em(12px);
 $dialog-message-font-weight: 400;
-
 $dialog-actions-padding: em(8px);
 $dialog-actions-margin: 0 em(-24px, 16px) em(-12px, 16px) em(-24px, 16px);
 
@@ -477,3 +458,27 @@ $snackbar-background: $off-black;
 $snackbar-text-color: $white;
 $snackbar-button-text-color: $secondary-color;
 $snackbar-button-line-height: em(16px);
+
+
+/* 26. Button Group
+   ========================================================================== */
+// Group layout
+$bgroup-radius: 2px;
+$bgroup-shadow: $elevate-2;
+
+// Item style
+$bgroup-item-minWidth: 24px;
+$bgroup-item-minHeight: 24px;
+$bgroup-item-color: rgba(0, 0, 0, .38);
+$bgroup-item-border-thickness: 1px;
+$bgroup-item-border: transparent;
+$bgroup-item-font-weight: 600;
+$bgroup-item-background: $white;
+
+// Item style selected
+$bgroup-item-color-selected: rgba(0, 0, 0, .54);
+$bgroup-item-background-selected: #C8C8C8;
+$bgroup-item-border-selected: darken(#C8C8C8, 4%);
+
+// Margin between item elements
+$bgroup-items-margin: em(10px, 16px);

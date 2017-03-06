@@ -1,0 +1,21 @@
+<div class="igx-range"
+     #range
+     (panstart)="update($event)"
+     (panend)="update($event)"
+     (pan)="update($event)"
+     (tap)="update($event)">
+    <div class="igx-range__track">
+        <div #track class="igx-range__track-fill"></div>
+        <div #ticks class="igx-range__track-ticks"></div>
+    </div>
+    <div class="igx-range__thumbs">
+        <div *ngIf="isMulti" class="igx-range__thumb-from" [ngClass]="{ 'igx-range__thumb-from--active': isActiveLabel }" #thumbFrom>
+            <span class="label">{{ formatValue(lowerValue) }}</span>
+            <span class="dot"></span>
+        </div>
+        <div class="igx-range__thumb-to" [ngClass]="{ 'igx-range__thumb-to--active': isActiveLabel }" #thumbTo>
+            <span class="label">{{ formatValue(upperValue) }}</span>
+            <span class="dot"></span>
+        </div>
+    </div>
+</div>

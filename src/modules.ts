@@ -14,7 +14,12 @@ import { IgxNavbarModule } from "./navbar/navbar.component";
 import { NavigationDrawerModule } from "./navigation-drawer/navigation-drawer.component";
 import { IgxRadioModule} from "./radio/radio.component";
 import { IgxSwitchModule} from "./switch/switch.component";
-import { IgxTabBarModule } from "./tabbar/tab.component";
+import { IgxTabBarModule } from "./tabbar/tabbar.component";
+import { IgxCardModule } from "./card/card.component";
+import { IgxSnackbarModule } from "./snackbar/snackbar.component";
+import { IgxToastModule } from "./toast/toast.component";
+import { IgxButtonGroupModule } from "./buttonGroup/buttonGroup.component";
+import { IgxRangeModule } from "./range/range.component";
 
 @NgModule({
     imports: [
@@ -30,7 +35,12 @@ import { IgxTabBarModule } from "./tabbar/tab.component";
         IgxProgressBarModule,
         IgxRadioModule,
         IgxSwitchModule,
-        IgxTabBarModule
+        IgxTabBarModule,
+        IgxCardModule,
+        IgxSnackbarModule,
+        IgxToastModule,
+        IgxButtonGroupModule,
+        IgxRangeModule,
     ],
     exports: [
         IgxAvatarModule,
@@ -45,7 +55,11 @@ import { IgxTabBarModule } from "./tabbar/tab.component";
         IgxProgressBarModule,
         IgxRadioModule,
         IgxSwitchModule,
-        IgxTabBarModule
+        IgxTabBarModule,
+        IgxSnackbarModule,
+        IgxToastModule,
+        IgxButtonGroupModule,
+        IgxRangeModule
     ]
 })
 export class IgxComponentsModule {}

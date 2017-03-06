@@ -54,7 +54,6 @@ export abstract class BaseProgress {
         }.bind(this), interval);
     }
 
-
     public getValue() {
         return getValueInRange(this.value, this.max);
     }

@@ -1,0 +1,123 @@
+%igx-range-display {
+	display: flex;
+	position: relative;
+	height: $range-height;
+	align-items: center;
+}
+
+%igx-range-thumbs-container {
+    position: absolute;
+    width: 100%;
+    height: 0;
+    cursor: default;
+    z-index: 1;
+}
+
+%igx-range-track {
+    position: absolute;
+    width: 100%;
+    height: $range-track-height;
+    background: $range-track-color;
+    transition: background .2s ease;
+}
+
+%igx-range-track-ticks {
+    position: absolute;
+    width: 100%;
+    height: $range-track-height;
+    background-size: 100% $range-track-height;
+    opacity: .85;
+    transition: opacity .2s ease;
+    z-index: 1;
+}
+
+%igx-range-track-fill {
+    position: absolute;
+    width: 100%;
+    height: inherit;
+    background: $range-track-fill-color;
+    transform-origin: 0 0 0;
+    transform: scaleX(0);
+}
+
+%igx-thumb-display {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    flex-flow: row nowrap;
+    width: $range-thumb-width;
+    height: $range-thumb-height;
+    margin-left: -$range-thumb-width/2;
+    top: -$range-thumb-height/2;
+}
+
+%igx-thumb-label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    min-width: $range-label-width;
+    height: $range-label-height;
+    padding: 0 2px;
+    border-radius: $range-label-radius;
+    top: -36px;
+    font-size: $range-label-font-size;
+    font-weight: 600;
+    line-height: $range-label-font-size;
+    color: $range-label-font-color;
+    background: $range-label-background;
+    opacity: .5;
+    transform: scale(0);
+    border-color: $range-label-background transparent transparent;
+    transform-origin: 50% 150% 0;
+    transition: all .2s ease-out;
+    z-index: -1;
+    &:after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        width: 0;
+        height: 0;
+        transform: translateX(-50%);
+        border-left: 10px solid;
+        border-right: 10px solid;
+        border-top: 12px solid;
+        border-color: inherit;
+        top: 24px;
+        z-index: -1;
+    }
+}
+
+%igx-thumb-dot {
+    position: absolute;
+    left: 0;
+    width: inherit;
+    height: inherit;
+    border-radius: $range-thumb-radius;
+    background: $range-thumb-color;
+    transform: scale(1);
+    transform-origin: 50% 50% 0;
+    opacity: 1;
+    transition: all .2s ease-out;
+}
+
+%igx-thumb-dot--active {
+    opacity: 0;
+    transform: scale(0);
+}
+
+%igx-thumb-label--active {
+    opacity: .85;
+    transform: scale(1.2); 
+}
+
+%igx-thumb-dot--start,
+%igx-thumb-label--start {
+    background: $range-background--start;
+    border-color: $range-background--start transparent transparent;
+}
+
+%igx-thumb--active {
+    z-index: 1;
+}
