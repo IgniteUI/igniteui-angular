@@ -1,3 +1,4 @@
+import { FilteringCondition } from "../main";
 import { DataType } from "../data-operations/data-util";
 import { AfterContentInit, Component, ContentChild, Input, TemplateRef } from "@angular/core";
 import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective } from "./grid.common";
@@ -17,9 +18,9 @@ export class IgxColumnComponent implements AfterContentInit {
     @Input() public hidden: boolean = false;
     @Input() public width: string;
     @Input() public index: number;
-    @Input() public filteringCondition: Function;
+    @Input() public filteringCondition: Function = FilteringCondition.string.contains;
     @Input() public filteringIgnoreCase: boolean = true;
-    @Input() public dataType: DataType;
+    @Input() public dataType: DataType = DataType.String;
     @ContentChild(IgxCellTemplateDirective) protected cellTemplate: IgxCellTemplateDirective;
     @ContentChild(IgxCellHeaderTemplateDirective) protected headTemplate: IgxCellHeaderTemplateDirective;
 
