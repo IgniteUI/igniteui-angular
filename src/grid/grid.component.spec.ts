@@ -1,7 +1,7 @@
 import { Component, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { FilteringCondition } from "../data-operations/filtering-condition";
-import { IgxGridComponent, IgxGridModule } from "./grid.component";
+import { IgxGridComponent, IgxGridModule, IgxGridRow } from "./grid.component";
 
 describe("IgxGrid", () => {
 
@@ -219,24 +219,32 @@ describe("IgxGrid", () => {
         expect(lastRow.querySelectorAll("td")[1].textContent).toMatch("New Value");
 
         // getCell
-        let cell = grid.getCell(0, 1);
+        let cell = grid.getCell(0, "Name");
         fixture.detectChanges();
 
         expect(cell.dataItem).toMatch("Johny");
 
         // getRow
-        let row = grid.getRow(0);
+        let row: IgxGridRow = grid.getRow(0);
         fixture.detectChanges();
 
-        expect(row.row.Name).toMatch("Johny");
-        expect(row.row.ID).toMatch("1");
+        expect(row.record.Name).toMatch("Johny");
+        expect(row.record.ID).toMatch("1");
+
+        // updateCell
+
+        grid.updateCell(cell.rowIndex, cell.columnField, "Timmy");
+        fixture.detectChanges();
+
+        cell = grid.getCell(cell.rowIndex, cell.columnField);
+        expect(cell.dataItem).toMatch("Timmy");
     });
 
     it("should have row selection", () => {
         let fixture = TestBed.createComponent(IgxGridMarkupDefinitionTestComponent);
         fixture.detectChanges();
 
-        let row: HTMLElement = fixture.nativeElement.querySelector("table > tbody > tr");
+        let row: any = fixture.nativeElement.querySelector("table > tbody > tr");
         let grid = fixture.componentInstance.grid;
 
         spyOn(grid.onRowSelection, "emit");
@@ -347,8 +355,8 @@ describe("IgxGrid", () => {
         firstColumn.dispatchEvent(new Event("click"));
         fixture.detectChanges();
 
-        expect(firstColumn.classList.contains("off")).toBe(true, "Column sorting should be 'off'");
-        expect(gridElement.querySelector("tbody > tr > td").textContent).toMatch("3");
+        expect(firstColumn.classList.contains("asc")).toBe(true, "Column sorting should be 'asc'");
+        expect(gridElement.querySelector("tbody > tr > td").textContent).toMatch("1");
     });
 
     it("should support filetring", () => {
@@ -495,7 +503,7 @@ describe("IgxGrid", () => {
         let gridElement: HTMLElement = fixture.nativeElement.querySelector("table");
 
         grid.columns.forEach((col) => col.editable = true);
-        grid.rowsPerPage = 1;
+        grid.perPage = 1;
         grid.paging = true;
 
         tick();
@@ -545,7 +553,7 @@ describe("IgxGrid", () => {
         let gridElement: HTMLElement = fixture.nativeElement.querySelector("table");
 
         grid.columns.forEach((col) => col.editable = true);
-        grid.rowsPerPage = 1;
+        grid.perPage = 1;
         grid.paging = true;
 
         tick();
@@ -610,7 +618,7 @@ describe("IgxGrid", () => {
         let gridElement: HTMLElement = fixture.nativeElement.querySelector("table");
 
         grid.columns.forEach((col) => col.editable = true);
-        grid.rowsPerPage = 1;
+        grid.perPage = 1;
         grid.paging = true;
 
         tick();

@@ -712,7 +712,7 @@ export class GridSampleComponent {
         "email": "hduncan2r@mac.com",
         "gender": "Male",
         "ip_address": "112.68.220.51"
-      }];
+      }].slice(0, 25);
 
 
 
@@ -720,7 +720,8 @@ export class GridSampleComponent {
         "id", "first_name", "last_name", "email", "gender", "ip_address"
     ];
 
-    selectionData: any;
+    selectedCell;
+    selectedRow;
     newEntry: any;
     newEntry2: any;
     row;
@@ -751,8 +752,16 @@ export class GridSampleComponent {
         this.newEntry2 = "";
       }
 
-    onSelection(data) {
-        this.selectionData = data;
+    cellSelected(event) {
+      this.selectedCell = event.cell;
+    }
+
+    rowSelected(event) {
+      this.selectedRow = event.row;
+    }
+
+    updateCell(event, selectedCell) {
+      this.grid.updateCell(selectedCell.rowIndex, selectedCell.columnField, event.target.value);
     }
 
     log(event) {

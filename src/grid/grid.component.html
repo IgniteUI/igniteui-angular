@@ -36,7 +36,7 @@
             </template>
         </tr>
     </thead>
-    <tbody role="rowgroup" (keyup)="navigate($event)">
+    <tbody role="rowgroup" (keydown)="navigate($event)">
         <div *ngIf="!dataContainer.transformedData || !dataContainer.transformedData.length || !columnsToRender || !columnsToRender.length">
             <h1>No data to display</h1>
         </div>
@@ -46,7 +46,7 @@
                     <td tabindex="0" role="gridcell" [attr.aria-readonly]="!col.editable" [attr.aria-describedby]="id + '_' + col.field"
                         [attr.data-row]="rowIndex" [attr.data-col]="colIndex"
                         *ngIf="col.bodyTemplate" [style.width]="col.width || ''"
-                        (focus)="onCellFocus($event, rowIndex, rowData[col.field])"
+                        (focus)="onCellFocus($event, rowIndex, col.field)"
                         (blur)="onCellBlur($event)"
                         (dblclick)="editCell(rowIndex, rowData[col.field], rowData)"
                         (keyup.enter)="editCell(rowIndex, rowData[col.field], rowData)">
@@ -55,7 +55,7 @@
                     <td tabindex="0" role="gridcell" [attr.aria-readonly]="!col.editable" [attr.aria-describedby]="id + '_' + col.field"
                         [attr.data-row]="rowIndex" [attr.data-col]="colIndex"
                         *ngIf="!col.bodyTemplate" [style.width]="col.width || ''"
-                        (focus)="onCellFocus($event, rowIndex, rowData[col.field])"
+                        (focus)="onCellFocus($event, rowIndex, col.field)"
                         (blur)="onCellBlur($event)"
                         (dblclick)="editCell(rowIndex, rowData[col.field], rowData)"
                         (keyup.enter)="editCell(rowIndex, rowData[col.field], rowData)">
@@ -65,6 +65,14 @@
             </tr>
         </template>
     </tbody>
+    <tfoot>
+        <igx-paginator *ngIf="paging"
+            (onPageChange)="_paginate($event)"
+            [currentPage]="dataContainer.state.paging.index"
+            [perPage]="perPage"
+            [totalPages]="dataContainer.state.paging.metadata.countPages">
+        </igx-paginator>
+    </tfoot>
     <igx-dialog *ngIf="hasEditableColumns"
             title="Edit Record"
             leftButtonLabel="Cancel"
@@ -82,11 +90,4 @@
             <label igxLabel>{{ col.header || col.field }}</label>
         </div>
     </igx-dialog>
-
-    <igx-paginator *ngIf="paging"
-        (onPageChange)="_paginate($event)"
-        [currentPage]="dataContainer.state.paging.index"
-        [perPage]="rowsPerPage"
-        [totalPages]="dataContainer.state.paging.metadata.countPages">
-    </igx-paginator>
 </table>

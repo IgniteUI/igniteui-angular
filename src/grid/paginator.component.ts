@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 export interface IgxPaginatorEvent {
     currentPage: number;
     perPage: number;
+    totalPages: number;
 }
 
 @Component({
@@ -43,7 +44,8 @@ export class IgxPaginatorComponent {
     public paginate(page: number): void {
         this.onPageChange.emit(<IgxPaginatorEvent> {
             currentPage: page,
-            perPage: this.perPage
+            perPage: this.perPage,
+            totalPages: this.totalPages
         });
     }
 }

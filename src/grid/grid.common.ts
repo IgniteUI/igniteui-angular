@@ -1,3 +1,4 @@
+import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import {
     Component,
     Directive,
@@ -11,19 +12,19 @@ import {
 } from "@angular/core";
 import { IgxColumnComponent } from "./column.component";
 
-// Interfaces
+// interfaces
 
-export interface IFilteredEvent {
+export interface IgxColumnFilteredEvent {
     value: string;
     column: IgxColumnComponent;
 }
 
-export interface ISortEvent {
+export interface IgxColumnSortedEvent {
     column: IgxColumnComponent;
     direction: any;
 }
 
-// Enums
+// enums
 
 export enum SortDirection {
     none,
@@ -31,7 +32,7 @@ export enum SortDirection {
     desc
 };
 
-// Directives
+// directives
 
 @Directive({
     selector: "[igxCell]"
@@ -51,41 +52,45 @@ export class IgxCellHeaderTemplateDirective {
 }
 
 @Directive({
+    selector: "[igxFooter]"
+})
+export class IgxCellFooterTemplateDirective {
+
+    constructor(public template: TemplateRef<any>) {}
+}
+
+@Directive({
     selector: "[igxColumnSorting]",
 })
 export class IgxColumnSortingDirective {
     @Input("igxColumnSorting") public column: IgxColumnComponent;
-    @Output() protected onSort = new EventEmitter<ISortEvent>();
-    public direction: SortDirection = SortDirection.none;
+    @Output() protected onSort = new EventEmitter<IgxColumnSortedEvent>();
+    public direction: SortingDirection;
 
     @HostBinding("class.asc")
     get asc(): boolean {
-        return this.direction === 1;
+        return this.direction === SortingDirection.Asc;
     }
 
     @HostBinding("class.desc")
     get desc(): boolean {
-        return this.direction === 2;
+        return this.direction === SortingDirection.Desc;
     }
 
-    @HostBinding("class.off")
-    get off(): boolean {
-        return this.direction === 0;
-    }
 
     @HostListener("click", ["$event"])
     protected onClick(event: Event): void {
         if (this.column.sortable) {
-            this.direction = ++this.direction > SortDirection.desc ? SortDirection.none : this.direction;
-            this.onSort.emit(<ISortEvent> {
+            this.direction = this.direction === SortingDirection.Asc ? SortingDirection.Desc : SortingDirection.Asc;
+            this.onSort.emit({
                 column: this.column,
-                direction: SortDirection[this.direction]
+                direction: this.direction
             });
         }
     }
 }
 
-// Components
+// components
 
 @Component({
     moduleId: module.id,
@@ -132,6 +137,26 @@ export class IgxCellHeaderComponent {
 
 @Component({
     moduleId: module.id,
+    selector: "igx-cell-footer",
+    template: ``
+})
+export class IgxCellFooterComponent {
+
+    @Input() public column: IgxColumnComponent;
+    @Input() public colIndex: number;
+
+    constructor(public viewContainer: ViewContainerRef) {}
+
+    public ngOnInit(): void {
+        this.viewContainer.createEmbeddedView(this.column.footerTemplate, {
+            "$implicit": this.column,
+            colIndex: this.colIndex
+        });
+    }
+}
+
+@Component({
+    moduleId: module.id,
     selector: "igx-col-filter",
     styles: [
         `
@@ -164,16 +189,24 @@ export class IgxColumnFilteringComponent {
     @Input() public column: IgxColumnComponent;
     @Input() public value: string;
     @Input() public hidden: boolean = true;
-    @Output() protected onFilter = new EventEmitter<IFilteredEvent>();
+    @Output() protected onFilter = new EventEmitter<IgxColumnFilteredEvent>();
 
-    protected filterData(event): void {
-        this.onFilter.emit(<IFilteredEvent> {
+    protected filterData(event: any): void {
+        this.onFilter.emit({
             column: this.column,
             value: event.target.value,
         });
     }
 
-    protected toggle(): void {
+    public show(): void {
+        this.hidden = false;
+    }
+
+    public hide(): void {
+        this.hidden = true;
+    }
+
+    public toggle(): void {
         this.hidden = !this.hidden;
     }
 }

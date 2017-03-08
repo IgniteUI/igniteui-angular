@@ -1,7 +1,11 @@
 import { FilteringCondition } from "../main";
 import { DataType } from "../data-operations/data-util";
 import { AfterContentInit, Component, ContentChild, Input, TemplateRef } from "@angular/core";
-import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective } from "./grid.common";
+import {
+    IgxCellFooterTemplateDirective,
+    IgxCellHeaderTemplateDirective,
+    IgxCellTemplateDirective
+} from "./grid.common";
 
 @Component({
     moduleId: module.id,
@@ -23,9 +27,11 @@ export class IgxColumnComponent implements AfterContentInit {
     @Input() public dataType: DataType = DataType.String;
     @ContentChild(IgxCellTemplateDirective) protected cellTemplate: IgxCellTemplateDirective;
     @ContentChild(IgxCellHeaderTemplateDirective) protected headTemplate: IgxCellHeaderTemplateDirective;
+    @ContentChild(IgxCellFooterTemplateDirective) protected footTemplate: IgxCellFooterTemplateDirective;
 
     public bodyTemplate: TemplateRef<any>;
     public headerTemplate: TemplateRef<any>;
+    public footerTemplate: TemplateRef<any>;
 
     public ngAfterContentInit(): void {
         if (this.cellTemplate) {
@@ -33,6 +39,9 @@ export class IgxColumnComponent implements AfterContentInit {
         }
         if (this.headTemplate) {
             this.headerTemplate = this.headTemplate.template;
+        }
+        if (this.footTemplate) {
+            this.footerTemplate = this.footTemplate.template;
         }
     }
 }
