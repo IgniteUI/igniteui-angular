@@ -36,7 +36,7 @@ export class DataUtil {
             });
         return target;
     }
-    static getFilteringConditionsByDataType(dataType: DataType): Array<string> {
+    static getFilteringConditionsForDataType(dataType: DataType): {[name: string]: Function} {
         var dt:string;
         switch(dataType) {
             case DataType.String:
@@ -52,7 +52,10 @@ export class DataUtil {
                 dt = "date";
             break;
         }
-        return Object.keys(FilteringCondition[dt]);
+        return FilteringCondition[dt];
+    }
+    static getListOfFilteringConditionsForDataType(dataType: DataType): Array<string> {
+        return Object.keys(DataUtil.getFilteringConditionsForDataType(dataType));
     }
     static sort<T> (data: T[], state: SortingState): T[] {
         // set defaults
@@ -82,6 +85,9 @@ export class DataUtil {
             return res;
         }
         state.metadata.countPages = Math.ceil(len / recordsPerPage);
+        if (!len) {
+            return data;
+        }
         if (index >= state.metadata.countPages) {
             state.metadata.error = PagingError.IncorrectPageIndex;
             return res;

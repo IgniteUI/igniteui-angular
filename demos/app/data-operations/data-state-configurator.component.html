@@ -1,0 +1,109 @@
+<div>
+    <div class="cards-container" [attr.disabled]="stateLoading ? true: null">
+        <section class="cards-column">
+            <article class="card-wrapper card-data-table">
+                <igx-card>
+                    <igx-card-header [innerHTML]="message">
+                    </igx-card-header>
+                    <igx-card-content>
+                        <data-table #dataTable [dataContainer]="dataContainer"></data-table>
+                    </igx-card-content>
+                </igx-card>
+            </article>
+            <!--Filtering-->
+            <article class="card-wrapper" *ngIf="!hideFiltering">
+                <igx-card>
+                    <igx-card-header>
+                        <h3 class="igx-card-header__title">Filtering</h3>
+                    </igx-card-header>
+                    <igx-card-content>
+                        <table #filteringPanel class="tbl-settings">
+                            <tr>
+                                <td>Column Name</td>
+                                <td>Filtering Condition</td>
+                                <td>Search Value</td>   
+                            </tr>
+                            <tr *ngFor="let column of columns" [attr.data-field-name]="column.fieldName">
+                                <td>
+                                    {{column.fieldName}}:
+                                </td>
+                                <td>
+                                    <select [attr.data-filtering-type]="column.type"
+                                        (change)="onChangeFilteringCondition($event)"
+                                        [ngModel]="getSelectedFilteringCondition(column)">
+                                        <option *ngFor="let cond of getFilteringConditions(column)"
+                                            [value]="cond">
+                                            {{cond || "Not applied"}}
+                                        </option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input data-filtering-search width="100" 
+                                        *ngIf="showFilteringSearchBox(column)" igxInput
+                                        [attr.type]="getDataTypeStringRepresentation(column)" 
+                                        [ngModel]="getSearchVal(column)"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <button igxButton igxButtonColor="#0375be" igxRipple (click)="process()">Filter</button>
+                    </igx-card-content>
+                </igx-card>
+            </article>
+            <!-- //Filtering-->
+        </section>
+
+        <!--Paging-->
+        <section class="cards-column">
+            <article class="card-wrapper" *ngIf="!hidePaging && this.dataState.paging">
+                <igx-card>
+                    <igx-card-header>
+                        <h3 class="igx-card-header__title">Paging</h3>
+                    </igx-card-header>
+                    <igx-card-content>
+                        <div class="igx-form-group">
+                            <input width="100" igxInput type="number" type="number" [(ngModel)]="this.dataState.paging.index"/> <label igxLabel>Page index: </label> 
+                        </div>
+                        <div class="igx-form-group">
+                            <input igxInput type="number" type="number" [(ngModel)]="this.dataState.paging.recordsPerPage"/><label igxLabel>Records per page:</label>
+                            <button igxButton igxButtonColor="#0375be" igxRipple (click)="process()">
+                                Process
+                            </button>
+                        </div>
+                    </igx-card-content>
+                </igx-card>
+            </article>
+        </section>
+        <!--//Paging-->
+        <!--Sorting-->
+        <section class="cards-column">
+            <article class="card-wrapper" *ngIf="!hideSorting">
+                <igx-card>
+                    <igx-card-header>
+                        <h3 class="igx-card-header__title">Sorting</h3>
+                    </igx-card-header>
+                    <igx-card-content>
+                        <table #sortingPanel class="tbl-settings">
+                            <tr>
+                                <td>Column Name</td>
+                                <td>Click to Sort</td>
+                            </tr>
+                            <tr *ngFor="let column of columns">
+                                <td>
+                                    {{column.fieldName}}:
+                                </td>
+                                <td>
+                                    <button igxButton igxButtonColor="#0375be" igxRipple (click)="changeSortingDirection(column)">
+                                        {{getSortingButtonTitle(column)}}
+                                    </button>
+                                </td>
+                            </tr>
+                        </table> 
+                    </igx-card-content>
+                </igx-card>
+            </article>
+        </section>
+        <!--//Sorting-->
+        
+    </div>
+</div>
+

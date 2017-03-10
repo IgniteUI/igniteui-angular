@@ -1,102 +1,24 @@
-<style>
-.panel {
-    margin: 5px;
-    padding: 5px;
-    float: left;
-    border: solid 1px gray;
-    border-radius: 12px;
-    min-width: 250px;
-}
-.paging {
-    width: 30%;
-}
-.panels {
-    clear:both;
-}
-.tbl-settings {
-    border-spacing: 1px;
-    border-collapse: collapse;
-}
-.tbl-settings td {
-    padding: 5px;
-}
-</style>
-<h3>Data utils:</h3>
-    <h4>Remote DataSource</h4>
-    <button igxButton="raised" (click)="this.ds2.process()">DataBind</button>
-    <data-iterator #listRemoteData [dataContainer]="remoteData|async"></data-iterator>
-
-    <div class="panels">
-        <h4>Local Datasource + Paging, Filtering, Sorting:</h4>
-
-        <div *ngIf="dataContainer.state && dataContainer.state.paging"
-            class="paging panel">
-            <h5>Paging</h5>
-            <div class="igx-form-group">
-                <input width="100" igxInput type="number" [(ngModel)]="dataContainer.state.paging.index"/> <label igxLabel>Page index: </label> 
-            </div>
-            <div class="igx-form-group">
-                <input igxInput type="number" [(ngModel)]="dataContainer.state.paging.recordsPerPage"/><label igxLabel>Page size:</label>
-            </div>
-            <button igxButton="raised" (click)="processData()">Apply paging</button>
-        </div>
-        
-        <div class="paging panel">
-            <h5>Sorting panel</h5>
-            <table class="tbl-settings">
-                <tr>
-                    <td>Column Name</td>
-                    <td>Apply Sorting</td>
-                    <td>Sorting State</td>   
-                </tr>
-                <tr *ngFor="let column of (helper.columns || [])">
-                    <td>
-                        {{column.name}}:
-                    </td>
-                    <td>
-                        <button igxButton="raised" (click)="changeSortDirection(column.name)">Change Sorting</button>
-                    </td>
-                    <td>
-                        {{getSortingDirecitonText(column.name)}}
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="filtering panel">
-            <h5>Filtering</h5>
-            <table #filteringPanel class="tbl-settings">
-                <tr>
-                    <td>Column Name</td>
-                    <td>Filtering Condition</td>
-                    <td>Search Value</td>   
-                </tr>
-                <tr *ngFor="let column of (helper.columns || [])" 
-                    [attr.data-field-name]="column.name">
-                    <td>
-                        {{column.name}}:
-                    </td>
-                    <td>
-                        <select [attr.data-filtering-type]="column.type">
-                            <option *ngFor="let opt of (getFilteringConditions(column.type) || [])"
-                                [attr.selected]="isFilteringConditionSelected(column.name, opt)? true : null "
-                                value="{{opt}}">
-                                {{opt || "Not applied"}}
-                            </option>
-                        </select>
-                    </td>
-                    <td>
-                        <input data-filtering-search width="100" *ngIf="column.type !== 'boolean'" igxInput type="{{column.type}}"/>
-                    </td>
-                </tr>
-            </table>
-            <button igxButton="raised" (click)="processData()">Apply filtering</button>
-        </div>
-    </div>
-    <div style="clear:both;"></div>
-    <span [innerHTML]="dataInfo.message"></span>
-
-    <data-iterator #listData></data-iterator>
-    
-    <hr />
-<hr>
+<igx-tab-bar>
+    <!--Local data-->
+    <igx-tab-panel label="Local Data">
+        <h4>Local Data</h4>
+        <data-state-configurator
+            [hideFiltering]="true" 
+            [dataContainer]="localDataContainer"
+            (onProcessDataState)="processLocalData($event)" 
+            #localDataStateConfig></data-state-configurator>
+    </igx-tab-panel>
+    <!-- //Local data-->
+    <!--Remote data-->
+    <igx-tab-panel label="Remote Data">
+        <igx-toast #toast></igx-toast>
+        <h4>Remote DataSource</h4>
+        <data-state-configurator 
+            [hidePaging]="true" 
+            [hideFiltering]="true" 
+            (onProcessDataState)="processRemoteData($event)" 
+            [dataContainer]="remoteDataContainer"
+            #remoteDataStateConfig></data-state-configurator>
+    </igx-tab-panel>
+    <!--//Remote data-->
+</igx-tab-bar>
