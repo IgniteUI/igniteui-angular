@@ -7,6 +7,11 @@ import { DataOperationsSampleComponent } from "./sample.component";
 import { DataTable } from "./data-table.component";
 import { HttpModule } from '@angular/http';
 import { DataStateConfiguratorComponent } from "./data-state-configurator.component";
+// import panels
+import { FilteringPanelComponent } from "./filtering-panel.component";
+import { SortingPanelComponent } from "./sorting-panel.component";
+import { PagingPanelComponent } from "./paging-panel.component";
+
 
 @NgModule({
     imports: [
@@ -17,6 +22,7 @@ import { DataStateConfiguratorComponent } from "./data-state-configurator.compon
         HttpModule,
         IgxCardModule
     ],
-    declarations: [DataOperationsSampleComponent, DataTable, DataStateConfiguratorComponent]
+    declarations: [DataOperationsSampleComponent, DataTable, DataStateConfiguratorComponent, 
+                FilteringPanelComponent, SortingPanelComponent, PagingPanelComponent]
 })
 export class DataOperationsSampleModule {}
