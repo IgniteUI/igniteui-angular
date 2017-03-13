@@ -21,7 +21,7 @@ import {DataOperationsSampleComponent} from "./data-operations/sample.component"
 const appRoutes: Routes = [
     {
         path: '',
-        redirectTo: '/card',
+        redirectTo: '/data-operations',
         pathMatch: 'full'
     },
     {

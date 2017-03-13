@@ -1,0 +1,50 @@
+@include b(igx-grid) {
+
+    @extend %grid-display;
+
+    @include e(caption) {
+        @extend %grid-caption;
+    }
+
+    @include e(thead) {
+        @extend %grid-thead;
+    }
+
+    @include e(tfoot) {
+        @extend %grid-tfoot;
+    }
+
+    @include e(tbody) {
+        @extend %grid-tbody;
+    }
+
+    @include e(tr) {
+        @extend %grid-row;
+    }
+
+    @include e(th) {
+        @extend %grid-cell-display;
+        @extend %grid-cell-header;
+
+        @include e(content, true) {
+            @extend %grid-cell-header-content;
+
+            & .icon {
+                @extend %grid-cell-header-cicon;
+            }
+        }
+
+        @include m(number) {
+            @extend %grid-cell-number;
+        }
+
+    }
+
+    @include e(td) {
+        @extend %grid-cell-display;
+
+        @include m(number) {
+            @extend %grid-cell-number;
+        }
+    }
+}
