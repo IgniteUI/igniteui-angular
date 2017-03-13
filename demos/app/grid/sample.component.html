@@ -1,0 +1,73 @@
+<div style="margin: 20px; width: 400px;">
+    <h4>Type in something and press Enter to add it to the grid [through Grid API call]</h4>
+    <input igxInput type="text" [(ngModel)]="newEntry" (keyup.enter)="addNewEntry()" />
+    <h4>Type in something and press Enter to add it to the grid [outside of Grid API call]</h4>
+    <input igxInput type="text" [(ngModel)]="newEntry2" (keyup.enter)="addNewEntryOutsideGrid()" />
+    <h4>Select which columns to hide</h4>
+    <igx-checkbox *ngFor="let col of grid.columns"
+        [(ngModel)]="col.hidden"
+        >{{ col.field }}</igx-checkbox>
+</div>
+<div style="margin: 20px; width: 400px;">
+    <p>Row: <input igxInput type="text" [(ngModel)]="row"></p>
+    <p>Column: <input igxInput type="text" [(ngModel)]="column"></p>
+    <button igxButton="raised" (click)="grid.focusCell(row, column)">Focus Cell</button>
+    <button igxButton="raised" (click)="grid.focusRow(row)">Focus Row</button>
+    <button igxButton="raised" (click)="delete()">Delete row</button>
+</div>
+
+<div style="margin: 20px; width: 400px;">
+    <button igxButton="raised" (click)="enablePaging()">Paging - {{ grid.paging }}</button>
+    <h4>Rows per page (should we dynamically re-render the grid?)</h4>
+    <input igxInput type="text" (change)="grid.perPage = $event.target.value">
+</div>
+
+<div style="margin: 20px; width: 400px;">
+    <h4>Update cell value</h4>
+    <input type="text" igxInput
+        [value]="selectedCell?.dataItem"
+        (change)="updateCell($event, selectedCell)"  />
+
+    <h4>Update cell value with ngModel</h4>
+    <input type="text" igxInput
+        [ngModel]="selectedCell?.dataItem"
+        (ngModelChange)="grid.updateCell(selectedCell?.rowIndex, selectedCell?.columnField, $event)"  />
+</div>
+
+<!--<div style="margin: 20px; width: 400px;">
+Selected cell:
+<pre>
+<code>
+    Value: {{ selectedCell?.dataItem }}
+    Column Field: {{ selectedCell?.columnField }}
+    Row Index: {{ selectedCell?.rowIndex }}
+</code>
+</pre>
+</div>
+
+<div style="margin: 20px; width: 400px;">
+Selected row:
+<pre>
+<code>
+    Index: {{ selectedRow?.index }}
+    Record: {{ selectedRow?.record | json }}
+    Cells: {{ selectedRow?.cells.length }}
+</code>
+</pre>
+</div>-->
+
+
+<div style="margin: 20px;">
+    <h4>Rows rendered currently: {{ grid.dataContainer.transformedData.length }}</h4>
+    <igx-grid (onCellSelection)="cellSelected($event)" (onRowSelection)="rowSelected($event)" [data]="data" [paging]="true" [perPage]="15">
+        <igx-column *ngFor="let col of columnsToRender"
+            [width]="'15%'"
+            [editable]="col =='first_name' || col == 'last_name'"
+            [filtering]="true"
+            [sortable]="true"
+            [field]="col"
+            [hidden]="col == 'id'"
+        >
+        </igx-column>
+    </igx-grid>
+</div>

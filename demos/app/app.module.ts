@@ -1,3 +1,4 @@
+import { GridSampleModule } from './grid/sample.module';
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
@@ -46,6 +47,7 @@ import { DataOperationsSampleModule } from "./data-operations/sample.module";
         IgxToastSampleModule,
         DialogSampleModule,
         IconSampleModule,
+        GridSampleModule,
         IgxCardSampleModule,
         IgxRangeSampleModule,
         DataOperationsSampleModule
