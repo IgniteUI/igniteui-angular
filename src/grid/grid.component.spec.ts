@@ -144,6 +144,20 @@ describe("IgxGrid", () => {
         let grid = fixture.componentInstance.grid;
         let data = fixture.componentInstance.data;
 
+        expect(grid.hasEditableColumns).toBe(false);
+        expect(grid.hasSorting).toBe(false);
+        expect(grid.hasFiltering).toBe(false);
+
+        grid.columns[0].sortable = true;
+        grid.columns[0].editable = true;
+        grid.columns[0].filtering = true;
+
+        fixture.detectChanges();
+
+        expect(grid.hasEditableColumns).toBe(true);
+        expect(grid.hasSorting).toBe(true);
+        expect(grid.hasFiltering).toBe(true);
+
         // Column API
         expect(grid.getColumnByIndex(0)).toEqual(grid.columns[0]);
         expect(grid.getColumnByIndex(1000)).toBeFalsy();
@@ -247,20 +261,29 @@ describe("IgxGrid", () => {
         let row: any = fixture.nativeElement.querySelector("table > tbody > tr");
         let grid = fixture.componentInstance.grid;
 
-        spyOn(grid.onRowSelection, "emit");
+        const rowSpy = spyOn(grid.onRowSelection, "emit");
         row.dispatchEvent(new Event("focus"));
 
         fixture.detectChanges();
 
         expect(row.classList.contains("selected-row")).toBe(true, "Focused row styling is not applied");
         expect(row.getAttribute("aria-selected")).toMatch("true", "Focused row ARIA attribute is not applied");
-        expect(grid.onRowSelection.emit).toHaveBeenCalled();
+        expect(rowSpy.calls.count()).toBe(1);
 
         row.dispatchEvent(new Event("blur"));
         fixture.detectChanges();
 
         expect(row.classList.contains("selected-row")).toBe(false, "Focused row styling is not removed");
         expect(row.getAttribute("aria-selected")).toBe(null, "Focused row ARIA attribute is not removed");
+
+        // through API call
+        grid.focusRow(0);
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(row);
+
+        grid.focusRow(1);
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(fixture.nativeElement.querySelectorAll("table > tbody > tr")[1]);
     });
 
     it("should have cell selection", () => {
@@ -270,7 +293,7 @@ describe("IgxGrid", () => {
         let cell: HTMLElement = fixture.nativeElement.querySelector("tbody td");
         let grid = fixture.componentInstance.grid;
 
-        spyOn(grid.onCellSelection, "emit");
+        const cellSpy = spyOn(grid.onCellSelection, "emit");
         cell.dispatchEvent(new Event("focus"));
 
         fixture.detectChanges();
@@ -278,7 +301,7 @@ describe("IgxGrid", () => {
         expect(cell.classList.contains("selected-cell")).toBe(true, "Focused cell styling is not applied");
         expect(cell.getAttribute("aria-selected")).toMatch("true", "Focused cell ARIA attribute is not applied");
         expect(cell.parentElement.classList.contains("selected-row")).toBe(true, "Focused cell does not applies parent row styling");
-        expect(grid.onCellSelection.emit).toHaveBeenCalled();
+        expect(cellSpy.calls.count()).toBe(1);
 
         cell.dispatchEvent(new Event("blur"));
         fixture.detectChanges();
@@ -286,44 +309,50 @@ describe("IgxGrid", () => {
         expect(cell.classList.contains("selected-cell")).toBe(false, "Focused cell styling is not removed");
         expect(cell.getAttribute("aria-selected")).toBe(null, "Focused cell ARIA attribute is not removed");
         expect(cell.parentElement.classList.contains("selected-row")).toBe(false, "Focused cell does not remove parent row styling");
+
+        // through API call
+        grid.focusCell(0, 0);
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(cell);
+
+        grid.focusCell(0, 1);
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(fixture.nativeElement.querySelectorAll("tbody td")[1]);
     });
 
-    // it("keyboard navigation", fakeAsync(() => {
-    //     let fixture = TestBed.createComponent(IgxGridMarkupDefinitionTestComponent);
-    //     tick();
-    //     fixture.detectChanges();
+    it("keyboard navigation", fakeAsync(() => {
+        let fixture = TestBed.createComponent(IgxGridMarkupDefinitionTestComponent);
+        let grid = fixture.componentInstance.grid;
+        tick();
+        fixture.detectChanges();
 
-    //     function hasClass(element: HTMLElement, className: string) {
-    //         return element.classList.contains(className);
-    //     }
+        let cells: HTMLElement[] = fixture.nativeElement.querySelectorAll("table > tbody td");
 
-    //     let cells: HTMLElement[] = fixture.nativeElement.querySelectorAll("table > tbody td");
+        grid.focusCell(0, 0);
+        tick();
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(cells[0]);
 
-    //     cells[0].dispatchEvent(new Event("focus"));
-    //     tick();
-    //     fixture.detectChanges();
-    //     expect(hasClass(cells[0], "selected-cell")).toBe(true, "1");
+        cells[0].dispatchEvent(new KeyboardEvent("keydown", <KeyboardEventInit>{key: "ArrowRight", bubbles: true}));
+        tick();
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(cells[1]);
 
-    //     cells[0].dispatchEvent(new KeyboardEvent("keyup", <KeyboardEventInit>{key: "ArrowRight", bubbles: true}));
-    //     tick();
-    //     fixture.detectChanges();
-    //     expect(hasClass(cells[1], "selected-cell")).toBe(true, "2");
+        cells[1].dispatchEvent(new KeyboardEvent("keydown", <KeyboardEventInit>{key: "ArrowLeft", bubbles: true}));
+        tick();
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(cells[0]);
 
-    //     cells[1].dispatchEvent(new KeyboardEvent("keyup", <KeyboardEventInit>{key: "ArrowLeft", bubbles: true}));
-    //     tick();
-    //     fixture.detectChanges();
-    //     expect(hasClass(cells[0], "selected-cell")).toBe(true, "3");
+        cells[0].dispatchEvent(new KeyboardEvent("keydown", <KeyboardEventInit>{key: "ArrowDown", bubbles: true}));
+        tick();
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(cells[2]);
 
-    //     cells[0].dispatchEvent(new KeyboardEvent("keyup", <KeyboardEventInit>{key: "ArrowDown", bubbles: true}));
-    //     tick();
-    //     fixture.detectChanges();
-    //     expect(hasClass(cells[2], "selected-cell")).toBe(true, "4");
-
-    //     cells[2].dispatchEvent(new KeyboardEvent("keyup", <KeyboardEventInit>{key: "ArrowUp", bubbles: true}));
-    //     tick();
-    //     fixture.detectChanges();
-    //     expect(hasClass(cells[0], "selected-cell")).toBe(true, "5");
-    // }));
+        cells[2].dispatchEvent(new KeyboardEvent("keydown", <KeyboardEventInit>{key: "ArrowUp", bubbles: true}));
+        tick();
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(cells[0]);
+    }));
 
     it("should support column sorting", () => {
         let fixture = TestBed.createComponent(IgxGridMarkupDefinitionTestComponent);
