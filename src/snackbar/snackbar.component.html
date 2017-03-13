@@ -5,7 +5,7 @@
 >
     <span class="igx-snackbar__message" [@fadeInOut]>{{ message }}</span>
     <button class="igx-snackbar__button" igxRipple="white" *ngIf="actionText" [@fadeInOut]
-        (click)="_triggerAction(snackbar)">
+        (click)="triggerAction(snackbar)">
             {{ actionText }}
     </button>
 </div>

@@ -1,7 +1,7 @@
-import { Component, NgModule, Input, Output, EventEmitter } from '@angular/core';
-import {  trigger, state, style, transition, animate, AnimationTransitionEvent } from '@angular/core';
-import { HammerGesturesManager } from '../core/touch';
-import { CommonModule } from '@angular/common';
+import { Component, NgModule, Input, Output, EventEmitter } from "@angular/core";
+import {  trigger, state, style, transition, animate, AnimationTransitionEvent } from "@angular/core";
+import { HammerGesturesManager } from "../core/touch";
+import { CommonModule } from "@angular/common";
 
 /**
  * IgxSnackbar provides feedback about an operation by showing brief message at the bottom of the screen on mobile
@@ -13,42 +13,42 @@ import { CommonModule } from '@angular/common';
  * ```
  **/
 @Component({
-    selector: 'igx-snackbar',
+    selector: "igx-snackbar",
     moduleId: module.id,
-    templateUrl: 'snackbar.component.html',
+    templateUrl: "snackbar.component.html",
     animations: [
-        trigger('slideInOut', [
-            state('in', style({
-                transform: 'translateY(0)',
-                color: 'rgba(255,255,255,1)'
+        trigger("slideInOut", [
+            state("in", style({
+                transform: "translateY(0)",
+                color: "rgba(255,255,255,1)"
             })),
-            transition('void => *', [
+            transition("void => *", [
                 style({
-                    transform: 'translateY(100%)'
+                    transform: "translateY(100%)"
                 }),
-                animate('.35s cubic-bezier(0.0, 0.0, 0.2, 1)')
+                animate(".35s cubic-bezier(0.0, 0.0, 0.2, 1)")
             ]),
-            transition('* => void',[
-                animate('.2s cubic-bezier(0.4, 0.0, 1, 1)', style({
-                    transform: 'translateY(100%)'
+            transition("* => void",[
+                animate(".2s cubic-bezier(0.4, 0.0, 1, 1)", style({
+                    transform: "translateY(100%)"
                 }))
             ])
         ]),
-        trigger('fadeInOut', [
-            state('in', style({
+        trigger("fadeInOut", [
+            state("in", style({
                 opacity: 1
             })),
-            transition('void => *', [
+            transition("void => *", [
                 style({
                     opacity: 0
                 }),
-                animate('.35s ease-out')
+                animate(".35s ease-out")
             ]),
-            transition('* => void',[
-                animate('.2s ease-out', style({
+            transition("* => void",[
+                animate(".2s ease-out", style({
                     opacity: 0
                 }))
-            ])            
+            ])
         ])
     ],
     providers: [HammerGesturesManager]
@@ -100,18 +100,18 @@ export class IgxSnackbar {
     @Output()
     public onAction = new EventEmitter();
 
-    private _intevalId;
+    private timeoutId;
 
     /**
      * Shows the IgxSnackbar component and hides it after some time span
      * if autoHide is enabled
      */
     public show(): void {
-        clearInterval(this._intevalId);
+        clearInterval(this.timeoutId);
         this.isVisible = true;
 
         if(this.autoHide) {
-            this._intevalId = setInterval(() => {
+            this.timeoutId = setInterval(() => {
                 this.hide();
             }, this.displayTime);
         }
@@ -122,10 +122,10 @@ export class IgxSnackbar {
      */
     public hide(): void {
         this.isVisible = false;
-        clearInterval(this._intevalId);
+        clearInterval(this.timeoutId);
     }
 
-    private _triggerAction(): void {
+    private triggerAction(): void {
         this.onAction.emit(this);
     }
 
@@ -135,7 +135,7 @@ export class IgxSnackbar {
      */
     @Output() animationStarted = new EventEmitter<AnimationTransitionEvent>();
     private snackbarAnimationStarted(evt?: AnimationTransitionEvent): void {
-        if(evt.fromState == 'void') {
+        if(evt.fromState == "void") {
             this.animationStarted.emit(evt);
         }
     };
@@ -146,7 +146,7 @@ export class IgxSnackbar {
      */
     @Output() animationDone = new EventEmitter<AnimationTransitionEvent>();
     private snackbarAnimationDone(evt?: AnimationTransitionEvent): void {
-        if(evt.fromState == 'show') {
+        if(evt.fromState == "show") {
             this.animationDone.emit(evt);
         }
     };
