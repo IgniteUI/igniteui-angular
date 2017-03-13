@@ -6,7 +6,7 @@ import { Component, ViewChild } from "@angular/core";
 import { FormsModule } from '@angular/forms';
 import { By } from "@angular/platform-browser";
 
-import { TestHelper} from "./test-util/test-helper.spec";
+import { DataGenerator } from "./test-util/data-generator";
 import {FilteringCondition} from "./filtering-condition";
 describe('Unit testing FilteringCondition', () => {
     it("tests string conditions", () => {

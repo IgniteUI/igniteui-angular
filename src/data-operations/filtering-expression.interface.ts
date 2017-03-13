@@ -11,5 +11,5 @@ export declare interface FilteringExpression {
     fieldName: string;
     condition: (value: any, searchVal?: any, ignoreCase?: boolean) => boolean;
     searchVal?: any;
-    ignoreCase?: boolean
+    ignoreCase?: boolean;
 }

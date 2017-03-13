@@ -1,0 +1,32 @@
+.cards-container[disabled] {
+    pointer-events: none;
+    /* for "disabled" effect */
+    opacity: 0.5;
+    background: #CCC;
+}
+
+.tbl-settings {
+    border-spacing: 1px;
+    border-collapse: collapse;
+}
+.tbl-settings td {
+    padding: 5px;
+}
+
+.cards-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    padding: 0 0 100px 0;
+}
+
+.cards-column {
+    display: flex;
+    flex-flow: column wrap;
+}
+
+.card-wrapper {
+    max-width: 446px;
+    min-width: 400px;
+    margin: 21px;
+}
