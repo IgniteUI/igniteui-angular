@@ -118,34 +118,12 @@ export interface IgxGridCell {
     moduleId: module.id,
     selector: "igx-grid",
     styles: [
-        `table {
-        border-collapse: collapse;
-        width: 100%;
-    }
-    table td, table th {
-        border: 1px solid #e0e0e0;
-        padding: 8px;
-    }
-
-   table tr:nth-child(even){background-color: #f5f5f5;}
-
-   table tr:hover {background-color: #e0e0e0;}
-
-   table th {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: left;
-        background-color: #616161;
-        color: white;
-    }
+        `
     .asc {
         background-color: #aed581 !important;
     }
     .desc {
         background-color: #ef5350 !important;
-    }
-    .none {
-        background-color: #616161 !important;
     }
     tr.selected-row td {
         color: white;

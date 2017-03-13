@@ -1,9 +1,10 @@
-<table [attr.id]="id" role="grid" [attr.aria-readonly]="!hasEditableColumns">
-    <thead role="rowgroup">
-        <tr role="rowheader">
+<table class="igx-grid" [attr.id]="id" role="grid" [attr.aria-readonly]="!hasEditableColumns">
+    <thead class="igx-grid__thead" role="rowgroup">
+        <tr class="igx-grid__tr" role="rowheader">
             <template ngFor let-col [ngForOf]="columnsToRender" let-colIndex="index">
                 <th (onSort)="processSort($event)"
                     role="columnheader" tabindex="0"
+                    class="igx-grid__th"
                     [attr.aria-label]="col.header || col.field"
                     (onDrop)="moveColumn($event)"
                     [igxDraggable]="col.index"
@@ -20,6 +21,7 @@
                 </th>
                 <th (onSort)="processSort($event)"
                     role="columnheader" tabindex="0"
+                    class="igx-grid__th"
                     [attr.aria-label]="col.header || col.field"
                     (onDrop)="moveColumn($event)"
                     [igxDraggable]="col.index"
@@ -36,15 +38,16 @@
             </template>
         </tr>
     </thead>
-    <tbody role="rowgroup" (keydown)="navigate($event)">
+    <tbody class="igx-grid__tbody" role="rowgroup" (keydown)="navigate($event)">
         <div *ngIf="!dataContainer.transformedData || !dataContainer.transformedData.length || !columnsToRender || !columnsToRender.length">
             <h1>No data to display</h1>
         </div>
         <template ngFor let-rowData [ngForOf]="dataContainer.transformedData" let-rowIndex="index">
-            <tr [attr.data-row]="rowIndex" tabindex="0" role="row" (focus)="onRowFocus($event, rowIndex)" (blur)="onRowBlur($event)">
+            <tr class="igx-grid__tr" [attr.data-row]="rowIndex" tabindex="0" role="row" (focus)="onRowFocus($event, rowIndex)" (blur)="onRowBlur($event)">
                 <template ngFor let-col [ngForOf]="columnsToRender" let-colIndex="index">
                     <td tabindex="0" role="gridcell" [attr.aria-readonly]="!col.editable" [attr.aria-describedby]="id + '_' + col.field"
                         [attr.data-row]="rowIndex" [attr.data-col]="colIndex"
+                        class="igx-grid__td"
                         *ngIf="col.bodyTemplate" [style.width]="col.width || ''"
                         (focus)="onCellFocus($event, rowIndex, col.field)"
                         (blur)="onCellBlur($event)"
@@ -54,6 +57,7 @@
                     </td>
                     <td tabindex="0" role="gridcell" [attr.aria-readonly]="!col.editable" [attr.aria-describedby]="id + '_' + col.field"
                         [attr.data-row]="rowIndex" [attr.data-col]="colIndex"
+                        class="igx-grid__td"
                         *ngIf="!col.bodyTemplate" [style.width]="col.width || ''"
                         (focus)="onCellFocus($event, rowIndex, col.field)"
                         (blur)="onCellBlur($event)"
@@ -65,7 +69,7 @@
             </tr>
         </template>
     </tbody>
-    <tfoot>
+    <tfoot class="igx-grid__tfoot">
         <igx-paginator *ngIf="paging"
             (onPageChange)="_paginate($event)"
             [currentPage]="dataContainer.state.paging.index"
