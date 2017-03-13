@@ -5,7 +5,7 @@ import {
 import { Component, ViewChild } from "@angular/core";
 import { FormsModule } from '@angular/forms';
 import { By } from "@angular/platform-browser";
-import { TestHelper} from "./test-util/test-helper.spec";
+import { DataGenerator } from "./test-util/data-generator";
 
 import {    DataUtil,
             DataType,
@@ -17,9 +17,10 @@ import {    DataUtil,
 /* Test sorting */
 function testSort() {
     var data:Array<any> = [],
-        helper:TestHelper = new TestHelper();
+        dataGenerator: DataGenerator;
     beforeEach(async(() => {
-        data = helper.generateData();
+        dataGenerator = new DataGenerator();
+        data = dataGenerator.data;
     }));
     describe('Test sorting', () => {
         it('sorts descending column "number"', () => {
@@ -28,8 +29,8 @@ function testSort() {
                     dir: SortingDirection.Desc
                 },
                 res = DataUtil.sort(data, {expressions: [se]});
-            expect(helper.getValuesForColumn(res, "number"))
-                .toEqual(helper.generateArray(4, 0));
+            expect(dataGenerator.getValuesForColumn(res, "number"))
+                .toEqual(dataGenerator.generateArray(4, 0));
         });
         it('sorts ascending column "boolean"', () => {
             var se = <SortingExpression> {
@@ -37,7 +38,7 @@ function testSort() {
                     dir: SortingDirection.Asc
                 },
                 res = DataUtil.sort(data, {expressions: [ se ]});
-            expect(helper.getValuesForColumn(res, "boolean"))
+            expect(dataGenerator.getValuesForColumn(res, "boolean"))
                 .toEqual([false, false, false, true, true]);
         });
         // test multiple sorting
@@ -51,7 +52,7 @@ function testSort() {
                     dir: SortingDirection.Asc
                 },
                 res = DataUtil.sort(data, {expressions: [se0, se1]});
-            expect(helper.getValuesForColumn(res, "number"))
+            expect(dataGenerator.getValuesForColumn(res, "number"))
                 .toEqual([1, 3, 0, 2, 4]);
         });
         it ("sorts as applying default setting ignoreCase to false", () => {
@@ -63,14 +64,14 @@ function testSort() {
                 res = DataUtil.sort(data, {
                     expressions: [se0]
                 });
-            expect(helper.getValuesForColumn(res, "number"))
+            expect(dataGenerator.getValuesForColumn(res, "number"))
                 .toEqual([3, 2, 1, 0, 4], "expressionDefaults.ignoreCase = false");
             se0.ignoreCase = true;
             res = DataUtil.sort(data, {
                     expressions: [se0]
                 });
-            expect(helper.getValuesForColumn(res, "number"))
-                .toEqual(helper.generateArray(4, 0));
+            expect(dataGenerator.getValuesForColumn(res, "number"))
+                .toEqual(dataGenerator.generateArray(4, 0));
         });
     });
 }
@@ -97,14 +98,14 @@ class CustomFilteringStrategy extends FilteringStrategy {
 }
 
 function testFilter() {
-    var helper:TestHelper = new TestHelper(),
-        data:Object[] = helper.generateData();
+    var dataGenerator:DataGenerator= new DataGenerator(),
+        data:Object[] = dataGenerator.data;
     describe('test filtering', () => {
         it('filters "number" column greater than 3', () => {
             var res = DataUtil.filter(data, {
                                         expressions:[{fieldName: "number", condition: FilteringCondition.number.greaterThan, searchVal: 3}]
                                     });
-            expect(helper.getValuesForColumn(res, "number"))
+            expect(dataGenerator.getValuesForColumn(res, "number"))
                     .toEqual([4]);
         });
         // test string filtering - with ignoreCase true/false
@@ -117,8 +118,8 @@ function testFilter() {
                                                     searchVal: "row"
                                                 }]
                                     });
-            expect(helper.getValuesForColumn(res, "number"))
-                    .toEqual(helper.getValuesForColumn(data, "number"));
+            expect(dataGenerator.getValuesForColumn(res, "number"))
+                    .toEqual(dataGenerator.getValuesForColumn(data, "number"));
             res[0]["string"] = "ROW";
             // case-sensitive
             res = DataUtil.filter(res, {
@@ -130,7 +131,7 @@ function testFilter() {
                                                     ignoreCase: false
                                                 }]
                                     });
-            expect(helper.getValuesForColumn(res, "number"))
+            expect(dataGenerator.getValuesForColumn(res, "number"))
                     .toEqual([0]);
         });
         // test date
@@ -143,7 +144,7 @@ function testFilter() {
                                                     searchVal: new Date()
                                                 }]
                                     });
-            expect(helper.getValuesForColumn(res, "number"))
+            expect(dataGenerator.getValuesForColumn(res, "number"))
                     .toEqual([1,2,3,4]);
         });
         it("filters 'bool' column", () => {
@@ -154,7 +155,7 @@ function testFilter() {
                                                     condition: FilteringCondition.boolean.false
                                                 }]
                                     });
-            expect(helper.getValuesForColumn(res, "number"))
+            expect(dataGenerator.getValuesForColumn(res, "number"))
                     .toEqual([0, 2, 4]);
         });
         it("filters using custom filtering strategy", () => {
@@ -166,7 +167,7 @@ function testFilter() {
                                                 }],
                                         strategy: new CustomFilteringStrategy()
                                     });
-            expect(helper.getValuesForColumn(res, "number"))
+            expect(dataGenerator.getValuesForColumn(res, "number"))
                     .toEqual([0, 2]);
         });
     });
@@ -174,8 +175,8 @@ function testFilter() {
 /* //Test filtering */
 /* Test paging */
 function testPage() {
-    var helper:TestHelper = new TestHelper(),
-        data:Object[] = helper.generateData();
+    var dataGenerator:DataGenerator = new DataGenerator(),
+        data:Object[] = dataGenerator.data;
     
     describe('test paging', () => {
         it('paginates data', () => {
@@ -183,14 +184,14 @@ function testPage() {
                 res = DataUtil.page(data, state);
             expect(state.metadata.error).toBe(PagingError.None);
             expect(state.metadata.countPages).toBe(2);
-            expect(helper.getValuesForColumn(res, "number"))
+            expect(dataGenerator.getValuesForColumn(res, "number"))
                 .toEqual([0, 1, 2]);
             // go to second page
             state = {index: 1, recordsPerPage: 3};
             res = DataUtil.page(data, state);
             expect(state.metadata.error).toBe(PagingError.None);
             expect(state.metadata.countPages).toBe(2);
-            expect(helper.getValuesForColumn(res, "number"))
+            expect(dataGenerator.getValuesForColumn(res, "number"))
                 .toEqual([3, 4]);
         });
         it('tests paging errors', () => {
@@ -205,8 +206,8 @@ function testPage() {
             expect(state.metadata.error).toBe(PagingError.IncorrectRecordsPerPage);
             // test with paging state null
             res = DataUtil.page(data, null);
-            expect(helper.getValuesForColumn(res, "number"))
-                .toEqual(helper.generateArray(0, 4));
+            expect(dataGenerator.getValuesForColumn(res, "number"))
+                .toEqual(dataGenerator.generateArray(0, 4));
         });
     });
 }
@@ -234,10 +235,10 @@ function testProcess() {
                         recordsPerPage: 2
                     }
                 }, 
-                helper:TestHelper = new TestHelper(),
-                data:Object[] = helper.generateData(), 
+                dataGenerator:DataGenerator = new DataGenerator(),
+                data:Object[] = dataGenerator.data, 
                 result = DataUtil.process(data, state);
-            expect(helper.getValuesForColumn(result, "number"))
+            expect(dataGenerator.getValuesForColumn(result, "number"))
                     .toEqual([2]);
             metadata = state.paging.metadata;
             expect(metadata.countPages === 2 && metadata.error === PagingError.None)
@@ -246,7 +247,7 @@ function testProcess() {
     });
 }
 /* //Test paging */
-describe('Unit testing DataUtil', () => {
+describe('DataUtil', () => {
     testSort();
     testFilter();
     testPage();
@@ -254,23 +255,23 @@ describe('Unit testing DataUtil', () => {
     testProcess();
     // test helper function getFilteringConditionsByDataType 
     it("tests getFilteringConditionsByDataType", () => {
-        var helper = new TestHelper(),
+        var dataGenerator = new DataGenerator(),
             stringCond = Object.keys(FilteringCondition["string"]),
             numberCond = Object.keys(FilteringCondition["number"]),
             booleanCond = Object.keys(FilteringCondition["boolean"]),
             dateCond = Object.keys(FilteringCondition["date"]);
         
         expect(
-            helper.isSuperset(DataUtil.getFilteringConditionsByDataType(DataType.String), stringCond))
+            dataGenerator.isSuperset(DataUtil.getListOfFilteringConditionsForDataType(DataType.String), stringCond))
                 .toBeTruthy("string filtering conditions");
         expect(
-            helper.isSuperset(DataUtil.getFilteringConditionsByDataType(DataType.Number), numberCond))
+            dataGenerator.isSuperset(DataUtil.getListOfFilteringConditionsForDataType(DataType.Number), numberCond))
                 .toBeTruthy("number filtering conditions");
         expect(
-            helper.isSuperset(DataUtil.getFilteringConditionsByDataType(DataType.Boolean), booleanCond))
+            dataGenerator.isSuperset(DataUtil.getListOfFilteringConditionsForDataType(DataType.Boolean), booleanCond))
                 .toBeTruthy("boolean filtering conditions");
         expect(
-            helper.isSuperset(DataUtil.getFilteringConditionsByDataType(DataType.Date), dateCond))
+            dataGenerator.isSuperset(DataUtil.getListOfFilteringConditionsForDataType(DataType.Date), dateCond))
                 .toBeTruthy("date filtering conditions");
     })
     
