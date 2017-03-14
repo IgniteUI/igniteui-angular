@@ -1,0 +1,15 @@
+@include b(igx-filtering) {
+    @extend %igx-filtering-display;
+
+    @include e(toggle) {
+        @extend %igx-filtering-toggle;
+
+        @include m(active) {
+            @extend %igx-filtering-toggle--active;
+        }
+    }
+
+    @include e(options) {
+        @extend %igx-filtering-options;
+    }
+}
