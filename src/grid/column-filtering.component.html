@@ -1,0 +1,16 @@
+<div (click)="$event.stopPropagation()">
+    <span class="igx-filtering"
+        igxButton="icon"
+        (click)="toggle()"
+        [class.b-active]="!hidden">
+        <i class="material-icons">filter_list</i>
+    </span>
+    <span class="igx-filter-drop"
+        *ngIf="!hidden">
+        <input igxInput type="text"
+            [value]="value"
+            (input)="filterData($event)"
+            (blur)="hidden = !hidden"
+        />
+    </span>
+</div>

@@ -1,252 +1,102 @@
-import { Component, Input, ViewChild, OnInit, DoCheck, Injectable } from "@angular/core";
-import { DataContainer, DataUtil, DataState, 
-        FilteringExpression, FilteringCondition, FilteringState, FilteringLogic, FilteringStrategy,
-        PagingError, PagingState,
-        SortingExpression, SortingDirection, SortingStrategy, StableSortingStrategy, SortingState
+import { Component, ViewChild, OnInit } from "@angular/core";
+import { DataContainer,  DataState, DataType,
+        FilteringCondition,
+        SortingDirection, SortingState
       } from "../../../src/main";
-
-import {TestHelper} from "../../../src/data-operations/test-util/test-helper.spec"
-
-import { Observable, BehaviorSubject } from 'rxjs/Rx';
-import { Http } from '@angular/http';
-
-// service 
-/* Example service */
-@Injectable()
-export class DataService extends BehaviorSubject<DataContainer> {
-    private url: string = 'http://services.odata.org/V4/Northwind/Northwind.svc/Categories?$skip=5&$top=5&$count=true';
-    
-    constructor(private http: Http) {
-        super(null);
-    }
-    public getData(): void {
-        this.fetch()
-            .subscribe(x => super.next(x));
-    }
-    private fetch(): Observable<DataContainer> {
-        return this.http
-            .get(this.url)
-            .map(response => response.json())
-            .map(function (response) {
-                return (<DataContainer>{
-                    data: response.value,
-                    transformedData: response.value
-                });
-            });
-    }
-}
+import {IgxToast, IgxToastPosition} from "../../../src/main";
+import {IgxTab, IgxTabBar} from "../../../src/main";
+import { DataColumn } from "../../../src/data-operations/test-util/data-generator"
+import { DataStateConfiguratorComponent } from "./data-state-configurator.component";
+// import services
+import {LocalDataService} from "./local-data.service";
+import {RemoteDataService} from "./remote-data.service";
 
 @Component({
-    selector: "data-iterator",
-    moduleId: module.id,
-    template: `
-    <style>
-        .my-table {
-            border-spacing: 2px;
-            border-collapse: collapse;
-        }
-        .my-table td, th {
-            padding: 5px;
-            border: solid 1px gray;
-        }
-    </style>
-    <table class="my-table">
-        <thead>
-            <tr>
-                <th *ngFor="let key of keys">
-                    {{key}}
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let dataRow of dataContainer? dataContainer.transformedData : (data || [])" >
-                <td *ngFor="let key of keys">
-                    {{dataRow[key]}}
-                </td>
-            </tr>
-        </tbody>
-</table>`
-})
-export class DataIterator {
-    @Input() data: Object[] = [];
-    @Input() keys: string[] = [];
-    @Input() dataContainer: DataContainer;
-}
-
-@Component({
-    providers: [DataService],
+    providers: [RemoteDataService, LocalDataService],
     selector: "data-util-sample",
     moduleId: module.id,
     templateUrl: './sample.component.html'
 })
-export class DataOperationsSampleComponent implements OnInit, DoCheck {
-    remoteData: Observable<DataContainer>;
-    helper: TestHelper;
-    localData: Array<any>;
-    dataContainer: DataContainer;
-    ds2: DataContainer;
-    DataContainerSettings;
-    private dataInfo = {
-        message: ""
-    };
-
+export class DataOperationsSampleComponent implements OnInit {
+    //remoteData: Observable<DataContainer>;
+    remoteDataContainer: DataContainer = new DataContainer();
+    localDataContainer: DataContainer = new DataContainer();
+    @ViewChild("localDataStateConfig") localDataStateConfig: DataStateConfiguratorComponent;
+    @ViewChild("remoteDataStateConfig") remoteDataStateConfig: DataStateConfiguratorComponent;
     // paging sample vars
-    @ViewChild("listRemoteData") listRemoteData: DataIterator;
-    @ViewChild("listData") listData: DataIterator;
-    @ViewChild("filteringPanel") filteringPanel;
-    constructor(private service:DataService) {
-        this.remoteData = service;
-        this.helper = new TestHelper();
+    @ViewChild("toast") toast: IgxToast;
+
+    message:string = "";
+    constructor(private remoteDataService:RemoteDataService,
+                private localDataService: LocalDataService) {
     }
     ngOnInit() {
-        this.listRemoteData.keys = ["CategoryID", "CategoryName", "Description"];
-        this.service.getData();
-        
-        
-        this.localData = this.helper.generateData(100000, 5);// generates 10 rows with 5 columns in each row
-        this.dataContainer = new DataContainer(this.localData);
-        this.listData.keys = this.helper.columns.map(col => {return col.name;});
-        this.dataContainer.state = {
-          paging: {
-            index: 0,
-            recordsPerPage: 5
-          }
-        };
-        this.listData.dataContainer = this.dataContainer;
-        this.processData();
+        this.initRemoteData();
+        this.initLocalData();
     }
-    ngDoCheck() {
-    }
-    // sorting
-    changeSortDirection (columnKey) {
-      var dir:SortingDirection = this.getSortingDirection(columnKey),
-          s: SortingState = this.dataContainer.state.sorting,
-          index: number;
-      if (dir === null) {
-        dir = SortingDirection.Asc;
-      } else {
-        dir++;
-        if (dir > SortingDirection.Desc) {
-          dir = null; // remove sorting
-        }
-      }
-      s = s || {
-        expressions: []
-      };
-      index = s.expressions.findIndex((e) => e.fieldName === columnKey)
-      if (dir === null) {
-        if (index >= 0) {
-          s.expressions.splice(index, 1);
-        }
-      } else {
-        if (index >= 0) {
-          s.expressions[index].dir = dir;
-        } else {
-          s.expressions.push({
-            fieldName: columnKey,
-            dir: dir
-          });
-        }
-      }
-      this.dataContainer.state.sorting = s;
-      this.processData();
-    }
-    getSortingDirecitonText (columnKey: string): string {
-      var s: SortingDirection = this.getSortingDirection(columnKey),
-          res: string;
-      switch(s) {
-        case SortingDirection.Asc:
-          res = "Sorted ascending";
-          break;
-        case SortingDirection.Desc: 
-          res = "Sorted descending";
-          break;
-        default:
-          res = "Sorting not applied";
-      }
-      return res;
-    }
-    getSortingDirection(columnKey: string): SortingDirection {
-      var e:SortingExpression, s = this.dataContainer.state.sorting;
-      if (!s || !s.expressions) {
-        return null;
-      }
-      e = s.expressions.filter(expr => {return expr.fieldName === columnKey;})[0];
-      if (!e) {
-        return null;
-      }
-      return e.dir;
-    }
-    // filtering
-    getFilteringConditions(colType: string) {
-      var conds:Array<any> = Object.keys(FilteringCondition[colType]);
-      conds.unshift(null);// add default filtering condition - not selected with value null
-      return conds;
-    }
-    isFilteringConditionSelected(columnKey: string, filteringCond: string): boolean {
-      return false;
-    }
-    getFilteringDataState(): void {
-      var i, expressions: FilteringExpression[] = [], 
-          expr: FilteringExpression,
-          cond,
-          searchVal,
-          selCond: string,
-          type: string,
-          search,
-          rows = this.filteringPanel.nativeElement.querySelectorAll("[data-field-name]"), 
-          row: HTMLTableRowElement,
-          fc;
-      for (i = 0; i < rows.length; i++) {
-        row = rows[i];
-        fc = row.querySelector("[data-filtering-type]");
-        selCond = fc.selectedOptions[0].value;
-        if (selCond) {
-          type = fc.attributes["data-filtering-type"].value
-          search = row.querySelector("[data-filtering-search]");
-          cond = (FilteringCondition[type] || {})[selCond];
-          if (cond) {
-            if (search) {
-              // data type transformation
-              searchVal = search.value;
-              switch(type) {
-                case "number": 
-                  searchVal = + searchVal;
-                  break;
-                case "date":
-                  searchVal = new Date(searchVal);
-                  break;
-              }
+    initRemoteData() {
+        let columns: Array<DataColumn> = [
+            {
+                fieldName: "ProductID",
+                type: DataType.Number
+            },
+            {
+                fieldName: "ProductName",
+                type: DataType.String
+            },
+            {
+                fieldName: "QuantityPerUnit",
+                type: DataType.String
+            },
+            {
+                fieldName: "UnitsInStock",
+                type: DataType.Number
             }
-            expressions.push({
-              fieldName: row.attributes["data-field-name"].value,
-              condition: cond,
-              searchVal: searchVal 
-            });
-          }
-        }
-      }
-      this.dataContainer.state.filtering = null;
-      if (expressions.length) {
-        this.dataContainer.state.filtering = {
-          expressions: expressions
-        };
-      }
+        ]
+        let initialDataState: DataState = {};
+        this.remoteDataStateConfig.columns = columns;
+        this.remoteDataStateConfig.dataState = initialDataState;
+        this.processRemoteData(initialDataState);
     }
-    processData() {
-        var p: PagingState, dt: number, metadata;
-        this.getFilteringDataState();
-        dt = new Date().getTime();
-        this.dataContainer.process();
-        p = this.dataContainer.state.paging;
-        if (p) {
-          metadata = p.metadata;
-          this.dataInfo.message = metadata.error !== PagingError.None ? 
-                                    "Incorrect arguments" : 
-                                    `Page: ${p.index + 1} of ${metadata.countPages} page(s) |
-                                    Total records: ${metadata.countRecords}
-                                    Time to process: ${new Date().getTime() - dt} ms.`;
-        }
-        
+    initLocalData() {
+        let initialDataState: DataState = {
+            paging: {
+                index: 0,
+                recordsPerPage: 5
+            }
+        };
+        let cols = this.localDataService.getColumns();
+        this.localDataStateConfig.dataState = initialDataState;
+        this.localDataStateConfig.columns = cols;
+        this.localDataService
+            .getData()
+            .then((data) => {
+                this.localDataContainer.data = <Array<any>>data;
+                this.processLocalData(initialDataState);
+            });
+    }
+    processRemoteData(dataState: DataState) {
+        this.remoteDataStateConfig.stateLoading = true;
+        this.toast.message = "Loading remote data";
+        this.remoteDataStateConfig.setMetadataInfo("Requesting data");
+        this.toast.show();
+        this.remoteDataService
+            .getData(dataState)
+            .then((response) => {
+                this.toast.hide();
+                this.remoteDataStateConfig.stateLoading = false;
+                this.remoteDataContainer.data = response.value;
+                this.remoteDataContainer.transformedData = response.value;
+                this.remoteDataContainer.state = dataState;
+                let msg: string = `Data container with ${this.remoteDataContainer.data.length} records.`;
+                this.remoteDataStateConfig.setMetadataInfo(msg);
+            });
+    }
+    processLocalData(dataState: DataState) {
+        let startTime = new Date().getTime();
+        this.localDataContainer.process(dataState);
+        let processTime = new Date().getTime() - startTime;
+        let msg = `Processing ${this.localDataContainer.data.length} records for ${processTime} ms`;
+        this.localDataStateConfig.setMetadataInfo(msg);
     }
 }

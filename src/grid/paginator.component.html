@@ -1,0 +1,15 @@
+<div class="igx-paginator">
+        <button [disabled]="isFirst" (click)="paginate(0)" igxButton="icon" igxRipple igxRippleCentered="true">
+            <i class="material-icons">first_page</i>
+        </button>
+        <button [disabled]="isFirst" (click)="paginate(currentPage - 1)" igxButton="icon" igxRipple igxRippleCentered="true">
+            <i class="material-icons">chevron_left</i>
+        </button>
+        <span>{{ currentPage + 1}} of {{ totalPages }}</span>
+        <button (click)="paginate(currentPage + 1)" igxRipple igxRippleCentered="true" [disabled]="isLast" igxButton="icon">
+            <i class="material-icons">chevron_right</i>
+        </button>
+        <button (click)="paginate(totalPages - 1)" igxRipple igxRippleCentered="true" [disabled]="isLast" igxButton="icon">
+            <i class="material-icons">last_page</i>
+        </button>
+    </div>

@@ -1,3 +1,4 @@
+import { GridSampleComponent } from './grid/sample.component';
 import { ModuleWithProviders } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
@@ -21,7 +22,7 @@ import {DataOperationsSampleComponent} from "./data-operations/sample.component"
 const appRoutes: Routes = [
     {
         path: '',
-        redirectTo: '/card',
+        redirectTo: '/data-operations',
         pathMatch: 'full'
     },
     {
@@ -75,6 +76,10 @@ const appRoutes: Routes = [
     {
         path: "icon",
         component: IconSampleComponent
+    },
+    {
+        path: "grid",
+        component: GridSampleComponent
     },
     {
         path: "card",

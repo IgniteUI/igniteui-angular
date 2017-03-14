@@ -22,7 +22,7 @@
  *  14. Range (Slider)
  *  TODO: 15. Spinners | Loaders
  *  TODO: 16. Tabs
- *  TODO: 17. Grid
+ *  17. Grid
  *  18. Toasts
  *  19. Typography
  *  TODO: 20. Flow Text
@@ -344,6 +344,39 @@ $range-background--start: $white;
    ========================================================================== */
 
 $tab-bar-background: $white;
+
+/* 17. Grid
+   ========================================================================== */
+
+// General
+$grid-bg: #fff;
+$grid-br: em(2px);
+$grid-shadow: $elevate-2;
+
+// Caption
+$grid-caption-fs: em(20px);
+$grid-caption-lh: em(32px);
+$grid-caption-padding: em(16px) em(24px);
+
+// Row
+$grid-row-bg: inherit;
+$grid-row-bb: 1px solid lightgray;
+$grid-row-hover: #eee;
+$grid-row-transition: background .2s ease;
+
+// Cell
+$grid-cell-padding: em(18px) em(24px);
+$grid-cell-align-num: right;
+$grid-cell-fs: em(13px);
+$grid-cell-lh: em(16px);
+$grid-cell-color: $off-black;
+
+// Heading
+$grid-head-fs: em(12px);
+$grid-head-color: rgba(0, 0, 0, .54);
+$grid-head-icon-size: em(16px);
+$grid-head-icon-lh: em(16px);
+$grid-head-icon-padding: em(8px);
 
 /* 18. Toasts
    ========================================================================== */

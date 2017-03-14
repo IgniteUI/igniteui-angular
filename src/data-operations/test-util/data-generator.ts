@@ -1,9 +1,20 @@
-/* class provides helper functions for testing */
+import {DataType} from "../data-util";
+
 const COUNT_ROWS = 5;
 const COUNT_COLS = 4;
 
-export class TestHelper {
-    columns: Array<{ name: string; type: string;}> = [];
+export interface DataColumn {
+    fieldName: string;
+    type: DataType;
+}
+
+export class DataGenerator {
+    columns: Array<DataColumn> = [];
+    data: Array<object> = [];
+    constructor(countRows = COUNT_ROWS, countCols = COUNT_COLS) {
+        this.columns = this.generateColumns(countCols);
+        this.data = this.generateData(countRows);
+    }
     generateArray(startValue, endValue) {
         var len = Math.abs(startValue - endValue),
             decrement = startValue > endValue;
@@ -15,26 +26,26 @@ export class TestHelper {
     isSuperset(haystack, arr) {
         return arr.every(val => haystack.indexOf(val) >= 0);
     }
-    generateColumns(countCols) : Array<{name: string, type: string}> {
+    private generateColumns(countCols) : Array<DataColumn> {
         var i:number,
             len: number,
             res,
-            defaultColumns = [
+            defaultColumns: Array<DataColumn> = [
                 {
-                    name: "number",
-                    type: "number"
+                    fieldName: "number",
+                    type: DataType.Number
                 },
                 {
-                    name: "string",
-                    type: "string"
+                    fieldName: "string",
+                    type: DataType.String
                 },
                 {
-                    name: "date",
-                    type: "date"
+                    fieldName: "date",
+                    type: DataType.Date
                 },
                 {
-                    name: "boolean",
-                    type: "boolean"
+                    fieldName: "boolean",
+                    type: DataType.Boolean
                 }
             ];
         if (countCols <= 0) {
@@ -47,34 +58,33 @@ export class TestHelper {
         res = defaultColumns;
         for (i =0; i < len; i++) {
             res.push({
-                name: `col${i}`,
-                type: "string"
+                fieldName: `col${i}`,
+                type: DataType.String
             })
         }
         return res;
     }
-    generateData(countRows: number = COUNT_ROWS, countCols: number = COUNT_COLS) {
-        var i, j, data = [], rec, val, col, cols = this.generateColumns(countCols);
-        this.columns = cols;
+    private generateData(countRows: number) {
+        var i, j, data = [], rec, val, col;
         for (i = 0; i < countRows; i++) {
             rec = {};
-            for (j = 0; j < cols.length; j++) {
-                col = cols[j];
+            for (j = 0; j < this.columns.length; j++) {
+                col = this.columns[j];
                 switch(col.type) {
-                    case "number":
+                    case DataType.Number:
                         val = i;
                         break;
-                    case "date":
+                    case DataType.Date:
                         val = new Date(Date.now() + i * 24*60*60*1000);
                         break;
-                    case "boolean":
+                    case DataType.Boolean:
                         val = !!(i % 2);
                         break;
                     default:
                         val = `row${i}, col${j}`;
                         break;
                 }
-                rec[col.name] = val;
+                rec[col.fieldName] = val;
             }
             data.push(rec);
         }

@@ -1,6 +1,6 @@
 import { Component, NgModule, Input, EventEmitter, Output } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { trigger, state, style, transition, animate, AnimationTransitionEvent } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/core';
 
 /**
  * IgxToast provides information and warning messages. They could not be dismissed, are non-interactive and can appear
@@ -102,19 +102,19 @@ export class IgxToast {
     @Input()
     public position: IgxToastPosition = IgxToastPosition.Bottom;
 
-    private _intevalId;
+    private timeoutId;
 
     /**
      * Shows the IgxToast component and hides it after some time span
      * if autoHide is enabled
      */
     public show(): void {
-        clearInterval(this._intevalId);
+        clearInterval(this.timeoutId);
         this.onShowing.emit(this);
         this.isVisible = true;
 
         if (this.autoHide) {
-            this._intevalId = setInterval(() => {
+            this.timeoutId = setTimeout(() => {
                 this.hide();
             }, this.displayTime);
         }
@@ -130,10 +130,10 @@ export class IgxToast {
         this.isVisible = false;
         this.onHidden.emit(this);
 
-        clearInterval(this._intevalId);
+        clearInterval(this.timeoutId);
     }
 
-    private _mapPositionToClassName(): any {
+    private mapPositionToClassName(): any {
         if (this.position == IgxToastPosition.Top) {
             return this.CSS_CLASSES.IGX_TOAST_TOP;
         }

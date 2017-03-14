@@ -2,7 +2,8 @@
  * Public API facet
  */
 export * from "./modules";
-export * from './core/navigation';
+export * from "./core/navigation";
+
 
 // export data-operations
 export * from "./data-operations/filtering-expression.interface";
@@ -17,6 +18,7 @@ export * from "./data-operations/paging-state.interface";
 export * from "./data-operations/data-state.interface";
 export * from "./data-operations/data-util";
 export * from "./data-operations/data-container";
+
 
 export * from './navigation-drawer/navigation-drawer.component';
 export * from './icon/icon.component';

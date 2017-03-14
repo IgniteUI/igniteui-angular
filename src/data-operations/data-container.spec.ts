@@ -4,7 +4,7 @@ import {
 import { Component, ViewChild } from "@angular/core";
 import { FormsModule } from '@angular/forms';
 import { By } from "@angular/platform-browser";
-import { TestHelper} from "./test-util/test-helper.spec";
+import { DataGenerator} from "./test-util/data-generator";
 
 import {DataState} from "./data-state.interface";
 import {FilteringCondition} from "./filtering-condition";
@@ -15,13 +15,13 @@ import {DataContainer, DataAccess} from "./data-container";
 import {SortingState} from "./sorting-state.interface";
 import { FilteringState } from "./filtering-state.interface";
 
-describe('Unit testing DataContainer', () => {
-    var helper:TestHelper,
+describe('DataContainer', () => {
+    var dataGenerator:DataGenerator,
         data:Object[],
         dc: DataContainer;
     beforeEach(() => {
-        helper = new TestHelper();
-        data = helper.generateData();
+        dataGenerator = new DataGenerator();
+        data = dataGenerator.data;
         dc = new DataContainer(data);
     });
     it("tests process", () => {
@@ -38,9 +38,9 @@ describe('Unit testing DataContainer', () => {
             }
         };
         dc.process();
-        expect(helper.getValuesForColumn(dc.transformedData, "number"))
+        expect(dataGenerator.getValuesForColumn(dc.transformedData, "number"))
             .toEqual([1,2,3,4]);
-        expect(helper.getValuesForColumn(dc.data, "number"))
+        expect(dataGenerator.getValuesForColumn(dc.data, "number"))
             .toEqual([0, 1,2,3,4]);
         // apply sorting without removing filtering
         dc.state.sorting = {
@@ -52,9 +52,9 @@ describe('Unit testing DataContainer', () => {
             ]
         };
         dc.process();
-        expect(helper.getValuesForColumn(dc.transformedData, "number"))
+        expect(dataGenerator.getValuesForColumn(dc.transformedData, "number"))
             .toEqual([4, 3, 2, 1]);
-        expect(helper.getValuesForColumn(dc.data, "number"))
+        expect(dataGenerator.getValuesForColumn(dc.data, "number"))
             .toEqual([0, 1,2,3,4]);
         // apply paging(+filtering and sorting)
         dc.state.paging = {
@@ -62,7 +62,7 @@ describe('Unit testing DataContainer', () => {
             recordsPerPage: 3
         };
         dc.process();
-        expect(helper.getValuesForColumn(dc.transformedData, "number"))
+        expect(dataGenerator.getValuesForColumn(dc.transformedData, "number"))
             .toEqual([1]);
         expect(dc.state.paging.metadata.countPages)
             .toEqual(2);
@@ -78,7 +78,7 @@ describe('Unit testing DataContainer', () => {
             ]
         };
         res = dc.process({sorting: sortingState});
-        expect(helper.getValuesForColumn(dc.transformedData, "number"))
+        expect(dataGenerator.getValuesForColumn(dc.transformedData, "number"))
             .toEqual([4, 3, 2, 1, 0]);
         expect(dc.state.sorting)
             .toEqual(sortingState);
@@ -95,7 +95,7 @@ describe('Unit testing DataContainer', () => {
             ]
         };
         res = dc.process({filtering: filteringState});
-        expect(helper.getValuesForColumn(dc.transformedData, "number"))
+        expect(dataGenerator.getValuesForColumn(dc.transformedData, "number"))
             .toEqual([0, 1, 2, 3]);
         expect(dc.state.filtering)
             .toEqual(filteringState);
@@ -107,7 +107,7 @@ describe('Unit testing DataContainer', () => {
             recordsPerPage: 4
         };
         dc.process({paging: pagingState});
-        expect(helper.getValuesForColumn(dc.transformedData, "number"))
+        expect(dataGenerator.getValuesForColumn(dc.transformedData, "number"))
             .toEqual([0, 1, 2, 3]);
         expect(dc.state.paging.metadata.countPages)
             .toEqual(2);
@@ -115,7 +115,7 @@ describe('Unit testing DataContainer', () => {
             .toEqual(PagingError.None);
         pagingState.index = 1;
         dc.process({paging: pagingState});
-        expect(helper.getValuesForColumn(dc.transformedData, "number"))
+        expect(dataGenerator.getValuesForColumn(dc.transformedData, "number"))
             .toEqual([4]);
         expect(dc.state.paging.metadata.countPages)
             .toEqual(2);
@@ -144,7 +144,7 @@ describe('Unit testing DataContainer', () => {
                 res = dc.deleteRecord(record);
             expect(res).toBeTruthy();
             expect(dc.data.length).toBe(4);
-            expect(helper.getValuesForColumn(dc.data, "number"))
+            expect(dataGenerator.getValuesForColumn(dc.data, "number"))
                 .toEqual([1, 2, 3, 4]);
         });
         it ("tests `deleteRecordByIndex`", () => {
@@ -152,7 +152,7 @@ describe('Unit testing DataContainer', () => {
             var res = dc.deleteRecordByIndex(0);
             expect(res).toBeTruthy();
             expect(dc.data.length).toBe(4);
-            expect(helper.getValuesForColumn(dc.data, "number"))
+            expect(dataGenerator.getValuesForColumn(dc.data, "number"))
                 .toEqual([1, 2, 3, 4]);
         });
         it ("tests `updateRecordByIndex`", () => {
