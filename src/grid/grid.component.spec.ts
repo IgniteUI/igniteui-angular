@@ -384,8 +384,8 @@ describe("IgxGrid", () => {
         firstColumn.dispatchEvent(new Event("click"));
         fixture.detectChanges();
 
-        expect(firstColumn.classList.contains("asc")).toBe(true, "Column sorting should be 'asc'");
-        expect(gridElement.querySelector("tbody > tr > td").textContent).toMatch("1");
+        expect(firstColumn.classList.contains("off")).toBe(true, "Column sorting should be removed");
+        expect(gridElement.querySelector("tbody > tr > td").textContent).toMatch("3");
     });
 
     it("should support filetring", () => {
@@ -747,7 +747,7 @@ export class IgxGridngForDefinitionTestComponent {
     template: `
     <igx-grid [data]="data">
         <igx-column field="ID">
-            <template igxHeader let-col>
+            <template igxHeader let-col="column">
                 <span class="myheadertemplate">{{ col.field }}</span>
             </template>
             <template igxCell let-item="item">
