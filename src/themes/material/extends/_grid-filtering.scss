@@ -1,0 +1,38 @@
+%igx-filtering-display {
+    position: static;
+}
+
+%igx-filtering-toggle {
+
+    & .icon {
+        font-size: $grid-head-icon-size;
+        line-height: $grid-head-icon-lh;
+        padding: $grid-head-icon-padding;
+    }
+    z-index: 10;
+}
+
+%igx-filtering-toggle--active {
+    background: $primary-color !important;
+    color: set-color($primary-color);
+}
+
+%igx-filtering-options {
+    display: block;
+    position: absolute;
+    width: calc(100% - 32px);
+    user-select: none;
+    right: 16px;
+    left: 16px;
+    background: $white;
+    box-shadow: $elevate-4;
+    border-radius: 2px;
+    padding: 8px;
+    z-index: 10;
+    margin-top: 8px;
+    
+    & > input {
+        font-weight: initial;
+        font-size: initial;
+    }
+}
