@@ -64,7 +64,8 @@ export class IgxButtonGroup implements AfterViewInit {
         this.selectedIndexes.push(index);
         buttonElement.setAttribute("data-selected", true);
         this.onSelect.emit({ button: this.buttons.toArray()[index], index: index });
-
+        this.values[index].selected = true;
+        
         // deselect other buttons if multiSelection is not enabled
         if (!this.multiSelection && this.selectedIndexes.length > 0) {
             this.buttons.forEach((b, i) => {
@@ -83,6 +84,7 @@ export class IgxButtonGroup implements AfterViewInit {
         this.selectedIndexes.splice(this.selectedIndexes.indexOf(index), 1);
         buttonElement.setAttribute("data-selected", false);
         this.onUnselect.emit({ button: this.buttons.toArray()[index], index: index });
+        this.values[index].selected = false;
     }
 
     ngAfterViewInit() {
