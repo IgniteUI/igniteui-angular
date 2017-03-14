@@ -42,7 +42,7 @@ class Button {
     }
 }
 
-fdescribe('IgxButtonGroup', function() {
+describe('IgxButtonGroup', function() {
    beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ InitButtonGroup, InitButtonGroupWithValues],
@@ -51,7 +51,7 @@ fdescribe('IgxButtonGroup', function() {
         .compileComponents();
     }));
 
-    fit('should initialize buttonGroup with default values', () => {
+    it('should initialize buttonGroup with default values', () => {
         let fixture = TestBed.createComponent(InitButtonGroup);
         fixture.detectChanges();
 
@@ -65,7 +65,7 @@ fdescribe('IgxButtonGroup', function() {
         expect(buttongroup.multiSelection).toBeFalsy();
     });
 
-    fit('should initialize buttonGroup with passed values', () => {
+    it('should initialize buttonGroup with passed values', () => {
         let fixture = TestBed.createComponent(InitButtonGroupWithValues);
         fixture.detectChanges();
 
@@ -79,16 +79,11 @@ fdescribe('IgxButtonGroup', function() {
         expect(buttongroup.multiSelection).toBeTruthy();
     });
 
-    fit('Button Group single selection', () => {
+    it('Button Group single selection', () => {
         let fixture = TestBed.createComponent(InitButtonGroup);
         fixture.detectChanges();
 
         let buttongroup = fixture.componentInstance.buttonGroup;
-
-        fixture.componentInstance.onSelectHandler = function () {
-            expect(buttongroup.multiSelection).toBeFalsy();
-            expect(buttongroup.selectedButtons.length).toBe(1);
-        }
 
         buttongroup.selectButton(0);
         expect(buttongroup.selectedButtons.length).toBe(1);
@@ -97,16 +92,11 @@ fdescribe('IgxButtonGroup', function() {
 
     });
 
-    fit('Button Group multiple selection', () => {
+    it('Button Group multiple selection', () => {
         let fixture = TestBed.createComponent(InitButtonGroupWithValues);
         fixture.detectChanges();
 
         let buttongroup = fixture.componentInstance.buttonGroup;
-
-        fixture.componentInstance.onSelectHandler = function () {
-            expect(buttongroup.selectedButtons.length).toBe(1);
-        }
-
         expect(buttongroup.multiSelection).toBeTruthy();
         buttongroup.selectButton(0);
         expect(buttongroup.selectedButtons.length).toBe(2);
@@ -120,16 +110,12 @@ fdescribe('IgxButtonGroup', function() {
 });
 
 
-@Component({ template: `<igx-buttongroup [values]="buttons" (onUnselect)="onUnselectHandler($event)" (onSelect)="onSelectHandler($event)"></igx-buttongroup>` })
+@Component({ template: `<igx-buttongroup [values]="buttons"></igx-buttongroup>` })
 class InitButtonGroup{
     @ViewChild(IgxButtonGroup) buttonGroup: IgxButtonGroup;
 
     constructor() {}
-    onSelectHandler(args) {
-    }
 
-    onUnselectHandler(args) {
-    }
     private buttons: Array<Button>;
         public ngOnInit(): void {
 
@@ -154,7 +140,7 @@ class InitButtonGroup{
     }
 }
 
-@Component({ template: `<igx-buttongroup multiSelection="true" [values]="buttons" [alignment]="alignment" (onUnselect)="onUnselectHandler($event)" (onSelect)="onSelectHandler($event)">
+@Component({ template: `<igx-buttongroup multiSelection="true" [values]="buttons" [alignment]="alignment">
                         </igx-buttongroup>` })
 class InitButtonGroupWithValues{
     @ViewChild(IgxButtonGroup) buttonGroup: IgxButtonGroup;
@@ -183,9 +169,6 @@ class InitButtonGroupWithValues{
             })
         ]
     }
-    onSelectHandler(args) {
-    }
-    onUnselectHandler(args) {
-    }
+
     private alignment = ButtonGroupAlignment.vertical;
 }
