@@ -5,17 +5,17 @@ import {
 import { Component, ViewChild } from "@angular/core";
 import { FormsModule } from '@angular/forms';
 import { By } from "@angular/platform-browser";
-import { TestHelper} from "./test-util/test-helper.spec";
+import { DataGenerator} from "./test-util/data-generator";
 
 import { SortingDirection, SortingStrategy, StableSortingStrategy } from "../main";
 
 describe("Unit testing StableSortingStrategy", () => {
-    var helper:TestHelper,
+    var dataGenerator:DataGenerator,
         data:Object[],
         strategy: SortingStrategy;
     beforeEach(() => {
-        helper = new TestHelper();
-        data = helper.generateData(100);
+        dataGenerator = new DataGenerator(100);
+        data = dataGenerator.data;
         strategy = new StableSortingStrategy();
     });
     it("tests `sort`", () => {
@@ -23,10 +23,10 @@ describe("Unit testing StableSortingStrategy", () => {
         data.forEach((item, index) => item["number"] = index % 2 ? 0: 1);
         
         strategy.sort(data, [{fieldName: "number", dir: SortingDirection.Asc}]);
-        sort0 = helper.getValuesForColumn(data, "string").join("");
+        sort0 = dataGenerator.getValuesForColumn(data, "string").join("");
         
         strategy.sort(data, [{fieldName: "number", dir: SortingDirection.Asc}]);
-        sort1 = helper.getValuesForColumn(data, "string").join("");
+        sort1 = dataGenerator.getValuesForColumn(data, "string").join("");
         expect(sort0).toEqual(sort1);
     });
 });

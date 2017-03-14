@@ -2,6 +2,7 @@
     <thead class="igx-grid__thead" role="rowgroup">
         <tr class="igx-grid__tr" role="rowheader">
             <template ngFor let-col [ngForOf]="columnsToRender" let-colIndex="index">
+
                 <th (onSort)="processSort($event)"
                     role="columnheader" tabindex="0"
                     class="igx-grid__th"
@@ -11,14 +12,18 @@
                     [igxDroppable]="col.index"
                     [igxColumnSorting]="col"
                     [style.width]="col.width || ''">
-                    <igx-cell-header *ngIf="col.headerTemplate" [column]="col" [colIndex]="index"></igx-cell-header>
-                    {{ formatHeader(col) }}
-                    <igx-col-filter
-                        (onFilter)="processFilter($event)"
-                        *ngIf="col.filtering"
-                        [value]="filteringExpressions[col.field]?.searchVal || ''"
-                        [column]="col">
-                    </igx-col-filter>
+                    <div class="igx-grid__th-content">
+                        <span class="title">
+                            <igx-cell-header *ngIf="col.headerTemplate" [column]="col" [colIndex]="index"></igx-cell-header>
+                            {{ formatHeader(col) }}
+                        </span>
+                        <igx-col-filter
+                            (onFilter)="processFilter($event)"
+                            *ngIf="col.filtering"
+                            [value]="filteringExpressions[col.field]?.searchVal || ''"
+                            [column]="col">
+                        </igx-col-filter>
+                    </div>
                 </th>
             </template>
         </tr>

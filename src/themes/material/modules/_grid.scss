@@ -23,6 +23,8 @@
     }
 
     @include e(th) {
+        $block: &;
+
         @extend %grid-cell-display;
         @extend %grid-cell-header;
 
@@ -31,6 +33,29 @@
 
             & .icon {
                 @extend %grid-cell-header-cicon;
+            }
+        }
+
+        &.asc,
+        &.desc {
+            color: #000;
+        }
+
+        &.desc {
+            #{$block}-content > .title:before {
+                position: relative;
+                font-family: 'Material Icons';
+                content: '\E5DB';
+                margin-right: 8px;
+            }
+        }
+
+        &.asc {
+            #{$block}-content > .title:before {
+                position: relative;
+                font-family: 'Material Icons';
+                content: '\E5D8';
+                margin-right: 8px;
             }
         }
 

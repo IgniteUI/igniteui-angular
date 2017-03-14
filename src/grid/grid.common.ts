@@ -162,30 +162,6 @@ export class IgxCellFooterComponent implements OnInit, OnDestroy {
 @Component({
     moduleId: module.id,
     selector: "igx-col-filter",
-    styles: [
-        `
-        div {
-            position: relative;
-            max-width: 200px;
-        }
-        .igx-filter-drop {
-            display: block;
-            position: absolute;
-            left: 3rem;
-            top: 0;
-            padding: 5px;
-            width: 200px;
-            background: white;
-            border: 2px solid #ccc;
-            border-radius: 4px;
-            box-shadow: 2px 2px 2px 2px rgba(0,0,0,.25);
-        }
-        .b-active {
-            background: #29b6f6 !important;
-            color: #fff;
-        }
-        `
-    ],
     templateUrl: "column-filtering.component.html"
 })
 export class IgxColumnFilteringComponent {

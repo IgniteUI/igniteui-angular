@@ -1,0 +1,16 @@
+<table class="data-table">
+    <thead>
+        <tr>
+            <th *ngFor="let key of keys">
+                {{key}}
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let dataRow of dataContainer? dataContainer.transformedData : data" >
+            <td *ngFor="let key of keys">
+                {{dataRow[key]}}
+            </td>
+        </tr>
+    </tbody>
+</table>

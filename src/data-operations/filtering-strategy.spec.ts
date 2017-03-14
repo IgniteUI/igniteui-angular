@@ -5,17 +5,17 @@ import {
 import { Component, ViewChild } from "@angular/core";
 import { FormsModule } from '@angular/forms';
 import { By } from "@angular/platform-browser";
-import { TestHelper} from "./test-util/test-helper.spec";
+import { DataGenerator } from "./test-util/data-generator";
 
 import { FilteringStrategy, FilteringCondition, FilteringLogic, FilteringExpression, FilteringState } from "../main";
 
 describe("Unit testing FilteringStrategy", () => {
-    var helper:TestHelper,
+    var dataGenerator:DataGenerator,
         data:Object[],
         fs: FilteringStrategy;
     beforeEach(() => {
-        helper = new TestHelper();
-        data = helper.generateData();
+        dataGenerator = new DataGenerator();
+        data = dataGenerator.data;
         fs = new FilteringStrategy();
     });
     it ("tests `filter`", () => {
@@ -24,7 +24,7 @@ describe("Unit testing FilteringStrategy", () => {
                 condition: FilteringCondition.number.greaterThan,
                 searchVal: 1
             }]);
-        expect(helper.getValuesForColumn(res, "number"))
+        expect(dataGenerator.getValuesForColumn(res, "number"))
                     .toEqual([2, 3, 4]);
     });
     it ("tests `matchRecordByExpressions`", () => {
@@ -61,7 +61,7 @@ describe("Unit testing FilteringStrategy", () => {
                                     condition: FilteringCondition.string.contains,
                                     searchVal: "ROW"
                                 }]);
-        expect(helper.getValuesForColumn(res, "number"))
+        expect(dataGenerator.getValuesForColumn(res, "number"))
                     .toEqual([0]);
     });
 });

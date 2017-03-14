@@ -92,8 +92,8 @@ describe("IgxGrid", () => {
         expect(grid.columns[0].bodyTemplate).toBeDefined("Column cell template not initialized");
         expect(grid.columns[0].headerTemplate).toBeDefined("Column header template not initialized");
         expect(fixture.nativeElement.querySelector("tr > td > span.mybodytemplate")).toBeDefined("Cell template not rendered");
-        expect(fixture.nativeElement.querySelector("tr > th > span.myheadertemplate")).toBeDefined("Header template not rendered");
-        expect(fixture.nativeElement.querySelector("tr > th > span.myheadertemplate").textContent)
+        expect(fixture.nativeElement.querySelector("tr > th > div.igx-grid__th-content")).toBeDefined("Header template not rendered");
+        expect(fixture.nativeElement.querySelector("tr > th > div.igx-grid__th-content").textContent)
             .toMatch("ID", "Header template is wrong");
         expect(fixture.nativeElement.querySelector("tr > td > span.mybodytemplate").textContent).toMatch("1", "Cell template is wrong");
     });
@@ -399,7 +399,7 @@ describe("IgxGrid", () => {
 
         fixture.detectChanges();
 
-        let filterInputButton: HTMLElement = fixture.nativeElement.querySelector(".igx-filtering");
+        let filterInputButton: HTMLElement = fixture.nativeElement.querySelector(".igx-filtering__toggle > .toggle-icon");
         let tbody: HTMLElement = fixture.nativeElement.querySelector("table > tbody");
 
         expect(filterInputButton).toBeTruthy();
@@ -407,8 +407,8 @@ describe("IgxGrid", () => {
         filterInputButton.dispatchEvent(new Event("click"));
         fixture.detectChanges();
 
-        expect(filterInputButton.classList.contains("b-active")).toBe(true);
-        let filterInput: HTMLInputElement = fixture.nativeElement.querySelector(".igx-filter-drop > input");
+        expect(filterInputButton.classList.contains("igx-filtering__toggle--active")).toBe(true);
+        let filterInput: HTMLInputElement = fixture.nativeElement.querySelector(".igx-filtering__options > input");
         expect(filterInput).toBeTruthy();
 
         filterInput.value = "1";

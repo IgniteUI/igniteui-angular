@@ -118,20 +118,14 @@ export interface IgxGridCell {
     selector: "igx-grid",
     styles: [
         `
-    .asc {
-        background-color: #aed581 !important;
-    }
-    .desc {
-        background-color: #ef5350 !important;
-    }
     tr.selected-row td {
         color: white;
-        background-color: #1976d2;
+        background-color: #0375be;
     }
     td.selected-cell {
         color: white;
         background-color: #29b6f6 !important;
-        outline-color: #29b6f6;
+        outline-color: #0375be;
         outline-width: 3px;
     }
     .selected-page {
