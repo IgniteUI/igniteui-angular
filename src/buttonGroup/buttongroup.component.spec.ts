@@ -42,7 +42,7 @@ class Button {
     }
 }
 
-describe('IgxButtonGroup', function() {
+fdescribe('IgxButtonGroup', function() {
    beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ InitButtonGroup, InitButtonGroupWithValues],
@@ -51,7 +51,7 @@ describe('IgxButtonGroup', function() {
         .compileComponents();
     }));
 
-    it('should initialize buttonGroup with default values', () => {
+    fit('should initialize buttonGroup with default values', () => {
         let fixture = TestBed.createComponent(InitButtonGroup);
         fixture.detectChanges();
 
@@ -65,7 +65,7 @@ describe('IgxButtonGroup', function() {
         expect(buttongroup.multiSelection).toBeFalsy();
     });
 
-    it('should initialize buttonGroup with passed values', () => {
+    fit('should initialize buttonGroup with passed values', () => {
         let fixture = TestBed.createComponent(InitButtonGroupWithValues);
         fixture.detectChanges();
 
@@ -79,14 +79,17 @@ describe('IgxButtonGroup', function() {
         expect(buttongroup.multiSelection).toBeTruthy();
     });
 
-    it('Button Group single selection', () => {
+    fit('Button Group single selection', () => {
         let fixture = TestBed.createComponent(InitButtonGroup);
         fixture.detectChanges();
 
         let buttongroup = fixture.componentInstance.buttonGroup;
 
-        expect(buttongroup.multiSelection).toBeFalsy();
-        expect(buttongroup.selectedButtons.length).toBe(0);
+        fixture.componentInstance.onSelectHandler = function () {
+            expect(buttongroup.multiSelection).toBeFalsy();
+            expect(buttongroup.selectedButtons.length).toBe(1);
+        }
+
         buttongroup.selectButton(0);
         expect(buttongroup.selectedButtons.length).toBe(1);
         buttongroup.selectButton(2);
@@ -94,32 +97,39 @@ describe('IgxButtonGroup', function() {
 
     });
 
-    it('Button Group multiple selection', () => {
+    fit('Button Group multiple selection', () => {
         let fixture = TestBed.createComponent(InitButtonGroupWithValues);
         fixture.detectChanges();
 
         let buttongroup = fixture.componentInstance.buttonGroup;
 
+        fixture.componentInstance.onSelectHandler = function () {
+            expect(buttongroup.selectedButtons.length).toBe(1);
+        }
+
         expect(buttongroup.multiSelection).toBeTruthy();
-        expect(buttongroup.selectedButtons.length).toBe(0);
         buttongroup.selectButton(0);
-        expect(buttongroup.selectedButtons.length).toBe(1);
-        buttongroup.selectButton(2);
         expect(buttongroup.selectedButtons.length).toBe(2);
+        buttongroup.selectButton(2);
+        expect(buttongroup.selectedButtons.length).toBe(3);
         buttongroup.deselectButton(0);
         buttongroup.deselectButton(1);
-        expect(buttongroup.selectedButtons.length).toBe(0);
+        expect(buttongroup.selectedButtons.length).toBe(1);
 
     });
 });
 
 
-@Component({ template: `<igx-buttongroup [values]="buttons"></igx-buttongroup>` })
+@Component({ template: `<igx-buttongroup [values]="buttons" (onUnselect)="onUnselectHandler($event)" (onSelect)="onSelectHandler($event)"></igx-buttongroup>` })
 class InitButtonGroup{
     @ViewChild(IgxButtonGroup) buttonGroup: IgxButtonGroup;
 
     constructor() {}
-    
+    onSelectHandler(args) {
+    }
+
+    onUnselectHandler(args) {
+    }
     private buttons: Array<Button>;
         public ngOnInit(): void {
 
@@ -144,7 +154,7 @@ class InitButtonGroup{
     }
 }
 
-@Component({ template: `<igx-buttongroup multiSelection="true" [values]="buttons" [alignment]="alignment">
+@Component({ template: `<igx-buttongroup multiSelection="true" [values]="buttons" [alignment]="alignment" (onUnselect)="onUnselectHandler($event)" (onSelect)="onSelectHandler($event)">
                         </igx-buttongroup>` })
 class InitButtonGroupWithValues{
     @ViewChild(IgxButtonGroup) buttonGroup: IgxButtonGroup;
@@ -172,6 +182,10 @@ class InitButtonGroupWithValues{
                 selected: false,
             })
         ]
+    }
+    onSelectHandler(args) {
+    }
+    onUnselectHandler(args) {
     }
     private alignment = ButtonGroupAlignment.vertical;
 }
