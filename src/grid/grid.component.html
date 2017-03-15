@@ -53,9 +53,9 @@
     <tfoot class="igx-grid__tfoot">
         <igx-paginator *ngIf="paging"
             (onPageChange)="_paginate($event)"
-            [currentPage]="dataContainer.state.paging.index"
+            [currentPage]="dataContainer.state.paging?.index"
             [perPage]="perPage"
-            [totalPages]="dataContainer.state.paging.metadata.countPages">
+            [totalPages]="dataContainer.state.paging?.metadata?.countPages">
         </igx-paginator>
     </tfoot>
     <igx-dialog *ngIf="hasEditableColumns"
