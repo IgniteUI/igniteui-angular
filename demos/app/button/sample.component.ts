@@ -6,9 +6,4 @@ import { IgxButtonModule } from "../../../src/button/button.directive";
     moduleId: module.id,
     templateUrl: './sample.component.html'
 })
-export class ButtonsSampleComponent {
-
-        ngAfterViewInit() {
-        debugger;
-    }
-}
+export class ButtonsSampleComponent {}

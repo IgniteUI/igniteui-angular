@@ -18,10 +18,12 @@
 
 %grid-thead,
 %grid-tfoot {
+	display: block;
 	flex: 0 0 auto;
 }
 
 %grid-tbody {
+	display: block;
     flex: 1 1 auto;
     position: relative;
     overflow-y: auto;
@@ -49,10 +51,16 @@
 	}
 }
 
+%grid-row--selected td {
+	color: #fff;
+	background-color: $off-black;
+}
+
 %grid-cell-display {
     display: flex;
     flex-flow: column wrap;
     flex: 1;
+	justify-content: center;
 	outline: none;
     padding: $grid-cell-padding;
 
@@ -66,6 +74,11 @@
 
 %grid-cell-number {
     text-align: $grid-cell-align-num;
+}
+
+%grid-cell--selected {
+	color: #fff;
+	background-color: $secondary-color !important;
 }
 
 %grid-cell-header {

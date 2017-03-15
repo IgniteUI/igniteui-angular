@@ -121,24 +121,7 @@ export interface IgxGridCell {
 @Component({
     moduleId: module.id,
     selector: "igx-grid",
-    styles: [
-        `
-    tr.selected-row td {
-        color: white;
-        background-color: #0375be;
-    }
-    td.selected-cell {
-        color: white;
-        background-color: #29b6f6 !important;
-        outline-color: #0375be;
-        outline-width: 3px;
-    }
-    .selected-page {
-        color: white;
-        background-color: #29b6f6;
-    }`
-    ],
-    templateUrl: "grid.component.html",
+    templateUrl: "grid.component.html"
 })
 export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDestroy {
 
@@ -426,29 +409,29 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
     protected onRowFocus(event: any, index: number): void {
         let el: HTMLElement = event.target;
         this._renderer.setElementAttribute(el, "aria-selected", "true");
-        this._renderer.setElementClass(el, "selected-row", true);
+        this._renderer.setElementClass(el, "igx-grid__tr--selected", true);
         this.onRowSelection.emit({row: this.getRow(index)});
     }
 
     protected onRowBlur(event: any): void {
         let el: HTMLElement = event.target;
         this._renderer.setElementAttribute(el, "aria-selected", null);
-        this._renderer.setElementClass(el, "selected-row", false);
+        this._renderer.setElementClass(el, "igx-grid__tr--selected", false);
     }
 
     protected onCellFocus(event: any, index: number, columnField: string): void {
         let el: HTMLElement = event.target ? event.target : event;
         this._renderer.setElementAttribute(el, "aria-selected", "true");
-        this._renderer.setElementClass(el, "selected-cell", true);
-        this._renderer.setElementClass(el.parentElement, "selected-row", true);
+        this._renderer.setElementClass(el, "igx-grid__td--selected", true);
+        this._renderer.setElementClass(el.parentElement, "igx-grid__tr--selected", true);
         this.onCellSelection.emit({cell: this.getCell(index, columnField)});
     }
 
     protected onCellBlur(event: any): void {
         let el: HTMLElement = event.target;
         this._renderer.setElementAttribute(el, "aria-selected", null);
-        this._renderer.setElementClass(el, "selected-cell", false);
-        this._renderer.setElementClass(el.parentElement, "selected-row", false);
+        this._renderer.setElementClass(el, "igx-grid__td--selected", false);
+        this._renderer.setElementClass(el.parentElement, "igx-grid__tr--selected", false);
     }
 
     protected editCell(index: number, item: any, row: Object): void {
