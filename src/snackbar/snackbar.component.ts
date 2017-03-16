@@ -1,4 +1,4 @@
-import { Component, NgModule, Input, Output, EventEmitter } from "@angular/core";
+import {Component, NgModule, Input, Output, EventEmitter, NgZone} from "@angular/core";
 import {  trigger, state, style, transition, animate, AnimationTransitionEvent } from "@angular/core";
 import { HammerGesturesManager } from "../core/touch";
 import { CommonModule } from "@angular/common";
@@ -54,6 +54,10 @@ import { CommonModule } from "@angular/common";
     providers: [HammerGesturesManager]
 })
 export class IgxSnackbar {
+    constructor(private zone: NgZone) {
+
+    }
+
     /**
      * The message that will be shown message by the IgxSnackbar component
      * @type {string}
@@ -107,11 +111,11 @@ export class IgxSnackbar {
      * if autoHide is enabled
      */
     public show(): void {
-        clearInterval(this.timeoutId);
+        setTimeout(this.timeoutId);
         this.isVisible = true;
 
         if(this.autoHide) {
-            this.timeoutId = setInterval(() => {
+            this.timeoutId = setTimeout(() => {
                 this.hide();
             }, this.displayTime);
         }
@@ -122,7 +126,7 @@ export class IgxSnackbar {
      */
     public hide(): void {
         this.isVisible = false;
-        clearInterval(this.timeoutId);
+        clearTimeout(this.timeoutId);
     }
 
     private triggerAction(): void {
