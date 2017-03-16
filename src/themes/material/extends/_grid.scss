@@ -29,6 +29,12 @@
     overflow-y: auto;
 }
 
+%grid-tbody--empty {
+	display: flex;
+	justify-content: center;
+	text-align: center;
+}
+
 %grid-row {
 	display: flex;
 	flex: 1;
