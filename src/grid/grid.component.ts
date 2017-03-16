@@ -17,6 +17,7 @@ import {
     IterableDiffers,
     NgModule,
     OnDestroy,
+    OnInit,
     Output,
     QueryList,
     Renderer,
@@ -45,16 +46,20 @@ import { IgxPaginatorComponent, IgxPaginatorEvent } from "./paginator.component"
 import {
     DataContainer,
     DataState,
+    PagingState,
     FilteringExpression,
     IgxDialog,
     IgxDialogModule,
     IgxDirectivesModule,
     SortingDirection,
-    SortingExpression,
-    StableSortingStrategy
+    SortingExpression
 } from "../../src/main";
-import { DataType } from "../data-operations/data-util";
+import { DataType, DataUtil } from "../data-operations/data-util";
 
+
+export interface IgxGridBindingBehavior {
+    process: Function;
+}
 
 // grid events
 
@@ -118,7 +123,7 @@ export interface IgxGridCell {
     selector: "igx-grid",
     templateUrl: "grid.component.html"
 })
-export class IgxGridComponent implements AfterContentInit, DoCheck, OnDestroy {
+export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDestroy {
 
     protected static nextId: number = 1;
     @Input() get data(): any[] {
@@ -128,14 +133,12 @@ export class IgxGridComponent implements AfterContentInit, DoCheck, OnDestroy {
     set data(value: any[]) {
         this._data = value;
         this.dataContainer.data = value;
-        if (this.paging) {
-            this.dataContainer.state.paging = {
-                index: 0,
-                recordsPerPage: this.perPage,
-            };
-        }
         this.shouldDataBind = true;
     }
+
+    @Input() public perPage: number = 25;
+
+    @Input() public state: DataState = {};
 
     @Input() get paging(): boolean {
         return this._paging;
@@ -143,18 +146,15 @@ export class IgxGridComponent implements AfterContentInit, DoCheck, OnDestroy {
 
     set paging(value: boolean) {
         this._paging = value;
-        if (!this._paging && this.dataContainer) {
-            this.dataContainer.state.paging = null;
-        } else if (this.dataContainer) {
-            this.dataContainer.state.paging = {
-                index: 0,
-                recordsPerPage: this.perPage,
-            };
+        if (this._paging) {
+            this.state.paging = <PagingState>DataUtil.mergeDefaultProperties(this.state.paging,
+                <PagingState>{index: 0, recordsPerPage: this.perPage});
+        } else {
+            this.state.paging = null;
         }
         this.shouldDataBind = true;
     }
 
-    @Input() public perPage: number = 25;
     @Input() public id: string = `igx-grid-${IgxGridComponent.nextId++}`;
     @Input() public autoGenerate: boolean = false;
 
@@ -172,7 +172,7 @@ export class IgxGridComponent implements AfterContentInit, DoCheck, OnDestroy {
     @Output() public onRowSelection = new EventEmitter<IgxGridRowSelectionEvent>();
     @Output() public onPagingDone = new EventEmitter<IgxPaginatorEvent>();
     @Output() public onColumnInit = new EventEmitter<IgxGridColumnInitEvent>();
-    @Output() public onBeforeProcess = new EventEmitter<IgxGridDataProcessingEvent>();
+    @Output() public onBeforeProcess = new EventEmitter<IgxGridBindingBehavior>();
 
     get columnsToRender(): IgxColumnComponent[] {
         return this.columns.filter((col) => !col.hidden);
@@ -199,7 +199,7 @@ export class IgxGridComponent implements AfterContentInit, DoCheck, OnDestroy {
         });
         return res;
     }
-    public dataContainer: DataContainer = new DataContainer([]);;
+    public dataContainer: DataContainer = new DataContainer([]);
     public columns: IgxColumnComponent[] = [];
     protected selectedRow: any;
     private _data: any[];
@@ -220,6 +220,14 @@ export class IgxGridComponent implements AfterContentInit, DoCheck, OnDestroy {
                     this._differ = this._itDiff.find([]).create(null);
                 }
 
+    public ngOnInit(): void {
+        this.dataContainer.state = this.state;
+        if (this.paging) {
+            this.state.paging = <PagingState>DataUtil.mergeDefaultProperties(this.state.paging,
+                <PagingState>{index: 0, recordsPerPage: this.perPage});
+        }
+    }
+
     /**
      * @hidden
      */
@@ -228,12 +236,6 @@ export class IgxGridComponent implements AfterContentInit, DoCheck, OnDestroy {
             this.autogenerate();
         } else {
             this.checkColumns();
-        }
-        if (this.hasSorting) {
-            this.dataContainer.state.sorting = {
-                expressions: [],
-                strategy: new StableSortingStrategy()
-            };
         }
         this.colDiffer = this.cols.changes.subscribe((_) => {
             this.checkColumns();
@@ -259,8 +261,14 @@ export class IgxGridComponent implements AfterContentInit, DoCheck, OnDestroy {
     public ngDoCheck(): void {
         let diff: IterableDiffer = this._differ.diff(this.data);
         if (this.shouldDataBind || diff) {
-            this.onBeforeProcess.emit({state: this.dataContainer.state});
-            this.dataContainer.process();
+
+            let bindingBehavior: IgxGridBindingBehavior = {
+                process: (dataContainer: DataContainer) => {
+                    dataContainer.process();
+                }
+            };
+            this.onBeforeProcess.emit(bindingBehavior);
+            bindingBehavior.process(this.dataContainer);
             this.shouldDataBind = false;
         }
     }
@@ -414,8 +422,11 @@ export class IgxGridComponent implements AfterContentInit, DoCheck, OnDestroy {
     protected onCellFocus(event: any, index: number, columnField: string): void {
         let el: HTMLElement = event.target ? event.target : event;
         this._renderer.setElementAttribute(el, "aria-selected", "true");
-        this._renderer.setElementClass(el, "igx-grid__td--selected", true);
-        this._renderer.setElementClass(el.parentElement, "igx-grid__tr--selected", true);
+
+        if (!this.getColumnByField(columnField).bodyTemplate) {
+            this._renderer.setElementClass(el, "igx-grid__td--selected", true);
+            this._renderer.setElementClass(el.parentElement, "igx-grid__tr--selected", true);
+        }
         this.onCellSelection.emit({cell: this.getCell(index, columnField)});
     }
 
@@ -517,6 +528,17 @@ export class IgxGridComponent implements AfterContentInit, DoCheck, OnDestroy {
         this.selectedRow.row[field] = event;
     }
 
+    protected getSortedExpression(column: IgxColumnComponent): number {
+        let dir: number = 0;
+        if (column.sortable && this.state.sorting) {
+            let expr: SortingExpression[] = this.state.sorting.expressions
+                .filter((each) => each.fieldName === column.field);
+            if (expr && expr.length) {
+                dir = expr[0].dir;
+            }
+        }
+        return dir;
+    }
     protected cancelEdit(): void {
         this.selectedRow.row = this._lastRow;
         if (this.paging) {

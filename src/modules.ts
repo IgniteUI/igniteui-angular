@@ -45,6 +45,7 @@ import { IgxRangeModule } from "./range/range.component";
     exports: [
         IgxAvatarModule,
         IgxBadgeModule,
+        IgxCardModule,
         IgxCarouselModule,
         IgxCheckboxModule,
         IgxIconModule,
