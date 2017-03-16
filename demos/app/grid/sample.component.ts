@@ -1,9 +1,19 @@
+import { IgxColumnComponent } from '../../../src/grid/column.component';
 import { Http } from "@angular/http";
 import { Component, Injectable, ViewChild } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs/Rx";
 
-import { IgxGridBindingBehavior, IgxGridComponent } from '../../../src/grid/grid.component';
-import { DataState, SortingDirection, IgxToast, IgxSnackbar, DataContainer, PagingState, PagingError } from "../../../src/main";
+import { IgxGridBindingBehavior, IgxGridColumnInitEvent, IgxGridComponent } from '../../../src/grid/grid.component';
+import {
+    DataContainer,
+    DataState,
+    IgxSnackbar,
+    IgxToast,
+    PagingError,
+    PagingState,
+    SortingDirection,
+    StableSortingStrategy
+} from '../../../src/main';
 
 
 @Injectable()
@@ -109,6 +119,8 @@ export class GridSampleComponent {
     local_data: any[];
     selectedCell;
     selectedRow;
+    newRecord = "";
+    editCell;
     ngOnInit(): void {
       this.data = this.localService.records;
       this.remote = this.remoteService.remoteData;
@@ -123,17 +135,24 @@ export class GridSampleComponent {
           {ID: 5, Name: "E"},
         ];
 
-        this.grid3.state = {
-          paging: {
-            index: 2,
-            recordsPerPage: 10
-          },
-          sorting: {
-            expressions: [
-              {fieldName: "ProductID", dir: SortingDirection.Desc}
-            ]
-          }
-        };
+      this.grid2.state = {
+        sorting: {
+          expressions: [],
+          strategy: new StableSortingStrategy()
+        }
+      };
+
+      this.grid3.state = {
+        paging: {
+          index: 2,
+          recordsPerPage: 15
+        },
+        sorting: {
+          expressions: [
+            {fieldName: "ProductID", dir: SortingDirection.Desc}
+          ]
+        }
+      };
     }
 
     ngAfterViewInit() {
@@ -148,21 +167,80 @@ export class GridSampleComponent {
       };
     }
 
+    onInlineEdit(event) {
+      this.editCell = event.cell;
+    }
+
+    showInput(index, field) {
+      return this.editCell && this.editCell.columnField === field && this.editCell.rowIndex === index;
+    }
     process(event) {
       this.toast.message = "Loading remote data";
+      this.toast.position = 1;
       this.toast.show();
       this.remoteService.getData(this.grid3.dataContainer.state, () => {
         this.toast.hide();
       });
     }
 
+    initColumns(event: IgxGridColumnInitEvent) {
+      let column: IgxColumnComponent = event.column;
+      if (column.field === "Name") {
+        column.filtering = true;
+        column.sortable = true;
+        column.editable = true;
+      }
+    }
+
+    onPagination(event) {
+      if (!this.grid2.paging) {
+        return;
+      }
+      let total = this.grid2.data.length;
+      let state = this.grid2.state;
+      if ((state.paging.recordsPerPage * event) >= total) {
+        return;
+      }
+      this.grid2.paginate(event);
+    }
+
+    onPerPage(event) {
+      if (!this.grid2.paging) {
+        return;
+      }
+      let total = this.grid2.data.length;
+      let state = this.grid2.state;
+      if ((state.paging.index * event) >= total) {
+        return;
+      }
+      this.grid2.perPage = event;
+      state.paging.recordsPerPage = event;
+      this.grid2.dataContainer.process();
+    }
+
     selectCell(event) {
       this.selectedCell = event.cell;
+    }
+
+    addRow() {
+      if (!this.newRecord.trim()) {
+        this.newRecord = "";
+        return;
+      }
+      let record = {ID: this.grid1.data[this.grid1.data.length - 1].ID + 1, Name: this.newRecord};
+      this.grid1.addRow(record);
+      this.newRecord = "";
+    }
+
+    updateRecord(event) {
+      this.grid1.updateCell(this.selectedCell.rowIndex, this.selectedCell.columnField, event);
+      this.grid1.getCell(this.selectedCell.rowIndex, this.selectedCell.columnField);
     }
 
     deleteRow(event) {
       this.selectedRow = Object.assign({}, this.grid1.getRow(this.selectedCell.rowIndex));
       this.grid1.deleteRow(this.selectedCell.rowIndex);
+      this.selectedCell = {};
       this.snax.show();
     }
 

@@ -11,6 +11,7 @@
                     [igxDraggable]="col.index"
                     [igxDroppable]="col.index"
                     [igxColumnSorting]="col"
+                    [sortDirection]="getSortedExpression(col)"
                     [style.width]="col.width || ''">
                     <div class="igx-grid__th-content">
                         <span class="title">

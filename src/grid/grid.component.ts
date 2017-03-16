@@ -422,8 +422,11 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
     protected onCellFocus(event: any, index: number, columnField: string): void {
         let el: HTMLElement = event.target ? event.target : event;
         this._renderer.setElementAttribute(el, "aria-selected", "true");
-        this._renderer.setElementClass(el, "igx-grid__td--selected", true);
-        this._renderer.setElementClass(el.parentElement, "igx-grid__tr--selected", true);
+
+        if (!this.getColumnByField(columnField).bodyTemplate) {
+            this._renderer.setElementClass(el, "igx-grid__td--selected", true);
+            this._renderer.setElementClass(el.parentElement, "igx-grid__tr--selected", true);
+        }
         this.onCellSelection.emit({cell: this.getCell(index, columnField)});
     }
 
@@ -525,6 +528,17 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
         this.selectedRow.row[field] = event;
     }
 
+    protected getSortedExpression(column: IgxColumnComponent): number {
+        let dir: number = 0;
+        if (column.sortable && this.state.sorting) {
+            let expr: SortingExpression[] = this.state.sorting.expressions
+                .filter((each) => each.fieldName === column.field);
+            if (expr && expr.length) {
+                dir = expr[0].dir;
+            }
+        }
+        return dir;
+    }
     protected cancelEdit(): void {
         this.selectedRow.row = this._lastRow;
         if (this.paging) {
