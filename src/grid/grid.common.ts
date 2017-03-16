@@ -60,31 +60,31 @@ export class IgxCellFooterTemplateDirective {
 export class IgxColumnSortingDirective {
     @Input("igxColumnSorting") public column: IgxColumnComponent;
     @Output() protected onSort = new EventEmitter<IgxColumnSortedEvent>();
-    public direction: SortingDirection = SortingDirection.None;
+    @Input() public sortDirection: SortingDirection = SortingDirection.None;
 
     @HostBinding("class.off")
     get off(): boolean {
-        return this.direction === SortingDirection.None;
+        return this.sortDirection === SortingDirection.None;
     }
 
     @HostBinding("class.asc")
     get asc(): boolean {
-        return this.direction === SortingDirection.Asc;
+        return this.sortDirection === SortingDirection.Asc;
     }
 
     @HostBinding("class.desc")
     get desc(): boolean {
-        return this.direction === SortingDirection.Desc;
+        return this.sortDirection === SortingDirection.Desc;
     }
 
 
     @HostListener("click", ["$event"])
     protected onClick(event: Event): void {
         if (this.column.sortable) {
-            this.direction = ++this.direction > SortingDirection.Desc ? SortingDirection.None : this.direction;
+            this.sortDirection = ++this.sortDirection > SortingDirection.Desc ? SortingDirection.None : this.sortDirection;
             this.onSort.emit({
                 column: this.column,
-                direction: this.direction
+                direction: this.sortDirection
             });
         }
     }

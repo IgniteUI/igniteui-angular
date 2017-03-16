@@ -16,10 +16,18 @@
 
     @include e(tbody) {
         @extend %grid-tbody;
+
+        @include e(empty, true) {
+            @extend %grid-tbody--empty;
+        }
     }
 
     @include e(tr) {
         @extend %grid-row;
+
+        @include m(selected) {
+            @extend %grid-row--selected;
+        }
     }
 
     @include e(th) {
@@ -67,6 +75,10 @@
 
     @include e(td) {
         @extend %grid-cell-display;
+
+        @include m(selected) {
+            @extend %grid-cell--selected;
+        }
 
         @include m(number) {
             @extend %grid-cell-number;

@@ -11,6 +11,7 @@
                     [igxDraggable]="col.index"
                     [igxDroppable]="col.index"
                     [igxColumnSorting]="col"
+                    [sortDirection]="getSortedExpression(col)"
                     [style.width]="col.width || ''">
                     <div class="igx-grid__th-content">
                         <span class="title">
@@ -29,8 +30,8 @@
         </tr>
     </thead>
     <tbody class="igx-grid__tbody" role="rowgroup" (keydown)="navigate($event)">
-        <div *ngIf="!dataContainer.transformedData || !dataContainer.transformedData.length || !columnsToRender || !columnsToRender.length">
-            <h1>No data to display</h1>
+        <div class="igx-grid__tbody-empty" *ngIf="!dataContainer.transformedData || !dataContainer.transformedData.length || !columnsToRender || !columnsToRender.length">
+            <h4>No data to display</h4>
         </div>
         <template ngFor let-rowData [ngForOf]="dataContainer.transformedData" let-rowIndex="index">
             <tr class="igx-grid__tr" [attr.data-row]="rowIndex" tabindex="0" role="row" (focus)="onRowFocus($event, rowIndex)" (blur)="onRowBlur($event)">
@@ -53,9 +54,9 @@
     <tfoot class="igx-grid__tfoot">
         <igx-paginator *ngIf="paging"
             (onPageChange)="_paginate($event)"
-            [currentPage]="dataContainer.state.paging.index"
+            [currentPage]="dataContainer.state.paging?.index"
             [perPage]="perPage"
-            [totalPages]="dataContainer.state.paging.metadata.countPages">
+            [totalPages]="dataContainer.state.paging?.metadata?.countPages">
         </igx-paginator>
     </tfoot>
     <igx-dialog *ngIf="hasEditableColumns"
