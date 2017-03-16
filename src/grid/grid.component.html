@@ -29,8 +29,8 @@
         </tr>
     </thead>
     <tbody class="igx-grid__tbody" role="rowgroup" (keydown)="navigate($event)">
-        <div *ngIf="!dataContainer.transformedData || !dataContainer.transformedData.length || !columnsToRender || !columnsToRender.length">
-            <h1>No data to display</h1>
+        <div class="igx-grid__tbody-empty" *ngIf="!dataContainer.transformedData || !dataContainer.transformedData.length || !columnsToRender || !columnsToRender.length">
+            <h4>No data to display</h4>
         </div>
         <template ngFor let-rowData [ngForOf]="dataContainer.transformedData" let-rowIndex="index">
             <tr class="igx-grid__tr" [attr.data-row]="rowIndex" tabindex="0" role="row" (focus)="onRowFocus($event, rowIndex)" (blur)="onRowBlur($event)">
