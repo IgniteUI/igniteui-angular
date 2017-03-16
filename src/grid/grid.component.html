@@ -11,6 +11,7 @@
                     [igxDraggable]="col.index"
                     [igxDroppable]="col.index"
                     [igxColumnSorting]="col"
+                    [sortDirection]="getSortedExpression(col)"
                     [style.width]="col.width || ''">
                     <div class="igx-grid__th-content">
                         <span class="title">
@@ -53,9 +54,9 @@
     <tfoot class="igx-grid__tfoot">
         <igx-paginator *ngIf="paging"
             (onPageChange)="_paginate($event)"
-            [currentPage]="dataContainer.state.paging.index"
+            [currentPage]="dataContainer.state.paging?.index"
             [perPage]="perPage"
-            [totalPages]="dataContainer.state.paging.metadata.countPages">
+            [totalPages]="dataContainer.state.paging?.metadata?.countPages">
         </igx-paginator>
     </tfoot>
     <igx-dialog *ngIf="hasEditableColumns"
