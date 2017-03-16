@@ -243,14 +243,11 @@ export class GridSampleComponent {
       this.grid1.deleteRow(this.selectedCell.rowIndex);
       this.selectedCell = {};
       this.snax.message = `Row with ID ${this.selectedRow.record.ID} was deleted`;
-      this.snax.isVisible = true;
-      // this.snax.show();
+      this.snax.show();
     }
 
     restore() {
       this.grid1.addRow(this.selectedRow.record, this.selectedRow.index);
-      this.snax.isVisible = false;
-      // this.snax.hide();
-
+      this.snax.hide();
     }
 }
