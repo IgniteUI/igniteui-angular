@@ -1,0 +1,13 @@
+.cards-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 24px 0;
+}
+
+igx-card ~ igx-card {
+   margin-left: 16px;
+}
+
+igx-switch ~ igx-switch {
+    margin: 8px;
+}

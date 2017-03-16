@@ -16,6 +16,10 @@
 
     @include e(tbody) {
         @extend %grid-tbody;
+
+        @include e(empty, true) {
+            @extend %grid-tbody--empty;
+        }
     }
 
     @include e(tr) {
