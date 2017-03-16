@@ -63,6 +63,7 @@
             <igx-switch [(ngModel)]="col.sortable">Sorting</igx-switch>
             <igx-switch [(ngModel)]="col.editable">Editable</igx-switch>
             <igx-switch [(ngModel)]="col.hidden">Visible</igx-switch>
+            <igx-switch [(ngModel)]="col.movable">Movable</igx-switch>
         </div>
     </div>
 
@@ -106,7 +107,7 @@
     <igx-grid #grid3 [data]="remote | async" [paging]="true" [perPage]="10"
         (onPagingDone)="process($event)" (onSortingDone)="process($event)" (onBeforeProcess)="onProcess($event)">
         <igx-column [sortable]="true" [field]="'ProductID'" [header]="'ID'"></igx-column>
-        <igx-column [editable]="true" [filtering]="true" [field]="'ProductName'"></igx-column>
+        <igx-column [sortable]="true" [field]="'ProductName'"></igx-column>
         <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'In Stock'"></igx-column>
         <igx-column [field]="'Discontinued'" [sortable]="true">
             <template igxHeader let-column="column">
@@ -123,6 +124,6 @@
 <div style="width: 100%; display: flex; position: fixed; bottom: 0; justify-content: center">
     <igx-snackbar #snax [autoHide]="true" displayTime="2500"
         style="width: 50%;"
-        message="Row was deleted" actionText="Undo" (onAction)="restore()">
+        actionText="Undo" (onAction)="restore()">
     </igx-snackbar>
 <div>

@@ -1,9 +1,9 @@
-import { IgxColumnComponent } from '../../../src/grid/column.component';
+import { IgxColumnComponent } from "../../../src/grid/column.component";
 import { Http } from "@angular/http";
 import { Component, Injectable, ViewChild } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs/Rx";
 
-import { IgxGridBindingBehavior, IgxGridColumnInitEvent, IgxGridComponent } from '../../../src/grid/grid.component';
+import { IgxGridBindingBehavior, IgxGridColumnInitEvent, IgxGridComponent } from "../../../src/grid/grid.component";
 import {
     DataContainer,
     DataState,
@@ -13,7 +13,7 @@ import {
     PagingState,
     SortingDirection,
     StableSortingStrategy
-} from '../../../src/main';
+} from "../../../src/main";
 
 
 @Injectable()
@@ -105,7 +105,7 @@ export class RemoteService {
     moduleId: module.id,
     selector: "grid-sample",
     templateUrl: "sample.component.html",
-    styleUrls: ['sample.component.css']
+    styleUrls: ["sample.component.css"]
 })
 export class GridSampleComponent {
     constructor(private localService: LocalService,
@@ -146,7 +146,7 @@ export class GridSampleComponent {
       this.grid3.state = {
         paging: {
           index: 2,
-          recordsPerPage: 15
+          recordsPerPage: 10
         },
         sorting: {
           expressions: [
@@ -242,11 +242,15 @@ export class GridSampleComponent {
       this.selectedRow = Object.assign({}, this.grid1.getRow(this.selectedCell.rowIndex));
       this.grid1.deleteRow(this.selectedCell.rowIndex);
       this.selectedCell = {};
-      this.snax.show();
+      this.snax.message = `Row with ID ${this.selectedRow.record.ID} was deleted`;
+      this.snax.isVisible = true;
+      // this.snax.show();
     }
 
     restore() {
       this.grid1.addRow(this.selectedRow.record, this.selectedRow.index);
-      this.snax.hide();
+      this.snax.isVisible = false;
+      // this.snax.hide();
+
     }
 }
