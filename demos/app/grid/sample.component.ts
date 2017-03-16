@@ -105,6 +105,7 @@ export class RemoteService {
     moduleId: module.id,
     selector: "grid-sample",
     templateUrl: "sample.component.html",
+    styleUrls: ['sample.component.css']
 })
 export class GridSampleComponent {
     constructor(private localService: LocalService,
