@@ -4,8 +4,8 @@
 	width: 100%;
 	background: $grid-bg;
 	border-radius: $grid-br;
-	overflow: hidden;
 	box-shadow: $grid-shadow;
+	overflow: hidden;
 }
 
 %grid-caption {
@@ -33,6 +33,7 @@
 	background: $grid-row-bg;
 	border-bottom: $grid-row-bb;
 	transition: $grid-row-transition;
+
 	&:last-of-type {
 		border-bottom: none;
 	}
@@ -52,7 +53,7 @@
     display: flex;
     flex-flow: column wrap;
     flex: 1;
-
+	outline: none;
     padding: $grid-cell-padding;
 
     font-size: $grid-cell-fs;
@@ -60,7 +61,7 @@
     color: $grid-cell-color;
     text-align: left;
     word-wrap: break-word;
-    overflow: hidden;
+	overflow: hidden;
 }
 
 %grid-cell-number {
@@ -70,11 +71,19 @@
 %grid-cell-header {
     font-size: $grid-head-fs;
     color: $grid-head-color;
+	position: relative;
+	overflow: visible;
 }
 
 %grid-cell-header-content {
     display: flex;
 	align-items: center;
+	overflow: hidden;
+	& .title {
+		display: flex;
+		align-items: center;
+		flex-grow: 1;
+	}
 }
 
 %grid-cell-header-cicon {
