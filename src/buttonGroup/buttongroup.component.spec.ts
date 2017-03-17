@@ -37,7 +37,7 @@ class Button {
         this.ripple = obj.ripple || 'orange';
         this.label = obj.label || 'Button label';
         this.selected = obj.selected || false;
-        this.togglable = obj.togglable || true;
+        this.togglable = obj.togglable && true;
         this.disabled = obj.disabled || false;
         this.color = obj.color || '#484848';
         this.bgcolor = obj.bgcolor || 'white';
@@ -147,17 +147,17 @@ class InitButtonGroup{
     }
 }
 
-@Component({ template: `<igx-buttongroup multiSelection="true" itemContentCssClass="customContentStyle" [values]="buttons" [alignment]="alignment">
+@Component({ template: `<igx-buttongroup multiSelection="true" itemContentCssClass="customContentStyle" [values]="cities" [alignment]="alignment">
                         </igx-buttongroup>` })
 class InitButtonGroupWithValues{
     @ViewChild(IgxButtonGroup) buttonGroup: IgxButtonGroup;
 
     constructor() {}
     
-    private buttons: Array<Button>;
+    private cities: Array<Button>;
         public ngOnInit(): void {
 
-        this.buttons = [
+        this.cities = [
             new Button({
                 label: 'Sofia',
                 selected: false,
