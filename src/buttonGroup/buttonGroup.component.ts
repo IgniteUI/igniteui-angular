@@ -57,7 +57,8 @@ export class IgxButtonGroup implements AfterViewInit {
     }
 
     selectButton(index: number) {
-        if(this.buttons.toArray()[index]._el.nativeElement.getAttribute("data-togglable") === 'false') {
+        if(this.buttons.toArray()[index]._el.nativeElement.getAttribute("data-togglable") === 'false'
+        || this.buttons.toArray()[index]._el.nativeElement.classList.contains("igx-button--disabled")) {
             return;
         }
         var buttonElement = this.buttons.toArray()[index]._el.nativeElement;
@@ -77,7 +78,8 @@ export class IgxButtonGroup implements AfterViewInit {
     }
 
     deselectButton(index: number) {
-        if(this.buttons.toArray()[index]._el.nativeElement.getAttribute("data-togglable") === 'false') {
+        if(this.buttons.toArray()[index]._el.nativeElement.getAttribute("data-togglable") === 'false'
+        || this.buttons.toArray()[index]._el.nativeElement.classList.contains("igx-button--disabled")) {
             return;
         }
         var buttonElement = this.buttons.toArray()[index]._el.nativeElement;
