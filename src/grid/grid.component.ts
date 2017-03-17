@@ -46,11 +46,12 @@ import { IgxPaginatorComponent, IgxPaginatorEvent } from "./paginator.component"
 import {
     DataContainer,
     DataState,
-    PagingState,
     FilteringExpression,
     IgxDialog,
     IgxDialogModule,
     IgxDirectivesModule,
+    IgxIconModule,
+    PagingState,
     SortingDirection,
     SortingExpression
 } from "../../src/main";
@@ -663,6 +664,6 @@ let GRID_DIRECTIVES: any[] = [
     declarations: GRID_DIRECTIVES,
     entryComponents: [IgxColumnComponent],
     exports: GRID_DIRECTIVES,
-    imports: [CommonModule, IgxDialogModule, IgxDirectivesModule, FormsModule],
+    imports: [CommonModule, IgxIconModule, IgxDialogModule, IgxDirectivesModule, FormsModule],
 })
 export class IgxGridModule {}
