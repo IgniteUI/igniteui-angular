@@ -4,8 +4,8 @@
 	width: 100%;
 	background: $grid-bg;
 	border-radius: $grid-br;
-	overflow: hidden;
 	box-shadow: $grid-shadow;
+	overflow: hidden;
 }
 
 %grid-caption {
@@ -18,13 +18,21 @@
 
 %grid-thead,
 %grid-tfoot {
+	display: block;
 	flex: 0 0 auto;
 }
 
 %grid-tbody {
+	display: block;
     flex: 1 1 auto;
     position: relative;
     overflow-y: auto;
+}
+
+%grid-tbody--empty {
+	display: flex;
+	justify-content: center;
+	text-align: center;
 }
 
 %grid-row {
@@ -33,6 +41,7 @@
 	background: $grid-row-bg;
 	border-bottom: $grid-row-bb;
 	transition: $grid-row-transition;
+
 	&:last-of-type {
 		border-bottom: none;
 	}
@@ -48,11 +57,17 @@
 	}
 }
 
+%grid-row--selected td {
+	color: #fff;
+	background-color: $off-black;
+}
+
 %grid-cell-display {
     display: flex;
     flex-flow: column wrap;
     flex: 1;
-
+	justify-content: center;
+	outline: none;
     padding: $grid-cell-padding;
 
     font-size: $grid-cell-fs;
@@ -60,21 +75,34 @@
     color: $grid-cell-color;
     text-align: left;
     word-wrap: break-word;
-    overflow: hidden;
+	overflow: hidden;
 }
 
 %grid-cell-number {
     text-align: $grid-cell-align-num;
 }
 
+%grid-cell--selected {
+	color: #fff;
+	background-color: $secondary-color !important;
+}
+
 %grid-cell-header {
     font-size: $grid-head-fs;
     color: $grid-head-color;
+	position: relative;
+	overflow: visible;
 }
 
 %grid-cell-header-content {
     display: flex;
 	align-items: center;
+	overflow: hidden;
+	& .title {
+		display: flex;
+		align-items: center;
+		flex-grow: 1;
+	}
 }
 
 %grid-cell-header-cicon {

@@ -2,10 +2,13 @@ import { SortingDirection } from "../data-operations/sorting-expression.interfac
 import {
     Component,
     Directive,
+    EmbeddedViewRef,
     EventEmitter,
     HostBinding,
     HostListener,
     Input,
+    OnDestroy,
+    OnInit,
     Output,
     TemplateRef,
     ViewContainerRef
@@ -23,14 +26,6 @@ export interface IgxColumnSortedEvent {
     column: IgxColumnComponent;
     direction: any;
 }
-
-// enums
-
-export enum SortDirection {
-    none,
-    asc,
-    desc
-};
 
 // directives
 
@@ -65,26 +60,31 @@ export class IgxCellFooterTemplateDirective {
 export class IgxColumnSortingDirective {
     @Input("igxColumnSorting") public column: IgxColumnComponent;
     @Output() protected onSort = new EventEmitter<IgxColumnSortedEvent>();
-    public direction: SortingDirection;
+    @Input() public sortDirection: SortingDirection = SortingDirection.None;
+
+    @HostBinding("class.off")
+    get off(): boolean {
+        return this.sortDirection === SortingDirection.None;
+    }
 
     @HostBinding("class.asc")
     get asc(): boolean {
-        return this.direction === SortingDirection.Asc;
+        return this.sortDirection === SortingDirection.Asc;
     }
 
     @HostBinding("class.desc")
     get desc(): boolean {
-        return this.direction === SortingDirection.Desc;
+        return this.sortDirection === SortingDirection.Desc;
     }
 
 
     @HostListener("click", ["$event"])
     protected onClick(event: Event): void {
         if (this.column.sortable) {
-            this.direction = this.direction === SortingDirection.Asc ? SortingDirection.Desc : SortingDirection.Asc;
+            this.sortDirection = ++this.sortDirection > SortingDirection.Desc ? SortingDirection.None : this.sortDirection;
             this.onSort.emit({
                 column: this.column,
-                direction: this.direction
+                direction: this.sortDirection
             });
         }
     }
@@ -97,21 +97,21 @@ export class IgxColumnSortingDirective {
     selector: "igx-cell-body",
     template: ``
 })
-export class IgxCellBodyComponent {
+export class IgxCellBodyComponent implements OnInit, OnDestroy {
 
     @Input() public column: IgxColumnComponent;
     @Input() public item: any;
     @Input() public rowIndex: number;
     @Input() public row: any;
+    protected view: EmbeddedViewRef<any>;
 
     constructor(public viewContainer: ViewContainerRef) {}
     public ngOnInit(): void {
-        this.viewContainer.createEmbeddedView(this.column.bodyTemplate, {
-            "$implicit": this.column,
-            item: this.item,
-            row: this.row,
-            rowIndex: this.rowIndex,
-        });
+        this.view = this.viewContainer.createEmbeddedView(this.column.bodyTemplate, this);
+    }
+
+    public ngOnDestroy(): void {
+        this.view.destroy();
     }
 }
 
@@ -120,18 +120,20 @@ export class IgxCellBodyComponent {
     selector: "igx-cell-header",
     template: ``
 })
-export class IgxCellHeaderComponent {
+export class IgxCellHeaderComponent implements OnInit, OnDestroy {
 
     @Input() public column: IgxColumnComponent;
     @Input() public colIndex: number;
+    protected view: EmbeddedViewRef<any>;
 
     constructor(public viewContainer: ViewContainerRef) {}
 
     public ngOnInit(): void {
-        this.viewContainer.createEmbeddedView(this.column.headerTemplate, {
-            "$implicit": this.column,
-            colIndex: this.colIndex
-        });
+        this.view = this.viewContainer.createEmbeddedView(this.column.headerTemplate, this);
+    }
+
+    public ngOnDestroy(): void {
+        this.view.destroy();
     }
 }
 
@@ -140,48 +142,26 @@ export class IgxCellHeaderComponent {
     selector: "igx-cell-footer",
     template: ``
 })
-export class IgxCellFooterComponent {
+export class IgxCellFooterComponent implements OnInit, OnDestroy {
 
     @Input() public column: IgxColumnComponent;
     @Input() public colIndex: number;
+    protected view: EmbeddedViewRef<any>;
 
     constructor(public viewContainer: ViewContainerRef) {}
 
     public ngOnInit(): void {
-        this.viewContainer.createEmbeddedView(this.column.footerTemplate, {
-            "$implicit": this.column,
-            colIndex: this.colIndex
-        });
+        this.view = this.viewContainer.createEmbeddedView(this.column.footerTemplate, this);
+    }
+
+    public ngOnDestroy(): void {
+        this.view.destroy();
     }
 }
 
 @Component({
     moduleId: module.id,
     selector: "igx-col-filter",
-    styles: [
-        `
-        div {
-            position: relative;
-            max-width: 200px;
-        }
-        .igx-filter-drop {
-            display: block;
-            position: absolute;
-            left: 3rem;
-            top: 0;
-            padding: 5px;
-            width: 200px;
-            background: white;
-            border: 2px solid #ccc;
-            border-radius: 4px;
-            box-shadow: 2px 2px 2px 2px rgba(0,0,0,.25);
-        }
-        .b-active {
-            background: #29b6f6 !important;
-            color: #fff;
-        }
-        `
-    ],
     templateUrl: "column-filtering.component.html"
 })
 export class IgxColumnFilteringComponent {

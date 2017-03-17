@@ -2,45 +2,36 @@
     <thead class="igx-grid__thead" role="rowgroup">
         <tr class="igx-grid__tr" role="rowheader">
             <template ngFor let-col [ngForOf]="columnsToRender" let-colIndex="index">
+
                 <th (onSort)="processSort($event)"
                     role="columnheader" tabindex="0"
                     class="igx-grid__th"
                     [attr.aria-label]="col.header || col.field"
-                    (onDrop)="moveColumn($event)"
-                    [igxDraggable]="col.index"
-                    [igxDroppable]="col.index"
                     [igxColumnSorting]="col"
-                    *ngIf="col.headerTemplate" [style.width]="col.width || ''">
-                    <igx-cell-header [column]="col" [colIndex]="index"></igx-cell-header>
-                    <igx-col-filter
-                        (onFilter)="processFilter($event)"
-                        *ngIf="col.filtering"
-                        [value]="filteringExpressions[col.field]?.searchVal || ''"
-                        [column]="col">
-                    </igx-col-filter>
-                </th>
-                <th (onSort)="processSort($event)"
-                    role="columnheader" tabindex="0"
-                    class="igx-grid__th"
-                    [attr.aria-label]="col.header || col.field"
-                    (onDrop)="moveColumn($event)"
-                    [igxDraggable]="col.index"
-                    [igxDroppable]="col.index"
-                    [igxColumnSorting]="col"
-                    *ngIf="!col.headerTemplate" [style.width]="col.width || ''">
-                    {{ col.header || col.field }}
-                    <igx-col-filter
-                        (onFilter)="processFilter($event)"
-                        *ngIf="col.filtering" [value]="filteringExpressions[col.field]?.searchVal || ''"
-                        [column]="col">
-                    </igx-col-filter>
+                    [sortDirection]="getSortedExpression(col)"
+                    [style.width]="col.width || ''">
+                    <div class="igx-grid__th-content">
+                        <span class="title">
+                            <igx-cell-header *ngIf="col.headerTemplate" [column]="col" [colIndex]="index"></igx-cell-header>
+                            {{ formatHeader(col) }}
+                        </span>
+                        <igx-col-filter
+                            (onFilter)="processFilter($event)"
+                            *ngIf="col.filtering"
+                            [value]="filteringExpressions[col.field]?.searchVal || ''"
+                            [column]="col">
+                        </igx-col-filter>
+                        <div *ngIf="col.movable" (onDrop)="moveColumn($event)" [igxDraggable]="col.index" [igxDroppable]="col.index">
+                            <igx-icon name="swap_horiz"></igx-icon>
+                        </div>
+                    </div>
                 </th>
             </template>
         </tr>
     </thead>
     <tbody class="igx-grid__tbody" role="rowgroup" (keydown)="navigate($event)">
-        <div *ngIf="!dataContainer.transformedData || !dataContainer.transformedData.length || !columnsToRender || !columnsToRender.length">
-            <h1>No data to display</h1>
+        <div class="igx-grid__tbody-empty" *ngIf="!dataContainer.transformedData || !dataContainer.transformedData.length || !columnsToRender || !columnsToRender.length">
+            <h4>No data to display</h4>
         </div>
         <template ngFor let-rowData [ngForOf]="dataContainer.transformedData" let-rowIndex="index">
             <tr class="igx-grid__tr" [attr.data-row]="rowIndex" tabindex="0" role="row" (focus)="onRowFocus($event, rowIndex)" (blur)="onRowBlur($event)">
@@ -48,22 +39,13 @@
                     <td tabindex="0" role="gridcell" [attr.aria-readonly]="!col.editable" [attr.aria-describedby]="id + '_' + col.field"
                         [attr.data-row]="rowIndex" [attr.data-col]="colIndex"
                         class="igx-grid__td"
-                        *ngIf="col.bodyTemplate" [style.width]="col.width || ''"
+                        [style.width]="col.width || ''"
                         (focus)="onCellFocus($event, rowIndex, col.field)"
                         (blur)="onCellBlur($event)"
                         (dblclick)="editCell(rowIndex, rowData[col.field], rowData)"
                         (keyup.enter)="editCell(rowIndex, rowData[col.field], rowData)">
-                        <igx-cell-body [column]="col" [row]="rowData" [item]="rowData[col.field]" [rowIndex]="rowIndex"></igx-cell-body>
-                    </td>
-                    <td tabindex="0" role="gridcell" [attr.aria-readonly]="!col.editable" [attr.aria-describedby]="id + '_' + col.field"
-                        [attr.data-row]="rowIndex" [attr.data-col]="colIndex"
-                        class="igx-grid__td"
-                        *ngIf="!col.bodyTemplate" [style.width]="col.width || ''"
-                        (focus)="onCellFocus($event, rowIndex, col.field)"
-                        (blur)="onCellBlur($event)"
-                        (dblclick)="editCell(rowIndex, rowData[col.field], rowData)"
-                        (keyup.enter)="editCell(rowIndex, rowData[col.field], rowData)">
-                        {{ rowData[col.field] }}
+                        <igx-cell-body *ngIf="col.bodyTemplate" [column]="col" [row]="rowData" [item]="rowData[col.field]" [rowIndex]="rowIndex"></igx-cell-body>
+                        {{ formatBody(rowData, col) }}
                     </td>
                 </template>
             </tr>
@@ -72,9 +54,9 @@
     <tfoot class="igx-grid__tfoot">
         <igx-paginator *ngIf="paging"
             (onPageChange)="_paginate($event)"
-            [currentPage]="dataContainer.state.paging.index"
+            [currentPage]="dataContainer.state.paging?.index"
             [perPage]="perPage"
-            [totalPages]="dataContainer.state.paging.metadata.countPages">
+            [totalPages]="dataContainer.state.paging?.metadata?.countPages">
         </igx-paginator>
     </tfoot>
     <igx-dialog *ngIf="hasEditableColumns"

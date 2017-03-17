@@ -92,8 +92,8 @@ describe("IgxGrid", () => {
         expect(grid.columns[0].bodyTemplate).toBeDefined("Column cell template not initialized");
         expect(grid.columns[0].headerTemplate).toBeDefined("Column header template not initialized");
         expect(fixture.nativeElement.querySelector("tr > td > span.mybodytemplate")).toBeDefined("Cell template not rendered");
-        expect(fixture.nativeElement.querySelector("tr > th > span.myheadertemplate")).toBeDefined("Header template not rendered");
-        expect(fixture.nativeElement.querySelector("tr > th > span.myheadertemplate").textContent)
+        expect(fixture.nativeElement.querySelector("tr > th > div.igx-grid__th-content")).toBeDefined("Header template not rendered");
+        expect(fixture.nativeElement.querySelector("tr > th > div.igx-grid__th-content").textContent)
             .toMatch("ID", "Header template is wrong");
         expect(fixture.nativeElement.querySelector("tr > td > span.mybodytemplate").textContent).toMatch("1", "Cell template is wrong");
     });
@@ -266,14 +266,14 @@ describe("IgxGrid", () => {
 
         fixture.detectChanges();
 
-        expect(row.classList.contains("selected-row")).toBe(true, "Focused row styling is not applied");
+        expect(row.classList.contains("igx-grid__tr--selected")).toBe(true, "Focused row styling is not applied");
         expect(row.getAttribute("aria-selected")).toMatch("true", "Focused row ARIA attribute is not applied");
         expect(rowSpy.calls.count()).toBe(1);
 
         row.dispatchEvent(new Event("blur"));
         fixture.detectChanges();
 
-        expect(row.classList.contains("selected-row")).toBe(false, "Focused row styling is not removed");
+        expect(row.classList.contains("igx-grid__tr--selected")).toBe(false, "Focused row styling is not removed");
         expect(row.getAttribute("aria-selected")).toBe(null, "Focused row ARIA attribute is not removed");
 
         // through API call
@@ -298,17 +298,17 @@ describe("IgxGrid", () => {
 
         fixture.detectChanges();
 
-        expect(cell.classList.contains("selected-cell")).toBe(true, "Focused cell styling is not applied");
+        expect(cell.classList.contains("igx-grid__td--selected")).toBe(true, "Focused cell styling is not applied");
         expect(cell.getAttribute("aria-selected")).toMatch("true", "Focused cell ARIA attribute is not applied");
-        expect(cell.parentElement.classList.contains("selected-row")).toBe(true, "Focused cell does not applies parent row styling");
+        expect(cell.parentElement.classList.contains("igx-grid__tr--selected")).toBe(true, "Focused cell does not applies parent row styling");
         expect(cellSpy.calls.count()).toBe(1);
 
         cell.dispatchEvent(new Event("blur"));
         fixture.detectChanges();
 
-        expect(cell.classList.contains("selected-cell")).toBe(false, "Focused cell styling is not removed");
+        expect(cell.classList.contains("igx-grid__td--selected")).toBe(false, "Focused cell styling is not removed");
         expect(cell.getAttribute("aria-selected")).toBe(null, "Focused cell ARIA attribute is not removed");
-        expect(cell.parentElement.classList.contains("selected-row")).toBe(false, "Focused cell does not remove parent row styling");
+        expect(cell.parentElement.classList.contains("igx-grid__tr--selected")).toBe(false, "Focused cell does not remove parent row styling");
 
         // through API call
         grid.focusCell(0, 0);
@@ -384,8 +384,8 @@ describe("IgxGrid", () => {
         firstColumn.dispatchEvent(new Event("click"));
         fixture.detectChanges();
 
-        expect(firstColumn.classList.contains("asc")).toBe(true, "Column sorting should be 'asc'");
-        expect(gridElement.querySelector("tbody > tr > td").textContent).toMatch("1");
+        expect(firstColumn.classList.contains("off")).toBe(true, "Column sorting should be removed");
+        expect(gridElement.querySelector("tbody > tr > td").textContent).toMatch("3");
     });
 
     it("should support filetring", () => {
@@ -399,7 +399,7 @@ describe("IgxGrid", () => {
 
         fixture.detectChanges();
 
-        let filterInputButton: HTMLElement = fixture.nativeElement.querySelector(".igx-filtering");
+        let filterInputButton: HTMLElement = fixture.nativeElement.querySelector(".igx-filtering__toggle > .toggle-icon");
         let tbody: HTMLElement = fixture.nativeElement.querySelector("table > tbody");
 
         expect(filterInputButton).toBeTruthy();
@@ -407,8 +407,8 @@ describe("IgxGrid", () => {
         filterInputButton.dispatchEvent(new Event("click"));
         fixture.detectChanges();
 
-        expect(filterInputButton.classList.contains("b-active")).toBe(true);
-        let filterInput: HTMLInputElement = fixture.nativeElement.querySelector(".igx-filter-drop > input");
+        expect(filterInputButton.classList.contains("igx-filtering__toggle--active")).toBe(true);
+        let filterInput: HTMLInputElement = fixture.nativeElement.querySelector(".igx-filtering__options > input");
         expect(filterInput).toBeTruthy();
 
         filterInput.value = "1";
@@ -747,7 +747,7 @@ export class IgxGridngForDefinitionTestComponent {
     template: `
     <igx-grid [data]="data">
         <igx-column field="ID">
-            <template igxHeader let-col>
+            <template igxHeader let-col="column">
                 <span class="myheadertemplate">{{ col.field }}</span>
             </template>
             <template igxCell let-item="item">

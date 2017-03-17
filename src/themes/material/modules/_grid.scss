@@ -16,13 +16,23 @@
 
     @include e(tbody) {
         @extend %grid-tbody;
+
+        @include e(empty, true) {
+            @extend %grid-tbody--empty;
+        }
     }
 
     @include e(tr) {
         @extend %grid-row;
+
+        @include m(selected) {
+            @extend %grid-row--selected;
+        }
     }
 
     @include e(th) {
+        $block: &;
+
         @extend %grid-cell-display;
         @extend %grid-cell-header;
 
@@ -34,6 +44,29 @@
             }
         }
 
+        &.asc,
+        &.desc {
+            color: #000;
+        }
+
+        &.desc {
+            #{$block}-content > .title:before {
+                position: relative;
+                font-family: 'Material Icons';
+                content: '\E5DB';
+                margin-right: 8px;
+            }
+        }
+
+        &.asc {
+            #{$block}-content > .title:before {
+                position: relative;
+                font-family: 'Material Icons';
+                content: '\E5D8';
+                margin-right: 8px;
+            }
+        }
+
         @include m(number) {
             @extend %grid-cell-number;
         }
@@ -42,6 +75,10 @@
 
     @include e(td) {
         @extend %grid-cell-display;
+
+        @include m(selected) {
+            @extend %grid-cell--selected;
+        }
 
         @include m(number) {
             @extend %grid-cell-number;
