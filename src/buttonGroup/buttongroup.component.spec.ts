@@ -45,7 +45,7 @@ class Button {
     }
 }
 
-fdescribe('IgxButtonGroup', function() {
+describe('IgxButtonGroup', function() {
    beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ InitButtonGroup, InitButtonGroupWithValues],
@@ -54,7 +54,7 @@ fdescribe('IgxButtonGroup', function() {
         .compileComponents();
     }));
 
-    fit('should initialize buttonGroup with default values', () => {
+    it('should initialize buttonGroup with default values', () => {
         let fixture = TestBed.createComponent(InitButtonGroup);
         fixture.detectChanges();
 
@@ -71,7 +71,7 @@ fdescribe('IgxButtonGroup', function() {
         expect(buttongroup.selectedButtons.length).toEqual(0);
     });
 
-    fit('should initialize buttonGroup with passed values', () => {
+    it('should initialize buttonGroup with passed values', () => {
         let fixture = TestBed.createComponent(InitButtonGroupWithValues);
         fixture.detectChanges();
 
@@ -88,7 +88,7 @@ fdescribe('IgxButtonGroup', function() {
         expect(buttongroup.selectedButtons.length).toEqual(0)
     });
 
-    fit('Button Group single selection', () => {
+    it('Button Group single selection', () => {
         let fixture = TestBed.createComponent(InitButtonGroup);
         fixture.detectChanges();
 
@@ -100,7 +100,7 @@ fdescribe('IgxButtonGroup', function() {
         expect(buttongroup.selectedButtons.length).toBe(1);
     });
 
-    fit('Button Group multiple selection', () => {
+    it('Button Group multiple selection', () => {
         let fixture = TestBed.createComponent(InitButtonGroupWithValues);
         fixture.detectChanges();
 
