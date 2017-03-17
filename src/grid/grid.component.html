@@ -7,9 +7,6 @@
                     role="columnheader" tabindex="0"
                     class="igx-grid__th"
                     [attr.aria-label]="col.header || col.field"
-                    (onDrop)="moveColumn($event)"
-                    [igxDraggable]="col.index"
-                    [igxDroppable]="col.index"
                     [igxColumnSorting]="col"
                     [sortDirection]="getSortedExpression(col)"
                     [style.width]="col.width || ''">
@@ -24,6 +21,9 @@
                             [value]="filteringExpressions[col.field]?.searchVal || ''"
                             [column]="col">
                         </igx-col-filter>
+                        <div *ngIf="col.movable" (onDrop)="moveColumn($event)" [igxDraggable]="col.index" [igxDroppable]="col.index">
+                            <igx-icon name="swap_horiz"></igx-icon>
+                        </div>
                     </div>
                 </th>
             </template>
