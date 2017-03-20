@@ -1,13 +1,59 @@
+.wrapper {
+    margin: 24px;
+}
+
+.grid-sample {
+    margin-bottom: 144px;
+}
+
+.grid-sample:last-child {
+    margin-bottom: 0;
+}
+
 .cards-container {
     display: flex;
     justify-content: space-between;
     margin: 24px 0;
 }
 
-igx-card ~ igx-card {
-   margin-left: 16px;
+.toggles-container {
+    margin: 24px 0;
+    display: flex; 
+    flex-flow: row wrap; 
+    justify-content: space-between; 
 }
 
-igx-switch ~ igx-switch {
-    margin: 8px;
+.toggle-group {
+    padding: 16px;
+    width: 25%;
+    border-radius: 8px;
+}
+
+.switch-group {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    padding: 16px 0;
+}
+
+.toggle-group:nth-child(odd) {
+    background: #F3F3F3;
+}
+
+.paging-config {
+    padding: 16px;
+    margin-bottom: 48px;
+}
+
+.igx-form-group ~ .igx-form-group {
+    margin-top: 16px;
+    /*background: red;*/
+}
+
+.paging-config .switch-group {
+    max-width: 200px;
+}
+
+igx-card ~ igx-card {
+   margin-left: 16px;
 }
