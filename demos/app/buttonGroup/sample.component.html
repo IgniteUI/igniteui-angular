@@ -4,6 +4,7 @@
         <igx-buttongroup [multiSelection]="!multi" [values]="alignOptions" (onUnselect)="onSelect($event)" (onSelect)="onSelect($event)">
         </igx-buttongroup>
     </article>
+    <h5>First button is selected: {{alignOptions[0].selected}}</h5>
 
     <article class="sample">
         <h4>Multiple Selection | Horizontal</h4>
@@ -26,6 +27,13 @@
     <article class="sample">
         <h4>Mutliple Selection | Vertical</h4>
         <igx-buttongroup [multiSelection]="true" [values]="borders" [alignment]="alignment">
+        </igx-buttongroup>
+    </article>
+
+    
+    <article class="sample">
+        <h4>Custom class to style the content</h4>
+        <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="false" itemContentCssClass="customContentStyle">
         </igx-buttongroup>
     </article>
 

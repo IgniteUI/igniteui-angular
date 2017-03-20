@@ -15,26 +15,24 @@ export enum ButtonGroupAlignment { horizontal, vertical };
 
 export class IgxButtonGroup implements AfterViewInit {
     @ViewChildren(IgxButton) buttons: QueryList<IgxButtonGroup>;
+    @Input() set itemContentCssClass(value: string){
+        this._itemContentCssClass = value || this._itemContentCssClass;
+    }
+    get itemContentCssClass(): string {
+        return this._itemContentCssClass;
+    }
     @Input() multiSelection: boolean = false;
     @Input() values: any;
-    @Input() set disabled(val: Boolean) {
-        this._isDisabled = val;
-    }
-    get disabled(): Boolean {
-        return this._isDisabled;
-    }
-
+    @Input() disabled: boolean = false;
     @Input() set alignment(value: ButtonGroupAlignment) {
         this._isVertical = value == ButtonGroupAlignment.vertical;
     }
-
     get alignment(): ButtonGroupAlignment {
         return this._isVertical ? ButtonGroupAlignment.vertical : ButtonGroupAlignment.horizontal;
     }
-    private _cssClass: string = 'igx-button-group';
-    private _isVertical: Boolean;
-    private _isDisabled: Boolean;
 
+    private _isVertical: Boolean;
+    private _itemContentCssClass: string;
     public selectedIndexes: Array<number> = [];
 
     @Output() onSelect = new EventEmitter();
@@ -59,11 +57,16 @@ export class IgxButtonGroup implements AfterViewInit {
     }
 
     selectButton(index: number) {
+        if(this.buttons.toArray()[index]._el.nativeElement.getAttribute("data-togglable") === 'false'
+        || this.buttons.toArray()[index]._el.nativeElement.classList.contains("igx-button--disabled")) {
+            return;
+        }
         var buttonElement = this.buttons.toArray()[index]._el.nativeElement;
         this.selectedIndexes.push(index);
         buttonElement.setAttribute("data-selected", true);
         this.onSelect.emit({ button: this.buttons.toArray()[index], index: index });
-
+        this.values[index].selected = true;
+        
         // deselect other buttons if multiSelection is not enabled
         if (!this.multiSelection && this.selectedIndexes.length > 0) {
             this.buttons.forEach((b, i) => {
@@ -75,22 +78,26 @@ export class IgxButtonGroup implements AfterViewInit {
     }
 
     deselectButton(index: number) {
+        if(this.buttons.toArray()[index]._el.nativeElement.getAttribute("data-togglable") === 'false'
+        || this.buttons.toArray()[index]._el.nativeElement.classList.contains("igx-button--disabled")) {
+            return;
+        }
         var buttonElement = this.buttons.toArray()[index]._el.nativeElement;
         this.selectedIndexes.splice(this.selectedIndexes.indexOf(index), 1);
         buttonElement.setAttribute("data-selected", false);
         this.onUnselect.emit({ button: this.buttons.toArray()[index], index: index });
+        this.values[index].selected = false;
     }
 
     ngAfterViewInit() {
         // initial selection
-        let self = this;
-        setTimeout(function () {
-            self.buttons.forEach((button, index) => {
+        setTimeout(() => {
+            this.buttons.forEach((button, index) => {
                 if (!button.disabled && button._el.nativeElement.getAttribute("data-selected") === 'true') {
-                    self.selectButton(index);
+                    this.selectButton(index);
                 }
             });
-        }, 0);
+        }, 0)
     }
 }
 
