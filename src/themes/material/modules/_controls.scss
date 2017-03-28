@@ -51,38 +51,31 @@
 
         ~ #{$block}__label {
             @extend %igx-cbx-lbl-display;
+
+            @include b(tick) {
+                @extend %igx-cbx-lbl-tick;
+            }
         }
 
-        &:not(:checked) ~ #{$block}__label:before {
-            @extend %igx-cbx-lbl-notchecked-before;
+        &:checked ~ #{$block}__label .tick {
+            @extend %igx-cbx-lbl-checked-tick;
         }
 
         &:not(:checked) ~ #{$block}__label:after {
             @extend %igx-cbx-lbl-notchecked-after;
         }
 
-        &:checked ~ #{$block}__label:before {
-            @extend %igx-cbx-lbl-checked-before;
-        }
-
         &:checked ~ #{$block}__label:after {
             @extend %igx-cbx-lbl-checked-after;
         }
+
 
         &:disabled ~ #{$block}__label {
             @extend %igx-cbx-lbl-disabled;
         }
 
-        &:disabled:checked ~ #{$block}__label:before {
-            @extend %igx-cbx-lbl-checked--disabled-before;
-        }
-
         &:disabled:checked ~ #{$block}__label:after {
             @extend %igx-cbx-lbl-checked--disabled-after;
-        }
-
-        &:disabled:not(:checked) ~ #{$block}__label:before {
-            @extend %igx-cbx-lbl-notchecked--disabled-before;
         }
 
         &:disabled:not(:checked) ~ #{$block}__label:after {
@@ -108,6 +101,6 @@
     }
 
     @include e(text) {
-        padding-right: 16px;
+        padding-right: em(16px);
     }
 }
