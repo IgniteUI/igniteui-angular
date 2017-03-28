@@ -1,3 +1,5 @@
+@include scale-in-center;
+
 %igx-cbx-lbl-display {
     display: inline-block;
     position: relative;
@@ -5,15 +7,12 @@
     min-height: $checkbox-height;
     line-height: $checkbox-height;
     font-size: $input-font-size;
+    font-weight: $input-font-weight;
     color: $input-color;
     padding-left: $checkbox-label-padding;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
-    transform: translateZ(0);
-    &:before {
-        transition: $input-transition;
-    }
-    &:before,
+    overflow: hidden;
     &:after {
         position: absolute;
         content: '';
@@ -23,50 +22,45 @@
     }
 }
 
-%igx-cbx-lbl-notchecked-before {
-    width: $checkbox-tick-width;
-    height: $checkbox-tick-height;
-    border: none;
-    top: -2px;
-    left: 2px;
-    transform-origin: 20% 100%;
-    transform: rotateZ(0) scale(.1);
-}
-
-%igx-cbx-lbl-notchecked-after {
+%igx-cbx-lbl-box {
     width: $checkbox-width;
     height: $checkbox-height;
-    background: none;
-    border: 2px solid $radio-empty-color;
-    z-index: 0;
 }
 
-%igx-cbx-lbl-checked-before {
+%igx-cbx-lbl-tick {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: $checkbox-tick-width;
     height: $checkbox-tick-height;
-    top: -2px;
-    left: 2px;
-    border-bottom: 2px solid $checkbox-tick-color;
-    border-right: 2px solid $checkbox-tick-color;
-    transform-origin: 20% 100%;
-    transform: rotateZ(37deg) scale(1);
+    padding: 3px 2px 2px 2px;
+    stroke: none;
+    stroke-linecap: round;
+    stroke-width: $checkbox-tick-weight;
+    fill: none;
     z-index: 1;
 }
 
+
+%igx-cbx-lbl-checked-tick {
+    stroke: $checkbox-tick-color;
+    @include animation('scale-in-center' .3s $ease-out-back both);
+}
+
+%igx-cbx-lbl-notchecked-after {
+    @extend %igx-cbx-lbl-box;
+    border: $checkbox-border-style $radio-empty-color;
+}
+
 %igx-cbx-lbl-checked-after {
-    width: $checkbox-width;
-    height: $checkbox-height;
+    @extend %igx-cbx-lbl-box;
     background-color: $radio-fill-color;
-    border: 2px solid $radio-fill-color;
+    border: $checkbox-border-style $radio-fill-color;
 }
 
 %igx-cbx-lbl-disabled {
-    color: #d1d1d1;
+    color: $input-disabled-color;
     pointer-events: none;
-}
-
-%igx-cbx-lbl-checked--disabled-before {
-    background-color: transparent;
 }
 
 %igx-cbx-lbl-checked--disabled-after {
@@ -74,19 +68,11 @@
     border-color: $input-disabled-solid-color;
 }
 
-%igx-cbx-lbl-notchecked--disabled-before {
-    background-color: transparent;
-    border: 2px solid transparent;
-}
-
 %igx-cbx-lbl-notchecked--disabled-after {
     border-color: $input-disabled-solid-color;
-    background-color: transparent;
 }
 
 %igx-cbx-lbl--indeterminate-after {
-    width: $checkbox-width;
-    height: $checkbox-height;
     background-color: $radio-fill-color;
-    border: 2px solid $radio-fill-color;
+    border: $checkbox-border-style $radio-fill-color;
 }
