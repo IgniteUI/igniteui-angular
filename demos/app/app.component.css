@@ -1,3 +1,13 @@
+::-webkit-scrollbar {
+    width: 1px;
+    background: #E4E4E4;
+}
+ 
+::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,.12);
+    border-radius: 0;
+}
+
 .main {
     display: flex;
     /*height: 100%;*/
@@ -30,6 +40,10 @@
     font-size: 14px;
     align-items: center;
     font-weight: 600;
+}
+
+.nav-item.active {
+    background-color: #F6E7EC;
 }
 
 .nav-item:hover {
