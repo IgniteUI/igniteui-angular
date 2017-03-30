@@ -34,7 +34,7 @@ class Card {
     moduleId: module.id,
     selector: "card-sample",
     templateUrl: "sample.component.html",
-    styleUrls: ["sample.component.css"]
+    styleUrls: ["sample.component.css", "../app.samples.css"]
 })
 export class IgxCardSampleComponent implements OnInit {
 
