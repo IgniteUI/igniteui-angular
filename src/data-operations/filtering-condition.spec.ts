@@ -88,8 +88,8 @@ describe('Unit testing FilteringCondition', () => {
             now = new Date(),
             cnow = new Date(),
             yesterday = ( d => new Date(d.setDate(d.getDate() - 1)) )(new Date),
-            lastMonth = ( d => new Date(d.setMonth(d.getMonth() - 1)) )(new Date),
-            nextMonth = ( d => new Date(d.setMonth(d.getMonth() + 1)) )(new Date),
+            lastMonth = ( d => { d.setDate(1); return new Date(d.setMonth(d.getMonth() - 1));} )(new Date),
+            nextMonth = ( d => { d.setDate(1); return new Date(d.setMonth(d.getMonth() + 1));} )(new Date),
             lastYear = ( d => new Date(d.setFullYear(d.getFullYear() - 1)) )(new Date),
             nextYear = ( d => new Date(d.setFullYear(d.getFullYear() + 1)) )(new Date);
         expect(fd.after(now, yesterday) && !fd.after(now, nextYear))
