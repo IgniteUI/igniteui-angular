@@ -5,7 +5,8 @@ import {IgxComponentsModule, IgxDirectivesModule} from "../../../src/main";
 @Component({
     selector: "input-sample",
     moduleId: module.id,
-    templateUrl: './sample.component.html'
+    templateUrl: './sample.component.html',
+    styleUrls: ['sample.component.css']
 })
 export class InputSampleComponent {
     placeholder = "Please enter a value";

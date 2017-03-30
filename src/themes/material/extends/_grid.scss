@@ -1,0 +1,112 @@
+%grid-display {
+	display: flex;
+	flex-flow: column nowrap;
+	width: 100%;
+	background: $grid-bg;
+	border-radius: $grid-br;
+	box-shadow: $grid-shadow;
+	overflow: hidden;
+}
+
+%grid-caption {
+	display: flex;
+	align-items: center;
+	font-size: $grid-caption-fs;
+	line-height: $grid-caption-lh;
+	padding: $grid-caption-padding;
+}
+
+%grid-thead,
+%grid-tfoot {
+	display: block;
+	flex: 0 0 auto;
+}
+
+%grid-tbody {
+	display: block;
+    flex: 1 1 auto;
+    position: relative;
+    overflow-y: auto;
+}
+
+%grid-tbody--empty {
+	display: flex;
+	justify-content: center;
+	text-align: center;
+}
+
+%grid-row {
+	display: flex;
+	flex: 1;
+	background: $grid-row-bg;
+	border-bottom: $grid-row-bb;
+	transition: $grid-row-transition;
+
+	&:last-of-type {
+		border-bottom: none;
+	}
+	
+	&:hover {
+		background: $grid-row-hover;
+	}
+	
+	@at-root thead & {
+		&:first-of-type:hover {
+			background: none;
+		}
+	}
+}
+
+%grid-row--selected td {
+	color: #fff;
+	background-color: $off-black;
+}
+
+%grid-cell-display {
+    display: flex;
+    flex-flow: column wrap;
+    flex: 1;
+	justify-content: center;
+	outline: none;
+    padding: $grid-cell-padding;
+
+    font-size: $grid-cell-fs;
+    line-height: $grid-cell-lh;
+    color: $grid-cell-color;
+    text-align: left;
+    word-wrap: break-word;
+	overflow: hidden;
+}
+
+%grid-cell-number {
+    text-align: $grid-cell-align-num;
+}
+
+%grid-cell--selected {
+	color: #fff;
+	background-color: $secondary-color !important;
+}
+
+%grid-cell-header {
+    font-size: $grid-head-fs;
+    color: $grid-head-color;
+	position: relative;
+	overflow: visible;
+}
+
+%grid-cell-header-content {
+    display: flex;
+	align-items: center;
+	overflow: hidden;
+	& .title {
+		display: flex;
+		align-items: center;
+		flex-grow: 1;
+	}
+}
+
+%grid-cell-header-cicon {
+    font-size: $grid-head-icon-size;
+    line-height: $grid-head-icon-lh;
+    padding: $grid-head-icon-padding;
+}

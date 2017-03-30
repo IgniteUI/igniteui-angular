@@ -4,10 +4,10 @@ import { IgxDirectivesModule } from "../../../src/modules";
 import { IgxButton } from "../../../src/button/button.directive";
 
 interface IButton {
-    type?: string,
     ripple?: string,
     label?: string,
-    disabled?: boolean
+    disabled?: boolean,
+    togglable?: boolean,
     selected?: boolean,
     color?: string,
     bgcolor?: string,
@@ -15,10 +15,10 @@ interface IButton {
 }
 
 class Button {
-    private type: string;
     private ripple: string;
     private label: string;
     private disabled: boolean;
+    private togglable: boolean;
     private selected: boolean;
     private color: string;
     private bgcolor: string;
@@ -28,6 +28,7 @@ class Button {
         this.ripple = obj.ripple || 'gray';
         this.label = obj.label;
         this.selected = obj.selected || false;
+        this.togglable = obj.togglable;
         this.disabled = obj.disabled || false;
         this.color = obj.color;
         this.bgcolor = obj.bgcolor || 'white';
@@ -92,6 +93,7 @@ export class ButtonGroupSampleComponent implements OnInit {
             }),
             new Button({
                 selected: true,
+                togglable: false,
                 disabled: false,
                 icon: 'format_italic'
             }),
@@ -105,7 +107,8 @@ export class ButtonGroupSampleComponent implements OnInit {
         this.cities = [
             new Button({
                 label: 'Sofia',
-                selected: true,
+                selected: false,
+                togglable: false,
                 disabled: false
             }),
             new Button({

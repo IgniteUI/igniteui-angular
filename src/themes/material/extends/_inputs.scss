@@ -21,8 +21,7 @@
     user-select: none;
     pointer-events: none;
     transform: translate3d(0,0,0);
-    transition: transform .25s ease-out;
-    -webkit-font-smoothing: antialiased;
+    transition: transform .25s $ease-in-out-quad, color .25s $ease-in-out-quad;
 }
 
 %igx-form-label--float {
@@ -40,25 +39,31 @@
 }
 
 %igx-form-input {
-    outline: none;
+    width: 100%;
     border: none;
-    border-bottom: $input-border;
+    outline: none;
     color: $input-color;
     background: transparent;
     font-size: $input-font-size;
     line-height: $input-line-height;
-    width: 100%;
+    padding-bottom: 3px;
+    box-shadow: inset 0 -1px 0 0 $input-border-color;
+    transition: box-shadow .25s $ease-in-out-quad;
 }
 
 %igx-form-input--focused {
-    border-bottom: $input-border-focus;
+    box-shadow: inset 0 -2px 0 0 $input-border-color-focus;
 }
 
 %igx-form-input--disabled {
     user-select: none;
     cursor: not-allowed;
     -webkit-text-fill-color: $input-disabled-color;
-    border-bottom: 1px dotted rgba(117, 117, 117, .5);
+    box-shadow: none;
+    background-image: linear-gradient(to right, rgba(117, 117, 117, .5) 20%, rgba(255,255,255,0) 10%);
+    background-position: bottom;
+    background-size: 5px 1px;
+    background-repeat: repeat-x;
 }
 
 %igx-form-label--disabled {
@@ -66,7 +71,7 @@
 }
 
 %igx-form-input--success {
-    border-bottom: $input-border-success;
+    box-shadow: inset 0 -2px 0 0 $success-color;
 }
 
 %igx-form-label--success {
@@ -74,7 +79,7 @@
 }
 
 %igx-form-input--warn {
-    border-bottom: $input-border-warn;
+    box-shadow: inset 0 -2px 0 0 $warn-color;
 }
 
 %igx-form-label--warn {
@@ -82,7 +87,7 @@
 }
 
 %igx-form-input--error {
-    border-bottom: $input-border-error;
+    box-shadow: inset 0 -2px 0 0 $error-color;
 }
 
 %igx-form-label--error {
@@ -96,11 +101,10 @@
 %igx-search-input {
     background: $white;
     padding: 12px 12px 12px 64px;
-    border-bottom: none;
     border-radius: 2px;
     font-size: em(16px);
     box-shadow: $elevate-2;
-    transition: box-shadow .2s ease;
+    transition: box-shadow .2s $ease-in-out-quad;
     &:hover,
     &:focus {
         box-shadow: $elevate-5;

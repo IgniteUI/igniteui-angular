@@ -359,7 +359,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         }
 
         if (e.type == 'panend' || e.type == 'tap') {
-            this.timer = setInterval(
+            this.timer = setTimeout(
                 () => this.isActiveLabel = false,
                 this.thumbLabelVisibilityDuration
             );

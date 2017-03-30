@@ -11,12 +11,12 @@ import { IgxRippleModule } from "../directives/ripple.directive";
     animations: [
         trigger('flyInOut', [
             state('open', style({
-                transform: 'translate(-50%, -50%)'
+                transform: 'translateY(0%)'
             })),
             transition('void => open', animate('.2s ease-out')),
             transition('open => void', [
                 animate('.2s ease-in', style({
-                    transform: 'translate(-50%, -100%)'
+                    transform: 'translateY(-100%)'
                 }))
             ])
         ]),

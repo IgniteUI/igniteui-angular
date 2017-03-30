@@ -22,7 +22,7 @@
  *  14. Range (Slider)
  *  TODO: 15. Spinners | Loaders
  *  TODO: 16. Tabs
- *  TODO: 17. Grid
+ *  17. Grid
  *  18. Toasts
  *  19. Typography
  *  TODO: 20. Flow Text
@@ -55,6 +55,8 @@ $warn-color: orange;
 $overlay-color: rgba(72, 72, 72, 0.5);
 // off-black
 $off-black: #484848;
+$disabled-color: #BDBDBD;
+
 // Color Palette
 $colors: ( primary: ( 100: gen-color($primary-color, 50), 200: gen-color($primary-color, 100), 300: gen-color($primary-color, 300), 400: gen-color($primary-color, 400), 500: $primary-color, 600: gen-color($primary-color, 600), 700: gen-color($primary-color, 700), 800: gen-color($primary-color, 800), 900: gen-color($primary-color, 900), A100: gen-color($primary-color, 'A100'), A200: gen-color($primary-color, 'A200'), A400: gen-color($primary-color, 'A400'), A700: gen-color($primary-color, 'A700'), ), secondary: ( 100: gen-color($secondary-color, 50), 200: gen-color($secondary-color, 100), 300: gen-color($secondary-color, 300), 400: gen-color($secondary-color, 400), 500: $secondary-color, 600: gen-color($secondary-color, 600), 700: gen-color($secondary-color, 700), 800: gen-color($secondary-color, 800), 900: gen-color($secondary-color, 900), A100: gen-color($secondary-color, 'A100'), A200: gen-color($secondary-color, 'A200'), A400: gen-color($secondary-color, 'A400'), A700: gen-color($secondary-color, 'A700'), ), accent: ( 100: gen-color($accent-color, 50), 200: gen-color($accent-color, 100), 300: gen-color($accent-color, 300), 400: gen-color($accent-color, 400), 500: $accent-color, 600: gen-color($accent-color, 600), 700: gen-color($accent-color, 700), 800: gen-color($accent-color, 800), 900: gen-color($accent-color, 900), A100: gen-color($accent-color, 'A100'), A200: gen-color($accent-color, 'A200'), A400: gen-color($accent-color, 'A400'), A700: gen-color($accent-color, 'A700'), ));
 
@@ -158,8 +160,8 @@ $badge-shadow: $elevate-1;
 $button-border: none !default;
 $button-radius: 2px !default;
 $button-focus-background: darken($secondary-color, 5%) !default;
-$button-font-size: em(16px) !default;
-$button-color: #484848 !default;
+$button-font-size: em(16px, 16px) !default;
+$button-color: $off-black !default;
 $button-font-weight: normal !default;
 $button-width: em(88px) !default;
 $button-height: em(40px) !default;
@@ -168,7 +170,7 @@ $button-transition: all 0.25s ease-out !default;
 $button-round-radius: 50% !default;
 // Disabled Styles
 $button-disabled-background: #F0F0F0 !default;
-$button-disabled-color: #AEAEAE !default;
+$button-disabled-color: $disabled-color !default;
 $button-disabled-shadow: none;
 // Raised Buttons
 $button-raised-background: $secondary-color !default;
@@ -185,7 +187,7 @@ $button-gradient-shadow: 0 4px 10px -2px darken(transparentize($button-gradient-
 $button-gradient-focus-shadow: 0 6px 12px -1px darken(transparentize($button-gradient-color-2, .25), 25%) !default;
 // Flat Buttons
 $button-flat-color: $secondary-color !default;
-$button-flat-color-disabled: #AEAEAE !default;
+$button-flat-color-disabled: $disabled-color !default;
 $button-flat-hover-background: #F0F0F0 !default;
 $button-flat-focus-background: #D1D1D1 !default;
 // Floating Buttons
@@ -242,7 +244,8 @@ $titillium-font-path: 'fonts/titillium/' !default;
 // Text Inputs + Textarea
 $input-min-height: em(70px) !default;
 $input-font-size: em(16px) !default;
-$input-color: #484848 !default;
+$input-font-weight: 400 !default;
+$input-color: rgba(0,0,0,.87) !default;
 $input-caret-color: $secondary-color;
 $input-line-height: em(24px) !default;
 $input-border-color: rgba(117, 117, 117, .5) !default;
@@ -257,20 +260,24 @@ $input-transition: all .2s ease-in !default;
 $input-placeholder-color: $input-border-color;
 $input-error-color : $error-color !default;
 $input-success-color: $success-color !default;
-$input-disabled-color: lighten($input-color, 25%) !default;
+$input-disabled-color: $disabled-color !default;
 $input-disabled-solid-color: $input-disabled-color !default;
-$label-color: #757575 !default;
+$label-color: rgba(0,0,0,.87) !default;
 $label-focus-color: $secondary-color !default;
 $label-active-color: lighten($label-color, 20%) !default;
 $label-font-size: em(16px) !default;
 $label-focus-font-size: em(12px) !default;
+
 // Radio Buttons
 $radio-fill-color: $secondary-color !default;
 $radio-empty-color: #757575 !default;
-$radio-border: 2px solid $radio-fill-color !default;
+
+$radio-border-style: 2px solid;
+$radio-border: $radio-border-style $radio-fill-color !default;
 $radio-width: 20px !default;
 $radio-height: $radio-width !default;
 $radio-radius: 50% 50% !default;
+
 // Switches
 $switch-background: #757575 !default;
 $switch-active-background: rgba($radio-fill-color, .5);
@@ -283,13 +290,17 @@ $switch-label-height: $switch-label-width !default;
 $switch-shadow: $elevate-1;
 $switch-disabled-shadow: $elevate-1;
 $switch-margin: 0 16px !default;
+
 // Checkboxes
 $checkbox-width: 20px !default;
 $checkbox-height: $checkbox-width !default;
-$checkbox-label-padding: 35px !default;
+$checkbox-label-padding: em(36px, 16px) !default;
 $checkbox-radius: 2px !default;
-$checkbox-tick-width: 8px !default;
-$checkbox-tick-height: 14px !default;
+$checkbox-border-style: 2px solid !default;
+
+$checkbox-tick-width: 20px !default;
+$checkbox-tick-height: 20px !default;
+$checkbox-tick-weight: 3px !default;
 $checkbox-tick-color: $white !default;
 
 /* 11. Global
@@ -308,7 +319,7 @@ $small-and-down: "only screen and (max-width : #{$small-screen})" !default;
 $medium-and-down: "only screen and (max-width : #{$medium-screen})" !default;
 $medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})" !default;
 
-/* 11. Range (Slider)
+/* 14. Range (Slider)
    ========================================================================== */
 
 // General
@@ -344,6 +355,39 @@ $range-background--start: $white;
    ========================================================================== */
 
 $tab-bar-background: $white;
+
+/* 17. Grid
+   ========================================================================== */
+
+// General
+$grid-bg: #fff;
+$grid-br: em(2px);
+$grid-shadow: $elevate-2;
+
+// Caption
+$grid-caption-fs: em(20px);
+$grid-caption-lh: em(32px);
+$grid-caption-padding: em(16px) em(24px);
+
+// Row
+$grid-row-bg: inherit;
+$grid-row-bb: 1px solid lightgray;
+$grid-row-hover: #eee;
+$grid-row-transition: background .2s ease;
+
+// Cell
+$grid-cell-padding: em(18px) em(24px);
+$grid-cell-align-num: right;
+$grid-cell-fs: em(13px);
+$grid-cell-lh: em(16px);
+$grid-cell-color: $off-black;
+
+// Heading
+$grid-head-fs: em(12px);
+$grid-head-color: rgba(0, 0, 0, .54);
+$grid-head-icon-size: em(16px);
+$grid-head-icon-lh: em(16px);
+$grid-head-icon-padding: em(8px);
 
 /* 18. Toasts
    ========================================================================== */

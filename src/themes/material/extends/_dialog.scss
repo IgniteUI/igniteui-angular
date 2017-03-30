@@ -1,5 +1,8 @@
 %igx-dialog-display {
     position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     top: 0;
     right: 0;
     left: 0;
@@ -14,12 +17,9 @@
 }
 
 %igx-dialog-window {
-    position: absolute;
     max-width: $dialog-max-width;
     min-width: $dialog-min-width;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, 0);
+    transform: translateY(100%);
     padding: $dialog-padding;
     border-radius: 2px;
     background: $dialog-background;

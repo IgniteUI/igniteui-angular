@@ -1,37 +1,53 @@
-<h3>Text Inputs</h3>
+<div class="wrapper">
+    <h3>Text Inputs</h3>
 
-<div class="igx-form-group">
-    <input type="text" igxInput [(ngModel)]="user.name"/>
-    <label igxLabel>Username</label>
+    <div class="input-sample">
+        <div class="igx-form-group">
+            <input type="text" igxInput [(ngModel)]="user.name" required/>
+            <label igxLabel>Username</label>
+        </div>
+        <p><code>Selected value = {{ user.name || ''}}</code></p>
+    </div>
+
+    <div class="input-sample">
+        <div class="igx-form-group">
+            <input type="password" igxInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
+            <label igxLabel>Password</label>
+        </div>
+        <p><code>Selected value = {{ user.password || ''}}</code></p>
+    </div>
+
+    <div class="input-sample">
+        <div class="igx-form-group">
+            <textarea placeholder="{{placeholder}}" igxInput [(ngModel)]="user.comment"></textarea>
+            <label igxLabel>Textarea</label>
+        </div>
+        <p><code>Selected value = {{ user.comment || ''}}</code></p>
+    </div>
+
+    <h4>Data model</h4>
+    <pre>{{ user | json }}</pre>
+
+    <div class="input-sample">
+        <h3>Checkbox</h3>
+        <igx-checkbox [(ngModel)]="user.registered">Registered</igx-checkbox>
+        <p><code>Selected value = {{ user.registered }}</code></p>
+    </div>
+
+    <div class="input-sample">
+        <h3>Switch</h3>
+        <igx-switch [(ngModel)]="user.subscribed">Subscribed</igx-switch>
+        <p><code>Selected value = {{ user.subscribed }}</code></p>
+    </div>
+
+    <div class="input-sample">
+        <h3>Radio</h3>
+        <igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" name="group" [(ngModel)]="user.favouriteVarName">{{item}}</igx-radio>
+        <p><code>Selected value = {{ user.favouriteVarName || ''}}</code></p>
+    </div>
+
+    <div class="input-sample">
+        <h3>Labels</h3>
+        <label igxLabel>Label me!</label>
+    </div>
 </div>
-<p><code>Selected value = {{ user.name || ''}}</code></p>
-
-<div class="igx-form-group">
-    <input type="password" igxInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
-    <label igxLabel>Password</label>
-</div>
-<p><code>Selected value = {{ user.password || ''}}</code></p>
-
-<div class="igx-form-group">
-    <textarea placeholder="{{placeholder}}" igxInput [(ngModel)]="user.comment"></textarea>
-    <label igxLabel>Textarea</label>
-</div>
-<p><code>Selected value = {{ user.comment || ''}}</code></p>
-
-<h3>Checkbox</h3>
-<igx-checkbox [(ngModel)]="user.registered">Registered</igx-checkbox>
-<p><code>Selected value = {{ user.registered }}</code></p>
-
-<h3>Switch</h3>
-<igx-switch [(ngModel)]="user.subscribed">Subscribed</igx-switch>
-<p><code>Selected value = {{ user.subscribed }}</code></p>
-
-<h3>Radio</h3>
-<igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" name="group" [(ngModel)]="user.favouriteVarName">{{item}}</igx-radio>
-<p><code>Selected value = {{ user.favouriteVarName || ''}}</code></p>
-
-<h4>Data model</h4>
-<pre>{{ user | json }}</pre>
-
-<h3>Labels</h3>
-<label igxLabel>Label me!</label>
