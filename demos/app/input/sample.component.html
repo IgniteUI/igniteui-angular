@@ -1,53 +1,49 @@
-<div class="wrapper">
-    <h3>Text Inputs</h3>
-
-    <div class="input-sample">
-        <div class="igx-form-group">
-            <input type="text" igxInput [(ngModel)]="user.name" required/>
-            <label igxLabel>Username</label>
-        </div>
-        <p><code>Selected value = {{ user.name || ''}}</code></p>
+<div class="sample-wrapper">
+    <div class="sample-header">
+        <h1 class="title">Forms</h1>
+        <p class="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas pretium lorem id tristique sagittis. Proin in mauris ac
+            tortor placerat sollicitudin eu sit amet leo. Aliquam consectetur eu sem vitae egestas. Class aptent taciti sociosqu
+            ad litora torquent per conubia nostra, per inceptos himenaeos. Cras a erat sagittis, iaculis urna ac, mollis
+            elit. Vestibulum accumsan ex at mauris sagittis, sed tincidunt justo fringilla. Phasellus vel porttitor odio.
+            Aenean quis nisi non ex ultrices efficitur. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec
+            nec felis cursus erat mattis venenatis. Curabitur congue ullamcorper nisi nec blandit. Fusce molestie consectetur
+            urna sed feugiat.
+        </p>
     </div>
 
-    <div class="input-sample">
-        <div class="igx-form-group">
-            <input type="password" igxInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
-            <label igxLabel>Password</label>
-        </div>
-        <p><code>Selected value = {{ user.password || ''}}</code></p>
-    </div>
+    <section class="sample-content">
 
-    <div class="input-sample">
-        <div class="igx-form-group">
-            <textarea placeholder="{{placeholder}}" igxInput [(ngModel)]="user.comment"></textarea>
-            <label igxLabel>Textarea</label>
-        </div>
-        <p><code>Selected value = {{ user.comment || ''}}</code></p>
-    </div>
+        <article class="input-sample">
+            <h4 class="form-title">Personal Info</h4>
+            <div class="igx-form-group">
+                <input type="text" igxInput [(ngModel)]="user.firstName" required/>
+                <label igxLabel>First Name*</label>
+            </div>
+            <div class="igx-form-group">
+                <input type="text" igxInput [(ngModel)]="user.lastName" required/>
+                <label igxLabel>Last Name*</label>
+            </div>
+            <div class="igx-form-group">
+                <input type="password" igxInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
+                <label igxLabel>Password</label>
+            </div>
+            <div class="igx-form-group">
+                <textarea placeholder="{{placeholder}}" igxInput [(ngModel)]="user.comment"></textarea>
+                <label igxLabel>Additional Information</label>
+            </div>
 
-    <h4>Data model</h4>
-    <pre>{{ user | json }}</pre>
+            <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group" [(ngModel)]="user.gender">{{item}}</igx-radio>
+        </article>
 
-    <div class="input-sample">
-        <h3>Checkbox</h3>
-        <igx-checkbox [(ngModel)]="user.registered">Registered</igx-checkbox>
-        <p><code>Selected value = {{ user.registered }}</code></p>
-    </div>
+        <article class="input-sample">
+            <h4 class="form-title">Checkbox</h4>
+            <igx-checkbox [(ngModel)]="user.registered">Registered</igx-checkbox>
+        </article>
 
-    <div class="input-sample">
-        <h3>Switch</h3>
-        <igx-switch [(ngModel)]="user.subscribed">Subscribed</igx-switch>
-        <p><code>Selected value = {{ user.subscribed }}</code></p>
-    </div>
-
-    <div class="input-sample">
-        <h3>Radio</h3>
-        <igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" name="group" [(ngModel)]="user.favouriteVarName">{{item}}</igx-radio>
-        <p><code>Selected value = {{ user.favouriteVarName || ''}}</code></p>
-    </div>
-
-    <div class="input-sample">
-        <h3>Labels</h3>
-        <label igxLabel>Label me!</label>
-    </div>
+        <article class="input-sample">
+            <h4 class="form-title">Switch</h4>
+            <igx-switch [(ngModel)]="user.subscribed">Subscribed</igx-switch>
+        </article>
+    </section>
 </div>

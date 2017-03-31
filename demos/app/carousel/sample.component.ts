@@ -4,7 +4,8 @@ import { IgxCarouselModule } from "../../../src/carousel/carousel.component";
 @Component({
     selector: "carousel-sample",
     moduleId: module.id,
-    templateUrl: './sample.component.html'
+    templateUrl: './sample.component.html',
+    styleUrls: ['sample.component.css','../app.samples.css']
 })
 export class CarouselSampleComponent {
     slides: Array<any> = [];
@@ -18,10 +19,10 @@ export class CarouselSampleComponent {
 
     addNewSlide() {
         this.slides.push(
-            {image: "http://lorempixel.com/1170/400/nature/1/"},
-            {image: "http://lorempixel.com/1170/400/nature/2/"},
-            {image: "http://lorempixel.com/1170/400/nature/3/"},
-            {image: "http://lorempixel.com/1170/400/nature/5/"}
+            {image: "../demos/app/carousel/images/slide1@x2.jpg"},
+            {image: "../demos/app/carousel/images/slide2@x2.jpg"},
+            {image: "../demos/app/carousel/images/slide3@x2.jpg"},
+            {image: "../demos/app/carousel/images/slide4@x2.jpg"}
         );
     }
 }

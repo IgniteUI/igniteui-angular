@@ -1,56 +1,60 @@
-<div class="dialog-sample">
-    <h3>
-        Alert with one action button and message
-    </h3>
+<div class="sample-wrapper">
+    <div class="sample-header">
+        <h1 class="title">Dialog</h1>
+        <p class="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas pretium lorem id tristique sagittis. Proin in mauris ac
+            tortor placerat sollicitudin eu sit amet leo. Aliquam consectetur eu sem vitae egestas. Class aptent taciti sociosqu
+            ad litora torquent per conubia nostra, per inceptos himenaeos. Cras a erat sagittis, iaculis urna ac, mollis
+            elit. Vestibulum accumsan ex at mauris sagittis, sed tincidunt justo fringilla. Phasellus vel porttitor odio.
+            Aenean quis nisi non ex ultrices efficitur. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec
+            nec felis cursus erat mattis venenatis. Curabitur congue ullamcorper nisi nec blandit. Fusce molestie consectetur
+            urna sed feugiat.
+        </p>
+    </div>
 
-    <button igxButton="raised" igxButtonColor="white" igxButtonBackground="#F44336" igxRipple="white" (click)="alert.open()">
-        Alert
-    </button>
+    <section class="sample-content">
+        <article>
+            <h4 class="sample-title">Alert</h4>
+            <p class="sample-description">Detailed description to be added.</p>
+            <div class="preview">
+                <img style="margin-left: -52px;" src="../demos/app/dialog/images/alert.png" alt="Alert preview image">
+            </div>
+            <button igxButton="raised" igxButtonColor="white" igxButtonBackground="#EC6F74" igxRipple="white" (click)="alert.open()">Trigger Alert</button>
+            <igx-dialog #alert title="Notification" message="Your email has been sent successfully!" leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()">
+            </igx-dialog>
+        </article>
 
-    <igx-dialog #alert title="Notification" message="Your email has been sent successfully!"
-        leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()">
-    </igx-dialog>
+        <article>
+            <h4 class="sample-title">Generic Dialog</h4>
+            <p class="sample-description">Detailed description to be added</p>
+            <div class="preview">
+                <img style="margin-left: -52px;" src="../demos/app/dialog/images/dialog.png" alt="Dialog preview image">
+            </div>
+            <button igxButton="raised" igxButtonColor="white" igxButtonBackground="#EC6F74" igxRipple="white" (click)="dialog.open()">Trigger Dialog</button>
+            <igx-dialog #dialog title="Confirmation" leftButtonLabel="Cancel" (onLeftButtonSelect)="dialog.close()" rightButtonLabel="OK"
+                rightButtonRipple="#4CAF50" (onRightButtonSelect)="onDialogOKSelected($event)" message="Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?">
+            </igx-dialog>
+        </article>
 
-    <h3>
-        Dialog with two action buttons and message
-    </h3>
+        <article>
+            <h4 class="sample-title">Custom Dialog</h4>
+            <p class="sample-description">Detailed description to be added</p>
+            <div class="preview">
+                <img style="margin-left: -52px;" src="../demos/app/dialog/images/dialog.png" alt="Custom dialog preview image">
+            </div>
+            <button igxButton="raised" igxButtonColor="white" igxButtonBackground="#EC6F74" igRipple="white" (click)="form.open()">Trigger Custom</button>
 
-    <button igxButton="raised" igxButtonColor="white"igxButtonBackground="#4CAF50" igxRipple="white" (click)="dialog.open()">
-        Dialog
-    </button>
-
-    <igx-dialog #dialog title="Confirmation" 
-        leftButtonLabel="Cancel"
-        (onLeftButtonSelect)="dialog.close()"
-        rightButtonLabel="OK" 
-        rightButtonRipple="#4CAF50"
-        (onRightButtonSelect)="onDialogOKSelected($event)"
-        message="Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?">
-    </igx-dialog>
-
-    <h3>
-        Form with two action buttons and custom message
-    </h3>
-
-    <button igxButton="raised" igxButtonColor="white" igxButtonBackground="#0375be" igRipple="white" (click)="form.open()">
-        Form
-    </button>
-
-    <igx-dialog #form title="Sign In"
-        leftButtonLabel="Cancel"
-        (onLeftButtonSelect)="form.close()"
-        rightButtonLabel="Sign In"
-        rightButtonBackgroundColor="#0375be"
-        rightButtonColor="white"
-        backgroundClick="true"
-        closeOnOutsideSelect="true">
-        <div class="igx-form-group">
-            <input type="text" igxInput />
-            <label igxLabel>Username</label>
-        </div>
-        <div class="igx-form-group">
-            <input type="password" igxInput />
-            <label igxLabel>Password</label>
-        </div>
-    </igx-dialog>
+            <igx-dialog #form title="Sign In" leftButtonLabel="Cancel" (onLeftButtonSelect)="form.close()" rightButtonLabel="Sign In"
+                rightButtonBackgroundColor="#0375be" rightButtonColor="white" backgroundClick="true" closeOnOutsideSelect="true">
+                <div class="igx-form-group">
+                    <input type="text" igxInput />
+                    <label igxLabel>Username</label>
+                </div>
+                <div class="igx-form-group">
+                    <input type="password" igxInput />
+                    <label igxLabel>Password</label>
+                </div>
+            </igx-dialog>
+        </article>
+    </section>
 </div>

@@ -8,6 +8,5 @@
 }
 
 %igx-icon--inactive {
-    color: lighten($input-disabled-solid-color, 25%);
-    opacity: .8;
+    color: $input-disabled-solid-color;
 }

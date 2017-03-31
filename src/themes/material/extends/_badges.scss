@@ -19,14 +19,15 @@
     box-shadow: $badge-shadow;
     overflow: hidden;
     i {
-        font-size: em(12px, 10px);
+        width: 17px;
+        font-size: em(10px, 10px);
         font-weight: $badge-font-weight;
     }
 }
 
 %igx-badge-value {
     white-space: nowrap;
-    padding: 0 2px;
+    padding: 4px;
 }
 
 %igx-badge--circle {

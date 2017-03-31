@@ -17,13 +17,13 @@
     position: fixed;
     width: 242px;
     height: 100%;
-    z-index: 0;
+    background: #fff;
+    z-index: 1;
 }
 
 .content {
     width: 100%;
     margin-left: 242px;
-    z-index: 1;
 }
 
 .nav {
