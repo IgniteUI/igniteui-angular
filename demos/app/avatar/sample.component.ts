@@ -5,12 +5,8 @@ import { IgxBadgeModule, IgxBadge } from "../../../src/badge/badge.component";
 @Component({
     selector: "avatar-sample",
     moduleId: module.id,
-    styles: [`
-        td {
-            padding: 5px;
-        }
-    `],
-    templateUrl: "./sample.component.html"
+    templateUrl: "./sample.component.html",
+    styleUrls: ['sample.component.css', '../app.samples.css']
 })
 export class AvatarSampleComponent {
     //@ViewChild(Avatar) avatar: Avatar;

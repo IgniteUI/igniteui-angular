@@ -5,7 +5,8 @@ import { RouterModule, Router } from '@angular/router';
 @Component({
     selector: "tabbar-sample",
     moduleId: module.id,
-    templateUrl: 'sample.component.html'
+    templateUrl: 'sample.component.html',
+    styleUrls: ['sample.component.css','../app.samples.css']
 })
 export class TabBarSampleComponent {
 

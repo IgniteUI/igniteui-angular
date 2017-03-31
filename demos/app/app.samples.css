@@ -1,3 +1,11 @@
+.sample-wrapper {
+    width: inherit;
+    position: relative;
+    height: 100%;
+    margin: 0 auto;
+    background: #fff;
+}
+
 .sample-header {
     padding: 48px 36px;
     -webkit-animation: color-change-2x 4s linear infinite alternate both;
@@ -18,7 +26,11 @@
     margin-top: 48px;
 }
 
-.sample-content {}
+.sample-content {
+    display: grid;
+    grid-gap: 48px 144px;
+    padding: 80px 40px;
+}
 
 @-webkit-keyframes color-change-2x {
   0% {

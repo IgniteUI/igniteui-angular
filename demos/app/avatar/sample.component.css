@@ -1,0 +1,24 @@
+.sample-content {
+    grid-gap: 150px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.avatars-wrapper {
+    display: grid;
+    grid-gap: 48px 16px;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.avatar-sample {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sample-title {
+    color: #0375BE;
+}
+
+.sample-title .light {
+    font-weight: 400;
+}
