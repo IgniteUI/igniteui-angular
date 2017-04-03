@@ -1,7 +1,8 @@
 %igx-icon-display {
-    display: inline-block;
+    display: flex;
     position: relative;
     font-size: em(24px, 16px);
+    justify-content: center;
     i {
         font-size: inherit;
     }

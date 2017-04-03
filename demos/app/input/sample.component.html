@@ -13,37 +13,75 @@
     </div>
 
     <section class="sample-content">
-
-        <article class="input-sample">
-            <h4 class="form-title">Personal Info</h4>
-            <div class="igx-form-group">
-                <input type="text" igxInput [(ngModel)]="user.firstName" required/>
-                <label igxLabel>First Name*</label>
-            </div>
-            <div class="igx-form-group">
-                <input type="text" igxInput [(ngModel)]="user.lastName" required/>
-                <label igxLabel>Last Name*</label>
-            </div>
-            <div class="igx-form-group">
-                <input type="password" igxInput placeholder="{{placeholder}}" [(ngModel)]="user.password" />
-                <label igxLabel>Password</label>
-            </div>
-            <div class="igx-form-group">
-                <textarea placeholder="{{placeholder}}" igxInput [(ngModel)]="user.comment"></textarea>
-                <label igxLabel>Additional Information</label>
-            </div>
-
-            <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group" [(ngModel)]="user.gender">{{item}}</igx-radio>
+        <article>
+            <h4 class="sample-title">Input fieds w/ radio buttons</h4>
+            <form class="input-sample" action="/" method="POST">
+                <h4 class="form-title">Personal Info</h4>
+                <div class="igx-form-group">
+                    <input igxInput name="firstName" type="text" [(ngModel)]="user.firstName" required/>
+                    <label igxLabel for="firstName">First Name*</label>
+                </div>
+                <div class="igx-form-group">
+                    <input igxInput name="lastName" type="text" [(ngModel)]="user.lastName" required/>
+                    <label igxLabel for="lastName">Last Name*</label>
+                </div>
+                <div class="igx-form-group">
+                    <input igxInput name="password" type="password" placeholder="{{placeholder}}" [(ngModel)]="user.password" required/>
+                    <label igxLabel for="password">Password*</label>
+                </div>
+                <div class="igx-form-group">
+                    <textarea igxInput name="comment" placeholder="{{placeholder}}" [(ngModel)]="user.comment"></textarea>
+                    <label igxLabel for="comment">Additional Information</label>
+                </div>
+                <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group" [(ngModel)]="user.gender">{{item}}</igx-radio>
+            </form>
         </article>
 
-        <article class="input-sample">
-            <h4 class="form-title">Checkbox</h4>
-            <igx-checkbox [(ngModel)]="user.registered">Registered</igx-checkbox>
+        <article>
+            <h4 class="sample-title">Switch sample</h4>
+            <div class="input-sample">
+                <h4 class="form-title">Settings</h4>
+                <div class="switch-sample">
+                    <igx-icon name="wifi"></igx-icon>
+                    <span igxLabel>WiFi</span>
+                    <igx-switch [(ngModel)]="user.registered"></igx-switch>
+                </div>
+                <div class="switch-sample">
+                    <igx-icon name="bluetooth"></igx-icon>
+                    <span igxLabel>Bluetooth</span>
+                    <igx-switch [(ngModel)]="user.registered"></igx-switch>
+                </div>
+                <div class="switch-sample">
+                    <igx-icon name="visibility"></igx-icon>
+                    <span igxLabel>Device visibility</span>
+                    <igx-switch [(ngModel)]="!user.registered"></igx-switch>
+                </div>
+            </div>
         </article>
 
-        <article class="input-sample">
-            <h4 class="form-title">Switch</h4>
-            <igx-switch [(ngModel)]="user.subscribed">Subscribed</igx-switch>
+        <article>
+            <h4 class="sample-title">Checkbox sample</h4>
+            <div class="input-sample">
+                <h4 class="form-title">Delete Contacts</h4>
+                <div class="switch-sample">
+                    <igx-avatar src="../demos/app/avatar/images/22.jpg" roundShape="true">
+                    </igx-avatar>
+                    <span igxLabel>Alicia Keys</span>
+                    <igx-checkbox [(ngModel)]="!user.registered"></igx-checkbox>
+                </div>
+                <div class="switch-sample">
+                    <igx-avatar src="../demos/app/avatar/images/8.jpg" roundShape="true">
+                    </igx-avatar>
+                    <span igxLabel>Petar Vasilev</span>
+                    <igx-checkbox [(ngModel)]="user.registered"></igx-checkbox>
+                </div>
+                <div class="switch-sample">
+                    <igx-avatar src="../demos/app/avatar/images/17.jpg" roundShape="true">
+                    </igx-avatar>
+                    <span igxLabel>Brian Vaughan</span>
+                    <igx-checkbox [(ngModel)]="!user.registered"></igx-checkbox>
+                </div>
+            </div>
         </article>
     </section>
 </div>

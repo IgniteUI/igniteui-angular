@@ -58,5 +58,6 @@
 
 %igx-list-item--active {
     background-color: $list-item-active-background;
-    box-shadow: $list-item-active-shadow;
+    // box-shadow: $list-item-active-shadow;
+    z-index: 3;
 }
