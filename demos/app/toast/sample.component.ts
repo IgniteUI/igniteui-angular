@@ -4,7 +4,8 @@ import {IgxToastPosition} from "../../../src/toast/toast.component";
 @Component({
     moduleId: module.id,
     selector: "toast-sample",
-    templateUrl: "sample.component.html"
+    templateUrl: "sample.component.html",
+    styleUrls: ["../app.samples.css", "sample.component.css"]
 })
 export class IgxToastSampleComponent {
     @Input()

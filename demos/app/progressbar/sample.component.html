@@ -1,0 +1,114 @@
+<div class="sample-wrapper">
+    <div class="sample-header">
+        <h1 class="title">Progress Indicators</h1>
+        <p class="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas pretium lorem id tristique sagittis. Proin in mauris ac
+            tortor placerat sollicitudin eu sit amet leo. Aliquam consectetur eu sem vitae egestas. Class aptent taciti sociosqu
+            ad litora torquent per conubia nostra, per inceptos himenaeos. Cras a erat sagittis, iaculis urna ac, mollis
+            elit. Vestibulum accumsan ex at mauris sagittis, sed tincidunt justo fringilla. Phasellus vel porttitor odio.
+            Aenean quis nisi non ex ultrices efficitur. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec
+            nec felis cursus erat mattis venenatis. Curabitur congue ullamcorper nisi nec blandit. Fusce molestie consectetur
+            urna sed feugiat.
+        </p>
+    </div>
+    <section class="sample-content">
+        <article class="linear-samples">
+            <h4 class="sample-title">Linear progress bar</h4>
+            <div class="linear-container">
+                <igx-linear-bar [striped]="false" [value]="currentValue" [max]="200">
+                </igx-linear-bar>
+            </div>
+
+            <div class="linear-container">
+                <igx-linear-bar type="success" [striped]="false" [value]="currentValue">
+                </igx-linear-bar>
+            </div>
+
+            <div class="linear-container">
+                <igx-linear-bar type="danger" [striped]="false" [value]="currentValue">
+                </igx-linear-bar>
+            </div>
+
+            <div class="linear-container">
+                <igx-linear-bar type="warning" [value]="20">
+                </igx-linear-bar>
+            </div>
+
+            <div class="linear-container">
+                <igx-linear-bar type="info" [striped]="false" [value]="currentValue">
+                </igx-linear-bar>
+            </div>
+        </article>
+
+        <article class="linear-samples">
+            <h4 class="sample-title">Striped linear progress bar</h4>
+            <div class="linear-container">
+                <igx-linear-bar striped="true" [value]="currentValue">
+                </igx-linear-bar>
+            </div>
+
+            <div class="linear-container">
+                <igx-linear-bar type="success" striped="true" [value]="currentValue">
+                </igx-linear-bar>
+            </div>
+
+            <div class="linear-container">
+                <igx-linear-bar type="danger" striped="true" [value]="currentValue">
+                </igx-linear-bar>
+            </div>
+
+            <div class="linear-container">
+                <igx-linear-bar type="warning" [striped]="true" [max]="100" (onProgressChanged)="change($event)" [value]="currentValue">
+                </igx-linear-bar>
+            </div>
+
+            <div class="linear-container">
+                <igx-linear-bar type="info" [striped]="true" [max]="100" (onProgressChanged)="change($event)" [value]="currentValue">
+                </igx-linear-bar>
+            </div>
+        </article>
+
+        <article>
+            <h4 class="sample-title">Circular progress indicator</h4>
+            <div class="circular-samples">
+                <div class="circular-container">
+                    <igx-circular-bar (onProgressChanged)="f($event)" [value]="currentValue"></igx-circular-bar>
+                </div>
+                <div class="circular-container">
+                    <igx-circular-bar (onProgressChanged)="f($event)" [value]="24"></igx-circular-bar>
+                </div>
+                <div class="circular-container">
+                    <igx-circular-bar (onProgressChanged)="f($event)" [value]="32"></igx-circular-bar>
+                </div>
+            </div>
+            <div class="circular-samples">
+                <div class="circular-container">
+                    <igx-circular-bar (onProgressChanged)="f($event)" [value]="43"></igx-circular-bar>
+                </div>
+                <div class="circular-container">
+                    <igx-circular-bar (onProgressChanged)="f($event)" [value]="53"></igx-circular-bar>
+                </div>
+                <div class="circular-container">
+                    <igx-circular-bar (onProgressChanged)="f($event)" [value]="30"></igx-circular-bar>
+                </div>
+            </div>
+            <div class="circular-samples">
+                <div class="circular-container">
+                    <igx-circular-bar (onProgressChanged)="f($event)" [value]="18"></igx-circular-bar>
+                </div>
+                <div class="circular-container">
+                    <igx-circular-bar (onProgressChanged)="f($event)" [value]="77"></igx-circular-bar>
+                </div>
+                <div class="circular-container">
+                    <igx-circular-bar (onProgressChanged)="f($event)" [value]="44"></igx-circular-bar>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <div class="button-container">
+        <button igxButton="fab" igxRipple="" (click)="generateNewProgressValues()">
+            <i class="material-icons">refresh</i>
+        </button>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="360px" height="414px" viewBox="0 0 360 414" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>bg</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Demo-Page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Navbar" transform="translate(-282.000000, -410.000000)">
+            <g id="Screen-Crop" transform="translate(282.000000, 410.000000)">
+                <g id="bg">
+                    <rect id="Combined-Shape" fill-opacity="0.1" fill="#FFFFFF" x="0" y="0" width="360" height="414"></rect>
+                    <g id="Lines" transform="translate(16.000000, 84.000000)" fill="#F2F2F2">
+                        <g id="3" transform="translate(0.000000, 236.000000)">
+                            <rect id="Rectangle-7" x="50.4615385" y="0" width="277.538462" height="24" rx="8"></rect>
+                            <rect id="Rectangle-7-Copy-2" x="0" y="40" width="328" height="54" rx="8"></rect>
+                            <rect id="Rectangle-7-Copy" x="0" y="0" width="25.2307692" height="24" rx="12"></rect>
+                        </g>
+                        <g id="2" transform="translate(0.000000, 118.000000)">
+                            <rect id="Rectangle-7" x="50.4615385" y="0" width="277.538462" height="24" rx="8"></rect>
+                            <rect id="Rectangle-7-Copy-2" x="0" y="40" width="328" height="54" rx="8"></rect>
+                            <rect id="Rectangle-7-Copy" x="0" y="0" width="25.2307692" height="24" rx="12"></rect>
+                        </g>
+                        <g id="1">
+                            <rect id="Rectangle-7" x="50.4615385" y="0" width="277.538462" height="24" rx="8"></rect>
+                            <rect id="Rectangle-7-Copy-2" x="0" y="40" width="328" height="54" rx="8"></rect>
+                            <rect id="Rectangle-7-Copy" x="0" y="0" width="25.2307692" height="24" rx="12"></rect>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,4 +1,5 @@
-import {Component, Input, NgModule, EventEmitter, Output, OnInit, AfterContentChecked} from '@angular/core';
+import { Component, Input, NgModule, EventEmitter, Output, OnInit, AfterContentChecked } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { HammerGesturesManager } from "../core/touch";
 import { IgxButtonModule } from "../button/button.directive";
 
@@ -55,7 +56,7 @@ export class IgxNavbar implements AfterContentChecked {
 }
 
 @NgModule({
-    imports: [IgxButtonModule],
+    imports: [IgxButtonModule, CommonModule],
     declarations: [IgxNavbar],
     exports: [IgxNavbar]
 })

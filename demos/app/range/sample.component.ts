@@ -4,7 +4,8 @@ import {SliderType} from "../../../src/range/range.component";
 @Component({
     moduleId: module.id,
     selector: "range-sample",
-    templateUrl: "./sample.component.html"
+    templateUrl: "./sample.component.html",
+    styleUrls: ['../app.samples.css', 'sample.component.css']
 })
 export class IgxRangeSampleComponent {
 

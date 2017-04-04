@@ -11,7 +11,7 @@ import { ButtonGroupSampleComponent } from "./buttonGroup/sample.component";
 import { AvatarSampleComponent } from "./avatar/sample.component";
 import { NavbarSampleComponent } from "./navbar/sample.component";
 import { DialogSampleComponent } from "./dialog/sample.component";
-import { ProgressbarSampleComponent } from "./progressbar/progressbarsample.component";
+import { ProgressbarSampleComponent } from "./progressbar/sample.component";
 import { IconSampleComponent } from "./icon/sample.component";
 import { IgxSnackbarSampleComponent } from "./snackbar/sample.component";
 import { IgxCardSampleComponent } from "./card/sample.component";
@@ -22,7 +22,7 @@ import {DataOperationsSampleComponent} from "./data-operations/sample.component"
 const appRoutes: Routes = [
     {
         path: '',
-        redirectTo: '/list',
+        redirectTo: '/toast',
         pathMatch: 'full'
     },
     {

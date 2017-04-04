@@ -1,8 +1,26 @@
-<igx-toast #toast
-    message="This message will self-destruct in 4 seconds."
-    [position]="toastPosition"
-    (onShowing)="onShowing($event)">
-</igx-toast>
+<div class="sample-wrapper">
+    <div class="sample-header">
+        <h1 class="title">Toast</h1>
+        <p class="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas pretium lorem id tristique sagittis. Proin in mauris ac
+            tortor placerat sollicitudin eu sit amet leo. Aliquam consectetur eu sem vitae egestas. Class aptent taciti sociosqu
+            ad litora torquent per conubia nostra, per inceptos himenaeos. Cras a erat sagittis, iaculis urna ac, mollis
+            elit. Vestibulum accumsan ex at mauris sagittis, sed tincidunt justo fringilla. Phasellus vel porttitor odio.
+            Aenean quis nisi non ex ultrices efficitur. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec
+            nec felis cursus erat mattis venenatis. Curabitur congue ullamcorper nisi nec blandit. Fusce molestie consectetur
+            urna sed feugiat.
+        </p>
+    </div>
+    <section class="sample-content">
+        <article>
+            <h4 class="sample-title">Bottom Position</h4>
+            <div>
+                <button igxButton="raised" igxRipple="white" (click)="toast.show()" [disabled]="toast.isVisible">Show Toast</button>
+                <button igxButton="raised" igxRipple="white" (click)="toast.hide()" [disabled]="!toast.isVisible">Hide Toast</button>
+            </div>
+        </article>
+    </section>
 
-<button igxButton="raised" igxRipple="white" (click)="toast.show()" [disabled]="toast.isVisible">Show Toast</button>
-<button igxButton="raised" igxRipple="white" (click)="toast.hide()" [disabled]="!toast.isVisible">Hide Toast</button>
+    <igx-toast #toast message="This message will self-destruct in 4 seconds." [position]="toastPosition" (onShowing)="onShowing($event)">
+    </igx-toast>
+</div>

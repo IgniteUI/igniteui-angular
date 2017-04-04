@@ -1,6 +1,6 @@
 <div class="sample-wrapper">
     <div class="sample-header">
-        <h1 class="title">Range Slider</h1>
+        <h1 class="title">Navbar</h1>
         <p class="description">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas pretium lorem id tristique sagittis. Proin in mauris ac
             tortor placerat sollicitudin eu sit amet leo. Aliquam consectetur eu sem vitae egestas. Class aptent taciti sociosqu
@@ -11,32 +11,32 @@
             urna sed feugiat.
         </p>
     </div>
-
     <section class="sample-content">
         <article>
-            <h4 class="sample-title">One-handle range slider</h4>
-            <igx-range #range [(ngModel)]="task.percentCompleted">
-            </igx-range>
+            <h4 class="sample-title">With nav and action icons</h4>
+            <div class="navbar-sample">
+                <igx-navbar title="Sample App" actionButtonIcon="menu">
+                    <igx-icon name="search"></igx-icon>
+                    <igx-icon name="favorite"></igx-icon>
+                    <igx-icon name="more_vert"></igx-icon>
+                </igx-navbar>
+            </div>
         </article>
 
         <article>
-            <h4 class="sample-title">Two-handle range slider</h4>
-            <igx-range #range2 [type]="sliderType" [lowerValue]="30" [upperValue]="60" [minValue]="0"
-                [maxValue]="100">
-            </igx-range>
+            <h4 class="sample-title">With nav icon</h4>
+            <div class="navbar-sample">
+                <igx-navbar [title]="currentView" actionButtonIcon="arrow_back" [isActionButtonVisible]="canGoBack()" (onAction)="navigateBack()">
+                </igx-navbar>
+            </div>
         </article>
 
         <article>
-            <h4 class="sample-title">Two-handle stepped range slider</h4>
-            <igx-range #range2 [type]="sliderType" [lowerValue]="30" [upperValue]="60" [lowerBound]="10" [upperBound]="90" [minValue]="0"
-                [maxValue]="100" [stepRange]="10">
-            </igx-range>
+            <h4 class="sample-title">Without nav icon</h4>
+            <div class="navbar-sample">
+                <igx-navbar [title]="currentView" [isActionButtonVisible]="'false'">
+                </igx-navbar>
+            </div>
         </article>
     </section>
 </div>
-<!--
-<h3>Task</h3>
-<div>name: {{task.title}}</div>
-<div>completed: {{task.percentCompleted}}</div>
-<input type="text" [(ngModel)]="task.title">
-<input type="text" [(ngModel)]="task.percentCompleted">-->

@@ -1,12 +1,12 @@
 @include b(igx-navbar) {
     @extend %igx-navbar-display;
     
-    @include e(left-btn) {
-        @extend %igx-navbar-left-btn;
+    @include e(left) {
+        @extend %igx-navbar-bundle;
+    }
 
-        @include m(disabled) {
-            @extend %igx-navbar-left-btn--disabled;
-        }
+    @include e(right) {
+        @extend %igx-navbar-bundle;
     }
 
     @include e(title) {
