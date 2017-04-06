@@ -2,7 +2,7 @@
 What the project does.
 
 ## Usage
-How is the project is useful.
+How is the project useful.
 
 ## Getting Started
 
@@ -15,9 +15,9 @@ Give examples
 
 ### Installation
 
-A step by step series of examples that tell you have to get a development env running
+A step by step series of examples that tell how users can get started with the project.
 
-Say what the step will be
+Say what first the step will be
 
 ```
 Give the example
@@ -29,11 +29,18 @@ And repeat
 until finished
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+End with an example of getting some data out of the system or using it for a little demo.
 
 
 ## API
 
+
+###### Properties
+
+| Name | Type | Description |
+| :--- | :--- | :--- |
+| Content Cell  | Content Cell  | Content Cell |
+| Content Cell  | Content Cell  | Content Cell |
 
 ###### Inputs
 
@@ -60,18 +67,11 @@ End with an example of getting some data out of the system or using it for a lit
 
 
 
-###### Properties
 
-| Name | Type | Description |
-| :--- | :--- | :--- |
-| Content Cell  | Content Cell  | Content Cell |
-| Content Cell  | Content Cell  | Content Cell |
+Wiki Link - Where users can get help with your project.
 
+Link to a demo.
 
-
-Wiki Link - Where users can get help with your project
-
-Who maintains and contributes to the project
-
+Who maintains and contributes to the project.
 
 
