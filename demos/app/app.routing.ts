@@ -22,7 +22,7 @@ import {DataOperationsSampleComponent} from "./data-operations/sample.component"
 const appRoutes: Routes = [
     {
         path: '',
-        redirectTo: '/toast',
+        redirectTo: '/tabbar',
         pathMatch: 'full'
     },
     {

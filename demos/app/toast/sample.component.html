@@ -14,8 +14,25 @@
     <section class="sample-content">
         <article>
             <h4 class="sample-title">Bottom Position</h4>
-            <div>
-                <button igxButton="raised" igxRipple="white" (click)="toast.show()" [disabled]="toast.isVisible">Show Toast</button>
+            <div class="preview bottom"></div>
+            <div class="btn-group">
+                <button igxButton="raised" igxRipple="white" (click)="showToast(toast)" [disabled]="toast.isVisible">Show Toast</button>
+                <button igxButton="raised" igxRipple="white" (click)="toast.hide()" [disabled]="!toast.isVisible">Hide Toast</button>
+            </div>
+        </article>
+        <article>
+            <h4 class="sample-title">Middle Position</h4>
+            <div class="preview middle"></div>
+            <div class="btn-group">
+                <button igxButton="raised" igxRipple="white" (click)="showToast(toast, 'middle')" [disabled]="toast.isVisible">Show Toast</button>
+                <button igxButton="raised" igxRipple="white" (click)="toast.hide()" [disabled]="!toast.isVisible">Hide Toast</button>
+            </div>
+        </article>
+        <article>
+            <h4 class="sample-title">Top Position</h4>
+            <div class="preview top"></div>
+            <div class="btn-group">
+                <button igxButton="raised" igxRipple="white" (click)="showToast(toast, 'top')" [disabled]="toast.isVisible">Show Toast</button>
                 <button igxButton="raised" igxRipple="white" (click)="toast.hide()" [disabled]="!toast.isVisible">Hide Toast</button>
             </div>
         </article>

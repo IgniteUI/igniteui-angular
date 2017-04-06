@@ -3,13 +3,14 @@
     position: relative;
     min-width: $button-width;
     padding: $button-padding;
+    font-family: 'Titillium Web', sans-serif;
     font-size: $button-font-size;
     font-weight: $button-font-weight;
     text-align: center;
     color: $button-color;
     border: $button-border;
     border-radius: $button-radius;
-    text-transform: uppercase;
+    text-transform: uppercase;;
     cursor: pointer;
     user-select: none;
     outline: none;

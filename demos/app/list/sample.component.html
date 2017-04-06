@@ -41,7 +41,7 @@
         <article>
             <h4 class="sample-title">Data source filtered list</h4>
             <div class="igx-form-group">
-                <input class="igx-form-group__input--search" placeholder="Search List" [(ngModel)]="search1" />
+                <input class="igx-form-group__input--search" placeholder="Search Contacts" [(ngModel)]="search1" />
                 <label igxLabel>
                     <i class="material-icons">search</i>
                 </label>
@@ -52,7 +52,7 @@
             <div class="list-sample">
                 <igx-list>
                     <igx-list-item [isHeader]="true">Contacts</igx-list-item>
-                    <igx-list-item igxRipple="pink" igxRippleTarget=".ig-list__item" *ngFor="let item of navItems | igxFilter: fo1">
+                    <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item" *ngFor="let item of navItems | igxFilter: fo1">
                         <div class="item">
                             <igx-avatar [src]="item.avatar" roundShape="true"></igx-avatar>
                             <span igxLabel>{{item.text}}</span>

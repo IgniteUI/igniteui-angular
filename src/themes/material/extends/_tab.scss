@@ -8,13 +8,11 @@
 
 %igx-tabbar-menu {
     position: fixed;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: em(56px, 16px);
-    margin: 0;
-    padding: 0;
     background: $tab-bar-background;
     color: set-color($tab-bar-background);
     overflow: hidden;
@@ -36,19 +34,20 @@
 %igx-tabbar-menu-item {
     display: flex;
     position: relative;
-    flex-flow: column wrap;
+    flex-flow: column nowrap;
     align-items: center;
     justify-content: center;
     min-width: 80px;
-    flex-grow: 1;
+    max-width: 168px;
     height: 100%;
+    flex: 1;
     cursor: pointer;
     text-transform: uppercase;
     white-space: nowrap;
     text-overflow: ellipsis;
     user-select: none;
     overflow: hidden;
-    padding: 0 16px;
+    padding: 0 12px;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -64,10 +63,10 @@
 }
 
 %igx-tab-label {
-    max-width: 168px;
     padding-top: 5px;
     font-size: 12px;
     line-height: 12px;
+    max-width: 80px;
     text-transform: uppercase;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -77,9 +76,15 @@
 
 %igx-tab-icon {
     position: relative;
+    display: flex;
+    justify-content: center;
     height: 24px;
     z-index: 1;
     opacity: .75;
+    i {
+        width: 24px;
+        height: 24px;
+    }
 }
 
 %igx-tab-label--selected,
