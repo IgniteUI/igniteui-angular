@@ -1,13 +1,14 @@
 # Title
-What the project does.
+What the project does?
 
 ## Usage
-How is the project useful.
+How is the project useful?
 
 ## Getting Started
 
 
 ### Dependencies
+Can you use the component alone?
 
 ```
 Give examples
