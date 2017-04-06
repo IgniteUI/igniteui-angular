@@ -8,7 +8,7 @@ How is the project useful?
 
 
 ### Dependencies
-Can you use the component alone?
+Limitations in the implementation (ex.g. position). Intended use - alone or in combination with other components.
 
 ```
 Give examples
