@@ -21,6 +21,8 @@ export class TabBarSampleComponent {
         { key: "7", text: "Marianne Taylor", phone: "401-661-3742", avatar: "../demos/app/avatar/images/14.jpg", favorite: false, link: "#" }
     ];
 
+    options: Object = {};
+
     constructor(private router: Router, private renderer: Renderer) { }
 
     route(event) {
