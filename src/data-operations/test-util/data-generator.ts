@@ -10,7 +10,7 @@ export interface DataColumn {
 
 export class DataGenerator {
     columns: Array<DataColumn> = [];
-    data: Array<object> = [];
+    data: Array<Object> = [];
     constructor(countRows = COUNT_ROWS, countCols = COUNT_COLS) {
         this.columns = this.generateColumns(countCols);
         this.data = this.generateData(countRows);

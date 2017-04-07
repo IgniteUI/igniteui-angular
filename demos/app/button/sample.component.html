@@ -1,47 +1,118 @@
-<h3>Buttons</h3>
-<div style="margin: 0 20px">
-    <button igxButton="flat" igxRipple>Flat</button>
-</div>
-<br>
-<div style="margin: 0 20px">
-    <span igxButton="raised" igxRipple="white">Raised</span>
-</div>
-<br>
-<div style="margin: 0 20px">
-    <button igxButton="raised" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="white">Raised Custom</button>
-</div>
-<br>
-<div style="margin: 0 20px">
-    <span igxButton="raised" igxButtonColor="yellow" igxButtonBackground="black" igxRipple="yellow">Raised Custom</span>
-</div>
-<br>
-<div style="margin: 0 20px">
-    <span igxButton="gradient" igxRipple="white">Gradient</span>
-</div>
-<br>
-<div style="margin: 0 20px">
-    <span igxButton="raised" [disabled]="true">Disabled</span>
-</div>
-<br>
-<div style="margin: 0 20px">
-    <span igxButton="fab" igxRipple="white">
-        <i class="material-icons">add</i>
-    </span>
-</div>
-<br>
-<div style="margin: 0 20px">
-    <button type="button" igxButton="fab" igxButtonColor="#484848" igxButtonBackground="white" igxRipple="#484848">
-        <i class="material-icons">edit</i>
-    </button>
-</div>
-<div style="display: flex; flex-wrap: row; padding: 10px 0">
-    <span igxButton="icon" igxRipple igxRippleCentered="true">
-        <i class="material-icons">search</i>
-    </span>
-    <span igxButton="icon" igxRipple igxButtonColor="#E41C77" igxRippleCentered="true">
-        <i class="material-icons">favorite</i>
-    </span>
-    <span igxButton="icon" igxRipple igxRippleCentered="true">
-        <i class="material-icons">more_vert</i>
-    </span>
+<div class="sample-wrapper">
+    <div class="sample-header">
+        <h1 class="title">Buttons</h1>
+        <p class="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas pretium lorem id tristique sagittis. Proin in mauris ac
+            tortor placerat sollicitudin eu sit amet leo. Aliquam consectetur eu sem vitae egestas. Class aptent taciti sociosqu
+            ad litora torquent per conubia nostra, per inceptos himenaeos. Cras a erat sagittis, iaculis urna ac, mollis
+            elit. Vestibulum accumsan ex at mauris sagittis, sed tincidunt justo fringilla. Phasellus vel porttitor odio.
+            Aenean quis nisi non ex ultrices efficitur. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec
+            nec felis cursus erat mattis venenatis. Curabitur congue ullamcorper nisi nec blandit. Fusce molestie consectetur
+            urna sed feugiat.
+        </p>
+    </div>
+
+    <section class="sample-content">
+        <article>
+            <h4 class="sample-title">Flat Buttons</h4>
+            <div class="buttons-sample">
+                <button igxButton="flat" igxRipple>Flat</button>
+                <button igxButton="flat" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Flat</button>
+                <button igxButton="flat" igxRipple igxButtonColor="yellow" igxButtonBackground="black" igxRipple="yellow">Flat</button>
+                <button igxButton="flat" igxRipple>Flat</button>
+                <button igxButton="flat" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Flat</button>
+                <button igxButton="flat" igxRipple igxButtonColor="yellow" igxButtonBackground="black" igxRipple="yellow">Flat</button>
+                <button igxButton="flat" igxRipple [disabled]="true">Flat</button>
+                <button igxButton="flat" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" [disabled]="true">Flat</button>
+                <button igxButton="flat" igxRipple igxButtonColor="yellow" igxButtonBackground="black" igxRipple="yellow" [disabled]="true">Flat</button>
+            </div>
+        </article>
+
+        <article>
+            <h4 class="sample-title">Raised Buttons</h4>
+            <div class="buttons-sample">
+                <button igxButton="raised" igxRipple="white">Raised</button>
+                <button igxButton="raised" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Raised</button>
+                <button igxButton="raised" igxButtonColor="yellow" igxButtonBackground="black" igxRipple="yellow">Raised</button>
+                <button igxButton="raised" igxRipple="white">Raised</button>
+                <button igxButton="raised" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Raised</button>
+                <button igxButton="raised" igxButtonColor="yellow" igxButtonBackground="black" igxRipple="yellow">Raised</button>
+                <button igxButton="raised" [disabled]="true">Raised</button>
+                <button igxButton="raised" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" [disabled]="true">Raised</button>
+                <button igxButton="raised" igxButtonColor="yellow" igxButtonBackground="black" igxRipple="yellow" [disabled]="true">Raised</button>
+            </div>
+        </article>
+
+        <article>
+            <h4 class="sample-title">Floating Action Buttons</h4>
+            <div class="buttons-sample">
+                <button igxButton="fab" igxRipple="white">
+                <i class="material-icons">favorite</i>
+                </button>
+                <button igxButton="fab" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">
+                    <i class="material-icons">edit</i>
+                </button>
+                <button igxButton="fab" igxButtonColor="yellow" igxButtonBackground="black" igxRipple="yellow">
+                    <i class="material-icons">add</i>
+                </button>
+                <button igxButton="fab" igxRipple="white">
+                    <i class="material-icons">favorite</i>
+                </button>
+                <button igxButton="fab" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">
+                    <i class="material-icons">edit</i>
+                </button>
+                <button igxButton="fab" igxButtonColor="yellow" igxButtonBackground="black" igxRipple="yellow">
+                    <i class="material-icons">add</i>
+                </button>
+                <button igxButton="fab" igxRipple="white" [disabled]="true">
+                <i class="material-icons">favorite</i>
+                </button>
+                <button igxButton="fab" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" [disabled]="true">
+                    <i class="material-icons">edit</i>
+                </button>
+                <button igxButton="fab" igxButtonColor="yellow" igxButtonBackground="black" igxRipple="yellow" [disabled]="true">
+                    <i class="material-icons">add</i>
+                </button>
+            </div>
+        </article>
+
+        <article>
+            <h4 class="sample-title">Icon Buttons</h4>
+            <div class="buttons-sample">
+                <button igxButton="icon" igxRipple igxRippleCentered="true">
+                    <i class="material-icons">search</i>
+                </button>
+
+                <button igxButton="icon" igxRipple igxButtonColor="#E41C77" igxRippleCentered="true">
+                    <i class="material-icons">favorite</i>
+                </button>
+
+                <button igxButton="icon" igxRipple igxRippleCentered="true">
+                    <i class="material-icons">more_vert</i>
+                </button>
+                <button igxButton="icon" igxButtonColor="white" igxButtonBackground="#E41D78" igxRipple="white" igxRippleCentered="true">
+                    <i class="material-icons">search</i>
+                </button>
+
+                <button igxButton="icon" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" igxRippleCentered="true">
+                    <i class="material-icons">favorite</i>
+                </button>
+
+                <button igxButton="icon" igxButtonColor="yellow" igxButtonBackground="black" igxRipple="yellow" igxRippleCentered="true">
+                    <i class="material-icons">more_vert</i>
+                </button>
+                <button igxButton="icon" igxRipple igxRippleCentered="true" [disabled]="true">
+                    <i class="material-icons">search</i>
+                </button>
+
+                <button igxButton="icon" igxRipple igxButtonColor="#E41C77" igxRippleCentered="true" [disabled]="true">
+                    <i class="material-icons">favorite</i>
+                </button>
+
+                <button igxButton="icon" igxRipple igxRippleCentered="true" [disabled]="true">
+                    <i class="material-icons">more_vert</i>
+                </button>
+            </div>
+        </article>
+    </section>
 </div>

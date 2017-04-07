@@ -6,17 +6,18 @@ import {IgxComponentsModule, IgxDirectivesModule} from "../../../src/main";
     selector: "input-sample",
     moduleId: module.id,
     templateUrl: './sample.component.html',
-    styleUrls: ['sample.component.css']
+    styleUrls: ['../app.samples.css', 'sample.component.css']
 })
 export class InputSampleComponent {
     placeholder = "Please enter a value";
 
     user = {
-        name: 'John Doe',
+        firstName: 'John',
+        lastName: 'Doe',
         password: '1337s3cr3t',
-        comment: "N/A",
+        comment: '',
         registered: true,
         subscribed: false,
-        favouriteVarName: 'Foo'
+        gender: 'Male'
     };
 }

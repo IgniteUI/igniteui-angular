@@ -1,0 +1,27 @@
+.sample-content {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.circular-samples {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.circular-container {
+    width: 84px;
+    height: 84px;
+    padding: 16px;
+}
+
+.linear-container + .linear-container{
+    padding-top: 16px;
+}
+
+
+.button-container {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 24px;
+    z-index: 24;
+}

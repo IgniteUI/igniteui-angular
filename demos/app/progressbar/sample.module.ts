@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { IgxProgressBarModule, IgxButtonModule } from "../../../src/main";
-import { ProgressbarSampleComponent } from "./progressbarsample.component";
+import { ProgressbarSampleComponent } from "./sample.component";
 
 @NgModule({
     imports: [IgxProgressBarModule, IgxButtonModule],

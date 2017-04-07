@@ -1,16 +1,23 @@
-<div class="sample-header">
-    <h1 class="title">Cards</h1>
-    <p class="description">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas pretium lorem id tristique sagittis. Proin in mauris ac tortor placerat sollicitudin eu sit amet leo. Aliquam consectetur eu sem vitae egestas. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Cras a erat sagittis, iaculis urna ac, mollis elit. Vestibulum accumsan ex at mauris sagittis, sed tincidunt justo fringilla. Phasellus vel porttitor odio. Aenean quis nisi non ex ultrices efficitur. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec nec felis cursus erat mattis venenatis. Curabitur congue ullamcorper nisi nec blandit. Fusce molestie consectetur urna sed feugiat.
-    </p>
-</div>
-<div class="sample-content cards-container">
-    <!--Cards Column 1 Begins-->
-    <section class="cards-column">
+<div class="sample-wrapper">
+    <div class="sample-header">
+        <h1 class="title">Cards</h1>
+        <p class="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas pretium lorem id tristique sagittis. Proin in mauris ac
+            tortor placerat sollicitudin eu sit amet leo. Aliquam consectetur eu sem vitae egestas. Class aptent taciti sociosqu
+            ad litora torquent per conubia nostra, per inceptos himenaeos. Cras a erat sagittis, iaculis urna ac, mollis
+            elit. Vestibulum accumsan ex at mauris sagittis, sed tincidunt justo fringilla. Phasellus vel porttitor odio.
+            Aenean quis nisi non ex ultrices efficitur. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec
+            nec felis cursus erat mattis venenatis. Curabitur congue ullamcorper nisi nec blandit. Fusce molestie consectetur
+            urna sed feugiat.
+        </p>
+    </div>
+    <div class="sample-content">
         <!--New York City Card Begins-->
         <article class="card-wrapper">
             <igx-card>
-                <img height="194.5px" [src]="cards[0].imageUrl">
+                <div style="overflow: hidden">
+                    <img width="100%" height="100%" [src]="cards[0].imageUrl">
+                </div>
                 <igx-card-header>
                     <h3 class="igx-card-header__title">{{ cards[0].title }}</h3>
                     <h5 class="igx-card-header__subtitle">{{ cards[0].subtitle }}</h5>
@@ -21,35 +28,20 @@
                 <igx-card-actions>
                     <div class="igx-card-actions__igroup--end">
                         <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[0].icons">
-                            <i class="material-icons">{{ icon }}</i>
-                        </span>
+                        <i class="material-icons">{{ icon }}</i>
+                    </span>
                     </div>
                 </igx-card-actions>
             </igx-card>
         </article>
         <!--New York City Card End-->
-        <!--Ice Forsest Card Begins-->
-        <article class="card-wrapper">
-            <igx-card>
-                <img height="194.5px" [src]="cards[1].imageUrl">
-                <igx-card-actions>
-                    <div class="igx-card-actions__igroup--end">
-                        <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[1].icons">
-                            <i class="material-icons">{{ icon }}</i>
-                        </span>
-                    </div>
-                </igx-card-actions>
-            </igx-card>
-        </article>
-        <!--Ice Forsest Card Ends-->
-    </section>
-    <!--Cards Column 1 Ends-->
-    <!--Cards Column 2 Begins-->
-    <section class="cards-column">
+
         <!--Incepient Dawn Card Begins-->
         <article class="card-wrapper">
             <igx-card>
-                <img height="194.5px" [src]="cards[2].imageUrl">
+                <div style="overflow: hidden">
+                    <img width="100%" height="100%" [src]="cards[2].imageUrl">
+                </div>
                 <igx-card-header>
                     <h3 class="igx-card-header__title">{{ cards[2].title }}</h3>
                     <h5 class="igx-card-header__subtitle">{{ cards[2].subtitle }}</h5>
@@ -62,6 +54,45 @@
             </igx-card>
         </article>
         <!--Incepient Dawn Card Ends-->
+
+        <!--Monuments Card Begins-->
+        <article class="card-wrapper">
+            <igx-card>
+                <div style="overflow: hidden">
+                    <img width="100%" height="100%" [src]="cards[5].imageUrl">
+                </div>
+                <igx-card-actions>
+                    <div class="igx-card-actions__igroup--start">
+                        <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[5].icons">
+                        <i class="material-icons">{{ icon }}</i>
+                    </span>
+                    </div>
+                    <div class="igx-card-actions__bgroup">
+                        <button igxButton igxButtonColor="#0375be" igxRipple *ngFor="let button of cards[5].buttons">{{ button }}</button>
+                    </div>
+                </igx-card-actions>
+            </igx-card>
+        </article>
+        <!--Monuments Card Ends-->
+
+        <!--Ice Forsest Card Begins-->
+        <article class="card-wrapper">
+            <igx-card>
+                <div style="overflow: hidden">
+                    <img width="100%" height="100%" [src]="cards[1].imageUrl">
+                </div>
+                <igx-card-actions>
+                    <div class="igx-card-actions__igroup--end">
+                        <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[1].icons">
+                        <i class="material-icons">{{ icon }}</i>
+                    </span>
+                    </div>
+                </igx-card-actions>
+            </igx-card>
+        </article>
+        <!--Ice Forsest Card Ends-->
+
+
         <!--Nico Rosberg Card Begins-->
         <article class="card-wrapper">
             <igx-card>
@@ -75,6 +106,35 @@
             </igx-card>
         </article>
         <!--Nico Rosberg Card Ends-->
+
+
+        <!--Rupert Stadler Card Begins-->
+        <article class="card-wrapper">
+            <igx-card>
+                <igx-card-header class="compact">
+                    <igx-avatar [src]="cards[6].avatarUrl" roundShape="true"></igx-avatar>
+                    <div class="igx-card-header__tgroup">
+                        <h3 class="igx-card-header__title--small">{{ cards[6].title }}</h3>
+                        <h5 class="igx-card-header__subtitle">{{ cards[6].subtitle }}</h5>
+                    </div>
+                </igx-card-header>
+                <div style="overflow: hidden">
+                    <img width="100%" height="100%" [src]="cards[6].imageUrl">
+                </div>
+                <igx-card-actions>
+                    <div class="igx-card-actions__igroup--start">
+                        <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[6].icons">
+                        <i class="material-icons">{{ icon }}</i>
+                    </span>
+                    </div>
+                    <div class="igx-card-actions__bgroup">
+                        <button igxButton igxButtonColor="#0375be" igxRipple *ngFor="let button of cards[6].buttons">{{ button }}</button>
+                    </div>
+                </igx-card-actions>
+            </igx-card>
+        </article>
+        <!--Rupert Stadler Card Ends-->
+
         <!--Alicia Keys Card Begins-->
         <article class="card-wrapper">
             <igx-card>
@@ -96,51 +156,18 @@
             </igx-card>
         </article>
         <!--Alicia Keys Card Ends-->
-    </section>
-    <!--Cards Column 2 Ends-->
-    <!--Cards Column 3 Begins-->
-    <section class="cards-column">
-        <!--Monuments Card Begins-->
-        <article class="card-wrapper">
-            <igx-card>
-                <img class="igx-card__media" height="346px" [src]="cards[5].imageUrl">
-                <igx-card-actions>
-                    <div class="igx-card-actions__igroup--start">
-                        <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[5].icons">
-                            <i class="material-icons">{{ icon }}</i>
-                        </span>
-                    </div>
-                    <div class="igx-card-actions__bgroup">
-                        <button igxButton igxButtonColor="#0375be" igxRipple *ngFor="let button of cards[5].buttons">{{ button }}</button>
-                    </div>
-                </igx-card-actions>
-            </igx-card>
-        </article>
-        <!--Monuments Card Ends-->
-        <!--Rupert Stadler Card Begins-->
-        <article class="card-wrapper">
-            <igx-card>
-                <igx-card-header class="compact">
-                    <igx-avatar [src]="cards[6].avatarUrl" roundShape="true"></igx-avatar>
-                    <div class="igx-card-header__tgroup">
-                        <h3 class="igx-card-header__title--small">{{ cards[6].title }}</h3>
-                        <h5 class="igx-card-header__subtitle">{{ cards[6].subtitle }}</h5>
-                    </div>
-                </igx-card-header>
-                <img height="194.5px" [src]="cards[6].imageUrl">
-                <igx-card-actions>
-                    <div class="igx-card-actions__igroup--start">
-                        <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[6].icons">
-                            <i class="material-icons">{{ icon }}</i>
-                        </span>
-                    </div>
-                    <div class="igx-card-actions__bgroup">
-                        <button igxButton igxButtonColor="#0375be" igxRipple *ngFor="let button of cards[6].buttons">{{ button }}</button>
-                    </div>
-                </igx-card-actions>
-            </igx-card>
-        </article>
-        <!--Rupert Stadler Card Ends-->
-    </section>
-    <!--Cards Column 3 Ends-->
+
+        <!--Cards Column 1 Begins-->
+        <!--<section class="cards-column">
+    </section>-->
+        <!--Cards Column 1 Ends-->
+        <!--Cards Column 2 Begins-->
+        <!--<section class="cards-column">
+    </section>-->
+        <!--Cards Column 2 Ends-->
+        <!--Cards Column 3 Begins-->
+        <!--<section class="cards-column">
+    </section>-->
+        <!--Cards Column 3 Ends-->
+    </div>
 </div>

@@ -1,74 +1,163 @@
-<h3>Avatars</h3>
-<div style="width: 600px;">
-    <table>
-        <tr>
-            <td>
-                <igx-avatar [src]="src" [roundShape]="roundShape">
-                    <igx-badge type="warning" value="8"></igx-badge>
-                </igx-avatar>
-            </td>
-            <td>
-                <igx-avatar [src]="src">
-                </igx-avatar>
-            </td>
-            <td>
-                <igx-avatar src="https://unsplash.it/60/60?image=55">
-                </igx-avatar>
-            </td>
-            <td>
-                <igx-avatar src="https://unsplash.it/60/60?image=55" [initials]="initials"
-                    [bgColor]="bgColor" [roundShape]="roundShape">
-                </igx-avatar>
-            </td>
-            <td>
-                <igx-avatar initials="RK" bgColor="#fbb13c">
-                </igx-avatar>
-            </td>
-            <td>
-                <igx-avatar initials="AA" bgColor="#731963" roundShape="true">
-                </igx-avatar>
-            </td>
-            <td>
-                <igx-avatar roundShape="true" icon="person" bgColor="#0375be" data-init="SS">
-                </igx-avatar>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <igx-avatar initials="ZK" width="100" roundShape="true"
-                    bgColor="#ff6978">
-                    <igx-badge type="error" value="222" position="bottom-left"></igx-badge>
-                </igx-avatar>
-            </td>
-            <td>
-                <igx-avatar initials="HA" width="100" size="potatos"
-                    bgColor="#340068">
-                    <igx-badge type="info" position="top-right"></igx-badge>
-                </igx-avatar>
-            </td>
-            <td>
-                <igx-avatar initials="PP" width="100" color="black" icon="person"
-                    roundShape="false" bgColor="#94feed">
-                    <igx-badge icon="link" position="invalid"></igx-badge>
-                </igx-avatar>
-            </td>
-            <td>
-                <igx-avatar initials="PP" size="medium" roundShape="false"
-                    bgColor="#e41c77">
-                    <igx-badge type="success" icon="done" position="bottom-right"></igx-badge>
-                </igx-avatar>
-            </td>
-            <td>
-                <igx-avatar initials="ZK" size="large" roundShape="true"
-                    bgColor="#484848">
-                    <igx-badge type="success" icon="done" position="top-right"></igx-badge>
-                </igx-avatar>
-            </td>
-            <td>
-                <igx-avatar color="gray">
-                </igx-avatar>
-            </td>
-        </tr>
-    </table>
+<div class="sample-wrapper">
+    <div class="sample-header">
+        <h1 class="title">Avatar</h1>
+        <p class="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas pretium lorem id tristique sagittis. Proin in mauris ac
+            tortor placerat sollicitudin eu sit amet leo. Aliquam consectetur eu sem vitae egestas. Class aptent taciti sociosqu
+            ad litora torquent per conubia nostra, per inceptos himenaeos. Cras a erat sagittis, iaculis urna ac, mollis
+            elit. Vestibulum accumsan ex at mauris sagittis, sed tincidunt justo fringilla. Phasellus vel porttitor odio.
+            Aenean quis nisi non ex ultrices efficitur. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec
+            nec felis cursus erat mattis venenatis. Curabitur congue ullamcorper nisi nec blandit. Fusce molestie consectetur
+            urna sed feugiat.
+        </p>
+    </div>
+
+    <div class="sample-content">
+
+        <!--Round Avatars-->
+        <section>
+            <h4 class="sample-title">Circular Avatars</h4>
+            <article class="avatars-wrapper">
+                <div class="avatar-sample">
+                    <igx-avatar color="gray" [roundShape]="'true'" color="#484848"></igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar color="gray" [roundShape]="'true'" color="#484848" size="medium"></igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar color="gray" [roundShape]="'true'" color="#484848" size="large"></igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar initials="AZ" [roundShape]="'true'" bgColor="#D1D1D1" color="#484848"></igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar initials="AZ" [roundShape]="'true'" bgColor="#D1D1D1" color="#484848" size="medium"></igx-avatar>
+                </div>
+                
+                <div class="avatar-sample">
+                    <igx-avatar initials="AZ" [roundShape]="'true'" bgColor="#D1D1D1" color="#484848" size="large"></igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar src="../demos/app/avatar/images/4.jpg" roundShape="true"></igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar src="../demos/app/avatar/images/17.jpg" roundShape="true" size="medium"></igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar src="../demos/app/avatar/images/21.jpg" roundShape="true" size="large"></igx-avatar>
+                </div>
+            </article>
+
+        </section>
+
+        <!--Square Avatars-->
+        <section>
+            <h4 class="sample-title">Square Icons</h4>
+            <article class="avatars-wrapper">
+                <div class="avatar-sample">
+                    <igx-avatar color="gray" color="#484848"></igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar color="gray" color="#484848" size="medium"></igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar color="gray" color="#484848" size="large"></igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar initials="AZ" bgColor="#D1D1D1" color="#484848"></igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar initials="AZ" bgColor="#D1D1D1" color="#484848" size="medium"></igx-avatar>
+                </div>
+                
+                <div class="avatar-sample">
+                    <igx-avatar initials="AZ" bgColor="#D1D1D1" color="#484848" size="large"></igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar src="../demos/app/avatar/images/18.jpg"></igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar src="../demos/app/avatar/images/16.jpg" size="medium"></igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar src="../demos/app/avatar/images/19.jpg" size="large"></igx-avatar>
+                </div>
+            </article>
+        </section>
+
+        <!--Avatars w/ badges-->
+        <section>
+            <h4 class="sample-title">In conjunction with the <i class="light">Badge Component</i></h4>
+            <article class="avatars-wrapper">
+
+                <div class="avatar-sample">
+                    <igx-avatar color="gray" color="#484848" roundShape="true">
+                        <igx-badge type="success" position="top-left" icon="check"></igx-badge>
+                    </igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar color="gray" color="#484848" size="medium">
+                        <igx-badge type="info" position="top-right" value="8"></igx-badge>
+                    </igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar color="gray" color="#484848" size="large" roundShape="true">
+                        <igx-badge type="error" position="bottom-left" icon="close"></igx-badge>
+                    </igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar initials="AZ" bgColor="#D1D1D1"  color="#484848">
+                        <igx-badge type="warning" position="bottom-right" icon="info_outline"></igx-badge>
+                    </igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar initials="AZ" bgColor="#D1D1D1" color="#484848" roundShape="true" size="medium">
+                        <igx-badge type="success" position="top-left" value="72"></igx-badge>
+                    </igx-avatar>
+                </div>
+                
+                <div class="avatar-sample">
+                    <igx-avatar initials="AZ" bgColor="#D1D1D1" color="#484848" size="large">
+                        <igx-badge type="info" position="bottom-right" icon="star"></igx-badge>
+                    </igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar src="../demos/app/avatar/images/22.jpg" roundShape="true">
+                        <igx-badge type="error" position="top-left" value="212"></igx-badge>
+                    </igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar src="../demos/app/avatar/images/14.jpg" size="medium">
+                        <igx-badge type="warning" position="top-right" icon="perm_identity"></igx-badge>
+                    </igx-avatar>
+                </div>
+
+                <div class="avatar-sample">
+                    <igx-avatar src="../demos/app/avatar/images/8.jpg" roundShape="true" size="large">
+                        <igx-badge type="success" position="bottom-left" icon="chat_bubble"></igx-badge>
+                    </igx-avatar>
+                </div>
+            </article>
+        </section>
+    </div>
 </div>
-<span igxButton="raised" (click)="changeLink()">Change Image</span>

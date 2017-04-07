@@ -1,40 +1,57 @@
-<section class="container">
-    <article class="sample">
-        <h4>Exclusive Selection | Horizontal</h4>
-        <igx-buttongroup [multiSelection]="!multi" [values]="alignOptions" (onUnselect)="onSelect($event)" (onSelect)="onSelect($event)">
-        </igx-buttongroup>
-    </article>
-    <h5>First button is selected: {{alignOptions[0].selected}}</h5>
+<div class="sample-wrapper">
+    <div class="sample-header">
+        <h1 class="title">Button Group</h1>
+        <p class="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas pretium lorem id tristique sagittis. Proin in mauris ac
+            tortor placerat sollicitudin eu sit amet leo. Aliquam consectetur eu sem vitae egestas. Class aptent taciti sociosqu
+            ad litora torquent per conubia nostra, per inceptos himenaeos. Cras a erat sagittis, iaculis urna ac, mollis
+            elit. Vestibulum accumsan ex at mauris sagittis, sed tincidunt justo fringilla. Phasellus vel porttitor odio.
+            Aenean quis nisi non ex ultrices efficitur. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec
+            nec felis cursus erat mattis venenatis. Curabitur congue ullamcorper nisi nec blandit. Fusce molestie consectetur
+            urna sed feugiat.
+        </p>
+    </div>
 
-    <article class="sample">
-        <h4>Multiple Selection | Horizontal</h4>
-        <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="false">
-        </igx-buttongroup>
-    </article>
+    <section class="sample-content">
 
-    <article class="sample">
-        <h4>Multiple Selection | Horizontal Disabled</h4>
-        <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="true">
-        </igx-buttongroup>
-    </article>
+        <article class="sample">
+            <h4 class="sample-title">Exclusive Selection <i class="light">Horizontal</i></h4>
+            <igx-buttongroup [multiSelection]="!multi" [values]="alignOptions" (onUnselect)="onSelect($event)" (onSelect)="onSelect($event)">
+            </igx-buttongroup>
+            <h5>First button is selected: {{alignOptions[0].selected}}</h5>
+        </article>
 
-    <article class="sample">
-        <h4>Exclusive Selection | Vertical</h4>
-        <igx-buttongroup [multiSelection]="false" [values]="cities" [alignment]="alignment">
-        </igx-buttongroup>
-    </article>
 
-    <article class="sample">
-        <h4>Mutliple Selection | Vertical</h4>
-        <igx-buttongroup [multiSelection]="true" [values]="borders" [alignment]="alignment">
-        </igx-buttongroup>
-    </article>
+        <article class="sample">
+            <h4 class="sample-title">Multiple Selection <i class="light">Horizontal</i></h4>
+            <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="false">
+            </igx-buttongroup>
+        </article>
 
-    
-    <article class="sample">
-        <h4>Custom class to style the content</h4>
-        <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="false" itemContentCssClass="customContentStyle">
-        </igx-buttongroup>
-    </article>
+        <article class="sample">
+            <h4 class="sample-title">Multiple Selection <i class="light">Horizontal Disabled</i></h4>
+            <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="true">
+            </igx-buttongroup>
+        </article>
 
-</section>
+        <article class="sample">
+            <h4 class="sample-title">Exclusive Selection <i class="light">Vertical</i></h4>
+            <igx-buttongroup [multiSelection]="false" [values]="cities" [alignment]="alignment">
+            </igx-buttongroup>
+        </article>
+
+        <article class="sample">
+            <h4 class="sample-title">Mutliple Selection <i class="light">Vertical</i></h4>
+            <igx-buttongroup [multiSelection]="true" [values]="borders" [alignment]="alignment">
+            </igx-buttongroup>
+        </article>
+
+        
+        <article class="sample">
+            <h4 class="sample-title">Custom class to style the content</h4>
+            <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="false" itemContentCssClass="customContentStyle">
+            </igx-buttongroup>
+        </article>
+
+    </section>
+</div>
