@@ -28,6 +28,7 @@
     display: block;
     position: relative;
     list-style-type: none;
+    user-select: none;
 }
 
 %igx-list-header {
@@ -54,9 +55,12 @@
     color: $list-item-color;
     background-color: $list-item-background;
     z-index: 2;
+    // &:not(:active) {
+    //     transition: left .3s $ease-out-quad;
+    // }
 }
 
 %igx-list-item--active {
     background-color: $list-item-active-background;
-    box-shadow: $list-item-active-shadow;
+    z-index: 3;
 }

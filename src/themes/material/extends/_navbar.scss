@@ -1,22 +1,24 @@
 %igx-navbar-display {
-    $background-color: $primary-color;
-    
-    position: fixed;
-    width: 100%;
-    top: 0;
+    position: relative;   
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    flex-flow: row nowrap;
     align-items: center;
+    justify-content: space-between;
+    width: 100%;
     height: 56px;
-    background: $background-color;
-    color: set-color($background-color);
+    padding: 0 16px;
+    background: $primary-color;
+    color: set-color($primary-color);
     box-shadow: $elevate-4;
     z-index: 4;
 }
 
-%igx-navbar-left-btn {
-    padding-left: 16px;
+%igx-navbar-bundle {
+    display: flex;
+    align-items: center;
+    * + * {
+        margin-left: 16px;
+    }
 }
 
 %igx-navbar-left-btn--disabled {
@@ -24,9 +26,6 @@
 }
 
 %igx-navbar-title {
-    padding: 0;
-    margin: 0;
-    font-size: 18px;
-    line-height: 18px;
-    padding-left: 16px;
+    font-size: em(18px, 16px);
+    line-height: em(18px, 16px);
 }

@@ -398,7 +398,8 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private setSliderOffset() {
-        this.xOffset = this.slider.nativeElement.offsetLeft;
+        let rect = this.slider.nativeElement.getBoundingClientRect();
+        this.xOffset = rect.left; 
     }
 
     public getSliderOffset(): number {

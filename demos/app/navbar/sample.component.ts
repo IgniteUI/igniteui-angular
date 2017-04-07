@@ -6,7 +6,8 @@ const CURRENT_VIEW: string = "Ignite UI JS Blocks Samples";
 @Component({
     moduleId: module.id,
     selector: "navbar-sample",
-    templateUrl: "sample.html",
+    templateUrl: "sample.component.html",
+    styleUrls: ["../app.samples.css", "./sample.component.css"]
 })
 export class NavbarSampleComponent implements OnInit {
     currentView: string;
@@ -24,8 +25,6 @@ export class NavbarSampleComponent implements OnInit {
     }
 
     canGoBack() {
-        var isStackHisoryEmpty = window.history.length == 0;
-
-        return !isStackHisoryEmpty;
+        return window.history.length == 0;
     }
 }

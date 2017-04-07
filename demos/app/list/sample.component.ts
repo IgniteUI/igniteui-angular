@@ -8,10 +8,8 @@ import { IgxDialogModule, IgxDialog } from '../../../src/dialog/dialog.component
 @Component({
     selector: "list-sample",
     moduleId: module.id,
-    styles: [
-        '.wrapper { width:33%; display:inline-block; float: left; padding: 10px; height: 600px; border: 1px solid lightgray; overflow: auto;}'
-    ],
-    templateUrl: './sample.component.html'
+    templateUrl: './sample.component.html',
+    styleUrls: ["../app.samples.css", "./sample.component.css"]
 })
 export class ListSampleComponent {
     @ViewChild("checkbox") checkbox: any;
@@ -25,22 +23,17 @@ export class ListSampleComponent {
     fruitsFilteredItemsCount = undefined;
 
     private navItems: Array<Object> = [
-            { key:"1", text: "Nav1", link: "#" },
-            { key:"2", text: "Nav2", link: "#" },
-            { key:"3", text: "Nav3", link: "#" },
-            { key:"4", text: "Nav4", link: "#" },
-            { key:"5", text: "Nav5", link: "#" },
-            { key:"6", text: "Nav6", link: "#" },
-            { key:"7", text: "Nav7", link: "#" },
-            { key:"8", text: "Nav8", link: "#" },
-            { key:"9", text: "Nav9", link: "#" },
-            { key:"10", text: "Nav10", link: "#" },
-            { key:"11", text: "Nav11", link: "#" },
-            { key:"12", text: "Nav12", link: "#" },
-            { key:"13", text: "Nav13", link: "#" },
-            { key:"14", text: "Nav14", link: "#" },
-            { key:"15", text: "Nav15", link: "#" }
-        ];
+        { key: "1", text: "Terrance Orta", phone: "770-504-2217" ,avatar: "../demos/app/avatar/images/1.jpg", favorite: true, link: "#" },
+        { key: "2", text: "Richard Mahoney", phone: "423-676-2869", avatar: "../demos/app/avatar/images/2.jpg", favorite: false, link: "#" },
+        { key: "3", text: "Donna Price", phone: "859-496-2817", avatar: "../demos/app/avatar/images/3.jpg", favorite: false, link: "#" },
+        { key: "4", text: "Lisa Landers", phone: "901-747-3428", avatar: "../demos/app/avatar/images/4.jpg", favorite: false, link: "#" },
+        { key: "5", text: "Dorothy H. Spencer", phone: "573-394-9254", avatar: "../demos/app/avatar/images/12.jpg", favorite: true, link: "#" },
+        { key: "6", text: "Stephanie May", phone: "323-668-1482", avatar: "../demos/app/avatar/images/13.jpg", favorite: false, link: "#" },
+        { key: "7", text: "Marianne Taylor", phone: "401-661-3742", avatar: "../demos/app/avatar/images/14.jpg", favorite: false, link: "#" },
+        { key: "8", text: "Tammie Alvarez", phone: "662-374-2920", avatar: "../demos/app/avatar/images/15.jpg", favorite: true, link: "#" }, 
+        { key: "9", text: "Charlotte Flores", phone: "240-455-2267", avatar: "../demos/app/avatar/images/16.jpg", favorite: true, link: "#" },
+        { key: "10", text: "Ward Riley", phone: "724-742-0979", avatar: "../demos/app/avatar/images/17.jpg", favorite: false, link: "#" }
+    ];
 
     private fruits: Array<Fruit> = [];
 
@@ -62,12 +55,12 @@ export class ListSampleComponent {
         };
 
         _fo.metConditionFn = function (item: any) {
-             item.hidden = false;
-         };
+            item.hidden = false;
+        };
 
         _fo.overdueConditionFn = function (item: any) {
-             item.hidden = true;
-         };
+            item.hidden = true;
+        };
 
         return _fo;
     }
@@ -80,11 +73,11 @@ export class ListSampleComponent {
         return fruitsFilterOpts;
     }
 
-    private filteringHandler = function(args) {
+    private filteringHandler = function (args) {
         args.cancel = !this.checkbox.checked;
     }
 
-    private filteredHandler = function(args) {
+    private filteredHandler = function (args) {
     }
 
     private onLeftPan(args) {
@@ -103,7 +96,7 @@ export class ListSampleComponent {
     }
 
     private onAddFruitButtonClicked(fruitName) {
-        this.fruits.push( {id: this.fruits.length, name: fruitName} );
+        this.fruits.push({ id: this.fruits.length, name: fruitName });
         this.addFruitDialog.close();
     }
 

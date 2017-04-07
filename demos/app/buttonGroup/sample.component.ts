@@ -40,7 +40,7 @@ class Button {
     selector: "buttongroup-sample",
     moduleId: module.id,
     templateUrl: './sample.component.html',
-    styleUrls: ['./sample.styles.css']
+    styleUrls: ['../app.samples.css', './sample.component.css']
 })
 
 export class ButtonGroupSampleComponent implements OnInit {

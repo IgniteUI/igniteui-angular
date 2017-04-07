@@ -1,8 +1,26 @@
-<h3>Carousel</h3>
-<div style="width: 100%;">
-    <igx-carousel [interval]="interval" [pause]="pause" [loop]="loop">
-        <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
-            <img [src]="slide.image">
-        </igx-slide>
-    </igx-carousel>
+<div class="sample-wrapper">
+    <div class="sample-header">
+        <h1 class="title">Carousel</h1>
+        <p class="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas pretium lorem id tristique sagittis. Proin in mauris ac
+            tortor placerat sollicitudin eu sit amet leo. Aliquam consectetur eu sem vitae egestas. Class aptent taciti sociosqu
+            ad litora torquent per conubia nostra, per inceptos himenaeos. Cras a erat sagittis, iaculis urna ac, mollis
+            elit. Vestibulum accumsan ex at mauris sagittis, sed tincidunt justo fringilla. Phasellus vel porttitor odio.
+            Aenean quis nisi non ex ultrices efficitur. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec
+            nec felis cursus erat mattis venenatis. Curabitur congue ullamcorper nisi nec blandit. Fusce molestie consectetur
+            urna sed feugiat.
+        </p>
+    </div>
+    <div class="sample-content">
+        <section>
+            <article>
+                <h4 class="sample-title">Desktop</h4>
+                <igx-carousel [interval]="interval" [pause]="pause" [loop]="loop">
+                    <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
+                        <img [src]="slide.image">
+                    </igx-slide>
+                </igx-carousel>
+            </article>
+        </section>
+    </div>
 </div>

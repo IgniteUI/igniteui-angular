@@ -4,7 +4,7 @@ import { IgxSnackbar } from '../../../src/snackbar/snackbar.component';
 @Component({
     moduleId: module.id,
     selector: 'snackbar-sample',
-    styleUrls: ['sample.component.css'],
+    styleUrls: ['sample.component.css', '../app.samples.css'],
     templateUrl: 'sample.component.html',
 })
 export class IgxSnackbarSampleComponent implements OnInit {

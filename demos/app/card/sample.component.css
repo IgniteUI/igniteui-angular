@@ -1,16 +1,8 @@
-.cards-container {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-around;
-}
-
-.cards-column {
-    display: flex;
-    flex-flow: column wrap;
+.sample-content {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 
 .card-wrapper {
-    max-width: 346px;
-    min-width: 300px;
-    margin: 21px;
+    max-width: 100%;
+    min-width: 320px;
 }

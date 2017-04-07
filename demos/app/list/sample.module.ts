@@ -5,7 +5,7 @@ import { IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
 import { ListSampleComponent } from "./sample.component";
 
 @NgModule({
-    imports: [IgxComponentsModule, IgxDirectivesModule, CommonModule, FormsModule],
+    imports: [IgxComponentsModule, IgxDirectivesModule, CommonModule, FormsModule, CommonModule, FormsModule],
     declarations: [ListSampleComponent]
 })
 export class ListSampleModule {}

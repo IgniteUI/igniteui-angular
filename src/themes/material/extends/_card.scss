@@ -4,6 +4,7 @@
     box-shadow: $card-shadow;
     overflow: hidden;
     border-radius: $card-border-radius;
+    background: #fff;
     &:hover {
         box-shadow: $card-shadow-hover;
     }
