@@ -55,12 +55,13 @@
     color: $list-item-color;
     background-color: $list-item-background;
     z-index: 2;
-    // &:not(:active) {
-    //     transition: left .3s $ease-out-quad;
-    // }
 }
 
 %igx-list-item--active {
     background-color: $list-item-active-background;
     z-index: 3;
+}
+
+%igx-list-item--inactive {
+    transition: left .3s $ease-out-quad;
 }
