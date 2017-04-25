@@ -2,7 +2,7 @@ import {
     Directive,
     Input,
     ElementRef,
-    Renderer,
+    Renderer2,
     NgModule
 } from '@angular/core';
 
@@ -10,8 +10,8 @@ import {
     selector: '[igxLabel]'
 })
 export class IgxLabel {
-    constructor(el: ElementRef, renderer: Renderer){
-        renderer.setElementClass(el.nativeElement, 'igx-form-group__label', true);
+    constructor(el: ElementRef, renderer: Renderer2){
+        renderer.addClass(el.nativeElement, 'igx-form-group__label');
     }
 }
 
