@@ -1,4 +1,5 @@
 import {TestBed, async } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {IgxSnackbar, IgxSnackbarModule} from './snackbar.component';
 import {Component, ViewChild} from "@angular/core";
 
@@ -9,6 +10,7 @@ describe('IgxSnackbar', () => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000;
         TestBed.configureTestingModule({
             imports: [
+                BrowserAnimationsModule,
                 IgxSnackbarModule
             ],
             declarations: [

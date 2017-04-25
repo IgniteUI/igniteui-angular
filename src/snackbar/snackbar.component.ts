@@ -1,5 +1,5 @@
 import {Component, NgModule, Input, Output, EventEmitter, NgZone} from "@angular/core";
-import {  trigger, state, style, transition, animate, AnimationTransitionEvent } from "@angular/core";
+import {  trigger, state, style, transition, animate } from "@angular/animations";
 import { HammerGesturesManager } from "../core/touch";
 import { CommonModule } from "@angular/common";
 
@@ -137,8 +137,8 @@ export class IgxSnackbar {
      * The event that will be thrown when the snackbar animation starts
      * @type {EventEmitter<AnimationTransitionEvent>}
      */
-    @Output() animationStarted = new EventEmitter<AnimationTransitionEvent>();
-    private snackbarAnimationStarted(evt?: AnimationTransitionEvent): void {
+    @Output() animationStarted = new EventEmitter<any>();
+    private snackbarAnimationStarted(evt?: any): void {
         if(evt.fromState == "void") {
             this.animationStarted.emit(evt);
         }
@@ -148,8 +148,8 @@ export class IgxSnackbar {
      * The event that will be thrown when the snackbar animation ends
      * @type {EventEmitter<AnimationTransitionEvent>}
      */
-    @Output() animationDone = new EventEmitter<AnimationTransitionEvent>();
-    private snackbarAnimationDone(evt?: AnimationTransitionEvent): void {
+    @Output() animationDone = new EventEmitter<any>();
+    private snackbarAnimationDone(evt?: any): void {
         if(evt.fromState == "show") {
             this.animationDone.emit(evt);
         }

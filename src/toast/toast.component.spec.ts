@@ -1,4 +1,5 @@
 import {TestBed, async } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {IgxToast, IgxToastModule, IgxToastPosition} from './toast.component';
 import {Component, ViewChild} from "@angular/core";
 import {By} from "@angular/platform-browser";
@@ -10,6 +11,7 @@ describe('IgxToast', () => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000;
         TestBed.configureTestingModule({
             imports: [
+                BrowserAnimationsModule,
                 IgxToastModule
             ],
             declarations: [

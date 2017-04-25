@@ -1,5 +1,5 @@
 import { Component, ViewChild, Input, Output, EventEmitter, ElementRef, NgModule, OnInit } from '@angular/core';
-import { trigger, state, style, transition, animate } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { IgxButtonModule } from "../button/button.directive";
 import { IgxRippleModule } from "../directives/ripple.directive";
@@ -77,7 +77,7 @@ export class IgxDialog {
     @Output() onClose = new EventEmitter();
 
     @Output() onLeftButtonSelect = new EventEmitter();
-    @Output() onRightButtonSelect = new EventEmitter();    
+    @Output() onRightButtonSelect = new EventEmitter();
 
     @ViewChild('dialog') dialogEl: ElementRef;
 
@@ -89,7 +89,7 @@ export class IgxDialog {
         if (this.isOpen) {
             return;
         }
-        
+
         this.toggleState('open');
         this.onOpen.emit(this);
     }

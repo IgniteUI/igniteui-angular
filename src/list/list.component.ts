@@ -1,4 +1,4 @@
-import { Component, Input, Output, ContentChildren, QueryList, Renderer, HostBinding,
+import { Component, Input, Output, ContentChildren, QueryList, Renderer2, HostBinding,
      NgModule, OnInit, OnDestroy, ViewChild, Inject, forwardRef, ElementRef, EventEmitter, AfterContentInit } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { HammerGesturesManager } from '../core/touch';
@@ -38,7 +38,7 @@ export class IgxList {
 
         return items;
     }
-    
+
     get headers(): IgxListItem[] {
         let headers: IgxListItem[] = [];
         if (this.children !== undefined) {
@@ -90,7 +90,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     private _innerStyle: string = "";
     private _previousPanDeltaX = 0;
 
-    hidden: boolean = false;    
+    hidden: boolean = false;
 
     get panState(): IgxListPanState {
         return  this._panState;
@@ -134,7 +134,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     @Input() href: string;
     @Input() options: Array<Object>
 
-    constructor(@Inject(forwardRef(() => IgxList)) private list: IgxList, public element: ElementRef, private _renderer: Renderer) {
+    constructor(@Inject(forwardRef(() => IgxList)) private list: IgxList, public element: ElementRef, private _renderer: Renderer2) {
     }
 
     public ngOnInit() {
@@ -149,7 +149,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
             this.element.nativeElement.style.touchAction = "pan-y";
         }
 
-        this.element.nativeElement.setAttribute('aria-label', this.element.nativeElement.textContent.trim());        
+        this.element.nativeElement.setAttribute('aria-label', this.element.nativeElement.textContent.trim());
     }
 
     public ngOnDestroy() {
@@ -185,7 +185,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
                 this.left = this.maxRight;
             }
         }
-        
+
         this._previousPanDeltaX = ev.deltaX;
     }
 
@@ -206,14 +206,14 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
         this._previousPanDeltaX = 0;
     }
 
-    private performMagneticGrip() {        
+    private performMagneticGrip() {
         var widthTriggeringGrip = this.width * this._FRACTION_OF_WIDTH_TO_TRIGGER_GRIP;
         var currentState = this.list
         if (this.left > 0) {
             if (this.left > widthTriggeringGrip) {
                 this.left = this.maxRight;
                 this._panState = IgxListPanState.RIGHT;
-            } else {                
+            } else {
                 this.left = 0;
                 this._panState = IgxListPanState.NONE;
             }
@@ -221,7 +221,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
             if (-this.left > widthTriggeringGrip) {
                 this.left = this.maxLeft;
                 this._panState = IgxListPanState.LEFT;
-            } else {                
+            } else {
                 this.left = 0;
                 this._panState = IgxListPanState.NONE;
             }

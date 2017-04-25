@@ -1,5 +1,5 @@
 import {
-    Component, NgModule, Input, ElementRef, ViewChild, OnInit, AfterViewInit, forwardRef, Renderer
+    Component, NgModule, Input, ElementRef, ViewChild, OnInit, AfterViewInit, forwardRef, Renderer2
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { HammerGesturesManager } from "../core/touch";
@@ -52,7 +52,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
 
     public isActiveLabel: boolean = false;
 
-    constructor(private renderer: Renderer) {}
+    constructor(private renderer: Renderer2) {}
     /**
      *
      * @type {number}
@@ -266,7 +266,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
             this.positionHandle(this.thumbTo, this.upperValue);
             this.positionHandle(this.thumbFrom, this.lowerValue);
         }
-        
+
         this.updateTrack();
     }
 
@@ -330,8 +330,8 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
 		let interval = this.stepRange > 1 ? 100 / this.stepRange : null;
         // CONSIDER
         // Use the renderer to style all elements of the range component?
-        this.renderer.setElementStyle(this.ticks.nativeElement, 'background', this.generateTickMarks('white', interval));
-        
+        this.renderer.setStyle(this.ticks.nativeElement, 'background', this.generateTickMarks('white', interval));
+
         // OTHERWISE uncomment below
         // this.ticks.nativeElement.style.backround = this.generateTickMarks('white', interval);
 	}
@@ -399,7 +399,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
 
     private setSliderOffset() {
         let rect = this.slider.nativeElement.getBoundingClientRect();
-        this.xOffset = rect.left; 
+        this.xOffset = rect.left;
     }
 
     public getSliderOffset(): number {
