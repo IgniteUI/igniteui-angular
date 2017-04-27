@@ -45,7 +45,7 @@ export abstract class BaseProgress {
 
                 this.onProgressChanged.emit(changedValues);
                 if(circular){
-                    this.renderer.setElementStyle(circular.nativeElement, 'strokeDashoffset', percentage);
+                    this.renderer.setStyle(circular.nativeElement, 'strokeDashoffset', percentage);
                 }
             } else {
                 // Update progress bar percent value
