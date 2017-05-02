@@ -1,6 +1,6 @@
 import { Component, NgModule, Input, EventEmitter, Output } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { trigger, state, style, transition, animate } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 /**
  * IgxToast provides information and warning messages. They could not be dismissed, are non-interactive and can appear

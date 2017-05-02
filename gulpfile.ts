@@ -50,7 +50,7 @@ gulp.task("cleanup", () => {
 gulp.task("build.js", () => {
     return gulp.src(tsSources.concat("./typings/index.d.ts"), { base: "."})
         .pipe(sourcemaps.init())
-        .pipe(ts(tsProject))
+        .pipe(tsProject())
         .pipe(sourcemaps.write("."))
         .pipe(gulp.dest("."));
 });
@@ -61,7 +61,7 @@ gulp.task("build.src", () => {
     var tsResult = gulp.src(["./typings/index.d.ts"].concat(source, specFilesNegate), { base: "./src"})
         .pipe(inlineNg2Template({ useRelativePaths: true, base: "/src/*"}))
         .pipe(sourcemaps.init())
-        .pipe(ts(tsProdProject));
+        .pipe(tsProdProject());
 
     return merge(
         tsResult.js.pipe(sourcemaps.write()).pipe(gulp.dest("./igniteui-js-blocks")),

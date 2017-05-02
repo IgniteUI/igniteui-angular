@@ -1,4 +1,5 @@
 import { Component, ViewChild } from "@angular/core";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { FilteringCondition } from "../data-operations/filtering-condition";
 import { IgxGridComponent, IgxGridModule, IgxGridRow } from "./grid.component";
@@ -13,7 +14,7 @@ describe("IgxGrid", () => {
                 IgxGridTemplatedTestComponent,
                 IgxGridWithAutogenerateTestComponent
             ],
-            imports: [IgxGridModule]
+            imports: [BrowserAnimationsModule, IgxGridModule]
         })
         .compileComponents();
     }));
@@ -747,12 +748,12 @@ export class IgxGridngForDefinitionTestComponent {
     template: `
     <igx-grid [data]="data">
         <igx-column field="ID">
-            <template igxHeader let-col="column">
+            <ng-template igxHeader let-col="column">
                 <span class="myheadertemplate">{{ col.field }}</span>
-            </template>
-            <template igxCell let-item="item">
+            </ng-template>
+            <ng-template igxCell let-item="item">
                 <span class="mybodytemplate">{{ item }}</span>
-            </template>
+            </ng-template>
         </igx-column>
         <igx-column field="Name"></igx-column>
     </igx-grid>

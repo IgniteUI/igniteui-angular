@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, Directive, Input, Output, NgModule, EventEmitter, ElementRef, QueryList, ViewChildren, Inject, forwardRef, AfterViewInit, Renderer } from '@angular/core';
+import { Component, ChangeDetectorRef, Input, Output, NgModule, EventEmitter, ElementRef, QueryList, ViewChildren, Inject, forwardRef, AfterViewInit, Renderer2 } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { IgxRippleModule } from "../../src/directives/ripple.directive";
 import { IgxButtonModule, IgxButton } from "../button/button.directive";
@@ -38,7 +38,7 @@ export class IgxButtonGroup implements AfterViewInit {
     @Output() onSelect = new EventEmitter();
     @Output() onUnselect = new EventEmitter();
 
-    constructor(private _el: ElementRef, private _renderer: Renderer, cdr: ChangeDetectorRef) {
+    constructor(private _el: ElementRef, private _renderer: Renderer2, cdr: ChangeDetectorRef) {
     }
 
     _clickHandler(event, i) {
@@ -66,7 +66,7 @@ export class IgxButtonGroup implements AfterViewInit {
         buttonElement.setAttribute("data-selected", true);
         this.onSelect.emit({ button: this.buttons.toArray()[index], index: index });
         this.values[index].selected = true;
-        
+
         // deselect other buttons if multiSelection is not enabled
         if (!this.multiSelection && this.selectedIndexes.length > 0) {
             this.buttons.forEach((b, i) => {

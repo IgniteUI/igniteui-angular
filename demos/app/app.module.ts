@@ -1,6 +1,6 @@
-import { GridSampleModule } from './grid/sample.module';
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule } from "@angular/forms";
 
 
@@ -12,6 +12,7 @@ import { CarouselSampleModule } from "./carousel/sample.module";
 import { TabBarSampleModule } from "./tabbar/sample.module";
 import { ListSampleModule } from "./list/sample.module";
 import { ButtonSampleModule } from "./button/sample.module";
+import { GridSampleModule } from './grid/sample.module';
 import { ButtonGroupSampleModule } from './buttonGroup/sample.module';
 import { AvatarSampleModule } from "./avatar/sample.module";
 import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
@@ -29,6 +30,7 @@ import { DataOperationsSampleModule } from "./data-operations/sample.module";
 @NgModule({
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         FormsModule,
         routing,
         IgxComponentsModule,

@@ -1,4 +1,4 @@
-import { Directive, Pipe, PipeTransform, NgModule, Output, EventEmitter, ElementRef, Renderer, Input, OnChanges, SimpleChanges } from "@angular/core";
+import { Directive, Pipe, PipeTransform, NgModule, Output, EventEmitter, ElementRef, Renderer2, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
 @Directive({
@@ -10,7 +10,7 @@ export class IgxFilterDirective implements OnChanges {
 
     @Input("igxFilter") filterOptions: IgxFilterOptions;
 
-    constructor(private element: ElementRef, renderer: Renderer) {
+    constructor(private element: ElementRef, renderer: Renderer2) {
     }
 
     ngOnChanges(changes: SimpleChanges) {

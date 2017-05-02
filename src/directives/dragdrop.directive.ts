@@ -9,7 +9,7 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    Renderer,
+    Renderer2,
 } from "@angular/core";
 
 export interface IgxDropEvent {
@@ -32,8 +32,7 @@ export class IgxDraggableDirective implements OnInit, OnDestroy {
     @HostListener("dragstart", ["$event"])
     protected onDragStart(event: DragEvent): void {
         if (this.dragClass) {
-            this._renderer.setElementClass(this._elementRef.nativeElement,
-                this.dragClass, true);
+            this._renderer.addClass(this._elementRef.nativeElement, this.dragClass);
         }
         event.dataTransfer.effectAllowed = this.effectAllowed;
         event.dataTransfer.setData("data", JSON.stringify(this.data));
@@ -43,12 +42,11 @@ export class IgxDraggableDirective implements OnInit, OnDestroy {
     protected onDragEnd(event: DragEvent): void {
         event.preventDefault();
         if (this.dragClass) {
-            this._renderer.setElementClass(this._elementRef.nativeElement,
-                this.dragClass, false);
+            this._renderer.removeClass(this._elementRef.nativeElement, this.dragClass);
         }
     }
 
-    constructor(private _elementRef: ElementRef, private _renderer: Renderer) {}
+    constructor(private _elementRef: ElementRef, private _renderer: Renderer2) {}
 
     public ngOnInit(): void {
         this.draggable = true;
@@ -73,16 +71,14 @@ export class IgxDroppableDirective {
     @HostListener("dragenter", ["$event"])
     protected onDragEnter(event: DragEvent): void {
         if (this.dropClass) {
-            this._renderer.setElementClass(this._elementRef.nativeElement,
-                this.dropClass, true);
+            this._renderer.addClass(this._elementRef.nativeElement, this.dropClass);
         }
     }
 
     @HostListener("dragleave", ["$event"])
     protected onDragLeave(event: DragEvent): void {
         if (this.dropClass) {
-            this._renderer.setElementClass(this._elementRef.nativeElement,
-                this.dropClass, false);
+            this._renderer.removeClass(this._elementRef.nativeElement, this.dropClass);
         }
     }
 
@@ -102,8 +98,7 @@ export class IgxDroppableDirective {
         }
 
         if (this.dropClass) {
-            this._renderer.setElementClass(this._elementRef.nativeElement,
-                this.dropClass, false);
+            this._renderer.removeClass(this._elementRef.nativeElement, this.dropClass);
         }
         let eventData: any = JSON.parse(event.dataTransfer.getData("data"));
         this.onDrop.emit(<IgxDropEvent> {
@@ -113,7 +108,7 @@ export class IgxDroppableDirective {
         });
     }
 
-    constructor(private _elementRef: ElementRef, private _renderer: Renderer) {}
+    constructor(private _elementRef: ElementRef, private _renderer: Renderer2) {}
 
 }
 

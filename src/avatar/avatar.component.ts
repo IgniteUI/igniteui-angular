@@ -1,6 +1,4 @@
-import { NgModule, Directive, Component, ElementRef, Renderer,
-    OnInit, Input, Output, ViewChild, HostBinding
-} from '@angular/core';
+import { NgModule, Component, ElementRef, Renderer2, Input, ViewChild } from '@angular/core';
 import { CommonModule } from "@angular/common";
 
 export enum Size { SMALL, MEDIUM, LARGE };
@@ -72,7 +70,7 @@ export class IgxAvatar {
         this._icon = value;
     }
 
-    constructor(public element_ref: ElementRef, private renderer: Renderer) {
+    constructor(public element_ref: ElementRef, private renderer: Renderer2) {
         this._addEventListeners(renderer);
     }
 
@@ -116,7 +114,7 @@ export class IgxAvatar {
         return canvas.toDataURL("image/png");
     }
 
-    private _addEventListeners(renderer: Renderer) {
+    private _addEventListeners(renderer: Renderer2) {
 
     }
 }

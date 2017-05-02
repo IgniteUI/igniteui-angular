@@ -1,4 +1,4 @@
-import { Component, NgModule, AfterViewInit, Renderer, ViewChild, ViewChildren, QueryList, ElementRef } from "@angular/core";
+import { Component, NgModule, AfterViewInit, Renderer2, ViewChild, ViewChildren, QueryList, ElementRef } from "@angular/core";
 import { IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
 import { RouterModule, Router } from '@angular/router';
 
@@ -8,7 +8,7 @@ import { RouterModule, Router } from '@angular/router';
     templateUrl: 'sample.component.html',
     styleUrls: ['sample.component.css', '../app.samples.css']
 })
-export class TabBarSampleComponent {
+export class TabBarSampleComponent implements AfterViewInit {
     @ViewChildren('tabbarEl') tabbar: QueryList<ElementRef>;
 
     private contacts: Array<Object> = [
@@ -23,7 +23,7 @@ export class TabBarSampleComponent {
 
     options: Object = {};
 
-    constructor(private router: Router, private renderer: Renderer) { }
+    constructor(private router: Router, private renderer: Renderer2) { }
 
     route(event) {
         if (event.panel.index == 2) {
@@ -34,7 +34,7 @@ export class TabBarSampleComponent {
     ngAfterViewInit() {
         this.tabbar.map(e => {
             menubar = e.nativeElement.querySelector('.igx-tab-bar__menu');
-            this.renderer.setElementStyle(menubar, 'position', 'absolute');
+            this.renderer.setStyle(menubar, 'position', 'absolute');
         });
     }
 }
