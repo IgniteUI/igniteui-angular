@@ -3,10 +3,10 @@
 
     @include e(toggle) {
         @extend %igx-filtering-toggle;
+    }
 
-        @include m(active) {
-            @extend %igx-filtering-toggle--active;
-        }
+    @include e(toggle, $m:active) {
+        @extend %igx-filtering-toggle--active;
     }
 
     @include e(options) {

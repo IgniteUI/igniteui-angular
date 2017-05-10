@@ -3,10 +3,6 @@
 
     @include e(inner) {
        @extend %igx-carousel-slide-wrapper;
-
-       /*@include m(active) {
-           @extend %igx-carousel-slide--active;
-       }*/
     }
 
     @include e(indicators){
@@ -15,23 +11,23 @@
 
     @include e(arrow) {
         @extend %igx-carousel-arrow;
+    }
 
-        @include m(prev) {
-            @extend %igx-carousel-arrow;
-            @extend %igx-carousel-arrow--prev;
-                    
-            &:hover {
-                @extend %igx-carousel-arrow--hover;
-            }
+    @include e(arrow, $m:prev) {
+        @extend %igx-carousel-arrow;
+        @extend %igx-carousel-arrow--prev;
+                
+        &:hover {
+            @extend %igx-carousel-arrow--hover;
         }
+    }
 
-        @include m(next) {
-            @extend %igx-carousel-arrow;
-            @extend %igx-carousel-arrow--next;
-                    
-            &:hover {
-                @extend %igx-carousel-arrow--hover;
-            }
+    @include e(arrow, $m:next) {
+        @extend %igx-carousel-arrow;
+        @extend %igx-carousel-arrow--next;
+                
+        &:hover {
+            @extend %igx-carousel-arrow--hover;
         }
     }
 }

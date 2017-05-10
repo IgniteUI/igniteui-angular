@@ -3,39 +3,39 @@
 
     @include e(bar) {
         @extend %progressbar-display;
-    
-        @include m(default) {
-            @extend %progressbar-display;
-            @extend %progressbar--default;
-        }
-
-        @include m(danger) {
-            @extend %progressbar-display;
-            @extend %progressbar--danger;
-        }
-
-        @include m(warning) {
-            @extend %progressbar-display;
-            @extend %progressbar--warning;
-        }
-
-        @include m(info) {
-            @extend %progressbar-display;
-            @extend %progressbar--info;
-        }
-
-        @include m(success) {
-            @extend %progressbar-display;
-            @extend %progressbar--success;
-        }
     }
 
-    @include m(striped) {
-        @extend %progressbar--striped;
+    @include e(bar, $m:default) {
+        @extend %progressbar-display;
+        @extend %progressbar--default;
+    }
+
+    @include e(bar, $m:danger) {
+        @extend %progressbar-display;
+        @extend %progressbar--danger;
+    }
+
+    @include e(bar, $m:warning) {
+        @extend %progressbar-display;
+        @extend %progressbar--warning;
+    }
+
+    @include e(bar, $m:info) {
+        @extend %progressbar-display;
+        @extend %progressbar--info;
     }
 
     @include e(value) {
         @extend %progress-linear-value;
+    }
+
+    @include e(bar, $m:success) {
+        @extend %progressbar-display;
+        @extend %progressbar--success;
+    }
+
+    @include m(striped) {
+        @extend %progressbar--striped;
     }
 }
 
