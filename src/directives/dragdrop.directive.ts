@@ -29,6 +29,16 @@ export class IgxDraggableDirective implements OnInit, OnDestroy {
 
     @HostBinding("draggable") public draggable: boolean;
 
+    constructor(private _elementRef: ElementRef, private _renderer: Renderer2) {}
+
+    public ngOnInit(): void {
+        this.draggable = true;
+    }
+
+    public ngOnDestroy(): void {
+        this.draggable = false;
+    }
+
     @HostListener("dragstart", ["$event"])
     protected onDragStart(event: DragEvent): void {
         if (this.dragClass) {
@@ -45,16 +55,6 @@ export class IgxDraggableDirective implements OnInit, OnDestroy {
             this._renderer.removeClass(this._elementRef.nativeElement, this.dragClass);
         }
     }
-
-    constructor(private _elementRef: ElementRef, private _renderer: Renderer2) {}
-
-    public ngOnInit(): void {
-        this.draggable = true;
-    }
-
-    public ngOnDestroy(): void {
-        this.draggable = false;
-    }
 }
 
 @Directive({
@@ -67,6 +67,8 @@ export class IgxDroppableDirective {
     @Input() public dropEffect: string = "move";
 
     @Output() public onDrop = new EventEmitter<IgxDropEvent>();
+
+    constructor(private _elementRef: ElementRef, private _renderer: Renderer2) {}
 
     @HostListener("dragenter", ["$event"])
     protected onDragEnter(event: DragEvent): void {
@@ -101,15 +103,13 @@ export class IgxDroppableDirective {
             this._renderer.removeClass(this._elementRef.nativeElement, this.dropClass);
         }
         const eventData: any = JSON.parse(event.dataTransfer.getData("data"));
-        this.onDrop.emit({
+        const args: IgxDropEvent = {
             dragData: eventData,
             dropData: this.data,
             event
-        } as IgxDropEvent);
+        };
+        this.onDrop.emit(args);
     }
-
-    constructor(private _elementRef: ElementRef, private _renderer: Renderer2) {}
-
 }
 
 @NgModule({

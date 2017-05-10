@@ -4,7 +4,7 @@ export enum PagingError {
     IncorrectRecordsPerPage
 }
 
-export declare interface PagingState {
+export declare interface IPagingState {
     index: number;
     recordsPerPage: number;
     metadata?: {

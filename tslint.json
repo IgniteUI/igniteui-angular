@@ -7,6 +7,6 @@
 	  "trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
       "no-empty": false,
 	  "no-bitwise": false,
-	  "max-classes-per-file": [true, 6]
+	  "max-classes-per-file": false
   }
 }

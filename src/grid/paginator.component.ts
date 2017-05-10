@@ -42,10 +42,11 @@ export class IgxPaginatorComponent {
     }
 
     public paginate(page: number): void {
-        this.onPageChange.emit({
+        const event: IgxPaginatorEvent = {
             currentPage: page,
             perPage: this.perPage,
             totalPages: this.totalPages
-        } as IgxPaginatorEvent);
+        };
+        this.onPageChange.emit(event);
     }
 }

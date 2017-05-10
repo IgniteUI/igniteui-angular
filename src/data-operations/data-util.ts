@@ -4,12 +4,12 @@ import { FilteringState, filteringStateDefaults } from "./filtering-state.interf
 import { FilteringStrategy, IFilteringStrategy } from "./filtering-strategy";
 
 import { SortingDirection, SortingExpression } from "./sorting-expression.interface";
-import {SortingState, SortingStateDefaults} from "./sorting-state.interface";
-import {ISortingStrategy, SortingStrategy} from "./sorting-strategy";
+import { SortingState, SortingStateDefaults } from "./sorting-state.interface";
+import { ISortingStrategy, SortingStrategy } from "./sorting-strategy";
 
-import {PagingError, PagingState} from "./paging-state.interface";
+import { PagingError, PagingState } from "./paging-state.interface";
 
-import {DataState} from "./data-state.interface";
+import { DataState } from "./data-state.interface";
 
 export enum DataType {
     String,
@@ -19,7 +19,7 @@ export enum DataType {
 }
 
 export class DataUtil {
-    static mergeDefaultProperties(target: Object, defaults: Object) {
+    public static mergeDefaultProperties(target: object, defaults: object) {
         if (!defaults) {
             return target;
         }
@@ -29,14 +29,14 @@ export class DataUtil {
         }
         Object
             .keys(defaults)
-            .forEach(function(key) {
+            .forEach((key) => {
                 if (target[key] === undefined && defaults[key] !== undefined) {
                     target[key] = defaults[key];
                 }
             });
         return target;
     }
-    static getFilteringConditionsForDataType(dataType: DataType): {[name: string]: Function} {
+    public static getFilteringConditionsForDataType(dataType: DataType): {[name: string]: () => void} {
         let dt: string;
         switch (dataType) {
             case DataType.String:
@@ -54,27 +54,27 @@ export class DataUtil {
         }
         return FilteringCondition[dt];
     }
-    static getListOfFilteringConditionsForDataType(dataType: DataType): string[] {
+    public static getListOfFilteringConditionsForDataType(dataType: DataType): string[] {
         return Object.keys(DataUtil.getFilteringConditionsForDataType(dataType));
     }
-    static sort<T>(data: T[], state: SortingState): T[] {
+    public static sort<T>(data: T[], state: SortingState): T[] {
         // set defaults
         DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
         // apply default settings for each sorting expression(if not set)
         return state.strategy.sort(data, state.expressions);
     }
-    static page<T>(data: T[], state: PagingState): T[] {
+    public static page<T>(data: T[], state: PagingState): T[] {
         if (!state) {
             return data;
         }
-        const len = data.length,
-            index = state.index,
-            res = [],
-            recordsPerPage = state.recordsPerPage;
+        const len = data.length;
+        const index = state.index;
+        const res = [];
+        const recordsPerPage = state.recordsPerPage;
         state.metadata = {
             countPages: 0,
-            error: PagingError.None,
-            countRecords: data.length
+            countRecords: data.length,
+            error: PagingError.None
         };
         if (index < 0 || isNaN(index)) {
             state.metadata.error = PagingError.IncorrectPageIndex;
@@ -94,8 +94,8 @@ export class DataUtil {
         }
         return data.slice(index * recordsPerPage, (index + 1) * recordsPerPage);
     }
-    static filter<T>(data: T[],
-                     state: FilteringState): T[] {
+    public static filter<T>(data: T[],
+                            state: FilteringState): T[] {
         // set defaults
         DataUtil.mergeDefaultProperties(state, filteringStateDefaults);
         if (!state.strategy) {
@@ -103,7 +103,7 @@ export class DataUtil {
         }
         return state.strategy.filter(data, state.expressions, state.logic);
     }
-    static process<T>(data: T[], state: DataState): T[] {
+    public static process<T>(data: T[], state: DataState): T[] {
         if (!state) {
             return data;
         }

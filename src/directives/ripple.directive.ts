@@ -4,32 +4,35 @@ import { Directive, ElementRef, HostListener, Input, NgModule, NgZone, Renderer2
     selector: "[igxRipple]"
 })
 class IgxRippleDirective {
+    @Input("igxRippleTarget") public rippleTarget: string = "";
+    @Input("igxRipple") public rippleColor: string;
+    @Input("igxRippleDuration") public rippleDuration: number = 600;
+
+    protected container: HTMLElement;
 
     private _centered: boolean = false;
     private _remaining: number = 0;
 
-    protected container: HTMLElement;
-
-    @Input("igxRippleTarget") rippleTarget: string = "";
-
     @Input("igxRippleCentered") set centered(value: boolean) {
         this._centered = value || this.centered;
-    }
-    @Input("igxRipple") rippleColor: string;
-    @Input("igxRippleDuration") rippleDuration: number = 600;
-
-    @HostListener("mousedown", ["$event"])
-    onMouseDown(event) {
-        this.zone.runOutsideAngular(() => this._ripple(event));
     }
 
     constructor(protected el: ElementRef, protected renderer: Renderer2, private zone: NgZone) {
         this.container = el.nativeElement;
     }
 
-    _ripple(event) {
-        let target, top, left, radius,
-            rippleEl, rectBounds;
+    @HostListener("mousedown", ["$event"])
+    public onMouseDown(event) {
+        this.zone.runOutsideAngular(() => this._ripple(event));
+    }
+
+    private _ripple(event) {
+        let target;
+        let top;
+        let left;
+        let radius;
+        let rippleEl;
+        let rectBounds;
 
         event.stopPropagation();
 

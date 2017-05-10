@@ -5,9 +5,6 @@ import { IgxButtonModule } from "../button/button.directive";
 import { IgxRippleModule } from "../directives/ripple.directive";
 
 @Component({
-    selector: "igx-dialog",
-    moduleId: module.id,
-    templateUrl: "dialog-content.component.html",
     animations: [
         trigger("flyInOut", [
             state("open", style({
@@ -26,11 +23,40 @@ import { IgxRippleModule } from "../directives/ripple.directive";
             })),
             transition("void <=> open", animate(".2s ease-in-out"))
         ])
-    ]
+    ],
+    moduleId: module.id,
+    selector: "igx-dialog",
+    templateUrl: "dialog-content.component.html"
 })
 export class IgxDialog {
     private static NEXT_ID: number = 1;
     private static readonly DIALOG_CLASS = "igx-dialog";
+
+    @Input() public title: string = "";
+    @Input() public message: string = "";
+
+    @Input() public leftButtonLabel: string = "";
+    @Input() public leftButtonType: string = "flat";
+    @Input() public leftButtonColor: string = "";
+    @Input() public leftButtonBackgroundColor: string = "";
+    @Input() public leftButtonRipple: string = "";
+
+    @Input() public rightButtonLabel: string = "";
+    @Input() public rightButtonType: string = "flat";
+    @Input() public rightButtonColor: string = "";
+    @Input() public rightButtonBackgroundColor: string = "";
+    @Input() public rightButtonRipple: string = "";
+
+    @Input() public closeOnOutsideSelect: boolean = false;
+
+    @Output() public onOpen = new EventEmitter();
+    @Output() public onClose = new EventEmitter();
+
+    @Output() public onLeftButtonSelect = new EventEmitter();
+    @Output() public onRightButtonSelect = new EventEmitter();
+
+    @ViewChild("dialog") public dialogEl: ElementRef;
+
     private _isOpen = false;
     private _titleId: string;
     private state: string;
@@ -40,28 +66,11 @@ export class IgxDialog {
         return this._isOpen;
     }
 
-    @Input() title: string = "";
-    @Input() message: string = "";
-
-    @Input() leftButtonLabel: string = "";
-    @Input() leftButtonType: string = "flat";
-    @Input() leftButtonColor: string = "";
-    @Input() leftButtonBackgroundColor: string = "";
-    @Input() leftButtonRipple: string = "";
-
-    @Input() rightButtonLabel: string = "";
-    @Input() rightButtonType: string = "flat";
-    @Input() rightButtonColor: string = "";
-    @Input() rightButtonBackgroundColor: string = "";
-    @Input() rightButtonRipple: string = "";
-
-    @Input() closeOnOutsideSelect: boolean = false;
-
     @Input()
     get role() {
-        if (this.leftButtonLabel != "" && this.rightButtonLabel != "") {
+        if (this.leftButtonLabel !== "" && this.rightButtonLabel !== "") {
             return  "dialog";
-        } else if (this.leftButtonLabel != "" || this.rightButtonLabel != "") {
+        } else if (this.leftButtonLabel !== "" || this.rightButtonLabel !== "") {
             return  "alertdialog";
         } else {
             return "alert";
@@ -73,19 +82,11 @@ export class IgxDialog {
         return this._titleId;
     }
 
-    @Output() onOpen = new EventEmitter();
-    @Output() onClose = new EventEmitter();
-
-    @Output() onLeftButtonSelect = new EventEmitter();
-    @Output() onRightButtonSelect = new EventEmitter();
-
-    @ViewChild("dialog") dialogEl: ElementRef;
-
     constructor() {
         this._titleId = IgxDialog.NEXT_ID++ + "_title";
     }
 
-    open() {
+    public open() {
         if (this.isOpen) {
             return;
         }
@@ -94,7 +95,7 @@ export class IgxDialog {
         this.onOpen.emit(this);
     }
 
-    close() {
+    public close() {
         if (!this.isOpen) {
             return;
         }
@@ -120,7 +121,7 @@ export class IgxDialog {
 
     private toggleState(state: string): void {
         this.state = state;
-        this._isOpen = state == "open" ?  true : false;
+        this._isOpen = state === "open" ?  true : false;
     }
 }
 

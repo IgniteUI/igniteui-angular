@@ -1,4 +1,4 @@
-export interface RecordInfo{
+export interface IRecordInfo {
     index: number;
-    record: Object;
+    record: object;
 }

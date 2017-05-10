@@ -3,51 +3,51 @@ import {DataType} from "../data-util";
 const COUNT_ROWS = 5;
 const COUNT_COLS = 4;
 
-export interface DataColumn {
+export interface IDataColumn {
     fieldName: string;
     type: DataType;
 }
 
 export class DataGenerator {
-    columns: DataColumn[] = [];
-    data: Object[] = [];
+    public columns: IDataColumn[] = [];
+    public data: object[] = [];
     constructor(countRows = COUNT_ROWS, countCols = COUNT_COLS) {
         this.columns = this.generateColumns(countCols);
         this.data = this.generateData(countRows);
     }
-    generateArray(startValue, endValue) {
-        const len = Math.abs(startValue - endValue),
-            decrement = startValue > endValue;
+    public generateArray(startValue, endValue) {
+        const len = Math.abs(startValue - endValue);
+        const decrement = startValue > endValue;
         return Array.from({length: len + 1}, (e, i) => decrement ? startValue - i : startValue + i);
     }
-    getValuesForColumn(data, fieldName) {
+    public getValuesForColumn(data, fieldName) {
         return data.map((x) => x[fieldName]);
     }
-    isSuperset(haystack, arr) {
+    public isSuperset(haystack, arr) {
         return arr.every((val) => haystack.indexOf(val) >= 0);
     }
-    private generateColumns(countCols) : DataColumn[] {
-        let i: number,
-            len: number,
-            res,
-            defaultColumns: DataColumn[] = [
-                {
-                    fieldName: "number",
-                    type: DataType.Number
-                },
-                {
-                    fieldName: "string",
-                    type: DataType.String
-                },
-                {
-                    fieldName: "date",
-                    type: DataType.Date
-                },
-                {
-                    fieldName: "boolean",
-                    type: DataType.Boolean
-                }
-            ];
+    private generateColumns(countCols): IDataColumn[] {
+        let i: number;
+        let len: number;
+        let res;
+        const defaultColumns: IDataColumn[] = [
+            {
+                fieldName: "number",
+                type: DataType.Number
+            },
+            {
+                fieldName: "string",
+                type: DataType.String
+            },
+            {
+                fieldName: "date",
+                type: DataType.Date
+            },
+            {
+                fieldName: "boolean",
+                type: DataType.Boolean
+            }
+        ];
         if (countCols <= 0) {
             return defaultColumns;
         }
@@ -65,7 +65,12 @@ export class DataGenerator {
         return res;
     }
     private generateData(countRows: number) {
-        let i, j, data = [], rec, val, col;
+        let i;
+        let j;
+        let rec;
+        let val;
+        let col;
+        const data = [];
         for (i = 0; i < countRows; i++) {
             rec = {};
             for (j = 0; j < this.columns.length; j++) {
