@@ -1,8 +1,7 @@
-import { Directive, HostBinding, Input, NgModule } from '@angular/core';
-
+import { Directive, HostBinding, Input, NgModule } from "@angular/core";
 
 @Directive({
-    selector: '[igxLayout]'
+    selector: "[igxLayout]"
 })
 export class IgxLayoutDirective {
 
@@ -12,22 +11,22 @@ export class IgxLayoutDirective {
     @Input("igxLayoutJustify") justify: string = "flex-start";
     @Input("igxLayoutItemAlign") itemAlign: string = "flex-start";
 
-    @HostBinding('style.display') display = 'flex';
-    @HostBinding('style.flex-wrap') get flexwrap() { return this.wrap; }
-    @HostBinding('style.justify-content') get justifycontent() { return this.justify; }
-    @HostBinding('style.align-content') get align() { return this.itemAlign; }
+    @HostBinding("style.display") display = "flex";
+    @HostBinding("style.flex-wrap") get flexwrap() { return this.wrap; }
+    @HostBinding("style.justify-content") get justifycontent() { return this.justify; }
+    @HostBinding("style.align-content") get align() { return this.itemAlign; }
 
-    @HostBinding('style.flex-direction')
+    @HostBinding("style.flex-direction")
     get direction() {
         if (this.reverse) {
-            return (this.dir == 'row') ? 'row-reverse' : 'column-reverse';
+            return (this.dir == "row") ? "row-reverse" : "column-reverse";
         }
-        return (this.dir == 'row') ? 'row' : 'column';
+        return (this.dir == "row") ? "row" : "column";
     }
 }
 
 @Directive({
-    selector: '[igxFlex]'
+    selector: "[igxFlex]"
 })
 export class IgxFlexDirective {
     @Input("igxFlexGrow") grow: number = 1;
@@ -35,8 +34,7 @@ export class IgxFlexDirective {
     @Input("igxFlex") flex: string = "";
     @Input("igxFlexOrder") order: number = 0;
 
-
-    @HostBinding('style.flex')
+    @HostBinding("style.flex")
     get style() {
         if (this.flex) {
             return `${this.flex}`;
@@ -44,7 +42,7 @@ export class IgxFlexDirective {
         return `${this.grow} ${this.shrink}`;
     }
 
-    @HostBinding('style.order')
+    @HostBinding("style.order")
     get itemorder() {
         return this.order || 0;
     }

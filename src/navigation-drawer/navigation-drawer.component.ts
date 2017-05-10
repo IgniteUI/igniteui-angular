@@ -1,8 +1,8 @@
-import {Component, Input, Inject, SimpleChange, ElementRef, EventEmitter, Output, Renderer, OnInit, OnDestroy, OnChanges, Optional, AfterContentInit, NgModule} from '@angular/core';
+import {AfterContentInit, Component, ElementRef, EventEmitter, Inject, Input, NgModule, OnChanges, OnDestroy, OnInit, Optional, Output, Renderer, SimpleChange} from "@angular/core";
 // import {AnimationBuilder} from 'angular2/src/animate/animation_builder'; TODO
-import { BaseComponent } from '../core/base';
+import { BaseComponent } from "../core/base";
+import {NavigationService, ToggleView} from "../core/navigation";
 import { HammerGesturesManager } from "../core/touch";
-import {NavigationService, ToggleView} from '../core/navigation';
 
 // cover for transpiler error
 // SystemJS will eventually wrap the export in the proper node.js style function on the client
@@ -22,12 +22,12 @@ declare var module: any;
  * ID required to register with NavigationService allow directives to target the control.
  */
 @Component({
-    selector: 'ig-nav-drawer',
+    selector: "ig-nav-drawer",
     /* Per https://github.com/angular/angular/issues/2383 BUT https://github.com/angular/angular/issues/6053, can't use relative URLs still with SystemJS
         TODO: try https://github.com/angular/angular/issues/2991 ??
     */
     moduleId: module.id, // commonJS standard
-    templateUrl: 'navigation-drawer.component.html',
+    templateUrl: "navigation-drawer.component.html",
     providers: [HammerGesturesManager]
 })
 export class NavigationDrawer extends BaseComponent implements ToggleView, OnInit, AfterContentInit, OnDestroy, OnChanges  {
@@ -35,11 +35,11 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     private _swipeAttached: boolean = false;
     private _widthCache: {width: number, miniWidth: number} = {width: null, miniWidth: null};
     private css: { [name: string]: string; } = {
-        "drawer" : "ig-nav-drawer",
-        "overlay" : "ig-nav-drawer-overlay",
-        "mini" : "mini",
-        "miniProjection" : ".ig-drawer-mini-content",
-        "styleDummy" : "style-dummy"
+        drawer : "ig-nav-drawer",
+        overlay : "ig-nav-drawer-overlay",
+        mini : "mini",
+        miniProjection : ".ig-drawer-mini-content",
+        styleDummy : "style-dummy"
     };
     private _resolveOpen: (value?: any | PromiseLike<any>) => void;
     private _resolveClose: (value?: any | PromiseLike<any>) => void;
@@ -47,14 +47,14 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     private _drawer : any;
     get drawer(): HTMLElement {
         if (!this._drawer) {
-            this._drawer = this.getChild("." + this.css["drawer"]);
+            this._drawer = this.getChild("." + this.css.drawer);
         }
         return this._drawer;
     }
     private _overlay: any;
     get overlay() {
         if (!this._overlay) {
-            this._overlay = this.getChild("." + this.css["overlay"]);
+            this._overlay = this.getChild("." + this.css.overlay);
         }
         return this._overlay;
     }
@@ -62,7 +62,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     private _styleDummy: any;
     get styleDummy() {
         if (!this._styleDummy) {
-            this._styleDummy = this.getChild("." + this.css["styleDummy"]);
+            this._styleDummy = this.getChild("." + this.css.styleDummy);
         }
         return this._styleDummy;
     }
@@ -165,7 +165,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
         @Inject(ElementRef) private elementRef: ElementRef,
         @Optional() private _state: NavigationService,
         // private animate: AnimationBuilder, TODO
-        protected renderer:Renderer,
+        protected renderer: Renderer,
         private _touchManager: HammerGesturesManager)
     {
         super(renderer);
@@ -174,13 +174,13 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     ngOnInit() {
         // DOM and @Input()-s initialized
         if (this._state) {
-            this._state.add(this.id,this);
+            this._state.add(this.id, this);
         }
     }
 
     ngAfterContentInit() {
         // wait for template and ng-content to be ready
-        this._hasMimiTempl = this.getChild(this.css["miniProjection"]) !== null;
+        this._hasMimiTempl = this.getChild(this.css.miniProjection) !== null;
         this.updateEdgeZone();
         if (this.pinThreshold && this.getWindowWidth() > this.pinThreshold) {
             this.pin = true;
@@ -196,17 +196,17 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     ngOnDestroy() {
         this._touchManager.destroy();
         if (this._state) {
-            this._state.remove(this.id)
+            this._state.remove(this.id);
         }
     }
 
     ngOnChanges(changes: {[propName: string]: SimpleChange}) {
         // simple settings can come from attribute set (rather than binding), make sure boolean props are converted
-        if (changes['enableGestures'] && changes['enableGestures'].currentValue !== undefined) {
+        if (changes.enableGestures && changes.enableGestures.currentValue !== undefined) {
             this.enableGestures = !!(this.enableGestures && this.enableGestures.toString() === "true");
             this.ensureEvents();
         }
-        if (changes['pin'] && changes['pin'].currentValue !== undefined) {
+        if (changes.pin && changes.pin.currentValue !== undefined) {
             this.pin = !!(this.pin && this.pin.toString() === "true");
             this.ensureDrawerHeight();
             if (this.pin) {
@@ -216,13 +216,13 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
             }
         }
 
-        if (changes['width'] && this.isOpen) {
-            this.setDrawerWidth(changes['width'].currentValue);
+        if (changes.width && this.isOpen) {
+            this.setDrawerWidth(changes.width.currentValue);
         }
 
-        if (changes['miniWidth']) {
+        if (changes.miniWidth) {
             if (!this.isOpen) {
-                this.setDrawerWidth(changes['miniWidth'].currentValue);
+                this.setDrawerWidth(changes.miniWidth.currentValue);
             }
             this.updateEdgeZone();
         }
@@ -236,15 +236,15 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
      * Sets the drawer width.
      * @param width Width to set, must be valid CSS size string.
      */
-    private setDrawerWidth (width: string) {
+    private setDrawerWidth(width: string) {
         window.requestAnimationFrame(() => {
-            if(this.drawer) {
+            if (this.drawer) {
                 this.renderer.setElementStyle(this.drawer, "width", width);
             }
         });
     }
 
-    protected ensureDrawerHeight () {
+    protected ensureDrawerHeight() {
         if (this.pin) {
             // TODO: nested in content?
             // setElementStyle warning https://github.com/angular/angular/issues/6563
@@ -256,7 +256,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
      * Get the Drawer width for specific state. Will attempt to evaluate requested state and cache.
      * @param mini Request mini width instead
      */
-    protected getExpectedWidth (mini?: boolean) : number {
+    protected getExpectedWidth(mini?: boolean) : number {
         if (mini) {
             if (!this._hasMimiTempl) {
                 return 0;
@@ -267,27 +267,27 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
                 // if (!this.isOpen) { // This WON'T work due to transition timings...
                 //     return this.elementRef.nativeElement.children[1].offsetWidth;
                 // } else {
-                if (this._widthCache["miniWidth"] === null) {
+                if (this._widthCache.miniWidth === null) {
                     // force class for width calc. TODO?
-                    this.renderer.setElementClass(this.styleDummy, this.css["drawer"], true);
-                    this.renderer.setElementClass(this.styleDummy, this.css["mini"], true);
-                    this._widthCache["miniWidth"] = this.styleDummy.offsetWidth;
-                    this.renderer.setElementClass(this.styleDummy, this.css["drawer"], false);
-                    this.renderer.setElementClass(this.styleDummy, this.css["mini"], false);
+                    this.renderer.setElementClass(this.styleDummy, this.css.drawer, true);
+                    this.renderer.setElementClass(this.styleDummy, this.css.mini, true);
+                    this._widthCache.miniWidth = this.styleDummy.offsetWidth;
+                    this.renderer.setElementClass(this.styleDummy, this.css.drawer, false);
+                    this.renderer.setElementClass(this.styleDummy, this.css.mini, false);
                 }
-                return this._widthCache["miniWidth"];
+                return this._widthCache.miniWidth;
             }
         } else {
             if (this.width) {
                 return parseFloat(this.width);
             } else {
-                if (this._widthCache["width"] === null) {
+                if (this._widthCache.width === null) {
                     // force class for width calc. TODO?
-                    this.renderer.setElementClass(this.styleDummy, this.css["drawer"], true);
-                    this._widthCache["width"] = this.styleDummy.offsetWidth;
-                    this.renderer.setElementClass(this.styleDummy, this.css["drawer"], false);
+                    this.renderer.setElementClass(this.styleDummy, this.css.drawer, true);
+                    this._widthCache.width = this.styleDummy.offsetWidth;
+                    this.renderer.setElementClass(this.styleDummy, this.css.drawer, false);
                 }
-                return this._widthCache["width"];
+                return this._widthCache.width;
             }
         }
     }
@@ -295,7 +295,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     /**
      * Get current Drawer width.
      */
-    private getDrawerWidth () : number {
+    private getDrawerWidth() : number {
             return this.drawer.offsetWidth;
     }
 
@@ -317,7 +317,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     }
 
     private updateEdgeZone() {
-        var maxValue;
+        let maxValue;
 
         if (this._hasMimiTempl) {
             maxValue = Math.max(this._maxEdgeZone, this.getExpectedWidth(true) * 1.1);
@@ -327,12 +327,12 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
 
     private swipe = (evt: HammerInput) => { //use lambda to keep class scope (http://stackoverflow.com/questions/18423410/typescript-retain-scope-in-event-listener)
         // TODO: Could also force input type: http://stackoverflow.com/a/27108052
-        if(!this.enableGestures || evt.pointerType !== "touch") {
+        if (!this.enableGestures || evt.pointerType !== "touch") {
             return;
         }
 
         // HammerJS swipe is horizontal-only by default, don't check deltaY
-        var deltaX, startPosition;
+        let deltaX, startPosition;
         if (this.position === "right") {
             // when on the right use inverse of deltaX
             deltaX = -evt.deltaX;
@@ -350,13 +350,13 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     }
 
     private panstart = (evt: HammerInput) => { // TODO: test code
-        if(!this.enableGestures || this.pin || evt.pointerType !== "touch") {
+        if (!this.enableGestures || this.pin || evt.pointerType !== "touch") {
             return;
         }
-        var startPosition = this.position === "right" ? this.getWindowWidth() - (evt.center.x + evt.distance) : evt.center.x - evt.distance;
+        const startPosition = this.position === "right" ? this.getWindowWidth() - (evt.center.x + evt.distance) : evt.center.x - evt.distance;
 
         // cache width during animation, flag to allow further handling
-        if(this.isOpen || (startPosition < this.maxEdgeZone)) {
+        if (this.isOpen || (startPosition < this.maxEdgeZone)) {
             this._panning = true;
             this._panStartWidth =  this.getExpectedWidth(!this.isOpen);
             this._panLimit = this.getExpectedWidth(this.isOpen);
@@ -372,7 +372,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
         if (!this._panning) {
             return;
         }
-        var right: boolean = this.position === "right",
+        let right: boolean = this.position === "right",
             // when on the right use inverse of deltaX
             deltaX = right ? -evt.deltaX : evt.deltaX,
             visibleWidth, newX,
@@ -380,8 +380,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
 
         visibleWidth = this._panStartWidth + deltaX;
 
-
-        if(this.isOpen && deltaX < 0) {
+        if (this.isOpen && deltaX < 0) {
             // when visibleWidth hits limit - stop animating
             if (visibleWidth <= this._panLimit)  return;
 
@@ -410,15 +409,15 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
     }
 
     private panEnd = (evt: HammerInput) => {
-        if(this._panning) {
-            var deltaX = this.position === "right" ? -evt.deltaX : evt.deltaX,
+        if (this._panning) {
+            const deltaX = this.position === "right" ? -evt.deltaX : evt.deltaX,
                 visibleWidth: number = this._panStartWidth + deltaX;
             this.resetPan();
 
             // check if pan brought the drawer to 50%
-            if (this.isOpen && visibleWidth <= this._panStartWidth/2 ) {
+            if (this.isOpen && visibleWidth <= this._panStartWidth / 2 ) {
                 this.close(true);
-            } else if (!this.isOpen && visibleWidth >= this._panLimit/2) {
+            } else if (!this.isOpen && visibleWidth >= this._panLimit / 2) {
                 this.open(true);
             }
             this._panStartWidth = null;
@@ -438,14 +437,14 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
      * @param x the number pixels to translate on the X axis or the width to set. 0 width will clear the style instead.
      * @param opacity optional value to apply to the overlay
      */
-    private setXSize (x: number, opacity?: string) {
+    private setXSize(x: number, opacity?: string) {
         // Angular polyfills patches window.requestAnimationFrame, but switch to DomAdapter API (TODO)
         window.requestAnimationFrame(() => {
             if (this.hasAnimateWidth) {
                 this.renderer.setElementStyle(this.drawer, "width", x ? Math.abs(x) + "px" : "");
             } else {
                 this.renderer.setElementStyle(this.drawer, "transform", x ? "translate3d(" + x + "px,0,0)" : "");
-                this.renderer.setElementStyle(this.drawer, "-webkit-transform",  x ? "translate3d(" +x + "px,0,0)" : "");
+                this.renderer.setElementStyle(this.drawer, "-webkit-transform",  x ? "translate3d(" + x + "px,0,0)" : "");
             }
             if (opacity !== undefined) {
                 this.renderer.setElementStyle(this.overlay, "opacity", opacity);
@@ -493,7 +492,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
         this.elementRef.nativeElement.addEventListener("transitionend", this.toggleOpenedEvent, false);
         this.setDrawerWidth(this.width);
 
-        return new Promise<any>( resolve => {
+        return new Promise<any>( (resolve) => {
             this._resolveOpen = (value?: any) => {
                 resolve(value);
                 if (fireEvents) {
@@ -515,7 +514,6 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
         delete this._resolveClose;
     }
 
-
     /**
      * Close the Navigation Drawer. Has no effect if already closed.
      * @param fireEvents Optional flag determining whether events should be fired or not.
@@ -536,7 +534,7 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
         this.setDrawerWidth(this._hasMimiTempl ? this.miniWidth : "");
         this.elementRef.nativeElement.addEventListener("transitionend", this.toggleClosedEvent, false);
 
-        return new Promise<any>( resolve => {
+        return new Promise<any>( (resolve) => {
             this._resolveClose = (value?: any) => {
                 resolve(value);
                 if (fireEvents) {
@@ -546,7 +544,6 @@ export class NavigationDrawer extends BaseComponent implements ToggleView, OnIni
         } );
     }
 }
-
 
 @NgModule({
     declarations: [NavigationDrawer],

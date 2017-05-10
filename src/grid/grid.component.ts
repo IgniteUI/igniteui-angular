@@ -1,5 +1,3 @@
-import { IgxDropEvent } from "../directives/dragdrop.directive";
-import { DataAccess } from "../data-operations/data-container";
 import { CommonModule } from "@angular/common";
 import {
     AfterContentInit,
@@ -25,14 +23,16 @@ import {
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Subscription } from "rxjs/Rx";
+import { DataAccess } from "../data-operations/data-container";
+import { IgxDropEvent } from "../directives/dragdrop.directive";
 
 // grid helper components and directives
 import { IgxColumnComponent } from "./column.component";
 import {
     IgxCellBodyComponent,
     IgxCellFooterComponent,
-    IgxCellHeaderComponent,
     IgxCellFooterTemplateDirective,
+    IgxCellHeaderComponent,
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective,
     IgxColumnFilteredEvent,
@@ -55,7 +55,6 @@ import {
     SortingExpression
 } from "../../src/main";
 import { DataType, DataUtil } from "../data-operations/data-util";
-
 
 export interface IgxGridBindingBehavior {
     process: Function;
@@ -128,7 +127,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
     protected static nextId: number = 1;
     @Input() get data(): any[] {
         return this._data;
-    };
+    }
 
     set data(value: any[]) {
         this._data = value;
@@ -147,8 +146,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
     set paging(value: boolean) {
         this._paging = value;
         if (this._paging) {
-            this.state.paging = <PagingState>DataUtil.mergeDefaultProperties(this.state.paging,
-                <PagingState>{index: 0, recordsPerPage: this.perPage});
+            this.state.paging = DataUtil.mergeDefaultProperties(this.state.paging,
+                {index: 0, recordsPerPage: this.perPage} as PagingState) as PagingState;
         } else {
             this.state.paging = null;
         }
@@ -191,7 +190,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
     }
 
     get editableColumns(): IgxColumnComponent[] {
-        let res: IgxColumnComponent[] = [];
+        const res: IgxColumnComponent[] = [];
         this.columns.forEach((col) => {
             if (col.editable) {
                 res.push(col);
@@ -223,8 +222,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
     public ngOnInit(): void {
         this.dataContainer.state = this.state;
         if (this.paging) {
-            this.state.paging = <PagingState>DataUtil.mergeDefaultProperties(this.state.paging,
-                <PagingState>{index: 0, recordsPerPage: this.perPage});
+            this.state.paging = DataUtil.mergeDefaultProperties(this.state.paging,
+                {index: 0, recordsPerPage: this.perPage} as PagingState) as PagingState;
         }
     }
 
@@ -259,10 +258,10 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
      * @hidden
      */
     public ngDoCheck(): void {
-        let diff: any = this._differ.diff(this.data);
+        const diff: any = this._differ.diff(this.data);
         if (this.shouldDataBind || diff) {
 
-            let bindingBehavior: IgxGridBindingBehavior = {
+            const bindingBehavior: IgxGridBindingBehavior = {
                 process: (dataContainer: DataContainer) => {
                     dataContainer.process();
                 }
@@ -310,17 +309,17 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
      * @memberOf IgxGrid
      */
     public getCell(rowIndex: number, columnField: string): IgxGridCell {
-        let result: IgxGridCell = {
+        const result: IgxGridCell = {
             rowIndex,
             columnField,
             dataItem: null,
             element: null
         };
-        let column: IgxColumnComponent = this.getColumnByField(columnField);
-        let colIndex: number = this.columnsToRender.indexOf(column);
+        const column: IgxColumnComponent = this.getColumnByField(columnField);
+        const colIndex: number = this.columnsToRender.indexOf(column);
 
-        let record: any = this.dataContainer.getRecordByIndex(rowIndex, DataAccess.TransformedData);
-        let element: any = this._elementRef.nativeElement.querySelector(`td[data-row="${rowIndex}"][data-col="${colIndex}"]`);
+        const record: any = this.dataContainer.getRecordByIndex(rowIndex, DataAccess.TransformedData);
+        const element: any = this._elementRef.nativeElement.querySelector(`td[data-row="${rowIndex}"][data-col="${colIndex}"]`);
 
         if (record) {
             result.dataItem = record[column.field];
@@ -342,18 +341,18 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
      * @memberOf IgxGrid
      */
     public getRow(rowIndex: number): IgxGridRow {
-        let result: IgxGridRow = {
+        const result: IgxGridRow = {
             index: rowIndex,
             record: null,
             element: null,
             cells: []
         };
 
-        let colFields: string[] = [];
+        const colFields: string[] = [];
         this.columns.forEach((col) => colFields.push(col.field));
 
-        let record: any = this.dataContainer.getRecordByIndex(rowIndex, DataAccess.TransformedData);
-        let element: any = this._elementRef.nativeElement.querySelector(`tbody > tr[data-row="${rowIndex}"]`);
+        const record: any = this.dataContainer.getRecordByIndex(rowIndex, DataAccess.TransformedData);
+        const element: any = this._elementRef.nativeElement.querySelector(`tbody > tr[data-row="${rowIndex}"]`);
 
         if (record) {
             result.record = record;
@@ -381,7 +380,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
      * @memberOf IgxGrid
      */
     public focusCell(rowIndex: number | string, columnIndex: number | string): void {
-        let cell: HTMLElement = this._elementRef.nativeElement.querySelector(`td[data-row="${rowIndex}"][data-col="${columnIndex}"]`);
+        const cell: HTMLElement = this._elementRef.nativeElement.querySelector(`td[data-row="${rowIndex}"][data-col="${columnIndex}"]`);
         if (cell) {
             cell.focus();
         }
@@ -396,7 +395,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
      * @memberOf IgxGrid
      */
     public focusRow(index: number | string): void {
-        let row: HTMLElement = this._elementRef.nativeElement.querySelector(`tbody > tr[data-row="${index}"]`);
+        const row: HTMLElement = this._elementRef.nativeElement.querySelector(`tbody > tr[data-row="${index}"]`);
         if (row) {
             row.focus();
         }
@@ -407,20 +406,20 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
      */
 
     protected onRowFocus(event: any, index: number): void {
-        let el: HTMLElement = event.target;
+        const el: HTMLElement = event.target;
         this._renderer.setAttribute(el, "aria-selected", "true");
         this._renderer.addClass(el, "igx-grid__tr--selected");
         this.onRowSelection.emit({row: this.getRow(index)});
     }
 
     protected onRowBlur(event: any): void {
-        let el: HTMLElement = event.target;
+        const el: HTMLElement = event.target;
         this._renderer.removeAttribute(el, "aria-selected");
         this._renderer.removeClass(el, "igx-grid__tr--selected");
     }
 
     protected onCellFocus(event: any, index: number, columnField: string): void {
-        let el: HTMLElement = event.target ? event.target : event;
+        const el: HTMLElement = event.target ? event.target : event;
         this._renderer.setAttribute(el, "aria-selected", "true");
 
         if (!this.getColumnByField(columnField).bodyTemplate) {
@@ -431,7 +430,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
     }
 
     protected onCellBlur(event: any): void {
-        let el: HTMLElement = event.target;
+        const el: HTMLElement = event.target;
         this._renderer.removeAttribute(el, "aria-selected");
         this._renderer.removeClass(el, "igx-grid__td--selected");
         this._renderer.removeClass(el.parentElement, "igx-grid__tr--selected");
@@ -461,7 +460,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
         if (!searchTerm) {
             delete this.filteringExpressions[column.field];
         } else {
-            switch(column.dataType) {
+            switch (column.dataType) {
             case DataType.Number:
                 filterInput = parseFloat(searchTerm);
                 break;
@@ -471,14 +470,14 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
             default:
                 break;
             }
-            this.filteringExpressions[column.field] = <FilteringExpression> {
+            this.filteringExpressions[column.field] = {
                 condition: column.filteringCondition,
                 fieldName: column.field,
                 ignoreCase: column.filteringIgnoreCase,
                 searchVal: filterInput,
-            };
+            } as FilteringExpression;
         }
-        let result: FilteringExpression[] = [];
+        const result: FilteringExpression[] = [];
         Object.keys(this.filteringExpressions)
             .forEach((expr) => result.push(this.filteringExpressions[expr]));
 
@@ -517,7 +516,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
     }
 
     public updateCell(index: number, columnField: string, value: any): void {
-        let row: IgxGridRow = this.getRow(index);
+        const row: IgxGridRow = this.getRow(index);
         row.index = this.dataContainer.getIndexOfRecord(row.record);
         row.record[columnField] = value;
         this.updateRow(row.index, row.record);
@@ -531,7 +530,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
     protected getSortedExpression(column: IgxColumnComponent): number {
         let dir: number = 0;
         if (column.sortable && this.state.sorting) {
-            let expr: SortingExpression[] = this.state.sorting.expressions
+            const expr: SortingExpression[] = this.state.sorting.expressions
                 .filter((each) => each.fieldName === column.field);
             if (expr && expr.length) {
                 dir = expr[0].dir;
@@ -561,7 +560,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
     protected moveColumn(event: IgxDropEvent): void {
         this.columns[event.dragData].index = event.dropData;
         this.columns[event.dropData].index = event.dragData;
-        let temp: any = this.columns[event.dragData];
+        const temp: any = this.columns[event.dragData];
         this.columns[event.dragData] = this.columns[event.dropData];
         this.columns[event.dropData] = temp;
         this.onMovingDone.emit(event);
@@ -574,14 +573,14 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
         if (direction === SortingDirection.None) {
             delete this.sortingExpressions[column.field];
         } else {
-            this.sortingExpressions[column.field] = <SortingExpression> {
+            this.sortingExpressions[column.field] = {
                 dir: direction,
                 fieldName: column.field,
                 ignoreCase: true
-            };
+            } as SortingExpression;
         }
 
-        let result: SortingExpression[] = [];
+        const result: SortingExpression[] = [];
         Object.keys(this.sortingExpressions)
             .forEach((expr) => result.push(this.sortingExpressions[expr]));
 
@@ -613,10 +612,10 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
 
     private autogenerate(): void {
         const factory: ComponentFactory<IgxColumnComponent> = this._resolver.resolveComponentFactory(IgxColumnComponent);
-        let colFields: any[] = Object.keys(this.data[0]);
+        const colFields: any[] = Object.keys(this.data[0]);
 
         colFields.forEach((field, index) => {
-            let ref: ComponentRef<IgxColumnComponent> = this._viewRef.createComponent(factory);
+            const ref: ComponentRef<IgxColumnComponent> = this._viewRef.createComponent(factory);
             ref.instance.field = field;
             ref.instance.index = index;
             this.onColumnInit.emit({column: ref.instance});
@@ -626,7 +625,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
     }
 
     private navigate(event: any): void {
-        let key: string = event.key;
+        const key: string = event.key;
         let row: any = event.target.dataset.row;
         let column: any = event.target.dataset.col;
 
@@ -645,7 +644,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
     }
 }
 
-let GRID_DIRECTIVES: any[] = [
+const GRID_DIRECTIVES: any[] = [
     IgxGridComponent,
     IgxColumnComponent,
     IgxColumnFilteringComponent,

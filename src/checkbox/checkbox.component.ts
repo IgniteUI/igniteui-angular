@@ -1,13 +1,13 @@
 import {
-    NgModule,
     Component,
-    Input,
-    Output,
     EventEmitter,
-    ViewChild,
-    forwardRef
+    forwardRef,
+    Input,
+    NgModule,
+    Output,
+    ViewChild
 } from "@angular/core";
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from "@angular/forms";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 const noop = () => {};
 let nextId = 0;
@@ -37,7 +37,7 @@ export class IgxCheckbox implements ControlValueAccessor {
 
     @Output() change = new EventEmitter();
 
-    @ViewChild('checkbox') nativeCheckbox;
+    @ViewChild("checkbox") nativeCheckbox;
 
     protected _value: any;
 
@@ -76,7 +76,6 @@ export class IgxCheckbox implements ControlValueAccessor {
     registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
     registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 }
-
 
 @NgModule({
     declarations: [IgxCheckbox],

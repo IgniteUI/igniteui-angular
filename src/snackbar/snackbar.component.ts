@@ -1,7 +1,7 @@
-import {Component, NgModule, Input, Output, EventEmitter, NgZone} from "@angular/core";
-import {  trigger, state, style, transition, animate } from "@angular/animations";
-import { HammerGesturesManager } from "../core/touch";
+import {  animate, state, style, transition, trigger } from "@angular/animations";
 import { CommonModule } from "@angular/common";
+import {Component, EventEmitter, Input, NgModule, NgZone, Output} from "@angular/core";
+import { HammerGesturesManager } from "../core/touch";
 
 /**
  * IgxSnackbar provides feedback about an operation by showing brief message at the bottom of the screen on mobile
@@ -28,7 +28,7 @@ import { CommonModule } from "@angular/common";
                 }),
                 animate(".35s cubic-bezier(0.0, 0.0, 0.2, 1)")
             ]),
-            transition("* => void",[
+            transition("* => void", [
                 animate(".2s cubic-bezier(0.4, 0.0, 1, 1)", style({
                     transform: "translateY(100%)"
                 }))
@@ -44,7 +44,7 @@ import { CommonModule } from "@angular/common";
                 }),
                 animate(".35s ease-out")
             ]),
-            transition("* => void",[
+            transition("* => void", [
                 animate(".2s ease-out", style({
                     opacity: 0
                 }))
@@ -114,7 +114,7 @@ export class IgxSnackbar {
         setTimeout(this.timeoutId);
         this.isVisible = true;
 
-        if(this.autoHide) {
+        if (this.autoHide) {
             this.timeoutId = setTimeout(() => {
                 this.hide();
             }, this.displayTime);
@@ -139,10 +139,10 @@ export class IgxSnackbar {
      */
     @Output() animationStarted = new EventEmitter<any>();
     private snackbarAnimationStarted(evt?: any): void {
-        if(evt.fromState == "void") {
+        if (evt.fromState == "void") {
             this.animationStarted.emit(evt);
         }
-    };
+    }
 
     /**
      * The event that will be thrown when the snackbar animation ends
@@ -150,10 +150,10 @@ export class IgxSnackbar {
      */
     @Output() animationDone = new EventEmitter<any>();
     private snackbarAnimationDone(evt?: any): void {
-        if(evt.fromState == "show") {
+        if (evt.fromState == "show") {
             this.animationDone.emit(evt);
         }
-    };
+    }
 }
 
 @NgModule({

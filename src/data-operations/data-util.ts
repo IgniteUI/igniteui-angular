@@ -1,13 +1,13 @@
-import { FilteringExpression, FilteringLogic } from "./filtering-expression.interface";
 import { FilteringCondition } from "./filtering-condition";
+import { FilteringExpression, FilteringLogic } from "./filtering-expression.interface";
 import { FilteringState, filteringStateDefaults } from "./filtering-state.interface";
-import { IFilteringStrategy, FilteringStrategy } from "./filtering-strategy";
+import { FilteringStrategy, IFilteringStrategy } from "./filtering-strategy";
 
-import { SortingExpression, SortingDirection } from "./sorting-expression.interface";
-import {SortingStateDefaults, SortingState} from "./sorting-state.interface";
-import {SortingStrategy, ISortingStrategy} from "./sorting-strategy";
+import { SortingDirection, SortingExpression } from "./sorting-expression.interface";
+import {SortingState, SortingStateDefaults} from "./sorting-state.interface";
+import {ISortingStrategy, SortingStrategy} from "./sorting-strategy";
 
-import {PagingState, PagingError} from "./paging-state.interface";
+import {PagingError, PagingState} from "./paging-state.interface";
 
 import {DataState} from "./data-state.interface";
 
@@ -29,7 +29,7 @@ export class DataUtil {
         }
         Object
             .keys(defaults)
-            .forEach(function(key) { 
+            .forEach(function(key) {
                 if (target[key] === undefined && defaults[key] !== undefined) {
                     target[key] = defaults[key];
                 }
@@ -37,37 +37,37 @@ export class DataUtil {
         return target;
     }
     static getFilteringConditionsForDataType(dataType: DataType): {[name: string]: Function} {
-        var dt:string;
-        switch(dataType) {
+        let dt: string;
+        switch (dataType) {
             case DataType.String:
                 dt = "string";
-            break;
+                break;
             case DataType.Number:
                 dt = "number";
-            break;
+                break;
             case DataType.Boolean:
                 dt = "boolean";
-            break;
+                break;
             case DataType.Date:
                 dt = "date";
-            break;
+                break;
         }
         return FilteringCondition[dt];
     }
-    static getListOfFilteringConditionsForDataType(dataType: DataType): Array<string> {
+    static getListOfFilteringConditionsForDataType(dataType: DataType): string[] {
         return Object.keys(DataUtil.getFilteringConditionsForDataType(dataType));
     }
-    static sort<T> (data: T[], state: SortingState): T[] {
+    static sort<T>(data: T[], state: SortingState): T[] {
         // set defaults
         DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
         // apply default settings for each sorting expression(if not set)
         return state.strategy.sort(data, state.expressions);
     }
-    static page<T> (data: T[], state: PagingState): T[] {
+    static page<T>(data: T[], state: PagingState): T[] {
         if (!state) {
             return data;
         }
-        var len = data.length,
+        const len = data.length,
             index = state.index,
             res = [],
             recordsPerPage = state.recordsPerPage;
@@ -94,8 +94,8 @@ export class DataUtil {
         }
         return data.slice(index * recordsPerPage, (index + 1) * recordsPerPage);
     }
-    static filter<T> (data: T[],
-                    state: FilteringState): T[] {
+    static filter<T>(data: T[],
+                     state: FilteringState): T[] {
         // set defaults
         DataUtil.mergeDefaultProperties(state, filteringStateDefaults);
         if (!state.strategy) {
@@ -103,7 +103,7 @@ export class DataUtil {
         }
         return state.strategy.filter(data, state.expressions, state.logic);
     }
-    static process<T> (data: T[], state: DataState): T[] {
+    static process<T>(data: T[], state: DataState): T[] {
         if (!state) {
             return data;
         }

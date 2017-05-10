@@ -1,17 +1,17 @@
 import {
     Directive,
-    Input,
     ElementRef,
-    Renderer2,
-    NgModule
-} from '@angular/core';
+    Input,
+    NgModule,
+    Renderer2
+} from "@angular/core";
 
 @Directive({
-    selector: '[igxLabel]'
+    selector: "[igxLabel]"
 })
 export class IgxLabel {
     constructor(el: ElementRef, renderer: Renderer2){
-        renderer.addClass(el.nativeElement, 'igx-form-group__label');
+        renderer.addClass(el.nativeElement, "igx-form-group__label");
     }
 }
 

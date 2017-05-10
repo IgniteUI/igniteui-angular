@@ -1,0 +1,11 @@
+{
+  "extends": "tslint:latest",
+  "rules": {
+	  "indent": [true, "spaces"],
+	  "variable-name": [true, "allow-leading-underscore"],
+	  "interface-name": [true, "never-prefix"],
+	  "trailing-comma": [true, "never"],
+	  "no-bitwise": false,
+	  "max-classes-per-file": [true, 5]
+  }
+}

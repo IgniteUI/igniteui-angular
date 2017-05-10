@@ -1,5 +1,5 @@
 /**
- * Common interface for Components with show and collapse functionality 
+ * Common interface for Components with show and collapse functionality
  */
 export interface ToggleView {
     open(fireEvents?: boolean): Promise<any>;

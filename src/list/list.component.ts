@@ -1,24 +1,24 @@
-import { Component, Input, Output, ContentChildren, QueryList, Renderer2, HostBinding,
-     NgModule, OnInit, OnDestroy, ViewChild, Inject, forwardRef, ElementRef, EventEmitter, AfterContentInit } from '@angular/core';
 import { CommonModule } from "@angular/common";
-import { HammerGesturesManager } from '../core/touch';
+import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, forwardRef, HostBinding,
+     Inject, Input, NgModule, OnDestroy, OnInit, Output, QueryList, Renderer2, ViewChild } from "@angular/core";
 import { IgxButtonModule } from "../button/button.directive";
+import { HammerGesturesManager } from "../core/touch";
 import { IgxRippleModule } from "../directives/ripple.directive";
 
 export interface IListChild {
     index: number;
 }
 
-export enum IgxListPanState { NONE, LEFT, RIGHT };
+export enum IgxListPanState { NONE, LEFT, RIGHT }
 
 // ====================== LIST ================================
 // The `<igx-list>` directive is a list container for items and headers
 @Component({
-    selector: 'igx-list',
+    selector: "igx-list",
     moduleId: module.id,
-    templateUrl: 'list.component.html',
+    templateUrl: "list.component.html",
     host: {
-        'role': "list"
+        role: "list"
     }
 })
 export class IgxList {
@@ -27,9 +27,9 @@ export class IgxList {
     @ContentChildren(forwardRef(() => IgxListItem)) children: QueryList<IgxListItem>;
 
     get items(): IgxListItem[] {
-        let items: IgxListItem[] = [];
+        const items: IgxListItem[] = [];
         if (this.children !== undefined) {
-            for (let child of this.children.toArray()) {
+            for (const child of this.children.toArray()) {
                 if (!child.isHeader) {
                     items.push(child);
                 }
@@ -40,9 +40,9 @@ export class IgxList {
     }
 
     get headers(): IgxListItem[] {
-        let headers: IgxListItem[] = [];
+        const headers: IgxListItem[] = [];
         if (this.children !== undefined) {
-            for (let child of this.children.toArray()) {
+            for (const child of this.children.toArray()) {
                 if (child.isHeader) {
                     headers.push(child);
                 }
@@ -67,7 +67,7 @@ export class IgxList {
     @Output() onPanStateChange = new EventEmitter();
 
     private onEmptyListButtonClicked(event) {
-        this.emptyListButtonClick.emit({ list: this, event: event });
+        this.emptyListButtonClick.emit({ list: this, event });
     }
 
     constructor(private element: ElementRef) {
@@ -78,12 +78,12 @@ export class IgxList {
 // The `<igx-item>` directive is a container intended for row items in
 // a `<igx-list>` container.
 @Component({
-    selector: 'igx-list-item',
+    selector: "igx-list-item",
     moduleId: module.id,
-    templateUrl: 'list-item.component.html'
+    templateUrl: "list-item.component.html"
 })
 export class IgxListItem implements OnInit, OnDestroy, IListChild {
-    @ViewChild('wrapper') wrapper: ElementRef;
+    @ViewChild("wrapper") wrapper: ElementRef;
 
     private _panState: IgxListPanState = IgxListPanState.NONE;
     private _FRACTION_OF_WIDTH_TO_TRIGGER_GRIP = 0.5; // as a fraction of the item width
@@ -112,7 +112,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
         return this.wrapper.nativeElement.offsetLeft;
     }
     set left(value: number) {
-        var val = value + "";
+        let val = value + "";
 
         if (val.indexOf("px") == -1) {
             val += "px";
@@ -129,10 +129,10 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
         return this.width;
     }
 
-    @HostBinding('attr.role') role;
+    @HostBinding("attr.role") role;
     @Input() isHeader: boolean = false;
     @Input() href: string;
-    @Input() options: Array<Object>
+    @Input() options: Object[];
 
     constructor(@Inject(forwardRef(() => IgxList)) private list: IgxList, public element: ElementRef, private _renderer: Renderer2) {
     }
@@ -149,7 +149,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
             this.element.nativeElement.style.touchAction = "pan-y";
         }
 
-        this.element.nativeElement.setAttribute('aria-label', this.element.nativeElement.textContent.trim());
+        this.element.nativeElement.setAttribute("aria-label", this.element.nativeElement.textContent.trim());
     }
 
     public ngOnDestroy() {
@@ -158,9 +158,9 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     private _addEventListeners() {
         // Do not attach pan events if there is no options - no need to pan the item
         if (this._renderer && this.options && (this.list.allowLeftPanning || this.list.allowRightPanning)) {
-            this._renderer.listen(this.element.nativeElement, 'panstart', (event) => { this.panStart(event); });
-            this._renderer.listen(this.element.nativeElement, 'panmove', (event) => { this.panMove(event); });
-            this._renderer.listen(this.element.nativeElement, 'panend', (event) => { this.panEnd(event); });
+            this._renderer.listen(this.element.nativeElement, "panstart", (event) => { this.panStart(event); });
+            this._renderer.listen(this.element.nativeElement, "panmove", (event) => { this.panMove(event); });
+            this._renderer.listen(this.element.nativeElement, "panend", (event) => { this.panEnd(event); });
         }
     }
 
@@ -169,7 +169,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     }
 
     private panMove(ev: HammerInput) {
-        var isPanningToLeft = this.left + ev.deltaX < this.left;
+        const isPanningToLeft = this.left + ev.deltaX < this.left;
         if (isPanningToLeft) {
             this.left += ev.deltaX - this._previousPanDeltaX;
             if (this.list.allowRightPanning && !this.list.allowLeftPanning && this.left < 0) {
@@ -190,7 +190,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     }
 
     private panEnd(ev: HammerInput) {
-        var oldPanState = this._panState;
+        const oldPanState = this._panState;
 
         this.performMagneticGrip();
 
@@ -198,7 +198,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
             this.list.onPanStateChange.emit({ oldState: oldPanState, newState: this._panState, item: this});
             if (this._panState == IgxListPanState.LEFT) {
                 this.list.onLeftPan.emit(this);
-            } else if(this._panState == IgxListPanState.RIGHT) {
+            } else if (this._panState == IgxListPanState.RIGHT) {
                 this.list.onRightPan.emit(this);
             }
         }
@@ -207,8 +207,8 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     }
 
     private performMagneticGrip() {
-        var widthTriggeringGrip = this.width * this._FRACTION_OF_WIDTH_TO_TRIGGER_GRIP;
-        var currentState = this.list
+        const widthTriggeringGrip = this.width * this._FRACTION_OF_WIDTH_TO_TRIGGER_GRIP;
+        const currentState = this.list;
         if (this.left > 0) {
             if (this.left > widthTriggeringGrip) {
                 this.left = this.maxRight;

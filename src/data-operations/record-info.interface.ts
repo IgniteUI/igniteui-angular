@@ -1,4 +1,4 @@
 export interface RecordInfo{
-    index: number; 
+    index: number;
     record: Object;
 }

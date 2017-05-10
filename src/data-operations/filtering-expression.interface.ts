@@ -2,7 +2,7 @@ import { FilteringCondition } from "./filtering-condition";
 export enum FilteringLogic {
     And,
     Or
-};
+}
 
 /**
  * Represents filtering expressions.

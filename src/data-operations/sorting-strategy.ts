@@ -1,4 +1,4 @@
-import { SortingExpression, SortingDirection } from "./sorting-expression.interface";
+import { SortingDirection, SortingExpression } from "./sorting-expression.interface";
 
 export interface ISortingStrategy {
     sort: (data: any[], expressions: SortingExpression[]) => any[];
@@ -9,14 +9,14 @@ export class SortingStrategy implements ISortingStrategy {
     sort(data: any[], expressions: SortingExpression[]): any[] {
         return this.sortDataRecursive(data, expressions);
     }
-    protected arraySort<T> (data: T[], compareFn?): T[] {
+    protected arraySort<T>(data: T[], compareFn?): T[] {
         return data.sort(compareFn);
     }
-    private groupedRecordsByExpression<T> (data: T[], index: number, expression: SortingExpression): T[] {
-        var i, res = [], cmpRes, groupval,
+    private groupedRecordsByExpression<T>(data: T[], index: number, expression: SortingExpression): T[] {
+        let i, res = [], cmpRes, groupval,
             key = expression.fieldName,
             len = data.length,
-            cmpFunc = function (val1, val2): boolean {
+            cmpFunc = function(val1, val2): boolean {
                 return val1 === val2;
             };
         res.push(data[ index ]);
@@ -32,7 +32,7 @@ export class SortingStrategy implements ISortingStrategy {
         return res;
     }
     compareValues(a: any, b: any) {
-        var an = (a === null || a === undefined),
+        const an = (a === null || a === undefined),
             bn = (b === null || b === undefined);
         if (an) {
             if (bn) {
@@ -45,20 +45,20 @@ export class SortingStrategy implements ISortingStrategy {
         return a > b ? 1 : a < b ? -1 : 0;
     }
     protected compareObjects(obj1: Object, obj2: Object, key: string, reverse: number, ignoreCase: boolean) {
-        var a = obj1[key], b = obj2[key];
+        let a = obj1[key], b = obj2[key];
         if (ignoreCase) {
             a = a && a.toLowerCase ? a.toLowerCase() : a;
             b = b && b.toLowerCase ? b.toLowerCase() : b;
         }
         return reverse * this.compareValues(a, b);
     }
-    private sortByFieldExpression<T> (data: T[], expression: SortingExpression): T[] {
-        var arr = [], sortF, self = this,
+    private sortByFieldExpression<T>(data: T[], expression: SortingExpression): T[] {
+        const arr = [], sortF, self = this,
             key = expression.fieldName,
-            ignoreCase = expression.ignoreCase ? 
-                            data[0] && (typeof data[0][key] === "string" || data[0][key] === null || data[0][key] === undefined): 
+            ignoreCase = expression.ignoreCase ?
+                            data[0] && (typeof data[0][key] === "string" || data[0][key] === null || data[0][key] === undefined) :
                             false,
-            reverse = (expression.dir === SortingDirection.Desc? -1 : 1),
+            reverse = (expression.dir === SortingDirection.Desc ? -1 : 1),
             //cmpFunc = expression.compareFunction;
             cmpFunc = function(obj1, obj2) {
                 return self.compareObjects(obj1, obj2, key, reverse, ignoreCase);
@@ -66,10 +66,10 @@ export class SortingStrategy implements ISortingStrategy {
         return this.arraySort(data, cmpFunc);
     }
 
-    private sortDataRecursive<T> (data: T[],
-                            expressions: SortingExpression[],
-                            expressionIndex: number = 0): T[] {
-        var i, j, dataLen = data.length, expr, gbExpr, gbData, gbDataLen,
+    private sortDataRecursive<T>(data: T[],
+                                 expressions: SortingExpression[],
+                                 expressionIndex: number = 0): T[] {
+        let i, j, dataLen = data.length, expr, gbExpr, gbData, gbDataLen,
             exprsLen = expressions.length;
         expressionIndex = expressionIndex || 0;
         if (expressionIndex >= exprsLen || dataLen <= 1) {

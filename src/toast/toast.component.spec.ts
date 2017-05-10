@@ -1,12 +1,12 @@
-import {TestBed, async } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {IgxToast, IgxToastModule, IgxToastPosition} from './toast.component';
 import {Component, ViewChild} from "@angular/core";
+import {async, TestBed } from "@angular/core/testing";
 import {By} from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import {IgxToast, IgxToastModule, IgxToastPosition} from "./toast.component";
 
-var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
-describe('IgxToast', () => {
+describe("IgxToast", () => {
     beforeEach(async(() => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000;
         TestBed.configureTestingModule({
@@ -23,12 +23,12 @@ describe('IgxToast', () => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = oldTimeout;
     });
 
-    it('should properly initialize properties', async(() => {
+    it("should properly initialize properties", async(() => {
         TestBed.compileComponents().then(() => {
-            let fixture = TestBed.createComponent(ToastIntializeTestComponent);
+            const fixture = TestBed.createComponent(ToastIntializeTestComponent);
             fixture.componentInstance.toast.isVisible = true;
             fixture.detectChanges();
-            let element = fixture.debugElement.query(By.css(".igx-toast--bottom"));
+            const element = fixture.debugElement.query(By.css(".igx-toast--bottom"));
 
             expect(fixture.componentInstance.toast.message).toBeUndefined();
             expect(fixture.componentInstance.toast.displayTime).toBe(4000);
@@ -36,67 +36,67 @@ describe('IgxToast', () => {
             expect(fixture.componentInstance.toast.isVisible).toBeTruthy();
             expect(element.classes[fixture.componentInstance.toast.CSS_CLASSES.IGX_TOAST_BOTTOM]).toBeTruthy();
 
-        }).catch(reason => {
+        }).catch((reason) => {
             console.log(reason);
             return Promise.reject(reason);
         });
     }));
 
-    it('should change toast position to middle', async(() => {
+    it("should change toast position to middle", async(() => {
         TestBed.compileComponents().then(() => {
-            let fixture = TestBed.createComponent(ToastIntializeTestComponent);
+            const fixture = TestBed.createComponent(ToastIntializeTestComponent);
             fixture.componentInstance.toast.position = IgxToastPosition.Middle;
             fixture.componentInstance.toast.isVisible = true;
             fixture.detectChanges();
 
-            let element = fixture.debugElement.query(By.css(".igx-toast--middle"));
+            const element = fixture.debugElement.query(By.css(".igx-toast--middle"));
             expect(element.classes[fixture.componentInstance.toast.CSS_CLASSES.IGX_TOAST_MIDDLE]).toBeTruthy();
-        }).catch(reason => {
+        }).catch((reason) => {
             console.log(reason);
             return Promise.reject(reason);
         });
     }));
 
-    it('should change toast position to top', async(() => {
+    it("should change toast position to top", async(() => {
         TestBed.compileComponents().then(() => {
-            let fixture = TestBed.createComponent(ToastIntializeTestComponent);
+            const fixture = TestBed.createComponent(ToastIntializeTestComponent);
             fixture.componentInstance.toast.position = IgxToastPosition.Top;
             fixture.componentInstance.toast.isVisible = true;
             fixture.detectChanges();
 
-            let element = fixture.debugElement.query(By.css(".igx-toast--top"));
+            const element = fixture.debugElement.query(By.css(".igx-toast--top"));
 
             expect(element.classes[fixture.componentInstance.toast.CSS_CLASSES.IGX_TOAST_TOP]).toBeTruthy();
-        }).catch(reason => {
+        }).catch((reason) => {
             console.log(reason);
             return Promise.reject(reason);
         });
     }));
 
-    it('should change toast position something else should be undefined', async(() => {
+    it("should change toast position something else should be undefined", async(() => {
         TestBed.compileComponents().then(() => {
-            let fixture = TestBed.createComponent(ToastIntializeTestComponent);
+            const fixture = TestBed.createComponent(ToastIntializeTestComponent);
             fixture.componentInstance.toast.position = IgxToastPosition.Bottom;
             fixture.componentInstance.toast.isVisible = true;
             fixture.detectChanges();
 
-            let element = fixture.debugElement.query(By.css(".igx-toast--bottom"));
+            const element = fixture.debugElement.query(By.css(".igx-toast--bottom"));
 
             expect(element.classes[fixture.componentInstance.toast.CSS_CLASSES.IGX_TOAST_TOP] &&
                 element.classes[fixture.componentInstance.toast.CSS_CLASSES.IGX_TOAST_MIDDLE] &&
                 element.classes[fixture.componentInstance.toast.CSS_CLASSES.IGX_TOAST_BOTTOM]).toBeUndefined();
-        }).catch(reason => {
+        }).catch((reason) => {
             console.log(reason);
             return Promise.reject(reason);
         });
     }));
 
-    it('should auto hide 10 seconds after is open', (done) => {
+    it("should auto hide 10 seconds after is open", (done) => {
         TestBed.compileComponents().then(() => {
-            let fixture = TestBed.createComponent(ToastIntializeTestComponent);
+            const fixture = TestBed.createComponent(ToastIntializeTestComponent);
             fixture.detectChanges();
 
-            var displayTime: number = 1000;
+            const displayTime: number = 1000;
             fixture.componentInstance.toast.displayTime = displayTime;
 
             fixture.componentInstance.toast.show();
@@ -108,18 +108,18 @@ describe('IgxToast', () => {
                 expect(fixture.componentInstance.toast.isVisible).toBeFalsy();
                 done();
             }, displayTime);
-        }).catch(reason => {
+        }).catch((reason) => {
             console.log(reason);
             return Promise.reject(reason);
         });
     });
 
-    it('should not auto hide seconds after is open', (done) => {
+    it("should not auto hide seconds after is open", (done) => {
         TestBed.compileComponents().then(() => {
-            let fixture = TestBed.createComponent(ToastIntializeTestComponent);
+            const fixture = TestBed.createComponent(ToastIntializeTestComponent);
             fixture.detectChanges();
 
-            var displayTime: number = 1000;
+            const displayTime: number = 1000;
             fixture.componentInstance.toast.displayTime = displayTime;
             fixture.componentInstance.toast.autoHide = false;
 
@@ -132,14 +132,14 @@ describe('IgxToast', () => {
                 expect(fixture.componentInstance.toast.isVisible).toBeTruthy();
                 done();
             }, displayTime);
-        }).catch(reason => {
+        }).catch((reason) => {
             console.log(reason);
             return Promise.reject(reason);
         });
     });
 });
 @Component({
-    selector: 'snackbar-test-component',
+    selector: "snackbar-test-component",
     template: `<igx-toast #toast>
                </igx-toast>`
 })

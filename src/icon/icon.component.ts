@@ -1,36 +1,36 @@
-import { Component, ElementRef, Input, NgModule, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule } from "@angular/common";
+import { Component, ElementRef, Input, NgModule, ViewChild } from "@angular/core";
 
 @Component({
-	selector: 'igx-icon',
+	selector: "igx-icon",
 	moduleId: module.id,
-	templateUrl: 'icon.component.html'
+	templateUrl: "icon.component.html"
 })
 
 export class IgxIcon {
-	@ViewChild('icon') themeIcon: ElementRef;
+	@ViewChild("icon") themeIcon: ElementRef;
 
-	private font: string = 'material';
-	private active: string = 'true';
+	private font: string = "material";
+	private active: string = "true";
 	private iconColor: string;
 	private iconName: string;
 
-    constructor(public el: ElementRef) {}
+ constructor(public el: ElementRef) {}
 
-	@Input('fontSet') set fontSet(value: string) {
+	@Input("fontSet") set fontSet(value: string) {
 		this.font = value || this.font;
 	}
 
-	@Input('isActive') set isActive(value: string) {
+	@Input("isActive") set isActive(value: string) {
 		this.active = value || this.active;
 	}
 
-	@Input('color') set color(value: string) {
+	@Input("color") set color(value: string) {
 		this.iconColor = value;
 		this.el.nativeElement.style.color = this.iconColor;
 	}
 
-	@Input('name') set name(value: string) {
+	@Input("name") set name(value: string) {
 		this.iconName = value;
 	}
 
@@ -39,9 +39,9 @@ export class IgxIcon {
 	}
 
 	get getActive(): boolean {
-		if(this.active.toLowerCase() == 'true') {
+		if (this.active.toLowerCase() == "true") {
 			return true;
-		} else if(this.active.toLowerCase() == 'false') {
+		} else if (this.active.toLowerCase() == "false") {
 			return false;
 		}
 	}

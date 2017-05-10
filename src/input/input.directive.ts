@@ -1,15 +1,15 @@
+import {CommonModule} from "@angular/common";
 import {
     Directive,
+    DoCheck,
     ElementRef,
-    HostListener,
     HostBinding,
-    NgModule,
-    DoCheck
+    HostListener,
+    NgModule
 } from "@angular/core";
-import {CommonModule} from '@angular/common';
 
 @Directive({
-    selector: '[igxInput]',
+    selector: "[igxInput]",
     // host: {
     //     '[class.igx-form-group__input]': 'true',
     //     '[class.igx-form-group__input--filled]': 'filled',
@@ -32,22 +32,21 @@ export class IgxInputClass implements DoCheck {
 
     constructor(protected el: ElementRef) {}
 
-    @HostListener('focus', ['$event'])
+    @HostListener("focus", ["$event"])
     onFocus(event) {
         this.focused = true;
     }
 
-    @HostListener('blur', ['$event'])
+    @HostListener("blur", ["$event"])
     onBlur(event) {
         this.focused = false;
     }
 
-
     ngDoCheck() {
-        let value = this.el.nativeElement.value;
+        const value = this.el.nativeElement.value;
 
-        this.filled = value && (value !== '');
-        this.placeholder = this.el.nativeElement.getAttribute('placeholder') && !this.filled;
+        this.filled = value && (value !== "");
+        this.placeholder = this.el.nativeElement.getAttribute("placeholder") && !this.filled;
     }
 }
 

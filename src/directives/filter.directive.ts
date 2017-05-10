@@ -1,8 +1,8 @@
-import { Directive, Pipe, PipeTransform, NgModule, Output, EventEmitter, ElementRef, Renderer2, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { Directive, ElementRef, EventEmitter, Input, NgModule, OnChanges, Output, Pipe, PipeTransform, Renderer2, SimpleChanges } from "@angular/core";
 
 @Directive({
-    selector: '[igxFilter]',
+    selector: "[igxFilter]",
 })
 export class IgxFilterDirective implements OnChanges {
     @Output() filtering = new EventEmitter(false); // synchronous event emitter
@@ -15,11 +15,11 @@ export class IgxFilterDirective implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         // Detect only changes of input value
-        if (changes["filterOptions"] &&
-            changes["filterOptions"].currentValue &&
-            changes["filterOptions"].currentValue["inputValue"] !== undefined &&
-            changes["filterOptions"].previousValue &&
-            changes["filterOptions"].currentValue["inputValue"] !== changes["filterOptions"].previousValue["inputValue"]) {
+        if (changes.filterOptions &&
+            changes.filterOptions.currentValue &&
+            changes.filterOptions.currentValue.inputValue !== undefined &&
+            changes.filterOptions.previousValue &&
+            changes.filterOptions.currentValue.inputValue !== changes.filterOptions.previousValue.inputValue) {
             this.filter();
         }
     }
@@ -29,16 +29,16 @@ export class IgxFilterDirective implements OnChanges {
             return;
         }
 
-        var args = { cancel: false, items: this.filterOptions.items };
+        const args = { cancel: false, items: this.filterOptions.items };
         this.filtering.emit(args);
 
         if (args.cancel) {
             return;
         }
 
-        var pipe = new IgxFilterPipe();
+        const pipe = new IgxFilterPipe();
 
-        var filtered = pipe.transform(this.filterOptions.items, this.filterOptions);
+        const filtered = pipe.transform(this.filterOptions.items, this.filterOptions);
         this.filtered.emit({ filteredItems: filtered });
     }
 }
@@ -49,11 +49,11 @@ export class IgxFilterDirective implements OnChanges {
 })
 
 export class IgxFilterPipe implements PipeTransform {
-    transform(items: Array<any>,
+    transform(items: any[],
         // options - initial settings of filter functionality
-        options: IgxFilterOptions) {
+              options: IgxFilterOptions) {
 
-        var result = [];
+        let result = [];
 
         if (!items || !items.length || !options) {
             return;
@@ -64,7 +64,7 @@ export class IgxFilterPipe implements PipeTransform {
         }
 
         result = items.filter((item: any) => {
-            let match = options.matchFn(options.formatter(options.get_value(item, options.key)), options.inputValue);
+            const match = options.matchFn(options.formatter(options.get_value(item, options.key)), options.inputValue);
 
             if (match) {
                 if (options.metConditionFn) {
@@ -91,14 +91,14 @@ export class IgxFilterOptions {
     public key: string;
 
     // Represent items of the list. It should be used to handle decalaratevely defined widgets
-    public items: Array<any>;
+    public items: any[];
 
     // Function - get value to be tested from the item
     // item - single item of the list to be filtered
     // key - property name of item, which value should be tested
     // Default behavior - returns "key"- named property value of item if key si provided, otherwise textContent of the item's html element
     public get_value(item: any, key: string): string {
-        var result: string = "";
+        let result: string = "";
 
         if (key) {
             result = item[key].toString();
@@ -113,7 +113,7 @@ export class IgxFilterOptions {
 	// Default behavior - returns text to lower case
     formatter(valueToTest: string): string {
         return valueToTest.toLowerCase();
-	};
+	}
 
 	// Function - determines whether the item met the condition
 	// valueToTest - text value that should be tested
@@ -121,7 +121,7 @@ export class IgxFilterOptions {
     // Default behavior - "contains"
     matchFn(valueToTest: string, inputValue: string): boolean {
         return valueToTest.indexOf(inputValue && inputValue.toLowerCase() || "") > -1;
-	};
+	}
 
 	// Function - executed after matching test for every matched item
 	// Default behavior - shows the item
@@ -129,7 +129,7 @@ export class IgxFilterOptions {
         if (item.hasOwnProperty("hidden")) {
             item.hidden = false;
         }
-    };
+    }
 
 	// Function - executed for every NOT matched item after matching test
 	// Default behavior - hides the item
@@ -137,7 +137,7 @@ export class IgxFilterOptions {
         if (item.hasOwnProperty("hidden")) {
             item.hidden = true;
         }
-    };
+    }
 }
 
 @NgModule({

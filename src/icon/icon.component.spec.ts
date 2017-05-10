@@ -1,13 +1,12 @@
+import { Component, ViewChild } from "@angular/core";
 import {
     async,
     TestBed
-} from '@angular/core/testing';
-import { Component, ViewChild } from '@angular/core';
-import { By } from '@angular/platform-browser';
-import { IgxIconModule, IgxIcon } from './icon.component';
+} from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
+import { IgxIcon, IgxIconModule } from "./icon.component";
 
-
-describe('Icon', () => {
+describe("Icon", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -20,47 +19,47 @@ describe('Icon', () => {
         }).compileComponents();
     }));
 
-    it('Initializes icon with initials', () => {
-        let fixture = TestBed.createComponent(InitIcon);
-        let icon = fixture.componentInstance.icon;
+    it("Initializes icon with initials", () => {
+        const fixture = TestBed.createComponent(InitIcon);
+        const icon = fixture.componentInstance.icon;
         fixture.detectChanges();
 
         expect(icon.getActive).toBeTruthy();
         expect(icon.getIconColor).toBeFalsy();
         expect(icon.getIconName).toBeFalsy();
-        expect(icon.getFontSet).toEqual('material');
-        expect(icon.el.nativeElement.getElementsByClassName('igx-icon')).toBeTruthy();
+        expect(icon.getFontSet).toEqual("material");
+        expect(icon.el.nativeElement.getElementsByClassName("igx-icon")).toBeTruthy();
         expect(icon.themeIcon).toBeTruthy();
     });
 
-    it('Initializes material icon', () => {
-        let fixture = TestBed.createComponent(InitMaterialIcon);
-        let icon = fixture.componentInstance.icon;
+    it("Initializes material icon", () => {
+        const fixture = TestBed.createComponent(InitMaterialIcon);
+        const icon = fixture.componentInstance.icon;
         fixture.detectChanges();
 
-        expect(icon.themeIcon.nativeElement.classList.contains('material-icons')).toBeTruthy();
-        expect(icon.themeIcon.nativeElement.innerText).toEqual('home');
+        expect(icon.themeIcon.nativeElement.classList.contains("material-icons")).toBeTruthy();
+        expect(icon.themeIcon.nativeElement.innerText).toEqual("home");
 
     });
 
-    it('Initializes custom color icon', () => {
-        let fixture = TestBed.createComponent(InitCustomColorIcon);
-        let icon = fixture.componentInstance.icon;
+    it("Initializes custom color icon", () => {
+        const fixture = TestBed.createComponent(InitCustomColorIcon);
+        const icon = fixture.componentInstance.icon;
         fixture.detectChanges();
 
-        expect(icon.getIconColor).toEqual('red');
-        expect(icon.el.nativeElement.style.color).toEqual('red');
+        expect(icon.getIconColor).toEqual("red");
+        expect(icon.el.nativeElement.style.color).toEqual("red");
     });
 
-    it('Initializes inactive icon', () => {
-        let fixture = TestBed.createComponent(InitInactiveIcon);
-        let icon = fixture.componentInstance.icon,
-            iconContainers = icon.el.nativeElement.getElementsByClassName('igx-icon');
+    it("Initializes inactive icon", () => {
+        const fixture = TestBed.createComponent(InitInactiveIcon);
+        const icon = fixture.componentInstance.icon,
+            iconContainers = icon.el.nativeElement.getElementsByClassName("igx-icon");
 
         fixture.detectChanges();
 
         expect(icon.getActive).toBeFalsy();
-        expect(iconContainers[0].classList.contains('igx-icon--inactive')).toBeTruthy();
+        expect(iconContainers[0].classList.contains("igx-icon--inactive")).toBeTruthy();
     });
 });
 

@@ -1,13 +1,13 @@
-import { NgModule, Component, ElementRef, Input } from '@angular/core';
 import { CommonModule } from "@angular/common";
+import { Component, ElementRef, Input, NgModule } from "@angular/core";
 
 export enum Type { DEFAULT, INFO, SUCCESS, WARNING, ERROR }
 export enum Position { TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }
 
 @Component({
-    selector: 'igx-badge',
+    selector: "igx-badge",
     moduleId: module.id,
-    templateUrl: 'badge.component.html'
+    templateUrl: "badge.component.html"
 })
 export class IgxBadge {
     private _type: string = "";
@@ -22,9 +22,8 @@ export class IgxBadge {
         return this._type === undefined ? "default" : this._type;
     }
 
-
     set type(value: string) {
-        var sizeType = this.TypeEnum[value.toUpperCase()];
+        const sizeType = this.TypeEnum[value.toUpperCase()];
 
         if (sizeType === undefined) {
             this._type = "default";
@@ -38,9 +37,8 @@ export class IgxBadge {
         return this._position === undefined ? "top-right" : this._position;
     }
 
-
     set position(value: string) {
-        var positionType = this.PositionEnum[value.replace("-","_").toUpperCase()];
+        const positionType = this.PositionEnum[value.replace("-", "_").toUpperCase()];
 
         if (positionType === undefined) {
             this._position = "top-right";
@@ -53,7 +51,6 @@ export class IgxBadge {
     get value(): string {
         return this._value === undefined ? "?" : this._value;
     }
-
 
     set value(value: string) {
         if (value === undefined) {
@@ -73,7 +70,7 @@ export class IgxBadge {
     }
 
     get roleDescription() {
-        var message;
+        let message;
 
         if (this._iconBdg){
             message = this._type + " type badge with icon type " + this._iconBdg;
@@ -87,7 +84,7 @@ export class IgxBadge {
     }
 
     setClasses() {
-        var classes = {};
+        let classes = {};
 
         switch (this.TypeEnum[this._type.toUpperCase()]) {
             case Type.DEFAULT:
@@ -121,9 +118,9 @@ export class IgxBadge {
     }
 
     setPosition() {
-        var className = {};
+        let className = {};
 
-        switch (this.PositionEnum[this.position.replace("-","_").toUpperCase()]) {
+        switch (this.PositionEnum[this.position.replace("-", "_").toUpperCase()]) {
             case Position.BOTTOM_LEFT:
                 className = {
                     "igx-badge--bottom-left": true

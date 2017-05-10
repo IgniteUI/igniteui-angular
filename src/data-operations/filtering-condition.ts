@@ -1,25 +1,25 @@
 // helper functions
-function applyIgnoreCase (a: string, ignoreCase: boolean) : string {
+function applyIgnoreCase(a: string, ignoreCase: boolean) : string {
     a = a || "";
     // bulletproof
-    return ignoreCase? ("" + a).toLowerCase() : a;
+    return ignoreCase ? ("" + a).toLowerCase() : a;
 }
-function getDateParts(date: Date, dateFormat?: string): 
-                    {   year?: number, 
-                        month?: number, 
-                        day?: number, 
-                        hours?: number, 
-                        minutes?: number, 
-                        seconds?: number, 
+function getDateParts(date: Date, dateFormat?: string):
+                    {   year?: number,
+                        month?: number,
+                        day?: number,
+                        hours?: number,
+                        minutes?: number,
+                        seconds?: number,
                         milliseconds?: number
                     } {
-    let res = {
-        year: null, 
-        month: null, 
-        day: null, 
-        hours: null, 
-        minutes: null, 
-        seconds: null, 
+    const res = {
+        year: null,
+        month: null,
+        day: null,
+        hours: null,
+        minutes: null,
+        seconds: null,
         milliseconds: null
     };
     if (!date || !dateFormat) {
@@ -49,159 +49,159 @@ function getDateParts(date: Date, dateFormat?: string):
     return res;
 }
 
-export var FilteringCondition = {
+export let FilteringCondition = {
     string: {
-        contains: function (target: string, searchVal: string, ignoreCase?: boolean) : boolean
+        contains: function(target: string, searchVal: string, ignoreCase?: boolean) : boolean
         {
-            var search = applyIgnoreCase(searchVal, ignoreCase);
+            const search = applyIgnoreCase(searchVal, ignoreCase);
             target = applyIgnoreCase(target, ignoreCase);
             return target.indexOf(search) !== -1;
         },
-        startsWith: function (target: string, searchVal: string, ignoreCase?: boolean) : boolean
+        startsWith: function(target: string, searchVal: string, ignoreCase?: boolean) : boolean
         {
-            var search = applyIgnoreCase(searchVal, ignoreCase);
+            const search = applyIgnoreCase(searchVal, ignoreCase);
             target = applyIgnoreCase(target, ignoreCase);
             return target.startsWith(search);
         },
-        endsWith: function (target: string, searchVal: string, ignoreCase?: boolean) : boolean
+        endsWith: function(target: string, searchVal: string, ignoreCase?: boolean) : boolean
         {
-            var search = applyIgnoreCase(searchVal, ignoreCase);
+            const search = applyIgnoreCase(searchVal, ignoreCase);
             target = applyIgnoreCase(target, ignoreCase);
             return target.endsWith(search);
         },
-        doesNotContain: function (target: string, searchVal: string, ignoreCase?: boolean) : boolean
+        doesNotContain: function(target: string, searchVal: string, ignoreCase?: boolean) : boolean
         {
-            var search = applyIgnoreCase(searchVal, ignoreCase);
+            const search = applyIgnoreCase(searchVal, ignoreCase);
             target = applyIgnoreCase(target, ignoreCase);
             return target.indexOf(search) === -1;
         },
-        equals: function (target: string, searchVal: string, ignoreCase?: boolean) : boolean
+        equals: function(target: string, searchVal: string, ignoreCase?: boolean) : boolean
         {
-            var search = applyIgnoreCase(searchVal, ignoreCase);
+            const search = applyIgnoreCase(searchVal, ignoreCase);
             target = applyIgnoreCase(target, ignoreCase);
             return target === search;
         },
-        doesNotEqual: function (target: string, searchVal: string, ignoreCase?: boolean) : boolean
+        doesNotEqual: function(target: string, searchVal: string, ignoreCase?: boolean) : boolean
         {
-            var search = applyIgnoreCase(searchVal, ignoreCase);
+            const search = applyIgnoreCase(searchVal, ignoreCase);
             target = applyIgnoreCase(target, ignoreCase);
             return target !== search;
         },
-        null: function (target: string) : boolean
+        null: function(target: string) : boolean
         {
             return target === null;
         },
-        notNull: function (target: string) : boolean
+        notNull: function(target: string) : boolean
         {
             return target !== null;
         },
-        empty: function (target: string) : boolean
+        empty: function(target: string) : boolean
         {
             return target === null || target === undefined || target.length === 0;
         },
-        notEmpty: function (target: string) : boolean
+        notEmpty: function(target: string) : boolean
         {
             return target !== null && target !== undefined && target.length > 0;
         }
     },
     number: {
-        equals: function (target: number, searchVal: number) : boolean
+        equals: function(target: number, searchVal: number) : boolean
         {
             return target === searchVal;
         },
-        doesNotEqual: function (target: number, searchVal: number) : boolean
+        doesNotEqual: function(target: number, searchVal: number) : boolean
         {
             return target !== searchVal;
         },
-        greaterThan: function (target: number, searchVal: number) : boolean
+        greaterThan: function(target: number, searchVal: number) : boolean
         {
             return target > searchVal;
         },
-        lessThan: function (target: number, searchVal: number) : boolean
+        lessThan: function(target: number, searchVal: number) : boolean
         {
             return target < searchVal;
         },
-        greaterThanOrEqualTo: function (target: number, searchVal: number) : boolean
+        greaterThanOrEqualTo: function(target: number, searchVal: number) : boolean
         {
             return target >= searchVal;
         },
-        lessThanOrEqualTo: function (target: number, searchVal: number) : boolean
+        lessThanOrEqualTo: function(target: number, searchVal: number) : boolean
         {
             return target <= searchVal;
         },
-        null: function (target: number) : boolean
+        null: function(target: number) : boolean
         {
             return target === null;
         },
-        notNull: function (target) : boolean
+        notNull: function(target) : boolean
         {
             return target !== null;
         },
-        empty: function (target: number) : boolean
+        empty: function(target: number) : boolean
         {
             return target === null || target === undefined || isNaN(target);
         },
-        notEmpty: function (target: number) : boolean
+        notEmpty: function(target: number) : boolean
         {
             return target !== null && target !== undefined && !isNaN(target);
         }
     },
     boolean: {
-        true: function (target: boolean) : boolean {
+        true: function(target: boolean) : boolean {
             return target;
         },
-        false: function (target: boolean) : boolean {
+        false: function(target: boolean) : boolean {
             return !target;
         },
-        null: function (target: boolean) : boolean {
+        null: function(target: boolean) : boolean {
             return target === null;
         },
-        notNull: function (target: boolean) : boolean {
+        notNull: function(target: boolean) : boolean {
             return target !== null;
         },
-        empty: function (target: boolean) : boolean {
+        empty: function(target: boolean) : boolean {
             return target === null || target === undefined;
         },
-        notEmpty: function (target: boolean) : boolean {
+        notEmpty: function(target: boolean) : boolean {
             return target !== null && target !== undefined;
         }
     },
     date: {
-        equals: function (target: Date, searchVal: Date) : boolean {
+        equals: function(target: Date, searchVal: Date) : boolean {
             return +target === +searchVal;
         },
-        doesNotEqual: function (target: Date, searchVal: Date) : boolean {
+        doesNotEqual: function(target: Date, searchVal: Date) : boolean {
             return !FilteringCondition.date.equals(target, searchVal);
         },
-        before: function (target: Date, searchVal: Date) : boolean {
+        before: function(target: Date, searchVal: Date) : boolean {
             return target < searchVal;
         },
-        after: function (target: Date, searchVal: Date) : boolean {
+        after: function(target: Date, searchVal: Date) : boolean {
             return target > searchVal;
         },
-        today: function (target: Date) : boolean {
-            var d = getDateParts(target, "yMd"), 
+        today: function(target: Date) : boolean {
+            const d = getDateParts(target, "yMd"),
                 now = getDateParts(new Date(), "yMd");
             return  d.year === now.year &&
                     d.month === now.month &&
                     d.day === now.day;
         },
-        yesterday: function (target: Date) : boolean {
-            var td = getDateParts(target, "yMd"), 
-                y = ( d => new Date(d.setDate(d.getDate() - 1)) )(new Date),
+        yesterday: function(target: Date) : boolean {
+            const td = getDateParts(target, "yMd"),
+                y = ( (d) => new Date(d.setDate(d.getDate() - 1)) )(new Date),
                 yesterday = getDateParts(y, "yMd");
             return  td.year === yesterday.year &&
                     td.month === yesterday.month &&
                     td.day === yesterday.day;
         },
-        thisMonth: function (target: Date) : boolean {
-            var d = getDateParts(target, "yM"), 
+        thisMonth: function(target: Date) : boolean {
+            const d = getDateParts(target, "yM"),
                 now = getDateParts(new Date(), "yM");
             return  d.year === now.year &&
                     d.month === now.month;
         },
-        lastMonth: function (target: Date) : boolean {
-            var d = getDateParts(target, "yM"), 
+        lastMonth: function(target: Date) : boolean {
+            const d = getDateParts(target, "yM"),
                 now = getDateParts(new Date(), "yM");
             if (!now.month) {
                 now.month = 11;
@@ -212,8 +212,8 @@ export var FilteringCondition = {
             return  d.year === now.year &&
                     d.month === now.month;
         },
-        nextMonth: function (target: Date) : boolean {
-            var d = getDateParts(target, "yM"), 
+        nextMonth: function(target: Date) : boolean {
+            const d = getDateParts(target, "yM"),
                 now = getDateParts(new Date(), "yM");
             if (now.month === 11) {
                 now.month = 0;
@@ -224,32 +224,32 @@ export var FilteringCondition = {
             return  d.year === now.year &&
                     d.month === now.month;
         },
-        thisYear: function (target: Date) : boolean {
-            var d = getDateParts(target, "y"), 
+        thisYear: function(target: Date) : boolean {
+            const d = getDateParts(target, "y"),
                 now = getDateParts(new Date(), "y");
             return  d.year === now.year;
         },
-        lastYear: function (target: Date) : boolean {
-            var d = getDateParts(target, "y"), 
+        lastYear: function(target: Date) : boolean {
+            const d = getDateParts(target, "y"),
                 now = getDateParts(new Date(), "y");
             return  d.year === now.year - 1;
         },
-        nextYear: function (target: Date) : boolean {
-            var d = getDateParts(target, "y"), 
+        nextYear: function(target: Date) : boolean {
+            const d = getDateParts(target, "y"),
                 now = getDateParts(new Date(), "y");
             return  d.year === now.year + 1;
         },
-        null: function (target: Date) : boolean {
+        null: function(target: Date) : boolean {
             return target === null;
         },
-        notNull: function (target: Date) : boolean {
+        notNull: function(target: Date) : boolean {
             return target !== null;
         },
-        empty: function (target: Date) : boolean {
+        empty: function(target: Date) : boolean {
             return target === null || target === undefined;
         },
-        notEmpty: function (target: Date) : boolean {
+        notEmpty: function(target: Date) : boolean {
             return target !== null && target !== undefined;
         }
     }
-}
+};

@@ -1,13 +1,13 @@
-import {FilteringLogic, FilteringExpression} from "./filtering-expression.interface";
-import { IFilteringStrategy, FilteringStrategy} from "./filtering-strategy";
+import {FilteringExpression, FilteringLogic} from "./filtering-expression.interface";
+import { FilteringStrategy, IFilteringStrategy} from "./filtering-strategy";
 
 export const filteringStateDefaults = {
     logic: FilteringLogic.And,
     strategy: new FilteringStrategy()
-}
+};
 
 export declare interface FilteringState {
-    expressions: Array<FilteringExpression>;
+    expressions: FilteringExpression[];
     logic?: FilteringLogic;
     strategy?: IFilteringStrategy;
 }

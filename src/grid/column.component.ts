@@ -1,6 +1,6 @@
-import { FilteringCondition } from "../main";
-import { DataType } from "../data-operations/data-util";
 import { AfterContentInit, Component, ContentChild, Input, TemplateRef } from "@angular/core";
+import { DataType } from "../data-operations/data-util";
+import { FilteringCondition } from "../main";
 import {
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,

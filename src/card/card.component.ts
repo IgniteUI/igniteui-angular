@@ -1,6 +1,6 @@
-import {Directive, Component, NgModule} from "@angular/core";
-import {HammerGesturesManager} from "../core/touch";
+import {Component, Directive, NgModule} from "@angular/core";
 import {IgxButtonModule} from "../button/button.directive";
+import {HammerGesturesManager} from "../core/touch";
 
 /**
  * IgxCardHeader is container for the card header

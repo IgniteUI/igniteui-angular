@@ -1,13 +1,13 @@
+import { Component, ViewChildren } from "@angular/core";
 import {
     async,
     TestBed
 } from "@angular/core/testing";
-import { FormsModule } from '@angular/forms';
-import { Component, ViewChildren } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { IgxRadio } from './radio.component';
+import { IgxRadio } from "./radio.component";
 
-describe('IgRadio', function() {
+describe("IgRadio", function() {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -21,24 +21,24 @@ describe('IgRadio', function() {
         .compileComponents();
     }));
 
-    it('Init a radio', () => {
-        let fixture = TestBed.createComponent(InitRadio);
+    it("Init a radio", () => {
+        const fixture = TestBed.createComponent(InitRadio);
         fixture.detectChanges();
 
-        let nativeRadio = fixture.debugElement.query(By.css('input')).nativeElement;
-        let nativeLabel = fixture.debugElement.query(By.css('label')).nativeElement;
+        const nativeRadio = fixture.debugElement.query(By.css("input")).nativeElement;
+        const nativeLabel = fixture.debugElement.query(By.css("label")).nativeElement;
 
         expect(nativeRadio).toBeTruthy();
-        expect(nativeRadio.type).toBe('radio');
+        expect(nativeRadio.type).toBe("radio");
         expect(nativeLabel).toBeTruthy();
-        expect(nativeLabel.textContent.trim()).toEqual('Radio');
+        expect(nativeLabel.textContent.trim()).toEqual("Radio");
     });
 
-    it('Binding to ngModel', async(() => {
-        let fixture = TestBed.createComponent(RadioWithModel);
+    it("Binding to ngModel", async(() => {
+        const fixture = TestBed.createComponent(RadioWithModel);
         fixture.detectChanges();
 
-        let radios = fixture.componentInstance.radios.toArray();
+        const radios = fixture.componentInstance.radios.toArray();
 
         expect(radios.length).toEqual(3);
 
@@ -46,18 +46,17 @@ describe('IgRadio', function() {
             fixture.detectChanges();
             expect(radios[0].checked).toBe(true);
 
-            radios[1].nativeRadio.nativeElement.dispatchEvent(new Event('change'));
+            radios[1].nativeRadio.nativeElement.dispatchEvent(new Event("change"));
             fixture.detectChanges();
             fixture.whenStable().then(() => {
                 fixture.detectChanges();
                 expect(radios[1].checked).toBe(true);
                 expect(radios[0].checked).toBe(false);
-                expect(fixture.componentInstance.selected).toEqual('Bar');
+                expect(fixture.componentInstance.selected).toEqual("Bar");
             });
         });
     }));
 });
-
 
 @Component({ template: `<igx-radio>Radio</igx-radio>` })
 class InitRadio {}

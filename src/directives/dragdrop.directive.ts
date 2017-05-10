@@ -100,12 +100,12 @@ export class IgxDroppableDirective {
         if (this.dropClass) {
             this._renderer.removeClass(this._elementRef.nativeElement, this.dropClass);
         }
-        let eventData: any = JSON.parse(event.dataTransfer.getData("data"));
-        this.onDrop.emit(<IgxDropEvent> {
+        const eventData: any = JSON.parse(event.dataTransfer.getData("data"));
+        this.onDrop.emit({
             dragData: eventData,
             dropData: this.data,
             event
-        });
+        } as IgxDropEvent);
     }
 
     constructor(private _elementRef: ElementRef, private _renderer: Renderer2) {}

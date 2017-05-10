@@ -1,13 +1,13 @@
 import {
     Component,
-    NgModule,
-    Input,
-    Output,
-    ViewChild,
     EventEmitter,
-    forwardRef
+    forwardRef,
+    Input,
+    NgModule,
+    Output,
+    ViewChild
 } from "@angular/core";
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from "@angular/forms";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 let nextId = 0;
 
@@ -22,9 +22,9 @@ function MakeProvider(type: any) {
 }
 
 @Component({
-    selector: 'igx-radio',
+    selector: "igx-radio",
     moduleId: module.id,
-    templateUrl: 'radio.component.html',
+    templateUrl: "radio.component.html",
     providers: [MakeProvider(IgxRadio)]
 })
 export class IgxRadio implements ControlValueAccessor {
@@ -41,7 +41,7 @@ export class IgxRadio implements ControlValueAccessor {
 
     @Output() change: EventEmitter<any> = new EventEmitter();
 
-    @ViewChild('radio') nativeRadio;
+    @ViewChild("radio") nativeRadio;
 
     protected _value: any;
 

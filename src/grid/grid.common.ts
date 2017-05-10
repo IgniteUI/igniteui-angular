@@ -1,4 +1,3 @@
-import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import {
     Component,
     Directive,
@@ -13,6 +12,7 @@ import {
     TemplateRef,
     ViewContainerRef
 } from "@angular/core";
+import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxColumnComponent } from "./column.component";
 
 // interfaces
@@ -76,7 +76,6 @@ export class IgxColumnSortingDirective {
     get desc(): boolean {
         return this.sortDirection === SortingDirection.Desc;
     }
-
 
     @HostListener("click", ["$event"])
     protected onClick(event: Event): void {

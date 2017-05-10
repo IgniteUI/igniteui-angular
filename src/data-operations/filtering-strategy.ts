@@ -1,17 +1,17 @@
-import { FilteringExpression, FilteringLogic } from "./filtering-expression.interface";
-import { FilteringCondition } from "./filtering-condition";
-import { FilteringState } from "./filtering-state.interface";
 import {DataUtil} from "./data-util";
+import { FilteringCondition } from "./filtering-condition";
+import { FilteringExpression, FilteringLogic } from "./filtering-expression.interface";
+import { FilteringState } from "./filtering-state.interface";
 
 export interface IFilteringStrategy {
-    filter(data: any[], expressions: Array<FilteringExpression>, logic?: FilteringLogic): any[];
+    filter(data: any[], expressions: FilteringExpression[], logic?: FilteringLogic): any[];
 }
 
 export class FilteringStrategy implements IFilteringStrategy {
     filter<T>(data: T[],
-                expressions: Array<FilteringExpression>, 
-                logic?: FilteringLogic): T[] {
-        var i, len = data.length,
+              expressions: FilteringExpression[],
+              logic?: FilteringLogic): T[] {
+        let i, len = data.length,
             res: T[] = [],
             rec;
         if (!expressions || !expressions.length || !len) {
@@ -26,10 +26,10 @@ export class FilteringStrategy implements IFilteringStrategy {
         return res;
     }
     matchRecordByExpressions(rec: Object,
-                            expressions: Array<FilteringExpression>,
-                            index: number,
-                            logic?: FilteringLogic): Boolean {
-        var i, len = expressions.length, match = false, 
+                             expressions: FilteringExpression[],
+                             index: number,
+                             logic?: FilteringLogic): Boolean {
+        let i, len = expressions.length, match = false,
             and = (logic === FilteringLogic.And);
         for (i = 0; i < len; i++) {
             match = this.findMatch(rec, expressions[i], i);
@@ -46,7 +46,7 @@ export class FilteringStrategy implements IFilteringStrategy {
         return match;
     }
     findMatch(rec: Object, expr: FilteringExpression, index: number): boolean {
-        var cond = expr.condition,
+        const cond = expr.condition,
             val = rec[expr.fieldName];
         return cond(val, expr.searchVal, expr.ignoreCase);
     }

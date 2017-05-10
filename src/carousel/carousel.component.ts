@@ -1,18 +1,17 @@
-import {
-    NgModule,
-    Component,
-    HostBinding,
-    ElementRef,
-    Renderer,
-    OnInit,
-    OnDestroy,
-    Input,
-    Output,
-    EventEmitter
-} from '@angular/core';
 import { CommonModule } from "@angular/common";
-import { HammerGesturesManager } from '../core/touch';
-
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    NgModule,
+    OnDestroy,
+    OnInit,
+    Output,
+    Renderer
+} from "@angular/core";
+import { HammerGesturesManager } from "../core/touch";
 
 export enum Direction {NONE, NEXT, PREV}
 
@@ -32,12 +31,12 @@ export enum Direction {NONE, NEXT, PREV}
  */
 
 @Component({
-    selector: 'igx-carousel',
+    selector: "igx-carousel",
     host: {
-        'role': "region"
+        role: "region"
     },
     moduleId: module.id,
-    templateUrl: 'carousel.component.html',
+    templateUrl: "carousel.component.html",
 })
 
 export class IgxCarousel implements OnDestroy {
@@ -67,7 +66,6 @@ export class IgxCarousel implements OnDestroy {
     get interval(): number {
         return this._interval;
     }
-
 
     set interval(value: number) {
         this._interval = +value;
@@ -139,7 +137,7 @@ export class IgxCarousel implements OnDestroy {
      * @type {Array<Slide>}
      * @memberOf IgxCarousel
      */
-    public slides: Array<IgxSlide> = [];
+    public slides: IgxSlide[] = [];
     private _interval: number;
     private _lastInterval: any;
     private _playing: boolean;
@@ -212,7 +210,7 @@ export class IgxCarousel implements OnDestroy {
      * @memberOf IgxCarousel
      */
     public get(index: number): IgxSlide {
-        for (let each of this.slides) {
+        for (const each of this.slides) {
             if (each.index === index) {
                 return each;
             }
@@ -276,7 +274,7 @@ export class IgxCarousel implements OnDestroy {
      * @memberOf IgxCarousel
      */
     public select(slide: IgxSlide, direction: Direction = Direction.NONE) {
-        let new_index = slide.index;
+        const new_index = slide.index;
         if (direction === Direction.NONE) {
             direction = new_index > this.current ? Direction.NEXT : Direction.PREV;
         }
@@ -294,7 +292,7 @@ export class IgxCarousel implements OnDestroy {
      * @memberOf IgxCarousel
      */
     public next() {
-        let index = (this.current + 1) % this.total;
+        const index = (this.current + 1) % this.total;
 
         if (index === 0 && !this.loop) {
             this.stop();
@@ -311,7 +309,7 @@ export class IgxCarousel implements OnDestroy {
      * @memberOf IgxCarousel
      */
     public prev() {
-        let index = this.current - 1 < 0 ?
+        const index = this.current - 1 < 0 ?
             this.total - 1 : this.current - 1;
 
         if (!this.loop && index === this.total - 1) {
@@ -382,7 +380,7 @@ export class IgxCarousel implements OnDestroy {
 
         if (!isNaN(this.interval) && this.interval > 0) {
             this._lastInterval = setInterval(() => {
-                let tick = +this.interval;
+                const tick = +this.interval;
                 if (this._playing && this.total && !isNaN(tick) && tick > 0) {
                     this.next();
                 } else {
@@ -395,16 +393,16 @@ export class IgxCarousel implements OnDestroy {
     private _addEventListeners(renderer: Renderer) {
         // Swipe events
 
-        renderer.listen(this.element_ref.nativeElement, 'swipeleft', (event) => {
+        renderer.listen(this.element_ref.nativeElement, "swipeleft", (event) => {
             this.prev();
         });
 
-        renderer.listen(this.element_ref.nativeElement, 'swiperight', (event) => {
+        renderer.listen(this.element_ref.nativeElement, "swiperight", (event) => {
             this.next();
         });
 
         // Tap
-        renderer.listen(this.element_ref.nativeElement, 'tap', (event) => {
+        renderer.listen(this.element_ref.nativeElement, "tap", (event) => {
             if (this._playing) {
                 this.stop();
             } else {
@@ -414,8 +412,8 @@ export class IgxCarousel implements OnDestroy {
 
         // Keydown for arrow keys
 
-        renderer.listen(this.element_ref.nativeElement, 'keydown', (event) => {
-            switch(event.key) {
+        renderer.listen(this.element_ref.nativeElement, "keydown", (event) => {
+            switch (event.key) {
             case "ArrowLeft":
                 this.prev();
                 break;
@@ -446,9 +444,9 @@ export class IgxCarousel implements OnDestroy {
  * @implements {OnDestroy}
  */
 @Component({
-    selector: 'igx-slide',
+    selector: "igx-slide",
     moduleId: module.id,
-    templateUrl: 'slide.html'
+    templateUrl: "slide.html"
 })
 
 export class IgxSlide implements OnInit, OnDestroy {
@@ -469,7 +467,7 @@ export class IgxSlide implements OnInit, OnDestroy {
      */
     @Input() direction: Direction;
 
-    @HostBinding('class.active')
+    @HostBinding("class.active")
     @Input() active: boolean;
 
     constructor(private carousel: IgxCarousel, private element_ref: ElementRef) {}

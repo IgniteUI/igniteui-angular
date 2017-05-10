@@ -1,17 +1,17 @@
+import { Component, ViewChild } from "@angular/core";
 import {
     async,
     TestBed
 } from "@angular/core/testing";
-import { Component, ViewChild } from "@angular/core";
-import { FormsModule } from '@angular/forms';
+import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { DataGenerator } from "./test-util/data-generator";
 
-import { FilteringStrategy, FilteringCondition, FilteringLogic, FilteringExpression, FilteringState } from "../main";
+import { FilteringCondition, FilteringExpression, FilteringLogic, FilteringState, FilteringStrategy } from "../main";
 
 describe("Unit testing FilteringStrategy", () => {
-    var dataGenerator:DataGenerator,
-        data:Object[],
+    let dataGenerator: DataGenerator,
+        data: Object[],
         fs: FilteringStrategy;
     beforeEach(() => {
         dataGenerator = new DataGenerator();
@@ -19,8 +19,8 @@ describe("Unit testing FilteringStrategy", () => {
         fs = new FilteringStrategy();
     });
     it ("tests `filter`", () => {
-        var res = fs.filter(data, [{
-                fieldName: "number", 
+        const res = fs.filter(data, [{
+                fieldName: "number",
                 condition: FilteringCondition.number.greaterThan,
                 searchVal: 1
             }]);
@@ -28,8 +28,8 @@ describe("Unit testing FilteringStrategy", () => {
                     .toEqual([2, 3, 4]);
     });
     it ("tests `matchRecordByExpressions`", () => {
-        var rec = data[0],
-            res = fs.matchRecordByExpressions(rec, 
+        const rec = data[0],
+            res = fs.matchRecordByExpressions(rec,
                             [
                                 {
                                     fieldName: "string",
@@ -47,15 +47,15 @@ describe("Unit testing FilteringStrategy", () => {
         expect(res).toBeTruthy();
     });
     it ("tests `findMatch`", () => {
-        var rec = data[0],
+        const rec = data[0],
             res = fs.findMatch(rec, {
                     fieldName: "boolean",
                     condition: FilteringCondition.boolean.false}, -1);
-            expect(res).toBeTruthy();
+        expect(res).toBeTruthy();
     });
     it ("tests default settings", () => {
-        data[0]["string"] = "ROW"
-        var fs = new FilteringStrategy(),
+        data[0].string = "ROW";
+        const fs = new FilteringStrategy(),
             res = fs.filter(data, [{
                                     fieldName: "string",
                                     condition: FilteringCondition.string.contains,

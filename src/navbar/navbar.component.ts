@@ -1,7 +1,7 @@
-import { Component, Input, NgModule, EventEmitter, Output, OnInit, AfterContentChecked } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HammerGesturesManager } from "../core/touch";
+import { CommonModule } from "@angular/common";
+import { AfterContentChecked, Component, EventEmitter, Input, NgModule, OnInit, Output } from "@angular/core";
 import { IgxButtonModule } from "../button/button.directive";
+import { HammerGesturesManager } from "../core/touch";
 
 @Component({
     selector: "igx-navbar",

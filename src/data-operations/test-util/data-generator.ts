@@ -9,28 +9,28 @@ export interface DataColumn {
 }
 
 export class DataGenerator {
-    columns: Array<DataColumn> = [];
-    data: Array<Object> = [];
+    columns: DataColumn[] = [];
+    data: Object[] = [];
     constructor(countRows = COUNT_ROWS, countCols = COUNT_COLS) {
         this.columns = this.generateColumns(countCols);
         this.data = this.generateData(countRows);
     }
     generateArray(startValue, endValue) {
-        var len = Math.abs(startValue - endValue),
+        const len = Math.abs(startValue - endValue),
             decrement = startValue > endValue;
-        return Array.from({length: len + 1}, (e,i)=> decrement? startValue - i: startValue + i);
+        return Array.from({length: len + 1}, (e, i) => decrement ? startValue - i : startValue + i);
     }
     getValuesForColumn(data, fieldName) {
         return data.map((x) => x[fieldName]);
     }
     isSuperset(haystack, arr) {
-        return arr.every(val => haystack.indexOf(val) >= 0);
+        return arr.every((val) => haystack.indexOf(val) >= 0);
     }
-    private generateColumns(countCols) : Array<DataColumn> {
-        var i:number,
+    private generateColumns(countCols) : DataColumn[] {
+        let i: number,
             len: number,
             res,
-            defaultColumns: Array<DataColumn> = [
+            defaultColumns: DataColumn[] = [
                 {
                     fieldName: "number",
                     type: DataType.Number
@@ -56,26 +56,26 @@ export class DataGenerator {
         }
         len = countCols - defaultColumns.length;
         res = defaultColumns;
-        for (i =0; i < len; i++) {
+        for (i = 0; i < len; i++) {
             res.push({
                 fieldName: `col${i}`,
                 type: DataType.String
-            })
+            });
         }
         return res;
     }
     private generateData(countRows: number) {
-        var i, j, data = [], rec, val, col;
+        let i, j, data = [], rec, val, col;
         for (i = 0; i < countRows; i++) {
             rec = {};
             for (j = 0; j < this.columns.length; j++) {
                 col = this.columns[j];
-                switch(col.type) {
+                switch (col.type) {
                     case DataType.Number:
                         val = i;
                         break;
                     case DataType.Date:
-                        val = new Date(Date.now() + i * 24*60*60*1000);
+                        val = new Date(Date.now() + i * 24 * 60 * 60 * 1000);
                         break;
                     case DataType.Boolean:
                         val = !!(i % 2);

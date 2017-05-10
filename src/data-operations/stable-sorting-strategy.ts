@@ -2,8 +2,8 @@ import { SortingStrategy } from "./sorting-strategy";
 
 export class StableSortingStrategy extends SortingStrategy {
     compareObjects(obj1: any, obj2: any): number {
-        var res = super.compareObjects.apply(this, arguments), 
-            replacerFn = function (key, val) { 
+        const res = super.compareObjects.apply(this, arguments),
+            replacerFn = function(key, val) {
                             if (val === undefined)
                                 return null;
                             return val;

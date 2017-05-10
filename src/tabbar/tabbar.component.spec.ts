@@ -1,9 +1,9 @@
-import { async, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { IgxTabBar, IgxTabPanel, IgxTab, IgxTabBarModule } from './tabbar.component';
-import { Component, ViewChild, ContentChildren, QueryList, AfterViewChecked, AfterContentChecked } from '@angular/core';
+import { AfterContentChecked, AfterViewChecked, Component, ContentChildren, QueryList, ViewChild } from "@angular/core";
+import { async, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
+import { IgxTab, IgxTabBar, IgxTabBarModule, IgxTabPanel } from "./tabbar.component";
 
-describe("TabBar", function () {
+describe("TabBar", function() {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [IgxTabBarModule],
@@ -12,7 +12,7 @@ describe("TabBar", function () {
             .compileComponents();
     }));
 
-    it('should initialize igx-tab-bar, igx-tab-panel and igx-tab', () => {
+    it("should initialize igx-tab-bar, igx-tab-panel and igx-tab", () => {
         let fixture = TestBed.createComponent(TabBarTestComponent),
             tabbar = fixture.componentInstance.tabbar,
             panels: IgxTabPanel[], tabs: IgxTab[];
@@ -20,7 +20,7 @@ describe("TabBar", function () {
         fixture.detectChanges();
 
         panels = tabbar.panels.toArray();
-        tabs = tabbar.tabs.toArray(); 
+        tabs = tabbar.tabs.toArray();
 
         expect(tabbar).toBeDefined();
         expect(tabbar instanceof IgxTabBar).toBeTruthy();
@@ -41,7 +41,7 @@ describe("TabBar", function () {
         }
     });
 
-    it('should initialize default values of properties', () => {
+    it("should initialize default values of properties", () => {
         let fixture = TestBed.createComponent(TabBarTestComponent),
             tabbar = fixture.componentInstance.tabbar,
             tabs;
@@ -49,10 +49,10 @@ describe("TabBar", function () {
         expect(tabbar.selectedIndex).toBe(-1);
         expect(tabbar.selectedTab).toBeUndefined();
 
-        fixture.componentInstance.tabSelectedHandler = function () {
+        fixture.componentInstance.tabSelectedHandler = function() {
             expect(tabbar.selectedIndex).toBe(0);
             expect(tabbar.selectedTab).toBe(tabs[0]);
-        }
+        };
 
         fixture.detectChanges();
 
@@ -61,7 +61,7 @@ describe("TabBar", function () {
         expect(tabs[1].isDisabled).toBeFalsy();
     });
 
-    it('should initialize set/get properties', () => {
+    it("should initialize set/get properties", () => {
         let checkTabProperties,
             fixture = TestBed.createComponent(TabBarTestComponent),
             tabbar = fixture.componentInstance.tabbar,
@@ -79,24 +79,24 @@ describe("TabBar", function () {
         }
     });
 
-    it('should select/deselect tabs', () => {
+    it("should select/deselect tabs", () => {
         let fixture = TestBed.createComponent(TabBarTestComponent),
             tabbar = fixture.componentInstance.tabbar,
             tabs, tab1: IgxTab, tab2: IgxTab;
 
         expect(tabbar.selectedIndex).toBe(-1);
-        fixture.componentInstance.tabSelectedHandler = function () {
+        fixture.componentInstance.tabSelectedHandler = function() {
             expect(tabbar.selectedIndex).toBe(0);
             expect(tabbar.selectedTab).toBe(tab1);
-        }
+        };
 
         fixture.detectChanges();
         tabs = tabbar.tabs.toArray();
         tab1 = tabs[0];
         tab2 = tabs[1];
 
-        fixture.componentInstance.tabSelectedHandler = function () { };
-        
+        fixture.componentInstance.tabSelectedHandler = function() { };
+
         tab2.select();
         fixture.detectChanges();
 

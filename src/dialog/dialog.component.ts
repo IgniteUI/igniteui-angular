@@ -1,30 +1,30 @@
-import { Component, ViewChild, Input, Output, EventEmitter, ElementRef, NgModule, OnInit } from '@angular/core';
-import { trigger, state, style, transition, animate } from '@angular/animations';
-import { CommonModule } from '@angular/common';
+import { animate, state, style, transition, trigger } from "@angular/animations";
+import { CommonModule } from "@angular/common";
+import { Component, ElementRef, EventEmitter, Input, NgModule, OnInit, Output, ViewChild } from "@angular/core";
 import { IgxButtonModule } from "../button/button.directive";
 import { IgxRippleModule } from "../directives/ripple.directive";
 
 @Component({
-    selector: 'igx-dialog',
+    selector: "igx-dialog",
     moduleId: module.id,
-    templateUrl: 'dialog-content.component.html',
+    templateUrl: "dialog-content.component.html",
     animations: [
-        trigger('flyInOut', [
-            state('open', style({
-                transform: 'translateY(0%)'
+        trigger("flyInOut", [
+            state("open", style({
+                transform: "translateY(0%)"
             })),
-            transition('void => open', animate('.2s ease-out')),
-            transition('open => void', [
-                animate('.2s ease-in', style({
-                    transform: 'translateY(-100%)'
+            transition("void => open", animate(".2s ease-out")),
+            transition("open => void", [
+                animate(".2s ease-in", style({
+                    transform: "translateY(-100%)"
                 }))
             ])
         ]),
-        trigger('fadeInOut', [
-            state('open', style({
+        trigger("fadeInOut", [
+            state("open", style({
                 opacity: 1
             })),
-            transition('void <=> open', animate('.2s ease-in-out'))
+            transition("void <=> open", animate(".2s ease-in-out"))
         ])
     ]
 })
@@ -47,7 +47,7 @@ export class IgxDialog {
     @Input() leftButtonType: string = "flat";
     @Input() leftButtonColor: string = "";
     @Input() leftButtonBackgroundColor: string = "";
-    @Input() leftButtonRipple: string = ""
+    @Input() leftButtonRipple: string = "";
 
     @Input() rightButtonLabel: string = "";
     @Input() rightButtonType: string = "flat";
@@ -79,7 +79,7 @@ export class IgxDialog {
     @Output() onLeftButtonSelect = new EventEmitter();
     @Output() onRightButtonSelect = new EventEmitter();
 
-    @ViewChild('dialog') dialogEl: ElementRef;
+    @ViewChild("dialog") dialogEl: ElementRef;
 
     constructor() {
         this._titleId = IgxDialog.NEXT_ID++ + "_title";
@@ -90,7 +90,7 @@ export class IgxDialog {
             return;
         }
 
-        this.toggleState('open');
+        this.toggleState("open");
         this.onOpen.emit(this);
     }
 
@@ -111,16 +111,16 @@ export class IgxDialog {
     }
 
     private onInternalLeftButtonSelect(event) {
-        this.onLeftButtonSelect.emit({ dialog: this, event: event });
+        this.onLeftButtonSelect.emit({ dialog: this, event });
     }
 
     private onInternalRightButtonSelect(event) {
-        this.onRightButtonSelect.emit({ dialog: this, event: event });
+        this.onRightButtonSelect.emit({ dialog: this, event });
     }
 
     private toggleState(state: string): void {
         this.state = state;
-        this._isOpen = state == 'open' ?  true : false;
+        this._isOpen = state == "open" ?  true : false;
     }
 }
 

@@ -1,9 +1,9 @@
-import {
-    Component, NgModule, Input, ElementRef, ViewChild, OnInit, AfterViewInit, forwardRef, Renderer2
-} from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { HammerGesturesManager } from "../core/touch";
+import {
+    AfterViewInit, Component, ElementRef, forwardRef, Input, NgModule, OnInit, Renderer2, ViewChild
+} from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { HammerGesturesManager } from "../core/touch";
 
 export enum SliderType {
     SINGLE_HORIZONTAL,
@@ -68,7 +68,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     public type: SliderType = SliderType.SINGLE_HORIZONTAL;
 
     get isMulti(): boolean {
-        let isMulti: boolean = this.type != SliderType.SINGLE_HORIZONTAL &&
+        const isMulti: boolean = this.type != SliderType.SINGLE_HORIZONTAL &&
             this.type != SliderType.SINGLE_VERTICAL;
 
         return isMulti;
@@ -120,7 +120,6 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
 
         this._maxValue = value;
     }
-
 
     private _lowerBound?: number;
 
@@ -306,59 +305,59 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
                 break;
 
             default:
-                console.error('No such Slider Type');
+                console.error("No such Slider Type");
                 break;
         }
     }
 
     private closestHandle() {
-        let fromOffset = this.thumbFrom.nativeElement.offsetLeft + this.thumbFrom.nativeElement.offsetWidth / 2,
+        const fromOffset = this.thumbFrom.nativeElement.offsetLeft + this.thumbFrom.nativeElement.offsetWidth / 2,
             toOffset = this.thumbTo.nativeElement.offsetLeft + this.thumbTo.nativeElement.offsetWidth / 2;
 
-        let match = this.closestTo(this.xPointer, [fromOffset, toOffset]);
+        const match = this.closestTo(this.xPointer, [fromOffset, toOffset]);
 
         if (match === toOffset) {
             this.activeHandle = SliderHandle.TO;
         } else if (match === fromOffset) {
             this.activeHandle = SliderHandle.FROM;
         } else {
-            console.warn('No handles close upperValue pointer!');
+            console.warn("No handles close upperValue pointer!");
         }
     }
 
     private setTickInterval() {
-		let interval = this.stepRange > 1 ? 100 / this.stepRange : null;
+		const interval = this.stepRange > 1 ? 100 / this.stepRange : null;
         // CONSIDER
         // Use the renderer to style all elements of the range component?
-        this.renderer.setStyle(this.ticks.nativeElement, 'background', this.generateTickMarks('white', interval));
+  this.renderer.setStyle(this.ticks.nativeElement, "background", this.generateTickMarks("white", interval));
 
         // OTHERWISE uncomment below
         // this.ticks.nativeElement.style.backround = this.generateTickMarks('white', interval);
 	}
 
-    protected generateTickMarks(color:string, interval:number) {
+    protected generateTickMarks(color: string, interval: number) {
 		return `repeating-linear-gradient(
-			${'to left'},
+			${"to left"},
 			${color},
 			${color} 1.5px,
 			transparent 1.5px,
 			transparent ${interval}%
 		), repeating-linear-gradient(
-			${'to right'},
+			${"to right"},
 			${color},
 			${color} 1.5px,
 			transparent 1.5px,
 			transparent ${interval}%
-		)`
+		)`;
 	}
 
     private toggleActiveClass(e) {
-        if (e.type == 'panstart' || e.type == 'tap') {
+        if (e.type == "panstart" || e.type == "tap") {
             clearInterval(this.timer);
             this.isActiveLabel = true;
         }
 
-        if (e.type == 'panend' || e.type == 'tap') {
+        if (e.type == "panend" || e.type == "tap") {
             this.timer = setTimeout(
                 () => this.isActiveLabel = false,
                 this.thumbLabelVisibilityDuration
@@ -366,7 +365,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         }
     }
 
-    private closestTo(goal: number, positions: Array<number>): number {
+    private closestTo(goal: number, positions: number[]): number {
         return positions.reduce((previous, current) => {
             return (Math.abs(goal - current) < Math.abs(goal - previous) ? current : previous);
         });
@@ -398,7 +397,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private setSliderOffset() {
-        let rect = this.slider.nativeElement.getBoundingClientRect();
+        const rect = this.slider.nativeElement.getBoundingClientRect();
         this.xOffset = rect.left;
     }
 
@@ -419,7 +418,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private fractionToValue(fraction: number): number {
-        let max: number = this.maxValue,
+        const max: number = this.maxValue,
             min: number = this.minValue;
 
         return (max - min) * fraction + min;
@@ -444,14 +443,14 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
 
     private formatValue(value: number) {
         if (!value) {
-            return
+            return;
         }
 
         return value.toFixed(this.digitsAfterDecimalPoints);
     }
 
     private updateTrack() {
-        let fromPosition = this.valueToFraction(this.lowerValue),
+        const fromPosition = this.valueToFraction(this.lowerValue),
             toPosition = this.valueToFraction(this.upperValue),
             positionGap = (this.valueToFraction(this.upperValue) - this.valueToFraction(this.lowerValue));
 

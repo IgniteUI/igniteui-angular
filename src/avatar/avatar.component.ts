@@ -1,19 +1,19 @@
-import { NgModule, Component, ElementRef, Renderer2, Input, ViewChild } from '@angular/core';
 import { CommonModule } from "@angular/common";
+import { Component, ElementRef, Input, NgModule, Renderer2, ViewChild } from "@angular/core";
 
-export enum Size { SMALL, MEDIUM, LARGE };
+export enum Size { SMALL, MEDIUM, LARGE }
 
 @Component({
-    selector: 'igx-avatar',
+    selector: "igx-avatar",
     moduleId: module.id,
-    templateUrl: 'avatar.component.html'
+    templateUrl: "avatar.component.html"
 })
 export class IgxAvatar {
-    @ViewChild('image') image: ElementRef;
+    @ViewChild("image") image: ElementRef;
     @Input() initials: string;
     @Input() src: string;
     @Input("roundShape") roundShape: string = "false";
-    @Input() color: string = 'white';
+    @Input() color: string = "white";
 
     protected fontname = "Titillium Web";
     private _size: string;
@@ -27,9 +27,8 @@ export class IgxAvatar {
         return this._size === undefined ? "small" : this._size;
     }
 
-
     set size(value: string) {
-        var sizeType = this.SizeEnum[value.toUpperCase()];
+        const sizeType = this.SizeEnum[value.toUpperCase()];
 
         if (sizeType === undefined) {
             this._size = "small";
@@ -43,9 +42,8 @@ export class IgxAvatar {
         return this._bgColor;
     }
 
-
     set bgColor(value: string) {
-        var color = value === "" ? "lightgrey" : value;
+        const color = value === "" ? "lightgrey" : value;
         this._bgColor = color;
     }
 
@@ -76,7 +74,7 @@ export class IgxAvatar {
 
     ngAfterViewInit() {
         if (this.initials && this.image) {
-            var src = this.generateInitials(parseInt(this.image.nativeElement.width));
+            const src = this.generateInitials(parseInt(this.image.nativeElement.width));
             this.image.nativeElement.src = src;
         }
     }
@@ -96,13 +94,13 @@ export class IgxAvatar {
     }
 
     private generateInitials(size) {
-        var canvas = document.createElement('canvas'),
+        let canvas = document.createElement("canvas"),
             fontSize = size / 2, ctx;
 
         canvas.width = size;
         canvas.height = size;
 
-        ctx = canvas.getContext('2d');
+        ctx = canvas.getContext("2d");
         ctx.fillStyle = this.bgColor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.textAlign = "center";
