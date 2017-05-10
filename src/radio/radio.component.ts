@@ -15,33 +15,33 @@ const noop = () => {};
 
 function MakeProvider(type: any) {
     return {
+        multi: true,
         provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => type),
-        multi: true
+        useExisting: forwardRef(() => type)
     };
 }
 
 @Component({
-    selector: "igx-radio",
     moduleId: module.id,
-    templateUrl: "radio.component.html",
-    providers: [MakeProvider(IgxRadio)]
+    providers: [MakeProvider(IgxRadio)],
+    selector: "igx-radio",
+    templateUrl: "radio.component.html"
 })
 export class IgxRadio implements ControlValueAccessor {
 
-    @Input() value: any;
+    @Input() public value: any;
 
-    @Input() id: string = `igx-radio-${nextId++}`;
+    @Input() public id: string = `igx-radio-${nextId++}`;
 
-    @Input() name: string;
+    @Input() public name: string;
 
-    @Input() disabled: boolean;
+    @Input() public disabled: boolean;
 
-    @Input() tabindex: number = null;
+    @Input() public tabindex: number = null;
 
-    @Output() change: EventEmitter<any> = new EventEmitter();
+    @Output() public change: EventEmitter<any> = new EventEmitter();
 
-    @ViewChild("radio") nativeRadio;
+    @ViewChild("radio") public nativeRadio;
 
     protected _value: any;
 
@@ -49,35 +49,35 @@ export class IgxRadio implements ControlValueAccessor {
 
     protected focused: boolean;
 
-    onChange(event) {
+    private _onTouchedCallback: () => void = noop;
+    private _onChangeCallback: (_: any) => void = noop;
+
+    public onChange(event) {
         this.select();
         this.change.emit(event);
     }
 
-    select() {
+    public select() {
         this.checked = true;
         this._onChangeCallback(this.value);
     }
 
-    writeValue(value: any) {
+    public writeValue(value: any) {
         this._value = value;
-        this.checked = (this._value == this.value);
+        this.checked = (this._value === this.value);
     }
 
-    onFocus(event) {
+    public onFocus(event) {
         this.focused = true;
     }
 
-    onBlur(event) {
+    public onBlur(event) {
         this.focused = false;
         this._onTouchedCallback();
     }
 
-    private _onTouchedCallback: () => void = noop;
-    private _onChangeCallback: (_: any) => void = noop;
-
-    registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
-    registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+    public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
+    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 }
 
 @NgModule({

@@ -7,11 +7,11 @@ declare var Simulator: any;
 describe("IgxRange", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [
-                IgxRangeModule
-            ],
             declarations: [
                 RangeIntializeTestComponent
+            ],
+            imports: [
+                IgxRangeModule
             ]
         }).compileComponents();
     }));
@@ -36,7 +36,8 @@ describe("IgxRange", () => {
             .toBe(fixture.componentInstance.range.maxValue);
     });
 
-    it("should have lower value equal to lower bound when lower value is not set and slider type is DOUBLE_HORIZONTAL", () => {
+    it(`should have lower value equal to lower bound when
+        lower value is not set and slider type is DOUBLE_HORIZONTAL`, () => {
         const fixture = TestBed.createComponent(RangeIntializeTestComponent);
         fixture.componentInstance.range.type = SliderType.DOUBLE_HORIZONTAL;
         fixture.detectChanges();
@@ -45,7 +46,8 @@ describe("IgxRange", () => {
             .toBe(fixture.componentInstance.range.lowerBound);
     });
 
-    it("should have upper value equal to upper bound when lower value is not set and slider type is DOUBLE_HORIZONTAL", () => {
+    it(`should have upper value equal to upper bound when
+        lower value is not set and slider type is DOUBLE_HORIZONTAL`, () => {
         const fixture = TestBed.createComponent(RangeIntializeTestComponent);
         fixture.componentInstance.range.type = SliderType.DOUBLE_HORIZONTAL;
         fixture.detectChanges();
@@ -54,7 +56,8 @@ describe("IgxRange", () => {
             .toBe(fixture.componentInstance.range.upperBound);
     });
 
-    it("should have upper value equal to lower bound when lower value is not set and slider type is SINGLE_HORIZONTAL", () => {
+    it(`should have upper value equal to lower bound when
+        lower value is not set and slider type is SINGLE_HORIZONTAL`, () => {
         const fixture = TestBed.createComponent(RangeIntializeTestComponent);
         fixture.componentInstance.range.type = SliderType.SINGLE_HORIZONTAL;
         fixture.detectChanges();
@@ -64,8 +67,8 @@ describe("IgxRange", () => {
     });
 
     it("should change minValue", () => {
-        const fixture = TestBed.createComponent(RangeIntializeTestComponent),
-            expectedMinValue = 3;
+        const fixture = TestBed.createComponent(RangeIntializeTestComponent);
+        const expectedMinValue = 3;
         fixture.componentInstance.range.minValue = expectedMinValue;
 
         fixture.detectChanges();
@@ -74,8 +77,8 @@ describe("IgxRange", () => {
     });
 
     it("should change maxValue", () => {
-        const fixture = TestBed.createComponent(RangeIntializeTestComponent),
-            expectedMaxValue = 15;
+        const fixture = TestBed.createComponent(RangeIntializeTestComponent);
+        const expectedMaxValue = 15;
         fixture.componentInstance.range.maxValue = expectedMaxValue;
 
         fixture.detectChanges();
@@ -108,8 +111,8 @@ describe("IgxRange", () => {
     });
 
     it("should change lowerBound", () => {
-        const fixture = TestBed.createComponent(RangeIntializeTestComponent),
-            expectedLowerBound = 3;
+        const fixture = TestBed.createComponent(RangeIntializeTestComponent);
+        const expectedLowerBound = 3;
         fixture.componentInstance.range.lowerBound = expectedLowerBound;
         fixture.componentInstance.range.upperBound = 20;
 
@@ -119,8 +122,8 @@ describe("IgxRange", () => {
     });
 
     it("should change upperBound", () => {
-        const fixture = TestBed.createComponent(RangeIntializeTestComponent),
-            expectedUpperBound = 40;
+        const fixture = TestBed.createComponent(RangeIntializeTestComponent);
+        const expectedUpperBound = 40;
         fixture.componentInstance.range.upperBound = expectedUpperBound;
         fixture.componentInstance.range.lowerBound = 2;
 
@@ -183,8 +186,8 @@ describe("IgxRange", () => {
     });
 
     it("should move thumb range to value 60", (done) => {
-        let fixture,
-            range: IgxRange;
+        let fixture;
+        let range: IgxRange;
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(RangeIntializeTestComponent);
             range = fixture.componentInstance.range;
@@ -205,22 +208,22 @@ describe("IgxRange", () => {
 
     function panRight(element, elementHeight, elementWidth, duration) {
         const panOptions = {
-            pos: [element.offsetLeft, elementHeight * 0.5],
-            duration,
             deltaX: elementWidth * 0.6,
-            deltaY: 0
+            deltaY: 0,
+            pos: [element.offsetLeft, elementHeight * 0.5],
+            duration
         };
 
-        return new Promise(function(resolve, reject) {
-            Simulator.gestures.pan(element, panOptions, function() {
+        return new Promise((resolve, reject) => {
+            Simulator.gestures.pan(element, panOptions, () => {
                 resolve();
             });
         });
     }
 
     it("should draw tick marks", () => {
-        const fixture = TestBed.createComponent(RangeIntializeTestComponent),
-            ticks = fixture.nativeElement.querySelector(".igx-range__track-ticks");
+        const fixture = TestBed.createComponent(RangeIntializeTestComponent);
+        const ticks = fixture.nativeElement.querySelector(".igx-range__track-ticks");
 
             // Range steps <= 1. No marks should be drawn;
         expect(ticks.style.background).toBeFalsy();
@@ -238,5 +241,5 @@ describe("IgxRange", () => {
                 </igx-range>`
 })
 class RangeIntializeTestComponent {
-    @ViewChild(IgxRange) range: IgxRange;
+    @ViewChild(IgxRange) public range: IgxRange;
 }

@@ -7,7 +7,7 @@ import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { IgxRadio } from "./radio.component";
 
-describe("IgRadio", function() {
+describe("IgRadio", () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -63,11 +63,12 @@ class InitRadio {}
 
 @Component({
     template: `
-    <igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" name="group" [(ngModel)]="selected">{{item}}</igx-radio>
-    `
+        <igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']"
+                    value="{{item}}"
+                    name="group" [(ngModel)]="selected">{{item}}</igx-radio>`
 })
 class RadioWithModel {
-    @ViewChildren(IgxRadio) radios;
+    @ViewChildren(IgxRadio) public radios;
 
-    selected = "Foo";
+    public selected = "Foo";
 }

@@ -9,12 +9,12 @@ describe("IgxSnackbar", () => {
     beforeEach(async(() => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000;
         TestBed.configureTestingModule({
+            declarations: [
+                SnackbarIntializeTestComponent
+            ],
             imports: [
                 BrowserAnimationsModule,
                 IgxSnackbarModule
-            ],
-            declarations: [
-                SnackbarIntializeTestComponent
             ]
         });
     }));
@@ -35,7 +35,6 @@ describe("IgxSnackbar", () => {
             expect(fixture.componentInstance.snackbar.isVisible).toBeFalsy();
             expect(fixture.componentInstance.snackbar.actionText).toBeUndefined();
         }).catch((reason) => {
-            console.log(reason);
             return Promise.reject(reason);
         });
     }));
@@ -58,7 +57,6 @@ describe("IgxSnackbar", () => {
                 done();
             }, displayTime);
         }).catch((reason) => {
-            console.log(reason);
             return Promise.reject(reason);
         });
     });
@@ -82,7 +80,6 @@ describe("IgxSnackbar", () => {
                 done();
             }, displayTime);
         }).catch((reason) => {
-            console.log(reason);
             return Promise.reject(reason);
         });
     });
@@ -98,9 +95,9 @@ describe("IgxSnackbar", () => {
             fixture.debugElement.nativeElement.querySelector("button").click();
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.snackbar.onAction.emit).toHaveBeenCalledWith(fixture.componentInstance.snackbar);
+            expect(fixture.componentInstance.snackbar.onAction.emit)
+                .toHaveBeenCalledWith(fixture.componentInstance.snackbar);
         }).catch((reason) => {
-            console.log(reason);
             return Promise.reject(reason);
         });
     }));
@@ -111,6 +108,6 @@ describe("IgxSnackbar", () => {
                </igx-snackbar>`
 })
 class SnackbarIntializeTestComponent {
-    text: string;
-    @ViewChild(IgxSnackbar) snackbar: IgxSnackbar;
+    public text: string;
+    @ViewChild(IgxSnackbar) public snackbar: IgxSnackbar;
 }

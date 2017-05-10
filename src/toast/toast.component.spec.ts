@@ -10,12 +10,12 @@ describe("IgxToast", () => {
     beforeEach(async(() => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000;
         TestBed.configureTestingModule({
+            declarations: [
+                ToastIntializeTestComponent
+            ],
             imports: [
                 BrowserAnimationsModule,
                 IgxToastModule
-            ],
-            declarations: [
-                ToastIntializeTestComponent
             ]
         });
     }));
@@ -37,7 +37,6 @@ describe("IgxToast", () => {
             expect(element.classes[fixture.componentInstance.toast.CSS_CLASSES.IGX_TOAST_BOTTOM]).toBeTruthy();
 
         }).catch((reason) => {
-            console.log(reason);
             return Promise.reject(reason);
         });
     }));
@@ -52,7 +51,6 @@ describe("IgxToast", () => {
             const element = fixture.debugElement.query(By.css(".igx-toast--middle"));
             expect(element.classes[fixture.componentInstance.toast.CSS_CLASSES.IGX_TOAST_MIDDLE]).toBeTruthy();
         }).catch((reason) => {
-            console.log(reason);
             return Promise.reject(reason);
         });
     }));
@@ -68,7 +66,6 @@ describe("IgxToast", () => {
 
             expect(element.classes[fixture.componentInstance.toast.CSS_CLASSES.IGX_TOAST_TOP]).toBeTruthy();
         }).catch((reason) => {
-            console.log(reason);
             return Promise.reject(reason);
         });
     }));
@@ -86,7 +83,6 @@ describe("IgxToast", () => {
                 element.classes[fixture.componentInstance.toast.CSS_CLASSES.IGX_TOAST_MIDDLE] &&
                 element.classes[fixture.componentInstance.toast.CSS_CLASSES.IGX_TOAST_BOTTOM]).toBeUndefined();
         }).catch((reason) => {
-            console.log(reason);
             return Promise.reject(reason);
         });
     }));
@@ -109,7 +105,6 @@ describe("IgxToast", () => {
                 done();
             }, displayTime);
         }).catch((reason) => {
-            console.log(reason);
             return Promise.reject(reason);
         });
     });
@@ -133,7 +128,6 @@ describe("IgxToast", () => {
                 done();
             }, displayTime);
         }).catch((reason) => {
-            console.log(reason);
             return Promise.reject(reason);
         });
     });
@@ -144,5 +138,5 @@ describe("IgxToast", () => {
                </igx-toast>`
 })
 class ToastIntializeTestComponent {
-    @ViewChild(IgxToast) toast: IgxToast;
+    @ViewChild(IgxToast) public toast: IgxToast;
 }
