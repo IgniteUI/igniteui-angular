@@ -5,14 +5,13 @@ $thumbs: "from" "to";
     
     @include e(track) {
         @extend %igx-range-track;
-
-        @include e(fill, true) {
-            @extend %igx-range-track-fill;
-        }
+    }
+    @include e(track-fill) {
+        @extend %igx-range-track-fill;
+    }
         
-        @include e(ticks, true) {
-            @extend %igx-range-track-ticks;
-        }
+    @include e(track-ticks) {
+        @extend %igx-range-track-ticks;
     }
 
     @include e(thumbs) {
@@ -24,25 +23,25 @@ $thumbs: "from" "to";
         @include e(thumb-#{$t}) {
             @extend %igx-thumb-display;
 
-            @include b(label) {
+            .label {
                 @extend %igx-thumb-label;
             }
 
-            @include b(dot) {
+            .dot {
                 @extend %igx-thumb-dot;
             }
+        }
+        
+        @include e(thumb-#{$t}, $m:active) {
+            @extend %igx-thumb--active;
 
-            @include m(active) {
-                @extend %igx-thumb--active;
-
-                @include b(label) {
-                    @extend %igx-thumb-label--active;
-                }
-
-                @include b(dot) {
-                    @extend %igx-thumb-dot--active;
-                }          
+            .label {
+                @extend %igx-thumb-label--active;
             }
+
+            .dot {
+                @extend %igx-thumb-dot--active;
+            }          
         }
 
     }
