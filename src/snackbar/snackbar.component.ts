@@ -11,16 +11,13 @@ import { HammerGesturesManager } from "../core/touch";
  * <igx-snackbar (event output bindings) [input bindings]>
  * </igx-snackbar>
  * ```
- **/
+ */
 @Component({
-    selector: "igx-snackbar",
-    moduleId: module.id,
-    templateUrl: "snackbar.component.html",
     animations: [
         trigger("slideInOut", [
             state("in", style({
-                transform: "translateY(0)",
-                color: "rgba(255,255,255,1)"
+                color: "rgba(255,255,255,1)",
+                transform: "translateY(0)"
             })),
             transition("void => *", [
                 style({
@@ -51,13 +48,12 @@ import { HammerGesturesManager } from "../core/touch";
             ])
         ])
     ],
-    providers: [HammerGesturesManager]
+    moduleId: module.id,
+    providers: [HammerGesturesManager],
+    selector: "igx-snackbar",
+    templateUrl: "snackbar.component.html"
 })
 export class IgxSnackbar {
-    constructor(private zone: NgZone) {
-
-    }
-
     /**
      * The message that will be shown message by the IgxSnackbar component
      * @type {string}
@@ -102,9 +98,26 @@ export class IgxSnackbar {
      * @type {EventEmitter}
      */
     @Output()
+
+    /**
+     * The event that will be thrown when the snackbar animation starts
+     * @type {EventEmitter<AnimationTransitionEvent>}
+     */
+    @Output() public animationStarted = new EventEmitter<any>();
+
+    /**
+     * The event that will be thrown when the snackbar animation ends
+     * @type {EventEmitter<AnimationTransitionEvent>}
+     */
+    @Output() public animationDone = new EventEmitter<any>();
+
     public onAction = new EventEmitter();
 
     private timeoutId;
+
+    constructor(private zone: NgZone) {
+
+    }
 
     /**
      * Shows the IgxSnackbar component and hides it after some time span
@@ -133,33 +146,23 @@ export class IgxSnackbar {
         this.onAction.emit(this);
     }
 
-    /**
-     * The event that will be thrown when the snackbar animation starts
-     * @type {EventEmitter<AnimationTransitionEvent>}
-     */
-    @Output() animationStarted = new EventEmitter<any>();
     private snackbarAnimationStarted(evt?: any): void {
-        if (evt.fromState == "void") {
+        if (evt.fromState === "void") {
             this.animationStarted.emit(evt);
         }
     }
 
-    /**
-     * The event that will be thrown when the snackbar animation ends
-     * @type {EventEmitter<AnimationTransitionEvent>}
-     */
-    @Output() animationDone = new EventEmitter<any>();
     private snackbarAnimationDone(evt?: any): void {
-        if (evt.fromState == "show") {
+        if (evt.fromState === "show") {
             this.animationDone.emit(evt);
         }
     }
 }
 
 @NgModule({
-    imports: [CommonModule],
     declarations: [IgxSnackbar],
-    exports: [IgxSnackbar]
+    exports: [IgxSnackbar],
+    imports: [CommonModule]
 })
 export class IgxSnackbarModule {
 }
