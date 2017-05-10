@@ -22,26 +22,6 @@ import { IgxTabBarModule } from "./tabbar/tabbar.component";
 import { IgxToastModule } from "./toast/toast.component";
 
 @NgModule({
-    imports: [
-        IgxAvatarModule,
-        IgxBadgeModule,
-        IgxCarouselModule,
-        IgxCheckboxModule,
-        IgxIconModule,
-        IgxListModule,
-        IgxDialogModule,
-        IgxNavbarModule,
-        NavigationDrawerModule,
-        IgxProgressBarModule,
-        IgxRadioModule,
-        IgxSwitchModule,
-        IgxTabBarModule,
-        IgxCardModule,
-        IgxSnackbarModule,
-        IgxToastModule,
-        IgxButtonGroupModule,
-        IgxRangeModule
-    ],
     exports: [
         IgxAvatarModule,
         IgxBadgeModule,
@@ -57,6 +37,26 @@ import { IgxToastModule } from "./toast/toast.component";
         IgxRadioModule,
         IgxSwitchModule,
         IgxTabBarModule,
+        IgxSnackbarModule,
+        IgxToastModule,
+        IgxButtonGroupModule,
+        IgxRangeModule
+    ],
+    imports: [
+        IgxAvatarModule,
+        IgxBadgeModule,
+        IgxCarouselModule,
+        IgxCheckboxModule,
+        IgxIconModule,
+        IgxListModule,
+        IgxDialogModule,
+        IgxNavbarModule,
+        NavigationDrawerModule,
+        IgxProgressBarModule,
+        IgxRadioModule,
+        IgxSwitchModule,
+        IgxTabBarModule,
+        IgxCardModule,
         IgxSnackbarModule,
         IgxToastModule,
         IgxButtonGroupModule,
@@ -74,7 +74,7 @@ import { IgxLabelModule } from "./label/label.directive";
 import { IgxLayout } from "./layout/layout.directive";
 
 @NgModule({
-    imports: [
+    exports: [
         IgxButtonModule,
         IgxInput,
         IgxFilterModule,
@@ -83,7 +83,7 @@ import { IgxLayout } from "./layout/layout.directive";
         IgxLayout,
         IgxDragDropModule
     ],
-    exports: [
+    imports: [
         IgxButtonModule,
         IgxInput,
         IgxFilterModule,

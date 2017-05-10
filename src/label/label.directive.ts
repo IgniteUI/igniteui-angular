@@ -10,7 +10,7 @@ import {
     selector: "[igxLabel]"
 })
 export class IgxLabel {
-    constructor(el: ElementRef, renderer: Renderer2){
+    constructor(el: ElementRef, renderer: Renderer2) {
         renderer.addClass(el.nativeElement, "igx-form-group__label");
     }
 }

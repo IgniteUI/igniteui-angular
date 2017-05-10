@@ -14,17 +14,31 @@ export enum IgxListPanState { NONE, LEFT, RIGHT }
 // ====================== LIST ================================
 // The `<igx-list>` directive is a list container for items and headers
 @Component({
-    selector: "igx-list",
-    moduleId: module.id,
-    templateUrl: "list.component.html",
     host: {
         role: "list"
-    }
+    },
+    moduleId: module.id,
+    selector: "igx-list",
+    templateUrl: "list.component.html"
 })
 export class IgxList {
-    private _innerStyle: string = "igx-list";
+    @ContentChildren(forwardRef(() => IgxListItem)) public children: QueryList<IgxListItem>;
 
-    @ContentChildren(forwardRef(() => IgxListItem)) children: QueryList<IgxListItem>;
+    @Input() public allowLeftPanning: boolean = false;
+    @Input() public allowRightPanning: boolean = false;
+
+    @Input() public hasNoItemsTemplate: boolean = false;
+    @Input() public emptyListImage: string;
+    @Input() public emptyListMessage: string = "No items";
+    @Input() public emptyListButtonText: string = "Add";
+
+    @Output() public emptyListButtonClick = new EventEmitter();
+
+    @Output() public onLeftPan = new EventEmitter();
+    @Output() public onRightPan = new EventEmitter();
+    @Output() public onPanStateChange = new EventEmitter();
+
+    private _innerStyle: string = "igx-list";
 
     get items(): IgxListItem[] {
         const items: IgxListItem[] = [];
@@ -52,25 +66,11 @@ export class IgxList {
         return headers;
     }
 
-    @Input() allowLeftPanning: boolean = false;
-    @Input() allowRightPanning: boolean = false;
-
-    @Input() hasNoItemsTemplate: boolean = false;
-    @Input() emptyListImage: string;
-    @Input() emptyListMessage: string = "No items";
-    @Input() emptyListButtonText: string = "Add";
-
-    @Output() emptyListButtonClick = new EventEmitter();
-
-    @Output() onLeftPan = new EventEmitter();
-    @Output() onRightPan = new EventEmitter();
-    @Output() onPanStateChange = new EventEmitter();
+    constructor(private element: ElementRef) {
+    }
 
     private onEmptyListButtonClicked(event) {
         this.emptyListButtonClick.emit({ list: this, event });
-    }
-
-    constructor(private element: ElementRef) {
     }
 }
 
@@ -78,19 +78,24 @@ export class IgxList {
 // The `<igx-item>` directive is a container intended for row items in
 // a `<igx-list>` container.
 @Component({
-    selector: "igx-list-item",
     moduleId: module.id,
+    selector: "igx-list-item",
     templateUrl: "list-item.component.html"
 })
 export class IgxListItem implements OnInit, OnDestroy, IListChild {
-    @ViewChild("wrapper") wrapper: ElementRef;
+    @ViewChild("wrapper") public wrapper: ElementRef;
+
+    public hidden: boolean = false;
+
+    @HostBinding("attr.role") public role;
+    @Input() public isHeader: boolean = false;
+    @Input() public href: string;
+    @Input() public options: object[];
 
     private _panState: IgxListPanState = IgxListPanState.NONE;
     private _FRACTION_OF_WIDTH_TO_TRIGGER_GRIP = 0.5; // as a fraction of the item width
     private _innerStyle: string = "";
     private _previousPanDeltaX = 0;
-
-    hidden: boolean = false;
 
     get panState(): IgxListPanState {
         return  this._panState;
@@ -114,7 +119,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     set left(value: number) {
         let val = value + "";
 
-        if (val.indexOf("px") == -1) {
+        if (val.indexOf("px") === -1) {
             val += "px";
         }
 
@@ -129,12 +134,9 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
         return this.width;
     }
 
-    @HostBinding("attr.role") role;
-    @Input() isHeader: boolean = false;
-    @Input() href: string;
-    @Input() options: Object[];
-
-    constructor(@Inject(forwardRef(() => IgxList)) private list: IgxList, public element: ElementRef, private _renderer: Renderer2) {
+    constructor(@Inject(forwardRef(() => IgxList)) private list: IgxList,
+                public element: ElementRef,
+                private _renderer: Renderer2) {
     }
 
     public ngOnInit() {
@@ -194,11 +196,11 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
 
         this.performMagneticGrip();
 
-        if (oldPanState != this._panState) {
+        if (oldPanState !== this._panState) {
             this.list.onPanStateChange.emit({ oldState: oldPanState, newState: this._panState, item: this});
-            if (this._panState == IgxListPanState.LEFT) {
+            if (this._panState === IgxListPanState.LEFT) {
                 this.list.onLeftPan.emit(this);
-            } else if (this._panState == IgxListPanState.RIGHT) {
+            } else if (this._panState === IgxListPanState.RIGHT) {
                 this.list.onRightPan.emit(this);
             }
         }
@@ -231,8 +233,8 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
 
 @NgModule({
     declarations: [IgxList, IgxListItem],
-    imports: [CommonModule, IgxButtonModule, IgxRippleModule],
-    exports: [IgxList, IgxListItem]
+    exports: [IgxList, IgxListItem],
+    imports: [CommonModule, IgxButtonModule, IgxRippleModule]
 })
 export class IgxListModule {
 }
