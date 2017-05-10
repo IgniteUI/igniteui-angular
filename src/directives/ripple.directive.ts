@@ -1,7 +1,7 @@
 import { Directive, ElementRef, HostListener, Input, NgModule, NgZone, Renderer2 } from "@angular/core";
 
 @Directive({
-    selector: "[igxRipple]",
+    selector: "[igxRipple]"
 })
 class IgxRippleDirective {
 
@@ -67,7 +67,7 @@ class IgxRippleDirective {
 
         const FRAMES = [
             {opacity: 0.5, transform: "scale(0)"},
-            {opacity: 0, transform: "scale(2)"},
+            {opacity: 0, transform: "scale(2)"}
         ];
 
         const animation = rippleEl.animate(FRAMES, {

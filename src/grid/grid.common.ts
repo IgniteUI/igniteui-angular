@@ -55,7 +55,7 @@ export class IgxCellFooterTemplateDirective {
 }
 
 @Directive({
-    selector: "[igxColumnSorting]",
+    selector: "[igxColumnSorting]"
 })
 export class IgxColumnSortingDirective {
     @Input("igxColumnSorting") public column: IgxColumnComponent;
@@ -173,7 +173,7 @@ export class IgxColumnFilteringComponent {
     protected filterData(event: any): void {
         this.onFilter.emit({
             column: this.column,
-            value: event.target.value,
+            value: event.target.value
         });
     }
 

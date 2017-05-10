@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Directive, ElementRef, EventEmitter, Input, NgModule, OnChanges, Output, Pipe, PipeTransform, Renderer2, SimpleChanges } from "@angular/core";
 
 @Directive({
-    selector: "[igxFilter]",
+    selector: "[igxFilter]"
 })
 export class IgxFilterDirective implements OnChanges {
     @Output() filtering = new EventEmitter(false); // synchronous event emitter

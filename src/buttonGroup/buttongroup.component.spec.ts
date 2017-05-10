@@ -4,9 +4,9 @@ import {
     TestBed
 } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxDirectivesModule } from "../../src/modules";
 import { IgxButton } from "../button/button.directive";
-import { IgxButtonGroup, } from "./buttonGroup.component";
+import { IgxDirectivesModule } from "../modules";
+import { IgxButtonGroup } from "./buttonGroup.component";
 import { ButtonGroupAlignment, IgxButtonGroupModule } from "./buttonGroup.component";
 
 interface IButton {
@@ -45,7 +45,7 @@ class Button {
     }
 }
 
-describe("IgxButtonGroup", function() {
+describe("IgxButtonGroup", () => {
    beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ InitButtonGroup, InitButtonGroupWithValues],
@@ -121,98 +121,103 @@ describe("IgxButtonGroup", function() {
 
 @Component({ template: `<igx-buttongroup [values]="buttons"></igx-buttongroup>` })
 class InitButtonGroup{
-    @ViewChild(IgxButtonGroup) buttonGroup: IgxButtonGroup;
+    @ViewChild(IgxButtonGroup) public buttonGroup: IgxButtonGroup;
+
+    private buttons: Button[];
 
     constructor() {}
 
-    private buttons: Button[];
     public ngOnInit(): void {
 
         this.buttons = [
             new Button({
+                disabled: false,
                 label: "Euro",
-                selected: false,
-                disabled: false
+                selected: false
             }),
             new Button({
                 label: "British Pound",
-                selected: true,
+                selected: true
             }),
             new Button({
                 label: "US Dollar",
-                selected: false,
+                selected: false
             })
         ];
     }
 }
 
-@Component({ template: `<igx-buttongroup multiSelection="true" itemContentCssClass="customContentStyle" [values]="cities" [alignment]="alignment">
+@Component({ template: `<igx-buttongroup multiSelection="true" itemContentCssClass="customContentStyle"
+                            [values]="cities" [alignment]="alignment">
                         </igx-buttongroup>` })
-class InitButtonGroupWithValues{
-    @ViewChild(IgxButtonGroup) buttonGroup: IgxButtonGroup;
+class InitButtonGroupWithValues {
+    @ViewChild(IgxButtonGroup) public buttonGroup: IgxButtonGroup;
+
+    private cities: Button[];
+
+    private alignment = ButtonGroupAlignment.vertical;
 
     constructor() {}
 
-    private cities: Button[];
     public ngOnInit(): void {
 
         this.cities = [
             new Button({
+                disabled: false,
                 label: "Sofia",
                 selected: false,
-                togglable: false,
-                disabled: false
+                togglable: false
             }),
             new Button({
+                disabled: false,
                 label: "London",
-                selected: false,
-                disabled: false
+                selected: false
             }),
             new Button({
+                disabled: false,
                 label: "New York",
-                selected: false,
-                disabled: false
+                selected: false
             }),
             new Button({
+                disabled: true,
                 label: "Tokyo",
-                selected: false,
-                disabled: true
+                selected: false
             })
         ];
     }
-
-    private alignment = ButtonGroupAlignment.vertical;
 }
 
-@Component({ template: `<igx-buttongroup multiSelection="true" itemContentCssClass="customContentStyle" [values]="buttons" [alignment]="alignment">
+@Component({ template: `<igx-buttongroup multiSelection="true" itemContentCssClass="customContentStyle"
+                            [values]="buttons" [alignment]="alignment">
                         </igx-buttongroup>` })
-class ButtonGroupWithValues{
-    @ViewChild(IgxButtonGroup) buttonGroup: IgxButtonGroup;
+class ButtonGroupWithValues {
+    @ViewChild(IgxButtonGroup) public buttonGroup: IgxButtonGroup;
+
+    private buttons: Button[];
+
+    private alignment = ButtonGroupAlignment.vertical;
 
     constructor() {}
 
-    private buttons: Button[];
     public ngOnInit(): void {
 
         this.buttons = [
             new Button({
-                type: "raised",
+                disabled: false,
                 label: "Euro",
                 selected: false,
-                disabled: false
+                type: "raised"
             }),
             new Button({
-                type: "raised",
                 label: "British Pound",
                 selected: false,
+                type: "raised"
             }),
             new Button({
-                type: "raised",
                 label: "US Dollar",
                 selected: false,
+                type: "raised"
             })
         ];
     }
-
-    private alignment = ButtonGroupAlignment.vertical;
 }

@@ -9,7 +9,7 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    Renderer2,
+    Renderer2
 } from "@angular/core";
 
 export interface IgxDropEvent {

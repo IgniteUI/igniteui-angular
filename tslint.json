@@ -3,8 +3,8 @@
   "rules": {
 	  "indent": [true, "spaces"],
 	  "variable-name": [true, "allow-leading-underscore"],
-	  "interface-name": [true, "never-prefix"],
-	  "trailing-comma": [true, "never"],
+	  "interface-name": [true, "always-prefix"],
+	  "trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
       "no-empty": false,
 	  "no-bitwise": false,
 	  "max-classes-per-file": [true, 5]

@@ -84,11 +84,11 @@ export class IgxTabBar implements AfterViewInit {
         "[class.igx-tab-bar__panel--selected]": "isSelected",
         "[class.igx-tab-bar__panel]": "!isSelected",
         "[id]": "'igx-tab-bar__panel-' + index",
-        "role": "tabpanel",
+        "role": "tabpanel"
     },
     moduleId: module.id, // commonJS standard
     selector: "igx-tab-panel",
-    templateUrl: "tab-panel.component.html",
+    templateUrl: "tab-panel.component.html"
 })
 
 export class IgxTabPanel {

@@ -40,7 +40,7 @@ import { IgxToastModule } from "./toast/toast.component";
         IgxSnackbarModule,
         IgxToastModule,
         IgxButtonGroupModule,
-        IgxRangeModule,
+        IgxRangeModule
     ],
     exports: [
         IgxAvatarModule,

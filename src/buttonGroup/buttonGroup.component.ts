@@ -1,62 +1,62 @@
 import { CommonModule } from "@angular/common";
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, forwardRef, Inject, Input, NgModule, Output, QueryList, Renderer2, ViewChildren } from "@angular/core";
-import { IgxRippleModule } from "../../src/directives/ripple.directive";
+import { AfterViewInit,
+        ChangeDetectorRef,
+        Component,
+        ElementRef,
+        EventEmitter,
+        forwardRef,
+        Inject, Input, NgModule, Output, QueryList, Renderer2, ViewChildren } from "@angular/core";
 import { IgxButton, IgxButtonModule } from "../button/button.directive";
+import { IgxRippleModule } from "../directives/ripple.directive";
 
 export enum ButtonGroupAlignment { horizontal, vertical }
 
 // ====================== BUTTON GROUP ================================
 // The `<igx-buttonGroup>` component is a  container for buttons
 @Component({
-    selector: "igx-buttongroup",
     moduleId: module.id, // commonJS standard
+    selector: "igx-buttongroup",
     templateUrl: "buttongroup-content.component.html"
 })
 
 export class IgxButtonGroup implements AfterViewInit {
-    @ViewChildren(IgxButton) buttons: QueryList<IgxButtonGroup>;
+    @ViewChildren(IgxButton) public buttons: QueryList<IgxButtonGroup>;
     @Input() set itemContentCssClass(value: string){
         this._itemContentCssClass = value || this._itemContentCssClass;
     }
     get itemContentCssClass(): string {
         return this._itemContentCssClass;
     }
-    @Input() multiSelection: boolean = false;
-    @Input() values: any;
-    @Input() disabled: boolean = false;
+    @Input() public multiSelection: boolean = false;
+    @Input() public values: any;
+    @Input() public disabled: boolean = false;
+
+    public selectedIndexes: number[] = [];
+
     @Input() set alignment(value: ButtonGroupAlignment) {
-        this._isVertical = value == ButtonGroupAlignment.vertical;
+        this._isVertical = value === ButtonGroupAlignment.vertical;
     }
     get alignment(): ButtonGroupAlignment {
         return this._isVertical ? ButtonGroupAlignment.vertical : ButtonGroupAlignment.horizontal;
     }
 
-    private _isVertical: Boolean;
-    private _itemContentCssClass: string;
-    public selectedIndexes: number[] = [];
+    @Output() public onSelect = new EventEmitter();
+    @Output() public onUnselect = new EventEmitter();
 
-    @Output() onSelect = new EventEmitter();
-    @Output() onUnselect = new EventEmitter();
+    private _isVertical: boolean;
+    private _itemContentCssClass: string;
 
     constructor(private _el: ElementRef, private _renderer: Renderer2, cdr: ChangeDetectorRef) {
     }
 
-    _clickHandler(event, i) {
-        if (this.selectedIndexes.indexOf(i) != -1) {
-            this.deselectButton(i);
-        } else {
-            this.selectButton(i);
-        }
-    }
-
     get selectedButtons(): IgxButtonGroup[] {
         return this.buttons.filter((b, i) => {
-            return this.selectedIndexes.indexOf(i) != -1;
+            return this.selectedIndexes.indexOf(i) !== -1;
         });
 
     }
 
-    selectButton(index: number) {
+    public selectButton(index: number) {
         if (this.buttons.toArray()[index]._el.nativeElement.getAttribute("data-togglable") === "false"
         || this.buttons.toArray()[index]._el.nativeElement.classList.contains("igx-button--disabled")) {
             return;
@@ -70,14 +70,14 @@ export class IgxButtonGroup implements AfterViewInit {
         // deselect other buttons if multiSelection is not enabled
         if (!this.multiSelection && this.selectedIndexes.length > 0) {
             this.buttons.forEach((b, i) => {
-                if (i != index && this.selectedIndexes.indexOf(i) != -1) {
+                if (i !== index && this.selectedIndexes.indexOf(i) !== -1) {
                     this.deselectButton(i);
                 }
             });
         }
     }
 
-    deselectButton(index: number) {
+    public deselectButton(index: number) {
         if (this.buttons.toArray()[index]._el.nativeElement.getAttribute("data-togglable") === "false"
         || this.buttons.toArray()[index]._el.nativeElement.classList.contains("igx-button--disabled")) {
             return;
@@ -89,7 +89,7 @@ export class IgxButtonGroup implements AfterViewInit {
         this.values[index].selected = false;
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         // initial selection
         setTimeout(() => {
             this.buttons.forEach((button, index) => {
@@ -99,12 +99,20 @@ export class IgxButtonGroup implements AfterViewInit {
             });
         }, 0);
     }
+
+    private _clickHandler(event, i) {
+        if (this.selectedIndexes.indexOf(i) !== -1) {
+            this.deselectButton(i);
+        } else {
+            this.selectButton(i);
+        }
+    }
 }
 
 @NgModule({
     declarations: [IgxButtonGroup, IgxButtonGroup],
-    imports: [IgxButtonModule, CommonModule, IgxRippleModule],
-    exports: [IgxButtonGroup]
+    exports: [IgxButtonGroup],
+    imports: [IgxButtonModule, CommonModule, IgxRippleModule]
 })
 
 export class IgxButtonGroupModule {

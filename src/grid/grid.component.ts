@@ -42,6 +42,7 @@ import {
 } from "./grid.common";
 import { IgxPaginatorComponent, IgxPaginatorEvent } from "./paginator.component";
 
+import { DataType, DataUtil } from "../data-operations/data-util";
 import {
     DataContainer,
     DataState,
@@ -53,8 +54,7 @@ import {
     PagingState,
     SortingDirection,
     SortingExpression
-} from "../../src/main";
-import { DataType, DataUtil } from "../data-operations/data-util";
+} from "../main";
 
 export interface IgxGridBindingBehavior {
     process: Function;
@@ -474,7 +474,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
                 condition: column.filteringCondition,
                 fieldName: column.field,
                 ignoreCase: column.filteringIgnoreCase,
-                searchVal: filterInput,
+                searchVal: filterInput
             } as FilteringExpression;
         }
         const result: FilteringExpression[] = [];
@@ -655,13 +655,13 @@ const GRID_DIRECTIVES: any[] = [
     IgxCellHeaderComponent,
     IgxCellFooterComponent,
     IgxCellHeaderTemplateDirective,
-    IgxPaginatorComponent,
+    IgxPaginatorComponent
 ];
 
 @NgModule({
     declarations: GRID_DIRECTIVES,
     entryComponents: [IgxColumnComponent],
     exports: GRID_DIRECTIVES,
-    imports: [CommonModule, IgxIconModule, IgxDialogModule, IgxDirectivesModule, FormsModule],
+    imports: [CommonModule, IgxIconModule, IgxDialogModule, IgxDirectivesModule, FormsModule]
 })
 export class IgxGridModule {}

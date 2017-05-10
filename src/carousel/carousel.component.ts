@@ -36,7 +36,7 @@ export enum Direction {NONE, NEXT, PREV}
         role: "region"
     },
     moduleId: module.id,
-    templateUrl: "carousel.component.html",
+    templateUrl: "carousel.component.html"
 })
 
 export class IgxCarousel implements OnDestroy {

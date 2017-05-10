@@ -278,7 +278,7 @@ describe("IgLinearBar UI Logic", function() {
             declarations: [
                 linearBar,
                 SetValueAboveValuesLinearBar,
-                IgxLinearProgressBar,
+                IgxLinearProgressBar
             ]
         })
         .compileComponents();

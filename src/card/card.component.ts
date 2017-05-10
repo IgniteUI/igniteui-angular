@@ -44,7 +44,7 @@ export class IgxCardFooter{}
     selector: "igx-card",
     moduleId: module.id,
     templateUrl: "card.component.html",
-    providers: [HammerGesturesManager],
+    providers: [HammerGesturesManager]
 })
 export class IgxCardComponent{}
 
