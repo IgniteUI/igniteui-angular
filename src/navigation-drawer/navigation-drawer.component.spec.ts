@@ -8,7 +8,7 @@ import {
 
 import { Component, ViewChild, DebugElement } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import * as Infragistics from '../../src/main';
+import * as Infragistics from '../main';
 
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
@@ -24,7 +24,7 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
                     Infragistics.NavigationClose,
                     Infragistics.NavigationToggle,
                     TestComponent,
-                    TestComponentDI, 
+                    TestComponentDI,
                     TestComponentPin]
             });
         }));
@@ -41,34 +41,34 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
                 expect(fixture.componentInstance.viewChild.state).toBeNull();
             });
          }));
-         
+
          it('should initialize with DI service', async(() => {
             TestBed.compileComponents().then(() => {
                 let fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
-                    
+
                 expect(fixture.componentInstance.viewChild).toBeDefined();
                 expect(fixture.componentInstance.viewChild instanceof Infragistics.NavigationDrawer).toBeTruthy();
                 expect(fixture.componentInstance.viewChild.state instanceof Infragistics.NavigationService).toBeTruthy();
             });
         }));
-         
+
         it('should properly initialize all elements and properties', async(() => {
             TestBed.compileComponents().then(() => {
                 let fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
-                    
+
                 expect(fixture.componentInstance.viewChild.drawer.classList).toContain("ig-nav-drawer");
                 expect(fixture.componentInstance.viewChild.overlay.classList).toContain("ig-nav-drawer-overlay");
                 expect(fixture.componentInstance.viewChild.styleDummy.classList).toContain("style-dummy");
                 expect(fixture.componentInstance.viewChild.hasAnimateWidth).toBeFalsy();
-                    
+
             }).catch (reason => {
                 console.log(reason);
                 return Promise.reject(reason);
             });
          }));
-         
+
         it('should attach events and register to nav service and detach on destroy', async(() => {
             var template = '<ig-nav-drawer id="testNav"></ig-nav-drawer>';
             TestBed.overrideComponent(TestComponentDI, {
@@ -84,45 +84,45 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
                 expect(state.get("testNav")).toBeDefined();
                 expect(touchManager.getManagerForElement(document) instanceof Hammer.Manager).toBeTruthy();
-                
+
                 fixture.destroy();
                 expect(state.get("testNav")).toBeUndefined();
                 expect(touchManager.getManagerForElement(document)).toBe(null);
-                    
+
             }).catch (reason => {
                 console.log(reason);
                 return Promise.reject(reason);
             });
          }));
-                  
+
         it('should open and close with API calls', async(() => {
             TestBed.compileComponents().then(() => {
                 let fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
                 let drawer: Infragistics.NavigationDrawer = fixture.componentInstance.viewChild;
                 expect(drawer.isOpen).toBeFalsy();
-                
+
                 drawer.open();
                 expect(drawer.isOpen).toBeTruthy();
                 drawer.open(); // should do nothing
                 expect(drawer.isOpen).toBeTruthy();
-                
+
                 drawer.close();
                 expect(drawer.isOpen).toBeFalsy();
                 drawer.close(); // should do nothing
                 expect(drawer.isOpen).toBeFalsy();
-                
+
                 drawer.toggle();
                 expect(drawer.isOpen).toBeTruthy();
                 drawer.toggle();
                 expect(drawer.isOpen).toBeFalsy();
-                    
+
             }).catch (reason => {
                 console.log(reason);
                 return Promise.reject(reason);
             });
         }));
-         
+
         it('async API calls should resolve Promise and emit events', async(() => {
               var fixture: ComponentFixture<TestComponentDI>,
                    resolver, drawer,
@@ -136,12 +136,12 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
                     fixture = TestBed.createComponent(TestComponentDI);
                     fixture.detectChanges();
                     drawer = fixture.componentInstance.viewChild;
-                    
+
                     spyOn(drawer.closing, "emit");
                     spyOn(drawer.closed, "emit");
                     spyOn(drawer.opening, "emit");
                     spyOn(drawer.opened, "emit");
-                    
+
                     var re = drawer.open(true);
                     fixture.detectChanges();
                     fixture.debugElement.children[0].nativeElement.dispatchEvent(new Event('transitionend'));
@@ -151,7 +151,7 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
                     expect(value).toBe('opened');
                     expect(drawer.opening.emit).toHaveBeenCalledWith('opening');
                     expect(drawer.opened.emit).toHaveBeenCalledWith('opened');
-                    
+
                     var re = drawer.toggle(true);
                     fixture.detectChanges();
                     fixture.debugElement.children[0].nativeElement.dispatchEvent(new Event('transitionend'));
@@ -166,11 +166,11 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
                 console.log(reason);
                 return Promise.reject(reason);
             });
-            
+
             // to be resolved at the end of the promise chain
             return result;
          }));
-         
+
         it('should properly initialize with min template', async(() => {
             var template = '<ig-nav-drawer><div class="ig-drawer-content"></div><div class="ig-drawer-mini-content"></div></ig-nav-drawer>';
             TestBed.overrideComponent(TestComponentDI, {
@@ -181,7 +181,7 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
             TestBed.compileComponents().then(() => {
                 let fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
-                    
+
             expect(fixture.componentInstance.viewChild.hasAnimateWidth).toBeTruthy();
                 expect(fixture.debugElement.query((x) => { return x.nativeNode.nodeName === "ASIDE";}).nativeElement.classList).toContain("mini");
             }).catch (reason => {
@@ -200,22 +200,22 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
             TestBed.compileComponents().then(() => {
                 let fixture = TestBed.createComponent(TestComponentPin);
                 fixture.detectChanges();
-                    
+
                 expect(fixture.componentInstance.viewChild.pin).toBeTruthy();
                 expect(fixture.debugElement.query((x) => { return x.nativeNode.nodeName === "ASIDE";}).nativeElement.classList).toContain("pinned");
-                
+
                 expect(fixture.componentInstance.viewChild.enableGestures).toBe(false);
-                
+
                 fixture.componentInstance.enableGestures = "true";
                 fixture.detectChanges();
                 expect(fixture.componentInstance.viewChild.enableGestures).toBeTruthy();
-                
+
             }).catch (reason => {
                 console.log(reason);
                 return Promise.reject(reason);
             });
         }));
-        
+
         it('should toggle on edge swipe gesture', (done) => {
             var fixture: ComponentFixture<TestComponentDI>,
                 resolver, drawer;
@@ -224,7 +224,7 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
                 fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
                 expect(fixture.componentInstance.viewChild.isOpen).toEqual(false);
-                
+
                 //timeouts are +50 on the gesture to allow the swipe to be detected and triggered after the touches:
                 return swipe(document.body, 80, 10, 100, 250, 0);
             })
@@ -255,7 +255,7 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
                 fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
                 navDrawer = fixture.componentInstance.viewChild;
-                
+
                 expect(fixture.componentInstance.viewChild.isOpen).toEqual(false);
 
                 var listener = navDrawer.renderer.listen(document.body, "panmove", () => {
@@ -266,7 +266,7 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
                 })
 
                 return pan(document.body, 10, 10, 150, 20, 0);
-            })            
+            })
             .then(function() {
                 expect(navDrawer.isOpen).toEqual(false, "should ignore too short pan");
                 // valid pan
@@ -287,7 +287,7 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
                 done();
             });
          }, 10000);
-         
+
         it('should update edge zone with mini width', async(() => {
             var template = '<ig-nav-drawer [miniWidth]="drawerMiniWidth" ><div class="ig-drawer-content"></div><div class="ig-drawer-mini-content"></div></ig-nav-drawer>',
                 fixture: ComponentFixture<TestComponentDI>;
@@ -300,21 +300,21 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
                 fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
                     let drawer: Infragistics.NavigationDrawer = fixture.componentInstance.viewChild;
-                    
+
                     fixture.componentInstance.drawerMiniWidth = 60;
                     fixture.detectChanges();
                     expect(fixture.componentInstance.viewChild.maxEdgeZone).toBe(66);
-                    
+
                     fixture.componentInstance.drawerMiniWidth = 80;
                     fixture.detectChanges();
                     expect(fixture.componentInstance.viewChild.maxEdgeZone).toBe(fixture.componentInstance.drawerMiniWidth * 1.1);
-                    
+
                 }).catch (reason => {
                     console.log(reason);
                     return Promise.reject(reason);
                 });
          }));
-         
+
         it('should update width from css or property', done => {
             var template = `<ig-nav-drawer [miniWidth]="drawerMiniWidth" [width]="drawerWidth">
                                     <div class="ig-drawer-content"></div>
@@ -329,20 +329,20 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
-                
+
                 // defaults:
                 expect(fixture.componentInstance.viewChild.drawer.style.width).toBe("");
                 return fixture.componentInstance.viewChild.open();
             })
             .then(function () {
                 expect(fixture.componentInstance.viewChild.drawer.style.width).toBe("");
-                
+
                 fixture.componentInstance.drawerMiniWidth = "80px";
                 fixture.componentInstance.drawerWidth = "250px";
                 fixture.detectChanges();
                 return fixture.whenStable(); // let changes apply in the meantime
             })
-            .then(function () { 
+            .then(function () {
                 expect(fixture.componentInstance.viewChild.drawer.style.width).toBe("250px");
                 return fixture.componentInstance.viewChild.close();
             })
@@ -362,11 +362,11 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
         });
 
         function swipe(element, posX, posY, duration, deltaX, deltaY) {
-            var swipeOptions = { 
-                pos: [posX, posY], 
-                duration: duration, 
-                deltaX: deltaX, 
-                deltaY: deltaY 
+            var swipeOptions = {
+                pos: [posX, posY],
+                duration: duration,
+                deltaX: deltaX,
+                deltaY: deltaY
             };
 
             return new Promise(function(resolve, reject) {
@@ -377,11 +377,11 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
         }
 
         function pan(element, posX, posY, duration, deltaX, deltaY) {
-            var swipeOptions = { 
-                pos: [posX, posY], 
-                duration: duration, 
-                deltaX: deltaX, 
-                deltaY: deltaY 
+            var swipeOptions = {
+                pos: [posX, posY],
+                duration: duration,
+                deltaX: deltaX,
+                deltaY: deltaY
             };
 
             return new Promise(function(resolve, reject) {
@@ -390,8 +390,8 @@ var oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
                 });
             })
         }
-    }); 
-   
+    });
+
 
 @Component({
     selector: 'test-cmp',
@@ -402,7 +402,7 @@ class TestComponent {
 }
 
 @Component({
-    selector: 'test-cmp', 
+    selector: 'test-cmp',
     template: '<ig-nav-drawer></ig-nav-drawer>',
     providers: [Infragistics.NavigationService]
 })

@@ -53,7 +53,7 @@ import {
     PagingState,
     SortingDirection,
     SortingExpression
-} from "../../src/main";
+} from "../main";
 import { DataType, DataUtil } from "../data-operations/data-util";
 
 
