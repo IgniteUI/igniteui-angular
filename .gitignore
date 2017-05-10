@@ -52,3 +52,6 @@ dist/*.css
 dist/bundles/zero-blocks.dev.js
 !dist/package.json
 dist/README.md
+
+# vscode
+.vscode
