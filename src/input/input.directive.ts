@@ -10,12 +10,6 @@ import {CommonModule} from '@angular/common';
 
 @Directive({
     selector: '[igxInput]',
-    // host: {
-    //     '[class.igx-form-group__input]': 'true',
-    //     '[class.igx-form-group__input--filled]': 'filled',
-    //     '[class.igx-form-group__input--focused]': 'focused',
-    //     '[class.igx-form-group__input--placeholder]': 'placeholder'
-    // }
 })
 export class IgxInputClass implements DoCheck {
 
