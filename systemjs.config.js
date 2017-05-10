@@ -18,6 +18,9 @@
       // our app is within the demos/ folder
       app: 'demos/',
       // angular bundles
+      '@angular/animations': 'npm:@angular/animations/bundles/animations.umd.js',
+      '@angular/animations/browser': 'npm:@angular/animations/bundles/animations-browser.umd.js',
+      '@angular/platform-browser/animations': 'npm:@angular/platform-browser/bundles/platform-browser-animations.umd.js',
       '@angular/core': 'npm:@angular/core/bundles/core.umd.js',
       '@angular/common': 'npm:@angular/common/bundles/common.umd.js',
       '@angular/compiler': 'npm:@angular/compiler/bundles/compiler.umd.js',
@@ -29,8 +32,8 @@
       // other libraries
       'rxjs':                       'npm:rxjs',
       'angular2-in-memory-web-api': 'npm:angular2-in-memory-web-api',
-      'ts':                         'npm:plugin-typescript@4.0.10/lib/plugin.js',
-      'typescript':                 'npm:typescript@2.0.2/lib/typescript.js',
+      'ts':                         'npm:plugin-typescript@7.0.6/lib/plugin.js',
+      'typescript':                 'npm:typescript@2.3.2/lib/typescript.js',
       'prism':                      'npm:prismjs@1.5.1',
       'igniteui-js-blocks':                'npm:igniteui-js-blocks'
     },
@@ -42,9 +45,6 @@
       rxjs: {
         defaultExtension: 'js'
       },
-      // "src/": {
-      //   defaultExtension: 'js'
-      // },
       'angular2-in-memory-web-api': {
         main: './index.js',
         defaultExtension: 'js'
