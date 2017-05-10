@@ -13,14 +13,13 @@ import {
     ElementRef,
     EventEmitter,
     Input,
-    IterableDiffer,
     IterableDiffers,
     NgModule,
     OnDestroy,
     OnInit,
     Output,
     QueryList,
-    Renderer,
+    Renderer2,
     ViewChild,
     ViewContainerRef
 } from "@angular/core";
@@ -207,12 +206,12 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
     private filteringExpressions: Object = {};
     private sortingExpressions: Object = {};
     private colDiffer: Subscription;
-    private _differ: IterableDiffer;
+    private _differ: any;
     private _paging: boolean = false;
     private _lastRow: any;
     private shouldDataBind: boolean = false;
 
-    constructor(private _renderer: Renderer,
+    constructor(private _renderer: Renderer2,
                 private _elementRef: ElementRef,
                 private _detector: ChangeDetectorRef,
                 private _itDiff: IterableDiffers,
@@ -260,7 +259,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
      * @hidden
      */
     public ngDoCheck(): void {
-        let diff: IterableDiffer = this._differ.diff(this.data);
+        let diff: any = this._differ.diff(this.data);
         if (this.shouldDataBind || diff) {
 
             let bindingBehavior: IgxGridBindingBehavior = {
@@ -384,7 +383,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
     public focusCell(rowIndex: number | string, columnIndex: number | string): void {
         let cell: HTMLElement = this._elementRef.nativeElement.querySelector(`td[data-row="${rowIndex}"][data-col="${columnIndex}"]`);
         if (cell) {
-            this._renderer.invokeElementMethod(cell, "focus", []);
+            cell.focus();
         }
     }
 
@@ -399,7 +398,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
     public focusRow(index: number | string): void {
         let row: HTMLElement = this._elementRef.nativeElement.querySelector(`tbody > tr[data-row="${index}"]`);
         if (row) {
-            this._renderer.invokeElementMethod(row, "focus", []);
+            row.focus();
         }
     }
 
@@ -409,33 +408,33 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
 
     protected onRowFocus(event: any, index: number): void {
         let el: HTMLElement = event.target;
-        this._renderer.setElementAttribute(el, "aria-selected", "true");
-        this._renderer.setElementClass(el, "igx-grid__tr--selected", true);
+        this._renderer.setAttribute(el, "aria-selected", "true");
+        this._renderer.addClass(el, "igx-grid__tr--selected");
         this.onRowSelection.emit({row: this.getRow(index)});
     }
 
     protected onRowBlur(event: any): void {
         let el: HTMLElement = event.target;
-        this._renderer.setElementAttribute(el, "aria-selected", null);
-        this._renderer.setElementClass(el, "igx-grid__tr--selected", false);
+        this._renderer.removeAttribute(el, "aria-selected");
+        this._renderer.removeClass(el, "igx-grid__tr--selected");
     }
 
     protected onCellFocus(event: any, index: number, columnField: string): void {
         let el: HTMLElement = event.target ? event.target : event;
-        this._renderer.setElementAttribute(el, "aria-selected", "true");
+        this._renderer.setAttribute(el, "aria-selected", "true");
 
         if (!this.getColumnByField(columnField).bodyTemplate) {
-            this._renderer.setElementClass(el, "igx-grid__td--selected", true);
-            this._renderer.setElementClass(el.parentElement, "igx-grid__tr--selected", true);
+            this._renderer.addClass(el, "igx-grid__td--selected");
+            this._renderer.addClass(el.parentElement, "igx-grid__tr--selected");
         }
         this.onCellSelection.emit({cell: this.getCell(index, columnField)});
     }
 
     protected onCellBlur(event: any): void {
         let el: HTMLElement = event.target;
-        this._renderer.setElementAttribute(el, "aria-selected", null);
-        this._renderer.setElementClass(el, "igx-grid__td--selected", false);
-        this._renderer.setElementClass(el.parentElement, "igx-grid__tr--selected", false);
+        this._renderer.removeAttribute(el, "aria-selected");
+        this._renderer.removeClass(el, "igx-grid__td--selected");
+        this._renderer.removeClass(el.parentElement, "igx-grid__tr--selected");
     }
 
     protected editCell(index: number, item: any, row: Object): void {

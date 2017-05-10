@@ -5,7 +5,7 @@ import {
     ElementRef,
     AfterViewInit,
     ViewChild,
-    Renderer,
+    Renderer2,
     OnChanges,
     Output,
     EventEmitter
@@ -45,7 +45,7 @@ export abstract class BaseProgress {
 
                 this.onProgressChanged.emit(changedValues);
                 if(circular){
-                    this.renderer.setElementStyle(circular.nativeElement, 'strokeDashoffset', percentage);
+                    this.renderer.setStyle(circular.nativeElement, 'strokeDashoffset', percentage);
                 }
             } else {
                 // Update progress bar percent value
@@ -82,7 +82,7 @@ export class IgxLinearProgressBar extends BaseProgress implements OnChanges {
 
     @Output() onProgressChanged = new EventEmitter();
 
-    constructor(private elementRef: ElementRef, private renderer: Renderer){
+    constructor(private elementRef: ElementRef, private renderer: Renderer2){
         super();
     }
 
@@ -119,7 +119,7 @@ export class IgxCircularProgressBar extends BaseProgress implements AfterViewIni
 
     @Output() onProgressChanged = new EventEmitter();
 
-    constructor(private elementRef: ElementRef, private renderer: Renderer) {
+    constructor(private elementRef: ElementRef, private renderer: Renderer2) {
         super();
     }
 

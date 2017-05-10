@@ -1,6 +1,4 @@
-import { NgModule, Directive, Component, ElementRef, Renderer, OnInit, Input,
-        Output, ViewChild, HostBinding
-} from '@angular/core';
+import { NgModule, Component, ElementRef, Input } from '@angular/core';
 import { CommonModule } from "@angular/common";
 
 export enum Type { DEFAULT, INFO, SUCCESS, WARNING, ERROR }

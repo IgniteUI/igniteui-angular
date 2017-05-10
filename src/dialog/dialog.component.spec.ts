@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, ViewChild, DebugElement, ElementRef } from '@angular/core';
 
 import { IgxDialog, IgxDialogModule } from './dialog.component';
@@ -7,7 +8,7 @@ import { IgxDialog, IgxDialogModule } from './dialog.component';
 describe("Dialog", function () {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [IgxDialogModule],
+            imports: [BrowserAnimationsModule, IgxDialogModule],
             declarations: [Alert, Dialog, CustomDialog]
         }).compileComponents();
     }));
@@ -15,10 +16,10 @@ describe("Dialog", function () {
         let fixture = TestBed.createComponent(Alert),
             dialog = fixture.componentInstance.dialog,
             expectedTitle = "alert";
-        
+
         dialog.open();
         fixture.detectChanges();
-        
+
         expect(dialog.title).toEqual(expectedTitle);
         let titleDebugElement = fixture.debugElement.query(By.css(".igx-dialog__window-title"));
         expect(titleDebugElement.nativeElement.textContent.trim()).toEqual(expectedTitle);
@@ -41,7 +42,7 @@ describe("Dialog", function () {
     it("Should set custom modal message.", () => {
         let fixture = TestBed.createComponent(CustomDialog),
             dialog = fixture.componentInstance.dialog;
-        
+
         dialog.open();
         fixture.detectChanges();
 
@@ -54,7 +55,7 @@ describe("Dialog", function () {
     it("Should set left and right button properties.", () => {
         let fixture = TestBed.createComponent(Dialog),
             dialog = fixture.componentInstance.dialog;
-        
+
         fixture.detectChanges();
 
         dialog.open();
@@ -74,14 +75,14 @@ describe("Dialog", function () {
     it("Should execute open/close methods.", () => {
         let fixture = TestBed.createComponent(Alert),
             dialog = fixture.componentInstance.dialog;
-        
+
         fixture.detectChanges();
         testDialogIsOpen(fixture.debugElement, dialog, false);
 
         dialog.open();
         fixture.detectChanges();
         testDialogIsOpen(fixture.debugElement, dialog, true);
-        
+
         dialog.close();
         fixture.detectChanges();
         testDialogIsOpen(fixture.debugElement, dialog, false);
@@ -105,11 +106,11 @@ describe("Dialog", function () {
 
         testDialogIsOpen(fixture.debugElement, dialog, true);
     });
-    
+
     it("Should test events.", () => {
         let fixture = TestBed.createComponent(Dialog),
             dialog = fixture.componentInstance.dialog;
-        
+
 
         spyOn(dialog.onOpen, "emit");
         dialog.open();
@@ -128,11 +129,11 @@ describe("Dialog", function () {
         let buttons = fixture.debugElement.nativeElement.querySelectorAll("button"),
             leftButton = buttons[0],
             rightButton = buttons[1];
-        
+
         spyOn(dialog.onLeftButtonSelect, "emit");
         dispatchEvent(leftButton, "click");
         expect(dialog.onLeftButtonSelect.emit).toHaveBeenCalled();
-        
+
         spyOn(dialog.onRightButtonSelect, "emit");
         dispatchEvent(rightButton, "click");
         expect(dialog.onRightButtonSelect.emit).toHaveBeenCalled();
@@ -141,7 +142,7 @@ describe("Dialog", function () {
     it("Should set ARIA attributes.", () => {
         let alertFixture = TestBed.createComponent(Alert),
             alert = alertFixture.componentInstance.dialog;
-        
+
         alert.open();
         alertFixture.detectChanges();
         expect(alert.role).toEqual("alertdialog");
@@ -160,7 +161,7 @@ describe("Dialog", function () {
     function testDialogIsOpen(debugElement: DebugElement, dialog: IgxDialog, isOpen: boolean) {
         let dialogDebugElement = debugElement.query(By.css(".igx-dialog"));
 
-        expect(dialog.isOpen).toEqual(isOpen);        
+        expect(dialog.isOpen).toEqual(isOpen);
     }
 
     function dispatchEvent(element: HTMLElement, eventType: string) {
@@ -170,9 +171,9 @@ describe("Dialog", function () {
 });
 
 @Component({ template: `<div #wrapper>
-                            <igx-dialog #dialog 
-                                title="alert" 
-                                message="message" 
+                            <igx-dialog #dialog
+                                title="alert"
+                                message="message"
                                 closeOnOutsideSelect="true"
                                 leftButtonLabel="OK">
                             </igx-dialog>

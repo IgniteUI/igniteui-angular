@@ -1,7 +1,7 @@
 <table class="igx-grid" [attr.id]="id" role="grid" [attr.aria-readonly]="!hasEditableColumns">
     <thead class="igx-grid__thead" role="rowgroup">
         <tr class="igx-grid__tr" role="rowheader">
-            <template ngFor let-col [ngForOf]="columnsToRender" let-colIndex="index">
+            <ng-template ngFor let-col [ngForOf]="columnsToRender" let-colIndex="index">
 
                 <th (onSort)="processSort($event)"
                     role="columnheader" tabindex="0"
@@ -26,16 +26,16 @@
                         </div>
                     </div>
                 </th>
-            </template>
+            </ng-template>
         </tr>
     </thead>
     <tbody class="igx-grid__tbody" role="rowgroup" (keydown)="navigate($event)">
         <div class="igx-grid__tbody-empty" *ngIf="!dataContainer.transformedData || !dataContainer.transformedData.length || !columnsToRender || !columnsToRender.length">
             <h4>No data to display</h4>
         </div>
-        <template ngFor let-rowData [ngForOf]="dataContainer.transformedData" let-rowIndex="index">
+        <ng-template ngFor let-rowData [ngForOf]="dataContainer.transformedData" let-rowIndex="index">
             <tr class="igx-grid__tr" [attr.data-row]="rowIndex" tabindex="0" role="row" (focus)="onRowFocus($event, rowIndex)" (blur)="onRowBlur($event)">
-                <template ngFor let-col [ngForOf]="columnsToRender" let-colIndex="index">
+                <ng-template ngFor let-col [ngForOf]="columnsToRender" let-colIndex="index">
                     <td tabindex="0" role="gridcell" [attr.aria-readonly]="!col.editable" [attr.aria-describedby]="id + '_' + col.field"
                         [attr.data-row]="rowIndex" [attr.data-col]="colIndex"
                         class="igx-grid__td"
@@ -47,9 +47,9 @@
                         <igx-cell-body *ngIf="col.bodyTemplate" [column]="col" [row]="rowData" [item]="rowData[col.field]" [rowIndex]="rowIndex"></igx-cell-body>
                         {{ formatBody(rowData, col) }}
                     </td>
-                </template>
+                </ng-template>
             </tr>
-        </template>
+        </ng-template>
     </tbody>
     <tfoot class="igx-grid__tfoot">
         <igx-paginator *ngIf="paging"

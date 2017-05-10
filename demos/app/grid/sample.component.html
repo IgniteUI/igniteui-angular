@@ -113,18 +113,18 @@
                 <igx-column [sortable]="true" [field]="'ProductID'" [header]="'ID'"></igx-column>
                 <igx-column [sortable]="true" [filtering]="true" [field]="'ProductName'"></igx-column>
                 <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'In Stock'">
-                    <template igxCell let-col="column" let-ri="rowIndex" let-item="item">
+                    <ng-template igxCell let-col="column" let-ri="rowIndex" let-item="item">
                         <span *ngIf="!showInput(ri, col.field)">{{ item }}</span>
                         <input *ngIf="showInput(ri, col.field)" igxInput [value]="item" (blur)="editCell = null" (change)="grid2.updateCell(ri, col.field, $event.target.value); editCell = null">
-                    </template>
+                    </ng-template>
                 </igx-column>
                 <igx-column [field]="'Discontinued'">
-                    <template igxHeader let-column="column">
+                    <ng-template igxHeader let-column="column">
                         <p style="color: crimson">{{ column.field }}</p>
-                    </template>
-                    <template igxCell let-item="item" let-ri="rowIndex" let-column="column">
+                    </ng-template>
+                    <ng-template igxCell let-item="item" let-ri="rowIndex" let-column="column">
                         <igx-checkbox [checked]="item" (change)="grid2.updateCell(ri, column.field, $event.target.checked)"></igx-checkbox>
-                    </template>
+                    </ng-template>
                 </igx-column>
             </igx-grid>
         </article>
@@ -137,12 +137,12 @@
                 <igx-column [editable]="true" [filtering]="true" [field]="'ProductName'"></igx-column>
                 <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'In Stock'"></igx-column>
                 <igx-column [field]="'Discontinued'" [sortable]="true">
-                    <template igxHeader let-column="column">
+                    <ng-template igxHeader let-column="column">
                         <p style="color: crimson">{{ column.field }}</p>
-                    </template>
-                    <template igxCell let-item="item" let-ri="rowIndex" let-column="column">
+                    </ng-template>
+                    <ng-template igxCell let-item="item" let-ri="rowIndex" let-column="column">
                         <igx-checkbox [checked]="item" (change)="grid3.updateCell(ri, column?.field, $event.target.checked)"></igx-checkbox>
-                    </template>
+                    </ng-template>
                 </igx-column>
             </igx-grid>
         </article>
