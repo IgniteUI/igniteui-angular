@@ -9,13 +9,13 @@
 
             @include e(title) {
                 @extend %igx-card-header-title;
-
-                @include m(small) {
-                    @extend %igx-card-header-title;
-                    @extend %igx-card-header-title--small;
-                }
             }
             
+            @include e(title, $m:small) {
+                @extend %igx-card-header-title;
+                @extend %igx-card-header-title--small;
+            }
+
             @include e(subtitle) {
                 @extend %igx-card-header-subtitle;
             }
@@ -52,16 +52,16 @@
 
             @include e(igroup) {
                 @extend %igx-card-actions-igroup;
+            }
 
-                @include m(start) {
-                    @extend %igx-card-actions-igroup;
-                    @extend %igx-card-actions-igroup--start;
-                }
-                
-                @include m(end) {
-                    @extend %igx-card-actions-igroup;
-                    @extend %igx-card-actions-igroup--end;
-                }
+            @include e(igroup, $m:start) {
+                @extend %igx-card-actions-igroup;
+                @extend %igx-card-actions-igroup--start;
+            }
+            
+            @include e(igroup, $m:end) {
+                @extend %igx-card-actions-igroup;
+                @extend %igx-card-actions-igroup--end;
             }
 
             @include e(bgroup) {
@@ -72,9 +72,9 @@
 
     @include e(media) {
         @extend %igx-card-media;
+    }
 
-        @include m(right) {
-            @extend %igx-card-media--right;
-        }
+    @include e(media, $m:right) {
+        @extend %igx-card-media--right;
     }
 }
