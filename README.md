@@ -1,4 +1,4 @@
-# Ignite UI JS Blocks -  Infragistics Angular2 Components
+# Ignite UI JS Blocks -  Infragistics Angular Components
 
 [![Build Status](https://travis-ci.org/IgniteUI/igniteui-js-blocks.svg?branch=master)](https://travis-ci.org/IgniteUI/igniteui-js-blocks)
 [![Coverage Status](https://coveralls.io/repos/github/IgniteUI/igniteui-js-blocks/badge.svg?branch=master)](https://coveralls.io/github/IgniteUI/igniteui-js-blocks?branch=master)
@@ -6,7 +6,7 @@
 
 **Note:** as of January 3rd 2017 the license for this project has changed from MIT to Apache 2.0. For more information about these licenses please click [here](http://choosealicense.com/licenses/)
 
-Components and supporting directives built with TypeScript and [Angular 2](https://angular.io/)
+Components and supporting directives built with TypeScript and [Angular](https://angular.io/)
 including samples and tests. Source files under the `src` folder.
 
 Current list of controls include:
