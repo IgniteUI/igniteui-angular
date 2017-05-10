@@ -10,6 +10,9 @@
         &:active {
             @extend %igx-list-item--active;
         }
+        // &:not(:active) {
+        //     @extend %igx-list-item--inactive;
+        // }
     }
 
     @include e(empty) {
@@ -22,11 +25,11 @@
         @include b(message) {
             @extend %igx-list-empty-message;
         }
+    }
 
-        @include m(custom) {
-            @extend %igx-list-empty;
-        }
-    } 
+    @include e(empty, $m:custom) {
+        @extend %igx-list-empty;
+    }
 
     // style the wrapping component elements
     @at-root {

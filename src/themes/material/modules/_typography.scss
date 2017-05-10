@@ -5,13 +5,13 @@ a {
 html {
 	font-size-adjust: 100%;
 	font-family: 'Titillium Web', sans-serif;
-    font-weight: normal;
+    font-weight: 400;
     color: $off-black;
+    -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
-    -webkit-font-smoothing: antialiased;
 }
 
 @media only screen and (min-width: 0) {
