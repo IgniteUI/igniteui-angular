@@ -1,6 +1,6 @@
 import { Component, ChangeDetectorRef, Input, Output, NgModule, EventEmitter, ElementRef, QueryList, ViewChildren, Inject, forwardRef, AfterViewInit, Renderer2 } from '@angular/core';
 import { CommonModule } from "@angular/common";
-import { IgxRippleModule } from "../../src/directives/ripple.directive";
+import { IgxRippleModule } from "../directives/ripple.directive";
 import { IgxButtonModule, IgxButton } from "../button/button.directive";
 
 export enum ButtonGroupAlignment { horizontal, vertical };

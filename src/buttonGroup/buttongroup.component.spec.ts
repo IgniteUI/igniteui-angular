@@ -6,7 +6,7 @@ import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { IgxButtonGroup, } from './buttonGroup.component';
 import { IgxButtonGroupModule, ButtonGroupAlignment } from "./buttonGroup.component";
-import { IgxDirectivesModule } from "../../src/modules";
+import { IgxDirectivesModule } from "../modules";
 import { IgxButton } from "../button/button.directive";
 
 interface IButton {
@@ -153,7 +153,7 @@ class InitButtonGroupWithValues{
     @ViewChild(IgxButtonGroup) buttonGroup: IgxButtonGroup;
 
     constructor() {}
-    
+
     private cities: Array<Button>;
         public ngOnInit(): void {
 
@@ -191,7 +191,7 @@ class ButtonGroupWithValues{
     @ViewChild(IgxButtonGroup) buttonGroup: IgxButtonGroup;
 
     constructor() {}
-    
+
     private buttons: Array<Button>;
         public ngOnInit(): void {
 
