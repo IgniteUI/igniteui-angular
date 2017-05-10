@@ -12,8 +12,8 @@
         "lite": "lite-server",
         "test-dev": "concurrently \"npm run watch\" \"karma start karma.conf.js\"",
         "test": "karma start karma.conf.js --single-run",
-		"lint": "tslint src/**/*.ts",
-		"lint-dev": "tslint src/**/*.ts --fix"
+		"lint": "tslint src/**/*.ts -e 'src/**/*.spec.ts'",
+		"lint-dev": "tslint src/**/*.ts -e 'src/**/*.spec.ts' --fix"
     },
     "dependencies": {
         "@angular/animations": "^4.0.0",

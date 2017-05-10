@@ -6,7 +6,7 @@ import {
 import { By } from "@angular/platform-browser";
 import { IgxCircularProgressBar, IgxLinearProgressBar } from "./progressbar.component";
 
-describe("IgLinearBar", function() {
+describe("IgLinearBar", () => {
    beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -23,10 +23,10 @@ describe("IgLinearBar", function() {
 
         const progress = fixture.componentInstance.linearBar;
 
-        const defaultMaxValue = 100,
-            defaultValue = 0,
-            defaultStriped = false,
-            defaultType = "default";
+        const defaultMaxValue = 100;
+        const defaultValue = 0;
+        const defaultStriped = false;
+        const defaultType = "default";
 
         expect(progress.max).toBe(defaultMaxValue);
         expect(progress.striped).toBe(defaultStriped);
@@ -51,10 +51,10 @@ describe("IgLinearBar", function() {
     });
 
    it("should calculate the percentage (custom max size)", () => {
-        let maxValue = 150,
-            value = 75,
-            expectedPercentValue = 50,
-            fixture = TestBed.createComponent(InitLinearProgressBar);
+        const maxValue = 150;
+        const fixture = TestBed.createComponent(InitLinearProgressBar);
+        let value = 75;
+        let expectedPercentValue = 50;
 
         fixture.detectChanges();
 
@@ -72,9 +72,9 @@ describe("IgLinearBar", function() {
     });
 
    it("should set value to 0 for negative numbers", () => {
-        const negativeValue = -20,
-            expectedValue = 0,
-            fixture = TestBed.createComponent(InitLinearProgressBar);
+        const negativeValue = -20;
+        const expectedValue = 0;
+        const fixture = TestBed.createComponent(InitLinearProgressBar);
 
         fixture.detectChanges();
 
@@ -85,9 +85,9 @@ describe("IgLinearBar", function() {
     });
 
    it("should set value to max if it is higher than max (default max size)", () => {
-        const progressBarValue = 120,
-            expectedMaxValue = 100,
-            fixture = TestBed.createComponent(InitLinearProgressBar);
+        const progressBarValue = 120;
+        const expectedMaxValue = 100;
+        const fixture = TestBed.createComponent(InitLinearProgressBar);
 
         fixture.detectChanges();
 
@@ -98,9 +98,9 @@ describe("IgLinearBar", function() {
     });
 
    it("should set value to max if it is higher than max (custom max size)", () => {
-        const progressBarMaxValue = 150,
-            progressBarValue = 170,
-            fixture = TestBed.createComponent(InitLinearProgressBar);
+        const progressBarMaxValue = 150;
+        const progressBarValue = 170;
+        const fixture = TestBed.createComponent(InitLinearProgressBar);
 
         fixture.detectChanges();
 
@@ -112,9 +112,9 @@ describe("IgLinearBar", function() {
     });
 
    it("should update the value if max updates to a smaller value", () => {
-        const progressBarMaxValue = 70,
-            progressBarValue = 80,
-            fixture = TestBed.createComponent(InitLinearProgressBar);
+        const progressBarMaxValue = 70;
+        const progressBarValue = 80;
+        const fixture = TestBed.createComponent(InitLinearProgressBar);
 
         fixture.detectChanges();
 
@@ -126,9 +126,9 @@ describe("IgLinearBar", function() {
     });
 
    it("should not update the value if max updates to a larger value", () => {
-        const progressBarMaxValue = 150,
-            progressBarValue = 120,
-            fixture = TestBed.createComponent(InitLinearProgressBar);
+        const progressBarMaxValue = 150;
+        const progressBarValue = 120;
+        const fixture = TestBed.createComponent(InitLinearProgressBar);
 
         fixture.detectChanges();
 
@@ -141,7 +141,7 @@ describe("IgLinearBar", function() {
 
 });
 
-describe("IgCircularBar", function() {
+describe("IgCircularBar", () => {
    beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -158,8 +158,8 @@ describe("IgCircularBar", function() {
 
         const progress = fixture.componentInstance.circularBar;
 
-        const value = 0,
-            defaultMaxValue = 100;
+        const value = 0;
+        const defaultMaxValue = 100;
 
         expect(progress.max).toBe(defaultMaxValue);
         expect(progress.value).toBe(0);
@@ -182,10 +182,10 @@ describe("IgCircularBar", function() {
     });
 
    it("should calculate the percentage (custom max size)", () => {
-        let maxValue = 150,
-            value = 75,
-            expectedPercentValue = 50,
-            fixture = TestBed.createComponent(InitCircularProgressBar);
+        const maxValue = 150;
+        const fixture = TestBed.createComponent(InitCircularProgressBar);
+        let value = 75;
+        let expectedPercentValue = 50;
 
         fixture.detectChanges();
 
@@ -203,9 +203,9 @@ describe("IgCircularBar", function() {
     });
 
    it("should set value to 0 for negative numbers", () => {
-        const negativeValue = -20,
-            expectedValue = 0,
-            fixture = TestBed.createComponent(InitCircularProgressBar);
+        const negativeValue = -20;
+        const expectedValue = 0;
+        const fixture = TestBed.createComponent(InitCircularProgressBar);
 
         fixture.detectChanges();
 
@@ -216,9 +216,9 @@ describe("IgCircularBar", function() {
     });
 
    it("should set value to max if it is higher than max (default max size)", () => {
-        const progressBarValue = 120,
-            expectedMaxValue = 100,
-            fixture = TestBed.createComponent(InitCircularProgressBar);
+        const progressBarValue = 120;
+        const expectedMaxValue = 100;
+        const fixture = TestBed.createComponent(InitCircularProgressBar);
 
         fixture.detectChanges();
 
@@ -229,9 +229,9 @@ describe("IgCircularBar", function() {
     });
 
    it("should set value to max if it is higher than max (custom max size)", () => {
-        const progressBarMaxValue = 150,
-            progressBarValue = 170,
-            fixture = TestBed.createComponent(InitCircularProgressBar);
+        const progressBarMaxValue = 150;
+        const progressBarValue = 170;
+        const fixture = TestBed.createComponent(InitCircularProgressBar);
 
         fixture.detectChanges();
 
@@ -243,9 +243,9 @@ describe("IgCircularBar", function() {
     });
 
    it("should update the value if max updates to a smaller value", () => {
-        const progressBarMaxValue = 70,
-            progressBarValue = 80,
-            fixture = TestBed.createComponent(InitCircularProgressBar);
+        const progressBarMaxValue = 70;
+        const progressBarValue = 80;
+        const fixture = TestBed.createComponent(InitCircularProgressBar);
 
         fixture.detectChanges();
 
@@ -257,9 +257,9 @@ describe("IgCircularBar", function() {
     });
 
    it("should not update the value if max updates to a larger value", () => {
-        const progressBarMaxValue = 150,
-            progressBarValue = 120,
-            fixture = TestBed.createComponent(InitCircularProgressBar);
+        const progressBarMaxValue = 150;
+        const progressBarValue = 120;
+        const fixture = TestBed.createComponent(InitCircularProgressBar);
 
         fixture.detectChanges();
 
@@ -272,11 +272,11 @@ describe("IgCircularBar", function() {
 
 });
 
-describe("IgLinearBar UI Logic", function() {
+describe("IgLinearBar UI Logic", () => {
    beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                linearBar,
+                LinearBar,
                 SetValueAboveValuesLinearBar,
                 IgxLinearProgressBar
             ]
@@ -285,26 +285,28 @@ describe("IgLinearBar UI Logic", function() {
     }));
 
    it("accepts and respond to value", () => {
-        const fixture = TestBed.createComponent(linearBar);
+        const fixture = TestBed.createComponent(LinearBar);
 
         const expectedValue = 30;
 
         fixture.detectChanges();
 
-        const progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement.querySelectorAll('[class*="progress-linear__bar--"]')[0];
+        const progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement
+                                    .querySelectorAll('[class*="progress-linear__bar--"]')[0];
 
         expect(progressBarElem.style.width).toBe(expectedValue + "%");
         expect(progressBarElem.attributes["aria-valuenow"].textContent).toBe(expectedValue.toString());
     });
 
    it("accepts a max value and respond to max changes", () => {
-        const fixture = TestBed.createComponent(linearBar);
+        const fixture = TestBed.createComponent(LinearBar);
 
         const expectedValue = 30;
 
         fixture.detectChanges();
 
-        const progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement.querySelectorAll('[class*="progress-linear__bar--"]')[0];
+        const progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement
+                                    .querySelectorAll('[class*="progress-linear__bar--"]')[0];
 
         expect(progressBarElem.style.width).toBe(expectedValue + "%");
 
@@ -318,16 +320,18 @@ describe("IgLinearBar UI Logic", function() {
         const fixture = TestBed.createComponent(SetValueAboveValuesLinearBar);
         fixture.detectChanges();
 
-        const progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement.querySelectorAll('[class*="progress-linear__bar--"]')[0];
+        const progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement
+                                    .querySelectorAll('[class*="progress-linear__bar--"]')[0];
 
         expect(progressBarElem.style.width).toBe("100%");
     });
 
    it("accepts a custom type", () => {
-        const fixture = TestBed.createComponent(linearBar);
+        const fixture = TestBed.createComponent(LinearBar);
         fixture.detectChanges();
 
-        const progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement.querySelectorAll('[class*="progress-linear__bar--"]')[0];
+        const progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement
+                                    .querySelectorAll('[class*="progress-linear__bar--"]')[0];
 
         expect(progressBarElem.classList.contains("progress-linear__bar--default")).toBeTruthy();
 
@@ -338,10 +342,11 @@ describe("IgLinearBar UI Logic", function() {
     });
 
    it("accepts striped as normal attr", () => {
-        const fixture = TestBed.createComponent(linearBar);
+        const fixture = TestBed.createComponent(LinearBar);
         fixture.detectChanges();
 
-        const progressElem = fixture.componentInstance.linerBar.elementRef.nativeElement.getElementsByClassName("progress-linear")[0];
+        const progressElem = fixture.componentInstance.linerBar.elementRef.nativeElement
+                                    .getElementsByClassName("progress-linear")[0];
 
         expect(progressElem.classList.contains("progress-linear--striped")).toBeFalsy();
 
@@ -352,11 +357,13 @@ describe("IgLinearBar UI Logic", function() {
     });
 
    it("should stay striped when the type changes", () => {
-        const fixture = TestBed.createComponent(linearBar);
+        const fixture = TestBed.createComponent(LinearBar);
         fixture.detectChanges();
 
-        const progressElem = fixture.componentInstance.linerBar.elementRef.nativeElement.getElementsByClassName("progress-linear")[0];
-        const progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement.querySelectorAll('[class*="progress-linear__bar--"]')[0];
+        const progressElem = fixture.componentInstance.linerBar.elementRef.nativeElement
+                                    .getElementsByClassName("progress-linear")[0];
+        const progressBarElem = fixture.componentInstance.linerBar.elementRef.nativeElement
+                                    .querySelectorAll('[class*="progress-linear__bar--"]')[0];
 
         fixture.componentInstance.striped = true;
         fixture.detectChanges();
@@ -372,7 +379,7 @@ describe("IgLinearBar UI Logic", function() {
     });
 });
 
-describe("IgCircularBar UI Logic", function() {
+describe("IgCircularBar UI Logic", () => {
    beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -392,7 +399,8 @@ describe("IgCircularBar UI Logic", function() {
         fixture.componentInstance.value = expectedValue;
         fixture.detectChanges();
 
-        const progressBarElem = fixture.componentInstance.circularBar.elementRef.nativeElement.getElementsByClassName("progress-circular")[0];
+        const progressBarElem = fixture.componentInstance.circularBar.elementRef.nativeElement
+                                    .getElementsByClassName("progress-circular")[0];
 
         expect(progressBarElem.attributes["aria-valuenow"].textContent).toBe(expectedValue.toString());
         expect(progressBarElem.attributes["aria-valuemax"].textContent).toBe("100");
@@ -408,7 +416,8 @@ describe("IgCircularBar UI Logic", function() {
 
         fixture.detectChanges();
 
-        const progressBarElem = fixture.componentInstance.circularBar.elementRef.nativeElement.getElementsByClassName("progress-circular")[0];
+        const progressBarElem = fixture.componentInstance.circularBar.elementRef.nativeElement
+                                    .getElementsByClassName("progress-circular")[0];
 
         expect(progressBarElem.attributes["aria-valuenow"].textContent).toBe(expectedValue.toString());
         expect(progressBarElem.attributes["aria-valuemax"].textContent).toBe("100");
@@ -426,7 +435,8 @@ describe("IgCircularBar UI Logic", function() {
         const fixture = TestBed.createComponent(SetValueAboveValuesCircularBar);
         fixture.detectChanges();
 
-        const progressBarElem = fixture.componentInstance.circularBar.elementRef.nativeElement.getElementsByClassName("progress-circular")[0];
+        const progressBarElem = fixture.componentInstance.circularBar.elementRef.nativeElement
+                                    .getElementsByClassName("progress-circular")[0];
 
         expect(progressBarElem.attributes["aria-valuenow"].textContent).toBe("150");
         expect(progressBarElem.attributes["aria-valuemax"].textContent).toBe("150");
@@ -437,65 +447,65 @@ describe("IgCircularBar UI Logic", function() {
 });
 
 @Component({ template: `<igx-linear-bar></igx-linear-bar>` })
-class InitLinearProgressBar{
-    @ViewChild(IgxLinearProgressBar) linearBar: IgxLinearProgressBar;
+class InitLinearProgressBar {
+    @ViewChild(IgxLinearProgressBar) public linearBar: IgxLinearProgressBar;
 }
 
 @Component({ template: `<igx-circular-bar></igx-circular-bar>` })
-class InitCircularProgressBar{
-    @ViewChild(IgxCircularProgressBar) circularBar: IgxCircularProgressBar;
+class InitCircularProgressBar {
+    @ViewChild(IgxCircularProgressBar) public circularBar: IgxCircularProgressBar;
 }
 
 @Component({ template: `<div #wrapper>
                             <igx-linear-bar #linearBar [value]="value" [max]="max" [type]="type" [striped]="striped">
                             </igx-linear-bar>
                         </div>` })
-class linearBar{
-    @ViewChild(IgxLinearProgressBar) progressbar: IgxLinearProgressBar;
-    @ViewChild("wrapper") wrapper;
-    @ViewChild("linearBar") linerBar;
+class LinearBar {
+    @ViewChild(IgxLinearProgressBar) public progressbar: IgxLinearProgressBar;
+    @ViewChild("wrapper") public wrapper;
+    @ViewChild("linearBar") public linerBar;
 
-    value: number = 30;
-    max: number = 100;
-    type: string = "default";
-    striped: boolean = false;
+    public value: number = 30;
+    public max: number = 100;
+    public type: string = "default";
+    public striped: boolean = false;
 }
 
 @Component({ template: `<div #wrapper>
                             <igx-linear-bar #linearBar [value]="value" [max]="max">
                             </igx-linear-bar>
                         </div>` })
-class SetValueAboveValuesLinearBar{
-    @ViewChild(IgxLinearProgressBar) progressbar: IgxLinearProgressBar;
-    @ViewChild("wrapper") wrapper;
-    @ViewChild("linearBar") linerBar;
+class SetValueAboveValuesLinearBar {
+    @ViewChild(IgxLinearProgressBar) public progressbar: IgxLinearProgressBar;
+    @ViewChild("wrapper") public wrapper;
+    @ViewChild("linearBar") public linerBar;
 
-    value: number = 150;
-    max: number = 150;
+    public value: number = 150;
+    public max: number = 150;
 }
 
 @Component({ template: `<div #wrapper>
                             <igx-circular-bar #circularBar [value]="value" [max]="max">
                             </igx-circular-bar>
                         </div>` })
-class CircularBar{
-    @ViewChild(IgxCircularProgressBar) progressbar: IgxCircularProgressBar;
-    @ViewChild("wrapper") wrapper;
-    @ViewChild("circularBar") circularBar;
+class CircularBar {
+    @ViewChild(IgxCircularProgressBar) public progressbar: IgxCircularProgressBar;
+    @ViewChild("wrapper") public wrapper;
+    @ViewChild("circularBar") public circularBar;
 
-    value: number = 30;
-    max: number = 100;
+    public value: number = 30;
+    public max: number = 100;
 }
 
 @Component({ template: `<div #wrapper>
                             <igx-circular-bar #circularBar [value]="value" [max]="max">
                             </igx-circular-bar>
                         </div>` })
-class SetValueAboveValuesCircularBar{
-    @ViewChild(IgxCircularProgressBar) progressbar: IgxCircularProgressBar;
-    @ViewChild("wrapper") wrapper;
-    @ViewChild("circularBar") circularBar;
+class SetValueAboveValuesCircularBar {
+    @ViewChild(IgxCircularProgressBar) public progressbar: IgxCircularProgressBar;
+    @ViewChild("wrapper") public wrapper;
+    @ViewChild("circularBar") public circularBar;
 
-    value: number = 150;
-    max: number = 150;
+    public value: number = 150;
+    public max: number = 150;
 }
