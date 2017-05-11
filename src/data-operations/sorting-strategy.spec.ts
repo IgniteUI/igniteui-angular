@@ -10,9 +10,9 @@ import { DataGenerator } from "./test-util/data-generator";
 import { SortingDirection, SortingStrategy } from "../main";
 
 describe("Unit testing SortingStrategy", () => {
-    let dataGenerator: DataGenerator,
-        data: Object[],
-        strategy: SortingStrategy;
+    let dataGenerator: DataGenerator;
+    let data: object[];
+    let strategy: SortingStrategy;
     beforeEach(() => {
         dataGenerator = new DataGenerator();
         data = dataGenerator.data;
