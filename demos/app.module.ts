@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule } from "@angular/forms";
 import { AppComponent } from "./app.component";
 import { SwitchSampleComponent } from "./switch/switchsample.component";
@@ -24,6 +25,7 @@ import { IgxComponentsModule, IgxDirectivesModule } from "igniteui-js-blocks/mai
 @NgModule({
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         FormsModule,
         IgxComponentsModule,
         IgxDirectivesModule,
