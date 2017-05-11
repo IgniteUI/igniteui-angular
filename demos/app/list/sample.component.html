@@ -12,7 +12,7 @@
         </p>
     </div>
     <section class="sample-content">
-        <article>
+        <article class="sample-column">
             <h4 class="sample-title">Declarative filtered list</h4>
             <igx-switch [checked]="true" #checkbox>Filter</igx-switch>
             <div class="igx-form-group">
@@ -38,7 +38,7 @@
             </div>
         </article>
 
-        <article>
+        <article class="sample-column">
             <h4 class="sample-title">Data source filtered list</h4>
             <div class="igx-form-group">
                 <input class="igx-form-group__input--search" placeholder="Search Contacts" [(ngModel)]="search1" />
@@ -63,7 +63,7 @@
             </div>
         </article>
 
-        <article>
+        <article class="sample-column">
             <h4 class="sample-title">Non-header List with options</h4>
             <div class="list-sample">
                 <igx-list [allowRightPanning]="true" [allowLeftPanning]="true" (onLeftPan)="onLeftPan($event)" (onRightPan)="onRightPan($event)"
@@ -83,7 +83,7 @@
             </div>
         </article>
 
-        <article>
+        <article class="sample-column">
             <h4 class="sample-title">Empty list <i class="light">w/ Default template</i></h4>
             <div class="igx-form-group" [hidden]="fruits.length === 0">
                 <input #searchFruits class="igx-form-group__input--search" placeholder="Search List" [(ngModel)]="fruitsSearch" />
@@ -120,7 +120,7 @@
             </div>
         </article>
 
-        <article>
+        <article class="sample-column">
             <h4 class="sample-title">Empty list <i class="light">w/ Custom template</i></h4>
             <div class="list-sample">
                 <igx-list hasNoItemsTemplate="true">

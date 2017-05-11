@@ -1,13 +1,10 @@
-.sample-content {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-}
-
 .circular-samples {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    display: flex;
+    justify-content: space-between;
 }
 
 .circular-container {
+    display: flex;
     width: 84px;
     height: 84px;
     padding: 16px;

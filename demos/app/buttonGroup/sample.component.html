@@ -14,7 +14,7 @@
 
     <section class="sample-content">
 
-        <article class="sample">
+        <article class="sample-column">
             <h4 class="sample-title">Exclusive Selection <i class="light">Horizontal</i></h4>
             <igx-buttongroup [multiSelection]="!multi" [values]="alignOptions" (onUnselect)="onSelect($event)" (onSelect)="onSelect($event)">
             </igx-buttongroup>
@@ -22,32 +22,32 @@
         </article>
 
 
-        <article class="sample">
+        <article class="sample-column">
             <h4 class="sample-title">Multiple Selection <i class="light">Horizontal</i></h4>
             <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="false">
             </igx-buttongroup>
         </article>
 
-        <article class="sample">
+        <article class="sample-column">
             <h4 class="sample-title">Multiple Selection <i class="light">Horizontal Disabled</i></h4>
             <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="true">
             </igx-buttongroup>
         </article>
 
-        <article class="sample">
+        <article class="sample-column">
             <h4 class="sample-title">Exclusive Selection <i class="light">Vertical</i></h4>
             <igx-buttongroup [multiSelection]="false" [values]="cities" [alignment]="alignment">
             </igx-buttongroup>
         </article>
 
-        <article class="sample">
+        <article class="sample-column">
             <h4 class="sample-title">Mutliple Selection <i class="light">Vertical</i></h4>
             <igx-buttongroup [multiSelection]="true" [values]="borders" [alignment]="alignment">
             </igx-buttongroup>
         </article>
 
         
-        <article class="sample">
+        <article class="sample-column">
             <h4 class="sample-title">Custom class to style the content</h4>
             <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="false" itemContentCssClass="customContentStyle">
             </igx-buttongroup>

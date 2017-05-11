@@ -27,13 +27,22 @@
 }
 
 .sample-content {
-    display: grid;
-    grid-gap: 48px 144px;
+    display: flex;
+    flex-flow: row wrap;
     padding: 80px 40px;
     overflow: hidden;
     -webkit-animation: fade-in .3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
     -moz-animation: fade-in .3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
     animation: fade-in .3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+
+.sample-column {
+    display: flex;
+    flex-flow: column nowrap;
+    flex: 1 0 25%;
+    align-content: flex-start;
+    margin: 16px 36px;
+    min-width: 300px;
 }
 
 .sample-title {
