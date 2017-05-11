@@ -1,6 +1,6 @@
-import { Component, NgModule, Input, EventEmitter, Output } from "@angular/core";
+import { animate, state, style, transition, trigger } from "@angular/animations";
 import { CommonModule } from "@angular/common";
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import { Component, EventEmitter, Input, NgModule, Output } from "@angular/core";
 
 /**
  * IgxToast provides information and warning messages. They could not be dismissed, are non-interactive and can appear
@@ -11,26 +11,26 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
  * ```
  */
 @Component({
-    selector: "igx-toast",
-    moduleId: module.id,
-    templateUrl: "toast.component.html",
     animations: [
-        trigger('animate', [
-            state('show', style({
+        trigger("animate", [
+            state("show", style({
                 opacity: 1
             })),
-            transition('* => show', animate('.20s ease')),
-            transition('show => *', animate('.40s ease-out'))
+            transition("* => show", animate(".20s ease")),
+            transition("show => *", animate(".40s ease-out"))
         ])
     ],
     host: {
         role: "alert"
-    }
+    },
+    moduleId: module.id,
+    selector: "igx-toast",
+    templateUrl: "toast.component.html"
 })
 export class IgxToast {
     public readonly CSS_CLASSES = {
-        IGX_TOAST_MIDDLE: "igx-toast--middle",
         IGX_TOAST_BOTTOM: "igx-toast--bottom",
+        IGX_TOAST_MIDDLE: "igx-toast--middle",
         IGX_TOAST_TOP: "igx-toast--top"
     };
 
@@ -61,7 +61,6 @@ export class IgxToast {
      */
     @Output()
     public onHidden = new EventEmitter();
-
 
     /**
      * Sets if the IgxToast component will be hidden after shown
@@ -134,15 +133,15 @@ export class IgxToast {
     }
 
     private mapPositionToClassName(): any {
-        if (this.position == IgxToastPosition.Top) {
+        if (this.position === IgxToastPosition.Top) {
             return this.CSS_CLASSES.IGX_TOAST_TOP;
         }
 
-        if (this.position == IgxToastPosition.Middle) {
+        if (this.position === IgxToastPosition.Middle) {
             return this.CSS_CLASSES.IGX_TOAST_MIDDLE;
         }
 
-        if (this.position == IgxToastPosition.Bottom) {
+        if (this.position === IgxToastPosition.Bottom) {
             return this.CSS_CLASSES.IGX_TOAST_BOTTOM;
         }
     }
@@ -162,8 +161,8 @@ export enum IgxToastPosition {
 }
 
 @NgModule({
-    imports: [CommonModule],
     declarations: [IgxToast],
-    exports: [IgxToast]
+    exports: [IgxToast],
+    imports: [CommonModule]
 })
 export class IgxToastModule { }

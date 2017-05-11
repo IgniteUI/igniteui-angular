@@ -1,18 +1,16 @@
+import {Component, ViewChild} from "@angular/core";
 import {
   async,
-  TestBed,
-} from '@angular/core/testing';
-import {Component, ViewChild} from '@angular/core';
-import {By} from '@angular/platform-browser';
-import { HammerGesturesManager } from '../core/touch';
-import {IgxCarousel, IgxSlide, IgxCarouselModule} from './carousel.component';
-
+  TestBed
+} from "@angular/core/testing";
+import {By} from "@angular/platform-browser";
+import { HammerGesturesManager } from "../core/touch";
+import {IgxCarousel, IgxCarouselModule, IgxSlide} from "./carousel.component";
 
 function dispatchEv(element: HTMLElement, eventType: string) {
-    let event = new Event(eventType);
+    const event = new Event(eventType);
     element.dispatchEvent(event);
 }
-
 
 describe("Carousel", function() {
     beforeEach(async(() => {
@@ -23,24 +21,22 @@ describe("Carousel", function() {
         .compileComponents();
     }));
 
-    it('should initialize a carousel with two slides and then destroy it', () => {
-        let fixture = TestBed.createComponent(CarouselTestComponent);
+    it("should initialize a carousel with two slides and then destroy it", () => {
+        const fixture = TestBed.createComponent(CarouselTestComponent);
         fixture.detectChanges();
 
-        let instance = fixture.componentInstance;
-
+        const instance = fixture.componentInstance;
 
         fixture.detectChanges();
         expect(instance.carousel).toBeDefined();
         expect(instance.carousel instanceof IgxCarousel).toBe(true);
         expect(instance.carousel.slides[0] instanceof IgxSlide).toBe(true);
 
-
         expect(instance.carousel.slides instanceof Array).toBe(true);
         expect(instance.carousel.loop).toBe(true);
         expect(instance.carousel.pause).toBe(true);
         expect(instance.carousel.slides.length).toEqual(2);
-        expect(instance.carousel.interval).toEqual(2500)
+        expect(instance.carousel.interval).toEqual(2500);
 
         instance.carousel.ngOnDestroy();
         fixture.detectChanges();
@@ -49,15 +45,15 @@ describe("Carousel", function() {
     });
 
     it("Carousel disabled looping", () => {
-        let fixture = TestBed.createComponent(CarouselTestComponent);
+        const fixture = TestBed.createComponent(CarouselTestComponent);
         fixture.detectChanges();
 
-        let instance = fixture.componentInstance;
+        const instance = fixture.componentInstance;
 
         fixture.detectChanges();
 
-        let lastSlide = instance.carousel.get(1);
-        let firstSlide = instance.carousel.get(0);
+        const lastSlide = instance.carousel.get(1);
+        const firstSlide = instance.carousel.get(0);
 
         instance.carousel.loop = false;
         fixture.detectChanges();
@@ -73,11 +69,11 @@ describe("Carousel", function() {
 
     });
 
-    it('Carousel getter/setter tests', () => {
-        let fixture = TestBed.createComponent(CarouselTestComponent);
+    it("Carousel getter/setter tests", () => {
+        const fixture = TestBed.createComponent(CarouselTestComponent);
         fixture.detectChanges();
 
-        let instance = fixture.componentInstance;
+        const instance = fixture.componentInstance;
 
         fixture.detectChanges();
 
@@ -94,11 +90,11 @@ describe("Carousel", function() {
         expect(instance.carousel.navigation).toBe(false);
     });
 
-    it('Carousel add/remove slides tests', () => {
-        let fixture = TestBed.createComponent(CarouselTestComponent);
+    it("Carousel add/remove slides tests", () => {
+        const fixture = TestBed.createComponent(CarouselTestComponent);
         fixture.detectChanges();
 
-        let instance = fixture.componentInstance;
+        const instance = fixture.componentInstance;
 
         fixture.detectChanges();
 
@@ -122,13 +118,12 @@ describe("Carousel", function() {
     });
 
     it("Carousel public methods", () => {
-        let fixture = TestBed.createComponent(CarouselTestComponent);
+        const fixture = TestBed.createComponent(CarouselTestComponent);
         fixture.detectChanges();
 
-        let instance = fixture.componentInstance;
+        const instance = fixture.componentInstance;
 
         fixture.detectChanges();
-
 
         instance.carousel.stop();
 
@@ -149,80 +144,80 @@ describe("Carousel", function() {
     });
 
     it("Carousel emit events", () => {
-        let fixture = TestBed.createComponent(CarouselTestComponent);
+        const fixture = TestBed.createComponent(CarouselTestComponent);
         fixture.detectChanges();
 
-        let carousel = fixture.componentInstance.carousel;
+        const carousel = fixture.componentInstance.carousel;
 
-        spyOn(carousel.onSlideChanged, 'emit');
+        spyOn(carousel.onSlideChanged, "emit");
         carousel.next();
         fixture.detectChanges();
         expect(carousel.onSlideChanged.emit).toHaveBeenCalledWith(carousel);
 
-        spyOn(carousel.onSlideAdded, 'emit');
+        spyOn(carousel.onSlideAdded, "emit");
         carousel.add(carousel.get(carousel.current));
         fixture.detectChanges();
         expect(carousel.onSlideAdded.emit).toHaveBeenCalledWith(carousel);
 
-        spyOn(carousel.onSlideRemoved, 'emit');
+        spyOn(carousel.onSlideRemoved, "emit");
         carousel.remove(carousel.get(carousel.current));
         fixture.detectChanges();
         expect(carousel.onSlideRemoved.emit).toHaveBeenCalledWith(carousel);
 
-        spyOn(carousel.onCarouselPaused, 'emit');
+        spyOn(carousel.onCarouselPaused, "emit");
         carousel.stop();
         fixture.detectChanges();
         expect(carousel.onCarouselPaused.emit).toHaveBeenCalledWith(carousel);
 
-        spyOn(carousel.onCarouselPlaying, 'emit');
+        spyOn(carousel.onCarouselPlaying, "emit");
         carousel.play();
         fixture.detectChanges();
         expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledWith(carousel);
     });
 
-    it('Carousel click handlers', () => {
-        let fixture = TestBed.createComponent(CarouselTestComponent);
+    it("Carousel click handlers", () => {
+        const fixture = TestBed.createComponent(CarouselTestComponent);
         fixture.detectChanges();
 
         let prevNav, nextNav,
             carousel, carouselNative;
 
-        carouselNative = fixture.componentInstance.carousel.element_ref.nativeElement;
+        carouselNative = fixture.componentInstance.carousel.elementRef.nativeElement;
         carousel = fixture.componentInstance.carousel;
 
-        prevNav = carouselNative.querySelector('a.igx-carousel__arrow--prev');
-        nextNav = carouselNative.querySelector('a.igx-carousel__arrow--next');
+        prevNav = carouselNative.querySelector("a.igx-carousel__arrow--prev");
+        nextNav = carouselNative.querySelector("a.igx-carousel__arrow--next");
 
-        spyOn(carousel, 'prev');
-        dispatchEv(prevNav, 'click');
+        spyOn(carousel, "prev");
+        dispatchEv(prevNav, "click");
         fixture.detectChanges();
         expect(carousel.prev).toHaveBeenCalled();
 
-        spyOn(carousel, 'next');
-        dispatchEv(nextNav, 'click');
+        spyOn(carousel, "next");
+        dispatchEv(nextNav, "click");
         fixture.detectChanges();
         expect(carousel.next).toHaveBeenCalled();
     });
 
-    it('Carousel keyboard handlers', () => {
-        let fixture = TestBed.createComponent(CarouselTestComponent);
+    it("Carousel keyboard handlers", () => {
+        const fixture = TestBed.createComponent(CarouselTestComponent);
         fixture.detectChanges();
 
         let carousel, carouselNative;
 
-        carouselNative = fixture.componentInstance.carousel.element_ref.nativeElement;
+        carouselNative = fixture.componentInstance.carousel.elementRef.nativeElement;
         carousel = fixture.componentInstance.carousel;
 
         carousel.pause = true;
         fixture.detectChanges();
 
-        spyOn(carousel, 'prev');
-        carouselNative.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowLeft'}));
+        spyOn(carousel, "prev");
+        carouselNative.dispatchEvent(new KeyboardEvent("keydown", {key: "ArrowLeft"}));
         fixture.detectChanges();
         expect(carousel.prev).toHaveBeenCalled();
 
-        spyOn(carousel, 'next');
-        carouselNative.dispatchEvent(new KeyboardEvent('keydown', {key: "ArrowRight"}));
+        spyOn(carousel, "next");
+        carouselNative.dispatchEvent(new KeyboardEvent("keydown", {key: "ArrowRight"}));
         fixture.detectChanges();
         expect(carousel.next).toHaveBeenCalled();
     });
@@ -238,7 +233,7 @@ describe("Carousel", function() {
 })
 class CarouselTestComponent {
 
-    @ViewChild('carousel') carousel: IgxCarousel;
+    @ViewChild("carousel") carousel: IgxCarousel;
 
     loop = true;
     pause = true;

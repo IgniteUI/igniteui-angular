@@ -1,17 +1,17 @@
+import { Component, ViewChild } from "@angular/core";
 import {
     async,
     TestBed
 } from "@angular/core/testing";
-import { Component, ViewChild } from "@angular/core";
-import { FormsModule } from '@angular/forms';
+import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { DataGenerator } from "./test-util/data-generator";
 
-import { SortingStrategy, SortingDirection } from "../main";
+import { SortingDirection, SortingStrategy } from "../main";
 
 describe("Unit testing SortingStrategy", () => {
-    var dataGenerator:DataGenerator,
-        data:Object[],
+    let dataGenerator: DataGenerator,
+        data: Object[],
         strategy: SortingStrategy;
     beforeEach(() => {
         dataGenerator = new DataGenerator();
@@ -19,11 +19,11 @@ describe("Unit testing SortingStrategy", () => {
         strategy = new SortingStrategy();
     });
     it("tests `sort`", () => {
-        var res = strategy.sort(data, [
+        const res = strategy.sort(data, [
             {
                 dir: SortingDirection.Asc,
                 fieldName: "boolean"
-            },{
+            }, {
                 dir: SortingDirection.Desc,
                 fieldName: "number"
             }]);
@@ -36,7 +36,7 @@ describe("Unit testing SortingStrategy", () => {
                 strategy.compareValues("bc", "adfc") === 1)
             .toBeTruthy("compare first argument greater than second");
         expect(strategy.compareValues(1, 2) === -1 &&
-                strategy.compareValues("a", "b") === -1 && 
+                strategy.compareValues("a", "b") === -1 &&
                 strategy.compareValues(false, true) === -1)
             .toBeTruthy("compare 0, 1");
         expect(strategy.compareValues(0, 0) === 0 &&
@@ -47,12 +47,12 @@ describe("Unit testing SortingStrategy", () => {
     });
     it("tests default settings", () => {
         strategy = new SortingStrategy();
-        data[4]["string"] = "ROW";
-        var res = strategy.sort(data, [{
+        data[4].string = "ROW";
+        const res = strategy.sort(data, [{
                 dir: SortingDirection.Asc,
                 fieldName: "string"
             }]);
         expect(dataGenerator.getValuesForColumn(res, "number"))
                     .toEqual([4, 0, 1, 2, 3]);
-    })
+    });
 });

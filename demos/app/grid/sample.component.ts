@@ -1,20 +1,19 @@
-import { IgxColumnComponent } from "../../../src/grid/column.component";
-import { Http } from "@angular/http";
 import { Component, Injectable, ViewChild } from "@angular/core";
+import { Http } from "@angular/http";
 import { BehaviorSubject, Observable } from "rxjs/Rx";
+import { IgxColumnComponent } from "../../../src/grid/column.component";
 
 import { IgxGridBindingBehavior, IgxGridColumnInitEvent, IgxGridComponent } from "../../../src/grid/grid.component";
 import {
     DataContainer,
-    DataState,
+    IDataState,
     IgxSnackbar,
     IgxToast,
+    IPagingState,
     PagingError,
-    PagingState,
     SortingDirection,
     StableSortingStrategy
 } from "../../../src/main";
-
 
 @Injectable()
 export class LocalService {
@@ -31,8 +30,8 @@ export class LocalService {
 
     getData() {
       return this.http.get(this.url)
-        .map(response => response.json())
-        .subscribe(data => {
+        .map((response) => response.json())
+        .subscribe((data) => {
           this.dataStore = data.value;
           this._records.next(this.dataStore);
         });
@@ -54,33 +53,33 @@ export class RemoteService {
   private buildUrl(dataState: DataState): string {
     let qS: string = "";
     if (dataState && dataState.paging) {
-            let skip = dataState.paging.index * dataState.paging.recordsPerPage;
-            let top = dataState.paging.recordsPerPage;
+            const skip = dataState.paging.index * dataState.paging.recordsPerPage;
+            const top = dataState.paging.recordsPerPage;
             qS += `$skip=${skip}&$top=${top}&$count=true`;
         }
     if (dataState && dataState.sorting) {
-        let s = dataState.sorting;
+        const s = dataState.sorting;
         if (s && s.expressions && s.expressions.length) {
             qS += (qS ? "&" : "") + "$orderby=";
             s.expressions.forEach((e, ind) => {
                 qS += ind ? "," : "";
-                qS += `${e.fieldName} ${e.dir === SortingDirection.Asc?"asc":"desc"}`;
+                qS += `${e.fieldName} ${e.dir === SortingDirection.Asc ? "asc" : "desc"}`;
             });
         }
     }
-    qS = qS ? `?${qS}`: "";
+    qS = qS ? `?${qS}` : "";
     return `${this.url}${qS}`;
   }
 
   public getData(dataState?: DataState, cb?: Function): any {
     return this.http
       .get(this.buildUrl(dataState))
-      .map(response => response.json())
-      .map(response => {
+      .map((response) => response.json())
+      .map((response) => {
         if (dataState) {
-          let p: PagingState = dataState.paging;
+          const p: PagingState = dataState.paging;
           if (p) {
-            let countRecs: number = response["@odata.count"];
+            const countRecs: number = response["@odata.count"];
             p.metadata = {
               countRecords: countRecs,
               countPages: Math.ceil(countRecs / p.recordsPerPage),
@@ -93,12 +92,11 @@ export class RemoteService {
         }
         return response;
       })
-      .subscribe(data => {
+      .subscribe((data) => {
         this._remoteData.next(data.value);
       });
   }
 }
-
 
 @Component({
     providers: [LocalService, RemoteService],
@@ -133,7 +131,7 @@ export class GridSampleComponent {
           {ID: 2, Name: "B"},
           {ID: 3, Name: "C"},
           {ID: 4, Name: "D"},
-          {ID: 5, Name: "E"},
+          {ID: 5, Name: "E"}
         ];
 
       this.grid2.state = {
@@ -185,7 +183,7 @@ export class GridSampleComponent {
     }
 
     initColumns(event: IgxGridColumnInitEvent) {
-      let column: IgxColumnComponent = event.column;
+      const column: IgxColumnComponent = event.column;
       if (column.field === "Name") {
         column.filtering = true;
         column.sortable = true;
@@ -197,8 +195,8 @@ export class GridSampleComponent {
       if (!this.grid2.paging) {
         return;
       }
-      let total = this.grid2.data.length;
-      let state = this.grid2.state;
+      const total = this.grid2.data.length;
+      const state = this.grid2.state;
       if ((state.paging.recordsPerPage * event) >= total) {
         return;
       }
@@ -209,8 +207,8 @@ export class GridSampleComponent {
       if (!this.grid2.paging) {
         return;
       }
-      let total = this.grid2.data.length;
-      let state = this.grid2.state;
+      const total = this.grid2.data.length;
+      const state = this.grid2.state;
       if ((state.paging.index * event) >= total) {
         return;
       }
@@ -228,7 +226,7 @@ export class GridSampleComponent {
         this.newRecord = "";
         return;
       }
-      let record = {ID: this.grid1.data[this.grid1.data.length - 1].ID + 1, Name: this.newRecord};
+      const record = {ID: this.grid1.data[this.grid1.data.length - 1].ID + 1, Name: this.newRecord};
       this.grid1.addRow(record);
       this.newRecord = "";
     }

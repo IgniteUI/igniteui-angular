@@ -1,8 +1,8 @@
 import { NgModule } from "@angular/core";
 
-import { IgxNavbarModule } from "../../../src/main"
+import { IgxNavbarModule } from "../../../src/main";
 import { IgxIconModule } from "../../../src/main";
-import { NavbarSampleComponent } from './sample.component';
+import { NavbarSampleComponent } from "./sample.component";
 
 @NgModule({
     imports: [

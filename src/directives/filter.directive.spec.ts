@@ -1,11 +1,11 @@
-import { async, TestBed, ComponentFixtureAutoDetect } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { HammerGesturesManager } from '../core/touch';
-import { IgxList, IgxListItem, IgxListModule } from '../list/list.component';
-import { IgxFilterDirective, IgxFilterPipe, IgxFilterOptions, IgxFilterModule } from './filter.directive';
-import { Component, ViewChild, ContentChildren } from '@angular/core';
+import { Component, ContentChildren, ViewChild } from "@angular/core";
+import { async, ComponentFixtureAutoDetect, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
+import { HammerGesturesManager } from "../core/touch";
+import { IgxList, IgxListItem, IgxListModule } from "../list/list.component";
+import { IgxFilterDirective, IgxFilterModule, IgxFilterOptions, IgxFilterPipe } from "./filter.directive";
 
-describe("Filter", function () {
+describe("Filter", function() {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [IgxFilterModule, IgxListModule],
@@ -17,44 +17,44 @@ describe("Filter", function () {
             .compileComponents();
     }));
 
-    it('should filter declaratively created list', () => {
+    it("should filter declaratively created list", () => {
         let fixture = TestBed.createComponent(DeclarativeListTestComponent),
             items, visibleItems,
             list = fixture.componentInstance.list;
 
-            fixture.detectChanges();
-            expect(list.items.length).toBe(3);
-            items = list.items;
+        fixture.detectChanges();
+        expect(list.items.length).toBe(3);
+        items = list.items;
 
-            for (let item of items) {
+        for (const item of items) {
                 expect(item instanceof IgxListItem).toBeTruthy();
             }
 
-            visibleItems = items.filter((listItem) => { return !listItem.hidden; });
-            expect(visibleItems.length).toBe(3);
+        visibleItems = items.filter((listItem) => !listItem.hidden);
+        expect(visibleItems.length).toBe(3);
 
-            fixture.componentInstance.filterValue = "1";
-            fixture.detectChanges();
+        fixture.componentInstance.filterValue = "1";
+        fixture.detectChanges();
 
-            visibleItems = items.filter((listItem) => { return !listItem.hidden; });
-            expect(visibleItems.length).toBe(1);
-            expect(visibleItems[0] instanceof IgxListItem).toBeTruthy();
+        visibleItems = items.filter((listItem) => !listItem.hidden);
+        expect(visibleItems.length).toBe(1);
+        expect(visibleItems[0] instanceof IgxListItem).toBeTruthy();
 
-            fixture.componentInstance.filterValue = "";
-            fixture.detectChanges();
+        fixture.componentInstance.filterValue = "";
+        fixture.detectChanges();
 
-            visibleItems = items.filter((listItem) => { return !listItem.hidden; });
-            expect(visibleItems.length).toBe(3);
+        visibleItems = items.filter((listItem) => !listItem.hidden);
+        expect(visibleItems.length).toBe(3);
     });
 
-    it('should filter dynamically created list', () => {
-        let fixture = TestBed.createComponent(DynamicListTestComponent),
+    it("should filter dynamically created list", () => {
+        const fixture = TestBed.createComponent(DynamicListTestComponent),
             list = fixture.componentInstance.list;
 
         fixture.detectChanges();
         expect(list.items.length).toBe(4);
 
-        for (let item of list.items) {
+        for (const item of list.items) {
             expect(item instanceof IgxListItem).toBeTruthy();
         }
 
@@ -72,14 +72,14 @@ describe("Filter", function () {
         expect(list.items.length).toBe(4);
     });
 
-    it('should emit filter events on declaratively created list', () => {
+    it("should emit filter events on declaratively created list", () => {
         let visibleItems,
             fixture = TestBed.createComponent(DeclarativeListTestComponent),
             list = fixture.componentInstance.list,
             logInput = fixture.componentInstance.logInput;
 
         fixture.detectChanges();
-        visibleItems = list.items.filter((listItem) => { return !(<IgxListItem>listItem).hidden; });
+        visibleItems = list.items.filter((listItem) => !(listItem as IgxListItem).hidden);
         expect(list.items.length).toBe(3);
         expect(visibleItems.length).toBe(3);
 
@@ -89,32 +89,32 @@ describe("Filter", function () {
         fixture.componentInstance.filterValue = "2";
         fixture.detectChanges();
 
-        visibleItems = list.items.filter((listItem) => { return !(<IgxListItem>listItem).hidden; });
+        visibleItems = list.items.filter((listItem) => !(listItem as IgxListItem).hidden);
         expect(visibleItems.length).toBe(1);
 
         expect(logInput.nativeElement.value).toBe("filtering;filtered;");
         expect(fixture.componentInstance.filteringArgs).toBeDefined();
-        expect(fixture.componentInstance.filteringArgs["cancel"]).toBeDefined();
-        expect(fixture.componentInstance.filteringArgs["cancel"]).toBeFalsy();
-        expect(fixture.componentInstance.filteringArgs["items"]).toBeDefined();
-        expect(fixture.componentInstance.filteringArgs["items"] instanceof Array).toBeTruthy();
-        expect(fixture.componentInstance.filteringArgs["items"].length).toBe(3);
+        expect(fixture.componentInstance.filteringArgs.cancel).toBeDefined();
+        expect(fixture.componentInstance.filteringArgs.cancel).toBeFalsy();
+        expect(fixture.componentInstance.filteringArgs.items).toBeDefined();
+        expect(fixture.componentInstance.filteringArgs.items instanceof Array).toBeTruthy();
+        expect(fixture.componentInstance.filteringArgs.items.length).toBe(3);
 
         expect(fixture.componentInstance.filteredArgs).toBeDefined();
-        expect(fixture.componentInstance.filteredArgs["filteredItems"]).toBeDefined();
-        expect(fixture.componentInstance.filteredArgs["filteredItems"] instanceof Array).toBeTruthy();
-        expect(fixture.componentInstance.filteredArgs["filteredItems"].length).toBe(1);
-        expect(fixture.componentInstance.filteredArgs["filteredItems"][0]).toBe(visibleItems[0]);
+        expect(fixture.componentInstance.filteredArgs.filteredItems).toBeDefined();
+        expect(fixture.componentInstance.filteredArgs.filteredItems instanceof Array).toBeTruthy();
+        expect(fixture.componentInstance.filteredArgs.filteredItems.length).toBe(1);
+        expect(fixture.componentInstance.filteredArgs.filteredItems[0]).toBe(visibleItems[0]);
     });
 
-    it('should cancel filtering on declaratively created list', () => {
+    it("should cancel filtering on declaratively created list", () => {
         let visibleItems,
             fixture = TestBed.createComponent(DeclarativeListTestComponent),
             list = fixture.componentInstance.list,
             logInput = fixture.componentInstance.logInput;
 
         fixture.detectChanges();
-        visibleItems = list.items.filter((listItem) => { return !(<IgxListItem>listItem).hidden; });
+        visibleItems = list.items.filter((listItem) => !(listItem as IgxListItem).hidden);
         expect(list.items.length).toBe(3);
         expect(visibleItems.length).toBe(3);
 
@@ -125,16 +125,16 @@ describe("Filter", function () {
         fixture.componentInstance.filterValue = "2";
         fixture.detectChanges();
 
-        visibleItems = list.items.filter((listItem) => { return !(<IgxListItem>listItem).hidden; });
+        visibleItems = list.items.filter((listItem) => !(listItem as IgxListItem).hidden);
         expect(visibleItems.length).toBe(3);
 
         expect(logInput.nativeElement.value).toBe("filtering;");
         expect(fixture.componentInstance.filteringArgs).toBeDefined();
-        expect(fixture.componentInstance.filteringArgs["cancel"]).toBeDefined();
-        expect(fixture.componentInstance.filteringArgs["cancel"]).toBeTruthy();
-        expect(fixture.componentInstance.filteringArgs["items"]).toBeDefined();
-        expect(fixture.componentInstance.filteringArgs["items"] instanceof Array).toBeTruthy();
-        expect(fixture.componentInstance.filteringArgs["items"].length).toBe(3);
+        expect(fixture.componentInstance.filteringArgs.cancel).toBeDefined();
+        expect(fixture.componentInstance.filteringArgs.cancel).toBeTruthy();
+        expect(fixture.componentInstance.filteringArgs.items).toBeDefined();
+        expect(fixture.componentInstance.filteringArgs.items instanceof Array).toBeTruthy();
+        expect(fixture.componentInstance.filteringArgs.items.length).toBe(3);
 
         expect(fixture.componentInstance.filteredArgs).toBeUndefined();
     });
@@ -159,23 +159,23 @@ class DeclarativeListTestComponent {
     @ViewChild("logInput") logInput: any;
 
     get fo() {
-        var options = new IgxFilterOptions();
+        const options = new IgxFilterOptions();
         options.items = this.list.items;
         options.inputValue = this.filterValue;
 
         return options;
     }
 
-    filteringHandler = function (args) {
+    filteringHandler = function(args) {
         args.cancel = this.isCanceled;
         this.logInput.nativeElement.value += "filtering;";
         this.filteringArgs = args;
-    }
+    };
 
-    filteredHandler = function (args) {
+    filteredHandler = function(args) {
         this.logInput.nativeElement.value += "filtered;";
         this.filteredArgs = args;
-    }
+    };
 }
 
 @Component({
@@ -191,7 +191,7 @@ class DynamicListTestComponent {
 
     @ViewChild(IgxList) list: IgxList;
 
-    protected dataSourceItems: Array<Object> = [
+    protected dataSourceItems: Object[] = [
         { key: "1", text: "Nav1" },
         { key: "2", text: "Nav2" },
         { key: "3", text: "Nav3" },
@@ -199,7 +199,7 @@ class DynamicListTestComponent {
     ];
 
     get fo() {
-        var options = new IgxFilterOptions();
+        const options = new IgxFilterOptions();
         options.inputValue = this.filterValue;
         options.key = "text";
         return options;

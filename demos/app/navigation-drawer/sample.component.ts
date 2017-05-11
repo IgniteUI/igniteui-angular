@@ -1,9 +1,9 @@
 import { Component, ViewChild, ViewEncapsulation } from "@angular/core";
-import { NavigationDrawerModule, NavigationDrawer, NavigationService } from "../../../src/main";
+import { NavigationDrawer, NavigationDrawerModule, NavigationService } from "../../../src/main";
 
 @Component({
     moduleId: module.id, // commonJS standard
-    selector: 'nav-sample',
+    selector: "nav-sample",
     styleUrls: ["sample.css"],
     template: `
         <router-outlet></router-outlet>
@@ -19,12 +19,12 @@ export class NavDrawerSampleComponent {}
     templateUrl: "main.html"
 })
 export class MainDrawerSampleComponent {
-    navItems: Array<Object> = [{
+    navItems: Object[] = [{
         text: "Default sample", link: "/navigation-drawer"
-    },{
-        // router seems pretty confused how relative works.. "./pin" would generate "/navigation-drawer/mini/pin" under the "/navigation-drawer/mini" sample... 
+    }, {
+        // router seems pretty confused how relative works.. "./pin" would generate "/navigation-drawer/mini/pin" under the "/navigation-drawer/mini" sample...
         text: "Pin sample", link: "/navigation-drawer/pin"
-    },{
+    }, {
         text: "Mini sample", link: "/navigation-drawer/mini"
     }];
 
@@ -35,7 +35,7 @@ export class MainDrawerSampleComponent {
     drawerWidth = "";
     drawerMiniWidth = "";
     @ViewChild(NavigationDrawer) viewChild: NavigationDrawer;
-    
+
     /** Sample-specific configurations: */
     miniTemplate: boolean = false;
     showGestureToggle: boolean = true;
@@ -44,19 +44,19 @@ export class MainDrawerSampleComponent {
     showMiniWidth: boolean = false;
     showEventLog: boolean = true;
     showToggle: boolean = true;
-    log: Array<string> = new Array<string>();
-    
+    log: string[] = new Array<string>();
+
     logEvent(event) {
         this.log.push(event);
-        if(event === "closing") {
+        if (event === "closing") {
             // this will cause change detection, potentially run outside of angular
             this.open = false;
         }
-        if(event === "opening") {
+        if (event === "opening") {
             this.open = true;
         }
     }
-    testToggle () {
+    testToggle() {
         this.viewChild.toggle().then( (value) => {
             this.logEvent("API call resolved: " + value);
         });
@@ -76,7 +76,7 @@ export class PinNavDrawerSampleComponent extends MainDrawerSampleComponent {
         super();
         this.open = true;
         this.pin = true;
-        
+
         //sample config
         this.showPinToggle = true;
         this.showPositions = false;
@@ -95,7 +95,7 @@ export class PinNavDrawerSampleComponent extends MainDrawerSampleComponent {
 export class MiniNavDrawerSampleComponent extends MainDrawerSampleComponent {
     constructor() {
         super();
-        
+
         //sample config
         this.showMiniWidth = true;
         this.miniTemplate = true;

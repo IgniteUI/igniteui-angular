@@ -11,7 +11,9 @@
         "watch": "gulp watch",
         "lite": "lite-server",
         "test-dev": "concurrently \"npm run watch\" \"karma start karma.conf.js\"",
-        "test": "karma start karma.conf.js --single-run"
+        "test": "karma start karma.conf.js --single-run",
+		"lint": "tslint src/**/*.ts -e 'src/**/*.spec.ts'",
+		"lint-dev": "tslint src/**/*.ts -e 'src/**/*.spec.ts' --fix"
     },
     "dependencies": {
         "@angular/animations": "^4.0.0",
@@ -35,6 +37,7 @@
         "lite-server": "^2.3.0",
         "typescript": "^2.2.2",
         "hammer-simulator": "git+https://github.com/hammerjs/simulator.git",
+		"tslint": "^5.1.0",
 
         "del": "^2.2.2",
         "gulp": "^3.9.1",

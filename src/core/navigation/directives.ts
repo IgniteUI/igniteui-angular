@@ -1,10 +1,10 @@
-import {Directive, HostListener, Input} from '@angular/core';
-import {NavigationService} from './nav-service';
+import {Directive, HostListener, Input} from "@angular/core";
+import {NavigationService} from "./nav-service";
 
 // TODO: (style) NavToggleDirective, igNavToggle selector ?
-@Directive({ selector: '[igxNavToggle]' })
+@Directive({ selector: "[igxNavToggle]" })
 export class NavigationToggle {
-    state: NavigationService;
+    public state: NavigationService;
 
     @Input("igxNavToggle") private target;
 
@@ -12,15 +12,15 @@ export class NavigationToggle {
         this.state = nav;
     }
 
-    @HostListener('click') toggleNavigationDrawer () {
+    @HostListener("click") public toggleNavigationDrawer() {
         this.state.toggle(this.target, true);
     }
 }
 
 // TODO: (style) NavCloseDirective, igNavClose selector ?
-@Directive({ selector: '[igxNavClose]' })
+@Directive({ selector: "[igxNavClose]" })
 export class NavigationClose {
-    state: NavigationService;
+    public state: NavigationService;
 
     @Input("igxNavClose") private target;
 
@@ -28,7 +28,7 @@ export class NavigationClose {
         this.state = nav;
     }
 
-    @HostListener('click') closeNavigationDrawer () {
+    @HostListener("click") public closeNavigationDrawer() {
         this.state.close(this.target, true);
     }
 }

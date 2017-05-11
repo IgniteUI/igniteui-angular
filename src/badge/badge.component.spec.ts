@@ -1,13 +1,12 @@
+import { Component, ViewChild } from "@angular/core";
 import {
     async,
     TestBed
-} from '@angular/core/testing';
-import { Component, ViewChild } from '@angular/core';
-import { By } from '@angular/platform-browser';
-import { IgxBadgeModule, IgxBadge } from './badge.component';
+} from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
+import { IgxBadge, IgxBadgeModule } from "./badge.component";
 
-
-describe('Badge', function () {
+describe("Badge", function() {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -21,10 +20,10 @@ describe('Badge', function () {
             .compileComponents();
     }));
 
-    it('Initializes badge ', () => {
-        let fixture = TestBed.createComponent(InitBadge);
+    it("Initializes badge ", () => {
+        const fixture = TestBed.createComponent(InitBadge);
         fixture.detectChanges();
-        let badge = fixture.componentInstance.badge;
+        const badge = fixture.componentInstance.badge;
 
         expect(badge.value).toBeTruthy();
         expect(badge.type).toBeTruthy();
@@ -32,21 +31,21 @@ describe('Badge', function () {
         expect(fixture.elementRef.nativeElement.getElementsByClassName("igx-badge__circle")[0].textContent == 22).toBeTruthy();
     });
 
-    it('Initializes badge defaults', () => {
-        let fixture = TestBed.createComponent(InitBadgeWithDefaults);
+    it("Initializes badge defaults", () => {
+        const fixture = TestBed.createComponent(InitBadgeWithDefaults);
         fixture.detectChanges();
-        let badge = fixture.componentInstance.badge;
+        const badge = fixture.componentInstance.badge;
 
         expect(fixture.elementRef.nativeElement.getElementsByTagName("div")[0].classList.contains("igx-badge--top-right")).toBeTruthy();
         expect(fixture.elementRef.nativeElement.getElementsByTagName("span")[0].textContent == "?").toBeTruthy();
         expect(fixture.elementRef.nativeElement.getElementsByTagName("i").length === 0).toBeTruthy();
     });
 
-    it('Initializes badge with icon', () => {
-        let fixture = TestBed.createComponent(InitBadgeWithIcon);
+    it("Initializes badge with icon", () => {
+        const fixture = TestBed.createComponent(InitBadgeWithIcon);
         fixture.detectChanges();
-        let badge = fixture.componentInstance.badge;
-        let divContainer = fixture.elementRef.nativeElement.querySelectorAll("div.igx-badge__circle");
+        const badge = fixture.componentInstance.badge;
+        const divContainer = fixture.elementRef.nativeElement.querySelectorAll("div.igx-badge__circle");
 
         expect(divContainer).toBeTruthy();
         expect(badge.iconBdg === "person").toBeTruthy();
@@ -56,11 +55,11 @@ describe('Badge', function () {
         expect(divContainer[0].classList.contains("igx-badge__circle--info")).toBeTruthy();
     });
 
-    it('Initializes badge with icon ARIA', () => {
-        let fixture = TestBed.createComponent(InitBadgeWithIconARIA);
+    it("Initializes badge with icon ARIA", () => {
+        const fixture = TestBed.createComponent(InitBadgeWithIconARIA);
         fixture.detectChanges();
-        let badge = fixture.componentInstance.badge;
-        let divContainer = fixture.elementRef.nativeElement.querySelectorAll("div.igx-badge__circle");
+        const badge = fixture.componentInstance.badge;
+        const divContainer = fixture.elementRef.nativeElement.querySelectorAll("div.igx-badge__circle");
 
         expect(badge.roleDescription === "success type badge with icon type person").toBeTruthy();
         expect(divContainer[0].getAttribute("aria-roledescription") === "success type badge with icon type person").toBeTruthy();

@@ -1,53 +1,56 @@
 import {
-    NgModule,
     Component,
-    Input,
-    Output,
     EventEmitter,
-    ViewChild,
-    forwardRef
+    forwardRef,
+    Input,
+    NgModule,
+    Output,
+    ViewChild
 } from "@angular/core";
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from "@angular/forms";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 const noop = () => {};
 let nextId = 0;
 
 function MakeProvider(type: any) {
     return {
+        multi: true,
         provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => type),
-        multi: true
+        useExisting: forwardRef(() => type)
     };
 }
 
 @Component({
-    selector: "igx-switch",
     moduleId: module.id,
-    templateUrl: "switch.component.html",
-    providers: [MakeProvider(IgxSwitch)]
+    providers: [MakeProvider(IgxSwitch)],
+    selector: "igx-switch",
+    templateUrl: "switch.component.html"
 })
 export class IgxSwitch implements ControlValueAccessor {
 
-    @Input() value: any;
-    @Input() id: string = `igx-switch-${nextId++}`;
+    @Input() public value: any;
+    @Input() public id: string = `igx-switch-${nextId++}`;
     @Input()
         get labelId() {
             return this.id + "_label";
         }
-    @Input() name: string;
-    @Input() disabled: boolean = false;
-    @Input() tabindex: number = null;
-    @Input() checked: boolean = false;
+    @Input() public name: string;
+    @Input() public disabled: boolean = false;
+    @Input() public tabindex: number = null;
+    @Input() public checked: boolean = false;
 
-    @Output() change = new EventEmitter();
+    @Output() public change = new EventEmitter();
 
-    @ViewChild('checkbox') nativeCheckbox;
+    @ViewChild("checkbox") public nativeCheckbox;
+
+    public focused: boolean = false;
 
     protected _value: any;
 
-    focused: boolean = false;
+    private _onTouchedCallback: () => void = noop;
+    private _onChangeCallback: (_: any) => void = noop;
 
-    onChange(event) {
+    public onChange(event) {
         if (this.disabled) {
             return;
         }
@@ -57,16 +60,16 @@ export class IgxSwitch implements ControlValueAccessor {
         this.change.emit(event);
     }
 
-    onFocus(event) {
+    public onFocus(event) {
         this.focused = true;
     }
 
-    onBlur(event) {
+    public onBlur(event) {
         this.focused = false;
         this._onTouchedCallback();
     }
 
-    writeValue(value) {
+    public writeValue(value) {
         if (this.disabled) {
             return;
         }
@@ -74,13 +77,9 @@ export class IgxSwitch implements ControlValueAccessor {
         this.checked = this._value;
     }
 
-    private _onTouchedCallback: () => void = noop;
-    private _onChangeCallback: (_: any) => void = noop;
-
-    registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
-    registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+    public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
+    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 }
-
 
 @NgModule({
     declarations: [IgxSwitch],

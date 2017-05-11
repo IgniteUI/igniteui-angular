@@ -1,16 +1,16 @@
-import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
 import { IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
-import { TabBarSampleComponent, CustomContentComponent } from "./sample.component";
+import { CustomContentComponent, TabBarSampleComponent } from "./sample.component";
 
 const tabbarRoutes: Routes = [
     {
-        path: 'tabbar',
+        path: "tabbar",
         component: TabBarSampleComponent,
         children: [
-            { path: 'tabbarInnerPath', component: CustomContentComponent, outlet: 'tabPanelOutlet' }
+            { path: "tabbarInnerPath", component: CustomContentComponent, outlet: "tabPanelOutlet" }
         ]
     }
 ];

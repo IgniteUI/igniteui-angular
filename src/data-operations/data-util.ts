@@ -1,15 +1,15 @@
-import { FilteringExpression, FilteringLogic } from "./filtering-expression.interface";
 import { FilteringCondition } from "./filtering-condition";
-import { FilteringState, filteringStateDefaults } from "./filtering-state.interface";
-import { IFilteringStrategy, FilteringStrategy } from "./filtering-strategy";
+import { FilteringLogic, IFilteringExpression } from "./filtering-expression.interface";
+import { filteringStateDefaults, IFilteringState } from "./filtering-state.interface";
+import { FilteringStrategy, IFilteringStrategy } from "./filtering-strategy";
 
-import { SortingExpression, SortingDirection } from "./sorting-expression.interface";
-import {SortingStateDefaults, SortingState} from "./sorting-state.interface";
-import {SortingStrategy, ISortingStrategy} from "./sorting-strategy";
+import { ISortingExpression, SortingDirection } from "./sorting-expression.interface";
+import { ISortingState, SortingStateDefaults } from "./sorting-state.interface";
+import { ISortingStrategy, SortingStrategy } from "./sorting-strategy";
 
-import {PagingState, PagingError} from "./paging-state.interface";
+import { IPagingState, PagingError } from "./paging-state.interface";
 
-import {DataState} from "./data-state.interface";
+import { IDataState } from "./data-state.interface";
 
 export enum DataType {
     String,
@@ -19,7 +19,7 @@ export enum DataType {
 }
 
 export class DataUtil {
-    static mergeDefaultProperties(target: Object, defaults: Object) {
+    public static mergeDefaultProperties(target: object, defaults: object) {
         if (!defaults) {
             return target;
         }
@@ -29,52 +29,53 @@ export class DataUtil {
         }
         Object
             .keys(defaults)
-            .forEach(function(key) { 
+            .forEach((key) => {
                 if (target[key] === undefined && defaults[key] !== undefined) {
                     target[key] = defaults[key];
                 }
             });
         return target;
     }
-    static getFilteringConditionsForDataType(dataType: DataType): {[name: string]: Function} {
-        var dt:string;
-        switch(dataType) {
+    public static getFilteringConditionsForDataType(dataType: DataType):
+        {[name: string]: (value: any, searchVal?: any, ignoreCase?: boolean) => void} {
+        let dt: string;
+        switch (dataType) {
             case DataType.String:
                 dt = "string";
-            break;
+                break;
             case DataType.Number:
                 dt = "number";
-            break;
+                break;
             case DataType.Boolean:
                 dt = "boolean";
-            break;
+                break;
             case DataType.Date:
                 dt = "date";
-            break;
+                break;
         }
         return FilteringCondition[dt];
     }
-    static getListOfFilteringConditionsForDataType(dataType: DataType): Array<string> {
+    public static getListOfFilteringConditionsForDataType(dataType: DataType): string[] {
         return Object.keys(DataUtil.getFilteringConditionsForDataType(dataType));
     }
-    static sort<T> (data: T[], state: SortingState): T[] {
+    public static sort<T>(data: T[], state: SortingState): T[] {
         // set defaults
         DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
         // apply default settings for each sorting expression(if not set)
         return state.strategy.sort(data, state.expressions);
     }
-    static page<T> (data: T[], state: PagingState): T[] {
+    public static page<T>(data: T[], state: PagingState): T[] {
         if (!state) {
             return data;
         }
-        var len = data.length,
-            index = state.index,
-            res = [],
-            recordsPerPage = state.recordsPerPage;
+        const len = data.length;
+        const index = state.index;
+        const res = [];
+        const recordsPerPage = state.recordsPerPage;
         state.metadata = {
             countPages: 0,
-            error: PagingError.None,
-            countRecords: data.length
+            countRecords: data.length,
+            error: PagingError.None
         };
         if (index < 0 || isNaN(index)) {
             state.metadata.error = PagingError.IncorrectPageIndex;
@@ -94,8 +95,8 @@ export class DataUtil {
         }
         return data.slice(index * recordsPerPage, (index + 1) * recordsPerPage);
     }
-    static filter<T> (data: T[],
-                    state: FilteringState): T[] {
+    public static filter<T>(data: T[],
+                            state: FilteringState): T[] {
         // set defaults
         DataUtil.mergeDefaultProperties(state, filteringStateDefaults);
         if (!state.strategy) {
@@ -103,7 +104,7 @@ export class DataUtil {
         }
         return state.strategy.filter(data, state.expressions, state.logic);
     }
-    static process<T> (data: T[], state: DataState): T[] {
+    public static process<T>(data: T[], state: DataState): T[] {
         if (!state) {
             return data;
         }

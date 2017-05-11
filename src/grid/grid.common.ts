@@ -1,4 +1,3 @@
-import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import {
     Component,
     Directive,
@@ -13,6 +12,7 @@ import {
     TemplateRef,
     ViewContainerRef
 } from "@angular/core";
+import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxColumnComponent } from "./column.component";
 
 // interfaces
@@ -55,12 +55,12 @@ export class IgxCellFooterTemplateDirective {
 }
 
 @Directive({
-    selector: "[igxColumnSorting]",
+    selector: "[igxColumnSorting]"
 })
 export class IgxColumnSortingDirective {
     @Input("igxColumnSorting") public column: IgxColumnComponent;
-    @Output() protected onSort = new EventEmitter<IgxColumnSortedEvent>();
     @Input() public sortDirection: SortingDirection = SortingDirection.None;
+    @Output() protected onSort = new EventEmitter<IgxColumnSortedEvent>();
 
     @HostBinding("class.off")
     get off(): boolean {
@@ -77,11 +77,11 @@ export class IgxColumnSortingDirective {
         return this.sortDirection === SortingDirection.Desc;
     }
 
-
     @HostListener("click", ["$event"])
     protected onClick(event: Event): void {
         if (this.column.sortable) {
-            this.sortDirection = ++this.sortDirection > SortingDirection.Desc ? SortingDirection.None : this.sortDirection;
+            this.sortDirection = ++this.sortDirection > SortingDirection.Desc ? SortingDirection.None
+                                                                              : this.sortDirection;
             this.onSort.emit({
                 column: this.column,
                 direction: this.sortDirection
@@ -171,13 +171,6 @@ export class IgxColumnFilteringComponent {
     @Input() public hidden: boolean = true;
     @Output() protected onFilter = new EventEmitter<IgxColumnFilteredEvent>();
 
-    protected filterData(event: any): void {
-        this.onFilter.emit({
-            column: this.column,
-            value: event.target.value,
-        });
-    }
-
     public show(): void {
         this.hidden = false;
     }
@@ -188,5 +181,12 @@ export class IgxColumnFilteringComponent {
 
     public toggle(): void {
         this.hidden = !this.hidden;
+    }
+
+    protected filterData(event: any): void {
+        this.onFilter.emit({
+            column: this.column,
+            value: event.target.value
+        });
     }
 }

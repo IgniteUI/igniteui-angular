@@ -1,30 +1,29 @@
-import { NgModule, Component, ElementRef, Input } from '@angular/core';
 import { CommonModule } from "@angular/common";
+import { Component, ElementRef, Input, NgModule } from "@angular/core";
 
 export enum Type { DEFAULT, INFO, SUCCESS, WARNING, ERROR }
 export enum Position { TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }
 
 @Component({
-    selector: 'igx-badge',
     moduleId: module.id,
-    templateUrl: 'badge.component.html'
+    selector: "igx-badge",
+    templateUrl: "badge.component.html"
 })
 export class IgxBadge {
+    public typeEnum = Type;
+    public positionEnum = Position;
     private _type: string = "";
     private _value: string;
     private _iconBdg: string;
     private _position;
-    public TypeEnum = Type;
-    public PositionEnum = Position;
 
     @Input()
     get type(): string {
         return this._type === undefined ? "default" : this._type;
     }
 
-
     set type(value: string) {
-        var sizeType = this.TypeEnum[value.toUpperCase()];
+        const sizeType = this.typeEnum[value.toUpperCase()];
 
         if (sizeType === undefined) {
             this._type = "default";
@@ -38,9 +37,8 @@ export class IgxBadge {
         return this._position === undefined ? "top-right" : this._position;
     }
 
-
     set position(value: string) {
-        var positionType = this.PositionEnum[value.replace("-","_").toUpperCase()];
+        const positionType = this.positionEnum[value.replace("-", "_").toUpperCase()];
 
         if (positionType === undefined) {
             this._position = "top-right";
@@ -53,7 +51,6 @@ export class IgxBadge {
     get value(): string {
         return this._value === undefined ? "?" : this._value;
     }
-
 
     set value(value: string) {
         if (value === undefined) {
@@ -73,9 +70,9 @@ export class IgxBadge {
     }
 
     get roleDescription() {
-        var message;
+        let message;
 
-        if (this._iconBdg){
+        if (this._iconBdg) {
             message = this._type + " type badge with icon type " + this._iconBdg;
         } else if (this._value) {
             message = this._type + " badge type with value " + this._value;
@@ -86,10 +83,10 @@ export class IgxBadge {
         return message;
     }
 
-    setClasses() {
-        var classes = {};
+    public setClasses() {
+        let classes = {};
 
-        switch (this.TypeEnum[this._type.toUpperCase()]) {
+        switch (this.typeEnum[this._type.toUpperCase()]) {
             case Type.DEFAULT:
                 classes = {
                     "igx-badge__circle--default": true
@@ -120,10 +117,10 @@ export class IgxBadge {
         return classes;
     }
 
-    setPosition() {
-        var className = {};
+    public setPosition() {
+        let className = {};
 
-        switch (this.PositionEnum[this.position.replace("-","_").toUpperCase()]) {
+        switch (this.positionEnum[this.position.replace("-", "_").toUpperCase()]) {
             case Position.BOTTOM_LEFT:
                 className = {
                     "igx-badge--bottom-left": true
@@ -152,8 +149,8 @@ export class IgxBadge {
 
 @NgModule({
     declarations: [IgxBadge],
-    imports: [CommonModule],
-    exports: [IgxBadge]
+    exports: [IgxBadge],
+    imports: [CommonModule]
 })
 export class IgxBadgeModule {
 }

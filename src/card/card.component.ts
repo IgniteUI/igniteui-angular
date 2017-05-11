@@ -1,6 +1,6 @@
-import {Directive, Component, NgModule} from "@angular/core";
-import {HammerGesturesManager} from "../core/touch";
+import {Component, Directive, NgModule} from "@angular/core";
 import {IgxButtonModule} from "../button/button.directive";
+import {HammerGesturesManager} from "../core/touch";
 
 /**
  * IgxCardHeader is container for the card header
@@ -8,7 +8,7 @@ import {IgxButtonModule} from "../button/button.directive";
 @Directive({
     selector: "igx-card-header"
 })
-export class IgxCardHeader{}
+export class IgxCardHeader {}
 
 /**
  * IgxCardContent is container for the card content
@@ -16,7 +16,7 @@ export class IgxCardHeader{}
 @Directive({
     selector: "igx-card-content"
 })
-export class IgxCardContent{}
+export class IgxCardContent {}
 
 /**
  * IgxCardActions is container for the card actions
@@ -24,33 +24,33 @@ export class IgxCardContent{}
 @Directive({
     selector: "igx-card-actions"
 })
-export class IgxCardActions{}
+export class IgxCardActions {}
 
 /**
  * IgxCardFooter is container for the card footer
  */
 @Directive({
-    selector: "igx-card-footer",
     host: {
         role: "footer"
-    }
+    },
+    selector: "igx-card-footer"
 })
-export class IgxCardFooter{}
+export class IgxCardFooter {}
 
 /**
  * IgxCardComponent is a sheet of material that serves as an entry point to more detailed information.
  */
 @Component({
-    selector: "igx-card",
     moduleId: module.id,
-    templateUrl: "card.component.html",
     providers: [HammerGesturesManager],
+    selector: "igx-card",
+    templateUrl: "card.component.html"
 })
-export class IgxCardComponent{}
+export class IgxCardComponent {}
 
 @NgModule({
-    imports: [IgxButtonModule],
     declarations: [IgxCardComponent, IgxCardHeader, IgxCardContent, IgxCardActions, IgxCardFooter],
-    exports: [IgxCardComponent, IgxCardHeader, IgxCardContent, IgxCardActions, IgxCardFooter]
+    exports: [IgxCardComponent, IgxCardHeader, IgxCardContent, IgxCardActions, IgxCardFooter],
+    imports: [IgxButtonModule]
 })
-export class IgxCardModule{}
+export class IgxCardModule {}

@@ -4,11 +4,11 @@ import { IgxCarouselModule } from "../../../src/carousel/carousel.component";
 @Component({
     selector: "carousel-sample",
     moduleId: module.id,
-    templateUrl: './sample.component.html',
-    styleUrls: ['sample.component.css','../app.samples.css']
+    templateUrl: "./sample.component.html",
+    styleUrls: ["sample.component.css", "../app.samples.css"]
 })
 export class CarouselSampleComponent {
-    slides: Array<any> = [];
+    slides: any[] = [];
     interval = 3000;
     pause = true;
     loop = true;

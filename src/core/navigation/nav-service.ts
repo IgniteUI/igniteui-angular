@@ -1,46 +1,46 @@
-import {ToggleView} from './toggle';
+import { IToggleView } from "./toggle";
 
 /**
- * Common service to be injected between components where those implementing common 
+ * Common service to be injected between components where those implementing common
  * ToggleView interface can register and toggle directives can call their methods.
  * TODO: Track currently active? Events?
  */
 export class NavigationService {
-    private navs: { [id: string] : ToggleView; };     
-    
+    private navs: { [id: string]: IToggleView; };
+
     constructor() {
         this.navs = {};
     }
-    
-    public add(id: string, navItem: ToggleView) {
+
+    public add(id: string, navItem: IToggleView) {
         this.navs[id] = navItem;
     }
-    
+
     public remove(id: string) {
         delete this.navs[id];
     }
-    
-    public get(id: string): ToggleView {
+
+    public get(id: string): IToggleView {
         if (id) {
             return this.navs[id];
         }
     }
-       
-    public toggle(id: string, fireEvents?: boolean) : Promise<any> {
+
+    public toggle(id: string, fireEvents?: boolean): Promise<any> {
         if (this.navs[id]) {
             return this.navs[id].toggle(fireEvents);
         } else {
             return Promise.reject("No ToggleView component found for id:" + id);
         }
-    }        
-    public open(id: string, fireEvents?: boolean) : Promise<any> {
+    }
+    public open(id: string, fireEvents?: boolean): Promise<any> {
         if (this.navs[id]) {
             return this.navs[id].open(fireEvents);
         } else {
             return Promise.reject("No ToggleView component found for id:" + id);
         }
     }
-    public close(id: string, fireEvents?: boolean) : Promise<any> {
+    public close(id: string, fireEvents?: boolean): Promise<any> {
         if (this.navs[id]) {
             return this.navs[id].close(fireEvents);
         } else {

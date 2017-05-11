@@ -1,49 +1,51 @@
 import {
-    NgModule,
     Component,
-    Input,
-    Output,
     EventEmitter,
-    ViewChild,
-    forwardRef
+    forwardRef,
+    Input,
+    NgModule,
+    Output,
+    ViewChild
 } from "@angular/core";
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from "@angular/forms";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 const noop = () => {};
 let nextId = 0;
 
 function MakeProvider(type: any) {
     return {
+        multi: true,
         provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => type),
-        multi: true
+        useExisting: forwardRef(() => type)
     };
 }
 
 @Component({
-    selector: "igx-checkbox",
     moduleId: module.id,
-    templateUrl: "checkbox.component.html",
-    providers: [MakeProvider(IgxCheckbox)]
+    providers: [MakeProvider(IgxCheckbox)],
+    selector: "igx-checkbox",
+    templateUrl: "checkbox.component.html"
 })
 export class IgxCheckbox implements ControlValueAccessor {
+    public focused: boolean = false;
 
-    @Input() value: any;
-    @Input() id: string = `igx-checkbox-${nextId++}`;
-    @Input() name: string;
-    @Input() disabled: boolean = false;
-    @Input() tabindex: number = null;
-    @Input() checked: boolean = false;
+    @Input() public value: any;
+    @Input() public id: string = `igx-checkbox-${nextId++}`;
+    @Input() public name: string;
+    @Input() public disabled: boolean = false;
+    @Input() public tabindex: number = null;
+    @Input() public checked: boolean = false;
 
-    @Output() change = new EventEmitter();
+    @Output() public change = new EventEmitter();
 
-    @ViewChild('checkbox') nativeCheckbox;
+    @ViewChild("checkbox") public nativeCheckbox;
 
     protected _value: any;
 
-    focused: boolean = false;
+    private _onTouchedCallback: () => void = noop;
+    private _onChangeCallback: (_: any) => void = noop;
 
-    onChange(event) {
+    public onChange(event) {
         if (this.disabled) {
             return;
         }
@@ -53,16 +55,16 @@ export class IgxCheckbox implements ControlValueAccessor {
         this.change.emit(event);
     }
 
-    onFocus(event) {
+    public onFocus(event) {
         this.focused = true;
     }
 
-    onBlur(event) {
+    public onBlur(event) {
         this.focused = false;
         this._onTouchedCallback();
     }
 
-    writeValue(value) {
+    public writeValue(value) {
         if (this.disabled) {
             return;
         }
@@ -70,13 +72,9 @@ export class IgxCheckbox implements ControlValueAccessor {
         this.checked = !!this._value;
     }
 
-    private _onTouchedCallback: () => void = noop;
-    private _onChangeCallback: (_: any) => void = noop;
-
-    registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
-    registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+    public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
+    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 }
-
 
 @NgModule({
     declarations: [IgxCheckbox],

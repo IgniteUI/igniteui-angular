@@ -1,11 +1,11 @@
-import { Component, ViewChild, OnInit } from "@angular/core";
-import { DataContainer,  DataState, DataType,
-        FilteringCondition,
-        SortingDirection, SortingState
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { IDataColumn } from "../../../src/data-operations/test-util/data-generator";
+import { DataContainer,  DataType, FilteringCondition,
+        IDataState,
+        ISortingState, SortingDirection
       } from "../../../src/main";
 import {IgxToast, IgxToastPosition} from "../../../src/main";
 import {IgxTab, IgxTabBar} from "../../../src/main";
-import { DataColumn } from "../../../src/data-operations/test-util/data-generator"
 import { DataStateConfiguratorComponent } from "./data-state-configurator.component";
 // import services
 import {LocalDataService} from "./local-data.service";
@@ -15,7 +15,7 @@ import {RemoteDataService} from "./remote-data.service";
     providers: [RemoteDataService, LocalDataService],
     selector: "data-util-sample",
     moduleId: module.id,
-    templateUrl: './sample.component.html'
+    templateUrl: "./sample.component.html"
 })
 export class DataOperationsSampleComponent implements OnInit {
     //remoteData: Observable<DataContainer>;
@@ -26,8 +26,8 @@ export class DataOperationsSampleComponent implements OnInit {
     // paging sample vars
     @ViewChild("toast") toast: IgxToast;
 
-    message:string = "";
-    constructor(private remoteDataService:RemoteDataService,
+    message: string = "";
+    constructor(private remoteDataService: RemoteDataService,
                 private localDataService: LocalDataService) {
     }
     ngOnInit() {
@@ -35,7 +35,7 @@ export class DataOperationsSampleComponent implements OnInit {
         this.initLocalData();
     }
     initRemoteData() {
-        let columns: Array<DataColumn> = [
+        const columns: IDataColumn[] = [
             {
                 fieldName: "ProductID",
                 type: DataType.Number
@@ -52,30 +52,30 @@ export class DataOperationsSampleComponent implements OnInit {
                 fieldName: "UnitsInStock",
                 type: DataType.Number
             }
-        ]
-        let initialDataState: DataState = {};
+        ];
+        const initialDataState: IDataState = {};
         this.remoteDataStateConfig.columns = columns;
         this.remoteDataStateConfig.dataState = initialDataState;
         this.processRemoteData(initialDataState);
     }
     initLocalData() {
-        let initialDataState: DataState = {
+        const initialDataState: IDataState = {
             paging: {
                 index: 0,
                 recordsPerPage: 5
             }
         };
-        let cols = this.localDataService.getColumns();
+        const cols = this.localDataService.getColumns();
         this.localDataStateConfig.dataState = initialDataState;
         this.localDataStateConfig.columns = cols;
         this.localDataService
             .getData()
             .then((data) => {
-                this.localDataContainer.data = <Array<any>>data;
+                this.localDataContainer.data = data as any[];
                 this.processLocalData(initialDataState);
             });
     }
-    processRemoteData(dataState: DataState) {
+    processRemoteData(dataState: IDataState) {
         this.remoteDataStateConfig.stateLoading = true;
         this.toast.message = "Loading remote data";
         this.remoteDataStateConfig.setMetadataInfo("Requesting data");
@@ -88,15 +88,15 @@ export class DataOperationsSampleComponent implements OnInit {
                 this.remoteDataContainer.data = response.value;
                 this.remoteDataContainer.transformedData = response.value;
                 this.remoteDataContainer.state = dataState;
-                let msg: string = `Data container with ${this.remoteDataContainer.data.length} records.`;
+                const msg: string = `Data container with ${this.remoteDataContainer.data.length} records.`;
                 this.remoteDataStateConfig.setMetadataInfo(msg);
             });
     }
-    processLocalData(dataState: DataState) {
-        let startTime = new Date().getTime();
+    processLocalData(dataState: IDataState) {
+        const startTime = new Date().getTime();
         this.localDataContainer.process(dataState);
-        let processTime = new Date().getTime() - startTime;
-        let msg = `Processing ${this.localDataContainer.data.length} records for ${processTime} ms`;
+        const processTime = new Date().getTime() - startTime;
+        const msg = `Processing ${this.localDataContainer.data.length} records for ${processTime} ms`;
         this.localDataStateConfig.setMetadataInfo(msg);
     }
 }
