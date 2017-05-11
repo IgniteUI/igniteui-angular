@@ -1,11 +1,11 @@
 import { Component, ViewChild, OnInit } from "@angular/core";
-import { DataContainer,  DataState, DataType,
+import { DataContainer,  IDataState, DataType,
         FilteringCondition,
-        SortingDirection, SortingState
+        SortingDirection, ISortingState
       } from "../../../src/main";
 import {IgxToast, IgxToastPosition} from "../../../src/main";
 import {IgxTab, IgxTabBar} from "../../../src/main";
-import { DataColumn } from "../../../src/data-operations/test-util/data-generator"
+import { IDataColumn } from "../../../src/data-operations/test-util/data-generator"
 import { DataStateConfiguratorComponent } from "./data-state-configurator.component";
 // import services
 import {LocalDataService} from "./local-data.service";
@@ -35,7 +35,7 @@ export class DataOperationsSampleComponent implements OnInit {
         this.initLocalData();
     }
     initRemoteData() {
-        let columns: Array<DataColumn> = [
+        let columns: Array<IDataColumn> = [
             {
                 fieldName: "ProductID",
                 type: DataType.Number
@@ -53,13 +53,13 @@ export class DataOperationsSampleComponent implements OnInit {
                 type: DataType.Number
             }
         ]
-        let initialDataState: DataState = {};
+        let initialDataState: IDataState = {};
         this.remoteDataStateConfig.columns = columns;
         this.remoteDataStateConfig.dataState = initialDataState;
         this.processRemoteData(initialDataState);
     }
     initLocalData() {
-        let initialDataState: DataState = {
+        let initialDataState: IDataState = {
             paging: {
                 index: 0,
                 recordsPerPage: 5
@@ -75,7 +75,7 @@ export class DataOperationsSampleComponent implements OnInit {
                 this.processLocalData(initialDataState);
             });
     }
-    processRemoteData(dataState: DataState) {
+    processRemoteData(dataState: IDataState) {
         this.remoteDataStateConfig.stateLoading = true;
         this.toast.message = "Loading remote data";
         this.remoteDataStateConfig.setMetadataInfo("Requesting data");
@@ -92,7 +92,7 @@ export class DataOperationsSampleComponent implements OnInit {
                 this.remoteDataStateConfig.setMetadataInfo(msg);
             });
     }
-    processLocalData(dataState: DataState) {
+    processLocalData(dataState: IDataState) {
         let startTime = new Date().getTime();
         this.localDataContainer.process(dataState);
         let processTime = new Date().getTime() - startTime;

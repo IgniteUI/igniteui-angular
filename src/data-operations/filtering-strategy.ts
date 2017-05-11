@@ -1,7 +1,7 @@
 import {DataUtil} from "./data-util";
 import { FilteringCondition } from "./filtering-condition";
 import { FilteringLogic, IFilteringExpression } from "./filtering-expression.interface";
-import { FilteringState } from "./filtering-state.interface";
+import { IFilteringState } from "./filtering-state.interface";
 
 export interface IFilteringStrategy {
     filter(data: any[], expressions: IFilteringExpression[], logic?: FilteringLogic): any[];
@@ -26,10 +26,15 @@ export class FilteringStrategy implements IFilteringStrategy {
         }
         return res;
     }
-    protected matchRecordByExpressions(rec: object,
-                                       expressions: IFilteringExpression[],
-                                       index: number,
-                                       logic?: FilteringLogic): boolean {
+    public findMatch(rec: object, expr: IFilteringExpression, index: number): boolean {
+        const cond = expr.condition;
+        const val = rec[expr.fieldName];
+        return cond(val, expr.searchVal, expr.ignoreCase);
+    }
+    public matchRecordByExpressions(rec: object,
+                                    expressions: IFilteringExpression[],
+                                    index: number,
+                                    logic?: FilteringLogic): boolean {
         let i;
         let match = false;
         const and = (logic === FilteringLogic.And);
@@ -47,10 +52,5 @@ export class FilteringStrategy implements IFilteringStrategy {
             }
         }
         return match;
-    }
-    protected findMatch(rec: object, expr: IFilteringExpression, index: number): boolean {
-        const cond = expr.condition;
-        const val = rec[expr.fieldName];
-        return cond(val, expr.searchVal, expr.ignoreCase);
     }
 }

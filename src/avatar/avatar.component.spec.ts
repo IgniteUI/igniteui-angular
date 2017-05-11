@@ -46,7 +46,7 @@ describe("Avatar", function() {
         const fixture = TestBed.createComponent(InitIconAvatar);
         fixture.detectChanges();
         const avatar = fixture.componentInstance.avatar,
-            spanEl = avatar.element_ref.nativeElement.getElementsByClassName("igx-avatar--icon");
+            spanEl = avatar.elementRef.nativeElement.getElementsByClassName("igx-avatar--icon");
 
         expect(avatar.image === undefined).toBeTruthy();
         expect(avatar.srcImage === "").toBeTruthy();
@@ -57,7 +57,7 @@ describe("Avatar", function() {
 
         // For ARIA
         expect(spanEl[0].getAttribute("aria-roledescription") === "icon type avatar").toBeTruthy();
-        expect(avatar.element_ref.nativeElement.getElementsByTagName("div")[0].getAttribute("aria-label") === "avatar").toBeTruthy();
+        expect(avatar.elementRef.nativeElement.getElementsByTagName("div")[0].getAttribute("aria-label") === "avatar").toBeTruthy();
     });
 
     it("Initializes image avatar with src element", () => {
@@ -74,7 +74,7 @@ describe("Avatar", function() {
         // For ARIA
         expect(avatar.image.nativeElement.getAttribute("aria-roledescription") === "image type avatar").toBeTruthy();
         expect(avatar.roleDescription === "image type avatar").toBeTruthy();
-        expect(avatar.element_ref.nativeElement.getElementsByTagName("div")[0].getAttribute("aria-label") === "avatar").toBeTruthy();
+        expect(avatar.elementRef.nativeElement.getElementsByTagName("div")[0].getAttribute("aria-label") === "avatar").toBeTruthy();
     });
 
     it("Should set ARIA attributes.", () => {
@@ -84,7 +84,7 @@ describe("Avatar", function() {
 
         expect(avatar.image.nativeElement.getAttribute("aria-roledescription") === "initials type avatar").toBeTruthy();
         expect(avatar.roleDescription === "initials type avatar").toBeTruthy();
-        expect(avatar.element_ref.nativeElement.getElementsByTagName("div")[0].getAttribute("aria-label") === "avatar").toBeTruthy();
+        expect(avatar.elementRef.nativeElement.getElementsByTagName("div")[0].getAttribute("aria-label") === "avatar").toBeTruthy();
     });
 });
 

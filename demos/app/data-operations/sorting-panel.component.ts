@@ -1,11 +1,11 @@
 import { Component, Input, ViewChild, OnInit, EventEmitter, Output, ChangeDetectionStrategy } from "@angular/core";
-import { DataContainer, DataUtil, DataState, DataType,
+import { DataContainer, DataUtil, IDataState, DataType,
         IgxCardComponent, IgxCardActions, IgxCardContent, IgxCardFooter, IgxCardHeader, IgxCardModule,
-        FilteringExpression, FilteringCondition, FilteringState, FilteringLogic, FilteringStrategy,
-        PagingError, PagingState,
-        SortingExpression, SortingDirection, SortingStrategy, StableSortingStrategy, SortingState
+        IFilteringExpression, FilteringCondition, IFilteringState, FilteringLogic, FilteringStrategy,
+        PagingError, IPagingState,
+        ISortingExpression, SortingDirection, SortingStrategy, StableSortingStrategy, ISortingState
       } from "../../../src/main";
-import { DataColumn } from "../../../src/data-operations/test-util/data-generator";
+import { IDataColumn } from "../../../src/data-operations/test-util/data-generator";
 
 const SORT_TEXT_ASC = "ASC";
 const SORT_TEXT_DESC = "DESC";

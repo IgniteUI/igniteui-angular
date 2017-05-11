@@ -1,8 +1,8 @@
 import { Component, Input, ViewChild, OnInit, DoCheck, Injectable } from "@angular/core";
-import { DataContainer, DataUtil, DataState, 
-        FilteringExpression, FilteringCondition, FilteringState, FilteringLogic, FilteringStrategy,
-        PagingError, PagingState,
-        SortingExpression, SortingDirection, SortingStrategy, StableSortingStrategy, SortingState
+import { DataContainer, DataUtil, IDataState, 
+        IFilteringExpression, FilteringCondition, IFilteringState, FilteringLogic, FilteringStrategy,
+        PagingError, IPagingState,
+        ISortingExpression, SortingDirection, SortingStrategy, StableSortingStrategy, ISortingState
       } from "../../../src/main";
 
 @Component({
@@ -14,5 +14,5 @@ import { DataContainer, DataUtil, DataState,
 export class DataTable {
     @Input() keys: string[] = [];
     @Input() dataContainer: DataContainer;
-    @Input() data: Array<any> = [];
+    @Input() data: any[] = [];
 }

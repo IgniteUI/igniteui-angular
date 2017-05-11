@@ -182,7 +182,7 @@ describe("Carousel", function() {
         let prevNav, nextNav,
             carousel, carouselNative;
 
-        carouselNative = fixture.componentInstance.carousel.element_ref.nativeElement;
+        carouselNative = fixture.componentInstance.carousel.elementRef.nativeElement;
         carousel = fixture.componentInstance.carousel;
 
         prevNav = carouselNative.querySelector("a.igx-carousel__arrow--prev");
@@ -205,7 +205,7 @@ describe("Carousel", function() {
 
         let carousel, carouselNative;
 
-        carouselNative = fixture.componentInstance.carousel.element_ref.nativeElement;
+        carouselNative = fixture.componentInstance.carousel.elementRef.nativeElement;
         carousel = fixture.componentInstance.carousel;
 
         carousel.pause = true;

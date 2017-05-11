@@ -14,7 +14,7 @@ import { AfterContentInit,
         SimpleChange } from "@angular/core";
 // import {AnimationBuilder} from 'angular2/src/animate/animation_builder'; TODO
 import { BaseComponent } from "../core/base";
-import { NavigationService, ToggleView } from "../core/navigation";
+import { IToggleView, NavigationService } from "../core/navigation";
 import { HammerGesturesManager } from "../core/touch";
 
 // cover for transpiler error
@@ -44,7 +44,7 @@ declare var module: any;
     selector: "ig-nav-drawer",
     templateUrl: "navigation-drawer.component.html"
 })
-export class NavigationDrawer extends BaseComponent implements ToggleView,
+export class NavigationDrawer extends BaseComponent implements IToggleView,
                                                                OnInit,
                                                                AfterContentInit,
                                                                OnDestroy,

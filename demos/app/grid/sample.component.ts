@@ -6,11 +6,11 @@ import { BehaviorSubject, Observable } from "rxjs/Rx";
 import { IgxGridBindingBehavior, IgxGridColumnInitEvent, IgxGridComponent } from "../../../src/grid/grid.component";
 import {
     DataContainer,
-    DataState,
+    IDataState,
     IgxSnackbar,
     IgxToast,
     PagingError,
-    PagingState,
+    IPagingState,
     SortingDirection,
     StableSortingStrategy
 } from "../../../src/main";

@@ -296,7 +296,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         handle.nativeElement.style.left = `${this.valueToFraction(position) * 100}%`;
     }
 
-    protected writeValue(value: any): void {
+    public writeValue(value: any): void {
         if (!isNaN(value)) {
             this.upperValue = parseFloat(value);
 
@@ -304,11 +304,11 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         }
     }
 
-    protected registerOnChange(fn: any): void {
+    public registerOnChange(fn: any): void {
         this._onChangeCallback = fn;
     }
 
-    protected registerOnTouched(fn: any): void {
+    public registerOnTouched(fn: any): void {
         this._onTouchedCallback = fn;
     }
 

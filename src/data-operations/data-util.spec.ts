@@ -7,12 +7,12 @@ import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { DataGenerator } from "./test-util/data-generator";
 
-import {    DataState,
+import {    IDataState,
             DataType,
             DataUtil,
-            FilteringCondition, FilteringExpression, FilteringLogic,
-            FilteringState, FilteringStrategy, PagingError, PagingState, SortingDirection,
-            SortingExpression, SortingState
+            FilteringCondition, IFilteringExpression, FilteringLogic,
+            IFilteringState, FilteringStrategy, PagingError, IPagingState, SortingDirection,
+            ISortingExpression, ISortingState
         } from "../main";
 /* Test sorting */
 function testSort() {
@@ -27,7 +27,7 @@ function testSort() {
             const se = {
                     fieldName: "number",
                     dir: SortingDirection.Desc
-                } as SortingExpression,
+                } as ISortingExpression,
                 res = DataUtil.sort(data, {expressions: [se]});
             expect(dataGenerator.getValuesForColumn(res, "number"))
                 .toEqual(dataGenerator.generateArray(4, 0));
@@ -36,7 +36,7 @@ function testSort() {
             const se = {
                     fieldName: "boolean",
                     dir: SortingDirection.Asc
-                } as SortingExpression,
+                } as ISortingExpression,
                 res = DataUtil.sort(data, {expressions: [ se ]});
             expect(dataGenerator.getValuesForColumn(res, "boolean"))
                 .toEqual([false, false, false, true, true]);
@@ -46,18 +46,18 @@ function testSort() {
             const se0 = {
                     fieldName: "boolean",
                     dir: SortingDirection.Desc
-                } as SortingExpression,
+                } as ISortingExpression,
                 se1 = {
                     fieldName: "date",
                     dir: SortingDirection.Asc
-                } as SortingExpression,
+                } as ISortingExpression,
                 res = DataUtil.sort(data, {expressions: [se0, se1]});
             expect(dataGenerator.getValuesForColumn(res, "number"))
                 .toEqual([1, 3, 0, 2, 4]);
         });
         it ("sorts as applying default setting ignoreCase to false", () => {
             data[4].string = data[4].string.toUpperCase();
-            let se0: SortingExpression = {
+            let se0: ISortingExpression = {
                     fieldName: "string",
                     dir: SortingDirection.Desc
                 },
@@ -79,7 +79,7 @@ function testSort() {
 /* Test filtering */
 class CustomFilteringStrategy extends FilteringStrategy {
    filter<T>(data: T[],
-             expressions: FilteringExpression[],
+             expressions: IFilteringExpression[],
              logic?: FilteringLogic): T[] {
         let i, len = Math.ceil(data.length / 2),
             res: T[] = [],
@@ -180,7 +180,7 @@ function testPage() {
 
     describe("test paging", () => {
         it("paginates data", () => {
-            let state: PagingState = {index: 0, recordsPerPage: 3},
+            let state: IPagingState = {index: 0, recordsPerPage: 3},
                 res = DataUtil.page(data, state);
             expect(state.metadata.error).toBe(PagingError.None);
             expect(state.metadata.countPages).toBe(2);
@@ -195,7 +195,7 @@ function testPage() {
                 .toEqual([3, 4]);
         });
         it("tests paging errors", () => {
-            let state: PagingState = {index: -1, recordsPerPage: 3},
+            let state: IPagingState = {index: -1, recordsPerPage: 3},
                 res = DataUtil.page(data, state);
             expect(state.metadata.error).toBe(PagingError.IncorrectPageIndex);
             state = {index: 3, recordsPerPage: 3},
@@ -215,7 +215,7 @@ function testProcess() {
     describe("test process", () => {
         it("calls process as applies filtering, sorting, paging", () => {
             let metadata,
-                state: DataState = {
+                state: IDataState = {
                     filtering: {
                         expressions: [{
                             fieldName: "number",

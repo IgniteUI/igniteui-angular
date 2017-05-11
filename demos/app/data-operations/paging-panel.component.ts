@@ -1,9 +1,9 @@
 import { Component, Input, ViewChild, OnInit, EventEmitter, Output, ChangeDetectionStrategy } from "@angular/core";
-import { DataContainer, DataUtil, DataState, DataType,
+import { DataContainer, DataUtil, IDataState, DataType,
         IgxCardComponent, IgxCardActions, IgxCardContent, IgxCardFooter, IgxCardHeader, IgxCardModule,
-        FilteringExpression, FilteringCondition, FilteringState, FilteringLogic, FilteringStrategy,
-        PagingError, PagingState,
-        SortingExpression, SortingDirection, SortingStrategy, StableSortingStrategy, SortingState
+        IFilteringExpression, FilteringCondition, IFilteringState, FilteringLogic, FilteringStrategy,
+        PagingError, IPagingState,
+        ISortingExpression, SortingDirection, SortingStrategy, StableSortingStrategy, ISortingState
       } from "../../../src/main";
 
 @Component({
@@ -14,7 +14,7 @@ import { DataContainer, DataUtil, DataState, DataType,
 export class PagingPanelComponent {
     @ViewChild("pagingPanel") pagingPanel;
 
-    @Input() dataState: DataState;
+    @Input() dataState: IDataState;
     @Input() hidden: boolean = false;
     @Input() title: string = "Paging";
     

@@ -1,11 +1,11 @@
 import { Component, Input, ViewChild, OnInit, EventEmitter, Output, ChangeDetectionStrategy } from "@angular/core";
-import { DataContainer, DataUtil, DataState, DataType,
+import { DataContainer, DataUtil, IDataState, DataType,
         IgxCardComponent, IgxCardActions, IgxCardContent, IgxCardFooter, IgxCardHeader, IgxCardModule,
-        FilteringExpression, FilteringCondition, FilteringState, FilteringLogic, FilteringStrategy,
-        PagingError, PagingState,
-        SortingExpression, SortingDirection, SortingStrategy, StableSortingStrategy, SortingState
+        IFilteringExpression, FilteringCondition, IFilteringState, FilteringLogic, FilteringStrategy,
+        PagingError, IPagingState,
+        ISortingExpression, SortingDirection, SortingStrategy, StableSortingStrategy, ISortingState
       } from "../../../src/main";
-import { DataColumn } from "../../../src/data-operations/test-util/data-generator";
+import { IDataColumn } from "../../../src/data-operations/test-util/data-generator";
 
 @Component({
     selector: "filtering-panel",
@@ -15,33 +15,33 @@ import { DataColumn } from "../../../src/data-operations/test-util/data-generato
 export class FilteringPanelComponent {
     @ViewChild("filteringPanel") filteringPanel;
 
-    @Input() dataState: DataState;
-    @Input() columns: Array<DataColumn> = [];
+    @Input() dataState: IDataState;
+    @Input() columns: Array<IDataColumn> = [];
     @Input() hidden: boolean = false;
     title: string = "Filtering";
     @Output() onProcessDataState = new EventEmitter();
 
-    showFilteringSearchBox(column: DataColumn): boolean {
+    showFilteringSearchBox(column: IDataColumn): boolean {
       return column.type !== DataType.Boolean;
     }
-    getFilteringConditions(column: DataColumn) {
+    getFilteringConditions(column: IDataColumn) {
         let conds = DataUtil.getListOfFilteringConditionsForDataType(column.type);
         conds.unshift(null);// add default filtering condition - not selected with value null
         return conds;
     }
-    getFilteringExpression(column: DataColumn) {
-      var f: FilteringState = this.dataState.filtering;
+    getFilteringExpression(column: IDataColumn) {
+      var f: IFilteringState = this.dataState.filtering;
       if (!f || !f.expressions.length) {
         return null;
       }
       return f.expressions.find((e) => e.fieldName === column.fieldName);
     }
-    getSelectedFilteringCondition(column: DataColumn): string {
-      var f: FilteringState = this.dataState.filtering;
+    getSelectedFilteringCondition(column: IDataColumn): string {
+      var f: IFilteringState = this.dataState.filtering;
       if (!f || !f.expressions.length) {
         return null;
       }
-      let expr: FilteringExpression = f.expressions.find((e) => e.fieldName === column.fieldName);
+      let expr: IFilteringExpression = f.expressions.find((e) => e.fieldName === column.fieldName);
       if (!expr) {
         return null;
       }
@@ -61,14 +61,14 @@ export class FilteringPanelComponent {
           .value = "";
       }
     }
-    getSearchVal(column: DataColumn) {
+    getSearchVal(column: IDataColumn) {
       var expr = this.getFilteringExpression(column);
       return  expr ? expr.searchVal : "";
     }
     getFilteringDataState() {
-      var i, expressions: FilteringExpression[] = [], 
-            state: FilteringState = null,
-          expr: FilteringExpression,
+      var i, expressions: IFilteringExpression[] = [], 
+            state: IFilteringState = null,
+          expr: IFilteringExpression,
           cond,
           selCond: string,
           dataType: number,
@@ -106,7 +106,7 @@ export class FilteringPanelComponent {
       }
       this.dataState.filtering = (expressions.length)? {expressions: expressions} : null;
     }
-    getDataTypeStringRepresentation(column: DataColumn): string {
+    getDataTypeStringRepresentation(column: IDataColumn): string {
       let dt:string = "";
       switch(column.type) {
             case DataType.String:

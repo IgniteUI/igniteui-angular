@@ -1,15 +1,15 @@
 import { FilteringCondition } from "./filtering-condition";
-import { FilteringExpression, FilteringLogic } from "./filtering-expression.interface";
-import { FilteringState, filteringStateDefaults } from "./filtering-state.interface";
+import { FilteringLogic, IFilteringExpression } from "./filtering-expression.interface";
+import { filteringStateDefaults, IFilteringState } from "./filtering-state.interface";
 import { FilteringStrategy, IFilteringStrategy } from "./filtering-strategy";
 
-import { SortingDirection, SortingExpression } from "./sorting-expression.interface";
-import { SortingState, SortingStateDefaults } from "./sorting-state.interface";
+import { ISortingExpression, SortingDirection } from "./sorting-expression.interface";
+import { ISortingState, SortingStateDefaults } from "./sorting-state.interface";
 import { ISortingStrategy, SortingStrategy } from "./sorting-strategy";
 
-import { PagingError, PagingState } from "./paging-state.interface";
+import { IPagingState, PagingError } from "./paging-state.interface";
 
-import { DataState } from "./data-state.interface";
+import { IDataState } from "./data-state.interface";
 
 export enum DataType {
     String,
@@ -36,7 +36,8 @@ export class DataUtil {
             });
         return target;
     }
-    public static getFilteringConditionsForDataType(dataType: DataType): {[name: string]: () => void} {
+    public static getFilteringConditionsForDataType(dataType: DataType):
+        {[name: string]: (value: any, searchVal?: any, ignoreCase?: boolean) => void} {
         let dt: string;
         switch (dataType) {
             case DataType.String:

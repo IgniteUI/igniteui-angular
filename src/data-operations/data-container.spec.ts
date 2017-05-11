@@ -7,13 +7,13 @@ import { By } from "@angular/platform-browser";
 import { DataGenerator} from "./test-util/data-generator";
 
 import {DataAccess, DataContainer} from "./data-container";
-import {DataState} from "./data-state.interface";
+import {IDataState} from "./data-state.interface";
 import {DataUtil} from "./data-util";
 import {FilteringCondition} from "./filtering-condition";
-import { FilteringState } from "./filtering-state.interface";
-import {PagingError, PagingState} from "./paging-state.interface";
-import {SortingDirection, SortingExpression} from "./sorting-expression.interface";
-import {SortingState} from "./sorting-state.interface";
+import { IFilteringState } from "./filtering-state.interface";
+import {PagingError, IPagingState} from "./paging-state.interface";
+import {SortingDirection, ISortingExpression} from "./sorting-expression.interface";
+import {ISortingState} from "./sorting-state.interface";
 
 describe("DataContainer", () => {
     let dataGenerator: DataGenerator,
@@ -69,7 +69,7 @@ describe("DataContainer", () => {
     });
     it ("tests sort", () => {
         // apply sorting without removing filtering
-        let res, sortingState: SortingState = {
+        let res, sortingState: ISortingState = {
             expressions: [
                 {
                     fieldName: "number",
@@ -85,7 +85,7 @@ describe("DataContainer", () => {
     });
     it ("tests filter", () => {
         // apply sorting without removing filtering
-        let res, filteringState: FilteringState = {
+        let res, filteringState: IFilteringState = {
             expressions: [
                 {
                     fieldName: "number",
@@ -102,7 +102,7 @@ describe("DataContainer", () => {
     });
     it ("tests page", () => {
         // apply sorting without removing filtering
-        const res, pagingState: PagingState = {
+        let res, pagingState: IPagingState = {
             index: 0,
             recordsPerPage: 4
         };
