@@ -11,8 +11,8 @@ import {IDataState} from "./data-state.interface";
 import {DataUtil} from "./data-util";
 import {FilteringCondition} from "./filtering-condition";
 import { IFilteringState } from "./filtering-state.interface";
-import {PagingError, IPagingState} from "./paging-state.interface";
-import {SortingDirection, ISortingExpression} from "./sorting-expression.interface";
+import {IPagingState, PagingError} from "./paging-state.interface";
+import {ISortingExpression, SortingDirection} from "./sorting-expression.interface";
 import {ISortingState} from "./sorting-state.interface";
 
 describe("DataContainer", () => {
@@ -102,7 +102,7 @@ describe("DataContainer", () => {
     });
     it ("tests page", () => {
         // apply sorting without removing filtering
-        let res, pagingState: IPagingState = {
+        const res, pagingState: IPagingState = {
             index: 0,
             recordsPerPage: 4
         };

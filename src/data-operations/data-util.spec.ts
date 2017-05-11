@@ -7,12 +7,12 @@ import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { DataGenerator } from "./test-util/data-generator";
 
-import {    IDataState,
-            DataType,
+import {    DataType,
             DataUtil,
-            FilteringCondition, IFilteringExpression, FilteringLogic,
-            IFilteringState, FilteringStrategy, PagingError, IPagingState, SortingDirection,
-            ISortingExpression, ISortingState
+            FilteringCondition,
+            FilteringLogic, FilteringStrategy, IDataState,
+            IFilteringExpression, IFilteringState, IPagingState, ISortingExpression, ISortingState,
+            PagingError, SortingDirection
         } from "../main";
 /* Test sorting */
 function testSort() {
