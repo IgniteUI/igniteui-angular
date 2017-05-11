@@ -35,7 +35,7 @@ export class DataStateConfiguratorComponent implements OnInit {
     @Output() onProcessDataState = new EventEmitter();
 
     ngOnInit() {
-        this.dataTable.keys = this.columns.map((col) =>col.fieldName);
+        this.dataTable.keys = this.columns.map((col) => col.fieldName);
     }
 
     setMetadataInfo(title?: string) {
@@ -46,7 +46,7 @@ export class DataStateConfiguratorComponent implements OnInit {
             const metadata = p.metadata;
             msg += metadata.error !== PagingError.None ?
                                     "Incorrect arguments <br />" :
-                                    `Paging: ${metadata.countPages ? p.index + 1 : 0} of ${metadata.countPages} page(s) | 
+                                    `Paging: ${metadata.countPages ? p.index + 1 : 0} of ${metadata.countPages} page(s) |
                                     Records: ${metadata.countRecords}<br />`;
             msg += "<br />";
         }

@@ -5,11 +5,11 @@ import {IgxNavbar, IgxNavbarModule} from "./navbar.component";
 describe("IgxNavbar", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [
-                IgxNavbarModule
-            ],
             declarations: [
                 NavbarIntializeTestComponent
+            ],
+            imports: [
+                IgxNavbarModule
             ]
         });
     }));
@@ -23,17 +23,16 @@ describe("IgxNavbar", () => {
             expect(fixture.componentInstance.navbar.isActionButtonVisible).toBeFalsy();
             expect(fixture.componentInstance.navbar.actionButtonIcon).toBeUndefined();
         }).catch((reason) => {
-            console.log(reason);
             return Promise.reject(reason);
         });
     }));
 
     it("should change properties default values", async(() => {
         TestBed.compileComponents().then(() => {
-            const fixture = TestBed.createComponent(NavbarIntializeTestComponent),
-                title = "Test title",
-                isActionButtonVisible = true,
-                actionButtonIcon = "Test icon";
+            const fixture = TestBed.createComponent(NavbarIntializeTestComponent);
+            const title = "Test title";
+            const isActionButtonVisible = true;
+            const actionButtonIcon = "Test icon";
 
             fixture.componentInstance.title = title;
             fixture.componentInstance.isActionButtonVisible = isActionButtonVisible;
@@ -44,7 +43,6 @@ describe("IgxNavbar", () => {
             expect(fixture.componentInstance.navbar.isActionButtonVisible).toBeTruthy();
             expect(fixture.componentInstance.navbar.actionButtonIcon).toBe(actionButtonIcon);
         }).catch((reason) => {
-            console.log(reason);
             return Promise.reject(reason);
         });
     }));
@@ -58,9 +56,9 @@ describe("IgxNavbar", () => {
             fixture.debugElement.nativeElement.querySelector("button").click();
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.navbar.onAction.emit).toHaveBeenCalledWith(fixture.componentInstance.navbar);
+            expect(fixture.componentInstance.navbar.onAction.emit)
+                .toHaveBeenCalledWith(fixture.componentInstance.navbar);
         }).catch((reason) => {
-            console.log(reason);
             return Promise.reject(reason);
         });
     }));
@@ -74,8 +72,8 @@ describe("IgxNavbar", () => {
                </igx-navbar>`
 })
 class NavbarIntializeTestComponent {
-    title: string;
-    actionButtonIcon: string;
-    isActionButtonVisible: boolean;
-    @ViewChild(IgxNavbar) navbar: IgxNavbar;
+    public title: string;
+    public actionButtonIcon: string;
+    public isActionButtonVisible: boolean;
+    @ViewChild(IgxNavbar) public navbar: IgxNavbar;
 }

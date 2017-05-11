@@ -3,7 +3,6 @@ import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
-
 import { IgxComponentsModule, IgxDirectivesModule } from "../../src/main";
 
 import { AppComponent } from "./app.component";

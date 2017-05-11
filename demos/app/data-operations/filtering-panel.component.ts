@@ -104,23 +104,23 @@ export class FilteringPanelComponent {
           }
         }
       }
-      this.dataState.filtering = (expressions.length) ? {expressions: expressions} : null;
+      this.dataState.filtering = (expressions.length) ? {expressions} : null;
     }
     getDataTypeStringRepresentation(column: IDataColumn): string {
       let dt: string = "";
       switch (column.type) {
             case DataType.String:
                 dt = "string";
-            break;
+                break;
             case DataType.Number:
                 dt = "number";
-            break;
+                break;
             case DataType.Boolean:
                 dt = "boolean";
-            break;
+                break;
             case DataType.Date:
                 dt = "date";
-            break;
+                break;
         }
       return dt;
     }

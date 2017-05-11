@@ -90,7 +90,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     @HostBinding("attr.role") public role;
     @Input() public isHeader: boolean = false;
     @Input() public href: string;
-    @Input() public options: Array<object>;
+    @Input() public options: object[];
 
     private _panState: IgxListPanState = IgxListPanState.NONE;
     private _FRACTION_OF_WIDTH_TO_TRIGGER_GRIP = 0.5; // as a fraction of the item width

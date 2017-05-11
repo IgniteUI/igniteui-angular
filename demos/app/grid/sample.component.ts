@@ -15,7 +15,6 @@ import {
     StableSortingStrategy
 } from "../../../src/main";
 
-
 @Injectable()
 export class LocalService {
     private url: string = "http://services.odata.org/V4/Northwind/Northwind.svc/Alphabetical_list_of_products";
@@ -98,7 +97,6 @@ export class RemoteService {
       });
   }
 }
-
 
 @Component({
     providers: [LocalService, RemoteService],

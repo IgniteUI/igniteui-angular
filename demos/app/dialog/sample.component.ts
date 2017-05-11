@@ -13,5 +13,5 @@ export class DialogSampleComponent {
 
         // perform OK action
         args.dialog.close();
-    };
+    }
 }

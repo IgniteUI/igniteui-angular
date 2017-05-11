@@ -12,7 +12,6 @@ import { PagingPanelComponent } from "./paging-panel.component";
 import { DataOperationsSampleComponent } from "./sample.component";
 import { SortingPanelComponent } from "./sorting-panel.component";
 
-
 @NgModule({
     imports: [
         IgxComponentsModule,
