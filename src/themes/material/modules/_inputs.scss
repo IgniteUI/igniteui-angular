@@ -6,7 +6,7 @@ input:-webkit-autofill {
 }
 
 @include b(igx-form-group) {
-	$block: &;
+	$block: bem--selector-to-string(&);
 
 	@extend %igx-input-display;
 
