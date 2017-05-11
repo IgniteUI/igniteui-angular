@@ -19,8 +19,8 @@ const SORT_TEXT_NONE = "NOT SORTED";
 export class SortingPanelComponent{
     @ViewChild("sortingPanel") sortingPanel;
 
-    @Input() dataState: DataState;
-    @Input() columns: DataColumn[] = [];
+    @Input() dataState: IDataState;
+    @Input() columns: IDataColumn[] = [];
     @Input() hidden: boolean = false;
 
     title: string = "Sorting";
@@ -32,8 +32,8 @@ export class SortingPanelComponent{
       }
       return (++dir > SortingDirection.Desc) ? null : dir;
     }
-    changeSortingDirection(column: DataColumn) {
-        const s: SortingState = this.dataState.sorting || {expressions: []};
+    changeSortingDirection(column: IDataColumn) {
+        const s: ISortingState = this.dataState.sorting || {expressions: []};
         const indExpr = s.expressions.findIndex((e) => e.fieldName === column.fieldName);
         const expr = s.expressions[indExpr] || null;
         const dir = expr ? expr.dir : null;
@@ -53,8 +53,8 @@ export class SortingPanelComponent{
         this.dataState.sorting = (s.expressions.length) ? s : null;
         this.process();
     }
-    getSortingButtonTitle(column: DataColumn): string {
-      const s: SortingState = this.dataState.sorting || {expressions: []};
+    getSortingButtonTitle(column: IDataColumn): string {
+      const s: ISortingState = this.dataState.sorting || {expressions: []};
       if (!s.expressions.length) {
         return SORT_TEXT_NONE;
       }

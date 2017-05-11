@@ -7,16 +7,16 @@ import { By } from "@angular/platform-browser";
 import { IgxLabelModule } from "../label/label.directive";
 import { IgxInput } from "./input.directive";
 
-describe("IgxInput", function() {
+describe("IgxInput", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [
-                IgxInput,
-                IgxLabelModule
-            ],
             declarations: [
                 InitInput,
                 InputWithAttribs
+            ],
+            imports: [
+                IgxInput,
+                IgxLabelModule
             ]
         })
         .compileComponents();
@@ -74,5 +74,5 @@ class InitInput {
     `
 })
 class InputWithAttribs {
-    placeholder = "Please enter a name";
+    public placeholder = "Please enter a name";
 }
