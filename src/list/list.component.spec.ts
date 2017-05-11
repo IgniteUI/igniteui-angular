@@ -209,11 +209,11 @@ describe("List", () => {
     }, 5000);
 
     it("Should have default no items template.", () => {
-        const fixture = TestBed.createComponent(ListWithNoItems),
-            list = fixture.componentInstance.list,
-            listNoItemsImgSrc = "https://example.com/noitems.png",
-            listNoItemsMessage = "Custom no items message.",
-            listNoItemsButtonText = "Custom Button Text";
+        const fixture = TestBed.createComponent(ListWithNoItems);
+        const list = fixture.componentInstance.list;
+        const listNoItemsImgSrc = "https://example.com/noitems.png";
+        const listNoItemsMessage = "Custom no items message.";
+        const listNoItemsButtonText = "Custom Button Text";
 
         fixture.detectChanges();
 
@@ -237,9 +237,9 @@ describe("List", () => {
     });
 
     it("Should have custom no items template.", () => {
-        const fixture = TestBed.createComponent(ListWithCustomNoItemsTemplate),
-            list = fixture.componentInstance.list,
-            listCustomNoItemsTemplateContent = "Custom no items message.";
+        const fixture = TestBed.createComponent(ListWithCustomNoItemsTemplate);
+        const list = fixture.componentInstance.list;
+        const listCustomNoItemsTemplateContent = "Custom no items message.";
 
         fixture.detectChanges();
         expect(list.hasNoItemsTemplate).toBeTruthy();
@@ -249,14 +249,14 @@ describe("List", () => {
 
     function panRight(item, itemHeight, itemWidth, duration) {
         const panOptions = {
-            pos: [0, itemHeight * 0.5],
             duration,
             deltaX: itemWidth * 0.6,
-            deltaY: 0
+            deltaY: 0,
+            pos: [0, itemHeight * 0.5]
         };
 
-        return new Promise(function(resolve, reject) {
-             Simulator.gestures.pan(item, panOptions, function() {
+        return new Promise((resolve, reject) => {
+             Simulator.gestures.pan(item, panOptions, () => {
                 resolve();
             });
         });
@@ -264,14 +264,14 @@ describe("List", () => {
 
     function panLeft(item, itemHeight, itemWidth, duration) {
         const panOptions = {
-            pos: [itemWidth, itemHeight * 0.5],
             duration,
             deltaX: -(itemWidth * 0.6),
-            deltaY: 0
+            deltaY: 0,
+            pos: [itemWidth, itemHeight * 0.5]
         };
 
-        return new Promise(function(resolve, reject) {
-             Simulator.gestures.pan(item, panOptions, function() {
+        return new Promise((resolve, reject) => {
+             Simulator.gestures.pan(item, panOptions, () => {
                 resolve();
             });
         });
@@ -289,8 +289,8 @@ describe("List", () => {
                 </div>`
 })
 class ListTestComponent {
-     @ViewChild(IgxList) list: IgxList;
-     @ViewChild("wrapper") wrapper;
+     @ViewChild(IgxList) public list: IgxList;
+     @ViewChild("wrapper") public wrapper;
 }
 
 @Component({
@@ -303,7 +303,7 @@ class ListTestComponent {
                 </div>`
 })
 class ListWithPanningAllowed {
-    @ViewChild(IgxList) list: IgxList;
+    @ViewChild(IgxList) public list: IgxList;
 }
 
 @Component({
@@ -316,7 +316,7 @@ class ListWithPanningAllowed {
             </div>`
 })
 class ListWithRightPanningAllowed {
-    @ViewChild(IgxList) list: IgxList;
+    @ViewChild(IgxList) public list: IgxList;
 }
 
 @Component({
@@ -329,7 +329,7 @@ class ListWithRightPanningAllowed {
             </div>`
 })
 class ListWithLeftPanningAllowed {
-    @ViewChild(IgxList) list: IgxList;
+    @ViewChild(IgxList) public list: IgxList;
 }
 
 @Component({
@@ -342,7 +342,7 @@ class ListWithLeftPanningAllowed {
             </div>`
 })
 class ListWithNoItems {
-    @ViewChild(IgxList) list: IgxList;
+    @ViewChild(IgxList) public list: IgxList;
 }
 
 @Component({
@@ -355,5 +355,5 @@ class ListWithNoItems {
             </div>`
 })
 class ListWithCustomNoItemsTemplate {
-    @ViewChild(IgxList) list: IgxList;
+    @ViewChild(IgxList) public list: IgxList;
 }
