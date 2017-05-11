@@ -16,8 +16,7 @@ describe("Badge", () => {
                 IgxBadge,
                 InitBadgeWithIconARIA
             ]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
     it("Initializes badge ", () => {
@@ -27,11 +26,11 @@ describe("Badge", () => {
 
         expect(badge.value).toBeTruthy();
         expect(badge.type).toBeTruthy();
-        const contain = fixture.elementRef.nativeElement.getElementsByTagName("div")[0]
-                            .classList.contains("igx-badge--bottom-left");
+        const contain = fixture.elementRef.nativeElement
+                            .getElementsByTagName("div")[0].classList.contains("igx-badge--bottom-left");
         expect(contain).toBeTruthy();
         const text = fixture.elementRef.nativeElement.getElementsByClassName("igx-badge__circle")[0].textContent;
-        expect(text === 22).toBeTruthy();
+        expect(parseInt(text, 10) === 22).toBeTruthy();
     });
 
     it("Initializes badge defaults", () => {
@@ -39,8 +38,8 @@ describe("Badge", () => {
         fixture.detectChanges();
         const badge = fixture.componentInstance.badge;
 
-        const contain = fixture.elementRef.nativeElement.getElementsByTagName("div")[0]
-                            .classList.contains("igx-badge--top-right");
+        const contain = fixture.elementRef.nativeElement
+                            .getElementsByTagName("div")[0].classList.contains("igx-badge--top-right");
         expect(contain).toBeTruthy();
         expect(fixture.elementRef.nativeElement.getElementsByTagName("span")[0].textContent === "?").toBeTruthy();
         expect(fixture.elementRef.nativeElement.getElementsByTagName("i").length === 0).toBeTruthy();
