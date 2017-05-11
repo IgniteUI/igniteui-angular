@@ -1,18 +1,18 @@
-import { Component, NgModule, AfterViewInit, Renderer2, ViewChild, ViewChildren, QueryList, ElementRef } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, NgModule, QueryList, Renderer2, ViewChild, ViewChildren } from "@angular/core";
+import { Router, RouterModule } from "@angular/router";
 import { IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
-import { RouterModule, Router } from '@angular/router';
 
 @Component({
     selector: "tabbar-sample",
     moduleId: module.id,
-    templateUrl: 'sample.component.html',
-    styleUrls: ['sample.component.css', '../app.samples.css']
+    templateUrl: "sample.component.html",
+    styleUrls: ["sample.component.css", "../app.samples.css"]
 })
 export class TabBarSampleComponent implements AfterViewInit {
-    @ViewChildren('tabbarEl') tabbar: QueryList<ElementRef>;
+    @ViewChildren("tabbarEl") tabbar: QueryList<ElementRef>;
 
-    private contacts: Array<Object> = [
-        { key: "1", text: "Terrance Orta", phone: "770-504-2217" ,avatar: "../demos/app/avatar/images/1.jpg", favorite: true, link: "#" },
+    private contacts: Object[] = [
+        { key: "1", text: "Terrance Orta", phone: "770-504-2217" , avatar: "../demos/app/avatar/images/1.jpg", favorite: true, link: "#" },
         { key: "2", text: "Richard Mahoney", phone: "423-676-2869", avatar: "../demos/app/avatar/images/2.jpg", favorite: false, link: "#" },
         { key: "3", text: "Donna Price", phone: "859-496-2817", avatar: "../demos/app/avatar/images/3.jpg", favorite: false, link: "#" },
         { key: "4", text: "Lisa Landers", phone: "901-747-3428", avatar: "../demos/app/avatar/images/4.jpg", favorite: false, link: "#" },
@@ -27,14 +27,14 @@ export class TabBarSampleComponent implements AfterViewInit {
 
     route(event) {
         if (event.panel.index == 2) {
-            this.router.navigate(['/tabbar', { outlets: { 'tabPanelOutlet': ['tabbarInnerPath'] } }]);
+            this.router.navigate(["/tabbar", { outlets: { tabPanelOutlet: ["tabbarInnerPath"] } }]);
         }
     }
 
     ngAfterViewInit() {
-        this.tabbar.map(e => {
-            menubar = e.nativeElement.querySelector('.igx-tab-bar__menu');
-            this.renderer.setStyle(menubar, 'position', 'absolute');
+        this.tabbar.map((e) => {
+            menubar = e.nativeElement.querySelector(".igx-tab-bar__menu");
+            this.renderer.setStyle(menubar, "position", "absolute");
         });
     }
 }
@@ -42,7 +42,7 @@ export class TabBarSampleComponent implements AfterViewInit {
 @Component({
     selector: "custom-content",
     moduleId: module.id,
-    templateUrl: 'template.html'
+    templateUrl: "template.html"
 })
 
 export class CustomContentComponent {

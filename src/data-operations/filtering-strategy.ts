@@ -1,19 +1,20 @@
-import { FilteringExpression, FilteringLogic } from "./filtering-expression.interface";
-import { FilteringCondition } from "./filtering-condition";
-import { FilteringState } from "./filtering-state.interface";
 import {DataUtil} from "./data-util";
+import { FilteringCondition } from "./filtering-condition";
+import { FilteringLogic, IFilteringExpression } from "./filtering-expression.interface";
+import { IFilteringState } from "./filtering-state.interface";
 
 export interface IFilteringStrategy {
-    filter(data: any[], expressions: Array<FilteringExpression>, logic?: FilteringLogic): any[];
+    filter(data: any[], expressions: IFilteringExpression[], logic?: FilteringLogic): any[];
 }
 
 export class FilteringStrategy implements IFilteringStrategy {
-    filter<T>(data: T[],
-                expressions: Array<FilteringExpression>, 
-                logic?: FilteringLogic): T[] {
-        var i, len = data.length,
-            res: T[] = [],
-            rec;
+    public filter<T>(data: T[],
+                     expressions: IFilteringExpression[],
+                     logic?: FilteringLogic): T[] {
+        let i;
+        let rec;
+        const len = data.length;
+        const res: T[] = [];
         if (!expressions || !expressions.length || !len) {
             return data;
         }
@@ -25,12 +26,19 @@ export class FilteringStrategy implements IFilteringStrategy {
         }
         return res;
     }
-    matchRecordByExpressions(rec: Object,
-                            expressions: Array<FilteringExpression>,
-                            index: number,
-                            logic?: FilteringLogic): Boolean {
-        var i, len = expressions.length, match = false, 
-            and = (logic === FilteringLogic.And);
+    public findMatch(rec: object, expr: IFilteringExpression, index: number): boolean {
+        const cond = expr.condition;
+        const val = rec[expr.fieldName];
+        return cond(val, expr.searchVal, expr.ignoreCase);
+    }
+    public matchRecordByExpressions(rec: object,
+                                    expressions: IFilteringExpression[],
+                                    index: number,
+                                    logic?: FilteringLogic): boolean {
+        let i;
+        let match = false;
+        const and = (logic === FilteringLogic.And);
+        const len = expressions.length;
         for (i = 0; i < len; i++) {
             match = this.findMatch(rec, expressions[i], i);
             if (and) {
@@ -44,10 +52,5 @@ export class FilteringStrategy implements IFilteringStrategy {
             }
         }
         return match;
-    }
-    findMatch(rec: Object, expr: FilteringExpression, index: number): boolean {
-        var cond = expr.condition,
-            val = rec[expr.fieldName];
-        return cond(val, expr.searchVal, expr.ignoreCase);
     }
 }

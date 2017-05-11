@@ -7,7 +7,7 @@ export enum SortingDirection {
     Desc = 2
 }
 
-export interface SortingExpression {
+export interface ISortingExpression {
    fieldName: string;
    dir: SortingDirection;
    ignoreCase?: boolean;

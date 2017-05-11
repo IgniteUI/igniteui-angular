@@ -1,26 +1,16 @@
-import { Component, Input, NgModule, EventEmitter, Output, OnInit, AfterContentChecked } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HammerGesturesManager } from "../core/touch";
+import { CommonModule } from "@angular/common";
+import { AfterContentChecked, Component, EventEmitter, Input, NgModule, OnInit, Output } from "@angular/core";
 import { IgxButtonModule } from "../button/button.directive";
+import { HammerGesturesManager } from "../core/touch";
 
 @Component({
-    selector: "igx-navbar",
     moduleId: module.id,
-    templateUrl: "navbar.component.html",
-    providers: [HammerGesturesManager]
+    providers: [HammerGesturesManager],
+    selector: "igx-navbar",
+    templateUrl: "navbar.component.html"
 })
 export class IgxNavbar implements AfterContentChecked {
     private static NEXT_ID: number = 1;
-    private _titleId: string;
-
-    ngAfterContentChecked(): void {
-        this._titleId = `igx-navbar-${IgxNavbar.NEXT_ID++}`;
-    }
-
-    @Input()
-    get titleId() {
-        return this._titleId;
-    }
 
     /**
      * The IgxNavbar action button visual state state
@@ -33,22 +23,31 @@ export class IgxNavbar implements AfterContentChecked {
      * The IgxNavbar action button actionButtonIcon
      * @type {string}
      */
-    @Input()
-    public actionButtonIcon: string;
+    @Input() public actionButtonIcon: string;
 
     /**
      * The IgxNavbar title
      * @type {string}
      */
-    @Input() title: string;
+    @Input() public title: string;
 
     /**
      * The event that will be thrown when the action is executed,
      * provides reference to the IgxNavbar component as argument
      * @type {EventEmitter}
      */
-    @Output()
-    public onAction = new EventEmitter();
+    @Output() public onAction = new EventEmitter();
+
+    private _titleId: string;
+
+    public ngAfterContentChecked(): void {
+        this._titleId = `igx-navbar-${IgxNavbar.NEXT_ID++}`;
+    }
+
+    @Input()
+    get titleId() {
+        return this._titleId;
+    }
 
     private _triggerAction() {
         this.onAction.emit(this);
@@ -56,9 +55,9 @@ export class IgxNavbar implements AfterContentChecked {
 }
 
 @NgModule({
-    imports: [IgxButtonModule, CommonModule],
     declarations: [IgxNavbar],
-    exports: [IgxNavbar]
+    exports: [IgxNavbar],
+    imports: [IgxButtonModule, CommonModule]
 })
 export class IgxNavbarModule {
 }

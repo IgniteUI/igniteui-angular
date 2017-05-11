@@ -5,16 +5,16 @@ import {SliderType} from "../../../src/range/range.component";
     moduleId: module.id,
     selector: "range-sample",
     templateUrl: "./sample.component.html",
-    styleUrls: ['../app.samples.css', 'sample.component.css']
+    styleUrls: ["../app.samples.css", "sample.component.css"]
 })
 export class IgxRangeSampleComponent {
 
     private task: Task = new Task("Implement new app", 30);
 
     public changeValue(value: string) {
-        var numberValue: number = parseFloat(value);
+        const numberValue: number = parseFloat(value);
 
-        if(numberValue === NaN) {
+        if (numberValue === NaN) {
             return;
         }
     }

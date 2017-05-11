@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
+import { NgModule } from "@angular/core";
 
-import { IgxRangeModule } from '../../../src/main';
-import { IgxRangeSampleComponent } from './sample.component';
 import {FormsModule} from "@angular/forms";
+import { IgxRangeModule } from "../../../src/main";
+import { IgxRangeSampleComponent } from "./sample.component";
 
 @NgModule({
     imports: [
@@ -10,7 +10,7 @@ import {FormsModule} from "@angular/forms";
         FormsModule
     ],
     declarations: [
-        IgxRangeSampleComponent,
+        IgxRangeSampleComponent
     ]
 })
 export class IgxRangeSampleModule {}

@@ -1,23 +1,23 @@
+import { Component, ViewChild } from "@angular/core";
 import {
     TestBed
 } from "@angular/core/testing";
-import { Component, ViewChild } from "@angular/core";
-import { FormsModule } from '@angular/forms';
+import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { DataGenerator} from "./test-util/data-generator";
 
-import {DataState} from "./data-state.interface";
-import {FilteringCondition} from "./filtering-condition";
-import {SortingExpression, SortingDirection} from "./sorting-expression.interface";
+import {DataAccess, DataContainer} from "./data-container";
+import {IDataState} from "./data-state.interface";
 import {DataUtil} from "./data-util";
-import {PagingError, PagingState} from "./paging-state.interface";
-import {DataContainer, DataAccess} from "./data-container";
-import {SortingState} from "./sorting-state.interface";
-import { FilteringState } from "./filtering-state.interface";
+import {FilteringCondition} from "./filtering-condition";
+import { IFilteringState } from "./filtering-state.interface";
+import {IPagingState, PagingError} from "./paging-state.interface";
+import {ISortingExpression, SortingDirection} from "./sorting-expression.interface";
+import {ISortingState} from "./sorting-state.interface";
 
-describe('DataContainer', () => {
-    var dataGenerator:DataGenerator,
-        data:Object[],
+describe("DataContainer", () => {
+    let dataGenerator: DataGenerator,
+        data: Object[],
         dc: DataContainer;
     beforeEach(() => {
         dataGenerator = new DataGenerator();
@@ -39,9 +39,9 @@ describe('DataContainer', () => {
         };
         dc.process();
         expect(dataGenerator.getValuesForColumn(dc.transformedData, "number"))
-            .toEqual([1,2,3,4]);
+            .toEqual([1, 2, 3, 4]);
         expect(dataGenerator.getValuesForColumn(dc.data, "number"))
-            .toEqual([0, 1,2,3,4]);
+            .toEqual([0, 1, 2, 3, 4]);
         // apply sorting without removing filtering
         dc.state.sorting = {
             expressions: [
@@ -55,7 +55,7 @@ describe('DataContainer', () => {
         expect(dataGenerator.getValuesForColumn(dc.transformedData, "number"))
             .toEqual([4, 3, 2, 1]);
         expect(dataGenerator.getValuesForColumn(dc.data, "number"))
-            .toEqual([0, 1,2,3,4]);
+            .toEqual([0, 1, 2, 3, 4]);
         // apply paging(+filtering and sorting)
         dc.state.paging = {
             index: 1,
@@ -69,7 +69,7 @@ describe('DataContainer', () => {
     });
     it ("tests sort", () => {
         // apply sorting without removing filtering
-        var res, sortingState: SortingState = {
+        let res, sortingState: ISortingState = {
             expressions: [
                 {
                     fieldName: "number",
@@ -85,7 +85,7 @@ describe('DataContainer', () => {
     });
     it ("tests filter", () => {
         // apply sorting without removing filtering
-        var res, filteringState: FilteringState = {
+        let res, filteringState: IFilteringState = {
             expressions: [
                 {
                     fieldName: "number",
@@ -102,7 +102,7 @@ describe('DataContainer', () => {
     });
     it ("tests page", () => {
         // apply sorting without removing filtering
-        var res, pagingState: PagingState = {
+        const res, pagingState: IPagingState = {
             index: 0,
             recordsPerPage: 4
         };
@@ -124,8 +124,8 @@ describe('DataContainer', () => {
     });
 
     // test CRUD operations
-        it("tests `addRecord`", () => {
-            var record = {
+    it("tests `addRecord`", () => {
+            let record = {
                 number: -1
             };
             dc.addRecord(record);
@@ -138,8 +138,8 @@ describe('DataContainer', () => {
             expect(dc.data.length).toBe(7);
             expect(dc.data[0]).toEqual(record);
         });
-        it ("tests `deleteRecord`", () => {
-            var record = data[0],
+    it ("tests `deleteRecord`", () => {
+            const record = data[0],
             // remove first element
                 res = dc.deleteRecord(record);
             expect(res).toBeTruthy();
@@ -147,36 +147,36 @@ describe('DataContainer', () => {
             expect(dataGenerator.getValuesForColumn(dc.data, "number"))
                 .toEqual([1, 2, 3, 4]);
         });
-        it ("tests `deleteRecordByIndex`", () => {
+    it ("tests `deleteRecordByIndex`", () => {
             // remove first element
-            var res = dc.deleteRecordByIndex(0);
+            const res = dc.deleteRecordByIndex(0);
             expect(res).toBeTruthy();
             expect(dc.data.length).toBe(4);
             expect(dataGenerator.getValuesForColumn(dc.data, "number"))
                 .toEqual([1, 2, 3, 4]);
         });
-        it ("tests `updateRecordByIndex`", () => {
-            var recordCopy = Object.assign({}, data[0]),
+    it ("tests `updateRecordByIndex`", () => {
+            const recordCopy = Object.assign({}, data[0]),
                 res = dc.updateRecordByIndex(0, {number: -1});
-            recordCopy["number"] = -1;
+            recordCopy.number = -1;
             expect(dc.data[0]).toEqual(recordCopy);
         });
-        it ("tests `getRecordInfoByKeyValue`", () => {
-            var recordInfo = dc.getRecordInfoByKeyValue("number", 0);
+    it ("tests `getRecordInfoByKeyValue`", () => {
+            let recordInfo = dc.getRecordInfoByKeyValue("number", 0);
             expect(recordInfo.index === 0 && recordInfo.record === dc.data[0])
                 .toBeTruthy("tests getRecordInfoByKeyValue('number', 0)");
             recordInfo = dc.getRecordInfoByKeyValue("number", -1);
             expect(recordInfo.index === -1 && recordInfo.record === undefined)
                 .toBeTruthy("tests getRecordInfoByKeyValue('number', -1)");
         });
-        it ("tests `getIndexOfRecord`", () => {
-            var index = dc.getIndexOfRecord(data[1]);
+    it ("tests `getIndexOfRecord`", () => {
+            let index = dc.getIndexOfRecord(data[1]);
             expect(index).toBe(1, "original data");
             index = dc.getIndexOfRecord(data[0], DataAccess.TransformedData);
             expect(index).toBe(0, "transformed data");
         });
-        it ("tests `getRecordByIndex`", () => {
-            var rec = dc.getRecordByIndex(0);
+    it ("tests `getRecordByIndex`", () => {
+            let rec = dc.getRecordByIndex(0);
             expect(rec).toBe(data[0], "original data");
             rec = dc.getRecordByIndex(0, DataAccess.TransformedData);
             expect(rec).toBe(dc.transformedData[0], "transformed data");

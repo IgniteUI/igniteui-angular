@@ -1,16 +1,16 @@
+import { Component, ViewChild } from "@angular/core";
 import {
     async,
     TestBed
 } from "@angular/core/testing";
-import { Component, ViewChild } from "@angular/core";
-import { FormsModule } from '@angular/forms';
+import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 
-import { DataGenerator } from "./test-util/data-generator";
 import {FilteringCondition} from "./filtering-condition";
-describe('Unit testing FilteringCondition', () => {
+import { DataGenerator } from "./test-util/data-generator";
+describe("Unit testing FilteringCondition", () => {
     it("tests string conditions", () => {
-        var fc = FilteringCondition.string;
+        const fc = FilteringCondition.string;
         // contains
         expect(fc.contains("test123", "esT"))
             .toBeFalsy("contains ignoreCase: false");
@@ -55,7 +55,7 @@ describe('Unit testing FilteringCondition', () => {
             .toBeTruthy("notNull");
     });
     it("tests number conditions", () => {
-        var fn = FilteringCondition.number;
+        const fn = FilteringCondition.number;
         expect(fn.doesNotEqual(1, 2) && !fn.doesNotEqual(1, 1))
             .toBeTruthy("doesNotEqual");
         expect(fn.empty(null))
@@ -67,10 +67,10 @@ describe('Unit testing FilteringCondition', () => {
         expect(!fn.greaterThanOrEqualTo(1, 2) && !fn.greaterThanOrEqualTo(1, 2) &&
                 fn.greaterThanOrEqualTo(1, 1))
             .toBeTruthy("greaterThanOrEqualTo");
-        expect(fn.lessThan(1, 2) && !fn.lessThan(2, 2) && 
+        expect(fn.lessThan(1, 2) && !fn.lessThan(2, 2) &&
                 !fn.lessThan(3, 2))
             .toBeTruthy("lessThan");
-        expect(fn.lessThanOrEqualTo(1, 2) && 
+        expect(fn.lessThanOrEqualTo(1, 2) &&
                 fn.lessThanOrEqualTo(1, 1) &&
                 !fn.lessThanOrEqualTo(3, 2))
             .toBeTruthy("lessThanOrEqualTo");
@@ -84,14 +84,14 @@ describe('Unit testing FilteringCondition', () => {
             .toBeTruthy("null");
     });
     it("tests date conditions", () => {
-        var fd = FilteringCondition.date,
+        const fd = FilteringCondition.date,
             now = new Date(),
             cnow = new Date(),
-            yesterday = ( d => new Date(d.setDate(d.getDate() - 1)) )(new Date),
-            lastMonth = ( d => { d.setDate(1); return new Date(d.setMonth(d.getMonth() - 1));} )(new Date),
-            nextMonth = ( d => { d.setDate(1); return new Date(d.setMonth(d.getMonth() + 1));} )(new Date),
-            lastYear = ( d => new Date(d.setFullYear(d.getFullYear() - 1)) )(new Date),
-            nextYear = ( d => new Date(d.setFullYear(d.getFullYear() + 1)) )(new Date);
+            yesterday = ( (d) => new Date(d.setDate(d.getDate() - 1)) )(new Date),
+            lastMonth = ( (d) => { d.setDate(1); return new Date(d.setMonth(d.getMonth() - 1)); } )(new Date),
+            nextMonth = ( (d) => { d.setDate(1); return new Date(d.setMonth(d.getMonth() + 1)); } )(new Date),
+            lastYear = ( (d) => new Date(d.setFullYear(d.getFullYear() - 1)) )(new Date),
+            nextYear = ( (d) => new Date(d.setFullYear(d.getFullYear() + 1)) )(new Date);
         expect(fd.after(now, yesterday) && !fd.after(now, nextYear))
             .toBeTruthy("after");
         expect(fd.before(yesterday, now) && !fd.before(now, lastYear))
@@ -128,7 +128,7 @@ describe('Unit testing FilteringCondition', () => {
             .toBeTruthy("yesterday");
     });
     it("tests boolean conditions", () => {
-        var f = FilteringCondition.boolean;
+        const f = FilteringCondition.boolean;
         expect(f.empty(null) && f.empty(undefined) && !f.empty(false))
             .toBeTruthy("empty");
         expect(f.false(false) && !f.false(true))

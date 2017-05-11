@@ -1,7 +1,7 @@
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable, NgZone} from "@angular/core";
+import { forEach } from "@angular/router/src/utils/collection";
 
 const EVENT_SUFFIX: string = "precise";
-
 
 /**
  * Touch gestures manager based on Hammer.js
@@ -9,12 +9,10 @@ const EVENT_SUFFIX: string = "precise";
  */
 @Injectable()
 export class HammerGesturesManager {
-    private _hammerManagers: Array<{ element: EventTarget, manager: HammerManager; }> = [];
-
     /**
      * Event option defaults for each recognizer, see http://hammerjs.github.io/api/ for API listing.
      */
-    protected hammerOptions: Array<any> = [
+    protected hammerOptions: any[] = [
         {
             name: "pan",
             options: {
@@ -32,10 +30,12 @@ export class HammerGesturesManager {
             }
         }];
 
+    private _hammerManagers: Array<{ element: EventTarget, manager: HammerManager; }> = [];
+
     constructor(private _zone: NgZone) {
     }
 
-    supports(eventName: string): boolean {
+    public supports(eventName: string): boolean {
         return eventName.toLowerCase().endsWith("." + EVENT_SUFFIX);
     }
 
@@ -43,18 +43,20 @@ export class HammerGesturesManager {
      * Add listener extended with options for Hammer.js. Will use defaults if none are provided.
      * Modeling after other event plugins for easy future modifications.
      */
-    addEventListener(element: HTMLElement, eventName: string, eventHandler: Function, options: Object = null): Function {
-        let self = this;
-
+    public addEventListener(element: HTMLElement,
+                            eventName: string,
+                            eventHandler: (eventObj) => void,
+                            options: object = null): () => void {
+        const self = this;
 
         // Creating the manager bind events, must be done outside of angular
-        return this._zone.runOutsideAngular(function() {
+        return this._zone.runOutsideAngular(() => {
             // new Hammer is a shortcut for Manager with defaults
-            var mc = new Hammer(element);
-            for (var i = 0; i < self.hammerOptions.length; i++) {
-                mc.get(self.hammerOptions[i].name).set(self.hammerOptions[i].options);
+            const mc = new Hammer(element);
+            for (const item of self.hammerOptions) {
+                mc.get(item.name).set(item.options);
             }
-            var handler = function(eventObj) { self._zone.run(function() { eventHandler(eventObj); }); };
+            const handler = (eventObj) => { self._zone.run(() => { eventHandler(eventObj); }); };
             mc.on(eventName, handler);
             return () => { mc.off(eventName, handler); };
         });
@@ -66,22 +68,22 @@ export class HammerGesturesManager {
      *
      * @param target Can be one of either window, body or document(fallback default).
      */
-    addGlobalEventListener(target: string, eventName: string, eventHandler: Function): Function {
-        var self = this,
-            element = this.getGlobalEventTarget(target);
+    public addGlobalEventListener(target: string, eventName: string, eventHandler: (eventObj) => void): () => void {
+        const self = this;
+        const element = this.getGlobalEventTarget(target);
 
         // Creating the manager bind events, must be done outside of angular
-        return this._zone.runOutsideAngular(function() {
+        return this._zone.runOutsideAngular(() => {
             // new Hammer is a shortcut for Manager with defaults
 
-            var mc : HammerManager = new Hammer(element as HTMLElement);
+            const mc: HammerManager = new Hammer(element as HTMLElement);
             self.addManagerForElement(element as HTMLElement, mc);
 
-            for (var i = 0; i < self.hammerOptions.length; i++) {
-                mc.get(self.hammerOptions[i].name).set(self.hammerOptions[i].options);
+            for (const item of self.hammerOptions) {
+                mc.get(item.name).set(item.options);
             }
-            var handler = function(eventObj) {
-                self._zone.run(function() {
+            const handler = (eventObj) => {
+                self._zone.run(() => {
                     eventHandler(eventObj);
                 });
             };
@@ -91,7 +93,7 @@ export class HammerGesturesManager {
     }
 
     /** temp replacement for DOM.getGlobalEventTarget(target) because DI won't play nice for now */
-    getGlobalEventTarget(target: string): EventTarget {
+    public getGlobalEventTarget(target: string): EventTarget {
         switch (target) {
             case "window":
                 return window;
@@ -101,7 +103,6 @@ export class HammerGesturesManager {
                 return document;
         }
     }
-
 
     /**
      * Set HammerManager options.
@@ -114,8 +115,8 @@ export class HammerGesturesManager {
      * manager.setManagerOption(myElem, "pan", { pointers: 1 });
      * ```
      */
-    setManagerOption(element: EventTarget, event: string, options: any) {
-        var manager = this.getManagerForElement(element);
+    public setManagerOption(element: EventTarget, event: string, options: any) {
+        const manager = this.getManagerForElement(element);
         manager.get(event).set(options);
     }
 
@@ -124,8 +125,8 @@ export class HammerGesturesManager {
      *
      * @param element The DOM element used to create the manager on.
      */
-    addManagerForElement(element: EventTarget, manager: HammerManager) {
-        this._hammerManagers.push({element: element, manager: manager});
+    public addManagerForElement(element: EventTarget, manager: HammerManager) {
+        this._hammerManagers.push({element, manager});
     }
 
     /**
@@ -133,8 +134,8 @@ export class HammerGesturesManager {
      *
      * @param element The DOM element used to create the manager on.
      */
-    getManagerForElement(element: EventTarget) : HammerManager {
-        var result =  this._hammerManagers.filter(function (value, index, array) {
+    public getManagerForElement(element: EventTarget): HammerManager {
+        const result =  this._hammerManagers.filter((value, index, array) => {
             return value.element === element;
         });
         return result.length ? result[0].manager : null;
@@ -145,27 +146,26 @@ export class HammerGesturesManager {
      *
      * @param element The DOM element used to create the manager on.
      */
-    removeManagerForElement(element: HTMLElement) {
+    public removeManagerForElement(element: HTMLElement) {
         let index: number = null;
-        for (var i = 0; i < this._hammerManagers.length; i++) {
-            if(element === this._hammerManagers[i].element) {
+        for (let i = 0; i < this._hammerManagers.length; i++) {
+            if (element === this._hammerManagers[i].element) {
                 index = i;
                 break;
             }
         }
         if (index !== null) {
-            var item = this._hammerManagers.splice(index, 1)[0];
+            const item = this._hammerManagers.splice(index, 1)[0];
             // destroy also
             item.manager.destroy();
         }
     }
 
     /** Destroys all internally tracked HammerManagers, removing event listeners in the process. */
-    destroy() {
-        for (var i = 0; i < this._hammerManagers.length; i++) {
-            this._hammerManagers[i].manager.destroy();
+    public destroy() {
+        for (const item of this._hammerManagers) {
+            item.manager.destroy();
         }
         this._hammerManagers = [];
     }
 }
-

@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
+import { NgModule } from "@angular/core";
 
-import { IgxSnackbarModule } from '../../../src/main';
-import { IgxSnackbarSampleComponent } from './sample.component';
-import { IgxButtonModule } from '../../../src/button/button.directive';
+import { IgxButtonModule } from "../../../src/button/button.directive";
+import { IgxSnackbarModule } from "../../../src/main";
+import { IgxSnackbarSampleComponent } from "./sample.component";
 
 @NgModule({
     imports: [
@@ -10,7 +10,7 @@ import { IgxButtonModule } from '../../../src/button/button.directive';
         IgxButtonModule
     ],
     declarations: [
-        IgxSnackbarSampleComponent,
+        IgxSnackbarSampleComponent
     ]
 })
 export class IgxSnackbarSampleModule {}

@@ -1,6 +1,6 @@
-import { FilteringCondition } from "../main";
-import { DataType } from "../data-operations/data-util";
 import { AfterContentInit, Component, ContentChild, Input, TemplateRef } from "@angular/core";
+import { DataType } from "../data-operations/data-util";
+import { FilteringCondition } from "../main";
 import {
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
@@ -23,16 +23,17 @@ export class IgxColumnComponent implements AfterContentInit {
     @Input() public movable: boolean = false;
     @Input() public width: string;
     @Input() public index: number;
-    @Input() public filteringCondition: Function = FilteringCondition.string.contains;
+    @Input() public filteringCondition = FilteringCondition.string.contains;
     @Input() public filteringIgnoreCase: boolean = true;
     @Input() public dataType: DataType = DataType.String;
-    @ContentChild(IgxCellTemplateDirective) protected cellTemplate: IgxCellTemplateDirective;
-    @ContentChild(IgxCellHeaderTemplateDirective) protected headTemplate: IgxCellHeaderTemplateDirective;
-    @ContentChild(IgxCellFooterTemplateDirective) protected footTemplate: IgxCellFooterTemplateDirective;
 
     public bodyTemplate: TemplateRef<any>;
     public headerTemplate: TemplateRef<any>;
     public footerTemplate: TemplateRef<any>;
+
+    @ContentChild(IgxCellTemplateDirective) protected cellTemplate: IgxCellTemplateDirective;
+    @ContentChild(IgxCellHeaderTemplateDirective) protected headTemplate: IgxCellHeaderTemplateDirective;
+    @ContentChild(IgxCellFooterTemplateDirective) protected footTemplate: IgxCellFooterTemplateDirective;
 
     public ngAfterContentInit(): void {
         if (this.cellTemplate) {

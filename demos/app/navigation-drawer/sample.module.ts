@@ -1,22 +1,22 @@
+import { CommonModule }   from "@angular/common";
 import { NgModule } from "@angular/core";
-import { CommonModule }   from '@angular/common';
 import { FormsModule } from "@angular/forms";
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from "@angular/router";
 
-import { NavigationDrawerModule, NavigationClose, NavigationToggle } from "../../../src/main";
-import { NavDrawerSampleComponent, MainDrawerSampleComponent, PinNavDrawerSampleComponent, MiniNavDrawerSampleComponent } from './sample.component';
+import { NavigationClose, NavigationDrawerModule, NavigationToggle } from "../../../src/main";
+import { MainDrawerSampleComponent, MiniNavDrawerSampleComponent, NavDrawerSampleComponent, PinNavDrawerSampleComponent } from "./sample.component";
 
 const routes: Routes = [
-  { 
-      path: 'navigation-drawer',
+  {
+      path: "navigation-drawer",
       component: NavDrawerSampleComponent,
       children: [
-        { path: '', component: MainDrawerSampleComponent },
-        { path: 'pin', component: PinNavDrawerSampleComponent },
-        { path: 'mini', component: MiniNavDrawerSampleComponent }
+        { path: "", component: MainDrawerSampleComponent },
+        { path: "pin", component: PinNavDrawerSampleComponent },
+        { path: "mini", component: MiniNavDrawerSampleComponent }
       ]
-  },
- 
+  }
+
 ];
 
 @NgModule({

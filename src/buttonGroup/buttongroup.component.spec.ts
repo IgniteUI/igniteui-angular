@@ -1,24 +1,24 @@
+import { ChangeDetectorRef, Component, ViewChild } from "@angular/core";
 import {
     async,
     TestBed
-} from '@angular/core/testing';
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { By } from '@angular/platform-browser';
-import { IgxButtonGroup, } from './buttonGroup.component';
-import { IgxButtonGroupModule, ButtonGroupAlignment } from "./buttonGroup.component";
-import { IgxDirectivesModule } from "../modules";
+} from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 import { IgxButton } from "../button/button.directive";
+import { IgxDirectivesModule } from "../modules";
+import { IgxButtonGroup } from "./buttonGroup.component";
+import { ButtonGroupAlignment, IgxButtonGroupModule } from "./buttonGroup.component";
 
 interface IButton {
-    type?: string,
-    ripple?: string,
-    label?: string,
-    disabled?: boolean
-    togglable?: boolean,
-    selected?: boolean,
-    color?: string,
-    bgcolor?: string,
-    icon?: string
+    type?: string;
+    ripple?: string;
+    label?: string;
+    disabled?: boolean;
+    togglable?: boolean;
+    selected?: boolean;
+    color?: string;
+    bgcolor?: string;
+    icon?: string;
 }
 
 class Button {
@@ -33,19 +33,19 @@ class Button {
     private icon: string;
 
     constructor(obj?: IButton) {
-        this.type = obj.type || 'raised';
-        this.ripple = obj.ripple || 'orange';
-        this.label = obj.label || 'Button label';
+        this.type = obj.type || "raised";
+        this.ripple = obj.ripple || "orange";
+        this.label = obj.label || "Button label";
         this.selected = obj.selected || false;
         this.togglable = obj.togglable && true;
         this.disabled = obj.disabled || false;
-        this.color = obj.color || '#484848';
-        this.bgcolor = obj.bgcolor || 'white';
-        this.icon = obj.icon || '';
+        this.color = obj.color || "#484848";
+        this.bgcolor = obj.bgcolor || "white";
+        this.icon = obj.icon || "";
     }
 }
 
-describe('IgxButtonGroup', function() {
+describe("IgxButtonGroup", () => {
    beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ InitButtonGroup, InitButtonGroupWithValues],
@@ -54,12 +54,12 @@ describe('IgxButtonGroup', function() {
         .compileComponents();
     }));
 
-    it('should initialize buttonGroup with default values', () => {
-        let fixture = TestBed.createComponent(InitButtonGroup);
+   it("should initialize buttonGroup with default values", () => {
+        const fixture = TestBed.createComponent(InitButtonGroup);
         fixture.detectChanges();
 
-        let instance = fixture.componentInstance;
-        let buttongroup = fixture.componentInstance.buttonGroup;
+        const instance = fixture.componentInstance;
+        const buttongroup = fixture.componentInstance.buttonGroup;
 
         expect(instance.buttonGroup).toBeDefined();
         expect(buttongroup instanceof IgxButtonGroup).toBe(true);
@@ -71,12 +71,12 @@ describe('IgxButtonGroup', function() {
         expect(buttongroup.selectedButtons.length).toEqual(0);
     });
 
-    it('should initialize buttonGroup with passed values', () => {
-        let fixture = TestBed.createComponent(InitButtonGroupWithValues);
+   it("should initialize buttonGroup with passed values", () => {
+        const fixture = TestBed.createComponent(InitButtonGroupWithValues);
         fixture.detectChanges();
 
-        let instance = fixture.componentInstance;
-        let buttongroup = fixture.componentInstance.buttonGroup;
+        const instance = fixture.componentInstance;
+        const buttongroup = fixture.componentInstance.buttonGroup;
 
         expect(instance.buttonGroup).toBeDefined();
         expect(buttongroup instanceof IgxButtonGroup).toBe(true);
@@ -85,14 +85,14 @@ describe('IgxButtonGroup', function() {
         expect(buttongroup.multiSelection).toBeTruthy();
         expect(buttongroup.itemContentCssClass).toEqual("customContentStyle");
         expect(buttongroup.selectedIndexes.length).toEqual(0);
-        expect(buttongroup.selectedButtons.length).toEqual(0)
+        expect(buttongroup.selectedButtons.length).toEqual(0);
     });
 
-    it('Button Group single selection', () => {
-        let fixture = TestBed.createComponent(InitButtonGroup);
+   it("Button Group single selection", () => {
+        const fixture = TestBed.createComponent(InitButtonGroup);
         fixture.detectChanges();
 
-        let buttongroup = fixture.componentInstance.buttonGroup;
+        const buttongroup = fixture.componentInstance.buttonGroup;
 
         buttongroup.selectButton(0);
         expect(buttongroup.selectedButtons.length).toBe(1);
@@ -100,11 +100,11 @@ describe('IgxButtonGroup', function() {
         expect(buttongroup.selectedButtons.length).toBe(1);
     });
 
-    it('Button Group multiple selection', () => {
-        let fixture = TestBed.createComponent(InitButtonGroupWithValues);
+   it("Button Group multiple selection", () => {
+        const fixture = TestBed.createComponent(InitButtonGroupWithValues);
         fixture.detectChanges();
 
-        let buttongroup = fixture.componentInstance.buttonGroup;
+        const buttongroup = fixture.componentInstance.buttonGroup;
         expect(buttongroup.multiSelection).toBeTruthy();
         buttongroup.selectButton(1);
         expect(buttongroup.selectedButtons.length).toBe(1);
@@ -119,101 +119,105 @@ describe('IgxButtonGroup', function() {
     });
 });
 
-
 @Component({ template: `<igx-buttongroup [values]="buttons"></igx-buttongroup>` })
 class InitButtonGroup{
-    @ViewChild(IgxButtonGroup) buttonGroup: IgxButtonGroup;
+    @ViewChild(IgxButtonGroup) public buttonGroup: IgxButtonGroup;
+
+    private buttons: Button[];
 
     constructor() {}
 
-    private buttons: Array<Button>;
-        public ngOnInit(): void {
+    public ngOnInit(): void {
 
         this.buttons = [
             new Button({
-                label: 'Euro',
-                selected: false,
-                disabled: false
+                disabled: false,
+                label: "Euro",
+                selected: false
             }),
             new Button({
-                label: 'British Pound',
-                selected: true,
+                label: "British Pound",
+                selected: true
             }),
             new Button({
-                label: 'US Dollar',
-                selected: false,
+                label: "US Dollar",
+                selected: false
             })
-        ]
+        ];
     }
 }
 
-@Component({ template: `<igx-buttongroup multiSelection="true" itemContentCssClass="customContentStyle" [values]="cities" [alignment]="alignment">
+@Component({ template: `<igx-buttongroup multiSelection="true" itemContentCssClass="customContentStyle"
+                            [values]="cities" [alignment]="alignment">
                         </igx-buttongroup>` })
-class InitButtonGroupWithValues{
-    @ViewChild(IgxButtonGroup) buttonGroup: IgxButtonGroup;
+class InitButtonGroupWithValues {
+    @ViewChild(IgxButtonGroup) public buttonGroup: IgxButtonGroup;
+
+    private cities: Button[];
+
+    private alignment = ButtonGroupAlignment.vertical;
 
     constructor() {}
 
-    private cities: Array<Button>;
-        public ngOnInit(): void {
+    public ngOnInit(): void {
 
         this.cities = [
             new Button({
-                label: 'Sofia',
+                disabled: false,
+                label: "Sofia",
                 selected: false,
-                togglable: false,
-                disabled: false
+                togglable: false
             }),
             new Button({
-                label: 'London',
-                selected: false,
-                disabled: false
+                disabled: false,
+                label: "London",
+                selected: false
             }),
             new Button({
-                label: 'New York',
-                selected: false,
-                disabled: false
+                disabled: false,
+                label: "New York",
+                selected: false
             }),
             new Button({
-                label: 'Tokyo',
-                selected: false,
-                disabled: true
+                disabled: true,
+                label: "Tokyo",
+                selected: false
             })
-        ]
+        ];
     }
-
-    private alignment = ButtonGroupAlignment.vertical;
 }
 
-@Component({ template: `<igx-buttongroup multiSelection="true" itemContentCssClass="customContentStyle" [values]="buttons" [alignment]="alignment">
+@Component({ template: `<igx-buttongroup multiSelection="true" itemContentCssClass="customContentStyle"
+                            [values]="buttons" [alignment]="alignment">
                         </igx-buttongroup>` })
-class ButtonGroupWithValues{
-    @ViewChild(IgxButtonGroup) buttonGroup: IgxButtonGroup;
+class ButtonGroupWithValues {
+    @ViewChild(IgxButtonGroup) public buttonGroup: IgxButtonGroup;
+
+    private buttons: Button[];
+
+    private alignment = ButtonGroupAlignment.vertical;
 
     constructor() {}
 
-    private buttons: Array<Button>;
-        public ngOnInit(): void {
+    public ngOnInit(): void {
 
         this.buttons = [
             new Button({
-                type: 'raised',
-                label: 'Euro',
+                disabled: false,
+                label: "Euro",
                 selected: false,
-                disabled: false
+                type: "raised"
             }),
             new Button({
-                type: 'raised',
-                label: 'British Pound',
+                label: "British Pound",
                 selected: false,
+                type: "raised"
             }),
             new Button({
-                type: 'raised',
-                label: 'US Dollar',
+                label: "US Dollar",
                 selected: false,
+                type: "raised"
             })
-        ]
+        ];
     }
-
-    private alignment = ButtonGroupAlignment.vertical;
 }
