@@ -1,6 +1,5 @@
 .sample-content {
-    grid-template-columns: 1fr;
-    grid-template-rows: 480px;
+    flex-flow: column nowrap;
 }
 
 .snackbar-sample {

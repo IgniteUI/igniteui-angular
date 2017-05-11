@@ -2,6 +2,10 @@
     margin: 24px;
 }
 
+.sample-content {
+    flex-flow: column nowrap;
+}
+
 .grid-sample {
     margin-bottom: 144px;
 }
