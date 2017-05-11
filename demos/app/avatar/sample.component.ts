@@ -1,20 +1,20 @@
-import { Component, ViewChild, QueryList, ViewChildren } from "@angular/core";
-import { IgxAvatarModule, IgxAvatar } from "../../../src/avatar/avatar.component";
-import { IgxBadgeModule, IgxBadge } from "../../../src/badge/badge.component";
+import { Component, QueryList, ViewChild, ViewChildren } from "@angular/core";
+import { IgxAvatar, IgxAvatarModule } from "../../../src/avatar/avatar.component";
+import { IgxBadge, IgxBadgeModule } from "../../../src/badge/badge.component";
 
 @Component({
     selector: "avatar-sample",
     moduleId: module.id,
     templateUrl: "./sample.component.html",
-    styleUrls: ['sample.component.css', '../app.samples.css']
+    styleUrls: ["sample.component.css", "../app.samples.css"]
 })
 export class AvatarSampleComponent {
     //@ViewChild(Avatar) avatar: Avatar;
     // Collection of avatars
     @ViewChildren(IgxAvatar) avatar;
-    initials: string = 'ZK';
-    bgColor: string = '#0375be';
-    src: string = '';
+    initials: string = "ZK";
+    bgColor: string = "#0375be";
+    src: string = "";
     roundShape: string = "true";
 
     constructor() {
@@ -27,8 +27,8 @@ export class AvatarSampleComponent {
 
     public changeLink() {
         // for more avatars
-        for (let each of this.avatar.toArray()) {
-            if(each.src) {
+        for (const each of this.avatar.toArray()) {
+            if (each.src) {
                 each.srcImage = "http://lorempixel.com/300/300/people/" + Math.floor((Math.random() * 10) + 1);
             }
         }

@@ -4,7 +4,7 @@ import { DialogSampleComponent } from "./sample.component";
 
 @NgModule({
     imports: [
-        IgxComponentsModule, 
+        IgxComponentsModule,
         IgxDirectivesModule
     ],
     declarations: [

@@ -1,11 +1,11 @@
-import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { ButtonGroupSampleComponent } from "./sample.component";
+import { NgModule } from "@angular/core";
+import {ButtonGroupAlignment, IgxButtonGroup, IgxButtonGroupModule} from "../../../src/buttonGroup/buttonGroup.component";
 import { IgxDirectivesModule } from "../../../src/main";
-import {IgxButtonGroup, IgxButtonGroupModule, ButtonGroupAlignment} from "../../../src/buttonGroup/buttonGroup.component";
+import { ButtonGroupSampleComponent } from "./sample.component";
 
 @NgModule({
     imports: [IgxButtonGroupModule, IgxDirectivesModule],
-    declarations: [ButtonGroupSampleComponent],
+    declarations: [ButtonGroupSampleComponent]
 })
 export class ButtonGroupSampleModule {}

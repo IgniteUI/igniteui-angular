@@ -1,12 +1,12 @@
 import { NgModule } from "@angular/core";
 
-import { IgxCardModule } from "../../../src/main";
-import { IgxCardSampleComponent } from './sample.component';
+import {CommonModule} from "@angular/common";
 import {IgxAvatar, IgxAvatarModule} from "../../../src/avatar/avatar.component";
 import {IgxButton, IgxButtonModule} from "../../../src/button/button.directive";
-import { IgxRippleModule } from "../../../src/main";
 import {IgxList, IgxListModule} from "../../../src/list/list.component";
-import {CommonModule} from "@angular/common";
+import { IgxCardModule } from "../../../src/main";
+import { IgxRippleModule } from "../../../src/main";
+import { IgxCardSampleComponent } from "./sample.component";
 
 @NgModule({
     imports: [
@@ -18,7 +18,7 @@ import {CommonModule} from "@angular/common";
         CommonModule
     ],
     declarations: [
-        IgxCardSampleComponent,
+        IgxCardSampleComponent
     ]
 })
 export class IgxCardSampleModule {}

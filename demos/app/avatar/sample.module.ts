@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
-import { AvatarSampleComponent } from "./sample.component";
 import { IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
+import { AvatarSampleComponent } from "./sample.component";
 
 @NgModule({
     imports: [IgxComponentsModule, IgxDirectivesModule],

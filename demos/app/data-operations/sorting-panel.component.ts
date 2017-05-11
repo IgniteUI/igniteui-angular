@@ -1,11 +1,11 @@
-import { Component, Input, ViewChild, OnInit, EventEmitter, Output, ChangeDetectionStrategy } from "@angular/core";
-import { DataContainer, DataUtil, IDataState, DataType,
-        IgxCardComponent, IgxCardActions, IgxCardContent, IgxCardFooter, IgxCardHeader, IgxCardModule,
-        IFilteringExpression, FilteringCondition, IFilteringState, FilteringLogic, FilteringStrategy,
-        PagingError, IPagingState,
-        ISortingExpression, SortingDirection, SortingStrategy, StableSortingStrategy, ISortingState
-      } from "../../../src/main";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { IDataColumn } from "../../../src/data-operations/test-util/data-generator";
+import { DataContainer, DataType, DataUtil, FilteringCondition,
+        FilteringLogic, FilteringStrategy, IDataState, IFilteringExpression, IFilteringState, IgxCardActions,
+        IgxCardComponent, IgxCardContent, IgxCardFooter, IgxCardHeader, IgxCardModule,
+        IPagingState, ISortingExpression,
+        ISortingState, PagingError, SortingDirection, SortingStrategy, StableSortingStrategy
+      } from "../../../src/main";
 
 const SORT_TEXT_ASC = "ASC";
 const SORT_TEXT_DESC = "DESC";
@@ -14,13 +14,13 @@ const SORT_TEXT_NONE = "NOT SORTED";
 @Component({
     selector: "sorting-panel",
     moduleId: module.id,
-    templateUrl: './sorting-panel.component.html'
+    templateUrl: "./sorting-panel.component.html"
 })
 export class SortingPanelComponent{
     @ViewChild("sortingPanel") sortingPanel;
-    
+
     @Input() dataState: DataState;
-    @Input() columns: Array<DataColumn> = [];
+    @Input() columns: DataColumn[] = [];
     @Input() hidden: boolean = false;
 
     title: string = "Sorting";
@@ -30,14 +30,14 @@ export class SortingPanelComponent{
       if (dir === null) {
         return SortingDirection.Asc;
       }
-      return (++dir > SortingDirection.Desc) ? null: dir;
+      return (++dir > SortingDirection.Desc) ? null : dir;
     }
-    changeSortingDirection (column: DataColumn) {
-        let s:SortingState = this.dataState.sorting || {expressions: []};
-        let indExpr = s.expressions.findIndex((e) => e.fieldName === column.fieldName);
-        let expr = s.expressions[indExpr] || null;
-        let dir = expr? expr.dir : null;
-        let nextDir = this.getNextSortingDirection(dir);
+    changeSortingDirection(column: DataColumn) {
+        const s: SortingState = this.dataState.sorting || {expressions: []};
+        const indExpr = s.expressions.findIndex((e) => e.fieldName === column.fieldName);
+        const expr = s.expressions[indExpr] || null;
+        const dir = expr ? expr.dir : null;
+        const nextDir = this.getNextSortingDirection(dir);
         if (expr) {
           if (nextDir === null) {
             s.expressions.splice(indExpr, 1);
@@ -50,15 +50,15 @@ export class SortingPanelComponent{
             dir: nextDir
           });
         }
-        this.dataState.sorting = (s.expressions.length)? s : null;
+        this.dataState.sorting = (s.expressions.length) ? s : null;
         this.process();
     }
-    getSortingButtonTitle (column: DataColumn): string {
-      let s:SortingState = this.dataState.sorting || {expressions: []};
+    getSortingButtonTitle(column: DataColumn): string {
+      const s: SortingState = this.dataState.sorting || {expressions: []};
       if (!s.expressions.length) {
         return SORT_TEXT_NONE;
       }
-      let indExpr = s.expressions.findIndex((e) => e.fieldName === column.fieldName);
+      const indExpr = s.expressions.findIndex((e) => e.fieldName === column.fieldName);
       if (indExpr === -1) {
         return SORT_TEXT_NONE;
       }
@@ -67,7 +67,7 @@ export class SortingPanelComponent{
       }
       return SORT_TEXT_DESC;
     }
-    
+
     process() {
         this.onProcessDataState.emit(this.dataState);
     }

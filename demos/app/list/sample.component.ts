@@ -1,14 +1,14 @@
-import { Component, ViewChild, ElementRef } from "@angular/core";
-import { IgxListModule, IgxList, IgxListItem, IgxListPanState } from "../../../src/list/list.component";
-import { IgxFilterModule, IgxFilterOptions } from '../../../src/directives/filter.directive';
-import { IgxRippleModule } from '../../../src/directives/ripple.directive';
-import { IgxInput } from '../../../src/input/input.directive';
-import { IgxDialogModule, IgxDialog } from '../../../src/dialog/dialog.component';
+import { Component, ElementRef, ViewChild } from "@angular/core";
+import { IgxDialog, IgxDialogModule } from "../../../src/dialog/dialog.component";
+import { IgxFilterModule, IgxFilterOptions } from "../../../src/directives/filter.directive";
+import { IgxRippleModule } from "../../../src/directives/ripple.directive";
+import { IgxInput } from "../../../src/input/input.directive";
+import { IgxList, IgxListItem, IgxListModule, IgxListPanState } from "../../../src/list/list.component";
 
 @Component({
     selector: "list-sample",
     moduleId: module.id,
-    templateUrl: './sample.component.html',
+    templateUrl: "./sample.component.html",
     styleUrls: ["../app.samples.css", "./sample.component.css"]
 })
 export class ListSampleComponent {
@@ -22,43 +22,43 @@ export class ListSampleComponent {
     options: Object = {};
     fruitsFilteredItemsCount = undefined;
 
-    private navItems: Array<Object> = [
-        { key: "1", text: "Terrance Orta", phone: "770-504-2217" ,avatar: "../demos/app/avatar/images/1.jpg", favorite: true, link: "#" },
+    private navItems: Object[] = [
+        { key: "1", text: "Terrance Orta", phone: "770-504-2217" , avatar: "../demos/app/avatar/images/1.jpg", favorite: true, link: "#" },
         { key: "2", text: "Richard Mahoney", phone: "423-676-2869", avatar: "../demos/app/avatar/images/2.jpg", favorite: false, link: "#" },
         { key: "3", text: "Donna Price", phone: "859-496-2817", avatar: "../demos/app/avatar/images/3.jpg", favorite: false, link: "#" },
         { key: "4", text: "Lisa Landers", phone: "901-747-3428", avatar: "../demos/app/avatar/images/4.jpg", favorite: false, link: "#" },
         { key: "5", text: "Dorothy H. Spencer", phone: "573-394-9254", avatar: "../demos/app/avatar/images/12.jpg", favorite: true, link: "#" },
         { key: "6", text: "Stephanie May", phone: "323-668-1482", avatar: "../demos/app/avatar/images/13.jpg", favorite: false, link: "#" },
         { key: "7", text: "Marianne Taylor", phone: "401-661-3742", avatar: "../demos/app/avatar/images/14.jpg", favorite: false, link: "#" },
-        { key: "8", text: "Tammie Alvarez", phone: "662-374-2920", avatar: "../demos/app/avatar/images/15.jpg", favorite: true, link: "#" }, 
+        { key: "8", text: "Tammie Alvarez", phone: "662-374-2920", avatar: "../demos/app/avatar/images/15.jpg", favorite: true, link: "#" },
         { key: "9", text: "Charlotte Flores", phone: "240-455-2267", avatar: "../demos/app/avatar/images/16.jpg", favorite: true, link: "#" },
         { key: "10", text: "Ward Riley", phone: "724-742-0979", avatar: "../demos/app/avatar/images/17.jpg", favorite: false, link: "#" }
     ];
 
-    private fruits: Array<Fruit> = [];
+    private fruits: Fruit[] = [];
 
     get fo1() {
-        var _fo = new IgxFilterOptions();
+        const _fo = new IgxFilterOptions();
         _fo.key = "text";
         _fo.inputValue = this.search1;
         return _fo;
     }
 
     get fo2() {
-        var _fo = new IgxFilterOptions();
+        const _fo = new IgxFilterOptions();
 
         _fo.items = this.declarativeList.items;
         _fo.inputValue = this.search2;
 
-        _fo.get_value = function (item: any) {
+        _fo.get_value = function(item: any) {
             return item.element.nativeElement.textContent.trim();
         };
 
-        _fo.metConditionFn = function (item: any) {
+        _fo.metConditionFn = function(item: any) {
             item.hidden = false;
         };
 
-        _fo.overdueConditionFn = function (item: any) {
+        _fo.overdueConditionFn = function(item: any) {
             item.hidden = true;
         };
 
@@ -66,19 +66,19 @@ export class ListSampleComponent {
     }
 
     get fruitsFilterOptions() {
-        var fruitsFilterOpts = new IgxFilterOptions();
+        const fruitsFilterOpts = new IgxFilterOptions();
         fruitsFilterOpts.items = this.fruits;
         fruitsFilterOpts.key = "name";
         fruitsFilterOpts.inputValue = this.fruitsSearch;
         return fruitsFilterOpts;
     }
 
-    private filteringHandler = function (args) {
+    private filteringHandler = function(args) {
         args.cancel = !this.checkbox.checked;
-    }
+    };
 
-    private filteredHandler = function (args) {
-    }
+    private filteredHandler = function(args) {
+    };
 
     private onLeftPan(args) {
         console.log("Left pan fired.");
@@ -102,7 +102,7 @@ export class ListSampleComponent {
 
     private deleteFruit(fruitId) {
         let fruitIndex = -1;
-        for (var i = 0; i < this.fruits.length; i++) {
+        for (let i = 0; i < this.fruits.length; i++) {
             if (fruitId === this.fruits[i].id) {
                 fruitIndex = i;
                 break;

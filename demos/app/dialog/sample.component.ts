@@ -4,7 +4,7 @@ import { Component } from "@angular/core";
     moduleId: module.id,
     selector: "dialog-sample",
     styleUrls: ["../app.samples.css", "sample.component.css"],
-    templateUrl: "sample.component.html",
+    templateUrl: "sample.component.html"
 })
 export class DialogSampleComponent {
     onDialogOKSelected(args) {

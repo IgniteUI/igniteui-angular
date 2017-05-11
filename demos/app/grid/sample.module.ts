@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
-import { FormsModule } from "@angular/forms";
 import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { IgxGridModule } from "../../../src/grid/grid.component";
 import { IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
 import { GridSampleComponent } from "./sample.component";
@@ -11,10 +11,10 @@ import { GridSampleComponent } from "./sample.component";
         CommonModule,
         IgxComponentsModule,
         IgxDirectivesModule,
-        IgxGridModule,
+        IgxGridModule
         ],
     declarations: [
         GridSampleComponent
-    ],
+    ]
 })
 export class GridSampleModule { }

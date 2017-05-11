@@ -12,15 +12,15 @@ export class IgxToastSampleComponent {
     public toastPosition: IgxToastPosition = IgxToastPosition.Bottom;
 
     public onShowing(): void {
-        console.log("Toast is showing!")
+        console.log("Toast is showing!");
     }
 
     public showToast(toast, position) {
         switch (position) {
-            case 'middle':
+            case "middle":
                 this.toastPosition = IgxToastPosition.Middle;
                 break;
-            case 'top':
+            case "top":
                 this.toastPosition = IgxToastPosition.Top;
                 break;
             default:

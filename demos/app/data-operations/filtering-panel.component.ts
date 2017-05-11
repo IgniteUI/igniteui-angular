@@ -1,22 +1,22 @@
-import { Component, Input, ViewChild, OnInit, EventEmitter, Output, ChangeDetectionStrategy } from "@angular/core";
-import { DataContainer, DataUtil, IDataState, DataType,
-        IgxCardComponent, IgxCardActions, IgxCardContent, IgxCardFooter, IgxCardHeader, IgxCardModule,
-        IFilteringExpression, FilteringCondition, IFilteringState, FilteringLogic, FilteringStrategy,
-        PagingError, IPagingState,
-        ISortingExpression, SortingDirection, SortingStrategy, StableSortingStrategy, ISortingState
-      } from "../../../src/main";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { IDataColumn } from "../../../src/data-operations/test-util/data-generator";
+import { DataContainer, DataType, DataUtil, FilteringCondition,
+        FilteringLogic, FilteringStrategy, IDataState, IFilteringExpression, IFilteringState, IgxCardActions,
+        IgxCardComponent, IgxCardContent, IgxCardFooter, IgxCardHeader, IgxCardModule,
+        IPagingState, ISortingExpression,
+        ISortingState, PagingError, SortingDirection, SortingStrategy, StableSortingStrategy
+      } from "../../../src/main";
 
 @Component({
     selector: "filtering-panel",
     moduleId: module.id,
-    templateUrl: './filtering-panel.component.html'
+    templateUrl: "./filtering-panel.component.html"
 })
 export class FilteringPanelComponent {
     @ViewChild("filteringPanel") filteringPanel;
 
     @Input() dataState: IDataState;
-    @Input() columns: Array<IDataColumn> = [];
+    @Input() columns: IDataColumn[] = [];
     @Input() hidden: boolean = false;
     title: string = "Filtering";
     @Output() onProcessDataState = new EventEmitter();
@@ -25,28 +25,28 @@ export class FilteringPanelComponent {
       return column.type !== DataType.Boolean;
     }
     getFilteringConditions(column: IDataColumn) {
-        let conds = DataUtil.getListOfFilteringConditionsForDataType(column.type);
-        conds.unshift(null);// add default filtering condition - not selected with value null
+        const conds = DataUtil.getListOfFilteringConditionsForDataType(column.type);
+        conds.unshift(null); // add default filtering condition - not selected with value null
         return conds;
     }
     getFilteringExpression(column: IDataColumn) {
-      var f: IFilteringState = this.dataState.filtering;
+      const f: IFilteringState = this.dataState.filtering;
       if (!f || !f.expressions.length) {
         return null;
       }
       return f.expressions.find((e) => e.fieldName === column.fieldName);
     }
     getSelectedFilteringCondition(column: IDataColumn): string {
-      var f: IFilteringState = this.dataState.filtering;
+      const f: IFilteringState = this.dataState.filtering;
       if (!f || !f.expressions.length) {
         return null;
       }
-      let expr: IFilteringExpression = f.expressions.find((e) => e.fieldName === column.fieldName);
+      const expr: IFilteringExpression = f.expressions.find((e) => e.fieldName === column.fieldName);
       if (!expr) {
         return null;
       }
-      let conds = DataUtil.getFilteringConditionsForDataType(column.type)
-      for (let cond in conds) {
+      const conds = DataUtil.getFilteringConditionsForDataType(column.type);
+      for (const cond in conds) {
         if (conds.hasOwnProperty(cond) && conds[cond] === expr.condition) {
           return "" + cond;
         }
@@ -54,26 +54,26 @@ export class FilteringPanelComponent {
       return null;
     }
     onChangeFilteringCondition(event: Event) {
-      const select = <HTMLSelectElement>event.srcElement;
-      const value:string = select.value;
+      const select = event.srcElement as HTMLSelectElement;
+      const value: string = select.value;
       if (!value || value === "null") {
-        (<HTMLInputElement>select.closest("tr").querySelector("[data-filtering-search]"))
+        (select.closest("tr").querySelector("[data-filtering-search]") as HTMLInputElement)
           .value = "";
       }
     }
     getSearchVal(column: IDataColumn) {
-      var expr = this.getFilteringExpression(column);
+      const expr = this.getFilteringExpression(column);
       return  expr ? expr.searchVal : "";
     }
     getFilteringDataState() {
-      var i, expressions: IFilteringExpression[] = [], 
+      let i, expressions: IFilteringExpression[] = [],
             state: IFilteringState = null,
           expr: IFilteringExpression,
           cond,
           selCond: string,
           dataType: number,
           search,
-          rows = this.filteringPanel.nativeElement.querySelectorAll("[data-field-name]"), 
+          rows = this.filteringPanel.nativeElement.querySelectorAll("[data-field-name]"),
           row: HTMLTableRowElement,
           fc;
       for (i = 0; i < rows.length; i++) {
@@ -82,12 +82,12 @@ export class FilteringPanelComponent {
         selCond = fc.options[fc.selectedIndex].value;
         if (selCond && selCond !== "null") {
           dataType = +fc.attributes["data-filtering-type"].value;
-          let search: any = (<HTMLInputElement>row.querySelector("[data-filtering-search]")).value;
+          let search: any = (row.querySelector("[data-filtering-search]") as HTMLInputElement).value;
           cond = (DataUtil.getFilteringConditionsForDataType(dataType) || {})[selCond];
           if (cond) {
             if (search !== "") {
               // data type transformation
-              switch(dataType) {
+              switch (dataType) {
                 case DataType.Number:
                   search = +search;
                   break;
@@ -99,16 +99,16 @@ export class FilteringPanelComponent {
             expressions.push({
               fieldName: row.attributes["data-field-name"].value,
               condition: cond,
-              searchVal: search 
+              searchVal: search
             });
           }
         }
       }
-      this.dataState.filtering = (expressions.length)? {expressions: expressions} : null;
+      this.dataState.filtering = (expressions.length) ? {expressions: expressions} : null;
     }
     getDataTypeStringRepresentation(column: IDataColumn): string {
-      let dt:string = "";
-      switch(column.type) {
+      let dt: string = "";
+      switch (column.type) {
             case DataType.String:
                 dt = "string";
             break;
@@ -122,7 +122,7 @@ export class FilteringPanelComponent {
                 dt = "date";
             break;
         }
-        return dt;
+      return dt;
     }
     process() {
         this.getFilteringDataState();
