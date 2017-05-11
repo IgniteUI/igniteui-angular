@@ -15,5 +15,4 @@ export class SwitchSampleComponent {
         subscribed: false,
         favouriteVarName: 'Foo'
     };
-    
 }

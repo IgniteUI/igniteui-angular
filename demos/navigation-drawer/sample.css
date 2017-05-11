@@ -13,19 +13,20 @@
     cursor: pointer;
 }
 
-button {
-    line-height: 1.3rem;
-    font-family: "Open sans",Helvetica,Arial,sans-serif;
+.nav-sample-btn {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    font-family: "Titillium Web",Helvetica,Arial,sans-serif;
     border: none;
-    transition: .2s ease-in-out all;
-    background-color: #DADEE4;
+    border-radius: 2px;
+    outline: none;
+    font-weight: 400;
+    text-transform: capitalize;
+    width: 100%;
+    margin: 10px auto !important;
 }
-    button:hover {
-        background-color: #76C4F8
-    }
-    button:active {
-        background-color: #00bcff;
-    }
     
 ig-drawer-content h1{
     margin: 0;

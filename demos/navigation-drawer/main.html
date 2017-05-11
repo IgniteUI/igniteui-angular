@@ -27,8 +27,8 @@
     <div class="sample-content" [class.full]="pin && !open" [class.pin]="pin">
         <span class="hamburger" igxNavToggle="test" *ngIf="showToggle"> &#9776; </span>
         <div>
-            <button igxNavToggle="test"> Toggle </button>
-            <button igxNavClose="test"> Close </button>
+            <button igxNavToggle="test" class="nav-sample-btn" > Toggle </button>
+            <button igxNavClose="test" class="nav-sample-btn" > Close </button>
         </div>
 
         <button (click)="open = !open;"> Toggle opened</button>

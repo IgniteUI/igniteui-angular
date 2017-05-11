@@ -1,0 +1,58 @@
+<div class="dialog-sample">
+    <h1 class="componentTitle">Dialog</h1>
+    <p class="componentDesc">
+        Alert with one action button and message
+    </p>
+    <button igxButton="raised" igxButtonColor="white" igxButtonBackground="#F44336" igxRipple="white" (click)="alert.open()">
+        Alert
+    </button>
+
+    <igx-dialog #alert title="Notification" message="Your email has been sent successfully!"
+        leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()">
+    </igx-dialog>
+    <br>
+    <br>
+    <p class="componentDesc">
+        Dialog with two action buttons and message
+    </p>
+
+    <button igxButton="raised" igxButtonColor="white"igxButtonBackground="#4CAF50" igxRipple="white" (click)="dialog.open()">
+        Dialog
+    </button>
+
+    <igx-dialog #dialog title="Confirmation" 
+        leftButtonLabel="Cancel"
+        (onLeftButtonSelect)="dialog.close()"
+        rightButtonLabel="OK" 
+        rightButtonRipple="#4CAF50"
+        (onRightButtonSelect)="onDialogOKSelected($event)"
+        message="Are you sure you want to delete this email?">
+    </igx-dialog>
+    <br>
+    <br>
+    <p class="componentDesc">
+        Form with two action buttons and custom message
+    </p>
+
+    <button igxButton="raised" igxButtonColor="white" igxButtonBackground="#0375be" igRipple="white" (click)="form.open()">
+        Form
+    </button>
+
+    <igx-dialog #form title="Sign In"
+        leftButtonLabel="Cancel"
+        (onLeftButtonSelect)="form.close()"
+        rightButtonLabel="Sign In"
+        rightButtonBackgroundColor="#0375be"
+        rightButtonColor="white"
+        backgroundClick="true"
+        closeOnOutsideSelect="true">
+        <div class="igx-form-group">
+            <input type="text" igxInput />
+            <label igxLabel>Username</label>
+        </div>
+        <div class="igx-form-group">
+            <input type="password" igxInput />
+            <label igxLabel>Password</label>
+        </div>
+    </igx-dialog>
+</div>

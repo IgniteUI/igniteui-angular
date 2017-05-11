@@ -16,6 +16,9 @@
                         <li #item [routerLinkActive]="'active'"><a><span data-demo="list" routerLink="/list">List</span><span class="badge preview">preview</span></a></li>
                         <li #item [routerLinkActive]="'active'"><a><span data-demo="avatar" routerLink="/avatar">Avatar</span></a></li>
                         <li #item [routerLinkActive]="'active'"><a><span data-demo="navdrawer" routerLink="/navigation-drawer">Navigation Drawer</span><span class="badge preview">preview</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="navbar" routerLink="/navbar">Navbar</span><span class="badge preview">preview</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="dialog" routerLink="/dialog">Dialog</span></a></li>
+                        <li #item [routerLinkActive]="'active'"><a><span data-demo="progressbar" routerLink="/progressbar">Progress Indicators</span></a></li>
                     </ul>
                 </nav>
                 <nav class="nav-list nav-directives">
@@ -37,6 +40,9 @@
                         <option #item value="buttons" [selected]="isActiveRoute('/buttons')">Buttons</option>
                         <option #item value="avatar" [selected]="isActiveRoute('/avatar')">Avatar</option>
                         <option #item value="navigation-drawer" [selected]="isActiveRoute('/navigation-drawer')">Navigation Drawer</option>
+                        <option #item value="navbar" [selected]="isActiveRoute('/navbar')">Navbar</option>
+                        <option #item value="dialog" [selected]="isActiveRoute('/dialog')">Dialog</option>
+                        <option #item value="progressbar" [selected]="isActiveRoute('/progressbar')">Progress Indicators</option>
                     </optgroup>
                     <optgroup label="Directives">
                         <option #item value="filter" [selected]="isActiveRoute('/filter')">filter</option>

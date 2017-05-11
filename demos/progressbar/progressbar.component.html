@@ -1,0 +1,33 @@
+<h1 class="componentTitle">Progress Indicators</h1>
+<p class="componentDesc">A component used to show progress of data and/or state.</p>
+
+<div class="button-container">
+    <button igxButton="fab" igxRipple="" (click)="generateNewProgressValues()">
+        <i class="material-icons">refresh</i>
+    </button>
+</div>
+
+<div class="progress-container-linear">
+    <igx-linear-bar [striped]="false" [value]="currentValue" [max]="200">
+    </igx-linear-bar>
+</div>
+
+<div class="progress-container-linear">
+    <igx-linear-bar type="danger" [striped]="false" [value]="currentValue">
+    </igx-linear-bar>
+</div>
+
+<div class="progress-container-linear">
+    <igx-linear-bar type="warning" [value]="20">
+    </igx-linear-bar>
+</div>
+
+<div class="progress-container-linear">
+    <igx-linear-bar type="success" striped="true" [value]="currentValue">
+    </igx-linear-bar>
+</div>
+
+<div class="progress-container-circular">
+    <igx-circular-bar (onProgressChanged)="f($event)" [value]="currentValue">
+    </igx-circular-bar>
+</div>

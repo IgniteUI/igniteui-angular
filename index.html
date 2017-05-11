@@ -29,8 +29,10 @@
 	<!-- 2. Configure SystemJS -->
 	<script src="systemjs.config.js"></script>
 	<script>
-        System.import('app/main.ts').catch(function(err){ console.error(err); });
-    </script>
+		SystemJS.import('app').catch(function (err) {
+			console.error(err);
+		});
+	</script>
 </head>
 
 <body>
@@ -100,57 +102,6 @@
 			</div>
 		</sample-app>
 	</div>
-	<!--Main Content ENDS-->
-	<!--<div class="wholeContent">-->
-	<!--Header Begins-->
-	<!--
-        <header class="row ig-jumbotron">
-		    <div class="row">
-			    <div class="logo-wrapper">
-				    <a href="http://www.igniteui.com/" target="_blank"><img class="BlocksLogo" src="demos/images/blocks-logo.png"></a>
-			    </div>
-			    <div class="github-wrapper">
-				    <a href="http://www.igniteui.com/" target="_blank"><img class="github-link" src="demos/images/github-link.png"></a>
-			    </div>
-		    </div>
-
-		    <div class="row">
-			    <div>
-				    <h1>Angular 2 development. One block at a time.</h1>
-				    <h2>IgniteUI Blocks - an open source, mobile optimised, pure Angular 2 set of components and directives.</h2>
-			    </div>
-		    </div>
-        </header>-->
-	<!--<div class="ig-container">
-			<section>
-				<div class="whiteContainer row col-sm-11 col-lg-10">
-					<div class="col-xs-12 col-sm-6">
-						<img src="demos/images/warehouse-app-preview-on-galaxy-2.png" class="samsung-phones-image">
-					</div>
-					<div class="col-xs-12 col-sm-6 text-content">
-						<span class="midContentHeading">Blocks in action.</span><br>
-						<span class="midContent">Take a look at the sample application we’ve developed to get a taste of what you can build with IgniteUI Blocks. </span><br><br>
-						<div class="buttons">
-							<a href="https://igniteui.github.io/warehouse-js-blocks/" target="_blank"><div class="appButton" igButton="raised" (click)="changeLink()">PREVIEW IN BROWSER</div></a>
-							<a href="https://github.com/IgniteUI/warehouse-js-blocks" target="_blank"><div class="appButton" igButton="raised" (click)="changeLink()">DOWNLOAD AS APP</div></a>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			<sample-app>Loading...</sample-app>
-		</div>-->
-	<!--<footer>
-			<div class="ig-container">
-				<div class="row">
-					<div class="col-xs-2 col-xs-push-5">
-						<a href="http://www.igniteui.com/" target="_blank"><img class="github-link" src="demos/images/github-link.png"></a>
-					</div>
-				</div>
-			</div>
-		</footer>-->
-	<!--</div>-->
-	<!--Footer Begins-->
 	<footer class="main-footer">
 		<div class="wrapper flex-column justify-content-b">
 			<a href="https://github.com/IgniteUI/igniteui-js-blocks" class="fork">
