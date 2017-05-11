@@ -5,11 +5,11 @@ import { HammerGesturesManager } from "../core/touch";
 import { IgxList, IgxListItem, IgxListModule } from "../list/list.component";
 import { IgxFilterDirective, IgxFilterModule, IgxFilterOptions, IgxFilterPipe } from "./filter.directive";
 
-describe("Filter", function() {
+describe("Filter", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [IgxFilterModule, IgxListModule],
             declarations: [DeclarativeListTestComponent, DynamicListTestComponent],
+            imports: [IgxFilterModule, IgxListModule],
             providers: [
                 { provide: ComponentFixtureAutoDetect, useValue: true }
             ]
@@ -18,9 +18,10 @@ describe("Filter", function() {
     }));
 
     it("should filter declaratively created list", () => {
-        let fixture = TestBed.createComponent(DeclarativeListTestComponent),
-            items, visibleItems,
-            list = fixture.componentInstance.list;
+        const fixture = TestBed.createComponent(DeclarativeListTestComponent);
+        const list = fixture.componentInstance.list;
+        let items;
+        let visibleItems;
 
         fixture.detectChanges();
         expect(list.items.length).toBe(3);
@@ -48,8 +49,8 @@ describe("Filter", function() {
     });
 
     it("should filter dynamically created list", () => {
-        const fixture = TestBed.createComponent(DynamicListTestComponent),
-            list = fixture.componentInstance.list;
+        const fixture = TestBed.createComponent(DynamicListTestComponent);
+        const list = fixture.componentInstance.list;
 
         fixture.detectChanges();
         expect(list.items.length).toBe(4);
@@ -73,10 +74,10 @@ describe("Filter", function() {
     });
 
     it("should emit filter events on declaratively created list", () => {
-        let visibleItems,
-            fixture = TestBed.createComponent(DeclarativeListTestComponent),
-            list = fixture.componentInstance.list,
-            logInput = fixture.componentInstance.logInput;
+        let visibleItems;
+        const fixture = TestBed.createComponent(DeclarativeListTestComponent);
+        const list = fixture.componentInstance.list;
+        const logInput = fixture.componentInstance.logInput;
 
         fixture.detectChanges();
         visibleItems = list.items.filter((listItem) => !(listItem as IgxListItem).hidden);
@@ -108,10 +109,10 @@ describe("Filter", function() {
     });
 
     it("should cancel filtering on declaratively created list", () => {
-        let visibleItems,
-            fixture = TestBed.createComponent(DeclarativeListTestComponent),
-            list = fixture.componentInstance.list,
-            logInput = fixture.componentInstance.logInput;
+        let visibleItems;
+        const fixture = TestBed.createComponent(DeclarativeListTestComponent);
+        const list = fixture.componentInstance.list;
+        const logInput = fixture.componentInstance.logInput;
 
         fixture.detectChanges();
         visibleItems = list.items.filter((listItem) => !(listItem as IgxListItem).hidden);
@@ -150,13 +151,13 @@ describe("Filter", function() {
                 <input #logInput />`
 })
 class DeclarativeListTestComponent {
-    filterValue: string;
-    isCanceled: boolean = false;
-    filteringArgs: Object;
-    filteredArgs: Object;
+    public filterValue: string;
+    public isCanceled: boolean = false;
+    public filteringArgs: FilteringArgs;
+    public filteredArgs: FilteringArgs;
 
-    @ViewChild(IgxList) list: IgxList;
-    @ViewChild("logInput") logInput: any;
+    @ViewChild(IgxList) public list: IgxList;
+    @ViewChild("logInput") public logInput: any;
 
     get fo() {
         const options = new IgxFilterOptions();
@@ -166,13 +167,13 @@ class DeclarativeListTestComponent {
         return options;
     }
 
-    filteringHandler = function(args) {
+    public filteringHandler = function(args) {
         args.cancel = this.isCanceled;
         this.logInput.nativeElement.value += "filtering;";
         this.filteringArgs = args;
     };
 
-    filteredHandler = function(args) {
+    public filteredHandler = function(args) {
         this.logInput.nativeElement.value += "filtered;";
         this.filteredArgs = args;
     };
@@ -186,12 +187,12 @@ class DeclarativeListTestComponent {
               </igx-list>`
 })
 class DynamicListTestComponent {
-    filterValue: string;
-    isCanceled: boolean = false;
+    public filterValue: string;
+    public isCanceled: boolean = false;
 
-    @ViewChild(IgxList) list: IgxList;
+    @ViewChild(IgxList) public list: IgxList;
 
-    protected dataSourceItems: Object[] = [
+    protected dataSourceItems: object[] = [
         { key: "1", text: "Nav1" },
         { key: "2", text: "Nav2" },
         { key: "3", text: "Nav3" },
@@ -204,4 +205,10 @@ class DynamicListTestComponent {
         options.key = "text";
         return options;
     }
+}
+
+class FilteringArgs {
+    public cancel: boolean;
+    public items: IgxListItem[];
+    public filteredItems: IgxListItem[];
 }
