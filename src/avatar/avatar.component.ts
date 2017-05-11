@@ -4,23 +4,25 @@ import { Component, ElementRef, Input, NgModule, Renderer2, ViewChild } from "@a
 export enum Size { SMALL, MEDIUM, LARGE }
 
 @Component({
-    selector: "igx-avatar",
     moduleId: module.id,
+    selector: "igx-avatar",
     templateUrl: "avatar.component.html"
 })
 export class IgxAvatar {
-    @ViewChild("image") image: ElementRef;
-    @Input() initials: string;
-    @Input() src: string;
-    @Input("roundShape") roundShape: string = "false";
-    @Input() color: string = "white";
+    @ViewChild("image") public image: ElementRef;
+    @Input() public initials: string;
+    @Input() public src: string;
+    @Input("roundShape") public roundShape: string = "false";
+    @Input() public color: string = "white";
+
+    public sizeEnum = Size;
+    public roleDescription: string;
 
     protected fontname = "Titillium Web";
+
     private _size: string;
     private _bgColor: string;
     private _icon: string = "android";
-    public SizeEnum = Size;
-    public roleDescription: string;
 
     @Input()
     get size(): string {
@@ -28,7 +30,7 @@ export class IgxAvatar {
     }
 
     set size(value: string) {
-        const sizeType = this.SizeEnum[value.toUpperCase()];
+        const sizeType = this.sizeEnum[value.toUpperCase()];
 
         if (sizeType === undefined) {
             this._size = "small";
@@ -68,25 +70,25 @@ export class IgxAvatar {
         this._icon = value;
     }
 
-    constructor(public element_ref: ElementRef, private renderer: Renderer2) {
+    constructor(public elementRef: ElementRef, private renderer: Renderer2) {
         this._addEventListeners(renderer);
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         if (this.initials && this.image) {
-            const src = this.generateInitials(parseInt(this.image.nativeElement.width));
+            const src = this.generateInitials(parseInt(this.image.nativeElement.width, 10));
             this.image.nativeElement.src = src;
         }
     }
 
-    ngAfterContentChecked(){
+    public ngAfterContentChecked() {
         this.roleDescription = this.getRole();
     }
 
     private getRole() {
-        if (this.initials){
+        if (this.initials) {
             return "initials type avatar";
-        } else if (this.src){
+        } else if (this.src) {
             return "image type avatar";
         } else {
             return "icon type avatar";
@@ -94,8 +96,9 @@ export class IgxAvatar {
     }
 
     private generateInitials(size) {
-        let canvas = document.createElement("canvas"),
-            fontSize = size / 2, ctx;
+        const canvas = document.createElement("canvas");
+        const fontSize = size / 2;
+        let ctx;
 
         canvas.width = size;
         canvas.height = size;
@@ -119,8 +122,8 @@ export class IgxAvatar {
 
 @NgModule({
     declarations: [IgxAvatar],
-    imports: [CommonModule],
-    exports: [IgxAvatar]
+    exports: [IgxAvatar],
+    imports: [CommonModule]
 })
 export class IgxAvatarModule {
 }

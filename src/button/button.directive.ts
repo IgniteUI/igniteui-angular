@@ -1,10 +1,10 @@
 import { Directive, ElementRef, Input, NgModule, OnInit, Renderer2 } from "@angular/core";
 
 @Directive({
-    selector: "[igxButton]",
     host: {
         role: "button"
-    }
+    },
+    selector: "[igxButton]"
 })
 export class IgxButton {
     private _type: string = "flat";
@@ -37,10 +37,11 @@ export class IgxButton {
 
     @Input() set disabled(val) {
         val = !!val;
-        if (val)
+        if (val) {
             this._renderer.addClass(this._el.nativeElement, `${this._cssClass}--disabled`);
-        else
+        } else {
             this._renderer.removeClass(this._el.nativeElement, `${this._cssClass}--disabled`);
+        }
     }
 }
 
