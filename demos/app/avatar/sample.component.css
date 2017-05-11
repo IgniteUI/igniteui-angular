@@ -1,16 +1,14 @@
-.sample-content {
-    grid-gap: 150px;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-}
-
 .avatars-wrapper {
-    display: grid;
-    grid-gap: 48px 16px;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-flow: row wrap;
 }
 
 .avatar-sample {
     display: flex;
-    align-items: center;
+    flex: 1 0 30%;
+    width: 88px;
+    height: 88px;
     justify-content: center;
+    align-items: center;
+    margin-bottom: 72px;
 }

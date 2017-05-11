@@ -31,7 +31,7 @@
     }
 
     @include e(th) {
-        $block: &;
+        $block: bem--selector-to-string(&);
 
         @extend %grid-cell-display;
         @extend %grid-cell-header;

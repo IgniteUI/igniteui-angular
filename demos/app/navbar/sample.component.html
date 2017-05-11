@@ -12,7 +12,7 @@
         </p>
     </div>
     <section class="sample-content">
-        <article>
+        <article class="sample-column">
             <h4 class="sample-title">With nav and action icons</h4>
             <div class="navbar-sample">
                 <igx-navbar title="Sample App" actionButtonIcon="menu">
@@ -23,7 +23,7 @@
             </div>
         </article>
 
-        <article>
+        <article class="sample-column">
             <h4 class="sample-title">With nav icon</h4>
             <div class="navbar-sample">
                 <igx-navbar [title]="currentView" actionButtonIcon="arrow_back" [isActionButtonVisible]="canGoBack()" (onAction)="navigateBack()">
@@ -31,7 +31,7 @@
             </div>
         </article>
 
-        <article>
+        <article class="sample-column">
             <h4 class="sample-title">Without nav icon</h4>
             <div class="navbar-sample">
                 <igx-navbar [title]="currentView" [isActionButtonVisible]="'false'">
