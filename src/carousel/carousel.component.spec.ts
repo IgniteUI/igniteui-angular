@@ -12,11 +12,11 @@ function dispatchEv(element: HTMLElement, eventType: string) {
     element.dispatchEvent(event);
 }
 
-describe("Carousel", function() {
+describe("Carousel", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [IgxCarouselModule],
-            declarations: [CarouselTestComponent]
+            declarations: [CarouselTestComponent],
+            imports: [IgxCarouselModule]
         })
         .compileComponents();
     }));
@@ -179,8 +179,10 @@ describe("Carousel", function() {
         const fixture = TestBed.createComponent(CarouselTestComponent);
         fixture.detectChanges();
 
-        let prevNav, nextNav,
-            carousel, carouselNative;
+        let prevNav;
+        let nextNav;
+        let carousel;
+        let carouselNative;
 
         carouselNative = fixture.componentInstance.carousel.elementRef.nativeElement;
         carousel = fixture.componentInstance.carousel;
@@ -203,7 +205,8 @@ describe("Carousel", function() {
         const fixture = TestBed.createComponent(CarouselTestComponent);
         fixture.detectChanges();
 
-        let carousel, carouselNative;
+        let carousel;
+        let carouselNative;
 
         carouselNative = fixture.componentInstance.carousel.elementRef.nativeElement;
         carousel = fixture.componentInstance.carousel;
@@ -233,9 +236,9 @@ describe("Carousel", function() {
 })
 class CarouselTestComponent {
 
-    @ViewChild("carousel") carousel: IgxCarousel;
+    @ViewChild("carousel") public carousel: IgxCarousel;
 
-    loop = true;
-    pause = true;
-    interval = 2500;
+    public loop = true;
+    public pause = true;
+    public interval = 2500;
 }

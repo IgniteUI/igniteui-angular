@@ -120,7 +120,7 @@ describe("IgxButtonGroup", () => {
 });
 
 @Component({ template: `<igx-buttongroup [values]="buttons"></igx-buttongroup>` })
-class InitButtonGroup{
+class InitButtonGroup {
     @ViewChild(IgxButtonGroup) public buttonGroup: IgxButtonGroup;
 
     private buttons: Button[];
