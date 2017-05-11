@@ -16,54 +16,54 @@ import {    DataType,
         } from "../main";
 /* Test sorting */
 function testSort() {
-    let data: any[] = [],
-        dataGenerator: DataGenerator;
+    let data: any[] = [];
+    let dataGenerator: DataGenerator;
     beforeEach(async(() => {
         dataGenerator = new DataGenerator();
         data = dataGenerator.data;
     }));
     describe("Test sorting", () => {
         it('sorts descending column "number"', () => {
-            const se = {
-                    fieldName: "number",
-                    dir: SortingDirection.Desc
-                } as ISortingExpression,
-                res = DataUtil.sort(data, {expressions: [se]});
+            const se: ISortingExpression = {
+                dir: SortingDirection.Desc,
+                fieldName: "number"
+            };
+            const res = DataUtil.sort(data, {expressions: [se]});
             expect(dataGenerator.getValuesForColumn(res, "number"))
                 .toEqual(dataGenerator.generateArray(4, 0));
         });
         it('sorts ascending column "boolean"', () => {
-            const se = {
-                    fieldName: "boolean",
-                    dir: SortingDirection.Asc
-                } as ISortingExpression,
-                res = DataUtil.sort(data, {expressions: [ se ]});
+            const se: ISortingExpression = {
+                dir: SortingDirection.Asc,
+                fieldName: "boolean"
+            };
+            const res = DataUtil.sort(data, {expressions: [ se ]});
             expect(dataGenerator.getValuesForColumn(res, "boolean"))
                 .toEqual([false, false, false, true, true]);
         });
         // test multiple sorting
         it('sorts descending column "boolean", sorts "date" ascending', () => {
-            const se0 = {
-                    fieldName: "boolean",
-                    dir: SortingDirection.Desc
-                } as ISortingExpression,
-                se1 = {
-                    fieldName: "date",
-                    dir: SortingDirection.Asc
-                } as ISortingExpression,
-                res = DataUtil.sort(data, {expressions: [se0, se1]});
+            const se0: ISortingExpression = {
+                dir: SortingDirection.Desc,
+                fieldName: "boolean"
+            };
+            const se1: ISortingExpression = {
+                dir: SortingDirection.Asc,
+                fieldName: "date"
+            };
+            const res = DataUtil.sort(data, {expressions: [se0, se1]});
             expect(dataGenerator.getValuesForColumn(res, "number"))
                 .toEqual([1, 3, 0, 2, 4]);
         });
         it ("sorts as applying default setting ignoreCase to false", () => {
             data[4].string = data[4].string.toUpperCase();
-            let se0: ISortingExpression = {
-                    fieldName: "string",
-                    dir: SortingDirection.Desc
-                },
-                res = DataUtil.sort(data, {
-                    expressions: [se0]
-                });
+            const se0: ISortingExpression = {
+                    dir: SortingDirection.Desc,
+                    fieldName: "string"
+                };
+            let res = DataUtil.sort(data, {
+                expressions: [se0]
+            });
             expect(dataGenerator.getValuesForColumn(res, "number"))
                 .toEqual([3, 2, 1, 0, 4], "expressionDefaults.ignoreCase = false");
             se0.ignoreCase = true;
@@ -78,12 +78,11 @@ function testSort() {
 /* //Test sorting */
 /* Test filtering */
 class CustomFilteringStrategy extends FilteringStrategy {
-   filter<T>(data: T[],
-             expressions: IFilteringExpression[],
-             logic?: FilteringLogic): T[] {
-        let i, len = Math.ceil(data.length / 2),
-            res: T[] = [],
-            rec;
+   public filter<T>(data: T[], expressions: IFilteringExpression[], logic?: FilteringLogic): T[] {
+        const len = Math.ceil(data.length / 2);
+        const res: T[] = [];
+        let i;
+        let rec;
         if (!expressions || !expressions.length || !len) {
             return data;
         }
@@ -98,13 +97,13 @@ class CustomFilteringStrategy extends FilteringStrategy {
 }
 
 function testFilter() {
-    const dataGenerator: DataGenerator = new DataGenerator(),
-        data: Object[] = dataGenerator.data;
+    const dataGenerator: DataGenerator = new DataGenerator();
+    const data: object[] = dataGenerator.data;
     describe("test filtering", () => {
         it('filters "number" column greater than 3', () => {
             const res = DataUtil.filter(data, {
-                                        expressions: [{fieldName: "number", condition: FilteringCondition.number.greaterThan, searchVal: 3}]
-                                    });
+                expressions: [{fieldName: "number", condition: FilteringCondition.number.greaterThan, searchVal: 3}]
+            });
             expect(dataGenerator.getValuesForColumn(res, "number"))
                     .toEqual([4]);
         });
@@ -113,8 +112,8 @@ function testFilter() {
             let res = DataUtil.filter(data, {
                                         expressions: [
                                                 {
-                                                    fieldName: "string",
                                                     condition: FilteringCondition.string.contains,
+                                                    fieldName: "string",
                                                     searchVal: "row"
                                                 }]
                                     });
@@ -125,10 +124,10 @@ function testFilter() {
             res = DataUtil.filter(res, {
                                         expressions: [
                                                 {
-                                                    fieldName: "string",
                                                     condition: FilteringCondition.string.contains,
-                                                    searchVal: "ROW",
-                                                    ignoreCase: false
+                                                    fieldName: "string",
+                                                    ignoreCase: false,
+                                                    searchVal: "ROW"
                                                 }]
                                     });
             expect(dataGenerator.getValuesForColumn(res, "number"))
@@ -139,8 +138,8 @@ function testFilter() {
             const res = DataUtil.filter(data, {
                                         expressions: [
                                                 {
-                                                    fieldName: "date",
                                                     condition: FilteringCondition.date.after,
+                                                    fieldName: "date",
                                                     searchVal: new Date()
                                                 }]
                                     });
@@ -151,8 +150,8 @@ function testFilter() {
              const res = DataUtil.filter(data, {
                                         expressions: [
                                                 {
-                                                    fieldName: "boolean",
-                                                    condition: FilteringCondition.boolean.false
+                                                    condition: FilteringCondition.boolean.false,
+                                                    fieldName: "boolean"
                                                 }]
                                     });
              expect(dataGenerator.getValuesForColumn(res, "number"))
@@ -162,8 +161,8 @@ function testFilter() {
             const res = DataUtil.filter(data, {
                                         expressions: [
                                                 {
-                                                    fieldName: "boolean",
-                                                    condition: FilteringCondition.boolean.false
+                                                    condition: FilteringCondition.boolean.false,
+                                                    fieldName: "boolean"
                                                 }],
                                         strategy: new CustomFilteringStrategy()
                                     });
@@ -175,13 +174,13 @@ function testFilter() {
 /* //Test filtering */
 /* Test paging */
 function testPage() {
-    const dataGenerator: DataGenerator = new DataGenerator(),
-        data: Object[] = dataGenerator.data;
+    const dataGenerator: DataGenerator = new DataGenerator();
+    const data: object[] = dataGenerator.data;
 
     describe("test paging", () => {
         it("paginates data", () => {
-            let state: IPagingState = {index: 0, recordsPerPage: 3},
-                res = DataUtil.page(data, state);
+            let state: IPagingState = {index: 0, recordsPerPage: 3};
+            let res = DataUtil.page(data, state);
             expect(state.metadata.error).toBe(PagingError.None);
             expect(state.metadata.countPages).toBe(2);
             expect(dataGenerator.getValuesForColumn(res, "number"))
@@ -195,8 +194,8 @@ function testPage() {
                 .toEqual([3, 4]);
         });
         it("tests paging errors", () => {
-            let state: IPagingState = {index: -1, recordsPerPage: 3},
-                res = DataUtil.page(data, state);
+            let state: IPagingState = {index: -1, recordsPerPage: 3};
+            let res = DataUtil.page(data, state);
             expect(state.metadata.error).toBe(PagingError.IncorrectPageIndex);
             state = {index: 3, recordsPerPage: 3},
             res = DataUtil.page(data, state);
@@ -214,30 +213,30 @@ function testPage() {
 function testProcess() {
     describe("test process", () => {
         it("calls process as applies filtering, sorting, paging", () => {
-            let metadata,
-                state: IDataState = {
-                    filtering: {
-                        expressions: [{
-                            fieldName: "number",
-                            condition: FilteringCondition.number.greaterThan,
-                            searchVal: 1}]
-                    },
-                    sorting: {
-                            expressions: [
-                                {
-                                    fieldName: "number",
-                                    dir: SortingDirection.Desc
-                                }
-                            ]
-                        },
-                    paging: {
-                        index: 1,
-                        recordsPerPage: 2
-                    }
+            let metadata;
+            const state: IDataState = {
+                filtering: {
+                    expressions: [{
+                        condition: FilteringCondition.number.greaterThan,
+                        fieldName: "number",
+                        searchVal: 1}]
                 },
-                dataGenerator: DataGenerator = new DataGenerator(),
-                data: Object[] = dataGenerator.data,
-                result = DataUtil.process(data, state);
+                paging: {
+                    index: 1,
+                    recordsPerPage: 2
+                },
+                sorting: {
+                    expressions: [
+                        {
+                            dir: SortingDirection.Desc,
+                            fieldName: "number"
+                        }
+                    ]
+                }
+            };
+            const dataGenerator: DataGenerator = new DataGenerator();
+            const data: object[] = dataGenerator.data;
+            const result = DataUtil.process(data, state);
             expect(dataGenerator.getValuesForColumn(result, "number"))
                     .toEqual([2]);
             metadata = state.paging.metadata;
@@ -255,11 +254,11 @@ describe("DataUtil", () => {
     testProcess();
     // test helper function getFilteringConditionsByDataType
     it("tests getFilteringConditionsByDataType", () => {
-        const dataGenerator = new DataGenerator(),
-            stringCond = Object.keys(FilteringCondition.string),
-            numberCond = Object.keys(FilteringCondition.number),
-            booleanCond = Object.keys(FilteringCondition.boolean),
-            dateCond = Object.keys(FilteringCondition.date);
+        const dataGenerator = new DataGenerator();
+        const stringCond = Object.keys(FilteringCondition.string);
+        const numberCond = Object.keys(FilteringCondition.number);
+        const booleanCond = Object.keys(FilteringCondition.boolean);
+        const dateCond = Object.keys(FilteringCondition.date);
 
         expect(
             dataGenerator.isSuperset(DataUtil.getListOfFilteringConditionsForDataType(DataType.String), stringCond))

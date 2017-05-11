@@ -10,16 +10,17 @@ import { DataGenerator} from "./test-util/data-generator";
 import { SortingDirection, SortingStrategy, StableSortingStrategy } from "../main";
 
 describe("Unit testing StableSortingStrategy", () => {
-    let dataGenerator: DataGenerator,
-        data: Object[],
-        strategy: SortingStrategy;
+    let dataGenerator: DataGenerator;
+    let data: object[];
+    let strategy: SortingStrategy;
     beforeEach(() => {
         dataGenerator = new DataGenerator(100);
         data = dataGenerator.data;
         strategy = new StableSortingStrategy();
     });
     it("tests `sort`", () => {
-        let sort0, sort1;
+        let sort0;
+        let sort1;
         data.forEach((item, index) => item.number = index % 2 ? 0 : 1);
 
         strategy.sort(data, [{fieldName: "number", dir: SortingDirection.Asc}]);

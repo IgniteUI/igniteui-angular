@@ -35,7 +35,8 @@ describe("IgxGrid", () => {
         expect(grid.columns[0].field).toMatch("ID");
         expect(grid.columns[1].field).toMatch("Name");
         expect(fixture.nativeElement.querySelectorAll("tr").length).toEqual(4, "Incorrect number of grid rows");
-        expect(fixture.nativeElement.querySelectorAll("table > thead > tr").length).toEqual(1, "Header row not rendered");
+        expect(fixture.nativeElement.querySelectorAll("table > thead > tr").length)
+            .toEqual(1, "Header row not rendered");
         expect(fixture.nativeElement.querySelectorAll("th").length).toEqual(2, "Columns not rendered correctly");
     });
 
@@ -55,7 +56,8 @@ describe("IgxGrid", () => {
         expect(grid.columns[0].field).toMatch("ID");
         expect(grid.columns[1].field).toMatch("Name");
         expect(fixture.nativeElement.querySelectorAll("tr").length).toEqual(4, "Incorrect number of grid rows");
-        expect(fixture.nativeElement.querySelectorAll("table > thead > tr").length).toEqual(1, "Header row not rendered");
+        expect(fixture.nativeElement.querySelectorAll("table > thead > tr").length)
+            .toEqual(1, "Header row not rendered");
         expect(fixture.nativeElement.querySelectorAll("th").length).toEqual(2, "Columns not rendered correctly");
     });
 
@@ -74,7 +76,8 @@ describe("IgxGrid", () => {
         expect(grid.columns[0].field).toMatch("ID");
         expect(grid.columns[1].field).toMatch("Name");
         expect(fixture.nativeElement.querySelectorAll("tr").length).toEqual(4, "Incorrect number of grid rows");
-        expect(fixture.nativeElement.querySelectorAll("table > thead > tr").length).toEqual(1, "Header row not rendered");
+        expect(fixture.nativeElement.querySelectorAll("table > thead > tr").length)
+            .toEqual(1, "Header row not rendered");
         expect(fixture.nativeElement.querySelectorAll("th").length).toEqual(2, "Columns not rendered correctly");
     });
 
@@ -92,11 +95,14 @@ describe("IgxGrid", () => {
 
         expect(grid.columns[0].bodyTemplate).toBeDefined("Column cell template not initialized");
         expect(grid.columns[0].headerTemplate).toBeDefined("Column header template not initialized");
-        expect(fixture.nativeElement.querySelector("tr > td > span.mybodytemplate")).toBeDefined("Cell template not rendered");
-        expect(fixture.nativeElement.querySelector("tr > th > div.igx-grid__th-content")).toBeDefined("Header template not rendered");
+        expect(fixture.nativeElement.querySelector("tr > td > span.mybodytemplate"))
+            .toBeDefined("Cell template not rendered");
+        expect(fixture.nativeElement.querySelector("tr > th > div.igx-grid__th-content"))
+            .toBeDefined("Header template not rendered");
         expect(fixture.nativeElement.querySelector("tr > th > div.igx-grid__th-content").textContent)
             .toMatch("ID", "Header template is wrong");
-        expect(fixture.nativeElement.querySelector("tr > td > span.mybodytemplate").textContent).toMatch("1", "Cell template is wrong");
+        expect(fixture.nativeElement.querySelector("tr > td > span.mybodytemplate").textContent)
+            .toMatch("1", "Cell template is wrong");
     });
 
     it("should have ARIA attributes set correctly", () => {
@@ -183,7 +189,8 @@ describe("IgxGrid", () => {
 
         expect(data.length).toEqual(3, "Row removed from the data container");
         expect(gridElement.querySelectorAll("tbody > tr").length).toEqual(3, "Row is removed from the grid");
-        expect(gridElement.querySelector("tbody > tr:last-child > td:last-child").textContent).not.toMatch("Test String");
+        expect(gridElement.querySelector("tbody > tr:last-child > td:last-child").textContent)
+            .not.toMatch("Test String");
 
         grid.addRow(newRow);
         fixture.detectChanges();
@@ -198,7 +205,8 @@ describe("IgxGrid", () => {
 
         expect(data.length).toEqual(3, "Row removed from the data container");
         expect(gridElement.querySelectorAll("tbody > tr").length).toEqual(3, "Row is removed from the grid");
-        expect(gridElement.querySelector("tbody > tr:last-child > td:last-child").textContent).not.toMatch("Test String");
+        expect(gridElement.querySelector("tbody > tr:last-child > td:last-child").textContent)
+            .not.toMatch("Test String");
 
         grid.addRow(newRow);
         fixture.detectChanges();
@@ -213,7 +221,8 @@ describe("IgxGrid", () => {
 
         expect(data.length).toEqual(3, "Row removed from the datasource");
         expect(gridElement.querySelectorAll("tbody > tr").length).toEqual(3, "Row is removed from the grid");
-        expect(gridElement.querySelector("tbody > tr:last-child > td:last-child").textContent).not.toMatch("Test String");
+        expect(gridElement.querySelector("tbody > tr:last-child > td:last-child").textContent)
+            .not.toMatch("Test String");
 
         grid.addRow(newRow);
         fixture.detectChanges();
@@ -301,7 +310,8 @@ describe("IgxGrid", () => {
 
         expect(cell.classList.contains("igx-grid__td--selected")).toBe(true, "Focused cell styling is not applied");
         expect(cell.getAttribute("aria-selected")).toMatch("true", "Focused cell ARIA attribute is not applied");
-        expect(cell.parentElement.classList.contains("igx-grid__tr--selected")).toBe(true, "Focused cell does not applies parent row styling");
+        expect(cell.parentElement.classList.contains("igx-grid__tr--selected"))
+            .toBe(true, "Focused cell does not applies parent row styling");
         expect(cellSpy.calls.count()).toBe(1);
 
         cell.dispatchEvent(new Event("blur"));
@@ -309,7 +319,8 @@ describe("IgxGrid", () => {
 
         expect(cell.classList.contains("igx-grid__td--selected")).toBe(false, "Focused cell styling is not removed");
         expect(cell.getAttribute("aria-selected")).toBe(null, "Focused cell ARIA attribute is not removed");
-        expect(cell.parentElement.classList.contains("igx-grid__tr--selected")).toBe(false, "Focused cell does not remove parent row styling");
+        expect(cell.parentElement.classList.contains("igx-grid__tr--selected"))
+            .toBe(false, "Focused cell does not remove parent row styling");
 
         // through API call
         grid.focusCell(0, 0);
@@ -334,22 +345,26 @@ describe("IgxGrid", () => {
         fixture.detectChanges();
         expect(document.activeElement).toBe(cells[0]);
 
-        cells[0].dispatchEvent(new KeyboardEvent("keydown", {key: "ArrowRight", bubbles: true} as KeyboardEventInit));
+        let args: KeyboardEventInit = {key: "ArrowRight", bubbles: true};
+        cells[0].dispatchEvent(new KeyboardEvent("keydown", args));
         tick();
         fixture.detectChanges();
         expect(document.activeElement).toBe(cells[1]);
 
-        cells[1].dispatchEvent(new KeyboardEvent("keydown", {key: "ArrowLeft", bubbles: true} as KeyboardEventInit));
+        args = {key: "ArrowLeft", bubbles: true};
+        cells[1].dispatchEvent(new KeyboardEvent("keydown", args));
         tick();
         fixture.detectChanges();
         expect(document.activeElement).toBe(cells[0]);
 
-        cells[0].dispatchEvent(new KeyboardEvent("keydown", {key: "ArrowDown", bubbles: true} as KeyboardEventInit));
+        args = {key: "ArrowDown", bubbles: true};
+        cells[0].dispatchEvent(new KeyboardEvent("keydown", args));
         tick();
         fixture.detectChanges();
         expect(document.activeElement).toBe(cells[2]);
 
-        cells[2].dispatchEvent(new KeyboardEvent("keydown", {key: "ArrowUp", bubbles: true} as KeyboardEventInit));
+        args = {key: "ArrowUp", bubbles: true};
+        cells[2].dispatchEvent(new KeyboardEvent("keydown", args));
         tick();
         fixture.detectChanges();
         expect(document.activeElement).toBe(cells[0]);
@@ -400,7 +415,8 @@ describe("IgxGrid", () => {
 
         fixture.detectChanges();
 
-        const filterInputButton: HTMLElement = fixture.nativeElement.querySelector(".igx-filtering__toggle > .toggle-icon");
+        const filterInputButton: HTMLElement = fixture.nativeElement
+                                                .querySelector(".igx-filtering__toggle > .toggle-icon");
         const tbody: HTMLElement = fixture.nativeElement.querySelector("table > tbody");
 
         expect(filterInputButton).toBeTruthy();
@@ -440,8 +456,9 @@ describe("IgxGrid", () => {
         tick();
         fixture.detectChanges();
 
+        let args: KeyboardEventInit = {key: "Enter", bubbles: true};
         gridElement.querySelector("tbody td:first-child")
-            .dispatchEvent(new KeyboardEvent("keyup", {key: "Enter", bubbles: true} as KeyboardEventInit));
+            .dispatchEvent(new KeyboardEvent("keyup", args));
 
         tick();
         fixture.detectChanges();
@@ -462,7 +479,8 @@ describe("IgxGrid", () => {
         tick();
         fixture.detectChanges();
 
-        dialog.dispatchEvent(new KeyboardEvent("keyup", {key: "Enter", bubbles: true} as KeyboardEventInit));
+        args = {key: "Enter", bubbles: true};
+        dialog.dispatchEvent(new KeyboardEvent("keyup", args));
 
         tick();
         fixture.detectChanges();
@@ -489,8 +507,9 @@ describe("IgxGrid", () => {
         tick();
         fixture.detectChanges();
 
+        let args: KeyboardEventInit = {key: "Enter", bubbles: true};
         gridElement.querySelector("tbody td:first-child")
-            .dispatchEvent(new KeyboardEvent("keyup", {key: "Enter", bubbles: true} as KeyboardEventInit));
+            .dispatchEvent(new KeyboardEvent("keyup", args));
 
         tick();
         fixture.detectChanges();
@@ -511,7 +530,8 @@ describe("IgxGrid", () => {
         tick();
         fixture.detectChanges();
 
-        dialog.dispatchEvent(new KeyboardEvent("keyup", {key: "Escape", bubbles: true} as KeyboardEventInit));
+        args = {key: "Escape", bubbles: true};
+        dialog.dispatchEvent(new KeyboardEvent("keyup", args));
 
         tick();
         fixture.detectChanges();
@@ -604,8 +624,9 @@ describe("IgxGrid", () => {
         expect(gridElement.querySelector(".igx-paginator > span").textContent).toMatch("2 of 3");
         expect(gridElement.querySelector("tbody > tr > td").textContent).toMatch("2");
 
+        let args: KeyboardEventInit = {key: "Enter", bubbles: true};
         gridElement.querySelector("tbody > tr > td")
-            .dispatchEvent(new KeyboardEvent("keyup", {key: "Enter", bubbles: true} as KeyboardEventInit));
+            .dispatchEvent(new KeyboardEvent("keyup", args));
 
         tick();
         fixture.detectChanges();
@@ -626,7 +647,8 @@ describe("IgxGrid", () => {
         tick();
         fixture.detectChanges();
 
-        dialog.dispatchEvent(new KeyboardEvent("keyup", {key: "Enter", bubbles: true} as KeyboardEventInit));
+        args = {key: "Enter", bubbles: true};
+        dialog.dispatchEvent(new KeyboardEvent("keyup", args));
 
         tick();
         fixture.detectChanges();
@@ -669,8 +691,9 @@ describe("IgxGrid", () => {
         expect(gridElement.querySelector(".igx-paginator > span").textContent).toMatch("2 of 3");
         expect(gridElement.querySelector("tbody > tr > td").textContent).toMatch("2");
 
+        let args: KeyboardEventInit = {key: "Enter", bubbles: true};
         gridElement.querySelector("tbody > tr > td")
-            .dispatchEvent(new KeyboardEvent("keyup", {key: "Enter", bubbles: true} as KeyboardEventInit));
+            .dispatchEvent(new KeyboardEvent("keyup", args));
 
         tick();
         fixture.detectChanges();
@@ -691,7 +714,8 @@ describe("IgxGrid", () => {
         tick();
         fixture.detectChanges();
 
-        dialog.dispatchEvent(new KeyboardEvent("keyup", {key: "Escape", bubbles: true} as KeyboardEventInit));
+        args = {key: "Escape", bubbles: true};
+        dialog.dispatchEvent(new KeyboardEvent("keyup", args));
 
         tick();
         fixture.detectChanges();

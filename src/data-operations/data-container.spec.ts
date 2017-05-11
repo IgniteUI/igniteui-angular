@@ -16,9 +16,9 @@ import {ISortingExpression, SortingDirection} from "./sorting-expression.interfa
 import {ISortingState} from "./sorting-state.interface";
 
 describe("DataContainer", () => {
-    let dataGenerator: DataGenerator,
-        data: Object[],
-        dc: DataContainer;
+    let dataGenerator: DataGenerator;
+    let data: object[];
+    let dc: DataContainer;
     beforeEach(() => {
         dataGenerator = new DataGenerator();
         data = dataGenerator.data;
@@ -30,8 +30,8 @@ describe("DataContainer", () => {
             filtering: {
                 expressions: [
                     {
-                        fieldName: "number",
                         condition: FilteringCondition.number.greaterThanOrEqualTo,
+                        fieldName: "number",
                         searchVal: 1
                     }
                 ]
@@ -46,8 +46,8 @@ describe("DataContainer", () => {
         dc.state.sorting = {
             expressions: [
                 {
-                    fieldName: "number",
-                    dir: SortingDirection.Desc
+                    dir: SortingDirection.Desc,
+                    fieldName: "number"
                 }
             ]
         };
@@ -69,11 +69,12 @@ describe("DataContainer", () => {
     });
     it ("tests sort", () => {
         // apply sorting without removing filtering
-        let res, sortingState: ISortingState = {
+        let res;
+        const sortingState: ISortingState = {
             expressions: [
                 {
-                    fieldName: "number",
-                    dir: SortingDirection.Desc
+                    dir: SortingDirection.Desc,
+                    fieldName: "number"
                 }
             ]
         };
@@ -85,11 +86,12 @@ describe("DataContainer", () => {
     });
     it ("tests filter", () => {
         // apply sorting without removing filtering
-        let res, filteringState: IFilteringState = {
+        let res;
+        const filteringState: IFilteringState = {
             expressions: [
                 {
-                    fieldName: "number",
                     condition: FilteringCondition.number.doesNotEqual,
+                    fieldName: "number",
                     searchVal: 4
                 }
             ]
@@ -102,7 +104,7 @@ describe("DataContainer", () => {
     });
     it ("tests page", () => {
         // apply sorting without removing filtering
-        const res, pagingState: IPagingState = {
+        const pagingState: IPagingState = {
             index: 0,
             recordsPerPage: 4
         };
@@ -139,9 +141,9 @@ describe("DataContainer", () => {
             expect(dc.data[0]).toEqual(record);
         });
     it ("tests `deleteRecord`", () => {
-            const record = data[0],
+            const record = data[0];
             // remove first element
-                res = dc.deleteRecord(record);
+            const res = dc.deleteRecord(record);
             expect(res).toBeTruthy();
             expect(dc.data.length).toBe(4);
             expect(dataGenerator.getValuesForColumn(dc.data, "number"))
@@ -156,8 +158,8 @@ describe("DataContainer", () => {
                 .toEqual([1, 2, 3, 4]);
         });
     it ("tests `updateRecordByIndex`", () => {
-            const recordCopy = Object.assign({}, data[0]),
-                res = dc.updateRecordByIndex(0, {number: -1});
+            const recordCopy = Object.assign({}, data[0]);
+            const res = dc.updateRecordByIndex(0, {number: -1});
             recordCopy.number = -1;
             expect(dc.data[0]).toEqual(recordCopy);
         });

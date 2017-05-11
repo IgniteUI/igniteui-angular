@@ -53,8 +53,8 @@ describe("Icon", () => {
 
     it("Initializes inactive icon", () => {
         const fixture = TestBed.createComponent(InitInactiveIcon);
-        const icon = fixture.componentInstance.icon,
-            iconContainers = icon.el.nativeElement.getElementsByClassName("igx-icon");
+        const icon = fixture.componentInstance.icon;
+        const iconContainers = icon.el.nativeElement.getElementsByClassName("igx-icon");
 
         fixture.detectChanges();
 
@@ -67,26 +67,26 @@ describe("Icon", () => {
     template: `<igx-icon></igx-icon>`
 })
 class InitIcon {
-    @ViewChild(IgxIcon) icon: IgxIcon;
+    @ViewChild(IgxIcon) public icon: IgxIcon;
 }
 
 @Component({
     template: `<igx-icon fontSet="material" name="home"></igx-icon>`
 })
 class InitMaterialIcon {
-    @ViewChild(IgxIcon) icon: IgxIcon;
+    @ViewChild(IgxIcon) public icon: IgxIcon;
 }
 
 @Component({
     template: `<igx-icon fontSet="material" name="home" color="red"></igx-icon>`
 })
 class InitCustomColorIcon {
-    @ViewChild(IgxIcon) icon: IgxIcon;
+    @ViewChild(IgxIcon) public icon: IgxIcon;
 }
 
 @Component({
     template: `<igx-icon fontSet="material" name="home" isActive="false"></igx-icon>`
 })
 class InitInactiveIcon {
-    @ViewChild(IgxIcon) icon: IgxIcon;
+    @ViewChild(IgxIcon) public icon: IgxIcon;
 }

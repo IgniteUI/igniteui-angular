@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { DataColumn, DataGenerator } from "../../../src/data-operations/test-util/data-generator";
+import { IDataColumn, DataGenerator } from "../../../src/data-operations/test-util/data-generator";
 @Injectable()
 export class LocalDataService {
     private dataGenerator: DataGenerator = new DataGenerator(100000, 4);
-    getColumns(): DataColumn[] {
+    getColumns(): IDataColumn[] {
         return this.dataGenerator.columns;
     }
     getData() {

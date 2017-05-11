@@ -6,7 +6,7 @@ import {
 import { By } from "@angular/platform-browser";
 import { IgxButton } from "./button.directive";
 
-describe("IgxButton", function() {
+describe("IgxButton", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -63,10 +63,13 @@ class InitButton {
 
 @Component({
     template:
-    `<span igxButton="raised" [igxButtonColor]="foreground" [igxButtonBackground]="background" [disabled]="isDisabled">Test</span>`
+    `<span igxButton="raised"
+        [igxButtonColor]="foreground"
+        [igxButtonBackground]="background"
+        [disabled]="isDisabled">Test</span>`
 })
 class ButtonWithAttribs {
-    isDisabled = true;
-    foreground = "white";
-    background = "black";
+    public isDisabled = true;
+    public foreground = "white";
+    public background = "black";
 }
