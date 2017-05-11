@@ -1,7 +1,3 @@
-.sample-content {
-    /*grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));*/
-}
-
 .card-wrapper {
     max-width: 460px;
     min-width: 320px;

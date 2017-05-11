@@ -41,7 +41,8 @@
     flex-flow: column nowrap;
     flex: 1 0 25%;
     align-content: flex-start;
-    margin-right: 72px;
+    margin: 16px 36px;
+    min-width: 300px;
 }
 
 .sample-title {

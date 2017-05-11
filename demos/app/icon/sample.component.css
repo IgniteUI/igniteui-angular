@@ -1,6 +1,10 @@
 .sample-icons {
-    padding: 16px;
-    display: grid;
-    grid-gap: 48px;
-    grid-template-columns: repeat(auto-fill, minmax(24px, 1fr));
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.sample-icons igx-icon {
+    display: flex;
+    flex: 1 0 20%;
+    margin-bottom: 72px;
 }

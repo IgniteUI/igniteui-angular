@@ -1,9 +1,10 @@
-.sample-content {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+.buttons-sample {
+    display: flex;
+    flex-flow: row wrap;
 }
 
-.buttons-sample {
-    display: grid;
-    grid-gap: 44px;
-    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+.button-sample {
+    display: flex;
+    flex: 1 0 30%;
+    margin-bottom: 36px;
 }
