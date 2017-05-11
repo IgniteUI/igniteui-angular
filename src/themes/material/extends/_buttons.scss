@@ -62,7 +62,7 @@
 }
 
 %igx-button--round {
-    $block: &;
+    $block: bem--selector-to-string(&);
     
     position: relative;
     display: flex;
