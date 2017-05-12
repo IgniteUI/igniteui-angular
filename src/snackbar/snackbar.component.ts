@@ -97,7 +97,7 @@ export class IgxSnackbar {
      * provides reference to the IgxSnackbar component as argument
      * @type {EventEmitter}
      */
-    @Output()
+    @Output() public onAction = new EventEmitter();
 
     /**
      * The event that will be thrown when the snackbar animation starts
@@ -110,8 +110,6 @@ export class IgxSnackbar {
      * @type {EventEmitter<AnimationTransitionEvent>}
      */
     @Output() public animationDone = new EventEmitter<any>();
-
-    public onAction = new EventEmitter();
 
     private timeoutId;
 

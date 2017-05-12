@@ -58,13 +58,13 @@ export class DataUtil {
     public static getListOfFilteringConditionsForDataType(dataType: DataType): string[] {
         return Object.keys(DataUtil.getFilteringConditionsForDataType(dataType));
     }
-    public static sort<T>(data: T[], state: SortingState): T[] {
+    public static sort<T>(data: T[], state: ISortingState): T[] {
         // set defaults
         DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
         // apply default settings for each sorting expression(if not set)
         return state.strategy.sort(data, state.expressions);
     }
-    public static page<T>(data: T[], state: PagingState): T[] {
+    public static page<T>(data: T[], state: IPagingState): T[] {
         if (!state) {
             return data;
         }
@@ -96,7 +96,7 @@ export class DataUtil {
         return data.slice(index * recordsPerPage, (index + 1) * recordsPerPage);
     }
     public static filter<T>(data: T[],
-                            state: FilteringState): T[] {
+                            state: IFilteringState): T[] {
         // set defaults
         DataUtil.mergeDefaultProperties(state, filteringStateDefaults);
         if (!state.strategy) {
@@ -104,7 +104,7 @@ export class DataUtil {
         }
         return state.strategy.filter(data, state.expressions, state.logic);
     }
-    public static process<T>(data: T[], state: DataState): T[] {
+    public static process<T>(data: T[], state: IDataState): T[] {
         if (!state) {
             return data;
         }
