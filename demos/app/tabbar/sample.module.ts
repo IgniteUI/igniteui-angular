@@ -7,25 +7,25 @@ import { CustomContentComponent, TabBarSampleComponent } from "./sample.componen
 
 const tabbarRoutes: Routes = [
     {
-        path: "tabbar",
-        component: TabBarSampleComponent,
         children: [
             { path: "tabbarInnerPath", component: CustomContentComponent, outlet: "tabPanelOutlet" }
-        ]
+        ],
+        component: TabBarSampleComponent,
+        path: "tabbar"
     }
 ];
 
 @NgModule({
+    declarations: [
+        TabBarSampleComponent,
+        CustomContentComponent
+    ],
     imports: [
         CommonModule,
         FormsModule,
         IgxComponentsModule,
         IgxDirectivesModule,
         RouterModule.forChild(tabbarRoutes)
-    ],
-    declarations: [
-        TabBarSampleComponent,
-        CustomContentComponent
     ]
 })
 export class TabBarSampleModule { }

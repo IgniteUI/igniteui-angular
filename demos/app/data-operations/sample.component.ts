@@ -12,29 +12,29 @@ import {LocalDataService} from "./local-data.service";
 import {RemoteDataService} from "./remote-data.service";
 
 @Component({
+    moduleId: module.id,
     providers: [RemoteDataService, LocalDataService],
     selector: "data-util-sample",
-    moduleId: module.id,
     templateUrl: "./sample.component.html"
 })
 export class DataOperationsSampleComponent implements OnInit {
-    //remoteData: Observable<DataContainer>;
-    remoteDataContainer: DataContainer = new DataContainer();
-    localDataContainer: DataContainer = new DataContainer();
-    @ViewChild("localDataStateConfig") localDataStateConfig: DataStateConfiguratorComponent;
-    @ViewChild("remoteDataStateConfig") remoteDataStateConfig: DataStateConfiguratorComponent;
+    // remoteData: Observable<DataContainer>;
+    public remoteDataContainer: DataContainer = new DataContainer();
+    public localDataContainer: DataContainer = new DataContainer();
+    @ViewChild("localDataStateConfig") public localDataStateConfig: DataStateConfiguratorComponent;
+    @ViewChild("remoteDataStateConfig") public remoteDataStateConfig: DataStateConfiguratorComponent;
     // paging sample vars
-    @ViewChild("toast") toast: IgxToast;
+    @ViewChild("toast") public toast: IgxToast;
 
-    message: string = "";
+    public message: string = "";
     constructor(private remoteDataService: RemoteDataService,
                 private localDataService: LocalDataService) {
     }
-    ngOnInit() {
+    public ngOnInit() {
         this.initRemoteData();
         this.initLocalData();
     }
-    initRemoteData() {
+    public initRemoteData() {
         const columns: IDataColumn[] = [
             {
                 fieldName: "ProductID",
@@ -58,7 +58,7 @@ export class DataOperationsSampleComponent implements OnInit {
         this.remoteDataStateConfig.dataState = initialDataState;
         this.processRemoteData(initialDataState);
     }
-    initLocalData() {
+    public initLocalData() {
         const initialDataState: IDataState = {
             paging: {
                 index: 0,
@@ -75,7 +75,7 @@ export class DataOperationsSampleComponent implements OnInit {
                 this.processLocalData(initialDataState);
             });
     }
-    processRemoteData(dataState: IDataState) {
+    public processRemoteData(dataState: IDataState) {
         this.remoteDataStateConfig.stateLoading = true;
         this.toast.message = "Loading remote data";
         this.remoteDataStateConfig.setMetadataInfo("Requesting data");
@@ -92,7 +92,7 @@ export class DataOperationsSampleComponent implements OnInit {
                 this.remoteDataStateConfig.setMetadataInfo(msg);
             });
     }
-    processLocalData(dataState: IDataState) {
+    public processLocalData(dataState: IDataState) {
         const startTime = new Date().getTime();
         this.localDataContainer.process(dataState);
         const processTime = new Date().getTime() - startTime;

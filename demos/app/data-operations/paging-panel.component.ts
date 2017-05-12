@@ -7,20 +7,20 @@ import { DataContainer, DataType, DataUtil, FilteringCondition,
       } from "../../../src/main";
 
 @Component({
-    selector: "paging-panel",
     moduleId: module.id,
+    selector: "paging-panel",
     templateUrl: "./paging-panel.component.html"
 })
 export class PagingPanelComponent {
-    @ViewChild("pagingPanel") pagingPanel;
+    @ViewChild("pagingPanel") public pagingPanel;
 
-    @Input() dataState: IDataState;
-    @Input() hidden: boolean = false;
-    @Input() title: string = "Paging";
+    @Input() public dataState: IDataState;
+    @Input() public hidden: boolean = false;
+    @Input() public title: string = "Paging";
 
-    @Output() onProcessDataState = new EventEmitter();
+    @Output() public onProcessDataState = new EventEmitter();
 
-    process() {
+    public process() {
         this.onProcessDataState.emit(this.dataState);
     }
 }

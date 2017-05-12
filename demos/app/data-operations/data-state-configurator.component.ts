@@ -13,41 +13,41 @@ import { PagingPanelComponent } from "./paging-panel.component";
 import { SortingPanelComponent } from "./sorting-panel.component";
 
 @Component({
-    selector: "data-state-configurator",
     moduleId: module.id,
-    templateUrl: "./data-state-configurator.component.html",
-    styleUrls: ["data-state-configurator.component.css"]
+    selector: "data-state-configurator",
+    styleUrls: ["data-state-configurator.component.css"],
+    templateUrl: "./data-state-configurator.component.html"
 })
 export class DataStateConfiguratorComponent implements OnInit {
-    @ViewChild("dataTable") dataTable: DataTable;
+    @ViewChild("dataTable") public dataTable: DataTable;
 
-    @Input() dataContainer: DataContainer;
-    @Input() dataState: IDataState;
-    @Input() columns: IDataColumn[] = [];
+    @Input() public dataContainer: DataContainer;
+    @Input() public dataState: IDataState;
+    @Input() public columns: IDataColumn[] = [];
 
-    @Input() hidePaging: boolean = false;
-    @Input() hideSorting: boolean = false;
-    @Input() hideFiltering: boolean = false;
+    @Input() public hidePaging: boolean = false;
+    @Input() public hideSorting: boolean = false;
+    @Input() public hideFiltering: boolean = false;
 
-    message: string;
+    public message: string;
 
-    @Input() stateLoading: boolean = false;
-    @Output() onProcessDataState = new EventEmitter();
+    @Input() public stateLoading: boolean = false;
+    @Output() public onProcessDataState = new EventEmitter();
 
-    ngOnInit() {
+    public ngOnInit() {
         this.dataTable.keys = this.columns.map((col) => col.fieldName);
     }
 
-    setMetadataInfo(title?: string) {
+    public setMetadataInfo(title?: string) {
         let msg: string = `<h3 class="igx-card-header__title">${title || ""}</h3>`;
         msg += '<p class="igx-card-content__text">';
         const p = this.dataState.paging;
         if (p && p.metadata) {
             const metadata = p.metadata;
             msg += metadata.error !== PagingError.None ?
-                                    "Incorrect arguments <br />" :
-                                    `Paging: ${metadata.countPages ? p.index + 1 : 0} of ${metadata.countPages} page(s) |
-                                    Records: ${metadata.countRecords}<br />`;
+                            "Incorrect arguments <br />" :
+                            `Paging: ${metadata.countPages ? p.index + 1 : 0} of ${metadata.countPages} page(s) |
+                            Records: ${metadata.countRecords}<br />`;
             msg += "<br />";
         }
         if (this.dataState.filtering && this.dataState.filtering.expressions.length) {
@@ -59,7 +59,7 @@ export class DataStateConfiguratorComponent implements OnInit {
         msg += "</p>";
         this.message = msg;
     }
-    process() {
+    public process() {
         this.onProcessDataState.emit(this.dataState);
     }
 }

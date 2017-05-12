@@ -13,6 +13,8 @@ import { DataOperationsSampleComponent } from "./sample.component";
 import { SortingPanelComponent } from "./sorting-panel.component";
 
 @NgModule({
+    declarations: [DataOperationsSampleComponent, DataTable, DataStateConfiguratorComponent,
+                FilteringPanelComponent, SortingPanelComponent, PagingPanelComponent],
     imports: [
         IgxComponentsModule,
         CommonModule,
@@ -20,8 +22,6 @@ import { SortingPanelComponent } from "./sorting-panel.component";
         IgxDirectivesModule,
         HttpModule,
         IgxCardModule
-    ],
-    declarations: [DataOperationsSampleComponent, DataTable, DataStateConfiguratorComponent,
-                FilteringPanelComponent, SortingPanelComponent, PagingPanelComponent]
+    ]
 })
 export class DataOperationsSampleModule {}

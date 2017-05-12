@@ -5,12 +5,12 @@ import { IgxSnackbarModule } from "../../../src/main";
 import { IgxSnackbarSampleComponent } from "./sample.component";
 
 @NgModule({
+    declarations: [
+        IgxSnackbarSampleComponent
+    ],
     imports: [
         IgxSnackbarModule,
         IgxButtonModule
-    ],
-    declarations: [
-        IgxSnackbarSampleComponent
     ]
 })
 export class IgxSnackbarSampleModule {}

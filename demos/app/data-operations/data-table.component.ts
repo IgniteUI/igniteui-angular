@@ -6,13 +6,13 @@ import { DataContainer, DataUtil, FilteringCondition,
       } from "../../../src/main";
 
 @Component({
-    selector: "data-table",
     moduleId: module.id,
-    templateUrl: "./data-table.component.html",
-    styleUrls: ["data-table.component.css"]
+    selector: "data-table",
+    styleUrls: ["data-table.component.css"],
+    templateUrl: "./data-table.component.html"
 })
 export class DataTable {
-    @Input() keys: string[] = [];
-    @Input() dataContainer: DataContainer;
-    @Input() data: any[] = [];
+    @Input() public keys: string[] = [];
+    @Input() public dataContainer: DataContainer;
+    @Input() public data: any[] = [];
 }

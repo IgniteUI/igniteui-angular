@@ -4,7 +4,7 @@ import { IgxComponentsModule } from "../../../src/main";
 import { CarouselSampleComponent } from "./sample.component";
 
 @NgModule({
-    imports: [IgxComponentsModule, CommonModule],
-    declarations: [CarouselSampleComponent]
+    declarations: [CarouselSampleComponent],
+    imports: [IgxComponentsModule, CommonModule]
 })
 export class CarouselSampleModule {}

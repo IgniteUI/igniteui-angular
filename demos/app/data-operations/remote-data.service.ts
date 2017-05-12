@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
 import { BehaviorSubject, Observable } from "rxjs/Rx";
-import { DataContainer, DataState, DataType, DataUtil, SortingDirection
+import { DataContainer, DataType, DataUtil, IDataState, SortingDirection
       } from "../../../src/main";
 
 @Injectable()
@@ -10,7 +10,14 @@ export class RemoteDataService  extends BehaviorSubject<DataContainer> {
     constructor(private http: Http) {
         super(null);
     }
-    private encodeUrl(dataState: DataState): string {
+    public getData(dataState?: IDataState) {
+        const url = this.encodeUrl(dataState);
+        return this.http
+            .get(url)
+            .map((response) => response.json())
+            .toPromise();
+    }
+    private encodeUrl(dataState: IDataState): string {
         let queryStr: string = "";
         if (dataState && dataState.paging) {
             const skip = dataState.paging.index * dataState.paging.recordsPerPage;
@@ -29,12 +36,5 @@ export class RemoteDataService  extends BehaviorSubject<DataContainer> {
         }
         queryStr = queryStr ? `?${queryStr}` : "";
         return `${this.url}${queryStr}`;
-    }
-    public getData(dataState?: DataState) {
-        const url = this.encodeUrl(dataState);
-        return this.http
-            .get(url)
-            .map((response) => response.json())
-            .toPromise();
     }
 }

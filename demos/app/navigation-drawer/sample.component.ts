@@ -2,14 +2,14 @@ import { Component, ViewChild, ViewEncapsulation } from "@angular/core";
 import { NavigationDrawer, NavigationDrawerModule, NavigationService } from "../../../src/main";
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     moduleId: module.id, // commonJS standard
+    providers: [NavigationService],
     selector: "nav-sample",
     styleUrls: ["sample.css"],
     template: `
         <router-outlet></router-outlet>
-    `,
-    providers: [NavigationService],
-    encapsulation: ViewEncapsulation.None
+    `
 })
 export class NavDrawerSampleComponent {}
 
@@ -19,34 +19,38 @@ export class NavDrawerSampleComponent {}
     templateUrl: "main.html"
 })
 export class MainDrawerSampleComponent {
-    navItems: Object[] = [{
-        text: "Default sample", link: "/navigation-drawer"
+    public navItems: object[] = [{
+        link: "/navigation-drawer",
+        text: "Default sample"
     }, {
-        // router seems pretty confused how relative works.. "./pin" would generate "/navigation-drawer/mini/pin" under the "/navigation-drawer/mini" sample...
-        text: "Pin sample", link: "/navigation-drawer/pin"
+        // router seems pretty confused how relative works..
+        // "./pin" would generate "/navigation-drawer/mini/pin" under the "/navigation-drawer/mini" sample...
+        link: "/navigation-drawer/pin",
+        text: "Pin sample"
     }, {
-        text: "Mini sample", link: "/navigation-drawer/mini"
+        link: "/navigation-drawer/mini",
+        text: "Mini sample"
     }];
 
-    pin: boolean = false;
-    gestures: boolean = true;
-    open: boolean = false;
-    position = "left";
-    drawerWidth = "";
-    drawerMiniWidth = "";
-    @ViewChild(NavigationDrawer) viewChild: NavigationDrawer;
+    public pin: boolean = false;
+    public gestures: boolean = true;
+    public open: boolean = false;
+    public position = "left";
+    public drawerWidth = "";
+    public drawerMiniWidth = "";
+    @ViewChild(NavigationDrawer) public viewChild: NavigationDrawer;
 
     /** Sample-specific configurations: */
-    miniTemplate: boolean = false;
-    showGestureToggle: boolean = true;
-    showPositions: boolean = true;
-    showPinToggle: boolean = false;
-    showMiniWidth: boolean = false;
-    showEventLog: boolean = true;
-    showToggle: boolean = true;
-    log: string[] = new Array<string>();
+    public miniTemplate: boolean = false;
+    public showGestureToggle: boolean = true;
+    public showPositions: boolean = true;
+    public showPinToggle: boolean = false;
+    public showMiniWidth: boolean = false;
+    public showEventLog: boolean = true;
+    public showToggle: boolean = true;
+    public log: string[] = new Array<string>();
 
-    logEvent(event) {
+    public logEvent(event) {
         this.log.push(event);
         if (event === "closing") {
             // this will cause change detection, potentially run outside of angular
@@ -56,7 +60,8 @@ export class MainDrawerSampleComponent {
             this.open = true;
         }
     }
-    testToggle() {
+
+    public testToggle() {
         this.viewChild.toggle().then( (value) => {
             this.logEvent("API call resolved: " + value);
         });
@@ -77,7 +82,7 @@ export class PinNavDrawerSampleComponent extends MainDrawerSampleComponent {
         this.open = true;
         this.pin = true;
 
-        //sample config
+        // sample config
         this.showPinToggle = true;
         this.showPositions = false;
         this.showGestureToggle = false;
@@ -96,7 +101,7 @@ export class MiniNavDrawerSampleComponent extends MainDrawerSampleComponent {
     constructor() {
         super();
 
-        //sample config
+        // sample config
         this.showMiniWidth = true;
         this.miniTemplate = true;
         this.showToggle = false;
