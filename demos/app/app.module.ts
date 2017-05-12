@@ -24,7 +24,8 @@ import { ProgressBarSampleModule } from "./progressbar/sample.module";
 import {IgxRangeSampleModule} from "./range/sample.module";
 import { IgxSnackbarSampleModule } from "./snackbar/sample.module";
 import { TabBarSampleModule } from "./tabbar/sample.module";
-import {IgxToastSampleModule} from "./toast/sample.module";
+import { IgxToastSampleModule } from "./toast/sample.module";
+import { BadgeSampleModule } from "./badge/sample.module";
 
 @NgModule({
     imports: [
@@ -51,7 +52,8 @@ import {IgxToastSampleModule} from "./toast/sample.module";
         GridSampleModule,
         IgxCardSampleModule,
         IgxRangeSampleModule,
-        DataOperationsSampleModule
+        DataOperationsSampleModule,
+        BadgeSampleModule
     ],
     declarations: [
         AppComponent
@@ -60,4 +62,4 @@ import {IgxToastSampleModule} from "./toast/sample.module";
         AppComponent
     ]
 })
-export class AppModule {}
+export class AppModule { }
