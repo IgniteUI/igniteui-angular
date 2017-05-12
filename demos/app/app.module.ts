@@ -8,6 +8,7 @@ import { IgxComponentsModule, IgxDirectivesModule } from "../../src/main";
 import { AppComponent } from "./app.component";
 import { routing } from "./app.routing";
 import { AvatarSampleModule } from "./avatar/sample.module";
+import { BadgeSampleModule } from "./badge/sample.module";
 import { ButtonSampleModule } from "./button/sample.module";
 import { ButtonGroupSampleModule } from "./buttonGroup/sample.module";
 import { IgxCardSampleModule } from "./card/sample.module";
@@ -21,10 +22,11 @@ import { ListSampleModule } from "./list/sample.module";
 import { NavbarSampleModule } from "./navbar/sample.module";
 import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
 import { ProgressBarSampleModule } from "./progressbar/sample.module";
-import {IgxRangeSampleModule} from "./range/sample.module";
+import { IgxRangeSampleModule } from "./range/sample.module";
+import { RippleSampleModule} from "./ripple/sample.module";
 import { IgxSnackbarSampleModule } from "./snackbar/sample.module";
 import { TabBarSampleModule } from "./tabbar/sample.module";
-import {IgxToastSampleModule} from "./toast/sample.module";
+import { IgxToastSampleModule } from "./toast/sample.module";
 
 @NgModule({
     bootstrap: [
@@ -57,7 +59,9 @@ import {IgxToastSampleModule} from "./toast/sample.module";
         GridSampleModule,
         IgxCardSampleModule,
         IgxRangeSampleModule,
-        DataOperationsSampleModule
+        DataOperationsSampleModule,
+        BadgeSampleModule,
+        RippleSampleModule
     ]
 })
-export class AppModule {}
+export class AppModule { }
