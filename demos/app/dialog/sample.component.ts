@@ -7,7 +7,7 @@ import { Component } from "@angular/core";
     templateUrl: "sample.component.html"
 })
 export class DialogSampleComponent {
-    onDialogOKSelected(args) {
+    public onDialogOKSelected(args) {
         // args.event - event
         // args.dialog - dialog
 

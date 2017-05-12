@@ -9,6 +9,9 @@ import { IgxRippleModule } from "../../../src/main";
 import { IgxCardSampleComponent } from "./sample.component";
 
 @NgModule({
+    declarations: [
+        IgxCardSampleComponent
+    ],
     imports: [
         IgxAvatarModule,
         IgxButtonModule,
@@ -16,9 +19,6 @@ import { IgxCardSampleComponent } from "./sample.component";
         IgxCardModule,
         IgxRippleModule,
         CommonModule
-    ],
-    declarations: [
-        IgxCardSampleComponent
     ]
 })
 export class IgxCardSampleModule {}

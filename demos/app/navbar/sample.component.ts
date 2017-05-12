@@ -6,25 +6,25 @@ const CURRENT_VIEW: string = "Ignite UI JS Blocks Samples";
 @Component({
     moduleId: module.id,
     selector: "navbar-sample",
-    templateUrl: "sample.component.html",
-    styleUrls: ["../app.samples.css", "./sample.component.css"]
+    styleUrls: ["../app.samples.css", "./sample.component.css"],
+    templateUrl: "sample.component.html"
 })
 export class NavbarSampleComponent implements OnInit {
-    currentView: string;
+    public currentView: string;
 
     constructor(private _location: Location) {
 
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.currentView = CURRENT_VIEW;
     }
 
-    navigateBack() {
+    public navigateBack() {
         this._location.back();
     }
 
-    canGoBack() {
-        return window.history.length == 0;
+    public canGoBack() {
+        return window.history.length === 0;
     }
 }

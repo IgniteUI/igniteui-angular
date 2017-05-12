@@ -2,22 +2,22 @@ import { Component } from "@angular/core";
 import { IgxCarouselModule } from "../../../src/carousel/carousel.component";
 
 @Component({
-    selector: "carousel-sample",
     moduleId: module.id,
-    templateUrl: "./sample.component.html",
-    styleUrls: ["sample.component.css", "../app.samples.css"]
+    selector: "carousel-sample",
+    styleUrls: ["sample.component.css", "../app.samples.css"],
+    templateUrl: "./sample.component.html"
 })
 export class CarouselSampleComponent {
-    slides: any[] = [];
-    interval = 3000;
-    pause = true;
-    loop = true;
+    public slides: any[] = [];
+    public interval = 3000;
+    public pause = true;
+    public loop = true;
 
     constructor() {
             this.addNewSlide();
     }
 
-    addNewSlide() {
+    public addNewSlide() {
         this.slides.push(
             {image: "../demos/app/carousel/images/slide1@x2.jpg"},
             {image: "../demos/app/carousel/images/slide2@x2.jpg"},

@@ -22,76 +22,76 @@ import {IgxToastSampleComponent} from "./toast/sample.component";
 const appRoutes: Routes = [
     {
         path: "",
-        redirectTo: "/avatar",
-        pathMatch: "full"
+        pathMatch: "full",
+        redirectTo: "/avatar"
     },
     {
-        path: "inputs",
-        component: InputSampleComponent
+        component: InputSampleComponent,
+        path: "inputs"
     },
     {
-        path: "carousel",
-        component: CarouselSampleComponent
+        component: CarouselSampleComponent,
+        path: "carousel"
     },
     {
-        path: "tabbar",
-        component: TabBarSampleComponent
+        component: TabBarSampleComponent,
+        path: "tabbar"
     },
     {
-        path: "buttons",
-        component: ButtonsSampleComponent
+        component: ButtonsSampleComponent,
+        path: "buttons"
     },
     {
-        path: "buttonGroup",
-        component: ButtonGroupSampleComponent
+        component: ButtonGroupSampleComponent,
+        path: "buttonGroup"
     },
     {
-        path: "list",
-        component: ListSampleComponent
+        component: ListSampleComponent,
+        path: "list"
     },
     {
-        path: "avatar",
-        component: AvatarSampleComponent
+        component: AvatarSampleComponent,
+        path: "avatar"
     },
     {
-        path: "navbar",
-        component: NavbarSampleComponent
+        component: NavbarSampleComponent,
+        path: "navbar"
     },
     {
-        path: "progressbar",
-        component: ProgressbarSampleComponent
+        component: ProgressbarSampleComponent,
+        path: "progressbar"
     },
     {
-        path: "snackbar",
-        component: IgxSnackbarSampleComponent
+        component: IgxSnackbarSampleComponent,
+        path: "snackbar"
     },
     {
-        path: "toast",
-        component: IgxToastSampleComponent
+        component: IgxToastSampleComponent,
+        path: "toast"
     },
     {
-        path: "dialog",
-        component: DialogSampleComponent
+        component: DialogSampleComponent,
+        path: "dialog"
     },
     {
-        path: "icon",
-        component: IconSampleComponent
+        component: IconSampleComponent,
+        path: "icon"
     },
     {
-        path: "grid",
-        component: GridSampleComponent
+        component: GridSampleComponent,
+        path: "grid"
     },
     {
-        path: "card",
-        component: IgxCardSampleComponent
+        component: IgxCardSampleComponent,
+        path: "card"
     },
     {
-        path: "range",
-        component: IgxRangeSampleComponent
+        component: IgxRangeSampleComponent,
+        path: "range"
     },
     {
-        path: "data-operations",
-        component: DataOperationsSampleComponent
+        component: DataOperationsSampleComponent,
+        path: "data-operations"
     }
 ];
 

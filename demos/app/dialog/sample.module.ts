@@ -3,12 +3,12 @@ import { IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
 import { DialogSampleComponent } from "./sample.component";
 
 @NgModule({
+    declarations: [
+        DialogSampleComponent
+    ],
     imports: [
         IgxComponentsModule,
         IgxDirectivesModule
-    ],
-    declarations: [
-        DialogSampleComponent
     ]
 })
 export class DialogSampleModule {}

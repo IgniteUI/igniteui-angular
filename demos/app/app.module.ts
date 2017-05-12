@@ -27,6 +27,12 @@ import { TabBarSampleModule } from "./tabbar/sample.module";
 import {IgxToastSampleModule} from "./toast/sample.module";
 
 @NgModule({
+    bootstrap: [
+        AppComponent
+    ],
+    declarations: [
+        AppComponent
+    ],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
@@ -52,12 +58,6 @@ import {IgxToastSampleModule} from "./toast/sample.module";
         IgxCardSampleModule,
         IgxRangeSampleModule,
         DataOperationsSampleModule
-    ],
-    declarations: [
-        AppComponent
-    ],
-    bootstrap: [
-        AppComponent
     ]
 })
 export class AppModule {}

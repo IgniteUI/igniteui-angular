@@ -4,8 +4,8 @@ import { IgxProgressBarModule } from "../../../src/main";
 @Component({
     moduleId: module.id,
     selector: "progressbar-sample",
-    templateUrl: "sample.component.html",
-    styleUrls: ["../app.samples.css", "sample.component.css"]
+    styleUrls: ["../app.samples.css", "sample.component.css"],
+    templateUrl: "sample.component.html"
 })
 
 export class ProgressbarSampleComponent {
@@ -24,16 +24,7 @@ export class ProgressbarSampleComponent {
         this.currentValue = value;
     }
 
-    private randomIntFromInterval(min: number, max: number)
-    {
+    private randomIntFromInterval(min: number, max: number) {
         return Math.floor(Math.random() * (max - min + 1) + min);
-    }
-
-    f(evt) {
-        console.log(evt);
-    }
-
-    change(evt) {
-        console.log(evt);
     }
 }

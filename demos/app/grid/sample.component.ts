@@ -17,8 +17,8 @@ import {
 
 @Injectable()
 export class LocalService {
-    private url: string = "http://services.odata.org/V4/Northwind/Northwind.svc/Alphabetical_list_of_products";
     public records: Observable<any[]>;
+    private url: string = "http://services.odata.org/V4/Northwind/Northwind.svc/Alphabetical_list_of_products";
     private _records: BehaviorSubject<any[]>;
     private dataStore: any[];
 
@@ -28,7 +28,7 @@ export class LocalService {
       this.records = this._records.asObservable();
     }
 
-    getData() {
+    public getData() {
       return this.http.get(this.url)
         .map((response) => response.json())
         .subscribe((data) => {
@@ -41,8 +41,8 @@ export class LocalService {
 
 @Injectable()
 export class RemoteService {
-  private url: string = "http://services.odata.org/V4/Northwind/Northwind.svc/Products";
   public remoteData: Observable<any[]>;
+  private url: string = "http://services.odata.org/V4/Northwind/Northwind.svc/Products";
   private _remoteData: BehaviorSubject<any[]>;
 
   constructor(private http: Http) {
@@ -50,7 +50,33 @@ export class RemoteService {
     this.remoteData = this._remoteData.asObservable();
   }
 
-  private buildUrl(dataState: DataState): string {
+  public getData(dataState?: IDataState, cb?: () => void): any {
+    return this.http
+      .get(this.buildUrl(dataState))
+      .map((response) => response.json())
+      .map((response) => {
+        if (dataState) {
+          const p: IPagingState = dataState.paging;
+          if (p) {
+            const countRecs: number = response["@odata.count"];
+            p.metadata = {
+              countPages: Math.ceil(countRecs / p.recordsPerPage),
+              countRecords: countRecs,
+              error: PagingError.None
+            };
+          }
+        }
+        if (cb) {
+          cb();
+        }
+        return response;
+      })
+      .subscribe((data) => {
+        this._remoteData.next(data.value);
+      });
+  }
+
+  private buildUrl(dataState: IDataState): string {
     let qS: string = "";
     if (dataState && dataState.paging) {
             const skip = dataState.paging.index * dataState.paging.recordsPerPage;
@@ -70,63 +96,37 @@ export class RemoteService {
     qS = qS ? `?${qS}` : "";
     return `${this.url}${qS}`;
   }
-
-  public getData(dataState?: DataState, cb?: Function): any {
-    return this.http
-      .get(this.buildUrl(dataState))
-      .map((response) => response.json())
-      .map((response) => {
-        if (dataState) {
-          const p: PagingState = dataState.paging;
-          if (p) {
-            const countRecs: number = response["@odata.count"];
-            p.metadata = {
-              countRecords: countRecs,
-              countPages: Math.ceil(countRecs / p.recordsPerPage),
-              error: PagingError.None
-            };
-          }
-        }
-        if (cb) {
-          cb();
-        }
-        return response;
-      })
-      .subscribe((data) => {
-        this._remoteData.next(data.value);
-      });
-  }
 }
 
 @Component({
-    providers: [LocalService, RemoteService],
     moduleId: module.id,
+    providers: [LocalService, RemoteService],
     selector: "grid-sample",
-    templateUrl: "sample.component.html",
-    styleUrls: ["../app.samples.css", "sample.component.css"]
+    styleUrls: ["../app.samples.css", "sample.component.css"],
+    templateUrl: "sample.component.html"
 })
 export class GridSampleComponent {
+    @ViewChild("grid1") public grid1: IgxGridComponent;
+    @ViewChild("grid2") public grid2: IgxGridComponent;
+    @ViewChild("grid3") public grid3: IgxGridComponent;
+    @ViewChild("toast") public toast: IgxToast;
+    @ViewChild("snax") public snax: IgxSnackbar;
+    public data: Observable<any[]>;
+    public remote: Observable<any[]>;
+    public localData: any[];
+    public selectedCell;
+    public selectedRow;
+    public newRecord = "";
+    public editCell;
     constructor(private localService: LocalService,
                 private remoteService: RemoteService) {}
-    @ViewChild("grid1") grid1: IgxGridComponent;
-    @ViewChild("grid2") grid2: IgxGridComponent;
-    @ViewChild("grid3") grid3: IgxGridComponent;
-    @ViewChild("toast") toast: IgxToast;
-    @ViewChild("snax") snax: IgxSnackbar;
-    data: Observable<any[]>;
-    remote: Observable<any[]>;
-    local_data: any[];
-    selectedCell;
-    selectedRow;
-    newRecord = "";
-    editCell;
-    ngOnInit(): void {
+    public ngOnInit(): void {
       this.data = this.localService.records;
       this.remote = this.remoteService.remoteData;
 
       this.localService.getData();
 
-      this.local_data = [
+      this.localData = [
           {ID: 1, Name: "A"},
           {ID: 2, Name: "B"},
           {ID: 3, Name: "C"},
@@ -154,11 +154,11 @@ export class GridSampleComponent {
       };
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
       this.remoteService.getData(this.grid3.dataContainer.state);
     }
 
-    onProcess(event: IgxGridBindingBehavior): void {
+    public onProcess(event: IgxGridBindingBehavior): void {
       event.process = (dataContainer: DataContainer) => {
         if (dataContainer.data.length) {
           dataContainer.transformedData = dataContainer.data;
@@ -166,14 +166,14 @@ export class GridSampleComponent {
       };
     }
 
-    onInlineEdit(event) {
+    public onInlineEdit(event) {
       this.editCell = event.cell;
     }
 
-    showInput(index, field) {
+    public showInput(index, field) {
       return this.editCell && this.editCell.columnField === field && this.editCell.rowIndex === index;
     }
-    process(event) {
+    public process(event) {
       this.toast.message = "Loading remote data";
       this.toast.position = 1;
       this.toast.show();
@@ -182,7 +182,7 @@ export class GridSampleComponent {
       });
     }
 
-    initColumns(event: IgxGridColumnInitEvent) {
+    public initColumns(event: IgxGridColumnInitEvent) {
       const column: IgxColumnComponent = event.column;
       if (column.field === "Name") {
         column.filtering = true;
@@ -191,7 +191,7 @@ export class GridSampleComponent {
       }
     }
 
-    onPagination(event) {
+    public onPagination(event) {
       if (!this.grid2.paging) {
         return;
       }
@@ -203,7 +203,7 @@ export class GridSampleComponent {
       this.grid2.paginate(event);
     }
 
-    onPerPage(event) {
+    public onPerPage(event) {
       if (!this.grid2.paging) {
         return;
       }
@@ -217,11 +217,11 @@ export class GridSampleComponent {
       this.grid2.dataContainer.process();
     }
 
-    selectCell(event) {
+    public selectCell(event) {
       this.selectedCell = event.cell;
     }
 
-    addRow() {
+    public addRow() {
       if (!this.newRecord.trim()) {
         this.newRecord = "";
         return;
@@ -231,12 +231,12 @@ export class GridSampleComponent {
       this.newRecord = "";
     }
 
-    updateRecord(event) {
+    public updateRecord(event) {
       this.grid1.updateCell(this.selectedCell.rowIndex, this.selectedCell.columnField, event);
       this.grid1.getCell(this.selectedCell.rowIndex, this.selectedCell.columnField);
     }
 
-    deleteRow(event) {
+    public deleteRow(event) {
       this.selectedRow = Object.assign({}, this.grid1.getRow(this.selectedCell.rowIndex));
       this.grid1.deleteRow(this.selectedCell.rowIndex);
       this.selectedCell = {};
@@ -244,7 +244,7 @@ export class GridSampleComponent {
       this.snax.show();
     }
 
-    restore() {
+    public restore() {
       this.grid1.addRow(this.selectedRow.record, this.selectedRow.index);
       this.snax.hide();
     }

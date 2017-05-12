@@ -5,12 +5,12 @@ import { IgxIconModule } from "../../../src/main";
 import { NavbarSampleComponent } from "./sample.component";
 
 @NgModule({
+    declarations: [
+        NavbarSampleComponent
+    ],
     imports: [
         IgxNavbarModule,
         IgxIconModule
-    ],
-    declarations: [
-        NavbarSampleComponent
     ]
 })
 export class NavbarSampleModule {}
