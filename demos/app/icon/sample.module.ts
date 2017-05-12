@@ -3,7 +3,7 @@ import { IgxIconModule } from "../../../src/main";
 import { IconSampleComponent } from "./sample.component";
 
 @NgModule({
-    imports: [IgxIconModule],
-    declarations: [IconSampleComponent]
+    declarations: [IconSampleComponent],
+    imports: [IgxIconModule]
 })
 export class IconSampleModule {}

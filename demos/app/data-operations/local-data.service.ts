@@ -3,10 +3,10 @@ import { DataGenerator, IDataColumn } from "../../../src/data-operations/test-ut
 @Injectable()
 export class LocalDataService {
     private dataGenerator: DataGenerator = new DataGenerator(100000, 4);
-    getColumns(): IDataColumn[] {
+    public getColumns(): IDataColumn[] {
         return this.dataGenerator.columns;
     }
-    getData() {
+    public getData() {
         return new Promise((resolve, rejct) => {
             resolve(this.dataGenerator.data);
         });

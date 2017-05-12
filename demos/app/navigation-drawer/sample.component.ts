@@ -32,25 +32,25 @@ export class MainDrawerSampleComponent {
         text: "Mini sample"
     }];
 
-    pin: boolean = false;
-    gestures: boolean = true;
-    open: boolean = false;
-    position = "left";
-    drawerWidth = "";
-    drawerMiniWidth = "";
-    @ViewChild(NavigationDrawer) viewChild: NavigationDrawer;
+    public pin: boolean = false;
+    public gestures: boolean = true;
+    public open: boolean = false;
+    public position = "left";
+    public drawerWidth = "";
+    public drawerMiniWidth = "";
+    @ViewChild(NavigationDrawer) public viewChild: NavigationDrawer;
 
     /** Sample-specific configurations: */
-    miniTemplate: boolean = false;
-    showGestureToggle: boolean = true;
-    showPositions: boolean = true;
-    showPinToggle: boolean = false;
-    showMiniWidth: boolean = false;
-    showEventLog: boolean = true;
-    showToggle: boolean = true;
-    log: string[] = new Array<string>();
+    public miniTemplate: boolean = false;
+    public showGestureToggle: boolean = true;
+    public showPositions: boolean = true;
+    public showPinToggle: boolean = false;
+    public showMiniWidth: boolean = false;
+    public showEventLog: boolean = true;
+    public showToggle: boolean = true;
+    public log: string[] = new Array<string>();
 
-    logEvent(event) {
+    public logEvent(event) {
         this.log.push(event);
         if (event === "closing") {
             // this will cause change detection, potentially run outside of angular
@@ -60,7 +60,8 @@ export class MainDrawerSampleComponent {
             this.open = true;
         }
     }
-    testToggle() {
+
+    public testToggle() {
         this.viewChild.toggle().then( (value) => {
             this.logEvent("API call resolved: " + value);
         });
@@ -81,7 +82,7 @@ export class PinNavDrawerSampleComponent extends MainDrawerSampleComponent {
         this.open = true;
         this.pin = true;
 
-        //sample config
+        // sample config
         this.showPinToggle = true;
         this.showPositions = false;
         this.showGestureToggle = false;
@@ -100,7 +101,7 @@ export class MiniNavDrawerSampleComponent extends MainDrawerSampleComponent {
     constructor() {
         super();
 
-        //sample config
+        // sample config
         this.showMiniWidth = true;
         this.miniTemplate = true;
         this.showToggle = false;

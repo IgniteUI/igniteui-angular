@@ -12,27 +12,27 @@ const SORT_TEXT_DESC = "DESC";
 const SORT_TEXT_NONE = "NOT SORTED";
 
 @Component({
-    selector: "sorting-panel",
     moduleId: module.id,
+    selector: "sorting-panel",
     templateUrl: "./sorting-panel.component.html"
 })
-export class SortingPanelComponent{
-    @ViewChild("sortingPanel") sortingPanel;
+export class SortingPanelComponent {
+    @ViewChild("sortingPanel") public sortingPanel;
 
-    @Input() dataState: IDataState;
-    @Input() columns: IDataColumn[] = [];
-    @Input() hidden: boolean = false;
+    @Input() public dataState: IDataState;
+    @Input() public columns: IDataColumn[] = [];
+    @Input() public hidden: boolean = false;
 
-    title: string = "Sorting";
-    @Output() onProcessDataState = new EventEmitter();
+    public title: string = "Sorting";
+    @Output() public onProcessDataState = new EventEmitter();
 
-    getNextSortingDirection(dir: SortingDirection): SortingDirection {
+    public getNextSortingDirection(dir: SortingDirection): SortingDirection {
       if (dir === null) {
         return SortingDirection.Asc;
       }
       return (++dir > SortingDirection.Desc) ? null : dir;
     }
-    changeSortingDirection(column: IDataColumn) {
+    public changeSortingDirection(column: IDataColumn) {
         const s: ISortingState = this.dataState.sorting || {expressions: []};
         const indExpr = s.expressions.findIndex((e) => e.fieldName === column.fieldName);
         const expr = s.expressions[indExpr] || null;
@@ -46,14 +46,14 @@ export class SortingPanelComponent{
           }
         } else {
           s.expressions.push({
-            fieldName: column.fieldName,
-            dir: nextDir
+            dir: nextDir,
+            fieldName: column.fieldName
           });
         }
         this.dataState.sorting = (s.expressions.length) ? s : null;
         this.process();
     }
-    getSortingButtonTitle(column: IDataColumn): string {
+    public getSortingButtonTitle(column: IDataColumn): string {
       const s: ISortingState = this.dataState.sorting || {expressions: []};
       if (!s.expressions.length) {
         return SORT_TEXT_NONE;
@@ -68,7 +68,7 @@ export class SortingPanelComponent{
       return SORT_TEXT_DESC;
     }
 
-    process() {
+    public process() {
         this.onProcessDataState.emit(this.dataState);
     }
 }

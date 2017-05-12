@@ -22,7 +22,8 @@ class Card {
     constructor(obj?: ICard) {
         this.title = obj.title || "Card Title";
         this.subtitle = obj.subtitle || "Card Subtitle";
-        this.content = obj.content || "Some card content should be placed here. Description or other related information.";
+        this.content = obj.content ||
+                    "Some card content should be placed here. Description or other related information.";
         this.imageUrl = obj.imageUrl || "demos/app/card/images/media/placeholder.jpg";
         this.avatarUrl = obj.avatarUrl || "demos/app/card/images/avatars/rupert_stadler.jpg";
         this.buttons = obj.buttons || ["ACTION1", "ACTION2"];
@@ -33,8 +34,8 @@ class Card {
 @Component({
     moduleId: module.id,
     selector: "card-sample",
-    templateUrl: "sample.component.html",
-    styleUrls: ["sample.component.css", "../app.samples.css"]
+    styleUrls: ["sample.component.css", "../app.samples.css"],
+    templateUrl: "sample.component.html"
 })
 export class IgxCardSampleComponent implements OnInit {
 
@@ -44,46 +45,51 @@ export class IgxCardSampleComponent implements OnInit {
 
         this.cards = [
             new Card({
-                title: "New York City",
-                subtitle: "City in New York",
+                content: `New York City comprises 5 boroughs sitting where the
+                        Hudson River meets the Atlantic Ocean. At its core is Manhattan,
+                        a densely populated borough that’s among the world’s major commercial,
+                        financial and cultural centers.`,
+                icons: ["favorite", "bookmark", "share"],
                 imageUrl: "demos/app/card/images/media/ny.jpg",
-                content: "New York City comprises 5 boroughs sitting where the Hudson River meets the Atlantic Ocean. At its core is Manhattan, a densely populated borough that’s among the world’s major commercial, financial and cultural centers.",
-                icons: ["favorite", "bookmark", "share"]
+                subtitle: "City in New York",
+                title: "New York City"
             }),
             new Card({
-                imageUrl: "demos/app/card/images/media/the_red_ice_forest.jpg",
-                icons: ["favorite", "bookmark", "share"]
+                icons: ["favorite", "bookmark", "share"],
+                imageUrl: "demos/app/card/images/media/the_red_ice_forest.jpg"
             }),
             new Card({
-                title: "Incipient Dawn",
-                subtitle: "Yosemite National Park",
+                buttons: ["Share", "Explore"],
                 imageUrl: "demos/app/card/images/media/yosemite.jpg",
-                buttons: ["Share", "Explore"]
+                subtitle: "Yosemite National Park",
+                title: "Incipient Dawn"
             }),
             new Card({
-                title: "Nico Rosberg",
+                content: `Nico Erik Rosberg is a German former Formula One racing driver
+                    and current Formula One World Champion who drove for Williams F1 and
+                    Mercedes AMG Petronas under the German flag.`,
                 subtitle: "Racing Driver",
-                content: "Nico Erik Rosberg is a German former Formula One racing driver and current Formula One World Champion who drove for Williams F1 and Mercedes AMG Petronas under the German flag."
+                title: "Nico Rosberg"
             }),
             new Card({
                 avatarUrl: "demos/app/card/images/avatars/alicia_keys.jpg",
-                title: "HERE",
-                subtitle: "by Alicia Keys",
+                buttons: ["share", "play album"],
                 imageUrl: "demos/app/card/images/media/here_media.jpg",
-                buttons: ["share", "play album"]
+                subtitle: "by Alicia Keys",
+                title: "HERE"
             }),
             new Card({
-                imageUrl: "demos/app/card/images/media/monuments.jpg",
+                buttons: ["Comment", "Explore"],
                 icons: ["favorite", "share"],
-                buttons: ["Comment", "Explore"]
+                imageUrl: "demos/app/card/images/media/monuments.jpg"
             }),
             new Card({
                 avatarUrl: "demos/app/card/images/avatars/rupert_stadler.jpg",
-                title: "Rupert Stadler",
-                subtitle: "January 30, 2017",
-                imageUrl: "demos/app/card/images/media/audi_tt.jpg",
                 buttons: ["message", "follow"],
-                icons: ["add", "star"]
+                icons: ["add", "star"],
+                imageUrl: "demos/app/card/images/media/audi_tt.jpg",
+                subtitle: "January 30, 2017",
+                title: "Rupert Stadler"
             }),
             new Card({})
         ];

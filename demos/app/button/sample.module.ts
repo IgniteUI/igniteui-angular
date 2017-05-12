@@ -3,7 +3,7 @@ import { IgxDirectivesModule } from "../../../src/main";
 import { ButtonsSampleComponent } from "./sample.component";
 
 @NgModule({
-    imports: [IgxDirectivesModule],
-    declarations: [ButtonsSampleComponent]
+    declarations: [ButtonsSampleComponent],
+    imports: [IgxDirectivesModule]
 })
 export class ButtonSampleModule {}

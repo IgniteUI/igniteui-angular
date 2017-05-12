@@ -6,15 +6,15 @@ import { IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
 import { GridSampleComponent } from "./sample.component";
 
 @NgModule({
+    declarations: [
+        GridSampleComponent
+    ],
     imports: [
         FormsModule,
         CommonModule,
         IgxComponentsModule,
         IgxDirectivesModule,
         IgxGridModule
-        ],
-    declarations: [
-        GridSampleComponent
     ]
 })
 export class GridSampleModule { }

@@ -3,7 +3,7 @@ import { IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
 import { AvatarSampleComponent } from "./sample.component";
 
 @NgModule({
-    imports: [IgxComponentsModule, IgxDirectivesModule],
-    declarations: [AvatarSampleComponent]
+    declarations: [AvatarSampleComponent],
+    imports: [IgxComponentsModule, IgxDirectivesModule]
 })
 export class AvatarSampleModule {}

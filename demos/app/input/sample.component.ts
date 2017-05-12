@@ -2,21 +2,21 @@ import { Component } from "@angular/core";
 import {IgxComponentsModule, IgxDirectivesModule} from "../../../src/main";
 
 @Component({
-    selector: "input-sample",
     moduleId: module.id,
-    templateUrl: "./sample.component.html",
-    styleUrls: ["../app.samples.css", "sample.component.css"]
+    selector: "input-sample",
+    styleUrls: ["../app.samples.css", "sample.component.css"],
+    templateUrl: "./sample.component.html"
 })
 export class InputSampleComponent {
-    placeholder = "Please enter a value";
+    public placeholder = "Please enter a value";
 
-    user = {
+    public user = {
+        comment: "",
         firstName: "John",
+        gender: "Male",
         lastName: "Doe",
         password: "1337s3cr3t",
-        comment: "",
         registered: true,
-        subscribed: false,
-        gender: "Male"
+        subscribed: false
     };
 }

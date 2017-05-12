@@ -13,7 +13,7 @@
         "test-dev": "concurrently \"npm run watch\" \"karma start karma.conf.js\"",
         "test": "karma start karma.conf.js --single-run",
 		"lint": "tslint src/**/*.ts",
-        "lint-demos": "tslint demos/**/*.ts --fix",
+        "lint-demos": "tslint demos/**/*.ts",
 		"lint-dev": "tslint src/**/*.ts --fix"
     },
     "dependencies": {

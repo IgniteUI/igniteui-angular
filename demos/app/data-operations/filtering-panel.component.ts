@@ -8,35 +8,35 @@ import { DataContainer, DataType, DataUtil, FilteringCondition,
       } from "../../../src/main";
 
 @Component({
-    selector: "filtering-panel",
     moduleId: module.id,
+    selector: "filtering-panel",
     templateUrl: "./filtering-panel.component.html"
 })
 export class FilteringPanelComponent {
-    @ViewChild("filteringPanel") filteringPanel;
+    @ViewChild("filteringPanel") public filteringPanel;
 
-    @Input() dataState: IDataState;
-    @Input() columns: IDataColumn[] = [];
-    @Input() hidden: boolean = false;
-    title: string = "Filtering";
-    @Output() onProcessDataState = new EventEmitter();
+    @Input() public dataState: IDataState;
+    @Input() public columns: IDataColumn[] = [];
+    @Input() public hidden: boolean = false;
+    public title: string = "Filtering";
+    @Output() public onProcessDataState = new EventEmitter();
 
-    showFilteringSearchBox(column: IDataColumn): boolean {
+    public showFilteringSearchBox(column: IDataColumn): boolean {
       return column.type !== DataType.Boolean;
     }
-    getFilteringConditions(column: IDataColumn) {
+    public getFilteringConditions(column: IDataColumn) {
         const conds = DataUtil.getListOfFilteringConditionsForDataType(column.type);
         conds.unshift(null); // add default filtering condition - not selected with value null
         return conds;
     }
-    getFilteringExpression(column: IDataColumn) {
+    public getFilteringExpression(column: IDataColumn) {
       const f: IFilteringState = this.dataState.filtering;
       if (!f || !f.expressions.length) {
         return null;
       }
       return f.expressions.find((e) => e.fieldName === column.fieldName);
     }
-    getSelectedFilteringCondition(column: IDataColumn): string {
+    public getSelectedFilteringCondition(column: IDataColumn): string {
       const f: IFilteringState = this.dataState.filtering;
       if (!f || !f.expressions.length) {
         return null;
@@ -53,7 +53,7 @@ export class FilteringPanelComponent {
       }
       return null;
     }
-    onChangeFilteringCondition(event: Event) {
+    public onChangeFilteringCondition(event: Event) {
       const select = event.srcElement as HTMLSelectElement;
       const value: string = select.value;
       if (!value || value === "null") {
@@ -61,52 +61,50 @@ export class FilteringPanelComponent {
           .value = "";
       }
     }
-    getSearchVal(column: IDataColumn) {
+    public getSearchVal(column: IDataColumn) {
       const expr = this.getFilteringExpression(column);
       return  expr ? expr.searchVal : "";
     }
-    getFilteringDataState() {
-      let i, expressions: IFilteringExpression[] = [],
-            state: IFilteringState = null,
-          expr: IFilteringExpression,
-          cond,
-          selCond: string,
-          dataType: number,
-          search,
-          rows = this.filteringPanel.nativeElement.querySelectorAll("[data-field-name]"),
-          row: HTMLTableRowElement,
-          fc;
-      for (i = 0; i < rows.length; i++) {
-        row = rows[i];
-        fc = row.querySelector("[data-filtering-type]");
-        selCond = fc.options[fc.selectedIndex].value;
-        if (selCond && selCond !== "null") {
-          dataType = +fc.attributes["data-filtering-type"].value;
-          let search: any = (row.querySelector("[data-filtering-search]") as HTMLInputElement).value;
-          cond = (DataUtil.getFilteringConditionsForDataType(dataType) || {})[selCond];
-          if (cond) {
-            if (search !== "") {
-              // data type transformation
-              switch (dataType) {
-                case DataType.Number:
-                  search = +search;
-                  break;
-                case DataType.Date:
-                  search = new Date(search);
-                  break;
-              }
+    public getFilteringDataState() {
+        let i;
+        let cond;
+        let selCond: string;
+        let dataType: number;
+        let row: HTMLTableRowElement;
+        let fc;
+        const rows = this.filteringPanel.nativeElement.querySelectorAll("[data-field-name]");
+        const expressions: IFilteringExpression[] = [];
+        for (i = 0; i < rows.length; i++) {
+            row = rows[i];
+            fc = row.querySelector("[data-filtering-type]");
+            selCond = fc.options[fc.selectedIndex].value;
+            if (selCond && selCond !== "null") {
+                dataType = +fc.attributes["data-filtering-type"].value;
+                let search: any = (row.querySelector("[data-filtering-search]") as HTMLInputElement).value;
+                cond = (DataUtil.getFilteringConditionsForDataType(dataType) || {})[selCond];
+                if (cond) {
+                    if (search !== "") {
+                        // data type transformation
+                        switch (dataType) {
+                        case DataType.Number:
+                            search = +search;
+                            break;
+                        case DataType.Date:
+                            search = new Date(search);
+                            break;
+                        }
+                    }
+                    expressions.push({
+                        condition: cond,
+                        fieldName: row.attributes["data-field-name"].value,
+                        searchVal: search
+                    });
+                }
             }
-            expressions.push({
-              fieldName: row.attributes["data-field-name"].value,
-              condition: cond,
-              searchVal: search
-            });
-          }
         }
-      }
-      this.dataState.filtering = (expressions.length) ? {expressions} : null;
+        this.dataState.filtering = (expressions.length) ? {expressions} : null;
     }
-    getDataTypeStringRepresentation(column: IDataColumn): string {
+    public getDataTypeStringRepresentation(column: IDataColumn): string {
       let dt: string = "";
       switch (column.type) {
             case DataType.String:
@@ -124,7 +122,7 @@ export class FilteringPanelComponent {
         }
       return dt;
     }
-    process() {
+    public process() {
         this.getFilteringDataState();
         this.onProcessDataState.emit(this.dataState);
     }

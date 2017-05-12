@@ -37,117 +37,110 @@ class Button {
 }
 
 @Component({
-    selector: "buttongroup-sample",
     moduleId: module.id,
-    templateUrl: "./sample.component.html",
-    styleUrls: ["../app.samples.css", "./sample.component.css"]
+    selector: "buttongroup-sample",
+    styleUrls: ["../app.samples.css", "./sample.component.css"],
+    templateUrl: "./sample.component.html"
 })
 
 export class ButtonGroupSampleComponent implements OnInit {
     private multi: boolean = true;
     private alignment = ButtonGroupAlignment.vertical;
-
-    constructor() { }
-
     private alignOptions: Button[];
     private fontOptions: Button[];
     private cities: Button[];
     private borders: Button[];
 
-    onSelect(args) {
-        console.log(args.index + " is selected");
-    }
-    onUnselect(args) {
-        console.log(args.index + " is deselected");
-    }
+    constructor() { }
+
     public ngOnInit(): void {
 
         this.alignOptions = [
             new Button({
-                selected: false,
                 disabled: false,
-                icon: "format_align_left"
+                icon: "format_align_left",
+                selected: false
             }),
             new Button({
-                selected: true,
                 disabled: false,
-                icon: "format_align_center"
+                icon: "format_align_center",
+                selected: true
             }),
             new Button({
-                selected: false,
                 disabled: false,
-                icon: "format_align_right"
+                icon: "format_align_right",
+                selected: false
             }),
             new Button({
-                selected: true,
                 disabled: false,
-                icon: "format_align_justify"
+                icon: "format_align_justify",
+                selected: true
             })
         ];
 
         this.fontOptions = [
             new Button({
-                selected: false,
                 disabled: false,
-                icon: "format_bold"
+                icon: "format_bold",
+                selected: false
             }),
             new Button({
+                disabled: false,
+                icon: "format_italic",
                 selected: true,
-                togglable: false,
-                disabled: false,
-                icon: "format_italic"
+                togglable: false
             }),
             new Button({
-                selected: false,
                 disabled: false,
-                icon: "format_underlined"
+                icon: "format_underlined",
+                selected: false
             })
         ];
 
         this.cities = [
             new Button({
+                disabled: false,
                 label: "Sofia",
                 selected: false,
-                togglable: false,
-                disabled: false
+                togglable: false
             }),
             new Button({
+                disabled: false,
                 label: "London",
-                selected: false,
-                disabled: false
+                selected: false
             }),
             new Button({
+                disabled: false,
                 label: "New York",
-                selected: false,
-                disabled: false
+                selected: false
             }),
             new Button({
+                disabled: true,
                 label: "Tokyo",
-                selected: false,
-                disabled: true
+                selected: false
             })
         ];
 
         this.borders = [
             new Button({
-                selected: true,
                 disabled: false,
-                icon: "border_top"
+                icon: "border_top",
+                selected: true
             }),
             new Button({
-                selected: false,
                 disabled: false,
-                icon: "border_right"
+                icon: "border_right",
+                selected: false
             }),
             new Button({
-                selected: false,
                 disabled: false,
-                icon: "border_bottom"
+                icon: "border_bottom",
+                selected: false
             }),
             new Button({
-                selected: false,
                 disabled: false,
-                icon: "border_left"
+                icon: "border_left",
+                selected: false
             })
         ];
     }
