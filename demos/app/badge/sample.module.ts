@@ -3,7 +3,7 @@ import { IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
 import { BadgeSampleComponent } from "./sample.component";
 
 @NgModule({
-    imports: [IgxComponentsModule, IgxDirectivesModule],
-    declarations: [BadgeSampleComponent]
+    declarations: [BadgeSampleComponent],
+    imports: [IgxComponentsModule, IgxDirectivesModule]
 })
 export class BadgeSampleModule {}
