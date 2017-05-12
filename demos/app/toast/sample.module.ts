@@ -4,13 +4,13 @@ import { IgxButtonModule, IgxRippleModule, IgxToastModule } from "../../../src/m
 import { IgxToastSampleComponent } from "./sample.component";
 
 @NgModule({
+    declarations: [
+        IgxToastSampleComponent
+    ],
     imports: [
         IgxToastModule,
         IgxButtonModule,
         IgxRippleModule
-    ],
-    declarations: [
-        IgxToastSampleComponent
     ]
 })
 export class IgxToastSampleModule {}

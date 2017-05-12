@@ -5,12 +5,12 @@ import { IgxRangeModule } from "../../../src/main";
 import { IgxRangeSampleComponent } from "./sample.component";
 
 @NgModule({
+    declarations: [
+        IgxRangeSampleComponent
+    ],
     imports: [
         IgxRangeModule,
         FormsModule
-    ],
-    declarations: [
-        IgxRangeSampleComponent
     ]
 })
 export class IgxRangeSampleModule {}

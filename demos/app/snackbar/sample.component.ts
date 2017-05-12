@@ -8,18 +8,18 @@ import { IgxSnackbar } from "../../../src/snackbar/snackbar.component";
     templateUrl: "sample.component.html"
 })
 export class IgxSnackbarSampleComponent implements OnInit {
-    color: string;
-    message: string;
-    actionName: string;
+    public color: string;
+    public message: string;
+    public actionName: string;
     private _colors: string[];
 
-    ngOnInit() {
+    public ngOnInit() {
         this.color = "mediumpurple";
         this.actionName = "Undo";
         this._colors = [];
     }
 
-    changeColor(snackbar: IgxSnackbar) {
+    public changeColor(snackbar: IgxSnackbar) {
         const characters = "0123456789ABCDEF";
         let color = "#";
 
@@ -34,14 +34,13 @@ export class IgxSnackbarSampleComponent implements OnInit {
         snackbar.show();
     }
 
-    undoColorChange(snackbar) {
+    public undoColorChange(snackbar) {
         this.color = this._colors.pop();
 
         snackbar.hide();
     }
 
-    onAnimation(evt) {
-        const message = evt.fromState == "void" ? "Sliding snackbar IN" : "Sliding snackbar OUT";
-        console.log(message);
+    public onAnimation(evt) {
+        const message = evt.fromState === "void" ? "Sliding snackbar IN" : "Sliding snackbar OUT";
     }
 }

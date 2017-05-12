@@ -1,37 +1,85 @@
-import { AfterViewInit, Component, ElementRef, NgModule, QueryList, Renderer2, ViewChild, ViewChildren } from "@angular/core";
+import { AfterViewInit,
+        Component,
+        ElementRef,
+        NgModule,
+        QueryList,
+        Renderer2,
+        ViewChild,
+        ViewChildren } from "@angular/core";
 import { Router, RouterModule } from "@angular/router";
 import { IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
 
 @Component({
-    selector: "tabbar-sample",
     moduleId: module.id,
-    templateUrl: "sample.component.html",
-    styleUrls: ["sample.component.css", "../app.samples.css"]
+    selector: "tabbar-sample",
+    styleUrls: ["sample.component.css", "../app.samples.css"],
+    templateUrl: "sample.component.html"
 })
 export class TabBarSampleComponent implements AfterViewInit {
-    @ViewChildren("tabbarEl") tabbar: QueryList<ElementRef>;
+    @ViewChildren("tabbarEl") public tabbar: QueryList<ElementRef>;
 
-    private contacts: Object[] = [
-        { key: "1", text: "Terrance Orta", phone: "770-504-2217" , avatar: "../demos/app/avatar/images/1.jpg", favorite: true, link: "#" },
-        { key: "2", text: "Richard Mahoney", phone: "423-676-2869", avatar: "../demos/app/avatar/images/2.jpg", favorite: false, link: "#" },
-        { key: "3", text: "Donna Price", phone: "859-496-2817", avatar: "../demos/app/avatar/images/3.jpg", favorite: false, link: "#" },
-        { key: "4", text: "Lisa Landers", phone: "901-747-3428", avatar: "../demos/app/avatar/images/4.jpg", favorite: false, link: "#" },
-        { key: "5", text: "Dorothy H. Spencer", phone: "573-394-9254", avatar: "../demos/app/avatar/images/12.jpg", favorite: true, link: "#" },
-        { key: "6", text: "Stephanie May", phone: "323-668-1482", avatar: "../demos/app/avatar/images/13.jpg", favorite: false, link: "#" },
-        { key: "7", text: "Marianne Taylor", phone: "401-661-3742", avatar: "../demos/app/avatar/images/14.jpg", favorite: false, link: "#" }
-    ];
+    public options: object = {};
 
-    options: Object = {};
+    private contacts: object[] = [{
+        avatar: "../demos/app/avatar/images/1.jpg",
+        favorite: true,
+        key: "1",
+        link: "#",
+        phone: "770-504-2217",
+        text: "Terrance Orta"
+    }, {
+        avatar: "../demos/app/avatar/images/2.jpg",
+        favorite: false,
+        key: "2",
+        link: "#",
+        phone: "423-676-2869",
+        text: "Richard Mahoney"
+    }, {
+        avatar: "../demos/app/avatar/images/3.jpg",
+        favorite: false,
+        key: "3",
+        link: "#",
+        phone: "859-496-2817",
+        text: "Donna Price"
+    }, {
+        avatar: "../demos/app/avatar/images/4.jpg",
+        favorite: false,
+        key: "4",
+        link: "#",
+        phone: "901-747-3428",
+        text: "Lisa Landers"
+    }, {
+        avatar: "../demos/app/avatar/images/12.jpg",
+        favorite: true,
+        key: "5",
+        link: "#",
+        phone: "573-394-9254",
+        text: "Dorothy H. Spencer"
+    }, {
+        avatar: "../demos/app/avatar/images/13.jpg",
+        favorite: false,
+        key: "6",
+        link: "#",
+        phone: "323-668-1482",
+        text: "Stephanie May"
+    }, {
+        avatar: "../demos/app/avatar/images/14.jpg",
+        favorite: false,
+        key: "7",
+        link: "#",
+        phone: "401-661-3742",
+        text: "Marianne Taylor"
+    }];
 
     constructor(private router: Router, private renderer: Renderer2) { }
 
-    route(event) {
-        if (event.panel.index == 2) {
+    public route(event) {
+        if (event.panel.index === 2) {
             this.router.navigate(["/tabbar", { outlets: { tabPanelOutlet: ["tabbarInnerPath"] } }]);
         }
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.tabbar.map((e) => {
             menubar = e.nativeElement.querySelector(".igx-tab-bar__menu");
             this.renderer.setStyle(menubar, "position", "absolute");
@@ -40,8 +88,8 @@ export class TabBarSampleComponent implements AfterViewInit {
 }
 
 @Component({
-    selector: "custom-content",
     moduleId: module.id,
+    selector: "custom-content",
     templateUrl: "template.html"
 })
 

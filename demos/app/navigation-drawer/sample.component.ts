@@ -2,14 +2,14 @@ import { Component, ViewChild, ViewEncapsulation } from "@angular/core";
 import { NavigationDrawer, NavigationDrawerModule, NavigationService } from "../../../src/main";
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     moduleId: module.id, // commonJS standard
+    providers: [NavigationService],
     selector: "nav-sample",
     styleUrls: ["sample.css"],
     template: `
         <router-outlet></router-outlet>
-    `,
-    providers: [NavigationService],
-    encapsulation: ViewEncapsulation.None
+    `
 })
 export class NavDrawerSampleComponent {}
 
@@ -19,13 +19,17 @@ export class NavDrawerSampleComponent {}
     templateUrl: "main.html"
 })
 export class MainDrawerSampleComponent {
-    navItems: Object[] = [{
-        text: "Default sample", link: "/navigation-drawer"
+    public navItems: object[] = [{
+        link: "/navigation-drawer",
+        text: "Default sample"
     }, {
-        // router seems pretty confused how relative works.. "./pin" would generate "/navigation-drawer/mini/pin" under the "/navigation-drawer/mini" sample...
-        text: "Pin sample", link: "/navigation-drawer/pin"
+        // router seems pretty confused how relative works..
+        // "./pin" would generate "/navigation-drawer/mini/pin" under the "/navigation-drawer/mini" sample...
+        link: "/navigation-drawer/pin",
+        text: "Pin sample"
     }, {
-        text: "Mini sample", link: "/navigation-drawer/mini"
+        link: "/navigation-drawer/mini",
+        text: "Mini sample"
     }];
 
     pin: boolean = false;
