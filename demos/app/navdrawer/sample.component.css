@@ -1,0 +1,36 @@
+.sample-content {
+    flex-flow: column nowrap;
+}
+
+.settings {
+    max-width: 400px;
+}
+
+.setting-container {
+    width: 100%;
+}
+
+.setting-container.radio {
+    display: flex;
+    flex-flow: row wrap;
+    margin: 8px 0;
+}
+
+.setting-container ~ .setting-container {
+    margin-top: 16px;
+}
+
+.setting-title {
+    margin-bottom: 0;
+    color: #EC6F74;
+}
+
+.setting-note {
+    font-size: 14px;
+    color: #484848;
+    margin: 4px 0;
+}
+
+igx-radio + igx-radio {
+    margin-left: 24px;
+}

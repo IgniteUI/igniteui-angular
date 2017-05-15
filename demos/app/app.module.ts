@@ -20,7 +20,7 @@ import { IconSampleModule } from "./icon/sample.module";
 import { InputSampleModule } from "./input/sample.module";
 import { ListSampleModule } from "./list/sample.module";
 import { NavbarSampleModule } from "./navbar/sample.module";
-import { NavDrawerSampleModule } from "./navigation-drawer/sample.module";
+import { NavdrawerSampleModule } from "./navdrawer/sample.module";
 import { ProgressBarSampleModule } from "./progressbar/sample.module";
 import { IgxRangeSampleModule } from "./range/sample.module";
 import { RippleSampleModule} from "./ripple/sample.module";
@@ -49,7 +49,7 @@ import { IgxToastSampleModule } from "./toast/sample.module";
         ButtonSampleModule,
         ButtonGroupSampleModule,
         AvatarSampleModule,
-        NavDrawerSampleModule,
+        NavdrawerSampleModule,
         NavbarSampleModule,
         ProgressBarSampleModule,
         IgxSnackbarSampleModule,

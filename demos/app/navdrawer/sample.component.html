@@ -1,0 +1,57 @@
+<div class="sample-wrapper">
+    <div class="sample-header">
+        <h1 class="title">Navdrawer</h1>
+        <p class="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas pretium lorem id tristique sagittis. Proin in mauris ac
+            tortor placerat sollicitudin eu sit amet leo. Aliquam consectetur eu sem vitae egestas. Class aptent taciti sociosqu
+            ad litora torquent per conubia nostra, per inceptos himenaeos. Cras a erat sagittis, iaculis urna ac, mollis
+            elit. Vestibulum accumsan ex at mauris sagittis, sed tincidunt justo fringilla. Phasellus vel porttitor odio.
+            Aenean quis nisi non ex ultrices efficitur. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec
+            nec felis cursus erat mattis venenatis. Curabitur congue ullamcorper nisi nec blandit. Fusce molestie consectetur
+            urna sed feugiat.
+        </p>
+    </div>
+    <section class="sample-content">
+        <h4 class="sample-title">Settings</h4>
+        <div class="settings">
+            <article>
+                <h5 class="setting-title">Visibility</h5>
+                <div class="setting-container">            
+                    <igx-switch 
+                        (change)="toggle()"
+                        [checked]="this.app.navdrawer.isOpen"
+                        [(ngModel)]="this.app.drawerState.open" 
+                    >
+                    Show Navdrawer
+                    </igx-switch>
+                </div>
+            </article>
+            <article>
+                <h5 class="setting-title">Style</h5>
+                <div class="setting-container">
+                    <igx-switch 
+                        (change)="pinned()"
+                        [(ngModel)]="this.app.drawerState.pin" 
+                    >
+                    Pinned Navdrawer
+                    </igx-switch>
+                </div>
+            </article>
+            <article>
+                <h5 class="setting-title">Position</h5>
+                <div class="setting-container radio">
+                    <igx-radio 
+                        *ngFor="let item of ['left', 'right']" 
+                        value="{{item}}" 
+                        name="group" 
+                        [(ngModel)]="this.app.navdrawer.position"
+                        [disabled]="this.app.navdrawer.pin"
+                        >{{item}}</igx-radio>
+                    <p class="setting-note">
+                        Can be "left"(default) or "right". Only has effect when not pinned.
+                    </p>
+                </div>
+            </article>
+        </div>
+    </section>
+</div>

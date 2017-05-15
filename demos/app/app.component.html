@@ -1,115 +1,128 @@
 <div class="main">
-    <aside class="aside">
-        <nav class="nav">
-            <img class="logo" src="demos/app/rsrcs/jsblocks-logo.svg" alt="Ignite UI JS Blocks Logo">
-            <!--Components-->
-            <span class="nav-item header">Components</span>
+    <ig-nav-drawer #navdrawer 
+        [enableGestures]="drawerState.enableGestures"
+        [isOpen]="drawerState.open"
+        [miniWidth]="drawerState.miniWidth"
+        [pin]="drawerState.pin"
+        [width]="drawerState.width"
+        [position]="drawerState.position"
+    >
+        <div class="ig-drawer-content">
+            <aside class="aside">
+                <nav class="nav">
+                    <img class="logo" src="demos/app/rsrcs/jsblocks-logo.svg" alt="Ignite UI JS Blocks Logo">
+                    <!--Components-->
+                    <span class="nav-item header">Components</span>
 
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/avatar">
-                <i class="material-icons">account_circle</i>
-                <span>Avatar</span>
-            </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/avatar">
+                        <i class="material-icons">account_circle</i>
+                        <span>Avatar</span>
+                    </span>
 
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/badge">
-                <i class="material-icons">error</i>
-                <span>Badge</span>
-            </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/badge">
+                        <i class="material-icons">error</i>
+                        <span>Badge</span>
+                    </span>
 
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/buttonGroup">
-                <i class="material-icons">group_work</i>
-                <span>Button Group</span>
-            </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/buttonGroup">
+                        <i class="material-icons">group_work</i>
+                        <span>Button Group</span>
+                    </span>
 
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/card">
-                <i class="material-icons">home</i>
-                <span>Card</span>
-            </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/card">
+                        <i class="material-icons">home</i>
+                        <span>Card</span>
+                    </span>
 
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/carousel">
-                <i class="material-icons">view_carousel</i>
-                <span>Carousel</span>
-            </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/carousel">
+                        <i class="material-icons">view_carousel</i>
+                        <span>Carousel</span>
+                    </span>
 
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/grid">
-                <i class="material-icons">view_column</i>
-                <span>Grid</span>
-            </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/grid">
+                        <i class="material-icons">view_column</i>
+                        <span>Grid</span>
+                    </span>
 
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/dialog">
-                <i class="material-icons">all_out</i>
-                <span>Dialog</span>
-            </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/dialog">
+                        <i class="material-icons">all_out</i>
+                        <span>Dialog</span>
+                    </span>
 
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/inputs">
-                <i class="material-icons">web</i>
-                <span>Forms</span>
-            </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/inputs">
+                        <i class="material-icons">web</i>
+                        <span>Forms</span>
+                    </span>
 
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/icon">
-                <i class="material-icons">android</i>
-                <span>Icon</span>
-            </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/icon">
+                        <i class="material-icons">android</i>
+                        <span>Icon</span>
+                    </span>
 
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/list">
-                <i class="material-icons">list</i>
-                <span>List</span>
-            </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/list">
+                        <i class="material-icons">list</i>
+                        <span>List</span>
+                    </span>
 
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/navbar">
-                <i class="material-icons">arrow_back</i>
-                <span>Navbar</span>
-            </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/navbar">
+                        <i class="material-icons">arrow_back</i>
+                        <span>Navbar</span>
+                    </span>
 
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/navigation-drawer">
-                <i class="material-icons">menu</i>
-                <span>Navdrawer</span>
-            </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/navdrawer">
+                        <i class="material-icons">menu</i>
+                        <span>Navdrawer</span>
+                    </span>
 
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/progressbar">
-                <i class="material-icons">poll</i>
-                <span>Progress Indicators</span>
-            </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/progressbar">
+                        <i class="material-icons">poll</i>
+                        <span>Progress Indicators</span>
+                    </span>
 
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/range">
-                <i class="material-icons">linear_scale</i>
-                <span>Range</span>
-            </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/range">
+                        <i class="material-icons">linear_scale</i>
+                        <span>Range</span>
+                    </span>
 
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/snackbar">
-                <i class="material-icons">feedback</i>
-                <span>Snackbar</span>
-            </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/snackbar">
+                        <i class="material-icons">feedback</i>
+                        <span>Snackbar</span>
+                    </span>
 
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/tabbar">
-                <i class="material-icons">tab</i>
-                <span>Tabbar</span>
-            </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/tabbar">
+                        <i class="material-icons">tab</i>
+                        <span>Tabbar</span>
+                    </span>
 
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/toast">
-                <i class="material-icons">android</i>
-                <span>Toast</span>
-            </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/toast">
+                        <i class="material-icons">android</i>
+                        <span>Toast</span>
+                    </span>
 
-            <!--Directives-->
-            <span class="nav-item header">Directives</span>
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/buttons">
-                <i class="material-icons">radio_button_unchecked</i>
-                <span>Buttons</span>
-            </span>
+                    <!--Directives-->
+                    <span class="nav-item header">Directives</span>
 
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/ripple">
-                <i class="material-icons">wifi_tethering</i>
-                <span>Ripple</span>
-            </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/buttons">
+                        <i class="material-icons">radio_button_unchecked</i>
+                        <span>Buttons</span>
+                    </span>
 
-            <!--Directives-->
-            <span class="nav-item header">Utils</span>
-            <span class="nav-item" [routerLinkActive]="'active'" routerLink="/data-operations">
-                <i class="material-icons">data_usage</i>
-                <span>Data Operations</span>
-            </span>
-        </nav>
-    </aside>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/ripple">
+                        <i class="material-icons">wifi_tethering</i>
+                        <span>Ripple</span>
+                    </span>
+
+                    <!--Utils-->
+                    <span class="nav-item header">Utils</span>
+
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/data-operations">
+                        <i class="material-icons">data_usage</i>
+                        <span>Data Operations</span>
+                    </span>
+                </nav>
+            </aside>
+        </div>
+    </ig-nav-drawer>
     <div class="content">
         <router-outlet></router-outlet>
     </div>

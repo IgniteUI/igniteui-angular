@@ -14,6 +14,7 @@ import { IconSampleComponent } from "./icon/sample.component";
 import { InputSampleComponent } from "./input/sample.component";
 import { ListSampleComponent } from "./list/sample.component";
 import { NavbarSampleComponent } from "./navbar/sample.component";
+import { NavdrawerSampleComponent } from "./navdrawer/sample.component";
 import { ProgressbarSampleComponent } from "./progressbar/sample.component";
 import { IgxRangeSampleComponent } from "./range/sample.component";
 import { RippleSampleComponent } from "./ripple/sample.component";
@@ -58,6 +59,10 @@ const appRoutes: Routes = [
     {
         component: NavbarSampleComponent,
         path: "navbar"
+    },
+    {
+        component: NavdrawerSampleComponent,
+        path: "navdrawer"
     },
     {
         component: ProgressbarSampleComponent,
