@@ -1,7 +1,7 @@
 /* Main Navigation Drawer state styles */
 @include b(ig-nav-drawer) {
     position: fixed;
-    width: em(300px);
+    width: em(242px);
     height: 100%;
     max-width: 90%;
     min-height: 100%;
@@ -11,17 +11,16 @@
     bottom: 0;
     left: 0;
     z-index: 999;
-    /*transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);*/
-    /* use full syntax, iOS Safari won't work with transition: width .3s ease-in, transform .3s ease-in; shorthand */
+    /* use full syntax, iOS Safari won't work with transition: width .3s ease-out, transform .3s ease-out; shorthand */
     transition-property: width, transform;
-    transition-duration: 0.25s, 0.25s;
-    transition-timing-function: ease-in-out, ease-in;
+    transition-duration: 0.3s, 0.3s;
+    transition-timing-function: $ease-out-quad, $ease-out-quad;
     transition-delay: 0s, 0s;
     box-shadow: $elevate-16;
     
     /* states */
     &.collapsed {
-        transform: translate3d(-300px,0px,0px);
+        transform: translate3d(-300px,0,0);
         box-shadow: none;
     }
     
@@ -42,7 +41,8 @@
     
     &.pinned {
         position: relative;
-        box-shadow: none; 
+        max-width: 100%;
+        box-shadow: none;
     }
     
     &.pinned.collapsed {
@@ -93,7 +93,7 @@
     width: 100%;
     height: 100%;
     visibility: visible;
-    
+    z-index: 999;
     &.hidden {
         transition-timing-function: ease-in-out, step-end;
         /* use visibility so opacity can be animated */

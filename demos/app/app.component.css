@@ -9,24 +9,34 @@
 }
 
 .main {
+    position: absolute;
     display: flex;
-    height: 100%;
+    flex-flow: row nowrap;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.content {
+    position: relative;
+    width: 100%;
+    overflow-y: scroll;
 }
 
 .aside {
-    position: fixed;
-    width: 242px;
-    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     background: #fff;
     z-index: 1;
 }
 
-.content {
-    width: 100%;
-    margin-left: 242px;
-}
-
 .nav {
+    position: absolute;
+    width: 100%;
     height: 100%;
     border-right: 1px solid #E4E4E4;
     overflow-y: scroll;
@@ -35,6 +45,7 @@
 
 .nav .logo {
     margin-top: 16px;
+    width: 238px;
 }
 
 .nav-item {
@@ -49,6 +60,8 @@
     align-items: center;
     font-weight: 600;
     user-select: none;
+    outline: transparent;
+    white-space: nowrap;
 }
 
 .nav-item.active {
