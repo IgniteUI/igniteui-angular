@@ -29,8 +29,8 @@
 .sample-content {
     display: flex;
     flex-flow: row wrap;
-    padding: 80px 40px;
-    overflow: hidden;
+    justify-content: center;
+    padding: 48px 8px;
     -webkit-animation: fade-in .3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
     -moz-animation: fade-in .3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
     animation: fade-in .3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
@@ -41,8 +41,8 @@
     flex-flow: column nowrap;
     flex: 1 0 25%;
     align-content: flex-start;
-    margin: 16px 36px;
-    min-width: 300px;
+    margin: 16px;
+    min-width: 280px;
 }
 
 .sample-title {

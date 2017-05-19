@@ -1,9 +1,10 @@
 %igx-input-display {
     display: block;
+    margin: $input-margin;
     position: relative;
-    margin: 20px 0;
     min-height: 40px;
-    ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+
+    ::-webkit-input-placeholder {
         color: $label-color;
     }
 }
@@ -20,7 +21,7 @@
     cursor: text;
     user-select: none;
     pointer-events: none;
-    transform: translate3d(0,0,0);
+    transform: translate3d(0, 0, 0);
     transition: transform .25s $ease-in-out-quad, color .25s $ease-in-out-quad;
 }
 
@@ -40,7 +41,7 @@
 
 %igx-form-input {
     width: 100%;
-    border: none;
+    border: 0;
     outline: none;
     color: $input-color;
     background: transparent;
@@ -60,14 +61,14 @@
     cursor: not-allowed;
     -webkit-text-fill-color: $input-disabled-color;
     box-shadow: none;
-    background-image: linear-gradient(to right, rgba(117, 117, 117, .5) 20%, rgba(255,255,255,0) 10%);
+    background-image: linear-gradient(to right, $input-disabled-color 20%, transparent 10%);
     background-position: bottom;
     background-size: 5px 1px;
     background-repeat: repeat-x;
 }
 
 %igx-form-label--disabled {
-    color: lighten($label-color, 80%);
+    color: $label-color-disabled;
 }
 
 %igx-form-input--success {
@@ -100,11 +101,12 @@
 
 %igx-search-input {
     background: $white;
-    padding: 12px 12px 12px 64px;
+    padding: $input-search-padding;
     border-radius: 2px;
-    font-size: em(16px);
+    font-size: $input-font-size;
     box-shadow: $elevate-2;
     transition: box-shadow .2s $ease-in-out-quad;
+
     &:hover,
     &:focus {
         box-shadow: $elevate-5;
@@ -114,8 +116,8 @@
 %igx-input-clear,
 %igx-search-label {
     max-height: 100%;
-    padding: 12px 16px;
-    color: #484848;
+    padding: $input-search-label-padding;
+    color: $off-black;
 }
 
 %igx-input-clear {

@@ -1,39 +1,36 @@
 @mixin hide-default {
-  position: absolute;
-  opacity: 0;
-  margin: 0;
-  z-index: -1;
-  width: 0;
-  height: 0;
-  left: 0;
-  overflow: hidden;
-  pointer-events: none;
+    margin: 0;
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+    width: 0;
+    height: 0;
+    left: 0;
+    overflow: hidden;
+    pointer-events: none;
 }
-
 
 @mixin linear-gradient($direction, $color-stops...) {
-  // Direction has been omitted and happens to be a color-stop
-  @if is-direction($direction) == false {
-    $color-stops: $direction, $color-stops;
-    $direction: 180deg;
-  }
-
-  background: nth(nth($color-stops, 1), 1);
-  background: -webkit-linear-gradient(legacy-direction($direction), $color-stops);
-  background: linear-gradient($direction, $color-stops);
+    // Direction has been omitted and happens to be a color-stop
+    @if is-direction($direction) == false {
+        $color-stops: $direction, $color-stops;
+        $direction: 180deg;
+    }
+    background: linear-gradient($direction, $color-stops);
 }
 
-@mixin clearfix() {
+@mixin clearfix {
     & {
-        *zoom: 1;
+        zoom: 1;
     }
 
-    &:before, &:after {
-        content: "";
+    &::before,
+    &::after {
         display: table;
+        content: '';
     }
 
-    &:after {
+    &::after {
         clear: both;
     }
 }

@@ -3,18 +3,18 @@
 }
 
 %igx-filtering-toggle {
+    z-index: 10;
 
     & .icon {
         font-size: $grid-head-icon-size;
         line-height: $grid-head-icon-lh;
         padding: $grid-head-icon-padding;
     }
-    z-index: 10;
 }
 
 %igx-filtering-toggle--active {
-    background: $primary-color !important;
-    color: set-color($primary-color);
+    background: $grid-filtering-bg-active !important;
+    color: $grid-filtering-color-active;
 }
 
 %igx-filtering-options {
@@ -27,10 +27,10 @@
     background: $white;
     box-shadow: $elevate-4;
     border-radius: 2px;
-    padding: 8px;
+    padding: $grid-filtering-options-padding;
     z-index: 10;
     margin-top: 8px;
-    
+
     & > input {
         font-weight: initial;
         font-size: initial;

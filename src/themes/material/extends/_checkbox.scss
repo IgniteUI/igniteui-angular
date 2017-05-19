@@ -13,7 +13,8 @@
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     overflow: hidden;
-    &:after {
+
+    &::after {
         position: absolute;
         content: '';
         top: 0;
@@ -33,7 +34,7 @@
     left: 0;
     width: $checkbox-tick-width;
     height: $checkbox-tick-height;
-    padding: 3px 2px 2px 2px;
+    padding: $checkbox-tick-padding;
     stroke: none;
     stroke-linecap: round;
     stroke-width: $checkbox-tick-weight;
@@ -43,8 +44,8 @@
 
 
 %igx-cbx-lbl-checked-tick {
-    stroke: $checkbox-tick-color;
     @include animation('scale-in-center' .3s $ease-out-back both);
+    stroke: $checkbox-tick-color;
 }
 
 %igx-cbx-lbl-notchecked-after {

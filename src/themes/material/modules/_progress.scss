@@ -1,26 +1,26 @@
-@include b(progress-linear){
+@include b(progress-linear) {
     @extend %progress-linear-display;
 
     @include e(bar) {
         @extend %progressbar-display;
     }
 
-    @include e(bar, $m:default) {
+    @include e(bar, $m: default) {
         @extend %progressbar-display;
         @extend %progressbar--default;
     }
 
-    @include e(bar, $m:danger) {
+    @include e(bar, $m: danger) {
         @extend %progressbar-display;
         @extend %progressbar--danger;
     }
 
-    @include e(bar, $m:warning) {
+    @include e(bar, $m: warning) {
         @extend %progressbar-display;
         @extend %progressbar--warning;
     }
 
-    @include e(bar, $m:info) {
+    @include e(bar, $m: info) {
         @extend %progressbar-display;
         @extend %progressbar--info;
     }
@@ -29,7 +29,7 @@
         @extend %progress-linear-value;
     }
 
-    @include e(bar, $m:success) {
+    @include e(bar, $m: success) {
         @extend %progressbar-display;
         @extend %progressbar--success;
     }

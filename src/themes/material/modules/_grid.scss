@@ -26,23 +26,23 @@
         @extend %grid-row;
     }
 
-    @include e(tr, $m:selected) {
+    @include e(tr, $m: selected) {
         @extend %grid-row--selected;
     }
 
     @include e(th) {
-        $block: bem--selector-to-string(&);
-
         @extend %grid-cell-display;
         @extend %grid-cell-header;
 
+        $block: bem--selector-to-string(&);
+
         &.asc,
         &.desc {
-            color: #000;
+            color: $off-black;
         }
 
         &.desc {
-            #{$block}-content > .title:before {
+            #{$block}-content > .title::before {
                 position: relative;
                 font-family: 'Material Icons';
                 content: '\E5DB';
@@ -51,7 +51,7 @@
         }
 
         &.asc {
-            #{$block}-content > .title:before {
+            #{$block}-content > .title::before {
                 position: relative;
                 font-family: 'Material Icons';
                 content: '\E5D8';
@@ -60,7 +60,7 @@
         }
     }
 
-    @include e(th, $m:number) {
+    @include e(th, $m: number) {
         @extend %grid-cell-number;
     }
 
@@ -76,11 +76,11 @@
         @extend %grid-cell-display;
     }
 
-    @include e(td, $m:selected) {
+    @include e(td, $m: selected) {
         @extend %grid-cell--selected;
     }
 
-    @include e(td, $m:number) {
+    @include e(td, $m: number) {
         @extend %grid-cell-number;
     }
 }

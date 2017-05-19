@@ -1,6 +1,6 @@
 @include b(igx-navbar) {
     @extend %igx-navbar-display;
-    
+
     @include e(left) {
         @extend %igx-navbar-bundle;
     }

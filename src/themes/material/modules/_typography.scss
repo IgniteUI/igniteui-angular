@@ -1,17 +1,25 @@
+$font-weight: 400;
+$font-weight-headings: 600;
+
 a {
     text-decoration: none;
 }
 
 html {
-	font-size-adjust: 100%;
-	font-family: 'Titillium Web', sans-serif;
-    font-weight: 400;
+    font-size-adjust: 100%;
+    font-family: 'Titillium Web', sans-serif;
+    font-weight: $font-weight;
     color: $off-black;
     -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-weight: 600;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: $font-weight-headings;
 }
 
 @media only screen and (min-width: 0) {
@@ -19,18 +27,22 @@ h1, h2, h3, h4, h5, h6 {
         font-size: $h1-font-size-phone;
         line-height: $h1-line-height-phone;
     }
+
     h2 {
         font-size: $h2-font-size-phone;
         line-height: $h2-line-height-phone;
     }
+
     h3 {
         font-size: $h3-font-size-phone;
         line-height: $h3-line-height-phone;
     }
+
     h4 {
         font-size: $h4-font-size-phone;
-        line-height: $h4-line-height-phone;     
+        line-height: $h4-line-height-phone;
     }
+
     p {
         line-height: $paragraph-line-height-phone;
     }
@@ -41,18 +53,22 @@ h1, h2, h3, h4, h5, h6 {
         font-size: $h1-font-size-tablet;
         line-height: $h1-line-height-tablet;
     }
+
     h2 {
         font-size: $h2-font-size-tablet;
         line-height: $h2-line-height-tablet;
     }
+
     h3 {
         font-size: $h3-font-size-tablet;
         line-height: $h3-line-height-tablet;
     }
+
     h4 {
         font-size: $h4-font-size-tablet;
-        line-height: $h4-line-height-tablet;     
+        line-height: $h4-line-height-tablet;
     }
+
     p {
         line-height: $paragraph-line-height-desktop;
     }
@@ -63,16 +79,19 @@ h1, h2, h3, h4, h5, h6 {
         font-size: $h1-font-size-desktop;
         line-height: $h1-line-height-desktop;
     }
+
     h2 {
         font-size: $h2-font-size-desktop;
         line-height: $h2-line-height-desktop;
     }
+
     h3 {
         font-size: $h3-font-size-desktop;
         line-height: $h3-line-height-desktop;
     }
+
     h4 {
         font-size: $h4-font-size-desktop;
-        line-height: $h4-line-height-desktop;     
+        line-height: $h4-line-height-desktop;
     }
 }

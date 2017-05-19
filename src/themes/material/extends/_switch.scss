@@ -9,34 +9,37 @@
     cursor: pointer;
     transition: $input-transition;
     user-select: none;
-    &:after {
+
+    &::after {
         display: block;
         position: absolute;
-		content: '';
+        content: '';
         width: $switch-label-width;
-		height: $switch-label-height;
-		top: -3px;
-		left: -1px;
-		border-radius: $switch-radius;
-		background: $white;
-		box-shadow: $switch-shadow;
-		transition: $input-transition;
+        height: $switch-label-height;
+        top: -3px;
+        left: -1px;
+        border-radius: $switch-radius;
+        background: $white;
+        box-shadow: $switch-shadow;
+        transition: $input-transition;
     }
 }
 
 %igx-switch-lbl--on {
     background-color: $switch-active-background;
-    &:after {
+
+    &::after {
         left: 16px;
         background: $radio-fill-color;
     }
 }
 
 %igx-switch-lbl--disabled {
-    background: #F0F0F0;
+    background: $switch-background-disabled;
     pointer-events: none;
-    &:after {
-        background: #D1D1D1;
+
+    &::after {
+        background: $switch-thumb-color-disabled;
         box-shadow: $switch-disabled-shadow;
     }
 }

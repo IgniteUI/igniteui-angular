@@ -1,6 +1,6 @@
 %igx-dialog-display {
-    position: fixed;
     display: flex;
+    position: fixed;
     align-items: center;
     justify-content: center;
     top: 0;
@@ -36,7 +36,7 @@
 }
 
 %igx-dialog-content {
-    color: gray;
+    color: $dialog-message-color;
     font-size: $dialog-message-font-size;
     line-height: $dialog-message-line-height;
     padding-top: $dialog-message-padding-top;
@@ -45,8 +45,8 @@
 
 %igx-dialog-actions {
     display: flex;
+    margin: $dialog-actions-margin;
     flex-flow: row nowrap;
     justify-content: flex-end;
     padding: $dialog-actions-padding;
-    margin: $dialog-actions-margin;
 }

@@ -4,14 +4,14 @@
     igx-card-header {
 
         @extend %igx-card-header;
-        
+
         @include b(igx-card-header) {
 
             @include e(title) {
                 @extend %igx-card-header-title;
             }
-            
-            @include e(title, $m:small) {
+
+            @include e(title, $m: small) {
                 @extend %igx-card-header-title;
                 @extend %igx-card-header-title--small;
             }
@@ -21,9 +21,9 @@
             }
 
             @include e(tgroup) {
-                margin: 0 16px;
+                margin: $card-tgroup-margin;
             }
-            
+
             @include m(compact) {
                 @extend %igx-card-header--compact;
             }
@@ -38,7 +38,6 @@
         @extend %igx-card-content;
 
         @include b(igx-card-content) {
-            
             @include e(text) {
                 @extend %igx-card-content-text;
             }
@@ -47,19 +46,19 @@
 
     igx-card-actions {
         @extend %igx-card-actions;
-        
+
         @include b(igx-card-actions) {
 
             @include e(igroup) {
                 @extend %igx-card-actions-igroup;
             }
 
-            @include e(igroup, $m:start) {
+            @include e(igroup, $m: start) {
                 @extend %igx-card-actions-igroup;
                 @extend %igx-card-actions-igroup--start;
             }
-            
-            @include e(igroup, $m:end) {
+
+            @include e(igroup, $m: end) {
                 @extend %igx-card-actions-igroup;
                 @extend %igx-card-actions-igroup--end;
             }
@@ -74,7 +73,7 @@
         @extend %igx-card-media;
     }
 
-    @include e(media, $m:right) {
+    @include e(media, $m: right) {
         @extend %igx-card-media--right;
     }
 }

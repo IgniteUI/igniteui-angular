@@ -1,12 +1,13 @@
 @include b(igx-list) {
     @extend %igx-list;
-    
+
     @include e(header) {
         @extend %igx-list-header;
     }
 
     @include e(item) {
         @extend %igx-list-item;
+
         &:active {
             @extend %igx-list-item--active;
         }
@@ -27,7 +28,7 @@
         }
     }
 
-    @include e(empty, $m:custom) {
+    @include e(empty, $m: custom) {
         @extend %igx-list-empty;
     }
 
