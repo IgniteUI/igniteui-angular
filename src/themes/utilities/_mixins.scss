@@ -1,5 +1,7 @@
+$default-margin: 0;
+
 @mixin hide-default {
-    margin: 0;
+    margin: $default-margin;
     position: absolute;
     opacity: 0;
     z-index: -1;
