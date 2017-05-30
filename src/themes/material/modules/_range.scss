@@ -1,15 +1,16 @@
-$thumbs: "from" "to";
+$thumbs: 'from' 'to';
 
 @include b(igx-range) {
     @extend %igx-range-display;
-    
+
     @include e(track) {
         @extend %igx-range-track;
     }
+
     @include e(track-fill) {
         @extend %igx-range-track-fill;
     }
-        
+
     @include e(track-ticks) {
         @extend %igx-range-track-ticks;
     }
@@ -31,8 +32,8 @@ $thumbs: "from" "to";
                 @extend %igx-thumb-dot;
             }
         }
-        
-        @include e(thumb-#{$t}, $m:active) {
+
+        @include e(thumb-#{$t}, $m: active) {
             @extend %igx-thumb--active;
 
             .label {
@@ -41,7 +42,7 @@ $thumbs: "from" "to";
 
             .dot {
                 @extend %igx-thumb-dot--active;
-            }          
+            }
         }
 
     }

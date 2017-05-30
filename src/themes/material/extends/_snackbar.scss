@@ -1,6 +1,6 @@
 %igx-snackbar-display {
-    position: relative;
     display: flex;
+    position: relative;
     flex-flow: row nowrap;
     align-items: center;
     justify-content: space-between;
@@ -23,11 +23,12 @@
     margin-left: $snackbar-button-left-margin;
     text-transform: uppercase;
     user-select: none;
-    font-weight: 600;
+    font-weight: $snackbar-button-font-weight;
     -webkit-tap-highlight-color: transparent;
     outline: none;
     transition: color .2s ease;
+
     &:hover {
-        color: lighten($secondary-color, 15%);
+        color: $snackbar-button-text-color-hover;
     }
 }

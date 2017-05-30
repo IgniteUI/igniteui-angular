@@ -22,9 +22,11 @@
 %igx-button--flat {
     background: transparent;
     color: $secondary-color;
+
     &:hover {
         background: $button-flat-hover-background;
     }
+
     &:focus,
     &:active {
         background: $button-flat-focus-background;
@@ -35,10 +37,12 @@
     color: $button-raised-color;
     background: $button-raised-background;
     box-shadow: $button-raised-shadow;
+
     &:hover {
         background: $button-focus-background;
         box-shadow: $button-raised-shadow;
     }
+
     &:focus,
     &:active {
         background: $button-focus-background;
@@ -50,10 +54,12 @@
     color: $button-gradient-color;
     background: $button-gradient-background;
     box-shadow: $button-gradient-shadow;
+
     &:hover {
         background: $button-focus-gradient;
         box-shadow: $button-gradient-shadow;
     }
+
     &:focus,
     &:active {
         background: $button-focus-gradient;
@@ -63,9 +69,8 @@
 
 %igx-button--round {
     $block: bem--selector-to-string(&);
-    
-    position: relative;
     display: flex;
+    position: relative;
     flex-direction: row nowrap;
     justify-content: center;
     align-items: center;
@@ -77,16 +82,18 @@
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     // hack to allow circular overflow in chrome ...
-    filter: drop-shadow(0 0 0 rgba(255, 255, 255, 1));
+    filter: drop-shadow(0 0 0 $white);
 
     // reset for safari's inability to handle flex in buttons
     @at-root {
         button#{$block} {
             display: initial;
+
             * {
                 display: flex;
                 justify-content: center;
             }
+
         }
     }
 }
@@ -97,9 +104,11 @@
     color: $button-raised-color;
     background: $button-floating-background;
     box-shadow: $button-floating-shadow;
+
     &:hover {
         box-shadow: $button-floating-hover-shadow;
     }
+
     &:focus,
     &:active {
         background: $button-focus-background;
@@ -111,10 +120,12 @@
     height: $button-icon-width;
     font-size: $button-icon-font-size;
     background: transparent;
+
     &:hover {
         transition: $button-transition;
         background: $button-icon-hover-background;
     }
+
     &:focus,
     &:active {
         background: $button-icon-focus-background;
@@ -125,7 +136,7 @@
     width: $button-navbar-width;
     height: $button-navbar-height;
     font-size: $button-icon-font-size;
-    padding: 0;
+    padding: $button-navbar-padding;
 }
 
 %igx-button--disabled {
@@ -133,5 +144,5 @@
     background: $button-disabled-background !important;
     pointer-events: none !important;
     box-shadow: $button-disabled-shadow !important;
-    opacity: 0.8 !important;
+    opacity: .8 !important;
 }

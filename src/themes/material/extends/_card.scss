@@ -4,12 +4,12 @@
     box-shadow: $card-shadow;
     overflow: hidden;
     border-radius: $card-border-radius;
-    background: #fff;
+    background: $white;
+    transition: $card-transitions;
+
     &:hover {
         box-shadow: $card-shadow-hover;
     }
-
-    transition: $card-transitions;
 }
 
 %igx-card-header {
@@ -25,21 +25,21 @@
 }
 
 %igx-card-header-title {
+    margin: $card-heading-margin;
     flex: 1 0 100%;
-    font-size: $card-title-fontSize;
+    font-size: $card-title-fz;
     line-height: $card-title-line-height;
-    margin: 0;
 }
 
 %igx-card-header-title--small {
-    font-size: $card-subtitle-fontSize;
+    font-size: $card-subtitle-fz;
 }
 
 %igx-card-header-subtitle {
+    margin: $card-subtitle-margin;
     color: $card-subtitle-color;
-    font-size: $card-subtitle-fontSize;
+    font-size: $card-subtitle-fz;
     line-height: $card-subtitle-line-height;
-    margin: 0;
 }
 
 %igx-card-content {
@@ -48,10 +48,10 @@
 }
 
 %igx-card-content-text {
-    margin: 0;
+    margin: $card-content-margin;
     color: $card-content-color;
-    font-size: $card-content-fontSize;
-    line-height: $card-content-lineHeight;
+    font-size: $card-content-fz;
+    line-height: $card-content-lh;
 }
 
 %igx-card-media {
@@ -77,7 +77,8 @@
 %igx-card-actions-bgroup {
     display: flex;
     flex-flow: row nowrap;
-    [igxButton] ~ [igxButton] {
+
+    [igxButton]~[igxButton] {
         margin-left: 8px;
     }
 }
@@ -85,7 +86,7 @@
 %igx-card-actions-igroup {
     display: flex;
     flex-flow: row nowrap;
-    color: rgba(0,0,0,.54);
+    color: $gray-opaque-54;
 }
 
 %igx-card-actions-igroup--start {

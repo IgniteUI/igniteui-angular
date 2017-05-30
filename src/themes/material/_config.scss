@@ -1,160 +1,159 @@
-/* ==========================================================================
-   Ignite UI JS Blocks Variables
-   ========================================================================== */
+// Ignite UI JS Blocks Variables //
+
+// Table of Contents: //
+
+// 1. Colors
+// 2. Badges
+// 3. Buttons
+// 4. Cards
+// TODO: 5. Collapsible 
+// TODO: 6. Chips
+// TODO: 7. Date Picker
+// TODO: 8. Dropdown
+// 9. Fonts
+// 10. Forms
+// 11. Global
+// 12. Navigation Bar
+// 13. Navigation Drawer
+// 14. Range (Slider)
+// TODO: 15. Spinners | Loaders
+// TODO: 16. Tabs
+// 17. Grid
+// 18. Toasts
+// 19. Typography
+// TODO: 20. Flow Text
+// TODO: 21. Collections
+// 22. Progress Bar
+// 23. Lists
+// 24. Dialog
+// 25. Snackbar
+// 26. Button Group
+// 27. Avatar
+// 28. Carousel
+// 29. Icon
 
 
-/**
- * Table of Contents:
- *
- *  1. Colors
- *  2. Badges
- *  3. Buttons
- *  4. Cards
- *  TODO: 5. Collapsible
- *  TODO: 6. Chips
- *  TODO: 7. Date Picker
- *  TODO: 8. Dropdown
- *  9. Fonts
- *  10. Forms
- *  11. Global
- *  TODO: 12. Navigation Bar
- *  TODO: 13. Navigation Drawer
- *  14. Range (Slider)
- *  TODO: 15. Spinners | Loaders
- *  TODO: 16. Tabs
- *  17. Grid
- *  18. Toasts
- *  19. Typography
- *  TODO: 20. Flow Text
- *  TODO: 21. Collections
- *  TODO: 22. Progress Bar
- *  23. Lists
- *  24. Dialog
- *  25. Snackbar
- *  26. Button Group
- */
-
-
-/* 1. Colors
-   ========================================================================== */
+// 1. Colors //
 
 // Base Palette To Chose Colors From
-$rich-black: #0b3c49 !default;
+$rich-black: #0B3C49 !default;
 $byzantium: #731963 !default;
-$vivid-cerise: #e41c77 !default;
-$white: #fff !default;
-$yellow-orange: #fbb13c !default;
-$ocean-blue: #0375be !default;
+$vivid-cerise: #E41C77 !default;
+$white: #FFF !default;
+$yellow-orange: #FBB13C !default;
+$ocean-blue: #0375BE !default;
 // Main App Colors
 $primary-color: $ocean-blue !default;
 $secondary-color: $vivid-cerise !default;
 $accent-color: $yellow-orange !default;
 $success-color: #4CAF50 !default;
 $error-color: #F44336 !default;
-$warn-color: orange !default;
-$overlay-color: rgba(72, 72, 72, 0.5) !default;
+$warn-color: #FFA500 !default;
+$overlay-color: rgba(72, 72, 72, .5) !default;
 // off-black
 $off-black: #484848 !default;
 $disabled-color: #BDBDBD !default;
 
+// grays
+$gray-opaque-54: rgba(0, 0, 0, .54) !default;
+
 // Color Palette
 $colors: ( primary: ( 100: gen-color($primary-color, 50), 200: gen-color($primary-color, 100), 300: gen-color($primary-color, 300), 400: gen-color($primary-color, 400), 500: $primary-color, 600: gen-color($primary-color, 600), 700: gen-color($primary-color, 700), 800: gen-color($primary-color, 800), 900: gen-color($primary-color, 900), A100: gen-color($primary-color, 'A100'), A200: gen-color($primary-color, 'A200'), A400: gen-color($primary-color, 'A400'), A700: gen-color($primary-color, 'A700'), ), secondary: ( 100: gen-color($secondary-color, 50), 200: gen-color($secondary-color, 100), 300: gen-color($secondary-color, 300), 400: gen-color($secondary-color, 400), 500: $secondary-color, 600: gen-color($secondary-color, 600), 700: gen-color($secondary-color, 700), 800: gen-color($secondary-color, 800), 900: gen-color($secondary-color, 900), A100: gen-color($secondary-color, 'A100'), A200: gen-color($secondary-color, 'A200'), A400: gen-color($secondary-color, 'A400'), A700: gen-color($secondary-color, 'A700'), ), accent: ( 100: gen-color($accent-color, 50), 200: gen-color($accent-color, 100), 300: gen-color($accent-color, 300), 400: gen-color($accent-color, 400), 500: $accent-color, 600: gen-color($accent-color, 600), 700: gen-color($accent-color, 700), 800: gen-color($accent-color, 800), 900: gen-color($accent-color, 900), A100: gen-color($accent-color, 'A100'), A200: gen-color($accent-color, 'A200'), A400: gen-color($accent-color, 'A400'), A700: gen-color($accent-color, 'A700'), ));
 
-/* 2. Material Elevations / Shadows
-   ========================================================================== */
+// 2. Material Elevations / Shadows //
+$elevate-1: 0 1px 3px 0 rgba(0, 0, 0, .2),
+0 1px 1px 0 rgba(0, 0, 0, .14),
+0 2px 1px -1px rgba(0, 0, 0, .12);
+$elevate-2: 0 1px 5px 0 rgba(0, 0, 0, .2),
+0 2px 2px 0 rgba(0, 0, 0, .14),
+0 3px 1px -2px rgba(0, 0, 0, .12);
+$elevate-3: 0 1px 8px 0 rgba(0, 0, 0, .2),
+0 3px 4px 0 rgba(0, 0, 0, .14),
+0 3px 3px -2px rgba(0, 0, 0, .12);
+$elevate-4: 0 2px 4px -1px rgba(0, 0, 0, .2),
+0 4px 5px 0 rgba(0, 0, 0, .14),
+0 1px 10px 0 rgba(0, 0, 0, .12);
+$elevate-5: 0 3px 5px -1px rgba(0, 0, 0, .2),
+0 5px 8px 0 rgba(0, 0, 0, .14),
+0 1px 14px 0 rgba(0, 0, 0, .12);
+$elevate-6: 0 3px 5px -1px rgba(0, 0, 0, .2),
+0 6px 10px 0 rgba(0, 0, 0, .14),
+0 1px 18px 0 rgba(0, 0, 0, .12);
+$elevate-7: 0 4px 5px -2px rgba(0, 0, 0, .2),
+0 7px 10px 1px rgba(0, 0, 0, .14),
+0 2px 16px 1px rgba(0, 0, 0, .12);
+$elevate-8: 0 5px 5px -3px rgba(0, 0, 0, .2),
+0 8px 10px 1px rgba(0, 0, 0, .14),
+0 3px 14px 2px rgba(0, 0, 0, .12);
+$elevate-8-up: 0 -2px 4px -1px rgba(0, 0, 0, .14),
+0 -4px 5px 0 rgba(0, 0, 0, .14),
+0 -1px 10px 0 rgba(0, 0, 0, .12);
+$elevate-9: 0 5px 6px -3px rgba(0, 0, 0, .2),
+0 9px 12px 1px rgba(0, 0, 0, .14),
+0 3px 16px 2px rgba(0, 0, 0, .12);
+$elevate-10: 0 6px 6px -3px rgba(0, 0, 0, .2),
+0 10px 14px 1px rgba(0, 0, 0, .14),
+0 4px 18px 3px rgba(0, 0, 0, .12);
+$elevate-11: 0 6px 7px -4px rgba(0, 0, 0, .2),
+0 11px 15px 1px rgba(0, 0, 0, .14),
+0 4px 20px 3px rgba(0, 0, 0, .12);
+$elevate-12: 0 7px 8px -4px rgba(0, 0, 0, .2),
+0 12px 17px 2px rgba(0, 0, 0, .14),
+0 5px 22px 4px rgba(0, 0, 0, .12);
+$elevate-13: 0 7px 8px -4px rgba(0, 0, 0, .2),
+0 13px 19px 2px rgba(0, 0, 0, .14),
+0 5px 24px 4px rgba(0, 0, 0, .12);
+$elevate-14: 0 7px 9px -4px rgba(0, 0, 0, .2),
+0 14px 21px 2px rgba(0, 0, 0, .14),
+0 5px 26px 4px rgba(0, 0, 0, .12);
+$elevate-15: 0 8px 9px -5px rgba(0, 0, 0, .2),
+0 15px 22px 2px rgba(0, 0, 0, .14),
+0 6px 28px 5px rgba(0, 0, 0, .12);
+$elevate-16: 0 8px 10px -5px rgba(0, 0, 0, .2),
+0 16px 24px 2px rgba(0, 0, 0, .14),
+0 6px 30px 5px rgba(0, 0, 0, .12);
+$elevate-17: 0 8px 11px -5px rgba(0, 0, 0, .2),
+0 17px 26px 2px rgba(0, 0, 0, .14),
+0 6px 32px 5px rgba(0, 0, 0, .12);
+$elevate-18: 0 9px 11px -5px rgba(0, 0, 0, .2),
+0 18px 28px 2px rgba(0, 0, 0, .14),
+0 7px 34px 6px rgba(0, 0, 0, .12);
+$elevate-19: 0 9px 12px -6px rgba(0, 0, 0, .2),
+0 19px 29px 2px rgba(0, 0, 0, .14),
+0 7px 36px 6px rgba(0, 0, 0, .12);
+$elevate-20: 0 10px 13px -6px rgba(0, 0, 0, .2),
+0 20px 31px 3px rgba(0, 0, 0, .14),
+0 8px 38px 7px rgba(0, 0, 0, .12);
+$elevate-21: 0 10px 13px -6px rgba(0, 0, 0, .2),
+0 21px 33px 3px rgba(0, 0, 0, .14),
+0 8px 40px 7px rgba(0, 0, 0, .12);
+$elevate-22: 0 10px 14px -6px rgba(0, 0, 0, .2),
+0 22px 35px 3px rgba(0, 0, 0, .14),
+0 8px 42px 7px rgba(0, 0, 0, .12);
+$elevate-23: 0 11px 14px -7px rgba(0, 0, 0, .2),
+0 23px 36px 3px rgba(0, 0, 0, .14),
+0 9px 44px 8px rgba(0, 0, 0, .12);
+$elevate-24: 0 11px 15px -7px rgba(0, 0, 0, .2),
+0 24px 38px 3px rgba(0, 0, 0, .14),
+0 9px 46px 8px rgba(0, 0, 0, .12);
 
-$elevate-1: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
-0px 1px 1px 0px rgba(0, 0, 0, 0.14),
-0px 2px 1px -1px rgba(0, 0, 0, 0.12);
-$elevate-2: 0px 1px 5px 0px rgba(0, 0, 0, 0.2),
-0px 2px 2px 0px rgba(0, 0, 0, 0.14),
-0px 3px 1px -2px rgba(0, 0, 0, 0.12);
-$elevate-3: 0px 1px 8px 0px rgba(0, 0, 0, 0.2),
-0px 3px 4px 0px rgba(0, 0, 0, 0.14),
-0px 3px 3px -2px rgba(0, 0, 0, 0.12);
-$elevate-4: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
-0px 4px 5px 0px rgba(0, 0, 0, 0.14),
-0px 1px 10px 0px rgba(0, 0, 0, 0.12);
-$elevate-5: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
-0px 5px 8px 0px rgba(0, 0, 0, 0.14),
-0px 1px 14px 0px rgba(0, 0, 0, 0.12);
-$elevate-6: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
-0px 6px 10px 0px rgba(0, 0, 0, 0.14),
-0px 1px 18px 0px rgba(0, 0, 0, 0.12);
-$elevate-7: 0px 4px 5px -2px rgba(0, 0, 0, 0.2),
-0px 7px 10px 1px rgba(0, 0, 0, 0.14),
-0px 2px 16px 1px rgba(0, 0, 0, 0.12);
-$elevate-8: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
-0px 8px 10px 1px rgba(0, 0, 0, 0.14),
-0px 3px 14px 2px rgba(0, 0, 0, 0.12);
-$elevate-8-up: 0px -2px 4px -1px rgba(0, 0, 0, 0.14),
-0px -4px 5px 0px rgba(0, 0, 0, 0.14),
-0px -1px 10px 0px rgba(0, 0, 0, 0.12);
-$elevate-9: 0px 5px 6px -3px rgba(0, 0, 0, 0.2),
-0px 9px 12px 1px rgba(0, 0, 0, 0.14),
-0px 3px 16px 2px rgba(0, 0, 0, 0.12);
-$elevate-10: 0px 6px 6px -3px rgba(0, 0, 0, 0.2),
-0px 10px 14px 1px rgba(0, 0, 0, 0.14),
-0px 4px 18px 3px rgba(0, 0, 0, 0.12);
-$elevate-11: 0px 6px 7px -4px rgba(0, 0, 0, 0.2),
-0px 11px 15px 1px rgba(0, 0, 0, 0.14),
-0px 4px 20px 3px rgba(0, 0, 0, 0.12);
-$elevate-12: 0px 7px 8px -4px rgba(0, 0, 0, 0.2),
-0px 12px 17px 2px rgba(0, 0, 0, 0.14),
-0px 5px 22px 4px rgba(0, 0, 0, 0.12);
-$elevate-13: 0px 7px 8px -4px rgba(0, 0, 0, 0.2),
-0px 13px 19px 2px rgba(0, 0, 0, 0.14),
-0px 5px 24px 4px rgba(0, 0, 0, 0.12);
-$elevate-14: 0px 7px 9px -4px rgba(0, 0, 0, 0.2),
-0px 14px 21px 2px rgba(0, 0, 0, 0.14),
-0px 5px 26px 4px rgba(0, 0, 0, 0.12);
-$elevate-15: 0px 8px 9px -5px rgba(0, 0, 0, 0.2),
-0px 15px 22px 2px rgba(0, 0, 0, 0.14),
-0px 6px 28px 5px rgba(0, 0, 0, 0.12);
-$elevate-16: 0px 8px 10px -5px rgba(0, 0, 0, 0.2),
-0px 16px 24px 2px rgba(0, 0, 0, 0.14),
-0px 6px 30px 5px rgba(0, 0, 0, 0.12);
-$elevate-17: 0px 8px 11px -5px rgba(0, 0, 0, 0.2),
-0px 17px 26px 2px rgba(0, 0, 0, 0.14),
-0px 6px 32px 5px rgba(0, 0, 0, 0.12);
-$elevate-18: 0px 9px 11px -5px rgba(0, 0, 0, 0.2),
-0px 18px 28px 2px rgba(0, 0, 0, 0.14),
-0px 7px 34px 6px rgba(0, 0, 0, 0.12);
-$elevate-19: 0px 9px 12px -6px rgba(0, 0, 0, 0.2),
-0px 19px 29px 2px rgba(0, 0, 0, 0.14),
-0px 7px 36px 6px rgba(0, 0, 0, 0.12);
-$elevate-20: 0px 10px 13px -6px rgba(0, 0, 0, 0.2),
-0px 20px 31px 3px rgba(0, 0, 0, 0.14),
-0px 8px 38px 7px rgba(0, 0, 0, 0.12);
-$elevate-21: 0px 10px 13px -6px rgba(0, 0, 0, 0.2),
-0px 21px 33px 3px rgba(0, 0, 0, 0.14),
-0px 8px 40px 7px rgba(0, 0, 0, 0.12);
-$elevate-22: 0px 10px 14px -6px rgba(0, 0, 0, 0.2),
-0px 22px 35px 3px rgba(0, 0, 0, 0.14),
-0px 8px 42px 7px rgba(0, 0, 0, 0.12);
-$elevate-23: 0px 11px 14px -7px rgba(0, 0, 0, 0.2),
-0px 23px 36px 3px rgba(0, 0, 0, 0.14),
-0px 9px 44px 8px rgba(0, 0, 0, 0.12);
-$elevate-24: 0px 11px 15px -7px rgba(0, 0, 0, 0.2),
-0px 24px 38px 3px rgba(0, 0, 0, 0.14),
-0px 9px 46px 8px rgba(0, 0, 0, 0.12);
-
-/* 2. Badges
-   ========================================================================== */
+// 2. Badges //
 
 $badge-width: 22px !default;
 $badge-height: $badge-width !default;
 $badge-bg-color-default: $secondary-color !default;
-$badge-border: 0px solid $white !default;
+$badge-border: 0 solid $white !default;
 $badge-border-color: $white !default;
 $badge-border-radius-default: 4px !default;
 $badge-border-radius-circle: ($badge-width / 2) !default;
 $badge-font-size: em(10px) !default;
 $badge-font-weight: 600 !default;
 $badge-shadow: $elevate-1 !default;
+$badge-line-height: 2px !default;
+$badge-icon-font-size: em(10px, 10px) !default;
+$badge-value-padding: 4px !default;
 
-/* 3. Buttons
-   ========================================================================== */
+// 3. Buttons //
 
 // Shared Styles
 $button-border: none !default;
@@ -166,7 +165,7 @@ $button-font-weight: normal !default;
 $button-width: em(88px) !default;
 $button-height: em(40px) !default;
 $button-padding: em(8px) em(16px) !default;
-$button-transition: all 0.25s ease-out !default;
+$button-transition: all .25s ease-out !default;
 $button-round-radius: 50% !default;
 // Disabled Styles
 $button-disabled-background: #F0F0F0 !default;
@@ -182,8 +181,8 @@ $button-gradient-color-1: $yellow-orange !default;
 $button-gradient-color-2: $secondary-color !default;
 $button-gradient-background: linear-gradient(to bottom right, $button-gradient-color-2, $button-gradient-color-1) !default;
 $button-focus-gradient: linear-gradient(to bottom right, darken($button-gradient-color-2, 5%), darken($button-gradient-color-1, 5%)) !default;
-$button-gradient-color: #fff !default;
-$button-gradient-shadow: 0 4px 10px -2px darken(transparentize($button-gradient-color-2, .20), 20%) !default;
+$button-gradient-color: $white !default;
+$button-gradient-shadow: 0 4px 10px -2px darken(transparentize($button-gradient-color-2, .2), 20%) !default;
 $button-gradient-focus-shadow: 0 6px 12px -1px darken(transparentize($button-gradient-color-2, .25), 25%) !default;
 // Flat Buttons
 $button-flat-color: $secondary-color !default;
@@ -206,9 +205,9 @@ $button-icon-font-size: em(24px, 16px) !default;
 // Navbar Buttons 
 $button-navbar-width: em(24px, 16px) !default;
 $button-navbar-height: $button-navbar-width !default;
+$button-navbar-padding: 0 !default;
 
-/* 4. Cards
-   ========================================================================== */
+// 4. Cards //
 
 // Genaral
 $card-border-radius: 2px !default;
@@ -219,33 +218,37 @@ $card-subtitle-color: #757575 !default;
 $card-shadow: $elevate-2 !default;
 $card-shadow-hover: $elevate-8 !default;
 // Font Sizes
-$card-title-fontSize: em(24px, 16px) !default;
+$card-title-fz: em(24px, 16px) !default;
 $card-title-line-height: em(24px, 16px) !default;
-$card-subtitle-fontSize: em(14px, 16px) !default;
+$card-subtitle-fz: em(14px, 16px) !default;
 $card-subtitle-line-height: em(24px, 16px) !default;
-$card-content-fontSize: em(14px, 16px) !default;
-$card-content-lineHeight: (20px, 16px) !default;
+$card-content-fz: em(14px, 16px) !default;
+$card-content-lh: (20px, 16px) !default;
 // Padding & Margin
 $card-heading-padding: em(24px, 16px) em(16px, 16px) em(16px, 16px) em(16px, 16px) !default;
 $card-heading-compact-padding: em(16px, 16px) !default;
+$card-heading-margin: 0 !default;
 $card-content-padding: em(16px, 16px) !default;
+$card-content-margin: 0 !default;
 $card-actions-padding: em(8px, 16px) !default;
+$card-actions-igroup-bg: $gray-opaque-54 !default;
+$card-subtitle-margin: 0 !default;
+$card-tgroup-margin: 0 em(16px);
 // Transitions
-$card-transitions: box-shadow 0.3s cubic-bezier(.25, .8, .25, 1) !default;
+$card-transitions: box-shadow .3s cubic-bezier(.25, .8, .25, 1) !default;
 
-/* 9. Fonts
-   ========================================================================== */
+// 9. Fonts //
 
 $titillium-font-path: 'fonts/titillium/' !default;
 
-/* 10. Forms
-   ========================================================================== */
+// 10. Forms //
+$control-padding: 8px 0 !default;
 
 // Text Inputs + Textarea
 $input-min-height: em(70px) !default;
 $input-font-size: em(16px) !default;
 $input-font-weight: 400 !default;
-$input-color: rgba(0,0,0,.87) !default;
+$input-color: rgba(0, 0, 0, .87) !default;
 $input-caret-color: $secondary-color;
 $input-line-height: em(24px) !default;
 $input-border-color: rgba(117, 117, 117, .5) !default;
@@ -255,18 +258,22 @@ $input-border-warn: 2px solid $warn-color !default;
 $input-border-error: 2px solid $error-color !default;
 $input-border-color-focus: $secondary-color !default;
 $input-border-focus: 2px solid $input-border-color-focus !default;
-$input-background: #fff !default;
+$input-background: #FFF !default;
 $input-transition: all .2s ease-in !default;
 $input-placeholder-color: $input-border-color !default;
-$input-error-color : $error-color !default;
+$input-error-color: $error-color !default;
 $input-success-color: $success-color !default;
 $input-disabled-color: $disabled-color !default;
 $input-disabled-solid-color: $input-disabled-color !default;
-$label-color: rgba(0,0,0,.87) !default;
+$label-color: rgba(0, 0, 0, .87) !default;
+$label-color-disabled: lighten($label-color, 80%);
 $label-focus-color: $secondary-color !default;
 $label-active-color: lighten($label-color, 20%) !default;
 $label-font-size: em(16px) !default;
 $label-focus-font-size: em(12px) !default;
+$input-search-padding: 12px 12px 12px 64px !default;
+$input-search-label-padding: 12px 16px !default;
+$input-margin: 20px 0 !default;
 
 // Radio Buttons
 $radio-fill-color: $secondary-color !default;
@@ -280,6 +287,8 @@ $radio-radius: 50% 50% !default;
 
 // Switches
 $switch-background: #757575 !default;
+$switch-background-disabled: #F0F0F0 !default;
+$switch-thumb-color-disabled: #D1D1D1 !default;
 $switch-active-background: rgba($radio-fill-color, .5);
 $switch-color: transparent !default;
 $switch-radius: 100px !default;
@@ -302,9 +311,9 @@ $checkbox-tick-width: 20px !default;
 $checkbox-tick-height: 20px !default;
 $checkbox-tick-weight: 3px !default;
 $checkbox-tick-color: $white !default;
+$checkbox-tick-padding: 3px 2px 2px !default;
 
-/* 11. Global
-   ========================================================================== */
+// 11. Global //
 
 // Media Query Ranges
 $small-screen-up: 601px !default;
@@ -313,20 +322,29 @@ $large-screen-up: 1025px !default;
 $small-screen: 600px !default;
 $medium-screen: 768px !default;
 $large-screen: 1024px !default;
-$medium-and-up: "only screen and (min-width : #{$small-screen-up})" !default;
-$large-and-up: "only screen and (min-width : #{$medium-screen-up})" !default;
-$small-and-down: "only screen and (max-width : #{$small-screen})" !default;
-$medium-and-down: "only screen and (max-width : #{$medium-screen})" !default;
-$medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})" !default;
+$medium-and-up: 'only screen and (min-width : #{$small-screen-up})' !default;
+$large-and-up: 'only screen and (min-width : #{$medium-screen-up})' !default;
+$small-and-down: 'only screen and (max-width : #{$small-screen})' !default;
+$medium-and-down: 'only screen and (max-width : #{$medium-screen})' !default;
+$medium-only: 'only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})' !default;
 
-/* 14. Range (Slider)
-   ========================================================================== */
+// 12. Navigation Bar //
+$navbar-padding: 0 em(16px) !default;
+$navbar-text-color: set-color($primary-color) !default;
+$navbar-title-fz: em(18px, 16px) !default;
+$navbar-title-lh: em(18px, 16px) !default;
+
+
+// 13. Navigation Drawer //
+$navdrawer-pin-collapsed-padding: 0;
+
+// 14. Range (Slider) //
 
 // General
 $range-height: 48px !default;
 
 // Range Track
-$range-track-color: rgba(0,0,0,.32) !default;
+$range-track-color: rgba(0, 0, 0, .32) !default;
 $range-track-fill-color: $primary-color !default;
 $range-track-height: 2px !default;
 
@@ -344,23 +362,25 @@ $range-label-width: 28px !default;
 $range-label-height: $range-label-width !default;
 $range-label-radius: $range-label-width / 2 !default;
 $range-label-font-size: em(11px) !default;
+$range-label-font-weight: 600 !default;
 $range-label-font-color: $off-black !default;
 $range-label-background: $yellow-orange !default;
-
+$range-label-padding: 0 2px !default;
 // Start Modifier
 $range-background--start: $white !default;
 
 
-/* 16. Bottom navigation bar / Tabs
-   ========================================================================== */
-
+// 16. Bottom navigation bar / Tabs //
 $tab-bar-background: $white !default;
+$tab-bar-color: set-color($tab-bar-background);
+$tab-bar-label-font-size: em(12px, 16px);
+$tab-bar-label-line-height: em(12px, 16px);
+$tab-bar-item-padding: 0 em(12px);
 
-/* 17. Grid
-   ========================================================================== */
+// 17. Grid //
 
 // General
-$grid-bg: #fff !default;
+$grid-bg: #FFF !default;
 $grid-br: em(2px) !default;
 $grid-shadow: $elevate-2 !default;
 
@@ -371,8 +391,8 @@ $grid-caption-padding: em(16px) em(24px) !default;
 
 // Row
 $grid-row-bg: inherit !default;
-$grid-row-bb: 1px solid lightgray !default;
-$grid-row-hover: #eee !default;
+$grid-row-bb: 1px solid #D3D3D3 !default;
+$grid-row-hover: #EEE !default;
 $grid-row-transition: background .2s ease !default;
 
 // Cell
@@ -389,19 +409,21 @@ $grid-head-icon-size: em(16px) !default;
 $grid-head-icon-lh: em(16px) !default;
 $grid-head-icon-padding: em(8px) !default;
 
-/* 18. Toasts
-   ========================================================================== */
+$grid-filtering-color-active: set-color($primary-color);
+$grid-filtering-bg-active: $primary-color;
+$grid-filtering-options-padding: em(8px, 16px);
+// 18. Toasts //
 
 $toast-width: 52px !default;
 $toast-padding: em(16px, 16px) em(24px, 16px) !default;
+$toast-margin: em(42px, 16px) auto !default;
 $toast-color: $white !default;
 $toast-background: rgba(0, 0, 0, .54) !default;
 $toast-border-radius: ($toast-width / 2) !default;
 $toast-font-size: em(14px, 16px) !default;
 $toast-line-height: em(24px, 16px) !default;
 
-/* 19. Typography
-   ========================================================================== */
+// 19. Typography //
 
 // paragraph
 $paragraph-line-height-desktop: em(22px) !default;
@@ -442,9 +464,16 @@ $blockquote-line-height-tablet: em(35px) !default;
 $blockquote-font-size-phone: em(20px) !default;
 $blockquote-line-height-phone: em(25px) !default;
 
-/* 23. List
-   ========================================================================== */
 
+// 22. Progress Bar //
+$progressbar-color: rgba($primary-color, .1) !default;
+$progressbar-stripe-color: rgba(255, 255, 255, .15) !default;
+$progressbar-value-fz: em(14px, 16px) !default;
+$progressbar-value-fw: 600 !default;
+$progressbar-value-margin: 10px 5px !default;
+$progress-circular-value-fz: em(32px, 16px);
+
+// 23. List //
 $list-margin: 8px 16px !default;
 $list-background: $white !default;
 $list-header-color: $secondary-color !default;
@@ -459,18 +488,16 @@ $list-item-height: em(48px) !default;
 $list-item-line-height: em(48px) !default;
 $list-item-font-size: em(16px) !default;
 $list-item-padding: em(8px) em(16px) !default;
-$list-item-active-background: darken(#fff, 5%);
+$list-item-active-background: darken($white, 5%);
 $list-item-active-shadow: $elevate-2 !default;
 $list-item-tl-sl-font-size: em(14px) !default;
 $list-item-tl-height: em(72px) !default;
 $list-item-tl-sl-color: #757575 !default;
 
-/* Rectangle: */
+$list-empty-color: set-color($list-background);
+$list-empty-padding: em(16px, 16px);
 
-
-/* 24. Dialog
-   ========================================================================== */
-
+// 24. Dialog //
 $dialog-transition: background .25s ease-out !default;
 $dialog-max-width: em(400px) !default;
 $dialog-min-width: em(280px) !default;
@@ -487,13 +514,12 @@ $dialog-message-font-size: em(16px, 16px) !default;
 $dialog-message-line-height: em(18px, 16px) !default;
 $dialog-message-padding-top: em(10px) !default;
 $dialog-message-padding-bottom: em(12px) !default;
+$dialog-message-color: #808080 !default;
 $dialog-message-font-weight: 400 !default;
 $dialog-actions-padding: em(8px) !default;
 $dialog-actions-margin: 0 em(-24px, 16px) em(-12px, 16px) em(-24px, 16px) !default;
 
-/* 25. Snackbar
-   ========================================================================== */
-
+// 25. Snackbar
 $snackbar-height: em(48px) !default;
 $snackbar-padding: em(7px) em(24px) !default;
 $snackbar-button-left-margin: em(24px) !default;
@@ -501,18 +527,18 @@ $snackbar-font-size: em(14px) !default;
 $snackbar-background: $off-black !default;
 $snackbar-text-color: $white !default;
 $snackbar-button-text-color: $secondary-color !default;
+$snackbar-button-text-color-hover: lighten($secondary-color, 15%) !default;
 $snackbar-button-line-height: em(16px) !default;
+$snackbar-button-font-weight: 600 !default;
 
-
-/* 26. Button Group
-   ========================================================================== */
+// 26. Button Group
 // Group layout
 $bgroup-radius: 2px !default;
 $bgroup-shadow: $elevate-2 !default;
 
 // Item style
-$bgroup-item-minWidth: 24px !default;
-$bgroup-item-minHeight: 24px !default;
+$bgroup-item-minwidth: 24px !default;
+$bgroup-item-minheight: 24px !default;
 $bgroup-item-color: rgba(0, 0, 0, .38) !default;
 $bgroup-item-border-thickness: 1px !default;
 $bgroup-item-border: transparent !default;
@@ -520,9 +546,25 @@ $bgroup-item-font-weight: 600 !default;
 $bgroup-item-background: $white !default;
 
 // Item style selected
+$bgroup-selected-bg: #C8C8C8;
 $bgroup-item-color-selected: rgba(0, 0, 0, .54) !default;
-$bgroup-item-background-selected: #C8C8C8 !default;
-$bgroup-item-border-selected: darken(#C8C8C8, 4%) !default;
+$bgroup-item-background-selected: $bgroup-selected-bg !default;
+$bgroup-item-border-selected: darken($bgroup-selected-bg, 4%) !default;
 
 // Margin between item elements
 $bgroup-items-margin: em(10px, 16px) !default;
+
+// 27. Avatar
+$igx-avatar-icon-bg: #D1D1D1 !default;
+
+
+// 28. Carousel
+$carousel-arrow-margin: 0 em(16px) !default;
+$carousel-indicators-margin: em(16px) 0 !default;
+$carousel-indicators-padding: 0 !default;
+$carousel-indicator-margin: 0 em(5px) !default;
+$carousel-arrow-bg: transparentize($white, .7) !default;
+$carousel-indicator-bg: transparentize($white, .8) !default;
+
+// 29. Icon
+$igx-icon-font-size: em(24px, 16px) !default;

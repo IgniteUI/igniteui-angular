@@ -14,19 +14,21 @@
     color: $badge-border-color;
     background-color: $badge-bg-color-default;
     border: $badge-border;
-    line-height: 2px;
+    line-height: $badge-line-height;
     border-radius: $badge-border-radius-default;
     box-shadow: $badge-shadow;
     overflow: hidden;
+
     i {
-        font-size: em(10px, 10px);
+        font-size: $badge-icon-font-size;
         font-weight: $badge-font-weight;
     }
+
 }
 
 %igx-badge-value {
     white-space: nowrap;
-    padding: 4px;
+    padding: $badge-value-padding;
 }
 
 %igx-badge--circle {

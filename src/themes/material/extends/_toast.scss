@@ -1,11 +1,11 @@
 %igx-toast-display {
     display: block;
+    margin: $toast-margin;
     position: fixed;
     text-align: center;
     left: 50%;
     transform: translate3d(-50%, 0, 0);
     min-width: $toast-width;
-    margin: em(42px, 16px) auto;
     padding: $toast-padding;
     background-color: $toast-background;
     border-radius: $toast-border-radius;

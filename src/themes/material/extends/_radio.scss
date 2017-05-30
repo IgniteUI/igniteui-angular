@@ -8,8 +8,9 @@
     color: $input-color;
     padding-left: $checkbox-label-padding;
     user-select: none;
-    &:before,
-    &:after {
+
+    &::before,
+    &::after {
         position: absolute;
         content: '';
         width: $radio-width;
@@ -17,7 +18,8 @@
         left: 0;
         border-radius: $radio-radius;
     }
-    &:before {
+
+    &::before {
         backface-visibility: hidden;
         transform: translateZ(0);
         transition: $input-transition;
@@ -54,7 +56,7 @@
 %igx-radio-lbl-checked--disabled-before {
     background-color: $input-disabled-color;
     border: $radio-border-style $input-disabled-color;
-} 
+}
 
 %igx-radio-lbl-checked--disabled-after {
     border: $radio-border-style $input-disabled-color;

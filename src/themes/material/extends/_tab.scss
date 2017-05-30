@@ -7,14 +7,14 @@
 }
 
 %igx-tabbar-menu {
+    display: flex;
     position: fixed;
     width: 100%;
-    display: flex;
     justify-content: center;
     align-items: center;
     height: em(56px, 16px);
     background: $tab-bar-background;
-    color: set-color($tab-bar-background);
+    color: $tab-bar-color;
     overflow: hidden;
     z-index: 8;
 }
@@ -47,25 +47,25 @@
     text-overflow: ellipsis;
     user-select: none;
     overflow: hidden;
-    padding: 0 12px;
+    padding: $tab-bar-item-padding;
     -webkit-tap-highlight-color: transparent;
 }
 
 %igx-tabbar-menu-item--disabled {
-    opacity: 0.5;
+    opacity: .5;
     cursor: default;
 }
 
 %igx-active-tab {
     opacity: 1;
     color: $secondary-color;
-    transition: all .25s ease-out; 
+    transition: color .25s ease-out, opacity .25s ease-out;
 }
 
 %igx-tab-label {
     padding-top: 5px;
-    font-size: 12px;
-    line-height: 12px;
+    font-size: $tab-bar-label-font-size;
+    line-height: $tab-bar-label-line-height;
     max-width: 80px;
     text-transform: uppercase;
     text-overflow: ellipsis;
@@ -75,12 +75,13 @@
 }
 
 %igx-tab-icon {
-    position: relative;
     display: flex;
+    position: relative;
     justify-content: center;
     height: 24px;
     z-index: 1;
     opacity: .75;
+
     i {
         width: 24px;
         height: 24px;

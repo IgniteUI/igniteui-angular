@@ -18,7 +18,7 @@ script:
 - npm run lint
 - npm run lint-demos
 - npm test
-- cat ./coverage/report-lcov/lcov.info | coveralls
+- if [ "${TRAVIS_REPO_SLUG}" == "IgniteUI/igniteui-js-blocks" ]; then cat ./coverage/report-lcov/lcov.info | coveralls; fi
 
 before_deploy:
 - npm run bundle

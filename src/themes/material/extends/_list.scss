@@ -19,8 +19,8 @@
 
 %igx-list-empty-message {
     text-align: center;
-    color: set-color($list-background);
-    padding: em(16, 16);
+    color: $list-empty-color;
+    padding: $list-empty-padding;
     z-index: 1;
 }
 

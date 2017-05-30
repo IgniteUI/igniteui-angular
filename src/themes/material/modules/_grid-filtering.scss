@@ -5,7 +5,7 @@
         @extend %igx-filtering-toggle;
     }
 
-    @include e(toggle, $m:active) {
+    @include e(toggle, $m: active) {
         @extend %igx-filtering-toggle--active;
     }
 

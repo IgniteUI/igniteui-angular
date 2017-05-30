@@ -2,32 +2,29 @@
     // Save the reference to this block element
     // in a variable for scoped access
     $block: bem--selector-to-string(&);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 0;
+
     // Radio control styles
     @include e(radio) {
         //hide default radio control
         @include hide-default;
-        
+
         ~ #{$block}__label {
             @extend %igx-radio-lbl-display;
         }
 
-        &:not(:checked) ~ #{$block}__label:before {
+        &:not(:checked) ~ #{$block}__label::before {
             @extend %igx-radio-lbl-notchecked--before;
         }
-        
-        &:not(:checked) ~ #{$block}__label:after {
+
+        &:not(:checked) ~ #{$block}__label::after {
             @extend %igx-radio-lbl-notchecked--after;
         }
 
-        &:checked ~ #{$block}__label:before {
+        &:checked ~ #{$block}__label::before {
             @extend %igx-radio-lbl-checked--before;
         }
 
-        &:checked ~ #{$block}__label:after {
+        &:checked ~ #{$block}__label::after {
             @extend %igx-radio-lbl-checked--after;
         }
 
@@ -35,19 +32,19 @@
             @extend %igx-radio-lbl--disabled;
         }
 
-        &:disabled:checked ~ #{$block}__label:before {
+        &:disabled:checked ~ #{$block}__label::before {
             @extend %igx-radio-lbl-checked--disabled-before;
         }
 
-        &:disabled:checked ~ #{$block}__label:after {
+        &:disabled:checked ~ #{$block}__label::after {
             @extend %igx-radio-lbl-checked--disabled-after;
         }
 
-        &:disabled:not(:checked) ~ #{$block}__label:after {
+        &:disabled:not(:checked) ~ #{$block}__label::after {
             @extend %igx-radio-lbl-notchecked--disabled-after;
         }
     }
-    
+
     // Checkbox control styles
     @include e(cbx) {
         @include hide-default;
@@ -60,15 +57,17 @@
             }
         }
 
-        &:checked ~ #{$block}__label .tick {
-            @extend %igx-cbx-lbl-checked-tick;
+        &:checked ~ #{$block}__label {
+            .tick {
+                @extend %igx-cbx-lbl-checked-tick;
+            }
         }
 
-        &:not(:checked) ~ #{$block}__label:after {
+        &:not(:checked) ~ #{$block}__label::after {
             @extend %igx-cbx-lbl-notchecked-after;
         }
 
-        &:checked ~ #{$block}__label:after {
+        &:checked ~ #{$block}__label::after {
             @extend %igx-cbx-lbl-checked-after;
         }
 
@@ -77,11 +76,11 @@
             @extend %igx-cbx-lbl-disabled;
         }
 
-        &:disabled:checked ~ #{$block}__label:after {
+        &:disabled:checked ~ #{$block}__label::after {
             @extend %igx-cbx-lbl-checked--disabled-after;
         }
 
-        &:disabled:not(:checked) ~ #{$block}__label:after {
+        &:disabled:not(:checked) ~ #{$block}__label::after {
             @extend %igx-cbx-lbl-notchecked--disabled-after;
         }
     }
@@ -97,13 +96,18 @@
         &:checked ~ #{$block}__label {
             @extend %igx-switch-lbl--on;
         }
-        
+
         &:disabled ~ #{$block}__label {
             @extend %igx-switch-lbl--disabled;
         }
     }
 
-    @include e(text) {
+    @include e(switch-text) {
         padding-right: em(16px);
     }
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $control-padding;
 }

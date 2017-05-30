@@ -1,9 +1,9 @@
-::-webkit-scrollbar {
+.aside ::-webkit-scrollbar {
     width: 3px;
     background: #E4E4E4;
 }
  
-::-webkit-scrollbar-thumb {
+.aside ::-webkit-scrollbar-thumb {
     background: #EC6F74;
     border-radius: 0;
 }
@@ -21,7 +21,7 @@
 .content {
     position: relative;
     width: 100%;
-    overflow-y: scroll;
+    overflow: auto;
 }
 
 .aside {
