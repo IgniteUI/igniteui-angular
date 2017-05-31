@@ -58,12 +58,12 @@
             </div>
 
             <div class="linear-container">
-                <igx-linear-bar type="warning" [striped]="true" [max]="100" (onProgressChanged)="change($event)" [value]="currentValue">
+                <igx-linear-bar type="warning" [striped]="true" [max]="100" [value]="currentValue">
                 </igx-linear-bar>
             </div>
 
             <div class="linear-container">
-                <igx-linear-bar type="info" [striped]="true" [max]="100" (onProgressChanged)="change($event)" [value]="currentValue">
+                <igx-linear-bar type="info" [striped]="true" [max]="100" [value]="currentValue">
                 </igx-linear-bar>
             </div>
         </article>
@@ -72,35 +72,35 @@
             <h4 class="sample-title">Circular progress indicator</h4>
             <div class="circular-samples">
                 <div class="circular-container">
-                    <igx-circular-bar (onProgressChanged)="f($event)" [value]="currentValue"></igx-circular-bar>
+                    <igx-circular-bar [value]="currentValue"></igx-circular-bar>
                 </div>
                 <div class="circular-container">
-                    <igx-circular-bar (onProgressChanged)="f($event)" [value]="24"></igx-circular-bar>
+                    <igx-circular-bar [value]="24"></igx-circular-bar>
                 </div>
                 <div class="circular-container">
-                    <igx-circular-bar (onProgressChanged)="f($event)" [value]="32"></igx-circular-bar>
-                </div>
-            </div>
-            <div class="circular-samples">
-                <div class="circular-container">
-                    <igx-circular-bar (onProgressChanged)="f($event)" [value]="43"></igx-circular-bar>
-                </div>
-                <div class="circular-container">
-                    <igx-circular-bar (onProgressChanged)="f($event)" [value]="53"></igx-circular-bar>
-                </div>
-                <div class="circular-container">
-                    <igx-circular-bar (onProgressChanged)="f($event)" [value]="30"></igx-circular-bar>
+                    <igx-circular-bar [value]="32"></igx-circular-bar>
                 </div>
             </div>
             <div class="circular-samples">
                 <div class="circular-container">
-                    <igx-circular-bar (onProgressChanged)="f($event)" [value]="18"></igx-circular-bar>
+                    <igx-circular-bar [value]="43"></igx-circular-bar>
                 </div>
                 <div class="circular-container">
-                    <igx-circular-bar (onProgressChanged)="f($event)" [value]="77"></igx-circular-bar>
+                    <igx-circular-bar [value]="53"></igx-circular-bar>
                 </div>
                 <div class="circular-container">
-                    <igx-circular-bar (onProgressChanged)="f($event)" [value]="44"></igx-circular-bar>
+                    <igx-circular-bar [value]="30"></igx-circular-bar>
+                </div>
+            </div>
+            <div class="circular-samples">
+                <div class="circular-container">
+                    <igx-circular-bar [value]="18"></igx-circular-bar>
+                </div>
+                <div class="circular-container">
+                    <igx-circular-bar [value]="77"></igx-circular-bar>
+                </div>
+                <div class="circular-container">
+                    <igx-circular-bar [value]="44"></igx-circular-bar>
                 </div>
             </div>
         </article>
