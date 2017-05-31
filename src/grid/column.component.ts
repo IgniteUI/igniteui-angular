@@ -23,7 +23,7 @@ export class IgxColumnComponent implements AfterContentInit {
     @Input() public movable: boolean = false;
     @Input() public width: string;
     @Input() public index: number;
-    @Input() public filteringCondition: (target: any, searchVal: any, ignoreCase?: boolean) => void
+    @Input() public filteringCondition: (target: any, searchVal: any, ignoreCase?: boolean) => boolean
         = FilteringCondition.string.contains;
     @Input() public filteringIgnoreCase: boolean = true;
     @Input() public dataType: DataType = DataType.String;

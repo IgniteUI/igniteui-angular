@@ -16,7 +16,7 @@
 
         <article class="sample-column">
             <h4 class="sample-title">Exclusive Selection <i class="light">Horizontal</i></h4>
-            <igx-buttongroup [multiSelection]="!multi" [values]="alignOptions" (onUnselect)="onSelect($event)" (onSelect)="onSelect($event)">
+            <igx-buttongroup [multiSelection]="!multi" [values]="alignOptions">
             </igx-buttongroup>
             <h5>First button is selected: {{alignOptions[0].selected}}</h5>
         </article>
@@ -46,7 +46,7 @@
             </igx-buttongroup>
         </article>
 
-        
+
         <article class="sample-column">
             <h4 class="sample-title">Custom class to style the content</h4>
             <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="false" itemContentCssClass="customContentStyle">
