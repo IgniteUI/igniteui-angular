@@ -1,19 +1,19 @@
-#IgxTabBar
+#Igx-Tab-Bar
 
 #### Category
 _Components_
 
 ## Description
-_IgxTabBar represents a single content area with multiple panels, each associated with a tab._
+_Igx-Tab-Bar represents a single content area with multiple panels, each associated with a tab._
 
 ### More Info
-IgxTabBar provides two observable collections (QueryLists): one with panels and one with related tabs. 
-The children components of the IgxTabBar are: 
+Igx-Tab-Bar provides two observable collections (QueryLists): one with panels and one with related tabs. 
+The children components of the Igx-Tab-Bar are: 
 
--  *IgxTabPanel* - represents the wrapper of the content that needs to be displayed
-- *IgxTab* - button that triggers displaying of the associated panel
+-  *Igx-Tab-Panel* - represents the wrapper of the content that needs to be displayed
+- *Igx-Tab* - button that triggers displaying of the associated panel
 
-Each tab (IgxTab) is related to particular panel (IgxTabPanel). When tab is clicked, the associated panel is selected and visualized into a single container.
+Each tab (Igx-Tab) is related to particular panel (Igx-Tab-Panel). When tab is clicked, the associated panel is selected and visualized into a single container.
 There should always be a selected tab. Only one tab can be selected at a time.
 
 ## Properties
@@ -28,13 +28,13 @@ There should always be a selected tab. Only one tab can be selected at a time.
 
 ----------
 
-#IgxTabPanel
+#Igx-Tab-Panel
 
 #### Category
 _Child components_
 
 ## Description
-_Child component of IgxTabBar, that represents the container of the content need to be displayed._
+_Child component of Igx-Tab-Bar, that represents the container of the content need to be displayed._
 
 ## Properties
 - `isSelected` - Determines whether the panel is selected
@@ -50,13 +50,13 @@ _Child component of IgxTabBar, that represents the container of the content need
 
 ----------
 
-#IgxTab
+#Igx-Tab
 
 #### Category
 _Child components_
 
 ## Description
-_Child component of IgxTabBar, that represents the button that triggers displaying of the associated panel._
+_Child component of Igx-Tab-Bar, that represents the button that triggers displaying of the associated panel._
 
 ## Properties
 - `isDisabled` - Determines whether the tab is disabled

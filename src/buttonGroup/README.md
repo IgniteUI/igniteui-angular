@@ -1,6 +1,6 @@
-# igxButtonGroup
+# igx-ButtonGroup
 
-The **igxButtonGroup** component aims at providing a button group functionality to developers that also allow horizontal/vertical alignment, single/multiple selection with toggling. The igxButtounGroup component makes use of the igxButton directive.
+The **igx-ButtonGroup** component aims at providing a button group functionality to developers that also allow horizontal/vertical alignment, single/multiple selection with toggling. The igx-ButtounGroup component makes use of the igxButton directive.
 
 # Usage
 ```html
@@ -31,7 +31,7 @@ The **igxButtonGroup** component aims at providing a button group functionality 
 
 # Examples
 
-Using `igxButtonGroup` to organize buttons into an js blocks styled button group.
+Using `igx-ButtonGroup` to organize buttons into an js blocks styled button group.
 ```html
     <igx-buttongroup multiSelection="false" [values]="buttons" [alignment]="alignment">
     </igx-buttongroup>
