@@ -1,16 +1,16 @@
-#IgxList
+#Igx-List
 
 #### Category
 _Components_
 
 ## Description
-_IgxList represents a list of identical items._
+_Igx-List represents a list of identical items._
 
 ### More Info
 The children components of the IgxTabBar are:
 
-- *IgxListItem* - represents list item
-- *IgxListHeader* - represents list header - non-interactable list item which role is to label, describe and unify the next list items, composed below it
+- *Igx-List-Item* - represents list item
+- *Igx-List-Header* - represents list header - non-interactable list item which role is to label, describe and unify the next list items, composed below it
 
 Both: item and header, implement `IListChild`.  
 The list provides three arrays: 
@@ -38,25 +38,25 @@ The list provides three arrays:
 
 ----------
 
-#IgxListHeader
+#Igx-List-Header
 
 #### Category
 _Child components_
 
 ## Description
-_Child component of IgxList, that represents a single non-interactable item, that is used as a header of the following items. The header implements `IListChild` interface._
+_Child component of Igx-List, that represents a single non-interactable item, that is used as a header of the following items. The header implements `IListChild` interface._
 
 ## Properties
 - `index` - The index of header in children array
 
 ----------
-#IgxListItem
+#Igx-List-Item
 
 #### Category
 _Child components_
 
 ## Description
-_Child component of IgxList, that represents a single interactable item. Its content can be text or any other HTML content. The item implements `IListChild` interface._
+_Child component of Igx-List, that represents a single interactable item. Its content can be text or any other HTML content. The item implements `IListChild` interface._
 
 ## Properties
 - `index` - The index of item in children array
