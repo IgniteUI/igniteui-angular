@@ -35,7 +35,7 @@
     },
     "devDependencies": {
         "@types/core-js": "^0.9.41",
-        "@types/gulp": "^4.0.2",
+        "@types/gulp": "^3.8.32",
         "@types/gulp-autoprefixer": "^0.0.30",
         "@types/gulp-plumber": "^0.0.30",
         "@types/gulp-sass": "^0.0.30",
