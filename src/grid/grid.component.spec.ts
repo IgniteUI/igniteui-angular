@@ -3,8 +3,9 @@ import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FilteringCondition } from "../data-operations/filtering-condition";
 import { IgxGridComponent, IgxGridModule, IgxGridRow } from "./grid.component";
+import { CustomJobTitleSortingStrategy } from "../grid/tests.helper"
 
-describe("IgxGrid", () => {
+fdescribe("IgxGrid", () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -12,11 +13,12 @@ describe("IgxGrid", () => {
                 IgxGridMarkupDefinitionTestComponent,
                 IgxGridngForDefinitionTestComponent,
                 IgxGridTemplatedTestComponent,
-                IgxGridWithAutogenerateTestComponent
+                IgxGridWithAutogenerateTestComponent,
+                IgxGridCustomSortingTestComponent
             ],
             imports: [BrowserAnimationsModule, IgxGridModule]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     it("should initialize a grid with columns from markup", () => {
@@ -173,7 +175,7 @@ describe("IgxGrid", () => {
 
         fixture.detectChanges();
 
-        const newRow = {ID: 4, Name: "Test String"};
+        const newRow = { ID: 4, Name: "Test String" };
 
         // Row Adding
         grid.addRow(newRow);
@@ -233,7 +235,7 @@ describe("IgxGrid", () => {
 
         // Row updating through API
         spyOn(grid.onEditDone, "emit");
-        grid.updateRow(3, {ID: 10, Name: "New Value"});
+        grid.updateRow(3, { ID: 10, Name: "New Value" });
         fixture.detectChanges();
 
         expect(grid.onEditDone.emit).toHaveBeenCalled();
@@ -345,25 +347,25 @@ describe("IgxGrid", () => {
         fixture.detectChanges();
         expect(document.activeElement).toBe(cells[0]);
 
-        let args: KeyboardEventInit = {key: "ArrowRight", bubbles: true};
+        let args: KeyboardEventInit = { key: "ArrowRight", bubbles: true };
         cells[0].dispatchEvent(new KeyboardEvent("keydown", args));
         tick();
         fixture.detectChanges();
         expect(document.activeElement).toBe(cells[1]);
 
-        args = {key: "ArrowLeft", bubbles: true};
+        args = { key: "ArrowLeft", bubbles: true };
         cells[1].dispatchEvent(new KeyboardEvent("keydown", args));
         tick();
         fixture.detectChanges();
         expect(document.activeElement).toBe(cells[0]);
 
-        args = {key: "ArrowDown", bubbles: true};
+        args = { key: "ArrowDown", bubbles: true };
         cells[0].dispatchEvent(new KeyboardEvent("keydown", args));
         tick();
         fixture.detectChanges();
         expect(document.activeElement).toBe(cells[2]);
 
-        args = {key: "ArrowUp", bubbles: true};
+        args = { key: "ArrowUp", bubbles: true };
         cells[2].dispatchEvent(new KeyboardEvent("keydown", args));
         tick();
         fixture.detectChanges();
@@ -416,7 +418,7 @@ describe("IgxGrid", () => {
         fixture.detectChanges();
 
         const filterInputButton: HTMLElement = fixture.nativeElement
-                                                .querySelector(".igx-filtering__toggle > .toggle-icon");
+            .querySelector(".igx-filtering__toggle > .toggle-icon");
         const tbody: HTMLElement = fixture.nativeElement.querySelector("table > tbody");
 
         expect(filterInputButton).toBeTruthy();
@@ -456,7 +458,7 @@ describe("IgxGrid", () => {
         tick();
         fixture.detectChanges();
 
-        let args: KeyboardEventInit = {key: "Enter", bubbles: true};
+        let args: KeyboardEventInit = { key: "Enter", bubbles: true };
         gridElement.querySelector("tbody td:first-child")
             .dispatchEvent(new KeyboardEvent("keyup", args));
 
@@ -479,7 +481,7 @@ describe("IgxGrid", () => {
         tick();
         fixture.detectChanges();
 
-        args = {key: "Enter", bubbles: true};
+        args = { key: "Enter", bubbles: true };
         dialog.dispatchEvent(new KeyboardEvent("keyup", args));
 
         tick();
@@ -507,7 +509,7 @@ describe("IgxGrid", () => {
         tick();
         fixture.detectChanges();
 
-        let args: KeyboardEventInit = {key: "Enter", bubbles: true};
+        let args: KeyboardEventInit = { key: "Enter", bubbles: true };
         gridElement.querySelector("tbody td:first-child")
             .dispatchEvent(new KeyboardEvent("keyup", args));
 
@@ -530,7 +532,7 @@ describe("IgxGrid", () => {
         tick();
         fixture.detectChanges();
 
-        args = {key: "Escape", bubbles: true};
+        args = { key: "Escape", bubbles: true };
         dialog.dispatchEvent(new KeyboardEvent("keyup", args));
 
         tick();
@@ -624,7 +626,7 @@ describe("IgxGrid", () => {
         expect(gridElement.querySelector(".igx-paginator > span").textContent).toMatch("2 of 3");
         expect(gridElement.querySelector("tbody > tr > td").textContent).toMatch("2");
 
-        let args: KeyboardEventInit = {key: "Enter", bubbles: true};
+        let args: KeyboardEventInit = { key: "Enter", bubbles: true };
         gridElement.querySelector("tbody > tr > td")
             .dispatchEvent(new KeyboardEvent("keyup", args));
 
@@ -647,7 +649,7 @@ describe("IgxGrid", () => {
         tick();
         fixture.detectChanges();
 
-        args = {key: "Enter", bubbles: true};
+        args = { key: "Enter", bubbles: true };
         dialog.dispatchEvent(new KeyboardEvent("keyup", args));
 
         tick();
@@ -691,7 +693,7 @@ describe("IgxGrid", () => {
         expect(gridElement.querySelector(".igx-paginator > span").textContent).toMatch("2 of 3");
         expect(gridElement.querySelector("tbody > tr > td").textContent).toMatch("2");
 
-        let args: KeyboardEventInit = {key: "Enter", bubbles: true};
+        let args: KeyboardEventInit = { key: "Enter", bubbles: true };
         gridElement.querySelector("tbody > tr > td")
             .dispatchEvent(new KeyboardEvent("keyup", args));
 
@@ -714,7 +716,7 @@ describe("IgxGrid", () => {
         tick();
         fixture.detectChanges();
 
-        args = {key: "Escape", bubbles: true};
+        args = { key: "Escape", bubbles: true };
         dialog.dispatchEvent(new KeyboardEvent("keyup", args));
 
         tick();
@@ -727,6 +729,43 @@ describe("IgxGrid", () => {
 
         expect(gridElement.querySelector("tbody > tr > td").textContent).toMatch("2");
         expect(data[1].ID).toMatch("2");
+    }));
+
+    fit("custom sorting (job title)", fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxGridCustomSortingTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const data = fixture.componentInstance.data;
+        const gridElement: HTMLElement = fixture.nativeElement.querySelector("table");
+        const jobTitleColumn = gridElement.querySelector("thead > tr > th:nth-child(3)");
+
+        jobTitleColumn.dispatchEvent(new Event('click'));
+        fixture.detectChanges();
+
+        expect(jobTitleColumn.classList.contains("asc")).toBe(false, "Column should not be sorted by job title starting from CEO");
+        grid.getColumnByField("JobTitle").sortable = true;
+        fixture.detectChanges();
+
+        jobTitleColumn.dispatchEvent(new Event("click"));
+        fixture.detectChanges();
+
+        expect(jobTitleColumn.classList.contains("asc")).toBe(true, "Column should be sorted by job title starting from CEO");
+
+        expect(grid.getRow(0).cells[0].dataItem).toMatch("6");
+        expect(grid.getRow(0).cells[1].dataItem).toMatch("Erma Walsh");
+        expect(grid.getRow(0).cells[2].dataItem).toMatch("CEO");
+
+        expect(grid.getCell(1, "ID").dataItem).toMatch("1");
+        expect(grid.getCell(2, "ID").dataItem).toMatch("2");
+        expect(grid.getCell(3, "ID").dataItem).toMatch("3");
+        expect(grid.getCell(4, "ID").dataItem).toMatch("10");
+        expect(grid.getCell(5, "ID").dataItem).toMatch("8");
+        expect(grid.getCell(6, "ID").dataItem).toMatch("5");
+        expect(grid.getCell(7, "ID").dataItem).toMatch("4");
+        expect(grid.getCell(8, "ID").dataItem).toMatch("7");
+        expect(grid.getCell(9, "ID").dataItem).toMatch("9");
+
     }));
 });
 
@@ -741,9 +780,9 @@ describe("IgxGrid", () => {
 export class IgxGridMarkupDefinitionTestComponent {
 
     public data = [
-        {ID: 1, Name: "Johny"},
-        {ID: 2, Name: "Sally"},
-        {ID: 3, Name: "Tim"}
+        { ID: 1, Name: "Johny" },
+        { ID: 2, Name: "Sally" },
+        { ID: 3, Name: "Tim" }
     ];
 
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
@@ -760,9 +799,9 @@ export class IgxGridMarkupDefinitionTestComponent {
 export class IgxGridngForDefinitionTestComponent {
 
     public data = [
-        {ID: 1, Name: "Johny"},
-        {ID: 2, Name: "Sally"},
-        {ID: 3, Name: "Tim"}
+        { ID: 1, Name: "Johny" },
+        { ID: 2, Name: "Sally" },
+        { ID: 3, Name: "Tim" }
     ];
 
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
@@ -786,9 +825,9 @@ export class IgxGridngForDefinitionTestComponent {
 export class IgxGridTemplatedTestComponent {
 
     public data = [
-        {ID: 1, Name: "Johny"},
-        {ID: 2, Name: "Sally"},
-        {ID: 3, Name: "Tim"}
+        { ID: 1, Name: "Johny" },
+        { ID: 2, Name: "Sally" },
+        { ID: 3, Name: "Tim" }
     ];
 
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
@@ -802,10 +841,47 @@ export class IgxGridTemplatedTestComponent {
 export class IgxGridWithAutogenerateTestComponent {
 
     public data = [
-        {ID: 1, Name: "Johny"},
-        {ID: 2, Name: "Sally"},
-        {ID: 3, Name: "Tim"}
+        { ID: 1, Name: "Johny" },
+        { ID: 2, Name: "Sally" },
+        { ID: 3, Name: "Tim" }
     ];
 
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
 }
+
+@Component({
+    template: `
+    <igx-grid [data]="data" >
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'Name'" [header]="'Name'"></igx-column>
+        <igx-column [field]="'JobTitle'" [header]="'JobTitle'"></igx-column>
+    </igx-grid>
+    `
+})
+export class IgxGridCustomSortingTestComponent {
+    public data = [
+        { ID: 1, Name: "Casey Houston", JobTitle: "Vice President", },
+        { ID: 2, Name: "Gilberto Todd", JobTitle: "Director" },
+        { ID: 3, Name: "Tanya Bennett", JobTitle: "Director" },
+        { ID: 4, Name: "Jack Simon", JobTitle: "Software Developer" },
+        { ID: 5, Name: "Celia Martinez", JobTitle: "Senior Software Developer" },
+        { ID: 6, Name: "Erma Walsh", JobTitle: "CEO" },
+        { ID: 7, Name: "Debra Morton", JobTitle: "Associate Software Developer" },
+        { ID: 8, Name: "Erika Wells", JobTitle: "Software Development Team Lead" },
+        { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer" },
+        { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager" }
+    ];
+
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+
+    public ngOnInit(): void {
+        this.grid.state = {
+            sorting: {
+                expressions: [],
+                strategy: new CustomJobTitleSortingStrategy()
+            }
+        };
+    }
+}
+
+
