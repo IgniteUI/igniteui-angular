@@ -66,3 +66,12 @@ rules:
   force-pseudo-nesting: 0
   force-element-nesting: 0
   force-attribute-nesting: 0
+  final-newline:
+    - 1
+    - include: false
+  space-between-parens:
+    - 1
+    - include: false
+  empty-line-between-blocks:
+    - 0
+    - ignore-single-line-rulesets: true
