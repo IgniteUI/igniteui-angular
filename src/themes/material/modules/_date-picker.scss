@@ -1,4 +1,4 @@
-@include b(igx-calender) {
+@include b(igx-calendar) {
     @extend %cal-display;
     @include e(header) {
         @extend %cal-header-display;
@@ -13,6 +13,7 @@
         @extend %cal-body-display;
     }
     @include e(body-picker) {
+        @extend %cal-picker-display;
         .date {
             @extend %cal-picker-date;
         }
