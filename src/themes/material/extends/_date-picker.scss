@@ -3,6 +3,8 @@
     flex-flow: column nowrap;
     width: 100%;
     overflow: hidden;
+    border-radius: $cal-border-radius;
+    box-shadow: $elevate-2;
     @media only screen and (min-width: em(540px)) {
         flex-flow: row nowrap;
         %cal-header-display {
@@ -27,13 +29,15 @@
 }
 
 %cal-header-year {
+    margin: $cal-header-year-margin;
     color: $cal-header-year-color;
     font-size: $cal-header-year-fs;
 }
 
 %cal-header-date {
+    margin: $cal-header-date-margin;
     font-size: $cal-header-date-fs;
-    line-height: $cal-header-date-lh;
+    line-height: $cal-header-date-lh !important;
     letter-spacing: $cal-header-date-lsp;
 }
 
@@ -46,6 +50,7 @@
 
 %cal-picker-arrow {
     color: $cal-picker-arrow-color;
+    user-select: none;
     cursor: pointer;
     &:hover {
         color: $cal-picker-arrow-hover-color;
@@ -101,6 +106,7 @@
 %cal-value--selected {
     color: $cal-value-selected-text-color;
     background-color: $cal-value-selected-bg;
+    font-weight: $cal-value-fw;
 }
 
 %cal-value--current {
