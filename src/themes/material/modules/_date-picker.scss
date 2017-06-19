@@ -1,0 +1,68 @@
+@include b(igx-calendar) {
+    @extend %cal-display;
+    @include e(header) {
+        @extend %cal-header-display;
+    }
+    @include e(header-year) {
+        @extend %cal-header-year;
+    }
+    @include e(header-date) {
+        @extend %cal-header-date;
+    }
+    @include e(body) {
+        @extend %cal-body-display;
+    }
+    @include e(body-picker) {
+        @extend %cal-picker-display;
+        .date {
+            @extend %cal-picker-date;
+        }
+        .next,
+        .prev {
+            @extend %cal-picker-arrow;
+        }
+    }
+    @include e(body-row) {
+        @extend %cal-row-display;
+    }
+    @include e(label) {
+        @extend %cal-value;
+        @extend %cal-value--label;
+    }
+    @include e(date) {
+        @extend %cal-value;
+        &:hover {
+            @extend %cal-value--hover;
+        }
+    }
+    @include e(date, 'inactive') {
+        @extend %cal-value;
+        @extend %cal-value--inactive;
+        cursor: pointer;
+        &:hover {
+            @extend %cal-value--hover;
+        }
+    }
+    @include e(date, 'selected') {
+        @extend %cal-value;
+        @extend %cal-value--selected;
+    }
+    @include e(date, 'current') {
+        @extend %cal-value;
+        @extend %cal-value--current;
+        &:hover {
+            @extend %cal-value--hover;
+        }
+    }
+    @include e(date, 'weekend') {
+        @extend %cal-value;
+        @extend %cal-value--weekend;
+        &:hover {
+            @extend %cal-value--hover;
+        }
+    }
+    @include m(vertical) {
+        @extend %cal-display;
+        @extend %cal-display--vertical;
+    }
+}

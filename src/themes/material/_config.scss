@@ -1,14 +1,12 @@
 // Ignite UI JS Blocks Variables //
-
 // Table of Contents: //
-
 // 1. Colors
 // 2. Badges
 // 3. Buttons
 // 4. Cards
 // TODO: 5. Collapsible 
 // TODO: 6. Chips
-// TODO: 7. Date Picker
+// 7. Calendar/Date Picker
 // TODO: 8. Dropdown
 // 9. Fonts
 // 10. Forms
@@ -31,11 +29,9 @@
 // 27. Avatar
 // 28. Carousel
 // 29. Icon
-
-
 // 1. Colors //
-
 // Base Palette To Chose Colors From
+$black: #000 !default;
 $rich-black: #0B3C49 !default;
 $byzantium: #731963 !default;
 $vivid-cerise: #E41C77 !default;
@@ -53,13 +49,10 @@ $overlay-color: rgba(72, 72, 72, .5) !default;
 // off-black
 $off-black: #484848 !default;
 $disabled-color: #BDBDBD !default;
-
 // grays
 $gray-opaque-54: rgba(0, 0, 0, .54) !default;
-
 // Color Palette
 $colors: ( primary: ( 100: gen-color($primary-color, 50), 200: gen-color($primary-color, 100), 300: gen-color($primary-color, 300), 400: gen-color($primary-color, 400), 500: $primary-color, 600: gen-color($primary-color, 600), 700: gen-color($primary-color, 700), 800: gen-color($primary-color, 800), 900: gen-color($primary-color, 900), A100: gen-color($primary-color, 'A100'), A200: gen-color($primary-color, 'A200'), A400: gen-color($primary-color, 'A400'), A700: gen-color($primary-color, 'A700'), ), secondary: ( 100: gen-color($secondary-color, 50), 200: gen-color($secondary-color, 100), 300: gen-color($secondary-color, 300), 400: gen-color($secondary-color, 400), 500: $secondary-color, 600: gen-color($secondary-color, 600), 700: gen-color($secondary-color, 700), 800: gen-color($secondary-color, 800), 900: gen-color($secondary-color, 900), A100: gen-color($secondary-color, 'A100'), A200: gen-color($secondary-color, 'A200'), A400: gen-color($secondary-color, 'A400'), A700: gen-color($secondary-color, 'A700'), ), accent: ( 100: gen-color($accent-color, 50), 200: gen-color($accent-color, 100), 300: gen-color($accent-color, 300), 400: gen-color($accent-color, 400), 500: $accent-color, 600: gen-color($accent-color, 600), 700: gen-color($accent-color, 700), 800: gen-color($accent-color, 800), 900: gen-color($accent-color, 900), A100: gen-color($accent-color, 'A100'), A200: gen-color($accent-color, 'A200'), A400: gen-color($accent-color, 'A400'), A700: gen-color($accent-color, 'A700'), ));
-
 // 2. Material Elevations / Shadows //
 $elevate-1: 0 1px 3px 0 rgba(0, 0, 0, .2),
 0 1px 1px 0 rgba(0, 0, 0, .14),
@@ -136,9 +129,7 @@ $elevate-23: 0 11px 14px -7px rgba(0, 0, 0, .2),
 $elevate-24: 0 11px 15px -7px rgba(0, 0, 0, .2),
 0 24px 38px 3px rgba(0, 0, 0, .14),
 0 9px 46px 8px rgba(0, 0, 0, .12);
-
 // 2. Badges //
-
 $badge-width: 22px !default;
 $badge-height: $badge-width !default;
 $badge-bg-color-default: $secondary-color !default;
@@ -152,9 +143,7 @@ $badge-shadow: $elevate-1 !default;
 $badge-line-height: 2px !default;
 $badge-icon-font-size: em(10px, 10px) !default;
 $badge-value-padding: 4px !default;
-
 // 3. Buttons //
-
 // Shared Styles
 $button-border: none !default;
 $button-radius: 2px !default;
@@ -194,7 +183,6 @@ $button-floating-width: em(56px) !default;
 $button-floating-height: $button-floating-width;
 $button-floating-shadow: $elevate-6 !default;
 $button-floating-hover-shadow: $elevate-12 !default;
-;
 $button-floating-background: $secondary-color !default;
 // Icon Buttons
 $button-icon-width: em(28px, 16px) !default;
@@ -206,9 +194,7 @@ $button-icon-font-size: em(24px, 16px) !default;
 $button-navbar-width: em(24px, 16px) !default;
 $button-navbar-height: $button-navbar-width !default;
 $button-navbar-padding: 0 !default;
-
 // 4. Cards //
-
 // Genaral
 $card-border-radius: 2px !default;
 // Colors
@@ -236,14 +222,49 @@ $card-subtitle-margin: 0 !default;
 $card-tgroup-margin: 0 em(16px);
 // Transitions
 $card-transitions: box-shadow .3s cubic-bezier(.25, .8, .25, 1) !default;
-
+// 7. Calendar / Date Picker
+// Calendar Header
+$cal-border-radius: 4px !default;
+$cal-theme-color: $ocean-blue !default;
+$cal-header-year-fs: em(18px, 16px) !default;
+$cal-header-year-lh: em(16px, 16px) !default;
+$cal-header-year-margin: 0 !default;
+$cal-header-date-fs: em(38px, 16px) !default;
+$cal-header-date-lh: em(16px, 16px) !default;
+$cal-header-date-lsp: 2px !default;
+$cal-header-date-margin: 0 !default;
+$cal-header-bg: $cal-theme-color !default;
+$cal-header-color: text-contrast($cal-theme-color) !default;
+$cal-header-year-color: transparentize($cal-header-color, .2) !default;
+$cal-header-padding: em(24px) em(16px) !default;
+// Calendar Picker
+$cal-picker-arrow-color: $off-black !default;
+$cal-picker-arrow-hover-color: $cal-theme-color !default;
+$cal-picker-date-fs: em(18px, 16px) !default;
+$cal-picker-date-lh: em(22px, 16px) !default;
+$cal-picker-date-fw: 600 !default;
+$cal-picker-padding: em(24px, 16px) !default;
+// Calendar Values
+$cal-value-w: em(40px, 16px) !default;
+$cal-value-h: $cal-value-w;
+$cal-valu-br: $cal-value-w / 2;
+$cal-value-margin: em(2px, 16px) !default;
+$cal-value-fs: em(16px, 16px) !default;
+$cal-value-lh: em(22px, 16px) !default;
+$cal-value-fw: 600 !default;
+$cal-value-text-color: $black !default;
+$cal-value-inactive-color: $disabled-color !default;
+$cal-value-selected-text-color: text-contrast($cal-theme-color) !default;
+$cal-value-selected-bg: $cal-theme-color !default;
+$cal-value-current: $cal-theme-color !default;
+$cal-value-weekend: $disabled-color !default;
+$cal-value-hover-bg: transparentize($disabled-color, .85) !default;
+// Calendar Body
+$cal-row-padding: 0 em(16px, 16px) !default;
 // 9. Fonts //
-
 $titillium-font-path: 'fonts/titillium/' !default;
-
 // 10. Forms //
 $control-padding: 8px 0 !default;
-
 // Text Inputs + Textarea
 $input-min-height: em(70px) !default;
 $input-font-size: em(16px) !default;
@@ -274,17 +295,14 @@ $label-focus-font-size: em(12px) !default;
 $input-search-padding: 12px 12px 12px 64px !default;
 $input-search-label-padding: 12px 16px !default;
 $input-margin: 20px 0 !default;
-
 // Radio Buttons
 $radio-fill-color: $secondary-color !default;
 $radio-empty-color: #757575 !default;
-
 $radio-border-style: 2px solid !default;
 $radio-border: $radio-border-style $radio-fill-color !default;
 $radio-width: 20px !default;
 $radio-height: $radio-width !default;
 $radio-radius: 50% 50% !default;
-
 // Switches
 $switch-background: #757575 !default;
 $switch-background-disabled: #F0F0F0 !default;
@@ -299,22 +317,18 @@ $switch-label-height: $switch-label-width !default;
 $switch-shadow: $elevate-1 !default;
 $switch-disabled-shadow: $elevate-1 !default;
 $switch-margin: 0 16px !default;
-
 // Checkboxes
 $checkbox-width: 20px !default;
 $checkbox-height: $checkbox-width !default;
 $checkbox-label-padding: em(36px, 16px) !default;
 $checkbox-radius: 2px !default;
 $checkbox-border-style: 2px solid !default;
-
 $checkbox-tick-width: 20px !default;
 $checkbox-tick-height: 20px !default;
 $checkbox-tick-weight: 3px !default;
 $checkbox-tick-color: $white !default;
 $checkbox-tick-padding: 3px 2px 2px !default;
-
 // 11. Global //
-
 // Media Query Ranges
 $small-screen-up: 601px !default;
 $medium-screen-up: 767px !default;
@@ -327,36 +341,27 @@ $large-and-up: 'only screen and (min-width : #{$medium-screen-up})' !default;
 $small-and-down: 'only screen and (max-width : #{$small-screen})' !default;
 $medium-and-down: 'only screen and (max-width : #{$medium-screen})' !default;
 $medium-only: 'only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})' !default;
-
 // 12. Navigation Bar //
 $navbar-padding: 0 em(16px) !default;
 $navbar-text-color: set-color($primary-color) !default;
 $navbar-title-fz: em(18px, 16px) !default;
 $navbar-title-lh: em(18px, 16px) !default;
-
-
 // 13. Navigation Drawer //
 $navdrawer-pin-collapsed-padding: 0;
-
 // 14. Range (Slider) //
-
 // General
 $range-height: 48px !default;
-
 // Range Track
 $range-track-color: rgba(0, 0, 0, .32) !default;
 $range-track-fill-color: $primary-color !default;
 $range-track-height: 2px !default;
-
 // Range Ticks
 $range-tick-color: $white !default;
-
 // Range Thumb
 $range-thumb-width: 14px !default;
 $range-thumb-height: $range-thumb-width !default;
 $range-thumb-radius: $range-thumb-width / 2 !default;
 $range-thumb-color: $yellow-orange !default;
-
 // Range Label
 $range-label-width: 28px !default;
 $range-label-height: $range-label-width !default;
@@ -368,52 +373,42 @@ $range-label-background: $yellow-orange !default;
 $range-label-padding: 0 2px !default;
 // Start Modifier
 $range-background--start: $white !default;
-
-
 // 16. Bottom navigation bar / Tabs //
 $tab-bar-background: $white !default;
 $tab-bar-color: set-color($tab-bar-background);
 $tab-bar-label-font-size: em(12px, 16px);
 $tab-bar-label-line-height: em(12px, 16px);
 $tab-bar-item-padding: 0 em(12px);
-
 // 17. Grid //
-
 // General
 $grid-bg: #FFF !default;
 $grid-br: em(2px) !default;
 $grid-shadow: $elevate-2 !default;
-
 // Caption
 $grid-caption-fs: em(20px) !default;
 $grid-caption-lh: em(32px) !default;
 $grid-caption-padding: em(16px) em(24px) !default;
-
 // Row
 $grid-row-bg: inherit !default;
 $grid-row-bb: 1px solid #D3D3D3 !default;
 $grid-row-hover: #EEE !default;
 $grid-row-transition: background .2s ease !default;
-
 // Cell
 $grid-cell-padding: em(18px) em(24px) !default;
 $grid-cell-align-num: right !default;
 $grid-cell-fs: em(13px) !default;
 $grid-cell-lh: em(16px) !default;
 $grid-cell-color: $off-black !default;
-
 // Heading
 $grid-head-fs: em(12px) !default;
 $grid-head-color: rgba(0, 0, 0, .54) !default;
 $grid-head-icon-size: em(16px) !default;
 $grid-head-icon-lh: em(16px) !default;
 $grid-head-icon-padding: em(8px) !default;
-
 $grid-filtering-color-active: set-color($primary-color);
 $grid-filtering-bg-active: $primary-color;
 $grid-filtering-options-padding: em(8px, 16px);
 // 18. Toasts //
-
 $toast-width: 52px !default;
 $toast-padding: em(16px, 16px) em(24px, 16px) !default;
 $toast-margin: em(42px, 16px) auto !default;
@@ -422,9 +417,7 @@ $toast-background: rgba(0, 0, 0, .54) !default;
 $toast-border-radius: ($toast-width / 2) !default;
 $toast-font-size: em(14px, 16px) !default;
 $toast-line-height: em(24px, 16px) !default;
-
 // 19. Typography //
-
 // paragraph
 $paragraph-line-height-desktop: em(22px) !default;
 $paragraph-line-height-phone: em(20px) !default;
@@ -463,8 +456,6 @@ $blockquote-font-size-tablet: em(24px) !default;
 $blockquote-line-height-tablet: em(35px) !default;
 $blockquote-font-size-phone: em(20px) !default;
 $blockquote-line-height-phone: em(25px) !default;
-
-
 // 22. Progress Bar //
 $progressbar-color: rgba($primary-color, .1) !default;
 $progressbar-stripe-color: rgba(255, 255, 255, .15) !default;
@@ -472,7 +463,6 @@ $progressbar-value-fz: em(14px, 16px) !default;
 $progressbar-value-fw: 600 !default;
 $progressbar-value-margin: 10px 5px !default;
 $progress-circular-value-fz: em(32px, 16px);
-
 // 23. List //
 $list-margin: 8px 16px !default;
 $list-background: $white !default;
@@ -493,10 +483,8 @@ $list-item-active-shadow: $elevate-2 !default;
 $list-item-tl-sl-font-size: em(14px) !default;
 $list-item-tl-height: em(72px) !default;
 $list-item-tl-sl-color: #757575 !default;
-
 $list-empty-color: set-color($list-background);
 $list-empty-padding: em(16px, 16px);
-
 // 24. Dialog //
 $dialog-transition: background .25s ease-out !default;
 $dialog-max-width: em(400px) !default;
@@ -518,7 +506,6 @@ $dialog-message-color: #808080 !default;
 $dialog-message-font-weight: 400 !default;
 $dialog-actions-padding: em(8px) !default;
 $dialog-actions-margin: 0 em(-24px, 16px) em(-12px, 16px) em(-24px, 16px) !default;
-
 // 25. Snackbar
 $snackbar-height: em(48px) !default;
 $snackbar-padding: em(7px) em(24px) !default;
@@ -530,12 +517,10 @@ $snackbar-button-text-color: $secondary-color !default;
 $snackbar-button-text-color-hover: lighten($secondary-color, 15%) !default;
 $snackbar-button-line-height: em(16px) !default;
 $snackbar-button-font-weight: 600 !default;
-
 // 26. Button Group
 // Group layout
 $bgroup-radius: 2px !default;
 $bgroup-shadow: $elevate-2 !default;
-
 // Item style
 $bgroup-item-minwidth: 24px !default;
 $bgroup-item-minheight: 24px !default;
@@ -544,20 +529,15 @@ $bgroup-item-border-thickness: 1px !default;
 $bgroup-item-border: transparent !default;
 $bgroup-item-font-weight: 600 !default;
 $bgroup-item-background: $white !default;
-
 // Item style selected
 $bgroup-selected-bg: #C8C8C8;
 $bgroup-item-color-selected: rgba(0, 0, 0, .54) !default;
 $bgroup-item-background-selected: $bgroup-selected-bg !default;
 $bgroup-item-border-selected: darken($bgroup-selected-bg, 4%) !default;
-
 // Margin between item elements
 $bgroup-items-margin: em(10px, 16px) !default;
-
 // 27. Avatar
 $igx-avatar-icon-bg: #D1D1D1 !default;
-
-
 // 28. Carousel
 $carousel-arrow-margin: 0 em(16px) !default;
 $carousel-indicators-margin: em(16px) 0 !default;
@@ -565,6 +545,5 @@ $carousel-indicators-padding: 0 !default;
 $carousel-indicator-margin: 0 em(5px) !default;
 $carousel-arrow-bg: transparentize($white, .7) !default;
 $carousel-indicator-bg: transparentize($white, .8) !default;
-
 // 29. Icon
 $igx-icon-font-size: em(24px, 16px) !default;
