@@ -1,9 +1,10 @@
 import { Component, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { FilteringCondition } from "../data-operations/filtering-condition";
 import { IgxGridComponent, IgxGridModule, IgxGridRow } from "./grid.component";
-import { CustomJobTitleSortingStrategy } from "../grid/tests.helper"
+import { CustomJobTitleSortingStrategy, CustomDateRangeFilteringStrategy, CustomStrategyData } from "../grid/tests.helper"
+import { FilteringCondition } from "../../src/data-operations/filtering-condition";
+import { IDataState } from "../data-operations/data-state.interface";
 
 fdescribe("IgxGrid", () => {
 
@@ -14,7 +15,8 @@ fdescribe("IgxGrid", () => {
                 IgxGridngForDefinitionTestComponent,
                 IgxGridTemplatedTestComponent,
                 IgxGridWithAutogenerateTestComponent,
-                IgxGridCustomSortingTestComponent
+                IgxGridCustomSortingTestComponent,
+                IgxGridCustomFilteringDateRange
             ],
             imports: [BrowserAnimationsModule, IgxGridModule]
         })
@@ -731,7 +733,7 @@ fdescribe("IgxGrid", () => {
         expect(data[1].ID).toMatch("2");
     }));
 
-    fit("custom sorting (job title)", fakeAsync(() => {
+    it("custom sorting (job title)", fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxGridCustomSortingTestComponent);
         fixture.detectChanges();
 
@@ -765,7 +767,42 @@ fdescribe("IgxGrid", () => {
         expect(grid.getCell(7, "ID").dataItem).toMatch("4");
         expect(grid.getCell(8, "ID").dataItem).toMatch("7");
         expect(grid.getCell(9, "ID").dataItem).toMatch("9");
+    }));
 
+    xit("custom date range filtering", fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxGridCustomFilteringDateRange);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const data = fixture.componentInstance.data;
+        const gridElement: HTMLElement = fixture.nativeElement.querySelector("table");
+        const tbody: HTMLElement = fixture.nativeElement.querySelector("table > tbody")
+
+        grid.getColumnByField("HireDate").filtering = true;
+        // This FilteringCondition is going to be used as 'between'
+        grid.getColumnByField("HireDate").filteringCondition = FilteringCondition.date.before;
+        // DataType 'Date'
+        grid.getColumnByField("HireDate").dataType = 3;
+        fixture.detectChanges();
+
+        expect(grid.getRow(0).cells[0].dataItem).toMatch("1");
+        expect(grid.getRow(0).cells[1].dataItem).toMatch("Casey Houston");
+
+        // Between dates
+        let betweenDates = {
+            Date1: "2006-12-18T11:23:17.714Z",
+            Date2: "2010-11-20T10:14:12.714Z"
+        };
+
+        // Filter
+        grid.filterData(JSON.stringify(betweenDates), grid.getColumnByField("HireDate"));
+        fixture.detectChanges();
+
+        expect(tbody.querySelectorAll("tr").length).toEqual(2);
+        expect(grid.getRow(0).cells[0].dataItem).toMatch("4");
+        expect(grid.getRow(0).cells[2].dataItem).toMatch("2008-12-18T11:23:17.714Z");
+        expect(grid.getRow(1).cells[0].dataItem).toMatch("5");
+        expect(grid.getRow(1).cells[2].dataItem).toMatch("2007-12-19T11:23:17.714Z");
     }));
 });
 
@@ -859,18 +896,7 @@ export class IgxGridWithAutogenerateTestComponent {
     `
 })
 export class IgxGridCustomSortingTestComponent {
-    public data = [
-        { ID: 1, Name: "Casey Houston", JobTitle: "Vice President", },
-        { ID: 2, Name: "Gilberto Todd", JobTitle: "Director" },
-        { ID: 3, Name: "Tanya Bennett", JobTitle: "Director" },
-        { ID: 4, Name: "Jack Simon", JobTitle: "Software Developer" },
-        { ID: 5, Name: "Celia Martinez", JobTitle: "Senior Software Developer" },
-        { ID: 6, Name: "Erma Walsh", JobTitle: "CEO" },
-        { ID: 7, Name: "Debra Morton", JobTitle: "Associate Software Developer" },
-        { ID: 8, Name: "Erika Wells", JobTitle: "Software Development Team Lead" },
-        { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer" },
-        { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager" }
-    ];
+    public data = new CustomStrategyData().data;
 
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
 
@@ -885,3 +911,31 @@ export class IgxGridCustomSortingTestComponent {
 }
 
 
+@Component({
+    template: `<igx-grid [data]="data">
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'Name'" [header]="'Name'"></igx-column>
+        <igx-column [field]="'HireDate'" [header]="'HireDate'">
+            <ng-template igxHeader let-col="column">
+                <span class="myheadertemplate">{{ col.field }}</span>
+            </ng-template>
+            <ng-template igxCell let-item="item">
+                <span class="mybodytemplate">{{ item | date: 'dd/MM/yyyy'}}</span>
+            </ng-template>
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridCustomFilteringDateRange {
+    public data = new CustomStrategyData().data;
+
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+
+    public ngOnInit(): void {
+        this.grid.state = <IDataState>{
+            filtering: {
+                expressions: [],
+                strategy: new CustomDateRangeFilteringStrategy()
+            }
+        }
+    }
+}
