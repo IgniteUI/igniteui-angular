@@ -6,7 +6,7 @@ import { CustomJobTitleSortingStrategy, CustomDateRangeFilteringStrategy, Custom
 import { FilteringCondition } from "../../src/data-operations/filtering-condition";
 import { IDataState } from "../data-operations/data-state.interface";
 
-fdescribe("IgxGrid", () => {
+describe("IgxGrid", () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
