@@ -1,10 +1,11 @@
 import { Component, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { IgxGridComponent, IgxGridModule, IgxGridRow } from "./grid.component";
-import { CustomJobTitleSortingStrategy, CustomDateRangeFilteringStrategy, CustomStrategyData } from "../grid/tests.helper"
 import { FilteringCondition } from "../../src/data-operations/filtering-condition";
 import { IDataState } from "../data-operations/data-state.interface";
+import { CustomDateRangeFilteringStrategy, CustomJobTitleSortingStrategy } from "../grid/tests.helper";
+import { CustomStrategyData } from "../grid/tests.helper";
+import { IgxGridComponent, IgxGridModule, IgxGridRow } from "./grid.component";
 
 describe("IgxGrid", () => {
 
@@ -742,17 +743,21 @@ describe("IgxGrid", () => {
         const gridElement: HTMLElement = fixture.nativeElement.querySelector("table");
         const jobTitleColumn = gridElement.querySelector("thead > tr > th:nth-child(3)");
 
-        jobTitleColumn.dispatchEvent(new Event('click'));
+        jobTitleColumn.dispatchEvent(new Event("click"));
         fixture.detectChanges();
 
-        expect(jobTitleColumn.classList.contains("asc")).toBe(false, "Column should not be sorted by job title starting from CEO");
+        expect(jobTitleColumn
+            .classList.contains("asc"))
+            .toBe(false, "Column should not be sorted by job title starting from CEO");
         grid.getColumnByField("JobTitle").sortable = true;
         fixture.detectChanges();
 
         jobTitleColumn.dispatchEvent(new Event("click"));
         fixture.detectChanges();
 
-        expect(jobTitleColumn.classList.contains("asc")).toBe(true, "Column should be sorted by job title starting from CEO");
+        expect(jobTitleColumn
+            .classList.contains("asc"))
+            .toBe(true, "Column should be sorted by job title starting from CEO");
 
         expect(grid.getRow(0).cells[0].dataItem).toMatch("6");
         expect(grid.getRow(0).cells[1].dataItem).toMatch("Erma Walsh");
@@ -776,7 +781,7 @@ describe("IgxGrid", () => {
         const grid = fixture.componentInstance.grid;
         const data = fixture.componentInstance.data;
         const gridElement: HTMLElement = fixture.nativeElement.querySelector("table");
-        const tbody: HTMLElement = fixture.nativeElement.querySelector("table > tbody")
+        const tbody: HTMLElement = fixture.nativeElement.querySelector("table > tbody");
 
         grid.getColumnByField("HireDate").filtering = true;
         // This FilteringCondition is going to be used as 'between'
@@ -789,7 +794,7 @@ describe("IgxGrid", () => {
         expect(grid.getRow(0).cells[1].dataItem).toMatch("Casey Houston");
 
         // Between dates
-        let betweenDates = {
+        const betweenDates = {
             Date1: "2006-12-18T11:23:17.714Z",
             Date2: "2010-11-20T10:14:12.714Z"
         };
@@ -910,7 +915,6 @@ export class IgxGridCustomSortingTestComponent {
     }
 }
 
-
 @Component({
     template: `<igx-grid [data]="data">
         <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
@@ -931,11 +935,11 @@ export class IgxGridCustomFilteringDateRange {
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
 
     public ngOnInit(): void {
-        this.grid.state = <IDataState>{
+        this.grid.state = {
             filtering: {
                 expressions: [],
                 strategy: new CustomDateRangeFilteringStrategy()
             }
-        }
+        };
     }
 }
