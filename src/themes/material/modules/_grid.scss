@@ -1,5 +1,4 @@
 @include b(igx-grid) {
-
     @extend %grid-display;
 
     @include e(caption) {
@@ -36,8 +35,7 @@
 
         $block: bem--selector-to-string(&);
 
-        &.asc,
-        &.desc {
+        &.asc, &.desc {
             color: $off-black;
         }
 

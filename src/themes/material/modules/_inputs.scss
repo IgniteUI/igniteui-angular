@@ -29,20 +29,18 @@ input:-webkit-autofill {
             @extend %igx-form-input--disabled;
         }
 
-        &.ng-valid[required].ng-touched,
-        &.ng-valid.required {
+        &.ng-valid[required].ng-touched, &.ng-valid.required {
             @extend %igx-form-input--success;
 
-            ~label {
+            ~ label {
                 @extend %igx-form-label--success;
             }
         }
 
-        &.ng-invalid.ng-touched,
-        &.ng-invalid:not(form).ng-touched {
+        &.ng-invalid.ng-touched, &.ng-invalid:not(form).ng-touched {
             @extend %igx-form-input--error;
 
-            ~label {
+            ~ label {
                 @extend %igx-form-label--error;
             }
         }
@@ -50,7 +48,7 @@ input:-webkit-autofill {
         &.ng-warning {
             @extend %igx-form-input--warn;
 
-            ~label {
+            ~ label {
                 @extend %igx-form-label--warn;
             }
         }
@@ -58,7 +56,7 @@ input:-webkit-autofill {
     @include e(input, $m: filled) {
         @extend %igx-form-input;
 
-        ~label {
+        ~ label {
             @extend %igx-form-label--filled;
             @extend %igx-form-label--float;
         }
@@ -66,7 +64,7 @@ input:-webkit-autofill {
     @include e(input, $m: focused) {
         @extend %igx-form-input;
 
-        ~label {
+        ~ label {
             @extend %igx-form-label--focused;
         }
     }
@@ -74,7 +72,7 @@ input:-webkit-autofill {
     @include e(input, $m: placeholder) {
         @extend %igx-form-input;
 
-        ~label {
+        ~ label {
             @extend %igx-form-label--float;
         }
     }
@@ -82,7 +80,7 @@ input:-webkit-autofill {
         @extend %igx-form-input;
         @extend %igx-search-input;
 
-        ~label {
+        ~ label {
             @extend %igx-search-label;
         }
     }

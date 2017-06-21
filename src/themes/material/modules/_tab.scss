@@ -35,7 +35,6 @@
     }
 
     @include e(menu-item, $m: selected) {
-
         .tab-icon {
             @extend %igx-tab-icon--selected;
         }
@@ -49,4 +48,3 @@
         @extend %igx-tabbar-menu-item--disabled;
     }
 }
-    

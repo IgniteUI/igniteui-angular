@@ -61,7 +61,11 @@
     cursor: not-allowed;
     -webkit-text-fill-color: $input-disabled-color;
     box-shadow: none;
-    background-image: linear-gradient(to right, $input-disabled-color 20%, transparent 10%);
+    background-image: linear-gradient(
+        to right,
+        $input-disabled-color 20%,
+        transparent 10%
+    );
     background-position: bottom;
     background-size: 5px 1px;
     background-repeat: repeat-x;
@@ -107,14 +111,12 @@
     box-shadow: $elevate-2;
     transition: box-shadow .2s $ease-in-out-quad;
 
-    &:hover,
-    &:focus {
+    &:hover, &:focus {
         box-shadow: $elevate-5;
     }
 }
 
-%igx-input-clear,
-%igx-search-label {
+%igx-input-clear, %igx-search-label {
     max-height: 100%;
     padding: $input-search-label-padding;
     color: $off-black;

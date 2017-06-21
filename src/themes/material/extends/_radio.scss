@@ -9,8 +9,7 @@
     padding-left: $checkbox-label-padding;
     user-select: none;
 
-    &::before,
-    &::after {
+    &::before, &::after {
         position: absolute;
         content: '';
         width: $radio-width;

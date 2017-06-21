@@ -71,7 +71,6 @@
             @extend %igx-cbx-lbl-checked-after;
         }
 
-
         &:disabled ~ #{$block}__label {
             @extend %igx-cbx-lbl-disabled;
         }

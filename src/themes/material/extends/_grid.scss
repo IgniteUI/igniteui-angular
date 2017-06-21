@@ -16,8 +16,7 @@
     padding: $grid-caption-padding;
 }
 
-%grid-thead,
-%grid-tfoot {
+%grid-thead, %grid-tfoot {
     display: block;
     flex: 0 0 auto;
 }
@@ -49,7 +48,7 @@
     &:hover {
         background: $grid-row-hover;
     }
-    @at-root thead  {
+    @at-root thead {
         &:first-of-type:hover {
             background: none;
         }
