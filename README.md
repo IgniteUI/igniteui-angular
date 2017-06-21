@@ -44,12 +44,12 @@ From the root folder run:
 npm install
 ```
 
-Demos can be run using either the [lite server](https://github.com/johnpapa/lite-server):
+Demos can run using either the [lite server](https://github.com/johnpapa/lite-server):
 ```
 npm start
 ```
 or by pointing a server of your choosing to the root directory of the repo (e.g. Virtual Directory in IIS pointing to this folder).
-Either way works by simply opening html files from the samples folder (`samples/index.html`) afterwards.
+Either way works by opening html files from the samples folder (`samples/index.html`) afterwards.
 The start script will also build and watch TypeScript files. For other options use the commands below.
 
 ## Build
@@ -66,7 +66,7 @@ file changes and recompile accordingly.
 
 ## NPM Package
 
-You can include Ignite UI JS Blocks in your project as a depencency using the NPM package.
+You can include Ignite UI JS Blocks in your project as a dependency using the NPM package.
 
 `npm install igniteui-js-blocks --save-dev`
 
