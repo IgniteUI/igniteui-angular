@@ -27,6 +27,9 @@ input:-webkit-autofill {
 
         &:disabled {
             @extend %igx-form-input--disabled;
+            ~ label {
+                @extend %igx-form-label--disabled;
+            }
         }
 
         &.ng-valid[required].ng-touched, &.ng-valid.required {

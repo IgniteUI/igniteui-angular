@@ -48,12 +48,12 @@
     font-size: $input-font-size;
     line-height: $input-line-height;
     padding-bottom: 3px;
-    box-shadow: inset 0 -1px 0 0 $input-border-color;
+    box-shadow: $input-border;
     transition: box-shadow .25s $ease-in-out-quad;
 }
 
 %igx-form-input--focused {
-    box-shadow: inset 0 -2px 0 0 $input-border-color-focus;
+    box-shadow: $input-border-focus;
 }
 
 %igx-form-input--disabled {
@@ -76,27 +76,27 @@
 }
 
 %igx-form-input--success {
-    box-shadow: inset 0 -2px 0 0 $success-color;
+    box-shadow: $input-border-success;
 }
 
 %igx-form-label--success {
-    color: $success-color;
+    color: $label-success-color;
 }
 
 %igx-form-input--warn {
-    box-shadow: inset 0 -2px 0 0 $warn-color;
+    box-shadow: $input-border-warn;
 }
 
 %igx-form-label--warn {
-    color: $warn-color;
+    color: $label-warn-color;
 }
 
 %igx-form-input--error {
-    box-shadow: inset 0 -2px 0 0 $error-color;
+    box-shadow: $input-border-error;
 }
 
 %igx-form-label--error {
-    color: $error-color;
+    color: $label-error-color;
 }
 
 %igx-textarea {
