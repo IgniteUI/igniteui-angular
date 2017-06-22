@@ -27,7 +27,7 @@ rules:
     -
       style: uppercase
   indentation:
-    - 2
+    - 1
     -
       size: 4
   mixins-before-declarations:
