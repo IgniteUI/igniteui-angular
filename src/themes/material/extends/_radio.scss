@@ -54,7 +54,7 @@
 
 %igx-radio-lbl-checked--disabled-before {
     background-color: $input-disabled-color;
-    border: $radio-border-style $input-disabled-color;
+    border: $radio-border-style transparent;
 }
 
 %igx-radio-lbl-checked--disabled-after {
