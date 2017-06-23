@@ -48,8 +48,8 @@ $accent-color: $yellow-orange !default;
 $colors: (
     primary:
         (
-            100: gen-color($primary-color, 50),
-            200: gen-color($primary-color, 100),
+            100: gen-color($primary-color, 100),
+            200: gen-color($primary-color, 200),
             300: gen-color($primary-color, 300),
             400: gen-color($primary-color, 400),
             500: $primary-color,
@@ -64,8 +64,8 @@ $colors: (
         ),
     secondary:
         (
-            100: gen-color($secondary-color, 50),
-            200: gen-color($secondary-color, 100),
+            100: gen-color($secondary-color, 100),
+            200: gen-color($secondary-color, 200),
             300: gen-color($secondary-color, 300),
             400: gen-color($secondary-color, 400),
             500: $secondary-color,
@@ -80,8 +80,8 @@ $colors: (
         ),
     accent:
         (
-            100: gen-color($accent-color, 50),
-            200: gen-color($accent-color, 100),
+            100: gen-color($accent-color, 100),
+            200: gen-color($accent-color, 200),
             300: gen-color($accent-color, 300),
             400: gen-color($accent-color, 400),
             500: $accent-color,
@@ -104,8 +104,7 @@ $colors: (
             600: rgba(0, 0, 0, .54),
             700: rgba(0, 0, 0, .62),
             800: rgba(0, 0, 0, .74),
-            900: rgba(0, 0, 0, .87),
-
+            900: rgba(0, 0, 0, .87)
         )
 );
 
@@ -218,7 +217,7 @@ $badge-value-padding: 4px !default;
 // Shared Styles
 $button-border: none !default;
 $button-radius: 2px !default;
-$button-focus-background: darken(palette(secondary), 5%) !default;
+$button-focus-background: palette(secondary, 700) !default;
 $button-font-size: em(16px, 16px) !default;
 $button-color: $off-black !default;
 $button-font-weight: normal !default;
@@ -232,29 +231,37 @@ $button-disabled-background: $off-white !default;
 $button-disabled-color: $disabled-color !default;
 $button-disabled-shadow: none !default;
 // Raised Buttons
-$button-raised-background: palette(secondary) !default;
-$button-raised-color: $white !default;
+$button-raised-background: palette(secondary, 500) !default;
+$button-raised-color: text-contrast($button-raised-background) !default;
 $button-raised-shadow: $elevate-2 !default;
 $button-raised-focus-shadow: $elevate-8 !default;
 // Gradient Buttons
 $button-gradient-color-1: palette(accent) !default;
 $button-gradient-color-2: palette(secondary) !default;
 $button-gradient-background: linear-gradient(
-    to bottom right,
-    $button-gradient-color-2,
-    $button-gradient-color-1
-) !default;
+        to bottom right,
+        $button-gradient-color-2,
+        $button-gradient-color-1
+    )
+    !default;
 $button-focus-gradient: linear-gradient(
-    to bottom right,
-    darken($button-gradient-color-2, 5%),
-    darken($button-gradient-color-1, 5%)
-) !default;
+        to bottom right,
+        gen-color($button-gradient-color-1, 700),
+        gen-color($button-gradient-color-2, 700)
+    )
+    !default;
 $button-gradient-color: $white !default;
-$button-gradient-shadow: 0 4px 10px -2px
-darken(transparentize($button-gradient-color-2, .2), 20%) !default;
+$button-gradient-shadow: 0
+    4px
+    10px -2px
+    darken(transparentize($button-gradient-color-2, .2), 20%)
+    !default;
 
-$button-gradient-focus-shadow: 0 6px 12px -1px
-darken(transparentize($button-gradient-color-2, .25), 25%) !default;
+$button-gradient-focus-shadow: 0
+    6px
+    12px -1px
+    darken(transparentize($button-gradient-color-2, .25), 25%)
+    !default;
 // Flat Buttons
 $button-flat-color: palette(secondary) !default;
 $button-flat-color-disabled: $disabled-color !default;
@@ -294,7 +301,11 @@ $card-content-fz: em(14px, 16px) !default;
 $card-content-lh: (20px, 16px) !default;
 
 // Padding & Margin
-$card-heading-padding: em(24px, 16px) em(16px, 16px) em(16px, 16px) em(16px, 16px) !default;
+$card-heading-padding: em(24px, 16px)
+    em(16px, 16px)
+    em(16px, 16px)
+    em(16px, 16px)
+    !default;
 $card-heading-compact-padding: em(16px, 16px) !default;
 $card-heading-margin: 0 !default;
 $card-content-padding: em(16px, 16px) !default;
@@ -431,7 +442,8 @@ $medium-and-up: 'only screen and (min-width : #{$small-screen-up})' !default;
 $large-and-up: 'only screen and (min-width : #{$medium-screen-up})' !default;
 $small-and-down: 'only screen and (max-width : #{$small-screen})' !default;
 $medium-and-down: 'only screen and (max-width : #{$medium-screen})' !default;
-$medium-only: 'only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})' !default;
+$medium-only: 'only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})'
+    !default;
 
 // 12. Navigation Bar //
 $navbar-padding: 0 em(16px) !default;
