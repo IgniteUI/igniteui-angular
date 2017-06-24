@@ -113,8 +113,7 @@
     transform: scale(1.2);
 }
 
-%igx-thumb-dot--start,
-%igx-thumb-label--start {
+%igx-thumb-dot--start, %igx-thumb-label--start {
     background: $range-background--start;
     border-color: $range-background--start transparent transparent;
 }

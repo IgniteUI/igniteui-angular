@@ -17,8 +17,7 @@
         .date {
             @extend %cal-picker-date;
         }
-        .next,
-        .prev {
+        .next, .prev {
             @extend %cal-picker-arrow;
         }
     }
