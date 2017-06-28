@@ -1,7 +1,18 @@
 import { CommonModule } from "@angular/common";
-import { Component, ElementRef, Input, NgModule, Renderer2, ViewChild } from "@angular/core";
+import {
+    Component,
+    ElementRef,
+    Input,
+    NgModule,
+    Renderer2,
+    ViewChild
+} from "@angular/core";
 
-export enum Size { SMALL, MEDIUM, LARGE }
+export enum Size {
+    SMALL,
+    MEDIUM,
+    LARGE
+}
 
 @Component({
     moduleId: module.id,
@@ -76,7 +87,9 @@ export class IgxAvatar {
 
     public ngAfterViewInit() {
         if (this.initials && this.image) {
-            const src = this.generateInitials(parseInt(this.image.nativeElement.width, 10));
+            const src = this.generateInitials(
+                parseInt(this.image.nativeElement.width, 10)
+            );
             this.image.nativeElement.src = src;
         }
     }
@@ -109,15 +122,16 @@ export class IgxAvatar {
         ctx.textAlign = "center";
         ctx.fillStyle = this.color;
         ctx.font = fontSize + `px ${this.fontname}`;
-        ctx.fillText(this.initials.toUpperCase(), size / 2,
-            size - (size / 2) + (fontSize / 3));
+        ctx.fillText(
+            this.initials.toUpperCase(),
+            size / 2,
+            size - size / 2 + fontSize / 3
+        );
 
         return canvas.toDataURL("image/png");
     }
 
-    private _addEventListeners(renderer: Renderer2) {
-
-    }
+    private _addEventListeners(renderer: Renderer2) {}
 }
 
 @NgModule({
@@ -125,5 +139,4 @@ export class IgxAvatar {
     exports: [IgxAvatar],
     imports: [CommonModule]
 })
-export class IgxAvatarModule {
-}
+export class IgxAvatarModule {}

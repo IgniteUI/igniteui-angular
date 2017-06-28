@@ -23,7 +23,6 @@
         font-size: $badge-icon-font-size;
         font-weight: $badge-font-weight;
     }
-
 }
 
 %igx-badge-value {
@@ -40,7 +39,7 @@
 }
 
 %igx-badge--info {
-    background-color: $primary-color;;
+    background-color: $primary-color;
 }
 
 %igx-circle--warn {
