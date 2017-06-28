@@ -5,7 +5,7 @@ import { By } from "@angular/platform-browser";
 import { Calendar, isLeap, monthRange, weekDay, WEEKDAYS } from "./calendar";
 import { IgxCalendarComponent, IgxCalendarModule } from "./calendar.component";
 
-fdescribe("IgxCalendar", () => {
+describe("IgxCalendar", () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({

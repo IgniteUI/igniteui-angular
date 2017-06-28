@@ -5,8 +5,9 @@
 	  "variable-name": [true, "allow-leading-underscore"],
 	  "interface-name": [true, "always-prefix"],
 	  "trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
-      "no-empty": false,
+    "no-empty": false,
 	  "no-bitwise": false,
-	  "max-classes-per-file": [false]
+	  "max-classes-per-file": [false],
+		"prefer-object-spread": false
   }
 }

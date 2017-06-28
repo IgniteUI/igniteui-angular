@@ -24,12 +24,7 @@ export class IgxBadge {
 
     set type(value: string) {
         const sizeType = this.typeEnum[value.toUpperCase()];
-
-        if (sizeType === undefined) {
-            this._type = "default";
-        } else {
-            this._type = value.toLowerCase();
-        }
+        this._type = sizeType === undefined ? "default" : value.toLowerCase();
     }
 
     @Input()
@@ -39,12 +34,7 @@ export class IgxBadge {
 
     set position(value: string) {
         const positionType = this.positionEnum[value.replace("-", "_").toUpperCase()];
-
-        if (positionType === undefined) {
-            this._position = "top-right";
-        } else {
-            this._position = value.toLowerCase();
-        }
+        this._position = positionType === undefined ? "top-right" : value.toLowerCase();
     }
 
     @Input()
@@ -53,11 +43,7 @@ export class IgxBadge {
     }
 
     set value(value: string) {
-        if (value === undefined) {
-            this._value = "-";
-        } else {
-            this._value = value;
-        }
+        this._value = value === undefined ? "-" : value;
     }
 
     @Input("icon")
@@ -72,6 +58,7 @@ export class IgxBadge {
     get roleDescription() {
         let message;
 
+        // tslint:disable-next-line:prefer-conditional-expression
         if (this._iconBdg) {
             message = this._type + " type badge with icon type " + this._iconBdg;
         } else if (this._value) {

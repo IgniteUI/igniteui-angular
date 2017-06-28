@@ -120,30 +120,30 @@ export class IgxFilterOptions {
         return result;
     }
 
-	// Function - formats the original text before matching process
-	// Default behavior - returns text to lower case
+    // Function - formats the original text before matching process
+    // Default behavior - returns text to lower case
     public formatter(valueToTest: string): string {
         return valueToTest.toLowerCase();
     }
 
-	// Function - determines whether the item met the condition
-	// valueToTest - text value that should be tested
-	// inputValue - text value from input that condition is based on
+    // Function - determines whether the item met the condition
+    // valueToTest - text value that should be tested
+    // inputValue - text value from input that condition is based on
     // Default behavior - "contains"
     public matchFn(valueToTest: string, inputValue: string): boolean {
         return valueToTest.indexOf(inputValue && inputValue.toLowerCase() || "") > -1;
     }
 
-	// Function - executed after matching test for every matched item
-	// Default behavior - shows the item
+    // Function - executed after matching test for every matched item
+    // Default behavior - shows the item
     public metConditionFn(item: any) {
         if (item.hasOwnProperty("hidden")) {
             item.hidden = false;
         }
     }
 
-	// Function - executed for every NOT matched item after matching test
-	// Default behavior - hides the item
+    // Function - executed for every NOT matched item after matching test
+    // Default behavior - hides the item
     public overdueConditionFn(item: any) {
         if (item.hasOwnProperty("hidden")) {
             item.hidden = true;

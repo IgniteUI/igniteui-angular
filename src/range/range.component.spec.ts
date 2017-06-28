@@ -210,8 +210,8 @@ describe("IgxRange", () => {
         const panOptions = {
             deltaX: elementWidth * 0.6,
             deltaY: 0,
-            pos: [element.offsetLeft, elementHeight * 0.5],
-            duration
+            duration,
+            pos: [element.offsetLeft, elementHeight * 0.5]
         };
 
         return new Promise((resolve, reject) => {

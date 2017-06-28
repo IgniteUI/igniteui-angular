@@ -33,17 +33,16 @@ class IgxRippleDirective {
         let radius;
         let rippleEl;
         let rectBounds;
+
         // document.body.scrollX always returns 0 in Firefox. Use documentElement instead.
         const scrollLeft = (document.body.scrollLeft || document.documentElement.scrollLeft);
         const scrollTop = (document.body.scrollTop || document.documentElement.scrollTop);
 
         event.stopPropagation();
 
-        if (this.rippleTarget) {
-            target = this.container.querySelector(this.rippleTarget) || this.container;
-        } else {
-            target = this.container;
-        }
+        target = (this.rippleTarget ?
+            this.container.querySelector(this.rippleTarget) || this.container
+            : this.container);
 
         rectBounds = target.getBoundingClientRect();
 
