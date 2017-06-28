@@ -42,7 +42,6 @@
     z-index: 1;
 }
 
-
 %igx-cbx-lbl-checked-tick {
     @include animation('scale-in-center' .3s $ease-out-back both);
     stroke: $checkbox-tick-color;

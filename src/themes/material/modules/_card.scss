@@ -2,11 +2,9 @@
     @extend %igx-card-display;
 
     igx-card-header {
-
         @extend %igx-card-header;
 
         @include b(igx-card-header) {
-
             @include e(title) {
                 @extend %igx-card-header-title;
             }
@@ -48,7 +46,6 @@
         @extend %igx-card-actions;
 
         @include b(igx-card-actions) {
-
             @include e(igroup) {
                 @extend %igx-card-actions-igroup;
             }
