@@ -1,12 +1,6 @@
 <div class="main">
-    <ig-nav-drawer #navdrawer 
-        [enableGestures]="drawerState.enableGestures"
-        [isOpen]="drawerState.open"
-        [miniWidth]="drawerState.miniWidth"
-        [pin]="drawerState.pin"
-        [width]="drawerState.width"
-        [position]="drawerState.position"
-    >
+    <ig-nav-drawer #navdrawer [enableGestures]="drawerState.enableGestures" [isOpen]="drawerState.open" [miniWidth]="drawerState.miniWidth"
+        [pin]="drawerState.pin" [width]="drawerState.width" [position]="drawerState.position">
         <div class="ig-drawer-content">
             <aside class="aside">
                 <nav class="nav">
@@ -118,6 +112,22 @@
                     <span class="nav-item" [routerLinkActive]="'active'" routerLink="/data-operations">
                         <i class="material-icons">data_usage</i>
                         <span>Data Operations</span>
+                    </span>
+
+                    <!--Styleguide-->
+                    <span class="nav-item header">Style</span>
+
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/colors">
+                        <i class="material-icons">color_lens</i>
+                        <span>Colors</span>
+                    </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/typography">
+                        <i class="material-icons">font_download</i>
+                        <span>Typography</span>
+                    </span>
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/shadows">
+                        <i class="material-icons">layers</i>
+                        <span>Shadows</span>
                     </span>
                 </nav>
             </aside>

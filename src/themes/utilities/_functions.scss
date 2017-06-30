@@ -12,6 +12,17 @@
     @return ($pixels / $context) * 1em;
 }
 
+@function rem($pixels, $context: $browser-context) {
+    @if (unitless($pixels)) {
+        $pixels: $pixels * 1px;
+    }
+
+    @if (unitless($context)) {
+        $context: $context * 1px;
+    }
+    @return ($pixels / $context) * 1rem;
+}
+
 // Generate Color Variations
 // @access public
 // @param {string} $color - Source color

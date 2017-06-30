@@ -31,7 +31,10 @@
     flex-flow: row wrap;
     justify-content: center;
     padding: 48px 8px;
-    -webkit-animation: fade-in .3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+    -webkit-animation: fade-in
+        .3s
+        cubic-bezier(0.390, 0.575, 0.565, 1.000)
+        both;
     -moz-animation: fade-in .3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
     animation: fade-in .3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
 }
@@ -47,6 +50,7 @@
 
 .sample-title {
     color: #0375BE;
+    margin-bottom: 24px;
 }
 
 .sample-title .light {
@@ -78,19 +82,19 @@
 }
 
 @-webkit-keyframes fade-in {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 @keyframes fade-in {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }

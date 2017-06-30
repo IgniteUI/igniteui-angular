@@ -25,7 +25,7 @@ rules:
   hex-notation:
     - 2
     -
-      style: uppercase
+      style: lowercase
   indentation:
     - 1
     -

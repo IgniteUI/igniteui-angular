@@ -19,7 +19,13 @@ import { ProgressbarSampleComponent } from "./progressbar/sample.component";
 import { IgxRangeSampleComponent } from "./range/sample.component";
 import { RippleSampleComponent } from "./ripple/sample.component";
 import { IgxSnackbarSampleComponent } from "./snackbar/sample.component";
-import { CustomContentComponent, TabBarSampleComponent } from "./tabbar/sample.component";
+import { IgxColorsSampleComponent } from "./styleguide/colors/sample.component";
+import { IgxShadowsSampleComponent } from "./styleguide/shadows/sample.component";
+import { IgxTypographySampleComponent } from "./styleguide/typography/sample.component";
+import {
+    CustomContentComponent,
+    TabBarSampleComponent
+} from "./tabbar/sample.component";
 import { IgxToastSampleComponent } from "./toast/sample.component";
 
 const appRoutes: Routes = [
@@ -107,6 +113,18 @@ const appRoutes: Routes = [
     {
         component: RippleSampleComponent,
         path: "ripple"
+    },
+    {
+        component: IgxColorsSampleComponent,
+        path: "colors"
+    },
+    {
+        component: IgxTypographySampleComponent,
+        path: "typography"
+    },
+    {
+        component: IgxShadowsSampleComponent,
+        path: "shadows"
     }
 ];
 
