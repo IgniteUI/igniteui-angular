@@ -23,18 +23,17 @@ import { NavbarSampleModule } from "./navbar/sample.module";
 import { NavdrawerSampleModule } from "./navdrawer/sample.module";
 import { ProgressBarSampleModule } from "./progressbar/sample.module";
 import { IgxRangeSampleModule } from "./range/sample.module";
-import { RippleSampleModule} from "./ripple/sample.module";
+import { RippleSampleModule } from "./ripple/sample.module";
 import { IgxSnackbarSampleModule } from "./snackbar/sample.module";
+import { IgxColorsSampleModule } from "./styleguide/colors/sample.module";
+import { IgxShadowsSampleModule } from "./styleguide/shadows/sample.module";
+import { IgxTypographySampleModule } from "./styleguide/typography/sample.module";
 import { TabBarSampleModule } from "./tabbar/sample.module";
 import { IgxToastSampleModule } from "./toast/sample.module";
 
 @NgModule({
-    bootstrap: [
-        AppComponent
-    ],
-    declarations: [
-        AppComponent
-    ],
+    bootstrap: [AppComponent],
+    declarations: [AppComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
@@ -61,7 +60,10 @@ import { IgxToastSampleModule } from "./toast/sample.module";
         IgxRangeSampleModule,
         DataOperationsSampleModule,
         BadgeSampleModule,
-        RippleSampleModule
+        RippleSampleModule,
+        IgxTypographySampleModule,
+        IgxColorsSampleModule,
+        IgxShadowsSampleModule
     ]
 })
-export class AppModule { }
+export class AppModule {}
