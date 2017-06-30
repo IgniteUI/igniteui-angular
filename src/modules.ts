@@ -5,6 +5,7 @@ import { NgModule } from "@angular/core";
 import { IgxAvatarModule } from "./avatar/avatar.component";
 import { IgxBadgeModule } from "./badge/badge.component";
 import { IgxButtonGroupModule } from "./buttonGroup/buttonGroup.component";
+import { IgxCalendarModule } from "./calendar/calendar.component";
 import { IgxCardModule } from "./card/card.component";
 import { IgxCarouselModule } from "./carousel/carousel.component";
 import { IgxCheckboxModule } from "./checkbox/checkbox.component";
@@ -26,6 +27,7 @@ import { IgxToastModule } from "./toast/toast.component";
         IgxAvatarModule,
         IgxBadgeModule,
         IgxCardModule,
+        IgxCalendarModule,
         IgxCarouselModule,
         IgxCheckboxModule,
         IgxIconModule,
@@ -45,6 +47,7 @@ import { IgxToastModule } from "./toast/toast.component";
     imports: [
         IgxAvatarModule,
         IgxBadgeModule,
+        IgxCalendarModule,
         IgxCarouselModule,
         IgxCheckboxModule,
         IgxIconModule,

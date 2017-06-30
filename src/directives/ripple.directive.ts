@@ -11,7 +11,7 @@ class IgxRippleDirective {
     protected container: HTMLElement;
 
     private _centered: boolean = false;
-    private _remaining: number = 0;
+    private animationQueue = [];
 
     @Input("igxRippleCentered") set centered(value: boolean) {
         this._centered = value || this.centered;
@@ -33,17 +33,16 @@ class IgxRippleDirective {
         let radius;
         let rippleEl;
         let rectBounds;
+
         // document.body.scrollX always returns 0 in Firefox. Use documentElement instead.
         const scrollLeft = (document.body.scrollLeft || document.documentElement.scrollLeft);
         const scrollTop = (document.body.scrollTop || document.documentElement.scrollTop);
 
         event.stopPropagation();
 
-        if (this.rippleTarget) {
-            target = this.container.querySelector(this.rippleTarget) || this.container;
-        } else {
-            target = this.container;
-        }
+        target = (this.rippleTarget ?
+            this.container.querySelector(this.rippleTarget) || this.container
+            : this.container);
 
         rectBounds = target.getBoundingClientRect();
 
@@ -80,12 +79,12 @@ class IgxRippleDirective {
             duration: this.rippleDuration,
             fill: "forwards"
         });
-        this._remaining++;
+        this.animationQueue.push(animation);
 
-        animation.onfinish = (ev?) => {
+        animation.onfinish = () => {
+            this.animationQueue.splice(this.animationQueue.indexOf(animation), 1);
             target.removeChild(rippleEl);
-            this._remaining--;
-            if (this._remaining <= 0) {
+            if (this.animationQueue.length < 1) {
                 this.renderer.removeClass(target, "ig-ripple-host");
             }
         };

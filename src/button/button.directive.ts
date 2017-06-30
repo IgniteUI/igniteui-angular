@@ -25,7 +25,7 @@ export class IgxButton {
         this._renderer.setStyle(this._el.nativeElement, "color", this._color);
     }
 
-    @Input("igxButtonBackground") set background (value: string) {
+    @Input("igxButtonBackground") set background(value: string) {
         this._backgroundColor = value || this._backgroundColor;
         this._renderer.setStyle(this._el.nativeElement, "background", this._backgroundColor);
     }

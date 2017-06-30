@@ -363,10 +363,10 @@ describe("Navigation Drawer", () => {
 
         function swipe(element, posX, posY, duration, deltaX, deltaY) {
             const swipeOptions = {
-                pos: [posX, posY],
-                duration,
                 deltaX,
-                deltaY
+                deltaY,
+                duration,
+                pos: [posX, posY]
             };
 
             return new Promise((resolve, reject) => {
@@ -378,10 +378,10 @@ describe("Navigation Drawer", () => {
 
         function pan(element, posX, posY, duration, deltaX, deltaY) {
             const swipeOptions = {
-                pos: [posX, posY],
-                duration,
                 deltaX,
-                deltaY
+                deltaY,
+                duration,
+                pos: [posX, posY]
             };
 
             return new Promise((resolve, reject) => {

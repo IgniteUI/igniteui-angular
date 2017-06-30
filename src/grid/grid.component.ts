@@ -300,10 +300,10 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
      */
     public getCell(rowIndex: number, columnField: string): IgxGridCell {
         const result: IgxGridCell = {
-            rowIndex,
             columnField,
             dataItem: null,
-            element: null
+            element: null,
+            rowIndex
         };
         const column: IgxColumnComponent = this.getColumnByField(columnField);
         const colIndex: number = this.columnsToRender.indexOf(column);

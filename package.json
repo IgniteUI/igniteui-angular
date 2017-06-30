@@ -74,7 +74,7 @@
         "systemjs-builder": "^0.16.4",
         "ts-node": "^3.0.2",
         "tslint": "^5.1.0",
-        "typescript": "^2.2.2",
+        "typescript": "2.3.4",
         "vinyl-paths": "^2.1.0"
     }
 }

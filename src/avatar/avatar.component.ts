@@ -42,12 +42,7 @@ export class IgxAvatar {
 
     set size(value: string) {
         const sizeType = this.sizeEnum[value.toUpperCase()];
-
-        if (sizeType === undefined) {
-            this._size = "small";
-        } else {
-            this._size = value.toLowerCase();
-        }
+        this._size = sizeType === undefined ? "small" : value.toLowerCase();
     }
 
     @Input()

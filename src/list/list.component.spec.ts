@@ -249,9 +249,9 @@ describe("List", () => {
 
     function panRight(item, itemHeight, itemWidth, duration) {
         const panOptions = {
-            duration,
             deltaX: itemWidth * 0.6,
             deltaY: 0,
+            duration,
             pos: [0, itemHeight * 0.5]
         };
 
@@ -264,9 +264,9 @@ describe("List", () => {
 
     function panLeft(item, itemHeight, itemWidth, duration) {
         const panOptions = {
-            duration,
             deltaX: -(itemWidth * 0.6),
             deltaY: 0,
+            duration,
             pos: [itemWidth, itemHeight * 0.5]
         };
 

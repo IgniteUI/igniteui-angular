@@ -160,7 +160,7 @@ describe("DataContainer", () => {
     it ("tests `updateRecordByIndex`", () => {
             const recordCopy = Object.assign({}, data[0]);
             const res = dc.updateRecordByIndex(0, {number: -1});
-            recordCopy.number = -1;
+            (recordCopy as { number: number }).number = -1;
             expect(dc.data[0]).toEqual(recordCopy);
         });
     it ("tests `getRecordInfoByKeyValue`", () => {
