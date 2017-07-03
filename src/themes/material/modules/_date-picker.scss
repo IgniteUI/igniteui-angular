@@ -17,12 +17,20 @@
         .date {
             @extend %cal-picker-date;
         }
-        .next, .prev {
+        .next,
+        .prev {
             @extend %cal-picker-arrow;
         }
     }
     @include e(body-row) {
         @extend %cal-row-display;
+    }
+    @include e(body-row, 'wrap') {
+        @extend %cal-row-display;
+        @extend %cal-row-display--wrap;
+    }
+    @include e(body-column) {
+        @extend %cal-column-display;
     }
     @include e(label) {
         @extend %cal-value;
@@ -45,6 +53,9 @@
     @include e(date, 'selected') {
         @extend %cal-value;
         @extend %cal-value--selected;
+        &:hover {
+            @extend %cal-value--selected;
+        }
     }
     @include e(date, 'current') {
         @extend %cal-value;
@@ -58,6 +69,20 @@
         @extend %cal-value--weekend;
         &:hover {
             @extend %cal-value--hover;
+        }
+    }
+    @include e(year) {
+        @extend %cal-value;
+        @extend %cal-value--year;
+        &:hover {
+            @extend %cal-value--year-hover;
+        }
+    }
+    @include e(month) {
+        @extend %cal-value;
+        @extend %cal-value--month;
+        &:hover {
+            @extend %cal-value--month-hover;
         }
     }
     @include m(vertical) {

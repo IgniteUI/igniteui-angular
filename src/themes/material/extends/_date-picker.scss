@@ -45,7 +45,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: $cal-picker-padding;
+    padding-bottom: $cal-picker-padding;
+    padding-left: $cal-picker-padding;
+    padding-right: $cal-picker-padding;
 }
 
 %cal-picker-arrow {
@@ -66,13 +68,25 @@
 
 %cal-body-display {
     flex: 1;
-    padding-bottom: 24px;
+    padding-top: $cal-picker-padding;
+    padding-bottom: $cal-picker-padding;
 }
 
 %cal-row-display {
     display: flex;
     justify-content: space-between;
     padding: $cal-row-padding;
+}
+
+%cal-row-display--wrap {
+    flex-wrap: wrap;
+}
+
+%cal-column-display {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    align-items: center;
 }
 
 %cal-value {
@@ -99,13 +113,36 @@
     color: $cal-value-weekend;
 }
 
+%cal-value--year {
+    font-size: $cal-value-year-fs;
+    transition: color .15s ease-in;
+}
+
+%cal-value--year-hover {
+    color: $cal-value-year-hover-color;
+}
+
+%cal-value--month-hover {
+    color: $cal-value-month-hover-color;
+}
+
+%cal-value--month {
+    display: flex;
+    margin: $cal-value-month-margin;
+    flex: 1 0 25%;
+    justify-content: center;
+    align-items: center;
+    min-width: 25%;
+    height: $cal-value-month-height;
+}
+
 %cal-value--inactive {
     color: $cal-value-inactive-color;
 }
 
 %cal-value--selected {
     color: $cal-value-selected-text-color;
-    background-color: $cal-value-selected-bg;
+    background-color: $cal-value-selected-bg !important;
     font-weight: $cal-value-fw;
 }
 
