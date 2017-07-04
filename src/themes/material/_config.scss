@@ -288,15 +288,14 @@ $card-transitions: box-shadow .3s cubic-bezier(.25, .8, .25, 1) !default;
 
 // 7. Calendar / Date Picker
 // Calendar Header
-$cal-border-radius: 4px !default;
-$cal-theme-color: palette(primary) !default;
+$cal-theme-color: palette(secondary) !default;
 $cal-header-year-fs: em(18px, 16px) !default;
 $cal-header-year-lh: em(16px, 16px) !default;
 $cal-header-year-margin: 0 !default;
 $cal-header-date-fs: em(38px, 16px) !default;
 $cal-header-date-lh: em(16px, 16px) !default;
-$cal-header-date-lsp: 2px !default;
 $cal-header-date-margin: 0 !default;
+$cal-header-date-hover-color: $cal-theme-color !default;
 $cal-header-bg: $cal-theme-color !default;
 $cal-header-color: text-contrast($cal-theme-color) !default;
 $cal-header-year-color: transparentize($cal-header-color, .2) !default;

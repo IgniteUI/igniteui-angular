@@ -16,6 +16,9 @@
         @extend %cal-picker-display;
         .date {
             @extend %cal-picker-date;
+            &__el:hover {
+                @extend %cal-header-date-el--hover;
+            }
         }
         .next,
         .prev {
@@ -53,9 +56,6 @@
     @include e(date, 'selected') {
         @extend %cal-value;
         @extend %cal-value--selected;
-        &:hover {
-            @extend %cal-value--selected;
-        }
     }
     @include e(date, 'current') {
         @extend %cal-value;
@@ -89,4 +89,11 @@
         @extend %cal-display;
         @extend %cal-display--vertical;
     }
+}
+
+// Allow the calendar to take the full with
+// when placed inside a flex container
+// such as a card
+igx-calendar {
+    flex: 1 0 100%;
 }

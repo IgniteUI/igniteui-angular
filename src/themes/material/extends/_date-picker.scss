@@ -3,13 +3,10 @@
     flex-flow: column nowrap;
     width: 100%;
     overflow: hidden;
-    border-radius: $cal-border-radius;
-    box-shadow: $elevate-2;
     @media only screen and (min-width: em(540px)) {
         flex-flow: row nowrap;
         %cal-header-display {
-            max-width: 168px;
-            min-width: 148px;
+            width: 148px;
         }
     }
 }
@@ -17,8 +14,7 @@
 %cal-display--vertical {
     flex-flow: row nowrap;
     %cal-header-display {
-        max-width: 168px;
-        min-width: 148px;
+        width: 148px;
     }
 }
 
@@ -37,8 +33,12 @@
 %cal-header-date {
     margin: $cal-header-date-margin;
     font-size: $cal-header-date-fs;
-    line-height: $cal-header-date-lh !important;
-    letter-spacing: $cal-header-date-lsp;
+    line-height: $cal-header-date-lh;
+}
+
+%cal-header-date-el--hover {
+    color: $cal-header-date-hover-color;
+    cursor: pointer;
 }
 
 %cal-picker-display {
