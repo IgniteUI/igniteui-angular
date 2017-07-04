@@ -167,6 +167,8 @@ describe("IgxCalendar", () => {
         expect(calendar.selection).toEqual("single");
 
         const today = new Date(Date.now());
+        calendar.viewDate = today;
+        fixture.detectChanges();
 
         expect(calendar.currentYear).toEqual(today.getFullYear());
         expect(calendar.currentMonth).toEqual(today.getMonth());
@@ -174,6 +176,13 @@ describe("IgxCalendar", () => {
 
         calendar.weekStart = WEEKDAYS.MONDAY;
         expect(calendar.weekStart).toEqual(1);
+
+        calendar.value = new Date(today);
+        fixture.detectChanges();
+        expect((fixture.componentInstance.model as Date).toDateString()).toMatch(today.toDateString());
+        expect((calendar.value as Date).toDateString()).toMatch(today.toDateString());
+
+        expect(() => calendar.selection = "non-existant").toThrow();
     });
 
     it("Calendar DOM structure", () => {
@@ -182,6 +191,8 @@ describe("IgxCalendar", () => {
 
         const calendar = fixture.componentInstance.calendar;
         const today = new Date(Date.now());
+        calendar.viewDate = today;
+        fixture.detectChanges();
         const dom = fixture.debugElement;
         const calendarRows = dom.queryAll(By.css(".igx-calendar__body-row"));
 
@@ -491,11 +502,12 @@ describe("IgxCalendar", () => {
 
 @Component({
     template: `
-        <igx-calendar [(ngModel)]="model"></igx-calendar>
+        <igx-calendar [viewDate]="viewDate" [(ngModel)]="model"></igx-calendar>
     `
 })
 export class IgxCalendarRenderingComponent {
 
     public model: Date | Date[] = new Date(2017, 5, 13);
+    public viewDate = new Date(2017, 5, 13);
     @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
 }

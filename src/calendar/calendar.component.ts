@@ -11,7 +11,7 @@ import {
     Output,
     Renderer2
 } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { HammerGesturesManager } from "../core/touch";
 import { Calendar, ICalendarDate, WEEKDAYS } from "./calendar";
 
@@ -58,9 +58,17 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
         this._rangeStarted = false;
         this._selection = value;
     }
+
+    @Input() public get viewDate(): Date {
+        return this._viewDate;
+    }
+
+    public set viewDate(value: Date) {
+        this._viewDate = new Date(value);
+    }
     @Output() public onSelection = new EventEmitter<Date | Date[]>();
 
-    public get value() {
+    public get value(): Date | Date[] {
         return this.selectedDates;
     }
 
@@ -68,15 +76,8 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
         this.selectDate(val);
     }
 
-    protected weekDaysLong = [
-        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
-    ];
-    protected weekDaysAbbr = [
-        "S", "M", "T", "W", "T", "F", "S"
-    ];
-
     private calendarModel: Calendar;
-    private viewDate: Date;
+    private _viewDate: Date;
     private activeView = CalendarView.DEFAULT;
     private selectedDates;
     private _selection: "single" | "multi" | "range" = "single";
@@ -96,37 +97,15 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
     public ngOnInit(): void {
         this.calendarModel.firstWeekDay = this.weekStart;
 
-        const today = new Date(Date.now());
-
-        if (!this.currentYear) {
-            this.currentYear = today.getFullYear();
-        }
-
-        if (!this.currentMonth) {
-            this.currentMonth = today.getMonth();
-        }
-
-        if (!this.currentDate) {
-            this.currentDate = today.getDate();
-        }
-
-        this.viewDate = new Date(this.currentYear, this.currentMonth,
-                                 this.currentDate);
-
-        switch (this.selection) {
-            case "single":
-                this.selectedDates = null;
-                break;
-            case "multi":
-            case "range":
-                this.selectedDates = [];
+        if (!this._viewDate) {
+            this._viewDate = new Date(Date.now());
         }
     }
 
     public ngDoCheck(): void {
-        this.currentYear = this.viewDate.getFullYear();
-        this.currentMonth = this.viewDate.getMonth();
-        this.currentDate = this.viewDate.getDate();
+        this.currentYear = this._viewDate.getFullYear();
+        this.currentMonth = this._viewDate.getMonth();
+        this.currentDate = this._viewDate.getDate();
     }
 
     public generateWeekHeader(): string[] {
@@ -159,8 +138,8 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
             this.nextMonth();
         }
 
-        const value = new Date(this.viewDate.getFullYear(),
-            this.viewDate.getMonth(), parseInt(target.textContent, 10));
+        const value = new Date(this._viewDate.getFullYear(),
+            this._viewDate.getMonth(), parseInt(target.textContent, 10));
 
         this.selectDate(value);
     }
@@ -250,11 +229,11 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
         this._onChangeCallback(this.selectedDates);
     }
     protected prevMonth(): void {
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, "month", -1);
+        this._viewDate = this.calendarModel.timedelta(this._viewDate, "month", -1);
     }
 
     protected nextMonth(): void {
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, "month", 1);
+        this._viewDate = this.calendarModel.timedelta(this._viewDate, "month", 1);
     }
 
     // Util methods for the template
@@ -270,26 +249,10 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
             weekday: "short"
         };
 
-        let res = this.viewDate.toLocaleString(this.locale, formatOptions);
+        let res = this._viewDate.toLocaleString(this.locale, formatOptions);
 
         if (this.selectedDates) {
-            switch (this.selection) {
-                case "single":
-                    res = this.selectedDates.toLocaleString(this.locale, formatOptions);
-                    break;
-                case "multi":
-                    res = (this.selectedDates[0] ?
-                        this.selectedDates[0].toLocaleString(this.locale, formatOptions) :
-                        res);
-                    break;
-                case "range":
-                    res = (this.selectedDates[0] ?
-                        this.selectedDates[0].toLocaleString(this.locale, formatOptions) :
-                        res);
-                    break;
-                default:
-                    break;
-            }
+            res = this.selectedDates.toLocaleString(this.locale, formatOptions);
         }
         return res;
     }
@@ -347,7 +310,7 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
     // XXX: WiP! Will still have to discuss what are we showing
     //      and how are we showing it
     protected getDecade() {
-        let start = this.viewDate.getFullYear() - 5;
+        let start = this._viewDate.getFullYear() - 5;
         const res = [];
 
         for (let i = 0; i < 11; i++) {
@@ -359,7 +322,7 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
     }
 
     protected getYear() {
-        let start = new Date(this.viewDate.getFullYear(), 0, 1);
+        let start = new Date(this._viewDate.getFullYear(), 0, 1);
         const res = [];
 
         for (let i = 0; i < 12; i++) {
@@ -372,13 +335,13 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
 
     protected changeYear(event) {
         const year = parseInt(event.target.textContent, 10);
-        this.viewDate = new Date(year, 0, 1);
+        this._viewDate = new Date(year, 0, 1);
         this.activeView = CalendarView.YEAR;
     }
 
     protected changeMonth(event) {
         const month = event.target.dataset.index;
-        this.viewDate = new Date(this.viewDate.getFullYear(), month, 1);
+        this._viewDate = new Date(this._viewDate.getFullYear(), month, 1);
         this.activeView = CalendarView.DEFAULT;
     }
 
@@ -397,6 +360,6 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
 @NgModule({
     declarations: [IgxCalendarComponent],
     exports: [IgxCalendarComponent],
-    imports: [CommonModule]
+    imports: [CommonModule, FormsModule]
 })
 export class IgxCalendarModule {}
