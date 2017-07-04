@@ -6,7 +6,7 @@
     @media only screen and (min-width: em(540px)) {
         flex-flow: row nowrap;
         %cal-header-display {
-            width: 148px;
+            width: 168px;
         }
     }
 }
@@ -14,7 +14,7 @@
 %cal-display--vertical {
     flex-flow: row nowrap;
     %cal-header-display {
-        width: 148px;
+        width: 168px;
     }
 }
 
@@ -132,7 +132,6 @@
     flex: 1 0 25%;
     justify-content: center;
     align-items: center;
-    min-width: 25%;
     height: $cal-value-month-height;
 }
 
