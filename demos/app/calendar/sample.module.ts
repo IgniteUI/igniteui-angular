@@ -1,11 +1,11 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 
-import { IgxCalendarModule } from "../../../src/main";
+import { IgxCalendarModule, IgxCardModule } from "../../../src/main";
 import { IgxCalendarSampleComponent } from "./sample.component";
 
 @NgModule({
     declarations: [IgxCalendarSampleComponent],
-    imports: [IgxCalendarModule, CommonModule]
+    imports: [IgxCalendarModule, IgxCardModule, CommonModule]
 })
 export class IgxCalendarSampleModule {}
