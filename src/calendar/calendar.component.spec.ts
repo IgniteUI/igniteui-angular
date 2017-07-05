@@ -435,7 +435,7 @@ describe("IgxCalendar", () => {
                 0
             );
 
-            weekDays.forEach(el => {
+            weekDays.forEach((el) => {
                 weekDiv.triggerEventHandler("click", {
                     target: el.nativeElement
                 });
@@ -446,7 +446,7 @@ describe("IgxCalendar", () => {
             expect((fixture.componentInstance.model as Date[]).length).toEqual(
                 7
             );
-            weekDays.forEach(el => {
+            weekDays.forEach((el) => {
                 expect(
                     el.nativeElement.classList.contains(
                         "igx-calendar__date--selected"
@@ -617,7 +617,7 @@ describe("IgxCalendar", () => {
                     (calendar.value as Date[]).length - 1
                 ].toDateString()
             ).toMatch(lastDay.toDateString());
-            weekDays.forEach(el => {
+            weekDays.forEach((el) => {
                 expect(
                     el.nativeElement.classList.contains(
                         "igx-calendar__date--selected"
@@ -666,7 +666,7 @@ describe("IgxCalendar", () => {
                     (calendar.value as Date[]).length - 1
                 ].toDateString()
             ).toMatch(lastDay.toDateString());
-            weekDays.forEach(el => {
+            weekDays.forEach((el) => {
                 expect(
                     el.nativeElement.classList.contains(
                         "igx-calendar__date--selected"
