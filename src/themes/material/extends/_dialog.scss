@@ -9,7 +9,6 @@
     bottom: 0;
     background: $overlay-color;
     z-index: 24;
-    opacity: 0;
 }
 
 %igx-dialog--hidden {
@@ -19,7 +18,6 @@
 %igx-dialog-window {
     max-width: $dialog-max-width;
     min-width: $dialog-min-width;
-    transform: translateY(100%);
     padding: $dialog-padding;
     border-radius: 2px;
     background: $dialog-background;

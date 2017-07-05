@@ -1,27 +1,35 @@
-import { animate, state, style, transition, trigger } from "@angular/animations";
+import { transition, trigger, useAnimation } from "@angular/animations";
 import { CommonModule } from "@angular/common";
-import { Component, ElementRef, EventEmitter, Input, NgModule, OnInit, Output, ViewChild } from "@angular/core";
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    NgModule,
+    OnInit,
+    Output,
+    ViewChild
+} from "@angular/core";
+
+import { fadeIn, fadeOut, slide } from "../animations/main";
 import { IgxButtonModule } from "../button/button.directive";
 import { IgxRippleModule } from "../directives/ripple.directive";
 
 @Component({
     animations: [
-        trigger("flyInOut", [
-            state("open", style({
-                transform: "translateY(0%)"
-            })),
-            transition("void => open", animate(".2s ease-out")),
-            transition("open => void", [
-                animate(".2s ease-in", style({
-                    transform: "translateY(-100%)"
-                }))
+        trigger("slideIn", [
+            transition("void => open", [
+                useAnimation(slide, {
+                    params: {
+                        fromPosition: "translateY(100%)",
+                        toPosition: "translateY(0%)"
+                    }
+                })
             ])
         ]),
         trigger("fadeInOut", [
-            state("open", style({
-                opacity: 1
-            })),
-            transition("void <=> open", animate(".2s ease-in-out"))
+            transition("open => void", [useAnimation(fadeOut)]),
+            transition("void => open", [useAnimation(fadeIn)])
         ])
     ],
     moduleId: module.id,
@@ -69,9 +77,12 @@ export class IgxDialog {
     @Input()
     get role() {
         if (this.leftButtonLabel !== "" && this.rightButtonLabel !== "") {
-            return  "dialog";
-        } else if (this.leftButtonLabel !== "" || this.rightButtonLabel !== "") {
-            return  "alertdialog";
+            return "dialog";
+        } else if (
+            this.leftButtonLabel !== "" ||
+            this.rightButtonLabel !== ""
+        ) {
+            return "alertdialog";
         } else {
             return "alert";
         }
@@ -105,8 +116,11 @@ export class IgxDialog {
     }
 
     private onDialogSelected(event) {
-        if (this.isOpen && this.closeOnOutsideSelect &&
-            event.target.classList.contains(IgxDialog.DIALOG_CLASS)) {
+        if (
+            this.isOpen &&
+            this.closeOnOutsideSelect &&
+            event.target.classList.contains(IgxDialog.DIALOG_CLASS)
+        ) {
             this.close();
         }
     }
@@ -121,7 +135,7 @@ export class IgxDialog {
 
     private toggleState(state: string): void {
         this.state = state;
-        this._isOpen = state === "open" ?  true : false;
+        this._isOpen = state === "open" ? true : false;
     }
 }
 
