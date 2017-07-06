@@ -37,12 +37,12 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
 
     public ngOnInit(): void {
         if (this.dateValue) {
-            this.displayData = this.customFormatChecker(this.formatter, this.dateValue);
+            this.displayData = this._customFormatChecker(this.formatter, this.dateValue);
         }
     }
 
     protected handleSelection(event) {
-        this.displayData = this.customFormatChecker(this.formatter, event);
+        this.displayData = this._customFormatChecker(this.formatter, event);
 
         this.alert.close();
     }
@@ -56,11 +56,11 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
         return value.toLocaleDateString(locale);
     }
 
-    private dateStringChecker(date: string): boolean {
+    private _dateStringChecker(date: string): boolean {
         return (new Date(date).toString() !== "Invalid Date");
     }
 
-    private customFormatChecker(formatter: (_: Date) => string, date: Date) {
+    private _customFormatChecker(formatter: (_: Date) => string, date: Date) {
         return this.formatter ? this.formatter(date) : this._setLocaleToDate(date);
     }
 
