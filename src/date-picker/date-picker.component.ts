@@ -26,7 +26,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
 
     @ViewChild("alert") private alert;
 
-    private displayData: string = "";
+    private _displayData: string = "";
 
     public writeValue(value: Date): void {
         this.dateValue = value;
@@ -37,12 +37,12 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
 
     public ngOnInit(): void {
         if (this.dateValue) {
-            this.displayData = this._customFormatChecker(this.formatter, this.dateValue);
+            this._displayData = this._customFormatChecker(this.formatter, this.dateValue);
         }
     }
 
     protected handleSelection(event) {
-        this.displayData = this._customFormatChecker(this.formatter, event);
+        this._displayData = this._customFormatChecker(this.formatter, event);
 
         this.alert.close();
     }
