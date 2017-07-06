@@ -21,6 +21,7 @@ import { IgxSnackbarModule } from "./snackbar/snackbar.component";
 import { IgxSwitchModule} from "./switch/switch.component";
 import { IgxTabBarModule } from "./tabbar/tabbar.component";
 import { IgxToastModule } from "./toast/toast.component";
+import { IgxDatePickerModule } from "./date-picker/date-picker.component"
 
 @NgModule({
     exports: [
@@ -42,7 +43,8 @@ import { IgxToastModule } from "./toast/toast.component";
         IgxSnackbarModule,
         IgxToastModule,
         IgxButtonGroupModule,
-        IgxRangeModule
+        IgxRangeModule,
+        IgxDatePickerModule
     ],
     imports: [
         IgxAvatarModule,
@@ -63,7 +65,8 @@ import { IgxToastModule } from "./toast/toast.component";
         IgxSnackbarModule,
         IgxToastModule,
         IgxButtonGroupModule,
-        IgxRangeModule
+        IgxRangeModule,
+        IgxDatePickerModule
     ]
 })
 export class IgxComponentsModule {}
