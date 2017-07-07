@@ -37,7 +37,9 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
 
     public ngOnInit(): void {
         if (this.dateValue) {
-            this._displayData = this._customFormatChecker(this.formatter, this.dateValue);
+            this.dateValue instanceof Date ?
+                this._displayData = this._customFormatChecker(this.formatter, this.dateValue) :
+                this._displayData = "Invalid Type";
         }
     }
 
