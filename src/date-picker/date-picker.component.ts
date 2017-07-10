@@ -26,31 +26,43 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
 
     @ViewChild("alert") private alert;
 
-    private _displayData: string = "";
+    private _displayData: string =
+        this._customFormatChecker(this.formatter, new Date(Date.now()));
 
     public writeValue(value: Date): void {
         this.dateValue = value;
+    }
+
+    get displayValue(): any {
+        return this._displayData;
+    }
+
+    set displayValue(value: any) {
+        if (value !== this.displayValue && this._dateStringChecker(value)) {
+            const toDate = new Date(value);
+            this._displayData = this.formatter ?
+                this._customFormatChecker(this.formatter, toDate) :
+                this._setLocaleToDate(toDate);
+
+            this._onChangeCallback(value);
+        }
     }
 
     public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 
     public ngOnInit(): void {
-        if (this.dateValue) {
-            this.dateValue instanceof Date ?
-                this._displayData = this._customFormatChecker(this.formatter, this.dateValue) :
-                this._displayData = "Invalid Type";
-        }
+        this.displayValue(this.dateValue);
     }
 
     protected handleSelection(event) {
-        this._displayData = this._customFormatChecker(this.formatter, event);
-
+        this.displayValue(event);
         this.alert.close();
     }
 
     private onOpened(): void {
         this.alert.open();
+        this._onTouchedCallback();
         this.opened.emit(this);
     }
 
@@ -62,6 +74,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
         return (new Date(date).toString() !== "Invalid Date");
     }
 
+    // TODO: rename function
     private _customFormatChecker(formatter: (_: Date) => string, date: Date) {
         return this.formatter ? this.formatter(date) : this._setLocaleToDate(date);
     }

@@ -9,6 +9,7 @@ import { IgxCalendarModule } from "./calendar/calendar.component";
 import { IgxCardModule } from "./card/card.component";
 import { IgxCarouselModule } from "./carousel/carousel.component";
 import { IgxCheckboxModule } from "./checkbox/checkbox.component";
+import { IgxDatePickerModule } from "./date-picker/date-picker.component"
 import { IgxDialogModule } from "./dialog/dialog.component";
 import { IgxIconModule } from "./icon/icon.component";
 import { IgxListModule } from "./list/list.component";
@@ -21,7 +22,6 @@ import { IgxSnackbarModule } from "./snackbar/snackbar.component";
 import { IgxSwitchModule} from "./switch/switch.component";
 import { IgxTabBarModule } from "./tabbar/tabbar.component";
 import { IgxToastModule } from "./toast/toast.component";
-import { IgxDatePickerModule } from "./date-picker/date-picker.component"
 
 @NgModule({
     exports: [
