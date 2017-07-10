@@ -22,8 +22,7 @@ import { IgxInput } from "../input/input.directive";
     selector: "igx-datePicker",
     templateUrl: "date-picker.component.html"
 })
-export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
-    @Input() public dateValue: Date;
+export class IgxDatePickerComponent implements ControlValueAccessor {
     @Input() public formatter: (val: Date) => string;
 
     @Output() public opened = new EventEmitter();
@@ -37,16 +36,16 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
         this.dateValue = value;
     }
 
-    get displayValue(): any {
-        return this._displayData;
+    get dateValue(): Date {
+        return new Date(this._displayData);
     }
 
-    set displayValue(value: any) {
-        if (value !== this.displayValue && this._dateStringChecker(value)) {
-            const toDate = new Date(value);
+    @Input() set dateValue(value: Date) {
+        const toDate = new Date(this._displayData);
+        if (value !== toDate && this._dateStringChecker(value.toString())) {
             this._displayData = this.formatter ?
-                this._customFormatChecker(this.formatter, toDate) :
-                this._setLocaleToDate(toDate);
+                this._customFormatChecker(this.formatter, value) :
+                this._setLocaleToDate(value);
 
             this._onChangeCallback(value);
         }
@@ -55,12 +54,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
     public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 
-    public ngOnInit(): void {
-        this.displayValue(this.dateValue);
-    }
-
     protected handleSelection(event) {
-        this.displayValue(event);
+        this.dateValue = event;
         this.alert.close();
     }
 
