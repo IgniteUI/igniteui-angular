@@ -1,6 +1,6 @@
 import { Component, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
-import { IgxRange, IgxRangeModule, SliderType } from "./range.component";
+import {IDualSliderValue, IgxRange, IgxRangeModule, SliderType} from "./range.component";
 
 declare var Simulator: any;
 
@@ -28,7 +28,7 @@ describe("IgxRange", () => {
             .toBe(fixture.componentInstance.range.minValue);
     });
 
-    it("should have upper boybd equal to max value when upper bound is not set", () => {
+    it("should have upper bound equal to max value when upper bound is not set", () => {
         const fixture = TestBed.createComponent(RangeIntializeTestComponent);
         fixture.detectChanges();
 
@@ -42,7 +42,7 @@ describe("IgxRange", () => {
         fixture.componentInstance.range.type = SliderType.DOUBLE_HORIZONTAL;
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.range.lowerValue)
+        expect((<IDualSliderValue>fixture.componentInstance.range.value).lower)
             .toBe(fixture.componentInstance.range.lowerBound);
     });
 
@@ -52,7 +52,7 @@ describe("IgxRange", () => {
         fixture.componentInstance.range.type = SliderType.DOUBLE_HORIZONTAL;
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.range.upperValue)
+        expect((<IDualSliderValue>fixture.componentInstance.range.value).upper)
             .toBe(fixture.componentInstance.range.upperBound);
     });
 
@@ -62,7 +62,7 @@ describe("IgxRange", () => {
         fixture.componentInstance.range.type = SliderType.SINGLE_HORIZONTAL;
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.range.upperValue)
+        expect(fixture.componentInstance.range.value)
             .toBe(fixture.componentInstance.range.lowerBound);
     });
 
@@ -201,7 +201,7 @@ describe("IgxRange", () => {
                 rangeElement.offsetWidth,
                 200);
         }).then(() => {
-            expect(Math.round(range.upperValue)).toBe(60);
+            expect(Math.round(<number>range.value)).toBe(60);
             done();
         });
     }, 5000);

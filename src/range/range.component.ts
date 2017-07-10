@@ -17,6 +17,11 @@ enum SliderHandle {
     TO
 }
 
+export interface IDualSliderValue {
+    lower: number;
+    upper: number;
+}
+
 const noop = () => { };
 
 function MakeProvider(type: any) {
@@ -190,41 +195,68 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         this._upperBound = value;
     }
 
-    public get lowerValue(): number {
-        return this._lowerValue;
-    }
+    // public get lowerValue(): number {
+    //     return this._lowerValue;
+    // }
+    //
+    // /**
+    //  * Lower value of the range
+    //  * @type {number}
+    //  */
+    // @Input()
+    // public set lowerValue(value: number) {
+    //     this._lowerValue = value;
+    //
+    //     if (this.isMulti && this.hasViewInit) {
+    //         this.positionHandlesAndUpdateTrack();
+    //     }
+    // }
+    //
+    // public get upperValue() {
+    //     return this._upperValue;
+    // }
+    //
+    // /**
+    //  * Upper value of the range
+    //  * The default thumb value if the slider has singe thumb
+    //  * @type {number}
+    //  */
+    // @Input()
+    // public set upperValue(value: number) {
+    //     this._upperValue = value;
+    //     this._onChangeCallback(this._upperValue);
+    //
+    //     if (this.hasViewInit) {
+    //         this.positionHandlesAndUpdateTrack();
+    //     }
+    // }
 
-    /**
-     * Lower value of the range
-     * @type {number}
-     */
-    @Input()
-    public set lowerValue(value: number) {
-        this._lowerValue = value;
-
-        if (this.isMulti && this.hasViewInit) {
-            this.positionHandlesAndUpdateTrack();
+    public get value(): number | IDualSliderValue {
+        if(this.isMulti) {
+            return {
+                lower: this._lowerValue,
+                upper: this._upperValue
+            };
+        } else {
+            return this._upperValue;
         }
     }
 
-    public get upperValue() {
-        return this._upperValue;
-    }
-
-    /**
-     * Upper value of the range
-     * The default thumb value if the slider has singe thumb
-     * @type {number}
-     */
     @Input()
-    public set upperValue(value: number) {
-        this._upperValue = value;
-        this._onChangeCallback(this._upperValue);
+    public set value(value: number | IDualSliderValue) {
+        if(!this.isMulti) {
+            this._upperValue = <number>value;
+        } else {
+            this._upperValue = (<IDualSliderValue>value) == null ? null : (<IDualSliderValue>value).upper;
+            this._lowerValue = (<IDualSliderValue>value) == null ? null : (<IDualSliderValue>value).lower;
+        }
 
-        if (this.hasViewInit) {
+        this._onChangeCallback(value);
+
+        if(this.hasViewInit) {
             this.positionHandlesAndUpdateTrack();
         }
-    }
+     }
 
     public ngOnInit() {
         if (this.lowerBound === undefined) {
@@ -236,10 +268,12 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         }
 
         if (this.isMulti) {
-            this.lowerValue = this.lowerBound;
-            this.upperValue = this.upperBound;
+            this.value = {
+                lower: this.lowerBound,
+                upper: this.upperBound
+            };
         } else {
-            this.upperValue = this.lowerBound;
+            this.value = this.lowerBound;
         }
 
         this.pMin = this.valueToFraction(this.lowerBound) || 0;
@@ -297,11 +331,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     public writeValue(value: any): void {
-        if (!isNaN(value)) {
-            this.upperValue = parseFloat(value);
-
-            return;
-        }
+        this.value = value;
     }
 
     public registerOnChange(fn: any): void {
@@ -330,10 +360,10 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
 
     private positionHandlesAndUpdateTrack() {
         if (!this.isMulti) {
-            this.positionHandle(this.thumbTo, this.upperValue);
+            this.positionHandle(this.thumbTo, <number>this.value);
         } else {
-            this.positionHandle(this.thumbTo, this.upperValue);
-            this.positionHandle(this.thumbFrom, this.lowerValue);
+            this.positionHandle(this.thumbTo, (<IDualSliderValue>this.value).upper);
+            this.positionHandle(this.thumbFrom, (<IDualSliderValue>this.value).lower);
         }
 
         this.updateTrack();
@@ -399,12 +429,23 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     // Set Values for To/From based on active handle
     private setValues() {
         if (this.activeHandle === SliderHandle.TO) {
-            this.upperValue = this.fractionToValue(this.pPointer);
+            if(this.isMulti) {
+                this.value = {
+                    upper: this.fractionToValue(this.pPointer),
+                    lower: (<IDualSliderValue>this.value).lower
+                };
+            } else {
+                this.value = this.fractionToValue(this.pPointer);
+            }
             this.toPercent = this.fractionToPercent(this.pPointer);
         }
 
         if (this.activeHandle === SliderHandle.FROM) {
-            this.lowerValue = this.fractionToValue(this.pPointer);
+            this.value = {
+                upper: (<IDualSliderValue>this.value).upper,
+                lower: this.fractionToValue(this.pPointer)
+            };
+
             this.fromPercent = this.fractionToPercent(this.pPointer);
         }
     }
@@ -446,7 +487,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private formatValue(value: number) {
-        if (!value) {
+        if (value === null || value === undefined) {
             return;
         }
 
@@ -454,9 +495,9 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private updateTrack() {
-        const fromPosition = this.valueToFraction(this.lowerValue);
-        const toPosition = this.valueToFraction(this.upperValue);
-        const positionGap = (this.valueToFraction(this.upperValue) - this.valueToFraction(this.lowerValue));
+        const fromPosition = this.valueToFraction(this._lowerValue);
+        const toPosition = this.valueToFraction(this._upperValue);
+        const positionGap = (this.valueToFraction(this._upperValue) - this.valueToFraction(this._lowerValue));
 
         if (this.type === SliderType.SINGLE_HORIZONTAL || this.type === SliderType.SINGLE_VERTICAL) {
             this.track.nativeElement.style.transform = `scaleX(${toPosition})`;

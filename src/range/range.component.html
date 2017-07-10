@@ -10,11 +10,12 @@
     </div>
     <div class="igx-range__thumbs">
         <div *ngIf="isMulti" class="igx-range__thumb-from" [ngClass]="{ 'igx-range__thumb-from--active': isActiveLabel }" #thumbFrom>
-            <span class="label">{{ formatValue(lowerValue) }}</span>
+            <span class="label">{{ formatValue(value.lower) }}</span>
             <span class="dot"></span>
         </div>
         <div class="igx-range__thumb-to" [ngClass]="{ 'igx-range__thumb-to--active': isActiveLabel }" #thumbTo>
-            <span class="label">{{ formatValue(upperValue) }}</span>
+            <span *ngIf="isMulti" class="label">{{ formatValue(value.upper) }}</span>
+            <span *ngIf="!isMulti" class="label">{{ formatValue(value) }}</span>
             <span class="dot"></span>
         </div>
     </div>
