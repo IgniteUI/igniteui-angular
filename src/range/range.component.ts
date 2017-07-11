@@ -1,9 +1,9 @@
-import { CommonModule } from "@angular/common";
+import {CommonModule} from "@angular/common";
 import {
     AfterViewInit, Component, ElementRef, forwardRef, Input, NgModule, OnInit, Renderer2, ViewChild
 } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { HammerGesturesManager } from "../core/touch";
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
+import {HammerGesturesManager} from "../core/touch";
 
 export enum SliderType {
     SINGLE_HORIZONTAL,
@@ -22,7 +22,8 @@ export interface IDualSliderValue {
     upper: number;
 }
 
-const noop = () => { };
+const noop = () => {
+};
 
 function MakeProvider(type: any) {
     return {
@@ -108,7 +109,8 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
 
-    constructor(private renderer: Renderer2) {}
+    constructor(private renderer: Renderer2) {
+    }
 
     get isMulti(): boolean {
         const isMulti: boolean = this.type !== SliderType.SINGLE_HORIZONTAL &&
@@ -195,68 +197,73 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         this._upperBound = value;
     }
 
-    // public get lowerValue(): number {
-    //     return this._lowerValue;
-    // }
-    //
-    // /**
-    //  * Lower value of the range
-    //  * @type {number}
-    //  */
-    // @Input()
-    // public set lowerValue(value: number) {
-    //     this._lowerValue = value;
-    //
-    //     if (this.isMulti && this.hasViewInit) {
-    //         this.positionHandlesAndUpdateTrack();
-    //     }
-    // }
-    //
-    // public get upperValue() {
-    //     return this._upperValue;
-    // }
-    //
-    // /**
-    //  * Upper value of the range
-    //  * The default thumb value if the slider has singe thumb
-    //  * @type {number}
-    //  */
-    // @Input()
-    // public set upperValue(value: number) {
-    //     this._upperValue = value;
-    //     this._onChangeCallback(this._upperValue);
-    //
-    //     if (this.hasViewInit) {
-    //         this.positionHandlesAndUpdateTrack();
-    //     }
-    // }
+    private get lowerValue(): number {
+        return this._lowerValue;
+    }
+
+    /**
+     * Lower value of the range
+     * @type {number}
+     */
+    private set lowerValue(value: number) {
+        if (value < this.lowerBound || this.upperBound < value) {
+            return;
+        }
+
+        if (this.isMulti && value > this.upperValue) {
+            return;
+        }
+
+        this._lowerValue = value;
+    }
+
+    private get upperValue() {
+        return this._upperValue;
+    }
+
+    /**
+     * Upper value of the range
+     * The default thumb value if the slider has singe thumb
+     * @type {number}
+     */
+    private set upperValue(value: number) {
+        if (value < this.lowerBound || this.upperBound < value) {
+            return;
+        }
+
+        if (this.isMulti && value < this.lowerValue) {
+            return;
+        }
+
+        this._upperValue = value;
+    }
 
     public get value(): number | IDualSliderValue {
-        if(this.isMulti) {
+        if (this.isMulti) {
             return {
-                lower: this._lowerValue,
-                upper: this._upperValue
+                lower: this.lowerValue,
+                upper: this.upperValue
             };
         } else {
-            return this._upperValue;
+            return this.upperValue;
         }
     }
 
     @Input()
     public set value(value: number | IDualSliderValue) {
-        if(!this.isMulti) {
-            this._upperValue = <number>value;
+        if (!this.isMulti) {
+            this.upperValue = <number>value;
         } else {
-            this._upperValue = (<IDualSliderValue>value) == null ? null : (<IDualSliderValue>value).upper;
-            this._lowerValue = (<IDualSliderValue>value) == null ? null : (<IDualSliderValue>value).lower;
+            this.upperValue = (<IDualSliderValue>value) == null ? null : (<IDualSliderValue>value).upper;
+            this.lowerValue = (<IDualSliderValue>value) == null ? null : (<IDualSliderValue>value).lower;
         }
 
         this._onChangeCallback(value);
 
-        if(this.hasViewInit) {
+        if (this.hasViewInit) {
             this.positionHandlesAndUpdateTrack();
         }
-     }
+    }
 
     public ngOnInit() {
         if (this.lowerBound === undefined) {
@@ -295,8 +302,10 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         this.setPointerPosition($event);
         this.setPointerPercent();
 
-        // Find the closest handle
-        this.setActiveHandle();
+        // Find the closest handle if dual slider
+        if (this.isMulti) {
+            this.closestHandle();
+        }
         this.toggleActiveClass($event);
 
         // Update To/From Values
@@ -369,21 +378,6 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         this.updateTrack();
     }
 
-    private setActiveHandle(): void {
-        switch (this.type) {
-            case SliderType.SINGLE_HORIZONTAL:
-            case SliderType.SINGLE_VERTICAL:
-                this.activeHandle = SliderHandle.TO;
-                break;
-            case SliderType.DOUBLE_HORIZONTAL:
-            case SliderType.DOUBLE_VERTICAL:
-                this.closestHandle();
-                break;
-            default:
-                break;
-        }
-    }
-
     private closestHandle() {
         const fromOffset = this.thumbFrom.nativeElement.offsetLeft + this.thumbFrom.nativeElement.offsetWidth / 2;
         const toOffset = this.thumbTo.nativeElement.offsetLeft + this.thumbTo.nativeElement.offsetWidth / 2;
@@ -429,7 +423,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     // Set Values for To/From based on active handle
     private setValues() {
         if (this.activeHandle === SliderHandle.TO) {
-            if(this.isMulti) {
+            if (this.isMulti) {
                 this.value = {
                     upper: this.fractionToValue(this.pPointer),
                     lower: (<IDualSliderValue>this.value).lower
@@ -495,18 +489,76 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private updateTrack() {
-        const fromPosition = this.valueToFraction(this._lowerValue);
-        const toPosition = this.valueToFraction(this._upperValue);
-        const positionGap = (this.valueToFraction(this._upperValue) - this.valueToFraction(this._lowerValue));
+        const fromPosition = this.valueToFraction(this.lowerValue);
+        const toPosition = this.valueToFraction(this.upperValue);
+        const positionGap = (this.valueToFraction(this.upperValue) - this.valueToFraction(this.lowerValue));
 
-        if (this.type === SliderType.SINGLE_HORIZONTAL || this.type === SliderType.SINGLE_VERTICAL) {
+        if (!this.isMulti) {
             this.track.nativeElement.style.transform = `scaleX(${toPosition})`;
         }
 
-        if (this.type === SliderType.DOUBLE_HORIZONTAL || this.type === SliderType.DOUBLE_VERTICAL) {
+        if (this.isMulti) {
             this.track.nativeElement.style.transform = `scaleX(${1})`;
             this.track.nativeElement.style.left = `${fromPosition * 100}%`;
             this.track.nativeElement.style.width = `${positionGap * 100}%`;
+        }
+    }
+
+    private onKeyDown($event: KeyboardEvent) {
+        let incrementSign;
+
+        if ($event.key.endsWith("Left")) {
+            incrementSign = -1;
+        } else if ($event.key.endsWith("Right")) {
+            incrementSign = 1;
+        } else {
+            return;
+        }
+
+        if (this.isMulti) {
+            if (this.activeHandle == SliderHandle.FROM) {
+                let newLower = (<IDualSliderValue>this.value).lower + incrementSign * this.stepRange;
+
+                if (newLower > (<IDualSliderValue>this.value).upper) {
+                    this.thumbTo.nativeElement.focus();
+                    return;
+                }
+
+                this.value = {
+                    lower: newLower,
+                    upper: (<IDualSliderValue>this.value).upper
+                }
+            } else {
+                let newUpper = (<IDualSliderValue>this.value).upper + incrementSign * this.stepRange;
+
+                if (newUpper < (<IDualSliderValue>this.value).lower) {
+                    this.thumbFrom.nativeElement.focus();
+                    return;
+                }
+
+                this.value = {
+                    lower: (<IDualSliderValue>this.value).lower,
+                    upper: (<IDualSliderValue>this.value).upper + incrementSign * this.stepRange
+                }
+            }
+        } else {
+            this.value = <number>this.value + incrementSign * this.stepRange;
+        }
+
+        this.isActiveLabel = true;
+    }
+
+    private hideThumbLabels($event: KeyboardEvent) {
+        this.isActiveLabel = false;
+    }
+
+    private onFocus($event: FocusEvent) {
+        if (this.isMulti && $event.target == this.thumbFrom.nativeElement) {
+            this.activeHandle = SliderHandle.FROM;
+        }
+
+        if ($event.target == this.thumbTo.nativeElement) {
+            this.activeHandle = SliderHandle.TO;
         }
     }
 }
