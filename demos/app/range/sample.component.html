@@ -15,7 +15,8 @@
 
         <article class="sample-column">
             <h4 class="sample-title">Two-handle range slider</h4>
-            <igx-range #range2 [type]="sliderType" [lowerValue]="30" [upperValue]="60" [minValue]="0" [maxValue]="100">
+            <igx-range #range2 [type]="sliderType" [(ngModel)]="rangeValue"
+                       [minValue]="0" [maxValue]="100">
             </igx-range>
         </article>
 

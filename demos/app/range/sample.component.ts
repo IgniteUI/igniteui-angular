@@ -12,6 +12,11 @@ export class IgxRangeSampleComponent {
 
     private task: Task = new Task("Implement new app", 30);
 
+    public rangeValue = {
+        lower: 30,
+        upper: 60
+    };
+
     public changeValue(value: string) {
         const numberValue: number = parseFloat(value);
 
