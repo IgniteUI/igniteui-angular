@@ -3,7 +3,6 @@
     margin: $input-margin;
     position: relative;
     min-height: 40px;
-
     ::-webkit-input-placeholder {
         color: $label-color;
     }
@@ -111,12 +110,14 @@
     box-shadow: $elevate-2;
     transition: box-shadow .2s $ease-in-out-quad;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
         box-shadow: $elevate-5;
     }
 }
 
-%igx-input-clear, %igx-search-label {
+%igx-input-clear,
+%igx-search-label {
     max-height: 100%;
     padding: $input-search-label-padding;
     color: $off-black;
