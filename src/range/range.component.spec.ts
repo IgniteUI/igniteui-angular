@@ -439,6 +439,7 @@ describe("IgxRange", () => {
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(RangeIntializeTestComponent);
             range = fixture.componentInstance.range;
+            range.type = SliderType.DOUBLE_HORIZONTAL;
 
             fixture.detectChanges();
 
