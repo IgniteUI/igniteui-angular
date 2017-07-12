@@ -11,25 +11,19 @@ import {
     ViewChild
 } from "@angular/core";
 
-import { fadeIn, fadeOut, slide } from "../animations/main";
+import { EaseOut } from "../animations/easings";
+import { fadeIn, fadeOut, slideInBottom } from "../animations/main";
 import { IgxButtonModule } from "../button/button.directive";
 import { IgxRippleModule } from "../directives/ripple.directive";
 
 @Component({
     animations: [
-        trigger("slideIn", [
-            transition("void => open", [
-                useAnimation(slide, {
-                    params: {
-                        fromPosition: "translateY(100%)",
-                        toPosition: "translateY(0%)"
-                    }
-                })
-            ])
-        ]),
         trigger("fadeInOut", [
-            transition("open => void", [useAnimation(fadeOut)]),
-            transition("void => open", [useAnimation(fadeIn)])
+            transition("void => open", useAnimation(fadeIn)),
+            transition("open => void", useAnimation(fadeOut))
+        ]),
+        trigger("slideIn", [
+            transition("void => open", useAnimation(slideInBottom))
         ])
     ],
     moduleId: module.id,
@@ -144,4 +138,4 @@ export class IgxDialog {
     exports: [IgxDialog],
     imports: [CommonModule, IgxButtonModule, IgxRippleModule]
 })
-export class IgxDialogModule {}
+export class IgxDialogModule { }

@@ -15,7 +15,7 @@ import {
     NgZone,
     Output
 } from "@angular/core";
-import { fadeIn, fadeOut, slide } from "../animations/main";
+import { fadeIn, fadeOut, slideInBottom, slideOutBottom } from "../animations/main";
 import { HammerGesturesManager } from "../core/touch";
 /**
  * IgxSnackbar provides feedback about an operation by showing brief message at the bottom of the screen on mobile
@@ -30,21 +30,22 @@ import { HammerGesturesManager } from "../core/touch";
     animations: [
         trigger("slideInOut", [
             transition("void => *", [
-                useAnimation(slide, {
+                useAnimation(slideInBottom, {
                     params: {
+                        duration: ".35s",
                         easing: "cubic-bezier(0.0, 0.0, 0.2, 1)",
                         fromPosition: "translateY(100%)",
-                        time: ".35s",
-                        toPosition: "translateY(0%)"
+                        toPosition: "translateY(0)"
                     }
                 })
             ]),
             transition("* => void", [
-                useAnimation(slide, {
+                useAnimation(slideOutBottom, {
                     params: {
+                        duration: ".2s",
                         easing: "cubic-bezier(0.4, 0.0, 1, 1)",
-                        fromPosition: "translateY(0%)",
-                        time: ".2s",
+                        fromPosition: "translateY(0)",
+                        toOpacity: 1,
                         toPosition: "translateY(100%)"
                     }
                 })
@@ -129,13 +130,14 @@ export class IgxSnackbar {
 
     private timeoutId;
 
-    constructor(private zone: NgZone) {}
+    constructor(private zone: NgZone) { }
 
     /**
      * Shows the IgxSnackbar component and hides it after some time span
      * if autoHide is enabled
      */
     public show(): void {
+        clearTimeout(this.timeoutId);
         setTimeout(this.timeoutId);
         this.isVisible = true;
 
@@ -176,4 +178,4 @@ export class IgxSnackbar {
     exports: [IgxSnackbar],
     imports: [CommonModule]
 })
-export class IgxSnackbarModule {}
+export class IgxSnackbarModule { }
