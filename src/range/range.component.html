@@ -9,12 +9,20 @@
         <div #ticks class="igx-range__track-ticks"></div>
     </div>
     <div class="igx-range__thumbs">
-        <div *ngIf="isMulti" class="igx-range__thumb-from" [ngClass]="{ 'igx-range__thumb-from--active': isActiveLabel }" #thumbFrom>
-            <span class="label">{{ formatValue(lowerValue) }}</span>
+        <div (keydown)="onKeyDown($event)" (keyup)="hideThumbLabels()" (blur)="hideThumbLabels()"
+             (focus)="onFocus($event)"
+             *ngIf="isMulti" class="igx-range__thumb-from"
+             tabindex="1"
+             [ngClass]="{ 'igx-range__thumb-from--active': isActiveLabel }" #thumbFrom>
+            <span class="label">{{ formatValue(value.lower) }}</span>
             <span class="dot"></span>
         </div>
-        <div class="igx-range__thumb-to" [ngClass]="{ 'igx-range__thumb-to--active': isActiveLabel }" #thumbTo>
-            <span class="label">{{ formatValue(upperValue) }}</span>
+        <div (keydown)="onKeyDown($event)" (keyup)="hideThumbLabels()" (blur)="hideThumbLabels()"
+             (focus)="onFocus($event)" class="igx-range__thumb-to"
+             tabindex="1"
+             [ngClass]="{ 'igx-range__thumb-to--active': isActiveLabel }" #thumbTo>
+            <span *ngIf="isMulti" class="label">{{ formatValue(value.upper) }}</span>
+            <span *ngIf="!isMulti" class="label">{{ formatValue(value) }}</span>
             <span class="dot"></span>
         </div>
     </div>

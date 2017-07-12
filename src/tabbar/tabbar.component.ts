@@ -45,7 +45,7 @@ export class IgxTabBar implements AfterViewInit {
         // initial selection
         setTimeout(() => {
             if (this.selectedIndex === -1) {
-                const selectablePanels = this.panels.filter((panel) => !panel.isDisabled);
+                const selectablePanels = this.panels.filter((p) => !p.isDisabled);
                 const panel = selectablePanels[0];
 
                 if (panel) {
