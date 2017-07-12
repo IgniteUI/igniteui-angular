@@ -42,7 +42,7 @@ describe("IgxRange", () => {
         fixture.componentInstance.range.type = SliderType.DOUBLE_HORIZONTAL;
         fixture.detectChanges();
 
-        expect((<IDualSliderValue>fixture.componentInstance.range.value).lower)
+        expect((fixture.componentInstance.range.value as IDualSliderValue).lower)
             .toBe(fixture.componentInstance.range.lowerBound);
     });
 
@@ -52,7 +52,7 @@ describe("IgxRange", () => {
         fixture.componentInstance.range.type = SliderType.DOUBLE_HORIZONTAL;
         fixture.detectChanges();
 
-        expect((<IDualSliderValue>fixture.componentInstance.range.value).upper)
+        expect((fixture.componentInstance.range.value as IDualSliderValue).upper)
             .toBe(fixture.componentInstance.range.upperBound);
     });
 
@@ -313,7 +313,7 @@ describe("IgxRange", () => {
                 rangeElement.offsetWidth,
                 200);
         }).then(() => {
-            expect(Math.round(<number>range.value)).toBe(60);
+            expect(Math.round(range.value as number)).toBe(60);
             done();
         });
     }, 5000);
@@ -349,7 +349,7 @@ describe("IgxRange", () => {
             fromThumb.focus();
             return simulateKeyDown(fromThumb, "ArrowRight");
         }).then(() => {
-            expect(Math.round(<number>range.value)).toBe(61);
+            expect(Math.round(range.value as number)).toBe(61);
             done();
         });
     }, 5000);
@@ -370,12 +370,13 @@ describe("IgxRange", () => {
             toThumb.focus();
             return simulateKeyDown(toThumb, "ArrowLeft");
         }).then(() => {
-            expect(Math.round(<number>range.value)).toBe(59);
+            expect(Math.round(range.value as number)).toBe(59);
             done();
         });
     }, 5000);
 
-    it("should switch from left thumb to be focused upper when lower value is near upper when range is DOUBLE_HORIZONTAL", (done) => {
+    it("should switch from left thumb to be focused upper when lower value is near upper" +
+        "when range is DOUBLE_HORIZONTAL", (done) => {
         let fixture;
         let range: IgxRange;
         TestBed.compileComponents().then(() => {
@@ -396,14 +397,15 @@ describe("IgxRange", () => {
             fromThumb.focus();
             return simulateKeyDown(fromThumb, "ArrowRight");
         }).then(() => {
-            expect((<IDualSliderValue>range.value).lower).toBe(59);
-            expect((<IDualSliderValue>range.value).upper).toBe(60);
+            expect((range.value as IDualSliderValue).lower).toBe(59);
+            expect((range.value as IDualSliderValue).upper).toBe(60);
             expect(document.activeElement).toBe(fixture.nativeElement.querySelector(".igx-range__thumb-to"));
             done();
         });
     }, 5000);
 
-    it("should switch from right thumb to be focused lower when upper value is near lower when range is DOUBLE_HORIZONTAL", (done) => {
+    it("should switch from right thumb to be focused lower when upper value is near lower" +
+        "when range is DOUBLE_HORIZONTAL", (done) => {
         let fixture;
         let range: IgxRange;
         TestBed.compileComponents().then(() => {
@@ -424,8 +426,8 @@ describe("IgxRange", () => {
             toThumb.focus();
             return simulateKeyDown(toThumb, "ArrowLeft");
         }).then(() => {
-            expect((<IDualSliderValue>range.value).lower).toBe(59);
-            expect((<IDualSliderValue>range.value).upper).toBe(60);
+            expect((range.value as IDualSliderValue).lower).toBe(59);
+            expect((range.value as IDualSliderValue).upper).toBe(60);
             expect(document.activeElement).toBe(fixture.nativeElement.querySelector(".igx-range__thumb-from"));
             done();
         });
@@ -451,14 +453,15 @@ describe("IgxRange", () => {
             toThumb.focus();
             return simulateKeyDown(toThumb, "A");
         }).then(() => {
-            expect((<IDualSliderValue>range.value).lower).toBe(50);
-            expect((<IDualSliderValue>range.value).upper).toBe(60);
+            expect((range.value as IDualSliderValue).lower).toBe(50);
+            expect((range.value as IDualSliderValue).upper).toBe(60);
             expect(document.activeElement).toBe(fixture.nativeElement.querySelector(".igx-range__thumb-to"));
             done();
         });
     }, 5000);
 
-    it("should increment lower value when lower thumb is focused if right arrow is pressed and slider is DOUBLE_HORIZONTAL", (done) => {
+    it("should increment lower value when lower thumb is focused" +
+        "if right arrow is pressed and slider is DOUBLE_HORIZONTAL", (done) => {
         let fixture;
         let range: IgxRange;
         TestBed.compileComponents().then(() => {
@@ -480,13 +483,14 @@ describe("IgxRange", () => {
 
             return simulateKeyDown(fromThumb, "ArrowRight");
         }).then(() => {
-            expect((<IDualSliderValue>range.value).lower).toBe(51);
-            expect((<IDualSliderValue>range.value).upper).toBe(60);
+            expect((range.value as IDualSliderValue).lower).toBe(51);
+            expect((range.value as IDualSliderValue).upper).toBe(60);
             done();
         });
     }, 5000);
 
-    it("should increment upper value when upper thumb is focused if right arrow is pressed and slider is DOUBLE_HORIZONTAL", (done) => {
+    it("should increment upper value when upper thumb is focused" +
+        "if right arrow is pressed and slider is DOUBLE_HORIZONTAL", (done) => {
         let fixture;
         let range: IgxRange;
         TestBed.compileComponents().then(() => {
@@ -508,18 +512,18 @@ describe("IgxRange", () => {
 
             return simulateKeyDown(toThumb, "ArrowRight");
         }).then(() => {
-            expect((<IDualSliderValue>range.value).lower).toBe(50);
-            expect((<IDualSliderValue>range.value).upper).toBe(61);
+            expect((range.value as IDualSliderValue).lower).toBe(50);
+            expect((range.value as IDualSliderValue).upper).toBe(61);
             done();
         });
     }, 5000);
 
     function simulateKeyDown(element, key) {
-        const keyOptioins : KeyboardEventInit = {
-            key: key
+        const keyOptioins: KeyboardEventInit = {
+            key
         };
 
-        let keypressEvent = new KeyboardEvent("keydown", keyOptioins);
+        const keypressEvent = new KeyboardEvent("keydown", keyOptioins);
 
         return new Promise((resolve, reject) => {
             element.dispatchEvent(keypressEvent);

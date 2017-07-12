@@ -252,10 +252,10 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     @Input()
     public set value(value: number | IDualSliderValue) {
         if (!this.isMulti) {
-            this.upperValue = <number>value;
+            this.upperValue = value as number;
         } else {
-            this.upperValue = (<IDualSliderValue>value) == null ? null : (<IDualSliderValue>value).upper;
-            this.lowerValue = (<IDualSliderValue>value) == null ? null : (<IDualSliderValue>value).lower;
+            this.upperValue = (value as IDualSliderValue) == null ? null : (value as IDualSliderValue).upper;
+            this.lowerValue = (value as IDualSliderValue) == null ? null : (value as IDualSliderValue).lower;
         }
 
         this._onChangeCallback(value);
@@ -369,10 +369,10 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
 
     private positionHandlesAndUpdateTrack() {
         if (!this.isMulti) {
-            this.positionHandle(this.thumbTo, <number>this.value);
+            this.positionHandle(this.thumbTo, this.value as number);
         } else {
-            this.positionHandle(this.thumbTo, (<IDualSliderValue>this.value).upper);
-            this.positionHandle(this.thumbFrom, (<IDualSliderValue>this.value).lower);
+            this.positionHandle(this.thumbTo, (this.value as IDualSliderValue).upper);
+            this.positionHandle(this.thumbFrom, (this.value as IDualSliderValue).lower);
         }
 
         this.updateTrack();
@@ -425,8 +425,8 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         if (this.activeHandle === SliderHandle.TO) {
             if (this.isMulti) {
                 this.value = {
-                    upper: this.fractionToValue(this.pPointer),
-                    lower: (<IDualSliderValue>this.value).lower
+                    lower: (this.value as IDualSliderValue).lower,
+                    upper: this.fractionToValue(this.pPointer)
                 };
             } else {
                 this.value = this.fractionToValue(this.pPointer);
@@ -436,8 +436,8 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
 
         if (this.activeHandle === SliderHandle.FROM) {
             this.value = {
-                upper: (<IDualSliderValue>this.value).upper,
-                lower: this.fractionToValue(this.pPointer)
+                lower: this.fractionToValue(this.pPointer),
+                upper: (this.value as IDualSliderValue).upper
             };
 
             this.fromPercent = this.fractionToPercent(this.pPointer);
@@ -516,33 +516,33 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         }
 
         if (this.isMulti) {
-            if (this.activeHandle == SliderHandle.FROM) {
-                let newLower = (<IDualSliderValue>this.value).lower + incrementSign * this.stepRange;
+            if (this.activeHandle === SliderHandle.FROM) {
+                const newLower = (this.value as IDualSliderValue).lower + incrementSign * this.stepRange;
 
-                if (newLower >= (<IDualSliderValue>this.value).upper) {
+                if (newLower >= (this.value as IDualSliderValue).upper) {
                     this.thumbTo.nativeElement.focus();
                     return;
                 }
 
                 this.value = {
                     lower: newLower,
-                    upper: (<IDualSliderValue>this.value).upper
-                }
+                    upper: (this.value as IDualSliderValue).upper
+                };
             } else {
-                let newUpper = (<IDualSliderValue>this.value).upper + incrementSign * this.stepRange;
+                const newUpper = (this.value as IDualSliderValue).upper + incrementSign * this.stepRange;
 
-                if (newUpper <= (<IDualSliderValue>this.value).lower) {
+                if (newUpper <= (this.value as IDualSliderValue).lower) {
                     this.thumbFrom.nativeElement.focus();
                     return;
                 }
 
                 this.value = {
-                    lower: (<IDualSliderValue>this.value).lower,
-                    upper: (<IDualSliderValue>this.value).upper + incrementSign * this.stepRange
-                }
+                    lower: (this.value as IDualSliderValue).lower,
+                    upper: (this.value as IDualSliderValue).upper + incrementSign * this.stepRange
+                };
             }
         } else {
-            this.value = <number>this.value + incrementSign * this.stepRange;
+            this.value = this.value as number + incrementSign * this.stepRange;
         }
 
         this.isActiveLabel = true;
@@ -553,12 +553,11 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private onFocus($event: FocusEvent) {
-        console.log("focused");
-        if (this.isMulti && $event.target == this.thumbFrom.nativeElement) {
+        if (this.isMulti && $event.target === this.thumbFrom.nativeElement) {
             this.activeHandle = SliderHandle.FROM;
         }
 
-        if ($event.target == this.thumbTo.nativeElement) {
+        if ($event.target === this.thumbTo.nativeElement) {
             this.activeHandle = SliderHandle.TO;
         }
     }
