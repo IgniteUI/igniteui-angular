@@ -43,10 +43,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor {
     @Input() set dateValue(value: Date) {
         const toDate = new Date(this._displayData);
         if (value !== toDate && this._dateStringChecker(value.toString())) {
-            this._displayData = this.formatter ?
-                this._customFormatChecker(this.formatter, value) :
-                this._setLocaleToDate(value);
-
+            this._displayData = this._customFormatChecker(this.formatter, value);
             this._onChangeCallback(value);
         }
     }
@@ -73,7 +70,6 @@ export class IgxDatePickerComponent implements ControlValueAccessor {
         return (new Date(date).toString() !== "Invalid Date");
     }
 
-    // TODO: rename function
     private _customFormatChecker(formatter: (_: Date) => string, date: Date) {
         return this.formatter ? this.formatter(date) : this._setLocaleToDate(date);
     }
