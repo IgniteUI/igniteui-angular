@@ -234,11 +234,55 @@ describe("IgxCalendar", () => {
         ).toMatch(today.getDate().toString());
 
         // Hide calendar header when not single selection
-        // calendar.selection = "multi";
-        // fixture.detectChanges();
+        calendar.selection = "multi";
+        fixture.detectChanges();
 
-        // const calendarHeader = dom.query(By.css(".igx-calendar__header"));
-        // expect(calendarHeader).toBeFalsy();
+        const calendarHeader = dom.query(By.css(".igx-calendar__header"));
+        expect(calendarHeader).toBeFalsy();
+    });
+
+    it("Calendar DOM strucutre - year view | month view", () => {
+        const fixture = TestBed.createComponent(
+                IgxCalendarRenderingComponent
+            );
+        fixture.detectChanges();
+
+        const calendar = fixture.componentInstance.calendar;
+        const dom = fixture.debugElement;
+
+        const collection = dom.queryAll(By.css(".date__el"));
+        const monthButton = collection[0];
+        const yearButton = collection[1];
+
+        monthButton.triggerEventHandler("click", {});
+        fixture.detectChanges();
+
+        expect(dom.query(By.css(".igx-calendar__body-row--wrap"))).toBeDefined();
+        const months = dom.queryAll(By.css(".igx-calendar__month"));
+        const currentMonth = dom.query(By.css(".igx-calendar__month--current"));
+
+        expect(months.length).toEqual(11);
+        expect(currentMonth.nativeElement.textContent.trim()).toMatch("Jun");
+
+        months[0].parent.triggerEventHandler("click", { target: months[0].nativeElement });
+        fixture.detectChanges();
+
+        expect(calendar.viewDate.getMonth()).toEqual(0);
+
+        yearButton.triggerEventHandler("click", {});
+        fixture.detectChanges();
+
+        expect(dom.query(By.css(".igx-calendar__body-column"))).toBeDefined();
+        const years = dom.queryAll(By.css(".igx-calendar__year"));
+        const currentYear = dom.query(By.css(".igx-calendar__year--current"));
+
+        expect(years.length).toEqual(10);
+        expect(currentYear.nativeElement.textContent.trim()).toMatch("2017");
+
+        years[0].parent.triggerEventHandler("click", { target: years[0].nativeElement });
+        fixture.detectChanges();
+
+        expect(calendar.viewDate.getFullYear()).toEqual(2012);
     });
 
     it(
