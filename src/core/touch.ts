@@ -47,16 +47,15 @@ export class HammerGesturesManager {
                             eventName: string,
                             eventHandler: (eventObj) => void,
                             options: object = null): () => void {
-        const self = this;
 
         // Creating the manager bind events, must be done outside of angular
         return this._zone.runOutsideAngular(() => {
             // new Hammer is a shortcut for Manager with defaults
             const mc = new Hammer(element);
-            for (const item of self.hammerOptions) {
+            for (const item of this.hammerOptions) {
                 mc.get(item.name).set(item.options);
             }
-            const handler = (eventObj) => { self._zone.run(() => { eventHandler(eventObj); }); };
+            const handler = (eventObj) => { this._zone.run(() => { eventHandler(eventObj); }); };
             mc.on(eventName, handler);
             return () => { mc.off(eventName, handler); };
         });
@@ -69,7 +68,6 @@ export class HammerGesturesManager {
      * @param target Can be one of either window, body or document(fallback default).
      */
     public addGlobalEventListener(target: string, eventName: string, eventHandler: (eventObj) => void): () => void {
-        const self = this;
         const element = this.getGlobalEventTarget(target);
 
         // Creating the manager bind events, must be done outside of angular
@@ -77,13 +75,13 @@ export class HammerGesturesManager {
             // new Hammer is a shortcut for Manager with defaults
 
             const mc: HammerManager = new Hammer(element as HTMLElement);
-            self.addManagerForElement(element as HTMLElement, mc);
+            this.addManagerForElement(element as HTMLElement, mc);
 
-            for (const item of self.hammerOptions) {
+            for (const item of this.hammerOptions) {
                 mc.get(item.name).set(item.options);
             }
             const handler = (eventObj) => {
-                self._zone.run(() => {
+                this._zone.run(() => {
                     eventHandler(eventObj);
                 });
             };

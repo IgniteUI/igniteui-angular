@@ -56,7 +56,7 @@ export class SortingStrategy implements ISortingStrategy {
         return res;
     }
     private sortByFieldExpression<T>(data: T[], expression: ISortingExpression): T[] {
-        const self = this;
+
         const key = expression.fieldName;
         const ignoreCase = expression.ignoreCase ?
                             data[0] && (typeof data[0][key] === "string" ||
@@ -65,7 +65,7 @@ export class SortingStrategy implements ISortingStrategy {
                             false;
         const reverse = (expression.dir === SortingDirection.Desc ? -1 : 1);
         const cmpFunc = (obj1, obj2) => {
-            return self.compareObjects(obj1, obj2, key, reverse, ignoreCase);
+            return this.compareObjects(obj1, obj2, key, reverse, ignoreCase);
         };
         return this.arraySort(data, cmpFunc);
     }
