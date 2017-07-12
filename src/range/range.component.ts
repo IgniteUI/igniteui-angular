@@ -241,24 +241,27 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     public get value(): number | IDualSliderValue {
         if (this.isMulti) {
             return {
-                lower: this.lowerValue,
-                upper: this.upperValue
+                lower: this.snapValueToStep(this.lowerValue),
+                upper: this.snapValueToStep(this.upperValue)
             };
         } else {
-            return this.upperValue;
+            const val =  this.snapValueToStep(this.upperValue);
+            return val;
         }
     }
 
     @Input()
     public set value(value: number | IDualSliderValue) {
         if (!this.isMulti) {
-            this.upperValue = value as number;
+            this.upperValue = this.snapValueToStep(value as number);
         } else {
-            this.upperValue = (value as IDualSliderValue) == null ? null : (value as IDualSliderValue).upper;
-            this.lowerValue = (value as IDualSliderValue) == null ? null : (value as IDualSliderValue).lower;
+            this.upperValue =
+                this.snapValueToStep((value as IDualSliderValue) == null ? null : (value as IDualSliderValue).upper);
+            this.lowerValue =
+                this.snapValueToStep((value as IDualSliderValue) == null ? null : (value as IDualSliderValue).lower);
         }
 
-        this._onChangeCallback(value);
+        this._onChangeCallback(this.value);
 
         if (this.hasViewInit) {
             this.positionHandlesAndUpdateTrack();
@@ -293,52 +296,6 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         this.setTickInterval();
     }
 
-    public update($event) {
-        // Set width and offset first
-        this.setSliderWidth();
-        this.setSliderOffset();
-
-        // Then get pointer coordinates
-        this.setPointerPosition($event);
-        this.setPointerPercent();
-
-        // Find the closest handle if dual slider
-        if (this.isMulti) {
-            this.closestHandle();
-        }
-        this.toggleActiveClass($event);
-
-        // Update To/From Values
-        this.setValues();
-        // this.printInfo();
-
-        // Finally do positionHandlesAndUpdateTrack the DOM
-        // based on data values
-        this.positionHandlesAndUpdateTrack();
-        this._onTouchedCallback();
-    }
-
-    public getPointerPosition(): number {
-        return this.xPointer;
-    }
-
-    public getSliderOffset(): number {
-        return this.xOffset;
-    }
-
-    public getPointerPercent(): number {
-        return this.pPointer;
-    }
-
-    public toFixed(num: number): number {
-        num = parseFloat(num.toFixed(20));
-        return num;
-    }
-
-    public positionHandle(handle: ElementRef, position: number) {
-        handle.nativeElement.style.left = `${this.valueToFraction(position) * 100}%`;
-    }
-
     public writeValue(value: any): void {
         this.value = value;
     }
@@ -367,6 +324,67 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         )`;
     }
 
+    private onPanStart($event) {
+        if (this.timer !== null) {
+            clearInterval(this.timer);
+        }
+
+        this.isActiveLabel = true;
+        return true;
+    }
+
+    private onPanEnd($event) {
+        this.timer = setTimeout(
+            () => this.isActiveLabel = false,
+            this.thumbLabelVisibilityDuration
+        );
+    }
+
+    private update($event) {
+        // Set width and offset first
+        this.setSliderWidth();
+        this.setSliderOffset();
+
+        // Then get pointer coordinates
+        this.setPointerPosition($event);
+        this.setPointerPercent();
+
+        // Find the closest handle if dual slider
+        if (this.isMulti) {
+            this.closestHandle();
+        }
+
+        // Update To/From Values
+        this.setValues();
+        // this.printInfo();
+
+        // Finally do positionHandlesAndUpdateTrack the DOM
+        // based on data values
+        this.positionHandlesAndUpdateTrack();
+        this._onTouchedCallback();
+    }
+
+    private getPointerPosition(): number {
+        return this.xPointer;
+    }
+
+    private getSliderOffset(): number {
+        return this.xOffset;
+    }
+
+    private getPointerPercent(): number {
+        return this.pPointer;
+    }
+
+    private toFixed(num: number): number {
+        num = parseFloat(num.toFixed(20));
+        return num;
+    }
+
+    private positionHandle(handle: ElementRef, position: number) {
+        handle.nativeElement.style.left = `${this.valueToFraction(position) * 100}%`;
+    }
+
     private positionHandlesAndUpdateTrack() {
         if (!this.isMulti) {
             this.positionHandle(this.thumbTo, this.value as number);
@@ -384,9 +402,9 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         const match = this.closestTo(this.xPointer, [fromOffset, toOffset]);
 
         if (match === toOffset) {
-            this.activeHandle = SliderHandle.TO;
+            this.thumbTo.nativeElement.focus();
         } else if (match === fromOffset) {
-            this.activeHandle = SliderHandle.FROM;
+            this.thumbFrom.nativeElement.focus();
         }
     }
 
@@ -400,18 +418,15 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         // this.ticks.nativeElement.style.backround = this.generateTickMarks('white', interval);
     }
 
-    private toggleActiveClass(e) {
-        if (e.type === "panstart" || e.type === "tap") {
-            clearInterval(this.timer);
-            this.isActiveLabel = true;
+    private snapValueToStep(value: number): number {
+        const valueModStep = (value - this.minValue) % this.stepRange;
+        let snapValue = value - valueModStep;
+
+        if (Math.abs(valueModStep) * 2 >= this.stepRange) {
+            snapValue += (valueModStep > 0) ? this.stepRange : (-this.stepRange);
         }
 
-        if (e.type === "panend" || e.type === "tap") {
-            this.timer = setTimeout(
-                () => this.isActiveLabel = false,
-                this.thumbLabelVisibilityDuration
-            );
-        }
+        return parseFloat(snapValue.toFixed(20));
     }
 
     private closestTo(goal: number, positions: number[]): number {
@@ -431,7 +446,6 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
             } else {
                 this.value = this.fractionToValue(this.pPointer);
             }
-            this.toPercent = this.fractionToPercent(this.pPointer);
         }
 
         if (this.activeHandle === SliderHandle.FROM) {
@@ -439,8 +453,6 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
                 lower: this.fractionToValue(this.pPointer),
                 upper: (this.value as IDualSliderValue).upper
             };
-
-            this.fromPercent = this.fractionToPercent(this.pPointer);
         }
     }
 
@@ -553,6 +565,8 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private onFocus($event: FocusEvent) {
+        this.isActiveLabel =  true;
+
         if (this.isMulti && $event.target === this.thumbFrom.nativeElement) {
             this.activeHandle = SliderHandle.FROM;
         }
