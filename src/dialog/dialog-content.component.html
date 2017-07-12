@@ -1,5 +1,5 @@
-<div #dialog tabindex="-1" class="igx-dialog" *ngIf="isOpen" [@fadeInOut]="this.state" (click)="onDialogSelected($event)">
-    <div #dialogWindow class="igx-dialog__window" [@slideIn]='this.state' [attr.role]="role" [attr.aria-labelledby]="titleId">
+<div #dialog tabindex="-1" class="igx-dialog" *ngIf="isOpen" [@fadeInOut]="state" (click)="onDialogSelected($event)">
+    <div #dialogWindow class="igx-dialog__window" [@slideIn]="state" [attr.role]="role" [attr.aria-labelledby]="titleId">
         <div [attr.id]="titleId" class="igx-dialog__window-title">
             {{ title }}
         </div>
