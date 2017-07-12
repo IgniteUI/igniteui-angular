@@ -4,7 +4,7 @@ import {IDualSliderValue, IgxRange, IgxRangeModule, SliderType} from "./range.co
 
 declare var Simulator: any;
 
-fdescribe("IgxRange", () => {
+describe("IgxRange", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
