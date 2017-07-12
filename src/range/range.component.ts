@@ -519,7 +519,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
             if (this.activeHandle == SliderHandle.FROM) {
                 let newLower = (<IDualSliderValue>this.value).lower + incrementSign * this.stepRange;
 
-                if (newLower > (<IDualSliderValue>this.value).upper) {
+                if (newLower >= (<IDualSliderValue>this.value).upper) {
                     this.thumbTo.nativeElement.focus();
                     return;
                 }
@@ -531,7 +531,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
             } else {
                 let newUpper = (<IDualSliderValue>this.value).upper + incrementSign * this.stepRange;
 
-                if (newUpper < (<IDualSliderValue>this.value).lower) {
+                if (newUpper <= (<IDualSliderValue>this.value).lower) {
                     this.thumbFrom.nativeElement.focus();
                     return;
                 }
@@ -553,6 +553,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private onFocus($event: FocusEvent) {
+        console.log("focused");
         if (this.isMulti && $event.target == this.thumbFrom.nativeElement) {
             this.activeHandle = SliderHandle.FROM;
         }
