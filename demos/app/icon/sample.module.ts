@@ -5,5 +5,5 @@ import { IconSampleComponent } from "./sample.component";
 @NgModule({
     declarations: [IconSampleComponent],
     imports: [IgxIconModule]
- })
+})
 export class IconSampleModule {}
