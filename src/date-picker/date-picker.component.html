@@ -1,6 +1,10 @@
 <div class="igx-date-picker">
-    <input class="igx-date-picker__input-date" igxInput (click)="onOpened($event)" [value]="_displayData"  />
+    <input class="igx-date-picker__input-date" igxInput (click)="onOpenedEvent($event)" [value]="_displayData"  />
     <igx-dialog class="igx-date-picker__dialog-popup" #alert closeOnOutsideSelect="true">
-        <igx-calendar class="igx-date-picker__calendar" (onSelection)="handleSelection($event)"></igx-calendar>
+        <igx-calendar 
+            class="igx-date-picker__calendar"
+            (onSelection)="handleSelection($event)"
+            [class.igx-date-picker__date--opened]="alert.isOpen">
+        </igx-calendar>
     </igx-dialog>
 </div>
