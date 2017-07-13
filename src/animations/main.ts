@@ -28,5 +28,3 @@ export * from "./misc/index";
 export * from "./scale/index";
 export * from "./slide/index";
 export * from "./swing/index";
-export * from "./basic/fade";
-export * from "./basic/slide";
