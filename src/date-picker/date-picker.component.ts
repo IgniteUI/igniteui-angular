@@ -22,27 +22,30 @@ import { IgxInput } from "../input/input.directive";
     selector: "igx-datePicker",
     templateUrl: "date-picker.component.html"
 })
-export class IgxDatePickerComponent implements ControlValueAccessor {
+export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
     @Input() public formatter: (val: Date) => string;
 
-    @Output() public opened = new EventEmitter();
-
-    @ViewChild("alert") private alert;
+    @Output() public onOpened = new EventEmitter();
 
     private _displayData: string =
         this._customFormatChecker(this.formatter, new Date(Date.now()));
+    @ViewChild("alert") private alert;
 
     public writeValue(value: Date): void {
         this.dateValue = value;
     }
 
     get dateValue(): Date {
-        return new Date(this._displayData);
+        const toDate = new Date(this._displayData);
+        const formattedDate = this._customFormatChecker(this.formatter, toDate);
+        return new Date(formattedDate);
     }
 
     @Input() set dateValue(value: Date) {
         const toDate = new Date(this._displayData);
-        if (value !== toDate && this._dateStringChecker(value.toString())) {
+        if (value !== toDate &&
+                value instanceof Date &&
+                this._dateStringChecker(value.toString())) {
             this._displayData = this._customFormatChecker(this.formatter, value);
             this._onChangeCallback(value);
         }
@@ -51,15 +54,19 @@ export class IgxDatePickerComponent implements ControlValueAccessor {
     public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 
+    public ngOnInit(): void {
+        this._displayData = this._customFormatChecker(this.formatter, new Date(this._displayData));
+    }
+
     protected handleSelection(event) {
         this.dateValue = event;
         this.alert.close();
     }
 
-    private onOpened(): void {
+    private onOpenedEvent(): void {
         this.alert.open();
         this._onTouchedCallback();
-        this.opened.emit(this);
+        this.onOpened.emit(this);
     }
 
     private _setLocaleToDate(value: Date, locale: string = "en"): string {
