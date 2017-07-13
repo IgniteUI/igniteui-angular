@@ -78,12 +78,22 @@
             @extend %cal-value--year-hover;
         }
     }
+    @include e(year, 'current') {
+        @extend %cal-value;
+        @extend %cal-value--year;
+        @extend %cal-value--year-current;
+    }
     @include e(month) {
         @extend %cal-value;
         @extend %cal-value--month;
         &:hover {
             @extend %cal-value--month-hover;
         }
+    }
+    @include e(month, 'current') {
+        @extend %cal-value;
+        @extend %cal-value--month;
+        @extend %cal-value--month-current;
     }
     @include m(vertical) {
         @extend %cal-display;

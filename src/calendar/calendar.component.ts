@@ -1,3 +1,4 @@
+import { transition, trigger, useAnimation } from "@angular/animations";
 import { CommonModule } from "@angular/common";
 import {
     Component,
@@ -11,6 +12,8 @@ import {
     Renderer2
 } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from "../animations/main";
 import { HammerGesturesManager } from "../core/touch";
 import { Calendar, ICalendarDate, weekDay, WEEKDAYS } from "./calendar";
 
@@ -21,6 +24,29 @@ export enum CalendarView {
 }
 
 @Component({
+    animations: [
+        trigger("animateView", [
+            transition("void => 0", useAnimation(fadeIn)),
+            transition("void => *", useAnimation(scaleInCenter, {
+                params: {
+                    duration: ".2s",
+                    fromScale: .9
+                }
+            }))
+        ]),
+        trigger("animateChange", [
+            transition("* => prev", useAnimation(slideInLeft, {
+                params: {
+                    fromPosition: "translateX(-30%)"
+                }
+            })),
+            transition("* => next", useAnimation(slideInRight, {
+                params: {
+                    fromPosition: "translateX(30%)"
+                }
+            }))
+        ])
+    ],
     moduleId: module.id,
     providers: [HammerGesturesManager, { provide: NG_VALUE_ACCESSOR, useExisting: IgxCalendarComponent, multi: true }],
     selector: "igx-calendar",
@@ -89,7 +115,7 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
     private selectedDates;
     private _selection: "single" | "multi" | "range" = "single";
     private _rangeStarted: boolean = false;
-
+    private monthAction = "";
     constructor(private renderer: Renderer2) {
         this.calendarModel = new Calendar();
     }
@@ -241,10 +267,12 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
     }
     protected prevMonth(): void {
         this._viewDate = this.calendarModel.timedelta(this._viewDate, "month", -1);
+        this.monthAction = "prev";
     }
 
     protected nextMonth(): void {
         this._viewDate = this.calendarModel.timedelta(this._viewDate, "month", 1);
+        this.monthAction = "next";
     }
 
     protected handleScroll(event) {
@@ -270,7 +298,7 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
     protected getMonthName(date: Date): string {
         return date.toLocaleString(this.locale, { month: this.formatOptions.month });
     }
-    protected getFormattedDate(): {weekday: string, monthday: string} {
+    protected getFormattedDate(): { weekday: string, monthday: string } {
 
         const date = this.selectedDates ? this.selectedDates : this.headerDate;
 
@@ -324,8 +352,8 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
     protected isToday(day: ICalendarDate): boolean {
         const today = new Date(Date.now());
         return (day.date.getFullYear() === today.getFullYear() &&
-                day.date.getMonth() === today.getMonth() &&
-                day.date.getDate() === today.getDate());
+            day.date.getMonth() === today.getMonth() &&
+            day.date.getDate() === today.getDate());
     }
 
     protected get isDefaultView(): boolean {
@@ -390,17 +418,18 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
         return `${item.date.getMonth()}{item.date.getDate()}`;
     }
 
-    protected rowTracker(index, item): number {
-        return index;
+    protected rowTracker(index, item): string {
+        return `${index}:${item[0].date.getMonth()}`;
+        // return index;
     }
 
-    private _onTouchedCallback: () => void = () => {};
-    private _onChangeCallback: (_: Date) => void = () => {};
+    private _onTouchedCallback: () => void = () => { };
+    private _onChangeCallback: (_: Date) => void = () => { };
 }
 
 @NgModule({
     declarations: [IgxCalendarComponent],
     exports: [IgxCalendarComponent],
-    imports: [CommonModule, FormsModule]
+    imports: [CommonModule, FormsModule, BrowserAnimationsModule]
 })
-export class IgxCalendarModule {}
+export class IgxCalendarModule { }
