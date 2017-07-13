@@ -47,7 +47,7 @@ describe("Unit testing SortingStrategy", () => {
     });
     it("tests default settings", () => {
         strategy = new SortingStrategy();
-        data[4].string = "ROW";
+        (data[4] as { string: string }).string = "ROW";
         const res = strategy.sort(data, [{
                 dir: SortingDirection.Asc,
                 fieldName: "string"

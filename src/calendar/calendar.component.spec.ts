@@ -188,10 +188,6 @@ describe("IgxCalendar", () => {
         calendar.viewDate = today;
         fixture.detectChanges();
 
-        expect(calendar.currentYear).toEqual(today.getFullYear());
-        expect(calendar.currentMonth).toEqual(today.getMonth());
-        expect(calendar.currentDate).toEqual(today.getDate());
-
         calendar.weekStart = WEEKDAYS.MONDAY;
         expect(calendar.weekStart).toEqual(1);
 

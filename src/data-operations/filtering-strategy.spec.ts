@@ -55,7 +55,7 @@ describe("Unit testing FilteringStrategy", () => {
         expect(res).toBeTruthy();
     });
     it ("tests default settings", () => {
-        data[0].string = "ROW";
+        (data[0] as { string: string }).string = "ROW";
         const filterstr = new FilteringStrategy();
         const res = filterstr.filter(data, [{
             condition: FilteringCondition.string.contains,
