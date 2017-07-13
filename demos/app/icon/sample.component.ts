@@ -7,4 +7,11 @@ import { IgxIconModule } from "../../../src/main";
     styleUrls: ["../app.samples.css", "./sample.component.css"],
     templateUrl: "icon.sample.html"
 })
-export class IconSampleComponent {}
+export class IconSampleComponent {
+    private val = new Date(2017, 7, 7);
+
+    public customFormatter = (_: Date) => {
+        return `${_.getFullYear()}/${_.getMonth()}/${_.getDate()}`;
+    }
+
+}
