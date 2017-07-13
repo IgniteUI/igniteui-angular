@@ -5,7 +5,7 @@ import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations"
 import { IgxDatePickerComponent, IgxDatePickerModule } from "./date-picker.component";
 
-fdescribe("IgxDatePicker", () => {
+describe("IgxDatePicker", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
