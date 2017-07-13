@@ -7,29 +7,39 @@
     </div>
 
     <section class="sample-content">
-        <article class="sample-column">
-            <h4 class="sample-title">One-handle range slider</h4>
-            <igx-range #range [(ngModel)]="task.percentCompleted">
-            </igx-range>
-        </article>
+        <div>
+            <article class="sample-column">
+                <h4 class="sample-title">One-handle range slider</h4>
+                <igx-range #range [(ngModel)]="task.percentCompleted"
+                    [lowerBound]="20">
+                </igx-range>
+            </article>
 
-        <article class="sample-column">
-            <h4 class="sample-title">Two-handle range slider</h4>
-            <igx-range #range2 [type]="sliderType" [lowerValue]="30" [upperValue]="60" [minValue]="0" [maxValue]="100">
-            </igx-range>
-        </article>
 
-        <!--<article class="sample-column">
-            <h4 class="sample-title">Two-handle stepped range slider</h4>
-            <igx-range #range2 [type]="sliderType" [lowerValue]="30" [upperValue]="60" [lowerBound]="10" [upperBound]="90" [minValue]="0"
-                [maxValue]="100" [stepRange]="10">
-            </igx-range>
-        </article>-->
+            <article class="sample-column">
+                <h4 class="sample-title">Two-handle range slider</h4>
+                <igx-range #range2 [type]="sliderType" [(ngModel)]="rangeValue"
+                           [minValue]="0" [maxValue]="100">
+                </igx-range>
+            </article>
+        </div>
+
+        <div>
+            <article class="sample-column">
+                <h3>Task</h3>
+                <div>name: {{task.title}}</div>
+
+                <div>completed: {{task.percentCompleted}}</div>
+                <input type="text" [(ngModel)]="task.title">
+                <input type="text" [(ngModel)]="task.percentCompleted">
+            </article>
+
+
+            <article class="sample-column">
+                <input type="text" [(ngModel)]="rangeValue.lower">
+                <input type="text" [(ngModel)]="rangeValue.upper">
+            </article>
+        </div>
     </section>
 </div>
-<!--
-<h3>Task</h3>
-<div>name: {{task.title}}</div>
-<div>completed: {{task.percentCompleted}}</div>
-<input type="text" [(ngModel)]="task.title">
-<input type="text" [(ngModel)]="task.percentCompleted">-->
+

@@ -1,9 +1,9 @@
-import { CommonModule } from "@angular/common";
+import {CommonModule} from "@angular/common";
 import {
     AfterViewInit, Component, ElementRef, forwardRef, Input, NgModule, OnInit, Renderer2, ViewChild
 } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { HammerGesturesManager } from "../core/touch";
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
+import {HammerGesturesManager} from "../core/touch";
 
 export enum SliderType {
     SINGLE_HORIZONTAL,
@@ -17,7 +17,13 @@ enum SliderHandle {
     TO
 }
 
-const noop = () => { };
+export interface IDualSliderValue {
+    lower: number;
+    upper: number;
+}
+
+const noop = () => {
+};
 
 function MakeProvider(type: any) {
     return {
@@ -103,7 +109,8 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
 
-    constructor(private renderer: Renderer2) {}
+    constructor(private renderer: Renderer2) {
+    }
 
     get isMulti(): boolean {
         const isMulti: boolean = this.type !== SliderType.SINGLE_HORIZONTAL &&
@@ -190,7 +197,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         this._upperBound = value;
     }
 
-    public get lowerValue(): number {
+    private get lowerValue(): number {
         return this._lowerValue;
     }
 
@@ -198,16 +205,19 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
      * Lower value of the range
      * @type {number}
      */
-    @Input()
-    public set lowerValue(value: number) {
-        this._lowerValue = value;
-
-        if (this.isMulti && this.hasViewInit) {
-            this.positionHandlesAndUpdateTrack();
+    private set lowerValue(value: number) {
+        if (value < this.lowerBound || this.upperBound < value) {
+            return;
         }
+
+        if (this.isMulti && value > this.upperValue) {
+            return;
+        }
+
+        this._lowerValue = value;
     }
 
-    public get upperValue() {
+    private get upperValue() {
         return this._upperValue;
     }
 
@@ -216,10 +226,42 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
      * The default thumb value if the slider has singe thumb
      * @type {number}
      */
-    @Input()
-    public set upperValue(value: number) {
+    private set upperValue(value: number) {
+        if (value < this.lowerBound || this.upperBound < value) {
+            return;
+        }
+
+        if (this.isMulti && value < this.lowerValue) {
+            return;
+        }
+
         this._upperValue = value;
-        this._onChangeCallback(this._upperValue);
+    }
+
+    public get value(): number | IDualSliderValue {
+        if (this.isMulti) {
+            return {
+                lower: this.snapValueToStep(this.lowerValue),
+                upper: this.snapValueToStep(this.upperValue)
+            };
+        } else {
+            const val =  this.snapValueToStep(this.upperValue);
+            return val;
+        }
+    }
+
+    @Input()
+    public set value(value: number | IDualSliderValue) {
+        if (!this.isMulti) {
+            this.upperValue = this.snapValueToStep(value as number);
+        } else {
+            this.upperValue =
+                this.snapValueToStep((value as IDualSliderValue) == null ? null : (value as IDualSliderValue).upper);
+            this.lowerValue =
+                this.snapValueToStep((value as IDualSliderValue) == null ? null : (value as IDualSliderValue).lower);
+        }
+
+        this._onChangeCallback(this.value);
 
         if (this.hasViewInit) {
             this.positionHandlesAndUpdateTrack();
@@ -236,10 +278,12 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         }
 
         if (this.isMulti) {
-            this.lowerValue = this.lowerBound;
-            this.upperValue = this.upperBound;
+            this.value = {
+                lower: this.lowerBound,
+                upper: this.upperBound
+            };
         } else {
-            this.upperValue = this.lowerBound;
+            this.value = this.lowerBound;
         }
 
         this.pMin = this.valueToFraction(this.lowerBound) || 0;
@@ -252,56 +296,8 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         this.setTickInterval();
     }
 
-    public update($event) {
-        // Set width and offset first
-        this.setSliderWidth();
-        this.setSliderOffset();
-
-        // Then get pointer coordinates
-        this.setPointerPosition($event);
-        this.setPointerPercent();
-
-        // Find the closest handle
-        this.setActiveHandle();
-        this.toggleActiveClass($event);
-
-        // Update To/From Values
-        this.setValues();
-        // this.printInfo();
-
-        // Finally do positionHandlesAndUpdateTrack the DOM
-        // based on data values
-        this.positionHandlesAndUpdateTrack();
-        this._onTouchedCallback();
-    }
-
-    public getPointerPosition(): number {
-        return this.xPointer;
-    }
-
-    public getSliderOffset(): number {
-        return this.xOffset;
-    }
-
-    public getPointerPercent(): number {
-        return this.pPointer;
-    }
-
-    public toFixed(num: number): number {
-        num = parseFloat(num.toFixed(20));
-        return num;
-    }
-
-    public positionHandle(handle: ElementRef, position: number) {
-        handle.nativeElement.style.left = `${this.valueToFraction(position) * 100}%`;
-    }
-
     public writeValue(value: any): void {
-        if (!isNaN(value)) {
-            this.upperValue = parseFloat(value);
-
-            return;
-        }
+        this.value = value;
     }
 
     public registerOnChange(fn: any): void {
@@ -328,30 +324,76 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         )`;
     }
 
+    private onPanStart($event) {
+        if (this.timer !== null) {
+            clearInterval(this.timer);
+        }
+
+        this.isActiveLabel = true;
+        return true;
+    }
+
+    private onPanEnd($event) {
+        this.timer = setTimeout(
+            () => this.isActiveLabel = false,
+            this.thumbLabelVisibilityDuration
+        );
+    }
+
+    private update($event) {
+        // Set width and offset first
+        this.setSliderWidth();
+        this.setSliderOffset();
+
+        // Then get pointer coordinates
+        this.setPointerPosition($event);
+        this.setPointerPercent();
+
+        // Find the closest handle if dual slider
+        if (this.isMulti) {
+            this.closestHandle();
+        }
+
+        // Update To/From Values
+        this.setValues();
+        // this.printInfo();
+
+        // Finally do positionHandlesAndUpdateTrack the DOM
+        // based on data values
+        this.positionHandlesAndUpdateTrack();
+        this._onTouchedCallback();
+    }
+
+    private getPointerPosition(): number {
+        return this.xPointer;
+    }
+
+    private getSliderOffset(): number {
+        return this.xOffset;
+    }
+
+    private getPointerPercent(): number {
+        return this.pPointer;
+    }
+
+    private toFixed(num: number): number {
+        num = parseFloat(num.toFixed(20));
+        return num;
+    }
+
+    private positionHandle(handle: ElementRef, position: number) {
+        handle.nativeElement.style.left = `${this.valueToFraction(position) * 100}%`;
+    }
+
     private positionHandlesAndUpdateTrack() {
         if (!this.isMulti) {
-            this.positionHandle(this.thumbTo, this.upperValue);
+            this.positionHandle(this.thumbTo, this.value as number);
         } else {
-            this.positionHandle(this.thumbTo, this.upperValue);
-            this.positionHandle(this.thumbFrom, this.lowerValue);
+            this.positionHandle(this.thumbTo, (this.value as IDualSliderValue).upper);
+            this.positionHandle(this.thumbFrom, (this.value as IDualSliderValue).lower);
         }
 
         this.updateTrack();
-    }
-
-    private setActiveHandle(): void {
-        switch (this.type) {
-            case SliderType.SINGLE_HORIZONTAL:
-            case SliderType.SINGLE_VERTICAL:
-                this.activeHandle = SliderHandle.TO;
-                break;
-            case SliderType.DOUBLE_HORIZONTAL:
-            case SliderType.DOUBLE_VERTICAL:
-                this.closestHandle();
-                break;
-            default:
-                break;
-        }
     }
 
     private closestHandle() {
@@ -360,9 +402,9 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         const match = this.closestTo(this.xPointer, [fromOffset, toOffset]);
 
         if (match === toOffset) {
-            this.activeHandle = SliderHandle.TO;
+            this.thumbTo.nativeElement.focus();
         } else if (match === fromOffset) {
-            this.activeHandle = SliderHandle.FROM;
+            this.thumbFrom.nativeElement.focus();
         }
     }
 
@@ -376,18 +418,15 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         // this.ticks.nativeElement.style.backround = this.generateTickMarks('white', interval);
     }
 
-    private toggleActiveClass(e) {
-        if (e.type === "panstart" || e.type === "tap") {
-            clearInterval(this.timer);
-            this.isActiveLabel = true;
+    private snapValueToStep(value: number): number {
+        const valueModStep = (value - this.minValue) % this.stepRange;
+        let snapValue = value - valueModStep;
+
+        if (Math.abs(valueModStep) * 2 >= this.stepRange) {
+            snapValue += (valueModStep > 0) ? this.stepRange : (-this.stepRange);
         }
 
-        if (e.type === "panend" || e.type === "tap") {
-            this.timer = setTimeout(
-                () => this.isActiveLabel = false,
-                this.thumbLabelVisibilityDuration
-            );
-        }
+        return parseFloat(snapValue.toFixed(20));
     }
 
     private closestTo(goal: number, positions: number[]): number {
@@ -399,13 +438,21 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     // Set Values for To/From based on active handle
     private setValues() {
         if (this.activeHandle === SliderHandle.TO) {
-            this.upperValue = this.fractionToValue(this.pPointer);
-            this.toPercent = this.fractionToPercent(this.pPointer);
+            if (this.isMulti) {
+                this.value = {
+                    lower: (this.value as IDualSliderValue).lower,
+                    upper: this.fractionToValue(this.pPointer)
+                };
+            } else {
+                this.value = this.fractionToValue(this.pPointer);
+            }
         }
 
         if (this.activeHandle === SliderHandle.FROM) {
-            this.lowerValue = this.fractionToValue(this.pPointer);
-            this.fromPercent = this.fractionToPercent(this.pPointer);
+            this.value = {
+                lower: this.fractionToValue(this.pPointer),
+                upper: (this.value as IDualSliderValue).upper
+            };
         }
     }
 
@@ -446,7 +493,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private formatValue(value: number) {
-        if (!value) {
+        if (value === null || value === undefined) {
             return;
         }
 
@@ -458,14 +505,74 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         const toPosition = this.valueToFraction(this.upperValue);
         const positionGap = (this.valueToFraction(this.upperValue) - this.valueToFraction(this.lowerValue));
 
-        if (this.type === SliderType.SINGLE_HORIZONTAL || this.type === SliderType.SINGLE_VERTICAL) {
+        if (!this.isMulti) {
             this.track.nativeElement.style.transform = `scaleX(${toPosition})`;
         }
 
-        if (this.type === SliderType.DOUBLE_HORIZONTAL || this.type === SliderType.DOUBLE_VERTICAL) {
+        if (this.isMulti) {
             this.track.nativeElement.style.transform = `scaleX(${1})`;
             this.track.nativeElement.style.left = `${fromPosition * 100}%`;
             this.track.nativeElement.style.width = `${positionGap * 100}%`;
+        }
+    }
+
+    private onKeyDown($event: KeyboardEvent) {
+        let incrementSign;
+
+        if ($event.key.endsWith("Left")) {
+            incrementSign = -1;
+        } else if ($event.key.endsWith("Right")) {
+            incrementSign = 1;
+        } else {
+            return;
+        }
+
+        if (this.isMulti) {
+            if (this.activeHandle === SliderHandle.FROM) {
+                const newLower = (this.value as IDualSliderValue).lower + incrementSign * this.stepRange;
+
+                if (newLower >= (this.value as IDualSliderValue).upper) {
+                    this.thumbTo.nativeElement.focus();
+                    return;
+                }
+
+                this.value = {
+                    lower: newLower,
+                    upper: (this.value as IDualSliderValue).upper
+                };
+            } else {
+                const newUpper = (this.value as IDualSliderValue).upper + incrementSign * this.stepRange;
+
+                if (newUpper <= (this.value as IDualSliderValue).lower) {
+                    this.thumbFrom.nativeElement.focus();
+                    return;
+                }
+
+                this.value = {
+                    lower: (this.value as IDualSliderValue).lower,
+                    upper: (this.value as IDualSliderValue).upper + incrementSign * this.stepRange
+                };
+            }
+        } else {
+            this.value = this.value as number + incrementSign * this.stepRange;
+        }
+
+        this.isActiveLabel = true;
+    }
+
+    private hideThumbLabels($event: KeyboardEvent) {
+        this.isActiveLabel = false;
+    }
+
+    private onFocus($event: FocusEvent) {
+        this.isActiveLabel =  true;
+
+        if (this.isMulti && $event.target === this.thumbFrom.nativeElement) {
+            this.activeHandle = SliderHandle.FROM;
+        }
+
+        if ($event.target === this.thumbTo.nativeElement) {
+            this.activeHandle = SliderHandle.TO;
         }
     }
 }

@@ -1,8 +1,22 @@
-import {  animate, state, style, transition, trigger } from "@angular/animations";
+import {
+    animate,
+    state,
+    style,
+    transition,
+    trigger,
+    useAnimation
+} from "@angular/animations";
 import { CommonModule } from "@angular/common";
-import {Component, EventEmitter, Input, NgModule, NgZone, Output} from "@angular/core";
+import {
+    Component,
+    EventEmitter,
+    Input,
+    NgModule,
+    NgZone,
+    Output
+} from "@angular/core";
+import { fadeIn, fadeOut, slideInBottom, slideOutBottom } from "../animations/main";
 import { HammerGesturesManager } from "../core/touch";
-
 /**
  * IgxSnackbar provides feedback about an operation by showing brief message at the bottom of the screen on mobile
  * and lower left on larger devices. IgxSnackbar will appear above all
@@ -15,36 +29,44 @@ import { HammerGesturesManager } from "../core/touch";
 @Component({
     animations: [
         trigger("slideInOut", [
-            state("in", style({
-                color: "rgba(255,255,255,1)",
-                transform: "translateY(0)"
-            })),
             transition("void => *", [
-                style({
-                    transform: "translateY(100%)"
-                }),
-                animate(".35s cubic-bezier(0.0, 0.0, 0.2, 1)")
+                useAnimation(slideInBottom, {
+                    params: {
+                        duration: ".35s",
+                        easing: "cubic-bezier(0.0, 0.0, 0.2, 1)",
+                        fromPosition: "translateY(100%)",
+                        toPosition: "translateY(0)"
+                    }
+                })
             ]),
             transition("* => void", [
-                animate(".2s cubic-bezier(0.4, 0.0, 1, 1)", style({
-                    transform: "translateY(100%)"
-                }))
+                useAnimation(slideOutBottom, {
+                    params: {
+                        duration: ".2s",
+                        easing: "cubic-bezier(0.4, 0.0, 1, 1)",
+                        fromPosition: "translateY(0)",
+                        toOpacity: 1,
+                        toPosition: "translateY(100%)"
+                    }
+                })
             ])
         ]),
         trigger("fadeInOut", [
-            state("in", style({
-                opacity: 1
-            })),
             transition("void => *", [
-                style({
-                    opacity: 0
-                }),
-                animate(".35s ease-out")
+                useAnimation(fadeIn, {
+                    params: {
+                        duration: ".35s",
+                        easing: "ease-out"
+                    }
+                })
             ]),
             transition("* => void", [
-                animate(".2s ease-out", style({
-                    opacity: 0
-                }))
+                useAnimation(fadeOut, {
+                    params: {
+                        duration: ".2s",
+                        easing: "ease-out"
+                    }
+                })
             ])
         ])
     ],
@@ -58,23 +80,20 @@ export class IgxSnackbar {
      * The message that will be shown message by the IgxSnackbar component
      * @type {string}
      */
-    @Input()
-    public message: string;
+    @Input() public message: string;
 
     /**
      * The IgxSnackbar component visual state state
      * @type {boolean}
      */
-    @Input()
-    public isVisible: boolean = false;
+    @Input() public isVisible: boolean = false;
 
     /**
      * Sets if the IgxSnackbar component will be hidden after shown
      * Default value is true
      * @type {number}
      */
-    @Input()
-    public autoHide: boolean = true;
+    @Input() public autoHide: boolean = true;
 
     /**
      * The duration of time span in ms which the IgxSnackbar component will be visible
@@ -82,15 +101,13 @@ export class IgxSnackbar {
      * Default value is 4000
      * @type {number}
      */
-    @Input()
-    public displayTime: number = 4000;
+    @Input() public displayTime: number = 4000;
 
     /**
      * The text of the IgxSnackbar component action
      * @type {string}
      */
-    @Input()
-    public actionText?: string;
+    @Input() public actionText?: string;
 
     /**
      * The event that will be thrown when the action is executed,
@@ -113,15 +130,14 @@ export class IgxSnackbar {
 
     private timeoutId;
 
-    constructor(private zone: NgZone) {
-
-    }
+    constructor(private zone: NgZone) { }
 
     /**
      * Shows the IgxSnackbar component and hides it after some time span
      * if autoHide is enabled
      */
     public show(): void {
+        clearTimeout(this.timeoutId);
         setTimeout(this.timeoutId);
         this.isVisible = true;
 
@@ -162,5 +178,4 @@ export class IgxSnackbar {
     exports: [IgxSnackbar],
     imports: [CommonModule]
 })
-export class IgxSnackbarModule {
-}
+export class IgxSnackbarModule { }

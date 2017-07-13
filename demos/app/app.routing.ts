@@ -5,6 +5,7 @@ import { AvatarSampleComponent } from "./avatar/sample.component";
 import { BadgeSampleComponent } from "./badge/sample.component";
 import { ButtonsSampleComponent } from "./button/sample.component";
 import { ButtonGroupSampleComponent } from "./buttonGroup/sample.component";
+import { IgxCalendarSampleComponent } from "./calendar/sample.component";
 import { IgxCardSampleComponent } from "./card/sample.component";
 import { CarouselSampleComponent } from "./carousel/sample.component";
 import { DataOperationsSampleComponent } from "./data-operations/sample.component";
@@ -32,7 +33,7 @@ const appRoutes: Routes = [
     {
         path: "",
         pathMatch: "full",
-        redirectTo: "/avatar"
+        redirectTo: "/calendar"
     },
     {
         component: InputSampleComponent,
@@ -125,6 +126,10 @@ const appRoutes: Routes = [
     {
         component: IgxShadowsSampleComponent,
         path: "shadows"
+    },
+    {
+        component: IgxCalendarSampleComponent,
+        path: "calendar"
     }
 ];
 

@@ -1,24 +1,29 @@
 <div class="igx-calendar">
 
-    <div *ngIf="isDefaultView && selection === 'single'" class="igx-calendar__header">
-        <h5 class="igx-calendar__header-year">{{ currentYear }}</h5>
+    <div class="igx-calendar__header" *ngIf="selection === 'single'">
+        <h5 class="igx-calendar__header-year">{{ getHeaderYear() }}</h5>
         <h2 class="igx-calendar__header-date">
-            {{ getFormattedDate() }}
+            <span>
+                {{ getFormattedDate().weekday }}
+            </span>
+            <span>
+                {{ getFormattedDate().monthday }}
+            </span>
         </h2>
     </div>
 
     <div *ngIf="isDefaultView" class="igx-calendar__body">
         <div class="igx-calendar__body-picker">
-            <span class="prev" (click)="prevMonth()">
+            <div class="prev" (click)="prevMonth()">
                 <i class="material-icons">keyboard_arrow_left</i>
-            </span>
-            <span class="date">
-                <span (click)="activeViewYear()">{{ getMonthName(viewDate) }}</span>
-                <span (click)="activeViewDecade()">{{ currentYear }}</span>
-            </span>
-            <span class="next" (click)="nextMonth()">
+            </div>
+            <div class="date">
+                <span (click)="activeViewYear()" class="date__el">{{ getMonthName(viewDate) }}</span>
+                <span (click)="activeViewDecade()" class="date__el">{{ currentYear }}</span>
+            </div>
+            <div class="next" (click)="nextMonth()">
                 <i class="material-icons">keyboard_arrow_right</i>
-            </span>
+            </div>
         </div>
 
         <div class="igx-calendar__body-row">
@@ -27,15 +32,10 @@
             </span>
         </div>
         <div *ngFor="let week of getMonth; trackBy:rowTracker" class="igx-calendar__body-row" (click)="onDateClick($event)">
-            <span *ngFor="let day of week; trackBy:dateTracker"
-                [attr.data-prevmonth]="day.isPrevMonth ? true : null"
-                [attr.data-nextmonth]="day.isNextMonth ? true : null"
-                [class.igx-calendar__date--inactive]="isInactive(day)"
-                [class.igx-calendar__date]="day.isCurrentMonth && !isWeekend(day)"
-                [class.igx-calendar__date--weekend]="isWeekend(day)"
-                [class.igx-calendar__date--current]="isToday(day) && !isSelected(day)"
-                [class.igx-calendar__date--selected]="isSelected(day)"
-            >
+            <span *ngFor="let day of week; trackBy:dateTracker" [attr.data-prevmonth]="day.isPrevMonth ? true : null" [attr.data-nextmonth]="day.isNextMonth ? true : null"
+                [class.igx-calendar__date--inactive]="isInactive(day)" [class.igx-calendar__date]="day.isCurrentMonth && !isWeekend(day) && !isSelected(day)"
+                [class.igx-calendar__date--weekend]="isWeekend(day)" [class.igx-calendar__date--current]="isToday(day) && !isSelected(day)"
+                [class.igx-calendar__date--selected]="isSelected(day)">
                 {{ day.date.getDate() }}
             </span>
         </div>
@@ -43,19 +43,22 @@
     </div>
 
     <div *ngIf="isYearView" class="igx-calendar__body">
-        <div class="igx-calendar__body-row" (click)="changeMonth($event)">
-            <div [attr.data-index]="i" style="display: flex; cursor: pointer; justify-content: center; width: 4.5em; height: 4.5em;" *ngFor="let month of getYear(); let i = index;">
+        <div class="igx-calendar__body-row--wrap" (click)="changeMonth($event)">
+            <div [attr.data-index]="i" *ngFor="let month of getYear(); let i = index;"
+                [class.igx-calendar__month]="!isCurrentMonth(month)"
+                [class.igx-calendar__month--current]="isCurrentMonth(month)">
                 {{ getMonthName(month) }}
             </div>
         </div>
     </div>
 
     <div *ngIf="isDecadeView" class="igx-calendar__body">
-        <div class="igx-calendar__body-row" (click)="changeYear($event)">
-            <div style="display: flex; cursor: pointer; justify-content: center; width: 4.5em; height: 4.5em;" *ngFor="let year of getDecade()">
+        <div class="igx-calendar__body-column" (click)="changeYear($event)" (wheel)="handleScroll($event)">
+            <span *ngFor="let year of getDecade()"
+                [class.igx-calendar__year]="!isCurrentYear(year)"
+                [class.igx-calendar__year--current]="isCurrentYear(year)">
                 {{ year }}
-            </div>
+            </span>
         </div>
     </div>
-
 </div>

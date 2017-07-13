@@ -11,6 +11,7 @@ import { AvatarSampleModule } from "./avatar/sample.module";
 import { BadgeSampleModule } from "./badge/sample.module";
 import { ButtonSampleModule } from "./button/sample.module";
 import { ButtonGroupSampleModule } from "./buttonGroup/sample.module";
+import { IgxCalendarSampleModule } from "./calendar/sample.module";
 import { IgxCardSampleModule } from "./card/sample.module";
 import { CarouselSampleModule } from "./carousel/sample.module";
 import { DataOperationsSampleModule } from "./data-operations/sample.module";
@@ -63,7 +64,8 @@ import { IgxToastSampleModule } from "./toast/sample.module";
         RippleSampleModule,
         IgxTypographySampleModule,
         IgxColorsSampleModule,
-        IgxShadowsSampleModule
+        IgxShadowsSampleModule,
+        IgxCalendarSampleModule
     ]
 })
 export class AppModule {}

@@ -6,7 +6,7 @@
     border-radius: $card-border-radius;
     background: $white;
     transition: $card-transitions;
-
+    backface-visibility: hidden;
     &:hover {
         box-shadow: $card-shadow-hover;
     }
