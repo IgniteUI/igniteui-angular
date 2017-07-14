@@ -10,16 +10,14 @@
         <div>
             <article class="sample-column">
                 <h4 class="sample-title">One-handle range slider</h4>
-                <igx-range #range [(ngModel)]="task.percentCompleted"
-                    [lowerBound]="20">
+                <igx-range #range [(ngModel)]="task.percentCompleted" stepRange="5" [lowerBound]="20">
                 </igx-range>
             </article>
 
 
             <article class="sample-column">
                 <h4 class="sample-title">Two-handle range slider</h4>
-                <igx-range #range2 [type]="sliderType" [(ngModel)]="rangeValue"
-                           [minValue]="0" [maxValue]="100">
+                <igx-range #range2 [type]="sliderType" [(ngModel)]="rangeValue" [minValue]="0" [maxValue]="100">
                 </igx-range>
             </article>
         </div>
@@ -42,4 +40,3 @@
         </div>
     </section>
 </div>
-
