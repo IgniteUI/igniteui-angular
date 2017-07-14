@@ -162,7 +162,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         return dayNames;
     }
 
-    public get getMonth(): ICalendarDate[][] {
+    public get getCalendarMonth(): ICalendarDate[][] {
         return this.calendarModel.monthdatescalendar(this.viewDate.getFullYear(), this.viewDate.getMonth(), true);
     }
 
@@ -281,6 +281,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         this.monthAction = "next";
     }
 
+    // Event handlers for scrolling/keyboard interaction
     protected handleScroll(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -299,30 +300,90 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         this._viewDate = this.calendarModel.timedelta(this._viewDate, "year", delta);
     }
 
+    protected handlePageUpDown(event) {
+        event.preventDefault();
+
+        if (event.key === "PageUp") {
+            if (event.shiftKey) {
+                this.viewDate = this.calendarModel.timedelta(this.viewDate, "year", -1);
+            } else {
+                this.prevMonth();
+            }
+        } else {
+            if (event.shiftKey) {
+                this.viewDate = this.calendarModel.timedelta(this.viewDate, "year", 1);
+            } else {
+                this.nextMonth();
+            }
+        }
+    }
+
     protected handleKeyDown(event) {
 
+        if (event.key.startsWith("Page")) {
+            this.handlePageUpDown(event);
+            return;
+        }
+
+        if (event.key.endsWith("Left") || event.key.endsWith("Right") ||
+            event.key.endsWith("Up") || event.key.endsWith("Down")) {
+                this.handleKeyboardNavigation(event);
+                return;
+        }
+
         switch (event.key) {
-            case "PageUp":
-                event.preventDefault();
-                if (event.shiftKey) {
-                    this.viewDate = this.calendarModel.timedelta(this.viewDate, "year", -1);
-                } else {
-                    this.prevMonth();
-                }
-                break;
-            case "PageDown":
-                event.preventDefault();
-                if (event.shiftKey) {
-                    this.viewDate = this.calendarModel.timedelta(this.viewDate, "year", 1);
-                } else {
-                    this.nextMonth();
-                }
-                break;
             case "Home":
+                event.preventDefault();
+                this.elementRef.nativeElement.querySelectorAll("[data-curmonth='true']")[0].focus();
+                break;
+            case "End":
+                event.preventDefault();
+                const curentDates = this.elementRef.nativeElement.querySelectorAll("[data-curmonth='true']");
+                curentDates[curentDates.length - 1].focus();
                 break;
             case "Enter":
                 this.onDateClick(event);
                 break;
+            default:
+                return;
+        }
+    }
+
+    protected handleKeyboardNavigation(event) {
+        event.preventDefault();
+
+        if (event.target.nodeName.toLowerCase() !== "span") {
+            return;
+        }
+
+        const target = event.target;
+        let dest = null;
+
+        if (event.key.endsWith("Left")) {
+            dest = target.previousElementSibling;
+            if (dest) {
+                dest.focus();
+            }
+        }
+        if (event.key.endsWith("Right")) {
+            dest = target.nextElementSibling;
+            if (dest) {
+                dest.focus();
+            }
+        }
+        if (event.key.endsWith("Down")) {
+            const targetIndex = Array.from(target.parentNode.children).indexOf(target);
+            dest = target.parentNode.nextElementSibling;
+            if (dest) {
+                dest.children[targetIndex].focus();
+            }
+        }
+        if (event.key.endsWith("Up")) {
+            const targetIndex = Array.from(target.parentNode.children).indexOf(target);
+            dest = target.parentNode.previousElementSibling;
+            if (dest) {
+                dest.children[targetIndex].focus();
+            }
         }
     }
 
@@ -452,7 +513,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     }
 
     protected rowTracker(index, item): string {
-        return `${item[0].date.getMonth()}{item[0].date.getDate()}`;
+        return `${item[index].date.getMonth()}${item[index].date.getDate()}`;
     }
 
     protected monthTracker(index, item): number {
