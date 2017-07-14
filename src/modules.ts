@@ -9,6 +9,7 @@ import { IgxCalendarModule } from "./calendar/calendar.component";
 import { IgxCardModule } from "./card/card.component";
 import { IgxCarouselModule } from "./carousel/carousel.component";
 import { IgxCheckboxModule } from "./checkbox/checkbox.component";
+import { IgxDatePickerModule } from "./date-picker/date-picker.component"
 import { IgxDialogModule } from "./dialog/dialog.component";
 import { IgxIconModule } from "./icon/icon.component";
 import { IgxListModule } from "./list/list.component";
@@ -42,7 +43,8 @@ import { IgxToastModule } from "./toast/toast.component";
         IgxSnackbarModule,
         IgxToastModule,
         IgxButtonGroupModule,
-        IgxRangeModule
+        IgxRangeModule,
+        IgxDatePickerModule
     ],
     imports: [
         IgxAvatarModule,
@@ -63,7 +65,8 @@ import { IgxToastModule } from "./toast/toast.component";
         IgxSnackbarModule,
         IgxToastModule,
         IgxButtonGroupModule,
-        IgxRangeModule
+        IgxRangeModule,
+        IgxDatePickerModule
     ]
 })
 export class IgxComponentsModule {}
