@@ -43,7 +43,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
 
     @Input() set dateValue(value: Date) {
         const toDate = new Date(this._displayData);
-        if (value !== toDate &&
+        if (value.toDateString() !== toDate.toDateString() &&
                 value instanceof Date &&
                 this._dateStringChecker(value.toString())) {
             this._displayData = this._customFormatChecker(this.formatter, value);
