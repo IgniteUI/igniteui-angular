@@ -1,9 +1,9 @@
-import {CommonModule} from "@angular/common";
+import { CommonModule } from "@angular/common";
 import {
     AfterViewInit, Component, ElementRef, forwardRef, Input, NgModule, OnInit, Renderer2, ViewChild
 } from "@angular/core";
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
-import {HammerGesturesManager} from "../core/touch";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { HammerGesturesManager } from "../core/touch";
 
 export enum SliderType {
     SINGLE_HORIZONTAL,
@@ -245,7 +245,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
                 upper: this.snapValueToStep(this.upperValue)
             };
         } else {
-            const val =  this.snapValueToStep(this.upperValue);
+            const val = this.snapValueToStep(this.upperValue);
             return val;
         }
     }
@@ -409,13 +409,8 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private setTickInterval() {
-        const interval = this.stepRange > 1 ? 100 / this.stepRange : null;
-        // CONSIDER
-        // Use the renderer to style all elements of the range component?
+        const interval = this.stepRange > 1 ? this.stepRange : null;
         this.renderer.setStyle(this.ticks.nativeElement, "background", this.generateTickMarks("white", interval));
-
-        // OTHERWISE uncomment below
-        // this.ticks.nativeElement.style.backround = this.generateTickMarks('white', interval);
     }
 
     private snapValueToStep(value: number): number {
@@ -565,7 +560,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private onFocus($event: FocusEvent) {
-        this.isActiveLabel =  true;
+        this.isActiveLabel = true;
 
         if (this.isMulti && $event.target === this.thumbFrom.nativeElement) {
             this.activeHandle = SliderHandle.FROM;

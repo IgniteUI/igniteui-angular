@@ -49,6 +49,7 @@
     height: $range-thumb-height;
     margin-left: -$range-thumb-width / 2;
     top: -$range-thumb-height / 2;
+    outline: none;
 }
 
 %igx-thumb-label {
@@ -113,7 +114,8 @@
     transform: scale(1.2);
 }
 
-%igx-thumb-dot--start, %igx-thumb-label--start {
+%igx-thumb-dot--start,
+%igx-thumb-label--start {
     background: $range-background--start;
     border-color: $range-background--start transparent transparent;
 }

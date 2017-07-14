@@ -31,6 +31,8 @@
 }
 
 %cal-header-date {
+    display: flex;
+    flex-flow: column nowrap;
     margin: $cal-header-date-margin;
     font-size: $cal-header-date-fs;
     line-height: $cal-header-date-lh;
@@ -70,6 +72,7 @@
     flex: 1;
     padding-top: $cal-picker-padding;
     padding-bottom: $cal-picker-padding;
+    overflow: hidden;
 }
 
 %cal-row-display {
@@ -115,7 +118,11 @@
 
 %cal-value--year {
     font-size: $cal-value-year-fs;
-    transition: color .15s ease-in;
+}
+
+%cal-value--year-current {
+    font-size: $cal-value-year-current-fs;
+    color: $cal-theme-color;
 }
 
 %cal-value--year-hover {
@@ -135,11 +142,16 @@
     height: $cal-value-month-height;
 }
 
+%cal-value--month-current {
+    color: $cal-theme-color;
+}
+
 %cal-value--inactive {
     color: $cal-value-inactive-color;
 }
 
 %cal-value--selected {
+    position: relative;
     color: $cal-value-selected-text-color;
     background-color: $cal-value-selected-bg !important;
     font-weight: $cal-value-fw;
