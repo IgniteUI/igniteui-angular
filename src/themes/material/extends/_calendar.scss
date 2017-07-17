@@ -3,6 +3,7 @@
     flex-flow: column nowrap;
     width: 100%;
     overflow: hidden;
+    outline: none;
 }
 
 %cal-display--vertical {
@@ -102,6 +103,7 @@
     border-radius: $cal-valu-br;
     color: $cal-value-text-color;
     cursor: pointer;
+    outline: none;
     transition: background .15s ease-out;
 }
 

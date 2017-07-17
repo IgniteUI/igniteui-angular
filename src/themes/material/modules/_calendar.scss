@@ -16,7 +16,8 @@
         @extend %cal-picker-display;
         .date {
             @extend %cal-picker-date;
-            &__el:hover {
+            &__el:hover,
+            &__el:focus {
                 @extend %cal-header-date-el--hover;
             }
         }
@@ -41,7 +42,8 @@
     }
     @include e(date) {
         @extend %cal-value;
-        &:hover {
+        &:hover,
+        &:focus {
             @extend %cal-value--hover;
         }
     }
@@ -49,7 +51,8 @@
         @extend %cal-value;
         @extend %cal-value--inactive;
         cursor: pointer;
-        &:hover {
+        &:hover,
+        &:focus {
             @extend %cal-value--hover;
         }
     }
@@ -60,21 +63,24 @@
     @include e(date, 'current') {
         @extend %cal-value;
         @extend %cal-value--current;
-        &:hover {
+        &:hover,
+        &:focus {
             @extend %cal-value--hover;
         }
     }
     @include e(date, 'weekend') {
         @extend %cal-value;
         @extend %cal-value--weekend;
-        &:hover {
+        &:hover,
+        &:focus {
             @extend %cal-value--hover;
         }
     }
     @include e(year) {
         @extend %cal-value;
         @extend %cal-value--year;
-        &:hover {
+        &:hover,
+        &:focus {
             @extend %cal-value--year-hover;
         }
     }
@@ -86,7 +92,8 @@
     @include e(month) {
         @extend %cal-value;
         @extend %cal-value--month;
-        &:hover {
+        &:hover,
+        &:focus {
             @extend %cal-value--month-hover;
         }
     }
