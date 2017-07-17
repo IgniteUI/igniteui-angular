@@ -119,7 +119,7 @@ function testFilter() {
                                     });
             expect(dataGenerator.getValuesForColumn(res, "number"))
                     .toEqual(dataGenerator.getValuesForColumn(data, "number"));
-            res[0].string = "ROW";
+            (res[0] as { string: string}).string = "ROW";
             // case-sensitive
             res = DataUtil.filter(res, {
                                         expressions: [

@@ -2,20 +2,18 @@ import { transition, trigger, useAnimation } from "@angular/animations";
 import { CommonModule } from "@angular/common";
 import {
     Component,
-    DoCheck,
+    ElementRef,
     EventEmitter,
     forwardRef,
     Input,
     NgModule,
     OnInit,
-    Output,
-    Renderer2
+    Output
 } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from "../animations/main";
-import { HammerGesturesManager } from "../core/touch";
-import { Calendar, ICalendarDate, weekDay, WEEKDAYS } from "./calendar";
+import { Calendar, ICalendarDate, range, weekDay, WEEKDAYS } from "./calendar";
 
 export enum CalendarView {
     DEFAULT,
@@ -23,6 +21,15 @@ export enum CalendarView {
     DECADE
 }
 
+/**
+ *
+ *
+ * @export
+ * @class IgxCalendarComponent
+ * @implements {OnInit}
+ * @implements {DoCheck}
+ * @implements {ControlValueAccessor}
+ */
 @Component({
     animations: [
         trigger("animateView", [
@@ -48,21 +55,25 @@ export enum CalendarView {
         ])
     ],
     moduleId: module.id,
-    providers: [HammerGesturesManager, { provide: NG_VALUE_ACCESSOR, useExisting: IgxCalendarComponent, multi: true }],
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxCalendarComponent, multi: true }],
     selector: "igx-calendar",
     templateUrl: "calendar.component.html"
 })
-export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccessor {
+export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 
+    /**
+     * Returns the day on which the week starts
+     *
+     * @readonly
+     * @type {(WEEKDAYS | number)}
+     * @memberof IgxCalendarComponent
+     */
     @Input() public get weekStart(): WEEKDAYS | number {
         return this.calendarModel.firstWeekDay;
     }
     public set weekStart(value: WEEKDAYS | number) {
         this.calendarModel.firstWeekDay = value;
     }
-    @Input() public currentYear: number;
-    @Input() public currentMonth: number;
-    @Input() public currentDate: number;
     @Input() public locale: string = "en";
     @Input() public get selection(): string {
         return this._selection;
@@ -116,7 +127,8 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
     private _selection: "single" | "multi" | "range" = "single";
     private _rangeStarted: boolean = false;
     private monthAction = "";
-    constructor(private renderer: Renderer2) {
+
+    constructor(private elementRef: ElementRef) {
         this.calendarModel = new Calendar();
     }
 
@@ -139,15 +151,9 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
         this.headerDate = new Date(today);
     }
 
-    public ngDoCheck(): void {
-        this.currentYear = this._viewDate.getFullYear();
-        this.currentMonth = this._viewDate.getMonth();
-        this.currentDate = this._viewDate.getDate();
-    }
-
     public generateWeekHeader(): string[] {
         const dayNames: string[] = [];
-        const rv = this.calendarModel.monthdatescalendar(this.currentYear, this.currentMonth)[0];
+        const rv = this.calendarModel.monthdatescalendar(this.viewDate.getFullYear(), this.viewDate.getMonth())[0];
 
         for (const day of rv) {
             dayNames.push(day.date.toLocaleString(this.locale, { weekday: this.formatOptions.weekday }));
@@ -156,8 +162,8 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
         return dayNames;
     }
 
-    public get getMonth(): ICalendarDate[][] {
-        return this.calendarModel.monthdatescalendar(this.currentYear, this.currentMonth, true);
+    public get getCalendarMonth(): ICalendarDate[][] {
+        return this.calendarModel.monthdatescalendar(this.viewDate.getFullYear(), this.viewDate.getMonth(), true);
     }
 
     public onDateClick(event: MouseEvent): void {
@@ -275,6 +281,7 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
         this.monthAction = "next";
     }
 
+    // Event handlers for scrolling/keyboard interaction
     protected handleScroll(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -291,6 +298,93 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
             return;
         }
         this._viewDate = this.calendarModel.timedelta(this._viewDate, "year", delta);
+    }
+
+    protected handlePageUpDown(event) {
+        event.preventDefault();
+
+        if (event.key === "PageUp") {
+            if (event.shiftKey) {
+                this.viewDate = this.calendarModel.timedelta(this.viewDate, "year", -1);
+            } else {
+                this.prevMonth();
+            }
+        } else {
+            if (event.shiftKey) {
+                this.viewDate = this.calendarModel.timedelta(this.viewDate, "year", 1);
+            } else {
+                this.nextMonth();
+            }
+        }
+    }
+
+    protected handleKeyDown(event) {
+
+        if (event.key.startsWith("Page")) {
+            this.handlePageUpDown(event);
+            return;
+        }
+
+        if (event.key.endsWith("Left") || event.key.endsWith("Right") ||
+            event.key.endsWith("Up") || event.key.endsWith("Down")) {
+                this.handleKeyboardNavigation(event);
+                return;
+        }
+
+        switch (event.key) {
+            case "Home":
+                event.preventDefault();
+                this.elementRef.nativeElement.querySelectorAll("[data-curmonth='true']")[0].focus();
+                break;
+            case "End":
+                event.preventDefault();
+                const curentDates = this.elementRef.nativeElement.querySelectorAll("[data-curmonth='true']");
+                curentDates[curentDates.length - 1].focus();
+                break;
+            case "Enter":
+                this.onDateClick(event);
+                break;
+            default:
+                return;
+        }
+    }
+
+    protected handleKeyboardNavigation(event) {
+        event.preventDefault();
+
+        if (event.target.nodeName.toLowerCase() !== "span") {
+            return;
+        }
+
+        const target = event.target;
+        let dest = null;
+
+        if (event.key.endsWith("Left")) {
+            dest = target.previousElementSibling;
+            if (dest) {
+                dest.focus();
+            }
+        }
+        if (event.key.endsWith("Right")) {
+            dest = target.nextElementSibling;
+            if (dest) {
+                dest.focus();
+            }
+        }
+        if (event.key.endsWith("Down")) {
+            const targetIndex = Array.from(target.parentNode.children).indexOf(target);
+            dest = target.parentNode.nextElementSibling;
+            if (dest) {
+                dest.children[targetIndex].focus();
+            }
+        }
+        if (event.key.endsWith("Up")) {
+            const targetIndex = Array.from(target.parentNode.children).indexOf(target);
+            dest = target.parentNode.previousElementSibling;
+            if (dest) {
+                dest.children[targetIndex].focus();
+            }
+        }
     }
 
     // Util methods for the template
@@ -379,12 +473,12 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
     // XXX: WiP! Will still have to discuss what are we showing
     //      and how are we showing it
     protected getDecade(): number[] {
-        let start = this._viewDate.getFullYear() - 5;
         const res = [];
+        const start = this._viewDate.getFullYear() - 5;
+        const end = this._viewDate.getFullYear() + 6;
 
-        for (let i = 0; i < 11; i++) {
-            res.push(start);
-            start++;
+        for (const year of range(start, end)) {
+            res.push(year);
         }
 
         return res;
@@ -419,8 +513,11 @@ export class IgxCalendarComponent implements OnInit, DoCheck, ControlValueAccess
     }
 
     protected rowTracker(index, item): string {
-        return `${index}:${item[0].date.getMonth()}`;
-        // return index;
+        return `${item[index].date.getMonth()}${item[index].date.getDate()}`;
+    }
+
+    protected monthTracker(index, item): number {
+        return index;
     }
 
     private _onTouchedCallback: () => void = () => { };

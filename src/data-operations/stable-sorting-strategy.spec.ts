@@ -21,7 +21,7 @@ describe("Unit testing StableSortingStrategy", () => {
     it("tests `sort`", () => {
         let sort0;
         let sort1;
-        data.forEach((item, index) => item.number = index % 2 ? 0 : 1);
+        data.forEach((item, index) => (item as { number: number }).number = index % 2 ? 0 : 1);
 
         strategy.sort(data, [{fieldName: "number", dir: SortingDirection.Asc}]);
         sort0 = dataGenerator.getValuesForColumn(data, "string").join("");

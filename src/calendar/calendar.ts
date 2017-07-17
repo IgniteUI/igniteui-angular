@@ -111,7 +111,7 @@ export class Calendar {
      * @memberof Calendar
      */
     public monthdates(year: number, month: number, extraWeek: boolean = false): ICalendarDate[] {
-        let date = new Date(year, month, 1);
+        let date = new Date(year, month, 1, 12, 0, 0, 0);
         let days = (date.getDay() - this.firstWeekDay) % 7;
         if (days < 0) {
             days = 7 - Math.abs(days);
@@ -121,22 +121,15 @@ export class Calendar {
         let value: ICalendarDate;
 
         while (true) {
-            value = {date: null, isPrevMonth: false, isNextMonth: false, isCurrentMonth: false};
-            value.date = date;
-            value.isCurrentMonth = date.getFullYear() === year && date.getMonth() === month;
-            value.isPrevMonth = this.isPreviousMonth(date, year, month);
-            value.isNextMonth = this.isNextMonth(date, year, month);
+
+            value = this.generateICalendarDate(date, year, month);
             res.push(value);
             date = this.timedelta(date, "day", 1);
 
             if ((date.getMonth() !== month) && (date.getDay() === this.firstWeekDay)) {
                 if (extraWeek && res.length <= 35) {
                     for (const i of range(0, 7)) {
-                        value = {date: null, isPrevMonth: false, isNextMonth: false, isCurrentMonth: false};
-                        value.date = date;
-                        value.isCurrentMonth = date.getFullYear() === year && date.getMonth() === month;
-                        value.isPrevMonth = this.isPreviousMonth(date, year, month);
-                        value.isNextMonth = this.isNextMonth(date, year, month);
+                        value = this.generateICalendarDate(date, year, month);
                         res.push(value);
                         date = this.timedelta(date, "day", 1);
                     }
@@ -209,6 +202,14 @@ export class Calendar {
         return ret;
     }
 
+    private generateICalendarDate(date: Date, year: number, month: number): ICalendarDate {
+            return {
+                date,
+                isCurrentMonth: date.getFullYear() === year && date.getMonth() === month,
+                isNextMonth: this.isNextMonth(date, year, month),
+                isPrevMonth: this.isPreviousMonth(date, year, month)
+            };
+        }
     private isPreviousMonth(date: Date, year: number, month: number): boolean {
         if (date.getFullYear() === year) {
             return date.getMonth() < month;
