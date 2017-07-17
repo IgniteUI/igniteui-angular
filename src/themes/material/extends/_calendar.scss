@@ -1,0 +1,167 @@
+%cal-display {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+    overflow: hidden;
+    outline: none;
+}
+
+%cal-display--vertical {
+    flex-flow: row nowrap;
+    %cal-header-display {
+        width: 168px;
+    }
+}
+
+%cal-header-display {
+    background-color: $cal-header-bg;
+    color: $cal-header-color;
+    padding: $cal-header-padding;
+}
+
+%cal-header-year {
+    margin: $cal-header-year-margin;
+    color: $cal-header-year-color;
+    font-size: $cal-header-year-fs;
+}
+
+%cal-header-date {
+    display: flex;
+    margin: $cal-header-date-margin;
+    font-size: $cal-header-date-fs;
+    line-height: $cal-header-date-lh;
+}
+
+%cal-header-date--vertical {
+    flex-flow: column nowrap;
+}
+
+%cal-header-date-el--hover {
+    color: $cal-header-date-hover-color;
+    cursor: pointer;
+}
+
+%cal-picker-display {
+    display: flex;
+    height: 56px;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: $cal-picker-padding;
+    padding-left: $cal-picker-padding;
+    padding-right: $cal-picker-padding;
+}
+
+%cal-picker-arrow {
+    color: $cal-picker-arrow-color;
+    user-select: none;
+    cursor: pointer;
+    &:hover {
+        color: $cal-picker-arrow-hover-color;
+    }
+}
+
+%cal-picker-date {
+    font-size: $cal-picker-date-fs;
+    line-height: $cal-picker-date-lh;
+    font-weight: $cal-picker-date-fw;
+    text-align: center;
+}
+
+%cal-body-display {
+    flex: 1;
+    padding-top: $cal-picker-padding;
+    padding-bottom: $cal-picker-padding;
+    overflow: hidden;
+}
+
+%cal-row-display {
+    display: flex;
+    justify-content: space-between;
+    padding: $cal-row-padding;
+}
+
+%cal-row-display--wrap {
+    flex-wrap: wrap;
+}
+
+%cal-column-display {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+%cal-value {
+    display: flex;
+    margin: $cal-value-margin;
+    justify-content: center;
+    align-items: center;
+    width: $cal-value-w;
+    height: $cal-value-h;
+    font-size: $cal-value-fs;
+    line-height: $cal-value-lh;
+    border-radius: $cal-valu-br;
+    color: $cal-value-text-color;
+    cursor: pointer;
+    outline: none;
+    transition: background .15s ease-out;
+}
+
+%cal-value--label {
+    color: $cal-value-inactive-color;
+    cursor: default;
+}
+
+%cal-value--weekend {
+    color: $cal-value-weekend;
+}
+
+%cal-value--year {
+    font-size: $cal-value-year-fs;
+}
+
+%cal-value--year-current {
+    font-size: $cal-value-year-current-fs;
+    color: $cal-theme-color;
+}
+
+%cal-value--year-hover {
+    color: $cal-value-year-hover-color;
+}
+
+%cal-value--month-hover {
+    color: $cal-value-month-hover-color;
+}
+
+%cal-value--month {
+    display: flex;
+    margin: $cal-value-month-margin;
+    flex: 1 0 25%;
+    justify-content: center;
+    align-items: center;
+    height: $cal-value-month-height;
+}
+
+%cal-value--month-current {
+    color: $cal-theme-color;
+}
+
+%cal-value--inactive {
+    color: $cal-value-inactive-color;
+}
+
+%cal-value--selected {
+    position: relative;
+    color: $cal-value-selected-text-color;
+    background-color: $cal-value-selected-bg !important;
+    font-weight: $cal-value-fw;
+}
+
+%cal-value--current {
+    color: $cal-value-current;
+    font-weight: $cal-value-fw;
+}
+
+%cal-value--hover {
+    background-color: $cal-value-hover-bg;
+}
