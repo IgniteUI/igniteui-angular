@@ -188,10 +188,6 @@ describe("IgxCalendar", () => {
         calendar.viewDate = today;
         fixture.detectChanges();
 
-        expect(calendar.currentYear).toEqual(today.getFullYear());
-        expect(calendar.currentMonth).toEqual(today.getMonth());
-        expect(calendar.currentDate).toEqual(today.getDate());
-
         calendar.weekStart = WEEKDAYS.MONDAY;
         expect(calendar.weekStart).toEqual(1);
 
@@ -742,6 +738,146 @@ describe("IgxCalendar", () => {
             }
         })
     );
+
+    it("Calendar keyboard navigation - PageUp/PageDown", fakeAsync(() => {
+        const fixture = TestBed.createComponent(
+            IgxCalendarRenderingComponent
+        );
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        const calendar = fixture.componentInstance.calendar;
+        const dom = fixture.debugElement;
+        const component = dom.query(By.css(".igx-calendar"));
+
+        let args: KeyboardEventInit = { key: "PageUp", bubbles: true };
+
+        component.triggerEventHandler("keydown", new KeyboardEvent("keydown", args));
+        fixture.detectChanges();
+
+        expect(calendar.viewDate.getMonth()).toEqual(4);
+
+        calendar.viewDate = new Date(2017, 5, 13);
+        fixture.detectChanges();
+
+        args = { key: "PageDown", bubbles: true };
+
+        component.triggerEventHandler("keydown", new KeyboardEvent("keydown", args));
+        fixture.detectChanges();
+
+        expect(calendar.viewDate.getMonth()).toEqual(6);
+
+        args = { key: "PageUp", bubbles: true, shiftKey: true };
+
+        component.triggerEventHandler("keydown", new KeyboardEvent("keydown", args));
+        fixture.detectChanges();
+
+        expect(calendar.viewDate.getFullYear()).toEqual(2016);
+
+        calendar.viewDate = new Date(2017, 5, 13);
+        fixture.detectChanges();
+
+        args = { key: "PageDown", bubbles: true, shiftKey: true };
+
+        component.triggerEventHandler("keydown", new KeyboardEvent("keydown", args));
+        fixture.detectChanges();
+
+        expect(calendar.viewDate.getFullYear()).toEqual(2018);
+    }));
+
+    it("Calendar keyboard navigation - Home/End/Enter", fakeAsync(() => {
+        const fixture = TestBed.createComponent(
+            IgxCalendarRenderingComponent
+        );
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        const calendar = fixture.componentInstance.calendar;
+        const dom = fixture.debugElement;
+        const component = dom.query(By.css(".igx-calendar"));
+
+        let args: KeyboardEventInit = { key: "Home", bubbles: true };
+
+        const days = dom.queryAll(By.css("[data-curmonth]"));
+        const firstDay = days[0];
+        const lastDay = days[days.length - 1];
+
+        component.triggerEventHandler("keydown", new KeyboardEvent("keydown", args));
+        fixture.detectChanges();
+
+        expect(document.activeElement.textContent).toMatch(firstDay.nativeElement.textContent);
+        expect(document.activeElement.textContent.trim()).toMatch("1");
+
+        args = { key: "End", bubbles: true };
+
+        component.triggerEventHandler("keydown", new KeyboardEvent("keydown", args));
+        fixture.detectChanges();
+
+        expect(document.activeElement.textContent).toMatch(lastDay.nativeElement.textContent);
+        expect(document.activeElement.textContent.trim()).toMatch("30");
+
+        args = { key: "Enter", bubbles: true };
+
+        firstDay.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        fixture.detectChanges();
+
+        expect((calendar.value as Date).toDateString()).toMatch(new Date(2017, 5, 1).toDateString());
+    }));
+
+    it("Calendar keyboard navigation - Arrow keys", fakeAsync(() => {
+        const fixture = TestBed.createComponent(
+            IgxCalendarRenderingComponent
+        );
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        const calendar = fixture.componentInstance.calendar;
+        const dom = fixture.debugElement;
+        const component = dom.query(By.css(".igx-calendar"));
+
+        let args: KeyboardEventInit = { key: "Home", bubbles: true };
+
+        const days = dom.queryAll(By.css("[data-curmonth]"));
+        const firstDay = days[0];
+
+        component.triggerEventHandler("keydown", new KeyboardEvent("keydown", args));
+        fixture.detectChanges();
+
+        expect(document.activeElement.textContent).toMatch(firstDay.nativeElement.textContent);
+        expect(document.activeElement.textContent.trim()).toMatch("1");
+
+        args = { key: "ArrowDown", bubbles: true };
+
+        document.activeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        fixture.detectChanges();
+
+        expect(document.activeElement.textContent.trim()).toMatch("8");
+
+        args = { key: "ArrowLeft", bubbles: true };
+
+        document.activeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        fixture.detectChanges();
+
+        expect(document.activeElement.textContent.trim()).toMatch("7");
+
+        args = { key: "ArrowRight", bubbles: true };
+
+        document.activeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        fixture.detectChanges();
+
+        expect(document.activeElement.textContent.trim()).toMatch("8");
+
+        args = { key: "ArrowUp", bubbles: true };
+
+        document.activeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        fixture.detectChanges();
+
+        expect(document.activeElement.textContent.trim()).toMatch("1");
+
+    }));
 });
 
 @Component({
