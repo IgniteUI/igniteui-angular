@@ -23,7 +23,7 @@ import {
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Subscription } from "rxjs/Rx";
-import { DataAccess } from "../data-operations/data-container";
+import { DataAccess, DataContainer } from "../data-operations/data-container";
 import { IgxDropEvent } from "../directives/dragdrop.directive";
 
 // grid helper components and directives
@@ -42,19 +42,17 @@ import {
 } from "./grid.common";
 import { IgxPaginatorComponent, IgxPaginatorEvent } from "./paginator.component";
 
+import { IgxButtonModule } from "../button/button.directive";
+import { IDataState } from "../data-operations/data-state.interface";
 import { DataType, DataUtil } from "../data-operations/data-util";
-import {
-    DataContainer,
-    IDataState,
-    IFilteringExpression,
-    IgxDialog,
-    IgxDialogModule,
-    IgxDirectivesModule,
-    IgxIconModule,
-    IPagingState,
-    ISortingExpression,
-    SortingDirection
-} from "../main";
+import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
+import { IPagingState } from "../data-operations/paging-state.interface";
+import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
+import { ISortingState } from "../data-operations/sorting-state.interface";
+import { IgxDialog, IgxDialogModule } from "../dialog/dialog.component";
+import { IgxDragDropModule } from "../directives/dragdrop.directive";
+import { IgxIconModule } from "../icon/icon.component";
+import { IgxInput } from "../input/input.directive";
 
 export interface IgxGridBindingBehavior {
     process: (dataContainer: DataContainer) => void;
@@ -668,6 +666,6 @@ const GRID_DIRECTIVES: any[] = [
     declarations: GRID_DIRECTIVES,
     entryComponents: [IgxColumnComponent],
     exports: GRID_DIRECTIVES,
-    imports: [CommonModule, IgxIconModule, IgxDialogModule, IgxDirectivesModule, FormsModule]
+    imports: [CommonModule, IgxIconModule, IgxDialogModule, IgxDragDropModule, IgxInput, IgxButtonModule, FormsModule]
 })
 export class IgxGridModule {}
