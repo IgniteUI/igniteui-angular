@@ -1,12 +1,19 @@
 import { CommonModule } from "@angular/common";
 import {
-    AfterViewInit, Component, ElementRef, forwardRef, Input, NgModule, OnInit, Renderer2, ViewChild
+    AfterViewInit, Component, ElementRef, EventEmitter, forwardRef, Input, NgModule, OnInit, Output, Renderer2,
+    ViewChild
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { HammerGesturesManager } from "../core/touch";
 
 export enum SliderType {
+    /**
+     * Slider with single thumb.
+     */
     SLIDER,
+    /**
+     *  Range slider with multiple thumbs, that can mark the range.
+     */
     RANGE
 }
 
@@ -35,34 +42,46 @@ function MakeProvider(type: any) {
     moduleId: module.id,
     providers: [HammerGesturesManager, MakeProvider(IgxSlider)],
     selector: "igx-slider",
-    templateUrl: "src/slider/slider.component.html"
+    templateUrl: "slider.component.html"
 })
 export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     /**
-     *
-     * @type {number}
+     * Marks slider as continuous. By default is considered that the slider is discrete.
+     * Discrete slider does not have ticks and does not shows bubbles for values.
      */
     @Input()
-    public digitsAfterDecimalPoints: number = 0;
+    public isContinuous: boolean = false;
 
     /**
-     * The type of the slider
+     * The type of the slider. The slider can be SliderType.SLIDER or SliderType.RANGE
      * @type {SliderType}
      */
     @Input()
     public type: SliderType = SliderType.SLIDER;
 
-    public isActiveLabel: boolean = false;
-
+    /***
+     * The duration visibility of thumbs labels. The default value is 750 milliseconds.
+     * @type {number}
+     */
     @Input()
     public thumbLabelVisibilityDuration: number = 750;
 
     /**
-     *
+     * The incremental/decremental step of the value when dragging the thumb.
+     * The default step is 1, and step should not be less or equal than 0.
      * @type {number}
      */
     @Input()
     public step: number = 1;
+
+    /**
+     * This event is thrown when user has stopped interacting the thumb and value is changed.
+     * @type {EventEmitter}
+     */
+    @Output()
+    public valueChanged = new EventEmitter();
+
+    private isActiveLabel: boolean = false;
 
     private activeHandle: SliderHandle = SliderHandle.TO;
 
@@ -94,8 +113,6 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     private pMax: number = 1;
 
     // From/upperValue in percent values
-    private fromPercent: number = 0;
-    private toPercent: number = 0;
     private hasViewInit: boolean = false;
     private timer;
     private _maxValue: number = 100;
@@ -110,12 +127,16 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     constructor(private renderer: Renderer2) {
     }
 
-    get isRange(): boolean {
+    private get isRange(): boolean {
         const isRange: boolean = this.type === SliderType.RANGE;
 
         return isRange;
     }
 
+    /**
+     * Gets the minimal value for the slider.
+     * @returns {number}
+     */
     public get minValue(): number {
         return this._minValue;
     }
@@ -144,7 +165,7 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     /**
-     *
+     * Sets the maximal value for the slider
      * @type {number}
      */
     @Input()
@@ -159,7 +180,7 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     /**
-     * Gets the lower bound of the slider value
+     * Gets the lower bound of the slider.
      * @returns {number}
      */
     public get lowerBound(): number {
@@ -167,7 +188,8 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     /**
-     * Sets the lower bound of the slider value
+     * Sets the lower bound of the slider value.
+     * If not set is the same as min value.
      * @type {number}
      */
     @Input()
@@ -180,16 +202,21 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
         this._lowerBound = value;
     }
 
-    get upperBound(): number {
+    /**
+     * Gets the upper bound of the slider.
+     * @returns {number}
+     */
+    public get upperBound(): number {
         return this._upperBound;
     }
 
     /**
-     * The upper bound of the slider value
+     * Sets the upper bound of the slider value.
+     * If not set is the same as max value.
      * @type {number}
      */
     @Input()
-    set upperBound(value: number) {
+    public set upperBound(value: number) {
         if (value <= this.lowerBound) {
             this._upperBound = this.maxValue;
 
@@ -203,10 +230,6 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
         return this._lowerValue;
     }
 
-    /**
-     * Lower value of the slider
-     * @type {number}
-     */
     private set lowerValue(value: number) {
         if (value < this.lowerBound || this.upperBound < value) {
             return;
@@ -223,11 +246,6 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
         return this._upperValue;
     }
 
-    /**
-     * Upper value of the slider
-     * The default thumb value if the slider has singe thumb
-     * @type {number}
-     */
     private set upperValue(value: number) {
         if (value < this.lowerBound || this.upperBound < value) {
             return;
@@ -240,6 +258,11 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
         this._upperValue = value;
     }
 
+    /**
+     * Returns the slider value. If the slider is of type SLIDER the returned value is number.
+     * If the slider type is RANGE the returned value is object containing lower and upper properties for the values.
+     * @returns {any}
+     */
     public get value(): number | IRangeSliderValue {
         if (this.isRange) {
             return {
@@ -252,6 +275,15 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
         }
     }
 
+    /**
+     * Sets the slider value.
+     * If the slider is of type SLIDER the argument is number. By default if no value is set the default value is
+     * same as lower upper bound.
+     * If the slider type is RANGE the the argument is object containing lower and upper properties for the values.
+     * By default if no value is set the default value is for lower value it is the same as lower bound and if no
+     * value is set for the upper value it is the same as the upper bound.
+     * @param value
+     */
     @Input()
     public set value(value: number | IRangeSliderValue) {
         if (!this.isRange) {
@@ -310,7 +342,7 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
         this._onTouchedCallback = fn;
     }
 
-    protected generateTickMarks(color: string, interval: number) {
+    private generateTickMarks(color: string, interval: number) {
         return `repeating-linear-gradient(
             ${"to left"},
             ${color},
@@ -326,23 +358,39 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
         )`;
     }
 
-    private onPanStart($event) {
+    private showThumbsLabels() {
+        if (this.isContinuous) {
+            return;
+        }
+
         if (this.timer !== null) {
             clearInterval(this.timer);
         }
 
         this.isActiveLabel = true;
-        return true;
     }
 
-    private onPanEnd($event) {
+    private hideThumbsLabels() {
+        if (this.isContinuous) {
+            return;
+        }
+
         this.timer = setTimeout(
             () => this.isActiveLabel = false,
             this.thumbLabelVisibilityDuration
         );
     }
 
+    private toggleThumbLabel() {
+        this.showThumbsLabels();
+        this.hideThumbsLabels();
+    }
+
     private update($event) {
+        if ($event.type === "tap") {
+            this.toggleThumbLabel();
+        }
+
         // Set width and offset first
         this.setSliderWidth();
         this.setSliderOffset();
@@ -366,16 +414,8 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
         this._onTouchedCallback();
     }
 
-    private getPointerPosition(): number {
-        return this.xPointer;
-    }
-
     private getSliderOffset(): number {
         return this.xOffset;
-    }
-
-    private getPointerPercent(): number {
-        return this.pPointer;
     }
 
     private toFixed(num: number): number {
@@ -411,6 +451,10 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private setTickInterval() {
+        if (this.isContinuous) {
+            return;
+        }
+
         const interval = this.step > 1 ? this.step : null;
         this.renderer.setStyle(this.ticks.nativeElement, "background", this.generateTickMarks("white", interval));
     }
@@ -489,14 +533,6 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
         return Math.max(this.pMin, Math.min(num, this.pMax));
     }
 
-    private formatValue(value: number) {
-        if (value === null || value === undefined) {
-            return;
-        }
-
-        return value.toFixed(this.digitsAfterDecimalPoints);
-    }
-
     private updateTrack() {
         const fromPosition = this.valueToFraction(this.lowerValue);
         const toPosition = this.valueToFraction(this.upperValue);
@@ -513,6 +549,24 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
         }
     }
 
+    private onTap($event) {
+        const value = this.value;
+        this.update($event);
+
+        if (this.hasValueChanged(value)) {
+            this.emitValueChanged();
+        }
+    }
+
+    private hasValueChanged(oldValue) {
+        const isSliderWithDifferentValue: boolean = !this.isRange && oldValue !== this.value;
+        const isRangeWithOneDifferentValue: boolean = this.isRange &&
+            ((oldValue as IRangeSliderValue).lower  !== (this.value as IRangeSliderValue).lower ||
+            (oldValue as IRangeSliderValue).upper !== (this.value as IRangeSliderValue).upper);
+
+        return isSliderWithDifferentValue || isRangeWithOneDifferentValue;
+    }
+
     private onKeyDown($event: KeyboardEvent) {
         let incrementSign;
 
@@ -523,6 +577,8 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
         } else {
             return;
         }
+
+        const value = this.value;
 
         if (this.isRange) {
             if (this.activeHandle === SliderHandle.FROM) {
@@ -554,16 +610,14 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
             this.value = this.value as number + incrementSign * this.step;
         }
 
-        this.isActiveLabel = true;
-    }
+        if (this.hasValueChanged(value)) {
+            this.emitValueChanged();
+        }
 
-    private hideThumbLabels($event: KeyboardEvent) {
-        this.isActiveLabel = false;
+        this.showThumbsLabels();
     }
 
     private onFocus($event: FocusEvent) {
-        this.isActiveLabel = true;
-
         if (this.isRange && $event.target === this.thumbFrom.nativeElement) {
             this.activeHandle = SliderHandle.FROM;
         }
@@ -571,6 +625,25 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
         if ($event.target === this.thumbTo.nativeElement) {
             this.activeHandle = SliderHandle.TO;
         }
+
+        this.toggleThumbLabel();
+    }
+
+    private onPanEnd($event) {
+        this.hideThumbsLabels();
+        this.emitValueChanged();
+    }
+
+    private hideThumbLabelsOnBlur() {
+        if (this.timer !== null) {
+            clearInterval(this.timer);
+        }
+
+        this.isActiveLabel = false;
+    }
+
+    private emitValueChanged() {
+        this.valueChanged.emit({value: this.value});
     }
 }
 

@@ -1,24 +1,24 @@
 <div class="igx-slider"
      #slider
-     (panstart)="onPanStart($event)"
+     (panstart)="showThumbsLabels()"
      (panend)="onPanEnd($event)"
      (pan)="update($event)"
-     (tap)="update($event)">
+     (tap)="onTap($event)">
     <div class="igx-slider__track">
         <div #track class="igx-slider__track-fill"></div>
         <div #ticks class="igx-slider__track-ticks"></div>
     </div>
     <div class="igx-slider__thumbs">
-        <div (keydown)="onKeyDown($event)" (keyup)="hideThumbLabels()" (blur)="hideThumbLabels()"
-             (focus)="onFocus($event)"
+        <div (keydown)="onKeyDown($event);" (keyup)="hideThumbsLabels()" (blur)="hideThumbLabelsOnBlur()"
+             (focus)="onFocus($event);"
              *ngIf="isRange" class="igx-slider__thumb-from"
              tabindex="1"
              [ngClass]="{ 'igx-slider__thumb-from--active': isActiveLabel }" #thumbFrom>
             <span class="label">{{ value.lower }}</span>
             <span class="dot"></span>
         </div>
-        <div (keydown)="onKeyDown($event)" (keyup)="hideThumbLabels()" (blur)="hideThumbLabels()"
-             (focus)="onFocus($event)" class="igx-slider__thumb-to"
+        <div (keydown)="onKeyDown($event);" (keyup)="hideThumbsLabels()" (blur)="hideThumbLabelsOnBlur()"
+             (focus)="onFocus($event);" class="igx-slider__thumb-to"
              tabindex="1"
              [ngClass]="{ 'igx-slider__thumb-to--active': isActiveLabel }" #thumbTo>
             <span *ngIf="isRange" class="label">{{ value.upper }}</span>
