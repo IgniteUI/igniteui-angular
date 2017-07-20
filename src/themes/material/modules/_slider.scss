@@ -1,22 +1,22 @@
 $thumbs: 'from' 'to';
 
-@include b(igx-range) {
-    @extend %igx-range-display;
+@include b(igx-slider) {
+    @extend %igx-slider-display;
 
     @include e(track) {
-        @extend %igx-range-track;
+        @extend %igx-slider-track;
     }
 
     @include e(track-fill) {
-        @extend %igx-range-track-fill;
+        @extend %igx-slider-track-fill;
     }
 
     @include e(track-ticks) {
-        @extend %igx-range-track-ticks;
+        @extend %igx-slider-track-ticks;
     }
 
     @include e(thumbs) {
-        @extend %igx-range-thumbs-container;
+        @extend %igx-slider-thumbs-container;
     }
 
     @each $t in $thumbs {

@@ -9,7 +9,7 @@ import { IgxCalendarModule } from "./calendar/calendar.component";
 import { IgxCardModule } from "./card/card.component";
 import { IgxCarouselModule } from "./carousel/carousel.component";
 import { IgxCheckboxModule } from "./checkbox/checkbox.component";
-import { IgxDatePickerModule } from "./date-picker/date-picker.component"
+import { IgxDatePickerModule } from "./date-picker/date-picker.component";
 import { IgxDialogModule } from "./dialog/dialog.component";
 import { IgxIconModule } from "./icon/icon.component";
 import { IgxListModule } from "./list/list.component";
@@ -17,7 +17,7 @@ import { IgxNavbarModule } from "./navbar/navbar.component";
 import { NavigationDrawerModule } from "./navigation-drawer/navigation-drawer.component";
 import { IgxProgressBarModule } from "./progressbar/progressbar.component";
 import { IgxRadioModule} from "./radio/radio.component";
-import { IgxRangeModule } from "./range/range.component";
+import { IgxSliderModule } from "./slider/slider.component";
 import { IgxSnackbarModule } from "./snackbar/snackbar.component";
 import { IgxSwitchModule} from "./switch/switch.component";
 import { IgxTabBarModule } from "./tabbar/tabbar.component";
@@ -43,7 +43,7 @@ import { IgxToastModule } from "./toast/toast.component";
         IgxSnackbarModule,
         IgxToastModule,
         IgxButtonGroupModule,
-        IgxRangeModule,
+        IgxSliderModule,
         IgxDatePickerModule
     ],
     imports: [
@@ -65,7 +65,7 @@ import { IgxToastModule } from "./toast/toast.component";
         IgxSnackbarModule,
         IgxToastModule,
         IgxButtonGroupModule,
-        IgxRangeModule,
+        IgxSliderModule,
         IgxDatePickerModule
     ]
 })

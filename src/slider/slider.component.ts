@@ -6,10 +6,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { HammerGesturesManager } from "../core/touch";
 
 export enum SliderType {
-    SINGLE_HORIZONTAL,
-    DOUBLE_HORIZONTAL,
-    SINGLE_VERTICAL,
-    DOUBLE_VERTICAL
+    SLIDER,
+    RANGE
 }
 
 enum SliderHandle {
@@ -17,7 +15,7 @@ enum SliderHandle {
     TO
 }
 
-export interface IDualSliderValue {
+export interface IRangeSliderValue {
     lower: number;
     upper: number;
 }
@@ -35,11 +33,11 @@ function MakeProvider(type: any) {
 
 @Component({
     moduleId: module.id,
-    providers: [HammerGesturesManager, MakeProvider(IgxRange)],
-    selector: "igx-range",
-    templateUrl: "range.component.html"
+    providers: [HammerGesturesManager, MakeProvider(IgxSlider)],
+    selector: "igx-slider",
+    templateUrl: "src/slider/slider.component.html"
 })
-export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
+export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     /**
      *
      * @type {number}
@@ -52,7 +50,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
      * @type {SliderType}
      */
     @Input()
-    public type: SliderType = SliderType.SINGLE_HORIZONTAL;
+    public type: SliderType = SliderType.SLIDER;
 
     public isActiveLabel: boolean = false;
 
@@ -64,11 +62,11 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
      * @type {number}
      */
     @Input()
-    public stepRange: number = 1;
+    public step: number = 1;
 
     private activeHandle: SliderHandle = SliderHandle.TO;
 
-    @ViewChild("range")
+    @ViewChild("slider")
     private slider: ElementRef;
 
     @ViewChild("track")
@@ -112,11 +110,10 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     constructor(private renderer: Renderer2) {
     }
 
-    get isMulti(): boolean {
-        const isMulti: boolean = this.type !== SliderType.SINGLE_HORIZONTAL &&
-            this.type !== SliderType.SINGLE_VERTICAL;
+    get isRange(): boolean {
+        const isRange: boolean = this.type === SliderType.RANGE;
 
-        return isMulti;
+        return isRange;
     }
 
     public get minValue(): number {
@@ -124,7 +121,8 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     /**
-     *
+     * Sets the minimal value for the slider.
+     * The default minimal value is 0.
      * @type {number}
      */
     @Input()
@@ -137,6 +135,10 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         this._minValue = value;
     }
 
+    /**
+     * Gets the minimal value for the slider
+     * @returns {number}
+     */
     public get maxValue(): number {
         return this._maxValue;
     }
@@ -157,7 +159,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     /**
-     * Gets the lower bound of the range value
+     * Gets the lower bound of the slider value
      * @returns {number}
      */
     public get lowerBound(): number {
@@ -165,7 +167,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     /**
-     * Sets the lower bound of the range value
+     * Sets the lower bound of the slider value
      * @type {number}
      */
     @Input()
@@ -183,7 +185,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     /**
-     * The upper bound of the range value
+     * The upper bound of the slider value
      * @type {number}
      */
     @Input()
@@ -202,7 +204,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     /**
-     * Lower value of the range
+     * Lower value of the slider
      * @type {number}
      */
     private set lowerValue(value: number) {
@@ -210,7 +212,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
             return;
         }
 
-        if (this.isMulti && value > this.upperValue) {
+        if (this.isRange && value > this.upperValue) {
             return;
         }
 
@@ -222,7 +224,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     /**
-     * Upper value of the range
+     * Upper value of the slider
      * The default thumb value if the slider has singe thumb
      * @type {number}
      */
@@ -231,15 +233,15 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
             return;
         }
 
-        if (this.isMulti && value < this.lowerValue) {
+        if (this.isRange && value < this.lowerValue) {
             return;
         }
 
         this._upperValue = value;
     }
 
-    public get value(): number | IDualSliderValue {
-        if (this.isMulti) {
+    public get value(): number | IRangeSliderValue {
+        if (this.isRange) {
             return {
                 lower: this.snapValueToStep(this.lowerValue),
                 upper: this.snapValueToStep(this.upperValue)
@@ -251,14 +253,14 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     @Input()
-    public set value(value: number | IDualSliderValue) {
-        if (!this.isMulti) {
+    public set value(value: number | IRangeSliderValue) {
+        if (!this.isRange) {
             this.upperValue = this.snapValueToStep(value as number);
         } else {
             this.upperValue =
-                this.snapValueToStep((value as IDualSliderValue) == null ? null : (value as IDualSliderValue).upper);
+                this.snapValueToStep((value as IRangeSliderValue) == null ? null : (value as IRangeSliderValue).upper);
             this.lowerValue =
-                this.snapValueToStep((value as IDualSliderValue) == null ? null : (value as IDualSliderValue).lower);
+                this.snapValueToStep((value as IRangeSliderValue) == null ? null : (value as IRangeSliderValue).lower);
         }
 
         this._onChangeCallback(this.value);
@@ -277,7 +279,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
             this.upperBound = this.maxValue;
         }
 
-        if (this.isMulti) {
+        if (this.isRange) {
             this.value = {
                 lower: this.lowerBound,
                 upper: this.upperBound
@@ -350,7 +352,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         this.setPointerPercent();
 
         // Find the closest handle if dual slider
-        if (this.isMulti) {
+        if (this.isRange) {
             this.closestHandle();
         }
 
@@ -386,11 +388,11 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private positionHandlesAndUpdateTrack() {
-        if (!this.isMulti) {
+        if (!this.isRange) {
             this.positionHandle(this.thumbTo, this.value as number);
         } else {
-            this.positionHandle(this.thumbTo, (this.value as IDualSliderValue).upper);
-            this.positionHandle(this.thumbFrom, (this.value as IDualSliderValue).lower);
+            this.positionHandle(this.thumbTo, (this.value as IRangeSliderValue).upper);
+            this.positionHandle(this.thumbFrom, (this.value as IRangeSliderValue).lower);
         }
 
         this.updateTrack();
@@ -409,16 +411,16 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private setTickInterval() {
-        const interval = this.stepRange > 1 ? this.stepRange : null;
+        const interval = this.step > 1 ? this.step : null;
         this.renderer.setStyle(this.ticks.nativeElement, "background", this.generateTickMarks("white", interval));
     }
 
     private snapValueToStep(value: number): number {
-        const valueModStep = (value - this.minValue) % this.stepRange;
+        const valueModStep = (value - this.minValue) % this.step;
         let snapValue = value - valueModStep;
 
-        if (Math.abs(valueModStep) * 2 >= this.stepRange) {
-            snapValue += (valueModStep > 0) ? this.stepRange : (-this.stepRange);
+        if (Math.abs(valueModStep) * 2 >= this.step) {
+            snapValue += (valueModStep > 0) ? this.step : (-this.step);
         }
 
         return parseFloat(snapValue.toFixed(20));
@@ -433,9 +435,9 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     // Set Values for To/From based on active handle
     private setValues() {
         if (this.activeHandle === SliderHandle.TO) {
-            if (this.isMulti) {
+            if (this.isRange) {
                 this.value = {
-                    lower: (this.value as IDualSliderValue).lower,
+                    lower: (this.value as IRangeSliderValue).lower,
                     upper: this.fractionToValue(this.pPointer)
                 };
             } else {
@@ -446,7 +448,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         if (this.activeHandle === SliderHandle.FROM) {
             this.value = {
                 lower: this.fractionToValue(this.pPointer),
-                upper: (this.value as IDualSliderValue).upper
+                upper: (this.value as IRangeSliderValue).upper
             };
         }
     }
@@ -500,11 +502,11 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
         const toPosition = this.valueToFraction(this.upperValue);
         const positionGap = (this.valueToFraction(this.upperValue) - this.valueToFraction(this.lowerValue));
 
-        if (!this.isMulti) {
+        if (!this.isRange) {
             this.track.nativeElement.style.transform = `scaleX(${toPosition})`;
         }
 
-        if (this.isMulti) {
+        if (this.isRange) {
             this.track.nativeElement.style.transform = `scaleX(${1})`;
             this.track.nativeElement.style.left = `${fromPosition * 100}%`;
             this.track.nativeElement.style.width = `${positionGap * 100}%`;
@@ -522,34 +524,34 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
             return;
         }
 
-        if (this.isMulti) {
+        if (this.isRange) {
             if (this.activeHandle === SliderHandle.FROM) {
-                const newLower = (this.value as IDualSliderValue).lower + incrementSign * this.stepRange;
+                const newLower = (this.value as IRangeSliderValue).lower + incrementSign * this.step;
 
-                if (newLower >= (this.value as IDualSliderValue).upper) {
+                if (newLower >= (this.value as IRangeSliderValue).upper) {
                     this.thumbTo.nativeElement.focus();
                     return;
                 }
 
                 this.value = {
                     lower: newLower,
-                    upper: (this.value as IDualSliderValue).upper
+                    upper: (this.value as IRangeSliderValue).upper
                 };
             } else {
-                const newUpper = (this.value as IDualSliderValue).upper + incrementSign * this.stepRange;
+                const newUpper = (this.value as IRangeSliderValue).upper + incrementSign * this.step;
 
-                if (newUpper <= (this.value as IDualSliderValue).lower) {
+                if (newUpper <= (this.value as IRangeSliderValue).lower) {
                     this.thumbFrom.nativeElement.focus();
                     return;
                 }
 
                 this.value = {
-                    lower: (this.value as IDualSliderValue).lower,
-                    upper: (this.value as IDualSliderValue).upper + incrementSign * this.stepRange
+                    lower: (this.value as IRangeSliderValue).lower,
+                    upper: (this.value as IRangeSliderValue).upper + incrementSign * this.step
                 };
             }
         } else {
-            this.value = this.value as number + incrementSign * this.stepRange;
+            this.value = this.value as number + incrementSign * this.step;
         }
 
         this.isActiveLabel = true;
@@ -562,7 +564,7 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
     private onFocus($event: FocusEvent) {
         this.isActiveLabel = true;
 
-        if (this.isMulti && $event.target === this.thumbFrom.nativeElement) {
+        if (this.isRange && $event.target === this.thumbFrom.nativeElement) {
             this.activeHandle = SliderHandle.FROM;
         }
 
@@ -573,9 +575,9 @@ export class IgxRange implements ControlValueAccessor, OnInit, AfterViewInit {
 }
 
 @NgModule({
-    declarations: [IgxRange],
-    exports: [IgxRange],
+    declarations: [IgxSlider],
+    exports: [IgxSlider],
     imports: [CommonModule]
 })
-export class IgxRangeModule {
+export class IgxSliderModule {
 }

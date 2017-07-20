@@ -17,7 +17,7 @@ import { ListSampleComponent } from "./list/sample.component";
 import { NavbarSampleComponent } from "./navbar/sample.component";
 import { NavdrawerSampleComponent } from "./navdrawer/sample.component";
 import { ProgressbarSampleComponent } from "./progressbar/sample.component";
-import { IgxRangeSampleComponent } from "./range/sample.component";
+import { IgxSliderSampleComponent } from "./slider/sample.component";
 import { RippleSampleComponent } from "./ripple/sample.component";
 import { IgxSnackbarSampleComponent } from "./snackbar/sample.component";
 import { IgxColorsSampleComponent } from "./styleguide/colors/sample.component";
@@ -100,8 +100,8 @@ const appRoutes: Routes = [
         path: "card"
     },
     {
-        component: IgxRangeSampleComponent,
-        path: "range"
+        component: IgxSliderSampleComponent,
+        path: "slider"
     },
     {
         component: DataOperationsSampleComponent,

@@ -13,7 +13,7 @@
 // 11. Global
 // 12. Navigation Bar
 // 13. Navigation Drawer
-// 14. Range (Slider)
+// 14. Slider
 // TODO: 15. Spinners | Loaders
 // TODO: 16. Tabs
 // 17. Grid
@@ -430,31 +430,31 @@ $navbar-title-margin: 0;
 // 13. Navigation Drawer //
 $navdrawer-pin-collapsed-padding: 0;
 
-// 14. Range (Slider) //
+// 14. Slider //
 // General
-$range-height: 48px !default;
-// Range Track
-$range-track-color: palette(gray, 500) !default;
-$range-track-fill-color: palette(primary) !default;
-$range-track-height: 2px !default;
-// Range Ticks
-$range-tick-color: $white !default;
-// Range Thumb
-$range-thumb-width: 14px !default;
-$range-thumb-height: $range-thumb-width !default;
-$range-thumb-radius: $range-thumb-width / 2 !default;
-$range-thumb-color: palette(accent) !default;
-// Range Label
-$range-label-width: 28px !default;
-$range-label-height: $range-label-width !default;
-$range-label-radius: $range-label-width / 2 !default;
-$range-label-font-size: em(11px) !default;
-$range-label-font-weight: 600 !default;
-$range-label-font-color: $off-black !default;
-$range-label-background: palette(accent) !default;
-$range-label-padding: 0 2px !default;
+$slider-height: 48px !default;
+// Slider Track
+$slider-track-color: palette(gray, 500) !default;
+$slider-track-fill-color: palette(primary) !default;
+$slider-track-height: 2px !default;
+// Slider Ticks
+$slider-tick-color: $white !default;
+// Slider Thumb
+$slider-thumb-width: 14px !default;
+$slider-thumb-height: $slider-thumb-width !default;
+$slider-thumb-radius: $slider-thumb-width / 2 !default;
+$slider-thumb-color: palette(accent) !default;
+// Slider Label
+$slider-label-width: 28px !default;
+$slider-label-height: $slider-label-width !default;
+$slider-label-radius: $slider-label-width / 2 !default;
+$slider-label-font-size: em(11px) !default;
+$slider-label-font-weight: 600 !default;
+$slider-label-font-color: $off-black !default;
+$slider-label-background: palette(accent) !default;
+$slider-label-padding: 0 2px !default;
 // Start Modifier
-$range-background--start: $white !default;
+$slider-background--start: $white !default;
 
 // 16. Bottom navigation bar / Tabs //
 $tab-bar-background: $white !default;
