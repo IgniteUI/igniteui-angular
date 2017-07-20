@@ -17,8 +17,8 @@ import { ListSampleComponent } from "./list/sample.component";
 import { NavbarSampleComponent } from "./navbar/sample.component";
 import { NavdrawerSampleComponent } from "./navdrawer/sample.component";
 import { ProgressbarSampleComponent } from "./progressbar/sample.component";
-import { IgxSliderSampleComponent } from "./slider/sample.component";
 import { RippleSampleComponent } from "./ripple/sample.component";
+import { IgxSliderSampleComponent } from "./slider/sample.component";
 import { IgxSnackbarSampleComponent } from "./snackbar/sample.component";
 import { IgxColorsSampleComponent } from "./styleguide/colors/sample.component";
 import { IgxShadowsSampleComponent } from "./styleguide/shadows/sample.component";
@@ -33,7 +33,7 @@ const appRoutes: Routes = [
     {
         path: "",
         pathMatch: "full",
-        redirectTo: "/calendar"
+        redirectTo: "/slider"
     },
     {
         component: InputSampleComponent,

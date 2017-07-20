@@ -75,7 +75,7 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     public step: number = 1;
 
     /**
-     * This event is thrown when user has stopped interacting the thumb and value is changed.
+     * This event is emitted when user has stopped interacting the thumb and value is changed.
      * @type {EventEmitter}
      */
     @Output()
