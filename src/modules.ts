@@ -11,6 +11,7 @@ import { IgxCarouselModule } from "./carousel/carousel.component";
 import { IgxCheckboxModule } from "./checkbox/checkbox.component";
 import { IgxDatePickerModule } from "./date-picker/date-picker.component";
 import { IgxDialogModule } from "./dialog/dialog.component";
+import { IgxGridModule } from "./grid/grid.component";
 import { IgxIconModule } from "./icon/icon.component";
 import { IgxListModule } from "./list/list.component";
 import { IgxNavbarModule } from "./navbar/navbar.component";
@@ -31,6 +32,7 @@ import { IgxToastModule } from "./toast/toast.component";
         IgxCalendarModule,
         IgxCarouselModule,
         IgxCheckboxModule,
+        IgxGridModule,
         IgxIconModule,
         IgxListModule,
         IgxDialogModule,
@@ -52,6 +54,7 @@ import { IgxToastModule } from "./toast/toast.component";
         IgxCalendarModule,
         IgxCarouselModule,
         IgxCheckboxModule,
+        IgxGridModule,
         IgxIconModule,
         IgxListModule,
         IgxDialogModule,
