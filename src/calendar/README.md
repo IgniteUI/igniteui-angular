@@ -43,19 +43,19 @@ When a day inside the current month is focused:
 ### Inputs
 | Name       |      Type      |  Description |
 |:----------:|:-------------|:------|
-| `weekStart`| `Number | WEEKDAYS` | Sets on which day will the week start. |
+| `weekStart`| `Number \| WEEKDAYS` | Sets on which day will the week start. |
 | `locale` | `string` | Sets the locale used for formatting and displaying the dates in the calendar. For more information check out [this](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl) page for valid formats. |
 | `selection` | `string` | Sets the type of selection in the calendar. Valid values are `single` (default), `multi` and `range` |
 | `viewDate` | `Date` | Sets the year/month that will be presented in the default view when the calendar renders. By default it is the current year/month.   |
-| `value` | `Date | Date[]` | Gets/Sets the current value of the calendar widget. Both multi-selection and range selection return an array of selected dates. |
+| `value` | `Date \| Date[]` | Gets/Sets the current value of the calendar widget. Both multi-selection and range selection return an array of selected dates. |
 | `formatOptions` | `Object` | The format options passed along with the `locale` property used for formatting the dates. |
 
 ### Outputs
 | Name | Return Type | Description |
 |:--:|:---|:---|
-| `onSelection` | `Date | Date[]` | Fired when selection is made in the calendar. The event contains the selected value(s) based on the type of selection the component is set to |
+| `onSelection` | `Date \| Date[]` | Fired when selection is made in the calendar. The event contains the selected value(s) based on the type of selection the component is set to |
 
 ### Methods
 | Name   | Arguments | Return Type | Description |
 |:----------:|:------|:------|:------|
-| `selectDate` | `date: Date | Date[]` | `void` | Change the calendar selection. Calling this method will emit the `onSelection` event. |
+| `selectDate` | `date: Date \| Date[]` | `void` | Change the calendar selection. Calling this method will emit the `onSelection` event. |
