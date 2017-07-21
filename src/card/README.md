@@ -3,9 +3,9 @@ igx-card
 
 **igx-card** is a sheet of material that serves as an entry point to more detailed information.
 
-#Usage
+# Usage
 
-##Simple Card
+## Simple Card
 
 ```html
 <igx-card>
