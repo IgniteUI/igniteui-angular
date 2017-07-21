@@ -11,7 +11,8 @@ Based on its configuration it's a slider or range slider.
 <igx-slider [minValue]="0" [maxValue]="50" [lowerBound]="20" [value]="30">
 </igx-slider>
 ```
-<hr>
+
+----
 
 ### Range slider
 
@@ -22,7 +23,6 @@ Based on its configuration it's a slider or range slider.
 ```
 
 ## Getting Started
-
 
 ### Dependencies
 

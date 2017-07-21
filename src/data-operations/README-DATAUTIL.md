@@ -1,7 +1,7 @@
 # DataUtil
 
 ## Description
-**DataUtil** is a static class which provides a set of helper functoins for querying local data - array of JavaScript objects. 
+**DataUtil** is a static class which provides a set of helper functions for querying local data - array of JavaScript objects. 
 It can be used for applying data operations like - filtering, sorting, paging.
 
 
@@ -72,9 +72,9 @@ items: Array<Object> = [
     * `fieldName` - specifies name of the column
     * `dir` - identifies sorting direction. It is of type enum **SortingDirection**. Possible options are **SortingDirection.Asc** and **SortingDirection.Desc**
     * `ignoreCase` - boolean property which identifies whether sorting is case-sensitive for string columns(optional)
-* **FilteringExpression** - interface which defines how filterin should be applied for each column. Its properties are:
+* **FilteringExpression** - interface which defines how filtering should be applied for each column. Its properties are:
     * `fieldName` - specifies name of the column
-    * `condtion` - specifies filteirng condition. It should be function which accepts as argumennts:
+    * `condtion` - specifies filtering condition. It should be function which accepts as arguments:
         * `value` - value of the record on which filtering is applied
         * `searchVal` - search value. There are filtering conditions which do not require searchVal. Example - FilteringCondition.Boolean.True.(optional)
         * `ignoreCase` - boolean variable which specifies case-sensitivity for string columns(optional) 
@@ -82,7 +82,7 @@ items: Array<Object> = [
     * `ignoreCase` - boolean variable which specifies case-sensitivity for string columns(optional) 
 * **SortingStrategy** - class which implements **ISortingStrategy** interface. It specifies sorting algorithm.
 * **FilteringStrategy** - class which implements **IFilteringStrategy** interface. It specifies filtering algorithm.
-* **DataType** - enumaration which represent basic data types. Its values are:
+* **DataType** - enumeration which represent basic data types. Its values are:
     * **DataType.Boolean**
     * **DataType.Date**
     * **DataType.Number**

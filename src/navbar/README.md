@@ -1,11 +1,10 @@
-igx-navbar
-----------
+# igx-navbar
 
 **igx-navbar** is position on top and represents current state and enables a user defined action.
 
-#Usage
+# Usage
 
-##Simple Navbar
+## Simple Navbar
 
 ```html
 <igx-navbar title="Settings">
@@ -15,7 +14,7 @@ igx-navbar
 You can be more descriptive and set title `title="User settings"`.
 
 
-##Navbar with back button
+## Navbar with back button
 
 ```html
 <igx-navbar title="Settings"

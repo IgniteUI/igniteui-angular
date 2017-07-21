@@ -1,11 +1,10 @@
-igx-snackbar
---------------------
+# igx-toast
 
-**igx-snackbar** IgxToast provides information and warning messages. They could not be dismissed, are non-interactive and can appear on top, middle and the bottom of the screen.
+**igx-toast** IgxToast provides information and warning messages. They could not be dismissed, are non-interactive and can appear on top, middle and the bottom of the screen.
 
-#Usage
+# Usage
 
-##Simple Toast
+## Simple Toast
 
 ```html
 <button (click)="toast.show()">Show toast</button>
@@ -22,7 +21,7 @@ You can show the toast by using `toast.show()` method.
 
 You can show hide toast by using `toast.hide()` method.
 
-##Toast positioned on top
+## Toast positioned on top
 
 ```html
 <button (click)="toast.show()">Show toast</button>
@@ -35,7 +34,7 @@ You can show hide toast by using `toast.hide()` method.
 
 You can modify the position of the toast by setting `postion="IgxToastPosition.Top"`.
 
-##Toast with events
+## Toast with events
 
 ```html
 <button (click)="toast.show()">Show toast</button>

@@ -1,7 +1,7 @@
 # igx-badge
 
 The **igx-badge** component is an absolutely positioned element that can be used in tandem with other components such as avatars, navigation menus, or anywhere else in an app where some active indication is required.
-With the igx-badge you can display active count or an icon in several different predifined styles.
+With the igx-badge you can display active count or an icon in several different predefined styles.
 
 # Usage
 ```html

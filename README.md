@@ -33,8 +33,8 @@ Current list of controls include:
 | **circular progress** |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/progressbar/README.md)  |     |               |               |                                                                                                       |
 | **icon**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/tree/master/src/icon/README.md)         |     |               |               |                                                                                                       |
 | **card**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/card/README.md)         |     |               |               |                                                                                                       |
-| **grid**              |           Available | Not available         |     |               |               |                                                                                                       |
-| **range**              |           Available | Not available         |     |               |               |                                                                                                       |
+| **grid**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/grid/README.md)         |     |               |               |                                                                                                       |
+| **slider**            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/slider/README.md)       |     |               |               |                                                                                                       |
 | **calendar**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/tree/master/src/calendar/README.md)         |     |               |               |                                                                                                       |
 | **buttonGroup**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/buttonGroup/README.md)      |               |               |                                                                                                       |
 | **dataContainer**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/data-operations/README-DATACONTAINER.md)      |               |               |                                                                                                       |
@@ -79,4 +79,4 @@ You can include Ignite UI JS Blocks in your project as a dependency using the NP
 [General Naming Guidelines](../../wiki//General-Naming-Guidelines-for-Ignite-UI-JS-Blocks)
 
 ## Demo App
-[Warehouse Picklist App] (https://github.com/IgniteUI/warehouse-js-blocks)
+[Warehouse Picklist App](https://github.com/IgniteUI/warehouse-js-blocks)

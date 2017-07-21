@@ -1,4 +1,4 @@
-#Igx-Tab-Bar
+# Igx-Tab-Bar
 
 #### Category
 _Components_
