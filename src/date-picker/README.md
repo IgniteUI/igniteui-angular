@@ -9,14 +9,22 @@ which is presented into input field.
 </igx-datePicker>
 ```
 
-# API Summary
+# API
+
+###### Inputs
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
-| `formatter` |  function | Sets the date format. |
 | `dateValue` | Date | Sets the initial date value. |
-| `onOpen` | event | Emitted when a datePicker calendar is being opened. |
 
-*You can also set all igx-datePicker properties programatically.
+###### Outputs
+| Name | Description |
+| :--- | :--- | 
+| `onOpen`  | Emitted when a datePicker calendar is being opened.  |
+
+###### Methods
+| Signature | Description |
+| :--- | :--- |
+| `formatter`  | Sets the date format.  |
 
 # Examples
 
