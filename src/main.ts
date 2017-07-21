@@ -17,6 +17,7 @@ export * from "./data-operations/paging-state.interface";
 export * from "./data-operations/data-state.interface";
 export * from "./data-operations/data-util";
 export * from "./data-operations/data-container";
+export * from "./grid/grid.component";
 
 export * from "./navigation-drawer/navigation-drawer.component";
 export * from "./icon/icon.component";
@@ -42,5 +43,5 @@ export * from "./badge/badge.component";
 export * from "./snackbar/snackbar.component";
 export * from "./card/card.component";
 export * from "./toast/toast.component";
-export * from "./range/range.component";
+export * from "./slider/slider.component";
 export * from "./date-picker/date-picker.component";
