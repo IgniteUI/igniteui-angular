@@ -1,7 +1,7 @@
 # Ignite UI JS Blocks -  Infragistics Angular Components
 
 [![Build Status](https://travis-ci.org/IgniteUI/igniteui-js-blocks.svg?branch=master)](https://travis-ci.org/IgniteUI/igniteui-js-blocks)
-[![Coverage Status](https://coveralls.io/repos/github/IgniteUI/igniteui-js-blocks/badge.svg?branch=master)](https://coveralls.io/github/IgniteUI/igniteui-js-blocks?branch=master)  
+[![Coverage Status](https://coveralls.io/repos/github/IgniteUI/igniteui-js-blocks/badge.svg?branch=master)](https://coveralls.io/github/IgniteUI/igniteui-js-blocks?branch=master)
 [![NPM version](https://img.shields.io/npm/v/igniteui-js-blocks.svg?style=flat)](https://www.npmjs.com/package/igniteui-js-blocks)
 
 ### [**View control samples here**](http://139.59.168.161/demos)
@@ -35,6 +35,7 @@ Current list of controls include:
 | **card**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/card/README.md)         |     |               |               |                                                                                                       |
 | **grid**              |           Available | Not available         |     |               |               |                                                                                                       |
 | **range**              |           Available | Not available         |     |               |               |                                                                                                       |
+| **calendar**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/tree/master/src/calendar/README.md)         |     |               |               |                                                                                                       |
 | **buttonGroup**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/buttonGroup/README.md)      |               |               |                                                                                                       |
 | **dataContainer**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/data-operations/README-DATACONTAINER.md)      |               |               |                                                                                                       |
 | **dataUtil**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/data-operations/README-DATAUTIL.md)      |               |               |                                                                                                       |
