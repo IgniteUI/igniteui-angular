@@ -157,7 +157,7 @@ public deleteRow(event) {
 
 | Name | Description |
 | :--- | :--- |
-| Event emitters | Notify for a change |
+| *Event emitters* | *Notify for a change* |
 | onEditDone  | Used on update row to emit the updated row  |
 | onFilterDone  | Used when filtering data to emit the column and filtering expression  |
 | onSortingDone  | Used when sorting data to emit the column, direction and sorting expression  |
@@ -188,5 +188,41 @@ public deleteRow(event) {
 | paginate | Change the current page by passed number  |
 
 
+# IgxColumnComponent
 
+Column component used to define grid's *columns* collection. Cell, header and footer templates are available.
+
+## Example
+```html
+<igx-grid #grid2 [data]="data | async" [paging]="true" [perPage]="10"
+    (onCellSelection)="onInlineEdit($event)">
+    <igx-column [sortable]="true" [field]="'ProductID'" [header]="'ID'"></igx-column>
+    <igx-column [sortable]="true" [filtering]="true" [field]="'ProductName'"></igx-column>
+    <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'In Stock'">
+        <ng-template igxCell let-col="column" let-ri="rowIndex" let-item="item">
+            <span *ngIf="!showInput(ri, col.field)">{{ item }}</span>
+            <input *ngIf="showInput(ri, col.field)" igxInput [value]="item">
+        </ng-template>
+    </igx-column>
+```
+
+
+## API
+
+### Inputs
+
+| Name | Type | Description |
+| :--- |:--- | :--- |
+| field  | string  | Column field name |
+| header  | string  | Column header text |
+| sortable  | boolean  | Set column to be sorted or not |
+| editable  | boolean  | Set column values to be editable |
+| filtering  | boolean  | Set column values to be filterable |
+| hidden  | boolean  | Visibility of the column |
+| movable  | boolean  | Column moving |
+| width  | string  | Columns width |
+| index  | string  | Column index |
+| filteringCondition  | FilteringCondition  | Boolean, date, string or number conditions. Default is string *contains*  |
+| filteringIgnoreCase  | boolean  | Ignore capitalization of words |
+| dataType  | DataType  | String, number, Boolean or Date |
 
