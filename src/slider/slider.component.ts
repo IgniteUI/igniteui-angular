@@ -47,7 +47,7 @@ function MakeProvider(type: any) {
 export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     /**
      * Marks slider as continuous. By default is considered that the slider is discrete.
-     * Discrete slider does not have ticks and does not shows bubbles for values.
+     * Discrete slider does not have ticks and does not shows bubble labels for values.
      */
     @Input()
     public isContinuous: boolean = false;
@@ -79,7 +79,7 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
      * @type {EventEmitter}
      */
     @Output()
-    public valueChanged = new EventEmitter();
+    public onValueChange = new EventEmitter();
 
     private isActiveLabel: boolean = false;
 
@@ -188,7 +188,7 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     /**
-     * Sets the lower bound of the slider value.
+     * Sets the lower boundary of the slider value.
      * If not set is the same as min value.
      * @type {number}
      */
@@ -312,12 +312,23 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
         }
 
         if (this.isRange) {
-            this.value = {
-                lower: this.lowerBound,
-                upper: this.upperBound
-            };
+            if (Number.isNaN((this.value as IRangeSliderValue).lower)) {
+                this.value = {
+                    lower: this.lowerBound,
+                    upper: (this.value as IRangeSliderValue).upper
+                };
+            }
+
+            if (Number.isNaN((this.value as IRangeSliderValue).upper)) {
+                this.value = {
+                    lower: (this.value as IRangeSliderValue).lower,
+                    upper: this.upperBound
+                };
+            }
         } else {
-            this.value = this.lowerBound;
+            if (Number.isNaN(this.value as number)) {
+                this.value = this.lowerBound;
+            }
         }
 
         this.pMin = this.valueToFraction(this.lowerBound) || 0;
@@ -643,7 +654,7 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private emitValueChanged() {
-        this.valueChanged.emit({value: this.value});
+        this.onValueChange.emit({value: this.value});
     }
 }
 
