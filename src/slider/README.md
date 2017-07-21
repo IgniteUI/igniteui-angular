@@ -1,10 +1,12 @@
 # igx-slider
-The slider component allows users to select a value in certain range or select a range of values 
-based on it configuration it's a slider or range slider.
+
+The slider component allows users to select a value in certain range or select a range of values. 
+Based on its configuration it's a slider or range slider.
 
 ## Usage
 
 ### Slider
+
 ```html
 <igx-slider [minValue]="0" [maxValue]="50" [lowerBound]="20" [value]="30">
 </igx-slider>
@@ -12,17 +14,21 @@ based on it configuration it's a slider or range slider.
 <hr>
 
 ### Range slider
+
 ```html
 <igx-slider [type]="sliderType" [value]="{ lower: 5, upper: 50 }"
             [minValue]="0" [maxValue]="100">
 </igx-slider>
+```
 
 ## Getting Started
 
 
 ### Dependencies
+
 To use the IgxSlider import the IgxSlider:
-```ts
+
+```typescript
 import { IgxSlider } from "../../../src/main";
 ```
 
