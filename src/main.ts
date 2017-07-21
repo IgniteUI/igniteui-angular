@@ -43,5 +43,5 @@ export * from "./badge/badge.component";
 export * from "./snackbar/snackbar.component";
 export * from "./card/card.component";
 export * from "./toast/toast.component";
-export * from "./range/range.component";
+export * from "./slider/slider.component";
 export * from "./date-picker/date-picker.component";
