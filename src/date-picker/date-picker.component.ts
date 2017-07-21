@@ -11,7 +11,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { IgxCalendarModule } from "../calendar/calendar.component";
 import { HammerGesturesManager } from "../core/touch";
-import { IgxDialogModule } from "../dialog/dialog.component";
+import { IgxDialog, IgxDialogModule } from "../dialog/dialog.component";
 import { IgxInput } from "../input/input.directive";
 
 @Component({
@@ -29,7 +29,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
 
     private _displayData: string =
         this._customFormatChecker(this.formatter, new Date(Date.now()));
-    @ViewChild("alert") private alert;
+    @ViewChild(IgxDialog) private alert: IgxDialog;
 
     public writeValue(value: Date): void {
         this.dateValue = value;
@@ -65,8 +65,14 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
 
     private onOpenedEvent(): void {
         this.alert.open();
+        this._focusTheDialog();
         this._onTouchedCallback();
         this.onOpened.emit(this);
+    }
+
+    private _focusTheDialog() {
+        // Get the dialog element after the element appeares into DOM.
+        setTimeout(() => this.alert.dialogEl.nativeElement.focus(), 60);
     }
 
     private _setLocaleToDate(value: Date, locale: string = "en"): string {
