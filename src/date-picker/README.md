@@ -14,7 +14,7 @@ which is presented into input field.
 |:----------|:-------------:|:------|
 | `formatter` |  function | Sets the date format. |
 | `dateValue` | Date | Sets the initial date value. |
-| `onOpened` | event | Emitted when a datePicker calendar is being opened. |
+| `onOpen` | event | Emitted when a datePicker calendar is being opened. |
 
 *You can also set all igx-datePicker properties programatically.
 
