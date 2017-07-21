@@ -16,12 +16,12 @@ import { HammerGesturesManager } from "../core/touch";
 export enum Direction {NONE, NEXT, PREV}
 
 /**
- * A carousel component is used to browse or navigate through a collection of slides - galeries of images,
- * cards, on-boarding tutorials or page-based interfaces. It can be used as a seperate fullscreen element
+ * A carousel component is used to browse or navigate through a collection of slides - galleries of images,
+ * cards, on-boarding tutorials or page-based interfaces. It can be used as a separate fulls creen element
  * or inside another component
  *
  * ```
- * <igx-carousel (event output bindings) [input bindigns] >
+ * <igx-carousel (event output bindings) [input bindings] >
  *     ....
  * </igx-carousel>
  * ```

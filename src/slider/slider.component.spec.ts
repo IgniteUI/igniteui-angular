@@ -524,11 +524,11 @@ describe("IgxSlider", () => {
     }, 5000);
 
     function simulateKeyDown(element, key) {
-        const keyOptioins: KeyboardEventInit = {
+        const keyOptions: KeyboardEventInit = {
             key
         };
 
-        const keypressEvent = new KeyboardEvent("keydown", keyOptioins);
+        const keypressEvent = new KeyboardEvent("keydown", keyOptions);
 
         return new Promise((resolve, reject) => {
             element.dispatchEvent(keypressEvent);
