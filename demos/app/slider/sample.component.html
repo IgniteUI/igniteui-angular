@@ -1,24 +1,24 @@
 <div class="sample-wrapper">
     <div class="sample-header">
-        <h1 class="title">Range Slider</h1>
+        <h1 class="title">Slider</h1>
         <p class="description">
-            Allows the user to set values within a given range.
+            Allows the user to set value/values within a given range.
         </p>
     </div>
 
     <section class="sample-content">
         <div>
             <article class="sample-column">
-                <h4 class="sample-title">One-handle range slider</h4>
-                <igx-range #range [(ngModel)]="task.percentCompleted" stepRange="5" [lowerBound]="20">
-                </igx-range>
+                <h4 class="sample-title">Slider</h4>
+                <igx-slider #slider [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
+                </igx-slider>
             </article>
 
 
             <article class="sample-column">
-                <h4 class="sample-title">Two-handle range slider</h4>
-                <igx-range #range2 [type]="sliderType" [(ngModel)]="rangeValue" [minValue]="0" [maxValue]="100">
-                </igx-range>
+                <h4 class="sample-title">Range slider</h4>
+                <igx-slider #slider2 [type]="sliderType" [(ngModel)]="rangeValue" [minValue]="0" [maxValue]="100">
+                </igx-slider>
             </article>
         </div>
 

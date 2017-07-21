@@ -1,11 +1,11 @@
-%igx-range-display {
+%igx-slider-display {
     display: flex;
     position: relative;
-    height: $range-height;
+    height: $slider-height;
     align-items: center;
 }
 
-%igx-range-thumbs-container {
+%igx-slider-thumbs-container {
     position: absolute;
     width: 100%;
     height: 0;
@@ -13,29 +13,29 @@
     z-index: 1;
 }
 
-%igx-range-track {
+%igx-slider-track {
     position: absolute;
     width: 100%;
-    height: $range-track-height;
-    background: $range-track-color;
+    height: $slider-track-height;
+    background: $slider-track-color;
     transition: background .2s ease;
 }
 
-%igx-range-track-ticks {
+%igx-slider-track-ticks {
     position: absolute;
     width: 100%;
-    height: $range-track-height;
-    background-size: 100% $range-track-height;
+    height: $slider-track-height;
+    background-size: 100% $slider-track-height;
     opacity: .85;
     transition: opacity .2s ease;
     z-index: 1;
 }
 
-%igx-range-track-fill {
+%igx-slider-track-fill {
     position: absolute;
     width: 100%;
     height: inherit;
-    background: $range-track-fill-color;
+    background: $slider-track-fill-color;
     transform-origin: 0 0 0;
     transform: scaleX(0);
 }
@@ -45,10 +45,10 @@
     position: absolute;
     justify-content: center;
     flex-flow: row nowrap;
-    width: $range-thumb-width;
-    height: $range-thumb-height;
-    margin-left: -$range-thumb-width / 2;
-    top: -$range-thumb-height / 2;
+    width: $slider-thumb-width;
+    height: $slider-thumb-height;
+    margin-left: -$slider-thumb-width / 2;
+    top: -$slider-thumb-height / 2;
     outline: none;
 }
 
@@ -58,19 +58,19 @@
     align-items: center;
     justify-content: center;
     flex: 0 0 auto;
-    min-width: $range-label-width;
-    height: $range-label-height;
-    padding: $range-label-padding;
-    border-radius: $range-label-radius;
+    min-width: $slider-label-width;
+    height: $slider-label-height;
+    padding: $slider-label-padding;
+    border-radius: $slider-label-radius;
     top: -36px;
-    font-size: $range-label-font-size;
-    font-weight: $range-label-font-weight;
-    line-height: $range-label-font-size;
-    color: $range-label-font-color;
-    background: $range-label-background;
+    font-size: $slider-label-font-size;
+    font-weight: $slider-label-font-weight;
+    line-height: $slider-label-font-size;
+    color: $slider-label-font-color;
+    background: $slider-label-background;
     opacity: .5;
     transform: scale(0);
-    border-color: $range-label-background transparent transparent;
+    border-color: $slider-label-background transparent transparent;
     transform-origin: 50% 150% 0;
     transition: transform .2s ease-out;
     z-index: -1;
@@ -96,8 +96,8 @@
     left: 0;
     width: inherit;
     height: inherit;
-    border-radius: $range-thumb-radius;
-    background: $range-thumb-color;
+    border-radius: $slider-thumb-radius;
+    background: $slider-thumb-color;
     transform: scale(1);
     transform-origin: 50% 50% 0;
     opacity: 1;
@@ -116,8 +116,8 @@
 
 %igx-thumb-dot--start,
 %igx-thumb-label--start {
-    background: $range-background--start;
-    border-color: $range-background--start transparent transparent;
+    background: $slider-background--start;
+    border-color: $slider-background--start transparent transparent;
 }
 
 %igx-thumb--active {
