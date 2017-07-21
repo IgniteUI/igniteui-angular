@@ -25,7 +25,7 @@ import { IgxInput } from "../input/input.directive";
 export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
     @Input() public formatter: (val: Date) => string;
 
-    @Output() public onOpened = new EventEmitter();
+    @Output() public onOpen = new EventEmitter();
 
     private _displayData: string =
         this._customFormatChecker(this.formatter, new Date(Date.now()));
@@ -63,11 +63,11 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
         this.alert.close();
     }
 
-    private onOpenedEvent(): void {
+    private onOpenEvent(): void {
         this.alert.open();
         this._focusTheDialog();
         this._onTouchedCallback();
-        this.onOpened.emit(this);
+        this.onOpen.emit(this);
     }
 
     private _focusTheDialog() {

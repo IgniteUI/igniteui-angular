@@ -5,7 +5,7 @@ import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxDatePickerComponent, IgxDatePickerModule } from "./date-picker.component";
 
-describe("IgxDatePicker", () => {
+fdescribe("IgxDatePicker", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -66,10 +66,8 @@ describe("IgxDatePicker", () => {
 
     });
 
-    it("Datepicker opened event", fakeAsync(() => {
+    it("Datepicker open event", () => {
         const fixture = TestBed.createComponent(IgxDatePicker);
-        fixture.detectChanges();
-        tick();
         fixture.detectChanges();
 
         const datePicker = fixture.componentInstance.datePicker;
@@ -77,14 +75,14 @@ describe("IgxDatePicker", () => {
 
         const target = dom.query(By.css(".igx-date-picker__input-date"));
 
-        spyOn(datePicker.onOpened, "emit");
+        spyOn(datePicker.onOpen, "emit");
 
         target.triggerEventHandler("click", { target: dom.nativeElement.children[0] });
 
         fixture.detectChanges();
 
-        expect(datePicker.onOpened.emit).toHaveBeenCalled();
-    }));
+        expect(datePicker.onOpen.emit).toHaveBeenCalled();
+    });
 
     it("Datepicker custom formatter", () => {
         const fixture = TestBed.createComponent(IgxDatePickerWithCustomFormatter);
