@@ -113,7 +113,7 @@ public initColumns(event: IgxGridColumnInitEvent) {
 }
 ```
 
-- Or add event handlers for CRUD operations
+- Аdd event handlers for CRUD operations
 
 ```typescript
 public addRow() {
@@ -146,48 +146,46 @@ public deleteRow(event) {
 
 | Name | Type | Description |
 | :--- |:--- | :--- |
-| perPage  | number  | Visible items per page, default is 25 |
+| id  | string  | Unique identifier of the Grid |
 | paging  | bool  | Enables paging feature |
-| state  | IDataState  |  |
-| id  | string  | Content Cell |
-| autoGenerate  | boolean  | Content Cell |
+| perPage  | number  | Visible items per page, default is 25 |
+| state  | IDataState  | Define filtering, sorting and paging state  |
+| autoGenerate  | boolean  | Autogenerate grid's columns, default value is *false* |
 
 
 ### Outputs
 
 | Name | Description |
 | :--- | :--- |
-| Event emitters |   |
-| onEditDone  | Content Cell  |
-| onFilterDone  | Content Cell  |
-| onSortingDone  | Content Cell  |
-| onMovingDone  | Content Cell  |
-| onCellSelection  | Content Cell  |
-| onRowSelection  | Content Cell  |
-| onPagingDone  | Content Cell  |
-| onColumnInit  | Content Cell  |
-| onBeforeProcess  | Content Cell  |
+| Event emitters | Notify for a change |
+| onEditDone  | Used on update row to emit the updated row  |
+| onFilterDone  | Used when filtering data to emit the column and filtering expression  |
+| onSortingDone  | Used when sorting data to emit the column, direction and sorting expression  |
+| onMovingDone  | Used when moving column to emit the drop event  |
+| onCellSelection  | Used when focusing a cell to emit the cell  |
+| onRowSelection  | Used when focusing a row to emit the row  |
+| onPagingDone  | Used when paginating to emit paginator event  |
+| onColumnInit  | Used when initializing a column to emit it  |
+| onBeforeProcess  | Emit binding behavior  |
 
 
 ### Methods
 
 | Signature | Description |
 | :--- | :--- |
-| getColumnByIndex(index: number)  | Content Cell  |
-| getColumnByField(field: string)  | Content Cell  |
-| formatBody(record: any, column: IgxColumnComponent) | Content Cell  |
-| formatHeader(column: IgxColumnComponent) | Content Cell  |
+| getColumnByIndex(index: number)  | Get grid column by index  |
+| getColumnByField(field: string)  | Get grid columng by field name  |
 | getCell(rowIndex: number, columnField: string) | Returns the cell at rowIndex/columnIndex.  |
 | getRow(rowIndex: number) | Returns row  |
 | focusCell | Focuses the grid cell at position row x column  |
-| focusRow | Focuses the grid row at index `index`.  |
-| filterData | Content Cell  |
-| addRow | Content Cell  |
-| deleteRow | Content Cell  |
-| updateRow | Content Cell  |
-| updateCell | Content Cell  |
-| sortColumn | Content Cell  |
-| paginate | Content Cell  |
+| focusRow | Focuses the grid row at `index`.  |
+| filterData | Filter data by search term and column  |
+| addRow | Add record to the grid data container  |
+| deleteRow | Remove record from the grid data container  |
+| updateRow | Update record from teh grid data container  |
+| updateCell | Update grid cell by index, column field and passed value  |
+| sortColumn | Sort grid column  |
+| paginate | Change the current page by passed number  |
 
 
 
