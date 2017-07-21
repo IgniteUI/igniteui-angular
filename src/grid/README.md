@@ -1,5 +1,5 @@
 # igx-grid
-The **igx-grid** component provides the capability to manipulate and represent tabular data.
+**igx-grid** component provides the capability to manipulate and represent tabular data.
 
 ## Usage
 ```html
@@ -190,7 +190,7 @@ public deleteRow(event) {
 
 # IgxColumnComponent
 
-Column component used to define grid's *columns* collection. Cell, header and footer templates are available.
+Column component is used to define grid's *columns* collection. Cell, header and footer templates are available.
 
 ## Example
 ```html
