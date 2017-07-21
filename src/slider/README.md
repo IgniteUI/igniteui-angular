@@ -1,6 +1,7 @@
 # igx-slider
-The slider component allows users to select a value in certain range or select a range of values 
-based on it configuration it's a slider or range slider.
+
+The slider component allows users to select a value in certain range or select a range of values. 
+Based on its configuration it's a slider or range slider.
 
 ## Usage
 
@@ -24,6 +25,7 @@ based on it configuration it's a slider or range slider.
 ## Getting Started
 
 ### Dependencies
+
 To use the IgxSlider import the IgxSlider:
 
 ```typescript
