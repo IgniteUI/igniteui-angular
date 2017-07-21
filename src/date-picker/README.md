@@ -1,12 +1,12 @@
-# igx-date-picker
+# igx-datePicker
 
-The **igx-date-picker** component allows you to choose date from calendar
+The **igx-datePicker** component allows you to choose date from calendar
 which is presented into input field.
 
 # Usage
 ```html
-<igx-date-picker [formatter]="curtomFormatter" [dateValue]="dateValue">
-</igx-date-picker>
+<igx-datePicker [formatter]="curtomFormatter" [dateValue]="dateValue">
+</igx-datePicker>
 ```
 
 # API Summary
@@ -16,17 +16,17 @@ which is presented into input field.
 | `dateValue` | Date | Sets the initial date value. |
 | `onOpened` | event | Emitted when a datePicker calendar is being opened. |
 
-*You can also set all igx-date-picker properties programatically.
+*You can also set all igx-datePicker properties programatically.
 
 # Examples
 
-Using `igx-date-picker` tag to include it into your app.
+Using `igx-datePicker` tag to include it into your app.
 ```html
-<igx-date-picker [formatter]="curtomFormatter" [dateValue]="dateValue">
-</igx-date-picker>
+<igx-datePicker [formatter]="curtomFormatter" [dateValue]="dateValue">
+</igx-datePicker>
 ```
 
-Using `TypeScript` to modify and existing igx-date-picker instance.
+Using `TypeScript` to modify and existing igx-datePicker instance.
 ```typescript
 datePickerInstance.formatter(callback);
 datePickerInstance.dateValue(new Date(Date.now()));
