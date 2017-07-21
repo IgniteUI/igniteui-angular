@@ -1,12 +1,12 @@
-igx-radio
+# igx-radio
 
 **igx-radio** renders a set of radio buttons to allow the user make a choice and submit data. The user is able to select just one from the available options.
 
-#Usage
+# Usage
 
 A number of options, attributes and events are available to customize the component look and feel and the way the radio button is working.
 
-##Initialize
+## Initialize
 ```html
 <igx-radio
     *ngFor="let item of ['Foo', 'Bar', 'Baz']"
@@ -20,9 +20,9 @@ A number of options, attributes and events are available to customize the compon
 The above markup will render three radio buttons, one for each item of the ['Foo', 'Bar', 'Baz'] array. The'value' property is mapped to the input element value attribute,
 while the content of the <igx-radio> tag is what gets displayed in the label associated with the input.
 
-##You can assign unique id's by using the 'id' property and use the 'name' property to group buttons together.
+## You can assign unique id's by using the 'id' property and use the 'name' property to group buttons together.
 
-##The rest of the properties are also standard and control the tabIndex, disabled and checked attributes of the input element that gets rendered:
+## The rest of the properties are also standard and control the tabIndex, disabled and checked attributes of the input element that gets rendered:
 ```html
 <igx-radio
     id="{{user.id}}"

@@ -1,4 +1,4 @@
-#igxFilter
+# igxFilter
 
 #### Category
 _Directives_

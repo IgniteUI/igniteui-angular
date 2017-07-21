@@ -1,7 +1,7 @@
 # igx-carousel
 
-A carousel component is used to browse or navigate through a collection of slides - galeries of images,
-cards, on-boarding tutorials or page-based interfaces. It can be used as a seperate fullscreen element
+A carousel component is used to browse or navigate through a collection of slides - galleries of images,
+cards, on-boarding tutorials or page-based interfaces. It can be used as a separate full screen element
 or inside another component.
 
 # API Summary `igx-carousel`

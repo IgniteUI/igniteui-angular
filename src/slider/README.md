@@ -5,24 +5,28 @@ based on it configuration it's a slider or range slider.
 ## Usage
 
 ### Slider
+
 ```html
 <igx-slider [minValue]="0" [maxValue]="50" [lowerBound]="20" [value]="30">
 </igx-slider>
 ```
-<hr>
+
+----
 
 ### Range slider
+
 ```html
 <igx-slider [type]="sliderType" [value]="{ lower: 5, upper: 50 }"
             [minValue]="0" [maxValue]="100">
 </igx-slider>
+```
 
 ## Getting Started
 
-
 ### Dependencies
 To use the IgxSlider import the IgxSlider:
-```ts
+
+```typescript
 import { IgxSlider } from "../../../src/main";
 ```
 
