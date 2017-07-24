@@ -28,7 +28,7 @@ export abstract class BaseProgress {
     }
 
     protected instantiateValAnimation(prevVal: number, currVal: number, max: number) {
-        // Valide current and previous value to be in ragne [0...max]
+        // Validate current and previous value to be in range [0...max]
         const validatePrevValue = getValueInRange(prevVal, max) || 0;
         const validateCurrValue = getValueInRange(currVal, max) || 0;
         // Get prev progress value in percent

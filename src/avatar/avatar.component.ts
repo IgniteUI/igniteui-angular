@@ -29,7 +29,7 @@ export class IgxAvatar {
     public sizeEnum = Size;
     public roleDescription: string;
 
-    protected fontname = "Titillium Web";
+    protected fontName = "Titillium Web";
 
     private _size: string;
     private _bgColor: string;
@@ -116,7 +116,7 @@ export class IgxAvatar {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.textAlign = "center";
         ctx.fillStyle = this.color;
-        ctx.font = fontSize + `px ${this.fontname}`;
+        ctx.font = fontSize + `px ${this.fontName}`;
         ctx.fillText(
             this.initials.toUpperCase(),
             size / 2,

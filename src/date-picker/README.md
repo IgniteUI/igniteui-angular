@@ -5,7 +5,7 @@ which is presented into input field.
 
 # Usage
 ```html
-<igx-datePicker [formatter]="curtomFormatter" [dateValue]="dateValue">
+<igx-datePicker [formatter]="customFormatter" [dateValue]="dateValue">
 </igx-datePicker>
 ```
 
@@ -30,7 +30,7 @@ which is presented into input field.
 
 Using `igx-datePicker` tag to include it into your app.
 ```html
-<igx-datePicker [formatter]="curtomFormatter" [dateValue]="dateValue">
+<igx-datePicker [formatter]="customFormatter" [dateValue]="dateValue">
 </igx-datePicker>
 ```
 
