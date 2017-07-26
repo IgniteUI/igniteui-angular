@@ -57,6 +57,7 @@ export enum CalendarView {
     moduleId: module.id,
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxCalendarComponent, multi: true }],
     selector: "igx-calendar",
+    styleUrls: ["./calendar.component.css"],
     templateUrl: "calendar.component.html"
 })
 export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
@@ -327,8 +328,8 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 
         if (event.key.endsWith("Left") || event.key.endsWith("Right") ||
             event.key.endsWith("Up") || event.key.endsWith("Down")) {
-                this.handleKeyboardNavigation(event);
-                return;
+            this.handleKeyboardNavigation(event);
+            return;
         }
 
         switch (event.key) {

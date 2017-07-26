@@ -17,6 +17,7 @@ export enum Size {
 @Component({
     moduleId: module.id,
     selector: "igx-avatar",
+    styleUrls: ["./avatar.component.css"],
     templateUrl: "avatar.component.html"
 })
 export class IgxAvatar {
@@ -126,7 +127,7 @@ export class IgxAvatar {
         return canvas.toDataURL("image/png");
     }
 
-    private _addEventListeners(renderer: Renderer2) {}
+    private _addEventListeners(renderer: Renderer2) { }
 }
 
 @NgModule({
@@ -134,4 +135,4 @@ export class IgxAvatar {
     exports: [IgxAvatar],
     imports: [CommonModule]
 })
-export class IgxAvatarModule {}
+export class IgxAvatarModule { }

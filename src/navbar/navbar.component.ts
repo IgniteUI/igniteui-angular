@@ -1,12 +1,23 @@
 import { CommonModule } from "@angular/common";
-import { AfterContentChecked, Component, EventEmitter, Input, NgModule, OnInit, Output } from "@angular/core";
+import {
+    AfterContentChecked,
+    Component,
+    EventEmitter,
+    Input,
+    NgModule,
+    OnInit,
+    Output,
+    ViewEncapsulation
+} from "@angular/core";
 import { IgxButtonModule } from "../button/button.directive";
 import { HammerGesturesManager } from "../core/touch";
 
 @Component({
+    encapsulation: ViewEncapsulation.Native,
     moduleId: module.id,
     providers: [HammerGesturesManager],
     selector: "igx-navbar",
+    styleUrls: ["./navbar.component.css"],
     templateUrl: "navbar.component.html"
 })
 export class IgxNavbar implements AfterContentChecked {

@@ -1,6 +1,8 @@
 import { CommonModule } from "@angular/common";
-import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, forwardRef, HostBinding,
-     Inject, Input, NgModule, OnDestroy, OnInit, Output, QueryList, Renderer2, ViewChild } from "@angular/core";
+import {
+    AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, forwardRef, HostBinding,
+    Inject, Input, NgModule, OnDestroy, OnInit, Output, QueryList, Renderer2, ViewChild
+} from "@angular/core";
 import { IgxButtonModule } from "../button/button.directive";
 import { HammerGesturesManager } from "../core/touch";
 import { IgxRippleModule } from "../directives/ripple.directive";
@@ -19,6 +21,7 @@ export enum IgxListPanState { NONE, LEFT, RIGHT }
     },
     moduleId: module.id,
     selector: "igx-list",
+    styleUrls: ["./list.component.css"],
     templateUrl: "list.component.html"
 })
 export class IgxList {
@@ -80,6 +83,7 @@ export class IgxList {
 @Component({
     moduleId: module.id,
     selector: "igx-list-item",
+    styleUrls: ["./list.component.css"],
     templateUrl: "list-item.component.html"
 })
 export class IgxListItem implements OnInit, OnDestroy, IListChild {
@@ -98,7 +102,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     private _previousPanDeltaX = 0;
 
     get panState(): IgxListPanState {
-        return  this._panState;
+        return this._panState;
     }
 
     get index(): number {
@@ -134,9 +138,9 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
         return this.width;
     }
 
-    constructor(@Inject(forwardRef(() => IgxList)) private list: IgxList,
-                public element: ElementRef,
-                private _renderer: Renderer2) {
+    constructor( @Inject(forwardRef(() => IgxList)) private list: IgxList,
+        public element: ElementRef,
+        private _renderer: Renderer2) {
     }
 
     public ngOnInit() {
@@ -197,7 +201,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
         this.performMagneticGrip();
 
         if (oldPanState !== this._panState) {
-            this.list.onPanStateChange.emit({ oldState: oldPanState, newState: this._panState, item: this});
+            this.list.onPanStateChange.emit({ oldState: oldPanState, newState: this._panState, item: this });
             if (this._panState === IgxListPanState.LEFT) {
                 this.list.onLeftPan.emit(this);
             } else if (this._panState === IgxListPanState.RIGHT) {

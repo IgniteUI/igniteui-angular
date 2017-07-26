@@ -1,17 +1,19 @@
-import { AfterContentInit,
-        Component,
-        ElementRef,
-        EventEmitter,
-        Inject,
-        Input,
-        NgModule,
-        OnChanges,
-        OnDestroy,
-        OnInit,
-        Optional,
-        Output,
-        Renderer,
-        SimpleChange } from "@angular/core";
+import {
+    AfterContentInit,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    NgModule,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Optional,
+    Output,
+    Renderer,
+    SimpleChange
+} from "@angular/core";
 // import {AnimationBuilder} from 'angular2/src/animate/animation_builder'; TODO
 import { BaseComponent } from "../core/base";
 import { IToggleView, NavigationService } from "../core/navigation";
@@ -42,13 +44,14 @@ declare var module: any;
     moduleId: module.id, // commonJS standard
     providers: [HammerGesturesManager],
     selector: "ig-nav-drawer",
+    styleUrls: ["./navigation-drawer.component.css"],
     templateUrl: "navigation-drawer.component.html"
 })
 export class NavigationDrawer extends BaseComponent implements IToggleView,
-                                                               OnInit,
-                                                               AfterContentInit,
-                                                               OnDestroy,
-                                                               OnChanges  {
+    OnInit,
+    AfterContentInit,
+    OnDestroy,
+    OnChanges {
 
     /** ID of the component */
     @Input() public id: string;
@@ -98,13 +101,13 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
 
     private _hasMimiTempl: boolean = false;
     private _swipeAttached: boolean = false;
-    private _widthCache: {width: number, miniWidth: number} = {width: null, miniWidth: null};
+    private _widthCache: { width: number, miniWidth: number } = { width: null, miniWidth: null };
     private css: { [name: string]: string; } = {
-        drawer : "ig-nav-drawer",
-        mini : "mini",
-        miniProjection : ".ig-drawer-mini-content",
-        overlay : "ig-nav-drawer-overlay",
-        styleDummy : "style-dummy"
+        drawer: "ig-nav-drawer",
+        mini: "mini",
+        miniProjection: ".ig-drawer-mini-content",
+        overlay: "ig-nav-drawer-overlay",
+        styleDummy: "style-dummy"
     };
     private _resolveOpen: (value?: any | PromiseLike<any>) => void;
     private _resolveClose: (value?: any | PromiseLike<any>) => void;
@@ -176,7 +179,7 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
     /**
      * Exposes optional navigation service
      */
-    public get state(){
+    public get state() {
         return this._state;
     }
 
@@ -218,7 +221,7 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
         }
     }
 
-    public ngOnChanges(changes: {[propName: string]: SimpleChange}) {
+    public ngOnChanges(changes: { [propName: string]: SimpleChange }) {
         // simple settings can come from attribute set (rather than binding), make sure boolean props are converted
         if (changes.enableGestures && changes.enableGestures.currentValue !== undefined) {
             this.enableGestures = !!(this.enableGestures && this.enableGestures.toString() === "true");
@@ -276,7 +279,7 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
         }
         this.isOpen = true;
 
-       // TODO: Switch to animate API when available
+        // TODO: Switch to animate API when available
         // var animationCss = this.animate.css();
         //     animationCss
         //         .setStyles({'width':'50px'}, {'width':'400px'})
@@ -286,14 +289,14 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
         this.elementRef.nativeElement.addEventListener("transitionend", this.toggleOpenedEvent, false);
         this.setDrawerWidth(this.width);
 
-        return new Promise<any>( (resolve) => {
+        return new Promise<any>((resolve) => {
             this._resolveOpen = (value?: any) => {
                 resolve(value);
                 if (fireEvents) {
                     this.opened.emit("opened");
                 }
             };
-        } );
+        });
     }
 
     /**
@@ -316,14 +319,14 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
         this.setDrawerWidth(this._hasMimiTempl ? this.miniWidth : "");
         this.elementRef.nativeElement.addEventListener("transitionend", this.toggleClosedEvent, false);
 
-        return new Promise<any>( (resolve) => {
+        return new Promise<any>((resolve) => {
             this._resolveClose = (value?: any) => {
                 resolve(value);
                 if (fireEvents) {
                     this.closed.emit("closed");
                 }
             };
-        } );
+        });
     }
 
     protected set_maxEdgeZone(value: number) {
@@ -398,7 +401,7 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
      * Get current Drawer width.
      */
     private getDrawerWidth(): number {
-            return this.drawer.offsetWidth;
+        return this.drawer.offsetWidth;
     }
 
     private ensureEvents() {
@@ -460,12 +463,12 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
             return;
         }
         const startPosition = this.position === "right" ? this.getWindowWidth() - (evt.center.x + evt.distance)
-                                                        : evt.center.x - evt.distance;
+            : evt.center.x - evt.distance;
 
         // cache width during animation, flag to allow further handling
         if (this.isOpen || (startPosition < this.maxEdgeZone)) {
             this._panning = true;
-            this._panStartWidth =  this.getExpectedWidth(!this.isOpen);
+            this._panStartWidth = this.getExpectedWidth(!this.isOpen);
             this._panLimit = this.getExpectedWidth(this.isOpen);
 
             this.renderer.setElementClass(this.overlay, "panning", true);
@@ -511,8 +514,8 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
             }
 
             if (this.hasAnimateWidth) {
-                 percent = (visibleWidth - this._panStartWidth) / (this._panLimit - this._panStartWidth);
-                 newX = visibleWidth;
+                percent = (visibleWidth - this._panStartWidth) / (this._panLimit - this._panStartWidth);
+                newX = visibleWidth;
             } else {
                 percent = visibleWidth / this._panLimit;
                 newX = (this._panLimit - visibleWidth) * (right ? 1 : -1);
@@ -528,7 +531,7 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
             this.resetPan();
 
             // check if pan brought the drawer to 50%
-            if (this.isOpen && visibleWidth <= this._panStartWidth / 2 ) {
+            if (this.isOpen && visibleWidth <= this._panStartWidth / 2) {
                 this.close(true);
             } else if (!this.isOpen && visibleWidth >= this._panLimit / 2) {
                 this.open(true);
@@ -558,7 +561,7 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
             } else {
                 this.renderer.setElementStyle(this.drawer, "transform", x ? "translate3d(" + x + "px,0,0)" : "");
                 this.renderer.setElementStyle(this.drawer, "-webkit-transform",
-                                                x ? "translate3d(" + x + "px,0,0)" : "");
+                    x ? "translate3d(" + x + "px,0,0)" : "");
             }
             if (opacity !== undefined) {
                 this.renderer.setElementStyle(this.overlay, "opacity", opacity);

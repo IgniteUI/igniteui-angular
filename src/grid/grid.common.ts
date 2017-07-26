@@ -34,7 +34,7 @@ export interface IgxColumnSortedEvent {
 })
 export class IgxCellTemplateDirective {
 
-    constructor(public template: TemplateRef<any>) {}
+    constructor(public template: TemplateRef<any>) { }
 }
 
 @Directive({
@@ -42,7 +42,7 @@ export class IgxCellTemplateDirective {
 })
 export class IgxCellHeaderTemplateDirective {
 
-    constructor(public template: TemplateRef<any>) {}
+    constructor(public template: TemplateRef<any>) { }
 
 }
 
@@ -51,7 +51,7 @@ export class IgxCellHeaderTemplateDirective {
 })
 export class IgxCellFooterTemplateDirective {
 
-    constructor(public template: TemplateRef<any>) {}
+    constructor(public template: TemplateRef<any>) { }
 }
 
 @Directive({
@@ -81,7 +81,7 @@ export class IgxColumnSortingDirective {
     protected onClick(event: Event): void {
         if (this.column.sortable) {
             this.sortDirection = ++this.sortDirection > SortingDirection.Desc ? SortingDirection.None
-                                                                              : this.sortDirection;
+                : this.sortDirection;
             this.onSort.emit({
                 column: this.column,
                 direction: this.sortDirection
@@ -105,7 +105,7 @@ export class IgxCellBodyComponent implements OnInit, OnDestroy {
     @Input() public row: any;
     protected view: EmbeddedViewRef<any>;
 
-    constructor(public viewContainer: ViewContainerRef) {}
+    constructor(public viewContainer: ViewContainerRef) { }
     public ngOnInit(): void {
         this.view = this.viewContainer.createEmbeddedView(this.column.bodyTemplate, this);
     }
@@ -126,7 +126,7 @@ export class IgxCellHeaderComponent implements OnInit, OnDestroy {
     @Input() public colIndex: number;
     protected view: EmbeddedViewRef<any>;
 
-    constructor(public viewContainer: ViewContainerRef) {}
+    constructor(public viewContainer: ViewContainerRef) { }
 
     public ngOnInit(): void {
         this.view = this.viewContainer.createEmbeddedView(this.column.headerTemplate, this);
@@ -148,7 +148,7 @@ export class IgxCellFooterComponent implements OnInit, OnDestroy {
     @Input() public colIndex: number;
     protected view: EmbeddedViewRef<any>;
 
-    constructor(public viewContainer: ViewContainerRef) {}
+    constructor(public viewContainer: ViewContainerRef) { }
 
     public ngOnInit(): void {
         this.view = this.viewContainer.createEmbeddedView(this.column.footerTemplate, this);
@@ -162,6 +162,7 @@ export class IgxCellFooterComponent implements OnInit, OnDestroy {
 @Component({
     moduleId: module.id,
     selector: "igx-col-filter",
+    styleUrls: ["./column-filtering.component.css"],
     templateUrl: "column-filtering.component.html"
 })
 export class IgxColumnFilteringComponent {

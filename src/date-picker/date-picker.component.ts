@@ -6,7 +6,8 @@ import {
     NgModule,
     OnInit,
     Output,
-    ViewChild
+    ViewChild,
+    ViewEncapsulation
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { IgxCalendarModule } from "../calendar/calendar.component";
@@ -15,11 +16,13 @@ import { IgxDialog, IgxDialogModule } from "../dialog/dialog.component";
 import { IgxInput } from "../input/input.directive";
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     moduleId: module.id,
     providers:
-        [HammerGesturesManager,
+    [HammerGesturesManager,
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true }],
     selector: "igx-datePicker",
+    styleUrls: ["date-picker.component.css"],
     templateUrl: "date-picker.component.html"
 })
 export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
@@ -28,7 +31,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
     @Output() public onOpen = new EventEmitter();
 
     private _displayData: string =
-        this._customFormatChecker(this.formatter, new Date(Date.now()));
+    this._customFormatChecker(this.formatter, new Date(Date.now()));
     @ViewChild(IgxDialog) private alert: IgxDialog;
 
     public writeValue(value: Date): void {
@@ -44,8 +47,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
     @Input() set dateValue(value: Date) {
         const toDate = new Date(this._displayData);
         if (value.toDateString() !== toDate.toDateString() &&
-                value instanceof Date &&
-                this._dateStringChecker(value.toString())) {
+            value instanceof Date &&
+            this._dateStringChecker(value.toString())) {
             this._displayData = this._customFormatChecker(this.formatter, value);
             this._onChangeCallback(value);
         }
@@ -87,8 +90,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
         return this.formatter ? this.formatter(date) : this._setLocaleToDate(date);
     }
 
-    private _onTouchedCallback: () => void = () => {};
-    private _onChangeCallback: (_: Date) => void = () => {};
+    private _onTouchedCallback: () => void = () => { };
+    private _onChangeCallback: (_: Date) => void = () => { };
 }
 
 @NgModule({
@@ -96,4 +99,4 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
     exports: [IgxDatePickerComponent],
     imports: [CommonModule, IgxInput, IgxDialogModule, IgxCalendarModule]
 })
-export class IgxDatePickerModule {}
+export class IgxDatePickerModule { }

@@ -9,7 +9,7 @@ import {
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
-const noop = () => {};
+const noop = () => { };
 let nextId = 0;
 
 function MakeProvider(type: any) {
@@ -24,6 +24,7 @@ function MakeProvider(type: any) {
     moduleId: module.id,
     providers: [MakeProvider(IgxCheckbox)],
     selector: "igx-checkbox",
+    styleUrls: ["./checkbox.component.css"],
     templateUrl: "checkbox.component.html"
 })
 export class IgxCheckbox implements ControlValueAccessor {
@@ -80,4 +81,4 @@ export class IgxCheckbox implements ControlValueAccessor {
     declarations: [IgxCheckbox],
     exports: [IgxCheckbox]
 })
-export class IgxCheckboxModule {}
+export class IgxCheckboxModule { }

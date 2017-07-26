@@ -9,11 +9,12 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    Renderer
+    Renderer,
+    ViewEncapsulation
 } from "@angular/core";
 import { HammerGesturesManager } from "../core/touch";
 
-export enum Direction {NONE, NEXT, PREV}
+export enum Direction { NONE, NEXT, PREV }
 
 /**
  * A carousel component is used to browse or navigate through a collection of slides - galeries of images,
@@ -31,11 +32,13 @@ export enum Direction {NONE, NEXT, PREV}
  */
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     host: {
         role: "region"
     },
     moduleId: module.id,
     selector: "igx-carousel",
+    styleUrls: ["./carousel.component.css"],
     templateUrl: "carousel.component.html"
 })
 
@@ -414,14 +417,14 @@ export class IgxCarousel implements OnDestroy {
 
         renderer.listen(this.elementRef.nativeElement, "keydown", (event) => {
             switch (event.key) {
-            case "ArrowLeft":
-                this.prev();
-                break;
-            case "ArrowRight":
-                this.next();
-                break;
-            default:
-                return;
+                case "ArrowLeft":
+                    this.prev();
+                    break;
+                case "ArrowRight":
+                    this.next();
+                    break;
+                default:
+                    return;
             }
         });
     }
@@ -470,7 +473,7 @@ export class IgxSlide implements OnInit, OnDestroy {
     @HostBinding("class.active")
     @Input() public active: boolean;
 
-    constructor(private carousel: IgxCarousel, private elementRef: ElementRef) {}
+    constructor(private carousel: IgxCarousel, private elementRef: ElementRef) { }
 
     public ngOnInit() {
         this.carousel.add(this);

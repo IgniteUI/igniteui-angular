@@ -1,0 +1,11 @@
+@import "../themes/base/index";
+@import "../themes/material/manifest";
+@import "../themes/material/extends/icon";
+
+@include b(igx-icon) {
+    @extend %igx-icon-display;
+
+    @include m(inactive) {
+        @extend %igx-icon--inactive;
+    }
+}

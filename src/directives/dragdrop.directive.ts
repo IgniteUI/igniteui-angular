@@ -40,7 +40,7 @@ export class IgxDraggableDirective implements OnInit, OnDestroy {
     }
 
     @HostListener("dragstart", ["$event"])
-    protected onDragStart(event: DragEvent): void {
+    protected onDragStart(event: any): void {
         if (this.dragClass) {
             this._renderer.addClass(this._elementRef.nativeElement, this.dragClass);
         }
@@ -49,7 +49,7 @@ export class IgxDraggableDirective implements OnInit, OnDestroy {
     }
 
     @HostListener("dragend", ["$event"])
-    protected onDragEnd(event: DragEvent): void {
+    protected onDragEnd(event: any): void {
         event.preventDefault();
         if (this.dragClass) {
             this._renderer.removeClass(this._elementRef.nativeElement, this.dragClass);
@@ -71,21 +71,21 @@ export class IgxDroppableDirective {
     constructor(private _elementRef: ElementRef, private _renderer: Renderer2) {}
 
     @HostListener("dragenter", ["$event"])
-    protected onDragEnter(event: DragEvent): void {
+    protected onDragEnter(event: any): void {
         if (this.dropClass) {
             this._renderer.addClass(this._elementRef.nativeElement, this.dropClass);
         }
     }
 
     @HostListener("dragleave", ["$event"])
-    protected onDragLeave(event: DragEvent): void {
+    protected onDragLeave(event: any): void {
         if (this.dropClass) {
             this._renderer.removeClass(this._elementRef.nativeElement, this.dropClass);
         }
     }
 
     @HostListener("dragover", ["$event"])
-    protected onDragOver(event: DragEvent): boolean {
+    protected onDragOver(event: any): boolean {
         if (event.preventDefault) {
             event.preventDefault();
         }
@@ -94,7 +94,7 @@ export class IgxDroppableDirective {
     }
 
     @HostListener("drop", ["$event"])
-    protected onDragDrop(event: DragEvent): void {
+    protected onDragDrop(event: any): void {
         if (event.stopPropagation) {
             event.stopPropagation();
         }
