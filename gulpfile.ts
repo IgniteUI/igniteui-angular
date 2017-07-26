@@ -16,8 +16,8 @@ var concat = require('gulp-concat'),
 var Builder = require('systemjs-builder');
 
 var tsProject = ts.createProject('tsconfig.json', {
-        typescript: tsc
-    }),
+    typescript: tsc
+}),
     tsProdProject = ts.createProject('tsconfig.json', {
         typescript: tsc,
         declaration: true
@@ -48,7 +48,7 @@ gulp.task("cleanup", () => {
  */
 
 gulp.task("build.js", () => {
-    return gulp.src(tsSources.concat("./typings/index.d.ts"), { base: "."})
+    return gulp.src(tsSources.concat("./typings/index.d.ts"), { base: "." })
         .pipe(sourcemaps.init())
         .pipe(tsProject())
         .pipe(sourcemaps.write("."))
@@ -58,8 +58,8 @@ gulp.task("build.js", () => {
 
 gulp.task("build.src", () => {
 
-    var tsResult = gulp.src(["./typings/index.d.ts"].concat(source, specFilesNegate), { base: "./src"})
-        .pipe(inlineNg2Template({ useRelativePaths: true, base: "/src/*"}))
+    var tsResult = gulp.src(["./typings/index.d.ts"].concat(source, specFilesNegate), { base: "./src" })
+        .pipe(inlineNg2Template({ useRelativePaths: true, base: "/src/*" }))
         .pipe(sourcemaps.init())
         .pipe(tsProdProject());
 
@@ -96,7 +96,7 @@ gulp.task("bundle.src", ["build.src"], () => {
  * CSS
  */
 
-gulp.task("build.css", ["build.css.dev"], () => {
+gulp.task("build.css", ["build.css.dev", "build.component.css"], () => {
     return gulp.src(["src/themes/*.scss"])
         .pipe(plumber())
         .pipe(sourcemaps.init())
@@ -130,6 +130,21 @@ gulp.task("build.css.dev", () => {
         .pipe(gulp.dest("./dist/dev"))
 });
 
+gulp.task("build.component.css", () => {
+    gulp.src(["src/**/*.component.scss"], { base: "./" })
+        .pipe(plumber())
+        .pipe(sourcemaps.init())
+        .pipe(sass({
+            outputStyle: "compressed"
+        }))
+        .pipe(autoprefixer({
+            browsers: ["last 2 versions"],
+            cascade: false
+        }))
+        .pipe(sourcemaps.write("./"))
+        .pipe(plumber.stop())
+        .pipe(gulp.dest("."));
+});
 
 /**
  * Fonts
@@ -156,11 +171,16 @@ gulp.task("bundle.README", () => {
 gulp.task("watch", [
     "build.css:watch",
     "build.js:watch",
-    "build.fonts:watch"
+    "build.fonts:watch",
+    "build.component.css:watch"
 ]);
 
 gulp.task("build.css:watch", () => {
     gulp.watch("src/**/*.scss", ["build.css"]);
+});
+
+gulp.task("build.component.css:watch", () => {
+    gulp.watch("src/**/*.component.scs", ["build.component.css"]);
 });
 
 gulp.task("build.js:watch", () => {
