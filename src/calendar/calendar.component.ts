@@ -13,6 +13,7 @@ import {
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from "../animations/main";
+import { IgxIconModule } from "../icon/icon.component";
 import { Calendar, ICalendarDate, range, weekDay, WEEKDAYS } from "./calendar";
 
 export enum CalendarView {
@@ -528,6 +529,6 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 @NgModule({
     declarations: [IgxCalendarComponent],
     exports: [IgxCalendarComponent],
-    imports: [CommonModule, FormsModule, BrowserAnimationsModule]
+    imports: [CommonModule, FormsModule, BrowserAnimationsModule, IgxIconModule]
 })
 export class IgxCalendarModule { }

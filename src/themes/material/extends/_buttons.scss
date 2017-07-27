@@ -10,7 +10,7 @@
     color: $button-color;
     border: $button-border;
     border-radius: $button-radius;
-    text-transform: uppercase;;
+    text-transform: uppercase;
     cursor: pointer;
     user-select: none;
     outline: none;
@@ -93,7 +93,6 @@
                 display: flex;
                 justify-content: center;
             }
-
         }
     }
 }
@@ -133,6 +132,7 @@
 }
 
 %igx-button--navbar {
+    display: block !important;
     width: $button-navbar-width;
     height: $button-navbar-height;
     font-size: $button-icon-font-size;

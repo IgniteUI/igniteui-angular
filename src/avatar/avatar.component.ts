@@ -7,6 +7,7 @@ import {
     Renderer2,
     ViewChild
 } from "@angular/core";
+import { IgxIconModule } from "../icon/icon.component";
 
 export enum Size {
     SMALL,
@@ -133,6 +134,6 @@ export class IgxAvatar {
 @NgModule({
     declarations: [IgxAvatar],
     exports: [IgxAvatar],
-    imports: [CommonModule]
+    imports: [CommonModule, IgxIconModule]
 })
 export class IgxAvatarModule { }

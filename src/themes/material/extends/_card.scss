@@ -70,6 +70,7 @@
     display: flex;
     flex-flow: row wrap;
     flex: 1 0 auto;
+    align-items: center;
     padding: $card-actions-padding;
     max-height: 56px;
 }

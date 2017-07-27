@@ -10,6 +10,7 @@ import {
 } from "@angular/core";
 import { IgxButton, IgxButtonModule } from "../button/button.directive";
 import { IgxRippleModule } from "../directives/ripple.directive";
+import { IgxIconModule } from "../icon/icon.component";
 
 export enum ButtonGroupAlignment { horizontal, vertical }
 
@@ -115,7 +116,7 @@ export class IgxButtonGroup implements AfterViewInit {
 @NgModule({
     declarations: [IgxButtonGroup, IgxButtonGroup],
     exports: [IgxButtonGroup],
-    imports: [IgxButtonModule, CommonModule, IgxRippleModule]
+    imports: [IgxButtonModule, CommonModule, IgxRippleModule, IgxIconModule]
 })
 
 export class IgxButtonGroupModule {

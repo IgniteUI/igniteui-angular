@@ -14,7 +14,8 @@ import {
     ViewChildren,
     ViewEncapsulation
 } from "@angular/core";
-import { IgxBadge, IgxBadgeModule } from "../../src/badge/badge.component";
+import { IgxBadgeModule } from "../../src/badge/badge.component";
+import { IgxIconModule } from "../../src/icon/icon.component";
 @Component({
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -176,7 +177,7 @@ export class IgxTab {
 @NgModule({
     declarations: [IgxTabBar, IgxTabPanel, IgxTab],
     exports: [IgxTabBar, IgxTabPanel, IgxTab],
-    imports: [CommonModule, IgxBadgeModule]
+    imports: [CommonModule, IgxBadgeModule, IgxIconModule]
 })
 export class IgxTabBarModule {
 }

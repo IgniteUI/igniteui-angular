@@ -11,9 +11,10 @@ import {
 } from "@angular/core";
 import { IgxButtonModule } from "../button/button.directive";
 import { HammerGesturesManager } from "../core/touch";
+import { IgxIconModule } from "../icon/icon.component";
 
 @Component({
-    encapsulation: ViewEncapsulation.Native,
+    encapsulation: ViewEncapsulation.None,
     moduleId: module.id,
     providers: [HammerGesturesManager],
     selector: "igx-navbar",
@@ -68,7 +69,7 @@ export class IgxNavbar implements AfterContentChecked {
 @NgModule({
     declarations: [IgxNavbar],
     exports: [IgxNavbar],
-    imports: [IgxButtonModule, CommonModule]
+    imports: [IgxButtonModule, IgxIconModule, CommonModule]
 })
 export class IgxNavbarModule {
 }

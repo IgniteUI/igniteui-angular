@@ -13,6 +13,7 @@ import {
     ViewEncapsulation
 } from "@angular/core";
 import { HammerGesturesManager } from "../core/touch";
+import { IgxIconModule } from "../icon/icon.component";
 
 export enum Direction { NONE, NEXT, PREV }
 
@@ -487,7 +488,7 @@ export class IgxSlide implements OnInit, OnDestroy {
 @NgModule({
     declarations: [IgxCarousel, IgxSlide],
     exports: [IgxCarousel, IgxSlide],
-    imports: [CommonModule]
+    imports: [CommonModule, IgxIconModule]
 })
 export class IgxCarouselModule {
 }
