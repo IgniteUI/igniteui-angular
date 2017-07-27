@@ -81,13 +81,14 @@
     height: 24px;
     z-index: 1;
     opacity: .75;
-
+    padding: 0 8px;
     i {
         width: 24px;
         height: 24px;
     }
 }
 
-%igx-tab-label--selected, %igx-tab-icon--selected {
+%igx-tab-label--selected,
+%igx-tab-icon--selected {
     @extend %igx-active-tab;
 }
