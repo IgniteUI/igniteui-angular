@@ -138,7 +138,9 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
         return this.width;
     }
 
-    constructor( @Inject(forwardRef(() => IgxList)) private list: IgxList,
+    constructor(
+        @Inject(forwardRef(() => IgxList))
+        private list: IgxList,
         public element: ElementRef,
         private _renderer: Renderer2) {
     }

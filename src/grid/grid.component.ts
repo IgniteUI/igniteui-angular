@@ -210,7 +210,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
     private _lastRow: any;
     private shouldDataBind: boolean = false;
 
-    constructor(private _renderer: Renderer2,
+    constructor(
+        private _renderer: Renderer2,
         private _elementRef: ElementRef,
         private _detector: ChangeDetectorRef,
         private _itDiff: IterableDiffers,

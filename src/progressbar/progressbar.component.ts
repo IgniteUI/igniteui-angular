@@ -41,7 +41,7 @@ export abstract class BaseProgress {
 
     protected startAnimation(interval: number, circular: ElementRef = null, percentage: number = 0) {
         // Change progress bar percent value
-        const timer = setInterval(function () {
+        const timer = setInterval(function animateBar() {
             if (this._valueInPercent >= this._currValue) {
                 clearInterval(timer);
 
