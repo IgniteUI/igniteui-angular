@@ -322,6 +322,30 @@ describe("IgxSlider", () => {
         });
     }, 5000);
 
+    it("should not move thumb slider and value should remain the same when slider is disabled", (done) => {
+        let fixture;
+        let slider: IgxSlider;
+        TestBed.compileComponents().then(() => {
+            fixture = TestBed.createComponent(SliderInitializeTestComponent);
+            slider = fixture.componentInstance.slider;
+            slider.disabled = true;
+            slider.value = 30;
+
+            fixture.detectChanges();
+
+            return fixture.whenStable();
+        }).then(() => {
+            const sliderElement = fixture.nativeElement.querySelector(".igx-slider");
+            return panRight(sliderElement,
+                sliderElement.offsetHeight,
+                sliderElement.offsetWidth,
+                200);
+        }).then(() => {
+            expect(Math.round(slider.value as number)).toBe(30);
+            done();
+        });
+    }, 5000);
+
     function panRight(element, elementHeight, elementWidth, duration) {
         const panOptions = {
             deltaX: elementWidth * 0.6,
@@ -523,12 +547,42 @@ describe("IgxSlider", () => {
         });
     }, 5000);
 
+    it("should not increment upper value when slider is disabled", (done) => {
+        let fixture;
+        let slider: IgxSlider;
+        TestBed.compileComponents().then(() => {
+            fixture = TestBed.createComponent(SliderInitializeTestComponent);
+            slider = fixture.componentInstance.slider;
+            slider.type = SliderType.RANGE;
+
+            fixture.detectChanges();
+            debugger;
+            slider.disabled = true;
+
+            slider.value = {
+                lower: 50,
+                upper: 60
+            };
+
+            return fixture.whenStable();
+        }).then(() => {
+            const toThumb = fixture.nativeElement.querySelector(".igx-slider__thumb-to");
+            toThumb.focus();
+
+            return simulateKeyDown(toThumb, "ArrowRight");
+        }).then(() => {
+            expect((slider.value as IRangeSliderValue).lower).toBe(50);
+            expect((slider.value as IRangeSliderValue).upper).toBe(60);
+            done();
+        });
+    }, 5000);
+
     function simulateKeyDown(element, key) {
-        const keyOptioins: KeyboardEventInit = {
+        const keyOptions: KeyboardEventInit = {
             key
         };
 
-        const keypressEvent = new KeyboardEvent("keydown", keyOptioins);
+        const keypressEvent = new KeyboardEvent("keydown", keyOptions);
 
         return new Promise((resolve, reject) => {
             element.dispatchEvent(keypressEvent);
@@ -540,10 +594,10 @@ describe("IgxSlider", () => {
         const fixture = TestBed.createComponent(SliderInitializeTestComponent);
         const ticks = fixture.nativeElement.querySelector(".igx-slider__track-ticks");
 
-            // Slider steps <= 1. No marks should be drawn;
+        // Slider steps <= 1. No marks should be drawn;
         expect(ticks.style.background).toBeFalsy();
 
-            // Slider steps > 1. Should draw tick marks;
+        // Slider steps > 1. Should draw tick marks;
         fixture.componentInstance.slider.step = 10;
         fixture.detectChanges();
 
@@ -553,7 +607,7 @@ describe("IgxSlider", () => {
 @Component({
     selector: "slider-test-component",
     template: `<igx-slider #slider>
-                </igx-slider>`
+    </igx-slider>`
 })
 class SliderInitializeTestComponent {
     @ViewChild(IgxSlider) public slider: IgxSlider;

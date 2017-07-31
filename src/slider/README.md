@@ -11,7 +11,8 @@ Based on its configuration it's a slider or range slider.
 <igx-slider [minValue]="0" [maxValue]="50" [lowerBound]="20" [value]="30">
 </igx-slider>
 ```
-<hr>
+
+----
 
 ### Range slider
 
@@ -22,7 +23,6 @@ Based on its configuration it's a slider or range slider.
 ```
 
 ## Getting Started
-
 
 ### Dependencies
 
@@ -57,6 +57,7 @@ import { IgxSlider } from "../../../src/main";
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
+| disabled | boolean | Disables or enables UI interaction. |
 | isContinuous | boolean | Marks slider as continuous. By default is considered that the slider is discrete. Discrete slider does not have ticks and does not shows bubble labels for values. |
 | lowerBound | number | The lower boundary of the slider value. If not set is the same as min value. |
 | maxValue | number | The maximal value for the slider. |
