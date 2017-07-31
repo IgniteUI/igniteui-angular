@@ -5,7 +5,8 @@ import {
     Input,
     NgModule,
     Renderer2,
-    ViewChild
+    ViewChild,
+    ViewEncapsulation
 } from "@angular/core";
 import { IgxIconModule } from "../icon/icon.component";
 
@@ -16,6 +17,7 @@ export enum Size {
 }
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     moduleId: module.id,
     selector: "igx-avatar",
     styleUrls: ["./avatar.component.css"],

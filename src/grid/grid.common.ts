@@ -10,7 +10,8 @@ import {
     OnInit,
     Output,
     TemplateRef,
-    ViewContainerRef
+    ViewContainerRef,
+    ViewEncapsulation
 } from "@angular/core";
 import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxColumnComponent } from "./column.component";
@@ -93,6 +94,7 @@ export class IgxColumnSortingDirective {
 // components
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     moduleId: module.id,
     selector: "igx-cell-body",
     template: ``
@@ -116,6 +118,7 @@ export class IgxCellBodyComponent implements OnInit, OnDestroy {
 }
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     moduleId: module.id,
     selector: "igx-cell-header",
     template: ``
@@ -160,6 +163,7 @@ export class IgxCellFooterComponent implements OnInit, OnDestroy {
 }
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     moduleId: module.id,
     selector: "igx-col-filter",
     styleUrls: ["./column-filtering.component.css"],
