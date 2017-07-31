@@ -49,7 +49,7 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
      * Disables or enables UI interaction.
      */
     @Input()
-    public disabled: boolean
+    public disabled: boolean;
 
     /**
      * Marks slider as continuous. By default is considered that the slider is discrete.

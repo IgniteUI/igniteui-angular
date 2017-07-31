@@ -554,10 +554,9 @@ describe("IgxSlider", () => {
             fixture = TestBed.createComponent(SliderInitializeTestComponent);
             slider = fixture.componentInstance.slider;
             slider.type = SliderType.RANGE;
+            slider.disabled = true;
 
             fixture.detectChanges();
-            debugger;
-            slider.disabled = true;
 
             slider.value = {
                 lower: 50,
