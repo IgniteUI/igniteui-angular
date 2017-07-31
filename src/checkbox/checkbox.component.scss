@@ -11,7 +11,6 @@
     align-items: center;
     justify-content: space-between;
     padding: $control-padding;
-
     // Checkbox control styles
     @include e(cbx) {
         @include hide-default;

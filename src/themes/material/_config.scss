@@ -185,7 +185,7 @@ $badge-font-size: em(10px) !default;
 $badge-font-weight: 600 !default;
 $badge-shadow: $elevate-1 !default;
 $badge-line-height: 2px !default;
-$badge-icon-font-size: em(10px) !default;
+$badge-icon-font-size: em(11px, 16px) !default;
 $badge-value-padding: 4px !default;
 
 // 3. Buttons //
@@ -397,7 +397,7 @@ $switch-margin: 0 16px !default;
 // Checkboxes
 $checkbox-width: 20px !default;
 $checkbox-height: $checkbox-width !default;
-$checkbox-label-padding: em(36px, 16px) !default;
+$checkbox-label-padding: em(24px, 16px) !default;
 $checkbox-radius: 2px !default;
 $checkbox-border-style: 2px solid !default;
 $checkbox-tick-width: 20px !default;
