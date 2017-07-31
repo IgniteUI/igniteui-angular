@@ -34,7 +34,7 @@ describe("Avatar", () => {
         expect(avatar.isRounded).toBeFalsy();
     });
 
-    it("Initializes binded avatar with initials", () => {
+    it("Initializes bound avatar with initials", () => {
         const fixture = TestBed.createComponent(AvatarWithAttribs);
         fixture.detectChanges();
         const avatar = fixture.componentInstance.avatar;

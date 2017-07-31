@@ -11,7 +11,7 @@ describe("IgxToast", () => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000;
         TestBed.configureTestingModule({
             declarations: [
-                ToastIntializeTestComponent
+                ToastInitializeTestComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -25,7 +25,7 @@ describe("IgxToast", () => {
 
     it("should properly initialize properties", async(() => {
         TestBed.compileComponents().then(() => {
-            const fixture = TestBed.createComponent(ToastIntializeTestComponent);
+            const fixture = TestBed.createComponent(ToastInitializeTestComponent);
             fixture.componentInstance.toast.isVisible = true;
             fixture.detectChanges();
             const element = fixture.debugElement.query(By.css(".igx-toast--bottom"));
@@ -43,7 +43,7 @@ describe("IgxToast", () => {
 
     it("should change toast position to middle", async(() => {
         TestBed.compileComponents().then(() => {
-            const fixture = TestBed.createComponent(ToastIntializeTestComponent);
+            const fixture = TestBed.createComponent(ToastInitializeTestComponent);
             fixture.componentInstance.toast.position = IgxToastPosition.Middle;
             fixture.componentInstance.toast.isVisible = true;
             fixture.detectChanges();
@@ -57,7 +57,7 @@ describe("IgxToast", () => {
 
     it("should change toast position to top", async(() => {
         TestBed.compileComponents().then(() => {
-            const fixture = TestBed.createComponent(ToastIntializeTestComponent);
+            const fixture = TestBed.createComponent(ToastInitializeTestComponent);
             fixture.componentInstance.toast.position = IgxToastPosition.Top;
             fixture.componentInstance.toast.isVisible = true;
             fixture.detectChanges();
@@ -72,7 +72,7 @@ describe("IgxToast", () => {
 
     it("should change toast position something else should be undefined", async(() => {
         TestBed.compileComponents().then(() => {
-            const fixture = TestBed.createComponent(ToastIntializeTestComponent);
+            const fixture = TestBed.createComponent(ToastInitializeTestComponent);
             fixture.componentInstance.toast.position = IgxToastPosition.Bottom;
             fixture.componentInstance.toast.isVisible = true;
             fixture.detectChanges();
@@ -89,7 +89,7 @@ describe("IgxToast", () => {
 
     it("should auto hide 10 seconds after is open", (done) => {
         TestBed.compileComponents().then(() => {
-            const fixture = TestBed.createComponent(ToastIntializeTestComponent);
+            const fixture = TestBed.createComponent(ToastInitializeTestComponent);
             fixture.detectChanges();
 
             const displayTime: number = 1000;
@@ -111,7 +111,7 @@ describe("IgxToast", () => {
 
     it("should not auto hide seconds after is open", (done) => {
         TestBed.compileComponents().then(() => {
-            const fixture = TestBed.createComponent(ToastIntializeTestComponent);
+            const fixture = TestBed.createComponent(ToastInitializeTestComponent);
             fixture.detectChanges();
 
             const displayTime: number = 1000;
@@ -137,6 +137,6 @@ describe("IgxToast", () => {
     template: `<igx-toast #toast>
                </igx-toast>`
 })
-class ToastIntializeTestComponent {
+class ToastInitializeTestComponent {
     @ViewChild(IgxToast) public toast: IgxToast;
 }

@@ -10,7 +10,7 @@ describe("IgxSnackbar", () => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000;
         TestBed.configureTestingModule({
             declarations: [
-                SnackbarIntializeTestComponent
+                SnackbarInitializeTestComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -25,7 +25,7 @@ describe("IgxSnackbar", () => {
 
     it("should properly initialize properties", async(() => {
         TestBed.compileComponents().then(() => {
-            const fixture = TestBed.createComponent(SnackbarIntializeTestComponent);
+            const fixture = TestBed.createComponent(SnackbarInitializeTestComponent);
             fixture.detectChanges();
 
             expect(fixture.componentInstance.snackbar.message).toBeUndefined();
@@ -41,7 +41,7 @@ describe("IgxSnackbar", () => {
 
     it("should auto hide 1 seconds after is open", (done) => {
         TestBed.compileComponents().then(() => {
-            const fixture = TestBed.createComponent(SnackbarIntializeTestComponent);
+            const fixture = TestBed.createComponent(SnackbarInitializeTestComponent);
             fixture.detectChanges();
 
             const displayTime: number = 1000;
@@ -63,7 +63,7 @@ describe("IgxSnackbar", () => {
 
     it("should not auto hide seconds after is open", (done) => {
         TestBed.compileComponents().then(() => {
-            const fixture = TestBed.createComponent(SnackbarIntializeTestComponent);
+            const fixture = TestBed.createComponent(SnackbarInitializeTestComponent);
             fixture.detectChanges();
 
             const displayTime: number = 1000;
@@ -86,7 +86,7 @@ describe("IgxSnackbar", () => {
 
     it("should trigger on action", async(() => {
         TestBed.compileComponents().then(() => {
-            const fixture = TestBed.createComponent(SnackbarIntializeTestComponent);
+            const fixture = TestBed.createComponent(SnackbarInitializeTestComponent);
             fixture.componentInstance.text = "Click";
             fixture.componentInstance.snackbar.isVisible = true;
             fixture.detectChanges();
@@ -107,7 +107,7 @@ describe("IgxSnackbar", () => {
     template: `<igx-snackbar #snackbar [actionText]="text">
                </igx-snackbar>`
 })
-class SnackbarIntializeTestComponent {
+class SnackbarInitializeTestComponent {
     public text: string;
     @ViewChild(IgxSnackbar) public snackbar: IgxSnackbar;
 }

@@ -65,7 +65,7 @@ import { IgxSlider } from "../../../src/main";
 | thumbLabelVisibilityDuration | number | The duration visibility of thumbs labels. The default value is 750 milliseconds. |
 | type | [SliderType](#slidertype) | The duration visibility of thumbs labels. The default value is 750 milliseconds. |
 | upperBound | number | The lower boundary of the slider value. If not set is the same as min value. |
-| value | number\|[IRangeSliderValue](#IRangeSliderValue) | The slider value. If the slider is of type SLIDER the argument is number. By default if no value is set the default value is same as lower upper bound. If the slider type is RANGE the the argument is object containing lower and upper properties for the values.  By default if no value is set the default value is for lower value it is the same as lower bound and if no value is set for the upper value it is the same as the upper bound.
+| value | number\|[IRangeSliderValue](#irangeslidervalue) | The slider value. If the slider is of type SLIDER the argument is number. By default if no value is set the default value is same as lower upper bound. If the slider type is RANGE the the argument is object containing lower and upper properties for the values.  By default if no value is set the default value is for lower value it is the same as lower bound and if no value is set for the upper value it is the same as the upper bound.
 
 ##### Outputs
 
