@@ -1,6 +1,7 @@
-$browser-context: 16px;
-$browser-line-height: 27px;
 @import 'functions';
 @import 'mixins';
 @import 'bem';
 @import 'animations/index';
+
+$browser-context: 16px;
+$browser-line-height: 27px;

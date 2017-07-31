@@ -22,13 +22,18 @@ $legacy_browser_support: false !default;
 
 html {
     font-family: sans-serif; /* 1 */
+    box-sizing: border-box;
     -ms-text-size-adjust: 100%; /* 2 */
     -webkit-text-size-adjust: 100%; /* 2 */
     @if $legacy_browser_support {
         *font-size: 100%; /* 3 */
     }
 }
-
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
 /**
  * Remove default margin.
  */
