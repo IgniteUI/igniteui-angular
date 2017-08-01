@@ -11,9 +11,9 @@ export enum SliderType {
      * Slider with single thumb.
      */
     SLIDER,
-    /**
-     *  Range slider with multiple thumbs, that can mark the range.
-     */
+        /**
+         *  Range slider with multiple thumbs, that can mark the range.
+         */
     RANGE
 }
 
@@ -46,6 +46,12 @@ function MakeProvider(type: any) {
     templateUrl: "slider.component.html"
 })
 export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
+    /**
+     * Disables or enables UI interaction.
+     */
+    @Input()
+    public disabled: boolean;
+
     /**
      * Marks slider as continuous. By default is considered that the slider is discrete.
      * Discrete slider does not have ticks and does not shows bubble labels for values.
@@ -371,6 +377,10 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private showThumbsLabels() {
+        if (this.disabled) {
+            return;
+        }
+
         if (this.isContinuous) {
             return;
         }
@@ -383,6 +393,10 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private hideThumbsLabels() {
+        if (this.disabled) {
+            return;
+        }
+
         if (this.isContinuous) {
             return;
         }
@@ -399,6 +413,10 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private update($event) {
+        if (this.disabled) {
+            return;
+        }
+
         if ($event.type === "tap") {
             this.toggleThumbLabel();
         }
@@ -580,6 +598,10 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private onKeyDown($event: KeyboardEvent) {
+        if (this.disabled) {
+            return true;
+        }
+
         let incrementSign;
 
         if ($event.key.endsWith("Left")) {

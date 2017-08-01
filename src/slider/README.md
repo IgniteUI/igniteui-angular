@@ -57,6 +57,7 @@ import { IgxSlider } from "../../../src/main";
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
+| disabled | boolean | Disables or enables UI interaction. |
 | isContinuous | boolean | Marks slider as continuous. By default is considered that the slider is discrete. Discrete slider does not have ticks and does not shows bubble labels for values. |
 | lowerBound | number | The lower boundary of the slider value. If not set is the same as min value. |
 | maxValue | number | The maximal value for the slider. |
