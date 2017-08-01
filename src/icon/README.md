@@ -1,11 +1,10 @@
-igx-icon
---------------------
+# igx-icon
 
 **igx-icon** supports icon component that unifies various icon/font sets to allow their usage interchangeably.
 
 With the igx-icon you can add **material-icons** in your markup
 
-#Usage
+# Usage
 
 ```html
     <igx-icon fontSet="material" name="home" color="magenta" isActive="false"></igx-icon>
@@ -32,7 +31,7 @@ You can access all properties of the button component with the following attribu
 
 
 **Setters**
-You can programatically set all of the icon properties with the following icon setters: 
+You can programmatically set all of the icon properties with the following icon setters: 
 
 `fontSet(fontFamily: string)` sets the icon font family
 `color(color: string)` sets the icon color
@@ -40,7 +39,7 @@ You can programatically set all of the icon properties with the following icon s
 `isActive(state: boolean)` sets the icon style to inactive if set the false
 
 **Getters**
-You can programatically get all of the icon properties with the following icon getters: 
+You can programmatically get all of the icon properties with the following icon getters: 
 
 `getFontSet()` returns the icon font family
 `getIconColor()` returns the icon color

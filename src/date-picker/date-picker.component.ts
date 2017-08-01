@@ -71,7 +71,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
     }
 
     private _focusTheDialog() {
-        // Get the dialog element after the element appeares into DOM.
+        // Get the dialog element after the element appears into DOM.
         setTimeout(() => this.alert.dialogEl.nativeElement.focus(), 60);
     }
 

@@ -1,7 +1,7 @@
 # DataUtil
 
 ## Description
-**DataUtil** is a static class which provides a set of helper functoins for querying local data - array of JavaScript objects. 
+**DataUtil** is a static class which provides a set of helper functions for querying local data - array of JavaScript objects. 
 It can be used for applying data operations like - filtering, sorting, paging.
 
 
@@ -11,7 +11,7 @@ It can be used for applying data operations like - filtering, sorting, paging.
 | `sort` | Takes as arguments array of JavaScript objects(on which sorting is applied) and object of type **SortingState**. The method returns sorted data. Object of type **SortingState** is used to configure which column(s) to sort,sorting direction, sorting algorithm.  |
 | `filter` | Takes as arguments array of JavaScript objects(on which filtering should be applied) and object of type **FilteringState**. Returns filtered data(array of JavaScript objects). Object of type **FilteringState** is used to configure which column(s) to filter, search value, filtering algorithm. |
 | `page` |  Takes as arguments array of JavaScript objects and object of type **PagingState**. Returns paginated data. Object of type **PagingState** is used to configure how paging should be applied - which is the current page, records per page. NOTE: This method validates input arguments(e.g. page index should be positive number) and calculates number of pages. The result is saved in property of **PagingState** - `metadata`. |
-| `process` | Takes as arguments array of JavaScript objects and object of type **DataState** and applies sorting/paging/filtering. Returns transformed data. Object of type **DataState** is used to configure which data-quering operation to be applied.  |
+| `process` | Takes as arguments array of JavaScript objects and object of type **DataState** and applies sorting/paging/filtering. Returns transformed data. Object of type **DataState** is used to configure which data-querying operation to be applied.  |
 | `getFilteringConditionsForDataType` |  Takes as argument variable of type **DataType** and returns available filtering condition for the specified data type |
 | `getListOfFilteringConditionsForDataType` | Takes as an argument data type and returns list of name of the filtering conditions available for the specified data type |
 
@@ -72,9 +72,9 @@ items: Array<Object> = [
     * `fieldName` - specifies name of the column
     * `dir` - identifies sorting direction. It is of type enum **SortingDirection**. Possible options are **SortingDirection.Asc** and **SortingDirection.Desc**
     * `ignoreCase` - boolean property which identifies whether sorting is case-sensitive for string columns(optional)
-* **FilteringExpression** - interface which defines how filterin should be applied for each column. Its properties are:
+* **FilteringExpression** - interface which defines how filtering should be applied for each column. Its properties are:
     * `fieldName` - specifies name of the column
-    * `condtion` - specifies filteirng condition. It should be function which accepts as argumennts:
+    * `condtion` - specifies filtering condition. It should be function which accepts as arguments:
         * `value` - value of the record on which filtering is applied
         * `searchVal` - search value. There are filtering conditions which do not require searchVal. Example - FilteringCondition.Boolean.True.(optional)
         * `ignoreCase` - boolean variable which specifies case-sensitivity for string columns(optional) 
@@ -82,7 +82,7 @@ items: Array<Object> = [
     * `ignoreCase` - boolean variable which specifies case-sensitivity for string columns(optional) 
 * **SortingStrategy** - class which implements **ISortingStrategy** interface. It specifies sorting algorithm.
 * **FilteringStrategy** - class which implements **IFilteringStrategy** interface. It specifies filtering algorithm.
-* **DataType** - enumaration which represent basic data types. Its values are:
+* **DataType** - enumeration which represent basic data types. Its values are:
     * **DataType.Boolean**
     * **DataType.Date**
     * **DataType.Number**

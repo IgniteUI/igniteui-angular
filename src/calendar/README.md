@@ -20,7 +20,7 @@ handler when selection is done.
 <igx-calendar weekStart="1" selection="range" (onSelection)="eventHandler($event)"></igx-calendar>
 ```
 
-The calendar also supports binding through `ngModel` if two-way databind is needed.
+The calendar also supports binding through `ngModel` if two-way data-bind is needed.
 ```html
 <igx-calendar [(ngModel)]="myDateValue"></igx-calendar>
 ```

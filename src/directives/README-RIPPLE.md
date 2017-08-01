@@ -22,7 +22,7 @@ starts.
 
 # Examples
 
-Using `igxRippleTarget` to attach a ripple effect to a specific element inisde a
+Using `igxRippleTarget` to attach a ripple effect to a specific element inside a
 more complex component.
 ```html
 <igx-list>

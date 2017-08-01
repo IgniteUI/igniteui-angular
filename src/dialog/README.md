@@ -1,13 +1,12 @@
-igx-dialog
---------------------
+#igx-dialog
 
 **igx-dialog** supports dialog component that opens centered on top of the app content.
 
 With the igx-dialog you can create **alerts**, **dialogs** and **custom dialogs**.
 
-#Usage
+# Usage
 
-##Alerts are done by adding title, message and button label.
+## Alerts are done by adding title, message and button label.
 
 ```html
 <igx-dialog #alert

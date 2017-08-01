@@ -3,22 +3,22 @@
 ## Description
 **DataContainer** is a wrapper class of original data - array of JavaScript objects. It allows to apply in-memory data operations like - filtering, sorting, paging, CRUD(Create, Read, Update, Delete) operations.  Original data is saved in property `data` and result data(on which data operations are applied) is saved in property `transformedData`.
 
-#API Summary
+# API Summary
 
 ## Properties
 | Name   | Type |  Description |
 |:----------|:-------------|:-------------|
 |  `data` | Array of JavaScript objects | represents original data |
-| `transformedData` | Array of JavaScript objects | When functoin `process` is called data operations defined in argument data state are applied and result data is saved in property `transformedData` |
+| `transformedData` | Array of JavaScript objects | When function `process` is called data operations defined in argument data state are applied and result data is saved in property `transformedData` |
 | `state`| object of type **DataState** | It defines which data operations should be applied when function `process` is called. |
 
 ## Methods
 | Name   |  Description |
 |:----------|:-------------|
-| `process` | Takes as argument object of type **DataState**(optional). If this argument is set then assign it to property `state`. The method sets value of `transformedData` to `data` and applies data operations defined in propety `state`. Result of processed data is saved in property `transformedData`. The method returns instance of DataContainer(allows chaining). |
-| `getIndexOfRecord` |  Takes as arguments: object representing data record and varible of type **DataAccess**(with default value OriginalData). It searches in collection specified by dataAccess(original or transformed data) and returns index of the found record. If record is not found returns -1.   |
-| `getRecordByIndex` | Takes as arguments: index of record and varible of type **DataAccess**(with default value OriginalData). It searches in collection specified by dataAccess(original or transformed data) and returns object representing data record. If record is not found returns `undefined`.  |
-| `getRecordInfoByKeyValue` |  Takes as arguments: column key, search value and varible of type **DataAccess**(with default value OriginalData). It searches in collection specified by dataAccess(original or transformed data) record with property specified in column key that has value equals to search value. It returns variable of type **RecordInfo** with properties `index` and `record`. If record is not found then `index` of result object is -1 and `record` is undefined. |
+| `process` | Takes as argument object of type **DataState**(optional). If this argument is set then assign it to property `state`. The method sets value of `transformedData` to `data` and applies data operations defined in property `state`. Result of processed data is saved in property `transformedData`. The method returns instance of DataContainer(allows chaining). |
+| `getIndexOfRecord` |  Takes as arguments: object representing data record and variable of type **DataAccess**(with default value OriginalData). It searches in collection specified by dataAccess(original or transformed data) and returns index of the found record. If record is not found returns -1.   |
+| `getRecordByIndex` | Takes as arguments: index of record and variable of type **DataAccess**(with default value OriginalData). It searches in collection specified by dataAccess(original or transformed data) and returns object representing data record. If record is not found returns `undefined`.  |
+| `getRecordInfoByKeyValue` |  Takes as arguments: column key, search value and variable of type **DataAccess**(with default value OriginalData). It searches in collection specified by dataAccess(original or transformed data) record with property specified in column key that has value equals to search value. It returns variable of type **RecordInfo** with properties `index` and `record`. If record is not found then `index` of result object is -1 and `record` is undefined. |
 | `addRecord` | Takes as arguments: object representing data record and optional variable identifying position. If position is not set then adds it to the end of the original data otherwise at the specified position  |
 | `deleteRecord`| Takes as argument object representing data record. It tries to remove data record from the original data. If data record is found and removed from the array returns true, otherwise false |
 | `deleteRecordByIndex`| Takes as argument index. It tries to remove data record specified by the index from the original data. If data record is found and removed from the array returns true, otherwise false |
@@ -62,8 +62,8 @@ items: Array<Object> = [
         let res = dataContainer.transformedData;
 ```
 # Additional interfaces, enums and classes used in DataContainer 
- * **DataAccess** - enumaration representing which data should be taken from data container. Possible values are: 
-    * **DataAccess.OriginalData** - takes orinal data
+ * **DataAccess** - enumeration representing which data should be taken from data container. Possible values are: 
+    * **DataAccess.OriginalData** - takes original data
     * **DataAccess.TransformedData** - takes transformed data
 * **RecordInfo** - interface which represents reference to data record and  and index of this data record in the collection. Its properties are:
     * `index` - record index in data collection

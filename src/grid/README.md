@@ -174,7 +174,7 @@ public deleteRow(event) {
 | Signature | Description |
 | :--- | :--- |
 | getColumnByIndex(index: number)  | Get grid column by index  |
-| getColumnByField(field: string)  | Get grid columng by field name  |
+| getColumnByField(field: string)  | Get grid column by field name  |
 | getCell(rowIndex: number, columnField: string) | Returns the cell at rowIndex/columnIndex.  |
 | getRow(rowIndex: number) | Returns row  |
 | focusCell | Focuses the grid cell at position row x column  |
