@@ -1,0 +1,26 @@
+@import "../themes/base/utilities/index";
+@import "../themes/material/config";
+@import "../themes/material/extends/dialog";
+
+@include b(igx-dialog) {
+    @extend %igx-dialog-display;
+    @include e(window) {
+        @extend %igx-dialog-window;
+    }
+    @include e(window-title) {
+        @extend %igx-dialog-title;
+    }
+    @include e(window-content) {
+        @extend %igx-dialog-content;
+    }
+    @include e(window-actions) {
+        @extend %igx-dialog-actions;
+
+        button ~ button {
+            margin-left: 8px;
+        }
+    }
+    @include m(hidden) {
+        @extend %igx-dialog--hidden;
+    }
+}

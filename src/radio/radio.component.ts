@@ -11,7 +11,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 let nextId = 0;
 
-const noop = () => {};
+const noop = () => { };
 
 function MakeProvider(type: any) {
     return {
@@ -25,6 +25,7 @@ function MakeProvider(type: any) {
     moduleId: module.id,
     providers: [MakeProvider(IgxRadio)],
     selector: "igx-radio",
+    styleUrls: ["./radio.component.css"],
     templateUrl: "radio.component.html"
 })
 export class IgxRadio implements ControlValueAccessor {
@@ -84,4 +85,4 @@ export class IgxRadio implements ControlValueAccessor {
     declarations: [IgxRadio],
     exports: [IgxRadio]
 })
-export class IgxRadioModule {}
+export class IgxRadioModule { }

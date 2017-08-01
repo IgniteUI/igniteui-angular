@@ -23,7 +23,7 @@ class Card {
         this.title = obj.title || "Card Title";
         this.subtitle = obj.subtitle || "Card Subtitle";
         this.content = obj.content ||
-                    "Some card content should be placed here. Description or other related information.";
+            "Some card content should be placed here. Description or other related information.";
         this.imageUrl = obj.imageUrl || "demos/app/card/images/media/placeholder.jpg";
         this.avatarUrl = obj.avatarUrl || "demos/app/card/images/avatars/rupert_stadler.jpg";
         this.buttons = obj.buttons || ["ACTION1", "ACTION2"];

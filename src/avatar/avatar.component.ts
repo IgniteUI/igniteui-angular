@@ -5,8 +5,10 @@ import {
     Input,
     NgModule,
     Renderer2,
-    ViewChild
+    ViewChild,
+    ViewEncapsulation
 } from "@angular/core";
+import { IgxIconModule } from "../icon/icon.component";
 
 export enum Size {
     SMALL,
@@ -15,8 +17,10 @@ export enum Size {
 }
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     moduleId: module.id,
     selector: "igx-avatar",
+    styleUrls: ["./avatar.component.css"],
     templateUrl: "avatar.component.html"
 })
 export class IgxAvatar {
@@ -126,12 +130,12 @@ export class IgxAvatar {
         return canvas.toDataURL("image/png");
     }
 
-    private _addEventListeners(renderer: Renderer2) {}
+    private _addEventListeners(renderer: Renderer2) { }
 }
 
 @NgModule({
     declarations: [IgxAvatar],
     exports: [IgxAvatar],
-    imports: [CommonModule]
+    imports: [CommonModule, IgxIconModule]
 })
-export class IgxAvatarModule {}
+export class IgxAvatarModule { }
