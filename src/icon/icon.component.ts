@@ -4,6 +4,7 @@ import { Component, ElementRef, Input, NgModule, ViewChild } from "@angular/core
 @Component({
     moduleId: module.id,
     selector: "igx-icon",
+    styleUrls: ["./icon.component.css"],
     templateUrl: "icon.component.html"
 })
 
@@ -15,7 +16,7 @@ export class IgxIcon {
     private iconColor: string;
     private iconName: string;
 
-    constructor(public el: ElementRef) {}
+    constructor(public el: ElementRef) { }
 
     @Input("fontSet") set fontSet(value: string) {
         this.font = value || this.font;
@@ -60,4 +61,4 @@ export class IgxIcon {
     exports: [IgxIcon],
     imports: [CommonModule]
 })
-export class IgxIconModule {}
+export class IgxIconModule { }

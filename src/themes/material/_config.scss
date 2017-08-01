@@ -185,7 +185,7 @@ $badge-font-size: em(10px) !default;
 $badge-font-weight: 600 !default;
 $badge-shadow: $elevate-1 !default;
 $badge-line-height: 2px !default;
-$badge-icon-font-size: em(10px, 10px) !default;
+$badge-icon-font-size: em(11px, 16px) !default;
 $badge-value-padding: 4px !default;
 
 // 3. Buttons //
@@ -247,11 +247,11 @@ $button-floating-shadow: $elevate-6 !default;
 $button-floating-hover-shadow: $elevate-12 !default;
 $button-floating-background: palette(secondary) !default;
 // Icon Buttons
-$button-icon-width: em(28px, 16px) !default;
+$button-icon-width: em(36px, 16px) !default;
 $button-icon-height: $button-icon-width !default;
 $button-icon-hover-background: $off-white !default;
 $button-icon-focus-background: $lightgray, .5 !default;
-$button-icon-font-size: em(24px, 16px) !default;
+$button-icon-font-size: em(24px, 24px) !default;
 // Navbar Buttons
 $button-navbar-width: em(24px, 16px) !default;
 $button-navbar-height: $button-navbar-width !default;
@@ -333,7 +333,7 @@ $cal-value-month-height: 91px !default;
 $cal-row-padding: 0 em(16px, 16px) !default;
 
 // 9. Fonts //
-$titillium-font-path: 'fonts/titillium/' !default;
+$titillium-font-path: '../src/fonts/titillium/' !default;
 
 // 10. Forms //
 $control-padding: 8px 0 !default;
@@ -397,7 +397,7 @@ $switch-margin: 0 16px !default;
 // Checkboxes
 $checkbox-width: 20px !default;
 $checkbox-height: $checkbox-width !default;
-$checkbox-label-padding: em(36px, 16px) !default;
+$checkbox-label-padding: em(24px, 16px) !default;
 $checkbox-radius: 2px !default;
 $checkbox-border-style: 2px solid !default;
 $checkbox-tick-width: 20px !default;

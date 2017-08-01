@@ -16,7 +16,8 @@
     display: flex;
     flex-flow: row wrap;
     align-items: center;
-    flex: 1 0 100%;
+    // flex: 1 0 100%;
+    flex-basis: 100%;
     padding: $card-heading-padding;
 }
 
@@ -26,7 +27,8 @@
 
 %igx-card-header-title {
     margin: $card-heading-margin;
-    flex: 1 0 100%;
+    // flex: 1 0 100%;
+    flex-basis: 100%;
     font-size: $card-title-fz;
     line-height: $card-title-line-height;
 }
@@ -43,7 +45,8 @@
 }
 
 %igx-card-content {
-    flex: 1 0 100%;
+    // flex: 1 0 100%;
+    flex-basis: 100%;
     padding: $card-content-padding;
 }
 
@@ -70,6 +73,7 @@
     display: flex;
     flex-flow: row wrap;
     flex: 1 0 auto;
+    align-items: center;
     padding: $card-actions-padding;
     max-height: 56px;
 }

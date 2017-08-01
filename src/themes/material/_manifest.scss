@@ -1,6 +1,4 @@
+@import '../base/index';
 @import 'config';
 @import 'extends/index';
 @import 'modules/index';
-
-// always import last
-@import 'helpers/index';

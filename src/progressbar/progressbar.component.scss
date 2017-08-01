@@ -1,0 +1,60 @@
+@import "../themes/base/utilities/index";
+@import "../themes/material/config";
+@import "../themes/material/extends/progress";
+
+@include b(progress-linear) {
+    @extend %progress-linear-display;
+
+    @include e(bar) {
+        @extend %progressbar-display;
+    }
+
+    @include e(bar, $m: default) {
+        @extend %progressbar-display;
+        @extend %progressbar--default;
+    }
+
+    @include e(bar, $m: danger) {
+        @extend %progressbar-display;
+        @extend %progressbar--danger;
+    }
+
+    @include e(bar, $m: warning) {
+        @extend %progressbar-display;
+        @extend %progressbar--warning;
+    }
+
+    @include e(bar, $m: info) {
+        @extend %progressbar-display;
+        @extend %progressbar--info;
+    }
+
+    @include e(value) {
+        @extend %progress-linear-value;
+    }
+
+    @include e(bar, $m: success) {
+        @extend %progressbar-display;
+        @extend %progressbar--success;
+    }
+
+    @include m(striped) {
+        @extend %progressbar--striped;
+    }
+}
+
+@include b(progress-circular) {
+    @extend %progress-circular-display;
+
+    @include e(innercircle) {
+        @extend %progress-circular-innercircle;
+    }
+
+    @include e(circle) {
+        @extend %progress-circular-circle;
+    }
+
+    @include e(text) {
+        @extend %progress-circular-text;
+    }
+}

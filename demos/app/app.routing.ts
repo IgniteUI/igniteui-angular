@@ -33,7 +33,7 @@ const appRoutes: Routes = [
     {
         path: "",
         pathMatch: "full",
-        redirectTo: "/slider"
+        redirectTo: "/avatar"
     },
     {
         component: InputSampleComponent,

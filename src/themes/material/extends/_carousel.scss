@@ -59,10 +59,12 @@
     margin: $carousel-indicators-margin;
     justify-content: center;
     align-items: center;
-    position: fixed;
+    position: absolute;
     list-style: none;
     z-index: 10;
     bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
     padding: $carousel-indicators-padding;
     opacity: .85;
 
