@@ -1,7 +1,7 @@
-/** Utils **/
+// Utils
 @import 'utils';
 
-/** Generic Animations **/
+// Generic Animations
 @import 'generic/flip';
 @import 'generic/rotate';
 @import 'generic/scale';
@@ -9,7 +9,7 @@
 @import 'generic/slide';
 @import 'generic/swing';
 
-/** Entrance Animations **/
+// Entrance Animations
 @import 'entrances/bounce';
 @import 'entrances/fade';
 @import 'entrances/flicker';
@@ -23,7 +23,7 @@
 @import 'entrances/swing';
 @import 'entrances/swirl';
 
-/** Exit Animations **/
+// Exit Animations
 @import 'exits/bounce';
 @import 'exits/fade';
 @import 'exits/flicker';

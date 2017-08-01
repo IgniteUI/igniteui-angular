@@ -41,7 +41,7 @@ export abstract class BaseProgress {
 
     protected startAnimation(interval: number, circular: ElementRef = null, percentage: number = 0) {
         // Change progress bar percent value
-        const timer = setInterval(function() {
+        const timer = setInterval(function animateBar() {
             if (this._valueInPercent >= this._currValue) {
                 clearInterval(timer);
 
@@ -66,6 +66,7 @@ export abstract class BaseProgress {
 @Component({
     moduleId: module.id,
     selector: "igx-linear-bar",
+    styleUrls: ["progressbar.component.css"],
     templateUrl: "templates/linear-bar.component.html"
 })
 export class IgxLinearProgressBar extends BaseProgress implements OnChanges {
@@ -100,6 +101,7 @@ export class IgxLinearProgressBar extends BaseProgress implements OnChanges {
 @Component({
     moduleId: module.id,
     selector: "igx-circular-bar",
+    styleUrls: ["progressbar.component.css"],
     templateUrl: "templates/circular-bar.component.html"
 })
 export class IgxCircularProgressBar extends BaseProgress implements AfterViewInit, OnChanges {
@@ -169,13 +171,13 @@ export function getValueInRange(value: number, max: number, min = 0): number {
 }
 
 export function convertValueInPercent(value: number, max: number) {
-     return Math.floor(100 * value / max);
+    return Math.floor(100 * value / max);
 }
 
 @NgModule({
     declarations: [IgxLinearProgressBar, IgxCircularProgressBar],
     exports: [IgxLinearProgressBar, IgxCircularProgressBar],
-    imports: [ CommonModule]
+    imports: [CommonModule]
 })
 export class IgxProgressBarModule {
 }

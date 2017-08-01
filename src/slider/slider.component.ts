@@ -42,6 +42,7 @@ function MakeProvider(type: any) {
     moduleId: module.id,
     providers: [HammerGesturesManager, MakeProvider(IgxSlider)],
     selector: "igx-slider",
+    styleUrls: ["./slider.component.css"],
     templateUrl: "slider.component.html"
 })
 export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
@@ -590,8 +591,8 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     private hasValueChanged(oldValue) {
         const isSliderWithDifferentValue: boolean = !this.isRange && oldValue !== this.value;
         const isRangeWithOneDifferentValue: boolean = this.isRange &&
-            ((oldValue as IRangeSliderValue).lower  !== (this.value as IRangeSliderValue).lower ||
-            (oldValue as IRangeSliderValue).upper !== (this.value as IRangeSliderValue).upper);
+            ((oldValue as IRangeSliderValue).lower !== (this.value as IRangeSliderValue).lower ||
+                (oldValue as IRangeSliderValue).upper !== (this.value as IRangeSliderValue).upper);
 
         return isSliderWithDifferentValue || isRangeWithOneDifferentValue;
     }
@@ -676,7 +677,7 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private emitValueChanged() {
-        this.onValueChange.emit({value: this.value});
+        this.onValueChange.emit({ value: this.value });
     }
 }
 

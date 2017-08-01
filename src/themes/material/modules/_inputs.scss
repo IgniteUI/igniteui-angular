@@ -32,7 +32,8 @@ input:-webkit-autofill {
             }
         }
 
-        &.ng-valid[required].ng-touched, &.ng-valid.required {
+        &.ng-valid[required].ng-touched,
+        &.ng-valid.required {
             @extend %igx-form-input--success;
 
             ~ label {
@@ -40,7 +41,8 @@ input:-webkit-autofill {
             }
         }
 
-        &.ng-invalid.ng-touched, &.ng-invalid:not(form).ng-touched {
+        &.ng-invalid.ng-touched,
+        &.ng-invalid:not(form).ng-touched {
             @extend %igx-form-input--error;
 
             ~ label {
