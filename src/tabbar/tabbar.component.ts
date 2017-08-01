@@ -1,23 +1,29 @@
 import { CommonModule } from "@angular/common";
-import { AfterViewInit,
-        Component,
-        ContentChildren,
-        ElementRef,
-        EventEmitter,
-        forwardRef,
-        Input,
-        NgModule,
-        Output,
-        QueryList,
-        ViewChild,
-        ViewChildren } from "@angular/core";
-
+import {
+    AfterViewInit,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    Input,
+    NgModule,
+    Output,
+    QueryList,
+    ViewChild,
+    ViewChildren,
+    ViewEncapsulation
+} from "@angular/core";
+import { IgxBadgeModule } from "../../src/badge/badge.component";
+import { IgxIconModule } from "../../src/icon/icon.component";
 @Component({
+    encapsulation: ViewEncapsulation.None,
     host: {
         "(onTabSelected)": "_selectedPanelHandler($event)"
     },
     moduleId: module.id, // commonJS standard
     selector: "igx-tab-bar",
+    styleUrls: ["./tabbar.component.css"],
     templateUrl: "tab-bar-content.component.html"
 })
 
@@ -171,7 +177,7 @@ export class IgxTab {
 @NgModule({
     declarations: [IgxTabBar, IgxTabPanel, IgxTab],
     exports: [IgxTabBar, IgxTabPanel, IgxTab],
-    imports: [CommonModule]
+    imports: [CommonModule, IgxBadgeModule, IgxIconModule]
 })
 export class IgxTabBarModule {
 }

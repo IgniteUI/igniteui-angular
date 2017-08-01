@@ -1,0 +1,15 @@
+@import "../themes/base/utilities/index";
+@import "../themes/material/config";
+@import "../themes/material/extends/snackbar";
+
+@include b(igx-snackbar) {
+    @extend %igx-snackbar-display;
+
+    @include e(message) {
+        @extend %igx-snackbar-message;
+    }
+
+    @include e(button) {
+        @extend %igx-snackbar-button;
+    }
+}

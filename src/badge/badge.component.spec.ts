@@ -4,6 +4,7 @@ import {
     TestBed
 } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { IgxIcon, IgxIconModule } from "../icon/icon.component";
 import { IgxBadge, IgxBadgeModule } from "./badge.component";
 
 describe("Badge", () => {
@@ -14,7 +15,8 @@ describe("Badge", () => {
                 InitBadgeWithDefaults,
                 InitBadgeWithIcon,
                 IgxBadge,
-                InitBadgeWithIconARIA
+                InitBadgeWithIconARIA,
+                IgxIcon
             ]
         }).compileComponents();
     }));
@@ -27,7 +29,7 @@ describe("Badge", () => {
         expect(badge.value).toBeTruthy();
         expect(badge.type).toBeTruthy();
         const contain = fixture.elementRef.nativeElement
-                            .getElementsByTagName("div")[0].classList.contains("igx-badge--bottom-left");
+            .getElementsByTagName("div")[0].classList.contains("igx-badge--bottom-left");
         expect(contain).toBeTruthy();
         const text = fixture.elementRef.nativeElement.getElementsByClassName("igx-badge__circle")[0].textContent;
         expect(parseInt(text, 10) === 22).toBeTruthy();
@@ -39,7 +41,7 @@ describe("Badge", () => {
         const badge = fixture.componentInstance.badge;
 
         const contain = fixture.elementRef.nativeElement
-                            .getElementsByTagName("div")[0].classList.contains("igx-badge--top-right");
+            .getElementsByTagName("div")[0].classList.contains("igx-badge--top-right");
         expect(contain).toBeTruthy();
         expect(fixture.elementRef.nativeElement.getElementsByTagName("span")[0].textContent === "?").toBeTruthy();
         expect(fixture.elementRef.nativeElement.getElementsByTagName("i").length === 0).toBeTruthy();
@@ -56,7 +58,7 @@ describe("Badge", () => {
         expect(badge.type === "info").toBeTruthy();
         expect(badge.value === "?").toBeTruthy();
         const contain = fixture.elementRef.nativeElement.getElementsByTagName("div")[0]
-                            .classList.contains("igx-badge--top-left");
+            .classList.contains("igx-badge--top-left");
         expect(contain).toBeTruthy();
         expect(divContainer[0].classList.contains("igx-badge__circle--info")).toBeTruthy();
     });

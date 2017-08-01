@@ -9,7 +9,7 @@ import {
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
-const noop = () => {};
+const noop = () => { };
 let nextId = 0;
 
 function MakeProvider(type: any) {
@@ -24,6 +24,7 @@ function MakeProvider(type: any) {
     moduleId: module.id,
     providers: [MakeProvider(IgxSwitch)],
     selector: "igx-switch",
+    styleUrls: ["./switch.component.css"],
     templateUrl: "switch.component.html"
 })
 export class IgxSwitch implements ControlValueAccessor {
@@ -31,9 +32,9 @@ export class IgxSwitch implements ControlValueAccessor {
     @Input() public value: any;
     @Input() public id: string = `igx-switch-${nextId++}`;
     @Input()
-        get labelId() {
-            return this.id + "_label";
-        }
+    get labelId() {
+        return this.id + "_label";
+    }
     @Input() public name: string;
     @Input() public disabled: boolean = false;
     @Input() public tabindex: number = null;
@@ -85,4 +86,4 @@ export class IgxSwitch implements ControlValueAccessor {
     declarations: [IgxSwitch],
     exports: [IgxSwitch]
 })
-export class IgxSwitchModule {}
+export class IgxSwitchModule { }

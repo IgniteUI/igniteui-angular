@@ -1,42 +1,37 @@
-import * as gulp from 'gulp';
-import * as sass from 'gulp-sass';
-import * as sourcemaps from 'gulp-sourcemaps';
-import * as autoprefixer from 'gulp-autoprefixer';
-import * as plumber from 'gulp-plumber';
-import * as tsc from 'typescript';
-import * as ts from 'gulp-typescript';
+import * as del from "del";
+import * as gulp from "gulp";
+import * as autoprefixer from "gulp-autoprefixer";
+import * as cleanCSS from "gulp-clean-css";
+import * as concat from "gulp-concat";
+import * as inlineNg2Template from "gulp-inline-ng2-template";
+import * as plumber from "gulp-plumber";
+import * as sass from "gulp-sass";
+import * as sourcemaps from "gulp-sourcemaps";
+import * as ts from "gulp-typescript";
+import * as Builder from "systemjs-builder";
+import * as tsc from "typescript";
 import merge = require("merge-stream");
+import * as vinylPaths from "vinyl-paths";
 
-var concat = require('gulp-concat'),
-    cleanCSS = require('gulp-clean-css'),
-    inlineNg2Template = require('gulp-inline-ng2-template'),
-    del = require('del'),
-    vinylPaths = require('vinyl-paths');
-
-var Builder = require('systemjs-builder');
-
-var tsProject = ts.createProject('tsconfig.json', {
-        typescript: tsc
-    }),
-    tsProdProject = ts.createProject('tsconfig.json', {
-        typescript: tsc,
-        declaration: true
-    }),
-    source = './src/**/*.ts',
-    tsSources: Array<string> = [
-        "./demos/**/*.ts"
-    ].concat(source),
-    specFilesNegate = '!./src/**/*.spec.ts';
-
+const tsProject = ts.createProject("tsconfig.json", {
+    typescript: tsc
+});
+const tsProdProject = ts.createProject("tsconfig.json", {
+    declaration: true,
+    typescript: tsc
+});
+const source = "./src/**/*.ts";
+const tsSources: string[] = [
+    "./demos/**/*.ts"
+].concat(source);
+const specFilesNegate = "!./src/**/*.spec.ts";
 
 gulp.task("build", ["build.css", "build.js", "build.fonts"]);
-
 
 gulp.task("bundle", ["bundle.src", "build.css", "build.fonts", "bundle.README"], () => {
     return gulp.src("./igniteui-js-blocks/**/*")
         .pipe(gulp.dest("./dist"));
 });
-
 
 gulp.task("cleanup", () => {
     return gulp.src("./igniteui-js-blocks")
@@ -48,18 +43,17 @@ gulp.task("cleanup", () => {
  */
 
 gulp.task("build.js", () => {
-    return gulp.src(tsSources.concat("./typings/index.d.ts"), { base: "."})
+    return gulp.src(tsSources.concat("./typings/index.d.ts"), { base: "." })
         .pipe(sourcemaps.init())
         .pipe(tsProject())
         .pipe(sourcemaps.write("."))
         .pipe(gulp.dest("."));
 });
 
-
 gulp.task("build.src", () => {
 
-    var tsResult = gulp.src(["./typings/index.d.ts"].concat(source, specFilesNegate), { base: "./src"})
-        .pipe(inlineNg2Template({ useRelativePaths: true, base: "/src/*"}))
+    const tsResult = gulp.src(["./typings/index.d.ts"].concat(source, specFilesNegate), { base: "./src" })
+        .pipe(inlineNg2Template({ useRelativePaths: true, base: "/src/*" }))
         .pipe(sourcemaps.init())
         .pipe(tsProdProject());
 
@@ -69,39 +63,37 @@ gulp.task("build.src", () => {
     );
 });
 
-
 gulp.task("bundle.src", ["build.src"], () => {
-    var builder = new Builder({
-        paths: {
-            '*': "*.js"
-        },
+    const builder = new Builder({
         meta: {
-            '@angular/*': {
+            "@angular/*": {
                 build: false
             }
+        },
+        paths: {
+            "*": "*.js"
         }
     });
 
-    return builder.trace('igniteui-js-blocks/main').then(trees => {
-        console.log('tree resolved');
+    return builder.trace("igniteui-js-blocks/main").then((trees) => {
+        // console.log("tree resolved");
         return Promise.all([
-            builder.bundle(trees, './dist/bundles/igniteui-js-blocks.dev.js'),
-            builder.bundle(trees, './dist/bundles/igniteui-js-blocks.min.js', { minify: true })
+            builder.bundle(trees, "./dist/bundles/igniteui-js-blocks.dev.js"),
+            builder.bundle(trees, "./dist/bundles/igniteui-js-blocks.min.js", { minify: true })
         ]);
     });
 });
-
 
 /**
  * CSS
  */
 
-gulp.task("build.css", ["build.css.dev"], () => {
+gulp.task("build.css", ["build.component.css"], () => {
     return gulp.src(["src/themes/*.scss"])
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(sass({
-            includePaths: ["src/**/*.scss"],
+            includePaths: ["src/**/*.scss"]
         }))
         .pipe(autoprefixer({
             browsers: ["last 2 versions"],
@@ -110,26 +102,26 @@ gulp.task("build.css", ["build.css.dev"], () => {
         .pipe(cleanCSS())
         .pipe(sourcemaps.write())
         .pipe(plumber.stop())
-        .pipe(gulp.dest("./dist"));
+        .pipe(gulp.dest("./dist"))
+        .pipe(gulp.dest("./dist/dev"));
 });
 
-
-gulp.task("build.css.dev", () => {
-    gulp.src(["src/themes/*.scss"])
+gulp.task("build.component.css", () => {
+    gulp.src(["src/**/*.component.scss"], { base: "./" })
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(sass({
-            includePaths: ["src/**/*.scss"],
+            outputStyle: "compressed"
         }))
         .pipe(autoprefixer({
             browsers: ["last 2 versions"],
             cascade: false
         }))
+        .pipe(cleanCSS())
         .pipe(sourcemaps.write("./"))
         .pipe(plumber.stop())
-        .pipe(gulp.dest("./dist/dev"))
+        .pipe(gulp.dest("."));
 });
-
 
 /**
  * Fonts
@@ -156,11 +148,16 @@ gulp.task("bundle.README", () => {
 gulp.task("watch", [
     "build.css:watch",
     "build.js:watch",
-    "build.fonts:watch"
+    "build.fonts:watch",
+    "build.component.css:watch"
 ]);
 
 gulp.task("build.css:watch", () => {
     gulp.watch("src/**/*.scss", ["build.css"]);
+});
+
+gulp.task("build.component.css:watch", () => {
+    gulp.watch("src/**/*.component.scs", ["build.component.css"]);
 });
 
 gulp.task("build.js:watch", () => {
