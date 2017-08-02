@@ -436,6 +436,8 @@ $slider-height: 48px !default;
 // Slider Track
 $slider-track-color: palette(gray, 500) !default;
 $slider-track-fill-color: palette(primary) !default;
+$slider-track-disabled-color: hexrgba($disabled-color) !default;
+$slider-track-fill-disabled-color: hexrgba($disabled-color) !default;
 $slider-track-height: 2px !default;
 // Slider Ticks
 $slider-tick-color: $white !default;
@@ -444,6 +446,7 @@ $slider-thumb-width: 14px !default;
 $slider-thumb-height: $slider-thumb-width !default;
 $slider-thumb-radius: $slider-thumb-width / 2 !default;
 $slider-thumb-color: palette(accent) !default;
+$slider-thumb-disabled-color: hexrgba($disabled-color) !default;
 // Slider Label
 $slider-label-width: 28px !default;
 $slider-label-height: $slider-label-width !default;

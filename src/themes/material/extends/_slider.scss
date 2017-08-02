@@ -21,6 +21,10 @@
     transition: background .2s ease;
 }
 
+%igx-slider-track--disabled {
+    background: $slider-track-disabled-color;
+}
+
 %igx-slider-track-ticks {
     position: absolute;
     width: 100%;
@@ -38,6 +42,10 @@
     background: $slider-track-fill-color;
     transform-origin: 0 0 0;
     transform: scaleX(0);
+}
+
+%igx-slider-track-fill--disabled {
+    background: $slider-track-fill-disabled-color;
 }
 
 %igx-thumb-display {
@@ -102,6 +110,12 @@
     transform-origin: 50% 50% 0;
     opacity: 1;
     transition: transform .2s ease-out;
+}
+
+%igx-thumb-dot--disabled {
+    background: $slider-thumb-disabled-color;
+    transform: scale(.9);
+    border: 2px solid $white;
 }
 
 %igx-thumb-dot--active {
