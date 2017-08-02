@@ -72,41 +72,29 @@
 @function gen-color($color, $saturation) {
     @if ($saturation==50) {
         @return lighten(saturate($color, 10.4), 37.7);
-    }
-    @else if ($saturation==100) {
+    } @else if ($saturation==100) {
         @return lighten(desaturate($color, 10.4), 31.8);
-    }
-    @else if ($saturation==200) {
+    } @else if ($saturation==200) {
         @return lighten(desaturate($color, 17), 18.7);
-    }
-    @else if ($saturation==300) {
+    } @else if ($saturation==300) {
         @return lighten(desaturate($color, 12.9), 9.1);
-    }
-    @else if ($saturation==400) {
+    } @else if ($saturation==400) {
         @return lighten(desaturate($color, 6.6), 4.1);
-    }
-    @else if ($saturation==600) {
+    } @else if ($saturation==600) {
         @return darken(saturate($color, 12.4), 5.1);
-    }
-    @else if ($saturation==700) {
+    } @else if ($saturation==700) {
         @return darken(saturate($color, 24.5), 8.8);
-    }
-    @else if ($saturation==800) {
+    } @else if ($saturation==800) {
         @return darken(saturate($color, 23.2), 12.7);
-    }
-    @else if ($saturation==900) {
+    } @else if ($saturation==900) {
         @return darken(saturate($color, 16.1), 17);
-    }
-    @else if ($saturation=='A100') {
+    } @else if ($saturation=='A100') {
         @return lighten(saturate($color, 10.4), 16.7);
-    }
-    @else if ($saturation=='A200') {
+    } @else if ($saturation=='A200') {
         @return lighten(saturate($color, 10.4), 7.7);
-    }
-    @else if ($saturation=='A400') {
+    } @else if ($saturation=='A400') {
         @return darken(saturate($color, 10.4), 3.9);
-    }
-    @else if ($saturation=='A700') {
+    } @else if ($saturation=='A700') {
         @return darken(saturate($color, 10.4), 16.6);
     }
 }
@@ -129,8 +117,7 @@
 @function set-color($bgcolor) {
     @if (lightness($bgcolor) > 50) {
         @return #333; // Lighter backgorund, return dark color
-    }
-    @else {
+    } @else {
         @return #FFF; // Darker background, return light color
     }
 }
@@ -143,12 +130,11 @@
          (red($n) * 299) + (green($n) * 587) + (blue($n) * 114) / 1000
     );
     $light-color: round(
-         (red(#FFF) * 299) + (green(#FFF) * 587) + (blue(#FFF) * 114) / 1000
+         (red(#fff) * 299) + (green(#fff) * 587) + (blue(#fff) * 114) / 1000
     );
     @if abs($color-brightness) < ($light-color / 2) {
         @return #FFF;
-    }
-    @else {
+    } @else {
         @return #000;
     }
 }
@@ -175,8 +161,7 @@
         ),
         $value
     );
-    $is-angle: type-of($value)=='number'
-        and
+    $is-angle: type-of($value)=='number' and
         index('deg' 'grad' 'turn' 'rad', unit($value));
     @return $is-keyword or $is-angle;
 }
@@ -219,10 +204,46 @@
     $direct-alpha: (24 - round($dp / 10)) / 100;
     @if $dp==0 {
         @return $box-shadow;
-    }
-    @else {
+    } @else {
         $box-shadow: #{'0 #{$ambient-y}px #{$blur}px rgba(0, 0, 0, #{$ambient-alpha})'},
             #{'0 #{$direct-y}px #{$blur}px rgba(0, 0, 0, #{$direct-alpha})'};
         @return $box-shadow;
     }
+}
+
+@function to-string($num, $radix: 16) {
+    $chars: '0123456789abcdef';
+    $result: '';
+    $sign: '';
+
+    @if $num < 0 {
+        $sign: '-';
+        $num: abs($num);
+    }
+
+    @if $num >= 0 and $num < $radix {
+        @return $sign + str-slice($chars, ($num + 1), ($num + 1));
+    }
+
+    $q: $num;
+    @while $q != 0 {
+        $r: $q % $radix;
+        $q: floor($q / $radix);
+        $result: str-slice($chars,  ($r + 1),  ($r + 1)) + $result;
+    }
+
+    @return $sign + $result;
+}
+
+@function hexrgba($rgba) {
+    $red: red($rgba);
+    $green: green($rgba);
+    $blue: blue($rgba);
+
+    $a: alpha($rgba);
+    $r: floor($a * $red + (1 - $a) * 255);
+    $g: floor($a * $green + (1 - $a) * 255);
+    $b: floor($a * $blue + (1 - $a) * 255);
+
+    @return unquote('##{str-slice('0#{to-string($r)}',-2)}#{str-slice('0#{to-string($g)}',-2)}#{str-slice('0#{to-string($b)}',-2)}');
 }
