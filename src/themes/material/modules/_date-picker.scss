@@ -2,8 +2,11 @@
     .igx-dialog__window {
         @extend %date-picker-display;
     }
-    .igx-dialog__window-title,
     .igx-dialog__window-actions {
+        margin: auto;
+        // vertical-align: center;
+    } 
+    .igx-dialog__window-title {
         display: none;
     }
     .igx-dialog__window,

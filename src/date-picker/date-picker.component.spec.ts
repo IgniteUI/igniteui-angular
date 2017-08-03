@@ -24,10 +24,10 @@ describe("IgxDatePicker", () => {
         fixture.detectChanges();
 
         const datePicker = fixture.componentInstance.datePicker;
-        const today = new Date(Date.now());
+        const result = "";
 
         expect(fixture.componentInstance).toBeDefined();
-        expect(datePicker.dateValue.getDate()).toEqual(today.getDate());
+        expect(datePicker.displayData).toEqual(result);
     });
 
     it("@Input properties", () => {
@@ -36,14 +36,14 @@ describe("IgxDatePicker", () => {
 
         const datePicker = fixture.componentInstance.datePicker;
 
-        expect(datePicker.dateValue).toEqual(new Date(2017, 7, 7));
+        expect(datePicker.value).toEqual(new Date(2017, 7, 7));
     });
 
     it("Datepicker DOM input value", () => {
-        const fixture = TestBed.createComponent(IgxDatePicker);
+        const fixture = TestBed.createComponent(IgxDatePickerWithPassedDate);
         fixture.detectChanges();
 
-        const today = new Date(Date.now());
+        const today = new Date(2017, 7, 7);
         const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
 
         const dom = fixture.debugElement;
@@ -52,17 +52,16 @@ describe("IgxDatePicker", () => {
         expect(getValueFromInput).toEqual(formattedDate);
     });
 
-    it("Datepicker pass invalid type", () => {
+    xit("Datepicker pass invalid type", () => {
         const fixture = TestBed.createComponent(IgxDatePickerInvalidDate);
         fixture.detectChanges();
 
-        const today = new Date(Date.now());
-        const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
+        const result = "";
 
         const dom = fixture.debugElement;
         const getValueFromInput = dom.query(By.css(".igx-date-picker__input-date")).nativeElement.value;
 
-        expect(getValueFromInput).toEqual(formattedDate);
+        expect(getValueFromInput).toEqual(result);
 
     });
 
@@ -92,17 +91,17 @@ describe("IgxDatePicker", () => {
         const datePicker = compInstance.datePicker;
         const dom = fixture.debugElement;
         const inputTarget = dom.query(By.css(".igx-date-picker__input-date")).nativeElement;
-        const today = new Date(Date.now());
-        const formattedDate = compInstance.customFormatter(today);
+        const date = new Date(2017, 7, 7);
+        const formattedDate = compInstance.customFormatter(date);
 
         expect(inputTarget.value).toEqual(formattedDate);
     });
 
     it("Datepicker custom locale(EN) date format", () => {
-        const fixture = TestBed.createComponent(IgxDatePicker);
+        const fixture = TestBed.createComponent(IgxDatePickerWithPassedDate);
         fixture.detectChanges();
 
-        const todayToEnLocale = new Date(Date.now()).toLocaleDateString("en");
+        const todayToEnLocale = new Date(2017, 7, 7).toLocaleDateString("en");
         const dom = fixture.debugElement;
         const inputTarget = dom.query(By.css(".igx-date-picker__input-date")).nativeElement;
 
@@ -112,12 +111,13 @@ describe("IgxDatePicker", () => {
 
 @Component({
     template: `
-        <igx-datePicker [formatter]="customFormatter"></igx-datePicker>
+        <igx-datePicker [formatter]="customFormatter" [value]=date></igx-datePicker>
     `
 })
 export class IgxDatePickerWithCustomFormatter {
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
 
+    public date = new Date(2017, 7, 7);
     public customFormatter = (_: Date) => (
         `${_.getFullYear()}/${_.getMonth()}/${_.getDate()}`
     )
@@ -125,11 +125,11 @@ export class IgxDatePickerWithCustomFormatter {
 
 @Component({
     template: `
-        <igx-datePicker></igx-datePicker>
+        <igx-datePicker [value]="date"></igx-datePicker>
     `
 })
 export class IgxDatePickerInvalidDate {
-    public date: string = "234/12/2017";
+    public date: string = "23/12/2017";
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
 }
 
@@ -144,7 +144,7 @@ export class IgxDatePicker {
 
 @Component({
     template: `
-        <igx-datePicker [dateValue]="date"></igx-datePicker>
+        <igx-datePicker [value]="date"></igx-datePicker>
     `
 })
 export class IgxDatePickerWithPassedDate {
