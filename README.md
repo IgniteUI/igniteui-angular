@@ -39,6 +39,7 @@ Current list of controls include:
 | **buttonGroup**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/buttonGroup/README.md)      |               |               |                                                                                                       |
 | **dataContainer**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/data-operations/README-DATACONTAINER.md)      |               |               |                                                                                                       |
 | **dataUtil**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/data-operations/README-DATAUTIL.md)      |               |               |                                                                                                       |
+| **datePicker**              |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/date-picker/README.md)      |               |               |                                                                                                       |
 
 ## Setup
 From the root folder run:

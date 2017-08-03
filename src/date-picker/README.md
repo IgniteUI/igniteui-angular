@@ -1,11 +1,32 @@
-# igx-datePicker
+# igx-datePicker Component
 
 The **igx-datePicker** component allows you to choose date from calendar
 which is presented into input field.
 
 # Usage
+```typescript
+import { IgxDatePickerComponent } from "igniteui-js-blocks";
+```
+
+Basic initialization
 ```html
-<igx-datePicker [formatter]="customFormatter" [dateValue]="dateValue">
+<igx-datePicker></igx-datePicker>
+```
+Custom formatter function with passed initial date.
+```html
+<igx-datePicker [formatter]="customFormatter" [value]="dateValue">
+</igx-datePicker>
+```
+
+DatePicker with cancel and today buttons
+```html
+<igx-datePicker [cancelButtonLabel]="'Close'"[todayButtonLabel]="'Today'">
+</igx-datePicker>
+```
+
+You have also ability to disable the datePicker
+```html
+<igx-datePicker [isDisabled]="false">
 </igx-datePicker>
 ```
 
@@ -14,7 +35,12 @@ which is presented into input field.
 ###### Inputs
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
-| `dateValue` | Date | Sets the initial date value. |
+| `todayBottonLabel` | string | Creates today button with custom name, which selects today date from calendar, and fill the datePicker input. |
+| `cancelButtonLabel` | string | Creates cancel button with custom name,
+which closes the calendar. |
+| `formatter` | function | Applied custom formatter on the selected or passed date. |
+| `isDisabled` | boolean | Disable the datePicker. |
+| `value` | Date | Getter and Setter for the selected or passed date value. |
 
 ###### Outputs
 | Name | Description |
@@ -24,18 +50,4 @@ which is presented into input field.
 ###### Methods
 | Signature | Description |
 | :--- | :--- |
-| `formatter`  | Sets the date format.  |
-
-# Examples
-
-Using `igx-datePicker` tag to include it into your app.
-```html
-<igx-datePicker [formatter]="customFormatter" [dateValue]="dateValue">
-</igx-datePicker>
-```
-
-Using `TypeScript` to modify and existing igx-datePicker instance.
-```typescript
-datePickerInstance.formatter(callback);
-datePickerInstance.dateValue(new Date(Date.now()));
-```
+| `triggerTodaySelection`  | Selects today date from calendar and fill the input value with it. Also emits the `onSelection` event from calendar.  |
