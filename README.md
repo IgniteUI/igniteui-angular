@@ -13,6 +13,7 @@ including samples and tests. Source files under the `src` folder.
 
 Current list of controls include:
 
+
 | *Components*          | Status              | Docs                                                                                            |     | *Directives*  | Status        | Docs                                                                                                  |
 | :-:                   | :-:                 | :-:                                                                                             | :-: | :-:           | :-:           | :-:                                                                                                   |
 | **avatar**            |           Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/avatar/README.md)       |     | **button**    |     Available | [Readme](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/src/button/README.md)             |

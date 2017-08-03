@@ -1,9 +1,10 @@
 $font-weight: 400;
 $font-weight-headings: 600;
+$link-color: palette(secondary, 500);
 
 a {
     text-decoration: none;
-    color: palette(secondary, 500);
+    color: $link-color;
 }
 
 html {

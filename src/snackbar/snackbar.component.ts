@@ -73,6 +73,7 @@ import { HammerGesturesManager } from "../core/touch";
     moduleId: module.id,
     providers: [HammerGesturesManager],
     selector: "igx-snackbar",
+    styleUrls: ["./snackbar.component.css"],
     templateUrl: "snackbar.component.html"
 })
 export class IgxSnackbar {

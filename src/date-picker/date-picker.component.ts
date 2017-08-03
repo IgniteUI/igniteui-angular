@@ -7,7 +7,8 @@ import {
     NgModule,
     OnInit,
     Output,
-    ViewChild
+    ViewChild,
+    ViewEncapsulation
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { IgxCalendarComponent, IgxCalendarModule } from "../calendar/calendar.component";
@@ -16,11 +17,13 @@ import { IgxDialog, IgxDialogModule } from "../dialog/dialog.component";
 import { IgxInput } from "../input/input.directive";
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     moduleId: module.id,
     providers:
-        [HammerGesturesManager,
+    [HammerGesturesManager,
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true }],
     selector: "igx-datePicker",
+    styleUrls: ["date-picker.component.css"],
     templateUrl: "date-picker.component.html"
 })
 export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
@@ -137,4 +140,4 @@ class Constants {
     exports: [IgxDatePickerComponent],
     imports: [CommonModule, IgxInput, IgxDialogModule, IgxCalendarModule]
 })
-export class IgxDatePickerModule {}
+export class IgxDatePickerModule { }

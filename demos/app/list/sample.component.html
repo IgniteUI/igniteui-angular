@@ -12,10 +12,10 @@
             <div class="igx-form-group">
                 <input class="igx-form-group__input--search" placeholder="Search List" [(ngModel)]="search2" />
                 <label igxLabel>
-                    <i class="material-icons">search</i>
+                    <igx-icon fontSet="material" name="search"></igx-icon>
                 </label>
                 <span class="igx-form-group__clear--hidden">
-                    <i class="material-icons">clear</i>
+                    <igx-icon fontSet="material" name="clear"></igx-icon>
                 </span>
             </div>
             <div class="list-sample">
@@ -37,10 +37,10 @@
             <div class="igx-form-group">
                 <input class="igx-form-group__input--search" placeholder="Search Contacts" [(ngModel)]="search1" />
                 <label igxLabel>
-                    <i class="material-icons">search</i>
+                    <igx-icon fontSet="material" name="search"></igx-icon>
                 </label>
                 <span class="igx-form-group__clear--hidden">
-                    <i class="material-icons">clear</i>
+                    <igx-icon fontSet="material" name="clear"></igx-icon>
                 </span>
             </div>
             <div class="list-sample">
@@ -82,10 +82,10 @@
             <div class="igx-form-group" [hidden]="fruits.length === 0">
                 <input #searchFruits class="igx-form-group__input--search" placeholder="Search List" [(ngModel)]="fruitsSearch" />
                 <label igxLabel>
-                    <i class="material-icons">search</i>
+                    <igx-icon fontSet="material" name="search"></igx-icon>
                 </label>
                 <span class="igx-form-group__clear--hidden">
-                    <i class="material-icons">clear</i>
+                    <igx-icon fontSet="material" name="clear"></igx-icon>
                 </span>
             </div>
             <div class="list-sample">
@@ -103,7 +103,7 @@
                 </div>
                 <button igxButton="fab" igxButtonColor="white" igxButtonBackground="#0375be" igRipple="white" (click)="addFruitDialog.open()"
                     [hidden]="fruits.length === 0" style="position: absolute; bottom: 24px; right: 24px">
-                        <i class="material-icons">add</i>
+                        <igx-icon fontSet="material" name="add"></igx-icon>
                 </button>
             </div>
         </article>

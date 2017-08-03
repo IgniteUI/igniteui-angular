@@ -42,6 +42,8 @@ demos/**/*.js.map
 src/**/*.js
 src/**/*.js.map
 
+src/**/*.css
+src/**/*.css.map
 
 dist/dev
 dist/**/*.js

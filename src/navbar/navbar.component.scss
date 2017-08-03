@@ -1,0 +1,19 @@
+@import "../themes/base/utilities/index";
+@import "../themes/material/config";
+@import "../themes/material/extends/navbar";
+
+@include b(igx-navbar) {
+    @extend %igx-navbar-display;
+
+    @include e(left) {
+        @extend %igx-navbar-bundle;
+    }
+
+    @include e(right) {
+        @extend %igx-navbar-bundle;
+    }
+
+    @include e(title) {
+        @extend %igx-navbar-title;
+    }
+}

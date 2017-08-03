@@ -1,13 +1,16 @@
 import { CommonModule } from "@angular/common";
-import { AfterViewInit,
-        ChangeDetectorRef,
-        Component,
-        ElementRef,
-        EventEmitter,
-        forwardRef,
-        Inject, Input, NgModule, Output, QueryList, Renderer2, ViewChildren } from "@angular/core";
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    Inject, Input, NgModule, Output, QueryList, Renderer2, ViewChildren
+} from "@angular/core";
 import { IgxButton, IgxButtonModule } from "../button/button.directive";
 import { IgxRippleModule } from "../directives/ripple.directive";
+import { IgxIconModule } from "../icon/icon.component";
 
 export enum ButtonGroupAlignment { horizontal, vertical }
 
@@ -16,12 +19,13 @@ export enum ButtonGroupAlignment { horizontal, vertical }
 @Component({
     moduleId: module.id, // commonJS standard
     selector: "igx-buttongroup",
+    styleUrls: ["./buttongroup.component.css"],
     templateUrl: "buttongroup-content.component.html"
 })
 
 export class IgxButtonGroup implements AfterViewInit {
     @ViewChildren(IgxButton) public buttons: QueryList<IgxButtonGroup>;
-    @Input() set itemContentCssClass(value: string){
+    @Input() set itemContentCssClass(value: string) {
         this._itemContentCssClass = value || this._itemContentCssClass;
     }
     get itemContentCssClass(): string {
@@ -58,7 +62,7 @@ export class IgxButtonGroup implements AfterViewInit {
 
     public selectButton(index: number) {
         if (this.buttons.toArray()[index]._el.nativeElement.getAttribute("data-togglable") === "false"
-        || this.buttons.toArray()[index]._el.nativeElement.classList.contains("igx-button--disabled")) {
+            || this.buttons.toArray()[index]._el.nativeElement.classList.contains("igx-button--disabled")) {
             return;
         }
         const buttonElement = this.buttons.toArray()[index]._el.nativeElement;
@@ -79,7 +83,7 @@ export class IgxButtonGroup implements AfterViewInit {
 
     public deselectButton(index: number) {
         if (this.buttons.toArray()[index]._el.nativeElement.getAttribute("data-togglable") === "false"
-        || this.buttons.toArray()[index]._el.nativeElement.classList.contains("igx-button--disabled")) {
+            || this.buttons.toArray()[index]._el.nativeElement.classList.contains("igx-button--disabled")) {
             return;
         }
         const buttonElement = this.buttons.toArray()[index]._el.nativeElement;
@@ -112,7 +116,7 @@ export class IgxButtonGroup implements AfterViewInit {
 @NgModule({
     declarations: [IgxButtonGroup, IgxButtonGroup],
     exports: [IgxButtonGroup],
-    imports: [IgxButtonModule, CommonModule, IgxRippleModule]
+    imports: [IgxButtonModule, CommonModule, IgxRippleModule, IgxIconModule]
 })
 
 export class IgxButtonGroupModule {

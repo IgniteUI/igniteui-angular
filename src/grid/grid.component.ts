@@ -118,6 +118,7 @@ export interface IgxGridCell {
 @Component({
     moduleId: module.id,
     selector: "igx-grid",
+    styleUrls: ["grid.component.css"],
     templateUrl: "grid.component.html"
 })
 export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDestroy {
@@ -209,14 +210,15 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
     private _lastRow: any;
     private shouldDataBind: boolean = false;
 
-    constructor(private _renderer: Renderer2,
-                private _elementRef: ElementRef,
-                private _detector: ChangeDetectorRef,
-                private _itDiff: IterableDiffers,
-                private _resolver: ComponentFactoryResolver,
-                private _viewRef: ViewContainerRef) {
-                    this._differ = this._itDiff.find([]).create(null);
-                }
+    constructor(
+        private _renderer: Renderer2,
+        private _elementRef: ElementRef,
+        private _detector: ChangeDetectorRef,
+        private _itDiff: IterableDiffers,
+        private _resolver: ComponentFactoryResolver,
+        private _viewRef: ViewContainerRef) {
+        this._differ = this._itDiff.find([]).create(null);
+    }
 
     public ngOnInit(): void {
         this.dataContainer.state = this.state;
@@ -308,7 +310,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
 
         const record: any = this.dataContainer.getRecordByIndex(rowIndex, DataAccess.TransformedData);
         const element: any = this._elementRef.nativeElement
-                                .querySelector(`td[data-row="${rowIndex}"][data-col="${colIndex}"]`);
+            .querySelector(`td[data-row="${rowIndex}"][data-col="${colIndex}"]`);
 
         if (record) {
             result.dataItem = record[column.field];
@@ -370,7 +372,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
      */
     public focusCell(rowIndex: number | string, columnIndex: number | string): void {
         const cell: HTMLElement = this._elementRef.nativeElement
-                                    .querySelector(`td[data-row="${rowIndex}"][data-col="${columnIndex}"]`);
+            .querySelector(`td[data-row="${rowIndex}"][data-col="${columnIndex}"]`);
         if (cell) {
             cell.focus();
         }
@@ -398,14 +400,14 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
             delete this.filteringExpressions[column.field];
         } else {
             switch (column.dataType) {
-            case DataType.Number:
-                filterInput = parseFloat(searchTerm);
-                break;
-            case DataType.Boolean:
-                filterInput = Boolean(searchTerm);
-                break;
-            default:
-                break;
+                case DataType.Number:
+                    filterInput = parseFloat(searchTerm);
+                    break;
+                case DataType.Boolean:
+                    filterInput = Boolean(searchTerm);
+                    break;
+                default:
+                    break;
             }
             const expr: IFilteringExpression = {
                 condition: column.filteringCondition,
@@ -450,7 +452,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
 
     public updateRow(index: number, rowData: object): void {
         this.dataContainer.updateRecordByIndex(index, rowData);
-        this.onEditDone.emit({row: this.getRow(index)});
+        this.onEditDone.emit({ row: this.getRow(index) });
     }
 
     public updateCell(index: number, columnField: string, value: any): void {
@@ -477,7 +479,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
         Object.keys(this.sortingExpressions)
             .forEach((expr) => result.push(this.sortingExpressions[expr]));
 
-        this.dataContainer.state.sorting = this.dataContainer.state.sorting || {expressions: []};
+        this.dataContainer.state.sorting = this.dataContainer.state.sorting || { expressions: [] };
         this.dataContainer.state.sorting.expressions = result;
         this.shouldDataBind = true;
         this.onSortingDone.emit({
@@ -498,7 +500,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
         this.columns = this.cols.toArray();
         this.columns.forEach((col, index) => {
             col.index = index;
-            this.onColumnInit.emit({column: col});
+            this.onColumnInit.emit({ column: col });
         });
     }
 
@@ -509,7 +511,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
         const el: HTMLElement = event.target;
         this._renderer.setAttribute(el, "aria-selected", "true");
         this._renderer.addClass(el, "igx-grid__tr--selected");
-        this.onRowSelection.emit({row: this.getRow(index)});
+        this.onRowSelection.emit({ row: this.getRow(index) });
     }
 
     protected onRowBlur(event: any): void {
@@ -526,7 +528,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
             this._renderer.addClass(el, "igx-grid__td--selected");
             this._renderer.addClass(el.parentElement, "igx-grid__tr--selected");
         }
-        this.onCellSelection.emit({cell: this.getCell(index, columnField)});
+        this.onCellSelection.emit({ cell: this.getCell(index, columnField) });
     }
 
     protected onCellBlur(event: any): void {
@@ -615,14 +617,14 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
 
     private autogenerate(): void {
         const factory: ComponentFactory<IgxColumnComponent> = this._resolver
-                                                                .resolveComponentFactory(IgxColumnComponent);
+            .resolveComponentFactory(IgxColumnComponent);
         const colFields: any[] = Object.keys(this.data[0]);
 
         colFields.forEach((field, index) => {
             const ref: ComponentRef<IgxColumnComponent> = this._viewRef.createComponent(factory);
             ref.instance.field = field;
             ref.instance.index = index;
-            this.onColumnInit.emit({column: ref.instance});
+            this.onColumnInit.emit({ column: ref.instance });
             this.columns.push(ref.instance);
             ref.changeDetectorRef.detectChanges();
         });
@@ -638,7 +640,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
 
         if (key.endsWith("Left")) {
             this.focusCell(row, column - 1);
-         } else if (key.endsWith("Right")) {
+        } else if (key.endsWith("Right")) {
             this.focusCell(row, column + 1);
         } else if (key.endsWith("Up")) {
             this.focusCell(row - 1, column);
@@ -668,4 +670,4 @@ const GRID_DIRECTIVES: any[] = [
     exports: GRID_DIRECTIVES,
     imports: [CommonModule, IgxIconModule, IgxDialogModule, IgxDragDropModule, IgxInput, IgxButtonModule, FormsModule]
 })
-export class IgxGridModule {}
+export class IgxGridModule { }

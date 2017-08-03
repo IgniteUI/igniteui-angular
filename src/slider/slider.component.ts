@@ -11,9 +11,9 @@ export enum SliderType {
      * Slider with single thumb.
      */
     SLIDER,
-    /**
-     *  Range slider with multiple thumbs, that can mark the range.
-     */
+        /**
+         *  Range slider with multiple thumbs, that can mark the range.
+         */
     RANGE
 }
 
@@ -42,9 +42,16 @@ function MakeProvider(type: any) {
     moduleId: module.id,
     providers: [HammerGesturesManager, MakeProvider(IgxSlider)],
     selector: "igx-slider",
+    styleUrls: ["./slider.component.css"],
     templateUrl: "slider.component.html"
 })
 export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
+    /**
+     * Disables or enables UI interaction.
+     */
+    @Input()
+    public disabled: boolean;
+
     /**
      * Marks slider as continuous. By default is considered that the slider is discrete.
      * Discrete slider does not have ticks and does not shows bubble labels for values.
@@ -370,6 +377,10 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private showThumbsLabels() {
+        if (this.disabled) {
+            return;
+        }
+
         if (this.isContinuous) {
             return;
         }
@@ -382,6 +393,10 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private hideThumbsLabels() {
+        if (this.disabled) {
+            return;
+        }
+
         if (this.isContinuous) {
             return;
         }
@@ -398,6 +413,10 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private update($event) {
+        if (this.disabled) {
+            return;
+        }
+
         if ($event.type === "tap") {
             this.toggleThumbLabel();
         }
@@ -572,13 +591,17 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     private hasValueChanged(oldValue) {
         const isSliderWithDifferentValue: boolean = !this.isRange && oldValue !== this.value;
         const isRangeWithOneDifferentValue: boolean = this.isRange &&
-            ((oldValue as IRangeSliderValue).lower  !== (this.value as IRangeSliderValue).lower ||
-            (oldValue as IRangeSliderValue).upper !== (this.value as IRangeSliderValue).upper);
+            ((oldValue as IRangeSliderValue).lower !== (this.value as IRangeSliderValue).lower ||
+                (oldValue as IRangeSliderValue).upper !== (this.value as IRangeSliderValue).upper);
 
         return isSliderWithDifferentValue || isRangeWithOneDifferentValue;
     }
 
     private onKeyDown($event: KeyboardEvent) {
+        if (this.disabled) {
+            return true;
+        }
+
         let incrementSign;
 
         if ($event.key.endsWith("Left")) {
@@ -654,7 +677,7 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     }
 
     private emitValueChanged() {
-        this.onValueChange.emit({value: this.value});
+        this.onValueChange.emit({ value: this.value });
     }
 }
 

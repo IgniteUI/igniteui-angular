@@ -1,0 +1,43 @@
+@import "../themes/base/utilities/index";
+@import "../themes/material/config";
+@import "../themes/material/extends/list";
+
+@include b(igx-list) {
+    @extend %igx-list;
+
+    @include e(header) {
+        @extend %igx-list-header;
+    }
+
+    @include e(item) {
+        @extend %igx-list-item;
+
+        &:active {
+            @extend %igx-list-item--active;
+        }
+        // &:not(:active) {
+        //     @extend %igx-list-item--inactive;
+        // }
+    }
+
+    @include e(empty) {
+        @extend %igx-list-empty;
+
+        @include b(image) {
+            @extend %igx-list-empty-image;
+        }
+
+        @include b(message) {
+            @extend %igx-list-empty-message;
+        }
+    }
+
+    @include e(empty, $m: custom) {
+        @extend %igx-list-empty;
+    }
+    @at-root {
+        igx-list-item {
+            @extend %igx-list-item-display;
+        }
+    }
+}
