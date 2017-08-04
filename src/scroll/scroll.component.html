@@ -1,0 +1,21 @@
+<style>
+    .igx-scroll__vertical {
+        width: 20px;
+        overflow-y: scroll;
+    }
+</style>
+<div class="igx-scroll"
+     #scroll>
+    <div style="display: inline-block" [ngStyle]="{ 'height': totalHeight, 'overflow-y': 'hidden' }"
+        (pan)="onPanend($event)"
+        (wheel)="onMouseDown($event)">
+        <ng-content>
+        </ng-content>
+    </div>
+    <div (scroll)="onScrolled($event)"
+         #verticalScroll class="igx-scroll__vertical" [ngStyle]="{ 'height': totalHeight, 'display': 'inline-block' }">
+        <div [ngStyle]="{ 'height': innerHeight }">
+        </div>
+    </div>
+    <!--<div class="igx-scroll__horizontal"></div>-->
+</div>

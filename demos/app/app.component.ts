@@ -17,4 +17,12 @@ export class AppComponent {
         position: "left",
         width: "242px"
     };
+
+    private toggleNavigationDrawer($event): void {
+        if (this.navdrawer.isOpen) {
+            this.navdrawer.close();
+        } else {
+            this.navdrawer.open();
+        }
+    }
 }

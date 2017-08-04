@@ -19,6 +19,7 @@ import { NavigationDrawerModule } from "./navigation-drawer/navigation-drawer.co
 import { IgxProgressBarModule } from "./progressbar/progressbar.component";
 import { IgxRadioModule} from "./radio/radio.component";
 import { IgxSliderModule } from "./slider/slider.component";
+import { IgxScrollModule } from "./scroll/scroll.component";
 import { IgxSnackbarModule } from "./snackbar/snackbar.component";
 import { IgxSwitchModule} from "./switch/switch.component";
 import { IgxTabBarModule } from "./tabbar/tabbar.component";
@@ -46,6 +47,7 @@ import { IgxToastModule } from "./toast/toast.component";
         IgxToastModule,
         IgxButtonGroupModule,
         IgxSliderModule,
+        IgxScrollModule,
         IgxDatePickerModule
     ],
     imports: [
@@ -69,6 +71,7 @@ import { IgxToastModule } from "./toast/toast.component";
         IgxToastModule,
         IgxButtonGroupModule,
         IgxSliderModule,
+        IgxScrollModule,
         IgxDatePickerModule
     ]
 })
