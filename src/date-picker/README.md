@@ -36,8 +36,7 @@ You have also ability to disable the datePicker
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
 | `todayBottonLabel` | string | Creates today button with custom name, which selects today date from calendar, and fill the datePicker input. |
-| `cancelButtonLabel` | string | Creates cancel button with custom name,
-which closes the calendar. |
+| `cancelButtonLabel` | string | Creates cancel button with custom name, which closes the calendar. |
 | `formatter` | function | Applied custom formatter on the selected or passed date. |
 | `isDisabled` | boolean | Disable the datePicker. |
 | `value` | Date | Getter and Setter for the selected or passed date value. |

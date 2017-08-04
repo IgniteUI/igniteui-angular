@@ -15,6 +15,7 @@ import { IgxCalendarSampleModule } from "./calendar/sample.module";
 import { IgxCardSampleModule } from "./card/sample.module";
 import { CarouselSampleModule } from "./carousel/sample.module";
 import { DataOperationsSampleModule } from "./data-operations/sample.module";
+import { IgxDatePickerSampleModule } from "./date-picker/sample.module";
 import { DialogSampleModule } from "./dialog/sample.module";
 import { GridSampleModule } from "./grid/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
@@ -65,7 +66,8 @@ import { IgxToastSampleModule } from "./toast/sample.module";
         IgxTypographySampleModule,
         IgxColorsSampleModule,
         IgxShadowsSampleModule,
-        IgxCalendarSampleModule
+        IgxCalendarSampleModule,
+        IgxDatePickerSampleModule
     ]
 })
 export class AppModule {}
