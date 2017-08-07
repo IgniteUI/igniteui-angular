@@ -80,5 +80,14 @@ You can include Ignite UI JS Blocks in your project as a dependency using the NP
 
 [General Naming Guidelines](../../wiki//General-Naming-Guidelines-for-Ignite-UI-JS-Blocks)
 
+
+## Quickstart App
+[IgniteUI JS Blocks Quickstart app](https://github.com/IgniteUI/igniteui-js-blocks-quickstart)
+This repository is a fork of the Angular QuickStart Source and has been updated to demonstrate how to include and use components from the Ignite UI JS Blocks. It basically follows the shortest path to bootstrap writing the application with IgniteUI JS Blocks:
+
+- Fork the [the angular quickstart](https://github.com/angular/quickstart)
+- Install IgniteUI JS Blocks from npm using `npm install igniteui-js-blocks --save-dev`
+- Update the views with sample JS Blocks controls.
+
 ## Demo App
 [Warehouse Picklist App](https://github.com/IgniteUI/warehouse-js-blocks)
