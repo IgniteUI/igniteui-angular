@@ -8,7 +8,7 @@
      #scroll>
     <div style="display: inline-block" [ngStyle]="{ 'height': totalHeight, 'overflow-y': 'hidden' }"
         (pan)="onPanend($event)"
-        (wheel)="onMouseDown($event)">
+        (wheel)="onMouseWheel($event)">
         <ng-content>
         </ng-content>
     </div>
