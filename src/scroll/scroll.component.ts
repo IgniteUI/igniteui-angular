@@ -51,8 +51,9 @@ export class IgxScroll implements OnInit, AfterViewInit {
         // throw new Error("Method not implemented.");
     }
 
-    private onMouseDown($event): void {
+    private onMouseWheel($event): void {
         this.scrollVertically($event.deltaY);
+        $event.preventDefault();
     }
 
     private onPanend($event) {
