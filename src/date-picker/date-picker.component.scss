@@ -6,12 +6,20 @@
     .igx-dialog__window {
         @extend %date-picker-display;
     }
-    .igx-dialog__window-title,
-    .igx-dialog__window-actions {
+    .igx-dialog__window-title {
         display: none;
     }
+
+    .igx-dialog__window-actions {
+        margin: 0;
+    }
+
     .igx-dialog__window,
     .igx-dialog__window-content {
         @extend %date-picker-content;
+    }
+
+    .igx-calendar__body {
+        padding-bottom: 0 !important;
     }
 }
