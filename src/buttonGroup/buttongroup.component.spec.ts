@@ -6,8 +6,7 @@ import {
 import { By } from "@angular/platform-browser";
 import { IgxButton } from "../button/button.directive";
 import { IgxDirectivesModule } from "../modules";
-import { IgxButtonGroup } from "./buttonGroup.component";
-import { ButtonGroupAlignment, IgxButtonGroupModule } from "./buttonGroup.component";
+import { ButtonGroupAlignment, IgxButtonGroup, IgxButtonGroupModule } from "./buttonGroup.component";
 
 interface IButton {
     type?: string;

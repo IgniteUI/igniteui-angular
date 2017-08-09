@@ -124,11 +124,11 @@ describe("Navigation Drawer", () => {
             let fixture: ComponentFixture<TestComponentDI>;
             let resolver;
             let drawer;
-            const result = new Promise<any>( (resolve) => {
+            const result = new Promise<any>((resolve) => {
                 resolver = (value?: any) => {
                     resolve(value);
                 };
-            } );
+            });
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentDI);

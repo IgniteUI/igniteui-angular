@@ -24,7 +24,6 @@ import {
 import { FormsModule } from "@angular/forms";
 import { Subscription } from "rxjs/Rx";
 import { DataAccess, DataContainer } from "../data-operations/data-container";
-import { IgxDropEvent } from "../directives/dragdrop.directive";
 
 // grid helper components and directives
 import { IgxColumnComponent } from "./column.component";
@@ -50,7 +49,7 @@ import { IPagingState } from "../data-operations/paging-state.interface";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
 import { ISortingState } from "../data-operations/sorting-state.interface";
 import { IgxDialog, IgxDialogModule } from "../dialog/dialog.component";
-import { IgxDragDropModule } from "../directives/dragdrop.directive";
+import { IgxDragDropModule, IgxDropEvent } from "../directives/dragdrop.directive";
 import { IgxIconModule } from "../icon/icon.component";
 import { IgxInput } from "../input/input.directive";
 

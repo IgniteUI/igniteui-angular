@@ -87,11 +87,11 @@ describe("Unit testing FilteringCondition", () => {
         const fd = FilteringCondition.date;
         const now = new Date();
         const cnow = new Date();
-        const yesterday = ( (d) => new Date(d.setDate(d.getDate() - 1)) )(new Date());
-        const lastMonth = ( (d) => { d.setDate(1); return new Date(d.setMonth(d.getMonth() - 1)); } )(new Date());
-        const nextMonth = ( (d) => { d.setDate(1); return new Date(d.setMonth(d.getMonth() + 1)); } )(new Date());
-        const lastYear = ( (d) => new Date(d.setFullYear(d.getFullYear() - 1)) )(new Date());
-        const nextYear = ( (d) => new Date(d.setFullYear(d.getFullYear() + 1)) )(new Date());
+        const yesterday = ((d) => new Date(d.setDate(d.getDate() - 1)))(new Date());
+        const lastMonth = ((d) => { d.setDate(1); return new Date(d.setMonth(d.getMonth() - 1)); })(new Date());
+        const nextMonth = ((d) => { d.setDate(1); return new Date(d.setMonth(d.getMonth() + 1)); })(new Date());
+        const lastYear = ((d) => new Date(d.setFullYear(d.getFullYear() - 1)))(new Date());
+        const nextYear = ((d) => new Date(d.setFullYear(d.getFullYear() + 1)))(new Date());
 
         expect(fd.after(now, yesterday) && !fd.after(now, nextYear))
             .toBeTruthy("after");
