@@ -6,9 +6,9 @@
         margin: auto;
         // vertical-align: center;
     } 
-    // .igx-dialog__window-title {
-    //     display: none;
-    // }
+    .igx-dialog__window-title {
+        display: none;
+    }
     .igx-dialog__window,
     .igx-dialog__window-content {
         @extend %date-picker-content;
