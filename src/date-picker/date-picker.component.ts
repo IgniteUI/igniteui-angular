@@ -11,6 +11,7 @@ import {
     ViewEncapsulation
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { WEEKDAYS } from "../calendar/calendar";
 import { IgxCalendarComponent, IgxCalendarModule } from "../calendar/calendar.component";
 import { HammerGesturesManager } from "../core/touch";
 import { IgxDialog, IgxDialogModule } from "../dialog/dialog.component";
@@ -27,17 +28,29 @@ import { IgxInput } from "../input/input.directive";
     templateUrl: "date-picker.component.html"
 })
 export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
-    @Input() public todayButtonLabel: string;
-    @Input() public cancelButtonLabel: string;
-    // Custom formatter function
     @Input() public formatter: (val: Date) => string;
-    // Disable property for input.
     @Input() public isDisabled: boolean;
     @Input() public value: Date;
+    /**
+     * Propagate calendar properties.
+     */
+    @Input() public locale: string;
+    @Input() public weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;
+    @Input() public formatOptions = {
+        day: "numeric",
+        month: "short",
+        weekday: "short",
+        year: "numeric"
+    };
+    /**
+     * Propagate dialog properties.
+     */
+    @Input() public todayButtonLabel: string;
+    @Input() public cancelButtonLabel: string;
 
     @Output() public onOpen = new EventEmitter();
 
-    get displayData() {
+    private get displayData() {
         if (this.value) {
             return this._customFormatChecker(this.formatter, this.value);
         }
@@ -48,18 +61,18 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
     @ViewChild(IgxDialog) private alert: IgxDialog;
     @ViewChild(IgxCalendarComponent) private calendar: IgxCalendarComponent;
 
-    public writeValue(value: Date): void {
-        this.value = value;
+    public writeValue(value: Date) {
+        this._updateCalendarDate(value);
     }
 
     public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 
     public ngOnInit(): void {
-        if (this.value) {
-            this.calendar.value = this.value;
-            this.calendar.viewDate = this.value;
-        }
+        /**
+         * If we have passed value from user, update calendar value and viewDate.
+         */
+       this._updateCalendarDate(this.value);
     }
 
     /**
@@ -67,9 +80,9 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
      */
     public triggerTodaySelection() {
         const today = new Date(Date.now());
-        this.calendar.selectDate(today);
-        this.calendar.viewDate = today;
         this.value = today;
+        this._updateCalendarDate(today);
+        this._onChangeCallback(this.value);
         this._handleDialogCloseAction();
     }
 
@@ -79,6 +92,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
      */
     protected handleSelection(event) {
         this.value = event;
+        this._onChangeCallback(this.value);
         this._handleDialogCloseAction();
     }
 
@@ -90,6 +104,14 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
         this._focusTheDialog();
         this._onTouchedCallback();
         this.onOpen.emit(this);
+    }
+
+    private _updateCalendarDate(value: Date) {
+         if (this.value) {
+            this._onChangeCallback(this.value);
+            this.calendar.selectDate(this.value);
+            this.calendar.viewDate = this.value;
+        }
     }
 
     private _focusTheDialog() {
@@ -115,7 +137,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
      * @param date passed date
      */
     private _customFormatChecker(formatter: (_: Date) => string, date: Date) {
-        return this.formatter ? this.formatter(date) : this._setLocaleToDate(date);
+        return this.formatter ? this.formatter(date) : this._setLocaleToDate(date, this.locale);
     }
 
     /**
