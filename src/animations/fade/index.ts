@@ -1,5 +1,4 @@
-import { AnimationMetadata, AnimationReferenceMetadata } from "@angular/animations";
-import { animate, animation, style } from "@angular/animations";
+import { animate, animation, AnimationMetadata, AnimationReferenceMetadata, style } from "@angular/animations";
 import { EaseOut } from "../easings";
 import { IAnimationParams } from "../main";
 

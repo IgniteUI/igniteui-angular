@@ -93,7 +93,7 @@ export let FilteringCondition = {
         },
         yesterday(target: Date): boolean {
             const td = getDateParts(target, "yMd");
-            const y = ( (d) => new Date(d.setDate(d.getDate() - 1)) )(new Date());
+            const y = ((d) => new Date(d.setDate(d.getDate() - 1)))(new Date());
             const yesterday = getDateParts(y, "yMd");
             return  td.year === yesterday.year &&
                     td.month === yesterday.month &&
