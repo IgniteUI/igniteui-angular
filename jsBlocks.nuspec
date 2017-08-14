@@ -11,5 +11,8 @@
   </metadata>
   <files>
     <file src="demos\**\*.*" ></file>
+    <file src="dist\**\*.*" target="dist"></file>
+    <file src="node_modules\**\*.*" target="node_modules" ></file>
+    <file src="systemjs.config.js" ></file>    
   </files>
 </package>
