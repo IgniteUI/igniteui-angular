@@ -13,7 +13,7 @@ export class IgxLayoutDirective {
     @HostBinding("style.display") public display = "flex";
     @HostBinding("style.flex-wrap") get flexwrap() { return this.wrap; }
     @HostBinding("style.justify-content") get justifycontent() { return this.justify; }
-    @HostBinding("style.align-content") get align() { return this.itemAlign; }
+    @HostBinding("style.align-items") get align() { return this.itemAlign; }
 
     @HostBinding("style.flex-direction")
     get direction() {
@@ -38,7 +38,7 @@ export class IgxFlexDirective {
         if (this.flex) {
             return `${this.flex}`;
         }
-        return `${this.grow} ${this.shrink}`;
+        return `${this.grow} ${this.shrink} auto`;
     }
 
     @HostBinding("style.order")
@@ -51,4 +51,4 @@ export class IgxFlexDirective {
     declarations: [IgxLayoutDirective, IgxFlexDirective],
     exports: [IgxFlexDirective, IgxLayoutDirective]
 })
-export class IgxLayout {}
+export class IgxLayout { }
