@@ -56,7 +56,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
      */
     @Output() public onSelection = new EventEmitter<Date>();
 
-    private get displayData() {
+    public get displayData() {
         if (this.value) {
             return this._customFormatChecker(this.formatter, this.value);
         }

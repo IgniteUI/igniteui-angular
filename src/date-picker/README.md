@@ -58,10 +58,10 @@ The DatePicker also supports binding through `ngModel` if two-way date-bind is n
 ### Outputs
 | Name | Return Type | Description |
 |:--:|:---|:---|
-| `onSelection` | `Date \| Date[]` | Fired when selection is made in the calendar. The event contains the selected value(s) based on the type of selection the component is set to |
+| `onSelection` | `Date` | Fired when selection is made in the calendar. The event contains the selected value(s) based on the type of selection the component is set to |
 | `onOpen`  | `datePicker` | Emitted when a datePicker calendar is being opened.  |
 
 ### Methods
 | Name   | Arguments | Return Type | Description |
 |:----------:|:------|:------|:------|
-| `selectDate` | `date: Date \| Date[]` | `void` | Change the calendar selection. Calling this method will emit the `onSelection` event. |
+| `selectDate` | `date: Date` | `void` | Change the calendar selection. Calling this method will emit the `onSelection` event. |
