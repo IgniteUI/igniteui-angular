@@ -56,7 +56,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
      */
     @Output() public onSelection = new EventEmitter<Date>();
 
-    get displayData() {
+    private get displayData() {
         if (this.value) {
             return this._customFormatChecker(this.formatter, this.value);
         }
@@ -67,8 +67,9 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
     @ViewChild(IgxDialog) private alert: IgxDialog;
     @ViewChild(IgxCalendarComponent) private calendar: IgxCalendarComponent;
 
-    public writeValue(value: Date): void {
+    public writeValue(value: Date) {
         this.value = value;
+        this.selectDate(value);
     }
 
     public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
@@ -76,36 +77,42 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
 
     public ngOnInit(): void {
         /**
-         * If we have passed value from user, update calendar value and viewDate.
+         * If we have passed value from user, update @calendar.value and @calendar.viewDate.
          */
         if (this.value) {
-            this.calendar.value = this.value;
-            this.calendar.viewDate = this.value;
+            this.selectDate(this.value);
         }
     }
 
     /**
-     * Selects today's date from calendar and change the input field value, @calendar.viewDate and calendar value.
+     * Selects today's date from calendar and change the input field value, @calendar.viewDate and @calendar.value.
      */
     public triggerTodaySelection() {
         const today = new Date(Date.now());
-        this.calendar.selectDate(today);
+        this.selectDate(today);
     }
 
     /**
-     * Gets the selected date from calendar and sets it to the input.
+     * Change the calendar slection and calling this method will emit the @calendar.onSelection event,
+     * which will fire @handleSelection method.
+     * @param date passed date that has to be set to the calendar.
+     */
+    public selectDate(date: Date) {
+        this.calendar.selectDate(date);
+    }
+
+    /**
+     * Evaluates when @calendar.onSelection event was fired
+     * and update the input value.
+     *
      * @param event selected value from calendar.
      */
     protected handleSelection(event) {
         this.value = event;
-        this._updateCalendarDate(event);
+        this.calendar.viewDate = event;
         this._onChangeCallback(event);
         this._handleDialogCloseAction();
-    }
-
-    private _updateCalendarDate(date: Date) {
-        this.calendar.viewDate = date;
-        this.onSelection.emit(date);
+        this.onSelection.emit(event);
     }
 
     /**
