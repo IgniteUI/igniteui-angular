@@ -3,8 +3,11 @@ import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FilteringCondition } from "../../src/data-operations/filtering-condition";
 import { IDataState } from "../data-operations/data-state.interface";
-import { CustomDateRangeFilteringStrategy, CustomJobTitleSortingStrategy } from "../grid/tests.helper";
-import { CustomStrategyData } from "../grid/tests.helper";
+import {
+    CustomDateRangeFilteringStrategy,
+    CustomJobTitleSortingStrategy,
+    CustomStrategyData
+} from "../grid/tests.helper";
 import { IgxGridComponent, IgxGridModule, IgxGridRow } from "./grid.component";
 
 describe("IgxGrid", () => {

@@ -15,6 +15,7 @@ html {
     font-weight: $font-weight;
     color: $off-black;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 h1,

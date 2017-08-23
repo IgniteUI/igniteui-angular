@@ -20,6 +20,7 @@ import { DialogSampleModule } from "./dialog/sample.module";
 import { GridSampleModule } from "./grid/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
 import { InputSampleModule } from "./input/sample.module";
+import { LayoutSampleModule } from "./layout/sample.module";
 import { ListSampleModule } from "./list/sample.module";
 import { NavbarSampleModule } from "./navbar/sample.module";
 import { NavdrawerSampleModule } from "./navdrawer/sample.module";
@@ -67,7 +68,8 @@ import { IgxToastSampleModule } from "./toast/sample.module";
         IgxColorsSampleModule,
         IgxShadowsSampleModule,
         IgxCalendarSampleModule,
-        IgxDatePickerSampleModule
+        IgxDatePickerSampleModule,
+        LayoutSampleModule
     ]
 })
-export class AppModule {}
+export class AppModule { }
