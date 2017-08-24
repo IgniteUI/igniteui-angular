@@ -12,23 +12,19 @@ export class HammerGesturesManager {
     /**
      * Event option defaults for each recognizer, see http://hammerjs.github.io/api/ for API listing.
      */
-    protected hammerOptions: any[] = [
-        {
-            name: "pan",
-            options: {
-                threshold: 0
-            }
-        }, {
-            name: "pinch",
-            options: {
-                enable: true
-            }
-        }, {
-            name: "rotate",
-            options: {
-                enable: true
-            }
-        }];
+    protected hammerOptions: HammerOptions = {
+        //D.P. #447 Force Hammer.TouchInput due to Hammer.PointerEventInput bug https://github.com/hammerjs/hammer.js/issues/1065,
+        //see https://github.com/IgniteUI/igniteui-js-blocks/issues/447#issuecomment-324601803
+        inputClass: Hammer.TouchInput,
+        recognizers: [
+            [ Hammer.Pan, { threshold: 0 } ],
+            [ Hammer.Pinch, { enable: true } ],
+            [ Hammer.Rotate, { enable: true } ],
+            [ Hammer.Swipe, {
+                direction: Hammer.DIRECTION_HORIZONTAL
+            }]
+        ]
+    };
 
     private _hammerManagers: Array<{ element: EventTarget, manager: HammerManager; }> = [];
 
@@ -51,10 +47,7 @@ export class HammerGesturesManager {
         // Creating the manager bind events, must be done outside of angular
         return this._zone.runOutsideAngular(() => {
             // new Hammer is a shortcut for Manager with defaults
-            const mc = new Hammer(element);
-            for (const item of this.hammerOptions) {
-                mc.get(item.name).set(item.options);
-            }
+            const mc = new Hammer(element, this.hammerOptions);
             const handler = (eventObj) => { this._zone.run(() => { eventHandler(eventObj); }); };
             mc.on(eventName, handler);
             return () => { mc.off(eventName, handler); };
@@ -71,23 +64,7 @@ export class HammerGesturesManager {
         const element = this.getGlobalEventTarget(target);
 
         // Creating the manager bind events, must be done outside of angular
-        return this._zone.runOutsideAngular(() => {
-            // new Hammer is a shortcut for Manager with defaults
-
-            const mc: HammerManager = new Hammer(element as HTMLElement);
-            this.addManagerForElement(element as HTMLElement, mc);
-
-            for (const item of this.hammerOptions) {
-                mc.get(item.name).set(item.options);
-            }
-            const handler = (eventObj) => {
-                this._zone.run(() => {
-                    eventHandler(eventObj);
-                });
-            };
-            mc.on(eventName, handler);
-            return () => { mc.off(eventName, handler); };
-        });
+        return this.addEventListener(element as HTMLElement, eventName, eventHandler);
     }
 
     /** temp replacement for DOM.getGlobalEventTarget(target) because DI won't play nice for now */
