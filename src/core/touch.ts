@@ -1,5 +1,5 @@
-import {Injectable, NgZone} from "@angular/core";
-import { forEach } from "@angular/router/src/utils/collection";
+import { Inject, Injectable, NgZone } from "@angular/core";
+import { DOCUMENT, ɵgetDOM as getDOM } from "@angular/platform-browser";
 
 const EVENT_SUFFIX: string = "precise";
 
@@ -13,8 +13,8 @@ export class HammerGesturesManager {
      * Event option defaults for each recognizer, see http://hammerjs.github.io/api/ for API listing.
      */
     protected hammerOptions: HammerOptions = {
-        //D.P. #447 Force Hammer.TouchInput due to Hammer.PointerEventInput bug https://github.com/hammerjs/hammer.js/issues/1065,
-        //see https://github.com/IgniteUI/igniteui-js-blocks/issues/447#issuecomment-324601803
+        // D.P. #447 Force TouchInput due to PointerEventInput bug (https://github.com/hammerjs/hammer.js/issues/1065)
+        // see https://github.com/IgniteUI/igniteui-js-blocks/issues/447#issuecomment-324601803
         inputClass: Hammer.TouchInput,
         recognizers: [
             [ Hammer.Pan, { threshold: 0 } ],
@@ -28,7 +28,7 @@ export class HammerGesturesManager {
 
     private _hammerManagers: Array<{ element: EventTarget, manager: HammerManager; }> = [];
 
-    constructor(private _zone: NgZone) {
+    constructor(private _zone: NgZone, @Inject(DOCUMENT) private doc: any) {
     }
 
     public supports(eventName: string): boolean {
@@ -48,6 +48,7 @@ export class HammerGesturesManager {
         return this._zone.runOutsideAngular(() => {
             // new Hammer is a shortcut for Manager with defaults
             const mc = new Hammer(element, this.hammerOptions);
+            this.addManagerForElement(element, mc);
             const handler = (eventObj) => { this._zone.run(() => { eventHandler(eventObj); }); };
             mc.on(eventName, handler);
             return () => { mc.off(eventName, handler); };
@@ -61,22 +62,10 @@ export class HammerGesturesManager {
      * @param target Can be one of either window, body or document(fallback default).
      */
     public addGlobalEventListener(target: string, eventName: string, eventHandler: (eventObj) => void): () => void {
-        const element = this.getGlobalEventTarget(target);
+        const element = getDOM().getGlobalEventTarget(this.doc, target);
 
         // Creating the manager bind events, must be done outside of angular
         return this.addEventListener(element as HTMLElement, eventName, eventHandler);
-    }
-
-    /** temp replacement for DOM.getGlobalEventTarget(target) because DI won't play nice for now */
-    public getGlobalEventTarget(target: string): EventTarget {
-        switch (target) {
-            case "window":
-                return window;
-            case "body":
-                return document.body;
-            default:
-                return document;
-        }
     }
 
     /**
