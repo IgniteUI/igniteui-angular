@@ -1,5 +1,5 @@
 <div class="main">
-    <ig-nav-drawer #navdrawer [enableGestures]="drawerState.enableGestures" [isOpen]="drawerState.open" [miniWidth]="drawerState.miniWidth"
+    <ig-nav-drawer id="navdrawer" #navdrawer [enableGestures]="drawerState.enableGestures" [isOpen]="drawerState.open" [miniWidth]="drawerState.miniWidth"
         [pin]="drawerState.pin" [width]="drawerState.width" [position]="drawerState.position">
         <div class="ig-drawer-content">
             <aside class="aside">
@@ -122,12 +122,12 @@
                     </span>
 
                     <!--Utils-->
-                    <span class="nav-item header">Utils</span>
+                    <!-- <span class="nav-item header">Utils</span>
 
                     <span class="nav-item" [routerLinkActive]="'active'" routerLink="/data-operations">
                         <igx-icon fontSet="material" name="data_usage"></igx-icon>
                         <span>Data Operations</span>
-                    </span>
+                    </span> -->
 
                     <!--Style guide-->
                     <span class="nav-item header">Style</span>
