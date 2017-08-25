@@ -16,7 +16,6 @@ import {
     Output
 } from "@angular/core";
 import { fadeIn, fadeOut, slideInBottom, slideOutBottom } from "../animations/main";
-import { HammerGesturesManager } from "../core/touch";
 /**
  * IgxSnackbar provides feedback about an operation by showing brief message at the bottom of the screen on mobile
  * and lower left on larger devices. IgxSnackbar will appear above all
@@ -71,7 +70,6 @@ import { HammerGesturesManager } from "../core/touch";
         ])
     ],
     moduleId: module.id,
-    providers: [HammerGesturesManager],
     selector: "igx-snackbar",
     styleUrls: ["./snackbar.component.css"],
     templateUrl: "snackbar.component.html"

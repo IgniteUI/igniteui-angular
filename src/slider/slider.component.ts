@@ -4,7 +4,6 @@ import {
     ViewChild
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { HammerGesturesManager } from "../core/touch";
 
 export enum SliderType {
     /**
@@ -40,7 +39,7 @@ function MakeProvider(type: any) {
 
 @Component({
     moduleId: module.id,
-    providers: [HammerGesturesManager, MakeProvider(IgxSlider)],
+    providers: [MakeProvider(IgxSlider)],
     selector: "igx-slider",
     styleUrls: ["./slider.component.css"],
     templateUrl: "slider.component.html"

@@ -12,7 +12,6 @@ import {
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { IgxCalendarComponent, IgxCalendarModule } from "../calendar/calendar.component";
-import { HammerGesturesManager } from "../core/touch";
 import { IgxDialog, IgxDialogModule } from "../dialog/dialog.component";
 import { IgxInput } from "../input/input.directive";
 
@@ -20,8 +19,7 @@ import { IgxInput } from "../input/input.directive";
     encapsulation: ViewEncapsulation.None,
     moduleId: module.id,
     providers:
-    [HammerGesturesManager,
-        { provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true }],
+    [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true }],
     selector: "igx-datePicker",
     styleUrls: ["date-picker.component.css"],
     templateUrl: "date-picker.component.html"

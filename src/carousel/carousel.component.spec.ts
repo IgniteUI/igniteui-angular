@@ -4,7 +4,6 @@ import {
   TestBed
 } from "@angular/core/testing";
 import {By} from "@angular/platform-browser";
-import { HammerGesturesManager } from "../core/touch";
 import {IgxCarousel, IgxCarouselModule, IgxSlide} from "./carousel.component";
 
 function dispatchEv(element: HTMLElement, eventType: string) {

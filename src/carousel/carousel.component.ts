@@ -12,7 +12,6 @@ import {
     Renderer,
     ViewEncapsulation
 } from "@angular/core";
-import { HammerGesturesManager } from "../core/touch";
 import { IgxIconModule } from "../icon/icon.component";
 
 export enum Direction { NONE, NEXT, PREV }
