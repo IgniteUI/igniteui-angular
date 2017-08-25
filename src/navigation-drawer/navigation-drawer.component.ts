@@ -100,7 +100,7 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
     @Output() public closed = new EventEmitter();
 
     private _hasMimiTempl: boolean = false;
-    private _swipeAttached: boolean = false;
+    private _gesturesAttached: boolean = false;
     private _widthCache: { width: number, miniWidth: number } = { width: null, miniWidth: null };
     private css: { [name: string]: string; } = {
         drawer: "ig-nav-drawer",
@@ -203,7 +203,7 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
         // wait for template and ng-content to be ready
         this._hasMimiTempl = this.getChild(this.css.miniProjection) !== null;
         this.updateEdgeZone();
-        if (this.pinThreshold && this.getWindowWidth() > this.pinThreshold) {
+        if (this.pinThreshold && this.getWindowWidth() >= this.pinThreshold) {
             this.pin = true;
         }
 
@@ -232,6 +232,7 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
             this.ensureDrawerHeight();
             if (this.pin) {
                 this._touchManager.destroy();
+                this._gesturesAttached = false;
             } else {
                 this.ensureEvents();
             }
@@ -406,13 +407,13 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
 
     private ensureEvents() {
         // set listeners for swipe/pan only if needed, but just once
-        if (this.enableGestures && !this.pin && !this._swipeAttached) {
+        if (this.enableGestures && !this.pin && !this._gesturesAttached) {
             // Built-in manager handler(L20887) causes endless loop and max stack exception.
             // https://github.com/angular/angular/issues/6993
             // Use ours for now (until beta.10):
             // this.renderer.listen(document, "swipe", this.swipe);
             this._touchManager.addGlobalEventListener("document", "swipe", this.swipe);
-            this._swipeAttached = true;
+            this._gesturesAttached = true;
 
             // this.renderer.listen(document, "panstart", this.panstart);
             // this.renderer.listen(document, "pan", this.pan);
