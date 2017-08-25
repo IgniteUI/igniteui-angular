@@ -12,7 +12,8 @@ export class NavigationToggle {
         this.state = nav;
     }
 
-    @HostListener("click") public toggleNavigationDrawer() {
+    @HostListener("click")
+    public toggleNavigationDrawer() {
         this.state.toggle(this.target, true);
     }
 }
@@ -28,7 +29,8 @@ export class NavigationClose {
         this.state = nav;
     }
 
-    @HostListener("click") public closeNavigationDrawer() {
+    @HostListener("click")
+    public closeNavigationDrawer() {
         this.state.close(this.target, true);
     }
 }
