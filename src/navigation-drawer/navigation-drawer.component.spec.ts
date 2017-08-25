@@ -233,7 +233,7 @@ describe("Navigation Drawer", () => {
                 return swipe(document.body, 10, 10, 150, 250, 0);
             })
             .then(() => {
-                expect(fixture.componentInstance.viewChild.isOpen).toEqual(true);
+                expect(fixture.componentInstance.viewChild.isOpen).toEqual(true, "Should accept edge swipe");
                 return swipe(document.body, 180, 10, 150, -180, 0);
             })
             .then(() => {
@@ -370,6 +370,8 @@ describe("Navigation Drawer", () => {
             };
 
             return new Promise((resolve, reject) => {
+                // force touch (https://github.com/hammerjs/hammer.js/issues/1065)
+                Simulator.setType("touch");
                 Simulator.gestures.swipe(element, swipeOptions, () => {
                     resolve();
                 });
@@ -385,6 +387,8 @@ describe("Navigation Drawer", () => {
             };
 
             return new Promise((resolve, reject) => {
+                // force touch (https://github.com/hammerjs/hammer.js/issues/1065)
+                Simulator.setType("touch");
                 Simulator.gestures.pan(element, swipeOptions, () => {
                     resolve();
                 });
