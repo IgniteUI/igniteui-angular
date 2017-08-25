@@ -4,11 +4,16 @@ import {
     Renderer2,
     ViewChild
 } from "@angular/core";
-import { HammerGesturesManager } from "../core/touch";
+import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from "@angular/platform-browser";
+
+export class ScrollHammerGestureManager extends HammerGestureConfig  {
+    public overrides = {
+        pan: { threshold: 0 } // override default settings
+    } as any;
+}
 
 @Component({
     moduleId: module.id,
-    providers: [HammerGesturesManager],
     selector: "igx-scroll",
     styleUrls: ["./scroll.component.css"],
     templateUrl: "scroll.component.html"
@@ -35,6 +40,14 @@ export class IgxScroll implements OnInit, AfterViewInit {
     @ViewChild("verticalScroll")
     public verticalScroll: ElementRef;
 
+    private animationFrameId: number;
+    private velocityY: number;
+    private deltaY: number;
+    private amplitude: number;
+    private timestamp: number;
+    private target: number;
+
+
     public get totalHeight(): string {
         return this.averageHeight * this.itemsToView  + "px";
     }
@@ -57,7 +70,29 @@ export class IgxScroll implements OnInit, AfterViewInit {
     }
 
     private onPanend($event) {
-        this.scrollVertically($event.deltaY * -1);
+        if ($event.pointerType !== "touch") {
+            return;
+        }
+
+        this.amplitude = 0.8 * $event.velocityY;
+        this.timestamp = $event.timeStamp;
+        this.target  = Math.round($event.deltaY + this.amplitude);
+        this.animationFrameId = requestAnimationFrame((timestamp) => this.run(timestamp));
+    }
+
+    private run(timeStamp: number) {
+        let elapsed;
+        let delta;
+
+        elapsed = Date.now() - this.timestamp;
+        delta = this.amplitude * Math.exp(-elapsed / 325);
+
+        if (delta > 0.5 || delta < -0.5) {
+            this.scrollVertically((this.target + delta) * -1);
+            requestAnimationFrame((timestamp) => this.run(timestamp));
+        } else {
+            this.scrollVertically(this.target * -1);
+        }
     }
 
     private scrollVertically(delta) {
@@ -88,7 +123,11 @@ export class IgxScroll implements OnInit, AfterViewInit {
 @NgModule({
     declarations: [IgxScroll],
     exports: [IgxScroll],
-    imports: [CommonModule]
+    imports: [CommonModule],
+    providers: [{
+        provide: HAMMER_GESTURE_CONFIG,
+        useClass: ScrollHammerGestureManager
+    }]
 })
 export class IgxScrollModule {
 }
