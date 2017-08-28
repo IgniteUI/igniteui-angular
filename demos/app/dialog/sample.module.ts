@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
+import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { DialogSampleComponent } from "./sample.component";
 
 @NgModule({
@@ -8,7 +9,8 @@ import { DialogSampleComponent } from "./sample.component";
     ],
     imports: [
         IgxComponentsModule,
-        IgxDirectivesModule
+        IgxDirectivesModule,
+        PageHeaderModule
     ]
 })
-export class DialogSampleModule {}
+export class DialogSampleModule { }
