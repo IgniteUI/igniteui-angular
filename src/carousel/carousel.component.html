@@ -1,5 +1,9 @@
 <div tabindex="0" aria-label="carousel" class="igx-carousel"
-    (mouseenter)="stop()" (mouseleave)="play()" (keydown)="($event)"  (swipeleft)="next()" (swiperight)="prev()" (keydown)="onKeydown($event)"
+        (mouseenter)="stop()"
+        (mouseleave)="play()"
+        (swipeleft)="next()"
+        (swiperight)="prev()"
+        (keydown)="onKeydown($event)"
         (tap)="_playing ? stop() : play()">
     <ul class="igx-carousel__indicators" [hidden]="slides.length <= 1">
         <li *ngFor="let slide of slides" [attr.aria-label]="setAriaLabel(slide)" [attr.aria-selected]="slide.active" [class.active]="slide.active === true"
