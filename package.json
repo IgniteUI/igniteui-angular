@@ -73,7 +73,7 @@
         "sass-lint": "^1.10.2",
         "systemjs-builder": "^0.16.9",
         "ts-node": "^3.1.0",
-        "tslint": "^5.1.0",
+        "tslint": "^5.7.0",
         "typescript": "2.3.4",
         "vinyl-paths": "^2.1.0"
     }

@@ -1,4 +1,6 @@
-<div tabindex="1" aria-label="carousel" (mouseenter)="stop()" (mouseleave)="play()" (keydown)="($event)" class="igx-carousel">
+<div tabindex="0" aria-label="carousel" class="igx-carousel"
+    (mouseenter)="stop()" (mouseleave)="play()" (keydown)="($event)"  (swipeleft)="next()" (swiperight)="prev()" (keydown)="onKeydown($event)"
+        (tap)="_playing ? stop() : play()">
     <ul class="igx-carousel__indicators" [hidden]="slides.length <= 1">
         <li *ngFor="let slide of slides" [attr.aria-label]="setAriaLabel(slide)" [attr.aria-selected]="slide.active" [class.active]="slide.active === true"
             (click)="select(slide)"></li>
@@ -7,10 +9,10 @@
         <ng-content></ng-content>
     </div>
     <div ng-template="ngIf navigation">
-        <a role="button" tabindex="2" class="igx-carousel__arrow--prev" (click)="prev()" [hidden]="!slides.length">
+        <a role="button" tabindex="0" class="igx-carousel__arrow--prev" (click)="prev()" [hidden]="!slides.length">
             <igx-icon fontSet="material" name="arrow_back"></igx-icon>
         </a>
-        <a role="button" tabindex="3" class="igx-carousel__arrow--next" (click)="next()" [hidden]="!slides.length">
+        <a role="button" tabindex="0" class="igx-carousel__arrow--next" (click)="next()" [hidden]="!slides.length">
             <igx-icon fontSet="material" name="arrow_forward"></igx-icon>
         </a>
     </div>
