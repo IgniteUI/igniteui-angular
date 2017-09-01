@@ -410,8 +410,8 @@ class TestComponent {
     template: "<ig-nav-drawer></ig-nav-drawer>"
 })
 class TestComponentDI {
-     public drawerMiniWidth: string|number;
-     public drawerWidth: string|number;
+     public drawerMiniWidth: string | number;
+     public drawerWidth: string | number;
      @ViewChild(Infragistics.NavigationDrawer) public viewChild: Infragistics.NavigationDrawer;
 }
 
