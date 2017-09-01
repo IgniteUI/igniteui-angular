@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { IgxGridModule } from "../../../src/grid/grid.component";
 import { IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
+import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { GridSampleComponent } from "./sample.component";
 
 @NgModule({
@@ -14,7 +15,8 @@ import { GridSampleComponent } from "./sample.component";
         CommonModule,
         IgxComponentsModule,
         IgxDirectivesModule,
-        IgxGridModule
+        IgxGridModule,
+        PageHeaderModule
     ]
 })
 export class GridSampleModule { }

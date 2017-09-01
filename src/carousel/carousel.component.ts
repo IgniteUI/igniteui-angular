@@ -1,7 +1,6 @@
 import { CommonModule } from "@angular/common";
 import {
     Component,
-    ElementRef,
     EventEmitter,
     HostBinding,
     Input,
@@ -9,7 +8,6 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    Renderer,
     ViewEncapsulation
 } from "@angular/core";
 import { IgxIconModule } from "../icon/icon.component";
@@ -37,6 +35,7 @@ export enum Direction { NONE, NEXT, PREV }
         role: "region"
     },
     moduleId: module.id,
+    providers: [HammerGesturesManager],
     selector: "igx-carousel",
     styleUrls: ["./carousel.component.css"],
     templateUrl: "carousel.component.html"
@@ -142,12 +141,7 @@ export class IgxCarousel implements OnDestroy {
     private _playing: boolean;
     private _currentSlide: IgxSlide;
     private _destroyed: boolean;
-    private _total: number;
-
-    constructor(public elementRef: ElementRef, private renderer: Renderer) {
-        this._total = 0;
-        this._addEventListeners(renderer);
-    }
+    private _total: number = 0;
 
     public ngOnDestroy() {
         this._destroyed = true;
@@ -393,40 +387,17 @@ export class IgxCarousel implements OnDestroy {
         }
     }
 
-    private _addEventListeners(renderer: Renderer) {
-        // Swipe events
-
-        renderer.listen(this.elementRef.nativeElement, "swipeleft", (event) => {
-            this.prev();
-        });
-
-        renderer.listen(this.elementRef.nativeElement, "swiperight", (event) => {
-            this.next();
-        });
-
-        // Tap
-        renderer.listen(this.elementRef.nativeElement, "tap", (event) => {
-            if (this._playing) {
-                this.stop();
-            } else {
-                this.play();
-            }
-        });
-
-        // Keydown for arrow keys
-
-        renderer.listen(this.elementRef.nativeElement, "keydown", (event) => {
-            switch (event.key) {
-                case "ArrowLeft":
-                    this.prev();
-                    break;
-                case "ArrowRight":
-                    this.next();
-                    break;
-                default:
-                    return;
-            }
-        });
+    private onKeydown(event) {
+        switch (event.key) {
+            case "ArrowLeft":
+                this.prev();
+                break;
+            case "ArrowRight":
+                this.next();
+                break;
+            default:
+                return;
+        }
     }
 
 }
@@ -473,7 +444,7 @@ export class IgxSlide implements OnInit, OnDestroy {
     @HostBinding("class.active")
     @Input() public active: boolean;
 
-    constructor(private carousel: IgxCarousel, private elementRef: ElementRef) { }
+    constructor(private carousel: IgxCarousel) { }
 
     public ngOnInit() {
         this.carousel.add(this);
