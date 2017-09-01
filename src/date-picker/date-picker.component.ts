@@ -11,6 +11,7 @@ import {
     ViewEncapsulation
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { WEEKDAYS } from "../calendar/calendar";
 import { IgxCalendarComponent, IgxCalendarModule } from "../calendar/calendar.component";
 import { HammerGesturesManager } from "../core/touch";
 import { IgxDialog, IgxDialogModule } from "../dialog/dialog.component";
@@ -27,17 +28,35 @@ import { IgxInput } from "../input/input.directive";
     templateUrl: "date-picker.component.html"
 })
 export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
-    @Input() public todayButtonLabel: string;
-    @Input() public cancelButtonLabel: string;
     // Custom formatter function
     @Input() public formatter: (val: Date) => string;
-    // Disable property for input.
     @Input() public isDisabled: boolean;
     @Input() public value: Date;
 
-    @Output() public onOpen = new EventEmitter();
+    /**
+     * Propagate calendar properties.
+     */
+    @Input() public locale: string = Constants.DEFAULT_LOCALE_DATE;
+    @Input() public weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;
+    @Input() public formatOptions = {
+        day: "numeric",
+        month: "short",
+        weekday: "short",
+        year: "numeric"
+    };
+    /**
+     * Propagate dialog properties.
+     */
+    @Input() public todayButtonLabel: string;
+    @Input() public cancelButtonLabel: string;
 
-    get displayData() {
+    @Output() public onOpen = new EventEmitter();
+    /**
+     * Propagate clanedar events.
+     */
+    @Output() public onSelection = new EventEmitter<Date>();
+
+    public get displayData() {
         if (this.value) {
             return this._customFormatChecker(this.formatter, this.value);
         }
@@ -48,38 +67,52 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
     @ViewChild(IgxDialog) private alert: IgxDialog;
     @ViewChild(IgxCalendarComponent) private calendar: IgxCalendarComponent;
 
-    public writeValue(value: Date): void {
+    public writeValue(value: Date) {
         this.value = value;
+        this.selectDate(value);
     }
 
     public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 
     public ngOnInit(): void {
+        /**
+         * If we have passed value from user, update @calendar.value and @calendar.viewDate.
+         */
         if (this.value) {
-            this.calendar.value = this.value;
-            this.calendar.viewDate = this.value;
+            this.selectDate(this.value);
         }
     }
 
     /**
-     * Selects today's date from calendar and change the input field value, calendar viewDate and calendar value.
+     * Selects today's date from calendar and change the input field value, @calendar.viewDate and @calendar.value.
      */
     public triggerTodaySelection() {
         const today = new Date(Date.now());
-        this.calendar.selectDate(today);
-        this.calendar.viewDate = today;
-        this.value = today;
-        this._handleDialogCloseAction();
+        this.selectDate(today);
     }
 
     /**
-     * Gets the selected date from calendar and sets it to the input.
+     * Change the calendar slection and calling this method will emit the @calendar.onSelection event,
+     * which will fire @handleSelection method.
+     * @param date passed date that has to be set to the calendar.
+     */
+    public selectDate(date: Date) {
+        this.calendar.selectDate(date);
+    }
+
+    /**
+     * Evaluates when @calendar.onSelection event was fired
+     * and update the input value.
+     *
      * @param event selected value from calendar.
      */
     protected handleSelection(event) {
         this.value = event;
+        this.calendar.viewDate = event;
+        this._onChangeCallback(event);
         this._handleDialogCloseAction();
+        this.onSelection.emit(event);
     }
 
     /**
@@ -92,21 +125,13 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
         this.onOpen.emit(this);
     }
 
+    // Focus the dialog element, after its appearence into DOM.
     private _focusTheDialog() {
-        // Focus the dialog element, after its appearence into DOM.
-        setTimeout(() => this.alert.dialogEl.nativeElement.focus(), 60);
+        requestAnimationFrame(() => this.alert.dialogEl.nativeElement.focus());
     }
 
     private _setLocaleToDate(value: Date, locale: string = Constants.DEFAULT_LOCALE_DATE): string {
         return value.toLocaleDateString(locale);
-    }
-
-    /**
-     * Check if passed date as a string is valid.
-     * @param date passed date as a string
-     */
-    private _dateStringChecker(date: string): boolean {
-        return (new Date(date).toString() !== Constants.DATE_CHECKER_VALUE);
     }
 
     /**
@@ -115,7 +140,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
      * @param date passed date
      */
     private _customFormatChecker(formatter: (_: Date) => string, date: Date) {
-        return this.formatter ? this.formatter(date) : this._setLocaleToDate(date);
+        return this.formatter ? this.formatter(date) : this._setLocaleToDate(date, this.locale);
     }
 
     /**
@@ -130,9 +155,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
 }
 
 class Constants {
-    public static readonly TODAY_BUTTON_TEXT = "Today";
     public static readonly DEFAULT_LOCALE_DATE = "en";
-    public static readonly DATE_CHECKER_VALUE = "Invalid Date";
 }
 
 @NgModule({

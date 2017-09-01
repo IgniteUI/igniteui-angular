@@ -6,6 +6,9 @@
         <igx-calendar
             class="igx-date-picker__calendar"
             (onSelection)="handleSelection($event)"
+            [locale]="locale"
+            [weekStart]="weekStart"
+            [formatOptions]="formatOptions"
             [class.igx-date-picker__date--opened]="alert.isOpen">
         </igx-calendar>
     </igx-dialog>
