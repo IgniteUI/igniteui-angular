@@ -6,7 +6,8 @@
 	  "interface-name": [true, "always-prefix"],
 	  "trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
     "no-empty": false,
-	  "no-bitwise": false,
+		"no-bitwise": false,
+		"no-submodule-imports": [true, "rxjs", "@angular/platform-browser", "@angular/core/testing"],
 	  "max-classes-per-file": [false],
 		"prefer-object-spread": false
   }
