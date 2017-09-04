@@ -10,13 +10,13 @@
         <div>
             <article class="sample-column">
                 <h4 class="sample-title">Scroll</h4>
-                <igx-scroll #scroll hasVerticalScrollBar="true"
-                                    (onScroll)="updateList($event)"
-                                    [itemsToView]="visibleItemsCount"
-                                    [averageHeight]="50"
-                                    [totalItemsCount]="items.length">
-                    <ul style="width: 300px">
-                        <li *ngFor="let item of visibleItems" style="height: 50px">
+                <igx-scroll #scroll
+                            (onScroll)="updateList($event)"
+                            [itemsToViewCount]="visibleItemsCount"
+                            [itemHeight]="50"
+                            [totalItemsCount]="items.length">
+                    <ul class="list">
+                        <li class="list-item" *ngFor="let item of visibleItems">
                             {{item}}
                         </li>
                     </ul>

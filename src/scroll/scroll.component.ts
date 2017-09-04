@@ -1,15 +1,25 @@
 import { CommonModule } from "@angular/common";
 import {
-    AfterViewInit, Component, ElementRef, EventEmitter, forwardRef, Input, NgModule, OnInit, Output,
-    Renderer2,
+    Component, ElementRef, EventEmitter, Input, NgModule, Output,
     ViewChild
 } from "@angular/core";
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from "@angular/platform-browser";
 
-export class ScrollHammerGestureManager extends HammerGestureConfig  {
+class ScrollHammerGestureManager extends HammerGestureConfig  {
     public overrides = {
-        pan: { threshold: 0 } // override default settings
+        pan: { threshold: 0 }
     } as any;
+}
+
+/**
+ * Scroll event interface
+ */
+export interface IgxScrollEvent {
+    /**
+     * Returns the index of the current top item (zero based).
+     * @type {number}
+     */
+    currentTop: number;
 }
 
 @Component({
@@ -18,27 +28,34 @@ export class ScrollHammerGestureManager extends HammerGestureConfig  {
     styleUrls: ["./scroll.component.css"],
     templateUrl: "scroll.component.html"
 })
-export class IgxScroll implements OnInit, AfterViewInit {
+export class IgxScroll {
+    /**
+     *  The amount of items in viewport of the scroll.
+     */
     @Input()
-    public hasVerticalScrollBar: boolean;
+    public itemsToViewCount: number;
 
-    @Input()
-    public verticalScrollHeight: string;
-
-    @Input()
-    public itemsToView: number;
-
+    /**
+     * The total amount of items in that will be virtualized.
+     */
     @Input()
     public totalItemsCount: number;
 
+    /**
+     *  The height for container of the items. By design only items with same heights are supported
+     */
     @Input()
-    public averageHeight: number;
+    public itemHeight: number;
 
+    /**
+     * Scroll event executed each time when the viewport of the IgxScroll is scrolled.
+     * @type {EventEmitter<IgxScrollEvent>}
+     */
     @Output()
-    public onScroll = new EventEmitter();
+    public onScroll = new EventEmitter<IgxScrollEvent>();
 
     @ViewChild("verticalScroll")
-    public verticalScroll: ElementRef;
+    private verticalScroll: ElementRef;
 
     private animationFrameId: number;
     private velocityY: number;
@@ -47,21 +64,26 @@ export class IgxScroll implements OnInit, AfterViewInit {
     private timestamp: number;
     private target: number;
 
+    /**
+     * Scroll with the given delta
+     * @param delta
+     */
+    public scrollVertically(delta: number) {
+        this.verticalScroll.nativeElement.scrollTop += delta;
 
-    public get totalHeight(): string {
-        return this.averageHeight * this.itemsToView  + "px";
+        if (this.verticalScroll.nativeElement.scrollTop < 0) {
+            return;
+        }
+
+        this.emitScroll();
     }
 
-    public get innerHeight(): string {
-        return this.totalItemsCount * this.averageHeight + "px";
+    private get totalHeight(): string {
+        return this.itemHeight * this.itemsToViewCount  + "px";
     }
 
-    public ngOnInit(): void {
-        // throw new Error("Method not implemented.");
-    }
-
-    public ngAfterViewInit(): void {
-        // throw new Error("Method not implemented.");
+    private get innerHeight(): string {
+        return this.totalItemsCount * this.itemHeight + "px";
     }
 
     private onMouseWheel($event): void {
@@ -69,7 +91,7 @@ export class IgxScroll implements OnInit, AfterViewInit {
         $event.preventDefault();
     }
 
-    private onPanend($event) {
+    private onPan($event) {
         if ($event.pointerType !== "touch") {
             return;
         }
@@ -95,24 +117,14 @@ export class IgxScroll implements OnInit, AfterViewInit {
         }
     }
 
-    private scrollVertically(delta) {
-        this.verticalScroll.nativeElement.scrollTop += delta;
-
-        if (this.verticalScroll.nativeElement.scrollTop < 0) {
-            return;
-        }
-
-        this.emitScroll();
-    }
-
     private onScrolled($event): void {
         this.emitScroll();
     }
 
     private emitScroll() {
-        let currentTop: number = this.verticalScroll.nativeElement.scrollTop / this.averageHeight;
+        let currentTop: number = this.verticalScroll.nativeElement.scrollTop / this.itemHeight;
 
-        if (this.verticalScroll.nativeElement.scrollTop % this.averageHeight !== 0) {
+        if (this.verticalScroll.nativeElement.scrollTop % this.itemHeight !== 0) {
             currentTop = Math.round(currentTop);
         }
 

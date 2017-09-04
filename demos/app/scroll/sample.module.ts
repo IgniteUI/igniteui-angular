@@ -4,6 +4,7 @@ import { CommonModule } from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import { IgxScrollModule } from "../../../src/main";
 import { IgxScrollSampleComponent } from "./sample.component";
+import {IgxListModule} from "../../../src/list/list.component";
 
 @NgModule({
     declarations: [
@@ -11,6 +12,7 @@ import { IgxScrollSampleComponent } from "./sample.component";
     ],
     imports: [
         IgxScrollModule,
+        IgxListModule,
         CommonModule,
         FormsModule
     ]
