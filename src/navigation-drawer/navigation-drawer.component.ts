@@ -28,11 +28,11 @@ declare var module: any;
  * Navigation Drawer component supports collapsible side navigation container.
  * Usage:
  * ```
- * <ig-nav-drawer id="ID" (event output bindings) [input bindings]>
+ * <igx-nav-drawer id="ID" (event output bindings) [input bindings]>
  *  <div class="ig-drawer-content">
  *   <!-- expanded template -->
  *  </div>
- * </ig-nav-drawer>
+ * </igx-nav-drawer>
  * ```
  * Can also include an optional `<div class="ig-drawer-mini-content">`.
  * ID required to register with NavigationService allow directives to target the control.
@@ -44,7 +44,7 @@ declare var module: any;
     */
     moduleId: module.id, // commonJS standard
     providers: [HammerGesturesManager],
-    selector: "ig-nav-drawer",
+    selector: "igx-nav-drawer",
     styleUrls: ["./navigation-drawer.component.css"],
     templateUrl: "navigation-drawer.component.html"
 })

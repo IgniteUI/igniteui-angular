@@ -69,7 +69,7 @@ describe("Navigation Drawer", () => {
          }));
 
         it("should attach events and register to nav service and detach on destroy", async(() => {
-            const template = '<ig-nav-drawer id="testNav"></ig-nav-drawer>';
+            const template = '<igx-nav-drawer id="testNav"></igx-nav-drawer>';
             TestBed.overrideComponent(TestComponentDI, {
             set: {
                 template
@@ -169,10 +169,10 @@ describe("Navigation Drawer", () => {
          }));
 
         it("should properly initialize with min template", async(() => {
-            const template = `<ig-nav-drawer>
+            const template = `<igx-nav-drawer>
                                 <div class='ig-drawer-content'></div>
                                 <div class='ig-drawer-mini-content'></div>
-                              </ig-nav-drawer>`;
+                              </igx-nav-drawer>`;
             TestBed.overrideComponent(TestComponentDI, {
             set: {
                 template
@@ -191,7 +191,7 @@ describe("Navigation Drawer", () => {
         }));
 
         it("should set pin, gestures options", async(() => {
-            const template =  '<ig-nav-drawer [pin]="pin" [enableGestures]="enableGestures"></ig-nav-drawer>';
+            const template =  '<igx-nav-drawer [pin]="pin" [enableGestures]="enableGestures"></igx-nav-drawer>';
             TestBed.overrideComponent(TestComponentPin, {
             set: {
                 template
@@ -288,9 +288,9 @@ describe("Navigation Drawer", () => {
          }, 10000);
 
         it("should update edge zone with mini width", async(() => {
-            const template = `<ig-nav-drawer [miniWidth]="drawerMiniWidth">
+            const template = `<igx-nav-drawer [miniWidth]="drawerMiniWidth">
                                 <div class="ig-drawer-content"></div><div class="ig-drawer-mini-content"></div>
-                              </ig-nav-drawer>`;
+                              </igx-nav-drawer>`;
             let fixture: ComponentFixture<TestComponentDI>;
             TestBed.overrideComponent(TestComponentDI, {
             set: {
@@ -317,10 +317,10 @@ describe("Navigation Drawer", () => {
          }));
 
         it("should update width from css or property", (done) => {
-            const template = `<ig-nav-drawer [miniWidth]="drawerMiniWidth" [width]="drawerWidth">
+            const template = `<igx-nav-drawer [miniWidth]="drawerMiniWidth" [width]="drawerWidth">
                                     <div class="ig-drawer-content"></div>
                                     <div class="ig-drawer-mini-content"></div>
-                            </ig-nav-drawer>`;
+                            </igx-nav-drawer>`;
             let fixture: ComponentFixture<TestComponentDI>;
             TestBed.overrideComponent(TestComponentDI, {
             set: {
@@ -362,7 +362,7 @@ describe("Navigation Drawer", () => {
         });
 
         it("should update pin based on window width (pinThreshold)", (done) => {
-            const template = `'<ig-nav-drawer [pin]="pin" [pinThreshold]="pinThreshold"></ig-nav-drawer>'`;
+            const template = `'<igx-nav-drawer [pin]="pin" [pinThreshold]="pinThreshold"></igx-nav-drawer>'`;
             const originalWidth = window.innerWidth;
             let fixture: ComponentFixture<TestComponentPin>;
             let widthSpyOverride: jasmine.Spy;
@@ -449,7 +449,7 @@ describe("Navigation Drawer", () => {
 
 @Component({
     selector: "test-cmp",
-    template: "<ig-nav-drawer></ig-nav-drawer>"
+    template: "<igx-nav-drawer></igx-nav-drawer>"
 })
 class TestComponent {
      @ViewChild(Infragistics.NavigationDrawer) public viewChild: Infragistics.NavigationDrawer;
@@ -458,7 +458,7 @@ class TestComponent {
 @Component({
     providers: [Infragistics.NavigationService],
     selector: "test-cmp",
-    template: "<ig-nav-drawer></ig-nav-drawer>"
+    template: "<igx-nav-drawer></igx-nav-drawer>"
 })
 class TestComponentDI {
      public drawerMiniWidth: string | number;
