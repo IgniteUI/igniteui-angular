@@ -35,7 +35,6 @@ export enum Direction { NONE, NEXT, PREV }
         role: "region"
     },
     moduleId: module.id,
-    providers: [HammerGesturesManager],
     selector: "igx-carousel",
     styleUrls: ["./carousel.component.css"],
     templateUrl: "carousel.component.html"
