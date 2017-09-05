@@ -3,7 +3,7 @@ import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
-import { IgxComponentsModule, IgxDirectivesModule, NavigationService } from "../../src/main";
+import { IgxComponentsModule, IgxDirectivesModule, IgxNavigationModule } from "../../src/main";
 
 import { AppComponent } from "./app.component";
 import { routing } from "./app.routing";
@@ -44,6 +44,7 @@ import { IgxToastSampleModule } from "./toast/sample.module";
         routing,
         IgxComponentsModule,
         IgxDirectivesModule,
+        IgxNavigationModule,
         InputSampleModule,
         CarouselSampleModule,
         TabBarSampleModule,
@@ -70,7 +71,6 @@ import { IgxToastSampleModule } from "./toast/sample.module";
         IgxCalendarSampleModule,
         IgxDatePickerSampleModule,
         LayoutSampleModule
-    ],
-    providers: [NavigationService]
+    ]
 })
 export class AppModule { }

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output, ViewChild } from "@angular/core";
+import { Router, NavigationStart } from "@angular/router";
 import { NavigationDrawer, NavigationDrawerModule } from "../../src/main";
 
 @Component({
@@ -17,4 +18,16 @@ export class AppComponent {
         position: "left",
         width: "242px"
     };
+
+    constructor(private router: Router) {}
+    ngOnInit() {
+        this.router.events
+            .filter(x =>  x instanceof  NavigationStart)
+            .subscribe((event: NavigationStart) => {
+                if (event.url !== "/" && !this.drawerState.pin) {
+                    // Close drawer when a sample is selected
+                    this.navdrawer.close();
+                }
+            });
+    }
 }
