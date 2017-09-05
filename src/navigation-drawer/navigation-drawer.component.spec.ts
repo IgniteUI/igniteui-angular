@@ -191,7 +191,8 @@ describe("Navigation Drawer", () => {
         }));
 
         it("should set pin, gestures options", async(() => {
-            const template =  '<igx-nav-drawer [pin]="pin" [enableGestures]="enableGestures"></igx-nav-drawer>';
+            const template =  `<igx-nav-drawer [pin]="pin" pinThreshold="false" [enableGestures]="enableGestures">
+                               </igx-nav-drawer>`;
             TestBed.overrideComponent(TestComponentPin, {
             set: {
                 template
