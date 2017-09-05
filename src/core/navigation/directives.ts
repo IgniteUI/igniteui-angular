@@ -3,7 +3,7 @@ import {NavigationService} from "./nav-service";
 
 /**
  * Directive that can toggle targets through provided NavigationService.
- * 
+ *
  * Usage:
  * ```
  * <button igxNavToggle="ID"> Toggle </button>
@@ -28,7 +28,7 @@ export class NavigationToggle {
 
 /**
  * Directive that can close targets through provided NavigationService.
- * 
+ *
  * Usage:
  * ```
  * <button igxNavClose="ID"> Close </button>

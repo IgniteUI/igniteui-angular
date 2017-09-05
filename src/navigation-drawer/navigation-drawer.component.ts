@@ -15,10 +15,10 @@ import {
     SimpleChange
 } from "@angular/core";
 // import {AnimationBuilder} from 'angular2/src/animate/animation_builder'; TODO
+import { Observable, Subscription } from "rxjs/Rx";
 import { BaseComponent } from "../core/base";
 import { IToggleView, NavigationService } from "../core/navigation";
 import { HammerGesturesManager } from "../core/touch";
-import { Observable, Subscription } from "rxjs/Rx";
 
 // cover for transpiler error
 // SystemJS will eventually wrap the export in the proper node.js style function on the client
@@ -437,7 +437,7 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
         }
         if (this.pinThreshold && !this._resizeObserver) {
             this._resizeObserver = Observable.fromEvent(window, "resize").debounce(() => Observable.interval(150))
-                .subscribe((value) => { this.checkPinThreshold() });
+                .subscribe((value) => { this.checkPinThreshold(); });
         }
     }
 
@@ -451,7 +451,7 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
     }
 
     private checkPinThreshold = (evt?: Event) => {
-        var windowWidth;
+        let windowWidth;
         if (this.pinThreshold) {
             windowWidth = this.getWindowWidth();
             if (!this.pin && windowWidth >= this.pinThreshold) {

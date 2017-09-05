@@ -46,8 +46,8 @@ export class HammerGesturesManager {
 
         // Creating the manager bind events, must be done outside of angular
         return this._zone.runOutsideAngular(() => {
-            var mc: HammerManager = this.getManagerForElement(element);
-            if(mc === null) {
+            let mc: HammerManager = this.getManagerForElement(element);
+            if (mc === null) {
                 // new Hammer is a shortcut for Manager with defaults
                 mc = new Hammer(element, this.hammerOptions);
                 this.addManagerForElement(element, mc);

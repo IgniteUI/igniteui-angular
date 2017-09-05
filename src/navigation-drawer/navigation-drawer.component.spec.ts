@@ -361,33 +361,34 @@ describe("Navigation Drawer", () => {
             });
         });
 
-        
         it("should update pin based on window width (pinThreshold)", (done) => {
             const template = `'<ig-nav-drawer [pin]="pin" [pinThreshold]="pinThreshold"></ig-nav-drawer>'`;
-            let fixture: ComponentFixture<TestComponentPin>,
-                originalWidth = window.innerWidth,
-                widthSpyOverride: jasmine.Spy;
+            const originalWidth = window.innerWidth;
+            let fixture: ComponentFixture<TestComponentPin>;
+            let widthSpyOverride: jasmine.Spy;
+
             TestBed.overrideComponent(TestComponentPin, {
             set: {
                 template
             }});
-            //set width
-            
-            //window.innerWidth = 1024;
+
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentPin);
                 fixture.detectChanges();
 
                 // defaults:
-                expect(fixture.componentInstance.viewChild.pin).toBe(originalWidth >= fixture.componentInstance.pinThreshold);
+                expect(fixture.componentInstance.viewChild.pin)
+                    .toBe(originalWidth >= fixture.componentInstance.pinThreshold);
 
-                // Using Window through DI causes AOT error (https://github.com/angular/angular/issues/15640), so for tests just force override the the `getWindowWidth`
-                widthSpyOverride = spyOn(fixture.componentInstance.viewChild as any, "getWindowWidth").and.returnValue(fixture.componentInstance.pinThreshold);
+                // Using Window through DI causes AOT error (https://github.com/angular/angular/issues/15640)
+                // so for tests just force override the the `getWindowWidth`
+                widthSpyOverride = spyOn(fixture.componentInstance.viewChild as any, "getWindowWidth")
+                    .and.returnValue(fixture.componentInstance.pinThreshold);
                 window.dispatchEvent(new Event("resize"));
                 // wait for debounce
                 return new Promise((resolve) => {
-                    setTimeout(() =>{ resolve(); }, 200);
+                    setTimeout(() => { resolve(); }, 200);
                 });
             })
             .then(() => {
@@ -397,7 +398,7 @@ describe("Navigation Drawer", () => {
                 window.dispatchEvent(new Event("resize"));
                 // wait for debounce
                 return new Promise((resolve) => {
-                    setTimeout(() =>{ resolve(); }, 200);
+                    setTimeout(() => { resolve(); }, 200);
                 });
             })
             .then(() => {
