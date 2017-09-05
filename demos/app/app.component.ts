@@ -12,8 +12,8 @@ export class AppComponent {
     public drawerState = {
         enableGestures: true,
         open: true,
-        pin: true,
-        pinThreshold: "768px",
+        pin: false,
+        pinThreshold: 768,
         position: "left",
         width: "242px"
     };
