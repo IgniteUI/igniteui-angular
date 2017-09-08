@@ -28,89 +28,60 @@ fdescribe("IgxScroll", () => {
         const listItems = nativeElement.querySelectorAll(".list-item");
 
         expect(listItems.length).toBe(5);
+        expect(fixture.componentInstance.scroll.scrollTop).toEqual(0);
     });
 
-    it("should change visible items when scrolling through api", () => {
+    it("should change current top when scrolling through api", () => {
         const fixture = TestBed.createComponent(ScrollInitializeTestComponent);
         fixture.detectChanges();
 
-        const nativeElement = fixture.nativeElement;
-        const listItemsBeforeScroll = [];
-        const listItemsAfterScroll = [];
-
-        nativeElement.querySelectorAll(".list-item").forEach((item) => {
-            listItemsBeforeScroll.push(item.innerText);
-        });
+        const currentTopBeforeScroll = fixture.componentInstance.currentTop;
 
         fixture.componentInstance.scroll.scrollVertically(400);
         fixture.detectChanges();
 
-        nativeElement.querySelectorAll(".list-item").forEach((item) => {
-            listItemsAfterScroll.push(item.innerText);
-        });
+        const currentTopAfterScroll = fixture.componentInstance.currentTop;
 
-        expect(listItemsBeforeScroll.length).toBe(5);
-        expect(listItemsAfterScroll.length).toBe(5);
-        expect(listItemsBeforeScroll).not.toEqual(listItemsAfterScroll);
+        expect(currentTopBeforeScroll).not.toEqual(currentTopAfterScroll);
     });
 
-    it("should not change visible items when scrolling through api when it scrolled " +
+    it("should not change currentTop when scrolling through api when it scrolled " +
         "all the way to top and scrolling with negative delta", () => {
         const fixture = TestBed.createComponent(ScrollInitializeTestComponent);
         fixture.detectChanges();
 
-        const nativeElement = fixture.nativeElement;
-        const listItemsBeforeScroll = [];
-        const listItemsAfterScroll = [];
-
-        nativeElement.querySelectorAll(".list-item").forEach((item) => {
-            listItemsBeforeScroll.push(item.innerText);
-        });
+        const currentTopBeforeScroll = fixture.componentInstance.currentTop;
 
         fixture.componentInstance.scroll.scrollVertically(-1000);
         fixture.detectChanges();
 
-        nativeElement.querySelectorAll(".list-item").forEach((item) => {
-            listItemsAfterScroll.push(item.innerText);
-        });
+        const currentTopAfterScroll = fixture.componentInstance.currentTop;
 
-        expect(listItemsBeforeScroll.length).toBe(5);
-        expect(listItemsAfterScroll.length).toBe(5);
-        expect(listItemsBeforeScroll).toEqual(listItemsAfterScroll);
+        expect(currentTopBeforeScroll).toEqual(currentTopAfterScroll);
     });
 
-    it("should not change visible items when scrolling through api when it scrolled " +
+    it("should not change currentTop when scrolling through api when it scrolled " +
         "all the way to bottom and scrolling with positive delta", () => {
         const fixture = TestBed.createComponent(ScrollInitializeTestComponent);
         fixture.detectChanges();
-        const nativeElement = fixture.nativeElement;
 
         fixture.componentInstance.scroll.scrollVertically(250000);
         fixture.detectChanges();
 
-        const listItemsBeforeScroll = [];
-        const listItemsAfterScroll = [];
-
-        nativeElement.querySelectorAll(".list-item").forEach((item) => {
-            listItemsBeforeScroll.push(item.innerText);
-        });
+        const currentTopBeforeScroll = fixture.componentInstance.currentTop;
 
         fixture.componentInstance.scroll.scrollVertically(237);
         fixture.detectChanges();
 
-        nativeElement.querySelectorAll(".list-item").forEach((item) => {
-            listItemsAfterScroll.push(item.innerText);
-        });
+        const currentTopAfterScroll = fixture.componentInstance.currentTop;
 
-        expect(listItemsBeforeScroll.length).toBe(5);
-        expect(listItemsAfterScroll.length).toBe(5);
-        expect(listItemsBeforeScroll).toEqual(listItemsAfterScroll);
+        expect(currentTopBeforeScroll).toEqual(currentTopAfterScroll);
     });
 
-    it("should scroll with mouse wheel to bottom and change items when is at top position", (done) => {
-        const listItemsBeforeScroll = [];
-        const listItemsAfterScroll = [];
+    it("should scroll with mouse wheel to bottom and change currentTop when is at top position", (done) => {
         let fixture;
+        let currentTopBeforeScroll;
+        let currentTopAfterScroll;
 
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(ScrollInitializeTestComponent);
@@ -119,27 +90,22 @@ fdescribe("IgxScroll", () => {
             return fixture.whenStable();
         }).then(() => {
             const scrollViewPort = fixture.nativeElement.querySelector(".igx-scroll__viewport");
-
-            fixture.nativeElement.querySelectorAll(".list-item").forEach((item) => {
-                listItemsBeforeScroll.push(item.innerText);
-            });
+            currentTopBeforeScroll = fixture.componentInstance.currentTop;
 
             return simulateWheel(scrollViewPort, 0, 150);
         }).then(() => {
             fixture.detectChanges();
-            fixture.nativeElement.querySelectorAll(".list-item").forEach((item) => {
-                listItemsAfterScroll.push(item.innerText);
-            });
+            currentTopAfterScroll = fixture.componentInstance.currentTop;
 
-            expect(listItemsBeforeScroll).not.toEqual(listItemsAfterScroll);
+            expect(currentTopBeforeScroll).not.toEqual(currentTopAfterScroll);
             done();
         });
     }, 5000);
 
-    fit("should scroll with mouse wheel to top and change items when is at bottom position", (done) => {
-        const listItemsBeforeScroll = [];
-        const listItemsAfterScroll = [];
+    it("should scroll with mouse wheel to top and change currentTop when is at bottom position", (done) => {
         let fixture;
+        let currentTopBeforeScroll;
+        let currentTopAfterScroll;
 
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(ScrollInitializeTestComponent);
@@ -151,19 +117,14 @@ fdescribe("IgxScroll", () => {
             return fixture.whenStable();
         }).then(() => {
             const scrollViewPort = fixture.nativeElement.querySelector(".igx-scroll__viewport");
-
-            fixture.nativeElement.querySelectorAll(".list-item").forEach((item) => {
-                listItemsBeforeScroll.push(item.innerText);
-            });
+            currentTopBeforeScroll = fixture.componentInstance.currentTop;
 
             return simulateWheel(scrollViewPort, 0, -150);
         }).then(() => {
             fixture.detectChanges();
-            fixture.nativeElement.querySelectorAll(".list-item").forEach((item) => {
-                listItemsAfterScroll.push(item.innerText);
-            });
+            currentTopAfterScroll = fixture.componentInstance.currentTop;
 
-            expect(listItemsBeforeScroll).not.toEqual(listItemsAfterScroll);
+            expect(currentTopBeforeScroll).not.toEqual(currentTopAfterScroll);
             done();
         });
     }, 5000);
@@ -183,10 +144,10 @@ fdescribe("IgxScroll", () => {
         });
     }
 
-    fit("should scroll with pan to bottom and change items when is at top position", (done) => {
-        const listItemsBeforeScroll = [];
-        const listItemsAfterScroll = [];
+    it("should scroll with pan to bottom and change currentTop when is at top position", (done) => {
         let fixture;
+        let currentTopBeforeScroll;
+        let currentTopAfterScroll;
 
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(ScrollInitializeTestComponent);
@@ -195,27 +156,98 @@ fdescribe("IgxScroll", () => {
             return fixture.whenStable();
         }).then(() => {
             const scrollViewPort = fixture.nativeElement.querySelector(".igx-scroll__viewport");
+            currentTopBeforeScroll = fixture.componentInstance.currentTop;
 
-            debugger;
-
-            fixture.nativeElement.querySelectorAll(".list-item").forEach((item) => {
-                listItemsBeforeScroll.push(item.innerText);
-            });
-
-            return pan(scrollViewPort, 50, 200, 100, 0, -100);
+            return pan(scrollViewPort, 40, 200, 100, 0, -100);
         }).then(() => {
             fixture.detectChanges();
-            fixture.nativeElement.querySelectorAll(".list-item").forEach((item) => {
-                listItemsAfterScroll.push(item.innerText);
-            });
+            currentTopAfterScroll = fixture.componentInstance.currentTop;
 
-            expect(listItemsBeforeScroll).not.toEqual(listItemsAfterScroll);
+            expect(currentTopBeforeScroll).not.toEqual(currentTopAfterScroll);
+            done();
+        });
+    }, 5000);
+
+    it("should scroll with pan to top and change currentTop when is at bottom position", (done) => {
+        let fixture;
+        let currentTopBeforeScroll;
+        let currentTopAfterScroll;
+
+        TestBed.compileComponents().then(() => {
+            fixture = TestBed.createComponent(ScrollInitializeTestComponent);
+            fixture.detectChanges();
+
+            fixture.componentInstance.scroll.scrollVertically(250000);
+            fixture.detectChanges();
+
+            return fixture.whenStable();
+        }).then(() => {
+            const scrollViewPort = fixture.nativeElement.querySelector(".igx-scroll__viewport");
+            currentTopBeforeScroll = fixture.componentInstance.currentTop;
+
+            return pan(scrollViewPort, 40, 10, 100, 0, 100);
+        }).then(() => {
+            fixture.detectChanges();
+            currentTopAfterScroll = fixture.componentInstance.currentTop;
+
+            expect(currentTopBeforeScroll).not.toEqual(currentTopAfterScroll);
+            done();
+        });
+    }, 5000);
+
+    it("should not scroll with pan to top and change currentTop when is at top position", (done) => {
+        let fixture;
+        let currentTopBeforeScroll;
+        let currentTopAfterScroll;
+
+        TestBed.compileComponents().then(() => {
+            fixture = TestBed.createComponent(ScrollInitializeTestComponent);
+            fixture.detectChanges();
+
+            return fixture.whenStable();
+        }).then(() => {
+            const scrollViewPort = fixture.nativeElement.querySelector(".igx-scroll__viewport");
+            currentTopBeforeScroll = fixture.componentInstance.currentTop;
+
+            return pan(scrollViewPort, 40, 200, 100, 0, 100);
+        }).then(() => {
+            fixture.detectChanges();
+            currentTopAfterScroll = fixture.componentInstance.currentTop;
+
+            expect(currentTopBeforeScroll).toEqual(currentTopAfterScroll);
+            done();
+        });
+    }, 5000);
+
+    it("should not scroll with pan to bottom and change currentTop when is at bottom position", (done) => {
+        let fixture;
+        let currentTopBeforeScroll;
+        let currentTopAfterScroll;
+
+        TestBed.compileComponents().then(() => {
+            fixture = TestBed.createComponent(ScrollInitializeTestComponent);
+            fixture.detectChanges();
+
+            fixture.componentInstance.scroll.scrollVertically(250000);
+            fixture.detectChanges();
+
+            return fixture.whenStable();
+        }).then(() => {
+            const scrollViewPort = fixture.nativeElement.querySelector(".igx-scroll__viewport");
+            currentTopBeforeScroll = fixture.componentInstance.currentTop;
+
+            return pan(scrollViewPort, 40, 10, 100, 0, -100);
+        }).then(() => {
+            fixture.detectChanges();
+            currentTopAfterScroll = fixture.componentInstance.currentTop;
+
+            expect(currentTopBeforeScroll).toEqual(currentTopAfterScroll);
             done();
         });
     }, 5000);
 
     function pan(element, posX, posY, duration, deltaX, deltaY) {
-        const swipeOptions = {
+        const panOptions = {
             deltaX,
             deltaY,
             duration,
@@ -223,7 +255,7 @@ fdescribe("IgxScroll", () => {
         };
 
         return new Promise((resolve, reject) => {
-            Simulator.gestures.pan(element, swipeOptions, () => {
+            Simulator.gestures.pan(element, panOptions, () => {
                 resolve();
             });
         });
@@ -234,7 +266,7 @@ fdescribe("IgxScroll", () => {
     template: `
         <igx-scroll #scroll
                     (onScroll)="updateList($event)"
-                    [itemsToViewCount]="visibleItemsCount"
+                    [visibleItemsCount]="visibleItemsCount"
                     [itemHeight]="50"
                     [totalItemsCount]="items.length">
             <ul class="list">
@@ -253,6 +285,8 @@ class ScrollInitializeTestComponent {
 
     public visibleItemsCount: number = 5;
 
+    public currentTop: number = 0;
+
     public constructor() {
         for (let i = 1; i <= 5000; i++) {
             this.items.push("item #" + i);
@@ -262,6 +296,8 @@ class ScrollInitializeTestComponent {
     }
 
     private updateList($event: IgxScrollEvent): void {
+        this.currentTop = $event.currentTop;
+
         this.visibleItems = this.items.slice($event.currentTop, $event.currentTop + this.visibleItemsCount);
     }
 }

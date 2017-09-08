@@ -7,7 +7,7 @@ import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from "@angular/platform-br
 
 class ScrollHammerGestureManager extends HammerGestureConfig  {
     public overrides = {
-        pan: { threshold: 0 }
+        pan: { threshold: 0, direction: Hammer.DIRECTION_VERTICAL }
     } as any;
 }
 
@@ -30,10 +30,18 @@ export interface IgxScrollEvent {
 })
 export class IgxScroll {
     /**
-     *  The amount of items in viewport of the scroll.
+     * Gets the scroll top of the scroll
+     * @returns {number}
+     */
+    public get scrollTop(): number {
+        return this.verticalScroll.nativeElement.scrollTop;
+    }
+
+    /**
+     *  The amount of the actual rendered items in the scroll.
      */
     @Input()
-    public itemsToViewCount: number;
+    public visibleItemsCount: number;
 
     /**
      * The total amount of items in that will be virtualized.
@@ -59,13 +67,12 @@ export class IgxScroll {
 
     private animationFrameId: number;
     private velocityY: number;
-    private deltaY: number;
     private amplitude: number;
     private timestamp: number;
     private target: number;
 
     /**
-     * Scroll with the given delta
+     * Scroll with the given delta. Does not scrolls when the scroll delta is outside of the scroll boundaries
      * @param delta
      */
     public scrollVertically(delta: number) {
@@ -79,7 +86,7 @@ export class IgxScroll {
     }
 
     private get totalHeight(): string {
-        return this.itemHeight * this.itemsToViewCount  + "px";
+        return this.itemHeight * this.visibleItemsCount  + "px";
     }
 
     private get innerHeight(): string {
@@ -91,7 +98,12 @@ export class IgxScroll {
         $event.preventDefault();
     }
 
+    private panStart($event) {
+        console.log("Pan");
+    }
+
     private onPan($event) {
+        debugger;
         if ($event.pointerType !== "touch") {
             return;
         }
