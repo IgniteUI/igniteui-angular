@@ -4,7 +4,7 @@ import {IgxScroll, IgxScrollEvent, IgxScrollModule} from "./scroll.component";
 
 declare var Simulator: any;
 
-fdescribe("IgxScroll", () => {
+describe("IgxScroll", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [

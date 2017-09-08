@@ -1,11 +1,17 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { IDataColumn } from "../../../src/data-operations/test-util/data-generator";
-import { DataContainer,  DataType, FilteringCondition,
-        IDataState,
-        ISortingState, SortingDirection
-      } from "../../../src/main";
-import {IgxToast, IgxToastPosition} from "../../../src/main";
-import {IgxTab, IgxTabBar} from "../../../src/main";
+import {
+    DataContainer,
+    DataType,
+    FilteringCondition,
+    IDataState,
+    IgxTab,
+    IgxTabBar,
+    IgxToast,
+    IgxToastPosition,
+    ISortingState,
+    SortingDirection
+} from "../../../src/main";
 import { DataStateConfiguratorComponent } from "./data-state-configurator.component";
 // import services
 import {LocalDataService} from "./local-data.service";

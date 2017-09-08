@@ -16,7 +16,7 @@ export class IgxScrollSampleComponent {
 
     public constructor() {
         for (let i = 1; i <= 50000; i++) {
-            this.items.push("item #" + i );
+            this.items.push("item #" + i);
         }
 
         this.visibleItems = this.items.slice(0, 5);

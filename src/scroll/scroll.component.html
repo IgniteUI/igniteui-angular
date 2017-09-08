@@ -1,7 +1,6 @@
 <div class="igx-scroll"
      #scroll>
     <div class="igx-scroll__viewport" [ngStyle]="{ 'height': totalHeight }"
-         (panstart)="panStart($event)"
          (pan)="onPan($event)"
          (wheel)="onMouseWheel($event)">
         <ng-content>

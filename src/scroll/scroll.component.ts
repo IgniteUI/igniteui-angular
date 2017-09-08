@@ -98,12 +98,7 @@ export class IgxScroll {
         $event.preventDefault();
     }
 
-    private panStart($event) {
-        console.log("Pan");
-    }
-
     private onPan($event) {
-        debugger;
         if ($event.pointerType !== "touch") {
             return;
         }
