@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Output, ViewChild } from "@angular/core";
 import { NavigationDrawer, NavigationDrawerModule } from "../../src/main";
 
 @Component({

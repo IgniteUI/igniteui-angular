@@ -124,11 +124,11 @@ describe("Navigation Drawer", () => {
             let fixture: ComponentFixture<TestComponentDI>;
             let resolver;
             let drawer;
-            const result = new Promise<any>( (resolve) => {
+            const result = new Promise<any>((resolve) => {
                 resolver = (value?: any) => {
                     resolve(value);
                 };
-            } );
+            });
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentDI);
@@ -233,7 +233,7 @@ describe("Navigation Drawer", () => {
                 return swipe(document.body, 10, 10, 150, 250, 0);
             })
             .then(() => {
-                expect(fixture.componentInstance.viewChild.isOpen).toEqual(true);
+                expect(fixture.componentInstance.viewChild.isOpen).toEqual(true, "Should accept edge swipe");
                 return swipe(document.body, 180, 10, 150, -180, 0);
             })
             .then(() => {
@@ -370,6 +370,8 @@ describe("Navigation Drawer", () => {
             };
 
             return new Promise((resolve, reject) => {
+                // force touch (https://github.com/hammerjs/hammer.js/issues/1065)
+                Simulator.setType("touch");
                 Simulator.gestures.swipe(element, swipeOptions, () => {
                     resolve();
                 });
@@ -385,6 +387,8 @@ describe("Navigation Drawer", () => {
             };
 
             return new Promise((resolve, reject) => {
+                // force touch (https://github.com/hammerjs/hammer.js/issues/1065)
+                Simulator.setType("touch");
                 Simulator.gestures.pan(element, swipeOptions, () => {
                     resolve();
                 });
@@ -406,8 +410,8 @@ class TestComponent {
     template: "<ig-nav-drawer></ig-nav-drawer>"
 })
 class TestComponentDI {
-     public drawerMiniWidth: string|number;
-     public drawerWidth: string|number;
+     public drawerMiniWidth: string | number;
+     public drawerWidth: string | number;
      @ViewChild(Infragistics.NavigationDrawer) public viewChild: Infragistics.NavigationDrawer;
 }
 

@@ -1,5 +1,11 @@
-import { AnimationMetadata, AnimationReferenceMetadata } from "@angular/animations";
-import { animate, animation, keyframes, style } from "@angular/animations";
+import {
+    animate,
+    animation,
+    AnimationMetadata,
+    AnimationReferenceMetadata,
+    keyframes,
+    style
+} from "@angular/animations";
 import { EaseInOut } from "../easings";
 import { IAnimationParams } from "../main";
 

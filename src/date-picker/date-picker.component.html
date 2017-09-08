@@ -1,9 +1,14 @@
 <div class="igx-date-picker">
-    <input class="igx-date-picker__input-date" igxInput (click)="onOpenEvent($event)" [value]="_displayData"  />
-    <igx-dialog class="igx-date-picker__dialog-popup" closeOnOutsideSelect="true">
+    <input class="igx-date-picker__input-date" igxInput (click)="_onOpenEvent($event)" [value]="displayData" [disabled]="isDisabled" />
+    <igx-dialog class="igx-date-picker__dialog-popup" closeOnOutsideSelect="true"
+        [leftButtonLabel]="cancelButtonLabel" (onLeftButtonSelect)="_handleDialogCloseAction()"
+        [rightButtonLabel]="todayButtonLabel" (onRightButtonSelect)="triggerTodaySelection()">
         <igx-calendar
             class="igx-date-picker__calendar"
             (onSelection)="handleSelection($event)"
+            [locale]="locale"
+            [weekStart]="weekStart"
+            [formatOptions]="formatOptions"
             [class.igx-date-picker__date--opened]="alert.isOpen">
         </igx-calendar>
     </igx-dialog>

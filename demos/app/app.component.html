@@ -1,5 +1,5 @@
 <div class="main">
-    <ig-nav-drawer #navdrawer [enableGestures]="drawerState.enableGestures" [isOpen]="drawerState.open" [miniWidth]="drawerState.miniWidth"
+    <ig-nav-drawer id="navdrawer" #navdrawer [enableGestures]="drawerState.enableGestures" [isOpen]="drawerState.open" [miniWidth]="drawerState.miniWidth"
         [pin]="drawerState.pin" [width]="drawerState.width" [position]="drawerState.position">
         <div class="ig-drawer-content">
             <aside class="aside">
@@ -37,6 +37,11 @@
                     <span class="nav-item" [routerLinkActive]="'active'" routerLink="/carousel">
                         <igx-icon fontSet="material" name="view_carousel"></igx-icon>
                         <span>Carousel</span>
+                    </span>
+
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/datePicker">
+                        <igx-icon fontSet="material" name="date_range"></igx-icon>
+                        <span>DatePicker</span>
                     </span>
 
                     <span class="nav-item" [routerLinkActive]="'active'" routerLink="/grid">
@@ -112,18 +117,23 @@
                         <span>Buttons</span>
                     </span>
 
+                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/layout">
+                        <igx-icon fontSet="material" name="view_quilt"></igx-icon>
+                        <span>Layout</span>
+                    </span>
+
                     <span class="nav-item" [routerLinkActive]="'active'" routerLink="/ripple">
                         <igx-icon fontSet="material" name="wifi_tethering"></igx-icon>
                         <span>Ripple</span>
                     </span>
 
                     <!--Utils-->
-                    <span class="nav-item header">Utils</span>
+                    <!-- <span class="nav-item header">Utils</span>
 
                     <span class="nav-item" [routerLinkActive]="'active'" routerLink="/data-operations">
                         <igx-icon fontSet="material" name="data_usage"></igx-icon>
                         <span>Data Operations</span>
-                    </span>
+                    </span> -->
 
                     <!--Style guide-->
                     <span class="nav-item header">Style</span>

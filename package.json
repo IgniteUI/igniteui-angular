@@ -1,7 +1,7 @@
 {
     "name": "igniteui-js-blocks",
     "version": "0.1.0",
-    "license": "MIT",
+    "license": "Apache 2.0",
     "scripts": {
         "postinstall": "npm prune",
         "start": "npm run build && concurrently \"npm run watch\" \"npm run lite\"",
@@ -73,7 +73,7 @@
         "sass-lint": "^1.10.2",
         "systemjs-builder": "^0.16.9",
         "ts-node": "^3.1.0",
-        "tslint": "^5.1.0",
+        "tslint": "^5.7.0",
         "typescript": "2.3.4",
         "vinyl-paths": "^2.1.0"
     }

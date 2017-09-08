@@ -9,10 +9,12 @@ import { IgxCalendarSampleComponent } from "./calendar/sample.component";
 import { IgxCardSampleComponent } from "./card/sample.component";
 import { CarouselSampleComponent } from "./carousel/sample.component";
 import { DataOperationsSampleComponent } from "./data-operations/sample.component";
+import { IgxDatePickerSampleComponent } from "./date-picker/sample.component";
 import { DialogSampleComponent } from "./dialog/sample.component";
 import { GridSampleComponent } from "./grid/sample.component";
 import { IconSampleComponent } from "./icon/sample.component";
 import { InputSampleComponent } from "./input/sample.component";
+import { LayoutSampleComponent } from "./layout/sample.component";
 import { ListSampleComponent } from "./list/sample.component";
 import { NavbarSampleComponent } from "./navbar/sample.component";
 import { NavdrawerSampleComponent } from "./navdrawer/sample.component";
@@ -135,6 +137,14 @@ const appRoutes: Routes = [
     {
         component: IgxCalendarSampleComponent,
         path: "calendar"
+    },
+    {
+        component: IgxDatePickerSampleComponent,
+        path: "datePicker"
+    },
+    {
+        component: LayoutSampleComponent,
+        path: "layout"
     }
 ];
 

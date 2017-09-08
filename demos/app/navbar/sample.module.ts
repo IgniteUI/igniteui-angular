@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 
 import { IgxNavbarModule } from "../../../src/main";
 import { IgxIconModule } from "../../../src/main";
+import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { NavbarSampleComponent } from "./sample.component";
 
 @NgModule({
@@ -10,7 +11,8 @@ import { NavbarSampleComponent } from "./sample.component";
     ],
     imports: [
         IgxNavbarModule,
-        IgxIconModule
+        IgxIconModule,
+        PageHeaderModule
     ]
 })
-export class NavbarSampleModule {}
+export class NavbarSampleModule { }

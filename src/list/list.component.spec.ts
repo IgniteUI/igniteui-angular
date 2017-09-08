@@ -73,7 +73,7 @@ describe("List", () => {
         expect(list.headers.length).toBe(1);
 
         for (let i = 0; i < list.children.length; i++) {
-            const item: IgxListItem = list.children.find(((child) => ( child.index === i)));
+            const item: IgxListItem = list.children.find(((child) => (child.index === i)));
             expect(item.index).toBe(i);
         }
     });

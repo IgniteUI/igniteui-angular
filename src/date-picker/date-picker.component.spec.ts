@@ -10,9 +10,10 @@ describe("IgxDatePicker", () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxDatePicker,
-                IgxDatePickerInvalidDate,
+                IgxDatePickerWithWeekStart,
                 IgxDatePickerWithCustomFormatter,
-                IgxDatePickerWithPassedDate
+                IgxDatePickerWithPassedDate,
+                IgxDatePickerWIthLocale
             ],
             imports: [IgxDatePickerModule, FormsModule, BrowserAnimationsModule]
         })
@@ -24,10 +25,10 @@ describe("IgxDatePicker", () => {
         fixture.detectChanges();
 
         const datePicker = fixture.componentInstance.datePicker;
-        const today = new Date(Date.now());
+        const result = "";
 
         expect(fixture.componentInstance).toBeDefined();
-        expect(datePicker.dateValue.getDate()).toEqual(today.getDate());
+        expect(datePicker.displayData).toEqual(result);
     });
 
     it("@Input properties", () => {
@@ -36,14 +37,14 @@ describe("IgxDatePicker", () => {
 
         const datePicker = fixture.componentInstance.datePicker;
 
-        expect(datePicker.dateValue).toEqual(new Date(2017, 7, 7));
+        expect(datePicker.value).toEqual(new Date(2017, 7, 7));
     });
 
     it("Datepicker DOM input value", () => {
-        const fixture = TestBed.createComponent(IgxDatePicker);
+        const fixture = TestBed.createComponent(IgxDatePickerWithPassedDate);
         fixture.detectChanges();
 
-        const today = new Date(Date.now());
+        const today = new Date(2017, 7, 7);
         const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
 
         const dom = fixture.debugElement;
@@ -52,18 +53,47 @@ describe("IgxDatePicker", () => {
         expect(getValueFromInput).toEqual(formattedDate);
     });
 
-    it("Datepicker pass invalid type", () => {
-        const fixture = TestBed.createComponent(IgxDatePickerInvalidDate);
+    it("Datepicker week start day (Monday)", () => {
+        const fixture = TestBed.createComponent(IgxDatePickerWithWeekStart);
         fixture.detectChanges();
 
-        const today = new Date(Date.now());
-        const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
-
         const dom = fixture.debugElement;
-        const getValueFromInput = dom.query(By.css(".igx-date-picker__input-date")).nativeElement.value;
+        const datePickerTarget = dom.query(By.css(".igx-date-picker__input-date"));
 
-        expect(getValueFromInput).toEqual(formattedDate);
+        datePickerTarget.triggerEventHandler("click", { target: dom.nativeElement.children[0] });
+        fixture.detectChanges();
 
+        const firstDayValue = dom.query(By.css(".igx-calendar__label")).nativeElement.innerText;
+        const expectedResult = "Mon";
+
+        expect(firstDayValue).toBe(expectedResult);
+    });
+
+    it("Set formatOptions for month to be numeric", () => {
+        const fixture = TestBed.createComponent(IgxDatePickerWithPassedDate);
+        fixture.detectChanges();
+
+        const getMonthFromPickerDate = fixture.componentInstance.date.getMonth() + 1;
+        const dom = fixture.debugElement;
+        const datePickerTarget = dom.query(By.css(".igx-date-picker__input-date"));
+
+        datePickerTarget.triggerEventHandler("click", { target: dom.nativeElement.children[0] });
+        fixture.detectChanges();
+
+        const getMonthFromCalendarHeader: any = dom.query(By.css(".igx-calendar__header-date")).nativeElement
+            .children[1].innerText.substring(0, 1);
+
+        expect(parseInt(getMonthFromCalendarHeader, 10)).toBe(getMonthFromPickerDate);
+    });
+
+    it("locale propagate calendar value (de-DE)", () => {
+        const fixture = TestBed.createComponent(IgxDatePickerWIthLocale);
+        fixture.detectChanges();
+
+        const datePicker = fixture.componentInstance.datePicker;
+        const dateConvertedToDeLocale = fixture.componentInstance.date.toLocaleDateString("de-DE");
+
+        expect(datePicker.displayData).toBe(dateConvertedToDeLocale);
     });
 
     it("Datepicker open event", () => {
@@ -84,6 +114,22 @@ describe("IgxDatePicker", () => {
         expect(datePicker.onOpen.emit).toHaveBeenCalled();
     });
 
+    it("Datepicker onSelection event and selectDate method propagation", () => {
+        const fixture = TestBed.createComponent(IgxDatePicker);
+        fixture.detectChanges();
+
+        const datePicker = fixture.componentInstance.datePicker;
+        spyOn(datePicker.onSelection, "emit");
+
+        const newDate: Date = new Date(2016, 4, 6);
+        datePicker.selectDate(newDate);
+
+        fixture.detectChanges();
+
+        expect(datePicker.onSelection.emit).toHaveBeenCalled();
+        expect(datePicker.value).toBe(newDate);
+    });
+
     it("Datepicker custom formatter", () => {
         const fixture = TestBed.createComponent(IgxDatePickerWithCustomFormatter);
         fixture.detectChanges();
@@ -92,17 +138,17 @@ describe("IgxDatePicker", () => {
         const datePicker = compInstance.datePicker;
         const dom = fixture.debugElement;
         const inputTarget = dom.query(By.css(".igx-date-picker__input-date")).nativeElement;
-        const today = new Date(Date.now());
-        const formattedDate = compInstance.customFormatter(today);
+        const date = new Date(2017, 7, 7);
+        const formattedDate = compInstance.customFormatter(date);
 
         expect(inputTarget.value).toEqual(formattedDate);
     });
 
     it("Datepicker custom locale(EN) date format", () => {
-        const fixture = TestBed.createComponent(IgxDatePicker);
+        const fixture = TestBed.createComponent(IgxDatePickerWithPassedDate);
         fixture.detectChanges();
 
-        const todayToEnLocale = new Date(Date.now()).toLocaleDateString("en");
+        const todayToEnLocale = new Date(2017, 7, 7).toLocaleDateString("en");
         const dom = fixture.debugElement;
         const inputTarget = dom.query(By.css(".igx-date-picker__input-date")).nativeElement;
 
@@ -112,12 +158,13 @@ describe("IgxDatePicker", () => {
 
 @Component({
     template: `
-        <igx-datePicker [formatter]="customFormatter"></igx-datePicker>
+        <igx-datePicker [formatter]="customFormatter" [value]=date></igx-datePicker>
     `
 })
 export class IgxDatePickerWithCustomFormatter {
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
 
+    public date = new Date(2017, 7, 7);
     public customFormatter = (_: Date) => (
         `${_.getFullYear()}/${_.getMonth()}/${_.getDate()}`
     )
@@ -125,11 +172,11 @@ export class IgxDatePickerWithCustomFormatter {
 
 @Component({
     template: `
-        <igx-datePicker></igx-datePicker>
+        <igx-datePicker [value]="date" [weekStart]="1"></igx-datePicker>
     `
 })
-export class IgxDatePickerInvalidDate {
-    public date: string = "234/12/2017";
+export class IgxDatePickerWithWeekStart {
+    public date: Date = new Date(2017, 6, 8);
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
 }
 
@@ -139,15 +186,32 @@ export class IgxDatePickerInvalidDate {
     `
 })
 export class IgxDatePicker {
+    public weekStart: number = 1;
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
 }
 
 @Component({
     template: `
-        <igx-datePicker [dateValue]="date"></igx-datePicker>
+        <igx-datePicker [value]="date" [formatOptions]="formatOptions"></igx-datePicker>
     `
 })
 export class IgxDatePickerWithPassedDate {
+    public date: Date = new Date(2017, 7, 7);
+    public formatOptions = {
+        day: "numeric",
+        month: "numeric",
+        weekday: "short",
+        year: "numeric"
+    };
+    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+}
+
+@Component({
+    template: `
+        <igx-datePicker [value]="date" [locale]="'de-DE'"></igx-datePicker>
+    `
+})
+export class IgxDatePickerWIthLocale {
     public date: Date = new Date(2017, 7, 7);
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
 }

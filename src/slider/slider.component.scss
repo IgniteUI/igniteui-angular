@@ -48,4 +48,31 @@ $thumbs: 'from' 'to';
             }
         }
     }
+    @include m(disabled) {
+        @extend %igx-slider-display;
+
+        @include e(track) {
+            @extend %igx-slider-track;
+            @extend %igx-slider-track--disabled;
+        }
+
+        @include e(track-fill) {
+            @extend %igx-slider-track-fill;
+            @extend %igx-slider-track-fill--disabled;
+        }
+
+        @each $t in $thumbs {
+            @include e(thumb-#{$t}) {
+                @extend %igx-thumb-display;
+
+                .label {
+                    @extend %igx-thumb-label;
+                }
+
+                .dot {
+                    @extend %igx-thumb-dot--disabled;
+                }
+            }
+        }
+    }
 }

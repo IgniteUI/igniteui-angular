@@ -3,7 +3,7 @@ import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
-import { IgxComponentsModule, IgxDirectivesModule } from "../../src/main";
+import { IgxComponentsModule, IgxDirectivesModule, NavigationService } from "../../src/main";
 
 import { AppComponent } from "./app.component";
 import { routing } from "./app.routing";
@@ -15,10 +15,12 @@ import { IgxCalendarSampleModule } from "./calendar/sample.module";
 import { IgxCardSampleModule } from "./card/sample.module";
 import { CarouselSampleModule } from "./carousel/sample.module";
 import { DataOperationsSampleModule } from "./data-operations/sample.module";
+import { IgxDatePickerSampleModule } from "./date-picker/sample.module";
 import { DialogSampleModule } from "./dialog/sample.module";
 import { GridSampleModule } from "./grid/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
 import { InputSampleModule } from "./input/sample.module";
+import { LayoutSampleModule } from "./layout/sample.module";
 import { ListSampleModule } from "./list/sample.module";
 import { NavbarSampleModule } from "./navbar/sample.module";
 import { NavdrawerSampleModule } from "./navdrawer/sample.module";
@@ -67,7 +69,10 @@ import { IgxToastSampleModule } from "./toast/sample.module";
         IgxTypographySampleModule,
         IgxColorsSampleModule,
         IgxShadowsSampleModule,
-        IgxCalendarSampleModule
-    ]
+        IgxCalendarSampleModule,
+        IgxDatePickerSampleModule,
+        LayoutSampleModule
+    ],
+    providers: [NavigationService]
 })
-export class AppModule {}
+export class AppModule { }

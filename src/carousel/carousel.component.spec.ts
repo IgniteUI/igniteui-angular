@@ -184,11 +184,11 @@ describe("Carousel", () => {
         let carousel;
         let carouselNative;
 
-        carouselNative = fixture.componentInstance.carousel.elementRef.nativeElement;
+        carouselNative = fixture.debugElement;
         carousel = fixture.componentInstance.carousel;
 
-        prevNav = carouselNative.querySelector("a.igx-carousel__arrow--prev");
-        nextNav = carouselNative.querySelector("a.igx-carousel__arrow--next");
+        prevNav = carouselNative.query(By.css("a.igx-carousel__arrow--prev")).nativeElement;
+        nextNav = carouselNative.query(By.css("a.igx-carousel__arrow--next")).nativeElement;
 
         spyOn(carousel, "prev");
         dispatchEv(prevNav, "click");
@@ -208,19 +208,19 @@ describe("Carousel", () => {
         let carousel;
         let carouselNative;
 
-        carouselNative = fixture.componentInstance.carousel.elementRef.nativeElement;
+        carouselNative = fixture.debugElement.query(By.css(".igx-carousel"));
         carousel = fixture.componentInstance.carousel;
 
         carousel.pause = true;
         fixture.detectChanges();
 
         spyOn(carousel, "prev");
-        carouselNative.dispatchEvent(new KeyboardEvent("keydown", {key: "ArrowLeft"}));
+        carouselNative.nativeElement.dispatchEvent(new KeyboardEvent("keydown", {key: "ArrowLeft"}));
         fixture.detectChanges();
         expect(carousel.prev).toHaveBeenCalled();
 
         spyOn(carousel, "next");
-        carouselNative.dispatchEvent(new KeyboardEvent("keydown", {key: "ArrowRight"}));
+        carouselNative.nativeElement.dispatchEvent(new KeyboardEvent("keydown", {key: "ArrowRight"}));
         fixture.detectChanges();
         expect(carousel.next).toHaveBeenCalled();
     });

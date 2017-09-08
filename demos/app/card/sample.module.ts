@@ -7,6 +7,7 @@ import { IgxIconModule } from "../../../src/icon/icon.component";
 import { IgxList, IgxListModule } from "../../../src/list/list.component";
 import { IgxCardModule } from "../../../src/main";
 import { IgxRippleModule } from "../../../src/main";
+import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { IgxCardSampleComponent } from "./sample.component";
 
 @NgModule({
@@ -20,7 +21,8 @@ import { IgxCardSampleComponent } from "./sample.component";
         IgxListModule,
         IgxCardModule,
         IgxRippleModule,
-        CommonModule
+        CommonModule,
+        PageHeaderModule
     ]
 })
 export class IgxCardSampleModule { }
