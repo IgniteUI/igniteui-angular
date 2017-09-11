@@ -15,6 +15,7 @@ import {
     SimpleChange
 } from "@angular/core";
 // import {AnimationBuilder} from 'angular2/src/animate/animation_builder'; TODO
+import { Observable, Subscription } from "rxjs/Rx";
 import { BaseComponent } from "../core/base";
 import { IToggleView, NavigationService } from "../core/navigation";
 import { HammerGesturesManager } from "../core/touch";
@@ -27,11 +28,11 @@ declare var module: any;
  * Navigation Drawer component supports collapsible side navigation container.
  * Usage:
  * ```
- * <ig-nav-drawer id="ID" (event output bindings) [input bindings]>
+ * <igx-nav-drawer id="ID" (event output bindings) [input bindings]>
  *  <div class="ig-drawer-content">
  *   <!-- expanded template -->
  *  </div>
- * </ig-nav-drawer>
+ * </igx-nav-drawer>
  * ```
  * Can also include an optional `<div class="ig-drawer-mini-content">`.
  * ID required to register with NavigationService allow directives to target the control.
@@ -43,7 +44,7 @@ declare var module: any;
     */
     moduleId: module.id, // commonJS standard
     providers: [HammerGesturesManager],
-    selector: "ig-nav-drawer",
+    selector: "igx-nav-drawer",
     styleUrls: ["./navigation-drawer.component.css"],
     templateUrl: "navigation-drawer.component.html"
 })
@@ -90,6 +91,8 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
      */
     @Input() public miniWidth: string;
 
+    /** Pinned state change output for two-way binding  */
+    @Output() public pinChange = new EventEmitter();
     /** Event fired as the Navigation Drawer is about to open. */
     @Output() public opening = new EventEmitter();
     /** Event fired when the Navigation Drawer has opened. */
@@ -102,6 +105,7 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
     private _hasMimiTempl: boolean = false;
     private _gesturesAttached: boolean = false;
     private _widthCache: { width: number, miniWidth: number } = { width: null, miniWidth: null };
+    private _resizeObserver: Subscription;
     private css: { [name: string]: string; } = {
         drawer: "ig-nav-drawer",
         mini: "mini",
@@ -203,13 +207,12 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
         // wait for template and ng-content to be ready
         this._hasMimiTempl = this.getChild(this.css.miniProjection) !== null;
         this.updateEdgeZone();
-        if (this.pinThreshold && this.getWindowWidth() >= this.pinThreshold) {
-            this.pin = true;
-        }
+        this.checkPinThreshold();
 
         // need to set height without absolute positioning
         this.ensureDrawerHeight();
         this.ensureEvents();
+
         // TODO: apply platform-safe Ruler from http://plnkr.co/edit/81nWDyreYMzkunihfRgX?p=preview
         // (https://github.com/angular/angular/issues/6515), blocked by https://github.com/angular/angular/issues/6904
     }
@@ -219,6 +222,7 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
         if (this._state) {
             this._state.remove(this.id);
         }
+        this._resizeObserver.unsubscribe();
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }) {
@@ -235,6 +239,16 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
                 this._gesturesAttached = false;
             } else {
                 this.ensureEvents();
+            }
+        }
+
+        if (changes.pinThreshold) {
+            if (this.pinThreshold) {
+                this.ensureEvents();
+                this.checkPinThreshold();
+            } else {
+                this._resizeObserver.unsubscribe();
+                this._resizeObserver = null;
             }
         }
 
@@ -421,6 +435,10 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
             this._touchManager.addGlobalEventListener("document", "panmove", this.pan);
             this._touchManager.addGlobalEventListener("document", "panend", this.panEnd);
         }
+        if (this.pinThreshold && !this._resizeObserver) {
+            this._resizeObserver = Observable.fromEvent(window, "resize").debounce(() => Observable.interval(150))
+                .subscribe((value) => { this.checkPinThreshold(); });
+        }
     }
 
     private updateEdgeZone() {
@@ -432,9 +450,21 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
         }
     }
 
+    private checkPinThreshold = (evt?: Event) => {
+        let windowWidth;
+        if (this.pinThreshold) {
+            windowWidth = this.getWindowWidth();
+            if (!this.pin && windowWidth >= this.pinThreshold) {
+                this.pin = true;
+                this.pinChange.emit(true);
+            } else if (this.pin && windowWidth < this.pinThreshold) {
+                this.pin = false;
+                this.pinChange.emit(false);
+            }
+        }
+    }
+
     private swipe = (evt: HammerInput) => {
-        // use lambda to keep class scope
-        // http://stackoverflow.com/questions/18423410/typescript-retain-scope-in-event-listener
         // TODO: Could also force input type: http://stackoverflow.com/a/27108052
         if (!this.enableGestures || evt.pointerType !== "touch") {
             return;

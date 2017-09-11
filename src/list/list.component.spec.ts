@@ -2,7 +2,6 @@ import { Component, ContentChildren, QueryList, ViewChild } from "@angular/core"
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs/Rx";
-import { HammerGesturesManager } from "../core/touch";
 import { IgxList, IgxListItem, IgxListModule, IgxListPanState } from "./list.component";
 
 declare var Simulator: any;

@@ -1,153 +1,151 @@
 <div class="main">
-    <ig-nav-drawer id="navdrawer" #navdrawer [enableGestures]="drawerState.enableGestures" [isOpen]="drawerState.open" [miniWidth]="drawerState.miniWidth"
-        [pin]="drawerState.pin" [width]="drawerState.width" [position]="drawerState.position">
+    <igx-nav-drawer id="navdrawer" #navdrawer [enableGestures]="drawerState.enableGestures" [isOpen]="drawerState.open" [miniWidth]="drawerState.miniWidth"
+        [(pin)]="drawerState.pin" [width]="drawerState.width" [position]="drawerState.position">
         <div class="ig-drawer-content">
-            <aside class="aside">
-                <nav class="nav">
-                    <img class="logo" src="demos/app/rsrcs/jsblocks-logo.svg" alt="Ignite UI JS Blocks Logo">
-                    <!--Components-->
-                    <span class="nav-item header">Components</span>
+            <nav class="nav">
+                <img class="logo" src="demos/app/rsrcs/jsblocks-logo.svg" alt="Ignite UI JS Blocks Logo">
+                <!--Components-->
+                <span class="nav-item header">Components</span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/avatar">
-                        <igx-icon fontSet="material" name="account_circle"></igx-icon>
-                        <span>Avatar</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/avatar">
+                    <igx-icon fontSet="material" name="account_circle"></igx-icon>
+                    <span>Avatar</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/badge">
-                        <igx-icon fontSet="material" name="error"></igx-icon>
-                        <span>Badge</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/badge">
+                    <igx-icon fontSet="material" name="error"></igx-icon>
+                    <span>Badge</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/buttonGroup">
-                        <igx-icon fontSet="material" name="group_work"></igx-icon>
-                        <span>Button Group</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/buttonGroup">
+                    <igx-icon fontSet="material" name="group_work"></igx-icon>
+                    <span>Button Group</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/calendar">
-                        <igx-icon fontSet="material" name="event"></igx-icon>
-                        <span>Calendar</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/calendar">
+                    <igx-icon fontSet="material" name="event"></igx-icon>
+                    <span>Calendar</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/card">
-                        <igx-icon fontSet="material" name="home"></igx-icon>
-                        <span>Card</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/card">
+                    <igx-icon fontSet="material" name="home"></igx-icon>
+                    <span>Card</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/carousel">
-                        <igx-icon fontSet="material" name="view_carousel"></igx-icon>
-                        <span>Carousel</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/carousel">
+                    <igx-icon fontSet="material" name="view_carousel"></igx-icon>
+                    <span>Carousel</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/datePicker">
-                        <igx-icon fontSet="material" name="date_range"></igx-icon>
-                        <span>DatePicker</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/datePicker">
+                    <igx-icon fontSet="material" name="date_range"></igx-icon>
+                    <span>DatePicker</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/grid">
-                        <igx-icon fontSet="material" name="view_column"></igx-icon>
-                        <span>Grid</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/grid">
+                    <igx-icon fontSet="material" name="view_column"></igx-icon>
+                    <span>Grid</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/dialog">
-                        <igx-icon fontSet="material" name="all_out"></igx-icon>
-                        <span>Dialog</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/dialog">
+                    <igx-icon fontSet="material" name="all_out"></igx-icon>
+                    <span>Dialog</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/inputs">
-                        <igx-icon fontSet="material" name="web"></igx-icon>
-                        <span>Forms</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/inputs">
+                    <igx-icon fontSet="material" name="web"></igx-icon>
+                    <span>Forms</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/icon">
-                        <igx-icon fontSet="material" name="android"></igx-icon>
-                        <span>Icon</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/icon">
+                    <igx-icon fontSet="material" name="android"></igx-icon>
+                    <span>Icon</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/list">
-                        <igx-icon fontSet="material" name="list"></igx-icon>
-                        <span>List</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/list">
+                    <igx-icon fontSet="material" name="list"></igx-icon>
+                    <span>List</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/navbar">
-                        <igx-icon fontSet="material" name="arrow_back"></igx-icon>
-                        <span>Navbar</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/navbar">
+                    <igx-icon fontSet="material" name="arrow_back"></igx-icon>
+                    <span>Navbar</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/navdrawer">
-                        <igx-icon fontSet="material" name="menu"></igx-icon>
-                        <span>Navdrawer</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/navdrawer">
+                    <igx-icon fontSet="material" name="menu"></igx-icon>
+                    <span>Navdrawer</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/progressbar">
-                        <igx-icon fontSet="material" name="poll"></igx-icon>
-                        <span>Progress Indicators</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/progressbar">
+                    <igx-icon fontSet="material" name="poll"></igx-icon>
+                    <span>Progress Indicators</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/slider">
-                        <igx-icon fontSet="material" name="linear_scale"></igx-icon>
-                        <span>Slider</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/slider">
+                    <igx-icon fontSet="material" name="linear_scale"></igx-icon>
+                    <span>Slider</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/snackbar">
-                        <igx-icon fontSet="material" name="feedback"></igx-icon>
-                        <span>Snackbar</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/snackbar">
+                    <igx-icon fontSet="material" name="feedback"></igx-icon>
+                    <span>Snackbar</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/tabbar">
-                        <igx-icon fontSet="material" name="tab"></igx-icon>
-                        <span>Tabbar</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/tabbar">
+                    <igx-icon fontSet="material" name="tab"></igx-icon>
+                    <span>Tabbar</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/toast">
-                        <igx-icon fontSet="material" name="android"></igx-icon>
-                        <span>Toast</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/toast">
+                    <igx-icon fontSet="material" name="android"></igx-icon>
+                    <span>Toast</span>
+                </span>
 
-                    <!--Directives-->
-                    <span class="nav-item header">Directives</span>
+                <!--Directives-->
+                <span class="nav-item header">Directives</span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/buttons">
-                        <igx-icon fontSet="material" name="radio_button_unchecked"></igx-icon>
-                        <span>Buttons</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/buttons">
+                    <igx-icon fontSet="material" name="radio_button_unchecked"></igx-icon>
+                    <span>Buttons</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/layout">
-                        <igx-icon fontSet="material" name="view_quilt"></igx-icon>
-                        <span>Layout</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/layout">
+                    <igx-icon fontSet="material" name="view_quilt"></igx-icon>
+                    <span>Layout</span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/ripple">
-                        <igx-icon fontSet="material" name="wifi_tethering"></igx-icon>
-                        <span>Ripple</span>
-                    </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/ripple">
+                    <igx-icon fontSet="material" name="wifi_tethering"></igx-icon>
+                    <span>Ripple</span>
+                </span>
 
-                    <!--Utils-->
-                    <!-- <span class="nav-item header">Utils</span>
+                <!--Utils-->
+                <!-- <span class="nav-item header">Utils</span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/data-operations">
-                        <igx-icon fontSet="material" name="data_usage"></igx-icon>
-                        <span>Data Operations</span>
-                    </span> -->
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/data-operations">
+                    <igx-icon fontSet="material" name="data_usage"></igx-icon>
+                    <span>Data Operations</span>
+                </span> -->
 
-                    <!--Style guide-->
-                    <span class="nav-item header">Style</span>
+                <!--Style guide-->
+                <span class="nav-item header">Style</span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/colors">
-                        <igx-icon fontSet="material" name="color_lens"></igx-icon>
-                        <span>Colors</span>
-                    </span>
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/typography">
-                        <igx-icon fontSet="material" name="font_download"></igx-icon>
-                        <span>Typography</span>
-                    </span>
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/shadows">
-                        <igx-icon fontSet="material" name="layers"></igx-icon>
-                        <span>Shadows</span>
-                    </span>
-                </nav>
-            </aside>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/colors">
+                    <igx-icon fontSet="material" name="color_lens"></igx-icon>
+                    <span>Colors</span>
+                </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/typography">
+                    <igx-icon fontSet="material" name="font_download"></igx-icon>
+                    <span>Typography</span>
+                </span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/shadows">
+                    <igx-icon fontSet="material" name="layers"></igx-icon>
+                    <span>Shadows</span>
+                </span>
+            </nav>
         </div>
-    </ig-nav-drawer>
+    </igx-nav-drawer>
     <div class="content">
         <router-outlet></router-outlet>
     </div>

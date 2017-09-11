@@ -1,6 +1,5 @@
 import { Component, Directive, NgModule, ViewEncapsulation } from "@angular/core";
 import { IgxButtonModule } from "../button/button.directive";
-import { HammerGesturesManager } from "../core/touch";
 
 /**
  * IgxCardHeader is container for the card header
@@ -43,7 +42,6 @@ export class IgxCardFooter { }
 @Component({
     encapsulation: ViewEncapsulation.None,
     moduleId: module.id,
-    providers: [HammerGesturesManager],
     selector: "igx-card",
     styleUrls: ["./card.component.css"],
     templateUrl: "card.component.html"
