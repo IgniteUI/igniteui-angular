@@ -1,7 +1,6 @@
 import { Component, ContentChildren, ViewChild } from "@angular/core";
 import { async, ComponentFixtureAutoDetect, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { HammerGesturesManager } from "../core/touch";
 import { IgxList, IgxListItem, IgxListModule } from "../list/list.component";
 import { IgxFilterDirective, IgxFilterModule, IgxFilterOptions, IgxFilterPipe } from "./filter.directive";
 
