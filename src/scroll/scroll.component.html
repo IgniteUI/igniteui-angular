@@ -1,0 +1,14 @@
+<div class="igx-scroll"
+     #scroll>
+    <div class="igx-scroll__viewport" [ngStyle]="{ 'height': totalHeight }"
+         (pan)="onPan($event)"
+         (wheel)="onMouseWheel($event)">
+        <ng-content>
+        </ng-content>
+    </div>
+    <div (scroll)="onScrolled($event)"
+         #verticalScroll class="igx-scroll__vertical" [ngStyle]="{ 'height': totalHeight }">
+        <div [ngStyle]="{ 'height': innerHeight }">
+        </div>
+    </div>
+</div>

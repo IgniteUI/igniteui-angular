@@ -20,6 +20,7 @@ import { NavbarSampleComponent } from "./navbar/sample.component";
 import { NavdrawerSampleComponent } from "./navdrawer/sample.component";
 import { ProgressbarSampleComponent } from "./progressbar/sample.component";
 import { RippleSampleComponent } from "./ripple/sample.component";
+import { IgxScrollSampleComponent } from "./scroll/sample.component";
 import { IgxSliderSampleComponent } from "./slider/sample.component";
 import { IgxSnackbarSampleComponent } from "./snackbar/sample.component";
 import { IgxColorsSampleComponent } from "./styleguide/colors/sample.component";
@@ -35,7 +36,7 @@ const appRoutes: Routes = [
     {
         path: "",
         pathMatch: "full",
-        redirectTo: "/avatar"
+        redirectTo: "/scroll"
     },
     {
         component: InputSampleComponent,
@@ -104,6 +105,10 @@ const appRoutes: Routes = [
     {
         component: IgxSliderSampleComponent,
         path: "slider"
+    },
+    {
+        component: IgxScrollSampleComponent,
+        path: "scroll"
     },
     {
         component: DataOperationsSampleComponent,

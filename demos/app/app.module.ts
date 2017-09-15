@@ -26,6 +26,7 @@ import { NavbarSampleModule } from "./navbar/sample.module";
 import { NavdrawerSampleModule } from "./navdrawer/sample.module";
 import { ProgressBarSampleModule } from "./progressbar/sample.module";
 import { RippleSampleModule } from "./ripple/sample.module";
+import { IgxScrollSampleModule } from "./scroll/sample.module";
 import { IgxSliderSampleModule } from "./slider/sample.module";
 import { IgxSnackbarSampleModule } from "./snackbar/sample.module";
 import { IgxColorsSampleModule } from "./styleguide/colors/sample.module";
@@ -62,6 +63,7 @@ import { IgxToastSampleModule } from "./toast/sample.module";
         GridSampleModule,
         IgxCardSampleModule,
         IgxSliderSampleModule,
+        IgxScrollSampleModule,
         DataOperationsSampleModule,
         BadgeSampleModule,
         RippleSampleModule,

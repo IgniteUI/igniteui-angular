@@ -2,8 +2,7 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
-import { IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
-import { IgxCardModule } from "../../../src/main";
+import { IgxCardModule, IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
 import { DataStateConfiguratorComponent } from "./data-state-configurator.component";
 import { DataTable } from "./data-table.component";
 // import panels

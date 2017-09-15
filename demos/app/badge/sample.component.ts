@@ -1,6 +1,4 @@
 import { Component } from "@angular/core";
-import { IgxAvatarModule } from "../../../src/main";
-import { IgxBadgeModule } from "../../../src/main";
 
 @Component({
     moduleId: module.id,

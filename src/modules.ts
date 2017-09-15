@@ -18,6 +18,7 @@ import { IgxNavbarModule } from "./navbar/navbar.component";
 import { NavigationDrawerModule } from "./navigation-drawer/navigation-drawer.component";
 import { IgxProgressBarModule } from "./progressbar/progressbar.component";
 import { IgxRadioModule} from "./radio/radio.component";
+import { IgxScrollModule } from "./scroll/scroll.component";
 import { IgxSliderModule } from "./slider/slider.component";
 import { IgxSnackbarModule } from "./snackbar/snackbar.component";
 import { IgxSwitchModule} from "./switch/switch.component";
@@ -48,6 +49,7 @@ import { NavigationClose, NavigationService, NavigationToggle } from "./core/nav
         IgxToastModule,
         IgxButtonGroupModule,
         IgxSliderModule,
+        IgxScrollModule,
         IgxDatePickerModule
     ],
     imports: [
@@ -71,6 +73,7 @@ import { NavigationClose, NavigationService, NavigationToggle } from "./core/nav
         IgxToastModule,
         IgxButtonGroupModule,
         IgxSliderModule,
+        IgxScrollModule,
         IgxDatePickerModule
     ]
 })
