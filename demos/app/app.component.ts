@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output, ViewChild } from "@angular/core";
+import { NavigationStart, Router } from "@angular/router";
 import { NavigationDrawer, NavigationDrawerModule } from "../../src/main";
 
 @Component({
@@ -12,17 +13,21 @@ export class AppComponent {
     public drawerState = {
         enableGestures: true,
         open: true,
-        pin: true,
-        pinThreshold: "768px",
+        pin: false,
+        pinThreshold: 768,
         position: "left",
         width: "242px"
     };
 
-    private toggleNavigationDrawer($event): void {
-        if (this.navdrawer.isOpen) {
-            this.navdrawer.close();
-        } else {
-            this.navdrawer.open();
-        }
+    constructor(private router: Router) {}
+    public ngOnInit(): void {
+        this.router.events
+            .filter((x) => x instanceof NavigationStart)
+            .subscribe((event: NavigationStart) => {
+                if (event.url !== "/" && !this.drawerState.pin) {
+                    // Close drawer when a sample is selected
+                    this.navdrawer.close();
+                }
+            });
     }
 }

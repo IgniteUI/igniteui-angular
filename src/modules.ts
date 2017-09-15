@@ -25,6 +25,8 @@ import { IgxSwitchModule} from "./switch/switch.component";
 import { IgxTabBarModule } from "./tabbar/tabbar.component";
 import { IgxToastModule } from "./toast/toast.component";
 
+import { NavigationClose, NavigationService, NavigationToggle } from "./core/navigation";
+
 @NgModule({
     exports: [
         IgxAvatarModule,
@@ -106,3 +108,16 @@ import { IgxLayout } from "./layout/layout.directive";
     ]
 })
 export class IgxDirectivesModule {}
+
+@NgModule({
+    declarations: [
+        NavigationToggle,
+        NavigationClose
+    ],
+    exports: [
+        NavigationToggle,
+        NavigationClose
+    ],
+    providers: [ NavigationService ]
+})
+export class IgxNavigationModule {}

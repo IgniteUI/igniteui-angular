@@ -10,7 +10,6 @@ import {
     Output,
     ViewEncapsulation
 } from "@angular/core";
-import { HammerGesturesManager } from "../core/touch";
 import { IgxIconModule } from "../icon/icon.component";
 
 export enum Direction { NONE, NEXT, PREV }
@@ -36,7 +35,6 @@ export enum Direction { NONE, NEXT, PREV }
         role: "region"
     },
     moduleId: module.id,
-    providers: [HammerGesturesManager],
     selector: "igx-carousel",
     styleUrls: ["./carousel.component.css"],
     templateUrl: "carousel.component.html"

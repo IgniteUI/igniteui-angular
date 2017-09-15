@@ -10,13 +10,11 @@ import {
     ViewEncapsulation
 } from "@angular/core";
 import { IgxButtonModule } from "../button/button.directive";
-import { HammerGesturesManager } from "../core/touch";
 import { IgxIconModule } from "../icon/icon.component";
 
 @Component({
     encapsulation: ViewEncapsulation.None,
     moduleId: module.id,
-    providers: [HammerGesturesManager],
     selector: "igx-navbar",
     styleUrls: ["./navbar.component.css"],
     templateUrl: "navbar.component.html"

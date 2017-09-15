@@ -46,9 +46,12 @@ export class HammerGesturesManager {
 
         // Creating the manager bind events, must be done outside of angular
         return this._zone.runOutsideAngular(() => {
-            // new Hammer is a shortcut for Manager with defaults
-            const mc = new Hammer(element, this.hammerOptions);
-            this.addManagerForElement(element, mc);
+            let mc: HammerManager = this.getManagerForElement(element);
+            if (mc === null) {
+                // new Hammer is a shortcut for Manager with defaults
+                mc = new Hammer(element, this.hammerOptions);
+                this.addManagerForElement(element, mc);
+            }
             const handler = (eventObj) => { this._zone.run(() => { eventHandler(eventObj); }); };
             mc.on(eventName, handler);
             return () => { mc.off(eventName, handler); };
@@ -62,10 +65,19 @@ export class HammerGesturesManager {
      * @param target Can be one of either window, body or document(fallback default).
      */
     public addGlobalEventListener(target: string, eventName: string, eventHandler: (eventObj) => void): () => void {
-        const element = getDOM().getGlobalEventTarget(this.doc, target);
+        const element = this.getGlobalEventTarget(target);
 
         // Creating the manager bind events, must be done outside of angular
         return this.addEventListener(element as HTMLElement, eventName, eventHandler);
+    }
+
+    /**
+     * Exposes [Dom]Adapter.getGlobalEventTarget to get global event targets.
+     * Supported: window, document, body. Defaults to document for invalid args.
+     * @param target Target name
+     */
+    public getGlobalEventTarget(target: string): EventTarget {
+        return getDOM().getGlobalEventTarget(this.doc, target);
     }
 
     /**

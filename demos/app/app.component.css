@@ -1,9 +1,13 @@
-.aside ::-webkit-scrollbar {
+.ig-drawer-content {
+    background: #fff;
+}
+
+.ig-drawer-content ::-webkit-scrollbar {
     width: 3px;
     background: #e4e4e4;
 }
 
-.aside ::-webkit-scrollbar-thumb {
+.ig-drawer-content ::-webkit-scrollbar-thumb {
     background: #ec6f74;
     border-radius: 0;
 }
@@ -23,15 +27,6 @@
     position: relative;
     width: 100%;
     overflow-y: scroll;
-}
-
-.aside {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: #fff;
 }
 
 .nav {
