@@ -8,8 +8,7 @@
 
 **Note:** as of January 3rd 2017 the license for this project has changed from MIT to Apache 2.0. For more information about these licenses please click [here](http://choosealicense.com/licenses/)
 
-Components and supporting directives built with TypeScript and [Angular](https://angular.io/)
-including samples and tests. Source files under the `src` folder.
+Material-based UI Components and supporting directives for [Angular](https://angular.io/) by Infragistics including samples and tests. Source files under the [`src`](https://github.com/IgniteUI/igniteui-js-blocks/tree/master/src) folder.
 
 Current list of controls include:
 
