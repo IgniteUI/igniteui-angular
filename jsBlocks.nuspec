@@ -10,9 +10,9 @@
     <description>This is a package that can be used with Octopus deployer</description>
   </metadata>
   <files>
-    <file src="demos\**\*.*" ></file>
-    <file src="dist\**\*.*" target="dist"></file>
+    <file src="**\*.*" target="\"></file>
+    <!--<file src="dist\**\*.*" target="dist"></file>
     <file src="node_modules\**\*.*" target="node_modules" ></file>
-    <file src="systemjs.config.js" ></file>    
+    <file src="systemjs.config.js" ></file>-->
   </files>
 </package>
