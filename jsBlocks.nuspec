@@ -10,7 +10,9 @@
     <description>This is a package that can be used with Octopus deployer</description>
   </metadata>
   <files>
-    <file src="**\*.*" target="\"></file>
+    <file src="**\*.*" target="\"
+          exclude=".git\**\*.*;.sass-lint.yml;.travis.yml;CONTRIBUTING.md;ISSUE_TEMPLATE.md;PULL_REQUEST_TEMPLATE.md;readme-template.md;"></file>
+    
     <!--<file src="dist\**\*.*" target="dist"></file>
     <file src="node_modules\**\*.*" target="node_modules" ></file>
     <file src="systemjs.config.js" ></file>-->
