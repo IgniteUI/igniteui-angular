@@ -17,9 +17,8 @@ export enum ButtonGroupAlignment { horizontal, vertical }
 // ====================== BUTTON GROUP ================================
 // The `<igx-buttonGroup>` component is a  container for buttons
 @Component({
-    moduleId: module.id, // commonJS standard
     selector: "igx-buttongroup",
-    styleUrls: ["./buttongroup.component.css"],
+    styleUrls: ["./buttongroup.component.scss"],
     templateUrl: "buttongroup-content.component.html"
 })
 

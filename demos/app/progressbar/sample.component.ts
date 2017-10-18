@@ -1,8 +1,7 @@
 import { Component, NgModule } from "@angular/core";
-import { IgxProgressBarModule } from "../../../src/main";
+import { IgxProgressBarModule } from "../../lib/main";
 
 @Component({
-    moduleId: module.id,
     selector: "progressbar-sample",
     styleUrls: ["../app.samples.css", "sample.component.css"],
     templateUrl: "sample.component.html"

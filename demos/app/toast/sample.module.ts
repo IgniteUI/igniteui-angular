@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 
-import { IgxButtonModule, IgxRippleModule, IgxToastModule } from "../../../src/main";
+import { IgxButtonModule, IgxRippleModule, IgxToastModule } from "../../lib/main";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { IgxToastSampleComponent } from "./sample.component";
 

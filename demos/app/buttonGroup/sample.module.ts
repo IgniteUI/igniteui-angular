@@ -3,9 +3,9 @@ import { NgModule } from "@angular/core";
 import {
     ButtonGroupAlignment,
     IgxButtonGroup,
-    IgxButtonGroupModule
-} from "../../../src/buttonGroup/buttonGroup.component";
-import { IgxDirectivesModule } from "../../../src/main";
+    IgxButtonGroupModule,
+    IgxDirectivesModule
+} from "../../lib/main";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { ButtonGroupSampleComponent } from "./sample.component";
 

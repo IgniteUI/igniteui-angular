@@ -20,10 +20,6 @@ import { BaseComponent } from "../core/base";
 import { IToggleView, NavigationService } from "../core/navigation";
 import { HammerGesturesManager } from "../core/touch";
 
-// cover for transpiler error
-// SystemJS will eventually wrap the export in the proper node.js style function on the client
-declare var module: any;
-
 /**
  * Navigation Drawer component supports collapsible side navigation container.
  * Usage:
@@ -38,14 +34,9 @@ declare var module: any;
  * ID required to register with NavigationService allow directives to target the control.
  */
 @Component({
-    /* Per https://github.com/angular/angular/issues/2383 BUT https://github.com/angular/angular/issues/6053
-        can't use relative URLs still with SystemJS
-        TODO: try https://github.com/angular/angular/issues/2991 ??
-    */
-    moduleId: module.id, // commonJS standard
     providers: [HammerGesturesManager],
     selector: "igx-nav-drawer",
-    styleUrls: ["./navigation-drawer.component.css"],
+    styleUrls: ["./navigation-drawer.component.scss"],
     templateUrl: "navigation-drawer.component.html"
 })
 export class NavigationDrawer extends BaseComponent implements IToggleView,

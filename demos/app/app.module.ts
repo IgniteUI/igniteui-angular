@@ -1,9 +1,10 @@
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { HttpModule } from "@angular/http";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
-import { IgxComponentsModule, IgxDirectivesModule, IgxNavigationModule } from "../../src/main";
+import { IgxComponentsModule, IgxDirectivesModule, IgxNavigationModule } from "../lib/main";
 
 import { AppComponent } from "./app.component";
 import { routing } from "./app.routing";
@@ -14,7 +15,6 @@ import { ButtonGroupSampleModule } from "./buttonGroup/sample.module";
 import { IgxCalendarSampleModule } from "./calendar/sample.module";
 import { IgxCardSampleModule } from "./card/sample.module";
 import { CarouselSampleModule } from "./carousel/sample.module";
-import { DataOperationsSampleModule } from "./data-operations/sample.module";
 import { IgxDatePickerSampleModule } from "./date-picker/sample.module";
 import { DialogSampleModule } from "./dialog/sample.module";
 import { GridSampleModule } from "./grid/sample.module";
@@ -42,6 +42,7 @@ import { IgxToastSampleModule } from "./toast/sample.module";
         BrowserModule,
         BrowserAnimationsModule,
         FormsModule,
+        HttpModule,
         routing,
         IgxComponentsModule,
         IgxDirectivesModule,
@@ -64,7 +65,6 @@ import { IgxToastSampleModule } from "./toast/sample.module";
         IgxCardSampleModule,
         IgxSliderSampleModule,
         IgxScrollSampleModule,
-        DataOperationsSampleModule,
         BadgeSampleModule,
         RippleSampleModule,
         IgxTypographySampleModule,

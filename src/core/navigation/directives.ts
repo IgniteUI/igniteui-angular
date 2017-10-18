@@ -1,4 +1,4 @@
-import {Directive, HostListener, Input} from "@angular/core";
+import { Directive, HostListener, Input, NgModule } from "@angular/core";
 import {NavigationService} from "./nav-service";
 
 /**
@@ -50,3 +50,10 @@ export class NavigationClose {
         this.state.close(this.target, true);
     }
 }
+
+@NgModule({
+    declarations: [NavigationClose, NavigationToggle],
+    exports: [NavigationClose, NavigationToggle],
+    providers: [NavigationService]
+})
+export class IgxNavigationDirectives {}

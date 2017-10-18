@@ -115,9 +115,8 @@ export interface IgxGridCell {
  * @implements {OnDestroy}
  */
 @Component({
-    moduleId: module.id,
     selector: "igx-grid",
-    styleUrls: ["grid.component.css"],
+    styleUrls: ["grid.component.scss"],
     templateUrl: "grid.component.html"
 })
 export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDestroy {

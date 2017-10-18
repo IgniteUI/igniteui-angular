@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "es2015",
+        "moduleResolution": "node",
+        "noEmit": true,
+        "declaration": false,
+        "sourceMap": true,
+        "inlineSources": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "noImplicitAny": false,
+        "skipLibCheck": true,
+        "lib": [
+            "es2015",
+            "dom"
+        ],
+        "typeRoots": [
+            "./node_modules@types"
+        ]
+    },
+    "include": [
+      "./app/**/*ts"
+    ],
+    "angularCompilerOptions": {
+        "genDir": "dist",
+        "entryModule": "app/app.module#AppModule"
+    }
+}

@@ -23,9 +23,8 @@ import { Component, EventEmitter, Input, NgModule, Output } from "@angular/core"
     host: {
         role: "alert"
     },
-    moduleId: module.id,
     selector: "igx-toast",
-    styleUrls: ["./toast.component.css"],
+    styleUrls: ["./toast.component.scss"],
     templateUrl: "toast.component.html"
 })
 export class IgxToast {

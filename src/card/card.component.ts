@@ -41,9 +41,8 @@ export class IgxCardFooter { }
  */
 @Component({
     encapsulation: ViewEncapsulation.None,
-    moduleId: module.id,
     selector: "igx-card",
-    styleUrls: ["./card.component.css"],
+    styleUrls: ["./card.component.scss"],
     templateUrl: "card.component.html"
 })
 export class IgxCardComponent { }

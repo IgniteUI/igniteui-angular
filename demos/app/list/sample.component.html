@@ -84,7 +84,7 @@
                 </span>
             </div>
             <div class="list-sample">
-                <igx-list [hidden]="fruitsFilteredItemsCount === 0" emptyListMessage="No fruits." emptyListImage="../../demos/app/list/images/empty.png"
+                <igx-list [hidden]="fruitsFilteredItemsCount === 0" emptyListMessage="No fruits." emptyListImage="images/list/empty.png"
                     (emptyListButtonClick)="addFruitDialog.open()" [igxFilter]="fruitsFilterOptions" (filtered)="fruitsFiltered($event)">
                     <igx-list-item *ngFor="let fruit of fruits">
                         <div class="item" [attr.data-fruit-id]="fruit.id">

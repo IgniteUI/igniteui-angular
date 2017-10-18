@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 
 import { CommonModule } from "@angular/common";
 import {FormsModule} from "@angular/forms";
-import { IgxScrollModule } from "../../../src/main";
+import { IgxScrollModule } from "../../lib/main";
 import { IgxScrollSampleComponent } from "./sample.component";
 
 @NgModule({

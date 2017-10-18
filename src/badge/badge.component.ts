@@ -7,9 +7,8 @@ export enum Position { TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }
 
 @Component({
     encapsulation: ViewEncapsulation.None,
-    moduleId: module.id,
     selector: "igx-badge",
-    styleUrls: ["./badge.component.css"],
+    styleUrls: ["./badge.component.scss"],
     templateUrl: "badge.component.html"
 })
 export class IgxBadge {

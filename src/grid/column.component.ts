@@ -8,7 +8,6 @@ import {
 } from "./grid.common";
 
 @Component({
-    moduleId: module.id,
     selector: "igx-column",
     template: ``
 })

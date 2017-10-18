@@ -28,9 +28,8 @@ import { IgxRippleModule } from "../directives/ripple.directive";
         ])
     ],
     encapsulation: ViewEncapsulation.None,
-    moduleId: module.id,
     selector: "igx-dialog",
-    styleUrls: ["./dialog.component.css"],
+    styleUrls: ["./dialog.component.scss"],
     templateUrl: "dialog-content.component.html"
 })
 export class IgxDialog {

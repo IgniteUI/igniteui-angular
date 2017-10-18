@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { IgxDirectivesModule } from "../../../src/main";
+import { IgxDirectivesModule } from "../../lib/main";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { RippleSampleComponent } from "./sample.component";
 

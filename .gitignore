@@ -36,8 +36,20 @@ node_modules
 # Transpiled output
 gulpfile.js*
 
+tmp
+*.metadata.json
+*.ngFactory.ts
+
 demos/**/*.js
 demos/**/*.js.map
+demos/style/fonts
+demos/node_modules
+demos/lib
+demos/dist
+demos/polyfills.js
+demos/vendor.js
+demos/main.js
+demos/index.html
 
 src/**/*.js
 src/**/*.js.map
@@ -45,6 +57,8 @@ src/**/*.js.map
 src/**/*.css
 src/**/*.css.map
 
+
+dist/**/*
 dist/dev
 dist/**/*.js
 dist/**/*.d.ts
