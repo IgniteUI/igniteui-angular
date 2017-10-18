@@ -9,7 +9,7 @@
         "build:esm:watch": "gulp build:esm:watch",
         "build:umd": "webpack --config webpack-umd.config.ts",
         "build:umd:watch": "npm run build:umd -- --watch",
-        "build:docs": "typedoc --out dist/docs src/ --name \"IgniteUI JS Blocks\" --module commonjs --target ES5",
+        "build:docs": "typedoc src/",
         "ci": "npm run lint && npm run test && npm run build",
         "clean": "rimraf coverage tmp dist",
         "codecov": "cat coverage/lcov.info | codecov",

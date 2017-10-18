@@ -26,6 +26,23 @@
           "webpack-env"
       ]
   },
+  "typedocOptions": {
+    "mode": "modules",
+    "out": "dist/docs",
+    "exclude": "**/*.spec.ts",
+    "theme": "default",
+    "ignoreCompilerErrors": true,
+    "excludePrivate": true,
+    "excludeNotExported": true,
+    "name": "IgniteUI JS Blocks",
+    "target": "ES5",
+    "moduleResolution": "node",
+    "preserveConstEnums": true,
+    "stripInternal": true,
+    "suppressExcessPropertyErrors": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "module": "commonjs"
+  },
   "include": [
       "src/**/*.ts"
   ],
