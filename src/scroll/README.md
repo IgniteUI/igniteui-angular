@@ -1,6 +1,6 @@
 # igx-scroll
 
-The IgxScroll a control giving easy access to vertically scrollable content so that developers/designers are not limited by the contain estate and can add scrollable content positioned outside the visible area.
+The `IgxScroll` component enables developers to put content in a scrollable container with set height, or number of items in the content to be visible at a time. The scroll component allows for DOM virtualization to be applied to the content inside the scrollable container.  
 
 ## Usage
 

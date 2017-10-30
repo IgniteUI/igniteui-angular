@@ -1,8 +1,6 @@
 # igx-checkbox
 
-`igx-checkbox` is a selection control that allows users to make a binary choice
-for a certain condition. It follows the native browser checkbox element and behaves
-in the same way.
+`igx-checkbox` is a selection component that allows users to make a binary choice for a certain condition. It behaves similar to the native browser checkbox.  
 
 # Usage
 
