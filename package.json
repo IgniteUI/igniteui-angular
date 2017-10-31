@@ -61,7 +61,7 @@
         "@angular/platform-server": "^4.4.4",
         "@types/hammerjs": "^2.0.35",
         "@types/jasmine": "^2.6.0",
-        "@types/karma": "^0.13.36",
+        "@types/karma": "^1.7.1",
         "@types/node": "^8.0.31",
         "@types/webpack": "^3.0.12",
         "@types/webpack-env": "^1.13.1",
