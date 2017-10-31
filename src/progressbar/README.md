@@ -1,7 +1,7 @@
 # igx-linear-bar and igx-circular-bar
 
 The `linear` progress bar component provides the ability to display a progress bar and update its appearance as its state changes. This component offers a choice of colors and can be striped or non-striped.  
-The `circular` progress indicator component provides the ability to display progress in a circle and update its appearance as its state changes. This component offers a choice of colors and can be striped or non-striped.
+The `circular` progress indicator component provides the ability to display progress in a circle and update its appearance as its state changes.  
 
 # Usage
 ```html
