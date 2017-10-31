@@ -144,7 +144,7 @@ describe("IgxScroll", () => {
         });
     }
 
-    it("should scroll with pan to bottom and change currentTop when is at top position", (done) => {
+    xit("should scroll with pan to bottom and change currentTop when is at top position", (done) => {
         let fixture;
         let currentTopBeforeScroll;
         let currentTopAfterScroll;
@@ -168,7 +168,7 @@ describe("IgxScroll", () => {
         });
     }, 5000);
 
-    it("should scroll with pan to top and change currentTop when is at bottom position", (done) => {
+    xit("should scroll with pan to top and change currentTop when is at bottom position", (done) => {
         let fixture;
         let currentTopBeforeScroll;
         let currentTopAfterScroll;

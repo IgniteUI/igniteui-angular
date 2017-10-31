@@ -86,7 +86,7 @@ export class IgxList {
     templateUrl: "list-item.component.html"
 })
 export class IgxListItem implements OnInit, OnDestroy, IListChild {
-    @ViewChild("wrapper") public wrapper: ElementRef;
+    @ViewChild("wrapper") public element: ElementRef;
 
     public hidden: boolean = false;
 
@@ -117,7 +117,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     }
 
     get left() {
-        return this.wrapper.nativeElement.offsetLeft;
+        return this.element.nativeElement.offsetLeft;
     }
     set left(value: number) {
         let val = value + "";
@@ -126,7 +126,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
             val += "px";
         }
 
-        this.wrapper.nativeElement.style.left = val;
+        this.element.nativeElement.style.left = val;
     }
 
     get maxLeft() {
@@ -140,7 +140,6 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     constructor(
         @Inject(forwardRef(() => IgxList))
         private list: IgxList,
-        public element: ElementRef,
         private _renderer: Renderer2) {
     }
 

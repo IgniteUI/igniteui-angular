@@ -1,9 +1,23 @@
 {
     "name": "igniteui-js-blocks",
     "version": "0.1.0",
-    "license": "Apache 2.0",
+    "description": "Infragistics mobile-first Angular native components and supporting directives built with TypeScript",
+    "author": "Infragistics",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/IgniteUI/igniteui-js-blocks"
+    },
+    "bugs": {
+        "url": "https://github.com/IgniteUI/igniteui-js-blocks/issues"
+    },
+    "keywords": [
+        "igniteui-js-blocks",
+        "angular",
+        "angular4"
+    ],
     "scripts": {
-        "build": "npm run build:esm && npm run build:umd",
+        "build": "npm run build:esm && npm run build:umd && gulp make-packagejson",
         "build:watch": "concurrently --raw --kill-others \"npm run build:umd:watch\" \"npm run build:esm:watch\"",
         "build:esm": "gulp build:esm && gulp build-style",
         "build:esm:watch": "gulp build:esm:watch",
@@ -22,18 +36,18 @@
         "test:watch": "karma start --auto-watch --no-single-run",
         "tslint": "tslint",
         "sass-lint": "sass-lint",
-        "run-demos": "cd demos && npm start"
+        "start:demos": "cd demos && npm start",
+        "start:dev": "concurrently --raw --kill-others \"npm run build:esm:watch\" \"npm run start:demos\""
     },
     "dependencies": {
         "@angular/animations": "^4.4.4",
         "@angular/common": "^4.4.4",
+        "@angular/compiler": "^4.4.4",
         "@angular/core": "^4.4.4",
         "@angular/forms": "^4.4.4",
-        "@angular/platform-browser": "^4.4.4",
-        "@angular/platform-browser-dynamic": "^4.4.4",
-        "karma-firefox-launcher": "^1.0.1",
-        "material-design-icons": "^3.0.1",
-        "typedoc": "^0.9.0"
+        "@angular/platform-browser": "^4.4.6",
+        "hammerjs": "^2.0.8",
+        "rxjs": "^5.5.2"
     },
     "devDependencies": {
         "@angular/animations": "^4.4.4",
@@ -45,8 +59,8 @@
         "@angular/platform-browser": "^4.4.4",
         "@angular/platform-browser-dynamic": "^4.4.4",
         "@angular/platform-server": "^4.4.4",
-        "@types/jasmine": "^2.6.0",
         "@types/hammerjs": "^2.0.35",
+        "@types/jasmine": "^2.6.0",
         "@types/karma": "^0.13.36",
         "@types/node": "^8.0.31",
         "@types/webpack": "^3.0.12",
@@ -59,8 +73,8 @@
         "css-loader": "^0.28.7",
         "gulp": "^3.9.1",
         "gulp-inline-ng2-template": "^4.0.0",
-        "hammerjs": "^2.0.8",
         "hammer-simulator": "git+https://github.com/hammerjs/simulator.git",
+        "hammerjs": "^2.0.8",
         "istanbul-instrumenter-loader": "^3.0.0",
         "jasmine-core": "^2.8.0",
         "json-loader": "^0.5.7",
@@ -81,7 +95,7 @@
         "source-map-explorer": "^1.5.0",
         "to-string-loader": "^1.1.5",
         "ts-node": "^3.3.0",
-        "tslint": "^5.7.0",
+        "tslint": "^5.8.0",
         "typedoc": "^0.9.0",
         "typescript": "^2.5.3",
         "webpack": "^3.6.0",

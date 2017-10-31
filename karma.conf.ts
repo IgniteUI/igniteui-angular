@@ -3,7 +3,7 @@ import webpackTestConfig from "./webpack-test.config";
 
 export default (config) => {
     config.set({
-        basePath: "./",
+        basePath: "",
 
         frameworks: ["jasmine"],
 

@@ -65,7 +65,8 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
     /** Pinned state of the drawer. Currently only support  */
     @Input() public pin: boolean = false;
 
-    /** Minimum device width required for automatic pin to be toggled.
+    /**
+     * Minimum device width required for automatic pin to be toggled.
      * Deafult is 1024, can be set to falsy value to ignore.
      */
     @Input() public pinThreshold: number = 1024;

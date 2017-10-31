@@ -55,8 +55,7 @@
         <article class="sample-column">
             <h4 class="sample-title">Non-header List with options</h4>
             <div class="list-sample">
-                <igx-list [allowRightPanning]="true" [allowLeftPanning]="true" (onLeftPan)="onLeftPan($event)" (onRightPan)="onRightPan($event)"
-                    (onPanStateChange)="onPanStateChange($event)">
+                <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                     <igx-list-item [isHeader]="true">Contacts</igx-list-item>
                     <igx-list-item *ngFor="let navItem of navItems; let index = index" [options]="options">
                         <div class="item">
