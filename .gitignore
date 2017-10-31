@@ -33,8 +33,6 @@ node_modules
 # Optional REPL history
 .node_repl_history
 
-# Transpiled output
-gulpfile.js*
 
 tmp
 *.metadata.json
