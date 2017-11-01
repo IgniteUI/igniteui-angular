@@ -1,7 +1,6 @@
 import { Component } from "@angular/core";
 
 @Component({
-    moduleId: module.id,
     selector: "dialog-sample",
     styleUrls: ["../app.samples.css", "sample.component.css"],
     templateUrl: "sample.component.html"

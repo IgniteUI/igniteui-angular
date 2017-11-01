@@ -1,8 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { IgxGridModule } from "../../../src/grid/grid.component";
-import { IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
+import { IgxComponentsModule, IgxDirectivesModule, IgxGridModule } from "../../lib/main";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { GridSampleComponent } from "./sample.component";
 

@@ -18,9 +18,8 @@ export enum Size {
 
 @Component({
     encapsulation: ViewEncapsulation.None,
-    moduleId: module.id,
     selector: "igx-avatar",
-    styleUrls: ["./avatar.component.css"],
+    styleUrls: ["./avatar.component.scss"],
     templateUrl: "avatar.component.html"
 })
 export class IgxAvatar {

@@ -1,8 +1,7 @@
 import { Component } from "@angular/core";
-import {IgxComponentsModule, IgxDirectivesModule} from "../../../src/main";
+import {IgxComponentsModule, IgxDirectivesModule} from "../../lib/main";
 
 @Component({
-    moduleId: module.id,
     selector: "input-sample",
     styleUrls: ["../app.samples.css", "sample.component.css"],
     templateUrl: "./sample.component.html"

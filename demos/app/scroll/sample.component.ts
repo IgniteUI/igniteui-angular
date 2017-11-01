@@ -1,8 +1,7 @@
 import {Component} from "@angular/core";
-import {IgxScrollEvent} from "../../../src/scroll/scroll.component";
+import {IgxScrollEvent} from "../../lib/scroll/scroll.component";
 
 @Component({
-    moduleId: module.id,
     selector: "scroll-sample",
     styleUrls: ["../app.samples.css", "sample.component.css"],
     templateUrl: "./sample.component.html"

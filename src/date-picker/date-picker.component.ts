@@ -18,11 +18,10 @@ import { IgxInput } from "../input/input.directive";
 
 @Component({
     encapsulation: ViewEncapsulation.None,
-    moduleId: module.id,
     providers:
     [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true }],
     selector: "igx-datePicker",
-    styleUrls: ["date-picker.component.css"],
+    styleUrls: ["date-picker.component.scss"],
     templateUrl: "date-picker.component.html"
 })
 export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {

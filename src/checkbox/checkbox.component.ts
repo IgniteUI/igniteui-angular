@@ -12,19 +12,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 const noop = () => { };
 let nextId = 0;
 
-function MakeProvider(type: any) {
-    return {
-        multi: true,
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => type)
-    };
-}
-
 @Component({
-    moduleId: module.id,
-    providers: [MakeProvider(IgxCheckbox)],
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxCheckbox, multi: true }],
     selector: "igx-checkbox",
-    styleUrls: ["./checkbox.component.css"],
+    styleUrls: ["./checkbox.component.scss"],
     templateUrl: "checkbox.component.html"
 })
 export class IgxCheckbox implements ControlValueAccessor {

@@ -1,8 +1,7 @@
 import {Component} from "@angular/core";
-import {SliderType} from "../../../src/slider/slider.component";
+import {SliderType} from "../../lib/main";
 
 @Component({
-    moduleId: module.id,
     selector: "slider-sample",
     styleUrls: ["../app.samples.css", "sample.component.css"],
     templateUrl: "./sample.component.html"

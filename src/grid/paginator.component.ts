@@ -7,7 +7,6 @@ export interface IgxPaginatorEvent {
 }
 
 @Component({
-    moduleId: module.id,
     selector: "igx-paginator",
     styles: [
         `.igx-paginator {

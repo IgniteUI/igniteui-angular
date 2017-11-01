@@ -12,19 +12,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 const noop = () => { };
 let nextId = 0;
 
-function MakeProvider(type: any) {
-    return {
-        multi: true,
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => type)
-    };
-}
-
 @Component({
-    moduleId: module.id,
-    providers: [MakeProvider(IgxSwitch)],
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSwitch, multi: true }],
     selector: "igx-switch",
-    styleUrls: ["./switch.component.css"],
+    styleUrls: ["./switch.component.scss"],
     templateUrl: "switch.component.html"
 })
 export class IgxSwitch implements ControlValueAccessor {

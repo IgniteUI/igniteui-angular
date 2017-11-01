@@ -34,9 +34,8 @@ export enum Direction { NONE, NEXT, PREV }
     host: {
         role: "region"
     },
-    moduleId: module.id,
     selector: "igx-carousel",
-    styleUrls: ["./carousel.component.css"],
+    styleUrls: ["./carousel.component.scss"],
     templateUrl: "carousel.component.html"
 })
 
@@ -417,7 +416,6 @@ export class IgxCarousel implements OnDestroy {
  * @implements {OnDestroy}
  */
 @Component({
-    moduleId: module.id,
     selector: "igx-slide",
     templateUrl: "slide.html"
 })

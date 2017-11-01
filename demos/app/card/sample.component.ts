@@ -24,15 +24,14 @@ class Card {
         this.subtitle = obj.subtitle || "Card Subtitle";
         this.content = obj.content ||
             "Some card content should be placed here. Description or other related information.";
-        this.imageUrl = obj.imageUrl || "demos/app/card/images/media/placeholder.jpg";
-        this.avatarUrl = obj.avatarUrl || "demos/app/card/images/avatars/rupert_stadler.jpg";
+        this.imageUrl = obj.imageUrl || "images/card/media/placeholder.jpg";
+        this.avatarUrl = obj.avatarUrl || "images/card/avatars/rupert_stadler.jpg";
         this.buttons = obj.buttons || ["ACTION1", "ACTION2"];
         this.icons = obj.icons || ["favorite", "bookmark", "share"];
     }
 }
 
 @Component({
-    moduleId: module.id,
     selector: "card-sample",
     styleUrls: ["sample.component.css", "../app.samples.css"],
     templateUrl: "sample.component.html"
@@ -50,17 +49,17 @@ export class IgxCardSampleComponent implements OnInit {
                         a densely populated borough that’s among the world’s major commercial,
                         financial and cultural centers.`,
                 icons: ["favorite", "bookmark", "share"],
-                imageUrl: "demos/app/card/images/media/ny.jpg",
+                imageUrl: "images/card/media/ny.jpg",
                 subtitle: "City in New York",
                 title: "New York City"
             }),
             new Card({
                 icons: ["favorite", "bookmark", "share"],
-                imageUrl: "demos/app/card/images/media/the_red_ice_forest.jpg"
+                imageUrl: "images/card/media/the_red_ice_forest.jpg"
             }),
             new Card({
                 buttons: ["Share", "Explore"],
-                imageUrl: "demos/app/card/images/media/yosemite.jpg",
+                imageUrl: "images/card/media/yosemite.jpg",
                 subtitle: "Yosemite National Park",
                 title: "Incipient Dawn"
             }),
@@ -72,22 +71,22 @@ export class IgxCardSampleComponent implements OnInit {
                 title: "Nico Rosberg"
             }),
             new Card({
-                avatarUrl: "demos/app/card/images/avatars/alicia_keys.jpg",
+                avatarUrl: "images/card/avatars/alicia_keys.jpg",
                 buttons: ["share", "play album"],
-                imageUrl: "demos/app/card/images/media/here_media.jpg",
+                imageUrl: "images/card/media/here_media.jpg",
                 subtitle: "by Alicia Keys",
                 title: "HERE"
             }),
             new Card({
                 buttons: ["Comment", "Explore"],
                 icons: ["favorite", "share"],
-                imageUrl: "demos/app/card/images/media/monuments.jpg"
+                imageUrl: "images/card/media/monuments.jpg"
             }),
             new Card({
-                avatarUrl: "demos/app/card/images/avatars/rupert_stadler.jpg",
+                avatarUrl: "images/card/avatars/rupert_stadler.jpg",
                 buttons: ["message", "follow"],
                 icons: ["add", "star"],
-                imageUrl: "demos/app/card/images/media/audi_tt.jpg",
+                imageUrl: "images/card/media/audi_tt.jpg",
                 subtitle: "January 30, 2017",
                 title: "Rupert Stadler"
             }),

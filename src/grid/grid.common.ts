@@ -95,7 +95,6 @@ export class IgxColumnSortingDirective {
 
 @Component({
     encapsulation: ViewEncapsulation.None,
-    moduleId: module.id,
     selector: "igx-cell-body",
     template: ``
 })
@@ -119,7 +118,6 @@ export class IgxCellBodyComponent implements OnInit, OnDestroy {
 
 @Component({
     encapsulation: ViewEncapsulation.None,
-    moduleId: module.id,
     selector: "igx-cell-header",
     template: ``
 })
@@ -141,7 +139,6 @@ export class IgxCellHeaderComponent implements OnInit, OnDestroy {
 }
 
 @Component({
-    moduleId: module.id,
     selector: "igx-cell-footer",
     template: ``
 })
@@ -164,9 +161,8 @@ export class IgxCellFooterComponent implements OnInit, OnDestroy {
 
 @Component({
     encapsulation: ViewEncapsulation.None,
-    moduleId: module.id,
     selector: "igx-col-filter",
-    styleUrls: ["./column-filtering.component.css"],
+    styleUrls: ["./column-filtering.component.scss"],
     templateUrl: "column-filtering.component.html"
 })
 export class IgxColumnFilteringComponent {

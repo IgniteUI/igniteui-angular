@@ -2,9 +2,8 @@ import { CommonModule } from "@angular/common";
 import { Component, ElementRef, Input, NgModule, ViewChild } from "@angular/core";
 
 @Component({
-    moduleId: module.id,
     selector: "igx-icon",
-    styleUrls: ["./icon.component.css"],
+    styleUrls: ["./icon.component.scss"],
     templateUrl: "icon.component.html"
 })
 
