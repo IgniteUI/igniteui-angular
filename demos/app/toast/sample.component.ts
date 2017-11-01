@@ -1,8 +1,7 @@
 import {Component, Input} from "@angular/core";
-import {IgxToastPosition} from "../../../src/toast/toast.component";
+import {IgxToastPosition} from "../../lib/main";
 
 @Component({
-    moduleId: module.id,
     selector: "toast-sample",
     styleUrls: ["../app.samples.css", "sample.component.css"],
     templateUrl: "sample.component.html"

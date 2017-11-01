@@ -4,6 +4,7 @@ import {
     Inject, Input, NgModule, OnDestroy, OnInit, Output, QueryList, Renderer2, ViewChild
 } from "@angular/core";
 import { IgxButtonModule } from "../button/button.directive";
+import { HammerGesturesManager } from "../core/touch";
 import { IgxRippleModule } from "../directives/ripple.directive";
 
 export interface IListChild {
@@ -18,9 +19,8 @@ export enum IgxListPanState { NONE, LEFT, RIGHT }
     host: {
         role: "list"
     },
-    moduleId: module.id,
     selector: "igx-list",
-    styleUrls: ["./list.component.css"],
+    styleUrls: ["./list.component.scss"],
     templateUrl: "list.component.html"
 })
 export class IgxList {
@@ -80,13 +80,13 @@ export class IgxList {
 // The `<igx-item>` directive is a container intended for row items in
 // a `<igx-list>` container.
 @Component({
-    moduleId: module.id,
+    providers: [HammerGesturesManager],
     selector: "igx-list-item",
-    styleUrls: ["./list.component.css"],
+    styleUrls: ["./list.component.scss"],
     templateUrl: "list-item.component.html"
 })
 export class IgxListItem implements OnInit, OnDestroy, IListChild {
-    @ViewChild("wrapper") public wrapper: ElementRef;
+    @ViewChild("wrapper") public element: ElementRef;
 
     public hidden: boolean = false;
 
@@ -117,7 +117,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     }
 
     get left() {
-        return this.wrapper.nativeElement.offsetLeft;
+        return this.element.nativeElement.offsetLeft;
     }
     set left(value: number) {
         let val = value + "";
@@ -126,7 +126,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
             val += "px";
         }
 
-        this.wrapper.nativeElement.style.left = val;
+        this.element.nativeElement.style.left = val;
     }
 
     get maxLeft() {
@@ -140,7 +140,6 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     constructor(
         @Inject(forwardRef(() => IgxList))
         private list: IgxList,
-        public element: ElementRef,
         private _renderer: Renderer2) {
     }
 
@@ -215,7 +214,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
 
     private performMagneticGrip() {
         const widthTriggeringGrip = this.width * this._FRACTION_OF_WIDTH_TO_TRIGGER_GRIP;
-        const currentState = this.list;
+
         if (this.left > 0) {
             if (this.left > widthTriggeringGrip) {
                 this.left = this.maxRight;

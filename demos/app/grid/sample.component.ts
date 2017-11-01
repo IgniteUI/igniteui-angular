@@ -1,19 +1,21 @@
 import { Component, Injectable, ViewChild } from "@angular/core";
 import { Http } from "@angular/http";
 import { BehaviorSubject, Observable } from "rxjs/Rx";
-import { IgxColumnComponent } from "../../../src/grid/column.component";
-
-import { IgxGridBindingBehavior, IgxGridColumnInitEvent, IgxGridComponent } from "../../../src/grid/grid.component";
+import { IgxColumnComponent } from "../../lib/grid/column.component";
 import {
-    DataContainer,
-    IDataState,
-    IgxSnackbar,
-    IgxToast,
-    IPagingState,
-    PagingError,
-    SortingDirection,
-    StableSortingStrategy
-} from "../../../src/main";
+  DataContainer,
+  IDataState,
+
+  IgxGridBindingBehavior,
+  IgxGridColumnInitEvent,
+  IgxGridComponent,
+  IgxSnackbar,
+  IgxToast,
+  IPagingState,
+  PagingError,
+  SortingDirection,
+  StableSortingStrategy
+} from "../../lib/main";
 
 @Injectable()
 export class LocalService {
@@ -99,7 +101,6 @@ export class RemoteService {
 }
 
 @Component({
-    moduleId: module.id,
     providers: [LocalService, RemoteService],
     selector: "grid-sample",
     styleUrls: ["../app.samples.css", "sample.component.css"],

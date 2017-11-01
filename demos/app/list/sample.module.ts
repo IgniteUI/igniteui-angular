@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
+import { IgxComponentsModule, IgxDirectivesModule } from "../../lib/main";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { ListSampleComponent } from "./sample.component";
 

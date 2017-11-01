@@ -14,16 +14,15 @@ import {
     ViewChildren,
     ViewEncapsulation
 } from "@angular/core";
-import { IgxBadgeModule } from "../../src/badge/badge.component";
-import { IgxIconModule } from "../../src/icon/icon.component";
+import { IgxBadgeModule } from "../badge/badge.component";
+import { IgxIconModule } from "../icon/icon.component";
 @Component({
     encapsulation: ViewEncapsulation.None,
     host: {
         "(onTabSelected)": "_selectedPanelHandler($event)"
     },
-    moduleId: module.id, // commonJS standard
     selector: "igx-tab-bar",
-    styleUrls: ["./tabbar.component.css"],
+    styleUrls: ["./tabbar.component.scss"],
     templateUrl: "tab-bar-content.component.html"
 })
 
@@ -92,7 +91,6 @@ export class IgxTabBar implements AfterViewInit {
         "[id]": "'igx-tab-bar__panel-' + index",
         "role": "tabpanel"
     },
-    moduleId: module.id, // commonJS standard
     selector: "igx-tab-panel",
     templateUrl: "tab-panel.component.html"
 })
@@ -136,7 +134,6 @@ export class IgxTabPanel {
         class: "igx-tab-bar__menu-item",
         role: "tab"
     },
-    moduleId: module.id, // commonJS standard
     selector: "igx-tab",
     templateUrl: "tab.component.html"
 })

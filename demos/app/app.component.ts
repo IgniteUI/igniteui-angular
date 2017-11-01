@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Output, ViewChild } from "@angular/core";
 import { NavigationStart, Router } from "@angular/router";
-import { NavigationDrawer, NavigationDrawerModule } from "../../src/main";
+import "rxjs/add/operator/filter";
+import { NavigationDrawer, NavigationDrawerModule } from "../lib/main";
 
 @Component({
     selector: "sample-app",
-    styleUrls: ["demos/app/app.component.css"],
-    templateUrl: "demos/app/app.component.html"
+    styleUrls: ["app.component.css"],
+    templateUrl: "app.component.html"
 })
 export class AppComponent {
     @ViewChild("navdrawer") public navdrawer: NavigationDrawer;

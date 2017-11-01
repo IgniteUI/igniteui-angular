@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 
 import { FormsModule } from "@angular/forms";
-import { IgxSliderModule } from "../../../src/main";
+import { IgxSliderModule } from "../../lib/main";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { IgxSliderSampleComponent } from "./sample.component";
 

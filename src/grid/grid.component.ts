@@ -22,7 +22,7 @@ import {
     ViewContainerRef
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { Subscription } from "rxjs/Rx";
+import { Subscription } from "rxjs/Subscription";
 import { DataAccess, DataContainer } from "../data-operations/data-container";
 
 // grid helper components and directives
@@ -115,9 +115,8 @@ export interface IgxGridCell {
  * @implements {OnDestroy}
  */
 @Component({
-    moduleId: module.id,
     selector: "igx-grid",
-    styleUrls: ["grid.component.css"],
+    styleUrls: ["grid.component.scss"],
     templateUrl: "grid.component.html"
 })
 export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDestroy {

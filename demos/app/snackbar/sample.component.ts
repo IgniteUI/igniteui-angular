@@ -1,8 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { IgxSnackbar } from "../../../src/snackbar/snackbar.component";
+import { IgxSnackbar } from "../../lib/main";
 
 @Component({
-    moduleId: module.id,
     selector: "snackbar-sample",
     styleUrls: ["sample.component.css", "../app.samples.css"],
     templateUrl: "sample.component.html"

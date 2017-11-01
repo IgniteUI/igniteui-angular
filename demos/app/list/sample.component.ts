@@ -1,12 +1,18 @@
 import { Component, ElementRef, ViewChild } from "@angular/core";
-import { IgxDialog, IgxDialogModule } from "../../../src/dialog/dialog.component";
-import { IgxFilterModule, IgxFilterOptions } from "../../../src/directives/filter.directive";
-import { IgxRippleModule } from "../../../src/directives/ripple.directive";
-import { IgxInput } from "../../../src/input/input.directive";
-import { IgxList, IgxListItem, IgxListModule, IgxListPanState } from "../../../src/list/list.component";
+import {
+    IgxDialog,
+    IgxDialogModule,
+    IgxFilterModule,
+    IgxFilterOptions,
+    IgxInput,
+    IgxList,
+    IgxListItem,
+    IgxListModule,
+    IgxListPanState,
+    IgxRippleModule
+} from "../../lib/main";
 
 @Component({
-    moduleId: module.id,
     selector: "list-sample",
     styleUrls: ["../app.samples.css", "./sample.component.css"],
     templateUrl: "./sample.component.html"
@@ -23,70 +29,70 @@ export class ListSampleComponent {
     public fruitsFilteredItemsCount = undefined;
 
     private navItems: object[] = [{
-        avatar: "../demos/app/avatar/images/1.jpg",
+        avatar: "images/avatar/1.jpg",
         favorite: true,
         key: "1",
         link: "#",
         phone: "770-504-2217",
         text: "Terrance Orta"
     }, {
-        avatar: "../demos/app/avatar/images/2.jpg",
+        avatar: "images/avatar/2.jpg",
         favorite: false,
         key: "2",
         link: "#",
         phone: "423-676-2869",
         text: "Richard Mahoney"
     }, {
-        avatar: "../demos/app/avatar/images/3.jpg",
+        avatar: "images/avatar/3.jpg",
         favorite: false,
         key: "3",
         link: "#",
         phone: "859-496-2817",
         text: "Donna Price"
     }, {
-        avatar: "../demos/app/avatar/images/4.jpg",
+        avatar: "images/avatar/4.jpg",
         favorite: false,
         key: "4",
         link: "#",
         phone: "901-747-3428",
         text: "Lisa Landers"
     }, {
-        avatar: "../demos/app/avatar/images/12.jpg",
+        avatar: "images/avatar/12.jpg",
         favorite: true,
         key: "5",
         link: "#",
         phone: "573-394-9254",
         text: "Dorothy H. Spencer"
     }, {
-        avatar: "../demos/app/avatar/images/13.jpg",
+        avatar: "images/avatar/13.jpg",
         favorite: false,
         key: "6",
         link: "#",
         phone: "323-668-1482",
         text: "Stephanie May"
     }, {
-        avatar: "../demos/app/avatar/images/14.jpg",
+        avatar: "images/avatar/14.jpg",
         favorite: false,
         key: "7",
         link: "#",
         phone: "401-661-3742",
         text: "Marianne Taylor"
     }, {
-        avatar: "../demos/app/avatar/images/15.jpg",
+        avatar: "images/avatar/15.jpg",
         favorite: true,
         key: "8",
         link: "#",
         phone: "662-374-2920",
         text: "Tammie Alvarez"
     }, {
-        avatar: "../demos/app/avatar/images/16.jpg",
+        avatar: "images/avatar/16.jpg",
         favorite: true,
         key: "9",
         link: "#",
         phone: "240-455-2267",
         text: "Charlotte Flores"
     }, {
-        avatar: "../demos/app/avatar/images/17.jpg",
+        avatar: "images/avatar/17.jpg",
         favorite: false,
         key: "10",
         link: "#",

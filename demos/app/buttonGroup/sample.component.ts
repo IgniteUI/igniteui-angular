@@ -1,7 +1,10 @@
 import { Component, OnInit } from "@angular/core";
-import { IgxButton } from "../../../src/button/button.directive";
-import { ButtonGroupAlignment, IgxButtonGroupModule } from "../../../src/buttonGroup/buttonGroup.component";
-import { IgxDirectivesModule } from "../../../src/modules";
+import {
+    ButtonGroupAlignment,
+    IgxButton,
+    IgxButtonGroupModule,
+    IgxDirectivesModule
+} from "../../lib/main";
 
 interface IButton {
     ripple?: string;
@@ -37,7 +40,6 @@ class Button {
 }
 
 @Component({
-    moduleId: module.id,
     selector: "buttongroup-sample",
     styleUrls: ["../app.samples.css", "./sample.component.css"],
     templateUrl: "./sample.component.html"

@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { IgxComponentsModule, IgxDirectivesModule } from "../../../src/main";
+import { IgxComponentsModule, IgxDirectivesModule } from "../../lib/main";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { DialogSampleComponent } from "./sample.component";
 

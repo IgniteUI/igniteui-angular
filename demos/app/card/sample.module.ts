@@ -1,11 +1,17 @@
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 
-import { CommonModule } from "@angular/common";
-import { IgxAvatarModule } from "../../../src/avatar/avatar.component";
-import { IgxButton, IgxButtonModule } from "../../../src/button/button.directive";
-import { IgxIconModule } from "../../../src/icon/icon.component";
-import { IgxList, IgxListModule } from "../../../src/list/list.component";
-import { IgxCardModule, IgxRippleModule } from "../../../src/main";
+import {
+    IgxAvatarModule,
+    IgxButton,
+    IgxButtonModule,
+    IgxCardModule,
+    IgxIconModule,
+    IgxList,
+    IgxListModule,
+    IgxRippleModule
+} from "../../lib/main";
+
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { IgxCardSampleComponent } from "./sample.component";
 

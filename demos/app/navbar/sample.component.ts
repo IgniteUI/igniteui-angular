@@ -4,7 +4,6 @@ import { Component, OnInit } from "@angular/core";
 const CURRENT_VIEW: string = "Ignite UI JS Blocks Samples";
 
 @Component({
-    moduleId: module.id,
     selector: "navbar-sample",
     styleUrls: ["../app.samples.css", "./sample.component.css"],
     templateUrl: "sample.component.html"
