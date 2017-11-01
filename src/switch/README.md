@@ -1,8 +1,6 @@
 # igx-switch
 
-`igx-switch` is a selection control that allows users to make a binary choice
-for a certain condition. It follows the native browser checkbox element and behaves
-in the same way.
+`igx-switch` is a selection component that allows users to make a binary choice for a certain condition. It behaves similar to the switch component in iOS. 
 
 # Usage
 
