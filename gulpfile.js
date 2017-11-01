@@ -48,7 +48,7 @@ gulp.task("make-packagejson", () => {
         data.peerDependencies = data.dependencies;
         delete data.dependencies;
 
-        fs.writeFile("dist/package.json", JSON.stringify(PACKAGE_JSON, null, 4), "utf8", (err) => {
+        fs.writeFile("dist/package.json", JSON.stringify(data, null, 4), "utf8", (err) => {
             if (err) throw err;
         });
     });
