@@ -1,7 +1,6 @@
 import { Component, Input } from "@angular/core";
 
 @Component({
-    moduleId: module.id,
     selector: "page-header",
     styleUrls: ["./pageHeading.styles.css"],
     templateUrl: "./pageHeading.template.html"

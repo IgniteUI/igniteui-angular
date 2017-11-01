@@ -1,0 +1,50 @@
+{
+    "name": "igniteui-js-blocks-demos",
+    "version": "0.1.0",
+    "scripts": {
+        "build:aot": "npm run build:aot:compile && npm run build:aot:bundle",
+        "build:aot:bundle": "webpack --config webpack-aot.config.js --bail",
+        "build:aot:compile": "ngc -p tsconfig-aot.json",
+        "build:jit": "npm run build:assets && webpack --config webpack.config.js --bail",
+        "copy-style": "copyfiles --up 1 \"lib/*.css\" \"lib/fonts/*\" \"style/*\" dist/style",
+        "copy-images": "copyfiles --up 1 \"images/**/*\" dist/images",
+        "copy-lib": "copyfiles --up 2 \"../dist/**/*\" lib",
+        "build:assets": "rimraf dist && npm run copy-style && npm run copy-images",
+        "prestart": "rimraf lib && npm run copy-lib && copyfiles --up 1 \"lib/*.css\" \"lib/fonts/*\" style",
+        "start": "concurrently --raw --kill-others \"gulp copy-lib:watch\" \"webpack-dev-server --open --watch --config webpack.config.js\""
+    },
+    "dependencies": {
+        "@angular/animations": "^4.4.4",
+        "@angular/common": "^4.4.4",
+        "@angular/core": "^4.4.4",
+        "@angular/forms": "^4.4.4",
+        "@angular/http": "^4.4.4",
+        "@angular/router": "^4.4.4",
+        "@angular/platform-browser": "^4.4.4",
+        "@angular/platform-browser-dynamic": "^4.4.4"
+    },
+    "devDependencies": {
+        "@types/node": "^8.0.31",
+        "@angular/compiler": "^4.4.4",
+        "@angular/compiler-cli": "^4.4.4",
+        "angular2-template-loader": "^0.6.2",
+        "awesome-typescript-loader": "^3.2.3",
+        "concurrently": "^3.5.0",
+        "core-js": "^2.5.1",
+        "copyfiles": "^1.2.0",
+        "css-loader": "^0.28.7",
+        "gulp": "^3.9.1",
+        "html-webpack-plugin": "^2.30.1",
+        "file-loader": "^1.1.5",
+        "raw-loader": "^0.5.1",
+        "rimraf": "^2.6.2",
+        "rxjs": "^5.4.3",
+        "to-string-loader": "^1.1.5",
+        "typescript": "^2.5.3",
+        "sass-loader": "^6.0.6",
+        "svg-inline-loader": "^0.8.0",
+        "webpack": "^3.6.0",
+        "webpack-dev-server": "^2.9.1",
+        "zone.js": "^0.8.18"
+    }
+}

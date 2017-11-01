@@ -3,7 +3,7 @@ import { Directive, ElementRef, HostListener, Input, NgModule, NgZone, Renderer2
 @Directive({
     selector: "[igxRipple]"
 })
-class IgxRippleDirective {
+export class IgxRippleDirective {
     @Input("igxRippleTarget") public rippleTarget: string = "";
     @Input("igxRipple") public rippleColor: string;
     @Input("igxRippleDuration") public rippleDuration: number = 600;

@@ -69,9 +69,8 @@ import { fadeIn, fadeOut, slideInBottom, slideOutBottom } from "../animations/ma
             ])
         ])
     ],
-    moduleId: module.id,
     selector: "igx-snackbar",
-    styleUrls: ["./snackbar.component.css"],
+    styleUrls: ["./snackbar.component.scss"],
     templateUrl: "snackbar.component.html"
 })
 export class IgxSnackbar {

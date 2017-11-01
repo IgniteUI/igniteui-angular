@@ -13,19 +13,10 @@ let nextId = 0;
 
 const noop = () => { };
 
-function MakeProvider(type: any) {
-    return {
-        multi: true,
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => type)
-    };
-}
-
 @Component({
-    moduleId: module.id,
-    providers: [MakeProvider(IgxRadio)],
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxRadio, multi: true }],
     selector: "igx-radio",
-    styleUrls: ["./radio.component.css"],
+    styleUrls: ["./radio.component.scss"],
     templateUrl: "radio.component.html"
 })
 export class IgxRadio implements ControlValueAccessor {

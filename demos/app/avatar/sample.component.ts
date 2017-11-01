@@ -1,9 +1,7 @@
 import { Component, QueryList, ViewChild, ViewChildren } from "@angular/core";
-import { IgxAvatar, IgxAvatarModule } from "../../../src/avatar/avatar.component";
-import { IgxBadge, IgxBadgeModule } from "../../../src/badge/badge.component";
+import { IgxAvatar, IgxAvatarModule, IgxBadge, IgxBadgeModule} from "../../lib/main";
 
 @Component({
-    moduleId: module.id,
     selector: "avatar-sample",
     styleUrls: ["sample.component.css", "../app.samples.css"],
     templateUrl: "./sample.component.html"

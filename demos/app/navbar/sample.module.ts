@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 
-import { IgxIconModule, IgxNavbarModule } from "../../../src/main";
+import { IgxIconModule, IgxNavbarModule } from "../../lib/main";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { NavbarSampleComponent } from "./sample.component";
 

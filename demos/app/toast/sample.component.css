@@ -3,17 +3,17 @@
 }
 
 .preview.bottom {
-    background: url('demos/app/rsrcs/toast-bg-bottom.svg') no-repeat;
+    background: url('/images/rsrcs/toast-bg-bottom.svg') no-repeat;
 }
 
 
 .preview.middle {
-    background: url('demos/app/rsrcs/toast-bg-middle.svg') no-repeat;
+    background: url('/images/rsrcs/toast-bg-middle.svg') no-repeat;
 }
 
 
 .preview.top {
-    background: url('demos/app/rsrcs/toast-bg-top.svg') no-repeat;
+    background: url('/images/rsrcs/toast-bg-top.svg') no-repeat;
 }
 
 .btn-group {

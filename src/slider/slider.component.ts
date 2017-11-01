@@ -29,19 +29,10 @@ export interface IRangeSliderValue {
 const noop = () => {
 };
 
-function MakeProvider(type: any) {
-    return {
-        multi: true,
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => type)
-    };
-}
-
 @Component({
-    moduleId: module.id,
-    providers: [MakeProvider(IgxSlider)],
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSlider, multi: true }],
     selector: "igx-slider",
-    styleUrls: ["./slider.component.css"],
+    styleUrls: ["./slider.component.scss"],
     templateUrl: "slider.component.html"
 })
 export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {

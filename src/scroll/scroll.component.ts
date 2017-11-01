@@ -5,7 +5,7 @@ import {
 } from "@angular/core";
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from "@angular/platform-browser";
 
-class ScrollHammerGestureManager extends HammerGestureConfig  {
+export class ScrollHammerGestureManager extends HammerGestureConfig  {
     public overrides = {
         pan: { threshold: 0, direction: Hammer.DIRECTION_VERTICAL }
     } as any;
@@ -23,9 +23,8 @@ export interface IgxScrollEvent {
 }
 
 @Component({
-    moduleId: module.id,
     selector: "igx-scroll",
-    styleUrls: ["./scroll.component.css"],
+    styleUrls: ["./scroll.component.scss"],
     templateUrl: "scroll.component.html"
 })
 export class IgxScroll {

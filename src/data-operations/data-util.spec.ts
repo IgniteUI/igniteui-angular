@@ -197,10 +197,10 @@ function testPage() {
             let state: IPagingState = {index: -1, recordsPerPage: 3};
             let res = DataUtil.page(data, state);
             expect(state.metadata.error).toBe(PagingError.IncorrectPageIndex);
-            state = {index: 3, recordsPerPage: 3},
+            state = {index: 3, recordsPerPage: 3};
             res = DataUtil.page(data, state);
             expect(state.metadata.error).toBe(PagingError.IncorrectPageIndex);
-            state = {index: 3, recordsPerPage: 0},
+            state = {index: 3, recordsPerPage: 0};
             res = DataUtil.page(data, state);
             expect(state.metadata.error).toBe(PagingError.IncorrectRecordsPerPage);
             // test with paging state null

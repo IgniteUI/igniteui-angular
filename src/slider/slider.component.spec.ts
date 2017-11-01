@@ -301,7 +301,7 @@ describe("IgxSlider", () => {
             .toBeGreaterThan(fixture.componentInstance.slider.lowerBound);
     });
 
-    it("should move thumb slider to value 60", (done) => {
+    xit("should move thumb slider to value 60", (done) => {
         let fixture;
         let slider: IgxSlider;
         TestBed.compileComponents().then(() => {
