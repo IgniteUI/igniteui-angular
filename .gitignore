@@ -55,7 +55,7 @@ src/**/*.js.map
 src/**/*.css
 src/**/*.css.map
 
-dist
+dist/
 
 # vscode
 .vscode
