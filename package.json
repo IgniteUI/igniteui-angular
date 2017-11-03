@@ -14,7 +14,9 @@
     "keywords": [
         "igniteui-js-blocks",
         "angular",
-        "angular4"
+		"angular4",
+		"UI components",
+		"grid"
     ],
     "scripts": {
         "build": "npm run build:esm && npm run build:umd && gulp make-packagejson",

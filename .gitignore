@@ -48,6 +48,7 @@ demos/polyfills.js
 demos/vendor.js
 demos/main.js
 demos/index.html
+!demos/webpack.config.js
 
 src/**/*.js
 src/**/*.js.map
