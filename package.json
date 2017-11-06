@@ -38,7 +38,7 @@
         "test:watch": "karma start --auto-watch --no-single-run",
         "tslint": "tslint",
         "sass-lint": "sass-lint",
-        "start:demos": "cd demos && npm start",
+        "start:demos": "npm run build && cd demos && npm start",
         "start:dev": "concurrently --raw --kill-others \"npm run build:esm:watch\" \"npm run start:demos\""
     },
     "dependencies": {
