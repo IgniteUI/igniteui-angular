@@ -49,6 +49,7 @@ demos/vendor.js
 demos/main.js
 demos/index.html
 !demos/webpack.config.js
+!demos/gulpfile.js
 
 src/**/*.js
 src/**/*.js.map
