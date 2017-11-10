@@ -45,9 +45,9 @@ const slideInLeft: AnimationReferenceMetadata = animation(base,
             duration: "350ms",
             easing: EaseOut.quad,
             endOpacity: 1,
+            fromPosition: "translateX(-500px)",
             startOpacity: 0,
-            toPosition: "translateY(0)",
-            fromPosition: "translateX(-500px)"
+            toPosition: "translateY(0)"
         }
     }
 );
@@ -59,9 +59,9 @@ const slideInRight: AnimationReferenceMetadata = animation(base,
             duration: "350ms",
             easing: EaseOut.quad,
             endOpacity: 1,
+            fromPosition: "translateX(500px)",
             startOpacity: 0,
-            toPosition: "translateY(0)",
-            fromPosition: "translateX(500px)"
+            toPosition: "translateY(0)"
         }
     }
 );
@@ -73,9 +73,9 @@ const slideInBottom: AnimationReferenceMetadata = animation(base,
             duration: "350ms",
             easing: EaseOut.quad,
             endOpacity: 1,
+            fromPosition: "translateY(500px)",
             startOpacity: 0,
-            toPosition: "translateY(0)",
-            fromPosition: "translateY(500px)"
+            toPosition: "translateY(0)"
         }
     }
 );
