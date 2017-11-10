@@ -4,7 +4,7 @@
         (swipeleft)="next()"
         (swiperight)="prev()"
         (keydown)="onKeydown($event)"
-        (tap)="_playing ? stop() : play()">
+        (tap)="isPlaying ? stop() : play()">
     <ul class="igx-carousel__indicators" [hidden]="slides.length <= 1">
         <li *ngFor="let slide of slides" [attr.aria-label]="setAriaLabel(slide)" [attr.aria-selected]="slide.active" [class.active]="slide.active === true"
             (click)="select(slide)"></li>

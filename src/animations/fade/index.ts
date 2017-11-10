@@ -23,12 +23,14 @@ const baseParams: IAnimationParams = {
 };
 
 const fadeIn: AnimationReferenceMetadata = animation(base, {
-    params: { ...baseParams }
+    params: baseParams
 });
 
 const fadeOut: AnimationReferenceMetadata = animation(base, {
     params: {
-        ...baseParams,
+        delay: "0s",
+        duration: "350ms",
+        easing: EaseOut.sine,
         endOpacity: 0,
         startOpacity: 1
     }

@@ -27,7 +27,8 @@ const baseInParams: IAnimationParams = {
 };
 
 const baseOutParams: IAnimationParams = {
-    ...baseInParams,
+    delay: "0s",
+    duration: "350ms",
     easing: EaseIn.quad,
     endOpacity: 0,
     fromPosition: "translateY(0)",
@@ -40,7 +41,12 @@ const slideInTop: AnimationReferenceMetadata = animation(base, { params: baseInP
 const slideInLeft: AnimationReferenceMetadata = animation(base,
     {
         params: {
-            ...baseInParams,
+            delay: "0s",
+            duration: "350ms",
+            easing: EaseOut.quad,
+            endOpacity: 1,
+            startOpacity: 0,
+            toPosition: "translateY(0)",
             fromPosition: "translateX(-500px)"
         }
     }
@@ -49,7 +55,12 @@ const slideInLeft: AnimationReferenceMetadata = animation(base,
 const slideInRight: AnimationReferenceMetadata = animation(base,
     {
         params: {
-            ...baseInParams,
+            delay: "0s",
+            duration: "350ms",
+            easing: EaseOut.quad,
+            endOpacity: 1,
+            startOpacity: 0,
+            toPosition: "translateY(0)",
             fromPosition: "translateX(500px)"
         }
     }
@@ -58,7 +69,12 @@ const slideInRight: AnimationReferenceMetadata = animation(base,
 const slideInBottom: AnimationReferenceMetadata = animation(base,
     {
         params: {
-            ...baseInParams,
+            delay: "0s",
+            duration: "350ms",
+            easing: EaseOut.quad,
+            endOpacity: 1,
+            startOpacity: 0,
+            toPosition: "translateY(0)",
             fromPosition: "translateY(500px)"
         }
     }
@@ -118,7 +134,12 @@ const slideOutRight: AnimationReferenceMetadata = animation(base,
 const slideOutBottom: AnimationReferenceMetadata = animation(base,
     {
         params: {
-            ...baseOutParams,
+            delay: "0s",
+            duration: "350ms",
+            easing: EaseIn.quad,
+            endOpacity: 0,
+            fromPosition: "translateY(0)",
+            startOpacity: 1,
             toPosition: "translateY(500px)"
         }
     }

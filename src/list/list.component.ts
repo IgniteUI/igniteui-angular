@@ -40,6 +40,10 @@ export class IgxList {
     @Output() public onRightPan = new EventEmitter();
     @Output() public onPanStateChange = new EventEmitter();
 
+    public get innerStyle(): string {
+        return this._innerStyle;
+    }
+
     private _innerStyle: string = "igx-list";
 
     get items(): IgxListItem[] {
@@ -94,6 +98,10 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     @Input() public isHeader: boolean = false;
     @Input() public href: string;
     @Input() public options: object[];
+
+    public get innerStyle(): string {
+        return this._innerStyle;
+    }
 
     private _panState: IgxListPanState = IgxListPanState.NONE;
     private _FRACTION_OF_WIDTH_TO_TRIGGER_GRIP = 0.5; // as a fraction of the item width

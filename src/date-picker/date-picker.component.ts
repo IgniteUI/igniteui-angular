@@ -1,13 +1,17 @@
 import { CommonModule } from "@angular/common";
 import {
     Component,
+    ComponentFactoryResolver,
+    ComponentRef,
     EventEmitter,
     HostBinding,
     Input,
     NgModule,
+    OnDestroy,
     OnInit,
     Output,
     ViewChild,
+    ViewContainerRef,
     ViewEncapsulation
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
@@ -24,17 +28,21 @@ import { IgxInput } from "../input/input.directive";
     styleUrls: ["date-picker.component.scss"],
     templateUrl: "date-picker.component.html"
 })
-export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
+export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
     // Custom formatter function
     @Input() public formatter: (val: Date) => string;
+
     @Input() public isDisabled: boolean;
+
     @Input() public value: Date;
 
     /**
      * Propagate calendar properties.
      */
     @Input() public locale: string = Constants.DEFAULT_LOCALE_DATE;
+
     @Input() public weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;
+
     @Input() public formatOptions = {
         day: "numeric",
         month: "short",
@@ -45,6 +53,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
      * Propagate dialog properties.
      */
     @Input() public todayButtonLabel: string;
+
     @Input() public cancelButtonLabel: string;
 
     @Output() public onOpen = new EventEmitter();
@@ -61,24 +70,36 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
         return "";
     }
 
-    @ViewChild(IgxDialog) private alert: IgxDialog;
-    @ViewChild(IgxCalendarComponent) private calendar: IgxCalendarComponent;
+    @ViewChild("container", {read: ViewContainerRef}) public container: ViewContainerRef;
+    @ViewChild(IgxDialog) public alert: IgxDialog;
+
+    public calendarRef: ComponentRef<IgxCalendarComponent>;
+
+    public get calendar() {
+        return this.calendarRef.instance;
+    }
+
+    constructor(private resolver: ComponentFactoryResolver) {}
 
     public writeValue(value: Date) {
         this.value = value;
-        this.selectDate(value);
     }
 
     public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
+
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 
     public ngOnInit(): void {
         /**
          * If we have passed value from user, update @calendar.value and @calendar.viewDate.
          */
-        if (this.value) {
-            this.selectDate(this.value);
-        }
+        this.alert.onOpen.subscribe((ev) => this._focusTheDialog());
+        this.alert.onClose.subscribe((ev) => this.handleDialogCloseAction());
+    }
+
+    public ngOnDestroy(): void {
+        this.alert.onClose.unsubscribe();
+        this.alert.onOpen.unsubscribe();
     }
 
     /**
@@ -86,7 +107,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
      */
     public triggerTodaySelection() {
         const today = new Date(Date.now());
-        this.selectDate(today);
+        this.handleSelection(today);
     }
 
     /**
@@ -95,7 +116,33 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
      * @param date passed date that has to be set to the calendar.
      */
     public selectDate(date: Date) {
-        this.calendar.selectDate(date);
+        this.value = date;
+        this.onSelection.emit(date);
+    }
+
+    /**
+     * Emits the open event and focus the dialog.
+     */
+    public onOpenEvent(event): void {
+        const factory = this.resolver.resolveComponentFactory(IgxCalendarComponent);
+
+        this.calendarRef = this.container.createComponent(factory);
+
+        this.calendarRef.changeDetectorRef.detach();
+        this.updateCalendarInstance();
+        this.calendarRef.location.nativeElement.classList.add("igx-date-picker__date--opened");
+        this.calendarRef.changeDetectorRef.reattach();
+
+        this.alert.open();
+        this._onTouchedCallback();
+        this.onOpen.emit(this);
+    }
+
+    /**
+     * Closes the dialog, after was clearing all calendar items from dom.
+     */
+    public handleDialogCloseAction() {
+        setTimeout(() => this.calendarRef.destroy(), 350);
     }
 
     /**
@@ -104,22 +151,23 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
      *
      * @param event selected value from calendar.
      */
-    protected handleSelection(event) {
+    public handleSelection(event) {
         this.value = event;
         this.calendar.viewDate = event;
         this._onChangeCallback(event);
-        this._handleDialogCloseAction();
+        this.alert.close();
         this.onSelection.emit(event);
     }
 
-    /**
-     * Emits the open event and focus the dialog.
-     */
-    private _onOpenEvent(): void {
-        this.alert.open();
-        this._focusTheDialog();
-        this._onTouchedCallback();
-        this.onOpen.emit(this);
+    private updateCalendarInstance() {
+        this.calendar.formatOptions = this.formatOptions;
+        this.calendar.locale = this.locale;
+        if (this.value) {
+            this.calendar.value = this.value;
+            this.calendar.viewDate = this.value;
+        }
+        this.calendar.weekStart = this.weekStart;
+        this.calendar.onSelection.subscribe((ev) => this.handleSelection(ev));
     }
 
     // Focus the dialog element, after its appearence into DOM.
@@ -140,14 +188,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit {
         return this.formatter ? this.formatter(date) : this._setLocaleToDate(date, this.locale);
     }
 
-    /**
-     * Closes the dialog, after was clearing all calendar items from dom.
-     */
-    private _handleDialogCloseAction() {
-        requestAnimationFrame(() => this.alert.close());
-    }
-
     private _onTouchedCallback: () => void = () => {};
+
     private _onChangeCallback: (_: Date) => void = () => {};
 }
 
@@ -157,6 +199,7 @@ class Constants {
 
 @NgModule({
     declarations: [IgxDatePickerComponent],
+    entryComponents: [IgxCalendarComponent],
     exports: [IgxDatePickerComponent],
     imports: [CommonModule, IgxInput, IgxDialogModule, IgxCalendarModule]
 })

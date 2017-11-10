@@ -63,7 +63,11 @@ export class IgxDialog {
 
     private _isOpen = false;
     private _titleId: string;
-    private state: string;
+    private _state: string;
+
+    get state(): string {
+        return this._state;
+    }
 
     @Input()
     get isOpen() {
@@ -130,7 +134,7 @@ export class IgxDialog {
     }
 
     private toggleState(state: string): void {
-        this.state = state;
+        this._state = state;
         this._isOpen = state === "open" ? true : false;
     }
 }

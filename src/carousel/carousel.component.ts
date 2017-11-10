@@ -344,6 +344,19 @@ export class IgxCarousel implements OnDestroy {
         }
     }
 
+    public onKeydown(event) {
+        switch (event.key) {
+            case "ArrowLeft":
+                this.prev();
+                break;
+            case "ArrowRight":
+                this.next();
+                break;
+            default:
+                return;
+        }
+    }
+
     private _moveTo(slide: IgxSlide, direction: Direction) {
         if (this._destroyed) {
             return;
@@ -384,20 +397,6 @@ export class IgxCarousel implements OnDestroy {
             }, this.interval);
         }
     }
-
-    private onKeydown(event) {
-        switch (event.key) {
-            case "ArrowLeft":
-                this.prev();
-                break;
-            case "ArrowRight":
-                this.next();
-                break;
-            default:
-                return;
-        }
-    }
-
 }
 
 /**

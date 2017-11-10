@@ -84,20 +84,20 @@ export class IgxScroll {
         this.emitScroll();
     }
 
-    private get totalHeight(): string {
+    public get totalHeight(): string {
         return this.itemHeight * this.visibleItemsCount  + "px";
     }
 
-    private get innerHeight(): string {
+    public get innerHeight(): string {
         return this.totalItemsCount * this.itemHeight + "px";
     }
 
-    private onMouseWheel($event): void {
+    public onMouseWheel($event): void {
         this.scrollVertically($event.deltaY);
         $event.preventDefault();
     }
 
-    private onPan($event) {
+    public onPan($event) {
         if ($event.pointerType !== "touch") {
             return;
         }
@@ -106,6 +106,10 @@ export class IgxScroll {
         this.timestamp = $event.timeStamp;
         this.target  = Math.round($event.deltaY + this.amplitude);
         this.animationFrameId = requestAnimationFrame((timestamp) => this.run(timestamp));
+    }
+
+    public onScrolled($event): void {
+        this.emitScroll();
     }
 
     private run(timeStamp: number) {
@@ -121,10 +125,6 @@ export class IgxScroll {
         } else {
             this.scrollVertically(this.target * -1);
         }
-    }
-
-    private onScrolled($event): void {
-        this.emitScroll();
     }
 
     private emitScroll() {

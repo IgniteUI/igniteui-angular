@@ -494,6 +494,28 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
     /**
      * @hidden
      */
+    public navigate(event: any): void {
+        const key: string = event.key;
+        let row: any = event.target.dataset.row;
+        let column: any = event.target.dataset.col;
+
+        row = parseInt(row, 10);
+        column = parseInt(column, 10);
+
+        if (key.endsWith("Left")) {
+            this.focusCell(row, column - 1);
+        } else if (key.endsWith("Right")) {
+            this.focusCell(row, column + 1);
+        } else if (key.endsWith("Up")) {
+            this.focusCell(row - 1, column);
+        } else if (key.endsWith("Down")) {
+            this.focusCell(row + 1, column);
+        }
+    }
+
+    /**
+     * @hidden
+     */
     protected checkColumns(): void {
         this.columns = this.cols.toArray();
         this.columns.forEach((col, index) => {
@@ -626,25 +648,6 @@ export class IgxGridComponent implements OnInit, AfterContentInit, DoCheck, OnDe
             this.columns.push(ref.instance);
             ref.changeDetectorRef.detectChanges();
         });
-    }
-
-    private navigate(event: any): void {
-        const key: string = event.key;
-        let row: any = event.target.dataset.row;
-        let column: any = event.target.dataset.col;
-
-        row = parseInt(row, 10);
-        column = parseInt(column, 10);
-
-        if (key.endsWith("Left")) {
-            this.focusCell(row, column - 1);
-        } else if (key.endsWith("Right")) {
-            this.focusCell(row, column + 1);
-        } else if (key.endsWith("Up")) {
-            this.focusCell(row - 1, column);
-        } else if (key.endsWith("Down")) {
-            this.focusCell(row + 1, column);
-        }
     }
 }
 

@@ -19,6 +19,10 @@ export abstract class BaseProgress {
     protected max;
     protected value;
 
+    public get valueInPercent(): number {
+        return this._valueInPercent;
+    }
+
     public getValue() {
         return getValueInRange(this.value, this.max);
     }

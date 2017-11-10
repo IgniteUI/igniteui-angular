@@ -78,7 +78,7 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     @Output()
     public onValueChange = new EventEmitter();
 
-    private isActiveLabel: boolean = false;
+    public isActiveLabel: boolean = false;
 
     private activeHandle: SliderHandle = SliderHandle.TO;
 
@@ -124,7 +124,7 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     constructor(private renderer: Renderer2) {
     }
 
-    private get isRange(): boolean {
+    public get isRange(): boolean {
         const isRange: boolean = this.type === SliderType.RANGE;
 
         return isRange;
@@ -350,23 +350,7 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
         this._onTouchedCallback = fn;
     }
 
-    private generateTickMarks(color: string, interval: number) {
-        return `repeating-linear-gradient(
-            ${"to left"},
-            ${color},
-            ${color} 1.5px,
-            transparent 1.5px,
-            transparent ${interval}%
-        ), repeating-linear-gradient(
-            ${"to right"},
-            ${color},
-            ${color} 1.5px,
-            transparent 1.5px,
-            transparent ${interval}%
-        )`;
-    }
-
-    private showThumbsLabels() {
+    public showThumbsLabels() {
         if (this.disabled) {
             return;
         }
@@ -382,27 +366,95 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
         this.isActiveLabel = true;
     }
 
-    private hideThumbsLabels() {
-        if (this.disabled) {
-            return;
+    public onFocus($event: FocusEvent) {
+        if (this.isRange && $event.target === this.thumbFrom.nativeElement) {
+            this.activeHandle = SliderHandle.FROM;
         }
 
-        if (this.isContinuous) {
-            return;
+        if ($event.target === this.thumbTo.nativeElement) {
+            this.activeHandle = SliderHandle.TO;
         }
 
-        this.timer = setTimeout(
-            () => this.isActiveLabel = false,
-            this.thumbLabelVisibilityDuration
-        );
+        this.toggleThumbLabel();
     }
 
-    private toggleThumbLabel() {
-        this.showThumbsLabels();
+    public onPanEnd($event) {
         this.hideThumbsLabels();
+        this.emitValueChanged();
     }
 
-    private update($event) {
+    public hideThumbLabelsOnBlur() {
+        if (this.timer !== null) {
+            clearInterval(this.timer);
+        }
+
+        this.isActiveLabel = false;
+    }
+
+    public onKeyDown($event: KeyboardEvent) {
+        if (this.disabled) {
+            return true;
+        }
+
+        let incrementSign;
+
+        if ($event.key.endsWith("Left")) {
+            incrementSign = -1;
+        } else if ($event.key.endsWith("Right")) {
+            incrementSign = 1;
+        } else {
+            return;
+        }
+
+        const value = this.value;
+
+        if (this.isRange) {
+            if (this.activeHandle === SliderHandle.FROM) {
+                const newLower = (this.value as IRangeSliderValue).lower + incrementSign * this.step;
+
+                if (newLower >= (this.value as IRangeSliderValue).upper) {
+                    this.thumbTo.nativeElement.focus();
+                    return;
+                }
+
+                this.value = {
+                    lower: newLower,
+                    upper: (this.value as IRangeSliderValue).upper
+                };
+            } else {
+                const newUpper = (this.value as IRangeSliderValue).upper + incrementSign * this.step;
+
+                if (newUpper <= (this.value as IRangeSliderValue).lower) {
+                    this.thumbFrom.nativeElement.focus();
+                    return;
+                }
+
+                this.value = {
+                    lower: (this.value as IRangeSliderValue).lower,
+                    upper: (this.value as IRangeSliderValue).upper + incrementSign * this.step
+                };
+            }
+        } else {
+            this.value = this.value as number + incrementSign * this.step;
+        }
+
+        if (this.hasValueChanged(value)) {
+            this.emitValueChanged();
+        }
+
+        this.showThumbsLabels();
+    }
+
+    public onTap($event) {
+        const value = this.value;
+        this.update($event);
+
+        if (this.hasValueChanged(value)) {
+            this.emitValueChanged();
+        }
+    }
+
+    public update($event) {
         if (this.disabled) {
             return;
         }
@@ -432,6 +484,42 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
         // based on data values
         this.positionHandlesAndUpdateTrack();
         this._onTouchedCallback();
+    }
+
+    public hideThumbsLabels() {
+        if (this.disabled) {
+            return;
+        }
+
+        if (this.isContinuous) {
+            return;
+        }
+
+        this.timer = setTimeout(
+            () => this.isActiveLabel = false,
+            this.thumbLabelVisibilityDuration
+        );
+    }
+
+    private generateTickMarks(color: string, interval: number) {
+        return `repeating-linear-gradient(
+            ${"to left"},
+            ${color},
+            ${color} 1.5px,
+            transparent 1.5px,
+            transparent ${interval}%
+        ), repeating-linear-gradient(
+            ${"to right"},
+            ${color},
+            ${color} 1.5px,
+            transparent 1.5px,
+            transparent ${interval}%
+        )`;
+    }
+
+    private toggleThumbLabel() {
+        this.showThumbsLabels();
+        this.hideThumbsLabels();
     }
 
     private getSliderOffset(): number {
@@ -568,16 +656,6 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
             this.track.nativeElement.style.width = `${positionGap * 100}%`;
         }
     }
-
-    private onTap($event) {
-        const value = this.value;
-        this.update($event);
-
-        if (this.hasValueChanged(value)) {
-            this.emitValueChanged();
-        }
-    }
-
     private hasValueChanged(oldValue) {
         const isSliderWithDifferentValue: boolean = !this.isRange && oldValue !== this.value;
         const isRangeWithOneDifferentValue: boolean = this.isRange &&
@@ -585,85 +663,6 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
                 (oldValue as IRangeSliderValue).upper !== (this.value as IRangeSliderValue).upper);
 
         return isSliderWithDifferentValue || isRangeWithOneDifferentValue;
-    }
-
-    private onKeyDown($event: KeyboardEvent) {
-        if (this.disabled) {
-            return true;
-        }
-
-        let incrementSign;
-
-        if ($event.key.endsWith("Left")) {
-            incrementSign = -1;
-        } else if ($event.key.endsWith("Right")) {
-            incrementSign = 1;
-        } else {
-            return;
-        }
-
-        const value = this.value;
-
-        if (this.isRange) {
-            if (this.activeHandle === SliderHandle.FROM) {
-                const newLower = (this.value as IRangeSliderValue).lower + incrementSign * this.step;
-
-                if (newLower >= (this.value as IRangeSliderValue).upper) {
-                    this.thumbTo.nativeElement.focus();
-                    return;
-                }
-
-                this.value = {
-                    lower: newLower,
-                    upper: (this.value as IRangeSliderValue).upper
-                };
-            } else {
-                const newUpper = (this.value as IRangeSliderValue).upper + incrementSign * this.step;
-
-                if (newUpper <= (this.value as IRangeSliderValue).lower) {
-                    this.thumbFrom.nativeElement.focus();
-                    return;
-                }
-
-                this.value = {
-                    lower: (this.value as IRangeSliderValue).lower,
-                    upper: (this.value as IRangeSliderValue).upper + incrementSign * this.step
-                };
-            }
-        } else {
-            this.value = this.value as number + incrementSign * this.step;
-        }
-
-        if (this.hasValueChanged(value)) {
-            this.emitValueChanged();
-        }
-
-        this.showThumbsLabels();
-    }
-
-    private onFocus($event: FocusEvent) {
-        if (this.isRange && $event.target === this.thumbFrom.nativeElement) {
-            this.activeHandle = SliderHandle.FROM;
-        }
-
-        if ($event.target === this.thumbTo.nativeElement) {
-            this.activeHandle = SliderHandle.TO;
-        }
-
-        this.toggleThumbLabel();
-    }
-
-    private onPanEnd($event) {
-        this.hideThumbsLabels();
-        this.emitValueChanged();
-    }
-
-    private hideThumbLabelsOnBlur() {
-        if (this.timer !== null) {
-            clearInterval(this.timer);
-        }
-
-        this.isActiveLabel = false;
     }
 
     private emitValueChanged() {
