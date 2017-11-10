@@ -1,4 +1,4 @@
-<div class="igx-button-group" role="group" [class.igx-button-group--vertical]="_isVertical">
+<div class="igx-button-group" role="group" [class.igx-button-group--vertical]="isVertical">
 
     <span class="igx-button-group__item" *ngFor="let button of values; let i = 'index'" type="button" (click)="_clickHandler($event, i)"
         igxButton="flat" [attr.data-selected]="button.selected" [attr.data-togglable]="button.togglable" [attr.aria-pressed]="button.selected"

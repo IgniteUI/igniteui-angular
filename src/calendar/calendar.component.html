@@ -32,9 +32,9 @@
                 {{ dayName }}
             </span>
         </div>
-        <div *ngFor="let week of getCalendarMonth; trackBy:rowTracker" class="igx-calendar__body-row" (click)="onDateClick($event)"
+        <div *ngFor="let week of getCalendarMonth; trackBy: rowTracker" class="igx-calendar__body-row" (click)="onDateClick($event)"
             [@animateChange]="monthAction">
-            <span tabindex="0" *ngFor="let day of week; trackBy:dateTracker" [attr.data-prevmonth]="day.isPrevMonth ? true : null" [attr.data-nextmonth]="day.isNextMonth ? true : null"
+            <span tabindex="0" *ngFor="let day of week; trackBy: dateTracker" [attr.data-prevmonth]="day.isPrevMonth ? true : null" [attr.data-nextmonth]="day.isNextMonth ? true : null"
                 [attr.data-curmonth]="day.isCurrentMonth ? true : null" [class.igx-calendar__date--inactive]="isInactive(day)"
                 [class.igx-calendar__date]="day.isCurrentMonth && !isWeekend(day) && !isSelected(day)" [class.igx-calendar__date--weekend]="isWeekend(day)"
                 [class.igx-calendar__date--current]="isToday(day) && !isSelected(day)" [class.igx-calendar__date--selected]="isSelected(day)">
@@ -46,7 +46,7 @@
 
     <div *ngIf="isYearView" class="igx-calendar__body" [@animateView]="activeView">
         <div class="igx-calendar__body-row--wrap" (click)="changeMonth($event)">
-            <div [attr.data-index]="i" *ngFor="let month of getYear();trackBy:monthTracker; let i = index;" [class.igx-calendar__month]="!isCurrentMonth(month)"
+            <div [attr.data-index]="i" *ngFor="let month of getYear(); trackBy: monthTracker; let i = index;" [class.igx-calendar__month]="!isCurrentMonth(month)"
                 [class.igx-calendar__month--current]="isCurrentMonth(month)">
                 {{ getMonthName(month) }}
             </div>

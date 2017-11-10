@@ -105,7 +105,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     }
     @Output() public onSelection = new EventEmitter<Date | Date[]>();
 
-    public get value(): Date | Date[] {
+    @Input() public get value(): Date | Date[] {
         return this.selectedDates;
     }
 
@@ -120,14 +120,22 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         year: "numeric"
     };
 
+    public get activeView(): CalendarView {
+        return this._activeView;
+    }
+
+    public get monthAction(): string {
+        return this._monthAction;
+    }
+
     private calendarModel: Calendar;
     private _viewDate: Date;
     private headerDate: Date;
-    private activeView = CalendarView.DEFAULT;
+    private _activeView = CalendarView.DEFAULT;
     private selectedDates;
     private _selection: "single" | "multi" | "range" = "single";
     private _rangeStarted: boolean = false;
-    private monthAction = "";
+    private _monthAction = "";
 
     constructor(private elementRef: ElementRef) {
         this.calendarModel = new Calendar();
@@ -207,6 +215,37 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         this.onSelection.emit(this.selectedDates);
     }
 
+    public handleKeyDown(event) {
+
+        if (event.key.startsWith("Page")) {
+            this.handlePageUpDown(event);
+            return;
+        }
+
+        if (event.key.endsWith("Left") || event.key.endsWith("Right") ||
+            event.key.endsWith("Up") || event.key.endsWith("Down")) {
+            this.handleKeyboardNavigation(event);
+            return;
+        }
+
+        switch (event.key) {
+            case "Home":
+                event.preventDefault();
+                this.elementRef.nativeElement.querySelectorAll("[data-curmonth='true']")[0].focus();
+                break;
+            case "End":
+                event.preventDefault();
+                const curentDates = this.elementRef.nativeElement.querySelectorAll("[data-curmonth='true']");
+                curentDates[curentDates.length - 1].focus();
+                break;
+            case "Enter":
+                this.onDateClick(event);
+                break;
+            default:
+                return;
+        }
+    }
+
     protected selectSingle(newVal: Date): void {
         this.selectedDates = newVal;
         this._onChangeCallback(this.selectedDates);
@@ -274,12 +313,12 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     }
     protected prevMonth(): void {
         this._viewDate = this.calendarModel.timedelta(this._viewDate, "month", -1);
-        this.monthAction = "prev";
+        this._monthAction = "prev";
     }
 
     protected nextMonth(): void {
         this._viewDate = this.calendarModel.timedelta(this._viewDate, "month", 1);
-        this.monthAction = "next";
+        this._monthAction = "next";
     }
 
     // Event handlers for scrolling/keyboard interaction
@@ -316,37 +355,6 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
             } else {
                 this.nextMonth();
             }
-        }
-    }
-
-    protected handleKeyDown(event) {
-
-        if (event.key.startsWith("Page")) {
-            this.handlePageUpDown(event);
-            return;
-        }
-
-        if (event.key.endsWith("Left") || event.key.endsWith("Right") ||
-            event.key.endsWith("Up") || event.key.endsWith("Down")) {
-            this.handleKeyboardNavigation(event);
-            return;
-        }
-
-        switch (event.key) {
-            case "Home":
-                event.preventDefault();
-                this.elementRef.nativeElement.querySelectorAll("[data-curmonth='true']")[0].focus();
-                break;
-            case "End":
-                event.preventDefault();
-                const curentDates = this.elementRef.nativeElement.querySelectorAll("[data-curmonth='true']");
-                curentDates[curentDates.length - 1].focus();
-                break;
-            case "Enter":
-                this.onDateClick(event);
-                break;
-            default:
-                return;
         }
     }
 
@@ -451,24 +459,24 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
             day.date.getDate() === today.getDate());
     }
 
-    protected get isDefaultView(): boolean {
+    public get isDefaultView(): boolean {
         return this.activeView === CalendarView.DEFAULT;
     }
 
-    protected get isYearView(): boolean {
+    public get isYearView(): boolean {
         return this.activeView === CalendarView.YEAR;
     }
 
-    protected get isDecadeView(): boolean {
+    public get isDecadeView(): boolean {
         return this.activeView === CalendarView.DECADE;
     }
 
     protected activeViewYear(): void {
-        this.activeView = CalendarView.YEAR;
+        this._activeView = CalendarView.YEAR;
     }
 
     protected activeViewDecade(): void {
-        this.activeView = CalendarView.DECADE;
+        this._activeView = CalendarView.DECADE;
     }
 
     // XXX: WiP! Will still have to discuss what are we showing
@@ -500,17 +508,17 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     protected changeYear(event): void {
         const year = parseInt(event.target.textContent, 10);
         this._viewDate = new Date(year, this._viewDate.getMonth(), 1);
-        this.activeView = CalendarView.DEFAULT;
+        this._activeView = CalendarView.DEFAULT;
     }
 
     protected changeMonth(event): void {
         const month = event.target.dataset.index;
         this._viewDate = new Date(this._viewDate.getFullYear(), month, 1);
-        this.activeView = CalendarView.DEFAULT;
+        this._activeView = CalendarView.DEFAULT;
     }
 
     protected dateTracker(index, item): string {
-        return `${item.date.getMonth()}{item.date.getDate()}`;
+        return `${item.date.getMonth()}--${item.date.getDate()}`;
     }
 
     protected rowTracker(index, item): string {

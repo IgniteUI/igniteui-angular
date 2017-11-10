@@ -4,8 +4,8 @@
         aria-valuemin="0"
         [attr.aria-valuemax]="max"
         [attr.aria-valuenow]="getValue()"
-        [style.width.%]="_valueInPercent || getPercentValue()">
+        [style.width.%]="valueInPercent || getPercentValue()">
         <ng-content></ng-content>
     </div>
-    <span class="progress-linear__value">{{_valueInPercent || getPercentValue()}}%</span>
+    <span class="progress-linear__value">{{valueInPercent || getPercentValue()}}%</span>
 </div>

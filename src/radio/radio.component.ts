@@ -35,9 +35,17 @@ export class IgxRadio implements ControlValueAccessor {
 
     @ViewChild("radio") public nativeRadio;
 
+    public get checked(): boolean {
+        return this._checked;
+    }
+
+    public set checked(value: boolean) {
+        this._checked = value;
+    }
+
     protected _value: any;
 
-    protected checked: boolean;
+    protected _checked: boolean;
 
     protected focused: boolean;
 

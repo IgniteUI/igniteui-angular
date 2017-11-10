@@ -35,6 +35,10 @@ export class IgxTabBar implements AfterViewInit {
 
     public selectedIndex: number = -1;
 
+    public get itemStyle(): string {
+        return this._itemStyle;
+    }
+
     private _itemStyle: string = "igx-tab-bar";
 
     get selectedTab(): IgxTab {
@@ -102,6 +106,9 @@ export class IgxTabPanel {
     @Input() public icon: string;
     @Input() public isDisabled: boolean;
 
+    public get itemStyle(): string {
+        return this._itemStyle;
+    }
     private _itemStyle: string = "igx-tab-panel";
 
     get relatedTab(): IgxTab {

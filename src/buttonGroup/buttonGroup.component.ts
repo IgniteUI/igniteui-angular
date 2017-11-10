@@ -46,6 +46,9 @@ export class IgxButtonGroup implements AfterViewInit {
     @Output() public onSelect = new EventEmitter();
     @Output() public onUnselect = new EventEmitter();
 
+    public get isVertical(): boolean {
+        return this._isVertical;
+    }
     private _isVertical: boolean;
     private _itemContentCssClass: string;
 
@@ -113,7 +116,7 @@ export class IgxButtonGroup implements AfterViewInit {
 }
 
 @NgModule({
-    declarations: [IgxButtonGroup, IgxButtonGroup],
+    declarations: [IgxButtonGroup],
     exports: [IgxButtonGroup],
     imports: [IgxButtonModule, CommonModule, IgxRippleModule, IgxIconModule]
 })

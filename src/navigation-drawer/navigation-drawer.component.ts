@@ -14,8 +14,11 @@ import {
     Renderer,
     SimpleChange
 } from "@angular/core";
-// import {AnimationBuilder} from 'angular2/src/animate/animation_builder'; TODO
-import { Observable, Subscription } from "rxjs/Rx";
+import "rxjs/add/observable/fromEvent";
+import "rxjs/add/observable/interval";
+import "rxjs/add/operator/debounce";
+import { Observable } from "rxjs/Observable";
+import { Subscription } from "rxjs/Subscription";
 import { BaseComponent } from "../core/base";
 import { IToggleView, NavigationService } from "../core/navigation";
 import { HammerGesturesManager } from "../core/touch";
@@ -94,7 +97,7 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
     /** Event fired when the Navigation Drawer has closed. */
     @Output() public closed = new EventEmitter();
 
-    private _hasMimiTempl: boolean = false;
+    public _hasMimiTempl: boolean = false;
     private _gesturesAttached: boolean = false;
     private _widthCache: { width: number, miniWidth: number } = { width: null, miniWidth: null };
     private _resizeObserver: Subscription;

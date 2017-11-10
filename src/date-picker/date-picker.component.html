@@ -1,15 +1,8 @@
 <div class="igx-date-picker">
-    <input class="igx-date-picker__input-date" igxInput (click)="_onOpenEvent($event)" [value]="displayData" [disabled]="isDisabled" />
+    <input class="igx-date-picker__input-date" igxInput (click)="onOpenEvent($event)" [value]="displayData" [disabled]="isDisabled" />
     <igx-dialog class="igx-date-picker__dialog-popup" closeOnOutsideSelect="true"
-        [leftButtonLabel]="cancelButtonLabel" (onLeftButtonSelect)="_handleDialogCloseAction()"
+        [leftButtonLabel]="cancelButtonLabel" (onLeftButtonSelect)="alert.close()"
         [rightButtonLabel]="todayButtonLabel" (onRightButtonSelect)="triggerTodaySelection()">
-        <igx-calendar
-            class="igx-date-picker__calendar"
-            (onSelection)="handleSelection($event)"
-            [locale]="locale"
-            [weekStart]="weekStart"
-            [formatOptions]="formatOptions"
-            [class.igx-date-picker__date--opened]="alert.isOpen">
-        </igx-calendar>
+        <ng-container #container></ng-container>
     </igx-dialog>
 </div>

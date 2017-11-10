@@ -4,8 +4,6 @@ import {
     TestBed
 } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxButton } from "../button/button.directive";
-import { IgxDirectivesModule } from "../modules";
 import { ButtonGroupAlignment, IgxButtonGroup, IgxButtonGroupModule } from "./buttonGroup.component";
 
 interface IButton {
