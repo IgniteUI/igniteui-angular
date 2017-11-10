@@ -94,7 +94,7 @@ It will watch both the `src` and `demos` directories and will rebuild both the l
 
 ## NPM Package
 
-You can include Ignite UI JS Blocks in your project as a dependency using the NPM package.
+You can include Ignite UI for Angular in your project as a dependency using the NPM package.
 
 `npm install igniteui-js-blocks --save-dev`
 
@@ -105,12 +105,15 @@ You can include Ignite UI JS Blocks in your project as a dependency using the NP
 
 
 ## Quickstart App
-[IgniteUI JS Blocks Quickstart app](https://github.com/IgniteUI/igniteui-js-blocks-quickstart)
-This repository is a fork of the Angular QuickStart Source and has been updated to demonstrate how to include and use components from the Ignite UI JS Blocks. It basically follows the shortest path to bootstrap writing the application with IgniteUI JS Blocks:
+[Ignite UI for Angular Quickstart app](https://github.com/IgniteUI/igniteui-js-blocks-quickstart)
+This repository is a fork of the Angular QuickStart Source and has been updated to demonstrate how to include and use components from Ignite UI for Angular. It basically follows the shortest path to bootstrap writing the application with Ignite UI for Angular:
 
 - Fork the [the angular quickstart](https://github.com/angular/quickstart)
-- Install IgniteUI JS Blocks from npm using `npm install igniteui-js-blocks --save-dev`
-- Update the views with sample JS Blocks controls.
+- Install Ignite UI for Angular from npm using `npm install igniteui-js-blocks --save-dev`
+- Update the views with sample Ignite UI for Angular controls.
 
 ## Demo App
 [Warehouse Picklist App](https://github.com/IgniteUI/warehouse-js-blocks)
+
+## Roadmap
+[Roadmap document](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/ROADMAP.md)
