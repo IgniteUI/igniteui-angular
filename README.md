@@ -1,14 +1,17 @@
-# Ignite UI for Angular - From Infragistics
+# Ignite UI for Angular - from Infragistics
 
 [![Build Status](https://travis-ci.org/IgniteUI/igniteui-js-blocks.svg?branch=master)](https://travis-ci.org/IgniteUI/igniteui-js-blocks)
 [![Coverage Status](https://coveralls.io/repos/github/IgniteUI/igniteui-js-blocks/badge.svg?branch=master)](https://coveralls.io/github/IgniteUI/igniteui-js-blocks?branch=master)
 [![NPM version](https://img.shields.io/npm/v/igniteui-js-blocks.svg?style=flat)](https://www.npmjs.com/package/igniteui-js-blocks)
 
-### [**View samples here**](http://139.59.168.161)
+[Ignite UI for Angular](https://www.infragistics.com/products/ignite-ui-angular) is a complete set of Material-based UI Widgets, Components & Sketch UI kits and supporting directives for [Angular](https://angular.io/) by Infragistics.  Ignite UI for Angular is designed to enable developers to build the most modern, high-performance HTML5 & JavaScript apps for modern desktop browsers, mobile experiences and progressive web apps (PWA’s) targeting Google's Angular framework.  
 
-**Note:** as of January 3rd 2017 the license for this project has changed from MIT to Apache 2.0. For more information about these licenses please click [here](http://choosealicense.com/licenses/)
+You can find source files under the [`src`](https://github.com/IgniteUI/igniteui-js-blocks/tree/master/src) folder, including samples and tests.
 
-Material-based UI Components and supporting directives for [Angular](https://angular.io/) by Infragistics including samples and tests. Source files under the [`src`](https://github.com/IgniteUI/igniteui-js-blocks/tree/master/src) folder.
+#### [**View running samples here**](https://www.infragistics.com/angular-samples/components/grid.html)
+
+
+
 
 Current list of controls include:
 
@@ -112,8 +115,29 @@ This repository is a fork of the Angular QuickStart Source and has been updated 
 - Install Ignite UI for Angular from npm using `npm install igniteui-js-blocks --save-dev`
 - Update the views with sample Ignite UI for Angular controls.
 
-## Demo App
-[Warehouse Picklist App](https://github.com/IgniteUI/warehouse-js-blocks)
+## Demo Apps & Documentation
+The [Warehouse Picklist App](https://github.com/IgniteUI/warehouse-js-blocks) demonstrates using several Ignite UI for Angular widgets together to build a modern, mobile app.
+
+To get started with the Data Grid, use the steps in the [grid walk-through](https://www.infragistics.com/angular-samples/components/grid.html).  
+
+All help, related API documents and walk-throughs can be found for each control [here](https://www.infragistics.com/angular-samples/components/grid.html). 
 
 ## Roadmap
 [Roadmap document](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/ROADMAP.md)
+
+## Support
+Developer support is provided as part of the commercial, paid-for license via [Infragistics Forums](https://www.infragistics.com/community/forums/), or via Chat & Phone with a Priority Support license.  To acquire a license for paid support or Prioroty Support, please visit this [page](https://www.infragistics.com/how-to-buy/product-pricing#developers).
+
+Community support for open source usage of this product is available at [StackOverflow](https://stackoverflow.com/questions/tagged/ignite-ui-angular).
+
+Infragistics is only successful if you are successful, if you need additional assitance beyond our help documentation, forums or Prioroty Support, we have a full suite of Services offerings, including Angular Training, Application Architecture and Development and full Design Consultation.  Click to learn more about our [Services offerings](https://www.infragistics.com/consulting#popular-services).
+
+## License
+This project is released under the Apache License, version 2.0.  This is a commercial product, requiring a valid paid-for license for commercial use.  This product is free to use for non-commercial applications, like non-profits and educational usage. 
+
+To acquire a license for commercial usage, please register for a trial and acquire a license at [Infragistics.com/Angular](https://www.infragistics.com/products/ignite-ui-angular/getting-started).
+
+© Copyright 2017 INFRAGISTICS. All Rights Reserved.  The Infragistics Ultimate license & copyright applies to this distribution.  For information on that license, please go to our website [here](https://www.infragistics.com/legal/license).
+
+
+
