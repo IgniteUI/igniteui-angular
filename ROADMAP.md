@@ -11,8 +11,8 @@
 4. Grid Row virtualization - after row objects and virtualization are implemented
 5. Grid Column virtualization - after row objects and column component refactoring are done  
 	This feature enables Grid columns to be virtualized. The feature splits records into parts, and only a certain part of the record is rendered.
-6. Filter UI - 2 sprints design, then implementation (by December 31st, 2017)  
-	We need a filtering UI component, which communicates with our filtering pipe. The filtering component should be templatable and pluggable into any component that is bound to our `DataContainer`, but should also provide an exceptional default template.
+6. Data Operations UI - 2 sprints design, then implementation (by December 31st, 2017) [issue link](https://github.com/IgniteUI/igniteui-js-blocks/issues/486)  
+	We need a data oprations UI component, which communicates with our filtering, sorting, and other data opration pipes. The data operations component should be templatable and pluggable into any component that is bound to our `DataContainer`, but should also provide an exceptional default template.
 7. Alternating row style
 
 ## Next six months (due April 15th, 2018)
