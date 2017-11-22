@@ -12,7 +12,9 @@
 	This feature enables Grid columns to be virtualized. The feature splits records into parts, and only a certain part of the record is rendered.
 6. Data Operations UI - 2 sprints design, then implementation (by December 31st, 2017) [issue](https://github.com/IgniteUI/igniteui-js-blocks/issues/486)  
 	We need a data oprations UI component, which communicates with our filtering, sorting, and other data opration pipes. The data operations component should be templatable and pluggable into any component that is bound to our `DataContainer`, but should also provide an exceptional default template.
-7. Alternating row style
+7. Alternating row style  
+8. Ignite UI CLI integration [issue](https://github.com/IgniteUI/ignite-ui-cli/issues/53)  
+    Ignite UI CLI will also provide Ignite UI for Angular templates, views, and components integration. All features of the CLI will be accessible in the context of Ignite UI for Angular, as well as the full Ignite UI product suite.  
 
 ## Next six months (due April 15th, 2018)
 
