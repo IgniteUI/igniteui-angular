@@ -21,5 +21,4 @@
 3. Grouping
 4. Export to excel
 5. Combo
-6. Grid-wide search
-7. Mask directive (editor)
+6. Mask directive (editor)
