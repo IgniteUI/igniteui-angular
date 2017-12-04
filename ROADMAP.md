@@ -10,17 +10,17 @@
 4. Grid Row virtualization - after row objects and virtualization are implemented
 5. Grid Column virtualization - after row objects and column component refactoring are done  
 	This feature enables Grid columns to be virtualized. The feature splits records into parts, and only a certain part of the record is rendered.
-6. Data Operations UI - 2 sprints design, then implementation (by December 31st, 2017) [issue](https://github.com/IgniteUI/igniteui-js-blocks/issues/486)  
+6. Data Operations UI (by December 31st, 2017) [issue](https://github.com/IgniteUI/igniteui-js-blocks/issues/486)  
 	We need a data oprations UI component, which communicates with our filtering, sorting, and other data opration pipes. The data operations component should be templatable and pluggable into any component that is bound to our `DataContainer`, but should also provide an exceptional default template.
 7. Alternating row style  
-8. Ignite UI CLI integration [issue](https://github.com/IgniteUI/ignite-ui-cli/issues/53)  
+8. **[DONE]** Ignite UI CLI integration [issue](https://github.com/IgniteUI/ignite-ui-cli/issues/53)  
     Ignite UI CLI will also provide Ignite UI for Angular templates, views, and components integration. All features of the CLI will be accessible in the context of Ignite UI for Angular, as well as the full Ignite UI product suite.  
+9. Grid Multi-column Headers (by January 15th, 2018) [issue](https://github.com/IgniteUI/igniteui-js-blocks/issues/488)
 
 ## Next six months (due April 15th, 2018)
 
-1. Multi-column headers
-2. Column pinning
-3. Grouping
-4. Export to excel
-5. Combo
-6. Mask directive (editor)
+1. Column pinning
+2. Grouping
+3. Export to excel
+4. Combo
+5. Mask directive (editor)
