@@ -51,6 +51,16 @@ From the root folder run:
 npm install
 ```
 
+## Getting Started with CLI
+To get started with the Ignite UI CLI and Ignite UI for Angular:
+
+```
+npm i -g igniteui-cli
+ig new <project name> --framework=angular
+cd <project name>
+ig add grid <component name>
+```
+
 ## Build Library
 In case your editor cannot auto-compile the TypeScript files (VS, VS Code, others with plugins)
 there's a configured npm command in place to run the compiler:
