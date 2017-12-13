@@ -59,6 +59,7 @@ npm i -g igniteui-cli
 ig new <project name> --framework=angular
 cd <project name>
 ig add grid <component name>
+ig start
 ```
 
 ## Build Library
