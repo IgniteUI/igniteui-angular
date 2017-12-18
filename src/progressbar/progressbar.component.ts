@@ -105,8 +105,8 @@ export class IgxLinearProgressBar extends BaseProgress {
 
         const valueInRange = getValueInProperRange(val, this.max);
         const changedValues = {
-            previousValue: this._value,
-            currentValue: valueInRange
+            currentValue: valueInRange,
+            previousValue: this._value
         };
 
         if (this._animate) {
@@ -167,8 +167,8 @@ export class IgxCircularProgressBar extends BaseProgress implements AfterViewIni
 
         const valueInProperRange = getValueInProperRange(val, this.max);
         const changedValues = {
-            previousValue: this._value,
-            currentValue: valueInProperRange
+            currentValue: valueInProperRange,
+            previousValue: this._value
         };
 
         if (this.animate) {
