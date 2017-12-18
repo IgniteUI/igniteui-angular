@@ -13,57 +13,56 @@ import {
 } from "@angular/core";
 
 export abstract class BaseProgress {
-    protected _valueInPercent: number;
-    protected _prevValue: number;
-    protected _currValue: number;
-    protected max;
-    protected value;
+    protected requestAnimationId: number = undefined;
 
-    public get valueInPercent(): number {
+    protected _valueInPercent: number = 0;
+    protected _max: number = 100;
+    protected _value = 0;
+    protected _animate = true;
+
+    protected get valueInPercent(): number {
         return this._valueInPercent;
     }
 
-    public getValue() {
-        return getValueInRange(this.value, this.max);
+    protected set valueInPercent(valInPercent: number) {
+        const valueInRange = getValueInProperRange(valInPercent, this._max);
+        const valueIntoPercentage = convertInPercentage(valueInRange, this._max);
+        this._valueInPercent = valueIntoPercentage;
     }
 
-    public getPercentValue() {
-        return convertValueInPercent(this.getValue(), this.max);
+    protected runAnimation(val: number) {
+        const direction = this.directionFlow(this._value, val);
+
+        if (!this.requestAnimationId) {
+            this.requestAnimationId = requestAnimationFrame(
+                () => this.updateProgressSmoothly.call(this, val, direction));
+        }
+
     }
 
-    protected instantiateValAnimation(prevVal: number, currVal: number, max: number) {
-        // Validate current and previous value to be in range [0...max]
-        const validatePrevValue = getValueInRange(prevVal, max) || 0;
-        const validateCurrValue = getValueInRange(currVal, max) || 0;
-        // Get prev progress value in percent
-        this._valueInPercent = convertValueInPercent(validatePrevValue, max);
-        // Get previous value in percent
-        this._prevValue = convertValueInPercent(validatePrevValue, max);
-        // Get current value in percent
-        this._currValue = convertValueInPercent(validateCurrValue, max);
+    protected updateProgressSmoothly(val: number, direction: number) {
+        if (this._value === val) {
+            this.requestAnimationId = undefined;
+            return;
+        }
+
+        this._value += direction;
+        this.valueInPercent = this._value;
+
+        requestAnimationFrame(() => this.updateProgressSmoothly.call(this, val, direction));
     }
 
-    protected startAnimation(interval: number, circular: ElementRef = null, percentage: number = 0) {
-        // Change progress bar percent value
-        const timer = setInterval(function animateBar() {
-            if (this._valueInPercent >= this._currValue) {
-                clearInterval(timer);
+    protected updateProgressDirectly(val: number) {
+        this._value = val;
+        this.valueInPercent = this._value;
+    }
 
-                // Object that passed to the event
-                const changedValues = {
-                    currentValue: this._currValue,
-                    previousValue: this._prevValue
-                };
+    protected directionFlow(currentValue: number, prevValue: number): number {
+        if (currentValue < prevValue) {
+            return 1;
+        }
 
-                this.onProgressChanged.emit(changedValues);
-                if (circular) {
-                    this.renderer.setStyle(circular.nativeElement, "strokeDashoffset", percentage);
-                }
-            } else {
-                // Update progress bar percent value
-                this._valueInPercent++;
-            }
-        }.bind(this), interval);
+        return -1;
     }
 }
 
@@ -72,32 +71,57 @@ export abstract class BaseProgress {
     styleUrls: ["progressbar.component.scss"],
     templateUrl: "templates/linear-bar.component.html"
 })
-export class IgxLinearProgressBar extends BaseProgress implements OnChanges {
-    @Input() public max: number = 100;
+export class IgxLinearProgressBar extends BaseProgress {
+
     @Input() public striped: boolean = false;
     @Input() public type: string = "default";
-    @Input() public value: number = 0;
+    @Input()
+    set animate(animate: boolean) {
+        this._animate = animate;
+    }
+
+    get animate(): boolean {
+        return this._animate;
+    }
+
+    @Input()
+    set max(maxNum: number) {
+        this._max = maxNum;
+    }
+
+    get max() {
+        return this._max;
+    }
+
+    @Input()
+    get value(): number {
+        return this._value;
+    }
+
+    set value(val) {
+        if (this._value === val) {
+            return;
+        }
+
+        const valueInRange = getValueInProperRange(val, this.max);
+        const changedValues = {
+            previousValue: this._value,
+            currentValue: valueInRange
+        };
+
+        if (this._animate) {
+            super.runAnimation(valueInRange);
+        } else {
+            super.updateProgressDirectly(valueInRange);
+        }
+
+        this.onProgressChanged.emit(changedValues);
+    }
 
     @Output() public onProgressChanged = new EventEmitter();
 
-    @Input() protected _valueInPercent: number = 0;
-
-    private _interval: number = 15;
-
-    @ViewChild("linearBar") private _linearBar: ElementRef;
-
-    constructor(private elementRef: ElementRef, private renderer: Renderer2) {
+    constructor(private elementRef: ElementRef) {
         super();
-    }
-
-    public ngOnChanges(changes) {
-        if (this._linearBar) {
-            if (changes.value) {
-                super.instantiateValAnimation(changes.value.previousValue, changes.value.currentValue, this.max);
-
-                super.startAnimation(this._interval);
-            }
-        }
     }
 }
 
@@ -106,19 +130,58 @@ export class IgxLinearProgressBar extends BaseProgress implements OnChanges {
     styleUrls: ["progressbar.component.scss"],
     templateUrl: "templates/circular-bar.component.html"
 })
-export class IgxCircularProgressBar extends BaseProgress implements AfterViewInit, OnChanges {
-    @Input() public max: number = 100;
-    @Input() public value: number = 0;
+export class IgxCircularProgressBar extends BaseProgress implements AfterViewInit {
 
     @Output() public onProgressChanged = new EventEmitter();
 
-    @Input() protected _valueInPercent: number = 0;
+    private readonly STROKE_OPACITY_DVIDER = 100;
+    private readonly STROKE_OPACITY_ADDITION = .2;
+
+    @Input()
+    set animate(animate: boolean) {
+        this._animate = animate;
+    }
+
+    get animate(): boolean {
+        return this._animate;
+    }
+
+    @Input()
+    set max(maxNum: number) {
+        this._max = maxNum;
+    }
+
+    get max(): number {
+        return this._max;
+    }
+
+    @Input()
+    get value() {
+        return this._value;
+    }
+
+    set value(val) {
+        if (this._value === val) {
+            return;
+        }
+
+        const valueInProperRange = getValueInProperRange(val, this.max);
+        const changedValues = {
+            previousValue: this._value,
+            currentValue: valueInProperRange
+        };
+
+        if (this.animate) {
+            super.runAnimation(valueInProperRange);
+        } else {
+            this.updateProgressDirectly(valueInProperRange);
+        }
+
+        this.onProgressChanged.emit(changedValues);
+    }
 
     private _radius: number = 0;
-    private _circumference: number = 289;
-    private _interval: number = 15;
-    private _percentage = 0;
-    private _progress = 0;
+    private _circumference: number;
 
     @ViewChild("circle") private _svgCircle: ElementRef;
     @ViewChild("text") private _svgText: ElementRef;
@@ -127,40 +190,40 @@ export class IgxCircularProgressBar extends BaseProgress implements AfterViewIni
         super();
     }
 
-    public ngOnChanges(changes) {
-        if (this._svgCircle) {
-            // Validate percentage value to be between [0...100]
-            this._percentage = getValueInRange(super.getPercentValue(), 100);
-
-            if (changes.value) {
-                super.instantiateValAnimation(changes.value.previousValue, changes.value.currentValue, this.max);
-
-                super.startAnimation(this._interval, this._svgCircle, this._percentage);
-
-                // Set frames for the animation
-                const FRAMES = [{
-                    strokeDashoffset: this.getProgress(this._prevValue),
-                    strokeOpacity: (this._prevValue / 100) + .2
-                }, {
-                    strokeDashoffset: this.getProgress(this._percentage),
-                    strokeOpacity: (this._percentage / 100) + .2
-                }];
-
-                // Animate the svg
-                this._svgCircle.nativeElement.animate(FRAMES, {
-                    duration: (this._percentage * this._interval) + 400,
-                    easing: "ease-out",
-                    fill: "forwards"
-                });
-            }
-        }
+    public ngAfterViewInit() {
+        this._radius = parseInt(this._svgCircle.nativeElement.getAttribute("r"), 10);
+        this._circumference = 2 * Math.PI * this._radius;
     }
 
-    public ngAfterViewInit() {
-        if (this._svgCircle) {
-            this._radius = parseInt(this._svgCircle.nativeElement.getAttribute("r"), 10);
-            this._circumference = 2 * Math.PI * this._radius;
-        }
+    public updateProgressSmoothly(val: number, direction: number) {
+        // Set frames for the animation
+        const FRAMES = [{
+            strokeDashoffset: this.getProgress(this._value),
+            strokeOpacity: (this._value / this.STROKE_OPACITY_DVIDER) + this.STROKE_OPACITY_ADDITION
+        }, {
+            strokeDashoffset: this.getProgress(this.valueInPercent),
+            strokeOpacity: (this.valueInPercent / this.STROKE_OPACITY_DVIDER) + this.STROKE_OPACITY_ADDITION
+        }];
+        this._svgCircle.nativeElement.animate(FRAMES, {
+            easing: "ease-out",
+            fill: "forwards"
+        });
+
+        super.updateProgressSmoothly(val, direction);
+    }
+
+    public updateProgressDirectly(val: number) {
+        super.updateProgressDirectly(val);
+
+        this.renderer.setStyle(
+            this._svgCircle.nativeElement,
+            "stroke-dashoffset",
+            this.getProgress(this.valueInPercent));
+
+        this.renderer.setStyle(
+            this._svgCircle.nativeElement,
+            "stroke-opacity",
+            (this.valueInPercent / this.STROKE_OPACITY_DVIDER) + this.STROKE_OPACITY_ADDITION);
     }
 
     private getProgress(percentage: number) {
@@ -168,11 +231,11 @@ export class IgxCircularProgressBar extends BaseProgress implements AfterViewIni
     }
 }
 
-export function getValueInRange(value: number, max: number, min = 0): number {
+export function getValueInProperRange(value: number, max: number, min = 0): number {
     return Math.max(Math.min(value, max), min);
 }
 
-export function convertValueInPercent(value: number, max: number) {
+export function convertInPercentage(value: number, max: number) {
     return Math.floor(100 * value / max);
 }
 

@@ -3,9 +3,9 @@
     <div #linearBar role="progressbar" class="progress-linear__bar{{type ? '--' + type : ''}}"
         aria-valuemin="0"
         [attr.aria-valuemax]="max"
-        [attr.aria-valuenow]="getValue()"
-        [style.width.%]="valueInPercent || getPercentValue()">
+        [attr.aria-valuenow]="value"
+        [style.width.%]="valueInPercent">
         <ng-content></ng-content>
     </div>
-    <span class="progress-linear__value">{{valueInPercent || getPercentValue()}}%</span>
+    <span class="progress-linear__value">{{valueInPercent}}%</span>
 </div>
