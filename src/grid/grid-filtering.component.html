@@ -1,0 +1,34 @@
+<ng-template #defaultFilterUI>
+    <p>Condition:
+        <select (change)="conditionChanged($event.target.value)">
+            <option [selected]="isActive(each)" *ngFor="let each of conditions" [value]="each">{{ each | filterCondition | titlecase }}</option>
+        </select>
+    </p>
+    <p *ngIf="!unaryCondition">Value:
+        <input type="text" igxInput autocomplete="off" [value]="value" (input)="onInputChanged($event.target.value)" />
+    </p>
+    <button igxButton (click)="filter()">Filter</button>
+    <button igxButton (click)="clearFiltering()">Reset</button>
+</ng-template>
+
+<ng-template #defaultBooleanUI>
+    <p>Condition:
+        <select (change)="conditionChanged($event.target.value)">
+            <option [selected]="isActive(each)" *ngFor="let each of conditions" [value]="each">{{ each | filterCondition | titlecase }}</option>
+        </select>
+    </p>
+    <button igxButton (click)="clearFiltering()">Reset</button>
+</ng-template>
+
+<div class="igx-filtering">
+    <div class="igx-filtering__toggle">
+        <span class="toggle-icon" igxButton="icon" [class.igx-filtering__toggle--active]="dialogShowing" (click)="toggle()">
+            <igx-icon fontSet="material" name="filter_list"></igx-icon>
+        </span>
+    </div>
+</div>
+
+
+<span *ngIf="dialogShowing" class="igx-filtering__options">
+    <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
+</span>

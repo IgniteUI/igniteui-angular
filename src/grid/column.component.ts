@@ -1,6 +1,17 @@
-import { AfterContentInit, Component, ContentChild, Input, TemplateRef } from "@angular/core";
+import {
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    ContentChildren,
+    Input,
+    QueryList,
+    TemplateRef
+} from "@angular/core";
 import { DataType } from "../data-operations/data-util";
-import { FilteringCondition } from "../data-operations/filtering-condition";
+import { STRING_FILTERS } from "../data-operations/filtering-condition";
+import { IgxGridAPIService } from "./api.service";
 import {
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
@@ -8,42 +19,128 @@ import {
 } from "./grid.common";
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: "igx-column",
-    template: ``
+    template: ``,
+    preserveWhitespaces: false
 })
 export class IgxColumnComponent implements AfterContentInit {
 
-    @Input() public field: string;
-    @Input() public header: string = "";
-    @Input() public sortable: boolean = false;
-    @Input() public editable: boolean = false;
-    @Input() public filtering: boolean = false;
-    @Input() public hidden: boolean = false;
-    @Input() public movable: boolean = false;
-    @Input() public width: string;
-    @Input() public index: number;
-    @Input() public filteringCondition: (target: any, searchVal: any, ignoreCase?: boolean) => boolean
-        = FilteringCondition.string.contains;
-    @Input() public filteringIgnoreCase: boolean = true;
-    @Input() public dataType: DataType = DataType.String;
+    @Input()
+    public field: string;
 
-    public bodyTemplate: TemplateRef<any>;
-    public headerTemplate: TemplateRef<any>;
-    public footerTemplate: TemplateRef<any>;
+    @Input()
+    public header = "";
 
-    @ContentChild(IgxCellTemplateDirective) protected cellTemplate: IgxCellTemplateDirective;
-    @ContentChild(IgxCellHeaderTemplateDirective) protected headTemplate: IgxCellHeaderTemplateDirective;
-    @ContentChild(IgxCellFooterTemplateDirective) protected footTemplate: IgxCellFooterTemplateDirective;
+    @Input()
+    public sortable = false;
+
+    @Input()
+    public editable = false;
+
+    @Input()
+    public filterable = false;
+
+    @Input()
+    get hidden(): boolean {
+        return this._hidden;
+    }
+
+    set hidden(value: boolean) {
+        this._hidden = value;
+        this.gridAPI.get(this.gridID).onColumnChanges();
+        this.gridAPI.markForCheck(this.gridID);
+    }
+
+    @Input()
+    public movable = false;
+
+    @Input()
+    public width: string;
+
+    @Input()
+    public headerClasses = "";
+
+    @Input()
+    public cellClasses = "";
+
+    @Input()
+    get index(): number {
+        return this._index;
+    }
+
+    set index(value: number) {
+        this._index = value;
+    }
+
+    @Input()
+    public formatter: (value: any) => any;
+
+    @Input()
+    public filteringCondition: (target: any, searchVal: any, ignoreCase?: boolean) =>
+        boolean = STRING_FILTERS.contains;
+
+    @Input()
+    public filteringIgnoreCase = true;
+
+    @Input()
+    public dataType: DataType = DataType.String;
+
+    public gridID: string;
+
+    get bodyTemplate(): TemplateRef<any> {
+        return this._bodyTemplate;
+    }
+
+    set bodyTemplate(template: TemplateRef<any>) {
+        this._bodyTemplate = template;
+        this.gridAPI.markForCheck(this.gridID);
+    }
+
+    get headerTemplate(): TemplateRef<any> {
+        return this._headerTemplate;
+    }
+
+    set headerTemplate(template: TemplateRef<any>) {
+        this._headerTemplate = template;
+        this.gridAPI.markForCheck(this.gridID);
+    }
+
+    get footerTemplate(): TemplateRef<any> {
+        return this._headerTemplate;
+    }
+
+    set footerTemplate(template: TemplateRef<any>) {
+        this._footerTemplate = template;
+        this.gridAPI.markForCheck(this.gridID);
+    }
+
+    protected _bodyTemplate: TemplateRef<any>;
+    protected _headerTemplate: TemplateRef<any>;
+    protected _footerTemplate: TemplateRef<any>;
+    protected _hidden = false;
+    protected _index: number;
+
+    @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective })
+    protected cellTemplate: IgxCellTemplateDirective;
+
+    @ContentChild(IgxCellHeaderTemplateDirective, { read: IgxCellHeaderTemplateDirective })
+    protected headTemplate: IgxCellHeaderTemplateDirective;
+
+    @ContentChild(IgxCellFooterTemplateDirective, { read: IgxCellFooterTemplateDirective })
+    protected footTemplate: IgxCellFooterTemplateDirective;
+
+    constructor(private gridAPI: IgxGridAPIService, private cdr: ChangeDetectorRef) {}
 
     public ngAfterContentInit(): void {
         if (this.cellTemplate) {
-            this.bodyTemplate = this.cellTemplate.template;
+            this._bodyTemplate = this.cellTemplate.template;
         }
         if (this.headTemplate) {
-            this.headerTemplate = this.headTemplate.template;
+            this._headerTemplate = this.headTemplate.template;
         }
         if (this.footTemplate) {
-            this.footerTemplate = this.footTemplate.template;
+            this._footerTemplate = this.footTemplate.template;
         }
     }
 }

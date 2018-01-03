@@ -12,10 +12,10 @@ import { IPagingState, PagingError } from "./paging-state.interface";
 import { IDataState } from "./data-state.interface";
 
 export enum DataType {
-    String,
-    Number,
-    Boolean,
-    Date
+    String = "string",
+    Number = "number",
+    Boolean = "boolean",
+    Date = "date"
 }
 
 export class DataUtil {
@@ -38,22 +38,7 @@ export class DataUtil {
     }
     public static getFilteringConditionsForDataType(dataType: DataType):
         {[name: string]: (value: any, searchVal?: any, ignoreCase?: boolean) => void} {
-        let dt: string;
-        switch (dataType) {
-            case DataType.String:
-                dt = "string";
-                break;
-            case DataType.Number:
-                dt = "number";
-                break;
-            case DataType.Boolean:
-                dt = "boolean";
-                break;
-            case DataType.Date:
-                dt = "date";
-                break;
-        }
-        return FilteringCondition[dt];
+        return FilteringCondition[dataType];
     }
     public static getListOfFilteringConditionsForDataType(dataType: DataType): string[] {
         return Object.keys(DataUtil.getFilteringConditionsForDataType(dataType));

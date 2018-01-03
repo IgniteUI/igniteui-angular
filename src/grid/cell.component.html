@@ -1,0 +1,7 @@
+<td>
+    <ng-template #defaultCell>
+        {{ formatter ? formatter(value) : value }}
+    </ng-template>
+    <ng-container *ngTemplateOutlet="column.bodyTemplate ? column.bodyTemplate : defaultCell; context: context">
+    </ng-container>
+</td>

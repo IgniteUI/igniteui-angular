@@ -16,7 +16,7 @@ export * from "./data-operations/paging-state.interface";
 export * from "./data-operations/data-state.interface";
 export * from "./data-operations/data-util";
 export * from "./data-operations/data-container";
-export * from "./grid/grid.component";
+export * from "./grid/";
 
 export * from "./navigation-drawer/navigation-drawer.component";
 export * from "./icon/icon.component";
