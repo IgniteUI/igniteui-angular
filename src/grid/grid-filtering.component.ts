@@ -25,7 +25,7 @@ import { IgxColumnComponent } from "./column.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: "igx-grid-filter",
     templateUrl: "./grid-filtering.component.html",
-    styleUrls: ["./column-filtering.component.scss"],
+    styleUrls: ["./grid-filtering.component.scss"],
     preserveWhitespaces: false
 })
 export class IgxGridFilterComponent implements OnDestroy {
