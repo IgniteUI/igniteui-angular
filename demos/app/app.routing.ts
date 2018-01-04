@@ -1,6 +1,7 @@
 import { ModuleWithProviders } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
+import { VirtualContainerSampleComponent } from "./virtual-container/sample.component";
 import { AvatarSampleComponent } from "./avatar/sample.component";
 import { BadgeSampleComponent } from "./badge/sample.component";
 import { ButtonsSampleComponent } from "./button/sample.component";
@@ -140,6 +141,10 @@ const appRoutes: Routes = [
     {
         component: LayoutSampleComponent,
         path: "layout"
+    },
+    {
+        component: VirtualContainerSampleComponent ,
+        path: "virtual-container"
     }
 ];
 

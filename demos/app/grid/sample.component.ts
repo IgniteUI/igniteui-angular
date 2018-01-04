@@ -2,13 +2,10 @@ import { Component, Injectable, ViewChild } from "@angular/core";
 import { Http } from "@angular/http";
 import { BehaviorSubject, Observable } from "rxjs/Rx";
 import { IgxColumnComponent } from "../../lib/grid/column.component";
+import {  IgxGridComponent} from "../../lib/grid/grid.component";
 import {
   DataContainer,
   IDataState,
-
-  IgxGridBindingBehavior,
-  IgxGridColumnInitEvent,
-  IgxGridComponent,
   IgxSnackbar,
   IgxToast,
   IPagingState,
@@ -135,31 +132,31 @@ export class GridSampleComponent {
           {ID: 5, Name: "E"}
         ];
 
-      this.grid2.state = {
-        sorting: {
-          expressions: [],
-          strategy: new StableSortingStrategy()
-        }
-      };
+      //this.grid2.state = {
+      // sorting: {
+      //    expressions: [],
+      //    strategy: new StableSortingStrategy()
+      //  }
+      //};
 
-      this.grid3.state = {
-        paging: {
-          index: 2,
-          recordsPerPage: 10
-        },
-        sorting: {
-          expressions: [
-            {fieldName: "ProductID", dir: SortingDirection.Desc}
-          ]
-        }
-      };
+    //this.grid3.state = {
+    //  paging: {
+    //    index: 2,
+    //    recordsPerPage: 10
+    //   },
+    //   sorting: {
+    //     expressions: [
+    //       {fieldName: "ProductID", dir: SortingDirection.Desc}
+    //     ]
+   //   }
+    // };
     }
 
     public ngAfterViewInit() {
-      this.remoteService.getData(this.grid3.dataContainer.state);
+     // this.remoteService.getData(this.grid3.dataContainer.state);
     }
 
-    public onProcess(event: IgxGridBindingBehavior): void {
+    public onProcess(event: any): void {
       event.process = (dataContainer: DataContainer) => {
         if (dataContainer.data.length) {
           dataContainer.transformedData = dataContainer.data;
@@ -178,15 +175,15 @@ export class GridSampleComponent {
       this.toast.message = "Loading remote data";
       this.toast.position = 1;
       this.toast.show();
-      this.remoteService.getData(this.grid3.dataContainer.state, () => {
-        this.toast.hide();
-      });
+     // this.remoteService.getData(this.grid3.dataContainer.state, () => {
+     //   this.toast.hide();
+     // });
     }
 
-    public initColumns(event: IgxGridColumnInitEvent) {
+    public initColumns(event: any) {
       const column: IgxColumnComponent = event.column;
       if (column.field === "Name") {
-        column.filtering = true;
+        //column.filtering = true;
         column.sortable = true;
         column.editable = true;
       }
@@ -197,10 +194,10 @@ export class GridSampleComponent {
         return;
       }
       const total = this.grid2.data.length;
-      const state = this.grid2.state;
-      if ((state.paging.recordsPerPage * event) >= total) {
-        return;
-      }
+    //  const state = this.grid2.state;
+    // if ((state.paging.recordsPerPage * event) >= total) {
+    //    return;
+    //  }
       this.grid2.paginate(event);
     }
 
@@ -209,13 +206,13 @@ export class GridSampleComponent {
         return;
       }
       const total = this.grid2.data.length;
-      const state = this.grid2.state;
-      if ((state.paging.index * event) >= total) {
-        return;
-      }
+      //const state = this.grid2.state;
+     // if ((state.paging.index * event) >= total) {
+     //   return;
+     // }
       this.grid2.perPage = event;
-      state.paging.recordsPerPage = event;
-      this.grid2.dataContainer.process();
+     // state.paging.recordsPerPage = event;
+     // this.grid2.dataContainer.process();
     }
 
     public selectCell(event) {
@@ -228,25 +225,25 @@ export class GridSampleComponent {
         return;
       }
       const record = {ID: this.grid1.data[this.grid1.data.length - 1].ID + 1, Name: this.newRecord};
-      this.grid1.addRow(record);
+     // this.grid1.addRow(record);
       this.newRecord = "";
     }
 
     public updateRecord(event) {
-      this.grid1.updateCell(this.selectedCell.rowIndex, this.selectedCell.columnField, event);
-      this.grid1.getCell(this.selectedCell.rowIndex, this.selectedCell.columnField);
+      //this.grid1.updateCell(this.selectedCell.rowIndex, this.selectedCell.columnField, event);
+      //this.grid1.getCell(this.selectedCell.rowIndex, this.selectedCell.columnField);
     }
 
     public deleteRow(event) {
-      this.selectedRow = Object.assign({}, this.grid1.getRow(this.selectedCell.rowIndex));
-      this.grid1.deleteRow(this.selectedCell.rowIndex);
+      //this.selectedRow = Object.assign({}, this.grid1.getRow(this.selectedCell.rowIndex));
+      //this.grid1.deleteRow(this.selectedCell.rowIndex);
       this.selectedCell = {};
       this.snax.message = `Row with ID ${this.selectedRow.record.ID} was deleted`;
       this.snax.show();
     }
 
     public restore() {
-      this.grid1.addRow(this.selectedRow.record, this.selectedRow.index);
+      this.grid1.addRow(this.selectedRow.record);
       this.snax.hide();
     }
 }

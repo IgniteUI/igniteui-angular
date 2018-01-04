@@ -3,7 +3,6 @@ import {
     ButtonGroupAlignment,
     IgxButton,
     IgxButtonGroupModule,
-    IgxDirectivesModule
 } from "../../lib/main";
 
 interface IButton {
