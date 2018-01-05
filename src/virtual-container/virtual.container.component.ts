@@ -1,6 +1,8 @@
-import { Component, Input, AfterViewInit, ViewChild, ComponentFactoryResolver, OnDestroy, OnInit, ElementRef } from '@angular/core';
+import { Component, Input, AfterViewInit, ViewChild, ComponentFactoryResolver, OnDestroy, OnInit, ElementRef, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { VirtualRowHost } from './virtual.row.host.directive';
 import { VirtualVericalItemComponent } from './virtual.vertical.item.component';
+import { Observable } from "rxjs/Rx";
+import {IVirtualizationState} from "./virtualization-state.interface"
 
 @Component({
   selector: 'igx-virtual-container',
@@ -9,17 +11,23 @@ import { VirtualVericalItemComponent } from './virtual.vertical.item.component';
                 </ng-template>
             `
 })
-export class VirtualContainerComponent implements AfterViewInit, OnDestroy, OnInit {
-@Input() options: any;
+export class VirtualContainerComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges {
+@Input() public options: any;
+@Input()  public data:any;
+@Output() loadRemoteChunk = new EventEmitter<IVirtualizationState>();
+
 startVertIndex:number;
 endVertIndex:number;
+localChunkData:any;
+private _localCache:any;
+state:IVirtualizationState;
 
 startHorIndex:number;
 endHorIndex:number;
 
 height:number;
 width:number;
-totalRowCount:number;
+public totalRowCount:number;
 
 topPortionHeight:any;
 bottomPortionHeight:any
@@ -35,10 +43,8 @@ constructor(private componentFactoryResolver: ComponentFactoryResolver, private 
 
 @ViewChild(VirtualRowHost) rowsHost: VirtualRowHost;
  ngOnInit() {
-     this.attachEventHandlers();
- }
-  ngAfterViewInit() {
-      this.totalRowCount = this.options.data.length;
+      this.attachEventHandlers();
+
       this.width = this.options.width;
       var containerElem = this.elemRef.nativeElement.parentElement;
       this.prevScrTop = 0;
@@ -53,7 +59,20 @@ constructor(private componentFactoryResolver: ComponentFactoryResolver, private 
       this.startHorIndex = 0;
       this.endHorIndex = this.startHorIndex + this.visibleHorizontalItemsCount;      
 
-      this.loadItems(this.startVertIndex, this.endVertIndex);
+      if(this.data instanceof Array){
+          this.totalRowCount = this.data.length;
+      } else {
+          this.totalRowCount = this.data.count();
+      }
+ }
+ ngOnChanges(changes: SimpleChanges) {
+     if(changes["data"]){
+         this.loadItems(this.startVertIndex, this.endVertIndex, false);
+     }
+
+ }
+  ngAfterViewInit() {
+      this.loadItems(this.startVertIndex, this.endVertIndex, false);
   }
    ngOnDestroy() {
    }
@@ -109,19 +128,19 @@ constructor(private componentFactoryResolver: ComponentFactoryResolver, private 
    loadNextVerticalChunk(){
        this.startVertIndex = this.startVertIndex + this.visibleVerticalItemsCount/2;
        this.endVertIndex = this.startVertIndex + this.visibleVerticalItemsCount;
-       this.loadItems(this.startVertIndex, this.endVertIndex);
+       this.loadItems(this.startVertIndex, this.endVertIndex, false);
    }
 
     loadPreviousVerticalChunk(){
        this.startVertIndex = this.startVertIndex - this.visibleVerticalItemsCount/2;
        this.endVertIndex = this.startVertIndex + this.visibleVerticalItemsCount;
-       this.loadItems(this.startVertIndex, this.endVertIndex);
+       this.loadItems(this.startVertIndex, this.endVertIndex, false);
    }
 
    loadVerticalChunkAt(percentage){
         this.startVertIndex = parseInt((this.totalRowCount * percentage/100).toFixed(0));
         this.endVertIndex = this.startVertIndex + this.visibleVerticalItemsCount;
-        this.loadItems(this.startVertIndex, this.endVertIndex);
+        this.loadItems(this.startVertIndex, this.endVertIndex, false);
    }
    
    loadHorizontalChunkAt(percentage){
@@ -129,14 +148,14 @@ constructor(private componentFactoryResolver: ComponentFactoryResolver, private 
        this.startHorIndex = start > 0 ? start : 0;
        this.endHorIndex = this.startHorIndex + this.visibleHorizontalItemsCount;
         //console.log("Start:" +this.startHorIndex + ", End: "+ this.endHorIndex );
-        this.loadItems(this.startVertIndex, this.endVertIndex);
+        this.loadItems(this.startVertIndex, this.endVertIndex, true);
    }
 
     loadNextHorizontalChunk(){
         this.startHorIndex = this.startHorIndex + this.visibleHorizontalItemsCount/2;
         this.endHorIndex = this.startHorIndex + this.visibleHorizontalItemsCount;
         //console.log("Start:" +this.startHorIndex + ", End: "+ this.endHorIndex );
-        this.loadItems(this.startVertIndex, this.endVertIndex);
+        this.loadItems(this.startVertIndex, this.endVertIndex, true);
     }
 
     loadPrevHorizontalChunk(){
@@ -144,15 +163,49 @@ constructor(private componentFactoryResolver: ComponentFactoryResolver, private 
         this.startHorIndex = start > 0 ? start : 0;
         this.endHorIndex = this.startHorIndex + this.visibleHorizontalItemsCount;
         //console.log("Start:" +this.startHorIndex + ", End: "+ this.endHorIndex );
-        this.loadItems(this.startVertIndex, this.endVertIndex);
+        this.loadItems(this.startVertIndex, this.endVertIndex, true);
     }
    
-   loadItems(start, end){
+   loadItems(start, end, isHorizontal){
+       var data;
+       if(start === undefined || start === null ){
+           return;
+       }
+       if(start < 0){
+           start = 0;
+       }
+       if(!isHorizontal)
+       {
+            if(this.data instanceof Array) {
+               this.totalRowCount = this.data.length;
+               data = this.data.slice(start, end);
+            } else if(this.localChunkData){
+                data = this.localChunkData;
+                if(!this.options.loadOnDemand){
+                    this.totalRowCount = data.length;
+                    data = data.slice(start, end);
+                }
+                this.localChunkData = null;
+            } else {
+                    //trigger event
+                  this.state = {
+                      chunkStartIndex: start,
+                      chunkEndIndex: end
+                  };
+                  this.loadRemoteChunk.emit(this.state)
+                  this.data.subscribe(value => { this.totalRowCount = this.state.metadata ?  this.state.metadata.totalRecordsCount: this.totalRowCount; this.localChunkData = value; this.loadItems(start,  end, false)});
+                  return;
+            }
+       } else {
+           data = this._localCache;
+       }    
+       if(data.length === 0){
+           return;
+       }
+       this._localCache = data;
        this.topPortionHeight = this.startVertIndex * this.options.verticalItemHeight;
        this.bottomPortionHeight = (this.totalRowCount - end) * this.options.verticalItemHeight;
 
-       //splice data
-       var data = this.options.data.slice(start, end);
        this.currColumns = this.options.columns.slice(this.startHorIndex, this.endHorIndex);
 
        var rowComponent = this.options.rowComponent;
