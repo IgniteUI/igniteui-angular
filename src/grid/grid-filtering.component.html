@@ -1,23 +1,11 @@
 <ng-template #defaultFilterUI>
-    <p>Condition:
-        <select (change)="conditionChanged($event.target.value)">
-            <option [selected]="isActive(each)" *ngFor="let each of conditions" [value]="each">{{ each | filterCondition | titlecase }}</option>
-        </select>
-    </p>
     <p *ngIf="!unaryCondition">Value:
         <input type="text" igxInput autocomplete="off" [value]="value" (input)="onInputChanged($event.target.value)" />
     </p>
-    <button igxButton (click)="filter()">Filter</button>
-    <button igxButton (click)="clearFiltering()">Reset</button>
 </ng-template>
 
-<ng-template #defaultBooleanUI>
-    <p>Condition:
-        <select (change)="conditionChanged($event.target.value)">
-            <option [selected]="isActive(each)" *ngFor="let each of conditions" [value]="each">{{ each | filterCondition | titlecase }}</option>
-        </select>
-    </p>
-    <button igxButton (click)="clearFiltering()">Reset</button>
+<ng-template #defaultDateUI>
+    <igx-datePicker *ngIf="!unaryCondition" [(ngModel)]="value"></igx-datePicker>
 </ng-template>
 
 <div class="igx-filtering">
@@ -28,7 +16,13 @@
     </div>
 </div>
 
-
 <span *ngIf="dialogShowing" class="igx-filtering__options">
+    <p>Condition:
+        <select (change)="conditionChanged($event.target.value)">
+            <option [selected]="isActive(each)" *ngFor="let each of conditions" [value]="each">{{ each | filterCondition | titlecase }}</option>
+        </select>
+    </p>
     <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
+    <button igxButton igxRipple (click)="filter()">Filter</button>
+    <button igxButton igxRipple (click)="clearFiltering()">Reset</button>
 </span>

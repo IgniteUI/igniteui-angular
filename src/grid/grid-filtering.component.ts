@@ -74,8 +74,10 @@ export class IgxGridFilterComponent implements OnDestroy {
             case DataType.String:
             case DataType.Number:
                 return this.defaultFilterUI;
+            case DataType.Date:
+                return this.defaultDateUI;
             case DataType.Boolean:
-                return this.defaultBooleanUI;
+                return null;
         }
     }
 
@@ -90,6 +92,11 @@ export class IgxGridFilterComponent implements OnDestroy {
 
     public dialogShowing = false;
 
+    protected UNARY_CONDITIONS = [
+        "true", "false", "null", "notNull", "empty", "notEmpty",
+        "yesterday", "today", "thisMonth", "lastMonth", "nextMonth",
+        "thisYear", "lastYear", "nextYear"
+    ];
     protected _value;
     protected _filterCondition;
     protected filterChanged = new Subject();
@@ -97,8 +104,8 @@ export class IgxGridFilterComponent implements OnDestroy {
     @ViewChild("defaultFilterUI", { read: TemplateRef })
     protected defaultFilterUI: TemplateRef<any>;
 
-    @ViewChild("defaultBooleanUI", { read: TemplateRef })
-    protected defaultBooleanUI: TemplateRef<any>;
+    @ViewChild("defaultDateUI", { read: TemplateRef })
+    protected defaultDateUI: TemplateRef<any>;
 
     constructor(private gridAPI: IgxGridAPIService, private cdr: ChangeDetectorRef) {
         this.filterChanged.pipe(
@@ -116,7 +123,7 @@ export class IgxGridFilterComponent implements OnDestroy {
     }
 
     get unaryCondition() {
-        for (const each of ["true", "false", "null", "notNull", "empty", "notEmpty"]) {
+        for (const each of this.UNARY_CONDITIONS) {
             if (this._filterCondition && this._filterCondition === each) {
                 return true;
             }
@@ -133,7 +140,7 @@ export class IgxGridFilterComponent implements OnDestroy {
 
     public clearFiltering() {
         this._value = null;
-        // this._filterCondition = undefined;
+        this._filterCondition = undefined;
         this.gridAPI.clear_filter(this.gridID, this.column.field);
         this.cdr.markForCheck();
     }
@@ -148,6 +155,8 @@ export class IgxGridFilterComponent implements OnDestroy {
             this.column.filteringCondition = NUMBER_FILTERS[value];
         } else if (this.dataType === DataType.Boolean) {
             this.column.filteringCondition = BOOLEAN_FILTERS[value];
+        } else if (this.dataType === DataType.Date) {
+            this.column.filteringCondition = DATE_FILTERS[value];
         }
         this.filter();
     }
@@ -179,6 +188,8 @@ export class IgxGridFilterComponent implements OnDestroy {
             value = parseInt(value, 10);
         } else if (this.dataType === DataType.Boolean) {
             value = Boolean(value);
+        } else if (this.dataType === DataType.Date) {
+            value = new Date(Date.parse(value));
         }
 
         return value;

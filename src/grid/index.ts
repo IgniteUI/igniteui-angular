@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { IgxButtonModule } from "../button/button.directive";
+import { IgxDatePickerModule } from "../date-picker/date-picker.component";
 import { IgxRippleModule } from "../directives/ripple.directive";
 import { IgxIconModule } from "../icon/icon.component";
 import { IgxInput } from "../input/input.directive";
@@ -42,6 +43,7 @@ import { IgxGridRowComponent } from "./row.component";
     CommonModule,
     FormsModule,
     IgxButtonModule,
+    IgxDatePickerModule,
     IgxIconModule,
     IgxRippleModule,
     IgxInput

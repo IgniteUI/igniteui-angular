@@ -48,8 +48,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
     set hidden(value: boolean) {
         this._hidden = value;
-        this.gridAPI.get(this.gridID).onColumnChanges();
-        this.gridAPI.markForCheck(this.gridID);
+        this.check();
     }
 
     @Input()
@@ -141,6 +140,13 @@ export class IgxColumnComponent implements AfterContentInit {
         }
         if (this.footTemplate) {
             this._footerTemplate = this.footTemplate.template;
+        }
+    }
+
+    protected check() {
+        if (this.gridID) {
+            this.gridAPI.get(this.gridID).onColumnChanges();
+            this.gridAPI.markForCheck(this.gridID);
         }
     }
 }

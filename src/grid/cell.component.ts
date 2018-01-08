@@ -67,6 +67,10 @@ export class IgxGridCellComponent {
         return this.column.index;
     }
 
+    get nativeElement(): any {
+        return this.element.nativeElement;
+    }
+
     @HostBinding("attr.tabindex")
     public tabindex = 0;
 

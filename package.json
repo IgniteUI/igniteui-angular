@@ -35,7 +35,7 @@
         "prebuild": "rimraf dist tmp",
         "prebuild:watch": "rimraf dist tmp",
         "test": "karma start",
-        "test:watch": "karma start --auto-watch --no-single-run",
+        "test:watch": "karma start --auto-watch --use-polling --no-single-run",
         "tslint": "tslint",
         "sass-lint": "sass-lint",
         "start:demos": "npm run build && cd demos && npm start",
