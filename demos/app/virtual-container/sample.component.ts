@@ -17,12 +17,6 @@ export class LocalDataService {
 
     constructor(private http: Http) {
       this.sampleData = [];
-
-      this._records = new BehaviorSubject([]);
-      this.records = this._records.asObservable();
-    }
-
-    public getData() {
       var cols = [];
         for(var j = 0; j < 100; j++){
           cols.push({field: j.toString()});
@@ -36,7 +30,13 @@ export class LocalDataService {
        }
         this.sampleData.push(obj);
       }
-      this._records.next(this.sampleData);
+      this._records = new BehaviorSubject([]);
+      this.records = this._records.asObservable();
+    }
+
+    public getData(virtualization?: IVirtualizationState) {
+      virtualization.metadata = {totalRecordsCount : this.sampleData.length};
+      this._records.next(this.sampleData.slice(virtualization.chunkStartIndex, virtualization.chunkEndIndex));
     }
 
 }
@@ -73,7 +73,7 @@ export class VirtualContainerSampleComponent {
   };
 
    }
-   public ngOnInit(): void {
-     this.localService.getData();
+  loadChunk(event){
+     this.localService.getData(event);
    }
 }

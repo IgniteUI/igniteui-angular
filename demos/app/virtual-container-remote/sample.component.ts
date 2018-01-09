@@ -85,7 +85,6 @@ export class VirtualContainerRemoteSampleComponent {
    
     this.data = this.remoteService.remoteData;
     this.opts = {
-    loadOnDemand:true,
     columns:this.cols,
     horizontalItemWidth :200,
     verticalItemHeight: 25,
