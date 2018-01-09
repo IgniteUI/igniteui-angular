@@ -7,9 +7,9 @@ import { VirtualContainerSampleComponent } from "./sample.component";
 import { myRow } from './row';
 import { myCell } from './cell';
 
-@NgModule({    
+@NgModule({
     declarations: [VirtualContainerSampleComponent, myRow, myCell],
-    imports: [PageHeaderModule, CommonModule, IgxVirtualContainerModule ],
+    imports: [PageHeaderModule, CommonModule, IgxVirtualContainerModule],
     entryComponents: [myRow, myCell]
 })
-export class VirtualContainerSampleModule {  }
+export class VirtualContainerSampleModule { }
