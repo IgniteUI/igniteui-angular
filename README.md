@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/IgniteUI/igniteui-js-blocks.svg?branch=master)](https://travis-ci.org/IgniteUI/igniteui-js-blocks)
 [![Coverage Status](https://coveralls.io/repos/github/IgniteUI/igniteui-js-blocks/badge.svg?branch=master)](https://coveralls.io/github/IgniteUI/igniteui-js-blocks?branch=master)
-[![NPM version](https://img.shields.io/npm/v/igniteui-js-blocks.svg?style=flat)](https://www.npmjs.com/package/igniteui-js-blocks)
+[![npm version](https://badge.fury.io/js/igniteui-js-blocks.svg)](https://badge.fury.io/js/igniteui-js-blocks)
 
 [Ignite UI for Angular](https://www.infragistics.com/products/ignite-ui-angular) is a complete set of Material-based UI Widgets, Components & Sketch UI kits and supporting directives for [Angular](https://angular.io/) by Infragistics.  Ignite UI for Angular is designed to enable developers to build the most modern, high-performance HTML5 & JavaScript apps for modern desktop browsers, mobile experiences and progressive web apps (PWA’s) targeting Google's Angular framework.  
 
@@ -49,6 +49,17 @@ From the root folder run:
 
 ```
 npm install
+```
+
+## Getting Started with CLI
+To get started with the Ignite UI CLI and Ignite UI for Angular:
+
+```
+npm i -g igniteui-cli
+ig new <project name> --framework=angular
+cd <project name>
+ig add grid <component name>
+ig start
 ```
 
 ## Build Library
