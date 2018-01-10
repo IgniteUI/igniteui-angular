@@ -49,3 +49,5 @@ export * from "./date-picker/date-picker.component";
 export * from "./virtual-container/virtual.container.component";
 export * from "./virtual-container/virtual.horizontal.item.component";
 export * from "./virtual-container/virtual.vertical.item.component";
+export * from "./virtual-container/virtualization-state.interface";
+

@@ -1,6 +1,4 @@
-<div style="margin: 100px">
-    <table class='myGrid'>
-        <igx-virtual-container [options]='opts'>
-        </igx-virtual-container>
-    </table>
-</div>
+<table class='myGrid'>
+  <igx-virtual-container [options]='opts' [data]='data' (loadRemoteChunk)="loadChunk($event)">
+  </igx-virtual-container>
+</table>
