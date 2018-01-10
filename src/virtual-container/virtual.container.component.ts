@@ -66,6 +66,9 @@ export class VirtualContainerComponent implements AfterViewInit, OnDestroy, OnIn
         var containerElem = this.elemRef.nativeElement.parentElement;
         this.prevScrTop = 0;
         this.prevScrLeft = 0;
+        this.columnLeftCache = [];
+
+        this.visibleVerticalItemsCount = (containerElem.clientHeight / this.options.verticalItemHeight) * 2;
 
         var totalWidth = 0, i = 0;
         this.columnLeftCache.push(0);
@@ -95,12 +98,13 @@ export class VirtualContainerComponent implements AfterViewInit, OnDestroy, OnIn
         this.isLoading = true;
         this.ref.detectChanges();
     }
+
     ngOnChanges(changes: SimpleChanges) {
         if (changes["data"] && this.state) {
             this.loadItems(this.state.chunkStartIndex, this.state.chunkEndIndex, false);
         }
-
     }
+
     ngDoCheck() {
         if (!this.isLoading) {
             var containerElem = this.elemRef.nativeElement.parentElement;
@@ -110,8 +114,8 @@ export class VirtualContainerComponent implements AfterViewInit, OnDestroy, OnIn
                 this.scroll();
             }
         }
-
     }
+
     ngAfterViewInit() {
         this.initialLoad = true;
         this.loadItems(this.state.chunkStartIndex, this.state.chunkEndIndex, false);
@@ -125,8 +129,10 @@ export class VirtualContainerComponent implements AfterViewInit, OnDestroy, OnIn
             });
         }
     }
+
     ngOnDestroy() {
     }
+
     attachEventHandlers() {
         var containerElem = this.elemRef.nativeElement.parentElement;
         var that = this;
@@ -280,7 +286,7 @@ export class VirtualContainerComponent implements AfterViewInit, OnDestroy, OnIn
         this.topPortionHeight = this.state.chunkStartIndex * this.options.verticalItemHeight;
         this.bottomPortionHeight = (this.state.metadata.totalRecordsCount - this.state.chunkEndIndex) * this.options.verticalItemHeight;
 
-        this.currColumns = this.options.columns.slice(this.startHorIndex, this.endHorIndex);
+        this.currColumns = this.options.columns.slice(this.startHorIndex, this.endHorIndex + 1);
 
         var rowComponent = this.options.rowComponent;
         let componentFactory = this.componentFactoryResolver.resolveComponentFactory(rowComponent);
