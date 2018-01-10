@@ -6,7 +6,9 @@ import {
     HostBinding,
     HostListener,
     Input,
-    TemplateRef
+    TemplateRef,
+    ViewChild,
+    ViewContainerRef
 } from "@angular/core";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridAPIService } from "./api.service";
@@ -51,6 +53,17 @@ export class IgxGridCellComponent {
         };
     }
 
+    get template(): TemplateRef<any> {
+        if (this.inEditMode) {
+            const inlineEditorTemplate = this.column.inlineEditorTemplate;
+            return inlineEditorTemplate ? inlineEditorTemplate : this.inlineEditorTemplate;
+        }
+        if (this.cellTemplate) {
+            return this.cellTemplate;
+        }
+        return this.defaultCellTemplate;
+    }
+
     get gridID(): any {
       return this.row.gridID;
     }
@@ -69,6 +82,10 @@ export class IgxGridCellComponent {
 
     get nativeElement(): any {
         return this.element.nativeElement;
+    }
+
+    get inEditMode(): boolean {
+        return this._inEditMode;
     }
 
     @HostBinding("attr.tabindex")
@@ -122,14 +139,28 @@ export class IgxGridCellComponent {
         this.cdr.markForCheck();
     }
 
+    @ViewChild("defaultCell", { read: TemplateRef })
+    protected defaultCellTemplate: TemplateRef<any>;
+
+    @ViewChild("inlineEditor", { read: TemplateRef })
+    protected inlineEditorTemplate: TemplateRef<any>;
+
     protected defaultCssClass = "igx-grid__td";
     protected isFocused = false;
     protected isSelected = false;
     protected _value: any;
+    protected _inEditMode = false;
 
     constructor(private gridAPI: IgxGridAPIService,
                 private cdr: ChangeDetectorRef,
                 private element: ElementRef) {}
+
+    @HostListener("dblclick", ["$event"])
+    public onDoubleClick(event) {
+        if (this.column.editable) {
+            this._inEditMode = true;
+        }
+    }
 
     @HostListener("focus", ["$event"])
     public onFocus(event) {
@@ -145,26 +176,46 @@ export class IgxGridCellComponent {
     }
 
     @HostListener("keydown", ["$event"])
-    public onKeyDown(event) {
+    public onKeyDown(event: KeyboardEvent) {
 
-        const handleKeyboardNavigation = (rowIndex, columnIndex) => {
-            target = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
-            if (target) {
-                target.element.nativeElement.focus();
-            }
-        };
-
-        const key = event.key;
+        const visibleColumns = this.grid.visibleColumns;
+        let ri = this.rowIndex;
+        let ci = this.columnIndex;
+        let rv;
         let target;
 
-        if (key.endsWith("ArrowUp")) {
-            handleKeyboardNavigation(this.rowIndex - 1, this.columnIndex);
-        } else if (key.endsWith("ArrowDown")) {
-            handleKeyboardNavigation(this.rowIndex + 1, this.columnIndex);
-        } else if (key.endsWith("Right")) {
-            handleKeyboardNavigation(this.rowIndex, this.columnIndex + 1);
-        } else if (key.endsWith("Left")) {
-            handleKeyboardNavigation(this.rowIndex, this.columnIndex - 1);
+        if (event.key === "Enter" && this.column.editable) {
+            this._inEditMode = !this._inEditMode;
+            return;
+        } else if (event.key === "Escape") {
+            this._inEditMode = false;
+            return;
+        }
+
+        switch (event.keyCode) {
+            case 37:
+                rv = visibleColumns.findIndex((col) => col.index === ci);
+                if (rv > 0) {
+                    ci = visibleColumns[rv - 1].index;
+                }
+                break;
+            case 38:
+                ri = this.rowIndex - 1;
+                break;
+            case 39:
+                rv = visibleColumns.findIndex((col) => col.index === ci);
+                if (rv > -1 && rv < visibleColumns.length) {
+                    ci = visibleColumns[rv + 1].index;
+                }
+                break;
+            case 40:
+                ri = this.rowIndex + 1;
+                break;
+        }
+
+        target = this.gridAPI.get_cell_by_index(this.gridID, ri, ci);
+        if (target) {
+            target.nativeElement.focus();
         }
     }
 }

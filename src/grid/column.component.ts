@@ -70,6 +70,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
     set index(value: number) {
         this._index = value;
+        this.check();
     }
 
     @Input()
@@ -114,9 +115,19 @@ export class IgxColumnComponent implements AfterContentInit {
         this.gridAPI.markForCheck(this.gridID);
     }
 
+    get inlineEditorTemplate(): TemplateRef<any> {
+        return this._inlineEditorTemplate;
+    }
+
+    set inlineEditorTemplate(template: TemplateRef<any>) {
+        this._inlineEditorTemplate = template;
+        this.gridAPI.markForCheck(this.gridID);
+    }
+
     protected _bodyTemplate: TemplateRef<any>;
     protected _headerTemplate: TemplateRef<any>;
     protected _footerTemplate: TemplateRef<any>;
+    protected _inlineEditorTemplate: TemplateRef<any>;
     protected _hidden = false;
     protected _index: number;
 
@@ -145,7 +156,6 @@ export class IgxColumnComponent implements AfterContentInit {
 
     protected check() {
         if (this.gridID) {
-            this.gridAPI.get(this.gridID).onColumnChanges();
             this.gridAPI.markForCheck(this.gridID);
         }
     }

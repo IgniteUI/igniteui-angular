@@ -30,7 +30,7 @@
     <igx-grid-row [gridID]="id" [index]="i" [rowData]="item"
         *ngFor="let item of data | gridFiltering:filteringExpressions:_filteringLogic:id
                                  | gridSort:sortingExpressions:id
-                                 | gridPaging:page:perPage:id;
+                                 | gridPaging:page:perPage:id:refresh;
                                  index as i;">
     </igx-grid-row>
 </tbody>

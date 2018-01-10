@@ -60,7 +60,15 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     }
 
     @Input()
-    public paging = false;
+    get paging(): boolean {
+        return this._paging;
+    }
+
+    set paging(value: boolean) {
+        this._paging = value;
+        this._refresh = !this._refresh;
+        this.cdr.markForCheck();
+    }
 
     @Input()
     get page(): number {
@@ -71,6 +79,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
         if (val < 0) {
             return;
         }
+        this.onPaging.emit({ previous: this._page, current: val });
         this._page = val;
     }
 
@@ -111,6 +120,18 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     @Output()
     public onSorting = new EventEmitter();
 
+    @Output()
+    public onFiltering = new EventEmitter();
+
+    @Output()
+    public onPaging = new EventEmitter();
+
+    @Output()
+    public onRowAdded = new EventEmitter();
+
+    @Output()
+    public onRowDeleted = new EventEmitter();
+
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
 
@@ -120,6 +141,10 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     @HostBinding("attr.tabindex")
     public tabindex = 0;
 
+    get refresh() {
+        return this._refresh;
+    }
+
     public sortingExpressions = [];
 
     public pagingState;
@@ -128,6 +153,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
 
     protected _perPage = 15;
     protected _page = 0;
+    protected _paging = false;
+    protected _refresh = false;
     protected _columns = [];
     protected _filteringLogic = FilteringLogic.And;
 
@@ -137,13 +164,6 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
                 public cdr: ChangeDetectorRef,
                 private resolver: ComponentFactoryResolver,
                 private viewRef: ViewContainerRef) {
-    }
-
-    public onColumnChanges() {
-        let idx = 0;
-        this.columnList.forEach((col) => {
-            col.index = !col.hidden ? idx++ : -1;
-        });
     }
 
     public ngOnInit() {
@@ -171,7 +191,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     }
 
     get visibleColumns(): IgxColumnComponent[] {
-        return this.columnList.filter((col) => !col.hidden);
+        return this.columnList.filter((col) => !col.hidden).sort((col1, col2) => col1.index - col2.index);
     }
 
     public getCellByColumn(rowIndex: number, columnField: string): IgxGridCellComponent {
@@ -220,7 +240,20 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
 
     public addRow(data: any) {
         this.data.push(data);
+        this.onRowDeleted.emit({ data });
+        this._refresh = !this._refresh;
         this.cdr.markForCheck();
+    }
+
+    public deleteRow(rowIndex: number) {
+        const index = this.data.indexOf(this.gridAPI.get_row(this.id, rowIndex).rowData);
+        const row = this.gridAPI.get_row(this.id, rowIndex);
+        if (index > -1) {
+            this.data.splice(index, 1);
+            this.onRowDeleted.emit({ row });
+            this._refresh = !this._refresh;
+            this.cdr.markForCheck();
+        }
     }
 
     public sort(name: string, direction = SortingDirection.Asc) {
