@@ -1,5 +1,4 @@
 import { Component } from "@angular/core";
-import {IgxComponentsModule, IgxDirectivesModule} from "../../lib/main";
 
 @Component({
     selector: "input-sample",

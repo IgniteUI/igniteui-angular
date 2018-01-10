@@ -3,11 +3,7 @@ import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-
-import { IgxComponentsModule, IgxDirectivesModule, IgxNavigationModule } from "../lib/main";
-
-import { AppComponent } from "./app.component";
-import { routing } from "./app.routing";
+import { VirtualContainerSampleModule } from "./virtual-container/sample.module";
 import { AvatarSampleModule } from "./avatar/sample.module";
 import { BadgeSampleModule } from "./badge/sample.module";
 import { ButtonSampleModule } from "./button/sample.module";
@@ -34,6 +30,15 @@ import { IgxShadowsSampleModule } from "./styleguide/shadows/sample.module";
 import { IgxTypographySampleModule } from "./styleguide/typography/sample.module";
 import { TabBarSampleModule } from "./tabbar/sample.module";
 import { IgxToastSampleModule } from "./toast/sample.module";
+import { VirtualContainerRemoteSampleModule } from "./virtual-container-remote/sample.module";
+
+import { AppComponent } from "./app.component";
+import { routing } from "./app.routing";
+import { NavigationDrawerModule } from "../lib/main";
+
+
+import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSwitchModule, IgxAvatarModule } from "../lib/main";
+
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -44,9 +49,10 @@ import { IgxToastSampleModule } from "./toast/sample.module";
         FormsModule,
         HttpModule,
         routing,
-        IgxComponentsModule,
-        IgxDirectivesModule,
-        IgxNavigationModule,
+        NavigationDrawerModule,
+        IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSwitchModule, IgxAvatarModule,
+        VirtualContainerSampleModule,
+        VirtualContainerRemoteSampleModule,
         InputSampleModule,
         CarouselSampleModule,
         TabBarSampleModule,
@@ -72,7 +78,7 @@ import { IgxToastSampleModule } from "./toast/sample.module";
         IgxShadowsSampleModule,
         IgxCalendarSampleModule,
         IgxDatePickerSampleModule,
-        LayoutSampleModule
+        LayoutSampleModule   
     ]
 })
 export class AppModule { }
