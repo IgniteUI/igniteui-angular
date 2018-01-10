@@ -58,7 +58,16 @@ export class VirtualContainerSampleComponent {
    constructor(private localService: LocalDataService) {
       var cols = [];
         for(var j = 0; j < 100; j++){
-          cols.push({field: j.toString()});
+			cols.push({
+				field: j.toString(),
+				width: j % 3 === 0 ?
+					Math.floor((Math.random() * 50) + 50) :
+					(
+						j % 3 === 1 ?
+							Math.floor((Math.random() * 200) + 50) :
+							Math.floor((Math.random() * 400) + 50)
+					)
+			});
       }
       this.cols = cols;
   

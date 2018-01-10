@@ -20,6 +20,9 @@ coverage
 # node-waf configuration
 .lock-wscript
 
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
