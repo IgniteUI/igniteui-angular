@@ -20,7 +20,7 @@ import { ChangeDetectorRef } from '@angular/core';
                 }`
     ]
 })
-export class VirtualContainerComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges {
+export class VirtualContainerComponent implements AfterViewInit, OnInit, OnChanges {
     @Input() public options: any;
     @Input() public data: any;
     @Output() loadRemoteChunk = new EventEmitter<IVirtualizationState>();
@@ -35,7 +35,7 @@ export class VirtualContainerComponent implements AfterViewInit, OnDestroy, OnIn
     top: string;
     left: string;
 
-height:number;
+    height: number;
 public totalRowCount:number;
 
     topPortionHeight: any;
@@ -64,13 +64,12 @@ public totalRowCount:number;
         };
         this.attachEventHandlers();
 
-        this.width = this.options.width;
         var containerElem = this.elemRef.nativeElement.parentElement;
         this.prevScrTop = 0;
         this.prevScrLeft = 0;
         this.columnLeftCache = [];
 
- }
+    }
   ngAfterViewInit() {
       var containerElem = this.elemRef.nativeElement.parentElement;
       this.visibleVerticalItemsCount = containerElem.clientHeight > 0 ? (containerElem.clientHeight/this.options.verticalItemHeight) * 2 : 1;
@@ -79,7 +78,7 @@ public totalRowCount:number;
         var totalWidth = 0, i = 0;
         this.columnLeftCache.push(0);
         for (i; i < this.options.columns.length; i++) {
-            totalWidth += this.options.columns[i].width;
+            totalWidth += parseInt(this.options.columns[i].width);
             this.columnLeftCache.push(totalWidth);
         }
 
@@ -133,23 +132,20 @@ public totalRowCount:number;
       }
      
  }
-   ngOnDestroy() {
-   }
-   attachEventHandlers(){
+ attachEventHandlers() {
        var containerElem = this.options.scrollContainer ? this.options.scrollContainer.nativeElement : this.elemRef.nativeElement.parentElement;
        var that = this;
-        containerElem.addEventListener('scroll', function(evt){         
-            if(!that.isLoading){ 
+       containerElem.addEventListener('scroll', function (evt) {
+           if (!that.isLoading) { 
                that.scroll.apply(that);
             }
         });
    }
-   scroll(){
-
+ scroll() {
       var containerElem = this.options.scrollContainer ? this.options.scrollContainer.nativeElement : this.elemRef.nativeElement.parentElement;
       var scrTop = containerElem.scrollTop;
       var scrLeft = containerElem.scrollLeft;
-      if(scrTop !== this.prevScrTop){
+      if (scrTop !== this.prevScrTop) {
           //Handle vertical scroll
             var top = this.emptyVertItemTop.instance.height;
             var bottom = top + (this.visibleVerticalItemsCount * this.options.verticalItemHeight);
@@ -249,20 +245,19 @@ public totalRowCount:number;
     loadItems(start, end, isHorizontal) {
 
        var data, that = this;
-       if(start === undefined || start === null ){
+       if (start === undefined || start === null) {
            return;
        }
        if(start < 0){
            start = 0;
        }
        
-       if(!isHorizontal)
-       {
-            if(this.data instanceof Array) {
+       if (!isHorizontal) {
+            if (this.data instanceof Array) {
                this.state.metadata.totalRecordsCount = this.data.length;
                data = this.data.slice(start, end);
                this.isLoading = false;
-            } else if(this.localChunkData){
+            } else if (this.localChunkData) {
                 data = this.localChunkData;
                 this.localChunkData = null;
             } else {
@@ -311,7 +306,7 @@ public totalRowCount:number;
          (<VirtualVericalItemComponent>emptyVertItemTopRef.instance).height = this.topPortionHeight > 0 ? this.topPortionHeight: 0;
           
           this.emptyVertItemTop = emptyVertItemTopRef;
-        for(var i = 0; i < data.length; i++){
+        for (var i = 0; i < data.length; i++) {
             let componentRef = viewContainerRef.createComponent(componentFactory);
             (<VirtualVericalItemComponent>componentRef.instance).rowData = data[i];
             (<VirtualVericalItemComponent>componentRef.instance).columns = this.currColumns;
