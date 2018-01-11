@@ -1,0 +1,10 @@
+td { 
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+:host { 
+    display: -webkit-box;
+    display: -ms-flexbox;
+    flex-flow: row;
+}

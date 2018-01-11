@@ -1,4 +1,4 @@
-import { NgModule } from "@angular/core";
+﻿import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
 import { BrowserModule } from "@angular/platform-browser";
@@ -31,14 +31,17 @@ import { IgxTypographySampleModule } from "./styleguide/typography/sample.module
 import { TabBarSampleModule } from "./tabbar/sample.module";
 import { IgxToastSampleModule } from "./toast/sample.module";
 import { VirtualContainerRemoteSampleModule } from "./virtual-container-remote/sample.module";
+import { VirtualContainerV2SampleModule } from "./virtual-container-v2/sample.module";
 
 import { AppComponent } from "./app.component";
 import { routing } from "./app.routing";
 import { NavigationDrawerModule } from "../lib/main";
-
-
-import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSwitchModule, IgxAvatarModule } from "../lib/main";
-
+import { IgxRadioModule } from "../lib/main";
+import { IgxIconModule } from "../lib/main";
+import { IgxCheckboxModule } from "../lib/main";
+import { IgxLabelModule } from "../lib/main";
+import { IgxSwitchModule } from "../lib/main";
+import { IgxAvatarModule } from "../lib/main";
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -48,12 +51,17 @@ import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSw
         BrowserAnimationsModule,
         FormsModule,
         HttpModule,
-        routing,
-        NavigationDrawerModule,
-        IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSwitchModule, IgxAvatarModule,
-        VirtualContainerSampleModule,
-        VirtualContainerRemoteSampleModule,
-        InputSampleModule,
+		routing,
+		NavigationDrawerModule,
+		IgxRadioModule,
+		IgxIconModule,
+		IgxCheckboxModule,
+		IgxLabelModule,
+		IgxSwitchModule,
+		IgxAvatarModule,
+		VirtualContainerSampleModule,
+		VirtualContainerRemoteSampleModule,
+		InputSampleModule,
         CarouselSampleModule,
         TabBarSampleModule,
         ListSampleModule,
@@ -78,7 +86,8 @@ import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSw
         IgxShadowsSampleModule,
         IgxCalendarSampleModule,
         IgxDatePickerSampleModule,
-        LayoutSampleModule   
+        LayoutSampleModule,
+		VirtualContainerV2SampleModule,
     ]
 })
 export class AppModule { }

@@ -1,4 +1,4 @@
-import { ModuleWithProviders } from "@angular/core";
+﻿import { ModuleWithProviders } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
 import { VirtualContainerSampleComponent } from "./virtual-container/sample.component";
@@ -32,6 +32,7 @@ import {
     TabBarSampleComponent
 } from "./tabbar/sample.component";
 import { IgxToastSampleComponent } from "./toast/sample.component";
+import { VirtualContainerV2SampleComponent } from "./virtual-container-v2/sample.component";
 
 const appRoutes: Routes = [
     {
@@ -142,15 +143,19 @@ const appRoutes: Routes = [
     {
         component: LayoutSampleComponent,
         path: "layout"
-    },
+	},
+	{
+		component: VirtualContainerSampleComponent,
+		path: "virtual-container"
+	},
+	{
+		component: VirtualContainerRemoteSampleComponent,
+		path: "virtual-container-remote"
+	},
     {
-        component: VirtualContainerSampleComponent ,
-        path: "virtual-container"
-    },
-    {
-        component: VirtualContainerRemoteSampleComponent ,
-        path: "virtual-container-remote"
-    },
+        component: VirtualContainerV2SampleComponent,
+        path: "virtual-container-v2"
+    }
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);

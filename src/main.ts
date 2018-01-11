@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Public API facet
  */
 export * from "./core/navigation";
@@ -18,6 +18,7 @@ export * from "./data-operations/data-util";
 export * from "./data-operations/data-container";
 export * from "./grid/";
 export * from "./virtual-container/";
+export * from "./virtual-container-v2/";
 
 export * from "./navigation-drawer/navigation-drawer.component";
 export * from "./icon/icon.component";
@@ -50,4 +51,3 @@ export * from "./virtual-container/virtual.container.component";
 export * from "./virtual-container/virtual.horizontal.item.component";
 export * from "./virtual-container/virtual.vertical.item.component";
 export * from "./virtual-container/virtualization-state.interface";
-
