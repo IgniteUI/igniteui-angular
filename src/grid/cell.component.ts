@@ -11,14 +11,20 @@ import {
 import { DataType } from "../data-operations/data-util";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
+import {VirtualHorizontalItemComponent} from "../virtual-container/virtual.horizontal.item.component";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: "igx-grid-cell",
     templateUrl: "./cell.component.html",
-    preserveWhitespaces: false
+    preserveWhitespaces: false,
+    styles:[`    
+    td{
+    box-sizing: content-box;
+}`
+    ]
 })
-export class IgxGridCellComponent {
+export class IgxGridCellComponent{
 
     @Input()
     public column: IgxColumnComponent;
@@ -88,9 +94,15 @@ export class IgxGridCellComponent {
         return `${this.defaultCssClass} ${this.column.cellClasses}`;
     }
 
-    @HostBinding("style.min-width")
-    get width() {
-        return this.column.width;
+    @HostBinding("style.width.px")
+    @HostBinding("style.max-width.px")
+    get width() {       
+        return Number(this.column.width);
+    }
+
+    @HostBinding("style.display")
+    get shouldDisplay() {        
+        return Number(this.column.width) === 0 ? "none": "flex";
     }
 
     @HostBinding("attr.aria-selected")

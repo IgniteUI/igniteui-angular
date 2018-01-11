@@ -21,18 +21,13 @@
 
 
 <table [style.height]="height" [style.width]="width" class="igx-grid">
-<thead class="igx-grid__thead">
-    <tr class="igx-grid__tr">
-        <igx-grid-header [gridID]="id" *ngFor="let col of visibleColumns" [column]="col"></igx-grid-header>
-    </tr>
+<thead class="igx-grid__thead" #header>    
+        <igx-virtual-container [options]='virtualizationOptionsHeader' [data]='[{}]'>
+        </igx-virtual-container>
 </thead>
-<tbody class="igx-grid__tbody">
-    <igx-grid-row [gridID]="id" [index]="i" [rowData]="item"
-        *ngFor="let item of data | gridFiltering:filteringExpressions:_filteringLogic:id
-                                 | gridSort:sortingExpressions:id
-                                 | gridPaging:page:perPage:id;
-                                 index as i;">
-    </igx-grid-row>
+<tbody class="igx-grid__tbody"  [style.height]="height" [style.width]="width" #container (scroll)="onScroll($event)">
+    <igx-virtual-container [options]='virtualizationOptions' [data]='data'>
+    </igx-virtual-container>
 </tbody>
 <tfoot class="igx-grid__tfoot">
     <ng-container

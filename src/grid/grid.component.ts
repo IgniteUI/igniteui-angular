@@ -23,6 +23,10 @@ import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { IgxGridRowComponent } from "./row.component";
+import { IgxGridHeaderComponent } from "./grid-header.component";
+import { IgxGridHeaderRowComponent } from "./header-row.component";
+
+import { IgxVirtualContainerModule } from "../virtual-container";
 
 let NEXT_ID = 0;
 
@@ -35,6 +39,24 @@ let NEXT_ID = 0;
   preserveWhitespaces: false
 })
 export class IgxGridComponent implements OnInit, AfterContentInit {
+  @ViewChild("container") scrollContainer: any;
+ @ViewChild("header") headerTable: any;
+  
+
+  @Input()
+  public virtualizationOptions:any={
+    horizontalItemWidth :200,
+    verticalItemHeight: 30,
+    rowComponent: IgxGridRowComponent,
+    cellComponent: IgxGridCellComponent,
+    scrollContainer: this.scrollContainer
+  }
+  public virtualizationOptionsHeader: any = {
+    horizontalItemWidth :200,
+    rowComponent: IgxGridHeaderRowComponent,
+    cellComponent: IgxGridHeaderComponent,
+    scrollContainer: this.scrollContainer
+  }
 
   @Input()
   public data = [];
@@ -106,6 +128,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
   @Output()
   public onSorting = new EventEmitter();
 
+
   @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
   public columnList: QueryList<IgxColumnComponent>;
 
@@ -142,6 +165,17 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     this.gridAPI.register(this);
   }
 
+  onScroll(evt){
+   var scrLeft = evt.target.scrollLeft % parseInt(this.width);
+   if(scrLeft !== this.headerTable.nativeElement.scrollLeft){     
+    this.headerTable.nativeElement.style.overflowX = "auto";
+    this.headerTable.nativeElement.style.overflowY = "hidden";
+    this.headerTable.nativeElement.scrollLeft = scrLeft;
+    this.headerTable.nativeElement.style.overflowX = "hidden";
+   }
+
+  }
+
   public ngAfterContentInit() {
     this.columnList.forEach((col, idx) => {
       col.index = idx;
@@ -149,6 +183,11 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
       this.onColumnInit.emit(col);
     });
     this._columns = this.columnList.toArray();
+    this.virtualizationOptions.columns = this._columns;
+    this.virtualizationOptionsHeader.columns = this._columns;
+
+    this.virtualizationOptions.scrollContainer = this.scrollContainer;
+    this.virtualizationOptionsHeader.scrollContainer = this.scrollContainer;
   }
 
   get columns(): IgxColumnComponent[] {

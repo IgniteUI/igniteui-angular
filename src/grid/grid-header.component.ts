@@ -22,9 +22,14 @@ export class IgxGridHeaderComponent implements DoCheck {
         return `igx-grid__th ${this.column.headerClasses}`;
     }
 
-    @HostBinding("style.min-width")
+    @HostBinding("style.width.px")
     get width() {
         return this.column.width;
+    }
+
+    @HostBinding("style.display")
+    get shouldDisplay() {        
+        return this.column instanceof IgxColumnComponent ? "flex" : "none";
     }
 
     @HostBinding("class.asc")

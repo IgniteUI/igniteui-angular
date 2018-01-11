@@ -10,6 +10,7 @@ import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { IgxGridFilterComponent } from "./grid-filtering.component";
 import { IgxGridHeaderComponent } from "./grid-header.component";
+import { IgxGridHeaderRowComponent } from "./header-row.component";
 import {
   IgxCellFooterTemplateDirective,
   IgxCellHeaderTemplateDirective,
@@ -18,6 +19,7 @@ import {
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridPagingPipe, IgxGridSortingPipe } from "./grid.pipes";
 import { IgxGridRowComponent } from "./row.component";
+import { IgxVirtualContainerModule } from "../virtual-container";
 
 @NgModule({
   declarations: [
@@ -26,6 +28,7 @@ import { IgxGridRowComponent } from "./row.component";
     IgxGridComponent,
     IgxGridRowComponent,
     IgxGridHeaderComponent,
+    IgxGridHeaderRowComponent,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective,
@@ -36,7 +39,11 @@ import { IgxGridRowComponent } from "./row.component";
     IgxGridFilterConditionPipe
   ],
   entryComponents: [
-    IgxColumnComponent
+    IgxColumnComponent,
+    IgxGridRowComponent,
+    IgxGridCellComponent,
+    IgxGridHeaderComponent,
+    IgxGridHeaderRowComponent
   ],
   imports: [
     CommonModule,
@@ -44,7 +51,8 @@ import { IgxGridRowComponent } from "./row.component";
     IgxButtonModule,
     IgxIconModule,
     IgxRippleModule,
-    IgxInput
+    IgxInput,
+    IgxVirtualContainerModule
   ],
   exports: [
     IgxGridComponent,
@@ -52,17 +60,20 @@ import { IgxGridRowComponent } from "./row.component";
     IgxGridRowComponent,
     IgxColumnComponent,
     IgxGridHeaderComponent,
+    IgxGridHeaderRowComponent,
     IgxGridFilterComponent,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective
-  ]
+  ],
+  providers: [IgxGridAPIService]
 })
 export class IgxGridModule {
   public static forRoot() {
     return {
       ngModule: IgxGridModule,
-      providers: [IgxGridAPIService]
+      providers: [IgxGridAPIService],
+      entryComponents:[IgxGridRowComponent, IgxGridCellComponent, IgxGridHeaderComponent, IgxGridHeaderRowComponent]
     };
   }
 }

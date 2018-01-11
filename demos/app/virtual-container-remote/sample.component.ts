@@ -11,11 +11,11 @@ import {
 @Injectable()
 export class RemoteCurstomerService {
   public remoteData: Observable<any[]>;
-  private url: string = "http://services.odata.org/V4/Northwind/Northwind.svc/Customers";
+  private url: string = "http://services.odata.org/V4/Northwind/Northwind.svc/Alphabetical_list_of_products";
   private _remoteData: BehaviorSubject<any[]>;
 
   constructor(private http: Http) {
-    this._remoteData = new BehaviorSubject([]);
+    this._remoteData = new BehaviorSubject(null);
     this.remoteData = this._remoteData.asObservable();
   }
 
@@ -71,15 +71,17 @@ export class VirtualContainerRemoteSampleComponent {
   private prevRequest:any;
    constructor(private remoteService: RemoteCurstomerService) {
     this.cols = [
-      {field: "CustomerID"},
-      {field: "ContactName"},
-      {field: "City"},
-      {field: "Country"},
-      {field: "Address"},
-      {field: "Fax"},
-      {field: "Phone"},
-      {field: "PostalCode"},
-      {field: "ContactTitle"}
+      {field: "ProductID"},
+      {field: "ProductName"},
+      {field: "SupplierID"},
+      {field: "CategoryID"},
+      {field: "QuantityPerUnit"},
+      {field: "UnitPrice"},
+      {field: "UnitsInStock"},
+      {field: "UnitsOnOrder"},
+      {field: "Discontinued"},
+      {field: "ReorderLevel"},
+      {field: "CategoryName"}      
       ];
   
    
