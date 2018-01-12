@@ -96,13 +96,13 @@ export class IgxGridCellComponent{
 
     @HostBinding("style.width.px")
     @HostBinding("style.max-width.px")
-    get width() {       
-        return Number(this.column.width);
+    get width() {
+        return parseInt(this.column.width);
     }
 
     @HostBinding("style.display")
     get shouldDisplay() {        
-        return Number(this.column.width) === 0 ? "none": "flex";
+        return parseInt(this.column.width) === 0 ? "none": "flex";
     }
 
     @HostBinding("attr.aria-selected")
