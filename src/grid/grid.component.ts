@@ -242,7 +242,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     }
 
   onScroll(evt){
-   var scrLeft = evt.target.scrollLeft % parseInt(this.width);
+   var scrLeft = evt.target.scrollLeft;
    if(scrLeft !== this.headerTable.nativeElement.scrollLeft){     
     this.headerTable.nativeElement.style.overflowX = "auto";
     this.headerTable.nativeElement.style.overflowY = "hidden";
