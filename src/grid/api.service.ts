@@ -52,6 +52,7 @@ export class IgxGridAPIService {
 
     public update(id: string, cell: IgxGridCellComponent): void {
         const index = this.get(id).data.indexOf(cell.row.rowData);
+        if(index === -1 ){return;}
         this.get(id).data[index][cell.column.field] = cell.value;
     }
 

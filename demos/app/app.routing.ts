@@ -3,6 +3,7 @@ import { RouterModule, Routes } from "@angular/router";
 
 import { VirtualContainerSampleComponent } from "./virtual-container/sample.component";
 import { VirtualContainerRemoteSampleComponent } from "./virtual-container-remote/sample.component";
+import { VirtualGridSampleComponent } from "./virtual-grid/sample.component";
 import { AvatarSampleComponent } from "./avatar/sample.component";
 import { BadgeSampleComponent } from "./badge/sample.component";
 import { ButtonsSampleComponent } from "./button/sample.component";
@@ -150,6 +151,10 @@ const appRoutes: Routes = [
     {
         component: VirtualContainerRemoteSampleComponent ,
         path: "virtual-container-remote"
+    },
+    {
+        component: VirtualGridSampleComponent ,
+        path: "virtual-grid"
     },
 ];
 
