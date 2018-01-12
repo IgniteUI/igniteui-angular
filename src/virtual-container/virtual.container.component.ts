@@ -210,7 +210,7 @@ public totalRowCount:number;
         );
         // var start = parseInt((this.options.columns.length * percentage / 100).toFixed(0))
         this.startHorIndex = start > 0 ? start : 0;
-        this.endHorIndex = this.startHorIndex + this.getHorizontalIndexAt(
+        this.endHorIndex = this.getHorizontalIndexAt(
             this.columnLeftCache[this.startHorIndex] + this.elemRef.nativeElement.parentElement.clientWidth * 2,
             this.columnLeftCache.slice(0, this.options.columns.length),
             0
