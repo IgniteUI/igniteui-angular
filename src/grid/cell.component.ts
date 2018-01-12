@@ -10,6 +10,7 @@ import {
     ViewChild,
     ViewContainerRef
 } from "@angular/core";
+import { KEYCODES } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
@@ -178,44 +179,54 @@ export class IgxGridCellComponent {
     @HostListener("keydown", ["$event"])
     public onKeyDown(event: KeyboardEvent) {
 
-        const visibleColumns = this.grid.visibleColumns;
+        this.handleKeyboardNavigation(event.keyCode);
+        this.handleInlineEditMode(event.keyCode);
+    }
+
+    protected handleKeyboardNavigation(keyCode): void {
+
+        const visibleColumns: IgxColumnComponent[] = this.grid.visibleColumns;
         let ri = this.rowIndex;
         let ci = this.columnIndex;
-        let rv;
-        let target;
+        let rv: number;
+        let target: IgxGridCellComponent;
 
-        if (event.key === "Enter" && this.column.editable) {
-            this._inEditMode = !this._inEditMode;
-            return;
-        } else if (event.key === "Escape") {
-            this._inEditMode = false;
-            return;
-        }
-
-        switch (event.keyCode) {
-            case 37:
+        switch (keyCode) {
+            case KEYCODES.LEFT_ARROW:
                 rv = visibleColumns.findIndex((col) => col.index === ci);
                 if (rv > 0) {
                     ci = visibleColumns[rv - 1].index;
                 }
                 break;
-            case 38:
-                ri = this.rowIndex - 1;
+            case KEYCODES.UP_ARROW:
+                ri -= 1;
                 break;
-            case 39:
+            case KEYCODES.RIGHT_ARROW:
                 rv = visibleColumns.findIndex((col) => col.index === ci);
-                if (rv > -1 && rv < visibleColumns.length) {
+                if (rv > -1 && rv < visibleColumns.length - 1) {
                     ci = visibleColumns[rv + 1].index;
                 }
                 break;
-            case 40:
-                ri = this.rowIndex + 1;
+            case KEYCODES.DOWN_ARROW:
+                ri += 1;
                 break;
+            default:
+                return;
         }
 
         target = this.gridAPI.get_cell_by_index(this.gridID, ri, ci);
         if (target) {
             target.nativeElement.focus();
+        }
+    }
+
+    protected handleInlineEditMode(keyCode) {
+        if (keyCode === KEYCODES.ENTER && this.column.editable) {
+            this._inEditMode = !this._inEditMode;
+            return;
+        }
+        if (keyCode === KEYCODES.ESCAPE) {
+            this._inEditMode = false;
         }
     }
 }

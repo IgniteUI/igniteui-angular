@@ -13,7 +13,8 @@ export class IgxGridSortingPipe implements PipeTransform {
 
     constructor(private gridAPI: IgxGridAPIService) {}
 
-    public transform(collection: any[], expressions: ISortingExpression | ISortingExpression[], id: string): any[] {
+    public transform(collection: any[], expressions: ISortingExpression | ISortingExpression[],
+                     id: string, pipeTrigger: number): any[] {
 
         const state = { expressions: []};
         state.expressions = this.gridAPI.get(id).sortingExpressions;
@@ -34,7 +35,7 @@ export class IgxGridPagingPipe implements PipeTransform {
 
     constructor(private gridAPI: IgxGridAPIService) {}
 
-    public transform(collection: any[], page = 0, perPage = 10, id: string, refresh: boolean = false): any[] {
+    public transform(collection: any[], page = 0, perPage = 10, id: string, pipeTrigger: number): any[] {
 
         if (!this.gridAPI.get(id).paging) {
             return collection;
@@ -60,7 +61,7 @@ export class IgxGridFilteringPipe implements PipeTransform {
     constructor(private gridAPI: IgxGridAPIService) {}
 
     public transform(collection: any[], expressions: IFilteringExpression | IFilteringExpression[],
-                     logic: FilteringLogic, id: string) {
+                     logic: FilteringLogic, id: string, pipeTrigger: number) {
         const state = { expressions: [], logic };
         state.expressions = this.gridAPI.get(id).filteringExpressions;
 
