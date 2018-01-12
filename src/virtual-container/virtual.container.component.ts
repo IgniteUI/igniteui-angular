@@ -212,7 +212,7 @@ public totalRowCount:number;
         this.startHorIndex = start > 0 ? start : 0;
         this.endHorIndex = this.startHorIndex + this.getHorizontalIndexAt(
             this.columnLeftCache[this.startHorIndex] + this.elemRef.nativeElement.parentElement.clientWidth * 2,
-            this.columnLeftCache,
+            this.columnLeftCache.slice(0, this.options.columns.length),
             0
         );
         //console.log("Start:" +this.startHorIndex + ", End: "+ this.endHorIndex );
@@ -223,7 +223,7 @@ public totalRowCount:number;
         this.startHorIndex = this.startHorIndex + Math.floor((this.endHorIndex - this.startHorIndex) / 2);
         this.endHorIndex = this.getHorizontalIndexAt(
             this.columnLeftCache[this.startHorIndex] + this.elemRef.nativeElement.parentElement.clientWidth * 2,
-            this.columnLeftCache,
+            this.columnLeftCache.slice(0, this.options.columns.length),
             0
         );
         //console.log("Start:" +this.startHorIndex + ", End: "+ this.endHorIndex );
@@ -235,7 +235,7 @@ public totalRowCount:number;
         this.startHorIndex = start > 0 ? start : 0;
         this.endHorIndex = this.getHorizontalIndexAt(
             this.columnLeftCache[this.startHorIndex] + this.elemRef.nativeElement.parentElement.clientWidth * 2,
-            this.columnLeftCache,
+            this.columnLeftCache.slice(0, this.options.columns.length),
             0
         );
         //console.log("Start:" +this.startHorIndex + ", End: "+ this.endHorIndex );
