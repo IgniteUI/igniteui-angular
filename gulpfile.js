@@ -13,7 +13,9 @@ function compileSass(path, ext, file, callback) {
         file: path,
         outputStyle: "compressed"
     });
-    callback(null, autoprefixer.process(compiledCss.css, { browsers: ["last 2 versions"] }).css);
+    callback(null, autoprefixer.process(compiledCss.css, {
+        browsers: ["last 2 versions"]
+    }).css);
 }
 
 
@@ -57,13 +59,15 @@ gulp.task("make-packagejson", () => {
 
 gulp.task("build-style", () => {
     let result = sass.renderSync({
-        file: "src/themes/zero-blocks.scss",
+        file: "src/themes/igniteui-angular.scss",
         outputStyle: "compressed",
         includePaths: ["./src/themes"],
-        outFile: "dist/zero-blocks.css"
+        outFile: "dist/igniteui-angular.css"
     });
 
-    fs.writeFile("dist/zero-blocks.css", autoprefixer.process(result.css, { browsers: ["last 2 versions"] }).css, (err) => {
+    fs.writeFile("dist/igniteui-angular.css", autoprefixer.process(result.css, {
+        browsers: ["last 2 versions"]
+    }).css, (err) => {
         if (err) throw err;
     });
 
@@ -80,7 +84,7 @@ gulp.task("inline-templates", () => {
 
 
 gulp.task("build:esm", ["inline-templates"], (callback) => {
-    exec("npm run ngcompile", function(err, stdout, stderr) {
+    exec("npm run ngcompile", function (err, stdout, stderr) {
         console.log(stdout, stderr);
         callback(err);
     });
