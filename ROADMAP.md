@@ -1,5 +1,20 @@
 # Roadmap - Ignite UI for Angular
 
+## Next three months (due April 15th, 2018)
+
+1. Expanding Ignite UI CLI views and templates with Ignite UI for Angular
+1.1. Adding component views like App Host, Tabs, List
+1.2. Updating the default project look
+1.3. Move the project navigation inside an App Host
+2. Grid Multi-column Headers [issue](https://github.com/IgniteUI/igniteui-js-blocks/issues/488)
+3. Collapsible Column Groups with state templating (collapsed state column can be templated)
+4. Column pinning
+5. Grouping
+6. Export to excel
+7. Combo
+8. Mask directive (editor)
+9. Operations UI - column chooser
+
 ## Next three months (due January 15th, 2018)
 
 1. Row objects - 1st sprint (by November 20th, 2017) [issue](https://github.com/IgniteUI/igniteui-js-blocks/issues/479)  
@@ -15,12 +30,7 @@
 7. Alternating row style  
 8. **[DONE]** Ignite UI CLI integration [issue](https://github.com/IgniteUI/ignite-ui-cli/issues/53)  
     Ignite UI CLI will also provide Ignite UI for Angular templates, views, and components integration. All features of the CLI will be accessible in the context of Ignite UI for Angular, as well as the full Ignite UI product suite.  
-9. Grid Multi-column Headers (by January 15th, 2018) [issue](https://github.com/IgniteUI/igniteui-js-blocks/issues/488)
 
-## Next six months (due April 15th, 2018)
+# Previous Milestones
 
-1. Column pinning
-2. Grouping
-3. Export to excel
-4. Combo
-5. Mask directive (editor)
+## Milestone 1 (by January 15th, 2018)
