@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <base href="/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <link rel="stylesheet" href="style/zero-blocks.css" rel="stylesheet">
+    <link rel="stylesheet" href="style/igniteui-angular.css" rel="stylesheet">
     <link rel="stylesheet" href="style/preloader.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.3.1/web-animations.min.js"></script>
     <script src="https://unpkg.com/hammerjs@2.0.8/hammer.js"></script>
-    <title><%= htmlWebpackPlugin.options.title %></title>
-  </head>
-  <body>
+    <title>
+        <%= htmlWebpackPlugin.options.title %>
+    </title>
+</head>
+
+<body>
     <sample-app>
-      <div class="preloader">
-        <img width="90px" src="style/loading.svg" alt="loading">
-        <h4 class="preloader-title">Please wait...<br><span id="funny" class="funny">... we're testing your patience.</span></h4>
-      </div>
+        <div class="preloader">
+            <img width="90px" src="style/loading.svg" alt="loading">
+            <h4 class="preloader-title">Please wait...
+                <br>
+                <span id="funny" class="funny">... we're testing your patience.</span>
+            </h4>
+        </div>
     </sample-app>
-  </body>
+</body>
+
 </html>

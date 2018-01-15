@@ -8,7 +8,7 @@ export default (config) => {
         frameworks: ["jasmine"],
 
         files: [
-            "./dist/zero-blocks.css",
+            "./dist/igniteui-angular.css",
             {
                 pattern: "./dist/fonts/*",
                 watched: false,
