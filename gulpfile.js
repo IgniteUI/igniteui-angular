@@ -3,17 +3,19 @@
 const autoprefixer = require("autoprefixer");
 const gulp = require("gulp");
 const sass = require("node-sass");
+const postcss = require("postcss");
 const inlineTemplates = require("gulp-inline-ng2-template");
 const exec = require("child_process").exec;
 const fs = require("fs");
 
+const prefixer = postcss([ autoprefixer({ browsers: ["last 2 versions"] }) ]);
 
 function compileSass(path, ext, file, callback) {
     let compiledCss = sass.renderSync({
         file: path,
         outputStyle: "compressed"
     });
-    callback(null, autoprefixer.process(compiledCss.css, { browsers: ["last 2 versions"] }).css);
+    callback(null, prefixer.process(compiledCss.css).css);
 }
 
 
@@ -63,7 +65,7 @@ gulp.task("build-style", () => {
         outFile: "dist/zero-blocks.css"
     });
 
-    fs.writeFile("dist/zero-blocks.css", autoprefixer.process(result.css, { browsers: ["last 2 versions"] }).css, (err) => {
+    fs.writeFile("dist/zero-blocks.css", prefixer.process(result.css).css, (err) => {
         if (err) throw err;
     });
 

@@ -17,9 +17,9 @@ import { IgxColumnComponent } from "./column.component";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
+    preserveWhitespaces: false,
     selector: "igx-grid-cell",
-    templateUrl: "./cell.component.html",
-    preserveWhitespaces: false
+    templateUrl: "./cell.component.html"
 })
 export class IgxGridCellComponent {
 
@@ -160,6 +160,7 @@ export class IgxGridCellComponent {
     public onDoubleClick(event) {
         if (this.column.editable) {
             this._inEditMode = true;
+            this.grid.cellInEditMode = this;
         }
     }
 
@@ -167,6 +168,11 @@ export class IgxGridCellComponent {
     public onFocus(event) {
         this.isFocused = true;
         this.isSelected = true;
+        if (this.grid.cellInEditMode && this.grid.cellInEditMode !== this) {
+            this.grid.cellInEditMode._inEditMode = false;
+            this.grid.cellInEditMode.cdr.markForCheck();
+            this.grid.cellInEditMode = null;
+        }
         this.grid.onSelection.emit(this);
     }
 
@@ -223,6 +229,7 @@ export class IgxGridCellComponent {
     protected handleInlineEditMode(keyCode) {
         if (keyCode === KEYCODES.ENTER && this.column.editable) {
             this._inEditMode = !this._inEditMode;
+            this.grid.cellInEditMode = this;
             return;
         }
         if (keyCode === KEYCODES.ESCAPE) {

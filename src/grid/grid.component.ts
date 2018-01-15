@@ -33,11 +33,11 @@ let NEXT_ID = 0;
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: "igx-grid",
-    templateUrl: "./grid.component.html",
-    styleUrls: ["./grid.component.scss"],
     encapsulation: ViewEncapsulation.None,
-    preserveWhitespaces: false
+    preserveWhitespaces: false,
+    selector: "igx-grid",
+    styleUrls: ["./grid.component.scss"],
+    templateUrl: "./grid.component.html"
 })
 export class IgxGridComponent implements OnInit, AfterContentInit {
 
@@ -151,6 +151,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
 
     public filteringExpressions = [];
 
+    public cellInEditMode: IgxGridCellComponent;
+
     protected _perPage = 15;
     protected _page = 0;
     protected _paging = false;
@@ -261,6 +263,15 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
         if (cell) {
             cell.value = value;
             this._pipeTrigger++;
+        }
+    }
+
+    public updateRow(value: any, rowIndex: number): void {
+        const row = this.gridAPI.get_row(this.id, rowIndex);
+        if (row) {
+            this.gridAPI.updateRow(value, this.id, row);
+            this._pipeTrigger++;
+            this.cdr.markForCheck();
         }
     }
 

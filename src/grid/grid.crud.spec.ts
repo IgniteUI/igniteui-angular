@@ -141,12 +141,42 @@ describe("IgxGrid - CRUD operations", () => {
         expect(grid.rowList.first.cells.first.value).toEqual(5);
     });
 
+    it("should support updating a row through the grid API", () => {
+        const fix = TestBed.createComponent(DefaultCRUDGrid);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const data = fix.componentInstance.data;
+
+        // Update non-existing row
+        grid.updateRow({ index: -100, value: -100 }, 100);
+        fix.detectChanges();
+
+        expect(grid.rowList.first.cells.first.value).not.toEqual(-100);
+        expect(grid.data[0].index).not.toEqual(-100);
+
+        // Update an existing row
+        grid.updateRow({ index: 100, value: 100 }, 0);
+        fix.detectChanges();
+
+        expect(grid.rowList.first.cells.first.value).toEqual(100);
+        expect(grid.data[0].index).toEqual(100);
+    });
+
     it("should support updating a cell value through the grid API", () => {
         const fix = TestBed.createComponent(DefaultCRUDGrid);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
 
+        // Update a non-existing cell
+        grid.updateCell(-100, 100, "index");
+        fix.detectChanges();
+
+        expect(grid.rowList.first.cells.first.value).not.toEqual(-100);
+        expect(grid.rowList.first.cells.first.nativeElement.textContent).not.toMatch("-100");
+
+        // Update an existing cell
         grid.updateCell(100, 0, "index");
         fix.detectChanges();
 

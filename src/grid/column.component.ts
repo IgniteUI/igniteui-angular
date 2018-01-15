@@ -20,9 +20,9 @@ import {
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
+    preserveWhitespaces: false,
     selector: "igx-column",
-    template: ``,
-    preserveWhitespaces: false
+    template: ``
 })
 export class IgxColumnComponent implements AfterContentInit {
 
