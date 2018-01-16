@@ -19,7 +19,14 @@ export class LocalDataService {
       this.sampleData = [];
       var cols = [];
         for(var j = 0; j < 100; j++){
-          cols.push({field: j.toString()});
+          cols.push({field: j.toString(), width: j % 3 === 0 ?
+            String(Math.floor((Math.random() * 50) + 50)) :
+            (
+              j % 3 === 1 ?
+                String(Math.floor((Math.random() * 200) + 50)) :
+                String(Math.floor((Math.random() * 400) + 50))
+            )
+            });
       }
       for(var i = 0; i < 10000; i++){
 
@@ -58,8 +65,14 @@ export class VirtualGridSampleComponent {
   private localData:any;
    constructor(private localService: LocalDataService) {
       var cols = [];
-        for(var j = 0; j < 100; j++){
-          cols.push({field: j.toString(), width:"200"});
+        for(var j = 0; j < 100; j++) {
+          cols.push({field: j.toString(), width: j % 3 === 0 ?
+            String(Math.floor((Math.random() * 50) + 50)) :
+            (
+              j % 3 === 1 ?
+                String(Math.floor((Math.random() * 200) + 50)) :
+                String(Math.floor((Math.random() * 400) + 50))
+            )});
       }
       this.columns = cols;
   
