@@ -5,7 +5,7 @@ which is presented into input field.
 
 # Usage
 ```typescript
-import { IgxDatePickerComponent } from "igniteui-js-blocks";
+import { IgxDatePickerComponent } from "igniteui-angular";
 ```
 
 Basic initialization
