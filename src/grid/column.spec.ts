@@ -144,7 +144,6 @@ describe("IgxGrid - Column properties", () => {
     });
 });
 
-
 @Component({
     template: `
         <igx-grid [data]="data">

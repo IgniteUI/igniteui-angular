@@ -5,9 +5,9 @@ import { IgxColumnComponent } from "./column.component";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
+    preserveWhitespaces: false,
     selector: "igx-grid-header",
-    templateUrl: "./grid-header.component.html",
-    preserveWhitespaces: false
+    templateUrl: "./grid-header.component.html"
 })
 export class IgxGridHeaderComponent implements DoCheck {
 

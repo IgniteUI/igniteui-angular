@@ -23,10 +23,10 @@ import { IgxColumnComponent } from "./column.component";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
+    preserveWhitespaces: false,
     selector: "igx-grid-filter",
-    templateUrl: "./grid-filtering.component.html",
     styleUrls: ["./grid-filtering.component.scss"],
-    preserveWhitespaces: false
+    templateUrl: "./grid-filtering.component.html"
 })
 export class IgxGridFilterComponent implements OnDestroy {
 

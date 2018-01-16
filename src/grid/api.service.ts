@@ -55,6 +55,11 @@ export class IgxGridAPIService {
         this.get(id).data[index][cell.column.field] = cell.value;
     }
 
+    public updateRow(value: any, id: string, row: IgxGridRowComponent): void {
+        const index = this.get(id).data.indexOf(row.rowData);
+        this.get(id).data[index] = value;
+    }
+
     public sort(id: string, fieldName: string, dir: SortingDirection): void {
         const sortingState = this.get(id).sortingExpressions;
 

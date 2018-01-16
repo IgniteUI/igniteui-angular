@@ -17,9 +17,9 @@ import { IgxGridComponent } from "./grid.component";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
+    preserveWhitespaces: false,
     selector: "igx-grid-row",
-    templateUrl: "./row.component.html",
-    preserveWhitespaces: false
+    templateUrl: "./row.component.html"
 })
 export class IgxGridRowComponent {
 

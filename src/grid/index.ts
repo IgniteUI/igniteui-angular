@@ -39,15 +39,6 @@ import { IgxGridRowComponent } from "./row.component";
   entryComponents: [
     IgxColumnComponent
   ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    IgxButtonModule,
-    IgxDatePickerModule,
-    IgxIconModule,
-    IgxRippleModule,
-    IgxInput
-  ],
   exports: [
     IgxGridComponent,
     IgxGridCellComponent,
@@ -58,6 +49,15 @@ import { IgxGridRowComponent } from "./row.component";
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective
+  ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IgxButtonModule,
+    IgxDatePickerModule,
+    IgxIconModule,
+    IgxRippleModule,
+    IgxInput
   ]
 })
 export class IgxGridModule {
