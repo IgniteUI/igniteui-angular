@@ -66,7 +66,6 @@ describe("IgxGrid - Grid initialization", () => {
     });
 });
 
-
 @Component({
     template: `
         <igx-grid [data]="data">
