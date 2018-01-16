@@ -10,8 +10,7 @@ You can find source files under the [`src`](https://github.com/IgniteUI/igniteui
 
 #### [**View running samples here**](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
 
-
-
+**IMPORTANT** The repository has been renamed from `igniteui-js-blocks` to `igniteui-angular`. Read more on our new [naming convention](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-github-repo-name-changes). 
 
 Current list of controls include:
 
