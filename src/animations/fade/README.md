@@ -21,8 +21,8 @@ const params: IAnimationParams = {
 If parameters are attached, they act as default values.  When an animation is invoked via [`useAnimation`](https://angular.io/api/animations/useAnimation) then parameter values are allowed to be passed in directly. If any of the passed in parameter values are missing then the default values will be used.
 
 ``` typescript
-import { fadeIn } from "igniteui-js-blocks/animations/main";
-import { EaseOut } from "ignieui-js-blocks/animations/easings";
+import { fadeIn } from "igniteui-angular/animations/main";
+import { EaseOut } from "ignieui-angular/animations/easings";
 
 useAnimation(fadeIn, {
     params: {

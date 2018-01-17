@@ -1,18 +1,18 @@
 {
-    "name": "igniteui-js-blocks",
+    "name": "igniteui-angular",
     "version": "0.1.0",
     "description": "Infragistics mobile-first Angular native components and supporting directives built with TypeScript",
     "author": "Infragistics",
     "license": "Apache-2.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/IgniteUI/igniteui-js-blocks"
+        "url": "https://github.com/IgniteUI/igniteui-angular"
     },
     "bugs": {
-        "url": "https://github.com/IgniteUI/igniteui-js-blocks/issues"
+        "url": "https://github.com/IgniteUI/igniteui-angular/issues"
     },
     "keywords": [
-        "igniteui-js-blocks",
+        "igniteui-angular",
         "angular",
         "angular4",
         "UI components",

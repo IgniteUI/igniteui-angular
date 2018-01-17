@@ -6,7 +6,7 @@ You can see it in action [here](http://139.59.168.161/demos/calendar)
 
 ## Usage
 ```typescript
-import { IgxCalendarComponent } from "igniteui-js-blocks";
+import { IgxCalendarComponent } from "igniteui-angular";
 ```
 
 Basic initialization

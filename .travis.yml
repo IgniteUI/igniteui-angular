@@ -18,7 +18,7 @@ script:
 - npm run lint
 - npm run build
 - npm run test
-- if [ "${TRAVIS_REPO_SLUG}" == "IgniteUI/igniteui-js-blocks" ]; then cat ./coverage/lcov.info | coveralls; fi
+- if [ "${TRAVIS_REPO_SLUG}" == "IgniteUI/igniteui-angular" ]; then cat ./coverage/lcov.info | coveralls; fi
 
 before_deploy:
 # move to dist
@@ -37,4 +37,4 @@ deploy:
     secure: UvQG2jKbNOUsKoN2XEj1zMhehq14ZUtXnSFGFH7XcryVo5GNVfzeqzTouRmbEAxn9XvfwyZP+QLwQAFBggIdfXhld/CDrxJ6mTTl+b3kp055XVIJuRwgYfs2w+VusUxZlJpkq5t1sdPa19q/Xd6ITiUgVllymZu3udFe/3LP29UPvg4V5iAIOxUCBkIWvAcvygt9NvBe1B51PbfhBemiK4LvV88t8AGipF3dd5YTjs0M4f6+P97ehdjJUkr8WG2VcIui7ER9fGrkc/KmybglxygWV65WPJC6vsqxIpB0QSLGSSbvbDoagnbuxOmizrvFabZFO7hfwcEUR/1VneiRjjLNUeMiIF/1WVGAcPVVJKm8ABIzRtk8Vuj8QR79SAhXNdF2wvd/lVnb0CkcWjJhpRwq1dKIh7CX+/tmGzhubKUYaDCqKeNIAPVZIiehcELsTizW/99RoJq03IIbbNJnAD1qUO7PCW9dCWIGgF7p5UNPb7Mo7x/vVcEgh/NHLorVx+p7dqAWi2OGiSdq+ZU6ZtCgNKNYJHaJXaYdwALGktKfJkiuNYJ+3/o7tM8ruXhimmZ5h5olzlyk4kPK9OCfWPR7HLzWpjy5BFiQS+ZPgIL0z1/6I/qqs59bXGHAE9UABTyvc4mM32mSnJ7xsnKxuxefHayOdRvVB/CeJmA14rk=
   on:
     tags: true
-    repo: IgniteUI/igniteui-js-blocks
+    repo: IgniteUI/igniteui-angular
