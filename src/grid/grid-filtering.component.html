@@ -1,0 +1,28 @@
+<ng-template #defaultFilterUI>
+    <p *ngIf="!unaryCondition">Value:
+        <input type="text" igxInput autocomplete="off" [value]="value" (input)="onInputChanged($event.target.value)" />
+    </p>
+</ng-template>
+
+<ng-template #defaultDateUI>
+    <igx-datePicker *ngIf="!unaryCondition" [(ngModel)]="value"></igx-datePicker>
+</ng-template>
+
+<div class="igx-filtering">
+    <div class="igx-filtering__toggle">
+        <span class="toggle-icon" igxButton="icon" [class.igx-filtering__toggle--active]="dialogShowing" (click)="toggle()">
+            <igx-icon fontSet="material" name="filter_list"></igx-icon>
+        </span>
+    </div>
+</div>
+
+<span *ngIf="dialogShowing" class="igx-filtering__options">
+    <p>Condition:
+        <select (change)="conditionChanged($event.target.value)">
+            <option [selected]="isActive(each)" *ngFor="let each of conditions" [value]="each">{{ each | filterCondition | titlecase }}</option>
+        </select>
+    </p>
+    <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
+    <button igxButton igxRipple (click)="filter()">Filter</button>
+    <button igxButton igxRipple (click)="clearFiltering()">Reset</button>
+</span>
