@@ -1,4 +1,4 @@
-<td>
+<td [style.width.px]='column.width'>
     <ng-template #defaultCell>
         {{ formatter ? formatter(value) : value }}
     </ng-template>

@@ -2,7 +2,7 @@
     {{ column.header || column.field }}
 </ng-template>
 
-<th class="igx-grid__th-content">
+<th class="igx-grid__th-content" [style.width.px]='column.width'>
     <span class="title">
         <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column }">
         </ng-container>

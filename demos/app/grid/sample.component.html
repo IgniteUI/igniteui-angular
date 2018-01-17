@@ -107,10 +107,10 @@
                 </igx-column>
                 <igx-column [field]="'Discontinued'">
                     <ng-template igxHeader let-column="column">
-                        <p style="color: crimson">{{ column.field }}</p>
+                        <p style="color: crimson"></p>
                     </ng-template>
                     <ng-template igxCell let-item="item" let-ri="rowIndex" let-column="column">
-                        <igx-checkbox [checked]="item" (change)="grid2.updateCell(ri, column.field, $event.target.checked)"></igx-checkbox>
+                        <igx-checkbox [checked]="item" (change)="grid2.updateCell(ri, $event.target.checked)"></igx-checkbox>
                     </ng-template>
                 </igx-column>
             </igx-grid>
@@ -125,7 +125,7 @@
                 <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'In Stock'"></igx-column>
                 <igx-column [field]="'Discontinued'" [sortable]="true">
                     <ng-template igxHeader let-column="column">
-                        <p style="color: crimson">{{ column.field }}</p>
+                        <p style="color: crimson"></p>
                     </ng-template>
                     <ng-template igxCell let-item="item" let-ri="rowIndex" let-column="column">
                         <igx-checkbox [checked]="item" (change)="grid3.updateCell(ri, column?.field, $event.target.checked)"></igx-checkbox>

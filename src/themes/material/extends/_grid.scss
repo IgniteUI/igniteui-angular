@@ -35,7 +35,7 @@
 }
 
 %grid-row {
-    display: flex;
+    display: inline-flex;
     flex: 1;
     background: $grid-row-bg;
     border-bottom: $grid-row-bb;

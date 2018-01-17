@@ -1,32 +1,32 @@
 import { Component, Injectable, ViewChild, OnChanges } from "@angular/core";
 import { Http } from "@angular/http";
 import { BehaviorSubject, Observable } from "rxjs/Rx";
-import { myRow } from './row';
-import { myCell } from './cell';
 
 import {
-  VirtualContainerComponent, IVirtualizationState
+  IVirtualizationState
 } from "../../lib/main";
 
+import { IgxColumnComponent } from "../../lib/grid/column.component";
+import {  IgxGridComponent} from "../../lib/grid/grid.component";
 
 @Injectable()
 export class LocalDataService {
     public records: Observable<any[]>;
     private _records: BehaviorSubject<any[]>;
-    private sampleData: any[];
+    public sampleData: any[];
 
     constructor(private http: Http) {
       this.sampleData = [];
       var cols = [];
         for(var j = 0; j < 100; j++){
-          cols.push({field: j.toString(),	width: j % 3 === 0 ?
-            Math.floor((Math.random() * 50) + 50) :
+          cols.push({field: j.toString(), width: j % 3 === 0 ?
+            String(Math.floor((Math.random() * 50) + 50)) :
             (
               j % 3 === 1 ?
-                Math.floor((Math.random() * 200) + 50) :
-                Math.floor((Math.random() * 400) + 50)
+                String(Math.floor((Math.random() * 200) + 50)) :
+                String(Math.floor((Math.random() * 400) + 50))
             )
-        });
+            });
       }
       for(var i = 0; i < 10000; i++){
 
@@ -55,41 +55,33 @@ export class LocalDataService {
     templateUrl: "sample.component.html",
     providers: [LocalDataService],
 })
-export class VirtualContainerSampleComponent { 
-  private cols:any;
+export class VirtualGridSampleComponent { 
+  private columns:any;
   private opts:any;
   private data: any;
   private remoteData:any;
   private dataState: IVirtualizationState;
   private prevRequest:any;
+  private localData:any;
    constructor(private localService: LocalDataService) {
       var cols = [];
-        for(var j = 0; j < 100; j++){
-			cols.push({
-				field: j.toString(),
-				width: j % 3 === 0 ?
-					Math.floor((Math.random() * 50) + 50) :
-					(
-						j % 3 === 1 ?
-							Math.floor((Math.random() * 200) + 50) :
-							Math.floor((Math.random() * 400) + 50)
-					)
-			});
+        for(var j = 0; j < 100; j++) {
+          cols.push({field: j.toString(), width: j % 3 === 0 ?
+            String(Math.floor((Math.random() * 50) + 50)) :
+            (
+              j % 3 === 1 ?
+                String(Math.floor((Math.random() * 200) + 50)) :
+                String(Math.floor((Math.random() * 400) + 50))
+            )});
       }
-      this.cols = cols;
+      this.columns = cols;
   
    
     this.data = this.localService.records;
-    this.opts = {
-    columns:this.cols,
-    horizontalItemWidth :200,
-    verticalItemHeight: 25,
-    rowComponent: myRow,
-    cellComponent: myCell,
-  };
-
+    
    }
-  loadChunk(event){
-     this.localService.getData(event);
+  ngOnInit(event){
+     this.localData = this.localService.sampleData;
+     //this.localService.getData(event);
    }
 }

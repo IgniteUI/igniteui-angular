@@ -28,6 +28,10 @@ import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { IgxGridRowComponent } from "./row.component";
+import { IgxGridHeaderComponent } from "./grid-header.component";
+import { IgxGridHeaderRowComponent } from "./header-row.component";
+
+import { IgxVirtualContainerModule } from "../virtual-container";
 
 let NEXT_ID = 0;
 
@@ -40,6 +44,24 @@ let NEXT_ID = 0;
     preserveWhitespaces: false
 })
 export class IgxGridComponent implements OnInit, AfterContentInit {
+    @ViewChild("container") scrollContainer: any;
+    @ViewChild("header") headerTable: any;
+
+
+    @Input()
+    public virtualizationOptions: any = {
+        horizontalItemWidth: 200,
+        verticalItemHeight: 30,
+        rowComponent: IgxGridRowComponent,
+        cellComponent: IgxGridCellComponent,
+        scrollContainer: this.scrollContainer
+    }
+    public virtualizationOptionsHeader: any = {
+        horizontalItemWidth: 200,
+        rowComponent: IgxGridHeaderRowComponent,
+        cellComponent: IgxGridHeaderComponent,
+        scrollContainer: this.scrollContainer
+    }
 
     @Input()
     public data = [];
@@ -161,25 +183,13 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     private sub$: Subscription;
 
     constructor(private gridAPI: IgxGridAPIService,
-                public cdr: ChangeDetectorRef,
-                private resolver: ComponentFactoryResolver,
-                private viewRef: ViewContainerRef) {
+        public cdr: ChangeDetectorRef,
+        private resolver: ComponentFactoryResolver,
+        private viewRef: ViewContainerRef) {
     }
 
     public ngOnInit() {
         this.gridAPI.register(this);
-    }
-
-    public ngAfterContentInit() {
-        if (this.autogenerate) {
-            this.autogenerateColumns();
-        }
-        this.columnList.forEach((col, idx) => {
-            col.index = idx;
-            col.gridID = this.id;
-            this.onColumnInit.emit(col);
-        });
-        this._columns = this.columnList.toArray();
     }
 
     get columns(): IgxColumnComponent[] {
@@ -231,11 +241,29 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
         }
     }
 
-    public paginate(val: number): void {
-        if (val < 0) {
-            return;
+    onScroll(evt) {
+        var scrLeft = evt.target.scrollLeft;
+        if (scrLeft !== this.headerTable.nativeElement.scrollLeft) {
+            this.headerTable.nativeElement.style.overflowX = "auto";
+            this.headerTable.nativeElement.style.overflowY = "hidden";
+            this.headerTable.nativeElement.scrollLeft = scrLeft;
+            this.headerTable.nativeElement.style.overflowX = "hidden";
         }
-        this.page = val;
+
+    }
+
+    public ngAfterContentInit() {
+        this.columnList.forEach((col, idx) => {
+            col.index = idx;
+            col.gridID = this.id;
+            this.onColumnInit.emit(col);
+        });
+        this._columns = this.columnList.toArray();
+        this.virtualizationOptions.columns = this._columns;
+        this.virtualizationOptionsHeader.columns = this._columns;
+
+        this.virtualizationOptions.scrollContainer = this.scrollContainer;
+        this.virtualizationOptionsHeader.scrollContainer = this.scrollContainer;
     }
 
     public addRow(data: any) {
