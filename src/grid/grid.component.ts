@@ -62,6 +62,16 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     }
 
     @Input()
+    get filteringExpressions() {
+        return this._filteringExpressions;
+    }
+
+    set filteringExpressions(value) {
+        this._filteringExpressions = cloneArray(value);
+        this.cdr.markForCheck();
+    }
+
+    @Input()
     get paging(): boolean {
         return this._paging;
     }
@@ -159,16 +169,14 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
 
     public pagingState;
 
-    public filteringExpressions = [];
-
     public cellInEditMode: IgxGridCellComponent;
-
     protected _perPage = 15;
     protected _page = 0;
     protected _paging = false;
     protected _pipeTrigger = 0;
     protected _columns = [];
     protected _filteringLogic = FilteringLogic.And;
+    protected _filteringExpressions = [];
     protected _sortingExpressions = [];
 
     private sub$: Subscription;
@@ -302,14 +310,25 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
         this.gridAPI.filter(
             this.id, name, value, condition || col.filteringCondition, ignoreCase || col.filteringIgnoreCase);
         this.page = 0;
-        this.cdr.markForCheck();
     }
 
     public filterGlobal(value: any, condition?, ignoreCase?) {
         // TODO: AND OR Filtering logic
         this.gridAPI.filterGlobal(this.id, value, condition, ignoreCase);
         this.page = 0;
-        this.cdr.markForCheck();
+    }
+
+    public clearFilter(name: string) {
+        const col = this.gridAPI.get_column_by_name(this.id, name);
+        if (!col) {
+            return;
+        }
+
+        this.gridAPI.clear_filter(this.id, name);
+    }
+
+    public clearFilterAll() {
+
     }
 
     get hasSortableColumns(): boolean {

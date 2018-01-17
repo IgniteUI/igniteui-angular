@@ -83,7 +83,7 @@ export class IgxGridAPIService {
             this.get(id).page = 0;
         }
         this.prepare_filtering_expression(filteringState, fieldName, term, condition, ignoreCase);
-        this.get(id).filteringExpressions = cloneArray(filteringState);
+        this.get(id).filteringExpressions = filteringState;
     }
 
     public filterGlobal(id, term, condition, ignoreCase) {
@@ -92,13 +92,13 @@ export class IgxGridAPIService {
             this.prepare_filtering_expression(filteringState, column.field, term,
                 condition || column.filteringCondition, ignoreCase || column.filteringIgnoreCase);
         }
-        this.get(id).filteringExpressions = cloneArray(filteringState);
+        this.get(id).filteringExpressions = filteringState;
     }
 
     public clear_filter(id, fieldName) {
         const filteringState = this.get(id).filteringExpressions;
         filteringState.splice(filteringState.findIndex((expr) => expr.fieldName === fieldName), 1);
-        this.get(id).filteringExpressions = cloneArray(filteringState);
+        this.get(id).filteringExpressions = filteringState;
     }
 
     protected prepare_filtering_expression(state, fieldName, searchVal, condition, ignoreCase) {
