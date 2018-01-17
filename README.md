@@ -1,6 +1,6 @@
 # Ignite UI for Angular - from Infragistics
 
-[![Build Status](https://travis-ci.org/IgniteUI/igniteui-js-blocks.svg?branch=master)](https://travis-ci.org/IgniteUI/igniteui-js-blocks)
+[![Build Status](https://travis-ci.org/IgniteUI/igniteui-angular.svg?branch=master)](https://travis-ci.org/IgniteUI/igniteui-angular)
 [![Coverage Status](https://coveralls.io/repos/github/IgniteUI/igniteui-js-blocks/badge.svg?branch=master)](https://coveralls.io/github/IgniteUI/igniteui-js-blocks?branch=master)
 [![npm version](https://badge.fury.io/js/igniteui-js-blocks.svg)](https://badge.fury.io/js/igniteui-js-blocks)
 
