@@ -12,8 +12,8 @@ In order to perform all the necessary checks before pulling your changes in, you
     npm install
     npm test
 
-[Naming Convention](https://github.com/IgniteUI/igniteui-js-blocks/wiki/General-Naming-Guidelines-for-Ignite-UI-JS-Blocks)  
-[CSS Naming Convention](https://github.com/IgniteUI/igniteui-js-blocks/blob/master/css-naming-convention.md)  
+[Naming Convention](https://github.com/IgniteUI/igniteui-angular/wiki/General-Naming-Guidelines-for-Ignite-UI-JS-Blocks)  
+[CSS Naming Convention](https://github.com/IgniteUI/igniteui-angular/blob/master/css-naming-convention.md)  
 
 # Workflow
 When working on an issue for the Ignite UI JS Blocks repository, you need to be aware of and to follow a correct status workflow. We have created a number of status labels in order to communicate well what the current status of a single issue/pull request is. The statuses are as follows:
@@ -44,10 +44,10 @@ In order to test a pull request that is awaiting test, perform the following act
 
   Replace the `<PULL_ID>` with the respective pull number in the following:
   ```bash
-  git fetch IgniteUI-JS-Blocks +refs/pull/<PULL_ID>/merge
+  git fetch igniteui-angular +refs/pull/<PULL_ID>/merge
   git checkout -qf FETCH_HEAD
   ```
-  > Note that the above assumes the remote for this repo is "IgniteUI-JS-Blocks" but "https://github.com/IgniteUI/igniteui-js-blocks.git" can be used as well. This uses a detached and temporary ref to quickly get PR merged state the same as the CI builds so there's no branch to dispose of after switching away. If you do want to make some changes, consider creating a branch from the pull request one or check out the [Checking out pull requests locally](https://help.github.com/articles/checking-out-pull-requests-locally/) article.
+  > Note that the above assumes the remote for this repo is "igniteui-angular" but "https://github.com/IgniteUI/igniteui-angular.git" can be used as well. This uses a detached and temporary ref to quickly get PR merged state the same as the CI builds so there's no branch to dispose of after switching away. If you do want to make some changes, consider creating a branch from the pull request one or check out the [Checking out pull requests locally](https://help.github.com/articles/checking-out-pull-requests-locally/) article.
 4. Verify that the expected behavior is observed with the changes in the pull request.
 5. Return the pull request in a not fixed state if you're still reproducing the issue.
 6. Don't forget to make the necessary status updates, as described in the workflow section.

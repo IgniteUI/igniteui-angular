@@ -1,5 +1,5 @@
 {
-    "name": "igniteui-js-blocks-demos",
+    "name": "igniteui-angular-demos",
     "version": "0.1.0",
     "scripts": {
         "build:aot": "npm run build:aot:compile && npm run build:aot:bundle",

@@ -2,17 +2,17 @@
 
 Ignite UI JS Blocks includes over 100+ pre-built animations. They are split in 7 groups:
 
-  - [Fade](https://github.com/IgniteUI/igniteui-js-blocks/tree/master/src/animations/fade/README.md)
-  - [Flip](https://github.com/IgniteUI/igniteui-js-blocks/tree/master/src/animations/flip/README.md)
-  - [Miscellaneous](https://github.com/IgniteUI/igniteui-js-blocks/tree/master/src/animations/misc/README.md)
+  - [Fade](https://github.com/IgniteUI/igniteui-angular/tree/master/src/animations/fade/README.md)
+  - [Flip](https://github.com/IgniteUI/igniteui-angular/tree/master/src/animations/flip/README.md)
+  - [Miscellaneous](https://github.com/IgniteUI/igniteui-angular/tree/master/src/animations/misc/README.md)
     - Blink
     - Heartbeat
     - Pulsate
     - Shake
-  - [Rotate](https://github.com/IgniteUI/igniteui-js-blocks/tree/master/src/animations/rotate/README.md)
-  - [Scale](https://github.com/IgniteUI/igniteui-js-blocks/tree/master/src/animations/scale/README.md)
-  - [Slide](https://github.com/IgniteUI/igniteui-js-blocks/tree/master/src/animations/slide/README.md)
-  - [Swing](https://github.com/IgniteUI/igniteui-js-blocks/tree/master/src/animations/swing/README.md)
+  - [Rotate](https://github.com/IgniteUI/igniteui-angular/tree/master/src/animations/rotate/README.md)
+  - [Scale](https://github.com/IgniteUI/igniteui-angular/tree/master/src/animations/scale/README.md)
+  - [Slide](https://github.com/IgniteUI/igniteui-angular/tree/master/src/animations/slide/README.md)
+  - [Swing](https://github.com/IgniteUI/igniteui-angular/tree/master/src/animations/swing/README.md)
 
 Each group accepts a different set of parameters, allowing you to modify the behavior  of any of the included animations. Each animation is an [`AnimationReferenceMetadata`](https://angular.io/api/animations/AnimationReferenceMetadata) object as produced by the [`animation`](https://angular.io/api/animations/animation) function provided by Angular.
 
@@ -64,7 +64,7 @@ There are three main timing function groups - **EaseIn**, **EaseOut**, and **Eas
 
 To use a specific timing function, import it first:
 ``` typescript 
-import { EaseOut } from "igniteui-js-blocks/animations/easings";
+import { EaseOut } from "igniteui-angular/animations/easings";
 ```
 and then use it as value for the easing param in any animation:
 
