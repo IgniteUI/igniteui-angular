@@ -22,7 +22,7 @@ If parameters are attached, they act as default values.  When an animation is in
 
 ``` typescript
 import { fadeIn } from "igniteui-angular/animations/main";
-import { EaseOut } from "ignieui-js-blocks/animations/easings";
+import { EaseOut } from "ignieui-angular/animations/easings";
 
 useAnimation(fadeIn, {
     params: {
