@@ -64,7 +64,7 @@ export class IgxGridAPIService {
         const sortingState = this.get(id).sortingExpressions;
 
         this.prepare_sorting_expression(sortingState, fieldName, dir);
-        this.get(id).sortingExpressions = cloneArray(sortingState);
+        this.get(id).sortingExpressions = sortingState;
     }
 
     public sort_multiple(id: string, expressions): void {
@@ -74,7 +74,7 @@ export class IgxGridAPIService {
             this.prepare_sorting_expression(sortingState, each.fieldName, each.dir);
         }
 
-        this.get(id).sortingExpressions = cloneArray(sortingState);
+        this.get(id).sortingExpressions = sortingState;
     }
 
     public filter(id, fieldName, term, condition, ignoreCase) {

@@ -21,9 +21,11 @@ import {
     ViewEncapsulation
 } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
+import { cloneArray } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { FilteringLogic } from "../data-operations/filtering-expression.interface";
 import { SortingDirection } from "../data-operations/sorting-expression.interface";
+import { ISortingExpression } from "../main";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
@@ -145,7 +147,15 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
         return this._pipeTrigger;
     }
 
-    public sortingExpressions = [];
+    @Input()
+    get sortingExpressions() {
+        return this._sortingExpressions;
+    }
+
+    set sortingExpressions(value) {
+        this._sortingExpressions = cloneArray(value);
+        this.cdr.markForCheck();
+    }
 
     public pagingState;
 
@@ -159,6 +169,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     protected _pipeTrigger = 0;
     protected _columns = [];
     protected _filteringLogic = FilteringLogic.And;
+    protected _sortingExpressions = [];
 
     private sub$: Subscription;
 
@@ -277,12 +288,10 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
 
     public sort(name: string, direction = SortingDirection.Asc): void {
         this.gridAPI.sort(this.id, name, direction);
-        this.cdr.markForCheck();
     }
 
     public sortMultiple(exprArray): void {
         this.gridAPI.sort_multiple(this.id, exprArray);
-        this.cdr.markForCheck();
     }
 
     public filter(name: string, value: any, condition?, ignoreCase?): void {
