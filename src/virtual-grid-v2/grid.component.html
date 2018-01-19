@@ -1,0 +1,61 @@
+<ng-template #defaultPager let-api>
+    <div *ngIf="api.paging && api.totalPages > 0" class="igx-paginator">
+        <button [disabled]="api.isFirstPage" (click)="api.paginate(0)" igxButton="icon" igxRipple igxRippleCentered="true">
+            <igx-icon fontSet="material" name="first_page"></igx-icon>
+        </button>
+        <button [disabled]="api.isFirstPage" (click)="api.previousPage()" igxButton="icon" igxRipple igxRippleCentered="true">
+            <igx-icon fontSet="material" name="chevron_left"></igx-icon>
+        </button>
+        <span>{{ api.page + 1 }} of {{ api.totalPages }}</span>
+        <button [disabled]="api.isLastPage" (click)="api.nextPage()" igxRipple igxRippleCentered="true" igxButton="icon">
+            <igx-icon fontSet="material" name="chevron_right"></igx-icon>
+        </button>
+        <button [disabled]="api.isLastPage" (click)="api.paginate(api.totalPages - 1)" igxButton="icon" igxRipple igxRippleCentered="true">
+            <igx-icon fontSet="material" name="last_page"></igx-icon>
+        </button>
+        <select style="margin-left: 1rem;" (change)="api.perPage = $event.target.value">
+            <option [value]="val" [selected]="api.perPage == val" *ngFor="let val of [5, 10, 15, 25, 50, 100, 500]">{{ val }}</option>
+        </select>
+    </div>
+</ng-template>
+
+
+<table #content [style.height]="height" [style.width]="width" class="igx-grid">
+    <thead class="igx-grid__thead">
+        <virtual-container #virtualHeaders
+            [data]="_columnsData"
+            [cols]="_columns"
+            [rowComponent]="_rowComponent"
+            [cellComponent]="_cellComponent"
+            [rowDefaults]="_rowDefaults"
+            [cellDefaults]="_cellDefaults"
+            [verticalItemHeight]="50"
+            [horizontalItemWidth]="200"
+            [containerHeight]="50"
+            [containerWidth]="width"
+            [enableScrollbars]="false"
+            [bindScrollTo]="_virtDataScroll"
+        ></virtual-container> 
+    </thead>
+    <tbody class="igx-grid__tbody">
+        <virtual-container #virtualContent
+            [data]="data"
+            [cols]="_columns"
+            [rowComponent]="_rowComponent"
+            [cellComponent]="_cellComponent"
+            [rowDefaults]="_rowDefaults"
+            [cellDefaults]="_cellDefaults"
+            [verticalItemHeight]="rowHeight"
+            [horizontalItemWidth]="200"
+            [containerHeight]="_dataContainerHeight"
+            [containerWidth]="width"
+            (virtScroll)="onVirtScroll($event)"
+            (chunksRendered)="onChunksRendered($event)"
+        ></virtual-container> 
+    </tbody>
+    <tfoot class="igx-grid__tfoot">
+        
+    </tfoot>
+</table>
+
+    

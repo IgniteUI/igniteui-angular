@@ -1,16 +1,25 @@
 import { NgModule } from "@angular/core";
-
+import { CommonModule } from "@angular/common";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { VirtualContainerV2SampleComponent } from "./sample.component";
-import { VirtualContainerModule } from "../../lib/main";
+import { VirtualContainerV2Module } from "../../lib/main";
+import { CellComponent } from './cell.component';
+import { RowComponent } from './row.component';
 
 @NgModule({
     declarations: [
-        VirtualContainerV2SampleComponent
+        VirtualContainerV2SampleComponent,
+        CellComponent,
+        RowComponent
     ],
     imports: [
-        VirtualContainerModule,
-        PageHeaderModule
+        VirtualContainerV2Module,
+        PageHeaderModule,
+        CommonModule
+    ],
+    entryComponents: [
+        CellComponent,
+        RowComponent
     ]
 })
 export class VirtualContainerV2SampleModule { }

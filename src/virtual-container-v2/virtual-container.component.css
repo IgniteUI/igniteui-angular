@@ -10,8 +10,6 @@
 }
 
 .scrollContainer {
-    border: 1px solid #777777;
-    overflow: auto;
     position: relative;
 }
 

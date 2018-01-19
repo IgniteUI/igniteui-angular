@@ -34,7 +34,7 @@ import { VirtualContainerRemoteSampleModule } from "./virtual-container-remote/s
 import { VirtualGridSampleModule } from "./virtual-grid/sample.module";
 
 import { VirtualContainerV2SampleModule } from "./virtual-container-v2/sample.module";
-
+import { VirtualGridV2SampleModule } from "./virtual-grid-v2/sample.module";
 
 import { AppComponent } from "./app.component";
 import { routing } from "./app.routing";
@@ -91,7 +91,8 @@ import { IgxAvatarModule } from "../lib/main";
         IgxDatePickerSampleModule,
         LayoutSampleModule,
         VirtualGridSampleModule,
-		VirtualContainerV2SampleModule,
+        VirtualContainerV2SampleModule,
+        VirtualGridV2SampleModule
     ]
 })
 export class AppModule { }

@@ -12,6 +12,8 @@ import { VirtualContainerComponent } from "./virtual-container.component";
       HorizontalChunkComponent
     ],
     entryComponents: [
+      VerticalChunkComponent,
+      HorizontalChunkComponent
     ],
     imports: [
       CommonModule
@@ -22,10 +24,10 @@ import { VirtualContainerComponent } from "./virtual-container.component";
       HorizontalChunkComponent
     ]
 })
-export class VirtualContainerModule {
+export class VirtualContainerV2Module {
     public static forRoot() {
       return {
-        ngModule: VirtualContainerModule
+        ngModule: VirtualContainerV2Module
       };
     }
   }

@@ -34,6 +34,7 @@ import {
 } from "./tabbar/sample.component";
 import { IgxToastSampleComponent } from "./toast/sample.component";
 import { VirtualContainerV2SampleComponent } from "./virtual-container-v2/sample.component";
+import { VirtualGridV2SampleComponent } from "./virtual-grid-v2/sample.component";
 
 const appRoutes: Routes = [
     {
@@ -160,6 +161,10 @@ const appRoutes: Routes = [
     {
         component: VirtualContainerV2SampleComponent,
         path: "virtual-container-v2"
+    },
+    {
+        component: VirtualGridV2SampleComponent,
+        path: "virtual-grid-v2"
     }
 ];
 
