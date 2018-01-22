@@ -188,11 +188,11 @@ export class IgxGridCellComponent {
     @HostListener("keydown", ["$event"])
     public onKeyDown(event: KeyboardEvent) {
 
-        this.handleKeyboardNavigation(event.keyCode);
-        this.handleInlineEditMode(event.keyCode);
+        this.handleKeyboardNavigation(event);
+        this.handleInlineEditMode(event);
     }
 
-    protected handleKeyboardNavigation(keyCode): void {
+    protected handleKeyboardNavigation(event: KeyboardEvent): void {
 
         const visibleColumns: IgxColumnComponent[] = this.grid.visibleColumns;
         let ri = this.rowIndex;
@@ -200,8 +200,12 @@ export class IgxGridCellComponent {
         let rv: number;
         let target: IgxGridCellComponent;
 
-        switch (keyCode) {
+        switch (event.keyCode) {
             case KEYCODES.LEFT_ARROW:
+                if (event.ctrlKey) {
+                    ci = this.row.cells.first.columnIndex;
+                    break;
+                }
                 rv = visibleColumns.findIndex((col) => col.index === ci);
                 if (rv > 0) {
                     ci = visibleColumns[rv - 1].index;
@@ -211,6 +215,10 @@ export class IgxGridCellComponent {
                 ri -= 1;
                 break;
             case KEYCODES.RIGHT_ARROW:
+                if (event.ctrlKey) {
+                    ci = this.row.cells.last.columnIndex;
+                    break;
+                }
                 rv = visibleColumns.findIndex((col) => col.index === ci);
                 if (rv > -1 && rv < visibleColumns.length - 1) {
                     ci = visibleColumns[rv + 1].index;
@@ -229,13 +237,13 @@ export class IgxGridCellComponent {
         }
     }
 
-    protected handleInlineEditMode(keyCode) {
-        if (keyCode === KEYCODES.ENTER && this.column.editable) {
+    protected handleInlineEditMode(event: KeyboardEvent) {
+        if ((event.keyCode === KEYCODES.ENTER || event.keyCode === KEYCODES.F2) && this.column.editable) {
             this._inEditMode = !this._inEditMode;
             this.grid.cellInEditMode = this;
             return;
         }
-        if (keyCode === KEYCODES.ESCAPE) {
+        if (event.keyCode === KEYCODES.ESCAPE) {
             this._inEditMode = false;
         }
     }
