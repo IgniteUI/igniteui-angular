@@ -97,8 +97,11 @@ export class IgxGridAPIService {
 
     public clear_filter(id, fieldName) {
         const filteringState = this.get(id).filteringExpressions;
-        filteringState.splice(filteringState.findIndex((expr) => expr.fieldName === fieldName), 1);
-        this.get(id).filteringExpressions = filteringState;
+        const index = filteringState.findIndex((expr) => expr.fieldName === fieldName);
+        if (index > -1) {
+            filteringState.splice(index, 1);
+            this.get(id).filteringExpressions = filteringState;
+        }
     }
 
     protected prepare_filtering_expression(state, fieldName, searchVal, condition, ignoreCase) {
