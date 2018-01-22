@@ -36,7 +36,7 @@ export class VirtualContainerComponent implements AfterViewInit, OnInit, OnChang
     left: string;
 
     height: number;
-public totalRowCount:number;
+    public totalRowCount: number;
 
     topPortionHeight: any;
     bottomPortionHeight: any
@@ -70,10 +70,10 @@ public totalRowCount:number;
         this.columnLeftCache = [];
 
     }
-  ngAfterViewInit() {
-      var containerElem = this.elemRef.nativeElement.parentElement;
-      this.visibleVerticalItemsCount = containerElem.clientHeight > 0 ? (containerElem.clientHeight/this.options.verticalItemHeight) * 2 : 1;
-      this.visibleHorizontalItemsCount = (containerElem.clientWidth/this.options.horizontalItemWidth) * 2;
+    ngAfterViewInit() {
+        var containerElem = this.elemRef.nativeElement.parentElement;
+        this.visibleVerticalItemsCount = containerElem.clientHeight > 0 ? (containerElem.clientHeight / this.options.verticalItemHeight) * 2 : 1;
+        this.visibleHorizontalItemsCount = (containerElem.clientWidth / this.options.horizontalItemWidth) * 2;
 
         var totalWidth = 0, i = 0;
         this.columnLeftCache.push(0);
@@ -91,62 +91,62 @@ public totalRowCount:number;
             0
         );
 
-      if(this.data instanceof Array){
-          this.state.metadata.totalRecordsCount = this.data.length;
-      }
-
-    var bounds =  containerElem.getBoundingClientRect();
-    var top = bounds.top + bounds.height/2;
-    var left =  bounds.left;
-    this.top = top + "px";
-    this.left = left/2 + "px";
-    this.isLoading = true;
-    this.ref.detectChanges();
-
-    this.initialLoad = true;
-    this.loadItems(this.state.chunkStartIndex, this.state.chunkEndIndex, false);
-    if (this.data instanceof Observable) {
-        this.data.subscribe(value => {
-            //this.state.metadata.totalRecordsCount = this.state.metadata ?  this.state.metadata.totalRecordsCount: this.state.metadata.totalRecordsCount;
-            this.localChunkData = value;
-            this.isLoading = false;
-            this.ref.detectChanges();
-            this.loadItems(this.state.chunkStartIndex, this.state.chunkEndIndex, false);
-        });
-    }
- }
- ngOnChanges(changes: SimpleChanges) {
-     if(changes["data"] && this.state){
-         this.loadItems(this.state.chunkStartIndex, this.state.chunkEndIndex, false);
-     }
-
- }
- ngDoCheck(){
-     if(!this.isLoading){
-        var containerElem = this.elemRef.nativeElement.parentElement;
-        var scrTop = containerElem.scrollTop;
-        var scrLeft = containerElem.scrollLeft;
-        if(scrTop !== this.prevScrTop){
-            this.scroll();
+        if (this.data instanceof Array) {
+            this.state.metadata.totalRecordsCount = this.data.length;
         }
-      }
-     
- }
- attachEventHandlers() {
-       var containerElem = this.options.scrollContainer ? this.options.scrollContainer.nativeElement : this.elemRef.nativeElement.parentElement;
-       var that = this;
-       containerElem.addEventListener('scroll', function (evt) {
-           if (!that.isLoading) { 
-               that.scroll.apply(that);
+
+        var bounds = containerElem.getBoundingClientRect();
+        var top = bounds.top + bounds.height / 2;
+        var left = bounds.left;
+        this.top = top + "px";
+        this.left = left / 2 + "px";
+        this.isLoading = true;
+        this.ref.detectChanges();
+
+        this.initialLoad = true;
+        this.loadItems(this.state.chunkStartIndex, this.state.chunkEndIndex, false);
+        if (this.data instanceof Observable) {
+            this.data.subscribe(value => {
+                //this.state.metadata.totalRecordsCount = this.state.metadata ?  this.state.metadata.totalRecordsCount: this.state.metadata.totalRecordsCount;
+                this.localChunkData = value;
+                this.isLoading = false;
+                this.ref.detectChanges();
+                this.loadItems(this.state.chunkStartIndex, this.state.chunkEndIndex, false);
+            });
+        }
+    }
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes["data"] && this.state) {
+            this.loadItems(this.state.chunkStartIndex, this.state.chunkEndIndex, false);
+        }
+
+    }
+    ngDoCheck() {
+        if (!this.isLoading) {
+            var containerElem = this.elemRef.nativeElement.parentElement;
+            var scrTop = containerElem.scrollTop;
+            var scrLeft = containerElem.scrollLeft;
+            if (scrTop !== this.prevScrTop) {
+                this.scroll();
+            }
+        }
+
+    }
+    attachEventHandlers() {
+        var containerElem = this.options.scrollContainer ? this.options.scrollContainer.nativeElement : this.elemRef.nativeElement.parentElement;
+        var that = this;
+        containerElem.addEventListener('scroll', function (evt) {
+            if (!that.isLoading) {
+                that.scroll.apply(that);
             }
         });
-   }
- scroll() {
-      var containerElem = this.options.scrollContainer ? this.options.scrollContainer.nativeElement : this.elemRef.nativeElement.parentElement;
-      var scrTop = containerElem.scrollTop;
-      var scrLeft = containerElem.scrollLeft;
-      if (scrTop !== this.prevScrTop) {
-          //Handle vertical scroll
+    }
+    scroll() {
+        var containerElem = this.options.scrollContainer ? this.options.scrollContainer.nativeElement : this.elemRef.nativeElement.parentElement;
+        var scrTop = containerElem.scrollTop;
+        var scrLeft = containerElem.scrollLeft;
+        if (scrTop !== this.prevScrTop) {
+            //Handle vertical scroll
             var top = this.emptyVertItemTop.instance.height;
             var bottom = top + (this.visibleVerticalItemsCount * this.options.verticalItemHeight);
             if (Math.abs(this.prevScrTop - scrTop) > containerElem.clientHeight) {
@@ -244,19 +244,19 @@ public totalRowCount:number;
 
     loadItems(start, end, isHorizontal) {
 
-       var data, that = this;
-       if (start === undefined || start === null) {
-           return;
-       }
-       if(start < 0){
-           start = 0;
-       }
-       
-       if (!isHorizontal) {
+        var data, that = this;
+        if (start === undefined || start === null) {
+            return;
+        }
+        if (start < 0) {
+            start = 0;
+        }
+
+        if (!isHorizontal) {
             if (this.data instanceof Array) {
-               this.state.metadata.totalRecordsCount = this.data.length;
-               data = this.data.slice(start, end);
-               this.isLoading = false;
+                this.state.metadata.totalRecordsCount = this.data.length;
+                data = this.data.slice(start, end);
+                this.isLoading = false;
             } else if (this.localChunkData) {
                 data = this.localChunkData;
                 this.localChunkData = null;
@@ -303,9 +303,9 @@ public totalRowCount:number;
         let emptyVertItemTopRef = viewContainerRef.createComponent(componentFactory);
         (<VirtualVericalItemComponent>emptyVertItemTopRef.instance).rowData = [];
         (<VirtualVericalItemComponent>emptyVertItemTopRef.instance).columns = this.currColumns;
-         (<VirtualVericalItemComponent>emptyVertItemTopRef.instance).height = this.topPortionHeight > 0 ? this.topPortionHeight: 0;
-          
-          this.emptyVertItemTop = emptyVertItemTopRef;
+        (<VirtualVericalItemComponent>emptyVertItemTopRef.instance).height = this.topPortionHeight > 0 ? this.topPortionHeight : 0;
+
+        this.emptyVertItemTop = emptyVertItemTopRef;
         for (var i = 0; i < data.length; i++) {
             let componentRef = viewContainerRef.createComponent(componentFactory);
             (<VirtualVericalItemComponent>componentRef.instance).rowData = data[i];
@@ -316,7 +316,7 @@ public totalRowCount:number;
         let emptyVertItemBottomRef = viewContainerRef.createComponent(componentFactory);
         (<VirtualVericalItemComponent>emptyVertItemBottomRef.instance).rowData = [];
         (<VirtualVericalItemComponent>emptyVertItemBottomRef.instance).columns = this.currColumns;
-        (<VirtualVericalItemComponent>emptyVertItemBottomRef.instance).height =  this.bottomPortionHeight > 0 ? this.bottomPortionHeight: 0;
+        (<VirtualVericalItemComponent>emptyVertItemBottomRef.instance).height = this.bottomPortionHeight > 0 ? this.bottomPortionHeight : 0;
         this.emptyVertItemBottom = emptyVertItemBottomRef;
 
         this.ref.detectChanges();
