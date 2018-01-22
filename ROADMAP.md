@@ -13,7 +13,7 @@
 6. Export to excel
 7. Combo
 8. Mask directive (editor)
-9. Operations UI - column chooser (Data Operations UI)
+9. Operations UI - column chooser (Data Operations UI) 
 10.Virtualization - research 1st sprint [issue](https://github.com/IgniteUI/igniteui-angular/issues/482)  
 	We need a virtual container as an extension/feature of the `DataContainer`. Virtualization would behave similar to how the controls operate with the `Paging` pipe. There would be a mechanism for components to request the `DataContainer` to skip `n` records and return `k` records. Then the control takes care of rendering those `k` records in a container, which we call `virtual DOM container`. The side of the `virtual DOM container` will be fixed, and there should be no difference for the component whether the records are available in memory, or should be requested from a remote service. This is, in fact, a generalization of the `Paging` feature, where with paging the skip is performed on a multiple of `k` and `k` is fixed and controlled by the developer.
   
