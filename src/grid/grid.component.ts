@@ -47,7 +47,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     public data = [];
 
     @Input()
-    public autogenerate = false;
+    public autoGenerate = false;
 
     @Input()
     public id = `igx-grid-${NEXT_ID++}`;
@@ -192,7 +192,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     }
 
     public ngAfterContentInit() {
-        if (this.autogenerate) {
+        if (this.autoGenerate) {
             this.autogenerateColumns();
         }
         this.columnList.forEach((col, idx) => {
