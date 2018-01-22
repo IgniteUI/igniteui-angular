@@ -3,7 +3,7 @@
 
 ## Usage
 ```html
-<igx-grid #grid1 [data]="localData" [autoGenerate]="true"
+<igx-grid #grid1 [data]="localData" [autogenerate]="true"
     (onColumnInit)="initColumns($event)" (onCellSelection)="selectCell($event)">
 </igx-grid>
 ```
@@ -33,7 +33,7 @@ import {
 
 Define the grid
 ```html
-<igx-grid #grid1 [data]="localData" [autoGenerate]="true"
+<igx-grid #grid1 [data]="localData" [autogenerate]="true"
     (onColumnInit)="initColumns($event)" (onCellSelection)="selectCell($event)">
 </igx-grid>
 ```
@@ -150,7 +150,7 @@ public deleteRow(event) {
 | paging  | bool  | Enables paging feature |
 | perPage  | number  | Visible items per page, default is 25 |
 | state  | IDataState  | Define filtering, sorting and paging state  |
-| autoGenerate  | boolean  | Autogenerate grid's columns, default value is *false* |
+| autogenerate  | boolean  | Autogenerate grid's columns, default value is *false* |
 
 
 ### Outputs
