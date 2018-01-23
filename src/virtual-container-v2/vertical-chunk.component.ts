@@ -19,7 +19,6 @@ export class VerticalChunkComponent implements OnInit {
   @Input() cellDefaults: any;
   @Input() maxRowWidth: any;
   @Input() data: {
-    startIndex: number,
     height: number,
     width: number,
     hChunks: Array<Array<{
@@ -96,9 +95,6 @@ export class VerticalChunkComponent implements OnInit {
   }
 
   loadNewRowItems() {
-    var rowComponentFactory = this.componentFactoryResolver.resolveComponentFactory(this.rowComponent);
-    var horizontalChunkCF= this.componentFactoryResolver.resolveComponentFactory(HorizontalChunkComponent);
-
     this.customRowTemplate.clear();
     
     for(let i = 0; i < this.data.hChunks.length; i++) {
@@ -107,9 +103,6 @@ export class VerticalChunkComponent implements OnInit {
   }
 
   updateRowItems() {
-    var rowComponentFactory = this.componentFactoryResolver.resolveComponentFactory(this.rowComponent);
-    var horizontalChunkCF= this.componentFactoryResolver.resolveComponentFactory(HorizontalChunkComponent);
-
     for(let i = 0; i < this.data.hChunks.length; i++) {
       if(i >= this.rows.length) {
         this.createRow(i);

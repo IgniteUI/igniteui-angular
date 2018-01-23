@@ -24,7 +24,7 @@ export class HorizontalChunkComponent implements OnInit {
     startIndex: number,
     height: number,
     width: number,
-    cells: Array<any>,
+    cells: Object,
     cols: Array<any>
   };
   public cells: Array<any>;
@@ -54,7 +54,6 @@ export class HorizontalChunkComponent implements OnInit {
     this.customCellTemplate.clear();
     
     this.width = this.data.width;
-    var cellComponentFactory = this.componentFactoryResolver.resolveComponentFactory(this.cellComponent);    
     for(let i = 0; i < this.data.cols.length; i++) {
       this.createCell(i);
     }
@@ -63,8 +62,6 @@ export class HorizontalChunkComponent implements OnInit {
   }
 
   updateCellsItems() {
-    var cellComponentFactory = this.componentFactoryResolver.resolveComponentFactory(this.cellComponent);  
-
     for (let i = 0; i < this.data.cols.length; i++) {
       if(i < this.cells.length) {
         (<VirtualCell>this.cells[i].instance).width = this.data.cols[i].width;

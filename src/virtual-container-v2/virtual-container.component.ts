@@ -1,4 +1,4 @@
-import { Component, Renderer, OnInit, Input, Output, EventEmitter, ViewChild, TemplateRef, ElementRef } from '@angular/core';
+﻿import { Component, Renderer, OnInit, Input, Output, EventEmitter, ViewChild, TemplateRef, ElementRef } from '@angular/core';
 import { VerticalChunkComponent } from './vertical-chunk.component';
 
 @Component({
@@ -75,6 +75,9 @@ export class VirtualContainerComponent implements OnInit {
   private lastScrollLeft: number;
   private lastContentScrollTop: number;
 
+  private vChunkNumRows: number;
+  private vChunkHeight: number;
+  private vChunksTotal: number;
   private currentVChunkIdx: number;
   private currentHChunkIdx: number;
   private _firstLoad = true;
@@ -113,7 +116,6 @@ export class VirtualContainerComponent implements OnInit {
 
   ngOnInit() {
     this.calculateTotalSize();
-    this.generateChunks();
   }
 
   ngAfterViewInit() {
@@ -148,47 +150,30 @@ export class VirtualContainerComponent implements OnInit {
     for(let i=0; i < this.data.length; i++) {
       this.contentHeight += this.verticalItemHeight;
     }
+
+    this.vChunkNumRows = Math.floor(parseInt(this.containerHeight) / this.verticalItemHeight) + 1;
+    this.vChunkHeight = this.vChunkNumRows * this.verticalItemHeight;
+    this.vChunksTotal = Math.ceil(this.contentHeight / this.vChunkHeight);
   }
 
-  generateChunks() {
-    var i, chunkData,
-      containerHeight = parseInt(this.containerHeight),
-      currentHeight = 0,
-      chunkWidth = this.cols.length * this.horizontalItemWidth;
+  getDataForChunk(chunkIndex) {
+    var chunkWidth = this.cols.length * this.horizontalItemWidth,
+      data = {
+        height: this.verticalItemHeight * this.vChunkNumRows,
+        width: chunkWidth,
+        hChunks: []
+      },
+      startIndex, endIndex, rows;
+    
+    startIndex = chunkIndex * this.vChunkNumRows;
+    endIndex = startIndex + this.vChunkNumRows;
+    rows = this.data.slice(startIndex, endIndex);
+    data.hChunks = this.getChunksFromRows(rows);
 
-    this.vChunks = [{
-      startIndex: 0,
-      height: 0,
-      width: chunkWidth,
-      hChunks: []
-    }];
-
-    //Vertical data
-    for(i = 0; i < this.data.length; i++) {
-      if(currentHeight > containerHeight) {
-        this.vChunks.push({
-          startIndex: i,
-          height: 0,
-          width: chunkWidth,
-          hChunks: []
-        });
-
-        chunkData = this.data.slice(this.vChunks[this.vChunks.length - 2].startIndex, i);
-        this.vChunks[this.vChunks.length - 2].height = currentHeight;
-        this.vChunks[this.vChunks.length - 2].hChunks = this.getRowsForChunk(chunkData);
-
-        currentHeight = 0;
-      }
-
-      currentHeight += this.verticalItemHeight;
-    }
-
-    chunkData = this.data.slice(this.vChunks[this.vChunks.length - 1].startIndex, i);
-    this.vChunks[this.vChunks.length - 1].height = currentHeight;
-    this.vChunks[this.vChunks.length - 1].hChunks = this.getRowsForChunk(chunkData);
+    return data;
   }
 
-  getRowsForChunk(data) {
+  getChunksFromRows(data) {
     var rows = [],
         rowIdx, colIdx, curLength,
         containerWidth = parseInt(this.containerWidth),
@@ -250,11 +235,12 @@ export class VirtualContainerComponent implements OnInit {
   }
 
   updateVerticalChunk(chunkRef: VerticalChunkComponent, newChunkIndex) {
-    if(newChunkIndex >= this.vChunks.length) {
+    if(newChunkIndex > this.vChunksTotal) {
       return;
     }
 
-    chunkRef.data = this.vChunks[newChunkIndex];
+    chunkRef.data = this.getDataForChunk(newChunkIndex);
+    chunkRef.maxRowWidth = this.maxRowWidth;
     chunkRef.changeDet.detectChanges();
 
     if(this._firstLoad) {
@@ -272,7 +258,7 @@ export class VirtualContainerComponent implements OnInit {
     chunkRef.updateHorizontalChunk(chunkRef.nextChunks, newCurChunkIndex + 1, false);
   }
 
-  onScroll = (event)  =>{
+  onScroll = (event) => {
     var newVChunkIndex, newHChunkIndex,
         curScrollTop = event.target.scrollTop,
         curScrollLeft = event.target.scrollLeft,
@@ -285,23 +271,25 @@ export class VirtualContainerComponent implements OnInit {
     if(curScrollTop != this.lastScrollTop  &&
       this.currentChunk.data && this.nextChunk.data) {
       let currentHeight = 0;
+      
+      if (vDir > 0) {
+        let testNewIndex = Math.floor(curScrollTop / this.vChunkHeight);
+        currentHeight = testNewIndex * this.vChunkHeight;
 
-      for(let i = 0; i < this.vChunks.length; i++) {
-        if (vDir > 0 &&
-            currentHeight <= curScrollTop &&
-            curScrollTop < currentHeight + this.vChunks[i].height &&
-            i >= this.currentVChunkIdx) {
-          newVChunkIndex = i;
-          break;
-        } else if (vDir <= 0 && 
-            currentHeight - this.vChunks[i].height <= curScrollTop &&
-            curScrollTop < currentHeight && 
-            i <= this.currentVChunkIdx) {
-          newVChunkIndex = i;
-          break;
+        if(currentHeight < curScrollTop &&
+          curScrollTop < currentHeight + this.vChunkHeight &&
+          testNewIndex >= this.currentVChunkIdx) {
+            newVChunkIndex = testNewIndex;
         }
+      } else if (vDir <= 0) {
+        let testNewIndex = curScrollTop < this.vChunkHeight ? 1 : Math.ceil(curScrollTop / this.vChunkHeight);
+        currentHeight = testNewIndex * this.vChunkHeight;
 
-        currentHeight += this.vChunks[i].height;
+        if(currentHeight - this.vChunkHeight <= curScrollTop &&
+          curScrollTop < currentHeight &&
+          testNewIndex <= this.currentVChunkIdx) {
+            newVChunkIndex = testNewIndex;
+        }
       }
 
       if(Math.abs(curScrollTop - this.lastScrollTop) <= this.previousChunk.data.height) {
