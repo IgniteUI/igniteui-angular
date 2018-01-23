@@ -106,7 +106,7 @@ export class IgxButtonGroup implements AfterViewInit {
         }, 0);
     }
 
-    private _clickHandler(event, i) {
+    public _clickHandler(event, i) {
         if (this.selectedIndexes.indexOf(i) !== -1) {
             this.deselectButton(i);
         } else {

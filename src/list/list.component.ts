@@ -75,7 +75,7 @@ export class IgxList {
     constructor(private element: ElementRef) {
     }
 
-    private onEmptyListButtonClicked(event) {
+    public onEmptyListButtonClicked(event) {
         this.emptyListButtonClick.emit({ list: this, event });
     }
 }

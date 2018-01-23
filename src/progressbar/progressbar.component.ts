@@ -20,11 +20,11 @@ export abstract class BaseProgress {
     protected _value = 0;
     protected _animate = true;
 
-    protected get valueInPercent(): number {
+    public get valueInPercent(): number {
         return this._valueInPercent;
     }
 
-    protected set valueInPercent(valInPercent: number) {
+    public set valueInPercent(valInPercent: number) {
         const valueInRange = getValueInProperRange(valInPercent, this._max);
         const valueIntoPercentage = convertInPercentage(valueInRange, this._max);
         this._valueInPercent = valueIntoPercentage;

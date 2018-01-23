@@ -27,7 +27,7 @@
 </div>
 
 <div class="igx-grid__tbody">
-    <igx-grid-row [gridID]="id" [index]="i" [rowData]="item" *ngFor="let item of data | gridFiltering:filteringExpressions:_filteringLogic:id:pipeTrigger
+    <igx-grid-row [gridID]="id" [index]="i" [rowData]="item" *ngFor="let item of data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
                                  | gridSort:sortingExpressions:id:pipeTrigger
                                  | gridPaging:page:perPage:id:pipeTrigger;
                                  index as i;">

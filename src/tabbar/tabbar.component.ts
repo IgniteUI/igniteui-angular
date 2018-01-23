@@ -64,7 +64,7 @@ export class IgxTabBar implements AfterViewInit {
         }, 0);
     }
 
-    private _selectedPanelHandler(args) {
+    public _selectedPanelHandler(args) {
         this.selectedIndex = args.panel.index;
 
         this.panels.forEach((p) => {
@@ -149,6 +149,10 @@ export class IgxTab {
     @Input() public relatedPanel: IgxTabPanel;
 
     private _changesCount: number = 0; // changes and updates accordingly applied to the tab.
+
+    get changesCount(): number {
+        return this._changesCount;
+    }
 
     get isDisabled(): boolean {
         const panel = this.relatedPanel;
