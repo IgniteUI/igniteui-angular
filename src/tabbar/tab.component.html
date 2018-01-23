@@ -1,5 +1,5 @@
 <div *ngIf="relatedPanel.icon" ngClass="tab-icon">
     <igx-icon fontSet="material" [name]="relatedPanel.icon"></igx-icon>
-    <igx-badge [value]="_changesCount" [hidden]="_changesCount == 0"></igx-badge>
+    <igx-badge [value]="changesCount" [hidden]="changesCount == 0"></igx-badge>
 </div>
 <div *ngIf="relatedPanel.label" ngClass="tab-label">{{relatedPanel.label}}</div>

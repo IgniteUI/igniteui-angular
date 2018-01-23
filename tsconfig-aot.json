@@ -29,6 +29,9 @@
       "debug": false,
       "skipTemplateCodegen": true,
       "skipMetadataEmit": false,
-      "strictMetadataEmit": true
+      "strictMetadataEmit": true,
+      "strictInjectionParameters": true,
+      "fullTemplateTypeCheck": true,
+      "preserveWhitespace": false
     }
 }

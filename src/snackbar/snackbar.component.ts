@@ -154,17 +154,17 @@ export class IgxSnackbar {
         clearTimeout(this.timeoutId);
     }
 
-    private triggerAction(): void {
+    public triggerAction(): void {
         this.onAction.emit(this);
     }
 
-    private snackbarAnimationStarted(evt?: any): void {
+    public snackbarAnimationStarted(evt?: any): void {
         if (evt.fromState === "void") {
             this.animationStarted.emit(evt);
         }
     }
 
-    private snackbarAnimationDone(evt?: any): void {
+    public snackbarAnimationDone(evt?: any): void {
         if (evt.fromState === "show") {
             this.animationDone.emit(evt);
         }

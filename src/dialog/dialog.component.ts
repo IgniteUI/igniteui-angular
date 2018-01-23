@@ -115,7 +115,7 @@ export class IgxDialog {
         this.onClose.emit(this);
     }
 
-    private onDialogSelected(event) {
+    public onDialogSelected(event) {
         if (
             this.isOpen &&
             this.closeOnOutsideSelect &&
@@ -125,11 +125,11 @@ export class IgxDialog {
         }
     }
 
-    private onInternalLeftButtonSelect(event) {
+    public onInternalLeftButtonSelect(event) {
         this.onLeftButtonSelect.emit({ dialog: this, event });
     }
 
-    private onInternalRightButtonSelect(event) {
+    public onInternalRightButtonSelect(event) {
         this.onRightButtonSelect.emit({ dialog: this, event });
     }
 

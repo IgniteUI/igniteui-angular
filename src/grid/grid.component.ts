@@ -53,13 +53,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     public id = `igx-grid-${NEXT_ID++}`;
 
     @Input()
-    get filteringLogic(): string {
-        return this._filteringLogic === FilteringLogic.And ? "AND" : "OR";
-    }
-
-    set filteringLogic(value: string) {
-        this._filteringLogic = (value === "OR") ? FilteringLogic.Or : FilteringLogic.And;
-    }
+    public filteringLogic = FilteringLogic.And;
 
     @Input()
     get filteringExpressions() {
@@ -266,6 +260,10 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
             return;
         }
         this.page = val;
+    }
+
+    public markForCheck() {
+        this.gridAPI.markForCheck(this.id);
     }
 
     public addRow(data: any): void {
