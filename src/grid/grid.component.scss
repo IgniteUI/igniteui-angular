@@ -1,60 +1,47 @@
 @import "../themes/base/utilities/index";
 @import "../themes/material/config";
 @import "../themes/material/extends/grid";
-
 @include b(igx-grid) {
     @extend %grid-display;
-
     @include e(caption) {
         @extend %grid-caption;
     }
-
     @include e(thead) {
         @extend %grid-thead;
     }
-
     @include e(tfoot) {
         @extend %grid-tfoot;
     }
-
     @include e(tbody) {
         @extend %grid-tbody;
     }
-
     @include e(tbody-empty) {
         @extend %grid-tbody--empty;
     }
-
     @include e(tr) {
         @extend %grid-row;
     }
-
     @include e(tr, $m: selected) {
         @extend %grid-row--selected;
     }
-
     @include e(th) {
         @extend %grid-cell-display;
         @extend %grid-cell-header;
-
         $block: bem--selector-to-string(&);
-
         &.asc,
         &.desc {
-            color: $off-black;
+            font-weight: 800;
         }
-
         &.desc {
-            #{$block}-content > .title::before {
+            &>.title::before {
                 position: relative;
                 font-family: 'Material Icons';
                 content: '\E5DB';
                 margin-right: 8px;
             }
         }
-
         &.asc {
-            #{$block}-content > .title::before {
+            &>.title::before {
                 position: relative;
                 font-family: 'Material Icons';
                 content: '\E5D8';
@@ -62,27 +49,15 @@
             }
         }
     }
-
     @include e(th, $m: number) {
         @extend %grid-cell-number;
     }
-
-    @include e(th-content) {
-        @extend %grid-cell-header-content;
-
-        & .icon {
-            @extend %grid-cell-header-cicon;
-        }
-    }
-
     @include e(td) {
         @extend %grid-cell-display;
     }
-
     @include e(td, $m: selected) {
         @extend %grid-cell--selected;
     }
-
     @include e(td, $m: number) {
         @extend %grid-cell-number;
     }
