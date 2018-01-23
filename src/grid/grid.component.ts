@@ -189,7 +189,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
 
     private sub$: Subscription;
 
-    constructor(private gridAPI: IgxGridAPIService,
+    constructor(
+        private gridAPI: IgxGridAPIService,
         public cdr: ChangeDetectorRef,
         private resolver: ComponentFactoryResolver,
         private viewRef: ViewContainerRef) {
