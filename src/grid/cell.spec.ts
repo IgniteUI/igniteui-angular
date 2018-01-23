@@ -202,7 +202,7 @@ describe("IgxGrid - Cell component", () => {
         <igx-grid
             (onSelection)="cellSelected($event)"
             [data]="data"
-            [autogenerate]="true">
+            [autoGenerate]="true">
         </igx-grid>
     `
 })
@@ -225,7 +225,7 @@ export class DefaultGrid {
 
 @Component({
     template: `
-        <igx-grid (onSelection)="cellSelected($event)" [data]="data" [autogenerate]="true"></igx-grid>
+        <igx-grid (onSelection)="cellSelected($event)" [data]="data" [autoGenerate]="true"></igx-grid>
     `
 })
 export class CtrlKeyKeyboardNagivation {
