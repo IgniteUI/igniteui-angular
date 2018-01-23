@@ -1,0 +1,11 @@
+<div class="sample-wrapper">
+    <section class="sample-content">
+        <igx-virt-grid-v2 #grid1 [data]="localData" [cols]="cols" [width]="'800px'" [height]="'500px'" [rowHeight]="rowHeight">
+            <igx-virt-column *ngFor="let col of cols" [field]="col.field" [header]="'Col ' + col.field" [width]="col.width"></igx-virt-column>
+        </igx-virt-grid-v2>
+
+        <!-- <igx-grid #grid2 [data]="localData" [width]="'800px'" [height]="'400px'">
+            <igx-column *ngFor="let col of cols" [field]="col.field" [header]="'Col ' + col.field" [width]="col.width + 'px'"></igx-column>
+        </igx-grid> -->
+    </section>
+</div>

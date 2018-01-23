@@ -1,0 +1,10 @@
+<td [ngStyle]="{width: width + 'px', height: height + 'px'}">
+    <ng-template #defaultCell>
+        {{ formatter ? formatter(value) : value }}
+    </ng-template>
+    <ng-template #inlineEditor let-cell="cell">
+        <input igxInput [value]="value" (keydown.enter)="cell.value = $event.target.value">
+    </ng-template>
+    <ng-container *ngTemplateOutlet="template; context: context">
+    </ng-container>
+</td>

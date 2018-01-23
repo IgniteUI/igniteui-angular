@@ -1,0 +1,31 @@
+.displayContainer {
+    width: 500px;
+    height: 400px;
+    position: absolute;
+}
+
+.mainContainer {
+    overflow: hidden;
+    position: relative;
+}
+
+.scrollContainer {
+    position: relative;
+}
+
+.scrollInner { 
+    pointer-events: none;
+}
+
+/*
+.previousChunk {
+    background-color: orange;
+}
+
+.currentChunk {
+    background-color: green;
+}
+
+.nextChunk {
+    background-color: red;
+}*/

@@ -70,3 +70,6 @@ yarn.lock
 
 #jsbeautify
 .jsbeautifyrc
+
+#temorary enable css styles for virtual-container v2 poc
+!src/virtual-container-v2/*.css

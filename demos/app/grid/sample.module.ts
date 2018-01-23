@@ -4,6 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { IgxGridModule, IgxCardModule, IgxSnackbarModule, IgxSwitchModule, IgxToastModule, IgxCheckboxModule } from "../../lib/main";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { GridSampleComponent } from "./sample.component";
+import { IgxGridAPIService } from "../../lib/grid/api.service";
 
 @NgModule({
     declarations: [
@@ -19,6 +20,9 @@ import { GridSampleComponent } from "./sample.component";
         IgxSwitchModule,
         IgxToastModule ,
         IgxCheckboxModule
+    ],
+    providers: [
+        IgxGridAPIService
     ]
 })
 export class GridSampleModule { }

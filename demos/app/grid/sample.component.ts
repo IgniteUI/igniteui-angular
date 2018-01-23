@@ -3,6 +3,7 @@ import { Http } from "@angular/http";
 import { BehaviorSubject, Observable } from "rxjs/Rx";
 import { IgxColumnComponent } from "../../lib/grid/column.component";
 import {  IgxGridComponent} from "../../lib/grid/grid.component";
+import { IgxGridAPIService } from '../../lib/virtual-grid-v2/api.service';
 import {
   DataContainer,
   IDataState,
@@ -98,7 +99,7 @@ export class RemoteService {
 }
 
 @Component({
-    providers: [LocalService, RemoteService],
+    providers: [LocalService, RemoteService, IgxGridAPIService],
     selector: "grid-sample",
     styleUrls: ["../app.samples.css", "sample.component.css"],
     templateUrl: "sample.component.html"
@@ -198,7 +199,7 @@ export class GridSampleComponent {
     // if ((state.paging.recordsPerPage * event) >= total) {
     //    return;
     //  }
-      this.grid2.paginate(event);
+      //this.grid2.paginate(event);
     }
 
     public onPerPage(event) {
