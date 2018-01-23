@@ -66,7 +66,7 @@ export class IgxGridCellComponent {
     }
 
     get gridID(): any {
-      return this.row.gridID;
+        return this.row.gridID;
     }
 
     get grid(): any {
@@ -110,7 +110,7 @@ export class IgxGridCellComponent {
         return `${this.defaultCssClass} ${this.column.cellClasses}`;
     }
 
-    @HostBinding("style.min-width")
+    @HostBinding("style.max-width")
     get width() {
         return this.column.width;
     }
@@ -152,9 +152,10 @@ export class IgxGridCellComponent {
     protected _value: any;
     protected _inEditMode = false;
 
-    constructor(private gridAPI: IgxGridAPIService,
-                private cdr: ChangeDetectorRef,
-                private element: ElementRef) {}
+    constructor(
+        private gridAPI: IgxGridAPIService,
+        private cdr: ChangeDetectorRef,
+        private element: ElementRef) { }
 
     @HostListener("dblclick", ["$event"])
     public onDoubleClick(event) {
@@ -168,6 +169,7 @@ export class IgxGridCellComponent {
     public onFocus(event) {
         this.isFocused = true;
         this.isSelected = true;
+        this.row.focused = true;
         if (this.grid.cellInEditMode && this.grid.cellInEditMode !== this) {
             this.grid.cellInEditMode._inEditMode = false;
             this.grid.cellInEditMode.cdr.markForCheck();
@@ -180,6 +182,7 @@ export class IgxGridCellComponent {
     public onBlur(event) {
         this.isFocused = false;
         this.isSelected = false;
+        this.row.focused = false;
     }
 
     @HostListener("keydown", ["$event"])

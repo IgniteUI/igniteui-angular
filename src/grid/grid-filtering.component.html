@@ -1,7 +1,9 @@
 <ng-template #defaultFilterUI>
-    <p *ngIf="!unaryCondition">Value:
+    <div *ngIf="!unaryCondition">
+        <p style="margin-bottom: 0">Value:</p>
         <input type="text" igxInput autocomplete="off" [value]="value" (input)="onInputChanged($event.target.value)" />
-    </p>
+    </div>
+    <br>
 </ng-template>
 
 <ng-template #defaultDateUI>
@@ -17,11 +19,12 @@
 </div>
 
 <span *ngIf="dialogShowing" class="igx-filtering__options">
-    <p>Condition:
+    <div>
+        <p style="margin-bottom: 0">Condition:</p>
         <select (change)="conditionChanged($event.target.value)">
             <option [selected]="isActive(each)" *ngFor="let each of conditions" [value]="each">{{ each | filterCondition | titlecase }}</option>
         </select>
-    </p>
+    </div>
     <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
     <button igxButton igxRipple (click)="filter()">Filter</button>
     <button igxButton igxRipple (click)="clearFiltering()">Reset</button>

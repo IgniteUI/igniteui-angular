@@ -18,20 +18,19 @@ describe("IgxGrid - Grid Paging", () => {
             ],
             imports: [IgxGridModule.forRoot()]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     it("should paginate data UI", fakeAsync(() => {
         const fix = TestBed.createComponent(GridMarkupPagingDeclaration);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector("table");
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
         const disabled = "igx-button--disabled";
 
         expect(grid.paging).toBeTruthy();
         expect(grid.rowList.length).toEqual(3, "Invalid number of rows initialized");
-        expect(gridElement.querySelectorAll("tbody tr").length).toEqual(3);
-        expect(gridElement.querySelector("tbody tr td").textContent).toMatch("1");
+        expect(grid.getCellByColumn(0, "ID").value).toMatch("1");
         expect(gridElement.querySelector(".igx-paginator")).toBeDefined();
 
         expect(gridElement.querySelectorAll(".igx-paginator > button").length).toEqual(4);
@@ -50,8 +49,8 @@ describe("IgxGrid - Grid Paging", () => {
         fix.detectChanges();
 
         expect(gridElement.querySelector(".igx-paginator > span").textContent).toMatch("2 of 4");
-        expect(gridElement.querySelector("tbody tr td").textContent).toMatch("4");
-        expect(gridElement.querySelectorAll("tbody tr").length).toEqual(3);
+        expect(grid.getCellByColumn(0, "ID").value).toMatch("4");
+        expect(grid.rowList.length).toEqual(3, "Invalid number of rows initialized");
 
         expect(gridElement.querySelectorAll(".igx-paginator > button").length).toEqual(4);
         expect(gridElement.querySelectorAll(".igx-paginator > button")[0].className.includes(disabled)).toBeFalsy();
@@ -66,8 +65,8 @@ describe("IgxGrid - Grid Paging", () => {
         fix.detectChanges();
 
         expect(gridElement.querySelector(".igx-paginator > span").textContent).toMatch("4 of 4");
-        expect(gridElement.querySelector("tbody tr td").textContent).toMatch("10");
-        expect(gridElement.querySelectorAll("tbody tr").length).toEqual(1);
+        expect(grid.getCellByColumn(0, "ID").value).toMatch("10");
+        expect(grid.rowList.length).toEqual(1, "Invalid number of rows initialized");
 
         expect(gridElement.querySelectorAll(".igx-paginator > button").length).toEqual(4);
         expect(gridElement.querySelectorAll(".igx-paginator > button")[0].className.includes(disabled)).toBeFalsy();
@@ -82,8 +81,8 @@ describe("IgxGrid - Grid Paging", () => {
         fix.detectChanges();
 
         expect(gridElement.querySelector(".igx-paginator > span").textContent).toMatch("3 of 4");
-        expect(gridElement.querySelector("tbody tr td").textContent).toMatch("7");
-        expect(gridElement.querySelectorAll("tbody tr").length).toEqual(3);
+        expect(grid.getCellByColumn(0, "ID").value).toMatch("7");
+        expect(grid.rowList.length).toEqual(3, "Invalid number of rows initialized");
 
         expect(gridElement.querySelectorAll(".igx-paginator > button").length).toEqual(4);
         expect(gridElement.querySelectorAll(".igx-paginator > button")[0].className.includes(disabled)).toBeFalsy();
@@ -98,8 +97,8 @@ describe("IgxGrid - Grid Paging", () => {
         fix.detectChanges();
 
         expect(gridElement.querySelector(".igx-paginator > span").textContent).toMatch("1 of 4");
-        expect(gridElement.querySelector("tbody tr td").textContent).toMatch("1");
-        expect(gridElement.querySelectorAll("tbody tr").length).toEqual(3);
+        expect(grid.getCellByColumn(0, "ID").value).toMatch("1");
+        expect(grid.rowList.length).toEqual(3, "Invalid number of rows initialized");
 
         expect(gridElement.querySelectorAll(".igx-paginator > button").length).toEqual(4);
         expect(gridElement.querySelectorAll(".igx-paginator > button")[0].className.includes(disabled)).toBeTruthy();
@@ -112,7 +111,7 @@ describe("IgxGrid - Grid Paging", () => {
         const fix = TestBed.createComponent(GridDeclaration);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector("table");
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
 
         grid.paging = true;
         grid.perPage = 3;
@@ -126,27 +125,27 @@ describe("IgxGrid - Grid Paging", () => {
 
         expect(grid.onPaging.emit).toHaveBeenCalled();
         expect(gridElement.querySelector(".igx-paginator > span").textContent).toMatch("3 of 4");
-        expect(gridElement.querySelector("tbody tr td").textContent).toMatch("7");
+        expect(grid.getCellByColumn(0, "ID").value).toMatch("7");
     }));
 
     it("change paging settings UI", fakeAsync(() => {
         const fix = TestBed.createComponent(GridMarkupPagingDeclaration);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector("table");
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
         const disabled = "igx-button--disabled";
 
         expect(grid.paging).toBeTruthy();
         expect(grid.perPage).toEqual(3, "Invalid page size");
         expect(grid.rowList.length).toEqual(3, "Invalid number of rows initialized");
-        expect(gridElement.querySelectorAll("tbody tr").length).toEqual(3);
-        expect(gridElement.querySelector("tbody tr td").textContent).toMatch("1");
+        expect(grid.getCellByColumn(0, "ID").value).toMatch("1");
+        expect(grid.rowList.length).toEqual(3, "Invalid number of rows initialized");
         expect(gridElement.querySelector(".igx-paginator")).toBeDefined();
         expect(gridElement.querySelectorAll(".igx-paginator > select").length).toEqual(1);
 
         // Change page size
         const select = fix.debugElement.query(By.css(".igx-paginator > select"));
-        select.triggerEventHandler("change", { target: { value: 10 }});
+        select.triggerEventHandler("change", { target: { value: 10 } });
 
         tick();
         fix.detectChanges();
@@ -154,8 +153,8 @@ describe("IgxGrid - Grid Paging", () => {
         expect(grid.paging).toBeTruthy();
         expect(grid.perPage).toEqual(10, "Invalid page size");
         expect(grid.rowList.length).toEqual(10, "Invalid number of rows initialized");
-        expect(gridElement.querySelectorAll("tbody tr").length).toEqual(10);
-        expect(gridElement.querySelector("tbody tr td").textContent).toMatch("1");
+        expect(grid.getCellByColumn(0, "ID").value).toMatch("1");
+        expect(grid.rowList.length).toEqual(10, "Invalid number of rows initialized");
         expect(gridElement.querySelector(".igx-paginator")).toBeDefined();
         expect(gridElement.querySelectorAll(".igx-paginator > select").length).toEqual(1);
     }));
@@ -164,7 +163,7 @@ describe("IgxGrid - Grid Paging", () => {
         const fix = TestBed.createComponent(GridDeclaration);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector("table");
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
         const disabled = "igx-button--disabled";
 
         // Change page size
@@ -176,9 +175,8 @@ describe("IgxGrid - Grid Paging", () => {
 
         expect(grid.paging).toBeTruthy();
         expect(grid.perPage).toEqual(2, "Invalid page size");
-        expect(gridElement.querySelectorAll("tbody tr").length).toEqual(2);
         expect(grid.rowList.length).toEqual(2, "Invalid number of rows initialized");
-        expect(gridElement.querySelector("tbody tr td").textContent).toMatch("1");
+        expect(grid.getCellByColumn(0, "ID").value).toMatch("1");
         expect(gridElement.querySelector(".igx-paginator")).toBeDefined();
         expect(gridElement.querySelectorAll(".igx-paginator > select").length).toEqual(1);
         expect(gridElement.querySelector(".igx-paginator > span").textContent).toMatch("1 of 5");
@@ -192,8 +190,7 @@ describe("IgxGrid - Grid Paging", () => {
         expect(grid.paging).toBeFalsy();
         expect(grid.perPage).toEqual(2, "Invalid page size after paging was turned off");
         expect(grid.rowList.length).toEqual(10, "Invalid number of rows initialized");
-        expect(gridElement.querySelectorAll("tbody tr").length).toEqual(10);
-        expect(gridElement.querySelector("tbody tr td").textContent).toMatch("1");
+        expect(grid.getCellByColumn(0, "ID").value).toMatch("1");
         expect(gridElement.querySelector(".igx-paginator")).toBeNull();
         expect(gridElement.querySelectorAll(".igx-paginator > select").length).toEqual(0);
     }));
