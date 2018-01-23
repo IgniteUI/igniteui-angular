@@ -22,7 +22,7 @@ export class IgxGridHeaderComponent implements DoCheck {
         return `igx-grid__th ${this.column.headerClasses}`;
     }
 
-    @HostBinding("style.min-width")
+    @HostBinding("style.max-width")
     get width() {
         return this.column.width;
     }
@@ -37,9 +37,12 @@ export class IgxGridHeaderComponent implements DoCheck {
         return this.sortDirection === SortingDirection.Desc;
     }
 
+    @HostBinding("attr.role")
+    public hostRole = "columnheader";
+
     protected sortDirection = SortingDirection.None;
 
-    constructor(private gridAPI: IgxGridAPIService) {}
+    constructor(private gridAPI: IgxGridAPIService) { }
 
     public ngDoCheck() {
         this.getSortDirection();

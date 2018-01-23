@@ -8,7 +8,7 @@ import { IgxGridModule } from "./index";
 
 describe("IgxGrid - Column properties", () => {
 
-    const COLUMN_HEADER_CLASS = ".igx-grid__th-content";
+    const COLUMN_HEADER_CLASS = ".igx-grid__th";
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -19,7 +19,7 @@ describe("IgxGrid - Column properties", () => {
             ],
             imports: [IgxGridModule.forRoot()]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     it("should correctly initialize column templates", () => {

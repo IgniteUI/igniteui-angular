@@ -2,12 +2,8 @@
     {{ column.header || column.field }}
 </ng-template>
 
-<th class="igx-grid__th-content">
-    <span class="title">
-        <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column }">
-        </ng-container>
-    </span>
-    <igx-grid-filter [column]="column" *ngIf="column.filterable"></igx-grid-filter>
-</th>
-
-
+<span class="title">
+    <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column }">
+    </ng-container>
+</span>
+<igx-grid-filter [column]="column" *ngIf="column.filterable"></igx-grid-filter>

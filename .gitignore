@@ -40,6 +40,7 @@ tmp
 
 demos/**/*.js
 demos/**/*.js.map
+demos/**/*.css
 demos/style/fonts
 demos/node_modules
 demos/lib

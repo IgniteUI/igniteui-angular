@@ -47,7 +47,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     public data = [];
 
     @Input()
-    public autogenerate = false;
+    public autoGenerate = false;
 
     @Input()
     public id = `igx-grid-${NEXT_ID++}`;
@@ -111,9 +111,11 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     @Input()
     public paginationTemplate: TemplateRef<any>;
 
+    @HostBinding("style.height")
     @Input()
     public height;
 
+    @HostBinding("style.width")
     @Input()
     public width;
 
@@ -153,6 +155,12 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     @HostBinding("attr.tabindex")
     public tabindex = 0;
 
+    @HostBinding("attr.class")
+    public hostClass = "igx-grid";
+
+    @HostBinding("attr.role")
+    public hostRole = "grid";
+
     get pipeTrigger(): number {
         return this._pipeTrigger;
     }
@@ -181,10 +189,11 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
 
     private sub$: Subscription;
 
-    constructor(private gridAPI: IgxGridAPIService,
-                public cdr: ChangeDetectorRef,
-                private resolver: ComponentFactoryResolver,
-                private viewRef: ViewContainerRef) {
+    constructor(
+        private gridAPI: IgxGridAPIService,
+        public cdr: ChangeDetectorRef,
+        private resolver: ComponentFactoryResolver,
+        private viewRef: ViewContainerRef) {
     }
 
     public ngOnInit() {
@@ -192,7 +201,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     }
 
     public ngAfterContentInit() {
-        if (this.autogenerate) {
+        if (this.autoGenerate) {
             this.autogenerateColumns();
         }
         this.columnList.forEach((col, idx) => {
