@@ -2,6 +2,7 @@ import { Component, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
+import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { Calendar, isLeap, monthRange, weekDay, WEEKDAYS } from "./calendar";
 import { IgxCalendarComponent, IgxCalendarModule } from "./calendar.component";
 
@@ -10,7 +11,7 @@ describe("IgxCalendar", () => {
         async(() => {
             TestBed.configureTestingModule({
                 declarations: [IgxCalendarRenderingComponent],
-                imports: [IgxCalendarModule, FormsModule]
+                imports: [IgxCalendarModule, FormsModule, BrowserAnimationsModule]
             }).compileComponents();
         })
     );
