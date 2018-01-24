@@ -42,7 +42,7 @@ import { HammerGesturesManager } from "../core/touch";
     styleUrls: ["./navigation-drawer.component.scss"],
     templateUrl: "navigation-drawer.component.html"
 })
-export class NavigationDrawer extends BaseComponent implements IToggleView,
+export class IgxNavigationDrawer extends BaseComponent implements IToggleView,
     OnInit,
     AfterContentInit,
     OnDestroy,
@@ -609,8 +609,8 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
 }
 
 @NgModule({
-    declarations: [NavigationDrawer],
-    exports: [NavigationDrawer]
+    declarations: [IgxNavigationDrawer],
+    exports: [IgxNavigationDrawer]
 })
-export class NavigationDrawerModule {
+export class IgxNavigationDrawerModule {
 }
