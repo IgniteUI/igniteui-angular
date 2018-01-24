@@ -3,7 +3,6 @@ import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { VirtualContainerSampleModule } from "./virtual-container/sample.module";
 import { AvatarSampleModule } from "./avatar/sample.module";
 import { BadgeSampleModule } from "./badge/sample.module";
 import { ButtonSampleModule } from "./button/sample.module";
@@ -49,8 +48,12 @@ import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSw
         HttpModule,
         routing,
         NavigationDrawerModule,
-        IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSwitchModule, IgxAvatarModule,
-        VirtualContainerSampleModule,
+        IgxRadioModule,
+        IgxIconModule,
+        IgxCheckboxModule,
+        IgxLabelModule, 
+        IgxSwitchModule, 
+        IgxAvatarModule,
         InputSampleModule,
         CarouselSampleModule,
         TabBarSampleModule,

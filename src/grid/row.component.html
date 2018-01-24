@@ -1,1 +1,3 @@
-<igx-grid-cell *ngFor="let c of columns" [column]="c" [row]="this" [value]="rowData[c.field]" [cellTemplate]="c.bodyTemplate"></igx-grid-cell>
+<ng-template igVirtFor let-col [igVirtForOf]="columns" [igVirtForIsChild]="true" let-colIndex="index">
+    <igx-grid-cell [column]="col" [row]="this" [value]="rowData[col.field]" [cellTemplate]="col.bodyTemplate"></igx-grid-cell>
+</ng-template>

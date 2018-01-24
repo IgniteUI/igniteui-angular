@@ -19,6 +19,7 @@ import {
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridPagingPipe, IgxGridSortingPipe } from "./grid.pipes";
 import { IgxGridRowComponent } from "./row.component";
+import { IgxVirtForModule } from "../directives/virtual-for/igx_virtual_for.directive";
 
 @NgModule({
   declarations: [
@@ -57,8 +58,10 @@ import { IgxGridRowComponent } from "./row.component";
     IgxDatePickerModule,
     IgxIconModule,
     IgxRippleModule,
-    IgxInput
-  ]
+    IgxInput,
+    IgxVirtForModule
+  ],
+  providers: [IgxGridAPIService]
 })
 export class IgxGridModule {
   public static forRoot() {

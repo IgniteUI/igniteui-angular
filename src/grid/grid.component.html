@@ -27,11 +27,10 @@
 </div>
 
 <div class="igx-grid__tbody">
-    <igx-grid-row [gridID]="id" [index]="i" [rowData]="item" *ngFor="let item of data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
-                                 | gridSort:sortingExpressions:id:pipeTrigger
-                                 | gridPaging:page:perPage:id:pipeTrigger;
-                                 index as i;">
-    </igx-grid-row>
+     <ng-template igVirtFor let-rowData [igVirtForOf]="data" let-rowIndex="index" [igVirtForScrolling]="'horizontal'">
+        <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
+        </igx-grid-row>
+     </ng-template>
 </div>
 
 <div class="igx-grid__tfoot">

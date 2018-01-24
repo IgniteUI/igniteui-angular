@@ -17,7 +17,6 @@ export * from "./data-operations/data-state.interface";
 export * from "./data-operations/data-util";
 export * from "./data-operations/data-container";
 export * from "./grid/";
-export * from "./virtual-container/";
 
 export * from "./navigation-drawer/navigation-drawer.component";
 export * from "./icon/icon.component";
@@ -46,6 +45,3 @@ export * from "./toast/toast.component";
 export * from "./slider/slider.component";
 export * from "./scroll/scroll.component";
 export * from "./date-picker/date-picker.component";
-export * from "./virtual-container/virtual.container.component";
-export * from "./virtual-container/virtual.horizontal.item.component";
-export * from "./virtual-container/virtual.vertical.item.component";

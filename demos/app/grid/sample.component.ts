@@ -111,7 +111,7 @@ export class GridSampleComponent {
     @ViewChild("snax") public snax: IgxSnackbar;
     public data: Observable<any[]>;
     public remote: Observable<any[]>;
-    public localData: any[];
+    public localData: any[] = [];
     public selectedCell;
     public selectedRow;
     public newRecord = "";
@@ -124,14 +124,17 @@ export class GridSampleComponent {
 
       this.localService.getData();
 
-      this.localData = [
-          {ID: 1, Name: "A"},
-          {ID: 2, Name: "B"},
-          {ID: 3, Name: "C"},
-          {ID: 4, Name: "D"},
-          {ID: 5, Name: "E"}
-        ];
+      // this.localData = [
+      //     {ID: 1, Name: "A"},
+      //     {ID: 2, Name: "B"},
+      //     {ID: 3, Name: "C"},
+      //     {ID: 4, Name: "D"},
+      //     {ID: 5, Name: "E"}
+      //   ];
 
+      for(let i = 0; i < 100000; i++) {
+          this.localData.push({ID: i, Name: "A" + i});
+      }
       //this.grid2.state = {
       // sorting: {
       //    expressions: [],
