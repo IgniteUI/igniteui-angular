@@ -19,8 +19,8 @@ describe("Navigation Drawer", () => {
             jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
             TestBed.configureTestingModule({
                 declarations: [
-                    Infragistics.NavigationClose,
-                    Infragistics.NavigationToggle,
+                    Infragistics.IgxNavigationClose,
+                    Infragistics.IgxNavigationToggle,
                     TestComponent,
                     TestComponentDI,
                     TestComponentPin],
