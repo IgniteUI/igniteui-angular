@@ -102,7 +102,7 @@ export class IgVirtualForOf<T> {
 		const dcFactory: ComponentFactory<DisplayContainer> = this.resolver.resolveComponentFactory(DisplayContainer);
 
 		if (this.igVirtForIsChild !== true) {
-			this._viewContainer.element.nativeElement.parentElement.style.height = "400px";
+			//this._viewContainer.element.nativeElement.parentElement.style.height = "400px";
 			const factory: ComponentFactory<VirtualHelper> = this.resolver.resolveComponentFactory(VirtualHelper);
 			let vh: ComponentRef<VirtualHelper> = this._viewContainer.createComponent(factory);
 			vh.instance.itemsLength = this.igVirtForOf.length;
@@ -125,7 +125,7 @@ export class IgVirtualForOf<T> {
 		}
 
 		if (this.igVirtForScrolling === "horizontal") {
-			this._viewContainer.element.nativeElement.parentElement.style.width = "1645px";
+			//this._viewContainer.element.nativeElement.parentElement.style.width = "1645px";
 			const hvFactory: ComponentFactory<HVirtualHelper> = this.resolver.resolveComponentFactory(HVirtualHelper);
 			let hvh: ComponentRef<HVirtualHelper> = this._viewContainer.createComponent(hvFactory);
 			hvh.instance.itemsLength = this.igVirtForOf.length;

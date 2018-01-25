@@ -105,11 +105,11 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     @Input()
     public paginationTemplate: TemplateRef<any>;
 
-    @HostBinding("style.height")
+    //@HostBinding("style.height")
     @Input()
     public height;
 
-    @HostBinding("style.width")
+    //@HostBinding("style.width")
     @Input()
     public width;
 

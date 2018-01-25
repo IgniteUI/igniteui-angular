@@ -26,7 +26,7 @@
     </div>
 </div>
 
-<div class="igx-grid__tbody">
+<div class="igx-grid__tbody" [style.height]='height' [style.width]='width'>
      <ng-template igVirtFor let-rowData [igVirtForOf]="data" let-rowIndex="index" [igVirtForScrolling]="'horizontal'">
         <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
         </igx-grid-row>
