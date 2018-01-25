@@ -20,7 +20,7 @@ import "rxjs/add/operator/debounce";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 import { BaseComponent } from "../core/base";
-import { IToggleView, IgxNavigationService } from "../core/navigation";
+import { IgxNavigationService, IToggleView } from "../core/navigation";
 import { HammerGesturesManager } from "../core/touch";
 
 /**
