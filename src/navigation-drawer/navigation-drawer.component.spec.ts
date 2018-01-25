@@ -19,12 +19,12 @@ describe("Navigation Drawer", () => {
             jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
             TestBed.configureTestingModule({
                 declarations: [
-                    Infragistics.NavigationClose,
-                    Infragistics.NavigationToggle,
+                    Infragistics.IgxNavigationClose,
+                    Infragistics.IgxNavigationToggle,
                     TestComponent,
                     TestComponentDI,
                     TestComponentPin],
-                imports: [Infragistics.NavigationDrawerModule]
+                imports: [Infragistics.IgxNavigationDrawerModule]
             });
         }));
 
@@ -36,7 +36,7 @@ describe("Navigation Drawer", () => {
             TestBed.compileComponents().then(() => {
                 const fixture = TestBed.createComponent(TestComponent);
                 fixture.detectChanges();
-                expect(fixture.componentInstance.viewChild instanceof Infragistics.NavigationDrawer).toBeTruthy();
+                expect(fixture.componentInstance.viewChild instanceof Infragistics.IgxNavigationDrawer).toBeTruthy();
                 expect(fixture.componentInstance.viewChild.state).toBeNull();
             });
         }));
@@ -47,8 +47,8 @@ describe("Navigation Drawer", () => {
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.viewChild).toBeDefined();
-                expect(fixture.componentInstance.viewChild instanceof Infragistics.NavigationDrawer).toBeTruthy();
-                expect(fixture.componentInstance.viewChild.state instanceof Infragistics.NavigationService)
+                expect(fixture.componentInstance.viewChild instanceof Infragistics.IgxNavigationDrawer).toBeTruthy();
+                expect(fixture.componentInstance.viewChild.state instanceof Infragistics.IgxNavigationService)
                     .toBeTruthy();
             });
         }));
@@ -78,7 +78,7 @@ describe("Navigation Drawer", () => {
             TestBed.compileComponents().then(() => {
                 const fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
-                const state: Infragistics.NavigationService = fixture.componentInstance.viewChild.state;
+                const state: Infragistics.IgxNavigationService = fixture.componentInstance.viewChild.state;
                 const touchManager = fixture.componentInstance.viewChild.touchManager;
 
                 expect(state.get("testNav")).toBeDefined();
@@ -97,7 +97,7 @@ describe("Navigation Drawer", () => {
             TestBed.compileComponents().then(() => {
                 const fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
-                const drawer: Infragistics.NavigationDrawer = fixture.componentInstance.viewChild;
+                const drawer: Infragistics.IgxNavigationDrawer = fixture.componentInstance.viewChild;
                 expect(drawer.isOpen).toBeFalsy();
 
                 drawer.open();
@@ -301,7 +301,7 @@ describe("Navigation Drawer", () => {
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
-                const drawer: Infragistics.NavigationDrawer = fixture.componentInstance.viewChild;
+                const drawer: Infragistics.IgxNavigationDrawer = fixture.componentInstance.viewChild;
 
                 fixture.componentInstance.drawerMiniWidth = 60;
                 fixture.detectChanges();
@@ -453,18 +453,18 @@ describe("Navigation Drawer", () => {
     template: "<igx-nav-drawer></igx-nav-drawer>"
 })
 class TestComponent {
-     @ViewChild(Infragistics.NavigationDrawer) public viewChild: Infragistics.NavigationDrawer;
+     @ViewChild(Infragistics.IgxNavigationDrawer) public viewChild: Infragistics.IgxNavigationDrawer;
 }
 
 @Component({
-    providers: [Infragistics.NavigationService],
+    providers: [Infragistics.IgxNavigationService],
     selector: "test-cmp",
     template: "<igx-nav-drawer></igx-nav-drawer>"
 })
 class TestComponentDI {
      public drawerMiniWidth: string | number;
      public drawerWidth: string | number;
-     @ViewChild(Infragistics.NavigationDrawer) public viewChild: Infragistics.NavigationDrawer;
+     @ViewChild(Infragistics.IgxNavigationDrawer) public viewChild: Infragistics.IgxNavigationDrawer;
 }
 
 class TestComponentPin extends TestComponentDI {

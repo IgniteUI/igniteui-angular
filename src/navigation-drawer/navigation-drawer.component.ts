@@ -20,7 +20,7 @@ import "rxjs/add/operator/debounce";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 import { BaseComponent } from "../core/base";
-import { IToggleView, NavigationService } from "../core/navigation";
+import { IgxNavigationService, IToggleView } from "../core/navigation";
 import { HammerGesturesManager } from "../core/touch";
 
 /**
@@ -42,7 +42,7 @@ import { HammerGesturesManager } from "../core/touch";
     styleUrls: ["./navigation-drawer.component.scss"],
     templateUrl: "navigation-drawer.component.html"
 })
-export class NavigationDrawer extends BaseComponent implements IToggleView,
+export class IgxNavigationDrawer extends BaseComponent implements IToggleView,
     OnInit,
     AfterContentInit,
     OnDestroy,
@@ -184,7 +184,7 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
 
     constructor(
         @Inject(ElementRef) private elementRef: ElementRef,
-        @Optional() private _state: NavigationService,
+        @Optional() private _state: IgxNavigationService,
         // private animate: AnimationBuilder, TODO
         protected renderer: Renderer,
         private _touchManager: HammerGesturesManager) {
@@ -609,8 +609,8 @@ export class NavigationDrawer extends BaseComponent implements IToggleView,
 }
 
 @NgModule({
-    declarations: [NavigationDrawer],
-    exports: [NavigationDrawer]
+    declarations: [IgxNavigationDrawer],
+    exports: [IgxNavigationDrawer]
 })
-export class NavigationDrawerModule {
+export class IgxNavigationDrawerModule {
 }
