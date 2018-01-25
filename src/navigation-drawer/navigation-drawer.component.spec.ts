@@ -48,7 +48,7 @@ describe("Navigation Drawer", () => {
 
                 expect(fixture.componentInstance.viewChild).toBeDefined();
                 expect(fixture.componentInstance.viewChild instanceof Infragistics.IgxNavigationDrawer).toBeTruthy();
-                expect(fixture.componentInstance.viewChild.state instanceof Infragistics.NavigationService)
+                expect(fixture.componentInstance.viewChild.state instanceof Infragistics.IgxNavigationService)
                     .toBeTruthy();
             });
         }));
@@ -78,7 +78,7 @@ describe("Navigation Drawer", () => {
             TestBed.compileComponents().then(() => {
                 const fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
-                const state: Infragistics.NavigationService = fixture.componentInstance.viewChild.state;
+                const state: Infragistics.IgxNavigationService = fixture.componentInstance.viewChild.state;
                 const touchManager = fixture.componentInstance.viewChild.touchManager;
 
                 expect(state.get("testNav")).toBeDefined();
@@ -457,7 +457,7 @@ class TestComponent {
 }
 
 @Component({
-    providers: [Infragistics.NavigationService],
+    providers: [Infragistics.IgxNavigationService],
     selector: "test-cmp",
     template: "<igx-nav-drawer></igx-nav-drawer>"
 })
