@@ -35,16 +35,15 @@ The **igx-nav-drawer** is a container element for side navigation, providing qui
 | `isOpen` | boolean | State of the drawer. |
 | `pin` | boolean | Pinned state of the drawer. Currently only support. |
 | `pinThreshold` | number | Minimum device width required for automatic pin to be toggled. Default is 1024, can be set to falsy value to ignore. |
-| `width` | string| Width of the drawer in its open state. Defaults to 300px based on the `.igx-nav-drawer` style. Can be used to override or dynamically modify the width.|
-| `miniWidth` | string | Width of the drawer in its mini state. Defaults to 60px based on the `.igx-nav-drawer.mini` style. Can be used to override or dynamically modify the width. |
+| `width` | string| Width of the drawer in its open state. Defaults to 300px based on the `.ig-nav-drawer` style. Can be used to override or dynamically modify the width.|
+| `miniWidth` | string | Width of the drawer in its mini state. Defaults to 60px based on the `.ig-nav-drawer.mini` style. Can be used to override or dynamically modify the width. |
 
 ## Methods
 | Name      |  Description |
 |:----------|:------|
-| `open`    | Open the Navigation Drawer. Has no effect if already opened. *@param* fireEvents Optional flag determining whether events should be fired or not. *@return* Promise that is resolved once the operation completes. |
-| `close`   | Close the Navigation Drawer. Has no effect if already closed. *@param* fireEvents Optional flag determining whether events should be fired or not. *@return* Promise that is resolved once the operation completes. |
-| `expectedWidth()`  | Get the Drawer width for specific state. Will attempt to evaluate requested state and cache. |
-| `expectedMiniWidth()`| Get the Drawer mini width for specific state. Will attempt to evaluate requested state and cache. |
+| `open`    | Open the Navigation Drawer. Has no effect if already opened. Returns `Promise` that is resolved once the operation completes. |
+| `close`   | Close the Navigation Drawer. Has no effect if already closed. Returns `Promise` that is resolved once the operation completes. |
+| `toggle()`  | Toggle the open state of the Navigation Drawer. Returns `Promise` that is resolved once the operation completes. |
 
 ## Events
 | Name      |  Description |
