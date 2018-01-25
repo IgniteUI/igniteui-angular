@@ -6,7 +6,7 @@
     border-radius: $grid-br;
     box-shadow: $grid-shadow;
     outline-style: none;
-    overflow-x: auto;
+    overflow-x: hidden;
 }
 
 %grid-caption {
@@ -46,6 +46,7 @@
 
 %grid-row {
     display: flex;
+    height:50px;
     background: $grid-row-bg;
     border-bottom: $grid-row-bb;
     transition: $grid-row-transition;
@@ -69,7 +70,7 @@
 }
 
 %grid-cell-display {
-    display: block;
+    display: inline-flex;
     width: 100%;
     outline-style: none;
     padding: $grid-cell-padding;

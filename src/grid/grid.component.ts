@@ -30,6 +30,7 @@ import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { IgxGridRowComponent } from "./row.component";
+import {IgVirtualForOf} from "../directives/virtual-for/igx_virtual_for.directive";
 
 let NEXT_ID = 0;
 
@@ -109,7 +110,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     @Input()
     public height;
 
-    //@HostBinding("style.width")
+    @HostBinding("style.width")
     @Input()
     public width;
 
@@ -144,6 +145,10 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     public columnList: QueryList<IgxColumnComponent>;
 
     @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
+
+    @ViewChild(IgVirtualForOf, { read: IgVirtualForOf })
+    public parentVirtDir:IgVirtualForOf<any>;
+
     public rowList: QueryList<IgxGridRowComponent>;
 
     @HostBinding("attr.tabindex")

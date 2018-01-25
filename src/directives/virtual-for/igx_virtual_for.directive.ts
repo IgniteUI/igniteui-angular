@@ -21,7 +21,7 @@ export class IgVirtualForOf<T> {
 
 	@Input() igVirtForOf: Array<any>;
 	@Input() igVirtForScrolling: string;
-	@Input() igVirtForIsChild: boolean;
+	@Input() igVirtForUseForScroll: any;
 	//@Input()
 	//set ngForTrackBy(fn: TrackByFunction<T>) {
 	//  if (isDevMode() && fn != null && typeof fn !== 'function') {
@@ -47,7 +47,6 @@ export class IgVirtualForOf<T> {
 		let endingIndex = this._pageSize + this._currIndex;
 		for(let i = this._currIndex; i < endingIndex && this.igVirtForOf[i] !== undefined; i++) {
 			let input = this.igVirtForOf[i];
-			//this._viewContainer.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
 			this.dc.instance._vcr.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
 		}
 	}
@@ -63,7 +62,6 @@ export class IgVirtualForOf<T> {
 		let endingIndex = this._pageSize + this._currIndex;
 		for(let i = this._currIndex; i < endingIndex && this.igVirtForOf[i] !== undefined; i++) {
 			let input = this.igVirtForOf[i];
-			//this._viewContainer.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
 			this.dc.instance._vcr.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
 		}
 	}
@@ -78,10 +76,6 @@ export class IgVirtualForOf<T> {
 	constructor(
 		private _viewContainer: ViewContainerRef, private _template: TemplateRef<NgForOfContext<T>>,
 		private _differs: IterableDiffers, private resolver: ComponentFactoryResolver) {}
-
-	//ngOnInit(): void {
-	//	this._viewContainer.createEmbeddedView(this._template);
-	//}
 
 	//@Input()
 	//set ngForTemplate(value: TemplateRef<NgForOfContext<T>>) {
@@ -100,93 +94,30 @@ export class IgVirtualForOf<T> {
 
 		
 		const dcFactory: ComponentFactory<DisplayContainer> = this.resolver.resolveComponentFactory(DisplayContainer);
+		this.dc = this._viewContainer.createComponent(dcFactory);
+		for(let i = 0; i < this._pageSize && this.igVirtForOf[i] !== undefined; i++) {
+			let input = this.igVirtForOf[i];
+			this.dc.instance._vcr.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
+		}
 
-		if (this.igVirtForIsChild !== true) {
-			//this._viewContainer.element.nativeElement.parentElement.style.height = "400px";
+		 if (this.igVirtForScrolling === "vertical") {
 			const factory: ComponentFactory<VirtualHelper> = this.resolver.resolveComponentFactory(VirtualHelper);
 			let vh: ComponentRef<VirtualHelper> = this._viewContainer.createComponent(factory);
 			vh.instance.itemsLength = this.igVirtForOf.length;
 			vh.instance.vhscroll.subscribe(v => this.onScroll(v));
-
-			this.dc = this._viewContainer.createComponent(dcFactory);
-
-
-			for(let i = 0; i < this._pageSize && this.igVirtForOf[i] !== undefined; i++) {
-				let input = this.igVirtForOf[i];
-				//this._viewContainer.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
-				this.dc.instance._vcr.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
-			}
-		} else {
-			for(let i = 0; i < this._pageSize && this.igVirtForOf[i] !== undefined; i++) {
-				let input = this.igVirtForOf[i];
-				//this._viewContainer.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
-				this._viewContainer.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
-			}
-		}
+		 }
 
 		if (this.igVirtForScrolling === "horizontal") {
-			//this._viewContainer.element.nativeElement.parentElement.style.width = "1645px";
-			const hvFactory: ComponentFactory<HVirtualHelper> = this.resolver.resolveComponentFactory(HVirtualHelper);
-			let hvh: ComponentRef<HVirtualHelper> = this._viewContainer.createComponent(hvFactory);
-			hvh.instance.itemsLength = this.igVirtForOf.length;
-			hvh.instance.vhscroll.subscribe(v => this.onHScroll(v));
+			var directiveRef = this.igVirtForUseForScroll || this;
+			let vc = this.igVirtForUseForScroll ? this.igVirtForUseForScroll._viewContainer : this._viewContainer;
+			if(vc.length === 2){
+				const hvFactory: ComponentFactory<HVirtualHelper> = this.resolver.resolveComponentFactory(HVirtualHelper);
+				let hvh: ComponentRef<HVirtualHelper> = vc.createComponent(hvFactory);
+				hvh.instance.itemsLength = this.igVirtForOf.length;
+				hvh.instance.vhscroll.subscribe(v => directiveRef.onHScroll(v));
+			}
 		}
-
-
-		//for (const input of this.igVirtForOf) {
-		//	this._viewContainer.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
-		//	if (this.igVirtForOf.indexOf(input) > this._pageSize) break;
-		//}
 	}
-  //
-	//ngDoCheck(): void {
-	//  if (this._differ) {
-	//	const changes = this._differ.diff(this.igVirtForOf);
-	//	if (changes) this._applyChanges(changes);
-	//  }
-	//}
-  //
-	//private _applyChanges(changes: IterableChanges<T>) {
-	//  const insertTuples: RecordViewTuple<T>[] = [];
-	//  changes.forEachOperation(
-	//	  (item: IterableChangeRecord<any>, adjustedPreviousIndex: number, currentIndex: number) => {
-	//		if (item.previousIndex == null) {
-	//		  const view = this._viewContainer.createEmbeddedView(
-	//			  this._template, new NgForOfContext<T>(null !, this.igVirtForOf, -1, -1), currentIndex);
-	//		  const tuple = new RecordViewTuple<T>(item, view);
-	//		  insertTuples.push(tuple);
-	//		} else if (currentIndex == null) {
-	//		  this._viewContainer.remove(adjustedPreviousIndex);
-	//		} else {
-	//		  const view = this._viewContainer.get(adjustedPreviousIndex) !;
-	//		  this._viewContainer.move(view, currentIndex);
-	//		  const tuple = new RecordViewTuple(item, <EmbeddedViewRef<NgForOfContext<T>>>view);
-	//		  insertTuples.push(tuple);
-	//		}
-	//	  });
-  //
-	//  for (let i = 0; i < insertTuples.length; i++) {
-	//	this._perViewChange(insertTuples[i].view, insertTuples[i].record);
-	//  }
-  //
-	//  for (let i = 0, ilen = this._viewContainer.length; i < ilen; i++) {
-	//	const viewRef = <EmbeddedViewRef<NgForOfContext<T>>>this._viewContainer.get(i);
-	//	viewRef.context.index = i;
-	//	viewRef.context.count = ilen;
-	//  }
-  //
-	//  changes.forEachIdentityChange((record: any) => {
-	//	const viewRef =
-	//		<EmbeddedViewRef<NgForOfContext<T>>>this._viewContainer.get(record.currentIndex);
-	//	viewRef.context.$implicit = record.item;
-	//  });
-	//}
-  //
-	//private _perViewChange(
-	//	view: EmbeddedViewRef<NgForOfContext<T>>, record: IterableChangeRecord<any>) {
-	//  view.context.$implicit = record.item;
-	//}
-
 }
 
 class RecordViewTuple<T> {

@@ -116,43 +116,28 @@ export class GridSampleComponent {
     public selectedRow;
     public newRecord = "";
     public editCell;
+    public columns;
     constructor(private localService: LocalService,
                 private remoteService: RemoteService) {}
     public ngOnInit(): void {
       this.data = this.localService.records;
       this.remote = this.remoteService.remoteData;
+      var cols = [];
+       for(var j = 0; j < 300; j++) {
+          cols.push({field: j.toString(), width: "200px"});
+      }
+      this.columns = cols;
 
       this.localService.getData();
-
-      // this.localData = [
-      //     {ID: 1, Name: "A"},
-      //     {ID: 2, Name: "B"},
-      //     {ID: 3, Name: "C"},
-      //     {ID: 4, Name: "D"},
-      //     {ID: 5, Name: "E"}
-      //   ];
-
       for(let i = 0; i < 100000; i++) {
-          this.localData.push({ID: i, Name: "A" + i});
+          var obj = {};
+          for(var j = 0; j <  cols.length; j++){
+            var col = cols[j].field;
+            obj[col] = 10*i*j;
+          }
+          this.localData.push(obj);
       }
-      //this.grid2.state = {
-      // sorting: {
-      //    expressions: [],
-      //    strategy: new StableSortingStrategy()
-      //  }
-      //};
-
-    //this.grid3.state = {
-    //  paging: {
-    //    index: 2,
-    //    recordsPerPage: 10
-    //   },
-    //   sorting: {
-    //     expressions: [
-    //       {fieldName: "ProductID", dir: SortingDirection.Desc}
-    //     ]
-   //   }
-    // };
+   
     }
 
     public ngAfterViewInit() {

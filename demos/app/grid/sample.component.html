@@ -122,6 +122,5 @@
 
 </div>-->
 <igx-grid #grid1 [data]="localData" (onCellSelection)="selectCell($event)" [width]="'1200px'" [height]="'800px'">
-                <igx-column [sortable]="true" [field]="'ID'" [header]="'ID'"></igx-column>
-                <igx-column [editable]="true" [field]="'Name'"></igx-column>  
+    <igx-column  *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width"></igx-column>
 </igx-grid>

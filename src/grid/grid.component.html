@@ -22,12 +22,12 @@
 
 <div class="igx-grid__thead">
     <div class="igx-grid__tr" role="row">
-        <igx-grid-header [gridID]="id" *ngFor="let col of visibleColumns" [column]="col"></igx-grid-header>
+    <igx-grid-header [gridID]="id" *ngFor="let col of visibleColumns" [column]="col"></igx-grid-header>
     </div>
 </div>
 
 <div class="igx-grid__tbody" [style.height]='height' [style.width]='width'>
-     <ng-template igVirtFor let-rowData [igVirtForOf]="data" let-rowIndex="index" [igVirtForScrolling]="'horizontal'">
+     <ng-template igVirtFor let-rowData [igVirtForOf]="data" let-rowIndex="index" [igVirtForScrolling]="'vertical'">
         <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
         </igx-grid-row>
      </ng-template>

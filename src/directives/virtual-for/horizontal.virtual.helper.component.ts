@@ -12,7 +12,7 @@ export class HVirtualHelper {
 	public width: number;
 
 	ngOnInit() {
-		this.width = 55 * this.itemsLength;
+		this.width = 200 * this.itemsLength;
 	}
 
 	@HostListener('scroll', ['$event'])
