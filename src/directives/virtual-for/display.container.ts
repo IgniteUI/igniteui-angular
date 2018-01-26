@@ -3,7 +3,7 @@ import { makeDecorator } from "@angular/core/src/util/decorators";
 
 @Component({
 	selector: 'display-container',
-	template: '<span #display_container></span>',
+	template: '<ng-template #display_container></ng-template>',
 	styles: [':host { height: calc(100% - 18px); width: calc(100% - 18px); overflow: hidden; float: left; position: relative;}']
 })
 export class DisplayContainer {
