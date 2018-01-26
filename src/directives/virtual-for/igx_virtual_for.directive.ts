@@ -113,7 +113,7 @@ export class IgVirtualForOf<T> {
 
 		var that = this;
 		if (this.igVirtForScrolling === "horizontal") {
-			
+			this.dc.instance._viewContainer.element.nativeElement.style.display = "inline-flex";
 			var directiveRef = this.igVirtForUseForScroll || this;
 			let vc = this.igVirtForUseForScroll ? this.igVirtForUseForScroll._viewContainer : this._viewContainer;
 			this.hScroll = this.checkIfExists(vc, "horizontal-virtual-helper");
