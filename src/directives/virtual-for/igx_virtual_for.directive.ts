@@ -1,4 +1,4 @@
-import { Directive, DoCheck, OnChanges, Input, TrackByFunction, isDevMode, NgIterable, IterableDiffer, ViewContainerRef, TemplateRef, IterableDiffers, SimpleChanges, IterableChanges, EmbeddedViewRef, IterableChangeRecord, ComponentFactory, ComponentFactoryResolver, ViewChild, HostListener } from '@angular/core';
+import { Directive, DoCheck, OnChanges, Input, TrackByFunction, isDevMode, ChangeDetectorRef, NgIterable, IterableDiffer, ViewContainerRef, TemplateRef, IterableDiffers, SimpleChanges, IterableChanges, EmbeddedViewRef, IterableChangeRecord, ComponentFactory, ComponentFactoryResolver, ViewChild, HostListener } from '@angular/core';
 import { NgForOfContext } from '@angular/common';
 import { NgForOf } from '@angular/common/src/directives/ng_for_of';
 import { VirtualHelper } from './virtual.helper.component';
@@ -10,6 +10,9 @@ import { HVirtualHelper } from './horizontal.virtual.helper.component';
 
 @Directive({selector: '[igVirtFor]'})
 export class IgVirtualForOf<T> {
+
+	private hScroll;
+	private func;
 
 	dc :ComponentRef<DisplayContainer>;
 
@@ -43,27 +46,29 @@ export class IgVirtualForOf<T> {
 
 		this._currIndex = Math.round(ratio * this.igVirtForOf.length);
 		this.dc.instance._vcr.clear();
-
 		let endingIndex = this._pageSize + this._currIndex;
 		for(let i = this._currIndex; i < endingIndex && this.igVirtForOf[i] !== undefined; i++) {
 			let input = this.igVirtForOf[i];
 			this.dc.instance._vcr.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
 		}
+		this.dc.changeDetectorRef.detectChanges();
 	}
 
 	onHScroll(event) {
+		if(!this.dc){return;}
 		let scrollLeft = event.target.scrollLeft;
 		let hcWidth = event.target.children[0].scrollWidth;
 		let ratio = scrollLeft / hcWidth;
 
-		this._currIndex = Math.round(ratio * this.igVirtForOf.length);
+		this._currIndex = Math.round(ratio * this.igVirtForOf.length);		
 		this.dc.instance._vcr.clear();
 
-		let endingIndex = this._pageSize + this._currIndex;
-		for(let i = this._currIndex; i < endingIndex && this.igVirtForOf[i] !== undefined; i++) {
-			let input = this.igVirtForOf[i];
-			this.dc.instance._vcr.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
-		}
+		 let endingIndex = this._pageSize + this._currIndex;
+		 for(let i = this._currIndex; i < endingIndex && this.igVirtForOf[i] !== undefined; i++) {
+		 	let input = this.igVirtForOf[i];
+		 	this.dc.instance._vcr.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
+		 }
+		this.dc.instance.cdr.markForCheck();
 	}
 
 	get ngForTrackBy(): TrackByFunction<T> { return this._trackByFn; }
@@ -75,7 +80,7 @@ export class IgVirtualForOf<T> {
 
 	constructor(
 		private _viewContainer: ViewContainerRef, private _template: TemplateRef<NgForOfContext<T>>,
-		private _differs: IterableDiffers, private resolver: ComponentFactoryResolver) {}
+		private _differs: IterableDiffers, private resolver: ComponentFactoryResolver, public cdr: ChangeDetectorRef) {}
 
 	//@Input()
 	//set ngForTemplate(value: TemplateRef<NgForOfContext<T>>) {
@@ -87,36 +92,54 @@ export class IgVirtualForOf<T> {
 	//  }
 	//}
   //
-	ngOnChanges(changes: SimpleChanges): void {
-		this._viewContainer.clear();
-		
-		
-
-		
+	ngOnInit(): void {
+		//this._viewContainer.clear();
 		const dcFactory: ComponentFactory<DisplayContainer> = this.resolver.resolveComponentFactory(DisplayContainer);
-		this.dc = this._viewContainer.createComponent(dcFactory);
+		this.dc = this._viewContainer.createComponent(dcFactory, 0);
 		for(let i = 0; i < this._pageSize && this.igVirtForOf[i] !== undefined; i++) {
 			let input = this.igVirtForOf[i];
 			this.dc.instance._vcr.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
 		}
 
 		 if (this.igVirtForScrolling === "vertical") {
+			 
 			const factory: ComponentFactory<VirtualHelper> = this.resolver.resolveComponentFactory(VirtualHelper);
-			let vh: ComponentRef<VirtualHelper> = this._viewContainer.createComponent(factory);
+			let vh: ComponentRef<VirtualHelper> = this._viewContainer.createComponent(factory, 1);
 			vh.instance.itemsLength = this.igVirtForOf.length;
 			vh.instance.vhscroll.subscribe(v => this.onScroll(v));
+			this.cdr.detectChanges();
+			this._pageSize = vh.instance.elementRef.nativeElement.clientHeight / 50;
 		 }
 
+		var that = this;
 		if (this.igVirtForScrolling === "horizontal") {
+			
 			var directiveRef = this.igVirtForUseForScroll || this;
 			let vc = this.igVirtForUseForScroll ? this.igVirtForUseForScroll._viewContainer : this._viewContainer;
-			if(vc.length === 2){
+			this.hScroll = this.checkIfExists(vc, "horizontal-virtual-helper");
+			if(!this.hScroll){
 				const hvFactory: ComponentFactory<HVirtualHelper> = this.resolver.resolveComponentFactory(HVirtualHelper);
 				let hvh: ComponentRef<HVirtualHelper> = vc.createComponent(hvFactory);
 				hvh.instance.itemsLength = this.igVirtForOf.length;
-				hvh.instance.vhscroll.subscribe(v => directiveRef.onHScroll(v));
+				hvh.instance.vhscroll.subscribe(v =>{ this.onHScroll(v);});
+				this._pageSize = hvh.instance.elementRef.nativeElement.clientWidth / 200;
+				//hvh.instance.elementRef.nativeElement.addEventListener('scroll', function (evt) {debugger;that.onHScroll(evt);})
+			} else {
+				this.func = function (evt) {that.onHScroll(evt);}
+				this.hScroll.addEventListener('scroll', this.func)
 			}
+			
 		}
+	}
+	ngOnDestroy(): void {
+		this.dc = null;
+		this.hScroll.removeEventListener("scroll", this.func);
+		this.cdr.detectChanges();
+	}
+
+	checkIfExists(viewref, nodeName) {
+		var elem = viewref.element.nativeElement.parentElement.getElementsByTagName(nodeName);
+		return elem.length > 0 ? elem[0] : null;
 	}
 }
 

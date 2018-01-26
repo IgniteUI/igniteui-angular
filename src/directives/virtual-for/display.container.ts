@@ -8,7 +8,7 @@ import { makeDecorator } from "@angular/core/src/util/decorators";
 })
 export class DisplayContainer {
 	@ViewChild('display_container', { read: ViewContainerRef }) _vcr;
-	constructor( public cdr: ChangeDetectorRef){}
+	constructor( public cdr: ChangeDetectorRef, public _viewContainer: ViewContainerRef){}
 	scroll(event){
 		console.log(event);
 	}

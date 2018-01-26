@@ -146,8 +146,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
 
     @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
 
-    @ViewChild(IgVirtualForOf, { read: IgVirtualForOf })
-    public parentVirtDir:IgVirtualForOf<any>;
+    @ViewChild("scrollContainer", { read: IgVirtualForOf }) parentVirtDir: IgVirtualForOf<any>;
 
     public rowList: QueryList<IgxGridRowComponent>;
 

@@ -12,9 +12,9 @@ export class VirtualHelper {
 	public height: number;
 
 	ngOnInit() {
-		this.height = 43 * this.itemsLength;
+		this.height = 50 * this.itemsLength;
 	}
-
+	constructor(public elementRef: ElementRef) { }
 	@HostListener('scroll', ['$event'])
 	onScroll(event) {
 		this.vhscroll.emit(event);
