@@ -76,7 +76,7 @@ export class IgVirtualForOf<T> {
 		 	cntx.$implicit = input;
 		 	cntx.index = this.igVirtForOf.indexOf(input);
 		  }
-		this.dc.changeDetectorRef.markForCheck();
+		this.dc.changeDetectorRef.detectChanges();
 	}
 
 	get ngForTrackBy(): TrackByFunction<T> { return this._trackByFn; }
@@ -105,7 +105,7 @@ export class IgVirtualForOf<T> {
 	//}
   //
 	ngOnInit(): void {
-		//this._viewContainer.clear();
+		var that = this;
 		const dcFactory: ComponentFactory<DisplayContainer> = this.resolver.resolveComponentFactory(DisplayContainer);
 		this.dc = this._viewContainer.createComponent(dcFactory, 0);
 		for(let i = 0; i < this._pageSize && this.igVirtForOf[i] !== undefined; i++) {
@@ -118,25 +118,28 @@ export class IgVirtualForOf<T> {
 			const factory: ComponentFactory<VirtualHelper> = this.resolver.resolveComponentFactory(VirtualHelper);
 			let vh: ComponentRef<VirtualHelper> = this._viewContainer.createComponent(factory, 1);
 			vh.instance.itemsLength = this.igVirtForOf.length;
-			vh.instance.vhscroll.subscribe(v => this.onScroll(v));
+			this._zone.runOutsideAngular(() => {
+				vh.instance.elementRef.nativeElement.addEventListener('scroll', function(evt){that.onScroll(evt) });
+			});
 			this.cdr.detectChanges();
 			this._pageSize = vh.instance.elementRef.nativeElement.clientHeight / 50;
 		 }
-
-		var that = this;
+		
 		if (this.igVirtForScrolling === "horizontal") {
 			this.dc.instance._viewContainer.element.nativeElement.style.display = "inline-flex";
 			var directiveRef = this.igVirtForUseForScroll || this;
 			let vc = this.igVirtForUseForScroll ? this.igVirtForUseForScroll._viewContainer : this._viewContainer;
 			this.hScroll = this.checkIfExists(vc, "horizontal-virtual-helper");
+			this.func = function (evt) {that.onHScroll(evt);}
 			if(!this.hScroll){
 				const hvFactory: ComponentFactory<HVirtualHelper> = this.resolver.resolveComponentFactory(HVirtualHelper);
 				let hvh: ComponentRef<HVirtualHelper> = vc.createComponent(hvFactory);
 				hvh.instance.itemsLength = this.igVirtForOf.length;
-				hvh.instance.vhscroll.subscribe(v =>{ this.onHScroll(v);});
+				this._zone.runOutsideAngular(() => {
+					hvh.instance.elementRef.nativeElement.addEventListener('scroll', that.func);
+				});
 				this._pageSize = hvh.instance.elementRef.nativeElement.clientWidth / 200;
 			} else {
-				this.func = function (evt) {that.onHScroll(evt);}
 				this._zone.runOutsideAngular(() => {
 					this.hScroll.addEventListener('scroll', this.func);
 				});
