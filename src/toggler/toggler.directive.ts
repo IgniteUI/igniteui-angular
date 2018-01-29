@@ -7,6 +7,7 @@ import {
     Input,
     NgModule,
     OnDestroy,
+    OnInit,
     Output,
     Renderer2
 } from "@angular/core";
@@ -15,9 +16,7 @@ import {
     exportAs: "toggler",
     selector: "[igx-toggler]"
 })
-export class IgxTogglerDirective implements OnDestroy {
-    @HostBinding("class.hidden")
-    public isHidden: boolean = true;
+export class IgxTogglerDirective implements OnDestroy, OnInit {
 
     @Output()
     public onOpen = new EventEmitter();
@@ -25,20 +24,32 @@ export class IgxTogglerDirective implements OnDestroy {
     @Output()
     public onClose = new EventEmitter();
 
+    @Input()
+    public isLoadedOpen = false;
+
+    private readonly HIDDEN_TOGGLER_CLASS: string = "igx-toggler--hidden";
+    private readonly TOGGLER_CLASS: string = "igx-toggler";
+
+    @HostBinding("class")
+    private hostClass: string = this.HIDDEN_TOGGLER_CLASS;
+
     private eventListener;
     private isTriggerClick = true;
+    private isHidden = true;
 
     constructor(private elementRef: ElementRef, private renderer: Renderer2) {
         this.eventListener = this.renderer.listen("document", "click", this.checkEventTarger.bind(this));
     }
 
     public open() {
+        this.hostClass = this.TOGGLER_CLASS;
         this.isHidden = false;
         this.isTriggerClick = true;
         this.onOpen.emit();
     }
 
     public close() {
+        this.hostClass = this.HIDDEN_TOGGLER_CLASS;
         this.isHidden = true;
         this.isTriggerClick = true;
         this.onClose.emit();
@@ -48,6 +59,12 @@ export class IgxTogglerDirective implements OnDestroy {
         if (this.eventListener) {
             // Removing the event handler
             this.eventListener();
+        }
+    }
+
+    public ngOnInit() {
+        if (this.isLoadedOpen) {
+            this.hostClass = this.TOGGLER_CLASS;
         }
     }
 
