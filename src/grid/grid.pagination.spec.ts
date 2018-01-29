@@ -117,13 +117,13 @@ describe("IgxGrid - Grid Paging", () => {
         grid.perPage = 3;
 
         // Goto page 3 through API and listen for event
-        spyOn(grid.onPaging, "emit");
+        spyOn(grid.onPagingDone, "emit");
         grid.paginate(2);
 
         tick();
         fix.detectChanges();
 
-        expect(grid.onPaging.emit).toHaveBeenCalled();
+        expect(grid.onPagingDone.emit).toHaveBeenCalled();
         expect(gridElement.querySelector(".igx-paginator > span").textContent).toMatch("3 of 4");
         expect(grid.getCellByColumn(0, "ID").value).toMatch("7");
     }));

@@ -13,7 +13,7 @@ export default {
         path: path.join(__dirname, "dist"),
         filename: "[name].js",
         libraryTarget: "umd",
-        library: "jsblocks"
+        library: "igniteui-angular"
     },
     resolve: {
         extensions: [".ts", ".js", ".json"]

@@ -84,6 +84,9 @@ export class IgxColumnComponent implements AfterContentInit {
     public filteringIgnoreCase = true;
 
     @Input()
+    public sortingIgnoreCase = true;
+
+    @Input()
     public dataType: DataType = DataType.String;
 
     public gridID: string;
