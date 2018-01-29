@@ -137,7 +137,7 @@ describe("IgxGrid - Grid Sorting", () => {
         expect(grid.getCellByColumn(grid.data.length - 1 , thirdColumn).value).toEqual(expectedResult);
 
         // Clear sorting on a column
-        grid.clearSorting(firstColumn);
+        grid.clearSort(firstColumn);
         fixture.detectChanges();
 
         expect(grid.sortingExpressions.length).toEqual(1);
@@ -150,7 +150,7 @@ describe("IgxGrid - Grid Sorting", () => {
         expect(grid.sortingExpressions.length).toEqual(2);
 
         // Clear sorting on all columns
-        grid.clearSorting();
+        grid.clearSort();
         fixture.detectChanges();
 
         expect(grid.sortingExpressions.length).toEqual(0);
@@ -183,7 +183,7 @@ describe("IgxGrid - Grid Sorting", () => {
         expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual(expectedResult);
         expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(7);
 
-        grid.clearSorting();
+        grid.clearSort();
         fixture.detectChanges();
 
         expect(grid.sortingExpressions.length).toEqual(0);

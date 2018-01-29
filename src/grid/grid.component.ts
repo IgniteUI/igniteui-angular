@@ -322,7 +322,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
         this.gridAPI.filterGlobal(this.id, value, condition, ignoreCase);
     }
 
-    public clearFiltering(name?: string) {
+    public clearFilter(name?: string) {
 
         if (!name) {
             this.filteringExpressions = [];
@@ -334,7 +334,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
         this.gridAPI.clear_filter(this.id, name);
     }
 
-    public clearSorting(name?: string) {
+    public clearSort(name?: string) {
         if (!name) {
             this.sortingExpressions = [];
             return;
