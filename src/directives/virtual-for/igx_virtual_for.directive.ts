@@ -25,6 +25,9 @@ export class IgVirtualForOf<T> {
 	@Input() igVirtForOf: Array<any>;
 	@Input() igVirtForScrolling: string;
 	@Input() igVirtForUseForScroll: any;
+
+	private _embeddedViews:Array<EmbeddedViewRef<any>> = [];
+
 	//@Input()
 	//set ngForTrackBy(fn: TrackByFunction<T>) {
 	//  if (isDevMode() && fn != null && typeof fn !== 'function') {
@@ -43,13 +46,16 @@ export class IgVirtualForOf<T> {
 		let scrollTop = event.target.scrollTop;
 		let vcHeight = event.target.children[0].scrollHeight;
 		let ratio = scrollTop / vcHeight;
-
+		let embeddedViewCopy = Object.assign([], this._embeddedViews);
 		this._currIndex = Math.round(ratio * this.igVirtForOf.length);
-		this.dc.instance._vcr.clear();
+		//this.dc.instance._vcr.clear();
 		let endingIndex = this._pageSize + this._currIndex;
 		for(let i = this._currIndex; i < endingIndex && this.igVirtForOf[i] !== undefined; i++) {
 			let input = this.igVirtForOf[i];
-			this.dc.instance._vcr.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
+			var embView = embeddedViewCopy.shift();
+			var cntx = (<EmbeddedViewRef<any>>embView).context;
+			cntx.$implicit = input;
+			cntx.index = this.igVirtForOf.indexOf(input);
 		}
 		this.dc.changeDetectorRef.detectChanges();
 	}
@@ -59,16 +65,19 @@ export class IgVirtualForOf<T> {
 		let scrollLeft = event.target.scrollLeft;
 		let hcWidth = event.target.children[0].scrollWidth;
 		let ratio = scrollLeft / hcWidth;
+		let embeddedViewCopy = Object.assign([], this._embeddedViews);
 
-		this._currIndex = Math.round(ratio * this.igVirtForOf.length);		
-		this.dc.instance._vcr.clear();
+		this._currIndex = Math.round(ratio * this.igVirtForOf.length);
 
 		 let endingIndex = this._pageSize + this._currIndex;
 		 for(let i = this._currIndex; i < endingIndex && this.igVirtForOf[i] !== undefined; i++) {
 		 	let input = this.igVirtForOf[i];
-		 	this.dc.instance._vcr.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
+		 	var embView = embeddedViewCopy.shift();
+			var cntx = (<EmbeddedViewRef<any>>embView).context;
+			cntx.$implicit = input;
+			cntx.index = this.igVirtForOf.indexOf(input);
 		 }
-		this.dc.instance.cdr.markForCheck();
+		this.dc.changeDetectorRef.markForCheck();
 	}
 
 	get ngForTrackBy(): TrackByFunction<T> { return this._trackByFn; }
@@ -98,9 +107,9 @@ export class IgVirtualForOf<T> {
 		this.dc = this._viewContainer.createComponent(dcFactory, 0);
 		for(let i = 0; i < this._pageSize && this.igVirtForOf[i] !== undefined; i++) {
 			let input = this.igVirtForOf[i];
-			this.dc.instance._vcr.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
+			let embeddedView = this.dc.instance._vcr.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
+			this._embeddedViews.push(embeddedView);
 		}
-
 		 if (this.igVirtForScrolling === "vertical") {
 			 
 			const factory: ComponentFactory<VirtualHelper> = this.resolver.resolveComponentFactory(VirtualHelper);
