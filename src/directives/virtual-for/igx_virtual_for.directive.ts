@@ -83,7 +83,7 @@ export class IgVirtualForOf<T> {
 
 	private _differ: IterableDiffer<T>|null = null;
 	private _trackByFn: TrackByFunction<T>;
-	private _pageSize: number = 20;
+	private _pageSize: number = 0;
 	private _currIndex: number = 0;
 
 	constructor(
@@ -104,8 +104,13 @@ export class IgVirtualForOf<T> {
 	//  }
 	//}
   //
-	ngOnInit(): void {
+	ngAfterViewInit(): void {
 		var that = this;
+		let vc = this.igVirtForUseForScroll ? this.igVirtForUseForScroll._viewContainer : this._viewContainer;
+		this._pageSize = this.igVirtForScrolling === "vertical" ?
+		 vc.element.nativeElement.parentElement.clientHeight/ 50 :
+		 vc.element.nativeElement.parentElement.clientWidth/200;
+
 		const dcFactory: ComponentFactory<DisplayContainer> = this.resolver.resolveComponentFactory(DisplayContainer);
 		this.dc = this._viewContainer.createComponent(dcFactory, 0);
 		for(let i = 0; i < this._pageSize && this.igVirtForOf[i] !== undefined; i++) {
@@ -122,14 +127,12 @@ export class IgVirtualForOf<T> {
 				vh.instance.elementRef.nativeElement.addEventListener('scroll', function(evt){that.onScroll(evt) });
 			});
 			this.cdr.detectChanges();
-			this._pageSize = vh.instance.elementRef.nativeElement.clientHeight / 50;
 		 }
 		
 		if (this.igVirtForScrolling === "horizontal") {
 			this.dc.instance._viewContainer.element.nativeElement.style.display = "inline-flex";
-			var directiveRef = this.igVirtForUseForScroll || this;
-			let vc = this.igVirtForUseForScroll ? this.igVirtForUseForScroll._viewContainer : this._viewContainer;
-			this.hScroll = this.checkIfExists(vc, "horizontal-virtual-helper");
+			var directiveRef = this.igVirtForUseForScroll || this;			
+			this.hScroll = this.getHorizontalScroll(vc, "horizontal-virtual-helper");
 			this.func = function (evt) {that.onHScroll(evt);}
 			if(!this.hScroll){
 				const hvFactory: ComponentFactory<HVirtualHelper> = this.resolver.resolveComponentFactory(HVirtualHelper);
@@ -138,21 +141,16 @@ export class IgVirtualForOf<T> {
 				this._zone.runOutsideAngular(() => {
 					hvh.instance.elementRef.nativeElement.addEventListener('scroll', that.func);
 				});
-				this._pageSize = hvh.instance.elementRef.nativeElement.clientWidth / 200;
 			} else {
 				this._zone.runOutsideAngular(() => {
 					this.hScroll.addEventListener('scroll', this.func);
 				});
-			}			
+			}
 		}
-	}
-	ngOnDestroy(): void {
-		this.dc = null;
-		this.hScroll.removeEventListener("scroll", this.func);
 		this.cdr.detectChanges();
 	}
 
-	checkIfExists(viewref, nodeName) {
+	getHorizontalScroll(viewref, nodeName) {
 		var elem = viewref.element.nativeElement.parentElement.getElementsByTagName(nodeName);
 		return elem.length > 0 ? elem[0] : null;
 	}

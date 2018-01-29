@@ -3,7 +3,7 @@ import { Component, ViewChild, ViewContainerRef, style, HostListener, Output, Ev
 @Component({
 	selector: 'virtual-helper',
 	template: '<div style="width:1px;float:right;" [style.height.px]="height" #container></div>',
-	styles: [':host { overflow: auto; display: block; height: calc(100% - 18px); float:right; }']
+	styles: [':host { overflow: auto; display: block; height: 100%; float:right; width:17px; }']
 })
 export class VirtualHelper {
 	@ViewChild('container', { read: ViewContainerRef }) _vcr;
