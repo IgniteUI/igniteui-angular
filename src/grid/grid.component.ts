@@ -210,11 +210,23 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
             this.onColumnInit.emit(col);
         });
         this._columns = this.columnList.toArray();
-        this._fixedColumns = this._columns.filter(function(c){ return c.fixed;});
+        this._fixedColumns = this._columns.filter(function(c){ return c.fixed;});        
         this._unfixedColumns = this._columns.filter(function(c){ return !c.fixed;});
 
     }
 
+    get fixedWidth(){
+        let fc = this.fixedColumns;
+        var sum  = 0;
+        for(var i = 0; i < fc.length; i++ ) {
+            sum += parseInt(fc[i].width);
+        }
+        return sum;
+    }
+    
+    get unfixedWidth(){
+        return parseInt(this.width) - this.fixedWidth;
+    }
     get columns(): IgxColumnComponent[] {
         return this._columns;
     }

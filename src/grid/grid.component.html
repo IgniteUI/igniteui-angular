@@ -30,12 +30,18 @@
 </div>
 
 <div class="igx-grid__tbody" [style.height]='height' [style.width]='width' >
-     <ng-template igVirtFor let-rowData [igVirtForOf]="data" let-rowIndex="index" [igVirtForScrolling]="'vertical'" #scrollContainer>
+     <ng-template igVirtFor let-rowData [igVirtForOf]="data" let-rowIndex="index" [igVirtForScrolling]="'vertical'">
         <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
         </igx-grid-row>
      </ng-template>
 </div>
-
+<div [style.width]='width'>
+    <div [style.width.px]='fixedWidth' style='float:left;'></div>
+    <div [style.width.px]='unfixedWidth' style='float:right;'>
+        <ng-template igVirtFor #scrollContainer>
+        </ng-template>
+    </div>
+</div>
 <div class="igx-grid__tfoot">
     <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
     </ng-container>
