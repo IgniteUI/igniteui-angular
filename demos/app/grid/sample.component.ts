@@ -126,6 +126,8 @@ export class GridSampleComponent {
        for(var j = 0; j < 300; j++) {
           cols.push({field: j.toString(), width: "200px"});
       }
+      cols[1].isFixed = true;
+      cols[2].isFixed = true;
       this.columns = cols;
 
       this.localService.getData();

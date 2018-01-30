@@ -181,6 +181,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     protected _paging = false;
     protected _pipeTrigger = 0;
     protected _columns = [];
+    protected _fixedColumns = [];
+    protected _unfixedColumns = [];
     protected _filteringLogic = FilteringLogic.And;
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
@@ -208,10 +210,20 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
             this.onColumnInit.emit(col);
         });
         this._columns = this.columnList.toArray();
+        this._fixedColumns = this._columns.filter(function(c){ return c.fixed;});
+        this._unfixedColumns = this._columns.filter(function(c){ return !c.fixed;});
+
     }
 
     get columns(): IgxColumnComponent[] {
         return this._columns;
+    }
+
+    get fixedColumns(): IgxColumnComponent[] {
+        return this._fixedColumns;
+    }
+    get unfixedColumns(): IgxColumnComponent[] {
+        return this._unfixedColumns;
     }
 
     public getColumnByName(name: string): IgxColumnComponent {

@@ -59,6 +59,13 @@ export class IgxGridRowComponent {
     get columns(): IgxColumnComponent[] {
         return this.grid.visibleColumns;
     }
+    get fixedColumns(): IgxColumnComponent[] {
+        return this.grid.fixedColumns;
+    }
+
+    get unfixedColumns(): IgxColumnComponent[] {
+        return this.grid.unfixedColumns;
+    }
 
     get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);

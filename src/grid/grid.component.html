@@ -22,7 +22,8 @@
 
 <div class="igx-grid__thead">
     <div class="igx-grid__tr" role="row">
-        <ng-template igVirtFor let-col [igVirtForOf]="visibleColumns" [igVirtForScrolling]="'horizontal'" [igVirtForUseForScroll]="parentVirtDir">
+        <igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col"></igx-grid-header>
+        <ng-template igVirtFor let-col [igVirtForOf]="unfixedColumns" [igVirtForScrolling]="'horizontal'" [igVirtForUseForScroll]="parentVirtDir">
             <igx-grid-header [gridID]="id" [column]="col"></igx-grid-header>
         </ng-template>
     </div>

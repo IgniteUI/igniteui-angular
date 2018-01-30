@@ -19,7 +19,14 @@ import { IgxColumnComponent } from "./column.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: "igx-grid-cell",
-    templateUrl: "./cell.component.html"
+    templateUrl: "./cell.component.html",   
+    styles:[
+        ` 
+        :host.last-fixed {
+            border-right: 1px solid #666;
+        }
+        `
+    ]
 })
 export class IgxGridCellComponent {
 
@@ -130,6 +137,16 @@ export class IgxGridCellComponent {
     @HostBinding("class.igx-grid__td--number")
     get applyNumberCSSClass() {
         return this.column.dataType === DataType.Number;
+    }
+    @HostBinding("class.fixed")
+    get isFixed() {
+        return this.column.fixed;
+    }
+
+    @HostBinding("class.last-fixed")
+    get isLastFixed() {
+        var fixedCols = this.grid.fixedColumns;
+        return fixedCols.indexOf(this.column) === fixedCols.length - 1;
     }
 
     get selected() {

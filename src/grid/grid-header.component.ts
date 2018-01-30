@@ -7,7 +7,14 @@ import { IgxColumnComponent } from "./column.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: "igx-grid-header",
-    templateUrl: "./grid-header.component.html"
+    templateUrl: "./grid-header.component.html",
+    styles:[
+        ` 
+        :host.last-fixed {
+            border-right: 1px solid #666;
+            }
+    `
+    ]
 })
 export class IgxGridHeaderComponent implements DoCheck {
 
@@ -57,6 +64,21 @@ export class IgxGridHeaderComponent implements DoCheck {
                 : this.sortDirection;
             this.gridAPI.sort(this.gridID, this.column.field, this.sortDirection);
         }
+    }
+
+    get grid(): any {
+        return this.gridAPI.get(this.gridID);
+    }
+
+    @HostBinding("class.fixed")
+    get isFixed() {
+        return this.column.fixed;
+    }
+
+    @HostBinding("class.last-fixed")
+    get isLastFixed() {
+        var fixedCols = this.grid.fixedColumns;
+        return fixedCols.indexOf(this.column) === fixedCols.length - 1;
     }
 
     protected getSortDirection() {
