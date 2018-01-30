@@ -23,7 +23,7 @@ import {
     exportAs: "toggle",
     selector: "[igx-toggle]"
 })
-export class IgxToggleDirective implements OnInit {
+export class IgxToggleDirective {
 
     @Output()
     public onOpen = new EventEmitter();
@@ -38,57 +38,54 @@ export class IgxToggleDirective implements OnInit {
         return this.elementRef.nativeElement;
     }
 
-    private readonly HIDDEN_TOGGLER_CLASS: string = "igx-toggle--hidden";
-    private readonly TOGGLER_CLASS: string = "igx-toggle";
+    @HostBinding("class.igx-toggle-hidden")
+    public get hiddenClass() {
+        return this.collapsed;
+    }
 
-    @HostBinding("class")
-    private hostClass: string = this.HIDDEN_TOGGLER_CLASS;
+    @HostBinding("class.igx-toggle")
+    public get defaultClass() {
+        return !this.collapsed;
+    }
 
     constructor(private elementRef: ElementRef, private builder: AnimationBuilder) { }
 
     public open() {
         if (!this.collapsed) { return; }
-        this.animationActivation();
-        this.hostClass = this.TOGGLER_CLASS;
-        this.collapsed = false;
+        const player = this.animationActivation();
+        player.onStart(() => this.collapsed = !this.collapsed);
+        player.play();
         this.onOpen.emit();
     }
 
     public close() {
         if (this.collapsed) { return; }
-        this.animationActivation();
-        this.hostClass = this.HIDDEN_TOGGLER_CLASS;
-        this.collapsed = true;
+        const player = this.animationActivation();
+        player.onDone(() => this.collapsed = !this.collapsed);
+        player.play();
         this.onClose.emit();
-    }
-
-    public ngOnInit() {
-        if (!this.collapsed) {
-            this.hostClass = this.TOGGLER_CLASS;
-        }
     }
 
     private animationActivation() {
         let animation: AnimationFactory;
         if (this.collapsed) {
-            animation = this.openingAnimation(this.builder);
+            animation = this.openingAnimation();
         } else {
-            animation = this.closingAnimation(this.builder);
+            animation = this.closingAnimation();
         }
 
-        const player: AnimationPlayer  = animation.create(this.elementRef.nativeElement);
-        player.play();
+        return animation.create(this.elementRef.nativeElement);
     }
 
-    private openingAnimation(builder: AnimationBuilder) {
-        return builder.build([
+    private openingAnimation() {
+        return this.builder.build([
             style({ transform: "scaleY(0) translateY(-48px)", transformOrigin: "100% 0%", opacity: 0 }),
             animate("200ms ease-out", style({ transform: "scaleY(1) translateY(0)", opacity: 1 }))
         ]);
     }
 
-    private closingAnimation(builder: AnimationBuilder) {
-        return builder.build([
+    private closingAnimation() {
+        return this.builder.build([
             style({ transform: "translateY(0)", opacity: 1}),
             animate("120ms ease-in", style({ transform: "translateY(-12px)", opacity: 0 }))
         ]);
