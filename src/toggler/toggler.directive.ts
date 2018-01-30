@@ -25,7 +25,7 @@ export class IgxTogglerDirective implements OnDestroy, OnInit {
     public onClose = new EventEmitter();
 
     @Input()
-    public isLoadedOpen = false;
+    public collapsed = false;
 
     private readonly HIDDEN_TOGGLER_CLASS: string = "igx-toggler--hidden";
     private readonly TOGGLER_CLASS: string = "igx-toggler";
@@ -33,48 +33,44 @@ export class IgxTogglerDirective implements OnDestroy, OnInit {
     @HostBinding("class")
     private hostClass: string = this.HIDDEN_TOGGLER_CLASS;
 
-    private eventListener;
-    private isTriggerClick = true;
-    private isHidden = true;
+    constructor(private elementRef: ElementRef) { }
 
-    constructor(private elementRef: ElementRef, private renderer: Renderer2) {
-        this.eventListener = this.renderer.listen("document", "click", this.checkEventTarger.bind(this));
+    public toggle() {
+        this.collapsed ? this.close() : this.open();
     }
 
     public open() {
+        if (this.collapsed) { return; }
         this.hostClass = this.TOGGLER_CLASS;
-        this.isHidden = false;
-        this.isTriggerClick = true;
+        this.collapsed = true;
+        document.addEventListener("click", this.handleClick.bind(this), true);
         this.onOpen.emit();
     }
 
     public close() {
+        if (!this.collapsed) { return; }
         this.hostClass = this.HIDDEN_TOGGLER_CLASS;
-        this.isHidden = true;
-        this.isTriggerClick = true;
+        this.collapsed = false;
         this.onClose.emit();
     }
 
     public ngOnDestroy() {
-        if (this.eventListener) {
-            // Removing the event handler
-            this.eventListener();
-        }
+        document.removeEventListener("click", this.handleClick.bind(this), true);
     }
 
     public ngOnInit() {
-        if (this.isLoadedOpen) {
+        if (this.collapsed) {
             this.hostClass = this.TOGGLER_CLASS;
         }
     }
 
-    private checkEventTarger(evt: MouseEvent) {
+    private handleClick(evt: MouseEvent) {
         const getElement = this.elementRef.nativeElement;
-        if (!getElement.contains(evt.target) && !this.isHidden && !this.isTriggerClick) {
-            this.close();
+        if (getElement.contains(evt.target)) {
+            return;
         }
-
-        this.isTriggerClick = false;
+        this.close();
+        document.removeEventListener("click", this.handleClick.bind(this), true);
     }
 }
 
@@ -82,4 +78,4 @@ export class IgxTogglerDirective implements OnDestroy, OnInit {
     declarations: [ IgxTogglerDirective ],
     exports: [ IgxTogglerDirective ]
 })
-export class IgxToggleBoxModule {}
+export class IgxTogglerModule {}
