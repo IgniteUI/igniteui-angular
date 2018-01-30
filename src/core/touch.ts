@@ -14,7 +14,7 @@ export class HammerGesturesManager {
      */
     protected hammerOptions: HammerOptions = {
         // D.P. #447 Force TouchInput due to PointerEventInput bug (https://github.com/hammerjs/hammer.js/issues/1065)
-        // see https://github.com/IgniteUI/igniteui-js-blocks/issues/447#issuecomment-324601803
+        // see https://github.com/IgniteUI/igniteui-angular/issues/447#issuecomment-324601803
         inputClass: Hammer.TouchInput,
         recognizers: [
             [ Hammer.Pan, { threshold: 0 } ],

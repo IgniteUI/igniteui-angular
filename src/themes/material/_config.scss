@@ -29,7 +29,6 @@
 // 27. Avatar
 // 28. Carousel
 // 29. Icon
-
 // 1. Colors //
 // Base colors
 $rich-black: #0b3c49 !default;
@@ -38,76 +37,12 @@ $vivid-cerise: #e41c77 !default;
 $yellow-orange: #fbb13c !default;
 $ocean-blue: #0375be !default;
 $white: #fff !default;
-
 // Main Theme Colors
 $primary-color: $ocean-blue !default;
 $secondary-color: $vivid-cerise !default;
 $accent-color: $yellow-orange !default;
-
 // Generate Color Palette
-$colors: (
-    primary:
-        (
-            100: gen-color($primary-color, 100),
-            200: gen-color($primary-color, 200),
-            300: gen-color($primary-color, 300),
-            400: gen-color($primary-color, 400),
-            500: $primary-color,
-            600: gen-color($primary-color, 600),
-            700: gen-color($primary-color, 700),
-            800: gen-color($primary-color, 800),
-            900: gen-color($primary-color, 900),
-            A100: gen-color($primary-color, 'A100'),
-            A200: gen-color($primary-color, 'A200'),
-            A400: gen-color($primary-color, 'A400'),
-            A700: gen-color($primary-color, 'A700')
-        ),
-    secondary:
-        (
-            100: gen-color($secondary-color, 100),
-            200: gen-color($secondary-color, 200),
-            300: gen-color($secondary-color, 300),
-            400: gen-color($secondary-color, 400),
-            500: $secondary-color,
-            600: gen-color($secondary-color, 600),
-            700: gen-color($secondary-color, 700),
-            800: gen-color($secondary-color, 800),
-            900: gen-color($secondary-color, 900),
-            A100: gen-color($secondary-color, 'A100'),
-            A200: gen-color($secondary-color, 'A200'),
-            A400: gen-color($secondary-color, 'A400'),
-            A700: gen-color($secondary-color, 'A700')
-        ),
-    accent:
-        (
-            100: gen-color($accent-color, 100),
-            200: gen-color($accent-color, 200),
-            300: gen-color($accent-color, 300),
-            400: gen-color($accent-color, 400),
-            500: $accent-color,
-            600: gen-color($accent-color, 600),
-            700: gen-color($accent-color, 700),
-            800: gen-color($accent-color, 800),
-            900: gen-color($accent-color, 900),
-            A100: gen-color($accent-color, 'A100'),
-            A200: gen-color($accent-color, 'A200'),
-            A400: gen-color($accent-color, 'A400'),
-            A700: gen-color($accent-color, 'A700')
-        ),
-    gray:
-        (
-            100: rgba(0, 0, 0, .04),
-            200: rgba(0, 0, 0, .08),
-            300: rgba(0, 0, 0, .12),
-            400: rgba(0, 0, 0, .26),
-            500: rgba(0, 0, 0, .38),
-            600: rgba(0, 0, 0, .54),
-            700: rgba(0, 0, 0, .62),
-            800: rgba(0, 0, 0, .74),
-            900: rgba(0, 0, 0, .87)
-        )
-);
-
+$colors: ( primary: ( 100: gen-color($primary-color, 100), 200: gen-color($primary-color, 200), 300: gen-color($primary-color, 300), 400: gen-color($primary-color, 400), 500: $primary-color, 600: gen-color($primary-color, 600), 700: gen-color($primary-color, 700), 800: gen-color($primary-color, 800), 900: gen-color($primary-color, 900), A100: gen-color($primary-color, 'A100'), A200: gen-color($primary-color, 'A200'), A400: gen-color($primary-color, 'A400'), A700: gen-color($primary-color, 'A700')), secondary: ( 100: gen-color($secondary-color, 100), 200: gen-color($secondary-color, 200), 300: gen-color($secondary-color, 300), 400: gen-color($secondary-color, 400), 500: $secondary-color, 600: gen-color($secondary-color, 600), 700: gen-color($secondary-color, 700), 800: gen-color($secondary-color, 800), 900: gen-color($secondary-color, 900), A100: gen-color($secondary-color, 'A100'), A200: gen-color($secondary-color, 'A200'), A400: gen-color($secondary-color, 'A400'), A700: gen-color($secondary-color, 'A700')), accent: ( 100: gen-color($accent-color, 100), 200: gen-color($accent-color, 200), 300: gen-color($accent-color, 300), 400: gen-color($accent-color, 400), 500: $accent-color, 600: gen-color($accent-color, 600), 700: gen-color($accent-color, 700), 800: gen-color($accent-color, 800), 900: gen-color($accent-color, 900), A100: gen-color($accent-color, 'A100'), A200: gen-color($accent-color, 'A200'), A400: gen-color($accent-color, 'A400'), A700: gen-color($accent-color, 'A700')), gray: ( 100: rgba(0, 0, 0, .04), 200: rgba(0, 0, 0, .08), 300: rgba(0, 0, 0, .12), 400: rgba(0, 0, 0, .26), 500: rgba(0, 0, 0, .38), 600: rgba(0, 0, 0, .54), 700: rgba(0, 0, 0, .62), 800: rgba(0, 0, 0, .74), 900: rgba(0, 0, 0, .87)));
 // Additional Theme Colors
 $black: palette(gray, 900) !default;
 $off-black: palette(gray, 800) !default;
@@ -120,59 +55,82 @@ $disabled-color: $lightgray !default;
 $success-color: #4caf50 !default;
 $error-color: #f44336 !default;
 $warn-color: $yellow-orange !default;
-
 // 2. Material Elevations / Shadows //
-$elevate-1: 0 1px 3px 0 palette(gray, 400), 0 1px 1px 0 palette(gray, 300),
-    0 2px 1px -1px palette(gray, 200);
-$elevate-2: 0 1px 5px 0 palette(gray, 400), 0 2px 2px 0 palette(gray, 300),
-    0 3px 1px -2px palette(gray, 200);
-$elevate-3: 0 1px 8px 0 palette(gray, 400), 0 3px 4px 0 palette(gray, 300),
-    0 3px 3px -2px palette(gray, 200);
-$elevate-4: 0 2px 4px -1px palette(gray, 400), 0 4px 5px 0 palette(gray, 300),
-    0 1px 10px 0 palette(gray, 200);
-$elevate-5: 0 3px 5px -1px palette(gray, 400), 0 5px 8px 0 palette(gray, 300),
-    0 1px 14px 0 palette(gray, 200);
-$elevate-6: 0 3px 5px -1px palette(gray, 400), 0 6px 10px 0 palette(gray, 300),
-    0 1px 18px 0 palette(gray, 200);
-$elevate-7: 0 4px 5px -2px palette(gray, 400), 0 7px 10px 1px palette(gray, 300),
-    0 2px 16px 1px palette(gray, 200);
-$elevate-8: 0 5px 5px -3px palette(gray, 400), 0 8px 10px 1px palette(gray, 300),
-    0 3px 14px 2px palette(gray, 200);
+$elevate-1: 0 1px 3px 0 palette(gray, 400),
+0 1px 1px 0 palette(gray, 300),
+0 2px 1px -1px palette(gray, 200);
+$elevate-2: 0 1px 5px 0 palette(gray, 400),
+0 2px 2px 0 palette(gray, 300),
+0 3px 1px -2px palette(gray, 200);
+$elevate-3: 0 1px 8px 0 palette(gray, 400),
+0 3px 4px 0 palette(gray, 300),
+0 3px 3px -2px palette(gray, 200);
+$elevate-4: 0 2px 4px -1px palette(gray, 400),
+0 4px 5px 0 palette(gray, 300),
+0 1px 10px 0 palette(gray, 200);
+$elevate-5: 0 3px 5px -1px palette(gray, 400),
+0 5px 8px 0 palette(gray, 300),
+0 1px 14px 0 palette(gray, 200);
+$elevate-6: 0 3px 5px -1px palette(gray, 400),
+0 6px 10px 0 palette(gray, 300),
+0 1px 18px 0 palette(gray, 200);
+$elevate-7: 0 4px 5px -2px palette(gray, 400),
+0 7px 10px 1px palette(gray, 300),
+0 2px 16px 1px palette(gray, 200);
+$elevate-8: 0 5px 5px -3px palette(gray, 400),
+0 8px 10px 1px palette(gray, 300),
+0 3px 14px 2px palette(gray, 200);
 $elevate-8-up: 0 -2px 4px -1px palette(gray, 400),
-    0 -4px 5px 0 palette(gray, 300), 0 -1px 10px 0 palette(gray, 200);
-$elevate-9: 0 5px 6px -3px palette(gray, 400), 0 9px 12px 1px palette(gray, 300),
-    0 3px 16px 2px palette(gray, 200);
+0 -4px 5px 0 palette(gray, 300),
+0 -1px 10px 0 palette(gray, 200);
+$elevate-9: 0 5px 6px -3px palette(gray, 400),
+0 9px 12px 1px palette(gray, 300),
+0 3px 16px 2px palette(gray, 200);
 $elevate-10: 0 6px 6px -3px palette(gray, 400),
-    0 10px 14px 1px palette(gray, 300), 0 4px 18px 3px palette(gray, 200);
+0 10px 14px 1px palette(gray, 300),
+0 4px 18px 3px palette(gray, 200);
 $elevate-11: 0 6px 7px -4px palette(gray, 400),
-    0 11px 15px 1px palette(gray, 300), 0 4px 20px 3px palette(gray, 200);
+0 11px 15px 1px palette(gray, 300),
+0 4px 20px 3px palette(gray, 200);
 $elevate-12: 0 7px 8px -4px palette(gray, 400),
-    0 12px 17px 2px palette(gray, 300), 0 5px 22px 4px palette(gray, 200);
+0 12px 17px 2px palette(gray, 300),
+0 5px 22px 4px palette(gray, 200);
 $elevate-13: 0 7px 8px -4px palette(gray, 400),
-    0 13px 19px 2px palette(gray, 300), 0 5px 24px 4px palette(gray, 200);
+0 13px 19px 2px palette(gray, 300),
+0 5px 24px 4px palette(gray, 200);
 $elevate-14: 0 7px 9px -4px palette(gray, 400),
-    0 14px 21px 2px palette(gray, 300), 0 5px 26px 4px palette(gray, 200);
+0 14px 21px 2px palette(gray, 300),
+0 5px 26px 4px palette(gray, 200);
 $elevate-15: 0 8px 9px -5px palette(gray, 400),
-    0 15px 22px 2px palette(gray, 300), 0 6px 28px 5px palette(gray, 200);
+0 15px 22px 2px palette(gray, 300),
+0 6px 28px 5px palette(gray, 200);
 $elevate-16: 0 8px 10px -5px palette(gray, 400),
-    0 16px 24px 2px palette(gray, 300), 0 6px 30px 5px palette(gray, 200);
+0 16px 24px 2px palette(gray, 300),
+0 6px 30px 5px palette(gray, 200);
 $elevate-17: 0 8px 11px -5px palette(gray, 400),
-    0 17px 26px 2px palette(gray, 300), 0 6px 32px 5px palette(gray, 200);
+0 17px 26px 2px palette(gray, 300),
+0 6px 32px 5px palette(gray, 200);
 $elevate-18: 0 9px 11px -5px palette(gray, 400),
-    0 18px 28px 2px palette(gray, 300), 0 7px 34px 6px palette(gray, 200);
+0 18px 28px 2px palette(gray, 300),
+0 7px 34px 6px palette(gray, 200);
 $elevate-19: 0 9px 12px -6px palette(gray, 400),
-    0 19px 29px 2px palette(gray, 300), 0 7px 36px 6px palette(gray, 200);
+0 19px 29px 2px palette(gray, 300),
+0 7px 36px 6px palette(gray, 200);
 $elevate-20: 0 10px 13px -6px palette(gray, 400),
-    0 20px 31px 3px palette(gray, 300), 0 8px 38px 7px palette(gray, 200);
+0 20px 31px 3px palette(gray, 300),
+0 8px 38px 7px palette(gray, 200);
 $elevate-21: 0 10px 13px -6px palette(gray, 400),
-    0 21px 33px 3px palette(gray, 300), 0 8px 40px 7px palette(gray, 200);
+0 21px 33px 3px palette(gray, 300),
+0 8px 40px 7px palette(gray, 200);
 $elevate-22: 0 10px 14px -6px palette(gray, 400),
-    0 22px 35px 3px palette(gray, 300), 0 8px 42px 7px palette(gray, 200);
+0 22px 35px 3px palette(gray, 300),
+0 8px 42px 7px palette(gray, 200);
 $elevate-23: 0 11px 14px -7px palette(gray, 400),
-    0 23px 36px 3px palette(gray, 300), 0 9px 44px 8px palette(gray, 200);
+0 23px 36px 3px palette(gray, 300),
+0 9px 44px 8px palette(gray, 200);
 $elevate-24: 0 11px 15px -7px palette(gray, 400),
-    0 24px 38px 3px palette(gray, 300), 0 9px 46px 8px palette(gray, 200);
-
+0 24px 38px 3px palette(gray, 300),
+0 9px 46px 8px palette(gray, 200);
 // 2. Badges //
 $badge-width: 22px !default;
 $badge-height: $badge-width !default;
@@ -187,7 +145,6 @@ $badge-shadow: $elevate-1 !default;
 $badge-line-height: 2px !default;
 $badge-icon-font-size: em(11px, 16px) !default;
 $badge-value-padding: 4px !default;
-
 // 3. Buttons //
 // Shared Styles
 $button-border: none !default;
@@ -213,28 +170,11 @@ $button-raised-focus-shadow: $elevate-8 !default;
 // Gradient Buttons
 $button-gradient-color-1: palette(accent) !default;
 $button-gradient-color-2: palette(secondary) !default;
-$button-gradient-background: linear-gradient(
-        to bottom right,
-        $button-gradient-color-2,
-        $button-gradient-color-1
-    )
-    !default;
-$button-focus-gradient: linear-gradient(
-        to bottom right,
-        gen-color($button-gradient-color-1, 700),
-        gen-color($button-gradient-color-2, 700)
-    )
-    !default;
+$button-gradient-background: linear-gradient( to bottom right, $button-gradient-color-2, $button-gradient-color-1) !default;
+$button-focus-gradient: linear-gradient( to bottom right, gen-color($button-gradient-color-1, 700), gen-color($button-gradient-color-2, 700)) !default;
 $button-gradient-color: $white !default;
-$button-gradient-shadow: 0 4px 10px -2px darken(
-        transparentize($button-gradient-color-2, .2),
-        20%
-    ) !default;
-
-$button-gradient-focus-shadow: 0 6px 12px -1px darken(
-        transparentize($button-gradient-color-2, .25),
-        25%
-    ) !default;
+$button-gradient-shadow: 0 4px 10px -2px darken( transparentize($button-gradient-color-2, .2), 20%) !default;
+$button-gradient-focus-shadow: 0 6px 12px -1px darken( transparentize($button-gradient-color-2, .25), 25%) !default;
 // Flat Buttons
 $button-flat-color: palette(secondary) !default;
 $button-flat-color-disabled: $disabled-color !default;
@@ -250,13 +190,13 @@ $button-floating-background: palette(secondary) !default;
 $button-icon-width: em(36px, 16px) !default;
 $button-icon-height: $button-icon-width !default;
 $button-icon-hover-background: $off-white !default;
-$button-icon-focus-background: $lightgray, .5 !default;
+$button-icon-focus-background: $lightgray,
+.5 !default;
 $button-icon-font-size: em(24px, 24px) !default;
 // Navbar Buttons
 $button-navbar-width: em(24px, 16px) !default;
 $button-navbar-height: $button-navbar-width !default;
 $button-navbar-padding: 0 !default;
-
 // 4. Cards //
 // Genaral
 $card-border-radius: 2px !default; // Colors
@@ -264,7 +204,6 @@ $card-content-color: $darkgray !default;
 $card-subtitle-color: $darkgray !default; // Shadows
 $card-shadow: $elevate-2 !default;
 $card-shadow-hover: $elevate-8 !default;
-
 // Font Sizes
 $card-title-fz: em(24px, 16px) !default;
 $card-title-line-height: em(24px, 16px) !default;
@@ -272,10 +211,8 @@ $card-subtitle-fz: em(14px, 16px) !default;
 $card-subtitle-line-height: em(24px, 16px) !default;
 $card-content-fz: em(14px, 16px) !default;
 $card-content-lh: (20px, 16px) !default;
-
 // Padding & Margin
-$card-heading-padding: em(24px, 16px) em(16px, 16px) em(16px, 16px)
-    em(16px, 16px) !default;
+$card-heading-padding: em(24px, 16px) em(16px, 16px) em(16px, 16px) em(16px, 16px) !default;
 $card-heading-compact-padding: em(16px, 16px) !default;
 $card-heading-margin: 0 !default;
 $card-content-padding: em(16px, 16px) !default;
@@ -285,7 +222,6 @@ $card-actions-igroup-color: palette(gray, 600) !default;
 $card-subtitle-margin: 0 !default;
 $card-tgroup-margin: 0 em(16px); // Transitions
 $card-transitions: box-shadow .3s cubic-bezier(.25, .8, .25, 1) !default;
-
 // 7. Calendar / Date Picker
 // Calendar Header
 $cal-theme-color: palette(secondary) !default;
@@ -331,13 +267,10 @@ $cal-value-month-margin: 0 em(12px, 16px) !default;
 $cal-value-month-height: 91px !default;
 // Calendar Body
 $cal-row-padding: 0 em(16px, 16px) !default;
-
 // 9. Fonts //
 $titillium-font-path: './fonts/' !default;
-
 // 10. Forms //
 $control-padding: 8px 0 !default;
-
 // Text Inputs + Textarea
 $input-min-height: em(70px) !default;
 $input-font-size: em(16px) !default;
@@ -371,7 +304,6 @@ $label-focus-font-size: em(12px) !default;
 $input-search-padding: 12px 12px 12px 64px !default;
 $input-search-label-padding: 12px 16px !default;
 $input-margin: 20px 0 !default;
-
 // Radio Buttons
 $radio-fill-color: palette(secondary) !default;
 $radio-empty-color: $darkgray !default;
@@ -393,7 +325,6 @@ $switch-label-height: $switch-label-width !default;
 $switch-shadow: $elevate-1 !default;
 $switch-disabled-shadow: $elevate-1 !default;
 $switch-margin: 0 16px !default;
-
 // Checkboxes
 $checkbox-width: 20px !default;
 $checkbox-height: $checkbox-width !default;
@@ -405,7 +336,6 @@ $checkbox-tick-height: 20px !default;
 $checkbox-tick-weight: 3px !default;
 $checkbox-tick-color: $white !default;
 $checkbox-tick-padding: 3px 2px 2px !default;
-
 // 11. Global //
 // Media Query Ranges
 $small-screen-up: 601px !default;
@@ -418,9 +348,7 @@ $medium-and-up: 'only screen and (min-width : #{$small-screen-up})' !default;
 $large-and-up: 'only screen and (min-width : #{$medium-screen-up})' !default;
 $small-and-down: 'only screen and (max-width : #{$small-screen})' !default;
 $medium-and-down: 'only screen and (max-width : #{$medium-screen})' !default;
-$medium-only: 'only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})'
-    !default;
-
+$medium-only: 'only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})' !default;
 // 12. Navigation Bar //
 $navbar-padding: 0 em(16px) !default;
 $navbar-text-color: set-color(palette(primary)) !default;
@@ -429,7 +357,6 @@ $navbar-title-lh: em(18px, 16px) !default;
 $navbar-title-margin: 0;
 // 13. Navigation Drawer //
 $navdrawer-pin-collapsed-padding: 0;
-
 // 14. Slider //
 // General
 $slider-height: 48px !default;
@@ -458,7 +385,6 @@ $slider-label-background: palette(accent) !default;
 $slider-label-padding: 0 2px !default;
 // Start Modifier
 $slider-background--start: $white !default;
-
 // 16. Bottom navigation bar / Tabs //
 $tab-bar-background: $white !default;
 $tab-bar-color: set-color($tab-bar-background);
@@ -466,7 +392,6 @@ $tab-bar-label-font-size: em(12px, 16px);
 $tab-bar-label-line-height: em(12px, 16px);
 $tab-bar-item-padding: 0 em(12px);
 $tab-bar-active-color: $primary-color;
-
 // 17. Grid //
 // General
 $grid-bg: $white !default;
@@ -478,25 +403,27 @@ $grid-caption-lh: em(32px) !default;
 $grid-caption-padding: em(16px) em(24px) !default;
 // Row
 $grid-row-bg: inherit !default;
+$grid-row-bg-selected: $off-black !default;
+$grid-row-color-selected: text-contrast($grid-row-bg-selected) !default;
 $grid-row-bb: 1px solid palette(gray, 300) !default;
 $grid-row-hover: $off-white !default;
-$grid-row-transition: background .2s ease !default;
+$grid-row-transition: none !default;
 // Cell
-$grid-cell-padding: em(18px) em(24px) !default;
+$grid-cell-padding: rem(16px) rem(24px) !default;
 $grid-cell-align-num: right !default;
-$grid-cell-fs: em(13px) !default;
-$grid-cell-lh: em(16px) !default;
+$grid-cell-fs: rem(13px) !default;
+$grid-cell-lh: rem(16px) !default;
 $grid-cell-color: $off-black !default;
 // Heading
 $grid-head-fs: em(12px) !default;
+$grid-head-fw: 600 !default;
 $grid-head-color: palette(gray, 600) !default;
-$grid-head-icon-size: em(16px) !default;
-$grid-head-icon-lh: em(16px) !default;
+$grid-head-icon-size: rem(16px) !default;
+$grid-head-icon-lh: rem(16px) !default;
 $grid-head-icon-padding: em(8px) !default;
 $grid-filtering-color-active: set-color(palette(primary));
 $grid-filtering-bg-active: palette(primary);
 $grid-filtering-options-padding: em(8px, 16px);
-
 // 18. Toasts //
 $toast-width: 52px !default;
 $toast-padding: em(16px, 16px) em(24px, 16px) !default;
@@ -506,7 +433,6 @@ $toast-background: palette(gray, 600) !default;
 $toast-border-radius: ($toast-width / 2) !default;
 $toast-font-size: em(14px, 16px) !default;
 $toast-line-height: em(24px, 16px) !default;
-
 // 19. Typography //
 // paragraph
 $paragraph-margin-top: 0;
@@ -516,7 +442,6 @@ $paragraph-line-height-phone: rem(22px) !default;
 // H1
 $h1-margin-top: rem(27px) !default;
 $h1-margin-bottom: rem(54px);
-
 $h1-font-size-desktop: rem(48px) !default;
 $h1-line-height-desktop: rem(54px) !default;
 $h1-font-size-tablet: rem(40px) !default;
@@ -526,7 +451,6 @@ $h1-line-height-phone: rem(40px) !default;
 // H2
 $h2-margin-top: rem(27px);
 $h2-margin-bottom: rem(27px);
-
 $h2-font-size-desktop: rem(36px) !default;
 $h2-line-height-desktop: rem(45px) !default;
 $h2-font-size-tablet: rem(32px) !default;
@@ -536,7 +460,6 @@ $h2-line-height-phone: rem(30px) !default;
 // H3
 $h3-margin-top: rem(27px);
 $h3-margin-bottom: 0;
-
 $h3-font-size-desktop: rem(28px) !default;
 $h3-line-height-desktop: rem(35px) !default;
 $h3-font-size-tablet: rem(24px) !default;
@@ -566,7 +489,6 @@ $progressbar-value-fz: em(14px, 16px) !default;
 $progressbar-value-fw: 600 !default;
 $progressbar-value-margin: 10px 5px !default;
 $progress-circular-value-fz: em(32px, 16px);
-
 // 23. List //
 $list-margin: 8px 16px !default;
 $list-background: $white !default;
@@ -589,7 +511,6 @@ $list-item-tl-height: em(72px) !default;
 $list-item-tl-sl-color: $darkgray !default;
 $list-empty-color: set-color($list-background);
 $list-empty-padding: em(16px, 16px);
-
 // 24. Dialog //
 $dialog-transition: background .25s ease-out !default;
 $dialog-max-width: em(400px) !default;
@@ -610,9 +531,7 @@ $dialog-message-padding-bottom: em(12px) !default;
 $dialog-message-color: $darkgray !default;
 $dialog-message-font-weight: 400 !default;
 $dialog-actions-padding: em(8px) !default;
-$dialog-actions-margin: 0 em(-24px, 16px) em(-12px, 16px) em(-24px, 16px)
-    !default;
-
+$dialog-actions-margin: 0 em(-24px, 16px) em(-12px, 16px) em(-24px, 16px) !default;
 // 25. Snackbar
 $snackbar-height: em(48px) !default;
 $snackbar-padding: em(7px) em(24px) !default;
@@ -624,7 +543,6 @@ $snackbar-button-text-color: palette(secondary) !default;
 $snackbar-button-text-color-hover: palette(secondary) !default;
 $snackbar-button-line-height: em(16px) !default;
 $snackbar-button-font-weight: 600 !default;
-
 // 26. Button Group
 // Group layout
 $bgroup-radius: 2px !default;
@@ -644,10 +562,8 @@ $bgroup-item-background-selected: $bgroup-selected-bg !default;
 $bgroup-item-border-selected: palette(gray, 200) !default;
 // Margin between item elements
 $bgroup-items-margin: em(10px, 16px) !default;
-
 // 27. Avatar
 $igx-avatar-icon-bg: $lightgray !default;
-
 // 28. Carousel
 $carousel-arrow-margin: 0 em(16px) !default;
 $carousel-indicators-margin: em(16px) 0 !default;
@@ -655,6 +571,5 @@ $carousel-indicators-padding: 0 !default;
 $carousel-indicator-margin: 0 em(5px) !default;
 $carousel-arrow-bg: transparentize($white, .7) !default;
 $carousel-indicator-bg: transparentize($white, .8) !default;
-
 // 29. Icon
 $igx-icon-font-size: em(24px, 16px) !default;

@@ -58,7 +58,7 @@ export class IgxNavbar implements AfterContentChecked {
         return this._titleId;
     }
 
-    private _triggerAction() {
+    public _triggerAction() {
         this.onAction.emit(this);
     }
 }

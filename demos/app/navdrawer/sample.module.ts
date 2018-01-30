@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { IgxDirectivesModule, IgxRadioModule, IgxSwitchModule, NavigationDrawerModule } from "../../lib/main";
+import { IgxDirectivesModule, IgxRadioModule, IgxSwitchModule, IgxNavigationDrawerModule } from "../../lib/main";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { NavdrawerSampleComponent } from "./sample.component";
 
@@ -12,7 +12,7 @@ import { NavdrawerSampleComponent } from "./sample.component";
     imports: [
         IgxDirectivesModule,
         IgxSwitchModule,
-        NavigationDrawerModule,
+        IgxNavigationDrawerModule,
         CommonModule,
         FormsModule,
         IgxRadioModule,

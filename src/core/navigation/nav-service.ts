@@ -5,7 +5,7 @@ import { IToggleView } from "./toggle";
  * ToggleView interface can register and toggle directives can call their methods.
  * TODO: Track currently active? Events?
  */
-export class NavigationService {
+export class IgxNavigationService {
     private navs: { [id: string]: IToggleView; };
 
     constructor() {

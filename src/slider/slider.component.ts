@@ -223,11 +223,11 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
         this._upperBound = value;
     }
 
-    private get lowerValue(): number {
+    public get lowerValue(): number {
         return this._lowerValue;
     }
 
-    private set lowerValue(value: number) {
+    public set lowerValue(value: number) {
         if (value < this.lowerBound || this.upperBound < value) {
             return;
         }
@@ -239,11 +239,11 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
         this._lowerValue = value;
     }
 
-    private get upperValue() {
+    public get upperValue() {
         return this._upperValue;
     }
 
-    private set upperValue(value: number) {
+    public set upperValue(value: number) {
         if (value < this.lowerBound || this.upperBound < value) {
             return;
         }

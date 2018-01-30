@@ -47,18 +47,22 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     public data = [];
 
     @Input()
-    public autogenerate = false;
+    public autoGenerate = false;
 
     @Input()
     public id = `igx-grid-${NEXT_ID++}`;
 
     @Input()
-    get filteringLogic(): string {
-        return this._filteringLogic === FilteringLogic.And ? "AND" : "OR";
+    public filteringLogic = FilteringLogic.And;
+
+    @Input()
+    get filteringExpressions() {
+        return this._filteringExpressions;
     }
 
-    set filteringLogic(value: string) {
-        this._filteringLogic = (value === "OR") ? FilteringLogic.Or : FilteringLogic.And;
+    set filteringExpressions(value) {
+        this._filteringExpressions = cloneArray(value);
+        this.cdr.markForCheck();
     }
 
     @Input()
@@ -101,9 +105,11 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     @Input()
     public paginationTemplate: TemplateRef<any>;
 
+    @HostBinding("style.height")
     @Input()
     public height;
 
+    @HostBinding("style.width")
     @Input()
     public width;
 
@@ -143,6 +149,12 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     @HostBinding("attr.tabindex")
     public tabindex = 0;
 
+    @HostBinding("attr.class")
+    public hostClass = "igx-grid";
+
+    @HostBinding("attr.role")
+    public hostRole = "grid";
+
     get pipeTrigger(): number {
         return this._pipeTrigger;
     }
@@ -159,24 +171,23 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
 
     public pagingState;
 
-    public filteringExpressions = [];
-
     public cellInEditMode: IgxGridCellComponent;
-
     protected _perPage = 15;
     protected _page = 0;
     protected _paging = false;
     protected _pipeTrigger = 0;
     protected _columns = [];
     protected _filteringLogic = FilteringLogic.And;
+    protected _filteringExpressions = [];
     protected _sortingExpressions = [];
 
     private sub$: Subscription;
 
-    constructor(private gridAPI: IgxGridAPIService,
-                public cdr: ChangeDetectorRef,
-                private resolver: ComponentFactoryResolver,
-                private viewRef: ViewContainerRef) {
+    constructor(
+        private gridAPI: IgxGridAPIService,
+        public cdr: ChangeDetectorRef,
+        private resolver: ComponentFactoryResolver,
+        private viewRef: ViewContainerRef) {
     }
 
     public ngOnInit() {
@@ -184,7 +195,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     }
 
     public ngAfterContentInit() {
-        if (this.autogenerate) {
+        if (this.autoGenerate) {
             this.autogenerateColumns();
         }
         this.columnList.forEach((col, idx) => {
@@ -251,6 +262,10 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
         this.page = val;
     }
 
+    public markForCheck() {
+        this.gridAPI.markForCheck(this.id);
+    }
+
     public addRow(data: any): void {
         this.data.push(data);
         this.onRowAdded.emit({ data });
@@ -302,14 +317,25 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
         this.gridAPI.filter(
             this.id, name, value, condition || col.filteringCondition, ignoreCase || col.filteringIgnoreCase);
         this.page = 0;
-        this.cdr.markForCheck();
     }
 
     public filterGlobal(value: any, condition?, ignoreCase?) {
         // TODO: AND OR Filtering logic
         this.gridAPI.filterGlobal(this.id, value, condition, ignoreCase);
         this.page = 0;
-        this.cdr.markForCheck();
+    }
+
+    public clearFilter(name: string) {
+        const col = this.gridAPI.get_column_by_name(this.id, name);
+        if (!col) {
+            return;
+        }
+
+        this.gridAPI.clear_filter(this.id, name);
+    }
+
+    public clearFilterAll() {
+
     }
 
     get hasSortableColumns(): boolean {

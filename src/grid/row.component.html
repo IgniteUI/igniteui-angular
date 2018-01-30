@@ -1,9 +1,1 @@
-<tr>
-    <igx-grid-cell
-        *ngFor="let c of columns"
-        [column]="c"
-        [row]="this"
-        [value]="rowData[c.field]"
-        [cellTemplate]="c.bodyTemplate"
-    ></igx-grid-cell>
-</tr>
+<igx-grid-cell *ngFor="let c of columns" [column]="c" [row]="this" [value]="rowData[c.field]" [cellTemplate]="c.bodyTemplate"></igx-grid-cell>

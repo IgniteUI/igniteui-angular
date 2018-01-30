@@ -8,12 +8,12 @@
         <div (keydown)="onKeyDown($event);" (keyup)="hideThumbsLabels()" (blur)="hideThumbLabelsOnBlur()" (focus)="onFocus($event);"
             *ngIf="isRange" class="igx-slider__thumb-from" tabindex="1" [ngClass]="{ 'igx-slider__thumb-from--active': isActiveLabel }"
             #thumbFrom>
-            <span class="label">{{ value.lower }}</span>
+            <span class="label">{{ lowerValue}}</span>
             <span class="dot"></span>
         </div>
         <div (keydown)="onKeyDown($event);" (keyup)="hideThumbsLabels()" (blur)="hideThumbLabelsOnBlur()" (focus)="onFocus($event);"
             class="igx-slider__thumb-to" tabindex="1" [ngClass]="{ 'igx-slider__thumb-to--active': isActiveLabel }" #thumbTo>
-            <span *ngIf="isRange" class="label">{{ value.upper }}</span>
+            <span *ngIf="isRange" class="label">{{ upperValue}}</span>
             <span *ngIf="!isRange" class="label">{{ value }}</span>
             <span class="dot"></span>
         </div>

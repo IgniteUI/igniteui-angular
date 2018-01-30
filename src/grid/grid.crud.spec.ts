@@ -206,7 +206,7 @@ describe("IgxGrid - CRUD operations", () => {
             [data]="data"
             (onRowAdded)="rowAdded($event)"
             (onRowDeleted)="rowDeleted($event)"
-            [autogenerate]="true">
+            [autoGenerate]="true">
         </igx-grid>
     `
 })

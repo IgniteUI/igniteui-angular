@@ -3,12 +3,14 @@
 }
 
 %igx-filtering-toggle {
-    z-index: 10;
-
+    .igx-button--icon {
+        width: rem(24px);
+        height: rem(24px);
+    }
     i {
-        font-size: $grid-head-icon-size;
-        line-height: $grid-head-icon-lh;
-        padding: $grid-head-icon-padding;
+        font-size: $grid-head-icon-size !important;
+        line-height: $grid-head-icon-lh !important;
+        padding: $grid-head-icon-padding !important;
     }
 }
 
@@ -20,7 +22,7 @@
 %igx-filtering-options {
     display: block;
     position: absolute;
-    width: calc(100% - 32px);
+    min-width: fit-content;
     user-select: none;
     right: 16px;
     left: 16px;
@@ -30,8 +32,7 @@
     padding: $grid-filtering-options-padding;
     z-index: 10;
     margin-top: 8px;
-
-    & > input {
+    &>input {
         font-weight: initial;
         font-size: initial;
     }

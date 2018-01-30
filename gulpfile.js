@@ -9,7 +9,9 @@ const exec = require("child_process").exec;
 const fs = require("fs");
 
 const prefixer = postcss([autoprefixer({
-    browsers: ["last 2 versions"]
+    browsers: ["last 5 versions", "> 3%"],
+    cascade: false,
+    grid: true
 })]);
 
 function compileSass(path, ext, file, callback) {
@@ -27,6 +29,7 @@ const INLINE_TEMPLATES = {
     CONFIG: {
         base: "/src",
         target: "es6",
+        removeLineBreaks: true,
         useRelativePaths: true,
         styleProcessor: compileSass
     }

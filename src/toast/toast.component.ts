@@ -132,7 +132,7 @@ export class IgxToast {
         clearInterval(this.timeoutId);
     }
 
-    private mapPositionToClassName(): any {
+    public mapPositionToClassName(): any {
         if (this.position === IgxToastPosition.Top) {
             return this.CSS_CLASSES.IGX_TOAST_TOP;
         }

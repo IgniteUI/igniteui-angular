@@ -72,7 +72,7 @@ const shakeParams: IAnimationParams = {
 If parameters are attached, they act as default values.  When an animation is invoked via [`useAnimation`](https://angular.io/api/animations/useAnimation) then parameter values are allowed to be passed in directly. If any of the passed in parameter values are missing then the default values will be used.
 
 ``` typescript
-import { blink } from "igniteui-js-blocks/animations/main";
+import { blink } from "igniteui-angular/animations/main";
 
 useAnimation(blink);
 ```
