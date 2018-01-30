@@ -22,7 +22,8 @@ export class IgxGridHeaderComponent implements DoCheck {
         return `igx-grid__th ${this.column.headerClasses}`;
     }
 
-    @HostBinding("style.max-width")
+    @HostBinding("style.flex-basis")
+    @HostBinding("class.igx-grid__th--fw")
     get width() {
         return this.column.width;
     }

@@ -80,6 +80,10 @@
     text-overflow: ellipsis;
 }
 
+%grid-cell--fixed-width {
+    flex-grow: 0;
+}
+
 %grid-cell-number {
     text-align: $grid-cell-align-num;
 }

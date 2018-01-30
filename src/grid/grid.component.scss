@@ -52,6 +52,9 @@
     @include e(th, $m: number) {
         @extend %grid-cell-number;
     }
+    @include e(th, $m: fw) {
+        @extend %grid-cell--fixed-width;
+    }
     @include e(td) {
         @extend %grid-cell-display;
     }
@@ -60,5 +63,8 @@
     }
     @include e(td, $m: number) {
         @extend %grid-cell-number;
+    }
+    @include e(td, $m: fw) {
+        @extend %grid-cell--fixed-width;
     }
 }
