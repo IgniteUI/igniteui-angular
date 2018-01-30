@@ -48,7 +48,6 @@
     display: flex;
     background: $grid-row-bg;
     border-bottom: $grid-row-bb;
-    transition: $grid-row-transition;
     outline-style: none;
     &:last-of-type {
         border-bottom: 0;
@@ -69,8 +68,7 @@
 }
 
 %grid-cell-display {
-    display: block;
-    width: 100%;
+    flex: 1;
     outline-style: none;
     padding: $grid-cell-padding;
     font-size: $grid-cell-fs;
@@ -112,21 +110,4 @@
         text-overflow: ellipsis;
         user-select: none;
     }
-}
-
-%grid-cell-header-content {
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    & .title {
-        display: flex;
-        align-items: center;
-        flex-grow: 1;
-    }
-}
-
-%grid-cell-header-cicon {
-    font-size: $grid-head-icon-size;
-    line-height: $grid-head-icon-lh;
-    padding: $grid-head-icon-padding;
 }

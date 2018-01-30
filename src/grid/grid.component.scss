@@ -15,7 +15,7 @@
     @include e(tbody) {
         @extend %grid-tbody;
     }
-    @include e(tbody-empty) {
+    @include e(tbody, $m: empty) {
         @extend %grid-tbody--empty;
     }
     @include e(tr) {
