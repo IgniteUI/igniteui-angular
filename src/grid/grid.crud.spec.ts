@@ -191,7 +191,7 @@ describe("IgxGrid - CRUD operations", () => {
         const grid = fix.componentInstance.instance;
 
         const firstCell = grid.getCellByColumn(0, "index");
-        firstCell.value = 100;
+        firstCell.update(100);
 
         fix.detectChanges();
 
