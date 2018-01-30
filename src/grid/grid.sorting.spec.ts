@@ -7,7 +7,7 @@ import { IgxGridFilterComponent } from "./grid-filtering.component";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-describe("IgxGrid - Grid Filtering", () => {
+describe("IgxGrid - Grid Sorting", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -47,7 +47,8 @@ describe("IgxGrid - Grid Filtering", () => {
         const grid = fixture.componentInstance.grid;
         const currentColumn = "Name";
 
-        grid.sort(currentColumn, SortingDirection.Desc);
+        // Ignore case on sorting set to false
+        grid.sort(currentColumn, SortingDirection.Desc, false);
         fixture.detectChanges();
 
         let expectedResult = "Rick";
@@ -55,6 +56,16 @@ describe("IgxGrid - Grid Filtering", () => {
         expect(grid.getCellByColumn(0, currentColumn).value).toEqual(expectedResult);
         expectedResult = "ALex";
         expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual(expectedResult);
+
+        // Ignore case on sorting set to true (default)
+        grid.sort(currentColumn, SortingDirection.Desc);
+        fixture.detectChanges();
+
+        expectedResult = "Rick";
+        expect(grid.getCellByColumn(0, currentColumn).value).toEqual(expectedResult);
+        expectedResult = "ALex";
+        expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).not.toEqual(expectedResult);
+
     });
 
     it("Try sort by invalid column should not change anything", () => {
@@ -103,7 +114,7 @@ describe("IgxGrid - Grid Filtering", () => {
         expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual(expectedResult);
     });
 
-    it("Grid sort by multiple expressions", () => {
+    it("Grid sort by multiple expressions and clear sorting through API", () => {
         const fixture = TestBed.createComponent(GridDeclaredColumns);
         fixture.detectChanges();
 
@@ -124,6 +135,25 @@ describe("IgxGrid - Grid Filtering", () => {
         expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(6);
         expectedResult = "Jones";
         expect(grid.getCellByColumn(grid.data.length - 1 , thirdColumn).value).toEqual(expectedResult);
+
+        // Clear sorting on a column
+        grid.clearSort(firstColumn);
+        fixture.detectChanges();
+
+        expect(grid.sortingExpressions.length).toEqual(1);
+        expect(grid.sortingExpressions[0].fieldName).toEqual(secondColumn);
+
+        grid.sortingExpressions = [{fieldName: secondColumn, dir: SortingDirection.Asc},
+            {fieldName: firstColumn, dir: SortingDirection.Desc }];
+        fixture.detectChanges();
+
+        expect(grid.sortingExpressions.length).toEqual(2);
+
+        // Clear sorting on all columns
+        grid.clearSort();
+        fixture.detectChanges();
+
+        expect(grid.sortingExpressions.length).toEqual(0);
     });
 
     it("Grid sort by multiple expressions through API using ignoreCase for the second expression", () => {
@@ -134,12 +164,34 @@ describe("IgxGrid - Grid Filtering", () => {
         const firstColumn = "ID";
         const secondColumn = "Name";
         const thirdColumn = "LastName";
+        const exprs = [
+            { fieldName: secondColumn, dir: SortingDirection.Asc },
+            { fieldName: thirdColumn, dir: SortingDirection.Desc, ignoreCase: true}
+        ];
 
-        grid.sortingExpressions = [{fieldName: secondColumn, dir: SortingDirection.Asc},
-            {fieldName: thirdColumn, dir: SortingDirection.Desc, ignoreCase: true}];
+        grid.sortingExpressions = exprs;
 
         fixture.detectChanges();
         let expectedResult = "ALex";
+        expect(grid.getCellByColumn(0, secondColumn).value).toEqual(expectedResult);
+        expectedResult = "Smith";
+        expect(grid.getCellByColumn(0, thirdColumn).value).toEqual(expectedResult);
+        expect(grid.getCellByColumn(0, firstColumn).value).toEqual(5);
+        expectedResult = "Rick";
+        expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual(expectedResult);
+        expectedResult = "BRown";
+        expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual(expectedResult);
+        expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(7);
+
+        grid.clearSort();
+        fixture.detectChanges();
+
+        expect(grid.sortingExpressions.length).toEqual(0);
+
+        grid.sort(exprs);
+        fixture.detectChanges();
+
+        expectedResult = "ALex";
         expect(grid.getCellByColumn(0, secondColumn).value).toEqual(expectedResult);
         expectedResult = "Smith";
         expect(grid.getCellByColumn(0, thirdColumn).value).toEqual(expectedResult);
@@ -192,7 +244,7 @@ describe("IgxGrid - Grid Filtering", () => {
         const invalidAndValidExp = [{FieldName: secondColumn, dir: SortingDirection.Desc },
             {fieldName: firstColumn }];
 
-        grid.sortMultiple(invalidAndValidExp);
+        grid.sort(invalidAndValidExp);
 
         fixture.detectChanges();
 

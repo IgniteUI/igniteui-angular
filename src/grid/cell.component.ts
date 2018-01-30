@@ -33,15 +33,7 @@ export class IgxGridCellComponent {
     public cellTemplate: TemplateRef<any>;
 
     @Input()
-    get value(): any {
-        return this._value;
-    }
-
-    set value(val: any) {
-        this._value = val;
-        this.gridAPI.update(this.gridID, this);
-        this.cdr.markForCheck();
-    }
+    public value: any;
 
     get formatter(): (value: any) => any {
         return this.column.formatter;
@@ -102,7 +94,7 @@ export class IgxGridCellComponent {
 
     @HostBinding("attr.aria-describedby")
     get describedby(): string {
-        return `${this.row.gridID}-${this.column.field}`;
+        return `${this.row.gridID}_${this.column.field}`;
     }
 
     @HostBinding("class")
@@ -114,6 +106,11 @@ export class IgxGridCellComponent {
     @HostBinding("class.igx-grid__td--fw")
     get width() {
         return this.column.width;
+    }
+
+    @HostBinding("class.igx-grid__td--editing")
+    get editModeCSS() {
+        return this._inEditMode;
     }
 
     @HostBinding("attr.aria-selected")
@@ -150,7 +147,6 @@ export class IgxGridCellComponent {
     protected defaultCssClass = "igx-grid__td";
     protected isFocused = false;
     protected isSelected = false;
-    protected _value: any;
     protected _inEditMode = false;
 
     constructor(
@@ -191,6 +187,13 @@ export class IgxGridCellComponent {
 
         this.handleKeyboardNavigation(event);
         this.handleInlineEditMode(event);
+    }
+
+    public update(val: any) {
+        this.grid.onEditDone.emit({ currentValue: this.value, newValue: val });
+        this.value = val;
+        this.gridAPI.update(this.gridID, this);
+        this.cdr.markForCheck();
     }
 
     protected handleKeyboardNavigation(event: KeyboardEvent): void {

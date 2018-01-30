@@ -20,21 +20,21 @@
 </ng-template>
 
 
-<div class="igx-grid__thead">
+<div class="igx-grid__thead" role="rowgroup">
     <div class="igx-grid__tr" role="row">
         <igx-grid-header [gridID]="id" *ngFor="let col of visibleColumns" [column]="col"></igx-grid-header>
     </div>
 </div>
 
-<div class="igx-grid__tbody">
+<div class="igx-grid__tbody" role="rowgroup">
     <igx-grid-row [gridID]="id" [index]="i" [rowData]="item" *ngFor="let item of data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
-                                 | gridSort:sortingExpressions:id:pipeTrigger
-                                 | gridPaging:page:perPage:id:pipeTrigger;
-                                 index as i;">
+                                | gridSort:sortingExpressions:id:pipeTrigger
+                                | gridPaging:page:perPage:id:pipeTrigger;
+                                index as i;">
     </igx-grid-row>
 </div>
 
-<div class="igx-grid__tfoot">
+<div class="igx-grid__tfoot" role="rowgroup">
     <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
     </ng-container>
 </div>

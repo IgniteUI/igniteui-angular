@@ -23,9 +23,8 @@ import {
 import { Subscription } from "rxjs/Subscription";
 import { cloneArray } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
-import { FilteringLogic } from "../data-operations/filtering-expression.interface";
-import { SortingDirection } from "../data-operations/sorting-expression.interface";
-import { ISortingExpression } from "../main";
+import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
+import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
@@ -85,7 +84,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
         if (val < 0) {
             return;
         }
-        this.onPaging.emit({ previous: this._page, current: val });
+        this.onPagingDone.emit({ previous: this._page, current: val });
         this._page = val;
     }
 
@@ -120,25 +119,28 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     public oddRowCSS = "";
 
     @Output()
-    public onSelection = new EventEmitter();
+    public onSelection = new EventEmitter<any>();
 
     @Output()
-    public onColumnInit = new EventEmitter();
+    public onEditDone = new EventEmitter<any>();
 
     @Output()
-    public onSorting = new EventEmitter();
+    public onColumnInit = new EventEmitter<any>();
 
     @Output()
-    public onFiltering = new EventEmitter();
+    public onSortingDone = new EventEmitter<any>();
 
     @Output()
-    public onPaging = new EventEmitter();
+    public onFilteringDone = new EventEmitter<any>();
 
     @Output()
-    public onRowAdded = new EventEmitter();
+    public onPagingDone = new EventEmitter<any>();
 
     @Output()
-    public onRowDeleted = new EventEmitter();
+    public onRowAdded = new EventEmitter<any>();
+
+    @Output()
+    public onRowDeleted = new EventEmitter<any>();
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
@@ -172,6 +174,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     public pagingState;
 
     public cellInEditMode: IgxGridCellComponent;
+
     protected _perPage = 15;
     protected _page = 0;
     protected _paging = false;
@@ -180,8 +183,6 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     protected _filteringLogic = FilteringLogic.And;
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
-
-    private sub$: Subscription;
 
     constructor(
         private gridAPI: IgxGridAPIService,
@@ -263,7 +264,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     }
 
     public markForCheck() {
-        this.gridAPI.markForCheck(this.id);
+        this.gridAPI.mark_for_check(this.id);
     }
 
     public addRow(data: any): void {
@@ -287,7 +288,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     public updateCell(value: any, rowIndex: number, column: string): void {
         const cell = this.gridAPI.get_cell_by_field(this.id, rowIndex, column);
         if (cell) {
-            cell.value = value;
+            cell.update(value);
             this._pipeTrigger++;
         }
     }
@@ -295,47 +296,53 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     public updateRow(value: any, rowIndex: number): void {
         const row = this.gridAPI.get_row(this.id, rowIndex);
         if (row) {
-            this.gridAPI.updateRow(value, this.id, row);
+            this.gridAPI.update_row(value, this.id, row);
             this._pipeTrigger++;
             this.cdr.markForCheck();
         }
     }
 
-    public sort(name: string, direction = SortingDirection.Asc): void {
-        this.gridAPI.sort(this.id, name, direction);
-    }
-
-    public sortMultiple(exprArray): void {
-        this.gridAPI.sort_multiple(this.id, exprArray);
-    }
-
-    public filter(name: string, value: any, condition?, ignoreCase?): void {
-        const col = this.gridAPI.get_column_by_name(this.id, name);
-        if (!col) {
-            return;
+    public sort(...rest): void {
+        if (rest.length === 1 && rest[0] instanceof Array) {
+            this._sortMultiple(rest[0]);
+        } else {
+            this._sort(rest[0], rest[1], rest[2]);
         }
-        this.gridAPI.filter(
-            this.id, name, value, condition || col.filteringCondition, ignoreCase || col.filteringIgnoreCase);
-        this.page = 0;
+    }
+
+    public filter(...rest): void {
+        if (rest.length === 1 && rest[0] instanceof Array) {
+            this._filterMultiple(rest[0]);
+        } else {
+            this._filter(rest[0], rest[1], rest[2], rest[3]);
+        }
     }
 
     public filterGlobal(value: any, condition?, ignoreCase?) {
-        // TODO: AND OR Filtering logic
-        this.gridAPI.filterGlobal(this.id, value, condition, ignoreCase);
-        this.page = 0;
+        this.gridAPI.filter_global(this.id, value, condition, ignoreCase);
     }
 
-    public clearFilter(name: string) {
-        const col = this.gridAPI.get_column_by_name(this.id, name);
-        if (!col) {
+    public clearFilter(name?: string) {
+
+        if (!name) {
+            this.filteringExpressions = [];
             return;
         }
-
+        if (!this.gridAPI.get_column_by_name(this.id, name)) {
+            return;
+        }
         this.gridAPI.clear_filter(this.id, name);
     }
 
-    public clearFilterAll() {
-
+    public clearSort(name?: string) {
+        if (!name) {
+            this.sortingExpressions = [];
+            return;
+        }
+        if (!this.gridAPI.get_column_by_name(this.id, name)) {
+            return;
+        }
+        this.gridAPI.clear_sort(this.id, name);
     }
 
     get hasSortableColumns(): boolean {
@@ -356,6 +363,29 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
                 .reduce((a, b) => a.concat(b), []);
         }
         return [];
+    }
+
+    protected _sort(name: string, direction = SortingDirection.Asc, ignoreCase = true) {
+        this.gridAPI.sort(this.id, name, direction, ignoreCase);
+    }
+
+    protected _sortMultiple(expressions: ISortingExpression[]) {
+        this.gridAPI.sort_multiple(this.id, expressions);
+    }
+
+    protected _filter(name: string, value: any, condition?, ignoreCase?) {
+        const col = this.gridAPI.get_column_by_name(this.id, name);
+        if (col) {
+            this.gridAPI
+                .filter(this.id, name, value,
+                        condition || col.filteringCondition, ignoreCase || col.filteringIgnoreCase);
+        } else {
+            this.gridAPI.filter(this.id, name, value, condition, ignoreCase);
+        }
+    }
+
+    protected _filterMultiple(expressions: IFilteringExpression[]) {
+        this.gridAPI.filter_multiple(this.id, expressions);
     }
 
     protected resolveDataTypes(rec) {
