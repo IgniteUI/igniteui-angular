@@ -102,7 +102,8 @@ export class IgxGridCellComponent {
         return `${this.defaultCssClass} ${this.column.cellClasses}`;
     }
 
-    @HostBinding("style.width")
+    @HostBinding("style.flex-basis")
+    @HostBinding("class.igx-grid__td--fw")
     get width() {
         return this.column.width;
     }
