@@ -22,7 +22,7 @@ export class IgxGridAPIService {
         return this.state.get(id);
     }
 
-    public markForCheck(id: string): void {
+    public mark_for_check(id: string): void {
         this.get(id).cdr.markForCheck();
         if (this.get(id).rowList) {
             this.get(id).rowList.forEach((row) => row.cdr.markForCheck());
@@ -56,7 +56,7 @@ export class IgxGridAPIService {
         this.get(id).data[index][cell.column.field] = cell.value;
     }
 
-    public updateRow(value: any, id: string, row: IgxGridRowComponent): void {
+    public update_row(value: any, id: string, row: IgxGridRowComponent): void {
         const index = this.get(id).data.indexOf(row.rowData);
         this.get(id).onEditDone.emit({ currentValue: this.get(id).data[index], newValue: value });
         this.get(id).data[index] = value;
@@ -101,7 +101,7 @@ export class IgxGridAPIService {
         this.get(id).filteringExpressions = filteringState;
     }
 
-    public filterGlobal(id, term, condition, ignoreCase) {
+    public filter_global(id, term, condition, ignoreCase) {
         const filteringState = this.get(id).filteringExpressions;
         if (this.get(id).paging) {
             this.get(id).page = 0;

@@ -4,6 +4,7 @@ import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BOOLEAN_FILTERS, DATE_FILTERS, FilteringCondition,
     NUMBER_FILTERS, STRING_FILTERS } from "../../src/data-operations/filtering-condition";
+import { Calendar } from "../calendar/calendar";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
@@ -236,10 +237,11 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const today = new Date();
+        const cal = fix.componentInstance.timeGenerator;
+        const today = fix.componentInstance.today;
 
         // After filter
-        grid.filter("ReleaseDate", new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 4),
+        grid.filter("ReleaseDate", cal.timedelta(today, "day", 4),
         DATE_FILTERS.after);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(2);
@@ -248,7 +250,7 @@ describe("IgxGrid - Filtering actions", () => {
         grid.clearFilter("ReleaseDate");
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
-        grid.filter("ReleaseDate", new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 4),
+        grid.filter("ReleaseDate", cal.timedelta(today, "day", 4),
         DATE_FILTERS.before);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(4);
@@ -256,7 +258,7 @@ describe("IgxGrid - Filtering actions", () => {
         // DoesNotEqual filter
         grid.clearFilter("ReleaseDate");
         fix.detectChanges();
-        grid.filter("ReleaseDate", new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 15),
+        grid.filter("ReleaseDate", cal.timedelta(today, "day", 15),
         DATE_FILTERS.doesNotEqual);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(6);
@@ -264,7 +266,7 @@ describe("IgxGrid - Filtering actions", () => {
         // Equals filter
         grid.clearFilter("ReleaseDate");
         fix.detectChanges();
-        grid.filter("ReleaseDate", new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 15),
+        grid.filter("ReleaseDate", cal.timedelta(today, "day", 15),
         DATE_FILTERS.equals);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
@@ -399,26 +401,60 @@ describe("IgxGrid - Filtering actions", () => {
     </igx-grid>`
 })
 export class IgxGridFiltering {
+
+    public timeGenerator: Calendar = new Calendar();
+    public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+
     public data = [
-        { Downloads: 254, ID: 1, ProductName: "Ignite UI for JavaScript",
-          ReleaseDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 15),
-          Released: false },
-        { Downloads: 127, ID: 2, ProductName: "NetAdvantage",
-          ReleaseDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 30),
-          Released: true },
-        { Downloads: 20, ID: 3, ProductName: "Ignite UI for Angular",
-          ReleaseDate: null, Released: null },
-        { Downloads: null, ID: 4, ProductName: null,
-          ReleaseDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1),
-          Released: true },
-        { Downloads: 100, ID: 5, ProductName: "",
-          ReleaseDate: undefined, Released: "" },
-        { Downloads: 702, ID: 6, ProductName: "Some other item with Script",
-          ReleaseDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1),
-          Released: null },
-        { Downloads: 0, ID: 7, ProductName: null,
-          ReleaseDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 30),
-          Released: true }
+        {
+            Downloads: 254,
+            ID: 1,
+            ProductName: "Ignite UI for JavaScript",
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", 15),
+            Released: false
+        },
+        {
+            Downloads: 127,
+            ID: 2,
+            ProductName: "NetAdvantage",
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "month", -1),
+            Released: true
+        },
+        {
+            Downloads: 20,
+            ID: 3,
+            ProductName: "Ignite UI for Angular",
+            ReleaseDate: null,
+            Released: null
+        },
+        {
+            Downloads: null,
+            ID: 4,
+            ProductName: null,
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", -1),
+            Released: true
+        },
+        {
+            Downloads: 100,
+            ID: 5,
+            ProductName: "",
+            ReleaseDate: undefined,
+            Released: ""
+        },
+        {
+            Downloads: 702,
+            ID: 6,
+            ProductName: "Some other item with Script",
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", 1),
+            Released: null
+        },
+        {
+            Downloads: 0,
+            ID: 7,
+            ProductName: null,
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "month", 1),
+            Released: true
+        }
     ];
 
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;

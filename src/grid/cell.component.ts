@@ -146,7 +146,6 @@ export class IgxGridCellComponent {
     protected defaultCssClass = "igx-grid__td";
     protected isFocused = false;
     protected isSelected = false;
-    // protected _value: any;
     protected _inEditMode = false;
 
     constructor(

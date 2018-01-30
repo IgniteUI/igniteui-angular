@@ -264,7 +264,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     }
 
     public markForCheck() {
-        this.gridAPI.markForCheck(this.id);
+        this.gridAPI.mark_for_check(this.id);
     }
 
     public addRow(data: any): void {
@@ -296,7 +296,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     public updateRow(value: any, rowIndex: number): void {
         const row = this.gridAPI.get_row(this.id, rowIndex);
         if (row) {
-            this.gridAPI.updateRow(value, this.id, row);
+            this.gridAPI.update_row(value, this.id, row);
             this._pipeTrigger++;
             this.cdr.markForCheck();
         }
@@ -319,7 +319,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     }
 
     public filterGlobal(value: any, condition?, ignoreCase?) {
-        this.gridAPI.filterGlobal(this.id, value, condition, ignoreCase);
+        this.gridAPI.filter_global(this.id, value, condition, ignoreCase);
     }
 
     public clearFilter(name?: string) {
