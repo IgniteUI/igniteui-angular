@@ -1,15 +1,17 @@
-@function igx-badge-theme($default-border-color) {
+@function igx-badge-theme($default-border-color: null, $default-color: null) {
     @return (
+        default-color: $default-color,
         default-border-color: $default-border-color,
     );
 }
 
 @mixin igx-badge($theme, $palette: $default-palette) {
     $default-theme: igx-badge-theme(
+        $default-color: igx-color($palette, accent, 500),
         $default-border-color: igx-color($palette, primary, 500)
     );
 
-    $this: map-merge($default-theme, $theme);
+    $this: extend($default-theme, $theme);
 
     @debug $this;
 
@@ -92,11 +94,5 @@
 
     %igx-badge--scale-in {
         animation: scale-in .25s ease-in backwards;
-    }
-
-    @keyframes scale-in {
-        0% {
-            transform: scale(0);
-        }
     }
 }

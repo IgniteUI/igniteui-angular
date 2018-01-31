@@ -151,6 +151,26 @@
     @return unquote('##{str-slice('0#{to-string($r)}',-2)}#{str-slice('0#{to-string($g)}',-2)}#{str-slice('0#{to-string($b)}',-2)}');
 }
 
+@function extend($obj, $extend) {
+    $result: ();
+
+    @each $key, $value in $extend {
+        @if not($value) {
+            $result: map-merge($result, (
+                #{$key}: map-get($obj, $key)
+            ));
+        } @else {
+            $result: map-merge($result, (
+                #{$key}: $value
+            ))
+        }
+    }
+
+    $result: map-merge($obj, $result);
+
+    @return $result;
+}
+
 @function igx-palette($primary, $accent, $warn) {
     @return (
        primary: (

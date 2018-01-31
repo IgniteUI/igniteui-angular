@@ -1,4 +1,4 @@
-@function igx-avatar-theme($background) {
+@function igx-avatar-theme($background: null) {
     @return (
         background: $background,
     );
@@ -9,7 +9,9 @@
         $background: igx-color($palette, grays, 400)
     );
 
-    $this: map-merge($default-theme, $theme);
+    $this: extend($default-theme, $theme);
+
+    @debug $this;
 
     %igx-avatar-display {
         display: flex;
