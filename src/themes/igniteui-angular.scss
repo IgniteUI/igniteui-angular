@@ -5,15 +5,16 @@
 // // Generating a palette
 $my-palette: igx-palette($primary: purple, $accent: cyan, $warn: orange);
 
-// // Overriding the default theme
-// @include igx-theme($my-palette);
-// $badge-theme: igx-badge-theme(
-//     $default-border-color: pink
-// );
+// Overriding the default theme
+// @include igx-theme($my-palette, $exclude: ('igx-badge': true));
 
-// @include igx-badge($badge-theme);
+@include igx-theme($default-palette, $exclude: ('igx-badge': true));
 
-@include igx-theme($my-palette);
+$badge-theme: igx-badge-theme(
+    $default-border-color: pink
+);
+
+@include igx-badge($badge-theme);
 
 // Generating a theme for the avatar component
 // $avatar-theme: igx-avatar-theme($background: red);

@@ -5,13 +5,13 @@
 @import '../components/grid/grid-theme';
 
 @mixin igx-theme($palette: $default-palette, $exclude: ()) {
-    @if not(map-has-key($exclude, 'igx-avatar')) {
+    @if not(map-has-key($exclude, 'igx-avatar') and map-get($exclude, 'igx-avatar') == true) {
         @include igx-avatar($theme: (), $palette: $palette);
     }
-    @if not(map-has-key($exclude, 'igx-badge')) {
+    @if not(map-has-key($exclude, 'igx-badge') and map-get($exclude, 'igx-badge') == true) {
         @include igx-badge($theme: (), $palette: $palette);
     }
-    @if not(map-has-key($exclude, 'igx-grid')) {
+    @if not(map-has-key($exclude, 'igx-grid') and map-get($exclude, 'igx-grid') == true) {
         @include igx-grid($theme: (), $palette: $palette);
     }
 }
