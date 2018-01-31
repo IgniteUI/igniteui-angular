@@ -32,17 +32,17 @@ export class IgxToggleDirective {
     @Input()
     public collapsed = true;
 
-    get element() {
+    public get element() {
         return this.elementRef.nativeElement;
     }
 
-    @HostBinding("class.igx-toggle-hidden")
-    public get hiddenClass() {
+    @HostBinding("class.igx-toggle--hidden")
+    protected get hiddenClass() {
         return this.collapsed;
     }
 
     @HostBinding("class.igx-toggle")
-    public get defaultClass() {
+    protected get defaultClass() {
         return !this.collapsed;
     }
 
@@ -90,12 +90,6 @@ export class IgxToggleDirective {
     }
 }
 
-@NgModule({
-    declarations: [ IgxToggleDirective ],
-    exports: [ IgxToggleDirective ]
-})
-export class IgxToggleModule {}
-
 @Directive({
     exportAs: "toggle-action",
     selector: "[igx-toggle-action]"
@@ -138,7 +132,7 @@ export class IgxToggleActionDirective implements OnDestroy {
     }
 }
 @NgModule({
-    declarations: [ IgxToggleActionDirective ],
-    exports: [ IgxToggleActionDirective ]
+    declarations: [ IgxToggleDirective, IgxToggleActionDirective ],
+    exports: [ IgxToggleDirective, IgxToggleActionDirective ]
 })
-export class IgxToggleActionModule {}
+export class IgxToggleModule {}
