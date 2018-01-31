@@ -1,0 +1,137 @@
+%igx-input-display {
+    display: block;
+    margin: $input-margin;
+    position: relative;
+    min-height: 40px;
+    ::-webkit-input-placeholder {
+        color: $label-color;
+    }
+}
+
+%igx-form-label {
+    display: block;
+    position: absolute;
+    overflow: hidden;
+    top: 0;
+    transform-origin: bottom left;
+    font-size: $input-font-size;
+    line-height: $input-line-height;
+    color: $label-color;
+    cursor: text;
+    user-select: none;
+    pointer-events: none;
+    transform: translate3d(0, 0, 0);
+    transition: transform .25s $ease-in-out-quad, color .25s $ease-in-out-quad;
+}
+
+%igx-form-label--float {
+    color: $label-active-color;
+    transform: translateY(-20px) perspective(1000px) translateZ(-300px);
+}
+
+%igx-form-label--filled {
+    color: $label-active-color;
+}
+
+%igx-form-label--focused {
+    color: $label-focus-color;
+    transform: translateY(-20px) perspective(1000px) translateZ(-300px);
+}
+
+%igx-form-input {
+    width: 100%;
+    border: 0;
+    outline: none;
+    color: $input-color;
+    background: transparent;
+    font-size: $input-font-size;
+    line-height: $input-line-height;
+    padding-bottom: 3px;
+    box-shadow: $input-border;
+    transition: box-shadow .25s $ease-in-out-quad;
+}
+
+%igx-form-input--focused {
+    box-shadow: $input-border-focus;
+}
+
+%igx-form-input--disabled {
+    user-select: none;
+    cursor: not-allowed;
+    -webkit-text-fill-color: $input-disabled-color;
+    box-shadow: none;
+    background-image: linear-gradient(
+        to right,
+        $input-disabled-color 20%,
+        transparent 10%
+    );
+    background-position: bottom;
+    background-size: 5px 1px;
+    background-repeat: repeat-x;
+}
+
+%igx-form-label--disabled {
+    color: $label-color-disabled;
+}
+
+%igx-form-input--success {
+    box-shadow: $input-border-success;
+}
+
+%igx-form-label--success {
+    color: $label-success-color;
+}
+
+%igx-form-input--warn {
+    box-shadow: $input-border-warn;
+}
+
+%igx-form-label--warn {
+    color: $label-warn-color;
+}
+
+%igx-form-input--error {
+    box-shadow: $input-border-error;
+}
+
+%igx-form-label--error {
+    color: $label-error-color;
+}
+
+%igx-textarea {
+    resize: none;
+}
+
+%igx-search-input {
+    background: $white;
+    padding: $input-search-padding;
+    border-radius: 2px;
+    font-size: $input-font-size;
+    box-shadow: $elevate-2;
+    transition: box-shadow .2s $ease-in-out-quad;
+
+    &:hover,
+    &:focus {
+        box-shadow: $elevate-5;
+    }
+}
+
+%igx-input-clear,
+%igx-search-label {
+    max-height: 100%;
+    padding: $input-search-label-padding;
+    color: $off-black;
+}
+
+%igx-input-clear {
+    position: absolute;
+    visibility: visible;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+}
+
+%igx-input-clear--hidden {
+    visibility: hidden;
+    pointer-events: none;
+}

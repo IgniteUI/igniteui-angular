@@ -1,0 +1,62 @@
+%igx-radio-lbl-display {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    height: $radio-height;
+    line-height: $radio-height;
+    font-size: $input-font-size;
+    color: $input-color;
+    padding-left: $checkbox-label-padding;
+    user-select: none;
+
+    &::before, &::after {
+        position: absolute;
+        content: '';
+        width: $radio-width;
+        height: $radio-height;
+        left: 0;
+        border-radius: $radio-radius;
+    }
+
+    &::before {
+        backface-visibility: hidden;
+        transform: translateZ(0);
+        transition: $input-transition;
+    }
+}
+
+%igx-radio-lbl-notchecked--before {
+    transform: scale3d(0, 0, 0);
+}
+
+%igx-radio-lbl-notchecked--after {
+    border: $radio-border-style $radio-empty-color;
+}
+
+%igx-radio-lbl-checked--before {
+    border: $radio-border;
+    background-color: $radio-fill-color;
+    transform: scale3d(.5, .5, .5);
+}
+
+%igx-radio-lbl-checked--after {
+    border: $radio-border;
+}
+
+%igx-radio-lbl--disabled {
+    pointer-events: none;
+    color: $input-disabled-color;
+}
+
+%igx-radio-lbl-notchecked--disabled-after {
+    border: $radio-border-style $input-disabled-color;
+}
+
+%igx-radio-lbl-checked--disabled-before {
+    background-color: $input-disabled-color;
+    border: $radio-border-style transparent;
+}
+
+%igx-radio-lbl-checked--disabled-after {
+    border: $radio-border-style $input-disabled-color;
+}

@@ -1,0 +1,33 @@
+%igx-navbar-display {
+    display: flex;
+    position: relative;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 56px;
+    padding: $navbar-padding;
+    background: $primary-color;
+    color: $navbar-text-color;
+    box-shadow: $elevate-4;
+    z-index: 4;
+}
+
+%igx-navbar-bundle {
+    display: flex;
+    align-items: center;
+
+    * + * {
+        margin-left: 16px;
+    }
+}
+
+%igx-navbar-left-btn--disabled {
+    display: none;
+}
+
+%igx-navbar-title {
+    margin: $navbar-title-margin;
+    font-size: $navbar-title-fz;
+    line-height: $navbar-title-lh;
+}

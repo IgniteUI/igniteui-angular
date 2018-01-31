@@ -1,2 +1,27 @@
 @import 'base/index';
 @import 'material/manifest';
+@import 'themes/index';
+
+// // Generating a palette
+$my-palette: igx-palette($primary: purple, $accent: cyan, $warn: orange);
+
+// // Overriding the default theme
+// @include igx-theme($my-palette);
+// $badge-theme: igx-badge-theme(
+//     $default-border-color: pink
+// );
+
+// @include igx-badge($badge-theme);
+
+@include igx-theme($my-palette);
+
+// Generating a theme for the avatar component
+// $avatar-theme: igx-avatar-theme($background: red);
+
+// // Getting individual colors from a palette
+// $my-color: igx-color($my-palette, accent, 'A700');
+// $my-contrast: igx-contrast-color($my-palette, 'accent', 'A700');
+
+
+// Overriding the default avatar styles
+// @include igx-avatar($avatar-theme);

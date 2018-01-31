@@ -1,0 +1,50 @@
+%igx-dialog-display {
+    display: flex;
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background: $overlay-color;
+    z-index: 24;
+}
+
+%igx-dialog--hidden {
+    display: none;
+}
+
+%igx-dialog-window {
+    max-width: $dialog-max-width;
+    min-width: $dialog-min-width;
+    padding: $dialog-padding;
+    border-radius: 2px;
+    background: $dialog-background;
+    box-shadow: $elevate-24;
+}
+
+%igx-dialog-title {
+    color: $off-black;
+    font-size: $dialog-title-font-size;
+    line-height: $dialog-title-line-height;
+    padding-top: $dialog-title-padding-top;
+    padding-bottom: $dialog-title-padding-bottom;
+    font-weight: $dialog-title-font-weight;
+}
+
+%igx-dialog-content {
+    color: $dialog-message-color;
+    font-size: $dialog-message-font-size;
+    line-height: $dialog-message-line-height;
+    padding-top: $dialog-message-padding-top;
+    padding-bottom: $dialog-message-padding-bottom;
+}
+
+%igx-dialog-actions {
+    display: flex;
+    margin: $dialog-actions-margin;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    padding: $dialog-actions-padding;
+}

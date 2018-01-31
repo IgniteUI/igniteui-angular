@@ -1,0 +1,17 @@
+// Import all themable component mixins
+@import 'palettes';
+@import '../components/avatar/avatar-theme';
+@import '../components/badge/badge-theme';
+@import '../components/grid/grid-theme';
+
+@mixin igx-theme($palette: $default-palette, $exclude: ()) {
+    @if not(map-has-key($exclude, 'igx-avatar')) {
+        @include igx-avatar($theme: (), $palette: $palette);
+    }
+    @if not(map-has-key($exclude, 'igx-badge')) {
+        @include igx-badge($theme: (), $palette: $palette);
+    }
+    @if not(map-has-key($exclude, 'igx-grid')) {
+        @include igx-grid($theme: (), $palette: $palette);
+    }
+}

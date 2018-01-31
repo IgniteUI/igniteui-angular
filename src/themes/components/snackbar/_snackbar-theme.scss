@@ -1,0 +1,34 @@
+%igx-snackbar-display {
+    display: flex;
+    position: relative;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    min-height: $snackbar-height;
+    padding: $snackbar-padding;
+    background: $snackbar-background;
+    color: $snackbar-text-color;
+    backface-visibility: hidden;
+}
+
+%igx-snackbar-message {
+    font-size: $snackbar-font-size;
+}
+
+%igx-snackbar-button {
+    background: transparent;
+    color: $secondary-color;
+    border: 0;
+    line-height: $snackbar-button-line-height;
+    margin-left: $snackbar-button-left-margin;
+    text-transform: uppercase;
+    user-select: none;
+    font-weight: $snackbar-button-font-weight;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    transition: color .2s ease;
+
+    &:hover {
+        color: $snackbar-button-text-color-hover;
+    }
+}
