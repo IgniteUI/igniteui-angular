@@ -78,7 +78,11 @@ export class IgxGridHeaderComponent implements DoCheck {
     @HostBinding("class.last-fixed")
     get isLastFixed() {
         var fixedCols = this.grid.fixedColumns;
-        return fixedCols.indexOf(this.column) === fixedCols.length - 1;
+        if(fixedCols.length === 0){
+            return false;
+        } else {
+            return fixedCols.indexOf(this.column) === fixedCols.length - 1;
+        }
     }
 
     protected getSortDirection() {
