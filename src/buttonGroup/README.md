@@ -31,7 +31,7 @@ The **igx-ButtonGroup** component aims at providing a button group functionality
 
 # Examples
 
-Using `igx-ButtonGroup` to organize buttons into an js blocks styled button group.
+Using `igx-ButtonGroup` to organize buttons into an for Angular styled button group.
 ```html
     <igx-buttongroup multiSelection="false" [values]="buttons" [alignment]="alignment">
     </igx-buttongroup>
