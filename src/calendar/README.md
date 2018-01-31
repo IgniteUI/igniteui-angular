@@ -4,6 +4,23 @@ The **igxCalendar** provides a way for the user to select date(s).
 
 You can see it in action [here](http://139.59.168.161/demos/calendar)
 
+## Dependencies
+In order to be able to use **igxCalendar** you should keep in mind that it is dependent on **BrowserAnimationsModule**,
+which must be imported **only once** in your application's AppModule, for example:
+```typescript
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+@NgModule({
+	imports: [
+		BrowserModule,
+        BrowserAnimationsModule
+        ...
+	]
+})
+export class AppModule {
+}
+```
+
 ## Usage
 ```typescript
 import { IgxCalendarComponent } from "igniteui-angular";
