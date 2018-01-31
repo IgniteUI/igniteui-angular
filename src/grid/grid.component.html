@@ -23,14 +23,14 @@
 <div class="igx-grid__thead">
     <div class="igx-grid__tr" role="row">
         <igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col"></igx-grid-header>
-        <ng-template igVirtFor let-col [igVirtForOf]="unfixedColumns" [igVirtForScrolling]="'horizontal'" [igVirtForUseForScroll]="parentVirtDir">
+        <ng-template igVirtFor let-col [igVirtForOf]="unfixedColumns" [igVirtForScrolling]="'horizontal'" [igVirtForUseForScroll]="parentVirtDir" [igVirtForContainerSize]='width'>
             <igx-grid-header [gridID]="id" [column]="col"></igx-grid-header>
         </ng-template>
     </div>
 </div>
 
 <div class="igx-grid__tbody" [style.height]='height' [style.width]='width' >
-     <ng-template igVirtFor let-rowData [igVirtForOf]="data" let-rowIndex="index" [igVirtForScrolling]="'vertical'">
+     <ng-template igVirtFor let-rowData [igVirtForOf]="data" let-rowIndex="index" [igVirtForScrolling]="'vertical'" [igVirtForContainerSize]='height'>
         <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
         </igx-grid-row>
      </ng-template>
