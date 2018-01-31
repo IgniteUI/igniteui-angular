@@ -8,13 +8,14 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { HVirtualHelper } from './horizontal.virtual.helper.component';
 
-@Directive({selector: '[igVirtFor]'})
+@Directive({ selector: '[igVirtFor]' })
 export class IgVirtualForOf<T> {
 
 	private hScroll;
 	private func;
+	private hCache: Array<number>;
 
-	dc :ComponentRef<DisplayContainer>;
+	dc: ComponentRef<DisplayContainer>;
 
 	@ViewChild(DisplayContainer)
 	private displayContiner: DisplayContainer;
@@ -26,7 +27,7 @@ export class IgVirtualForOf<T> {
 	@Input() igVirtForScrolling: string;
 	@Input() igVirtForUseForScroll: any;
 
-	private _embeddedViews:Array<EmbeddedViewRef<any>> = [];
+	private _embeddedViews: Array<EmbeddedViewRef<any>> = [];
 
 	//@Input()
 	//set ngForTrackBy(fn: TrackByFunction<T>) {
@@ -40,7 +41,7 @@ export class IgVirtualForOf<T> {
 	//  }
 	//  this._trackByFn = fn;
 	//}
-  //
+	//
 
 	onScroll(event) {
 		let scrollTop = event.target.scrollTop;
@@ -50,7 +51,7 @@ export class IgVirtualForOf<T> {
 		this._currIndex = Math.round(ratio * this.igVirtForOf.length);
 		//this.dc.instance._vcr.clear();
 		let endingIndex = this._pageSize + this._currIndex;
-		for(let i = this._currIndex; i < endingIndex && this.igVirtForOf[i] !== undefined; i++) {
+		for (let i = this._currIndex; i < endingIndex && this.igVirtForOf[i] !== undefined; i++) {
 			let input = this.igVirtForOf[i];
 			var embView = embeddedViewCopy.shift();
 			var cntx = (<EmbeddedViewRef<any>>embView).context;
@@ -61,38 +62,38 @@ export class IgVirtualForOf<T> {
 	}
 
 	onHScroll(event) {
-		 let scrollLeft = event.target.scrollLeft;
-		 let hcWidth = event.target.children[0].scrollWidth;
-		 let ratio = scrollLeft / hcWidth;
-		 let embeddedViewCopy = Object.assign([], this._embeddedViews);
+		let scrollLeft = event.target.scrollLeft;
+		let hcWidth = event.target.children[0].scrollWidth;
+		let ratio = scrollLeft / hcWidth;
+		let embeddedViewCopy = Object.assign([], this._embeddedViews);
 
-		 this._currIndex = Math.round(ratio * this.igVirtForOf.length);
+		this._currIndex = Math.round(ratio * this.igVirtForOf.length);
 
-		  let endingIndex = this._pageSize + this._currIndex;
-		  for(let i = this._currIndex; i < endingIndex && this.igVirtForOf[i] !== undefined; i++) {
-		  	let input = this.igVirtForOf[i];
-		  	var embView = embeddedViewCopy.shift();
-		 	var cntx = (<EmbeddedViewRef<any>>embView).context;
-		 	cntx.$implicit = input;
-		 	cntx.index = this.igVirtForOf.indexOf(input);
-		  }
+		let endingIndex = this._pageSize + this._currIndex;
+		for (let i = this._currIndex; i < endingIndex && this.igVirtForOf[i] !== undefined; i++) {
+			let input = this.igVirtForOf[i];
+			var embView = embeddedViewCopy.shift();
+			var cntx = (<EmbeddedViewRef<any>>embView).context;
+			cntx.$implicit = input;
+			cntx.index = this.igVirtForOf.indexOf(input);
+		}
 		this.dc.changeDetectorRef.detectChanges();
 	}
 
 	get ngForTrackBy(): TrackByFunction<T> { return this._trackByFn; }
 
-	private _differ: IterableDiffer<T>|null = null;
+	private _differ: IterableDiffer<T> | null = null;
 	private _trackByFn: TrackByFunction<T>;
 	private _pageSize: number = 0;
 	private _currIndex: number = 0;
 
 	constructor(
 		private _viewContainer: ViewContainerRef,
-		private _template: TemplateRef<NgForOfContext<T>>,		
+		private _template: TemplateRef<NgForOfContext<T>>,
 		private _differs: IterableDiffers,
 		private resolver: ComponentFactoryResolver,
 		public cdr: ChangeDetectorRef,
-		private _zone: NgZone) {}
+		private _zone: NgZone) { }
 
 	//@Input()
 	//set ngForTemplate(value: TemplateRef<NgForOfContext<T>>) {
@@ -103,41 +104,49 @@ export class IgVirtualForOf<T> {
 	//	this._template = value;
 	//  }
 	//}
-  //
+	//
 	ngAfterViewInit(): void {
 		var that = this;
 		let vc = this.igVirtForUseForScroll ? this.igVirtForUseForScroll._viewContainer : this._viewContainer;
-		this._pageSize = this.igVirtForScrolling === "vertical" ?
-		 vc.element.nativeElement.parentElement.clientHeight/ 50 :
-		 vc.element.nativeElement.parentElement.clientWidth/200;
+		if (this.igVirtForScrolling === "horizontal") {
+			var totalWidth: number = this.initHCache(this.igVirtForOf);
+			this._pageSize = this.getHorizontalIndexAt(
+				vc.element.nativeElement.parentElement.clientWidth,
+				this.hCache,
+				0
+			) + 2;
+		} else {
+			this._pageSize = vc.element.nativeElement.parentElement.clientHeight / 50;
+		}
 
 		const dcFactory: ComponentFactory<DisplayContainer> = this.resolver.resolveComponentFactory(DisplayContainer);
 		this.dc = this._viewContainer.createComponent(dcFactory, 0);
-		for(let i = 0; i < this._pageSize && this.igVirtForOf[i] !== undefined; i++) {
+		for (let i = 0; i < this._pageSize && this.igVirtForOf[i] !== undefined; i++) {
 			let input = this.igVirtForOf[i];
 			let embeddedView = this.dc.instance._vcr.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
 			this._embeddedViews.push(embeddedView);
 		}
-		 if (this.igVirtForScrolling === "vertical") {
-			 
+
+		if (this.igVirtForScrolling === "vertical") {
 			const factory: ComponentFactory<VirtualHelper> = this.resolver.resolveComponentFactory(VirtualHelper);
 			let vh: ComponentRef<VirtualHelper> = this._viewContainer.createComponent(factory, 1);
 			vh.instance.itemsLength = this.igVirtForOf.length;
 			this._zone.runOutsideAngular(() => {
-				vh.instance.elementRef.nativeElement.addEventListener('scroll', function(evt){that.onScroll(evt) });
+				vh.instance.elementRef.nativeElement.addEventListener('scroll', function (evt) { that.onScroll(evt) });
 			});
 			this.cdr.detectChanges();
-		 }
-		
+		}
+
 		if (this.igVirtForScrolling === "horizontal") {
+			
 			this.dc.instance._viewContainer.element.nativeElement.style.display = "inline-flex";
-			var directiveRef = this.igVirtForUseForScroll || this;			
+			var directiveRef = this.igVirtForUseForScroll || this;
 			this.hScroll = this.getHorizontalScroll(vc, "horizontal-virtual-helper");
-			this.func = function (evt) {that.onHScroll(evt);}
-			if(!this.hScroll){
+			this.func = function (evt) { that.onHScroll(evt); }
+			if (!this.hScroll) {
 				const hvFactory: ComponentFactory<HVirtualHelper> = this.resolver.resolveComponentFactory(HVirtualHelper);
 				let hvh: ComponentRef<HVirtualHelper> = vc.createComponent(hvFactory);
-				hvh.instance.itemsLength = this.igVirtForOf.length;
+				hvh.instance.width = totalWidth;
 				this._zone.runOutsideAngular(() => {
 					hvh.instance.elementRef.nativeElement.addEventListener('scroll', that.func);
 				});
@@ -154,23 +163,46 @@ export class IgVirtualForOf<T> {
 		var elem = viewref.element.nativeElement.parentElement.getElementsByTagName(nodeName);
 		return elem.length > 0 ? elem[0] : null;
 	}
+
+	initHCache(cols: Array<any>): number {
+		var totalWidth = 0, i = 0;
+		this.hCache = [];
+		this.hCache.push(0);
+		for (i; i < cols.length; i++) {
+			totalWidth += cols[i].width;
+			this.hCache.push(totalWidth);
+		}
+		return totalWidth;
+	}
+
+	getHorizontalIndexAt(left, set, index) {
+		var midIdx, midLeft;
+		if (set.length === 1) {
+			return index;
+		}
+		midIdx = Math.floor(set.length / 2);
+		midLeft = set[midIdx];
+		return this.getHorizontalIndexAt(
+			left,
+			midLeft > left ? set.slice(0, midIdx) : set.slice(midIdx),
+			midLeft > left ? index : index + midIdx
+		);
+	}
 }
 
 class RecordViewTuple<T> {
-	constructor(public record: any, public view: EmbeddedViewRef<NgForOfContext<T>>) {}
+	constructor(public record: any, public view: EmbeddedViewRef<NgForOfContext<T>>) { }
 }
 
 export function getTypeNameForDebugging(type: any): string {
 	return type['name'] || typeof type;
 }
 
-
-
 @NgModule({
-    declarations: [	IgVirtualForOf, DisplayContainer, VirtualHelper, HVirtualHelper],
-    entryComponents: [	DisplayContainer, VirtualHelper, HVirtualHelper],
-	imports: [ CommonModule ],
-	exports: [ IgVirtualForOf ]
+	declarations: [IgVirtualForOf, DisplayContainer, VirtualHelper, HVirtualHelper],
+	entryComponents: [DisplayContainer, VirtualHelper, HVirtualHelper],
+	imports: [CommonModule],
+	exports: [IgVirtualForOf]
 })
 export class IgxVirtForModule {
 }

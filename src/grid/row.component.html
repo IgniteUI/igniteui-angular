@@ -1,3 +1,3 @@
 <ng-template igVirtFor let-col [igVirtForOf]="columns" [igVirtForUseForScroll]="grid.parentVirtDir" let-colIndex="index" [igVirtForScrolling]="'horizontal'">
-    <igx-grid-cell [column]="col" [row]="this" [value]="rowData[col.field]" [cellTemplate]="col.bodyTemplate"></igx-grid-cell>
+    <igx-grid-cell [column]="col" [row]="this" [style.width.px]="col.width" [value]="rowData[col.field]" [cellTemplate]="col.bodyTemplate"></igx-grid-cell>
 </ng-template>

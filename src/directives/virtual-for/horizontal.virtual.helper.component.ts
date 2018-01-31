@@ -8,12 +8,8 @@ import { Component, ViewChild, ViewContainerRef, style, HostListener, Output, Ev
 export class HVirtualHelper {
 	@ViewChild('horizontal_container', { read: ViewContainerRef }) _vcr;
 	@Output() vhscroll: EventEmitter<any> = new EventEmitter();
-	@Input() itemsLength: number;
-	public width: number;
+	@Input() width: number;
 	constructor(public elementRef: ElementRef) { }
-	ngOnInit() {
-		this.width = 200 * this.itemsLength;
-	}
 
 	@HostListener('scroll', ['$event'])
 	onScroll(event) {

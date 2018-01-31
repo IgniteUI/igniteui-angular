@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewContainerRef,ChangeDetectorRef } from "@angular/core";
+import { Component, ViewChild, ViewContainerRef, ChangeDetectorRef } from "@angular/core";
 import { makeDecorator } from "@angular/core/src/util/decorators";
 
 @Component({
@@ -8,8 +8,8 @@ import { makeDecorator } from "@angular/core/src/util/decorators";
 })
 export class DisplayContainer {
 	@ViewChild('display_container', { read: ViewContainerRef }) _vcr;
-	constructor( public cdr: ChangeDetectorRef, public _viewContainer: ViewContainerRef){}
-	scroll(event){
+	constructor(public cdr: ChangeDetectorRef, public _viewContainer: ViewContainerRef) { }
+	scroll(event) {
 		console.log(event);
 	}
 }
