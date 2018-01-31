@@ -234,4 +234,27 @@ export class GridSampleComponent {
       this.grid1.addRow(this.selectedRow.record);
       this.snax.hide();
     }
+
+    public ToggleCol() {      
+      if(this.columns[0].field === '0'){
+        this.columns.splice(0,1);
+      } else {       
+         this.columns.unshift({field: "0", width: "200px"});
+      }
+      this.grid1.markForCheck();
+    }
+
+      public ToggleRow() {
+        if(this.localData[0][1] === 0){
+          this.localData.splice(0,1);
+        } else {
+          var obj = {};
+          for(var j = 0; j <  this.columns.length; j++){
+            var col = this.columns[j].field;
+            obj[col] = 0;
+          }
+          this.localData.unshift(obj);
+        }
+        this.grid1.markForCheck();
+    }
 }
