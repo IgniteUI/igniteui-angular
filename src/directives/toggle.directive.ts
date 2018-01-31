@@ -14,9 +14,7 @@ import {
     Input,
     NgModule,
     OnDestroy,
-    OnInit,
-    Output,
-    Renderer2
+    Output
 } from "@angular/core";
 
 @Directive({
