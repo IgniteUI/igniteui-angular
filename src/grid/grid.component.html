@@ -20,12 +20,17 @@
 </ng-template>
 
 
-<div class="igx-grid__thead">
+<div class="igx-grid__thead" [style.width.px]='headerWidth'>
     <div class="igx-grid__tr" role="row">
-        <igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col"></igx-grid-header>
-        <ng-template igVirtFor let-col [igVirtForOf]="unfixedColumns" [igVirtForScrolling]="'horizontal'" [igVirtForUseForScroll]="parentVirtDir" [igVirtForContainerSize]='width'>
+        <ng-container *ngIf="fixingDirection === 'left'" >
+            <igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col"></igx-grid-header>
+        </ng-container>
+        <ng-template igVirtFor let-col [igVirtForOf]="unfixedColumns" [igVirtForScrolling]="'horizontal'" [igVirtForUseForScroll]="parentVirtDir" [igVirtForContainerSize]='unfixedWidth'>
             <igx-grid-header [gridID]="id" [column]="col"></igx-grid-header>
         </ng-template>
+        <ng-container *ngIf="fixingDirection === 'right'" >
+            <igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col"></igx-grid-header>
+        </ng-container>
     </div>
 </div>
 
@@ -36,8 +41,8 @@
      </ng-template>
 </div>
 <div [style.width]='width'>
-    <div [style.width.px]='fixedWidth' style='float:left;'></div>
-    <div [style.width.px]='unfixedWidth' style='float:right;'>
+    <div [style.width.px]='fixedWidth' [style.float]='fixingDirection'></div>
+    <div [style.width.px]='unfixedWidth' [style.float]='fixingDirection === "right" ? "left": "right"'>
         <ng-template igVirtFor #scrollContainer>
         </ng-template>
     </div>

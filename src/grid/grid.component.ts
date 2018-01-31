@@ -114,11 +114,18 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     @Input()
     public width;
 
+    get headerWidth(){
+        return parseInt(this.width) - 17;
+    }
+
     @Input()
     public evenRowCSS = "";
 
     @Input()
     public oddRowCSS = "";
+
+    @Input()
+    public fixingDirection = "left";
 
     @Output()
     public onSelection = new EventEmitter();
@@ -411,5 +418,25 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
         });
 
         this.columnList.reset(columns);
+    }
+
+    public fixColumn(columnName:string) {
+        let col = this.getColumnByName(columnName);
+        col.fixed = true;
+        if(this._fixedColumns.indexOf(col) === -1) {
+            this._fixedColumns.push(col);
+            this._unfixedColumns.splice(this._unfixedColumns.indexOf(col), 1);
+        }
+        this.markForCheck();
+    }
+
+    public unfixColumn(columnName:string) {
+        let col = this.getColumnByName(columnName);
+        col.fixed = false;
+        if(this._fixedColumns.indexOf(col) !== -1) {
+            this._fixedColumns.splice(this._fixedColumns.indexOf(col), 1);
+            this._unfixedColumns.unshift(col);
+        }
+        this.markForCheck();
     }
 }

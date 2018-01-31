@@ -1,5 +1,9 @@
-<igx-grid-cell *ngFor="let c of fixedColumns" [column]="c" [row]="this" [value]="rowData[c.field]" [cellTemplate]="c.bodyTemplate"></igx-grid-cell>
-
-<ng-template igVirtFor let-col [igVirtForOf]="unfixedColumns" [igVirtForUseForScroll]="grid.parentVirtDir" let-colIndex="index" [igVirtForScrolling]="'horizontal'" [igVirtForContainerSize]='grid.width'>
+<ng-container *ngIf="grid.fixingDirection === 'left'" >
+    <igx-grid-cell *ngFor="let c of fixedColumns" [column]="c" [row]="this" [value]="rowData[c.field]" [cellTemplate]="c.bodyTemplate"></igx-grid-cell>
+</ng-container>
+<ng-template igVirtFor let-col [igVirtForOf]="unfixedColumns" [igVirtForUseForScroll]="grid.parentVirtDir" let-colIndex="index" [igVirtForScrolling]="'horizontal'" [igVirtForContainerSize]='grid.unfixedWidth'>
     <igx-grid-cell [column]="col" [row]="this" [value]="rowData[col.field]" [cellTemplate]="col.bodyTemplate"></igx-grid-cell>
 </ng-template>
+<ng-container *ngIf="grid.fixingDirection === 'right'" >
+    <igx-grid-cell *ngFor="let c of fixedColumns" [column]="c" [row]="this" [value]="rowData[c.field]" [cellTemplate]="c.bodyTemplate"></igx-grid-cell>
+</ng-container>

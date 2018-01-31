@@ -259,4 +259,13 @@ export class GridSampleComponent {
         }
         this.grid1.markForCheck();
     }
+
+      toggleFixedState(){
+      var col = this.grid1.getColumnByName("1");
+      if(col.fixed){
+        this.grid1.unfixColumn("1");
+      } else {
+        this.grid1.fixColumn("1");
+      }
+    }
 }

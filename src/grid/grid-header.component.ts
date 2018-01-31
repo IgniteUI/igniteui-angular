@@ -13,6 +13,9 @@ import { IgxColumnComponent } from "./column.component";
         :host.last-fixed {
             border-right: 1px solid #666;
             }
+        :host.first-fixed {
+            border-left: 1px solid #666;
+        }
     `
     ]
 })
@@ -78,10 +81,20 @@ export class IgxGridHeaderComponent implements DoCheck {
     @HostBinding("class.last-fixed")
     get isLastFixed() {
         var fixedCols = this.grid.fixedColumns;
-        if(fixedCols.length === 0){
+        if(fixedCols.length === 0 || this.grid.fixingDirection === "right"){
             return false;
         } else {
             return fixedCols.indexOf(this.column) === fixedCols.length - 1;
+        }
+    }
+
+    @HostBinding("class.first-fixed")
+    get isFirstFixed() {
+        var fixedCols = this.grid.fixedColumns;
+        if(fixedCols.length === 0 || this.grid.fixingDirection === "left"){
+            return false;
+        } else {
+            return fixedCols.indexOf(this.column) === 0;
         }
     }
 
