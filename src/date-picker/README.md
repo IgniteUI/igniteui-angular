@@ -3,6 +3,22 @@
 The **igx-datePicker** component allows you to choose date from calendar
 which is presented into input field.
 
+## Dependencies
+In order to be able to use **igx-datePicker** you should keep in mind that it is dependent on **BrowserAnimationsModule**,
+which must be imported **only once** in your application's AppModule, for example:
+```typescript
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+@NgModule({
+	imports: [
+		...
+        BrowserAnimationsModule
+        ...
+	]
+})
+export class AppModule {
+}
+```
+
 # Usage
 ```typescript
 import { IgxDatePickerComponent } from "igniteui-angular";
