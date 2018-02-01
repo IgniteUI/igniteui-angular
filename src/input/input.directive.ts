@@ -11,7 +11,7 @@ import {
 @Directive({
     selector: "[igxInput]"
 })
-export class IgxInputClass implements DoCheck {
+export class IgxInputDirective implements DoCheck {
 
     @HostBinding("class.igx-form-group__input")
     public isInput: boolean = true;
@@ -45,8 +45,8 @@ export class IgxInputClass implements DoCheck {
 }
 
 @NgModule({
-    declarations: [IgxInputClass],
-    exports: [IgxInputClass],
+    declarations: [IgxInputDirective],
+    exports: [IgxInputDirective],
     imports: [CommonModule]
 })
-export class IgxInput {}
+export class IgxInputModule {}

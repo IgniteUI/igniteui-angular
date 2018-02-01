@@ -18,7 +18,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { WEEKDAYS } from "../calendar/calendar";
 import { IgxCalendarComponent, IgxCalendarModule } from "../calendar/calendar.component";
 import { IgxDialog, IgxDialogModule } from "../dialog/dialog.component";
-import { IgxInput } from "../input/input.directive";
+import { IgxInputModule } from "../input/input.directive";
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -201,6 +201,6 @@ class Constants {
     declarations: [IgxDatePickerComponent],
     entryComponents: [IgxCalendarComponent],
     exports: [IgxDatePickerComponent],
-    imports: [CommonModule, IgxInput, IgxDialogModule, IgxCalendarModule]
+    imports: [CommonModule, IgxInputModule, IgxDialogModule, IgxCalendarModule]
 })
 export class IgxDatePickerModule { }

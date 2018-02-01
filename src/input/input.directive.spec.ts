@@ -5,7 +5,7 @@ import {
 } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { IgxLabelModule } from "../label/label.directive";
-import { IgxInput } from "./input.directive";
+import { IgxInputModule } from "./input.directive";
 
 describe("IgxInput", () => {
     beforeEach(async(() => {
@@ -15,7 +15,7 @@ describe("IgxInput", () => {
                 InputWithAttribs
             ],
             imports: [
-                IgxInput,
+                IgxInputModule,
                 IgxLabelModule
             ]
         })
