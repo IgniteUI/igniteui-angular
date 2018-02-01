@@ -34,7 +34,7 @@
     "ignoreCompilerErrors": true,
     "excludePrivate": true,
     "excludeNotExported": true,
-    "name": "IgniteUI JS Blocks",
+    "name": "Ignite UI for Angular",
     "target": "ES5",
     "moduleResolution": "node",
     "preserveConstEnums": true,

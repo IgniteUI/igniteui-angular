@@ -1,6 +1,6 @@
 # Animations
 
-Ignite UI JS Blocks includes over 100+ pre-built animations. They are split in 7 groups:
+Ignite UI for Angular includes over 100+ pre-built animations. They are split in 7 groups:
 
   - [Fade](https://github.com/IgniteUI/igniteui-angular/tree/master/src/animations/fade/README.md)
   - [Flip](https://github.com/IgniteUI/igniteui-angular/tree/master/src/animations/flip/README.md)
@@ -50,7 +50,7 @@ Some of the animations from the Flip, Rotate, and Swing groups require the paren
 
 # Timing Functions
 
-Ignite UI JS Blocks includes a set of timing functions that can be used to ease in or out an animation.
+Ignite UI for Angular includes a set of timing functions that can be used to ease in or out an animation.
 There are three main timing function groups - **EaseIn**, **EaseOut**, and **EaseInOut**; each containing the following timings:
 
   - quad
