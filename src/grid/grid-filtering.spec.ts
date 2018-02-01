@@ -300,21 +300,21 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
         grid.filter("ReleaseDate", null, DATE_FILTERS.thisYear);
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(5);
+        expect(grid.rowList.length).toEqual(expectedResults[2]);
 
         // LastYear filter
         grid.clearFilter("ReleaseDate");
         fix.detectChanges();
         grid.filter("ReleaseDate", null, DATE_FILTERS.lastYear);
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(1);
+        expect(grid.rowList.length).toEqual(expectedResults[4]);
 
         // NextYear filter
         grid.clearFilter("ReleaseDate");
         fix.detectChanges();
         grid.filter("ReleaseDate", null, DATE_FILTERS.nextYear);
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(0);
+        expect(grid.rowList.length).toEqual(expectedResults[3]);
 
         // Null filter
         grid.clearFilter("ReleaseDate");
@@ -484,20 +484,30 @@ function fillExpectedResults(grid: IgxGridComponent, calendar: Calendar, today) 
     // day + 15
     const dateItem0 = generateICalendarDate(grid.data[0].ReleaseDate,
         today.getFullYear(), today.getMonth());
+    // month - 1
+    const dateItem1 = generateICalendarDate(grid.data[1].ReleaseDate,
+        today.getFullYear(), today.getMonth());
     // day - 1
     const dateItem3 = generateICalendarDate(grid.data[3].ReleaseDate,
         today.getFullYear(), today.getMonth());
     // day + 1
     const dateItem5 = generateICalendarDate(grid.data[5].ReleaseDate,
         today.getFullYear(), today.getMonth());
+    // month + 1
+    const dateItem6 = generateICalendarDate(grid.data[6].ReleaseDate,
+        today.getFullYear(), today.getMonth());
 
     let nextMonthCountItems = 1;
     let lastMonthCountItems = 1;
+    let thisYearCountItems = 6;
+    let nextYearCountItems = 0;
+    let lastYearCountItems = 0;
 
     // LastMonth filter
     if (dateItem3.isPrevMonth) {
         lastMonthCountItems++;
     }
+    expectedResults[0] = lastMonthCountItems;
 
     // NextMonth filter
     if (dateItem0.isNextMonth) {
@@ -507,17 +517,72 @@ function fillExpectedResults(grid: IgxGridComponent, calendar: Calendar, today) 
     if (dateItem5.isNextMonth) {
         nextMonthCountItems++;
     }
-
-    expectedResults[0] = lastMonthCountItems;
     expectedResults[1] = nextMonthCountItems;
+
+    // ThisYear, NextYear, PreviousYear filter
+
+    // day + 15
+    if (!dateItem0.isThisYear) {
+        thisYearCountItems--;
+    } else if (dateItem0.isNextYear) {
+        nextYearCountItems++;
+    }
+
+    // month - 1
+    if (!dateItem1.isThisYear) {
+        thisYearCountItems--;
+    }
+
+    if (dateItem1.isLastYear) {
+        lastYearCountItems++;
+    }
+
+    // day - 1
+    if (!dateItem3.isThisYear) {
+        thisYearCountItems--;
+    }
+
+    if (dateItem3.isLastYear) {
+        lastYearCountItems++;
+    }
+
+    // day + 1
+    if (!dateItem5.isThisYear) {
+        thisYearCountItems--;
+    }
+
+    if (dateItem5.isNextYear) {
+        nextYearCountItems++;
+    }
+
+    // month + 1
+    if (!dateItem6.isThisYear) {
+        thisYearCountItems--;
+    }
+
+    if (dateItem6.isNextYear) {
+        nextYearCountItems++;
+    }
+
+    // ThisYear filter result
+    expectedResults[2] = thisYearCountItems;
+
+    // NextYear filter result
+    expectedResults[3] = nextYearCountItems;
+
+    // PreviousYear filter result
+    expectedResults[4] = lastYearCountItems;
 }
 
-function generateICalendarDate(date: Date, year: number, month: number): ICalendarDate {
+function generateICalendarDate(date: Date, year: number, month: number) {
     return {
         date,
         isCurrentMonth: date.getFullYear() === year && date.getMonth() === month,
+        isLastYear: isLastYear(date, year),
         isNextMonth: isNextMonth(date, year, month),
-        isPrevMonth: isPreviousMonth(date, year, month)
+        isNextYear: isNextYear(date, year),
+        isPrevMonth: isPreviousMonth(date, year, month),
+        isThisYear: isThisYear(date, year)
     };
 }
 function isPreviousMonth(date: Date, year: number, month: number): boolean {
@@ -531,5 +596,17 @@ function isNextMonth(date: Date, year: number, month: number): boolean {
     if (date.getFullYear() === year) {
         return date.getMonth() > month;
     }
+    return date.getFullYear() > year;
+}
+
+function isThisYear(date: Date, year: number): boolean {
+    return date.getFullYear() === year;
+}
+
+function isLastYear(date: Date, year: number): boolean {
+    return date.getFullYear() < year;
+}
+
+function isNextYear(date: Date, year: number): boolean {
     return date.getFullYear() > year;
 }
