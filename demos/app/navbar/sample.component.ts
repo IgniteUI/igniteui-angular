@@ -1,7 +1,7 @@
 import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 
-const CURRENT_VIEW: string = "Ignite UI JS Blocks Samples";
+const CURRENT_VIEW: string = "Ignite UI for Angular Samples";
 
 @Component({
     selector: "navbar-sample",
