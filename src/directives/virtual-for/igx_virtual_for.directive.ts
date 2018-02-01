@@ -176,6 +176,9 @@ export class IgVirtualForOf<T> {
 				}
 			}
 		}
+		if ('igVirtForContainerSize' in changes && !changes['igVirtForContainerSize'].firstChange) {
+			this._recalcOnContainerChange(changes);
+		}
 	}
 	ngDoCheck(): void {
 		if (this._differ) {
@@ -184,7 +187,7 @@ export class IgVirtualForOf<T> {
 		}
 	}
 	private _applyChanges(changes: IterableChanges<T>) {
-		if (this.igVirtForOf && this.igVirtForOf.length && this.dc) {
+		if (this.igVirtForOf && this.igVirtForOf.length && this.dc) {			
 			let embeddedViewCopy = Object.assign([], this._embeddedViews);
 			let endingIndex = this._pageSize + this._currIndex;
 			for (let i = this._currIndex; i < endingIndex && this.igVirtForOf[i] !== undefined; i++) {
@@ -198,6 +201,31 @@ export class IgVirtualForOf<T> {
 		}
 	}
 
+	private _recalcOnContainerChange(changes: SimpleChanges) {
+		var value = changes['igVirtForContainerSize'].currentValue
+		let pageSize = this.igVirtForScrolling === "vertical" ?
+				parseInt(value) / 50 :
+				parseInt(value) / 200;
+		if(pageSize > this._pageSize){
+			//add view
+			let diff = pageSize - this._pageSize;
+			for(var i = 0; i < diff; i++){
+				let input = this.igVirtForOf[pageSize - i];
+				let embeddedView = this.dc.instance._vcr.createEmbeddedView(this._template, { $implicit: input, index: this.igVirtForOf.indexOf(input) });
+				this._embeddedViews.push(embeddedView);
+			}
+		} else if (pageSize < this._pageSize){
+			//remove view
+			let diff = this._pageSize - pageSize;
+			for(var i = 0; i < diff; i++){
+				var ind = this._pageSize - i - 1;
+				let embeddedView = this._embeddedViews[ind];
+				embeddedView.destroy();
+				this._embeddedViews.splice(ind, 1);
+			}
+		}
+		this._pageSize = pageSize;
+	}
 	getHorizontalScroll(viewref, nodeName) {
 		var elem = viewref.element.nativeElement.parentElement.getElementsByTagName(nodeName);
 		return elem.length > 0 ? elem[0] : null;
