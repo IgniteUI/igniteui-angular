@@ -28,12 +28,22 @@
     </div>
 </div>
 
-<div class="igx-grid__tbody" role="rowgroup">
-    <igx-grid-row [gridID]="id" [index]="i" [rowData]="item" igVirtFor="let item of data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
+<!--<div class="igx-grid__tbody" role="rowgroup">
+    <igx-grid-row [gridID]="id" igVirtFor="let item of data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
                                 | gridSort:sortingExpressions:id:pipeTrigger
                                 | gridPaging:page:perPage:id:pipeTrigger;
                                 index as i;" [igVirtForScrolling]="'vertical'" #scrollContainer [igVirtForContainerSize]='height'>
     </igx-grid-row>
+</div>-->
+
+<div class="igx-grid__tbody" [style.height]='height' [style.width]='width' >
+        <ng-template igVirtFor="let item of data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
+                                | gridSort:sortingExpressions:id:pipeTrigger
+                                | gridPaging:page:perPage:id:pipeTrigger;
+                                index as i;" let-rowData [igVirtForOf]="data" let-rowIndex="index" [igVirtForScrolling]="'vertical'" [igVirtForContainerSize]='height'>
+           <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
+           </igx-grid-row>
+        </ng-template>
 </div>
 
 <div class="igx-grid__tfoot" role="rowgroup">

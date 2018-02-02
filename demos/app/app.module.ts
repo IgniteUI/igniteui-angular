@@ -33,11 +33,10 @@ import { IgxToastSampleModule } from "./toast/sample.module";
 
 import { AppComponent } from "./app.component";
 import { routing } from "./app.routing";
-import { NavigationDrawerModule } from "../lib/main";
+import { IgxNavigationDrawerModule } from "../lib/main";
 
 
 import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSwitchModule, IgxAvatarModule } from "../lib/main";
-import { GridPerformanceSampleComponent } from "./grid-performance/sample.component";
 
 
 @NgModule({
@@ -49,7 +48,7 @@ import { GridPerformanceSampleComponent } from "./grid-performance/sample.compon
         FormsModule,
         HttpModule,
         routing,
-        NavigationDrawerModule,
+        IgxNavigationDrawerModule,
         IgxRadioModule,
         IgxIconModule,
         IgxCheckboxModule,

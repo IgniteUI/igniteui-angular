@@ -100,7 +100,7 @@ const appRoutes: Routes = [
     },
     {
         component: GridPerformanceSampleComponent,
-        path: "grid-performance"
+        path: "gridPerformance"
     },
     {
         component: IgxCardSampleComponent,
