@@ -1,35 +1,35 @@
 import {
-    AfterContentInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ComponentFactory,
-    ComponentFactoryResolver,
-    ComponentRef,
-    ContentChild,
-    ContentChildren,
-    EventEmitter,
-    HostBinding,
-    Input,
-    OnInit,
-    Output,
-    QueryList,
-    TemplateRef,
-    ViewChild,
-    ViewChildren,
-    ViewContainerRef,
-    ViewEncapsulation
+AfterContentInit,
+ChangeDetectionStrategy,
+ChangeDetectorRef,
+Component,
+ComponentFactory,
+ComponentFactoryResolver,
+ComponentRef,
+ContentChild,
+ContentChildren,
+EventEmitter,
+HostBinding,
+Input,
+OnInit,
+Output,
+QueryList,
+TemplateRef,
+ViewChild,
+ViewChildren,
+ViewContainerRef,
+ViewEncapsulation
 } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
 import { cloneArray } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
+import {IgVirtualForOf} from "../directives/virtual-for/igx_virtual_for.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { IgxGridRowComponent } from "./row.component";
-import {IgVirtualForOf} from "../directives/virtual-for/igx_virtual_for.directive";
 
 let NEXT_ID = 0;
 
@@ -105,7 +105,6 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     @Input()
     public paginationTemplate: TemplateRef<any>;
 
-    //@HostBinding("style.height")
     @Input()
     public height;
 
@@ -148,7 +147,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
 
     @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
 
-    @ViewChild("scrollContainer", { read: IgVirtualForOf }) parentVirtDir: IgVirtualForOf<any>;
+    @ViewChild("scrollContainer", { read: IgVirtualForOf }) public parentVirtDir: IgVirtualForOf<any>;
 
     public rowList: QueryList<IgxGridRowComponent>;
 
