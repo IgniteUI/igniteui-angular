@@ -1,19 +1,38 @@
-@function igx-badge-theme($default-border-color: null, $default-color: null) {
+$components: register-component($components, 'igx-badge');
+
+@function igx-badge-theme($text-color: null, $border-color: null, $background-color: null) {
     @return (
-        default-color: $default-color,
-        default-border-color: $default-border-color,
+        text-color: $text-color,
+        border-color: $border-color,
+        background-color: $background-color
     );
 }
 
+
 @mixin igx-badge($theme, $palette: $default-palette) {
     $default-theme: igx-badge-theme(
-        $default-color: igx-color($palette, accent, 500),
-        $default-border-color: igx-color($palette, primary, 500)
+        // This variables should be defined in the theme function above with :null value and in return statement.
+        $text-color: igx-color($palette, accent, 500),
+        $border-color: igx-color($palette, primary, 500),
+        $background-color: igx-color($palette, accent, 500)
     );
 
     $this: extend($default-theme, $theme);
 
-    @debug $this;
+    // TODO remove all commented variables in this list, after the component is done.
+    $badge-width: 22px !default;
+    $badge-height: $badge-width !default;
+    /*$default-badge-bg-color: palette(secondary) !default;*/
+    $badge-border: 0 solid $white !default;
+    /* $badge-border-color: $white !default;*/
+    $badge-border-radius-default: 4px !default;
+    $badge-border-radius-circle: $badge-width / 2 !default;
+    $badge-font-size: em(10px) !default;
+    $badge-font-weight: 600 !default;
+    $badge-shadow: $elevate-1 !default;
+    $badge-line-height: 2px !default;
+    $badge-icon-font-size: em(11px, 16px) !default;
+    $badge-value-padding: 4px !default;
 
     %igx-badge-display {
         position: absolute;
@@ -28,10 +47,10 @@
         height: $badge-height;
         font-size: $badge-font-size;
         font-weight: $badge-font-weight;
-        color: $badge-border-color;
-        background-color: $badge-bg-color-default;
+        color:  map-get($this, text-color);
+        background-color:  map-get($this, background-color);
         border: $badge-border;
-        border-color: map-get($this, default-border-color);
+        border-color: map-get($this, border-color);
         line-height: $badge-line-height;
         border-radius: $badge-border-radius-default;
         box-shadow: $badge-shadow;

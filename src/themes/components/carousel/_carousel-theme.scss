@@ -1,124 +1,156 @@
-%igx-carousel-display {
-    display: flex;
-    position: relative;
-    justify-content: center;
-    align-items: center;
-    flex-flow: column nowrap;
-    transform-style: preserve-3d;
-    outline: none;
+$components: register-component($components, 'igx-carousel');
+
+@function igx-carousel-theme(
+    $arrow-color:null,
+    $arrow-background:null,
+    $indicator-background:null
+){
+    @return(
+        arrow-color:$arrow-color,
+        arrow-background:$arrow-background,
+        indicator-background:$indicator-background
+    );
 }
 
-%igx-carousel-slide-wrapper {
-    position: relative;
-    width: 100%;
-    height: inherit;
-    overflow: hidden;
+@mixin igx-carousel($theme, $palette: $default-palette) {
+    $default-theme: igx-carousel-theme(
+        $arrow-color: $white,
+        $arrow-background:transparentize($white, .7),
+        $indicator-background:transparentize($white, .8)
+    );
 
-    .active {
-        display: block;
-    }
-}
+    $this: extend($default-theme, $theme);
 
-%igx-carousel-arrow {
-    display: flex;
-    margin: $carousel-arrow-margin;
-    position: absolute;
-    justify-content: center;
-    align-items: center;
-    width: 46px;
-    height: 46px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: $white;
-    cursor: pointer;
-    background-color: $carousel-arrow-bg;
-    border-radius: 50%;
-    box-shadow: $elevate-1;
-    transition: opacity .25s ease-out;
+    // 28. Carousel
+    $carousel-arrow-margin: 0 em(16px) !default;
+    $carousel-indicators-margin: em(16px) 0 !default;
+    $carousel-indicators-padding: 0 !default;
+    $carousel-indicator-margin: 0 em(5px) !default;
 
-    span {
+    %igx-carousel-display {
         display: flex;
-        align-items: center;
-    }
-}
-
-%igx-carousel-arrow--hover {
-    opacity: .7;
-}
-
-%igx-carousel-arrow--next {
-    right: 0;
-}
-
-%igx-carousel-arrow--prev {
-    left: 0;
-}
-
-%igx-carousel-indicators {
-    display: flex;
-    margin: $carousel-indicators-margin;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    list-style: none;
-    z-index: 10;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: $carousel-indicators-padding;
-    opacity: .85;
-
-    li {
-        margin: $carousel-indicator-margin;
         position: relative;
-        width: 12px;
-        height: 12px;
-        text-indent: -9999px;
+        justify-content: center;
+        align-items: center;
+        flex-flow: column nowrap;
+        transform-style: preserve-3d;
+        outline: none;
+    }
+
+    %igx-carousel-slide-wrapper {
+        position: relative;
+        width: 100%;
+        height: inherit;
+        overflow: hidden;
+
+        .active {
+            display: block;
+        }
+    }
+
+    %igx-carousel-arrow {
+        display: flex;
+        margin: $carousel-arrow-margin;
+        position: absolute;
+        justify-content: center;
+        align-items: center;
+        width: 46px;
+        height: 46px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: map-get($this, arrow-color);
         cursor: pointer;
-        border: 1px solid $white;
+        background-color: map-get($this, arrow-background);
         border-radius: 50%;
-        background-color: $carousel-indicator-bg;
-        transition: transform .25s $ease-in-quad;
         box-shadow: $elevate-1;
+        transition: opacity .25s ease-out;
 
-        &::after {
-            content: '';
-            position: absolute;
-            top: -1px;
-            bottom: 0;
-            left: -1px;
-            right: 0;
-            width: inherit;
-            height: inherit;
-            border-radius: inherit;
-            background: $white;
-            transform: scale(0);
-        }
-
-        &:hover {
-            transform: scale(1.2);
+        span {
+            display: flex;
+            align-items: center;
         }
     }
 
-    .active {
-        &::after {
-            animation: scale-in .3s $ease-out-quad forwards;
+    %igx-carousel-arrow--hover {
+        opacity: .7;
+    }
+
+    %igx-carousel-arrow--next {
+        right: 0;
+    }
+
+    %igx-carousel-arrow--prev {
+        left: 0;
+    }
+
+    %igx-carousel-indicators {
+        display: flex;
+        margin: $carousel-indicators-margin;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        list-style: none;
+        z-index: 10;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: $carousel-indicators-padding;
+        opacity: .85;
+
+        li {
+            margin: $carousel-indicator-margin;
+            position: relative;
+            width: 12px;
+            height: 12px;
+            text-indent: -9999px;
+            cursor: pointer;
+            border: 1px solid $white;
+            border-radius: 50%;
+            background-color: map-get($this, indicator-background);
+            transition: transform .25s $ease-in-quad;
+            box-shadow: $elevate-1;
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: -1px;
+                bottom: 0;
+                left: -1px;
+                right: 0;
+                width: inherit;
+                height: inherit;
+                border-radius: inherit;
+                background: $white;
+                transform: scale(0);
+            }
+
+            &:hover {
+                transform: scale(1.2);
+            }
+        }
+
+        .active {
+            &::after {
+                animation: scale-in .3s $ease-out-quad forwards;
+            }
         }
     }
+
+    %igx-carousel-slide {
+        display: none;
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transition: .5s ease-in-out left;
+        backface-visibility: hidden;
+        perspective: 1000px;
+    }
+
+    %igx-carousel-slide img {
+        width: inherit;
+        height: inherit;
+        transform: scale(1.01);
+    }
+
 }
 
-%igx-carousel-slide {
-    display: none;
-    width: 100%;
-    height: 100%;
-    position: relative;
-    transition: .5s ease-in-out left;
-    backface-visibility: hidden;
-    perspective: 1000px;
-}
-
-%igx-carousel-slide img {
-    width: inherit;
-    height: inherit;
-    transform: scale(1.01);
-}

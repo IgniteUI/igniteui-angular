@@ -1,166 +1,270 @@
-%cal-display {
-    display: flex;
-    flex-flow: column nowrap;
-    width: 100%;
-    overflow: hidden;
-    outline: none;
+$components: register-component($components, 'igx-calendar');
+
+@function igx-calendar-theme(
+    $header-background: null,
+    $header-date-hover-color: null,
+    $picker-arrow-color: null,
+    $picker-arrow-hover-color: null,
+    $value-text-color: null,
+    $value-inactive-text-color: null,
+    $value-weekend-text-color: null,
+    $theme-text-color:null,
+    $value-year-hover-text-color:null,
+    $value-month-hover-text-color:null,
+    $value-selected-background-color:null,
+    $value-current-text-color: null,
+    $value-hover-background: null,
+    $header-text-color: null
+) {
+
+    @if not($header-text-color) and $header-background {
+        $header-text-color: text-contrast($header-background);
+    }
+
+    @return (
+        header-background: $header-background,
+        header-date-hover-color: $header-date-hover-color,
+        picker-arrow-color: $picker-arrow-color,
+        picker-arrow-hover-color: $picker-arrow-hover-color,
+        value-text-color: $value-text-color,
+        value-inactive-text-color: $value-inactive-text-color,
+        value-weekend-text-color:$value-weekend-text-color,
+        theme-text-color:$theme-text-color,
+        value-year-hover-text-color: $value-year-hover-text-color,
+        value-month-hover-text-color: $value-month-hover-text-color,
+        value-selected-background-color:$value-selected-background-color,
+        value-current-text-color:$value-current-text-color,
+        value-hover-background:$value-hover-background,
+        header-text-color: $header-text-color
+    );
 }
 
-%cal-display--vertical {
-    flex-flow: row nowrap;
+@mixin igx-calendar($theme, $palette: $default-palette) {
+
+    $default-theme: igx-calendar-theme(
+        $header-background: igx-color($palette, accent, 500),
+        $header-date-hover-color: igx-color($palette, accent, 500),
+        $picker-arrow-color: igx-color($palette, grays, 800),
+        $picker-arrow-hover-color: igx-color($palette, accent, 500),
+        $value-text-color: $black,
+        $value-inactive-text-color: igx-color($palette, grays, 400),
+        $value-weekend-text-color: igx-color($palette, grays, 400),
+        $theme-text-color: igx-color($palette, accent, 500),
+        $value-year-hover-text-color: igx-color($palette, accent, 500),
+        $value-month-hover-text-color: igx-color($palette, accent, 500),
+        $value-selected-background-color: igx-color($palette, accent, 500),
+        $value-current-text-color:igx-color($palette, accent, 500),
+        $value-hover-background:igx-color($palette, grays, 100)
+    );
+
+    $this: extend($default-theme, $theme);
+
+
+    // 7. Calendar / Date Picker
+    // Calendar Header
+    $cal-header-year-fs: em(18px, 16px) !default;
+    $cal-header-year-lh: em(16px, 16px) !default;
+    $cal-header-year-margin: 0 !default;
+    $cal-header-date-fs: em(38px, 16px) !default;
+    $cal-header-date-lh: em(16px, 16px) !default;
+    $cal-header-date-margin: 0 !default;
+
+    $cal-header-color: text-contrast(map-get($this, 'calendear-header-background')) !default;
+    $cal-header-year-color: transparentize($cal-header-color, .2) !default;
+
+    $cal-header-padding: em(24px) em(16px) !default;
+    // Calendar Picker
+    $cal-picker-date-fs: em(18px, 16px) !default;
+    $cal-picker-date-lh: em(22px, 16px) !default;
+    $cal-picker-date-fw: 600 !default;
+    $cal-picker-padding: em(24px, 16px) !default;
+    // Calendar Values
+    $cal-value-w: em(40px, 16px) !default;
+    $cal-value-h: $cal-value-w;
+    $cal-valu-br: $cal-value-w / 2;
+    $cal-value-margin: em(2px, 16px) !default;
+    $cal-value-fs: em(16px, 16px) !default;
+    $cal-value-lh: em(22px, 16px) !default;
+    $cal-value-fw: 600 !default;
+
+    $cal-value-selected-text-color: text-contrast($cal-theme-color) !default;
+
+    $cal-value-year-fs: em(18px, 16px) !default;
+    $cal-value-year-current-fs: em(24px, 16px) !default;
+    $cal-value-year-hover-fs: em(27px, 16px) !default;
+    $cal-value-month-margin: 0 em(12px, 16px) !default;
+    $cal-value-month-height: 91px !default;
+    // Calendar Body
+    $cal-row-padding: 0 em(16px, 16px) !default;
+
+    %cal-display {
+        display: flex;
+        flex-flow: column nowrap;
+        width: 100%;
+        overflow: hidden;
+        outline: none;
+    }
+
+    %cal-display--vertical {
+        flex-flow: row nowrap;
+        %cal-header-display {
+            width: 168px;
+        }
+    }
+
     %cal-header-display {
-        width: 168px;
+        background-color: map-get($this, header-background);
+        color: map-get($this, header-text-color);
+        padding: $cal-header-padding;
+    }
+
+    %cal-header-year {
+        margin: $cal-header-year-margin;
+        color: $cal-header-year-color; // This returns transparent color from "$cal-header-color";
+        font-size: $cal-header-year-fs;
+    }
+
+    %cal-header-date {
+        display: flex;
+        margin: $cal-header-date-margin;
+        font-size: $cal-header-date-fs;
+        line-height: $cal-header-date-lh;
+    }
+
+    %cal-header-date--vertical {
+        flex-flow: column nowrap;
+    }
+
+    %cal-header-date-el--hover {
+        color: map-get($this, header-date-hover-color);
+        cursor: pointer;
+    }
+
+
+    %cal-picker-display {
+        display: flex;
+        height: 56px;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: $cal-picker-padding;
+        padding-left: $cal-picker-padding;
+        padding-right: $cal-picker-padding;
+    }
+
+    %cal-picker-arrow {
+        color: map-get($this, picker-arrow-color);
+        user-select: none;
+        cursor: pointer;
+        &:hover {
+            color: map-get($this, picker-arrow-hover-color);
+        }
+    }
+
+    %cal-picker-date {
+        font-size: $cal-picker-date-fs;
+        line-height: $cal-picker-date-lh;
+        font-weight: $cal-picker-date-fw;
+        text-align: center;
+    }
+
+    %cal-body-display {
+        padding-top: $cal-picker-padding;
+        padding-bottom: $cal-picker-padding;
+        overflow: hidden;
+    }
+
+    %cal-row-display {
+        display: flex;
+        justify-content: space-between;
+        padding: $cal-row-padding;
+    }
+
+    %cal-row-display--wrap {
+        flex-wrap: wrap;
+    }
+
+    %cal-column-display {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    %cal-value {
+        display: flex;
+        margin: $cal-value-margin;
+        justify-content: center;
+        align-items: center;
+        width: $cal-value-w;
+        height: $cal-value-h;
+        font-size: $cal-value-fs;
+        line-height: $cal-value-lh;
+        border-radius: $cal-valu-br;
+        color: map-get($this, value-text-color);
+        cursor: pointer;
+        outline: none;
+        transition: background .15s ease-out;
+    }
+
+    %cal-value--label {
+        color: map-get($this, value-inactive-text-color);
+        cursor: default;
+    }
+
+    %cal-value--weekend {
+        color: map-get($this,  value-weekend-text-color);
+    }
+
+    %cal-value--year {
+        font-size: $cal-value-year-fs;
+    }
+
+    %cal-value--year-current {
+        font-size: $cal-value-year-current-fs;
+        color: map-get($this,  theme-text-color) ;
+    }
+
+    %cal-value--year-hover {
+        color: map-get($this,  value-year-hover-text-color) ;
+    }
+
+    %cal-value--month-hover {
+        color: map-get($this,  value-month-hover-text-color);
+    }
+
+    %cal-value--month {
+        display: flex;
+        margin: $cal-value-month-margin;
+        flex: 1 0 25%;
+        justify-content: center;
+        align-items: center;
+        height: $cal-value-month-height;
+    }
+
+    %cal-value--month-current {
+        color: map-get($this,  theme-text-color);
+    }
+
+    %cal-value--inactive {
+        color: map-get($this, value-inactive-text-color);
+    }
+
+    %cal-value--selected {
+        position: relative;
+        color: $cal-value-selected-text-color; // This is contrast color coming from "$cal-theme-color"
+        background-color: map-get($this, value-selected-background-color) !important;
+        font-weight: $cal-value-fw;
+    }
+
+    %cal-value--current {
+        color: map-get($this, value-current-text-color);
+        font-weight: $cal-value-fw;
+    }
+
+    %cal-value--hover {
+        background-color: map-get($this, value-hover-background);
     }
 }
 
-%cal-header-display {
-    background-color: $cal-header-bg;
-    color: $cal-header-color;
-    padding: $cal-header-padding;
-}
 
-%cal-header-year {
-    margin: $cal-header-year-margin;
-    color: $cal-header-year-color;
-    font-size: $cal-header-year-fs;
-}
 
-%cal-header-date {
-    display: flex;
-    margin: $cal-header-date-margin;
-    font-size: $cal-header-date-fs;
-    line-height: $cal-header-date-lh;
-}
-
-%cal-header-date--vertical {
-    flex-flow: column nowrap;
-}
-
-%cal-header-date-el--hover {
-    color: $cal-header-date-hover-color;
-    cursor: pointer;
-}
-
-%cal-picker-display {
-    display: flex;
-    height: 56px;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: $cal-picker-padding;
-    padding-left: $cal-picker-padding;
-    padding-right: $cal-picker-padding;
-}
-
-%cal-picker-arrow {
-    color: $cal-picker-arrow-color;
-    user-select: none;
-    cursor: pointer;
-    &:hover {
-        color: $cal-picker-arrow-hover-color;
-    }
-}
-
-%cal-picker-date {
-    font-size: $cal-picker-date-fs;
-    line-height: $cal-picker-date-lh;
-    font-weight: $cal-picker-date-fw;
-    text-align: center;
-}
-
-%cal-body-display {
-    padding-top: $cal-picker-padding;
-    padding-bottom: $cal-picker-padding;
-    overflow: hidden;
-}
-
-%cal-row-display {
-    display: flex;
-    justify-content: space-between;
-    padding: $cal-row-padding;
-}
-
-%cal-row-display--wrap {
-    flex-wrap: wrap;
-}
-
-%cal-column-display {
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: space-between;
-    align-items: center;
-}
-
-%cal-value {
-    display: flex;
-    margin: $cal-value-margin;
-    justify-content: center;
-    align-items: center;
-    width: $cal-value-w;
-    height: $cal-value-h;
-    font-size: $cal-value-fs;
-    line-height: $cal-value-lh;
-    border-radius: $cal-valu-br;
-    color: $cal-value-text-color;
-    cursor: pointer;
-    outline: none;
-    transition: background .15s ease-out;
-}
-
-%cal-value--label {
-    color: $cal-value-inactive-color;
-    cursor: default;
-}
-
-%cal-value--weekend {
-    color: $cal-value-weekend;
-}
-
-%cal-value--year {
-    font-size: $cal-value-year-fs;
-}
-
-%cal-value--year-current {
-    font-size: $cal-value-year-current-fs;
-    color: $cal-theme-color;
-}
-
-%cal-value--year-hover {
-    color: $cal-value-year-hover-color;
-}
-
-%cal-value--month-hover {
-    color: $cal-value-month-hover-color;
-}
-
-%cal-value--month {
-    display: flex;
-    margin: $cal-value-month-margin;
-    flex: 1 0 25%;
-    justify-content: center;
-    align-items: center;
-    height: $cal-value-month-height;
-}
-
-%cal-value--month-current {
-    color: $cal-theme-color;
-}
-
-%cal-value--inactive {
-    color: $cal-value-inactive-color;
-}
-
-%cal-value--selected {
-    position: relative;
-    color: $cal-value-selected-text-color;
-    background-color: $cal-value-selected-bg !important;
-    font-weight: $cal-value-fw;
-}
-
-%cal-value--current {
-    color: $cal-value-current;
-    font-weight: $cal-value-fw;
-}
-
-%cal-value--hover {
-    background-color: $cal-value-hover-bg;
-}
