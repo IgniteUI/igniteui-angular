@@ -1,137 +1,202 @@
-%igx-input-display {
-    display: block;
-    margin: $input-margin;
-    position: relative;
-    min-height: 40px;
-    ::-webkit-input-placeholder {
-        color: $label-color;
-    }
-}
-
-%igx-form-label {
-    display: block;
-    position: absolute;
-    overflow: hidden;
-    top: 0;
-    transform-origin: bottom left;
-    font-size: $input-font-size;
-    line-height: $input-line-height;
-    color: $label-color;
-    cursor: text;
-    user-select: none;
-    pointer-events: none;
-    transform: translate3d(0, 0, 0);
-    transition: transform .25s $ease-in-out-quad, color .25s $ease-in-out-quad;
-}
-
-%igx-form-label--float {
-    color: $label-active-color;
-    transform: translateY(-20px) perspective(1000px) translateZ(-300px);
-}
-
-%igx-form-label--filled {
-    color: $label-active-color;
-}
-
-%igx-form-label--focused {
-    color: $label-focus-color;
-    transform: translateY(-20px) perspective(1000px) translateZ(-300px);
-}
-
-%igx-form-input {
-    width: 100%;
-    border: 0;
-    outline: none;
-    color: $input-color;
-    background: transparent;
-    font-size: $input-font-size;
-    line-height: $input-line-height;
-    padding-bottom: 3px;
-    box-shadow: $input-border;
-    transition: box-shadow .25s $ease-in-out-quad;
-}
-
-%igx-form-input--focused {
-    box-shadow: $input-border-focus;
-}
-
-%igx-form-input--disabled {
-    user-select: none;
-    cursor: not-allowed;
-    -webkit-text-fill-color: $input-disabled-color;
-    box-shadow: none;
-    background-image: linear-gradient(
-        to right,
-        $input-disabled-color 20%,
-        transparent 10%
+@function igx-input-theme(
+    $focused-color: null,
+    $success-color: null,
+    $warning-color: null,
+    $error-color: null
+    ) {
+    @return (
+        focused-color: $focused-color,
+        success-color: $success-color,
+        warning-color: $warning-color,
+        error-color: $error-color
     );
-    background-position: bottom;
-    background-size: 5px 1px;
-    background-repeat: repeat-x;
 }
 
-%igx-form-label--disabled {
-    color: $label-color-disabled;
-}
+@mixin igx-input($theme, $palette: $default-palette) {
+    $default-theme: igx-input-theme(
+        $focused-color: igx-color($palette, 'primary'),
+        $success-color: $success-color,
+        $warning-color: igx-color($palette, 'warn'),
+        $error-color: igx-color($palette, 'warn', 900)
+    );
 
-%igx-form-input--success {
-    box-shadow: $input-border-success;
-}
+    $this: extend($default-theme, $theme);
 
-%igx-form-label--success {
-    color: $label-success-color;
-}
+    @debug $this;
 
-%igx-form-input--warn {
-    box-shadow: $input-border-warn;
-}
+    // Input Box
+    $input-min-height: rem(70px) !default;
+    $input-font-size: rem(16px) !default;
+    $input-font-weight: 400 !default;
+    $input-color: igx-color($palette, 'grays', 900) !default;
+    $input-caret-color: map-get($this, 'focused-color') !default;
+    $input-line-height: rem(24px) !default;
 
-%igx-form-label--warn {
-    color: $label-warn-color;
-}
+    $input-border-color: igx-color($palette, 'gray', 500) !default;
+    $input-border: inset 0 -1px 0 0 $input-border-color !default;
+    $input-border-success: inset 0 -2px 0 0 map-get($this, 'success-color') !default;
+    $input-border-warn: inset 0 -2px 0 0 map-get($this, 'warning-color') !default;
+    $input-border-error: inset 0 -2px 0 0 map-get($this, 'error-color') !default;
+    $input-border-color-focus: map-get($this, 'focused-color') !default;
+    $input-border-focus: inset 0 -2px 0 0 $input-border-color-focus !default;
 
-%igx-form-input--error {
-    box-shadow: $input-border-error;
-}
+    $input-background: $white !default;
+    $input-transition: all .2s ease-in !default;
+    $input-placeholder-color: $input-border-color !default;
+    $input-error-color: $input-color !default;
+    $input-success-color: $input-color !default;
+    $input-disabled-color: igx-color($palette, 'gray', 500) !default;
+    $input-disabled-solid-color: $input-disabled-color !default;
 
-%igx-form-label--error {
-    color: $label-error-color;
-}
+    // Floating Label
+    $label-color: igx-color($palette, 'gray', 600) !default;
+    $label-color-disabled: igx-color($palette, 'gray', 500) !default;
+    $label-focus-color: map-get($this, 'focused-color') !default;
+    $label-active-color: lighten($label-color, 20%) !default;
+    $label-success-color: map-get($this, 'success-color') !default;
+    $label-warn-color: map-get($this, 'warning-color') !default;
+    $label-error-color: map-get($this, 'error-color') !default;
+    $label-font-size: rem(16px) !default;
+    $label-focus-font-size: rem(12px) !default;
+    $input-search-padding: 12px 12px 12px 64px !default;
+    $input-search-label-padding: 12px 16px !default;
+    $input-margin: 20px 0 !default;
 
-%igx-textarea {
-    resize: none;
-}
-
-%igx-search-input {
-    background: $white;
-    padding: $input-search-padding;
-    border-radius: 2px;
-    font-size: $input-font-size;
-    box-shadow: $elevate-2;
-    transition: box-shadow .2s $ease-in-out-quad;
-
-    &:hover,
-    &:focus {
-        box-shadow: $elevate-5;
+    %igx-input-display {
+        display: block;
+        margin: $input-margin;
+        position: relative;
+        min-height: 40px;
+        ::-webkit-input-placeholder {
+            color: $label-color;
+        }
     }
-}
 
-%igx-input-clear,
-%igx-search-label {
-    max-height: 100%;
-    padding: $input-search-label-padding;
-    color: $off-black;
-}
+    %igx-form-label {
+        display: block;
+        position: absolute;
+        overflow: hidden;
+        top: 0;
+        transform-origin: bottom left;
+        font-size: $input-font-size;
+        line-height: $input-line-height;
+        color: $label-color;
+        cursor: text;
+        user-select: none;
+        pointer-events: none;
+        transform: translate3d(0, 0, 0);
+        transition: transform .25s $ease-in-out-quad, color .25s $ease-in-out-quad;
+    }
 
-%igx-input-clear {
-    position: absolute;
-    visibility: visible;
-    top: 0;
-    right: 0;
-    cursor: pointer;
-}
+    %igx-form-label--float {
+        color: $label-active-color;
+        transform: translateY(-20px) perspective(1000px) translateZ(-300px);
+    }
 
-%igx-input-clear--hidden {
-    visibility: hidden;
-    pointer-events: none;
+    %igx-form-label--filled {
+        color: $label-active-color;
+    }
+
+    %igx-form-label--focused {
+        color: $label-focus-color;
+        transform: translateY(-20px) perspective(1000px) translateZ(-300px);
+    }
+
+    %igx-form-input {
+        width: 100%;
+        border: 0;
+        outline: none;
+        color: $input-color;
+        background: transparent;
+        font-size: $input-font-size;
+        line-height: $input-line-height;
+        padding-bottom: 3px;
+        box-shadow: $input-border;
+        transition: box-shadow .25s $ease-in-out-quad;
+    }
+
+    %igx-form-input--focused {
+        box-shadow: $input-border-focus;
+    }
+
+    %igx-form-input--disabled {
+        user-select: none;
+        cursor: not-allowed;
+        -webkit-text-fill-color: $input-disabled-color;
+        box-shadow: none;
+        background-image: linear-gradient(
+            to right,
+            $input-disabled-color 20%,
+            transparent 10%
+        );
+        background-position: bottom;
+        background-size: 5px 1px;
+        background-repeat: repeat-x;
+    }
+
+    %igx-form-label--disabled {
+        color: $label-color-disabled;
+    }
+
+    %igx-form-input--success {
+        box-shadow: $input-border-success;
+    }
+
+    %igx-form-label--success {
+        color: $label-success-color;
+    }
+
+    %igx-form-input--warn {
+        box-shadow: $input-border-warn;
+    }
+
+    %igx-form-label--warn {
+        color: $label-warn-color;
+    }
+
+    %igx-form-input--error {
+        box-shadow: $input-border-error;
+    }
+
+    %igx-form-label--error {
+        color: $label-error-color;
+    }
+
+    %igx-textarea {
+        resize: none;
+    }
+
+    %igx-search-input {
+        background: $white;
+        padding: $input-search-padding;
+        border-radius: 2px;
+        font-size: $input-font-size;
+        box-shadow: $elevate-2;
+        transition: box-shadow .2s $ease-in-out-quad;
+
+        &:hover,
+        &:focus {
+            box-shadow: $elevate-5;
+        }
+    }
+
+    %igx-input-clear,
+    %igx-search-label {
+        max-height: 100%;
+        padding: $input-search-label-padding;
+        color: $off-black;
+    }
+
+    %igx-input-clear {
+        position: absolute;
+        visibility: visible;
+        top: 0;
+        right: 0;
+        cursor: pointer;
+    }
+
+    %igx-input-clear--hidden {
+        visibility: hidden;
+        pointer-events: none;
+    }
 }

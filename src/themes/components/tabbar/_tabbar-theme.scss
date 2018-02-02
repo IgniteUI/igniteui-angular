@@ -1,94 +1,123 @@
-%igx-tab-panel {
-    display: none;
+@function igx-tabbar-theme(
+    $background: null,
+    $icon-color: null,
+    $icon-color-active: null
+    ) {
+    @return (
+        background: $background,
+        icon-color: $icon-color,
+        icon-color-active: $icon-color-active
+    );
 }
 
-%igx-tab-panel--selected {
-    display: block;
-}
+@mixin igx-tabbar($theme, $palette: $default-palette) {
+    $default-theme: igx-tabbar-theme(
+        $background: $white,
+        $icon-color: $off-black,
+        $icon-color-active: igx-color($palette, 'accent')
+    );
 
-%igx-tabbar-menu {
-    display: flex;
-    position: fixed;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    height: em(56px, 16px);
-    background: $tab-bar-background;
-    color: $tab-bar-color;
-    overflow: hidden;
-    z-index: 8;
-}
+    $this: extend($default-theme, $theme);
+    
+    @debug $this;
 
-%igx-tabbar-menu--top {
-    bottom: inherit;
-    top: 0;
-    box-shadow: $elevate-8;
-}
+    $tab-bar-background: $white !default;
+    $tab-bar-label-font-size: em(12px, 16px);
+    $tab-bar-label-line-height: em(12px, 16px);
+    $tab-bar-item-padding: 0 em(12px);
 
-%igx-tabbar-menu--bottom {
-    top: inherit;
-    bottom: 0;
-    box-shadow: $elevate-8-up;
-}
-
-%igx-tabbar-menu-item {
-    display: flex;
-    position: relative;
-    flex-flow: column nowrap;
-    align-items: center;
-    justify-content: center;
-    min-width: 80px;
-    max-width: 168px;
-    height: 100%;
-    flex: 1;
-    cursor: pointer;
-    text-transform: uppercase;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    user-select: none;
-    overflow: hidden;
-    padding: $tab-bar-item-padding;
-    -webkit-tap-highlight-color: transparent;
-}
-
-%igx-tabbar-menu-item--disabled {
-    opacity: .5;
-    cursor: default;
-}
-
-%igx-active-tab {
-    opacity: 1;
-    color: $tab-bar-active-color;
-    transition: color .25s ease-out, opacity .25s ease-out;
-}
-
-%igx-tab-label {
-    padding-top: 5px;
-    font-size: $tab-bar-label-font-size;
-    line-height: $tab-bar-label-line-height;
-    max-width: 80px;
-    text-transform: uppercase;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    z-index: 1;
-    opacity: .75;
-}
-
-%igx-tab-icon {
-    display: flex;
-    position: relative;
-    justify-content: center;
-    height: 24px;
-    z-index: 1;
-    opacity: .75;
-    padding: 0 8px;
-    i {
-        width: 24px;
-        height: 24px;
+    %igx-tab-panel {
+        display: none;
     }
-}
 
-%igx-tab-label--selected,
-%igx-tab-icon--selected {
-    @extend %igx-active-tab;
+    %igx-tab-panel--selected {
+        display: block;
+    }
+
+    %igx-tabbar-menu {
+        display: flex;
+        position: fixed;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        height: em(56px, 16px);
+        background: map-get($this, 'background');
+        color: map-get($this, 'icon-color');
+        overflow: hidden;
+        z-index: 8;
+    }
+
+    %igx-tabbar-menu--top {
+        bottom: inherit;
+        top: 0;
+        box-shadow: $elevate-8;
+    }
+
+    %igx-tabbar-menu--bottom {
+        top: inherit;
+        bottom: 0;
+        box-shadow: $elevate-8-up;
+    }
+
+    %igx-tabbar-menu-item {
+        display: flex;
+        position: relative;
+        flex-flow: column nowrap;
+        align-items: center;
+        justify-content: center;
+        min-width: 80px;
+        max-width: 168px;
+        height: 100%;
+        flex: 1;
+        cursor: pointer;
+        text-transform: uppercase;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        user-select: none;
+        overflow: hidden;
+        padding: $tab-bar-item-padding;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    %igx-tabbar-menu-item--disabled {
+        opacity: .5;
+        cursor: default;
+    }
+
+    %igx-active-tab {
+        opacity: 1;
+        color: map-get($this, 'icon-color-active');
+        transition: color .25s ease-out, opacity .25s ease-out;
+    }
+
+    %igx-tab-label {
+        padding-top: 5px;
+        font-size: $tab-bar-label-font-size;
+        line-height: $tab-bar-label-line-height;
+        max-width: 80px;
+        text-transform: uppercase;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        z-index: 1;
+        opacity: .75;
+    }
+
+    %igx-tab-icon {
+        display: flex;
+        position: relative;
+        justify-content: center;
+        height: 24px;
+        z-index: 1;
+        opacity: .75;
+        padding: 0 8px;
+        i {
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    %igx-tab-label--selected,
+    %igx-tab-icon--selected {
+        @extend %igx-active-tab;
+    }
 }

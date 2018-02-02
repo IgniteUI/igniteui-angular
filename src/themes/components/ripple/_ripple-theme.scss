@@ -1,17 +1,33 @@
-%igx-ripple-display {
-    display: inline-block;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    border-radius: 50%;
-    background: transparentize($off-black, .5);
-    pointer-events: none;
-    transform: translate3d(0, 0, 0), scale(0);
-    will-change: opacity, transform;
+@function igx-ripple-theme($color: null) {
+    @return (
+        color: $color
+    );
 }
 
-%igx-ripple-wrapper {
-    overflow: hidden;
+@mixin igx-ripple($theme, $palette: $default-palette) {
+    $default-theme: igx-ripple-theme(
+        $color: transperantize(igx-color($palette, 'grays', 800), .5)
+    );
+
+    $this: extend($default-theme, $theme);
+    
+    @debug $this;
+
+    %igx-ripple-display {
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        border-radius: 50%;
+        background: map-get($this, 'color');
+        pointer-events: none;
+        transform: translate3d(0, 0, 0), scale(0);
+        will-change: opacity, transform;
+    }
+
+    %igx-ripple-wrapper {
+        overflow: hidden;
+    }
 }

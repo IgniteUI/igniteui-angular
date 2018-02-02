@@ -120,6 +120,50 @@
     @return $is-keyword or $is-angle;
 }
 
+@function is-component($components) {
+    $is-component: (
+        igx-avatar,
+        igx-badge,
+        igx-button,
+        igx-button-group,
+        igx-calendar,
+        igx-card,
+        igx-carousel,
+        igx-checkbox,
+        igx-date-picker,
+        igx-dialog,
+        igx-grid,
+        igx-grid-filtering,
+        igx-icon,
+        igx-input,
+        igx-list,
+        igx-navbar,
+        igx-navdrawer,
+        igx-progress-linear,
+        igx-progress-circular,
+        igx-radio,
+        igx-ripple,
+        igx-slider,
+        igx-scroll,
+        igx-snackbar,
+        igx-switch,
+        igx-tabbar,
+        igx-toast
+    );
+
+    @each $component in $components {
+        @if not(index($is-component, $component)) {
+            @error unquote('Can\'t exclude "#{$component}" because it is not in the list of Ignite UI for Angular components.');
+        }
+    }
+
+    @if length($components) > 0 {
+        @warn unquote('You have excluded the following components from the theme: "#{$components}". You can now add your own themes for the excluded components.');
+    }
+
+    @return '';
+}
+
 @function to-string($num, $radix: 16) {
     $chars: '0123456789abcdef';
     $result: '';
@@ -171,89 +215,73 @@
     @return $result;
 }
 
-@function igx-palette($primary, $accent, $warn) {
+@function _generate-palette($color) {
     @return (
-       primary: (
-           100: gen-color($primary, 100),
-           200: gen-color($primary, 200),
-           300: gen-color($primary, 300),
-           400: gen-color($primary, 400),
-           500: $primary,
-           600: gen-color($primary, 600),
-           700: gen-color($primary, 700),
-           800: gen-color($primary, 800),
-           900: gen-color($primary, 900),
-           A100: gen-color($primary, 'A100'),
-           A200: gen-color($primary, 'A200'),
-           A400: gen-color($primary, 'A400'),
-           A700: gen-color($primary, 'A700'),
-           contrast: (
-               100: text-contrast(gen-color($primary, 100)),
-               200: text-contrast(gen-color($primary, 200)),
-               300: text-contrast(gen-color($primary, 300)),
-               400: text-contrast(gen-color($primary, 400)),
-               500: text-contrast($primary),
-               600: text-contrast(gen-color($primary, 600)),
-               700: text-contrast(gen-color($primary, 700)),
-               800: text-contrast(gen-color($primary, 800)),
-               900: text-contrast(gen-color($primary, 900)),
-               A100: text-contrast(gen-color($primary, 'A100')),
-               A200: text-contrast(gen-color($primary, 'A200')),
-               A400: text-contrast(gen-color($primary, 'A400')),
-               A700: text-contrast(gen-color($primary, 'A700')),
-           )
-        ),
-       accent: (
-           100: gen-color($accent, 100),
-           200: gen-color($accent, 200),
-           300: gen-color($accent, 300),
-           400: gen-color($accent, 400),
-           500: $accent,
-           600: gen-color($accent, 600),
-           700: gen-color($accent, 700),
-           800: gen-color($accent, 800),
-           900: gen-color($accent, 900),
-           A100: gen-color($accent, 'A100'),
-           A200: gen-color($accent, 'A200'),
-           A400: gen-color($accent, 'A400'),
-           A700: gen-color($accent, 'A700'),
-           contrast: (
-               100: text-contrast(gen-color($accent, 100)),
-               200: text-contrast(gen-color($accent, 200)),
-               300: text-contrast(gen-color($accent, 300)),
-               400: text-contrast(gen-color($accent, 400)),
-               500: text-contrast($accent),
-               600: text-contrast(gen-color($accent, 600)),
-               700: text-contrast(gen-color($accent, 700)),
-               800: text-contrast(gen-color($accent, 800)),
-               900: text-contrast(gen-color($accent, 900)),
-               A100: text-contrast(gen-color($accent, 'A100')),
-               A200: text-contrast(gen-color($accent, 'A200')),
-               A400: text-contrast(gen-color($accent, 'A400')),
-               A700: text-contrast(gen-color($accent, 'A700')),
-           )
-        ),
+        100: gen-color($color, 100),
+        200: gen-color($color, 200),
+        300: gen-color($color, 300),
+        400: gen-color($color, 400),
+        500: $color,
+        600: gen-color($color, 600),
+        700: gen-color($color, 700),
+        800: gen-color($color, 800),
+        900: gen-color($color, 900),
+        A100: gen-color($color, 'A100'),
+        A200: gen-color($color, 'A200'),
+        A400: gen-color($color, 'A400'),
+        A700: gen-color($color, 'A700'),
+        contrast: (
+            100: text-contrast(gen-color($color, 100)),
+            200: text-contrast(gen-color($color, 200)),
+            300: text-contrast(gen-color($color, 300)),
+            400: text-contrast(gen-color($color, 400)),
+            500: text-contrast($color),
+            600: text-contrast(gen-color($color, 600)),
+            700: text-contrast(gen-color($color, 700)),
+            800: text-contrast(gen-color($color, 800)),
+            900: text-contrast(gen-color($color, 900)),
+            A100: text-contrast(gen-color($color, 'A100')),
+            A200: text-contrast(gen-color($color, 'A200')),
+            A400: text-contrast(gen-color($color, 'A400')),
+            A700: text-contrast(gen-color($color, 'A700')),
+        )
+    );
+};
+
+@function igx-palette($primary, $accent, $warn) {
+    $primary-palette: _generate-palette($primary);
+    $accent-palette: _generate-palette($accent);
+    $warn-palette: _generate-palette($warn);
+
+    @debug 'Primary Colors Palette: #{$primary-palette}';
+    @debug 'Accent Colors Palette: #{$accent-palette}';
+    @debug 'Warn Colors Palette: #{$warn-palette}';
+
+    @return (
+        primary: $primary-palette,
+        accent: $accent-palette,
+        warn: $warn-palette,
         grays: (
-           100: rgba(0, 0, 0, .04),
-           200: rgba(0, 0, 0, .08),
-           300: rgba(0, 0, 0, .12),
-           400: rgba(0, 0, 0, .26),
-           500: rgba(0, 0, 0, .38),
-           600: rgba(0, 0, 0, .54),
-           700: rgba(0, 0, 0, .62),
-           800: rgba(0, 0, 0, .74),
-           900: rgba(0, 0, 0, .87),
-           contrast: (
-               100: text-contrast(rgba(0, 0, 0, .04)),
-               200: text-contrast(rgba(0, 0, 0, .08)),
-               300: text-contrast(rgba(0, 0, 0, .12)),
-               400: text-contrast(rgba(0, 0, 0, .26)),
-               500: text-contrast(rgba(0, 0, 0, .38)),
-               600: text-contrast(rgba(0, 0, 0, .54)),
-               700: text-contrast(rgba(0, 0, 0, .62)),
-               800: text-contrast(rgba(0, 0, 0, .74)),
-               900: text-contrast(rgba(0, 0, 0, .87)),
-           )
+            100: rgba(0, 0, 0, .04),
+            200: rgba(0, 0, 0, .08),
+            300: rgba(0, 0, 0, .12),
+            400: rgba(0, 0, 0, .26),
+            500: rgba(0, 0, 0, .38),
+            600: rgba(0, 0, 0, .54),
+            700: rgba(0, 0, 0, .62),
+            800: rgba(0, 0, 0, .74),
+            900: rgba(0, 0, 0, .87),
+            contrast: (
+                100: text-contrast(rgba(0, 0, 0, .04)),
+                200: text-contrast(rgba(0, 0, 0, .08)),
+                300: text-contrast(rgba(0, 0, 0, .12)),
+                400: text-contrast(rgba(0, 0, 0, .26)),
+                500: text-contrast(rgba(0, 0, 0, .38)),
+                600: text-contrast(rgba(0, 0, 0, .54)),
+                700: text-contrast(rgba(0, 0, 0, .62)),
+                800: text-contrast(rgba(0, 0, 0, .74)),
+                900: text-contrast(rgba(0, 0, 0, .87)),
+            )
         )
     );
 }

@@ -1,33 +1,59 @@
-%igx-navbar-display {
-    display: flex;
-    position: relative;
-    flex-flow: row nowrap;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    height: 56px;
-    padding: $navbar-padding;
-    background: $primary-color;
-    color: $navbar-text-color;
-    box-shadow: $elevate-4;
-    z-index: 4;
-}
-
-%igx-navbar-bundle {
-    display: flex;
-    align-items: center;
-
-    * + * {
-        margin-left: 16px;
+@function igx-navbar-theme($background: null, $text-color: null) {
+    @if not($text-color) and $background {
+        $text-color: text-contrast($background);
     }
+
+    @return (
+        background: $background,
+        text-color: $text-color
+    );
 }
 
-%igx-navbar-left-btn--disabled {
-    display: none;
-}
+@mixin igx-navbar($theme, $palette: $default-palette) {
+    $default-theme: igx-navbar-theme(
+        $background: igx-color($palette, 'primary')
+    );
 
-%igx-navbar-title {
-    margin: $navbar-title-margin;
-    font-size: $navbar-title-fz;
-    line-height: $navbar-title-lh;
+    $this: extend($default-theme, $theme);
+
+    @debug $this;
+
+    $navbar-padding: 0 em(16px) !default;
+    $navbar-title-fz: em(18px, 16px) !default;
+    $navbar-title-lh: em(18px, 16px) !default;
+    $navbar-title-margin: 0;
+
+    %igx-navbar-display {
+        display: flex;
+        position: relative;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: 56px;
+        padding: $navbar-padding;
+        background: map-get($this, 'background');
+        color: map-get($this, 'text-color');
+        box-shadow: $elevate-4;
+        z-index: 4;
+    }
+
+    %igx-navbar-bundle {
+        display: flex;
+        align-items: center;
+
+        * + * {
+            margin-left: 16px;
+        }
+    }
+
+    %igx-navbar-left-btn--disabled {
+        display: none;
+    }
+
+    %igx-navbar-title {
+        margin: $navbar-title-margin;
+        font-size: $navbar-title-fz;
+        line-height: $navbar-title-lh;
+    }
 }

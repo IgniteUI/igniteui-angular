@@ -1,59 +1,81 @@
-%igx-filtering-display {
-    position: static;
+@function igx-grid-filtering-theme($color-selected: null, $color-filtered: null) {
+    @return (
+        color-selected: $color-selected,
+        color-filtered: $color-filtered
+    );
 }
 
-%igx-filtering-icon {
-    .igx-button--icon {
-        width: rem(24px);
-        height: rem(24px);
+@mixin igx-grid-filtering($theme, $palette: $default-palette) { 
+    $default-theme: igx-grid-filtering-theme(
+        $color-selected: igx-color($palette, 'primary'),
+        $color-filtered: igx-color($palette, 'primary')
+    );
+
+    $this: extend($default-theme, $theme);
+
+    $grid-filtering-color-active: map-get($this, 'color-selected');
+    $grid-filtering-bg-active: map-get($this, 'color-filtered');
+    $grid-filtering-options-padding: em(8px, 16px);
+
+    @debug $this;
+
+    %igx-filtering-display {
+        position: static;
     }
-    i {
-        font-size: $grid-head-icon-size !important;
-        line-height: $grid-head-icon-lh !important;
-        padding: $grid-head-icon-padding !important;
+
+    %igx-filtering-icon {
+        .igx-button--icon {
+            width: rem(24px);
+            height: rem(24px);
+        }
+        i {
+            font-size: $grid-head-icon-size !important;
+            line-height: $grid-head-icon-lh !important;
+            padding: $grid-head-icon-padding !important;
+        }
     }
-}
 
-%igx-filtering-icon--active {
-    color: $grid-filtering-color-active;
-    .igx-button--icon {
-        background: $grid-filtering-bg-active;
+    %igx-filtering-icon--active {
+        color: $grid-filtering-color-active;
+        .igx-button--icon {
+            background: $grid-filtering-bg-active;
+        }
     }
-}
 
-%igx-filtering-icon--filtered {
-    color: $grid-filtering-bg-active;
-}
-
-%igx-filtering-toggle {
-    @extend %igx-filtering-icon;
-}
-
-%igx-filtering-toggle--active {
-    @extend %igx-filtering-icon;
-    @extend %igx-filtering-icon--active;
-}
-
-%igx-filtering-toggle--filtered {
-    @extend %igx-filtering-icon;
-    @extend %igx-filtering-icon--filtered;
-}
-
-%igx-filtering-options {
-    display: block;
-    position: absolute;
-    min-width: fit-content;
-    user-select: none;
-    right: 16px;
-    left: 16px;
-    background: $white;
-    box-shadow: $elevate-4;
-    border-radius: 2px;
-    padding: $grid-filtering-options-padding;
-    z-index: 10;
-    margin-top: 8px;
-    &>input {
-        font-weight: initial;
-        font-size: initial;
+    %igx-filtering-icon--filtered {
+        color: $grid-filtering-bg-active;
     }
-}
+
+    %igx-filtering-toggle {
+        @extend %igx-filtering-icon;
+    }
+
+    %igx-filtering-toggle--active {
+        @extend %igx-filtering-icon;
+        @extend %igx-filtering-icon--active;
+    }
+
+    %igx-filtering-toggle--filtered {
+        @extend %igx-filtering-icon;
+        @extend %igx-filtering-icon--filtered;
+    }
+
+    %igx-filtering-options {
+        display: block;
+        position: absolute;
+        min-width: fit-content;
+        user-select: none;
+        right: 16px;
+        left: 16px;
+        background: $white;
+        box-shadow: $elevate-4;
+        border-radius: 2px;
+        padding: $grid-filtering-options-padding;
+        z-index: 10;
+        margin-top: 8px;
+        &>input {
+            font-weight: initial;
+            font-size: initial;
+        }
+    }
+ }

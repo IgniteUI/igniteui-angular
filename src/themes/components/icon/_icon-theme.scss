@@ -1,10 +1,30 @@
-%igx-icon-display {
-    display: flex;
-    position: relative;
-    font-size: $igx-icon-font-size;
-    justify-content: center;
+@function igx-icon-theme($color) {
+    @return (
+        color: $color
+    );
 }
 
-%igx-icon--inactive {
-    color: $input-disabled-solid-color;
+@mixin igx-icon($theme, $palette: $default-palette) {
+    $default-theme: igx-icon-theme(
+        $color: igx-color($palette, 'grays', 900)
+    );
+    
+    $this: extend($default-theme, $theme);
+
+    @debug $this;
+
+    $color: map-get($this, 'color');
+    $disabled-color: igx-color($palette, 'grays', 500);
+
+    %igx-icon-display {
+        display: flex;
+        color: $color;
+        position: relative;
+        font-size: $igx-icon-font-size;
+        justify-content: center;
+    }
+
+    %igx-icon--inactive {
+        color: $disabled-color;
+    }
 }

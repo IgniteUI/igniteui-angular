@@ -1,30 +1,55 @@
-%igx-toast-display {
-    display: block;
-    margin: $toast-margin;
-    position: fixed;
-    text-align: center;
-    left: 50%;
-    transform: translate3d(-50%, 0, 0);
-    min-width: $toast-width;
-    padding: $toast-padding;
-    background-color: $toast-background;
-    border-radius: $toast-border-radius;
-    color: $toast-color;
-    font-size: $toast-font-size;
-    line-height: $toast-line-height;
-    opacity: 0;
-    z-index: 999999;
+@function igx-toast-theme($background: null, $text-color: null) {
+    @return (
+        background: $background,
+        text-color: $text-color,
+    );
 }
 
-%igx-toast--top {
-    top: 0;
-}
+@mixin igx-toast($theme, $palette: $default-palette) {
+    $default-theme: igx-toast-theme(
+        $background: igx-color($palette, 'grays', 600),
+        $text-color: $white
+    );
 
-%igx-toast--middle {
-    top: 50%;
-    transform: translate3d(-50%, -50%, 0);
-}
+    $this: extend($default-theme, $theme);
 
-%igx-toast--bottom {
-    bottom: 0;
+    $toast-width: 52px !default;
+    $toast-padding: em(16px, 16px) em(24px, 16px) !default;
+    $toast-margin: em(42px, 16px) auto !default;
+    $toast-border-radius: ($toast-width / 2) !default;
+    $toast-font-size: em(14px, 16px) !default;
+    $toast-line-height: em(24px, 16px) !default;
+
+    @debug $this;
+
+    %igx-toast-display {
+        display: block;
+        margin: $toast-margin;
+        position: fixed;
+        text-align: center;
+        left: 50%;
+        transform: translate3d(-50%, 0, 0);
+        min-width: $toast-width;
+        padding: $toast-padding;
+        background-color: map-get($this, 'background');
+        border-radius: $toast-border-radius;
+        color: map-get($this, 'text-color');
+        font-size: $toast-font-size;
+        line-height: $toast-line-height;
+        opacity: 0;
+        z-index: 999999;
+    }
+
+    %igx-toast--top {
+        top: 0;
+    }
+
+    %igx-toast--middle {
+        top: 50%;
+        transform: translate3d(-50%, -50%, 0);
+    }
+
+    %igx-toast--bottom {
+        bottom: 0;
+    }
 }
