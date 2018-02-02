@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, , ViewChild, ViewContainerRef } from "@angular/core";
+import { ChangeDetectorRef, Component, ViewChild, ViewContainerRef } from "@angular/core";
 
 @Component({
     selector: "display-container",
