@@ -8,7 +8,7 @@ The **igxLabel** directive is intended to be used on single-line text elements t
 ```
 # Examples
 
-Using `igxButton` to turn a span element into an js blocks styled button.
+Using `igxButton` to turn a span element into an for Angular styled button.
 ```html
 <span igxLabel>Single line text<span>
 ```

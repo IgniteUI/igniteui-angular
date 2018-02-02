@@ -6,18 +6,19 @@
 1.1. Adding component views like App Host, Tabs, List
 1.2. Updating the default project look
 1.3. Move the project navigation inside an App Host
-2. Grid Multi-column Headers [issue](https://github.com/IgniteUI/igniteui-angular/issues/488)
-3. Collapsible Column Groups with state templating (collapsed state column can be templated)
-4. Column pinning
-5. Grouping
-6. Export to excel
-7. Combo
-8. Mask directive (editor)
-9. Operations UI - column chooser (Data Operations UI)          
-10. Virtualization (target ship of January 2018)
-11. Charting: Category Chart types Line (Area, Column, Point, StepLine, StepArea, Spline, SplineArea, Waterfall
-12. Design: Updated Design System (Sketch UI kits, UI patterns, screens)
-13. Design: Data dense theme for data grid 
+2. Product Themening 
+3. Grid Multi-column Headers [issue](https://github.com/IgniteUI/igniteui-angular/issues/488)
+4. Collapsible Column Groups with state templating (collapsed state column can be templated)
+5. Column pinning
+6. Grouping
+7. Export to excel
+8. Combo
+9. Mask directive (editor)
+10. Operations UI - column chooser (Data Operations UI)          
+11. Virtualization (target ship of January 2018)
+12. Charting: Category Chart types Line (Area, Column, Point, StepLine, StepArea, Spline, SplineArea, Waterfall
+13. Design: Updated Design System (Sketch UI kits, UI patterns, screens)
+14. Design: Data dense theme for data grid 
   
 
 # Previous Milestones

@@ -2,7 +2,7 @@
     position: static;
 }
 
-%igx-filtering-toggle {
+%igx-filtering-icon {
     .igx-button--icon {
         width: rem(24px);
         height: rem(24px);
@@ -14,9 +14,29 @@
     }
 }
 
-%igx-filtering-toggle--active {
-    background: $grid-filtering-bg-active !important;
+%igx-filtering-icon--active {
     color: $grid-filtering-color-active;
+    .igx-button--icon {
+        background: $grid-filtering-bg-active;
+    }
+}
+
+%igx-filtering-icon--filtered {
+    color: $grid-filtering-bg-active;
+}
+
+%igx-filtering-toggle {
+    @extend %igx-filtering-icon;
+}
+
+%igx-filtering-toggle--active {
+    @extend %igx-filtering-icon;
+    @extend %igx-filtering-icon--active;
+}
+
+%igx-filtering-toggle--filtered {
+    @extend %igx-filtering-icon;
+    @extend %igx-filtering-icon--filtered;
 }
 
 %igx-filtering-options {
