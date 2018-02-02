@@ -23,7 +23,7 @@
 <div class="igx-grid__thead">
     <div class="igx-grid__tr" role="row">
         <ng-template igVirtFor let-col [igVirtForOf]="visibleColumns" [igVirtForScrolling]="'horizontal'" [igVirtForUseForScroll]="parentVirtDir" [igVirtForContainerSize]='width'>
-            <igx-grid-header [gridID]="id" [column]="col"></igx-grid-header>
+            <igx-grid-header [gridID]="id" [column]="col" [style.width.px]="col.width"></igx-grid-header>
         </ng-template>
     </div>
 </div>
