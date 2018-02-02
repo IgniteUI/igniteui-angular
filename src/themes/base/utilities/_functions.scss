@@ -257,3 +257,13 @@
         )
     );
 }
+
+@function register-component($components, $component) {
+
+
+        @if not(index($components, $component)) {
+            @return join($components, $component);
+        }
+
+    @return $components;
+}

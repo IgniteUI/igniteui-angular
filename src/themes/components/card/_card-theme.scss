@@ -1,102 +1,157 @@
-%igx-card-display {
-    display: flex;
-    flex-flow: row wrap;
-    box-shadow: $card-shadow;
-    overflow: hidden;
-    border-radius: $card-border-radius;
-    background: $white;
-    transition: $card-transitions;
-    backface-visibility: hidden;
-    &:hover {
-        box-shadow: $card-shadow-hover;
+$components: register-component($components, 'igx-card');
+
+@function igx-card-theme(
+    $background: null,
+    $subtitle-text-color: null,
+    $content-text-color: null,
+    $actions-text-color: null
+
+){
+    @return (
+        background: $background,
+        subtitle-text-color:$subtitle-text-color,
+        content-text-color:$content-text-color,
+        actions-text-color:$actions-text-color
+    );
+}
+
+@mixin igx-card($theme, $palette: $default-palette) {
+
+    $default-theme: igx-card-theme(
+        $background: $white,
+        $subtitle-text-color:igx-color($palette, grays, 600),
+        $content-text-color:igx-color($palette, grays, 600),
+        $actions-text-color:igx-color($palette, grays, 600)
+    );
+
+    $this: extend($default-theme, $theme);
+
+    // 4. Cards //
+    // Genaral
+    $card-border-radius: 2px !default; // Colors
+    $card-shadow: $elevate-2 !default;
+    $card-shadow-hover: $elevate-8 !default;
+    // Font Sizes
+    $card-title-fz: em(24px, 16px) !default;
+    $card-title-line-height: em(24px, 16px) !default;
+    $card-subtitle-fz: em(14px, 16px) !default;
+    $card-subtitle-line-height: em(24px, 16px) !default;
+    $card-content-fz: em(14px, 16px) !default;
+    $card-content-lh: (20px, 16px) !default;
+    // Padding & Margin
+    $card-heading-padding: em(24px, 16px) em(16px, 16px) em(16px, 16px) em(16px, 16px) !default;
+    $card-heading-compact-padding: em(16px, 16px) !default;
+    $card-heading-margin: 0 !default;
+    $card-content-padding: em(16px, 16px) !default;
+    $card-content-margin: 0 !default;
+    $card-actions-padding: em(8px, 16px) !default;
+    $card-subtitle-margin: 0 !default;
+    $card-tgroup-margin: 0 em(16px); // Transitions
+    $card-transitions: box-shadow .3s cubic-bezier(.25, .8, .25, 1) !default;
+
+    %igx-card-display {
+        display: flex;
+        flex-flow: row wrap;
+        box-shadow: $card-shadow;
+        overflow: hidden;
+        border-radius: $card-border-radius;
+        background: map-get($this, background);
+        transition: $card-transitions;
+        backface-visibility: hidden;
+        &:hover {
+            box-shadow: $card-shadow-hover;
+        }
     }
-}
 
-%igx-card-header {
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    // flex: 1 0 100%;
-    flex-basis: 100%;
-    padding: $card-heading-padding;
-}
-
-%igx-card-header--compact {
-    padding: $card-heading-compact-padding;
-}
-
-%igx-card-header-title {
-    margin: $card-heading-margin;
-    // flex: 1 0 100%;
-    flex-basis: 100%;
-    font-size: $card-title-fz;
-    line-height: $card-title-line-height;
-}
-
-%igx-card-header-title--small {
-    font-size: $card-subtitle-fz;
-}
-
-%igx-card-header-subtitle {
-    margin: $card-subtitle-margin;
-    color: $card-subtitle-color;
-    font-size: $card-subtitle-fz;
-    line-height: $card-subtitle-line-height;
-}
-
-%igx-card-content {
-    // flex: 1 0 100%;
-    flex-basis: 100%;
-    padding: $card-content-padding;
-}
-
-%igx-card-content-text {
-    margin: $card-content-margin;
-    color: $card-content-color;
-    font-size: $card-content-fz;
-    line-height: $card-content-lh;
-}
-
-%igx-card-media {
-    width: auto;
-    margin-right: auto;
-    order: -1;
-}
-
-%igx-card-media--right {
-    width: auto;
-    margin-left: auto;
-    order: 9999;
-}
-
-%igx-card-actions {
-    display: flex;
-    flex-flow: row wrap;
-    flex: 1 0 auto;
-    align-items: center;
-    padding: $card-actions-padding;
-    max-height: 56px;
-}
-
-%igx-card-actions-bgroup {
-    display: flex;
-    flex-flow: row nowrap;
-
-    [igxButton] ~ [igxButton] {
-        margin-left: 8px;
+    %igx-card-header {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        // flex: 1 0 100%;
+        flex-basis: 100%;
+        padding: $card-heading-padding;
     }
+
+    %igx-card-header--compact {
+        padding: $card-heading-compact-padding;
+    }
+
+    %igx-card-header-title {
+        margin: $card-heading-margin;
+        // flex: 1 0 100%;
+        flex-basis: 100%;
+        font-size: $card-title-fz;
+        line-height: $card-title-line-height;
+    }
+
+    %igx-card-header-title--small {
+        font-size: $card-subtitle-fz;
+    }
+
+    %igx-card-header-subtitle {
+        margin: $card-subtitle-margin;
+        color: map-get($this, subtitle-text-color);
+        font-size: $card-subtitle-fz;
+        line-height: $card-subtitle-line-height;
+    }
+
+    %igx-card-content {
+        // flex: 1 0 100%;
+        flex-basis: 100%;
+        padding: $card-content-padding;
+    }
+
+    %igx-card-content-text {
+        margin: $card-content-margin;
+        color: map-get($this, content-text-color);
+        font-size: $card-content-fz;
+        line-height: $card-content-lh;
+    }
+
+    %igx-card-media {
+        width: auto;
+        margin-right: auto;
+        order: -1;
+    }
+
+    %igx-card-media--right {
+        width: auto;
+        margin-left: auto;
+        order: 9999;
+    }
+
+    %igx-card-actions {
+        display: flex;
+        flex-flow: row wrap;
+        flex: 1 0 auto;
+        align-items: center;
+        padding: $card-actions-padding;
+        max-height: 56px;
+    }
+
+    %igx-card-actions-bgroup {
+        display: flex;
+        flex-flow: row nowrap;
+
+        [igxButton] ~ [igxButton] {
+            margin-left: 8px;
+        }
+    }
+
+    %igx-card-actions-igroup {
+        display: flex;
+        flex-flow: row nowrap;
+        color: map-get($this, actions-text-color);
+    }
+
+    %igx-card-actions-igroup--start {
+        margin-right: auto;
+    }
+
+    %igx-card-actions-igroup--end {
+        margin-left: auto;
+    }
+
 }
 
-%igx-card-actions-igroup {
-    display: flex;
-    flex-flow: row nowrap;
-    color: $card-actions-igroup-color;
-}
 
-%igx-card-actions-igroup--start {
-    margin-right: auto;
-}
-
-%igx-card-actions-igroup--end {
-    margin-left: auto;
-}

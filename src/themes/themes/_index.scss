@@ -2,16 +2,52 @@
 @import 'palettes';
 @import '../components/avatar/avatar-theme';
 @import '../components/badge/badge-theme';
+@import '../components/button/button-theme';
+@import '../components/button-group/button-group-theme';
 @import '../components/grid/grid-theme';
+@import '../components/calendar/calendar-theme';
+@import '../components/card/card-theme';
+@import '../components/carousel/carousel-theme';
+@import '../components/checkbox/checkbox-theme';
+@import '../components/date-picker/date-picker-theme';
+@import '../components/dialog/dialog-theme';
 
 @mixin igx-theme($palette: $default-palette, $exclude: ()) {
-    @if not(map-has-key($exclude, 'igx-avatar') and map-get($exclude, 'igx-avatar') == true) {
+    @debug 'All registered: #{$components}';
+
+    @if not(index($exclude, 'igx-avatar')) {
         @include igx-avatar($theme: (), $palette: $palette);
     }
-    @if not(map-has-key($exclude, 'igx-badge') and map-get($exclude, 'igx-badge') == true) {
+    @if not(index($exclude, 'igx-badge')) {
         @include igx-badge($theme: (), $palette: $palette);
     }
-    @if not(map-has-key($exclude, 'igx-grid') and map-get($exclude, 'igx-grid') == true) {
+    @if not(index($exclude, 'igx-button')) {
+        @include igx-button($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-button-group')) {
+        @include igx-button-group($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-card')) {
+        @include igx-card($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-carousel')) {
+        @include igx-carousel($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-checkbox')) {
+        @include igx-checkbox($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-date-picker')) {
+        @include igx-date-picker($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-dialog')) {
+        @include igx-dialog($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-grid')) {
         @include igx-grid($theme: (), $palette: $palette);
     }
+    @if not(index($exclude, 'igx-calendar')) {
+        @include igx-calendar($theme: (), $palette: $palette);
+    }
 }
+
+
