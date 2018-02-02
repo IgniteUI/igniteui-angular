@@ -146,10 +146,10 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     public columnList: QueryList<IgxColumnComponent>;
 
     @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
-
-    @ViewChild("scrollContainer", { read: IgVirtualForOf }) public parentVirtDir: IgVirtualForOf<any>;
-
     public rowList: QueryList<IgxGridRowComponent>;
+
+    @ViewChild("scrollContainer", { read: IgVirtualForOf }) 
+    public parentVirtDir: IgVirtualForOf<any>;
 
     @HostBinding("attr.tabindex")
     public tabindex = 0;
