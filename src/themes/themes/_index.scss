@@ -2,6 +2,14 @@
 @import 'palettes';
 @import '../components/avatar/avatar-theme';
 @import '../components/badge/badge-theme';
+@import '../components/button/button-theme';
+@import '../components/button-group/button-group-theme';
+@import '../components/calendar/calendar-theme';
+@import '../components/card/card-theme';
+@import '../components/carousel/carousel-theme';
+@import '../components/checkbox/checkbox-theme';
+@import '../components/date-picker/date-picker-theme';
+@import '../components/dialog/dialog-theme';
 @import '../components/grid/grid-theme';
 @import '../components/toast/toast-theme';
 @import '../components/tabbar/tabbar-theme';
@@ -23,11 +31,37 @@
     // in the exclude list
     $valid-components: is-component($exclude);
 
+    @debug 'All registered: #{$components}';
+
     @if not(index($exclude, 'igx-avatar')) {
         @include igx-avatar($theme: (), $palette: $palette);
     }
     @if not(index($exclude, 'igx-badge')) {
         @include igx-badge($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-button')) {
+        @include igx-button($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-button-group')) {
+        @include igx-button-group($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-calendar')) {
+        @include igx-calendar($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-card')) {
+        @include igx-card($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-carousel')) {
+        @include igx-carousel($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-checkbox')) {
+        @include igx-checkbox($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-date-picker')) {
+        @include igx-date-picker($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-dialog')) {
+        @include igx-dialog($theme: (), $palette: $palette);
     }
     @if not(index($exclude, 'igx-grid')) {
         @include igx-grid($theme: (), $palette: $palette);
@@ -77,5 +111,6 @@
     @if not(index($exclude, 'igx-toast')) {
         @include igx-toast($theme: (), $palette: $palette);
     }
-
 }
+
+
