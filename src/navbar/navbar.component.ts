@@ -9,7 +9,7 @@ import {
     Output,
     ViewEncapsulation
 } from "@angular/core";
-import { IgxButtonModule } from "../button/button.directive";
+import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxIconModule } from "../icon/icon.component";
 
 @Component({

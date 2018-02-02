@@ -1,8 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { IgxButtonModule } from "../button/button.directive";
 import { IgxDatePickerModule } from "../date-picker/date-picker.component";
+import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxRippleModule } from "../directives/ripple.directive";
 import { IgxIconModule } from "../icon/icon.component";
 import { IgxInputModule } from "../input/input.directive";

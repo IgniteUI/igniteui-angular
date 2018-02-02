@@ -1,5 +1,5 @@
 import { Component, Directive, NgModule, ViewEncapsulation } from "@angular/core";
-import { IgxButtonModule } from "../button/button.directive";
+import { IgxButtonModule } from "../directives/button/button.directive";
 
 /**
  * IgxCardHeader is container for the card header

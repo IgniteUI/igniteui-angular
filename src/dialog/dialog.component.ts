@@ -14,7 +14,7 @@ import {
 
 import { EaseOut } from "../animations/easings";
 import { fadeIn, fadeOut, slideInBottom } from "../animations/main";
-import { IgxButtonModule } from "../button/button.directive";
+import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxRippleModule } from "../directives/ripple.directive";
 
 @Component({

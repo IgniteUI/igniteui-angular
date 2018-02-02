@@ -8,7 +8,7 @@ import {
     forwardRef,
     Inject, Input, NgModule, Output, QueryList, Renderer2, ViewChildren
 } from "@angular/core";
-import { IgxButtonDirective, IgxButtonModule } from "../button/button.directive";
+import { IgxButtonDirective, IgxButtonModule } from "../directives/button/button.directive";
 import { IgxRippleModule } from "../directives/ripple.directive";
 import { IgxIconModule } from "../icon/icon.component";
 

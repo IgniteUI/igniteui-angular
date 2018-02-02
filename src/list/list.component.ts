@@ -3,8 +3,8 @@ import {
     AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, forwardRef, HostBinding,
     Inject, Input, NgModule, OnDestroy, OnInit, Output, QueryList, Renderer2, ViewChild
 } from "@angular/core";
-import { IgxButtonModule } from "../button/button.directive";
 import { HammerGesturesManager } from "../core/touch";
+import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxRippleModule } from "../directives/ripple.directive";
 
 export interface IListChild {
