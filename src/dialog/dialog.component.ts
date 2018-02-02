@@ -32,7 +32,7 @@ import { IgxRippleModule } from "../directives/ripple.directive";
     styleUrls: ["./dialog.component.scss"],
     templateUrl: "dialog-content.component.html"
 })
-export class IgxDialog {
+export class IgxDialogComponent {
     private static NEXT_ID: number = 1;
     private static readonly DIALOG_CLASS = "igx-dialog";
 
@@ -94,7 +94,7 @@ export class IgxDialog {
     }
 
     constructor() {
-        this._titleId = IgxDialog.NEXT_ID++ + "_title";
+        this._titleId = IgxDialogComponent.NEXT_ID++ + "_title";
     }
 
     public open() {
@@ -119,7 +119,7 @@ export class IgxDialog {
         if (
             this.isOpen &&
             this.closeOnOutsideSelect &&
-            event.target.classList.contains(IgxDialog.DIALOG_CLASS)
+            event.target.classList.contains(IgxDialogComponent.DIALOG_CLASS)
         ) {
             this.close();
         }
@@ -140,8 +140,8 @@ export class IgxDialog {
 }
 
 @NgModule({
-    declarations: [IgxDialog],
-    exports: [IgxDialog],
+    declarations: [IgxDialogComponent],
+    exports: [IgxDialogComponent],
     imports: [CommonModule, IgxButtonModule, IgxRippleModule]
 })
 export class IgxDialogModule { }

@@ -4,7 +4,7 @@ import {
     TestBed
 } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { ButtonGroupAlignment, IgxButtonGroup, IgxButtonGroupModule } from "./buttonGroup.component";
+import { ButtonGroupAlignment, IgxButtonGroupComponent, IgxButtonGroupModule } from "./buttonGroup.component";
 
 interface IButton {
     type?: string;
@@ -59,7 +59,7 @@ describe("IgxButtonGroup", () => {
         const buttongroup = fixture.componentInstance.buttonGroup;
 
         expect(instance.buttonGroup).toBeDefined();
-        expect(buttongroup instanceof IgxButtonGroup).toBe(true);
+        expect(buttongroup instanceof IgxButtonGroupComponent).toBe(true);
         expect(buttongroup.disabled).toBeFalsy();
         expect(buttongroup.alignment).toBe(ButtonGroupAlignment.horizontal);
         expect(buttongroup.multiSelection).toBeFalsy();
@@ -76,7 +76,7 @@ describe("IgxButtonGroup", () => {
         const buttongroup = fixture.componentInstance.buttonGroup;
 
         expect(instance.buttonGroup).toBeDefined();
-        expect(buttongroup instanceof IgxButtonGroup).toBe(true);
+        expect(buttongroup instanceof IgxButtonGroupComponent).toBe(true);
         expect(buttongroup.disabled).toBeFalsy();
         expect(buttongroup.alignment).toBe(ButtonGroupAlignment.vertical);
         expect(buttongroup.multiSelection).toBeTruthy();
@@ -118,7 +118,7 @@ describe("IgxButtonGroup", () => {
 
 @Component({ template: `<igx-buttongroup [values]="buttons"></igx-buttongroup>` })
 class InitButtonGroup {
-    @ViewChild(IgxButtonGroup) public buttonGroup: IgxButtonGroup;
+    @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
 
     private buttons: Button[];
 
@@ -148,7 +148,7 @@ class InitButtonGroup {
                             [values]="cities" [alignment]="alignment">
                         </igx-buttongroup>` })
 class InitButtonGroupWithValues {
-    @ViewChild(IgxButtonGroup) public buttonGroup: IgxButtonGroup;
+    @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
 
     private cities: Button[];
 
@@ -188,7 +188,7 @@ class InitButtonGroupWithValues {
                             [values]="buttons" [alignment]="alignment">
                         </igx-buttongroup>` })
 class ButtonGroupWithValues {
-    @ViewChild(IgxButtonGroup) public buttonGroup: IgxButtonGroup;
+    @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
 
     private buttons: Button[];
 

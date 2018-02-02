@@ -1,6 +1,6 @@
 import {Component, ViewChild} from "@angular/core";
 import {async, TestBed} from "@angular/core/testing";
-import {IgxScroll, IgxScrollEvent, IgxScrollModule} from "./scroll.component";
+import {IgxScrollComponent, IgxScrollEvent, IgxScrollModule} from "./scroll.component";
 
 declare var Simulator: any;
 
@@ -277,7 +277,7 @@ describe("IgxScroll", () => {
         </igx-scroll>`
 })
 class ScrollInitializeTestComponent {
-    @ViewChild(IgxScroll) public scroll: IgxScroll;
+    @ViewChild(IgxScrollComponent) public scroll: IgxScrollComponent;
 
     public items: string[] = [];
 

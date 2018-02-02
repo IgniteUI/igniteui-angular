@@ -1,6 +1,6 @@
 import {Component, ViewChild} from "@angular/core";
 import {async, TestBed } from "@angular/core/testing";
-import {IgxNavbar, IgxNavbarModule} from "./navbar.component";
+import {IgxNavbarComponent, IgxNavbarModule} from "./navbar.component";
 
 describe("IgxNavbar", () => {
     beforeEach(async(() => {
@@ -75,5 +75,5 @@ class NavbarIntializeTestComponent {
     public title: string;
     public actionButtonIcon: string;
     public isActionButtonVisible: boolean;
-    @ViewChild(IgxNavbar) public navbar: IgxNavbar;
+    @ViewChild(IgxNavbarComponent) public navbar: IgxNavbarComponent;
 }

@@ -23,8 +23,8 @@ export enum IgxListPanState { NONE, LEFT, RIGHT }
     styleUrls: ["./list.component.scss"],
     templateUrl: "list.component.html"
 })
-export class IgxList {
-    @ContentChildren(forwardRef(() => IgxListItem)) public children: QueryList<IgxListItem>;
+export class IgxListComponent {
+    @ContentChildren(forwardRef(() => IgxListItemComponent)) public children: QueryList<IgxListItemComponent>;
 
     @Input() public allowLeftPanning: boolean = false;
     @Input() public allowRightPanning: boolean = false;
@@ -46,8 +46,8 @@ export class IgxList {
 
     private _innerStyle: string = "igx-list";
 
-    get items(): IgxListItem[] {
-        const items: IgxListItem[] = [];
+    get items(): IgxListItemComponent[] {
+        const items: IgxListItemComponent[] = [];
         if (this.children !== undefined) {
             for (const child of this.children.toArray()) {
                 if (!child.isHeader) {
@@ -59,8 +59,8 @@ export class IgxList {
         return items;
     }
 
-    get headers(): IgxListItem[] {
-        const headers: IgxListItem[] = [];
+    get headers(): IgxListItemComponent[] {
+        const headers: IgxListItemComponent[] = [];
         if (this.children !== undefined) {
             for (const child of this.children.toArray()) {
                 if (child.isHeader) {
@@ -89,7 +89,7 @@ export class IgxList {
     styleUrls: ["./list.component.scss"],
     templateUrl: "list-item.component.html"
 })
-export class IgxListItem implements OnInit, OnDestroy, IListChild {
+export class IgxListItemComponent implements OnInit, OnDestroy, IListChild {
     @ViewChild("wrapper") public element: ElementRef;
 
     public hidden: boolean = false;
@@ -146,8 +146,8 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     }
 
     constructor(
-        @Inject(forwardRef(() => IgxList))
-        private list: IgxList,
+        @Inject(forwardRef(() => IgxListComponent))
+        private list: IgxListComponent,
         private _renderer: Renderer2) {
     }
 
@@ -244,8 +244,8 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
 }
 
 @NgModule({
-    declarations: [IgxList, IgxListItem],
-    exports: [IgxList, IgxListItem],
+    declarations: [IgxListComponent, IgxListItemComponent],
+    exports: [IgxListComponent, IgxListItemComponent],
     imports: [CommonModule, IgxButtonModule, IgxRippleModule]
 })
 export class IgxListModule {

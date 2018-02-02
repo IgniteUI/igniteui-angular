@@ -14,12 +14,12 @@ let nextId = 0;
 const noop = () => { };
 
 @Component({
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxRadio, multi: true }],
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxRadioComponent, multi: true }],
     selector: "igx-radio",
     styleUrls: ["./radio.component.scss"],
     templateUrl: "radio.component.html"
 })
-export class IgxRadio implements ControlValueAccessor {
+export class IgxRadioComponent implements ControlValueAccessor {
 
     @Input() public value: any;
 
@@ -81,7 +81,7 @@ export class IgxRadio implements ControlValueAccessor {
 }
 
 @NgModule({
-    declarations: [IgxRadio],
-    exports: [IgxRadio]
+    declarations: [IgxRadioComponent],
+    exports: [IgxRadioComponent]
 })
 export class IgxRadioModule { }

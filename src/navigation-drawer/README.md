@@ -66,7 +66,7 @@ export class MainDrawerSampleComponent {
     open: boolean = false;
     position = "left";
     drawerMiniWidth = "";
-    @ViewChild(IgxNavigationDrawer) viewChild: IgxNavigationDrawer;
+    @ViewChild(IgxNavigationDrawerComponent) viewChild: IgxNavigationDrawerComponent;
     /** Sample-specific configurations: */
     showMiniWidth: boolean = false;
     showEventLog: boolean = true;

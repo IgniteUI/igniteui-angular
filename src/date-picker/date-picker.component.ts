@@ -17,7 +17,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { WEEKDAYS } from "../calendar/calendar";
 import { IgxCalendarComponent, IgxCalendarModule } from "../calendar/calendar.component";
-import { IgxDialog, IgxDialogModule } from "../dialog/dialog.component";
+import { IgxDialogComponent, IgxDialogModule } from "../dialog/dialog.component";
 import { IgxInputModule } from "../input/input.directive";
 
 @Component({
@@ -71,7 +71,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     @ViewChild("container", {read: ViewContainerRef}) public container: ViewContainerRef;
-    @ViewChild(IgxDialog) public alert: IgxDialog;
+    @ViewChild(IgxDialogComponent) public alert: IgxDialogComponent;
 
     public calendarRef: ComponentRef<IgxCalendarComponent>;
 

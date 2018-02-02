@@ -1,6 +1,6 @@
 import { Component, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
-import {IgxSlider, IgxSliderModule, IRangeSliderValue, SliderType} from "./slider.component";
+import {IgxSliderComponent, IgxSliderModule, IRangeSliderValue, SliderType} from "./slider.component";
 
 declare var Simulator: any;
 
@@ -303,7 +303,7 @@ describe("IgxSlider", () => {
 
     xit("should move thumb slider to value 60", (done) => {
         let fixture;
-        let slider: IgxSlider;
+        let slider: IgxSliderComponent;
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(SliderInitializeTestComponent);
             slider = fixture.componentInstance.slider;
@@ -324,7 +324,7 @@ describe("IgxSlider", () => {
 
     it("should not move thumb slider and value should remain the same when slider is disabled", (done) => {
         let fixture;
-        let slider: IgxSlider;
+        let slider: IgxSliderComponent;
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(SliderInitializeTestComponent);
             slider = fixture.componentInstance.slider;
@@ -363,7 +363,7 @@ describe("IgxSlider", () => {
 
     it("should change value from 60 to 61 when right arrow is pressed and slider is SLIDER", (done) => {
         let fixture;
-        let slider: IgxSlider;
+        let slider: IgxSliderComponent;
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(SliderInitializeTestComponent);
             slider = fixture.componentInstance.slider;
@@ -384,7 +384,7 @@ describe("IgxSlider", () => {
 
     it("should change value from 60 to 59 when left arrow is pressed and slider is SLIDER", (done) => {
         let fixture;
-        let slider: IgxSlider;
+        let slider: IgxSliderComponent;
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(SliderInitializeTestComponent);
             slider = fixture.componentInstance.slider;
@@ -406,7 +406,7 @@ describe("IgxSlider", () => {
     it("should switch from left thumb to be focused upper when lower value is near upper" +
         "when slider is RANGE", (done) => {
         let fixture;
-        let slider: IgxSlider;
+        let slider: IgxSliderComponent;
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(SliderInitializeTestComponent);
             slider = fixture.componentInstance.slider;
@@ -435,7 +435,7 @@ describe("IgxSlider", () => {
     it("should switch from right thumb to be focused lower when upper value is near lower" +
         "when slider is RANGE", (done) => {
         let fixture;
-        let slider: IgxSlider;
+        let slider: IgxSliderComponent;
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(SliderInitializeTestComponent);
             slider = fixture.componentInstance.slider;
@@ -463,7 +463,7 @@ describe("IgxSlider", () => {
 
     it("should not change value if different key from arrows is pressed and slider is SLIDER", (done) => {
         let fixture;
-        let slider: IgxSlider;
+        let slider: IgxSliderComponent;
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(SliderInitializeTestComponent);
             slider = fixture.componentInstance.slider;
@@ -492,7 +492,7 @@ describe("IgxSlider", () => {
     it("should increment lower value when lower thumb is focused" +
         "if right arrow is pressed and slider is RANGE", (done) => {
         let fixture;
-        let slider: IgxSlider;
+        let slider: IgxSliderComponent;
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(SliderInitializeTestComponent);
             slider = fixture.componentInstance.slider;
@@ -521,7 +521,7 @@ describe("IgxSlider", () => {
     it("should increment upper value when upper thumb is focused" +
         "if right arrow is pressed and slider is RANGE", (done) => {
         let fixture;
-        let slider: IgxSlider;
+        let slider: IgxSliderComponent;
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(SliderInitializeTestComponent);
             slider = fixture.componentInstance.slider;
@@ -549,7 +549,7 @@ describe("IgxSlider", () => {
 
     it("should not increment upper value when slider is disabled", (done) => {
         let fixture;
-        let slider: IgxSlider;
+        let slider: IgxSliderComponent;
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(SliderInitializeTestComponent);
             slider = fixture.componentInstance.slider;
@@ -609,5 +609,5 @@ describe("IgxSlider", () => {
     </igx-slider>`
 })
 class SliderInitializeTestComponent {
-    @ViewChild(IgxSlider) public slider: IgxSlider;
+    @ViewChild(IgxSliderComponent) public slider: IgxSliderComponent;
 }

@@ -48,7 +48,7 @@ export class IgxFlexDirective {
 }
 
 @NgModule({
-    declarations: [IgxLayoutDirective, IgxFlexDirective],
+    declarations: [IgxFlexDirective, IgxLayoutDirective],
     exports: [IgxFlexDirective, IgxLayoutDirective]
 })
-export class IgxLayout { }
+export class IgxLayoutModule { }

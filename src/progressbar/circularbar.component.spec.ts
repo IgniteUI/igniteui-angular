@@ -6,7 +6,7 @@ import {
     tick
 } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxCircularProgressBar } from "./progressbar.component";
+import { IgxCircularProgressBarComponent } from "./progressbar.component";
 
 describe("IgCircularBar", () => {
     const tickTime = 2000;
@@ -15,7 +15,7 @@ describe("IgCircularBar", () => {
             declarations: [
                 InitCircularProgressBar,
                 CircularBar,
-                IgxCircularProgressBar
+                IgxCircularProgressBarComponent
             ]
         })
         .compileComponents();
@@ -220,7 +220,7 @@ describe("IgCircularBar", () => {
 
 @Component({ template: `<igx-circular-bar></igx-circular-bar>` })
 class InitCircularProgressBar {
-    @ViewChild(IgxCircularProgressBar) public circularBar: IgxCircularProgressBar;
+    @ViewChild(IgxCircularProgressBarComponent) public circularBar: IgxCircularProgressBarComponent;
 }
 
 @Component({ template: `
@@ -230,7 +230,7 @@ class InitCircularProgressBar {
     </div>`
 })
 class CircularBar {
-    @ViewChild(IgxCircularProgressBar) public progressbar: IgxCircularProgressBar;
+    @ViewChild(IgxCircularProgressBarComponent) public progressbar: IgxCircularProgressBarComponent;
     @ViewChild("wrapper") public wrapper;
     @ViewChild("circularBar") public circularBar;
 

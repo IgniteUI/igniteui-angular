@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
-import { IgxDialog, IgxDialogModule } from "./dialog.component";
+import { IgxDialogComponent, IgxDialogModule } from "./dialog.component";
 
 describe("Dialog", () => {
     beforeEach(async(() => {
@@ -157,7 +157,7 @@ describe("Dialog", () => {
         expect(titleWrapper.attributes.id).toEqual(dialogWindow.attributes["aria-labelledby"]);
     });
 
-    function testDialogIsOpen(debugElement: DebugElement, dialog: IgxDialog, isOpen: boolean) {
+    function testDialogIsOpen(debugElement: DebugElement, dialog: IgxDialogComponent, isOpen: boolean) {
         const dialogDebugElement = debugElement.query(By.css(".igx-dialog"));
 
         expect(dialog.isOpen).toEqual(isOpen);
@@ -178,7 +178,7 @@ describe("Dialog", () => {
                             </igx-dialog>
                         </div>` })
 class Alert {
-    @ViewChild("dialog") public dialog: IgxDialog;
+    @ViewChild("dialog") public dialog: IgxDialogComponent;
 }
 
 @Component({ template: `<div #wrapper>
@@ -197,7 +197,7 @@ class Alert {
                             </igx-dialog>
                         </div>` })
 class Dialog {
-    @ViewChild("dialog") public dialog: IgxDialog;
+    @ViewChild("dialog") public dialog: IgxDialogComponent;
 }
 
 @Component({ template: `<div #wrapper>
@@ -208,5 +208,5 @@ class Dialog {
                             </igx-dialog>
                         <div>` })
 class CustomDialog {
-    @ViewChild("dialog") public dialog: IgxDialog;
+    @ViewChild("dialog") public dialog: IgxDialogComponent;
 }

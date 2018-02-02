@@ -4,7 +4,7 @@ import {
   TestBed
 } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxButton } from "./button.directive";
+import { IgxButtonDirective } from "./button.directive";
 
 describe("IgxButton", () => {
     beforeEach(async(() => {
@@ -12,7 +12,7 @@ describe("IgxButton", () => {
             declarations: [
                 InitButton,
                 ButtonWithAttribs,
-                IgxButton
+                IgxButtonDirective
             ]
         })
         .compileComponents();

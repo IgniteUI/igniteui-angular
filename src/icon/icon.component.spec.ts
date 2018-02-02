@@ -4,13 +4,13 @@ import {
     TestBed
 } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxIcon, IgxIconModule } from "./icon.component";
+import { IgxIconComponent, IgxIconModule } from "./icon.component";
 
 describe("Icon", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxIcon,
+                IgxIconComponent,
                 InitIcon,
                 InitMaterialIcon,
                 InitCustomColorIcon,
@@ -67,26 +67,26 @@ describe("Icon", () => {
     template: `<igx-icon></igx-icon>`
 })
 class InitIcon {
-    @ViewChild(IgxIcon) public icon: IgxIcon;
+    @ViewChild(IgxIconComponent) public icon: IgxIconComponent;
 }
 
 @Component({
     template: `<igx-icon fontSet="material" name="home"></igx-icon>`
 })
 class InitMaterialIcon {
-    @ViewChild(IgxIcon) public icon: IgxIcon;
+    @ViewChild(IgxIconComponent) public icon: IgxIconComponent;
 }
 
 @Component({
     template: `<igx-icon fontSet="material" name="home" color="red"></igx-icon>`
 })
 class InitCustomColorIcon {
-    @ViewChild(IgxIcon) public icon: IgxIcon;
+    @ViewChild(IgxIconComponent) public icon: IgxIconComponent;
 }
 
 @Component({
     template: `<igx-icon fontSet="material" name="home" isActive="false"></igx-icon>`
 })
 class InitInactiveIcon {
-    @ViewChild(IgxIcon) public icon: IgxIcon;
+    @ViewChild(IgxIconComponent) public icon: IgxIconComponent;
 }

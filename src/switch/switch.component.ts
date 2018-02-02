@@ -13,12 +13,12 @@ const noop = () => { };
 let nextId = 0;
 
 @Component({
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSwitch, multi: true }],
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSwitchComponent, multi: true }],
     selector: "igx-switch",
     styleUrls: ["./switch.component.scss"],
     templateUrl: "switch.component.html"
 })
-export class IgxSwitch implements ControlValueAccessor {
+export class IgxSwitchComponent implements ControlValueAccessor {
 
     @Input() public value: any;
     @Input() public id: string = `igx-switch-${nextId++}`;
@@ -74,7 +74,7 @@ export class IgxSwitch implements ControlValueAccessor {
 }
 
 @NgModule({
-    declarations: [IgxSwitch],
-    exports: [IgxSwitch]
+    declarations: [IgxSwitchComponent],
+    exports: [IgxSwitchComponent]
 })
 export class IgxSwitchModule { }

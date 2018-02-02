@@ -11,7 +11,7 @@ export enum Position { TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }
     styleUrls: ["./badge.component.scss"],
     templateUrl: "badge.component.html"
 })
-export class IgxBadge {
+export class IgxBadgeComponent {
     public typeEnum = Type;
     public positionEnum = Position;
     private _type: string = "";
@@ -137,8 +137,8 @@ export class IgxBadge {
 }
 
 @NgModule({
-    declarations: [IgxBadge],
-    exports: [IgxBadge],
+    declarations: [IgxBadgeComponent],
+    exports: [IgxBadgeComponent],
     imports: [CommonModule, IgxIconModule]
 })
 export class IgxBadgeModule {

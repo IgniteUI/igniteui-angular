@@ -1,7 +1,7 @@
 import {Component, ViewChild} from "@angular/core";
 import {async, TestBed } from "@angular/core/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import {IgxSnackbar, IgxSnackbarModule} from "./snackbar.component";
+import {IgxSnackbarComponent, IgxSnackbarModule} from "./snackbar.component";
 
 const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
@@ -109,5 +109,5 @@ describe("IgxSnackbar", () => {
 })
 class SnackbarInitializeTestComponent {
     public text: string;
-    @ViewChild(IgxSnackbar) public snackbar: IgxSnackbar;
+    @ViewChild(IgxSnackbarComponent) public snackbar: IgxSnackbarComponent;
 }

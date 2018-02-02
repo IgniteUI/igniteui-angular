@@ -22,7 +22,7 @@ export enum Size {
     styleUrls: ["./avatar.component.scss"],
     templateUrl: "avatar.component.html"
 })
-export class IgxAvatar {
+export class IgxAvatarComponent {
     @ViewChild("image") public image: ElementRef;
     @Input() public initials: string;
     @Input() public src: string;
@@ -133,8 +133,8 @@ export class IgxAvatar {
 }
 
 @NgModule({
-    declarations: [IgxAvatar],
-    exports: [IgxAvatar],
+    declarations: [IgxAvatarComponent],
+    exports: [IgxAvatarComponent],
     imports: [CommonModule, IgxIconModule]
 })
 export class IgxAvatarModule { }

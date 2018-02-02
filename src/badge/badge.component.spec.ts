@@ -4,8 +4,8 @@ import {
     TestBed
 } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxIcon, IgxIconModule } from "../icon/icon.component";
-import { IgxBadge, IgxBadgeModule } from "./badge.component";
+import { IgxIconComponent, IgxIconModule } from "../icon/icon.component";
+import { IgxBadgeComponent, IgxBadgeModule } from "./badge.component";
 
 describe("Badge", () => {
     beforeEach(async(() => {
@@ -14,9 +14,9 @@ describe("Badge", () => {
                 InitBadge,
                 InitBadgeWithDefaults,
                 InitBadgeWithIcon,
-                IgxBadge,
+                IgxBadgeComponent,
                 InitBadgeWithIconARIA,
-                IgxIcon
+                IgxIconComponent
             ]
         }).compileComponents();
     }));
@@ -77,20 +77,20 @@ describe("Badge", () => {
 
 @Component({ template: `<igx-badge type="error" value="22" position="bottom-left"></igx-badge>` })
 class InitBadge {
-    @ViewChild(IgxBadge) public badge: IgxBadge;
+    @ViewChild(IgxBadgeComponent) public badge: IgxBadgeComponent;
 }
 
 @Component({ template: `<igx-badge></igx-badge>` })
 class InitBadgeWithDefaults {
-    @ViewChild(IgxBadge) public badge: IgxBadge;
+    @ViewChild(IgxBadgeComponent) public badge: IgxBadgeComponent;
 }
 
 @Component({ template: `<igx-badge icon="person" type="info" position="top-left"></igx-badge>` })
 class InitBadgeWithIcon {
-    @ViewChild(IgxBadge) public badge: IgxBadge;
+    @ViewChild(IgxBadgeComponent) public badge: IgxBadgeComponent;
 }
 
 @Component({ template: `<igx-badge icon="person" type="success"></igx-badge>` })
 class InitBadgeWithIconARIA {
-    @ViewChild(IgxBadge) public badge: IgxBadge;
+    @ViewChild(IgxBadgeComponent) public badge: IgxBadgeComponent;
 }

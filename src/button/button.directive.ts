@@ -6,7 +6,7 @@ import { Directive, ElementRef, Input, NgModule, OnInit, Renderer2 } from "@angu
     },
     selector: "[igxButton]"
 })
-export class IgxButton {
+export class IgxButtonDirective {
     private _type: string = "flat";
     private _cssClass: string = "igx-button";
     private _color: string;
@@ -46,7 +46,7 @@ export class IgxButton {
 }
 
 @NgModule({
-    declarations: [IgxButton],
-    exports: [IgxButton]
+    declarations: [IgxButtonDirective],
+    exports: [IgxButtonDirective]
 })
 export class IgxButtonModule {}

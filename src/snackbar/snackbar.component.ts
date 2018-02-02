@@ -73,7 +73,7 @@ import { fadeIn, fadeOut, slideInBottom, slideOutBottom } from "../animations/ma
     styleUrls: ["./snackbar.component.scss"],
     templateUrl: "snackbar.component.html"
 })
-export class IgxSnackbar {
+export class IgxSnackbarComponent {
     /**
      * The message that will be shown message by the IgxSnackbar component
      * @type {string}
@@ -172,8 +172,8 @@ export class IgxSnackbar {
 }
 
 @NgModule({
-    declarations: [IgxSnackbar],
-    exports: [IgxSnackbar],
+    declarations: [IgxSnackbarComponent],
+    exports: [IgxSnackbarComponent],
     imports: [CommonModule]
 })
 export class IgxSnackbarModule { }

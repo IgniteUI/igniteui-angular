@@ -6,7 +6,7 @@ import {
     tick
 } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxLinearProgressBar } from "./progressbar.component";
+import { IgxLinearProgressBarComponent } from "./progressbar.component";
 
 describe("IgLinearBar", () => {
     const tickTime = 2000;
@@ -15,7 +15,7 @@ describe("IgLinearBar", () => {
             declarations: [
                 InitLinearProgressBar,
                 LinearBar,
-                IgxLinearProgressBar
+                IgxLinearProgressBarComponent
             ]
         })
         .compileComponents();
@@ -269,7 +269,7 @@ describe("IgLinearBar", () => {
 
 @Component({ template: `<igx-linear-bar [animate]="true"></igx-linear-bar>` })
 class InitLinearProgressBar {
-    @ViewChild(IgxLinearProgressBar) public linearBar: IgxLinearProgressBar;
+    @ViewChild(IgxLinearProgressBarComponent) public linearBar: IgxLinearProgressBarComponent;
 }
 
 @Component({ template: `<div #wrapper>
@@ -278,7 +278,7 @@ class InitLinearProgressBar {
                             </igx-linear-bar>
                         </div>` })
 class LinearBar {
-    @ViewChild(IgxLinearProgressBar) public progressbar: IgxLinearProgressBar;
+    @ViewChild(IgxLinearProgressBarComponent) public progressbar: IgxLinearProgressBarComponent;
     @ViewChild("wrapper") public wrapper;
     @ViewChild("linearBar") public linearBar;
 

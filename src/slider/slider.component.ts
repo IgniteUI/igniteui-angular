@@ -30,12 +30,12 @@ const noop = () => {
 };
 
 @Component({
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSlider, multi: true }],
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSliderComponent, multi: true }],
     selector: "igx-slider",
     styleUrls: ["./slider.component.scss"],
     templateUrl: "slider.component.html"
 })
-export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
+export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterViewInit {
     /**
      * Disables or enables UI interaction.
      */
@@ -671,8 +671,8 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
 }
 
 @NgModule({
-    declarations: [IgxSlider],
-    exports: [IgxSlider],
+    declarations: [IgxSliderComponent],
+    exports: [IgxSliderComponent],
     imports: [CommonModule]
 })
 export class IgxSliderModule {

@@ -71,7 +71,7 @@ export abstract class BaseProgress {
     styleUrls: ["progressbar.component.scss"],
     templateUrl: "templates/linear-bar.component.html"
 })
-export class IgxLinearProgressBar extends BaseProgress {
+export class IgxLinearProgressBarComponent extends BaseProgress {
 
     @Input() public striped: boolean = false;
     @Input() public type: string = "default";
@@ -130,7 +130,7 @@ export class IgxLinearProgressBar extends BaseProgress {
     styleUrls: ["progressbar.component.scss"],
     templateUrl: "templates/circular-bar.component.html"
 })
-export class IgxCircularProgressBar extends BaseProgress implements AfterViewInit {
+export class IgxCircularProgressBarComponent extends BaseProgress implements AfterViewInit {
 
     @Output() public onProgressChanged = new EventEmitter();
 
@@ -240,8 +240,8 @@ export function convertInPercentage(value: number, max: number) {
 }
 
 @NgModule({
-    declarations: [IgxLinearProgressBar, IgxCircularProgressBar],
-    exports: [IgxLinearProgressBar, IgxCircularProgressBar],
+    declarations: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent],
+    exports: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent],
     imports: [CommonModule]
 })
 export class IgxProgressBarModule {

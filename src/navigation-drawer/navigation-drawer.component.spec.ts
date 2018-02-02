@@ -19,8 +19,8 @@ describe("Navigation Drawer", () => {
             jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
             TestBed.configureTestingModule({
                 declarations: [
-                    Infragistics.IgxNavigationClose,
-                    Infragistics.IgxNavigationToggle,
+                    Infragistics.IgxNavigationCloseDirective,
+                    Infragistics.IgxNavigationToggleDirective,
                     TestComponent,
                     TestComponentDI,
                     TestComponentPin],
@@ -36,7 +36,7 @@ describe("Navigation Drawer", () => {
             TestBed.compileComponents().then(() => {
                 const fixture = TestBed.createComponent(TestComponent);
                 fixture.detectChanges();
-                expect(fixture.componentInstance.viewChild instanceof Infragistics.IgxNavigationDrawer).toBeTruthy();
+                expect(fixture.componentInstance.viewChild instanceof Infragistics.IgxNavigationDrawerComponent).toBeTruthy();
                 expect(fixture.componentInstance.viewChild.state).toBeNull();
             });
         }));
@@ -47,7 +47,7 @@ describe("Navigation Drawer", () => {
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.viewChild).toBeDefined();
-                expect(fixture.componentInstance.viewChild instanceof Infragistics.IgxNavigationDrawer).toBeTruthy();
+                expect(fixture.componentInstance.viewChild instanceof Infragistics.IgxNavigationDrawerComponent).toBeTruthy();
                 expect(fixture.componentInstance.viewChild.state instanceof Infragistics.IgxNavigationService)
                     .toBeTruthy();
             });
@@ -97,7 +97,7 @@ describe("Navigation Drawer", () => {
             TestBed.compileComponents().then(() => {
                 const fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
-                const drawer: Infragistics.IgxNavigationDrawer = fixture.componentInstance.viewChild;
+                const drawer: Infragistics.IgxNavigationDrawerComponent = fixture.componentInstance.viewChild;
                 expect(drawer.isOpen).toBeFalsy();
 
                 drawer.open();
@@ -301,7 +301,7 @@ describe("Navigation Drawer", () => {
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
-                const drawer: Infragistics.IgxNavigationDrawer = fixture.componentInstance.viewChild;
+                const drawer: Infragistics.IgxNavigationDrawerComponent = fixture.componentInstance.viewChild;
 
                 fixture.componentInstance.drawerMiniWidth = 60;
                 fixture.detectChanges();
@@ -453,7 +453,7 @@ describe("Navigation Drawer", () => {
     template: "<igx-nav-drawer></igx-nav-drawer>"
 })
 class TestComponent {
-     @ViewChild(Infragistics.IgxNavigationDrawer) public viewChild: Infragistics.IgxNavigationDrawer;
+     @ViewChild(Infragistics.IgxNavigationDrawerComponent) public viewChild: Infragistics.IgxNavigationDrawerComponent;
 }
 
 @Component({
@@ -464,7 +464,7 @@ class TestComponent {
 class TestComponentDI {
      public drawerMiniWidth: string | number;
      public drawerWidth: string | number;
-     @ViewChild(Infragistics.IgxNavigationDrawer) public viewChild: Infragistics.IgxNavigationDrawer;
+     @ViewChild(Infragistics.IgxNavigationDrawerComponent) public viewChild: Infragistics.IgxNavigationDrawerComponent;
 }
 
 class TestComponentPin extends TestComponentDI {

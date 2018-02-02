@@ -26,9 +26,9 @@ import { IgxIconModule } from "../icon/icon.component";
     templateUrl: "tab-bar-content.component.html"
 })
 
-export class IgxTabBar implements AfterViewInit {
-    @ViewChildren(forwardRef(() => IgxTab)) public tabs: QueryList<IgxTab>;
-    @ContentChildren(forwardRef(() => IgxTabPanel)) public panels: QueryList<IgxTabPanel>;
+export class IgxTabBarComponent implements AfterViewInit {
+    @ViewChildren(forwardRef(() => IgxTabComponent)) public tabs: QueryList<IgxTabComponent>;
+    @ContentChildren(forwardRef(() => IgxTabPanelComponent)) public panels: QueryList<IgxTabPanelComponent>;
 
     @Output() public onTabSelected = new EventEmitter();
     @Output() public onTabDeselected = new EventEmitter();
@@ -41,7 +41,7 @@ export class IgxTabBar implements AfterViewInit {
 
     private _itemStyle: string = "igx-tab-bar";
 
-    get selectedTab(): IgxTab {
+    get selectedTab(): IgxTabComponent {
         if (this.tabs && this.selectedIndex !== undefined) {
             return this.tabs.toArray()[this.selectedIndex];
         }
@@ -74,7 +74,7 @@ export class IgxTabBar implements AfterViewInit {
         });
     }
 
-    private _deselectPanel(panel: IgxTabPanel) {
+    private _deselectPanel(panel: IgxTabPanelComponent) {
         // Cannot deselect the selected tab - this will mean that there will be not selected tab left
         if (panel.isDisabled || this.selectedTab.index === panel.index) {
             return;
@@ -85,7 +85,7 @@ export class IgxTabBar implements AfterViewInit {
     }
 }
 
-// ================================= IgxTabPanel ======================================
+// ================================= IgxTabPanelComponent ======================================
 
 @Component({
     host: {
@@ -99,7 +99,7 @@ export class IgxTabBar implements AfterViewInit {
     templateUrl: "tab-panel.component.html"
 })
 
-export class IgxTabPanel {
+export class IgxTabPanelComponent {
     public isSelected: boolean = false;
 
     @Input() public label: string;
@@ -111,7 +111,7 @@ export class IgxTabPanel {
     }
     private _itemStyle: string = "igx-tab-panel";
 
-    get relatedTab(): IgxTab {
+    get relatedTab(): IgxTabComponent {
         if (this._tabBar.tabs) {
             return this._tabBar.tabs.toArray()[this.index];
         }
@@ -121,7 +121,7 @@ export class IgxTabPanel {
         return this._tabBar.panels.toArray().indexOf(this);
     }
 
-    constructor(private _tabBar: IgxTabBar) {
+    constructor(private _tabBar: IgxTabBarComponent) {
     }
 
     public select() {
@@ -134,7 +134,7 @@ export class IgxTabPanel {
     }
 }
 
-// ======================================= IgxTab ==========================================
+// ======================================= IgxTabComponent ==========================================
 
 @Component({
     host: {
@@ -145,8 +145,8 @@ export class IgxTabPanel {
     templateUrl: "tab.component.html"
 })
 
-export class IgxTab {
-    @Input() public relatedPanel: IgxTabPanel;
+export class IgxTabComponent {
+    @Input() public relatedPanel: IgxTabPanelComponent;
 
     private _changesCount: number = 0; // changes and updates accordingly applied to the tab.
 
@@ -174,7 +174,7 @@ export class IgxTab {
         return this._tabBar.tabs.toArray().indexOf(this);
     }
 
-    constructor(private _tabBar: IgxTabBar, private _element: ElementRef) {
+    constructor(private _tabBar: IgxTabBarComponent, private _element: ElementRef) {
     }
 
     public select() {
@@ -183,8 +183,8 @@ export class IgxTab {
 }
 
 @NgModule({
-    declarations: [IgxTabBar, IgxTabPanel, IgxTab],
-    exports: [IgxTabBar, IgxTabPanel, IgxTab],
+    declarations: [IgxTabBarComponent, IgxTabPanelComponent, IgxTabComponent],
+    exports: [IgxTabBarComponent, IgxTabPanelComponent, IgxTabComponent],
     imports: [CommonModule, IgxBadgeModule, IgxIconModule]
 })
 export class IgxTabBarModule {

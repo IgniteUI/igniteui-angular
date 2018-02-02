@@ -5,7 +5,7 @@ import {
 } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { IgxRadio } from "./radio.component";
+import { IgxRadioComponent } from "./radio.component";
 
 describe("IgRadio", () => {
 
@@ -14,7 +14,7 @@ describe("IgRadio", () => {
             declarations: [
                 InitRadio,
                 RadioWithModel,
-                IgxRadio
+                IgxRadioComponent
             ],
             imports: [FormsModule]
         })
@@ -68,7 +68,7 @@ class InitRadio {}
                     name="group" [(ngModel)]="selected">{{item}}</igx-radio>`
 })
 class RadioWithModel {
-    @ViewChildren(IgxRadio) public radios;
+    @ViewChildren(IgxRadioComponent) public radios;
 
     public selected = "Foo";
 }

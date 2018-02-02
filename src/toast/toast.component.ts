@@ -27,7 +27,7 @@ import { Component, EventEmitter, Input, NgModule, Output } from "@angular/core"
     styleUrls: ["./toast.component.scss"],
     templateUrl: "toast.component.html"
 })
-export class IgxToast {
+export class IgxToastComponent {
     public readonly CSS_CLASSES = {
         IGX_TOAST_BOTTOM: "igx-toast--bottom",
         IGX_TOAST_MIDDLE: "igx-toast--middle",
@@ -161,8 +161,8 @@ export enum IgxToastPosition {
 }
 
 @NgModule({
-    declarations: [IgxToast],
-    exports: [IgxToast],
+    declarations: [IgxToastComponent],
+    exports: [IgxToastComponent],
     imports: [CommonModule]
 })
 export class IgxToastModule { }

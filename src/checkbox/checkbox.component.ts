@@ -13,12 +13,12 @@ const noop = () => { };
 let nextId = 0;
 
 @Component({
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxCheckbox, multi: true }],
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxCheckboxComponent, multi: true }],
     selector: "igx-checkbox",
     styleUrls: ["./checkbox.component.scss"],
     templateUrl: "checkbox.component.html"
 })
-export class IgxCheckbox implements ControlValueAccessor {
+export class IgxCheckboxComponent implements ControlValueAccessor {
     public focused: boolean = false;
 
     @Input() public value: any;
@@ -69,7 +69,7 @@ export class IgxCheckbox implements ControlValueAccessor {
 }
 
 @NgModule({
-    declarations: [IgxCheckbox],
-    exports: [IgxCheckbox]
+    declarations: [IgxCheckboxComponent],
+    exports: [IgxCheckboxComponent]
 })
 export class IgxCheckboxModule { }

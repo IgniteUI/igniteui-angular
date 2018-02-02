@@ -7,7 +7,7 @@ import { IgxButtonModule } from "../button/button.directive";
 @Directive({
     selector: "igx-card-header"
 })
-export class IgxCardHeader { }
+export class IgxCardHeaderDirective { }
 
 /**
  * IgxCardContent is container for the card content
@@ -15,7 +15,7 @@ export class IgxCardHeader { }
 @Directive({
     selector: "igx-card-content"
 })
-export class IgxCardContent { }
+export class IgxCardContentDirective { }
 
 /**
  * IgxCardActions is container for the card actions
@@ -23,7 +23,7 @@ export class IgxCardContent { }
 @Directive({
     selector: "igx-card-actions"
 })
-export class IgxCardActions { }
+export class IgxCardActionsDirective { }
 
 /**
  * IgxCardFooter is container for the card footer
@@ -34,7 +34,7 @@ export class IgxCardActions { }
     },
     selector: "igx-card-footer"
 })
-export class IgxCardFooter { }
+export class IgxCardFooterDirective { }
 
 /**
  * IgxCardComponent is a sheet of material that serves as an entry point to more detailed information.
@@ -48,8 +48,8 @@ export class IgxCardFooter { }
 export class IgxCardComponent { }
 
 @NgModule({
-    declarations: [IgxCardComponent, IgxCardHeader, IgxCardContent, IgxCardActions, IgxCardFooter],
-    exports: [IgxCardComponent, IgxCardHeader, IgxCardContent, IgxCardActions, IgxCardFooter],
+    declarations: [IgxCardComponent, IgxCardHeaderDirective, IgxCardContentDirective, IgxCardActionsDirective, IgxCardFooterDirective],
+    exports: [IgxCardComponent, IgxCardHeaderDirective, IgxCardContentDirective, IgxCardActionsDirective, IgxCardFooterDirective],
     imports: [IgxButtonModule]
 })
 export class IgxCardModule { }

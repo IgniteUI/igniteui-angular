@@ -2,7 +2,7 @@ import {Component, ViewChild} from "@angular/core";
 import {async, TestBed } from "@angular/core/testing";
 import {By} from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import {IgxToast, IgxToastModule, IgxToastPosition} from "./toast.component";
+import {IgxToastComponent, IgxToastModule, IgxToastPosition} from "./toast.component";
 
 const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
@@ -138,5 +138,5 @@ describe("IgxToast", () => {
                </igx-toast>`
 })
 class ToastInitializeTestComponent {
-    @ViewChild(IgxToast) public toast: IgxToast;
+    @ViewChild(IgxToastComponent) public toast: IgxToastComponent;
 }

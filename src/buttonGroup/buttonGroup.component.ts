@@ -8,7 +8,7 @@ import {
     forwardRef,
     Inject, Input, NgModule, Output, QueryList, Renderer2, ViewChildren
 } from "@angular/core";
-import { IgxButton, IgxButtonModule } from "../button/button.directive";
+import { IgxButtonDirective, IgxButtonModule } from "../button/button.directive";
 import { IgxRippleModule } from "../directives/ripple.directive";
 import { IgxIconModule } from "../icon/icon.component";
 
@@ -22,8 +22,8 @@ export enum ButtonGroupAlignment { horizontal, vertical }
     templateUrl: "buttongroup-content.component.html"
 })
 
-export class IgxButtonGroup implements AfterViewInit {
-    @ViewChildren(IgxButton) public buttons: QueryList<IgxButtonGroup>;
+export class IgxButtonGroupComponent implements AfterViewInit {
+    @ViewChildren(IgxButtonDirective) public buttons: QueryList<IgxButtonGroupComponent>;
     @Input() set itemContentCssClass(value: string) {
         this._itemContentCssClass = value || this._itemContentCssClass;
     }
@@ -55,7 +55,7 @@ export class IgxButtonGroup implements AfterViewInit {
     constructor(private _el: ElementRef, private _renderer: Renderer2, cdr: ChangeDetectorRef) {
     }
 
-    get selectedButtons(): IgxButtonGroup[] {
+    get selectedButtons(): IgxButtonGroupComponent[] {
         return this.buttons.filter((b, i) => {
             return this.selectedIndexes.indexOf(i) !== -1;
         });
@@ -116,8 +116,8 @@ export class IgxButtonGroup implements AfterViewInit {
 }
 
 @NgModule({
-    declarations: [IgxButtonGroup],
-    exports: [IgxButtonGroup],
+    declarations: [IgxButtonGroupComponent],
+    exports: [IgxButtonGroupComponent],
     imports: [IgxButtonModule, CommonModule, IgxRippleModule, IgxIconModule]
 })
 
