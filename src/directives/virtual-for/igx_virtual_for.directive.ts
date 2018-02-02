@@ -119,8 +119,9 @@ export class IgVirtualForOf<T> {
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
-        if ("igVirtForOf" in changes) {
-            const value = changes["igVirtForOf"].currentValue;
+        const forOf = "igVirtForOf";
+        if (forOf in changes) {
+            const value = changes[forOf].currentValue;
             if (!this._differ && value) {
                 try {
                     this._differ = this._differs.find(value).create(this.ngForTrackBy);
@@ -131,7 +132,8 @@ export class IgVirtualForOf<T> {
                 }
             }
         }
-        if ("igVirtForContainerSize" in changes && !changes["igVirtForContainerSize"].firstChange) {
+        const containerSize = "igVirtForContainerSize";
+        if (containerSize in changes && !changes[containerSize].firstChange) {
             this._recalcOnContainerChange(changes);
         }
     }
@@ -200,7 +202,8 @@ export class IgVirtualForOf<T> {
     }
 
     private _recalcOnContainerChange(changes: SimpleChanges) {
-        const value = changes["igVirtForContainerSize"].currentValue;
+        const containerSize = "igVirtForContainerSize";
+        const value = changes[containerSize].currentValue;
         const pageSize = this.igVirtForScrolling === "vertical" ?
             parseInt(value, 10) / 50 :
             parseInt(value, 10) / 200;
@@ -264,7 +267,8 @@ class RecordViewTuple<T> {
 }
 
 export function getTypeNameForDebugging(type: any): string {
-    return type["name"] || typeof type;
+    const name = "name";
+    return type[name] || typeof type;
 }
 
 @NgModule({

@@ -40,7 +40,7 @@
         <ng-template igVirtFor="let item of data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
                                 | gridSort:sortingExpressions:id:pipeTrigger
                                 | gridPaging:page:perPage:id:pipeTrigger;
-                                index as i;" let-rowData [igVirtForOf]="data" let-rowIndex="index" [igVirtForScrolling]="'vertical'" [igVirtForContainerSize]='height'>
+                                index as i;" let-rowData [igVirtForOf]="data" let-rowIndex="index" [igVirtForScrolling]="'vertical'" [igVirtForContainerSize]='height' #scrollContainer>
            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
            </igx-grid-row>
         </ng-template>
