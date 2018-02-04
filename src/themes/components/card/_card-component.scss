@@ -1,0 +1,76 @@
+@include b(igx-card) {
+    @extend %igx-card-display !optional;
+
+    igx-card-header {
+        @extend %igx-card-header !optional;
+
+        @include b(igx-card-header) {
+            @include e(title) {
+                @extend %igx-card-header-title !optional;
+            }
+
+            @include e(title, $m: small) {
+                @extend %igx-card-header-title !optional;
+                @extend %igx-card-header-title--small !optional;
+            }
+
+            @include e(subtitle) {
+                @extend %igx-card-header-subtitle !optional;
+            }
+
+            @include e(tgroup) {
+                @extend %igx-card-tgroup !optional;
+            }
+
+            @include m(compact) {
+                @extend %igx-card-header--compact !optional;
+            }
+        }
+
+        &.compact {
+            @extend %igx-card-header--compact !optional;
+        }
+    }
+
+    igx-card-content {
+        @extend %igx-card-content !optional;
+
+        @include b(igx-card-content) {
+            @include e(text) {
+                @extend %igx-card-content-text !optional;
+            }
+        }
+    }
+
+    igx-card-actions {
+        @extend %igx-card-actions !optional;
+
+        @include b(igx-card-actions) {
+            @include e(igroup) {
+                @extend %igx-card-actions-igroup !optional;
+            }
+
+            @include e(igroup, $m: start) {
+                @extend %igx-card-actions-igroup !optional;
+                @extend %igx-card-actions-igroup--start !optional;
+            }
+
+            @include e(igroup, $m: end) {
+                @extend %igx-card-actions-igroup !optional;
+                @extend %igx-card-actions-igroup--end !optional;
+            }
+
+            @include e(bgroup) {
+                @extend %igx-card-actions-bgroup !optional;
+            }
+        }
+    }
+
+    @include e(media) {
+        @extend %igx-card-media !optional;
+    }
+
+    @include e(media, $m: right) {
+        @extend %igx-card-media--right !optional;
+    }
+}

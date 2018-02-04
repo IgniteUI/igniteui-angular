@@ -1,0 +1,50 @@
+@include b(igx-control) {
+    $block: bem--selector-to-string(&);
+    $control-padding: 8px 0 !default;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $control-padding;
+
+    @include e(radio) {
+        //hide default radio control
+        @include hide-default;
+
+        ~ #{$block}__label {
+            @extend %igx-radio-lbl-display !optional;
+        }
+
+        &:not(:checked) ~ #{$block}__label::before {
+            @extend %igx-radio-lbl-notchecked--before !optional;
+        }
+
+        &:not(:checked) ~ #{$block}__label::after {
+            @extend %igx-radio-lbl-notchecked--after !optional;
+        }
+
+        &:checked ~ #{$block}__label::before {
+            @extend %igx-radio-lbl-checked--before !optional;
+        }
+
+        &:checked ~ #{$block}__label::after {
+            @extend %igx-radio-lbl-checked--after !optional;
+        }
+
+        &:disabled ~ #{$block}__label {
+            @extend %igx-radio-lbl--disabled !optional;
+        }
+
+        &:disabled:checked ~ #{$block}__label::before {
+            @extend %igx-radio-lbl-checked--disabled-before !optional;
+        }
+
+        &:disabled:checked ~ #{$block}__label::after {
+            @extend %igx-radio-lbl-checked--disabled-after !optional;
+        }
+
+        &:disabled:not(:checked) ~ #{$block}__label::after {
+            @extend %igx-radio-lbl-notchecked--disabled-after !optional;
+        }
+    }
+}

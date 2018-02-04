@@ -1,0 +1,91 @@
+
+@include b(igx-form-group) {
+    @extend %igx-input-display !optional;
+    $block: bem--selector-to-string(&);
+
+    label {
+        @extend %igx-form-label !optional;
+    }
+    @include e(clear) {
+        @extend %igx-input-clear !optional;
+    }
+    @include e(clear, $m: hidden) {
+        @extend %igx-input-clear !optional;
+        @extend %igx-input-clear--hidden !optional;
+    }
+    @include e(input) {
+        @extend %igx-form-input !optional;
+
+        &:focus {
+            @extend %igx-form-input--focused !optional;
+        }
+
+        &:disabled {
+            @extend %igx-form-input--disabled !optional;
+            ~ label {
+                @extend %igx-form-label--disabled !optional;
+            }
+        }
+
+        &.ng-valid[required].ng-touched,
+        &.ng-valid.required {
+            @extend %igx-form-input--success !optional;
+
+            ~ label {
+                @extend %igx-form-label--success !optional;
+            }
+        }
+
+        &.ng-invalid.ng-touched,
+        &.ng-invalid:not(form).ng-touched {
+            @extend %igx-form-input--error !optional;
+
+            ~ label {
+                @extend %igx-form-label--error !optional;
+            }
+        }
+
+        &.ng-warning {
+            @extend %igx-form-input--warn !optional;
+
+            ~ label {
+                @extend %igx-form-label--warn !optional;
+            }
+        }
+    }
+    @include e(input, $m: filled) {
+        @extend %igx-form-input !optional;
+
+        ~ label {
+            @extend %igx-form-label--filled !optional;
+            @extend %igx-form-label--float !optional;
+        }
+    }
+    @include e(input, $m: focused) {
+        @extend %igx-form-input !optional;
+
+        ~ label {
+            @extend %igx-form-label--focused !optional;
+        }
+    }
+
+    @include e(input, $m: placeholder) {
+        @extend %igx-form-input !optional;
+
+        ~ label {
+            @extend %igx-form-label--float !optional;
+        }
+    }
+    @include e(input, $m: search) {
+        @extend %igx-form-input !optional;
+        @extend %igx-search-input !optional;
+
+        ~ label {
+            @extend %igx-search-label !optional;
+        }
+    }
+    @include e(textarea) {
+        // @extend #{$block}__input;
+        @extend %igx-textarea !optional;
+    }
+}

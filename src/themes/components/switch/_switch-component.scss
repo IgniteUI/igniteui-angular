@@ -1,0 +1,29 @@
+@include b(igx-control) {
+    $block: bem--selector-to-string(&);
+    $control-padding: 8px 0 !default;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $control-padding;
+
+    @include e(switch) {
+        @include hide-default;
+
+        ~ #{$block}__label {
+            @extend %igx-switch-lbl-display !optional;
+        }
+
+        &:checked ~ #{$block}__label {
+            @extend %igx-switch-lbl--on !optional;
+        }
+
+        &:disabled ~ #{$block}__label {
+            @extend %igx-switch-lbl--disabled !optional;
+        }
+    }
+
+    @include e(switch-text) {
+        padding-right: em(16px);
+    }
+}
