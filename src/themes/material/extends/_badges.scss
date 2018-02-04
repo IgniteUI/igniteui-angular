@@ -39,15 +39,15 @@
 }
 
 %igx-badge--info {
-    background-color: $primary-color;
+    background-color: igx-color($default-palette, 'primary');
 }
 
 %igx-circle--warn {
-    background-color: $warn-color;
+    background-color: igx-color($default-palette, 'warn');
 }
 
 %igx-circle--error {
-    background-color: $error-color;
+    background-color: igx-color($default-palette, 'warn', 900);
 }
 
 %igx-badge--hidden {

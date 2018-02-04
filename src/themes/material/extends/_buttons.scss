@@ -21,7 +21,7 @@
 
 %igx-button--flat {
     background: transparent;
-    color: $secondary-color;
+    color: igx-color($default-palette, 'accent');
 
     &:hover {
         background: $button-flat-hover-background;

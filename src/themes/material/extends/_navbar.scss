@@ -7,7 +7,7 @@
     width: 100%;
     height: 56px;
     padding: $navbar-padding;
-    background: $primary-color;
+    background: igx-color($default-palette, 'primary');
     color: $navbar-text-color;
     box-shadow: $elevate-4;
     z-index: 4;

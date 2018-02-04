@@ -42,7 +42,7 @@
 }
 
 %progressbar--default {
-    background-color: $primary-color;
+    background-color: igx-color($default-palette, 'primary');
 }
 
 %progressbar--danger {
@@ -54,7 +54,7 @@
 }
 
 %progressbar--info {
-    background-color: $secondary-color;
+    background-color: igx-color($default-palette, 'accent');
 }
 
 %progressbar--success {
@@ -70,7 +70,7 @@
 %progress-circular-innercircle {
     stroke-width: 4;
     fill: transparent;
-    stroke: $primary-color;
+    stroke: igx-color($default-palette, 'primary');
     stroke-opacity: .1;
 }
 

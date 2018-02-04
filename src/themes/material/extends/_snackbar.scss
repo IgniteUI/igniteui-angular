@@ -17,7 +17,7 @@
 
 %igx-snackbar-button {
     background: transparent;
-    color: $secondary-color;
+    color: igx-color($default-palette, 'accent');
     border: 0;
     line-height: $snackbar-button-line-height;
     margin-left: $snackbar-button-left-margin;
