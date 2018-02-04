@@ -36,3 +36,30 @@ $default-margin: 0;
         clear: both;
     }
 }
+
+@mixin keyframes($name) {
+    $keyframe: map-get($keyframes, $name);
+
+    @if $keyframe == null {
+        $keyframe: unique-id();
+        $keyframes: map-merge($keyframes, (#{$name}: $keyframe)) !global;
+
+        @at-root {
+            @keyframes #{$name} {
+                @content;
+            }
+        }
+    }
+}
+
+@mixin animation($animate...) {
+    $max: length($animate);
+    $animations: '';
+    @for $i from 1 through $max {
+        $animations: #{$animations + nth($animate, $i)};
+        @if $i < $max {
+            $animations: #{$animations + ', '};
+        }
+    }
+    animation: $animations;
+}
