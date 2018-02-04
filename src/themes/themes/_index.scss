@@ -1,3 +1,6 @@
+// Import the core module first
+@import '../core';
+
 // Import all themable component mixins
 @import 'palettes';
 @import '../components/avatar/avatar-theme';
@@ -21,6 +24,7 @@
 @import '../components/radio/radio-theme';
 @import '../components/progress/progress-theme';
 @import '../components/navbar/navbar-theme';
+@import '../components/navdrawer/navdrawer-theme';
 @import '../components/list/list-theme';
 @import '../components/input/input-theme';
 @import '../components/icon/icon-theme';
@@ -81,6 +85,9 @@
     @if not(index($exclude, 'igx-navbar')) {
         @include igx-navbar($theme: (), $palette: $palette);
     }
+    @if not(index($exclude, 'igx-navdrawer')) {
+        @include igx-navdrawer($theme: (), $palette: $palette);
+    }
     @if not(index($exclude, 'igx-progress-circular')) {
         @include igx-progress-circular($theme: (), $palette: $palette);
     }
@@ -112,5 +119,3 @@
         @include igx-toast($theme: (), $palette: $palette);
     }
 }
-
-
