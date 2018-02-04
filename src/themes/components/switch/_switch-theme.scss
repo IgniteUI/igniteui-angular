@@ -1,3 +1,7 @@
+$component-name: 'igx-switch';
+
+$components: register-component($components, #{$component-name});
+
 @function igx-switch-theme($thumb-color: null, $track-color: null) {
     @return (
         thumb-color: $thumb-color,
@@ -13,7 +17,7 @@
 
     $this: extend($default-theme, $theme);
 
-    @debug $this;
+    // @debug $this;
 
     $switch-background: $darkgray !default;
     $switch-background-disabled: $off-white !default;

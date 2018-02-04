@@ -1,4 +1,6 @@
-$components: register-component($components, 'igx-calendar');
+$component-name: 'igx-calendar';
+
+$components: register-component($components, #{$component-name});
 
 @function igx-calendar-theme(
     $header-background: null,

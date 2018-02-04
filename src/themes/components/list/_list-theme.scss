@@ -1,3 +1,7 @@
+$component-name: 'igx-list';
+
+$components: register-component($components, #{$component-name});
+
 @function igx-list-theme(
     $background: null,
     $header-background: null,
@@ -31,7 +35,7 @@
 
     $this: extend($default-theme, $theme);
 
-    @debug $this;
+    // @debug $this;
 
     $list-margin: 8px 16px !default;
     $list-background: map-get($this, 'background') !default;

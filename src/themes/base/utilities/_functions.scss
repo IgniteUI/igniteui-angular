@@ -120,45 +120,15 @@
     @return $is-keyword or $is-angle;
 }
 
-@function is-component($components) {
-    $is-component: (
-        igx-avatar,
-        igx-badge,
-        igx-button,
-        igx-button-group,
-        igx-calendar,
-        igx-card,
-        igx-carousel,
-        igx-checkbox,
-        igx-date-picker,
-        igx-dialog,
-        igx-grid,
-        igx-grid-filtering,
-        igx-icon,
-        igx-input,
-        igx-list,
-        igx-navbar,
-        igx-navdrawer,
-        igx-progress-linear,
-        igx-progress-circular,
-        igx-radio,
-        igx-ripple,
-        igx-slider,
-        igx-scroll,
-        igx-snackbar,
-        igx-switch,
-        igx-tabbar,
-        igx-toast
-    );
-
-    @each $component in $components {
-        @if not(index($is-component, $component)) {
-            @error unquote('Can\'t exclude "#{$component}" because it is not in the list of Ignite UI for Angular components.');
+@function is-component($components, $excludes) {
+    @each $item in $excludes {
+        @if not(index($components, $item)) {
+            @error unquote('Can\'t exclude "#{$item}" because it is not in the list of Ignite UI for Angular components.');
         }
     }
 
-    @if length($components) > 0 {
-        @warn unquote('You have excluded the following components from the theme: "#{$components}". You can now add your own themes for the excluded components.');
+    @if length($excludes) > 0 {
+        @warn unquote('You have excluded the following components from the theme: "#{$excludes}". You can now add your own themes for the excluded components.');
     }
 
     @return '';
@@ -253,9 +223,9 @@
     $accent-palette: _generate-palette($accent);
     $warn-palette: _generate-palette($warn);
 
-    @debug 'Primary Colors Palette: #{$primary-palette}';
-    @debug 'Accent Colors Palette: #{$accent-palette}';
-    @debug 'Warn Colors Palette: #{$warn-palette}';
+    // @debug 'Primary Colors Palette: #{$primary-palette}';
+    // @debug 'Accent Colors Palette: #{$accent-palette}';
+    // @debug 'Warn Colors Palette: #{$warn-palette}';
 
     @return (
         primary: $primary-palette,

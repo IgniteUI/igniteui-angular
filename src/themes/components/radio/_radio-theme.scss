@@ -1,3 +1,7 @@
+$component-name: 'igx-radio';
+
+$components: register-component($components, #{$component-name});
+
 @function igx-radio-theme($color: null) {
     @return (
         color: $color
@@ -11,7 +15,7 @@
 
     $this: extend($default-theme, $theme);
 
-    @debug $this;
+    // @debug $this;
 
     $radio-fill-color: map-get($this, 'color') !default;
     $radio-empty-color: igx-color($palette, 'grays', 600) !default;

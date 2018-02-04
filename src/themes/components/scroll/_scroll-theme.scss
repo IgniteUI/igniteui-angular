@@ -1,3 +1,7 @@
+$component-name: 'igx-scroll';
+
+$components: register-component($components, #{$component-name});
+
 @function igx-scroll-theme() {
   @return ();
 }
@@ -7,7 +11,7 @@
 
   $this: extend($default-theme, $theme);
 
-  @debug $this;
+  // @debug $this;
 
   .igx-scroll__viewport {
     display: inline-block;

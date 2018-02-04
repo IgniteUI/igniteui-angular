@@ -1,4 +1,6 @@
-$components: register-component($components, 'igx-badge');
+$component-name: 'igx-badge';
+
+$components: register-component($components, #{$component-name});
 
 @function igx-badge-theme($text-color: null, $border-color: null, $background-color: null) {
     @return (

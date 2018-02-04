@@ -1,3 +1,8 @@
+$component-names: 'igx-progress-linear' 'igx-progress-circular';
+
+@each $c in $component-names {
+    $components: register-component($components, #{$c});
+}
 // Linear Progress
 @function igx-progress-linear-theme(
     $track-color: null,
@@ -35,7 +40,7 @@
     
     $this: extend($default-theme, $theme);
     
-    @debug $this;
+    // @debug $this;
 
     $progressbar-color: map-get($this, 'track-color') !default;
     $progressbar-default-color: map-get($this, 'fill-color-default') !default;
@@ -127,7 +132,7 @@
 
     $this: extend($default-theme, $theme);
 
-    @debug $this;
+    // @debug $this;
     
     $progress-circular-value-fz: em(32px, 16px);
 

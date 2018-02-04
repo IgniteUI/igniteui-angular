@@ -1,4 +1,6 @@
-$components: register-component($components, 'igx-card');
+$component-name: 'igx-card';
+
+$components: register-component($components, #{$component-name});
 
 @function igx-card-theme(
     $background: null,

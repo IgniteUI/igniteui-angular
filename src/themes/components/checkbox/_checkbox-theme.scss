@@ -1,4 +1,6 @@
+$component-name: 'igx-checkbox';
 
+$components: register-component($components, #{$component-name});
 
 @function igx-checkbox-theme(
     $input-color:null,

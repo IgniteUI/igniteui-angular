@@ -1,3 +1,7 @@
+$component-name: 'igx-grid-filtering';
+
+$components: register-component($components, #{$component-name});
+
 @function igx-grid-filtering-theme($color-selected: null, $color-filtered: null) {
     @return (
         color-selected: $color-selected,
@@ -17,7 +21,7 @@
     $grid-filtering-bg-active: map-get($this, 'color-filtered');
     $grid-filtering-options-padding: em(8px, 16px);
 
-    @debug $this;
+    // @debug $this;
 
     %igx-filtering-display {
         position: static;

@@ -1,3 +1,7 @@
+$component-name: 'igx-icon';
+
+$components: register-component($components, #{$component-name});
+
 @function igx-icon-theme($color) {
     @return (
         color: $color
@@ -11,7 +15,7 @@
     
     $this: extend($default-theme, $theme);
 
-    @debug $this;
+    // @debug $this;
 
     $color: map-get($this, 'color');
     $disabled-color: igx-color($palette, 'grays', 500);

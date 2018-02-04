@@ -1,3 +1,7 @@
+$component-name: 'igx-tabbar';
+
+$components: register-component($components, #{$component-name});
+
 @function igx-tabbar-theme(
     $background: null,
     $icon-color: null,
@@ -19,7 +23,7 @@
 
     $this: extend($default-theme, $theme);
     
-    @debug $this;
+    // @debug $this;
 
     $tab-bar-background: $white !default;
     $tab-bar-label-font-size: em(12px, 16px);

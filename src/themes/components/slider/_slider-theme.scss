@@ -1,3 +1,7 @@
+$component-name: 'igx-slider';
+
+$components: register-component($components, #{$component-name});
+
 @function igx-slider-theme($track-color: null, $thumb-color: null, $label-color: null) {
     @return (
         track-color: $track-color,
@@ -15,7 +19,7 @@
 
     $this: extend($default-theme, $theme);
 
-    @debug $this;
+    // @debug $this;
 
     $slider-height: 48px !default;
     // Slider Track

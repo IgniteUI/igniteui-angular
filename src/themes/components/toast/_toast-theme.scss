@@ -1,3 +1,7 @@
+$component-name: 'igx-toast';
+
+$components: register-component($components, #{$component-name});
+
 @function igx-toast-theme($background: null, $text-color: null) {
     @return (
         background: $background,
@@ -20,7 +24,7 @@
     $toast-font-size: em(14px, 16px) !default;
     $toast-line-height: em(24px, 16px) !default;
 
-    @debug $this;
+    // @debug $this;
 
     %igx-toast-display {
         display: block;

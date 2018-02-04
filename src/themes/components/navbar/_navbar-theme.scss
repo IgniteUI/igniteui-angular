@@ -1,3 +1,7 @@
+$component-name: 'igx-navbar';
+
+$components: register-component($components, #{$component-name});
+
 @function igx-navbar-theme($background: null, $text-color: null) {
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -16,7 +20,7 @@
 
     $this: extend($default-theme, $theme);
 
-    @debug $this;
+    // @debug $this;
 
     $navbar-padding: 0 em(16px) !default;
     $navbar-title-fz: em(18px, 16px) !default;

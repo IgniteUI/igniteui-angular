@@ -1,3 +1,7 @@
+$component-name: 'igx-snackbar';
+
+$components: register-component($components, #{$component-name});
+
 @function igx-snackbar-theme(
     $background: null,
     $button-color: null
@@ -16,7 +20,7 @@
 
     $this: extend($default-theme, $theme);
 
-    @debug $this;
+    // @debug $this;
 
     $snackbar-height: em(48px) !default;
     $snackbar-padding: em(7px) em(24px) !default;

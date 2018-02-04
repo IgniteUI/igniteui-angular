@@ -1,4 +1,6 @@
-$components: register-component($components, 'igx-dialog');
+$component-name: 'igx-dialog';
+
+$components: register-component($components, #{$component-name});
 
 @function igx-dialog-theme(
     $overlay-color:null,

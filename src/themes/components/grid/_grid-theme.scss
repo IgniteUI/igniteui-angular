@@ -1,3 +1,7 @@
+$component-name: 'igx-grid';
+
+$components: register-component($components, #{$component-name});
+
 @function igx-grid-theme(
     $background: null,
     $cell-text-color: null,
@@ -59,7 +63,7 @@
 
     $this: extend($default-theme, $theme);
 
-    @debug $this;
+    // @debug $this;
 
     // General
     $grid-bg: map-get($this, 'background') !default;

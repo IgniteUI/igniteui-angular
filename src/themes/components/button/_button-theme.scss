@@ -1,4 +1,6 @@
-$components: register-component($components, 'igx-button');
+$component-name: 'igx-button';
+
+$components: register-component($components, #{$component-name});
 
 @function igx-button-theme(
     $button-text-color: null,

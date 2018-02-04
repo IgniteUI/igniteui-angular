@@ -29,9 +29,9 @@
 @mixin igx-theme($palette: $default-palette, $exclude: ()) {
     // Check for invalid components passed
     // in the exclude list
-    $valid-components: is-component($exclude);
+    $valid-components: is-component($components, $exclude);
 
-    @debug 'All registered: #{$components}';
+    // @debug 'All registered: #{$components}';
 
     @if not(index($exclude, 'igx-avatar')) {
         @include igx-avatar($theme: (), $palette: $palette);
