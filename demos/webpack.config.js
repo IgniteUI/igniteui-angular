@@ -74,7 +74,7 @@ const config = {
 
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, 'index.ejs'),
-            title: "IgniteUI Js Blocks Samples",
+            title: "IgniteUI for Angular Samples",
             inject: 'body'
         }),
 
