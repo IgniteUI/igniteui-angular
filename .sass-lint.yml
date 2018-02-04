@@ -16,9 +16,9 @@ rules:
   extends-before-declarations: 2
   extends-before-mixins: 2
   final-newline:
-    - 0
+    - 1
     -
-      include: false
+      include: true
   force-attribute-nesting: 0
   force-element-nesting: 0
   force-pseudo-nesting: 0
