@@ -3,8 +3,8 @@ $component-name: 'igx-checkbox';
 $components: register-component($components, #{$component-name});
 
 @function igx-checkbox-theme(
-    $input-color:null,
-    $disabled-color:null,
+    $input-color: null,
+    $disabled-color: null,
     $tick-color: null,
     $not-checked-border-color: null,
     $checked-border-color: null,
@@ -31,6 +31,16 @@ $components: register-component($components, #{$component-name});
     );
 
     $this: extend($default-theme, $theme);
+
+    // Defaults for all input controls
+    // TODO: Rename to match component name
+    $input-font-size: em(16px) !default;
+    $input-font-weight: 400 !default;
+    $input-color: igx-color($palette, 'grays', 900) !default;
+    $input-border-color: igx-color($palette, 'grays', 500) !default;
+    $input-border-color-focus: igx-color($palette, 'accent') !default;
+    $input-disabled-color: igx-color($palette, 'grays', 500) !default;
+    $input-transition: all .2s ease-in !default;
 
     // Checkboxes
     $checkbox-width: 20px !default;

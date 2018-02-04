@@ -20,6 +20,9 @@ $components: register-component($components, #{$component-name});
     $grid-filtering-color-active: map-get($this, 'color-selected');
     $grid-filtering-bg-active: map-get($this, 'color-filtered');
     $grid-filtering-options-padding: em(8px, 16px);
+    $grid-head-icon-size: rem(16px) !default;
+    $grid-head-icon-lh: rem(16px) !default;
+    $grid-head-icon-padding: em(8px) !default;
 
     // @debug $this;
 

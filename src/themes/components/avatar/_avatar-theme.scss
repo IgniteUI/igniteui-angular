@@ -11,7 +11,7 @@ $components: register-component($components, #{$component-name});
 
 @mixin igx-avatar($theme, $palette: $default-palette) {
     $default-theme: igx-avatar-theme(
-        $icon-background: igx-color($palette, grays, 400),
+       $icon-background: igx-color($palette, grays, 400),
        $image-background: transparent
     );
 
@@ -26,24 +26,30 @@ $components: register-component($components, #{$component-name});
         position: relative;
         pointer-events: none;
     }
+
     %igx-avatar--rounded {
         border-radius: 50%;
     }
+
     %igx-avatar--small {
         width: em(40px, 16px);
         height: em(40px, 16px);
     }
+
     %igx-avatar--medium {
         width: em(64px, 16px);
         height: em(64px, 16px);
     }
+
     %igx-avatar--large {
         width: em(88px, 16px);
         height: em(88px, 16px);
     }
+
     %igx-avatar--icon {
         background-color: map-get($this, icon-background);
     }
+
     %igx-avatar--image {
         background-color: map-get($this, image-background) !important;
     }

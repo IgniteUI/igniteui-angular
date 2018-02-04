@@ -87,7 +87,7 @@ $components: register-component($components, #{$component-name});
     $grid-row-bg: inherit !default;
     $grid-row-bg-selected: map-get($this, 'row-selected-background') !default;
     $grid-row-color-selected: map-get($this, 'row-selected-text-color') !default;
-    $grid-row-bb: 1px solid palette(gray, 300) !default;
+    $grid-row-bb: 1px solid igx-color($palette, 'grays', 300) !default;
     $grid-row-hover: $off-white !default;
     $grid-row-transition: none !default;
 
@@ -103,7 +103,7 @@ $components: register-component($components, #{$component-name});
     %grid-display {
         display: grid;
         grid-template-rows: min-content;
-        background: $primary-color;
+        background: $grid-bg;
         color: $grid-cell-color;
         border-radius: $grid-br;
         box-shadow: $grid-shadow;

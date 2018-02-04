@@ -45,6 +45,8 @@ $components: register-component($components, #{$component-name});
     $slider-label-font-weight: 600 !default;
     $slider-label-font-color: text-contrast(map-get($this, 'label-color')) !default;
     $slider-label-padding: 0 2px !default;
+    $slider-label-background: igx-color($palette, 'accent') !default;
+    $slider-background--start: $white !default;
 
     %igx-slider-display {
         display: flex;

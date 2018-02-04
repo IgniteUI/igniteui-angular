@@ -60,7 +60,10 @@ $components: register-component($components, #{$component-name});
     %igx-tabbar-menu--bottom {
         top: inherit;
         bottom: 0;
-        box-shadow: $elevate-8-up;
+        box-shadow: 0 -2px 4px -1px igx-color($default-palette, 'grays', 400),
+        0 -4px 5px 0 igx-color($default-palette, 'grays', 300),
+        0 -1px 10px 0 igx-color($default-palette, 'grays', 200);
+
     }
 
     %igx-tabbar-menu-item {

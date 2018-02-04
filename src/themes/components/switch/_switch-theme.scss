@@ -19,6 +19,16 @@ $components: register-component($components, #{$component-name});
 
     // @debug $this;
 
+    // Defaults for all input controls
+    // TODO: Rename to match component name
+    $input-font-size: em(16px) !default;
+    $input-font-weight: 400 !default;
+    $input-color: igx-color($palette, 'grays', 900) !default;
+    $input-border-color: igx-color($palette, 'grays', 500) !default;
+    $input-border-color-focus: igx-color($palette, 'accent') !default;
+    $input-transition: all .2s ease-in !default;
+    $input-disabled-color: igx-color($palette, 'grays', 500) !default;
+
     $switch-background: $darkgray !default;
     $switch-background-disabled: $off-white !default;
     $switch-thumb-color-disabled: $lightgray !default;

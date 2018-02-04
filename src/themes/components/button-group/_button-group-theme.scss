@@ -52,7 +52,7 @@ $components: register-component($components, #{$component-name});
     $bgroup-selected-bg: $lightgray;
     $bgroup-item-color-selected: $darkgray !default;
     $bgroup-item-background-selected: $bgroup-selected-bg !default;
-    $bgroup-item-border-selected: palette(gray, 200) !default;
+    $bgroup-item-border-selected: igx-color($palette, 'grays', 200) !default;
     // Margin between item elements
     $bgroup-items-margin: em(10px, 16px) !default;
 

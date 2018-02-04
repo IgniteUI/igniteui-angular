@@ -105,13 +105,13 @@ $components: register-component($components, #{$component-name});
     $button-raised-focus-shadow: $elevate-8 !default;
 
     // Gradient Buttons
-    $button-gradient-color-1: palette(accent) !default;
-    $button-gradient-color-2: palette(secondary) !default;
-    $button-gradient-background: linear-gradient( to bottom right, $button-gradient-color-2, $button-gradient-color-1) !default;
-    $button-focus-gradient: linear-gradient( to bottom right, gen-color($button-gradient-color-1, 700), gen-color($button-gradient-color-2, 700)) !default;
+    $button-gradient-color-1: igx-color($palette, 'accent') !default;
+    $button-gradient-color-2: igx-color($palette, 'accent') !default;
+    $button-gradient-background: linear-gradient(to bottom right, $button-gradient-color-2, $button-gradient-color-1) !default;
+    $button-focus-gradient: linear-gradient(to bottom right, gen-color($button-gradient-color-1, 700), gen-color($button-gradient-color-2, 700)) !default;
     $button-gradient-color: $white !default;
-    $button-gradient-shadow: 0 4px 10px -2px darken( transparentize($button-gradient-color-2, .2), 20%) !default;
-    $button-gradient-focus-shadow: 0 6px 12px -1px darken( transparentize($button-gradient-color-2, .25), 25%) !default;
+    $button-gradient-shadow: 0 4px 10px -2px darken(transparentize($button-gradient-color-2, .2), 20%) !default;
+    $button-gradient-focus-shadow: 0 6px 12px -1px darken(transparentize($button-gradient-color-2, .25), 25%) !default;
 
     /*$button-flat-hover-background: $off-white !default;*/
 

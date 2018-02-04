@@ -19,6 +19,7 @@ $components: register-component($components, #{$component-name});
 
     $color: map-get($this, 'color');
     $disabled-color: igx-color($palette, 'grays', 500);
+    $igx-icon-font-size: em(24px, 16px) !default;
 
     %igx-icon-display {
         display: flex;

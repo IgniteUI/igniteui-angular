@@ -36,7 +36,7 @@ $components: register-component($components, #{$component-name});
     $input-caret-color: map-get($this, 'focused-color') !default;
     $input-line-height: rem(24px) !default;
 
-    $input-border-color: igx-color($palette, 'gray', 500) !default;
+    $input-border-color: igx-color($palette, 'grays', 500) !default;
     $input-border: inset 0 -1px 0 0 $input-border-color !default;
     $input-border-success: inset 0 -2px 0 0 map-get($this, 'success-color') !default;
     $input-border-warn: inset 0 -2px 0 0 map-get($this, 'warning-color') !default;
@@ -49,12 +49,12 @@ $components: register-component($components, #{$component-name});
     $input-placeholder-color: $input-border-color !default;
     $input-error-color: $input-color !default;
     $input-success-color: $input-color !default;
-    $input-disabled-color: igx-color($palette, 'gray', 500) !default;
+    $input-disabled-color: igx-color($palette, 'grays', 500) !default;
     $input-disabled-solid-color: $input-disabled-color !default;
 
     // Floating Label
-    $label-color: igx-color($palette, 'gray', 600) !default;
-    $label-color-disabled: igx-color($palette, 'gray', 500) !default;
+    $label-color: igx-color($palette, 'grays', 600) !default;
+    $label-color-disabled: igx-color($palette, 'grays', 500) !default;
     $label-focus-color: map-get($this, 'focused-color') !default;
     $label-active-color: lighten($label-color, 20%) !default;
     $label-success-color: map-get($this, 'success-color') !default;

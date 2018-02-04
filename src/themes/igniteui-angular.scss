@@ -1,16 +1,48 @@
-@import 'base/index';
-@import 'material/manifest';
 @import 'themes/index';
 
+// @debug $default-palette;
+// @debug $elevations;
+
 // Generating a palette
-// $my-palette: igx-palette($primary: purple, $accent: cyan, $warn: orange);
-$bulgaria: igx-palette(white, green, red);
+@include igx-core;
 
-@include igx-theme($default-palette, $exclude: (igx-avatar));
-@debug $default-palette;
+$exclude: (
+    igx-avatar,
+    igx-badge,
+    // igx-button,
+    igx-button-group,
+    igx-calendar,
+    igx-card,
+    igx-carousel,
+    igx-checkbox,
+    igx-date-picker,
+    igx-dialog,
+    igx-grid,
+    igx-grid-filtering,
+    igx-icon,
+    // igx-input,
+    igx-list,
+    igx-navbar,
+    igx-navdrawer,
+    igx-progress-linear,
+    igx-progress-circular,
+    igx-radio,
+    // igx-ripple,
+    igx-scroll,
+    igx-slider,
+    igx-snackbar,
+    igx-switch,
+    igx-tabbar,
+    igx-toast
+);
 
-$avatar-theme: igx-avatar-theme($icon-background: yellow);
-@include igx-avatar($avatar-theme);
+@include igx-theme($default-palette, $exclude);
+
+// Generating theme overrides for the avatar component
+// $avatar-theme: igx-avatar-theme($icon-background: red);
+
+// Overriding the default avatar styles
+// @include igx-avatar($avatar-theme);
 
 // Getting individual colors from a palette
 // $my-color: igx-color($my-palette, 'primary', 300);
@@ -25,11 +57,6 @@ $avatar-theme: igx-avatar-theme($icon-background: yellow);
 // // Uncomment this if you want the default palette
 // // @include igx-theme($default-palette);
 
-// // Generating theme overrides for the avatar component
-// $avatar-theme: igx-avatar-theme($icon-background: red);
-
-// // Overriding the default avatar styles
-// @include igx-avatar($avatar-theme);
 
 
 // // Generating theme overrides for the badge component

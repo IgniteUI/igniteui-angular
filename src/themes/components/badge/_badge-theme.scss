@@ -24,7 +24,6 @@ $components: register-component($components, #{$component-name});
     // TODO remove all commented variables in this list, after the component is done.
     $badge-width: 22px !default;
     $badge-height: $badge-width !default;
-    /*$default-badge-bg-color: palette(secondary) !default;*/
     $badge-border: 0 solid $white !default;
     /* $badge-border-color: $white !default;*/
     $badge-border-radius-default: 4px !default;
@@ -35,6 +34,9 @@ $components: register-component($components, #{$component-name});
     $badge-line-height: 2px !default;
     $badge-icon-font-size: em(11px, 16px) !default;
     $badge-value-padding: 4px !default;
+    $badge-info-background: igx-color($palette, 'primary');
+    $badge-warn-background: igx-color($palette, 'warn');
+    $badge-error-background: igx-color($palette, 'warn', 900);
 
     %igx-badge-display {
         position: absolute;
@@ -78,15 +80,15 @@ $components: register-component($components, #{$component-name});
     }
 
     %igx-badge--info {
-        background-color: $primary-color;
+        background-color: $badge-info-background;
     }
 
     %igx-circle--warn {
-        background-color: $warn-color;
+        background-color: $badge-warn-background;
     }
 
     %igx-circle--error {
-        background-color: $error-color;
+        background-color: $badge-error-background;
     }
 
     %igx-badge--hidden {

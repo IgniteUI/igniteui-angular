@@ -25,5 +25,17 @@ $components: register-component($components, #{$component-name});
         font-size: initial;
         line-height: initial;
     }
+
+    %date-picker-dialog-title {
+        display: none;
+    }
+
+    %date-picker-dialog-actions {
+        margin: 0;
+    }
+
+    %date-picker-calendar-body {
+        padding-bottom: 0 !important;
+    }
 }
 
