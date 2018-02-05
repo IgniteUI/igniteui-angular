@@ -64,16 +64,9 @@ export class IgVirtualForOf<T> {
         let totalWidth: number;
         const vc = this.igVirtForUseForScroll ? this.igVirtForUseForScroll._viewContainer : this._viewContainer;
         if (this.igVirtForScrolling === "horizontal") {
-            totalWidth = this.initHCache(this.igVirtForOf);
-            this._pageSize = this.getHorizontalIndexAt(
-                parseInt(this.igVirtForContainerSize, 10),
-                this.hCache,
-                0
-            ) + 1;
-        } else {
-            this._pageSize = parseInt(this.igVirtForContainerSize, 10) / 50;
+                totalWidth = this.initHCache(this.igVirtForOf);
         }
-
+        this._pageSize = this._calculatePageSize();
         const dcFactory: ComponentFactory<DisplayContainer> = this.resolver.resolveComponentFactory(DisplayContainer);
         this.dc = this._viewContainer.createComponent(dcFactory, 0);
         if (this.igVirtForOf && this.igVirtForOf.length) {
@@ -200,13 +193,27 @@ export class IgVirtualForOf<T> {
             this.dc.changeDetectorRef.detectChanges();
         }
     }
-
+    private _calculatePageSize(): number {
+        let pageSize = 0;
+        if (this.igVirtForContainerSize) {
+            if (this.igVirtForScrolling === "horizontal") {
+                pageSize = this.getHorizontalIndexAt(
+                    parseInt(this.igVirtForContainerSize, 10),
+                    this.hCache,
+                    0
+                ) + 1;
+            } else {
+                pageSize = parseInt(this.igVirtForContainerSize, 10) / 50;
+            }
+        } else {
+            pageSize = this.igVirtForOf.length;
+        }
+        return pageSize;
+    }
     private _recalcOnContainerChange(changes: SimpleChanges) {
         const containerSize = "igVirtForContainerSize";
         const value = changes[containerSize].currentValue;
-        const pageSize = this.igVirtForScrolling === "vertical" ?
-            parseInt(value, 10) / 50 :
-            parseInt(value, 10) / 200;
+        const pageSize = this._calculatePageSize();
         if (pageSize > this._pageSize) {
             const diff = pageSize - this._pageSize;
             for (let i = 0; i < diff; i++) {
