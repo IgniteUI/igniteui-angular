@@ -103,7 +103,8 @@ export class RemoteService {
 	styleUrls: ["../app.samples.css", "sample.component.css"],
 	templateUrl: "sample.component.html"
 })
-export class GridSampleComponent {
+
+export class GridPerformanceSampleComponent {
 	@ViewChild("grid1") public grid1: IgxGridComponent;
 	@ViewChild("grid2") public grid2: IgxGridComponent;
 	@ViewChild("grid3") public grid3: IgxGridComponent;

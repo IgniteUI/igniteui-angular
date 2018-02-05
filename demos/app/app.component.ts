@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output, ViewChild } from "@angular/core";
 import { NavigationStart, Router } from "@angular/router";
 import "rxjs/add/operator/filter";
-import { NavigationDrawer, NavigationDrawerModule } from "../lib/main";
+import { IgxNavigationDrawer, IgxNavigationDrawerModule } from "../lib/main";
 
 @Component({
     selector: "sample-app",
@@ -9,7 +9,7 @@ import { NavigationDrawer, NavigationDrawerModule } from "../lib/main";
     templateUrl: "app.component.html"
 })
 export class AppComponent {
-    @ViewChild("navdrawer") public navdrawer: NavigationDrawer;
+    @ViewChild("navdrawer") public navdrawer: IgxNavigationDrawer;
 
     public drawerState = {
         enableGestures: true,

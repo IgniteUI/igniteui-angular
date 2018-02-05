@@ -35,7 +35,7 @@ export class IgxGridPagingPipe implements PipeTransform {
 
     constructor(private gridAPI: IgxGridAPIService) {}
 
-    public transform(collection: any[], page = 0, perPage = 10, id: string, pipeTrigger: number): any[] {
+    public transform(collection: any[], page = 0, perPage = 15, id: string, pipeTrigger: number): any[] {
 
         if (!this.gridAPI.get(id).paging) {
             return collection;

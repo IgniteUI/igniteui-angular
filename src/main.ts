@@ -38,6 +38,7 @@ export * from "./progressbar/progressbar.component";
 export * from "./navbar/navbar.component";
 export * from "./directives/filter.directive";
 export * from "./directives/ripple.directive";
+export * from "./directives/virtual-for/igx_virtual_for.directive";
 export * from "./badge/badge.component";
 export * from "./snackbar/snackbar.component";
 export * from "./card/card.component";

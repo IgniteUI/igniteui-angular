@@ -3,7 +3,7 @@
         [(pin)]="drawerState.pin" [width]="drawerState.width" [position]="drawerState.position">
         <div class="ig-drawer-content">
             <nav class="nav">
-                <img class="logo" src="images/rsrcs/jsblocks-logo.svg" alt="Ignite UI JS Blocks Logo">
+                <img class="logo" src="images/rsrcs/jsblocks-logo.svg" alt="Ignite UI for Angular Logo">
 
                 <!--Components-->
                 <span class="nav-item header">Components</span>
@@ -48,6 +48,11 @@
                     <span>Grid</span>
                 </span>
 
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/gridPerformance">
+                    <igx-icon fontSet="material" name="view_column"></igx-icon>
+                    <span>Grid Performance</span>
+                </span>
+
                 <span class="nav-item" [routerLinkActive]="'active'" routerLink="/dialog">
                     <igx-icon fontSet="material" name="all_out"></igx-icon>
                     <span>Dialog</span>
@@ -66,6 +71,11 @@
                 <span class="nav-item" [routerLinkActive]="'active'" routerLink="/list">
                     <igx-icon fontSet="material" name="list"></igx-icon>
                     <span>List</span>
+                </span>
+                
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/listPerformance">
+                    <igx-icon fontSet="material" name="list"></igx-icon>
+                    <span>List Performance</span>
                 </span>
 
                 <span class="nav-item" [routerLinkActive]="'active'" routerLink="/navbar">

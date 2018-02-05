@@ -15,7 +15,7 @@
     @include e(tbody) {
         @extend %grid-tbody;
     }
-    @include e(tbody-empty) {
+    @include e(tbody, $m: empty) {
         @extend %grid-tbody--empty;
     }
     @include e(tr) {
@@ -52,6 +52,9 @@
     @include e(th, $m: number) {
         @extend %grid-cell-number;
     }
+    @include e(th, $m: fw) {
+        @extend %grid-cell--fixed-width;
+    }
     @include e(td) {
         @extend %grid-cell-display;
     }
@@ -60,5 +63,8 @@
     }
     @include e(td, $m: number) {
         @extend %grid-cell-number;
+    }
+    @include e(td, $m: fw) {
+        @extend %grid-cell--fixed-width;
     }
 }

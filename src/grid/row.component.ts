@@ -3,6 +3,7 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChildren,
+    ElementRef,
     forwardRef,
     HostBinding,
     HostListener,
@@ -71,10 +72,16 @@ export class IgxGridRowComponent {
         return this.gridAPI.get(this.gridID);
     }
 
+    get nativeElement() {
+        return this.element.nativeElement;
+    }
+
     protected defaultCssClass = "igx-grid__tr";
     protected isFocused = false;
 
-    constructor(private gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {}
+    constructor(private gridAPI: IgxGridAPIService,
+                private element: ElementRef,
+                public cdr: ChangeDetectorRef) {}
 
     @HostListener("focus", ["$event"])
     public onFocus(event) {

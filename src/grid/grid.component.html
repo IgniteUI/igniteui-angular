@@ -34,20 +34,34 @@
     </div>
 </div>
 
+<!--<div class="igx-grid__tbody" role="rowgroup">
+    <igx-grid-row [gridID]="id" igVirtFor="let item of data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
+                                | gridSort:sortingExpressions:id:pipeTrigger
+                                | gridPaging:page:perPage:id:pipeTrigger;
+                                index as i;" [igVirtForScrolling]="'vertical'" #scrollContainer [igVirtForContainerSize]='height'>
+    </igx-grid-row>
+</div>-->
+
 <div class="igx-grid__tbody" [style.height]='height' [style.width]='width' >
-     <ng-template igVirtFor let-rowData [igVirtForOf]="data" let-rowIndex="index" [igVirtForScrolling]="'vertical'" [igVirtForContainerSize]='height'>
-        <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
-        </igx-grid-row>
-     </ng-template>
+        <ng-template igVirtFor let-rowData [igVirtForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
+                                | gridSort:sortingExpressions:id:pipeTrigger
+                                | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" 
+                                [igVirtForScrolling]="'vertical'"
+                                [igVirtForContainerSize]='height'
+                                [igVirtForItemSize]='"50px"' >
+           <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
+           </igx-grid-row>
+        </ng-template>
 </div>
 <div [style.width]='width'>
-    <div [style.width.px]='fixedWidth' [style.float]='fixingDirection'></div>
-    <div [style.width.px]='unfixedWidth' [style.float]='fixingDirection === "right" ? "left": "right"'>
-        <ng-template igVirtFor #scrollContainer>
-        </ng-template>
-    </div>
+	<div [style.width.px]='fixedWidth' [style.float]='fixingDirection'></div>
+	<div [style.width.px]='unfixedWidth' [style.float]='fixingDirection === "right" ? "left": "right"'>
+		<ng-template igVirtFor #scrollContainer>
+		</ng-template>
+	</div>
 </div>
-<div class="igx-grid__tfoot">
+
+<div class="igx-grid__tfoot" role="rowgroup">
     <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
     </ng-container>
 </div>

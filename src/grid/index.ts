@@ -4,6 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { IgxButtonModule } from "../button/button.directive";
 import { IgxDatePickerModule } from "../date-picker/date-picker.component";
 import { IgxRippleModule } from "../directives/ripple.directive";
+import { IgxVirtForModule } from "../directives/virtual-for/igx_virtual_for.directive";
 import { IgxIconModule } from "../icon/icon.component";
 import { IgxInput } from "../input/input.directive";
 import { IgxGridAPIService } from "./api.service";
@@ -19,7 +20,6 @@ import {
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridPagingPipe, IgxGridSortingPipe } from "./grid.pipes";
 import { IgxGridRowComponent } from "./row.component";
-import { IgxVirtForModule } from "../directives/virtual-for/igx_virtual_for.directive";
 
 @NgModule({
   declarations: [
