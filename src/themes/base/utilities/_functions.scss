@@ -194,7 +194,7 @@
     );
 };
 
-@function igx-palette($primary, $accent, $warn) {
+@function igx-palette($primary, $accent, $warn: $warn-color, $info: $info-color, $success: $success-color, $error: $error-color) {
     $primary-palette: _generate-palette($primary);
     $accent-palette: _generate-palette($accent);
     $warn-palette: _generate-palette($warn);
@@ -228,7 +228,10 @@
                 800: text-contrast(rgba(0, 0, 0, .74)),
                 900: text-contrast(rgba(0, 0, 0, .87)),
             )
-        )
+        ),
+        info: (500: $info),
+        success: (500: $success),
+        error: (500: $error)
     );
 }
 
