@@ -28,7 +28,7 @@ import { DisplayContainer } from "./display.container";
 import { HVirtualHelper } from "./horizontal.virtual.helper.component";
 import { VirtualHelper } from "./virtual.helper.component";
 
-@Directive({ selector: "[igVirtFor]" })
+@Directive({ selector: "[igVirtFor][igVirtForOf]" })
 export class IgVirtualForOf<T> {
     @Input() public igVirtForOf: any[];
     @Input() public igVirtForScrolling: string;
@@ -180,6 +180,7 @@ export class IgVirtualForOf<T> {
 
     get ngForTrackBy(): TrackByFunction<T> { return this._trackByFn; }
     private _applyChanges(changes: IterableChanges<T>) {
+        this.applyPageSizeChange();
         if (this.igVirtForOf && this.igVirtForOf.length && this.dc) {
             const embeddedViewCopy = Object.assign([], this._embeddedViews);
             const endingIndex = this._pageSize + this._currIndex;
@@ -213,6 +214,10 @@ export class IgVirtualForOf<T> {
     private _recalcOnContainerChange(changes: SimpleChanges) {
         const containerSize = "igVirtForContainerSize";
         const value = changes[containerSize].currentValue;
+        this.applyPageSizeChange();
+    }
+
+    private applyPageSizeChange() {
         const pageSize = this._calculatePageSize();
         if (pageSize > this._pageSize) {
             const diff = pageSize - this._pageSize;
