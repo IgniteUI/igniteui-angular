@@ -25,7 +25,7 @@ export * from "./directives/filter/filter.directive";
 export * from "./directives/input/input.directive";
 export * from "./directives/label/label.directive";
 export * from "./directives/layout/layout.directive";
-export * from "./directives/ripple.directive";
+export * from "./directives/ripple/ripple.directive";
 export * from "./buttonGroup/buttonGroup.component";
 export * from "./list/list.component";
 export * from "./tabbar/tabbar.component";

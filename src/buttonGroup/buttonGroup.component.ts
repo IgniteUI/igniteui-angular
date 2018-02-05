@@ -9,7 +9,7 @@ import {
     Inject, Input, NgModule, Output, QueryList, Renderer2, ViewChildren
 } from "@angular/core";
 import { IgxButtonDirective, IgxButtonModule } from "../directives/button/button.directive";
-import { IgxRippleModule } from "../directives/ripple.directive";
+import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxIconModule } from "../icon/icon.component";
 
 export enum ButtonGroupAlignment { horizontal, vertical }

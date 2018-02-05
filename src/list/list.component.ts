@@ -5,7 +5,7 @@ import {
 } from "@angular/core";
 import { HammerGesturesManager } from "../core/touch";
 import { IgxButtonModule } from "../directives/button/button.directive";
-import { IgxRippleModule } from "../directives/ripple.directive";
+import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 
 export interface IListChild {
     index: number;
