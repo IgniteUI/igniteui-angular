@@ -18,7 +18,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { WEEKDAYS } from "../calendar/calendar";
 import { IgxCalendarComponent, IgxCalendarModule } from "../calendar/calendar.component";
 import { IgxDialogComponent, IgxDialogModule } from "../dialog/dialog.component";
-import { IgxInputModule } from "../input/input.directive";
+import { IgxInputModule } from "../directives/input/input.directive";
 
 @Component({
     encapsulation: ViewEncapsulation.None,
