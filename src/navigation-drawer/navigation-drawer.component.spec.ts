@@ -36,7 +36,8 @@ describe("Navigation Drawer", () => {
             TestBed.compileComponents().then(() => {
                 const fixture = TestBed.createComponent(TestComponent);
                 fixture.detectChanges();
-                expect(fixture.componentInstance.viewChild instanceof Infragistics.IgxNavigationDrawerComponent).toBeTruthy();
+                expect(fixture.componentInstance.viewChild instanceof
+                    Infragistics.IgxNavigationDrawerComponent).toBeTruthy();
                 expect(fixture.componentInstance.viewChild.state).toBeNull();
             });
         }));
@@ -47,7 +48,8 @@ describe("Navigation Drawer", () => {
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.viewChild).toBeDefined();
-                expect(fixture.componentInstance.viewChild instanceof Infragistics.IgxNavigationDrawerComponent).toBeTruthy();
+                expect(fixture.componentInstance.viewChild instanceof
+                    Infragistics.IgxNavigationDrawerComponent).toBeTruthy();
                 expect(fixture.componentInstance.viewChild.state instanceof Infragistics.IgxNavigationService)
                     .toBeTruthy();
             });

@@ -48,8 +48,10 @@ export class IgxCardFooterDirective { }
 export class IgxCardComponent { }
 
 @NgModule({
-    declarations: [IgxCardComponent, IgxCardHeaderDirective, IgxCardContentDirective, IgxCardActionsDirective, IgxCardFooterDirective],
-    exports: [IgxCardComponent, IgxCardHeaderDirective, IgxCardContentDirective, IgxCardActionsDirective, IgxCardFooterDirective],
+    declarations: [IgxCardComponent, IgxCardHeaderDirective,
+        IgxCardContentDirective, IgxCardActionsDirective, IgxCardFooterDirective],
+    exports: [IgxCardComponent, IgxCardHeaderDirective,
+        IgxCardContentDirective, IgxCardActionsDirective, IgxCardFooterDirective],
     imports: [IgxButtonModule]
 })
 export class IgxCardModule { }
