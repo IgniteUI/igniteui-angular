@@ -1,4 +1,4 @@
-import {CommonModule, NgForOf, NgForOfContext } from "@angular/common";
+﻿import {CommonModule, NgForOf, NgForOfContext } from "@angular/common";
 import {
 ChangeDetectorRef,
 ComponentFactory,
@@ -88,7 +88,9 @@ export class IgVirtualForOf<T> {
             this.vh.instance.itemsLength = this.igVirtForOf.length;
             this._zone.runOutsideAngular(() => {
                 this.vh.instance.elementRef.nativeElement.addEventListener("scroll", (evt) => { this.onScroll(evt); });
-                this.dc.instance._viewContainer.element.nativeElement.addEventListener("wheel", (evt) => { this.onWheel(evt); });
+                this.dc.instance._viewContainer.element.nativeElement.addEventListener("wheel", (evt) => {
+                    this.onWheel(evt);
+                });
             });
         }
 
@@ -182,22 +184,16 @@ export class IgVirtualForOf<T> {
     }
 
     private onWheel(event) {
-        var hScroll, curScrollTop, maxScrollTop,
-            scrollStepX = 10,
-            scrollStepY = 0;
-        if (/Edge/.test(navigator.userAgent)) {
-            scrollStepY = 25;
-        } else {
-            scrollStepY =  100;
-        }
+        const scrollStepX = 10;
+        const scrollStepY = /Edge/.test(navigator.userAgent) ? 25 : 100;
 
         this.vh.instance.elementRef.nativeElement.scrollTop += Math.sign(event.deltaY) * scrollStepY;
-        hScroll = this.getHorizontalScroll(this._viewContainer, "horizontal-virtual-helper");
+        const hScroll = this.getHorizontalScroll(this._viewContainer, "horizontal-virtual-helper");
         hScroll.scrollLeft += Math.sign(event.deltaX) * scrollStepX;
 
-        curScrollTop = this.vh.instance.elementRef.nativeElement.scrollTop,
-        maxScrollTop = this.vh.instance.height - this.vh.instance.elementRef.nativeElement.offsetHeight; 
-        if(0 < curScrollTop && curScrollTop < maxScrollTop) {
+        const curScrollTop = this.vh.instance.elementRef.nativeElement.scrollTop;
+        const maxScrollTop = this.vh.instance.height - this.vh.instance.elementRef.nativeElement.offsetHeight;
+        if (0 < curScrollTop && curScrollTop < maxScrollTop) {
             event.preventDefault();
         }
     }
