@@ -39,6 +39,8 @@ export class IgVirtualForOf<T> {
     private func;
     private hCache: number[];
     private dc: ComponentRef<DisplayContainer>;
+    private vh: ComponentRef<VirtualHelper>;
+    private hvh: ComponentRef<HVirtualHelper>;
     private _differ: IterableDiffer<T> | null = null;
     private _trackByFn: TrackByFunction<T>;
     private _pageSize: number = 0;
@@ -82,10 +84,11 @@ export class IgVirtualForOf<T> {
 
         if (this.igVirtForScrolling === "vertical") {
             const factory: ComponentFactory<VirtualHelper> = this.resolver.resolveComponentFactory(VirtualHelper);
-            const vh: ComponentRef<VirtualHelper> = this._viewContainer.createComponent(factory, 1);
-            vh.instance.itemsLength = this.igVirtForOf.length;
+            this.vh = this._viewContainer.createComponent(factory, 1);
+            this.vh.instance.itemsLength = this.igVirtForOf.length;
             this._zone.runOutsideAngular(() => {
-                vh.instance.elementRef.nativeElement.addEventListener("scroll", (evt) => { this.onScroll(evt); });
+                this.vh.instance.elementRef.nativeElement.addEventListener("scroll", (evt) => { this.onScroll(evt); });
+                this.dc.instance._viewContainer.element.nativeElement.addEventListener("wheel", (evt) => { this.onWheel(evt); });
             });
         }
 
@@ -98,10 +101,10 @@ export class IgVirtualForOf<T> {
             if (!this.hScroll) {
                 const hvFactory: ComponentFactory<HVirtualHelper> =
                  this.resolver.resolveComponentFactory(HVirtualHelper);
-                const hvh: ComponentRef<HVirtualHelper> = vc.createComponent(hvFactory);
-                hvh.instance.width = totalWidth;
+                this.hvh = vc.createComponent(hvFactory);
+                this.hvh.instance.width = totalWidth;
                 this._zone.runOutsideAngular(() => {
-                    hvh.instance.elementRef.nativeElement.addEventListener("scroll", this.func);
+                    this.hvh.instance.elementRef.nativeElement.addEventListener("scroll", this.func);
                 });
             } else {
                 this._zone.runOutsideAngular(() => {
@@ -176,6 +179,27 @@ export class IgVirtualForOf<T> {
             cntx.index = this.igVirtForOf.indexOf(input);
         }
         this.dc.changeDetectorRef.detectChanges();
+    }
+
+    private onWheel(event) {
+        var hScroll, curScrollTop, maxScrollTop,
+            scrollStepX = 10,
+            scrollStepY = 0;
+        if (/Edge/.test(navigator.userAgent)) {
+            scrollStepY = 25;
+        } else {
+            scrollStepY =  100;
+        }
+
+        this.vh.instance.elementRef.nativeElement.scrollTop += Math.sign(event.deltaY) * scrollStepY;
+        hScroll = this.getHorizontalScroll(this._viewContainer, "horizontal-virtual-helper");
+        hScroll.scrollLeft += Math.sign(event.deltaX) * scrollStepX;
+
+        curScrollTop = this.vh.instance.elementRef.nativeElement.scrollTop,
+        maxScrollTop = this.vh.instance.height - this.vh.instance.elementRef.nativeElement.offsetHeight; 
+        if(0 < curScrollTop && curScrollTop < maxScrollTop) {
+            event.preventDefault();
+        }
     }
 
     get ngForTrackBy(): TrackByFunction<T> { return this._trackByFn; }
