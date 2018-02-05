@@ -6,6 +6,11 @@ $keyframes: () !default;
 $components: () !default;
 $excluded: () !default;
 
+$info-color: blue;
+$success-color: green;
+$error-color: red;
+$warn-color: orange;
+
 $small-screen-up: 601px !default;
 $medium-screen-up: 767px !default;
 $large-screen-up: 1025px !default;
