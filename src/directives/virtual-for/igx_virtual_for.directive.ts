@@ -34,6 +34,7 @@ export class IgVirtualForOf<T> {
     @Input() public igVirtForScrolling: string;
     @Input() public igVirtForUseForScroll: any;
     @Input() public igVirtForContainerSize: any;
+    @Input() public igVirtForItemSize: any;
 
     private hScroll;
     private func;
@@ -85,7 +86,7 @@ export class IgVirtualForOf<T> {
         if (this.igVirtForScrolling === "vertical") {
             const factory: ComponentFactory<VirtualHelper> = this.resolver.resolveComponentFactory(VirtualHelper);
             this.vh = this._viewContainer.createComponent(factory, 1);
-            this.vh.instance.itemsLength = this.igVirtForOf.length;
+            this.vh.instance.height = this.igVirtForOf.length * parseInt(this.igVirtForItemSize, 10);
             this._zone.runOutsideAngular(() => {
                 this.vh.instance.elementRef.nativeElement.addEventListener("scroll", (evt) => { this.onScroll(evt); });
                 this.dc.instance._viewContainer.element.nativeElement.addEventListener("wheel", (evt) => {
@@ -223,7 +224,7 @@ export class IgVirtualForOf<T> {
                     0
                 ) + 1;
             } else {
-                pageSize = parseInt(this.igVirtForContainerSize, 10) / 50;
+                pageSize = parseInt(this.igVirtForContainerSize, 10) / parseInt(this.igVirtForItemSize, 10);
             }
         } else {
             pageSize = this.igVirtForOf.length;

@@ -39,7 +39,11 @@
 <div class="igx-grid__tbody" role="rowgroup" [style.height]='height' [style.width]='width' >
         <ng-template igVirtFor let-rowData [igVirtForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
                                 | gridSort:sortingExpressions:id:pipeTrigger
-                                | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" [igVirtForScrolling]="'vertical'" [igVirtForContainerSize]='height' #scrollContainer>
+                                | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" 
+                                [igVirtForScrolling]="'vertical'"
+                                [igVirtForContainerSize]='height'
+                                [igVirtForItemSize]='"50px"'
+                                #scrollContainer>
            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
            </igx-grid-row>
         </ng-template>
