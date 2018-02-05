@@ -20,16 +20,16 @@
 </ng-template>
 
 
-<div class="igx-grid__thead" [style.width.px]='headerWidth'>
+<div class="igx-grid__thead" role="rowgroup">
     <div class="igx-grid__tr" role="row">
         <ng-container *ngIf="fixingDirection === 'left'" >
-            <igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col"></igx-grid-header>
+            <igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col" [style.width.px]="col.width"></igx-grid-header>
         </ng-container>
-        <ng-template igVirtFor let-col [igVirtForOf]="unfixedColumns" [igVirtForScrolling]="'horizontal'" [igVirtForUseForScroll]="parentVirtDir" [igVirtForContainerSize]='unfixedWidth'>
-            <igx-grid-header [gridID]="id" [column]="col"></igx-grid-header>
+        <ng-template igVirtFor let-col [igVirtForOf]="unfixedColumns" [igVirtForScrolling]="'horizontal'" [igVirtForUseForScroll]="parentVirtDir" [igVirtForContainerSize]='width'>
+            <igx-grid-header [gridID]="id" [column]="col" [style.width.px]="col.width"></igx-grid-header>
         </ng-template>
         <ng-container *ngIf="fixingDirection === 'right'" >
-            <igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col"></igx-grid-header>
+            <igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col" [style.width.px]="col.width"></igx-grid-header>
         </ng-container>
     </div>
 </div>
@@ -48,15 +48,16 @@
                                 | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" 
                                 [igVirtForScrolling]="'vertical'"
                                 [igVirtForContainerSize]='height'
-                                [igVirtForItemSize]='"50px"' >
+                                [igVirtForItemSize]='"50px"'>
            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
            </igx-grid-row>
         </ng-template>
 </div>
+
 <div [style.width]='width'>
 	<div [style.width.px]='fixedWidth' [style.float]='fixingDirection'></div>
 	<div [style.width.px]='unfixedWidth' [style.float]='fixingDirection === "right" ? "left": "right"'>
-		<ng-template igVirtFor #scrollContainer>
+		<ng-template igVirtFor [igVirtForOf]='[]' #scrollContainer>
 		</ng-template>
 	</div>
 </div>
