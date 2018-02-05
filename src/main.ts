@@ -21,7 +21,7 @@ export * from "./grid/";
 export * from "./navigation-drawer/navigation-drawer.component";
 export * from "./icon/icon.component";
 export * from "./directives/button/button.directive";
-export * from "./directives/filter.directive";
+export * from "./directives/filter/filter.directive";
 export * from "./directives/input/input.directive";
 export * from "./directives/label/label.directive";
 export * from "./directives/layout/layout.directive";
