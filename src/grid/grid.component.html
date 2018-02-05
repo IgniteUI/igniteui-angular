@@ -23,13 +23,13 @@
 <div class="igx-grid__thead" role="rowgroup">
     <div class="igx-grid__tr" role="row">
         <ng-container *ngIf="fixingDirection === 'left'" >
-            <igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col" [style.width.px]="col.width"></igx-grid-header>
+            <igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
         </ng-container>
         <ng-template igVirtFor let-col [igVirtForOf]="unfixedColumns" [igVirtForScrolling]="'horizontal'" [igVirtForUseForScroll]="parentVirtDir" [igVirtForContainerSize]='unfixedWidth'>
-            <igx-grid-header [gridID]="id" [column]="col" [style.width.px]="col.width"></igx-grid-header>
+            <igx-grid-header [gridID]="id" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
         </ng-template>
         <ng-container *ngIf="fixingDirection === 'right'" >
-            <igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col" [style.width.px]="col.width"></igx-grid-header>
+            <igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
         </ng-container>
     </div>
 </div>
@@ -42,7 +42,7 @@
     </igx-grid-row>
 </div>-->
 
-<div class="igx-grid__tbody" [style.height]='height' [style.width]='width' >
+<div class="igx-grid__tbody" role="rowgroup" [style.height]='height' [style.width]='width' >
         <ng-template igVirtFor let-rowData [igVirtForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
                                 | gridSort:sortingExpressions:id:pipeTrigger
                                 | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" 

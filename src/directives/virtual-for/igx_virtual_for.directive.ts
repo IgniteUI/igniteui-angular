@@ -1,27 +1,27 @@
-﻿import {CommonModule, NgForOf, NgForOfContext } from "@angular/common";
+﻿import { CommonModule, NgForOf, NgForOfContext } from "@angular/common";
 import {
-ChangeDetectorRef,
-ComponentFactory,
-ComponentFactoryResolver,
-ComponentRef,
-Directive,
-DoCheck,
-EmbeddedViewRef,
-HostListener,
-Input,
-IterableChangeRecord,
-IterableChanges,
-IterableDiffer,
-IterableDiffers,
-NgIterable,
-NgModule,
-NgZone,
-OnChanges,
-SimpleChanges,
-TemplateRef,
-TrackByFunction,
-ViewChild,
-ViewContainerRef
+    ChangeDetectorRef,
+    ComponentFactory,
+    ComponentFactoryResolver,
+    ComponentRef,
+    Directive,
+    DoCheck,
+    EmbeddedViewRef,
+    HostListener,
+    Input,
+    IterableChangeRecord,
+    IterableChanges,
+    IterableDiffer,
+    IterableDiffers,
+    NgIterable,
+    NgModule,
+    NgZone,
+    OnChanges,
+    SimpleChanges,
+    TemplateRef,
+    TrackByFunction,
+    ViewChild,
+    ViewContainerRef
 } from "@angular/core";
 
 import { DisplayContainer } from "./display.container";
@@ -67,7 +67,7 @@ export class IgVirtualForOf<T> {
         let totalWidth: number;
         const vc = this.igVirtForUseForScroll ? this.igVirtForUseForScroll._viewContainer : this._viewContainer;
         if (this.igVirtForScrolling === "horizontal") {
-                totalWidth = this.initHCache(this.igVirtForOf);
+            totalWidth = this.initHCache(this.igVirtForOf);
         }
         this._pageSize = this._calculatePageSize();
         const dcFactory: ComponentFactory<DisplayContainer> = this.resolver.resolveComponentFactory(DisplayContainer);
@@ -96,14 +96,13 @@ export class IgVirtualForOf<T> {
         }
 
         if (this.igVirtForScrolling === "horizontal") {
-            this.dc.instance._viewContainer.element.nativeElement.style.display = "inline-flex";
             this.dc.instance._viewContainer.element.nativeElement.style.height = "100%";
             const directiveRef = this.igVirtForUseForScroll || this;
             this.hScroll = this.getHorizontalScroll(vc, "horizontal-virtual-helper");
             this.func = (evt) => { this.onHScroll(evt); };
             if (!this.hScroll) {
                 const hvFactory: ComponentFactory<HVirtualHelper> =
-                 this.resolver.resolveComponentFactory(HVirtualHelper);
+                    this.resolver.resolveComponentFactory(HVirtualHelper);
                 this.hvh = vc.createComponent(hvFactory);
                 this.hvh.instance.width = totalWidth;
                 this._zone.runOutsideAngular(() => {
@@ -126,7 +125,7 @@ export class IgVirtualForOf<T> {
                     this._differ = this._differs.find(value).create(this.ngForTrackBy);
                 } catch (e) {
                     throw new Error(
-                    `Cannot find a differ supporting object "${value}" of type "${getTypeNameForDebugging(value)}".
+                        `Cannot find a differ supporting object "${value}" of type "${getTypeNameForDebugging(value)}".
                      NgFor only supports binding to Iterables such as Arrays.`);
                 }
             }

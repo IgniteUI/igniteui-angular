@@ -3,13 +3,13 @@ import { ChangeDetectorRef, Component, ViewChild, ViewContainerRef } from "@angu
 @Component({
     selector: "display-container",
     styles: [`
-	:host {
-		height: calc(100% - 18px);
-		width: calc(100% - 18px);
-		overflow: hidden;
-		float: left;
-		position: relative;
-		display: grid; }`],
+    :host {
+        height: calc(100% - 18px);
+        width: calc(100% - 18px);
+        overflow: hidden;
+        float: left;
+        position: relative;
+        display: inherit; }`],
     template: "<ng-template #display_container></ng-template>"
 })
 export class DisplayContainer {
