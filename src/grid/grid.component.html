@@ -25,7 +25,7 @@
         <ng-container *ngIf="fixingDirection === 'left'" >
             <igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col" [style.width.px]="col.width"></igx-grid-header>
         </ng-container>
-        <ng-template igVirtFor let-col [igVirtForOf]="unfixedColumns" [igVirtForScrolling]="'horizontal'" [igVirtForUseForScroll]="parentVirtDir" [igVirtForContainerSize]='width'>
+        <ng-template igVirtFor let-col [igVirtForOf]="unfixedColumns" [igVirtForScrolling]="'horizontal'" [igVirtForUseForScroll]="parentVirtDir" [igVirtForContainerSize]='unfixedWidth'>
             <igx-grid-header [gridID]="id" [column]="col" [style.width.px]="col.width"></igx-grid-header>
         </ng-template>
         <ng-container *ngIf="fixingDirection === 'right'" >
