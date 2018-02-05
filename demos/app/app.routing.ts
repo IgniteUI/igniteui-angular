@@ -16,6 +16,7 @@ import { IconSampleComponent } from "./icon/sample.component";
 import { InputSampleComponent } from "./input/sample.component";
 import { LayoutSampleComponent } from "./layout/sample.component";
 import { ListSampleComponent } from "./list/sample.component";
+import { ListPerformanceSampleComponent } from "./list-performance/sample.component";
 import { NavbarSampleComponent } from "./navbar/sample.component";
 import { NavdrawerSampleComponent } from "./navdrawer/sample.component";
 import { ProgressbarSampleComponent } from "./progressbar/sample.component";
@@ -145,6 +146,10 @@ const appRoutes: Routes = [
     {
         component: LayoutSampleComponent,
         path: "layout"
+    },
+    {
+        component: ListPerformanceSampleComponent,
+        path: "listPerformance"
     }
 ];
 

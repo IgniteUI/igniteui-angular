@@ -13,7 +13,6 @@ export class VirtualHelper {
     constructor(public elementRef: ElementRef) { }
 
     public ngOnInit() {
-        this.height = 50 * this.itemsLength;
     }
 
 }

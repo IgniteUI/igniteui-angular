@@ -1,0 +1,13 @@
+<div class="list-sample">
+<igx-list [allowRightPanning]="true" [allowLeftPanning]="true" [style.height]="'800px'" [style.width]="'200px'" style='display:block;'>
+                    <igx-list-item *igVirtFor="let navItem of data; scrolling : 'vertical'; containerSize: '800px'; itemSize: '50px'" [options]="options">
+                        <div class="item">
+                            <div class="person">
+                                <p class="name">{{navItem.name}}</p>
+                                <span class="phone">{{navItem.index}}</span>
+                            </div>
+                            <igx-icon name="chevron_right"></igx-icon>
+                        </div>
+                    </igx-list-item>
+                </igx-list>
+</div>
