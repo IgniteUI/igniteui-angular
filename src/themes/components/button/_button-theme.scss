@@ -54,7 +54,6 @@ $components: register-component($components, #{$component-name});
     );
 }
 
-
 @mixin igx-button($theme, $palette: $default-palette) {
     $default-theme: igx-button-theme(
         $button-text-color: igx-color($palette, grays, 800),
@@ -135,6 +134,8 @@ $components: register-component($components, #{$component-name});
 
 
     $this: extend($default-theme, $theme);
+    
+    @debug $this;
 
     %igx-button-display {
         display: inline-block;
