@@ -69,7 +69,7 @@
 }
 
 %grid-cell-display {
-    flex: 1;
+    /*flex: 1;*/
     outline-style: none;
     padding: $grid-cell-padding;
     font-size: $grid-cell-fs;
@@ -82,7 +82,7 @@
 }
 
 %grid-cell--fixed-width {
-    flex-grow: 0;
+    /*flex-grow: 0;*/
 }
 
 %grid-cell-number {
