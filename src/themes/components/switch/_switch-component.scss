@@ -8,7 +8,7 @@
     padding: $control-padding;
 
     @include e(switch) {
-        @include hide-default;
+        @include hide-default();
 
         ~ #{$block}__label {
             @extend %igx-switch-lbl-display !optional;

@@ -25,22 +25,25 @@
         @extend %grid-cell-display !optional;
         @extend %grid-cell-header !optional;
         $block: bem--selector-to-string(&);
+
         &.asc,
         &.desc {
             font-weight: 800;
         }
+
         &.desc {
-            &>.title::before {
+            > .title::before {
                 position: relative;
-                font-family: 'Material Icons';
+                font-family: 'Material Icons', sans-serif;
                 content: '\E5DB';
                 margin-right: 8px;
             }
         }
+
         &.asc {
-            &>.title::before {
+            > .title::before {
                 position: relative;
-                font-family: 'Material Icons';
+                font-family: 'Material Icons', sans-serif;
                 content: '\E5D8';
                 margin-right: 8px;
             }
