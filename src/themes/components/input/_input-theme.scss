@@ -7,7 +7,7 @@ $components: register-component($components, #{$component-name});
     $success-color: null,
     $warning-color: null,
     $error-color: null
-    ) {
+) {
     @return (
         focused-color: $focused-color,
         success-color: $success-color,
@@ -71,6 +71,7 @@ $components: register-component($components, #{$component-name});
         margin: $input-margin;
         position: relative;
         min-height: 40px;
+
         ::-webkit-input-placeholder {
             color: $label-color;
         }
@@ -128,11 +129,7 @@ $components: register-component($components, #{$component-name});
         cursor: not-allowed;
         -webkit-text-fill-color: $input-disabled-color;
         box-shadow: none;
-        background-image: linear-gradient(
-            to right,
-            $input-disabled-color 20%,
-            transparent 10%
-        );
+        background-image: linear-gradient(to right, $input-disabled-color 20%, transparent 10%);
         background-position: bottom;
         background-size: 5px 1px;
         background-repeat: repeat-x;

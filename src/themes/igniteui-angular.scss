@@ -4,11 +4,11 @@
 // @debug $elevations;
 
 // Generating a palette
-@include igx-core;
+@include igx-core();
 
 $exclude: (
-    igx-avatar,
-    igx-badge,
+    //igx-avatar,
+    //igx-badge,
     // igx-button,
     igx-button-group,
     igx-calendar,

@@ -3,25 +3,23 @@ $component-name: 'igx-scroll';
 $components: register-component($components, #{$component-name});
 
 @function igx-scroll-theme() {
-  @return ();
+    @return ();
 }
 
 @mixin igx-scroll($theme, $palette: $default-palette) {
-  $default-theme: igx-scroll-theme();
+    $default-theme: igx-scroll-theme();
+    $this: extend($default-theme, $theme);
 
-  $this: extend($default-theme, $theme);
+    // @debug $this;
 
-//   @debug $this;
+    %igx-scroll__viewport {
+        display: inline-block;
+        overflow-y: hidden;
+    }
 
-  
-  %igx-scroll__viewport {
-    display: inline-block;
-    overflow-y: hidden;
-  }
-
-  %igx-scroll__vertical {
-    display: inline-block;
-    width: 20px;
-    overflow-y: auto;
-  }
+    %igx-scroll__vertical {
+        display: inline-block;
+        width: 20px;
+        overflow-y: auto;
+    }
 }

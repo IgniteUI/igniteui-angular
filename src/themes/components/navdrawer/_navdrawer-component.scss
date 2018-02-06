@@ -9,12 +9,13 @@
     top: 0;
     bottom: 0;
     left: 0;
-    z-index: 999; // use full syntax, iOS Safari won't work with transition: width .3s ease-out, transform .3s ease-out; shorthand
+    // use full syntax, iOS Safari won't work with transition: width .3s ease-out, transform .3s ease-out; shorthand
+    z-index: 999;
     transition-property: width, transform;
     transition-duration: .3s, .3s;
     transition-timing-function: $ease-out-quad, $ease-out-quad;
     transition-delay: 0s, 0s;
-    box-shadow: $elevate-16; //states
+    box-shadow: $elevate-16;
 
     &.collapsed {
         transform: translate3d(-300px, 0, 0);
@@ -43,14 +44,13 @@
         z-index: 0;
     }
 
-    &.pinned {
-        &.collapsed {
-            transform: none;
-            width: 0;
-            padding: $navdrawer-pin-collapsed-padding;
-            overflow: hidden;
-        }
-    } // Utility classes for active pan
+    &.pinned.collapsed {
+        transform: none;
+        width: 0;
+        padding: $navdrawer-pin-collapsed-padding;
+        overflow: hidden;
+    }
+    // Utility classes for active pan
 
     &.panning {
         overflow-x: hidden;
@@ -63,14 +63,16 @@
     background: none;
     box-shadow: none;
     transition: none;
-    visibility: hidden; // potentially don't use this?
+    visibility: hidden;
+    // potentially don't use this?
 }
 
 // Navigation Drawer overlay styles
 .ig-nav-drawer-overlay {
     opacity: 1;
     background-color: $overlay-color;
-    transition-property: opacity, visibility; // opacity must match drawer transition, step over visibility to reduce animation cost
+    transition-property: opacity, visibility;
+    // opacity must match drawer transition, step over visibility to reduce animation cost
     transition-duration: .25s, .25s;
     transition-timing-function: ease-in, step-start;
     transition-delay: 0s, 0s;
@@ -83,7 +85,8 @@
     z-index: 999;
 
     &.hidden {
-        transition-timing-function: ease-in-out, step-end; // use visibility so opacity can be animated
+        transition-timing-function: ease-in-out, step-end;
+        // use visibility so opacity can be animated
         visibility: hidden;
         opacity: 0;
     }
@@ -93,11 +96,8 @@
     }
 
     &.panning {
-        transform: translate3d(
-            0,
-            0,
-            0
-        ); // try layer creation manually in advance for opacity
+        transform: translate3d(0, 0, 0);
+        // try layer creation manually in advance for opacity
         transition: none;
 
         &.hidden {
@@ -105,3 +105,4 @@
         }
     }
 }
+

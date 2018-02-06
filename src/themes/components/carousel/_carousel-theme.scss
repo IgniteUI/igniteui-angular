@@ -22,7 +22,6 @@ $components: register-component($components, #{$component-name});
     );
 
     $this: extend($default-theme, $theme);
-
     // 28. Carousel
     $carousel-arrow-margin: 0 em(16px) !default;
     $carousel-indicators-margin: em(16px) 0 !default;
@@ -153,6 +152,5 @@ $components: register-component($components, #{$component-name});
         height: inherit;
         transform: scale(1.01);
     }
-
 }
 

@@ -3,6 +3,7 @@ $component-names: 'igx-progress-linear' 'igx-progress-circular';
 @each $c in $component-names {
     $components: register-component($components, #{$c});
 }
+
 // Linear Progress
 @function igx-progress-linear-theme(
     $track-color: null,
@@ -13,7 +14,7 @@ $component-names: 'igx-progress-linear' 'igx-progress-circular';
     $fill-color-success: null,
     $stripes-color: null,
     $text-color: null
-    ) {
+) {
     @return (
         track-color: $track-color,
         fill-color-default: $fill-color-default,
@@ -34,12 +35,12 @@ $component-names: 'igx-progress-linear' 'igx-progress-circular';
         $fill-color-warning: igx-color($palette, 'warn'),
         $fill-color-info: igx-color($palette, 'accent'),
         $fill-color-success: $success-color,
-        $stripes-color: transperantize($white, .5),
+        $stripes-color: opacify($white, .5),
         $text-color: igx-color($palette, 'grays', 800)
     );
-    
+
     $this: extend($default-theme, $theme);
-    
+
     // @debug $this;
 
     $progressbar-color: map-get($this, 'track-color') !default;
@@ -116,6 +117,7 @@ $component-names: 'igx-progress-linear' 'igx-progress-circular';
         background-color: $progressbar-success-color;
     }
 }
+
 // Circular Progress
 @function igx-progress-circular-theme($stroke-color: null, $value-color: null) {
     @return (
@@ -133,7 +135,7 @@ $component-names: 'igx-progress-linear' 'igx-progress-circular';
     $this: extend($default-theme, $theme);
 
     // @debug $this;
-    
+
     $progress-circular-value-fz: em(32px, 16px);
 
     %progress-circular-display {

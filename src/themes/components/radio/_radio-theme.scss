@@ -12,11 +12,7 @@ $components: register-component($components, #{$component-name});
     $default-theme: igx-radio-theme(
         $color: igx-color($palette, 'accent')
     );
-
     $this: extend($default-theme, $theme);
-
-    // @debug $this;
-
     // Defaults for all input controls
     // TODO: Rename to match component name
     $input-font-size: em(16px) !default;
@@ -27,14 +23,14 @@ $components: register-component($components, #{$component-name});
     $input-transition: all .2s ease-in !default;
     $input-disabled-color: igx-color($palette, 'grays', 500) !default;
     $checkbox-label-padding: em(24px, 16px) !default;
-
     $radio-fill-color: map-get($this, 'color') !default;
     $radio-empty-color: igx-color($palette, 'grays', 600) !default;
     $radio-border-style: 2px solid !default;
     $radio-border: $radio-border-style $radio-fill-color !default;
     $radio-width: 20px !default;
     $radio-height: $radio-width !default;
-    $radio-radius: 50% 50% !default; // Switches
+    $radio-radius: 50% 50% !default;
+    // Switches
 
     %igx-radio-lbl-display {
         display: inline-block;
@@ -47,7 +43,8 @@ $components: register-component($components, #{$component-name});
         padding-left: $checkbox-label-padding;
         user-select: none;
 
-        &::before, &::after {
+        &::before,
+        &::after {
             position: absolute;
             content: '';
             width: $radio-width;

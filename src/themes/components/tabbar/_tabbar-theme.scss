@@ -6,7 +6,7 @@ $components: register-component($components, #{$component-name});
     $background: null,
     $icon-color: null,
     $icon-color-active: null
-    ) {
+) {
     @return (
         background: $background,
         icon-color: $icon-color,
@@ -22,7 +22,7 @@ $components: register-component($components, #{$component-name});
     );
 
     $this: extend($default-theme, $theme);
-    
+
     // @debug $this;
 
     $tab-bar-background: $white !default;
@@ -60,10 +60,7 @@ $components: register-component($components, #{$component-name});
     %igx-tabbar-menu--bottom {
         top: inherit;
         bottom: 0;
-        box-shadow: 0 -2px 4px -1px igx-color($default-palette, 'grays', 400),
-        0 -4px 5px 0 igx-color($default-palette, 'grays', 300),
-        0 -1px 10px 0 igx-color($default-palette, 'grays', 200);
-
+        box-shadow: 0 -2px 4px -1px igx-color($default-palette, 'grays', 400), 0 -4px 5px 0 igx-color($default-palette, 'grays', 300), 0 -1px 10px 0 igx-color($default-palette, 'grays', 200);
     }
 
     %igx-tabbar-menu-item {
@@ -117,6 +114,7 @@ $components: register-component($components, #{$component-name});
         z-index: 1;
         opacity: .75;
         padding: 0 8px;
+
         i {
             width: 24px;
             height: 24px;

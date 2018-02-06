@@ -8,15 +8,12 @@ $components: register-component($components, #{$component-name});
         image-background: $image-background
     );
 }
-
 @mixin igx-avatar($theme, $palette: $default-palette) {
     $default-theme: igx-avatar-theme(
-       $icon-background: igx-color($palette, grays, 400),
-       $image-background: transparent
+        $icon-background: igx-color($palette, grays, 400),
+        $image-background: transparent
     );
-
     $this: extend($default-theme, $theme);
-
     @debug $this;
 
     %igx-avatar-display {

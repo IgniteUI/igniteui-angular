@@ -16,28 +16,22 @@ $components: register-component($components, #{$component-name});
         button-group-text-color: $button-group-text-color,
         button-group-background: $button-group-background,
         button-group-border-color: $button-group-border-color,
-
         // BUTTON GROUP SELECTED
         button-group-selected-text-color: $button-group-selected-text-color,
         button-group-selected-background: $button-group-selected-background,
         button-group-selected-border-color: $button-group-selected-border-color
     );
 }
-
-
-
 @mixin igx-button-group($theme, $palette: $default-palette) {
-    $default-theme : igx-button-group-theme(
+    $default-theme: igx-button-group-theme(
         $button-group-text-color: igx-color($palette, grays, 500),
         $button-group-background: $white,
         $button-group-border-color: transparent,
-
         // BUTTON GROUP SELECTED
         $button-group-selected-text-color: igx-color($palette, grays, 600),
         $button-group-selected-background: igx-color($palette, grays, 400),
         $button-group-selected-border-color: igx-color($palette, grays, 200)
     );
-
 
     // 26. Button Group
     // Group layout
@@ -55,7 +49,6 @@ $components: register-component($components, #{$component-name});
     $bgroup-item-border-selected: igx-color($palette, 'grays', 200) !default;
     // Margin between item elements
     $bgroup-items-margin: em(10px, 16px) !default;
-
     $this: extend($default-theme, $theme);
 
     %igx-bgroup-display {
@@ -98,12 +91,11 @@ $components: register-component($components, #{$component-name});
         &:hover {
             @extend %igx-bgroup-item-selected;
         }
-
     }
 
     %igx-bgroup-item-selected {
-        color: map-get($this, button-group-selected-text-color)!important;
-        background: map-get($this, button-group-selected-background)!important;
+        color: map-get($this, button-group-selected-text-color) !important;
+        background: map-get($this, button-group-selected-background) !important;
         border-color: map-get($this, button-group-selected-border-color);
     }
 
@@ -121,12 +113,11 @@ $components: register-component($components, #{$component-name});
         &:last-child {
             border-bottom: 0;
         }
-
     }
 
     %igx-bgroup-item-vertical-selected {
-        color: map-get($this, button-group-selected-text-color)!important;
-        background: map-get($this, button-group-selected-background)!important;
+        color: map-get($this, button-group-selected-text-color) !important;
+        background: map-get($this, button-group-selected-background) !important;
         border-color: map-get($this, button-group-selected-border-color);
     }
 
@@ -140,7 +131,5 @@ $components: register-component($components, #{$component-name});
         * ~ * {
             margin-left: $bgroup-items-margin;
         }
-
     }
 }
-
