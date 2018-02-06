@@ -42,6 +42,7 @@
     }
     @include e(date) {
         @extend %cal-value !optional;
+
         &:hover,
         &:focus {
             @extend %cal-value--hover !optional;
@@ -50,6 +51,7 @@
     @include e(date, 'inactive') {
         @extend %cal-value !optional;
         @extend %cal-value--inactive !optional;
+
         &:hover,
         &:focus {
             @extend %cal-value--hover !optional;
@@ -62,6 +64,7 @@
     @include e(date, 'current') {
         @extend %cal-value !optional;
         @extend %cal-value--current !optional;
+
         &:hover,
         &:focus {
             @extend %cal-value--hover !optional;
@@ -70,6 +73,7 @@
     @include e(date, 'weekend') {
         @extend %cal-value !optional;
         @extend %cal-value--weekend !optional;
+
         &:hover,
         &:focus {
             @extend %cal-value--hover !optional;
@@ -78,6 +82,7 @@
     @include e(year) {
         @extend %cal-value !optional;
         @extend %cal-value--year !optional;
+
         &:hover,
         &:focus {
             @extend %cal-value--year-hover !optional;
@@ -91,6 +96,7 @@
     @include e(month) {
         @extend %cal-value !optional;
         @extend %cal-value--month !optional;
+
         &:hover,
         &:focus {
             @extend %cal-value--month-hover !optional;

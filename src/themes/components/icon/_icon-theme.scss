@@ -12,7 +12,7 @@ $components: register-component($components, #{$component-name});
     $default-theme: igx-icon-theme(
         $color: igx-color($palette, 'grays', 900)
     );
-    
+
     $this: extend($default-theme, $theme);
 
     // @debug $this;

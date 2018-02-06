@@ -10,15 +10,13 @@ $components: register-component($components, #{$component-name});
     );
 }
 
-
 @mixin igx-badge($theme, $palette: $default-palette) {
     $default-theme: igx-badge-theme(
         // This variables should be defined in the theme function above with :null value and in return statement.
-        $text-color: igx-color($palette, accent, 500),
+        $text-color: $white,
         $border-color: igx-color($palette, primary, 500),
         $background-color: igx-color($palette, accent, 500)
     );
-
     $this: extend($default-theme, $theme);
 
     // TODO remove all commented variables in this list, after the component is done.
@@ -51,8 +49,8 @@ $components: register-component($components, #{$component-name});
         height: $badge-height;
         font-size: $badge-font-size;
         font-weight: $badge-font-weight;
-        color:  map-get($this, text-color);
-        background-color:  map-get($this, background-color);
+        color: map-get($this, text-color);
+        background-color: map-get($this, background-color);
         border: $badge-border;
         border-color: map-get($this, border-color);
         line-height: $badge-line-height;

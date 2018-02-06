@@ -7,7 +7,7 @@ $components: register-component($components, #{$component-name});
     $background:null,
     $title-color:null,
     $message-color:null
-){
+) {
     @return (
         overlay-color:$overlay-color,
         background:$background,
@@ -16,8 +16,7 @@ $components: register-component($components, #{$component-name});
     );
 }
 
-
-@mixin igx-dialog($theme, $palette: $default-palette){
+@mixin igx-dialog($theme, $palette: $default-palette) {
 
     $default-theme: igx-dialog-theme(
         $overlay-color: igx-color($palette, grays, 500),

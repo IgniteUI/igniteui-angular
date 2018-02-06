@@ -9,7 +9,7 @@ $components: register-component($components, #{$component-name});
     $not-checked-border-color: null,
     $checked-border-color: null,
     $fill-color: null
-){
+) {
     @return (
         input-color:$input-color,
         disabled-color:$disabled-color,
@@ -20,14 +20,14 @@ $components: register-component($components, #{$component-name});
     );
 }
 
-@mixin igx-checkbox($theme, $palette: $default-palette){
+@mixin igx-checkbox($theme, $palette: $default-palette) {
     $default-theme: igx-checkbox-theme(
-            $input-color:igx-color($palette, grays, 900),
-            $disabled-color:igx-color($palette, grays, 500),
-            $tick-color: $white,
-            $not-checked-border-color: igx-color($palette, grays, 600),
-            $checked-border-color: igx-color($palette, accent, 500),
-            $fill-color: igx-color($palette, accent, 500)
+        $input-color: igx-color($palette, grays, 900),
+        $disabled-color: igx-color($palette, grays, 500),
+        $tick-color: $white,
+        $not-checked-border-color: igx-color($palette, grays, 600),
+        $checked-border-color: igx-color($palette, accent, 500),
+        $fill-color: igx-color($palette, accent, 500)
     );
 
     $this: extend($default-theme, $theme);
@@ -54,7 +54,7 @@ $components: register-component($components, #{$component-name});
     $checkbox-tick-color: $white !default;
     $checkbox-tick-padding: 3px 2px 2px !default;
 
-    @include scale-in-center;
+    @include scale-in-center();
 
     %igx-cbx-lbl-display {
         display: inline-block;

@@ -22,6 +22,7 @@
 
         &:disabled {
             @extend %igx-form-input--disabled !optional;
+
             ~ label {
                 @extend %igx-form-label--disabled !optional;
             }

@@ -10,11 +10,11 @@ $components: register-component($components, #{$component-name});
 
 @mixin igx-ripple($theme, $palette: $default-palette) {
     $default-theme: igx-ripple-theme(
-        $color: transperantize(igx-color($palette, 'grays', 800), .5)
+        $color: opacify(igx-color($palette, 'grays', 800), .5)
     );
 
     $this: extend($default-theme, $theme);
-    
+
     // @debug $this;
 
     %igx-ripple-display {
@@ -27,7 +27,7 @@ $components: register-component($components, #{$component-name});
         border-radius: 50%;
         background: map-get($this, 'color');
         pointer-events: none;
-        transform: translate3d(0, 0, 0), scale(0);
+        transform: translate3d(0, 0, 0) scale(0);
         will-change: opacity, transform;
     }
 

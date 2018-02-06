@@ -40,7 +40,6 @@ $components: register-component($components, #{$component-name});
         header-text-color: $header-text-color
     );
 }
-
 @mixin igx-calendar($theme, $palette: $default-palette) {
 
     $default-theme: igx-calendar-theme(
@@ -61,7 +60,6 @@ $components: register-component($components, #{$component-name});
 
     $this: extend($default-theme, $theme);
 
-
     // 7. Calendar / Date Picker
     $cal-theme-color: igx-color($palette, 'accent') !default;
     // Calendar Header
@@ -71,10 +69,8 @@ $components: register-component($components, #{$component-name});
     $cal-header-date-fs: em(38px, 16px) !default;
     $cal-header-date-lh: em(16px, 16px) !default;
     $cal-header-date-margin: 0 !default;
-
     $cal-header-color: text-contrast(map-get($this, 'header-background')) !default;
     $cal-header-year-color: transparentize($cal-header-color, .2) !default;
-
     $cal-header-padding: em(24px) em(16px) !default;
     // Calendar Picker
     $cal-picker-date-fs: em(18px, 16px) !default;
@@ -110,6 +106,7 @@ $components: register-component($components, #{$component-name});
 
     %cal-display--vertical {
         flex-flow: row nowrap;
+
         %cal-header-display {
             width: 168px;
         }
@@ -123,7 +120,7 @@ $components: register-component($components, #{$component-name});
 
     %cal-header-year {
         margin: $cal-header-year-margin;
-        color: $cal-header-year-color; // This returns transparent color from "$cal-header-color";
+        color: $cal-header-year-color;
         font-size: $cal-header-year-fs;
     }
 
@@ -143,7 +140,6 @@ $components: register-component($components, #{$component-name});
         cursor: pointer;
     }
 
-
     %cal-picker-display {
         display: flex;
         height: 56px;
@@ -155,11 +151,13 @@ $components: register-component($components, #{$component-name});
 
         .date {
             @extend %cal-picker-date !optional;
+
             &__el:hover,
             &__el:focus {
                 @extend %cal-header-date-el--hover !optional;
             }
         }
+
         .next,
         .prev {
             @extend %cal-picker-arrow !optional;
@@ -170,6 +168,7 @@ $components: register-component($components, #{$component-name});
         color: map-get($this, picker-arrow-color);
         user-select: none;
         cursor: pointer;
+
         &:hover {
             color: map-get($this, picker-arrow-hover-color);
         }
@@ -227,7 +226,7 @@ $components: register-component($components, #{$component-name});
     }
 
     %cal-value--weekend {
-        color: map-get($this,  value-weekend-text-color);
+        color: map-get($this, value-weekend-text-color);
     }
 
     %cal-value--year {
@@ -236,15 +235,15 @@ $components: register-component($components, #{$component-name});
 
     %cal-value--year-current {
         font-size: $cal-value-year-current-fs;
-        color: map-get($this,  theme-text-color) ;
+        color: map-get($this, theme-text-color);
     }
 
     %cal-value--year-hover {
-        color: map-get($this,  value-year-hover-text-color) ;
+        color: map-get($this, value-year-hover-text-color);
     }
 
     %cal-value--month-hover {
-        color: map-get($this,  value-month-hover-text-color);
+        color: map-get($this, value-month-hover-text-color);
     }
 
     %cal-value--month {
@@ -257,7 +256,7 @@ $components: register-component($components, #{$component-name});
     }
 
     %cal-value--month-current {
-        color: map-get($this,  theme-text-color);
+        color: map-get($this, theme-text-color);
     }
 
     %cal-value--inactive {
@@ -267,7 +266,7 @@ $components: register-component($components, #{$component-name});
 
     %cal-value--selected {
         position: relative;
-        color: $cal-value-selected-text-color; // This is contrast color coming from "$cal-theme-color"
+        color: $cal-value-selected-text-color;
         background-color: map-get($this, value-selected-background-color) !important;
         font-weight: $cal-value-fw;
     }

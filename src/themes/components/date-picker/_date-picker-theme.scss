@@ -2,11 +2,11 @@ $component-name: 'igx-date-picker';
 
 $components: register-component($components, #{$component-name});
 
-@function igx-date-picker-theme(){
+@function igx-date-picker-theme() {
     @return ();
 }
 
-@mixin igx-date-picker($theme, $palette: $default-palette){
+@mixin igx-date-picker($theme, $palette: $default-palette) {
 
     $default-theme: igx-date-picker-theme();
 
