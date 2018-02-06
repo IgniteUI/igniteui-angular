@@ -68,6 +68,8 @@
         "scss/selector-no-redundant-nesting-selector": true,
         "scss/dollar-variable-colon-newline-after": null,
         "scss/dollar-variable-colon-space-after": "always",
-        "max-nesting-depth": 2
+        "max-nesting-depth": [2, {
+            "severity": "warning"
+        }]
     }
 }
