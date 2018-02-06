@@ -7,9 +7,8 @@ import { IgxColumnComponent } from "./column.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: "igx-grid-header",
-    templateUrl: "./grid-header.component.html",
-    styles:[
-        ` 
+    styles: [
+        `
         :host.last-fixed {
             border-right: 1px solid #666;
             }
@@ -17,7 +16,8 @@ import { IgxColumnComponent } from "./column.component";
             border-left: 1px solid #666;
         }
     `
-    ]
+    ],
+    templateUrl: "./grid-header.component.html"
 })
 export class IgxGridHeaderComponent implements DoCheck {
 
@@ -103,8 +103,8 @@ export class IgxGridHeaderComponent implements DoCheck {
 
     @HostBinding("class.last-fixed")
     get isLastFixed() {
-        var fixedCols = this.grid.fixedColumns;
-        if(fixedCols.length === 0 || this.grid.fixingDirection === "right"){
+        const fixedCols = this.grid.fixedColumns;
+        if (fixedCols.length === 0 || this.grid.fixingDirection === "right") {
             return false;
         } else {
             return fixedCols.indexOf(this.column) === fixedCols.length - 1;
@@ -113,8 +113,8 @@ export class IgxGridHeaderComponent implements DoCheck {
 
     @HostBinding("class.first-fixed")
     get isFirstFixed() {
-        var fixedCols = this.grid.fixedColumns;
-        if(fixedCols.length === 0 || this.grid.fixingDirection === "left"){
+        const fixedCols = this.grid.fixedColumns;
+        if (fixedCols.length === 0 || this.grid.fixingDirection === "left") {
             return false;
         } else {
             return fixedCols.indexOf(this.column) === 0;

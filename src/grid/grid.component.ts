@@ -112,8 +112,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     @Input()
     public width;
 
-    get headerWidth(){
-        return parseInt(this.width) - 17;
+    get headerWidth() {
+        return parseInt(this.width, 10) - 17;
     }
 
     @Input()
@@ -217,22 +217,20 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
             this.onColumnInit.emit(col);
         });
         this._columns = this.columnList.toArray();
-        this._fixedColumns = this._columns.filter(function(c){ return c.fixed;});        
-        this._unfixedColumns = this._columns.filter(function(c){ return !c.fixed;});
-
+        this._fixedColumns = this._columns.filter((c) => c.fixed);
+        this._unfixedColumns = this._columns.filter((c) => !c.fixed);
     }
 
-    get fixedWidth(){
-        let fc = this.fixedColumns;
-        var sum  = 0;
-        for(var i = 0; i < fc.length; i++ ) {
-            sum += parseInt(fc[i].width);
+    get fixedWidth() {
+        const fc = this.fixedColumns;
+        let sum  = 0;
+        for (const col of fc) {
+            sum += parseInt(col.width, 10);
         }
         return sum;
     }
-    
-    get unfixedWidth(){
-        return parseInt(this.width) - this.fixedWidth;
+    get unfixedWidth() {
+        return parseInt(this.width, 10) - this.fixedWidth;
     }
     get columns(): IgxColumnComponent[] {
         return this._columns;
@@ -379,6 +377,26 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
         this.gridAPI.clear_sort(this.id, name);
     }
 
+    public fixColumn(columnName: string) {
+        const col = this.getColumnByName(columnName);
+        col.fixed = true;
+        if (this._fixedColumns.indexOf(col) === -1) {
+            this._fixedColumns.push(col);
+            this._unfixedColumns.splice(this._unfixedColumns.indexOf(col), 1);
+        }
+        this.markForCheck();
+    }
+
+    public unfixColumn(columnName: string) {
+        const col = this.getColumnByName(columnName);
+        col.fixed = false;
+        if (this._fixedColumns.indexOf(col) !== -1) {
+            this._fixedColumns.splice(this._fixedColumns.indexOf(col), 1);
+            this._unfixedColumns.unshift(col);
+        }
+        this.markForCheck();
+    }
+
     get hasSortableColumns(): boolean {
         return this.columnList.some((col) => col.sortable);
     }
@@ -447,25 +465,5 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
         });
 
         this.columnList.reset(columns);
-    }
-
-    public fixColumn(columnName:string) {
-        let col = this.getColumnByName(columnName);
-        col.fixed = true;
-        if(this._fixedColumns.indexOf(col) === -1) {
-            this._fixedColumns.push(col);
-            this._unfixedColumns.splice(this._unfixedColumns.indexOf(col), 1);
-        }
-        this.markForCheck();
-    }
-
-    public unfixColumn(columnName:string) {
-        let col = this.getColumnByName(columnName);
-        col.fixed = false;
-        if(this._fixedColumns.indexOf(col) !== -1) {
-            this._fixedColumns.splice(this._fixedColumns.indexOf(col), 1);
-            this._unfixedColumns.unshift(col);
-        }
-        this.markForCheck();
     }
 }
