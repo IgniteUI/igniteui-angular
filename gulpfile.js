@@ -95,7 +95,7 @@ gulp.task("inline-templates", () => {
 
 
 gulp.task("build:esm", ["inline-templates"], (callback) => {
-    exec("npm run ngcompile", function (err, stdout, stderr) {
+    exec("npm run ngcompile && npm run build:styles", function (err, stdout, stderr) {
         console.log(stdout, stderr);
         callback(err);
     });
