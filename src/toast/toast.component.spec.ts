@@ -92,7 +92,7 @@ describe("IgxToast", () => {
             const fixture = TestBed.createComponent(ToastInitializeTestComponent);
             fixture.detectChanges();
 
-            const displayTime: number = 1000;
+            const displayTime = 1000;
             fixture.componentInstance.toast.displayTime = displayTime;
 
             fixture.componentInstance.toast.show();
@@ -114,7 +114,7 @@ describe("IgxToast", () => {
             const fixture = TestBed.createComponent(ToastInitializeTestComponent);
             fixture.detectChanges();
 
-            const displayTime: number = 1000;
+            const displayTime = 1000;
             fixture.componentInstance.toast.displayTime = displayTime;
             fixture.componentInstance.toast.autoHide = false;
 
@@ -133,7 +133,6 @@ describe("IgxToast", () => {
     });
 });
 @Component({
-    selector: "snackbar-test-component",
     template: `<igx-toast #toast>
                </igx-toast>`
 })

@@ -21,21 +21,21 @@ let nextId = 0;
 export class IgxSwitchComponent implements ControlValueAccessor {
 
     @Input() public value: any;
-    @Input() public id: string = `igx-switch-${nextId++}`;
+    @Input() public id = `igx-switch-${nextId++}`;
     @Input()
     get labelId() {
         return this.id + "_label";
     }
     @Input() public name: string;
-    @Input() public disabled: boolean = false;
+    @Input() public disabled = false;
     @Input() public tabindex: number = null;
-    @Input() public checked: boolean = false;
+    @Input() public checked = false;
 
     @Output() public change = new EventEmitter();
 
     @ViewChild("checkbox") public nativeCheckbox;
 
-    public focused: boolean = false;
+    public focused = false;
 
     protected _value: any;
 

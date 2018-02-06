@@ -22,7 +22,7 @@ describe("Navigation Drawer", () => {
                     Infragistics.IgxNavigationCloseDirective,
                     Infragistics.IgxNavigationToggleDirective,
                     TestComponent,
-                    TestComponentDI,
+                    TestComponentDIComponent,
                     TestComponentPin],
                 imports: [Infragistics.IgxNavigationDrawerModule]
             });
@@ -44,7 +44,7 @@ describe("Navigation Drawer", () => {
 
         it("should initialize with DI service", async(() => {
             TestBed.compileComponents().then(() => {
-                const fixture = TestBed.createComponent(TestComponentDI);
+                const fixture = TestBed.createComponent(TestComponentDIComponent);
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.viewChild).toBeDefined();
@@ -57,7 +57,7 @@ describe("Navigation Drawer", () => {
 
         it("should properly initialize all elements and properties", async(() => {
             TestBed.compileComponents().then(() => {
-                const fixture = TestBed.createComponent(TestComponentDI);
+                const fixture = TestBed.createComponent(TestComponentDIComponent);
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.viewChild.drawer.classList).toContain("igx-nav-drawer");
@@ -71,14 +71,14 @@ describe("Navigation Drawer", () => {
          }));
 
         it("should attach events and register to nav service and detach on destroy", async(() => {
-            const template = '<igx-nav-drawer id="testNav"></igx-nav-drawer>';
-            TestBed.overrideComponent(TestComponentDI, {
+            const template = "<igx-nav-drawer id='testNav'></igx-nav-drawer>";
+            TestBed.overrideComponent(TestComponentDIComponent, {
             set: {
                 template
             }});
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
-                const fixture = TestBed.createComponent(TestComponentDI);
+                const fixture = TestBed.createComponent(TestComponentDIComponent);
                 fixture.detectChanges();
                 const state: Infragistics.IgxNavigationService = fixture.componentInstance.viewChild.state;
                 const touchManager = fixture.componentInstance.viewChild.touchManager;
@@ -97,7 +97,7 @@ describe("Navigation Drawer", () => {
 
         it("should open and close with API calls", async(() => {
             TestBed.compileComponents().then(() => {
-                const fixture = TestBed.createComponent(TestComponentDI);
+                const fixture = TestBed.createComponent(TestComponentDIComponent);
                 fixture.detectChanges();
                 const drawer: Infragistics.IgxNavigationDrawerComponent = fixture.componentInstance.viewChild;
                 expect(drawer.isOpen).toBeFalsy();
@@ -123,7 +123,7 @@ describe("Navigation Drawer", () => {
         }));
 
         it("async API calls should resolve Promise and emit events", async(() => {
-            let fixture: ComponentFixture<TestComponentDI>;
+            let fixture: ComponentFixture<TestComponentDIComponent>;
             let resolver;
             let drawer;
             const result = new Promise<any>((resolve) => {
@@ -133,7 +133,7 @@ describe("Navigation Drawer", () => {
             });
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
-                fixture = TestBed.createComponent(TestComponentDI);
+                fixture = TestBed.createComponent(TestComponentDIComponent);
                 fixture.detectChanges();
                 drawer = fixture.componentInstance.viewChild;
 
@@ -175,13 +175,13 @@ describe("Navigation Drawer", () => {
                                 <div class='igx-drawer-content'></div>
                                 <div class='igx-drawer-mini-content'></div>
                               </igx-nav-drawer>`;
-            TestBed.overrideComponent(TestComponentDI, {
+            TestBed.overrideComponent(TestComponentDIComponent, {
             set: {
                 template
             }});
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
-                const fixture = TestBed.createComponent(TestComponentDI);
+                const fixture = TestBed.createComponent(TestComponentDIComponent);
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.viewChild.hasAnimateWidth).toBeTruthy();
@@ -220,10 +220,10 @@ describe("Navigation Drawer", () => {
         }));
 
         it("should toggle on edge swipe gesture", (done) => {
-            let fixture: ComponentFixture<TestComponentDI>;
+            let fixture: ComponentFixture<TestComponentDIComponent>;
 
             TestBed.compileComponents().then(() => {
-                fixture = TestBed.createComponent(TestComponentDI);
+                fixture = TestBed.createComponent(TestComponentDIComponent);
                 fixture.detectChanges();
                 expect(fixture.componentInstance.viewChild.isOpen).toEqual(false);
 
@@ -250,11 +250,11 @@ describe("Navigation Drawer", () => {
 
         it("should toggle on edge pan gesture", (done) => {
             let navDrawer;
-            let fixture: ComponentFixture<TestComponentDI>;
+            let fixture: ComponentFixture<TestComponentDIComponent>;
 
             // Using bare minimum of timeouts, jasmine.DEFAULT_TIMEOUT_INTERVAL can be modified only in beforeEach
             TestBed.compileComponents().then(() => {
-                fixture = TestBed.createComponent(TestComponentDI);
+                fixture = TestBed.createComponent(TestComponentDIComponent);
                 fixture.detectChanges();
                 navDrawer = fixture.componentInstance.viewChild;
 
@@ -294,14 +294,14 @@ describe("Navigation Drawer", () => {
             const template = `<igx-nav-drawer [miniWidth]="drawerMiniWidth">
                                 <div class="igx-drawer-content"></div><div class="igx-drawer-mini-content"></div>
                               </igx-nav-drawer>`;
-            let fixture: ComponentFixture<TestComponentDI>;
-            TestBed.overrideComponent(TestComponentDI, {
+            let fixture: ComponentFixture<TestComponentDIComponent>;
+            TestBed.overrideComponent(TestComponentDIComponent, {
             set: {
                 template
             }});
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
-                fixture = TestBed.createComponent(TestComponentDI);
+                fixture = TestBed.createComponent(TestComponentDIComponent);
                 fixture.detectChanges();
                 const drawer: Infragistics.IgxNavigationDrawerComponent = fixture.componentInstance.viewChild;
 
@@ -324,14 +324,14 @@ describe("Navigation Drawer", () => {
                                     <div class="igx-drawer-content"></div>
                                     <div class="igx-drawer-mini-content"></div>
                             </igx-nav-drawer>`;
-            let fixture: ComponentFixture<TestComponentDI>;
-            TestBed.overrideComponent(TestComponentDI, {
+            let fixture: ComponentFixture<TestComponentDIComponent>;
+            TestBed.overrideComponent(TestComponentDIComponent, {
             set: {
                 template
             }});
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
-                fixture = TestBed.createComponent(TestComponentDI);
+                fixture = TestBed.createComponent(TestComponentDIComponent);
                 fixture.detectChanges();
 
                 // defaults:
@@ -451,7 +451,7 @@ describe("Navigation Drawer", () => {
     });
 
 @Component({
-    selector: "test-cmp",
+    selector: "igx-test-cmp",
     template: "<igx-nav-drawer></igx-nav-drawer>"
 })
 class TestComponent {
@@ -460,17 +460,17 @@ class TestComponent {
 
 @Component({
     providers: [Infragistics.IgxNavigationService],
-    selector: "test-cmp",
+    selector: "igx-test-cmp",
     template: "<igx-nav-drawer></igx-nav-drawer>"
 })
-class TestComponentDI {
+class TestComponentDIComponent {
      public drawerMiniWidth: string | number;
      public drawerWidth: string | number;
      @ViewChild(Infragistics.IgxNavigationDrawerComponent) public viewChild: Infragistics.IgxNavigationDrawerComponent;
 }
 
-class TestComponentPin extends TestComponentDI {
-     public pin: boolean = true;
-     public enableGestures: string = "";
-     public pinThreshold: number = 1024;
+class TestComponentPin extends TestComponentDIComponent {
+     public pin = true;
+     public enableGestures = "";
+     public pinThreshold = 1024;
 }

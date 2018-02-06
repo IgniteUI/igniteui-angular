@@ -30,9 +30,9 @@ export class IgxButtonGroupComponent implements AfterViewInit {
     get itemContentCssClass(): string {
         return this._itemContentCssClass;
     }
-    @Input() public multiSelection: boolean = false;
+    @Input() public multiSelection = false;
     @Input() public values: any;
-    @Input() public disabled: boolean = false;
+    @Input() public disabled = false;
 
     public selectedIndexes: number[] = [];
 

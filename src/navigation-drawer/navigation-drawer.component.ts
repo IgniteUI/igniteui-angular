@@ -54,25 +54,25 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements ITogg
     /**
      * Position of the Navigation Drawer. Can be "left"(default) or "right". Only has effect when not pinned.
      */
-    @Input() public position: string = "left";
+    @Input() public position = "left";
 
     /**
      * Enables the use of touch gestures to manipulate the drawer - such as swipe/pan from edge to open,
      * swipe toggle and pan drag.
      */
-    @Input() public enableGestures: boolean = true;
+    @Input() public enableGestures = true;
 
     /** State of the drawer. */
-    @Input() public isOpen: boolean = false;
+    @Input() public isOpen = false;
 
     /** Pinned state of the drawer. Currently only support  */
-    @Input() public pin: boolean = false;
+    @Input() public pin = false;
 
     /**
      * Minimum device width required for automatic pin to be toggled.
      * Deafult is 1024, can be set to falsy value to ignore.
      */
-    @Input() public pinThreshold: number = 1024;
+    @Input() public pinThreshold = 1024;
 
     /**
      * Width of the drawer in its open state. Defaults to 300px based on the `.igx-nav-drawer` style.
@@ -97,8 +97,8 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements ITogg
     /** Event fired when the Navigation Drawer has closed. */
     @Output() public closed = new EventEmitter();
 
-    public _hasMimiTempl: boolean = false;
-    private _gesturesAttached: boolean = false;
+    public _hasMimiTempl = false;
+    private _gesturesAttached = false;
     private _widthCache: { width: number, miniWidth: number } = { width: null, miniWidth: null };
     private _resizeObserver: Subscription;
     private css: { [name: string]: string; } = {
@@ -135,7 +135,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements ITogg
     }
 
     /** Pan animation properties */
-    private _panning: boolean = false;
+    private _panning = false;
     private _panStartWidth: number;
     private _panLimit: number;
     private _previousDeltaX: number;
@@ -147,7 +147,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements ITogg
         return this.pin || this._hasMimiTempl;
     }
 
-    private _maxEdgeZone: number = 50;
+    private _maxEdgeZone = 50;
     /**
      * Used for touch gestures (swipe and pan).
      * Defaults to 50 (in px) and is extended to at least 110% of the mini template width if available.

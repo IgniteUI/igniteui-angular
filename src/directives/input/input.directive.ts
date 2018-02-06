@@ -14,15 +14,15 @@ import {
 export class IgxInputDirective implements DoCheck {
 
     @HostBinding("class.igx-form-group__input")
-    public isInput: boolean = true;
+    public isInput = true;
 
     @HostBinding("class.igx-form-group__input--focused")
-    public focused: boolean = false;
+    public focused = false;
 
     @HostBinding("class.igx-form-group__input--filled")
-    public filled: boolean = false;
+    public filled = false;
     @HostBinding("class.igx-form-group__input--placeholder")
-    public placeholder: boolean = false;
+    public placeholder = false;
 
     constructor(protected el: ElementRef) {}
 

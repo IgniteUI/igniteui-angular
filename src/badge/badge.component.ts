@@ -14,7 +14,7 @@ export enum Position { TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }
 export class IgxBadgeComponent {
     public typeEnum = Type;
     public positionEnum = Position;
-    private _type: string = "";
+    private _type = "";
     private _value: string;
     private _iconBdg: string;
     private _position;

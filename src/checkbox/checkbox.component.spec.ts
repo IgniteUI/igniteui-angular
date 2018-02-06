@@ -11,9 +11,9 @@ describe("IgxCheckbox", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                InitCheckbox,
-                CheckboxSimple,
-                CheckboxDisabled,
+                InitCheckboxComponent,
+                CheckboxSimpleComponent,
+                CheckboxDisabledComponent,
                 IgxCheckboxComponent
             ],
             imports: [FormsModule]
@@ -22,7 +22,7 @@ describe("IgxCheckbox", () => {
     }));
 
     it("Initializes a checkbox", () => {
-        const fixture = TestBed.createComponent(InitCheckbox);
+        const fixture = TestBed.createComponent(InitCheckboxComponent);
         fixture.detectChanges();
 
         const nativeCheckbox = fixture.debugElement.query(By.css("input")).nativeElement;
@@ -34,7 +34,7 @@ describe("IgxCheckbox", () => {
     });
 
     it("Initialize with a ngModel", () => {
-        const fixture = TestBed.createComponent(CheckboxSimple);
+        const fixture = TestBed.createComponent(CheckboxSimpleComponent);
         fixture.detectChanges();
 
         const nativeCheckbox = fixture.debugElement.query(By.css("input")).nativeElement;
@@ -54,7 +54,7 @@ describe("IgxCheckbox", () => {
     });
 
     it("Disabled state", () => {
-        const fixture = TestBed.createComponent(CheckboxDisabled);
+        const fixture = TestBed.createComponent(CheckboxDisabledComponent);
         fixture.detectChanges();
 
         const nativeCheckbox = fixture.debugElement.query(By.css("input")).nativeElement;
@@ -75,7 +75,7 @@ describe("IgxCheckbox", () => {
     });
 
     it("Event handling", () => {
-        const fixture = TestBed.createComponent(CheckboxSimple);
+        const fixture = TestBed.createComponent(CheckboxSimpleComponent);
         fixture.detectChanges();
 
         const nativeCheckbox = fixture.debugElement.query(By.css("input")).nativeElement;
@@ -102,21 +102,21 @@ describe("IgxCheckbox", () => {
 });
 
 @Component({ template: `<igx-checkbox>Init</igx-checkbox>`})
-class InitCheckbox {}
+class InitCheckboxComponent {}
 
 @Component({ template: `<igx-checkbox #cb [(ngModel)]="subscribed" [checked]="subscribed">Simple</igx-checkbox>`})
-class CheckboxSimple {
+class CheckboxSimpleComponent {
     @ViewChild("cb") public cb: IgxCheckboxComponent;
 
-    public subscribed: boolean = false;
+    public subscribed = false;
 }
 
 @Component({ template: `<igx-checkbox #cb
                                 [(ngModel)]="subscribed"
                                 [checked]="subscribed"
                                 [disabled]="true">Disabled</igx-checkbox>`})
-class CheckboxDisabled {
+class CheckboxDisabledComponent {
     @ViewChild("cb") public cb: IgxCheckboxComponent;
 
-    public subscribed: boolean = false;
+    public subscribed = false;
 }

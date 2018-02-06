@@ -15,8 +15,8 @@ import {
 export abstract class BaseProgress {
     protected requestAnimationId: number = undefined;
 
-    protected _valueInPercent: number = 0;
-    protected _max: number = 100;
+    protected _valueInPercent = 0;
+    protected _max = 100;
     protected _value = 0;
     protected _animate = true;
 
@@ -73,8 +73,8 @@ export abstract class BaseProgress {
 })
 export class IgxLinearProgressBarComponent extends BaseProgress {
 
-    @Input() public striped: boolean = false;
-    @Input() public type: string = "default";
+    @Input() public striped = false;
+    @Input() public type = "default";
     @Input()
     set animate(animate: boolean) {
         this._animate = animate;
@@ -180,7 +180,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
         this.onProgressChanged.emit(changedValues);
     }
 
-    private _radius: number = 0;
+    private _radius = 0;
     private _circumference: number;
 
     @ViewChild("circle") private _svgCircle: ElementRef;

@@ -10,8 +10,8 @@ import { Component, ElementRef, Input, NgModule, ViewChild } from "@angular/core
 export class IgxIconComponent {
     @ViewChild("icon") public themeIcon: ElementRef;
 
-    private font: string = "material";
-    private active: string = "true";
+    private font = "material";
+    private active = "true";
     private iconColor: string;
     private iconName: string;
 

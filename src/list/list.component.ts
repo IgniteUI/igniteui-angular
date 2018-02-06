@@ -16,9 +16,6 @@ export enum IgxListPanState { NONE, LEFT, RIGHT }
 // ====================== LIST ================================
 // The `<igx-list>` directive is a list container for items and headers
 @Component({
-    host: {
-        role: "list"
-    },
     selector: "igx-list",
     styleUrls: ["./list.component.scss"],
     templateUrl: "list.component.html"
@@ -26,13 +23,14 @@ export enum IgxListPanState { NONE, LEFT, RIGHT }
 export class IgxListComponent {
     @ContentChildren(forwardRef(() => IgxListItemComponent)) public children: QueryList<IgxListItemComponent>;
 
-    @Input() public allowLeftPanning: boolean = false;
-    @Input() public allowRightPanning: boolean = false;
+    @Input() public role = "list";
+    @Input() public allowLeftPanning = false;
+    @Input() public allowRightPanning = false;
 
-    @Input() public hasNoItemsTemplate: boolean = false;
+    @Input() public hasNoItemsTemplate = false;
     @Input() public emptyListImage: string;
-    @Input() public emptyListMessage: string = "No items";
-    @Input() public emptyListButtonText: string = "Add";
+    @Input() public emptyListMessage = "No items";
+    @Input() public emptyListButtonText = "Add";
 
     @Output() public emptyListButtonClick = new EventEmitter();
 
@@ -44,7 +42,7 @@ export class IgxListComponent {
         return this._innerStyle;
     }
 
-    private _innerStyle: string = "igx-list";
+    private _innerStyle = "igx-list";
 
     get items(): IgxListItemComponent[] {
         const items: IgxListItemComponent[] = [];
@@ -92,10 +90,10 @@ export class IgxListComponent {
 export class IgxListItemComponent implements OnInit, OnDestroy, IListChild {
     @ViewChild("wrapper") public element: ElementRef;
 
-    public hidden: boolean = false;
+    public hidden = false;
 
     @HostBinding("attr.role") public role;
-    @Input() public isHeader: boolean = false;
+    @Input() public isHeader = false;
     @Input() public href: string;
     @Input() public options: object[];
 
@@ -105,7 +103,7 @@ export class IgxListItemComponent implements OnInit, OnDestroy, IListChild {
 
     private _panState: IgxListPanState = IgxListPanState.NONE;
     private _FRACTION_OF_WIDTH_TO_TRIGGER_GRIP = 0.5; // as a fraction of the item width
-    private _innerStyle: string = "";
+    private _innerStyle = "";
     private _previousPanDeltaX = 0;
 
     get panState(): IgxListPanState {

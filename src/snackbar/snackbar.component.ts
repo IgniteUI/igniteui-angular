@@ -84,14 +84,14 @@ export class IgxSnackbarComponent {
      * The IgxSnackbar component visual state state
      * @type {boolean}
      */
-    @Input() public isVisible: boolean = false;
+    @Input() public isVisible = false;
 
     /**
      * Sets if the IgxSnackbar component will be hidden after shown
      * Default value is true
      * @type {number}
      */
-    @Input() public autoHide: boolean = true;
+    @Input() public autoHide = true;
 
     /**
      * The duration of time span in ms which the IgxSnackbar component will be visible
@@ -99,7 +99,7 @@ export class IgxSnackbarComponent {
      * Default value is 4000
      * @type {number}
      */
-    @Input() public displayTime: number = 4000;
+    @Input() public displayTime = 4000;
 
     /**
      * The text of the IgxSnackbar component action

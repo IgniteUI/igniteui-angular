@@ -19,14 +19,14 @@ let nextId = 0;
     templateUrl: "checkbox.component.html"
 })
 export class IgxCheckboxComponent implements ControlValueAccessor {
-    public focused: boolean = false;
+    public focused = false;
 
     @Input() public value: any;
-    @Input() public id: string = `igx-checkbox-${nextId++}`;
+    @Input() public id = `igx-checkbox-${nextId++}`;
     @Input() public name: string;
-    @Input() public disabled: boolean = false;
+    @Input() public disabled = false;
     @Input() public tabindex: number = null;
-    @Input() public checked: boolean = false;
+    @Input() public checked = false;
 
     @Output() public change = new EventEmitter();
 

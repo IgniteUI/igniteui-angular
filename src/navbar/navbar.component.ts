@@ -19,14 +19,14 @@ import { IgxIconModule } from "../icon/icon.component";
     templateUrl: "navbar.component.html"
 })
 export class IgxNavbarComponent implements AfterContentChecked {
-    private static NEXT_ID: number = 1;
+    private static NEXT_ID = 1;
 
     /**
      * The IgxNavbar action button visual state state
      * @type {boolean}
      */
     @Input()
-    public isActionButtonVisible: boolean = false;
+    public isActionButtonVisible = false;
 
     /**
      * The IgxNavbar action button actionButtonIcon

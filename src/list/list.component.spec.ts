@@ -8,9 +8,9 @@ declare var Simulator: any;
 describe("List", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ListTestComponent, ListWithPanningAllowed,
-                ListWithLeftPanningAllowed, ListWithRightPanningAllowed,
-                ListWithNoItems, ListWithCustomNoItemsTemplate],
+            declarations: [ListTestComponent, ListWithPanningAllowedComponent,
+                ListWithLeftPanningAllowedComponent, ListWithRightPanningAllowedComponent,
+                ListWithNoItemsComponent, ListWithCustomNoItemsTemplateComponent],
             imports: [IgxListModule]
         }).compileComponents();
     }));
@@ -85,7 +85,7 @@ describe("List", () => {
         let itemWidth;
 
         TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(ListWithPanningAllowed);
+            fixture = TestBed.createComponent(ListWithPanningAllowedComponent);
             list = fixture.componentInstance.list;
 
             fixture.detectChanges();
@@ -133,7 +133,7 @@ describe("List", () => {
         let itemWidth;
 
         TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(ListWithRightPanningAllowed);
+            fixture = TestBed.createComponent(ListWithRightPanningAllowedComponent);
             list = fixture.componentInstance.list;
 
             fixture.detectChanges();
@@ -174,7 +174,7 @@ describe("List", () => {
         let itemWidth;
 
         TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(ListWithLeftPanningAllowed);
+            fixture = TestBed.createComponent(ListWithLeftPanningAllowedComponent);
             list = fixture.componentInstance.list;
 
             fixture.detectChanges();
@@ -207,7 +207,7 @@ describe("List", () => {
     }, 5000);
 
     it("Should have default no items template.", () => {
-        const fixture = TestBed.createComponent(ListWithNoItems);
+        const fixture = TestBed.createComponent(ListWithNoItemsComponent);
         const list = fixture.componentInstance.list;
         const listNoItemsImgSrc = "https://example.com/noitems.png";
         const listNoItemsMessage = "Custom no items message.";
@@ -235,7 +235,7 @@ describe("List", () => {
     });
 
     it("Should have custom no items template.", () => {
-        const fixture = TestBed.createComponent(ListWithCustomNoItemsTemplate);
+        const fixture = TestBed.createComponent(ListWithCustomNoItemsTemplateComponent);
         const list = fixture.componentInstance.list;
         const listCustomNoItemsTemplateContent = "Custom no items message.";
 
@@ -300,7 +300,7 @@ class ListTestComponent {
                     </igx-list>
                 </div>`
 })
-class ListWithPanningAllowed {
+class ListWithPanningAllowedComponent {
     @ViewChild(IgxListComponent) public list: IgxListComponent;
 }
 
@@ -313,7 +313,7 @@ class ListWithPanningAllowed {
                 </igx-list>
             </div>`
 })
-class ListWithRightPanningAllowed {
+class ListWithRightPanningAllowedComponent {
     @ViewChild(IgxListComponent) public list: IgxListComponent;
 }
 
@@ -326,7 +326,7 @@ class ListWithRightPanningAllowed {
                 </igx-list>
             </div>`
 })
-class ListWithLeftPanningAllowed {
+class ListWithLeftPanningAllowedComponent {
     @ViewChild(IgxListComponent) public list: IgxListComponent;
 }
 
@@ -339,7 +339,7 @@ class ListWithLeftPanningAllowed {
                 </igx-list>
             </div>`
 })
-class ListWithNoItems {
+class ListWithNoItemsComponent {
     @ViewChild(IgxListComponent) public list: IgxListComponent;
 }
 
@@ -352,6 +352,6 @@ class ListWithNoItems {
                 </igx-list>
             </div>`
 })
-class ListWithCustomNoItemsTemplate {
+class ListWithCustomNoItemsTemplateComponent {
     @ViewChild(IgxListComponent) public list: IgxListComponent;
 }

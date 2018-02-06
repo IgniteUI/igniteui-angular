@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
 import {
     async,
     TestBed
@@ -45,14 +45,14 @@ class Button {
 describe("IgxButtonGroup", () => {
    beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ InitButtonGroup, InitButtonGroupWithValues],
+            declarations: [ InitButtonGroupComponent, InitButtonGroupWithValuesComponent],
             imports: [IgxButtonGroupModule]
         })
         .compileComponents();
     }));
 
    it("should initialize buttonGroup with default values", () => {
-        const fixture = TestBed.createComponent(InitButtonGroup);
+        const fixture = TestBed.createComponent(InitButtonGroupComponent);
         fixture.detectChanges();
 
         const instance = fixture.componentInstance;
@@ -69,7 +69,7 @@ describe("IgxButtonGroup", () => {
     });
 
    it("should initialize buttonGroup with passed values", () => {
-        const fixture = TestBed.createComponent(InitButtonGroupWithValues);
+        const fixture = TestBed.createComponent(InitButtonGroupWithValuesComponent);
         fixture.detectChanges();
 
         const instance = fixture.componentInstance;
@@ -86,7 +86,7 @@ describe("IgxButtonGroup", () => {
     });
 
    it("Button Group single selection", () => {
-        const fixture = TestBed.createComponent(InitButtonGroup);
+        const fixture = TestBed.createComponent(InitButtonGroupComponent);
         fixture.detectChanges();
 
         const buttongroup = fixture.componentInstance.buttonGroup;
@@ -98,7 +98,7 @@ describe("IgxButtonGroup", () => {
     });
 
    it("Button Group multiple selection", () => {
-        const fixture = TestBed.createComponent(InitButtonGroupWithValues);
+        const fixture = TestBed.createComponent(InitButtonGroupWithValuesComponent);
         fixture.detectChanges();
 
         const buttongroup = fixture.componentInstance.buttonGroup;
@@ -117,7 +117,7 @@ describe("IgxButtonGroup", () => {
 });
 
 @Component({ template: `<igx-buttongroup [values]="buttons"></igx-buttongroup>` })
-class InitButtonGroup {
+class InitButtonGroupComponent implements OnInit {
     @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
 
     private buttons: Button[];
@@ -147,7 +147,7 @@ class InitButtonGroup {
 @Component({ template: `<igx-buttongroup multiSelection="true" itemContentCssClass="customContentStyle"
                             [values]="cities" [alignment]="alignment">
                         </igx-buttongroup>` })
-class InitButtonGroupWithValues {
+class InitButtonGroupWithValuesComponent implements OnInit {
     @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
 
     private cities: Button[];
@@ -187,7 +187,7 @@ class InitButtonGroupWithValues {
 @Component({ template: `<igx-buttongroup multiSelection="true" itemContentCssClass="customContentStyle"
                             [values]="buttons" [alignment]="alignment">
                         </igx-buttongroup>` })
-class ButtonGroupWithValues {
+class ButtonGroupWithValuesComponent implements OnInit {
     @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
 
     private buttons: Button[];

@@ -33,25 +33,25 @@ import { IgxRippleModule } from "../directives/ripple/ripple.directive";
     templateUrl: "dialog-content.component.html"
 })
 export class IgxDialogComponent {
-    private static NEXT_ID: number = 1;
+    private static NEXT_ID = 1;
     private static readonly DIALOG_CLASS = "igx-dialog";
 
-    @Input() public title: string = "";
-    @Input() public message: string = "";
+    @Input() public title = "";
+    @Input() public message = "";
 
-    @Input() public leftButtonLabel: string = "";
-    @Input() public leftButtonType: string = "flat";
-    @Input() public leftButtonColor: string = "";
-    @Input() public leftButtonBackgroundColor: string = "";
-    @Input() public leftButtonRipple: string = "";
+    @Input() public leftButtonLabel = "";
+    @Input() public leftButtonType = "flat";
+    @Input() public leftButtonColor = "";
+    @Input() public leftButtonBackgroundColor = "";
+    @Input() public leftButtonRipple = "";
 
-    @Input() public rightButtonLabel: string = "";
-    @Input() public rightButtonType: string = "flat";
-    @Input() public rightButtonColor: string = "";
-    @Input() public rightButtonBackgroundColor: string = "";
-    @Input() public rightButtonRipple: string = "";
+    @Input() public rightButtonLabel = "";
+    @Input() public rightButtonType = "flat";
+    @Input() public rightButtonColor = "";
+    @Input() public rightButtonBackgroundColor = "";
+    @Input() public rightButtonRipple = "";
 
-    @Input() public closeOnOutsideSelect: boolean = false;
+    @Input() public closeOnOutsideSelect = false;
 
     @Output() public onOpen = new EventEmitter();
     @Output() public onClose = new EventEmitter();

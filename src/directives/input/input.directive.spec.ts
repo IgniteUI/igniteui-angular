@@ -11,8 +11,8 @@ describe("IgxInput", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                InitInput,
-                InputWithAttribs
+                InitInputComponent,
+                InputWithAttribsComponent
             ],
             imports: [
                 IgxInputModule,
@@ -23,14 +23,14 @@ describe("IgxInput", () => {
     }));
 
     it("Initializes an empty input", () => {
-        const fixture = TestBed.createComponent(InitInput);
+        const fixture = TestBed.createComponent(InitInputComponent);
         fixture.detectChanges();
 
         expect(fixture.debugElement.query(By.css("input"))).toBeTruthy();
     });
 
     it("Initializes an empty input with attributes", () => {
-        const fixture = TestBed.createComponent(InputWithAttribs);
+        const fixture = TestBed.createComponent(InputWithAttribsComponent);
         fixture.detectChanges();
 
         const inputEl = fixture.debugElement.query(By.css("input")).nativeElement;
@@ -62,7 +62,7 @@ describe("IgxInput", () => {
 });
 
 @Component({ template: `<input type="text" igxInput />` })
-class InitInput {
+class InitInputComponent {
 }
 
 @Component({
@@ -73,6 +73,6 @@ class InitInput {
         </div>
     `
 })
-class InputWithAttribs {
+class InputWithAttribsComponent {
     public placeholder = "Please enter a name";
 }

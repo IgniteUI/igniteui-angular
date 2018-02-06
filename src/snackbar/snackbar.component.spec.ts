@@ -44,7 +44,7 @@ describe("IgxSnackbar", () => {
             const fixture = TestBed.createComponent(SnackbarInitializeTestComponent);
             fixture.detectChanges();
 
-            const displayTime: number = 1000;
+            const displayTime = 1000;
             fixture.componentInstance.snackbar.displayTime = displayTime;
 
             fixture.componentInstance.snackbar.show();
@@ -66,7 +66,7 @@ describe("IgxSnackbar", () => {
             const fixture = TestBed.createComponent(SnackbarInitializeTestComponent);
             fixture.detectChanges();
 
-            const displayTime: number = 1000;
+            const displayTime = 1000;
             fixture.componentInstance.snackbar.displayTime = displayTime;
             fixture.componentInstance.snackbar.autoHide = false;
 
@@ -103,7 +103,6 @@ describe("IgxSnackbar", () => {
     }));
 });
 @Component({
-    selector: "snackbar-test-component",
     template: `<igx-snackbar #snackbar [actionText]="text">
                </igx-snackbar>`
 })

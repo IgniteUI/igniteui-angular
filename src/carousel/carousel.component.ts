@@ -31,9 +31,9 @@ export enum Direction { NONE, NEXT, PREV }
 
 @Component({
     encapsulation: ViewEncapsulation.None,
-    host: {
+/*     host: {
         role: "region"
-    },
+    }, */
     selector: "igx-carousel",
     styleUrls: ["./carousel.component.scss"],
     templateUrl: "carousel.component.html"
@@ -41,6 +41,7 @@ export enum Direction { NONE, NEXT, PREV }
 
 export class IgxCarouselComponent implements OnDestroy {
 
+    @Input() public role = "region";
     /**
      * Sets whether the carousel should loop back to the first slide
      * after reaching the last slide.
@@ -50,7 +51,7 @@ export class IgxCarouselComponent implements OnDestroy {
      * @type {boolean}
      * @memberOf IgxCarouselComponent
      */
-    @Input() public loop: boolean = true;
+    @Input() public loop = true;
 
     /**
      * Sets whether the carousel can pause the slide transitions.
@@ -60,7 +61,7 @@ export class IgxCarouselComponent implements OnDestroy {
      * @type {boolean}
      * @memberOf IgxCarouselComponent
      */
-    @Input() public pause: boolean = true;
+    @Input() public pause = true;
 
     @Input()
     get interval(): number {
@@ -80,7 +81,7 @@ export class IgxCarouselComponent implements OnDestroy {
      * @type {boolean}
      * @memberOf IgxCarouselComponent
      */
-    @Input() public navigation: boolean = true;
+    @Input() public navigation = true;
 
     /**
      * An event that is emitted after a slide transition has happened.
@@ -139,7 +140,7 @@ export class IgxCarouselComponent implements OnDestroy {
     private _playing: boolean;
     private _currentSlide: IgxSlideComponent;
     private _destroyed: boolean;
-    private _total: number = 0;
+    private _total = 0;
 
     public ngOnDestroy() {
         this._destroyed = true;

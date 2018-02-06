@@ -151,7 +151,7 @@ describe("Filter", () => {
 })
 class DeclarativeListTestComponent {
     public filterValue: string;
-    public isCanceled: boolean = false;
+    public isCanceled = false;
     public filteringArgs: FilteringArgs;
     public filteredArgs: FilteringArgs;
 
@@ -187,7 +187,7 @@ class DeclarativeListTestComponent {
 })
 class DynamicListTestComponent {
     public filterValue: string;
-    public isCanceled: boolean = false;
+    public isCanceled = false;
 
     @ViewChild(IgxListComponent) public list: IgxListComponent;
 

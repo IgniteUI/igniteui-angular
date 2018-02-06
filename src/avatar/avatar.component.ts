@@ -1,5 +1,7 @@
 import { CommonModule } from "@angular/common";
 import {
+    AfterContentChecked,
+    AfterViewInit,
     Component,
     ElementRef,
     Input,
@@ -22,12 +24,12 @@ export enum Size {
     styleUrls: ["./avatar.component.scss"],
     templateUrl: "avatar.component.html"
 })
-export class IgxAvatarComponent {
+export class IgxAvatarComponent implements AfterViewInit, AfterContentChecked {
     @ViewChild("image") public image: ElementRef;
     @Input() public initials: string;
     @Input() public src: string;
-    @Input("roundShape") public roundShape: string = "false";
-    @Input() public color: string = "white";
+    @Input("roundShape") public roundShape = "false";
+    @Input() public color = "white";
 
     public sizeEnum = Size;
     public roleDescription: string;
@@ -36,7 +38,7 @@ export class IgxAvatarComponent {
 
     private _size: string;
     private _bgColor: string;
-    private _icon: string = "android";
+    private _icon = "android";
 
     @Input()
     get size(): string {

@@ -262,7 +262,6 @@ describe("IgxScroll", () => {
     }
 });
 @Component({
-    selector: "scroll-test-component",
     template: `
         <igx-scroll #scroll
                     (onScroll)="updateList($event)"
@@ -283,9 +282,9 @@ class ScrollInitializeTestComponent {
 
     public visibleItems: string[] = [];
 
-    public visibleItemsCount: number = 5;
+    public visibleItemsCount = 5;
 
-    public currentTop: number = 0;
+    public currentTop = 0;
 
     public constructor() {
         for (let i = 1; i <= 5000; i++) {

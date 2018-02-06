@@ -64,7 +64,7 @@ describe("IgxNavbar", () => {
     }));
 });
 @Component({
-    selector: "navbar-test-component",
+    selector: "igx-navbar-test-component",
     template: `<igx-navbar #navbar
                             [title]="title"
                             [actionButtonIcon]="actionButtonIcon"

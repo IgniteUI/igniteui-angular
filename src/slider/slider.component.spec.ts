@@ -604,7 +604,7 @@ describe("IgxSlider", () => {
     });
 });
 @Component({
-    selector: "slider-test-component",
+    selector: "igx-slider-test-component",
     template: `<igx-slider #slider>
     </igx-slider>`
 })

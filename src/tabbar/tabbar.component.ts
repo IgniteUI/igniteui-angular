@@ -6,6 +6,7 @@ import {
     ElementRef,
     EventEmitter,
     forwardRef,
+    HostBinding,
     Input,
     NgModule,
     Output,
@@ -33,13 +34,13 @@ export class IgxTabBarComponent implements AfterViewInit {
     @Output() public onTabSelected = new EventEmitter();
     @Output() public onTabDeselected = new EventEmitter();
 
-    public selectedIndex: number = -1;
+    public selectedIndex = -1;
 
     public get itemStyle(): string {
         return this._itemStyle;
     }
 
-    private _itemStyle: string = "igx-tab-bar";
+    private _itemStyle = "igx-tab-bar";
 
     get selectedTab(): IgxTabComponent {
         if (this.tabs && this.selectedIndex !== undefined) {
@@ -90,18 +91,24 @@ export class IgxTabBarComponent implements AfterViewInit {
 @Component({
     host: {
         "[attr.aria-labelledby]": "'igx-tab-' + index",
-        "[class.igx-tab-bar__panel--selected]": "isSelected",
         "[class.igx-tab-bar__panel]": "!isSelected",
         "[id]": "'igx-tab-bar__panel-' + index",
-        "role": "tabpanel"
     },
     selector: "igx-tab-panel",
     templateUrl: "tab-panel.component.html"
 })
 
 export class IgxTabPanelComponent {
-    public isSelected: boolean = false;
 
+    // @HostBinding("attr.aria-labelledby")
+
+    @HostBinding("class.igx-tab-bar__panel--selected")
+    public isSelected = false;
+
+    @HostBinding("class.igx-form-group__input--focused")
+    public focused = false;
+
+    @Input() public role = "tabpanel";
     @Input() public label: string;
     @Input() public icon: string;
     @Input() public isDisabled: boolean;
@@ -109,7 +116,7 @@ export class IgxTabPanelComponent {
     public get itemStyle(): string {
         return this._itemStyle;
     }
-    private _itemStyle: string = "igx-tab-panel";
+    private _itemStyle = "igx-tab-panel";
 
     get relatedTab(): IgxTabComponent {
         if (this._tabBar.tabs) {
@@ -137,18 +144,22 @@ export class IgxTabPanelComponent {
 // ======================================= IgxTabComponent ==========================================
 
 @Component({
-    host: {
+/*     host: {
         class: "igx-tab-bar__menu-item",
         role: "tab"
-    },
+    }, */
     selector: "igx-tab",
     templateUrl: "tab.component.html"
 })
 
 export class IgxTabComponent {
+
+    @HostBinding("class.igx-tab-bar__menu-item")
+    public role = "tab";
+
     @Input() public relatedPanel: IgxTabPanelComponent;
 
-    private _changesCount: number = 0; // changes and updates accordingly applied to the tab.
+    private _changesCount = 0; // changes and updates accordingly applied to the tab.
 
     get changesCount(): number {
         return this._changesCount;

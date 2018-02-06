@@ -11,18 +11,18 @@ describe("Badge", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                InitBadge,
-                InitBadgeWithDefaults,
-                InitBadgeWithIcon,
+                InitBadgeComponent,
+                InitBadgeWithDefaultsComponent,
+                InitBadgeWithIconComponent,
                 IgxBadgeComponent,
-                InitBadgeWithIconARIA,
+                InitBadgeWithIconARIAComponent,
                 IgxIconComponent
             ]
         }).compileComponents();
     }));
 
     it("Initializes badge ", () => {
-        const fixture = TestBed.createComponent(InitBadge);
+        const fixture = TestBed.createComponent(InitBadgeComponent);
         fixture.detectChanges();
         const badge = fixture.componentInstance.badge;
 
@@ -36,7 +36,7 @@ describe("Badge", () => {
     });
 
     it("Initializes badge defaults", () => {
-        const fixture = TestBed.createComponent(InitBadgeWithDefaults);
+        const fixture = TestBed.createComponent(InitBadgeWithDefaultsComponent);
         fixture.detectChanges();
         const badge = fixture.componentInstance.badge;
 
@@ -48,7 +48,7 @@ describe("Badge", () => {
     });
 
     it("Initializes badge with icon", () => {
-        const fixture = TestBed.createComponent(InitBadgeWithIcon);
+        const fixture = TestBed.createComponent(InitBadgeWithIconComponent);
         fixture.detectChanges();
         const badge = fixture.componentInstance.badge;
         const divContainer = fixture.elementRef.nativeElement.querySelectorAll("div.igx-badge__circle");
@@ -64,7 +64,7 @@ describe("Badge", () => {
     });
 
     it("Initializes badge with icon ARIA", () => {
-        const fixture = TestBed.createComponent(InitBadgeWithIconARIA);
+        const fixture = TestBed.createComponent(InitBadgeWithIconARIAComponent);
         fixture.detectChanges();
         const badge = fixture.componentInstance.badge;
         const divContainer = fixture.elementRef.nativeElement.querySelectorAll("div.igx-badge__circle");
@@ -76,21 +76,21 @@ describe("Badge", () => {
 });
 
 @Component({ template: `<igx-badge type="error" value="22" position="bottom-left"></igx-badge>` })
-class InitBadge {
+class InitBadgeComponent {
     @ViewChild(IgxBadgeComponent) public badge: IgxBadgeComponent;
 }
 
 @Component({ template: `<igx-badge></igx-badge>` })
-class InitBadgeWithDefaults {
+class InitBadgeWithDefaultsComponent {
     @ViewChild(IgxBadgeComponent) public badge: IgxBadgeComponent;
 }
 
 @Component({ template: `<igx-badge icon="person" type="info" position="top-left"></igx-badge>` })
-class InitBadgeWithIcon {
+class InitBadgeWithIconComponent {
     @ViewChild(IgxBadgeComponent) public badge: IgxBadgeComponent;
 }
 
 @Component({ template: `<igx-badge icon="person" type="success"></igx-badge>` })
-class InitBadgeWithIconARIA {
+class InitBadgeWithIconARIAComponent {
     @ViewChild(IgxBadgeComponent) public badge: IgxBadgeComponent;
 }

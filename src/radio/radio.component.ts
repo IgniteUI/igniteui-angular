@@ -23,7 +23,7 @@ export class IgxRadioComponent implements ControlValueAccessor {
 
     @Input() public value: any;
 
-    @Input() public id: string = `igx-radio-${nextId++}`;
+    @Input() public id = `igx-radio-${nextId++}`;
 
     @Input() public name: string;
 
