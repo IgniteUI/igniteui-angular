@@ -35,6 +35,11 @@ const INLINE_TEMPLATES = {
     }
 };
 
+// const THEMING = {
+//     SRC: "./src/core/styles/**/*",
+//     DIST: "dist/core/styles"
+// }
+
 const FONTS = {
     SRC: [
         "node_modules/material-design-icons/iconfont/*.{woff,woff2,ttf}",
@@ -73,6 +78,9 @@ gulp.task("build-style", () => {
     fs.writeFile("dist/igniteui-angular.css", prefixer.process(result.css).css, (err) => {
         if (err) throw err;
     });
+
+    // gulp.src(THEMING.SRC)
+    //     .pipe(gulp.dest(THEMING.DIST));
 
     return gulp.src(FONTS.SRC)
         .pipe(gulp.dest(FONTS.DIST));
