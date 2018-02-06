@@ -25,7 +25,8 @@ export enum Size {
     templateUrl: "avatar.component.html"
 })
 export class IgxAvatarComponent implements AfterViewInit, AfterContentChecked {
-    @ViewChild("image") public image: ElementRef;
+	@ViewChild("image") public image: ElementRef;
+	@ViewChild("initialsImage") public initialsImage: ElementRef;
     @Input() public initials: string;
     @Input() public src: string;
     @Input("roundShape") public roundShape = "false";
@@ -86,11 +87,12 @@ export class IgxAvatarComponent implements AfterViewInit, AfterContentChecked {
     }
 
     public ngAfterViewInit() {
-        if (this.initials && this.image) {
-            const src = this.generateInitials(
-                parseInt(this.image.nativeElement.width, 10)
-            );
-            this.image.nativeElement.src = src;
+        if (this.initials && this.initialsImage) {
+			// it seems the svg element is not yet fully initialized so give it some time
+			setTimeout(()=>{ 
+				var size = parseInt(this.initialsImage.nativeElement.width.baseVal.value, 10);
+				this.generateInitials(size);
+			}, 50);
         }
     }
 
@@ -109,26 +111,23 @@ export class IgxAvatarComponent implements AfterViewInit, AfterContentChecked {
     }
 
     private generateInitials(size) {
-        const canvas = document.createElement("canvas");
         const fontSize = size / 2;
-        let ctx;
 
-        canvas.width = size;
-        canvas.height = size;
+		var svg = this.initialsImage.nativeElement;
+		svg.setAttribute('width', size);
+		svg.setAttribute('height', size);
 
-        ctx = canvas.getContext("2d");
-        ctx.fillStyle = this.bgColor;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.textAlign = "center";
-        ctx.fillStyle = this.color;
-        ctx.font = fontSize + `px ${this.fontName}`;
-        ctx.fillText(
-            this.initials.toUpperCase(),
-            size / 2,
-            size - size / 2 + fontSize / 3
-        );
-
-        return canvas.toDataURL("image/png");
+		var svgText = svg.children[0];
+		if (svgText) {
+			svgText.textContent = this.initials.toUpperCase();
+			svgText.setAttribute('font-size', fontSize);
+			svgText.setAttribute('font-family', this.fontName);
+			
+			let x = fontSize;
+			svgText.setAttribute('x', x);
+			var y = size - size / 2 + fontSize / 3;
+			svgText.setAttribute('y', y);
+		}
     }
 
     private _addEventListeners(renderer: Renderer2) { }
