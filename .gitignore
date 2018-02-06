@@ -41,6 +41,7 @@ tmp
 demos/**/*.js
 demos/**/*.js.map
 demos/style/fonts
+demos/style/*.css
 demos/node_modules
 demos/lib
 demos/dist
