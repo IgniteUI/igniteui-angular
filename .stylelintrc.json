@@ -50,8 +50,8 @@
         "selector-pseudo-element-colon-notation": "double",
         "selector-type-case": "lower",
         "selector-list-comma-newline-after": "always",
-        "rule-empty-line-before": ["never", {
-            "except": ["inside-block-and-after-rule"],
+        "rule-empty-line-before": ["always-multi-line", {
+            "except": ["first-nested"],
             "ignore": ["after-comment"]
         }],
         "scss/at-else-closing-brace-newline-after": "always-last-in-chain",
