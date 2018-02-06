@@ -5,33 +5,33 @@ import { IgxVirtForModule } from "./igx_virtual_for.directive";
 
 describe("IgxVirtual directive - simple template", () => {
 
-	beforeEach(async(() => {
-		TestBed.configureTestingModule({
-			declarations: [CustomTemplateDirective],
-			imports: [ IgxVirtForModule ]
-		})
-			.compileComponents();
-	}));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [CustomTemplateDirective],
+            imports: [ IgxVirtForModule ]
+        })
+            .compileComponents();
+    }));
 
-	it("should initialize empty directive", fakeAsync(() => {
-		const fix = TestBed.createComponent(CustomTemplateDirective);
-		fix.detectChanges();
-		const container = fix.componentInstance.container;
-		const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
-		expect(displayContainer).not.toBeNull();
-	}));
+    it("should initialize empty directive", fakeAsync(() => {
+        const fix = TestBed.createComponent(CustomTemplateDirective);
+        fix.detectChanges();
+        const container = fix.componentInstance.container;
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
+        expect(displayContainer).not.toBeNull();
+    }));
 });
 
 @Component({
-	template: `
-		<span #container>
-			<ng-template igVirtFor [igVirtForOf]="data"></ng-template>
-		</span>
-	`
+    template: `
+        <span #container>
+            <ng-template igVirtFor [igVirtForOf]="data"></ng-template>
+        </span>
+    `
 })
 export class CustomTemplateDirective {
-	public data = [];
-	
-	@ViewChild("container") public container;
+    public data = [];
+
+    @ViewChild("container") public container;
 
 }
