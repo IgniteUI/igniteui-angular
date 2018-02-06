@@ -5,7 +5,7 @@ $components: register-component($components, #{$component-name});
 @function igx-snackbar-theme(
     $background: null,
     $button-color: null
-    ) {
+) {
     @return (
         background: $background,
         button-color: $button-color

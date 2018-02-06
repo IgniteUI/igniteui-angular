@@ -9,22 +9,18 @@ $components: register-component($components, #{$component-name});
     );
 }
 
-@mixin igx-grid-filtering($theme, $palette: $default-palette) { 
+@mixin igx-grid-filtering($theme, $palette: $default-palette) {
     $default-theme: igx-grid-filtering-theme(
         $color-selected: igx-color($palette, 'primary'),
         $color-filtered: igx-color($palette, 'primary')
     );
-
     $this: extend($default-theme, $theme);
-
     $grid-filtering-color-active: map-get($this, 'color-selected');
     $grid-filtering-bg-active: map-get($this, 'color-filtered');
     $grid-filtering-options-padding: em(8px, 16px);
     $grid-head-icon-size: rem(16px) !default;
     $grid-head-icon-lh: rem(16px) !default;
     $grid-head-icon-padding: em(8px) !default;
-
-    // @debug $this;
 
     %igx-filtering-display {
         position: static;
@@ -35,6 +31,7 @@ $components: register-component($components, #{$component-name});
             width: rem(24px);
             height: rem(24px);
         }
+
         i {
             font-size: $grid-head-icon-size !important;
             line-height: $grid-head-icon-lh !important;
@@ -44,6 +41,7 @@ $components: register-component($components, #{$component-name});
 
     %igx-filtering-icon--active {
         color: $grid-filtering-color-active;
+
         .igx-button--icon {
             background: $grid-filtering-bg-active;
         }
@@ -80,9 +78,10 @@ $components: register-component($components, #{$component-name});
         padding: $grid-filtering-options-padding;
         z-index: 10;
         margin-top: 8px;
-        &>input {
-            font-weight: initial;
-            font-size: initial;
-        }
     }
- }
+
+    %igx-filtering-options > input {
+        font-weight: initial;
+        font-size: initial;
+    }
+}

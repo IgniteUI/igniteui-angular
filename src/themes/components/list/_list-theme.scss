@@ -10,7 +10,7 @@ $components: register-component($components, #{$component-name});
     $item-text-color: null,
     $item-background-active: null,
     $item-text-color-active: null
-    ) {
+) {
     @return (
         background: $background,
         header-background: $header-background,
@@ -56,7 +56,7 @@ $components: register-component($components, #{$component-name});
     $list-item-tl-sl-font-size: em(14px) !default;
     $list-item-tl-height: em(72px) !default;
     $list-item-tl-sl-color: $darkgray !default;
-    $list-empty-color: set-color($list-background);
+    /*$list-empty-color: set-color($list-background);*/
     $list-empty-padding: em(16px, 16px);
 
     %igx-list {
@@ -127,3 +127,4 @@ $components: register-component($components, #{$component-name});
         transition: left .3s $ease-out-quad;
     }
 }
+

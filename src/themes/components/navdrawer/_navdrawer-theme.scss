@@ -8,8 +8,6 @@ $components: register-component($components, #{$component-name});
 
 @mixin igx-navdrawer($theme, $palette: $default-palette) {
     $default-theme: igx-navdrawer-theme();
-
     $this: extend($default-theme, $theme);
-
     $navdrawer-pin-collapsed-padding: 0;
 }

@@ -44,6 +44,7 @@ $thumbs: 'from' 'to';
             }
         }
     }
+
     @include m(disabled) {
         @extend %igx-slider-display !optional;
 

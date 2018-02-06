@@ -9,7 +9,8 @@
 
     @include e(radio) {
         //hide default radio control
-        @include hide-default;
+
+        @include hide-default();
 
         ~ #{$block}__label {
             @extend %igx-radio-lbl-display !optional;

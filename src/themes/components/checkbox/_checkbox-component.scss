@@ -5,11 +5,10 @@ $block: 'igx-control';
 }
 
 @include b(#{$block}__cbx) {
-    @include hide-default;
+    @include hide-default();
 
     ~ #{$block}__label {
         @extend %igx-cbx-lbl-display !optional;
-
     }
 
     &:checked ~ #{$block}__label {
@@ -38,3 +37,4 @@ $block: 'igx-control';
         @extend %igx-cbx-lbl-notchecked--disabled-after !optional;
     }
 }
+
