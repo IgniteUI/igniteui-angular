@@ -184,6 +184,10 @@ export class IgVirtualForOf<T> {
     }
 
     private onWheel(event) {
+<<<<<<< HEAD
+        let hScroll, curScrollTop, maxScrollTop;
+=======
+>>>>>>> c4d0ff234f0360d2a76c425809690c71026c5243
         const scrollStepX = 10;
         const scrollStepY = /Edge/.test(navigator.userAgent) ? 25 : 100;
 
@@ -191,8 +195,13 @@ export class IgVirtualForOf<T> {
         const hScroll = this.getHorizontalScroll(this._viewContainer, "horizontal-virtual-helper");
         hScroll.scrollLeft += Math.sign(event.deltaX) * scrollStepX;
 
+<<<<<<< HEAD
+        curScrollTop = this.vh.instance.elementRef.nativeElement.scrollTop;
+        maxScrollTop = this.vh.instance.height - this.vh.instance.elementRef.nativeElement.offsetHeight;
+=======
         const curScrollTop = this.vh.instance.elementRef.nativeElement.scrollTop;
         const maxScrollTop = this.vh.instance.height - this.vh.instance.elementRef.nativeElement.offsetHeight;
+>>>>>>> c4d0ff234f0360d2a76c425809690c71026c5243
         if (0 < curScrollTop && curScrollTop < maxScrollTop) {
             event.preventDefault();
         }
