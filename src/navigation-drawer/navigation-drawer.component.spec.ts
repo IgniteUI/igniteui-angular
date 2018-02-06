@@ -60,8 +60,8 @@ describe("Navigation Drawer", () => {
                 const fixture = TestBed.createComponent(TestComponentDI);
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.viewChild.drawer.classList).toContain("ig-nav-drawer");
-                expect(fixture.componentInstance.viewChild.overlay.classList).toContain("ig-nav-drawer-overlay");
+                expect(fixture.componentInstance.viewChild.drawer.classList).toContain("igx-nav-drawer");
+                expect(fixture.componentInstance.viewChild.overlay.classList).toContain("igx-nav-drawer-overlay");
                 expect(fixture.componentInstance.viewChild.styleDummy.classList).toContain("style-dummy");
                 expect(fixture.componentInstance.viewChild.hasAnimateWidth).toBeFalsy();
 
@@ -172,8 +172,8 @@ describe("Navigation Drawer", () => {
 
         it("should properly initialize with min template", async(() => {
             const template = `<igx-nav-drawer>
-                                <div class='ig-drawer-content'></div>
-                                <div class='ig-drawer-mini-content'></div>
+                                <div class='igx-drawer-content'></div>
+                                <div class='igx-drawer-mini-content'></div>
                               </igx-nav-drawer>`;
             TestBed.overrideComponent(TestComponentDI, {
             set: {
@@ -292,7 +292,7 @@ describe("Navigation Drawer", () => {
 
         it("should update edge zone with mini width", async(() => {
             const template = `<igx-nav-drawer [miniWidth]="drawerMiniWidth">
-                                <div class="ig-drawer-content"></div><div class="ig-drawer-mini-content"></div>
+                                <div class="igx-drawer-content"></div><div class="igx-drawer-mini-content"></div>
                               </igx-nav-drawer>`;
             let fixture: ComponentFixture<TestComponentDI>;
             TestBed.overrideComponent(TestComponentDI, {
@@ -321,8 +321,8 @@ describe("Navigation Drawer", () => {
 
         it("should update width from css or property", (done) => {
             const template = `<igx-nav-drawer [miniWidth]="drawerMiniWidth" [width]="drawerWidth">
-                                    <div class="ig-drawer-content"></div>
-                                    <div class="ig-drawer-mini-content"></div>
+                                    <div class="igx-drawer-content"></div>
+                                    <div class="igx-drawer-mini-content"></div>
                             </igx-nav-drawer>`;
             let fixture: ComponentFixture<TestComponentDI>;
             TestBed.overrideComponent(TestComponentDI, {

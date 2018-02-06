@@ -28,12 +28,12 @@ import { HammerGesturesManager } from "../core/touch";
  * Usage:
  * ```
  * <igx-nav-drawer id="ID" (event output bindings) [input bindings]>
- *  <div class="ig-drawer-content">
+ *  <div class="igx-drawer-content">
  *   <!-- expanded template -->
  *  </div>
  * </igx-nav-drawer>
  * ```
- * Can also include an optional `<div class="ig-drawer-mini-content">`.
+ * Can also include an optional `<div class="igx-drawer-mini-content">`.
  * ID required to register with NavigationService allow directives to target the control.
  */
 @Component({
@@ -75,13 +75,13 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements ITogg
     @Input() public pinThreshold: number = 1024;
 
     /**
-     * Width of the drawer in its open state. Defaults to 300px based on the `.ig-nav-drawer` style.
+     * Width of the drawer in its open state. Defaults to 300px based on the `.igx-nav-drawer` style.
      * Can be used to override or dynamically modify the width.
      */
     @Input() public width: string;
 
     /**
-     * Width of the drawer in its mini state. Defaults to 60px based on the `.ig-nav-drawer.mini` style.
+     * Width of the drawer in its mini state. Defaults to 60px based on the `.igx-nav-drawer.mini` style.
      * Can be used to override or dynamically modify the width.
      */
     @Input() public miniWidth: string;
@@ -102,10 +102,10 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements ITogg
     private _widthCache: { width: number, miniWidth: number } = { width: null, miniWidth: null };
     private _resizeObserver: Subscription;
     private css: { [name: string]: string; } = {
-        drawer: "ig-nav-drawer",
+        drawer: "igx-nav-drawer",
         mini: "mini",
-        miniProjection: ".ig-drawer-mini-content",
-        overlay: "ig-nav-drawer-overlay",
+        miniProjection: ".igx-drawer-mini-content",
+        overlay: "igx-nav-drawer-overlay",
         styleDummy: "style-dummy"
     };
     private _resolveOpen: (value?: any | PromiseLike<any>) => void;
