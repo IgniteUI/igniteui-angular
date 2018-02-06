@@ -1,10 +1,10 @@
 <div class="igx-avatar igx-avatar--{{size}}" aria-label="avatar" role="img">
     <img #image *ngIf="src" src="{{src}}" class="igx-avatar--image igx-avatar--{{size}}" [class.igx-avatar--rounded]="isRounded"
-		[style.backgroundColor]="bgColor" [attr.aria-roledescription]="roleDescription" />
-	<svg #initialsImage *ngIf="initials && !src" xmlns="http://www.w3.org/2000/svg" [class.igx-avatar--rounded]="isRounded"
-		[style.backgroundColor]="bgColor" [attr.aria-roledescription]="roleDescription">
-		<text text-anchor="middle"/>
-	</svg>
+         [style.backgroundColor]="bgColor" [attr.aria-roledescription]="roleDescription" />
+        <svg #initialsImage *ngIf="initials && !src" xmlns="http://www.w3.org/2000/svg" [class.igx-avatar--rounded]="isRounded" [style.backgroundColor]="bgColor"
+            [attr.aria-roledescription]="roleDescription">
+            <text text-anchor="middle" />
+        </svg>
     <span *ngIf="!src && !initials" class="igx-avatar--{{size}} igx-avatar--icon" [class.igx-avatar--rounded]="isRounded" [style.backgroundColor]="bgColor"
         [style.color]="color" [attr.aria-roledescription]="roleDescription">
         <igx-icon fontSet="material" [name]="icon"></igx-icon>

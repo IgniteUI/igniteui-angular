@@ -25,8 +25,8 @@ export enum Size {
     templateUrl: "avatar.component.html"
 })
 export class IgxAvatarComponent implements AfterViewInit, AfterContentChecked {
-	@ViewChild("image") public image: ElementRef;
-	@ViewChild("initialsImage") public initialsImage: ElementRef;
+    @ViewChild("image") public image: ElementRef;
+    @ViewChild("initialsImage") public initialsImage: ElementRef;
     @Input() public initials: string;
     @Input() public src: string;
     @Input("roundShape") public roundShape = "false";
@@ -88,11 +88,11 @@ export class IgxAvatarComponent implements AfterViewInit, AfterContentChecked {
 
     public ngAfterViewInit() {
         if (this.initials && this.initialsImage) {
-			// it seems the svg element is not yet fully initialized so give it some time
-			setTimeout(()=>{ 
-				var size = parseInt(this.initialsImage.nativeElement.width.baseVal.value, 10);
-				this.generateInitials(size);
-			}, 50);
+            // it seems the svg element is not yet fully initialized so give it some time
+            setTimeout(() => {
+                const size = parseInt(this.initialsImage.nativeElement.width.baseVal.value, 10);
+                this.generateInitials(size);
+            }, 50);
         }
     }
 
@@ -113,21 +113,21 @@ export class IgxAvatarComponent implements AfterViewInit, AfterContentChecked {
     private generateInitials(size) {
         const fontSize = size / 2;
 
-		var svg = this.initialsImage.nativeElement;
-		svg.setAttribute('width', size);
-		svg.setAttribute('height', size);
+        const svg = this.initialsImage.nativeElement;
+        svg.setAttribute("width", size);
+        svg.setAttribute("height", size);
 
-		var svgText = svg.children[0];
-		if (svgText) {
-			svgText.textContent = this.initials.toUpperCase();
-			svgText.setAttribute('font-size', fontSize);
-			svgText.setAttribute('font-family', this.fontName);
-			
-			let x = fontSize;
-			svgText.setAttribute('x', x);
-			var y = size - size / 2 + fontSize / 3;
-			svgText.setAttribute('y', y);
-		}
+        const svgText = svg.children[0];
+        if (svgText) {
+            svgText.textContent = this.initials.toUpperCase();
+            svgText.setAttribute("font-size", fontSize);
+            svgText.setAttribute("font-family", this.fontName);
+
+            const x = fontSize;
+            svgText.setAttribute("x", x);
+            const y = size - size / 2 + fontSize / 3;
+            svgText.setAttribute("y", y);
+        }
     }
 
     private _addEventListeners(renderer: Renderer2) { }
