@@ -11,6 +11,7 @@
             transform-origin: top;
             opacity: 1;
         }
+
         100% {
             transform: rotateX(-100deg);
             transform-origin: top;
@@ -33,6 +34,7 @@
             transform-origin: top;
             opacity: 1;
         }
+
         100% {
             transform: rotateX(70deg);
             transform-origin: top;
@@ -55,6 +57,7 @@
             transform-origin: right;
             opacity: 1;
         }
+
         100% {
             transform: rotateY(-100deg);
             transform-origin: right;
@@ -77,6 +80,7 @@
             transform-origin: right;
             opacity: 1;
         }
+
         100% {
             transform: rotateY(70deg);
             transform-origin: right;
@@ -99,6 +103,7 @@
             transform-origin: bottom;
             opacity: 1;
         }
+
         100% {
             transform: rotateX(100deg);
             transform-origin: bottom;
@@ -121,6 +126,7 @@
             transform-origin: bottom;
             opacity: 1;
         }
+
         100% {
             transform: rotateX(-70deg);
             transform-origin: bottom;
@@ -143,6 +149,7 @@
             transform-origin: left;
             opacity: 1;
         }
+
         100% {
             transform: rotateY(100deg);
             transform-origin: left;
@@ -165,6 +172,7 @@
             transform-origin: left;
             opacity: 1;
         }
+
         100% {
             transform: rotateY(-70deg);
             transform-origin: left;

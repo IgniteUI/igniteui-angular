@@ -10,6 +10,7 @@
             transform: rotate(0);
             opacity: 1;
         }
+
         100% {
             transform: rotate(-360deg);
             opacity: 0;
@@ -31,6 +32,7 @@
             transform-origin: bottom left;
             opacity: 1;
         }
+
         100% {
             transform: rotate(-360deg);
             transform-origin: bottom left;
@@ -52,6 +54,7 @@
             transform: rotate3d(-1, 1, 0, 360deg);
             opacity: 1;
         }
+
         100% {
             transform: rotate3d(-1, 1, 0, 0deg);
             opacity: 0;
@@ -73,6 +76,7 @@
             transform-origin: top;
             opacity: 1;
         }
+
         100% {
             transform: rotate(-360deg);
             transform-origin: top;
@@ -95,6 +99,7 @@
             transform-origin: left;
             opacity: 1;
         }
+
         100% {
             transform: rotate(-360deg);
             transform-origin: left;
@@ -117,6 +122,7 @@
             transform-origin: top right;
             opacity: 1;
         }
+
         100% {
             transform: rotate(-360deg);
             transform-origin: top right;
@@ -139,6 +145,7 @@
             transform-origin: top left;
             opacity: 1;
         }
+
         100% {
             transform: rotate(-360deg);
             transform-origin: top left;
@@ -161,6 +168,7 @@
             transform-origin: right;
             opacity: 1;
         }
+
         100% {
             transform: rotate(-360deg);
             transform-origin: right;
@@ -182,6 +190,7 @@
             transform: rotate(0);
             opacity: 1;
         }
+
         100% {
             transform: rotate(45deg);
             opacity: 0;
@@ -202,6 +211,7 @@
             transform: rotate(0);
             opacity: 1;
         }
+
         100% {
             transform: rotate(-45deg);
             opacity: 0;
@@ -222,6 +232,7 @@
             transform: translateZ(0) rotate(0);
             opacity: 1;
         }
+
         100% {
             transform: translateZ(-180px) rotate(-45deg);
             opacity: 0;
@@ -242,6 +253,7 @@
             transform: translateZ(0) rotate(0);
             opacity: 1;
         }
+
         100% {
             transform: translateZ(180px) rotate(45deg);
             opacity: 0;
@@ -263,6 +275,7 @@
             transform-origin: 100% 0%;
             opacity: 1;
         }
+
         100% {
             transform: rotate(45deg);
             transform-origin: 100% 0%;
@@ -285,6 +298,7 @@
             transform-origin: 100% 0%;
             opacity: 1;
         }
+
         100% {
             transform: rotate(-45deg);
             transform-origin: 100% 0%;
@@ -307,6 +321,7 @@
             transform-origin: 100% 100%;
             opacity: 1;
         }
+
         100% {
             transform: rotate(45deg);
             transform-origin: 100% 100%;
@@ -329,6 +344,7 @@
             transform-origin: 100% 100%;
             opacity: 1;
         }
+
         100% {
             transform: rotate(-45deg);
             transform-origin: 100% 100%;
@@ -351,6 +367,7 @@
             transform-origin: 0 100%;
             opacity: 1;
         }
+
         100% {
             transform: rotate(45deg);
             transform-origin: 0 100%;
@@ -373,6 +390,7 @@
             transform-origin: 0 100%;
             opacity: 1;
         }
+
         100% {
             transform: rotate(-45deg);
             transform-origin: 0 100%;
@@ -395,6 +413,7 @@
             transform-origin: 0 0;
             opacity: 1;
         }
+
         100% {
             transform: rotate(45deg);
             transform-origin: 0 0;
@@ -417,6 +436,7 @@
             transform-origin: 0 0;
             opacity: 1;
         }
+
         100% {
             transform: rotate(-45deg);
             transform-origin: 0 0;
@@ -438,6 +458,7 @@
             transform: rotateX(360deg);
             opacity: 1;
         }
+
         100% {
             transform: rotateX(0deg);
             opacity: 0;
@@ -459,6 +480,7 @@
             transform-origin: bottom right;
             opacity: 1;
         }
+
         100% {
             transform: rotate(-360deg);
             transform-origin: bottom right;
@@ -480,6 +502,7 @@
             transform: rotateY(360deg);
             opacity: 1;
         }
+
         100% {
             transform: rotateY(0deg);
             opacity: 0;
@@ -501,6 +524,7 @@
             transform-origin: bottom;
             opacity: 1;
         }
+
         100% {
             transform: rotate(-360deg);
             transform-origin: bottom;
@@ -522,6 +546,7 @@
             transform: rotate3d(1, 1, 0, 360deg);
             opacity: 1;
         }
+
         100% {
             transform: rotate3d(1, 1, 0, 0deg);
             opacity: 0;

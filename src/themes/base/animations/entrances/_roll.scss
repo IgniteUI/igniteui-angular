@@ -5,16 +5,17 @@
  */
 
 @mixin roll-in-left {
-  @include keyframes(roll-in-left) {
-    0% {
-      transform: translateX(-800px) rotate(-540deg);
-      opacity: 0;
+    @include keyframes(roll-in-left) {
+        0% {
+            transform: translateX(-800px) rotate(-540deg);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translateX(0) rotate(0deg);
+            opacity: 1;
+        }
     }
-    100% {
-      transform: translateX(0) rotate(0deg);
-      opacity: 1;
-    }
-  }
 }
 
 
@@ -25,16 +26,17 @@
  */
 
 @mixin roll-in-top {
-  @include keyframes(roll-in-top) {
-    0% {
-      transform: translateY(-800px) rotate(-540deg);
-      opacity: 0;
+    @include keyframes(roll-in-top) {
+        0% {
+            transform: translateY(-800px) rotate(-540deg);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 1;
+        }
     }
-    100% {
-      transform: translateY(0) rotate(0deg);
-      opacity: 1;
-    }
-  }
 }
 
 
@@ -45,16 +47,17 @@
  */
 
 @mixin roll-in-right {
-  @include keyframes(roll-in-right) {
-    0% {
-      transform: translateX(800px) rotate(540deg);
-      opacity: 0;
+    @include keyframes(roll-in-right) {
+        0% {
+            transform: translateX(800px) rotate(540deg);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translateX(0) rotate(0deg);
+            opacity: 1;
+        }
     }
-    100% {
-      transform: translateX(0) rotate(0deg);
-      opacity: 1;
-    }
-  }
 }
 
 
@@ -65,14 +68,15 @@
  */
 
 @mixin roll-in-bottom {
-  @include keyframes(roll-in-bottom) {
-    0% {
-      transform: translateY(800px) rotate(540deg);
-      opacity: 0;
+    @include keyframes(roll-in-bottom) {
+        0% {
+            transform: translateY(800px) rotate(540deg);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 1;
+        }
     }
-    100% {
-      transform: translateY(0) rotate(0deg);
-      opacity: 1;
-    }
-  }
 }

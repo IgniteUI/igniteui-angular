@@ -10,6 +10,7 @@
             transform: translateX(0) rotate(0deg);
             opacity: 1;
         }
+
         100% {
             transform: translateX(-1000px) rotate(-540deg);
             opacity: 0;
@@ -30,6 +31,7 @@
             transform: translateY(0) rotate(0deg);
             opacity: 1;
         }
+
         100% {
             transform: translateY(-800px) rotate(-540deg);
             opacity: 0;
@@ -50,6 +52,7 @@
             transform: translateX(0) rotate(0deg);
             opacity: 1;
         }
+
         100% {
             transform: translateX(1000px) rotate(540deg);
             opacity: 0;
@@ -70,6 +73,7 @@
             transform: translateY(0) rotate(0deg);
             opacity: 1;
         }
+
         100% {
             transform: translateY(800px) rotate(540deg);
             opacity: 0;

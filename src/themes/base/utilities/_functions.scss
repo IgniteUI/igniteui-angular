@@ -192,7 +192,7 @@
             A700: text-contrast(gen-color($color, 'A700')),
         )
     );
-};
+}
 
 @function igx-palette($primary, $accent, $warn: $warn-color, $info: $info-color, $success: $success-color, $error: $error-color) {
     $primary-palette: _generate-palette($primary);

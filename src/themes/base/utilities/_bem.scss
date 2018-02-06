@@ -9,7 +9,8 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
     @if $s == null {
         @return '';
     }
-    $s: inspect($s); //cast to string
+    //cast to string
+    $s: inspect($s); 
     @if str-index($s, '(') {
         // ruby sass => "(selector,)"
         @return str-slice($s, 2, -3);
@@ -60,11 +61,9 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
     // Returns the BEM block-name that generated $x. Does not include leading "."
     @if bem--contains-mod($x) {
         @return str-slice($x, 1, str-index($x, $bem--sep-mod)-1);
-    }
-    @else if bem--contains-elem($x) {
+    } @else if bem--contains-elem($x) {
         @return str-slice($x, 1, str-index($x, $bem--sep-elem)-1);
-    }
-    @else if bem--contains-pseudo($x) {
+    } @else if bem--contains-pseudo($x) {
         @return str-slice($x, 1, str-index($x, ':')-1);
     }
     @return $x;
@@ -106,7 +105,8 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
     //
     $block: bem--with-dot($block);
     $elem: $e or $elem;
-    $mods: $m or $mod or $mods; // Return early if possible
+    // Return early if possible
+    $mods: $m or $mod or $mods;
     @if not ($elem or $mods) {
         @return $block;
     }
@@ -120,7 +120,7 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
             $elem: str-slice(bem-selector(nth($elem, 1), $m: nth($elem, 2)), 2);
         }
         $elem: bem--elem-str($block, $elem);
-    } // Return early if possible
+    }
     @if not $mods {
         @return bem--with-dot($elem);
     }
@@ -156,7 +156,7 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
         @error 'Detected an Element that is not inside a Block: #{$elem}';
     }
     @if bem--contains-elem($this) {
-        @error 'Detected a multi-level nested Element (#{$this} #{$elem})! Bemerald doesn\'t support nested ' + 'elements because they do not have BEM nature (http://getbem.com/faq/#css-nested-elements). ' + 'If you must do it, use a hardcoded selector like &__subsubelem ';
+        @error 'Detected a multi-level nested Element (#{$this} #{$elem})! Bemerald doesn\'t support nested ' + 'elements because they do not have BEM nature (www.getbem.com/faq/#css-nested-elements). ' + 'If you must do it, use a hardcoded selector like &__subsubelem ';
     }
     $mod: $m or $mod;
     $block: bem--extract-block($this);

@@ -86,6 +86,7 @@
         margin-top: 0;
         margin-bottom: 1.6875rem;
     }
+
     ul ul,
     ol ol,
     ul ol,
@@ -98,6 +99,7 @@
         font-size: $blockquote-font-size-desktop;
         line-height: $blockquote-line-height-tablet;
         font-style: italic;
+
         &::before,
         &::after {
             content: '\'';
@@ -109,6 +111,7 @@
         margin: -1px 0;
         border: 1px solid;
     }
+
     a,
     b,
     i,
@@ -118,17 +121,20 @@
     code {
         line-height: 0;
     }
+
     sub,
     sup {
         line-height: 0;
         position: relative;
         vertical-align: baseline;
     }
+
     sup {
-        top: -0.5em;
+        top: -.5em;
     }
+
     sub {
-        bottom: -0.25em;
+        bottom: -.25em;
     }
 
     @media only screen and (min-width: 0) {
