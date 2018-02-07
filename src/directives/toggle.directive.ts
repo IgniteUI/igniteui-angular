@@ -127,7 +127,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 })
 export class IgxToggleActionDirective implements OnDestroy, OnInit {
     @Input()
-    public closeOnOutsideClick: boolean;
+    public closeOnOutsideClick: boolean = false;
 
     @Input("igx-toggle-action")
     set target(target) {
@@ -147,7 +147,7 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
     constructor(private element: ElementRef, @Optional() private navigationService: IgxNavigationService) { }
 
     public ngOnDestroy() {
-        this.removeEventHandler("click", this._handler);
+        document.removeEventListener("click", this._handler, true);
     }
 
     public ngOnInit() {
@@ -158,8 +158,10 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
                 }
 
                 this.target.close();
-                this.removeEventHandler("click", this._handler, true);
+                document.removeEventListener("click", this._handler, true);
             };
+
+            document.addEventListener("click", this._handler, true);
         }
     }
 
@@ -170,10 +172,6 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
         if (this._handler) {
             document.addEventListener("click", this._handler, true);
         }
-    }
-
-    private removeEventHandler(event, callback, useCapture?) {
-        document.removeEventListener(event, callback, useCapture);
     }
 }
 @NgModule({
