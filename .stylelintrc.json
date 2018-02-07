@@ -1,6 +1,9 @@
 {
     "plugins": ["stylelint-scss"],
     "rules": {
+        "at-rule-blacklist": ["debug", {
+            "severity": "warning"
+        }],
         "block-closing-brace-empty-line-before": "never",
         "block-closing-brace-newline-after": "always-single-line",
         "block-no-empty": true,
