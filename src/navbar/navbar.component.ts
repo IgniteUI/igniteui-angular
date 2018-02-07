@@ -15,7 +15,6 @@ import { IgxIconModule } from "../icon/icon.component";
 @Component({
     encapsulation: ViewEncapsulation.None,
     selector: "igx-navbar",
-    styleUrls: ["./navbar.component.scss"],
     templateUrl: "navbar.component.html"
 })
 export class IgxNavbar implements AfterContentChecked {

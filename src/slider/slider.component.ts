@@ -32,7 +32,6 @@ const noop = () => {
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSlider, multi: true }],
     selector: "igx-slider",
-    styleUrls: ["./slider.component.scss"],
     templateUrl: "slider.component.html"
 })
 export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {

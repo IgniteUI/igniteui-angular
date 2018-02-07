@@ -24,7 +24,6 @@ export interface IgxScrollEvent {
 
 @Component({
     selector: "igx-scroll",
-    styleUrls: ["./scroll.component.scss"],
     templateUrl: "scroll.component.html"
 })
 export class IgxScroll {
