@@ -4,9 +4,11 @@ import {
     AfterViewInit,
     Component,
     ElementRef,
+    HostBinding,
     Input,
     NgModule,
     Renderer2,
+    TemplateRef,
     ViewChild,
     ViewEncapsulation
 } from "@angular/core";
@@ -35,7 +37,18 @@ export class IgxAvatarComponent implements AfterViewInit, AfterContentChecked {
     public sizeEnum = Size;
     public roleDescription: string;
 
+    @ViewChild("imageTemplate", { read: TemplateRef }) protected imageTemplate: TemplateRef<any>;
+    @ViewChild("initialsTemplate", { read: TemplateRef }) protected initialsTemplate: TemplateRef<any>;
+    @ViewChild("iconTemplate", { read: TemplateRef }) protected iconTemplate: TemplateRef<any>;
+
     protected fontName = "Titillium Web";
+
+    @HostBinding("attr.aria-label") private ariaLabel = "avatar";
+    @HostBinding("attr.role") private role = "img";
+    @HostBinding("attr.class")
+    get classes() {
+        return "igx-avatar igx-avatar--" + this.size;
+    }
 
     private _size: string;
     private _bgColor: string;
@@ -71,6 +84,18 @@ export class IgxAvatarComponent implements AfterViewInit, AfterContentChecked {
 
     get isRounded(): boolean {
         return this.roundShape.toUpperCase() === "TRUE" ? true : false;
+    }
+
+    get template() {
+        if (this.src) {
+            return this.imageTemplate;
+        }
+
+        if (this.initials) {
+            return this.initialsTemplate;
+        }
+
+        return this.iconTemplate;
     }
 
     @Input()
