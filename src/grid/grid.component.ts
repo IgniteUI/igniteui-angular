@@ -1,24 +1,28 @@
+import { DOCUMENT } from "@angular/common";
 import {
-AfterContentInit,
-ChangeDetectionStrategy,
-ChangeDetectorRef,
-Component,
-ComponentFactory,
-ComponentFactoryResolver,
-ComponentRef,
-ContentChild,
-ContentChildren,
-EventEmitter,
-HostBinding,
-Input,
-OnInit,
-Output,
-QueryList,
-TemplateRef,
-ViewChild,
-ViewChildren,
-ViewContainerRef,
-ViewEncapsulation
+    AfterContentInit,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ComponentFactory,
+    ComponentFactoryResolver,
+    ComponentRef,
+    ContentChild,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Inject,
+    Input,
+    OnInit,
+    Output,
+    QueryList,
+    TemplateRef,
+    ViewChild,
+    ViewChildren,
+    ViewContainerRef,
+    ViewEncapsulation
 } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
 import { cloneArray } from "../core/utils";
@@ -41,7 +45,7 @@ let NEXT_ID = 0;
     styleUrls: ["./grid.component.scss"],
     templateUrl: "./grid.component.html"
 })
-export class IgxGridComponent implements OnInit, AfterContentInit {
+export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit {
 
     @Input()
     public data = [];
@@ -189,6 +193,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
 
     constructor(
         private gridAPI: IgxGridAPIService,
+        private elementRef: ElementRef,
+        @Inject(DOCUMENT) private document,
         public cdr: ChangeDetectorRef,
         private resolver: ComponentFactoryResolver,
         private viewRef: ViewContainerRef) {
@@ -208,6 +214,19 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
             this.onColumnInit.emit(col);
         });
         this._columns = this.columnList.toArray();
+    }
+
+    public ngAfterViewInit() {
+        setTimeout(() => {
+            const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+            this.width = computed.getPropertyValue("width");
+            this.height = computed.getPropertyValue("height");
+            this.markForCheck();
+        });
+    }
+
+    get nativeElement() {
+        return this.elementRef.nativeElement;
     }
 
     get columns(): IgxColumnComponent[] {
