@@ -97,6 +97,10 @@ export class IgxNavigationDrawer extends BaseComponent implements IToggleView,
     /** Event fired when the Navigation Drawer has closed. */
     @Output() public closed = new EventEmitter();
 
+    public get element() {
+        return this.elementRef.nativeElement;
+    }
+
     public _hasMimiTempl: boolean = false;
     private _gesturesAttached: boolean = false;
     private _widthCache: { width: number, miniWidth: number } = { width: null, miniWidth: null };

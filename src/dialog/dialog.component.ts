@@ -6,6 +6,7 @@ import {
     EventEmitter,
     Input,
     NgModule,
+    OnDestroy,
     OnInit,
     Output,
     ViewChild,
@@ -15,6 +16,8 @@ import {
 import { EaseOut } from "../animations/easings";
 import { fadeIn, fadeOut, slideInBottom } from "../animations/main";
 import { IgxButtonModule } from "../button/button.directive";
+import { IToggleView } from "../core/navigation";
+import { IgxNavigationService } from "../core/navigation/nav-service";
 import { IgxRippleModule } from "../directives/ripple.directive";
 
 @Component({
@@ -32,32 +35,52 @@ import { IgxRippleModule } from "../directives/ripple.directive";
     styleUrls: ["./dialog.component.scss"],
     templateUrl: "dialog-content.component.html"
 })
-export class IgxDialog {
+export class IgxDialog implements IToggleView, OnInit, OnDestroy {
     private static NEXT_ID: number = 1;
     private static readonly DIALOG_CLASS = "igx-dialog";
 
-    @Input() public title: string = "";
-    @Input() public message: string = "";
+    @Input()
+    public id: string;
 
-    @Input() public leftButtonLabel: string = "";
-    @Input() public leftButtonType: string = "flat";
-    @Input() public leftButtonColor: string = "";
-    @Input() public leftButtonBackgroundColor: string = "";
-    @Input() public leftButtonRipple: string = "";
+    @Input()
+    public title: string = "";
+    @Input()
+    public message: string = "";
 
-    @Input() public rightButtonLabel: string = "";
-    @Input() public rightButtonType: string = "flat";
-    @Input() public rightButtonColor: string = "";
-    @Input() public rightButtonBackgroundColor: string = "";
-    @Input() public rightButtonRipple: string = "";
+    @Input()
+    public leftButtonLabel: string = "";
+    @Input()
+    public leftButtonType: string = "flat";
+    @Input()
+    public leftButtonColor: string = "";
+    @Input()
+    public leftButtonBackgroundColor: string = "";
+    @Input()
+    public leftButtonRipple: string = "";
 
-    @Input() public closeOnOutsideSelect: boolean = false;
+    @Input()
+    public rightButtonLabel: string = "";
+    @Input()
+    public rightButtonType: string = "flat";
+    @Input()
+    public rightButtonColor: string = "";
+    @Input()
+    public rightButtonBackgroundColor: string = "";
+    @Input()
+    public rightButtonRipple: string = "";
 
-    @Output() public onOpen = new EventEmitter();
-    @Output() public onClose = new EventEmitter();
+    @Input()
+    public closeOnOutsideSelect: boolean = false;
 
-    @Output() public onLeftButtonSelect = new EventEmitter();
-    @Output() public onRightButtonSelect = new EventEmitter();
+    @Output()
+    public onOpen = new EventEmitter();
+    @Output()
+    public onClose = new EventEmitter();
+
+    @Output()
+    public onLeftButtonSelect = new EventEmitter();
+    @Output()
+    public onRightButtonSelect = new EventEmitter();
 
     @ViewChild("dialog") public dialogEl: ElementRef;
 
@@ -93,8 +116,12 @@ export class IgxDialog {
         return this._titleId;
     }
 
-    constructor() {
+    constructor(private elementRef: ElementRef, private navigationService: IgxNavigationService) {
         this._titleId = IgxDialog.NEXT_ID++ + "_title";
+    }
+
+    public get element() {
+        return this.elementRef.nativeElement;
     }
 
     public open() {
@@ -111,8 +138,12 @@ export class IgxDialog {
             return;
         }
 
-        this.toggleState(null);
+        this.toggleState("close");
         this.onClose.emit(this);
+    }
+
+    public toggle() {
+        this._isOpen ? this.close() : this.open();
     }
 
     public onDialogSelected(event) {
@@ -131,6 +162,18 @@ export class IgxDialog {
 
     public onInternalRightButtonSelect(event) {
         this.onRightButtonSelect.emit({ dialog: this, event });
+    }
+
+    public ngOnInit() {
+        if (this.navigationService && this.id) {
+            this.navigationService.add(this.id, this);
+        }
+    }
+
+    public ngOnDestroy() {
+        if (this.navigationService && this.id) {
+            this.navigationService.remove(this.id);
+        }
     }
 
     private toggleState(state: string): void {
