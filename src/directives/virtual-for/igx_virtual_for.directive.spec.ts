@@ -33,7 +33,7 @@ describe("IgxVirtual directive - simple template", () => {
 @Component({
     template: `
         <span #container>
-            <ng-template igVirtFor [igVirtForOf]="data"></ng-template>
+            <ng-template igxVirtFor [igxVirtForOf]="data"></ng-template>
         </span>
     `
 })
@@ -47,10 +47,10 @@ export class EmptyVirtualComp {
 @Component({
     template: `
         <div #container [style.width]='width' [style.height]='height'>
-            <ng-template igVirtFor let-rowData [igVirtForOf]="data"
-                [igVirtForScrolling]="'vertical'"
-                [igVirtForContainerSize]='height'
-                [igVirtForItemSize]='"50px"'>
+            <ng-template igxVirtFor let-rowData [igxVirtForOf]="data"
+                [igxVirtForScrolling]="'vertical'"
+                [igxVirtForContainerSize]='height'
+                [igxVirtForItemSize]='"50px"'>
                 <div [style.display]="'flex'" [style.height]="'50px'">
                     <div [style.width]=cols[0].width>{{rowData['1']}}</div>
                     <div [style.width]=cols[1].width>{{rowData['2']}}</div>
@@ -107,10 +107,10 @@ export class VerticalVirtualComp {
                 [style.float]='"left"'
                 [style.position]='"relative"'>
                 <div *ngFor="let rowData of data" [style.display]="'flex'" [style.height]="'50px'">
-                    <ng-template igVirtFor let-col [igVirtForOf]="cols"
-                        [igVirtForScrolling]="'horizontal'"
-                        [igVirtForUseForScroll]="scrollContainer"
-                        [igVirtForContainerSize]='width'>
+                    <ng-template igxVirtFor let-col [igxVirtForOf]="cols"
+                        [igxVirtForScrolling]="'horizontal'"
+                        [igxVirtForUseForScroll]="scrollContainer"
+                        [igxVirtForContainerSize]='width'>
                             <div [style.width]='col.width + "px"'>{{rowData[col.field]}}</div>
                     </ng-template>
                 </div>
@@ -160,15 +160,15 @@ export class HorizontalVirtualComp {
 @Component({
     template: `
         <div #container [style.width]='width' [style.height]='height'>
-            <ng-template #scrollContainer igVirtFor let-rowData [igVirtForOf]="data"
-                [igVirtForScrolling]="'vertical'"
-                [igVirtForContainerSize]='height'
-                [igVirtForItemSize]='"50px"'>
+            <ng-template #scrollContainer igxVirtFor let-rowData [igxVirtForOf]="data"
+                [igxVirtForScrolling]="'vertical'"
+                [igxVirtForContainerSize]='height'
+                [igxVirtForItemSize]='"50px"'>
                 <div [style.display]="'flex'" [style.height]="'50px'">
-                    <ng-template igVirtFor let-col [igVirtForOf]="cols"
-                        [igVirtForScrolling]="'horizontal'"
-                        [igVirtForUseForScroll]="parentVirtDir"
-                        [igVirtForContainerSize]='width'>
+                    <ng-template igxVirtFor let-col [igxVirtForOf]="cols"
+                        [igxVirtForScrolling]="'horizontal'"
+                        [igxVirtForUseForScroll]="parentVirtDir"
+                        [igxVirtForContainerSize]='width'>
                             <div [style.width]='col.width + "px"'>{{rowData[col.field]}}</div>
                     </ng-template>
                 </div>
