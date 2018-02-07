@@ -35,20 +35,10 @@ const INLINE_TEMPLATES = {
     }
 };
 
-// const THEMING = {
-//     SRC: "./src/core/styles/**/*",
-//     DIST: "dist/core/styles"
-// }
-
-const FONTS = {
-    SRC: [
-        "node_modules/material-design-icons/iconfont/*.{woff,woff2,ttf}",
-        "src/fonts/titillium/*.ttf",
-        "src/fonts/titillium/*.txt"
-    ],
-    DIST: "dist/fonts"
-};
-
+const THEMING = {
+    SRC: "./src/core/styles/**/*",
+    DIST: "dist/core/styles"
+}
 
 gulp.task("make-packagejson", () => {
     fs.readFile("package.json", "utf8", (err, data) => {
@@ -69,21 +59,18 @@ gulp.task("make-packagejson", () => {
 
 gulp.task("build-style", () => {
     let result = sass.renderSync({
-        file: "src/themes/igniteui-angular.scss",
+        file: "src/core/styles/themes/presets/igniteui-angular.scss",
         outputStyle: "compressed",
-        includePaths: ["./src/themes"],
-        outFile: "dist/igniteui-angular.css"
+        includePaths: ["./src/core/styles/themes/presets"],
+        outFile: "dist/styles/igniteui-angular.css"
     });
 
     fs.writeFile("dist/igniteui-angular.css", prefixer.process(result.css).css, (err) => {
         if (err) throw err;
     });
 
-    // gulp.src(THEMING.SRC)
-    //     .pipe(gulp.dest(THEMING.DIST));
-
-    return gulp.src(FONTS.SRC)
-        .pipe(gulp.dest(FONTS.DIST));
+    return gulp.src(THEMING.SRC)
+        .pipe(gulp.dest(THEMING.DIST));
 });
 
 
