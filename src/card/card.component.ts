@@ -5,7 +5,7 @@ import { IgxButtonModule } from "../directives/button/button.directive";
  * IgxCardHeader is container for the card header
  */
 @Directive({
-    selector: "[igxCardHeader]"
+    selector: "igx-card-header"
 })
 export class IgxCardHeaderDirective { }
 
@@ -13,7 +13,7 @@ export class IgxCardHeaderDirective { }
  * IgxCardContent is container for the card content
  */
 @Directive({
-    selector: "[igxCardContent]"
+    selector: "igx-card-content"
 })
 export class IgxCardContentDirective { }
 
@@ -21,7 +21,7 @@ export class IgxCardContentDirective { }
  * IgxCardActions is container for the card actions
  */
 @Directive({
-    selector: "[igxCardActions]"
+    selector: "igx-card-actions"
 })
 export class IgxCardActionsDirective { }
 
@@ -29,7 +29,10 @@ export class IgxCardActionsDirective { }
  * IgxCardFooter is container for the card footer
  */
 @Directive({
-    selector: "[igxCardFooter]"
+/*     host: {
+        role: "footer"
+    }, */
+    selector: "igx-card-footer"
 })
 export class IgxCardFooterDirective {
     @Input() public role = "footer";
