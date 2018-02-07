@@ -23,7 +23,7 @@ export enum IgxListPanState { NONE, LEFT, RIGHT }
 export class IgxListComponent {
     @ContentChildren(forwardRef(() => IgxListItemComponent)) public children: QueryList<IgxListItemComponent>;
 
-    @Input() public role = "list";
+    @HostBinding("attr.role") public role = "list";
     @Input() public allowLeftPanning = false;
     @Input() public allowRightPanning = false;
 

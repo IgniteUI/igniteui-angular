@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, NgModule, OnInit, Renderer2 } from "@angular/core";
+import { Directive, ElementRef, HostBinding, Input, NgModule, OnInit, Renderer2 } from "@angular/core";
 
 @Directive({
     selector: "[igxButton]"
@@ -12,7 +12,7 @@ export class IgxButtonDirective {
 
     constructor(private _el: ElementRef, private _renderer: Renderer2) {}
 
-    @Input() public role = "button";
+    @HostBinding("attr.role") public role = "button";
 
     @Input("igxButton") set type(value: string) {
         this._type = value || this._type;

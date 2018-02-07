@@ -41,7 +41,7 @@ export enum Direction { NONE, NEXT, PREV }
 
 export class IgxCarouselComponent implements OnDestroy {
 
-    @Input() public role = "region";
+    @HostBinding("attr.role") public role = "region";
     /**
      * Sets whether the carousel should loop back to the first slide
      * after reaching the last slide.
