@@ -61,7 +61,7 @@ gulp.task("build-style", () => {
     let result = sass.renderSync({
         file: "src/core/styles/themes/presets/igniteui-angular.scss",
         outputStyle: "compressed",
-        includePaths: ["./src/core/styles/themes/presets"],
+        includePaths: ["./src/core/styles/"],
         outFile: "dist/styles/igniteui-angular.css"
     });
 

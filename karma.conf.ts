@@ -9,13 +9,6 @@ export default (config) => {
 
         files: [
             "./dist/igniteui-angular.css",
-            {
-                pattern: "./dist/fonts/*",
-                watched: false,
-                included: false,
-                served: true,
-                nocache: false
-            },
             "./node_modules/hammerjs/hammer.js",
             "./node_modules/hammer-simulator/index.js",
             "karma-test-entry.ts"

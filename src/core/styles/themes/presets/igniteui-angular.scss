@@ -6,37 +6,7 @@
 // Generating a palette
 @include igx-core();
 
-$exclude: (
-    //igx-avatar,
-    // igx-badge,
-    // igx-button,
-    // igx-button-group,
-    igx-calendar,
-    igx-card,
-    igx-carousel,
-    igx-checkbox,
-    igx-date-picker,
-    igx-dialog,
-    igx-grid,
-    igx-grid-filtering,
-    igx-icon,
-    // igx-input,
-    igx-list,
-    igx-navbar,
-    igx-navdrawer,
-    igx-progress-linear,
-    igx-progress-circular,
-    igx-radio,
-    // igx-ripple,
-    igx-scroll,
-    igx-slider,
-    igx-snackbar,
-    igx-switch,
-    igx-tabbar,
-    igx-toast
-);
-
-@include igx-theme($default-palette, $exclude);
+@include igx-theme($default-palette);
 
 // Generating theme overrides for the avatar component
 // $avatar-theme: igx-avatar-theme($icon-background: red);
