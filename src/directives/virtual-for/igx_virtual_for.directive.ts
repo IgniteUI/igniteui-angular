@@ -272,7 +272,7 @@ export class IgVirtualForOf<T> {
         this.hCache = [];
         this.hCache.push(0);
         for (i; i < cols.length; i++) {
-            totalWidth += cols[i].width;
+            totalWidth += parseInt(cols[i].width, 10);
             this.hCache.push(totalWidth);
         }
         return totalWidth;
