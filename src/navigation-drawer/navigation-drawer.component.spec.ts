@@ -7,7 +7,7 @@ import {
 } from "@angular/core/testing";
 
 import { Component, DebugElement, ViewChild } from "@angular/core";
-import { Observable } from "rxjs/Rx";
+import { Observable } from "rxjs/observable";
 import * as Infragistics from "../../src/main";
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
