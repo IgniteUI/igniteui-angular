@@ -1,4 +1,4 @@
-@import 'themes/index';
+@import '../index';
 
 // @debug $default-palette;
 // @debug $elevations;
@@ -8,7 +8,7 @@
 
 $exclude: (
     //igx-avatar,
-    //igx-badge,
+    // igx-badge,
     // igx-button,
     // igx-button-group,
     igx-calendar,

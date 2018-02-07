@@ -1,0 +1,246 @@
+@mixin igx-typography($config) {
+    $font-family: map-get($config, 'font-family');
+    $font-weight: 400;
+    $font-weight-headings: 600;
+    $link-color: igx-color($default-palette, 'accent');
+
+    // paragraph
+    $paragraph-margin-top: 0;
+    $paragraph-margin-bottom: rem(27px);
+    $paragraph-line-height-desktop: rem(27px) !default;
+    $paragraph-line-height-phone: rem(22px) !default;
+    // H1
+    $h1-margin-top: rem(27px) !default;
+    $h1-margin-bottom: rem(54px);
+    $h1-font-size-desktop: rem(48px) !default;
+    $h1-line-height-desktop: rem(54px) !default;
+    $h1-font-size-tablet: rem(40px) !default;
+    $h1-line-height-tablet: rem(45px) !default;
+    $h1-font-size-phone: rem(32px) !default;
+    $h1-line-height-phone: rem(40px) !default;
+    // H2
+    $h2-margin-top: rem(27px);
+    $h2-margin-bottom: rem(27px);
+    $h2-font-size-desktop: rem(36px) !default;
+    $h2-line-height-desktop: rem(45px) !default;
+    $h2-font-size-tablet: rem(32px) !default;
+    $h2-line-height-tablet: rem(40px) !default;
+    $h2-font-size-phone: rem(26px) !default;
+    $h2-line-height-phone: rem(30px) !default;
+    // H3
+    $h3-margin-top: rem(27px);
+    $h3-margin-bottom: 0;
+    $h3-font-size-desktop: rem(28px) !default;
+    $h3-line-height-desktop: rem(35px) !default;
+    $h3-font-size-tablet: rem(24px) !default;
+    $h3-line-height-tablet: rem(30px) !default;
+    $h3-font-size-phone: rem(22px) !default;
+    $h3-line-height-phone: rem(27px) !default;
+    // H4
+    $h4-margin-top: rem(27px);
+    $h4-margin-bottom: 0;
+    $h4-font-size-desktop: rem(18px) !default;
+    $h4-line-height-desktop: rem(22px) !default;
+    $h4-font-size-tablet: rem(18px) !default;
+    $h4-line-height-tablet: rem(22px) !default;
+    $h4-font-size-phone: rem(22px) !default;
+    $h4-line-height-phone: rem(27px) !default;
+    // Blockquote
+    $blockquote-font-size-desktop: rem(24px) !default;
+    $blockquote-line-height-desktop: rem(35px) !default;
+    $blockquote-font-size-tablet: rem(24px) !default;
+    $blockquote-line-height-tablet: rem(35px) !default;
+    $blockquote-font-size-phone: rem(20px) !default;
+    $blockquote-line-height-phone: rem(27px) !default;
+
+    a {
+        text-decoration: none;
+        color: $link-color;
+    }
+
+    html {
+        font-size: $browser-context;
+        line-height: $browser-line-height;
+        font-size-adjust: 100%;
+        font-family: $font-family, sans-serif;
+        font-weight: $font-weight;
+        color: $off-black;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-weight: $font-weight-headings;
+    }
+
+    ul,
+    ol,
+    pre,
+    table,
+    blockquote {
+        margin-top: 0;
+        margin-bottom: 1.6875rem;
+    }
+
+    ul ul,
+    ol ol,
+    ul ol,
+    ol ul {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    blockquote {
+        font-size: $blockquote-font-size-desktop;
+        line-height: $blockquote-line-height-tablet;
+        font-style: italic;
+
+        &::before,
+        &::after {
+            content: '\'';
+        }
+    }
+
+    /* Let's make sure all's aligned */
+    hr {
+        margin: -1px 0;
+        border: 1px solid;
+    }
+
+    a,
+    b,
+    i,
+    strong,
+    em,
+    small,
+    code {
+        line-height: 0;
+    }
+
+    sub,
+    sup {
+        line-height: 0;
+        position: relative;
+        vertical-align: baseline;
+    }
+
+    sup {
+        top: -.5em;
+    }
+
+    sub {
+        bottom: -.25em;
+    }
+
+    @media only screen and (min-width: 0) {
+        h1 {
+            font-size: $h1-font-size-phone;
+            line-height: $h1-line-height-phone;
+            margin-top: $h1-margin-top;
+            margin-bottom: $h1-margin-bottom;
+        }
+
+        h2 {
+            font-size: $h2-font-size-phone;
+            line-height: $h2-line-height-phone;
+            margin-top: $h2-margin-top;
+            margin-bottom: $h2-margin-bottom;
+        }
+
+        h3 {
+            font-size: $h3-font-size-phone;
+            line-height: $h3-line-height-phone;
+            margin-top: $h3-margin-top;
+            margin-bottom: $h3-margin-bottom;
+        }
+
+        h4 {
+            font-size: $h4-font-size-phone;
+            line-height: $h4-line-height-phone;
+            margin-top: $h4-margin-top;
+            margin-bottom: $h4-margin-bottom;
+        }
+
+        p {
+            line-height: $paragraph-line-height-phone;
+            margin-top: $paragraph-margin-top;
+            margin-bottom: $paragraph-margin-bottom;
+        }
+    }
+
+    @media only screen and (min-width: $medium-screen) {
+        h1 {
+            font-size: $h1-font-size-tablet;
+            line-height: $h1-line-height-tablet;
+            margin-top: $h1-margin-top;
+            margin-bottom: $h1-margin-bottom;
+        }
+
+        h2 {
+            font-size: $h2-font-size-tablet;
+            line-height: $h2-line-height-tablet;
+            margin-top: $h2-margin-top;
+            margin-bottom: $h2-margin-bottom;
+        }
+
+        h3 {
+            font-size: $h3-font-size-tablet;
+            line-height: $h3-line-height-tablet;
+            margin-top: $h3-margin-top;
+            margin-bottom: $h3-margin-bottom;
+        }
+
+        h4 {
+            font-size: $h4-font-size-tablet;
+            line-height: $h4-line-height-tablet;
+            margin-top: $h4-margin-top;
+            margin-bottom: $h4-margin-bottom;
+        }
+
+        p {
+            line-height: $paragraph-line-height-desktop;
+            margin-top: $paragraph-margin-top;
+            margin-bottom: $paragraph-margin-bottom;
+        }
+    }
+
+    @media only screen and (min-width: $large-screen) {
+        h1 {
+            font-size: $h1-font-size-desktop;
+            line-height: $h1-line-height-desktop;
+            margin-top: $h1-margin-top;
+            margin-bottom: $h1-margin-bottom;
+        }
+
+        h2 {
+            font-size: $h2-font-size-desktop;
+            line-height: $h2-line-height-desktop;
+            margin-top: $h2-margin-top;
+            margin-bottom: $h2-margin-bottom;
+        }
+
+        h3 {
+            font-size: $h3-font-size-desktop;
+            line-height: $h3-line-height-desktop;
+            margin-top: $h3-margin-top;
+            margin-bottom: $h3-margin-bottom;
+        }
+
+        h4 {
+            font-size: $h4-font-size-desktop;
+            line-height: $h4-line-height-desktop;
+            margin-top: $h4-margin-top;
+            margin-bottom: $h4-margin-bottom;
+        }
+
+        p {
+            margin-top: $paragraph-margin-top;
+            margin-bottom: $paragraph-margin-bottom;
+        }
+    }
+}
