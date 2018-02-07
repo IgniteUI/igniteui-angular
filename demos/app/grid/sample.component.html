@@ -49,7 +49,7 @@
                 </igx-card>
             </div>
 
-            <igx-grid #grid1 [data]="localData" (onColumnInit)="initColumns($event)" (onCellSelection)="selectCell($event)">
+            <igx-grid #grid1 [data]="localData" [autoGenerate]="true" (onColumnInit)="initColumns($event)" (onCellSelection)="selectCell($event)">
             </igx-grid>
 
         </article>
@@ -100,10 +100,12 @@
                 <igx-column [sortable]="true" [field]="'ProductID'" [header]="'ID'"></igx-column>
                 <igx-column [sortable]="true" [field]="'ProductName'"></igx-column>
                 <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'In Stock'">
+                <!--
                     <ng-template igxCell let-col="column" let-ri="rowIndex" let-item="item">
                         <span *ngIf="!showInput(ri, col.field)">{{ item }}</span>
                         <input *ngIf="showInput(ri, col.field)" igxInput [value]="item" (blur)="editCell = null" (change)="grid2.updateCell(ri, col.field, $event.target.value); editCell = null">
                     </ng-template>
+                -->
                 </igx-column>
                 <igx-column [field]="'Discontinued'">
                     <ng-template igxHeader let-column="column">
