@@ -20,9 +20,6 @@ import { IgxBadgeModule } from "../badge/badge.component";
 import { IgxIconModule } from "../icon/icon.component";
 @Component({
     encapsulation: ViewEncapsulation.None,
-  /*  host: {
-        "(onTabSelected)": "_selectedPanelHandler($event)"
-    },  */
     selector: "igx-tab-bar",
     styleUrls: ["./tabbar.component.scss"],
     templateUrl: "tab-bar-content.component.html"
@@ -91,13 +88,6 @@ export class IgxTabBarComponent implements AfterViewInit {
 // ================================= IgxTabPanelComponent ======================================
 
 @Component({
-/*     host: {
-        "[attr.aria-labelledby]": "'igx-tab-' + index",
-        "[class.igx-tab-bar__panel--selected]": "isSelected",
-        "[class.igx-tab-bar__panel]": "!isSelected",
-        "[id]": "'igx-tab-bar__panel-' + index"
-        "role": "tabpanel"
-    }, */
     selector: "igx-tab-panel",
     templateUrl: "tab-panel.component.html"
 })
@@ -158,10 +148,6 @@ export class IgxTabPanelComponent {
 // ======================================= IgxTabComponent ==========================================
 
 @Component({
-/*     host: {
-        class: "igx-tab-bar__menu-item",
-        role: "tab"
-    }, */
     selector: "igx-tab",
     templateUrl: "tab.component.html"
 })
