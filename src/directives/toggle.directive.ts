@@ -14,14 +14,17 @@ import {
     Input,
     NgModule,
     OnDestroy,
+    OnInit,
+    Optional,
     Output
 } from "@angular/core";
+import { IgxNavigationService, IToggleView } from "../core/navigation";
 
 @Directive({
     exportAs: "toggle",
     selector: "[igx-toggle]"
 })
-export class IgxToggleDirective {
+export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     @Output()
     public onOpen = new EventEmitter();
@@ -31,6 +34,9 @@ export class IgxToggleDirective {
 
     @Input()
     public collapsed = true;
+
+    @Input()
+    public id: string;
 
     public get element() {
         return this.elementRef.nativeElement;
@@ -46,22 +52,47 @@ export class IgxToggleDirective {
         return !this.collapsed;
     }
 
-    constructor(private elementRef: ElementRef, private builder: AnimationBuilder) { }
+    private _id: string;
 
-    public open() {
+    constructor(
+        private elementRef: ElementRef,
+        private builder: AnimationBuilder,
+        @Optional() private navigationService: IgxNavigationService) { }
+
+    public open(fireEvents?: boolean, handler?) {
         if (!this.collapsed) { return; }
         const player = this.animationActivation();
         player.onStart(() => this.collapsed = !this.collapsed);
         player.play();
-        this.onOpen.emit();
+        if (fireEvents) {
+            this.onOpen.emit();
+        }
     }
 
-    public close() {
+    public close(fireEvents?: boolean, handler?) {
         if (this.collapsed) { return; }
         const player = this.animationActivation();
         player.onDone(() => this.collapsed = !this.collapsed);
         player.play();
-        this.onClose.emit();
+        if (fireEvents) {
+            this.onClose.emit();
+        }
+    }
+
+    public toggle(fireEvents?: boolean, handler?) {
+        this.collapsed ? this.open(true) : this.close(true);
+    }
+
+    public ngOnInit() {
+        if (this.navigationService && this.id) {
+            this.navigationService.add(this.id, this);
+        }
+    }
+
+    public ngOnDestroy() {
+        if (this.navigationService && this.id) {
+            this.navigationService.remove(this.id);
+        }
     }
 
     private animationActivation() {
@@ -94,41 +125,55 @@ export class IgxToggleDirective {
     exportAs: "toggle-action",
     selector: "[igx-toggle-action]"
 })
-export class IgxToggleActionDirective implements OnDestroy {
+export class IgxToggleActionDirective implements OnDestroy, OnInit {
+    @Input()
+    public closeOnOutsideClick: boolean;
 
     @Input("igx-toggle-action")
-    public toggle: IgxToggleDirective;
-
-    private handler;
-
-    constructor(private element: ElementRef) {
-        this.handler = (evt) => {
-            if (this.toggle.element.contains(evt.target) || this.element.nativeElement === evt.target) {
-                return;
-            }
-
-            this.toggle.close();
-            this.removeEventHandler("click", this.handler);
-        };
+    set target(target) {
+        this._target = target;
     }
 
+    get target() {
+        if (typeof this._target === "string") {
+            return this.navigationService.get(this._target);
+        }
+        return this._target;
+    }
+
+    private _handler;
+    private _target: IToggleView;
+
+    constructor(private element: ElementRef, @Optional() private navigationService: IgxNavigationService) { }
+
     public ngOnDestroy() {
-        this.removeEventHandler("click", this.handler);
+        this.removeEventHandler("click", this._handler);
+    }
+
+    public ngOnInit() {
+        if (this.closeOnOutsideClick) {
+            this._handler = (evt) => {
+                if (this.target.element.contains(evt.target) || this.element.nativeElement === evt.target) {
+                    return;
+                }
+
+                this.target.close();
+                this.removeEventHandler("click", this._handler, true);
+            };
+        }
     }
 
     @HostListener("click", ["$event"])
     private onClick() {
-        if (this.toggle.collapsed) {
-            this.toggle.open();
-            document.addEventListener("click", this.handler, true);
-        } else {
-            this.toggle.close();
-            this.removeEventHandler("click", this.handler);
+        this.target.toggle(false);
+
+        if (this._handler) {
+            document.addEventListener("click", this._handler, true);
         }
     }
 
-    private removeEventHandler(event, callback) {
-        document.removeEventListener(event, callback);
+    private removeEventHandler(event, callback, useCapture?) {
+        document.removeEventListener(event, callback, useCapture);
     }
 }
 @NgModule({
