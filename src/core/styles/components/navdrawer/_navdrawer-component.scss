@@ -16,7 +16,7 @@ $overlay-color: rgba(0, 0, 0, .25);
     left: 0;
     // use full syntax, iOS Safari won't work with transition: width .3s ease-out, transform .3s ease-out; shorthand
     z-index: 999;
-    transition-property: width, transform;
+    transition: width, transform;
     transition-duration: .3s, .3s;
     transition-timing-function: $ease-out-quad, $ease-out-quad;
     transition-delay: 0s, 0s;
@@ -76,7 +76,7 @@ $overlay-color: rgba(0, 0, 0, .25);
 .ig-nav-drawer-overlay {
     opacity: 1;
     background-color: $overlay-color;
-    transition-property: opacity, visibility;
+    transition: opacity, visibility;
     // opacity must match drawer transition, step over visibility to reduce animation cost
     transition-duration: .25s, .25s;
     transition-timing-function: ease-in, step-start;
