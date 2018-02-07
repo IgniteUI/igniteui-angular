@@ -1,3 +1,7 @@
+igx-calendar {
+    width: 100%;
+}
+
 @include b(igx-calendar) {
     @extend %cal-display !optional;
     @include e(header) {
@@ -14,17 +18,6 @@
     }
     @include e(body-picker) {
         @extend %cal-picker-display !optional;
-        // .date {
-        //     @extend %cal-picker-date !optional;
-        //     &__el:hover,
-        //     &__el:focus {
-        //         @extend %cal-header-date-el--hover !optional;
-        //     }
-        // }
-        // .next,
-        // .prev {
-        //     @extend %cal-picker-arrow !optional;
-        // }
     }
     @include e(body-row) {
         @extend %cal-row-display !optional;

@@ -10,7 +10,7 @@ $components: register-component($components, #{$component-name});
 
 @mixin igx-icon($theme, $palette: $default-palette) {
     $default-theme: igx-icon-theme(
-        $color: igx-color($palette, 'grays', 900)
+        $color: currentColor
     );
 
     $this: extend($default-theme, $theme);
