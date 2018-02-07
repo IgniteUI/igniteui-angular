@@ -196,7 +196,9 @@ export class IgVirtualForOf<T> {
 
         this.vh.instance.elementRef.nativeElement.scrollTop += Math.sign(event.deltaY) * scrollStepY;
         const hScroll = this.getHorizontalScroll(this._viewContainer, "horizontal-virtual-helper");
-        hScroll.scrollLeft += Math.sign(event.deltaX) * scrollStepX;
+        if(hScroll) {
+            hScroll.scrollLeft += Math.sign(event.deltaX) * scrollStepX;
+        }
 
         const curScrollTop = this.vh.instance.elementRef.nativeElement.scrollTop;
         const maxScrollTop = this.vh.instance.height - this.vh.instance.elementRef.nativeElement.offsetHeight;
