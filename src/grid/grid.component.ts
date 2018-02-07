@@ -214,10 +214,12 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     }
 
     public ngAfterViewInit() {
-        const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
-        this.width = computed.getPropertyValue("width");
-        this.height = computed.getPropertyValue("height");
-        this.markForCheck();
+        setTimeout(() => {
+            const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+            this.width = computed.getPropertyValue("width");
+            this.height = computed.getPropertyValue("height");
+            this.markForCheck();
+        });
     }
 
     get nativeElement() {
