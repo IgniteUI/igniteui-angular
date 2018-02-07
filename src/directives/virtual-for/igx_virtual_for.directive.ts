@@ -105,6 +105,7 @@ export class IgVirtualForOf<T> {
                     this.resolver.resolveComponentFactory(HVirtualHelper);
                 this.hvh = vc.createComponent(hvFactory);
                 this.hvh.instance.width = totalWidth;
+                this.hScroll =  this.hvh.instance.elementRef.nativeElement;
                 this._zone.runOutsideAngular(() => {
                     this.hvh.instance.elementRef.nativeElement.addEventListener("scroll", this.func);
                 });
@@ -168,10 +169,16 @@ export class IgVirtualForOf<T> {
         const scrollLeft = event.target.scrollLeft;
         const hcWidth = event.target.children[0].scrollWidth;
         const ratio = scrollLeft / hcWidth;
+        this._currIndex = this.getHorizontalIndexAt(
+                    scrollLeft,
+                    this.hCache,
+                    0
+                );
+
+        /*recalculate and apply page size.*/
+        this.applyPageSizeChange();
+
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
-
-        this._currIndex = Math.round(ratio * this.igVirtForOf.length);
-
         const endingIndex = this._pageSize + this._currIndex;
         for (let i = this._currIndex; i < endingIndex && this.igVirtForOf[i] !== undefined; i++) {
             const input = this.igVirtForOf[i];
@@ -200,6 +207,10 @@ export class IgVirtualForOf<T> {
 
     get ngForTrackBy(): TrackByFunction<T> { return this._trackByFn; }
     private _applyChanges(changes: IterableChanges<T>) {
+        if (this.igVirtForScrolling === "horizontal") {
+           const totalWidth = this.initHCache(this.igVirtForOf);
+           this.hScroll.children[0].style.width = totalWidth + "px";
+        }
         this.applyPageSizeChange();
         if (this.igVirtForOf && this.igVirtForOf.length && this.dc) {
             const embeddedViewCopy = Object.assign([], this._embeddedViews);
@@ -218,11 +229,35 @@ export class IgVirtualForOf<T> {
         let pageSize = 0;
         if (this.igVirtForContainerSize) {
             if (this.igVirtForScrolling === "horizontal") {
-                pageSize = this.getHorizontalIndexAt(
-                    parseInt(this.igVirtForContainerSize, 10),
+                const vc = this.igVirtForUseForScroll ? this.igVirtForUseForScroll._viewContainer : this._viewContainer;
+                const hScroll = this.getHorizontalScroll(vc, "horizontal-virtual-helper");
+
+                const left = hScroll && hScroll.scrollLeft !== 0 ?
+                hScroll.scrollLeft + parseInt(this.igVirtForContainerSize, 10) :
+                parseInt(this.igVirtForContainerSize, 10);
+
+                let endIndex = this.getHorizontalIndexAt(
+                    left,
                     this.hCache,
                     0
                 ) + 1;
+                if (endIndex > this.igVirtForOf.length) {
+                    endIndex = this.igVirtForOf.length;
+                    /*At right edge. Check if last elem fits.*/
+                    let diff = this.hCache[endIndex] - this.hCache[this._currIndex];
+                    if (diff > parseInt(this.igVirtForContainerSize, 10)) {
+                        /*If last col does not fit we should remove some of the prev cols to fit the last col.*/
+                        while (diff > parseInt(this.igVirtForContainerSize, 10)) {
+                            diff -= parseInt(this.igVirtForOf[this._currIndex].width, 10);
+                            if (this._currIndex + 1 === endIndex) {
+                                /*large column that exceeds the size of the container...*/
+                                break;
+                            }
+                            this._currIndex++;
+                        }
+                    }
+                }
+                pageSize = endIndex - this._currIndex;
             } else {
                 pageSize = parseInt(this.igVirtForContainerSize, 10) / parseInt(this.igVirtForItemSize, 10);
             }
@@ -272,7 +307,7 @@ export class IgVirtualForOf<T> {
         this.hCache = [];
         this.hCache.push(0);
         for (i; i < cols.length; i++) {
-            totalWidth += cols[i].width;
+            totalWidth += parseInt(cols[i].width, 10);
             this.hCache.push(totalWidth);
         }
         return totalWidth;
