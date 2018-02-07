@@ -1,4 +1,4 @@
-import { Component, Directive, NgModule, ViewEncapsulation } from "@angular/core";
+import { Component, Directive, NgModule } from "@angular/core";
 import { IgxButtonModule } from "../button/button.directive";
 
 /**
@@ -40,9 +40,7 @@ export class IgxCardFooter { }
  * IgxCardComponent is a sheet of material that serves as an entry point to more detailed information.
  */
 @Component({
-    encapsulation: ViewEncapsulation.None,
     selector: "igx-card",
-    styleUrls: ["./card.component.scss"],
     templateUrl: "card.component.html"
 })
 export class IgxCardComponent { }

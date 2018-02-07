@@ -5,7 +5,7 @@ import {
 } from "@angular/core";
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from "@angular/platform-browser";
 
-export class ScrollHammerGestureManager extends HammerGestureConfig  {
+export class ScrollHammerGestureManager extends HammerGestureConfig {
     public overrides = {
         pan: { threshold: 0, direction: Hammer.DIRECTION_VERTICAL }
     } as any;
@@ -24,7 +24,6 @@ export interface IgxScrollEvent {
 
 @Component({
     selector: "igx-scroll",
-    styleUrls: ["./scroll.component.scss"],
     templateUrl: "scroll.component.html"
 })
 export class IgxScroll {
@@ -85,7 +84,7 @@ export class IgxScroll {
     }
 
     public get totalHeight(): string {
-        return this.itemHeight * this.visibleItemsCount  + "px";
+        return this.itemHeight * this.visibleItemsCount + "px";
     }
 
     public get innerHeight(): string {
@@ -104,7 +103,7 @@ export class IgxScroll {
 
         this.amplitude = 0.8 * $event.velocityY;
         this.timestamp = $event.timeStamp;
-        this.target  = Math.round($event.deltaY + this.amplitude);
+        this.target = Math.round($event.deltaY + this.amplitude);
         this.animationFrameId = requestAnimationFrame((timestamp) => this.run(timestamp));
     }
 

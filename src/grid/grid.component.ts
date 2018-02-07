@@ -17,8 +17,7 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    ViewContainerRef,
-    ViewEncapsulation
+    ViewContainerRef
 } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
 import { cloneArray } from "../core/utils";
@@ -34,10 +33,8 @@ let NEXT_ID = 0;
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     preserveWhitespaces: false,
     selector: "igx-grid",
-    styleUrls: ["./grid.component.scss"],
     templateUrl: "./grid.component.html"
 })
 export class IgxGridComponent implements OnInit, AfterContentInit {
@@ -378,7 +375,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
         if (col) {
             this.gridAPI
                 .filter(this.id, name, value,
-                        condition || col.filteringCondition, ignoreCase || col.filteringIgnoreCase);
+                condition || col.filteringCondition, ignoreCase || col.filteringIgnoreCase);
         } else {
             this.gridAPI.filter(this.id, name, value, condition, ignoreCase);
         }

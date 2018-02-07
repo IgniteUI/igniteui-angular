@@ -68,7 +68,6 @@ export abstract class BaseProgress {
 
 @Component({
     selector: "igx-linear-bar",
-    styleUrls: ["progressbar.component.scss"],
     templateUrl: "templates/linear-bar.component.html"
 })
 export class IgxLinearProgressBar extends BaseProgress {
@@ -127,7 +126,6 @@ export class IgxLinearProgressBar extends BaseProgress {
 
 @Component({
     selector: "igx-circular-bar",
-    styleUrls: ["progressbar.component.scss"],
     templateUrl: "templates/circular-bar.component.html"
 })
 export class IgxCircularProgressBar extends BaseProgress implements AfterViewInit {

@@ -15,7 +15,6 @@ let nextId = 0;
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSwitch, multi: true }],
     selector: "igx-switch",
-    styleUrls: ["./switch.component.scss"],
     templateUrl: "switch.component.html"
 })
 export class IgxSwitch implements ControlValueAccessor {

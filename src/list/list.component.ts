@@ -20,7 +20,6 @@ export enum IgxListPanState { NONE, LEFT, RIGHT }
         role: "list"
     },
     selector: "igx-list",
-    styleUrls: ["./list.component.scss"],
     templateUrl: "list.component.html"
 })
 export class IgxList {
@@ -86,7 +85,6 @@ export class IgxList {
 @Component({
     providers: [HammerGesturesManager],
     selector: "igx-list-item",
-    styleUrls: ["./list.component.scss"],
     templateUrl: "list-item.component.html"
 })
 export class IgxListItem implements OnInit, OnDestroy, IListChild {

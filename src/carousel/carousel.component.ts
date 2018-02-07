@@ -7,8 +7,7 @@ import {
     NgModule,
     OnDestroy,
     OnInit,
-    Output,
-    ViewEncapsulation
+    Output
 } from "@angular/core";
 import { IgxIconModule } from "../icon/icon.component";
 
@@ -30,12 +29,10 @@ export enum Direction { NONE, NEXT, PREV }
  */
 
 @Component({
-    encapsulation: ViewEncapsulation.None,
     host: {
         role: "region"
     },
     selector: "igx-carousel",
-    styleUrls: ["./carousel.component.scss"],
     templateUrl: "carousel.component.html"
 })
 
