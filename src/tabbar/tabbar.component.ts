@@ -122,12 +122,12 @@ export class IgxTabPanelComponent {
     }
     @HostBinding("attr.aria-labelledby")
     get labelledBy(): string {
-        return "igx-tab-" + this._tabBar.panels.toArray().indexOf(this);
+        return "igx-tab-" + this.index;
     }
 
     @HostBinding("attr.id")
     get id(): string {
-        return "igx-tab-bar__panel-" + this._tabBar.panels.toArray().indexOf(this);
+        return "igx-tab-bar__panel-" + this.index;
     }
 
     public get itemStyle(): string {
