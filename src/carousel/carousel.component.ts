@@ -35,7 +35,6 @@ export enum Direction { NONE, NEXT, PREV }
         role: "region"
     },
     selector: "igx-carousel",
-    styleUrls: ["./carousel.component.scss"],
     templateUrl: "carousel.component.html"
 })
 

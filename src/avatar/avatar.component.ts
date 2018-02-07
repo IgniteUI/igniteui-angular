@@ -19,7 +19,6 @@ export enum Size {
 @Component({
     encapsulation: ViewEncapsulation.None,
     selector: "igx-avatar",
-    // styleUrls: ["./avatar.component.scss"],
     templateUrl: "avatar.component.html"
 })
 export class IgxAvatar {

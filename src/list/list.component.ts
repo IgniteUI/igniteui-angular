@@ -20,7 +20,6 @@ export enum IgxListPanState { NONE, LEFT, RIGHT }
         role: "list"
     },
     selector: "igx-list",
-    styleUrls: ["./list.component.scss"],
     templateUrl: "list.component.html"
 })
 export class IgxList {

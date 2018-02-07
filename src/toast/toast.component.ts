@@ -24,7 +24,6 @@ import { Component, EventEmitter, Input, NgModule, Output } from "@angular/core"
         role: "alert"
     },
     selector: "igx-toast",
-    styleUrls: ["./toast.component.scss"],
     templateUrl: "toast.component.html"
 })
 export class IgxToast {

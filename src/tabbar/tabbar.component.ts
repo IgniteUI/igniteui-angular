@@ -22,7 +22,6 @@ import { IgxIconModule } from "../icon/icon.component";
         "(onTabSelected)": "_selectedPanelHandler($event)"
     },
     selector: "igx-tab-bar",
-    styleUrls: ["./tabbar.component.scss"],
     templateUrl: "tab-bar-content.component.html"
 })
 
