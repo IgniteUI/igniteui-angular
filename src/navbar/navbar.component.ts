@@ -18,7 +18,7 @@ import { IgxIconModule } from "../icon/icon.component";
     styleUrls: ["./navbar.component.scss"],
     templateUrl: "navbar.component.html"
 })
-export class IgxNavbarComponent implements AfterContentChecked {
+export class IgxNavbarComponent {
     private static NEXT_ID = 1;
 
     /**
@@ -47,16 +47,8 @@ export class IgxNavbarComponent implements AfterContentChecked {
      */
     @Output() public onAction = new EventEmitter();
 
-    private _titleId: string;
-
-    public ngAfterContentChecked(): void {
-        this._titleId = `igx-navbar-${IgxNavbarComponent.NEXT_ID++}`;
-    }
-
     @Input()
-    get titleId() {
-        return this._titleId;
-    }
+    public titleId = `igx-navbar-${IgxNavbarComponent.NEXT_ID++}`;
 
     public _triggerAction() {
         this.onAction.emit(this);
