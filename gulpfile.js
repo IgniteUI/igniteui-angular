@@ -24,6 +24,10 @@ const STYLES = {
     SRC: "./src/core/styles/themes/presets/*",
     DIST: "./dist/styles",
     MAPS: "./maps",
+    THEMING: {
+        SRC: "./src/core/styles/**/*",
+        DIST: "./dist/core/styles"
+    },
     CONFIG: {
         outputStyle: "compressed"
     }
@@ -51,6 +55,9 @@ gulp.task("build-style", () => {
         cascade: false,
         grid: true
     })]);
+
+    gulp.src(STYLES.THEMING.SRC)
+        .pipe(gulp.dest(STYLES.THEMING.DIST));
 
     return gulp.src(STYLES.SRC)
         .pipe(sourcemaps.init())
