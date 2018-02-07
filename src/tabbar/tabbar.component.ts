@@ -7,6 +7,7 @@ import {
     EventEmitter,
     forwardRef,
     HostBinding,
+    HostListener,
     Input,
     NgModule,
     Output,
@@ -19,9 +20,9 @@ import { IgxBadgeModule } from "../badge/badge.component";
 import { IgxIconModule } from "../icon/icon.component";
 @Component({
     encapsulation: ViewEncapsulation.None,
-    host: {
+  /*  host: {
         "(onTabSelected)": "_selectedPanelHandler($event)"
-    },
+    },  */
     selector: "igx-tab-bar",
     styleUrls: ["./tabbar.component.scss"],
     templateUrl: "tab-bar-content.component.html"
@@ -65,6 +66,7 @@ export class IgxTabBarComponent implements AfterViewInit {
         }, 0);
     }
 
+    @HostListener("onTabSelected",  ["$event"])
     public _selectedPanelHandler(args) {
         this.selectedIndex = args.panel.index;
 
@@ -89,45 +91,57 @@ export class IgxTabBarComponent implements AfterViewInit {
 // ================================= IgxTabPanelComponent ======================================
 
 @Component({
-    host: {
+/*     host: {
         "[attr.aria-labelledby]": "'igx-tab-' + index",
+        "[class.igx-tab-bar__panel--selected]": "isSelected",
         "[class.igx-tab-bar__panel]": "!isSelected",
-        "[id]": "'igx-tab-bar__panel-' + index",
-    },
+        "[id]": "'igx-tab-bar__panel-' + index"
+        "role": "tabpanel"
+    }, */
     selector: "igx-tab-panel",
     templateUrl: "tab-panel.component.html"
 })
 
 export class IgxTabPanelComponent {
-
-    // @HostBinding("attr.aria-labelledby")
-
-    @HostBinding("class.igx-tab-bar__panel--selected")
+    private _itemStyle = "igx-tab-panel";
     public isSelected = false;
 
-    @HostBinding("class.igx-form-group__input--focused")
-    public focused = false;
-
-    @Input() public role = "tabpanel";
     @Input() public label: string;
     @Input() public icon: string;
     @Input() public isDisabled: boolean;
 
+    @HostBinding("attr.role") public role = "tabpanel";
+
+    @HostBinding("class.igx-tab-bar__panel")
+    get styleClass(): boolean {
+        return (!this.isSelected);
+    }
+    @HostBinding("class.igx-tab-bar__panel--selected")
+    get selected(): boolean {
+        return this.isSelected;
+    }
+    @HostBinding("attr.aria-labelledby")
+    get labelledBy(): string {
+        return "igx-tab-" + this._tabBar.panels.toArray().indexOf(this);
+    }
+
+    @HostBinding("attr.id")
+    get id(): string {
+        return "igx-tab-bar__panel-" + this._tabBar.panels.toArray().indexOf(this);
+    }
+
     public get itemStyle(): string {
         return this._itemStyle;
     }
-    private _itemStyle = "igx-tab-panel";
 
     get relatedTab(): IgxTabComponent {
         if (this._tabBar.tabs) {
             return this._tabBar.tabs.toArray()[this.index];
         }
     }
-
     get index() {
         return this._tabBar.panels.toArray().indexOf(this);
     }
-
     constructor(private _tabBar: IgxTabBarComponent) {
     }
 
@@ -154,8 +168,7 @@ export class IgxTabPanelComponent {
 
 export class IgxTabComponent {
 
-    @HostBinding("class.igx-tab-bar__menu-item")
-    public role = "tab";
+    @HostBinding("attr.role") public role = "tab";
 
     @Input() public relatedPanel: IgxTabPanelComponent;
 
