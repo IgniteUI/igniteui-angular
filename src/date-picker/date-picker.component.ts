@@ -24,6 +24,7 @@ import { IgxInputModule } from "../directives/input/input.directive";
     encapsulation: ViewEncapsulation.None,
     providers:
     [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true }],
+    // tslint:disable-next-line:component-selector
     selector: "igx-datePicker",
     styleUrls: ["date-picker.component.scss"],
     templateUrl: "date-picker.component.html"

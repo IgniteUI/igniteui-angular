@@ -5,6 +5,7 @@ import { IgxButtonModule } from "../directives/button/button.directive";
  * IgxCardHeader is container for the card header
  */
 @Directive({
+    // tslint:disable-next-line:directive-selector
     selector: "igx-card-header"
 })
 export class IgxCardHeaderDirective { }
@@ -13,6 +14,7 @@ export class IgxCardHeaderDirective { }
  * IgxCardContent is container for the card content
  */
 @Directive({
+    // tslint:disable-next-line:directive-selector
     selector: "igx-card-content"
 })
 export class IgxCardContentDirective { }
@@ -21,6 +23,7 @@ export class IgxCardContentDirective { }
  * IgxCardActions is container for the card actions
  */
 @Directive({
+    // tslint:disable-next-line:directive-selector
     selector: "igx-card-actions"
 })
 export class IgxCardActionsDirective { }
@@ -32,6 +35,7 @@ export class IgxCardActionsDirective { }
 /*     host: {
         role: "footer"
     }, */
+    // tslint:disable-next-line:directive-selector
     selector: "igx-card-footer"
 })
 export class IgxCardFooterDirective {
