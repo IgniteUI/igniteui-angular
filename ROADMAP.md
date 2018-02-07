@@ -6,7 +6,7 @@
 1.1. Adding component views like App Host, Tabs, List
 1.2. Updating the default project look
 1.3. Move the project navigation inside an App Host
-2. Product Themening 
+2. Product Theming 
 3. Grid Multi-column Headers [issue](https://github.com/IgniteUI/igniteui-angular/issues/488)
 4. Collapsible Column Groups with state templating (collapsed state column can be templated)
 5. Column pinning
