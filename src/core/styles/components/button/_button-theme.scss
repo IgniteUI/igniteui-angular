@@ -120,7 +120,8 @@ $components: register-component($components, #{$component-name});
     $button-navbar-height: $button-navbar-width !default;
     $button-navbar-padding: 0 !default;
     $this: extend($default-theme, $theme);
-    @debug $this;
+
+    // @debug $this;
 
     %igx-button-display {
         display: inline-block;

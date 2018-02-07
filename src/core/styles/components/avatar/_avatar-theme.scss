@@ -14,7 +14,8 @@ $components: register-component($components, #{$component-name});
         $image-background: transparent
     );
     $this: extend($default-theme, $theme);
-    @debug $this;
+
+    // @debug $this;
 
     %igx-avatar-display {
         display: flex;
