@@ -170,7 +170,7 @@ export class TestIgVirtualForOf<T> extends IgVirtualForOf<T> {
     }
 
     public testGetHorizontalScroll(viewref, nodeName) {
-        return super.getHorizontalScroll(viewref, nodeName);
+        return super.getElement(viewref, nodeName);
     }
 
     public testGetHorizontalIndexAt(left, set, index) {
