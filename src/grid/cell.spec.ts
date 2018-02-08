@@ -14,15 +14,15 @@ describe("IgxGrid - Cell component", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                DefaultGrid,
-                CtrlKeyKeyboardNagivation
+                DefaultGridComponent,
+                CtrlKeyKeyboardNagivationComponent
             ],
             imports: [IgxGridModule.forRoot()]
         }).compileComponents();
     }));
 
     it("@Input properties and getters", () => {
-        const fix = TestBed.createComponent(DefaultGrid);
+        const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -38,7 +38,7 @@ describe("IgxGrid - Cell component", () => {
     });
 
     it("selection and selection events", () => {
-        const fix = TestBed.createComponent(DefaultGrid);
+        const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -57,7 +57,7 @@ describe("IgxGrid - Cell component", () => {
     });
 
     it("edit mode", fakeAsync(() => {
-        const fix = TestBed.createComponent(DefaultGrid);
+        const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -99,7 +99,7 @@ describe("IgxGrid - Cell component", () => {
     }));
 
     it("edit mode - leaves edit mode on blur", fakeAsync(() => {
-        const fix = TestBed.createComponent(DefaultGrid);
+        const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -125,7 +125,7 @@ describe("IgxGrid - Cell component", () => {
     }));
 
     it("keyboard navigation", fakeAsync(() => {
-        const fix = TestBed.createComponent(DefaultGrid);
+        const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -173,7 +173,7 @@ describe("IgxGrid - Cell component", () => {
     }));
 
     it("keyboard navigation - first/last cell jump with Ctrl", fakeAsync(() => {
-        const fix = TestBed.createComponent(CtrlKeyKeyboardNagivation);
+        const fix = TestBed.createComponent(CtrlKeyKeyboardNagivationComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -206,7 +206,7 @@ describe("IgxGrid - Cell component", () => {
         </igx-grid>
     `
 })
-export class DefaultGrid {
+export class DefaultGridComponent {
 
     public data = [
         { index: 1, value: 1},
@@ -228,7 +228,7 @@ export class DefaultGrid {
         <igx-grid (onSelection)="cellSelected($event)" [data]="data" [autoGenerate]="true"></igx-grid>
     `
 })
-export class CtrlKeyKeyboardNagivation {
+export class CtrlKeyKeyboardNagivationComponent {
 
     public data = [
         { index: 1, value: 1, other: 1, another: 1},

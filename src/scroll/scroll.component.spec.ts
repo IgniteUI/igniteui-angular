@@ -1,6 +1,6 @@
 import {Component, ViewChild} from "@angular/core";
 import {async, TestBed} from "@angular/core/testing";
-import {IgxScroll, IgxScrollEvent, IgxScrollModule} from "./scroll.component";
+import {IgxScrollComponent, IgxScrollEvent, IgxScrollModule} from "./scroll.component";
 
 declare var Simulator: any;
 
@@ -262,7 +262,6 @@ describe("IgxScroll", () => {
     }
 });
 @Component({
-    selector: "scroll-test-component",
     template: `
         <igx-scroll #scroll
                     (onScroll)="updateList($event)"
@@ -277,15 +276,15 @@ describe("IgxScroll", () => {
         </igx-scroll>`
 })
 class ScrollInitializeTestComponent {
-    @ViewChild(IgxScroll) public scroll: IgxScroll;
+    @ViewChild(IgxScrollComponent) public scroll: IgxScrollComponent;
 
     public items: string[] = [];
 
     public visibleItems: string[] = [];
 
-    public visibleItemsCount: number = 5;
+    public visibleItemsCount = 5;
 
-    public currentTop: number = 0;
+    public currentTop = 0;
 
     public constructor() {
         for (let i = 1; i <= 5000; i++) {

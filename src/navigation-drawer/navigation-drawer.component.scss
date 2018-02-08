@@ -2,7 +2,7 @@
 @import "../themes/material/config";
 
 // Main Navigation Drawer state styles
-@include b(ig-nav-drawer) {
+@include b(igx-nav-drawer) {
     position: fixed;
     width: em(242px);
     height: 100%;
@@ -71,7 +71,7 @@
 }
 
 // Navigation Drawer overlay styles
-.ig-nav-drawer-overlay {
+.igx-nav-drawer-overlay {
     opacity: 1;
     background-color: $overlay-color;
     transition-property: opacity, visibility; // opacity must match drawer transition, step over visibility to reduce animation cost
