@@ -42,6 +42,7 @@ Current list of controls include:
 | **switch**            | Available | [Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/src/switch/README.md)                        |     |               |               |                                                                                                    |
 | **tabbar**            | Available | [Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/src/tabbar/README.md)                        |     |               |               |                                                                                                    |
 | **toast**             | Available | [Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/src/toast/README.md)                         |     |               |               |                                                                                                    |
+| **toast**             | Available | [Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/src/directives/README-TOGGLE.md)                         |     |               |               |                                                                                                    |
 
 ## Setup
 From the root folder run:

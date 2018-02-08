@@ -27,10 +27,10 @@ import { IgxNavigationService, IToggleView } from "../core/navigation";
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     @Output()
-    public onOpened = new EventEmitter();
+    public onOpen = new EventEmitter();
 
     @Output()
-    public onClosed = new EventEmitter();
+    public onClose = new EventEmitter();
 
     @Input()
     public collapsed = true;
@@ -63,24 +63,20 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         if (!this.collapsed) { return; }
         const player = this.animationActivation();
         player.onStart(() => this.collapsed = !this.collapsed);
-        player.onDone(() => {
-            if (fireEvents) {
-                this.onOpen.emit();
-            }
-        });
         player.play();
+        if (fireEvents) {
+            this.onOpen.emit();
+        }
     }
 
     public close(fireEvents?: boolean, handler?) {
         if (this.collapsed) { return; }
         const player = this.animationActivation();
-        player.onDone(() =>  {
-            this.collapsed = !this.collapsed;
-            if (fireEvents) {
-                this.onClose.emit();
-            }
-        });
+        player.onDone(() => this.collapsed = !this.collapsed);
         player.play();
+        if (fireEvents) {
+            this.onClose.emit();
+        }
     }
 
     public toggle(fireEvents?: boolean) {
