@@ -2,5 +2,6 @@
     <igx-column  *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width">
     </igx-column>
 </igx-grid>
+<br/>
 <button (click)="ToggleCol()">Add/Remove Column</button>
 <button (click)="ToggleRow()">Add/Remove Row</button>

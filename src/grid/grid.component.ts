@@ -109,6 +109,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     @Input()
     public paginationTemplate: TemplateRef<any>;
 
+    @HostBinding("style.height")
     @Input()
     public height;
 
@@ -179,6 +180,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     }
 
     public pagingState;
+    public calcWidth: number;
+    public calcHeight: number;
 
     public cellInEditMode: IgxGridCellComponent;
 
@@ -202,6 +205,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
 
     public ngOnInit() {
         this.gridAPI.register(this);
+        this.calcWidth = this.width && this.width.indexOf("%") === -1 ?  parseInt(this.width, 10) : 0;
+        this.calcHeight = this.height && this.height.indexOf("%") === -1 ?  parseInt(this.height, 10) - 50 : 0;
     }
 
     public ngAfterContentInit() {
@@ -217,12 +222,22 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     }
 
     public ngAfterViewInit() {
-        setTimeout(() => {
-            const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
-            this.width = computed.getPropertyValue("width");
-            this.height = computed.getPropertyValue("height");
-            this.markForCheck();
-        });
+        const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+        if (!this.width) {
+            /*no width specified.*/
+            this.calcWidth = null;
+        } else if (this.width && this.width.indexOf("%") !== -1) {
+            /* width in %*/
+            this.calcWidth = parseInt(computed.getPropertyValue("width"), 10);
+        }
+        if (!this.height) {
+            /*no height specified.*/
+            this.calcHeight = null;
+        } else if (this.height && this.height.indexOf("%") !== -1) {
+            /*height in %*/
+            this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) - 50;
+        }
+        this.cdr.detectChanges();
     }
 
     get nativeElement() {

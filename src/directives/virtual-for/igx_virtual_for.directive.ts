@@ -98,11 +98,11 @@ export class IgVirtualForOf<T> {
         if (this.igVirtForScrolling === "horizontal") {
             this.dc.instance._viewContainer.element.nativeElement.style.height = "100%";
             const directiveRef = this.igVirtForUseForScroll || this;
-            this.hScroll = this.getHorizontalScroll(vc, "horizontal-virtual-helper");
+            this.hScroll = this.getElement(vc, "horizontal-virtual-helper");
             this.func = (evt) => { this.onHScroll(evt); };
             if (!this.hScroll) {
                 const hvFactory: ComponentFactory<HVirtualHelper> =
-                    this.resolver.resolveComponentFactory(HVirtualHelper);
+                this.resolver.resolveComponentFactory(HVirtualHelper);
                 this.hvh = vc.createComponent(hvFactory);
                 this.hvh.instance.width = totalWidth;
                 this.hScroll =  this.hvh.instance.elementRef.nativeElement;
@@ -193,9 +193,9 @@ export class IgVirtualForOf<T> {
     private onWheel(event) {
         const scrollStepX = 10;
         const scrollStepY = /Edge/.test(navigator.userAgent) ? 25 : 100;
-
-        this.vh.instance.elementRef.nativeElement.scrollTop += Math.sign(event.deltaY) * scrollStepY;
-        const hScroll = this.getHorizontalScroll(this._viewContainer, "horizontal-virtual-helper");
+        this.vh.instance.elementRef.nativeElement.scrollTop +=
+        Math.sign(event.deltaY) * scrollStepY;
+        const hScroll = this.getElement(this._viewContainer, "horizontal-virtual-helper");
         hScroll.scrollLeft += Math.sign(event.deltaX) * scrollStepX;
 
         const curScrollTop = this.vh.instance.elementRef.nativeElement.scrollTop;
@@ -207,10 +207,7 @@ export class IgVirtualForOf<T> {
 
     get ngForTrackBy(): TrackByFunction<T> { return this._trackByFn; }
     private _applyChanges(changes: IterableChanges<T>) {
-        if (this.igVirtForScrolling === "horizontal") {
-           const totalWidth = this.initHCache(this.igVirtForOf);
-           this.hScroll.children[0].style.width = totalWidth + "px";
-        }
+        this._recalcScrollBarSize();
         this.applyPageSizeChange();
         if (this.igVirtForOf && this.igVirtForOf.length && this.dc) {
             const embeddedViewCopy = Object.assign([], this._embeddedViews);
@@ -225,12 +222,23 @@ export class IgVirtualForOf<T> {
             this.dc.changeDetectorRef.detectChanges();
         }
     }
+    private _recalcScrollBarSize() {
+        if (this.igVirtForScrolling === "horizontal") {
+            const totalWidth = this.igVirtForContainerSize ? this.initHCache(this.igVirtForOf) : 0;
+            this.hScroll.children[0].style.width = totalWidth + "px";
+        }
+        if (this.igVirtForScrolling === "vertical") {
+            this.vh.instance.elementRef.nativeElement.style.height = parseInt(this.igVirtForContainerSize, 10) + "px";
+            this.vh.instance.elementRef.nativeElement.children[0].style.height =
+            (this.igVirtForOf.length * parseInt(this.igVirtForItemSize, 10)) + "px";
+        }
+    }
     private _calculatePageSize(): number {
         let pageSize = 0;
-        if (this.igVirtForContainerSize) {
+        if (this.igVirtForContainerSize !== null && this.igVirtForContainerSize !== undefined) {
             if (this.igVirtForScrolling === "horizontal") {
                 const vc = this.igVirtForUseForScroll ? this.igVirtForUseForScroll._viewContainer : this._viewContainer;
-                const hScroll = this.getHorizontalScroll(vc, "horizontal-virtual-helper");
+                const hScroll = this.getElement(vc, "horizontal-virtual-helper");
 
                 const left = hScroll && hScroll.scrollLeft !== 0 ?
                 hScroll.scrollLeft + parseInt(this.igVirtForContainerSize, 10) :
@@ -259,7 +267,11 @@ export class IgVirtualForOf<T> {
                 }
                 pageSize = endIndex - this._currIndex;
             } else {
-                pageSize = parseInt(this.igVirtForContainerSize, 10) / parseInt(this.igVirtForItemSize, 10);
+                pageSize = parseInt(this.igVirtForContainerSize, 10) /
+                parseInt(this.igVirtForItemSize, 10);
+                if (pageSize > this.igVirtForOf.length) {
+                    pageSize = this.igVirtForOf.length;
+                }
             }
         } else {
             pageSize = this.igVirtForOf.length;
@@ -270,6 +282,7 @@ export class IgVirtualForOf<T> {
         const containerSize = "igVirtForContainerSize";
         const value = changes[containerSize].currentValue;
         this.applyPageSizeChange();
+        this._recalcScrollBarSize();
     }
 
     private applyPageSizeChange() {
@@ -277,7 +290,7 @@ export class IgVirtualForOf<T> {
         if (pageSize > this._pageSize) {
             const diff = pageSize - this._pageSize;
             for (let i = 0; i < diff; i++) {
-                const input = this.igVirtForOf[pageSize - i];
+                const input = this.igVirtForOf[this._currIndex + this._pageSize + i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
                     this._template,
                     { $implicit: input, index: this.igVirtForOf.indexOf(input) }
@@ -296,7 +309,7 @@ export class IgVirtualForOf<T> {
         this._pageSize = pageSize;
     }
 
-    private getHorizontalScroll(viewref, nodeName) {
+    private getElement(viewref, nodeName) {
         const elem = viewref.element.nativeElement.parentElement.getElementsByTagName(nodeName);
         return elem.length > 0 ? elem[0] : null;
     }
