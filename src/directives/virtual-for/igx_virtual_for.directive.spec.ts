@@ -7,9 +7,11 @@ import {
     IterableChanges,
     IterableDiffers,
     NgZone,
+    QueryList,
     SimpleChanges,
     TemplateRef,
     ViewChild,
+    ViewChildren,
     ViewContainerRef
 } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
@@ -44,7 +46,30 @@ describe("IgxVirtual directive - simple template", () => {
         fix.detectChanges();
         const container = fix.componentInstance.container;
         const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("horizontal-virtual-helper");
         expect(displayContainer).not.toBeNull();
+        expect(verticalScroller).toBeNull();
+        expect(horizontalScroller).not.toBeNull();
+        horizontalScroller.scrollLeft = 100;
+        fix.componentInstance.igxVirtDir.forEach((item) => {
+            item.testOnHScroll(horizontalScroller);
+        });
+
+        fix.detectChanges();
+        fix.changeDetectorRef.detectChanges();
+
+        const firstRecChildren = displayContainer.children;
+        for (let i = 0; i < firstRecChildren.length; i++) {
+            expect(firstRecChildren[i].textContent)
+                .toBe(fix.componentInstance.data[0][i + 1].toString());
+        }
+
+        const secondRecChildren = fix.nativeElement.querySelectorAll("display-container")[1].children;
+        for (let i = 0; i < secondRecChildren.length; i++) {
+            expect(secondRecChildren[i].textContent)
+                .toBe(fix.componentInstance.data[1][i + 1].toString());
+        }
     });
 
     it("should initialize directive with vertical and horizontal virtualization", () => {
@@ -234,7 +259,7 @@ export class VerticalVirtualComp {
                 [style.float]='"left"'
                 [style.position]='"relative"'>
                 <div *ngFor="let rowData of data" [style.display]="'flex'" [style.height]="'50px'">
-                    <ng-template igxVirtForTest let-col [igxVirtForOf]="cols"
+                    <ng-template #igxVirtDir igxVirtForTest let-col [igxVirtForOf]="cols"
                         [igxVirtForScrolling]="'horizontal'"
                         [igxVirtForUseForScroll]="scrollContainer"
                         [igxVirtForContainerSize]='width'>
@@ -255,6 +280,9 @@ export class HorizontalVirtualComp {
 
     @ViewChild("container", {read: ViewContainerRef})
     public container: ViewContainerRef;
+
+    @ViewChildren("igxVirtDir", {read: TestIgVirtualForOf})
+    public igxVirtDir: QueryList<TestIgVirtualForOf<any>>;
 
     public ngOnInit(): void {
         this.generateData();
