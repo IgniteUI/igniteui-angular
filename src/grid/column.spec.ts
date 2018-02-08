@@ -13,9 +13,9 @@ describe("IgxGrid - Column properties", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                TemplatedColumns,
-                ColumnHiddenFromMarkup,
-                ColumnCellFormatter
+                TemplatedColumnsComponent,
+                ColumnHiddenFromMarkupComponent,
+                ColumnCellFormatterComponent
             ],
             imports: [IgxGridModule.forRoot()]
         })
@@ -23,7 +23,7 @@ describe("IgxGrid - Column properties", () => {
     }));
 
     it("should correctly initialize column templates", () => {
-        const fix = TestBed.createComponent(TemplatedColumns);
+        const fix = TestBed.createComponent(TemplatedColumnsComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -42,7 +42,7 @@ describe("IgxGrid - Column properties", () => {
     });
 
     it("should provide a way to change templates dynamically", () => {
-        const fix = TestBed.createComponent(TemplatedColumns);
+        const fix = TestBed.createComponent(TemplatedColumnsComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -62,7 +62,7 @@ describe("IgxGrid - Column properties", () => {
     });
 
     it("should reflect column hiding correctly in the DOM dynamically", () => {
-        const fix = TestBed.createComponent(TemplatedColumns);
+        const fix = TestBed.createComponent(TemplatedColumnsComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -83,7 +83,7 @@ describe("IgxGrid - Column properties", () => {
     });
 
     it("should reflect column hiding correctly in the DOM from markup declaration", () => {
-        const fix = TestBed.createComponent(ColumnHiddenFromMarkup);
+        const fix = TestBed.createComponent(ColumnHiddenFromMarkupComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -99,7 +99,7 @@ describe("IgxGrid - Column properties", () => {
     });
 
     it("should support providing a custom formatter for cell values", () => {
-        const fix = TestBed.createComponent(ColumnCellFormatter);
+        const fix = TestBed.createComponent(ColumnCellFormatterComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -114,7 +114,7 @@ describe("IgxGrid - Column properties", () => {
     });
 
     it("should reflect the column in the DOM based on its index", () => {
-        const fix = TestBed.createComponent(ColumnCellFormatter);
+        const fix = TestBed.createComponent(ColumnCellFormatterComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -184,7 +184,7 @@ describe("IgxGrid - Column properties", () => {
         </ng-template>
     `
 })
-export class TemplatedColumns {
+export class TemplatedColumnsComponent {
 
     public data = [
         { ID: 1, Name: "Johny" },
@@ -209,7 +209,7 @@ export class TemplatedColumns {
         </igx-grid>
     `
 })
-export class ColumnHiddenFromMarkup {
+export class ColumnHiddenFromMarkupComponent {
 
     public data = [
         { ID: 1, Name: "Johny" },
@@ -229,7 +229,7 @@ export class ColumnHiddenFromMarkup {
         </igx-grid>
     `
 })
-export class ColumnCellFormatter {
+export class ColumnCellFormatterComponent {
 
     public data = [
         { ID: 1, Name: "Johny" },

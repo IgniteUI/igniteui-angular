@@ -1,7 +1,7 @@
 import { AfterContentChecked, AfterViewChecked, Component, ContentChildren, QueryList, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxTab, IgxTabBar, IgxTabBarModule, IgxTabPanel } from "./tabbar.component";
+import { IgxTabBarComponent, IgxTabBarModule, IgxTabComponent, IgxTabPanelComponent } from "./tabbar.component";
 
 describe("TabBar", () => {
     beforeEach(async(() => {
@@ -15,8 +15,8 @@ describe("TabBar", () => {
     it("should initialize igx-tab-bar, igx-tab-panel and igx-tab", () => {
         const fixture = TestBed.createComponent(TabBarTestComponent);
         const tabbar = fixture.componentInstance.tabbar;
-        let panels: IgxTabPanel[];
-        let tabs: IgxTab[];
+        let panels: IgxTabPanelComponent[];
+        let tabs: IgxTabComponent[];
 
         fixture.detectChanges();
 
@@ -24,12 +24,12 @@ describe("TabBar", () => {
         tabs = tabbar.tabs.toArray();
 
         expect(tabbar).toBeDefined();
-        expect(tabbar instanceof IgxTabBar).toBeTruthy();
+        expect(tabbar instanceof IgxTabBarComponent).toBeTruthy();
         expect(tabbar.panels instanceof QueryList).toBeTruthy();
         expect(tabbar.panels.length).toBe(3);
 
         for (let i = 0; i < tabbar.panels.length; i++) {
-            expect(panels[i] instanceof IgxTabPanel).toBeTruthy();
+            expect(panels[i] instanceof IgxTabPanelComponent).toBeTruthy();
             expect(panels[i].relatedTab).toBe(tabs[i]);
         }
 
@@ -37,7 +37,7 @@ describe("TabBar", () => {
         expect(tabbar.tabs.length).toBe(3);
 
         for (let i = 0; i < tabbar.tabs.length; i++) {
-            expect(tabs[i] instanceof IgxTab).toBeTruthy();
+            expect(tabs[i] instanceof IgxTabComponent).toBeTruthy();
             expect(tabs[i].relatedPanel).toBe(panels[i]);
         }
     });
@@ -84,8 +84,8 @@ describe("TabBar", () => {
         const fixture = TestBed.createComponent(TabBarTestComponent);
         const tabbar = fixture.componentInstance.tabbar;
         let tabs;
-        let tab1: IgxTab;
-        let tab2: IgxTab;
+        let tab1: IgxTabComponent;
+        let tab2: IgxTabComponent;
 
         expect(tabbar.selectedIndex).toBe(-1);
         fixture.componentInstance.tabSelectedHandler = () => {
@@ -161,7 +161,7 @@ describe("TabBar", () => {
         </div>`
 })
 class TabBarTestComponent {
-    @ViewChild(IgxTabBar) public tabbar: IgxTabBar;
+    @ViewChild(IgxTabBarComponent) public tabbar: IgxTabBarComponent;
     @ViewChild("wrapperDiv") public wrapperDiv: any;
 
     public tabSelectedHandler(args) {
@@ -200,6 +200,6 @@ class TabBarTestComponent {
         </div>`
 })
 class BottomTabBarTestComponent {
-    @ViewChild(IgxTabBar) public tabbar: IgxTabBar;
+    @ViewChild(IgxTabBarComponent) public tabbar: IgxTabBarComponent;
     @ViewChild("wrapperDiv") public wrapperDiv: any;
 }
