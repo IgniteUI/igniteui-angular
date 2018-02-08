@@ -1,4 +1,17 @@
-import { Component, ViewChild, ViewContainerRef } from "@angular/core";
+﻿import { CommonModule, NgForOf, NgForOfContext } from "@angular/common";
+import {
+    ChangeDetectorRef,
+    Component,
+    ComponentFactoryResolver,
+    Directive,
+    IterableChanges,
+    IterableDiffers,
+    NgZone,
+    SimpleChanges,
+    TemplateRef,
+    ViewChild,
+    ViewContainerRef
+} from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { IgVirtualForOf, IgxVirtForModule } from "./igx_virtual_for.directive";
@@ -6,8 +19,14 @@ import { IgVirtualForOf, IgxVirtForModule } from "./igx_virtual_for.directive";
 describe("IgxVirtual directive - simple template", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [EmptyVirtualComp, VerticalVirtualComp, HorizontalVirtualComp, VirtualComp],
-            imports: [ IgxVirtForModule ]
+            declarations: [
+                TestIgVirtualForOf,
+                EmptyVirtualComp,
+                VerticalVirtualComp,
+                HorizontalVirtualComp,
+                VirtualComp
+            ],
+            imports: [IgxVirtForModule]
         }).compileComponents();
     }));
 
@@ -27,13 +46,118 @@ describe("IgxVirtual directive - simple template", () => {
         const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
         expect(displayContainer).not.toBeNull();
     });
+
+    it("should initialize directive with vertical and horizontal virtualization", () => {
+        const fix = TestBed.createComponent(VirtualComp);
+        fix.detectChanges();
+        const container = fix.componentInstance.container;
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("horizontal-virtual-helper");
+        expect(displayContainer).not.toBeNull();
+        expect(verticalScroller).not.toBeNull();
+        expect(horizontalScroller).not.toBeNull();
+        /* The height of the row is set to 50px so scrolling by 100px should render the third record */
+        verticalScroller.scrollTop = 100;
+        fix.componentInstance.parentVirtDir.testOnScroll(verticalScroller);
+
+        const firstInnerDisplayContainer = displayContainer.children[0].querySelector("display-container");
+        expect(firstInnerDisplayContainer).not.toBeNull();
+
+        fix.detectChanges();
+
+        const firstRecChildren = firstInnerDisplayContainer.children;
+        for (let i = 0; i < firstRecChildren.length; i++) {
+            expect(firstInnerDisplayContainer.children[i].textContent)
+                .toBe(fix.componentInstance.data[2][i].toString());
+        }
+    });
+
+    it("should scroll to wheel event correctly", () => {
+        const fix = TestBed.createComponent(VirtualComp);
+        fix.detectChanges();
+        const container = fix.componentInstance.container;
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("horizontal-virtual-helper");
+
+        expect(displayContainer).not.toBeNull();
+        expect(verticalScroller).not.toBeNull();
+        expect(horizontalScroller).not.toBeNull();
+
+        /* The height of the row is set to 50px so scrolling by 100px should render the third record */
+        fix.componentInstance.parentVirtDir.testOnWheel(0, 100);
+        fix.componentInstance.parentVirtDir.testOnScroll(verticalScroller);
+
+        const firstInnerDisplayContainer = displayContainer.children[0].querySelector("display-container");
+        expect(firstInnerDisplayContainer).not.toBeNull();
+        const firstRecChildren = firstInnerDisplayContainer.children;
+
+        fix.detectChanges();
+
+        for (let i = 0; i < firstRecChildren.length; i++) {
+            expect(firstInnerDisplayContainer.children[i].textContent)
+                .toBe(fix.componentInstance.data[2][i].toString());
+        }
+    });
 });
+
+/** igxVirtFor for testing */
+@Directive({ selector: "[igxVirtForTest]" })
+export class TestIgVirtualForOf<T> extends IgVirtualForOf<T> {
+    constructor(
+        public viewContainer: ViewContainerRef,
+        public template: TemplateRef<NgForOfContext<T>>,
+        public differs: IterableDiffers,
+        public fResolver: ComponentFactoryResolver,
+        public changeDet: ChangeDetectorRef,
+        public zone: NgZone) {
+        super(viewContainer, template, differs, fResolver, changeDet, zone);
+    }
+
+    public testOnScroll(target) {
+        const event = new Event("scroll");
+        Object.defineProperty(event, "target", {value: target, enumerable: true});
+        super.onScroll(event);
+    }
+
+    public testOnHScroll(target) {
+        const event = new Event("scroll");
+        Object.defineProperty(event, "target", {value: target, enumerable: true});
+        super.onHScroll(event);
+    }
+
+    public testOnWheel(_deltaX: number, _deltaY: number) {
+        const event = new WheelEvent("wheel", {deltaX: _deltaX, deltaY: _deltaY});
+        super.onWheel(event);
+    }
+
+    public testApplyChanges(changes: IterableChanges<T>) {
+        super._applyChanges(changes);
+    }
+
+    public testCalculatePageSize(): number {
+        return super._calculatePageSize();
+    }
+
+    public testInitHCache(cols: any[]): number {
+        return super.initHCache(cols);
+    }
+
+    public testGetHorizontalScroll(viewref, nodeName) {
+        return super.getHorizontalScroll(viewref, nodeName);
+    }
+
+    public testGetHorizontalIndexAt(left, set, index) {
+        super.getHorizontalIndexAt(left, set, index);
+    }
+}
 
 /** Empty virtualized component */
 @Component({
     template: `
         <span #container>
-            <ng-template igVirtFor [igVirtForOf]="data"></ng-template>
+            <ng-template igxVirtForTest [igxVirtForOf]="data"></ng-template>
         </span>
     `
 })
@@ -47,10 +171,10 @@ export class EmptyVirtualComp {
 @Component({
     template: `
         <div #container [style.width]='width' [style.height]='height'>
-            <ng-template igVirtFor let-rowData [igVirtForOf]="data"
-                [igVirtForScrolling]="'vertical'"
-                [igVirtForContainerSize]='height'
-                [igVirtForItemSize]='"50px"'>
+            <ng-template #scrollContainer igxVirtForTest let-rowData [igxVirtForOf]="data"
+                [igxVirtForScrolling]="'vertical'"
+                [igxVirtForContainerSize]='height'
+                [igxVirtForItemSize]='"50px"'>
                 <div [style.display]="'flex'" [style.height]="'50px'">
                     <div [style.width]=cols[0].width>{{rowData['1']}}</div>
                     <div [style.width]=cols[1].width>{{rowData['2']}}</div>
@@ -76,6 +200,9 @@ export class VerticalVirtualComp {
     public data = [];
 
     @ViewChild("container") public container;
+
+    @ViewChild("scrollContainer", { read: TestIgVirtualForOf })
+    public parentVirtDir: TestIgVirtualForOf<any>;
 
     public ngOnInit(): void {
         this.generateData();
@@ -107,10 +234,10 @@ export class VerticalVirtualComp {
                 [style.float]='"left"'
                 [style.position]='"relative"'>
                 <div *ngFor="let rowData of data" [style.display]="'flex'" [style.height]="'50px'">
-                    <ng-template igVirtFor let-col [igVirtForOf]="cols"
-                        [igVirtForScrolling]="'horizontal'"
-                        [igVirtForUseForScroll]="scrollContainer"
-                        [igVirtForContainerSize]='width'>
+                    <ng-template igxVirtForTest let-col [igxVirtForOf]="cols"
+                        [igxVirtForScrolling]="'horizontal'"
+                        [igxVirtForUseForScroll]="scrollContainer"
+                        [igxVirtForContainerSize]='width'>
                             <div [style.width]='col.width + "px"'>{{rowData[col.field]}}</div>
                     </ng-template>
                 </div>
@@ -160,15 +287,15 @@ export class HorizontalVirtualComp {
 @Component({
     template: `
         <div #container [style.width]='width' [style.height]='height'>
-            <ng-template #scrollContainer igVirtFor let-rowData [igVirtForOf]="data"
-                [igVirtForScrolling]="'vertical'"
-                [igVirtForContainerSize]='height'
-                [igVirtForItemSize]='"50px"'>
+            <ng-template #scrollContainer igxVirtForTest let-rowData [igxVirtForOf]="data"
+                [igxVirtForScrolling]="'vertical'"
+                [igxVirtForContainerSize]='height'
+                [igxVirtForItemSize]='"50px"'>
                 <div [style.display]="'flex'" [style.height]="'50px'">
-                    <ng-template igVirtFor let-col [igVirtForOf]="cols"
-                        [igVirtForScrolling]="'horizontal'"
-                        [igVirtForUseForScroll]="parentVirtDir"
-                        [igVirtForContainerSize]='width'>
+                    <ng-template igxVirtForTest let-col [igxVirtForOf]="cols"
+                        [igxVirtForScrolling]="'horizontal'"
+                        [igxVirtForUseForScroll]="parentVirtDir"
+                        [igxVirtForContainerSize]='width'>
                             <div [style.width]='col.width + "px"'>{{rowData[col.field]}}</div>
                     </ng-template>
                 </div>
@@ -185,8 +312,8 @@ export class VirtualComp {
 
     @ViewChild("container") public container;
 
-    @ViewChild("scrollContainer", { read: IgVirtualForOf })
-    public parentVirtDir: IgVirtualForOf<any>;
+    @ViewChild("scrollContainer", { read: TestIgVirtualForOf })
+    public parentVirtDir: TestIgVirtualForOf<any>;
 
     public ngOnInit(): void {
         this.generateData();
