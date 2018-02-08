@@ -34,6 +34,13 @@ export class IgxAvatarComponent implements AfterViewInit, AfterContentChecked {
     @Input("roundShape") public roundShape = "false";
     @Input() public color = "white";
 
+    @HostBinding("attr.aria-label") public ariaLabel = "avatar";
+    @HostBinding("attr.role") public role = "img";
+    @HostBinding("attr.class")
+    public get classes() {
+        return "igx-avatar igx-avatar--" + this.size;
+    }
+
     public sizeEnum = Size;
     public roleDescription: string;
 
@@ -41,27 +48,27 @@ export class IgxAvatarComponent implements AfterViewInit, AfterContentChecked {
     @ViewChild("initialsTemplate", { read: TemplateRef }) protected initialsTemplate: TemplateRef<any>;
     @ViewChild("iconTemplate", { read: TemplateRef }) protected iconTemplate: TemplateRef<any>;
 
-    protected fontName = "Titillium Web";
-
-    @HostBinding("attr.aria-label") private ariaLabel = "avatar";
-    @HostBinding("attr.role") private role = "img";
-    @HostBinding("attr.class")
-    get classes() {
-        return "igx-avatar igx-avatar--" + this.size;
-    }
-
     private _size: string;
     private _bgColor: string;
     private _icon = "android";
+    private _isInitialsRepositionNeeded = false;
 
     @Input()
     get size(): string {
+        if (this._isInitialsRepositionNeeded) {
+            this.repositionInitials();
+        }
+
         return this._size === undefined ? "small" : this._size;
     }
 
     set size(value: string) {
         const sizeType = this.sizeEnum[value.toUpperCase()];
         this._size = sizeType === undefined ? "small" : value.toLowerCase();
+
+        if (this.initials && this.initialsImage) {
+            this._isInitialsRepositionNeeded = true;
+        }
     }
 
     @Input()
@@ -84,6 +91,11 @@ export class IgxAvatarComponent implements AfterViewInit, AfterContentChecked {
 
     get isRounded(): boolean {
         return this.roundShape.toUpperCase() === "TRUE" ? true : false;
+    }
+
+    get initialsClasses() {
+        const isRoundedClass = this.isRounded ? "igx-avatar--rounded" : "";
+        return isRoundedClass + " igx-avatar--" + this.size;
     }
 
     get template() {
@@ -113,11 +125,12 @@ export class IgxAvatarComponent implements AfterViewInit, AfterContentChecked {
 
     public ngAfterViewInit() {
         if (this.initials && this.initialsImage) {
-            // it seems the svg element is not yet fully initialized so give it some time
-            setTimeout(() => {
-                const size = parseInt(this.initialsImage.nativeElement.width.baseVal.value, 10);
-                this.generateInitials(size);
-            }, 50);
+            const svgText = this.initialsImage.nativeElement.children[0];
+            if (svgText) {
+                svgText.textContent = this.initials.toUpperCase();
+            }
+
+            this.repositionInitials();
         }
     }
 
@@ -135,24 +148,22 @@ export class IgxAvatarComponent implements AfterViewInit, AfterContentChecked {
         }
     }
 
-    private generateInitials(size) {
-        const fontSize = size / 2;
+    private repositionInitials() {
+        // it seems the svg element is not yet fully initialized so give it some time
+        setTimeout(() => {
+            const svgText = this.initialsImage.nativeElement.children[0];
+            if (svgText) {
+                const size = parseInt(this.initialsImage.nativeElement.width.baseVal.value, 10);
+                const fontSize = size / 2;
+                const y = size - size / 2 + fontSize / 3;
 
-        const svg = this.initialsImage.nativeElement;
-        svg.setAttribute("width", size);
-        svg.setAttribute("height", size);
+                this.renderer.setAttribute(svgText, "font-size", fontSize.toString());
+                this.renderer.setAttribute(svgText, "x", fontSize.toString());
+                this.renderer.setAttribute(svgText, "y", y.toString());
+            }
+        }, 50);
 
-        const svgText = svg.children[0];
-        if (svgText) {
-            svgText.textContent = this.initials.toUpperCase();
-            svgText.setAttribute("font-size", fontSize);
-            svgText.setAttribute("font-family", this.fontName);
-
-            const x = fontSize;
-            svgText.setAttribute("x", x);
-            const y = size - size / 2 + fontSize / 3;
-            svgText.setAttribute("y", y);
-        }
+        this._isInitialsRepositionNeeded = false;
     }
 
     private _addEventListeners(renderer: Renderer2) { }

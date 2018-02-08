@@ -4,9 +4,9 @@
 </ng-template>
 
 <ng-template #initialsTemplate>
-    <svg #initialsImage xmlns="http://www.w3.org/2000/svg" [class.igx-avatar--rounded]="isRounded" [style.backgroundColor]="bgColor"
+    <svg #initialsImage xmlns="http://www.w3.org/2000/svg" [attr.class]="initialsClasses" [style.backgroundColor]="bgColor"
         [attr.aria-roledescription]="roleDescription">
-        <text text-anchor="middle" />
+        <text text-anchor="middle"/> 
     </svg>
 </ng-template>
 
