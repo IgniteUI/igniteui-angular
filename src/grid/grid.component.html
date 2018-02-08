@@ -22,7 +22,7 @@
 
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth'>
     <div class="igx-grid__tr" role="row">
-        <ng-template igVirtFor let-col [igVirtForOf]="visibleColumns" [igVirtForScrolling]="'horizontal'" [igVirtForUseForScroll]="parentVirtDir" [igVirtForContainerSize]='calcWidth'>
+        <ng-template igxVirtFor let-col [igxVirtForOf]="visibleColumns" [igxVirtForScrolling]="'horizontal'" [igxVirtForUseForScroll]="parentVirtDir" [igxVirtForContainerSize]='calcWidth'>
             <igx-grid-header [gridID]="id" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
         </ng-template>
     </div>
@@ -37,12 +37,12 @@
 </div>-->
 
 <div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' >
-        <ng-template igVirtFor let-rowData [igVirtForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
+        <ng-template igxVirtFor let-rowData [igxVirtForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
                                 | gridSort:sortingExpressions:id:pipeTrigger
                                 | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" 
-                                [igVirtForScrolling]="'vertical'"
-                                [igVirtForContainerSize]='calcHeight'
-                                [igVirtForItemSize]='"50px"'
+                                [igxVirtForScrolling]="'vertical'"
+                                [igxVirtForContainerSize]='calcHeight'
+                                [igxVirtForItemSize]='"50px"'
                                 #scrollContainer>
            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
            </igx-grid-row>
