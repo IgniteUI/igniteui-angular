@@ -6,8 +6,8 @@ import { IgxGridComponent } from "../../lib/grid/grid.component";
 import {
     DataContainer,
     IDataState,
-    IgxSnackbar,
-    IgxToast,
+    IgxSnackbarComponent,
+    IgxToastComponent,
     IPagingState,
     PagingError,
     SortingDirection,
@@ -107,8 +107,8 @@ export class GridSampleComponent {
     @ViewChild("grid1") public grid1: IgxGridComponent;
     @ViewChild("grid2") public grid2: IgxGridComponent;
     @ViewChild("grid3") public grid3: IgxGridComponent;
-    @ViewChild("toast") public toast: IgxToast;
-    @ViewChild("snax") public snax: IgxSnackbar;
+    @ViewChild("toast") public toast: IgxToastComponent;
+    @ViewChild("snax") public snax: IgxSnackbarComponent;
     public data: Observable<any[]>;
     public remote: Observable<any[]>;
     public localData: any[];
