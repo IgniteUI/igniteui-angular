@@ -4,35 +4,59 @@ igx-calendar {
 
 @include b(igx-calendar) {
     @extend %cal-display !optional;
+
     @include e(header) {
         @extend %cal-header-display !optional;
     }
+
     @include e(header-year) {
         @extend %cal-header-year !optional;
     }
+
     @include e(header-date) {
         @extend %cal-header-date !optional;
     }
+
     @include e(body) {
         @extend %cal-body-display !optional;
     }
+
     @include e(body-picker) {
         @extend %cal-picker-display !optional;
+
+        .date {
+            @extend %cal-picker-date !optional;
+
+            &__el:hover,
+            &__el:focus {
+                @extend %cal-header-date-el--hover !optional;
+            }
+        }
+
+        .next,
+        .prev {
+            @extend %cal-picker-arrow !optional;
+        }
     }
+
     @include e(body-row) {
         @extend %cal-row-display !optional;
     }
+
     @include e(body-row, 'wrap') {
         @extend %cal-row-display !optional;
         @extend %cal-row-display--wrap !optional;
     }
+
     @include e(body-column) {
         @extend %cal-column-display !optional;
     }
+
     @include e(label) {
         @extend %cal-value !optional;
         @extend %cal-value--label !optional;
     }
+
     @include e(date) {
         @extend %cal-value !optional;
 
@@ -41,6 +65,7 @@ igx-calendar {
             @extend %cal-value--hover !optional;
         }
     }
+
     @include e(date, 'inactive') {
         @extend %cal-value !optional;
         @extend %cal-value--inactive !optional;
@@ -50,10 +75,12 @@ igx-calendar {
             @extend %cal-value--hover !optional;
         }
     }
+
     @include e(date, 'selected') {
         @extend %cal-value !optional;
         @extend %cal-value--selected !optional;
     }
+
     @include e(date, 'current') {
         @extend %cal-value !optional;
         @extend %cal-value--current !optional;
@@ -63,6 +90,7 @@ igx-calendar {
             @extend %cal-value--hover !optional;
         }
     }
+
     @include e(date, 'weekend') {
         @extend %cal-value !optional;
         @extend %cal-value--weekend !optional;
@@ -72,6 +100,7 @@ igx-calendar {
             @extend %cal-value--hover !optional;
         }
     }
+
     @include e(year) {
         @extend %cal-value !optional;
         @extend %cal-value--year !optional;
@@ -81,11 +110,13 @@ igx-calendar {
             @extend %cal-value--year-hover !optional;
         }
     }
+
     @include e(year, 'current') {
         @extend %cal-value !optional;
         @extend %cal-value--year !optional;
         @extend %cal-value--year-current !optional;
     }
+
     @include e(month) {
         @extend %cal-value !optional;
         @extend %cal-value--month !optional;
@@ -95,11 +126,13 @@ igx-calendar {
             @extend %cal-value--month-hover !optional;
         }
     }
+
     @include e(month, 'current') {
         @extend %cal-value !optional;
         @extend %cal-value--month !optional;
         @extend %cal-value--month-current !optional;
     }
+
     @include m(vertical) {
         @extend %cal-display !optional;
         @extend %cal-display--vertical !optional;
