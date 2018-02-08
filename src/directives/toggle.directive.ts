@@ -22,7 +22,7 @@ import { IgxNavigationService, IToggleView } from "../core/navigation";
 
 @Directive({
     exportAs: "toggle",
-    selector: "[igx-toggle]"
+    selector: "[igxToggle]"
 })
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
@@ -123,7 +123,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
 @Directive({
     exportAs: "toggle-action",
-    selector: "[igx-toggle-action]"
+    selector: "[igxToggleAction]"
 })
 export class IgxToggleActionDirective implements OnDestroy, OnInit {
     @Input()
