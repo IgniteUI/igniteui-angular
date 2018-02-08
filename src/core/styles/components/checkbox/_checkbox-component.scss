@@ -1,40 +1,43 @@
-$block: 'igx-control';
+@include b(igx-control) {
+    $block: bem--selector-to-string(&);
 
-@include b(tick) {
-    @extend %igx-cbx-lbl-tick !optional;
-}
+    @extend %igx-control-display !optional;
 
-@include b(#{$block}__cbx) {
-    @include hide-default();
-
-    ~ #{$block}__label {
-        @extend %igx-cbx-lbl-display !optional;
+    @include b(tick) {
+        @extend %igx-cbx-lbl-tick;
     }
 
-    &:checked ~ #{$block}__label {
-        .tick {
-            @extend %igx-cbx-lbl-checked-tick !optional;
+    @include e(cbx) {
+        @include hide-default();
+
+        ~ #{$block}__label {
+            @extend %igx-cbx-lbl-display;
+        }
+
+        &:checked ~ #{$block}__label {
+            .tick {
+                @extend %igx-cbx-lbl-checked-tick;
+            }
+        }
+
+        &:not(:checked) ~ #{$block}__label::after {
+            @extend %igx-cbx-lbl-notchecked-after;
+        }
+
+        &:checked ~ #{$block}__label::after {
+            @extend %igx-cbx-lbl-checked-after;
+        }
+
+        &:disabled ~ #{$block}__label {
+            @extend %igx-cbx-lbl-disabled;
+        }
+
+        &:disabled:checked ~ #{$block}__label::after {
+            @extend %igx-cbx-lbl-checked--disabled-after;
+        }
+
+        &:disabled:not(:checked) ~ #{$block}__label::after {
+            @extend %igx-cbx-lbl-notchecked--disabled-after;
         }
     }
-
-    &:not(:checked) ~ #{$block}__label::after {
-        @extend %igx-cbx-lbl-notchecked-after !optional;
-    }
-
-    &:checked ~ #{$block}__label::after {
-        @extend %igx-cbx-lbl-checked-after !optional;
-    }
-
-    &:disabled ~ #{$block}__label {
-        @extend %igx-cbx-lbl-disabled !optional;
-    }
-
-    &:disabled:checked ~ #{$block}__label::after {
-        @extend %igx-cbx-lbl-checked--disabled-after !optional;
-    }
-
-    &:disabled:not(:checked) ~ #{$block}__label::after {
-        @extend %igx-cbx-lbl-notchecked--disabled-after !optional;
-    }
 }
-

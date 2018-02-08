@@ -15,6 +15,9 @@ $components: register-component($components, #{$component-name});
 }
 
 @mixin igx-carousel($theme, $palette: $default-palette) {
+    @include scale-in-center();
+    @include scale-out-center();
+
     $default-theme: igx-carousel-theme(
         $arrow-color: $white,
         $arrow-background:transparentize($white, .7),
@@ -27,7 +30,7 @@ $components: register-component($components, #{$component-name});
     $carousel-indicators-margin: em(16px) 0 !default;
     $carousel-indicators-padding: 0 !default;
     $carousel-indicator-margin: 0 em(5px) !default;
-
+    
     %igx-carousel-display {
         display: flex;
         position: relative;
@@ -118,21 +121,20 @@ $components: register-component($components, #{$component-name});
                 bottom: 0;
                 left: -1px;
                 right: 0;
-                width: inherit;
-                height: inherit;
+                width: 12px;
+                height: 12px;
                 border-radius: inherit;
                 background: $white;
                 transform: scale(0);
+                @include animation('scale-out-center' .3s $ease-out-quad forwards);
+            }
+
+            &.active::after {
+                @include animation('scale-in-center' .3s $ease-out-quad forwards);
             }
 
             &:hover {
                 transform: scale(1.2);
-            }
-        }
-
-        .active {
-            &::after {
-                animation: scale-in .3s $ease-out-quad forwards;
             }
         }
     }
