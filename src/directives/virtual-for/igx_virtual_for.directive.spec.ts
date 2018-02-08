@@ -51,13 +51,9 @@ describe("IgxVirtual directive - simple template", () => {
         expect(displayContainer).not.toBeNull();
         expect(verticalScroller).toBeNull();
         expect(horizontalScroller).not.toBeNull();
-        horizontalScroller.scrollLeft = 100;
-        fix.componentInstance.igxVirtDir.forEach((item) => {
-            item.testOnHScroll(horizontalScroller);
-        });
 
+        fix.componentInstance.scrollLeft(100);
         fix.detectChanges();
-        fix.changeDetectorRef.detectChanges();
 
         const firstRecChildren = displayContainer.children;
         for (let i = 0; i < firstRecChildren.length; i++) {
@@ -83,8 +79,7 @@ describe("IgxVirtual directive - simple template", () => {
         expect(verticalScroller).not.toBeNull();
         expect(horizontalScroller).not.toBeNull();
         /* The height of the row is set to 50px so scrolling by 100px should render the third record */
-        verticalScroller.scrollTop = 100;
-        fix.componentInstance.parentVirtDir.testOnScroll(verticalScroller);
+        fix.componentInstance.scrollTop(100);
 
         const firstInnerDisplayContainer = displayContainer.children[0].querySelector("display-container");
         expect(firstInnerDisplayContainer).not.toBeNull();
@@ -123,6 +118,99 @@ describe("IgxVirtual directive - simple template", () => {
         for (let i = 0; i < firstRecChildren.length; i++) {
             expect(firstInnerDisplayContainer.children[i].textContent)
                 .toBe(fix.componentInstance.data[2][i].toString());
+        }
+    });
+
+    it("should scroll to the far right and last column should be visible", () => {
+        const fix = TestBed.createComponent(VirtualComp);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        const container = fix.componentInstance.container;
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("horizontal-virtual-helper");
+
+        expect(displayContainer).not.toBeNull();
+        expect(verticalScroller).not.toBeNull();
+        expect(horizontalScroller).not.toBeNull();
+
+        // scroll to the last right pos
+        fix.componentInstance.scrollLeft(80000);
+        fix.detectChanges();
+
+        const rowChildren = displayContainer.querySelectorAll("display-container");
+        for (let i = 0; i < rowChildren.length; i++) {
+            expect(rowChildren[i].children.length).toBe(1);
+            expect(rowChildren[i].children[0].textContent)
+                .toBe(fix.componentInstance.data[i][299].toString());
+        }
+    });
+
+    it("should detect width change and update initially rendered columns", () => {
+        const fix = TestBed.createComponent(VirtualComp);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        const container = fix.componentInstance.container;
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("horizontal-virtual-helper");
+
+        expect(displayContainer).not.toBeNull();
+        expect(verticalScroller).not.toBeNull();
+        expect(horizontalScroller).not.toBeNull();
+
+        let rows = displayContainer.querySelectorAll("display-container");
+        expect(rows.length).toBe(8);
+        for (let i = 0; i < rows.length; i++) {
+            expect(rows[i].children.length).toBe(4);
+            expect(rows[i].children[3].textContent)
+                .toBe(fix.componentInstance.data[i][3].toString());
+        }
+
+        // scroll to the last right pos
+        fix.componentInstance.width = "1200px";
+        fix.detectChanges();
+
+        rows = displayContainer.querySelectorAll("display-container");
+        expect(rows.length).toBe(8);
+        for (let i = 0; i < rows.length; i++) {
+            expect(rows[i].children.length).toBe(5);
+            expect(rows[i].children[4].textContent)
+                .toBe(fix.componentInstance.data[i][4].toString());
+        }
+    });
+
+    it("should detect height change and update initially rendered rows", () => {
+        const fix = TestBed.createComponent(VirtualComp);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        const container = fix.componentInstance.container;
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("horizontal-virtual-helper");
+
+        expect(displayContainer).not.toBeNull();
+        expect(verticalScroller).not.toBeNull();
+        expect(horizontalScroller).not.toBeNull();
+
+        let rows = displayContainer.querySelectorAll("display-container");
+        expect(rows.length).toBe(8);
+        for (let i = 0; i < rows.length; i++) {
+            expect(rows[i].children.length).toBe(4);
+            expect(rows[i].children[2].textContent)
+                .toBe(fix.componentInstance.data[i][2].toString());
+        }
+
+        // scroll to the last right pos
+        fix.componentInstance.height = "700px";
+        fix.detectChanges();
+
+        rows = displayContainer.querySelectorAll("display-container");
+        expect(rows.length).toBe(14);
+        for (let i = 0; i < rows.length; i++) {
+            expect(rows[i].children.length).toBe(4);
+            expect(rows[i].children[2].textContent)
+                .toBe(fix.componentInstance.data[i][2].toString());
         }
     });
 });
@@ -201,11 +289,11 @@ export class EmptyVirtualComp {
                 [igxVirtForContainerSize]='height'
                 [igxVirtForItemSize]='"50px"'>
                 <div [style.display]="'flex'" [style.height]="'50px'">
-                    <div [style.width]=cols[0].width>{{rowData['1']}}</div>
-                    <div [style.width]=cols[1].width>{{rowData['2']}}</div>
-                    <div [style.width]=cols[2].width>{{rowData['3']}}</div>
-                    <div [style.width]=cols[3].width>{{rowData['4']}}</div>
-                    <div [style.width]=cols[4].width>{{rowData['5']}}</div>
+                    <div [style.min-width]=cols[0].width>{{rowData['1']}}</div>
+                    <div [style.min-width]=cols[1].width>{{rowData['2']}}</div>
+                    <div [style.min-width]=cols[2].width>{{rowData['3']}}</div>
+                    <div [style.min-width]=cols[3].width>{{rowData['4']}}</div>
+                    <div [style.min-width]=cols[4].width>{{rowData['5']}}</div>
                 </div>
             </ng-template>
         </div>
@@ -231,6 +319,13 @@ export class VerticalVirtualComp {
 
     public ngOnInit(): void {
         this.generateData();
+    }
+
+    public scrollTop(newScrollTop) {
+        const verticalScrollbar = this.container.element.nativeElement.querySelector("virtual-helper");
+        verticalScrollbar.scrollTop = newScrollTop;
+
+        this.parentVirtDir.testOnScroll(verticalScrollbar);
     }
 
     private generateData() {
@@ -259,11 +354,11 @@ export class VerticalVirtualComp {
                 [style.float]='"left"'
                 [style.position]='"relative"'>
                 <div *ngFor="let rowData of data" [style.display]="'flex'" [style.height]="'50px'">
-                    <ng-template #igxVirtDir igxVirtForTest let-col [igxVirtForOf]="cols"
+                    <ng-template #childContainer igxVirtForTest let-col [igxVirtForOf]="cols"
                         [igxVirtForScrolling]="'horizontal'"
                         [igxVirtForUseForScroll]="scrollContainer"
                         [igxVirtForContainerSize]='width'>
-                            <div [style.width]='col.width + "px"'>{{rowData[col.field]}}</div>
+                            <div [style.min-width]='col.width + "px"'>{{rowData[col.field]}}</div>
                     </ng-template>
                 </div>
             </div>
@@ -281,12 +376,22 @@ export class HorizontalVirtualComp {
     @ViewChild("container", {read: ViewContainerRef})
     public container: ViewContainerRef;
 
-    @ViewChildren("igxVirtDir", {read: TestIgVirtualForOf})
-    public igxVirtDir: QueryList<TestIgVirtualForOf<any>>;
+    @ViewChildren("childContainer", {read: TestIgVirtualForOf})
+    public childVirtDirs: QueryList<TestIgVirtualForOf<any>>;
 
     public ngOnInit(): void {
         this.generateData();
         this.scrollContainer._viewContainer = this.container;
+    }
+
+    public scrollLeft(newScrollLeft) {
+        const horizontalScrollbar =
+            this.container.element.nativeElement.parentElement.querySelector("horizontal-virtual-helper");
+        horizontalScrollbar.scrollLeft = newScrollLeft;
+
+        this.childVirtDirs.forEach((item) => {
+            item.testOnHScroll(horizontalScrollbar);
+        });
     }
 
     private generateData() {
@@ -320,11 +425,11 @@ export class HorizontalVirtualComp {
                 [igxVirtForContainerSize]='height'
                 [igxVirtForItemSize]='"50px"'>
                 <div [style.display]="'flex'" [style.height]="'50px'">
-                    <ng-template igxVirtForTest let-col [igxVirtForOf]="cols"
+                    <ng-template #childContainer igxVirtForTest let-col [igxVirtForOf]="cols"
                         [igxVirtForScrolling]="'horizontal'"
                         [igxVirtForUseForScroll]="parentVirtDir"
                         [igxVirtForContainerSize]='width'>
-                            <div [style.width]='col.width + "px"'>{{rowData[col.field]}}</div>
+                            <div [style.min-width]='col.width + "px"'>{{rowData[col.field]}}</div>
                     </ng-template>
                 </div>
             </ng-template>
@@ -338,13 +443,33 @@ export class VirtualComp {
     public cols = [];
     public data = [];
 
-    @ViewChild("container") public container;
+    @ViewChild("container", { read: ViewContainerRef })
+    public container: ViewContainerRef;
 
     @ViewChild("scrollContainer", { read: TestIgVirtualForOf })
     public parentVirtDir: TestIgVirtualForOf<any>;
 
+    @ViewChildren("childContainer", { read: TestIgVirtualForOf })
+    public childVirtDirs: QueryList<TestIgVirtualForOf<any>>;
+
     public ngOnInit(): void {
         this.generateData();
+    }
+
+    public scrollTop(newScrollTop) {
+        const verticalScrollbar = this.container.element.nativeElement.querySelector("virtual-helper");
+        verticalScrollbar.scrollTop = newScrollTop;
+
+        this.parentVirtDir.testOnScroll(verticalScrollbar);
+    }
+
+    public scrollLeft(newScrollLeft) {
+        const horizontalScrollbar = this.container.element.nativeElement.querySelector("horizontal-virtual-helper");
+        horizontalScrollbar.scrollLeft = newScrollLeft;
+
+        this.childVirtDirs.forEach((item) => {
+            item.testOnHScroll(horizontalScrollbar);
+        });
     }
 
     private generateData() {
