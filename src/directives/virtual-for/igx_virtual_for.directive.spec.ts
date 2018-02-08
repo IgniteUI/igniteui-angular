@@ -27,6 +27,32 @@ describe("IgxVirtual directive - simple template", () => {
         const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
         expect(displayContainer).not.toBeNull();
     });
+
+    it("should initialize directive with vertical and horizontal virtualization", () => {
+        const fix = TestBed.createComponent(VirtualComp);
+        fix.detectChanges();
+        const container = fix.componentInstance.container;
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("horizontal-virtual-helper");
+        expect(displayContainer).not.toBeNull();
+        expect(verticalScroller).not.toBeNull();
+        expect(horizontalScroller).not.toBeNull();
+        /* The height of the row is set to 50px so scrolling by 100px should render the third record */
+        verticalScroller.scrollTop = 100;
+        let e = new Event("scroll");
+        Object.defineProperty(e, 'target', {value: verticalScroller, enumerable: true});
+        fix.componentInstance.parentVirtDir.onScroll(e);
+        let firstInnerDisplayContainer = displayContainer.children[0].querySelector("display-container");
+        expect(firstInnerDisplayContainer).not.toBeNull();
+        let firstRecChildren = firstInnerDisplayContainer.children;
+
+        fix.detectChanges();
+
+        for (let i = 0; i < firstRecChildren.length; i++) {
+            expect(firstInnerDisplayContainer.children[i].textContent).toBe(fix.componentInstance.data[2][i].toString());
+        }
+    });
 });
 
 /** Empty virtualized component */

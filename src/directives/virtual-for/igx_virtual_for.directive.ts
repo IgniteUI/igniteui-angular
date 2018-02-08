@@ -146,7 +146,7 @@ export class IgVirtualForOf<T> {
         }
     }
 
-    private onScroll(event) {
+    public onScroll(event) {
         const scrollTop = event.target.scrollTop;
         const vcHeight = event.target.children[0].scrollHeight;
         const ratio = scrollTop / vcHeight;
