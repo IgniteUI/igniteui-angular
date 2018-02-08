@@ -5,7 +5,7 @@ import { FilteringStrategy, IFilteringStrategy } from "../../src/data-operations
 import { SortingStrategy } from "../../src/data-operations/sorting-strategy";
 import { StableSortingStrategy } from "../../src/data-operations/stable-sorting-strategy";
 
-const KEY_JOB_TITLE: string =  "JobTitle";
+const KEY_JOB_TITLE =  "JobTitle";
 
 export class CustomJobTitleSortingStrategy extends SortingStrategy {
     public jobTitles = {

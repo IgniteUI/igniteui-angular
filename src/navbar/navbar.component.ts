@@ -9,7 +9,7 @@ import {
     Output,
     ViewEncapsulation
 } from "@angular/core";
-import { IgxButtonModule } from "../button/button.directive";
+import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxIconModule } from "../icon/icon.component";
 
 @Component({
@@ -18,15 +18,15 @@ import { IgxIconModule } from "../icon/icon.component";
     styleUrls: ["./navbar.component.scss"],
     templateUrl: "navbar.component.html"
 })
-export class IgxNavbar implements AfterContentChecked {
-    private static NEXT_ID: number = 1;
+export class IgxNavbarComponent {
+    private static NEXT_ID = 1;
 
     /**
      * The IgxNavbar action button visual state state
      * @type {boolean}
      */
     @Input()
-    public isActionButtonVisible: boolean = false;
+    public isActionButtonVisible = false;
 
     /**
      * The IgxNavbar action button actionButtonIcon
@@ -47,16 +47,8 @@ export class IgxNavbar implements AfterContentChecked {
      */
     @Output() public onAction = new EventEmitter();
 
-    private _titleId: string;
-
-    public ngAfterContentChecked(): void {
-        this._titleId = `igx-navbar-${IgxNavbar.NEXT_ID++}`;
-    }
-
     @Input()
-    get titleId() {
-        return this._titleId;
-    }
+    public titleId = `igx-navbar-${IgxNavbarComponent.NEXT_ID++}`;
 
     public _triggerAction() {
         this.onAction.emit(this);
@@ -64,8 +56,8 @@ export class IgxNavbar implements AfterContentChecked {
 }
 
 @NgModule({
-    declarations: [IgxNavbar],
-    exports: [IgxNavbar],
+    declarations: [IgxNavbarComponent],
+    exports: [IgxNavbarComponent],
     imports: [IgxButtonModule, IgxIconModule, CommonModule]
 })
 export class IgxNavbarModule {

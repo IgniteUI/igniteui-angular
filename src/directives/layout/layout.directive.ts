@@ -4,11 +4,11 @@ import { Directive, HostBinding, Input, NgModule } from "@angular/core";
     selector: "[igxLayout]"
 })
 export class IgxLayoutDirective {
-    @Input("igxLayoutDir") public dir: string = "row";
-    @Input("igxLayoutReverse") public reverse: boolean = false;
-    @Input("igxLayoutWrap") public wrap: string = "nowrap";
-    @Input("igxLayoutJustify") public justify: string = "flex-start";
-    @Input("igxLayoutItemAlign") public itemAlign: string = "flex-start";
+    @Input("igxLayoutDir") public dir = "row";
+    @Input("igxLayoutReverse") public reverse = false;
+    @Input("igxLayoutWrap") public wrap = "nowrap";
+    @Input("igxLayoutJustify") public justify = "flex-start";
+    @Input("igxLayoutItemAlign") public itemAlign = "flex-start";
 
     @HostBinding("style.display") public display = "flex";
     @HostBinding("style.flex-wrap") get flexwrap() { return this.wrap; }
@@ -28,10 +28,10 @@ export class IgxLayoutDirective {
     selector: "[igxFlex]"
 })
 export class IgxFlexDirective {
-    @Input("igxFlexGrow") public grow: number = 1;
-    @Input("igxFlexShrink") public shrink: number = 1;
-    @Input("igxFlex") public flex: string = "";
-    @Input("igxFlexOrder") public order: number = 0;
+    @Input("igxFlexGrow") public grow = 1;
+    @Input("igxFlexShrink") public shrink = 1;
+    @Input("igxFlex") public flex = "";
+    @Input("igxFlexOrder") public order = 0;
 
     @HostBinding("style.flex")
     get style() {
@@ -48,7 +48,7 @@ export class IgxFlexDirective {
 }
 
 @NgModule({
-    declarations: [IgxLayoutDirective, IgxFlexDirective],
+    declarations: [IgxFlexDirective, IgxLayoutDirective],
     exports: [IgxFlexDirective, IgxLayoutDirective]
 })
-export class IgxLayout { }
+export class IgxLayoutModule { }

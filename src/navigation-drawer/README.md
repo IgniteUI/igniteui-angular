@@ -12,12 +12,12 @@ The **igx-nav-drawer** is a container element for side navigation, providing qui
     [isOpen]="open"
     [width]="drawerWidth"
     [miniWidth]="drawerMiniWidth">
-        <div class="ig-drawer-content">
+        <div class="igx-drawer-content">
             <h3>Drawer Title</h3>
             <div *ngFor="let navItem of navItems"><img src="http://www.infragistics.com/assets/images/favicon.ico" width='16' />
             <a routerLink="{{navItem.link}}"> {{navItem.text}} </a></div>
         </div>
-        <div *ngIf="miniTemplate" class="ig-drawer-mini-content">
+        <div *ngIf="miniTemplate" class="igx-drawer-mini-content">
             <span class="hamburger" igxNavToggle="test" > &#9776; </span>
             <div *ngFor="let navItem of navItems"><img src="http://www.infragistics.com/assets/images/favicon.ico" width='16' /></div>
         </div>
@@ -35,8 +35,8 @@ The **igx-nav-drawer** is a container element for side navigation, providing qui
 | `isOpen` | boolean | State of the drawer. |
 | `pin` | boolean | Pinned state of the drawer. Currently only support. |
 | `pinThreshold` | number | Minimum device width required for automatic pin to be toggled. Default is 1024, can be set to falsy value to ignore. |
-| `width` | string| Width of the drawer in its open state. Defaults to 300px based on the `.ig-nav-drawer` style. Can be used to override or dynamically modify the width.|
-| `miniWidth` | string | Width of the drawer in its mini state. Defaults to 60px based on the `.ig-nav-drawer.mini` style. Can be used to override or dynamically modify the width. |
+| `width` | string| Width of the drawer in its open state. Defaults to 300px based on the `.igx-nav-drawer` style. Can be used to override or dynamically modify the width.|
+| `miniWidth` | string | Width of the drawer in its mini state. Defaults to 60px based on the `.igx-nav-drawer.mini` style. Can be used to override or dynamically modify the width. |
 
 ## Methods
 | Name      |  Description |
@@ -66,7 +66,7 @@ export class MainDrawerSampleComponent {
     open: boolean = false;
     position = "left";
     drawerMiniWidth = "";
-    @ViewChild(IgxNavigationDrawer) viewChild: IgxNavigationDrawer;
+    @ViewChild(IgxNavigationDrawerComponent) viewChild: IgxNavigationDrawerComponent;
     /** Sample-specific configurations: */
     showMiniWidth: boolean = false;
     showEventLog: boolean = true;

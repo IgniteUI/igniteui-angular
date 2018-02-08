@@ -9,11 +9,11 @@ describe("IgxDatePicker", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxDatePicker,
-                IgxDatePickerWithWeekStart,
-                IgxDatePickerWithCustomFormatter,
-                IgxDatePickerWithPassedDate,
-                IgxDatePickerWIthLocale
+                IgxDatePickerTestComponent,
+                IgxDatePickerWithWeekStartComponent,
+                IgxDatePickerWithCustomFormatterComponent,
+                IgxDatePickerWithPassedDateComponent,
+                IgxDatePickerWIthLocaleComponent
             ],
             imports: [IgxDatePickerModule, FormsModule, BrowserAnimationsModule]
         })
@@ -21,7 +21,7 @@ describe("IgxDatePicker", () => {
     }));
 
     it("Initialize a datepicker component", () => {
-        const fixture = TestBed.createComponent(IgxDatePicker);
+        const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
         fixture.detectChanges();
 
         const datePicker = fixture.componentInstance.datePicker;
@@ -32,7 +32,7 @@ describe("IgxDatePicker", () => {
     });
 
     it("@Input properties", () => {
-        const fixture = TestBed.createComponent(IgxDatePickerWithPassedDate);
+        const fixture = TestBed.createComponent(IgxDatePickerWithPassedDateComponent);
         fixture.detectChanges();
 
         const datePicker = fixture.componentInstance.datePicker;
@@ -41,7 +41,7 @@ describe("IgxDatePicker", () => {
     });
 
     it("Datepicker DOM input value", () => {
-        const fixture = TestBed.createComponent(IgxDatePickerWithPassedDate);
+        const fixture = TestBed.createComponent(IgxDatePickerWithPassedDateComponent);
         fixture.detectChanges();
 
         const today = new Date(2017, 7, 7);
@@ -54,7 +54,7 @@ describe("IgxDatePicker", () => {
     });
 
     it("Datepicker week start day (Monday)", () => {
-        const fixture = TestBed.createComponent(IgxDatePickerWithWeekStart);
+        const fixture = TestBed.createComponent(IgxDatePickerWithWeekStartComponent);
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
@@ -70,7 +70,7 @@ describe("IgxDatePicker", () => {
     });
 
     it("Set formatOptions for month to be numeric", () => {
-        const fixture = TestBed.createComponent(IgxDatePickerWithPassedDate);
+        const fixture = TestBed.createComponent(IgxDatePickerWithPassedDateComponent);
         fixture.detectChanges();
 
         const getMonthFromPickerDate = fixture.componentInstance.date.getMonth() + 1;
@@ -87,7 +87,7 @@ describe("IgxDatePicker", () => {
     });
 
     it("locale propagate calendar value (de-DE)", () => {
-        const fixture = TestBed.createComponent(IgxDatePickerWIthLocale);
+        const fixture = TestBed.createComponent(IgxDatePickerWIthLocaleComponent);
         fixture.detectChanges();
 
         const datePicker = fixture.componentInstance.datePicker;
@@ -97,7 +97,7 @@ describe("IgxDatePicker", () => {
     });
 
     it("Datepicker open event", () => {
-        const fixture = TestBed.createComponent(IgxDatePicker);
+        const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
         fixture.detectChanges();
 
         const datePicker = fixture.componentInstance.datePicker;
@@ -115,7 +115,7 @@ describe("IgxDatePicker", () => {
     });
 
     it("Datepicker onSelection event and selectDate method propagation", () => {
-        const fixture = TestBed.createComponent(IgxDatePicker);
+        const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
         fixture.detectChanges();
 
         const datePicker = fixture.componentInstance.datePicker;
@@ -131,7 +131,7 @@ describe("IgxDatePicker", () => {
     });
 
     it("Datepicker custom formatter", () => {
-        const fixture = TestBed.createComponent(IgxDatePickerWithCustomFormatter);
+        const fixture = TestBed.createComponent(IgxDatePickerWithCustomFormatterComponent);
         fixture.detectChanges();
 
         const compInstance = fixture.componentInstance;
@@ -145,7 +145,7 @@ describe("IgxDatePicker", () => {
     });
 
     it("Datepicker custom locale(EN) date format", () => {
-        const fixture = TestBed.createComponent(IgxDatePickerWithPassedDate);
+        const fixture = TestBed.createComponent(IgxDatePickerWithPassedDateComponent);
         fixture.detectChanges();
 
         const todayToEnLocale = new Date(2017, 7, 7).toLocaleDateString("en");
@@ -161,7 +161,7 @@ describe("IgxDatePicker", () => {
         <igx-datePicker [formatter]="customFormatter" [value]=date></igx-datePicker>
     `
 })
-export class IgxDatePickerWithCustomFormatter {
+export class IgxDatePickerWithCustomFormatterComponent {
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
 
     public date = new Date(2017, 7, 7);
@@ -175,7 +175,7 @@ export class IgxDatePickerWithCustomFormatter {
         <igx-datePicker [value]="date" [weekStart]="1"></igx-datePicker>
     `
 })
-export class IgxDatePickerWithWeekStart {
+export class IgxDatePickerWithWeekStartComponent {
     public date: Date = new Date(2017, 6, 8);
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
 }
@@ -185,8 +185,8 @@ export class IgxDatePickerWithWeekStart {
         <igx-datePicker></igx-datePicker>
     `
 })
-export class IgxDatePicker {
-    public weekStart: number = 1;
+export class IgxDatePickerTestComponent {
+    public weekStart = 1;
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
 }
 
@@ -195,7 +195,7 @@ export class IgxDatePicker {
         <igx-datePicker [value]="date" [formatOptions]="formatOptions"></igx-datePicker>
     `
 })
-export class IgxDatePickerWithPassedDate {
+export class IgxDatePickerWithPassedDateComponent {
     public date: Date = new Date(2017, 7, 7);
     public formatOptions = {
         day: "numeric",
@@ -211,7 +211,7 @@ export class IgxDatePickerWithPassedDate {
         <igx-datePicker [value]="date" [locale]="'de-DE'"></igx-datePicker>
     `
 })
-export class IgxDatePickerWIthLocale {
+export class IgxDatePickerWIthLocaleComponent {
     public date: Date = new Date(2017, 7, 7);
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
 }
