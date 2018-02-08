@@ -74,6 +74,10 @@ export class IgxNavigationDrawer extends BaseComponent implements IToggleView,
      */
     @Input() public pinThreshold: number = 1024;
 
+    get element() {
+        return this.elementRef.nativeElement;
+    }
+
     /**
      * Width of the drawer in its open state. Defaults to 300px based on the `.ig-nav-drawer` style.
      * Can be used to override or dynamically modify the width.
