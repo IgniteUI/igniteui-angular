@@ -24,7 +24,7 @@ export * from "./button/button.directive";
 export * from "./buttonGroup/buttonGroup.component";
 export * from "./list/list.component";
 export * from "./tabbar/tabbar.component";
-export * from "./calendar/calendar.component";
+export * from "./calendar";
 export * from "./carousel/carousel.component";
 export * from "./input/input.directive";
 export * from "./checkbox/checkbox.component";

@@ -3,6 +3,7 @@ import {
     Component,
     ComponentFactoryResolver,
     ComponentRef,
+    ContentChild,
     EventEmitter,
     HostBinding,
     Input,
@@ -15,8 +16,13 @@ import {
     ViewEncapsulation
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { WEEKDAYS } from "../calendar/calendar";
-import { IgxCalendarComponent, IgxCalendarModule } from "../calendar/calendar.component";
+import {
+    IgxCalendarComponent,
+    IgxCalendarHeaderTemplateDirective,
+    IgxCalendarModule,
+    IgxCalendarSubheaderTemplateDirective,
+    WEEKDAYS
+} from "../calendar";
 import { IgxDialog, IgxDialogModule } from "../dialog/dialog.component";
 import { IgxInput } from "../input/input.directive";
 
@@ -49,6 +55,13 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         weekday: "short",
         year: "numeric"
     };
+
+    @Input() public formatViews = {
+        day: false,
+        month: true,
+        year: false
+    };
+
     /**
      * Propagate dialog properties.
      */
@@ -70,8 +83,17 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         return "";
     }
 
-    @ViewChild("container", {read: ViewContainerRef}) public container: ViewContainerRef;
-    @ViewChild(IgxDialog) public alert: IgxDialog;
+    @ContentChild(IgxCalendarHeaderTemplateDirective, { read: IgxCalendarHeaderTemplateDirective })
+    public headerTemplate: IgxCalendarHeaderTemplateDirective;
+
+    @ContentChild(IgxCalendarSubheaderTemplateDirective, { read: IgxCalendarSubheaderTemplateDirective })
+    public subheaderTemplate: IgxCalendarSubheaderTemplateDirective;
+
+    @ViewChild("container", {read: ViewContainerRef})
+    public container: ViewContainerRef;
+
+    @ViewChild(IgxDialog)
+    public alert: IgxDialog;
 
     public calendarRef: ComponentRef<IgxCalendarComponent>;
 
@@ -161,7 +183,17 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     private updateCalendarInstance() {
         this.calendar.formatOptions = this.formatOptions;
+        this.calendar.formatViews = this.formatViews;
         this.calendar.locale = this.locale;
+
+        if (this.headerTemplate) {
+            this.calendar.headerTemplate = this.headerTemplate;
+        }
+
+        if (this.subheaderTemplate) {
+            this.calendar.subheaderTemplate = this.subheaderTemplate;
+        }
+
         if (this.value) {
             this.calendar.value = this.value;
             this.calendar.viewDate = this.value;
