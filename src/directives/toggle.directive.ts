@@ -27,10 +27,10 @@ import { IgxNavigationService, IToggleView } from "../core/navigation";
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     @Output()
-    public onOpen = new EventEmitter();
+    public onOpened = new EventEmitter();
 
     @Output()
-    public onClose = new EventEmitter();
+    public onClosed = new EventEmitter();
 
     @Input()
     public collapsed = true;
