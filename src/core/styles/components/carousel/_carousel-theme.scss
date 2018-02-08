@@ -25,7 +25,6 @@ $components: register-component($components, #{$component-name});
     );
 
     $this: extend($default-theme, $theme);
-    // 28. Carousel
     $carousel-arrow-margin: 0 em(16px) !default;
     $carousel-indicators-margin: em(16px) 0 !default;
     $carousel-indicators-padding: 0 !default;
@@ -67,6 +66,7 @@ $components: register-component($components, #{$component-name});
         background-color: map-get($this, arrow-background);
         border-radius: 50%;
         box-shadow: $elevate-1;
+        outline-style: none;
         transition: opacity .25s ease-out;
 
         span {
