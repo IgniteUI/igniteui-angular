@@ -2,7 +2,7 @@ import {Component, ViewChild} from "@angular/core";
 import {async, TestBed } from "@angular/core/testing";
 import {By} from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import {IgxToast, IgxToastModule, IgxToastPosition} from "./toast.component";
+import {IgxToastComponent, IgxToastModule, IgxToastPosition} from "./toast.component";
 
 const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
@@ -92,7 +92,7 @@ describe("IgxToast", () => {
             const fixture = TestBed.createComponent(ToastInitializeTestComponent);
             fixture.detectChanges();
 
-            const displayTime: number = 1000;
+            const displayTime = 1000;
             fixture.componentInstance.toast.displayTime = displayTime;
 
             fixture.componentInstance.toast.show();
@@ -114,7 +114,7 @@ describe("IgxToast", () => {
             const fixture = TestBed.createComponent(ToastInitializeTestComponent);
             fixture.detectChanges();
 
-            const displayTime: number = 1000;
+            const displayTime = 1000;
             fixture.componentInstance.toast.displayTime = displayTime;
             fixture.componentInstance.toast.autoHide = false;
 
@@ -133,10 +133,9 @@ describe("IgxToast", () => {
     });
 });
 @Component({
-    selector: "snackbar-test-component",
     template: `<igx-toast #toast>
                </igx-toast>`
 })
 class ToastInitializeTestComponent {
-    @ViewChild(IgxToast) public toast: IgxToast;
+    @ViewChild(IgxToastComponent) public toast: IgxToastComponent;
 }

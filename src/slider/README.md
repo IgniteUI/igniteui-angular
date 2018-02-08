@@ -26,10 +26,10 @@ Based on its configuration it's a slider or range slider.
 
 ### Dependencies
 
-To use the IgxSlider import the IgxSlider:
+To use the IgxSlider import the IgxSliderComponent:
 
 ```typescript
-import { IgxSlider } from "../../../src/main";
+import { IgxSliderComponent } from "../../../src/main";
 ```
 
 ## API
