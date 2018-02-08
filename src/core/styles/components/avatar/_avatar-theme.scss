@@ -2,20 +2,24 @@ $component-name: 'igx-avatar';
 
 $components: register-component($components, #{$component-name});
 
-@function igx-avatar-theme($icon-background: null, $image-background: null) {
+@function igx-avatar-theme($icon-background: null, $image-background: null, $icon-color: null) {
+    @if not($icon-color) and $icon-background {
+        $icon-color: text-contrast($icon-background);
+    }
+
     @return (
         icon-background: $icon-background,
+        icon-color: $icon-color,
         image-background: $image-background
     );
 }
 @mixin igx-avatar($theme, $palette: $default-palette) {
     $default-theme: igx-avatar-theme(
-        $icon-background: igx-color($palette, grays, 400),
+        $icon-background: igx-color($default-palette, grays, 400),
+        $icon-color: igx-color($default-palette, grays, 800),
         $image-background: transparent
     );
     $this: extend($default-theme, $theme);
-
-    // @debug $this;
 
     %igx-avatar-display {
         display: flex;
@@ -46,6 +50,7 @@ $components: register-component($components, #{$component-name});
 
     %igx-avatar--icon {
         background-color: map-get($this, icon-background);
+        color: map-get($this, icon-color);
     }
 
     %igx-avatar--image {

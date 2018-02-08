@@ -24,7 +24,7 @@ export class IgxAvatar {
     @Input() public initials: string;
     @Input() public src: string;
     @Input("roundShape") public roundShape: string = "false";
-    @Input() public color: string = "white";
+    @Input() public color: string = "";
 
     public sizeEnum = Size;
     public roleDescription: string;
