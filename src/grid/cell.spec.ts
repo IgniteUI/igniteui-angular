@@ -73,25 +73,25 @@ describe("IgxGrid - Cell component", () => {
 
         expect(cell.inEditMode).toBe(true);
 
-        rv.triggerEventHandler("keydown", { keyCode: KEYCODES.ESCAPE });
+        rv.triggerEventHandler("keydown.escape", null);
         tick();
         fix.detectChanges();
 
         expect(cell.inEditMode).toBe(false);
 
-        rv.triggerEventHandler("keydown", { keyCode: KEYCODES.ENTER });
+        rv.triggerEventHandler("keydown.enter", null);
         tick();
         fix.detectChanges();
 
         expect(cell.inEditMode).toBe(true);
 
-        rv.triggerEventHandler("keydown", { keyCode: KEYCODES.ESCAPE });
+        rv.triggerEventHandler("keydown.escape", null);
         tick();
         fix.detectChanges();
 
         expect(cell.inEditMode).toBe(false);
 
-        rv.triggerEventHandler("keydown", { keyCode: KEYCODES.F2 });
+        rv.triggerEventHandler("keydown.f2", null);
         tick();
         fix.detectChanges();
 
@@ -111,7 +111,7 @@ describe("IgxGrid - Cell component", () => {
         cell.column.editable = true;
         fix.detectChanges();
 
-        rv.triggerEventHandler("keydown", { keyCode: KEYCODES.ENTER });
+        rv.triggerEventHandler("keydown.enter", null);
         tick();
         fix.detectChanges();
 
@@ -143,28 +143,28 @@ describe("IgxGrid - Cell component", () => {
         expect(fix.componentInstance.selectedCell.value).toEqual(1);
         expect(fix.componentInstance.selectedCell.column.field).toMatch("index");
 
-        topLeft.triggerEventHandler("keydown", { keyCode: KEYCODES.DOWN_ARROW });
+        topLeft.triggerEventHandler("keydown.arrowdown", null);
         tick();
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(2);
         expect(fix.componentInstance.selectedCell.column.field).toMatch("index");
 
-        bottomLeft.triggerEventHandler("keydown", { keyCode: KEYCODES.RIGHT_ARROW });
+        bottomLeft.triggerEventHandler("keydown.arrowright", null);
         tick();
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(2);
         expect(fix.componentInstance.selectedCell.column.field).toMatch("value");
 
-        bottomRight.triggerEventHandler("keydown", { keyCode: KEYCODES.UP_ARROW });
+        bottomRight.triggerEventHandler("keydown.arrowup", null);
         tick();
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(1);
         expect(fix.componentInstance.selectedCell.column.field).toMatch("value");
 
-        topRight.triggerEventHandler("keydown", { keyCode: KEYCODES.LEFT_ARROW });
+        topRight.triggerEventHandler("keydown.arrowleft", null);
         tick();
         fix.detectChanges();
 
@@ -181,14 +181,14 @@ describe("IgxGrid - Cell component", () => {
         const rv2 = fix.debugElement.query(By.css(`${CELL_CSS_CLASS}:last-child`));
 
         rv.triggerEventHandler("focus", {});
-        rv.triggerEventHandler("keydown", { keyCode: KEYCODES.RIGHT_ARROW, ctrlKey: true});
+        rv.triggerEventHandler("keydown.ctrl.arrowright", null);
         tick();
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(1);
         expect(fix.componentInstance.selectedCell.column.field).toMatch("another");
 
-        rv2.triggerEventHandler("keydown", { keyCode: KEYCODES.LEFT_ARROW, ctrlKey: true});
+        rv2.triggerEventHandler("keydown.ctrl.arrowleft", null);
         tick();
         fix.detectChanges();
 
