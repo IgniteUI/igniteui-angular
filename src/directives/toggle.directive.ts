@@ -79,8 +79,8 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         }
     }
 
-    public toggle(fireEvents?: boolean, handler?) {
-        this.collapsed ? this.open(true) : this.close(true);
+    public toggle(fireEvents?: boolean) {
+        this.collapsed ? this.open(fireEvents) : this.close(fireEvents);
     }
 
     public ngOnInit() {
@@ -157,7 +157,7 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
                     return;
                 }
 
-                this.target.close();
+                this.target.close(true);
                 document.removeEventListener("click", this._handler, true);
             };
 
@@ -167,7 +167,7 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
 
     @HostListener("click", ["$event"])
     private onClick() {
-        this.target.toggle(false);
+        this.target.toggle(true);
 
         if (this._handler) {
             document.addEventListener("click", this._handler, true);
