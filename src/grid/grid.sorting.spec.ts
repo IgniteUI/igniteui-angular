@@ -11,7 +11,7 @@ describe("IgxGrid - Grid Sorting", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [
-                GridDeclaredColumns
+                GridDeclaredColumnsComponent
             ],
             imports: [IgxGridModule.forRoot()]
         })
@@ -19,7 +19,7 @@ describe("IgxGrid - Grid Sorting", () => {
     });
 
     it("Grid sort ascending by column name (default)", () => {
-        const fixture = TestBed.createComponent(GridDeclaredColumns);
+        const fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid;
@@ -41,7 +41,7 @@ describe("IgxGrid - Grid Sorting", () => {
     });
 
     it("Grid sort descending by column name", () => {
-        const fixture = TestBed.createComponent(GridDeclaredColumns);
+        const fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid;
@@ -69,7 +69,7 @@ describe("IgxGrid - Grid Sorting", () => {
     });
 
     it("Try sort by invalid column should not change anything", () => {
-        const fixture = TestBed.createComponent(GridDeclaredColumns);
+        const fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid;
@@ -87,7 +87,7 @@ describe("IgxGrid - Grid Sorting", () => {
     });
 
     it("Grid sort current column by expression (Ascending)", () => {
-        const fixture = TestBed.createComponent(GridDeclaredColumns);
+        const fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid;
@@ -100,7 +100,7 @@ describe("IgxGrid - Grid Sorting", () => {
     });
 
     it("Grid sort current column by expression (Descending with ignoreCase)", () => {
-        const fixture = TestBed.createComponent(GridDeclaredColumns);
+        const fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid;
@@ -115,7 +115,7 @@ describe("IgxGrid - Grid Sorting", () => {
     });
 
     it("Grid sort by multiple expressions and clear sorting through API", () => {
-        const fixture = TestBed.createComponent(GridDeclaredColumns);
+        const fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid;
@@ -157,7 +157,7 @@ describe("IgxGrid - Grid Sorting", () => {
     });
 
     it("Grid sort by multiple expressions through API using ignoreCase for the second expression", () => {
-        const fixture = TestBed.createComponent(GridDeclaredColumns);
+        const fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid;
@@ -204,7 +204,7 @@ describe("IgxGrid - Grid Sorting", () => {
     });
 
     it("Grid sort by invalid expressions fieldName shouldn't change anything", () => {
-        const fixture = TestBed.createComponent(GridDeclaredColumns);
+        const fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid;
@@ -234,7 +234,7 @@ describe("IgxGrid - Grid Sorting", () => {
 
     it(`Grid sort by mixed valid and invalid expressions should update the
             data only by valid ones (through API)`, () => {
-        const fixture = TestBed.createComponent(GridDeclaredColumns);
+        const fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid;
@@ -263,7 +263,7 @@ describe("IgxGrid - Grid Sorting", () => {
     // UI Tests
 
     it("Grid sort ascending by clicking once on first header cell UI", () => {
-        const fixture = TestBed.createComponent(GridDeclaredColumns);
+        const fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid;
@@ -288,7 +288,7 @@ describe("IgxGrid - Grid Sorting", () => {
     });
 
     it("Grid sort descending by clicking twice on header cell UI", () => {
-        const fixture = TestBed.createComponent(GridDeclaredColumns);
+        const fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid;
@@ -315,7 +315,7 @@ describe("IgxGrid - Grid Sorting", () => {
     });
 
     it("Grid sort none when we click three time on header cell UI", () => {
-        const fixture = TestBed.createComponent(GridDeclaredColumns);
+        const fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid;
@@ -351,7 +351,7 @@ describe("IgxGrid - Grid Sorting", () => {
         </igx-grid>
     `
 })
-export class GridDeclaredColumns {
+export class GridDeclaredColumnsComponent {
 
     public data = [
         { ID: 2, Name: "Jane", LastName: "Brown" },

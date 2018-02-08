@@ -4,13 +4,13 @@ import { Directive, ElementRef, HostListener, Input, NgModule, NgZone, Renderer2
     selector: "[igxRipple]"
 })
 export class IgxRippleDirective {
-    @Input("igxRippleTarget") public rippleTarget: string = "";
+    @Input("igxRippleTarget") public rippleTarget = "";
     @Input("igxRipple") public rippleColor: string;
-    @Input("igxRippleDuration") public rippleDuration: number = 600;
+    @Input("igxRippleDuration") public rippleDuration = 600;
 
     protected container: HTMLElement;
 
-    private _centered: boolean = false;
+    private _centered = false;
     private animationQueue = [];
 
     @Input("igxRippleCentered") set centered(value: boolean) {

@@ -16,12 +16,13 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { WEEKDAYS } from "../calendar/calendar";
 import { IgxCalendarComponent, IgxCalendarModule } from "../calendar/calendar.component";
-import { IgxDialog, IgxDialogModule } from "../dialog/dialog.component";
-import { IgxInput } from "../input/input.directive";
+import { IgxDialogComponent, IgxDialogModule } from "../dialog/dialog.component";
+import { IgxInputModule } from "../directives/input/input.directive";
 
 @Component({
     providers:
         [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true }],
+    // tslint:disable-next-line:component-selector
     selector: "igx-datePicker",
     templateUrl: "date-picker.component.html"
 })
@@ -68,7 +69,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     @ViewChild("container", { read: ViewContainerRef }) public container: ViewContainerRef;
-    @ViewChild(IgxDialog) public alert: IgxDialog;
+    @ViewChild(IgxDialogComponent) public alert: IgxDialogComponent;
 
     public calendarRef: ComponentRef<IgxCalendarComponent>;
 
@@ -198,6 +199,6 @@ class Constants {
     declarations: [IgxDatePickerComponent],
     entryComponents: [IgxCalendarComponent],
     exports: [IgxDatePickerComponent],
-    imports: [CommonModule, IgxInput, IgxDialogModule, IgxCalendarModule]
+    imports: [CommonModule, IgxInputModule, IgxDialogModule, IgxCalendarModule]
 })
 export class IgxDatePickerModule { }
