@@ -19,7 +19,6 @@ import {
 import { IgxBadgeModule } from "../badge/badge.component";
 import { IgxIconModule } from "../icon/icon.component";
 @Component({
-    encapsulation: ViewEncapsulation.None,
     selector: "igx-tab-bar",
     styleUrls: ["./tabbar.component.scss"],
     templateUrl: "tab-bar-content.component.html"
@@ -63,7 +62,7 @@ export class IgxTabBarComponent implements AfterViewInit {
         }, 0);
     }
 
-    @HostListener("onTabSelected",  ["$event"])
+    @HostListener("onTabSelected", ["$event"])
     public _selectedPanelHandler(args) {
         this.selectedIndex = args.panel.index;
 
