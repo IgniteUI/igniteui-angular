@@ -3,8 +3,7 @@ import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import { Calendar, isLeap, monthRange, weekDay, WEEKDAYS } from "./calendar";
-import { IgxCalendarComponent, IgxCalendarModule } from "./calendar.component";
+import { Calendar, IgxCalendarComponent, IgxCalendarModule, isLeap, monthRange, weekDay, WEEKDAYS } from "./index";
 
 describe("IgxCalendar", () => {
     beforeEach(
@@ -238,7 +237,7 @@ describe("IgxCalendar", () => {
         expect(calendarHeader).toBeFalsy();
     });
 
-    it("Calendar DOM strucutre - year view | month view", () => {
+    it("Calendar DOM structure - year view | month view", () => {
         const fixture = TestBed.createComponent(
                 IgxCalendarRenderingComponent
             );
@@ -261,7 +260,7 @@ describe("IgxCalendar", () => {
         expect(months.length).toEqual(11);
         expect(currentMonth.nativeElement.textContent.trim()).toMatch("Jun");
 
-        months[0].parent.triggerEventHandler("click", { target: months[0].nativeElement });
+        months[0].triggerEventHandler("click", { target: months[0].nativeElement });
         fixture.detectChanges();
 
         expect(calendar.viewDate.getMonth()).toEqual(0);
@@ -273,13 +272,13 @@ describe("IgxCalendar", () => {
         const years = dom.queryAll(By.css(".igx-calendar__year"));
         const currentYear = dom.query(By.css(".igx-calendar__year--current"));
 
-        expect(years.length).toEqual(10);
+        expect(years.length).toEqual(6);
         expect(currentYear.nativeElement.textContent.trim()).toMatch("2017");
 
-        years[0].parent.triggerEventHandler("click", { target: years[0].nativeElement });
+        years[0].triggerEventHandler("click", { target: years[0].nativeElement });
         fixture.detectChanges();
 
-        expect(calendar.viewDate.getFullYear()).toEqual(2012);
+        expect(calendar.viewDate.getFullYear()).toEqual(2014);
     });
 
     it(
@@ -306,11 +305,8 @@ describe("IgxCalendar", () => {
 
             spyOn(calendar.onSelection, "emit");
 
-            // Fire on the div representing the week as events fired on the children don't bubble up the tree
             // Select 14th
-            weekDiv.triggerEventHandler("click", {
-                target: weekDays[3].nativeElement
-            });
+            weekDays[3].triggerEventHandler("click", {});
 
             fixture.detectChanges();
 
@@ -352,9 +348,7 @@ describe("IgxCalendar", () => {
             );
             const target = parent.queryAll(By.css("span")).pop();
 
-            parent.triggerEventHandler("click", {
-                target: target.nativeElement
-            });
+            target.triggerEventHandler("click", {});
             fixture.detectChanges();
 
             expect(
@@ -384,9 +378,7 @@ describe("IgxCalendar", () => {
             const parent = dom.queryAll(By.css(".igx-calendar__body-row"))[1];
             const target = parent.queryAll(By.css("span")).shift();
 
-            parent.triggerEventHandler("click", {
-                target: target.nativeElement
-            });
+            target.triggerEventHandler("click", {});
             fixture.detectChanges();
 
             expect(
@@ -422,12 +414,9 @@ describe("IgxCalendar", () => {
                 new Date(2017, 5, 13).toDateString()
             );
 
-            spyOn(calendar.onSelection, "emit");
-
             calendar.selectDate(new Date(2017, 5, 14));
             fixture.detectChanges();
 
-            expect(calendar.onSelection.emit).toHaveBeenCalled();
             expect((calendar.value as Date).toDateString()).toMatch(
                 nextDay.toDateString()
             );
@@ -477,9 +466,7 @@ describe("IgxCalendar", () => {
             );
 
             weekDays.forEach((el) => {
-                weekDiv.triggerEventHandler("click", {
-                    target: el.nativeElement
-                });
+                el.triggerEventHandler("click", {});
                 fixture.detectChanges();
             });
 
@@ -496,9 +483,7 @@ describe("IgxCalendar", () => {
             });
 
             // Deselect last day
-            weekDiv.triggerEventHandler("click", {
-                target: weekDays[weekDays.length - 1].nativeElement
-            });
+            weekDays[weekDays.length - 1].triggerEventHandler("click", {});
             fixture.detectChanges();
 
             expect((calendar.value as Date[]).length).toEqual(6);
@@ -600,9 +585,7 @@ describe("IgxCalendar", () => {
             const firstDay = new Date(2017, 5, 11);
 
             // Toggle range selection...
-            weekDiv.triggerEventHandler("click", {
-                target: weekDays[0].nativeElement
-            });
+            weekDays[0].triggerEventHandler("click", {});
             fixture.detectChanges();
 
             expect((fixture.componentInstance.model as Date[]).length).toEqual(
@@ -619,9 +602,7 @@ describe("IgxCalendar", () => {
             ).toBe(true);
 
             // ...and cancel it
-            weekDiv.triggerEventHandler("click", {
-                target: weekDays[0].nativeElement
-            });
+            weekDays[0].triggerEventHandler("click", {});
             fixture.detectChanges();
 
             expect((fixture.componentInstance.model as Date[]).length).toEqual(
@@ -635,15 +616,11 @@ describe("IgxCalendar", () => {
             ).toBe(false);
 
             // Toggle range selection...
-            weekDiv.triggerEventHandler("click", {
-                target: weekDays[0].nativeElement
-            });
+            weekDays[0].triggerEventHandler("click", {});
             fixture.detectChanges();
 
             // ...and complete it
-            weekDiv.triggerEventHandler("click", {
-                target: weekDays[weekDays.length - 1].nativeElement
-            });
+            weekDays[weekDays.length - 1].triggerEventHandler("click", {});
             fixture.detectChanges();
 
             expect((fixture.componentInstance.model as Date[]).length).toEqual(
@@ -754,7 +731,7 @@ describe("IgxCalendar", () => {
 
         let args: KeyboardEventInit = { key: "PageUp", bubbles: true };
 
-        component.triggerEventHandler("keydown", new KeyboardEvent("keydown", args));
+        component.triggerEventHandler("keydown.pageup", new KeyboardEvent("keydown", args));
         fixture.detectChanges();
 
         expect(calendar.viewDate.getMonth()).toEqual(4);
@@ -764,14 +741,14 @@ describe("IgxCalendar", () => {
 
         args = { key: "PageDown", bubbles: true };
 
-        component.triggerEventHandler("keydown", new KeyboardEvent("keydown", args));
+        component.triggerEventHandler("keydown.pagedown", new KeyboardEvent("keydown", args));
         fixture.detectChanges();
 
         expect(calendar.viewDate.getMonth()).toEqual(6);
 
         args = { key: "PageUp", bubbles: true, shiftKey: true };
 
-        component.triggerEventHandler("keydown", new KeyboardEvent("keydown", args));
+        component.triggerEventHandler("keydown.shift.pageup", new KeyboardEvent("keydown", args));
         fixture.detectChanges();
 
         expect(calendar.viewDate.getFullYear()).toEqual(2016);
@@ -781,7 +758,7 @@ describe("IgxCalendar", () => {
 
         args = { key: "PageDown", bubbles: true, shiftKey: true };
 
-        component.triggerEventHandler("keydown", new KeyboardEvent("keydown", args));
+        component.triggerEventHandler("keydown.shift.pagedown", new KeyboardEvent("keydown", args));
         fixture.detectChanges();
 
         expect(calendar.viewDate.getFullYear()).toEqual(2018);
@@ -801,11 +778,11 @@ describe("IgxCalendar", () => {
 
         let args: KeyboardEventInit = { key: "Home", bubbles: true };
 
-        const days = dom.queryAll(By.css("[data-curmonth]"));
+        const days = calendar.dates.filter((day) => day.isCurrentMonth);
         const firstDay = days[0];
         const lastDay = days[days.length - 1];
 
-        component.triggerEventHandler("keydown", new KeyboardEvent("keydown", args));
+        component.triggerEventHandler("keydown.home", new KeyboardEvent("keydown", args));
         fixture.detectChanges();
 
         expect(document.activeElement.textContent).toMatch(firstDay.nativeElement.textContent);
@@ -813,7 +790,7 @@ describe("IgxCalendar", () => {
 
         args = { key: "End", bubbles: true };
 
-        component.triggerEventHandler("keydown", new KeyboardEvent("keydown", args));
+        component.triggerEventHandler("keydown.end", new KeyboardEvent("keydown", args));
         fixture.detectChanges();
 
         expect(document.activeElement.textContent).toMatch(lastDay.nativeElement.textContent);
@@ -841,10 +818,10 @@ describe("IgxCalendar", () => {
 
         let args: KeyboardEventInit = { key: "Home", bubbles: true };
 
-        const days = dom.queryAll(By.css("[data-curmonth]"));
+        const days = calendar.dates.filter((day) => day.isCurrentMonth);
         const firstDay = days[0];
 
-        component.triggerEventHandler("keydown", new KeyboardEvent("keydown", args));
+        component.triggerEventHandler("keydown.home", new KeyboardEvent("keydown", args));
         fixture.detectChanges();
 
         expect(document.activeElement.textContent).toMatch(firstDay.nativeElement.textContent);
