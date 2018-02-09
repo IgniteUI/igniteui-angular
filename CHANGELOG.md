@@ -15,23 +15,67 @@ All notable changes for each version of this project will be documented in this 
     ```
 
     - @HostBinding `min-width` added to `IgxGridCellComponent` and `IgxGridHeaderCell`
+    - The IgxGridCellComponent no longer has a value setter, but instead has an update(newValue) modifier.
+    - Class `IgxGridFiltering` renamed to `IgxGridFilteringComponent `
+    - `state` input
+        - filtering epxpresstion and sortin expressions provided
+    - Removed `onCellSelection` and `onRowSelection` event emitters, `onSelection` added instead.
+    - Removed `onBeforeProcess` event emitter.
+    - Removed `onMovingDone` event emitter.
+    - Removed methods `focusCell` and `focusRow`.
+    - Renamed method `filderData` to `filter`.
+    - New methods `filterGlobal` and `clearFilter`.
+    - New method `clearSort`.
+    - Renamed method `sortColumn` to `sort`.
+    - New Input `sortingIgnoreCase` - Ignore capitalization of words.
 - `igx-navigation-drawer` changes:
-    - Class `NavigationDrawer` renamed to `IgxNavigationDrawer`
-    - Class `NavigationDrawerModule` renamed to `IgxNavigationDrawerModule`
-    - Class `NavigationService` renamed to `IgxNavigationService`
-    - Class `NavigationToggle` renamed to `IgxNavigationToggle`
-    - Class `NavigationClose` renamed to `IgxNavigationClose`
+    - `IgxNavigationDrawer` renamed to `IgxNavigationDrawerComponent`
+    - `IgxNavigationDirectives` renamed to `IgxNavigationModule`
+    - `NavigationDrawer` renamed to `IgxNavigationDrawer`
+    - `NavigationDrawerModule` renamed to `IgxNavigationDrawerModule`
+    - `NavigationService` renamed to `IgxNavigationService`
+    - `NavigationToggle` renamed to `IgxNavigationToggleDirective`
+    - `NavigationClose` renamed to `IgxNavigationCloseDirective`
+    - `IgxNavigationToggle ` renamed to `IgxNavigationToggleDirective`
     - CSS class `ig-nav-drawer-overlay` renamed to `igx-nav-drawer-overlay`
     - CSS class `ig-nav-drawer` renamed to `igx-nav-drawer`
     - CSS class `ig-drawer-mini-content` to `igx-drawer-mini-content`
     - CSS class `ig-drawer-content` to `igx-drawer-content`
     - CSS class `ig-form-group` to `igx-form-group`
-- Renaming and restructuring directives and components based on ng naming guidelines:
-    - Class `IgxIcon` renamed to `IgxIconComponent`
-    - Class `IgxAvatar` renamed to `IgxAvatarComponent`
-    - Class `IgxBadge` renamed to `IgxBadgeComponent`
-    - Class `IgxButton` renamed to `IgxButtonDirective`
-    - Class `IgxButtonGroup` renamed to `IgxButtonGroupComponent`
+- `igx-avatar` changes
+    - [Initials type avatar is using SVG element from now on](https://github.com/IgniteUI/igniteui-angular/issues/136)
+- [Renaming and restructuring directives and components](https://github.com/IgniteUI/igniteui-angular/issues/536) based on the [General Angular Naming Guidelines](https://angular.io/guide/styleguide#naming):
+    - `IgxAvatar` renamed to `IgxAvatarComponent`
+    - `IgxBadge` renamed to `IgxBadgeComponent`
+    - `IgxButton` renamed to `IgxButtonDirective`
+    - `IgxButtonGroup` renamed to `IgxButtonGroupComponent`
+    - `IgxCardHeader` renamed to `IgxCardHeaderDirective`
+    - `IgxCardContent` renamed to `IgxCardContentDirective`
+    - `IgxCardActions` renamed to `IgxCardActionsDirective`
+    - `IgxCardFooter` renamed to `IgxCardFooterDirective`
+    - `IgxCarousel` renamed to `IgxCarouselComponent`
+    - `IgxInput` renamed to `IgxInputModule`
+    - `IgxInputClass` renamed to `IgxInputDirective`
+    - `IgxCheckbox` renamed to `IgxCheckboxComponent`
+    - `IgxLabel` renamed to `IgxLabelDirective`
+    - `IgxIcon` renamed to `IgxIconComponent`
+    - `IgxList` renamed to `IgxListComponent`
+    - `IgxListItem` renamed to `IgxListItemComponent`
+    - `IgxSlide` renamed to `IgxSlideComponent`
+    - `IgxDialog` renamed to `IgxDialogComponent`
+    - `IgxLayout` renamed to `IgxLayoutModule`
+    - `IgxNavbar` renamed to `IgxNavbarComponent`
+    - `IgxCircularProgressBar` renamed to `IgxCircularProgressBarComponent`
+    - `IgxLinearProgressBar ` renamed to `IgxLinearProgressBarComponent`
+    - `IgxRadio` renamed to `IgxRadioComponent`
+    - `IgxScroll` renamed to `IgxScrollComponent`
+    - `IgxSlider` renamed to `IgxSliderComponent`
+    - `IgxSnackbar` renamed to `IgxSnackbarComponent`
+    - `IgxSwitch ` renamed to `IgxSwitchComponent`
+    - `IgxTabBar` renamed to `IgxTabBarComponent`
+    - `IgxTabPanel` renamed to `IgxTabPanelComponent`
+    - `IgxTab` renamed to `IgxTabComponent`
+    - `IgxToast` renamed to `IgxToastComponent`
     - `IgxLabelDirective` moved inside `../directives/label/` folder
     - `IgxInputDirective` moved inside `../directives/input/` folder
     - `IgxButtonDirective` moved inside `../directives/button/` folder
@@ -39,4 +83,4 @@ All notable changes for each version of this project will be documented in this 
     - `IgxFilterDirective` moved inside `../directives/filter/` folder
     - `IgxDraggableDirective` moved inside `../directives/dragdrop/` folder
     - `IgxRippleDirective` moved inside `../directives/ripple/` folder
-
+    - Folder `"./navigation/nav-service"` renamed to `"./navigation/nav.service"`
