@@ -60,11 +60,11 @@ When you are using Custom Dialogs you don't have a message property set.
     rightButtonBackgroundColor="green"
     rightButtonColor="white"
     closeOnOutsideSelect="true">
-    <div class="ig-form-group">
+    <div class="igx-form-group">
         <input type="text" igInput />
         <label igLabel>Username</label>
     </div>
-    <div class="ig-form-group">
+    <div class="igx-form-group">
         <input type="password" igInput />
         <label igLabel>Password</label>
     </div>

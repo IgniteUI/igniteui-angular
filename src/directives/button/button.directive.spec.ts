@@ -4,22 +4,22 @@ import {
   TestBed
 } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxButton } from "./button.directive";
+import { IgxButtonDirective } from "./button.directive";
 
 describe("IgxButton", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                InitButton,
-                ButtonWithAttribs,
-                IgxButton
+                InitButtonComponent,
+                ButtonWithAttribsComponent,
+                IgxButtonDirective
             ]
         })
         .compileComponents();
     }));
 
     it("Initializes a button", () => {
-        const fixture = TestBed.createComponent(InitButton);
+        const fixture = TestBed.createComponent(InitButtonComponent);
         fixture.detectChanges();
 
         expect(fixture.debugElement.query(By.css("span.igx-button--flat"))).toBeTruthy();
@@ -27,7 +27,7 @@ describe("IgxButton", () => {
     });
 
     it("Button with properties", () => {
-        const fixture = TestBed.createComponent(ButtonWithAttribs);
+        const fixture = TestBed.createComponent(ButtonWithAttribsComponent);
         fixture.detectChanges();
 
         const button = fixture.debugElement.query(By.css("span")).nativeElement;
@@ -58,7 +58,7 @@ describe("IgxButton", () => {
         <i class="material-icons">add</i>
     </span>`
 })
-class InitButton {
+class InitButtonComponent {
 }
 
 @Component({
@@ -68,7 +68,7 @@ class InitButton {
         [igxButtonBackground]="background"
         [disabled]="isDisabled">Test</span>`
 })
-class ButtonWithAttribs {
+class ButtonWithAttribsComponent {
     public isDisabled = true;
     public foreground = "white";
     public background = "black";

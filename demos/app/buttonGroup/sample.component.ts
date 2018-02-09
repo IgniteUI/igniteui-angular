@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import {
     ButtonGroupAlignment,
-    IgxButton,
+    IgxButtonDirective,
     IgxButtonGroupModule,
 } from "../../lib/main";
 

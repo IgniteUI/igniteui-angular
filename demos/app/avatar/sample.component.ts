@@ -1,5 +1,5 @@
 import { Component, QueryList, ViewChild, ViewChildren } from "@angular/core";
-import { IgxAvatar, IgxAvatarModule, IgxBadge, IgxBadgeModule} from "../../lib/main";
+import { IgxAvatarComponent, IgxAvatarModule, IgxBadgeComponent, IgxBadgeModule} from "../../lib/main";
 
 @Component({
     selector: "avatar-sample",
@@ -9,7 +9,7 @@ import { IgxAvatar, IgxAvatarModule, IgxBadge, IgxBadgeModule} from "../../lib/m
 export class AvatarSampleComponent {
     // @ViewChild(Avatar) avatar: Avatar;
     // Collection of avatars
-    @ViewChildren(IgxAvatar) public avatar;
+    @ViewChildren(IgxAvatarComponent) public avatar;
     public initials: string = "ZK";
     public bgColor: string = "#0375be";
     public src: string = "";

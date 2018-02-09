@@ -1,12 +1,12 @@
 import { Component, ElementRef, ViewChild } from "@angular/core";
 import {
-    IgxDialog,
+    IgxDialogComponent,
     IgxDialogModule,
     IgxFilterModule,
     IgxFilterOptions,
-    IgxInput,
-    IgxList,
-    IgxListItem,
+    IgxInputDirective,
+    IgxListComponent,
+    IgxListItemComponent,
     IgxListModule,
     IgxListPanState,
     IgxRippleModule
