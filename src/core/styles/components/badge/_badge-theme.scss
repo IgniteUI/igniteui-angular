@@ -2,34 +2,45 @@ $component-name: 'igx-badge';
 
 $components: register-component($components, #{$component-name});
 
-@function igx-badge-theme($text-color: null, $border-color: null, $background-color: null) {
+@function igx-badge-theme(
+    $color: null,
+    $border-color: null,
+    $border-radius: null,
+    $background-color: null,
+    $disableShadow: true,
+    $disableBorder: true
+) {
+
+    @if not($color) and $background-color {
+        $color: text-contrast($background-color);
+    }
+
     @return (
-        text-color: $text-color,
+        color: $color,
         border-color: $border-color,
-        background-color: $background-color
+        border-radius: $border-radius,
+        background-color: $background-color,
+        disableShadow: $disableShadow,
+        disableBorder: $disableBorder
     );
 }
 
 @mixin igx-badge($theme, $palette: $default-palette) {
     $default-theme: igx-badge-theme(
         // This variables should be defined in the theme function above with :null value and in return statement.
-        $text-color: $white,
-        $border-color: igx-color($palette, primary, 500),
-        $background-color: igx-color($palette, accent, 500)
+        $color: $white,
+        $border-color: $white,
+        $background-color: igx-color($palette, accent, 500),
+        $border-radius: 4px
     );
 
     $this: extend($default-theme, $theme);
 
-    // TODO remove all commented variables in this list, after the component is done.
     $badge-width: 22px !default;
     $badge-height: $badge-width !default;
-    $badge-border: 0 solid $white !default;
-    /* $badge-border-color: $white !default;*/
-    $badge-border-radius-default: 4px !default;
     $badge-border-radius-circle: $badge-width / 2 !default;
     $badge-font-size: em(10px) !default;
     $badge-font-weight: 600 !default;
-    $badge-shadow: $elevate-1 !default;
     $badge-line-height: 2px !default;
     $badge-icon-font-size: em(11px, 16px) !default;
     $badge-value-padding: 4px !default;
@@ -37,9 +48,22 @@ $components: register-component($components, #{$component-name});
     $badge-warn-background: igx-color($palette, 'warn');
     $badge-error-background: igx-color($palette, 'warn', 900);
 
+    $badge-shadow: $elevate-1 !default;
+
+    $border-width: 1px;
+    $border-type: solid;
+
+    @if map-get($theme, 'disableShadow') {
+        $badge-shadow: none;
+    }
+
+    @if map-get($theme, 'disableBorder') {
+        $border-width: 0;
+    }
+
     %igx-badge-display {
-        position: absolute;
-        max-width: 100%;
+        display: flex;
+        min-width: $badge-width;
     }
 
     %igx-badge--default {
@@ -50,12 +74,11 @@ $components: register-component($components, #{$component-name});
         height: $badge-height;
         font-size: $badge-font-size;
         font-weight: $badge-font-weight;
-        color: map-get($this, text-color);
-        background-color: map-get($this, background-color);
-        border: $badge-border;
-        border-color: map-get($this, border-color);
+        color: map-get($this, 'color');
+        background-color: map-get($this, 'background-color');
         line-height: $badge-line-height;
-        border-radius: $badge-border-radius-default;
+        border: $border-width $border-type map-get($this, 'border-color');
+        border-radius: map-get($this, 'border-raduis');
         box-shadow: $badge-shadow;
         overflow: hidden;
 
@@ -94,25 +117,25 @@ $components: register-component($components, #{$component-name});
         visibility: hidden;
     }
 
-    %igx-badge-pos-tl {
-        top: -5px;
-        left: -5px;
+    /*  %igx-badge-pos-tl {
+        top: 0;
+        left: 0;
     }
 
     %igx-badge-pos-tr {
-        top: -5px;
-        right: -5px;
+        top: 0;
+        right: 0;
     }
 
     %igx-badge-pos-bl {
-        bottom: -5px;
-        left: -5px;
+        bottom: 0;
+        left: 0;
     }
 
     %igx-badge-pos-br {
-        bottom: -5px;
-        right: -5px;
-    }
+        bottom: 0;
+        right: 0;
+    }*/
 
     %igx-badge--scale-in {
         animation: scale-in .25s ease-in backwards;
