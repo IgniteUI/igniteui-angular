@@ -97,10 +97,10 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     private animationActivation() {
         let animation: AnimationFactory;
-        if (this.collapsed) {
-            animation = this.openingAnimation();
-        }
-        animation = this.closingAnimation();
+
+        this.collapsed ?
+            animation = this.openingAnimation() :
+            animation = this.closingAnimation();
 
         return animation.create(this.elementRef.nativeElement);
     }
