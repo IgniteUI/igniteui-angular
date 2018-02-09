@@ -28,9 +28,8 @@ describe("Avatar", () => {
         fixture.detectChanges();
         const avatar = fixture.componentInstance.avatar;
 
-        expect(avatar.image).toBeTruthy();
-        expect(avatar.image.nativeElement.classList.contains("igx-avatar--image")).toBeTruthy();
-        expect(avatar.image.nativeElement.classList.contains("igx-avatar--medium")).toBeTruthy();
+        expect(avatar.initialsImage).toBeTruthy();
+        expect(avatar.initialsImage.nativeElement.classList.contains("igx-avatar--medium")).toBeTruthy();
         expect(avatar.isRounded).toBeFalsy();
     });
 
@@ -39,9 +38,8 @@ describe("Avatar", () => {
         fixture.detectChanges();
         const avatar = fixture.componentInstance.avatar;
 
-        expect(avatar.image).toBeTruthy();
-        expect(avatar.image.nativeElement.classList.contains("igx-avatar--image")).toBeTruthy();
-        expect(avatar.image.nativeElement.classList.contains("igx-avatar--small")).toBeTruthy();
+        expect(avatar.initialsImage).toBeTruthy();
+        expect(avatar.initialsImage.nativeElement.classList.contains("igx-avatar--small")).toBeTruthy();
         expect(avatar.isRounded).toBeTruthy();
     });
     it("Initializes icon avatar", () => {
@@ -59,8 +57,6 @@ describe("Avatar", () => {
 
         // For ARIA
         expect(spanEl[0].getAttribute("aria-roledescription") === "icon type avatar").toBeTruthy();
-        expect(avatar.elementRef.nativeElement.getElementsByTagName("div")[0].getAttribute("aria-label") === "avatar")
-            .toBeTruthy();
     });
 
     it("Initializes image avatar with src element", () => {
@@ -77,8 +73,6 @@ describe("Avatar", () => {
         // For ARIA
         expect(avatar.image.nativeElement.getAttribute("aria-roledescription") === "image type avatar").toBeTruthy();
         expect(avatar.roleDescription === "image type avatar").toBeTruthy();
-        expect(avatar.elementRef.nativeElement.getElementsByTagName("div")[0].getAttribute("aria-label") === "avatar")
-            .toBeTruthy();
     });
 
     it("Should set ARIA attributes.", () => {
@@ -86,10 +80,8 @@ describe("Avatar", () => {
         fixture.detectChanges();
         const avatar = fixture.componentInstance.avatar;
 
-        expect(avatar.image.nativeElement.getAttribute("aria-roledescription") === "initials type avatar").toBeTruthy();
+        expect(avatar.initialsImage.nativeElement.getAttribute("aria-roledescription") === "initials type avatar").toBeTruthy();
         expect(avatar.roleDescription === "initials type avatar").toBeTruthy();
-        expect(avatar.elementRef.nativeElement.getElementsByTagName("div")[0].getAttribute("aria-label") === "avatar")
-            .toBeTruthy();
     });
 });
 
