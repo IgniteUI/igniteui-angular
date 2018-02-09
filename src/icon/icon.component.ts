@@ -3,15 +3,14 @@ import { Component, ElementRef, Input, NgModule, ViewChild } from "@angular/core
 
 @Component({
     selector: "igx-icon",
-    styleUrls: ["./icon.component.scss"],
     templateUrl: "icon.component.html"
 })
 
-export class IgxIcon {
+export class IgxIconComponent {
     @ViewChild("icon") public themeIcon: ElementRef;
 
-    private font: string = "material";
-    private active: string = "true";
+    private font = "material";
+    private active = "true";
     private iconColor: string;
     private iconName: string;
 
@@ -56,8 +55,8 @@ export class IgxIcon {
 }
 
 @NgModule({
-    declarations: [IgxIcon],
-    exports: [IgxIcon],
+    declarations: [IgxIconComponent],
+    exports: [IgxIconComponent],
     imports: [CommonModule]
 })
 export class IgxIconModule { }

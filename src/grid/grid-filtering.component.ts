@@ -25,7 +25,6 @@ import { IgxColumnComponent } from "./column.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: "igx-grid-filter",
-    styleUrls: ["./grid-filtering.component.scss"],
     templateUrl: "./grid-filtering.component.html"
 })
 export class IgxGridFilterComponent implements OnDestroy {
@@ -81,7 +80,17 @@ export class IgxGridFilterComponent implements OnDestroy {
         }
     }
 
-    get gridID() {
+    get filterCSS(): string {
+        if (this.dialogShowing) {
+            return "igx-filtering__toggle--active";
+        }
+        if (this.filteringExpression()) {
+            return "igx-filtering__toggle--filtered";
+        }
+        return "igx-filtering__toggle";
+    }
+
+    get gridID(): string {
         return this.column.gridID;
     }
 
@@ -118,11 +127,11 @@ export class IgxGridFilterComponent implements OnDestroy {
         this.filterChanged.unsubscribe();
     }
 
-    public isActive(value) {
+    public isActive(value): boolean {
         return this._filterCondition === value;
     }
 
-    get unaryCondition() {
+    get unaryCondition(): boolean {
         for (const each of this.UNARY_CONDITIONS) {
             if (this._filterCondition && this._filterCondition === each) {
                 return true;
@@ -131,21 +140,30 @@ export class IgxGridFilterComponent implements OnDestroy {
         return false;
     }
 
-    public filter() {
+    public filter(): void {
+        const grid = this.gridAPI.get(this.gridID);
         this.gridAPI.filter(
             this.column.gridID, this.column.field,
             this._value, this.column.filteringCondition, this.column.filteringIgnoreCase);
+        grid.onFilteringDone.emit({
+            expression: {
+                fieldName: this.column.field,
+                filteringCondition: this.column.filteringCondition,
+                filteringIgnoreCase: this.column.filteringIgnoreCase,
+                searchVal: this._value
+            }
+        });
         this.cdr.markForCheck();
     }
 
-    public clearFiltering() {
+    public clearFiltering(): void {
         this._value = null;
         this._filterCondition = undefined;
         this.gridAPI.clear_filter(this.gridID, this.column.field);
         this.cdr.markForCheck();
     }
 
-    public conditionChanged(value) {
+    public conditionChanged(value): void {
 
         this._filterCondition = value;
 
@@ -161,20 +179,15 @@ export class IgxGridFilterComponent implements OnDestroy {
         this.filter();
     }
 
-    public onInputChanged(val) {
+    public onInputChanged(val): void {
         this.filterChanged.next(val);
     }
 
-    public toggle() {
+    public toggle(): void {
         this.dialogShowing = !this.dialogShowing;
 
         if (this.dialogShowing) {
-            const expr = this.gridAPI.get(this.gridID)
-                .filteringExpressions.find((x) => x.fieldName === this.column.field);
-            if (expr) {
-                this._value = expr.searchVal;
-                this._filterCondition = expr.condition.name;
-            }
+            this.filteringExpression();
         }
     }
 
@@ -193,5 +206,16 @@ export class IgxGridFilterComponent implements OnDestroy {
         }
 
         return value;
+    }
+
+    protected filteringExpression(): boolean {
+        const expr = this.gridAPI.get(this.gridID)
+            .filteringExpressions.find((x) => x.fieldName === this.column.field);
+        if (expr) {
+            this._value = expr.searchVal;
+            this._filterCondition = expr.condition.name;
+            return true;
+        }
+        return false;
     }
 }

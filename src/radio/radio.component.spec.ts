@@ -5,16 +5,16 @@ import {
 } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { IgxRadio } from "./radio.component";
+import { IgxRadioComponent } from "./radio.component";
 
 describe("IgRadio", () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                InitRadio,
-                RadioWithModel,
-                IgxRadio
+                InitRadioComponent,
+                RadioWithModelComponent,
+                IgxRadioComponent
             ],
             imports: [FormsModule]
         })
@@ -22,7 +22,7 @@ describe("IgRadio", () => {
     }));
 
     it("Init a radio", () => {
-        const fixture = TestBed.createComponent(InitRadio);
+        const fixture = TestBed.createComponent(InitRadioComponent);
         fixture.detectChanges();
 
         const nativeRadio = fixture.debugElement.query(By.css("input")).nativeElement;
@@ -35,7 +35,7 @@ describe("IgRadio", () => {
     });
 
     it("Binding to ngModel", async(() => {
-        const fixture = TestBed.createComponent(RadioWithModel);
+        const fixture = TestBed.createComponent(RadioWithModelComponent);
         fixture.detectChanges();
 
         const radios = fixture.componentInstance.radios.toArray();
@@ -59,7 +59,7 @@ describe("IgRadio", () => {
 });
 
 @Component({ template: `<igx-radio>Radio</igx-radio>` })
-class InitRadio {}
+class InitRadioComponent {}
 
 @Component({
     template: `
@@ -67,8 +67,8 @@ class InitRadio {}
                     value="{{item}}"
                     name="group" [(ngModel)]="selected">{{item}}</igx-radio>`
 })
-class RadioWithModel {
-    @ViewChildren(IgxRadio) public radios;
+class RadioWithModelComponent {
+    @ViewChildren(IgxRadioComponent) public radios;
 
     public selected = "Foo";
 }

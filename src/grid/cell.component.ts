@@ -33,15 +33,7 @@ export class IgxGridCellComponent {
     public cellTemplate: TemplateRef<any>;
 
     @Input()
-    get value(): any {
-        return this._value;
-    }
-
-    set value(val: any) {
-        this._value = val;
-        this.gridAPI.update(this.gridID, this);
-        this.cdr.markForCheck();
-    }
+    public value: any;
 
     get formatter(): (value: any) => any {
         return this.column.formatter;
@@ -102,7 +94,7 @@ export class IgxGridCellComponent {
 
     @HostBinding("attr.aria-describedby")
     get describedby(): string {
-        return `${this.row.gridID}-${this.column.field}`;
+        return `${this.row.gridID}_${this.column.field}`;
     }
 
     @HostBinding("class")
@@ -110,9 +102,16 @@ export class IgxGridCellComponent {
         return `${this.defaultCssClass} ${this.column.cellClasses}`;
     }
 
-    @HostBinding("style.max-width")
+    @HostBinding("style.min-width")
+    @HostBinding("style.flex-basis")
+    @HostBinding("class.igx-grid__td--fw")
     get width() {
         return this.column.width;
+    }
+
+    @HostBinding("class.igx-grid__td--editing")
+    get editModeCSS() {
+        return this._inEditMode;
     }
 
     @HostBinding("attr.aria-selected")
@@ -149,13 +148,19 @@ export class IgxGridCellComponent {
     protected defaultCssClass = "igx-grid__td";
     protected isFocused = false;
     protected isSelected = false;
-    protected _value: any;
     protected _inEditMode = false;
 
     constructor(
         private gridAPI: IgxGridAPIService,
         private cdr: ChangeDetectorRef,
         private element: ElementRef) { }
+
+    public update(val: any) {
+        this.grid.onEditDone.emit({ currentValue: this.value, newValue: val });
+        this.value = val;
+        this.gridAPI.update(this.gridID, this);
+        this.cdr.markForCheck();
+    }
 
     @HostListener("dblclick", ["$event"])
     public onDoubleClick(event) {
@@ -185,66 +190,89 @@ export class IgxGridCellComponent {
         this.row.focused = false;
     }
 
-    @HostListener("keydown", ["$event"])
-    public onKeyDown(event: KeyboardEvent) {
+    @HostListener("keydown.arrowleft")
+    public onKeydownArrowLeft() {
+        const visibleColumns = this.grid.visibleColumns;
+        const rowIndex = this.rowIndex;
+        let columnIndex = this.columnIndex;
+        const rv = visibleColumns.findIndex((col) => col.index === columnIndex);
 
-        this.handleKeyboardNavigation(event);
-        this.handleInlineEditMode(event);
+        if (rv > 0) {
+            columnIndex = visibleColumns[rv - 1].index;
+
+            const target = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
+
+            if (target) {
+                target.nativeElement.focus();
+            }
+        }
     }
 
-    protected handleKeyboardNavigation(event: KeyboardEvent): void {
+    @HostListener("keydown.ctrl.arrowleft")
+    public onKeydownCtrlArrowLeft() {
+        const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex, this.row.cells.first.columnIndex);
 
-        const visibleColumns: IgxColumnComponent[] = this.grid.visibleColumns;
-        let ri = this.rowIndex;
-        let ci = this.columnIndex;
-        let rv: number;
-        let target: IgxGridCellComponent;
-
-        switch (event.keyCode) {
-            case KEYCODES.LEFT_ARROW:
-                if (event.ctrlKey) {
-                    ci = this.row.cells.first.columnIndex;
-                    break;
-                }
-                rv = visibleColumns.findIndex((col) => col.index === ci);
-                if (rv > 0) {
-                    ci = visibleColumns[rv - 1].index;
-                }
-                break;
-            case KEYCODES.UP_ARROW:
-                ri -= 1;
-                break;
-            case KEYCODES.RIGHT_ARROW:
-                if (event.ctrlKey) {
-                    ci = this.row.cells.last.columnIndex;
-                    break;
-                }
-                rv = visibleColumns.findIndex((col) => col.index === ci);
-                if (rv > -1 && rv < visibleColumns.length - 1) {
-                    ci = visibleColumns[rv + 1].index;
-                }
-                break;
-            case KEYCODES.DOWN_ARROW:
-                ri += 1;
-                break;
-            default:
-                return;
-        }
-
-        target = this.gridAPI.get_cell_by_index(this.gridID, ri, ci);
         if (target) {
             target.nativeElement.focus();
         }
     }
 
-    protected handleInlineEditMode(event: KeyboardEvent) {
-        if ((event.keyCode === KEYCODES.ENTER || event.keyCode === KEYCODES.F2) && this.column.editable) {
+    @HostListener("keydown.arrowright")
+    public onKeydownArrowRight() {
+        const visibleColumns = this.grid.visibleColumns;
+        const rowIndex = this.rowIndex;
+        let columnIndex = this.columnIndex;
+        const rv = visibleColumns.findIndex((col) => col.index === columnIndex);
+
+        if (rv > -1 && rv < visibleColumns.length - 1) {
+            columnIndex = visibleColumns[rv + 1].index;
+
+            const target = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
+
+            if (target) {
+                target.nativeElement.focus();
+            }
+        }
+    }
+
+    @HostListener("keydown.ctrl.arrowright")
+    public onKeydownCtrlArrowRight() {
+        const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex, this.row.cells.last.columnIndex);
+
+        if (target) {
+            target.nativeElement.focus();
+        }
+    }
+
+    @HostListener("keydown.arrowup")
+    public onKeydownArrowUp() {
+        const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex - 1, this.columnIndex);
+
+        if (target) {
+            target.nativeElement.focus();
+        }
+    }
+
+    @HostListener("keydown.arrowdown")
+    public onKeydownArrowDown() {
+        const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex + 1, this.columnIndex);
+
+        if (target) {
+            target.nativeElement.focus();
+        }
+    }
+
+    @HostListener("keydown.enter")
+    @HostListener("keydown.f2")
+    public onKeydownEnterEditMode() {
+        if (this.column.editable) {
             this._inEditMode = !this._inEditMode;
             this.grid.cellInEditMode = this;
-            return;
         }
-        if (event.keyCode === KEYCODES.ESCAPE) {
-            this._inEditMode = false;
-        }
+    }
+
+    @HostListener("keydown.escape")
+    public onKeydownExitEditMode() {
+        this._inEditMode = false;
     }
 }

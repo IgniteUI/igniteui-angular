@@ -84,6 +84,9 @@ export class IgxColumnComponent implements AfterContentInit {
     public filteringIgnoreCase = true;
 
     @Input()
+    public sortingIgnoreCase = true;
+
+    @Input()
     public dataType: DataType = DataType.String;
 
     public gridID: string;
@@ -94,7 +97,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
     set bodyTemplate(template: TemplateRef<any>) {
         this._bodyTemplate = template;
-        this.gridAPI.markForCheck(this.gridID);
+        this.gridAPI.mark_for_check(this.gridID);
     }
 
     get headerTemplate(): TemplateRef<any> {
@@ -103,7 +106,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
     set headerTemplate(template: TemplateRef<any>) {
         this._headerTemplate = template;
-        this.gridAPI.markForCheck(this.gridID);
+        this.gridAPI.mark_for_check(this.gridID);
     }
 
     get footerTemplate(): TemplateRef<any> {
@@ -112,7 +115,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
     set footerTemplate(template: TemplateRef<any>) {
         this._footerTemplate = template;
-        this.gridAPI.markForCheck(this.gridID);
+        this.gridAPI.mark_for_check(this.gridID);
     }
 
     get inlineEditorTemplate(): TemplateRef<any> {
@@ -121,7 +124,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
     set inlineEditorTemplate(template: TemplateRef<any>) {
         this._inlineEditorTemplate = template;
-        this.gridAPI.markForCheck(this.gridID);
+        this.gridAPI.mark_for_check(this.gridID);
     }
 
     protected _bodyTemplate: TemplateRef<any>;
@@ -156,7 +159,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
     protected check() {
         if (this.gridID) {
-            this.gridAPI.markForCheck(this.gridID);
+            this.gridAPI.mark_for_check(this.gridID);
         }
     }
 }

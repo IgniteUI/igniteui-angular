@@ -8,14 +8,13 @@ import {
     NgModule,
     OnInit,
     Output,
-    ViewChild,
-    ViewEncapsulation
+    ViewChild
 } from "@angular/core";
 
 import { EaseOut } from "../animations/easings";
 import { fadeIn, fadeOut, slideInBottom } from "../animations/main";
-import { IgxButtonModule } from "../button/button.directive";
-import { IgxRippleModule } from "../directives/ripple.directive";
+import { IgxButtonModule } from "../directives/button/button.directive";
+import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 
 @Component({
     animations: [
@@ -27,31 +26,29 @@ import { IgxRippleModule } from "../directives/ripple.directive";
             transition("void => open", useAnimation(slideInBottom))
         ])
     ],
-    encapsulation: ViewEncapsulation.None,
     selector: "igx-dialog",
-    styleUrls: ["./dialog.component.scss"],
     templateUrl: "dialog-content.component.html"
 })
-export class IgxDialog {
-    private static NEXT_ID: number = 1;
+export class IgxDialogComponent {
+    private static NEXT_ID = 1;
     private static readonly DIALOG_CLASS = "igx-dialog";
 
-    @Input() public title: string = "";
-    @Input() public message: string = "";
+    @Input() public title = "";
+    @Input() public message = "";
 
-    @Input() public leftButtonLabel: string = "";
-    @Input() public leftButtonType: string = "flat";
-    @Input() public leftButtonColor: string = "";
-    @Input() public leftButtonBackgroundColor: string = "";
-    @Input() public leftButtonRipple: string = "";
+    @Input() public leftButtonLabel = "";
+    @Input() public leftButtonType = "flat";
+    @Input() public leftButtonColor = "";
+    @Input() public leftButtonBackgroundColor = "";
+    @Input() public leftButtonRipple = "";
 
-    @Input() public rightButtonLabel: string = "";
-    @Input() public rightButtonType: string = "flat";
-    @Input() public rightButtonColor: string = "";
-    @Input() public rightButtonBackgroundColor: string = "";
-    @Input() public rightButtonRipple: string = "";
+    @Input() public rightButtonLabel = "";
+    @Input() public rightButtonType = "flat";
+    @Input() public rightButtonColor = "";
+    @Input() public rightButtonBackgroundColor = "";
+    @Input() public rightButtonRipple = "";
 
-    @Input() public closeOnOutsideSelect: boolean = false;
+    @Input() public closeOnOutsideSelect = false;
 
     @Output() public onOpen = new EventEmitter();
     @Output() public onClose = new EventEmitter();
@@ -94,7 +91,7 @@ export class IgxDialog {
     }
 
     constructor() {
-        this._titleId = IgxDialog.NEXT_ID++ + "_title";
+        this._titleId = IgxDialogComponent.NEXT_ID++ + "_title";
     }
 
     public open() {
@@ -119,7 +116,7 @@ export class IgxDialog {
         if (
             this.isOpen &&
             this.closeOnOutsideSelect &&
-            event.target.classList.contains(IgxDialog.DIALOG_CLASS)
+            event.target.classList.contains(IgxDialogComponent.DIALOG_CLASS)
         ) {
             this.close();
         }
@@ -140,8 +137,8 @@ export class IgxDialog {
 }
 
 @NgModule({
-    declarations: [IgxDialog],
-    exports: [IgxDialog],
+    declarations: [IgxDialogComponent],
+    exports: [IgxDialogComponent],
     imports: [CommonModule, IgxButtonModule, IgxRippleModule]
 })
 export class IgxDialogModule { }

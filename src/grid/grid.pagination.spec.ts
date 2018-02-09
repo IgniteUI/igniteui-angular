@@ -12,9 +12,9 @@ describe("IgxGrid - Grid Paging", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                GridMarkupPagingDeclaration,
-                GridDeclaration,
-                IgxGridMarkupEditingDeclaration
+                GridMarkupPagingDeclarationComponent,
+                GridDeclarationComponent,
+                IgxGridMarkupEditingDeclarationComponent
             ],
             imports: [IgxGridModule.forRoot()]
         })
@@ -22,7 +22,7 @@ describe("IgxGrid - Grid Paging", () => {
     }));
 
     it("should paginate data UI", fakeAsync(() => {
-        const fix = TestBed.createComponent(GridMarkupPagingDeclaration);
+        const fix = TestBed.createComponent(GridMarkupPagingDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
         const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
@@ -108,7 +108,7 @@ describe("IgxGrid - Grid Paging", () => {
     }));
 
     it("should paginate data API", fakeAsync(() => {
-        const fix = TestBed.createComponent(GridDeclaration);
+        const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
         const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
@@ -117,19 +117,19 @@ describe("IgxGrid - Grid Paging", () => {
         grid.perPage = 3;
 
         // Goto page 3 through API and listen for event
-        spyOn(grid.onPaging, "emit");
+        spyOn(grid.onPagingDone, "emit");
         grid.paginate(2);
 
         tick();
         fix.detectChanges();
 
-        expect(grid.onPaging.emit).toHaveBeenCalled();
+        expect(grid.onPagingDone.emit).toHaveBeenCalled();
         expect(gridElement.querySelector(".igx-paginator > span").textContent).toMatch("3 of 4");
         expect(grid.getCellByColumn(0, "ID").value).toMatch("7");
     }));
 
     it("change paging settings UI", fakeAsync(() => {
-        const fix = TestBed.createComponent(GridMarkupPagingDeclaration);
+        const fix = TestBed.createComponent(GridMarkupPagingDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
         const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
@@ -160,7 +160,7 @@ describe("IgxGrid - Grid Paging", () => {
     }));
 
     it("change paging settings API", fakeAsync(() => {
-        const fix = TestBed.createComponent(GridDeclaration);
+        const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
         const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
@@ -206,7 +206,7 @@ describe("IgxGrid - Grid Paging", () => {
         </igx-grid>
     `
 })
-export class GridMarkupPagingDeclaration {
+export class GridMarkupPagingDeclarationComponent {
     public data = new CustomStrategyData().data;
 
     @ViewChild("grid1", { read: IgxGridComponent })
@@ -222,7 +222,7 @@ export class GridMarkupPagingDeclaration {
     </igx-grid>
     `
 })
-export class GridDeclaration {
+export class GridDeclarationComponent {
 
     public data = new CustomStrategyData().data;
 
@@ -239,7 +239,7 @@ export class GridDeclaration {
     </igx-grid>
     `
 })
-export class IgxGridMarkupEditingDeclaration {
+export class IgxGridMarkupEditingDeclarationComponent {
 
     public data = new CustomStrategyData().data;
 

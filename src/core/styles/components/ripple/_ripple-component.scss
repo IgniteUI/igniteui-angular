@@ -1,0 +1,7 @@
+@include b(ig-ripple-host) {
+    @extend %igx-ripple-wrapper !optional;
+
+    @include e(ripple) {
+        @extend %igx-ripple-display !optional;
+    }
+}

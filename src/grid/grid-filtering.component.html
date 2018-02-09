@@ -11,8 +11,8 @@
 </ng-template>
 
 <div class="igx-filtering">
-    <div class="igx-filtering__toggle">
-        <span class="toggle-icon" igxButton="icon" [class.igx-filtering__toggle--active]="dialogShowing" (click)="toggle()">
+    <div [attr.class]="filterCSS">
+        <span class="toggle-icon" igxButton="icon" (click)="toggle()">
             <igx-icon fontSet="material" name="filter_list"></igx-icon>
         </span>
     </div>

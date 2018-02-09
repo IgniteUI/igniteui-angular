@@ -9,14 +9,14 @@ describe("IgxGrid - CRUD operations", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                DefaultCRUDGrid
+                DefaultCRUDGridComponent
             ],
             imports: [IgxGridModule.forRoot()]
         }).compileComponents();
     }));
 
     it("should support adding rows through the grid API", () => {
-        const fix = TestBed.createComponent(DefaultCRUDGrid);
+        const fix = TestBed.createComponent(DefaultCRUDGridComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -36,7 +36,7 @@ describe("IgxGrid - CRUD operations", () => {
     });
 
     it("should support adding rows by manipulating the `data` @Input of the grid", () => {
-        const fix = TestBed.createComponent(DefaultCRUDGrid);
+        const fix = TestBed.createComponent(DefaultCRUDGridComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -67,7 +67,7 @@ describe("IgxGrid - CRUD operations", () => {
     });
 
     it("should support deleting rows through the grid API", () => {
-        const fix = TestBed.createComponent(DefaultCRUDGrid);
+        const fix = TestBed.createComponent(DefaultCRUDGridComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -107,7 +107,7 @@ describe("IgxGrid - CRUD operations", () => {
     });
 
     it("should support removing rows by manipulating the `data` @Input of the grid", () => {
-        const fix = TestBed.createComponent(DefaultCRUDGrid);
+        const fix = TestBed.createComponent(DefaultCRUDGridComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -142,7 +142,7 @@ describe("IgxGrid - CRUD operations", () => {
     });
 
     it("should support updating a row through the grid API", () => {
-        const fix = TestBed.createComponent(DefaultCRUDGrid);
+        const fix = TestBed.createComponent(DefaultCRUDGridComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -164,7 +164,7 @@ describe("IgxGrid - CRUD operations", () => {
     });
 
     it("should support updating a cell value through the grid API", () => {
-        const fix = TestBed.createComponent(DefaultCRUDGrid);
+        const fix = TestBed.createComponent(DefaultCRUDGridComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -185,13 +185,13 @@ describe("IgxGrid - CRUD operations", () => {
     });
 
     it("should support updating a cell value through the cell object", () => {
-        const fix = TestBed.createComponent(DefaultCRUDGrid);
+        const fix = TestBed.createComponent(DefaultCRUDGridComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
 
         const firstCell = grid.getCellByColumn(0, "index");
-        firstCell.value = 100;
+        firstCell.update(100);
 
         fix.detectChanges();
 
@@ -210,7 +210,7 @@ describe("IgxGrid - CRUD operations", () => {
         </igx-grid>
     `
 })
-export class DefaultCRUDGrid {
+export class DefaultCRUDGridComponent {
 
     public data = [
         { index: 1, value: 1}

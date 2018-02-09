@@ -20,14 +20,10 @@ import { Component, EventEmitter, Input, NgModule, Output } from "@angular/core"
             transition("show => *", animate(".40s ease-out"))
         ])
     ],
-    host: {
-        role: "alert"
-    },
     selector: "igx-toast",
-    styleUrls: ["./toast.component.scss"],
     templateUrl: "toast.component.html"
 })
-export class IgxToast {
+export class IgxToastComponent {
     public readonly CSS_CLASSES = {
         IGX_TOAST_BOTTOM: "igx-toast--bottom",
         IGX_TOAST_MIDDLE: "igx-toast--middle",
@@ -62,13 +58,15 @@ export class IgxToast {
     @Output()
     public onHidden = new EventEmitter();
 
+    @Input()
+    public role = "alert";
     /**
      * Sets if the IgxToast component will be hidden after shown
      * Default value is true
      * @type {number}
      */
     @Input()
-    public autoHide: boolean = true;
+    public autoHide = true;
 
     /**
      * The duration of time span in ms which the IgxToast component will be visible
@@ -77,14 +75,14 @@ export class IgxToast {
      * @type {number}
      */
     @Input()
-    public displayTime: number = 4000;
+    public displayTime = 4000;
 
     /**
      * The IgxToast component visual state state
      * @type {boolean}
      */
     @Input()
-    public isVisible: boolean = false;
+    public isVisible = false;
 
     /**
      * The message that will be shown message by the IgxToast component
@@ -161,8 +159,8 @@ export enum IgxToastPosition {
 }
 
 @NgModule({
-    declarations: [IgxToast],
-    exports: [IgxToast],
+    declarations: [IgxToastComponent],
+    exports: [IgxToastComponent],
     imports: [CommonModule]
 })
 export class IgxToastModule { }

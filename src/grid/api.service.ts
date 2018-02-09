@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs/Subject";
 import { cloneArray } from "../core/utils";
-import { SortingDirection } from "../data-operations/sorting-expression.interface";
+import { IFilteringExpression } from "../data-operations/filtering-expression.interface";
+import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { IgxGridComponent } from "./grid.component";
@@ -21,7 +22,7 @@ export class IgxGridAPIService {
         return this.state.get(id);
     }
 
-    public markForCheck(id: string): void {
+    public mark_for_check(id: string): void {
         this.get(id).cdr.markForCheck();
         if (this.get(id).rowList) {
             this.get(id).rowList.forEach((row) => row.cdr.markForCheck());
@@ -55,23 +56,24 @@ export class IgxGridAPIService {
         this.get(id).data[index][cell.column.field] = cell.value;
     }
 
-    public updateRow(value: any, id: string, row: IgxGridRowComponent): void {
+    public update_row(value: any, id: string, row: IgxGridRowComponent): void {
         const index = this.get(id).data.indexOf(row.rowData);
+        this.get(id).onEditDone.emit({ currentValue: this.get(id).data[index], newValue: value });
         this.get(id).data[index] = value;
     }
 
-    public sort(id: string, fieldName: string, dir: SortingDirection): void {
+    public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
         const sortingState = this.get(id).sortingExpressions;
 
-        this.prepare_sorting_expression(sortingState, fieldName, dir);
+        this.prepare_sorting_expression(sortingState, fieldName, dir, ignoreCase);
         this.get(id).sortingExpressions = sortingState;
     }
 
-    public sort_multiple(id: string, expressions): void {
+    public sort_multiple(id: string, expressions: ISortingExpression[]): void {
         const sortingState = this.get(id).sortingExpressions;
 
         for (const each of expressions) {
-            this.prepare_sorting_expression(sortingState, each.fieldName, each.dir);
+            this.prepare_sorting_expression(sortingState, each.fieldName, each.dir, each.ignoreCase);
         }
 
         this.get(id).sortingExpressions = sortingState;
@@ -86,8 +88,25 @@ export class IgxGridAPIService {
         this.get(id).filteringExpressions = filteringState;
     }
 
-    public filterGlobal(id, term, condition, ignoreCase) {
+    public filter_multiple(id: string, expressions: IFilteringExpression[]) {
         const filteringState = this.get(id).filteringExpressions;
+        if (this.get(id).paging) {
+            this.get(id).page = 0;
+        }
+
+        for (const each of expressions) {
+            this.prepare_filtering_expression(filteringState, each.fieldName,
+                                              each.searchVal, each.condition, each.ignoreCase);
+        }
+        this.get(id).filteringExpressions = filteringState;
+    }
+
+    public filter_global(id, term, condition, ignoreCase) {
+        const filteringState = this.get(id).filteringExpressions;
+        if (this.get(id).paging) {
+            this.get(id).page = 0;
+        }
+
         for (const column of this.get(id).columns) {
             this.prepare_filtering_expression(filteringState, column.field, term,
                 condition || column.filteringCondition, ignoreCase || column.filteringIgnoreCase);
@@ -104,6 +123,15 @@ export class IgxGridAPIService {
         }
     }
 
+    public clear_sort(id, fieldName) {
+        const sortingState = this.get(id).sortingExpressions;
+        const index = sortingState.findIndex((expr) => expr.fieldName === fieldName);
+        if (index > -1) {
+            sortingState.splice(index, 1);
+            this.get(id).sortingExpressions = sortingState;
+        }
+    }
+
     protected prepare_filtering_expression(state, fieldName, searchVal, condition, ignoreCase) {
 
         const expression = state.find((expr) => expr.fieldName === fieldName);
@@ -115,7 +143,7 @@ export class IgxGridAPIService {
         }
     }
 
-    protected prepare_sorting_expression(state, fieldName, dir) {
+    protected prepare_sorting_expression(state, fieldName, dir, ignoreCase) {
 
         if (dir === SortingDirection.None) {
             state.splice(state.findIndex((expr) => expr.fieldName === fieldName), 1);
@@ -125,9 +153,9 @@ export class IgxGridAPIService {
         const expression = state.find((expr) => expr.fieldName === fieldName);
 
         if (!expression) {
-            state.push({ fieldName, dir });
+            state.push({ fieldName, dir, ignoreCase });
         } else {
-            Object.assign(expression, { fieldName, dir });
+            Object.assign(expression, { fieldName, dir, ignoreCase });
         }
     }
 }
