@@ -95,7 +95,7 @@ export class IgxFilterPipe implements PipeTransform {
 
 export class IgxFilterOptions {
     // Input text value that will be used as a filtering pattern (matching condition is based on it)
-    public inputValue: string = "";
+    public inputValue = "";
 
     // Item property, which value should be used for filtering
     public key: string;
@@ -109,7 +109,7 @@ export class IgxFilterOptions {
     // Default behavior - returns "key"- named property value of item if key si provided,
     // otherwise textContent of the item's html element
     public get_value(item: any, key: string): string {
-        let result: string = "";
+        let result = "";
 
         if (key) {
             result = item[key].toString();
