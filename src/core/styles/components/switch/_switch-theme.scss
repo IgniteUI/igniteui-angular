@@ -1,0 +1,90 @@
+$component-name: 'igx-switch';
+
+$components: register-component($components, #{$component-name});
+
+@function igx-switch-theme($thumb-color: null, $track-color: null) {
+    @return (
+        thumb-color: $thumb-color,
+        track-color: $track-color,
+    );
+}
+
+@mixin igx-switch($theme, $palette: $default-palette) {
+    $default-theme: igx-switch-theme(
+        $thumb-color: igx-color($palette, 'accent'),
+        $track-color: rgba(igx-color($palette, 'accent'), .5)
+    );
+
+    $this: extend($default-theme, $theme);
+
+    // @debug $this;
+
+    // Defaults for all input controls
+    // TODO: Rename to match component name
+    $input-font-size: em(16px) !default;
+    $input-font-weight: 400 !default;
+    $input-color: igx-color($palette, 'grays', 900) !default;
+    $input-border-color: igx-color($palette, 'grays', 500) !default;
+    $input-border-color-focus: igx-color($palette, 'accent') !default;
+    $input-transition: all .2s ease-in !default;
+    $input-disabled-color: igx-color($palette, 'grays', 500) !default;
+
+    $switch-background: $darkgray !default;
+    $switch-background-disabled: $off-white !default;
+    $switch-thumb-color-disabled: $lightgray !default;
+    $switch-color: transparent !default;
+    $switch-radius: 100px !default;
+    $switch-width: 35px !default;
+    $switch-height: 14px !default;
+    $switch-label-width: 20px !default;
+    $switch-label-height: $switch-label-width !default;
+    $switch-shadow: $elevate-1 !default;
+    $switch-disabled-shadow: $elevate-1 !default;
+    $switch-margin: 0 16px !default;
+
+    %igx-switch-lbl-display {
+        display: inline-block;
+        position: relative;
+        width: $switch-width;
+        height: $switch-height;
+        background-color: $switch-background;
+        color: transparent;
+        border-radius: $switch-radius;
+        cursor: pointer;
+        transition: $input-transition;
+        user-select: none;
+
+        &::after {
+            display: block;
+            position: absolute;
+            content: '';
+            width: $switch-label-width;
+            height: $switch-label-height;
+            top: -3px;
+            left: -1px;
+            border-radius: $switch-radius;
+            background: $white;
+            box-shadow: $switch-shadow;
+            transition: $input-transition;
+        }
+    }
+
+    %igx-switch-lbl--on {
+        background-color: map-get($this, 'track-color');
+
+        &::after {
+            left: 16px;
+            background: map-get($this, 'thumb-color');
+        }
+    }
+
+    %igx-switch-lbl--disabled {
+        background: $switch-background-disabled;
+        pointer-events: none;
+
+        &::after {
+            background: $switch-thumb-color-disabled;
+            box-shadow: $switch-disabled-shadow;
+        }
+    }
+}

@@ -1,0 +1,41 @@
+$component-name: 'igx-date-picker';
+
+$components: register-component($components, #{$component-name});
+
+@function igx-date-picker-theme() {
+    @return ();
+}
+
+@mixin igx-date-picker($theme, $palette: $default-palette) {
+
+    $default-theme: igx-date-picker-theme();
+
+    $this: extend($default-theme, $theme);
+
+    %date-picker-display {
+        max-width: 340px;
+        min-width: 320px;
+        padding: 0;
+    }
+
+    %date-picker-content {
+        width: 100%;
+        padding: 0;
+        color: inherit;
+        font-size: initial;
+        line-height: initial;
+    }
+
+    %date-picker-dialog-title {
+        display: none;
+    }
+
+    %date-picker-dialog-actions {
+        margin: 0;
+    }
+
+    %date-picker-calendar-body {
+        padding-bottom: 0 !important;
+    }
+}
+

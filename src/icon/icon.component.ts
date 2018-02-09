@@ -3,7 +3,6 @@ import { Component, ElementRef, Input, NgModule, ViewChild } from "@angular/core
 
 @Component({
     selector: "igx-icon",
-    styleUrls: ["./icon.component.scss"],
     templateUrl: "icon.component.html"
 })
 

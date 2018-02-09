@@ -11,8 +11,7 @@ import {
     OnInit,
     Output,
     ViewChild,
-    ViewContainerRef,
-    ViewEncapsulation
+    ViewContainerRef
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { WEEKDAYS } from "../calendar/calendar";
@@ -21,12 +20,10 @@ import { IgxDialogComponent, IgxDialogModule } from "../dialog/dialog.component"
 import { IgxInputModule } from "../directives/input/input.directive";
 
 @Component({
-    encapsulation: ViewEncapsulation.None,
     providers:
-    [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true }],
+        [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true }],
     // tslint:disable-next-line:component-selector
     selector: "igx-datePicker",
-    styleUrls: ["date-picker.component.scss"],
     templateUrl: "date-picker.component.html"
 })
 export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
@@ -71,7 +68,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         return "";
     }
 
-    @ViewChild("container", {read: ViewContainerRef}) public container: ViewContainerRef;
+    @ViewChild("container", { read: ViewContainerRef }) public container: ViewContainerRef;
     @ViewChild(IgxDialogComponent) public alert: IgxDialogComponent;
 
     public calendarRef: ComponentRef<IgxCalendarComponent>;
@@ -80,7 +77,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         return this.calendarRef.instance;
     }
 
-    constructor(private resolver: ComponentFactoryResolver) {}
+    constructor(private resolver: ComponentFactoryResolver) { }
 
     public writeValue(value: Date) {
         this.value = value;
@@ -189,9 +186,9 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         return this.formatter ? this.formatter(date) : this._setLocaleToDate(date, this.locale);
     }
 
-    private _onTouchedCallback: () => void = () => {};
+    private _onTouchedCallback: () => void = () => { };
 
-    private _onChangeCallback: (_: Date) => void = () => {};
+    private _onChangeCallback: (_: Date) => void = () => { };
 }
 
 class Constants {
