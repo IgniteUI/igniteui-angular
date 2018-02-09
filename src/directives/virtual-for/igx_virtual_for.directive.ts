@@ -29,7 +29,7 @@ import { HVirtualHelper } from "./horizontal.virtual.helper.component";
 import { VirtualHelper } from "./virtual.helper.component";
 
 @Directive({ selector: "[igxVirtFor][igxVirtForOf]" })
-export class igxVirtualForOf<T> {
+export class IgxVirtualForOf<T> {
     @Input() public igxVirtForOf: any[];
     @Input() public igxVirtForScrolling: string;
     @Input() public igxVirtForUseForScroll: any;
@@ -159,6 +159,7 @@ export class igxVirtualForOf<T> {
           this.vh.instance.elementRef.nativeElement.scrollTop += parseInt(this.igxVirtForItemSize, 10);
         }
     }
+
     public scrollPrev() {
         if (this.igxVirtForScrolling === "horizontal") {
             const startItemSize = parseInt(this.igxVirtForOf[this._currIndex].width, 10);
@@ -230,6 +231,7 @@ export class igxVirtualForOf<T> {
     }
 
     get ngForTrackBy(): TrackByFunction<T> { return this._trackByFn; }
+
     protected _applyChanges(changes: IterableChanges<T>) {
         this._recalcScrollBarSize();
         this.applyPageSizeChange();
@@ -294,6 +296,7 @@ export class igxVirtualForOf<T> {
         }
         return pageSize;
     }
+
     protected getElement(viewref, nodeName) {
         const elem = viewref.element.nativeElement.parentElement.getElementsByTagName(nodeName);
         return elem.length > 0 ? elem[0] : null;
@@ -325,6 +328,7 @@ export class igxVirtualForOf<T> {
             midLeft > left ? index : index + midIdx
         );
     }
+
     private _recalcScrollBarSize() {
         if (this.igxVirtForScrolling === "horizontal") {
             const totalWidth = this.igxVirtForContainerSize ? this.initHCache(this.igxVirtForOf) : 0;
@@ -336,6 +340,7 @@ export class igxVirtualForOf<T> {
             (this.igxVirtForOf.length * parseInt(this.igxVirtForItemSize, 10)) + "px";
         }
     }
+
     private _recalcOnContainerChange(changes: SimpleChanges) {
         const containerSize = "igxVirtForContainerSize";
         const value = changes[containerSize].currentValue;
@@ -378,9 +383,9 @@ export function getTypeNameForDebugging(type: any): string {
 }
 
 @NgModule({
-    declarations: [igxVirtualForOf, DisplayContainer, VirtualHelper, HVirtualHelper],
+    declarations: [IgxVirtualForOf, DisplayContainer, VirtualHelper, HVirtualHelper],
     entryComponents: [DisplayContainer, VirtualHelper, HVirtualHelper],
-    exports: [igxVirtualForOf],
+    exports: [IgxVirtualForOf],
     imports: [CommonModule]
 })
 

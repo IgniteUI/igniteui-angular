@@ -64,7 +64,7 @@ When the contents of the iterator changes, `igxVirtForOf` makes the correspondin
 | igxVirtForItemSize      | string          | The px-affixed size of the item along the axis of scrolling                                                                |
 | igxVirtForUseForScroll  | string          | Only the strings `vertical` and `horizontal` are valid and specify the scroll orientation                                  |
 | igxVirtForContainerSize | string          | The px-affixed size of the container along the axis of scrolling                                                           |
-| igxVirtForUseForScroll  | igxVirtualForOf | Optionally pass the parent `igxVirtForOf` instance to create a virtual template scrolling both horizontally and vertically |
+| igxVirtForUseForScroll  | IgxVirtualForOf | Optionally pass the parent `igxVirtForOf` instance to create a virtual template scrolling both horizontally and vertically |
 
 ### Outputs
 
@@ -78,7 +78,8 @@ When the contents of the iterator changes, `igxVirtForOf` makes the correspondin
 
 | Signature | Description |
 | :--- | :--- |
-|  |  |
+| scrollNext | Positions the scroll and renders the next virtualization page if one is available     |
+| scrollPrev | Positions the scroll and renders the previous virtualization page if one is avialable |
 
 
 

@@ -239,6 +239,23 @@ export class IgxGridCellComponent {
         target = this.gridAPI.get_cell_by_index(this.gridID, ri, ci);
         if (target) {
             target.nativeElement.focus();
+        } else {
+            switch (event.keyCode) {
+                case KEYCODES.LEFT_ARROW:
+                    this.row.grid.parentVirtDir.scrollPrev();
+                    break;
+                case KEYCODES.UP_ARROW:
+                    this.row.grid.parentVirtDir.scrollPrev();
+                    break;
+                case KEYCODES.RIGHT_ARROW:
+                    this.row.grid.parentVirtDir.scrollNext();
+                    break;
+                case KEYCODES.DOWN_ARROW:
+                    this.row.grid.parentVirtDir.scrollNext();
+                    break;
+            }
+            target = this.gridAPI.get_cell_by_index(this.gridID, ri, ci);
+            target.nativeElement.focus();
         }
     }
 

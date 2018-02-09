@@ -9,9 +9,10 @@ import {
     IgxListItem,
     IgxListModule,
     IgxListPanState,
-    IgxRippleModule
+    IgxRippleModule,
+    IgxVirtualForOf
 } from "../../lib/main";
-import {IgVirtualForOf} from "../../lib/main"; 
+
 @Component({
     selector: "virt-for-sample",
     styleUrls: ["../app.samples.css", "./sample.component.css"],
@@ -22,17 +23,17 @@ export class VirtualForSampleComponent {
     public data: any[] = [];
 	public options: any = {};
     
-    @ViewChild("virtDirVertical", { read: IgVirtualForOf })
-    public virtDirVertical: IgVirtualForOf<any>;
+    @ViewChild("virtDirVertical", { read: IgxVirtualForOf })
+    public virtDirVertical: IgxVirtualForOf<any>;
         
-    @ViewChild("virtDirHorizontal", { read: IgVirtualForOf })
-    public virtDirHorizontal: IgVirtualForOf<any>;
+    @ViewChild("virtDirHorizontal", { read: IgxVirtualForOf })
+    public virtDirHorizontal: IgxVirtualForOf<any>;
 
     public ngOnInit(): void {
         let data = [{
             key: 1,
             avatar: "images/avatar/1.jpg",
-            favorite: true,            
+            favorite: true, 
             link: "#",
             phone: "770-504-2217",
             text: "Terrance Orta",
