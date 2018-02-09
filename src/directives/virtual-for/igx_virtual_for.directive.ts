@@ -47,6 +47,8 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     private _trackByFn: TrackByFunction<T>;
     private _pageSize = 0;
     private _currIndex = 0;
+    private _lastTouchX: number = 0;
+    private _lastTouchY: number = 0;
 
     @ViewChild(DisplayContainerComponent)
     private displayContiner: DisplayContainerComponent;
@@ -90,9 +92,12 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
             this.vh.instance.height = this.igxVirtForOf.length * parseInt(this.igxVirtForItemSize, 10);
             this._zone.runOutsideAngular(() => {
                 this.vh.instance.elementRef.nativeElement.addEventListener("scroll", (evt) => { this.onScroll(evt); });
-                this.dc.instance._viewContainer.element.nativeElement.addEventListener("wheel", (evt) => {
-                    this.onWheel(evt);
-                });
+                this.dc.instance._viewContainer.element.nativeElement.addEventListener("wheel",
+                    (evt) => { this.onWheel(evt); });
+                this.dc.instance._viewContainer.element.nativeElement.addEventListener("touchstart",
+                    (evt) => { this.onTouchStart(evt); });
+                this.dc.instance._viewContainer.element.nativeElement.addEventListener("touchmove",
+                    (evt) => { this.onTouchMove(evt); });
             });
         }
 
@@ -229,6 +234,32 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
         if (0 < curScrollTop && curScrollTop < maxScrollTop) {
             event.preventDefault();
         }
+    }
+
+    protected onTouchStart(event) {
+        this._lastTouchX = event.changedTouches[0].screenX;
+        this._lastTouchY = event.changedTouches[0].screenY;
+    }
+
+    protected onTouchMove(event) {
+        const maxScrollTop = this.vh.instance.elementRef.nativeElement.children[0].offsetHeight -
+            this.dc.instance._viewContainer.element.nativeElement.offsetHeight;
+        const hScroll = this.getElement(this._viewContainer, "horizontal-virtual-helper");
+
+        const movedX = this._lastTouchX - event.changedTouches[0].screenX;
+        const movedY = this._lastTouchY - event.changedTouches[0].screenY;
+        if (hScroll) {
+            hScroll.scrollLeft += movedX;
+        }
+        this.vh.instance.elementRef.nativeElement.scrollTop += movedY;
+
+        if(this.vh.instance.elementRef.nativeElement.scrollTop !== 0 &&
+            this.vh.instance.elementRef.nativeElement.scrollTop !== maxScrollTop) {
+            event.preventDefault();
+        }
+
+        this._lastTouchX = event.changedTouches[0].screenX;
+        this._lastTouchY = event.changedTouches[0].screenY;
     }
 
     get ngForTrackBy(): TrackByFunction<T> { return this._trackByFn; }
