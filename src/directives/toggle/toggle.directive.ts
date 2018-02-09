@@ -18,7 +18,7 @@ import {
     Optional,
     Output
 } from "@angular/core";
-import { IgxNavigationService, IToggleView } from "../core/navigation";
+import { IgxNavigationService, IToggleView } from "../../core/navigation";
 
 @Directive({
     exportAs: "toggle",

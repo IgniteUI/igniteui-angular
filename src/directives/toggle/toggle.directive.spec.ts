@@ -4,7 +4,7 @@ import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule } from "./toggle.directive";
 
-describe("IgxToggler", () => {
+fdescribe("IgxToggler", () => {
     const HIDDEN_TOGGLER_CLASS = "igx-toggle--hidden";
     const TOGGLER_CLASS = "igx-toggle";
     beforeEach(async(() => {
@@ -90,20 +90,24 @@ describe("IgxToggler", () => {
 
         expect(divEl.classes[TOGGLER_CLASS]).toBeTruthy();
     }));
-/*     it("should close toggle when IgxToggleActionDiretive is clicked and toggle is opened", fakeAsync(() => {
-        const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
-        fixture.detectChanges();
-        const divEl: DebugElement = fixture.debugElement.query(By.directive(IgxToggleDirective));
-        const button: DebugElement = fixture.debugElement.query(By.directive(IgxToggleActionDirective));
-        expect(divEl.classes[TOGGLER_CLASS]).toBeTruthy();
-        button.triggerEventHandler("click", null);
-        fixture.whenStable().then(() => {
-            tick();
-            fixture.detectChanges();
-            const t = divEl.classes["igx-toggle--hidden"];
-            expect(t).toBeTruthy();
-        });
-    })); */
+    // it("should close toggle when IgxToggleActionDiretive is clicked and toggle is opened", fakeAsync(() => {
+    //     const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
+    //     fixture.detectChanges();
+
+    //     const divEl: DebugElement = fixture.debugElement.query(By.directive(IgxToggleDirective));
+    //     const button: DebugElement = fixture.debugElement.query(By.directive(IgxToggleActionDirective));
+
+    //     expect(divEl.classes[TOGGLER_CLASS]).toBeTruthy();
+
+    //     button.triggerEventHandler("click", null);
+
+    //     fixture.whenStable().then(() => {
+    //         tick();
+    //         fixture.detectChanges();
+    //         const t = divEl.classes["igx-toggle--hidden"];
+    //         expect(t).toBeTruthy();
+    //     });
+    // }));
     it("should hide content and emit 'onClose' event when you click outside the toggler's content", fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
         fixture.detectChanges();
