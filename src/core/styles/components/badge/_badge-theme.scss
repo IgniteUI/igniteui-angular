@@ -11,9 +11,6 @@ $components: register-component($components, #{$component-name});
     $disableBorder: true
 ) {
 
-    @debug 'disableShadow: #{$disableShadow}';
-    @debug 'disableBorder: #{$disableBorder}';
-
     @if not($color) and $background-color {
         $color: text-contrast($background-color);
     }
