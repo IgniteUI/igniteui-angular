@@ -3,7 +3,7 @@ $ease-out-quad: cubic-bezier(.25, .46, .45, .94);
 $navdrawer-pin-collapsed-padding: 0;
 $overlay-color: rgba(0, 0, 0, .25);
 
-@include b(ig-nav-drawer) {
+@include b(igx-nav-drawer) {
     position: fixed;
     width: em(242px);
     height: 100%;
@@ -14,13 +14,12 @@ $overlay-color: rgba(0, 0, 0, .25);
     top: 0;
     bottom: 0;
     left: 0;
-    // use full syntax, iOS Safari won't work with transition: width .3s ease-out, transform .3s ease-out; shorthand
     z-index: 999;
     transition: width, transform;
     transition-duration: .3s, .3s;
     transition-timing-function: $ease-out-quad, $ease-out-quad;
     transition-delay: 0s, 0s;
-    box-shadow: rgba(0, 0, 0, .25);
+    box-shadow: rgba(0, 0, 0, .2);
 
     &.collapsed {
         transform: translate3d(-300px, 0, 0);
@@ -55,7 +54,6 @@ $overlay-color: rgba(0, 0, 0, .25);
         padding: $navdrawer-pin-collapsed-padding;
         overflow: hidden;
     }
-    // Utility classes for active pan
 
     &.panning {
         overflow-x: hidden;
@@ -69,15 +67,13 @@ $overlay-color: rgba(0, 0, 0, .25);
     box-shadow: none;
     transition: none;
     visibility: hidden;
-    // potentially don't use this?
 }
 
 // Navigation Drawer overlay styles
-.ig-nav-drawer-overlay {
+.igx-nav-drawer-overlay {
     opacity: 1;
     background-color: $overlay-color;
     transition: opacity, visibility;
-    // opacity must match drawer transition, step over visibility to reduce animation cost
     transition-duration: .25s, .25s;
     transition-timing-function: ease-in, step-start;
     transition-delay: 0s, 0s;
@@ -91,7 +87,6 @@ $overlay-color: rgba(0, 0, 0, .25);
 
     &.hidden {
         transition-timing-function: ease-in-out, step-end;
-        // use visibility so opacity can be animated
         visibility: hidden;
         opacity: 0;
     }
@@ -101,8 +96,11 @@ $overlay-color: rgba(0, 0, 0, .25);
     }
 
     &.panning {
-        transform: translate3d(0, 0, 0);
-        // try layer creation manually in advance for opacity
+        transform: translate3d(
+            0,
+            0,
+            0
+        );
         transition: none;
 
         &.hidden {
@@ -110,4 +108,3 @@ $overlay-color: rgba(0, 0, 0, .25);
         }
     }
 }
-

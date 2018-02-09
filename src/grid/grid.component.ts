@@ -1,5 +1,7 @@
+import { DOCUMENT } from "@angular/common";
 import {
     AfterContentInit,
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -8,8 +10,10 @@ import {
     ComponentRef,
     ContentChild,
     ContentChildren,
+    ElementRef,
     EventEmitter,
     HostBinding,
+    Inject,
     Input,
     OnInit,
     Output,
@@ -37,7 +41,7 @@ let NEXT_ID = 0;
     selector: "igx-grid",
     templateUrl: "./grid.component.html"
 })
-export class IgxGridComponent implements OnInit, AfterContentInit {
+export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit {
 
     @Input()
     public data = [];
@@ -183,6 +187,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
 
     constructor(
         private gridAPI: IgxGridAPIService,
+        private elementRef: ElementRef,
+        @Inject(DOCUMENT) private document,
         public cdr: ChangeDetectorRef,
         private resolver: ComponentFactoryResolver,
         private viewRef: ViewContainerRef) {
@@ -202,6 +208,19 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
             this.onColumnInit.emit(col);
         });
         this._columns = this.columnList.toArray();
+    }
+
+    public ngAfterViewInit() {
+        setTimeout(() => {
+            const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+            this.width = computed.getPropertyValue("width");
+            this.height = computed.getPropertyValue("height");
+            this.markForCheck();
+        });
+    }
+
+    get nativeElement() {
+        return this.elementRef.nativeElement;
     }
 
     get columns(): IgxColumnComponent[] {

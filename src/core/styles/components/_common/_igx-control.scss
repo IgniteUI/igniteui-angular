@@ -1,8 +1,6 @@
-$control-padding: 8px 0 !default;
-
-@include b(igx-control) {
+%igx-control-display {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $control-padding;
+    padding: 8px 0;
 }

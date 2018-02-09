@@ -1,19 +1,18 @@
-import { Directive, ElementRef, Input, NgModule, OnInit, Renderer2 } from "@angular/core";
+import { Directive, ElementRef, HostBinding, Input, NgModule, OnInit, Renderer2 } from "@angular/core";
 
 @Directive({
-    host: {
-        role: "button"
-    },
     selector: "[igxButton]"
 })
-export class IgxButton {
-    private _type: string = "flat";
-    private _cssClass: string = "igx-button";
+export class IgxButtonDirective {
+    private _type = "flat";
+    private _cssClass = "igx-button";
     private _color: string;
     private _label: string;
     private _backgroundColor: string;
 
     constructor(private _el: ElementRef, private _renderer: Renderer2) {}
+
+    @HostBinding("attr.role") public role = "button";
 
     @Input("igxButton") set type(value: string) {
         this._type = value || this._type;
@@ -46,7 +45,7 @@ export class IgxButton {
 }
 
 @NgModule({
-    declarations: [IgxButton],
-    exports: [IgxButton]
+    declarations: [IgxButtonDirective],
+    exports: [IgxButtonDirective]
 })
 export class IgxButtonModule {}

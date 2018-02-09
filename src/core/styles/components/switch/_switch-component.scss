@@ -1,11 +1,7 @@
 @include b(igx-control) {
     $block: bem--selector-to-string(&);
-    $control-padding: 8px 0 !default;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: $control-padding;
+    @extend %igx-control-display !optional;
 
     @include e(switch) {
         @include hide-default();

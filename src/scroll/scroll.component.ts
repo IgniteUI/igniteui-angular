@@ -26,7 +26,7 @@ export interface IgxScrollEvent {
     selector: "igx-scroll",
     templateUrl: "scroll.component.html"
 })
-export class IgxScroll {
+export class IgxScrollComponent {
     /**
      * Gets the scroll top of the scroll
      * @returns {number}
@@ -138,8 +138,8 @@ export class IgxScroll {
 }
 
 @NgModule({
-    declarations: [IgxScroll],
-    exports: [IgxScroll],
+    declarations: [IgxScrollComponent],
+    exports: [IgxScrollComponent],
     imports: [CommonModule],
     providers: [{
         provide: HAMMER_GESTURE_CONFIG,
