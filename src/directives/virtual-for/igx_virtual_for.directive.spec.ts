@@ -16,7 +16,7 @@ import {
 } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgVirtualForOf, IgxVirtForModule } from "./igx_virtual_for.directive";
+import { igxVirtualForOf, IgxVirtForModule } from "./igx_virtual_for.directive";
 
 describe("IgxVirtual directive - simple template", () => {
     beforeEach(async(() => {
@@ -129,7 +129,7 @@ describe("IgxVirtual directive - simple template", () => {
 
 /** igxVirtFor for testing */
 @Directive({ selector: "[igxVirtForTest]" })
-export class TestIgVirtualForOf<T> extends IgVirtualForOf<T> {
+export class TestIgVirtualForOf<T> extends igxVirtualForOf<T> {
     constructor(
         public viewContainer: ViewContainerRef,
         public template: TemplateRef<NgForOfContext<T>>,

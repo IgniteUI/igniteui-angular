@@ -29,7 +29,7 @@ import { HVirtualHelper } from "./horizontal.virtual.helper.component";
 import { VirtualHelper } from "./virtual.helper.component";
 
 @Directive({ selector: "[igxVirtFor][igxVirtForOf]" })
-export class IgVirtualForOf<T> {
+export class igxVirtualForOf<T> {
     @Input() public igxVirtForOf: any[];
     @Input() public igxVirtForScrolling: string;
     @Input() public igxVirtForUseForScroll: any;
@@ -356,9 +356,9 @@ export function getTypeNameForDebugging(type: any): string {
 }
 
 @NgModule({
-    declarations: [IgVirtualForOf, DisplayContainer, VirtualHelper, HVirtualHelper],
+    declarations: [igxVirtualForOf, DisplayContainer, VirtualHelper, HVirtualHelper],
     entryComponents: [DisplayContainer, VirtualHelper, HVirtualHelper],
-    exports: [IgVirtualForOf],
+    exports: [igxVirtualForOf],
     imports: [CommonModule]
 })
 
