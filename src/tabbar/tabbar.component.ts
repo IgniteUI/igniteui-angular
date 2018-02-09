@@ -18,9 +18,6 @@ import {
 import { IgxBadgeModule } from "../badge/badge.component";
 import { IgxIconModule } from "../icon/icon.component";
 @Component({
-    host: {
-        "(onTabSelected)": "_selectedPanelHandler($event)"
-    },
     selector: "igx-tab-bar",
     templateUrl: "tab-bar-content.component.html"
 })
