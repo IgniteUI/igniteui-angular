@@ -4,7 +4,7 @@ import {
   TestBed
 } from "@angular/core/testing";
 import {By} from "@angular/platform-browser";
-import {IgxCarousel, IgxCarouselModule, IgxSlide} from "./carousel.component";
+import {IgxCarouselComponent, IgxCarouselModule, IgxSlideComponent} from "./carousel.component";
 
 function dispatchEv(element: HTMLElement, eventType: string) {
     const event = new Event(eventType);
@@ -28,8 +28,8 @@ describe("Carousel", () => {
 
         fixture.detectChanges();
         expect(instance.carousel).toBeDefined();
-        expect(instance.carousel instanceof IgxCarousel).toBe(true);
-        expect(instance.carousel.slides[0] instanceof IgxSlide).toBe(true);
+        expect(instance.carousel instanceof IgxCarouselComponent).toBe(true);
+        expect(instance.carousel.slides[0] instanceof IgxSlideComponent).toBe(true);
 
         expect(instance.carousel.slides instanceof Array).toBe(true);
         expect(instance.carousel.loop).toBe(true);
@@ -235,7 +235,7 @@ describe("Carousel", () => {
 })
 class CarouselTestComponent {
 
-    @ViewChild("carousel") public carousel: IgxCarousel;
+    @ViewChild("carousel") public carousel: IgxCarouselComponent;
 
     public loop = true;
     public pause = true;
