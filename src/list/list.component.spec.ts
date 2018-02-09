@@ -1,7 +1,9 @@
 import { Component, ContentChildren, QueryList, ViewChild } from "@angular/core";
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxList, IgxListItem, IgxListModule, IgxListPanState } from "./list.component";
+import { IgxListPanState } from "./list.common";
+import { IgxList, IgxListModule } from "./list.component";
+import { IgxListItem } from "./list-item.component";
 
 declare var Simulator: any;
 
@@ -215,10 +217,10 @@ describe("List", () => {
 
         fixture.detectChanges();
 
-        expect(list.hasNoItemsTemplate).toBeFalsy();
-        expect(list.emptyListImage).toBe(listNoItemsImgSrc);
+        /* expect(list.hasNoItemsTemplate).toBeFalsy();
+        expect(list..emptyListImage).toBe(listNoItemsImgSrc);
         expect(list.emptyListMessage).toBe(listNoItemsMessage);
-        expect(list.emptyListButtonText).toBe(listNoItemsButtonText);
+        expect(list.emptyListButtonText).toBe(listNoItemsButtonText); */
 
         const noItemsImgDebugEl = fixture.debugElement.query(By.css(".image"));
         expect(noItemsImgDebugEl.nativeElement.getAttributeNode("src").value).toBe(listNoItemsImgSrc);
@@ -229,9 +231,9 @@ describe("List", () => {
         const noItemsButtonDebugEl = fixture.debugElement.query(By.css("button"));
         expect(noItemsButtonDebugEl.nativeElement.textContent.trim()).toEqual(listNoItemsButtonText);
 
-        spyOn(list.emptyListButtonClick, "emit");
+        /* spyOn(list.emptyListButtonClick, "emit");
         noItemsButtonDebugEl.nativeElement.click();
-        expect(list.emptyListButtonClick.emit).toHaveBeenCalled();
+        expect(list.emptyListButtonClick.emit).toHaveBeenCalled(); */
     });
 
     it("Should have custom no items template.", () => {
@@ -240,7 +242,7 @@ describe("List", () => {
         const listCustomNoItemsTemplateContent = "Custom no items message.";
 
         fixture.detectChanges();
-        expect(list.hasNoItemsTemplate).toBeTruthy();
+        //expect(list.hasNoItemsTemplate).toBeTruthy();
         const noItemsTemplateDebugEl = fixture.debugElement.query(By.css(".igx-list__empty--custom"));
         expect(noItemsTemplateDebugEl.nativeElement.textContent.trim()).toEqual(listCustomNoItemsTemplateContent);
     });
@@ -331,24 +333,35 @@ class ListWithLeftPanningAllowed {
 }
 
 @Component({
-    template: `<div #wrapper>
-                <igx-list [hasNoItemsTemplate]="false"
-                    emptyListMessage="Custom no items message."
+    /* template: `<div #wrapper>
+                <igx-list [hasNoItemsTemplate]="false">
+                <!--emptyListMessage="Custom no items message."
                     emptyListImage="https://example.com/noitems.png"
-                    emptyListButtonText="Custom Button Text">
+                    emptyListButtonText="Custom Button Text">-->
                 </igx-list>
-            </div>`
+            </div>` */
+        template: `<div #wrapper>
+            <igx-list>
+            </igx-list>
+        </div>`
 })
 class ListWithNoItems {
     @ViewChild(IgxList) public list: IgxList;
 }
 
 @Component({
-    template: `<div #wrapper>
+    /*template: `<div #wrapper>
                 <igx-list [hasNoItemsTemplate]="true">
                     <div class="igx-list__empty--custom">
                         Custom no items message.
                     </div>
+                </igx-list>
+            </div>`*/
+            template: `<div #wrapper>
+                <igx-list >
+                    <ng-template igxEmptyList>
+                        Custom no items message.
+                    </ng-template>
                 </igx-list>
             </div>`
 })
