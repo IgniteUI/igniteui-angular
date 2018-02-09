@@ -1,12 +1,12 @@
 import { Component, ElementRef, ViewChild } from "@angular/core";
 import {
-    IgxDialog,
+    IgxDialogComponent,
     IgxDialogModule,
     IgxFilterModule,
     IgxFilterOptions,
-    IgxInput,
-    IgxList,
-    IgxListItem,
+    IgxInputModule,
+    IgxListComponent,
+    IgxListItemComponent,
     IgxListModule,
     IgxListPanState,
     IgxRippleModule
@@ -20,7 +20,7 @@ import {
 export class ListSampleComponent {
     @ViewChild("checkbox") public checkbox: any;
     @ViewChild("declarativeList") public declarativeList: any;
-    @ViewChild("addFruitDialog") public addFruitDialog: IgxDialog;
+    @ViewChild("addFruitDialog") public addFruitDialog: IgxDialogComponent;
 
     public fruitsSearch: string;
     public search1: string;

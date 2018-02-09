@@ -64,6 +64,7 @@
         "angular2-template-loader": "^0.6.2",
         "autoprefixer": "^7.2.5",
         "awesome-typescript-loader": "^3.4.1",
+        "codelyzer": "^4.1.0",
         "coveralls": "^3.0.0",
         "concurrently": "^3.5.1",
         "css-loader": "^0.28.8",

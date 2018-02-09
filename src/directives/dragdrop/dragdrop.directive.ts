@@ -25,7 +25,7 @@ export class IgxDraggableDirective implements OnInit, OnDestroy {
 
     @Input("igxDraggable") public data: any;
     @Input() public dragClass: string;
-    @Input() public effectAllowed: string = "move";
+    @Input() public effectAllowed = "move";
 
     @HostBinding("draggable") public draggable: boolean;
 
@@ -64,7 +64,7 @@ export class IgxDroppableDirective {
 
     @Input("igxDroppable") public data: any;
     @Input() public dropClass: string;
-    @Input() public dropEffect: string = "move";
+    @Input() public dropEffect = "move";
 
     @Output() public onDrop = new EventEmitter<IgxDropEvent>();
 
