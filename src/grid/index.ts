@@ -1,11 +1,11 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { IgxButtonModule } from "../button/button.directive";
 import { IgxDatePickerModule } from "../date-picker/date-picker.component";
-import { IgxRippleModule } from "../directives/ripple.directive";
+import { IgxButtonModule } from "../directives/button/button.directive";
+import { IgxInputModule } from "../directives/input/input.directive";
+import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxIconModule } from "../icon/icon.component";
-import { IgxInput } from "../input/input.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
@@ -57,7 +57,7 @@ import { IgxGridRowComponent } from "./row.component";
     IgxDatePickerModule,
     IgxIconModule,
     IgxRippleModule,
-    IgxInput
+    IgxInputModule
   ]
 })
 export class IgxGridModule {

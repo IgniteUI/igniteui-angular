@@ -1,5 +1,5 @@
 import { Directive, HostListener, Input, NgModule } from "@angular/core";
-import {IgxNavigationService} from "./nav-service";
+import {IgxNavigationService} from "./nav.service";
 
 /**
  * Directive that can toggle targets through provided NavigationService.
@@ -11,7 +11,7 @@ import {IgxNavigationService} from "./nav-service";
  * Where the `ID` matches the ID of compatible `IToggleView` component.
  */
 @Directive({ selector: "[igxNavToggle]" })
-export class IgxNavigationToggle {
+export class IgxNavigationToggleDirective {
     public state: IgxNavigationService;
 
     @Input("igxNavToggle") private target;
@@ -36,7 +36,7 @@ export class IgxNavigationToggle {
  * Where the `ID` matches the ID of compatible `IToggleView` component.
  */
 @Directive({ selector: "[igxNavClose]" })
-export class IgxNavigationClose {
+export class IgxNavigationCloseDirective {
     public state: IgxNavigationService;
 
     @Input("igxNavClose") private target;
@@ -52,8 +52,8 @@ export class IgxNavigationClose {
 }
 
 @NgModule({
-    declarations: [IgxNavigationClose, IgxNavigationToggle],
-    exports: [IgxNavigationClose, IgxNavigationToggle],
+    declarations: [IgxNavigationCloseDirective, IgxNavigationToggleDirective],
+    exports: [IgxNavigationCloseDirective, IgxNavigationToggleDirective],
     providers: [IgxNavigationService]
 })
-export class IgxNavigationDirectives {}
+export class IgxNavigationModule {}

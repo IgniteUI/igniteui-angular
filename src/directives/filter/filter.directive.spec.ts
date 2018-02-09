@@ -1,9 +1,10 @@
 import { Component, ContentChildren, ViewChild } from "@angular/core";
 import { async, ComponentFixtureAutoDetect, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxList, IgxListModule } from "../list/list.component";
-import { IgxListItem } from "../list/list-item.component";
+import { IgxListComponent, IgxListModule } from "../../list/list.component";
+import { IgxListItemComponent } from "../../list/list-item.component";
 import { IgxFilterDirective, IgxFilterModule, IgxFilterOptions, IgxFilterPipe } from "./filter.directive";
+
 
 describe("Filter", () => {
     beforeEach(async(() => {
@@ -28,7 +29,7 @@ describe("Filter", () => {
         items = list.items;
 
         for (const item of items) {
-                expect(item instanceof IgxListItem).toBeTruthy();
+                expect(item instanceof IgxListItemComponent).toBeTruthy();
             }
 
         visibleItems = items.filter((listItem) => !listItem.hidden);
@@ -39,7 +40,7 @@ describe("Filter", () => {
 
         visibleItems = items.filter((listItem) => !listItem.hidden);
         expect(visibleItems.length).toBe(1);
-        expect(visibleItems[0] instanceof IgxListItem).toBeTruthy();
+        expect(visibleItems[0] instanceof IgxListItemComponent).toBeTruthy();
 
         fixture.componentInstance.filterValue = "";
         fixture.detectChanges();
@@ -56,7 +57,7 @@ describe("Filter", () => {
         expect(list.items.length).toBe(4);
 
         for (const item of list.items) {
-            expect(item instanceof IgxListItem).toBeTruthy();
+            expect(item instanceof IgxListItemComponent).toBeTruthy();
         }
 
         expect(list.items.length).toBe(4);
@@ -65,7 +66,7 @@ describe("Filter", () => {
         fixture.detectChanges();
 
         expect(list.items.length).toBe(1);
-        expect(list.items[0] instanceof IgxListItem).toBeTruthy();
+        expect(list.items[0] instanceof IgxListItemComponent).toBeTruthy();
 
         fixture.componentInstance.filterValue = "";
         fixture.detectChanges();
@@ -80,7 +81,7 @@ describe("Filter", () => {
         const logInput = fixture.componentInstance.logInput;
 
         fixture.detectChanges();
-        visibleItems = list.items.filter((listItem) => !(listItem as IgxListItem).hidden);
+        visibleItems = list.items.filter((listItem) => !(listItem as IgxListItemComponent).hidden);
         expect(list.items.length).toBe(3);
         expect(visibleItems.length).toBe(3);
 
@@ -90,7 +91,7 @@ describe("Filter", () => {
         fixture.componentInstance.filterValue = "2";
         fixture.detectChanges();
 
-        visibleItems = list.items.filter((listItem) => !(listItem as IgxListItem).hidden);
+        visibleItems = list.items.filter((listItem) => !(listItem as IgxListItemComponent).hidden);
         expect(visibleItems.length).toBe(1);
 
         expect(logInput.nativeElement.value).toBe("filtering;filtered;");
@@ -115,7 +116,7 @@ describe("Filter", () => {
         const logInput = fixture.componentInstance.logInput;
 
         fixture.detectChanges();
-        visibleItems = list.items.filter((listItem) => !(listItem as IgxListItem).hidden);
+        visibleItems = list.items.filter((listItem) => !(listItem as IgxListItemComponent).hidden);
         expect(list.items.length).toBe(3);
         expect(visibleItems.length).toBe(3);
 
@@ -126,7 +127,7 @@ describe("Filter", () => {
         fixture.componentInstance.filterValue = "2";
         fixture.detectChanges();
 
-        visibleItems = list.items.filter((listItem) => !(listItem as IgxListItem).hidden);
+        visibleItems = list.items.filter((listItem) => !(listItem as IgxListItemComponent).hidden);
         expect(visibleItems.length).toBe(3);
 
         expect(logInput.nativeElement.value).toBe("filtering;");
@@ -152,11 +153,11 @@ describe("Filter", () => {
 })
 class DeclarativeListTestComponent {
     public filterValue: string;
-    public isCanceled: boolean = false;
+    public isCanceled = false;
     public filteringArgs: FilteringArgs;
     public filteredArgs: FilteringArgs;
 
-    @ViewChild(IgxList) public list: IgxList;
+    @ViewChild(IgxListComponent) public list: IgxListComponent;
     @ViewChild("logInput") public logInput: any;
 
     get fo() {
@@ -188,9 +189,9 @@ class DeclarativeListTestComponent {
 })
 class DynamicListTestComponent {
     public filterValue: string;
-    public isCanceled: boolean = false;
+    public isCanceled = false;
 
-    @ViewChild(IgxList) public list: IgxList;
+    @ViewChild(IgxListComponent) public list: IgxListComponent;
 
     protected dataSourceItems: object[] = [
         { key: "1", text: "Nav1" },
@@ -209,6 +210,6 @@ class DynamicListTestComponent {
 
 class FilteringArgs {
     public cancel: boolean;
-    public items: IgxListItem[];
-    public filteredItems: IgxListItem[];
+    public items: IgxListItemComponent[];
+    public filteredItems: IgxListItemComponent[];
 }

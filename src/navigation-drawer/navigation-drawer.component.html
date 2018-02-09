@@ -1,12 +1,12 @@
-<div class="ig-nav-drawer-overlay" [class.pinned]="pin" [class.hidden]="!isOpen" (click)="close(true)"></div>
-<aside class="ig-nav-drawer" role="navigation" 
+<div class="igx-nav-drawer-overlay" [class.pinned]="pin" [class.hidden]="!isOpen" (click)="close(true)"></div>
+<aside class="igx-nav-drawer" role="navigation" 
     [class.collapsed]="!_hasMimiTempl && !isOpen" [class.mini]="_hasMimiTempl && !isOpen" [class.pinned]="pin" [class.right]="position == 'right'">
     
     <div class="" [hidden]="!isOpen && _hasMimiTempl">
-        <ng-content select=".ig-drawer-content"></ng-content>
+        <ng-content select=".igx-drawer-content"></ng-content>
     </div>                
     <div class="" [hidden]="isOpen">
-        <ng-content select=".ig-drawer-mini-content"></ng-content>
+        <ng-content select=".igx-drawer-mini-content"></ng-content>
     </div>
 </aside>
 <div class="style-dummy"></div>
