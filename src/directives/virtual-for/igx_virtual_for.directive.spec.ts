@@ -120,6 +120,29 @@ describe("IgxVirtual directive - simple template", () => {
         }
     });
 
+    it("should scroll to bottom and correct rows and columns should be rendered", () => {
+        const fix = TestBed.createComponent(VirtualComp);
+        fix.detectChanges();
+        const container = fix.componentInstance.container;
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("horizontal-virtual-helper");
+        fix.componentInstance.scrollTop(2500000);
+
+        const rows = displayContainer.children;
+        const lastInnerDisplayContainer = rows[rows.length - 1].querySelector("display-container");
+        expect(lastInnerDisplayContainer).not.toBeNull();
+
+        fix.detectChanges();
+
+        const lastRecChildren = lastInnerDisplayContainer.children;
+        const data = fix.componentInstance.data;
+        for (let i = 0; i < lastRecChildren.length; i++) {
+            expect(lastInnerDisplayContainer.children[i].textContent)
+                .toBe(data[data.length - 1][i].toString());
+        }
+    });
+
     it("should scroll to wheel event correctly", () => {
         const fix = TestBed.createComponent(VirtualComp);
         fix.detectChanges();
