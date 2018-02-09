@@ -15,7 +15,13 @@ All notable changes for each version of this project will be documented in this 
     ```
 
     - @HostBinding `min-width` added to `IgxGridCellComponent` and `IgxGridHeaderCell`
-    - The IgxGridCellComponent no longer has a value setter, but instead has an update(newValue) modifier.
+    - The IgxGridCellComponent no longer has a value setter, but instead has an `update` modifier.
+
+    ```html
+    <ng-template igxCell let-cell="cell">
+        {{ cell.update("newValue") }}
+    </ng-template>
+    ```
     - Class `IgxGridFiltering` renamed to `IgxGridFilteringComponent `
     - `state` input
         - filtering epxpresstion and sortin expressions provided
