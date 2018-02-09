@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, ViewChild, ViewContainerRef } from "@angu
 
 @Component({
     selector: "igx-horizontal-virtual-helper",
-    styles: [":host { display: block; width: 100%; overflow: auto; }"],
+    styles: [":host { display: block; width: calc(100% - 17px); overflow: auto; }"],
     template: "<div [style.width.px]='width' #horizontal_container style='height: 1px;'></div>"
 })
 export class HVirtualHelperComponent {

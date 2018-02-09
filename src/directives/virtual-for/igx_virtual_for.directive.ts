@@ -160,6 +160,7 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
           this.vh.instance.elementRef.nativeElement.scrollTop += parseInt(this.igxVirtForItemSize, 10);
         }
     }
+
     public scrollPrev() {
         if (this.igxVirtForScrolling === "horizontal") {
             const startItemSize = parseInt(this.igxVirtForOf[this._currIndex].width, 10);
@@ -231,6 +232,7 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     }
 
     get ngForTrackBy(): TrackByFunction<T> { return this._trackByFn; }
+
     protected _applyChanges(changes: IterableChanges<T>) {
         this._recalcScrollBarSize();
         this.applyPageSizeChange();
@@ -295,6 +297,7 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
         }
         return pageSize;
     }
+
     protected getElement(viewref, nodeName) {
         const elem = viewref.element.nativeElement.parentElement.getElementsByTagName(nodeName);
         return elem.length > 0 ? elem[0] : null;
@@ -326,6 +329,7 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
             midLeft > left ? index : index + midIdx
         );
     }
+
     private _recalcScrollBarSize() {
         if (this.igxVirtForScrolling === "horizontal") {
             const totalWidth = this.igxVirtForContainerSize ? this.initHCache(this.igxVirtForOf) : 0;
@@ -337,6 +341,7 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
             (this.igxVirtForOf.length * parseInt(this.igxVirtForItemSize, 10)) + "px";
         }
     }
+
     private _recalcOnContainerChange(changes: SimpleChanges) {
         const containerSize = "igxVirtForContainerSize";
         const value = changes[containerSize].currentValue;

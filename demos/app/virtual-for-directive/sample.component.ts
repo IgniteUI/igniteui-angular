@@ -5,9 +5,9 @@ import {
     IgxFilterOptions,
     IgxListModule,
     IgxListPanState,
-    IgxRippleModule
+    IgxRippleModule,
+    IgxVirtualForOfDirective
 } from "../../lib/main";
-import { IgxVirtualForOfDirective } from "../../lib/main"; 
 @Component({
     selector: "virt-for-sample",
     styleUrls: ["../app.samples.css", "./sample.component.css"],
@@ -28,7 +28,7 @@ export class VirtualForSampleComponent {
         let data = [{
             key: 1,
             avatar: "images/avatar/1.jpg",
-            favorite: true,            
+            favorite: true, 
             link: "#",
             phone: "770-504-2217",
             text: "Terrance Orta",
