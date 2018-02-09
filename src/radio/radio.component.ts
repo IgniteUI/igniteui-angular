@@ -16,7 +16,6 @@ const noop = () => { };
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxRadioComponent, multi: true }],
     selector: "igx-radio",
-    styleUrls: ["./radio.component.scss"],
     templateUrl: "radio.component.html"
 })
 export class IgxRadioComponent implements ControlValueAccessor {

@@ -1,0 +1,53 @@
+// Base colors
+$ocean-blue: #0375be !default;
+$vivid-cerise: #e41c77 !default;
+$yellow-orange: #fbb13c !default;
+$white: #fff !default;
+
+$default-palette: igx-palette($ocean-blue, $vivid-cerise, $yellow-orange);
+
+// Generate shadows from the default palette 
+$shadow-color-1: igx-color($default-palette, 'grays', 400);
+$shadow-color-2: igx-color($default-palette, 'grays', 300);
+$shadow-color-3: igx-color($default-palette, 'grays', 200);
+
+$elevations: igx-elevations($shadow-color-1, $shadow-color-2, $shadow-color-3);
+
+// Additional Theme Colors
+// TODO: Remove all instances of these
+// from within the component themes
+$black: igx-color($default-palette, 'grays', 900) !default;
+$off-black: igx-color($default-palette, 'grays', 800) !default;
+$off-white: igx-color($default-palette, 'grays', 100) !default;
+$darkgray: igx-color($default-palette, 'grays', 600) !default;
+$gray: igx-color($default-palette, 'grays') !default;
+$lightgray: igx-color($default-palette, 'grays', 400) !default;
+
+$overlay-color: $gray !default;
+$disabled-color: $lightgray !default;
+
+// 2. Material Elevations / Shadows //
+$elevate-1: igx-elevation($elevations, 1);
+$elevate-2: igx-elevation($elevations, 2);
+$elevate-3: igx-elevation($elevations, 3);
+$elevate-4: igx-elevation($elevations, 4);
+$elevate-5: igx-elevation($elevations, 5);
+$elevate-6: igx-elevation($elevations, 6);
+$elevate-7: igx-elevation($elevations, 7);
+$elevate-8: igx-elevation($elevations, 8);
+$elevate-9: igx-elevation($elevations, 9);
+$elevate-10: igx-elevation($elevations, 10);
+$elevate-11: igx-elevation($elevations, 11);
+$elevate-12: igx-elevation($elevations, 12);
+$elevate-13: igx-elevation($elevations, 13);
+$elevate-14: igx-elevation($elevations, 14);
+$elevate-15: igx-elevation($elevations, 15);
+$elevate-16: igx-elevation($elevations, 16);
+$elevate-17: igx-elevation($elevations, 17);
+$elevate-18: igx-elevation($elevations, 18);
+$elevate-19: igx-elevation($elevations, 19);
+$elevate-20: igx-elevation($elevations, 20);
+$elevate-21: igx-elevation($elevations, 21);
+$elevate-22: igx-elevation($elevations, 22);
+$elevate-23: igx-elevation($elevations, 23);
+$elevate-24: igx-elevation($elevations, 24);

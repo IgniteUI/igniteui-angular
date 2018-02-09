@@ -8,14 +8,7 @@ export default (config) => {
         frameworks: ["jasmine"],
 
         files: [
-            "./dist/igniteui-angular.css",
-            {
-                pattern: "./dist/fonts/*",
-                watched: false,
-                included: false,
-                served: true,
-                nocache: false
-            },
+            "./dist/styles/igniteui-angular.css",
             "./node_modules/hammerjs/hammer.js",
             "./node_modules/hammer-simulator/index.js",
             "karma-test-entry.ts"

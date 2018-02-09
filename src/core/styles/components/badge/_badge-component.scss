@@ -1,0 +1,41 @@
+@include b(igx-badge) {
+    @extend %igx-badge-display !optional;
+    @include e(circle) {
+        @extend %igx-badge--default !optional;
+        @extend %igx-badge--circle !optional;
+    }
+    @include e(circle-value) {
+        @extend %igx-badge-value !optional;
+    }
+    @include e(circle, $m: info) {
+        @extend %igx-badge--info !optional;
+    }
+    @include e(circle, $m: success) {
+        @extend %igx-circle--success !optional;
+    }
+    @include e(circle, $m: warning) {
+        @extend %igx-circle--warn !optional;
+    }
+    @include e(circle, $m: error) {
+        @extend %igx-circle--error !optional;
+    }
+    @include m(top-left) {
+        @extend %igx-badge-display !optional;
+        @extend %igx-badge-pos-tl !optional;
+    }
+    @include m(bottom-left) {
+        @extend %igx-badge-display !optional;
+        @extend %igx-badge-pos-bl !optional;
+    }
+    @include m(top-right) {
+        @extend %igx-badge-display !optional;
+        @extend %igx-badge-pos-tr !optional;
+    }
+    @include m(bottom-right) {
+        @extend %igx-badge-display !optional;
+        @extend %igx-badge-pos-br !optional;
+    }
+    @include m(hidden) {
+        @extend %igx-badge--hidden !optional;
+    }
+}

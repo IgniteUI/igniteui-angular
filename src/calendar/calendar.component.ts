@@ -56,7 +56,6 @@ export enum CalendarView {
     ],
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxCalendarComponent, multi: true }],
     selector: "igx-calendar",
-    styleUrls: ["./calendar.component.scss"],
     templateUrl: "calendar.component.html"
 })
 export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
