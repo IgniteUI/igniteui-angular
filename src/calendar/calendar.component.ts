@@ -84,8 +84,7 @@ export class CalendarHammerConfig extends HammerGestureConfig {
             }
         ],
     selector: "igx-calendar",
-    styleUrls: ["./calendar.component.scss"],
-    templateUrl: "./calendar.component.html"
+    templateUrl: "calendar.component.html"
 })
 export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 

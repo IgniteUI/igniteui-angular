@@ -1,0 +1,15 @@
+@include b(igx-navbar) {
+    @extend %igx-navbar-display !optional;
+
+    @include e(left) {
+        @extend %igx-navbar-bundle !optional;
+    }
+
+    @include e(right) {
+        @extend %igx-navbar-bundle !optional;
+    }
+
+    @include e(title) {
+        @extend %igx-navbar-title !optional;
+    }
+}
