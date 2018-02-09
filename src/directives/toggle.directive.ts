@@ -126,7 +126,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 })
 export class IgxToggleActionDirective implements OnDestroy, OnInit {
     @Input()
-    public closeOnOutsideClick: boolean = false;
+    public closeOnOutsideClick = false;
 
     @Input("igxToggleAction")
     set target(target) {
