@@ -15,10 +15,10 @@ import {
 
 import { EaseOut } from "../animations/easings";
 import { fadeIn, fadeOut, slideInBottom } from "../animations/main";
-import { IgxButtonModule } from "../button/button.directive";
+import { IgxButtonModule } from "../directives/button/button.directive";
 import { IToggleView } from "../core/navigation";
+import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxNavigationService } from "../core/navigation/nav-service";
-import { IgxRippleModule } from "../directives/ripple.directive";
 
 @Component({
     animations: [
@@ -36,17 +36,24 @@ import { IgxRippleModule } from "../directives/ripple.directive";
     templateUrl: "dialog-content.component.html"
 })
 export class IgxDialog implements IToggleView, OnInit, OnDestroy {
-    private static NEXT_ID: number = 1;
+    private static NEXT_ID = 1;
     private static readonly DIALOG_CLASS = "igx-dialog";
 
     @Input()
     public id: string;
+    @Input() public title = "";
+    @Input() public message = "";
 
     @Input()
     public title: string = "";
     @Input()
     public message: string = "";
 
+    @Input() public rightButtonLabel = "";
+    @Input() public rightButtonType = "flat";
+    @Input() public rightButtonColor = "";
+    @Input() public rightButtonBackgroundColor = "";
+    @Input() public rightButtonRipple = "";
     @Input()
     public leftButtonLabel: string = "";
     @Input()
@@ -58,7 +65,7 @@ export class IgxDialog implements IToggleView, OnInit, OnDestroy {
     @Input()
     public leftButtonRipple: string = "";
 
-    @Input()
+    @Input() public closeOnOutsideSelect: boolean = false;
     public rightButtonLabel: string = "";
     @Input()
     public rightButtonType: string = "flat";
@@ -117,7 +124,7 @@ export class IgxDialog implements IToggleView, OnInit, OnDestroy {
     }
 
     constructor(private elementRef: ElementRef, private navigationService: IgxNavigationService) {
-        this._titleId = IgxDialog.NEXT_ID++ + "_title";
+        this._titleId = IgxDialogComponent.NEXT_ID++ + "_title";
     }
 
     public get element() {
@@ -150,7 +157,7 @@ export class IgxDialog implements IToggleView, OnInit, OnDestroy {
         if (
             this.isOpen &&
             this.closeOnOutsideSelect &&
-            event.target.classList.contains(IgxDialog.DIALOG_CLASS)
+            event.target.classList.contains(IgxDialogComponent.DIALOG_CLASS)
         ) {
             this.close();
         }
@@ -183,8 +190,8 @@ export class IgxDialog implements IToggleView, OnInit, OnDestroy {
 }
 
 @NgModule({
-    declarations: [IgxDialog],
-    exports: [IgxDialog],
+    declarations: [IgxDialogComponent],
+    exports: [IgxDialogComponent],
     imports: [CommonModule, IgxButtonModule, IgxRippleModule]
 })
 export class IgxDialogModule { }

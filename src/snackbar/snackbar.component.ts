@@ -73,7 +73,7 @@ import { fadeIn, fadeOut, slideInBottom, slideOutBottom } from "../animations/ma
     styleUrls: ["./snackbar.component.scss"],
     templateUrl: "snackbar.component.html"
 })
-export class IgxSnackbar {
+export class IgxSnackbarComponent {
     /**
      * The message that will be shown message by the IgxSnackbar component
      * @type {string}
@@ -84,14 +84,14 @@ export class IgxSnackbar {
      * The IgxSnackbar component visual state state
      * @type {boolean}
      */
-    @Input() public isVisible: boolean = false;
+    @Input() public isVisible = false;
 
     /**
      * Sets if the IgxSnackbar component will be hidden after shown
      * Default value is true
      * @type {number}
      */
-    @Input() public autoHide: boolean = true;
+    @Input() public autoHide = true;
 
     /**
      * The duration of time span in ms which the IgxSnackbar component will be visible
@@ -99,7 +99,7 @@ export class IgxSnackbar {
      * Default value is 4000
      * @type {number}
      */
-    @Input() public displayTime: number = 4000;
+    @Input() public displayTime = 4000;
 
     /**
      * The text of the IgxSnackbar component action
@@ -172,8 +172,8 @@ export class IgxSnackbar {
 }
 
 @NgModule({
-    declarations: [IgxSnackbar],
-    exports: [IgxSnackbar],
+    declarations: [IgxSnackbarComponent],
+    exports: [IgxSnackbarComponent],
     imports: [CommonModule]
 })
 export class IgxSnackbarModule { }

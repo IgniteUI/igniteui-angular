@@ -47,7 +47,7 @@ export class IgxScrollSampleComponent {
 To use the IgxSlider import the IgxSlider:
 
 ```typescript
-import { IgxScroll } from "../../../src/main";
+import { IgxScrollComponent } from "../../../src/main";
 ```
 
 ## API
