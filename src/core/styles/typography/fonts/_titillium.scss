@@ -1,0 +1,25 @@
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+@font-face {
+    font-family: 'Titillium Web';
+    src: url('#{$font-path}TitilliumWeb-Light.ttf') format('truetype');
+    font-weight: $font-weight-light;
+}
+@font-face {
+    font-family: 'Titillium Web';
+    src: url('#{$font-path}TitilliumWeb-Regular.ttf') format('truetype');
+    font-weight: $font-weight-normal;
+}
+@font-face {
+    font-family: 'Titillium Web';
+    src: url('#{$font-path}TitilliumWeb-SemiBold.ttf') format('truetype');
+    font-weight: $font-weight-semibold;
+}
+@font-face {
+    font-family: 'Titillium Web';
+    src: url('#{$font-path}TitilliumWeb-Bold.ttf') format('truetype');
+    font-weight: $font-weight-bold;
+}

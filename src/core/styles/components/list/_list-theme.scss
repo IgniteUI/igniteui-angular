@@ -1,0 +1,130 @@
+$component-name: 'igx-list';
+
+$components: register-component($components, #{$component-name});
+
+@function igx-list-theme(
+    $background: null,
+    $header-background: null,
+    $header-text-color: null,
+    $item-background: null,
+    $item-text-color: null,
+    $item-background-active: null,
+    $item-text-color-active: null
+) {
+    @return (
+        background: $background,
+        header-background: $header-background,
+        header-text-color: $header-text-color,
+        item-background: $item-background,
+        item-text-color: $item-text-color,
+        item-background-active: $item-background-active,
+        item-text-color-active: $item-text-color-active
+    );
+}
+
+@mixin igx-list($theme, $palette: $default-palette) {
+    $default-theme: igx-list-theme(
+        $background: $white,
+        $header-background: transparent,
+        $header-text-color: igx-color($palette, 'accent'),
+        $item-background: transparent,
+        $item-text-color: igx-color($palette, 'grays', 800),
+        $item-background-active: igx-color($palette, 'grays', 100),
+        $item-text-color-active: igx-color($palette, 'grays', 800)
+    );
+
+    $this: extend($default-theme, $theme);
+
+    // @debug $this;
+
+    $list-margin: 8px 16px !default;
+    $list-background: map-get($this, 'background') !default;
+    $list-header-color: map-get($this, 'header-text-color') !default;
+    $list-header-background: map-get($this, 'header-backround') !default;
+    $list-header-font-size: em(13px) !default;
+    $list-header-font-weight: normal !default;
+    $list-header-height: em(48px) !default;
+    $list-header-line-height: em(48px) !default;
+    $list-item-color: map-get($this, 'item-text-color') !default;
+    $list-item-background: map-get($this, 'item-background');
+    $list-item-height: em(48px) !default;
+    $list-item-line-height: em(48px) !default;
+    $list-item-font-size: em(16px) !default;
+    $list-item-padding: em(8px) em(16px) !default;
+    $list-item-active-background: map-get($this, 'item-background-active');
+    $list-item-active-shadow: $elevate-2 !default;
+    $list-item-tl-sl-font-size: em(14px) !default;
+    $list-item-tl-height: em(72px) !default;
+    $list-item-tl-sl-color: $darkgray !default;
+    $list-empty-color: text-contrast($list-background);
+    $list-empty-padding: em(16px, 16px);
+
+    %igx-list {
+        background-color: $list-background;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    %igx-list-empty {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+        height: inherit;
+    }
+
+    %igx-list-empty-image {
+        width: auto;
+        max-height: 120px;
+    }
+
+    %igx-list-empty-message {
+        text-align: center;
+        color: $list-empty-color;
+        padding: $list-empty-padding;
+        z-index: 1;
+    }
+
+    %igx-list-item-display {
+        display: block;
+        position: relative;
+        list-style-type: none;
+        user-select: none;
+    }
+
+    %igx-list-header {
+        display: flex;
+        align-items: center;
+        color: $list-header-color;
+        background-color: $list-header-background;
+        font-size: $list-header-font-size;
+        font-weight: $list-header-font-weight;
+        height: $list-header-height;
+        line-height: $list-header-line-height;
+        padding: $list-item-padding;
+        user-select: none;
+    }
+
+    %igx-list-item {
+        display: flex;
+        position: relative;
+        flex-flow: column wrap;
+        justify-content: center;
+        padding: $list-item-padding;
+        min-height: $list-item-height;
+        font-size: $list-item-font-size;
+        color: $list-item-color;
+        background-color: $list-item-background;
+        z-index: 2;
+    }
+
+    %igx-list-item--active {
+        background-color: $list-item-active-background;
+        z-index: 3;
+    }
+
+    %igx-list-item--inactive {
+        transition: left .3s $ease-out-quad;
+    }
+}
+

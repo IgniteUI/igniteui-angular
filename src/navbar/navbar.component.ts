@@ -5,16 +5,13 @@ import {
     Input,
     NgModule,
     OnInit,
-    Output,
-    ViewEncapsulation
+    Output
 } from "@angular/core";
 import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxIconModule } from "../icon/icon.component";
 
 @Component({
-    encapsulation: ViewEncapsulation.None,
     selector: "igx-navbar",
-    styleUrls: ["./navbar.component.scss"],
     templateUrl: "navbar.component.html"
 })
 
