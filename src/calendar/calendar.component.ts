@@ -191,6 +191,14 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         year: false
     };
 
+    /**
+     * An @Input property controlling the layout of the calendar.
+     * When `vertical` is set to `true` the calendar header will be displayed on the side of
+     * the calendar body, otherwise it will be above (default).
+     */
+    @Input()
+    public vertical = false;
+
     @Output()
     public onSelection = new EventEmitter<Date | Date[]>();
 
@@ -230,7 +238,12 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      * @hidden
      */
     @HostBinding("class")
-    public styleClass = "igx-calendar";
+    get styleClass(): string {
+        if (this.vertical) {
+            return "igx-calendar--vertical";
+        }
+        return "igx-calendar";
+    }
 
     /**
      * Returns an array of date objects which are then used to

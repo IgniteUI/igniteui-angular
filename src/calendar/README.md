@@ -77,6 +77,12 @@ When a day inside the current month is focused:
 
 ### Inputs
 
+- `vertical: boolean`
+
+Controls the layout of the calendar component. When vertical is set to `true`
+the calendar header will be rendered to the side of the calendar body.
+Defaults to `false`.
+
 - `weekStart: number | WEEKDAYS`
 
 Controls the starting day of the weeek for the calendar.

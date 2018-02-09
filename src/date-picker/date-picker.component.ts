@@ -63,6 +63,9 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         year: false
     };
 
+    @Input()
+    public vertical = false;
+
     /**
      * Propagate dialog properties.
      */
@@ -186,6 +189,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         this.calendar.formatOptions = this.formatOptions;
         this.calendar.formatViews = this.formatViews;
         this.calendar.locale = this.locale;
+        this.calendar.vertical = this.vertical;
 
         if (this.headerTemplate) {
             this.calendar.headerTemplate = this.headerTemplate;
