@@ -246,37 +246,26 @@ export class IgxGridCellComponent {
 
     @HostListener("keydown.arrowup")
     public onKeydownArrowUp() {
-        const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex - 1, this.columnIndex);
-
+        let target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex - 1, this.columnIndex);
         if (target) {
             target.nativeElement.focus();
+            return;
         }
+        this.row.grid.parentVirtDir.scrollPrev();
+        target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex + 1, this.columnIndex);
+        target.nativeElement.focus();
     }
 
     @HostListener("keydown.arrowdown")
     public onKeydownArrowDown() {
-        const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex + 1, this.columnIndex);
-
+        let target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex + 1, this.columnIndex);
         if (target) {
             target.nativeElement.focus();
-        } else {
-            switch (event.keyCode) {
-                case KEYCODES.LEFT_ARROW:
-                    this.row.grid.parentVirtDir.scrollPrev();
-                    break;
-                case KEYCODES.UP_ARROW:
-                    this.row.grid.parentVirtDir.scrollPrev();
-                    break;
-                case KEYCODES.RIGHT_ARROW:
-                    this.row.grid.parentVirtDir.scrollNext();
-                    break;
-                case KEYCODES.DOWN_ARROW:
-                    this.row.grid.parentVirtDir.scrollNext();
-                    break;
-            }
-            target = this.gridAPI.get_cell_by_index(this.gridID, ri, ci);
-            target.nativeElement.focus();
+            return;
         }
+        this.row.grid.parentVirtDir.scrollNext();
+        target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex + 1, this.columnIndex);
+        target.nativeElement.focus();
     }
 
     @HostListener("keydown.enter")
