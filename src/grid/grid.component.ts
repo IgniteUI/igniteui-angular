@@ -29,7 +29,7 @@ import { cloneArray } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
-import { igxVirtualForOf } from "../directives/virtual-for/igx_virtual_for.directive";
+import { IgxVirtualForOfDirective } from "../directives/virtual-for/igx_virtual_for.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
@@ -153,8 +153,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
     public rowList: QueryList<IgxGridRowComponent>;
 
-    @ViewChild("scrollContainer", { read: igxVirtualForOf })
-    public parentVirtDir: igxVirtualForOf<any>;
+    @ViewChild("scrollContainer", { read: IgxVirtualForOfDirective })
+    public parentVirtDir: IgxVirtualForOfDirective<any>;
 
     @HostBinding("attr.tabindex")
     public tabindex = 0;

@@ -17,6 +17,7 @@ import {
     NgModule,
     NgZone,
     OnChanges,
+    OnInit,
     SimpleChanges,
     TemplateRef,
     TrackByFunction,
@@ -24,12 +25,12 @@ import {
     ViewContainerRef
 } from "@angular/core";
 
-import { DisplayContainer } from "./display.container";
-import { HVirtualHelper } from "./horizontal.virtual.helper.component";
-import { VirtualHelper } from "./virtual.helper.component";
+import { DisplayContainerComponent } from "./display.container";
+import { HVirtualHelperComponent } from "./horizontal.virtual.helper.component";
+import { VirtualHelperComponent } from "./virtual.helper.component";
 
 @Directive({ selector: "[igxVirtFor][igxVirtForOf]" })
-export class igxVirtualForOf<T> {
+export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     @Input() public igxVirtForOf: any[];
     @Input() public igxVirtForScrolling: string;
     @Input() public igxVirtForUseForScroll: any;
@@ -39,19 +40,19 @@ export class igxVirtualForOf<T> {
     private hScroll;
     private func;
     private hCache: number[];
-    private dc: ComponentRef<DisplayContainer>;
-    private vh: ComponentRef<VirtualHelper>;
-    private hvh: ComponentRef<HVirtualHelper>;
+    private dc: ComponentRef<DisplayContainerComponent>;
+    private vh: ComponentRef<VirtualHelperComponent>;
+    private hvh: ComponentRef<HVirtualHelperComponent>;
     private _differ: IterableDiffer<T> | null = null;
     private _trackByFn: TrackByFunction<T>;
-    private _pageSize: number = 0;
-    private _currIndex: number = 0;
+    private _pageSize = 0;
+    private _currIndex = 0;
 
-    @ViewChild(DisplayContainer)
-    private displayContiner: DisplayContainer;
+    @ViewChild(DisplayContainerComponent)
+    private displayContiner: DisplayContainerComponent;
 
-    @ViewChild(VirtualHelper)
-    private virtualHelper: VirtualHelper;
+    @ViewChild(VirtualHelperComponent)
+    private virtualHelper: VirtualHelperComponent;
 
     private _embeddedViews: Array<EmbeddedViewRef<any>> = [];
 
@@ -70,7 +71,7 @@ export class igxVirtualForOf<T> {
             totalWidth = this.initHCache(this.igxVirtForOf);
         }
         this._pageSize = this._calculatePageSize();
-        const dcFactory: ComponentFactory<DisplayContainer> = this.resolver.resolveComponentFactory(DisplayContainer);
+        const dcFactory: ComponentFactory<DisplayContainerComponent> = this.resolver.resolveComponentFactory(DisplayContainerComponent);
         this.dc = this._viewContainer.createComponent(dcFactory, 0);
         if (this.igxVirtForOf && this.igxVirtForOf.length) {
             for (let i = 0; i < this._pageSize && this.igxVirtForOf[i] !== undefined; i++) {
@@ -84,7 +85,7 @@ export class igxVirtualForOf<T> {
         }
 
         if (this.igxVirtForScrolling === "vertical") {
-            const factory: ComponentFactory<VirtualHelper> = this.resolver.resolveComponentFactory(VirtualHelper);
+            const factory: ComponentFactory<VirtualHelperComponent> = this.resolver.resolveComponentFactory(VirtualHelperComponent);
             this.vh = this._viewContainer.createComponent(factory, 1);
             this.vh.instance.height = this.igxVirtForOf.length * parseInt(this.igxVirtForItemSize, 10);
             this._zone.runOutsideAngular(() => {
@@ -98,11 +99,11 @@ export class igxVirtualForOf<T> {
         if (this.igxVirtForScrolling === "horizontal") {
             this.dc.instance._viewContainer.element.nativeElement.style.height = "100%";
             const directiveRef = this.igxVirtForUseForScroll || this;
-            this.hScroll = this.getElement(vc, "horizontal-virtual-helper");
+            this.hScroll = this.getElement(vc, "igx-horizontal-virtual-helper");
             this.func = (evt) => { this.onHScroll(evt); };
             if (!this.hScroll) {
-                const hvFactory: ComponentFactory<HVirtualHelper> =
-                this.resolver.resolveComponentFactory(HVirtualHelper);
+                const hvFactory: ComponentFactory<HVirtualHelperComponent> =
+                this.resolver.resolveComponentFactory(HVirtualHelperComponent);
                 this.hvh = vc.createComponent(hvFactory);
                 this.hvh.instance.width = totalWidth;
                 this.hScroll =  this.hvh.instance.elementRef.nativeElement;
@@ -217,7 +218,7 @@ export class igxVirtualForOf<T> {
         const scrollStepY = /Edge/.test(navigator.userAgent) ? 25 : 100;
 
         this.vh.instance.elementRef.nativeElement.scrollTop += Math.sign(event.deltaY) * scrollStepY;
-        const hScroll = this.getElement(this._viewContainer, "horizontal-virtual-helper");
+        const hScroll = this.getElement(this._viewContainer, "igx-horizontal-virtual-helper");
         if (hScroll) {
             hScroll.scrollLeft += Math.sign(event.deltaX) * scrollStepX;
         }
@@ -254,7 +255,7 @@ export class igxVirtualForOf<T> {
                 const vc = this.igxVirtForUseForScroll ?
                 this.igxVirtForUseForScroll._viewContainer :
                 this._viewContainer;
-                const hScroll = this.getElement(vc, "horizontal-virtual-helper");
+                const hScroll = this.getElement(vc, "igx-horizontal-virtual-helper");
 
                 const left = hScroll && hScroll.scrollLeft !== 0 ?
                 hScroll.scrollLeft + parseInt(this.igxVirtForContainerSize, 10) :
@@ -378,9 +379,9 @@ export function getTypeNameForDebugging(type: any): string {
 }
 
 @NgModule({
-    declarations: [igxVirtualForOf, DisplayContainer, VirtualHelper, HVirtualHelper],
-    entryComponents: [DisplayContainer, VirtualHelper, HVirtualHelper],
-    exports: [igxVirtualForOf],
+    declarations: [IgxVirtualForOfDirective, DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
+    entryComponents: [DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
+    exports: [IgxVirtualForOfDirective],
     imports: [CommonModule]
 })
 

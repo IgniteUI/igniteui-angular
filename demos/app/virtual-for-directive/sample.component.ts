@@ -1,17 +1,13 @@
 import { Component, ElementRef, ViewChild } from "@angular/core";
 import {
-    IgxDialog,
     IgxDialogModule,
     IgxFilterModule,
     IgxFilterOptions,
-    IgxInput,
-    IgxList,
-    IgxListItem,
     IgxListModule,
     IgxListPanState,
     IgxRippleModule
 } from "../../lib/main";
-import {IgVirtualForOf} from "../../lib/main"; 
+import { IgxVirtualForOfDirective } from "../../lib/main"; 
 @Component({
     selector: "virt-for-sample",
     styleUrls: ["../app.samples.css", "./sample.component.css"],
@@ -22,11 +18,11 @@ export class VirtualForSampleComponent {
     public data: any[] = [];
 	public options: any = {};
     
-    @ViewChild("virtDirVertical", { read: IgVirtualForOf })
-    public virtDirVertical: IgVirtualForOf<any>;
+    @ViewChild("virtDirVertical", { read: IgxVirtualForOfDirective })
+    public virtDirVertical: IgxVirtualForOfDirective<any>;
         
-    @ViewChild("virtDirHorizontal", { read: IgVirtualForOf })
-    public virtDirHorizontal: IgVirtualForOf<any>;
+    @ViewChild("virtDirHorizontal", { read: IgxVirtualForOfDirective })
+    public virtDirHorizontal: IgxVirtualForOfDirective<any>;
 
     public ngOnInit(): void {
         let data = [{

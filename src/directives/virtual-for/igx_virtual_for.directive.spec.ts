@@ -7,6 +7,7 @@ import {
     IterableChanges,
     IterableDiffers,
     NgZone,
+    OnInit,
     QueryList,
     SimpleChanges,
     TemplateRef,
@@ -16,38 +17,38 @@ import {
 } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { igxVirtualForOf, IgxVirtForModule } from "./igx_virtual_for.directive";
+import { IgxVirtForModule, IgxVirtualForOfDirective } from "./igx_virtual_for.directive";
 
 describe("IgxVirtual directive - simple template", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                TestIgVirtualForOf,
-                EmptyVirtualComp,
-                VerticalVirtualComp,
-                HorizontalVirtualComp,
-                VirtualComp
+                TestIgVirtualForOfDirective,
+                EmptyVirtualComponent,
+                VerticalVirtualComponent,
+                HorizontalVirtualComponent,
+                VirtualComponent
             ],
             imports: [IgxVirtForModule]
         }).compileComponents();
     }));
 
     it("should initialize empty directive", () => {
-        const fix = TestBed.createComponent(EmptyVirtualComp);
+        const fix = TestBed.createComponent(EmptyVirtualComponent);
         fix.detectChanges();
         const container = fix.componentInstance.container;
-        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
         expect(displayContainer).not.toBeNull();
     });
 
     it("should initialize directive with horizontal virtualization", () => {
-        const fix = TestBed.createComponent(HorizontalVirtualComp);
+        const fix = TestBed.createComponent(HorizontalVirtualComponent);
         fix.componentRef.hostView.detectChanges();
         fix.detectChanges();
         const container = fix.componentInstance.container;
-        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
-        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("virtual-helper");
-        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("horizontal-virtual-helper");
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("igx-horizontal-virtual-helper");
         expect(displayContainer).not.toBeNull();
         expect(verticalScroller).toBeNull();
         expect(horizontalScroller).not.toBeNull();
@@ -61,7 +62,7 @@ describe("IgxVirtual directive - simple template", () => {
                 .toBe(fix.componentInstance.data[0][i + 1].toString());
         }
 
-        const secondRecChildren = fix.nativeElement.querySelectorAll("display-container")[1].children;
+        const secondRecChildren = fix.nativeElement.querySelectorAll("igx-display-container")[1].children;
         for (let i = 0; i < secondRecChildren.length; i++) {
             expect(secondRecChildren[i].textContent)
                 .toBe(fix.componentInstance.data[1][i + 1].toString());
@@ -69,13 +70,13 @@ describe("IgxVirtual directive - simple template", () => {
     });
 
     it("should initialize directive with vertical virtualization", () => {
-        const fix = TestBed.createComponent(VerticalVirtualComp);
+        const fix = TestBed.createComponent(VerticalVirtualComponent);
         fix.componentRef.hostView.detectChanges();
         fix.detectChanges();
         const container = fix.componentInstance.container;
-        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
-        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("virtual-helper");
-        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("horizontal-virtual-helper");
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("igx-horizontal-virtual-helper");
         expect(displayContainer).not.toBeNull();
         expect(verticalScroller).not.toBeNull();
         expect(horizontalScroller).toBeNull();
@@ -96,19 +97,19 @@ describe("IgxVirtual directive - simple template", () => {
     });
 
     it("should initialize directive with vertical and horizontal virtualization", () => {
-        const fix = TestBed.createComponent(VirtualComp);
+        const fix = TestBed.createComponent(VirtualComponent);
         fix.detectChanges();
         const container = fix.componentInstance.container;
-        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
-        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("virtual-helper");
-        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("horizontal-virtual-helper");
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("igx-horizontal-virtual-helper");
         expect(displayContainer).not.toBeNull();
         expect(verticalScroller).not.toBeNull();
         expect(horizontalScroller).not.toBeNull();
         /* The height of the row is set to 50px so scrolling by 100px should render the third record */
         fix.componentInstance.scrollTop(100);
 
-        const firstInnerDisplayContainer = displayContainer.children[0].querySelector("display-container");
+        const firstInnerDisplayContainer = displayContainer.children[0].querySelector("igx-display-container");
         expect(firstInnerDisplayContainer).not.toBeNull();
 
         fix.detectChanges();
@@ -121,12 +122,12 @@ describe("IgxVirtual directive - simple template", () => {
     });
 
     it("should allow scrolling at certain amount down and then to the top renders correct rows and cols", () => {
-        const fix = TestBed.createComponent(VirtualComp);
+        const fix = TestBed.createComponent(VirtualComponent);
         fix.detectChanges();
         const container = fix.componentInstance.container;
-        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
-        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("virtual-helper");
-        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("horizontal-virtual-helper");
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("igx-horizontal-virtual-helper");
         expect(displayContainer).not.toBeNull();
         expect(verticalScroller).not.toBeNull();
         expect(horizontalScroller).not.toBeNull();
@@ -136,7 +137,7 @@ describe("IgxVirtual directive - simple template", () => {
         fix.componentInstance.scrollTop(0);
         fix.detectChanges();
 
-        const firstInnerDisplayContainer = displayContainer.children[0].querySelector("display-container");
+        const firstInnerDisplayContainer = displayContainer.children[0].querySelector("igx-display-container");
         expect(firstInnerDisplayContainer).not.toBeNull();
 
         const firstRecChildren = firstInnerDisplayContainer.children;
@@ -147,16 +148,16 @@ describe("IgxVirtual directive - simple template", () => {
     });
 
     it("should scroll to bottom and correct rows and columns should be rendered", () => {
-        const fix = TestBed.createComponent(VirtualComp);
+        const fix = TestBed.createComponent(VirtualComponent);
         fix.detectChanges();
         const container = fix.componentInstance.container;
-        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
-        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("virtual-helper");
-        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("horizontal-virtual-helper");
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("igx-horizontal-virtual-helper");
         fix.componentInstance.scrollTop(2500000);
 
         const rows = displayContainer.children;
-        const lastInnerDisplayContainer = rows[rows.length - 1].querySelector("display-container");
+        const lastInnerDisplayContainer = rows[rows.length - 1].querySelector("igx-display-container");
         expect(lastInnerDisplayContainer).not.toBeNull();
 
         fix.detectChanges();
@@ -170,12 +171,12 @@ describe("IgxVirtual directive - simple template", () => {
     });
 
     it("should scroll to wheel event correctly", () => {
-        const fix = TestBed.createComponent(VirtualComp);
+        const fix = TestBed.createComponent(VirtualComponent);
         fix.detectChanges();
         const container = fix.componentInstance.container;
-        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
-        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("virtual-helper");
-        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("horizontal-virtual-helper");
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("igx-horizontal-virtual-helper");
 
         expect(displayContainer).not.toBeNull();
         expect(verticalScroller).not.toBeNull();
@@ -185,7 +186,7 @@ describe("IgxVirtual directive - simple template", () => {
         fix.componentInstance.parentVirtDir.testOnWheel(0, 100);
         fix.componentInstance.parentVirtDir.testOnScroll(verticalScroller);
 
-        const firstInnerDisplayContainer = displayContainer.children[0].querySelector("display-container");
+        const firstInnerDisplayContainer = displayContainer.children[0].querySelector("igx-display-container");
         expect(firstInnerDisplayContainer).not.toBeNull();
         const firstRecChildren = firstInnerDisplayContainer.children;
 
@@ -198,13 +199,13 @@ describe("IgxVirtual directive - simple template", () => {
     });
 
     it("should scroll to the far right and last column should be visible", () => {
-        const fix = TestBed.createComponent(VirtualComp);
+        const fix = TestBed.createComponent(VirtualComponent);
         fix.componentRef.hostView.detectChanges();
         fix.detectChanges();
         const container = fix.componentInstance.container;
-        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
-        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("virtual-helper");
-        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("horizontal-virtual-helper");
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("igx-horizontal-virtual-helper");
 
         expect(displayContainer).not.toBeNull();
         expect(verticalScroller).not.toBeNull();
@@ -214,7 +215,7 @@ describe("IgxVirtual directive - simple template", () => {
         fix.componentInstance.scrollLeft(80000);
         fix.detectChanges();
 
-        const rowChildren = displayContainer.querySelectorAll("display-container");
+        const rowChildren = displayContainer.querySelectorAll("igx-display-container");
         for (let i = 0; i < rowChildren.length; i++) {
             expect(rowChildren[i].children.length).toBe(1);
             expect(rowChildren[i].children[0].textContent)
@@ -223,19 +224,19 @@ describe("IgxVirtual directive - simple template", () => {
     });
 
     it("should detect width change and update initially rendered columns", () => {
-        const fix = TestBed.createComponent(VirtualComp);
+        const fix = TestBed.createComponent(VirtualComponent);
         fix.componentRef.hostView.detectChanges();
         fix.detectChanges();
         const container = fix.componentInstance.container;
-        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
-        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("virtual-helper");
-        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("horizontal-virtual-helper");
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("igx-horizontal-virtual-helper");
 
         expect(displayContainer).not.toBeNull();
         expect(verticalScroller).not.toBeNull();
         expect(horizontalScroller).not.toBeNull();
 
-        let rows = displayContainer.querySelectorAll("display-container");
+        let rows = displayContainer.querySelectorAll("igx-display-container");
         expect(rows.length).toBe(8);
         for (let i = 0; i < rows.length; i++) {
             expect(rows[i].children.length).toBe(4);
@@ -247,7 +248,7 @@ describe("IgxVirtual directive - simple template", () => {
         fix.componentInstance.width = "1200px";
         fix.detectChanges();
 
-        rows = displayContainer.querySelectorAll("display-container");
+        rows = displayContainer.querySelectorAll("igx-display-container");
         expect(rows.length).toBe(8);
         for (let i = 0; i < rows.length; i++) {
             expect(rows[i].children.length).toBe(5);
@@ -257,19 +258,19 @@ describe("IgxVirtual directive - simple template", () => {
     });
 
     it("should detect height change and update initially rendered rows", () => {
-        const fix = TestBed.createComponent(VirtualComp);
+        const fix = TestBed.createComponent(VirtualComponent);
         fix.componentRef.hostView.detectChanges();
         fix.detectChanges();
         const container = fix.componentInstance.container;
-        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
-        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("virtual-helper");
-        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("horizontal-virtual-helper");
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("igx-horizontal-virtual-helper");
 
         expect(displayContainer).not.toBeNull();
         expect(verticalScroller).not.toBeNull();
         expect(horizontalScroller).not.toBeNull();
 
-        let rows = displayContainer.querySelectorAll("display-container");
+        let rows = displayContainer.querySelectorAll("igx-display-container");
         expect(rows.length).toBe(8);
         for (let i = 0; i < rows.length; i++) {
             expect(rows[i].children.length).toBe(4);
@@ -281,7 +282,7 @@ describe("IgxVirtual directive - simple template", () => {
         fix.componentInstance.height = "700px";
         fix.detectChanges();
 
-        rows = displayContainer.querySelectorAll("display-container");
+        rows = displayContainer.querySelectorAll("igx-display-container");
         expect(rows.length).toBe(14);
         for (let i = 0; i < rows.length; i++) {
             expect(rows[i].children.length).toBe(4);
@@ -293,7 +294,7 @@ describe("IgxVirtual directive - simple template", () => {
 
 /** igxVirtFor for testing */
 @Directive({ selector: "[igxVirtForTest]" })
-export class TestIgVirtualForOf<T> extends igxVirtualForOf<T> {
+export class TestIgVirtualForOfDirective<T> extends IgxVirtualForOfDirective<T> {
     constructor(
         public viewContainer: ViewContainerRef,
         public template: TemplateRef<NgForOfContext<T>>,
@@ -350,7 +351,7 @@ export class TestIgVirtualForOf<T> extends igxVirtualForOf<T> {
         </span>
     `
 })
-export class EmptyVirtualComp {
+export class EmptyVirtualComponent {
     public data = [];
 
     @ViewChild("container") public container;
@@ -375,7 +376,7 @@ export class EmptyVirtualComp {
         </div>
     `
 })
-export class VerticalVirtualComp {
+export class VerticalVirtualComponent implements OnInit {
 
     public width = "450px";
     public height = "300px";
@@ -390,15 +391,15 @@ export class VerticalVirtualComp {
 
     @ViewChild("container") public container;
 
-    @ViewChild("scrollContainer", { read: TestIgVirtualForOf })
-    public parentVirtDir: TestIgVirtualForOf<any>;
+    @ViewChild("scrollContainer", { read: TestIgVirtualForOfDirective })
+    public parentVirtDir: TestIgVirtualForOfDirective<any>;
 
     public ngOnInit(): void {
         this.generateData();
     }
 
     public scrollTop(newScrollTop) {
-        const verticalScrollbar = this.container.nativeElement.querySelector("virtual-helper");
+        const verticalScrollbar = this.container.nativeElement.querySelector("igx-virtual-helper");
         verticalScrollbar.scrollTop = newScrollTop;
 
         this.parentVirtDir.testOnScroll(verticalScrollbar);
@@ -441,7 +442,7 @@ export class VerticalVirtualComp {
         </div>
     `
 })
-export class HorizontalVirtualComp {
+export class HorizontalVirtualComponent implements OnInit {
 
     public width = "800px";
     public height = "400px";
@@ -452,8 +453,8 @@ export class HorizontalVirtualComp {
     @ViewChild("container", {read: ViewContainerRef})
     public container: ViewContainerRef;
 
-    @ViewChildren("childContainer", {read: TestIgVirtualForOf})
-    public childVirtDirs: QueryList<TestIgVirtualForOf<any>>;
+    @ViewChildren("childContainer", {read: TestIgVirtualForOfDirective})
+    public childVirtDirs: QueryList<TestIgVirtualForOfDirective<any>>;
 
     public ngOnInit(): void {
         this.generateData();
@@ -462,7 +463,7 @@ export class HorizontalVirtualComp {
 
     public scrollLeft(newScrollLeft) {
         const horizontalScrollbar =
-            this.container.element.nativeElement.parentElement.querySelector("horizontal-virtual-helper");
+            this.container.element.nativeElement.parentElement.querySelector("igx-horizontal-virtual-helper");
         horizontalScrollbar.scrollLeft = newScrollLeft;
 
         this.childVirtDirs.forEach((item) => {
@@ -512,7 +513,7 @@ export class HorizontalVirtualComp {
         </div>
     `
 })
-export class VirtualComp {
+export class VirtualComponent implements OnInit {
 
     public width = "800px";
     public height = "400px";
@@ -522,25 +523,25 @@ export class VirtualComp {
     @ViewChild("container", { read: ViewContainerRef })
     public container: ViewContainerRef;
 
-    @ViewChild("scrollContainer", { read: TestIgVirtualForOf })
-    public parentVirtDir: TestIgVirtualForOf<any>;
+    @ViewChild("scrollContainer", { read: TestIgVirtualForOfDirective })
+    public parentVirtDir: TestIgVirtualForOfDirective<any>;
 
-    @ViewChildren("childContainer", { read: TestIgVirtualForOf })
-    public childVirtDirs: QueryList<TestIgVirtualForOf<any>>;
+    @ViewChildren("childContainer", { read: TestIgVirtualForOfDirective })
+    public childVirtDirs: QueryList<TestIgVirtualForOfDirective<any>>;
 
     public ngOnInit(): void {
         this.generateData();
     }
 
     public scrollTop(newScrollTop) {
-        const verticalScrollbar = this.container.element.nativeElement.querySelector("virtual-helper");
+        const verticalScrollbar = this.container.element.nativeElement.querySelector("igx-virtual-helper");
         verticalScrollbar.scrollTop = newScrollTop;
 
         this.parentVirtDir.testOnScroll(verticalScrollbar);
     }
 
     public scrollLeft(newScrollLeft) {
-        const horizontalScrollbar = this.container.element.nativeElement.querySelector("horizontal-virtual-helper");
+        const horizontalScrollbar = this.container.element.nativeElement.querySelector("igx-horizontal-virtual-helper");
         horizontalScrollbar.scrollLeft = newScrollLeft;
 
         this.childVirtDirs.forEach((item) => {
