@@ -35,6 +35,8 @@
     }
 
     @include e(menu-item, $m: selected) {
+        @extend %igx-tabbar-menu-item !optional;
+
         .tab-icon {
             @extend %igx-tab-icon--selected !optional;
         }
@@ -45,6 +47,7 @@
     }
 
     @include e(menu-item, $m: disabled) {
+        @extend %igx-tabbar-menu-item !optional;
         @extend %igx-tabbar-menu-item--disabled !optional;
     }
 }
