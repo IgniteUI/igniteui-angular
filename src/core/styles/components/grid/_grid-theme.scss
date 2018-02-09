@@ -60,8 +60,11 @@ $components: register-component($components, #{$component-name});
         $cell-selected-background: igx-color($palette, 'accent'),
         $cell-selected-text-color: igx-contrast-color($palette, 'accent')
     );
+
     $this: extend($default-theme, $theme);
+
     // @debug $this;
+
     // General
     $grid-bg: map-get($this, 'background') !default;
     $grid-br: em(2px) !default;
