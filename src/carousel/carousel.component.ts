@@ -29,9 +29,6 @@ export enum Direction { NONE, NEXT, PREV }
  */
 
 @Component({
-    host: {
-        role: "region"
-    },
     selector: "igx-carousel",
     templateUrl: "carousel.component.html"
 })
