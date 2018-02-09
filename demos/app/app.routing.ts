@@ -27,6 +27,7 @@ import { IgxSnackbarSampleComponent } from "./snackbar/sample.component";
 import { IgxColorsSampleComponent } from "./styleguide/colors/sample.component";
 import { IgxShadowsSampleComponent } from "./styleguide/shadows/sample.component";
 import { IgxTypographySampleComponent } from "./styleguide/typography/sample.component";
+import { VirtualForSampleComponent } from "./virtual-for-directive/sample.component";
 import {
     CustomContentComponent,
     TabBarSampleComponent
@@ -150,6 +151,10 @@ const appRoutes: Routes = [
     {
         component: ListPerformanceSampleComponent,
         path: "listPerformance"
+    },
+    {
+        component: VirtualForSampleComponent,
+        path: "virtualForDirective"
     }
 ];
 

@@ -146,6 +146,28 @@ export class igxVirtualForOf<T> {
         }
     }
 
+    public scrollNext() {
+        if (this.igxVirtForScrolling === "horizontal") {
+            const endIndex = this._currIndex + this._pageSize;
+            if (!this.igxVirtForOf[endIndex]) {
+                return;
+            }
+            const endItemSize = parseInt(this.igxVirtForOf[endIndex].width, 10);
+            this.hScroll.scrollLeft += endItemSize;
+
+        } else if (this.igxVirtForScrolling === "vertical") {
+          this.vh.instance.elementRef.nativeElement.scrollTop += parseInt(this.igxVirtForItemSize, 10);
+        }
+    }
+    public scrollPrev() {
+        if (this.igxVirtForScrolling === "horizontal") {
+            const startItemSize = parseInt(this.igxVirtForOf[this._currIndex].width, 10);
+            this.hScroll.scrollLeft -= startItemSize;
+        } else if (this.igxVirtForScrolling === "vertical") {
+          this.vh.instance.elementRef.nativeElement.scrollTop -= parseInt(this.igxVirtForItemSize, 10);
+        }
+    }
+
     protected onScroll(event) {
         const scrollTop = event.target.scrollTop;
         const vcHeight = event.target.children[0].scrollHeight;

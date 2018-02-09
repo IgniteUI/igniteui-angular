@@ -31,6 +31,7 @@ import { IgxTypographySampleModule } from "./styleguide/typography/sample.module
 import { TabBarSampleModule } from "./tabbar/sample.module";
 import { IgxToastSampleModule } from "./toast/sample.module";
 import { ListPerformanceSampleModule } from "./list-performance/sample.module";
+import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
 
 import { AppComponent } from "./app.component";
 import { routing } from "./app.routing";
@@ -83,7 +84,8 @@ import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSw
         IgxCalendarSampleModule,
         IgxDatePickerSampleModule,
         LayoutSampleModule,
-        ListPerformanceSampleModule
+        ListPerformanceSampleModule,
+        VirtualForSampleModule
     ]
 })
 export class AppModule { }
