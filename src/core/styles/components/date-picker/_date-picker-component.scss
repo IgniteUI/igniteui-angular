@@ -1,0 +1,22 @@
+@include b(igx-date-picker) {
+    .igx-dialog__window {
+        @extend %date-picker-display !optional;
+    }
+
+    .igx-dialog__window-title {
+        @extend %date-picker-dialog-title !optional;
+    }
+
+    .igx-dialog__window-actions {
+        @extend %date-picker-dialog-actions !optional;
+    }
+
+    .igx-dialog__window,
+    .igx-dialog__window-content {
+        @extend %date-picker-content !optional;
+    }
+
+    .igx-calendar__body {
+        @extend %date-picker-calendar-body !optional;
+    }
+}
