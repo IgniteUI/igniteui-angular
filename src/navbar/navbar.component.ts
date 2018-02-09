@@ -9,7 +9,7 @@ import {
     Output,
     ViewEncapsulation
 } from "@angular/core";
-import { IgxButtonModule } from "../button/button.directive";
+import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxIconModule } from "../icon/icon.component";
 
 @Component({
@@ -18,15 +18,15 @@ import { IgxIconModule } from "../icon/icon.component";
     styleUrls: ["./navbar.component.scss"],
     templateUrl: "navbar.component.html"
 })
-export class IgxNavbar {
-    private static NEXT_ID: number = 1;
+export class IgxNavbarComponent {
+    private static NEXT_ID = 1;
 
     /**
      * The IgxNavbar action button visual state state
      * @type {boolean}
      */
     @Input()
-    public isActionButtonVisible: boolean = false;
+    public isActionButtonVisible = false;
 
     /**
      * The IgxNavbar action button actionButtonIcon
@@ -48,7 +48,7 @@ export class IgxNavbar {
     @Output() public onAction = new EventEmitter();
 
     @Input()
-    public titleId = `igx-navbar-${IgxNavbar.NEXT_ID++}`;
+    public titleId = `igx-navbar-${IgxNavbarComponent.NEXT_ID++}`;
 
     public _triggerAction() {
         this.onAction.emit(this);
@@ -56,8 +56,8 @@ export class IgxNavbar {
 }
 
 @NgModule({
-    declarations: [IgxNavbar],
-    exports: [IgxNavbar],
+    declarations: [IgxNavbarComponent],
+    exports: [IgxNavbarComponent],
     imports: [IgxButtonModule, IgxIconModule, CommonModule]
 })
 export class IgxNavbarModule {

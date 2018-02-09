@@ -1,16 +1,16 @@
 import { Component, ContentChildren, QueryList, ViewChild } from "@angular/core";
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxList, IgxListItem, IgxListModule, IgxListPanState } from "./list.component";
+import { IgxListComponent, IgxListItemComponent, IgxListModule, IgxListPanState } from "./list.component";
 
 declare var Simulator: any;
 
 describe("List", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ListTestComponent, ListWithPanningAllowed,
-                ListWithLeftPanningAllowed, ListWithRightPanningAllowed,
-                ListWithNoItems, ListWithCustomNoItemsTemplate],
+            declarations: [ListTestComponent, ListWithPanningAllowedComponent,
+                ListWithLeftPanningAllowedComponent, ListWithRightPanningAllowedComponent,
+                ListWithNoItemsComponent, ListWithCustomNoItemsTemplateComponent],
             imports: [IgxListModule]
         }).compileComponents();
     }));
@@ -20,7 +20,7 @@ describe("List", () => {
         const list = fixture.componentInstance.list;
 
         expect(list).toBeDefined();
-        expect(list instanceof IgxList).toBeTruthy();
+        expect(list instanceof IgxListComponent).toBeTruthy();
         expect(list.items instanceof Array).toBeTruthy();
         expect(list.items.length).toBe(0);
         expect(list.headers instanceof Array).toBeTruthy();
@@ -29,10 +29,10 @@ describe("List", () => {
         fixture.detectChanges();
         expect(list.items instanceof Array).toBeTruthy();
         expect(list.items.length).toBe(3);
-        expect(list.items[0] instanceof IgxListItem).toBeTruthy();
+        expect(list.items[0] instanceof IgxListItemComponent).toBeTruthy();
         expect(list.headers instanceof Array).toBeTruthy();
         expect(list.headers.length).toBe(1);
-        expect(list.headers[0] instanceof IgxListItem).toBeTruthy();
+        expect(list.headers[0] instanceof IgxListItemComponent).toBeTruthy();
     });
 
     it("should set/get properly layout properties: width, left, maxLeft", () => {
@@ -49,7 +49,7 @@ describe("List", () => {
          fixture.detectChanges();
          expect(list.items.length).toBe(3);
          item = list.items[0];
-         expect(item instanceof IgxListItem).toBeTruthy();
+         expect(item instanceof IgxListItemComponent).toBeTruthy();
          expect(item.width).toBe(testWidth);
          expect(item.left).toBe(0);
          expect(item.maxLeft).toBe(-testWidth);
@@ -71,28 +71,28 @@ describe("List", () => {
         expect(list.headers.length).toBe(1);
 
         for (let i = 0; i < list.children.length; i++) {
-            const item: IgxListItem = list.children.find(((child) => (child.index === i)));
+            const item: IgxListItemComponent = list.children.find(((child) => (child.index === i)));
             expect(item.index).toBe(i);
         }
     });
 
     it("Should pan right and pan left.", (done) => {
         let fixture;
-        let list: IgxList;
-        let item: IgxListItem;
+        let list: IgxListComponent;
+        let item: IgxListItemComponent;
         let itemNativeElement;
         let itemHeight;
         let itemWidth;
 
         TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(ListWithPanningAllowed);
+            fixture = TestBed.createComponent(ListWithPanningAllowedComponent);
             list = fixture.componentInstance.list;
 
             fixture.detectChanges();
             return fixture.whenStable();
         }).then(() => {
 
-            item = list.items[0] as IgxListItem;
+            item = list.items[0] as IgxListItemComponent;
             itemNativeElement = item.element.nativeElement;
             itemHeight = item.element.nativeElement.offsetHeight;
             itemWidth = item.element.nativeElement.offsetWidth;
@@ -126,20 +126,20 @@ describe("List", () => {
 
     it("Should pan right only.", (done) => {
         let fixture;
-        let list: IgxList;
-        let item: IgxListItem;
+        let list: IgxListComponent;
+        let item: IgxListItemComponent;
         let itemNativeElement;
         let itemHeight;
         let itemWidth;
 
         TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(ListWithRightPanningAllowed);
+            fixture = TestBed.createComponent(ListWithRightPanningAllowedComponent);
             list = fixture.componentInstance.list;
 
             fixture.detectChanges();
             return fixture.whenStable();
         }).then(() => {
-            item = list.items[0] as IgxListItem;
+            item = list.items[0] as IgxListItemComponent;
             itemNativeElement = item.element.nativeElement;
             itemHeight = item.element.nativeElement.offsetHeight;
             itemWidth = item.element.nativeElement.offsetWidth;
@@ -167,20 +167,20 @@ describe("List", () => {
 
     it("Should pan left only.", (done) => {
         let fixture;
-        let list: IgxList;
-        let item: IgxListItem;
+        let list: IgxListComponent;
+        let item: IgxListItemComponent;
         let itemNativeElement;
         let itemHeight;
         let itemWidth;
 
         TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(ListWithLeftPanningAllowed);
+            fixture = TestBed.createComponent(ListWithLeftPanningAllowedComponent);
             list = fixture.componentInstance.list;
 
             fixture.detectChanges();
             return fixture.whenStable();
         }).then(() => {
-            item = list.items[0] as IgxListItem;
+            item = list.items[0] as IgxListItemComponent;
             itemNativeElement = item.element.nativeElement;
             itemHeight = item.element.nativeElement.offsetHeight;
             itemWidth = item.element.nativeElement.offsetWidth;
@@ -207,7 +207,7 @@ describe("List", () => {
     }, 5000);
 
     it("Should have default no items template.", () => {
-        const fixture = TestBed.createComponent(ListWithNoItems);
+        const fixture = TestBed.createComponent(ListWithNoItemsComponent);
         const list = fixture.componentInstance.list;
         const listNoItemsImgSrc = "https://example.com/noitems.png";
         const listNoItemsMessage = "Custom no items message.";
@@ -235,7 +235,7 @@ describe("List", () => {
     });
 
     it("Should have custom no items template.", () => {
-        const fixture = TestBed.createComponent(ListWithCustomNoItemsTemplate);
+        const fixture = TestBed.createComponent(ListWithCustomNoItemsTemplateComponent);
         const list = fixture.componentInstance.list;
         const listCustomNoItemsTemplateContent = "Custom no items message.";
 
@@ -287,7 +287,7 @@ describe("List", () => {
                 </div>`
 })
 class ListTestComponent {
-     @ViewChild(IgxList) public list: IgxList;
+     @ViewChild(IgxListComponent) public list: IgxListComponent;
      @ViewChild("wrapper") public wrapper;
 }
 
@@ -300,8 +300,8 @@ class ListTestComponent {
                     </igx-list>
                 </div>`
 })
-class ListWithPanningAllowed {
-    @ViewChild(IgxList) public list: IgxList;
+class ListWithPanningAllowedComponent {
+    @ViewChild(IgxListComponent) public list: IgxListComponent;
 }
 
 @Component({
@@ -313,8 +313,8 @@ class ListWithPanningAllowed {
                 </igx-list>
             </div>`
 })
-class ListWithRightPanningAllowed {
-    @ViewChild(IgxList) public list: IgxList;
+class ListWithRightPanningAllowedComponent {
+    @ViewChild(IgxListComponent) public list: IgxListComponent;
 }
 
 @Component({
@@ -326,8 +326,8 @@ class ListWithRightPanningAllowed {
                 </igx-list>
             </div>`
 })
-class ListWithLeftPanningAllowed {
-    @ViewChild(IgxList) public list: IgxList;
+class ListWithLeftPanningAllowedComponent {
+    @ViewChild(IgxListComponent) public list: IgxListComponent;
 }
 
 @Component({
@@ -339,8 +339,8 @@ class ListWithLeftPanningAllowed {
                 </igx-list>
             </div>`
 })
-class ListWithNoItems {
-    @ViewChild(IgxList) public list: IgxList;
+class ListWithNoItemsComponent {
+    @ViewChild(IgxListComponent) public list: IgxListComponent;
 }
 
 @Component({
@@ -352,6 +352,6 @@ class ListWithNoItems {
                 </igx-list>
             </div>`
 })
-class ListWithCustomNoItemsTemplate {
-    @ViewChild(IgxList) public list: IgxList;
+class ListWithCustomNoItemsTemplateComponent {
+    @ViewChild(IgxListComponent) public list: IgxListComponent;
 }

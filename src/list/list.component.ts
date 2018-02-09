@@ -3,9 +3,9 @@ import {
     AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, forwardRef, HostBinding,
     Inject, Input, NgModule, OnDestroy, OnInit, Output, QueryList, Renderer2, ViewChild
 } from "@angular/core";
-import { IgxButtonModule } from "../button/button.directive";
 import { HammerGesturesManager } from "../core/touch";
-import { IgxRippleModule } from "../directives/ripple.directive";
+import { IgxButtonModule } from "../directives/button/button.directive";
+import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 
 export interface IListChild {
     index: number;
@@ -16,23 +16,21 @@ export enum IgxListPanState { NONE, LEFT, RIGHT }
 // ====================== LIST ================================
 // The `<igx-list>` directive is a list container for items and headers
 @Component({
-    host: {
-        role: "list"
-    },
     selector: "igx-list",
     styleUrls: ["./list.component.scss"],
     templateUrl: "list.component.html"
 })
-export class IgxList {
-    @ContentChildren(forwardRef(() => IgxListItem)) public children: QueryList<IgxListItem>;
+export class IgxListComponent {
+    @ContentChildren(forwardRef(() => IgxListItemComponent)) public children: QueryList<IgxListItemComponent>;
 
-    @Input() public allowLeftPanning: boolean = false;
-    @Input() public allowRightPanning: boolean = false;
+    @HostBinding("attr.role") public role = "list";
+    @Input() public allowLeftPanning = false;
+    @Input() public allowRightPanning = false;
 
-    @Input() public hasNoItemsTemplate: boolean = false;
+    @Input() public hasNoItemsTemplate = false;
     @Input() public emptyListImage: string;
-    @Input() public emptyListMessage: string = "No items";
-    @Input() public emptyListButtonText: string = "Add";
+    @Input() public emptyListMessage = "No items";
+    @Input() public emptyListButtonText = "Add";
 
     @Output() public emptyListButtonClick = new EventEmitter();
 
@@ -44,10 +42,10 @@ export class IgxList {
         return this._innerStyle;
     }
 
-    private _innerStyle: string = "igx-list";
+    private _innerStyle = "igx-list";
 
-    get items(): IgxListItem[] {
-        const items: IgxListItem[] = [];
+    get items(): IgxListItemComponent[] {
+        const items: IgxListItemComponent[] = [];
         if (this.children !== undefined) {
             for (const child of this.children.toArray()) {
                 if (!child.isHeader) {
@@ -59,8 +57,8 @@ export class IgxList {
         return items;
     }
 
-    get headers(): IgxListItem[] {
-        const headers: IgxListItem[] = [];
+    get headers(): IgxListItemComponent[] {
+        const headers: IgxListItemComponent[] = [];
         if (this.children !== undefined) {
             for (const child of this.children.toArray()) {
                 if (child.isHeader) {
@@ -89,13 +87,13 @@ export class IgxList {
     styleUrls: ["./list.component.scss"],
     templateUrl: "list-item.component.html"
 })
-export class IgxListItem implements OnInit, OnDestroy, IListChild {
+export class IgxListItemComponent implements OnInit, OnDestroy, IListChild {
     @ViewChild("wrapper") public element: ElementRef;
 
-    public hidden: boolean = false;
+    public hidden = false;
 
     @HostBinding("attr.role") public role;
-    @Input() public isHeader: boolean = false;
+    @Input() public isHeader = false;
     @Input() public href: string;
     @Input() public options: object[];
 
@@ -105,7 +103,7 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
 
     private _panState: IgxListPanState = IgxListPanState.NONE;
     private _FRACTION_OF_WIDTH_TO_TRIGGER_GRIP = 0.5; // as a fraction of the item width
-    private _innerStyle: string = "";
+    private _innerStyle = "";
     private _previousPanDeltaX = 0;
 
     get panState(): IgxListPanState {
@@ -146,8 +144,8 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
     }
 
     constructor(
-        @Inject(forwardRef(() => IgxList))
-        private list: IgxList,
+        @Inject(forwardRef(() => IgxListComponent))
+        private list: IgxListComponent,
         private _renderer: Renderer2) {
     }
 
@@ -244,8 +242,8 @@ export class IgxListItem implements OnInit, OnDestroy, IListChild {
 }
 
 @NgModule({
-    declarations: [IgxList, IgxListItem],
-    exports: [IgxList, IgxListItem],
+    declarations: [IgxListComponent, IgxListItemComponent],
+    exports: [IgxListComponent, IgxListItemComponent],
     imports: [CommonModule, IgxButtonModule, IgxRippleModule]
 })
 export class IgxListModule {
