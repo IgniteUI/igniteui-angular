@@ -68,6 +68,33 @@ describe("IgxVirtual directive - simple template", () => {
         }
     });
 
+    it("should initialize directive with vertical virtualization", () => {
+        const fix = TestBed.createComponent(VerticalVirtualComp);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        const container = fix.componentInstance.container;
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("horizontal-virtual-helper");
+        expect(displayContainer).not.toBeNull();
+        expect(verticalScroller).not.toBeNull();
+        expect(horizontalScroller).toBeNull();
+        /* The height of the row is set to 50px so scrolling by 100px should render the third record */
+        fix.componentInstance.scrollTop(100);
+
+        fix.detectChanges();
+
+        const firstRecChildren = displayContainer.children[0].children;
+        let i = 0;
+        const thirdRecord = fix.componentInstance.data[2];
+        for (const item in thirdRecord) {
+            if (thirdRecord.hasOwnProperty(item)) {
+                expect(thirdRecord[item].toString())
+                    .toBe(firstRecChildren[i++].textContent);
+            }
+        }
+    });
+
     it("should initialize directive with vertical and horizontal virtualization", () => {
         const fix = TestBed.createComponent(VirtualComp);
         fix.detectChanges();
@@ -322,7 +349,7 @@ export class VerticalVirtualComp {
     }
 
     public scrollTop(newScrollTop) {
-        const verticalScrollbar = this.container.element.nativeElement.querySelector("virtual-helper");
+        const verticalScrollbar = this.container.nativeElement.querySelector("virtual-helper");
         verticalScrollbar.scrollTop = newScrollTop;
 
         this.parentVirtDir.testOnScroll(verticalScrollbar);
