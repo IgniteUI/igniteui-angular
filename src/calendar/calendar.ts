@@ -54,6 +54,12 @@ export interface ICalendarDate {
     isNextMonth: boolean;
 }
 
+export interface IFormattedParts {
+    value: string;
+    literal?: string;
+    combined: string;
+}
+
 export enum WEEKDAYS {
     SUNDAY = 0,
     MONDAY = 1,
@@ -202,14 +208,52 @@ export class Calendar {
         return ret;
     }
 
-    private generateICalendarDate(date: Date, year: number, month: number): ICalendarDate {
-            return {
-                date,
-                isCurrentMonth: date.getFullYear() === year && date.getMonth() === month,
-                isNextMonth: this.isNextMonth(date, year, month),
-                isPrevMonth: this.isPreviousMonth(date, year, month)
+    public formatToParts(date: Date, locale: string, options: any, parts: string[]) {
+        const formatter = new Intl.DateTimeFormat(locale, options);
+        const result = {
+            date,
+            full: formatter.format(date)
+        };
+
+        if ((formatter as any).formatToParts) {
+            const formattedParts = (formatter as any).formatToParts(date);
+
+            const toType = (partType: string) => {
+                const index = formattedParts.findIndex(({ type, value}) => type === partType);
+                const o: IFormattedParts = { value: "", literal: "", combined: ""};
+
+                if (partType === "era" && index > -1) {
+                    o.value = formattedParts[index].value;
+                    return o;
+                } else if (partType === "era" && index === -1) {
+                    return o;
+                }
+
+                o.value = formattedParts[index].value;
+                o.literal = formattedParts[index + 1] ? formattedParts[index + 1].value : "";
+                o.combined = [o.value, o.literal].join("");
+                return o;
             };
+
+            for (const each of parts) {
+                result[each] = toType(each);
+            }
+        } else {
+            for (const each of parts) {
+                result[each] = { value: "", literal: "", combined: ""};
+            }
         }
+        return result;
+    }
+
+    private generateICalendarDate(date: Date, year: number, month: number): ICalendarDate {
+        return {
+            date,
+            isCurrentMonth: date.getFullYear() === year && date.getMonth() === month,
+            isNextMonth: this.isNextMonth(date, year, month),
+            isPrevMonth: this.isPreviousMonth(date, year, month)
+        };
+    }
     private isPreviousMonth(date: Date, year: number, month: number): boolean {
         if (date.getFullYear() === year) {
             return date.getMonth() < month;
