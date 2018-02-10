@@ -2,29 +2,42 @@ $component-name: 'igx-avatar';
 
 $components: register-component($components, #{$component-name});
 
-@function igx-avatar-theme($icon-background: null, $image-background: null, $icon-color: null) {
+@function igx-avatar-theme(
+    $icon-background: null,
+    $icon-color: null,
+    $initials-background: null,
+    $initials-color: null,
+    $image-background: null
+) {
     @if not($icon-color) and $icon-background {
         $icon-color: text-contrast($icon-background);
+    }
+
+    @if not($initials-color) and $initials-background {
+        $initials-color: text-contrast($initials-background);
     }
 
     @return (
         icon-background: $icon-background,
         icon-color: $icon-color,
+        initials-background: $initials-background,
+        initials-color: $initials-color,
         image-background: $image-background
     );
 }
+
 @mixin igx-avatar($theme, $palette: $default-palette) {
     $default-theme: igx-avatar-theme(
-        $icon-background: igx-color($default-palette, grays, 400),
-        $icon-color: igx-color($default-palette, grays, 800),
+        $icon-background: igx-color($palette, 'grays', 400),
+        $icon-color: igx-color($palette, 'grays', 800),
+        $initials-background: igx-color($palette, 'grays', 400),
+        $initials-color: igx-color($palette, 'grays', 800),
         $image-background: transparent
     );
+
     $this: extend($default-theme, $theme);
 
     %igx-avatar-display {
-        display: flex;
-        justify-content: center;
-        align-items: center;
         position: relative;
         pointer-events: none;
     }
@@ -51,12 +64,40 @@ $components: register-component($components, #{$component-name});
         min-width: em(88px, 16px);
     }
 
-    %igx-avatar--icon {
-        background-color: map-get($this, icon-background);
-        color: map-get($this, icon-color);
+    %igx-avatar-inner {
+        width: inherit;
+        height: inherit;
+        border-radius: inherit;
     }
 
-    %igx-avatar--image {
-        background-color: map-get($this, image-background) !important;
+    %igx-avatar-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: map-get($this, 'icon-color');
+        background-color: map-get($this, 'icon-background');
+    }
+
+    %igx-avatar-image {
+        background-color: map-get($this, 'image-background');
+    }
+
+    %igx-avatar-initials {
+        text-transform: uppercase;
+        fill: map-get($this, 'initials-color');
+        background-color: map-get($this, 'initials-background');
+    }
+
+    %igx-avatar-initials--small {
+        font-size: rem(16px);
+        font-weight: 600;
+    }
+
+    %igx-avatar-initials--medium {
+        font-size: rem(32px);
+    }
+
+    %igx-avatar-initials--large {
+        font-size: rem(44px);
     }
 }

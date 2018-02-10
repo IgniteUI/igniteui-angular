@@ -1,19 +1,17 @@
 <ng-template #imageTemplate>
-    <img #image src="{{src}}" class="igx-avatar--image igx-avatar--{{size}}" [class.igx-avatar--rounded]="isRounded" [style.backgroundColor]="bgColor"
-        [attr.aria-roledescription]="roleDescription" />
+    <img #image src="{{src}}" class="igx-avatar__image" [style.backgroundColor]="bgColor" [attr.aria-roledescription]="roleDescription"
+    />
 </ng-template>
 
 <ng-template #initialsTemplate>
-    <svg #initialsImage xmlns="http://www.w3.org/2000/svg" [attr.class]="initialsClasses" [style.backgroundColor]="bgColor"
-        [attr.aria-roledescription]="roleDescription">
-        <text text-anchor="middle"/> 
+    <svg #initialsImage xmlns="http://www.w3.org/2000/svg" class="igx-avatar__initials" [style.backgroundColor]="bgColor" [attr.aria-roledescription]="roleDescription">
+        <text text-anchor="middle" dominant-baseline="central" x="50%" y="50%">{{initials}}</text>
     </svg>
 </ng-template>
 
 <ng-template #iconTemplate>
-    <span class="igx-avatar--{{size}} igx-avatar--icon" [class.igx-avatar--rounded]="isRounded" [style.backgroundColor]="bgColor"
-        [style.color]="color" [attr.aria-roledescription]="roleDescription">
-        <igx-icon fontSet="material" [name]="icon"></igx-icon>
+    <span class="igx-avatar__icon" [style.backgroundColor]="bgColor" [style.color]="color" [attr.aria-roledescription]="roleDescription">
+        <igx-icon [name]="icon"></igx-icon>
     </span>
 </ng-template>
 

@@ -29,34 +29,34 @@ describe("Avatar", () => {
         const avatar = fixture.componentInstance.avatar;
 
         expect(avatar.initialsImage).toBeTruthy();
-        expect(avatar.initialsImage.nativeElement.classList.contains("igx-avatar--medium")).toBeTruthy();
+        expect(avatar.initialsImage.nativeElement.classList.contains("igx-avatar__initials")).toBeTruthy();
         expect(avatar.isRounded).toBeFalsy();
     });
 
-    it("Initializes bound avatar with initials", () => {
+    it("Initializes round avatar with initials", () => {
         const fixture = TestBed.createComponent(AvatarWithAttribsComponent);
         fixture.detectChanges();
         const avatar = fixture.componentInstance.avatar;
 
         expect(avatar.initialsImage).toBeTruthy();
-        expect(avatar.initialsImage.nativeElement.classList.contains("igx-avatar--small")).toBeTruthy();
+        expect(avatar.initialsImage.nativeElement.classList.contains("igx-avatar__initials")).toBeTruthy();
         expect(avatar.isRounded).toBeTruthy();
     });
     it("Initializes icon avatar", () => {
         const fixture = TestBed.createComponent(InitIconAvatarComponent);
         fixture.detectChanges();
         const avatar = fixture.componentInstance.avatar;
-        const spanEl = avatar.elementRef.nativeElement.getElementsByClassName("igx-avatar--icon");
+        const spanEl = avatar.elementRef.nativeElement.querySelector(".igx-avatar__icon");
 
         expect(avatar.image === undefined).toBeTruthy();
-        expect(avatar.srcImage === "").toBeTruthy();
+        expect(avatar.src).toBeFalsy();
         expect(spanEl).toBeTruthy();
-        expect(spanEl[0].classList.contains("igx-avatar--small")).toBeTruthy();
-        expect(spanEl[0].classList.length === 2).toBeTruthy();
+        expect(avatar.elementRef.nativeElement.classList.contains("igx-avatar--small")).toBeTruthy();
+        expect(spanEl.classList.length === 1).toBeTruthy();
         expect(avatar.isRounded).toBeFalsy();
 
         // For ARIA
-        expect(spanEl[0].getAttribute("aria-roledescription") === "icon type avatar").toBeTruthy();
+        expect(spanEl.getAttribute("aria-roledescription") === "icon type avatar").toBeTruthy();
     });
 
     it("Initializes image avatar with src element", () => {
@@ -65,9 +65,9 @@ describe("Avatar", () => {
         const avatar = fixture.componentInstance.avatar;
 
         expect(avatar.image).toBeTruthy();
-        expect(avatar.srcImage.length !== 0).toBeTruthy();
-        expect(avatar.image.nativeElement.classList.contains("igx-avatar--large")).toBeTruthy();
-        expect(avatar.image.nativeElement.classList.length === 3).toBeTruthy();
+        expect(avatar.src.length !== 0).toBeTruthy();
+        expect(avatar.elementRef.nativeElement.classList.contains("igx-avatar--large")).toBeTruthy();
+        expect(avatar.image.nativeElement.classList.length === 1).toBeTruthy();
         expect(avatar.isRounded).toBeTruthy();
 
         // For ARIA
