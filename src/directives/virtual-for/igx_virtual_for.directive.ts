@@ -47,8 +47,8 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     private _trackByFn: TrackByFunction<T>;
     private _pageSize = 0;
     private _currIndex = 0;
-    private _lastTouchX: number = 0;
-    private _lastTouchY: number = 0;
+    private _lastTouchX = 0;
+    private _lastTouchY = 0;
 
     @ViewChild(DisplayContainerComponent)
     private displayContiner: DisplayContainerComponent;
@@ -253,7 +253,7 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
         }
         this.vh.instance.elementRef.nativeElement.scrollTop += movedY;
 
-        if(this.vh.instance.elementRef.nativeElement.scrollTop !== 0 &&
+        if (this.vh.instance.elementRef.nativeElement.scrollTop !== 0 &&
             this.vh.instance.elementRef.nativeElement.scrollTop !== maxScrollTop) {
             event.preventDefault();
         }
