@@ -331,12 +331,12 @@ $components: register-component($components, #{$component-name});
 
     %cal-value--year {
         font-size: $cal-value-year-fs;
+        min-width: fit-content;
     }
 
     %cal-value--year-current {
         font-size: $cal-value-year-current-fs;
         color: map-get($this, 'year-current-text-color');
-        min-width: fit-content;
     }
 
     %cal-value--year-hover {
