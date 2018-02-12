@@ -1,11 +1,11 @@
 import { CommonModule } from "@angular/common";
 import {
-    AfterContentChecked,
     Component,
     ElementRef,
     HostBinding,
     Input,
     NgModule,
+    OnInit,
     TemplateRef,
     ViewChild
 } from "@angular/core";
@@ -21,7 +21,7 @@ export enum Size {
     selector: "igx-avatar",
     templateUrl: "avatar.component.html"
 })
-export class IgxAvatarComponent implements AfterContentChecked {
+export class IgxAvatarComponent implements OnInit {
     @ViewChild("image") public image: ElementRef;
     @ViewChild("initialsImage") public initialsImage: ElementRef;
     @ViewChild("imageTemplate", { read: TemplateRef }) protected imageTemplate: TemplateRef<any>;
@@ -111,7 +111,7 @@ export class IgxAvatarComponent implements AfterContentChecked {
 
     constructor(public elementRef: ElementRef) { }
 
-    public ngAfterContentChecked() {
+    public ngOnInit() {
         this.roleDescription = this.getRole();
     }
 
