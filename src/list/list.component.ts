@@ -17,9 +17,9 @@ import {
 	ContentChild,
 } from "@angular/core";
 
-import { IgxRippleModule } from "../directives/ripple.directive";
+import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxEmptyListTemplateDirective } from "./list.common"
-import { IgxListItem } from "./list-item.component"
+import { IgxListItemComponent } from "./list-item.component"
 
 // ====================== LIST ================================
 // The `<igx-list>` directive is a list container for items and headers
@@ -32,8 +32,8 @@ import { IgxListItem } from "./list-item.component"
 	styleUrls: ["./list.component.scss"],
 	templateUrl: "list.component.html"
 })
-export class IgxList {
-	@ContentChildren(forwardRef(() => IgxListItem)) public children: QueryList<IgxListItem>;
+export class IgxListComponent {
+	@ContentChildren(forwardRef(() => IgxListItemComponent)) public children: QueryList<IgxListItemComponent>;
 
 	@Input() public allowLeftPanning: boolean = false;
 	@Input() public allowRightPanning: boolean = false;
@@ -59,8 +59,8 @@ export class IgxList {
 		return "igx-list";
 	}
 
-	public get items(): IgxListItem[] {
-		const items: IgxListItem[] = [];
+	public get items(): IgxListItemComponent[] {
+		const items: IgxListItemComponent[] = [];
 		if (this.children !== undefined) {
 			for (const child of this.children.toArray()) {
 				if (!child.isHeader) {
@@ -72,8 +72,8 @@ export class IgxList {
 		return items;
 	}
 
-	public get headers(): IgxListItem[] {
-		const headers: IgxListItem[] = [];
+	public get headers(): IgxListItemComponent[] {
+		const headers: IgxListItemComponent[] = [];
 		if (this.children !== undefined) {
 			for (const child of this.children.toArray()) {
 				if (child.isHeader) {
@@ -97,8 +97,8 @@ export class IgxList {
 }
 
 @NgModule({
-	declarations: [IgxList, IgxListItem, IgxEmptyListTemplateDirective],
-	exports: [IgxList, IgxListItem, IgxEmptyListTemplateDirective],
+	declarations: [IgxListComponent, IgxListItemComponent, IgxEmptyListTemplateDirective],
+	exports: [IgxListComponent, IgxListItemComponent, IgxEmptyListTemplateDirective],
 	imports: [CommonModule, IgxRippleModule]
 })
 export class IgxListModule {

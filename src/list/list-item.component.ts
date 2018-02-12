@@ -18,9 +18,9 @@ import {
 } from "./list.common"
 
 import { HammerGesturesManager } from "../core/touch";
-import { IgxRippleModule } from "../directives/ripple.directive";
+import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 
-import { IgxList } from "./list.component"
+import { IgxListComponent } from "./list.component"
 
 // ====================== ITEM ================================
 // The `<igx-item>` component is a container intended for row items in
@@ -31,7 +31,7 @@ import { IgxList } from "./list.component"
 	styleUrls: ["./list.component.scss"],
 	templateUrl: "list-item.component.html"
 })
-export class IgxListItem implements OnInit, IListChild {
+export class IgxListItemComponent implements OnInit, IListChild {
 	private _panState: IgxListPanState = IgxListPanState.NONE;
 	private _FRACTION_OF_WIDTH_TO_TRIGGER_GRIP = 0.5; // as a fraction of the item width
 	private _innerStyle: string = "";
@@ -49,8 +49,8 @@ export class IgxListItem implements OnInit, IListChild {
 	@HostBinding("attr.aria-label") public ariaLabel : string;
 
 	constructor(
-		@Inject(forwardRef(() => IgxList))
-		public list: IgxList,
+		@Inject(forwardRef(() => IgxListComponent))
+		public list: IgxListComponent,
 		private _renderer: Renderer2) {
 	}
 

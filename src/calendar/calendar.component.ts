@@ -74,7 +74,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     public set weekStart(value: WEEKDAYS | number) {
         this.calendarModel.firstWeekDay = value;
     }
-    @Input() public locale: string = "en";
+    @Input() public locale = "en";
     @Input() public get selection(): string {
         return this._selection;
     }
@@ -133,7 +133,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     private _activeView = CalendarView.DEFAULT;
     private selectedDates;
     private _selection: "single" | "multi" | "range" = "single";
-    private _rangeStarted: boolean = false;
+    private _rangeStarted = false;
     private _monthAction = "";
 
     constructor(private elementRef: ElementRef) {
