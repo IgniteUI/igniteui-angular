@@ -10,7 +10,6 @@ import { Component, DebugElement, ViewChild } from "@angular/core";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs/Observable";
 import * as Infragistics from "../../src/main";
-import { IgxNavbarComponent } from "../../src/main";
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
 declare var Simulator: any;
@@ -126,13 +125,7 @@ describe("Navigation Drawer", () => {
 
         it("async API calls should emit events", async(() => {
             let fixture: ComponentFixture<TestComponentDIComponent>;
-            // let resolver;
             let drawer;
-            // const result = new Promise<any>((resolve) => {
-            //     resolver = (value?: any) => {
-            //         resolve(value);
-            //     };
-            // });
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentDIComponent);
@@ -161,12 +154,6 @@ describe("Navigation Drawer", () => {
                     expect(drawer.closed.emit).toHaveBeenCalledWith("closed");
                     // resolver();
             });
-            // }).catch((reason) => {
-            //     return Promise.reject(reason);
-            // });
-
-            // // to be resolved at the end of the promise chain
-            // return result;
          }));
 
         it("should properly initialize with min template", async(() => {
