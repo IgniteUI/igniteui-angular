@@ -80,7 +80,7 @@ export abstract class BaseProgress {
 export class IgxLinearProgressBarComponent extends BaseProgress {
 
     @Input()
-    public textPosition: TextPosition = TextPosition.RIGHT;
+    public textPosition: TextPosition = TextPosition.LEFT;
 
     @Input()
     public textVisability: boolean;
