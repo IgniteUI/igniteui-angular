@@ -34,7 +34,7 @@ describe("IgxGrid - Cell component", () => {
         expect(firstIndexCell.nativeElement).toBeDefined();
         expect(firstIndexCell.nativeElement.textContent).toMatch("1");
         expect(firstIndexCell.readonly).toBe(true);
-        expect(firstIndexCell.describedby).toMatch(`${grid.id}-${firstIndexCell.column.field}`);
+        expect(firstIndexCell.describedby).toMatch(`${grid.id}_${firstIndexCell.column.field}`);
     });
 
     it("selection and selection events", () => {

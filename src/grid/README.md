@@ -197,7 +197,7 @@ Column component is used to define grid's *columns* collection. Cell, header and
 <igx-grid #grid2 [data]="data | async" [paging]="true" [perPage]="10"
     (onCellSelection)="onInlineEdit($event)">
     <igx-column [sortable]="true" [field]="'ProductID'" [header]="'ID'"></igx-column>
-    <igx-column [sortable]="true" [filtering]="true" [field]="'ProductName'"></igx-column>
+    <igx-column [sortable]="true" [filterable]="true" [field]="'ProductName'"></igx-column>
     <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'In Stock'">
         <ng-template igxCell let-col="column" let-ri="rowIndex" let-item="item">
             <span *ngIf="!showInput(ri, col.field)">{{ item }}</span>
