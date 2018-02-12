@@ -41,7 +41,8 @@ import { HammerGesturesManager } from "../core/touch";
     selector: "igx-nav-drawer",
     templateUrl: "navigation-drawer.component.html"
 })
-export class IgxNavigationDrawerComponent extends BaseComponent implements IToggleView,
+export class IgxNavigationDrawerComponent extends BaseComponent implements
+    IToggleView,
     OnInit,
     AfterContentInit,
     OnDestroy,
@@ -73,6 +74,9 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements ITogg
      */
     @Input() public pinThreshold = 1024;
 
+    /**
+     * Returns nativeElement of the component.
+     */
     get element() {
         return this.elementRef.nativeElement;
     }

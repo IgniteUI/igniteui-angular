@@ -43,12 +43,12 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     }
 
     @HostBinding("class.igx-toggle--hidden")
-    protected get hiddenClass() {
+    public get hiddenClass() {
         return this.collapsed;
     }
 
     @HostBinding("class.igx-toggle")
-    protected get defaultClass() {
+    public get defaultClass() {
         return !this.collapsed;
     }
 
@@ -126,7 +126,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 })
 export class IgxToggleActionDirective implements OnDestroy, OnInit {
     @Input()
-    public closeOnOutsideClick = false;
+    public closeOnOutsideClick = true;
 
     @Input("igxToggleAction")
     set target(target) {
@@ -164,8 +164,8 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
         }
     }
 
-    @HostListener("click", ["$event"])
-    private onClick() {
+    @HostListener("click")
+    public onClick() {
         this.target.toggle(true);
 
         if (this._handler) {
