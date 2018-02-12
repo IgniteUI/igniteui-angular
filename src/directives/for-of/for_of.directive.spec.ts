@@ -17,19 +17,19 @@ import {
 } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxVirtForModule, IgxVirtualForOfDirective } from "./igx_virtual_for.directive";
+import { IgxForOfDirective, IgxForOfModule} from "./for_of.directive";
 
 describe("IgxVirtual directive - simple template", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                TestIgVirtualForOfDirective,
+                TestIgxForOfDirective,
                 EmptyVirtualComponent,
                 VerticalVirtualComponent,
                 HorizontalVirtualComponent,
                 VirtualComponent
             ],
-            imports: [IgxVirtForModule]
+            imports: [IgxForOfModule]
         }).compileComponents();
     }));
 
@@ -292,9 +292,9 @@ describe("IgxVirtual directive - simple template", () => {
     });
 });
 
-/** igxVirtFor for testing */
-@Directive({ selector: "[igxVirtForTest]" })
-export class TestIgVirtualForOfDirective<T> extends IgxVirtualForOfDirective<T> {
+/** igxFor for testing */
+@Directive({ selector: "[igxForTest]" })
+export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
     constructor(
         public viewContainer: ViewContainerRef,
         public template: TemplateRef<NgForOfContext<T>>,
@@ -347,7 +347,7 @@ export class TestIgVirtualForOfDirective<T> extends IgxVirtualForOfDirective<T> 
 @Component({
     template: `
         <span #container>
-            <ng-template igxVirtForTest [igxVirtForOf]="data"></ng-template>
+            <ng-template igxForTest [igxForOf]="data"></ng-template>
         </span>
     `
 })
@@ -361,10 +361,10 @@ export class EmptyVirtualComponent {
 @Component({
     template: `
         <div #container [style.width]='width' [style.height]='height'>
-            <ng-template #scrollContainer igxVirtForTest let-rowData [igxVirtForOf]="data"
-                [igxVirtForScrolling]="'vertical'"
-                [igxVirtForContainerSize]='height'
-                [igxVirtForItemSize]='"50px"'>
+            <ng-template #scrollContainer igxForTest let-rowData [igxForOf]="data"
+                [igxForScrollOrientation]="'vertical'"
+                [igxForContainerSize]='height'
+                [igxForItemSize]='"50px"'>
                 <div [style.display]="'flex'" [style.height]="'50px'">
                     <div [style.min-width]=cols[0].width>{{rowData['1']}}</div>
                     <div [style.min-width]=cols[1].width>{{rowData['2']}}</div>
@@ -391,8 +391,8 @@ export class VerticalVirtualComponent implements OnInit {
 
     @ViewChild("container") public container;
 
-    @ViewChild("scrollContainer", { read: TestIgVirtualForOfDirective })
-    public parentVirtDir: TestIgVirtualForOfDirective<any>;
+    @ViewChild("scrollContainer", { read: TestIgxForOfDirective })
+    public parentVirtDir: TestIgxForOfDirective<any>;
 
     public ngOnInit(): void {
         this.generateData();
@@ -431,10 +431,10 @@ export class VerticalVirtualComponent implements OnInit {
                 [style.float]='"left"'
                 [style.position]='"relative"'>
                 <div *ngFor="let rowData of data" [style.display]="'flex'" [style.height]="'50px'">
-                    <ng-template #childContainer igxVirtForTest let-col [igxVirtForOf]="cols"
-                        [igxVirtForScrolling]="'horizontal'"
-                        [igxVirtForUseForScroll]="scrollContainer"
-                        [igxVirtForContainerSize]='width'>
+                    <ng-template #childContainer igxForTest let-col [igxForOf]="cols"
+                        [igxForScrollOrientation]="'horizontal'"
+                        [igxForScrollContainer]="scrollContainer"
+                        [igxForContainerSize]='width'>
                             <div [style.min-width]='col.width + "px"'>{{rowData[col.field]}}</div>
                     </ng-template>
                 </div>
@@ -453,8 +453,8 @@ export class HorizontalVirtualComponent implements OnInit {
     @ViewChild("container", {read: ViewContainerRef})
     public container: ViewContainerRef;
 
-    @ViewChildren("childContainer", {read: TestIgVirtualForOfDirective})
-    public childVirtDirs: QueryList<TestIgVirtualForOfDirective<any>>;
+    @ViewChildren("childContainer", {read: TestIgxForOfDirective})
+    public childVirtDirs: QueryList<TestIgxForOfDirective<any>>;
 
     public ngOnInit(): void {
         this.generateData();
@@ -497,15 +497,15 @@ export class HorizontalVirtualComponent implements OnInit {
 @Component({
     template: `
         <div #container [style.width]='width' [style.height]='height'>
-            <ng-template #scrollContainer igxVirtForTest let-rowData [igxVirtForOf]="data"
-                [igxVirtForScrolling]="'vertical'"
-                [igxVirtForContainerSize]='height'
-                [igxVirtForItemSize]='"50px"'>
+            <ng-template #scrollContainer igxForTest let-rowData [igxForOf]="data"
+                [igxForScrollOrientation]="'vertical'"
+                [igxForContainerSize]='height'
+                [igxForItemSize]='"50px"'>
                 <div [style.display]="'flex'" [style.height]="'50px'">
-                    <ng-template #childContainer igxVirtForTest let-col [igxVirtForOf]="cols"
-                        [igxVirtForScrolling]="'horizontal'"
-                        [igxVirtForUseForScroll]="parentVirtDir"
-                        [igxVirtForContainerSize]='width'>
+                    <ng-template #childContainer igxForTest let-col [igxForOf]="cols"
+                        [igxForScrollOrientation]="'horizontal'"
+                        [igxForScrollContainer]="parentVirtDir"
+                        [igxForContainerSize]='width'>
                             <div [style.min-width]='col.width + "px"'>{{rowData[col.field]}}</div>
                     </ng-template>
                 </div>
@@ -523,11 +523,11 @@ export class VirtualComponent implements OnInit {
     @ViewChild("container", { read: ViewContainerRef })
     public container: ViewContainerRef;
 
-    @ViewChild("scrollContainer", { read: TestIgVirtualForOfDirective })
-    public parentVirtDir: TestIgVirtualForOfDirective<any>;
+    @ViewChild("scrollContainer", { read: TestIgxForOfDirective })
+    public parentVirtDir: TestIgxForOfDirective<any>;
 
-    @ViewChildren("childContainer", { read: TestIgVirtualForOfDirective })
-    public childVirtDirs: QueryList<TestIgVirtualForOfDirective<any>>;
+    @ViewChildren("childContainer", { read: TestIgxForOfDirective })
+    public childVirtDirs: QueryList<TestIgxForOfDirective<any>>;
 
     public ngOnInit(): void {
         this.generateData();

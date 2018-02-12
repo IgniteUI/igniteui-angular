@@ -3,10 +3,10 @@
             <span>Vertical Virtualization</span>
             <br/>
             <div style='height:500px;'>
-              <ng-template igxVirtFor let-item [igxVirtForOf]="data" #virtDirVertical
-                [igxVirtForScrolling]="'vertical'"
-                [igxVirtForContainerSize]='"500px"'
-                [igxVirtForItemSize]='"50px"'
+              <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical
+                [igxForScrollOrientation]="'vertical'"
+                [igxForContainerSize]='"500px"'
+                [igxForItemSize]='"50px"'
                 let-rowIndex="index">
                 <div style='height:50px;'>{{rowIndex}} : {{item.text}}</div>
                 </ng-template>
@@ -20,10 +20,10 @@
             <table> 
                 <tbody style='display:grid;'>
                 <tr style='width:500px; height:118px;'>               
-                    <ng-template igxVirtFor let-item [igxVirtForOf]="data" #virtDirHorizontal
-                        [igxVirtForScrolling]="'horizontal'"
-                        [igxVirtForContainerSize]='"500px"'
-                        [igxVirtForUseForScroll]="parentVirtDir"
+                    <ng-template igxFor let-item [igxForOf]="data" #virtDirHorizontal
+                        [igxForScrollOrientation]="'horizontal'"
+                        [igxForContainerSize]='"500px"'
+                        [igxForScrollContainer]="parentVirtDir"
                         let-rowIndex="index">
                             <td  [style.width.px]='item.width' style='height:100px;'>{{rowIndex}} : {{item.text}}</td>
                         </ng-template>

@@ -21,28 +21,28 @@
 
 
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth'>
-    <div class="igx-grid__tr" role="row">
-        <ng-template igxVirtFor let-col [igxVirtForOf]="visibleColumns" [igxVirtForScrolling]="'horizontal'" [igxVirtForUseForScroll]="parentVirtDir" [igxVirtForContainerSize]='calcWidth'>
+    <div class="igx-grid__tr" role="row" style="width: calc(100% - 17px)">
+        <ng-template igxFor let-col [igxForOf]="visibleColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='calcWidth' #headerContainer>
             <igx-grid-header [gridID]="id" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
         </ng-template>
     </div>
 </div>
 
 <!--<div class="igx-grid__tbody" role="rowgroup">
-    <igx-grid-row [gridID]="id" igxVirtFor="let item of data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
+    <igx-grid-row [gridID]="id" igxFor="let item of data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
                                 | gridSort:sortingExpressions:id:pipeTrigger
                                 | gridPaging:page:perPage:id:pipeTrigger;
-                                index as i;" [igxVirtForScrolling]="'vertical'" #scrollContainer [igxVirtForContainerSize]='height'>
+                                index as i;" [igxForScrollOrientation]="'vertical'" #scrollContainer [igxForContainerSize]='height'>
     </igx-grid-row>
 </div>-->
 
 <div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' >
-        <ng-template igxVirtFor let-rowData [igxVirtForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
+        <ng-template igxFor let-rowData [igxForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
                                 | gridSort:sortingExpressions:id:pipeTrigger
                                 | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" 
-                                [igxVirtForScrolling]="'vertical'"
-                                [igxVirtForContainerSize]='calcHeight'
-                                [igxVirtForItemSize]='"50px"'
+                                [igxForScrollOrientation]="'vertical'"
+                                [igxForContainerSize]='calcHeight'
+                                [igxForItemSize]='"50px"'
                                 #scrollContainer>
            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
            </igx-grid-row>

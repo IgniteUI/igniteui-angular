@@ -204,6 +204,23 @@ export class IgxGridCellComponent {
 
             if (target) {
                 target.nativeElement.focus();
+                this.syncRows();
+            } else {
+                this.row.virtDirRow.scrollPrev();
+                this.row.virtDirRow.onChunkLoaded.take(1).subscribe({
+                    next: (event: any) => {
+                        this.row.cdr.detectChanges();
+                        const currTarget = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
+                        if (currTarget) {
+                            currTarget.nativeElement.focus();
+                        } else {
+                            this.row.cells.first.nativeElement.focus();
+                        }
+                        setTimeout(() => {
+                            this.syncRows();
+                        });
+                    }
+                });
             }
         }
     }
@@ -231,10 +248,36 @@ export class IgxGridCellComponent {
 
             if (target) {
                 target.nativeElement.focus();
+                this.syncRows();
+            } else {
+                this.row.virtDirRow.scrollNext();
+                this.row.virtDirRow.onChunkLoaded.take(1).subscribe({
+                    next: (event: any) => {
+                        this.row.cdr.detectChanges();
+                        const currTarget = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
+                        if (currTarget) {
+                            currTarget.nativeElement.focus();
+                        } else {
+                            this.row.cells.last.nativeElement.focus();
+                        }
+                        setTimeout(() => {
+                            this.syncRows();
+                        });
+                    }
+                });
             }
         }
     }
-
+    syncRows() {
+        this.grid.cdr.detectChanges();
+        const scrLeft = this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.scrollLeft;
+        this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement.scrollLeft = scrLeft;
+        const rows = this.row.grid.rowList.toArray();
+        for (const row of rows) {
+            const elem = row.virtDirRow.dc.instance._viewContainer.element.nativeElement;
+            elem.scrollLeft = scrLeft;
+       }
+    }
     @HostListener("keydown.ctrl.arrowright")
     public onKeydownCtrlArrowRight() {
         const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex, this.row.cells.last.columnIndex);
@@ -246,26 +289,22 @@ export class IgxGridCellComponent {
 
     @HostListener("keydown.arrowup")
     public onKeydownArrowUp() {
-        let target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex - 1, this.columnIndex);
+        const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex - 1, this.columnIndex);
         if (target) {
             target.nativeElement.focus();
-            return;
+        } else {
+            this.row.grid.parentVirtDir.scrollPrev();
         }
-        this.row.grid.parentVirtDir.scrollPrev();
-        target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex + 1, this.columnIndex);
-        target.nativeElement.focus();
     }
 
     @HostListener("keydown.arrowdown")
     public onKeydownArrowDown() {
-        let target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex + 1, this.columnIndex);
+        const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex + 1, this.columnIndex);
         if (target) {
             target.nativeElement.focus();
-            return;
+        } else {
+            this.row.grid.parentVirtDir.scrollNext();
         }
-        this.row.grid.parentVirtDir.scrollNext();
-        target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex + 1, this.columnIndex);
-        target.nativeElement.focus();
     }
 
     @HostListener("keydown.enter")

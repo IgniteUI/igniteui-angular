@@ -9,8 +9,10 @@ import {
     HostListener,
     Input,
     QueryList,
+    ViewChild,
     ViewChildren
 } from "@angular/core";
+import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
@@ -32,6 +34,9 @@ export class IgxGridRowComponent {
 
     @Input()
     public gridID: string;
+
+    @ViewChild("igxDirRef", { read: IgxForOfDirective })
+    public virtDirRow: IgxForOfDirective<any>;
 
     @ViewChildren(forwardRef(() => IgxGridCellComponent), { read: IgxGridCellComponent })
     public cells: QueryList<IgxGridCellComponent>;

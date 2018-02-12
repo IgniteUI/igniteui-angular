@@ -1,3 +1,3 @@
-<ng-template igxVirtFor let-col [igxVirtForOf]="columns" [igxVirtForUseForScroll]="grid.parentVirtDir" let-colIndex="index" [igxVirtForScrolling]="'horizontal'" [igxVirtForContainerSize]='grid.calcWidth'>
+<ng-template igxFor let-col [igxForOf]="columns" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.calcWidth' #igxDirRef>
     <igx-grid-cell [column]="col" [row]="this" [style.min-width.px]="col.width" [value]="rowData[col.field]" [cellTemplate]="col.bodyTemplate"></igx-grid-cell>
 </ng-template>

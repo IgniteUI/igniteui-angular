@@ -6,7 +6,7 @@ import {
     IgxListModule,
     IgxListPanState,
     IgxRippleModule,
-    IgxVirtualForOfDirective
+    IgxForOfDirective
 } from "../../lib/main";
 @Component({
     selector: "virt-for-sample",
@@ -18,11 +18,11 @@ export class VirtualForSampleComponent {
     public data: any[] = [];
 	public options: any = {};
     
-    @ViewChild("virtDirVertical", { read: IgxVirtualForOfDirective })
-    public virtDirVertical: IgxVirtualForOfDirective<any>;
+    @ViewChild("virtDirVertical", { read: IgxForOfDirective })
+    public virtDirVertical: IgxForOfDirective<any>;
         
-    @ViewChild("virtDirHorizontal", { read: IgxVirtualForOfDirective })
-    public virtDirHorizontal: IgxVirtualForOfDirective<any>;
+    @ViewChild("virtDirHorizontal", { read: IgxForOfDirective })
+    public virtDirHorizontal: IgxForOfDirective<any>;
 
     public ngOnInit(): void {
         let data = [{

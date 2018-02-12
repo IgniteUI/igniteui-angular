@@ -7,6 +7,7 @@ import {
     Directive,
     DoCheck,
     EmbeddedViewRef,
+    EventEmitter,
     HostListener,
     Input,
     IterableChangeRecord,
@@ -18,6 +19,7 @@ import {
     NgZone,
     OnChanges,
     OnInit,
+    Output,
     SimpleChanges,
     TemplateRef,
     TrackByFunction,
@@ -29,13 +31,16 @@ import { DisplayContainerComponent } from "./display.container";
 import { HVirtualHelperComponent } from "./horizontal.virtual.helper.component";
 import { VirtualHelperComponent } from "./virtual.helper.component";
 
-@Directive({ selector: "[igxVirtFor][igxVirtForOf]" })
-export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
-    @Input() public igxVirtForOf: any[];
-    @Input() public igxVirtForScrolling: string;
-    @Input() public igxVirtForUseForScroll: any;
-    @Input() public igxVirtForContainerSize: any;
-    @Input() public igxVirtForItemSize: any;
+@Directive({ selector: "[igxFor][igxForOf]" })
+export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
+    @Input() public igxForOf: any[];
+    @Input() public igxForScrollOrientation: string;
+    @Input() public igxForScrollContainer: any;
+    @Input() public igxForContainerSize: any;
+    @Input() public igxForItemSize: any;
+
+    @Output()
+    public onChunkLoaded = new EventEmitter<any>();
 
     private hScroll;
     private func;
@@ -70,28 +75,28 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
 
     public ngOnInit(): void {
         let totalWidth: number;
-        const vc = this.igxVirtForUseForScroll ? this.igxVirtForUseForScroll._viewContainer : this._viewContainer;
-        if (this.igxVirtForScrolling === "horizontal") {
-            totalWidth = this.initHCache(this.igxVirtForOf);
+        const vc = this.igxForScrollContainer ? this.igxForScrollContainer._viewContainer : this._viewContainer;
+        if (this.igxForScrollOrientation === "horizontal") {
+            totalWidth = this.initHCache(this.igxForOf);
         }
         this._pageSize = this._calculatePageSize();
         const dcFactory: ComponentFactory<DisplayContainerComponent> = this.resolver.resolveComponentFactory(DisplayContainerComponent);
         this.dc = this._viewContainer.createComponent(dcFactory, 0);
-        if (this.igxVirtForOf && this.igxVirtForOf.length) {
-            for (let i = 0; i < this._pageSize && this.igxVirtForOf[i] !== undefined; i++) {
-                const input = this.igxVirtForOf[i];
+        if (this.igxForOf && this.igxForOf.length) {
+            for (let i = 0; i < this._pageSize && this.igxForOf[i] !== undefined; i++) {
+                const input = this.igxForOf[i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
                     this._template,
-                    { $implicit: input, index: this.igxVirtForOf.indexOf(input) }
+                    { $implicit: input, index: this.igxForOf.indexOf(input) }
                 );
                 this._embeddedViews.push(embeddedView);
             }
         }
 
-        if (this.igxVirtForScrolling === "vertical") {
+        if (this.igxForScrollOrientation === "vertical") {
             const factory: ComponentFactory<VirtualHelperComponent> = this.resolver.resolveComponentFactory(VirtualHelperComponent);
             this.vh = this._viewContainer.createComponent(factory, 1);
-            this.vh.instance.height = this.igxVirtForOf.length * parseInt(this.igxVirtForItemSize, 10);
+            this.vh.instance.height = this.igxForOf.length * parseInt(this.igxForItemSize, 10);
             this._zone.runOutsideAngular(() => {
                 this.vh.instance.elementRef.nativeElement.addEventListener("scroll", (evt) => { this.onScroll(evt); });
                 this.dc.instance._viewContainer.element.nativeElement.addEventListener("wheel",
@@ -111,9 +116,9 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
             });
         }
 
-        if (this.igxVirtForScrolling === "horizontal") {
+        if (this.igxForScrollOrientation === "horizontal") {
             this.dc.instance._viewContainer.element.nativeElement.style.height = "100%";
-            const directiveRef = this.igxVirtForUseForScroll || this;
+            const directiveRef = this.igxForScrollContainer || this;
             this.hScroll = this.getElement(vc, "igx-horizontal-virtual-helper");
             this.func = (evt) => { this.onHScroll(evt); };
             if (!this.hScroll) {
@@ -134,7 +139,7 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
-        const forOf = "igxVirtForOf";
+        const forOf = "igxForOf";
         if (forOf in changes) {
             const value = changes[forOf].currentValue;
             if (!this._differ && value) {
@@ -147,7 +152,7 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
                 }
             }
         }
-        const containerSize = "igxVirtForContainerSize";
+        const containerSize = "igxForContainerSize";
         if (containerSize in changes && !changes[containerSize].firstChange) {
             this._recalcOnContainerChange(changes);
         }
@@ -155,7 +160,7 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
 
     public ngDoCheck(): void {
         if (this._differ) {
-            const changes = this._differ.diff(this.igxVirtForOf);
+            const changes = this._differ.diff(this.igxForOf);
             if (changes) {
                 this._applyChanges(changes);
             }
@@ -163,25 +168,25 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     }
 
     public scrollNext() {
-        if (this.igxVirtForScrolling === "horizontal") {
-            const endIndex = this._currIndex + this._pageSize;
-            if (!this.igxVirtForOf[endIndex]) {
+        if (this.igxForScrollOrientation === "horizontal") {
+            const endIndex = this._currIndex + this._pageSize - 1;
+            if (!this.igxForOf[endIndex]) {
                 return;
             }
-            const endItemSize = parseInt(this.igxVirtForOf[endIndex].width, 10);
+            const endItemSize = parseInt(this.igxForOf[endIndex].width, 10);
             this.hScroll.scrollLeft += endItemSize;
 
-        } else if (this.igxVirtForScrolling === "vertical") {
-          this.vh.instance.elementRef.nativeElement.scrollTop += parseInt(this.igxVirtForItemSize, 10);
+        } else if (this.igxForScrollOrientation === "vertical") {
+          this.vh.instance.elementRef.nativeElement.scrollTop += parseInt(this.igxForItemSize, 10);
         }
     }
 
     public scrollPrev() {
-        if (this.igxVirtForScrolling === "horizontal") {
-            const startItemSize = parseInt(this.igxVirtForOf[this._currIndex].width, 10);
+        if (this.igxForScrollOrientation === "horizontal") {
+            const startItemSize = parseInt(this.igxForOf[this._currIndex].width, 10);
             this.hScroll.scrollLeft -= startItemSize;
-        } else if (this.igxVirtForScrolling === "vertical") {
-          this.vh.instance.elementRef.nativeElement.scrollTop -= parseInt(this.igxVirtForItemSize, 10);
+        } else if (this.igxForScrollOrientation === "vertical") {
+          this.vh.instance.elementRef.nativeElement.scrollTop -= parseInt(this.igxForItemSize, 10);
         }
     }
 
@@ -191,17 +196,18 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
         const ratio = scrollTop / vcHeight;
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
 
-        this._currIndex = Math.round(ratio * this.igxVirtForOf.length);
+        this._currIndex = Math.round(ratio * this.igxForOf.length);
 
         const endingIndex = this._pageSize + this._currIndex;
-        for (let i = this._currIndex; i < endingIndex && this.igxVirtForOf[i] !== undefined; i++) {
-            const input = this.igxVirtForOf[i];
+        for (let i = this._currIndex; i < endingIndex && this.igxForOf[i] !== undefined; i++) {
+            const input = this.igxForOf[i];
             const embView = embeddedViewCopy.shift();
             const cntx = (embView as EmbeddedViewRef<any>).context;
             cntx.$implicit = input;
-            cntx.index = this.igxVirtForOf.indexOf(input);
+            cntx.index = this.igxForOf.indexOf(input);
         }
         this.dc.changeDetectorRef.detectChanges();
+        this.onChunkLoaded.emit();
     }
 
     protected onHScroll(event) {
@@ -219,14 +225,15 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
 
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
         const endingIndex = this._pageSize + this._currIndex;
-        for (let i = this._currIndex; i < endingIndex && this.igxVirtForOf[i] !== undefined; i++) {
-            const input = this.igxVirtForOf[i];
+        for (let i = this._currIndex; i < endingIndex && this.igxForOf[i] !== undefined; i++) {
+            const input = this.igxForOf[i];
             const embView = embeddedViewCopy.shift();
             const cntx = (embView as EmbeddedViewRef<any>).context;
             cntx.$implicit = input;
-            cntx.index = this.igxVirtForOf.indexOf(input);
+            cntx.index = this.igxForOf.indexOf(input);
         }
         this.dc.changeDetectorRef.detectChanges();
+        this.onChunkLoaded.emit();
     }
 
     protected onWheel(event) {
@@ -335,15 +342,15 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     protected _applyChanges(changes: IterableChanges<T>) {
         this._recalcScrollBarSize();
         this.applyPageSizeChange();
-        if (this.igxVirtForOf && this.igxVirtForOf.length && this.dc) {
+        if (this.igxForOf && this.igxForOf.length && this.dc) {
             const embeddedViewCopy = Object.assign([], this._embeddedViews);
             const endingIndex = this._pageSize + this._currIndex;
-            for (let i = this._currIndex; i < endingIndex && this.igxVirtForOf[i] !== undefined; i++) {
-                const input = this.igxVirtForOf[i];
+            for (let i = this._currIndex; i < endingIndex && this.igxForOf[i] !== undefined; i++) {
+                const input = this.igxForOf[i];
                 const embView = embeddedViewCopy.shift();
                 const cntx = (embView as EmbeddedViewRef<any>).context;
                 cntx.$implicit = input;
-                cntx.index = this.igxVirtForOf.indexOf(input);
+                cntx.index = this.igxForOf.indexOf(input);
             }
             this.dc.changeDetectorRef.detectChanges();
         }
@@ -351,30 +358,30 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
 
     protected _calculatePageSize(): number {
         let pageSize = 0;
-        if (this.igxVirtForContainerSize !== null && this.igxVirtForContainerSize !== undefined) {
-            if (this.igxVirtForScrolling === "horizontal") {
-                const vc = this.igxVirtForUseForScroll ?
-                this.igxVirtForUseForScroll._viewContainer :
+        if (this.igxForContainerSize !== null && this.igxForContainerSize !== undefined) {
+            if (this.igxForScrollOrientation === "horizontal") {
+                const vc = this.igxForScrollContainer ?
+                this.igxForScrollContainer._viewContainer :
                 this._viewContainer;
                 const hScroll = this.getElement(vc, "igx-horizontal-virtual-helper");
 
                 const left = hScroll && hScroll.scrollLeft !== 0 ?
-                hScroll.scrollLeft + parseInt(this.igxVirtForContainerSize, 10) :
-                parseInt(this.igxVirtForContainerSize, 10);
+                hScroll.scrollLeft + parseInt(this.igxForContainerSize, 10) :
+                parseInt(this.igxForContainerSize, 10);
 
                 let endIndex = this.getHorizontalIndexAt(
                     left,
                     this.hCache,
                     0
                 ) + 1;
-                if (endIndex > this.igxVirtForOf.length) {
-                    endIndex = this.igxVirtForOf.length;
+                if (endIndex > this.igxForOf.length) {
+                    endIndex = this.igxForOf.length;
                     /*At right edge. Check if last elem fits.*/
                     let diff = this.hCache[endIndex] - this.hCache[this._currIndex];
-                    if (diff > parseInt(this.igxVirtForContainerSize, 10)) {
+                    if (diff > parseInt(this.igxForContainerSize, 10)) {
                         /*If last col does not fit we should remove some of the prev cols to fit the last col.*/
-                        while (diff > parseInt(this.igxVirtForContainerSize, 10)) {
-                            diff -= parseInt(this.igxVirtForOf[this._currIndex].width, 10);
+                        while (diff > parseInt(this.igxForContainerSize, 10)) {
+                            diff -= parseInt(this.igxForOf[this._currIndex].width, 10);
                             if (this._currIndex + 1 === endIndex) {
                                 /*large column that exceeds the size of the container...*/
                                 break;
@@ -385,14 +392,14 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
                 }
                 pageSize = endIndex - this._currIndex;
             } else {
-                pageSize = parseInt(this.igxVirtForContainerSize, 10) /
-                parseInt(this.igxVirtForItemSize, 10);
-                if (pageSize > this.igxVirtForOf.length) {
-                    pageSize = this.igxVirtForOf.length;
+                pageSize = parseInt(this.igxForContainerSize, 10) /
+                parseInt(this.igxForItemSize, 10);
+                if (pageSize > this.igxForOf.length) {
+                    pageSize = this.igxForOf.length;
                 }
             }
         } else {
-            pageSize = this.igxVirtForOf.length;
+            pageSize = this.igxForOf.length;
         }
         return pageSize;
     }
@@ -430,19 +437,19 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     }
 
     private _recalcScrollBarSize() {
-        if (this.igxVirtForScrolling === "horizontal") {
-            const totalWidth = this.igxVirtForContainerSize ? this.initHCache(this.igxVirtForOf) : 0;
+        if (this.igxForScrollOrientation === "horizontal") {
+            const totalWidth = this.igxForContainerSize ? this.initHCache(this.igxForOf) : 0;
             this.hScroll.children[0].style.width = totalWidth + "px";
         }
-        if (this.igxVirtForScrolling === "vertical") {
-            this.vh.instance.elementRef.nativeElement.style.height = parseInt(this.igxVirtForContainerSize, 10) + "px";
+        if (this.igxForScrollOrientation === "vertical") {
+            this.vh.instance.elementRef.nativeElement.style.height = parseInt(this.igxForContainerSize, 10) + "px";
             this.vh.instance.elementRef.nativeElement.children[0].style.height =
-            (this.igxVirtForOf.length * parseInt(this.igxVirtForItemSize, 10)) + "px";
+            (this.igxForOf.length * parseInt(this.igxForItemSize, 10)) + "px";
         }
     }
 
     private _recalcOnContainerChange(changes: SimpleChanges) {
-        const containerSize = "igxVirtForContainerSize";
+        const containerSize = "igxForContainerSize";
         const value = changes[containerSize].currentValue;
         this.applyPageSizeChange();
         this._recalcScrollBarSize();
@@ -453,10 +460,10 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
         if (pageSize > this._pageSize) {
             const diff = pageSize - this._pageSize;
             for (let i = 0; i < diff; i++) {
-                const input = this.igxVirtForOf[this._currIndex + this._pageSize + i];
+                const input = this.igxForOf[this._currIndex + this._pageSize + i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
                     this._template,
-                    { $implicit: input, index: this.igxVirtForOf.indexOf(input) }
+                    { $implicit: input, index: this.igxForOf.indexOf(input) }
                 );
                 this._embeddedViews.push(embeddedView);
             }
@@ -483,11 +490,11 @@ export function getTypeNameForDebugging(type: any): string {
 }
 
 @NgModule({
-    declarations: [IgxVirtualForOfDirective, DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
+    declarations: [IgxForOfDirective, DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
     entryComponents: [DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
-    exports: [IgxVirtualForOfDirective],
+    exports: [IgxForOfDirective],
     imports: [CommonModule]
 })
 
-export class IgxVirtForModule {
+export class IgxForOfModule {
 }
