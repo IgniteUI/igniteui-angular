@@ -153,6 +153,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     @ViewChild("scrollContainer", { read: IgxVirtualForOfDirective })
     public parentVirtDir: IgxVirtualForOfDirective<any>;
 
+    @ViewChild("headerContainer", { read: IgxVirtualForOfDirective })
+    public headerContainer: IgxVirtualForOfDirective<any>;
     @HostBinding("attr.tabindex")
     public tabindex = 0;
 

@@ -21,8 +21,8 @@
 
 
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth'>
-    <div class="igx-grid__tr" role="row">
-        <ng-template igxVirtFor let-col [igxVirtForOf]="visibleColumns" [igxVirtForScrolling]="'horizontal'" [igxVirtForUseForScroll]="parentVirtDir" [igxVirtForContainerSize]='calcWidth'>
+    <div class="igx-grid__tr" role="row" style="width: calc(100% - 17px)">
+        <ng-template igxVirtFor let-col [igxVirtForOf]="visibleColumns" [igxVirtForScrolling]="'horizontal'" [igxVirtForUseForScroll]="parentVirtDir" [igxVirtForContainerSize]='calcWidth' #headerContainer>
             <igx-grid-header [gridID]="id" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
         </ng-template>
     </div>

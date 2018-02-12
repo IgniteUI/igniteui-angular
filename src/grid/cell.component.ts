@@ -204,6 +204,7 @@ export class IgxGridCellComponent {
 
             if (target) {
                 target.nativeElement.focus();
+                this.syncRows();
             } else {
                 this.row.virtDirRow.scrollPrev();
                 this.row.virtDirRow.onChunkLoaded.take(1).subscribe({
@@ -215,6 +216,9 @@ export class IgxGridCellComponent {
                         } else {
                             this.row.cells.first.nativeElement.focus();
                         }
+                        setTimeout(() => {
+                            this.syncRows();
+                        });
                     }
                 });
             }
@@ -244,6 +248,7 @@ export class IgxGridCellComponent {
 
             if (target) {
                 target.nativeElement.focus();
+                this.syncRows();
             } else {
                 this.row.virtDirRow.scrollNext();
                 this.row.virtDirRow.onChunkLoaded.take(1).subscribe({
@@ -255,12 +260,24 @@ export class IgxGridCellComponent {
                         } else {
                             this.row.cells.last.nativeElement.focus();
                         }
+                        setTimeout(() => {
+                            this.syncRows();
+                        });
                     }
                 });
             }
         }
     }
-
+    syncRows() {
+        this.grid.cdr.detectChanges();
+        const scrLeft = this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.scrollLeft;
+        this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement.scrollLeft = scrLeft;
+        const rows = this.row.grid.rowList.toArray();
+        for (const row of rows) {
+            const elem = row.virtDirRow.dc.instance._viewContainer.element.nativeElement;
+            elem.scrollLeft = scrLeft;
+       }
+    }
     @HostListener("keydown.ctrl.arrowright")
     public onKeydownCtrlArrowRight() {
         const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex, this.row.cells.last.columnIndex);
