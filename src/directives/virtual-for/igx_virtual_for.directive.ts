@@ -7,6 +7,7 @@ import {
     Directive,
     DoCheck,
     EmbeddedViewRef,
+    EventEmitter,
     HostListener,
     Input,
     IterableChangeRecord,
@@ -18,6 +19,7 @@ import {
     NgZone,
     OnChanges,
     OnInit,
+    Output,
     SimpleChanges,
     TemplateRef,
     TrackByFunction,
@@ -36,6 +38,9 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     @Input() public igxVirtForUseForScroll: any;
     @Input() public igxVirtForContainerSize: any;
     @Input() public igxVirtForItemSize: any;
+
+    @Output()
+    public onChunkLoaded = new EventEmitter<any>();
 
     private hScroll;
     private func;
@@ -154,7 +159,7 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
 
     public scrollNext() {
         if (this.igxVirtForScrolling === "horizontal") {
-            const endIndex = this._currIndex + this._pageSize;
+            const endIndex = this._currIndex + this._pageSize - 1;
             if (!this.igxVirtForOf[endIndex]) {
                 return;
             }
@@ -192,6 +197,7 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
             cntx.index = this.igxVirtForOf.indexOf(input);
         }
         this.dc.changeDetectorRef.detectChanges();
+        this.onChunkLoaded.emit();
     }
 
     protected onHScroll(event) {
@@ -217,6 +223,7 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
             cntx.index = this.igxVirtForOf.indexOf(input);
         }
         this.dc.changeDetectorRef.detectChanges();
+        this.onChunkLoaded.emit();
     }
 
     protected onWheel(event) {
