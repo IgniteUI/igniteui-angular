@@ -7,5 +7,7 @@
         [style.width.%]="valueInPercent">
         <ng-content></ng-content>
     </div>
-    <span class="progress-linear__value">{{valueInPercent}}%</span>
+    <span *ngIf="textVisability" class="progress-linear__value--{{textPosition}}">
+        {{ text ? text : valueInPercent + "%" }}
+    </span>
 </div>

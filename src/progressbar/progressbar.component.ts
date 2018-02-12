@@ -4,6 +4,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    HostBinding,
     Input,
     NgModule,
     OnChanges,
@@ -11,6 +12,12 @@ import {
     Renderer2,
     ViewChild
 } from "@angular/core";
+
+export enum TextPosition {
+    RIGHT = "right",
+    CENTER = "center",
+    LEFT = "left"
+}
 
 export abstract class BaseProgress {
     protected requestAnimationId: number = undefined;
@@ -72,8 +79,21 @@ export abstract class BaseProgress {
 })
 export class IgxLinearProgressBarComponent extends BaseProgress {
 
-    @Input() public striped = false;
-    @Input() public type = "default";
+    @Input()
+    public textPosition: TextPosition = TextPosition.RIGHT;
+
+    @Input()
+    public textVisability: boolean;
+
+    @Input()
+    public text: string;
+
+    @Input()
+    public striped = false;
+
+    @Input()
+    public type = "default";
+
     @Input()
     set animate(animate: boolean) {
         this._animate = animate;
@@ -119,6 +139,8 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
 
     @Output() public onProgressChanged = new EventEmitter();
 
+    private _textVisability;
+
     constructor(private elementRef: ElementRef) {
         super();
     }
@@ -134,6 +156,9 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
 
     private readonly STROKE_OPACITY_DVIDER = 100;
     private readonly STROKE_OPACITY_ADDITION = .2;
+
+    @Input()
+    public textVisability: boolean;
 
     @Input()
     set animate(animate: boolean) {
