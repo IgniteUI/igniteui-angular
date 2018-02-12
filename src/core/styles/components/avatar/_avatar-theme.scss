@@ -42,7 +42,7 @@ $components: register-component($components, #{$component-name});
 
     %igx-avatar-display {
         position: relative;
-        pointer-events: none;
+        user-select: none;
     }
 
     %igx-avatar--rounded {
