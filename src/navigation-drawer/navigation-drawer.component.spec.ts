@@ -7,8 +7,10 @@ import {
 } from "@angular/core/testing";
 
 import { Component, DebugElement, ViewChild } from "@angular/core";
+import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs/Observable";
 import * as Infragistics from "../../src/main";
+import { IgxNavbarComponent } from "../../src/main";
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
 declare var Simulator: any;
@@ -122,15 +124,15 @@ describe("Navigation Drawer", () => {
             });
         }));
 
-        it("async API calls should resolve Promise and emit events", async(() => {
+        it("async API calls should emit events", async(() => {
             let fixture: ComponentFixture<TestComponentDIComponent>;
-            let resolver;
+            // let resolver;
             let drawer;
-            const result = new Promise<any>((resolve) => {
-                resolver = (value?: any) => {
-                    resolve(value);
-                };
-            });
+            // const result = new Promise<any>((resolve) => {
+            //     resolver = (value?: any) => {
+            //         resolve(value);
+            //     };
+            // });
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentDIComponent);
@@ -145,29 +147,26 @@ describe("Navigation Drawer", () => {
                 const re = drawer.open(true);
                 fixture.detectChanges();
                 fixture.debugElement.children[0].nativeElement.dispatchEvent(new Event("transitionend"));
-                return re;
             })
             .then((value) => {
-                expect(value).toBe("opened");
                 expect(drawer.opening.emit).toHaveBeenCalledWith("opening");
                 expect(drawer.opened.emit).toHaveBeenCalledWith("opened");
 
                 const re = drawer.toggle(true);
                 fixture.detectChanges();
                 fixture.debugElement.children[0].nativeElement.dispatchEvent(new Event("transitionend"));
-                return re;
             })
             .then((value) => {
-                    expect(value).toBe("closed");
                     expect(drawer.closing.emit).toHaveBeenCalledWith("closing");
                     expect(drawer.closed.emit).toHaveBeenCalledWith("closed");
-                    resolver();
-            }).catch((reason) => {
-                return Promise.reject(reason);
+                    // resolver();
             });
+            // }).catch((reason) => {
+            //     return Promise.reject(reason);
+            // });
 
-            // to be resolved at the end of the promise chain
-            return result;
+            // // to be resolved at the end of the promise chain
+            // return result;
          }));
 
         it("should properly initialize with min template", async(() => {
@@ -319,7 +318,7 @@ describe("Navigation Drawer", () => {
                 });
          }));
 
-        it("should update width from css or property", (done) => {
+        it("should update width from css or property", fakeAsync((done) => {
             const template = `<igx-nav-drawer [miniWidth]="drawerMiniWidth" [width]="drawerWidth">
                                     <div class="igx-drawer-content"></div>
                                     <div class="igx-drawer-mini-content"></div>
@@ -333,6 +332,7 @@ describe("Navigation Drawer", () => {
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentDIComponent);
                 fixture.detectChanges();
+                // const comp: DebugElement = fixture.debugElement.query(By.component(IgxNavbarComponent));
 
                 // defaults:
                 expect(fixture.componentInstance.viewChild.drawer.style.width).toBe("");
@@ -351,6 +351,7 @@ describe("Navigation Drawer", () => {
                 return fixture.componentInstance.viewChild.close();
             })
             .then(() => {
+                tick(1000);
                 expect(fixture.componentInstance.viewChild.drawer.style.width).toBe("80px");
                 fixture.componentInstance.drawerWidth = "350px";
                 fixture.detectChanges();
@@ -362,7 +363,7 @@ describe("Navigation Drawer", () => {
             }).catch ((reason) => {
                 return Promise.reject(reason);
             });
-        });
+        }));
 
         it("should update pin based on window width (pinThreshold)", (done) => {
             const template = `'<igx-nav-drawer [pin]="pin" [pinThreshold]="pinThreshold"></igx-nav-drawer>'`;
