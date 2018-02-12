@@ -1,6 +1,8 @@
 import { animate, state, style, transition, trigger } from "@angular/animations";
 import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, Input, NgModule, Output } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Input, NgModule, Output } from "@angular/core";
+import { OnDestroy, OnInit } from "@angular/core/src/metadata/lifecycle_hooks";
+import { IgxNavigationService, IToggleView } from "../core/navigation";
 
 /**
  * IgxToast provides information and warning messages. They could not be dismissed, are non-interactive and can appear
@@ -23,12 +25,19 @@ import { Component, EventEmitter, Input, NgModule, Output } from "@angular/core"
     selector: "igx-toast",
     templateUrl: "toast.component.html"
 })
-export class IgxToastComponent {
+export class IgxToast implements IToggleView, OnInit, OnDestroy {
     public readonly CSS_CLASSES = {
         IGX_TOAST_BOTTOM: "igx-toast--bottom",
         IGX_TOAST_MIDDLE: "igx-toast--middle",
         IGX_TOAST_TOP: "igx-toast--top"
     };
+
+    /**
+     * Id of the component
+     * @type {string}
+     */
+    @Input()
+    public id: string;
 
     /**
      * Event is thrown prior toast is shown
@@ -101,6 +110,15 @@ export class IgxToastComponent {
 
     private timeoutId;
 
+    constructor(private elementRef: ElementRef, private navigationService: IgxNavigationService) { }
+
+    /**
+     * Returns the nativeElement of the component
+     */
+    public get element() {
+        return this.elementRef.nativeElement;
+    }
+
     /**
      * Shows the IgxToast component and hides it after some time span
      * if autoHide is enabled
@@ -130,6 +148,27 @@ export class IgxToastComponent {
         clearInterval(this.timeoutId);
     }
 
+    /**
+     * Wraps @shown() function due necessary implementation of @IToggleView interface
+     */
+    public open() {
+        this.show();
+    }
+
+    /**
+     * Wraps @hide() function due necessary implementation of @IToggleView interface
+     */
+    public close() {
+        this.hide();
+    }
+
+    /**
+     * Show or respectively hide the toast based on the state it has.
+     */
+    public toggle() {
+        this.isVisible ? this.close() : this.open();
+    }
+
     public mapPositionToClassName(): any {
         if (this.position === IgxToastPosition.Top) {
             return this.CSS_CLASSES.IGX_TOAST_TOP;
@@ -141,6 +180,18 @@ export class IgxToastComponent {
 
         if (this.position === IgxToastPosition.Bottom) {
             return this.CSS_CLASSES.IGX_TOAST_BOTTOM;
+        }
+    }
+
+    public ngOnInit() {
+        if (this.navigationService && this.id) {
+            this.navigationService.add(this.id, this);
+        }
+    }
+
+    public ngOnDestroy() {
+        if (this.navigationService && this.id) {
+            this.navigationService.remove(this.id);
         }
     }
 }
