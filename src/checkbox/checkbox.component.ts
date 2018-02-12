@@ -15,7 +15,6 @@ let nextId = 0;
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxCheckboxComponent, multi: true }],
     selector: "igx-checkbox",
-    styleUrls: ["./checkbox.component.scss"],
     templateUrl: "checkbox.component.html"
 })
 export class IgxCheckboxComponent implements ControlValueAccessor {

@@ -4,12 +4,12 @@ import {
 	ViewChild,
 	HostBinding,
 	HostListener,
-	OnInit,
 	Input,
 	ElementRef,
 	Inject,
 	forwardRef,
-	Renderer2
+	Renderer2,
+	ChangeDetectionStrategy
 } from '@angular/core';
 
 import {
@@ -28,18 +28,17 @@ import { IgxListComponent } from "./list.component"
 @Component({
 	providers: [HammerGesturesManager],
 	selector: "igx-list-item",
-	styleUrls: ["./list.component.scss"],
-	templateUrl: "list-item.component.html"
+	templateUrl: "list-item.component.html",
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class IgxListItemComponent implements OnInit, IListChild {
+export class IgxListItemComponent implements IListChild {
 	private _panState: IgxListPanState = IgxListPanState.NONE;
 	private _FRACTION_OF_WIDTH_TO_TRIGGER_GRIP = 0.5; // as a fraction of the item width
 	private _innerStyle: string = "";
+	private _currentLeft = 0;
 
-	@ViewChild("wrapper") public element: ElementRef;
-	@HostBinding("attr.role") public role;
-	@HostBinding("style.overflow-x") public get overFlowX() {
-		return "hidden";
+	@HostBinding("attr.role") public get role() {
+		return this.isHeader ? "separator" : "listitem";
 	}
 
 	@Input() public isHeader: boolean;
@@ -51,25 +50,23 @@ export class IgxListItemComponent implements OnInit, IListChild {
 	constructor(
 		@Inject(forwardRef(() => IgxListComponent))
 		public list: IgxListComponent,
+		private elementRef: ElementRef,
 		private _renderer: Renderer2) {
 	}
 
-	public ngOnInit() {
-		if (this.isHeader) {
-			this._innerStyle = "igx-list__header";
-			this.role = "separator";
-		} else {
-			this._innerStyle = "igx-list__item";
-			this.role = "listitem";
-
-			this.element.nativeElement.style.touchAction = "pan-y";
-		}
-
-		this.ariaLabel = this.element.nativeElement.textContent.trim();
+	public get element() {
+		return this.elementRef.nativeElement;
 	}
 
-	get innerStyle(): string {
-		return this._innerStyle;
+	@HostBinding("style.touch-action") touchAction = "pan-y";
+
+	@HostBinding("class.igx-list__header")
+	get headerStyle(): boolean {
+		return this.isHeader;
+	}
+	@HostBinding("class.igx-list__item")
+	get innerStyle(): boolean {
+		return !this.isHeader;
 	}
 
 	public get panState(): IgxListPanState {
@@ -81,15 +78,15 @@ export class IgxListItemComponent implements OnInit, IListChild {
 	}
 
 	public get width() {
-		if (this.element && this.element.nativeElement) {
-			return this.element.nativeElement.offsetWidth;
+		if (this.element) {
+			return this.element.offsetWidth;
 		} else {
 			return 0;
 		}
 	}
 
 	private get left() {
-		return this.element.nativeElement.offsetLeft;
+		return this.element.offsetLeft;
 	}
 	private set left(value: number) {
 		let val = value + "";
@@ -97,7 +94,7 @@ export class IgxListItemComponent implements OnInit, IListChild {
 		if (val.indexOf("px") === -1) {
 			val += "px";
 		}
-		this.element.nativeElement.style.left = val;
+		this.element.style.left = val;
 	}
 
 	public get maxLeft() {
@@ -115,14 +112,16 @@ export class IgxListItemComponent implements OnInit, IListChild {
 	@HostListener("panstart", ['$event']) panStart(ev: HammerInput) {
 		if(!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning))
 			return;
+
+		this._currentLeft = this.left;
 	}
 
 	@HostListener("panmove", ['$event']) panMove(ev: HammerInput) {
 		if(!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning))
 			return;
 
-		const isPanningToLeft = this.left + ev.deltaX < this.left;
-		this.left = ev.deltaX;
+		const isPanningToLeft = ev.deltaX < 0;
+		this.left = this._currentLeft + ev.deltaX;
 		if (isPanningToLeft) {
 			if (this.isTrue(this.list.allowRightPanning) && !this.isTrue(this.list.allowLeftPanning) && this.left < 0) {
 				this.left = 0;
@@ -138,7 +137,7 @@ export class IgxListItemComponent implements OnInit, IListChild {
 		}
 	}
 
-	@HostListener("panEnd", ['$event']) panEnd(ev: HammerInput) {
+	@HostListener("panend", ['$event']) panEnd(ev: HammerInput) {
 		if(!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning))
 			return;
 

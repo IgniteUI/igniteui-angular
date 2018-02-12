@@ -25,7 +25,6 @@ import { IgxColumnComponent } from "./column.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: "igx-grid-filter",
-    styleUrls: ["./grid-filtering.component.scss"],
     templateUrl: "./grid-filtering.component.html"
 })
 export class IgxGridFilterComponent implements OnDestroy {
@@ -211,7 +210,7 @@ export class IgxGridFilterComponent implements OnDestroy {
 
     protected filteringExpression(): boolean {
         const expr = this.gridAPI.get(this.gridID)
-                        .filteringExpressions.find((x) => x.fieldName === this.column.field);
+            .filteringExpressions.find((x) => x.fieldName === this.column.field);
         if (expr) {
             this._value = expr.searchVal;
             this._filterCondition = expr.condition.name;

@@ -10,9 +10,9 @@ export enum SliderType {
      * Slider with single thumb.
      */
     SLIDER,
-        /**
-         *  Range slider with multiple thumbs, that can mark the range.
-         */
+    /**
+     *  Range slider with multiple thumbs, that can mark the range.
+     */
     RANGE
 }
 
@@ -32,7 +32,6 @@ const noop = () => {
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSliderComponent, multi: true }],
     selector: "igx-slider",
-    styleUrls: ["./slider.component.scss"],
     templateUrl: "slider.component.html"
 })
 export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterViewInit {

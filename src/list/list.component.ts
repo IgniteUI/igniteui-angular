@@ -12,7 +12,6 @@ import {
 	Output,
 	QueryList,
 	ViewChild,
-	ChangeDetectionStrategy,
 	TemplateRef,
 	ContentChild,
 } from "@angular/core";
@@ -27,9 +26,8 @@ import { IgxListItemComponent } from "./list-item.component"
 	host: {
 		role: "list"
 	},
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	// changeDetection: ChangeDetectionStrategy.OnPush,
 	selector: "igx-list",
-	styleUrls: ["./list.component.scss"],
 	templateUrl: "list.component.html"
 })
 export class IgxListComponent {
@@ -49,14 +47,13 @@ export class IgxListComponent {
 	@Output() public onPanStateChange = new EventEmitter();
 
 	@Output() public onItemClicked = new EventEmitter();
-	@Output() public onSelectionChanged = new EventEmitter();
 
 	constructor(private element: ElementRef) {
 	}
 
 	@HostBinding("class")
 	public get innerStyle(): string {
-		return "igx-list";
+		return this.children.length === 0 ? "igx-list-empty" : "igx-list";
 	}
 
 	public get items(): IgxListItemComponent[] {

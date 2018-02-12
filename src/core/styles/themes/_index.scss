@@ -1,0 +1,121 @@
+// Import the core modules first
+@import 'core';
+
+// Import all themable component mixins
+@import 'palettes';
+@import '../components/avatar/avatar-theme';
+@import '../components/badge/badge-theme';
+@import '../components/button/button-theme';
+@import '../components/button-group/button-group-theme';
+@import '../components/calendar/calendar-theme';
+@import '../components/card/card-theme';
+@import '../components/carousel/carousel-theme';
+@import '../components/checkbox/checkbox-theme';
+@import '../components/date-picker/date-picker-theme';
+@import '../components/dialog/dialog-theme';
+@import '../components/grid/grid-theme';
+@import '../components/toast/toast-theme';
+@import '../components/tabbar/tabbar-theme';
+@import '../components/switch/switch-theme';
+@import '../components/snackbar/snackbar-theme';
+@import '../components/slider/slider-theme';
+@import '../components/scroll/scroll-theme';
+@import '../components/ripple/ripple-theme';
+@import '../components/radio/radio-theme';
+@import '../components/progress/progress-theme';
+@import '../components/navbar/navbar-theme';
+@import '../components/navdrawer/navdrawer-theme';
+@import '../components/list/list-theme';
+@import '../components/input/input-theme';
+@import '../components/icon/icon-theme';
+@import '../components/grid-filtering/grid-filtering-theme';
+
+@mixin igx-theme($palette: $default-palette, $exclude: ()) {
+    // Check for invalid components passed
+    // in the exclude list
+    $valid-components: is-component($components, $exclude);
+
+    // @debug 'All registered: #{$components}';
+
+    @if not(index($exclude, 'igx-avatar')) {
+        @include igx-avatar($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-badge')) {
+        @include igx-badge($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-button')) {
+        @include igx-button($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-button-group')) {
+        @include igx-button-group($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-calendar')) {
+        @include igx-calendar($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-card')) {
+        @include igx-card($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-carousel')) {
+        @include igx-carousel($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-checkbox')) {
+        @include igx-checkbox($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-date-picker')) {
+        @include igx-date-picker($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-dialog')) {
+        @include igx-dialog($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-grid')) {
+        @include igx-grid($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-grid-filtering')) {
+        @include igx-grid-filtering($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-icon')) {
+        @include igx-icon($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-input')) {
+        @include igx-input($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-list')) {
+        @include igx-list($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-navbar')) {
+        @include igx-navbar($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-navdrawer')) {
+        @include igx-navdrawer($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-progress-circular')) {
+        @include igx-progress-circular($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-progress-linear')) {
+        @include igx-progress-linear($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-radio')) {
+        @include igx-radio($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-ripple')) {
+        @include igx-ripple($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-scroll')) {
+        @include igx-scroll($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-slider')) {
+        @include igx-slider($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-snackbar')) {
+        @include igx-snackbar($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-switch')) {
+        @include igx-switch($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-tabbar')) {
+        @include igx-tabbar($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-toast')) {
+        @include igx-toast($theme: (), $palette: $palette);
+    }
+}

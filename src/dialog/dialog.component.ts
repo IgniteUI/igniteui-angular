@@ -8,8 +8,7 @@ import {
     NgModule,
     OnInit,
     Output,
-    ViewChild,
-    ViewEncapsulation
+    ViewChild
 } from "@angular/core";
 
 import { EaseOut } from "../animations/easings";
@@ -27,9 +26,7 @@ import { IgxRippleModule } from "../directives/ripple/ripple.directive";
             transition("void => open", useAnimation(slideInBottom))
         ])
     ],
-    encapsulation: ViewEncapsulation.None,
     selector: "igx-dialog",
-    styleUrls: ["./dialog.component.scss"],
     templateUrl: "dialog-content.component.html"
 })
 export class IgxDialogComponent {
