@@ -1,9 +1,19 @@
-<div class="igx-avatar igx-avatar--{{size}}" aria-label="avatar" role="img">
-    <img #image *ngIf="src || initials" src="{{src}}" class="igx-avatar--image igx-avatar--{{size}}" [class.igx-avatar--rounded]="isRounded"
-        [style.backgroundColor]="bgColor" [attr.aria-roledescription]="roleDescription" />
-    <span *ngIf="!src && !initials" class="igx-avatar--{{size}} igx-avatar--icon" [class.igx-avatar--rounded]="isRounded" [style.backgroundColor]="bgColor"
-        [style.color]="color" [attr.aria-roledescription]="roleDescription">
-        <igx-icon fontSet="material" [name]="icon"></igx-icon>
+<ng-template #imageTemplate>
+    <img #image [src]="src" class="igx-avatar__image" [style.backgroundColor]="bgColor" [attr.aria-roledescription]="roleDescription"
+    />
+</ng-template>
+
+<ng-template #initialsTemplate>
+    <div class="igx-avatar__initials" [style.backgroundColor]="bgColor" [style.color]="color" [attr.aria-roledescription]="roleDescription">
+        <span>{{initials.substring(0, 2)}}</span>
+    </div>
+</ng-template>
+
+<ng-template #iconTemplate>
+    <span class="igx-avatar__icon" [style.backgroundColor]="bgColor" [style.color]="color" [attr.aria-roledescription]="roleDescription">
+        <igx-icon [name]="icon"></igx-icon>
     </span>
-    <ng-content></ng-content>
-</div>
+</ng-template>
+
+<ng-container *ngTemplateOutlet="template"></ng-container>
+<ng-content></ng-content>

@@ -1,0 +1,39 @@
+@include b(igx-list) {
+    @extend %igx-list !optional;
+
+    @include e(header) {
+        @extend %igx-list-header !optional;
+    }
+
+    @include e(item) {
+        @extend %igx-list-item !optional;
+
+        &:active {
+            @extend %igx-list-item--active !optional;
+        }
+        // &:not(:active) {
+        //     @extend %igx-list-item--inactive;
+        // }
+    }
+
+    @include e(empty) {
+        @extend %igx-list-empty !optional;
+
+        @include b(image) {
+            @extend %igx-list-empty-image !optional;
+        }
+
+        @include b(message) {
+            @extend %igx-list-empty-message !optional;
+        }
+    }
+
+    @include e(empty, $m: custom) {
+        @extend %igx-list-empty !optional;
+    }
+    @at-root {
+        igx-list-item {
+            @extend %igx-list-item-display !optional;
+        }
+    }
+}
