@@ -17,7 +17,7 @@ import {
 } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxForOfDirective, IgxForOfModule} from "./igx_virtual_for.directive";
+import { IgxForOfDirective, IgxForOfModule} from "./for_of.directive";
 
 describe("IgxVirtual directive - simple template", () => {
     beforeEach(async(() => {
