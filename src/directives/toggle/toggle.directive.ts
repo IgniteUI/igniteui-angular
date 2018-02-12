@@ -152,7 +152,7 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
     public ngOnInit() {
         if (this.closeOnOutsideClick) {
             this._handler = (evt) => {
-                if (this.target.element.contains(evt.target) || this.element.nativeElement === evt.target) {
+                if (this.target.element.contains(evt.target) || this.element.nativeElement.contains(evt.target)) {
                     return;
                 }
 
