@@ -36,8 +36,10 @@ export class IgxListItemComponent implements OnInit, IListChild {
 	private _FRACTION_OF_WIDTH_TO_TRIGGER_GRIP = 0.5; // as a fraction of the item width
 	private _innerStyle: string = "";
 
-	@ViewChild("wrapper") public element: ElementRef;
-	@HostBinding("attr.role") public role;
+	// @ViewChild("wrapper") public element: ElementRef;
+	@HostBinding("attr.role") public get role() {
+		return this.isHeader ? "separator" : "listitem";
+	}
 
 	@Input() public isHeader: boolean;
 	@Input() public href: string;
@@ -48,25 +50,34 @@ export class IgxListItemComponent implements OnInit, IListChild {
 	constructor(
 		@Inject(forwardRef(() => IgxListComponent))
 		public list: IgxListComponent,
+		private elementRef: ElementRef,
 		private _renderer: Renderer2) {
 	}
 
 	public ngOnInit() {
-		if (this.isHeader) {
-			this._innerStyle = "igx-list__header";
-			this.role = "separator";
-		} else {
-			this._innerStyle = "igx-list__item";
-			this.role = "listitem";
+		// if (this.isHeader) {
+		// 	this._innerStyle = "igx-list__header";
+		// 	this.role = "separator";
+		// } else {
+		// 	this._innerStyle = "igx-list__item";
+		// 	this.role = "listitem";
 
-			this.element.nativeElement.style.touchAction = "pan-y";
-		}
+			// this.elementRef.nativeElement.style.touchAction = "pan-y";
+		// }
 
-		this.ariaLabel = this.element.nativeElement.textContent.trim();
+		//this.ariaLabel = this.element.nativeElement.textContent.trim();
 	}
 
-	get innerStyle(): string {
-		return this._innerStyle;
+	public get element() {
+		return this.elementRef.nativeElement;
+	}
+
+	@HostBinding("class.igx-list__header")
+	get headerStyle(): boolean {
+		return this.isHeader;
+	}
+	@HostBinding("class.igx-list__item") get innerStyle(): boolean {
+		return !this.isHeader;
 	}
 
 	public get panState(): IgxListPanState {
@@ -78,15 +89,15 @@ export class IgxListItemComponent implements OnInit, IListChild {
 	}
 
 	public get width() {
-		if (this.element && this.element.nativeElement) {
-			return this.element.nativeElement.offsetWidth;
+		if (this.element) {
+			return this.element.offsetWidth;
 		} else {
 			return 0;
 		}
 	}
 
 	private get left() {
-		return this.element.nativeElement.offsetLeft;
+		return this.element.offsetLeft;
 	}
 	private set left(value: number) {
 		let val = value + "";
@@ -94,7 +105,7 @@ export class IgxListItemComponent implements OnInit, IListChild {
 		if (val.indexOf("px") === -1) {
 			val += "px";
 		}
-		this.element.nativeElement.style.left = val;
+		this.element.style.left = val;
 	}
 
 	public get maxLeft() {

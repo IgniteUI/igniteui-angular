@@ -27,7 +27,7 @@ import { IgxListItemComponent } from "./list-item.component"
 	host: {
 		role: "list"
 	},
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	// changeDetection: ChangeDetectionStrategy.OnPush,
 	selector: "igx-list",
 	styleUrls: ["./list.component.scss"],
 	templateUrl: "list.component.html"
