@@ -49,7 +49,6 @@ export class IgxListComponent {
 	@Output() public onPanStateChange = new EventEmitter();
 
 	@Output() public onItemClicked = new EventEmitter();
-	@Output() public onSelectionChanged = new EventEmitter();
 
 	constructor(private element: ElementRef) {
 	}

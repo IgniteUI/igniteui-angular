@@ -38,9 +38,6 @@ export class IgxListItemComponent implements OnInit, IListChild {
 
 	@ViewChild("wrapper") public element: ElementRef;
 	@HostBinding("attr.role") public role;
-	@HostBinding("style.overflow-x") public get overFlowX() {
-		return "hidden";
-	}
 
 	@Input() public isHeader: boolean;
 	@Input() public href: string;
