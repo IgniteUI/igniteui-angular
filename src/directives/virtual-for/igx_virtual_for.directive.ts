@@ -49,6 +49,8 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     private _currIndex = 0;
     private _lastTouchX = 0;
     private _lastTouchY = 0;
+    private _pointerCapture;
+    private _gestureObject;
 
     @ViewChild(DisplayContainerComponent)
     private displayContiner: DisplayContainerComponent;
@@ -98,6 +100,14 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
                     (evt) => { this.onTouchStart(evt); });
                 this.dc.instance._viewContainer.element.nativeElement.addEventListener("touchmove",
                     (evt) => { this.onTouchMove(evt); });
+                this.dc.instance._viewContainer.element.nativeElement.addEventListener("pointerdown",
+                    (evt) => { this.onPointerDown(evt); });
+                this.dc.instance._viewContainer.element.nativeElement.addEventListener("pointerup",
+                    (evt) => { this.onPointerUp(evt); });
+                this.dc.instance._viewContainer.element.nativeElement.addEventListener("MSGestureStart",
+                    (evt) => { this.onMSGestureStart(evt); });
+                this.dc.instance._viewContainer.element.nativeElement.addEventListener("MSGestureChange",
+                    (evt) => { this.onMSGestureChange(evt); });
             });
         }
 
@@ -220,6 +230,7 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     }
 
     protected onWheel(event) {
+        /** runs only on the vertical directive */
         const scrollStepX = 10;
         const scrollStepY = /Edge/.test(navigator.userAgent) ? 25 : 100;
 
@@ -237,17 +248,25 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     }
 
     protected onTouchStart(event) {
+        /** runs only on the vertical directive */
+        if (typeof MSGesture === "function") {
+            return false;
+        }
         this._lastTouchX = event.changedTouches[0].screenX;
         this._lastTouchY = event.changedTouches[0].screenY;
     }
 
     protected onTouchMove(event) {
+        /** runs only on the vertical directive */
+        if (typeof MSGesture === "function") {
+            return false;
+        }
         const maxScrollTop = this.vh.instance.elementRef.nativeElement.children[0].offsetHeight -
             this.dc.instance._viewContainer.element.nativeElement.offsetHeight;
-        const hScroll = this.getElement(this._viewContainer, "horizontal-virtual-helper");
-
+        const hScroll = this.getElement(this._viewContainer, "igx-horizontal-virtual-helper");
         const movedX = this._lastTouchX - event.changedTouches[0].screenX;
         const movedY = this._lastTouchY - event.changedTouches[0].screenY;
+
         if (hScroll) {
             hScroll.scrollLeft += movedX;
         }
@@ -260,6 +279,55 @@ export class IgxVirtualForOfDirective<T> implements OnInit, OnChanges, DoCheck {
 
         this._lastTouchX = event.changedTouches[0].screenX;
         this._lastTouchY = event.changedTouches[0].screenY;
+    }
+
+    protected onPointerDown(event) {
+        /** runs only on the vertical directive */
+        if (!event || (event.pointerType !== 2 && event.pointerType !== "touch") ||
+            typeof MSGesture !== "function") {
+            return true;
+        }
+
+        if (!this._gestureObject) {
+            this._gestureObject = new MSGesture();
+            this._gestureObject.target = this.dc.instance._viewContainer.element.nativeElement;
+        }
+
+        event.target.setPointerCapture(this._pointerCapture = event.pointerId);
+        this._gestureObject.addPointer(this._pointerCapture);
+    }
+
+    protected onPointerUp(event) {
+        /** runs only on the vertical directive */
+        if (!this._pointerCapture) {
+            return true;
+        }
+
+        event.target.releasePointerCapture(this._pointerCapture);
+        delete this._pointerCapture;
+    }
+
+    protected onMSGestureStart(event) {
+        /** runs only on the vertical directive */
+        this._lastTouchX = event.screenX;
+        this._lastTouchY = event.screenY;
+        return false;
+    }
+
+    protected onMSGestureChange(event) {
+        /** runs only on the vertical directive */
+        const movedX = this._lastTouchX - event.screenX;
+        const movedY = this._lastTouchY - event.screenY;
+
+        const hScroll = this.getElement(this._viewContainer, "igx-horizontal-virtual-helper");
+        if (hScroll) {
+            hScroll.scrollLeft += movedX;
+        }
+        this.vh.instance.elementRef.nativeElement.scrollTop += movedY;
+
+        this._lastTouchX = event.screenX;
+        this._lastTouchY = event.screenY;
+        return false;
     }
 
     get ngForTrackBy(): TrackByFunction<T> { return this._trackByFn; }
