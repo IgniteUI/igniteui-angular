@@ -1,0 +1,8 @@
+@include b(igx-display-container) {
+    display: inherit;
+    position: relative;
+    float: left;
+    width: calc(100% - 16px);
+    height: calc(100% - 16px);
+    overflow: hidden;
+}

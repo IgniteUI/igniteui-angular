@@ -1,12 +1,14 @@
-import { Component, ElementRef, Input, ViewChild, ViewContainerRef } from "@angular/core";
+import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef } from "@angular/core";
 
 @Component({
     selector: "igx-horizontal-virtual-helper",
-    styles: [":host { display: block; width: calc(100% - 17px); overflow: auto; }"],
-    template: "<div [style.width.px]='width' #horizontal_container style='height: 1px;'></div>"
+    template: "<div #horizontal_container [style.width.px]='width' style='height: 1px;'></div>"
 })
 export class HVirtualHelperComponent {
     @ViewChild("horizontal_container", { read: ViewContainerRef }) public _vcr;
     @Input() public width: number;
+    @HostBinding("class")
+    public cssClasses = "igx-vhelper--horizontal";
+
     constructor(public elementRef: ElementRef) { }
 }

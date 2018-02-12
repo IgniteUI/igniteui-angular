@@ -1,14 +1,16 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
+import { Component, ElementRef, HostBinding, Input, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
 
 @Component({
     selector: "igx-virtual-helper",
-    styles: [":host { overflow: auto; display: block; height: 100%; float:right; width:17px; }"],
-    template: "<div style='width:1px;float:right;' [style.height.px]='height' #container></div>"
+    template: "<div #container [style.height.px]='height'></div>"
 })
 export class VirtualHelperComponent implements OnInit {
     @ViewChild("container", { read: ViewContainerRef }) public _vcr;
     @Input() public itemsLength: number;
     public height: number;
+
+    @HostBinding("class")
+    public cssClasses = "igx-vhelper--vertical";
 
     constructor(public elementRef: ElementRef) { }
 

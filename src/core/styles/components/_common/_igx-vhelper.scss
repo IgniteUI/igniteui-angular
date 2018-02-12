@@ -1,0 +1,26 @@
+%igx-vhelper-display {
+    display: block;
+    overflow: auto;
+}
+
+%igx-vhelper--vertical {
+    width: 16px;
+    height: calc(100% - 16px);
+    float: right;
+}
+
+%igx-vhelper--horizontal {
+    width: calc(100% - 16px);
+}
+
+@include b(igx-vhelper) {
+    @include m(vertical) {
+        @extend %igx-vhelper-display !optional;
+        @extend %igx-vhelper--vertical !optional;
+    }
+
+    @include m(horizontal) {
+        @extend %igx-vhelper-display !optional;
+        @extend %igx-vhelper--horizontal !optional;
+    }
+}

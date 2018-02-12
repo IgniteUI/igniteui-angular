@@ -108,7 +108,7 @@ $components: register-component($components, #{$component-name});
         border-radius: $grid-br;
         box-shadow: $grid-shadow;
         outline-style: none;
-        overflow-x: auto;
+        overflow: hidden;
     }
 
     %grid-caption {
@@ -126,7 +126,7 @@ $components: register-component($components, #{$component-name});
     %grid-thead,
     %grid-tfoot {
         display: block;
-        margin-right: 16px;
+        // margin-right: 16px;
 
         %grid-row {
             &:hover {
@@ -137,7 +137,7 @@ $components: register-component($components, #{$component-name});
 
     %grid-tbody {
         position: relative;
-        overflow-y: scroll;
+        // overflow-y: scroll;
         will-change: transform;
     }
 
