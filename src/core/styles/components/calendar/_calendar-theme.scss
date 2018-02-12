@@ -233,6 +233,10 @@ $components: register-component($components, #{$component-name});
         margin: $cal-header-date-margin;
         font-size: $cal-header-date-fs;
         line-height: $cal-header-date-lh;
+
+        .date-text {
+            @include ellipsis();
+        }
     }
 
     %cal-header-date--vertical {
