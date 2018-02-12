@@ -9,8 +9,7 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    ViewChild,
-    ViewEncapsulation
+    ViewChild
 } from "@angular/core";
 
 import { EaseOut } from "../animations/easings";
@@ -30,9 +29,7 @@ import { IgxNavigationService } from "../core/navigation/nav-service";
             transition("void => open", useAnimation(slideInBottom))
         ])
     ],
-    encapsulation: ViewEncapsulation.None,
     selector: "igx-dialog",
-    styleUrls: ["./dialog.component.scss"],
     templateUrl: "dialog-content.component.html"
 })
 export class IgxDialog implements IToggleView, OnInit, OnDestroy {

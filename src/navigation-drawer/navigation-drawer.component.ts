@@ -39,7 +39,6 @@ import { HammerGesturesManager } from "../core/touch";
 @Component({
     providers: [HammerGesturesManager],
     selector: "igx-nav-drawer",
-    styleUrls: ["./navigation-drawer.component.scss"],
     templateUrl: "navigation-drawer.component.html"
 })
 export class IgxNavigationDrawerComponent extends BaseComponent implements IToggleView,

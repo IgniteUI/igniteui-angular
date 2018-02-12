@@ -23,7 +23,6 @@ import { IgxNavigationService, IToggleView } from "../core/navigation";
         ])
     ],
     selector: "igx-toast",
-    styleUrls: ["./toast.component.scss"],
     templateUrl: "toast.component.html"
 })
 export class IgxToast implements IToggleView, OnInit, OnDestroy {

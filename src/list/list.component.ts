@@ -17,7 +17,6 @@ export enum IgxListPanState { NONE, LEFT, RIGHT }
 // The `<igx-list>` directive is a list container for items and headers
 @Component({
     selector: "igx-list",
-    styleUrls: ["./list.component.scss"],
     templateUrl: "list.component.html"
 })
 export class IgxListComponent {
@@ -84,7 +83,6 @@ export class IgxListComponent {
 @Component({
     providers: [HammerGesturesManager],
     selector: "igx-list-item",
-    styleUrls: ["./list.component.scss"],
     templateUrl: "list-item.component.html"
 })
 export class IgxListItemComponent implements OnInit, OnDestroy, IListChild {
