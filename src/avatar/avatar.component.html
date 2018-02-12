@@ -1,10 +1,10 @@
 <ng-template #imageTemplate>
-    <img #image src="{{src}}" class="igx-avatar__image" [style.backgroundColor]="bgColor" [attr.aria-roledescription]="roleDescription"
+    <img #image [src]="src" class="igx-avatar__image" [style.backgroundColor]="bgColor" [attr.aria-roledescription]="roleDescription"
     />
 </ng-template>
 
 <ng-template #initialsTemplate>
-    <div #initialsImage class="igx-avatar__initials" [style.backgroundColor]="bgColor" [style.color]="color" [attr.aria-roledescription]="roleDescription">
+    <div class="igx-avatar__initials" [style.backgroundColor]="bgColor" [style.color]="color" [attr.aria-roledescription]="roleDescription">
         <span>{{initials.substring(0, 2)}}</span>
     </div>
 </ng-template>
