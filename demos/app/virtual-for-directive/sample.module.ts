@@ -4,7 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { VirtualForSampleComponent } from "./sample.component";
 
-import { IgxVirtForModule } from "../../lib/main";
+import { IgxForOfModule } from "../../lib/main";
 
 @NgModule({
     declarations: [VirtualForSampleComponent],
@@ -12,7 +12,7 @@ import { IgxVirtForModule } from "../../lib/main";
          CommonModule,
          FormsModule,
          CommonModule,
-         IgxVirtForModule
+         IgxForOfModule
        ]
 })
 export class VirtualForSampleModule {}

@@ -15,7 +15,7 @@
                     <igx-list-item [isHeader]="true">Contacts</igx-list-item>
                     <div [style.height]="'518px'">
                         <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
-                        *igxVirtFor="let item of data | igxFilter: fo1; scrolling : 'vertical'; containerSize: '500px'; itemSize: '50px'">
+                        *igxFor="let item of data | igxFilter: fo1; scrollOrientation : 'vertical'; containerSize: '500px'; itemSize: '50px'">
                             <div class="item">
                                 <igx-avatar [src]="item.avatar" roundShape="true"></igx-avatar>
                                 <span igxLabel>{{item.text}}</span>

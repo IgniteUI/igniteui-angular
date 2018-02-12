@@ -4,7 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { ListPerformanceSampleComponent } from "./sample.component";
 
-import { IgxSwitchModule, IgxIconModule, IgxListModule, IgxAvatarModule , IgxDialogModule, IgxFilterModule, IgxVirtForModule } from "../../lib/main";
+import { IgxSwitchModule, IgxIconModule, IgxListModule, IgxAvatarModule , IgxDialogModule, IgxFilterModule, IgxForOfModule } from "../../lib/main";
 
 @NgModule({
     declarations: [ListPerformanceSampleComponent],
@@ -20,7 +20,7 @@ import { IgxSwitchModule, IgxIconModule, IgxListModule, IgxAvatarModule , IgxDia
          IgxAvatarModule,
          IgxDialogModule,
          IgxFilterModule,
-         IgxVirtForModule
+         IgxForOfModule
        ]
 })
 export class ListPerformanceSampleModule {}
