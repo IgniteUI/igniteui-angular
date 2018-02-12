@@ -211,16 +211,21 @@ describe("List", () => {
     it("Should have default no items template.", () => {
         const fixture = TestBed.createComponent(ListWithNoItemsComponent);
         const list = fixture.componentInstance.list;
-        const listNoItemsImgSrc = "https://example.com/noitems.png";
-        const listNoItemsMessage = "Custom no items message.";
-        const listNoItemsButtonText = "Custom Button Text";
+        //const listNoItemsImgSrc = "https://example.com/noitems.png";
+        const listNoItemsMessage = "No items placeholder.";
+        //const listNoItemsButtonText = "Custom Button Text";
 
         fixture.detectChanges();
 
+        verifyItemsCount(list, 0);
+
+        const noItemsParagraphEl = fixture.debugElement.query(By.css(".igx-list > p"));
+        expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listNoItemsMessage);
+
         /* expect(list.hasNoItemsTemplate).toBeFalsy();
-        expect(list..emptyListImage).toBe(listNoItemsImgSrc);
+        expect(list.emptyListImage).toBe(listNoItemsImgSrc);
         expect(list.emptyListMessage).toBe(listNoItemsMessage);
-        expect(list.emptyListButtonText).toBe(listNoItemsButtonText); */
+        expect(list.emptyListButtonText).toBe(listNoItemsButtonText);
 
         const noItemsImgDebugEl = fixture.debugElement.query(By.css(".image"));
         expect(noItemsImgDebugEl.nativeElement.getAttributeNode("src").value).toBe(listNoItemsImgSrc);
@@ -229,7 +234,7 @@ describe("List", () => {
         expect(noItemsTextDebugEl.nativeElement.textContent.trim()).toBe(listNoItemsMessage);
 
         const noItemsButtonDebugEl = fixture.debugElement.query(By.css("button"));
-        expect(noItemsButtonDebugEl.nativeElement.textContent.trim()).toEqual(listNoItemsButtonText);
+        expect(noItemsButtonDebugEl.nativeElement.textContent.trim()).toEqual(listNoItemsButtonText);*/
 
         /* spyOn(list.emptyListButtonClick, "emit");
         noItemsButtonDebugEl.nativeElement.click();
@@ -242,9 +247,59 @@ describe("List", () => {
         const listCustomNoItemsTemplateContent = "Custom no items message.";
 
         fixture.detectChanges();
+
+        verifyItemsCount(list, 0);
+
+        const noItemsParagraphEl = fixture.debugElement.query(By.css(".igx-list > h3"));
+        expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listCustomNoItemsTemplateContent);
+
         //expect(list.hasNoItemsTemplate).toBeTruthy();
-        const noItemsTemplateDebugEl = fixture.debugElement.query(By.css(".igx-list__empty--custom"));
-        expect(noItemsTemplateDebugEl.nativeElement.textContent.trim()).toEqual(listCustomNoItemsTemplateContent);
+        //const noItemsTemplateDebugEl = fixture.debugElement.query(By.css(".igx-list__empty--custom"));
+        //expect(noItemsTemplateDebugEl.nativeElement.textContent.trim()).toEqual(listCustomNoItemsTemplateContent);
+    });
+
+    it("should fire ItemClicked on click.", () => {
+        const fixture = TestBed.createComponent(ListTestComponent);
+        const list = fixture.componentInstance.list;
+        const itemElement = list.items[0].element.nativeElement;
+        let listItem: IgxListItemComponent;
+
+        list.onItemClicked.subscribe((value) => listItem = value);
+
+        spyOn(list.onItemClicked, "emit");
+        //spyOn(list.onSelectionChanged, "emit");
+        itemElement.click();
+        //expect(list.onItemClicked.emit).toHaveBeenCalled();
+        //expect(list.onSelectionChanged.emit).toHaveBeenCalled();
+        expect(listItem.index).toBe(0);
+        expect(listItem.element.nativeElement.textContent.trim()).toBe("Item 1");
+
+        //Click the same item again and verify click is fired again
+        itemElement.click();
+        expect(list.onItemClicked.emit).toHaveBeenCalled();
+    });
+
+    it("should fire SelectionChanged on click items.", () => {
+        const fixture = TestBed.createComponent(ListTestComponent);
+        const list = fixture.componentInstance.list;
+        const itemElement = list.items[1].element.nativeElement;
+        const secondItemElement = list.items[2].element.nativeElement;
+        let listItem: IgxListItemComponent;
+
+        list.onSelectionChanged.subscribe((value) => listItem = value);
+
+        spyOn(list.onSelectionChanged, "emit");
+        itemElement.click();
+
+        expect(listItem.index).toBe(1);
+        expect(listItem.element.nativeElement.textContent.trim()).toBe("Item 2");
+
+        secondItemElement.click();
+        expect(listItem.index).toBe(2);
+        expect(listItem.element.nativeElement.textContent.trim()).toBe("Item 3");
+
+        secondItemElement.click();
+        expect(list.onSelectionChanged.emit).not.toHaveBeenCalled();
     });
 
     function panRight(item, itemHeight, itemWidth, duration) {
@@ -275,6 +330,11 @@ describe("List", () => {
                 resolve();
             });
         });
+    }
+
+    function verifyItemsCount(list, expectedCount) {
+        expect(list.items instanceof Array).toBeTruthy();
+        expect(list.items.length).toBe(expectedCount);
     }
 });
 
@@ -360,7 +420,7 @@ class ListWithNoItemsComponent {
             template: `<div #wrapper>
                 <igx-list >
                     <ng-template igxEmptyList>
-                        Custom no items message.
+                        <h3>Custom no items message.</h3>
                     </ng-template>
                 </igx-list>
             </div>`
