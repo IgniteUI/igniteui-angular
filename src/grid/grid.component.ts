@@ -156,8 +156,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     @ViewChild("headerContainer", { read: IgxForOfDirective })
     public headerContainer: IgxForOfDirective<any>;
 
-    @ViewChild("thead")
-    public thead: ElementRef;
+    @ViewChild("theadRow")
+    public theadRow: ElementRef;
 
     @HostBinding("attr.tabindex")
     public tabindex = 0;
@@ -209,7 +209,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     public ngOnInit() {
         this.gridAPI.register(this);
         this.calcWidth = this.width && this.width.indexOf("%") === -1 ?  parseInt(this.width, 10) : 0;
-        this.calcHeight = this.height && this.height.indexOf("%") === -1 ?  parseInt(this.height, 10) - 50 : 0;
+        this.calcHeight = 0;
     }
 
     public ngAfterContentInit() {
@@ -238,7 +238,9 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
             this.calcHeight = null;
         } else if (this.height && this.height.indexOf("%") !== -1) {
             /*height in %*/
-            this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) - this.thead.nativeElement.clientHeight;
+            this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) - this.theadRow.nativeElement.clientHeight;
+        } else {
+            this.calcHeight = parseInt(this.height, 10) - this.theadRow.nativeElement.clientHeight;
         }
         this.cdr.detectChanges();
     }

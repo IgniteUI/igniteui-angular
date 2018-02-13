@@ -17,5 +17,8 @@ export class DisplayContainerComponent {
     @HostBinding("class")
     public cssClass = "igx-display-container";
 
+    @HostBinding("class.igx-display-container--notVirtual")
+    public notVirtual = true;
+
     constructor(public cdr: ChangeDetectorRef, public _viewContainer: ViewContainerRef) { }
 }
