@@ -12,21 +12,30 @@ $components: register-component($components, #{$component-name});
     $flat-text-color: null,
     $flat-background: null,
     $flat-hover-background: null,
+    $flat-hover-text-color: null,
     $flat-focus-background: null,
+    $flat-focus-text-color: null,
     // Raised Button
     $raised-text-color: null,
     $raised-background: null,
     $raised-hover-background: null,
+    $raised-hover-text-color: null,
     $raised-focus-background: null,
+    $raised-focus-text-color: null,
     // Fab Button ( Floating action button )
     $fab-text-color: null,
     $fab-background: null,
+    $fab-hover-background: null,
+    $fab-hover-text-color: null,
     $fab-focus-background: null,
+    $fab-focus-text-color: null,
     // Icon Button
     $icon-color: null,
     $icon-background: null,
     $icon-hover-background: null,
+    $icon-hover-color: null,
     $icon-focus-background: null,
+    $icon-focus-color: null,
     // Disabled Button
     $disabled-color: null,
     $disabled-background: null
@@ -35,22 +44,58 @@ $components: register-component($components, #{$component-name});
     @if not($text-color) and $background-color {
         $text-color: text-contrast($background-color);
     }
+
     // Flat Button
     @if not($flat-text-color) and $flat-background {
         $flat-text-color: text-contrast($flat-background);
+    }
+    // Flat Hover button
+    @if not($flat-hover-text-color) and $flat-hover-background {
+        $flat-hover-text-color: text-contrast($flat-hover-background);
+    }
+    // Flat focus button
+    @if not($flat-focus-text-color) and $flat-focus-background {
+        $flat-focus-text-color: text-contrast($flat-focus-background);
     }
     // Raised Button
     @if not($raised-text-color) and $raised-background {
         $raised-text-color: text-contrast($raised-background);
     }
+    // Raised Hover Button
+    @if not($raised-hover-text-color) and $raised-hover-background {
+        $raised-hover-text-color: text-contrast($raised-hover-background);
+    }
+    // Raised focus Button
+    @if not($raised-focus-text-color) and $raised-focus-background {
+        $raised-focus-text-color: text-contrast($raised-focus-background);
+    }
+
     // Fab Button ( Floating action button )
     @if not($fab-text-color) and $fab-background {
         $fab-text-color: text-contrast($fab-background);
     }
+    // Fab hover Button ( Floating action button )
+    @if not($fab-hover-text-color) and $fab-hover-background {
+        $fab-hover-text-color: text-contrast($fab-hover-background);
+    }
+    // Fab focus Button ( Floating action button )
+    @if not($fab-focus-text-color) and $fab-focus-background {
+        $fab-focus-text-color: text-contrast($fab-focus-background);
+    }
 
-    // icon Button ( Floating action button )
+    // Icon Button
     @if not($icon-color) and $icon-background {
         $icon-color: text-contrast($icon-background);
+    }
+
+    // Icon focus Button
+    @if not($icon-focus-color) and $icon-focus-background {
+        $icon-focus-color: text-contrast($icon-focus-background);
+    }
+
+    // Icon focus Button
+    @if not($icon-hover-color) and $icon-hover-background {
+        $icon-hover-color: text-contrast($icon-hover-background);
     }
 
     @return (
@@ -63,21 +108,30 @@ $components: register-component($components, #{$component-name});
         flat-text-color: $flat-text-color,
         flat-background: $flat-background,
         flat-hover-background: $flat-hover-background,
+        flat-hover-text-color: $flat-hover-text-color,
         flat-focus-background: $flat-focus-background,
+        flat-focus-text-color: $flat-focus-text-color,
         // Raised Button
         raised-text-color: $raised-text-color,
         raised-background: $raised-background,
         raised-hover-background: $raised-hover-background,
+        raised-hover-text-color: $raised-hover-text-color,
         raised-focus-background: $raised-focus-background,
+        raised-focus-text-color: $raised-focus-text-color,
         // Fab Button ( Floating action button )
         fab-text-color: $fab-text-color,
         fab-background: $fab-background,
+        fab-hover-background: $fab-hover-background,
+        fab-hover-text-color: $fab-hover-text-color,
         fab-focus-background: $fab-focus-background,
+        fab-focus-text-color: $fab-focus-text-color,
         // Icon Button
         icon-color:$icon-color,
         icon-background:$icon-background,
         icon-hover-background:$icon-hover-background,
+        icon-hover-color:$icon-hover-color,
         icon-focus-background:$icon-focus-background,
+        icon-focus-color:$icon-focus-color,
         // Disabled Button
         disabled-color:$disabled-color,
         disabled-background:$disabled-background,
@@ -93,22 +147,31 @@ $components: register-component($components, #{$component-name});
         // Flat button
         $flat-text-color: igx-color($palette, accent, 500),
         $flat-background: transparent,
-        $flat-hover-background: igx-color($palette, grays, 100),
+        $flat-hover-background: null,
+        $flat-hover-text-color: null,
         $flat-focus-background: igx-color($palette, grays, 400),
+        $flat-focus-text-color: igx-color($palette, grays, 800),
         // Raised Button
         $raised-text-color: igx-contrast-color($palette, accent, 500),
         $raised-background: igx-color($palette, accent, 500),
         $raised-hover-background: igx-color($palette, accent, 700),
+        $raised-hover-text-color: null,
         $raised-focus-background: igx-color($palette, accent, 700),
+        $raised-focus-text-color: igx-contrast-color($palette, accent, 500),
         // Fab button ( Floating action button )
         $fab-text-color: igx-contrast-color($palette, accent, 500),
         $fab-background: igx-color($palette, accent, 500),
+        $fab-hover-text-color: null,
+        $fab-hover-background: null,
         $fab-focus-background: igx-color($palette, accent, 500),
+        $fab-focus-text-color: igx-contrast-color($palette, accent, 500),
         // Icon Button
         $icon-color: igx-color($palette, grays, 800),
         $icon-background: transparent,
         $icon-hover-background: igx-color($palette, grays, 100),
+        $icon-hover-color: igx-color($palette, grays, 800),
         $icon-focus-background: igx-color($palette, grays, 400),
+        $icon-focus-color: igx-color($palette, grays, 800),
         // Icon Button
         $disabled-color: igx-color($palette, grays, 400),
         $disabled-background: igx-color($palette, grays, 100)
@@ -175,12 +238,14 @@ $components: register-component($components, #{$component-name});
         color: map-get($this, 'flat-text-color');
 
         &:hover {
-            background: map-get($this, 'utton-flat-hover-background');
+            background: map-get($this, 'flat-hover-background');
+            color: map-get($this, 'flat-hover-text-color');
         }
 
         &:focus,
         &:active {
             background: map-get($this, 'flat-focus-background');
+            color: map-get($this, 'flat-focus-text-color');
         }
     }
 
@@ -191,12 +256,14 @@ $components: register-component($components, #{$component-name});
 
         &:hover {
             background: map-get($this, 'raised-hover-background');
+            color: map-get($this, 'raised-hover-text-color');
             box-shadow: $button-raised-shadow;
         }
 
         &:focus,
         &:active {
             background: map-get($this, 'raised-focus-background');
+            color: map-get($this, 'raised-focus-text-color');
             box-shadow: $button-raised-focus-shadow;
         }
     }
@@ -240,11 +307,14 @@ $components: register-component($components, #{$component-name});
 
         &:hover {
             box-shadow: $button-floating-hover-shadow;
+            background: map-get($this, 'fab-hover-background');
+            color: map-get($this, 'fab-hover-text-color');
         }
 
         &:focus,
         &:active {
             background: map-get($this, 'fab-focus-background');
+            color: map-get($this, 'fab-focus-text-color');
         }
     }
 
@@ -258,11 +328,13 @@ $components: register-component($components, #{$component-name});
         &:hover {
             transition: $button-transition;
             background: map-get($this, 'icon-hover-background');
+            color: map-get($this, 'icon-hover-color');
         }
 
         &:focus,
         &:active {
             background: map-get($this, 'icon-focus-background');
+            color: map-get($this, 'icon-focus-color');
         }
     }
 
