@@ -192,6 +192,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     }
 
     protected onScroll(event) {
+        /* in certain situations this may be called when no scrollbar is visible */
+        if (!parseInt(this.vh.instance.elementRef.nativeElement.style.height, 10)) {
+            return;
+        }
         const scrollTop = event.target.scrollTop;
         const vcHeight = event.target.children[0].scrollHeight;
         const ratio = scrollTop / vcHeight;
@@ -212,6 +216,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     }
 
     protected onHScroll(event) {
+        /* in certain situations this may be called when no scrollbar is visible */
+        if (!parseInt(this.hScroll.children[0].style.width, 10)) {
+            return;
+        }
         const scrollLeft = event.target.scrollLeft;
         const hcWidth = event.target.children[0].scrollWidth;
         const ratio = scrollLeft / hcWidth;
@@ -393,8 +401,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
                 }
                 pageSize = endIndex - this._currIndex;
             } else {
-                pageSize = parseInt(this.igxForContainerSize, 10) /
-                    parseInt(this.igxForItemSize, 10);
+                pageSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
+                    parseInt(this.igxForItemSize, 10));
                 if (pageSize > this.igxForOf.length) {
                     pageSize = this.igxForOf.length;
                 }
