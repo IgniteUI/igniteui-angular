@@ -41,7 +41,8 @@ import { HammerGesturesManager } from "../core/touch";
     selector: "igx-nav-drawer",
     templateUrl: "navigation-drawer.component.html"
 })
-export class IgxNavigationDrawerComponent extends BaseComponent implements IToggleView,
+export class IgxNavigationDrawerComponent extends BaseComponent implements
+    IToggleView,
     OnInit,
     AfterContentInit,
     OnDestroy,
@@ -72,6 +73,13 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements ITogg
      * Deafult is 1024, can be set to falsy value to ignore.
      */
     @Input() public pinThreshold = 1024;
+
+    /**
+     * Returns nativeElement of the component.
+     */
+    get element() {
+        return this.elementRef.nativeElement;
+    }
 
     /**
      * Width of the drawer in its open state. Defaults to 300px based on the `.igx-nav-drawer` style.
@@ -107,8 +115,6 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements ITogg
         overlay: "igx-nav-drawer-overlay",
         styleDummy: "style-dummy"
     };
-    private _resolveOpen: (value?: any | PromiseLike<any>) => void;
-    private _resolveClose: (value?: any | PromiseLike<any>) => void;
 
     private _drawer: any;
     get drawer(): HTMLElement {
@@ -261,27 +267,25 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements ITogg
     /**
      * Toggle the open state of the Navigation Drawer.
      * @param fireEvents Optional flag determining whether events should be fired or not.
-     * @return Promise that is resolved once the operation completes.
      */
-    public toggle(fireEvents?: boolean): Promise<any> {
+    public toggle(fireEvents?: boolean) {
         if (this.isOpen) {
-            return this.close(fireEvents);
+            this.close(fireEvents);
         } else {
-            return this.open(fireEvents);
+            this.open(fireEvents);
         }
     }
 
     /**
      * Open the Navigation Drawer. Has no effect if already opened.
      * @param fireEvents Optional flag determining whether events should be fired or not.
-     * @return Promise that is resolved once the operation completes.
      */
-    public open(fireEvents?: boolean): Promise<any> {
+    public open(fireEvents?: boolean) {
         if (this._panning) {
             this.resetPan();
         }
         if (this.isOpen) {
-            return Promise.resolve();
+            return;
         }
         if (fireEvents) {
             this.opening.emit("opening");
@@ -297,28 +301,18 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements ITogg
 
         this.elementRef.nativeElement.addEventListener("transitionend", this.toggleOpenedEvent, false);
         this.setDrawerWidth(this.width);
-
-        return new Promise<any>((resolve) => {
-            this._resolveOpen = (value?: any) => {
-                resolve(value);
-                if (fireEvents) {
-                    this.opened.emit("opened");
-                }
-            };
-        });
     }
 
     /**
      * Close the Navigation Drawer. Has no effect if already closed.
      * @param fireEvents Optional flag determining whether events should be fired or not.
-     * @return Promise that is resolved once the operation completes.
      */
-    public close(fireEvents?: boolean): Promise<any> {
+    public close(fireEvents?: boolean) {
         if (this._panning) {
             this.resetPan();
         }
         if (!this.isOpen) {
-            return Promise.resolve();
+            return;
         }
         if (fireEvents) {
             this.closing.emit("closing");
@@ -327,15 +321,6 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements ITogg
         this.isOpen = false;
         this.setDrawerWidth(this._hasMimiTempl ? this.miniWidth : "");
         this.elementRef.nativeElement.addEventListener("transitionend", this.toggleClosedEvent, false);
-
-        return new Promise<any>((resolve) => {
-            this._resolveClose = (value?: any) => {
-                resolve(value);
-                if (fireEvents) {
-                    this.closed.emit("closed");
-                }
-            };
-        });
     }
 
     protected set_maxEdgeZone(value: number) {
@@ -594,16 +579,14 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements ITogg
         });
     }
 
-    private toggleOpenedEvent = (evt?) => {
+    private toggleOpenedEvent = (evt?, fireEvents?) => {
         this.elementRef.nativeElement.removeEventListener("transitionend", this.toggleOpenedEvent, false);
-        this._resolveOpen("opened");
-        delete this._resolveClose;
+        this.opened.emit("opened");
     }
 
     private toggleClosedEvent = (evt?) => {
         this.elementRef.nativeElement.removeEventListener("transitionend", this.toggleClosedEvent, false);
-        this._resolveClose("closed");
-        delete this._resolveClose;
+        this.closed.emit("closed");
     }
 }
 
