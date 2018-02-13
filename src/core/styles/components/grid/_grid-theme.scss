@@ -76,7 +76,7 @@ $components: register-component($components, #{$component-name});
     $grid-caption-padding: em(16px) em(24px) !default;
 
     // Heading
-    $grid-head-fs: em(12px) !default;
+    $grid-head-fs: rem(12px) !default;
     $grid-head-fw: 600 !default;
     $grid-head-color: map-get($this, 'heading-text-color') !default;
     $grid-head-icon-size: rem(16px) !default;
@@ -109,6 +109,21 @@ $components: register-component($components, #{$component-name});
         box-shadow: $grid-shadow;
         outline-style: none;
         overflow: hidden;
+    }
+
+    %vhelper-display {
+        &::-webkit-scrollbar {
+            width: 17px;
+            height: 17px;
+        }
+        
+        &::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, .08);
+        }
+        
+        &::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, .24);
+        }
     }
 
     %grid-caption {
