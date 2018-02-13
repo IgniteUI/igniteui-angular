@@ -123,10 +123,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
             this.func = (evt) => { this.onHScroll(evt); };
             if (!this.hScroll) {
                 const hvFactory: ComponentFactory<HVirtualHelperComponent> =
-                this.resolver.resolveComponentFactory(HVirtualHelperComponent);
+                    this.resolver.resolveComponentFactory(HVirtualHelperComponent);
                 this.hvh = vc.createComponent(hvFactory);
                 this.hvh.instance.width = totalWidth;
-                this.hScroll =  this.hvh.instance.elementRef.nativeElement;
+                this.hScroll = this.hvh.instance.elementRef.nativeElement;
                 this._zone.runOutsideAngular(() => {
                     this.hvh.instance.elementRef.nativeElement.addEventListener("scroll", this.func);
                 });
@@ -168,16 +168,16 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     }
 
     public scrollNext() {
+        const endIndex = this._currIndex + this._pageSize - 1;
         if (this.igxForScrollOrientation === "horizontal") {
-            const endIndex = this._currIndex + this._pageSize - 1;
             if (!this.igxForOf[endIndex]) {
                 return;
             }
             const endItemSize = parseInt(this.igxForOf[endIndex].width, 10);
             this.hScroll.scrollLeft += endItemSize;
 
-        } else if (this.igxForScrollOrientation === "vertical") {
-          this.vh.instance.elementRef.nativeElement.scrollTop += parseInt(this.igxForItemSize, 10);
+        } else if (this.igxForScrollOrientation === "vertical" && endIndex < this.igxForOf.length - 1) {
+            this.vh.instance.elementRef.nativeElement.scrollTop += parseInt(this.igxForItemSize, 10);
         }
     }
 
@@ -185,8 +185,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
         if (this.igxForScrollOrientation === "horizontal") {
             const startItemSize = parseInt(this.igxForOf[this._currIndex].width, 10);
             this.hScroll.scrollLeft -= startItemSize;
-        } else if (this.igxForScrollOrientation === "vertical") {
-          this.vh.instance.elementRef.nativeElement.scrollTop -= parseInt(this.igxForItemSize, 10);
+        } else if (this.igxForScrollOrientation === "vertical" && this._currIndex > 0) {
+            this.vh.instance.elementRef.nativeElement.scrollTop -= parseInt(this.igxForItemSize, 10);
         }
     }
 
@@ -215,10 +215,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
         const hcWidth = event.target.children[0].scrollWidth;
         const ratio = scrollLeft / hcWidth;
         this._currIndex = this.getHorizontalIndexAt(
-                    scrollLeft,
-                    this.hCache,
-                    0
-                );
+            scrollLeft,
+            this.hCache,
+            0
+        );
 
         /*recalculate and apply page size.*/
         this.applyPageSizeChange();
@@ -361,13 +361,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
         if (this.igxForContainerSize !== null && this.igxForContainerSize !== undefined) {
             if (this.igxForScrollOrientation === "horizontal") {
                 const vc = this.igxForScrollContainer ?
-                this.igxForScrollContainer._viewContainer :
-                this._viewContainer;
+                    this.igxForScrollContainer._viewContainer :
+                    this._viewContainer;
                 const hScroll = this.getElement(vc, "igx-horizontal-virtual-helper");
 
                 const left = hScroll && hScroll.scrollLeft !== 0 ?
-                hScroll.scrollLeft + parseInt(this.igxForContainerSize, 10) :
-                parseInt(this.igxForContainerSize, 10);
+                    hScroll.scrollLeft + parseInt(this.igxForContainerSize, 10) :
+                    parseInt(this.igxForContainerSize, 10);
 
                 let endIndex = this.getHorizontalIndexAt(
                     left,
@@ -393,7 +393,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
                 pageSize = endIndex - this._currIndex;
             } else {
                 pageSize = parseInt(this.igxForContainerSize, 10) /
-                parseInt(this.igxForItemSize, 10);
+                    parseInt(this.igxForItemSize, 10);
                 if (pageSize > this.igxForOf.length) {
                     pageSize = this.igxForOf.length;
                 }
@@ -444,7 +444,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
         if (this.igxForScrollOrientation === "vertical") {
             this.vh.instance.elementRef.nativeElement.style.height = parseInt(this.igxForContainerSize, 10) + "px";
             this.vh.instance.elementRef.nativeElement.children[0].style.height =
-            (this.igxForOf.length * parseInt(this.igxForItemSize, 10)) + "px";
+                (this.igxForOf.length * parseInt(this.igxForItemSize, 10)) + "px";
         }
     }
 

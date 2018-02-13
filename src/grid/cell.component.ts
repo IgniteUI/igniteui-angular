@@ -269,16 +269,7 @@ export class IgxGridCellComponent {
             }
         }
     }
-    syncRows() {
-        this.grid.cdr.detectChanges();
-        const scrLeft = this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.scrollLeft;
-        this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement.scrollLeft = scrLeft;
-        const rows = this.row.grid.rowList.toArray();
-        for (const row of rows) {
-            const elem = row.virtDirRow.dc.instance._viewContainer.element.nativeElement;
-            elem.scrollLeft = scrLeft;
-       }
-    }
+
     @HostListener("keydown.ctrl.arrowright")
     public onKeydownCtrlArrowRight() {
         const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex, this.row.cells.last.columnIndex);
@@ -320,5 +311,16 @@ export class IgxGridCellComponent {
     @HostListener("keydown.escape")
     public onKeydownExitEditMode() {
         this._inEditMode = false;
+    }
+
+    syncRows() {
+        this.grid.cdr.detectChanges();
+        const scrLeft = this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.scrollLeft;
+        this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement.scrollLeft = scrLeft;
+        const rows = this.row.grid.rowList.toArray();
+        for (const row of rows) {
+            const elem = row.virtDirRow.dc.instance._viewContainer.element.nativeElement;
+            elem.scrollLeft = scrLeft;
+       }
     }
 }
