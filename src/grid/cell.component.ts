@@ -316,7 +316,7 @@ export class IgxGridCellComponent {
     syncRows() {
         this.grid.cdr.detectChanges();
         const scrLeft = this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.scrollLeft;
-        this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement.scrollLeft = scrLeft;
+        this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement.style.left = (-scrLeft) + "px";
         const rows = this.row.grid.rowList.toArray();
         for (const row of rows) {
             const elem = row.virtDirRow.dc.instance._viewContainer.element.nativeElement;
