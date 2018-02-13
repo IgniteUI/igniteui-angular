@@ -192,6 +192,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     }
 
     protected onScroll(event) {
+        /* in certain situations this may be called when no scrollbar is visible */
+        if (!parseInt(this.vh.instance.elementRef.nativeElement.style.height, 10)) {
+            return;
+        }
         const scrollTop = event.target.scrollTop;
         const vcHeight = event.target.children[0].scrollHeight;
         const ratio = scrollTop / vcHeight;
@@ -212,6 +216,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     }
 
     protected onHScroll(event) {
+        /* in certain situations this may be called when no scrollbar is visible */
+        if (!parseInt(this.hScroll.children[0].style.width, 10)) {
+            return;
+        }
         const scrollLeft = event.target.scrollLeft;
         const hcWidth = event.target.children[0].scrollWidth;
         const ratio = scrollLeft / hcWidth;
@@ -239,16 +247,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
 
     protected onWheel(event) {
         /** runs only on the vertical directive */
-        if (!parseInt(this.vh.instance.elementRef.nativeElement.style.height, 10)) {
-            return;
-        }
         const scrollStepX = 10;
         const scrollStepY = /Edge/.test(navigator.userAgent) ? 25 : 100;
 
         this.vh.instance.elementRef.nativeElement.scrollTop += Math.sign(event.deltaY) * scrollStepY;
         const hScroll = this.getElement(this._viewContainer, "igx-horizontal-virtual-helper");
-        if (hScroll &&
-            parseInt(hScroll.children[0].style.width, 10)) {
+        if (hScroll) {
             hScroll.scrollLeft += Math.sign(event.deltaX) * scrollStepX;
         }
 
