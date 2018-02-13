@@ -398,6 +398,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
                     pageSize = this.igxForOf.length;
                 }
             }
+            if (this.dc) {
+                this.dc.instance.notVirtual = false;
+            }
         } else {
             pageSize = this.igxForOf.length;
         }
