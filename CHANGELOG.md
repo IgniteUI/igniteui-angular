@@ -3,7 +3,10 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 5.2.0
+- `igxForOf` directive added
+    - `igxForOf` is now available as an alternative to `ngForOf` for templating large amounts of data
 - `igx-grid` changes
+    - The component now uses the new `igxForOf` directive to virtualize its content both vertically and horizontally dramatically improving performance for applications displaying large amounts of data.
     - Data-bound Input property `filtering` changed to `filterable`:
 
     ```html
