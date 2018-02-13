@@ -2,31 +2,47 @@ $component-name: 'igx-avatar';
 
 $components: register-component($components, #{$component-name});
 
-@function igx-avatar-theme($icon-background: null, $image-background: null, $icon-color: null) {
+@function igx-avatar-theme(
+    $icon-background: null,
+    $icon-color: null,
+    $initials-background: null,
+    $initials-color: null,
+    $image-background: null
+) {
     @if not($icon-color) and $icon-background {
         $icon-color: text-contrast($icon-background);
+    }
+
+    @if not($initials-color) and $initials-background {
+        $initials-color: text-contrast($initials-background);
     }
 
     @return (
         icon-background: $icon-background,
         icon-color: $icon-color,
+        initials-background: $initials-background,
+        initials-color: $initials-color,
         image-background: $image-background
     );
 }
+
 @mixin igx-avatar($theme, $palette: $default-palette) {
     $default-theme: igx-avatar-theme(
-        $icon-background: igx-color($default-palette, grays, 400),
-        $icon-color: igx-color($default-palette, grays, 800),
+        $icon-background: igx-color($palette, 'grays', 400),
+        $icon-color: igx-color($palette, 'grays', 800),
+        $initials-background: igx-color($palette, 'grays', 400),
+        $initials-color: igx-color($palette, 'grays', 800),
         $image-background: transparent
     );
+
     $this: extend($default-theme, $theme);
+    $small-size: 40px;
+    $medium-size: 64px;
+    $large-size: 88px;
 
     %igx-avatar-display {
-        display: flex;
-        justify-content: center;
-        align-items: center;
         position: relative;
-        pointer-events: none;
+        user-select: none;
     }
 
     %igx-avatar--rounded {
@@ -34,29 +50,62 @@ $components: register-component($components, #{$component-name});
     }
 
     %igx-avatar--small {
-        width: em(40px, 16px);
-        height: em(40px, 16px);
-        min-width: em(40px, 16px);
+        width: rem($small-size);
+        height: rem($small-size);
+        min-width: rem($small-size);
     }
 
     %igx-avatar--medium {
-        width: em(64px, 16px);
-        height: em(64px, 16px);
-        min-width: em(64px, 16px);
+        width: rem($medium-size);
+        height: rem($medium-size);
+        min-width: rem($medium-size);
     }
 
     %igx-avatar--large {
-        width: em(88px, 16px);
-        height: em(88px, 16px);
-        min-width: em(88px, 16px);
+        width: rem($large-size);
+        height: rem($large-size);
+        min-width: rem($large-size);
     }
 
-    %igx-avatar--icon {
-        background-color: map-get($this, icon-background);
-        color: map-get($this, icon-color);
+    %igx-avatar-inner {
+        width: inherit;
+        height: inherit;
+        border-radius: inherit;
     }
 
-    %igx-avatar--image {
-        background-color: map-get($this, image-background) !important;
+    %igx-avatar-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: map-get($this, 'icon-color');
+        background-color: map-get($this, 'icon-background');
+    }
+
+    %igx-avatar-image {
+        background-color: map-get($this, 'image-background');
+    }
+
+    %igx-avatar-initials {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-transform: uppercase;
+        color: map-get($this, 'initials-color');
+        background-color: map-get($this, 'initials-background');
+    }
+
+    %igx-avatar-initials--small {
+        font-size: rem($small-size / 2);
+        line-height: rem($small-size);
+    }
+
+    %igx-avatar-initials--medium {
+        font-size: rem($medium-size / 2);
+        line-height: rem($medium-size);
+    }
+
+    %igx-avatar-initials--large {
+        font-size: rem($large-size / 2);
+        line-height: rem($large-size);
     }
 }

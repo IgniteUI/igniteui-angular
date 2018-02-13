@@ -1,6 +1,6 @@
 <ng-template let-result #defaultHeader>
-    <span>{{ getFormattedDate().weekday }},&nbsp;</span>
-    <span>{{ getFormattedDate().monthday }}</span>
+    <span class="date-text">{{ getFormattedDate().weekday }},</span>
+    <span class="date-text">{{ getFormattedDate().monthday }}</span>
 </ng-template>
 
 <ng-template let-result #defaultMonth>
@@ -15,8 +15,7 @@
 <div *ngIf="selection === 'single'" class="igx-calendar__header">
     <h5 class="igx-calendar__header-year">{{ formattedYear(headerDate) }}</h5>
     <h2 class="igx-calendar__header-date">
-        <ng-container
-            *ngTemplateOutlet="headerTemplate ? headerTemplate : defaultHeader; context: headerContext">
+        <ng-container *ngTemplateOutlet="headerTemplate ? headerTemplate : defaultHeader; context: headerContext">
         </ng-container>
     </h2>
 </div>
@@ -27,8 +26,7 @@
             <igx-icon fontSet="material" name="keyboard_arrow_left"></igx-icon>
         </div>
         <div class="date">
-            <ng-container
-                *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonth; context: context">
+            <ng-container *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonth; context: context">
             </ng-container>
         </div>
         <div class="next" (click)="nextMonth()">
