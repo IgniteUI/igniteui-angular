@@ -1,0 +1,12 @@
+<input class="igx-time-picker" igxInput (click)="onOpenEvent($event)" [value]="displayTime" [disabled]="isDisabled" />
+<ng-container *ngTemplateOutlet="listDropdown"></ng-container>
+<ng-template #listDropDown>
+    <div>
+        <ul>
+            <li *ngFor="let item of dropDownItems" (click)="onItemClicked(item)">
+                {{ getDropDownItem(item) }}
+            </li>
+        </ul>
+    </div>
+</ng-template>
+<ng-template #scrollDropDown>scroll</ng-template>
