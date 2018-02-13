@@ -79,7 +79,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
         if (this.igxForScrollOrientation === "horizontal") {
             totalWidth = this.initHCache(this.igxForOf);
         }
-        this._pageSize = this._calculatePageSize();
+        this._pageSize = Math.ceil(this._calculatePageSize());
         const dcFactory: ComponentFactory<DisplayContainerComponent> = this.resolver.resolveComponentFactory(DisplayContainerComponent);
         this.dc = this._viewContainer.createComponent(dcFactory, 0);
         this.dc.instance.notVirtual = this.igxForContainerSize ? false : true;
@@ -468,7 +468,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     }
 
     private applyPageSizeChange() {
-        const pageSize = this._calculatePageSize();
+        const pageSize = Math.ceil(this._calculatePageSize());
         if (pageSize > this._pageSize) {
             const diff = pageSize - this._pageSize;
             for (let i = 0; i < diff; i++) {
