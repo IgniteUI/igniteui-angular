@@ -2,7 +2,7 @@ import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef 
 
 @Component({
     selector: "igx-horizontal-virtual-helper",
-    template: "<div #horizontal_container [style.width.px]='width' style='height: 1px;'></div>"
+    template: "<div #horizontal_container class='igx-vhelper__placeholder-content' [style.width.px]='width'></div>"
 })
 export class HVirtualHelperComponent {
     @ViewChild("horizontal_container", { read: ViewContainerRef }) public _vcr;

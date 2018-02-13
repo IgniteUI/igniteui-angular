@@ -2,7 +2,7 @@ import { Component, ElementRef, HostBinding, Input, OnInit, ViewChild, ViewConta
 
 @Component({
     selector: "igx-virtual-helper",
-    template: "<div #container [style.height.px]='height'></div>"
+    template: "<div #container class='igx-vhelper__placeholder-content' [style.height.px]='height'></div>"
 })
 export class VirtualHelperComponent implements OnInit {
     @ViewChild("container", { read: ViewContainerRef }) public _vcr;

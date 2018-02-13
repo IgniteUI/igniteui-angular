@@ -1,26 +1,42 @@
-%igx-vhelper-display {
+%vhelper-display {
     display: block;
     overflow: auto;
 }
 
-%igx-vhelper--vertical {
+%vhelper--vertical {
     width: 16px;
     height: calc(100% - 16px);
     float: right;
 }
 
-%igx-vhelper--horizontal {
+%vhelper--horizontal {
     width: calc(100% - 16px);
+}
+
+%vhelper-content--vertical {
+    width: 1px;
+}
+
+%vhelper-content--horizontal {
+    height: 1px;
 }
 
 @include b(igx-vhelper) {
     @include m(vertical) {
-        @extend %igx-vhelper-display !optional;
-        @extend %igx-vhelper--vertical !optional;
+        @extend %vhelper-display !optional;
+        @extend %vhelper--vertical !optional;
+
+        @include e(placeholder-content) {
+            @extend %vhelper-content--vertical !optional;
+        }
     }
 
     @include m(horizontal) {
-        @extend %igx-vhelper-display !optional;
-        @extend %igx-vhelper--horizontal !optional;
+        @extend %vhelper-display !optional;
+        @extend %vhelper--horizontal !optional;
+
+        @include e(placeholder-content) {
+            @extend %vhelper-content--horizontal !optional;
+        }
     }
 }
