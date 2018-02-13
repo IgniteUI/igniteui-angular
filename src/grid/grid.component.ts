@@ -1,5 +1,7 @@
+import { DOCUMENT } from "@angular/common";
 import {
     AfterContentInit,
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -8,8 +10,10 @@ import {
     ComponentRef,
     ContentChild,
     ContentChildren,
+    ElementRef,
     EventEmitter,
     HostBinding,
+    Inject,
     Input,
     OnInit,
     Output,
@@ -17,8 +21,7 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    ViewContainerRef,
-    ViewEncapsulation
+    ViewContainerRef
 } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
 import { cloneArray } from "../core/utils";
@@ -34,13 +37,11 @@ let NEXT_ID = 0;
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     preserveWhitespaces: false,
     selector: "igx-grid",
-    styleUrls: ["./grid.component.scss"],
     templateUrl: "./grid.component.html"
 })
-export class IgxGridComponent implements OnInit, AfterContentInit {
+export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit {
 
     @Input()
     public data = [];
@@ -186,6 +187,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
 
     constructor(
         private gridAPI: IgxGridAPIService,
+        private elementRef: ElementRef,
+        @Inject(DOCUMENT) private document,
         public cdr: ChangeDetectorRef,
         private resolver: ComponentFactoryResolver,
         private viewRef: ViewContainerRef) {
@@ -205,6 +208,19 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
             this.onColumnInit.emit(col);
         });
         this._columns = this.columnList.toArray();
+    }
+
+    public ngAfterViewInit() {
+        setTimeout(() => {
+            const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+            this.width = computed.getPropertyValue("width");
+            this.height = computed.getPropertyValue("height");
+            this.markForCheck();
+        });
+    }
+
+    get nativeElement() {
+        return this.elementRef.nativeElement;
     }
 
     get columns(): IgxColumnComponent[] {
@@ -378,7 +394,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
         if (col) {
             this.gridAPI
                 .filter(this.id, name, value,
-                        condition || col.filteringCondition, ignoreCase || col.filteringIgnoreCase);
+                condition || col.filteringCondition, ignoreCase || col.filteringIgnoreCase);
         } else {
             this.gridAPI.filter(this.id, name, value, condition, ignoreCase);
         }

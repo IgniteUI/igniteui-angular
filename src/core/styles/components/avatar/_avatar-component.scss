@@ -1,0 +1,47 @@
+@include b(igx-avatar) {
+    @extend %igx-avatar-display !optional;
+
+    @include m(rounded) {
+        @extend %igx-avatar-display !optional;
+        @extend %igx-avatar--rounded !optional;
+    }
+
+    @include m(small) {
+        @extend %igx-avatar--small !optional;
+
+        @include e(initials) {
+            @extend %igx-avatar-initials--small !optional;
+        }
+    }
+
+    @include m(medium) {
+        @extend %igx-avatar--medium !optional;
+
+        @include e(initials) {
+            @extend %igx-avatar-initials--medium !optional;
+        }
+    }
+
+    @include m(large) {
+        @extend %igx-avatar--large !optional;
+
+        @include e(initials) {
+            @extend %igx-avatar-initials--large !optional;
+        }
+    }
+
+    @include e(icon) {
+        @extend %igx-avatar-inner !optional;
+        @extend %igx-avatar-icon !optional;
+    }
+
+    @include e(image) {
+        @extend %igx-avatar-inner !optional;
+        @extend %igx-avatar-image !optional;
+    }
+
+    @include e(initials) {
+        @extend %igx-avatar-inner !optional;
+        @extend %igx-avatar-initials !optional;
+    }
+}

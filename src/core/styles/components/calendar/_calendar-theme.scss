@@ -1,0 +1,387 @@
+$component-name: 'igx-calendar';
+
+$components: register-component($components, #{$component-name});
+
+@function igx-calendar-theme(
+    $content-background: null,
+    $content-text-color: null,
+
+    $header-background: null,
+    $header-text-color: null,
+
+    $picker-arrow-color: null,
+    $picker-arrow-hover-color: null,
+
+    $picker-text-color: null,
+    $picker-text-hover-color: null,
+
+    $inactive-text-color: null,
+    $weekend-text-color: null,
+
+    $year-current-text-color: null,
+    $month-current-text-color: null,
+
+    $year-hover-text-color: null,
+    $month-hover-text-color: null,
+
+    $date-selected-background: null,
+    $date-selected-text-color: null,
+
+    $date-current-text-color: null,
+    $date-hover-background: null
+) {
+
+    @if not($content-text-color) and $content-background {
+        $content-text-color: text-contrast($content-background);
+    }
+
+    @if not($weekend-text-color) and $content-background {
+        $weekend-text-color: rgba($content-text-color, .7);
+    }
+
+    @if not($inactive-text-color) and $content-background {
+        $inactive-text-color: rgba($content-text-color, .5);
+    }
+
+    @if not($picker-arrow-color) and $content-background {
+        $picker-arrow-color: $content-text-color;
+    }
+
+    @if not($picker-arrow-hover-color) and $header-background {
+        $picker-arrow-hover-color: $header-background;
+    }
+
+    @if not($picker-text-color) and $content-background {
+        $picker-text-color: $content-text-color;
+    }
+
+    @if not($picker-text-hover-color) and $header-background {
+        $picker-text-hover-color: $header-background;
+    }
+
+    @if not($header-text-color) and $header-background {
+        $header-text-color: text-contrast($header-background);
+    }
+
+    @if not($date-selected-background) and $header-background {
+        $date-selected-background: $header-background;
+    }
+
+    @if not($date-selected-text-color) and $date-selected-background {
+        $date-selected-text-color: $content-background;
+    }
+
+    @if not($date-hover-background) and $content-background {
+        $date-hover-background: rgba(text-contrast($content-background), .12);
+    }
+
+    @if not($date-current-text-color) and $header-background {
+        $date-current-text-color: $header-background;
+    }
+
+    @if not($year-hover-text-color) and $header-background {
+        $year-hover-text-color: $header-background; 
+    } 
+
+    @if not($month-hover-text-color) and $header-background {
+        $month-hover-text-color: $header-background; 
+    } 
+
+    @if not($year-current-text-color) and $header-background {
+        $year-current-text-color: $header-background;
+    }
+
+    @if not($month-current-text-color) and $header-background {
+        $month-current-text-color: $header-background;
+    }
+
+    @return (
+        content-background: $content-background,
+        content-text-color: $content-text-color,
+
+        header-background: $header-background,
+        header-text-color: $header-text-color,
+
+
+        picker-arrow-color: $picker-arrow-color,
+        picker-arrow-hover-color: $picker-arrow-hover-color,
+
+        picker-text-color: $picker-text-color,
+        picker-text-hover-color: $picker-text-hover-color,
+
+        weekend-text-color: $weekend-text-color,
+        inactive-text-color: $inactive-text-color,
+
+        year-current-text-color: $year-current-text-color,
+        month-current-text-color: $month-current-text-color,
+
+        year-hover-text-color: $year-hover-text-color,
+        month-hover-text-color: $month-hover-text-color,
+
+        date-selected-background: $date-selected-background,
+        date-selected-text-color: $date-selected-text-color,
+
+        date-current-text-color: $date-current-text-color,
+        date-hover-background: $date-hover-background
+    );
+}
+@mixin igx-calendar($theme, $palette: $default-palette) {
+
+    $default-theme: igx-calendar-theme(
+        $content-background: #fff,
+        $content-text-color: igx-color($palette, 'grays', 900),
+
+        $header-background: igx-color($palette, 'accent', 500),
+        $header-text-color: igx-contrast-color($palette, 'accent', 500),
+
+        $picker-arrow-color: igx-color($palette, 'grays', 800),
+        $picker-arrow-hover-color: igx-color($palette, 'accent', 500),
+
+        $picker-text-color: igx-color($palette, 'grays', 800),
+        $picker-text-hover-color: igx-color($palette, 'accent', 500),
+
+        $inactive-text-color: igx-color($palette, 'grays', 400),
+        $weekend-text-color: igx-color($palette, 'grays', 400),
+
+        $year-current-text-color: igx-color($palette, 'accent', 500),
+        $month-current-text-color: igx-color($palette, 'accent', 500),
+
+        $year-hover-text-color: igx-color($palette, 'accent', 500),
+        $month-hover-text-color: igx-color($palette, 'accent', 500),
+
+        $date-selected-background: igx-color($palette, 'accent', 500),
+        $date-selected-text-color: igx-contrast-color($palette, 'accent', 500),
+
+        $date-current-text-color: igx-color($palette, 'accent', 500),
+        $date-hover-background: igx-color($palette, 'grays', 100)
+    );
+
+    $this: extend($default-theme, $theme);
+
+    // Calendar Header
+    $cal-header-year-fs: em(18px, 16px) !default;
+    $cal-header-year-lh: em(16px, 16px) !default;
+    $cal-header-year-margin: 0 !default;
+    $cal-header-date-fs: em(38px, 16px) !default;
+    $cal-header-date-lh: em(16px, 16px) !default;
+    $cal-header-date-margin: 0 !default;
+    $cal-header-padding: em(24px) em(16px) !default;
+    $cal-header-year-color: rgba(map-get($this, 'header-text-color'), .8) !default;
+
+    // Calendar Picker
+    $cal-picker-date-fs: em(18px, 16px) !default;
+    $cal-picker-date-lh: em(22px, 16px) !default;
+    $cal-picker-date-fw: 600 !default;
+    $cal-picker-padding: em(24px, 16px) !default;
+
+    // Calendar Values
+    $cal-value-w: rem(40px, 16px) !default;
+    $cal-value-h: $cal-value-w;
+    $cal-value-br: $cal-value-w / 2;
+    $cal-value-margin: em(2px, 16px) !default;
+    $cal-value-fs: em(16px, 16px) !default;
+    $cal-value-lh: $cal-value-h !default;
+    $cal-value-fw: 600 !default;
+
+    $cal-value-year-fs: em(18px, 16px) !default;
+    $cal-value-year-current-fs: em(24px, 16px) !default;
+    $cal-value-year-hover-fs: em(27px, 16px) !default;
+    $cal-value-month-margin: 0 em(12px, 16px) !default;
+    $cal-value-month-height: 91px !default;
+
+    // Calendar Body
+    $cal-row-padding: 0 rem(16px, 16px) !default;
+
+    %cal-display {
+        display: flex;
+        flex-flow: column nowrap;
+        width: 100%;
+        background: map-get($this, 'content-background');
+        overflow: hidden;
+        outline: none;
+
+        &[dir='rtl'] {
+            .prev,
+            .next {
+                @extend %cal-picker-arrow--rtl;
+            }
+        }
+    }
+
+    %cal-display--vertical {
+        flex-flow: row nowrap;
+
+        %cal-header-display {
+            width: 168px;
+        }
+    }
+
+    %cal-header-display {
+        background-color: map-get($this, 'header-background');
+        color: map-get($this, 'header-text-color');
+        padding: $cal-header-padding;
+    }
+
+    %cal-header-year {
+        margin: $cal-header-year-margin;
+        color: $cal-header-year-color;
+        font-size: $cal-header-year-fs;
+    }
+
+    %cal-header-date {
+        display: flex;
+        margin: $cal-header-date-margin;
+        font-size: $cal-header-date-fs;
+        line-height: $cal-header-date-lh;
+
+        .date-text {
+            @include ellipsis();
+        }
+    }
+
+    %cal-header-date--vertical {
+        flex-flow: column nowrap;
+    }
+
+    %cal-header-date-el--hover {
+        color: map-get($this, 'picker-text-hover-color');
+        cursor: pointer;
+    }
+
+    %cal-picker-display {
+        display: flex;
+        height: 56px;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: $cal-picker-padding;
+        padding-left: $cal-picker-padding;
+        padding-right: $cal-picker-padding;
+    }
+
+    %cal-picker-arrow {
+        color: map-get($this, 'picker-arrow-color');
+        user-select: none;
+        cursor: pointer;
+
+        &:hover {
+            color: map-get($this, 'picker-arrow-hover-color');
+        }
+    }
+
+    %cal-picker-arrow--rtl {
+        transform: scaleX(-1);
+    }
+
+    %cal-picker-date {
+        font-size: $cal-picker-date-fs;
+        line-height: $cal-picker-date-lh;
+        font-weight: $cal-picker-date-fw;
+        color: map-get($this, 'picker-text-color');
+        text-align: center;
+    }
+
+    %cal-body-display {
+        flex: 1;
+        padding-top: $cal-picker-padding;
+        padding-bottom: $cal-picker-padding;
+        overflow: hidden;
+    }
+
+    %cal-row-display {
+        display: flex;
+        justify-content: space-between;
+        padding: $cal-row-padding;
+    }
+
+    %cal-row-display--wrap {
+        flex-wrap: wrap;
+    }
+
+    %cal-column-display {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    %cal-value {
+        @include ellipsis();
+        width: $cal-value-w;
+        height: $cal-value-h;
+        min-width: 2ch;
+        font-size: $cal-value-fs;
+        margin: $cal-value-margin;
+        line-height: $cal-value-lh;
+        text-align: center;
+        border-radius: $cal-value-br;
+        color: map-get($this, 'content-text-color');
+        cursor: pointer;
+        outline: none;
+        transition: background .15s ease-out;
+    }
+
+    %cal-value--label {
+        color: map-get($this, 'inactive-text-color');
+        cursor: default;
+        border-radius: 0;
+    }
+
+    %cal-value--weekend {
+        color: map-get($this, 'weekend-text-color');
+    }
+
+    %cal-value--year {
+        font-size: $cal-value-year-fs;
+        min-width: fit-content;
+    }
+
+    %cal-value--year-current {
+        font-size: $cal-value-year-current-fs;
+        color: map-get($this, 'year-current-text-color');
+    }
+
+    %cal-value--year-hover {
+        color: map-get($this, 'year-hover-text-color');
+    }
+
+    %cal-value--month-hover {
+        color: map-get($this, 'month-hover-text-color');
+    }
+
+    %cal-value--month {
+        display: flex;
+        margin: $cal-value-month-margin;
+        flex: 1 0 25%;
+        justify-content: center;
+        align-items: center;
+        height: $cal-value-month-height;
+    }
+
+    %cal-value--month-current {
+        color: map-get($this, 'month-current-text-color');
+    }
+
+    %cal-value--inactive {
+        cursor: pointer;
+        color: map-get($this, 'inactive-text-color');
+    }
+
+    %cal-value--selected {
+        position: relative;
+        color: map-get($this, 'date-selected-text-color');
+        background-color: map-get($this, 'date-selected-background') !important;
+        font-weight: $cal-value-fw;
+    }
+
+    %cal-value--current {
+        color: map-get($this, 'date-current-text-color');
+        font-weight: $cal-value-fw;
+    }
+
+    %cal-value--hover {
+        background-color: map-get($this, 'date-hover-background');
+    }
+}
+
+
+

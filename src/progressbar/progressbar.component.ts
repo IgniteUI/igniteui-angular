@@ -15,8 +15,8 @@ import {
 export abstract class BaseProgress {
     protected requestAnimationId: number = undefined;
 
-    protected _valueInPercent: number = 0;
-    protected _max: number = 100;
+    protected _valueInPercent = 0;
+    protected _max = 100;
     protected _value = 0;
     protected _animate = true;
 
@@ -68,13 +68,12 @@ export abstract class BaseProgress {
 
 @Component({
     selector: "igx-linear-bar",
-    styleUrls: ["progressbar.component.scss"],
     templateUrl: "templates/linear-bar.component.html"
 })
-export class IgxLinearProgressBar extends BaseProgress {
+export class IgxLinearProgressBarComponent extends BaseProgress {
 
-    @Input() public striped: boolean = false;
-    @Input() public type: string = "default";
+    @Input() public striped = false;
+    @Input() public type = "default";
     @Input()
     set animate(animate: boolean) {
         this._animate = animate;
@@ -127,10 +126,9 @@ export class IgxLinearProgressBar extends BaseProgress {
 
 @Component({
     selector: "igx-circular-bar",
-    styleUrls: ["progressbar.component.scss"],
     templateUrl: "templates/circular-bar.component.html"
 })
-export class IgxCircularProgressBar extends BaseProgress implements AfterViewInit {
+export class IgxCircularProgressBarComponent extends BaseProgress implements AfterViewInit {
 
     @Output() public onProgressChanged = new EventEmitter();
 
@@ -180,7 +178,7 @@ export class IgxCircularProgressBar extends BaseProgress implements AfterViewIni
         this.onProgressChanged.emit(changedValues);
     }
 
-    private _radius: number = 0;
+    private _radius = 0;
     private _circumference: number;
 
     @ViewChild("circle") private _svgCircle: ElementRef;
@@ -240,8 +238,8 @@ export function convertInPercentage(value: number, max: number) {
 }
 
 @NgModule({
-    declarations: [IgxLinearProgressBar, IgxCircularProgressBar],
-    exports: [IgxLinearProgressBar, IgxCircularProgressBar],
+    declarations: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent],
+    exports: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent],
     imports: [CommonModule]
 })
 export class IgxProgressBarModule {

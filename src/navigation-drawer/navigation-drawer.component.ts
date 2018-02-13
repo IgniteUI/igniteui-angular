@@ -28,21 +28,21 @@ import { HammerGesturesManager } from "../core/touch";
  * Usage:
  * ```
  * <igx-nav-drawer id="ID" (event output bindings) [input bindings]>
- *  <div class="ig-drawer-content">
+ *  <div class="igx-drawer-content">
  *   <!-- expanded template -->
  *  </div>
  * </igx-nav-drawer>
  * ```
- * Can also include an optional `<div class="ig-drawer-mini-content">`.
+ * Can also include an optional `<div class="igx-drawer-mini-content">`.
  * ID required to register with NavigationService allow directives to target the control.
  */
 @Component({
     providers: [HammerGesturesManager],
     selector: "igx-nav-drawer",
-    styleUrls: ["./navigation-drawer.component.scss"],
     templateUrl: "navigation-drawer.component.html"
 })
-export class IgxNavigationDrawer extends BaseComponent implements IToggleView,
+export class IgxNavigationDrawerComponent extends BaseComponent implements
+    IToggleView,
     OnInit,
     AfterContentInit,
     OnDestroy,
@@ -54,34 +54,41 @@ export class IgxNavigationDrawer extends BaseComponent implements IToggleView,
     /**
      * Position of the Navigation Drawer. Can be "left"(default) or "right". Only has effect when not pinned.
      */
-    @Input() public position: string = "left";
+    @Input() public position = "left";
 
     /**
      * Enables the use of touch gestures to manipulate the drawer - such as swipe/pan from edge to open,
      * swipe toggle and pan drag.
      */
-    @Input() public enableGestures: boolean = true;
+    @Input() public enableGestures = true;
 
     /** State of the drawer. */
-    @Input() public isOpen: boolean = false;
+    @Input() public isOpen = false;
 
     /** Pinned state of the drawer. Currently only support  */
-    @Input() public pin: boolean = false;
+    @Input() public pin = false;
 
     /**
      * Minimum device width required for automatic pin to be toggled.
      * Deafult is 1024, can be set to falsy value to ignore.
      */
-    @Input() public pinThreshold: number = 1024;
+    @Input() public pinThreshold = 1024;
 
     /**
-     * Width of the drawer in its open state. Defaults to 300px based on the `.ig-nav-drawer` style.
+     * Returns nativeElement of the component.
+     */
+    get element() {
+        return this.elementRef.nativeElement;
+    }
+
+    /**
+     * Width of the drawer in its open state. Defaults to 300px based on the `.igx-nav-drawer` style.
      * Can be used to override or dynamically modify the width.
      */
     @Input() public width: string;
 
     /**
-     * Width of the drawer in its mini state. Defaults to 60px based on the `.ig-nav-drawer.mini` style.
+     * Width of the drawer in its mini state. Defaults to 60px based on the `.igx-nav-drawer.mini` style.
      * Can be used to override or dynamically modify the width.
      */
     @Input() public miniWidth: string;
@@ -97,19 +104,17 @@ export class IgxNavigationDrawer extends BaseComponent implements IToggleView,
     /** Event fired when the Navigation Drawer has closed. */
     @Output() public closed = new EventEmitter();
 
-    public _hasMimiTempl: boolean = false;
-    private _gesturesAttached: boolean = false;
+    public _hasMimiTempl = false;
+    private _gesturesAttached = false;
     private _widthCache: { width: number, miniWidth: number } = { width: null, miniWidth: null };
     private _resizeObserver: Subscription;
     private css: { [name: string]: string; } = {
-        drawer: "ig-nav-drawer",
+        drawer: "igx-nav-drawer",
         mini: "mini",
-        miniProjection: ".ig-drawer-mini-content",
-        overlay: "ig-nav-drawer-overlay",
+        miniProjection: ".igx-drawer-mini-content",
+        overlay: "igx-nav-drawer-overlay",
         styleDummy: "style-dummy"
     };
-    private _resolveOpen: (value?: any | PromiseLike<any>) => void;
-    private _resolveClose: (value?: any | PromiseLike<any>) => void;
 
     private _drawer: any;
     get drawer(): HTMLElement {
@@ -135,7 +140,7 @@ export class IgxNavigationDrawer extends BaseComponent implements IToggleView,
     }
 
     /** Pan animation properties */
-    private _panning: boolean = false;
+    private _panning = false;
     private _panStartWidth: number;
     private _panLimit: number;
     private _previousDeltaX: number;
@@ -147,7 +152,7 @@ export class IgxNavigationDrawer extends BaseComponent implements IToggleView,
         return this.pin || this._hasMimiTempl;
     }
 
-    private _maxEdgeZone: number = 50;
+    private _maxEdgeZone = 50;
     /**
      * Used for touch gestures (swipe and pan).
      * Defaults to 50 (in px) and is extended to at least 110% of the mini template width if available.
@@ -262,27 +267,25 @@ export class IgxNavigationDrawer extends BaseComponent implements IToggleView,
     /**
      * Toggle the open state of the Navigation Drawer.
      * @param fireEvents Optional flag determining whether events should be fired or not.
-     * @return Promise that is resolved once the operation completes.
      */
-    public toggle(fireEvents?: boolean): Promise<any> {
+    public toggle(fireEvents?: boolean) {
         if (this.isOpen) {
-            return this.close(fireEvents);
+            this.close(fireEvents);
         } else {
-            return this.open(fireEvents);
+            this.open(fireEvents);
         }
     }
 
     /**
      * Open the Navigation Drawer. Has no effect if already opened.
      * @param fireEvents Optional flag determining whether events should be fired or not.
-     * @return Promise that is resolved once the operation completes.
      */
-    public open(fireEvents?: boolean): Promise<any> {
+    public open(fireEvents?: boolean) {
         if (this._panning) {
             this.resetPan();
         }
         if (this.isOpen) {
-            return Promise.resolve();
+            return;
         }
         if (fireEvents) {
             this.opening.emit("opening");
@@ -298,28 +301,18 @@ export class IgxNavigationDrawer extends BaseComponent implements IToggleView,
 
         this.elementRef.nativeElement.addEventListener("transitionend", this.toggleOpenedEvent, false);
         this.setDrawerWidth(this.width);
-
-        return new Promise<any>((resolve) => {
-            this._resolveOpen = (value?: any) => {
-                resolve(value);
-                if (fireEvents) {
-                    this.opened.emit("opened");
-                }
-            };
-        });
     }
 
     /**
      * Close the Navigation Drawer. Has no effect if already closed.
      * @param fireEvents Optional flag determining whether events should be fired or not.
-     * @return Promise that is resolved once the operation completes.
      */
-    public close(fireEvents?: boolean): Promise<any> {
+    public close(fireEvents?: boolean) {
         if (this._panning) {
             this.resetPan();
         }
         if (!this.isOpen) {
-            return Promise.resolve();
+            return;
         }
         if (fireEvents) {
             this.closing.emit("closing");
@@ -328,15 +321,6 @@ export class IgxNavigationDrawer extends BaseComponent implements IToggleView,
         this.isOpen = false;
         this.setDrawerWidth(this._hasMimiTempl ? this.miniWidth : "");
         this.elementRef.nativeElement.addEventListener("transitionend", this.toggleClosedEvent, false);
-
-        return new Promise<any>((resolve) => {
-            this._resolveClose = (value?: any) => {
-                resolve(value);
-                if (fireEvents) {
-                    this.closed.emit("closed");
-                }
-            };
-        });
     }
 
     protected set_maxEdgeZone(value: number) {
@@ -595,22 +579,20 @@ export class IgxNavigationDrawer extends BaseComponent implements IToggleView,
         });
     }
 
-    private toggleOpenedEvent = (evt?) => {
+    private toggleOpenedEvent = (evt?, fireEvents?) => {
         this.elementRef.nativeElement.removeEventListener("transitionend", this.toggleOpenedEvent, false);
-        this._resolveOpen("opened");
-        delete this._resolveClose;
+        this.opened.emit("opened");
     }
 
     private toggleClosedEvent = (evt?) => {
         this.elementRef.nativeElement.removeEventListener("transitionend", this.toggleClosedEvent, false);
-        this._resolveClose("closed");
-        delete this._resolveClose;
+        this.closed.emit("closed");
     }
 }
 
 @NgModule({
-    declarations: [IgxNavigationDrawer],
-    exports: [IgxNavigationDrawer]
+    declarations: [IgxNavigationDrawerComponent],
+    exports: [IgxNavigationDrawerComponent]
 })
 export class IgxNavigationDrawerModule {
 }

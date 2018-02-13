@@ -1,0 +1,36 @@
+// Anything imported here shoulnd't affect
+// theme configuration
+@import '../base/index';
+@import '../typography/index';
+
+@import '../components/_common/igx-control';
+@import '../components/avatar/avatar-component';
+@import '../components/badge/badge-component';
+@import '../components/button/button-component';
+@import '../components/button-group/button-group-component';
+@import '../components/calendar/calendar-component';
+@import '../components/card/card-component';
+@import '../components/carousel/carousel-component';
+@import '../components/checkbox/checkbox-component';
+@import '../components/date-picker/date-picker-component';
+@import '../components/dialog/dialog-component';
+@import '../components/grid/grid-component';
+@import '../components/grid-filtering/grid-filtering-component';
+@import '../components/icon/icon-component';
+@import '../components/input/input-component';
+@import '../components/list/list-component';
+@import '../components/navbar/navbar-component';
+@import '../components/navdrawer/navdrawer-component';
+@import '../components/progress/progress-component';
+@import '../components/radio/radio-component';
+@import '../components/ripple/ripple-component';
+@import '../components/scroll/scroll-component';
+@import '../components/slider/slider-component';
+@import '../components/snackbar/snackbar-component';
+@import '../components/switch/switch-component';
+@import '../components/tabbar/tabbar-component';
+@import '../components/toast/toast-component';
+
+@mixin igx-core {
+    @include igx-typography($config: ('font-family': 'Titillium Web'));
+}

@@ -1,0 +1,102 @@
+$component-name: 'igx-dialog';
+
+$components: register-component($components, #{$component-name});
+
+@function igx-dialog-theme(
+    $overlay-color:null,
+    $background:null,
+    $title-color:null,
+    $message-color:null
+) {
+    @return (
+        overlay-color:$overlay-color,
+        background:$background,
+        title-color:$title-color,
+        message-color:$message-color
+    );
+}
+
+@mixin igx-dialog($theme, $palette: $default-palette) {
+
+    $default-theme: igx-dialog-theme(
+        $overlay-color: igx-color($palette, grays, 500),
+        $background: $white,
+        $title-color: igx-color($palette, grays, 800),
+        $message-color: igx-color($palette, grays, 600)
+    );
+
+    $this: extend($default-theme, $theme);
+
+    // 24. Dialog //
+    $dialog-transition: background .25s ease-out !default;
+    $dialog-max-width: em(400px) !default;
+    $dialog-min-width: em(280px) !default;
+    $dialog-padding: em(12px, 16px) em(24px, 16px) !default;
+    $dialog-background: $white !default;
+    $dialog-border-radius: 2px !default;
+    $dialog-title-font-size: em(20px, 16px) !default;
+    $dialog-title-line-height: em(16px, 16px) !default;
+    $dialog-title-padding: em(12px) 0 !default;
+    $dialog-title-padding-top: em(12px) !default;
+    $dialog-title-padding-bottom: em(10px) !default;
+    $dialog-title-font-weight: 600 !default;
+    $dialog-message-font-size: em(16px, 16px) !default;
+    $dialog-message-line-height: em(18px, 16px) !default;
+    $dialog-message-padding-top: em(10px) !default;
+    $dialog-message-padding-bottom: em(12px) !default;
+    $dialog-message-color: $darkgray !default;
+    $dialog-message-font-weight: 400 !default;
+    $dialog-actions-padding: em(8px) !default;
+    $dialog-actions-margin: 0 em(-24px, 16px) em(-12px, 16px) em(-24px, 16px) !default;
+
+    %igx-dialog-display {
+        display: flex;
+        position: fixed;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        background: map-get($this, overlay-color);
+        z-index: 24;
+    }
+
+    %igx-dialog--hidden {
+        display: none;
+    }
+
+    %igx-dialog-window {
+        max-width: $dialog-max-width;
+        min-width: $dialog-min-width;
+        padding: $dialog-padding;
+        border-radius: 2px;
+        background: map-get($this, background);
+        box-shadow: $elevate-24;
+    }
+
+    %igx-dialog-title {
+        color: map-get($this, title-color);
+        font-size: $dialog-title-font-size;
+        line-height: $dialog-title-line-height;
+        padding-top: $dialog-title-padding-top;
+        padding-bottom: $dialog-title-padding-bottom;
+        font-weight: $dialog-title-font-weight;
+    }
+
+    %igx-dialog-content {
+        color: map-get($this, message-color);
+        font-size: $dialog-message-font-size;
+        line-height: $dialog-message-line-height;
+        padding-top: $dialog-message-padding-top;
+        padding-bottom: $dialog-message-padding-bottom;
+    }
+
+    %igx-dialog-actions {
+        display: flex;
+        margin: $dialog-actions-margin;
+        flex-flow: row nowrap;
+        justify-content: flex-end;
+        padding: $dialog-actions-padding;
+    }
+}
