@@ -159,6 +159,9 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     @ViewChild("theadRow")
     public theadRow: ElementRef;
 
+    @ViewChild("tfoot")
+    public tfoot: ElementRef;
+
     @HostBinding("attr.tabindex")
     public tabindex = 0;
 
@@ -238,9 +241,17 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
             this.calcHeight = null;
         } else if (this.height && this.height.indexOf("%") !== -1) {
             /*height in %*/
-            this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) - this.theadRow.nativeElement.clientHeight;
+            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
+            this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
+            this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
+            this.theadRow.nativeElement.clientHeight -
+            footerHeight;
         } else {
-            this.calcHeight = parseInt(this.height, 10) - this.theadRow.nativeElement.clientHeight;
+            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
+            this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
+            this.calcHeight = parseInt(this.height, 10) -
+            this.theadRow.nativeElement.clientHeight -
+            footerHeight;
         }
         this.cdr.detectChanges();
     }

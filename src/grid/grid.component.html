@@ -49,7 +49,7 @@
         </ng-template>
 </div>
 
-<div class="igx-grid__tfoot" role="rowgroup">
+<div class="igx-grid__tfoot" role="rowgroup" #tfoot>
     <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
     </ng-container>
 </div>
