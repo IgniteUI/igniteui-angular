@@ -181,6 +181,7 @@ export class IgxGridCellComponent {
             this.grid.cellInEditMode = null;
         }
         this.grid.onSelection.emit(this);
+        this.grid.cdr.detectChanges();
     }
 
     @HostListener("blur", ["$event"])
