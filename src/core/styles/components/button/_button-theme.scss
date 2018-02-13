@@ -36,16 +36,16 @@ $components: register-component($components, #{$component-name});
         $text-color: text-contrast($background-color);
     }
     // Flat Button
-    @if not($flat-text-color) and $raised-background {
-        $flat-text-color: text-contrast($raised-background);
+    @if not($flat-text-color) and $flat-background {
+        $flat-text-color: text-contrast($flat-background);
     }
     // Raised Button
-    @if not($raised-text-color) and $fab-background {
-        $raised-text-color: text-contrast($fab-background);
+    @if not($raised-text-color) and $raised-background {
+        $raised-text-color: text-contrast($raised-background);
     }
     // Fab Button ( Floating action button )
-    @if not($fab-text-color) and $background-color {
-        $fab-text-color: text-contrast($background-color);
+    @if not($fab-text-color) and $fab-background {
+        $fab-text-color: text-contrast($fab-background);
     }
 
     // icon Button ( Floating action button )
