@@ -4,7 +4,7 @@ import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule } from "./toggle.directive";
 
-fdescribe("IgxToggler", () => {
+describe("IgxToggler", () => {
     const HIDDEN_TOGGLER_CLASS = "igx-toggle--hidden";
     const TOGGLER_CLASS = "igx-toggle";
     beforeEach(async(() => {
