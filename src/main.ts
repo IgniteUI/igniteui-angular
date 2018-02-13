@@ -46,3 +46,4 @@ export * from "./toast/toast.component";
 export * from "./slider/slider.component";
 export * from "./scroll/scroll.component";
 export * from "./date-picker/date-picker.component";
+export * from "./directives/toggle/toggle.directive";
