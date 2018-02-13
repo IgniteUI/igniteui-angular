@@ -175,6 +175,7 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
 }
 @NgModule({
     declarations: [ IgxToggleDirective, IgxToggleActionDirective ],
-    exports: [ IgxToggleDirective, IgxToggleActionDirective ]
+    exports: [ IgxToggleDirective, IgxToggleActionDirective ],
+    providers: [ IgxNavigationService ]
 })
 export class IgxToggleModule {}

@@ -4,18 +4,17 @@ import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule } from "./toggle.directive";
 
-describe("IgxToggler", () => {
+fdescribe("IgxToggler", () => {
     const HIDDEN_TOGGLER_CLASS = "igx-toggle--hidden";
     const TOGGLER_CLASS = "igx-toggle";
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxToggleActionDirective,
                 IgxToggleActionTestComponent,
-                IgxToggleDirective,
+                IgxToggleServiceInjectComponent,
                 IgxToggleTestComponent
             ],
-            imports: [BrowserAnimationsModule]
+            imports: [BrowserAnimationsModule, IgxToggleModule]
         })
         .compileComponents();
     }));
@@ -125,6 +124,17 @@ describe("IgxToggler", () => {
 
         expect(toggle.onClose.emit).toHaveBeenCalled();
     }));
+
+    it("Toggle should be registered into navigaitonService if it is passed through identifier", fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxToggleServiceInjectComponent);
+        fixture.detectChanges();
+
+        const toggleFromComponent = fixture.componentInstance.toggle;
+        const toggleFromService = fixture.componentInstance.toggleAction.target as IgxToggleDirective;
+
+        expect(toggleFromService instanceof IgxToggleDirective).toBeTruthy();
+        expect(toggleFromService.id).toEqual(toggleFromComponent.id);
+    }));
 });
 
 @Component({
@@ -164,4 +174,18 @@ export class IgxToggleActionTestComponent {
     public isClosed = false;
     public outsideClickClose = true;
     @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
+    @ViewChild(IgxToggleActionDirective) public toggleAction: IgxToggleActionDirective;
+}
+
+@Component({
+    template: `
+        <button igxToggleAction="toggleID">Open/Close Toggle</button>
+        <div igxToggle id="toggleID">
+            <p>Some content</p>
+        </div>
+    `
+})
+export class IgxToggleServiceInjectComponent {
+    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
+    @ViewChild(IgxToggleActionDirective) public toggleAction: IgxToggleActionDirective;
 }
