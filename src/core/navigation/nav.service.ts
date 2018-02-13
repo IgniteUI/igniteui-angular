@@ -1,4 +1,4 @@
-import { IToggleView } from "./toggle";
+import { IToggleView } from "./IToggleView";
 
 /**
  * Common service to be injected between components where those implementing common
@@ -26,25 +26,19 @@ export class IgxNavigationService {
         }
     }
 
-    public toggle(id: string, fireEvents?: boolean): Promise<any> {
+    public toggle(id: string, fireEvents?: boolean) {
         if (this.navs[id]) {
             return this.navs[id].toggle(fireEvents);
-        } else {
-            return Promise.reject("No ToggleView component found for id:" + id);
         }
     }
-    public open(id: string, fireEvents?: boolean): Promise<any> {
+    public open(id: string, fireEvents?: boolean) {
         if (this.navs[id]) {
             return this.navs[id].open(fireEvents);
-        } else {
-            return Promise.reject("No ToggleView component found for id:" + id);
         }
     }
-    public close(id: string, fireEvents?: boolean): Promise<any> {
+    public close(id: string, fireEvents?: boolean) {
         if (this.navs[id]) {
             return this.navs[id].close(fireEvents);
-        } else {
-            return Promise.reject("No ToggleView component found for id:" + id);
         }
     }
 }
