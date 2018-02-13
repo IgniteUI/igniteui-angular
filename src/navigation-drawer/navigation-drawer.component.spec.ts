@@ -61,9 +61,9 @@ describe("Navigation Drawer", () => {
                 const fixture = TestBed.createComponent(TestComponentDIComponent);
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.viewChild.drawer.classList).toContain("igx-nav-drawer");
-                expect(fixture.componentInstance.viewChild.overlay.classList).toContain("igx-nav-drawer-overlay");
-                expect(fixture.componentInstance.viewChild.styleDummy.classList).toContain("style-dummy");
+                expect(fixture.componentInstance.viewChild.drawer.classList).toContain("igx-nav-drawer__aside");
+                expect(fixture.componentInstance.viewChild.overlay.classList).toContain("igx-nav-drawer__overlay");
+                expect(fixture.componentInstance.viewChild.styleDummy.classList).toContain("igx-nav-drawer__style-dummy");
                 expect(fixture.componentInstance.viewChild.hasAnimateWidth).toBeFalsy();
 
             }).catch ((reason) => {
@@ -172,7 +172,7 @@ describe("Navigation Drawer", () => {
 
                 expect(fixture.componentInstance.viewChild.hasAnimateWidth).toBeTruthy();
                 expect(fixture.debugElement.query((x) => x.nativeNode.nodeName === "ASIDE").nativeElement.classList)
-                    .toContain("mini");
+                    .toContain("igx-nav-drawer__aside--mini");
             }).catch ((reason) => {
                 return Promise.reject(reason);
             });
@@ -192,7 +192,7 @@ describe("Navigation Drawer", () => {
 
                 expect(fixture.componentInstance.viewChild.pin).toBeTruthy();
                 expect(fixture.debugElement.query((x) => x.nativeNode.nodeName === "ASIDE").nativeElement.classList)
-                    .toContain("pinned");
+                    .toContain("igx-nav-drawer__aside--pinned");
 
                 expect(fixture.componentInstance.viewChild.enableGestures).toBe(false);
 
@@ -276,7 +276,7 @@ describe("Navigation Drawer", () => {
             });
          }, 10000);
 
-        it("should update edge zone with mini width", async(() => {
+        fit("should update edge zone with mini width", async(() => {
             const template = `<igx-nav-drawer [miniWidth]="drawerMiniWidth">
                                 <div class="igx-drawer-content"></div><div class="igx-drawer-mini-content"></div>
                               </igx-nav-drawer>`;

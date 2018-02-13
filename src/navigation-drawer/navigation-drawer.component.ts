@@ -3,6 +3,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    HostBinding,
     Inject,
     Input,
     NgModule,
@@ -47,6 +48,8 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     AfterContentInit,
     OnDestroy,
     OnChanges {
+
+    @HostBinding("class") public cssClass = "igx-nav-drawer";
 
     /** ID of the component */
     @Input() public id: string;
@@ -109,11 +112,11 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     private _widthCache: { width: number, miniWidth: number } = { width: null, miniWidth: null };
     private _resizeObserver: Subscription;
     private css: { [name: string]: string; } = {
-        drawer: "igx-nav-drawer",
-        mini: "mini",
+        drawer: "igx-nav-drawer__aside",
+        mini: ".igx-nav-drawer__aside--mini",
         miniProjection: ".igx-drawer-mini-content",
-        overlay: "igx-nav-drawer-overlay",
-        styleDummy: "style-dummy"
+        overlay: "igx-nav-drawer__overlay",
+        styleDummy: "igx-nav-drawer__style-dummy"
     };
 
     private _drawer: any;
