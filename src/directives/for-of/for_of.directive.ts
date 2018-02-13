@@ -239,12 +239,16 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
 
     protected onWheel(event) {
         /** runs only on the vertical directive */
+        if (!parseInt(this.vh.instance.elementRef.nativeElement.style.height, 10)) {
+            return;
+        }
         const scrollStepX = 10;
         const scrollStepY = /Edge/.test(navigator.userAgent) ? 25 : 100;
 
         this.vh.instance.elementRef.nativeElement.scrollTop += Math.sign(event.deltaY) * scrollStepY;
         const hScroll = this.getElement(this._viewContainer, "igx-horizontal-virtual-helper");
-        if (hScroll) {
+        if (hScroll &&
+            parseInt(hScroll.children[0].style.width, 10)) {
             hScroll.scrollLeft += Math.sign(event.deltaX) * scrollStepX;
         }
 
