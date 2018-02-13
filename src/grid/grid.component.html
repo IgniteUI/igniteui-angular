@@ -20,12 +20,12 @@
 </ng-template>
 
 
-<div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth'>
-    <div class="igx-grid__tr" role="row" style="width: calc(100% - 17px)">
-        <ng-template igxFor let-col [igxForOf]="visibleColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='calcWidth' #headerContainer>
-            <igx-grid-header [gridID]="id" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
-        </ng-template>
-    </div>
+<div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' style="height:50px;" #thead>
+	<div class="igx-grid__tr" role="row" style="width: calc(100% - 17px)">
+		<ng-template igxFor let-col [igxForOf]="visibleColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='calcWidth' #headerContainer>
+			<igx-grid-header [gridID]="id" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
+		</ng-template>
+	</div>
 </div>
 
 <!--<div class="igx-grid__tbody" role="rowgroup">

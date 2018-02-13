@@ -155,6 +155,10 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
 
     @ViewChild("headerContainer", { read: IgxForOfDirective })
     public headerContainer: IgxForOfDirective<any>;
+
+    @ViewChild("thead")
+    public thead: ElementRef;
+
     @HostBinding("attr.tabindex")
     public tabindex = 0;
 
@@ -234,7 +238,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
             this.calcHeight = null;
         } else if (this.height && this.height.indexOf("%") !== -1) {
             /*height in %*/
-            this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) - 50;
+            this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) - this.thead.nativeElement.clientHeight;
         }
         this.cdr.detectChanges();
     }

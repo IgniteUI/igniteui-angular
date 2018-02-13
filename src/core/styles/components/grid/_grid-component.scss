@@ -9,7 +9,7 @@
         @extend %grid-thead !optional;
 
         igx-display-container {
-            overflow: visible;
+            overflow: hidden;
         }
     }
 
