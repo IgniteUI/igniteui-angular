@@ -38,6 +38,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     @Input() public igxForScrollContainer: any;
     @Input() public igxForContainerSize: any;
     @Input() public igxForItemSize: any;
+    public dc: ComponentRef<DisplayContainerComponent>;
 
     @Output()
     public onChunkLoaded = new EventEmitter<any>();
@@ -45,7 +46,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     private hScroll;
     private func;
     private hCache: number[];
-    private dc: ComponentRef<DisplayContainerComponent>;
     private vh: ComponentRef<VirtualHelperComponent>;
     private hvh: ComponentRef<HVirtualHelperComponent>;
     private _differ: IterableDiffer<T> | null = null;
@@ -82,6 +82,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
         this._pageSize = this._calculatePageSize();
         const dcFactory: ComponentFactory<DisplayContainerComponent> = this.resolver.resolveComponentFactory(DisplayContainerComponent);
         this.dc = this._viewContainer.createComponent(dcFactory, 0);
+        this.dc.instance.notVirtual = this.igxForContainerSize ? false : true;
         if (this.igxForOf && this.igxForOf.length) {
             for (let i = 0; i < this._pageSize && this.igxForOf[i] !== undefined; i++) {
                 const input = this.igxForOf[i];
@@ -398,9 +399,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
                     pageSize = this.igxForOf.length;
                 }
             }
-            if (this.dc) {
-                this.dc.instance.notVirtual = false;
-            }
         } else {
             pageSize = this.igxForOf.length;
         }
@@ -455,6 +453,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
         const containerSize = "igxForContainerSize";
         const value = changes[containerSize].currentValue;
         this.applyPageSizeChange();
+        if (this.dc && this._pageSize !== this.igxForOf.length) {
+            this.dc.instance.notVirtual = false;
+        }
         this._recalcScrollBarSize();
     }
 
