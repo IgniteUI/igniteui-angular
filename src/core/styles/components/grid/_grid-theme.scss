@@ -102,13 +102,13 @@ $components: register-component($components, #{$component-name});
 
     %grid-display {
         display: grid;
-        grid-template-rows: min-content;
+        grid-template-rows: auto auto auto;
         background: $grid-bg;
         color: $grid-cell-color;
         border-radius: $grid-br;
         box-shadow: $grid-shadow;
         outline-style: none;
-        overflow: visible;
+        overflow: hidden;
     }
 
     %grid-caption {
