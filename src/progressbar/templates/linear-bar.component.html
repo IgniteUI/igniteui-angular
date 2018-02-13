@@ -1,13 +1,15 @@
 <div class="progress-linear"
     [class.progress-linear--striped]="striped">
-    <div #linearBar role="progressbar" class="progress-linear__bar{{type ? '--' + type : ''}}"
+    <div #linearBar role="progressbar" 
+        class="progress-linear__bar{{type ? '--' + type : ''}}"
         aria-valuemin="0"
         [attr.aria-valuemax]="max"
         [attr.aria-valuenow]="value"
-        [style.width.%]="valueInPercent">
+        [style.width.%]="100"
+        [style.transform]="'translateX('+ calcTransformValue +'%)'">
         <ng-content></ng-content>
     </div>
-    <span *ngIf="textVisability" class="progress-linear__value--{{textPosition}}">
+    <span *ngIf="textVisability" class="progress-linear__value progress-linear__value--{{textPosition}}">
         {{ text ? text : valueInPercent + "%" }}
     </span>
 </div>

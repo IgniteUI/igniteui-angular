@@ -83,7 +83,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
     public textPosition: TextPosition = TextPosition.LEFT;
 
     @Input()
-    public textVisability: boolean;
+    public textVisability = true;
 
     @Input()
     public text: string;
@@ -137,6 +137,10 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
         this.onProgressChanged.emit(changedValues);
     }
 
+    public get calcTransformValue() {
+        return this.valueInPercent - this.max;
+    }
+
     @Output() public onProgressChanged = new EventEmitter();
 
     private _textVisability;
@@ -152,13 +156,14 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
 })
 export class IgxCircularProgressBarComponent extends BaseProgress implements AfterViewInit {
 
-    @Output() public onProgressChanged = new EventEmitter();
-
     private readonly STROKE_OPACITY_DVIDER = 100;
     private readonly STROKE_OPACITY_ADDITION = .2;
 
+    @Output()
+    public onProgressChanged = new EventEmitter();
+
     @Input()
-    public textVisability: boolean;
+    public textVisability = true;
 
     @Input()
     set animate(animate: boolean) {
