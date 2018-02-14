@@ -1,8 +1,11 @@
 import { CommonModule } from "@angular/common";
 import {
+    AfterContentInit,
     AfterViewInit,
     Component,
+    ContentChild,
     ContentChildren,
+    Directive,
     ElementRef,
     EventEmitter,
     forwardRef,
@@ -12,11 +15,22 @@ import {
     NgModule,
     Output,
     QueryList,
+    TemplateRef,
     ViewChild,
     ViewChildren
 } from "@angular/core";
 import { IgxBadgeModule } from "../badge/badge.component";
 import { IgxIconModule } from "../icon/icon.component";
+
+@Directive({
+    selector: "[igxTab]"
+})
+export class IgxTabTemplateDirective {
+
+    constructor(public template: TemplateRef<any>) {
+     }
+}
+
 @Component({
     selector: "igx-tab-bar",
     templateUrl: "tab-bar-content.component.html"
@@ -89,7 +103,7 @@ export class IgxTabBarComponent implements AfterViewInit {
     templateUrl: "tab-panel.component.html"
 })
 
-export class IgxTabPanelComponent {
+export class IgxTabPanelComponent implements AfterContentInit{
     private _itemStyle = "igx-tab-panel";
     public isSelected = false;
 
@@ -129,7 +143,28 @@ export class IgxTabPanelComponent {
     get index() {
         return this._tabBar.panels.toArray().indexOf(this);
     }
+
+    get customTabTemplate(): TemplateRef<any> {
+        return this._tabTemplate;
+    }
+
+    set customTabTemplate(template: TemplateRef<any>) {
+        this._tabTemplate = template;
+    }
+
+    private _tabTemplate: TemplateRef<any>;
+
+    @ContentChild(IgxTabTemplateDirective, { read: IgxTabTemplateDirective })
+    protected tabTemplate: IgxTabTemplateDirective;
+
+
     constructor(private _tabBar: IgxTabBarComponent) {
+    }
+
+    public ngAfterContentInit(): void {
+        if (this.tabTemplate) {
+            this._tabTemplate = this.tabTemplate.template;
+        }
     }
 
     public select() {
@@ -189,9 +224,10 @@ export class IgxTabComponent {
     }
 }
 
+
 @NgModule({
-    declarations: [IgxTabBarComponent, IgxTabPanelComponent, IgxTabComponent],
-    exports: [IgxTabBarComponent, IgxTabPanelComponent, IgxTabComponent],
+    declarations: [IgxTabBarComponent, IgxTabPanelComponent, IgxTabComponent, IgxTabTemplateDirective],
+    exports: [IgxTabBarComponent, IgxTabPanelComponent, IgxTabComponent, IgxTabTemplateDirective],
     imports: [CommonModule, IgxBadgeModule, IgxIconModule]
 })
 export class IgxTabBarModule {
