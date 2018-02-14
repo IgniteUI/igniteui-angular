@@ -61,22 +61,33 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     public open(fireEvents?: boolean, handler?) {
         if (!this.collapsed) { return; }
+
         const player = this.animationActivation();
         player.onStart(() => this.collapsed = !this.collapsed);
+        player.onDone(() =>  {
+            player.destroy();
+            if (fireEvents) {
+                this.onOpen.emit();
+            }
+        });
+
         player.play();
-        if (fireEvents) {
-            this.onOpen.emit();
-        }
     }
 
     public close(fireEvents?: boolean, handler?) {
         if (this.collapsed) { return; }
+
         const player = this.animationActivation();
-        player.onDone(() => this.collapsed = !this.collapsed);
+        player.onDone(() => {
+            this.collapsed = !this.collapsed;
+            player.destroy();
+            if (fireEvents) {
+                this.onClose.emit();
+            }
+        });
+
         player.play();
-        if (fireEvents) {
-            this.onClose.emit();
-        }
+
     }
 
     public toggle(fireEvents?: boolean) {
@@ -129,11 +140,13 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
     public closeOnOutsideClick = true;
 
     @Input("igxToggleAction")
-    set target(target) {
-        this._target = target;
+    set target(target: any) {
+        if (target !== null && target !== "") {
+            this._target = target;
+        }
     }
 
-    get target() {
+    get target(): any {
         if (typeof this._target === "string") {
             return this.navigationService.get(this._target);
         }
@@ -141,7 +154,7 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
     }
 
     private _handler;
-    private _target: IToggleView;
+    private _target: IToggleView | string;
 
     constructor(private element: ElementRef, @Optional() private navigationService: IgxNavigationService) { }
 

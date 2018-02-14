@@ -18,6 +18,7 @@ import {
     NgModule,
     NgZone,
     OnChanges,
+    OnDestroy,
     OnInit,
     Output,
     SimpleChanges,
@@ -32,7 +33,7 @@ import { HVirtualHelperComponent } from "./horizontal.virtual.helper.component";
 import { VirtualHelperComponent } from "./virtual.helper.component";
 
 @Directive({ selector: "[igxFor][igxForOf]" })
-export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
+export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestroy {
     @Input() public igxForOf: any[];
     @Input() public igxForScrollOrientation: string;
     @Input() public igxForScrollContainer: any;
@@ -138,7 +139,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
             }
         }
     }
-
+    public ngOnDestroy() {
+        if (this.hScroll) {
+            this.hScroll.removeEventListener("scroll", this.func);
+        }
+    }
     public ngOnChanges(changes: SimpleChanges): void {
         const forOf = "igxForOf";
         if (forOf in changes) {
@@ -198,7 +203,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
         }
         const scrollTop = event.target.scrollTop;
         const vcHeight = event.target.children[0].scrollHeight;
-        const ratio = scrollTop / vcHeight;
+        const ratio = vcHeight !== 0 ? scrollTop / vcHeight : 0;
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
 
         this._currIndex = Math.round(ratio * this.igxForOf.length);

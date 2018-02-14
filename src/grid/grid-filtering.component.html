@@ -12,13 +12,13 @@
 
 <div class="igx-filtering">
     <div [attr.class]="filterCSS">
-        <span class="toggle-icon" (click)="toggle()">
+        <span class="toggle-icon" [igxToggleAction]="directive">
             <igx-icon fontSet="material" name="filter_list"></igx-icon>
         </span>
     </div>
 </div>
 
-<span *ngIf="dialogShowing" class="igx-filtering__options">
+<span igxToggle (onOpen)="refresh()" (onClose)="refresh()" #directive="toggle" class="igx-filtering__options">
     <div>
         <select (change)="conditionChanged($event.target.value)">
             <option [selected]="isActive(each)" *ngFor="let each of conditions" [value]="each">{{ each | filterCondition | titlecase }}</option>

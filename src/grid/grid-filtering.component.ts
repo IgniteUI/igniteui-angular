@@ -127,6 +127,11 @@ export class IgxGridFilterComponent implements OnDestroy {
         this.filterChanged.unsubscribe();
     }
 
+    public refresh() {
+        this.dialogShowing = !this.dialogShowing;
+        this.cdr.detectChanges();
+    }
+
     public isActive(value): boolean {
         return this._filterCondition === value;
     }
@@ -181,14 +186,6 @@ export class IgxGridFilterComponent implements OnDestroy {
 
     public onInputChanged(val): void {
         this.filterChanged.next(val);
-    }
-
-    public toggle(): void {
-        this.dialogShowing = !this.dialogShowing;
-
-        if (this.dialogShowing) {
-            this.filteringExpression();
-        }
     }
 
     @HostListener("click", ["$event"])
