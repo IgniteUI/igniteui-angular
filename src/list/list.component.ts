@@ -23,7 +23,6 @@ import { IgxEmptyListTemplateDirective } from "./list.common";
 // ====================== LIST ================================
 // The `<igx-list>` directive is a list container for items and headers
 @Component({
-
     selector: "igx-list",
     templateUrl: "list.component.html"
 })
