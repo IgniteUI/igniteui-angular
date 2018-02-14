@@ -50,7 +50,6 @@ export class IgxListItemComponent implements IListChild {
         return this.isHeader ? "separator" : "listitem";
     }
 
-    @HostBinding("hidden")
     @Input()
     public hidden: boolean;
 
@@ -66,6 +65,11 @@ export class IgxListItemComponent implements IListChild {
     @HostBinding("class.igx-list__item")
     get innerStyle(): boolean {
         return !this.isHeader;
+    }
+
+    @HostBinding("style.display")
+    get display(): string {
+        return this.hidden ? "none" : "";
     }
 
     @HostListener("click", ["$event"])
