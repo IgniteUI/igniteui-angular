@@ -42,39 +42,39 @@ export class IgxListItemComponent implements IListChild {
         private _renderer: Renderer2) {
     }
 
-	@Input()
-	public isHeader: boolean;
+    @Input()
+    public isHeader: boolean;
 
-	@HostBinding("attr.role")
-	public get role() {
+    @HostBinding("attr.role")
+    public get role() {
         return this.isHeader ? "separator" : "listitem";
     }
 
-	@HostBinding("hidden")
-	@Input()
-	public hidden: boolean;
+    @HostBinding("hidden")
+    @Input()
+    public hidden: boolean;
 
-	@HostBinding("attr.aria-label")
-	public ariaLabel: string;
-	@HostBinding("style.touch-action")
-	public touchAction = "pan-y";
+    @HostBinding("attr.aria-label")
+    public ariaLabel: string;
+    @HostBinding("style.touch-action")
+    public touchAction = "pan-y";
 
-	@HostBinding("class.igx-list__header")
-	get headerStyle(): boolean {
+    @HostBinding("class.igx-list__header")
+    get headerStyle(): boolean {
         return this.isHeader;
     }
-	@HostBinding("class.igx-list__item")
-	get innerStyle(): boolean {
+    @HostBinding("class.igx-list__item")
+    get innerStyle(): boolean {
         return !this.isHeader;
     }
 
-	@HostListener("click", ["$event"])
-	clicked(evt) {
+    @HostListener("click", ["$event"])
+    clicked(evt) {
         this.list.onItemClicked.emit({item: this, event: evt});
     }
 
-	@HostListener("panstart", ["$event"])
-	panStart(ev) {
+    @HostListener("panstart", ["$event"])
+    panStart(ev) {
         if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
             return;
         }
@@ -82,8 +82,8 @@ export class IgxListItemComponent implements IListChild {
         this._currentLeft = this.left;
     }
 
-	@HostListener("panmove", ["$event"])
-	panMove(ev) {
+    @HostListener("panmove", ["$event"])
+    panMove(ev) {
         if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
             return;
         }
@@ -105,8 +105,8 @@ export class IgxListItemComponent implements IListChild {
         }
     }
 
-	@HostListener("panend", ["$event"])
-	panEnd(ev) {
+    @HostListener("panend", ["$event"])
+    panEnd(ev) {
         if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
             return;
         }
