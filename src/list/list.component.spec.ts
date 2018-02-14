@@ -1,9 +1,9 @@
 import { Component, ContentChildren, QueryList, ViewChild } from "@angular/core";
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { IgxListItemComponent } from "./list-item.component";
 import { IgxListPanState } from "./list.common";
 import { IgxListComponent, IgxListModule } from "./list.component";
-import { IgxListItemComponent } from "./list-item.component";
 
 declare var Simulator: any;
 
@@ -211,9 +211,9 @@ fdescribe("List", () => {
     it("Should have default no items template.", () => {
         const fixture = TestBed.createComponent(ListWithNoItemsComponent);
         const list = fixture.componentInstance.list;
-        //const listNoItemsImgSrc = "https://example.com/noitems.png";
+        // const listNoItemsImgSrc = "https://example.com/noitems.png";
         const listNoItemsMessage = "No items placeholder.";
-        //const listNoItemsButtonText = "Custom Button Text";
+        // const listNoItemsButtonText = "Custom Button Text";
 
         fixture.detectChanges();
 
@@ -253,9 +253,9 @@ fdescribe("List", () => {
         const noItemsParagraphEl = fixture.debugElement.query(By.css(".igx-list > h3"));
         expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listCustomNoItemsTemplateContent);
 
-        //expect(list.hasNoItemsTemplate).toBeTruthy();
-        //const noItemsTemplateDebugEl = fixture.debugElement.query(By.css(".igx-list__empty--custom"));
-        //expect(noItemsTemplateDebugEl.nativeElement.textContent.trim()).toEqual(listCustomNoItemsTemplateContent);
+        // expect(list.hasNoItemsTemplate).toBeTruthy();
+        // const noItemsTemplateDebugEl = fixture.debugElement.query(By.css(".igx-list__empty--custom"));
+        // expect(noItemsTemplateDebugEl.nativeElement.textContent.trim()).toEqual(listCustomNoItemsTemplateContent);
     });
 
     it("should fire ItemClicked on click.", () => {
@@ -267,14 +267,14 @@ fdescribe("List", () => {
         list.onItemClicked.subscribe((value) => listItem = value);
 
         spyOn(list.onItemClicked, "emit");
-        //spyOn(list.onSelectionChanged, "emit");
+        // spyOn(list.onSelectionChanged, "emit");
         itemElement.click();
-        //expect(list.onItemClicked.emit).toHaveBeenCalled();
-        //expect(list.onSelectionChanged.emit).toHaveBeenCalled();
+        // expect(list.onItemClicked.emit).toHaveBeenCalled();
+        // expect(list.onSelectionChanged.emit).toHaveBeenCalled();
         expect(listItem.index).toBe(0);
         expect(listItem.element.nativeElement.textContent.trim()).toBe("Item 1");
 
-        //Click the same item again and verify click is fired again
+        // Click the same item again and verify click is fired again
         itemElement.click();
         expect(list.onItemClicked.emit).toHaveBeenCalled();
     });
