@@ -3,25 +3,52 @@ $component-name: 'igx-input';
 $components: register-component($components, #{$component-name});
 
 @function igx-input-theme(
-    $focused-color: null,
-    $success-color: null,
-    $warning-color: null,
-    $error-color: null
+    $idle-text-color: null,
+    $filled-text-color: null,
+    $focused-text-color: null,
+    $disabled-text-color: null,
+
+    $idle-accent-color: null,
+    $filled-accent-color: null,
+    $focused-accent-color: null,
+    $disabled-accent-color: null,
+
+    $success-accent-color: null,
+    $warning-accent-color: null,
+    $error-accent-color: null
 ) {
     @return (
-        focused-color: $focused-color,
-        success-color: $success-color,
-        warning-color: $warning-color,
-        error-color: $error-color
+        idle-text-color: $idle-text-color,
+        filled-text-color: $filled-text-color,
+        focused-text-color: $focused-text-color,
+        disabled-text-color: $disabled-text-color,
+
+        idle-accent-color: $idle-accent-color,
+        filled-accent-color: $filled-accent-color,
+        focused-accent-color: $focused-accent-color,
+        disabled-accent-color: $disabled-accent-color,
+
+        success-accent-color: $success-accent-color,
+        warning-accent-color: $warning-accent-color,
+        error-accent-color: $error-accent-color
     );
 }
 
 @mixin igx-input($theme, $palette: $default-palette) {
     $default-theme: igx-input-theme(
-        $focused-color: igx-color($palette, 'primary'),
-        $success-color: $success-color,
-        $warning-color: igx-color($palette, 'warn'),
-        $error-color: igx-color($palette, 'warn', 900)
+        $idle-text-color: igx-color($palette, 'grays', 600),
+        $filled-text-color: igx-color($palette, 'grays', 900),
+        $focused-text-color: igx-color($palette, 'grays', 900),
+        $disabled-text-color: igx-color($palette, 'grays', 500),
+
+        $idle-accent-color: igx-color($palette, 'grays', 600),
+        $filled-accent-color: igx-color($palette, 'grays', 600),
+        $focused-accent-color: igx-color($palette, 'primary'),
+        $disabled-accent-color: igx-color($palette, 'grays', 500),
+
+        $success-accent-color: igx-color($palette, 'success', 500),
+        $warning-accent-color: igx-color($palette, 'warn', 500),
+        $error-accent-color: igx-color($palette, 'error', 500)
     );
 
     $this: extend($default-theme, $theme);
@@ -32,17 +59,20 @@ $components: register-component($components, #{$component-name});
     $input-min-height: rem(70px) !default;
     $input-font-size: rem(16px) !default;
     $input-font-weight: 400 !default;
-    $input-color: igx-color($palette, 'grays', 900) !default;
-    $input-caret-color: map-get($this, 'focused-color') !default;
     $input-line-height: rem(24px) !default;
 
-    $input-border-color: igx-color($palette, 'grays', 500) !default;
+    $input-color: map-get($this, 'idle-text-color') !default;
+    $input-caret-color: map-get($this, 'focused-accent-color') !default;
+
+    $input-border-color: igx-color($palette, 'accent', 500) !default;
     $input-border: inset 0 -1px 0 0 $input-border-color !default;
-    $input-border-success: inset 0 -2px 0 0 map-get($this, 'success-color') !default;
-    $input-border-warn: inset 0 -2px 0 0 map-get($this, 'warning-color') !default;
-    $input-border-error: inset 0 -2px 0 0 map-get($this, 'error-color') !default;
-    $input-border-color-focus: map-get($this, 'focused-color') !default;
-    $input-border-focus: inset 0 -2px 0 0 $input-border-color-focus !default;
+
+    $input-border-success: inset 0 -2px 0 0 map-get($this, 'success-accent-color') !default;
+    $input-border-warn: inset 0 -2px 0 0 map-get($this, 'warning-accent-color') !default;
+    $input-border-error: inset 0 -2px 0 0 map-get($this, 'error-accent-color') !default;
+
+    $input-border-color-focus: map-get($this, 'focused-accent-color') !default;
+    $input-border-focus: inset 0 -2px 0 0 map-get($this, 'focused-accent-color') !default;
 
     $input-background: $white !default;
     $input-transition: all .2s ease-in !default;
@@ -55,11 +85,11 @@ $components: register-component($components, #{$component-name});
     // Floating Label
     $label-color: igx-color($palette, 'grays', 600) !default;
     $label-color-disabled: igx-color($palette, 'grays', 500) !default;
-    $label-focus-color: map-get($this, 'focused-color') !default;
+    $label-focus-color: map-get($this, 'focused-accent-color') !default;
     $label-active-color: lighten($label-color, 20%) !default;
-    $label-success-color: map-get($this, 'success-color') !default;
-    $label-warn-color: map-get($this, 'warning-color') !default;
-    $label-error-color: map-get($this, 'error-color') !default;
+    $label-success-color: map-get($this, 'success-accent-color') !default;
+    $label-warn-color: map-get($this, 'warning-accent-color') !default;
+    $label-error-color: map-get($this, 'error-accent-color') !default;
     $label-font-size: rem(16px) !default;
     $label-focus-font-size: rem(12px) !default;
     $input-search-padding: 12px 12px 12px 64px !default;
@@ -99,29 +129,35 @@ $components: register-component($components, #{$component-name});
     }
 
     %igx-form-label--filled {
-        color: $label-active-color;
+        color: map-get($this, 'filled-accent-color');
     }
 
     %igx-form-label--focused {
-        color: $label-focus-color;
+        color: map-get($this, 'focused-accent-color');
         transform: translateY(-20px) perspective(1000px) translateZ(-300px);
     }
 
     %igx-form-input {
         width: 100%;
         border: 0;
-        outline: none;
-        color: $input-color;
+        outline-style: none;
+        color: map-get($this, 'idle-text-color');
         background: transparent;
         font-size: $input-font-size;
+        font-weight: $input-font-weight;
         line-height: $input-line-height;
         padding-bottom: 3px;
-        box-shadow: $input-border;
+        box-shadow: inset 0 -1px 0 0 map-get($this, 'idle-accent-color');
         transition: box-shadow .25s $ease-in-out-quad;
     }
 
+    %igx-form-input--filled {
+        color: map-get($this, 'filled-text-color');
+    }
+
     %igx-form-input--focused {
-        box-shadow: $input-border-focus;
+        color: map-get($this, 'focused-text-color');
+        box-shadow: inset 0 -2px 0 0 map-get($this, 'focused-accent-color');
     }
 
     %igx-form-input--disabled {
@@ -136,7 +172,7 @@ $components: register-component($components, #{$component-name});
     }
 
     %igx-form-label--disabled {
-        color: $label-color-disabled;
+        color: map-get($this, 'disabled-text-color');
     }
 
     %igx-form-input--success {

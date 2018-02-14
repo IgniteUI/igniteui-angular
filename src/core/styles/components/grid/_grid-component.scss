@@ -27,6 +27,10 @@
 
     @include e(tr) {
         @extend %grid-row !optional;
+
+        igx-display-container {
+            width: 100%;
+        }
     }
 
     @include e(tr, $m: selected) {

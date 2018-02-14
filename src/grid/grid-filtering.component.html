@@ -1,7 +1,7 @@
 <ng-template #defaultFilterUI>
-    <div *ngIf="!unaryCondition">
-        <p style="margin-bottom: 0">Value:</p>
-        <input type="text" igxInput autocomplete="off" [value]="value" (input)="onInputChanged($event.target.value)" />
+    <div *ngIf="!unaryCondition" class="igx-filtering__op">
+        <input type="text" igxInput placeholder="value" autocomplete="off" [value]="value" (input)="onInputChanged($event.target.value)"
+        />
     </div>
     <br>
 </ng-template>
@@ -12,7 +12,7 @@
 
 <div class="igx-filtering">
     <div [attr.class]="filterCSS">
-        <span class="toggle-icon" igxButton="icon" [igxToggleAction]="directive">
+        <span class="toggle-icon" [igxToggleAction]="directive">
             <igx-icon fontSet="material" name="filter_list"></igx-icon>
         </span>
     </div>
@@ -20,12 +20,13 @@
 
 <span igxToggle (onOpen)="refresh()" (onClose)="refresh()" #directive="toggle" class="igx-filtering__options">
     <div>
-        <p style="margin-bottom: 0">Condition:</p>
         <select (change)="conditionChanged($event.target.value)">
             <option [selected]="isActive(each)" *ngFor="let each of conditions" [value]="each">{{ each | filterCondition | titlecase }}</option>
         </select>
     </div>
     <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
-    <button igxButton igxRipple (click)="filter()">Filter</button>
-    <button igxButton igxRipple (click)="clearFiltering()">Reset</button>
+    <div class="igx-filtering__options-bgroup">
+        <button igxButton igxRipple (click)="clearFiltering()" [disabled]="!value">Reset</button>
+        <button igxButton igxRipple (click)="filter()" [disabled]="!value">Filter</button>
+    </div>
 </span>
