@@ -4,7 +4,7 @@ All notable changes for each version of this project will be documented in this 
 
 ## 5.2.0
 - `igxForOf` directive added
-    - `igxForOf` is now available as an alternative to `ngForOf` for templating large amounts of data
+    - `igxForOf` is now available as an alternative to `ngForOf` for templating large amounts of data. The `igxForOf` uses virtualization technology behind the scenes to optimize DOM rendering and memory consumption. Virtualization technology works similar to Paging by slicing the data into smaller chucks which are swapped from a container viewport while the user scrolls the data horizontally/vertically. The difference with the Paging is that virtualization mimics the natural behavior of the scrollbar.
 - `igxToggle` and `igxToggleAction` directives added
     - `igxToggle` allows users to implement toggleable components/views (eg. dropdowns), while `igxToggleAction` can control the
       `igxToggle` directive. Refer to the official documenation for more information.
