@@ -1,12 +1,12 @@
 import { AfterContentChecked, AfterViewChecked, Component, ContentChildren, QueryList, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxTabBarComponent, IgxTabBarModule, IgxTabComponent, IgxTabPanelComponent } from "./tabbar.component";
+import { IgxTabBarComponent, IgxTabBarModule, IgxTabComponent, IgxTabPanelComponent, IgxTabTemplateDirective } from "./tabbar.component";
 
 describe("TabBar", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [TabBarTestComponent, BottomTabBarTestComponent],
+            declarations: [TabBarTestComponent, BottomTabBarTestComponent, TemplatedTabBarTestComponent],
             imports: [IgxTabBarModule]
         })
             .compileComponents();
@@ -127,6 +127,19 @@ describe("TabBar", () => {
         expect(tab1.isSelected).toBeTruthy();
         expect(tab2.isSelected).toBeFalsy();
     });
+
+    it("should initialize igx-tab custom template", () => {
+        const fixture = TestBed.createComponent(TemplatedTabBarTestComponent);
+        const tabbar = fixture.componentInstance.tabbar;
+
+        fixture.detectChanges();
+
+        const tabs: IgxTabComponent[] = tabbar.tabs.toArray();
+
+        expect(tabbar.tabs.length).toBe(3);
+
+        tabbar.tabs.forEach((tab) => expect(tab.relatedPanel.customTabTemplate).toBeDefined());
+    });
 });
 
 @Component({
@@ -200,6 +213,37 @@ class TabBarTestComponent {
         </div>`
 })
 class BottomTabBarTestComponent {
+    @ViewChild(IgxTabBarComponent) public tabbar: IgxTabBarComponent;
+    @ViewChild("wrapperDiv") public wrapperDiv: any;
+}
+
+@Component({
+    template: `
+        <div #wrapperDiv>
+
+        <igx-tab-bar>
+            <igx-tab-panel label="dede">
+                <ng-template igxTab>
+                    <div>T1</div>
+                 </ng-template>
+                 <h1>Tab 1 Content</h1>
+              </igx-tab-panel>
+            <igx-tab-panel label="Tab 2">
+                <ng-template igxTab>
+                    <div>T2</div>
+                </ng-template>
+                <h1>Tab 2 Content</h1>
+            </igx-tab-panel>
+            <igx-tab-panel label="Tab 3">
+                <ng-template igxTab>
+                    <div>T3</div>
+                </ng-template>
+                <h1>Tab 3 Content</h1>
+            </igx-tab-panel>
+        </igx-tab-bar>
+        </div>`
+})
+class TemplatedTabBarTestComponent {
     @ViewChild(IgxTabBarComponent) public tabbar: IgxTabBarComponent;
     @ViewChild("wrapperDiv") public wrapperDiv: any;
 }
