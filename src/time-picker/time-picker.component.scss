@@ -4,8 +4,11 @@ ul {
     list-style-position:inside;
     margin:0;
     padding:0;
-    width:200px;
     max-height: 4.5em; /* 1.5 x 3 */
     overflow-y: auto;
 }
 li:hover {background-color: #ddd}
+
+div.dropdown{
+    width: inherit
+}

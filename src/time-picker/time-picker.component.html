@@ -1,7 +1,9 @@
-<input class="igx-time-picker" igxInput (click)="onOpenEvent($event)" [value]="displayTime" [disabled]="isDisabled" />
-<ng-container *ngTemplateOutlet="listDropdown"></ng-container>
+<div class="igx-time-picker">
+    <input igxInput (click)="onOpenEvent($event)" [value]="displayTime" [disabled]="isDisabled" /><button igxToggleAction>V</button>
+</div>
+<ng-container *ngTemplateOutlet="dropdown" ></ng-container>
 <ng-template #listDropDown>
-    <div>
+    <div class="dropdown" igxToggle id="listToggle">
         <ul>
             <li *ngFor="let item of dropDownItems" (click)="onItemClicked(item)">
                 {{ getDropDownItem(item) }}
@@ -9,4 +11,8 @@
         </ul>
     </div>
 </ng-template>
-<ng-template #scrollDropDown>scroll</ng-template>
+<ng-template #scrollDropDown>
+    <div class="dropdown" igxToggle id="scrollToggle">
+        scroll
+    </div>
+</ng-template>

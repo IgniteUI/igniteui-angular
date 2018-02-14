@@ -1,4 +1,7 @@
-import { CommonModule } from "@angular/common";
+import { 
+    CommonModule,
+    DatePipe
+} from "@angular/common";
 import {
     Component,
     ComponentFactoryResolver,
@@ -12,11 +15,14 @@ import {
     Output,
     ViewChild,
     TemplateRef,
+    ElementRef,
     ViewContainerRef,
     ViewEncapsulation
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { IgxInput } from "../input/input.directive";
+import { IgxInputModule } from "../directives/input/input.directive";
+import { IgxToggleModule, IgxToggleDirective, IgxToggleActionDirective } from "../directives/toggle/toggle.directive";
+import { IgxNavigationService } from "../core/navigation";
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -30,7 +36,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     // Custom formatter function
     @Input() public formatter: (val: Date) => string;
 
-    @Input() public isDisabled: boolean;
+    @Input() public isDisabled = false;
 
     @Input() public value: Date;
 
@@ -44,27 +50,25 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     @Input() public format = "time";
 
-    @Input() public locale = "en";
+    @Input() public locale: string;
 
     @Output() public onValueChanged = new EventEmitter<any>();
 
     public get displayTime() {
         if (this.value) {
-            return this._setLocaleToTime(this.value, this.locale);
+            return this._formatDate(this.value);
         }
 
         return "";
     }
 
     public getDropDownItem(item: Date){
-        return this._setLocaleToTime(item, this.locale);
+        return this._formatDate(item);
     }
 
-    private _setLocaleToTime(value: Date, locale: string ) {
-        return value.toLocaleTimeString(locale, this.format);
+    private _formatDate(date: Date){
+        return this.datePipe.transform(date, this.format, null, this.locale);
     }
-
-    private _getFormatOptions
 
     dropDownItems = [];
 
@@ -95,7 +99,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         initDate.setMinutes(0);
         initDate.setSeconds(0);
 
-        for (var i = 0; i < dropDownItemsCount; i++) {
+        for (var i = startMinutes; i < dropDownItemsCount; i++) {
             var date = new Date(initDate);
             date.setMinutes(timeDeltaMinutes * i);
             {
@@ -112,11 +116,21 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     @ViewChild("scrollDropDown", { read: TemplateRef })
     protected scrollDropDown: TemplateRef<any>;
 
-    get listDropdown() {
+    @ViewChild(IgxToggleDirective) toggle: IgxToggleDirective;
+    @ViewChild(IgxToggleActionDirective) toggleAction: IgxToggleActionDirective;
+
+    get dropdown() {
         if (this.dropDown === DROPDOWN.LIST) {
+            if(this.navigationService) {
+                this.toggleAction.target = this.navigationService.get("listToggle");
+            }
             return this.listDropDown;
         }
 
+        if(this.navigationService) {
+            this.toggleAction.target = this.navigationService.get("scrollToggle");
+        }
+        
         return this.scrollDropDown;
     }    
 
@@ -145,7 +159,10 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     public onItemClicked(item) {
         this.value = item;
         this.onValueChanged.emit(item);
+        this.toggle.close();
     }
+
+    constructor(private navigationService: IgxNavigationService, private datePipe: DatePipe) {}
 }
 
 export enum DROPDOWN {
@@ -156,6 +173,7 @@ export enum DROPDOWN {
 @NgModule({
     declarations: [IgxTimePickerComponent],
     exports: [IgxTimePickerComponent],
-    imports: [CommonModule, IgxInput]
+    imports: [CommonModule, IgxInputModule, IgxToggleModule],
+    providers: [IgxNavigationService, DatePipe]
 })
 export class IgxTimePickerModule { }
