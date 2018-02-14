@@ -45,13 +45,13 @@ export class IgxListItemComponent implements IListChild {
     @Input()
     public isHeader: boolean;
 
+    @Input()
+    public hidden = false;
+
     @HostBinding("attr.role")
     public get role() {
         return this.isHeader ? "separator" : "listitem";
     }
-
-    @Input()
-    public hidden: boolean;
 
     @HostBinding("attr.aria-label")
     public ariaLabel: string;
