@@ -96,6 +96,7 @@ Run the following command from the root directory of your repository.
 This will open the demos application in your preferred browser. Any changes in the
 application code will trigger a rebuild of the application.
 ```
+cd ..
 npm run start:demos
 ```
 

@@ -1,11 +1,11 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { IgxComponentsModule } from "../../lib/main";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { CarouselSampleComponent } from "./sample.component";
+import { IgxCarouselModule } from "../../lib/main";
 
 @NgModule({
     declarations: [CarouselSampleComponent],
-    imports: [IgxComponentsModule, CommonModule, PageHeaderModule]
+    imports: [CommonModule, PageHeaderModule, IgxCarouselModule]
 })
 export class CarouselSampleModule { }
