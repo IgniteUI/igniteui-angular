@@ -102,13 +102,13 @@ $components: register-component($components, #{$component-name});
 
     %grid-display {
         display: grid;
-        grid-template-rows: min-content;
+        grid-template-rows: auto auto auto;
         background: $grid-bg;
         color: $grid-cell-color;
         border-radius: $grid-br;
         box-shadow: $grid-shadow;
         outline-style: none;
-        overflow-x: auto;
+        overflow: hidden;
     }
 
     %grid-caption {
@@ -126,7 +126,7 @@ $components: register-component($components, #{$component-name});
     %grid-thead,
     %grid-tfoot {
         display: block;
-        margin-right: 16px;
+        // margin-right: 16px;
 
         %grid-row {
             &:hover {
@@ -137,7 +137,7 @@ $components: register-component($components, #{$component-name});
 
     %grid-tbody {
         position: relative;
-        overflow-y: scroll;
+        overflow: hidden;
         will-change: transform;
     }
 
