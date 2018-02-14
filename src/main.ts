@@ -38,6 +38,7 @@ export * from "./avatar/avatar.component";
 export * from "./dialog/dialog.component";
 export * from "./progressbar/progressbar.component";
 export * from "./navbar/navbar.component";
+export * from "./directives/for-of/for_of.directive";
 export * from "./badge/badge.component";
 export * from "./snackbar/snackbar.component";
 export * from "./card/card.component";
