@@ -26,15 +26,15 @@ import { IgxListItemComponent } from "./list-item.component"
 	host: {
 		role: "list"
 	},
-	// changeDetection: ChangeDetectionStrategy.OnPush,
 	selector: "igx-list",
 	templateUrl: "list.component.html"
 })
 export class IgxListComponent {
-	@ContentChildren(forwardRef(() => IgxListItemComponent)) public children: QueryList<IgxListItemComponent>;
 
-	@Input() public allowLeftPanning: boolean = false;
-	@Input() public allowRightPanning: boolean = false;
+	constructor(private element: ElementRef) {
+	}
+
+	@ContentChildren(forwardRef(() => IgxListItemComponent)) public children: QueryList<IgxListItemComponent>;
 
 	@ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective })
 	public emptyListTemplate: IgxEmptyListTemplateDirective;
@@ -42,14 +42,13 @@ export class IgxListComponent {
 	@ViewChild("defaultEmptyList", { read: TemplateRef })
 	protected defaultEmptyListTemplate: TemplateRef<any>;
 
+	@Input() public allowLeftPanning: boolean = false;
+	@Input() public allowRightPanning: boolean = false;
+
 	@Output() public onLeftPan = new EventEmitter();
 	@Output() public onRightPan = new EventEmitter();
 	@Output() public onPanStateChange = new EventEmitter();
-
 	@Output() public onItemClicked = new EventEmitter();
-
-	constructor(private element: ElementRef) {
-	}
 
 	@HostBinding("class")
 	public get innerStyle(): string {
@@ -82,13 +81,13 @@ export class IgxListComponent {
 		return headers;
 	}
 
-	get context(): any {
+	public get context(): any {
 		return {
 			$implicit: this
 		};
 	}
 
-	get template() : TemplateRef<any> {
+	public get template() : TemplateRef<any> {
 		return this.emptyListTemplate ? this.emptyListTemplate.template : this.defaultEmptyListTemplate;
 	}
 }

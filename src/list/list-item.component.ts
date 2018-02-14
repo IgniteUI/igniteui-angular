@@ -1,4 +1,3 @@
-
 import {
 	Component,
 	ViewChild,
@@ -35,17 +34,7 @@ export class IgxListItemComponent implements IListChild {
 	private _panState: IgxListPanState = IgxListPanState.NONE;
 	private _FRACTION_OF_WIDTH_TO_TRIGGER_GRIP = 0.5; // as a fraction of the item width
 	private _innerStyle: string = "";
-	private _currentLeft = 0;
-
-	@HostBinding("attr.role") public get role() {
-		return this.isHeader ? "separator" : "listitem";
-	}
-
-	@Input() public isHeader: boolean;
-	@Input() public href: string;
-
-	@HostBinding("hidden") @Input() public hidden : boolean;
-	@HostBinding("attr.aria-label") public ariaLabel : string;
+	private _currentLeft: number = 0;
 
 	constructor(
 		@Inject(forwardRef(() => IgxListComponent))
@@ -54,69 +43,35 @@ export class IgxListItemComponent implements IListChild {
 		private _renderer: Renderer2) {
 	}
 
-	public get element() {
-		return this.elementRef.nativeElement;
+	@Input() public isHeader: boolean;
+
+	@HostBinding("attr.role") public get role() {
+		return this.isHeader ? "separator" : "listitem";
 	}
 
-	@HostBinding("style.touch-action") touchAction = "pan-y";
+	@HostBinding("hidden") @Input() public hidden : boolean;
+	@HostBinding("attr.aria-label") public ariaLabel : string;
+	@HostBinding("style.touch-action") public touchAction = "pan-y";
 
-	@HostBinding("class.igx-list__header")
-	get headerStyle(): boolean {
+	@HostBinding("class.igx-list__header") get headerStyle(): boolean {
 		return this.isHeader;
 	}
-	@HostBinding("class.igx-list__item")
-	get innerStyle(): boolean {
+	@HostBinding("class.igx-list__item") get innerStyle(): boolean {
 		return !this.isHeader;
-	}
-
-	public get panState(): IgxListPanState {
-		return this._panState;
-	}
-
-	public get index(): number {
-		return this.list.children.toArray().indexOf(this);
-	}
-
-	public get width() {
-		if (this.element) {
-			return this.element.offsetWidth;
-		} else {
-			return 0;
-		}
-	}
-
-	private get left() {
-		return this.element.offsetLeft;
-	}
-	private set left(value: number) {
-		let val = value + "";
-
-		if (val.indexOf("px") === -1) {
-			val += "px";
-		}
-		this.element.style.left = val;
-	}
-
-	public get maxLeft() {
-		return -this.width;
-	}
-
-	public get maxRight() {
-		return this.width;
 	}
 
 	@HostListener("click", ['$event']) clicked(evt) {
 		this.list.onItemClicked.emit({item: this, event: evt});
 	}
 
-	@HostListener("panstart", ['$event']) panStart(ev: HammerInput) {
+	@HostListener("panstart", ['$event']) panStart(ev) {
 		if(!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning))
 			return;
 
 		this._currentLeft = this.left;
 	}
 
-	@HostListener("panmove", ['$event']) panMove(ev: HammerInput) {
+	@HostListener("panmove", ['$event']) panMove(ev) {
 		if(!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning))
 			return;
 
@@ -137,7 +92,7 @@ export class IgxListItemComponent implements IListChild {
 		}
 	}
 
-	@HostListener("panend", ['$event']) panEnd(ev: HammerInput) {
+	@HostListener("panend", ['$event']) panEnd(ev) {
 		if(!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning))
 			return;
 
@@ -153,6 +108,46 @@ export class IgxListItemComponent implements IListChild {
 				this.list.onRightPan.emit(this);
 			}
 		}
+	}
+
+	public get panState(): IgxListPanState {
+		return this._panState;
+	}
+
+	public get index(): number {
+		return this.list.children.toArray().indexOf(this);
+	}
+
+	public get element() {
+		return this.elementRef.nativeElement;
+	}
+
+	public get width() {
+		if (this.element) {
+			return this.element.offsetWidth;
+		} else {
+			return 0;
+		}
+	}
+
+	public get maxLeft() {
+		return -this.width;
+	}
+
+	public get maxRight() {
+		return this.width;
+	}
+
+	private get left() {
+		return this.element.offsetLeft;
+	}
+	private set left(value: number) {
+		let val = value + "";
+
+		if (val.indexOf("px") === -1) {
+			val += "px";
+		}
+		this.element.style.left = val;
 	}
 
 	private performMagneticGrip() {
