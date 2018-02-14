@@ -103,3 +103,17 @@ All notable changes for each version of this project will be documented in this 
     - `IgxDraggableDirective` moved inside `../directives/dragdrop/` folder
     - `IgxRippleDirective` moved inside `../directives/ripple/` folder
     - Folder `"./navigation/nav-service"` renamed to `"./navigation/nav.service"`
+- `igx-tab-bar` changes
+    - custom content can be added for tabs
+
+    ```html
+    <igx-tab-bar>
+        <igx-tab-panel>
+            <ng-template igxTab>
+                <igx-avatar initials="T1">
+                </igx-avatar>
+            </ng-template>
+            <h1>Tab 1 Content</h1>
+        </igx-tab-panel>
+    </igx-tab-bar>
+    ```
