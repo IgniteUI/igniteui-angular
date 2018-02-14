@@ -5,6 +5,10 @@ All notable changes for each version of this project will be documented in this 
 ## 5.2.0
 - `igxForOf` directive added
     - `igxForOf` is now available as an alternative to `ngForOf` for templating large amounts of data
+- `igxToggle` and `igxToggleAction` directives added
+    - `igxToggle` allows users to implement toggleable components/views (eg. dropdowns), while `igxToggleAction` can control the
+      `igxToggle` directive. Refer to the official documenation for more information.
+    - `igxToggle` requires `BrowserAnimationsModule` to be imported in your application.
 - `igx-grid` changes
     - The component now uses the new `igxForOf` directive to virtualize its content both vertically and horizontally dramatically improving performance for applications displaying large amounts of data.
     - Data-bound Input property `filtering` changed to `filterable`:
@@ -26,8 +30,10 @@ All notable changes for each version of this project will be documented in this 
     </ng-template>
     ```
     - Class `IgxGridFiltering` renamed to `IgxGridFilteringComponent `
+    - The grid filtering UI dropdowns are now controlled by the `igxToggle` directive.
+      - Make sure to import `BrowserAnimationsModule` inside your application module as `igxToggle` uses animations for state transition.
     - `state` input
-        - filtering epxpresstion and sortin expressions provided
+        - filtering expressions and sortin expressions provided
     - Removed `onCellSelection` and `onRowSelection` event emitters, `onSelection` added instead.
     - Removed `onBeforeProcess` event emitter.
     - Removed `onMovingDone` event emitter.
