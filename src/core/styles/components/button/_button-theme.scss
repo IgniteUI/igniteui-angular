@@ -147,7 +147,7 @@ $components: register-component($components, #{$component-name});
         // Flat button
         $flat-text-color: igx-color($palette, accent, 500),
         $flat-background: transparent,
-        $flat-hover-background: null,
+        $flat-hover-background: rgba(0, 0, 0, .24),
         $flat-hover-text-color: null,
         $flat-focus-background: igx-color($palette, grays, 400),
         $flat-focus-text-color: igx-color($palette, grays, 800),
