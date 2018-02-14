@@ -1,10 +1,11 @@
 import { NgModule } from "@angular/core";
-import { IgxComponentsModule, IgxDirectivesModule } from "../../lib/main";
+
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { AvatarSampleComponent } from "./sample.component";
+import { IgxAvatarModule } from "../../lib/main";
 
 @NgModule({
     declarations: [AvatarSampleComponent],
-    imports: [IgxComponentsModule, IgxDirectivesModule, PageHeaderModule]
+    imports: [PageHeaderModule, IgxAvatarModule ]
 })
 export class AvatarSampleModule { }

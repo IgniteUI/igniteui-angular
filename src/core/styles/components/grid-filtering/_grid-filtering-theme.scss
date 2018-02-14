@@ -11,12 +11,15 @@ $components: register-component($components, #{$component-name});
 
 @mixin igx-grid-filtering($theme, $palette: $default-palette) {
     $default-theme: igx-grid-filtering-theme(
-        $color-selected: igx-color($palette, 'primary'),
+        $color-selected: $white,
         $color-filtered: igx-color($palette, 'primary')
     );
+
     $this: extend($default-theme, $theme);
+
     $grid-filtering-color-active: map-get($this, 'color-selected');
     $grid-filtering-bg-active: map-get($this, 'color-filtered');
+
     $grid-filtering-options-padding: em(8px, 16px);
     $grid-head-icon-size: rem(16px) !default;
     $grid-head-icon-lh: rem(16px) !default;
