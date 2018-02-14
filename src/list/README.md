@@ -68,6 +68,7 @@ In order to use your own custom template, you can use the `igxEmptyList` directi
 | items  | Array of items in the list  |
 | headers  | Array of headers in the list  |
 | innerStyle  | Currently used inner style depending on whether the list is empty or not  |
+| role  | Gets the role of the list  |
 
 
 ### Outputs
@@ -134,3 +135,4 @@ All list items implement `IListChild`.
 | width  | Gets the width of the item   |
 | maxLeft  | Gets the maximum left position of the item   |
 | maxRight  | Gets the maximum right position of the item   |
+| touchAction  | Determines in what way the item can be manipulated by the user via a touch action   |
