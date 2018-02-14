@@ -31,11 +31,11 @@ $component-names: 'igx-progress-linear' 'igx-progress-circular';
     $default-theme: igx-progress-linear-theme(
         $track-color: rgba(igx-color($palette, 'primary'), .1),
         $fill-color-default: igx-color($palette, 'primary'),
-        $fill-color-danger: igx-color($palette, 'warn', 800),
+        $fill-color-danger: igx-color($palette, 'error'),
         $fill-color-warning: igx-color($palette, 'warn'),
         $fill-color-info: igx-color($palette, 'accent'),
-        $fill-color-success: $success-color,
-        $stripes-color: opacify($white, .5),
+        $fill-color-success: igx-color($palette, 'success'),
+        $stripes-color: rgba($white, .5),
         $text-color: igx-color($palette, 'grays', 800)
     );
 
