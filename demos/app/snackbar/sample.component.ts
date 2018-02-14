@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { IgxSnackbar } from "../../lib/main";
+import { IgxSnackbarComponent } from "../../lib/main";
 
 @Component({
     selector: "snackbar-sample",
@@ -18,7 +18,7 @@ export class IgxSnackbarSampleComponent implements OnInit {
         this._colors = [];
     }
 
-    public changeColor(snackbar: IgxSnackbar) {
+    public changeColor(snackbar: IgxSnackbarComponent) {
         const characters = "0123456789ABCDEF";
         let color = "#";
 

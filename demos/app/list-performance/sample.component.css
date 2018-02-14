@@ -1,0 +1,25 @@
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 34px;
+}
+
+.item > [igxLabel],
+.item > .person {
+    position: absolute;
+    margin-left: 72px;
+}
+
+.item igx-icon {
+    color: lightgray;
+}
+
+.item igx-icon.favorite {
+    color: orange;
+}
+
+.item .delete-item:hover {
+    color: crimson;
+    cursor: pointer;
+}

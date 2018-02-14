@@ -1,0 +1,36 @@
+<div class="list-sample">
+    <article class="sample-column">
+            <span>Vertical Virtualization</span>
+            <br/>
+            <div style='height:500px;'>
+              <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical
+                [igxForScrollOrientation]="'vertical'"
+                [igxForContainerSize]='"500px"'
+                [igxForItemSize]='"50px"'
+                let-rowIndex="index">
+                <div style='height:50px;'>{{rowIndex}} : {{item.text}}</div>
+                </ng-template>
+            </div>
+            <button (click)="scrNextRow()">Scroll Next Row</button>
+            <button (click)="scrPrevRow()">Scroll Prev Row</button>
+    </article>
+    <article class="sample-column">
+            <span>Horizontal Virtualization</span>
+            <br/>
+            <table> 
+                <tbody style='display:grid;'>
+                <tr style='width:500px; height:118px;'>               
+                    <ng-template igxFor let-item [igxForOf]="data" #virtDirHorizontal
+                        [igxForScrollOrientation]="'horizontal'"
+                        [igxForContainerSize]='"500px"'
+                        [igxForScrollContainer]="parentVirtDir"
+                        let-rowIndex="index">
+                            <td  [style.width.px]='item.width' style='height:100px;'>{{rowIndex}} : {{item.text}}</td>
+                        </ng-template>
+                </tr>
+                </tbody>
+            </table>
+            <button (click)="scrNextCol()">Scroll Next Column</button>
+            <button (click)="scrPrevCol()">Scroll Prev Column</button>
+    </article>
+</div>
