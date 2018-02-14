@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { IgxDatePickerModule } from "../date-picker/date-picker.component";
 import { IgxButtonModule } from "../directives/button/button.directive";
+import { IgxForOfModule } from "../directives/for-of/for_of.directive";
 import { IgxInputModule } from "../directives/input/input.directive";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxIconModule } from "../icon/icon.component";
@@ -57,8 +58,10 @@ import { IgxGridRowComponent } from "./row.component";
     IgxDatePickerModule,
     IgxIconModule,
     IgxRippleModule,
-    IgxInputModule
-  ]
+    IgxInputModule,
+    IgxForOfModule
+  ],
+  providers: [IgxGridAPIService]
 })
 export class IgxGridModule {
   public static forRoot() {
