@@ -18,7 +18,7 @@ export * from "./data-operations/data-util";
 export * from "./data-operations/data-container";
 export * from "./grid/";
 
-export * from "./navigation-drawer/navigation-drawer.component";
+export * from "./navigation-drawer";
 export * from "./icon/icon.component";
 export * from "./directives/button/button.directive";
 export * from "./directives/filter/filter.directive";

@@ -6,7 +6,6 @@ import {
     HostBinding,
     Inject,
     Input,
-    NgModule,
     OnChanges,
     OnDestroy,
     OnInit,
@@ -73,7 +72,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
 
     /**
      * Minimum device width required for automatic pin to be toggled.
-     * Deafult is 1024, can be set to falsy value to ignore.
+     * Default is 1024, can be set to falsy value to ignore.
      */
     @Input() public pinThreshold = 1024;
 
@@ -591,11 +590,4 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
         this.elementRef.nativeElement.removeEventListener("transitionend", this.toggleClosedEvent, false);
         this.closed.emit("closed");
     }
-}
-
-@NgModule({
-    declarations: [IgxNavigationDrawerComponent],
-    exports: [IgxNavigationDrawerComponent]
-})
-export class IgxNavigationDrawerModule {
 }
