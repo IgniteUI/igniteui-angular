@@ -17,7 +17,8 @@ export class AppComponent {
         pin: false,
         pinThreshold: 768,
         position: "left",
-        width: "242px"
+        width: "242px",
+        miniWidth: "80px"
     };
 
     constructor(private router: Router) {}

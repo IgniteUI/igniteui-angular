@@ -113,7 +113,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     private _resizeObserver: Subscription;
     private css: { [name: string]: string; } = {
         drawer: "igx-nav-drawer__aside",
-        mini: ".igx-nav-drawer__aside--mini",
+        mini: "igx-nav-drawer__aside--mini",
         miniProjection: ".igx-drawer-mini-content",
         overlay: "igx-nav-drawer__overlay",
         styleDummy: "igx-nav-drawer__style-dummy"

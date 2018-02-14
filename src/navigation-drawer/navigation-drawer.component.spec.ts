@@ -276,7 +276,7 @@ describe("Navigation Drawer", () => {
             });
          }, 10000);
 
-        fit("should update edge zone with mini width", async(() => {
+        it("should update edge zone with mini width", async(() => {
             const template = `<igx-nav-drawer [miniWidth]="drawerMiniWidth">
                                 <div class="igx-drawer-content"></div><div class="igx-drawer-mini-content"></div>
                               </igx-nav-drawer>`;
