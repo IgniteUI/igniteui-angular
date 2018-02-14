@@ -3,7 +3,7 @@ import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { IgxTabBarComponent, IgxTabBarModule, IgxTabComponent, IgxTabPanelComponent, IgxTabTemplateDirective } from "./tabbar.component";
 
-fdescribe("TabBar", () => {
+describe("TabBar", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [TabBarTestComponent, BottomTabBarTestComponent, TemplatedTabBarTestComponent],
@@ -134,7 +134,7 @@ fdescribe("TabBar", () => {
 
         fixture.detectChanges();
 
-        let tabs: IgxTabComponent[] = tabbar.tabs.toArray();
+        const tabs: IgxTabComponent[] = tabbar.tabs.toArray();
 
         expect(tabbar.tabs.length).toBe(3);
 

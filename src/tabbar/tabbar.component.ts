@@ -103,7 +103,7 @@ export class IgxTabBarComponent implements AfterViewInit {
     templateUrl: "tab-panel.component.html"
 })
 
-export class IgxTabPanelComponent implements AfterContentInit{
+export class IgxTabPanelComponent implements AfterContentInit {
     private _itemStyle = "igx-tab-panel";
     public isSelected = false;
 
@@ -156,7 +156,6 @@ export class IgxTabPanelComponent implements AfterContentInit{
 
     @ContentChild(IgxTabTemplateDirective, { read: IgxTabTemplateDirective })
     protected tabTemplate: IgxTabTemplateDirective;
-
 
     constructor(private _tabBar: IgxTabBarComponent) {
     }
@@ -223,7 +222,6 @@ export class IgxTabComponent {
         this.relatedPanel.select();
     }
 }
-
 
 @NgModule({
     declarations: [IgxTabBarComponent, IgxTabPanelComponent, IgxTabComponent, IgxTabTemplateDirective],
