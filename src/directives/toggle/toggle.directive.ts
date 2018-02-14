@@ -154,7 +154,7 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
     }
 
     private _handler;
-    private _target: IToggleView;
+    private _target: IToggleView | string;
 
     constructor(private element: ElementRef, @Optional() private navigationService: IgxNavigationService) { }
 
