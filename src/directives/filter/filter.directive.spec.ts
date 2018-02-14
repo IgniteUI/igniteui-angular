@@ -1,10 +1,9 @@
 import { Component, ContentChildren, ViewChild } from "@angular/core";
 import { async, ComponentFixtureAutoDetect, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxListComponent, IgxListModule } from "../../list/list.component";
 import { IgxListItemComponent } from "../../list/list-item.component";
+import { IgxListComponent, IgxListModule } from "../../list/list.component";
 import { IgxFilterDirective, IgxFilterModule, IgxFilterOptions, IgxFilterPipe } from "./filter.directive";
-
 
 describe("Filter", () => {
     beforeEach(async(() => {
