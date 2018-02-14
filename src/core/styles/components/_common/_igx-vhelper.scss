@@ -1,0 +1,42 @@
+%vhelper-display {
+    display: block;
+    overflow: auto;
+}
+
+%vhelper--vertical {
+    width: 17px;
+    height: calc(100% - 17px);
+    float: right;
+}
+
+%vhelper--horizontal {
+    width: calc(100% - 17px);
+}
+
+%vhelper-content--vertical {
+    width: 1px;
+}
+
+%vhelper-content--horizontal {
+    height: 1px;
+}
+
+@include b(igx-vhelper) {
+    @include m(vertical) {
+        @extend %vhelper-display !optional;
+        @extend %vhelper--vertical !optional;
+
+        @include e(placeholder-content) {
+            @extend %vhelper-content--vertical !optional;
+        }
+    }
+
+    @include m(horizontal) {
+        @extend %vhelper-display !optional;
+        @extend %vhelper--horizontal !optional;
+
+        @include e(placeholder-content) {
+            @extend %vhelper-content--horizontal !optional;
+        }
+    }
+}

@@ -42,6 +42,7 @@ Current list of controls include:
 | **switch**            | Available | [Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/src/switch/README.md)                        |     |               |               |                                                                                                    |
 | **tabbar**            | Available | [Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/src/tabbar/README.md)                        |     |               |               |                                                                                                    |
 | **toast**             | Available | [Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/src/toast/README.md)                         |     |               |               |                                                                                                    |
+| **toggle**             | Available | [Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/src/directives/README-TOGGLE.md)                         |     |               |               |                                                                                                    |
 
 ## Setup
 From the root folder run:
@@ -95,6 +96,7 @@ Run the following command from the root directory of your repository.
 This will open the demos application in your preferred browser. Any changes in the
 application code will trigger a rebuild of the application.
 ```
+cd ..
 npm run start:demos
 ```
 

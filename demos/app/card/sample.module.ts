@@ -3,11 +3,11 @@ import { NgModule } from "@angular/core";
 
 import {
     IgxAvatarModule,
-    IgxButton,
+    IgxButtonDirective,
     IgxButtonModule,
     IgxCardModule,
     IgxIconModule,
-    IgxList,
+    IgxListComponent,
     IgxListModule,
     IgxRippleModule
 } from "../../lib/main";
