@@ -140,11 +140,13 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
     public closeOnOutsideClick = true;
 
     @Input("igxToggleAction")
-    set target(target) {
-        this._target = target;
+    set target(target: any) {
+        if (target !== null && target !== "") {
+            this._target = target;
+        }
     }
 
-    get target() {
+    get target(): any {
         if (typeof this._target === "string") {
             return this.navigationService.get(this._target);
         }
