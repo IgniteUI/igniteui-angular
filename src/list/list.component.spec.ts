@@ -1,13 +1,13 @@
 import { Component, ContentChildren, QueryList, ViewChild } from "@angular/core";
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { IgxListItemComponent } from "./list-item.component";
 import { IgxListPanState } from "./list.common";
 import { IgxListComponent, IgxListModule } from "./list.component";
-import { IgxListItemComponent } from "./list-item.component";
 
 declare var Simulator: any;
 
-fdescribe("List", () => {
+describe("List", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ListTestComponent, ListWithPanningAllowedComponent,
@@ -23,7 +23,7 @@ fdescribe("List", () => {
 
         expect(list).toBeDefined();
         expect(list instanceof IgxListComponent).toBeTruthy();
-        expect(list.innerStyle).toBe("igx-list");
+        expect(list.innerStyle).toBe("igx-list-empty");
         expect(list.items instanceof Array).toBeTruthy();
         expect(list.items.length).toBe(0);
         expect(list.headers instanceof Array).toBeTruthy();
@@ -31,6 +31,7 @@ fdescribe("List", () => {
 
         fixture.detectChanges();
         expect(list.items instanceof Array).toBeTruthy();
+        expect(list.innerStyle).toBe("igx-list");
         expect(list.items.length).toBe(3);
         expect(list.items[0] instanceof IgxListItemComponent).toBeTruthy();
         expect(list.headers instanceof Array).toBeTruthy();
@@ -237,9 +238,8 @@ fdescribe("List", () => {
     it("should fire ItemClicked on click.", (done) => {
         let fixture;
         let list: IgxListComponent;
-        let itemElement;
         let listItem: IgxListItemComponent;
-        let timesCalled: number = 0;
+        let timesCalled = 0;
 
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(ListTestComponent);
@@ -249,27 +249,26 @@ fdescribe("List", () => {
             return fixture.whenStable();
         }).then(() => {
 
-            list.onItemClicked.subscribe(value =>
-                {
+            list.onItemClicked.subscribe((value) => {
                     timesCalled++;
                     listItem = value.item;
                 });
 
             return clickItem(list.items[0]);
-        }).then(()=> {
+        }).then(() => {
             expect(timesCalled).toBe(1);
             expect(listItem.index).toBe(1);
             expect(listItem.element.textContent.trim()).toBe("Item 1");
 
-            //Click the same item again and verify click is fired again
+            // Click the same item again and verify click is fired again
             return clickItem(list.items[0]);
-        }).then(()=> {
+        }).then(() => {
             expect(timesCalled).toBe(2);
             expect(listItem.index).toBe(1);
 
-            //Click the header and verify click is fired
+            // Click the header and verify click is fired
             return clickItem(list.headers[0]);
-        }).then(()=> {
+        }).then(() => {
             expect(timesCalled).toBe(3);
             expect(listItem.index).toBe(0);
             expect(listItem.element.textContent.trim()).toBe("Header");
@@ -277,7 +276,7 @@ fdescribe("List", () => {
         });
     }, 5000);
 
-    fit("should display multiple headers properly.", () => {
+    it("should display multiple headers properly.", () => {
         const fixture = TestBed.createComponent(TwoHeadersListComponent);
         const list = fixture.componentInstance.list;
 
@@ -286,10 +285,10 @@ fdescribe("List", () => {
         verifyItemsCount(list, 3);
         verifyHeadersCount(list, 2);
 
-        var headerClasses = fixture.debugElement.queryAll(By.css(".igx-list__header"));
+        const headerClasses = fixture.debugElement.queryAll(By.css(".igx-list__header"));
         expect(headerClasses.length).toBe(2);
 
-        var childrenArray = list.children.toArray();
+        const childrenArray = list.children.toArray();
 
         expect(childrenArray[0].role).toBe("separator");
         expect(childrenArray[1].role).toBe("listitem");
@@ -330,7 +329,6 @@ fdescribe("List", () => {
     function clickItem(currentItem: IgxListItemComponent) {
         return Promise.resolve(currentItem.element.click());
     }
-
 
     function verifyItemsCount(list, expectedCount) {
         expect(list.items instanceof Array).toBeTruthy();
