@@ -6,13 +6,16 @@
     label {
         @extend %igx-form-label !optional;
     }
+
     @include e(clear) {
         @extend %igx-input-clear !optional;
     }
+
     @include e(clear, $m: hidden) {
         @extend %igx-input-clear !optional;
         @extend %igx-input-clear--hidden !optional;
     }
+
     @include e(input) {
         @extend %igx-form-input !optional;
 
@@ -54,14 +57,17 @@
             }
         }
     }
+
     @include e(input, $m: filled) {
         @extend %igx-form-input !optional;
+        @extend %igx-form-input--filled !optional;
 
         ~ label {
             @extend %igx-form-label--filled !optional;
             @extend %igx-form-label--float !optional;
         }
     }
+
     @include e(input, $m: focused) {
         @extend %igx-form-input !optional;
 
@@ -77,6 +83,7 @@
             @extend %igx-form-label--float !optional;
         }
     }
+
     @include e(input, $m: search) {
         @extend %igx-form-input !optional;
         @extend %igx-search-input !optional;
@@ -85,6 +92,7 @@
             @extend %igx-search-label !optional;
         }
     }
+
     @include e(textarea) {
         // @extend #{$block}__input;
         @extend %igx-textarea !optional;

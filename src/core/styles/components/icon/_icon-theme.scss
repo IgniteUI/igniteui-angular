@@ -19,7 +19,7 @@ $components: register-component($components, #{$component-name});
 
     $color: map-get($this, 'color');
     $disabled-color: igx-color($palette, 'grays', 500);
-    $igx-icon-font-size: em(24px, 16px) !default;
+    $igx-icon-font-size: rem(24px, 16px) !default;
 
     %igx-icon-display {
         display: flex;
@@ -27,6 +27,16 @@ $components: register-component($components, #{$component-name});
         position: relative;
         font-size: $igx-icon-font-size;
         justify-content: center;
+        line-height: 1;
+        text-transform: none;
+        letter-spacing: normal;
+        word-wrap: normal;
+        white-space: nowrap;
+        direction: ltr;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        -moz-osx-font-smoothing: grayscale;
+        font-feature-settings: 'liga';
     }
 
     %igx-icon--inactive {
