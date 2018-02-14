@@ -61,22 +61,33 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     public open(fireEvents?: boolean, handler?) {
         if (!this.collapsed) { return; }
+
         const player = this.animationActivation();
         player.onStart(() => this.collapsed = !this.collapsed);
+        player.onDone(() =>  {
+            player.destroy();
+            if (fireEvents) {
+                this.onOpen.emit();
+            }
+        });
+
         player.play();
-        if (fireEvents) {
-            this.onOpen.emit();
-        }
     }
 
     public close(fireEvents?: boolean, handler?) {
         if (this.collapsed) { return; }
+
         const player = this.animationActivation();
-        player.onDone(() => this.collapsed = !this.collapsed);
+        player.onDone(() => {
+            this.collapsed = !this.collapsed;
+            player.destroy();
+            if (fireEvents) {
+                this.onClose.emit();
+            }
+        });
+
         player.play();
-        if (fireEvents) {
-            this.onClose.emit();
-        }
+
     }
 
     public toggle(fireEvents?: boolean) {

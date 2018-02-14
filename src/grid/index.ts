@@ -5,6 +5,7 @@ import { IgxDatePickerModule } from "../date-picker/date-picker.component";
 import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxInputModule } from "../directives/input/input.directive";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
+import { IgxToggleModule } from "../directives/toggle/toggle.directive";
 import { IgxIconModule } from "../icon/icon.component";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
@@ -57,7 +58,8 @@ import { IgxGridRowComponent } from "./row.component";
     IgxDatePickerModule,
     IgxIconModule,
     IgxRippleModule,
-    IgxInputModule
+    IgxInputModule,
+    IgxToggleModule
   ]
 })
 export class IgxGridModule {
