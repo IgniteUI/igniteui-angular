@@ -1,7 +1,7 @@
 import { Component, DebugElement, EventEmitter, Output, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule } from "./toggle.directive";
 
 describe("IgxToggler", () => {
@@ -14,10 +14,11 @@ describe("IgxToggler", () => {
                 IgxToggleServiceInjectComponent,
                 IgxToggleTestComponent
             ],
-            imports: [BrowserAnimationsModule, IgxToggleModule]
+            imports: [NoopAnimationsModule, IgxToggleModule]
         })
         .compileComponents();
     }));
+
     it("IgxToggleDirective is defined", () => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
@@ -26,6 +27,7 @@ describe("IgxToggler", () => {
         expect(fixture.debugElement.query(By.css("ul"))).toBeDefined();
         expect(fixture.debugElement.queryAll(By.css("li")).length).toBe(4);
     });
+
     it("verify that initially toggled content is hidden", () => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
@@ -33,6 +35,7 @@ describe("IgxToggler", () => {
         expect(fixture.componentInstance.isClosed).toBe(true);
         expect(divEl.classList.contains(HIDDEN_TOGGLER_CLASS)).toBeTruthy();
     });
+
     it("should show and hide contenct according 'collapsed' attribute", () => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
@@ -46,17 +49,20 @@ describe("IgxToggler", () => {
         expect(fixture.componentInstance.isClosed).toBe(false);
         expect(divEl.classList.contains(TOGGLER_CLASS)).toBeTruthy();
     });
-    it("should emit 'onOpen' event", () => {
+
+    it("should emit 'onOpen' event", fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
 
         const toggle = fixture.componentInstance.toggle;
         spyOn(toggle.onOpen, "emit");
         toggle.open(true);
+        tick();
         fixture.detectChanges();
 
         expect(toggle.onOpen.emit).toHaveBeenCalled();
-    });
+    }));
+
     it("should emit 'onClose' event", fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
@@ -72,6 +78,7 @@ describe("IgxToggler", () => {
 
         expect(toggle.onClose.emit).toHaveBeenCalled();
     }));
+
     it("should open toggle when IgxToggleActionDiretive is clicked and toggle is closed", fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
         fixture.detectChanges();
@@ -107,6 +114,7 @@ describe("IgxToggler", () => {
     //         expect(t).toBeTruthy();
     //     });
     // }));
+
     it("should hide content and emit 'onClose' event when you click outside the toggler's content", fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
         fixture.detectChanges();
