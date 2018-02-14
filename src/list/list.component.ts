@@ -1,19 +1,18 @@
 import { CommonModule } from "@angular/common";
 import {
-	Component,
-	ContentChildren,
-	ElementRef,
-	EventEmitter,
-	forwardRef,
-	HostBinding,
-	Inject,
-	Input,
-	NgModule,
-	Output,
-	QueryList,
-	ViewChild,
-	TemplateRef,
-	ContentChild,
+    Component,
+    ContentChild,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    HostBinding,
+    Input,
+    NgModule,
+    Output,
+    QueryList,
+    TemplateRef,
+    ViewChild
 } from "@angular/core";
 
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
@@ -31,66 +30,78 @@ import { IgxListItemComponent } from "./list-item.component"
 	templateUrl: "list.component.html"
 })
 export class IgxListComponent {
-	@ContentChildren(forwardRef(() => IgxListItemComponent)) public children: QueryList<IgxListItemComponent>;
 
-	@Input() public allowLeftPanning: boolean = false;
-	@Input() public allowRightPanning: boolean = false;
+    constructor(private element: ElementRef) {
+    }
 
-	@ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective })
-	public emptyListTemplate: IgxEmptyListTemplateDirective;
+	@ContentChildren(forwardRef(() => IgxListItemComponent))
+	public children: QueryList<IgxListItemComponent>;
 
-	@ViewChild("defaultEmptyList", { read: TemplateRef })
-	protected defaultEmptyListTemplate: TemplateRef<any>;
+    @ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective })
+    public emptyListTemplate: IgxEmptyListTemplateDirective;
 
-	@Output() public onLeftPan = new EventEmitter();
-	@Output() public onRightPan = new EventEmitter();
-	@Output() public onPanStateChange = new EventEmitter();
+    @ViewChild("defaultEmptyList", { read: TemplateRef })
+    protected defaultEmptyListTemplate: TemplateRef<any>;
 
-	@Output() public onItemClicked = new EventEmitter();
+	@Input()
+	public allowLeftPanning = false;
+	@Input()
+	public allowRightPanning = false;
 
-	constructor(private element: ElementRef) {
-	}
+	@Output()
+	public onLeftPan = new EventEmitter();
+	@Output()
+	public onRightPan = new EventEmitter();
+	@Output()
+	public onPanStateChange = new EventEmitter();
+	@Output()
+	public onItemClicked = new EventEmitter();
 
-	@HostBinding("class")
-	public get innerStyle(): string {
-		return this.children.length === 0 ? "igx-list-empty" : "igx-list";
-	}
+	@HostBinding("attr.role")
+	public get role() {
+        return "list";
+    }
 
-	public get items(): IgxListItemComponent[] {
-		const items: IgxListItemComponent[] = [];
-		if (this.children !== undefined) {
-			for (const child of this.children.toArray()) {
-				if (!child.isHeader) {
-					items.push(child);
-				}
-			}
-		}
+    @HostBinding("class")
+    public get innerStyle(): string {
+        return !this.children || this.children.length === 0 ? "igx-list-empty" : "igx-list";
+    }
 
-		return items;
-	}
+    public get items(): IgxListItemComponent[] {
+        const items: IgxListItemComponent[] = [];
+        if (this.children !== undefined) {
+            for (const child of this.children.toArray()) {
+                if (!child.isHeader) {
+                    items.push(child);
+                }
+            }
+        }
 
-	public get headers(): IgxListItemComponent[] {
-		const headers: IgxListItemComponent[] = [];
-		if (this.children !== undefined) {
-			for (const child of this.children.toArray()) {
-				if (child.isHeader) {
-					headers.push(child);
-				}
-			}
-		}
+        return items;
+    }
 
-		return headers;
-	}
+    public get headers(): IgxListItemComponent[] {
+        const headers: IgxListItemComponent[] = [];
+        if (this.children !== undefined) {
+            for (const child of this.children.toArray()) {
+                if (child.isHeader) {
+                    headers.push(child);
+                }
+            }
+        }
 
-	get context(): any {
-		return {
-			$implicit: this
-		};
-	}
+        return headers;
+    }
 
-	get template() : TemplateRef<any> {
-		return this.emptyListTemplate ? this.emptyListTemplate.template : this.defaultEmptyListTemplate;
-	}
+    public get context(): any {
+        return {
+            $implicit: this
+        };
+    }
+
+    public get template(): TemplateRef<any> {
+        return this.emptyListTemplate ? this.emptyListTemplate.template : this.defaultEmptyListTemplate;
+    }
 }
 
 @NgModule({

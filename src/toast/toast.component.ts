@@ -1,6 +1,17 @@
 import { animate, state, style, transition, trigger } from "@angular/animations";
 import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, Input, NgModule, Output } from "@angular/core";
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    NgModule,
+    OnDestroy,
+    OnInit,
+    Optional,
+    Output
+} from "@angular/core";
+import { IgxNavigationService, IToggleView } from "../core/navigation";
 
 /**
  * IgxToast provides information and warning messages. They could not be dismissed, are non-interactive and can appear
@@ -23,12 +34,18 @@ import { Component, EventEmitter, Input, NgModule, Output } from "@angular/core"
     selector: "igx-toast",
     templateUrl: "toast.component.html"
 })
-export class IgxToastComponent {
+export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
     public readonly CSS_CLASSES = {
         IGX_TOAST_BOTTOM: "igx-toast--bottom",
         IGX_TOAST_MIDDLE: "igx-toast--middle",
         IGX_TOAST_TOP: "igx-toast--top"
     };
+
+    /**
+     * Identifier of the component
+     * @type {string}
+     */
+    @Input() public id: string;
 
     /**
      * Event is thrown prior toast is shown
@@ -99,7 +116,18 @@ export class IgxToastComponent {
     @Input()
     public position: IgxToastPosition = IgxToastPosition.Bottom;
 
+    /**
+     * Return the nativeElement of the component
+     */
+    public get element() {
+        return this.elementRef.nativeElement;
+    }
+
     private timeoutId;
+
+    constructor(
+        private elementRef: ElementRef,
+        @Optional() private navService: IgxNavigationService) { }
 
     /**
      * Shows the IgxToast component and hides it after some time span
@@ -130,6 +158,27 @@ export class IgxToastComponent {
         clearInterval(this.timeoutId);
     }
 
+    /**
+     * Wraps @show() method due @IToggleView interface implementation.
+     */
+    public open() {
+        this.show();
+    }
+
+    /**
+     * Wraps @hide() method due @IToggleView interface implementation.
+     */
+    public close() {
+        this.hide();
+    }
+
+    /**
+     * Invoke @close() or @open() method depending on the state of the component.
+     */
+    public toggle() {
+        this.isVisible ? this.close() : this.open();
+    }
+
     public mapPositionToClassName(): any {
         if (this.position === IgxToastPosition.Top) {
             return this.CSS_CLASSES.IGX_TOAST_TOP;
@@ -141,6 +190,18 @@ export class IgxToastComponent {
 
         if (this.position === IgxToastPosition.Bottom) {
             return this.CSS_CLASSES.IGX_TOAST_BOTTOM;
+        }
+    }
+
+    public ngOnInit() {
+        if (this.navService && this.id) {
+            this.navService.add(this.id, this);
+        }
+    }
+
+    public ngOnDestroy() {
+        if (this.navService && this.id) {
+            this.navService.remove(this.id);
         }
     }
 }
