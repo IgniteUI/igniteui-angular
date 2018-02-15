@@ -49,29 +49,32 @@ const config = {
 
             {
                 test: /\.scss$/,
-                use: [{
-                    loader: "style-loader" // creates style nodes from JS strings
-                }, {
-                    loader: "css-loader", options: {
-                        sourceMap: true
-                    } // translates CSS into CommonJS
-                }, {
-                    loader: "postcss-loader", options: {
-                        ident: "postcss",
-                        sourceMap: true,
-                        plugins: [
-                            require('autoprefixer')({
-                                browsers: ["last 5 versions", "> 3%"],
-                                cascade: false,
-                                grid: true
-                            })
-                        ]
+                use: [
+                    {
+                        loader: "style-loader"
+                    },
+                    {
+                        loader: "css-loader",
+                        options: {
+                            sourceMap: true
+                        }
+                    },
+                    {
+                        loader: "postcss-loader",
+                        options: {
+                            sourceMap: true,
+                            config: {
+                                path: path.resolve(__dirname, "./postcss.config.js")
+                            }
+                        }
+                    },
+                    {
+                        loader: "sass-loader",
+                        options: {
+                            sourceMap: true
+                        }
                     }
-                }, {
-                    loader: "sass-loader", options: {
-                        sourceMap: true
-                    } // compiles Sass to CSS
-                }]
+                ]
             },
 
             {
