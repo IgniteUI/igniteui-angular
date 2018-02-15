@@ -1,6 +1,7 @@
 import {
     AfterContentInit,
     Component,
+    ContentChild,
     ElementRef,
     EventEmitter,
     HostBinding,
@@ -12,7 +13,8 @@ import {
     Optional,
     Output,
     Renderer,
-    SimpleChange
+    SimpleChange,
+    TemplateRef
 } from "@angular/core";
 import "rxjs/add/observable/fromEvent";
 import "rxjs/add/observable/interval";
@@ -22,6 +24,7 @@ import { Subscription } from "rxjs/Subscription";
 import { BaseComponent } from "../core/base";
 import { IgxNavigationService, IToggleView } from "../core/navigation";
 import { HammerGesturesManager } from "../core/touch";
+import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from "./navigation-drawer.directives";
 
 /**
  * Navigation Drawer component supports collapsible side navigation container.
@@ -106,14 +109,26 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     /** Event fired when the Navigation Drawer has closed. */
     @Output() public closed = new EventEmitter();
 
-    public _hasMimiTempl = false;
+    get template() {
+        if (this.miniTemplate && !this.isOpen) {
+            return this.miniTemplate.template;
+        } else if (this.contentTemplate) {
+            return this.contentTemplate.template;
+        }
+    }
+
+    @ContentChild(IgxNavDrawerMiniTemplateDirective, { read: IgxNavDrawerMiniTemplateDirective })
+    public miniTemplate: IgxNavDrawerMiniTemplateDirective;
+
+    @ContentChild(IgxNavDrawerTemplateDirective, { read: IgxNavDrawerTemplateDirective })
+    protected contentTemplate: IgxNavDrawerTemplateDirective;
+
     private _gesturesAttached = false;
     private _widthCache: { width: number, miniWidth: number } = { width: null, miniWidth: null };
     private _resizeObserver: Subscription;
     private css: { [name: string]: string; } = {
         drawer: "igx-nav-drawer__aside",
         mini: "igx-nav-drawer__aside--mini",
-        miniProjection: ".igx-drawer-mini-content",
         overlay: "igx-nav-drawer__overlay",
         styleDummy: "igx-nav-drawer__style-dummy"
     };
@@ -151,7 +166,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
      * Property to decide whether to change width or translate the drawer from pan gesture.
      */
     public get hasAnimateWidth(): boolean {
-        return this.pin || this._hasMimiTempl;
+        return this.pin || !!this.miniTemplate;
     }
 
     private _maxEdgeZone = 50;
@@ -207,7 +222,6 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
 
     public ngAfterContentInit() {
         // wait for template and ng-content to be ready
-        this._hasMimiTempl = this.getChild(this.css.miniProjection) !== null;
         this.updateEdgeZone();
         this.checkPinThreshold();
 
@@ -321,7 +335,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
         }
 
         this.isOpen = false;
-        this.setDrawerWidth(this._hasMimiTempl ? this.miniWidth : "");
+        this.setDrawerWidth(this.miniTemplate ? this.miniWidth : "");
         this.elementRef.nativeElement.addEventListener("transitionend", this.toggleClosedEvent, false);
     }
 
@@ -343,7 +357,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
      */
     protected getExpectedWidth(mini?: boolean): number {
         if (mini) {
-            if (!this._hasMimiTempl) {
+            if (!this.miniTemplate) {
                 return 0;
             }
             if (this.miniWidth) {
@@ -425,7 +439,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     private updateEdgeZone() {
         let maxValue;
 
-        if (this._hasMimiTempl) {
+        if (this.miniTemplate) {
             maxValue = Math.max(this._maxEdgeZone, this.getExpectedWidth(true) * 1.1);
             this.set_maxEdgeZone(maxValue);
         }
