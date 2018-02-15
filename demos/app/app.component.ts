@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output, ViewChild } from "@angular/core";
 import { NavigationStart, Router } from "@angular/router";
 import "rxjs/add/operator/filter";
 import { IgxNavigationDrawerComponent, IgxNavigationDrawerModule } from "../lib/main";
+import "../style/igniteui-theme.scss";
 
 @Component({
     selector: "sample-app",
@@ -20,7 +21,7 @@ export class AppComponent {
         width: "242px"
     };
 
-    constructor(private router: Router) {}
+    constructor(private router: Router) { }
     public ngOnInit(): void {
         this.router.events
             .filter((x) => x instanceof NavigationStart)
