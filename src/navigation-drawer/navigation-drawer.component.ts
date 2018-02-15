@@ -31,13 +31,14 @@ import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from
  * Usage:
  * ```
  * <igx-nav-drawer id="ID" (event output bindings) [input bindings]>
- *  <div class="igx-drawer-content">
+ *  <ng-template igxDrawer>
  *   <!-- expanded template -->
- *  </div>
+ *  </ng-template>
  * </igx-nav-drawer>
  * ```
- * Can also include an optional `<div class="igx-drawer-mini-content">`.
- * ID required to register with NavigationService allow directives to target the control.
+ * Can also include an optional `<ng-template igxDrawerMini>`.
+ * Items inside can be styled with `igxDrawerItem` directive.
+ * ID required to register with provided `IgxNavigationService` allow directives to target the control from other template files.
  */
 @Component({
     providers: [HammerGesturesManager],
@@ -70,7 +71,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     /** State of the drawer. */
     @Input() public isOpen = false;
 
-    /** Pinned state of the drawer. Currently only support  */
+    /** Pinned state of the drawer. May require additional layout styling. */
     @Input() public pin = false;
 
     /**
