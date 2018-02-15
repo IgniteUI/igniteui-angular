@@ -545,6 +545,129 @@ describe("IgxVirtual directive - simple template", () => {
         expect(rowsRendered.length).toBe(8);
         expect(colsRendered.length).toBe(4);
     });
+
+    it("should scroll down when using touch events", () => {
+        const fix = TestBed.createComponent(VirtualComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+
+        let rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        for (let i = 0; i < rowsRendered.length; i++) {
+            // Check only the second col, no need for the others
+            expect(rowsRendered[i].children[1].textContent)
+                .toBe(fix.componentInstance.data[i][1].toString());
+        }
+
+        expect(() => {
+            fix.componentInstance.parentVirtDir.testOnTouchStart();
+            fix.componentInstance.parentVirtDir.testOnTouchMove(0, 500);
+            // Trigger onScroll
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        for (let i = 0; i < rowsRendered.length; i++) {
+            // Check only the second col, no need for the others
+            expect(rowsRendered[i].children[1].textContent)
+                .toBe(fix.componentInstance.data[10 + i][1].toString());
+        }
+    });
+
+    it("should scroll left when using touch events", () => {
+        const fix = TestBed.createComponent(VirtualComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("igx-horizontal-virtual-helper");
+
+        let rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        for (let i = 0; i < rowsRendered.length; i++) {
+            // Check only the second col, no need for the others
+            expect(rowsRendered[i].children[1].textContent)
+                .toBe(fix.componentInstance.data[i][1].toString());
+        }
+
+        expect(() => {
+            fix.componentInstance.parentVirtDir.testOnTouchStart();
+            fix.componentInstance.parentVirtDir.testOnTouchMove(1000, 0);
+            // Trigger onScroll
+            fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        for (let i = 0; i < rowsRendered.length; i++) {
+            // Check only the second col, no need for the others
+            expect(rowsRendered[i].children[1].textContent)
+                .toBe(fix.componentInstance.data[i][5].toString());
+        }
+    });
+
+    it("should load next row and remove first row when using scrollNext method", () => {
+        const fix = TestBed.createComponent(VirtualComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+
+        let rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        for (let i = 0; i < rowsRendered.length; i++) {
+            // Check only the second col, no need for the others
+            expect(rowsRendered[i].children[1].textContent)
+                .toBe(fix.componentInstance.data[i][1].toString());
+        }
+
+        expect(() => {
+            fix.componentInstance.parentVirtDir.testScrollNext();
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        for (let i = 0; i < rowsRendered.length; i++) {
+            // Check only the second col, no need for the others
+            expect(rowsRendered[i].children[1].textContent)
+                .toBe(fix.componentInstance.data[1 + i][1].toString());
+        }
+    });
+
+    it("should load previous row and remove last row when using scrollPrev method", () => {
+        const fix = TestBed.createComponent(VirtualComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+
+        /** Step 1. Scroll down 500px first so we then have what to load previously */
+        expect(() => {
+            fix.componentInstance.scrollTop(500);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        let rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        for (let i = 0; i < rowsRendered.length; i++) {
+            // Check only the second col, no need for the others
+            expect(rowsRendered[i].children[1].textContent)
+                .toBe(fix.componentInstance.data[10 + i][1].toString());
+        }
+
+        /** Step 2. Execute scrollPrev to load previous row */
+        expect(() => {
+            fix.componentInstance.parentVirtDir.testScrollPrev();
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        for (let i = 0; i < rowsRendered.length; i++) {
+            // Check only the second col, no need for the others
+            expect(rowsRendered[i].children[1].textContent)
+                .toBe(fix.componentInstance.data[9 + i][1].toString());
+        }
+    });
 });
 
 /** igxFor for testing */
@@ -558,6 +681,14 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         public changeDet: ChangeDetectorRef,
         public zone: NgZone) {
         super(viewContainer, template, differs, fResolver, changeDet, zone);
+    }
+
+    public testScrollPrev() {
+        super.scrollPrev();
+    }
+
+    public testScrollNext() {
+        super.scrollNext();
     }
 
     public testOnScroll(target) {
@@ -575,6 +706,23 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
     public testOnWheel(_deltaX: number, _deltaY: number) {
         const event = new WheelEvent("wheel", {deltaX: _deltaX, deltaY: _deltaY});
         super.onWheel(event);
+    }
+
+    public testOnTouchStart() {
+        const touchEventObject = {
+            changedTouches: [{screenX: 200, screenY: 200}]
+        };
+
+        super.onTouchStart(touchEventObject);
+    }
+
+    public testOnTouchMove(movedX: number, movedY: number) {
+        const touchEventObject = {
+            changedTouches: [{screenX: 200 - movedX, screenY: 200 - movedY}],
+            preventDefault: () => {}
+        };
+
+        super.onTouchMove(touchEventObject);
     }
 
     public testApplyChanges(changes: IterableChanges<T>) {
