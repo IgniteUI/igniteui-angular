@@ -1,48 +1,61 @@
+@import '../grid-filtering/grid-filtering-component';
+@import '../grid-filtering/grid-filtering-theme';
+
 $component-name: 'igx-grid';
 
 $components: register-component($components, #{$component-name});
 
 @function igx-grid-theme(
-    $background: null,
-    $cell-text-color: null,
-    $heading-text-color: null,
-    $row-border-color: null,
-    $row-hover-background: null,
+    $header-background: null,
+    $header-text-color: null,
+
+    $content-background: null,
+    $content-text-color: null,
+
     $row-selected-background: null,
     $row-selected-text-color: null,
+    $row-hover-background: null,
+    $row-border-color: null,
+
     $cell-selected-background: null,
     $cell-selected-text-color: null
 ) {
-
-    @if (
-        not($cell-text-color)
-        or $cell-text-color != igx-color($default-palette, 'grays', 800))
-        and $background {
-        $cell-text-color: text-contrast($background);
+    @if not($header-text-color) and $header-background {
+        $header-text-color: text-contrast($header-background);
     }
 
-    @if (
-        not($cell-selected-text-color)
-        or $cell-selected-text-color != igx-contrast-color($default-palette, 'accent'))
-        and $cell-selected-background {
+    @if not($content-text-color) and $content-background {
+        $content-text-color: text-contrast($content-background);
+    }
+
+    @if not($cell-selected-text-color) and $cell-selected-background {
         $cell-selected-text-color: text-contrast($cell-selected-background);
     }
 
-    @if (
-        not($row-selected-text-color)
-        or $row-selected-text-color != igx-color($default-palette, 'grays', 900))
-        and $row-selected-background {
+    @if not($row-selected-text-color) and $row-selected-background {
         $row-selected-text-color: text-contrast($row-selected-background);
     }
 
+    @if not($row-hover-background) and $content-background {
+        $row-hover-background: rgba(text-contrast($content-background), .08)
+    }
+
+    @if not($row-border-color) and $content-background {
+        $row-border-color: rgba(text-contrast($content-background), .08)
+    }
+
     @return (
-        background: $background,
-        cell-text-color: $cell-text-color,
-        heading-text-color: $heading-text-color,
-        row-border-color: $row-border-color,
-        row-hover-background: $row-hover-background,
+        header-background: $header-background,
+        header-text-color: $header-text-color,
+
+        content-background: $content-background,
+        content-text-color: $content-text-color,
+
         row-selected-background: $row-selected-background,
         row-selected-text-color: $row-selected-text-color,
+        row-hover-background: $row-hover-background,
+        row-border-color: $row-border-color,
+
         cell-selected-background: $cell-selected-background,
         cell-selected-text-color: $cell-selected-text-color
     );
@@ -50,65 +63,99 @@ $components: register-component($components, #{$component-name});
 
 @mixin igx-grid($theme, $palette: $default-palette) {
     $default-theme: igx-grid-theme(
-        $background: $white,
-        $cell-text-color: igx-color($palette, 'grays', 800),
-        $heading-text-color: igx-color($palette, 'grays', 600),
-        $row-border-color: igx-color($palette, 'grays', 300),
-        $row-hover-background: igx-color($palette, 'grays', 100),
-        $row-selected-background: igx-color($palette, 'grays', 900),
+        $header-background: $white,
+        $header-text-color: igx-color($palette, 'grays', 600),
+
+        $content-background: $white,
+        $content-text-color: igx-color($palette, 'grays', 800),
+
+        $row-selected-background: igx-color($palette, 'grays', 800),
         $row-selected-text-color: igx-contrast-color($palette, 'grays', 900),
-        $cell-selected-background: igx-color($palette, 'accent'),
-        $cell-selected-text-color: igx-contrast-color($palette, 'accent')
+        $row-hover-background: igx-color($palette, 'grays', 100),
+        $row-border-color: igx-color($palette, 'grays', 300),
+
+        $cell-selected-background: igx-color($palette, 'primary'),
+        $cell-selected-text-color: igx-contrast-color($palette, 'primary')
     );
 
     $this: extend($default-theme, $theme);
 
+    $filtering-theme: igx-grid-filtering-theme(
+        $menu-background: map-get($this, 'content-background'),
+        $menu-button-text-color: map-get($this, 'cell-selected-background'),
+        $toggle-hover-background: map-get($this, 'row-hover-background'),
+        $toggle-active-background: map-get($this, 'cell-selected-background'),
+        $toggle-icon-filtered-color: map-get($this, 'cell-selected-background')
+    );
+
+    @include igx-grid-filtering($filtering-theme);
+
     // @debug $this;
 
     // General
-    $grid-bg: map-get($this, 'background') !default;
-    $grid-br: em(2px) !default;
+    $grid-br: 2px !default;
     $grid-shadow: $elevate-2 !default;
 
     // Caption
-    $grid-caption-fs: em(20px) !default;
-    $grid-caption-lh: em(32px) !default;
-    $grid-caption-padding: em(16px) em(24px) !default;
+    $grid-caption-fs: rem(20px) !default;
+    $grid-caption-lh: rem(32px) !default;
+    $grid-caption-padding: rem(16px) rem(24px) !default;
 
     // Heading
-    $grid-head-fs: em(12px) !default;
+    $grid-head-fs: rem(12px) !default;
     $grid-head-fw: 600 !default;
-    $grid-head-color: map-get($this, 'heading-text-color') !default;
     $grid-head-icon-size: rem(16px) !default;
     $grid-head-icon-lh: rem(16px) !default;
-    $grid-head-icon-padding: em(8px) !default;
-
-    // Row
-    $grid-row-bg: inherit !default;
-    $grid-row-bg-selected: map-get($this, 'row-selected-background') !default;
-    $grid-row-color-selected: map-get($this, 'row-selected-text-color') !default;
-    $grid-row-bb: 1px solid igx-color($palette, 'grays', 300) !default;
-    $grid-row-hover: $off-white !default;
-    $grid-row-transition: none !default;
+    $grid-head-icon-padding: rem(8px) !default;
 
     // Cell
     $grid-cell-padding: rem(16px) rem(24px) !default;
     $grid-cell-align-num: right !default;
     $grid-cell-fs: rem(13px) !default;
     $grid-cell-lh: rem(16px) !default;
-    $grid-cell-color: map-get($this, 'cell-text-color') !default;
-    $grid-cell-selected-bg: map-get($this, 'cell-selected-background') !default;
-    $grid-cell-selected-color: map-get($this, 'cell-selected-text-color') !default;
 
     %grid-display {
         display: grid;
         grid-template-rows: auto auto auto;
-        background: $grid-bg;
-        color: $grid-cell-color;
         border-radius: $grid-br;
         box-shadow: $grid-shadow;
         outline-style: none;
         overflow: hidden;
+    }
+
+    %vhelper-display {
+        &::-webkit-scrollbar {
+            width: 17px;
+            height: 17px;
+        }
+        
+        &::-webkit-scrollbar-track {
+            background: rgba(text-contrast(map-get($this, 'content-background')), .12);
+
+            /* stylelint-disable selector-pseudo-class-no-unknown */
+            &:vertical {
+                border-left: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
+                border-right: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
+            }
+
+            &:horizontal {
+                border-top: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
+                border-bottom: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
+            }
+            /* stylelint-enable */
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: rgba(text-contrast(map-get($this, 'content-background')), .24);
+
+            &:hover {
+                background: rgba(text-contrast(map-get($this, 'content-background')), .37);
+            }
+        }
+
+        &::-webkit-scrollbar-corner {
+            background: map-get($this, 'content-background');
+        }
     }
 
     %grid-caption {
@@ -126,8 +173,9 @@ $components: register-component($components, #{$component-name});
     %grid-thead,
     %grid-tfoot {
         display: block;
-        // margin-right: 16px;
-
+        background: map-get($this, 'header-background');
+        color: map-get($this, 'header-text-color');
+        
         %grid-row {
             &:hover {
                 background-color: transparent;
@@ -137,6 +185,8 @@ $components: register-component($components, #{$component-name});
 
     %grid-tbody {
         position: relative;
+        background: map-get($this, 'content-background');
+        color: map-get($this, 'content-text-color');
         overflow: hidden;
         will-change: transform;
     }
@@ -149,8 +199,8 @@ $components: register-component($components, #{$component-name});
 
     %grid-row {
         display: flex;
-        background: $grid-row-bg;
-        border-bottom: $grid-row-bb;
+        background: inherit;
+        border-bottom: 1px solid map-get($this, 'row-border-color');
         outline-style: none;
 
         &:last-of-type {
@@ -158,18 +208,16 @@ $components: register-component($components, #{$component-name});
         }
 
         &:hover {
-            background: $grid-row-hover;
+            background: map-get($this, 'row-hover-background');
         }
     }
 
     %grid-row--selected {
-        color: $grid-row-color-selected;
-        background-color: $grid-row-bg-selected;
-        border-bottom: 1px solid rgba(0, 0, 0, 0);
-        box-shadow: inset 0 3px 1px rgba(0, 0, 0, .08);
+        color: map-get($this, 'row-selected-text-color');
+        background-color: map-get($this, 'row-selected-background');
 
         &:hover {
-            background: $grid-row-bg-selected;
+            background: map-get($this, 'row-selected-background');
         }
     }
 
@@ -195,11 +243,10 @@ $components: register-component($components, #{$component-name});
     }
 
     %grid-cell--selected {
-        color: $grid-cell-selected-color;
-        background-color: $grid-cell-selected-bg !important;
+        color: map-get($this, 'cell-selected-text-color');
+        background-color: map-get($this, 'cell-selected-background') !important;
         border-bottom: 0;
         margin-bottom: -1px;
-        box-shadow: inset 0 3px 1px rgba(0, 0, 0, .12);
         z-index: 10;
     }
 

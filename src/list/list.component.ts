@@ -34,8 +34,8 @@ export class IgxListComponent {
     constructor(private element: ElementRef) {
     }
 
-	@ContentChildren(forwardRef(() => IgxListItemComponent))
-	public children: QueryList<IgxListItemComponent>;
+    @ContentChildren(forwardRef(() => IgxListItemComponent))
+    public children: QueryList<IgxListItemComponent>;
 
     @ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective })
     public emptyListTemplate: IgxEmptyListTemplateDirective;
@@ -43,22 +43,22 @@ export class IgxListComponent {
     @ViewChild("defaultEmptyList", { read: TemplateRef })
     protected defaultEmptyListTemplate: TemplateRef<any>;
 
-	@Input()
-	public allowLeftPanning = false;
-	@Input()
-	public allowRightPanning = false;
+    @Input()
+    public allowLeftPanning = false;
+    @Input()
+    public allowRightPanning = false;
 
-	@Output()
-	public onLeftPan = new EventEmitter();
-	@Output()
-	public onRightPan = new EventEmitter();
-	@Output()
-	public onPanStateChange = new EventEmitter();
-	@Output()
-	public onItemClicked = new EventEmitter();
+    @Output()
+    public onLeftPan = new EventEmitter();
+    @Output()
+    public onRightPan = new EventEmitter();
+    @Output()
+    public onPanStateChange = new EventEmitter();
+    @Output()
+    public onItemClicked = new EventEmitter();
 
-	@HostBinding("attr.role")
-	public get role() {
+    @HostBinding("attr.role")
+    public get role() {
         return "list";
     }
 
