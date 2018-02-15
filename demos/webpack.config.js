@@ -49,18 +49,29 @@ const config = {
 
             {
                 test: /\.scss$/,
-                use: [
-                    {
-                        loader: "to-string-loader",
-                    },
-                    {
-                        loader: "css-loader",
-                        options: { minimize: true }
-                    },
-                    {
-                        loader: "sass-loader"
+                use: [{
+                    loader: "style-loader" // creates style nodes from JS strings
+                }, {
+                    loader: "css-loader", options: {
+                        sourceMap: true
+                    } // translates CSS into CommonJS
+                }, {
+                    loader: "postcss-loader", options: {
+                        ident: "postcss",
+                        sourceMap: true,
+                        plugins: [
+                            require('autoprefixer')({
+                                browsers: ["last 5 versions", "> 3%"],
+                                cascade: false,
+                                grid: true
+                            })
+                        ]
                     }
-                ]
+                }, {
+                    loader: "sass-loader", options: {
+                        sourceMap: true
+                    } // compiles Sass to CSS
+                }]
             },
 
             {
@@ -102,7 +113,6 @@ const config = {
 
     devServer: {
         port: 8000,
-        host: "0.0.0.0",
         historyApiFallback: true,
         watchOptions: {
             aggregateTimeout: 30,
