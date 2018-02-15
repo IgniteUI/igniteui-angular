@@ -16,7 +16,7 @@
             <div class="list-sample">
                 <igx-list #declarativeList [igxFilter]="fo2" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)">
                     <igx-list-item [isHeader]="true">Mildly Sweet</igx-list-item>
-                    <igx-list-item [options]="{}">Red Delicious</igx-list-item>
+                    <igx-list-item>Red Delicious</igx-list-item>
                     <igx-list-item>Ambrosia</igx-list-item>
                     <igx-list-item>Rome</igx-list-item>
                     <igx-list-item [isHeader]="true">Sweet</igx-list-item>
@@ -53,11 +53,11 @@
         </article>
 
         <article class="sample-column">
-            <h4 class="sample-title">Non-header List with options</h4>
+            <h4 class="sample-title">Non-header List</h4>
             <div class="list-sample">
                 <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                     <igx-list-item [isHeader]="true">Contacts</igx-list-item>
-                    <igx-list-item *ngFor="let navItem of navItems; let index = index" [options]="options">
+                    <igx-list-item *ngFor="let navItem of navItems; let index = index">
                         <div class="item">
                             <igx-avatar [src]="navItem.avatar" roundShape="true"></igx-avatar>
                             <div class="person">
