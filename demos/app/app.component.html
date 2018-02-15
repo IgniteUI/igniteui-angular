@@ -2,57 +2,57 @@
     <igx-nav-drawer id="navdrawer" #navdrawer [enableGestures]="drawerState.enableGestures" [isOpen]="drawerState.open" [miniWidth]="drawerState.miniWidth"
         [(pin)]="drawerState.pin" [width]="drawerState.width" [position]="drawerState.position">
         <div class="igx-drawer-content">
-            <nav class="nav">
+            <nav>
                 <img class="logo" src="images/rsrcs/jsblocks-logo.svg" alt="Ignite UI for Angular Logo">
 
                 <!--Components-->
-                <span class="nav-item header" igxDrawerItem [isHeader]="true">Components</span>
+                <span igxDrawerItem [isHeader]="true">Components</span>
 
-                <span *ngFor="let item of componentLinks" class="nav-item" igxDrawerItem routerLinkActive="igx-nav-drawer-item--active" routerLink="{{item.link}}">
+                <span *ngFor="let item of componentLinks" igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
                     <igx-icon fontSet="material" name="{{item.icon}}"></igx-icon>
                     <span>{{item.name}}</span>
                 </span>
 
 
                 <!--Directives-->
-                <span class="nav-item header" igxDrawerItem >Directives</span>
+                <span igxDrawerItem [isHeader]="true">Directives</span>
 
-                <span *ngFor="let item of directiveLinks" class="nav-item" igxDrawerItem [routerLinkActive]="'active'" routerLink="{{item.link}}">
+                <span *ngFor="let item of directiveLinks" igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
                     <igx-icon fontSet="material" name="{{item.icon}}"></igx-icon>
                     <span>{{item.name}}</span>
                 </span>
 
                 <!--Style guide-->
-                <span class="nav-item header">Style</span>
+                <span igxDrawerItem [isHeader]="true">Style</span>
 
-                <span *ngFor="let item of styleLinks" class="nav-item" igxDrawerItem [routerLinkActive]="'active'" routerLink="{{item.link}}">
+                <span *ngFor="let item of styleLinks" igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
                     <igx-icon fontSet="material" name="{{item.icon}}"></igx-icon>
                     <span>{{item.name}}</span>
                 </span>
 
             </nav>
         </div>
-        <div class="igx-drawer-mini-content">
-            <nav class="nav">
-                <span class="nav-item header" igxDrawerItem>Components</span>
+        <!-- <div class="igx-drawer-mini-content">
+            <nav>
+                <span igxDrawerItem [isHeader]="true">Components</span>
 
-                <span *ngFor="let item of componentLinks" class="nav-item" igxDrawerItem [routerLinkActive]="'active'" routerLink="{{item.link}}">
+                <span *ngFor="let item of componentLinks" igxDrawerItem routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" routerLink="{{item.link}}">
                     <igx-icon fontSet="material" name="{{item.icon}}"></igx-icon>
                 </span>
 
-                <span class="nav-item header">Directives</span>
+                <span igxDrawerItem [isHeader]="true">Directives</span>
 
-                <span *ngFor="let item of directiveLinks" class="nav-item" igxDrawerItem [routerLinkActive]="'active'" routerLink="{{item.link}}">
+                <span *ngFor="let item of directiveLinks" igxDrawerItem routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" routerLink="{{item.link}}">
                     <igx-icon fontSet="material" name="{{item.icon}}"></igx-icon>
                 </span>
 
-                <span class="nav-item header">Style</span>
+                <span igxDrawerItem [isHeader]="true">Style</span>
 
-                <span *ngFor="let item of styleLinks" class="nav-item" igxDrawerItem [routerLinkActive]="'active'" routerLink="{{item.link}}">
+                <span *ngFor="let item of styleLinks" igxDrawerItem routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" routerLink="{{item.link}}">
                     <igx-icon fontSet="material" name="{{item.icon}}"></igx-icon>
                 </span>
             </nav>
-        </div>
+        </div> -->
     </igx-nav-drawer>
     <div class="content">
         <router-outlet></router-outlet>

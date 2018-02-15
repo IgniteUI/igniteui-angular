@@ -18,7 +18,7 @@ export class AppComponent {
         pinThreshold: 768,
         position: "left",
         width: "242px",
-        miniWidth: "80px"
+        // miniWidth: "80px"
     };
 
     public componentLinks = [
