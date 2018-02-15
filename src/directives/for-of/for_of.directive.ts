@@ -30,7 +30,7 @@ import {
 
 import { DisplayContainerComponent } from "./display.container";
 import { HVirtualHelperComponent } from "./horizontal.virtual.helper.component";
-import { IState } from "./IState";
+import { IForOfRemoteState } from "./IForOfRemoteState";
 import { VirtualHelperComponent } from "./virtual.helper.component";
 
 @Directive({ selector: "[igxFor][igxForOf]" })
@@ -41,7 +41,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     @Input() public igxForContainerSize: any;
     @Input() public igxForItemSize: any;
     public dc: ComponentRef<DisplayContainerComponent>;
-    public state: IState = {
+    public state: IForOfRemoteState = {
         startIndex: 0
     };
 
@@ -378,23 +378,18 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.applyPageSizeChange();
         if (this.igxForOf && this.igxForOf.length && this.dc) {
             const embeddedViewCopy = Object.assign([], this._embeddedViews);
-            if (!this.igxForRemote) {
-                const endingIndex = this._pageSize + this._currIndex;
-                for (let i = this._currIndex; i < endingIndex && this.igxForOf[i] !== undefined; i++) {
+            let startIndex = this._currIndex;
+            let endIndex =  this._pageSize + this._currIndex;
+            if (this.igxForRemote) {
+                startIndex = 0;
+                endIndex = this.igxForOf.length;
+            }
+            for (let i = startIndex; i < endIndex && this.igxForOf[i] !== undefined; i++) {
                     const input = this.igxForOf[i];
                     const embView = embeddedViewCopy.shift();
                     const cntx = (embView as EmbeddedViewRef<any>).context;
                     cntx.$implicit = input;
                     cntx.index = this.igxForOf.indexOf(input);
-                }
-            } else {
-                for (let i = 0; i < this.igxForOf.length && this.igxForOf[i] !== undefined; i++) {
-                    const input = this.igxForOf[i];
-                    const embView = embeddedViewCopy.shift();
-                    const cntx = (embView as EmbeddedViewRef<any>).context;
-                    cntx.$implicit = input;
-                    cntx.index = this.igxForOf.indexOf(input);
-                }
             }
             this.onChunkLoaded.emit();
             this.dc.changeDetectorRef.detectChanges();

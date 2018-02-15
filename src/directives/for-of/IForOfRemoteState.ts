@@ -1,4 +1,4 @@
-export declare interface IState {
+export declare interface IForOfRemoteState {
     startIndex?: number;
     endIndex?: number;
     totalCount?: number;

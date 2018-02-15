@@ -9,7 +9,7 @@ import {
     IgxListPanState,
     IgxRippleModule,
     IgxForOfDirective,
-    IState
+    IForOfRemoteState
 } from "../../lib/main";
 
 
@@ -24,7 +24,7 @@ export class RemoteService {
         this.remoteData = this._remoteData.asObservable();
     }
 
-    public getData(data?: IState, cb?: () => void): any {
+    public getData(data?: IForOfRemoteState, cb?: () => void): any {
         var dataState = data;
         return this.http
             .get(this.buildUrl(dataState))
