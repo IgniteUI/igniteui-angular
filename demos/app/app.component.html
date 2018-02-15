@@ -32,27 +32,23 @@
 
             </nav>
         </ng-template>
-        <!-- <ng-template igxDrawerMini>
-            <nav>
-                <span igxDrawerItem [isHeader]="true">Components</span>
 
+         <ng-template igxDrawerMini>
+            <nav>
                 <span *ngFor="let item of componentLinks" igxDrawerItem routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" routerLink="{{item.link}}">
                     <igx-icon fontSet="material" name="{{item.icon}}"></igx-icon>
                 </span>
-
-                <span igxDrawerItem [isHeader]="true">Directives</span>
 
                 <span *ngFor="let item of directiveLinks" igxDrawerItem routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" routerLink="{{item.link}}">
                     <igx-icon fontSet="material" name="{{item.icon}}"></igx-icon>
                 </span>
 
-                <span igxDrawerItem [isHeader]="true">Style</span>
-
                 <span *ngFor="let item of styleLinks" igxDrawerItem routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" routerLink="{{item.link}}">
                     <igx-icon fontSet="material" name="{{item.icon}}"></igx-icon>
                 </span>
             </nav>
-        </ng-template> -->
+        </ng-template>
+
     </igx-nav-drawer>
     <div class="content">
         <router-outlet></router-outlet>
