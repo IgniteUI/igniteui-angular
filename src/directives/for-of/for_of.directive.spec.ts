@@ -290,6 +290,261 @@ describe("IgxVirtual directive - simple template", () => {
                 .toBe(fix.componentInstance.data[i][2].toString());
         }
     });
+
+    it("should not render vertical scrollbar when number of rows change to 5", () => {
+        const fix = TestBed.createComponent(VirtualComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        const container = fix.componentInstance.container;
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("igx-horizontal-virtual-helper");
+        let rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+
+        expect(displayContainer).not.toBeNull();
+        expect(verticalScroller).not.toBeNull();
+        expect(horizontalScroller).not.toBeNull();
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
+        expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
+        expect(rowsRendered.length).toBe(8);
+
+        /** Step 1. Lower the amount of rows to 5. The vertical scrollbar then should not be rendered */
+        expect(() => {
+            fix.componentInstance.generateData(300, 5);
+            fix.detectChanges();
+
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop);
+            fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(false);
+        expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
+        expect(rowsRendered.length).toBe(5);
+
+        /** Step 2. Scroll to the left. There should be no errors then and everything should be still the same */
+        expect(() => {
+            fix.componentInstance.scrollLeft(1000);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(false);
+        expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
+        expect(rowsRendered.length).toBe(5);
+
+        /** Step 3. Increase the ammout of rows back and vertical scrollbar should be rendered back */
+        expect(() => {
+            fix.componentInstance.generateData(300, 50000);
+            fix.detectChanges();
+
+            // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop);
+            fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        expect(horizontalScroller.scrollLeft).toBe(1000);
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
+        expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
+        expect(rowsRendered.length).toBe(8);
+    });
+
+    it("should not render vertical scrollbars when number of rows change to 0 after scrolling down", () => {
+        const fix = TestBed.createComponent(VirtualComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        const container = fix.componentInstance.container;
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("igx-horizontal-virtual-helper");
+        let rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+
+        expect(displayContainer).not.toBeNull();
+        expect(verticalScroller).not.toBeNull();
+        expect(horizontalScroller).not.toBeNull();
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
+        expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
+        expect(rowsRendered.length).toBe(8);
+
+        fix.componentInstance.generateData(300, 50000);
+        fix.detectChanges();
+
+        /** Step 1. Scroll to the left. There should be no errors then and everything should be still the same */
+        fix.componentInstance.scrollTop(100000);
+        fix.detectChanges();
+
+        /** Step 2. Lower the amount of rows to 5. The vertical scrollbar then should not be rendered */
+        expect(() => {
+            fix.componentInstance.data = [];
+            fix.detectChanges();
+
+            // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop);
+            fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(false);
+        expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
+        expect(rowsRendered.length).toBe(0);
+
+        /** Step 3. Set the ammout of rows back and vertical scrollbar should be rendered back then. It should reset the scroll position. */
+        expect(() => {
+            fix.componentInstance.generateData(300, 50000);
+            fix.detectChanges();
+
+            // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop);
+            fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        expect(verticalScroller.scrollTop).toBe(0);
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
+        expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
+        expect(rowsRendered.length).toBe(8);
+    });
+
+    it("should not render vertical scrollbar when number of rows change to 0 after scrolling right", () => {
+        const fix = TestBed.createComponent(VirtualComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        const container = fix.componentInstance.container;
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("igx-horizontal-virtual-helper");
+        let rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        let colsRendered = rowsRendered[0].children;
+
+        expect(displayContainer).not.toBeNull();
+        expect(verticalScroller).not.toBeNull();
+        expect(horizontalScroller).not.toBeNull();
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
+        expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
+        expect(rowsRendered.length).toBe(8);
+        expect(colsRendered.length).toBe(4);
+
+         /** Step 1. Scroll to the right. */
+        fix.componentInstance.scrollLeft(1000);
+        fix.detectChanges();
+
+        /** Step 2. Lower the amount of cols to 0 so there would be no horizontal scrollbar */
+        expect(() => {
+            fix.componentInstance.generateData(2, 0);
+            fix.detectChanges();
+
+            // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop);
+            fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(false);
+        // expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false); To be investigated
+        expect(rowsRendered.length).toBe(0);
+
+        /** Step 3. Set the data back to and it should render both scrollbars. It should reset the scroll position */
+        expect(() => {
+            fix.componentInstance.generateData(300, 50000);
+            fix.detectChanges();
+
+            // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop);
+            fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
+            fix.detectChanges();
+        }).not.toThrow();
+        rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        colsRendered = rowsRendered[0].children;
+
+        // expect(horizontalScroller.scrollLeft).toBe(0); To be investigated
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
+        expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
+        expect(rowsRendered.length).toBe(8);
+        // expect(colsRendered.length).toBe(4); To be investigated
+    });
+
+    it("should not render horizontal scrollbars when number of cols change to 3", () => {
+        const fix = TestBed.createComponent(VirtualComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        const container = fix.componentInstance.container;
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("igx-horizontal-virtual-helper");
+        let rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        let colsRendered = rowsRendered[0].children;
+
+        expect(displayContainer).not.toBeNull();
+        expect(verticalScroller).not.toBeNull();
+        expect(horizontalScroller).not.toBeNull();
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
+        expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
+        expect(rowsRendered.length).toBe(8);
+        expect(colsRendered.length).toBe(4);
+
+        /** Step 1. Lower the amount of cols to 3 so there would be no horizontal scrollbar */
+        expect(() => {
+            fix.componentInstance.generateData(3, 50000);
+            fix.detectChanges();
+
+            // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        colsRendered = rowsRendered[0].children;
+
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
+        expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
+        expect(rowsRendered.length).toBe(8);
+        expect(colsRendered.length).toBe(3);
+
+        /** Step 2. Scroll down. There should be no errors then and everything should be still the same */
+        expect(() => {
+            fix.componentInstance.scrollTop(1000);
+            fix.detectChanges();
+
+            // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop);
+            fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        colsRendered = rowsRendered[0].children;
+
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
+        expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
+        expect(rowsRendered.length).toBe(8);
+        expect(colsRendered.length).toBe(3);
+
+        /** Step 3. Set the data back to have 300 columns and the horizontal scrollbar should render now. */
+        expect(() => {
+            fix.componentInstance.generateData(300, 50000);
+            fix.detectChanges();
+
+            // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop);
+            fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
+            fix.detectChanges();
+        }).not.toThrow();
+        rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        colsRendered = rowsRendered[0].children;
+
+        expect(verticalScroller.scrollTop).toBe(1000);
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
+        expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
+        expect(rowsRendered.length).toBe(8);
+        expect(colsRendered.length).toBe(4);
+    });
 });
 
 /** igxFor for testing */
@@ -405,7 +660,7 @@ export class VerticalVirtualComponent implements OnInit {
         this.parentVirtDir.testOnScroll(verticalScrollbar);
     }
 
-    private generateData() {
+    public generateData() {
         const dummyData = [];
         for (let i = 0; i < 50000; i++) {
             const obj = {};
@@ -471,7 +726,7 @@ export class HorizontalVirtualComponent implements OnInit {
         });
     }
 
-    private generateData() {
+    public generateData() {
         const dummyData = [];
         for (let j = 0; j < 300; j++) {
             this.cols.push({
@@ -530,7 +785,7 @@ export class VirtualComponent implements OnInit {
     public childVirtDirs: QueryList<TestIgxForOfDirective<any>>;
 
     public ngOnInit(): void {
-        this.generateData();
+        this.generateData(300, 50000);
     }
 
     public scrollTop(newScrollTop) {
@@ -549,16 +804,35 @@ export class VirtualComponent implements OnInit {
         });
     }
 
-    private generateData() {
+    public isVerticalScrollbarVisible() {
+        const verticalScrollbar = this.container.element.nativeElement.querySelector("igx-virtual-helper");
+        /**
+         * Due to current implementation the width is set to 17px.
+         * That's why when scrollWidth is less than 2px it means it's space is filled with the scrollbar
+         */
+        return verticalScrollbar.scrollWidth <= 2;
+    }
+
+    public isHorizontalScrollbarVisible() {
+        const horizontalScrollbar = this.container.element.nativeElement.querySelector("igx-horizontal-virtual-helper");
+        /**
+         * Due to current implementation the height is automatically calculated.
+         *  That's why when it's less than 16 there is not scrollbar
+         */
+        return horizontalScrollbar.offsetHeight >= 16;
+    }
+
+    public generateData(numCols: number, numRows: number) {
         const dummyData = [];
-        for (let j = 0; j < 300; j++) {
+        this.cols = [];
+        for (let j = 0; j < numCols; j++) {
             this.cols.push({
                 field: j.toString(),
                 width: j % 8 < 2 ? 100 : (j % 6) * 125
             });
         }
 
-        for (let i = 0; i < 50000; i++) {
+        for (let i = 0; i < numRows; i++) {
             const obj = {};
             for (let j = 0; j <  this.cols.length; j++) {
                 const col = this.cols[j].field;
