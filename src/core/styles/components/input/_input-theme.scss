@@ -7,6 +7,7 @@ $components: register-component($components, #{$component-name});
     $filled-text-color: null,
     $focused-text-color: null,
     $disabled-text-color: null,
+    $placeholder-text-color: null,
 
     $idle-accent-color: null,
     $filled-accent-color: null,
@@ -22,6 +23,7 @@ $components: register-component($components, #{$component-name});
         filled-text-color: $filled-text-color,
         focused-text-color: $focused-text-color,
         disabled-text-color: $disabled-text-color,
+        placeholder-text-color: $placeholder-text-color,
 
         idle-accent-color: $idle-accent-color,
         filled-accent-color: $filled-accent-color,
@@ -40,6 +42,7 @@ $components: register-component($components, #{$component-name});
         $filled-text-color: igx-color($palette, 'grays', 900),
         $focused-text-color: igx-color($palette, 'grays', 900),
         $disabled-text-color: igx-color($palette, 'grays', 500),
+        $placeholder-text-color: igx-color($palette, 'grays', 600),
 
         $idle-accent-color: igx-color($palette, 'grays', 600),
         $filled-accent-color: igx-color($palette, 'grays', 600),
@@ -101,10 +104,6 @@ $components: register-component($components, #{$component-name});
         margin: $input-margin;
         position: relative;
         min-height: 40px;
-
-        ::-webkit-input-placeholder {
-            color: $label-color;
-        }
     }
 
     %igx-form-label {
@@ -149,6 +148,10 @@ $components: register-component($components, #{$component-name});
         padding-bottom: 3px;
         box-shadow: inset 0 -1px 0 0 map-get($this, 'idle-accent-color');
         transition: box-shadow .25s $ease-in-out-quad;
+
+        &::-webkit-input-placeholder {
+            color: map-get($this, 'placeholder-text-color');
+        }
     }
 
     %igx-form-input--filled {
