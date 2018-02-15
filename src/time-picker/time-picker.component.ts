@@ -22,7 +22,6 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { IgxInputModule } from "../directives/input/input.directive";
 import { IgxToggleModule, IgxToggleDirective, IgxToggleActionDirective } from "../directives/toggle/toggle.directive";
-import { IgxNavigationService } from "../core/navigation";
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -51,6 +50,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     @Input() public format = "time";
 
     @Input() public locale: string;
+
+
 
     @Output() public onValueChanged = new EventEmitter<any>();
 
@@ -121,18 +122,13 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     get dropdown() {
         if (this.dropDown === DROPDOWN.LIST) {
-            if(this.navigationService) {
-                this.toggleAction.target = this.navigationService.get("listToggle");
-            }
+            this.toggleAction.target = "listToggle";
             return this.listDropDown;
+        } else {
+            this.toggleAction.target = "scrollToggle";
+            return this.scrollDropDown;
         }
-
-        if(this.navigationService) {
-            this.toggleAction.target = this.navigationService.get("scrollToggle");
-        }
-        
-        return this.scrollDropDown;
-    }    
+    }
 
     public onOpenEvent(event): void {
     }
@@ -162,7 +158,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         this.toggle.close();
     }
 
-    constructor(private navigationService: IgxNavigationService, private datePipe: DatePipe) {}
+    constructor(private datePipe: DatePipe) {}
 }
 
 export enum DROPDOWN {
@@ -174,6 +170,6 @@ export enum DROPDOWN {
     declarations: [IgxTimePickerComponent],
     exports: [IgxTimePickerComponent],
     imports: [CommonModule, IgxInputModule, IgxToggleModule],
-    providers: [IgxNavigationService, DatePipe]
+    providers: [DatePipe]
 })
 export class IgxTimePickerModule { }
