@@ -1,24 +1,41 @@
 $component-name: 'igx-navdrawer';
 $components: register-component($components, #{$component-name});
 
-
 @function igx-navdrawer-theme(
-    $background-color: null,
+    $navdrawer-background-color: null,
     $overlay-background: null,
-    $border-color: null
+    $navdrawer-border-color: null,
+    $item-text-color: null,
+    $item-active-text-color: null,
+    $item-hover-background: null,
+    $item-hover-text-color: null,
+    $item-active-background: null,
+    $item-header-text-color: null
 ) {
     @return (
-        background-color: $background-color,
+        navdrawer-background-color: $navdrawer-background-color,
         overlay-background: $overlay-background,
-        border-color: $border-color
+        navdrawer-border-color: $navdrawer-border-color,
+        item-text-color:$item-text-color,
+        item-active-text-color:$item-active-text-color,
+        item-active-background:$item-active-background,
+        item-hover-background:$item-hover-background,
+        item-hover-text-color:$item-hover-text-color,
+        item-header-text-color:$item-header-text-color
     );
 }
 
 @mixin igx-navdrawer($theme, $palette: $default-palette) {
     $default-theme: igx-navdrawer-theme(
-        $background-color: $white,
+        $navdrawer-background-color: $white,
         $overlay-background: rgba(0, 0, 0, .25),
-        $border-color: rgba(0, 0, 0, .14)
+        $navdrawer-border-color: rgba(0, 0, 0, .14),
+        $item-text-color: igx-color($palette, grays, 800),
+        $item-active-text-color: igx-color($palette, accent, 500),
+        $item-active-background: igx-color($palette, grays, 100),
+        $item-hover-background: igx-color($palette, grays, 200),
+        $item-hover-text-color: igx-color($palette, grays, 800),
+        $item-header-text-color: igx-color($palette, grays, 500)
     );
 
     $this: extend($default-theme, $theme);
@@ -33,7 +50,7 @@ $components: register-component($components, #{$component-name});
         max-width: 90%;
         min-height: 100%;
         overflow-x: hidden;
-        background-color: map-get($this, 'background-color');
+        background-color: map-get($this, 'navdrawer-background-color');
         top: 0;
         bottom: 0;
         left: 0;
@@ -42,8 +59,8 @@ $components: register-component($components, #{$component-name});
         transition-duration: .3s, .3s;
         transition-timing-function: $ease-in-bezier, $ease-out-bezier;
         transition-delay: 0s, 0s;
-        box-shadow: $elevate-4;
-        border-right: 1px solid map-get($this, 'border-color');
+        box-shadow: $elevate-5;
+        border-right: 1px solid map-get($this, 'navdrawer-border-color');
     }
 
     %aside--pinned {
@@ -68,7 +85,7 @@ $components: register-component($components, #{$component-name});
         left: auto;
         right: 0;
         border-right: none;
-        border-left: 1px solid map-get($this, 'border-color');
+        border-left: 1px solid map-get($this, 'navdrawer-border-color');
     }
 
     %aside--mini {
@@ -96,6 +113,52 @@ $components: register-component($components, #{$component-name});
         transition-timing-function: ease-in-out, step-end;
         visibility: hidden;
         opacity: 0;
+    }
+
+    %item {
+        display: flex;
+        flex: 1 0 100%;
+        flex-flow: row nowrap;
+        //for ripple
+        position: relative;
+        color: map-get($this, 'item-text-color');
+        max-height: 48px;
+        padding: 12px 16px;
+        cursor: pointer;
+        font-size: 14px;
+        align-items: center;
+        font-weight: 600;
+        user-select: none;
+        outline: transparent;
+        white-space: nowrap;
+
+        &:hover,
+        &:focus {
+            background-color: map-get($this, 'item-hover-background');
+            color: map-get($this, 'item-hover-text-color');
+        }
+
+        > * + * {
+            margin-left: 32px;
+        }
+    }
+
+    %item--active {
+        // should be app primary color
+        color: map-get($this, 'item-active-text-color');
+        background-color: map-get($this, 'item-active-background');
+
+        &:focus {
+            color: map-get($this, 'item-active-text-color');
+            background-color: map-get($this, 'item-active-background');
+        }
+    }
+
+    %item--header {
+        display: block;
+        padding: 12px 16px;
+        white-space: nowrap;
+        color: map-get($this, 'item-header-text-color');
     }
 }
 
