@@ -63,6 +63,22 @@ All notable changes for each version of this project will be documented in this 
     - `formatViews` - Controls whether the date parts in the different calendar views should be formatted according to the provided `locale` and `formatOptions`.
     - `templating` - The **igxCalendar** supports now templating of its header and subheader parts.
     - `vertical` input - Controls the layout of the calendar component. When vertical is set to `true` the calendar header will be rendered to the side of the calendar body.
+    
+- `igx-tab-bar` changes
+    - custom content can be added for tabs
+
+    ```html
+    <igx-tab-bar>
+        <igx-tab-panel>
+            <ng-template igxTab>
+                <igx-avatar initials="T1">
+                </igx-avatar>
+            </ng-template>
+            <h1>Tab 1 Content</h1>
+        </igx-tab-panel>
+    </igx-tab-bar>
+    ```
+
 - [Renaming and restructuring directives and components](https://github.com/IgniteUI/igniteui-angular/issues/536) based on the [General Angular Naming Guidelines](https://angular.io/guide/styleguide#naming):
     - `IgxAvatar` renamed to `IgxAvatarComponent`
     - `IgxBadge` renamed to `IgxBadgeComponent`
@@ -103,17 +119,4 @@ All notable changes for each version of this project will be documented in this 
     - `IgxDraggableDirective` moved inside `../directives/dragdrop/` folder
     - `IgxRippleDirective` moved inside `../directives/ripple/` folder
     - Folder `"./navigation/nav-service"` renamed to `"./navigation/nav.service"`
-- `igx-tab-bar` changes
-    - custom content can be added for tabs
 
-    ```html
-    <igx-tab-bar>
-        <igx-tab-panel>
-            <ng-template igxTab>
-                <igx-avatar initials="T1">
-                </igx-avatar>
-            </ng-template>
-            <h1>Tab 1 Content</h1>
-        </igx-tab-panel>
-    </igx-tab-bar>
-    ```
