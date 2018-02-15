@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output, ViewChild } from "@angular/core";
 import { NavigationStart, Router } from "@angular/router";
 import "rxjs/add/operator/filter";
 import { IgxNavigationDrawerComponent, IgxNavigationDrawerModule } from "../lib/main";
+import "../style/igniteui-theme.scss";
 
 @Component({
     selector: "sample-app",
@@ -149,6 +150,11 @@ export class AppComponent {
             link: "/ripple",
             icon: "wifi_tethering",
             name: "Ripple"
+        },
+        {
+            link: "/virtualForDirective",
+            icon: "view_column",
+            name: "Virtual-For Directive"
         }
     ];
 
@@ -167,15 +173,10 @@ export class AppComponent {
             link: "/shadows",
             icon: "layers",
             name: "Shadows"
-        },
-        {
-            link: "/virtualForDirective",
-            icon: "view_column",
-            name: "Virtual-For Directive"
         }
     ];
 
-    constructor(private router: Router) {}
+    constructor(private router: Router) { }
     public ngOnInit(): void {
         this.router.events
             .filter((x) => x instanceof NavigationStart)
