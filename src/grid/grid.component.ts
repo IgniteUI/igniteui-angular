@@ -1,31 +1,34 @@
+import { DOCUMENT } from "@angular/common";
 import {
-AfterContentInit,
-ChangeDetectionStrategy,
-ChangeDetectorRef,
-Component,
-ComponentFactory,
-ComponentFactoryResolver,
-ComponentRef,
-ContentChild,
-ContentChildren,
-EventEmitter,
-HostBinding,
-Input,
-OnInit,
-Output,
-QueryList,
-TemplateRef,
-ViewChild,
-ViewChildren,
-ViewContainerRef,
-ViewEncapsulation
+    AfterContentInit,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ComponentFactory,
+    ComponentFactoryResolver,
+    ComponentRef,
+    ContentChild,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Inject,
+    Input,
+    OnInit,
+    Output,
+    QueryList,
+    TemplateRef,
+    ViewChild,
+    ViewChildren,
+    ViewContainerRef
 } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
 import { cloneArray } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
-import {IgVirtualForOf} from "../directives/virtual-for/igx_virtual_for.directive";
+import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
@@ -35,13 +38,11 @@ let NEXT_ID = 0;
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     preserveWhitespaces: false,
     selector: "igx-grid",
-    styleUrls: ["./grid.component.scss"],
     templateUrl: "./grid.component.html"
 })
-export class IgxGridComponent implements OnInit, AfterContentInit {
+export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit {
 
     @Input()
     public data = [];
@@ -105,6 +106,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     @Input()
     public paginationTemplate: TemplateRef<any>;
 
+    @HostBinding("style.height")
     @Input()
     public height;
 
@@ -155,8 +157,17 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
     public rowList: QueryList<IgxGridRowComponent>;
 
-    @ViewChild("scrollContainer", { read: IgVirtualForOf })
-    public parentVirtDir: IgVirtualForOf<any>;
+    @ViewChild("scrollContainer", { read: IgxForOfDirective })
+    public parentVirtDir: IgxForOfDirective<any>;
+
+    @ViewChild("headerContainer", { read: IgxForOfDirective })
+    public headerContainer: IgxForOfDirective<any>;
+
+    @ViewChild("theadRow")
+    public theadRow: ElementRef;
+
+    @ViewChild("tfoot")
+    public tfoot: ElementRef;
 
     @HostBinding("attr.tabindex")
     public tabindex = 0;
@@ -182,6 +193,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
     }
 
     public pagingState;
+    public calcWidth: number;
+    public calcHeight: number;
 
     public cellInEditMode: IgxGridCellComponent;
 
@@ -198,6 +211,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
 
     constructor(
         private gridAPI: IgxGridAPIService,
+        private elementRef: ElementRef,
+        @Inject(DOCUMENT) private document,
         public cdr: ChangeDetectorRef,
         private resolver: ComponentFactoryResolver,
         private viewRef: ViewContainerRef) {
@@ -205,6 +220,8 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
 
     public ngOnInit() {
         this.gridAPI.register(this);
+        this.calcWidth = this.width && this.width.indexOf("%") === -1 ?  parseInt(this.width, 10) : 0;
+        this.calcHeight = 0;
     }
 
     public ngAfterContentInit() {
@@ -219,6 +236,39 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
         this._columns = this.columnList.toArray();
         this._fixedColumns = this._columns.filter((c) => c.fixed);
         this._unfixedColumns = this._columns.filter((c) => !c.fixed);
+    }
+
+    public ngAfterViewInit() {
+        const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+        if (!this.width) {
+            /*no width specified.*/
+            this.calcWidth = null;
+        } else if (this.width && this.width.indexOf("%") !== -1) {
+            /* width in %*/
+            this.calcWidth = parseInt(computed.getPropertyValue("width"), 10);
+        }
+        if (!this.height) {
+            /*no height specified.*/
+            this.calcHeight = null;
+        } else if (this.height && this.height.indexOf("%") !== -1) {
+            /*height in %*/
+            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
+            this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
+            this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
+            this.theadRow.nativeElement.clientHeight -
+            footerHeight;
+        } else {
+            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
+            this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
+            this.calcHeight = parseInt(this.height, 10) -
+            this.theadRow.nativeElement.clientHeight -
+            footerHeight;
+        }
+        this.cdr.detectChanges();
+    }
+
+    get nativeElement() {
+        return this.elementRef.nativeElement;
     }
 
     get fixedWidth() {
@@ -430,7 +480,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit {
         if (col) {
             this.gridAPI
                 .filter(this.id, name, value,
-                        condition || col.filteringCondition, ignoreCase || col.filteringIgnoreCase);
+                condition || col.filteringCondition, ignoreCase || col.filteringIgnoreCase);
         } else {
             this.gridAPI.filter(this.id, name, value, condition, ignoreCase);
         }

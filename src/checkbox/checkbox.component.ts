@@ -13,22 +13,19 @@ const noop = () => { };
 let nextId = 0;
 
 @Component({
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxCheckbox, multi: true }],
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxCheckboxComponent, multi: true }],
     selector: "igx-checkbox",
-    styleUrls: ["./checkbox.component.scss"],
     templateUrl: "checkbox.component.html"
 })
-export class IgxCheckbox implements ControlValueAccessor {
-    public focused: boolean = false;
+export class IgxCheckboxComponent implements ControlValueAccessor {
+    public focused = false;
 
     @Input() public value: any;
-    @Input() public id: string = `igx-checkbox-${nextId++}`;
+    @Input() public id = `igx-checkbox-${nextId++}`;
     @Input() public name: string;
-    @Input() public disabled: boolean = false;
+    @Input() public disabled = false;
     @Input() public tabindex: number = null;
-    @Input() public checked: boolean = false;
-
-    @Output() public change = new EventEmitter();
+    @Input() public checked = false;
 
     @ViewChild("checkbox") public nativeCheckbox;
 
@@ -44,7 +41,6 @@ export class IgxCheckbox implements ControlValueAccessor {
 
         this.checked = !this.checked;
         this._onChangeCallback(this.checked);
-        this.change.emit(event);
     }
 
     public onFocus(event) {
@@ -69,7 +65,7 @@ export class IgxCheckbox implements ControlValueAccessor {
 }
 
 @NgModule({
-    declarations: [IgxCheckbox],
-    exports: [IgxCheckbox]
+    declarations: [IgxCheckboxComponent],
+    exports: [IgxCheckboxComponent]
 })
 export class IgxCheckboxModule { }

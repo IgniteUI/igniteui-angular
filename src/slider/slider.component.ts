@@ -10,9 +10,9 @@ export enum SliderType {
      * Slider with single thumb.
      */
     SLIDER,
-        /**
-         *  Range slider with multiple thumbs, that can mark the range.
-         */
+    /**
+     *  Range slider with multiple thumbs, that can mark the range.
+     */
     RANGE
 }
 
@@ -30,12 +30,11 @@ const noop = () => {
 };
 
 @Component({
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSlider, multi: true }],
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSliderComponent, multi: true }],
     selector: "igx-slider",
-    styleUrls: ["./slider.component.scss"],
     templateUrl: "slider.component.html"
 })
-export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
+export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterViewInit {
     /**
      * Disables or enables UI interaction.
      */
@@ -47,7 +46,7 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
      * Discrete slider does not have ticks and does not shows bubble labels for values.
      */
     @Input()
-    public isContinuous: boolean = false;
+    public isContinuous = false;
 
     /**
      * The type of the slider. The slider can be SliderType.SLIDER or SliderType.RANGE
@@ -61,7 +60,7 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
      * @type {number}
      */
     @Input()
-    public thumbLabelVisibilityDuration: number = 750;
+    public thumbLabelVisibilityDuration = 750;
 
     /**
      * The incremental/decremental step of the value when dragging the thumb.
@@ -69,7 +68,7 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
      * @type {number}
      */
     @Input()
-    public step: number = 1;
+    public step = 1;
 
     /**
      * This event is emitted when user has stopped interacting the thumb and value is changed.
@@ -78,7 +77,7 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     @Output()
     public onValueChange = new EventEmitter();
 
-    public isActiveLabel: boolean = false;
+    public isActiveLabel = false;
 
     private activeHandle: SliderHandle = SliderHandle.TO;
 
@@ -97,22 +96,22 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
     @ViewChild("thumbTo")
     private thumbTo: ElementRef;
 
-    private _minValue: number = 0;
+    private _minValue = 0;
 
     // Measures & Coordinates
-    private width: number = 0;
-    private xOffset: number = 0;
-    private xPointer: number = 0;
-    private pPointer: number = 0;
+    private width = 0;
+    private xOffset = 0;
+    private xPointer = 0;
+    private pPointer = 0;
 
     // Limit handle travel zone
-    private pMin: number = 0;
-    private pMax: number = 1;
+    private pMin = 0;
+    private pMax = 1;
 
     // From/upperValue in percent values
-    private hasViewInit: boolean = false;
+    private hasViewInit = false;
     private timer;
-    private _maxValue: number = 100;
+    private _maxValue = 100;
     private _lowerBound?: number;
     private _upperBound?: number;
     private _lowerValue: number;
@@ -671,8 +670,8 @@ export class IgxSlider implements ControlValueAccessor, OnInit, AfterViewInit {
 }
 
 @NgModule({
-    declarations: [IgxSlider],
-    exports: [IgxSlider],
+    declarations: [IgxSliderComponent],
+    exports: [IgxSliderComponent],
     imports: [CommonModule]
 })
 export class IgxSliderModule {

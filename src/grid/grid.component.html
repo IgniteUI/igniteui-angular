@@ -20,35 +20,36 @@
 </ng-template>
 
 
-<div class="igx-grid__thead" role="rowgroup">
-    <div class="igx-grid__tr" role="row">
-        <ng-container *ngIf="fixingDirection === 'left'" >
-            <igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
-        </ng-container>
-        <ng-template igVirtFor let-col [igVirtForOf]="unfixedColumns" [igVirtForScrolling]="'horizontal'" [igVirtForUseForScroll]="parentVirtDir" [igVirtForContainerSize]='unfixedWidth'>
-            <igx-grid-header [gridID]="id" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
-        </ng-template>
-        <ng-container *ngIf="fixingDirection === 'right'" >
-            <igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
-        </ng-container>
-    </div>
+<div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth'>
+	<div class="igx-grid__tr" role="row" style="width: calc(100% - 17px)" #theadRow>
+		<ng-container *ngIf="fixingDirection === 'left'">
+			<igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
+		</ng-container>
+		<ng-template igxFor let-col [igxForOf]="visibleColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='unfixedWidth' #headerContainer>
+			<igx-grid-header [gridID]="id" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
+		</ng-template>
+		<ng-container *ngIf="fixingDirection === 'right'">
+			<igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
+		</ng-container>
+	</div>
 </div>
 
 <!--<div class="igx-grid__tbody" role="rowgroup">
-    <igx-grid-row [gridID]="id" igVirtFor="let item of data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
+    <igx-grid-row [gridID]="id" igxFor="let item of data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
                                 | gridSort:sortingExpressions:id:pipeTrigger
                                 | gridPaging:page:perPage:id:pipeTrigger;
-                                index as i;" [igVirtForScrolling]="'vertical'" #scrollContainer [igVirtForContainerSize]='height'>
+                                index as i;" [igxForScrollOrientation]="'vertical'" #scrollContainer [igxForContainerSize]='height'>
     </igx-grid-row>
 </div>-->
 
-<div class="igx-grid__tbody" role="rowgroup" [style.height]='height' [style.width]='width' >
-        <ng-template igVirtFor let-rowData [igVirtForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
+<div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' >
+        <ng-template igxFor let-rowData [igxForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
                                 | gridSort:sortingExpressions:id:pipeTrigger
                                 | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" 
-                                [igVirtForScrolling]="'vertical'"
-                                [igVirtForContainerSize]='height'
-                                [igVirtForItemSize]='"50px"'>
+                                [igxForScrollOrientation]="'vertical'"
+                                [igxForContainerSize]='calcHeight'
+                                [igxForItemSize]='"50px"'
+                                #scrollContainer>
            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
            </igx-grid-row>
         </ng-template>
@@ -62,7 +63,7 @@
 	</div>
 </div>
 
-<div class="igx-grid__tfoot" role="rowgroup">
+<div class="igx-grid__tfoot" role="rowgroup" #tfoot>
     <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
     </ng-container>
 </div>

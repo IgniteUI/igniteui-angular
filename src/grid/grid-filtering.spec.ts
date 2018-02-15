@@ -1,7 +1,7 @@
 import { Component, DebugElement, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { BOOLEAN_FILTERS, DATE_FILTERS, FilteringCondition,
     NUMBER_FILTERS, STRING_FILTERS } from "../../src/data-operations/filtering-condition";
 import { Calendar, ICalendarDate } from "../calendar/calendar";
@@ -13,15 +13,17 @@ describe("IgxGrid - Filtering actions", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxGridFiltering
+                IgxGridFilteringComponent
             ],
-            imports: [IgxGridModule.forRoot()]
+            imports: [
+                NoopAnimationsModule,
+                IgxGridModule.forRoot()]
         })
         .compileComponents();
     }));
 
     it("should correctly filter by 'string' filtering conditions", () => {
-        const fix = TestBed.createComponent(IgxGridFiltering);
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
@@ -109,7 +111,7 @@ describe("IgxGrid - Filtering actions", () => {
     });
 
     it("should correctly filter by 'number' filtering conditions", () => {
-        const fix = TestBed.createComponent(IgxGridFiltering);
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
@@ -185,7 +187,7 @@ describe("IgxGrid - Filtering actions", () => {
     });
 
     it("should correctly filter by 'boolean' filtering conditions", () => {
-        const fix = TestBed.createComponent(IgxGridFiltering);
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
@@ -233,7 +235,7 @@ describe("IgxGrid - Filtering actions", () => {
     });
 
     it("should correctly filter by 'date' filtering conditions", () => {
-        const fix = TestBed.createComponent(IgxGridFiltering);
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
@@ -362,7 +364,7 @@ describe("IgxGrid - Filtering actions", () => {
     // });
 
     it("should correctly apply multiple filtering through API", () => {
-        const fix = TestBed.createComponent(IgxGridFiltering);
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
@@ -385,7 +387,7 @@ describe("IgxGrid - Filtering actions", () => {
     });
 
     it("should correctly apply global filtering", () => {
-        const fix = TestBed.createComponent(IgxGridFiltering);
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
@@ -410,7 +412,7 @@ describe("IgxGrid - Filtering actions", () => {
         </igx-column>
     </igx-grid>`
 })
-export class IgxGridFiltering {
+export class IgxGridFilteringComponent {
 
     public timeGenerator: Calendar = new Calendar();
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);

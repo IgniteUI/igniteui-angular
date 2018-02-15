@@ -188,6 +188,13 @@ export class IgxGridCellComponent {
         private cdr: ChangeDetectorRef,
         private element: ElementRef) { }
 
+    public update(val: any) {
+        this.grid.onEditDone.emit({ currentValue: this.value, newValue: val });
+        this.value = val;
+        this.gridAPI.update(this.gridID, this);
+        this.cdr.markForCheck();
+    }
+
     @HostListener("dblclick", ["$event"])
     public onDoubleClick(event) {
         if (this.column.editable) {
@@ -207,6 +214,7 @@ export class IgxGridCellComponent {
             this.grid.cellInEditMode = null;
         }
         this.grid.onSelection.emit(this);
+        this.grid.cdr.detectChanges();
     }
 
     @HostListener("blur", ["$event"])
@@ -216,73 +224,136 @@ export class IgxGridCellComponent {
         this.row.focused = false;
     }
 
-    @HostListener("keydown", ["$event"])
-    public onKeyDown(event: KeyboardEvent) {
+    @HostListener("keydown.arrowleft")
+    public onKeydownArrowLeft() {
+        const visibleColumns = this.grid.visibleColumns;
+        const rowIndex = this.rowIndex;
+        let columnIndex = this.columnIndex;
+        const rv = visibleColumns.findIndex((col) => col.index === columnIndex);
 
-        this.handleKeyboardNavigation(event);
-        this.handleInlineEditMode(event);
-    }
+        if (rv > 0) {
+            columnIndex = visibleColumns[rv - 1].index;
 
-    public update(val: any) {
-        this.grid.onEditDone.emit({ currentValue: this.value, newValue: val });
-        this.value = val;
-        this.gridAPI.update(this.gridID, this);
-        this.cdr.markForCheck();
-    }
+            const target = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
 
-    protected handleKeyboardNavigation(event: KeyboardEvent): void {
-
-        const visibleColumns: IgxColumnComponent[] = this.grid.visibleColumns;
-        let ri = this.rowIndex;
-        let ci = this.columnIndex;
-        let rv: number;
-        let target: IgxGridCellComponent;
-
-        switch (event.keyCode) {
-            case KEYCODES.LEFT_ARROW:
-                if (event.ctrlKey) {
-                    ci = this.row.cells.first.columnIndex;
-                    break;
-                }
-                rv = visibleColumns.findIndex((col) => col.index === ci);
-                if (rv > 0) {
-                    ci = visibleColumns[rv - 1].index;
-                }
-                break;
-            case KEYCODES.UP_ARROW:
-                ri -= 1;
-                break;
-            case KEYCODES.RIGHT_ARROW:
-                if (event.ctrlKey) {
-                    ci = this.row.cells.last.columnIndex;
-                    break;
-                }
-                rv = visibleColumns.findIndex((col) => col.index === ci);
-                if (rv > -1 && rv < visibleColumns.length - 1) {
-                    ci = visibleColumns[rv + 1].index;
-                }
-                break;
-            case KEYCODES.DOWN_ARROW:
-                ri += 1;
-                break;
-            default:
-                return;
+            if (target) {
+                target.nativeElement.focus();
+                this.syncRows();
+            } else {
+                this.row.virtDirRow.scrollPrev();
+                this.row.virtDirRow.onChunkLoaded.take(1).subscribe({
+                    next: (event: any) => {
+                        this.row.cdr.detectChanges();
+                        const currTarget = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
+                        if (currTarget) {
+                            currTarget.nativeElement.focus();
+                        } else {
+                            this.row.cells.first.nativeElement.focus();
+                        }
+                        setTimeout(() => {
+                            this.syncRows();
+                        });
+                    }
+                });
+            }
         }
+    }
 
-        target = this.gridAPI.get_cell_by_index(this.gridID, ri, ci);
+    @HostListener("keydown.ctrl.arrowleft")
+    public onKeydownCtrlArrowLeft() {
+        const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex, this.row.cells.first.columnIndex);
+
         if (target) {
             target.nativeElement.focus();
         }
     }
 
-    protected handleInlineEditMode(event: KeyboardEvent) {
-        if ((event.keyCode === KEYCODES.ENTER || event.keyCode === KEYCODES.F2) && this.column.editable) {
+    @HostListener("keydown.arrowright")
+    public onKeydownArrowRight() {
+        const visibleColumns = this.grid.visibleColumns;
+        const rowIndex = this.rowIndex;
+        let columnIndex = this.columnIndex;
+        const rv = visibleColumns.findIndex((col) => col.index === columnIndex);
+
+        if (rv > -1 && rv < visibleColumns.length - 1) {
+            columnIndex = visibleColumns[rv + 1].index;
+
+            const target = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
+
+            if (target) {
+                target.nativeElement.focus();
+                this.syncRows();
+            } else {
+                this.row.virtDirRow.scrollNext();
+                this.row.virtDirRow.onChunkLoaded.take(1).subscribe({
+                    next: (event: any) => {
+                        this.row.cdr.detectChanges();
+                        const currTarget = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
+                        if (currTarget) {
+                            currTarget.nativeElement.focus();
+                        } else {
+                            this.row.cells.last.nativeElement.focus();
+                        }
+                        setTimeout(() => {
+                            this.syncRows();
+                        });
+                    }
+                });
+            }
+        }
+    }
+
+    @HostListener("keydown.ctrl.arrowright")
+    public onKeydownCtrlArrowRight() {
+        const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex, this.row.cells.last.columnIndex);
+
+        if (target) {
+            target.nativeElement.focus();
+        }
+    }
+
+    @HostListener("keydown.arrowup")
+    public onKeydownArrowUp() {
+        const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex - 1, this.columnIndex);
+        if (target) {
+            target.nativeElement.focus();
+        } else {
+            this.row.grid.parentVirtDir.scrollPrev();
+        }
+    }
+
+    @HostListener("keydown.arrowdown")
+    public onKeydownArrowDown() {
+        const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex + 1, this.columnIndex);
+        if (target) {
+            target.nativeElement.focus();
+        } else {
+            this.row.grid.parentVirtDir.scrollNext();
+        }
+    }
+
+    @HostListener("keydown.enter")
+    @HostListener("keydown.f2")
+    public onKeydownEnterEditMode() {
+        if (this.column.editable) {
             this._inEditMode = !this._inEditMode;
             this.grid.cellInEditMode = this;
-            return;
         }
-        if (event.keyCode === KEYCODES.ESCAPE) {
-            this._inEditMode = false;
-        }
+    }
+
+    @HostListener("keydown.escape")
+    public onKeydownExitEditMode() {
+        this._inEditMode = false;
+    }
+
+    syncRows() {
+        this.grid.cdr.detectChanges();
+        const scrLeft = this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.scrollLeft;
+        this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement.style.left = (-scrLeft) + "px";
+        const rows = this.row.grid.rowList.toArray();
+        for (const row of rows) {
+            const elem = row.virtDirRow.dc.instance._viewContainer.element.nativeElement;
+            elem.scrollLeft = scrLeft;
+       }
     }
 }

@@ -2,8 +2,8 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import {
     ButtonGroupAlignment,
-    IgxButtonGroup,
-    IgxButtonGroupModule    
+    IgxButtonGroupComponent,
+    IgxButtonGroupModule
 } from "../../lib/main";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { ButtonGroupSampleComponent } from "./sample.component";

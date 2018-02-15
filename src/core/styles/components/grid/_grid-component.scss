@@ -1,0 +1,92 @@
+@include b(igx-grid) {
+    @extend %grid-display !optional;
+
+    @include e(caption) {
+        @extend %grid-caption !optional;
+    }
+
+    @include e(thead) {
+        @extend %grid-thead !optional;
+
+        igx-display-container {
+            overflow: visible;
+        }
+    }
+
+    @include e(tfoot) {
+        @extend %grid-tfoot !optional;
+    }
+
+    @include e(tbody) {
+        @extend %grid-tbody !optional;
+    }
+
+    @include e(tbody, $m: empty) {
+        @extend %grid-tbody--empty !optional;
+    }
+
+    @include e(tr) {
+        @extend %grid-row !optional;
+
+        igx-display-container {
+            width: 100%;
+        }
+    }
+
+    @include e(tr, $m: selected) {
+        @extend %grid-row--selected !optional;
+    }
+
+    @include e(th) {
+        @extend %grid-cell-display !optional;
+        @extend %grid-cell-header !optional;
+        $block: bem--selector-to-string(&);
+
+        &.asc,
+        &.desc {
+            font-weight: 800;
+        }
+
+        &.desc {
+            > .title::before {
+                position: relative;
+                font-family: 'Material Icons', sans-serif;
+                content: '\E5DB';
+                margin-right: 8px;
+            }
+        }
+
+        &.asc {
+            > .title::before {
+                position: relative;
+                font-family: 'Material Icons', sans-serif;
+                content: '\E5D8';
+                margin-right: 8px;
+            }
+        }
+    }
+
+    @include e(th, $m: number) {
+        @extend %grid-cell-number !optional;
+    }
+
+    @include e(th, $m: fw) {
+        @extend %grid-cell--fixed-width !optional;
+    }
+
+    @include e(td) {
+        @extend %grid-cell-display !optional;
+    }
+
+    @include e(td, $m: selected) {
+        @extend %grid-cell--selected !optional;
+    }
+
+    @include e(td, $m: number) {
+        @extend %grid-cell-number !optional;
+    }
+
+    @include e(td, $m: fw) {
+        @extend %grid-cell--fixed-width !optional;
+    }
+}

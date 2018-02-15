@@ -1,0 +1,273 @@
+@import '../grid-filtering/grid-filtering-component';
+@import '../grid-filtering/grid-filtering-theme';
+
+$component-name: 'igx-grid';
+
+$components: register-component($components, #{$component-name});
+
+@function igx-grid-theme(
+    $header-background: null,
+    $header-text-color: null,
+
+    $content-background: null,
+    $content-text-color: null,
+
+    $row-selected-background: null,
+    $row-selected-text-color: null,
+    $row-hover-background: null,
+    $row-border-color: null,
+
+    $cell-selected-background: null,
+    $cell-selected-text-color: null
+) {
+    @if not($header-text-color) and $header-background {
+        $header-text-color: text-contrast($header-background);
+    }
+
+    @if not($content-text-color) and $content-background {
+        $content-text-color: text-contrast($content-background);
+    }
+
+    @if not($cell-selected-text-color) and $cell-selected-background {
+        $cell-selected-text-color: text-contrast($cell-selected-background);
+    }
+
+    @if not($row-selected-text-color) and $row-selected-background {
+        $row-selected-text-color: text-contrast($row-selected-background);
+    }
+
+    @if not($row-hover-background) and $content-background {
+        $row-hover-background: rgba(text-contrast($content-background), .08)
+    }
+
+    @if not($row-border-color) and $content-background {
+        $row-border-color: rgba(text-contrast($content-background), .08)
+    }
+
+    @return (
+        header-background: $header-background,
+        header-text-color: $header-text-color,
+
+        content-background: $content-background,
+        content-text-color: $content-text-color,
+
+        row-selected-background: $row-selected-background,
+        row-selected-text-color: $row-selected-text-color,
+        row-hover-background: $row-hover-background,
+        row-border-color: $row-border-color,
+
+        cell-selected-background: $cell-selected-background,
+        cell-selected-text-color: $cell-selected-text-color
+    );
+}
+
+@mixin igx-grid($theme, $palette: $default-palette) {
+    $default-theme: igx-grid-theme(
+        $header-background: $white,
+        $header-text-color: igx-color($palette, 'grays', 600),
+
+        $content-background: $white,
+        $content-text-color: igx-color($palette, 'grays', 800),
+
+        $row-selected-background: igx-color($palette, 'grays', 800),
+        $row-selected-text-color: igx-contrast-color($palette, 'grays', 900),
+        $row-hover-background: igx-color($palette, 'grays', 100),
+        $row-border-color: igx-color($palette, 'grays', 300),
+
+        $cell-selected-background: igx-color($palette, 'primary'),
+        $cell-selected-text-color: igx-contrast-color($palette, 'primary')
+    );
+
+    $this: extend($default-theme, $theme);
+
+    $filtering-theme: igx-grid-filtering-theme(
+        $menu-background: map-get($this, 'content-background'),
+        $menu-button-text-color: map-get($this, 'cell-selected-background'),
+        $toggle-hover-background: map-get($this, 'row-hover-background'),
+        $toggle-active-background: map-get($this, 'cell-selected-background'),
+        $toggle-icon-filtered-color: map-get($this, 'cell-selected-background')
+    );
+
+    @include igx-grid-filtering($filtering-theme);
+
+    // @debug $this;
+
+    // General
+    $grid-br: 2px !default;
+    $grid-shadow: $elevate-2 !default;
+
+    // Caption
+    $grid-caption-fs: rem(20px) !default;
+    $grid-caption-lh: rem(32px) !default;
+    $grid-caption-padding: rem(16px) rem(24px) !default;
+
+    // Heading
+    $grid-head-fs: rem(12px) !default;
+    $grid-head-fw: 600 !default;
+    $grid-head-icon-size: rem(16px) !default;
+    $grid-head-icon-lh: rem(16px) !default;
+    $grid-head-icon-padding: rem(8px) !default;
+
+    // Cell
+    $grid-cell-padding: rem(16px) rem(24px) !default;
+    $grid-cell-align-num: right !default;
+    $grid-cell-fs: rem(13px) !default;
+    $grid-cell-lh: rem(16px) !default;
+
+    %grid-display {
+        display: grid;
+        grid-template-rows: auto auto auto;
+        border-radius: $grid-br;
+        box-shadow: $grid-shadow;
+        outline-style: none;
+        overflow: hidden;
+    }
+
+    %vhelper-display {
+        &::-webkit-scrollbar {
+            width: 17px;
+            height: 17px;
+        }
+        
+        &::-webkit-scrollbar-track {
+            background: rgba(text-contrast(map-get($this, 'content-background')), .12);
+
+            /* stylelint-disable selector-pseudo-class-no-unknown */
+            &:vertical {
+                border-left: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
+                border-right: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
+            }
+
+            &:horizontal {
+                border-top: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
+                border-bottom: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
+            }
+            /* stylelint-enable */
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: rgba(text-contrast(map-get($this, 'content-background')), .24);
+
+            &:hover {
+                background: rgba(text-contrast(map-get($this, 'content-background')), .37);
+            }
+        }
+
+        &::-webkit-scrollbar-corner {
+            background: map-get($this, 'content-background');
+        }
+    }
+
+    %grid-caption {
+        display: flex;
+        align-items: center;
+        font-size: $grid-caption-fs;
+        line-height: $grid-caption-lh;
+        padding: $grid-caption-padding;
+    }
+
+    %grid-thead i {
+        font-size: $grid-head-icon-size;
+    }
+
+    %grid-thead,
+    %grid-tfoot {
+        display: block;
+        background: map-get($this, 'header-background');
+        color: map-get($this, 'header-text-color');
+        
+        %grid-row {
+            &:hover {
+                background-color: transparent;
+            }
+        }
+    }
+
+    %grid-tbody {
+        position: relative;
+        background: map-get($this, 'content-background');
+        color: map-get($this, 'content-text-color');
+        overflow: hidden;
+        will-change: transform;
+    }
+
+    %grid-tbody--empty {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+    }
+
+    %grid-row {
+        display: flex;
+        background: inherit;
+        border-bottom: 1px solid map-get($this, 'row-border-color');
+        outline-style: none;
+
+        &:last-of-type {
+            border-bottom: 0;
+        }
+
+        &:hover {
+            background: map-get($this, 'row-hover-background');
+        }
+    }
+
+    %grid-row--selected {
+        color: map-get($this, 'row-selected-text-color');
+        background-color: map-get($this, 'row-selected-background');
+
+        &:hover {
+            background: map-get($this, 'row-selected-background');
+        }
+    }
+
+    %grid-cell-display {
+        flex: 1;
+        outline-style: none;
+        padding: $grid-cell-padding;
+        font-size: $grid-cell-fs;
+        line-height: $grid-cell-lh;
+        color: inherit;
+        text-align: left;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    %grid-cell--fixed-width {
+        flex-grow: 0;
+    }
+
+    %grid-cell-number {
+        text-align: $grid-cell-align-num;
+    }
+
+    %grid-cell--selected {
+        color: map-get($this, 'cell-selected-text-color');
+        background-color: map-get($this, 'cell-selected-background') !important;
+        border-bottom: 0;
+        margin-bottom: -1px;
+        z-index: 10;
+    }
+
+    %grid-cell-header {
+        display: flex;
+        position: relative;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: space-between;
+        font-size: $grid-head-fs;
+        font-weight: $grid-head-fw;
+        overflow: visible;
+        min-width: 0;
+
+        &.title {
+            cursor: pointer;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            user-select: none;
+        }
+    }
+}
+

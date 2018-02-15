@@ -1,0 +1,245 @@
+// Pixels to Relative Values
+// @access public
+// @param {number|string} $pixels - Size in pixels
+// @param {number|string} $context - Size in pixels
+@function em($pixels, $context: $browser-context) {
+    @if (unitless($pixels)) {
+        $pixels: $pixels * 1px;
+    }
+    @if (unitless($context)) {
+        $context: $context * 1px;
+    }
+    @return ($pixels / $context) * 1em;
+}
+
+@function rem($pixels, $context: $browser-context) {
+    @if (unitless($pixels)) {
+        $pixels: $pixels * 1px;
+    }
+    @if (unitless($context)) {
+        $context: $context * 1px;
+    }
+    @return ($pixels / $context) * 1rem;
+}
+
+@function gen-color($color, $saturation) {
+    @if ($saturation == 50) {
+        @return lighten(saturate($color, 10.4), 37.7);
+    } @else if ($saturation == 100) {
+        @return lighten(desaturate($color, 10.4), 31.8);
+    } @else if ($saturation == 200) {
+        @return lighten(desaturate($color, 17), 18.7);
+    } @else if ($saturation == 300) {
+        @return lighten(desaturate($color, 12.9), 9.1);
+    } @else if ($saturation == 400) {
+        @return lighten(desaturate($color, 6.6), 4.1);
+    } @else if ($saturation == 600) {
+        @return darken(saturate($color, 12.4), 5.1);
+    } @else if ($saturation == 700) {
+        @return darken(saturate($color, 24.5), 8.8);
+    } @else if ($saturation == 800) {
+        @return darken(saturate($color, 23.2), 12.7);
+    } @else if ($saturation == 900) {
+        @return darken(saturate($color, 16.1), 17);
+    } @else if ($saturation == 'A100') {
+        @return lighten(saturate($color, 10.4), 16.7);
+    } @else if ($saturation == 'A200') {
+        @return lighten(saturate($color, 10.4), 7.7);
+    } @else if ($saturation == 'A400') {
+        @return darken(saturate($color, 10.4), 3.9);
+    } @else if ($saturation == 'A700') {
+        @return darken(saturate($color, 10.4), 16.6);
+    }
+}
+
+// Retrieve color from an igx palette map
+// @access public
+// @param {Map} $palette - Source palette map
+// @param {string} $saturation - Target color from palette
+@function igx-color($palette, $color, $variant: 500) {
+    @if map-exists($palette) and map-key-exists($palette, $color) and map-key-exists($color, $variant) {
+        @return map-get(map-get($palette, $color), $variant);
+    }
+    @return #fff;
+}
+
+// Retrieve a contrast color for text from an igx palette map
+// @access public
+// @param {Map} $palette - Source palette map
+// @param {string} $saturation - Target color from palette
+@function igx-contrast-color($palette, $color, $variant: 500) {
+    @if map-exists($palette) and map-key-exists($palette, $color) and map-key-exists($color, $variant) {
+        @return map-get(map-get(map-get($palette, $color), 'contrast'), $variant);
+    }
+    @return #fff;
+}
+
+// Set text color based on background color
+// @access public
+// @param {String} $n - Background color
+@function text-contrast($n) {
+    $color-brightness: round((red($n) * 299) + (green($n) * 587) + (blue($n) * 114) / 1000);
+    $light-color: round((red(#fff) * 299) + (green(#fff) * 587) + (blue(#fff) * 114) / 1000);
+    @if abs($color-brightness) < ($light-color / 2) {
+        @return #fff;
+    } @else {
+        @return #000;
+    }
+}
+
+// Test if `$value` is a valid direction
+// @param {*} $value - Value to test
+// @return {Bool}
+@function is-direction($value) {
+    $is-keyword: index( ( to top, to top right, to right top, to right, to bottom right, to right bottom, to bottom, to bottom left, to left bottom, to left, to left top, to top left), $value);
+    $is-angle: type-of($value)=='number' and index('deg' 'grad' 'turn' 'rad', unit($value));
+    @return $is-keyword or $is-angle;
+}
+
+@function is-component($components, $excludes) {
+    @each $item in $excludes {
+        @if not(index($components, $item)) {
+            @error unquote('Can\'t exclude "#{$item}" because it is not in the list of Ignite UI for Angular components.');
+        }
+    }
+
+    @if length($excludes) > 0 {
+        @warn unquote('You have excluded the following components from the theme: "#{$excludes}". You can now add your own themes for the excluded components.');
+    }
+
+    @return '';
+}
+
+@function to-string($num, $radix: 16) {
+    $chars: '0123456789abcdef';
+    $result: '';
+    $sign: '';
+    @if $num < 0 {
+        $sign: '-';
+        $num: abs($num);
+    }
+    @if $num >= 0 and $num < $radix {
+        @return $sign + str-slice($chars, ($num + 1), ($num + 1));
+    }
+    $q: $num;
+    @while $q !=0 {
+        $r: $q % $radix;
+        $q: floor($q / $radix);
+        $result: str-slice($chars, ($r + 1), ($r + 1)) + $result;
+    }
+    @return $sign + $result;
+}
+
+@function hexrgba($rgba) {
+    $red: red($rgba);
+    $green: green($rgba);
+    $blue: blue($rgba);
+    $a: alpha($rgba);
+    $r: floor($a * $red + (1 - $a) * 255);
+    $g: floor($a * $green + (1 - $a) * 255);
+    $b: floor($a * $blue + (1 - $a) * 255);
+    @return unquote('##{str-slice('0#{to-string($r)}',-2)}#{str-slice('0#{to-string($g)}',-2)}#{str-slice('0#{to-string($b)}',-2)}');
+}
+
+@function extend($obj, $extend) {
+    $result: ();
+
+    @each $key, $value in $extend {
+        @if not($value) {
+            $result: map-merge($result, (
+                #{$key}: map-get($obj, $key)
+            ));
+        } @else {
+            $result: map-merge($result, (
+                #{$key}: $value
+            ))
+        }
+    }
+
+    $result: map-merge($obj, $result);
+
+    @return $result;
+}
+
+@function _generate-palette($color) {
+    @return (
+        100: gen-color($color, 100),
+        200: gen-color($color, 200),
+        300: gen-color($color, 300),
+        400: gen-color($color, 400),
+        500: $color,
+        600: gen-color($color, 600),
+        700: gen-color($color, 700),
+        800: gen-color($color, 800),
+        900: gen-color($color, 900),
+        A100: gen-color($color, 'A100'),
+        A200: gen-color($color, 'A200'),
+        A400: gen-color($color, 'A400'),
+        A700: gen-color($color, 'A700'),
+        contrast: (
+            100: text-contrast(gen-color($color, 100)),
+            200: text-contrast(gen-color($color, 200)),
+            300: text-contrast(gen-color($color, 300)),
+            400: text-contrast(gen-color($color, 400)),
+            500: text-contrast($color),
+            600: text-contrast(gen-color($color, 600)),
+            700: text-contrast(gen-color($color, 700)),
+            800: text-contrast(gen-color($color, 800)),
+            900: text-contrast(gen-color($color, 900)),
+            A100: text-contrast(gen-color($color, 'A100')),
+            A200: text-contrast(gen-color($color, 'A200')),
+            A400: text-contrast(gen-color($color, 'A400')),
+            A700: text-contrast(gen-color($color, 'A700')),
+        )
+    );
+}
+
+@function igx-palette($primary, $accent, $warn: $warn-color, $info: $info-color, $success: $success-color, $error: $error-color) {
+    $primary-palette: _generate-palette($primary);
+    $accent-palette: _generate-palette($accent);
+    $warn-palette: _generate-palette($warn);
+
+    // @debug 'Primary Colors Palette: #{$primary-palette}';
+    // @debug 'Accent Colors Palette: #{$accent-palette}';
+    // @debug 'Warn Colors Palette: #{$warn-palette}';
+
+    @return (
+        primary: $primary-palette,
+        accent: $accent-palette,
+        warn: $warn-palette,
+        grays: (
+            100: rgba(0, 0, 0, .04),
+            200: rgba(0, 0, 0, .08),
+            300: rgba(0, 0, 0, .12),
+            400: rgba(0, 0, 0, .26),
+            500: rgba(0, 0, 0, .38),
+            600: rgba(0, 0, 0, .54),
+            700: rgba(0, 0, 0, .62),
+            800: rgba(0, 0, 0, .74),
+            900: rgba(0, 0, 0, .87),
+            contrast: (
+                100: text-contrast(rgba(0, 0, 0, .04)),
+                200: text-contrast(rgba(0, 0, 0, .08)),
+                300: text-contrast(rgba(0, 0, 0, .12)),
+                400: text-contrast(rgba(0, 0, 0, .26)),
+                500: text-contrast(rgba(0, 0, 0, .38)),
+                600: text-contrast(rgba(0, 0, 0, .54)),
+                700: text-contrast(rgba(0, 0, 0, .62)),
+                800: text-contrast(rgba(0, 0, 0, .74)),
+                900: text-contrast(rgba(0, 0, 0, .87)),
+            )
+        ),
+        info: (500: $info),
+        success: (500: $success),
+        error: (500: $error)
+    );
+}
+
+@function register-component($components, $component) {
+
+    @if not(index($components, $component)) {
+        @return join($components, $component);
+    }
+
+    @return $components;
+}

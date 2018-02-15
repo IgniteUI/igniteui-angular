@@ -1,0 +1,69 @@
+$default-margin: 0;
+
+@mixin hide-default {
+    margin: $default-margin;
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+    width: 0;
+    height: 0;
+    left: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+@mixin linear-gradient($direction, $color-stops...) {
+    // Direction has been omitted and happens to be a color-stop
+    @if is-direction($direction) == false {
+        $color-stops: $direction, $color-stops;
+        $direction: 180deg;
+    }
+    background: linear-gradient($direction, $color-stops);
+}
+
+@mixin clearfix {
+    zoom: 1;
+
+    &::before,
+    &::after {
+        display: table;
+        content: '';
+    }
+
+    &::after {
+        clear: both;
+    }
+}
+
+@mixin keyframes($name) {
+    $keyframe: map-get($keyframes, $name);
+
+    @if $keyframe == null {
+        $keyframe: unique-id();
+        $keyframes: map-merge($keyframes, (#{$name}: $keyframe)) !global;
+
+        @at-root {
+            @keyframes #{$name} {
+                @content;
+            }
+        }
+    }
+}
+
+@mixin animation($animate...) {
+    $max: length($animate);
+    $animations: '';
+    @for $i from 1 through $max {
+        $animations: #{$animations + nth($animate, $i)};
+        @if $i < $max {
+            $animations: #{$animations + ', '};
+        }
+    }
+    animation: $animations;
+}
+
+@mixin ellipsis() {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

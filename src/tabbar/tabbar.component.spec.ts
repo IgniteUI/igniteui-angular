@@ -1,12 +1,12 @@
 import { AfterContentChecked, AfterViewChecked, Component, ContentChildren, QueryList, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxTab, IgxTabBar, IgxTabBarModule, IgxTabPanel } from "./tabbar.component";
+import { IgxTabBarComponent, IgxTabBarModule, IgxTabComponent, IgxTabPanelComponent, IgxTabTemplateDirective } from "./tabbar.component";
 
 describe("TabBar", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [TabBarTestComponent, BottomTabBarTestComponent],
+            declarations: [TabBarTestComponent, BottomTabBarTestComponent, TemplatedTabBarTestComponent],
             imports: [IgxTabBarModule]
         })
             .compileComponents();
@@ -15,8 +15,8 @@ describe("TabBar", () => {
     it("should initialize igx-tab-bar, igx-tab-panel and igx-tab", () => {
         const fixture = TestBed.createComponent(TabBarTestComponent);
         const tabbar = fixture.componentInstance.tabbar;
-        let panels: IgxTabPanel[];
-        let tabs: IgxTab[];
+        let panels: IgxTabPanelComponent[];
+        let tabs: IgxTabComponent[];
 
         fixture.detectChanges();
 
@@ -24,12 +24,12 @@ describe("TabBar", () => {
         tabs = tabbar.tabs.toArray();
 
         expect(tabbar).toBeDefined();
-        expect(tabbar instanceof IgxTabBar).toBeTruthy();
+        expect(tabbar instanceof IgxTabBarComponent).toBeTruthy();
         expect(tabbar.panels instanceof QueryList).toBeTruthy();
         expect(tabbar.panels.length).toBe(3);
 
         for (let i = 0; i < tabbar.panels.length; i++) {
-            expect(panels[i] instanceof IgxTabPanel).toBeTruthy();
+            expect(panels[i] instanceof IgxTabPanelComponent).toBeTruthy();
             expect(panels[i].relatedTab).toBe(tabs[i]);
         }
 
@@ -37,7 +37,7 @@ describe("TabBar", () => {
         expect(tabbar.tabs.length).toBe(3);
 
         for (let i = 0; i < tabbar.tabs.length; i++) {
-            expect(tabs[i] instanceof IgxTab).toBeTruthy();
+            expect(tabs[i] instanceof IgxTabComponent).toBeTruthy();
             expect(tabs[i].relatedPanel).toBe(panels[i]);
         }
     });
@@ -84,8 +84,8 @@ describe("TabBar", () => {
         const fixture = TestBed.createComponent(TabBarTestComponent);
         const tabbar = fixture.componentInstance.tabbar;
         let tabs;
-        let tab1: IgxTab;
-        let tab2: IgxTab;
+        let tab1: IgxTabComponent;
+        let tab2: IgxTabComponent;
 
         expect(tabbar.selectedIndex).toBe(-1);
         fixture.componentInstance.tabSelectedHandler = () => {
@@ -127,6 +127,19 @@ describe("TabBar", () => {
         expect(tab1.isSelected).toBeTruthy();
         expect(tab2.isSelected).toBeFalsy();
     });
+
+    it("should initialize igx-tab custom template", () => {
+        const fixture = TestBed.createComponent(TemplatedTabBarTestComponent);
+        const tabbar = fixture.componentInstance.tabbar;
+
+        fixture.detectChanges();
+
+        const tabs: IgxTabComponent[] = tabbar.tabs.toArray();
+
+        expect(tabbar.tabs.length).toBe(3);
+
+        tabbar.tabs.forEach((tab) => expect(tab.relatedPanel.customTabTemplate).toBeDefined());
+    });
 });
 
 @Component({
@@ -161,7 +174,7 @@ describe("TabBar", () => {
         </div>`
 })
 class TabBarTestComponent {
-    @ViewChild(IgxTabBar) public tabbar: IgxTabBar;
+    @ViewChild(IgxTabBarComponent) public tabbar: IgxTabBarComponent;
     @ViewChild("wrapperDiv") public wrapperDiv: any;
 
     public tabSelectedHandler(args) {
@@ -200,6 +213,37 @@ class TabBarTestComponent {
         </div>`
 })
 class BottomTabBarTestComponent {
-    @ViewChild(IgxTabBar) public tabbar: IgxTabBar;
+    @ViewChild(IgxTabBarComponent) public tabbar: IgxTabBarComponent;
+    @ViewChild("wrapperDiv") public wrapperDiv: any;
+}
+
+@Component({
+    template: `
+        <div #wrapperDiv>
+
+        <igx-tab-bar>
+            <igx-tab-panel label="dede">
+                <ng-template igxTab>
+                    <div>T1</div>
+                 </ng-template>
+                 <h1>Tab 1 Content</h1>
+              </igx-tab-panel>
+            <igx-tab-panel label="Tab 2">
+                <ng-template igxTab>
+                    <div>T2</div>
+                </ng-template>
+                <h1>Tab 2 Content</h1>
+            </igx-tab-panel>
+            <igx-tab-panel label="Tab 3">
+                <ng-template igxTab>
+                    <div>T3</div>
+                </ng-template>
+                <h1>Tab 3 Content</h1>
+            </igx-tab-panel>
+        </igx-tab-bar>
+        </div>`
+})
+class TemplatedTabBarTestComponent {
+    @ViewChild(IgxTabBarComponent) public tabbar: IgxTabBarComponent;
     @ViewChild("wrapperDiv") public wrapperDiv: any;
 }

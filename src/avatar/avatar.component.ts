@@ -2,97 +2,105 @@ import { CommonModule } from "@angular/common";
 import {
     Component,
     ElementRef,
+    HostBinding,
     Input,
     NgModule,
-    Renderer2,
-    ViewChild,
-    ViewEncapsulation
+    OnInit,
+    TemplateRef,
+    ViewChild
 } from "@angular/core";
 import { IgxIconModule } from "../icon/icon.component";
 
 export enum Size {
-    SMALL,
-    MEDIUM,
-    LARGE
+    SMALL = "small",
+    MEDIUM = "medium",
+    LARGE = "large"
 }
 
 @Component({
-    encapsulation: ViewEncapsulation.None,
     selector: "igx-avatar",
-    styleUrls: ["./avatar.component.scss"],
     templateUrl: "avatar.component.html"
 })
-export class IgxAvatar {
-    @ViewChild("image") public image: ElementRef;
-    @Input() public initials: string;
-    @Input() public src: string;
-    @Input("roundShape") public roundShape: string = "false";
-    @Input() public color: string = "white";
+export class IgxAvatarComponent implements OnInit {
+    @ViewChild("image")
+    public image: ElementRef;
 
-    public sizeEnum = Size;
+    @ViewChild("imageTemplate", { read: TemplateRef })
+    protected imageTemplate: TemplateRef<any>;
+
+    @ViewChild("initialsTemplate", { read: TemplateRef })
+    protected initialsTemplate: TemplateRef<any>;
+
+    @ViewChild("iconTemplate", { read: TemplateRef })
+    protected iconTemplate: TemplateRef<any>;
+
+    @HostBinding("attr.aria-label")
+    public ariaLabel = "avatar";
+
+    @HostBinding("attr.role")
+    public role = "img";
+
+    @HostBinding("attr.class")
+    public get classes() {
+        if (this.roundShape) {
+            return `igx-avatar--rounded igx-avatar--${this._size}`;
+        }
+        return `igx-avatar igx-avatar--${this._size}`;
+    }
+
     public roleDescription: string;
-
-    protected fontName = "Titillium Web";
-
-    private _size: string;
-    private _bgColor: string;
-    private _icon: string = "android";
+    private _size: string | Size = "small";
 
     @Input()
-    get size(): string {
-        return this._size === undefined ? "small" : this._size;
-    }
-
-    set size(value: string) {
-        const sizeType = this.sizeEnum[value.toUpperCase()];
-        this._size = sizeType === undefined ? "small" : value.toLowerCase();
-    }
+    public roundShape = false;
 
     @Input()
-    get bgColor(): string {
-        return this._bgColor;
-    }
-
-    set bgColor(value: string) {
-        const color = value === "" ? "lightgrey" : value;
-        this._bgColor = color;
-    }
-
-    public get srcImage() {
-        return this.image ? this.image.nativeElement.src : "";
-    }
-
-    public set srcImage(value: string) {
-        this.image.nativeElement.src = value;
-    }
-
-    get isRounded(): boolean {
-        return this.roundShape.toUpperCase() === "TRUE" ? true : false;
-    }
+    public color: string;
 
     @Input()
-    public get icon(): string {
-        return this._icon;
+    public bgColor: string;
+
+    @Input()
+    public initials: string;
+
+    @Input()
+    public icon: string;
+
+    @Input()
+    public src: string;
+
+    @Input()
+    public get size(): string | Size {
+        return this._size;
     }
 
-    public set icon(value: string) {
-        this._icon = value;
-    }
-
-    constructor(public elementRef: ElementRef, private renderer: Renderer2) {
-        this._addEventListeners(renderer);
-    }
-
-    public ngAfterViewInit() {
-        if (this.initials && this.image) {
-            const src = this.generateInitials(
-                parseInt(this.image.nativeElement.width, 10)
-            );
-            this.image.nativeElement.src = src;
+    public set size(value: string | Size) {
+        switch (value) {
+            case "small":
+            case "medium":
+            case "large":
+                this._size = value;
+                break;
+            default:
+                this._size = "small";
         }
     }
 
-    public ngAfterContentChecked() {
+    get template() {
+        if (this.src) {
+            return this.imageTemplate;
+        }
+
+        if (this.initials) {
+            return this.initialsTemplate;
+        }
+
+        return this.iconTemplate;
+    }
+
+    constructor(public elementRef: ElementRef) { }
+
+    public ngOnInit() {
         this.roleDescription = this.getRole();
     }
 
@@ -105,36 +113,11 @@ export class IgxAvatar {
             return "icon type avatar";
         }
     }
-
-    private generateInitials(size) {
-        const canvas = document.createElement("canvas");
-        const fontSize = size / 2;
-        let ctx;
-
-        canvas.width = size;
-        canvas.height = size;
-
-        ctx = canvas.getContext("2d");
-        ctx.fillStyle = this.bgColor;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.textAlign = "center";
-        ctx.fillStyle = this.color;
-        ctx.font = fontSize + `px ${this.fontName}`;
-        ctx.fillText(
-            this.initials.toUpperCase(),
-            size / 2,
-            size - size / 2 + fontSize / 3
-        );
-
-        return canvas.toDataURL("image/png");
-    }
-
-    private _addEventListeners(renderer: Renderer2) { }
 }
 
 @NgModule({
-    declarations: [IgxAvatar],
-    exports: [IgxAvatar],
+    declarations: [IgxAvatarComponent],
+    exports: [IgxAvatarComponent],
     imports: [CommonModule, IgxIconModule]
 })
 export class IgxAvatarModule { }

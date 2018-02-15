@@ -23,7 +23,7 @@ function testSort() {
         data = dataGenerator.data;
     }));
     describe("Test sorting", () => {
-        it('sorts descending column "number"', () => {
+        it("sorts descending column 'number'", () => {
             const se: ISortingExpression = {
                 dir: SortingDirection.Desc,
                 fieldName: "number"
@@ -32,7 +32,7 @@ function testSort() {
             expect(dataGenerator.getValuesForColumn(res, "number"))
                 .toEqual(dataGenerator.generateArray(4, 0));
         });
-        it('sorts ascending column "boolean"', () => {
+        it("sorts ascending column 'boolean'", () => {
             const se: ISortingExpression = {
                 dir: SortingDirection.Asc,
                 fieldName: "boolean"
@@ -42,7 +42,7 @@ function testSort() {
                 .toEqual([false, false, false, true, true]);
         });
         // test multiple sorting
-        it('sorts descending column "boolean", sorts "date" ascending', () => {
+        it("sorts descending column 'boolean', sorts 'date' ascending", () => {
             const se0: ISortingExpression = {
                 dir: SortingDirection.Desc,
                 fieldName: "boolean"
@@ -100,7 +100,7 @@ function testFilter() {
     const dataGenerator: DataGenerator = new DataGenerator();
     const data: object[] = dataGenerator.data;
     describe("test filtering", () => {
-        it('filters "number" column greater than 3', () => {
+        it("filters 'number' column greater than 3", () => {
             const res = DataUtil.filter(data, {
                 expressions: [{fieldName: "number", condition: FilteringCondition.number.greaterThan, searchVal: 3}]
             });
@@ -108,7 +108,7 @@ function testFilter() {
                     .toEqual([4]);
         });
         // test string filtering - with ignoreCase true/false
-        it('filters "string" column contains "row"', () => {
+        it("filters 'string' column contains 'row'", () => {
             let res = DataUtil.filter(data, {
                                         expressions: [
                                                 {

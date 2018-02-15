@@ -1,19 +1,27 @@
 import { transition, trigger, useAnimation } from "@angular/animations";
-import { CommonModule } from "@angular/common";
 import {
     Component,
-    ElementRef,
+    ContentChild,
     EventEmitter,
     forwardRef,
+    HostBinding,
+    HostListener,
     Input,
-    NgModule,
     OnInit,
-    Output
+    Output,
+    QueryList,
+    TemplateRef,
+    ViewChildren
 } from "@angular/core";
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from "@angular/platform-browser";
 import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from "../animations/main";
-import { IgxIconModule } from "../icon/icon.component";
 import { Calendar, ICalendarDate, range, weekDay, WEEKDAYS } from "./calendar";
+import {
+    IgxCalendarDateDirective,
+    IgxCalendarHeaderTemplateDirective,
+    IgxCalendarSubheaderTemplateDirective
+} from "./calendar.directives";
 
 export enum CalendarView {
     DEFAULT,
@@ -21,14 +29,24 @@ export enum CalendarView {
     DECADE
 }
 
+export enum CalendarSelection {
+    SINGLE = "single",
+    MULTI = "multi",
+    RANGE = "range"
+}
+
+export class CalendarHammerConfig extends HammerGestureConfig {
+    public overrides = {
+        pan: { direction: Hammer.DIRECTION_VERTICAL, threshold: 1 }
+    };
+}
+
 /**
+ * The IgxCalendarComponent provides a way to manipulate dates.
  *
- *
- * @export
- * @class IgxCalendarComponent
- * @implements {OnInit}
- * @implements {DoCheck}
- * @implements {ControlValueAccessor}
+ * ```html
+ *  <igx-calendar></igx-calendar>
+ * ```
  */
 @Component({
     animations: [
@@ -54,31 +72,56 @@ export enum CalendarView {
             }))
         ])
     ],
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxCalendarComponent, multi: true }],
+    providers: [
+            {
+                multi: true,
+                provide: NG_VALUE_ACCESSOR,
+                useExisting: IgxCalendarComponent
+            },
+            {
+                provide: HAMMER_GESTURE_CONFIG,
+                useClass: CalendarHammerConfig
+            }
+        ],
     selector: "igx-calendar",
-    styleUrls: ["./calendar.component.scss"],
     templateUrl: "calendar.component.html"
 })
 export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 
     /**
-     * Returns the day on which the week starts
-     *
-     * @readonly
-     * @type {(WEEKDAYS | number)}
-     * @memberof IgxCalendarComponent
+     * An `@Input` property incidcating the start of the week.
+     * Defaults to Sunday.
      */
-    @Input() public get weekStart(): WEEKDAYS | number {
+    @Input()
+    public get weekStart(): WEEKDAYS | number {
         return this.calendarModel.firstWeekDay;
     }
+
     public set weekStart(value: WEEKDAYS | number) {
         this.calendarModel.firstWeekDay = value;
     }
-    @Input() public locale: string = "en";
-    @Input() public get selection(): string {
+
+    /**
+     * An `@Input` property indicating the locale of the calendar.
+     * Expects a valid BCP 47 language tag.
+     */
+    @Input()
+    public locale = "en-EN";
+
+    /**
+     * An @Input property controlling the selection mechanism of the calendar.
+     * Allowed values are `single`, `multi` and `range`. Defaults to `single`.
+     * Providing and invalid value will throw an error.
+     *
+     * Changing the type of selection in the calendar resets the currently
+     * selected values if any.
+     */
+    @Input()
+    public get selection(): string {
         return this._selection;
     }
-    public set selection(value) {
+
+    public set selection(value: string) {
         switch (value) {
             case "single":
                 this.selectedDates = null;
@@ -95,314 +138,373 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         this._selection = value;
     }
 
-    @Input() public get viewDate(): Date {
+    /**
+     * An @Input property controlling the
+     */
+    @Input()
+    public get viewDate(): Date {
         return this._viewDate;
     }
 
     public set viewDate(value: Date) {
         this._viewDate = new Date(value);
     }
-    @Output() public onSelection = new EventEmitter<Date | Date[]>();
 
-    @Input() public get value(): Date | Date[] {
+    /**
+     * Gets and sets the selected date(s) of the calendar.
+     *
+     * When the calendar selection is set to `single`, it accepts/returns
+     * a single `Date` object.
+     * Otherwise it is an array of `Date` objects.
+     */
+    @Input()
+    public get value(): Date | Date[] {
         return this.selectedDates;
     }
 
-    public set value(val: Date | Date[]) {
-        this.selectDate(val);
+    public set value(value: Date | Date[]) {
+        this.selectDate(value);
     }
 
-    @Input() public formatOptions = {
+    /**
+     * An @Input property which controls the formatting of the date components to use in
+     * formatted output.
+     */
+    @Input()
+    public formatOptions = {
         day: "numeric",
         month: "short",
         weekday: "short",
         year: "numeric"
     };
 
-    public get activeView(): CalendarView {
+    /**
+     * An @Input property controlling whether the date components should be rendered in the appropriate view,
+     * using the locale formatting if any,
+     * where `day` is the default view, `month` is the month view and `year` is the year view.
+     */
+    @Input()
+    public formatViews = {
+        day: false,
+        month: true,
+        year: false
+    };
+
+    /**
+     * An @Input property controlling the layout of the calendar.
+     * When `vertical` is set to `true` the calendar header will be displayed on the side of
+     * the calendar body, otherwise it will be above (default).
+     */
+    @Input()
+    public vertical = false;
+
+    @Output()
+    public onSelection = new EventEmitter<Date | Date[]>();
+
+    /**
+     * @hidden
+     */
+    @ViewChildren(forwardRef(() => IgxCalendarDateDirective), { read: IgxCalendarDateDirective })
+    public dates: QueryList<IgxCalendarDateDirective>;
+
+    /**
+     * The default `tabindex` attribute for the component.
+     *
+     * @hidden
+     */
+    @HostBinding("attr.tabindex")
+    public tabindex = 0;
+
+    /**
+     * The default aria role attribute for the component.
+     *
+     * @hidden
+     */
+    @HostBinding("attr.role")
+    public role = "grid";
+
+    /**
+     * The default aria lebelled by attribute for the component.
+     *
+     * @hidden
+     */
+    @HostBinding("attr.aria-labelledby")
+    public ariaLabelledBy = "calendar";
+
+    /**
+     * The default css class applied to the component.
+     *
+     * @hidden
+     */
+    @HostBinding("class")
+    get styleClass(): string {
+        if (this.vertical) {
+            return "igx-calendar--vertical";
+        }
+        return "igx-calendar";
+    }
+
+    /**
+     * Returns an array of date objects which are then used to
+     * properly render the month names.
+     *
+     * Used in the template of the component
+     *
+     * @hidden
+     */
+    get months(): Date[] {
+        let start = new Date(this._viewDate.getFullYear(), 0, 1);
+        const result = [];
+
+        for (let i = 0; i < 12; i++) {
+            result.push(start);
+            start = this.calendarModel.timedelta(start, "month", 1);
+        }
+
+        return result;
+    }
+
+    /**
+     * Returns an array of date objects which are then used to properly
+     * render the years.
+     *
+     * Used in the template of the component.
+     *
+     * @hidden
+     */
+    get decade(): number[] {
+        const result = [];
+        const start = this._viewDate.getFullYear() - 3;
+        const end = this._viewDate.getFullYear() + 4;
+
+        for (const year of range(start, end)) {
+            result.push(new Date(year, this._viewDate.getMonth(), this._viewDate.getDate()));
+        }
+
+        return result;
+    }
+
+    get isDefaultView(): boolean {
+        return this._activeView === CalendarView.DEFAULT;
+    }
+
+    get isYearView(): boolean {
+        return this._activeView === CalendarView.YEAR;
+    }
+
+    get isDecadeView(): boolean {
+        return this._activeView === CalendarView.DECADE;
+    }
+
+    /**
+     * Returns the current active view of the calendar.
+     */
+    get activeView(): CalendarView {
         return this._activeView;
     }
 
-    public get monthAction(): string {
+    /**
+     * @hidden
+     */
+    get monthAction(): string {
         return this._monthAction;
     }
 
-    private calendarModel: Calendar;
+    get headerTemplate(): any {
+        if (this.headerTemplateDirective) {
+            return this.headerTemplateDirective.template;
+        }
+        return null;
+    }
+
+    set headerTemplate(directive: any) {
+        this.headerTemplateDirective = directive;
+    }
+
+    get subheaderTemplate(): any {
+        if (this.subheaderTemplateDirective) {
+            return this.subheaderTemplateDirective.template;
+        }
+        return null;
+    }
+
+    set subheaderTemplate(directive: any) {
+        this.subheaderTemplateDirective = directive;
+    }
+
+    /**
+     * Returns the context for the template marked with the `igxCalendarHeader` directive.
+     *
+     */
+    get headerContext() {
+        const date: Date = this.headerDate;
+        return this.generateContext(date);
+    }
+
+    /**
+     * Returns the context for the template marked with either `igxCalendarSubHeaderMonth`
+     * or `igxCalendarSubHeaderYear` directive.
+     */
+    get context() {
+        const date: Date = this._viewDate;
+        return this.generateContext(date);
+    }
+
+    /**
+     * @hidden
+     */
+    get headerDate(): Date {
+        return this.selectedDates ? this.selectedDates : new Date();
+    }
+
+    /**
+     * @hidden
+     */
+    @ContentChild(forwardRef(() => IgxCalendarHeaderTemplateDirective), { read: IgxCalendarHeaderTemplateDirective })
+    private headerTemplateDirective: IgxCalendarHeaderTemplateDirective;
+
+    /**
+     * @hidden
+     */
+    // tslint:disable-next-line:max-line-length
+    @ContentChild(forwardRef(() => IgxCalendarSubheaderTemplateDirective), { read: IgxCalendarSubheaderTemplateDirective })
+    private subheaderTemplateDirective: IgxCalendarSubheaderTemplateDirective;
+
     private _viewDate: Date;
-    private headerDate: Date;
+    private calendarModel: Calendar;
     private _activeView = CalendarView.DEFAULT;
     private selectedDates;
-    private _selection: "single" | "multi" | "range" = "single";
-    private _rangeStarted: boolean = false;
+    private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
+    private _rangeStarted = false;
     private _monthAction = "";
 
-    constructor(private elementRef: ElementRef) {
+    /**
+     * @hidden
+     */
+    constructor() {
         this.calendarModel = new Calendar();
     }
 
-    public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
-    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+    /**
+     * @hidden
+     */
+    public ngOnInit() {
+        const today = new Date();
 
+        this.calendarModel.firstWeekDay = this.weekStart;
+        this._viewDate = this._viewDate ? this._viewDate : today;
+    }
+
+    /**
+     * @hidden
+     */
+    public registerOnChange(fn: (v: Date) => void) {
+        this._onChangeCallback = fn;
+    }
+
+    /**
+     * @hidden
+     */
+    public registerOnTouched(fn: () => void) {
+        this._onTouchedCallback = fn;
+    }
+
+    /**
+     * @hidden
+     */
     public writeValue(value: Date | Date[]) {
         this.selectedDates = value;
     }
 
-    public ngOnInit(): void {
-        this.calendarModel.firstWeekDay = this.weekStart;
-
-        const today = new Date(Date.now());
-
-        if (!this._viewDate) {
-            this._viewDate = new Date(today);
+    /**
+     * Returns the locale representation of the month in the month view if enabled,
+     * otherwise returns the default `Date.getMonth()` value.
+     *
+     * @hidden
+     */
+    public formattedMonth(value: Date): string {
+        if (this.formatViews.month) {
+            return value.toLocaleString(this.locale, { month: this.formatOptions.month });
         }
-
-        this.headerDate = new Date(today);
+        return `${value.getMonth()}`;
     }
 
-    public generateWeekHeader(): string[] {
-        const dayNames: string[] = [];
-        const rv = this.calendarModel.monthdatescalendar(this.viewDate.getFullYear(), this.viewDate.getMonth())[0];
-
-        for (const day of rv) {
-            dayNames.push(day.date.toLocaleString(this.locale, { weekday: this.formatOptions.weekday }));
+    /**
+     * Returns the locale representation of the date in the default view if enabled,
+     * otherwise returns the default `Date.getDate()` value.
+     *
+     * @hidden
+     */
+    public formattedDate(value: Date): string {
+        if (this.formatViews.day) {
+            return value.toLocaleString(this.locale, { day: this.formatOptions.day });
         }
-
-        return dayNames;
+        return `${value.getDate()}`;
     }
 
-    public get getCalendarMonth(): ICalendarDate[][] {
-        return this.calendarModel.monthdatescalendar(this.viewDate.getFullYear(), this.viewDate.getMonth(), true);
+    /**
+     * Returns the locale representation of the year in the year view if enabled,
+     * otherwise returns the default `Date.getFullYear()` value.
+     *
+     * @hidden
+     */
+    public formattedYear(value: Date): string {
+        if (this.formatViews.year) {
+            return value.toLocaleString(this.locale, { year: this.formatOptions.year });
+        }
+        return `${value.getFullYear()}`;
     }
 
-    public onDateClick(event: MouseEvent): void {
-        const target: any = event.target;
-
-        if (target.nodeName.toLowerCase() !== "span") {
-            return;
-        }
-
-        if (target.dataset.prevmonth) {
-            this.prevMonth();
-        }
-
-        if (target.dataset.nextmonth) {
-            this.nextMonth();
-        }
-
-        const value = new Date(this._viewDate.getFullYear(),
-            this._viewDate.getMonth(), parseInt(target.textContent, 10));
-
-        this.selectDate(value);
+    /**
+     * @hidden
+     */
+    public isCurrentMonth(value: Date): boolean {
+        return this.viewDate.getMonth() === value.getMonth();
     }
 
-    public selectDate(date: Date | Date[]): void {
-
-        switch (this.selection) {
-            case "single":
-                this.selectSingle(date as Date);
-                break;
-            case "multi":
-                this.selectMulti(date);
-                break;
-            case "range":
-                this.selectRange(date);
-                break;
-            default:
-                this.selectSingle(date as Date);
-        }
-
-        this.onSelection.emit(this.selectedDates);
+    /**
+     * @hidden
+     */
+    public isCurrentYear(value: Date): boolean {
+        return this.viewDate.getFullYear() === value.getFullYear();
     }
 
-    public handleKeyDown(event) {
-
-        if (event.key.startsWith("Page")) {
-            this.handlePageUpDown(event);
-            return;
-        }
-
-        if (event.key.endsWith("Left") || event.key.endsWith("Right") ||
-            event.key.endsWith("Up") || event.key.endsWith("Down")) {
-            this.handleKeyboardNavigation(event);
-            return;
-        }
-
-        switch (event.key) {
-            case "Home":
-                event.preventDefault();
-                this.elementRef.nativeElement.querySelectorAll("[data-curmonth='true']")[0].focus();
-                break;
-            case "End":
-                event.preventDefault();
-                const curentDates = this.elementRef.nativeElement.querySelectorAll("[data-curmonth='true']");
-                curentDates[curentDates.length - 1].focus();
-                break;
-            case "Enter":
-                this.onDateClick(event);
-                break;
-            default:
-                return;
-        }
-    }
-
-    public selectSingle(newVal: Date): void {
-        this.selectedDates = newVal;
-        this._onChangeCallback(this.selectedDates);
-    }
-
-    public selectMulti(newVal: Date | Date[]): void {
-        if (newVal instanceof Array) {
-            // XXX: Behavior for deselect with array
-            this.selectedDates = this.selectedDates.concat(newVal);
-        } else {
-            if (this.selectedDates.every((date: Date) => date.toDateString() !== newVal.toDateString())) {
-                this.selectedDates.push(newVal);
-            } else {
-                // Deselect if already selected
-                this.selectedDates = this.selectedDates.filter(
-                    (date: Date) => date.toDateString() !== newVal.toDateString()
-                );
-            }
-        }
-        this._onChangeCallback(this.selectedDates);
-    }
-
-    public selectRange(newVal: Date | Date[]): void {
-
-        if (newVal instanceof Array) {
-
-            this._rangeStarted = false;
-            newVal.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
-            let start: Date = newVal[0];
-            this.selectedDates = [start];
-
-            while (start.toDateString() !== newVal[newVal.length - 1].toDateString()) {
-                start = this.calendarModel.timedelta(start, "day", 1);
-                this.selectedDates.push(start);
-            }
-        } else {
-            // Single date toggle on range selection
-            if (!this._rangeStarted) {
-                this._rangeStarted = true;
-                this.selectedDates = [newVal];
-            } else {
-                // End value for range selection mode; toggle off
-                this._rangeStarted = false;
-
-                // Selected range end is the same as start; toggle new range selection
-                /// XXX: Or maybe we should just return a range of 1 ??
-                if (this.selectedDates[0].toDateString() === newVal.toDateString()) {
-                    this.selectedDates = [];
-                    this._onChangeCallback(this.selectedDates);
-                    return;
-                }
-                this.selectedDates.push(newVal);
-                this.selectedDates.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
-
-                let start: Date = this.selectedDates[0];
-                const end: Date = this.selectedDates.pop();
-
-                while (start.toDateString() !== end.toDateString()) {
-                    start = this.calendarModel.timedelta(start, "day", 1);
-                    this.selectedDates.push(start);
-                }
-            }
-        }
-        this._onChangeCallback(this.selectedDates);
-    }
-    public prevMonth(): void {
+    /**
+     * @hidden
+     */
+    public previousMonth() {
         this._viewDate = this.calendarModel.timedelta(this._viewDate, "month", -1);
         this._monthAction = "prev";
     }
 
-    public nextMonth(): void {
+    /**
+     * @hidden
+     */
+    public nextMonth() {
         this._viewDate = this.calendarModel.timedelta(this._viewDate, "month", 1);
         this._monthAction = "next";
     }
 
-    // Event handlers for scrolling/keyboard interaction
-    public handleScroll(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const currentYear = new Date(Date.now()).getFullYear();
-
-        const delta = event.deltaY < 0 ? 1 : -1;
-
-        // Limit to [-100, +100] years
-        if (delta > 0 && this._viewDate.getFullYear() - currentYear >= 95) {
-            return;
-        }
-        if (delta < 0 && currentYear - this._viewDate.getFullYear() >= 95) {
-            return;
-        }
-        this._viewDate = this.calendarModel.timedelta(this._viewDate, "year", delta);
+    /**
+     * @hidden
+     */
+    public previousYear() {
+        this._viewDate = this.calendarModel.timedelta(this._viewDate, "year", -1);
     }
 
-    public handlePageUpDown(event) {
-        event.preventDefault();
-
-        if (event.key === "PageUp") {
-            if (event.shiftKey) {
-                this.viewDate = this.calendarModel.timedelta(this.viewDate, "year", -1);
-            } else {
-                this.prevMonth();
-            }
-        } else {
-            if (event.shiftKey) {
-                this.viewDate = this.calendarModel.timedelta(this.viewDate, "year", 1);
-            } else {
-                this.nextMonth();
-            }
-        }
+    /**
+     * @hidden
+     */
+    public nextYear() {
+        this._viewDate = this.calendarModel.timedelta(this._viewDate, "year", 1);
     }
 
-    public handleKeyboardNavigation(event) {
-        event.preventDefault();
-
-        if (event.target.nodeName.toLowerCase() !== "span") {
-            return;
-        }
-
-        const target = event.target;
-        let dest = null;
-
-        if (event.key.endsWith("Left")) {
-            dest = target.previousElementSibling;
-            if (dest) {
-                dest.focus();
-            }
-        }
-        if (event.key.endsWith("Right")) {
-            dest = target.nextElementSibling;
-            if (dest) {
-                dest.focus();
-            }
-        }
-        if (event.key.endsWith("Down")) {
-            const targetIndex = Array.from(target.parentNode.children).indexOf(target);
-            dest = target.parentNode.nextElementSibling;
-            if (dest) {
-                dest.children[targetIndex].focus();
-            }
-        }
-        if (event.key.endsWith("Up")) {
-            const targetIndex = Array.from(target.parentNode.children).indexOf(target);
-            dest = target.parentNode.previousElementSibling;
-            if (dest) {
-                dest.children[targetIndex].focus();
-            }
-        }
-    }
-
-    // Util methods for the template
-
-    public getMonthName(date: Date): string {
-        return date.toLocaleString(this.locale, { month: this.formatOptions.month });
-    }
+    /**
+     * @hidden
+     */
     public getFormattedDate(): { weekday: string, monthday: string } {
 
-        const date = this.selectedDates ? this.selectedDates : this.headerDate;
+        const date = this.headerDate;
 
         return {
             monthday: date.toLocaleString(
@@ -411,130 +513,338 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         };
     }
 
-    public getHeaderYear(): string {
-        let res = this.headerDate.toLocaleString(this.locale, { year: this.formatOptions.year });
-
-        if (this.selectedDates) {
-            res = this.selectedDates.toLocaleString(this.locale, { year: this.formatOptions.year });
+    /**
+     * @hidden
+     */
+    public childClicked(instance: ICalendarDate) {
+        if (instance.isPrevMonth) {
+            this.previousMonth();
         }
-        return res;
-    }
 
-    public isInactive(day: ICalendarDate): boolean {
-        return day.isNextMonth || day.isPrevMonth;
-    }
-
-    public isWeekend(day: ICalendarDate): boolean {
-        return day.date.getDay() === 0 || day.date.getDay() === 6;
-    }
-
-    public isCurrentMonth(value: Date): boolean {
-        return this.viewDate.getMonth() === value.getMonth();
-    }
-
-    public isCurrentYear(value: number): boolean {
-        return this.viewDate.getFullYear() === value;
-    }
-
-    public isSelected(day: ICalendarDate): boolean {
-        if (this.selection === "multi" || this.selection === "range") {
-            for (const date of this.selectedDates) {
-                if (date.toDateString() === day.date.toDateString()) {
-                    return true;
-                }
-            }
-            return false;
+        if (instance.isNextMonth) {
+            this.nextMonth();
         }
-        if (this.selectedDates) {
-            return day.date.toDateString() === this.selectedDates.toDateString();
+
+        this.selectDate(instance.date);
+        this.onSelection.emit(this.selectedDates);
+    }
+
+    /**
+     * Performs date selection through the API of the calendar component.
+     * Does not trigger `onSelection` event.
+     */
+    public selectDate(value: Date | Date[]) {
+        switch (this.selection) {
+            case "single":
+                this.selectSingle(value as Date);
+                break;
+            case "multi":
+                this.selectMultiple(value);
+                break;
+            case "range":
+                this.selectRange(value);
+                break;
         }
-        return false;
     }
 
-    public isToday(day: ICalendarDate): boolean {
-        const today = new Date(Date.now());
-        return (day.date.getFullYear() === today.getFullYear() &&
-            day.date.getMonth() === today.getMonth() &&
-            day.date.getDate() === today.getDate());
+    /**
+     * @hidden
+     */
+    public generateWeekHeader(): string[] {
+        const dayNames = [];
+        const rv = this.calendarModel.monthdatescalendar(this.viewDate.getFullYear(), this.viewDate.getMonth())[0];
+        for (const day of rv) {
+            dayNames.push(day.date.toLocaleString(this.locale, { weekday: this.formatOptions.weekday }));
+        }
+
+        return dayNames;
     }
 
-    public get isDefaultView(): boolean {
-        return this.activeView === CalendarView.DEFAULT;
+    /**
+     * @hidden
+     */
+    public get getCalendarMonth(): ICalendarDate[][] {
+        return this.calendarModel.monthdatescalendar(this.viewDate.getFullYear(), this.viewDate.getMonth(), true);
     }
 
-    public get isYearView(): boolean {
-        return this.activeView === CalendarView.YEAR;
+    /**
+     * @hidden
+     */
+    public changeYear(event: Date) {
+        this._viewDate = new Date(event.getFullYear(), this._viewDate.getMonth(), 1, 0, 0, 0);
+        this._activeView = CalendarView.DEFAULT;
     }
 
-    public get isDecadeView(): boolean {
-        return this.activeView === CalendarView.DECADE;
+    /**
+     * @hidden
+     */
+    public changeMonth(event: Date) {
+        this._viewDate = new Date(this._viewDate.getFullYear(), event.getMonth(), 1, 0, 0, 0);
+        this._activeView = CalendarView.DEFAULT;
     }
 
+    /**
+     * @hidden
+     */
     public activeViewYear(): void {
         this._activeView = CalendarView.YEAR;
     }
 
+    /**
+     * @hidden
+     */
     public activeViewDecade(): void {
         this._activeView = CalendarView.DECADE;
     }
 
-    // XXX: WiP! Will still have to discuss what are we showing
-    //      and how are we showing it
-    public getDecade(): number[] {
-        const res = [];
-        const start = this._viewDate.getFullYear() - 5;
-        const end = this._viewDate.getFullYear() + 6;
+    /**
+     * @hidden
+     */
+    public onScroll(event) {
+        event.preventDefault();
+        event.stopPropagation();
 
-        for (const year of range(start, end)) {
-            res.push(year);
+        const delta = event.deltaY < 0 ? 1 : -1;
+        this.generateYearRange(delta);
+    }
+
+    /**
+     * @hidden
+     */
+    public onPan(event) {
+        const delta = event.deltaY < 0 ? 1 : -1;
+        this.generateYearRange(delta);
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener("keydown.pageup", ["$event"])
+    public onKeydownPageUp(event: KeyboardEvent) {
+        event.preventDefault();
+        this.previousMonth();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener("keydown.pagedown", ["$event"])
+    public onKeydownPageDown(event: KeyboardEvent) {
+        event.preventDefault();
+        this.nextMonth();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener("keydown.shift.pageup", ["$event"])
+    public onKeydownShiftPageUp(event: KeyboardEvent) {
+        event.preventDefault();
+        this.previousYear();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener("keydown.shift.pagedown", ["$event"])
+    public onKeydownShiftPageDown(event: KeyboardEvent) {
+        event.preventDefault();
+        this.nextYear();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener("keydown.arrowup", ["$event"])
+    public onKeydownArrowUp(event: KeyboardEvent) {
+        event.preventDefault();
+
+        const node = this.dates.find((date) => date.nativeElement === event.target);
+        const index = this.dates.toArray().indexOf(node);
+        if (node && index > -1 && index - 7 > -1) {
+            this.dates.toArray()[index - 7].nativeElement.focus();
         }
-
-        return res;
     }
 
-    public getYear(): Date[] {
-        let start = new Date(this._viewDate.getFullYear(), 0, 1);
-        const res = [];
+    /**
+     * @hidden
+     */
+    @HostListener("keydown.arrowdown", ["$event"])
+    public onKeydownArrowDown(event: KeyboardEvent) {
+        event.preventDefault();
 
-        for (let i = 0; i < 12; i++) {
-            res.push(start);
-            start = this.calendarModel.timedelta(start, "month", 1);
+        const node = this.dates.find((date) => date.nativeElement === event.target);
+        const index = this.dates.toArray().indexOf(node);
+        if (node && index > -1 && index + 7 < this.dates.length) {
+            this.dates.toArray()[index + 7].nativeElement.focus();
         }
-
-        return res;
     }
 
-    public changeYear(event): void {
-        const year = parseInt(event.target.textContent, 10);
-        this._viewDate = new Date(year, this._viewDate.getMonth(), 1);
-        this._activeView = CalendarView.DEFAULT;
+    /**
+     * @hidden
+     */
+    @HostListener("keydown.arrowleft", ["$event"])
+    public onKeydownArrowLeft(event: KeyboardEvent) {
+        event.preventDefault();
+
+        const node = this.dates.find((date) => date.nativeElement === event.target);
+        const index = this.dates.toArray().indexOf(node);
+        if (node && index > -1 && index > 0) {
+            this.dates.toArray()[index - 1].nativeElement.focus();
+        }
     }
 
-    public changeMonth(event): void {
-        const month = event.target.dataset.index;
-        this._viewDate = new Date(this._viewDate.getFullYear(), month, 1);
-        this._activeView = CalendarView.DEFAULT;
+    /**
+     * @hidden
+     */
+    @HostListener("keydown.arrowright", ["$event"])
+    public onKeydownArrowRight(event: KeyboardEvent) {
+        event.preventDefault();
+
+        const node = this.dates.find((date) => date.nativeElement === event.target);
+        const index = this.dates.toArray().indexOf(node);
+        if (node && index > -1 && index < this.dates.length - 1) {
+            this.dates.toArray()[index + 1].nativeElement.focus();
+        }
     }
 
+    /**
+     * @hidden
+     */
+    @HostListener("keydown.home", ["$event"])
+    public onKeydownHome(event: KeyboardEvent) {
+        event.preventDefault();
+
+        this.dates
+            .filter((date) => date.isCurrentMonth)
+            .shift().nativeElement.focus();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener("keydown.end", ["$event"])
+    public onKeydownEnd(event: KeyboardEvent) {
+        event.preventDefault();
+
+        this.dates
+            .filter((date) => date.isCurrentMonth)
+            .pop().nativeElement.focus();
+    }
+
+    /**
+     * @hidden
+     */
     public dateTracker(index, item): string {
         return `${item.date.getMonth()}--${item.date.getDate()}`;
     }
 
+    /**
+     * @hidden
+     */
     public rowTracker(index, item): string {
         return `${item[index].date.getMonth()}${item[index].date.getDate()}`;
     }
 
-    public monthTracker(index, item): number {
-        return index;
+    /**
+     * Performs a single selection.
+     */
+    private selectSingle(value: Date) {
+        this.selectedDates = value;
+        this._onChangeCallback(this.selectedDates);
+    }
+
+    /**
+     * Performs a multiple selection
+     */
+    private selectMultiple(value: Date | Date[]) {
+        if (Array.isArray(value)) {
+            this.selectedDates = this.selectedDates.concat(value);
+        } else {
+            if (this.selectedDates.every((date: Date) => date.toDateString() !== value.toDateString())) {
+                this.selectedDates.push(value);
+            } else {
+                this.selectedDates = this.selectedDates.filter(
+                    (date: Date) => date.toDateString() !== value.toDateString()
+                );
+            }
+        }
+
+        this._onChangeCallback(this.selectedDates);
+    }
+
+    private selectRange(value: Date | Date[]) {
+        let start: Date;
+        let end: Date;
+
+        if (Array.isArray(value)) {
+            this._rangeStarted = false;
+            value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
+            start = value.shift();
+            end = value.pop();
+            this.selectedDates = [start];
+
+            this.selectedDates = [start, ...this.generateDateRange(start, end)];
+
+        } else {
+            if (!this._rangeStarted) {
+                this._rangeStarted = true;
+                this.selectedDates = [value];
+            } else {
+                this._rangeStarted = false;
+
+                if (this.selectedDates[0].toDateString() === value.toDateString()) {
+                    this.selectedDates = [];
+                    this._onChangeCallback(this.selectedDates);
+                    return;
+                }
+
+                this.selectedDates.push(value);
+                this.selectedDates.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
+
+                start = this.selectedDates.shift();
+                end = this.selectedDates.pop();
+                this.selectedDates = [start, ...this.generateDateRange(start, end)];
+            }
+        }
+        this._onChangeCallback(this.selectedDates);
+    }
+
+    /**
+     * Helper method building and returning the context object inside
+     * the calendar templates.
+     */
+    private generateContext(value: Date) {
+        const formatObject = {
+            monthView: () => this.activeViewYear(),
+            yearView: () => this.activeViewDecade(),
+            ...this.calendarModel.formatToParts(value, this.locale, this.formatOptions,
+                                                    ["era", "year", "month", "day", "weekday"])
+        };
+        return { $implicit: formatObject };
+    }
+
+    private generateDateRange(start: Date, end: Date): Date[] {
+        const result = [];
+
+        while (start.toDateString() !== end.toDateString()) {
+            start = this.calendarModel.timedelta(start, "day", 1);
+            result.push(start);
+        }
+
+        return result;
+    }
+
+    private generateYearRange(delta: number) {
+        const currentYear = new Date().getFullYear();
+
+        if ((delta > 0 && this._viewDate.getFullYear() - currentYear >= 95) ||
+            (delta < 0 && currentYear - this._viewDate.getFullYear() >= 95)) {
+            return;
+        }
+        this._viewDate = this.calendarModel.timedelta(this._viewDate, "year", delta);
     }
 
     private _onTouchedCallback: () => void = () => { };
     private _onChangeCallback: (_: Date) => void = () => { };
 }
-
-@NgModule({
-    declarations: [IgxCalendarComponent],
-    exports: [IgxCalendarComponent],
-    imports: [CommonModule, FormsModule, IgxIconModule]
-})
-export class IgxCalendarModule { }

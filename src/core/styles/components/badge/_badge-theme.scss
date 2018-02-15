@@ -1,0 +1,154 @@
+$component-name: 'igx-badge';
+
+$components: register-component($components, #{$component-name});
+
+@function igx-badge-theme(
+    $icon-color: null,
+    $text-color: null,
+    $border-color: null,
+    $border-radius: null,
+    $background-color: null,
+    $disable-shadow: true,
+    $disable-border: true
+) {
+
+    @if not($icon-color) and $background-color {
+        $icon-color: text-contrast($background-color);
+    }
+
+    @if not($text-color) and $background-color {
+        $text-color: text-contrast($background-color);
+    }
+
+    @return (
+        icon-color: $icon-color,
+        text-color: $text-color,
+        border-color: $border-color,
+        border-radius: $border-radius,
+        background-color: $background-color,
+        disable-shadow: $disable-shadow,
+        disable-border: $disable-border
+    );
+}
+
+@mixin igx-badge($theme, $palette: $default-palette) {
+    $default-theme: igx-badge-theme(
+        $icon-color: $white,
+        $text-color: $white,
+        $border-color: $white,
+        $background-color: igx-color($palette, accent, 500),
+        $border-radius: 4px
+    );
+
+    $this: extend($default-theme, $theme);
+
+    $badge-width: 22px !default;
+    $badge-height: $badge-width !default;
+
+    $badge-border-radius-circle: $badge-width / 2 !default;
+
+    $badge-font-size: rem(11px) !default;
+    $badge-font-weight: 600 !default;
+    $badge-line-height: 2px !default;
+
+    $badge-icon-font-size: rem(12px) !default;
+    
+    $badge-value-padding: 4px !default;
+    $badge-info-background: igx-color($palette, 'primary');
+    $badge-warn-background: igx-color($palette, 'warn');
+    $badge-error-background: igx-color($palette, 'warn', 900);
+
+    $badge-shadow: $elevate-1 !default;
+
+    $border-width: 1px;
+    $border-type: solid;
+
+    @if map-get($this, 'disable-shadow') {
+        $badge-shadow: none;
+    }
+
+    @if map-get($this, 'disable-border') {
+        $border-width: 0;
+    }
+
+    %igx-badge-display {
+        display: flex;
+        min-width: $badge-width;
+    }
+
+    %igx-badge--default {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: $badge-width;
+        height: $badge-height;
+        font-size: $badge-font-size;
+        font-weight: $badge-font-weight;
+        color: map-get($this, 'text-color');
+        background-color: map-get($this, 'background-color');
+        line-height: $badge-line-height;
+        border: $border-width $border-type map-get($this, 'border-color');
+        border-radius: map-get($this, 'border-raduis');
+        box-shadow: $badge-shadow;
+        overflow: hidden;
+
+        i {
+            color: map-get($this, 'icon-color');
+            font-size: $badge-icon-font-size;
+            font-weight: $badge-font-weight;
+        }
+    }
+
+    %igx-badge-value {
+        white-space: nowrap;
+        padding: $badge-value-padding;
+    }
+
+    %igx-badge--circle {
+        border-radius: $badge-border-radius-circle;
+    }
+
+    %igx-circle--success {
+        background-color: $success-color;
+    }
+
+    %igx-badge--info {
+        background-color: $badge-info-background;
+    }
+
+    %igx-circle--warn {
+        background-color: $badge-warn-background;
+    }
+
+    %igx-circle--error {
+        background-color: $badge-error-background;
+    }
+
+    %igx-badge--hidden {
+        visibility: hidden;
+    }
+
+    /*  %igx-badge-pos-tl {
+        top: 0;
+        left: 0;
+    }
+
+    %igx-badge-pos-tr {
+        top: 0;
+        right: 0;
+    }
+
+    %igx-badge-pos-bl {
+        bottom: 0;
+        left: 0;
+    }
+
+    %igx-badge-pos-br {
+        bottom: 0;
+        right: 0;
+    }*/
+
+    %igx-badge--scale-in {
+        animation: scale-in .25s ease-in backwards;
+    }
+}

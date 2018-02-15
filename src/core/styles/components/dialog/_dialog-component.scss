@@ -1,0 +1,22 @@
+@include b(igx-dialog) {
+    @extend %igx-dialog-display !optional;
+    @include e(window) {
+        @extend %igx-dialog-window !optional;
+    }
+    @include e(window-title) {
+        @extend %igx-dialog-title !optional;
+    }
+    @include e(window-content) {
+        @extend %igx-dialog-content !optional;
+    }
+    @include e(window-actions) {
+        @extend %igx-dialog-actions !optional;
+
+        button ~ button {
+            margin-left: 8px;
+        }
+    }
+    @include m(hidden) {
+        @extend %igx-dialog--hidden !optional;
+    }
+}

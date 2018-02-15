@@ -1,20 +1,18 @@
 import { CommonModule } from "@angular/common";
-import { Component, ElementRef, Input, NgModule, ViewEncapsulation } from "@angular/core";
+import { Component, ElementRef, Input, NgModule } from "@angular/core";
 import { IgxIconModule } from "../icon/icon.component";
 
 export enum Type { DEFAULT, INFO, SUCCESS, WARNING, ERROR }
 export enum Position { TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }
 
 @Component({
-    encapsulation: ViewEncapsulation.None,
     selector: "igx-badge",
-    styleUrls: ["./badge.component.scss"],
     templateUrl: "badge.component.html"
 })
-export class IgxBadge {
+export class IgxBadgeComponent {
     public typeEnum = Type;
     public positionEnum = Position;
-    private _type: string = "";
+    private _type = "";
     private _value: string;
     private _iconBdg: string;
     private _position;
@@ -137,8 +135,8 @@ export class IgxBadge {
 }
 
 @NgModule({
-    declarations: [IgxBadge],
-    exports: [IgxBadge],
+    declarations: [IgxBadgeComponent],
+    exports: [IgxBadgeComponent],
     imports: [CommonModule, IgxIconModule]
 })
 export class IgxBadgeModule {

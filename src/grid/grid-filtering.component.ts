@@ -25,7 +25,6 @@ import { IgxColumnComponent } from "./column.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: "igx-grid-filter",
-    styleUrls: ["./grid-filtering.component.scss"],
     templateUrl: "./grid-filtering.component.html"
 })
 export class IgxGridFilterComponent implements OnDestroy {
@@ -128,6 +127,11 @@ export class IgxGridFilterComponent implements OnDestroy {
         this.filterChanged.unsubscribe();
     }
 
+    public refresh() {
+        this.dialogShowing = !this.dialogShowing;
+        this.cdr.detectChanges();
+    }
+
     public isActive(value): boolean {
         return this._filterCondition === value;
     }
@@ -184,14 +188,6 @@ export class IgxGridFilterComponent implements OnDestroy {
         this.filterChanged.next(val);
     }
 
-    public toggle(): void {
-        this.dialogShowing = !this.dialogShowing;
-
-        if (this.dialogShowing) {
-            this.filteringExpression();
-        }
-    }
-
     @HostListener("click", ["$event"])
     public onClick(event) {
         event.stopPropagation();
@@ -211,7 +207,7 @@ export class IgxGridFilterComponent implements OnDestroy {
 
     protected filteringExpression(): boolean {
         const expr = this.gridAPI.get(this.gridID)
-                        .filteringExpressions.find((x) => x.fieldName === this.column.field);
+            .filteringExpressions.find((x) => x.fieldName === this.column.field);
         if (expr) {
             this._value = expr.searchVal;
             this._filterCondition = expr.condition.name;

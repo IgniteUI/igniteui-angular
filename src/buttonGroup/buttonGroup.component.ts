@@ -8,8 +8,8 @@ import {
     forwardRef,
     Inject, Input, NgModule, Output, QueryList, Renderer2, ViewChildren
 } from "@angular/core";
-import { IgxButton, IgxButtonModule } from "../button/button.directive";
-import { IgxRippleModule } from "../directives/ripple.directive";
+import { IgxButtonDirective, IgxButtonModule } from "../directives/button/button.directive";
+import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxIconModule } from "../icon/icon.component";
 
 export enum ButtonGroupAlignment { horizontal, vertical }
@@ -18,21 +18,20 @@ export enum ButtonGroupAlignment { horizontal, vertical }
 // The `<igx-buttonGroup>` component is a  container for buttons
 @Component({
     selector: "igx-buttongroup",
-    styleUrls: ["./buttongroup.component.scss"],
     templateUrl: "buttongroup-content.component.html"
 })
 
-export class IgxButtonGroup implements AfterViewInit {
-    @ViewChildren(IgxButton) public buttons: QueryList<IgxButtonGroup>;
+export class IgxButtonGroupComponent implements AfterViewInit {
+    @ViewChildren(IgxButtonDirective) public buttons: QueryList<IgxButtonGroupComponent>;
     @Input() set itemContentCssClass(value: string) {
         this._itemContentCssClass = value || this._itemContentCssClass;
     }
     get itemContentCssClass(): string {
         return this._itemContentCssClass;
     }
-    @Input() public multiSelection: boolean = false;
+    @Input() public multiSelection = false;
     @Input() public values: any;
-    @Input() public disabled: boolean = false;
+    @Input() public disabled = false;
 
     public selectedIndexes: number[] = [];
 
@@ -55,7 +54,7 @@ export class IgxButtonGroup implements AfterViewInit {
     constructor(private _el: ElementRef, private _renderer: Renderer2, cdr: ChangeDetectorRef) {
     }
 
-    get selectedButtons(): IgxButtonGroup[] {
+    get selectedButtons(): IgxButtonGroupComponent[] {
         return this.buttons.filter((b, i) => {
             return this.selectedIndexes.indexOf(i) !== -1;
         });
@@ -116,8 +115,8 @@ export class IgxButtonGroup implements AfterViewInit {
 }
 
 @NgModule({
-    declarations: [IgxButtonGroup],
-    exports: [IgxButtonGroup],
+    declarations: [IgxButtonGroupComponent],
+    exports: [IgxButtonGroupComponent],
     imports: [IgxButtonModule, CommonModule, IgxRippleModule, IgxIconModule]
 })
 

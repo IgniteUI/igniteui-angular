@@ -5,16 +5,16 @@ import {
 } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { IgxCheckbox } from "./checkbox.component";
+import { IgxCheckboxComponent } from "./checkbox.component";
 
 describe("IgxCheckbox", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                InitCheckbox,
-                CheckboxSimple,
-                CheckboxDisabled,
-                IgxCheckbox
+                InitCheckboxComponent,
+                CheckboxSimpleComponent,
+                CheckboxDisabledComponent,
+                IgxCheckboxComponent
             ],
             imports: [FormsModule]
         })
@@ -22,7 +22,7 @@ describe("IgxCheckbox", () => {
     }));
 
     it("Initializes a checkbox", () => {
-        const fixture = TestBed.createComponent(InitCheckbox);
+        const fixture = TestBed.createComponent(InitCheckboxComponent);
         fixture.detectChanges();
 
         const nativeCheckbox = fixture.debugElement.query(By.css("input")).nativeElement;
@@ -34,7 +34,7 @@ describe("IgxCheckbox", () => {
     });
 
     it("Initialize with a ngModel", () => {
-        const fixture = TestBed.createComponent(CheckboxSimple);
+        const fixture = TestBed.createComponent(CheckboxSimpleComponent);
         fixture.detectChanges();
 
         const nativeCheckbox = fixture.debugElement.query(By.css("input")).nativeElement;
@@ -54,7 +54,7 @@ describe("IgxCheckbox", () => {
     });
 
     it("Disabled state", () => {
-        const fixture = TestBed.createComponent(CheckboxDisabled);
+        const fixture = TestBed.createComponent(CheckboxDisabledComponent);
         fixture.detectChanges();
 
         const nativeCheckbox = fixture.debugElement.query(By.css("input")).nativeElement;
@@ -75,7 +75,7 @@ describe("IgxCheckbox", () => {
     });
 
     it("Event handling", () => {
-        const fixture = TestBed.createComponent(CheckboxSimple);
+        const fixture = TestBed.createComponent(CheckboxSimpleComponent);
         fixture.detectChanges();
 
         const nativeCheckbox = fixture.debugElement.query(By.css("input")).nativeElement;
@@ -89,34 +89,37 @@ describe("IgxCheckbox", () => {
 
         nativeCheckbox.dispatchEvent(new Event("blur"));
         fixture.detectChanges();
-
         expect(checkboxInstance.focused).toBe(false);
 
-        spyOn(checkboxInstance.change, "emit");
-        nativeCheckbox.dispatchEvent(new Event("change"));
+        nativeCheckbox.click();
         fixture.detectChanges();
 
-        expect(checkboxInstance.change.emit).toHaveBeenCalled();
+        expect(testInstance.changeEventCalled).toBe(true);
         expect(testInstance.subscribed).toBe(true);
+
     });
 });
 
 @Component({ template: `<igx-checkbox>Init</igx-checkbox>`})
-class InitCheckbox {}
+class InitCheckboxComponent {}
 
-@Component({ template: `<igx-checkbox #cb [(ngModel)]="subscribed" [checked]="subscribed">Simple</igx-checkbox>`})
-class CheckboxSimple {
-    @ViewChild("cb") public cb: IgxCheckbox;
-
-    public subscribed: boolean = false;
+@Component({ template: `<igx-checkbox #cb (change)="onChange($event)"
+[(ngModel)]="subscribed" [checked]="subscribed">Simple</igx-checkbox>`})
+class CheckboxSimpleComponent {
+    @ViewChild("cb") public cb: IgxCheckboxComponent;
+    public changeEventCalled = false;
+    public subscribed = false;
+    public onChange(event) {
+        this.changeEventCalled = true;
+      }
 }
 
 @Component({ template: `<igx-checkbox #cb
                                 [(ngModel)]="subscribed"
                                 [checked]="subscribed"
                                 [disabled]="true">Disabled</igx-checkbox>`})
-class CheckboxDisabled {
-    @ViewChild("cb") public cb: IgxCheckbox;
+class CheckboxDisabledComponent {
+    @ViewChild("cb") public cb: IgxCheckboxComponent;
 
-    public subscribed: boolean = false;
+    public subscribed = false;
 }
