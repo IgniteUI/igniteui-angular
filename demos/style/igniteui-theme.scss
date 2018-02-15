@@ -1,0 +1,33 @@
+@import '../lib/core/styles/themes/index';
+
+// Generating a palette
+@include igx-core();
+@include igx-theme();
+
+.dark-grid {
+    $dark-gray: #181818; 
+    $light-gray: #282828;
+    $green: #00b95b;
+
+    $dark-grid-theme: igx-grid-theme(
+        $header-background: $dark-gray,
+        $content-background: $light-gray,
+        $cell-selected-background: $green 
+    );
+
+    @include igx-grid($dark-grid-theme);
+
+    $filtering-theme: (
+        menu-background: $light-gray,
+        menu-button-text-color: $green,
+        toggle-hover-background: $light-gray,
+        toggle-active-background: $green,
+        toggle-icon-filtered-color: $green
+    );
+
+    @include igx-grid-filtering($filtering-theme);
+
+    .igx-filtering {
+        @include igx-input((light: true));
+    }
+}
