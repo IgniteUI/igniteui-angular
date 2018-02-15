@@ -1,7 +1,7 @@
 <div class="main">
     <igx-nav-drawer id="navdrawer" #navdrawer [enableGestures]="drawerState.enableGestures" [isOpen]="drawerState.open" [miniWidth]="drawerState.miniWidth"
         [(pin)]="drawerState.pin" [width]="drawerState.width" [position]="drawerState.position">
-        <div class="igx-drawer-content">
+        <ng-template igxDrawer>
             <nav>
                 <img class="logo" src="images/rsrcs/jsblocks-logo.svg" alt="Ignite UI for Angular Logo">
 
@@ -31,8 +31,8 @@
                 </span>
 
             </nav>
-        </div>
-        <!-- <div class="igx-drawer-mini-content">
+        </ng-template>
+        <!-- <ng-template igxDrawerMini>
             <nav>
                 <span igxDrawerItem [isHeader]="true">Components</span>
 
@@ -52,7 +52,7 @@
                     <igx-icon fontSet="material" name="{{item.icon}}"></igx-icon>
                 </span>
             </nav>
-        </div> -->
+        </ng-template> -->
     </igx-nav-drawer>
     <div class="content">
         <router-outlet></router-outlet>
