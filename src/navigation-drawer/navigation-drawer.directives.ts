@@ -10,23 +10,19 @@ export class IgxNavDrawerItemDirective {
 
     @Input("isHeader") public isHeader = false;
 
-    public readonly activeClass = "igx-nav-drawer-item--active";
+    public readonly activeClass = "igx-nav-drawer__item--active";
 
-    private get activeClassBind() {
-        return `class.${this.activeClass}`;
-    }
-
-    @HostBinding("class.igx-nav-drawer-item")
+    @HostBinding("class.igx-nav-drawer__item")
     get defaultCSS(): boolean {
         return !this.active && !this.isHeader;
     }
 
-    @HostBinding(this.activeClassBind)
+    @HostBinding("class.igx-nav-drawer__item--active")
     get currentCSS(): boolean {
         return this.active && !this.isHeader;
     }
 
-    @HostBinding("class.igx-nav-drawer-item--header")
+    @HostBinding("class.igx-nav-drawer__item--header")
     get headerCSS(): boolean {
         return this.isHeader;
     }
