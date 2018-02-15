@@ -1,7 +1,7 @@
 import { Component, DebugElement, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { BOOLEAN_FILTERS, DATE_FILTERS, FilteringCondition,
     NUMBER_FILTERS, STRING_FILTERS } from "../../src/data-operations/filtering-condition";
 import { Calendar, ICalendarDate } from "../calendar/calendar";
@@ -15,7 +15,9 @@ describe("IgxGrid - Filtering actions", () => {
             declarations: [
                 IgxGridFilteringComponent
             ],
-            imports: [IgxGridModule.forRoot()]
+            imports: [
+                NoopAnimationsModule,
+                IgxGridModule.forRoot()]
         })
         .compileComponents();
     }));

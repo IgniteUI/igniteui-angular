@@ -27,8 +27,6 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     @Input() public tabindex: number = null;
     @Input() public checked = false;
 
-    @Output() public change = new EventEmitter();
-
     @ViewChild("checkbox") public nativeCheckbox;
 
     protected _value: any;
@@ -43,7 +41,6 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
 
         this.checked = !this.checked;
         this._onChangeCallback(this.checked);
-        this.change.emit(event);
     }
 
     public onFocus(event) {

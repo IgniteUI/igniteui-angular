@@ -6,11 +6,11 @@
         "build:aot:bundle": "webpack --config webpack-aot.config.js --bail",
         "build:aot:compile": "ngc -p tsconfig-aot.json",
         "build:jit": "npm run build:assets && webpack --config webpack.config.js --bail",
-        "copy-style": "copyfiles --up 1 \"lib/*.css\" \"lib/fonts/*\" \"style/*\" dist/style",
+        "copy-style": "copyfiles --up 2 \"lib/styles/*.css\" style",
         "copy-images": "copyfiles --up 1 \"images/**/*\" dist/images",
         "copy-lib": "copyfiles --up 2 \"../dist/**/*\" lib",
         "build:assets": "rimraf dist && npm run copy-style && npm run copy-images",
-        "prestart": "rimraf lib && npm run copy-lib && copyfiles --up 1 \"lib/*.css\" \"lib/fonts/*\" style",
+        "prestart": "rimraf lib && npm run copy-lib && copyfiles --up 2 \"lib/styles/*.css\" style",
         "start": "concurrently --raw --kill-others \"gulp copy-lib:watch\" \"webpack-dev-server --open --watch --config webpack.config.js\""
     },
     "dependencies": {

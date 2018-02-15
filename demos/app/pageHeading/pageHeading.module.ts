@@ -1,10 +1,10 @@
 import { NgModule } from "@angular/core";
-import { IgxDirectivesModule, IgxIconModule, IgxNavigationModule } from "../../lib/main";
+import { IgxButtonModule, IgxIconModule } from "../../lib/main";
 import { PageHeaderComponent } from "./pageHeading.component";
 
 @NgModule({
     declarations: [PageHeaderComponent],
     exports: [PageHeaderComponent],
-    imports: [IgxDirectivesModule, IgxIconModule, IgxNavigationModule]
+    imports: [IgxButtonModule, IgxIconModule]
 })
 export class PageHeaderModule { }

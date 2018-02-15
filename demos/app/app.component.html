@@ -1,7 +1,7 @@
 <div class="main">
     <igx-nav-drawer id="navdrawer" #navdrawer [enableGestures]="drawerState.enableGestures" [isOpen]="drawerState.open" [miniWidth]="drawerState.miniWidth"
         [(pin)]="drawerState.pin" [width]="drawerState.width" [position]="drawerState.position">
-        <div class="ig-drawer-content">
+        <div class="igx-drawer-content">
             <nav class="nav">
                 <img class="logo" src="images/rsrcs/jsblocks-logo.svg" alt="Ignite UI for Angular Logo">
 
@@ -48,6 +48,11 @@
                     <span>Grid</span>
                 </span>
 
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/gridPerformance">
+                    <igx-icon fontSet="material" name="view_column"></igx-icon>
+                    <span>Grid Performance</span>
+                </span>
+
                 <span class="nav-item" [routerLinkActive]="'active'" routerLink="/dialog">
                     <igx-icon fontSet="material" name="all_out"></igx-icon>
                     <span>Dialog</span>
@@ -68,6 +73,11 @@
                     <span>List</span>
                 </span>
 
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/listPerformance">
+                    <igx-icon fontSet="material" name="list"></igx-icon>
+                    <span>List Performance</span>
+                </span>
+
                 <span class="nav-item" [routerLinkActive]="'active'" routerLink="/navbar">
                     <igx-icon fontSet="material" name="arrow_back"></igx-icon>
                     <span>Navbar</span>
@@ -86,11 +96,11 @@
                 <span class="nav-item" [routerLinkActive]="'active'" routerLink="/slider">
                     <igx-icon fontSet="material" name="linear_scale"></igx-icon>
                     <span>Slider</span>
-                    </span>
+                </span>
 
-                    <span class="nav-item" [routerLinkActive]="'active'" routerLink="/scroll">
-                        <igx-icon fontSet="material" name="swap_vert"></igx-icon>
-                        <span>Scroll</span>
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/scroll">
+                    <igx-icon fontSet="material" name="swap_vert"></igx-icon>
+                    <span>Scroll</span>
                 </span>
 
                 <span class="nav-item" [routerLinkActive]="'active'" routerLink="/snackbar">
@@ -124,6 +134,11 @@
                 <span class="nav-item" [routerLinkActive]="'active'" routerLink="/ripple">
                     <igx-icon fontSet="material" name="wifi_tethering"></igx-icon>
                     <span>Ripple</span>
+                </span>
+
+                <span class="nav-item" [routerLinkActive]="'active'" routerLink="/virtualForDirective">
+                    <igx-icon fontSet="material" name="view_column"></igx-icon>
+                    <span>Virtual-For Directive</span>
                 </span>
 
                 <!--Style guide-->
