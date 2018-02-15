@@ -1,35 +1,34 @@
 
 import {
-	Component,
-	ViewChild,
-	HostBinding,
-	HostListener,
-	Input,
-	ElementRef,
-	Inject,
-	forwardRef,
-	Renderer2,
-	ChangeDetectionStrategy
-} from '@angular/core';
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    forwardRef,
+    HostBinding,
+    HostListener,
+    Inject,
+    Input,
+    Renderer2,
+    ViewChild
+} from "@angular/core";
 
 import {
-	IListChild,
-	IgxListPanState
-} from "./list.common"
+    IgxListPanState,
+    IListChild
+} from "./list.common";
 
 import { HammerGesturesManager } from "../core/touch";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
-
-import { IgxListComponent } from "./list.component"
+import { IgxListComponent } from "./list.component";
 
 // ====================== ITEM ================================
 // The `<igx-item>` component is a container intended for row items in
 // a `<igx-list>` container.
 @Component({
-	providers: [HammerGesturesManager],
-	selector: "igx-list-item",
-	templateUrl: "list-item.component.html",
-	changeDetection: ChangeDetectionStrategy.OnPush
+    providers: [HammerGesturesManager],
+    selector: "igx-list-item",
+    templateUrl: "list-item.component.html",
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IgxListItemComponent implements IListChild {
     private _panState: IgxListPanState = IgxListPanState.NONE;
