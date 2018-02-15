@@ -83,10 +83,10 @@ npm run build:umd
 npm run build:umd:watch // run in watch mode
 ```
 
-## Run Demos
+## Run Experimental Demos
 
-The `demos` directory contains a sample application showcasing the components and directives of the library.
-If you want to run the application make sure to install the application dependencies:
+The `demos` directory contains a sample application for development/experimental samples of the components and directives of the library.
+If you want to run the demo application make sure to install the application dependencies:
 ```
 cd demos && npm install
 ```
@@ -105,6 +105,8 @@ with:
 npm run start:dev
 ```
 It will watch both the `src` and `demos` directories and will rebuild both the library and the application.
+
+**NOTE**: Experimental demos are not always stable.
 
 ## NPM Package
 
