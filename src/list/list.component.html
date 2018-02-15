@@ -1,12 +1,10 @@
 <ng-content></ng-content>
 
 <ng-template #defaultEmptyList>
-    <article class="message">
-        <p>There are no items in the list.</p>
-    </article>
+	<p>No items placeholder.</p>
 </ng-template>
 
 <ng-container *ngIf="children && children.length === 0">
-    <ng-container *ngTemplateOutlet="template; context: context">
-    </ng-container>
+	<ng-container *ngTemplateOutlet="template; context: context">
+	</ng-container>
 </ng-container>

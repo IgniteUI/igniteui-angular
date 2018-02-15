@@ -16,14 +16,18 @@ import {
 } from "@angular/core";
 
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
-import { IgxListItemComponent } from "./list-item.component";
-import { IgxEmptyListTemplateDirective } from "./list.common";
+import { IgxEmptyListTemplateDirective } from "./list.common"
+import { IgxListItemComponent } from "./list-item.component"
 
 // ====================== LIST ================================
 // The `<igx-list>` directive is a list container for items and headers
 @Component({
-    selector: "igx-list",
-    templateUrl: "list.component.html"
+	host: {
+		role: "list"
+	},
+	// changeDetection: ChangeDetectionStrategy.OnPush,
+	selector: "igx-list",
+	templateUrl: "list.component.html"
 })
 export class IgxListComponent {
 
@@ -101,9 +105,9 @@ export class IgxListComponent {
 }
 
 @NgModule({
-    declarations: [IgxListComponent, IgxListItemComponent, IgxEmptyListTemplateDirective],
-    exports: [IgxListComponent, IgxListItemComponent, IgxEmptyListTemplateDirective],
-    imports: [CommonModule, IgxRippleModule]
+	declarations: [IgxListComponent, IgxListItemComponent, IgxEmptyListTemplateDirective],
+	exports: [IgxListComponent, IgxListItemComponent, IgxEmptyListTemplateDirective],
+	imports: [CommonModule, IgxRippleModule]
 })
 export class IgxListModule {
 }
