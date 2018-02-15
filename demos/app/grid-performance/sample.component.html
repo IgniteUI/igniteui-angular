@@ -1,9 +1,9 @@
-<div class="sample-wrapper">
+<div class="sample-wrapper dark-grid">
     <igx-grid #grid1 [data]="localData" (onCellSelection)="selectCell($event)" [width]="'1000px'" [height]="'600px'">
         <igx-column *ngFor="let c of columns" [sortable]="true" [filterable]="true" [field]="c.field" [header]="c.field" [width]="c.width">
         </igx-column>
     </igx-grid>
     <br/>
-    <button (click)="ToggleCol()">Add/Remove Column</button>
-    <button (click)="ToggleRow()">Add/Remove Row</button>
+    <button igxButton="raised" (click)="ToggleCol()">Add/Remove Column</button>
+    <button igxButton="raised" (click)="ToggleRow()">Add/Remove Row</button>
 </div>
