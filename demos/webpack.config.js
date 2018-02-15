@@ -51,14 +51,28 @@ const config = {
                 test: /\.scss$/,
                 use: [
                     {
-                        loader: "to-string-loader",
+                        loader: "style-loader"
                     },
                     {
                         loader: "css-loader",
-                        options: { minimize: true }
+                        options: {
+                            sourceMap: true
+                        }
                     },
                     {
-                        loader: "sass-loader"
+                        loader: "postcss-loader",
+                        options: {
+                            sourceMap: true,
+                            config: {
+                                path: path.resolve(__dirname, "./postcss.config.js")
+                            }
+                        }
+                    },
+                    {
+                        loader: "sass-loader",
+                        options: {
+                            sourceMap: true
+                        }
                     }
                 ]
             },
@@ -102,7 +116,6 @@ const config = {
 
     devServer: {
         port: 8000,
-        host: "0.0.0.0",
         historyApiFallback: true,
         watchOptions: {
             aggregateTimeout: 30,

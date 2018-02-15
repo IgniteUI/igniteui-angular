@@ -28,6 +28,8 @@ export * from "./directives/layout/layout.directive";
 export * from "./directives/ripple/ripple.directive";
 export * from "./buttonGroup/buttonGroup.component";
 export * from "./list/list.component";
+export * from "./list/list-item.component";
+export * from "./list/list.common";
 export * from "./tabbar/tabbar.component";
 export * from "./calendar";
 export * from "./carousel/carousel.component";

@@ -50,6 +50,7 @@ $components: register-component($components, #{$component-name});
             width: $radio-width;
             height: $radio-height;
             left: 0;
+            top: 0;
             border-radius: $radio-radius;
         }
 

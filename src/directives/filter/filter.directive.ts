@@ -113,8 +113,13 @@ export class IgxFilterOptions {
 
         if (key) {
             result = item[key].toString();
-        } else if (item.element && item.element.nativeElement) {
-            result = item.element.nativeElement.textContent.trim();
+        } else if (item.element) {
+            if (item.element.nativeElement) {
+                result = item.element.nativeElement.textContent.trim();
+            // Check if element doesn't return the DOM element directly
+            } else if (item.element.textContent) {
+                result = item.element.textContent.trim();
+            }
         }
 
         return result;

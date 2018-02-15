@@ -39,7 +39,7 @@ const appRoutes: Routes = [
     {
         path: "",
         pathMatch: "full",
-        redirectTo: "/scroll"
+        redirectTo: "/avatar"
     },
     {
         component: InputSampleComponent,
