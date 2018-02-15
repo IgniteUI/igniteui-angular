@@ -136,3 +136,5 @@ All list items implement `IListChild`.
 | maxLeft  | Gets the maximum left position of the item   |
 | maxRight  | Gets the maximum right position of the item   |
 | touchAction  | Determines in what way the item can be manipulated by the user via a touch action   |
+| headerStyle  | Gets if the item is styled as header item   |
+| innerStyle  | Gets if the item is styled as list item   |
