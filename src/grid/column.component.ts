@@ -90,7 +90,7 @@ export class IgxColumnComponent implements AfterContentInit {
     public dataType: DataType = DataType.String;
 
     @Input()
-    public fixed: boolean = false;
+    public fixed = false;
 
     public gridID: string;
 

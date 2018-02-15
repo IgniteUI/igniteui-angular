@@ -25,7 +25,7 @@
 		<ng-container *ngIf="fixingDirection === 'left'">
 			<igx-grid-header [gridID]="id" *ngFor="let col of fixedColumns" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
 		</ng-container>
-		<ng-template igxFor let-col [igxForOf]="visibleColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='unfixedWidth' #headerContainer>
+		<ng-template igxFor let-col [igxForOf]="unfixedColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='unfixedWidth' #headerContainer>
 			<igx-grid-header [gridID]="id" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
 		</ng-template>
 		<ng-container *ngIf="fixingDirection === 'right'">
@@ -49,16 +49,16 @@
                                 [igxForScrollOrientation]="'vertical'"
                                 [igxForContainerSize]='calcHeight'
                                 [igxForItemSize]='"50px"'
-                                #scrollContainer>
+                                >
            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
            </igx-grid-row>
         </ng-template>
 </div>
 
-<div [style.width]='width'>
+<div [style.width]='width' [style.height]="'17px'" #scr>
 	<div [style.width.px]='fixedWidth' [style.float]='fixingDirection'></div>
 	<div [style.width.px]='unfixedWidth' [style.float]='fixingDirection === "right" ? "left": "right"'>
-		<ng-template igVirtFor [igVirtForOf]='[]' #scrollContainer>
+		<ng-template igxFor [igxForOf]='[]' #scrollContainer>
 		</ng-template>
 	</div>
 </div>

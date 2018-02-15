@@ -6,8 +6,6 @@ import { IgxGridComponent } from "../../lib/grid/grid.component";
 import {
 	DataContainer,
 	IDataState,
-	IgxSnackbar,
-	IgxToast,
 	IPagingState,
 	PagingError,
 	SortingDirection,
@@ -106,10 +104,6 @@ export class RemoteService {
 
 export class GridColumnFixingSampleComponent {
 	@ViewChild("grid1") public grid1: IgxGridComponent;
-	@ViewChild("grid2") public grid2: IgxGridComponent;
-	@ViewChild("grid3") public grid3: IgxGridComponent;
-	@ViewChild("toast") public toast: IgxToast;
-	@ViewChild("snax") public snax: IgxSnackbar;
 	public data: Observable<any[]>;
 	public remote: Observable<any[]>;
 	public localData: any[] = [];
@@ -148,123 +142,7 @@ export class GridColumnFixingSampleComponent {
 	}
 
 	public ngAfterViewInit() {
-		// this.remoteService.getData(this.grid3.dataContainer.state);
 	}
-
-	public onProcess(event: any): void {
-		event.process = (dataContainer: DataContainer) => {
-			if (dataContainer.data.length) {
-				dataContainer.transformedData = dataContainer.data;
-			}
-		};
-	}
-
-	public onInlineEdit(event) {
-		this.editCell = event.cell;
-	}
-
-	public showInput(index, field) {
-		return this.editCell && this.editCell.columnField === field && this.editCell.rowIndex === index;
-	}
-	public process(event) {
-		this.toast.message = "Loading remote data";
-		this.toast.position = 1;
-		this.toast.show();
-		// this.remoteService.getData(this.grid3.dataContainer.state, () => {
-		//   this.toast.hide();
-		// });
-	}
-
-	public initColumns(event: any) {
-		const column: IgxColumnComponent = event.column;
-		if (column.field === "Name") {
-			//column.filtering = true;
-			column.sortable = true;
-			column.editable = true;
-		}
-	}
-
-	public onPagination(event) {
-		if (!this.grid2.paging) {
-			return;
-		}
-		const total = this.grid2.data.length;
-		//  const state = this.grid2.state;
-		// if ((state.paging.recordsPerPage * event) >= total) {
-		//    return;
-		//  }
-		this.grid2.paginate(event);
-	}
-
-	public onPerPage(event) {
-		if (!this.grid2.paging) {
-			return;
-		}
-		const total = this.grid2.data.length;
-		//const state = this.grid2.state;
-		// if ((state.paging.index * event) >= total) {
-		//   return;
-		// }
-		this.grid2.perPage = event;
-		// state.paging.recordsPerPage = event;
-		// this.grid2.dataContainer.process();
-	}
-
-	public selectCell(event) {
-		this.selectedCell = event.cell;
-	}
-
-	public addRow() {
-		if (!this.newRecord.trim()) {
-			this.newRecord = "";
-			return;
-		}
-		const record = { ID: this.grid1.data[this.grid1.data.length - 1].ID + 1, Name: this.newRecord };
-		// this.grid1.addRow(record);
-		this.newRecord = "";
-	}
-
-	public updateRecord(event) {
-		//this.grid1.updateCell(this.selectedCell.rowIndex, this.selectedCell.columnField, event);
-		//this.grid1.getCell(this.selectedCell.rowIndex, this.selectedCell.columnField);
-	}
-
-	public deleteRow(event) {
-		//this.selectedRow = Object.assign({}, this.grid1.getRow(this.selectedCell.rowIndex));
-		//this.grid1.deleteRow(this.selectedCell.rowIndex);
-		this.selectedCell = {};
-		this.snax.message = `Row with ID ${this.selectedRow.record.ID} was deleted`;
-		this.snax.show();
-	}
-
-	public restore() {
-		this.grid1.addRow(this.selectedRow.record);
-		this.snax.hide();
-	}
-
-	public ToggleCol() {
-		if (this.columns[0].field === '0') {
-			this.columns.splice(0, 1);
-		} else {
-			this.columns.unshift({ field: "0", width: "200px" });
-		}
-		this.grid1.markForCheck();
-	}
-
-	public ToggleRow() {
-		if (this.localData[0][1] === 0) {
-			this.localData.splice(0, 1);
-		} else {
-			var obj = {};
-			for (var j = 0; j < this.columns.length; j++) {
-				var col = this.columns[j].field;
-				obj[col] = 0;
-			}
-			this.localData.unshift(obj);
-		}
-		this.grid1.markForCheck();
-	}
-
 	public onToggleFix() {
 		var col = this.grid1.getColumnByName("0");
 		var ind = this.grid1.fixedColumns.indexOf(col);

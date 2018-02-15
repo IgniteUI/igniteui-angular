@@ -160,6 +160,9 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     @ViewChild("scrollContainer", { read: IgxForOfDirective })
     public parentVirtDir: IgxForOfDirective<any>;
 
+    @ViewChild("scr", { read: ElementRef })
+    public scr: ElementRef;
+
     @ViewChild("headerContainer", { read: IgxForOfDirective })
     public headerContainer: IgxForOfDirective<any>;
 
@@ -252,17 +255,21 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
             this.calcHeight = null;
         } else if (this.height && this.height.indexOf("%") !== -1) {
             /*height in %*/
+            const scrHeight = this.scr.nativeElement.clientHeight;
             const footerHeight = this.tfoot.nativeElement.firstElementChild ?
             this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
             this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
             this.theadRow.nativeElement.clientHeight -
-            footerHeight;
+            footerHeight -
+            scrHeight;
         } else {
+            const scrHeight = this.scr.nativeElement.clientHeight;
             const footerHeight = this.tfoot.nativeElement.firstElementChild ?
             this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
             this.calcHeight = parseInt(this.height, 10) -
             this.theadRow.nativeElement.clientHeight -
-            footerHeight;
+            footerHeight -
+            scrHeight;
         }
         this.cdr.detectChanges();
     }
