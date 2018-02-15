@@ -23,7 +23,6 @@
                     <ng-template igxFor let-item [igxForOf]="data" #virtDirHorizontal
                         [igxForScrollOrientation]="'horizontal'"
                         [igxForContainerSize]='"500px"'
-                        [igxForScrollContainer]="parentVirtDir"
                         let-rowIndex="index">
                             <td  [style.width.px]='item.width' style='height:100px;'>{{rowIndex}} : {{item.text}}</td>
                         </ng-template>
@@ -32,5 +31,19 @@
             </table>
             <button (click)="scrNextCol()">Scroll Next Column</button>
             <button (click)="scrPrevCol()">Scroll Prev Column</button>
+    </article>
+    <article class="sample-column">
+            <span>Remote Virtualization</span>
+            <br/>
+            <div style='height:500px;'>
+              <ng-template igxFor let-item [igxForOf]="remoteData | async" (onChunkLoading)="chunkLoading($event)"
+                [igxForScrollOrientation]="'vertical'"
+                [igxForContainerSize]='"500px"'
+                [igxForItemSize]='"50px"'
+                [igxForRemote]='true'
+                let-rowIndex="index" #virtDirRemote>
+                <div style='height:50px;'>{{item.ProductID}} : {{item.ProductName}}</div>
+                </ng-template>
+            </div>
     </article>
 </div>
