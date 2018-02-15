@@ -1,7 +1,16 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { IgxGridModule, IgxCardModule, IgxSnackbarModule, IgxSwitchModule, IgxToastModule, IgxCheckboxModule } from "../../lib/main";
+import {
+    IgxButtonModule,
+    IgxCardModule,
+    IgxCheckboxModule,
+    IgxGridModule,
+    IgxRippleModule,
+    IgxSnackbarModule,
+    IgxSwitchModule,
+    IgxToastModule
+} from "../../lib/main";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { GridPerformanceSampleComponent } from "./sample.component";
 
@@ -17,8 +26,10 @@ import { GridPerformanceSampleComponent } from "./sample.component";
         IgxCardModule,
         IgxSnackbarModule,
         IgxSwitchModule,
-        IgxToastModule ,
-        IgxCheckboxModule
+        IgxToastModule,
+        IgxCheckboxModule,
+        IgxRippleModule,
+        IgxButtonModule
     ]
 })
 export class GridPerformanceSampleModule { }
