@@ -147,6 +147,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     }
 
     public onDialogSelected(event) {
+        event.stopPropagation();
         if (
             this.isOpen &&
             this.closeOnOutsideSelect &&
