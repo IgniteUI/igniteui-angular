@@ -1,14 +1,14 @@
 import { NgModule } from "@angular/core";
+import { IgxButtonModule, IgxDialogModule, IgxInputModule, IgxRippleModule } from "../../lib/main";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { DialogSampleComponent } from "./sample.component";
-import { IgxDialogModule   } from "../../lib/main";
 
 @NgModule({
     declarations: [
         DialogSampleComponent
     ],
     imports: [
-        PageHeaderModule, IgxDialogModule
+        PageHeaderModule, IgxDialogModule, IgxButtonModule, IgxRippleModule, IgxInputModule
     ]
 })
 export class DialogSampleModule { }
