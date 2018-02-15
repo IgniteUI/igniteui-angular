@@ -1,6 +1,5 @@
 import { CommonModule } from "@angular/common";
 import {
-    AfterContentChecked,
     Component,
     EventEmitter,
     Input,
@@ -15,9 +14,9 @@ import { IgxIconModule } from "../icon/icon.component";
     selector: "igx-navbar",
     templateUrl: "navbar.component.html"
 })
+
 export class IgxNavbarComponent {
     private static NEXT_ID = 1;
-
     /**
      * The IgxNavbar action button visual state state
      * @type {boolean}

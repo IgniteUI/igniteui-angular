@@ -1,0 +1,21 @@
+%display-container {
+    display: inherit;
+    position: relative;
+    float: left;
+    width: calc(100% - 17px);
+    height: calc(100% - 17px);
+    overflow: hidden;
+}
+
+%display-container--inactive {
+    width: 100%;
+    height: 100%;
+}
+
+@include b(igx-display-container) {
+    @extend %display-container !optional;
+
+    @include m(inactive) {
+        @extend %display-container--inactive !optional;
+    }
+}

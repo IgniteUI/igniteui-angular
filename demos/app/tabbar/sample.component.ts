@@ -7,7 +7,6 @@ import { AfterViewInit,
         ViewChild,
         ViewChildren } from "@angular/core";
 import { Router, RouterModule } from "@angular/router";
-import { IgxComponentsModule, IgxDirectivesModule } from "../../lib/main";
 
 @Component({
     selector: "tabbar-sample",
