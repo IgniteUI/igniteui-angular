@@ -8,7 +8,7 @@ import { IgxDialogComponent, IgxDialogModule } from "./dialog.component";
 describe("Dialog", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [AlertComponent, DialogComponent, CustomDialogComponent],
+            declarations: [AlertComponent, DialogComponent, CustomDialogComponent, NestedDialogsComponent],
             imports: [BrowserAnimationsModule, IgxDialogModule]
         }).compileComponents();
     }));
@@ -157,6 +157,28 @@ describe("Dialog", () => {
         expect(titleWrapper.attributes.id).toEqual(dialogWindow.attributes["aria-labelledby"]);
     });
 
+    it("Should close only inner dialog on closeOnOutsideSelect.", () => {
+        const fixture = TestBed.createComponent(NestedDialogsComponent);
+        const mainDialog = fixture.componentInstance.main;
+        const childDialog = fixture.componentInstance.child;
+
+        mainDialog.open();
+        childDialog.open();
+        fixture.detectChanges();
+
+        fixture.componentInstance.child.dialogEl.nativeElement.click();
+        fixture.detectChanges();
+
+        testDialogIsOpen(fixture.debugElement, mainDialog, true);
+        testDialogIsOpen(fixture.debugElement, childDialog, false);
+
+        fixture.componentInstance.main.dialogEl.nativeElement.click();
+        fixture.detectChanges();
+
+        testDialogIsOpen(fixture.debugElement, mainDialog, false);
+        testDialogIsOpen(fixture.debugElement, childDialog, false);
+    });
+
     function testDialogIsOpen(debugElement: DebugElement, dialog: IgxDialogComponent, isOpen: boolean) {
         const dialogDebugElement = debugElement.query(By.css(".igx-dialog"));
 
@@ -209,4 +231,22 @@ class DialogComponent {
                         <div>` })
 class CustomDialogComponent {
     @ViewChild("dialog") public dialog: IgxDialogComponent;
+}
+
+@Component({ template: `<igx-dialog #main
+                            title="Main Dialog"
+                            leftButtonLabel="Cancel"
+                            rightButtonLabel="Sign In"
+                            [closeOnOutsideSelect]="true">
+
+                            <igx-dialog #child
+                                title="Child Dialog"
+                                leftButtonLabel="Cancel"
+                                rightButtonLabel="Sign In"
+                                [closeOnOutsideSelect]="true">
+                            </igx-dialog>
+                        </igx-dialog>` })
+class NestedDialogsComponent {
+    @ViewChild('child') public child: IgxDialogComponent;
+    @ViewChild('main') public main: IgxDialogComponent;
 }
