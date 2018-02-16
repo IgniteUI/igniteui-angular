@@ -29,6 +29,10 @@ $components: register-component($components, #{$component-name});
         $menu-button-disabled-text-color: rgba(text-contrast($menu-background), .3)
     }
 
+    @if not($toggle-icon-active-color) and $toggle-active-background {
+        $toggle-icon-active-color: text-contrast($toggle-active-background)
+    }
+
     @return (
         toggle-icon-color: $toggle-icon-color,
         toggle-icon-hover-color: $toggle-icon-hover-color,
@@ -148,16 +152,8 @@ $components: register-component($components, #{$component-name});
             $flat-hover-background: rgba(map-get($this, 'menu-button-text-color'), .12),
             $flat-focus-text-color: map-get($this, 'menu-button-text-color'),
             $flat-focus-background: rgba(map-get($this, 'menu-button-text-color'), .08),
-            $disabled-color: map-get($this, 'menu-button-disabled-text-color')
-        ));
-
-        @include igx-input(igx-input-theme(
-            $idle-accent-color: rgba(text-contrast(map-get($this, 'menu-background')), .7),
-            $idle-text-color: text-contrast(map-get($this, 'menu-background')),
-            $filled-text-color: rgba(text-contrast(map-get($this, 'menu-background')), .7),
-            $placeholder-text-color: rgba(text-contrast(map-get($this, 'menu-background')), .5),
-            $focused-text-color: text-contrast(map-get($this, 'menu-background')),
-            $focused-accent-color: map-get($this, 'toggle-active-background')
+            $disabled-color: map-get($this, 'menu-button-disabled-text-color'),
+            $disabled-background: transparent
         ));
 
         // TODO: remove after SELECT theme is created
