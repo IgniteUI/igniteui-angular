@@ -106,7 +106,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         if (this.igxForScrollOrientation === "vertical") {
             this.state.endIndex = Math.ceil(parseInt(this.igxForContainerSize, 10) /
-                    parseInt(this.igxForItemSize, 10));
+                parseInt(this.igxForItemSize, 10));
             const factory: ComponentFactory<VirtualHelperComponent> = this.resolver.resolveComponentFactory(VirtualHelperComponent);
             this.vh = this._viewContainer.createComponent(factory, 1);
             this.vh.instance.height = this.igxForOf.length * parseInt(this.igxForItemSize, 10);
@@ -379,17 +379,17 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForOf && this.igxForOf.length && this.dc) {
             const embeddedViewCopy = Object.assign([], this._embeddedViews);
             let startIndex = this._currIndex;
-            let endIndex =  this._pageSize + this._currIndex;
+            let endIndex = this._pageSize + this._currIndex;
             if (this.igxForRemote) {
                 startIndex = 0;
                 endIndex = this.igxForOf.length;
             }
             for (let i = startIndex; i < endIndex && this.igxForOf[i] !== undefined; i++) {
-                    const input = this.igxForOf[i];
-                    const embView = embeddedViewCopy.shift();
-                    const cntx = (embView as EmbeddedViewRef<any>).context;
-                    cntx.$implicit = input;
-                    cntx.index = this.igxForOf.indexOf(input);
+                const input = this.igxForOf[i];
+                const embView = embeddedViewCopy.shift();
+                const cntx = (embView as EmbeddedViewRef<any>).context;
+                cntx.$implicit = input;
+                cntx.index = this.igxForOf.indexOf(input);
             }
             this.onChunkLoaded.emit();
             this.dc.changeDetectorRef.detectChanges();
@@ -400,12 +400,42 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         let pageSize = 0;
         if (this.igxForContainerSize !== null && this.igxForContainerSize !== undefined) {
             if (this.igxForScrollOrientation === "horizontal") {
-                pageSize = Math.ceil(parseInt(this.igxForContainerSize, 10)) / 200;
+                const vc = this.igxForScrollContainer ?
+                    this.igxForScrollContainer._viewContainer :
+                    this._viewContainer;
+                const hScroll = this.getElement(vc, "igx-horizontal-virtual-helper");
+
+                const left = hScroll && hScroll.scrollLeft !== 0 ?
+                    hScroll.scrollLeft + parseInt(this.igxForContainerSize, 10) :
+                    parseInt(this.igxForContainerSize, 10);
+
+                let endIndex = this.getHorizontalIndexAt(
+                    left,
+                    this.hCache,
+                    0
+                ) + 1;
+                if (endIndex > this.igxForOf.length) {
+                    endIndex = this.igxForOf.length;
+                    /*At right edge. Check if last elem fits.*/
+                    let diff = this.hCache[endIndex] - this.hCache[this._currIndex];
+                    if (diff > parseInt(this.igxForContainerSize, 10)) {
+                        /*If last col does not fit we should remove some of the prev cols to fit the last col.*/
+                        while (diff > parseInt(this.igxForContainerSize, 10)) {
+                            diff -= parseInt(this.igxForOf[this._currIndex].width, 10);
+                            if (this._currIndex + 1 === endIndex) {
+                                /*large column that exceeds the size of the container...*/
+                                break;
+                            }
+                            this._currIndex++;
+                        }
+                    }
+                }
+                pageSize = endIndex - this._currIndex;
             } else {
                 pageSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
                     parseInt(this.igxForItemSize, 10));
                 if (pageSize > this.igxForOf.length) {
-                     pageSize = this.igxForOf.length;
+                    pageSize = this.igxForOf.length;
                 }
             }
         } else {

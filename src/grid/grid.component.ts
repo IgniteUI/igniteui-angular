@@ -270,6 +270,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.onColumnInit.emit(col);
         });
         this._columns = this.columnList.toArray();
+        this._pinnedLeftColumns = this._columns.filter((c) => c.pinnedToLeft);
+        this._pinnedRightColumns = this._columns.filter((c) => c.pinnedToRight);
+        this._unpinnedColumns = this._columns.filter((c) => !c.pinnedToLeft && !c.pinnedToRight)
     }
 
     public ngAfterViewInit() {

@@ -20,7 +20,7 @@ import { IgxColumnComponent } from "./column.component";
 import { IgxGridComponent } from "./grid.component";
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.Default,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: "igx-grid-row",
     templateUrl: "./row.component.html"
