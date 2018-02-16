@@ -512,15 +512,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this._embeddedViews.push(embeddedView);
             }
         } else if (pageSize < this._pageSize) {
-            const diff = this._pageSize - pageSize;
-            for (let i = 0; i < diff; i++) {
-                const ind = this._pageSize - i - 1;
-                const embeddedView = this._embeddedViews[ind];
-                embeddedView.destroy();
-                this._embeddedViews.splice(ind, 1);
+            const removedViews = this._embeddedViews.splice(pageSize);
+            for (let i = 0; i < removedViews.length; i++) {
+                removedViews[i].destroy();
             }
         }
-        this._pageSize = pageSize;
+        this._pageSize = pageSize > 0 ? pageSize : 0;
     }
 }
 
