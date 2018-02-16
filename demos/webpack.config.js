@@ -2,7 +2,12 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+const extractSass = new ExtractTextPlugin({
+    filename: 'style/igniteui-theme.css',
+    disable: process.env.NODE_ENV === 'development'
+});
 
 const config = {
     devtool: 'source-map',
@@ -11,7 +16,7 @@ const config = {
         main: path.resolve(__dirname, 'app', 'main.ts')
     },
     resolve: {
-        extensions: ['.js', '.ts']
+        extensions: ['.js', '.ts', '.scss']
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -49,32 +54,33 @@ const config = {
 
             {
                 test: /\.scss$/,
-                use: [
+                use: extractSass.extract(
                     {
-                        loader: "style-loader"
-                    },
-                    {
-                        loader: "css-loader",
-                        options: {
-                            sourceMap: true
-                        }
-                    },
-                    {
-                        loader: "postcss-loader",
-                        options: {
-                            sourceMap: true,
-                            config: {
-                                path: path.resolve(__dirname, "./postcss.config.js")
+                        use: [
+                            {
+                                loader: "css-loader",
+                                options: {
+                                    sourceMap: true
+                                }
+                            },
+                            {
+                                loader: "postcss-loader",
+                                options: {
+                                    sourceMap: true,
+                                    config: {
+                                        path: path.resolve(__dirname, "./postcss.config.js")
+                                    }
+                                }
+                            },
+                            {
+                                loader: "sass-loader",
+                                options: {
+                                    sourceMap: true
+                                }
                             }
-                        }
-                    },
-                    {
-                        loader: "sass-loader",
-                        options: {
-                            sourceMap: true
-                        }
-                    }
-                ]
+                        ],
+                        fallback: 'style-loader'
+                    })
             },
 
             {
@@ -84,6 +90,7 @@ const config = {
         ]
     },
     plugins: [
+        extractSass,
         new webpack.ProgressPlugin(),
 
         new HtmlWebpackPlugin({
