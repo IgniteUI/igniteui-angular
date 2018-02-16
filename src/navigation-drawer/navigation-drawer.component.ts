@@ -124,6 +124,21 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     @ContentChild(IgxNavDrawerTemplateDirective, { read: IgxNavDrawerTemplateDirective })
     protected contentTemplate: IgxNavDrawerTemplateDirective;
 
+    @HostBinding("style.flexBasis")
+    get flexWidth() {
+        if (!this.pin) {
+            return;
+        }
+        if (this.isOpen) {
+            // return width, even if not set to let CSS handle flex
+            return this.width;
+        }
+        if (this.miniTemplate && this.miniWidth) {
+            return this.miniWidth;
+        }
+        return "0px";
+    }
+
     private _gesturesAttached = false;
     private _widthCache: { width: number, miniWidth: number } = { width: null, miniWidth: null };
     private _resizeObserver: Subscription;
