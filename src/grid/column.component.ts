@@ -89,6 +89,9 @@ export class IgxColumnComponent implements AfterContentInit {
     @Input()
     public dataType: DataType = DataType.String;
 
+    @Input()
+    public fixed = false;
+
     public gridID: string;
 
     get bodyTemplate(): TemplateRef<any> {

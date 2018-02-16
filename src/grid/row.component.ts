@@ -20,7 +20,7 @@ import { IgxColumnComponent } from "./column.component";
 import { IgxGridComponent } from "./grid.component";
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
     preserveWhitespaces: false,
     selector: "igx-grid-row",
     templateUrl: "./row.component.html"
@@ -65,6 +65,13 @@ export class IgxGridRowComponent implements OnInit {
 
     get columns(): IgxColumnComponent[] {
         return this.grid.visibleColumns;
+    }
+    get fixedColumns(): IgxColumnComponent[] {
+        return this.grid.fixedColumns;
+    }
+
+    get unfixedColumns(): IgxColumnComponent[] {
+        return this.grid.unfixedColumns;
     }
 
     get grid(): IgxGridComponent {

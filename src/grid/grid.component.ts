@@ -116,11 +116,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public width;
 
+    get headerWidth() {
+        return parseInt(this.width, 10) - 17;
+    }
+
     @Input()
     public evenRowCSS = "";
 
     @Input()
     public oddRowCSS = "";
+
+    @Input()
+    public fixingDirection = "left";
 
     @Output()
     public onSelection = new EventEmitter<any>();
@@ -154,6 +161,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @ViewChild("scrollContainer", { read: IgxForOfDirective })
     public parentVirtDir: IgxForOfDirective<any>;
+
+    @ViewChild("scr", { read: ElementRef })
+    public scr: ElementRef;
 
     @ViewChild("headerContainer", { read: IgxForOfDirective })
     public headerContainer: IgxForOfDirective<any>;
@@ -198,6 +208,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _paging = false;
     protected _pipeTrigger = 0;
     protected _columns = [];
+    protected _fixedColumns = [];
+    protected _unfixedColumns = [];
     protected _filteringLogic = FilteringLogic.And;
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
@@ -239,6 +251,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.onColumnInit.emit(col);
         });
         this._columns = this.columnList.toArray();
+        this._fixedColumns = this._columns.filter((c) => c.fixed);
+        this._unfixedColumns = this._columns.filter((c) => !c.fixed);
     }
 
     public ngAfterViewInit() {
@@ -249,8 +263,26 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.elementRef.nativeElement;
     }
 
+    get fixedWidth() {
+        const fc = this.fixedColumns;
+        let sum  = 0;
+        for (const col of fc) {
+            sum += parseInt(col.width, 10);
+        }
+        return sum;
+    }
+    get unfixedWidth() {
+        return parseInt(this.width, 10) - this.fixedWidth;
+    }
     get columns(): IgxColumnComponent[] {
         return this._columns;
+    }
+
+    get fixedColumns(): IgxColumnComponent[] {
+        return this._fixedColumns;
+    }
+    get unfixedColumns(): IgxColumnComponent[] {
+        return this._unfixedColumns;
     }
 
     public getColumnByName(name: string): IgxColumnComponent {
@@ -385,6 +417,26 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             return;
         }
         this.gridAPI.clear_sort(this.id, name);
+    }
+
+    public fixColumn(columnName: string) {
+        const col = this.getColumnByName(columnName);
+        col.fixed = true;
+        if (this._fixedColumns.indexOf(col) === -1) {
+            this._fixedColumns.push(col);
+            this._unfixedColumns.splice(this._unfixedColumns.indexOf(col), 1);
+        }
+        this.markForCheck();
+    }
+
+    public unfixColumn(columnName: string) {
+        const col = this.getColumnByName(columnName);
+        col.fixed = false;
+        if (this._fixedColumns.indexOf(col) !== -1) {
+            this._fixedColumns.splice(this._fixedColumns.indexOf(col), 1);
+            this._unfixedColumns.unshift(col);
+        }
+        this.markForCheck();
     }
 
     get hasSortableColumns(): boolean {

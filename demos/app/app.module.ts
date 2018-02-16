@@ -14,6 +14,7 @@ import { IgxDatePickerSampleModule } from "./date-picker/sample.module";
 import { DialogSampleModule } from "./dialog/sample.module";
 import { GridSampleModule } from "./grid/sample.module";
 import { GridPerformanceSampleModule } from "./grid-performance/sample.module";
+import { GridColumnFixingSampleModule } from "./grid-column-fixing/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
 import { InputSampleModule } from "./input/sample.module";
 import { LayoutSampleModule } from "./layout/sample.module";
@@ -86,6 +87,7 @@ import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSw
         IgxRippleModule,
         LayoutSampleModule,
         ListPerformanceSampleModule,
+        GridColumnFixingSampleModule,
         VirtualForSampleModule
     ],
     providers: [IgxNavigationService]

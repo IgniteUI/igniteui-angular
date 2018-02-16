@@ -12,6 +12,7 @@ import { IgxDatePickerSampleComponent } from "./date-picker/sample.component";
 import { DialogSampleComponent } from "./dialog/sample.component";
 import { GridSampleComponent } from "./grid/sample.component";
 import { GridPerformanceSampleComponent } from "./grid-performance/sample.component";
+import { GridColumnFixingSampleComponent } from "./grid-column-fixing/sample.component";
 import { IconSampleComponent } from "./icon/sample.component";
 import { InputSampleComponent } from "./input/sample.component";
 import { LayoutSampleComponent } from "./layout/sample.component";
@@ -151,6 +152,10 @@ const appRoutes: Routes = [
     {
         component: ListPerformanceSampleComponent,
         path: "listPerformance"
+    },
+    {
+        component: GridColumnFixingSampleComponent,
+        path: "gridColumnFixing"
     },
     {
         component: VirtualForSampleComponent,
