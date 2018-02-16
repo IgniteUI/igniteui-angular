@@ -1,58 +1,5 @@
 @import '../index';
 
-// @debug $default-palette;
-// @debug $elevations;
-
-// Generating a palette
+// Generate a palette
 @include igx-core();
-
 @include igx-theme($default-palette);
-
-// Generating theme overrides for the avatar component
-// $avatar-theme: igx-avatar-theme($icon-background: red);
-
-// Overriding the default avatar styles
-// @include igx-avatar($avatar-theme);
-
-// Getting individual colors from a palette
-// $my-color: igx-color($my-palette, 'primary', 300);
-// $my-contrast: igx-contrast-color($my-palette, 'primary', 300);
-
-// @debug unquote("My Color:") $my-color, unquote("Contrast Text for 'My Color':") $my-contrast;
-
-// Overriding the default theme
-// @include igx-theme($default-palette, $exclude: (igx-avatar, igx-badge, igx-snackbar, igx-switch, igx-slider, igx-navbar));
-// // @include igx-theme($my-palette, $exclude: ('igx-avatar': true, 'igx-badge': true));
-
-// // Uncomment this if you want the default palette
-// // @include igx-theme($default-palette);
-
-
-
-// // Generating theme overrides for the badge component
-// $badge-theme: igx-badge-theme(
-//     $border-color: pink
-// );
-
-// // Overriding the default bage styles
-// // we have to specify the custom palette we created
-// // if we want to the modified bagde theme to use it
-// @include igx-badge($badge-theme);
-
-// // Generating theme overrides for the avatar component
-// $snackbar-theme: igx-snackbar-theme($background: yellow, $button-color: black);
-
-// // Overriding the default avatar styles
-// @include igx-snackbar($snackbar-theme);
-
-// // Generating theme overrides for the avatar component
-// $slider-theme: igx-slider-theme($track-color: yellow);
-
-// // Overriding the default avatar styles
-// @include igx-slider($slider-theme);
-
-// // Generating theme overrides for the avatar component
-// $navbar-theme: igx-navbar-theme($background: #fff);
-
-// // Overriding the default avatar styles
-// @include igx-navbar($navbar-theme);

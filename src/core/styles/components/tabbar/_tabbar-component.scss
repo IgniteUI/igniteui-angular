@@ -38,10 +38,12 @@
         @extend %igx-tabbar-menu-item !optional;
 
         .tab-icon {
+            @extend %igx-tab-icon !optional;
             @extend %igx-tab-icon--selected !optional;
         }
 
         .tab-label {
+            @extend %igx-tab-label !optional;
             @extend %igx-tab-label--selected !optional;
         }
     }
