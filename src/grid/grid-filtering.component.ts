@@ -6,11 +6,13 @@ import {
     HostListener,
     Input,
     OnDestroy,
+    OnInit,
     TemplateRef,
     ViewChild
 } from "@angular/core";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { Subject } from "rxjs/Subject";
+import { Subscription } from "rxjs/Subscription";
 import { DataType } from "../data-operations/data-util";
 import {
     BOOLEAN_FILTERS,
@@ -18,6 +20,7 @@ import {
     NUMBER_FILTERS,
     STRING_FILTERS
 } from "../data-operations/filtering-condition";
+import { IgxToggleDirective } from "../directives/toggle/toggle.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
 
@@ -27,7 +30,7 @@ import { IgxColumnComponent } from "./column.component";
     selector: "igx-grid-filter",
     templateUrl: "./grid-filtering.component.html"
 })
-export class IgxGridFilterComponent implements OnDestroy {
+export class IgxGridFilterComponent implements OnInit, OnDestroy {
 
     @Input()
     public column;
@@ -109,12 +112,16 @@ export class IgxGridFilterComponent implements OnDestroy {
     protected _value;
     protected _filterCondition;
     protected filterChanged = new Subject();
+    protected chunkLoaded = new Subscription();
 
     @ViewChild("defaultFilterUI", { read: TemplateRef })
     protected defaultFilterUI: TemplateRef<any>;
 
     @ViewChild("defaultDateUI", { read: TemplateRef })
     protected defaultDateUI: TemplateRef<any>;
+
+    @ViewChild(IgxToggleDirective, { read: IgxToggleDirective})
+    protected toggleDirective: IgxToggleDirective;
 
     constructor(private gridAPI: IgxGridAPIService, private cdr: ChangeDetectorRef) {
         this.filterChanged.pipe(
@@ -123,8 +130,18 @@ export class IgxGridFilterComponent implements OnDestroy {
         ).subscribe((value) => this.value = value);
     }
 
+    public ngOnInit() {
+        this.chunkLoaded = this.gridAPI.get(this.gridID).headerContainer.onChunkLoading.subscribe(() => {
+            if (!this.toggleDirective.collapsed) {
+                this.toggleDirective.collapsed = true;
+                this.refresh();
+            }
+        });
+    }
+
     public ngOnDestroy() {
         this.filterChanged.unsubscribe();
+        this.chunkLoaded.unsubscribe();
     }
 
     public refresh() {
@@ -208,11 +225,18 @@ export class IgxGridFilterComponent implements OnDestroy {
     protected filteringExpression(): boolean {
         const expr = this.gridAPI.get(this.gridID)
             .filteringExpressions.find((x) => x.fieldName === this.column.field);
+
         if (expr) {
             this._value = expr.searchVal;
             this._filterCondition = expr.condition.name;
+
+            if (!this.unaryCondition && !this._value) {
+                return false;
+            }
             return true;
+        } else {
+            this._value = null;
+            this._filterCondition = undefined;
         }
-        return false;
     }
 }

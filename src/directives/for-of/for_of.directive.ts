@@ -253,7 +253,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.hCache,
             0
         );
-
+        this.onChunkLoading.emit();
         /*recalculate and apply page size.*/
         this.applyPageSizeChange();
 
