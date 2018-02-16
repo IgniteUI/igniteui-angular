@@ -400,37 +400,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         let pageSize = 0;
         if (this.igxForContainerSize !== null && this.igxForContainerSize !== undefined) {
             if (this.igxForScrollOrientation === "horizontal") {
-                const vc = this.igxForScrollContainer ?
-                    this.igxForScrollContainer._viewContainer :
-                    this._viewContainer;
-                const hScroll = this.getElement(vc, "igx-horizontal-virtual-helper");
-
-                const left = hScroll && hScroll.scrollLeft !== 0 ?
-                    hScroll.scrollLeft + parseInt(this.igxForContainerSize, 10) :
-                    parseInt(this.igxForContainerSize, 10);
-
-                let endIndex = this.getHorizontalIndexAt(
-                    left,
-                    this.hCache,
-                    0
-                ) + 1;
-                if (endIndex > this.igxForOf.length) {
-                    endIndex = this.igxForOf.length;
-                    /*At right edge. Check if last elem fits.*/
-                    let diff = this.hCache[endIndex] - this.hCache[this._currIndex];
-                    if (diff > parseInt(this.igxForContainerSize, 10)) {
-                        /*If last col does not fit we should remove some of the prev cols to fit the last col.*/
-                        while (diff > parseInt(this.igxForContainerSize, 10)) {
-                            diff -= parseInt(this.igxForOf[this._currIndex].width, 10);
-                            if (this._currIndex + 1 === endIndex) {
-                                /*large column that exceeds the size of the container...*/
-                                break;
-                            }
-                            this._currIndex++;
-                        }
-                    }
-                }
-                pageSize = endIndex - this._currIndex;
+                pageSize = Math.ceil(parseInt(this.igxForContainerSize, 10)) / 200;
             } else {
                 pageSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
                     parseInt(this.igxForItemSize, 10));

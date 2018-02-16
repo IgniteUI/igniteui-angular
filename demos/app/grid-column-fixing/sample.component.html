@@ -1,6 +1,9 @@
-<igx-grid #grid1 [data]="localData" (onCellSelection)="selectCell($event)" [width]="'1200px'" [height]="'800px'">
-    <igx-column  *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [fixed]="c.fixed">
+<igx-grid #grid1 [data]="localData" (onCellSelection)="selectCell($event)" [width]="'1200px'" [height]="'800px'" [style.position]="'relative'">
+    <igx-column  *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinnedToRight]='c.pinnedToRight' [pinnedToLeft]='c.pinnedToLeft'>
     </igx-column>
 </igx-grid>
-
-<button (click)="onToggleFix()">Fix/Unfix column</button>
+<br />
+<button (click)="toggleFirstLeft()">Toggle first column to left</button>
+<button (click)="toggleSecondLeft()">Toggle second column to left</button>
+<button (click)="toggleFirstRight()">Toggle first column to right</button>
+<button (click)="toggleSecondRight()">Toggle second column to right</button> 

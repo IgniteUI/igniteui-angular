@@ -143,13 +143,41 @@ export class GridColumnFixingSampleComponent {
 
 	public ngAfterViewInit() {
 	}
-	public onToggleFix() {
+
+	toggleFirstLeft() {
 		var col = this.grid1.getColumnByName("0");
-		var ind = this.grid1.fixedColumns.indexOf(col);
-		if(ind == -1){
-			this.grid1.fixColumn("0");
+		if (col.pinnedToLeft) {
+			this.grid1.unpinColumn("0");
 		} else {
-			this.grid1.unfixColumn("0");
-		}		
+			this.grid1.pinToLeft("0");
+		}
 	}
+
+	toggleSecondLeft() {
+		var col = this.grid1.getColumnByName("1");
+		if (col.pinnedToLeft) {
+			this.grid1.unpinColumn("1");
+		} else {
+			this.grid1.pinToLeft("1");
+		}
+	}
+
+	toggleFirstRight() {
+		var col = this.grid1.getColumnByName("0");
+		if (col.pinnedToRight) {
+			this.grid1.unpinColumn("0");
+		} else {
+			this.grid1.pinToRight("0");
+		}
+	}
+
+	toggleSecondRight() {
+		var col = this.grid1.getColumnByName("1");
+		if (col.pinnedToRight) {
+			this.grid1.unpinColumn("1");
+		} else {
+			this.grid1.pinToRight("1");
+		}
+	}
+
 }

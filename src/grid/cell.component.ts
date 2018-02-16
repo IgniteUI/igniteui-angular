@@ -139,27 +139,29 @@ export class IgxGridCellComponent {
     get applyNumberCSSClass() {
         return this.column.dataType === DataType.Number;
     }
+
     @HostBinding("class.fixed")
     get isFixed() {
-        return this.column.fixed;
+        return this.column.pinnedToLeft || this.column.pinnedToRight;
     }
 
     @HostBinding("class.last-fixed")
     get isLastFixed() {
-        const fixedCols = this.grid.fixedColumns;
-        if (fixedCols.length === 0 || this.grid.fixingDirection === "right") {
+        const pinnedCols = this.grid.pinnedLeftColumns;
+        if (pinnedCols.length === 0) {
             return false;
         } else {
-            return fixedCols.indexOf(this.column) === fixedCols.length - 1;
+            return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
         }
     }
+
     @HostBinding("class.first-fixed")
     get isFirstFixed() {
-        const fixedCols = this.grid.fixedColumns;
-        if (fixedCols.length === 0 || this.grid.fixingDirection === "left") {
+        const pinnedCols = this.grid.pinnedRightColumns;
+        if (pinnedCols.length === 0) {
             return false;
         } else {
-            return fixedCols.indexOf(this.column) === 0;
+            return pinnedCols.indexOf(this.column) === 0;
         }
     }
 
@@ -354,6 +356,6 @@ export class IgxGridCellComponent {
         for (const row of rows) {
             const elem = row.virtDirRow.dc.instance._viewContainer.element.nativeElement;
             elem.scrollLeft = scrLeft;
-       }
+        }
     }
 }

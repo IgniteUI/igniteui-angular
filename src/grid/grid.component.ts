@@ -207,9 +207,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _page = 0;
     protected _paging = false;
     protected _pipeTrigger = 0;
-    protected _columns = [];
-    protected _fixedColumns = [];
-    protected _unfixedColumns = [];
+    protected _columns: Array<IgxColumnComponent> = [];
+    protected _pinnedLeftColumns: Array<IgxColumnComponent> = [];
+    protected _pinnedRightColumns: Array<IgxColumnComponent> = [];
+    protected _unpinnedColumns: Array<IgxColumnComponent> = [];
     protected _filteringLogic = FilteringLogic.And;
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
@@ -227,7 +228,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public ngOnInit() {
         this.gridAPI.register(this);
-        this.calcWidth = this.width && this.width.indexOf("%") === -1 ?  parseInt(this.width, 10) : 0;
+        this.calcWidth = this.width && this.width.indexOf("%") === -1 ? parseInt(this.width, 10) : 0;
         this.calcHeight = 0;
         this._compute = (evt) => { this.computeDimensions(); };
         this._zone.runOutsideAngular(() => {
@@ -251,8 +252,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.onColumnInit.emit(col);
         });
         this._columns = this.columnList.toArray();
-        this._fixedColumns = this._columns.filter((c) => c.fixed);
-        this._unfixedColumns = this._columns.filter((c) => !c.fixed);
+        this._pinnedLeftColumns = this._columns.filter(function (c) { return c.pinnedToLeft; });
+        this._pinnedRightColumns = this._columns.filter(function (c) { return c.pinnedToRight; });
+        this._unpinnedColumns = this._columns.filter(function (c) { return !c.pinnedToLeft && !c.pinnedToRight; });
     }
 
     public ngAfterViewInit() {
@@ -263,30 +265,50 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.elementRef.nativeElement;
     }
 
-    get fixedWidth() {
-        const fc = this.fixedColumns;
-        let sum  = 0;
-        for (const col of fc) {
-            sum += parseInt(col.width, 10);
+    get leftPinnedWidth() {
+        let fc = this.pinnedLeftColumns;
+        var sum = 0;
+        for (var i = 0; i < fc.length; i++) {
+            sum += parseInt(fc[i].width);
         }
         return sum;
     }
-    get unfixedWidth() {
-        return parseInt(this.width, 10) - this.fixedWidth;
+
+    get rightPinnedWidth() {
+        let fc = this.pinnedRightColumns;
+        var sum = 0;
+        for (var i = 0; i < fc.length; i++) {
+            sum += parseInt(fc[i].width);
+        }
+        return sum;
     }
+
+    get unpinnedWidth() {
+        return parseInt(this.width) - this.leftPinnedWidth - this.rightPinnedWidth;
+    }
+
     get columns(): IgxColumnComponent[] {
         return this._columns;
     }
 
-    get fixedColumns(): IgxColumnComponent[] {
-        return this._fixedColumns;
+    get pinnedLeftColumns(): IgxColumnComponent[] {
+        return this._pinnedLeftColumns;
     }
-    get unfixedColumns(): IgxColumnComponent[] {
-        return this._unfixedColumns;
+
+    get pinnedRightColumns(): IgxColumnComponent[] {
+        return this._pinnedRightColumns;
+    }
+
+    get unpinnedColumns(): IgxColumnComponent[] {
+        return this._unpinnedColumns;
     }
 
     public getColumnByName(name: string): IgxColumnComponent {
         return this.columnList.find((col) => col.field === name);
+    }
+
+    public getRowByIndex(index: number): IgxGridRowComponent {
+        return this.rowList.toArray()[index];
     }
 
     get visibleColumns(): IgxColumnComponent[] {
@@ -419,22 +441,40 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.gridAPI.clear_sort(this.id, name);
     }
 
-    public fixColumn(columnName: string) {
-        const col = this.getColumnByName(columnName);
-        col.fixed = true;
-        if (this._fixedColumns.indexOf(col) === -1) {
-            this._fixedColumns.push(col);
-            this._unfixedColumns.splice(this._unfixedColumns.indexOf(col), 1);
+    public pinToLeft(columnName: string) {
+        let col = this.getColumnByName(columnName);
+        col.pinnedToLeft = true;
+        if (this._pinnedLeftColumns.indexOf(col) === -1) {
+            this._pinnedLeftColumns.push(col);
+            this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
+            col.pinnedToRight = false;
+            this._pinnedRightColumns.splice(this._pinnedRightColumns.indexOf(col), 1);
         }
         this.markForCheck();
     }
 
-    public unfixColumn(columnName: string) {
-        const col = this.getColumnByName(columnName);
-        col.fixed = false;
-        if (this._fixedColumns.indexOf(col) !== -1) {
-            this._fixedColumns.splice(this._fixedColumns.indexOf(col), 1);
-            this._unfixedColumns.unshift(col);
+    public pinToRight(columnName: string) {
+        let col = this.getColumnByName(columnName);
+        col.pinnedToRight = true;
+        if (this._pinnedRightColumns.indexOf(col) === -1) {
+            this._pinnedRightColumns.push(col);
+            this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
+            col.pinnedToLeft = false;
+            this._pinnedLeftColumns.splice(this._pinnedLeftColumns.indexOf(col), 1);
+        }
+        this.markForCheck();
+    }
+
+    public unpinColumn(columnName: string) {
+        let col = this.getColumnByName(columnName);
+        col.pinnedToLeft = false;
+        col.pinnedToRight = false;
+        if (this._pinnedRightColumns.indexOf(col) !== -1) {
+            this._pinnedRightColumns.splice(this._pinnedRightColumns.indexOf(col), 1);
+            this._unpinnedColumns.unshift(col);
+        } else if (this._pinnedLeftColumns.indexOf(col) !== -1) {
+            this._pinnedLeftColumns.splice(this._pinnedLeftColumns.indexOf(col), 1);
+            this._unpinnedColumns.unshift(col);
         }
         this.markForCheck();
     }
@@ -472,7 +512,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (col) {
             this.gridAPI
                 .filter(this.id, name, value,
-                condition || col.filteringCondition, ignoreCase || col.filteringIgnoreCase);
+                    condition || col.filteringCondition, ignoreCase || col.filteringIgnoreCase);
         } else {
             this.gridAPI.filter(this.id, name, value, condition, ignoreCase);
         }
@@ -524,16 +564,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else if (this.height && this.height.indexOf("%") !== -1) {
             /*height in %*/
             const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-            this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
+                this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
             this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
-            this.theadRow.nativeElement.clientHeight -
-            footerHeight;
+                this.theadRow.nativeElement.clientHeight -
+                footerHeight;
         } else {
             const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-            this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
+                this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
             this.calcHeight = parseInt(this.height, 10) -
-            this.theadRow.nativeElement.clientHeight -
-            footerHeight;
+                this.theadRow.nativeElement.clientHeight -
+                footerHeight;
         }
         this.cdr.detectChanges();
     }
