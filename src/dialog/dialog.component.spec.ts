@@ -247,6 +247,6 @@ class CustomDialogComponent {
                             </igx-dialog>
                         </igx-dialog>` })
 class NestedDialogsComponent {
-    @ViewChild('child') public child: IgxDialogComponent;
-    @ViewChild('main') public main: IgxDialogComponent;
+    @ViewChild("child") public child: IgxDialogComponent;
+    @ViewChild("main") public main: IgxDialogComponent;
 }
