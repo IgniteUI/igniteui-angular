@@ -79,6 +79,43 @@ All notable changes for each version of this project will be documented in this 
     </igx-tab-bar>
     ```
 
+- [`igx-list` changes](https://github.com/IgniteUI/igniteui-angular/issues/528)
+    - `igxEmptyList` directive added
+        The list no longer has `emptyListImage`, `emptyListMessage`, `emptyListButtonText`, `emptyListButtonClick` and `hasNoItemsTemplate` members.
+        Instead of them, the `igxEmptyListTemplateDirective` can be used for templating the list when it is empty (or use the default empty template).
+        ```html
+        <igx-list>
+            <ng-template igxEmptyList>
+                <p>My custom empty list template</p>
+            </ng-template>
+        </igx-list>
+        ```
+    - `onItemClicked` event emitter added
+        ```html
+        <igx-list (onItemClicked)="itemClicked()">    
+            <igx-list-item>Item 1</igx-list-item>
+            <igx-list-item>Item 2</igx-list-item>    
+            <igx-list-item>Item 3</igx-list-item>
+        </igx-list>
+        ```
+    - Removed `emptyListImage` property from `IgxListComponent`.
+    - Removed `emptyListMessage` property from `IgxListComponent`.
+    - Removed `emptyListButtonText` property from `IgxListComponent`.
+    - Removed `emptyListButtonClick` event emitter from `IgxListComponent`.
+    - Removed `hasNoItemsTemplate` property from `IgxListComponent`.
+    - Removed `options` property from `IgxListItemComponent`.
+    - Removed `left` property from `IgxListItemComponent`.
+    - Removed `href` property from `IgxListItemComponent`.
+    - New `emptyListTemplate` input for `IgxListComponent`.
+    - New `onItemClicked` event emitter for `IgxListComponent`.
+    - New `role` property for `IgxListComponent`.
+    - New `innerStyle` property for `IgxListComponent`.
+    - New `role` property for `IgxListItemComponent`.
+    - New `element` property for `IgxListItemComponent`.
+    - New `list` property for `IgxListItemComponent`.
+    - New `headerStyle` property for `IgxListItemComponent`.
+    - New `innerStyle` property for `IgxListItemComponent`.
+
 - [Renaming and restructuring directives and components](https://github.com/IgniteUI/igniteui-angular/issues/536) based on the [General Angular Naming Guidelines](https://angular.io/guide/styleguide#naming):
     - `IgxAvatar` renamed to `IgxAvatarComponent`
     - `IgxBadge` renamed to `IgxBadgeComponent`
