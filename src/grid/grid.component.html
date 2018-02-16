@@ -28,21 +28,13 @@
 	</div>
 </div>
 
-<!--<div class="igx-grid__tbody" role="rowgroup">
-    <igx-grid-row [gridID]="id" igxFor="let item of data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
-                                | gridSort:sortingExpressions:id:pipeTrigger
-                                | gridPaging:page:perPage:id:pipeTrigger;
-                                index as i;" [igxForScrollOrientation]="'vertical'" #scrollContainer [igxForContainerSize]='height'>
-    </igx-grid-row>
-</div>-->
-
 <div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' >
         <ng-template igxFor let-rowData [igxForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
                                 | gridSort:sortingExpressions:id:pipeTrigger
-                                | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" 
+                                | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index"
                                 [igxForScrollOrientation]="'vertical'"
                                 [igxForContainerSize]='calcHeight'
-                                [igxForItemSize]='"50px"'
+                                [igxForItemSize]="rowHeight"
                                 #scrollContainer>
            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
            </igx-grid-row>
