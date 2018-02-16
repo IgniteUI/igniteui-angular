@@ -18,7 +18,7 @@ export * from "./data-operations/data-util";
 export * from "./data-operations/data-container";
 export * from "./grid/";
 
-export * from "./navigation-drawer/navigation-drawer.component";
+export * from "./navigation-drawer";
 export * from "./icon/icon.component";
 export * from "./directives/button/button.directive";
 export * from "./directives/filter/filter.directive";
@@ -49,3 +49,4 @@ export * from "./slider/slider.component";
 export * from "./scroll/scroll.component";
 export * from "./date-picker/date-picker.component";
 export * from "./directives/toggle/toggle.directive";
+export * from "./directives/for-of/IForOfRemoteState";
