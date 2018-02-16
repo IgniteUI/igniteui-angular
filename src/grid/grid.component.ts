@@ -312,6 +312,28 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.elementRef.nativeElement;
     }
 
+    get leftPinnedWidth() {
+        let fc = this.pinnedLeftColumns;
+        var sum = 0;
+        for (let i = 0; i < fc.length; i++) {
+            sum += parseInt(fc[i].width);
+        }
+        return sum;
+    }
+
+    get rightPinnedWidth() {
+        let fc = this.pinnedRightColumns;
+        var sum = 0;
+        for (let i = 0; i < fc.length; i++) {
+            sum += parseInt(fc[i].width);
+        }
+        return sum;
+    }
+
+    get unpinnedWidth() {
+        return parseInt(this.width) - this.leftPinnedWidth - this.rightPinnedWidth;
+    }
+
     get columns(): IgxColumnComponent[] {
         return this._columns;
     }
