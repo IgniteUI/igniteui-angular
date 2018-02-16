@@ -256,18 +256,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public ngOnInit() {
         this.gridAPI.register(this);
-        this.calcWidth = this.width && this.width.indexOf("%") === -1 ? parseInt(this.width, 10) : 0;
+        this.calcWidth = this.width && this.width.indexOf("%") === -1 ?  parseInt(this.width, 10) : 0;
         this.calcHeight = 0;
-        this._compute = (evt) => { this.computeDimensions(); };
-        this._zone.runOutsideAngular(() => {
-            window.addEventListener("load", this._compute);
-            window.addEventListener("resize", this._compute);
-        });
-    }
-
-    public ngOnDestroy() {
-        window.removeEventListener("load", this._compute);
-        window.removeEventListener("resize", this._compute);
     }
 
     public ngAfterContentInit() {
@@ -280,9 +270,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.onColumnInit.emit(col);
         });
         this._columns = this.columnList.toArray();
-        this._pinnedLeftColumns = this._columns.filter(function (c) { return c.pinnedToLeft; });
-        this._pinnedRightColumns = this._columns.filter(function (c) { return c.pinnedToRight; });
-        this._unpinnedColumns = this._columns.filter(function (c) { return !c.pinnedToLeft && !c.pinnedToRight; });
     }
 
     public ngAfterViewInit() {
@@ -585,34 +572,5 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         });
 
         this.columnList.reset(columns);
-    }
-
-    protected computeDimensions() {
-        const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
-        if (!this.width) {
-            /*no width specified.*/
-            this.calcWidth = null;
-        } else if (this.width && this.width.indexOf("%") !== -1) {
-            /* width in %*/
-            this.calcWidth = parseInt(computed.getPropertyValue("width"), 10);
-        }
-        if (!this.height) {
-            /*no height specified.*/
-            this.calcHeight = null;
-        } else if (this.height && this.height.indexOf("%") !== -1) {
-            /*height in %*/
-            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-                this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
-            this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
-                this.theadRow.nativeElement.clientHeight -
-                footerHeight;
-        } else {
-            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-                this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
-            this.calcHeight = parseInt(this.height, 10) -
-                this.theadRow.nativeElement.clientHeight -
-                footerHeight;
-        }
-        this.cdr.detectChanges();
     }
 }
