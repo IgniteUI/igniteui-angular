@@ -10,7 +10,9 @@ $components: register-component($components, #{$component-name});
     $item-hover-background: null,
     $item-hover-text-color: null,
     $item-active-background: null,
-    $item-header-text-color: null
+    $item-header-text-color: null,
+    $icon-color: null,
+    $active-icon-color:null
 ) {
     @return (
         navdrawer-background-color: $navdrawer-background-color,
@@ -21,7 +23,9 @@ $components: register-component($components, #{$component-name});
         item-active-background:$item-active-background,
         item-hover-background:$item-hover-background,
         item-hover-text-color:$item-hover-text-color,
-        item-header-text-color:$item-header-text-color
+        item-header-text-color:$item-header-text-color,
+        icon-color:$icon-color,
+        active-icon-color:$active-icon-color
     );
 }
 
@@ -31,11 +35,13 @@ $components: register-component($components, #{$component-name});
         $overlay-background: rgba(0, 0, 0, .25),
         $navdrawer-border-color: rgba(0, 0, 0, .14),
         $item-text-color: igx-color($palette, grays, 800),
-        $item-active-text-color: igx-color($palette, accent, 500),
+        $item-active-text-color: igx-color($palette, primary, 500),
         $item-active-background: igx-color($palette, grays, 100),
         $item-hover-background: igx-color($palette, grays, 200),
         $item-hover-text-color: igx-color($palette, grays, 800),
-        $item-header-text-color: igx-color($palette, grays, 500)
+        $item-header-text-color: igx-color($palette, grays, 600),
+        $icon-color: igx-color($palette, grays, 600),
+        $active-icon-color:igx-color($palette, primary, 500)
     );
 
     $this: extend($default-theme, $theme);
@@ -55,7 +61,7 @@ $components: register-component($components, #{$component-name});
         bottom: 0;
         left: 0;
         z-index: 999;
-        transition: width, transform;
+        transition: flex-basis, transform, width, transform;
         transition-duration: .3s, .3s;
         transition-timing-function: $ease-in-bezier, $ease-out-bezier;
         transition-delay: 0s, 0s;
@@ -141,6 +147,10 @@ $components: register-component($components, #{$component-name});
         > * + * {
             margin-left: 32px;
         }
+
+        .igx-icon {
+            color: map-get($this, 'icon-color');
+        }
     }
 
     %item--active {
@@ -148,9 +158,13 @@ $components: register-component($components, #{$component-name});
         color: map-get($this, 'item-active-text-color');
         background-color: map-get($this, 'item-active-background');
 
-        &:focus {
+        &:focus,
+        &:hover{
             color: map-get($this, 'item-active-text-color');
             background-color: map-get($this, 'item-active-background');
+        }
+        .igx-icon {
+            color: map-get($this, 'active-icon-color');
         }
     }
 
