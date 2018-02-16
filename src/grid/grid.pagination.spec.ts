@@ -5,7 +5,6 @@ import { DataType } from "../data-operations/data-util";
 import { IgxColumnComponent } from "./column.component";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
-import { CustomStrategyData } from "./tests.helper";
 
 describe("IgxGrid - Grid Paging", () => {
 
@@ -197,6 +196,21 @@ describe("IgxGrid - Grid Paging", () => {
 
 });
 
+const data = [
+    { ID: 1, Name: "Casey Houston", JobTitle: "Vice President", HireDate: "2017-06-19T11:43:07.714Z" },
+    { ID: 2, Name: "Gilberto Todd", JobTitle: "Director", HireDate: "2015-12-18T11:23:17.714Z" },
+    { ID: 3, Name: "Tanya Bennett", JobTitle: "Director", HireDate: "2005-11-18T11:23:17.714Z" },
+    { ID: 4, Name: "Jack Simon", JobTitle: "Software Developer", HireDate: "2008-12-18T11:23:17.714Z" },
+    { ID: 5, Name: "Celia Martinez", JobTitle: "Senior Software Developer", HireDate: "2007-12-19T11:23:17.714Z" },
+    { ID: 6, Name: "Erma Walsh", JobTitle: "CEO", HireDate: "2016-12-18T11:23:17.714Z" },
+    { ID: 7, Name: "Debra Morton", JobTitle: "Associate Software Developer", HireDate: "2005-11-19T11:23:17.714Z" },
+    // tslint:disable-next-line:object-literal-sort-keys
+    { ID: 8, Name: "Erika Wells", JobTitle: "Software Development Team Lead", HireDate: "2005-10-14T11:23:17.714Z" },
+    // tslint:disable-next-line:object-literal-sort-keys
+    { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer", HireDate: "2013-10-10T11:23:17.714Z" },
+    { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" }
+];
+
 @Component({
     template: `
         <igx-grid #grid1 [data]="data" [paging]="true" [perPage]="3">
@@ -207,7 +221,7 @@ describe("IgxGrid - Grid Paging", () => {
     `
 })
 export class GridMarkupPagingDeclarationComponent {
-    public data = new CustomStrategyData().data;
+    public data = data;
 
     @ViewChild("grid1", { read: IgxGridComponent })
     public grid1: IgxGridComponent;
@@ -224,7 +238,7 @@ export class GridMarkupPagingDeclarationComponent {
 })
 export class GridDeclarationComponent {
 
-    public data = new CustomStrategyData().data;
+    public data = data;
 
     @ViewChild("grid1", { read: IgxGridComponent })
     public grid1: IgxGridComponent;
@@ -241,7 +255,7 @@ export class GridDeclarationComponent {
 })
 export class IgxGridMarkupEditingDeclarationComponent {
 
-    public data = new CustomStrategyData().data;
+    public data = data;
 
     @ViewChild("grid1", { read: IgxGridComponent })
     public grid1: IgxGridComponent;
