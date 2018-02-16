@@ -1,13 +1,13 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { IgxGridModule, IgxCardModule, IgxSnackbarModule, IgxSwitchModule, IgxToastModule, IgxCheckboxModule } from "../../lib/main";
+import { IgxButtonModule, IgxGridModule, IgxCardModule, IgxSnackbarModule, IgxSwitchModule, IgxToastModule, IgxCheckboxModule, IgxRippleModule } from "../../lib/main";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
-import { GridColumnFixingSampleComponent } from "./sample.component";
+import { GridColumnPinningSampleComponent } from "./sample.component";
 
 @NgModule({
     declarations: [
-        GridColumnFixingSampleComponent
+        GridColumnPinningSampleComponent
     ],
     imports: [
         FormsModule,
@@ -17,8 +17,10 @@ import { GridColumnFixingSampleComponent } from "./sample.component";
         IgxCardModule,
         IgxSnackbarModule,
         IgxSwitchModule,
-        IgxToastModule ,
-        IgxCheckboxModule
+        IgxToastModule,
+        IgxCheckboxModule,
+        IgxRippleModule,
+        IgxButtonModule
     ]
 })
-export class GridColumnFixingSampleModule { }
+export class GridColumnPinningSampleModule { }
