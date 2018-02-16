@@ -35,7 +35,7 @@ import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
 
 import { AppComponent } from "./app.component";
 import { routing } from "./app.routing";
-import { IgxNavigationDrawerModule } from "../lib/main";
+import { IgxNavigationDrawerModule, IgxRippleModule, IgxNavigationService } from "../lib/main";
 
 
 import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSwitchModule, IgxAvatarModule } from "../lib/main";
@@ -83,9 +83,11 @@ import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSw
         IgxShadowsSampleModule,
         IgxCalendarSampleModule,
         IgxDatePickerSampleModule,
+        IgxRippleModule,
         LayoutSampleModule,
         ListPerformanceSampleModule,
         VirtualForSampleModule
-    ]
+    ],
+    providers: [IgxNavigationService]
 })
 export class AppModule { }
