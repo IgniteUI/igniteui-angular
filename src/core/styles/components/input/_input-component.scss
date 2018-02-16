@@ -19,6 +19,10 @@
     @include e(input) {
         @extend %igx-form-input !optional;
 
+        &:hover {
+            @extend %igx-form-input--hover !optional;
+        }
+
         &:focus {
             @extend %igx-form-input--focused !optional;
         }

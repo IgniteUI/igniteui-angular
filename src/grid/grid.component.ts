@@ -25,7 +25,6 @@ import {
     ViewChildren,
     ViewContainerRef
 } from "@angular/core";
-import { Subscription } from "rxjs/Subscription";
 import { cloneArray } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
@@ -124,10 +123,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public evenRowCSS = "";
 
     @Input()
-    public oddRowCSS = "";
+	public oddRowCSS = "";
 
     @Input()
-    public fixingDirection = "left";
+    public rowHeight = 50;
 
     @Output()
     public onSelection = new EventEmitter<any>();
@@ -214,16 +213,45 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _filteringLogic = FilteringLogic.And;
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
-    protected _compute;
+    private resizeHandler;
 
     constructor(
         private gridAPI: IgxGridAPIService,
         private elementRef: ElementRef,
+        private zone: NgZone,
         @Inject(DOCUMENT) private document,
         public cdr: ChangeDetectorRef,
         private resolver: ComponentFactoryResolver,
-        private viewRef: ViewContainerRef,
-        private _zone: NgZone) {
+        private viewRef: ViewContainerRef) {
+            this.resizeHandler = () => {
+                const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+                if (!this.width) {
+                    /*no width specified.*/
+                    this.calcWidth = null;
+                } else if (this.width && this.width.indexOf("%") !== -1) {
+                    /* width in %*/
+                    this.calcWidth = parseInt(computed.getPropertyValue("width"), 10);
+                }
+                if (!this.height) {
+                    /*no height specified.*/
+                    this.calcHeight = null;
+                } else if (this.height && this.height.indexOf("%") !== -1) {
+                    /*height in %*/
+                    const footerHeight = this.tfoot.nativeElement.firstElementChild ?
+                        this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
+                    this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
+                        this.theadRow.nativeElement.clientHeight -
+                        footerHeight;
+                } else {
+                    const footerHeight = this.tfoot.nativeElement.firstElementChild ?
+                    this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
+                    this.calcHeight = parseInt(this.height, 10) -
+                        this.theadRow.nativeElement.clientHeight -
+                        footerHeight;
+                }
+
+                this.markForCheck();
+            };
     }
 
     public ngOnInit() {
@@ -258,33 +286,43 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public ngAfterViewInit() {
-        this.computeDimensions();
+        this.zone.runOutsideAngular(() => {
+            this.document.defaultView.addEventListener("resize", this.resizeHandler);
+        });
+        const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+        if (!this.width) {
+            /*no width specified.*/
+            this.calcWidth = null;
+        } else if (this.width && this.width.indexOf("%") !== -1) {
+            /* width in %*/
+            this.calcWidth = parseInt(computed.getPropertyValue("width"), 10);
+        }
+        if (!this.height) {
+            /*no height specified.*/
+            this.calcHeight = null;
+        } else if (this.height && this.height.indexOf("%") !== -1) {
+            /*height in %*/
+            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
+                this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
+            this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
+                this.theadRow.nativeElement.clientHeight -
+                footerHeight;
+        } else {
+            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
+            this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
+            this.calcHeight = parseInt(this.height, 10) -
+                this.theadRow.nativeElement.clientHeight -
+                footerHeight;
+        }
+        this.cdr.detectChanges();
+    }
+
+    public ngOnDestroy() {
+        this.zone.runOutsideAngular(() => this.document.defaultView.removeEventListener("resize", this.resizeHandler));
     }
 
     get nativeElement() {
         return this.elementRef.nativeElement;
-    }
-
-    get leftPinnedWidth() {
-        let fc = this.pinnedLeftColumns;
-        var sum = 0;
-        for (var i = 0; i < fc.length; i++) {
-            sum += parseInt(fc[i].width);
-        }
-        return sum;
-    }
-
-    get rightPinnedWidth() {
-        let fc = this.pinnedRightColumns;
-        var sum = 0;
-        for (var i = 0; i < fc.length; i++) {
-            sum += parseInt(fc[i].width);
-        }
-        return sum;
-    }
-
-    get unpinnedWidth() {
-        return parseInt(this.width) - this.leftPinnedWidth - this.rightPinnedWidth;
     }
 
     get columns(): IgxColumnComponent[] {
