@@ -1,7 +1,4 @@
-<div [ngClass]="setPosition()" aria-label="badge" role="img">
-	<div class="igx-badge__circle" [ngClass]="setClasses()" [attr.aria-roledescription]="roleDescription">
-		<span *ngIf="!iconBdg" class="igx-badge__circle-value">{{value}}</span>
-		<igx-icon *ngIf="iconBdg" fontSet="material" [name]="iconBdg"></igx-icon>
-		<!-- <i *ngIf="iconBdg" class="material-icons igx-badge__circle-value" >{{iconBdg}}</i> -->
-	</div>
+<div class="igx-badge__circle" [ngClass]="setClasses()" [attr.aria-roledescription]="roleDescription">
+    <span *ngIf="!icon" class="igx-badge__circle-value">{{value}}</span>
+    <igx-icon *ngIf="icon" fontSet="material" [name]="icon"></igx-icon>
 </div>

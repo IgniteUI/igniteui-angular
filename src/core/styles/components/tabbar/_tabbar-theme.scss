@@ -115,9 +115,11 @@ $components: register-component($components, #{$component-name});
         opacity: .75;
         padding: 0 8px;
 
-        i {
-            width: 24px;
-            height: 24px;
+        igx-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            padding: 1px;
         }
     }
 
