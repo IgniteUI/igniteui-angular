@@ -88,16 +88,14 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     }
 
     /**
-     * Width of the drawer in its open state. Defaults to 300px based on the `.igx-nav-drawer` style.
-     * Can be used to override or dynamically modify the width.
+     * Width of the drawer in its open state. Defaults to "300px".
      */
-    @Input() public width: string;
+    @Input() public width = "300px";
 
     /**
-     * Width of the drawer in its mini state. Defaults to 60px based on the `.igx-nav-drawer.mini` style.
-     * Can be used to override or dynamically modify the width.
+     * Width of the drawer in its mini state. Defaults to 60px.
      */
-    @Input() public miniWidth: string;
+    @Input() public miniWidth = "60px";
 
     /** Pinned state change output for two-way binding  */
     @Output() public pinChange = new EventEmitter();
@@ -127,15 +125,15 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     @HostBinding("style.flexBasis")
     get flexWidth() {
         if (!this.pin) {
-            return;
+            return "0px";
         }
         if (this.isOpen) {
-            // return width, even if not set to let CSS handle flex
             return this.width;
         }
         if (this.miniTemplate && this.miniWidth) {
             return this.miniWidth;
         }
+
         return "0px";
     }
 
