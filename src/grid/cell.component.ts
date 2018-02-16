@@ -181,7 +181,7 @@ export class IgxGridCellComponent {
             this.grid.cellInEditMode = null;
         }
         this.grid.onSelection.emit(this);
-        this.grid.cdr.detectChanges();
+        this.syncRows();
     }
 
     @HostListener("blur", ["$event"])
@@ -191,8 +191,9 @@ export class IgxGridCellComponent {
         this.row.focused = false;
     }
 
-    @HostListener("keydown.arrowleft")
-    public onKeydownArrowLeft() {
+    @HostListener("keydown.arrowleft", ["$event"])
+    public onKeydownArrowLeft(event) {
+        event.preventDefault();
         const visibleColumns = this.grid.visibleColumns;
         const rowIndex = this.rowIndex;
         let columnIndex = this.columnIndex;
@@ -208,8 +209,8 @@ export class IgxGridCellComponent {
                 this.syncRows();
             } else {
                 this.row.virtDirRow.scrollPrev();
-                this.row.virtDirRow.onChunkLoaded.take(1).subscribe({
-                    next: (event: any) => {
+                this.row.virtDirRow.onChunkLoaded.first().subscribe({
+                    next: (e: any) => {
                         this.row.cdr.detectChanges();
                         const currTarget = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
                         if (currTarget) {
@@ -226,17 +227,19 @@ export class IgxGridCellComponent {
         }
     }
 
-    @HostListener("keydown.ctrl.arrowleft")
+    @HostListener("keydown.control.arrowleft")
     public onKeydownCtrlArrowLeft() {
         const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex, this.row.cells.first.columnIndex);
 
         if (target) {
             target.nativeElement.focus();
+            this.syncRows();
         }
     }
 
-    @HostListener("keydown.arrowright")
-    public onKeydownArrowRight() {
+    @HostListener("keydown.arrowright", ["$event"])
+    public onKeydownArrowRight(event) {
+        event.preventDefault();
         const visibleColumns = this.grid.visibleColumns;
         const rowIndex = this.rowIndex;
         let columnIndex = this.columnIndex;
@@ -252,8 +255,8 @@ export class IgxGridCellComponent {
                 this.syncRows();
             } else {
                 this.row.virtDirRow.scrollNext();
-                this.row.virtDirRow.onChunkLoaded.take(1).subscribe({
-                    next: (event: any) => {
+                this.row.virtDirRow.onChunkLoaded.first().subscribe({
+                    next: (e: any) => {
                         this.row.cdr.detectChanges();
                         const currTarget = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
                         if (currTarget) {
@@ -270,17 +273,19 @@ export class IgxGridCellComponent {
         }
     }
 
-    @HostListener("keydown.ctrl.arrowright")
+    @HostListener("keydown.control.arrowright")
     public onKeydownCtrlArrowRight() {
         const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex, this.row.cells.last.columnIndex);
 
         if (target) {
             target.nativeElement.focus();
+            this.syncRows();
         }
     }
 
-    @HostListener("keydown.arrowup")
-    public onKeydownArrowUp() {
+    @HostListener("keydown.arrowup", ["$event"])
+    public onKeydownArrowUp(event) {
+        event.preventDefault();
         const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex - 1, this.columnIndex);
         if (target) {
             target.nativeElement.focus();
@@ -289,8 +294,9 @@ export class IgxGridCellComponent {
         }
     }
 
-    @HostListener("keydown.arrowdown")
-    public onKeydownArrowDown() {
+    @HostListener("keydown.arrowdown", ["$event"])
+    public onKeydownArrowDown(event) {
+        event.preventDefault();
         const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex + 1, this.columnIndex);
         if (target) {
             target.nativeElement.focus();
@@ -314,13 +320,12 @@ export class IgxGridCellComponent {
     }
 
     syncRows() {
-        this.grid.cdr.detectChanges();
+        this.grid.markForCheck();
         const scrLeft = this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.scrollLeft;
         this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement.style.left = (-scrLeft) + "px";
-        const rows = this.row.grid.rowList.toArray();
-        for (const row of rows) {
+        this.row.grid.rowList.map((row) => {
             const elem = row.virtDirRow.dc.instance._viewContainer.element.nativeElement;
             elem.scrollLeft = scrLeft;
-       }
+        });
     }
 }
