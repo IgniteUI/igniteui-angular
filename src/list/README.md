@@ -6,74 +6,135 @@ _Components_
 ## Description
 _Igx-List represents a list of identical items._
 
-### More Info
-The children components of the IgxTabBar are:
+## Usage
+```html
+<igx-list>
+    <igx-list-item [isHeader]="true">
+        Work Contacts
+    </igx-list-item>
+    <igx-list-item>Terrance Orta</igx-list-item>
+    <igx-list-item>Richard Mahoney</igx-list-item>
+	<igx-list-item>Donna Price</igx-list-item>
+    <igx-list-item [isHeader]="true">
+        Family Contacts
+    </igx-list-item>
+    <igx-list-item>John Smith</igx-list-item>
+    <igx-list-item>Mary Smith</igx-list-item>
+</igx-list>
+```
 
-- *Igx-List-Item* - represents list item
-- *Igx-List-Header* - represents list header - non-interactable list item which role is to label, describe and unify the next list items, composed below it
+### List elements
+The children components of the Igx-List are *Igx-List-Item* components. Based on their `isHeader` property, the list items can have different roles within the list:
 
-Both: item and header, implement `IListChild`.  
-The list provides three arrays: 
+- List item with `isHeader` set to **false** - interactive list item.
+- List item with `isHeader` set to **true** - non-interactive list item which role is to label, describe and unify the next list items, composed below it
 
-- one that contains all the children: items and headers,
-- only items,
-- only headers.
+All list items implement `IListChild`.  
+In order to access its elements, the list provides the following: 
 
-## Properties
-- `children` - Array of all `IListChild` components: items and headers
-- `items` - Array of items in the list
-- `headers` - Array of headers in the list
-- `allowLeftPanning` - Determines whether the left panning of an item is allowed
-- `allowRightPanning` - Determines whether the right panning on an item is allowed
+- a collection that contains all the children: items and headers
+- an array with items only
+- an array with headers only
 
-## Methods
-- `addChild` - Add `IListChild` component to children array and to the respective specific array
-- `removeChild` - Remove `IListChild` component from children array and from the respective specific array
+### Empty list template
 
-## Events
+By default if there are no items in the list, the default empty list template will be displayed.
+In order to use your own custom template, you can use the `igxEmptyList` directive. It basically replaces the deprecated `emptyListImage`, `emptyListMessage`, `emptyListButtonText` inputs and the `emptyListButtonClick` event, which were previously used to template the list when it is empty.
 
-- `onPanStateChange` - Triggered when pan gesture is executed on list item
-- `onLeftPan` - Triggered when left pan gesture is executed on list item
-- `onRightPan` - Triggered when right pan gesture is executed on list item
+```html
+<igx-list>
+  <ng-template igxEmptyList>
+    <p>My custom empty list template</p>
+  </ng-template>
+</igx-list>
+```
+
+## API
+
+### Inputs
+
+| Name | Description |
+| :--- | :--- |
+| allowLeftPanning  | Determines whether the left panning of an item is allowed  |
+| allowRightPanning  | Determines whether the right panning of an item is allowed  |
+| emptyListTemplate  | The custom template to be used when the list is empty  |
+
+
+### Properties
+
+| Name | Description |
+| :--- | :--- |
+| children  | Collection of all `IListChild` components: items and headers  |
+| items  | Array of items in the list  |
+| headers  | Array of headers in the list  |
+| innerStyle  | Currently used inner style depending on whether the list is empty or not  |
+| role  | Gets the role of the list  |
+
+
+### Outputs
+
+| Name | Description |
+| :--- | :--- |
+| *Event emitters* | *Notify for a change* |
+| onPanStateChange  | Triggered when pan gesture is executed on list item  |
+| onLeftPan  | Triggered when left pan gesture is executed on list item  |
+| onRightPan  | Triggered when right pan gesture is executed on list item  |
+| onItemClicked  | Triggered when a list item has been clicked  |
+
 
 ----------
-
-#Igx-List-Header
+# Igx-List-Item
 
 #### Category
 _Child components_
 
 ## Description
-_Child component of Igx-List, that represents a single non-interactable item, that is used as a header of the following items. The header implements `IListChild` interface._
+Based on its `isHeader` property, the list item has a specific role within the list:
 
-## Properties
-- `index` - The index of header in children array
+| `isHeader` | Description |
+| :--- | :--- |
+| false  | _Child component of Igx-List, that represents a single interactive item. Its content can be text or any other HTML content._  |
+| true  | _Child component of Igx-List, that represents a single non-interactive item, that is used as a header of the following items._  |
 
-----------
-#Igx-List-Item
+## Usage
+- List item
+```html
+<igx-list-item>
+    Lisa Landers
+</igx-list-item>
+```
 
-#### Category
-_Child components_
+- List item as header
+```html
+<igx-list-item [isHeader]="true">
+    Contacts
+</igx-list-item>
+```
 
-## Description
-_Child component of Igx-List, that represents a single interactable item. Its content can be text or any other HTML content. The item implements `IListChild` interface._
+All list items implement `IListChild`.
 
-## Properties
-- `index` - The index of item in children array
-- `hidden` - Determines whether the item should be displayed
-- `panState` - Gets the items pan state
-- `options` - Defines the options of particular list item, that will be displayed on item swipe (pan)
+## API
 
-----------
-##Usage
+### Inputs
 
-	<igx-list>
-	    <igx-list-header>Header 1</igx-list-header>
-	    <igx-list-item>Item 1</igx-list-item>
-	    <igx-list-item>Item 2</igx-list-item>
-	    <igx-list-item>Item 3</igx-list-item>
-	    <igx-list-header>Header 2</igx-list-header>
-	    <igx-list-item>Item 4</igx-list-item>
-	    <igx-list-item>Item 5</igx-list-item>
-	    <igx-list-item>Item 6</igx-list-item>
-	</igx-list>
+| Name | Description |
+| :--- | :--- |
+| hidden  | Determines whether the item should be displayed  |
+| isHeader  | Determines whether the item should be displayed as a header, default value is _false_  |
+
+
+### Properties
+
+| Name | Description |
+| :--- | :--- |
+| index  | The index of item in children collection  |
+| panState  | Gets the item's pan state  |
+| list  | Gets the list that is associated with the item  |
+| role  | Gets the role of the item within its respective list - _separator_ if isHeader is true and _listitem_ otherwise   |
+| element  | Gets the native element that is associated with the item   |
+| width  | Gets the width of the item   |
+| maxLeft  | Gets the maximum left position of the item   |
+| maxRight  | Gets the maximum right position of the item   |
+| touchAction  | Determines in what way the item can be manipulated by the user via a touch action   |
+| headerStyle  | Gets if the item is styled as header item   |
+| innerStyle  | Gets if the item is styled as list item   |
