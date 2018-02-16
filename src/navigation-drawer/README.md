@@ -63,8 +63,8 @@ The navigation drawer can be either [temporary or persistent](#types) and by def
 | `isOpen` | boolean | State of the drawer. |
 | `pin` | boolean | Pinned state of the drawer. May require additional layout styling. |
 | `pinThreshold` | number | Minimum device width required for automatic pin to be toggled. Default is 1024, can be set to falsy value to ignore. |
-| `width` | string| Width of the drawer in its open state. Defaults to "300px" from default styles. Can be used to override or dynamically modify the width.|
-| `miniWidth` | string | Width of the drawer in its mini variant. Defaults to "60px" from default styles. Can be used to override or dynamically modify the mini variant width. |
+| `width` | string| Width of the drawer in its open state. Defaults to "300px".|
+| `miniWidth` | string | Width of the drawer in its mini variant. Defaults to "60px". |
 
 ### Outputs
 | Name      |  Description |

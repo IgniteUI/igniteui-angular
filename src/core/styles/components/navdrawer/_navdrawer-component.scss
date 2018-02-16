@@ -1,7 +1,5 @@
 @include b(igx-nav-drawer) {
 
-    flex-basis: 242px;
-
     @extend %animation !optional;
 
     // Main aside element
