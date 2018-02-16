@@ -1,15 +1,17 @@
 @include b(igx-navbar) {
     @extend %igx-navbar-display !optional;
 
+    @include e(title) {
+        @extend %igx-navbar-title !optional;
+    }
+
     @include e(left) {
         @extend %igx-navbar-bundle !optional;
+        @extend %igx-navbar-icon-display !optional;
     }
 
     @include e(right) {
         @extend %igx-navbar-bundle !optional;
-    }
-
-    @include e(title) {
-        @extend %igx-navbar-title !optional;
+        @extend %igx-navbar-icon-display !optional;
     }
 }

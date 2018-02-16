@@ -2,20 +2,38 @@ $component-name: 'igx-navbar';
 
 $components: register-component($components, #{$component-name});
 
-@function igx-navbar-theme($background: null, $text-color: null) {
+@function igx-navbar-theme(
+    $background: null,
+    $text-color: null,
+    $idle-icon-color: null,
+    $hover-icon-color: null
+) {
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
     }
 
+    @if not($idle-icon-color) and $background {
+        $idle-icon-color: text-contrast($background);
+    }
+
+    @if not($hover-icon-color) and $background {
+        $hover-icon-color: text-contrast($background);
+    }
+
     @return (
         background: $background,
-        text-color: $text-color
+        text-color: $text-color,
+        idle-icon-color: $idle-icon-color,
+        hover-icon-color: $hover-icon-color
     );
 }
 
 @mixin igx-navbar($theme, $palette: $default-palette) {
     $default-theme: igx-navbar-theme(
-        $background: igx-color($palette, 'primary')
+        $background: igx-color($palette, 'primary'),
+        $text-color: #fff,
+        $idle-icon-color: #fff,
+        $hover-icon-color: #fff 
     );
 
     $this: extend($default-theme, $theme);
@@ -42,22 +60,31 @@ $components: register-component($components, #{$component-name});
         z-index: 4;
     }
 
+    %igx-navbar-title {
+        margin: $navbar-title-margin;
+        font-size: $navbar-title-fz;
+        line-height: $navbar-title-lh;
+    }
+
     %igx-navbar-bundle {
         display: flex;
         align-items: center;
+        user-select: none;
 
         * + * {
             margin-left: 16px;
         }
     }
 
-    %igx-navbar-left-btn--disabled {
-        display: none;
-    }
+    %igx-navbar-icon-display {
+        igx-icon {
+            cursor: pointer;
+            color: map-get($this, 'idle-icon-color');
+            transition: color .15s $ease-out-quad;
 
-    %igx-navbar-title {
-        margin: $navbar-title-margin;
-        font-size: $navbar-title-fz;
-        line-height: $navbar-title-lh;
+            &:hover {
+                color: map-get($this, 'hover-icon-color');
+            }
+        }
     }
 }

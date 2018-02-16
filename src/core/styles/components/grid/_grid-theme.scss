@@ -80,16 +80,6 @@ $components: register-component($components, #{$component-name});
 
     $this: extend($default-theme, $theme);
 
-    $filtering-theme: igx-grid-filtering-theme(
-        $menu-background: map-get($this, 'content-background'),
-        $menu-button-text-color: map-get($this, 'cell-selected-background'),
-        $toggle-hover-background: map-get($this, 'row-hover-background'),
-        $toggle-active-background: map-get($this, 'cell-selected-background'),
-        $toggle-icon-filtered-color: map-get($this, 'cell-selected-background')
-    );
-
-    @include igx-grid-filtering($filtering-theme);
-
     // @debug $this;
 
     // General
