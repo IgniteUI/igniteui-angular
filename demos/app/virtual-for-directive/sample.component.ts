@@ -179,16 +179,16 @@ chunkLoading(evt) {
     });    
 }
 scrNextRow(){
-    this.virtDirVertical.scrollNext();
+    this.virtDirVertical.scrollNextItem();
 }
 scrPrevRow(){
-    this.virtDirVertical.scrollPrev();
+    this.virtDirVertical.scrollPrevItem();
 }
 scrNextCol(){
-    this.virtDirHorizontal.scrollNext();
+    this.virtDirHorizontal.scrollNextItem();
 }
 scrPrevCol(){
-    this.virtDirHorizontal.scrollPrev();
+    this.virtDirHorizontal.scrollPrevItem();
 }
 
 }
