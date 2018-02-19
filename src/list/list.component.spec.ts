@@ -7,7 +7,7 @@ import { IgxListComponent, IgxListModule } from "./list.component";
 
 declare var Simulator: any;
 
-describe("List", () => {
+fdescribe("List", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ListTestComponent, ListWithPanningAllowedComponent,
@@ -39,11 +39,11 @@ describe("List", () => {
         expect(list.headers[0] instanceof IgxListItemComponent).toBeTruthy();
     });
 
-    it("should set/get properly layout properties: width, maxLeft", () => {
+    it("should set/get properly layout properties: width, left, maxLeft, maxRight", () => {
          const fixture = TestBed.createComponent(ListTestComponent);
          const list = fixture.componentInstance.list;
          const testWidth = 400;
-         const testLeft = -100;
+         const testLeft = 0;
          let item;
 
          fixture.detectChanges();
@@ -56,6 +56,8 @@ describe("List", () => {
          expect(item instanceof IgxListItemComponent).toBeTruthy();
          expect(item.width).toBe(testWidth);
          expect(item.maxLeft).toBe(-testWidth);
+         expect(item.maxRight).toBe(testWidth);
+         expect(item.left).toBe(testLeft);
      });
 
     it("should calculate properly item index", () => {
@@ -287,13 +289,47 @@ describe("List", () => {
 
         const headerClasses = fixture.debugElement.queryAll(By.css(".igx-list__header"));
         expect(headerClasses.length).toBe(2);
+    });
+
+    it("should set items' isHeader property properly.", () => {
+        const fixture = TestBed.createComponent(TwoHeadersListComponent);
+        const list = fixture.componentInstance.list;
+
+        fixture.detectChanges();
 
         const childrenArray = list.children.toArray();
+        expect(childrenArray[0].isHeader).toBe(true);
+        expect(childrenArray[1].isHeader).toBe(false);
+        expect(childrenArray[2].isHeader).toBe(true);
+        expect(childrenArray[3].isHeader).toBeFalsy();
+        expect(childrenArray[4].isHeader).toBeFalsy();
+    });
 
+    it("should set items' role property properly.", () => {
+        const fixture = TestBed.createComponent(TwoHeadersListComponent);
+        const list = fixture.componentInstance.list;
+
+        fixture.detectChanges();
+
+        const childrenArray = list.children.toArray();
         expect(childrenArray[0].role).toBe("separator");
         expect(childrenArray[1].role).toBe("listitem");
         expect(childrenArray[2].role).toBe("separator");
         expect(childrenArray[3].role).toBe("listitem");
+        expect(childrenArray[4].role).toBe("listitem");
+    });
+
+    it("should hide items when hidden is true.", () => {
+        const fixture = TestBed.createComponent(TwoHeadersListComponent);
+        const list = fixture.componentInstance.list;
+
+        fixture.detectChanges();
+
+        const hiddenItems = list.items.filter((item) => item.hidden === true);
+        expect(hiddenItems.length).toBe(1);
+
+        const hiddenTags = list.children.filter((item) => item.element.style.display === "none");
+        expect(hiddenTags.length).toBe(1);
     });
 
     function panRight(item, itemHeight, itemWidth, duration) {
@@ -356,7 +392,7 @@ class ListTestComponent {
 }
 
 @Component({
-    template: `<div #wrapper>
+    template: `<div #wrapper width="300px">
                     <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                         <igx-list-item>Item 1</igx-list-item>
                         <igx-list-item>Item 2</igx-list-item>
@@ -432,12 +468,12 @@ class ListWithCustomNoItemsTemplateComponent {
 }
 
 @Component({
-    template: `<div #wrapper>
+    template: `<div #wrapper style="width: 300px">
                     <igx-list>
                         <igx-list-item [isHeader]="true">Header 1</igx-list-item>
-                        <igx-list-item [isHeader]="false">Item 1</igx-list-item>
+                        <igx-list-item [isHeader]="false" [hidden]="false">Item 1</igx-list-item>
                         <igx-list-item [isHeader]="true">Header 2</igx-list-item>
-                        <igx-list-item>Item 2</igx-list-item>
+                        <igx-list-item [hidden]="true">Item 2</igx-list-item>
                         <igx-list-item>Item 3</igx-list-item>
                     </igx-list>
                 </div>`
