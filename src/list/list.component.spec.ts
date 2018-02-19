@@ -108,7 +108,7 @@ describe("List", () => {
         }).then(() => {
             expect(item.panState).toBe(IgxListPanState.RIGHT);
 
-            return panLeft(itemNativeElement, itemHeight, itemWidth, 200);
+            return panLeft(itemNativeElement, itemHeight, 2 * itemWidth, 200);
         }).then(() => {
             expect(item.panState).toBe(IgxListPanState.NONE);
 
