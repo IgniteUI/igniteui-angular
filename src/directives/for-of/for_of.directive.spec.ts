@@ -611,7 +611,7 @@ describe("IgxVirtual directive - simple template", () => {
         }
     });
 
-    it("should load next row and remove first row when using scrollNext method", () => {
+    it("should load next row and remove first row when using scrollNextItem method", () => {
         const fix = TestBed.createComponent(VirtualComponent);
         fix.componentRef.hostView.detectChanges();
         fix.detectChanges();
@@ -626,7 +626,7 @@ describe("IgxVirtual directive - simple template", () => {
         }
 
         expect(() => {
-            fix.componentInstance.parentVirtDir.testScrollNext();
+            fix.componentInstance.parentVirtDir.testScrollNextItem();
             fix.componentInstance.scrollTop(verticalScroller.scrollTop);
             fix.detectChanges();
         }).not.toThrow();
@@ -639,7 +639,7 @@ describe("IgxVirtual directive - simple template", () => {
         }
     });
 
-    it("should load previous row and remove last row when using scrollPrev method", () => {
+    it("should load previous row and remove last row when using scrollPrevItem method", () => {
         const fix = TestBed.createComponent(VirtualComponent);
         fix.componentRef.hostView.detectChanges();
         fix.detectChanges();
@@ -659,9 +659,9 @@ describe("IgxVirtual directive - simple template", () => {
                 .toBe(fix.componentInstance.data[10 + i][1].toString());
         }
 
-        /** Step 2. Execute scrollPrev to load previous row */
+        /** Step 2. Execute scrollPrevItem to load previous row */
         expect(() => {
-            fix.componentInstance.parentVirtDir.testScrollPrev();
+            fix.componentInstance.parentVirtDir.testScrollPrevItem();
             fix.componentInstance.scrollTop(verticalScroller.scrollTop);
             fix.detectChanges();
         }).not.toThrow();
@@ -688,12 +688,12 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         super(viewContainer, template, differs, fResolver, changeDet, zone);
     }
 
-    public testScrollPrev() {
-        super.scrollPrev();
+    public testScrollPrevItem() {
+        super.scrollPrevItem();
     }
 
-    public testScrollNext() {
-        super.scrollNext();
+    public testScrollNextItem() {
+        super.scrollNextItem();
     }
 
     public testOnScroll(target) {

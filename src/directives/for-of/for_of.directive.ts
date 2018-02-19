@@ -48,10 +48,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     @Input() public igxForRemote = false;
 
     @Output()
-    public onChunkLoaded = new EventEmitter<any>();
+    public onItemLoad = new EventEmitter<any>();
 
     @Output()
-    public onChunkLoading = new EventEmitter<any>();
+    public onItemPreload = new EventEmitter<any>();
 
     private hScroll;
     private func;
@@ -187,7 +187,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
-    public scrollNext() {
+    public scrollNextItem() {
         const endIndex = this._currIndex + this._pageSize - 1;
         if (this.igxForScrollOrientation === "horizontal") {
             if (!this.igxForOf[endIndex]) {
@@ -201,7 +201,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
-    public scrollPrev() {
+    public scrollPrevItem() {
         if (this.igxForScrollOrientation === "horizontal") {
             const startItemSize = parseInt(this.igxForOf[this._currIndex].width, 10);
             this.hScroll.scrollLeft -= startItemSize;
@@ -227,7 +227,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.state.startIndex !== this._currIndex) {
             this.state.startIndex = this._currIndex;
             this.state.endIndex = endingIndex;
-            this.onChunkLoading.emit(this.state);
+            this.onItemPreload.emit(this.state);
         }
         if (this.igxForRemote) {
             return;
@@ -240,7 +240,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             cntx.index = this.igxForOf.indexOf(input);
         }
         this.dc.changeDetectorRef.detectChanges();
-        this.onChunkLoaded.emit();
+        this.onItemLoad.emit();
     }
 
     protected onHScroll(event) {
@@ -256,7 +256,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.hCache,
             0
         );
-        this.onChunkLoading.emit();
+        this.onItemPreload.emit();
         /*recalculate and apply page size.*/
         this.applyPageSizeChange();
 
@@ -270,7 +270,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             cntx.index = this.igxForOf.indexOf(input);
         }
         this.dc.changeDetectorRef.detectChanges();
-        this.onChunkLoaded.emit();
+        this.onItemLoad.emit();
     }
 
     protected onWheel(event) {
@@ -394,7 +394,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     cntx.$implicit = input;
                     cntx.index = this.igxForOf.indexOf(input);
             }
-            this.onChunkLoaded.emit();
+            this.onItemLoad.emit();
             this.dc.changeDetectorRef.detectChanges();
         }
     }

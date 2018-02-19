@@ -36,7 +36,7 @@
             <span>Remote Virtualization</span>
             <br/>
             <div style='height:500px;'>
-              <ng-template igxFor let-item [igxForOf]="remoteData | async" (onChunkLoading)="chunkLoading($event)"
+              <ng-template igxFor let-item [igxForOf]="remoteData | async" (onItemPreload)="chunkLoading($event)"
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='"500px"'
                 [igxForItemSize]='"50px"'
