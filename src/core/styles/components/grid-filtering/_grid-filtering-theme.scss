@@ -29,6 +29,10 @@ $components: register-component($components, #{$component-name});
         $menu-button-disabled-text-color: rgba(text-contrast($menu-background), .3)
     }
 
+    @if not($toggle-icon-active-color) and $toggle-active-background {
+        $toggle-icon-active-color: text-contrast($toggle-active-background)
+    }
+
     @return (
         toggle-icon-color: $toggle-icon-color,
         toggle-icon-hover-color: $toggle-icon-hover-color,
@@ -69,7 +73,7 @@ $components: register-component($components, #{$component-name});
     $grid-head-icon-padding: rem(4.5px) !default;
 
     $filtering-menu-min-width: 240px;
-    $filtering-menu-shadow: $elevate-4;
+    $filtering-menu-shadow: $elevate-8;
     $filtering-menu-radius: 4px;
     $filtering-menu-distance-to-toggle: 4px;
 
@@ -144,15 +148,12 @@ $components: register-component($components, #{$component-name});
 
         @include igx-button(igx-button-theme(
             $flat-text-color: map-get($this, 'menu-button-text-color'),
-            $flat-hover-background: map-get($this, 'menu-button-color'),
-            $disabled-color: map-get($this, 'menu-button-disabled-text-color')
-        ));
-
-        @include igx-input(igx-input-theme(
-            $idle-accent-color: rgba(text-contrast(map-get($this, 'menu-background')), .7),
-            $idle-text-color: text-contrast(map-get($this, 'menu-background')),
-            $focused-text-color: text-contrast(map-get($this, 'menu-background')),
-            $focused-accent-color: map-get($this, 'toggle-active-background')
+            $flat-hover-text-color: map-get($this, 'menu-button-text-color'),
+            $flat-hover-background: rgba(map-get($this, 'menu-button-text-color'), .12),
+            $flat-focus-text-color: map-get($this, 'menu-button-text-color'),
+            $flat-focus-background: rgba(map-get($this, 'menu-button-text-color'), .08),
+            $disabled-color: map-get($this, 'menu-button-disabled-text-color'),
+            $disabled-background: transparent
         ));
 
         // TODO: remove after SELECT theme is created

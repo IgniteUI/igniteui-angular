@@ -1,18 +1,20 @@
 import {
     AfterContentInit,
     Component,
+    ContentChild,
     ElementRef,
     EventEmitter,
+    HostBinding,
     Inject,
     Input,
-    NgModule,
     OnChanges,
     OnDestroy,
     OnInit,
     Optional,
     Output,
     Renderer,
-    SimpleChange
+    SimpleChange,
+    TemplateRef
 } from "@angular/core";
 import "rxjs/add/observable/fromEvent";
 import "rxjs/add/observable/interval";
@@ -22,19 +24,21 @@ import { Subscription } from "rxjs/Subscription";
 import { BaseComponent } from "../core/base";
 import { IgxNavigationService, IToggleView } from "../core/navigation";
 import { HammerGesturesManager } from "../core/touch";
+import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from "./navigation-drawer.directives";
 
 /**
  * Navigation Drawer component supports collapsible side navigation container.
  * Usage:
  * ```
  * <igx-nav-drawer id="ID" (event output bindings) [input bindings]>
- *  <div class="igx-drawer-content">
+ *  <ng-template igxDrawer>
  *   <!-- expanded template -->
- *  </div>
+ *  </ng-template>
  * </igx-nav-drawer>
  * ```
- * Can also include an optional `<div class="igx-drawer-mini-content">`.
- * ID required to register with NavigationService allow directives to target the control.
+ * Can also include an optional `<ng-template igxDrawerMini>`.
+ * Items inside can be styled with `igxDrawerItem` directive.
+ * ID required to register with provided `IgxNavigationService` allow directives to target the control from other template files.
  */
 @Component({
     providers: [HammerGesturesManager],
@@ -47,6 +51,8 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     AfterContentInit,
     OnDestroy,
     OnChanges {
+
+    @HostBinding("class") public cssClass = "igx-nav-drawer";
 
     /** ID of the component */
     @Input() public id: string;
@@ -65,12 +71,12 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     /** State of the drawer. */
     @Input() public isOpen = false;
 
-    /** Pinned state of the drawer. Currently only support  */
+    /** Pinned state of the drawer. May require additional layout styling. */
     @Input() public pin = false;
 
     /**
      * Minimum device width required for automatic pin to be toggled.
-     * Deafult is 1024, can be set to falsy value to ignore.
+     * Default is 1024, can be set to falsy value to ignore.
      */
     @Input() public pinThreshold = 1024;
 
@@ -82,16 +88,14 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     }
 
     /**
-     * Width of the drawer in its open state. Defaults to 300px based on the `.igx-nav-drawer` style.
-     * Can be used to override or dynamically modify the width.
+     * Width of the drawer in its open state. Defaults to "300px".
      */
-    @Input() public width: string;
+    @Input() public width = "300px";
 
     /**
-     * Width of the drawer in its mini state. Defaults to 60px based on the `.igx-nav-drawer.mini` style.
-     * Can be used to override or dynamically modify the width.
+     * Width of the drawer in its mini state. Defaults to 60px.
      */
-    @Input() public miniWidth: string;
+    @Input() public miniWidth = "60px";
 
     /** Pinned state change output for two-way binding  */
     @Output() public pinChange = new EventEmitter();
@@ -104,16 +108,43 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     /** Event fired when the Navigation Drawer has closed. */
     @Output() public closed = new EventEmitter();
 
-    public _hasMimiTempl = false;
+    get template() {
+        if (this.miniTemplate && !this.isOpen) {
+            return this.miniTemplate.template;
+        } else if (this.contentTemplate) {
+            return this.contentTemplate.template;
+        }
+    }
+
+    @ContentChild(IgxNavDrawerMiniTemplateDirective, { read: IgxNavDrawerMiniTemplateDirective })
+    public miniTemplate: IgxNavDrawerMiniTemplateDirective;
+
+    @ContentChild(IgxNavDrawerTemplateDirective, { read: IgxNavDrawerTemplateDirective })
+    protected contentTemplate: IgxNavDrawerTemplateDirective;
+
+    @HostBinding("style.flexBasis")
+    get flexWidth() {
+        if (!this.pin) {
+            return "0px";
+        }
+        if (this.isOpen) {
+            return this.width;
+        }
+        if (this.miniTemplate && this.miniWidth) {
+            return this.miniWidth;
+        }
+
+        return "0px";
+    }
+
     private _gesturesAttached = false;
     private _widthCache: { width: number, miniWidth: number } = { width: null, miniWidth: null };
     private _resizeObserver: Subscription;
     private css: { [name: string]: string; } = {
-        drawer: "igx-nav-drawer",
-        mini: "mini",
-        miniProjection: ".igx-drawer-mini-content",
-        overlay: "igx-nav-drawer-overlay",
-        styleDummy: "style-dummy"
+        drawer: "igx-nav-drawer__aside",
+        mini: "igx-nav-drawer__aside--mini",
+        overlay: "igx-nav-drawer__overlay",
+        styleDummy: "igx-nav-drawer__style-dummy"
     };
 
     private _drawer: any;
@@ -149,7 +180,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
      * Property to decide whether to change width or translate the drawer from pan gesture.
      */
     public get hasAnimateWidth(): boolean {
-        return this.pin || this._hasMimiTempl;
+        return this.pin || !!this.miniTemplate;
     }
 
     private _maxEdgeZone = 50;
@@ -205,7 +236,6 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
 
     public ngAfterContentInit() {
         // wait for template and ng-content to be ready
-        this._hasMimiTempl = this.getChild(this.css.miniProjection) !== null;
         this.updateEdgeZone();
         this.checkPinThreshold();
 
@@ -319,7 +349,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
         }
 
         this.isOpen = false;
-        this.setDrawerWidth(this._hasMimiTempl ? this.miniWidth : "");
+        this.setDrawerWidth(this.miniTemplate ? this.miniWidth : "");
         this.elementRef.nativeElement.addEventListener("transitionend", this.toggleClosedEvent, false);
     }
 
@@ -341,7 +371,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
      */
     protected getExpectedWidth(mini?: boolean): number {
         if (mini) {
-            if (!this._hasMimiTempl) {
+            if (!this.miniTemplate) {
                 return 0;
             }
             if (this.miniWidth) {
@@ -423,7 +453,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     private updateEdgeZone() {
         let maxValue;
 
-        if (this._hasMimiTempl) {
+        if (this.miniTemplate) {
             maxValue = Math.max(this._maxEdgeZone, this.getExpectedWidth(true) * 1.1);
             this.set_maxEdgeZone(maxValue);
         }
@@ -588,11 +618,4 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
         this.elementRef.nativeElement.removeEventListener("transitionend", this.toggleClosedEvent, false);
         this.closed.emit("closed");
     }
-}
-
-@NgModule({
-    declarations: [IgxNavigationDrawerComponent],
-    exports: [IgxNavigationDrawerComponent]
-})
-export class IgxNavigationDrawerModule {
 }

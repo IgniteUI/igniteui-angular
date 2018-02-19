@@ -129,6 +129,7 @@ describe("IgxGrid - Cell component", () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
+        const mockEvent = { preventDefault: () => {}};
 
         let topLeft;
         let topRight;
@@ -143,28 +144,28 @@ describe("IgxGrid - Cell component", () => {
         expect(fix.componentInstance.selectedCell.value).toEqual(1);
         expect(fix.componentInstance.selectedCell.column.field).toMatch("index");
 
-        topLeft.triggerEventHandler("keydown.arrowdown", null);
+        topLeft.triggerEventHandler("keydown.arrowdown", mockEvent);
         tick();
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(2);
         expect(fix.componentInstance.selectedCell.column.field).toMatch("index");
 
-        bottomLeft.triggerEventHandler("keydown.arrowright", null);
+        bottomLeft.triggerEventHandler("keydown.arrowright", mockEvent);
         tick();
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(2);
         expect(fix.componentInstance.selectedCell.column.field).toMatch("value");
 
-        bottomRight.triggerEventHandler("keydown.arrowup", null);
+        bottomRight.triggerEventHandler("keydown.arrowup", mockEvent);
         tick();
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(1);
         expect(fix.componentInstance.selectedCell.column.field).toMatch("value");
 
-        topRight.triggerEventHandler("keydown.arrowleft", null);
+        topRight.triggerEventHandler("keydown.arrowleft", mockEvent);
         tick();
         fix.detectChanges();
 
@@ -181,14 +182,17 @@ describe("IgxGrid - Cell component", () => {
         const rv2 = fix.debugElement.query(By.css(`${CELL_CSS_CLASS}:last-child`));
 
         rv.triggerEventHandler("focus", {});
-        rv.triggerEventHandler("keydown.ctrl.arrowright", null);
+        tick();
+        fix.detectChanges();
+
+        rv.triggerEventHandler("keydown.control.arrowright", null);
         tick();
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(1);
         expect(fix.componentInstance.selectedCell.column.field).toMatch("another");
 
-        rv2.triggerEventHandler("keydown.ctrl.arrowleft", null);
+        rv2.triggerEventHandler("keydown.control.arrowleft", null);
         tick();
         fix.detectChanges();
 
