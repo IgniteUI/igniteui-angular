@@ -1,6 +1,5 @@
 import { 
-    CommonModule,
-    DatePipe
+    CommonModule
 } from "@angular/common";
 import {
     Component,
@@ -22,6 +21,8 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { IgxInputModule } from "../directives/input/input.directive";
 import { IgxToggleModule, IgxToggleDirective, IgxToggleActionDirective } from "../directives/toggle/toggle.directive";
+import { IgxScrollModule, IgxScrollEvent } from "../scroll/scroll.component";
+import { IgxTimeFormatPipe } from "./time-picker-pipes";
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -49,9 +50,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     @Input() public format = "time";
 
-    @Input() public locale: string;
-
-
+    @HostBinding("class") class = "igx-timepicker";
 
     @Output() public onValueChanged = new EventEmitter<any>();
 
@@ -63,15 +62,21 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         return "";
     }
 
+    public updateList($event: IgxScrollEvent): void {
+        this.visibleItems = this.dropDownItems.slice($event.currentTop, $event.currentTop + 5);
+    }
+
     public getDropDownItem(item: Date){
         return this._formatDate(item);
     }
 
     private _formatDate(date: Date){
-        return this.datePipe.transform(date, this.format, null, this.locale);
+        return this.timePipe.transform(date, this.format);
     }
 
     dropDownItems = [];
+
+    visibleItems: string[] = [];
 
     private _populateDropDown(){
         var minMinutes, maxMinutes;
@@ -109,6 +114,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
                 }
             }
         }
+
+        this.visibleItems = this.dropDownItems.slice(0, 5);
     }
 
     @ViewChild("listDropDown", { read: TemplateRef })
@@ -158,7 +165,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         this.toggle.close();
     }
 
-    constructor(private datePipe: DatePipe) {}
+    constructor(private timePipe: IgxTimeFormatPipe) {}
 }
 
 export enum DROPDOWN {
@@ -167,9 +174,9 @@ export enum DROPDOWN {
 }
 
 @NgModule({
-    declarations: [IgxTimePickerComponent],
+    declarations: [IgxTimePickerComponent, IgxTimeFormatPipe],
     exports: [IgxTimePickerComponent],
-    imports: [CommonModule, IgxInputModule, IgxToggleModule],
-    providers: [DatePipe]
+    imports: [CommonModule, IgxInputModule, IgxToggleModule, IgxScrollModule],
+    providers: [IgxTimeFormatPipe]
 })
 export class IgxTimePickerModule { }
