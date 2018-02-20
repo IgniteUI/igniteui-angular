@@ -1,36 +1,135 @@
 $component-name: 'igx-button-group';
-
 $components: register-component($components, #{$component-name});
 
 @function igx-button-group-theme(
-    $button-group-text-color: null,
-    $button-group-background: null,
-    $button-group-border-color: null,
-
-    // BUTTON GROUP SELECTED
-    $button-group-selected-text-color: null,
-    $button-group-selected-background: null,
-    $button-group-selected-border-color: null
+    // NORMAL
+    $item-text-color: null,
+    $item-background: null,
+    $icon-text-color: null,
+    $item-border-color: null,
+    // HOVER
+    $icon-hover-text-color: null,
+    $item-hover-text-color: null,
+    $item-hover-background: null,
+    // DISABLED
+    $disabled-text-color: null,
+    $disabled-background-color: null,
+    // SELECTED
+    $item-selected-text-color: null,
+    $item-selected-background: null,
+    $item-selected-border-color: null,
+    $icon-selected-text-color: null
 ) {
+
+    $disabled-background-color: $item-background;
+
+    ////// NORMAL
+
+    // -- Color
+    @if not($item-text-color) and $item-background  {
+        $item-text-color: text-contrast($item-background);
+    }
+
+    // -- icon
+    @if not($icon-text-color) and $item-background {
+        $icon-text-color: text-contrast($item-background);
+    }
+
+
+    ////// HOVER
+
+    // -- Background
+    @if not($item-hover-background) and $item-background {
+        $item-hover-background: rgba(text-contrast($item-background), .2);
+    }
+
+    // -- Color
+    @if not($item-hover-text-color) and $item-hover-background {
+        $item-hover-text-color: text-contrast($item-background);
+    }
+
+    // -- Icon color
+    @if not($icon-hover-text-color) and $item-hover-background {
+        $icon-hover-text-color: text-contrast($item-background);
+    }
+
+    ////// SELECTED
+
+    // -- Background
+    @if not($item-selected-background) and $item-background {
+        $item-selected-background: rgba(text-contrast($item-background), .2);
+    }
+
+    // -- Border
+    @if not($item-selected-border-color) and $item-background {
+        $item-selected-border-color: rgba(text-contrast($item-background), .2);
+    }
+
+    // -- Color
+    @if not($item-selected-background) and $item-background {
+        $item-selected-text-color: text-contrast($item-background);
+    }
+
+    // -- Color
+    @if not($item-selected-text-color) and $item-selected-background {
+        $item-selected-text-color: text-contrast($item-background);
+    }
+
+    // -- Icon color
+    @if not($icon-selected-text-color) and $item-selected-background {
+        $icon-selected-text-color: text-contrast($item-background);
+    }
+
+
+    ////// DISABLED
+
+    @if not($disabled-text-color) and $item-background {
+        $disabled-text-color: rgba(text-contrast($item-background), .3);
+    }
+
     @return (
-        button-group-text-color: $button-group-text-color,
-        button-group-background: $button-group-background,
-        button-group-border-color: $button-group-border-color,
-        // BUTTON GROUP SELECTED
-        button-group-selected-text-color: $button-group-selected-text-color,
-        button-group-selected-background: $button-group-selected-background,
-        button-group-selected-border-color: $button-group-selected-border-color
+        // NORMAL
+        item-text-color: $item-text-color,
+        item-background: $item-background,
+        icon-text-color: $icon-text-color,
+        item-border-color: $item-border-color,
+
+        // HOVER
+        item-hover-text-color: $item-hover-text-color,
+        item-hover-background: $item-hover-background,
+        icon-hover-text-color: $icon-hover-text-color,
+
+        // DISABLED
+        disabled-text-color:$disabled-text-color,
+        disabled-background-color:$disabled-background-color,
+
+        // SELECTED
+        item-selected-text-color: $item-selected-text-color,
+        item-selected-background: $item-selected-background,
+        item-selected-border-color: $item-selected-border-color,
+        icon-selected-text-color: $icon-selected-text-color,
     );
 }
+
 @mixin igx-button-group($theme, $palette: $default-palette) {
     $default-theme: igx-button-group-theme(
-        $button-group-text-color: igx-color($palette, grays, 500),
-        $button-group-background: $white,
-        $button-group-border-color: transparent,
-        // BUTTON GROUP SELECTED
-        $button-group-selected-text-color: igx-color($palette, grays, 600),
-        $button-group-selected-background: igx-color($palette, grays, 400),
-        $button-group-selected-border-color: igx-color($palette, grays, 200)
+        // NORMAL
+        $item-text-color: igx-color($palette, 'accent', 500),
+        $item-background: $white,
+        $item-border-color: transparent,
+        $icon-text-color: igx-color($palette, 'accent', 500),
+            // HOVER
+        $icon-hover-text-color: igx-color($palette, 'accent', 500),
+        $item-hover-text-color: igx-color($palette, 'accent', 500),
+        $item-hover-background: rgba(igx-color($palette, 'accent', 400), .12),
+            // SELECTED
+        $item-selected-text-color: igx-color($palette, 'accent', 500),
+        $item-selected-background: rgba(igx-color($palette, 'accent', 400), .12),
+        $item-selected-border-color: rgba(igx-color($palette, 'accent', 500), .12),
+        $icon-selected-text-color: igx-color($palette, 'accent', 500),
+            // DISABLED
+        $disabled-text-color: igx-color($palette, 'grays', 300),
+        $disabled-background-color: transparent
     );
 
     // 26. Button Group
@@ -42,13 +141,9 @@ $components: register-component($components, #{$component-name});
     $bgroup-item-minheight: 24px !default;
     $bgroup-item-border-thickness: 1px !default;
     $bgroup-item-font-weight: 600 !default;
-    // Item style selected
-    $bgroup-selected-bg: $lightgray;
-    $bgroup-item-color-selected: $darkgray !default;
-    $bgroup-item-background-selected: $bgroup-selected-bg !default;
-    $bgroup-item-border-selected: igx-color($palette, 'grays', 200) !default;
     // Margin between item elements
     $bgroup-items-margin: em(10px, 16px) !default;
+
     $this: extend($default-theme, $theme);
 
     %igx-bgroup-display {
@@ -59,6 +154,7 @@ $components: register-component($components, #{$component-name});
         box-shadow: $bgroup-shadow;
         transition: box-shadow .2s ease;
         overflow: hidden;
+        background-color: map-get($this, 'item-background');
     }
 
     %igx-bgroup-vertical {
@@ -72,13 +168,13 @@ $components: register-component($components, #{$component-name});
         border: initial;
         border-left: $bgroup-item-border-thickness solid;
         border-right: $bgroup-item-border-thickness solid;
-        border-color: map-get($this, button-group-border-color);
+        border-color: map-get($this, 'item-border-color');
         min-width: $bgroup-item-minwidth;
         min-height: $bgroup-item-minheight;
         border-radius: 0;
-        color: map-get($this, button-group-text-color);
+        color: map-get($this, 'item-text-color');
         font-weight: $bgroup-item-font-weight;
-        background: map-get($this, button-group-background);
+        background-color: map-get($this, 'item-background');
 
         &:first-child {
             border-left: 0;
@@ -88,15 +184,40 @@ $components: register-component($components, #{$component-name});
             border-right: 0;
         }
 
-        &:hover {
-            @extend %igx-bgroup-item-selected;
+        .igx-icon {
+            color: map-get($this, 'icon-text-color');
+        }
+
+        &:hover,
+        &:focus{
+            color: map-get($this, 'item-hover-text-color');
+            background: map-get($this, 'item-hover-background');
+
+            .igx-icon {
+                color: map-get($this, 'icon-hover-text-color');
+            }
         }
     }
 
     %igx-bgroup-item-selected {
-        color: map-get($this, button-group-selected-text-color) !important;
-        background: map-get($this, button-group-selected-background) !important;
-        border-color: map-get($this, button-group-selected-border-color);
+        color: map-get($this, 'item-selected-text-color');
+        background: map-get($this, 'item-selected-background');
+        border-color: map-get($this, 'item-selected-border-color');
+
+        .igx-icon {
+            color: map-get($this, 'icon-selected-text-color');
+        }
+
+        &:hover,
+        &:focus{
+            color: map-get($this, 'item-selected-text-color');
+            background: map-get($this, 'item-selected-background');
+            border-color: map-get($this, 'item-selected-border-color');
+
+            .igx-icon {
+                color: map-get($this, 'item-selected-text-color');
+            }
+        }
     }
 
     %igx-bgroup-item-vertical {
@@ -104,7 +225,7 @@ $components: register-component($components, #{$component-name});
         border-right: 0;
         border-bottom: $bgroup-item-border-thickness solid;
         border-top: $bgroup-item-border-thickness solid;
-        border-color: map-get($this, button-group-border-color);
+        border-color: map-get($this, item-border-color);
 
         &:first-child {
             border-top: 0;
@@ -113,12 +234,6 @@ $components: register-component($components, #{$component-name});
         &:last-child {
             border-bottom: 0;
         }
-    }
-
-    %igx-bgroup-item-vertical-selected {
-        color: map-get($this, button-group-selected-text-color) !important;
-        background: map-get($this, button-group-selected-background) !important;
-        border-color: map-get($this, button-group-selected-border-color);
     }
 
     %igx-bgroup-item-content {
@@ -130,6 +245,16 @@ $components: register-component($components, #{$component-name});
 
         * ~ * {
             margin-left: $bgroup-items-margin;
+        }
+    }
+
+    %igx-button--disabled {
+        color: map-get($this, 'disabled-text-color') !important;
+        background: map-get($this, 'disabled-background-color') !important;
+        opacity: 1 !important;
+
+        .igx-icon {
+            color: map-get($this, 'disabled-text-color') !important;
         }
     }
 }
