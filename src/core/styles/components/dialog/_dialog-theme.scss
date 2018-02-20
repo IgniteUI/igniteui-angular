@@ -8,6 +8,15 @@ $components: register-component($components, #{$component-name});
     $title-color:null,
     $message-color:null
 ) {
+
+    @if not($title-color) and $background{
+        $title-color: text-contrast($background) ;
+    }
+
+    @if not($message-color) and $background{
+        $message-color: rgba(text-contrast($background), .8) ;
+    }
+
     @return (
         overlay-color:$overlay-color,
         background:$background,
