@@ -23,6 +23,16 @@
         @extend %igx-filtering-menu !optional;
     }
 
+    @include e(options, $m: 'to-left') {
+        @extend %igx-filtering-menu !optional;
+        @extend %igx-filtering-menu--to-left !optional;
+    }
+
+    @include e(options, $m: 'to-right') {
+        @extend %igx-filtering-menu !optional;
+        @extend %igx-filtering-menu--to-right !optional;
+    }
+
     @include e(options-bgroup) {
         @extend %igx-filtering-menu-buttons !optional;
     }

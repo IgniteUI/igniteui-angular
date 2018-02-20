@@ -171,12 +171,10 @@ $components: register-component($components, #{$component-name});
 
     %igx-filtering-menu--to-left {
         right: 16px;
-        left: 0;
     }
 
     %igx-filtering-menu--to-right {
-        right: 0;
-        left: 16px;
+        right: initial;
     }
 
     %igx-filtering-menu-buttons {
