@@ -88,6 +88,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const vc = this.igxForScrollContainer ? this.igxForScrollContainer._viewContainer : this._viewContainer;
         if (this.igxForScrollOrientation === "horizontal") {
             totalWidth = this.initHCache(this.igxForOf);
+            this.hScroll = this.getElement(vc, "igx-horizontal-virtual-helper");
+            if (this.hScroll) {
+                this._currIndex = this.getHorizontalIndexAt(this.hScroll.scrollLeft, this.hCache, 0);
+            }
         }
         this._pageSize = this._calculatePageSize();
         const dcFactory: ComponentFactory<DisplayContainerComponent> = this.resolver.resolveComponentFactory(DisplayContainerComponent);
@@ -132,7 +136,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForScrollOrientation === "horizontal") {
             this.dc.instance._viewContainer.element.nativeElement.style.height = "100%";
             const directiveRef = this.igxForScrollContainer || this;
-            this.hScroll = this.getElement(vc, "igx-horizontal-virtual-helper");
             this.func = (evt) => { this.onHScroll(evt); };
             if (!this.hScroll) {
                 const hvFactory: ComponentFactory<HVirtualHelperComponent> =
@@ -253,7 +256,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.hCache,
             0
         );
-
+        this.onChunkLoading.emit();
         /*recalculate and apply page size.*/
         this.applyPageSizeChange();
 
@@ -455,7 +458,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.hCache = [];
         this.hCache.push(0);
         for (i; i < cols.length; i++) {
-            totalWidth += parseInt(cols[i].width, 10);
+            totalWidth += parseInt(cols[i].width, 10) || 0;
             this.hCache.push(totalWidth);
         }
         return totalWidth;
@@ -471,8 +474,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         midLeft = set[midIdx];
         return this.getHorizontalIndexAt(
             left,
-            midLeft > left ? set.slice(0, midIdx) : set.slice(midIdx),
-            midLeft > left ? index : index + midIdx
+            midLeft >= left ? set.slice(0, midIdx) : set.slice(midIdx),
+            midLeft >= left ? index : index + midIdx
         );
     }
 

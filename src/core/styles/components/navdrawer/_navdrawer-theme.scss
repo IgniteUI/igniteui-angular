@@ -19,9 +19,9 @@ $components: register-component($components, #{$component-name});
         overlay-background: $overlay-background,
         navdrawer-border-color: $navdrawer-border-color,
         item-text-color:$item-text-color,
-        item-active-text-color:$item-active-text-color,
-        item-active-background:$item-active-background,
-        item-hover-background:$item-hover-background,
+        item-active-text-color: $item-active-text-color,
+        item-active-background: $item-active-background,
+        item-hover-background: $item-hover-background,
         item-hover-text-color:$item-hover-text-color,
         item-header-text-color:$item-header-text-color,
         icon-color:$icon-color,
@@ -41,13 +41,18 @@ $components: register-component($components, #{$component-name});
         $item-hover-text-color: igx-color($palette, grays, 800),
         $item-header-text-color: igx-color($palette, grays, 600),
         $icon-color: igx-color($palette, grays, 600),
-        $active-icon-color:igx-color($palette, primary, 500)
+        $active-icon-color: igx-color($palette, primary, 500)
     );
 
     $this: extend($default-theme, $theme);
 
-    $ease-in-bezier: cubic-bezier(.25, .46, .45, .94);
-    $ease-out-bezier: $ease-in-bezier;
+    $bezier: cubic-bezier(.25, .46, .45, .94);
+
+    %animation {
+        transition: flex-basis;
+        transition-duration: .3s;
+        transition-timing-function: $bezier;
+    }
 
     %adide {
         position: fixed;
@@ -61,10 +66,9 @@ $components: register-component($components, #{$component-name});
         bottom: 0;
         left: 0;
         z-index: 999;
-        transition: flex-basis, transform, width, transform;
+        transition: width, transform;
         transition-duration: .3s, .3s;
-        transition-timing-function: $ease-in-bezier, $ease-out-bezier;
-        transition-delay: 0s, 0s;
+        transition-timing-function: $bezier, $bezier;
         box-shadow: $elevate-5;
         border-right: 1px solid map-get($this, 'navdrawer-border-color');
     }
@@ -159,10 +163,11 @@ $components: register-component($components, #{$component-name});
         background-color: map-get($this, 'item-active-background');
 
         &:focus,
-        &:hover{
+        &:hover {
             color: map-get($this, 'item-active-text-color');
             background-color: map-get($this, 'item-active-background');
         }
+
         .igx-icon {
             color: map-get($this, 'active-icon-color');
         }
@@ -175,4 +180,3 @@ $components: register-component($components, #{$component-name});
         color: map-get($this, 'item-header-text-color');
     }
 }
-
