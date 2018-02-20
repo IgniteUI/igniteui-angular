@@ -118,16 +118,16 @@ $components: register-component($components, #{$component-name});
         $item-background: $white,
         $item-border-color: transparent,
         $icon-text-color: igx-color($palette, 'accent', 500),
-            // HOVER
+        // HOVER
         $icon-hover-text-color: igx-color($palette, 'accent', 500),
         $item-hover-text-color: igx-color($palette, 'accent', 500),
         $item-hover-background: rgba(igx-color($palette, 'accent', 400), .12),
-            // SELECTED
+        // SELECTED
         $item-selected-text-color: igx-color($palette, 'accent', 500),
         $item-selected-background: rgba(igx-color($palette, 'accent', 400), .12),
         $item-selected-border-color: rgba(igx-color($palette, 'accent', 500), .12),
         $icon-selected-text-color: igx-color($palette, 'accent', 500),
-            // DISABLED
+        // DISABLED
         $disabled-text-color: igx-color($palette, 'grays', 300),
         $disabled-background-color: transparent
     );
