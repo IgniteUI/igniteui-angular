@@ -65,23 +65,34 @@ When the contents of the iterator changes, `igxForOf` makes the corresponding ch
 | igxForScrollContainer  | string          | Only the strings `vertical` and `horizontal` are valid and specify the scroll orientation                                  |
 | igxForContainerSize    | string          | The px-affixed size of the container along the axis of scrolling                                                           |
 | igxForScrollContainer  | IgxForOf | Optionally pass the parent `igxForOf` instance to create a virtual template scrolling both horizontally and vertically     |
-| igxForRemote | boolean | Enables remote virtualization. Should be used in combination with the onChunkLoading event, where the new data can be requested from a remote service. Note that the state.totalCount option of the igxFor directive should be updated with the actual total record count from the service. 
+| igxForRemote | boolean | Enables remote virtualization. Should be used in combination with the OnChunkPreload event, where the new data can be requested from a remote service. Note that the state.totalCount option of the igxFor directive should be updated with the actual total record count from the service. 
 
 ### Outputs
 
 | Name | Description |
 | :--- | :--- |
 | *Event emitters* | *Notify for a change* |
-| onChunkLoaded  | Used on chunk loaded. Emits after a new chunk has been loaded.  |
-| onChunkLoading  | Used on chunk loading to emit the current state information - startIndex, endIndex, totalCount. Can be used for implementing remote load on demand for the igxFor data. |
+| OnChunkLoad  | Used on chunk loaded. Emits after a new chunk has been loaded.  |
+| OnChunkPreload  | Used on chunk loading to emit the current state information - startIndex, endIndex, totalCount. Can be used for implementing remote load on demand for the igxFor data. |
 
+### Accessors
+
+List of public accessors that the developers may use to get information from the `igxFor`:
+| Name | Type | Description |
+| :--- |:--- | :--- |
+| id | string | Unique identifier of the directive |
+| state | IgxForState | The current state of the directive it contains `startIndex` and `chunkSize` |
+| totalItemCount | number | The total count of the virtual data items, when using remote service |
+
+<div class="divider--half"></div>
 
 ### Methods
 
-| Signature | Description |
-| :--- | :--- |
-| scrollNext | Positions the scroll and renders the next virtualization page if one is available     |
-| scrollPrev | Positions the scroll and renders the previous virtualization page if one is avialable |
+| Signature       | Description                     |
+| :-------------- | :------------------------------ |
+| scrollNext()  | Scrolls by one item into the  appropriate  next direction |
+| scrollPrev()  | Scrolls by one item into the  appropriate  previous direction|
+| scrollTo(index)  | Scrolls to the specified index |
 
 
 
