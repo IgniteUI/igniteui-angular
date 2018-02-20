@@ -1,56 +1,123 @@
 @include b(progress-linear) {
-    @extend %progress-linear-display !optional;
+    @extend %linear-display !optional;
 
     @include e(bar) {
-        @extend %progressbar-display !optional;
+        @extend %linear-bar !optional;
     }
 
-    @include e(bar, $m: default) {
-        @extend %progressbar-display !optional;
-        @extend %progressbar--default !optional;
+    @include e(bar-base) {
+        @extend %linear-bar-base !optional;
     }
 
-    @include e(bar, $m: danger) {
-        @extend %progressbar-display !optional;
-        @extend %progressbar--danger !optional;
+    @include e(bar-progress) {
+        @extend %linear-bar-progress !optional;
     }
 
-    @include e(bar, $m: warning) {
-        @extend %progressbar-display !optional;
-        @extend %progressbar--warning !optional;
+    @include e(bar-progress, $m: default) {
+        @extend %linear-bar-progress !optional;
+        @extend %linear-bar-progress--default !optional;
     }
 
-    @include e(bar, $m: info) {
-        @extend %progressbar-display !optional;
-        @extend %progressbar--info !optional;
+    @include e(bar-progress, $m: danger) {
+        @extend %linear-bar-progress !optional;
+        @extend %linear-bar-progress--danger !optional;
+    }
+
+    @include e(bar-progress, $m: warning) {
+        @extend %linear-bar-progress !optional;
+        @extend %linear-bar-progress--warning !optional;
+    }
+
+    @include e(bar-progress, $m: info) {
+        @extend %linear-bar-progress !optional;
+        @extend %linear-bar-progress--info !optional;
+    }
+
+    @include e(bar-progress, $m: success) {
+        @extend %linear-bar-progress !optional;
+        @extend %linear-bar-progress--success !optional;
     }
 
     @include e(value) {
-        @extend %progress-linear-value !optional;
+        @extend %linear-value !optional;
+        @extend %linear-value--start !optional;
     }
 
-    @include e(bar, $m: success) {
-        @extend %progressbar-display !optional;
-        @extend %progressbar--success !optional;
+    @include e(value, $m: start) {
+        @extend %linear-value !optional;
+        @extend %linear-value--start !optional;
+    }
+
+    @include e(value, $m: center) {
+        @extend %linear-value !optional;
+        @extend %linear-value--center !optional;
+    }
+
+    @include e(value, $m: end) {
+        @extend %linear-value !optional;
+        @extend %linear-value--end !optional;
+    }
+
+    @include e(value, $m: top) {
+        @extend %linear-value !optional;
+        @extend %linear-value--top !optional;
+    }
+
+    @include e(value, $m: hidden) {
+        @extend %linear-value !optional;
+        @extend %linear-value--hidden !optional;
     }
 
     @include m(striped) {
-        @extend %progressbar--striped !optional;
+        @include e(bar-progress) {
+            @extend %linear-bar-progress !optional;
+            @extend %linear-bar-progress--striped !optional;
+        }
+
+        @include e(bar-progress, $m: default) {
+            @extend %linear-bar-progress !optional;
+            @extend %linear-bar-progress--striped !optional;
+        }
+
+        @include e(bar-progress, $m: danger) {
+            @extend %linear-bar-progress !optional;
+            @extend %linear-bar-progress--striped !optional;
+        }
+
+        @include e(bar-progress, $m: warning) {
+            @extend %linear-bar-progress !optional;
+            @extend %linear-bar-progress--striped !optional;
+        }
+
+        @include e(bar-progress, $m: info) {
+            @extend %linear-bar-progress !optional;
+            @extend %linear-bar-progress--striped !optional;
+        }
+
+        @include e(bar-progress, $m: success) {
+            @extend %linear-bar-progress !optional;
+            @extend %linear-bar-progress--striped !optional;
+        }
     }
 }
 
 @include b(progress-circular) {
-    @extend %progress-circular-display !optional;
+    @extend %circular-display !optional;
 
     @include e(innercircle) {
-        @extend %progress-circular-innercircle !optional;
+        @extend %circular-innercircle !optional;
     }
 
     @include e(circle) {
-        @extend %progress-circular-circle !optional;
+        @extend %circular-circle !optional;
     }
 
     @include e(text) {
-        @extend %progress-circular-text !optional;
+        @extend %circular-text !optional;
+    }
+
+    @include e(text, $m: hidden) {
+        @extend %circular-text !optional;
+        @extend %circular-text--hidden !optional;
     }
 }

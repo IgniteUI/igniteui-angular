@@ -18,7 +18,7 @@ describe("IgCircularBar", () => {
                 IgxCircularProgressBarComponent
             ]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     it("Initialize circularProgressbar with default values", fakeAsync(() => {
@@ -177,15 +177,16 @@ describe("IgCircularBar", () => {
         tick(tickTime);
 
         const progressBarElem = fixture.componentInstance.circularBar.elementRef.nativeElement
-                                    .getElementsByClassName("progress-circular")[0];
+            .querySelector(".progress-circular");
 
         fixture.detectChanges();
 
         expect(progressBarElem.attributes["aria-valuenow"].textContent).toBe(expectedValue.toString());
         expect(progressBarElem.attributes["aria-valuemax"].textContent).toBe("100");
-        expect(progressBarElem.children[1].classList.value).toBe("progress-circular__innercircle");
-        expect(progressBarElem.children[2].classList.value).toBe("progress-circular__circle");
-        expect(progressBarElem.children[3].classList.value).toBe("progress-circular__text");
+
+        expect(progressBarElem.children[0].classList.value).toBe("progress-circular__innercircle");
+        expect(progressBarElem.children[1].classList.value).toBe("progress-circular__circle");
+        expect(progressBarElem.children[2].classList.value).toBe("progress-circular__text");
     }));
 
     it("The max representation should respond correctly to passed maximum value", fakeAsync(() => {
@@ -198,7 +199,8 @@ describe("IgCircularBar", () => {
         tick(tickTime);
 
         const progressBarElem = fixture.componentInstance.circularBar.elementRef.nativeElement
-                                    .getElementsByClassName("progress-circular")[0];
+            .querySelector(".progress-circular");
+
         fixture.detectChanges();
         // tick(tickTime);
 
@@ -212,9 +214,9 @@ describe("IgCircularBar", () => {
         tick(tickTime);
 
         expect(progressBarElem.attributes["aria-valuemax"].textContent).toBe("200");
-        expect(progressBarElem.children[1].classList.value).toBe("progress-circular__innercircle");
-        expect(progressBarElem.children[2].classList.value).toBe("progress-circular__circle");
-        expect(progressBarElem.children[3].classList.value).toBe("progress-circular__text");
+        expect(progressBarElem.children[0].classList.value).toBe("progress-circular__innercircle");
+        expect(progressBarElem.children[1].classList.value).toBe("progress-circular__circle");
+        expect(progressBarElem.children[2].classList.value).toBe("progress-circular__text");
     }));
 });
 
@@ -223,7 +225,8 @@ class InitCircularProgressBarComponent {
     @ViewChild(IgxCircularProgressBarComponent) public circularBar: IgxCircularProgressBarComponent;
 }
 
-@Component({ template: `
+@Component({
+    template: `
     <div #wrapper>
         <igx-circular-bar #circularBar [value]="value" [animate]="animate" [max]="max">
         </igx-circular-bar>
