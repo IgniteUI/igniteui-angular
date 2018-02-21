@@ -79,7 +79,7 @@ describe("List", () => {
         }
     });
 
-    fit("should pan right and pan left.", () => {
+    it("should pan right and pan left.", () => {
         let fixture;
         let list: IgxListComponent;
         let item: IgxListItemComponent;
