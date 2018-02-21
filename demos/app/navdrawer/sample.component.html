@@ -6,16 +6,21 @@
             <article>
                 <h5 class="setting-title">Visibility</h5>
                 <div class="setting-container">
-                    <igx-switch (change)="toggle()" [checked]="this.app.navdrawer.isOpen" [(ngModel)]="this.app.drawerState.open">
+                    <igx-switch (ngModelChange)="toggle()" [checked]="this.app.navdrawer.isOpen" [(ngModel)]="this.app.drawerState.open">
                         Show Navdrawer
                     </igx-switch>
                 </div>
             </article>
             <article>
-                <h5 class="setting-title">Style</h5>
+                <h5 class="setting-title">Modes</h5>
                 <div class="setting-container">
-                    <igx-switch (change)="pinned()" [(ngModel)]="this.app.drawerState.pin">
+                    <igx-switch (ngModelChange)="toggle()" [(ngModel)]="this.app.drawerState.pin">
                         Pinned Navdrawer
+                    </igx-switch>
+                </div>
+                <div class="setting-container">
+                    <igx-switch (ngModelChange)="toggle()" [(ngModel)]="this.app.drawerState.miniVariant">
+                        Mini variant
                     </igx-switch>
                 </div>
             </article>
