@@ -44,18 +44,17 @@ All notable changes for each version of this project will be documented in this 
     - Renamed method `sortColumn` to `sort`.
     - New Input `sortingIgnoreCase` - Ignore capitalization of words.
 - `igx-navigation-drawer` changes
-    - `IgxNavigationDrawer` renamed to `IgxNavigationDrawerComponent`
-    - `IgxNavigationDirectives` renamed to `IgxNavigationModule`
-    - `NavigationDrawer` renamed to `IgxNavigationDrawer`
+    - `NavigationDrawer` renamed to `IgxNavigationDrawerComponent`
     - `NavigationDrawerModule` renamed to `IgxNavigationDrawerModule`
+    - `IgxNavigationDirectives` renamed to `IgxNavigationModule`
     - `NavigationService` renamed to `IgxNavigationService`
     - `NavigationToggle` renamed to `IgxNavigationToggleDirective`
     - `NavigationClose` renamed to `IgxNavigationCloseDirective`
-    - `IgxNavigationToggle ` renamed to `IgxNavigationToggleDirective`
-    - CSS class `ig-nav-drawer-overlay` renamed to `igx-nav-drawer-overlay`
+    - Content selector `ig-drawer-content` replaced with `<ng-template igxDrawer>`
+    - Content selector `ig-drawer-mini-content` replaced with `<ng-template igxDrawerMini>`
+    - CSS class `ig-nav-drawer-overlay` renamed to `igx-nav-drawer__overlay`
     - CSS class `ig-nav-drawer` renamed to `igx-nav-drawer`
-    - CSS class `ig-drawer-mini-content` to `igx-drawer-mini-content`
-    - CSS class `ig-drawer-content` to `igx-drawer-content`
+- `igxInput` changes
     - CSS class `ig-form-group` to `igx-form-group`
 - `igx-avatar` changes
     - [Initials type avatar is using SVG element from now on](https://github.com/IgniteUI/igniteui-angular/issues/136)

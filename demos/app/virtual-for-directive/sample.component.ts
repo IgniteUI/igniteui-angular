@@ -9,7 +9,7 @@ import {
     IgxListPanState,
     IgxRippleModule,
     IgxForOfDirective,
-    IForOfRemoteState
+    IForOfState
 } from "../../lib/main";
 
 
@@ -24,7 +24,7 @@ export class RemoteService {
         this.remoteData = this._remoteData.asObservable();
     }
 
-    public getData(data?: IForOfRemoteState, cb?: () => void): any {
+    public getData(data?: IForOfState, cb?: () => void): any {
         var dataState = data;
         return this.http
             .get(this.buildUrl(dataState))
@@ -33,7 +33,7 @@ export class RemoteService {
                 return response;
             })
             .subscribe((data) => {
-                dataState.totalCount = data["@odata.count"];
+                //dataState.totalCount = data["@odata.count"];
                 this._remoteData.next(data.value);
                 if (cb) {
                     cb();
@@ -184,11 +184,20 @@ scrNextRow(){
 scrPrevRow(){
     this.virtDirVertical.scrollPrev();
 }
+scrScrollTo(index){
+    console.log(index)
+    this.virtDirVertical.scrollTo(index);
+}
 scrNextCol(){
     this.virtDirHorizontal.scrollNext();
 }
 scrPrevCol(){
     this.virtDirHorizontal.scrollPrev();
+}
+
+scrHorizontalScrollTo(index){
+    console.log(index)
+    this.virtDirHorizontal.scrollTo(index);
 }
 
 }

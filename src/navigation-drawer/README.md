@@ -36,7 +36,7 @@ With the dependencies imported, the Navigation Drawer can be defined in the app 
     <!-- template(s) -->
 </igx-nav-drawer>
 ```
-The content for the drawer should be provided via `<ng-template>` marked with `igxDrawer` directive:
+The content for the drawer should be provided via `<ng-template>` decorated with `igxDrawer` directive:
 ```html
 <igx-nav-drawer id="navdrawer" [isOpen]="true">
     <ng-template igxDrawer>
@@ -46,11 +46,11 @@ The content for the drawer should be provided via `<ng-template>` marked with `i
     </ng-template>
 </igx-nav-drawer>
 ```
-> An additional template marked with `igxDrawerMini` can be provided for the alternative [Mini variant](#mini-variant) as closed state.
+> An additional template decorated with `igxDrawerMini` directive can be provided for the alternative [Mini variant](#mini-variant) as closed state.
 
 While any content can be provided in the template, the [`igxDrawerItem`](#item-styling) directive is available to apply out-of-the-box styling to items. The `igxRipple` directive completes the look and feel.
 
-The navigation drawer can be either [temporary or persistent](#types) and by default will switch between those depending the view size.
+The navigation drawer can either sit above content or be pinned alongside it and by default will switch between those depending the view size. See [Modes](#modes) for more.
 
 ## API
 
@@ -61,9 +61,9 @@ The navigation drawer can be either [temporary or persistent](#types) and by def
 | `position` | string | Position of the Navigation Drawer. Can be "left"(default) or "right". Only has effect when not pinned.|
 | `enableGestures`| boolean | Enables the use of touch gestures to manipulate the drawer - such as swipe/pan from edge to open, swipe toggle and pan drag. |
 | `isOpen` | boolean | State of the drawer. |
-| `pin` | boolean | Pinned state of the drawer. May require additional layout styling. |
-| `pinThreshold` | number | Minimum device width required for automatic pin to be toggled. Default is 1024, can be set to falsy value to ignore. |
-| `width` | string| Width of the drawer in its open state. Defaults to "300px".|
+| `pin` | boolean | When pinned the drawer is relatively positioned instead of sitting above content. May require additional layout styling. |
+| `pinThreshold` | number | Minimum device width required for automatic pin to be toggled. Default is 1024, can be set to a falsy value to disable this behavior. |
+| `width` | string| Width of the drawer in its open state. Defaults to "280px".|
 | `miniWidth` | string | Width of the drawer in its mini variant. Defaults to "60px". |
 
 ### Outputs
@@ -84,14 +84,17 @@ The navigation drawer can be either [temporary or persistent](#types) and by def
 | `toggle`  | Toggle the open state of the Navigation Drawer. Returns `Promise` that is resolved once the operation completes. |
 
 
-## Types
+## Modes
 
-> By default the Navigation Drawer is actively changing between temporary (elevated above content) to accommodate for mobile and persistent/pinned state for larger desktop screens. This behavior is controlled by the `pinThreshold` option. To disable the behavior the option can be set to a falsy value.
+Unpinned (elevated above content) mode is the normal behavior where the drawer sits above and applies a darkened overlay over all content. Generally used to provide a temporary navigation suitable for mobile devices. 
 
-The temporary (unpinned) state is the default state where the drawer sits above and applies a darkened overlay over all content.
+The drawer can be pinned to take advantage of larger screens, placing it within normal content flow with relative position. Depending on whether the app provides a way to toggle the drawer, the pinned mode can be used to achieve either [permanent or persistent behavior](https://material.io/guidelines/patterns/navigation-drawer.html#navigation-drawer-behavior).
 
-### Pinned/persistent setup
-Pin changes the position of the drawer from `fixed` to `relative` to put it on the same flow as content. Therefore, the app styling should account for such layout, especially if the drawer needs to be toggled in this state. While there's more than one way to achieve such fluid layout (including programmatically), the easiest way is using `igxLayout` and `igxFlex` directives:
+> By default the Navigation Drawer is responsive, actively changing between unpinned and pinned mode based on screen size. This behavior is controlled by the `pinThreshold` property and can be disabled by setting a falsy value (e.g. 0).
+
+
+### Pinned (persistent) setup
+Pin changes the position of the drawer from `fixed` to `relative` to put it on the same flow as content. Therefore, the app styling should account for such layout, especially if the drawer needs to be toggled in this mode. While there's more than one way to achieve such fluid layout (including programmatically), the easiest way is using `igxLayout` and `igxFlex` directives:
 
 ```html
 <div class="main" igxLayout igxLayoutDir="row">

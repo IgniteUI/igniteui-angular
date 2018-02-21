@@ -71,12 +71,12 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     /** State of the drawer. */
     @Input() public isOpen = false;
 
-    /** Pinned state of the drawer. May require additional layout styling. */
+    /** When pinned the drawer is relatively positioned instead of sitting above content. May require additional layout styling. */
     @Input() public pin = false;
 
     /**
      * Minimum device width required for automatic pin to be toggled.
-     * Default is 1024, can be set to falsy value to ignore.
+     * Default is 1024, can be set to a falsy value to disable this behavior.
      */
     @Input() public pinThreshold = 1024;
 
@@ -88,9 +88,9 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     }
 
     /**
-     * Width of the drawer in its open state. Defaults to "300px".
+     * Width of the drawer in its open state. Defaults to "280px".
      */
-    @Input() public width = "300px";
+    @Input() public width = "280px";
 
     /**
      * Width of the drawer in its mini state. Defaults to 60px.
@@ -231,6 +231,9 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
         // DOM and @Input()-s initialized
         if (this._state) {
             this._state.add(this.id, this);
+        }
+        if (this.isOpen) {
+            this.setDrawerWidth(this.width);
         }
     }
 
