@@ -3,56 +3,60 @@ $component-name: 'igx-checkbox';
 $components: register-component($components, #{$component-name});
 
 @function igx-checkbox-theme(
-    $input-color: null,
-    $disabled-color: null,
+    $label-color: null,
+    $empty-color: null,
+    $fill-color: null,
     $tick-color: null,
-    $not-checked-border-color: null,
-    $checked-border-color: null,
-    $fill-color: null
+    $disabled-color: null,
+    $light: false
 ) {
     @return (
-        input-color:$input-color,
-        disabled-color:$disabled-color,
-        tick-color:$tick-color,
-        not-checked-border-color:$not-checked-border-color,
-        checked-border-color:$checked-border-color,
-        fill-color:$fill-color
+        label-color: $label-color,
+        empty-color: $empty-color,
+        fill-color: $fill-color,
+        tick-color: $tick-color,
+        disabled-color: $disabled-color,
+        light: $light
     );
 }
 
 @mixin igx-checkbox($theme, $palette: $default-palette) {
-    $default-theme: igx-checkbox-theme(
-        $input-color: igx-color($palette, grays, 900),
-        $disabled-color: igx-color($palette, grays, 500),
-        $tick-color: $white,
-        $not-checked-border-color: igx-color($palette, grays, 600),
-        $checked-border-color: igx-color($palette, accent, 500),
-        $fill-color: igx-color($palette, accent, 500)
+    $dark-theme: igx-checkbox-theme(
+        $label-color: igx-color($palette, grays, 900),
+        $empty-color: igx-color($palette, 'grays', 600),
+        $fill-color: igx-color($palette, 'accent', 500),
+        $tick-color: #fff,
+        $disabled-color: igx-color($palette, grays, 400)
     );
 
-    $this: extend($default-theme, $theme);
+    $light-theme: igx-checkbox-theme(
+        $label-color: igx-color($palette, 'grays', 600),
+        $empty-color: rgba(255, 255, 255, .7),
+        $fill-color: igx-color($palette, 'accent', 500),
+        $tick-color: #000,
+        $disabled-color: rgba(255, 255, 255, .3)
+    );
 
-    // Defaults for all input controls
-    // TODO: Rename to match component name
-    $input-font-size: em(16px) !default;
-    $input-font-weight: 400 !default;
-    $input-color: igx-color($palette, 'grays', 900) !default;
-    $input-border-color: igx-color($palette, 'grays', 500) !default;
-    $input-border-color-focus: igx-color($palette, 'accent') !default;
-    $input-disabled-color: igx-color($palette, 'grays', 500) !default;
-    $input-transition: all .2s ease-in !default;
+    $this: ();
 
-    // Checkboxes
-    $checkbox-width: 20px !default;
-    $checkbox-height: $checkbox-width !default;
-    $checkbox-label-padding: em(24px, 16px) !default;
-    $checkbox-radius: 2px !default;
-    $checkbox-border-style: 2px solid !default;
-    $checkbox-tick-width: 20px !default;
-    $checkbox-tick-height: 20px !default;
-    $checkbox-tick-weight: 3px !default;
-    $checkbox-tick-color: $white !default;
-    $checkbox-tick-padding: 3px 2px 2px !default;
+    @if map-get($theme, 'light') {
+        $this: extend($light-theme, $theme);
+    } @else {
+        $this: extend($dark-theme, $theme);
+    }
+
+    $input-font-size: rem(16px);
+    $input-font-weight: 400;
+
+    $checkbox-min-width: 20px;
+    $checkbox-height: $checkbox-min-width;
+    $checkbox-label-padding: rem(24px, 16px);
+    $checkbox-radius: 2px;
+    $checkbox-border-style: 2px solid;
+    $checkbox-tick-width: 20px;
+    $checkbox-tick-height: 20px;
+    $checkbox-tick-weight: 3px;
+    $checkbox-tick-padding: 3px 2px 2px;
 
     @include scale-in-center();
 
@@ -60,15 +64,16 @@ $components: register-component($components, #{$component-name});
         display: inline-block;
         position: relative;
         cursor: pointer;
+        min-width: $checkbox-min-width;
         min-height: $checkbox-height;
         line-height: $checkbox-height;
         font-size: $input-font-size;
         font-weight: $input-font-weight;
-        color: map-get($this, input-color);
-        padding-left: $checkbox-label-padding;
+        color: map-get($this, 'label-color');
         user-select: none;
         -webkit-tap-highlight-color: transparent;
         overflow: hidden;
+        padding-left: $checkbox-label-padding;
 
         &::after {
             position: absolute;
@@ -80,7 +85,7 @@ $components: register-component($components, #{$component-name});
     }
 
     %igx-cbx-lbl-box {
-        width: $checkbox-width;
+        width: $checkbox-min-width;
         height: $checkbox-height;
     }
 
@@ -100,37 +105,37 @@ $components: register-component($components, #{$component-name});
 
     %igx-cbx-lbl-checked-tick {
         @include animation('scale-in-center' .3s $ease-out-back both);
-        stroke: map-get($this, tick-color);
+        stroke: map-get($this, 'tick-color');
     }
 
     %igx-cbx-lbl-notchecked-after {
         @extend %igx-cbx-lbl-box;
-        border: $checkbox-border-style map-get($this, not-checked-border-color);
+        border: $checkbox-border-style map-get($this, 'empty-color');
     }
 
     %igx-cbx-lbl-checked-after {
         @extend %igx-cbx-lbl-box;
         background-color: map-get($this, fill-color);
-        border: $checkbox-border-style map-get($this, checked-border-color);
+        border: $checkbox-border-style map-get($this, 'fill-color');
     }
 
     %igx-cbx-lbl-disabled {
-        color: map-get($this, disabled-color);
+        color: map-get($this, 'disabled-color');
         pointer-events: none;
     }
 
     %igx-cbx-lbl-checked--disabled-after {
-        background-color: map-get($this, disabled-color);
-        border-color: map-get($this, disabled-color);
+        background-color: map-get($this, 'disabled-color');
+        border-color: map-get($this, 'disabled-color');
     }
 
     %igx-cbx-lbl-notchecked--disabled-after {
-        border-color: map-get($this, disabled-color);
+        border-color: map-get($this, 'disabled-color');
     }
 
     %igx-cbx-lbl--indeterminate-after {
-        background-color: map-get($this, fill-color);
-        border: $checkbox-border-style map-get($this, fill-color);
+        background-color: map-get($this, 'fill-color');
+        border: $checkbox-border-style map-get($this, 'fill-color');
     }
 }
 
