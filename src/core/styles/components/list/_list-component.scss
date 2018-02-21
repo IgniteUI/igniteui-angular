@@ -12,6 +12,7 @@
             @extend %igx-list-item !optional;
             @extend %igx-list-item--active !optional;
         }
+
         &:not(:active) {
             @extend %igx-list-item--inactive;
         }
