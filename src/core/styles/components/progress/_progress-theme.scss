@@ -29,11 +29,11 @@ $component-names: 'igx-progress-linear' 'igx-progress-circular';
 
 @mixin igx-progress-linear($theme, $palette: $default-palette) {
     $default-theme: igx-progress-linear-theme(
-        $track-color: igx-color($palette, 'grays', 300), 
+        $track-color: igx-color($palette, 'grays', 300),
         $fill-color-default: igx-color($palette, 'primary'),
         $fill-color-danger: igx-color($palette, 'error'),
         $fill-color-warning: igx-color($palette, 'warn'),
-        $fill-color-info: $info-color,
+        $fill-color-info: igx-color($palette, 'info'),
         $fill-color-success: igx-color($palette, 'success'),
         $stripes-color: rgba(#fff, .7),
         $text-color: igx-color($palette, 'grays', 700)
