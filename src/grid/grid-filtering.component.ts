@@ -131,7 +131,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this.chunkLoaded = this.gridAPI.get(this.gridID).headerContainer.onChunkLoading.subscribe(() => {
+        this.chunkLoaded = this.gridAPI.get(this.gridID).headerContainer.onChunkPreload.subscribe(() => {
             if (!this.toggleDirective.collapsed) {
                 this.toggleDirective.collapsed = true;
                 this.refresh();

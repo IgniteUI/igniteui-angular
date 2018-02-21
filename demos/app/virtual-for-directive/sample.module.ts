@@ -4,7 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { VirtualForSampleComponent } from "./sample.component";
 
-import { IgxForOfModule, IForOfRemoteState } from "../../lib/main";
+import { IgxForOfModule, IForOfState } from "../../lib/main";
 
 @NgModule({
     declarations: [VirtualForSampleComponent],
