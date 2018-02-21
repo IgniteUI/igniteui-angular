@@ -102,13 +102,6 @@ $components: register-component($components, #{$component-name});
         z-index: 1;
     }
 
-    %igx-list-item-display {
-        display: block;
-        position: relative;
-        list-style-type: none;
-        user-select: none;
-    }
-
     %igx-list-header {
         display: flex;
         align-items: center;
