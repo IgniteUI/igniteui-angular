@@ -70,9 +70,6 @@ $components: register-component($components, #{$component-name});
     $input-transition: all .2s ease-in !default;
     $input-disabled-color: igx-color($palette, 'grays', 500) !default;
 
-    $switch-background: $darkgray !default;
-    $switch-background-disabled: $off-white !default;
-    $switch-thumb-color-disabled: $lightgray !default;
     $switch-color: transparent !default;
     $switch-radius: 100px !default;
     $switch-width: 35px !default;
