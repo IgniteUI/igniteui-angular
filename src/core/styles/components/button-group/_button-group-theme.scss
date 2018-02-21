@@ -114,19 +114,19 @@ $components: register-component($components, #{$component-name});
 @mixin igx-button-group($theme, $palette: $default-palette) {
     $default-theme: igx-button-group-theme(
         // NORMAL
-        $item-text-color: igx-color($palette, 'accent', 500),
+        $item-text-color: igx-color($palette, 'secondary', 500),
         $item-background: $white,
         $item-border-color: transparent,
-        $icon-text-color: igx-color($palette, 'accent', 500),
+        $icon-text-color: igx-color($palette, 'secondary', 500),
         // HOVER
-        $icon-hover-text-color: igx-color($palette, 'accent', 500),
-        $item-hover-text-color: igx-color($palette, 'accent', 500),
-        $item-hover-background: rgba(igx-color($palette, 'accent', 400), .12),
+        $icon-hover-text-color: igx-color($palette, 'secondary', 500),
+        $item-hover-text-color: igx-color($palette, 'secondary', 500),
+        $item-hover-background: rgba(igx-color($palette, 'secondary', 400), .12),
         // SELECTED
-        $item-selected-text-color: igx-color($palette, 'accent', 500),
-        $item-selected-background: rgba(igx-color($palette, 'accent', 400), .12),
-        $item-selected-border-color: rgba(igx-color($palette, 'accent', 500), .12),
-        $icon-selected-text-color: igx-color($palette, 'accent', 500),
+        $item-selected-text-color: igx-color($palette, 'secondary', 500),
+        $item-selected-background: rgba(igx-color($palette, 'secondary', 400), .12),
+        $item-selected-border-color: rgba(igx-color($palette, 'secondary', 500), .12),
+        $icon-selected-text-color: igx-color($palette, 'secondary', 500),
         // DISABLED
         $disabled-text-color: igx-color($palette, 'grays', 300),
         $disabled-background-color: transparent

@@ -26,7 +26,7 @@ $components: register-component($components, #{$component-name});
     $default-theme: igx-snackbar-theme(
         $background: #323232,
         $text-color: #fff,
-        $button-color: igx-color($palette, 'accent')
+        $button-color: igx-color($palette, 'secondary')
     );
 
     $this: extend($default-theme, $theme);

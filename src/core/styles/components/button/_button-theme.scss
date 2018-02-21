@@ -142,30 +142,30 @@ $components: register-component($components, #{$component-name});
         $button-roundness: 2px,
 
         // Flat button
-        $flat-text-color: igx-color($palette, 'accent', 500),
+        $flat-text-color: igx-color($palette, 'secondary', 500),
         $flat-background: transparent,
 
-        $flat-hover-background: rgba(igx-color($palette, 'accent'), .05),
-        $flat-hover-text-color: igx-color($palette, 'accent', 500),
+        $flat-hover-background: rgba(igx-color($palette, 'secondary'), .05),
+        $flat-hover-text-color: igx-color($palette, 'secondary', 500),
 
-        $flat-focus-background: rgba(igx-color($palette, 'accent', 400), .12),
-        $flat-focus-text-color: igx-color($palette, 'accent', 500),
+        $flat-focus-background: rgba(igx-color($palette, 'secondary', 400), .12),
+        $flat-focus-text-color: igx-color($palette, 'secondary', 500),
 
         // Raised Button
-        $raised-text-color: igx-contrast-color($palette, 'accent', 500),
-        $raised-background: igx-color($palette, 'accent', 500),
-        $raised-hover-background: igx-color($palette, 'accent', 700),
+        $raised-text-color: igx-contrast-color($palette, 'secondary', 500),
+        $raised-background: igx-color($palette, 'secondary', 500),
+        $raised-hover-background: igx-color($palette, 'secondary', 700),
         $raised-hover-text-color: null,
-        $raised-focus-background: igx-color($palette, 'accent', 700),
-        $raised-focus-text-color: igx-contrast-color($palette, 'accent', 500),
+        $raised-focus-background: igx-color($palette, 'secondary', 700),
+        $raised-focus-text-color: igx-contrast-color($palette, 'secondary', 500),
 
         // Fab button ( Floating action button )
-        $fab-text-color: igx-contrast-color($palette, 'accent', 500),
-        $fab-background: igx-color($palette, 'accent', 500),
+        $fab-text-color: igx-contrast-color($palette, 'secondary', 500),
+        $fab-background: igx-color($palette, 'secondary', 500),
         $fab-hover-text-color: null,
         $fab-hover-background: null,
-        $fab-focus-background: igx-color($palette, 'accent', 500),
-        $fab-focus-text-color: igx-contrast-color($palette, 'accent', 500),
+        $fab-focus-background: igx-color($palette, 'secondary', 500),
+        $fab-focus-text-color: igx-contrast-color($palette, 'secondary', 500),
 
         // Icon Button
         $icon-color: igx-color($palette, 'grays', 800),

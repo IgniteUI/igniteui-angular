@@ -80,12 +80,12 @@ $components: register-component($components, #{$component-name});
     }
 
     @if not($year-hover-text-color) and $header-background {
-        $year-hover-text-color: $header-background; 
-    } 
+        $year-hover-text-color: $header-background;
+    }
 
     @if not($month-hover-text-color) and $header-background {
-        $month-hover-text-color: $header-background; 
-    } 
+        $month-hover-text-color: $header-background;
+    }
 
     @if not($year-current-text-color) and $header-background {
         $year-current-text-color: $header-background;
@@ -131,28 +131,28 @@ $components: register-component($components, #{$component-name});
         $content-background: #fff,
         $content-text-color: igx-color($palette, 'grays', 900),
 
-        $header-background: igx-color($palette, 'accent', 500),
-        $header-text-color: igx-contrast-color($palette, 'accent', 500),
+        $header-background: igx-color($palette, 'secondary', 500),
+        $header-text-color: igx-contrast-color($palette, 'secondary', 500),
 
         $picker-arrow-color: igx-color($palette, 'grays', 800),
-        $picker-arrow-hover-color: igx-color($palette, 'accent', 500),
+        $picker-arrow-hover-color: igx-color($palette, 'secondary', 500),
 
         $picker-text-color: igx-color($palette, 'grays', 800),
-        $picker-text-hover-color: igx-color($palette, 'accent', 500),
+        $picker-text-hover-color: igx-color($palette, 'secondary', 500),
 
         $inactive-text-color: igx-color($palette, 'grays', 400),
         $weekend-text-color: igx-color($palette, 'grays', 400),
 
-        $year-current-text-color: igx-color($palette, 'accent', 500),
-        $month-current-text-color: igx-color($palette, 'accent', 500),
+        $year-current-text-color: igx-color($palette, 'secondary', 500),
+        $month-current-text-color: igx-color($palette, 'secondary', 500),
 
-        $year-hover-text-color: igx-color($palette, 'accent', 500),
-        $month-hover-text-color: igx-color($palette, 'accent', 500),
+        $year-hover-text-color: igx-color($palette, 'secondary', 500),
+        $month-hover-text-color: igx-color($palette, 'secondary', 500),
 
-        $date-selected-background: igx-color($palette, 'accent', 500),
-        $date-selected-text-color: igx-contrast-color($palette, 'accent', 500),
+        $date-selected-background: igx-color($palette, 'secondary', 500),
+        $date-selected-text-color: igx-contrast-color($palette, 'secondary', 500),
 
-        $date-current-text-color: igx-color($palette, 'accent', 500),
+        $date-current-text-color: igx-color($palette, 'secondary', 500),
         $date-hover-background: igx-color($palette, 'grays', 100)
     );
 

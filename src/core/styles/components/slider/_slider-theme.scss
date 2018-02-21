@@ -12,30 +12,30 @@ $components: register-component($components, #{$component-name});
         track-color: $track-color,
         thumb-color: $thumb-color,
         label-color: $label-color,
-        light: $light 
+        light: $light
     );
 }
 
 @mixin igx-slider($theme, $palette: $default-palette) {
     $dark-theme: (
-        track-color: igx-color($palette, 'accent'),
+        track-color: igx-color($palette, 'secondary'),
 
-        thumb-color: igx-color($palette, 'accent'),
+        thumb-color: igx-color($palette, 'secondary'),
         disabled-thumb-color: hexrgba(igx-color($palette, 'grays', 400)),
 
-        label-color: igx-color($palette, 'accent'),
+        label-color: igx-color($palette, 'secondary'),
 
         base-track-color: igx-color($palette, 'grays'),
         disabled-base-track-color: igx-color($palette, 'grays', 400)
     );
 
     $light-theme: (
-        track-color: igx-color($palette, 'accent'),
+        track-color: igx-color($palette, 'secondary'),
 
-        thumb-color: igx-color($palette, 'accent'),
+        thumb-color: igx-color($palette, 'secondary'),
         disabled-thumb-color: rgba(#fff, .3),
 
-        label-color: igx-color($palette, 'accent'),
+        label-color: igx-color($palette, 'secondary'),
 
         base-track-color: rgba(#fff, .3),
         disabled-base-track-color: rgba(#fff, .3)

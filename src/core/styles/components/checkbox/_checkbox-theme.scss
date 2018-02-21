@@ -24,7 +24,7 @@ $components: register-component($components, #{$component-name});
     $dark-theme: igx-checkbox-theme(
         $label-color: igx-color($palette, grays, 900),
         $empty-color: igx-color($palette, 'grays', 600),
-        $fill-color: igx-color($palette, 'accent', 500),
+        $fill-color: igx-color($palette, 'secondary', 500),
         $tick-color: #fff,
         $disabled-color: igx-color($palette, grays, 400)
     );
@@ -32,7 +32,7 @@ $components: register-component($components, #{$component-name});
     $light-theme: igx-checkbox-theme(
         $label-color: igx-color($palette, 'grays', 600),
         $empty-color: rgba(255, 255, 255, .7),
-        $fill-color: igx-color($palette, 'accent', 500),
+        $fill-color: igx-color($palette, 'secondary', 500),
         $tick-color: #000,
         $disabled-color: rgba(255, 255, 255, .3)
     );

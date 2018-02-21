@@ -24,14 +24,14 @@ $components: register-component($components, #{$component-name});
     $dark-theme: igx-radio-theme(
         $label-color: igx-color($palette, 'grays', 900),
         $empty-color: igx-color($palette, 'grays', 600),
-        $fill-color: igx-color($palette, 'accent', 500),
+        $fill-color: igx-color($palette, 'secondary', 500),
         $disabled-color: igx-color($palette, 'grays', 400)
     );
 
     $light-theme: igx-radio-theme(
         $label-color: igx-color($palette, 'grays', 600),
         $empty-color: rgba(255, 255, 255, .7),
-        $fill-color: igx-color($palette, 'accent', 500),
+        $fill-color: igx-color($palette, 'secondary', 500),
         $disabled-color: rgba(255, 255, 255, .3)
     );
 

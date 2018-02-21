@@ -53,7 +53,7 @@ $components: register-component($components, #{$component-name});
 @mixin igx-list($theme, $palette: $default-palette) {
     $default-theme: igx-list-theme(
         $background: $white,
-        $header-text-color: igx-color($palette, 'accent'),
+        $header-text-color: igx-color($palette, 'secondary'),
         $item-text-color: igx-color($palette, 'grays', 800),
         $item-background-active: igx-color($palette, 'grays', 100),
         $item-text-color-active: igx-color($palette, 'grays', 800)
