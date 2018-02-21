@@ -52,9 +52,9 @@ $components: register-component($components, #{$component-name});
     $badge-line-height: 2px !default;
 
     $badge-icon-font-size: rem(12px) !default;
-    
+
     $badge-value-padding: 4px !default;
-    $badge-shadow: $elevate-1 !default;
+    $badge-shadow: igx-elevation($elevations, 1) !default;
 
     $border-width: 1px;
     $border-type: solid;

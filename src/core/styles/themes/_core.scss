@@ -35,6 +35,6 @@
 @import '../components/tabbar/tabbar-component';
 @import '../components/toast/toast-component';
 
-@mixin igx-core {
+@mixin igx-core() {
     @include igx-typography($config: ('font-family': 'Titillium Web'));
 }
