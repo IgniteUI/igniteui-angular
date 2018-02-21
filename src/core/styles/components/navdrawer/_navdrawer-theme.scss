@@ -69,7 +69,7 @@ $components: register-component($components, #{$component-name});
         transition: width, transform;
         transition-duration: .3s, .3s;
         transition-timing-function: $bezier, $bezier;
-        box-shadow: $elevate-5;
+        box-shadow: igx-elevation($elevations, 5);
         border-right: 1px solid map-get($this, 'navdrawer-border-color');
     }
 

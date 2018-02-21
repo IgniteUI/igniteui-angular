@@ -31,8 +31,8 @@ $components: register-component($components, #{$component-name});
     // 4. Cards //
     // Genaral
     $card-border-radius: 2px !default;
-    $card-shadow: $elevate-2 !default;
-    $card-shadow-hover: $elevate-8 !default;
+    $card-shadow: igx-elevation($elevations, 2);
+    $card-shadow-hover: igx-elevation($elevations, 8);
     // Font Sizes
     $card-title-fz: em(24px, 16px) !default;
     $card-title-line-height: em(24px, 16px) !default;

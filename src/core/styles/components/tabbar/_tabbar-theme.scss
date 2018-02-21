@@ -30,7 +30,7 @@ $components: register-component($components, #{$component-name});
     // @debug $this;
 
     $menu-height: 56px;
-    $top-menu-shadow: $elevate-8;
+    $top-menu-shadow: igx-elevation($elevations, 8);
     $bottom-menu-shadow: 0 -2px 4px -1px igx-color($palette, 'grays', 400),
         0 -4px 5px 0 igx-color($palette, 'grays', 300),
         0 -1px 10px 0 igx-color($palette, 'grays', 200);

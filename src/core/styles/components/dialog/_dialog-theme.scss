@@ -44,7 +44,6 @@ $components: register-component($components, #{$component-name});
     $dialog-message-line-height: em(18px, 16px) !default;
     $dialog-message-padding-top: em(10px) !default;
     $dialog-message-padding-bottom: em(12px) !default;
-    $dialog-message-color: $darkgray !default;
     $dialog-message-font-weight: 400 !default;
     $dialog-actions-padding: em(8px) !default;
     $dialog-actions-margin: 0 em(-24px, 16px) em(-12px, 16px) em(-24px, 16px) !default;
@@ -72,7 +71,7 @@ $components: register-component($components, #{$component-name});
         padding: $dialog-padding;
         border-radius: 2px;
         background: map-get($this, background);
-        box-shadow: $elevate-24;
+        box-shadow: igx-elevation($elevations, 24);
     }
 
     %igx-dialog-title {

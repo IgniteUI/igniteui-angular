@@ -195,14 +195,14 @@ $components: register-component($components, #{$component-name});
     $button-disabled-shadow: none !default;
 
     // Raised Buttons
-    $button-raised-shadow: $elevate-2 !default;
-    $button-raised-focus-shadow: $elevate-8 !default;
+    $button-raised-shadow: igx-elevation($elevations, 2);
+    $button-raised-focus-shadow: igx-elevation($elevations, 8);
 
     // Floating Buttons
     $button-floating-width: rem(56px) !default;
     $button-floating-height: $button-floating-width;
-    $button-floating-shadow: $elevate-6 !default;
-    $button-floating-hover-shadow: $elevate-12 !default;
+    $button-floating-shadow: igx-elevation($elevations, 6);
+    $button-floating-hover-shadow: igx-elevation($elevations, 12);
 
     // Icon Buttons
     $button-icon-width: rem(36px, 16px) !default;
