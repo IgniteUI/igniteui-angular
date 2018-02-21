@@ -83,7 +83,7 @@ export class IgxGridRowComponent implements OnInit {
                 public cdr: ChangeDetectorRef) {}
 
     public ngOnInit() {
-        this.virtDirRow.onChunkLoaded.subscribe({
+        this.virtDirRow.onChunkLoad.subscribe({
             next: (event: any) => {
                 this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement.style.left = "0px";
             }

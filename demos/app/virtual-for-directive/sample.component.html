@@ -13,6 +13,7 @@
             </div>
             <button (click)="scrNextRow()">Scroll Next Row</button>
             <button (click)="scrPrevRow()">Scroll Prev Row</button>
+            <input (input)="scrScrollTo($event.target.value)" placeholder="scroll to index"/>
     </article>
     <article class="sample-column">
             <span>Horizontal Virtualization</span>
@@ -31,12 +32,13 @@
             </table>
             <button (click)="scrNextCol()">Scroll Next Column</button>
             <button (click)="scrPrevCol()">Scroll Prev Column</button>
+            <input (input)="scrHorizontalScrollTo($event.target.value)" placeholder="scroll to index"/>
     </article>
     <article class="sample-column">
             <span>Remote Virtualization</span>
             <br/>
             <div style='height:500px;'>
-              <ng-template igxFor let-item [igxForOf]="remoteData | async" (onChunkLoading)="chunkLoading($event)"
+              <ng-template igxFor let-item [igxForOf]="remoteData | async" (onChunkPreload)="chunkLoading($event)"
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='"500px"'
                 [igxForItemSize]='"50px"'
