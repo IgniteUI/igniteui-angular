@@ -28,7 +28,7 @@ $components: register-component($components, #{$component-name});
 ) {
     @if not($focused-bottom-line-color) and $focused-accent-color {
         $focused-bottom-line-color: $focused-accent-color;
-    } 
+    }
 
     @return (
         idle-text-color: $idle-text-color,
@@ -112,7 +112,7 @@ $components: register-component($components, #{$component-name});
 
     // @debug $this;
 
-    // Input Field 
+    // Input Field
     $input-min-height: rem(70px) !default;
     $input-font-size: rem(16px) !default;
     $input-font-weight: 400 !default;
@@ -190,7 +190,7 @@ $components: register-component($components, #{$component-name});
         cursor: pointer;
         box-shadow: inset 0 -2px 0 0 map-get($this, 'hover-bottom-line-color');
     }
-    
+
     %igx-form-input--filled {
         color: map-get($this, 'filled-text-color');
     }
@@ -253,12 +253,12 @@ $components: register-component($components, #{$component-name});
         padding: $input-search-padding;
         border-radius: 2px;
         font-size: $input-font-size;
-        box-shadow: $elevate-2;
+        box-shadow: igx-elevation($elevations, 2);
         transition: box-shadow .2s $ease-in-out-quad;
 
         &:hover,
         &:focus {
-            box-shadow: $elevate-5;
+            box-shadow: igx-elevation($elevations, 5);
         }
     }
 
@@ -266,7 +266,7 @@ $components: register-component($components, #{$component-name});
     %igx-search-label {
         max-height: 100%;
         padding: $input-search-label-padding;
-        color: $off-black;
+        color: igx-color($palette, 'grays', 800);
     }
 
     %igx-input-clear {

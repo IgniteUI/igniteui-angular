@@ -58,6 +58,11 @@ $thumbs: 'from' 'to';
             @extend %igx-slider-track-fill--disabled !optional;
         }
 
+        @include e(track-ticks) {
+            @extend %igx-slider-track-ticks !optional;
+            @extend %igx-slider-track-ticks--disabled !optional;
+        }
+
         @each $t in $thumbs {
             @include e(thumb-#{$t}) {
                 @extend %igx-thumb-display !optional;

@@ -79,8 +79,8 @@ $components: register-component($components, #{$component-name});
     $switch-height: 14px !default;
     $switch-label-width: 20px !default;
     $switch-label-height: $switch-label-width !default;
-    $switch-shadow: $elevate-2 !default;
-    $switch-disabled-shadow: $elevate-1 !default;
+    $switch-shadow: igx-elevation($elevations, 1);
+    $switch-disabled-shadow: igx-elevation($elevations, 1);
     $switch-margin: 0 16px !default;
 
     %igx-switch-lbl-display {
