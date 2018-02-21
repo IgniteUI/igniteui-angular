@@ -51,22 +51,22 @@ $components: register-component($components, #{$component-name});
 
     // @debug $this;
 
-    $slider-height: 48px !default;
-    $slider-track-height: 2px !default;
+    $slider-height: 48px;
+    $slider-track-height: 2px;
 
     // Slider Thumb
-    $slider-thumb-width: 14px !default;
-    $slider-thumb-height: $slider-thumb-width !default;
-    $slider-thumb-radius: $slider-thumb-width / 2 !default;
+    $slider-thumb-width: 14px;
+    $slider-thumb-height: $slider-thumb-width;
+    $slider-thumb-radius: $slider-thumb-width / 2;
 
     // Slider Label
-    $slider-label-width: 28px !default;
-    $slider-label-height: $slider-label-width !default;
-    $slider-label-radius: $slider-label-width / 2 !default;
-    $slider-label-font-size: rem(11px) !default;
-    $slider-label-font-weight: 600 !default;
-    $slider-label-padding: 0 2px !default;
-    $slider-background--start: $white !default;
+    $slider-label-width: 28px;
+    $slider-label-height: $slider-label-width;
+    $slider-label-radius: $slider-label-width / 2;
+    $slider-label-font-size: rem(11px);
+    $slider-label-font-weight: 600;
+    $slider-label-padding: 0 2px;
+    $slider-background--start: $white;
 
     %igx-slider-display {
         display: flex;

@@ -68,9 +68,9 @@ $components: register-component($components, #{$component-name});
     $this: extend($default-theme, $theme);
 
     $grid-filtering-options-padding: rem(8px, 16px);
-    $grid-head-icon-size: rem(15px) !default;
-    $grid-head-icon-lh: rem(15px) !default;
-    $grid-head-icon-padding: rem(4.5px) !default;
+    $grid-head-icon-size: rem(15px);
+    $grid-head-icon-lh: rem(15px);
+    $grid-head-icon-padding: rem(4.5px);
 
     $filtering-menu-min-width: 240px;
     $filtering-menu-shadow: igx-elevation($elevations, 8);

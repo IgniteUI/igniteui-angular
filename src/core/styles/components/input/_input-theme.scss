@@ -113,17 +113,17 @@ $components: register-component($components, #{$component-name});
     // @debug $this;
 
     // Input Field
-    $input-min-height: rem(70px) !default;
-    $input-font-size: rem(16px) !default;
-    $input-font-weight: 400 !default;
-    $input-line-height: rem(24px) !default;
+    $input-min-height: rem(70px);
+    $input-font-size: rem(16px);
+    $input-font-weight: 400;
+    $input-line-height: rem(24px);
 
     // Floating Label
-    $label-font-size: rem(16px) !default;
-    $label-focus-font-size: rem(12px) !default;
-    $input-search-padding: 12px 12px 12px 64px !default;
-    $input-search-label-padding: 12px 16px !default;
-    $input-margin: 20px 0 !default;
+    $label-font-size: rem(16px);
+    $label-focus-font-size: rem(12px);
+    $input-search-padding: 12px 12px 12px 64px;
+    $input-search-label-padding: 12px 16px;
+    $input-margin: 20px 0;
 
     // TODO: Add helper text
 

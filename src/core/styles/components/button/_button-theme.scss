@@ -181,38 +181,38 @@ $components: register-component($components, #{$component-name});
     );
 
     // Shared Styles
-    $button-border: none !default;
-    $button-radius: 2px !default;
-    $button-font-size: rem(14px, 16px) !default;
-    $button-font-weight: normal !default;
-    $button-width: rem(88px) !default;
-    $button-height: rem(40px) !default;
-    $button-padding: rem(8px) rem(16px) !default;
-    $button-transition: all .25s ease-out !default;
-    $button-round-radius: 50% !default;
+    $button-border: none;
+    $button-radius: 2px;
+    $button-font-size: rem(14px, 16px);
+    $button-font-weight: normal;
+    $button-width: rem(88px);
+    $button-height: rem(40px);
+    $button-padding: rem(8px) rem(16px);
+    $button-transition: all .25s ease-out;
+    $button-round-radius: 50%;
 
     // Disabled Styles
-    $button-disabled-shadow: none !default;
+    $button-disabled-shadow: none;
 
     // Raised Buttons
     $button-raised-shadow: igx-elevation($elevations, 2);
     $button-raised-focus-shadow: igx-elevation($elevations, 8);
 
     // Floating Buttons
-    $button-floating-width: rem(56px) !default;
+    $button-floating-width: rem(56px);
     $button-floating-height: $button-floating-width;
     $button-floating-shadow: igx-elevation($elevations, 6);
     $button-floating-hover-shadow: igx-elevation($elevations, 12);
 
     // Icon Buttons
-    $button-icon-width: rem(36px, 16px) !default;
-    $button-icon-height: $button-icon-width !default;
-    $button-icon-font-size: rem(24px, 24px) !default;
+    $button-icon-width: rem(36px, 16px);
+    $button-icon-height: $button-icon-width;
+    $button-icon-font-size: rem(24px, 24px);
 
     // Navbar Buttons
-    $button-navbar-width: rem(24px, 16px) !default;
-    $button-navbar-height: $button-navbar-width !default;
-    $button-navbar-padding: 0 !default;
+    $button-navbar-width: rem(24px, 16px);
+    $button-navbar-height: $button-navbar-width;
+    $button-navbar-padding: 0;
 
     $this: extend($default-theme, $theme);
 
