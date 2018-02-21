@@ -33,7 +33,7 @@ $components: register-component($components, #{$component-name});
         $background: igx-color($palette, 'primary'),
         $text-color: #fff,
         $idle-icon-color: #fff,
-        $hover-icon-color: #fff 
+        $hover-icon-color: #fff
     );
 
     $this: extend($default-theme, $theme);
@@ -56,7 +56,7 @@ $components: register-component($components, #{$component-name});
         padding: $navbar-padding;
         background: map-get($this, 'background');
         color: map-get($this, 'text-color');
-        box-shadow: $elevate-4;
+        box-shadow: igx-elevation($elevations, 4);
         z-index: 4;
     }
 

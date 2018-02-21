@@ -64,7 +64,7 @@
         font-size-adjust: 100%;
         font-family: $font-family, sans-serif;
         font-weight: $font-weight;
-        color: $off-black;
+        color: igx-color($default-palette, 'grays', 800);
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }

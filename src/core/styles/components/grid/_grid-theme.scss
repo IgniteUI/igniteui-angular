@@ -84,7 +84,7 @@ $components: register-component($components, #{$component-name});
 
     // General
     $grid-br: 2px !default;
-    $grid-shadow: $elevate-2 !default;
+    $grid-shadow: igx-elevation($elevations, 2);
 
     // Caption
     $grid-caption-fs: rem(20px) !default;
@@ -118,7 +118,7 @@ $components: register-component($components, #{$component-name});
             width: 17px;
             height: 17px;
         }
-        
+
         &::-webkit-scrollbar-track {
             background: rgba(text-contrast(map-get($this, 'content-background')), .12);
 
@@ -165,7 +165,7 @@ $components: register-component($components, #{$component-name});
         display: block;
         background: map-get($this, 'header-background');
         color: map-get($this, 'header-text-color');
-        
+
         %grid-row {
             &:hover {
                 background-color: transparent;

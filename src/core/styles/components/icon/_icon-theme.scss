@@ -2,28 +2,31 @@ $component-name: 'igx-icon';
 
 $components: register-component($components, #{$component-name});
 
-@function igx-icon-theme($color) {
+@function igx-icon-theme(
+    $color: null,
+    $disabled-color: null
+) {
     @return (
-        color: $color
+        color: $color,
+        disabled-color: $disabled-color
     );
 }
 
 @mixin igx-icon($theme, $palette: $default-palette) {
     $default-theme: igx-icon-theme(
-        $color: currentColor
+        $color: currentColor,
+        $disabled-color: igx-color($palette, 'grays', 500)
     );
 
     $this: extend($default-theme, $theme);
 
     // @debug $this;
 
-    $color: map-get($this, 'color');
-    $disabled-color: igx-color($palette, 'grays', 500);
     $igx-icon-font-size: rem(24px, 16px) !default;
 
     %igx-icon-display {
         display: flex;
-        color: $color;
+        color: map-get($this, 'color');
         position: relative;
         font-size: $igx-icon-font-size;
         justify-content: center;
@@ -40,6 +43,6 @@ $components: register-component($components, #{$component-name});
     }
 
     %igx-icon--inactive {
-        color: $disabled-color;
+        color: map-get($this, 'disabled-color');
     }
 }

@@ -32,7 +32,7 @@ $components: register-component($components, #{$component-name});
     $carousel-indicators-margin: em(16px) 0 !default;
     $carousel-indicators-padding: 0 !default;
     $carousel-indicator-margin: 0 em(5px) !default;
-    $arrow-shadow: $elevate-1 !default;
+    $arrow-shadow: igx-elevation($elevations, 1) !default;
 
     @if map-get($this, 'disable-shadow') {
         $arrow-shadow: none;
@@ -122,7 +122,7 @@ $components: register-component($components, #{$component-name});
             border-radius: 50%;
             background-color: map-get($this, indicator-background);
             transition: transform .25s $ease-in-quad;
-            box-shadow: $elevate-1;
+            box-shadow: igx-elevation($elevations, 1);
 
             &::after {
                 content: '';

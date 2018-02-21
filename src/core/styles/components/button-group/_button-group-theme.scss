@@ -135,15 +135,14 @@ $components: register-component($components, #{$component-name});
     // 26. Button Group
     // Group layout
     $bgroup-radius: 2px !default;
-    $bgroup-shadow: $elevate-2 !default;
+    $bgroup-shadow: igx-elevation($elevations, 2);
     // Item style
     $bgroup-item-minwidth: 24px !default;
     $bgroup-item-minheight: 24px !default;
     $bgroup-item-border-thickness: 1px !default;
     $bgroup-item-font-weight: 600 !default;
     // Margin between item elements
-    $bgroup-items-margin: em(10px, 16px) !default;
-
+    $bgroup-items-margin: rem(10px, 16px) !default;
     $this: extend($default-theme, $theme);
 
     %igx-bgroup-display {
