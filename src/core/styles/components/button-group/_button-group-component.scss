@@ -1,25 +1,33 @@
 @include b(igx-button-group) {
+
     @extend %igx-bgroup-display !optional;
+
     @include e(item) {
         @extend %igx-bgroup-item !optional;
     }
+
     @include e(item, $m: selected) {
         @extend %igx-bgroup-item !optional;
         @extend %igx-bgroup-item-selected !optional;
     }
+
     @include e(item-content) {
         @extend %igx-bgroup-item-content !optional;
     }
+
     @include m(vertical) {
+
         @extend %igx-bgroup-display !optional;
         @extend %igx-bgroup-vertical !optional;
+
         @include e(item) {
             @extend %igx-bgroup-item !optional;
             @extend %igx-bgroup-item-vertical !optional;
         }
+
         @include e(item, $m: selected) {
             @extend %igx-bgroup-item !optional;
-            @extend %igx-bgroup-item-vertical-selected !optional;
+            @extend %igx-bgroup-item-selected !optional;
         }
     }
 }

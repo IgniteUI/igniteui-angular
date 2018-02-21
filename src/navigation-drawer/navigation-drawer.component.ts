@@ -71,12 +71,12 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     /** State of the drawer. */
     @Input() public isOpen = false;
 
-    /** Pinned state of the drawer. May require additional layout styling. */
+    /** When pinned the drawer is relatively positioned instead of sitting above content. May require additional layout styling. */
     @Input() public pin = false;
 
     /**
      * Minimum device width required for automatic pin to be toggled.
-     * Default is 1024, can be set to falsy value to ignore.
+     * Default is 1024, can be set to a falsy value to disable this behavior.
      */
     @Input() public pinThreshold = 1024;
 

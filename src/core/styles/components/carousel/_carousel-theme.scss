@@ -5,12 +5,14 @@ $components: register-component($components, #{$component-name});
 @function igx-carousel-theme(
     $arrow-color:null,
     $arrow-background:null,
-    $indicator-background:null
+    $indicator-background:null,
+    $arrow-shadow: false
 ){
     @return(
         arrow-color:$arrow-color,
         arrow-background:$arrow-background,
-        indicator-background:$indicator-background
+        indicator-background:$indicator-background,
+        disable-shadow: $arrow-shadow
     );
 }
 
@@ -25,10 +27,21 @@ $components: register-component($components, #{$component-name});
     );
 
     $this: extend($default-theme, $theme);
+
     $carousel-arrow-margin: 0 em(16px) !default;
     $carousel-indicators-margin: em(16px) 0 !default;
     $carousel-indicators-padding: 0 !default;
     $carousel-indicator-margin: 0 em(5px) !default;
+<<<<<<< HEAD
+=======
+    $arrow-shadow: $elevate-1 !default;
+
+    @if map-get($this, 'disable-shadow') {
+        $arrow-shadow: none;
+    }
+
+
+>>>>>>> 62c10a4fddf4ceaa728284fd3a16c81a6fbe950d
 
     %igx-carousel-display {
         display: flex;
@@ -65,7 +78,11 @@ $components: register-component($components, #{$component-name});
         cursor: pointer;
         background-color: map-get($this, arrow-background);
         border-radius: 50%;
+<<<<<<< HEAD
         box-shadow: igx-elevation($elevations, 1);
+=======
+        box-shadow: $arrow-shadow;
+>>>>>>> 62c10a4fddf4ceaa728284fd3a16c81a6fbe950d
         outline-style: none;
         transition: opacity .25s ease-out;
 
@@ -155,4 +172,3 @@ $components: register-component($components, #{$component-name});
         transform: scale(1.01);
     }
 }
-
