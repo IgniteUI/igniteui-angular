@@ -32,16 +32,13 @@ $components: register-component($components, #{$component-name});
     $carousel-indicators-margin: em(16px) 0 !default;
     $carousel-indicators-padding: 0 !default;
     $carousel-indicator-margin: 0 em(5px) !default;
-<<<<<<< HEAD
-=======
-    $arrow-shadow: $elevate-1 !default;
+    $arrow-shadow: igx-elevation($elevations, 1) !default;
 
     @if map-get($this, 'disable-shadow') {
         $arrow-shadow: none;
     }
 
 
->>>>>>> 62c10a4fddf4ceaa728284fd3a16c81a6fbe950d
 
     %igx-carousel-display {
         display: flex;
@@ -78,11 +75,7 @@ $components: register-component($components, #{$component-name});
         cursor: pointer;
         background-color: map-get($this, arrow-background);
         border-radius: 50%;
-<<<<<<< HEAD
-        box-shadow: igx-elevation($elevations, 1);
-=======
         box-shadow: $arrow-shadow;
->>>>>>> 62c10a4fddf4ceaa728284fd3a16c81a6fbe950d
         outline-style: none;
         transition: opacity .25s ease-out;
 

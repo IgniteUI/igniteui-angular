@@ -142,12 +142,7 @@ $components: register-component($components, #{$component-name});
     $bgroup-item-border-thickness: 1px !default;
     $bgroup-item-font-weight: 600 !default;
     // Margin between item elements
-<<<<<<< HEAD
     $bgroup-items-margin: rem(10px, 16px) !default;
-=======
-    $bgroup-items-margin: em(10px, 16px) !default;
-
->>>>>>> 62c10a4fddf4ceaa728284fd3a16c81a6fbe950d
     $this: extend($default-theme, $theme);
 
     %igx-bgroup-display {
