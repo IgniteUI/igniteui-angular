@@ -33,7 +33,7 @@ class Button {
         this.togglable = obj.togglable;
         this.disabled = obj.disabled || false;
         this.color = obj.color;
-        this.bgcolor = obj.bgcolor || "white";
+        this.bgcolor = obj.bgcolor;
         this.icon = obj.icon;
     }
 }

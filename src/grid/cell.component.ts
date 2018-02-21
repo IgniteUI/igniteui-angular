@@ -209,7 +209,7 @@ export class IgxGridCellComponent {
                 this.syncRows();
             } else {
                 this.row.virtDirRow.scrollPrev();
-                this.row.virtDirRow.onChunkLoaded.first().subscribe({
+                this.row.virtDirRow.onChunkLoad.first().subscribe({
                     next: (e: any) => {
                         this.row.cdr.detectChanges();
                         const currTarget = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
@@ -255,7 +255,7 @@ export class IgxGridCellComponent {
                 this.syncRows();
             } else {
                 this.row.virtDirRow.scrollNext();
-                this.row.virtDirRow.onChunkLoaded.first().subscribe({
+                this.row.virtDirRow.onChunkLoad.first().subscribe({
                     next: (e: any) => {
                         this.row.cdr.detectChanges();
                         const currTarget = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
