@@ -253,7 +253,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         );
         this.onChunkPreload.emit(this.state);
         /*recalculate and apply page size.*/
-        this.applyPageSizeChange();
+        this.applyChunkSizeChange();
 
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
         const endingIndex = this.state.chunkSize + this.state.startIndex;
@@ -373,7 +373,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     protected _applyChanges(changes: IterableChanges<T>) {
         this._recalcScrollBarSize();
-        this.applyPageSizeChange();
+        this.applyChunkSizeChange();
         if (this.igxForOf && this.igxForOf.length && this.dc) {
             const embeddedViewCopy = Object.assign([], this._embeddedViews);
             let startIndex = this.state.startIndex;
@@ -395,7 +395,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     protected _calculateChunkSize(): number {
-        let pageSize = 0;
+        let chunkSize = 0;
         if (this.igxForContainerSize !== null && this.igxForContainerSize !== undefined) {
             if (this.igxForScrollOrientation === "horizontal") {
                 const vc = this.igxForScrollContainer ?
@@ -428,18 +428,18 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                         }
                     }
                 }
-                pageSize = endIndex - this.state.startIndex;
+                chunkSize = endIndex - this.state.startIndex;
             } else {
-                pageSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
+                chunkSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
                     parseInt(this.igxForItemSize, 10));
-                if (pageSize > this.igxForOf.length) {
-                     pageSize = this.igxForOf.length;
+                if (chunkSize > this.igxForOf.length) {
+                     chunkSize = this.igxForOf.length;
                 }
             }
         } else {
-            pageSize = this.igxForOf.length;
+            chunkSize = this.igxForOf.length;
         }
-        return pageSize;
+        return chunkSize;
     }
 
     protected getElement(viewref, nodeName) {
@@ -490,17 +490,17 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     private _recalcOnContainerChange(changes: SimpleChanges) {
         const containerSize = "igxForContainerSize";
         const value = changes[containerSize].currentValue;
-        this.applyPageSizeChange();
+        this.applyChunkSizeChange();
         if (this.dc && this.state.chunkSize !== this.igxForOf.length) {
             this.dc.instance.notVirtual = false;
         }
         this._recalcScrollBarSize();
     }
 
-    private applyPageSizeChange() {
-        const pageSize = this._calculateChunkSize();
-        if (pageSize > this.state.chunkSize) {
-            const diff = pageSize - this.state.chunkSize;
+    private applyChunkSizeChange() {
+        const chunkSize = this._calculateChunkSize();
+        if (chunkSize > this.state.chunkSize) {
+            const diff = chunkSize - this.state.chunkSize;
             for (let i = 0; i < diff; i++) {
                 const input = this.igxForOf[this.state.startIndex + this.state.chunkSize + i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
@@ -509,8 +509,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 );
                 this._embeddedViews.push(embeddedView);
             }
-        } else if (pageSize < this.state.chunkSize) {
-            const diff = this.state.chunkSize - pageSize;
+        } else if (chunkSize < this.state.chunkSize) {
+            const diff = this.state.chunkSize - chunkSize;
             for (let i = 0; i < diff; i++) {
                 const ind = this.state.chunkSize - i - 1;
                 const embeddedView = this._embeddedViews[ind];
@@ -518,7 +518,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this._embeddedViews.splice(ind, 1);
             }
         }
-        this.state.chunkSize = pageSize;
+        this.state.chunkSize = chunkSize;
     }
 }
 
