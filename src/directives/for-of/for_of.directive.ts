@@ -92,7 +92,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this.state.startIndex = this.getHorizontalIndexAt(this.hScroll.scrollLeft, this.hCache, 0);
             }
         }
-        this.state.chunkSize = this._calculatePageSize();
+        this.state.chunkSize = this._calculateChunkSize();
         const dcFactory: ComponentFactory<DisplayContainerComponent> = this.resolver.resolveComponentFactory(DisplayContainerComponent);
         this.dc = this._viewContainer.createComponent(dcFactory, 0);
         this.dc.instance.notVirtual = this.igxForContainerSize ? false : true;
@@ -217,11 +217,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
 
         const count = this.totalItemCount || this.igxForOf.length;
-        this.state.startIndex = Math.round(ratio * count);
+        const currIndex = Math.round(ratio * count);
 
-        const endingIndex = this.state.chunkSize + this.state.startIndex;
-        if (this.state.startIndex !== this.state.startIndex) {
-            this.state.startIndex = this.state.startIndex;
+        const endingIndex = this.state.chunkSize + currIndex;
+        if (this.state.startIndex !== currIndex) {
+            this.state.startIndex = currIndex;
             this.onChunkPreload.emit(this.state);
         }
         if (this.igxForRemote) {
@@ -235,7 +235,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             cntx.index = this.igxForOf.indexOf(input);
         }
         this.dc.changeDetectorRef.detectChanges();
-        this.onChunkLoad.emit();
+        this.onChunkLoad.emit(this.state);
     }
 
     protected onHScroll(event) {
@@ -251,7 +251,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.hCache,
             0
         );
-        this.onChunkPreload.emit();
+        this.onChunkPreload.emit(this.state);
         /*recalculate and apply page size.*/
         this.applyPageSizeChange();
 
@@ -394,7 +394,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
-    protected _calculatePageSize(): number {
+    protected _calculateChunkSize(): number {
         let pageSize = 0;
         if (this.igxForContainerSize !== null && this.igxForContainerSize !== undefined) {
             if (this.igxForScrollOrientation === "horizontal") {
@@ -498,7 +498,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     private applyPageSizeChange() {
-        const pageSize = this._calculatePageSize();
+        const pageSize = this._calculateChunkSize();
         if (pageSize > this.state.chunkSize) {
             const diff = pageSize - this.state.chunkSize;
             for (let i = 0; i < diff; i++) {
