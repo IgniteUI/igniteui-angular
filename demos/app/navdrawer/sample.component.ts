@@ -10,12 +10,6 @@ export class NavdrawerSampleComponent {
     constructor(private app: AppComponent) {}
 
     private toggle() {
-        const { navdrawer, drawerState: { open } } = this.app;
-        open ? navdrawer.open() : navdrawer.close();
-    }
-
-    private pinned() {
-        this.app.drawerState.pin = !this.app.drawerState.pin;
-        this.toggle();
+        this.app.navdrawer.toggle();
     }
 }

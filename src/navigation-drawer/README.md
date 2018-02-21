@@ -63,7 +63,7 @@ The navigation drawer can either sit above content or be pinned alongside it and
 | `isOpen` | boolean | State of the drawer. |
 | `pin` | boolean | When pinned the drawer is relatively positioned instead of sitting above content. May require additional layout styling. |
 | `pinThreshold` | number | Minimum device width required for automatic pin to be toggled. Default is 1024, can be set to a falsy value to disable this behavior. |
-| `width` | string| Width of the drawer in its open state. Defaults to "300px".|
+| `width` | string| Width of the drawer in its open state. Defaults to "280px".|
 | `miniWidth` | string | Width of the drawer in its mini variant. Defaults to "60px". |
 
 ### Outputs
