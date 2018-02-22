@@ -28,11 +28,11 @@ $components: register-component($components, #{$component-name});
 
     $this: extend($default-theme, $theme);
 
-    $carousel-arrow-margin: 0 em(16px) !default;
-    $carousel-indicators-margin: em(16px) 0 !default;
-    $carousel-indicators-padding: 0 !default;
-    $carousel-indicator-margin: 0 em(5px) !default;
-    $arrow-shadow: igx-elevation($elevations, 1) !default;
+    $carousel-arrow-margin: 0 em(16px);
+    $carousel-indicators-margin: em(16px) 0;
+    $carousel-indicators-padding: 0;
+    $carousel-indicator-margin: 0 em(5px);
+    $arrow-shadow: igx-elevation($elevations, 1);
 
     @if map-get($this, 'disable-shadow') {
         $arrow-shadow: none;

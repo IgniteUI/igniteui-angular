@@ -1,53 +1,85 @@
 $component-name: 'igx-switch';
 
 $components: register-component($components, #{$component-name});
+@function igx-switch-theme(
+    $thumb-on-color: null,
+    $track-on-color: null,
 
-@function igx-switch-theme($thumb-color: null, $track-color: null) {
+    $thumb-off-color: null,
+    $track-off-color: null,
+
+    $track-disabled-color: null,
+    $thumb-disabled-color: null,
+
+    $light: false
+) {
     @return (
-        thumb-color: $thumb-color,
-        track-color: $track-color,
+        thumb-on-color: $thumb-on-color,
+        track-on-color: $track-on-color,
+
+        thumb-off-color: $thumb-off-color,
+        track-off-color: $track-off-color,
+
+        track-disabled-color: $track-disabled-color,
+        thumb-disabled-color: $thumb-disabled-color,
+
+        light: $light
     );
 }
 
 @mixin igx-switch($theme, $palette: $default-palette) {
-    $default-theme: igx-switch-theme(
-        $thumb-color: igx-color($palette, 'accent'),
-        $track-color: rgba(igx-color($palette, 'accent'), .5)
+    $dark-theme: igx-switch-theme(
+        $thumb-on-color: igx-color($palette, 'secondary', 500),
+        $track-on-color: rgba(igx-color($palette, 'secondary', 500), .5),
+
+        $thumb-off-color: #fafafa,
+        $track-off-color: rgba(0, 0, 0, .5),
+
+        $track-disabled-color: rgba(0, 0, 0, .12),
+        $thumb-disabled-color: igx-color($palette, 'grays', 400)
     );
 
-    $this: extend($default-theme, $theme);
+    $light-theme: igx-switch-theme(
+        $thumb-on-color: igx-color($palette, 'secondary', 200),
+        $track-on-color: rgba(igx-color($palette, 'secondary', 200), .5),
+
+        $thumb-off-color: #bdbdbd,
+        $track-off-color: rgba(255, 255, 255, .3),
+
+        $track-disabled-color: #424242,
+        $thumb-disabled-color: rgba(255, 255, 255, .1)
+    );
+
+    $this: ();
+
+    @if map-get($theme, 'light') {
+        $this: extend($light-theme, $theme);
+    } @else {
+        $this: extend($dark-theme, $theme);
+    }
 
     // @debug $this;
 
     // Defaults for all input controls
     // TODO: Rename to match component name
-    $input-font-size: em(16px) !default;
-    $input-font-weight: 400 !default;
-    $input-color: igx-color($palette, 'grays', 900) !default;
-    $input-border-color: igx-color($palette, 'grays', 500) !default;
-    $input-border-color-focus: igx-color($palette, 'accent') !default;
-    $input-transition: all .2s ease-in !default;
-    $input-disabled-color: igx-color($palette, 'grays', 500) !default;
-
-    $switch-background: igx-color($palette, 'grays', 600) !default;
-    $switch-background-disabled: igx-color($palette, 'grays', 100) !default;
-    $switch-thumb-color-disabled: igx-color($palette, 'grays', 400) !default;
-    $switch-color: transparent !default;
-    $switch-radius: 100px !default;
-    $switch-width: 35px !default;
-    $switch-height: 14px !default;
-    $switch-label-width: 20px !default;
-    $switch-label-height: $switch-label-width !default;
+    $input-font-size: em(16px) ;
+    $input-font-weight: 400 ;
+    $input-transition: all .2s ease-in ;
+    $switch-radius: 100px ;
+    $switch-width: 35px ;
+    $switch-height: 14px ;
+    $switch-label-width: 20px ;
+    $switch-label-height: $switch-label-width ;
     $switch-shadow: igx-elevation($elevations, 1);
     $switch-disabled-shadow: igx-elevation($elevations, 1);
-    $switch-margin: 0 16px !default;
+    $switch-margin: 0 16px ;
 
     %igx-switch-lbl-display {
         display: inline-block;
         position: relative;
         width: $switch-width;
         height: $switch-height;
-        background-color: $switch-background;
+        background-color: map-get($this, 'track-off-color');
         color: transparent;
         border-radius: $switch-radius;
         cursor: pointer;
@@ -63,27 +95,28 @@ $components: register-component($components, #{$component-name});
             top: -3px;
             left: -1px;
             border-radius: $switch-radius;
-            background: $white;
+            background: map-get($this, 'thumb-off-color');
             box-shadow: $switch-shadow;
             transition: $input-transition;
         }
     }
 
     %igx-switch-lbl--on {
-        background-color: map-get($this, 'track-color');
+        background-color: map-get($this, 'track-on-color');
 
         &::after {
             left: 16px;
-            background: map-get($this, 'thumb-color');
+            background: map-get($this, 'thumb-on-color');
+            box-shadow: $switch-shadow;
         }
     }
 
     %igx-switch-lbl--disabled {
-        background: $switch-background-disabled;
+        background: map-get($this, 'track-disabled-color');
         pointer-events: none;
 
         &::after {
-            background: $switch-thumb-color-disabled;
+            background: map-get($this, 'thumb-disabled-color');
             box-shadow: $switch-disabled-shadow;
         }
     }

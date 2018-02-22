@@ -27,12 +27,12 @@ $components: register-component($components, #{$component-name});
 
     $this: extend($default-theme, $theme);
 
-    $toast-width: 52px !default;
-    $toast-padding: em(16px, 16px) em(24px, 16px) !default;
-    $toast-margin: em(42px, 16px) auto !default;
-    $toast-border-radius: ($toast-width / 2) !default;
-    $toast-font-size: em(14px, 16px) !default;
-    $toast-line-height: em(24px, 16px) !default;
+    $toast-width: 52px;
+    $toast-padding: em(16px, 16px) em(24px, 16px);
+    $toast-margin: em(42px, 16px) auto;
+    $toast-border-radius: ($toast-width / 2);
+    $toast-font-size: em(14px, 16px);
+    $toast-line-height: em(24px, 16px);
 
     // @debug $this;
 

@@ -26,19 +26,19 @@ $components: register-component($components, #{$component-name});
     $default-theme: igx-snackbar-theme(
         $background: #323232,
         $text-color: #fff,
-        $button-color: igx-color($palette, 'accent')
+        $button-color: igx-color($palette, 'secondary')
     );
 
     $this: extend($default-theme, $theme);
 
     // @debug $this;
 
-    $snackbar-min-height: rem(48px) !default;
-    $snackbar-padding: rem(7px) rem(24px) !default;
-    $snackbar-button-left-margin: rem(24px) !default;
-    $snackbar-font-size: rem(14px) !default;
-    $snackbar-button-line-height: rem(16px) !default;
-    $snackbar-button-font-weight: 600 !default;
+    $snackbar-min-height: rem(48px);
+    $snackbar-padding: rem(7px) rem(24px);
+    $snackbar-button-left-margin: rem(24px);
+    $snackbar-font-size: rem(14px);
+    $snackbar-button-line-height: rem(16px);
+    $snackbar-button-font-weight: 600;
 
     %igx-snackbar-display {
         position: relative;

@@ -40,9 +40,9 @@ $components: register-component($components, #{$component-name});
 
     // @debug $this;
 
-    $navbar-padding: 0 em(16px) !default;
-    $navbar-title-fz: em(18px, 16px) !default;
-    $navbar-title-lh: em(18px, 16px) !default;
+    $navbar-padding: 0 em(16px);
+    $navbar-title-fz: em(18px, 16px);
+    $navbar-title-lh: em(18px, 16px);
     $navbar-title-margin: 0;
 
     %igx-navbar-display {

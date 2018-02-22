@@ -23,16 +23,16 @@ $components: register-component($components, #{$component-name});
 
     $dark-theme: igx-radio-theme(
         $label-color: igx-color($palette, 'grays', 900),
-        $empty-color: rgba(0, 0, 0, .54),
-        $fill-color: igx-color($palette, 'accent', 500),
-        $disabled-color: rgba(255, 255, 255, .3)
+        $empty-color: igx-color($palette, 'grays', 600),
+        $fill-color: igx-color($palette, 'secondary', 500),
+        $disabled-color: igx-color($palette, 'grays', 400)
     );
 
     $light-theme: igx-radio-theme(
         $label-color: igx-color($palette, 'grays', 600),
         $empty-color: rgba(255, 255, 255, .7),
-        $fill-color: igx-color($palette, 'accent', 500),
-        $disabled-color: rgba(255, 255, 255, .26)
+        $fill-color: igx-color($palette, 'secondary', 500),
+        $disabled-color: rgba(255, 255, 255, .3)
     );
 
     $this: ();
@@ -43,20 +43,13 @@ $components: register-component($components, #{$component-name});
         $this: extend($dark-theme, $theme);
     }
 
-    // Defaults for all input controls
-    // TODO: Rename to match component name
-    $input-font-size: em(16px) !default;
-    $input-font-weight: 400 !default;
-    $input-color: igx-color($palette, 'grays', 900) !default;
-    $input-border-color: igx-color($palette, 'grays', 500) !default;
-    $input-border-color-focus: igx-color($palette, 'accent') !default;
-    $input-transition: all .2s ease-in !default;
-    $input-disabled-color: igx-color($palette, 'grays', 500) !default;
-    $checkbox-label-padding: em(24px, 16px) !default;
-    $radio-border-style: 2px solid !default;
-    $radio-width: 20px !default;
-    $radio-height: $radio-width !default;
-    $radio-radius: 50% 50% !default;
+    $input-font-size: rem(16px);
+    $input-transition: all .2s ease-in;
+    $checkbox-label-padding: rem(24px, 16px);
+    $radio-border-style: 2px solid;
+    $radio-width: 20px;
+    $radio-height: $radio-width;
+    $radio-radius: 50% 50%;
 
     %igx-radio-lbl-display {
         display: inline-block;
