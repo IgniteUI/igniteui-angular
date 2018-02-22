@@ -83,26 +83,26 @@ $components: register-component($components, #{$component-name});
     // @debug $this;
 
     // General
-    $grid-br: 2px !default;
+    $grid-br: 2px;
     $grid-shadow: igx-elevation($elevations, 2);
 
     // Caption
-    $grid-caption-fs: rem(20px) !default;
-    $grid-caption-lh: rem(32px) !default;
-    $grid-caption-padding: rem(16px) rem(24px) !default;
+    $grid-caption-fs: rem(20px);
+    $grid-caption-lh: rem(32px);
+    $grid-caption-padding: rem(16px) rem(24px);
 
     // Heading
-    $grid-head-fs: rem(12px) !default;
-    $grid-head-fw: 600 !default;
-    $grid-head-icon-size: rem(16px) !default;
-    $grid-head-icon-lh: rem(16px) !default;
-    $grid-head-icon-padding: rem(8px) !default;
+    $grid-head-fs: rem(12px);
+    $grid-head-fw: 600;
+    $grid-head-icon-size: rem(16px);
+    $grid-head-icon-lh: rem(16px);
+    $grid-head-icon-padding: rem(8px);
 
     // Cell
-    $grid-cell-padding: rem(16px) rem(24px) !default;
-    $grid-cell-align-num: right !default;
-    $grid-cell-fs: rem(13px) !default;
-    $grid-cell-lh: rem(16px) !default;
+    $grid-cell-padding: rem(16px) rem(24px);
+    $grid-cell-align-num: right;
+    $grid-cell-fs: rem(13px);
+    $grid-cell-lh: rem(16px);
 
     %grid-display {
         display: grid;

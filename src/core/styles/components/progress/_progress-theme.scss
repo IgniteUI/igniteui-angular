@@ -44,10 +44,10 @@ $component-names: 'igx-progress-linear' 'igx-progress-circular';
     // @debug $this;
 
     $bar-height: 4px;
-    $stripe-color: map-get($this, 'stripes-color') !default;
-    $value-fs: em(14px, 16px) !default;
-    $value-fw: 600 !default;
-    $value-margin: 0 !default;
+    $stripe-color: map-get($this, 'stripes-color');
+    $value-fs: em(14px, 16px);
+    $value-fw: 600;
+    $value-margin: 0;
 
     %linear-display {
         position: relative;
