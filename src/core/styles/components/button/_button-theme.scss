@@ -154,10 +154,10 @@ $components: register-component($components, #{$component-name});
         // Raised Button
         $raised-text-color: igx-contrast-color($palette, 'secondary', 500),
         $raised-background: igx-color($palette, 'secondary', 500),
-        $raised-hover-background: igx-color($palette, 'secondary', 700),
-        $raised-hover-text-color: null,
-        $raised-focus-background: igx-color($palette, 'secondary', 700),
-        $raised-focus-text-color: igx-contrast-color($palette, 'secondary', 500),
+        $raised-hover-background: igx-color($palette, 'secondary', 600),
+        $raised-hover-text-color: #fff,
+        $raised-focus-background: igx-color($palette, 'secondary', 500),
+        $raised-focus-text-color: igx-contrast-color($palette, 'secondary', 600),
 
         // Fab button ( Floating action button )
         $fab-text-color: igx-contrast-color($palette, 'secondary', 500),
@@ -184,11 +184,12 @@ $components: register-component($components, #{$component-name});
     $button-border: none;
     $button-radius: 2px;
     $button-font-size: rem(14px, 16px);
-    $button-font-weight: normal;
+    $button-line-height: 1;
+    $button-font-weight: 600;
     $button-width: rem(88px);
-    $button-height: rem(40px);
-    $button-padding: rem(8px) rem(16px);
-    $button-transition: all .25s ease-out;
+    $button-height: rem(36px);
+    $button-padding: 0 rem(16px, 16px);
+    $button-transition: all .15s ease-out;
     $button-round-radius: 50%;
 
     // Disabled Styles
@@ -196,6 +197,7 @@ $components: register-component($components, #{$component-name});
 
     // Raised Buttons
     $button-raised-shadow: igx-elevation($elevations, 2);
+    $button-hover-shadow: igx-elevation($elevations, 4);
     $button-raised-focus-shadow: igx-elevation($elevations, 8);
 
     // Floating Buttons
@@ -217,12 +219,16 @@ $components: register-component($components, #{$component-name});
     $this: extend($default-theme, $theme);
 
     %igx-button-display {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         position: relative;
         min-width: $button-width;
+        min-height: $button-height;
         padding: $button-padding;
         font-size: $button-font-size;
         font-weight: $button-font-weight;
+        line-height: $button-line-height;
         text-align: center;
         border: $button-border;
         border-radius: map-get($this, 'button-roundness');
@@ -256,13 +262,13 @@ $components: register-component($components, #{$component-name});
         background: map-get($this, 'raised-background');
         box-shadow: $button-raised-shadow;
 
+        &:focus,
         &:hover {
             background: map-get($this, 'raised-hover-background');
             color: map-get($this, 'raised-hover-text-color');
-            box-shadow: $button-raised-shadow;
+            box-shadow: $button-hover-shadow;
         }
 
-        &:focus,
         &:active {
             background: map-get($this, 'raised-focus-background');
             color: map-get($this, 'raised-focus-text-color');
