@@ -35,6 +35,13 @@ export class IgxGridCellComponent {
     @Input()
     public value: any;
 
+    @Input()
+    set isDirty(value: boolean) {
+        if (value) {
+           this.clearState();
+        }
+        value = false;
+    }
     get formatter(): (value: any) => any {
         return this.column.formatter;
     }
@@ -327,5 +334,11 @@ export class IgxGridCellComponent {
             const elem = row.virtDirRow.dc.instance._viewContainer.element.nativeElement;
             elem.scrollLeft = scrLeft;
         });
+    }
+
+    private clearState() {
+        this._inEditMode = false;
+        this.cdr.detectChanges();
+        this.cdr.markForCheck();
     }
 }
