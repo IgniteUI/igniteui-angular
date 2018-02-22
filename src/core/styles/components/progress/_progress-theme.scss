@@ -29,130 +29,159 @@ $component-names: 'igx-progress-linear' 'igx-progress-circular';
 
 @mixin igx-progress-linear($theme, $palette: $default-palette) {
     $default-theme: igx-progress-linear-theme(
-        $track-color: rgba(igx-color($palette, 'primary'), .1),
+        $track-color: igx-color($palette, 'grays', 300),
         $fill-color-default: igx-color($palette, 'primary'),
-        $fill-color-danger: igx-color($palette, 'warn', 800),
+        $fill-color-danger: igx-color($palette, 'error'),
         $fill-color-warning: igx-color($palette, 'warn'),
-        $fill-color-info: igx-color($palette, 'accent'),
-        $fill-color-success: $success-color,
-        $stripes-color: opacify($white, .5),
-        $text-color: igx-color($palette, 'grays', 800)
+        $fill-color-info: igx-color($palette, 'info'),
+        $fill-color-success: igx-color($palette, 'success'),
+        $stripes-color: rgba(#fff, .7),
+        $text-color: igx-color($palette, 'grays', 700)
     );
 
     $this: extend($default-theme, $theme);
 
     // @debug $this;
 
-    $progressbar-color: map-get($this, 'track-color') !default;
-    $progressbar-default-color: map-get($this, 'fill-color-default') !default;
-    $progressbar-danger-color: map-get($this, 'fill-color-danger') !default;
-    $progressbar-warning-color: map-get($this, 'fill-color-warning') !default;
-    $progressbar-info-color: map-get($this, 'fill-color-info') !default;
-    $progressbar-success-color: map-get($this, 'fill-color-success') !default;
-    $progressbar-stripe-color: map-get($this, 'stripes-color') !default;
-    $progressbar-text-color: map-get($this, 'text-color') !default;
-    $progressbar-value-fz: em(14px, 16px) !default;
-    $progressbar-value-fw: 600 !default;
-    $progressbar-value-margin: 10px 5px !default;
+    $bar-height: 4px;
+    $stripe-color: map-get($this, 'stripes-color');
+    $value-fs: em(14px, 16px);
+    $value-fw: 600;
+    $value-margin: 0;
 
-    %progress-linear-display {
-        display: flex;
+    %linear-display {
         position: relative;
+        display: flex;
         align-items: center;
-        justify-content: flex-start;
         flex-flow: column nowrap;
         width: 100%;
-        height: 5px;
-        margin-bottom: 32px;
-        background: $progressbar-color;
     }
 
-    %progressbar-display {
+    %linear-bar {
+        width: inherit;
+        height: $bar-height;
+        overflow: hidden;
+    }
+
+    %linear-bar-base {
+        position: absolute;
         width: inherit;
         height: inherit;
-        align-self: flex-start;
+        background: map-get($this, 'track-color');
+        z-index: 0;
     }
 
-    %progressbar--striped > div {
+    %linear-bar-progress {
+        width: 100%;
+        position: relative;
+        height: inherit;
+        backface-visibility: hidden;
+    }
+
+    %linear-bar-progress--striped {
         background-image: linear-gradient(
-            45deg,
-            $progressbar-stripe-color 25%,
+            -45deg,
+            $stripe-color 25%,
             transparent 25%,
             transparent 50%,
-            $progressbar-stripe-color 50%,
-            $progressbar-stripe-color 75%,
+            $stripe-color 50%,
+            $stripe-color 75%,
             transparent 75%,
             transparent
         );
-        -webkit-background-size: 40px 40px;
         background-size: 40px 40px;
     }
 
-    %progress-linear-value {
-        margin: $progressbar-value-margin;
-        position: absolute;
-        color: $progressbar-text-color;
-        font-size: $progressbar-value-fz;
+    %linear-bar-progress--default {
+        background: map-get($this, 'fill-color-default')
+    }
+
+    %linear-bar-progress--danger {
+        background-color: map-get($this, 'fill-color-danger');
+    }
+
+    %linear-bar-progress--warning {
+        background-color: map-get($this, 'fill-color-warning');
+    }
+
+    %linear-bar-progress--info {
+        background-color: map-get($this, 'fill-color-info');
+    }
+
+    %linear-bar-progress--success {
+        background-color: map-get($this, 'fill-color-success');
+    }
+
+
+    %linear-value {
+        margin: $value-margin;
+        color: map-get($this, 'text-color');
+        font-size: $value-fs;
+        font-weight: $value-fw;
+    }
+
+    %linear-value--start {
         align-self: flex-start;
-        font-weight: $progressbar-value-fw;
     }
 
-    %progressbar--default {
-        background-color: $progressbar-default-color;
+    %linear-value--center {
+        align-self: center;
     }
 
-    %progressbar--danger {
-        background-color: $progressbar-danger-color;
+    %linear-value--end {
+        align-self: flex-end;
     }
 
-    %progressbar--warning {
-        background-color: $progressbar-warning-color;
+    %linear-value--top {
+        order: -1;
     }
 
-    %progressbar--info {
-        background-color: $progressbar-info-color;
-    }
-
-    %progressbar--success {
-        background-color: $progressbar-success-color;
+    %linear-value--hidden {
+        display: none;
     }
 }
 
 // Circular Progress
-@function igx-progress-circular-theme($stroke-color: null, $value-color: null) {
+@function igx-progress-circular-theme(
+    $base-circle-color: null,
+    $progress-circle-color: null,
+    $text-color: null
+) {
     @return (
-        stroke-color: $stroke-color,
-        value-color: $value-color
+        base-circle-color: $base-circle-color,
+        progress-circle-color: $progress-circle-color,
+        text-color: $text-color
     );
 }
 
 @mixin igx-progress-circular($theme, $palette: $default-palette) {
     $default-theme: igx-progress-circular-theme(
-        $stroke-color: igx-color($palette, 'primary'),
-        $value-color: igx-color($palette, 'grays', 800)
+        $base-circle-color: igx-color($palette, 'grays', 300),
+        $progress-circle-color: igx-color($palette, 'primary'),
+        $text-color: igx-color($palette, 'grays', 700)
     );
 
     $this: extend($default-theme, $theme);
 
     // @debug $this;
 
-    $progress-circular-value-fz: em(32px, 16px);
+    $circular-value-fs: rem(32px, 16px);
+    $circular-value-fw: 600;
 
-    %progress-circular-display {
+    %circular-display {
         width: 100%;
         height: 100%;
     }
 
-    %progress-circular-innercircle {
+    %circular-innercircle {
         stroke-width: 4;
         fill: transparent;
-        stroke: map-get($this, 'stoke-color');
-        stroke-opacity: .1;
+        stroke: map-get($this, 'base-circle-color');
     }
 
-    %progress-circular-circle {
+    %circular-circle {
         fill: transparent;
-        stroke: url('#linear');
+        stroke: map-get($this, 'progress-circle-color');
         stroke-width: 6;
         stroke-linecap: round;
         stroke-dashoffset: 289;
@@ -161,9 +190,13 @@ $component-names: 'igx-progress-linear' 'igx-progress-circular';
         transform: rotate(-90deg);
     }
 
-    %progress-circular-text {
-        font-family: 'Titillium Web', sans-serif;
-        font-size: $progress-circular-value-fz;
-        fill: map-get($this, 'value-color');
+    %circular-text {
+        font-size: $circular-value-fs;
+        font-weight: $circular-value-fw;
+        fill: map-get($this, 'text-color');
+    }
+
+    %circular-text--hidden {
+        visibility: hidden;
     }
 }

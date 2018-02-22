@@ -4,42 +4,52 @@ $components: register-component($components, #{$component-name});
 
 @function igx-snackbar-theme(
     $background: null,
+    $text-color: null,
     $button-color: null
 ) {
+    @if not($button-color) and $background {
+        $button-color: text-contrast($background);
+    }
+
+    @if not($text-color) and $background {
+        $text-color: text-contrast($background);
+    }
+
     @return (
         background: $background,
+        text-color: $text-color,
         button-color: $button-color
     );
 }
 
 @mixin igx-snackbar($theme, $palette: $default-palette) {
     $default-theme: igx-snackbar-theme(
-        $background: igx-color($palette, 'grays', 800),
-        $button-color: igx-color($palette, 'accent')
+        $background: #323232,
+        $text-color: #fff,
+        $button-color: igx-color($palette, 'secondary')
     );
 
     $this: extend($default-theme, $theme);
 
     // @debug $this;
 
-    $snackbar-height: em(48px) !default;
-    $snackbar-padding: em(7px) em(24px) !default;
-    $snackbar-button-left-margin: em(24px) !default;
-    $snackbar-font-size: em(14px) !default;
-    $snackbar-text-color: text-contrast(map-get($this, 'background')) !default;
-    $snackbar-button-line-height: em(16px) !default;
-    $snackbar-button-font-weight: 600 !default;
+    $snackbar-min-height: rem(48px);
+    $snackbar-padding: rem(7px) rem(24px);
+    $snackbar-button-left-margin: rem(24px);
+    $snackbar-font-size: rem(14px);
+    $snackbar-button-line-height: rem(16px);
+    $snackbar-button-font-weight: 600;
 
     %igx-snackbar-display {
-        display: flex;
         position: relative;
+        display: flex;
         flex-flow: row nowrap;
         align-items: center;
         justify-content: space-between;
-        min-height: $snackbar-height;
+        min-height: $snackbar-min-height;
         padding: $snackbar-padding;
+        color: map-get($this, 'text-color');
         background: map-get($this, 'background');
-        color: $snackbar-text-color;
         backface-visibility: hidden;
     }
 

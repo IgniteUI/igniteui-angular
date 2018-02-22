@@ -40,8 +40,8 @@ tmp
 
 demos/**/*.js
 demos/**/*.js.map
-demos/**/*.css
 demos/style/fonts
+demos/style/*.css
 demos/node_modules
 demos/lib
 demos/dist
@@ -50,6 +50,7 @@ demos/vendor.js
 demos/main.js
 demos/index.html
 !demos/webpack.config.js
+!demos/postcss.config.js
 !demos/gulpfile.js
 
 src/**/*.js

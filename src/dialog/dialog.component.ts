@@ -6,13 +6,16 @@ import {
     EventEmitter,
     Input,
     NgModule,
+    OnDestroy,
     OnInit,
+    Optional,
     Output,
     ViewChild
 } from "@angular/core";
 
 import { EaseOut } from "../animations/easings";
 import { fadeIn, fadeOut, slideInBottom } from "../animations/main";
+import { IgxNavigationService, IToggleView } from "../core/navigation";
 import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 
@@ -29,32 +32,56 @@ import { IgxRippleModule } from "../directives/ripple/ripple.directive";
     selector: "igx-dialog",
     templateUrl: "dialog-content.component.html"
 })
-export class IgxDialogComponent {
+export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     private static NEXT_ID = 1;
     private static readonly DIALOG_CLASS = "igx-dialog";
 
-    @Input() public title = "";
-    @Input() public message = "";
+    @Input()
+    public id: string;
 
-    @Input() public leftButtonLabel = "";
-    @Input() public leftButtonType = "flat";
-    @Input() public leftButtonColor = "";
-    @Input() public leftButtonBackgroundColor = "";
-    @Input() public leftButtonRipple = "";
+    @Input()
+    public title = "";
+    @Input()
+    public message = "";
 
-    @Input() public rightButtonLabel = "";
-    @Input() public rightButtonType = "flat";
-    @Input() public rightButtonColor = "";
-    @Input() public rightButtonBackgroundColor = "";
-    @Input() public rightButtonRipple = "";
+    @Input()
+    public leftButtonLabel = "";
+    @Input()
+    public leftButtonType = "flat";
+    @Input()
+    public leftButtonColor = "";
+    @Input()
+    public leftButtonBackgroundColor = "";
+    @Input()
+    public leftButtonRipple = "";
 
-    @Input() public closeOnOutsideSelect = false;
+    @Input()
+    public rightButtonLabel = "";
+    @Input()
+    public rightButtonType = "flat";
+    @Input()
+    public rightButtonColor = "";
+    @Input()
+    public rightButtonBackgroundColor = "";
+    @Input()
+    public rightButtonRipple = "";
 
-    @Output() public onOpen = new EventEmitter();
-    @Output() public onClose = new EventEmitter();
+    @Input()
+    public closeOnOutsideSelect = false;
 
-    @Output() public onLeftButtonSelect = new EventEmitter();
-    @Output() public onRightButtonSelect = new EventEmitter();
+    @Output()
+    public onOpen = new EventEmitter();
+    @Output()
+    public onClose = new EventEmitter();
+
+    @Output()
+    public onLeftButtonSelect = new EventEmitter();
+    @Output()
+    public onRightButtonSelect = new EventEmitter();
+
+    public get element() {
+        return this.elementRef.nativeElement;
+    }
 
     @ViewChild("dialog") public dialogEl: ElementRef;
 
@@ -90,7 +117,10 @@ export class IgxDialogComponent {
         return this._titleId;
     }
 
-    constructor() {
+    constructor(
+        private elementRef: ElementRef,
+        @Optional() private navService: IgxNavigationService
+    ) {
         this._titleId = IgxDialogComponent.NEXT_ID++ + "_title";
     }
 
@@ -108,11 +138,16 @@ export class IgxDialogComponent {
             return;
         }
 
-        this.toggleState(null);
+        this.toggleState("close");
         this.onClose.emit(this);
     }
 
+    public toggle() {
+        this.isOpen ? this.close() : this.open();
+    }
+
     public onDialogSelected(event) {
+        event.stopPropagation();
         if (
             this.isOpen &&
             this.closeOnOutsideSelect &&
@@ -128,6 +163,18 @@ export class IgxDialogComponent {
 
     public onInternalRightButtonSelect(event) {
         this.onRightButtonSelect.emit({ dialog: this, event });
+    }
+
+    public ngOnInit() {
+        if (this.navService && this.id) {
+            this.navService.add(this.id, this);
+        }
+    }
+
+    public ngOnDestroy() {
+        if (this.navService && this.id) {
+            this.navService.remove(this.id);
+        }
     }
 
     private toggleState(state: string): void {

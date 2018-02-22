@@ -1,36 +1,55 @@
 $component-name: 'igx-radio';
-
 $components: register-component($components, #{$component-name});
 
-@function igx-radio-theme($color: null) {
+@function igx-radio-theme(
+    $label-color: null,
+    $empty-color: null,
+    $fill-color: null,
+    $disabled-color: null,
+
+    $light: false
+) {
     @return (
-        color: $color
+        label-color: $label-color,
+        empty-color: $empty-color,
+        fill-color: $fill-color,
+        disabled-color: $disabled-color,
+
+        light: $light,
     );
 }
 
 @mixin igx-radio($theme, $palette: $default-palette) {
-    $default-theme: igx-radio-theme(
-        $color: igx-color($palette, 'accent')
+
+    $dark-theme: igx-radio-theme(
+        $label-color: igx-color($palette, 'grays', 900),
+        $empty-color: igx-color($palette, 'grays', 600),
+        $fill-color: igx-color($palette, 'secondary', 500),
+        $disabled-color: igx-color($palette, 'grays', 400)
     );
-    $this: extend($default-theme, $theme);
-    // Defaults for all input controls
-    // TODO: Rename to match component name
-    $input-font-size: em(16px) !default;
-    $input-font-weight: 400 !default;
-    $input-color: igx-color($palette, 'grays', 900) !default;
-    $input-border-color: igx-color($palette, 'grays', 500) !default;
-    $input-border-color-focus: igx-color($palette, 'accent') !default;
-    $input-transition: all .2s ease-in !default;
-    $input-disabled-color: igx-color($palette, 'grays', 500) !default;
-    $checkbox-label-padding: em(24px, 16px) !default;
-    $radio-fill-color: map-get($this, 'color') !default;
-    $radio-empty-color: igx-color($palette, 'grays', 600) !default;
-    $radio-border-style: 2px solid !default;
-    $radio-border: $radio-border-style $radio-fill-color !default;
-    $radio-width: 20px !default;
-    $radio-height: $radio-width !default;
-    $radio-radius: 50% 50% !default;
-    // Switches
+
+    $light-theme: igx-radio-theme(
+        $label-color: igx-color($palette, 'grays', 600),
+        $empty-color: rgba(255, 255, 255, .7),
+        $fill-color: igx-color($palette, 'secondary', 500),
+        $disabled-color: rgba(255, 255, 255, .3)
+    );
+
+    $this: ();
+
+    @if map-get($theme, 'light') {
+        $this: extend($light-theme, $theme);
+    } @else {
+        $this: extend($dark-theme, $theme);
+    }
+
+    $input-font-size: rem(16px);
+    $input-transition: all .2s ease-in;
+    $checkbox-label-padding: rem(24px, 16px);
+    $radio-border-style: 2px solid;
+    $radio-width: 20px;
+    $radio-height: $radio-width;
+    $radio-radius: 50% 50%;
 
     %igx-radio-lbl-display {
         display: inline-block;
@@ -39,7 +58,7 @@ $components: register-component($components, #{$component-name});
         height: $radio-height;
         line-height: $radio-height;
         font-size: $input-font-size;
-        color: $input-color;
+        color: map-get($this, 'label-color');
         padding-left: $checkbox-label-padding;
         user-select: none;
 
@@ -50,6 +69,7 @@ $components: register-component($components, #{$component-name});
             width: $radio-width;
             height: $radio-height;
             left: 0;
+            top: 0;
             border-radius: $radio-radius;
         }
 
@@ -65,34 +85,34 @@ $components: register-component($components, #{$component-name});
     }
 
     %igx-radio-lbl-notchecked--after {
-        border: $radio-border-style $radio-empty-color;
+        border: $radio-border-style map-get($this, 'empty-color');
     }
 
     %igx-radio-lbl-checked--before {
-        border: $radio-border;
-        background-color: $radio-fill-color;
+        border: $radio-border-style map-get($this, 'fill-color');
+        background-color: map-get($this, 'fill-color');
         transform: scale3d(.5, .5, .5);
     }
 
     %igx-radio-lbl-checked--after {
-        border: $radio-border;
+        border: $radio-border-style map-get($this, 'fill-color');
     }
 
     %igx-radio-lbl--disabled {
         pointer-events: none;
-        color: $input-disabled-color;
+        color: map-get($this, 'disabled-color');
     }
 
     %igx-radio-lbl-notchecked--disabled-after {
-        border: $radio-border-style $input-disabled-color;
+        border: $radio-border-style map-get($this, 'disabled-color');
     }
 
     %igx-radio-lbl-checked--disabled-before {
-        background-color: $input-disabled-color;
+        background-color: map-get($this, 'disabled-color');
         border: $radio-border-style transparent;
     }
 
     %igx-radio-lbl-checked--disabled-after {
-        border: $radio-border-style $input-disabled-color;
+        border: $radio-border-style map-get($this, 'disabled-color');
     }
 }

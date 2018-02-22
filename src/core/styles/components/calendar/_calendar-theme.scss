@@ -80,12 +80,12 @@ $components: register-component($components, #{$component-name});
     }
 
     @if not($year-hover-text-color) and $header-background {
-        $year-hover-text-color: $header-background; 
-    } 
+        $year-hover-text-color: $header-background;
+    }
 
     @if not($month-hover-text-color) and $header-background {
-        $month-hover-text-color: $header-background; 
-    } 
+        $month-hover-text-color: $header-background;
+    }
 
     @if not($year-current-text-color) and $header-background {
         $year-current-text-color: $header-background;
@@ -131,66 +131,66 @@ $components: register-component($components, #{$component-name});
         $content-background: #fff,
         $content-text-color: igx-color($palette, 'grays', 900),
 
-        $header-background: igx-color($palette, 'accent', 500),
-        $header-text-color: igx-contrast-color($palette, 'accent', 500),
+        $header-background: igx-color($palette, 'secondary', 500),
+        $header-text-color: igx-contrast-color($palette, 'secondary', 500),
 
         $picker-arrow-color: igx-color($palette, 'grays', 800),
-        $picker-arrow-hover-color: igx-color($palette, 'accent', 500),
+        $picker-arrow-hover-color: igx-color($palette, 'secondary', 500),
 
         $picker-text-color: igx-color($palette, 'grays', 800),
-        $picker-text-hover-color: igx-color($palette, 'accent', 500),
+        $picker-text-hover-color: igx-color($palette, 'secondary', 500),
 
         $inactive-text-color: igx-color($palette, 'grays', 400),
         $weekend-text-color: igx-color($palette, 'grays', 400),
 
-        $year-current-text-color: igx-color($palette, 'accent', 500),
-        $month-current-text-color: igx-color($palette, 'accent', 500),
+        $year-current-text-color: igx-color($palette, 'secondary', 500),
+        $month-current-text-color: igx-color($palette, 'secondary', 500),
 
-        $year-hover-text-color: igx-color($palette, 'accent', 500),
-        $month-hover-text-color: igx-color($palette, 'accent', 500),
+        $year-hover-text-color: igx-color($palette, 'secondary', 500),
+        $month-hover-text-color: igx-color($palette, 'secondary', 500),
 
-        $date-selected-background: igx-color($palette, 'accent', 500),
-        $date-selected-text-color: igx-contrast-color($palette, 'accent', 500),
+        $date-selected-background: igx-color($palette, 'secondary', 500),
+        $date-selected-text-color: igx-contrast-color($palette, 'secondary', 500),
 
-        $date-current-text-color: igx-color($palette, 'accent', 500),
+        $date-current-text-color: igx-color($palette, 'secondary', 500),
         $date-hover-background: igx-color($palette, 'grays', 100)
     );
 
     $this: extend($default-theme, $theme);
 
     // Calendar Header
-    $cal-header-year-fs: em(18px, 16px) !default;
-    $cal-header-year-lh: em(16px, 16px) !default;
-    $cal-header-year-margin: 0 !default;
-    $cal-header-date-fs: em(38px, 16px) !default;
-    $cal-header-date-lh: em(16px, 16px) !default;
-    $cal-header-date-margin: 0 !default;
-    $cal-header-padding: em(24px) em(16px) !default;
-    $cal-header-year-color: rgba(map-get($this, 'header-text-color'), .8) !default;
+    $cal-header-year-fs: em(18px, 16px);
+    $cal-header-year-lh: em(16px, 16px);
+    $cal-header-year-margin: 0;
+    $cal-header-date-fs: em(38px, 16px);
+    $cal-header-date-lh: em(16px, 16px);
+    $cal-header-date-margin: 0;
+    $cal-header-padding: em(24px) em(16px);
+    $cal-header-year-color: rgba(map-get($this, 'header-text-color'), .8);
 
     // Calendar Picker
-    $cal-picker-date-fs: em(18px, 16px) !default;
-    $cal-picker-date-lh: em(22px, 16px) !default;
-    $cal-picker-date-fw: 600 !default;
-    $cal-picker-padding: em(24px, 16px) !default;
+    $cal-picker-date-fs: em(18px, 16px);
+    $cal-picker-date-lh: em(22px, 16px);
+    $cal-picker-date-fw: 600;
+    $cal-picker-padding: em(24px, 16px);
 
     // Calendar Values
-    $cal-value-w: rem(40px, 16px) !default;
+    $cal-value-w: rem(40px, 16px);
     $cal-value-h: $cal-value-w;
-    $cal-valu-br: $cal-value-w / 2;
-    $cal-value-margin: em(2px, 16px) !default;
-    $cal-value-fs: em(16px, 16px) !default;
-    $cal-value-lh: em(22px, 16px) !default;
-    $cal-value-fw: 600 !default;
+    $cal-value-br: $cal-value-w / 2;
+    $cal-value-margin: em(2px, 16px);
+    $cal-value-fs: em(16px, 16px);
+    $cal-value-lh: $cal-value-h;
+    $cal-value-fw: 600;
 
-    $cal-value-year-fs: em(18px, 16px) !default;
-    $cal-value-year-current-fs: em(24px, 16px) !default;
-    $cal-value-year-hover-fs: em(27px, 16px) !default;
-    $cal-value-month-margin: 0 em(12px, 16px) !default;
-    $cal-value-month-height: 91px !default;
+    $cal-value-year-fs: em(18px, 16px);
+    $cal-value-year-current-fs: em(24px, 16px);
+    $cal-value-year-hover-fs: em(27px, 16px);
+    $cal-value-month-margin: 0 em(12px, 16px);
+    $cal-value-month-height: 91px;
 
     // Calendar Body
-    $cal-row-padding: 0 rem(16px, 16px) !default;
+    $cal-row-padding: 0 rem(16px, 16px);
 
     %cal-display {
         display: flex;
@@ -233,6 +233,10 @@ $components: register-component($components, #{$component-name});
         margin: $cal-header-date-margin;
         font-size: $cal-header-date-fs;
         line-height: $cal-header-date-lh;
+
+        .date-text {
+            @include ellipsis();
+        }
     }
 
     %cal-header-date--vertical {
@@ -301,20 +305,16 @@ $components: register-component($components, #{$component-name});
     }
 
     %cal-value {
-        display: flex;
-        margin: $cal-value-margin;
-        justify-content: center;
-        align-items: center;
+        @include ellipsis();
         width: $cal-value-w;
         height: $cal-value-h;
+        min-width: 2ch;
         font-size: $cal-value-fs;
+        margin: $cal-value-margin;
         line-height: $cal-value-lh;
-        border-radius: $cal-valu-br;
+        text-align: center;
+        border-radius: $cal-value-br;
         color: map-get($this, 'content-text-color');
-        min-width: 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
         cursor: pointer;
         outline: none;
         transition: background .15s ease-out;
@@ -323,6 +323,7 @@ $components: register-component($components, #{$component-name});
     %cal-value--label {
         color: map-get($this, 'inactive-text-color');
         cursor: default;
+        border-radius: 0;
     }
 
     %cal-value--weekend {
@@ -331,12 +332,12 @@ $components: register-component($components, #{$component-name});
 
     %cal-value--year {
         font-size: $cal-value-year-fs;
+        min-width: fit-content;
     }
 
     %cal-value--year-current {
         font-size: $cal-value-year-current-fs;
         color: map-get($this, 'year-current-text-color');
-        min-width: fit-content;
     }
 
     %cal-value--year-hover {

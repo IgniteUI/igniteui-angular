@@ -9,14 +9,17 @@
         @extend %igx-list-item !optional;
 
         &:active {
+            @extend %igx-list-item !optional;
             @extend %igx-list-item--active !optional;
         }
-        // &:not(:active) {
-        //     @extend %igx-list-item--inactive;
-        // }
+
+        &:not(:active) {
+            @extend %igx-list-item--inactive;
+        }
     }
 
     @include e(empty) {
+        @extend %igx-list !optional;
         @extend %igx-list-empty !optional;
 
         @include b(image) {
@@ -30,10 +33,5 @@
 
     @include e(empty, $m: custom) {
         @extend %igx-list-empty !optional;
-    }
-    @at-root {
-        igx-list-item {
-            @extend %igx-list-item-display !optional;
-        }
     }
 }

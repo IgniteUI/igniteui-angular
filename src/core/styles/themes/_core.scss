@@ -4,6 +4,10 @@
 @import '../typography/index';
 
 @import '../components/_common/igx-control';
+@import '../components/_common/igx-display-container';
+@import '../components/_common/igx-vhelper';
+@import '../components/_common/igx-toggle';
+
 @import '../components/avatar/avatar-component';
 @import '../components/badge/badge-component';
 @import '../components/button/button-component';
@@ -31,6 +35,6 @@
 @import '../components/tabbar/tabbar-component';
 @import '../components/toast/toast-component';
 
-@mixin igx-core {
+@mixin igx-core() {
     @include igx-typography($config: ('font-family': 'Titillium Web'));
 }

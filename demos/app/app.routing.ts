@@ -11,10 +11,12 @@ import { CarouselSampleComponent } from "./carousel/sample.component";
 import { IgxDatePickerSampleComponent } from "./date-picker/sample.component";
 import { DialogSampleComponent } from "./dialog/sample.component";
 import { GridSampleComponent } from "./grid/sample.component";
+import { GridPerformanceSampleComponent } from "./grid-performance/sample.component";
 import { IconSampleComponent } from "./icon/sample.component";
 import { InputSampleComponent } from "./input/sample.component";
 import { LayoutSampleComponent } from "./layout/sample.component";
 import { ListSampleComponent } from "./list/sample.component";
+import { ListPerformanceSampleComponent } from "./list-performance/sample.component";
 import { NavbarSampleComponent } from "./navbar/sample.component";
 import { NavdrawerSampleComponent } from "./navdrawer/sample.component";
 import { ProgressbarSampleComponent } from "./progressbar/sample.component";
@@ -25,6 +27,7 @@ import { IgxSnackbarSampleComponent } from "./snackbar/sample.component";
 import { IgxColorsSampleComponent } from "./styleguide/colors/sample.component";
 import { IgxShadowsSampleComponent } from "./styleguide/shadows/sample.component";
 import { IgxTypographySampleComponent } from "./styleguide/typography/sample.component";
+import { VirtualForSampleComponent } from "./virtual-for-directive/sample.component";
 import {
     CustomContentComponent,
     TabBarSampleComponent
@@ -35,7 +38,7 @@ const appRoutes: Routes = [
     {
         path: "",
         pathMatch: "full",
-        redirectTo: "/scroll"
+        redirectTo: "/avatar"
     },
     {
         component: InputSampleComponent,
@@ -98,6 +101,10 @@ const appRoutes: Routes = [
         path: "grid"
     },
     {
+        component: GridPerformanceSampleComponent,
+        path: "gridPerformance"
+    },
+    {
         component: IgxCardSampleComponent,
         path: "card"
     },
@@ -140,6 +147,14 @@ const appRoutes: Routes = [
     {
         component: LayoutSampleComponent,
         path: "layout"
+    },
+    {
+        component: ListPerformanceSampleComponent,
+        path: "listPerformance"
+    },
+    {
+        component: VirtualForSampleComponent,
+        path: "virtualForDirective"
     }
 ];
 

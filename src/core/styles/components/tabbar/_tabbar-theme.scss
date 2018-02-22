@@ -4,31 +4,44 @@ $components: register-component($components, #{$component-name});
 
 @function igx-tabbar-theme(
     $background: null,
-    $icon-color: null,
-    $icon-color-active: null
+    $idle-item-color: null,
+    $active-item-color: null
 ) {
+    @if not($idle-item-color) and $background {
+        $idle-item-color: rgba(text-contrast($background), .7);
+    }
+
     @return (
         background: $background,
-        icon-color: $icon-color,
-        icon-color-active: $icon-color-active
+        idle-item-color: $idle-item-color,
+        active-item-color: $active-item-color
     );
 }
 
 @mixin igx-tabbar($theme, $palette: $default-palette) {
     $default-theme: igx-tabbar-theme(
-        $background: $white,
-        $icon-color: $off-black,
-        $icon-color-active: igx-color($palette, 'accent')
+        $background: #fff,
+        $idle-item-color: igx-color($palette, 'grays', 600),
+        $active-item-color: igx-color($palette, 'primary')
     );
 
     $this: extend($default-theme, $theme);
 
     // @debug $this;
 
-    $tab-bar-background: $white !default;
-    $tab-bar-label-font-size: em(12px, 16px);
-    $tab-bar-label-line-height: em(12px, 16px);
-    $tab-bar-item-padding: 0 em(12px);
+    $menu-height: 56px;
+    $top-menu-shadow: igx-elevation($elevations, 8);
+    $bottom-menu-shadow: 0 -2px 4px -1px igx-color($palette, 'grays', 400),
+        0 -4px 5px 0 igx-color($palette, 'grays', 300),
+        0 -1px 10px 0 igx-color($palette, 'grays', 200);
+
+    $item-min-width: 80px;
+    $item-max-width: 168px;
+    $item-padding: 0 rem(12px, 16px);
+
+    $label-font-size: rem(12px, 16px);
+    $label-line-height: rem(12px, 16px);
+
 
     %igx-tab-panel {
         display: none;
@@ -41,45 +54,43 @@ $components: register-component($components, #{$component-name});
     %igx-tabbar-menu {
         display: flex;
         position: fixed;
-        width: 100%;
         justify-content: center;
         align-items: center;
-        height: em(56px, 16px);
+        left: 0;
+        right: 0;
+        height: $menu-height;
         background: map-get($this, 'background');
-        color: map-get($this, 'icon-color');
         overflow: hidden;
         z-index: 8;
     }
 
     %igx-tabbar-menu--top {
-        bottom: inherit;
         top: 0;
-        box-shadow: $elevate-8;
+        bottom: inherit;
+        box-shadow: $top-menu-shadow;
     }
 
     %igx-tabbar-menu--bottom {
         top: inherit;
         bottom: 0;
-        box-shadow: 0 -2px 4px -1px igx-color($default-palette, 'grays', 400), 0 -4px 5px 0 igx-color($default-palette, 'grays', 300), 0 -1px 10px 0 igx-color($default-palette, 'grays', 200);
+        box-shadow: $bottom-menu-shadow
     }
 
     %igx-tabbar-menu-item {
         display: flex;
         position: relative;
         flex-flow: column nowrap;
+        flex: 1;
         align-items: center;
         justify-content: center;
-        min-width: 80px;
-        max-width: 168px;
+        min-width: $item-min-width;
+        max-width: $item-max-width;
         height: 100%;
-        flex: 1;
+        color: map-get($this, 'idle-item-color');
         cursor: pointer;
-        text-transform: uppercase;
-        white-space: nowrap;
-        text-overflow: ellipsis;
         user-select: none;
         overflow: hidden;
-        padding: $tab-bar-item-padding;
+        padding: $item-padding;
         -webkit-tap-highlight-color: transparent;
     }
 
@@ -89,21 +100,20 @@ $components: register-component($components, #{$component-name});
     }
 
     %igx-active-tab {
-        opacity: 1;
-        color: map-get($this, 'icon-color-active');
-        transition: color .25s ease-out, opacity .25s ease-out;
+        color: map-get($this, 'active-item-color');
+        transition: color .15s $ease-in-out-quad, opacity .25s $ease-in-out-quad;
     }
 
     %igx-tab-label {
-        padding-top: 5px;
-        font-size: $tab-bar-label-font-size;
-        line-height: $tab-bar-label-line-height;
-        max-width: 80px;
-        text-transform: uppercase;
-        text-overflow: ellipsis;
-        overflow: hidden;
+        @include ellipsis();
+        padding-top: 4px;
+        font-size: $label-font-size;
+        line-height: $label-line-height;
+        max-width: 100%;
+        text-align: center;
+        transform: translateZ(0);
+        transition: transform .15s $ease-in-out-quad;
         z-index: 1;
-        opacity: .75;
     }
 
     %igx-tab-icon {
@@ -111,18 +121,26 @@ $components: register-component($components, #{$component-name});
         position: relative;
         justify-content: center;
         height: 24px;
-        z-index: 1;
-        opacity: .75;
         padding: 0 8px;
+        transform: translateZ(0);
+        transition: transform .15s $ease-in-out-quad;
+        z-index: 1;
 
-        i {
-            width: 24px;
-            height: 24px;
+        igx-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            padding: 1px;
         }
     }
 
-    %igx-tab-label--selected,
     %igx-tab-icon--selected {
         @extend %igx-active-tab;
+        transform: translateY(-2px);
+    }
+
+    %igx-tab-label--selected {
+        @extend %igx-active-tab;
+        transform: translateY(-2px) scale(1.166667);
     }
 }

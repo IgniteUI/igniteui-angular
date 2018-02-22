@@ -8,9 +8,12 @@ import {
     HostBinding,
     HostListener,
     Input,
+    OnInit,
     QueryList,
+    ViewChild,
     ViewChildren
 } from "@angular/core";
+import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
@@ -22,7 +25,7 @@ import { IgxGridComponent } from "./grid.component";
     selector: "igx-grid-row",
     templateUrl: "./row.component.html"
 })
-export class IgxGridRowComponent {
+export class IgxGridRowComponent implements OnInit {
 
     @Input()
     public rowData: any[];
@@ -32,6 +35,9 @@ export class IgxGridRowComponent {
 
     @Input()
     public gridID: string;
+
+    @ViewChild("igxDirRef", { read: IgxForOfDirective })
+    public virtDirRow: IgxForOfDirective<any>;
 
     @ViewChildren(forwardRef(() => IgxGridCellComponent), { read: IgxGridCellComponent })
     public cells: QueryList<IgxGridCellComponent>;
@@ -75,6 +81,14 @@ export class IgxGridRowComponent {
     constructor(private gridAPI: IgxGridAPIService,
                 private element: ElementRef,
                 public cdr: ChangeDetectorRef) {}
+
+    public ngOnInit() {
+        this.virtDirRow.onChunkLoad.subscribe({
+            next: (event: any) => {
+                this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement.style.left = "0px";
+            }
+        });
+    }
 
     @HostListener("focus", ["$event"])
     public onFocus(event) {

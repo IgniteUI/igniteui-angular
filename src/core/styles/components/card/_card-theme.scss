@@ -4,13 +4,31 @@ $components: register-component($components, #{$component-name});
 
 @function igx-card-theme(
     $background: null,
+    $header-text-color: null,
     $subtitle-text-color: null,
     $content-text-color: null,
     $actions-text-color: null
+) {
 
-){
+    @if not($header-text-color) and $background {
+        $header-text-color: text-contrast($background);
+    }
+
+    @if not($actions-text-color) and $background {
+        $actions-text-color: rgba(text-contrast($background), .5);
+    }
+
+    @if not($content-text-color) and $background {
+        $content-text-color: rgba(text-contrast($background), .7);
+    }
+
+    @if not($subtitle-text-color) and $background {
+        $subtitle-text-color: rgba(text-contrast($background), .7);
+    }
+
     @return (
         background: $background,
+        header-text-color: $header-text-color,
         subtitle-text-color:$subtitle-text-color,
         content-text-color:$content-text-color,
         actions-text-color:$actions-text-color
@@ -21,35 +39,36 @@ $components: register-component($components, #{$component-name});
 
     $default-theme: igx-card-theme(
         $background: $white,
-        $subtitle-text-color:igx-color($palette, grays, 600),
-        $content-text-color:igx-color($palette, grays, 600),
-        $actions-text-color:igx-color($palette, grays, 600)
+        $header-text-color: igx-color($palette, grays, 800),
+        $subtitle-text-color: igx-color($palette, grays, 600),
+        $content-text-color: igx-color($palette, grays, 600),
+        $actions-text-color: igx-color($palette, grays, 600)
     );
 
     $this: extend($default-theme, $theme);
 
     // 4. Cards //
     // Genaral
-    $card-border-radius: 2px !default;
-    $card-shadow: $elevate-2 !default;
-    $card-shadow-hover: $elevate-8 !default;
+    $card-border-radius: 2px;
+    $card-shadow: igx-elevation($elevations, 2);
+    $card-shadow-hover: igx-elevation($elevations, 8);
     // Font Sizes
-    $card-title-fz: em(24px, 16px) !default;
-    $card-title-line-height: em(24px, 16px) !default;
-    $card-subtitle-fz: em(14px, 16px) !default;
-    $card-subtitle-line-height: em(24px, 16px) !default;
-    $card-content-fz: em(14px, 16px) !default;
-    $card-content-lh: (20px, 16px) !default;
+    $card-title-fz: em(24px, 16px);
+    $card-title-line-height: em(24px, 16px);
+    $card-subtitle-fz: em(14px, 16px);
+    $card-subtitle-line-height: em(24px, 16px);
+    $card-content-fz: em(14px, 16px);
+    $card-content-lh: (20px, 16px);
     // Padding & Margin
-    $card-heading-padding: em(24px, 16px) em(16px, 16px) em(16px, 16px) em(16px, 16px) !default;
-    $card-heading-compact-padding: em(16px, 16px) !default;
-    $card-heading-margin: 0 !default;
-    $card-content-padding: em(16px, 16px) !default;
-    $card-content-margin: 0 !default;
-    $card-actions-padding: em(8px, 16px) !default;
-    $card-subtitle-margin: 0 !default;
+    $card-heading-padding: em(24px, 16px) em(16px, 16px) em(16px, 16px) em(16px, 16px);
+    $card-heading-compact-padding: em(16px, 16px);
+    $card-heading-margin: 0;
+    $card-content-padding: em(16px, 16px);
+    $card-content-margin: 0;
+    $card-actions-padding: em(8px, 16px);
+    $card-subtitle-margin: 0;
     $card-tgroup-margin: 0 em(16px);
-    $card-transitions: box-shadow .3s cubic-bezier(.25, .8, .25, 1) !default;
+    $card-transitions: box-shadow .3s cubic-bezier(.25, .8, .25, 1);
 
     %igx-card-display {
         display: flex;
@@ -73,6 +92,7 @@ $components: register-component($components, #{$component-name});
         // flex: 1 0 100%;
         flex-basis: 100%;
         padding: $card-heading-padding;
+        color: map-get($this, header-text-color);
     }
 
     %igx-card-header--compact {
@@ -148,7 +168,10 @@ $components: register-component($components, #{$component-name});
     %igx-card-actions-igroup {
         display: flex;
         flex-flow: row nowrap;
-        color: map-get($this, actions-text-color);
+
+        .igx-button--icon {
+            color: map-get($this, actions-text-color);
+        }
     }
 
     %igx-card-actions-igroup--start {
@@ -159,5 +182,3 @@ $components: register-component($components, #{$component-name});
         margin-left: auto;
     }
 }
-
-

@@ -181,6 +181,7 @@ export class IgxGridCellComponent {
             this.grid.cellInEditMode = null;
         }
         this.grid.onSelection.emit(this);
+        this.syncRows();
     }
 
     @HostListener("blur", ["$event"])
@@ -190,8 +191,9 @@ export class IgxGridCellComponent {
         this.row.focused = false;
     }
 
-    @HostListener("keydown.arrowleft")
-    public onKeydownArrowLeft() {
+    @HostListener("keydown.arrowleft", ["$event"])
+    public onKeydownArrowLeft(event) {
+        event.preventDefault();
         const visibleColumns = this.grid.visibleColumns;
         const rowIndex = this.rowIndex;
         let columnIndex = this.columnIndex;
@@ -204,21 +206,40 @@ export class IgxGridCellComponent {
 
             if (target) {
                 target.nativeElement.focus();
+                this.syncRows();
+            } else {
+                this.row.virtDirRow.scrollPrev();
+                this.row.virtDirRow.onChunkLoad.first().subscribe({
+                    next: (e: any) => {
+                        this.row.cdr.detectChanges();
+                        const currTarget = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
+                        if (currTarget) {
+                            currTarget.nativeElement.focus();
+                        } else {
+                            this.row.cells.first.nativeElement.focus();
+                        }
+                        setTimeout(() => {
+                            this.syncRows();
+                        });
+                    }
+                });
             }
         }
     }
 
-    @HostListener("keydown.ctrl.arrowleft")
+    @HostListener("keydown.control.arrowleft")
     public onKeydownCtrlArrowLeft() {
         const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex, this.row.cells.first.columnIndex);
 
         if (target) {
             target.nativeElement.focus();
+            this.syncRows();
         }
     }
 
-    @HostListener("keydown.arrowright")
-    public onKeydownArrowRight() {
+    @HostListener("keydown.arrowright", ["$event"])
+    public onKeydownArrowRight(event) {
+        event.preventDefault();
         const visibleColumns = this.grid.visibleColumns;
         const rowIndex = this.rowIndex;
         let columnIndex = this.columnIndex;
@@ -231,34 +252,56 @@ export class IgxGridCellComponent {
 
             if (target) {
                 target.nativeElement.focus();
+                this.syncRows();
+            } else {
+                this.row.virtDirRow.scrollNext();
+                this.row.virtDirRow.onChunkLoad.first().subscribe({
+                    next: (e: any) => {
+                        this.row.cdr.detectChanges();
+                        const currTarget = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
+                        if (currTarget) {
+                            currTarget.nativeElement.focus();
+                        } else {
+                            this.row.cells.last.nativeElement.focus();
+                        }
+                        setTimeout(() => {
+                            this.syncRows();
+                        });
+                    }
+                });
             }
         }
     }
 
-    @HostListener("keydown.ctrl.arrowright")
+    @HostListener("keydown.control.arrowright")
     public onKeydownCtrlArrowRight() {
         const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex, this.row.cells.last.columnIndex);
 
         if (target) {
             target.nativeElement.focus();
+            this.syncRows();
         }
     }
 
-    @HostListener("keydown.arrowup")
-    public onKeydownArrowUp() {
+    @HostListener("keydown.arrowup", ["$event"])
+    public onKeydownArrowUp(event) {
+        event.preventDefault();
         const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex - 1, this.columnIndex);
-
         if (target) {
             target.nativeElement.focus();
+        } else {
+            this.row.grid.parentVirtDir.scrollPrev();
         }
     }
 
-    @HostListener("keydown.arrowdown")
-    public onKeydownArrowDown() {
+    @HostListener("keydown.arrowdown", ["$event"])
+    public onKeydownArrowDown(event) {
+        event.preventDefault();
         const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex + 1, this.columnIndex);
-
         if (target) {
             target.nativeElement.focus();
+        } else {
+            this.row.grid.parentVirtDir.scrollNext();
         }
     }
 
@@ -274,5 +317,15 @@ export class IgxGridCellComponent {
     @HostListener("keydown.escape")
     public onKeydownExitEditMode() {
         this._inEditMode = false;
+    }
+
+    syncRows() {
+        this.grid.markForCheck();
+        const scrLeft = this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.scrollLeft;
+        this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement.style.left = (-scrLeft) + "px";
+        this.row.grid.rowList.map((row) => {
+            const elem = row.virtDirRow.dc.instance._viewContainer.element.nativeElement;
+            elem.scrollLeft = scrLeft;
+        });
     }
 }

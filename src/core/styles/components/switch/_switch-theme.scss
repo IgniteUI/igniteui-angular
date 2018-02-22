@@ -11,8 +11,8 @@ $components: register-component($components, #{$component-name});
 
 @mixin igx-switch($theme, $palette: $default-palette) {
     $default-theme: igx-switch-theme(
-        $thumb-color: igx-color($palette, 'accent'),
-        $track-color: rgba(igx-color($palette, 'accent'), .5)
+        $thumb-color: igx-color($palette, 'secondary'),
+        $track-color: rgba(igx-color($palette, 'secondary'), .5)
     );
 
     $this: extend($default-theme, $theme);
@@ -25,21 +25,21 @@ $components: register-component($components, #{$component-name});
     $input-font-weight: 400 !default;
     $input-color: igx-color($palette, 'grays', 900) !default;
     $input-border-color: igx-color($palette, 'grays', 500) !default;
-    $input-border-color-focus: igx-color($palette, 'accent') !default;
+    $input-border-color-focus: igx-color($palette, 'secondary') !default;
     $input-transition: all .2s ease-in !default;
     $input-disabled-color: igx-color($palette, 'grays', 500) !default;
 
-    $switch-background: $darkgray !default;
-    $switch-background-disabled: $off-white !default;
-    $switch-thumb-color-disabled: $lightgray !default;
+    $switch-background: igx-color($palette, 'grays', 600) !default;
+    $switch-background-disabled: igx-color($palette, 'grays', 100) !default;
+    $switch-thumb-color-disabled: igx-color($palette, 'grays', 400) !default;
     $switch-color: transparent !default;
     $switch-radius: 100px !default;
     $switch-width: 35px !default;
     $switch-height: 14px !default;
     $switch-label-width: 20px !default;
     $switch-label-height: $switch-label-width !default;
-    $switch-shadow: $elevate-1 !default;
-    $switch-disabled-shadow: $elevate-1 !default;
+    $switch-shadow: igx-elevation($elevations, 1);
+    $switch-disabled-shadow: igx-elevation($elevations, 1);
     $switch-margin: 0 16px !default;
 
     %igx-switch-lbl-display {

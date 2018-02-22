@@ -3,6 +3,16 @@ $component-name: 'igx-toast';
 $components: register-component($components, #{$component-name});
 
 @function igx-toast-theme($background: null, $text-color: null) {
+    @if not($text-color) and $background {
+        $text-color: text-contrast($background);
+    }
+
+    @if $background and lightness($background) > 50 {
+        $background: rgba($background, .7)
+    } @else {
+        $background: rgba($background, .54)
+    }
+
     @return (
         background: $background,
         text-color: $text-color,
@@ -17,29 +27,30 @@ $components: register-component($components, #{$component-name});
 
     $this: extend($default-theme, $theme);
 
-    $toast-width: 52px !default;
-    $toast-padding: em(16px, 16px) em(24px, 16px) !default;
-    $toast-margin: em(42px, 16px) auto !default;
-    $toast-border-radius: ($toast-width / 2) !default;
-    $toast-font-size: em(14px, 16px) !default;
-    $toast-line-height: em(24px, 16px) !default;
+    $toast-width: 52px;
+    $toast-padding: em(16px, 16px) em(24px, 16px);
+    $toast-margin: em(42px, 16px) auto;
+    $toast-border-radius: ($toast-width / 2);
+    $toast-font-size: em(14px, 16px);
+    $toast-line-height: em(24px, 16px);
 
     // @debug $this;
 
     %igx-toast-display {
-        display: block;
-        margin: $toast-margin;
         position: fixed;
-        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         left: 50%;
         transform: translate3d(-50%, 0, 0);
-        min-width: $toast-width;
+        margin: $toast-margin;
         padding: $toast-padding;
-        background-color: map-get($this, 'background');
-        border-radius: $toast-border-radius;
-        color: map-get($this, 'text-color');
+        min-width: $toast-width;
         font-size: $toast-font-size;
         line-height: $toast-line-height;
+        color: map-get($this, 'text-color');
+        background-color: map-get($this, 'background');
+        border-radius: $toast-border-radius;
         opacity: 0;
         z-index: 999999;
     }

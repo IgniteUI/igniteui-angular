@@ -3,138 +3,229 @@ $component-name: 'igx-button';
 $components: register-component($components, #{$component-name});
 
 @function igx-button-theme(
-    $button-text-color: null,
+    // Global Button
+    $button-roundness: null,
 
-    $button-flat-text-color: null,
-    $button-flat-hover-background: null,
-    $button-flat-focus-background: null,
+    // Flat Button
+    $flat-text-color: null,
+    $flat-background: null,
+    $flat-hover-background: null,
+    $flat-hover-text-color: null,
+    $flat-focus-background: null,
+    $flat-focus-text-color: null,
 
-    $button-raised-text-color: null,
-    $button-raised-background: null,
-    $button-raised-hover-background: null,
-    $button-raised-focus-background: null,
+    // Raised Button
+    $raised-text-color: null,
+    $raised-background: null,
+    $raised-hover-background: null,
+    $raised-hover-text-color: null,
+    $raised-focus-background: null,
+    $raised-focus-text-color: null,
 
-    $button-fab-text-color: null,
-    $button-fab-focus-background: null,
-    $button-fab-background: null,
+    // Fab Button ( Floating action button )
+    $fab-text-color: null,
+    $fab-background: null,
+    $fab-hover-background: null,
+    $fab-hover-text-color: null,
+    $fab-focus-background: null,
+    $fab-focus-text-color: null,
 
-    $button-icon-hover-background: null,
-    $button-icon-focus-background: null,
+    // Icon Button
+    $icon-color: null,
+    $icon-background: null,
+    $icon-hover-background: null,
+    $icon-hover-color: null,
+    $icon-focus-background: null,
+    $icon-focus-color: null,
 
-    $button-disabled-text-color: null,
-    $button-disabled-background: null
+    // Disabled Button
+    $disabled-color: null,
+    $disabled-background: null
 ) {
+    // Flat Button
+    @if not($flat-text-color) and $flat-background {
+        $flat-text-color: text-contrast($flat-background);
+    }
+    // Flat Hover button
+    @if not($flat-hover-text-color) and $flat-hover-background {
+        $flat-hover-text-color: text-contrast($flat-hover-background);
+    }
+    // Flat focus button
+    @if not($flat-focus-text-color) and $flat-focus-background {
+        $flat-focus-text-color: text-contrast($flat-focus-background);
+    }
+    // Raised Button
+    @if not($raised-text-color) and $raised-background {
+        $raised-text-color: text-contrast($raised-background);
+    }
+    // Raised Hover Button
+    @if not($raised-hover-text-color) and $raised-hover-background {
+        $raised-hover-text-color: text-contrast($raised-hover-background);
+    }
+    // Raised focus Button
+    @if not($raised-focus-text-color) and $raised-focus-background {
+        $raised-focus-text-color: text-contrast($raised-focus-background);
+    }
+
+    // Fab Button ( Floating action button )
+    @if not($fab-text-color) and $fab-background {
+        $fab-text-color: text-contrast($fab-background);
+    }
+    // Fab hover Button ( Floating action button )
+    @if not($fab-hover-text-color) and $fab-hover-background {
+        $fab-hover-text-color: text-contrast($fab-hover-background);
+    }
+    // Fab focus Button ( Floating action button )
+    @if not($fab-focus-text-color) and $fab-focus-background {
+        $fab-focus-text-color: text-contrast($fab-focus-background);
+    }
+
+    // Icon Button
+    @if not($icon-color) and $icon-background {
+        $icon-color: text-contrast($icon-background);
+    }
+
+    // Icon focus Button
+    @if not($icon-focus-color) and $icon-focus-background {
+        $icon-focus-color: text-contrast($icon-focus-background);
+    }
+
+    // Icon focus Button
+    @if not($icon-hover-color) and $icon-hover-background {
+        $icon-hover-color: text-contrast($icon-hover-background);
+    }
+
     @return (
-        button-text-color: $button-text-color,
+        // Global
+        button-roundness: $button-roundness,
+
         // Flat Button
-        button-flat-text-color: $button-flat-text-color,
-        button-flat-hover-background: $button-flat-hover-background,
-        button-flat-focus-background: $button-flat-focus-background,
+        flat-text-color: $flat-text-color,
+        flat-background: $flat-background,
+        flat-hover-background: $flat-hover-background,
+        flat-hover-text-color: $flat-hover-text-color,
+        flat-focus-background: $flat-focus-background,
+        flat-focus-text-color: $flat-focus-text-color,
+
         // Raised Button
-        button-raised-text-color: $button-raised-text-color,
-        button-raised-background: $button-raised-background,
-        button-raised-hover-background: $button-raised-hover-background,
-        button-raised-focus-background: $button-raised-focus-background,
+        raised-text-color: $raised-text-color,
+        raised-background: $raised-background,
+        raised-hover-background: $raised-hover-background,
+        raised-hover-text-color: $raised-hover-text-color,
+        raised-focus-background: $raised-focus-background,
+        raised-focus-text-color: $raised-focus-text-color,
+
         // Fab Button ( Floating action button )
-        button-fab-text-color: $button-fab-text-color,
-        button-fab-background: $button-fab-background,
-        button-fab-focus-background: $button-fab-focus-background,
+        fab-text-color: $fab-text-color,
+        fab-background: $fab-background,
+        fab-hover-background: $fab-hover-background,
+        fab-hover-text-color: $fab-hover-text-color,
+        fab-focus-background: $fab-focus-background,
+        fab-focus-text-color: $fab-focus-text-color,
+
         // Icon Button
-        button-icon-hover-background:$button-icon-hover-background,
-        button-icon-focus-background:$button-icon-focus-background,
-        // Icon Button
-        button-disabled-text-color:$button-disabled-text-color,
-        button-disabled-background:$button-disabled-background,
+        icon-color: $icon-color,
+        icon-background: $icon-background,
+        icon-hover-background: $icon-hover-background,
+        icon-hover-color: $icon-hover-color,
+        icon-focus-background: $icon-focus-background,
+        icon-focus-color: $icon-focus-color,
+
+        // Disabled Button
+        disabled-color: $disabled-color,
+        disabled-background: $disabled-background,
     );
 }
 @mixin igx-button($theme, $palette: $default-palette) {
     $default-theme: igx-button-theme(
-        $button-text-color: igx-color($palette, grays, 800),
+        // Global
+        $button-roundness: 2px,
+
         // Flat button
-        $button-flat-text-color: igx-color($palette, accent, 500),
-        $button-flat-hover-background: igx-color($palette, grays, 100),
-        $button-flat-focus-background: igx-color($palette, grays, 400),
+        $flat-text-color: igx-color($palette, 'secondary', 500),
+        $flat-background: transparent,
+
+        $flat-hover-background: rgba(igx-color($palette, 'secondary'), .05),
+        $flat-hover-text-color: igx-color($palette, 'secondary', 500),
+
+        $flat-focus-background: rgba(igx-color($palette, 'secondary', 400), .12),
+        $flat-focus-text-color: igx-color($palette, 'secondary', 500),
+
         // Raised Button
-        $button-raised-text-color: igx-contrast-color($palette, accent, 500),
-        $button-raised-background: igx-color($palette, accent, 500),
-        $button-raised-hover-background: igx-color($palette, accent, 700),
-        $button-raised-focus-background: igx-color($palette, accent, 700),
+        $raised-text-color: igx-contrast-color($palette, 'secondary', 500),
+        $raised-background: igx-color($palette, 'secondary', 500),
+        $raised-hover-background: igx-color($palette, 'secondary', 700),
+        $raised-hover-text-color: null,
+        $raised-focus-background: igx-color($palette, 'secondary', 700),
+        $raised-focus-text-color: igx-contrast-color($palette, 'secondary', 500),
+
         // Fab button ( Floating action button )
-        $button-fab-text-color: igx-contrast-color($palette, accent, 500),
-        $button-fab-background: igx-color($palette, accent, 500),
-        $button-fab-focus-background: igx-color($palette, accent, 500),
+        $fab-text-color: igx-contrast-color($palette, 'secondary', 500),
+        $fab-background: igx-color($palette, 'secondary', 500),
+        $fab-hover-text-color: null,
+        $fab-hover-background: null,
+        $fab-focus-background: igx-color($palette, 'secondary', 500),
+        $fab-focus-text-color: igx-contrast-color($palette, 'secondary', 500),
+
         // Icon Button
-        $button-icon-hover-background: igx-color($palette, grays, 100),
-        $button-icon-focus-background: igx-color($palette, grays, 400),
+        $icon-color: igx-color($palette, 'grays', 800),
+        $icon-background: transparent,
+        $icon-hover-background: igx-color($palette, 'grays', 100),
+        $icon-hover-color: igx-color($palette, 'grays', 800),
+        $icon-focus-background: igx-color($palette, 'grays', 400),
+        $icon-focus-color: igx-color($palette, 'grays', 800),
+
         // Icon Button
-        $button-disabled-text-color: igx-color($palette, grays, 400),
-        $button-disabled-background: igx-color($palette, grays, 100)
+        $disabled-color: igx-color($palette, 'grays', 400),
+        $disabled-background: igx-color($palette, 'grays', 100)
     );
 
-    // TODO remove all commented variables in this list, after the component is done.
-    // 3. Buttons //
     // Shared Styles
-    $button-border: none !default;
-    $button-radius: 2px !default;
-    $button-font-size: em(16px, 16px) !default;
-    $button-font-weight: normal !default;
-    $button-width: em(88px) !default;
-    $button-height: em(40px) !default;
-    $button-padding: em(8px) em(16px) !default;
-    $button-transition: all .25s ease-out !default;
-    $button-round-radius: 50% !default;
+    $button-border: none;
+    $button-radius: 2px;
+    $button-font-size: rem(14px, 16px);
+    $button-font-weight: normal;
+    $button-width: rem(88px);
+    $button-height: rem(40px);
+    $button-padding: rem(8px) rem(16px);
+    $button-transition: all .25s ease-out;
+    $button-round-radius: 50%;
 
     // Disabled Styles
-    $button-disabled-shadow: none !default;
+    $button-disabled-shadow: none;
 
     // Raised Buttons
-    $button-raised-shadow: $elevate-2 !default;
-    $button-raised-focus-shadow: $elevate-8 !default;
-
-    // Gradient Buttons
-    $button-gradient-color-1: igx-color($palette, 'accent') !default;
-    $button-gradient-color-2: igx-color($palette, 'accent') !default;
-    $button-gradient-background: linear-gradient(to bottom right, $button-gradient-color-2, $button-gradient-color-1) !default;
-    $button-focus-gradient: linear-gradient(to bottom right, gen-color($button-gradient-color-1, 700), gen-color($button-gradient-color-2, 700)) !default;
-    $button-gradient-color: $white !default;
-    $button-gradient-shadow: 0 4px 10px -2px darken(transparentize($button-gradient-color-2, .2), 20%) !default;
-    $button-gradient-focus-shadow: 0 6px 12px -1px darken(transparentize($button-gradient-color-2, .25), 25%) !default;
-
-    /*$button-flat-hover-background: $off-white !default;*/
-
-    $button-flat-focus-background: $lightgray !default;
+    $button-raised-shadow: igx-elevation($elevations, 2);
+    $button-raised-focus-shadow: igx-elevation($elevations, 8);
 
     // Floating Buttons
-    $button-floating-width: em(56px) !default;
+    $button-floating-width: rem(56px);
     $button-floating-height: $button-floating-width;
-    $button-floating-shadow: $elevate-6 !default;
-    $button-floating-hover-shadow: $elevate-12 !default;
+    $button-floating-shadow: igx-elevation($elevations, 6);
+    $button-floating-hover-shadow: igx-elevation($elevations, 12);
 
     // Icon Buttons
-    $button-icon-width: em(36px, 16px) !default;
-    $button-icon-height: $button-icon-width !default;
-    $button-icon-font-size: em(24px, 24px) !default;
+    $button-icon-width: rem(36px, 16px);
+    $button-icon-height: $button-icon-width;
+    $button-icon-font-size: rem(24px, 24px);
 
     // Navbar Buttons
-    $button-navbar-width: em(24px, 16px) !default;
-    $button-navbar-height: $button-navbar-width !default;
-    $button-navbar-padding: 0 !default;
-    $this: extend($default-theme, $theme);
+    $button-navbar-width: rem(24px, 16px);
+    $button-navbar-height: $button-navbar-width;
+    $button-navbar-padding: 0;
 
-    // @debug $this;
+    $this: extend($default-theme, $theme);
 
     %igx-button-display {
         display: inline-block;
         position: relative;
         min-width: $button-width;
         padding: $button-padding;
-        font-family: 'Titillium Web', sans-serif;
         font-size: $button-font-size;
         font-weight: $button-font-weight;
         text-align: center;
-        color: map-get($this, button-text-color);
         border: $button-border;
-        border-radius: $button-radius;
+        border-radius: map-get($this, 'button-roundness');
         text-transform: uppercase;
         cursor: pointer;
         user-select: none;
@@ -145,51 +236,37 @@ $components: register-component($components, #{$component-name});
     }
 
     %igx-button--flat {
-        background: transparent;
-        color: map-get($this, button-flat-text-color);
+        background: map-get($this, 'flat-background');
+        color: map-get($this, 'flat-text-color');
 
         &:hover {
-            background: map-get($this, button-flat-hover-background);
+            background: map-get($this, 'flat-hover-background');
+            color: map-get($this, 'flat-hover-text-color');
         }
 
         &:focus,
         &:active {
-            background: map-get($this, button-flat-focus-background);
+            background: map-get($this, 'flat-focus-background');
+            color: map-get($this, 'flat-focus-text-color');
         }
     }
 
     %igx-button--raised {
-        color: map-get($this, button-raised-text-color);
-        background: map-get($this, button-raised-background);
+        color: map-get($this, 'raised-text-color');
+        background: map-get($this, 'raised-background');
         box-shadow: $button-raised-shadow;
 
         &:hover {
-            background: map-get($this, button-raised-hover-background);
+            background: map-get($this, 'raised-hover-background');
+            color: map-get($this, 'raised-hover-text-color');
             box-shadow: $button-raised-shadow;
         }
 
         &:focus,
         &:active {
-            background: map-get($this, button-raised-focus-background);
+            background: map-get($this, 'raised-focus-background');
+            color: map-get($this, 'raised-focus-text-color');
             box-shadow: $button-raised-focus-shadow;
-        }
-    }
-
-    // TODO WE NEED TO REMOVE GRADIENT BUTTON
-    %igx-button--gradient {
-        color: $button-gradient-color;
-        background: $button-gradient-background;
-        box-shadow: $button-gradient-shadow;
-
-        &:hover {
-            background: $button-focus-gradient;
-            box-shadow: $button-gradient-shadow;
-        }
-
-        &:focus,
-        &:active {
-            background: $button-focus-gradient;
-            box-shadow: $button-gradient-focus-shadow;
         }
     }
 
@@ -226,17 +303,20 @@ $components: register-component($components, #{$component-name});
     %igx-button--fab {
         width: $button-floating-width;
         height: $button-floating-height;
-        color: map-get($this, button-fab-text-color);
-        background: map-get($this, button-fab-background);
+        color: map-get($this, 'fab-text-color');
+        background: map-get($this, 'fab-background');
         box-shadow: $button-floating-shadow;
 
         &:hover {
             box-shadow: $button-floating-hover-shadow;
+            background: map-get($this, 'fab-hover-background');
+            color: map-get($this, 'fab-hover-text-color');
         }
 
         &:focus,
         &:active {
-            background: map-get($this, button-fab-focus-background);
+            background: map-get($this, 'fab-focus-background');
+            color: map-get($this, 'fab-focus-text-color');
         }
     }
 
@@ -244,16 +324,19 @@ $components: register-component($components, #{$component-name});
         width: $button-icon-width;
         height: $button-icon-width;
         font-size: $button-icon-font-size;
-        background: transparent;
+        color: map-get($this, 'icon-color');
+        background: map-get($this, 'icon-background');
 
         &:hover {
             transition: $button-transition;
-            background: map-get($this, button-icon-hover-background);
+            background: map-get($this, 'icon-hover-background');
+            color: map-get($this, 'icon-hover-color');
         }
 
         &:focus,
         &:active {
-            background: map-get($this, button-icon-focus-background);
+            background: map-get($this, 'icon-focus-background');
+            color: map-get($this, 'icon-focus-color');
         }
     }
 
@@ -267,10 +350,11 @@ $components: register-component($components, #{$component-name});
     }
 
     %igx-button--disabled {
-        color: map-get($this, button-disabled-text-color) !important;
-        background: map-get($this, button-disabled-background) !important;
-        pointer-events: none !important;
-        box-shadow: $button-disabled-shadow !important;
-        opacity: .8 !important;
+        color: map-get($this, 'disabled-color') !important;
+        background: map-get($this, 'disabled-background') !important;
+        pointer-events: none;
+        box-shadow: $button-disabled-shadow;
+        opacity: .8;
     }
 }
+

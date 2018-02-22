@@ -3,11 +3,6 @@ import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-
-import { IgxComponentsModule, IgxDirectivesModule, IgxNavigationModule } from "../lib/main";
-
-import { AppComponent } from "./app.component";
-import { routing } from "./app.routing";
 import { AvatarSampleModule } from "./avatar/sample.module";
 import { BadgeSampleModule } from "./badge/sample.module";
 import { ButtonSampleModule } from "./button/sample.module";
@@ -18,6 +13,7 @@ import { CarouselSampleModule } from "./carousel/sample.module";
 import { IgxDatePickerSampleModule } from "./date-picker/sample.module";
 import { DialogSampleModule } from "./dialog/sample.module";
 import { GridSampleModule } from "./grid/sample.module";
+import { GridPerformanceSampleModule } from "./grid-performance/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
 import { InputSampleModule } from "./input/sample.module";
 import { LayoutSampleModule } from "./layout/sample.module";
@@ -34,6 +30,16 @@ import { IgxShadowsSampleModule } from "./styleguide/shadows/sample.module";
 import { IgxTypographySampleModule } from "./styleguide/typography/sample.module";
 import { TabBarSampleModule } from "./tabbar/sample.module";
 import { IgxToastSampleModule } from "./toast/sample.module";
+import { ListPerformanceSampleModule } from "./list-performance/sample.module";
+import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
+
+import { AppComponent } from "./app.component";
+import { routing } from "./app.routing";
+import { IgxNavigationDrawerModule, IgxRippleModule, IgxNavigationService } from "../lib/main";
+
+
+import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSwitchModule, IgxAvatarModule } from "../lib/main";
+
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -44,9 +50,13 @@ import { IgxToastSampleModule } from "./toast/sample.module";
         FormsModule,
         HttpModule,
         routing,
-        IgxComponentsModule,
-        IgxDirectivesModule,
-        IgxNavigationModule,
+        IgxNavigationDrawerModule,
+        IgxRadioModule,
+        IgxIconModule,
+        IgxCheckboxModule,
+        IgxLabelModule, 
+        IgxSwitchModule, 
+        IgxAvatarModule,
         InputSampleModule,
         CarouselSampleModule,
         TabBarSampleModule,
@@ -62,6 +72,7 @@ import { IgxToastSampleModule } from "./toast/sample.module";
         DialogSampleModule,
         IconSampleModule,
         GridSampleModule,
+        GridPerformanceSampleModule,
         IgxCardSampleModule,
         IgxSliderSampleModule,
         IgxScrollSampleModule,
@@ -72,7 +83,11 @@ import { IgxToastSampleModule } from "./toast/sample.module";
         IgxShadowsSampleModule,
         IgxCalendarSampleModule,
         IgxDatePickerSampleModule,
-        LayoutSampleModule
-    ]
+        IgxRippleModule,
+        LayoutSampleModule,
+        ListPerformanceSampleModule,
+        VirtualForSampleModule
+    ],
+    providers: [IgxNavigationService]
 })
 export class AppModule { }

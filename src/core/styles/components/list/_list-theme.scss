@@ -11,6 +11,34 @@ $components: register-component($components, #{$component-name});
     $item-background-active: null,
     $item-text-color-active: null
 ) {
+    @if not($header-background) and $background {
+        $header-background: $background;
+    }
+
+    @if not($item-background) and $background {
+        $item-background: $background;
+    }
+
+    @if not($item-background-active) and $background {
+        @if lightness($background) > 50 {
+            $item-background-active: rgba(text-contrast($background), .04);
+        } @else {
+            $item-background-active: rgba(text-contrast($background), .12);
+        }
+    }
+
+    @if not($header-text-color) and $header-background {
+        $header-text-color: text-contrast($header-background);
+    }
+
+    @if not($item-text-color) and $item-background {
+        $item-text-color: text-contrast($item-background);
+    }
+
+    @if not($item-text-color-active) and $item-text-color {
+        $item-text-color-active: $item-text-color;
+    }
+
     @return (
         background: $background,
         header-background: $header-background,
@@ -25,9 +53,7 @@ $components: register-component($components, #{$component-name});
 @mixin igx-list($theme, $palette: $default-palette) {
     $default-theme: igx-list-theme(
         $background: $white,
-        $header-background: transparent,
-        $header-text-color: igx-color($palette, 'accent'),
-        $item-background: transparent,
+        $header-text-color: igx-color($palette, 'secondary'),
         $item-text-color: igx-color($palette, 'grays', 800),
         $item-background-active: igx-color($palette, 'grays', 100),
         $item-text-color-active: igx-color($palette, 'grays', 800)
@@ -37,40 +63,31 @@ $components: register-component($components, #{$component-name});
 
     // @debug $this;
 
-    $list-margin: 8px 16px !default;
-    $list-background: map-get($this, 'background') !default;
-    $list-header-color: map-get($this, 'header-text-color') !default;
-    $list-header-background: map-get($this, 'header-backround') !default;
-    $list-header-font-size: em(13px) !default;
-    $list-header-font-weight: normal !default;
-    $list-header-height: em(48px) !default;
-    $list-header-line-height: em(48px) !default;
-    $list-item-color: map-get($this, 'item-text-color') !default;
-    $list-item-background: map-get($this, 'item-background');
-    $list-item-height: em(48px) !default;
-    $list-item-line-height: em(48px) !default;
-    $list-item-font-size: em(16px) !default;
-    $list-item-padding: em(8px) em(16px) !default;
-    $list-item-active-background: map-get($this, 'item-background-active');
-    $list-item-active-shadow: $elevate-2 !default;
-    $list-item-tl-sl-font-size: em(14px) !default;
-    $list-item-tl-height: em(72px) !default;
-    $list-item-tl-sl-color: $darkgray !default;
-    $list-empty-color: text-contrast($list-background);
+    $list-margin: 8px 16px;
+    $list-header-font-size: em(13px);
+    $list-header-font-weight: normal;
+    $list-header-height: em(48px);
+    $list-header-line-height: em(48px);
+    $list-item-height: em(48px);
+    $list-item-line-height: em(48px);
+    $list-item-font-size: em(16px);
+    $list-item-padding: em(8px) em(16px);
+    $list-item-active-shadow: igx-elevation($elevations, 2);
+    $list-item-tl-sl-font-size: em(14px);
+    $list-item-tl-height: em(72px);
     $list-empty-padding: em(16px, 16px);
 
     %igx-list {
-        background-color: $list-background;
+        display: flex;
+        flex-flow: column nowrap;
+        background-color: map-get($this, 'background');
         height: 100%;
         overflow: hidden;
     }
 
     %igx-list-empty {
-        display: flex;
-        flex-flow: column nowrap;
         justify-content: center;
         align-items: center;
-        height: inherit;
     }
 
     %igx-list-empty-image {
@@ -80,23 +97,16 @@ $components: register-component($components, #{$component-name});
 
     %igx-list-empty-message {
         text-align: center;
-        color: $list-empty-color;
+        color: map-get($this, 'item-text-color');
         padding: $list-empty-padding;
         z-index: 1;
-    }
-
-    %igx-list-item-display {
-        display: block;
-        position: relative;
-        list-style-type: none;
-        user-select: none;
     }
 
     %igx-list-header {
         display: flex;
         align-items: center;
-        color: $list-header-color;
-        background-color: $list-header-background;
+        color: map-get($this, 'header-text-color');
+        background-color: map-get($this, 'header-background');
         font-size: $list-header-font-size;
         font-weight: $list-header-font-weight;
         height: $list-header-height;
@@ -113,13 +123,14 @@ $components: register-component($components, #{$component-name});
         padding: $list-item-padding;
         min-height: $list-item-height;
         font-size: $list-item-font-size;
-        color: $list-item-color;
-        background-color: $list-item-background;
+        color: map-get($this, 'item-text-color');
+        background-color: map-get($this, 'item-background');
         z-index: 2;
     }
 
     %igx-list-item--active {
-        background-color: $list-item-active-background;
+        color: map-get($this, 'item-text-color-active');
+        background-color: map-get($this, 'item-background-active');
         z-index: 3;
     }
 
