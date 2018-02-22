@@ -138,7 +138,7 @@ $components: register-component($components, #{$component-name});
     $bgroup-shadow: igx-elevation($elevations, 2);
     // Item style
     $bgroup-item-minwidth: 24px;
-    $bgroup-item-minheight: 24px;
+    $bgroup-item-minheight: 36px;
     $bgroup-item-border-thickness: 1px;
     $bgroup-item-font-weight: 600;
     // Margin between item elements
@@ -239,6 +239,7 @@ $components: register-component($components, #{$component-name});
         display: flex;
         flex-flow: row nowrap;
         justify-content: center;
+        line-height: initial;
         align-items: center;
         text-align: center;
 
