@@ -7,7 +7,7 @@ import { IgxListComponent, IgxListModule } from "./list.component";
 
 declare var Simulator: any;
 
-describe("List", () => {
+fdescribe("List", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ListTestComponent, ListWithPanningAllowedComponent,
@@ -82,8 +82,6 @@ describe("List", () => {
     it("should pan right and pan left.", () => {
         let fixture;
         let list: IgxListComponent;
-        let item: IgxListItemComponent;
-        let itemNativeElement;
         let timesCalledLeftPan = 0;
         let timesCalledStateChanged = 0;
         let timesCalledRightPan = 0;
@@ -105,46 +103,30 @@ describe("List", () => {
             timesCalledRightPan++;
         });
 
-        itemNativeElement = fixture.debugElement.queryAll(By.css("igx-list-item"))[0];
-        item = list.items[0] as IgxListItemComponent;
+        const itemNativeElements = fixture.debugElement.queryAll(By.css("igx-list-item"));
+        const listItems = list.items;
 
         /* Pan item right */
-        panItem(itemNativeElement, 0.6);
+        panItem(itemNativeElements[0], 0.6);
 
         fixture.detectChanges();
 
-        expect(item.panState).toBe(IgxListPanState.RIGHT);
+        expect(listItems[0].panState).toBe(IgxListPanState.RIGHT);
 
         /* Pan item left */
-        panItem(itemNativeElement, -0.6);
+        panItem(itemNativeElements[1], -0.6);
 
         fixture.detectChanges();
 
-        expect(item.panState).toBe(IgxListPanState.NONE);
-
-        /* Pan item left */
-        panItem(itemNativeElement, -0.6);
-
-        fixture.detectChanges();
-
-        expect(item.panState).toBe(IgxListPanState.LEFT);
-
-        /* Pan item right */
-        panItem(itemNativeElement, 0.6);
-
-        fixture.detectChanges();
-
-        expect(item.panState).toBe(IgxListPanState.NONE);
+        expect(listItems[1].panState).toBe(IgxListPanState.LEFT);
         expect(timesCalledLeftPan).toBe(1);
-        expect(timesCalledStateChanged).toBe(4);
+        expect(timesCalledStateChanged).toBe(2);
         expect(timesCalledRightPan).toBe(1);
     });
 
     it("should pan right only.", () => {
         let fixture;
         let list: IgxListComponent;
-        let item: IgxListItemComponent;
-        let itemNativeElement;
         let timesCalledLeftPan = 0;
         let timesCalledStateChanged = 0;
         let timesCalledRightPan = 0;
@@ -168,39 +150,30 @@ describe("List", () => {
             timesCalledRightPan++;
         });
 
-        itemNativeElement = fixture.debugElement.queryAll(By.css("igx-list-item"))[0];
-        item = list.items[0] as IgxListItemComponent;
+        const itemNativeElements = fixture.debugElement.queryAll(By.css("igx-list-item"));
+        const listItems = list.items;
 
         /* Pan item right */
-        panItem(itemNativeElement, 0.6);
+        panItem(itemNativeElements[0], 0.6);
 
         fixture.detectChanges();
 
-        expect(item.panState).toBe(IgxListPanState.RIGHT);
+        expect(listItems[0].panState).toBe(IgxListPanState.RIGHT);
 
         /* Pan item left */
-        panItem(itemNativeElement, -0.6);
+        panItem(itemNativeElements[1], -0.6);
 
         fixture.detectChanges();
 
-        expect(item.panState).toBe(IgxListPanState.NONE);
-
-        /* Pan item left */
-        panItem(itemNativeElement, -0.6);
-
-        fixture.detectChanges();
-
-        expect(item.panState).toBe(IgxListPanState.NONE);
+        expect(listItems[1].panState).toBe(IgxListPanState.NONE);
         expect(timesCalledLeftPan).toBe(0);
-        expect(timesCalledStateChanged).toBe(2);
+        expect(timesCalledStateChanged).toBe(1);
         expect(timesCalledRightPan).toBe(1);
     });
 
     it("should pan left only.", () => {
         let fixture;
         let list: IgxListComponent;
-        let item: IgxListItemComponent;
-        let itemNativeElement;
         let timesCalledLeftPan = 0;
         let timesCalledStateChanged = 0;
         let timesCalledRightPan = 0;
@@ -222,31 +195,24 @@ describe("List", () => {
             timesCalledRightPan++;
         });
 
-        itemNativeElement = fixture.debugElement.queryAll(By.css("igx-list-item"))[0];
-        item = list.items[0] as IgxListItemComponent;
+        const itemNativeElements = fixture.debugElement.queryAll(By.css("igx-list-item"));
+        const listItems = list.items;
 
         /* Pan item left */
-        panItem(itemNativeElement, -0.6);
+        panItem(itemNativeElements[0], -0.6);
 
         fixture.detectChanges();
 
-        expect(item.panState).toBe(IgxListPanState.LEFT);
+        expect(listItems[0].panState).toBe(IgxListPanState.LEFT);
 
         /* Pan item right */
-        panItem(itemNativeElement, 0.6);
+        panItem(itemNativeElements[1], 0.6);
 
         fixture.detectChanges();
 
-        expect(item.panState).toBe(IgxListPanState.NONE);
-
-        /* Pan item right */
-        panItem(itemNativeElement, 0.6);
-
-        fixture.detectChanges();
-
-        expect(item.panState).toBe(IgxListPanState.NONE);
+        expect(listItems[1].panState).toBe(IgxListPanState.NONE);
         expect(timesCalledLeftPan).toBe(1);
-        expect(timesCalledStateChanged).toBe(2);
+        expect(timesCalledStateChanged).toBe(1);
         expect(timesCalledRightPan).toBe(0);
     });
 
@@ -450,7 +416,7 @@ describe("List", () => {
 
         itemNativeElement.triggerEventHandler("panstart", null);
         itemNativeElement.triggerEventHandler("panmove", {
-            deltaX : factorX * itemWidth
+            deltaX : factorX * itemWidth, duration : 200
         });
         itemNativeElement.triggerEventHandler("panend", null);
     }
@@ -485,7 +451,7 @@ class ListTestComponent {
 }
 
 @Component({
-    template: `<div #wrapper width="300px">
+    template: `<div #wrapper>
                     <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                         <igx-list-item>Item 1</igx-list-item>
                         <igx-list-item>Item 2</igx-list-item>
@@ -499,7 +465,7 @@ class ListWithPanningAllowedComponent {
 
 @Component({
     template: `<div #wrapper>
-                <igx-list [allowLeftPanning]="false" [allowRightPanning]="true" >
+                <igx-list [allowLeftPanning]="false" [allowRightPanning]="true">
                     <igx-list-item>Item 1</igx-list-item>
                     <igx-list-item>Item 2</igx-list-item>
                     <igx-list-item>Item 3</igx-list-item>
@@ -561,7 +527,7 @@ class ListWithCustomNoItemsTemplateComponent {
 }
 
 @Component({
-    template: `<div #wrapper style="width: 300px">
+    template: `<div #wrapper>
                     <igx-list [allowRightPanning]="false" [allowLeftPanning]="false">
                         <igx-list-item [isHeader]="true">Header 1</igx-list-item>
                         <igx-list-item [isHeader]="false" [hidden]="false">Item 1</igx-list-item>
