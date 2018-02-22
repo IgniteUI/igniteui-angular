@@ -49,26 +49,26 @@ $components: register-component($components, #{$component-name});
 
     // 4. Cards //
     // Genaral
-    $card-border-radius: 2px !default;
+    $card-border-radius: 2px;
     $card-shadow: igx-elevation($elevations, 2);
     $card-shadow-hover: igx-elevation($elevations, 8);
     // Font Sizes
-    $card-title-fz: em(24px, 16px) !default;
-    $card-title-line-height: em(24px, 16px) !default;
-    $card-subtitle-fz: em(14px, 16px) !default;
-    $card-subtitle-line-height: em(24px, 16px) !default;
-    $card-content-fz: em(14px, 16px) !default;
-    $card-content-lh: (20px, 16px) !default;
+    $card-title-fz: em(24px, 16px);
+    $card-title-line-height: em(24px, 16px);
+    $card-subtitle-fz: em(14px, 16px);
+    $card-subtitle-line-height: em(24px, 16px);
+    $card-content-fz: em(14px, 16px);
+    $card-content-lh: (20px, 16px);
     // Padding & Margin
-    $card-heading-padding: em(24px, 16px) em(16px, 16px) em(16px, 16px) em(16px, 16px) !default;
-    $card-heading-compact-padding: em(16px, 16px) !default;
-    $card-heading-margin: 0 !default;
-    $card-content-padding: em(16px, 16px) !default;
-    $card-content-margin: 0 !default;
-    $card-actions-padding: em(8px, 16px) !default;
-    $card-subtitle-margin: 0 !default;
+    $card-heading-padding: em(24px, 16px) em(16px, 16px) em(16px, 16px) em(16px, 16px);
+    $card-heading-compact-padding: em(16px, 16px);
+    $card-heading-margin: 0;
+    $card-content-padding: em(16px, 16px);
+    $card-content-margin: 0;
+    $card-actions-padding: em(8px, 16px);
+    $card-subtitle-margin: 0;
     $card-tgroup-margin: 0 em(16px);
-    $card-transitions: box-shadow .3s cubic-bezier(.25, .8, .25, 1) !default;
+    $card-transitions: box-shadow .3s cubic-bezier(.25, .8, .25, 1);
 
     %igx-card-display {
         display: flex;
