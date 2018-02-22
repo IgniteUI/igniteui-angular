@@ -35,8 +35,9 @@
                                 [igxForScrollOrientation]="'vertical'"
                                 [igxForContainerSize]='calcHeight'
                                 [igxForItemSize]="rowHeight"
+                                 let-dirty="dirty"
                                 #scrollContainer>
-           <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
+           <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" [isDirty]="dirty">
            </igx-grid-row>
         </ng-template>
 </div>
