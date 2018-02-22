@@ -449,7 +449,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     protected getElement(viewref, nodeName) {
-        const elem = viewref.element.nativeElement.parentElement.getElementsByTagName(nodeName);
+        const elem = viewref.element.nativeElement.parentNode.getElementsByTagName(nodeName);
         return elem.length > 0 ? elem[0] : null;
     }
 

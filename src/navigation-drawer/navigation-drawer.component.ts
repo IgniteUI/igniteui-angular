@@ -255,7 +255,9 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
         if (this._state) {
             this._state.remove(this.id);
         }
-        this._resizeObserver.unsubscribe();
+        if (this._resizeObserver) {
+            this._resizeObserver.unsubscribe();
+        }
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }) {
@@ -279,7 +281,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
             if (this.pinThreshold) {
                 this.ensureEvents();
                 this.checkPinThreshold();
-            } else {
+            } else if (this._resizeObserver) {
                 this._resizeObserver.unsubscribe();
                 this._resizeObserver = null;
             }

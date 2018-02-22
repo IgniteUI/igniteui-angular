@@ -173,8 +173,17 @@ $components: register-component($components, #{$component-name});
         }
     }
 
+    %grid-thead {
+        grid-row: 1;
+    }
+
+    %grid-tfoot {
+        grid-row: 3;
+    }
+
     %grid-tbody {
         position: relative;
+        grid-row: 2;
         background: map-get($this, 'content-background');
         color: map-get($this, 'content-text-color');
         overflow: hidden;
