@@ -18,6 +18,7 @@ export class RemoteService {
     public remoteData: Observable<any[]>;
     private url: string = "http://services.odata.org/V4/Northwind/Northwind.svc/Products";
     private _remoteData: BehaviorSubject<any[]>;
+    public virtForDirective: IgxForOfDirective<any>;
 
     constructor(private http: Http) {
         this._remoteData = new BehaviorSubject([]);
@@ -34,6 +35,7 @@ export class RemoteService {
             })
             .subscribe((data) => {
                 //dataState.totalCount = data["@odata.count"];
+                this.virtForDirective.totalItemCount = data["@odata.count"];
                 this._remoteData.next(data.value);
                 if (cb) {
                     cb();
@@ -42,10 +44,15 @@ export class RemoteService {
     }
 
     private buildUrl(dataState: any): string {
-        let qS: string = "?";
+        let qS: string = "?", requiredChunkSize: number;
         if (dataState) {
             const skip = dataState.startIndex;
-            const top = dataState.endIndex - dataState.startIndex;
+                
+                requiredChunkSize =  dataState.chunkSize === 0 ?
+                    // calculate the chunk size initially
+                    parseInt(this.virtForDirective.igxForContainerSize) / parseInt(this.virtForDirective.igxForItemSize) :
+                    dataState.chunkSize;
+            const top = requiredChunkSize;
             qS += `$skip=${skip}&$top=${top}&$count=true`;
         }
         return `${this.url}${qS}`;
@@ -168,6 +175,7 @@ export class VirtualForSampleComponent {
 }
 
 public ngAfterViewInit() {   
+    this.remoteService.virtForDirective = this.virtDirRemote;
     this.remoteService.getData(this.virtDirRemote.state);
 }
 chunkLoading(evt) {
@@ -185,7 +193,6 @@ scrPrevRow(){
     this.virtDirVertical.scrollPrev();
 }
 scrScrollTo(index){
-    console.log(index)
     this.virtDirVertical.scrollTo(index);
 }
 scrNextCol(){
@@ -196,7 +203,6 @@ scrPrevCol(){
 }
 
 scrHorizontalScrollTo(index){
-    console.log(index)
     this.virtDirHorizontal.scrollTo(index);
 }
 
