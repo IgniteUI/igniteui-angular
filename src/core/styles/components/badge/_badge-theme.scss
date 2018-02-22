@@ -42,19 +42,19 @@ $components: register-component($components, #{$component-name});
 
     $this: extend($default-theme, $theme);
 
-    $badge-width: 22px !default;
-    $badge-height: $badge-width !default;
+    $badge-width: 22px;
+    $badge-height: $badge-width;
 
-    $badge-border-radius-circle: $badge-width / 2 !default;
+    $badge-border-radius-circle: $badge-width / 2;
 
-    $badge-font-size: rem(11px) !default;
-    $badge-font-weight: 600 !default;
-    $badge-line-height: 2px !default;
+    $badge-font-size: rem(11px);
+    $badge-font-weight: 600;
+    $badge-line-height: 2px;
 
-    $badge-icon-font-size: rem(12px) !default;
+    $badge-icon-font-size: rem(12px);
 
-    $badge-value-padding: 4px !default;
-    $badge-shadow: igx-elevation($elevations, 1) !default;
+    $badge-value-padding: 4px;
+    $badge-shadow: igx-elevation($elevations, 1);
 
     $border-width: 1px;
     $border-type: solid;

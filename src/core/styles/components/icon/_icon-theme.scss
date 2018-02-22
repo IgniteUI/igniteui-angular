@@ -22,7 +22,7 @@ $components: register-component($components, #{$component-name});
 
     // @debug $this;
 
-    $igx-icon-font-size: rem(24px, 16px) !default;
+    $igx-icon-font-size: rem(24px, 16px);
 
     %igx-icon-display {
         display: flex;
