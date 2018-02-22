@@ -2,7 +2,7 @@
     viewBox="0 0 100 100" preserveAspectRatio="none" role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="max" [attr.aria-valuenow]="value">
     <circle class="progress-circular__innercircle" cx="50" cy="50" r="46" />
     <circle #circle class="progress-circular__circle" cx="50" cy="50" r="46" />
-    <text #text class="progress-circular__text" id="myTimer" text-anchor="middle" x="50" y="60">
+    <text #text class="progress-circular__text" [class.progress-circular__text--hidden]="!textVisibility" id="myTimer" text-anchor="middle" x="50" y="60">
         {{valueInPercent}}%
     </text>
 </svg>

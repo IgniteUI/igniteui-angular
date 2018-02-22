@@ -3,5 +3,10 @@
         <div class="progress-linear__bar-base"></div>
         <div class="progress-linear__bar-progress{{type ? '--' + type : ''}}" [style.width.%]="valueInPercent"></div>
     </div>
-    <span class="progress-linear__value">{{valueInPercent}}%</span>
+    <span 
+        class="progress-linear__value{{textAlign ? '--' + textAlign : ''}}"
+        [class.progress-linear__value--top]="textTop"
+        [class.progress-linear__value--hidden]="!textVisibility">
+            {{text ? text : valueInPercent + '%'}}
+    </span>
 </div>
