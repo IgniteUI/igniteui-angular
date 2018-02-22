@@ -281,7 +281,7 @@ $components: register-component($components, #{$component-name});
     }
 
     %cal-body-display {
-        flex: 1;
+        flex: 1 0 auto;
         padding-top: $cal-picker-padding;
         padding-bottom: $cal-picker-padding;
         overflow: hidden;
