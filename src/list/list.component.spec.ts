@@ -7,7 +7,7 @@ import { IgxListComponent, IgxListModule } from "./list.component";
 
 declare var Simulator: any;
 
-fdescribe("List", () => {
+describe("List", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ListTestComponent, ListWithPanningAllowedComponent,
