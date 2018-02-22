@@ -18,14 +18,13 @@ export class RemoteService {
     public remoteData: Observable<any[]>;
     private url: string = "http://services.odata.org/V4/Northwind/Northwind.svc/Products";
     private _remoteData: BehaviorSubject<any[]>;
-    public virtForDirective: IgxForOfDirective<any>;
 
     constructor(private http: Http) {
         this._remoteData = new BehaviorSubject([]);
         this.remoteData = this._remoteData.asObservable();
     }
 
-    public getData(data?: IForOfState, cb?: () => void): any {
+    public getData(data?: IForOfState, cb?: (any) => void): any {
         var dataState = data;
         return this.http
             .get(this.buildUrl(dataState))
@@ -34,11 +33,9 @@ export class RemoteService {
                 return response;
             })
             .subscribe((data) => {
-                //dataState.totalCount = data["@odata.count"];
-                this.virtForDirective.totalItemCount = data["@odata.count"];
                 this._remoteData.next(data.value);
                 if (cb) {
-                    cb();
+                    cb(data);
                 }
             });
     }
@@ -49,9 +46,8 @@ export class RemoteService {
             const skip = dataState.startIndex;
                 
                 requiredChunkSize =  dataState.chunkSize === 0 ?
-                    // calculate the chunk size initially
-                    parseInt(this.virtForDirective.igxForContainerSize) / parseInt(this.virtForDirective.igxForItemSize) :
-                    dataState.chunkSize;
+                    // Set initial chunk size, the best value is igxForContainerSize divided on igxForItemSize
+                    10 : dataState.chunkSize;
             const top = requiredChunkSize;
             qS += `$skip=${skip}&$top=${top}&$count=true`;
         }
@@ -174,9 +170,10 @@ export class VirtualForSampleComponent {
     this.data = data;
 }
 
-public ngAfterViewInit() {   
-    this.remoteService.virtForDirective = this.virtDirRemote;
-    this.remoteService.getData(this.virtDirRemote.state);
+public ngAfterViewInit() {
+    this.remoteService.getData(this.virtDirRemote.state, (data) => {
+        this.virtDirRemote.totalItemCount = data["@odata.count"];
+    });
 }
 chunkLoading(evt) {
     if(this.prevRequest){
@@ -184,7 +181,7 @@ chunkLoading(evt) {
      }
      this.prevRequest = this.remoteService.getData(evt, ()=> {
         this.virtDirRemote.cdr.detectChanges();
-    });    
+    });
 }
 scrNextRow(){
     this.virtDirVertical.scrollNext();
