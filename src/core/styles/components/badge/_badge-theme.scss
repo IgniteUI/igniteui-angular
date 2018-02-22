@@ -82,10 +82,12 @@ $components: register-component($components, #{$component-name});
         box-shadow: $badge-shadow;
         overflow: hidden;
 
-        i {
-            color: map-get($this, 'icon-color');
+        igx-icon {
+            width: $badge-icon-font-size;
+            height: $badge-icon-font-size;
             font-size: $badge-icon-font-size;
             font-weight: $badge-font-weight;
+            color: map-get($this, 'icon-color');
         }
     }
 
