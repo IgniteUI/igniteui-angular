@@ -145,8 +145,6 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
 
     @Output() public onProgressChanged = new EventEmitter();
 
-    private _textVisability;
-
     constructor(private elementRef: ElementRef) {
         super();
     }
