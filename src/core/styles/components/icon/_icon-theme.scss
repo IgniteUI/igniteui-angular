@@ -23,12 +23,15 @@ $components: register-component($components, #{$component-name});
     // @debug $this;
 
     $igx-icon-font-size: rem(24px, 16px);
+    $igx-icon-height: 24px;
 
     %igx-icon-display {
-        display: flex;
-        color: map-get($this, 'color');
         position: relative;
+        display: inline-flex;
+        color: map-get($this, 'color');
+        height: $igx-icon-height;
         font-size: $igx-icon-font-size;
+        align-items: center;
         justify-content: center;
         line-height: 1;
         text-transform: none;
