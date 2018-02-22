@@ -139,10 +139,6 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
         this.onProgressChanged.emit(changedValues);
     }
 
-    public get calcTransformValue() {
-        return this.valueInPercent - this.max;
-    }
-
     @Output() public onProgressChanged = new EventEmitter();
 
     constructor(private elementRef: ElementRef) {
