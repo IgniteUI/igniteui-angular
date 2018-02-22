@@ -13,10 +13,10 @@ import {
     ViewChild
 } from "@angular/core";
 
-export enum TextPosition {
-    RIGHT = "right",
+export enum IgxTextAlign {
+    START = "start",
     CENTER = "center",
-    LEFT = "left"
+    END = "end"
 }
 
 export abstract class BaseProgress {
@@ -80,10 +80,13 @@ export abstract class BaseProgress {
 export class IgxLinearProgressBarComponent extends BaseProgress {
 
     @Input()
-    public textPosition: TextPosition = TextPosition.LEFT;
+    public textAlign: IgxTextAlign = IgxTextAlign.START;
 
     @Input()
-    public textVisability = true;
+    public textVisibility = true;
+
+    @Input()
+    public textTop = false;
 
     @Input()
     public text: string;
@@ -163,7 +166,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     public onProgressChanged = new EventEmitter();
 
     @Input()
-    public textVisability = true;
+    public textVisibility = true;
 
     @Input()
     set animate(animate: boolean) {
