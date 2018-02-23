@@ -78,6 +78,9 @@ All notable changes for each version of this project will be documented in this 
     </igx-tab-bar>
     ```
 
+- `igx-scroll` component deleted
+    - `igx-scroll` component is not available anymore due newly implemented `igxForOf` directive.
+
 - [`igx-list` changes](https://github.com/IgniteUI/igniteui-angular/issues/528)
     - `igxEmptyList` directive added
         The list no longer has `emptyListImage`, `emptyListMessage`, `emptyListButtonText`, `emptyListButtonClick` and `hasNoItemsTemplate` members.
@@ -139,7 +142,6 @@ All notable changes for each version of this project will be documented in this 
     - `IgxCircularProgressBar` renamed to `IgxCircularProgressBarComponent`
     - `IgxLinearProgressBar ` renamed to `IgxLinearProgressBarComponent`
     - `IgxRadio` renamed to `IgxRadioComponent`
-    - `IgxScroll` renamed to `IgxScrollComponent`
     - `IgxSlider` renamed to `IgxSliderComponent`
     - `IgxSnackbar` renamed to `IgxSnackbarComponent`
     - `IgxSwitch ` renamed to `IgxSwitchComponent`
