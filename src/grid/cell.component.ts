@@ -190,7 +190,7 @@ export class IgxGridCellComponent {
         this.grid.onSelection.emit(this);
         this.syncRows();
 
-        //M.K.Force check when isFocused/isSelected prop values in order to ensure HostBinding is updated accordingly.
+        // M.K.Force check when isFocused/isSelected prop values in order to ensure HostBinding is updated accordingly.
         this.grid.cdr.detectChanges();
     }
 
@@ -200,7 +200,7 @@ export class IgxGridCellComponent {
         this.isSelected = false;
         this.row.focused = false;
 
-        //M.K.Force check when isFocused/isSelected prop values in order to ensure HostBinding is updated accordingly.
+        // M.K.Force check when isFocused/isSelected prop values in order to ensure HostBinding is updated accordingly.
         this.grid.cdr.detectChanges();
     }
 
