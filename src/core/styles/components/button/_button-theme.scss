@@ -290,20 +290,9 @@ $components: register-component($components, #{$component-name});
         transition: $button-transition;
         user-select: none;
         -webkit-tap-highlight-color: transparent;
-        // hack to allow circular overflow in chrome ...
-        filter: drop-shadow(0 0 0 $white);
-
-        // reset for safari's inability to handle flex in buttons
-        @at-root {
-            button#{$block} {
-                display: initial;
-            }
-
-            button#{$block} * {
-                display: flex;
-                justify-content: center;
-            }
-        }
+        overflow: hidden;
+        // hack to allow circular overflow in safari...
+        filter: drop-shadow(0 0 0 #fff);
     }
 
     %igx-button--fab {
@@ -346,21 +335,11 @@ $components: register-component($components, #{$component-name});
         }
     }
 
-    %igx-button--navbar {
-        display: block !important;
-        width: $button-navbar-width;
-        height: $button-navbar-height;
-        font-size: $button-icon-font-size;
-        color: inherit;
-        padding: $button-navbar-padding;
-    }
-
     %igx-button--disabled {
-        color: map-get($this, 'disabled-color') !important;
-        background: map-get($this, 'disabled-background') !important;
+        color: map-get($this, 'disabled-color');
+        background: map-get($this, 'disabled-background');
         pointer-events: none;
         box-shadow: $button-disabled-shadow;
-        opacity: .8;
     }
 }
 

@@ -35,6 +35,13 @@ export class IgxGridCellComponent {
     @Input()
     public value: any;
 
+    @Input()
+    set isDirty(value: boolean) {
+        if (value) {
+           this.clearState();
+        }
+        value = false;
+    }
     get formatter(): (value: any) => any {
         return this.column.formatter;
     }
@@ -182,6 +189,9 @@ export class IgxGridCellComponent {
         }
         this.grid.onSelection.emit(this);
         this.syncRows();
+
+        // M.K.Force check when isFocused/isSelected prop values in order to ensure HostBinding is updated accordingly.
+        this.grid.cdr.detectChanges();
     }
 
     @HostListener("blur", ["$event"])
@@ -189,6 +199,9 @@ export class IgxGridCellComponent {
         this.isFocused = false;
         this.isSelected = false;
         this.row.focused = false;
+
+        // M.K.Force check when isFocused/isSelected prop values in order to ensure HostBinding is updated accordingly.
+        this.grid.cdr.detectChanges();
     }
 
     @HostListener("keydown.arrowleft", ["$event"])
@@ -327,5 +340,11 @@ export class IgxGridCellComponent {
             const elem = row.virtDirRow.dc.instance._viewContainer.element.nativeElement;
             elem.scrollLeft = scrLeft;
         });
+    }
+
+    private clearState() {
+        this._inEditMode = false;
+        this.cdr.detectChanges();
+        this.cdr.markForCheck();
     }
 }

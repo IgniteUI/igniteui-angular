@@ -101,7 +101,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 const input = this.igxForOf[i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
                     this._template,
-                    { $implicit: input, index: this.igxForOf.indexOf(input) }
+                    { $implicit: input, index: this.igxForOf.indexOf(input), dirty: false }
                 );
                 this._embeddedViews.push(embeddedView);
             }
@@ -231,6 +231,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const cntx = (embView as EmbeddedViewRef<any>).context;
             cntx.$implicit = input;
             cntx.index = this.igxForOf.indexOf(input);
+            cntx.dirty = true;
+            embView.detectChanges();
+            cntx.dirty = false;
         }
         this.dc.changeDetectorRef.detectChanges();
         this.onChunkLoad.emit(this.state);
@@ -261,6 +264,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const cntx = (embView as EmbeddedViewRef<any>).context;
             cntx.$implicit = input;
             cntx.index = this.igxForOf.indexOf(input);
+            cntx.dirty = true;
+            embView.detectChanges();
+            cntx.dirty = false;
         }
         this.dc.changeDetectorRef.detectChanges();
         this.onChunkLoad.emit();
@@ -386,6 +392,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     const cntx = (embView as EmbeddedViewRef<any>).context;
                     cntx.$implicit = input;
                     cntx.index = this.igxForOf.indexOf(input);
+                    cntx.dirty = true;
+                    embView.detectChanges();
+                    cntx.dirty =  false;
             }
             this.onChunkLoad.emit();
             this.dc.changeDetectorRef.detectChanges();
@@ -503,7 +512,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 const input = this.igxForOf[this.state.startIndex + this.state.chunkSize + i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
                     this._template,
-                    { $implicit: input, index: this.igxForOf.indexOf(input) }
+                    { $implicit: input, index: this.igxForOf.indexOf(input), dirty: false }
                 );
                 this._embeddedViews.push(embeddedView);
             }
