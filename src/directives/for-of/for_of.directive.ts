@@ -101,15 +101,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 const input = this.igxForOf[i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
                     this._template,
-                    { $implicit: input, index: this.igxForOf.indexOf(input) }
+                    { $implicit: input, index: this.igxForOf.indexOf(input), dirty: false }
                 );
                 this._embeddedViews.push(embeddedView);
             }
         }
 
         if (this.igxForScrollOrientation === "vertical") {
-            this.state.chunkSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
-                    parseInt(this.igxForItemSize, 10));
             const factory: ComponentFactory<VirtualHelperComponent> = this.resolver.resolveComponentFactory(VirtualHelperComponent);
             this.vh = this._viewContainer.createComponent(factory, 1);
             this.vh.instance.height = this.igxForOf.length * parseInt(this.igxForItemSize, 10);
@@ -233,6 +231,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const cntx = (embView as EmbeddedViewRef<any>).context;
             cntx.$implicit = input;
             cntx.index = this.igxForOf.indexOf(input);
+            cntx.dirty = true;
+            embView.detectChanges();
+            cntx.dirty = false;
         }
         this.dc.changeDetectorRef.detectChanges();
         this.onChunkLoad.emit(this.state);
@@ -263,6 +264,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const cntx = (embView as EmbeddedViewRef<any>).context;
             cntx.$implicit = input;
             cntx.index = this.igxForOf.indexOf(input);
+            cntx.dirty = true;
+            embView.detectChanges();
+            cntx.dirty = false;
         }
         this.dc.changeDetectorRef.detectChanges();
         this.onChunkLoad.emit();
@@ -388,6 +392,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     const cntx = (embView as EmbeddedViewRef<any>).context;
                     cntx.$implicit = input;
                     cntx.index = this.igxForOf.indexOf(input);
+                    cntx.dirty = true;
+                    embView.detectChanges();
+                    cntx.dirty =  false;
             }
             this.onChunkLoad.emit();
             this.dc.changeDetectorRef.detectChanges();
@@ -443,7 +450,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     protected getElement(viewref, nodeName) {
-        const elem = viewref.element.nativeElement.parentElement.getElementsByTagName(nodeName);
+        const elem = viewref.element.nativeElement.parentNode.getElementsByTagName(nodeName);
         return elem.length > 0 ? elem[0] : null;
     }
 
@@ -505,7 +512,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 const input = this.igxForOf[this.state.startIndex + this.state.chunkSize + i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
                     this._template,
-                    { $implicit: input, index: this.igxForOf.indexOf(input) }
+                    { $implicit: input, index: this.igxForOf.indexOf(input), dirty: false }
                 );
                 this._embeddedViews.push(embeddedView);
             }

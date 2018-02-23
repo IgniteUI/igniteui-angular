@@ -35,6 +35,13 @@ export class IgxGridCellComponent {
     @Input()
     public value: any;
 
+    @Input()
+    set isDirty(value: boolean) {
+        if (value) {
+           this.clearState();
+        }
+        value = false;
+    }
     get formatter(): (value: any) => any {
         return this.column.formatter;
     }
@@ -79,6 +86,14 @@ export class IgxGridCellComponent {
 
     get inEditMode(): boolean {
         return this._inEditMode;
+    }
+
+    set inEditMode(value: boolean) {
+        this._inEditMode = value;
+        if (this._inEditMode) {
+            this.grid.cellInEditMode = this;
+        }
+        this.cdr.markForCheck();
     }
 
     @HostBinding("attr.tabindex")
@@ -176,12 +191,14 @@ export class IgxGridCellComponent {
         this.isSelected = true;
         this.row.focused = true;
         if (this.grid.cellInEditMode && this.grid.cellInEditMode !== this) {
-            this.grid.cellInEditMode._inEditMode = false;
-            this.grid.cellInEditMode.cdr.markForCheck();
+            this.grid.cellInEditMode.inEditMode = false;
             this.grid.cellInEditMode = null;
         }
         this.grid.onSelection.emit(this);
         this.syncRows();
+
+        // M.K.Force check when isFocused/isSelected prop values in order to ensure HostBinding is updated accordingly.
+        this.grid.cdr.detectChanges();
     }
 
     @HostListener("blur", ["$event"])
@@ -189,6 +206,9 @@ export class IgxGridCellComponent {
         this.isFocused = false;
         this.isSelected = false;
         this.row.focused = false;
+
+        // M.K.Force check when isFocused/isSelected prop values in order to ensure HostBinding is updated accordingly.
+        this.grid.cdr.detectChanges();
     }
 
     @HostListener("keydown.arrowleft", ["$event"])
@@ -327,5 +347,11 @@ export class IgxGridCellComponent {
             const elem = row.virtDirRow.dc.instance._viewContainer.element.nativeElement;
             elem.scrollLeft = scrLeft;
         });
+    }
+
+    private clearState() {
+        this._inEditMode = false;
+        this.cdr.detectChanges();
+        this.cdr.markForCheck();
     }
 }

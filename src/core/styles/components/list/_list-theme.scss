@@ -63,18 +63,13 @@ $components: register-component($components, #{$component-name});
 
     // @debug $this;
 
-    $list-margin: 8px 16px;
     $list-header-font-size: em(13px);
     $list-header-font-weight: normal;
     $list-header-height: em(48px);
     $list-header-line-height: em(48px);
     $list-item-height: em(48px);
-    $list-item-line-height: em(48px);
     $list-item-font-size: em(16px);
     $list-item-padding: em(8px) em(16px);
-    $list-item-active-shadow: igx-elevation($elevations, 2);
-    $list-item-tl-sl-font-size: em(14px);
-    $list-item-tl-height: em(72px);
     $list-empty-padding: em(16px, 16px);
 
     %igx-list {

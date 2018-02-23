@@ -39,11 +39,11 @@ describe("List", () => {
         expect(list.headers[0] instanceof IgxListItemComponent).toBeTruthy();
     });
 
-    it("should set/get properly layout properties: width, maxLeft", () => {
+    it("should set/get properly layout properties: width, left, maxLeft, maxRight", () => {
         const fixture = TestBed.createComponent(ListTestComponent);
         const list = fixture.componentInstance.list;
         const testWidth = 400;
-        const testLeft = -100;
+        const testLeft = 0;
         let item;
 
         fixture.detectChanges();
@@ -56,7 +56,9 @@ describe("List", () => {
         expect(item instanceof IgxListItemComponent).toBeTruthy();
         expect(item.width).toBe(testWidth);
         expect(item.maxLeft).toBe(-testWidth);
-    });
+        expect(item.maxRight).toBe(testWidth);
+        expect(item.left).toBe(testLeft);
+     });
 
     it("should calculate properly item index", () => {
         const fixture = TestBed.createComponent(ListTestComponent);
@@ -77,135 +79,142 @@ describe("List", () => {
         }
     });
 
-    // it("Should pan right and pan left.", (done) => {
-    //     let fixture;
-    //     let list: IgxListComponent;
-    //     let item: IgxListItemComponent;
-    //     let itemNativeElement;
-    //     let itemHeight;
-    //     let itemWidth;
+    it("should pan right and pan left.", () => {
+        let fixture;
+        let list: IgxListComponent;
+        let timesCalledLeftPan = 0;
+        let timesCalledStateChanged = 0;
+        let timesCalledRightPan = 0;
 
-    //     TestBed.compileComponents().then(() => {
-    //         fixture = TestBed.createComponent(ListWithPanningAllowedComponent);
-    //         list = fixture.componentInstance.list;
+        fixture = TestBed.createComponent(ListWithPanningAllowedComponent);
+        list = fixture.componentInstance.list;
 
-    //         fixture.detectChanges();
-    //         return fixture.whenStable();
-    //     }).then(() => {
+        fixture.detectChanges();
 
-    //         item = list.items[0] as IgxListItemComponent;
-    //         itemNativeElement = item.element;
-    //         itemHeight = itemNativeElement.offsetHeight;
-    //         itemWidth = itemNativeElement.offsetWidth;
+        list.onLeftPan.subscribe(() => {
+            timesCalledLeftPan++;
+        });
 
-    //         spyOn(list.onLeftPan, "emit");
-    //         spyOn(list.onRightPan, "emit");
-    //         spyOn(list.onPanStateChange, "emit");
+        list.onPanStateChange.subscribe(() => {
+            timesCalledStateChanged++;
+        });
 
-    //         return panRight(itemNativeElement, itemHeight, itemWidth, 200);
-    //     }).then(() => {
-    //         expect(item.panState).toBe(IgxListPanState.RIGHT);
+        list.onRightPan.subscribe(() => {
+            timesCalledRightPan++;
+        });
 
-    //         return panLeft(itemNativeElement, itemHeight, itemWidth, 200);
-    //     }).then(() => {
-    //         expect(item.panState).toBe(IgxListPanState.NONE);
+        const itemNativeElements = fixture.debugElement.queryAll(By.css("igx-list-item"));
+        const listItems = list.items;
 
-    //         return panLeft(itemNativeElement, itemHeight, itemWidth, 200);
-    //     }).then(() => {
-    //         expect(item.panState).toBe(IgxListPanState.LEFT);
+        /* Pan item right */
+        panItem(itemNativeElements[0], 0.6);
 
-    //         return panRight(itemNativeElement, itemHeight, itemWidth, 200);
-    //     }).then(() => {
-    //         expect(item.panState).toBe(IgxListPanState.NONE);
-    //         expect(list.onLeftPan.emit).toHaveBeenCalledTimes(1);
-    //         expect(list.onRightPan.emit).toHaveBeenCalledTimes(1);
-    //         expect(list.onPanStateChange.emit).toHaveBeenCalledTimes(4);
+        fixture.detectChanges();
 
-    //         done();
-    //     });
-    // }, 5000);
+        expect(listItems[0].panState).toBe(IgxListPanState.RIGHT);
 
-    // it("Should pan right only.", (done) => {
-    //     let fixture;
-    //     let list: IgxListComponent;
-    //     let item: IgxListItemComponent;
-    //     let itemNativeElement;
-    //     let itemHeight;
-    //     let itemWidth;
+        /* Pan item left */
+        panItem(itemNativeElements[1], -0.6);
 
-    //     TestBed.compileComponents().then(() => {
-    //         fixture = TestBed.createComponent(ListWithRightPanningAllowedComponent);
-    //         list = fixture.componentInstance.list;
+        fixture.detectChanges();
 
-    //         fixture.detectChanges();
-    //         return fixture.whenStable();
-    //     }).then(() => {
-    //         item = list.items[0] as IgxListItemComponent;
-    //         itemNativeElement = item.element;
-    //         itemHeight = itemNativeElement.offsetHeight;
-    //         itemWidth = itemNativeElement.offsetWidth;
+        expect(listItems[1].panState).toBe(IgxListPanState.LEFT);
+        expect(timesCalledLeftPan).toBe(1);
+        expect(timesCalledStateChanged).toBe(2);
+        expect(timesCalledRightPan).toBe(1);
+    });
 
-    //         spyOn(list.onRightPan, "emit");
-    //         spyOn(list.onPanStateChange, "emit");
+    it("should pan right only.", () => {
+        let fixture;
+        let list: IgxListComponent;
+        let timesCalledLeftPan = 0;
+        let timesCalledStateChanged = 0;
+        let timesCalledRightPan = 0;
 
-    //         return panRight(itemNativeElement, itemHeight, itemWidth, 200);
-    //     }).then(() => {
-    //         expect(item.panState).toBe(IgxListPanState.RIGHT);
+        fixture = TestBed.createComponent(ListWithRightPanningAllowedComponent);
+        list = fixture.componentInstance.list;
 
-    //         return panLeft(itemNativeElement, itemHeight, itemWidth, 200);
-    //     }).then (() => {
-    //         expect(item.panState).toBe(IgxListPanState.NONE);
+        fixture.detectChanges();
 
-    //         return panLeft(itemNativeElement, itemHeight, itemWidth, 200);
-    //     }).then (() => {
-    //         expect(item.panState).toBe(IgxListPanState.NONE);
-    //         expect(list.onRightPan.emit).toHaveBeenCalledTimes(1);
-    //         expect(list.onPanStateChange.emit).toHaveBeenCalledTimes(2);
+        list = fixture.componentInstance.list;
 
-    //         done();
-    //     });
-    // }, 5000);
+        list.onLeftPan.subscribe(() => {
+            timesCalledLeftPan++;
+        });
 
-    // it("Should pan left only.", (done) => {
-    //     let fixture;
-    //     let list: IgxListComponent;
-    //     let item: IgxListItemComponent;
-    //     let itemNativeElement;
-    //     let itemHeight;
-    //     let itemWidth;
+        list.onPanStateChange.subscribe(() => {
+            timesCalledStateChanged++;
+        });
 
-    //     TestBed.compileComponents().then(() => {
-    //         fixture = TestBed.createComponent(ListWithLeftPanningAllowedComponent);
-    //         list = fixture.componentInstance.list;
+        list.onRightPan.subscribe(() => {
+            timesCalledRightPan++;
+        });
 
-    //         fixture.detectChanges();
-    //         return fixture.whenStable();
-    //     }).then(() => {
-    //         item = list.items[0] as IgxListItemComponent;
-    //         itemNativeElement = item.element;
-    //         itemHeight = itemNativeElement.offsetHeight;
-    //         itemWidth = itemNativeElement.offsetWidth;
+        const itemNativeElements = fixture.debugElement.queryAll(By.css("igx-list-item"));
+        const listItems = list.items;
 
-    //         spyOn(list.onLeftPan, "emit");
-    //         spyOn(list.onPanStateChange, "emit");
+        /* Pan item right */
+        panItem(itemNativeElements[0], 0.6);
 
-    //         return panLeft(itemNativeElement, itemHeight, itemWidth, 200);
-    //     }).then(() => {
-    //         expect(item.panState).toBe(IgxListPanState.LEFT);
+        fixture.detectChanges();
 
-    //         return panRight(itemNativeElement, itemHeight, itemWidth, 200);
-    //     }).then (() => {
-    //         expect(item.panState).toBe(IgxListPanState.NONE);
+        expect(listItems[0].panState).toBe(IgxListPanState.RIGHT);
 
-    //         return panRight(itemNativeElement, itemHeight, itemWidth, 200);
-    //     }).then (() => {
-    //         expect(item.panState).toBe(IgxListPanState.NONE);
-    //         expect(list.onLeftPan.emit).toHaveBeenCalledTimes(1);
-    //         expect(list.onPanStateChange.emit).toHaveBeenCalledTimes(2);
+        /* Pan item left */
+        panItem(itemNativeElements[1], -0.6);
 
-    //         done();
-    //     });
-    // }, 5000);
+        fixture.detectChanges();
+
+        expect(listItems[1].panState).toBe(IgxListPanState.NONE);
+        expect(timesCalledLeftPan).toBe(0);
+        expect(timesCalledStateChanged).toBe(1);
+        expect(timesCalledRightPan).toBe(1);
+    });
+
+    it("should pan left only.", () => {
+        let fixture;
+        let list: IgxListComponent;
+        let timesCalledLeftPan = 0;
+        let timesCalledStateChanged = 0;
+        let timesCalledRightPan = 0;
+
+        fixture = TestBed.createComponent(ListWithLeftPanningAllowedComponent);
+        fixture.detectChanges();
+
+        list = fixture.componentInstance.list;
+
+        list.onLeftPan.subscribe(() => {
+            timesCalledLeftPan++;
+        });
+
+        list.onPanStateChange.subscribe(() => {
+            timesCalledStateChanged++;
+        });
+
+        list.onRightPan.subscribe(() => {
+            timesCalledRightPan++;
+        });
+
+        const itemNativeElements = fixture.debugElement.queryAll(By.css("igx-list-item"));
+        const listItems = list.items;
+
+        /* Pan item left */
+        panItem(itemNativeElements[0], -0.6);
+
+        fixture.detectChanges();
+
+        expect(listItems[0].panState).toBe(IgxListPanState.LEFT);
+
+        /* Pan item right */
+        panItem(itemNativeElements[1], 0.6);
+
+        fixture.detectChanges();
+
+        expect(listItems[1].panState).toBe(IgxListPanState.NONE);
+        expect(timesCalledLeftPan).toBe(1);
+        expect(timesCalledStateChanged).toBe(1);
+        expect(timesCalledRightPan).toBe(0);
+    });
 
     it("Should have default no items template.", () => {
         const fixture = TestBed.createComponent(ListWithNoItemsComponent);
@@ -287,14 +296,87 @@ describe("List", () => {
 
         const headerClasses = fixture.debugElement.queryAll(By.css(".igx-list__header"));
         expect(headerClasses.length).toBe(2);
+    });
+
+    it("should set items' isHeader property properly.", () => {
+        const fixture = TestBed.createComponent(TwoHeadersListComponent);
+        const list = fixture.componentInstance.list;
+
+        fixture.detectChanges();
 
         const childrenArray = list.children.toArray();
+        expect(childrenArray[0].isHeader).toBe(true);
+        expect(childrenArray[1].isHeader).toBe(false);
+        expect(childrenArray[2].isHeader).toBe(true);
+        expect(childrenArray[3].isHeader).toBeFalsy();
+        expect(childrenArray[4].isHeader).toBeFalsy();
+    });
 
+    it("should set items' role property properly.", () => {
+        const fixture = TestBed.createComponent(TwoHeadersListComponent);
+        const list = fixture.componentInstance.list;
+
+        fixture.detectChanges();
+
+        const childrenArray = list.children.toArray();
         expect(childrenArray[0].role).toBe("separator");
         expect(childrenArray[1].role).toBe("listitem");
         expect(childrenArray[2].role).toBe("separator");
         expect(childrenArray[3].role).toBe("listitem");
+        expect(childrenArray[4].role).toBe("listitem");
     });
+
+    it("should hide items when hidden is true.", () => {
+        const fixture = TestBed.createComponent(TwoHeadersListComponent);
+        const list = fixture.componentInstance.list;
+
+        fixture.detectChanges();
+
+        const hiddenItems = list.items.filter((item) => item.hidden === true);
+        expect(hiddenItems.length).toBe(1);
+
+        const hiddenTags = list.children.filter((item) => item.element.style.display === "none");
+        expect(hiddenTags.length).toBe(1);
+    });
+
+    it("should not pan when panning is not allowed.", (done) => {
+        let fixture;
+        let list: IgxListComponent;
+        let item: IgxListItemComponent;
+        let itemNativeElement;
+        let itemHeight;
+        let itemWidth;
+
+        TestBed.compileComponents().then(() => {
+            fixture = TestBed.createComponent(TwoHeadersListComponent);
+            list = fixture.componentInstance.list;
+
+            fixture.detectChanges();
+            return fixture.whenStable();
+        }).then(() => {
+
+            item = list.items[0] as IgxListItemComponent;
+            itemNativeElement = item.element;
+            itemHeight = itemNativeElement.offsetHeight;
+            itemWidth = itemNativeElement.offsetWidth;
+
+            spyOn(list.onLeftPan, "emit");
+            spyOn(list.onRightPan, "emit");
+            spyOn(list.onPanStateChange, "emit");
+
+            return panRight(itemNativeElement, itemHeight, itemWidth, 200);
+        }).then(() => {
+            expect(item.panState).toBe(IgxListPanState.NONE);
+
+            return panLeft(itemNativeElement, itemHeight, itemWidth, 200);
+        }).then(() => {
+            expect(item.panState).toBe(IgxListPanState.NONE);
+            expect(list.onLeftPan.emit).toHaveBeenCalledTimes(0);
+            expect(list.onRightPan.emit).toHaveBeenCalledTimes(0);
+            expect(list.onPanStateChange.emit).toHaveBeenCalledTimes(0);
+            done();
+        });
+    }, 5000);
 
     function panRight(item, itemHeight, itemWidth, duration) {
         const panOptions = {
@@ -324,6 +406,19 @@ describe("List", () => {
                 resolve();
             });
         });
+    }
+
+    /* factorX - the coefficient used to calculate deltaX.
+    Pan left by providing negative factorX;
+    Pan right - positive factorX.  */
+    function panItem(itemNativeElement, factorX) {
+        const itemWidth = itemNativeElement.nativeElement.offsetWidth;
+
+        itemNativeElement.triggerEventHandler("panstart", null);
+        itemNativeElement.triggerEventHandler("panmove", {
+            deltaX : factorX * itemWidth, duration : 200
+        });
+        itemNativeElement.triggerEventHandler("panend", null);
     }
 
     function clickItem(currentItem: IgxListItemComponent) {
@@ -370,7 +465,7 @@ class ListWithPanningAllowedComponent {
 
 @Component({
     template: `<div #wrapper>
-                <igx-list [allowRightPanning]="true" [allowLeftPanning]="false">
+                <igx-list [allowLeftPanning]="false" [allowRightPanning]="true">
                     <igx-list-item>Item 1</igx-list-item>
                     <igx-list-item>Item 2</igx-list-item>
                     <igx-list-item>Item 3</igx-list-item>
@@ -433,11 +528,11 @@ class ListWithCustomNoItemsTemplateComponent {
 
 @Component({
     template: `<div #wrapper>
-                    <igx-list>
+                    <igx-list [allowRightPanning]="false" [allowLeftPanning]="false">
                         <igx-list-item [isHeader]="true">Header 1</igx-list-item>
-                        <igx-list-item [isHeader]="false">Item 1</igx-list-item>
+                        <igx-list-item [isHeader]="false" [hidden]="false">Item 1</igx-list-item>
                         <igx-list-item [isHeader]="true">Header 2</igx-list-item>
-                        <igx-list-item>Item 2</igx-list-item>
+                        <igx-list-item [hidden]="true">Item 2</igx-list-item>
                         <igx-list-item>Item 3</igx-list-item>
                     </igx-list>
                 </div>`
