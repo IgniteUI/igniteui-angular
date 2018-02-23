@@ -59,7 +59,7 @@ All notable changes for each version of this project will be documented in this 
 - `igxInput` changes
     - CSS class `ig-form-group` to `igx-form-group`
 - `igxBadge` changes
-    - From now on, the Badge position is set by css class, which specifies an absolute position as well as  top/bottom/left/right properties. The Badge position input should not be used.
+    - From now on, the Badge position is set by css class, which specifies an absolute position as well as top/bottom/left/right properties. The Badge position input should not be used.
 - `igx-avatar` changes
     - [Initials type avatar is using SVG element from now on](https://github.com/IgniteUI/igniteui-angular/issues/136)
 - `igx-calendar` changes
