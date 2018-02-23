@@ -14,6 +14,7 @@ import { IgxColumnComponent } from "./column.component";
 import { IgxGridFilterComponent } from "./grid-filtering.component";
 import { IgxGridHeaderComponent } from "./grid-header.component";
 import {
+  IgxCellEditorTemplateDirective,
   IgxCellFooterTemplateDirective,
   IgxCellHeaderTemplateDirective,
   IgxCellTemplateDirective
@@ -31,6 +32,7 @@ import { IgxGridRowComponent } from "./row.component";
     IgxGridHeaderComponent,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
+    IgxCellEditorTemplateDirective,
     IgxCellTemplateDirective,
     IgxGridFilterComponent,
     IgxGridSortingPipe,
@@ -50,6 +52,7 @@ import { IgxGridRowComponent } from "./row.component";
     IgxGridFilterComponent,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
+    IgxCellEditorTemplateDirective,
     IgxCellTemplateDirective
   ],
   imports: [
