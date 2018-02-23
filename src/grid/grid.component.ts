@@ -240,7 +240,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
                         footerHeight;
                 }
 
-                this.markForCheck();
+                this.zone.run(() => this.cdr.detectChanges());
             };
     }
 
