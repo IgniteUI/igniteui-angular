@@ -226,8 +226,8 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy {
 
         let x = dropdownRect.left;
         let x1 = gridRect.left + gridRect.width;
-        x += window.scrollX;
-        x1 += window.scrollX;
+        x += window.pageXOffset;
+        x1 += window.pageXOffset;
         if (Math.abs(x - x1) < this.MINIMUM_VIABLE_SIZE) {
             this.dialogPosition = "igx-filtering__options--to-left";
         }
