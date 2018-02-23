@@ -108,8 +108,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
 
         if (this.igxForScrollOrientation === "vertical") {
-            this.state.chunkSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
-                    parseInt(this.igxForItemSize, 10));
             const factory: ComponentFactory<VirtualHelperComponent> = this.resolver.resolveComponentFactory(VirtualHelperComponent);
             this.vh = this._viewContainer.createComponent(factory, 1);
             this.vh.instance.height = this.igxForOf.length * parseInt(this.igxForItemSize, 10);
@@ -266,6 +264,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const cntx = (embView as EmbeddedViewRef<any>).context;
             cntx.$implicit = input;
             cntx.index = this.igxForOf.indexOf(input);
+            cntx.dirty = true;
+            embView.detectChanges();
+            cntx.dirty = false;
         }
         this.dc.changeDetectorRef.detectChanges();
         this.onChunkLoad.emit();
