@@ -266,6 +266,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const cntx = (embView as EmbeddedViewRef<any>).context;
             cntx.$implicit = input;
             cntx.index = this.igxForOf.indexOf(input);
+            cntx.dirty = true;
+            embView.detectChanges();
+            cntx.dirty = false;
         }
         this.dc.changeDetectorRef.detectChanges();
         this.onChunkLoad.emit();
