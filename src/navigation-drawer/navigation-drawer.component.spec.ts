@@ -56,6 +56,20 @@ describe("Navigation Drawer", () => {
             });
         }));
 
+        it("should initialize with pinThreshold disabled", async(() => {
+            const template = `<igx-nav-drawer [pinThreshold]="0"></igx-nav-drawer>`;
+            TestBed.overrideComponent(TestComponent, { set: { template } });
+            TestBed.compileComponents().then(() => {
+                const fixture = TestBed.createComponent(TestComponent);
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.viewChild).toBeDefined();
+                expect(fixture.componentInstance.viewChild instanceof
+                    Infragistics.IgxNavigationDrawerComponent).toBeTruthy();
+                expect(() => fixture.destroy()).not.toThrow();
+            });
+        }));
+
         it("should properly initialize all elements and properties", async(() => {
             TestBed.compileComponents().then(() => {
                 const fixture = TestBed.createComponent(TestComponentDIComponent);

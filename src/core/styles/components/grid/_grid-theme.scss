@@ -95,8 +95,6 @@ $components: register-component($components, #{$component-name});
     $grid-head-fs: rem(12px);
     $grid-head-fw: 600;
     $grid-head-icon-size: rem(16px);
-    $grid-head-icon-lh: rem(16px);
-    $grid-head-icon-padding: rem(8px);
 
     // Cell
     $grid-cell-padding: rem(16px) rem(24px);
@@ -173,8 +171,17 @@ $components: register-component($components, #{$component-name});
         }
     }
 
+    %grid-thead {
+        grid-row: 1;
+    }
+
+    %grid-tfoot {
+        grid-row: 3;
+    }
+
     %grid-tbody {
         position: relative;
+        grid-row: 2;
         background: map-get($this, 'content-background');
         color: map-get($this, 'content-text-color');
         overflow: hidden;

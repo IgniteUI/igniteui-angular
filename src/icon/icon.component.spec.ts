@@ -54,12 +54,12 @@ describe("Icon", () => {
     it("Initializes inactive icon", () => {
         const fixture = TestBed.createComponent(InitInactiveIconComponent);
         const icon = fixture.componentInstance.icon;
-        const iconContainers = icon.el.nativeElement.getElementsByClassName("igx-icon");
+        const iconContainer = fixture.debugElement.query(By.css("igx-icon")).nativeElement;
 
         fixture.detectChanges();
 
-        expect(icon.getActive).toBeFalsy();
-        expect(iconContainers[0].classList.contains("igx-icon--inactive")).toBeTruthy();
+        expect(icon.getActive).toEqual(false);
+        expect(iconContainer.classList).toMatch("igx-icon--inactive");
     });
 });
 
@@ -85,7 +85,7 @@ class InitCustomColorIconComponent {
 }
 
 @Component({
-    template: `<igx-icon fontSet="material" name="home" isActive="false"></igx-icon>`
+    template: `<igx-icon fontSet="material" name="home" [isActive]="false"></igx-icon>`
 })
 class InitInactiveIconComponent {
     @ViewChild(IgxIconComponent) public icon: IgxIconComponent;

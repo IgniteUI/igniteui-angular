@@ -36,6 +36,13 @@ export class IgxGridRowComponent implements OnInit {
     @Input()
     public gridID: string;
 
+    @Input()
+    set isDirty(value: boolean) {
+        if (value) {
+           this.clearState();
+        }
+    }
+
     @ViewChild("igxDirRef", { read: IgxForOfDirective })
     public virtDirRow: IgxForOfDirective<any>;
 
@@ -102,5 +109,11 @@ export class IgxGridRowComponent implements OnInit {
         this.isFocused = false;
 
         // TODO: Emit de-selection event
+    }
+
+    private clearState() {
+        if (this.cells) {
+            this.cells.map((cell) => cell.isDirty = true);
+        }
     }
 }

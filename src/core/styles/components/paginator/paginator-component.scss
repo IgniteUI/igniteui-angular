@@ -1,0 +1,10 @@
+%paginator-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: currentColor;
+}
+
+@include b(igx-paginator) {
+    @extend %paginator-display !optional;
+}

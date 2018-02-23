@@ -62,8 +62,6 @@ $components: register-component($components, #{$component-name});
 
     // Defaults for all input controls
     // TODO: Rename to match component name
-    $input-font-size: em(16px) ;
-    $input-font-weight: 400 ;
     $input-transition: all .2s ease-in ;
     $switch-radius: 100px ;
     $switch-width: 35px ;
@@ -72,7 +70,6 @@ $components: register-component($components, #{$component-name});
     $switch-label-height: $switch-label-width ;
     $switch-shadow: igx-elevation($elevations, 1);
     $switch-disabled-shadow: igx-elevation($elevations, 1);
-    $switch-margin: 0 16px ;
 
     %igx-switch-lbl-display {
         display: inline-block;
