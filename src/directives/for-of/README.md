@@ -64,25 +64,27 @@ When the contents of the iterator changes, `igxForOf` makes the corresponding ch
 | igxForItemSize         | string          | The px-affixed size of the item along the axis of scrolling                                                                |
 | igxForScrollContainer  | string          | Only the strings `vertical` and `horizontal` are valid and specify the scroll orientation                                  |
 | igxForContainerSize    | string          | The px-affixed size of the container along the axis of scrolling                                                           |
-| igxForScrollContainer  | IgxForOf | Optionally pass the parent `igxForOf` instance to create a virtual template scrolling both horizontally and vertically     |
-| igxForRemote | boolean | Enables remote virtualization. Should be used in combination with the OnChunkPreload event, where the new data can be requested from a remote service. Note that the totalItemCount option of the igxFor directive should be updated with the actual total record count from the service. 
+| igxForScrollContainer  | IgxForOf        | Optionally pass the parent `igxForOf` instance to create a virtual template scrolling both horizontally and vertically     |
+| igxForRemote           | boolean         | Enables remote virtualization. Should be used in combination with the OnChunkPreload event, where the new data can be requested from a remote service. Note that the totalItemCount option of the igxFor directive should be updated with the actual total record count from the service. |
 
 ### Outputs
 
 | Name | Description |
 | :--- | :--- |
-| *Event emitters* | *Notify for a change* |
-| OnChunkLoad  | Used on chunk loaded. Emits after a new chunk has been loaded.  |
-| OnChunkPreload  | Used on chunk loading to emit the current state information - startIndex, chunkSize. Can be used for implementing remote load on demand for the igxFor data. |
+| *Event emitters* | *Notify for a change*                                           |
+| OnChunkLoad      | Used on chunk loaded. Emits after a new chunk has been loaded.  |
+| OnChunkPreload   | Used on chunk loading to emit the current state information - startIndex, chunkSize. Can be used for implementing remote load on demand for the igxFor data. |
 
 ### Accessors
 
 List of public accessors that the developers may use to get information from the `igxForOf`:
-| Name           | Type        | Description                                                                 |
-| :------------- |:----------- | :-------------------------------------------------------------------------- |
-| id             | string      | Unique identifier of the directive                                          |
-| state          | IgxForState | The current state of the directive it contains `startIndex` and `chunkSize` |
-| totalItemCount | number      | The total count of the virtual data items, when using remote service        |
+| Name             | Type        | Description                                                                  |
+| :--------------- |:----------- | :--------------------------------------------------------------------------- |
+| id               | string      | Unique identifier of the directive                                           |
+| state            | IgxForState | The current state of the directive. It contains `startIndex` and `chunkSize` |
+| state.startIndex | number      | The index of the item at which the current visible chunk begins              |
+| state.chunkSize  | number      | The number of items the current visible chunk holds                          |
+| totalItemCount   | number      | The total count of the virtual data items, when using remote service         |
 
 ### Local Variables
 
