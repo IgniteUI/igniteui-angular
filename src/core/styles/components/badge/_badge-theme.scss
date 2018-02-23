@@ -1,15 +1,14 @@
 $component-name: 'igx-badge';
-
 $components: register-component($components, #{$component-name});
 
 @function igx-badge-theme(
     $icon-color: null,
     $text-color: null,
     $border-color: null,
-    $border-radius: null,
     $background-color: null,
-    $disable-shadow: true,
-    $disable-border: true
+
+    $disable-shadow: 'true',
+    $disable-border: 'true'
 ) {
 
     @if not($icon-color) and $background-color {
@@ -24,10 +23,10 @@ $components: register-component($components, #{$component-name});
         icon-color: $icon-color,
         text-color: $text-color,
         border-color: $border-color,
-        border-radius: $border-radius,
         background-color: $background-color,
+
         disable-shadow: $disable-shadow,
-        disable-border: $disable-border
+        disable-border: $disable-border,
     );
 }
 
@@ -36,8 +35,7 @@ $components: register-component($components, #{$component-name});
         $icon-color: $white,
         $text-color: $white,
         $border-color: $white,
-        $background-color: igx-color($palette, 'primary', 500),
-        $border-radius: 4px
+        $background-color: igx-color($palette, 'primary', 500)
     );
 
     $this: extend($default-theme, $theme);
@@ -53,17 +51,18 @@ $components: register-component($components, #{$component-name});
 
     $badge-icon-font-size: rem(12px);
 
-    $badge-value-padding: 4px;
+    $badge-value-padding: rem(4px);
     $badge-shadow: igx-elevation($elevations, 1);
-
-    $border-width: 1px;
     $border-type: solid;
 
-    @if map-get($this, 'disable-shadow') {
+    $border-width: rem(1px);
+
+
+    @if map-get($this, 'disable-shadow') == 'true' {
         $badge-shadow: none;
     }
 
-    @if map-get($this, 'disable-border') {
+    @if map-get($this, 'disable-border') == 'true' {
         $border-width: 0;
     }
 
@@ -77,15 +76,13 @@ $components: register-component($components, #{$component-name});
         font-weight: $badge-font-weight;
         color: map-get($this, 'text-color');
         line-height: $badge-line-height;
-        border: $border-width $border-type map-get($this, 'border-color');
-        border-radius: map-get($this, 'border-raduis');
-        box-shadow: $badge-shadow;
-        overflow: hidden;
 
-        i {
-            color: map-get($this, 'icon-color');
+        igx-icon {
+            width: $badge-icon-font-size;
+            height: $badge-icon-font-size;
             font-size: $badge-icon-font-size;
             font-weight: $badge-font-weight;
+            color: map-get($this, 'icon-color');
         }
     }
 
@@ -96,6 +93,9 @@ $components: register-component($components, #{$component-name});
 
     %igx-badge--circle {
         border-radius: $badge-border-radius-circle;
+        border: $border-width $border-type map-get($this, 'border-color');
+        box-shadow: $badge-shadow;
+        overflow: hidden;
     }
 
     %igx-badge--default {
