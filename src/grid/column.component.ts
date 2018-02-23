@@ -13,10 +13,10 @@ import { DataType } from "../data-operations/data-util";
 import { STRING_FILTERS } from "../data-operations/filtering-condition";
 import { IgxGridAPIService } from "./api.service";
 import {
+    IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
-    IgxCellTemplateDirective,
-    IgxCellEditorTemplateDirective
+    IgxCellTemplateDirective
 } from "./grid.common";
 
 @Component({

@@ -104,7 +104,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy {
     }
 
     public dialogShowing = false;
-    public dialogPosition = 'igx-filtering__options--to-right';
+    public dialogPosition = "igx-filtering__options--to-right";
 
     protected UNARY_CONDITIONS = [
         "true", "false", "null", "notNull", "empty", "notEmpty",
@@ -229,7 +229,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy {
         x += window.scrollX;
         x1 += window.scrollX;
         if (Math.abs(x - x1) < this.MINIMUM_VIABLE_SIZE) {
-            this.dialogPosition = 'igx-filtering__options--to-left';
+            this.dialogPosition = "igx-filtering__options--to-left";
         }
     }
 
