@@ -117,19 +117,23 @@ $components: register-component($components, #{$component-name});
 @mixin igx-button-group($theme, $palette: $default-palette) {
     $default-theme: igx-button-group-theme(
         // NORMAL
-        $item-text-color: igx-color($palette, 'secondary', 500),
+        $item-text-color: igx-color($palette, 'grays', 500),
+        $icon-text-color: igx-color($palette, 'grays', 500),
+
         $item-background: $white,
         $item-border-color: transparent,
-        $icon-text-color: igx-color($palette, 'secondary', 500),
+
         // HOVER
-        $icon-hover-text-color: igx-color($palette, 'secondary', 500),
-        $item-hover-text-color: igx-color($palette, 'secondary', 500),
-        $item-hover-background: rgba(igx-color($palette, 'secondary', 400), .12),
+        $item-hover-text-color: igx-color($palette, 'grays', 800),
+        $icon-hover-text-color: igx-color($palette, 'grays', 800),
+
+        $item-hover-background: igx-color($palette, 'grays', 400),
         // SELECTED
-        $item-selected-text-color: igx-color($palette, 'secondary', 500),
-        $item-selected-background: rgba(igx-color($palette, 'secondary', 400), .12),
-        $item-selected-border-color: rgba(igx-color($palette, 'secondary', 500), .12),
-        $icon-selected-text-color: igx-color($palette, 'secondary', 500),
+        $item-selected-text-color: igx-color($palette, 'grays', 800),
+        $icon-selected-text-color: igx-color($palette, 'grays', 800),
+
+        $item-selected-background: igx-color($palette, 'grays', 400),
+        $item-selected-border-color: rgba(igx-color($palette, 'grays', 500), .12),
         // DISABLED
         $disabled-text-color: igx-color($palette, 'grays', 300),
         $disabled-background-color: transparent
@@ -180,17 +184,29 @@ $components: register-component($components, #{$component-name});
         background-color: map-get($this, 'item-background');
 
         &:first-child {
-            border-left: 0;
+            border-left-width: 0;
         }
 
         &:last-child {
-            border-right: 0;
+            border-right-width: 0;
         }
 
         &:hover,
         &:focus{
+
             color: map-get($this, 'item-hover-text-color');
             background: map-get($this, 'item-hover-background');
+        }
+    }
+
+    %igx-bgroup-item-vertical {
+        border-left: 0;
+        border-right: 0;
+        border-bottom: $bgroup-item-border-thickness solid;
+        border-color: map-get($this, item-border-color);
+
+        &:first-child {
+            border-top: 0;
         }
     }
 
@@ -207,21 +223,7 @@ $components: register-component($components, #{$component-name});
         }
     }
 
-    %igx-bgroup-item-vertical {
-        border-left: 0;
-        border-right: 0;
-        border-bottom: $bgroup-item-border-thickness solid;
-        border-top: $bgroup-item-border-thickness solid;
-        border-color: map-get($this, item-border-color);
 
-        &:first-child {
-            border-top: 0;
-        }
-
-        &:last-child {
-            border-bottom: 0;
-        }
-    }
 
     %igx-bgroup-item-content {
         display: flex;
