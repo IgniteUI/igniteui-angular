@@ -10,7 +10,7 @@ All notable changes for each version of this project will be documented in this 
       `igxToggle` directive. Refer to the official documenation for more information.
     - `igxToggle` requires `BrowserAnimationsModule` to be imported in your application.
 - [`Ignite UI for Angular Theming`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes.html) - comprehensive set of **Sass** functions and mixins will give the ability to easily style your entire application or only certain parts of it.
-    - Material `Fonts` and `Icons` should be provided externally because we no longer provide them with our bundle.
+    - Previously bundled fonts, are now listed as external dependencies. You should supply both the [Material Icons](http://google.github.io/material-design-icons/) and [Titillium Web](https://fonts.google.com/selection?selection.family=Titillium+Web:300,400,600,700) fonts yourself by either hosting or using CDN.
 - `igx-grid` changes
     - The component now uses the new `igxForOf` directive to virtualize its content both vertically and horizontally dramatically improving performance for applications displaying large amounts of data.
     - Data-bound Input property `filtering` changed to `filterable`:
