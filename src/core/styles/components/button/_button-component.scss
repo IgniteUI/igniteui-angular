@@ -26,12 +26,6 @@
         @extend %igx-button--icon !optional;
     }
 
-    @include m(navbar) {
-        @extend %igx-button--round !optional;
-        @extend %igx-button--icon !optional;
-        @extend %igx-button--navbar !optional;
-    }
-
     @include m(disabled) {
         @extend %igx-button--disabled !optional;
     }
