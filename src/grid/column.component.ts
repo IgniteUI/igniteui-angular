@@ -15,7 +15,8 @@ import { IgxGridAPIService } from "./api.service";
 import {
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
-    IgxCellTemplateDirective
+    IgxCellTemplateDirective,
+    IgxCellEditorTemplateDirective
 } from "./grid.common";
 
 @Component({
@@ -143,6 +144,9 @@ export class IgxColumnComponent implements AfterContentInit {
     @ContentChild(IgxCellFooterTemplateDirective, { read: IgxCellFooterTemplateDirective })
     protected footTemplate: IgxCellFooterTemplateDirective;
 
+    @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
+    protected editorTemplate: IgxCellEditorTemplateDirective;
+
     constructor(private gridAPI: IgxGridAPIService, private cdr: ChangeDetectorRef) {}
 
     public ngAfterContentInit(): void {
@@ -154,6 +158,9 @@ export class IgxColumnComponent implements AfterContentInit {
         }
         if (this.footTemplate) {
             this._footerTemplate = this.footTemplate.template;
+        }
+        if (this.editorTemplate) {
+            this._inlineEditorTemplate = this.editorTemplate.template;
         }
     }
 

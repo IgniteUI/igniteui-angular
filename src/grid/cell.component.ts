@@ -88,6 +88,14 @@ export class IgxGridCellComponent {
         return this._inEditMode;
     }
 
+    set inEditMode(value: boolean) {
+        this._inEditMode = value;
+        if (this._inEditMode) {
+            this.grid.cellInEditMode = this;
+        }
+        this.cdr.markForCheck();
+    }
+
     @HostBinding("attr.tabindex")
     public tabindex = 0;
 
@@ -183,8 +191,7 @@ export class IgxGridCellComponent {
         this.isSelected = true;
         this.row.focused = true;
         if (this.grid.cellInEditMode && this.grid.cellInEditMode !== this) {
-            this.grid.cellInEditMode._inEditMode = false;
-            this.grid.cellInEditMode.cdr.markForCheck();
+            this.grid.cellInEditMode.inEditMode = false;
             this.grid.cellInEditMode = null;
         }
         this.grid.onSelection.emit(this);
