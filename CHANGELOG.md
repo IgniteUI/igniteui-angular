@@ -9,6 +9,8 @@ All notable changes for each version of this project will be documented in this 
     - `igxToggle` allows users to implement toggleable components/views (eg. dropdowns), while `igxToggleAction` can control the
       `igxToggle` directive. Refer to the official documenation for more information.
     - `igxToggle` requires `BrowserAnimationsModule` to be imported in your application.
+- [`Ignite UI for Angular Theming`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes.html) - comprehensive set of **Sass** functions and mixins will give the ability to easily style your entire application or only certain parts of it.
+    - Material `Fonts` and `Icons` should be provided externally because we no longer provide them with our bundle.
 - `igx-grid` changes
     - The component now uses the new `igxForOf` directive to virtualize its content both vertically and horizontally dramatically improving performance for applications displaying large amounts of data.
     - Data-bound Input property `filtering` changed to `filterable`:
@@ -56,13 +58,17 @@ All notable changes for each version of this project will be documented in this 
     - CSS class `ig-nav-drawer` renamed to `igx-nav-drawer`
 - `igxInput` changes
     - CSS class `ig-form-group` to `igx-form-group`
+- `igxBadge` changes
+    - From now on, the Badge position is set by css class, which specifies an absolute position as well as top/bottom/left/right properties. The Badge position input should not be used.
 - `igx-avatar` changes
     - [Initials type avatar is using SVG element from now on](https://github.com/IgniteUI/igniteui-angular/issues/136)
 - `igx-calendar` changes
     - `formatViews` - Controls whether the date parts in the different calendar views should be formatted according to the provided `locale` and `formatOptions`.
     - `templating` - The **igxCalendar** supports now templating of its header and subheader parts.
     - `vertical` input - Controls the layout of the calendar component. When vertical is set to `true` the calendar header will be rendered to the side of the calendar body.
-    
+
+- `igx-nav-bar` changes
+    -   Currently `isActionButtonVisible` resolves to `false` if actionButtonIcon is not defined.
 - `igx-tab-bar` changes
     - custom content can be added for tabs
 
@@ -94,9 +100,9 @@ All notable changes for each version of this project will be documented in this 
         ```
     - `onItemClicked` event emitter added
         ```html
-        <igx-list (onItemClicked)="itemClicked()">    
+        <igx-list (onItemClicked)="itemClicked()">
             <igx-list-item>Item 1</igx-list-item>
-            <igx-list-item>Item 2</igx-list-item>    
+            <igx-list-item>Item 2</igx-list-item>
             <igx-list-item>Item 3</igx-list-item>
         </igx-list>
         ```
