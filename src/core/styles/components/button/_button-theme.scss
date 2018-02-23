@@ -291,7 +291,7 @@ $components: register-component($components, #{$component-name});
         -webkit-tap-highlight-color: transparent;
         overflow: hidden;
         // hack to allow circular overflow in safari...
-        filter: drop-shadow(0 0 0 #fff);
+        filter: blur(0);
     }
 
     %igx-button--fab {
@@ -335,10 +335,14 @@ $components: register-component($components, #{$component-name});
     }
 
     %igx-button--disabled {
-        color: map-get($this, 'disabled-color');
-        background: map-get($this, 'disabled-background');
+        color: map-get($this, 'disabled-color') !important;
+        background: map-get($this, 'disabled-background') !important;
         pointer-events: none;
         box-shadow: $button-disabled-shadow;
+
+        &%igx-button--flat {
+            background: transparent !important;
+        }
     }
 }
 
