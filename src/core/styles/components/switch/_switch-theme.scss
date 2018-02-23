@@ -36,7 +36,7 @@ $components: register-component($components, #{$component-name});
         $track-off-color: rgba(0, 0, 0, .5),
 
         $track-disabled-color: rgba(0, 0, 0, .12),
-        $thumb-disabled-color: igx-color($palette, 'grays', 400)
+        $thumb-disabled-color: hexrgba(igx-color($palette, 'grays', 400))
     );
 
     $light-theme: igx-switch-theme(
@@ -47,7 +47,7 @@ $components: register-component($components, #{$component-name});
         $track-off-color: rgba(255, 255, 255, .3),
 
         $track-disabled-color: #424242,
-        $thumb-disabled-color: rgba(255, 255, 255, .1)
+        $thumb-disabled-color: #6c6c6c
     );
 
     $this: ();
