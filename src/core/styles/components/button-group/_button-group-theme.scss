@@ -7,13 +7,16 @@ $components: register-component($components, #{$component-name});
     $item-background: null,
     $icon-text-color: null,
     $item-border-color: null,
+
     // HOVER
     $icon-hover-text-color: null,
     $item-hover-text-color: null,
     $item-hover-background: null,
+
     // DISABLED
     $disabled-text-color: null,
     $disabled-background-color: null,
+
     // SELECTED
     $item-selected-text-color: null,
     $item-selected-background: null,
@@ -132,15 +135,16 @@ $components: register-component($components, #{$component-name});
         $disabled-background-color: transparent
     );
 
-    // 26. Button Group
     // Group layout
     $bgroup-radius: 2px;
     $bgroup-shadow: igx-elevation($elevations, 2);
+
     // Item style
     $bgroup-item-minwidth: 24px;
     $bgroup-item-minheight: 36px;
     $bgroup-item-border-thickness: 1px;
     $bgroup-item-font-weight: 600;
+
     // Margin between item elements
     $bgroup-items-margin: rem(10px, 16px);
     $this: extend($default-theme, $theme);
@@ -183,18 +187,10 @@ $components: register-component($components, #{$component-name});
             border-right: 0;
         }
 
-        .igx-icon {
-            color: map-get($this, 'icon-text-color');
-        }
-
         &:hover,
         &:focus{
             color: map-get($this, 'item-hover-text-color');
             background: map-get($this, 'item-hover-background');
-
-            .igx-icon {
-                color: map-get($this, 'icon-hover-text-color');
-            }
         }
     }
 
@@ -203,19 +199,11 @@ $components: register-component($components, #{$component-name});
         background: map-get($this, 'item-selected-background');
         border-color: map-get($this, 'item-selected-border-color');
 
-        .igx-icon {
-            color: map-get($this, 'icon-selected-text-color');
-        }
-
         &:hover,
         &:focus{
             color: map-get($this, 'item-selected-text-color');
             background: map-get($this, 'item-selected-background');
             border-color: map-get($this, 'item-selected-border-color');
-
-            .igx-icon {
-                color: map-get($this, 'item-selected-text-color');
-            }
         }
     }
 
@@ -245,16 +233,6 @@ $components: register-component($components, #{$component-name});
 
         * ~ * {
             margin-left: $bgroup-items-margin;
-        }
-    }
-
-    %igx-button--disabled {
-        color: map-get($this, 'disabled-text-color') !important;
-        background: map-get($this, 'disabled-background-color') !important;
-        opacity: 1 !important;
-
-        .igx-icon {
-            color: map-get($this, 'disabled-text-color') !important;
         }
     }
 }
