@@ -1,0 +1,22 @@
+{
+    "dest": "./dist/docs/sass",
+    "descriptionPath": "./src/core/styles/README.md",
+    "exclude": [],
+    "package": {
+        "name": "Ignite UI for Angular",
+        "version": "5.2.0"
+    },
+    "theme": "default",
+    "autofill": ["throws", "content"],
+    "groups": {
+        "undefined": "general"
+    },
+    "no-update-notifier": false,
+    "verbose": false,
+    "strict": false,
+    "display": {
+        "alias": true,
+        "access": ["public", "private"]
+    },
+    "privatePrefix": true
+}
