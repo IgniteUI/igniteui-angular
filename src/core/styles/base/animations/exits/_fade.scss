@@ -1,9 +1,10 @@
-/**
- * ----------------------------------------
- * animation swing-out-top-bck
- * ----------------------------------------
- */
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// @requires {mixin} keyframes
 @mixin swing-out-top-bck {
     @include keyframes (swing-out-top-bck) {
         0% {
@@ -20,13 +21,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-out-top-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-out-top-fwd {
     @include keyframes (swing-out-top-fwd) {
         0% {
@@ -43,13 +38,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-out-right-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-out-right-bck {
     @include keyframes (swing-out-right-bck) {
         0% {
@@ -66,13 +55,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-out-right-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-out-right-fwd {
     @include keyframes (swing-out-right-fwd) {
         0% {
@@ -89,13 +72,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-out-bottom-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-out-bottom-bck {
     @include keyframes (swing-out-bottom-bck) {
         0% {
@@ -112,13 +89,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-out-bottom-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-out-bottom-fwd {
     @include keyframes (swing-out-bottom-fwd) {
         0% {
@@ -135,13 +106,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-out-left-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-out-left-bck {
     @include keyframes (swing-out-left-bck) {
         0% {
@@ -158,13 +123,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-out-left-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-out-left-fwd {
     @include keyframes (swing-out-left-fwd) {
         0% {

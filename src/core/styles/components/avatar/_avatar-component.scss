@@ -1,4 +1,15 @@
+//// Avatar
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
 @include b(igx-avatar) {
+    // Register the component in the component registry
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
     @extend %igx-avatar-display !optional;
 
     @include m(rounded) {

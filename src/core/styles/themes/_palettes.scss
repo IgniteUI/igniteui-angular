@@ -1,9 +1,19 @@
+/// Default theme palette.
+/// Will be the one used if no theme palette is specified.
+/// @group palettes
+/// @type Map
 $default-palette: igx-palette($primary: #09f, $secondary: #e41c77);
 
 $white: #fff !default;
+
+/// Global Overlay Color
+/// @group palettes
+/// @type Color
 $overlay-color: igx-color($default-palette, 'grays') !default;
 
-// Elevations, regardless of palette
+/// Default theme elevations.
+/// @group elevations
+/// @type Map
 $elevations: igx-elevations(
     rgba(0, 0, 0, .26),
     rgba(0, 0, 0, .12),

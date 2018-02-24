@@ -1,7 +1,16 @@
-$default-margin: 0;
+////
+/// @group Utilities
+/// @author Simeon Simeonoff
+////
 
+/// Hides the element from the DOM.
+/// @access public
+/// @example scss - Sample usage
+///   input[type="checkbox"] {
+///     @include hide-default();
+///   }
 @mixin hide-default {
-    margin: $default-margin;
+    margin: 0;
     position: absolute;
     opacity: 0;
     z-index: -1;
@@ -12,6 +21,15 @@ $default-margin: 0;
     pointer-events: none;
 }
 
+/// Generates a linear gradient.
+/// @access public
+/// @param {string} $direction - The direction of the gradient.
+/// @param {List} $color-stops - A list of color stops to be used in the gradient.
+/// @example scss - Sample usage
+///   .bozo {
+///     background: @include linear-gradient("to right", red, orange);
+///   }
+/// @outputs The CSS representation of linear-gradient.
 @mixin linear-gradient($direction, $color-stops...) {
     // Direction has been omitted and happens to be a color-stop
     @if is-direction($direction) == false {
@@ -21,20 +39,10 @@ $default-margin: 0;
     background: linear-gradient($direction, $color-stops);
 }
 
-@mixin clearfix {
-    zoom: 1;
-
-    &::before,
-    &::after {
-        display: table;
-        content: '';
-    }
-
-    &::after {
-        clear: both;
-    }
-}
-
+/// Registers a keyframes animation in the global keyframes registry list.
+/// @access public
+/// @group animations
+/// @param {String} $name - The name of the keyframes animation.
 @mixin keyframes($name) {
     $keyframe: map-get($keyframes, $name);
 
@@ -50,6 +58,27 @@ $default-margin: 0;
     }
 }
 
+/// Registers a component to the list of known components.
+/// @access private
+/// @param {String} $name - The component name to register.
+@mixin register-component($name) {
+    $component: map-get($components, $name);
+    @if $component == null {
+        $component: unique-id();
+        $components: map-merge($components, (#{$name}: $component)) !global;
+    }
+}
+
+/// Animates an element.
+/// @access public
+/// @group animations
+/// @param {List} $animate - The list of animation properties.
+/// @example scss - Animating an element
+///  @include fade-in(); // include the 'fade-in' keyframes animation mixin
+///
+///  .bozo {
+///     @include animation('fade-in' .3s ease-out);
+///  }
 @mixin animation($animate...) {
     $max: length($animate);
     $animations: '';
@@ -62,6 +91,9 @@ $default-margin: 0;
     animation: $animations;
 }
 
+/// Applies text-overflow ellipsis to e text element.
+/// This won't work on display flex elements.
+/// @access public
 @mixin ellipsis() {
     white-space: nowrap;
     text-overflow: ellipsis;

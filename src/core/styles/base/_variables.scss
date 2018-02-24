@@ -1,8 +1,18 @@
-$browser-context: 16px !default;
-$browser-line-height: 27px !default;
-$keyframes: () !default;
+////
+/// @group base
+/// @access private
+/// @author Simeon Simeonoff
+////
 
+/// @type String - The default font size used globally.
+$browser-context: 16px !default;
+/// @type String - The default line height used globally.
+$browser-line-height: 27px !default;
+/// @type List - The global keyframes registry list.
+$keyframes: () !default;
+/// @type List - The global component registry list.
 $components: () !default;
+/// @type List - The list of excluded components.
 $excluded: () !default;
 
 $small-screen-up: 601px !default;

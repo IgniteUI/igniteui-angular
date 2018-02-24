@@ -1,4 +1,14 @@
+//// List
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
 @include b(igx-list) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
     @extend %igx-list !optional;
 
     @include e(header) {
@@ -14,7 +24,7 @@
         }
 
         &:not(:active) {
-            @extend %igx-list-item--inactive;
+            @extend %igx-list-item--inactive !optional;
         }
     }
 

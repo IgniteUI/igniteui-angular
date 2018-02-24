@@ -1,9 +1,10 @@
-/**
- * ----------------------------------------
- * animation bounce-in-top
- * ----------------------------------------
- */
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// @requires {mixin} keyframes
 @mixin bounce-in-top {
     @include keyframes(bounce-in-top) {
         0% {
@@ -50,14 +51,7 @@
     }
 }
 
-
-
-/**
- * ----------------------------------------
- * animation bounce-in-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin bounce-in-right {
     @include keyframes(bounce-in-right) {
         0% {
@@ -104,14 +98,7 @@
     }
 }
 
-
-
-/**
- * ----------------------------------------
- * animation bounce-in-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin bounce-in-bottom {
     @include keyframes(bounce-in-bottom) {
         0% {
@@ -158,14 +145,7 @@
     }
 }
 
-
-
-/**
- * ----------------------------------------
- * animation bounce-in-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin bounce-in-left {
     @include keyframes(bounce-in-left) {
         0% {
@@ -212,14 +192,7 @@
     }
 }
 
-
-
-/**
- * ----------------------------------------
- * animation bounce-in-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin bounce-in-fwd {
     @include keyframes(bounce-in-fwd) {
         0% {
@@ -266,14 +239,7 @@
     }
 }
 
-
-
-/**
- * ----------------------------------------
- * animation bounce-in-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin bounce-in-bck {
     @include keyframes(bounce-in-bck) {
         0% {

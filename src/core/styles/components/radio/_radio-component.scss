@@ -1,4 +1,13 @@
+//// Radio
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
 @include b(igx-control) {
+    @include register-component(igx-radio);
+
     $block: bem--selector-to-string(&);
 
     @extend %igx-control-display !optional;
