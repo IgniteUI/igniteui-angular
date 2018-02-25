@@ -52,6 +52,6 @@
     }
 
     %igx-icon--inactive {
-        color: map-get($this, 'disabled-color');
+        color: map-get($this, 'disabled-color') !important;
     }
 }
