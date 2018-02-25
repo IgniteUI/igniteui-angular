@@ -63,6 +63,10 @@
     $blockquote-font-size-phone: rem(20px);
     $blockquote-line-height-phone: rem(27px);
 
+
+    $medium-screen: 768px;
+    $large-screen: 1024px;
+
     a {
         text-decoration: none;
         color: $link-color;
