@@ -1,3 +1,21 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Avatar Theme
+/// @param {Color} $icon-background [null]- The background color used for avatars of type icon.
+/// @param {Color} $icon-color [null] - The icon color used for avatars of type icon.
+/// @param {Color} $initials-background [null] - The background color used for avatars of type initials.
+/// @param {Color} $initials-color [null] - The text color used for avatars of type initials.
+/// @param {Color} $image-background [null] - The background color used for avatars of type image.
+/// @requires text-contrast
+/// @example scss Change the background and icon colors in icon avatars
+///   $my-avatar-theme: igx-avatar-theme($icon-background: black, $icon-color: white);
+///   // Pass the theme to the igx-avatar component mixin
+///   igx-avatar($my-avatar-theme);
 @function igx-avatar-theme(
     $icon-background: null,
     $icon-color: null,
@@ -22,6 +40,13 @@
     );
 }
 
+/// Avatar Component
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-avatar-theme
+/// @requires igx-color
+/// @requires extend
+/// @requires rem
 @mixin igx-avatar($theme, $palette: $default-palette) {
     $default-theme: igx-avatar-theme(
         $icon-background: igx-color($palette, 'grays', 400),

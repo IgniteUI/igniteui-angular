@@ -1,6 +1,6 @@
 ////
 /// @group Utilities
-/// @author [Simeon Simeonoff](ssimeonov@infragistics.com)
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// Converts pixels to relative values (em).
@@ -71,8 +71,8 @@
 /// @group Palettes
 /// @param {Map} $palette - The source palette map.
 /// @param {string} $color - The target color from the color palette.
-/// @param {number|string} $variant - The target color shade from the color palette.
-/// @returns {Color} [#fff] - Returns white if now palette, color and/or variant matches found.
+/// @param {number|string} $variant [500] - The target color shade from the color palette.
+/// @returns {Color} White if no palette, color, and variant matches found.
 @function igx-color($palette, $color, $variant: 500) {
     @if map-exists($palette) and map-key-exists($palette, $color) and map-key-exists($color, $variant) {
         @return map-get(map-get($palette, $color), $variant);

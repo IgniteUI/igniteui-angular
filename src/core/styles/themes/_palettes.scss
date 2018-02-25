@@ -2,17 +2,27 @@
 /// Will be the one used if no theme palette is specified.
 /// @group palettes
 /// @type Map
-$default-palette: igx-palette($primary: #09f, $secondary: #e41c77);
+/// @prop {Color} $primary [#09f] - The primary color used in the palette.
+/// @prop {Color} $primary [#e41c77] - The secondary color used in the palette.
+/// @requires igx-palette
+$default-palette: igx-palette($primary: #09f, $secondary: #e41c77) !default;
 
 /// Global Overlay Color
 /// @group palettes
 /// @type Color
+/// @prop {Map} $palette [$default-palette] - The palette used to extract the color from.
+/// @prop {String} $color [grays] - The name of the sub-palette to take the color from.
+/// @requires igx-color
 $overlay-color: igx-color($default-palette, 'grays') !default;
 
-/// Default theme elevations. (WIP)
+/// Default elevations. Work in progress.
 /// Subject to change.
 /// @group elevations
 /// @type Map
+/// @prop {Color} $color-1 [rgba(0, 0, 0, .26)] - The color used for the umbra shadow.
+/// @prop {Color} $color-2 [rgba(0, 0, 0, .12)] - The color used for the penumbra shadow.
+/// @prop {Color} $color-3 [rgba(0, 0, 0, .08)] - The color used for the ambient shadow.
+/// @requires igx-elevations
 $elevations: igx-elevations(
     rgba(0, 0, 0, .26),
     rgba(0, 0, 0, .12),

@@ -1,3 +1,9 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 @function igx-toast-theme($background: null, $text-color: null) {
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
