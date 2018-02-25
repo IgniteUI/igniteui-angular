@@ -12,8 +12,6 @@ $browser-line-height: 27px !default;
 $keyframes: () !default;
 /// @type List - The global component registry list.
 $components: () !default;
-/// @type List - The list of excluded components.
-$excluded: () !default;
 
 $small-screen-up: 601px !default;
 $medium-screen-up: 767px !default;

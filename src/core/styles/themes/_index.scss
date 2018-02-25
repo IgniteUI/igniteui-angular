@@ -35,11 +35,12 @@
 @import '../components/grid-filtering/grid-filtering-theme';
 
 /// Generates an Ignite UI for Angular global theme.
-/// @param {Map} $palette [$default-palette] - An igx-palette to be used by the global theme.
-/// @param {List} $exclude - A list of igx components to be excluded from the global theme styles.
-/// @requires {function} is-component
+/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {List} $exclude [()] - A list of igx components to be excluded from the global theme styles.
 /// @requires {variable} $components
-@mixin igx-theme($palette: $default-palette, $exclude: ()) {
+/// @requires {variable} $default-palette
+/// @requires {function} is-component
+@mixin igx-theme($palette, $exclude: ()) {
     // Stores all excluded component styles
     $excluded: ();
 
