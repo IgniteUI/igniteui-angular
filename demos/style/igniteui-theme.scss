@@ -2,10 +2,4 @@
 
 // Generating a palette
 @include igx-core();
-@include igx-theme();
-
-$dialog-theme: igx-dialog-theme(
-    $background: black
-);
-
-@include igx-dialog($dialog-theme);
+@include igx-theme($default-palette);
