@@ -34,7 +34,7 @@
 @mixin igx-card($theme, $palette: $default-palette) {
 
     $default-theme: igx-card-theme(
-        $background: $white,
+        $background: #fff,
         $header-text-color: igx-color($palette, grays, 800),
         $subtitle-text-color: igx-color($palette, grays, 600),
         $content-text-color: igx-color($palette, grays, 600),

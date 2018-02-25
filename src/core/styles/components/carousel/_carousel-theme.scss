@@ -17,9 +17,9 @@
     @include scale-out-center();
 
     $default-theme: igx-carousel-theme(
-        $arrow-color: $white,
-        $arrow-background:transparentize($white, .7),
-        $indicator-background:transparentize($white, .8)
+        $arrow-color: #fff,
+        $arrow-background:transparentize(#fff, .7),
+        $indicator-background:transparentize(#fff, .8)
     );
 
     $this: extend($default-theme, $theme);
@@ -114,7 +114,7 @@
             height: 12px;
             text-indent: -9999px;
             cursor: pointer;
-            border: 1px solid $white;
+            border: 1px solid #fff;
             border-radius: 50%;
             background-color: map-get($this, indicator-background);
             transition: transform .25s $ease-in-quad;
@@ -130,7 +130,7 @@
                 width: 12px;
                 height: 12px;
                 border-radius: inherit;
-                background: $white;
+                background: #fff;
                 transform: scale(0);
                 @include animation('scale-out-center' .3s $ease-out-quad forwards);
             }

@@ -29,9 +29,9 @@
 
 @mixin igx-badge($theme, $palette: $default-palette) {
     $default-theme: igx-badge-theme(
-        $icon-color: $white,
-        $text-color: $white,
-        $border-color: $white,
+        $icon-color: #fff,
+        $text-color: #fff,
+        $border-color: #fff,
         $background-color: igx-color($palette, 'primary', 500)
     );
 

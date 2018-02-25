@@ -25,7 +25,7 @@
 
     $default-theme: igx-dialog-theme(
         $overlay-color: igx-color($palette, grays, 500),
-        $background: $white,
+        $background: #fff,
         $title-color: igx-color($palette, grays, 800),
         $message-color: igx-color($palette, grays, 600)
     );

@@ -18,7 +18,7 @@
 @mixin igx-toast($theme, $palette: $default-palette) {
     $default-theme: igx-toast-theme(
         $background: igx-color($palette, 'grays', 600),
-        $text-color: $white
+        $text-color: #fff
     );
 
     $this: extend($default-theme, $theme);

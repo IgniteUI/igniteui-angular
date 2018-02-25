@@ -28,7 +28,7 @@
 
 @mixin igx-navdrawer($theme, $palette: $default-palette) {
     $default-theme: igx-navdrawer-theme(
-        $navdrawer-background-color: $white,
+        $navdrawer-background-color: #fff,
         $overlay-background: rgba(0, 0, 0, .25),
         $navdrawer-border-color: rgba(0, 0, 0, .14),
         $item-text-color: igx-color($palette, grays, 800),

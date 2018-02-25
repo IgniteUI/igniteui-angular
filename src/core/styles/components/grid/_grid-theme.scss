@@ -56,10 +56,10 @@
 
 @mixin igx-grid($theme, $palette: $default-palette) {
     $default-theme: igx-grid-theme(
-        $header-background: $white,
+        $header-background: #fff,
         $header-text-color: igx-color($palette, 'grays', 600),
 
-        $content-background: $white,
+        $content-background: #fff,
         $content-text-color: igx-color($palette, 'grays', 800),
 
         $row-selected-background: igx-color($palette, 'grays', 800),

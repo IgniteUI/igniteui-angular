@@ -4,14 +4,13 @@
 /// @type Map
 $default-palette: igx-palette($primary: #09f, $secondary: #e41c77);
 
-$white: #fff !default;
-
 /// Global Overlay Color
 /// @group palettes
 /// @type Color
 $overlay-color: igx-color($default-palette, 'grays') !default;
 
-/// Default theme elevations.
+/// Default theme elevations. (WIP)
+/// Subject to change.
 /// @group elevations
 /// @type Map
 $elevations: igx-elevations(
