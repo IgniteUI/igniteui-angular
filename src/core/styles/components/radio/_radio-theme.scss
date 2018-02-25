@@ -1,6 +1,3 @@
-$component-name: 'igx-radio';
-$components: register-component($components, #{$component-name});
-
 @function igx-radio-theme(
     $label-color: null,
     $empty-color: null,

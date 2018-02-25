@@ -1,7 +1,3 @@
-$component-name: 'igx-icon';
-
-$components: register-component($components, #{$component-name});
-
 @function igx-icon-theme(
     $color: null,
     $size: null,

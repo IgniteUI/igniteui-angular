@@ -1,7 +1,3 @@
-$component-name: 'igx-tabbar';
-
-$components: register-component($components, #{$component-name});
-
 @function igx-tabbar-theme(
     $background: null,
     $idle-item-color: null,

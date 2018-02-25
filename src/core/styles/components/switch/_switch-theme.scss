@@ -1,6 +1,3 @@
-$component-name: 'igx-switch';
-
-$components: register-component($components, #{$component-name});
 @function igx-switch-theme(
     $thumb-on-color: null,
     $track-on-color: null,

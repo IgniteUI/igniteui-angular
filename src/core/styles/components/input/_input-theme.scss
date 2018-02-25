@@ -1,7 +1,3 @@
-$component-name: 'igx-input';
-
-$components: register-component($components, #{$component-name});
-
 @function igx-input-theme(
     $idle-text-color: null,
     $filled-text-color: null,

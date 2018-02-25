@@ -1,7 +1,3 @@
-$component-name: 'igx-slider';
-
-$components: register-component($components, #{$component-name});
-
 @function igx-slider-theme(
     $track-color: null,
     $thumb-color: null,

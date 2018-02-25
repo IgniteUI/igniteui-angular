@@ -1,6 +1,3 @@
-$component-name: 'igx-badge';
-$components: register-component($components, #{$component-name});
-
 @function igx-badge-theme(
     $icon-color: null,
     $text-color: null,

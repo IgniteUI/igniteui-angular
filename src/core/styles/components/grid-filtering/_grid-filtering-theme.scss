@@ -1,7 +1,3 @@
-$component-name: 'igx-grid-filtering';
-
-$components: register-component($components, #{$component-name});
-
 @function igx-grid-filtering-theme(
     $toggle-icon-color: null,
     $toggle-icon-hover-color: null,

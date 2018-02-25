@@ -1,7 +1,3 @@
-$component-name: 'igx-ripple';
-
-$components: register-component($components, #{$component-name});
-
 @function igx-ripple-theme($color: null) {
     @return (
         color: $color

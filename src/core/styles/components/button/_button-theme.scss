@@ -1,7 +1,3 @@
-$component-name: 'igx-button';
-
-$components: register-component($components, #{$component-name});
-
 @function igx-button-theme(
     // Global Button
     $button-roundness: null,

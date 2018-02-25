@@ -1,6 +1,3 @@
-$component-name: 'igx-navdrawer';
-$components: register-component($components, #{$component-name});
-
 @function igx-navdrawer-theme(
     $navdrawer-background-color: null,
     $overlay-background: null,

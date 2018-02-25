@@ -1,7 +1,3 @@
-$component-name: 'igx-carousel';
-
-$components: register-component($components, #{$component-name});
-
 @function igx-carousel-theme(
     $arrow-color:null,
     $arrow-background:null,

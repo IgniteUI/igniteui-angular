@@ -1,7 +1,3 @@
-$component-name: 'igx-avatar';
-
-$components: register-component($components, #{$component-name});
-
 @function igx-avatar-theme(
     $icon-background: null,
     $icon-color: null,

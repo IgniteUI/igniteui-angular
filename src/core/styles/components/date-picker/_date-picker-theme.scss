@@ -1,7 +1,3 @@
-$component-name: 'igx-date-picker';
-
-$components: register-component($components, #{$component-name});
-
 @function igx-date-picker-theme() {
     @return ();
 }

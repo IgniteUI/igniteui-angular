@@ -1,9 +1,3 @@
-$component-names: 'igx-progress-linear' 'igx-progress-circular';
-
-@each $c in $component-names {
-    $components: register-component($components, #{$c});
-}
-
 // Linear Progress
 @function igx-progress-linear-theme(
     $track-color: null,

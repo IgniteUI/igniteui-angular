@@ -1,7 +1,3 @@
-$component-name: 'igx-checkbox';
-
-$components: register-component($components, #{$component-name});
-
 @function igx-checkbox-theme(
     $label-color: null,
     $empty-color: null,

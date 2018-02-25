@@ -1,7 +1,3 @@
-$component-name: 'igx-snackbar';
-
-$components: register-component($components, #{$component-name});
-
 @function igx-snackbar-theme(
     $background: null,
     $text-color: null,

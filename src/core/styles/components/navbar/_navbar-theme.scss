@@ -1,7 +1,3 @@
-$component-name: 'igx-navbar';
-
-$components: register-component($components, #{$component-name});
-
 @function igx-navbar-theme(
     $background: null,
     $text-color: null,

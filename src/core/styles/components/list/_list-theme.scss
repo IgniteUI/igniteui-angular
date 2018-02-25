@@ -1,7 +1,3 @@
-$component-name: 'igx-list';
-
-$components: register-component($components, #{$component-name});
-
 @function igx-list-theme(
     $background: null,
     $header-background: null,

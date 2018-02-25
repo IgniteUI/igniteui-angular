@@ -1,6 +1,3 @@
-$component-name: 'igx-button-group';
-$components: register-component($components, #{$component-name});
-
 @function igx-button-group-theme(
     // NORMAL
     $item-text-color: null,
@@ -23,10 +20,7 @@ $components: register-component($components, #{$component-name});
     $item-selected-border-color: null,
     $icon-selected-text-color: null
 ) {
-
     $disabled-background-color: $item-background;
-
-    ////// NORMAL
 
     // -- Color
     @if not($item-text-color) and $item-background  {
@@ -37,9 +31,6 @@ $components: register-component($components, #{$component-name});
     @if not($icon-text-color) and $item-background {
         $icon-text-color: text-contrast($item-background);
     }
-
-
-    ////// HOVER
 
     // -- Background
     @if not($item-hover-background) and $item-background {
@@ -55,8 +46,6 @@ $components: register-component($components, #{$component-name});
     @if not($icon-hover-text-color) and $item-hover-background {
         $icon-hover-text-color: text-contrast($item-background);
     }
-
-    ////// SELECTED
 
     // -- Background
     @if not($item-selected-background) and $item-background {
@@ -82,9 +71,6 @@ $components: register-component($components, #{$component-name});
     @if not($icon-selected-text-color) and $item-selected-background {
         $icon-selected-text-color: text-contrast($item-background);
     }
-
-
-    ////// DISABLED
 
     @if not($disabled-text-color) and $item-background {
         $disabled-text-color: rgba(text-contrast($item-background), .3);
