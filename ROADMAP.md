@@ -3,7 +3,7 @@
 ## Next three months (due April 16th, 2018)
 
 1. Expanding Ignite UI CLI views and templates with Ignite UI for Angular
-1.1. Adding component views like App Host, Tabs, List
+1.1. Adding component views like App Host, Tabbar, List
 1.2. Updating the default project look
 1.3. Move the project navigation inside an App Host
 2. Product Theming 

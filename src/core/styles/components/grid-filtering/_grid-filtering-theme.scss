@@ -8,7 +8,7 @@ $components: register-component($components, #{$component-name});
     $toggle-icon-active-color: null,
     $toggle-icon-filtered-color: null,
     $toggle-background: null,
-    $toggle-hover-background: null, 
+    $toggle-hover-background: null,
     $toggle-active-background: null,
     $toggle-filtered-background: null,
 
@@ -27,6 +27,10 @@ $components: register-component($components, #{$component-name});
 
     @if not($menu-button-disabled-text-color) and $menu-background {
         $menu-button-disabled-text-color: rgba(text-contrast($menu-background), .3)
+    }
+
+    @if not($toggle-icon-active-color) and $toggle-active-background {
+        $toggle-icon-active-color: text-contrast($toggle-active-background)
     }
 
     @return (
@@ -50,26 +54,26 @@ $components: register-component($components, #{$component-name});
     $default-theme: igx-grid-filtering-theme(
         $toggle-icon-color: inherit,
         $toggle-icon-hover-color: $white,
-        $toggle-icon-active-color: igx-contrast-color($palette, 'accent'),
-        $toggle-icon-filtered-color: igx-color($palette, 'accent'),
+        $toggle-icon-active-color: igx-contrast-color($palette, 'secondary'),
+        $toggle-icon-filtered-color: igx-color($palette, 'secondary'),
         $toggle-hover-background: igx-color($palette, 'grays', 300),
-        $toggle-active-background: igx-color($palette, 'accent'),
+        $toggle-active-background: igx-color($palette, 'secondary'),
         $toggle-filtered-background: transparent,
 
         $menu-background: $white,
         $menu-text-color: igx-color($palette, 'grays', 900),
-        $menu-button-text-color: igx-color($palette, 'accent') 
+        $menu-button-text-color: igx-color($palette, 'secondary')
     );
 
     $this: extend($default-theme, $theme);
 
     $grid-filtering-options-padding: rem(8px, 16px);
-    $grid-head-icon-size: rem(15px) !default;
-    $grid-head-icon-lh: rem(15px) !default;
-    $grid-head-icon-padding: rem(4.5px) !default;
+    $grid-head-icon-size: rem(15px);
+    $grid-head-icon-lh: rem(15px);
+    $grid-head-icon-padding: rem(4.5px);
 
     $filtering-menu-min-width: 240px;
-    $filtering-menu-shadow: $elevate-8;
+    $filtering-menu-shadow: igx-elevation($elevations, 8);
     $filtering-menu-radius: 4px;
     $filtering-menu-distance-to-toggle: 4px;
 
@@ -148,16 +152,8 @@ $components: register-component($components, #{$component-name});
             $flat-hover-background: rgba(map-get($this, 'menu-button-text-color'), .12),
             $flat-focus-text-color: map-get($this, 'menu-button-text-color'),
             $flat-focus-background: rgba(map-get($this, 'menu-button-text-color'), .08),
-            $disabled-color: map-get($this, 'menu-button-disabled-text-color')
-        ));
-
-        @include igx-input(igx-input-theme(
-            $idle-accent-color: rgba(text-contrast(map-get($this, 'menu-background')), .7),
-            $idle-text-color: text-contrast(map-get($this, 'menu-background')),
-            $filled-text-color: rgba(text-contrast(map-get($this, 'menu-background')), .7),
-            $placeholder-text-color: rgba(text-contrast(map-get($this, 'menu-background')), .5),
-            $focused-text-color: text-contrast(map-get($this, 'menu-background')),
-            $focused-accent-color: map-get($this, 'toggle-active-background')
+            $disabled-color: map-get($this, 'menu-button-disabled-text-color'),
+            $disabled-background: transparent
         ));
 
         // TODO: remove after SELECT theme is created
@@ -175,12 +171,10 @@ $components: register-component($components, #{$component-name});
 
     %igx-filtering-menu--to-left {
         right: 16px;
-        left: 0;
     }
 
     %igx-filtering-menu--to-right {
-        right: 0;
-        left: 16px;
+        right: initial;
     }
 
     %igx-filtering-menu-buttons {

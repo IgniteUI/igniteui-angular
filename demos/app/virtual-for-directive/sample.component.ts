@@ -1,4 +1,6 @@
-import { Component, ElementRef, ViewChild } from "@angular/core";
+import { Component, ElementRef, ViewChild, Injectable  } from "@angular/core";
+import { BehaviorSubject, Observable } from "rxjs/Rx";
+import { Http } from "@angular/http";
 import {
     IgxDialogModule,
     IgxFilterModule,
@@ -6,17 +8,65 @@ import {
     IgxListModule,
     IgxListPanState,
     IgxRippleModule,
-    IgxForOfDirective
+    IgxForOfDirective,
+    IForOfState
 } from "../../lib/main";
+
+
+@Injectable()
+export class RemoteService {
+    public remoteData: Observable<any[]>;
+    private url: string = "http://services.odata.org/V4/Northwind/Northwind.svc/Products";
+    private _remoteData: BehaviorSubject<any[]>;
+
+    constructor(private http: Http) {
+        this._remoteData = new BehaviorSubject([]);
+        this.remoteData = this._remoteData.asObservable();
+    }
+
+    public getData(data?: IForOfState, cb?: (any) => void): any {
+        var dataState = data;
+        return this.http
+            .get(this.buildUrl(dataState))
+            .map((response) => response.json())
+            .map((response) => {
+                return response;
+            })
+            .subscribe((data) => {
+                this._remoteData.next(data.value);
+                if (cb) {
+                    cb(data);
+                }
+            });
+    }
+
+    private buildUrl(dataState: any): string {
+        let qS: string = "?", requiredChunkSize: number;
+        if (dataState) {
+            const skip = dataState.startIndex;
+                
+                requiredChunkSize =  dataState.chunkSize === 0 ?
+                    // Set initial chunk size, the best value is igxForContainerSize divided on igxForItemSize
+                    10 : dataState.chunkSize;
+            const top = requiredChunkSize;
+            qS += `$skip=${skip}&$top=${top}&$count=true`;
+        }
+        return `${this.url}${qS}`;
+    }
+}
+
 @Component({
     selector: "virt-for-sample",
     styleUrls: ["../app.samples.css", "./sample.component.css"],
-    templateUrl: "./sample.component.html"
+    templateUrl: "./sample.component.html",
+    providers: [RemoteService]
 })
 export class VirtualForSampleComponent {
     public search1: string;
     public data: any[] = [];
+    public remoteData:any;
 	public options: any = {};
+    public prevRequest:any;
     
     @ViewChild("virtDirVertical", { read: IgxForOfDirective })
     public virtDirVertical: IgxForOfDirective<any>;
@@ -24,7 +74,13 @@ export class VirtualForSampleComponent {
     @ViewChild("virtDirHorizontal", { read: IgxForOfDirective })
     public virtDirHorizontal: IgxForOfDirective<any>;
 
+    @ViewChild("virtDirRemote", { read: IgxForOfDirective })
+    public virtDirRemote: IgxForOfDirective<any>;
+
+    constructor(private remoteService: RemoteService) { }
+
     public ngOnInit(): void {
+        this.remoteData = this.remoteService.remoteData;
         let data = [{
             key: 1,
             avatar: "images/avatar/1.jpg",
@@ -114,17 +170,37 @@ export class VirtualForSampleComponent {
     this.data = data;
 }
 
+public ngAfterViewInit() {
+    this.remoteService.getData(this.virtDirRemote.state, (data) => {
+        this.virtDirRemote.totalItemCount = data["@odata.count"];
+    });
+}
+chunkLoading(evt) {
+    if(this.prevRequest){
+        this.prevRequest.unsubscribe();
+     }
+     this.prevRequest = this.remoteService.getData(evt, ()=> {
+        this.virtDirRemote.cdr.detectChanges();
+    });
+}
 scrNextRow(){
     this.virtDirVertical.scrollNext();
 }
 scrPrevRow(){
     this.virtDirVertical.scrollPrev();
 }
+scrScrollTo(index){
+    this.virtDirVertical.scrollTo(index);
+}
 scrNextCol(){
     this.virtDirHorizontal.scrollNext();
 }
 scrPrevCol(){
     this.virtDirHorizontal.scrollPrev();
+}
+
+scrHorizontalScrollTo(index){
+    this.virtDirHorizontal.scrollTo(index);
 }
 
 }

@@ -1,12 +1,24 @@
-<div class="igx-nav-drawer-overlay" [class.pinned]="pin" [class.hidden]="!isOpen" (click)="close(true)"></div>
-<aside class="igx-nav-drawer" role="navigation" 
-    [class.collapsed]="!_hasMimiTempl && !isOpen" [class.mini]="_hasMimiTempl && !isOpen" [class.pinned]="pin" [class.right]="position == 'right'">
-    
-    <div class="" [hidden]="!isOpen && _hasMimiTempl">
-        <ng-content select=".igx-drawer-content"></ng-content>
-    </div>                
-    <div class="" [hidden]="isOpen">
-        <ng-content select=".igx-drawer-mini-content"></ng-content>
-    </div>
+<ng-template #defaultItemsTemplate>
+    <div igxDrawerItem [isHeader]="true">Navigation Drawer</div>
+    <div igxDrawerItem> Star by adding</div>
+    <div igxDrawerItem> <code>&lt;ng-template igxDrawer&gt;</code> </div>
+    <div igxDrawerItem> And some items inside </div>
+    <div igxDrawerItem> Style with igxDrawerItem </div>
+    <div igxDrawerItem> and igxRipple directives</div>
+</ng-template>
+
+<div [hidden]="pin"
+    class="igx-nav-drawer__overlay"
+    [class.igx-nav-drawer__overlay--hidden]="!isOpen"
+    (click)="close(true)">
+</div>
+<aside role="navigation"
+    class="igx-nav-drawer__aside"
+    [class.igx-nav-drawer__aside--collapsed]="!miniTemplate && !isOpen"
+    [class.igx-nav-drawer__aside--mini]="miniTemplate && !isOpen"
+    [class.igx-nav-drawer__aside--pinned]="pin"
+    [class.igx-nav-drawer__aside--right]="position == 'right'">
+
+    <ng-container *ngTemplateOutlet="template || defaultItemsTemplate"></ng-container>
 </aside>
-<div class="style-dummy"></div>
+<div class="igx-nav-drawer__style-dummy"></div>

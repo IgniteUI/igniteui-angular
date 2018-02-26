@@ -1,13 +1,7 @@
 <nav class="igx-navbar" role="navigation" [attr.aria-labelledby]="titleId">
     <div class="igx-navbar__left">
-        <span class="igx-navbar__left-btn" *ngIf="!isActionButtonVisible">
-            <button igxButton="navbar" (click)="_triggerAction()">
-                <igx-icon fontSet="material" [name]="actionButtonIcon"></igx-icon>
-            </button>
-        </span>
-        <span>
-            <h1 class="igx-navbar__title" [attr.id]="titleId">{{ title }}</h1>
-        </span>
+        <igx-icon (click)="_triggerAction()" fontSet="material" [name]="actionButtonIcon" *ngIf="isActionButtonVisible"></igx-icon>
+        <h1 class="igx-navbar__title" [attr.id]="titleId">{{ title }}</h1>
     </div>
     <div class="igx-navbar__right">
         <ng-content></ng-content>

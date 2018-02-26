@@ -19,7 +19,6 @@
 @import '../components/switch/switch-theme';
 @import '../components/snackbar/snackbar-theme';
 @import '../components/slider/slider-theme';
-@import '../components/scroll/scroll-theme';
 @import '../components/ripple/ripple-theme';
 @import '../components/radio/radio-theme';
 @import '../components/progress/progress-theme';
@@ -99,9 +98,6 @@
     }
     @if not(index($exclude, 'igx-ripple')) {
         @include igx-ripple($theme: (), $palette: $palette);
-    }
-    @if not(index($exclude, 'igx-scroll')) {
-        @include igx-scroll($theme: (), $palette: $palette);
     }
     @if not(index($exclude, 'igx-slider')) {
         @include igx-slider($theme: (), $palette: $palette);

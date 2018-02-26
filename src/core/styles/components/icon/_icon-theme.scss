@@ -2,44 +2,60 @@ $component-name: 'igx-icon';
 
 $components: register-component($components, #{$component-name});
 
-@function igx-icon-theme($color) {
+@function igx-icon-theme(
+    $color: null,
+    $size: null,
+    $disabled-color: null
+) {
     @return (
-        color: $color
-    );
+        color: $color,
+        size: $size,
+        disabled-color: $disabled-color);
 }
 
 @mixin igx-icon($theme, $palette: $default-palette) {
     $default-theme: igx-icon-theme(
-        $color: currentColor
+        $color: currentColor,
+        $size: 24px,
+        $disabled-color: igx-color($palette, 'grays', 500)
     );
 
     $this: extend($default-theme, $theme);
 
     // @debug $this;
 
-    $color: map-get($this, 'color');
-    $disabled-color: igx-color($palette, 'grays', 500);
-    $igx-icon-font-size: rem(24px, 16px) !default;
+    $igx-icon-font-size: rem(map-get($this, 'size'));
+    $igx-icon-width: map-get($this, 'size');
+    $igx-icon-height: map-get($this, 'size');
 
     %igx-icon-display {
-        display: flex;
-        color: $color;
         position: relative;
-        font-size: $igx-icon-font-size;
+        display: inline-flex;
+        align-items: center;
         justify-content: center;
-        line-height: 1;
-        text-transform: none;
-        letter-spacing: normal;
-        word-wrap: normal;
-        white-space: nowrap;
-        direction: ltr;
-        -webkit-font-smoothing: antialiased;
-        text-rendering: optimizeLegibility;
-        -moz-osx-font-smoothing: grayscale;
-        font-feature-settings: 'liga';
+        color: map-get($this, 'color');
+        width: $igx-icon-width;
+        height: $igx-icon-height;
+        font-size: $igx-icon-font-size;
+
+        i {
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            width: inherit;
+            height: inherit;
+            font-size: inherit;
+            direction: ltr;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            -moz-osx-font-smoothing: grayscale;
+            font-feature-settings: 'liga';
+        }
     }
 
     %igx-icon--inactive {
-        color: $disabled-color;
+        color: map-get($this, 'disabled-color');
     }
 }

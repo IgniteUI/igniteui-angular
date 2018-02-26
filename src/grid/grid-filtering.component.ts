@@ -2,15 +2,18 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ElementRef,
     HostBinding,
     HostListener,
     Input,
     OnDestroy,
+    OnInit,
     TemplateRef,
     ViewChild
 } from "@angular/core";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { Subject } from "rxjs/Subject";
+import { Subscription } from "rxjs/Subscription";
 import { DataType } from "../data-operations/data-util";
 import {
     BOOLEAN_FILTERS,
@@ -18,6 +21,7 @@ import {
     NUMBER_FILTERS,
     STRING_FILTERS
 } from "../data-operations/filtering-condition";
+import { IgxToggleDirective } from "../directives/toggle/toggle.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
 
@@ -27,7 +31,7 @@ import { IgxColumnComponent } from "./column.component";
     selector: "igx-grid-filter",
     templateUrl: "./grid-filtering.component.html"
 })
-export class IgxGridFilterComponent implements OnDestroy {
+export class IgxGridFilterComponent implements OnInit, OnDestroy {
 
     @Input()
     public column;
@@ -100,6 +104,7 @@ export class IgxGridFilterComponent implements OnDestroy {
     }
 
     public dialogShowing = false;
+    public dialogPosition = "igx-filtering__options--to-right";
 
     protected UNARY_CONDITIONS = [
         "true", "false", "null", "notNull", "empty", "notEmpty",
@@ -109,6 +114,8 @@ export class IgxGridFilterComponent implements OnDestroy {
     protected _value;
     protected _filterCondition;
     protected filterChanged = new Subject();
+    protected chunkLoaded = new Subscription();
+    private MINIMUM_VIABLE_SIZE = 240;
 
     @ViewChild("defaultFilterUI", { read: TemplateRef })
     protected defaultFilterUI: TemplateRef<any>;
@@ -116,15 +123,28 @@ export class IgxGridFilterComponent implements OnDestroy {
     @ViewChild("defaultDateUI", { read: TemplateRef })
     protected defaultDateUI: TemplateRef<any>;
 
-    constructor(private gridAPI: IgxGridAPIService, private cdr: ChangeDetectorRef) {
+    @ViewChild(IgxToggleDirective, { read: IgxToggleDirective})
+    protected toggleDirective: IgxToggleDirective;
+
+    constructor(private gridAPI: IgxGridAPIService, private cdr: ChangeDetectorRef, private elementRef: ElementRef) {
         this.filterChanged.pipe(
             debounceTime(250),
             distinctUntilChanged()
         ).subscribe((value) => this.value = value);
     }
 
+    public ngOnInit() {
+        this.chunkLoaded = this.gridAPI.get(this.gridID).headerContainer.onChunkPreload.subscribe(() => {
+            if (!this.toggleDirective.collapsed) {
+                this.toggleDirective.collapsed = true;
+                this.refresh();
+            }
+        });
+    }
+
     public ngOnDestroy() {
         this.filterChanged.unsubscribe();
+        this.chunkLoaded.unsubscribe();
     }
 
     public refresh() {
@@ -188,9 +208,29 @@ export class IgxGridFilterComponent implements OnDestroy {
         this.filterChanged.next(val);
     }
 
+    public get disabled() {
+        if (this.value && !this.unaryCondition) {
+            return false;
+        } else if (this.unaryCondition) {
+            return false;
+        }
+        return true;
+    }
+
     @HostListener("click", ["$event"])
     public onClick(event) {
         event.stopPropagation();
+        const grid = this.gridAPI.get(this.gridID);
+        const gridRect = grid.nativeElement.getBoundingClientRect();
+        const dropdownRect = this.elementRef.nativeElement.getBoundingClientRect();
+
+        let x = dropdownRect.left;
+        let x1 = gridRect.left + gridRect.width;
+        x += window.pageXOffset;
+        x1 += window.pageXOffset;
+        if (Math.abs(x - x1) < this.MINIMUM_VIABLE_SIZE) {
+            this.dialogPosition = "igx-filtering__options--to-left";
+        }
     }
 
     protected transformValue(value) {
@@ -208,11 +248,18 @@ export class IgxGridFilterComponent implements OnDestroy {
     protected filteringExpression(): boolean {
         const expr = this.gridAPI.get(this.gridID)
             .filteringExpressions.find((x) => x.fieldName === this.column.field);
+
         if (expr) {
             this._value = expr.searchVal;
             this._filterCondition = expr.condition.name;
+
+            if (!this.unaryCondition && !this._value) {
+                return false;
+            }
             return true;
+        } else {
+            this._value = null;
+            this._filterCondition = undefined;
         }
-        return false;
     }
 }

@@ -1,15 +1,9 @@
 $browser-context: 16px !default;
 $browser-line-height: 27px !default;
-$font-path: '~./fonts/' !default;
 $keyframes: () !default;
 
 $components: () !default;
 $excluded: () !default;
-
-$info-color: blue;
-$success-color: green;
-$error-color: red;
-$warn-color: orange;
 
 $small-screen-up: 601px !default;
 $medium-screen-up: 767px !default;

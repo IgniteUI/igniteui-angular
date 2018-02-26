@@ -80,39 +80,27 @@ $components: register-component($components, #{$component-name});
 
     $this: extend($default-theme, $theme);
 
-    $filtering-theme: igx-grid-filtering-theme(
-        $menu-background: map-get($this, 'content-background'),
-        $menu-button-text-color: map-get($this, 'cell-selected-background'),
-        $toggle-hover-background: map-get($this, 'row-hover-background'),
-        $toggle-active-background: map-get($this, 'cell-selected-background'),
-        $toggle-icon-filtered-color: map-get($this, 'cell-selected-background')
-    );
-
-    @include igx-grid-filtering($filtering-theme);
-
     // @debug $this;
 
     // General
-    $grid-br: 2px !default;
-    $grid-shadow: $elevate-2 !default;
+    $grid-br: 2px;
+    $grid-shadow: igx-elevation($elevations, 2);
 
     // Caption
-    $grid-caption-fs: rem(20px) !default;
-    $grid-caption-lh: rem(32px) !default;
-    $grid-caption-padding: rem(16px) rem(24px) !default;
+    $grid-caption-fs: rem(20px);
+    $grid-caption-lh: rem(32px);
+    $grid-caption-padding: rem(16px) rem(24px);
 
     // Heading
-    $grid-head-fs: rem(12px) !default;
-    $grid-head-fw: 600 !default;
-    $grid-head-icon-size: rem(16px) !default;
-    $grid-head-icon-lh: rem(16px) !default;
-    $grid-head-icon-padding: rem(8px) !default;
+    $grid-head-fs: rem(12px);
+    $grid-head-fw: 600;
+    $grid-head-icon-size: rem(16px);
 
     // Cell
-    $grid-cell-padding: rem(16px) rem(24px) !default;
-    $grid-cell-align-num: right !default;
-    $grid-cell-fs: rem(13px) !default;
-    $grid-cell-lh: rem(16px) !default;
+    $grid-cell-padding: rem(16px) rem(24px);
+    $grid-cell-align-num: right;
+    $grid-cell-fs: rem(13px);
+    $grid-cell-lh: rem(16px);
 
     %grid-display {
         display: grid;
@@ -128,7 +116,7 @@ $components: register-component($components, #{$component-name});
             width: 17px;
             height: 17px;
         }
-        
+
         &::-webkit-scrollbar-track {
             background: rgba(text-contrast(map-get($this, 'content-background')), .12);
 
@@ -175,7 +163,7 @@ $components: register-component($components, #{$component-name});
         display: block;
         background: map-get($this, 'header-background');
         color: map-get($this, 'header-text-color');
-        
+
         %grid-row {
             &:hover {
                 background-color: transparent;
@@ -183,8 +171,17 @@ $components: register-component($components, #{$component-name});
         }
     }
 
+    %grid-thead {
+        grid-row: 1;
+    }
+
+    %grid-tfoot {
+        grid-row: 3;
+    }
+
     %grid-tbody {
         position: relative;
+        grid-row: 2;
         background: map-get($this, 'content-background');
         color: map-get($this, 'content-text-color');
         overflow: hidden;

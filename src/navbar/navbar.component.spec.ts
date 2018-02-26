@@ -1,6 +1,6 @@
-import {Component, ViewChild} from "@angular/core";
-import {async, TestBed } from "@angular/core/testing";
-import {IgxNavbarComponent, IgxNavbarModule} from "./navbar.component";
+import { Component, ViewChild } from "@angular/core";
+import { async, TestBed } from "@angular/core/testing";
+import { IgxNavbarComponent, IgxNavbarModule } from "./navbar.component";
 
 describe("IgxNavbar", () => {
     beforeEach(async(() => {
@@ -50,10 +50,12 @@ describe("IgxNavbar", () => {
     it("should trigger on action", async(() => {
         TestBed.compileComponents().then(() => {
             const fixture = TestBed.createComponent(NavbarIntializeTestComponent);
+            fixture.componentInstance.isActionButtonVisible = true;
+            fixture.componentInstance.actionButtonIcon = "home";
             fixture.detectChanges();
 
             spyOn(fixture.componentInstance.navbar.onAction, "emit");
-            fixture.debugElement.nativeElement.querySelector("button").click();
+            fixture.debugElement.nativeElement.querySelector("igx-icon").click();
             fixture.detectChanges();
 
             expect(fixture.componentInstance.navbar.onAction.emit)

@@ -1,30 +1,26 @@
 @include b(igx-button) {
     @extend %igx-button-display !optional;
+
     @include m(flat) {
         @extend %igx-button-display !optional;
         @extend %igx-button--flat !optional;
     }
+
     @include m(raised) {
         @extend %igx-button-display !optional;
         @extend %igx-button--raised !optional;
     }
-    @include m(gradient) {
-        @extend %igx-button-display !optional;
-        @extend %igx-button--gradient !optional;
-    }
+
     @include m(fab) {
         @extend %igx-button--round !optional;
         @extend %igx-button--fab !optional;
     }
+
     @include m(icon) {
         @extend %igx-button--round !optional;
         @extend %igx-button--icon !optional;
     }
-    @include m(navbar) {
-        @extend %igx-button--round !optional;
-        @extend %igx-button--icon !optional;
-        @extend %igx-button--navbar !optional;
-    }
+
     @include m(disabled) {
         @extend %igx-button--disabled !optional;
     }

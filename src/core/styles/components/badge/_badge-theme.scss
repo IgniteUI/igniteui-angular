@@ -1,15 +1,14 @@
 $component-name: 'igx-badge';
-
 $components: register-component($components, #{$component-name});
 
 @function igx-badge-theme(
     $icon-color: null,
     $text-color: null,
     $border-color: null,
-    $border-radius: null,
     $background-color: null,
-    $disable-shadow: true,
-    $disable-border: true
+
+    $disable-shadow: 'true',
+    $disable-border: 'true'
 ) {
 
     @if not($icon-color) and $background-color {
@@ -24,10 +23,10 @@ $components: register-component($components, #{$component-name});
         icon-color: $icon-color,
         text-color: $text-color,
         border-color: $border-color,
-        border-radius: $border-radius,
         background-color: $background-color,
+
         disable-shadow: $disable-shadow,
-        disable-border: $disable-border
+        disable-border: $disable-border,
     );
 }
 
@@ -36,47 +35,38 @@ $components: register-component($components, #{$component-name});
         $icon-color: $white,
         $text-color: $white,
         $border-color: $white,
-        $background-color: igx-color($palette, accent, 500),
-        $border-radius: 4px
+        $background-color: igx-color($palette, 'primary', 500)
     );
 
     $this: extend($default-theme, $theme);
 
-    $badge-width: 22px !default;
-    $badge-height: $badge-width !default;
+    $badge-width: 22px;
+    $badge-height: $badge-width;
 
-    $badge-border-radius-circle: $badge-width / 2 !default;
+    $badge-border-radius-circle: $badge-width / 2;
 
-    $badge-font-size: rem(11px) !default;
-    $badge-font-weight: 600 !default;
-    $badge-line-height: 2px !default;
+    $badge-font-size: rem(11px);
+    $badge-font-weight: 600;
+    $badge-line-height: 2px;
 
-    $badge-icon-font-size: rem(12px) !default;
-    
-    $badge-value-padding: 4px !default;
-    $badge-info-background: igx-color($palette, 'primary');
-    $badge-warn-background: igx-color($palette, 'warn');
-    $badge-error-background: igx-color($palette, 'warn', 900);
+    $badge-icon-font-size: rem(12px);
 
-    $badge-shadow: $elevate-1 !default;
-
-    $border-width: 1px;
+    $badge-value-padding: rem(4px);
+    $badge-shadow: igx-elevation($elevations, 1);
     $border-type: solid;
 
-    @if map-get($this, 'disable-shadow') {
+    $border-width: rem(1px);
+
+
+    @if map-get($this, 'disable-shadow') == 'true' {
         $badge-shadow: none;
     }
 
-    @if map-get($this, 'disable-border') {
+    @if map-get($this, 'disable-border') == 'true' {
         $border-width: 0;
     }
 
     %igx-badge-display {
-        display: flex;
-        min-width: $badge-width;
-    }
-
-    %igx-badge--default {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -85,17 +75,14 @@ $components: register-component($components, #{$component-name});
         font-size: $badge-font-size;
         font-weight: $badge-font-weight;
         color: map-get($this, 'text-color');
-        background-color: map-get($this, 'background-color');
         line-height: $badge-line-height;
-        border: $border-width $border-type map-get($this, 'border-color');
-        border-radius: map-get($this, 'border-raduis');
-        box-shadow: $badge-shadow;
-        overflow: hidden;
 
-        i {
-            color: map-get($this, 'icon-color');
+        igx-icon {
+            width: $badge-icon-font-size;
+            height: $badge-icon-font-size;
             font-size: $badge-icon-font-size;
             font-weight: $badge-font-weight;
+            color: map-get($this, 'icon-color');
         }
     }
 
@@ -106,49 +93,32 @@ $components: register-component($components, #{$component-name});
 
     %igx-badge--circle {
         border-radius: $badge-border-radius-circle;
+        border: $border-width $border-type map-get($this, 'border-color');
+        box-shadow: $badge-shadow;
+        overflow: hidden;
+    }
+
+    %igx-badge--default {
+        background-color: map-get($this, 'background-color');
     }
 
     %igx-circle--success {
-        background-color: $success-color;
+        background-color: igx-color($palette, 'success');
     }
 
     %igx-badge--info {
-        background-color: $badge-info-background;
+        background-color: igx-color($palette, 'info');
     }
 
     %igx-circle--warn {
-        background-color: $badge-warn-background;
+        background-color: igx-color($palette, 'warn');
     }
 
     %igx-circle--error {
-        background-color: $badge-error-background;
+        background-color: igx-color($palette, 'error');
     }
 
     %igx-badge--hidden {
         visibility: hidden;
-    }
-
-    /*  %igx-badge-pos-tl {
-        top: 0;
-        left: 0;
-    }
-
-    %igx-badge-pos-tr {
-        top: 0;
-        right: 0;
-    }
-
-    %igx-badge-pos-bl {
-        bottom: 0;
-        left: 0;
-    }
-
-    %igx-badge-pos-br {
-        bottom: 0;
-        right: 0;
-    }*/
-
-    %igx-badge--scale-in {
-        animation: scale-in .25s ease-in backwards;
     }
 }
