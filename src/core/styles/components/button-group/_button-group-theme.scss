@@ -1,20 +1,55 @@
 ////
 /// @group themes
 /// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
+
+
+/// Button Group Theme
+/// @param {Color} $item-text-color [null]- Set text color for button group items.
+/// @param {Color} $item-background [null] - Set background color for button group items .
+/// @param {Color} $$item-border-color [null] - Set border color between button group items.
+///
+/// @param {Color} $icon-text-color [null] - Set color for buttons with icons.
+///
+/// @param {Color} $item-hover-text-color [null] - Set text color for button group items in :hover state.
+/// @param {Color} $item-hover-background [null] - Set background color for button group items in :hover state.
+///
+/// @param {Color} $icon-hover-text-color [null]- Set color for buttons with icons in :hover state.
+///
+/// @param {Color} $item-selected-text-color [null]- Set text color for a selected item from the button group.
+/// @param {Color} $item-selected-background [null] - Set background color for a selected item from the button group.
+/// @param {Color} $item-selected-border-color [null] - Set border color for a selected item from the button group.
+///
+/// @param {Color} $icon-selected-text-color [null] - Set icon color for a selected item from the button group.
+///
+/// @param {Color} $disabled-text-color [null]- Set text color/icon color for a disabled item from the button group.
+/// @param {Color} $disabled-background-color [null] - Set background color for a disabled item from the button group.
+///
+/// @requires text-contrast
+///
+/// @example scss Change the background, text color and border color for button group
+///   $my-button-group-theme: igx-button-group-theme(
+///     $item-text-color: white,
+///     $item-background: rgba(0,0,0, .8),
+///     $$item-border-color: #dadada
+///   );
+///   // Pass the theme to the igx-button-group component mixin
+///   igx-button-group($my-button-group-theme);
+
 @function igx-button-group-theme(
     // NORMAL
     $item-text-color: null,
     $item-background: null,
-    $icon-text-color: null,
     $item-border-color: null,
 
+    $icon-text-color: null,
+
     // HOVER
-    $icon-hover-text-color: null,
     $item-hover-text-color: null,
     $item-hover-background: null,
+
+    $icon-hover-text-color: null,
 
     // DISABLED
     $disabled-text-color: null,
@@ -24,6 +59,7 @@
     $item-selected-text-color: null,
     $item-selected-background: null,
     $item-selected-border-color: null,
+
     $icon-selected-text-color: null
 ) {
     $disabled-background-color: $item-background;
@@ -106,6 +142,12 @@
     );
 }
 
+
+/// Button group Component
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-button-group-theme
+/// @requires igx-color
 @mixin igx-button-group($theme, $palette: $default-palette) {
     $default-theme: igx-button-group-theme(
         // NORMAL

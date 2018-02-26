@@ -4,6 +4,46 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
+
+
+/// Calendar Theme
+/// @param {Color} $content-background [null]- Set calendar background color.
+/// @param {Color} $content-text-color [null] - Set calendar text color.
+///
+/// @param {Color} $header-background [null] - Set text color for calendar header elements.
+/// @param {Color} $header-text-color [null] - Set text color for calendar header elements in :hover state.
+///
+/// @param {Color} $picker-arrow-color [null] - Set color for the arrow icon.
+/// @param {Color} $picker-arrow-hover-color [null] - Set color for the arrow icon in :hover state.
+///
+/// @param {Color} $picker-text-color [null]- Set text color for the date picker.
+/// @param {Color} $picker-text-hover-color [null]-  Set text color for the date picker in :hover state.
+///
+/// @param {Color} $inactive-text-color [null] - Set text color for the week days and for the days from previous and next month.
+/// @param {Color} $weekend-text-color [null] - Set text color fot the weekend.
+///
+/// @param {Color} $year-current-text-color [null] - Set text color for currently selected year.
+/// @param {Color} $month-current-text-color [null]- Set text color for currently selected month.
+///
+/// @param {Color} $year-hover-text-color [null] - Set text color for currently selected year in :hover state.
+/// @param {Color} $month-hover-text-color [null] - Set text color for currently selected month in :hover state.
+///
+/// @param {Color} $date-selected-background [null] - Set background color for the selected date
+/// @param {Color} $date-selected-text-color [null] - Set text color for the selected date
+///
+/// @param {Color} $date-current-text-color [null] - Set text color for the current date
+/// @param {Color} $date-hover-background [null] - Set background color on a date in :hover state
+///
+/// @requires text-contrast
+///
+/// @example scss Change the background and text colors in raised button
+///   $my-calendar-theme: igx-calendar-theme(
+///     $item-text-color: #fff,
+///     $item-background: rgba(0,0,0, .8)
+///   );
+///   // Pass the theme to the igx-calendar component mixin
+///   igx-calendar($my-calendar-theme);
+
 @function igx-calendar-theme(
     $content-background: null,
     $content-text-color: null,
@@ -127,6 +167,14 @@
         date-hover-background: $date-hover-background
     );
 }
+
+/// Calendar Component
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-calendar-theme
+/// @requires igx-color
+/// @requires igx-contrast-color
+
 @mixin igx-calendar($theme, $palette: $default-palette) {
 
     $default-theme: igx-calendar-theme(

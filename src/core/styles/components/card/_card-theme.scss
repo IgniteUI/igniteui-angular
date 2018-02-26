@@ -1,9 +1,25 @@
 ////
 /// @group themes
 /// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
+
+/// Card Theme
+/// @param {Color} $background [null]- Set card background color.
+/// @param {Color} $header-text-color [null] - Set text color for card title.
+/// @param {Color} $subtitle-text-color [null] - Set text color for card subtitle.
+/// @param {Color} $content-text-color [null] - Set color for card text content.
+/// @param {Color} $actions-text-color [null] - Ser color for car action buttons.
+///
+/// @requires text-contrast
+///
+/// @example scss Change the background and content text colors in card
+///   $my-card-theme: igx-card-theme(
+///     $background: #fff,
+///     $content-text-color: rgba(0,0,0, .8)
+///   );
+///   // Pass the theme to the igx-card component mixin
+///   igx-calendar($my-card-theme);
 @function igx-card-theme(
     $background: null,
     $header-text-color: null,
@@ -37,6 +53,13 @@
     );
 }
 
+/// Card Component
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-card-theme
+/// @requires igx-color
+/// @requires extend
+/// @requires igx-elevation
 @mixin igx-card($theme, $palette: $default-palette) {
 
     $default-theme: igx-card-theme(
