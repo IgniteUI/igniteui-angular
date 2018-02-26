@@ -1,9 +1,54 @@
 ////
 /// @group themes
 /// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
+
+
+/// Buttons Theme
+/// @param {border-radius} $button-roundness [null]- Changes the button roundness(border-radius) for all button types.
+///
+/// @param {Color} $flat-text-color [null] - Changes the text color inside the flat button.
+/// @param {Color} $flat-hover-text-color [null] - Changes the text color in :hover state inside the flat button.
+/// @param {Color} $flat-background [null] - Changes the background color of the flat button.
+/// @param {Color} $flat-hover-background [null] - Changes the background color in :hover state of the flat button.
+/// @param {Color} $flat-focus-text-color [null] - Changes the text color in :focus state inside the flat button.
+/// @param {Color} $flat-focus-background [null] - Changes the background color in :focus state of the flat button.
+///
+/// @param {Color} $raised-text-color [null] - Changes the text color inside the raised button.
+/// @param {Color} $raised-hover-text-color [null] - Changes the text color in :hover state inside the raised button.
+/// @param {Color} $raised-background [null] - Changes the background color of the raised button.
+/// @param {Color} $raised-hover-background [null] - Changes the background color in :hover state of the raised button.
+/// @param {Color} $raised-focus-text-color [null] - Changes the text color in :focus state inside the raised button.
+/// @param {Color} $raised-focus-background [null] - Changes the background color in :focus state of the raised button.
+///
+/// @param {Color} $fab-text-color [null] - Changes the text color inside the fab button.
+/// @param {Color} $fab-hover-text-color [null] - Changes the text color in :hover state inside the fab button.
+/// @param {Color} $fab-background [null] - Changes the background color of the fab button.
+/// @param {Color} $fab-hover-background [null] - Changes the background color in :hover state of the fab button.
+/// @param {Color} $fab-focus-text-color [null] - Changes the text color in :focus state inside the fab button.
+/// @param {Color} $fab-focus-background [null] - Changes the background color in :focus state of the fab button.
+///
+/// @param {Color} $icon-color [null] - Changes the icon color inside the icon button.
+/// @param {Color} $icon-hover-color [null] - Changes the icon color in :hover state inside the icon button.
+/// @param {Color} $icon-background [null] - Changes the background color of the fab button.
+/// @param {Color} $icon-hover-background [null] - Changes the background color in :hover state of the icon button.
+/// @param {Color} $icon-focus-color [null] - Changes the icon color in :focus state inside the icon button.
+/// @param {Color} $icon-focus-background [null] - The icon color used for avatars of type icon.
+///
+/// @param {Color} $disabled-color [null] - Changes the text/icon color in disabled mode.
+/// @param {Color} $disabled-background [null] - Changes the background color in disabled mode.
+///
+/// @requires text-contrast
+///
+/// @example scss Change the background and text colors in raised button
+///   $my-button-theme: igx-button-theme(
+///     $raised-text-color: white,
+///     $raised-background: black
+///   );
+///   // Pass the theme to the igx-avatar component mixin
+///   igx-avatar($my-button-theme);
+
 @function igx-button-theme(
     // Global Button
     $button-roundness: null,
@@ -138,6 +183,13 @@
         disabled-background: $disabled-background,
     );
 }
+
+/// Button Component
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-button-theme
+/// @requires igx-color
+/// @requires igx-contrast-color
 @mixin igx-button($theme, $palette: $default-palette) {
     $default-theme: igx-button-theme(
         // Global
