@@ -50,3 +50,4 @@ export * from "./scroll/scroll.component";
 export * from "./date-picker/date-picker.component";
 export * from "./directives/toggle/toggle.directive";
 export * from "./directives/for-of/IForOfState";
+export * from "./excel/excel-exporter";
