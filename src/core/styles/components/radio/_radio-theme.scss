@@ -4,6 +4,17 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
+
+/// @param {Color} $label-color [null]- The text color used for the label text.
+/// @param {Color} $empty-color [null] - The unchecked border color.
+/// @param {Color} $fill-color [null] - The checked border and dot colors.
+/// @param {Color} $disabled-color [null] - The disabled border and dot colors.
+/// @param {Bool} $light [null] - Determines the default color scheme - light or not.
+/// Set light to true when the surrounding area is dark.
+/// @example scss Change the checked dot and border colors
+///   $my-radio-theme: igx-radio-theme($fill-color: magenta);
+///   // Pass the theme to the igx-radio component mixin
+///   @include igx-radio($my-radio-theme);
 @function igx-radio-theme(
     $label-color: null,
     $empty-color: null,
@@ -22,8 +33,13 @@
     );
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-radio-theme
+/// @requires igx-color
+/// @requires extend
+/// @requires rem
 @mixin igx-radio($theme, $palette: $default-palette) {
-
     $dark-theme: igx-radio-theme(
         $label-color: igx-color($palette, 'grays', 900),
         $empty-color: igx-color($palette, 'grays', 600),
@@ -83,11 +99,11 @@
         }
     }
 
-    %igx-radio-lbl-notchecked--before {
+    %igx-radio-lbl-unchecked--before {
         transform: scale3d(0, 0, 0);
     }
 
-    %igx-radio-lbl-notchecked--after {
+    %igx-radio-lbl-unchecked--after {
         border: $radio-border-style map-get($this, 'empty-color');
     }
 
@@ -106,7 +122,7 @@
         color: map-get($this, 'disabled-color');
     }
 
-    %igx-radio-lbl-notchecked--disabled-after {
+    %igx-radio-lbl-unchecked--disabled-after {
         border: $radio-border-style map-get($this, 'disabled-color');
     }
 

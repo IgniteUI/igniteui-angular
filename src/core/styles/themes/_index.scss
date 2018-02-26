@@ -6,7 +6,7 @@
 // Import the core modules first
 @import 'core';
 
-// Import all themable component mixins
+// Import all component mixins
 @import 'palettes';
 @import '../components/avatar/avatar-theme';
 @import '../components/badge/badge-theme';
@@ -40,6 +40,33 @@
 /// @requires {variable} $components
 /// @requires {variable} $default-palette
 /// @requires {function} is-component
+/// @requires {mixin} igx-avatar
+/// @requires {mixin} igx-badge
+/// @requires {mixin} igx-button
+/// @requires {mixin} igx-button-group
+/// @requires {mixin} igx-calendar
+/// @requires {mixin} igx-calendar
+/// @requires {mixin} igx-card
+/// @requires {mixin} igx-carousel
+/// @requires {mixin} igx-checkbox
+/// @requires {mixin} igx-date-picker
+/// @requires {mixin} igx-dialog
+/// @requires {mixin} igx-grid
+/// @requires {mixin} igx-grid-filtering
+/// @requires {mixin} igx-icon
+/// @requires {mixin} igx-input
+/// @requires {mixin} igx-list
+/// @requires {mixin} igx-navbar
+/// @requires {mixin} igx-navdrawer
+/// @requires {mixin} igx-progress-linear
+/// @requires {mixin} igx-progress-circular
+/// @requires {mixin} igx-radio
+/// @requires {mixin} igx-ripple
+/// @requires {mixin} igx-slider
+/// @requires {mixin} igx-snackbar
+/// @requires {mixin} igx-switch
+/// @requires {mixin} igx-tabbar
+/// @requires {mixin} igx-toast
 @mixin igx-theme($palette, $exclude: ()) {
     // Stores all excluded component styles
     $excluded: ();

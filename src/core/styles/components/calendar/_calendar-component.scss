@@ -1,14 +1,15 @@
-//// Calendar
+////
 /// @group components
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @requires {mixin} bem-block
-/// @requires {mixin} bem-elem
-/// @requires {mixin} bem-mod
 ////
+
 igx-calendar {
     width: 100%;
 }
 
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
 @include b(igx-calendar) {
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));

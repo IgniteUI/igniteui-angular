@@ -4,6 +4,18 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
+
+/// @param {Color} $label-color [null]- The text color used for the label text.
+/// @param {Color} $empty-color [null] - The unchecked border color.
+/// @param {Color} $fill-color [null] - The checked border and fill colors.
+/// @param {Color} $tick-color [null] - The checked mark color.
+/// @param {Color} $disabled-color [null] - The disabled border and fill colors.
+/// @param {Bool} $light [null] - Determines the default color scheme - light or not.
+/// Set light to true when the surrounding area is dark.
+/// @example scss Change the checked fill color
+///   $my-checkbox-theme: igx-checkbox-theme($fill-color: magenta);
+///   // Pass the theme to the igx-checkbox component mixin
+///   @include igx-checkbox($my-checkbox-theme);
 @function igx-checkbox-theme(
     $label-color: null,
     $empty-color: null,
@@ -22,6 +34,12 @@
     );
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-checkbox-theme
+/// @requires igx-color
+/// @requires extend
+/// @requires rem
 @mixin igx-checkbox($theme, $palette: $default-palette) {
     $dark-theme: igx-checkbox-theme(
         $label-color: igx-color($palette, grays, 900),
@@ -110,7 +128,7 @@
         stroke: map-get($this, 'tick-color');
     }
 
-    %igx-cbx-lbl-notchecked-after {
+    %igx-cbx-lbl-unchecked-after {
         @extend %igx-cbx-lbl-box;
         border: $checkbox-border-style map-get($this, 'empty-color');
     }
@@ -131,7 +149,7 @@
         border-color: map-get($this, 'disabled-color');
     }
 
-    %igx-cbx-lbl-notchecked--disabled-after {
+    %igx-cbx-lbl-unchecked--disabled-after {
         border-color: map-get($this, 'disabled-color');
     }
 

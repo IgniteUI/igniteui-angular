@@ -5,7 +5,8 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// Avatar Theme
+/// If only background color is specified, text/icon color
+/// will be assigned automatically to a contrasting color.
 /// @param {Color} $icon-background [null]- The background color used for avatars of type icon.
 /// @param {Color} $icon-color [null] - The icon color used for avatars of type icon.
 /// @param {Color} $initials-background [null] - The background color used for avatars of type initials.
@@ -15,7 +16,7 @@
 /// @example scss Change the background and icon colors in icon avatars
 ///   $my-avatar-theme: igx-avatar-theme($icon-background: black, $icon-color: white);
 ///   // Pass the theme to the igx-avatar component mixin
-///   igx-avatar($my-avatar-theme);
+///   @include igx-avatar($my-avatar-theme);
 @function igx-avatar-theme(
     $icon-background: null,
     $icon-color: null,
@@ -40,7 +41,6 @@
     );
 }
 
-/// Avatar Component
 /// @param {Map} $theme - The theme used to style the component.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @requires igx-avatar-theme

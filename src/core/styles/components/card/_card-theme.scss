@@ -5,21 +5,21 @@
 ////
 
 /// Card Theme
-/// @param {Color} $background [null]- Set card background color.
-/// @param {Color} $header-text-color [null] - Set text color for card title.
-/// @param {Color} $subtitle-text-color [null] - Set text color for card subtitle.
-/// @param {Color} $content-text-color [null] - Set color for card text content.
-/// @param {Color} $actions-text-color [null] - Ser color for car action buttons.
+/// @param {Color} $background [null]- The card background color.
+/// @param {Color} $header-text-color [null] - The text color of the card title.
+/// @param {Color} $subtitle-text-color [null] - The text color of the card subtitle.
+/// @param {Color} $content-text-color [null] - The text color of the card content.
+/// @param {Color} $actions-text-color [null] - The text color of the card buttons.
 ///
 /// @requires text-contrast
 ///
 /// @example scss Change the background and content text colors in card
 ///   $my-card-theme: igx-card-theme(
 ///     $background: #fff,
-///     $content-text-color: rgba(0,0,0, .8)
+///     $content-text-color: rgba(0, 0, 0, .8)
 ///   );
 ///   // Pass the theme to the igx-card component mixin
-///   igx-calendar($my-card-theme);
+///   @include igx-calendar($my-card-theme);
 @function igx-card-theme(
     $background: null,
     $header-text-color: null,
@@ -59,6 +59,7 @@
 /// @requires igx-card-theme
 /// @requires igx-color
 /// @requires extend
+/// @requires em
 /// @requires igx-elevation
 @mixin igx-card($theme, $palette: $default-palette) {
 
@@ -72,19 +73,17 @@
 
     $this: extend($default-theme, $theme);
 
-    // 4. Cards //
-    // Genaral
     $card-border-radius: 2px;
     $card-shadow: igx-elevation($elevations, 2);
     $card-shadow-hover: igx-elevation($elevations, 8);
-    // Font Sizes
+
     $card-title-fz: em(24px, 16px);
     $card-title-line-height: em(24px, 16px);
     $card-subtitle-fz: em(14px, 16px);
     $card-subtitle-line-height: em(24px, 16px);
     $card-content-fz: em(14px, 16px);
     $card-content-lh: (20px, 16px);
-    // Padding & Margin
+
     $card-heading-padding: em(24px, 16px) em(16px, 16px) em(16px, 16px) em(16px, 16px);
     $card-heading-compact-padding: em(16px, 16px);
     $card-heading-margin: 0;

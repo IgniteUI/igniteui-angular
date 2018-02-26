@@ -4,6 +4,18 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
+
+/// If you specify a background color, but do not specify colors for either the
+/// button or the text, their colors will be set automatically to a contrasting color.
+/// @param {Color} $background [null] - The background color used in the snackbar.
+/// @param {Color} $text-color [null] - The text color used in the snackbar.
+/// @param {Color} $button-color [null] - The button color used in the snackbar.
+/// @requires text-contrast
+/// @todo Add light option
+/// @example scss Set a custom background color
+///   $my-snackbar-theme: igx-snackbar-theme($background: white);
+///   // Pass the theme to the igx-tabbar component mixin
+///   @include igx-snackbar($my-snackbar-theme);
 @function igx-snackbar-theme(
     $background: null,
     $text-color: null,
@@ -24,6 +36,12 @@
     );
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-snackbar-theme
+/// @requires igx-color
+/// @requires extend
+/// @requires rem
 @mixin igx-snackbar($theme, $palette: $default-palette) {
     $default-theme: igx-snackbar-theme(
         $background: #323232,

@@ -4,10 +4,16 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
+
+/// Date Picker
 @function igx-date-picker-theme() {
     @return ();
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-date-picker-theme
+/// @requires extend
 @mixin igx-date-picker($theme, $palette: $default-palette) {
 
     $default-theme: igx-date-picker-theme();

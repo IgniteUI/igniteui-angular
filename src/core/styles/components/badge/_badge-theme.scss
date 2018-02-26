@@ -5,7 +5,8 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// Badge Theme
+/// If only background color is specified, text/icon color
+/// will be assigned automatically to a contrasting color.
 /// @param {Color} $icon-color [null] - The icon color used.
 /// @param {Color} $text-color [null] - The text color used.
 /// @param {Color} $border-color [null] - The border color used.
@@ -16,7 +17,7 @@
 /// @example scss Change the text and icon colors in a badge
 ///   $my-badge-theme: igx-badge-theme($icon-color: black, $background-color: white);
 ///   // Pass the theme to the igx-badge component mixin
-///   igx-badge($my-badge-theme);
+///   @include igx-badge($my-badge-theme);
 @function igx-badge-theme(
     $icon-color: null,
     $text-color: null,
@@ -46,7 +47,6 @@
     );
 }
 
-/// Badge Component
 /// @param {Map} $theme - The theme used to style the component.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @requires igx-badge-theme

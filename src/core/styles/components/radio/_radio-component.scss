@@ -1,4 +1,4 @@
-//// Radio
+////
 /// @group components
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @requires {mixin} bem-block
@@ -22,11 +22,11 @@
         }
 
         &:not(:checked) ~ #{$block}__label::before {
-            @extend %igx-radio-lbl-notchecked--before !optional;
+            @extend %igx-radio-lbl-unchecked--before !optional;
         }
 
         &:not(:checked) ~ #{$block}__label::after {
-            @extend %igx-radio-lbl-notchecked--after !optional;
+            @extend %igx-radio-lbl-unchecked--after !optional;
         }
 
         &:checked ~ #{$block}__label::before {
@@ -50,7 +50,7 @@
         }
 
         &:disabled:not(:checked) ~ #{$block}__label::after {
-            @extend %igx-radio-lbl-notchecked--disabled-after !optional;
+            @extend %igx-radio-lbl-unchecked--disabled-after !optional;
         }
     }
 }

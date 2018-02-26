@@ -1,4 +1,4 @@
-//// Checkbox
+////
 /// @group components
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @requires {mixin} bem-block
@@ -30,7 +30,7 @@
         }
 
         &:not(:checked) ~ #{$block}__label::after {
-            @extend %igx-cbx-lbl-notchecked-after !optional;
+            @extend %igx-cbx-lbl-unchecked-after !optional;
         }
 
         &:checked ~ #{$block}__label::after {
@@ -46,7 +46,7 @@
         }
 
         &:disabled:not(:checked) ~ #{$block}__label::after {
-            @extend %igx-cbx-lbl-notchecked--disabled-after !optional;
+            @extend %igx-cbx-lbl-unchecked--disabled-after !optional;
         }
     }
 }

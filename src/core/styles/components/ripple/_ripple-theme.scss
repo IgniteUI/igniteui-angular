@@ -4,15 +4,26 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
+
+/// @param {Color} $color [null] - The color of the ripple.
+/// @example scss Change the color
+///   $my-ripple-theme: igx-ripple-theme($color: yellow);
+///   // Pass the theme to the igx-ripple component mixin
+///   igx-ripple($my-ripple-theme);
 @function igx-ripple-theme($color: null) {
     @return (
         color: $color
     );
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-ripple-theme
+/// @requires igx-color
+/// @requires extend
 @mixin igx-ripple($theme, $palette: $default-palette) {
     $default-theme: igx-ripple-theme(
-        $color: opacify(igx-color($palette, 'grays', 800), .5)
+        $color: igx-color($palette, 'grays', 800)
     );
 
     $this: extend($default-theme, $theme);
@@ -27,7 +38,7 @@
         bottom: 0;
         left: 0;
         border-radius: 50%;
-        background: map-get($this, 'color');
+        background: rgba(map-get($this, 'color'), .5);
         pointer-events: none;
         transform: translate3d(0, 0, 0) scale(0);
         will-change: opacity, transform;
