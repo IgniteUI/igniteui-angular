@@ -1,14 +1,28 @@
-// ul {
-//     border: 1px solid black;
-//     list-style-type: none;
-//     list-style-position:inside;
-//     margin:0;
-//     padding:0;
-//     max-height: 4.5em; /* 1.5 x 3 */
-//     overflow-y: auto;
-// }
-// li:hover {background-color: #ddd}
+ul {
+    list-style-type: none;
+    list-style-position:inside;
+    margin:0;
+    padding:0;
+    max-height: 10.5em;
+    overflow-y: auto;
+    overflow: hidden;
+    display: inline-block;
+    width: 32%;
+    text-align: center;
+    
+}
+ul:hover{
+    background-color:rgb(209, 208, 208);
+}
+li {
+    min-height: 1.5em;
+    cursor: pointer;
+}
+li:hover{
+    font-weight: bold;
+}
 
-// div.dropdown{
-//     width: inherit
-// }
+li.selected{
+    font-weight: bold;
+    color:#E41C77;
+}
