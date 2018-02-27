@@ -4,6 +4,17 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
+
+/// @param {Color} $background [null] - The navbar background color.
+/// @param {Color} $text-color [null] - The navbar text color.
+/// @param {Color} $idle-icon-color [null] - The navbar idle icon color.
+/// @param {Color} $hover-icon-color [null] - The navbar hover icon color.
+/// @requires text-contrast
+///
+/// @example scss Change the background color
+///   $my-navbar-theme: igx-navbar-theme($background: green);
+///   // Pass the theme to the igx-navbar component mixin
+///   @include igx-navbar($my-navbar-theme);
 @function igx-navbar-theme(
     $background: null,
     $text-color: null,
@@ -30,6 +41,12 @@
     );
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-navbar-theme
+/// @requires igx-color
+/// @requires extend
+/// @requires em
 @mixin igx-navbar($theme, $palette: $default-palette) {
     $default-theme: igx-navbar-theme(
         $background: igx-color($palette, 'primary'),

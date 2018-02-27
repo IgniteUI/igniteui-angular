@@ -4,6 +4,18 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
+
+/// @param {Color} $header-background [null] - The table header background color.
+/// @param {Color} $header-text-color [null] - The table header text color.
+/// @param {Color} $content-background [null] - The table body background color.
+/// @param {Color} $content-text-color [null] - The table body text color.
+/// @param {Color} $row-border-color [null] - The row bottom border color.
+/// @param {Color} $row-selected-background [null] - The selected row background color.
+/// @param {Color} $row-selected-text-color [null] - The selected row text color.
+/// @param {Color} $row-hover-background [null] - The hover row background color.
+/// @param {Color} $cell-selected-background [null] - The selected cell background color.
+/// @param {Color} $cell-selected-text-color [null] - The selected cell text color.
+/// @requires text-contrast
 @function igx-grid-theme(
     $header-background: null,
     $header-text-color: null,
@@ -60,6 +72,15 @@
     );
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-grid-theme
+/// @requires igx-color
+/// @requires igx-contrast-color
+/// @requires igx-elevation
+/// @requires $elevations
+/// @requires extend
+/// @requires rem
 @mixin igx-grid($theme, $palette: $default-palette) {
     $default-theme: igx-grid-theme(
         $header-background: #fff,
@@ -242,7 +263,6 @@
         color: map-get($this, 'cell-selected-text-color');
         background-color: map-get($this, 'cell-selected-background') !important;
         border-bottom: 0;
-        margin-bottom: -1px;
         z-index: 10;
     }
 

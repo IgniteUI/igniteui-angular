@@ -6,7 +6,6 @@
 ////
 @function igx-navdrawer-theme(
     $navdrawer-background-color: null,
-    $overlay-background: null,
     $navdrawer-border-color: null,
     $item-text-color: null,
     $item-active-text-color: null,
@@ -19,7 +18,6 @@
 ) {
     @return (
         navdrawer-background-color: $navdrawer-background-color,
-        overlay-background: $overlay-background,
         navdrawer-border-color: $navdrawer-border-color,
         item-text-color:$item-text-color,
         item-active-text-color: $item-active-text-color,
@@ -35,7 +33,6 @@
 @mixin igx-navdrawer($theme, $palette: $default-palette) {
     $default-theme: igx-navdrawer-theme(
         $navdrawer-background-color: #fff,
-        $overlay-background: rgba(0, 0, 0, .25),
         $navdrawer-border-color: rgba(0, 0, 0, .14),
         $item-text-color: igx-color($palette, grays, 800),
         $item-active-text-color: igx-color($palette, primary, 500),
@@ -108,7 +105,7 @@
 
     %overlay {
         opacity: 1;
-        background-color: map-get($this, 'overlay-background');
+        background-color: $overlay-color;
         transition: opacity, visibility;
         transition-duration: .25s, .25s;
         transition-timing-function: ease-in, step-start;

@@ -4,13 +4,21 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
-@function igx-dialog-theme(
-    $overlay-color:null,
-    $background:null,
-    $title-color:null,
-    $message-color:null
-) {
 
+/// @param {Color} $background [null] - The dialog background color.
+/// @param {Color} $title-color [null] - The dialog title text color.
+/// @param {Color} $message-color [null] - The dialog message text color.
+/// @requires text-contrast
+///
+/// @example scss Change the background color
+///   $my-dialog-theme: igx-dialog-theme($background: black);
+///   // Pass the theme to the igx-dialog component mixin
+///   @include igx-dialog($my-dialog-theme);
+@function igx-dialog-theme(
+    $background: null,
+    $title-color: null,
+    $message-color: null
+) {
     @if not($title-color) and $background{
         $title-color: text-contrast($background) ;
     }
@@ -20,17 +28,23 @@
     }
 
     @return (
-        overlay-color:$overlay-color,
         background:$background,
         title-color:$title-color,
         message-color:$message-color
     );
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-dialog-theme
+/// @requires igx-color
+/// @requires igx-elevation
+/// @requires $elevations
+/// @requires extend
+/// @requires em
 @mixin igx-dialog($theme, $palette: $default-palette) {
 
     $default-theme: igx-dialog-theme(
-        $overlay-color: igx-color($palette, grays, 500),
         $background: #fff,
         $title-color: igx-color($palette, grays, 800),
         $message-color: igx-color($palette, grays, 600)
@@ -65,7 +79,7 @@
         right: 0;
         left: 0;
         bottom: 0;
-        background: map-get($this, overlay-color);
+        background: $overlay-color;
         z-index: 24;
     }
 
@@ -78,12 +92,12 @@
         min-width: $dialog-min-width;
         padding: $dialog-padding;
         border-radius: 2px;
-        background: map-get($this, background);
+        background: map-get($this, 'background');
         box-shadow: igx-elevation($elevations, 24);
     }
 
     %igx-dialog-title {
-        color: map-get($this, title-color);
+        color: map-get($this, 'title-color');
         font-size: $dialog-title-font-size;
         line-height: $dialog-title-line-height;
         padding-top: $dialog-title-padding-top;
@@ -92,7 +106,7 @@
     }
 
     %igx-dialog-content {
-        color: map-get($this, message-color);
+        color: map-get($this, 'message-color');
         font-size: $dialog-message-font-size;
         line-height: $dialog-message-line-height;
         padding-top: $dialog-message-padding-top;

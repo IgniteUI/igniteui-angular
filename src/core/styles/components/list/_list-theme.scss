@@ -4,6 +4,20 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
+
+/// @param {Color} $background [null] - The list background color.
+/// @param {Color} $header-background [null] - The list header background color.
+/// @param {Color} $header-text-color [null] - The list header text color.
+/// @param {Color} $item-background [null] - The list item background color.
+/// @param {Color} $item-text-color [null] - The list item text color.
+/// @param {Color} $item-background-active [null] - The active list item background color.
+/// @param {Color} $item-text-color-active [null] - The active list item text color.
+/// @requires text-contrast
+///
+/// @example scss Change the list background color
+///   $my-list-theme: igx-list-theme($background: black);
+///   // Pass the theme to the igx-list component mixin
+///   @include igx-avatar($my-list-theme);
 @function igx-list-theme(
     $background: null,
     $header-background: null,
@@ -52,6 +66,12 @@
     );
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-list-theme
+/// @requires igx-color
+/// @requires extend
+/// @requires em
 @mixin igx-list($theme, $palette: $default-palette) {
     $default-theme: igx-list-theme(
         $background: #fff,
