@@ -392,7 +392,7 @@ describe("IgxGrid - Filtering actions", () => {
     });
 
     // UI tests string column
-    it("UI - should correctly filter by 'Contains' filtering conditions", (done) => {
+    it("UI - should correctly filter string column by 'Contains' filtering conditions", (done) => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -408,12 +408,12 @@ describe("IgxGrid - Filtering actions", () => {
             fix.detectChanges();
             expect(grid.rowList.length).toEqual(1);
             expect(grid.getCellByColumn(0, "ID").value).toEqual(2);
-            expect(grid.getCellByColumn(0, "ProductName").value).toEqual("NetAdvantage");
+            expect(grid.getCellByColumn(0, "ProductName").value).toMatch("NetAdvantage");
             done();
         });
     });
 
-    it("UI - should correctly filter by 'EndsWith' filtering conditions", (done) => {
+    it("UI - should correctly filter string column by 'DoesNotContain' filtering conditions", (done) => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -422,52 +422,22 @@ describe("IgxGrid - Filtering actions", () => {
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
         const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
         const select = filterUIContainer.query(By.css("div > select"));
-        const selectOptions = filterUIContainer.queryAll(By.css("div > select > option"));
 
-        filterIcon.nativeElement.click();
-        fix.detectChanges();
-        select.nativeElement.dispatchEvent(new Event("click"));
-        fix.detectChanges();
-        selectOptions[2].nativeElement.dispatchEvent(new Event("click"));
-        fix.detectChanges();
-
-        sendInput(input, "Script", fix).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(2);
-            expect(grid.getCellByColumn(0, "ProductName").value).toEqual("Ignite UI for JavaScript");
-            expect(grid.getCellByColumn(1, "ProductName").value).toEqual("Some other item with Script");
-            done();
-        });
-    });
-
-    it("UI - should correctly filter by 'StartsWith' filtering conditions", (done) => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.query(By.css("igx-grid-filter"));
-        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
-        const select = filterUIContainer.query(By.css("div > select"));
-        const selectOptions = filterUIContainer.queryAll(By.css("div > select > option"));
-
-        filterIcon.nativeElement.click();
-        fix.detectChanges();
-        select.nativeElement.dispatchEvent(new Event("click"));
-        fix.detectChanges();
-        selectOptions[1].nativeElement.dispatchEvent(new Event("click"));
-        fix.detectChanges();
+        select.nativeElement.value = "doesNotContain";
+        select.nativeElement.dispatchEvent(new Event("change"));
 
         sendInput(input, "Ignite", fix).then(() => {
             fix.detectChanges();
-            expect(grid.rowList.length).toEqual(2);
-            expect(grid.getCellByColumn(0, "ProductName").value).toEqual("Ignite UI for JavaScript");
-            expect(grid.getCellByColumn(1, "ProductName").value).toEqual("Ignite UI for Angular");
+            expect(grid.rowList.length).toEqual(6);
+            expect(grid.getCellByColumn(0, "ProductName").value).toMatch("NetAdvantage");
+            expect(grid.getCellByColumn(1, "ProductName").value).toEqual(null);
+            expect(grid.getCellByColumn(2, "ProductName").value).toMatch("");
+            expect(grid.getCellByColumn(3, "ProductName").value).toMatch("Some other item with Script");
             done();
         });
     });
 
-    it("UI - should correctly filter by 'Equals' filtering conditions", (done) => {
+    it("UI - should correctly filter string column by 'StartsWith' filtering conditions", (done) => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -476,26 +446,317 @@ describe("IgxGrid - Filtering actions", () => {
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
         const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
         const select = filterUIContainer.query(By.css("div > select"));
-        const selectOptions = filterUIContainer.queryAll(By.css("div > select > option"));
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
-        select.nativeElement.click();
-        fix.detectChanges();
-        selectOptions[4].nativeElement.dispatchEvent(new Event("click"));
-        fix.detectChanges();
+        select.nativeElement.value = "startsWith";
+        select.nativeElement.dispatchEvent(new Event("change"));
 
-        sendInput(input, "NetAdvantage", fix).then(() => {
+        sendInput(input, "Net", fix).then(() => {
             fix.detectChanges();
             expect(grid.rowList.length).toEqual(1);
             expect(grid.getCellByColumn(0, "ID").value).toEqual(2);
-            expect(grid.getCellByColumn(0, "ProductName").value).toEqual("NetAdvantage");
+            expect(grid.getCellByColumn(0, "ProductName").value).toMatch("NetAdvantage");
             done();
         });
     });
 
+    it("UI - should correctly filter string column by 'EndsWith' filtering conditions", (done) => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.query(By.css("igx-grid-filter"));
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const select = filterUIContainer.query(By.css("div > select"));
+
+        select.nativeElement.value = "endsWith";
+        select.nativeElement.dispatchEvent(new Event("change"));
+
+        sendInput(input, "for", fix).then(() => {
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(0);
+            done();
+        });
+    });
+
+    it("UI - should correctly filter string column by 'Equals' filtering conditions", (done) => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.query(By.css("igx-grid-filter"));
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const select = filterUIContainer.query(By.css("div > select"));
+
+        select.nativeElement.value = "equals";
+        select.nativeElement.dispatchEvent(new Event("change"));
+
+        sendInput(input, "Some other item with Script", fix).then(() => {
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(1);
+            expect(grid.getCellByColumn(0, "ID").value).toEqual(6);
+            expect(grid.getCellByColumn(0, "ProductName").value).toMatch("Some other item with Script");
+            done();
+        });
+    });
+
+    it("UI - should correctly filter string column by 'doesNotEqual' filtering conditions", (done) => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.query(By.css("igx-grid-filter"));
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const select = filterUIContainer.query(By.css("div > select"));
+
+        select.nativeElement.value = "doesNotEqual";
+        select.nativeElement.dispatchEvent(new Event("change"));
+
+        sendInput(input, "NetAdvantage", fix).then(() => {
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(7);
+            expect(grid.getCellByColumn(0, "ProductName").value).toMatch("Ignite UI for JavaScript");
+            expect(grid.getCellByColumn(1, "ProductName").value).toMatch("Ignite UI for Angular");
+            expect(grid.getCellByColumn(4, "ProductName").value).toMatch("Some other item with Script");
+            done();
+        });
+    });
+
+    it("UI - should correctly filter string column string columnter by 'Empty' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.query(By.css("igx-grid-filter"));
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+
+        select.nativeElement.value = "empty";
+        select.nativeElement.dispatchEvent(new Event("change"));
+
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(4);
+        expect(grid.getCellByColumn(0, "ProductName").value).toMatch("");
+        expect(grid.getCellByColumn(1, "ProductName").value).toMatch("");
+        expect(grid.getCellByColumn(2, "ProductName").value).toMatch("");
+        expect(grid.getCellByColumn(3, "ProductName").value).toMatch("");
+
+    });
+
+    it("UI - should correctly filter string column by 'NotEmpty' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.query(By.css("igx-grid-filter"));
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+
+        select.nativeElement.value = "notEmpty";
+        select.nativeElement.dispatchEvent(new Event("change"));
+
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(4);
+        expect(grid.getCellByColumn(0, "ProductName").value).toMatch("Ignite UI for JavaScript");
+        expect(grid.getCellByColumn(1, "ProductName").value).toMatch("NetAdvantage");
+        expect(grid.getCellByColumn(2, "ProductName").value).toMatch("Ignite UI for Angular");
+        expect(grid.getCellByColumn(3, "ProductName").value).toMatch("Some other item with Script");
+    });
+
+    it("UI - should correctly filter string column by 'null' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.query(By.css("igx-grid-filter"));
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+
+        select.nativeElement.value = "null";
+        select.nativeElement.dispatchEvent(new Event("change"));
+
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(3);
+        expect(grid.getCellByColumn(0, "ProductName").value).toEqual(null);
+        expect(grid.getCellByColumn(1, "ProductName").value).toEqual(null);
+        expect(grid.getCellByColumn(2, "ProductName").value).toEqual(null);
+
+    });
+
+    it("UI - should correctly filter string column by 'NotNull' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.query(By.css("igx-grid-filter"));
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+
+        select.nativeElement.value = "notNull";
+        select.nativeElement.dispatchEvent(new Event("change"));
+
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(5);
+        expect(grid.getCellByColumn(3, "ProductName").value).toMatch("");
+    });
+
+    // UI tests boolean column
+    it("UI - should correctly filter boolean by 'true' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[2];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+
+        select.nativeElement.value = "true";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(3);
+        expect(grid.getCellByColumn(0, "Released").value).toBe(true);
+        expect(grid.getCellByColumn(1, "Released").value).toBe(true);
+        expect(grid.getCellByColumn(2, "Released").value).toBe(true);
+    });
+
+    it("UI - should correctly filter boolean by 'false' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[2];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+
+        select.nativeElement.value = "false";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(5);
+        expect(grid.getCellByColumn(0, "Released").value).toBeFalsy();
+        expect(grid.getCellByColumn(1, "Released").value).toBeFalsy();
+        expect(grid.getCellByColumn(2, "Released").value).toBeFalsy();
+        expect(grid.getCellByColumn(1, "Released").value).toBeFalsy();
+        expect(grid.getCellByColumn(2, "Released").value).toBeFalsy();
+    });
+
+    it("UI - should correctly filter boolean by 'null' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[2];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "null";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(2);
+        expect(grid.getCellByColumn(0, "Released").value).toEqual(null);
+        expect(grid.getCellByColumn(1, "Released").value).toEqual(null);
+    });
+
+    it("UI - should correctly filter boolean by 'notNull' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[2];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "notNull";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(6);
+        expect(grid.getCellByColumn(0, "Released").value).toBe(false);
+        expect(grid.getCellByColumn(1, "Released").value).toBe(true);
+        expect(grid.getCellByColumn(2, "Released").value).toBe(true);
+        expect(grid.getCellByColumn(3, "Released").value).toMatch("");
+        expect(grid.getCellByColumn(4, "Released").value).toBe(true);
+        expect(grid.getCellByColumn(5, "Released").value).toBe(false);
+    });
+
+    it("UI - should correctly filter boolean by 'empty' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[2];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "empty";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(2);
+        expect(grid.getCellByColumn(0, "Released").value).toEqual(null);
+        expect(grid.getCellByColumn(1, "Released").value).toEqual(null);
+    });
+
+    it("UI - should correctly filter boolean by 'notEmpty' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[2];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "notEmpty";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(6);
+        expect(grid.getCellByColumn(0, "Released").value).toBe(false);
+        expect(grid.getCellByColumn(1, "Released").value).toBe(true);
+        expect(grid.getCellByColumn(2, "Released").value).toBe(true);
+        expect(grid.getCellByColumn(3, "Released").value).toMatch("");
+        expect(grid.getCellByColumn(4, "Released").value).toBe(true);
+        expect(grid.getCellByColumn(5, "Released").value).toBe(false);
+    });
+
     // UI tests number column
-    it("UI - should correctly filter by 'Equals' filtering conditions", (done) => {
+    it("UI - should correctly filter number column by 'Equal' filtering conditions", (done) => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -509,10 +770,212 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "100", fix).then(() => {
             fix.detectChanges();
-            expect(grid.rowList.length).toEqual(4);
-            expect(grid.getCellByColumn(0, "ID").value).toEqual(1);
+            expect(grid.rowList.length).toEqual(1);
+            expect(grid.getCellByColumn(0, "Downloads").value).toEqual(100);
             done();
         });
+    });
+
+    it("UI - should correctly filter number column by 'DoesNotEqual' filtering conditions", (done) => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "doesNotEqual";
+        select.nativeElement.dispatchEvent(new Event("change"));
+
+        sendInput(input, "100", fix).then(() => {
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(7);
+            expect(grid.getCellByColumn(6, "Downloads").value).toEqual(1000);
+            done();
+        });
+    });
+
+    it("UI - should correctly filter number column by 'GreaterThan' filtering conditions", (done) => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "greaterThan";
+        select.nativeElement.dispatchEvent(new Event("change"));
+
+        sendInput(input, "300", fix).then(() => {
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(2);
+            expect(grid.getCellByColumn(0, "Downloads").value).toEqual(702);
+            expect(grid.getCellByColumn(1, "Downloads").value).toEqual(1000);
+            done();
+        });
+    });
+
+    it("UI - should correctly filter number column by 'LessThan' filtering conditions", (done) => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "lessThan";
+        select.nativeElement.dispatchEvent(new Event("change"));
+
+        sendInput(input, "100", fix).then(() => {
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(3);
+            expect(grid.getCellByColumn(0, "Downloads").value).toEqual(20);
+            expect(grid.getCellByColumn(1, "Downloads").value).toEqual(null);
+            expect(grid.getCellByColumn(2, "Downloads").value).toEqual(0);
+            done();
+        });
+    });
+
+    it("UI - should correctly filter number column by 'greaterThanOrEqualTo' filtering conditions", (done) => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "greaterThanOrEqualTo";
+        select.nativeElement.dispatchEvent(new Event("change"));
+
+        sendInput(input, "254", fix).then(() => {
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(3);
+            expect(grid.getCellByColumn(0, "Downloads").value).toEqual(254);
+            expect(grid.getCellByColumn(1, "Downloads").value).toEqual(702);
+            expect(grid.getCellByColumn(2, "Downloads").value).toEqual(1000);
+            done();
+        });
+    });
+
+    it("UI - should correctly filter number column by 'lessThanOrEqualTo' filtering conditions", (done) => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "lessThanOrEqualTo";
+        select.nativeElement.dispatchEvent(new Event("change"));
+
+        sendInput(input, "20", fix).then(() => {
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(3);
+            expect(grid.getCellByColumn(0, "Downloads").value).toEqual(20);
+            expect(grid.getCellByColumn(1, "Downloads").value).toEqual(null);
+            expect(grid.getCellByColumn(2, "Downloads").value).toEqual(0);
+            done();
+        });
+    });
+
+    it("UI - should correctly filter number column number column by 'null' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "null";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(1);
+        expect(grid.getCellByColumn(0, "ID").value).toEqual(4);
+        expect(grid.getCellByColumn(0, "Downloads").value).toEqual(null);
+    });
+
+    it("UI - should correctly filter number column by 'notNull' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "notNull";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(7);
+    });
+
+    it("UI - should correctly filter number column by 'empty' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "empty";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(1);
+        expect(grid.getCellByColumn(0, "ID").value).toEqual(4);
+        expect(grid.getCellByColumn(0, "Downloads").value).toEqual(null);
+    });
+
+    it("UI - should correctly filter number column by 'notEmpty' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "notEmpty";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(7);
     });
 });
 
