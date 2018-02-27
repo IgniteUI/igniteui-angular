@@ -194,19 +194,28 @@
     );
 }
 
-@function igx-palette($primary, $accent, $warn: $warn-color, $info: $info-color, $success: $success-color, $error: $error-color) {
+@function igx-palette(
+    $primary,
+    $secondary,
+    $info: #1377d5,
+    $success: #4eb862,
+    $warn: #fbb13c,
+    $error: #ff134a
+) {
     $primary-palette: _generate-palette($primary);
-    $accent-palette: _generate-palette($accent);
-    $warn-palette: _generate-palette($warn);
+    $secondary-palette: _generate-palette($secondary);
 
     // @debug 'Primary Colors Palette: #{$primary-palette}';
-    // @debug 'Accent Colors Palette: #{$accent-palette}';
+    // @debug 'secondary Colors Palette: #{$secondary-palette}';
     // @debug 'Warn Colors Palette: #{$warn-palette}';
 
     @return (
         primary: $primary-palette,
-        accent: $accent-palette,
-        warn: $warn-palette,
+        secondary: $secondary-palette,
+        info: (500: $info),
+        success: (500: $success),
+        warn: (500: $warn),
+        error: (500: $error),
         grays: (
             100: rgba(0, 0, 0, .04),
             200: rgba(0, 0, 0, .08),
@@ -228,10 +237,7 @@
                 800: text-contrast(rgba(0, 0, 0, .74)),
                 900: text-contrast(rgba(0, 0, 0, .87)),
             )
-        ),
-        info: (500: $info),
-        success: (500: $success),
-        error: (500: $error)
+        )
     );
 }
 

@@ -24,3 +24,11 @@ export class IgxCellFooterTemplateDirective {
 
     constructor(public template: TemplateRef<any>) { }
 }
+
+@Directive({
+    selector: "[igxCellEditor]"
+})
+export class IgxCellEditorTemplateDirective {
+
+    constructor(public template: TemplateRef<any>) { }
+}

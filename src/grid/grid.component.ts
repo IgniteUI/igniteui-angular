@@ -250,7 +250,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                         footerHeight;
                 }
 
-                this.markForCheck();
+                this.zone.run(() => this.cdr.detectChanges());
             };
     }
 

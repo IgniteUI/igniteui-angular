@@ -53,7 +53,7 @@ describe("IgxVirtual directive - simple template", () => {
         expect(verticalScroller).toBeNull();
         expect(horizontalScroller).not.toBeNull();
 
-        fix.componentInstance.scrollLeft(100);
+        fix.componentInstance.scrollLeft(150);
         fix.detectChanges();
 
         const firstRecChildren = displayContainer.children;
@@ -314,7 +314,6 @@ describe("IgxVirtual directive - simple template", () => {
             fix.detectChanges();
 
             fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-            fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
             fix.detectChanges();
         }).not.toThrow();
 
@@ -341,7 +340,6 @@ describe("IgxVirtual directive - simple template", () => {
 
             // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
             fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-            fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
             fix.detectChanges();
         }).not.toThrow();
 
@@ -383,7 +381,6 @@ describe("IgxVirtual directive - simple template", () => {
 
             // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
             fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-            fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
             fix.detectChanges();
         }).not.toThrow();
 
@@ -399,7 +396,6 @@ describe("IgxVirtual directive - simple template", () => {
 
             // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
             fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-            fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
             fix.detectChanges();
         }).not.toThrow();
 
@@ -433,6 +429,13 @@ describe("IgxVirtual directive - simple template", () => {
         fix.componentInstance.scrollLeft(1000);
         fix.detectChanges();
 
+        rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        for (let i = 0; i < rowsRendered.length; i++) {
+            // Check only the second col, no need for the others
+            expect(rowsRendered[i].children[1].textContent)
+                .toBe(fix.componentInstance.data[i][5].toString());
+        }
+
         /** Step 2. Lower the amount of cols to 0 so there would be no horizontal scrollbar */
         expect(() => {
             fix.componentInstance.generateData(2, 0);
@@ -440,7 +443,6 @@ describe("IgxVirtual directive - simple template", () => {
 
             // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
             fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-            fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
             fix.detectChanges();
         }).not.toThrow();
 
@@ -457,7 +459,6 @@ describe("IgxVirtual directive - simple template", () => {
 
             // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
             fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-            fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
             fix.detectChanges();
         }).not.toThrow();
         rowsRendered = displayContainer.querySelectorAll("igx-display-container");
@@ -468,6 +469,12 @@ describe("IgxVirtual directive - simple template", () => {
         expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
         expect(rowsRendered.length).toBe(8);
         // expect(colsRendered.length).toBe(4); To be investigated
+
+        for (let i = 0; i < rowsRendered.length; i++) {
+            // Check only the second col, no need for the others
+            expect(rowsRendered[i].children[1].textContent)
+                .toBe(fix.componentInstance.data[i][5].toString());
+        }
     });
 
     it("should not render horizontal scrollbars when number of cols change to 3", () => {
@@ -514,7 +521,6 @@ describe("IgxVirtual directive - simple template", () => {
 
             // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
             fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-            fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
             fix.detectChanges();
         }).not.toThrow();
 
@@ -533,7 +539,6 @@ describe("IgxVirtual directive - simple template", () => {
 
             // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
             fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-            fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
             fix.detectChanges();
         }).not.toThrow();
         rowsRendered = displayContainer.querySelectorAll("igx-display-container");
@@ -729,8 +734,8 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         super._applyChanges(changes);
     }
 
-    public testCalculatePageSize(): number {
-        return super._calculatePageSize();
+    public testCalculateChunkSize(): number {
+        return super._calculateChunkSize();
     }
 
     public testInitHCache(cols: any[]): number {

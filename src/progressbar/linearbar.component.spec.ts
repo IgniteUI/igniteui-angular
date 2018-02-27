@@ -18,7 +18,7 @@ describe("IgLinearBar", () => {
                 IgxLinearProgressBarComponent
             ]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     it("should initialize linearProgressbar with default values", fakeAsync(() => {
@@ -81,21 +81,21 @@ describe("IgLinearBar", () => {
 
     it("If passed value is higher then max it should stay equal to maximum " +
         "(custom max size and without animation)", fakeAsync(() => {
-        const progressBarMaxValue = 150;
-        const progressBarValue = 170;
-        const fixture = TestBed.createComponent(InitLinearProgressBarComponent);
+            const progressBarMaxValue = 150;
+            const progressBarValue = 170;
+            const fixture = TestBed.createComponent(InitLinearProgressBarComponent);
 
-        fixture.detectChanges();
+            fixture.detectChanges();
 
-        const progress = fixture.componentInstance.linearBar;
-        progress.animate = false;
-        progress.max = progressBarMaxValue;
-        progress.value = progressBarValue;
+            const progress = fixture.componentInstance.linearBar;
+            progress.animate = false;
+            progress.max = progressBarMaxValue;
+            progress.value = progressBarValue;
 
-        fixture.detectChanges();
+            fixture.detectChanges();
 
-        expect(progress.value).toBe(progressBarMaxValue);
-    }));
+            expect(progress.value).toBe(progressBarMaxValue);
+        }));
 
     it("should not update value if max is decreased", fakeAsync(() => {
         let progressBarMaxValue = 200;
@@ -205,28 +205,28 @@ describe("IgLinearBar", () => {
         fixture.detectChanges();
         tick(tickTime);
 
-        const progressBarElem = fixture.componentInstance.linearBar.elementRef.nativeElement
-                                    .querySelectorAll("[class*='progress-linear__bar--']")[0];
+        const progressBarContainer = fixture.componentInstance.linearBar.elementRef.nativeElement.querySelector(".progress-linear__bar");
+        const progressBarElem = progressBarContainer.querySelector("[class*='progress-linear__bar-progress']");
 
         fixture.detectChanges();
 
         expect(progressBarElem.style.width).toBe(expectedValue + "%");
-        expect(progressBarElem.attributes["aria-valuenow"].textContent).toBe(expectedValue.toString());
+        expect(progressBarContainer.attributes["aria-valuenow"].textContent).toBe(expectedValue.toString());
     }));
 
     it("Should change class suffix which would be relevant to the type that had been passed", fakeAsync(() => {
         const fixture = TestBed.createComponent(LinearBarComponent);
         fixture.detectChanges();
 
-        const progressBarElem = fixture.componentInstance.linearBar.elementRef.nativeElement
-                                    .querySelectorAll("[class*='progress-linear__bar--']")[0];
+        const progressBarContainer = fixture.componentInstance.linearBar.elementRef.nativeElement.querySelector(".progress-linear__bar");
+        const progressBarElem = progressBarContainer.querySelector("[class*='progress-linear__bar-progress']");
 
-        expect(progressBarElem.classList.contains("progress-linear__bar--default")).toBeTruthy();
+        expect(progressBarElem.classList.contains("progress-linear__bar-progress--default")).toBeTruthy();
 
         fixture.componentInstance.type = "info";
         fixture.detectChanges();
 
-        expect(progressBarElem.classList.contains("progress-linear__bar--info")).toBeTruthy();
+        expect(progressBarElem.classList.contains("progress-linear__bar-progress--info")).toBeTruthy();
     }));
 
     it("Change progressbar style to be striped", fakeAsync(() => {
@@ -234,7 +234,7 @@ describe("IgLinearBar", () => {
         fixture.detectChanges();
 
         const progressElem = fixture.componentInstance.linearBar.elementRef.nativeElement
-                                    .getElementsByClassName("progress-linear")[0];
+            .getElementsByClassName("progress-linear")[0];
 
         expect(progressElem.classList.contains("progress-linear--striped")).toBeFalsy();
 
@@ -249,20 +249,21 @@ describe("IgLinearBar", () => {
         fixture.detectChanges();
 
         const progressElem = fixture.componentInstance.linearBar.elementRef.nativeElement
-                                    .getElementsByClassName("progress-linear")[0];
-        const progressBarElem = fixture.componentInstance.linearBar.elementRef.nativeElement
-                                    .querySelectorAll("[class*='progress-linear__bar--']")[0];
+            .getElementsByClassName("progress-linear")[0];
+
+        const progressBarContainer = fixture.componentInstance.linearBar.elementRef.nativeElement.querySelector(".progress-linear__bar");
+        const progressBarElem = progressBarContainer.querySelector("[class*='progress-linear__bar-progress']");
 
         fixture.componentInstance.striped = true;
         fixture.detectChanges();
 
-        expect(progressBarElem.classList.contains("progress-linear__bar--default")).toBeTruthy();
+        expect(progressBarElem.classList.contains("progress-linear__bar-progress--default")).toBeTruthy();
         expect(progressElem.classList.contains("progress-linear--striped")).toBeTruthy();
 
         fixture.componentInstance.type = "success";
         fixture.detectChanges();
 
-        expect(progressBarElem.classList.contains("progress-linear__bar--success")).toBeTruthy();
+        expect(progressBarElem.classList.contains("progress-linear__bar-progress--success")).toBeTruthy();
         expect(progressElem.classList.contains("progress-linear--striped")).toBeTruthy();
     }));
 });
@@ -272,7 +273,8 @@ class InitLinearProgressBarComponent {
     @ViewChild(IgxLinearProgressBarComponent) public linearBar: IgxLinearProgressBarComponent;
 }
 
-@Component({ template: `<div #wrapper>
+@Component({
+    template: `<div #wrapper>
                             <igx-linear-bar #linearBar [value]="value" [max]="max"
                                 [animate]="animate" [type]="type" [striped]="striped">
                             </igx-linear-bar>

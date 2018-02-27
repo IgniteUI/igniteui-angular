@@ -2,6 +2,7 @@
     @extend %igx-icon-display !optional;
 
     @include m(inactive) {
+        @extend %igx-icon-display !optional;
         @extend %igx-icon--inactive !optional;
     }
 }

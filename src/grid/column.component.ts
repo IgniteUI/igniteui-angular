@@ -13,6 +13,7 @@ import { DataType } from "../data-operations/data-util";
 import { STRING_FILTERS } from "../data-operations/filtering-condition";
 import { IgxGridAPIService } from "./api.service";
 import {
+    IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective
@@ -149,6 +150,9 @@ export class IgxColumnComponent implements AfterContentInit {
     @ContentChild(IgxCellFooterTemplateDirective, { read: IgxCellFooterTemplateDirective })
     protected footTemplate: IgxCellFooterTemplateDirective;
 
+    @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
+    protected editorTemplate: IgxCellEditorTemplateDirective;
+
     constructor(private gridAPI: IgxGridAPIService, private cdr: ChangeDetectorRef) {}
 
     public ngAfterContentInit(): void {
@@ -160,6 +164,9 @@ export class IgxColumnComponent implements AfterContentInit {
         }
         if (this.footTemplate) {
             this._footerTemplate = this.footTemplate.template;
+        }
+        if (this.editorTemplate) {
+            this._inlineEditorTemplate = this.editorTemplate.template;
         }
     }
 

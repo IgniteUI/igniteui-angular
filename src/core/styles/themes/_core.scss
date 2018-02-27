@@ -25,16 +25,16 @@
 @import '../components/list/list-component';
 @import '../components/navbar/navbar-component';
 @import '../components/navdrawer/navdrawer-component';
+@import '../components/paginator/paginator-component';
 @import '../components/progress/progress-component';
 @import '../components/radio/radio-component';
 @import '../components/ripple/ripple-component';
-@import '../components/scroll/scroll-component';
 @import '../components/slider/slider-component';
 @import '../components/snackbar/snackbar-component';
 @import '../components/switch/switch-component';
 @import '../components/tabbar/tabbar-component';
 @import '../components/toast/toast-component';
 
-@mixin igx-core {
+@mixin igx-core() {
     @include igx-typography($config: ('font-family': 'Titillium Web'));
 }

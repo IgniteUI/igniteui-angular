@@ -8,7 +8,7 @@ $components: register-component($components, #{$component-name});
     $toggle-icon-active-color: null,
     $toggle-icon-filtered-color: null,
     $toggle-background: null,
-    $toggle-hover-background: null, 
+    $toggle-hover-background: null,
     $toggle-active-background: null,
     $toggle-filtered-background: null,
 
@@ -54,26 +54,26 @@ $components: register-component($components, #{$component-name});
     $default-theme: igx-grid-filtering-theme(
         $toggle-icon-color: inherit,
         $toggle-icon-hover-color: $white,
-        $toggle-icon-active-color: igx-contrast-color($palette, 'accent'),
-        $toggle-icon-filtered-color: igx-color($palette, 'accent'),
+        $toggle-icon-active-color: igx-contrast-color($palette, 'secondary'),
+        $toggle-icon-filtered-color: igx-color($palette, 'secondary'),
         $toggle-hover-background: igx-color($palette, 'grays', 300),
-        $toggle-active-background: igx-color($palette, 'accent'),
+        $toggle-active-background: igx-color($palette, 'secondary'),
         $toggle-filtered-background: transparent,
 
         $menu-background: $white,
         $menu-text-color: igx-color($palette, 'grays', 900),
-        $menu-button-text-color: igx-color($palette, 'accent') 
+        $menu-button-text-color: igx-color($palette, 'secondary')
     );
 
     $this: extend($default-theme, $theme);
 
     $grid-filtering-options-padding: rem(8px, 16px);
-    $grid-head-icon-size: rem(15px) !default;
-    $grid-head-icon-lh: rem(15px) !default;
-    $grid-head-icon-padding: rem(4.5px) !default;
+    $grid-head-icon-size: rem(15px);
+    $grid-head-icon-lh: rem(15px);
+    $grid-head-icon-padding: rem(4.5px);
 
     $filtering-menu-min-width: 240px;
-    $filtering-menu-shadow: $elevate-8;
+    $filtering-menu-shadow: igx-elevation($elevations, 8);
     $filtering-menu-radius: 4px;
     $filtering-menu-distance-to-toggle: 4px;
 
@@ -171,12 +171,10 @@ $components: register-component($components, #{$component-name});
 
     %igx-filtering-menu--to-left {
         right: 16px;
-        left: 0;
     }
 
     %igx-filtering-menu--to-right {
-        right: 0;
-        left: 16px;
+        right: initial;
     }
 
     %igx-filtering-menu-buttons {

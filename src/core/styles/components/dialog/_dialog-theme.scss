@@ -8,6 +8,15 @@ $components: register-component($components, #{$component-name});
     $title-color:null,
     $message-color:null
 ) {
+
+    @if not($title-color) and $background{
+        $title-color: text-contrast($background) ;
+    }
+
+    @if not($message-color) and $background{
+        $message-color: rgba(text-contrast($background), .8) ;
+    }
+
     @return (
         overlay-color:$overlay-color,
         background:$background,
@@ -28,26 +37,22 @@ $components: register-component($components, #{$component-name});
     $this: extend($default-theme, $theme);
 
     // 24. Dialog //
-    $dialog-transition: background .25s ease-out !default;
-    $dialog-max-width: em(400px) !default;
-    $dialog-min-width: em(280px) !default;
-    $dialog-padding: em(12px, 16px) em(24px, 16px) !default;
-    $dialog-background: $white !default;
-    $dialog-border-radius: 2px !default;
-    $dialog-title-font-size: em(20px, 16px) !default;
-    $dialog-title-line-height: em(16px, 16px) !default;
-    $dialog-title-padding: em(12px) 0 !default;
-    $dialog-title-padding-top: em(12px) !default;
-    $dialog-title-padding-bottom: em(10px) !default;
-    $dialog-title-font-weight: 600 !default;
-    $dialog-message-font-size: em(16px, 16px) !default;
-    $dialog-message-line-height: em(18px, 16px) !default;
-    $dialog-message-padding-top: em(10px) !default;
-    $dialog-message-padding-bottom: em(12px) !default;
-    $dialog-message-color: $darkgray !default;
-    $dialog-message-font-weight: 400 !default;
-    $dialog-actions-padding: em(8px) !default;
-    $dialog-actions-margin: 0 em(-24px, 16px) em(-12px, 16px) em(-24px, 16px) !default;
+    $dialog-max-width: em(400px);
+    $dialog-min-width: em(280px);
+    $dialog-padding: em(12px, 16px) em(24px, 16px);
+    $dialog-title-font-size: em(20px, 16px);
+    $dialog-title-line-height: em(16px, 16px);
+    $dialog-title-padding: em(12px) 0;
+    $dialog-title-padding-top: em(12px);
+    $dialog-title-padding-bottom: em(10px);
+    $dialog-title-font-weight: 600;
+    $dialog-message-font-size: em(16px, 16px);
+    $dialog-message-line-height: em(18px, 16px);
+    $dialog-message-padding-top: em(10px);
+    $dialog-message-padding-bottom: em(12px);
+    $dialog-message-font-weight: 400;
+    $dialog-actions-padding: em(8px);
+    $dialog-actions-margin: 0 em(-24px, 16px) em(-12px, 16px) em(-24px, 16px);
 
     %igx-dialog-display {
         display: flex;
@@ -72,7 +77,7 @@ $components: register-component($components, #{$component-name});
         padding: $dialog-padding;
         border-radius: 2px;
         background: map-get($this, background);
-        box-shadow: $elevate-24;
+        box-shadow: igx-elevation($elevations, 24);
     }
 
     %igx-dialog-title {

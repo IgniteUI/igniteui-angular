@@ -1,8 +1,6 @@
 .sample-header {
     padding: 48px 36px;
-    -webkit-animation: color-change-2x 4s linear infinite alternate both;
-    -moz-animation: color-change-2x 4s linear infinite alternate both;
-    animation: color-change-2x 4s linear infinite alternate both;
+    background: #f6e7ec;
     box-shadow: inset 0 -2px 3px 0 rgba(0, 0, 0, .07);
 }
 

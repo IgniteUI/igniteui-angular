@@ -17,13 +17,22 @@ import { IgxIconModule } from "../icon/icon.component";
 
 export class IgxNavbarComponent {
     private static NEXT_ID = 1;
+    private isVisible = true;
     /**
      * The IgxNavbar action button visual state state
      * @type {boolean}
      */
     @Input()
-    public isActionButtonVisible = false;
+    public get isActionButtonVisible(): boolean {
+        if (!this.actionButtonIcon) {
+            return false;
+        }
+        return this.isVisible;
+    }
 
+    public set isActionButtonVisible(value: boolean) {
+        this.isVisible = value;
+    }
     /**
      * The IgxNavbar action button actionButtonIcon
      * @type {string}

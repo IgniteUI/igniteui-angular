@@ -142,30 +142,30 @@ $components: register-component($components, #{$component-name});
         $button-roundness: 2px,
 
         // Flat button
-        $flat-text-color: igx-color($palette, 'accent', 500),
+        $flat-text-color: igx-color($palette, 'secondary', 500),
         $flat-background: transparent,
 
-        $flat-hover-background: rgba(igx-color($palette, 'accent'), .05),
-        $flat-hover-text-color: igx-color($palette, 'accent', 500),
+        $flat-hover-background: rgba(igx-color($palette, 'secondary'), .05),
+        $flat-hover-text-color: igx-color($palette, 'secondary', 500),
 
-        $flat-focus-background: rgba(igx-color($palette, 'accent', 400), .12),
-        $flat-focus-text-color: igx-color($palette, 'accent', 500),
+        $flat-focus-background: rgba(igx-color($palette, 'secondary', 400), .12),
+        $flat-focus-text-color: igx-color($palette, 'secondary', 500),
 
         // Raised Button
-        $raised-text-color: igx-contrast-color($palette, 'accent', 500),
-        $raised-background: igx-color($palette, 'accent', 500),
-        $raised-hover-background: igx-color($palette, 'accent', 700),
-        $raised-hover-text-color: null,
-        $raised-focus-background: igx-color($palette, 'accent', 700),
-        $raised-focus-text-color: igx-contrast-color($palette, 'accent', 500),
+        $raised-text-color: igx-contrast-color($palette, 'secondary', 500),
+        $raised-background: igx-color($palette, 'secondary', 500),
+        $raised-hover-background: igx-color($palette, 'secondary', 600),
+        $raised-hover-text-color: #fff,
+        $raised-focus-background: igx-color($palette, 'secondary', 500),
+        $raised-focus-text-color: igx-contrast-color($palette, 'secondary', 600),
 
         // Fab button ( Floating action button )
-        $fab-text-color: igx-contrast-color($palette, 'accent', 500),
-        $fab-background: igx-color($palette, 'accent', 500),
+        $fab-text-color: igx-contrast-color($palette, 'secondary', 500),
+        $fab-background: igx-color($palette, 'secondary', 500),
         $fab-hover-text-color: null,
         $fab-hover-background: null,
-        $fab-focus-background: igx-color($palette, 'accent', 500),
-        $fab-focus-text-color: igx-contrast-color($palette, 'accent', 500),
+        $fab-focus-background: igx-color($palette, 'secondary', 500),
+        $fab-focus-text-color: igx-contrast-color($palette, 'secondary', 500),
 
         // Icon Button
         $icon-color: igx-color($palette, 'grays', 800),
@@ -181,48 +181,53 @@ $components: register-component($components, #{$component-name});
     );
 
     // Shared Styles
-    $button-border: none !default;
-    $button-radius: 2px !default;
-    $button-font-size: rem(14px, 16px) !default;
-    $button-font-weight: normal !default;
-    $button-width: rem(88px) !default;
-    $button-height: rem(40px) !default;
-    $button-padding: rem(8px) rem(16px) !default;
-    $button-transition: all .25s ease-out !default;
-    $button-round-radius: 50% !default;
+    $button-border: none;
+    $button-font-size: rem(14px, 16px);
+    $button-line-height: 1;
+    $button-font-weight: 600;
+    $button-width: rem(88px);
+    $button-height: rem(36px);
+    $button-padding: 0 rem(16px, 16px);
+    $button-transition: all .15s ease-out;
+    $button-round-radius: 50%;
 
     // Disabled Styles
-    $button-disabled-shadow: none !default;
+    $button-disabled-shadow: none;
 
     // Raised Buttons
-    $button-raised-shadow: $elevate-2 !default;
-    $button-raised-focus-shadow: $elevate-8 !default;
+    $button-raised-shadow: igx-elevation($elevations, 2);
+    $button-hover-shadow: igx-elevation($elevations, 4);
+    $button-raised-focus-shadow: igx-elevation($elevations, 8);
 
     // Floating Buttons
-    $button-floating-width: rem(56px) !default;
+    $button-floating-width: rem(56px);
     $button-floating-height: $button-floating-width;
-    $button-floating-shadow: $elevate-6 !default;
-    $button-floating-hover-shadow: $elevate-12 !default;
+    $button-floating-shadow: igx-elevation($elevations, 6);
+    $button-floating-hover-shadow: igx-elevation($elevations, 12);
 
     // Icon Buttons
-    $button-icon-width: rem(36px, 16px) !default;
-    $button-icon-height: $button-icon-width !default;
-    $button-icon-font-size: rem(24px, 24px) !default;
+    $button-icon-width: rem(36px, 16px);
+    $button-icon-height: $button-icon-width;
+    $button-icon-font-size: rem(24px, 24px);
 
     // Navbar Buttons
-    $button-navbar-width: rem(24px, 16px) !default;
-    $button-navbar-height: $button-navbar-width !default;
-    $button-navbar-padding: 0 !default;
+    $button-navbar-width: rem(24px, 16px);
+    $button-navbar-height: $button-navbar-width;
+    $button-navbar-padding: 0;
 
     $this: extend($default-theme, $theme);
 
     %igx-button-display {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         position: relative;
         min-width: $button-width;
+        min-height: $button-height;
         padding: $button-padding;
         font-size: $button-font-size;
         font-weight: $button-font-weight;
+        line-height: $button-line-height;
         text-align: center;
         border: $button-border;
         border-radius: map-get($this, 'button-roundness');
@@ -256,13 +261,13 @@ $components: register-component($components, #{$component-name});
         background: map-get($this, 'raised-background');
         box-shadow: $button-raised-shadow;
 
+        &:focus,
         &:hover {
             background: map-get($this, 'raised-hover-background');
             color: map-get($this, 'raised-hover-text-color');
-            box-shadow: $button-raised-shadow;
+            box-shadow: $button-hover-shadow;
         }
 
-        &:focus,
         &:active {
             background: map-get($this, 'raised-focus-background');
             color: map-get($this, 'raised-focus-text-color');
@@ -284,20 +289,9 @@ $components: register-component($components, #{$component-name});
         transition: $button-transition;
         user-select: none;
         -webkit-tap-highlight-color: transparent;
-        // hack to allow circular overflow in chrome ...
-        filter: drop-shadow(0 0 0 $white);
-
-        // reset for safari's inability to handle flex in buttons
-        @at-root {
-            button#{$block} {
-                display: initial;
-            }
-
-            button#{$block} * {
-                display: flex;
-                justify-content: center;
-            }
-        }
+        overflow: hidden;
+        // hack to allow circular overflow in safari...
+        filter: blur(0);
     }
 
     %igx-button--fab {
@@ -340,21 +334,15 @@ $components: register-component($components, #{$component-name});
         }
     }
 
-    %igx-button--navbar {
-        display: block !important;
-        width: $button-navbar-width;
-        height: $button-navbar-height;
-        font-size: $button-icon-font-size;
-        color: inherit;
-        padding: $button-navbar-padding;
-    }
-
     %igx-button--disabled {
         color: map-get($this, 'disabled-color') !important;
         background: map-get($this, 'disabled-background') !important;
         pointer-events: none;
         box-shadow: $button-disabled-shadow;
-        opacity: .8;
+
+        &%igx-button--flat {
+            background: transparent !important;
+        }
     }
 }
 

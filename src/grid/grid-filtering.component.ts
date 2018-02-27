@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ElementRef,
     HostBinding,
     HostListener,
     Input,
@@ -103,6 +104,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy {
     }
 
     public dialogShowing = false;
+    public dialogPosition = "igx-filtering__options--to-right";
 
     protected UNARY_CONDITIONS = [
         "true", "false", "null", "notNull", "empty", "notEmpty",
@@ -113,6 +115,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy {
     protected _filterCondition;
     protected filterChanged = new Subject();
     protected chunkLoaded = new Subscription();
+    private MINIMUM_VIABLE_SIZE = 240;
 
     @ViewChild("defaultFilterUI", { read: TemplateRef })
     protected defaultFilterUI: TemplateRef<any>;
@@ -123,7 +126,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy {
     @ViewChild(IgxToggleDirective, { read: IgxToggleDirective})
     protected toggleDirective: IgxToggleDirective;
 
-    constructor(private gridAPI: IgxGridAPIService, private cdr: ChangeDetectorRef) {
+    constructor(private gridAPI: IgxGridAPIService, private cdr: ChangeDetectorRef, private elementRef: ElementRef) {
         this.filterChanged.pipe(
             debounceTime(250),
             distinctUntilChanged()
@@ -131,7 +134,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this.chunkLoaded = this.gridAPI.get(this.gridID).headerContainer.onChunkLoading.subscribe(() => {
+        this.chunkLoaded = this.gridAPI.get(this.gridID).headerContainer.onChunkPreload.subscribe(() => {
             if (!this.toggleDirective.collapsed) {
                 this.toggleDirective.collapsed = true;
                 this.refresh();
@@ -205,9 +208,29 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy {
         this.filterChanged.next(val);
     }
 
+    public get disabled() {
+        if (this.value && !this.unaryCondition) {
+            return false;
+        } else if (this.unaryCondition) {
+            return false;
+        }
+        return true;
+    }
+
     @HostListener("click", ["$event"])
     public onClick(event) {
         event.stopPropagation();
+        const grid = this.gridAPI.get(this.gridID);
+        const gridRect = grid.nativeElement.getBoundingClientRect();
+        const dropdownRect = this.elementRef.nativeElement.getBoundingClientRect();
+
+        let x = dropdownRect.left;
+        let x1 = gridRect.left + gridRect.width;
+        x += window.pageXOffset;
+        x1 += window.pageXOffset;
+        if (Math.abs(x - x1) < this.MINIMUM_VIABLE_SIZE) {
+            this.dialogPosition = "igx-filtering__options--to-left";
+        }
     }
 
     protected transformValue(value) {

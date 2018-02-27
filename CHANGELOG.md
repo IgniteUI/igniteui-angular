@@ -9,6 +9,8 @@ All notable changes for each version of this project will be documented in this 
     - `igxToggle` allows users to implement toggleable components/views (eg. dropdowns), while `igxToggleAction` can control the
       `igxToggle` directive. Refer to the official documenation for more information.
     - `igxToggle` requires `BrowserAnimationsModule` to be imported in your application.
+- [`Ignite UI for Angular Theming`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes.html) - comprehensive set of **Sass** functions and mixins will give the ability to easily style your entire application or only certain parts of it.
+    - Previously bundled fonts, are now listed as external dependencies. You should supply both the [Material Icons](http://google.github.io/material-design-icons/) and [Titillium Web](https://fonts.google.com/selection?selection.family=Titillium+Web:300,400,600,700) fonts yourself by either hosting or using CDN.
 - `igx-grid` changes
     - The component now uses the new `igxForOf` directive to virtualize its content both vertically and horizontally dramatically improving performance for applications displaying large amounts of data.
     - Data-bound Input property `filtering` changed to `filterable`:
@@ -44,26 +46,29 @@ All notable changes for each version of this project will be documented in this 
     - Renamed method `sortColumn` to `sort`.
     - New Input `sortingIgnoreCase` - Ignore capitalization of words.
 - `igx-navigation-drawer` changes
-    - `IgxNavigationDrawer` renamed to `IgxNavigationDrawerComponent`
-    - `IgxNavigationDirectives` renamed to `IgxNavigationModule`
-    - `NavigationDrawer` renamed to `IgxNavigationDrawer`
+    - `NavigationDrawer` renamed to `IgxNavigationDrawerComponent`
     - `NavigationDrawerModule` renamed to `IgxNavigationDrawerModule`
+    - `IgxNavigationDirectives` renamed to `IgxNavigationModule`
     - `NavigationService` renamed to `IgxNavigationService`
     - `NavigationToggle` renamed to `IgxNavigationToggleDirective`
     - `NavigationClose` renamed to `IgxNavigationCloseDirective`
-    - `IgxNavigationToggle ` renamed to `IgxNavigationToggleDirective`
-    - CSS class `ig-nav-drawer-overlay` renamed to `igx-nav-drawer-overlay`
+    - Content selector `ig-drawer-content` replaced with `<ng-template igxDrawer>`
+    - Content selector `ig-drawer-mini-content` replaced with `<ng-template igxDrawerMini>`
+    - CSS class `ig-nav-drawer-overlay` renamed to `igx-nav-drawer__overlay`
     - CSS class `ig-nav-drawer` renamed to `igx-nav-drawer`
-    - CSS class `ig-drawer-mini-content` to `igx-drawer-mini-content`
-    - CSS class `ig-drawer-content` to `igx-drawer-content`
+- `igxInput` changes
     - CSS class `ig-form-group` to `igx-form-group`
+- `igxBadge` changes
+    - From now on, the Badge position is set by css class, which specifies an absolute position as well as top/bottom/left/right properties. The Badge position input should not be used.
 - `igx-avatar` changes
     - [Initials type avatar is using SVG element from now on](https://github.com/IgniteUI/igniteui-angular/issues/136)
 - `igx-calendar` changes
     - `formatViews` - Controls whether the date parts in the different calendar views should be formatted according to the provided `locale` and `formatOptions`.
     - `templating` - The **igxCalendar** supports now templating of its header and subheader parts.
     - `vertical` input - Controls the layout of the calendar component. When vertical is set to `true` the calendar header will be rendered to the side of the calendar body.
-    
+
+- `igx-nav-bar` changes
+    -   Currently `isActionButtonVisible` resolves to `false` if actionButtonIcon is not defined.
 - `igx-tab-bar` changes
     - custom content can be added for tabs
 
@@ -79,6 +84,9 @@ All notable changes for each version of this project will be documented in this 
     </igx-tab-bar>
     ```
 
+- `igx-scroll` component deleted
+    - `igx-scroll` component is not available anymore due newly implemented `igxForOf` directive.
+
 - [`igx-list` changes](https://github.com/IgniteUI/igniteui-angular/issues/528)
     - `igxEmptyList` directive added
         The list no longer has `emptyListImage`, `emptyListMessage`, `emptyListButtonText`, `emptyListButtonClick` and `hasNoItemsTemplate` members.
@@ -92,9 +100,9 @@ All notable changes for each version of this project will be documented in this 
         ```
     - `onItemClicked` event emitter added
         ```html
-        <igx-list (onItemClicked)="itemClicked()">    
+        <igx-list (onItemClicked)="itemClicked()">
             <igx-list-item>Item 1</igx-list-item>
-            <igx-list-item>Item 2</igx-list-item>    
+            <igx-list-item>Item 2</igx-list-item>
             <igx-list-item>Item 3</igx-list-item>
         </igx-list>
         ```
@@ -140,7 +148,6 @@ All notable changes for each version of this project will be documented in this 
     - `IgxCircularProgressBar` renamed to `IgxCircularProgressBarComponent`
     - `IgxLinearProgressBar ` renamed to `IgxLinearProgressBarComponent`
     - `IgxRadio` renamed to `IgxRadioComponent`
-    - `IgxScroll` renamed to `IgxScrollComponent`
     - `IgxSlider` renamed to `IgxSliderComponent`
     - `IgxSnackbar` renamed to `IgxSnackbarComponent`
     - `IgxSwitch ` renamed to `IgxSwitchComponent`

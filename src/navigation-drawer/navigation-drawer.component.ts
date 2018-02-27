@@ -71,12 +71,12 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     /** State of the drawer. */
     @Input() public isOpen = false;
 
-    /** Pinned state of the drawer. May require additional layout styling. */
+    /** When pinned the drawer is relatively positioned instead of sitting above content. May require additional layout styling. */
     @Input() public pin = false;
 
     /**
      * Minimum device width required for automatic pin to be toggled.
-     * Default is 1024, can be set to falsy value to ignore.
+     * Default is 1024, can be set to a falsy value to disable this behavior.
      */
     @Input() public pinThreshold = 1024;
 
@@ -88,9 +88,9 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     }
 
     /**
-     * Width of the drawer in its open state. Defaults to "300px".
+     * Width of the drawer in its open state. Defaults to "280px".
      */
-    @Input() public width = "300px";
+    @Input() public width = "280px";
 
     /**
      * Width of the drawer in its mini state. Defaults to 60px.
@@ -232,6 +232,9 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
         if (this._state) {
             this._state.add(this.id, this);
         }
+        if (this.isOpen) {
+            this.setDrawerWidth(this.width);
+        }
     }
 
     public ngAfterContentInit() {
@@ -252,7 +255,9 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
         if (this._state) {
             this._state.remove(this.id);
         }
-        this._resizeObserver.unsubscribe();
+        if (this._resizeObserver) {
+            this._resizeObserver.unsubscribe();
+        }
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }) {
@@ -276,7 +281,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
             if (this.pinThreshold) {
                 this.ensureEvents();
                 this.checkPinThreshold();
-            } else {
+            } else if (this._resizeObserver) {
                 this._resizeObserver.unsubscribe();
                 this._resizeObserver = null;
             }

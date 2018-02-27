@@ -28,7 +28,7 @@ export class IgxBadgeComponent {
     @HostBinding("attr.role")
     public role = "status";
 
-    @HostBinding("attr.class")
+    @HostBinding("class.igx-badge")
     public cssClass = "igx-badge";
 
     @HostBinding("attr.aria-label")
