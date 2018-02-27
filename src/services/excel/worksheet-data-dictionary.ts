@@ -51,6 +51,10 @@ export class WorksheetDataDictionary {
 		return this._sortedKeys;
 	}
 
+	public getKeyFromValue(value: number): string {
+		return Object.keys(this._dictionary).filter((s) => this._dictionary[s] === value)[0];
+	}
+
 	private getTextWidth(text) {
 		var canvas = this._canvas || (this._canvas = document.createElement("canvas"));
 		var context = canvas.getContext("2d");

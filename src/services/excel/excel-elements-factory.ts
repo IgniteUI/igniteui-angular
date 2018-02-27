@@ -13,7 +13,9 @@ import {
 	StyleFile,
 	WorkbookFile,
 	ContentTypesFile,
-	SharedStringsFile
+	SharedStringsFile,
+	TablesFile,
+	WorksheetRelsFile
 } from "./excel-files";
 
 import {
@@ -22,8 +24,10 @@ import {
 	DocPropsExcelFolder,
 	XLExcelFolder,
 	XLRelsExcelFolder,
+	TablesExcelFolder,
 	ThemeExcelFolder,
-	WorksheetsExcelFolder
+	WorksheetsExcelFolder,
+	WorksheetsRelsExcelFolder,
 } from "./excel-folders";
 
 import {
@@ -40,6 +44,8 @@ export class ExcelElementsFactory {
 	private static _xlRelsExcelFolder: XLRelsExcelFolder = null;
 	private static _themeExcelFolder: ThemeExcelFolder = null;
 	private static _worksheetsExcelFolder: WorksheetsExcelFolder = null;
+	private static _worksheetsRelsExcelFolder: WorksheetsRelsExcelFolder = null;
+	private static _tablesExcelFolder: TablesExcelFolder = null;
 
 	// File types
 	private static _rootRelsFile: RootRelsFile = null;
@@ -52,6 +58,8 @@ export class ExcelElementsFactory {
 	private static _workbookFile: WorkbookFile = null;
 	private static _contentTypesFile: ContentTypesFile = null;
 	private static _sharedStringsFile: SharedStringsFile = null;
+	private static _worksheetRelsFile: WorksheetRelsFile = null;
+	private static _tablesFile: TablesFile = null;
 
 	public static getExcelFolder(type: ExcelFolderTypes): IExcelFolder{
 		switch(type) {
@@ -90,6 +98,16 @@ export class ExcelElementsFactory {
 					ExcelElementsFactory._worksheetsExcelFolder = new WorksheetsExcelFolder();
 				}
 				return ExcelElementsFactory._worksheetsExcelFolder;
+			case ExcelFolderTypes.WorksheetsRelsExcelFolder:
+				if (ExcelElementsFactory._worksheetsRelsExcelFolder === null ) {
+					ExcelElementsFactory._worksheetsRelsExcelFolder = new WorksheetsRelsExcelFolder();
+				}
+				return ExcelElementsFactory._worksheetsRelsExcelFolder;
+			case ExcelFolderTypes.TablesExcelFolder:
+				if (ExcelElementsFactory._tablesExcelFolder === null ) {
+					ExcelElementsFactory._tablesExcelFolder = new TablesExcelFolder();
+				}
+				return ExcelElementsFactory._tablesExcelFolder;
 			default:
 				throw new Error("Unknown excel folder type!");
 		}
@@ -147,6 +165,16 @@ export class ExcelElementsFactory {
 					ExcelElementsFactory._sharedStringsFile = new SharedStringsFile();
 				}
 				return ExcelElementsFactory._sharedStringsFile;
+			case ExcelFileTypes.WorksheetRelsFile:
+				if (ExcelElementsFactory._worksheetRelsFile === null) {
+					ExcelElementsFactory._worksheetRelsFile = new WorksheetRelsFile();
+				}
+				return ExcelElementsFactory._worksheetRelsFile;
+			case ExcelFileTypes.TablesFile:
+				if (ExcelElementsFactory._tablesFile === null) {
+					ExcelElementsFactory._tablesFile = new TablesFile();
+				}
+				return ExcelElementsFactory._tablesFile;
 			default:
 				throw Error("Unknown excel file type!");
 		}

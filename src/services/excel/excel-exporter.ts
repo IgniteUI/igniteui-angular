@@ -38,7 +38,6 @@ export class IgxExcelExporterService {
 		let columnList = grid.columnList.toArray();
 		let columns = new Array<string>();
 		let hasSkippedColumns = false;
-		const self = this;
 
 		let data = new Array<any>();
 
@@ -58,10 +57,6 @@ export class IgxExcelExporterService {
 			}
 		}
 
-		if (columns.length === 0) {
-			throw new Error("No columns to export!");
-		}
-
 		for (const row of rowList) {
 			var rowData: any = null;
 
@@ -79,10 +74,11 @@ export class IgxExcelExporterService {
 			}
 		}
 
-		if(data.length === 0) {
-			throw Error("No rows to export");
-		}
+		this.ExportData(data, fileName);
+	}
 
+	public ExportData(data: any[], fileName: string): void {
+		const self = this;
 		let worksheetData = new WorksheetData();
 		worksheetData.calculateSizeMetrics = true;
 		worksheetData.data = data;

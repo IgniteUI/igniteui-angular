@@ -26,6 +26,10 @@ export class WorksheetData {
 		this.prepareData();
 	}
 
+	public get isEmpty() {
+		return !this.cachedValues || this.cachedValues.length === 0
+	}
+
 	public get cachedValues() {
 		return this._values;
 	}

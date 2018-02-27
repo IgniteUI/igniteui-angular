@@ -5,7 +5,9 @@ export enum ExcelFolderTypes {
 	XLExcelFolder,
 	XLRelsExcelFolder,
 	ThemeExcelFolder,
-	WorksheetsExcelFolder
+	WorksheetsExcelFolder,
+	WorksheetsRelsExcelFolder,
+	TablesExcelFolder
 }
 
 export enum ExcelFileTypes {
@@ -18,5 +20,7 @@ export enum ExcelFileTypes {
 	StyleFile,
 	WorkbookFile,
 	ContentTypesFile,
-	SharedStringsFile
+	SharedStringsFile,
+	WorksheetRelsFile,
+	TablesFile
 }

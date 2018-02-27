@@ -66,7 +66,7 @@ export class XLExcelFolder implements IExcelFolder {
 			ExcelFileTypes.WorkbookFile
 		];
 
-		if (data.cachedValues && data.cachedValues.length > 0) {
+		if (!data.isEmpty) {
 			retVal.push(ExcelFileTypes.SharedStringsFile);
 		}
 
@@ -74,11 +74,17 @@ export class XLExcelFolder implements IExcelFolder {
 	}
 
 	ChildFolders(data: WorksheetData) {
-		return [
+		var retVal = [
 			ExcelFolderTypes.XLRelsExcelFolder,
 			ExcelFolderTypes.ThemeExcelFolder,
 			ExcelFolderTypes.WorksheetsExcelFolder
 		];
+
+		if(!data.isEmpty) {
+			retVal.push(ExcelFolderTypes.TablesExcelFolder);
+		}
+
+		return retVal;
 	}
 }
 
@@ -117,6 +123,34 @@ export class WorksheetsExcelFolder implements IExcelFolder {
 
 	ChildFiles(data: WorksheetData) {
 		return [ExcelFileTypes.WorksheetFile];
+	}
+
+	ChildFolders(data: WorksheetData) {
+		return data.isEmpty ? [] : [ExcelFolderTypes.WorksheetsRelsExcelFolder];
+	}
+}
+
+export class TablesExcelFolder implements IExcelFolder {
+	public get folderName() {
+		return "tables";
+	}
+
+	ChildFiles(data: WorksheetData) {
+		return [ExcelFileTypes.TablesFile];
+	}
+
+	ChildFolders(data: WorksheetData) {
+		return [];
+	}
+}
+
+export class WorksheetsRelsExcelFolder implements IExcelFolder {
+	public get folderName() {
+		return "_rels";
+	}
+
+	ChildFiles(data: WorksheetData) {
+		return [ExcelFileTypes.WorksheetRelsFile];
 	}
 
 	ChildFolders(data: WorksheetData) {

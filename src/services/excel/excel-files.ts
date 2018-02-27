@@ -46,7 +46,7 @@ export class WorksheetFile implements IExcelFile {
 		const values = data.cachedValues;
 		const dictionary = data.dataDictionary;
 
-		if (!values || values.length === 0) {
+		if (data.isEmpty) {
 			sheetData = "<sheetData/>";
 			cols = "";
 			dimension = "A1";
@@ -84,21 +84,20 @@ export class WorksheetFile implements IExcelFile {
 
 
 export class StyleFile implements IExcelFile {
-	public WriteElement(folder: JSZip, options: WorksheetData) {
+	public WriteElement(folder: JSZip, data: WorksheetData) {
 		folder.file("styles.xml", ExcelStrings.STYLES_XML);
 	}
 }
 
 export class WorkbookFile implements IExcelFile {
-	public WriteElement(folder: JSZip, options: WorksheetData) {
+	public WriteElement(folder: JSZip, data: WorksheetData) {
 		folder.file("workbook.xml", ExcelStrings.WORKBOOK_XML);
 	}
 }
 
 export class ContentTypesFile implements IExcelFile {
 	public WriteElement(folder: JSZip, data: WorksheetData) {
-		const hasSharedStrings = data.cachedValues && data.cachedValues.length > 0;
-		folder.file("[Content_Types].xml", ExcelStrings.getContentTypesXML(hasSharedStrings));
+		folder.file("[Content_Types].xml", ExcelStrings.getContentTypesXML(!data.isEmpty));
 	}
 }
 
@@ -119,5 +118,29 @@ export class SharedStringsFile implements IExcelFile {
 						sharedStrings.join(""))
 					);
 
+	}
+}
+
+export class TablesFile implements IExcelFile {
+	public WriteElement(folder: JSZip, data: WorksheetData) {
+		const columnCount = data.columnCount;
+		const dimension = "A1:" + String.fromCharCode(64 + columnCount) + data.rowCount;
+		const values = data.cachedValues;
+
+		var tableColumns = "<tableColumns count=\""+ columnCount +"\">";
+		for (let i = 0; i < columnCount; i++) {
+			const value =  data.dataDictionary.getKeyFromValue(values[i]);
+			tableColumns += "<tableColumn id=\"" + (i + 1) + "\" name=\"" + value + "\"/>";
+		}
+
+		tableColumns += "</tableColumns>";
+
+		folder.file("table1.xml", ExcelStrings.getTablesXML(dimension, tableColumns));
+	}
+}
+
+export class WorksheetRelsFile implements IExcelFile {
+	public WriteElement(folder: JSZip, data: WorksheetData) {
+		folder.file("sheet1.xml.rels", ExcelStrings.WORKSHEET_RELS_XML);
 	}
 }
