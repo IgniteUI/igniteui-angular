@@ -132,7 +132,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         if (this.igxForScrollOrientation === "horizontal") {
             this.dc.instance._viewContainer.element.nativeElement.style.height = "100%";
-            const directiveRef = this.igxForScrollContainer || this;
             this.func = (evt) => { this.onHScroll(evt); };
             if (!this.hScroll) {
                 const hvFactory: ComponentFactory<HVirtualHelperComponent> =
@@ -245,8 +244,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             return;
         }
         const scrollLeft = event.target.scrollLeft;
-        const hcWidth = event.target.children[0].scrollWidth;
-        const ratio = scrollLeft / hcWidth;
         this.state.startIndex = this.getHorizontalIndexAt(
             scrollLeft,
             this.hCache,
@@ -495,8 +492,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     private _recalcOnContainerChange(changes: SimpleChanges) {
-        const containerSize = "igxForContainerSize";
-        const value = changes[containerSize].currentValue;
         this.applyChunkSizeChange();
         if (this.dc && this.state.chunkSize !== this.igxForOf.length) {
             this.dc.instance.notVirtual = false;
@@ -527,10 +522,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
         this.state.chunkSize = chunkSize;
     }
-}
-
-class RecordViewTuple<T> {
-    constructor(public record: any, public view: EmbeddedViewRef<NgForOfContext<T>>) { }
 }
 
 export function getTypeNameForDebugging(type: any): string {
