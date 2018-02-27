@@ -1,12 +1,13 @@
 import { WorksheetDataDictionary } from "./worksheet-data-dictionary";
 
 export class WorksheetData {
-
 	private _columnCount: number;
 	private _rowCount: number;
 	private _data: any[];
 	private _values: number[];
-	private _dataDictionary = new WorksheetDataDictionary();
+	private _dataDictionary: WorksheetDataDictionary;
+
+	public calculateSizeMetrics = false;
 
 	public get columnCount(): number{
 		return this._columnCount;
@@ -33,9 +34,11 @@ export class WorksheetData {
 		return this._dataDictionary;
 	}
 
-	private prepareData() {
-		this.dataDictionary.clearValues();
+	private get calculateSizeMetricsResolved(): boolean {
+		return this.calculateSizeMetrics;
+	}
 
+	private prepareData() {
 		if(!this._data || this._data.length === 0) {
 			return;
 		}
@@ -50,8 +53,10 @@ export class WorksheetData {
 
 		this._values = new Array<number>(this._columnCount * this._rowCount);
 
+		this._dataDictionary = new WorksheetDataDictionary(this._columnCount, this.calculateSizeMetricsResolved);
+
 		for(let i = 0; i < keys.length; i++) {
-			this._dataDictionary.saveValue(keys[i]);
+			this._dataDictionary.saveValue(keys[i], i);
 			this._values[i] = this._dataDictionary.getValue(keys[i]);
 		}
 
@@ -62,7 +67,7 @@ export class WorksheetData {
 				const key = keys[j];
 				const value = String(element[key]);
 				const index = ((i + 1) * this._columnCount) + j;
-				this._dataDictionary.saveValue(value);
+				this._dataDictionary.saveValue(value, j);
 				this._values[index] = this._dataDictionary.getValue(value);
 			}
 		}

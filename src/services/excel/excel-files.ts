@@ -31,21 +31,40 @@ export class WorkbookRelsFile implements IExcelFile {
 
 export class ThemeFile implements IExcelFile {
 	public WriteElement(folder: JSZip, data: WorksheetData) {
-		folder.file("theme1.xml", ExcelStrings.THEME1_XML);
+		folder.file("theme1.xml", ExcelStrings.THEME_XML);
 	}
 }
 
 export class WorksheetFile implements IExcelFile {
+	private static MIN_WIDTH = 8.34;
+
 	public WriteElement(folder: JSZip, data: WorksheetData) {
+
 		let sheetData: string;
+		let cols: string;
 		let dimension: string;
 		const values = data.cachedValues;
+		const dictionary = data.dataDictionary;
 
 		if (!values || values.length === 0) {
 			sheetData = "<sheetData/>";
+			cols = "";
 			dimension = "A1";
 		} else {
-			sheetData = "<sheetData>";
+			if	(data.calculateSizeMetrics) {
+				cols += "<cols>"
+				for (let i = 0; i < data.columnCount; i++) {
+					const width = dictionary.columnWidths[i];
+					const widthInTwips = Math.max(((width / 96) * 14.4), WorksheetFile.MIN_WIDTH);
+
+					cols += "<col min=\""+ (i + 1) + "\" max=\""+ (i + 1) + "\" width=\""+ widthInTwips + "\" customWidth=\"1\"/>";
+				}
+				cols += "</cols>"
+			} else {
+				cols = "";
+			}
+
+			sheetData += "<sheetData>";
 
 			for (let i = 0; i < data.rowCount; i++) {
 				sheetData += "<row r=\""+ (i + 1) +"\">";
@@ -59,9 +78,10 @@ export class WorksheetFile implements IExcelFile {
 			sheetData += "</sheetData>";
 			dimension = "A1:" + String.fromCharCode(64 + data.columnCount) + data.rowCount;
 		}
-		folder.file("sheet1.xml", ExcelStrings.getSheetXML(dimension, sheetData));
+		folder.file("sheet1.xml", ExcelStrings.getSheetXML(dimension, cols, sheetData));
 	}
 }
+
 
 export class StyleFile implements IExcelFile {
 	public WriteElement(folder: JSZip, options: WorksheetData) {
@@ -83,8 +103,8 @@ export class ContentTypesFile implements IExcelFile {
 }
 
 export class SharedStringsFile implements IExcelFile {
-	public WriteElement(folder: JSZip, options: WorksheetData) {
-		const dict = options.dataDictionary;
+	public WriteElement(folder: JSZip, data: WorksheetData) {
+		const dict = data.dataDictionary;
 		const sortedValues = dict.getSortedValues();
 		const sharedStrings = new Array<string>(sortedValues.length);
 
@@ -94,7 +114,7 @@ export class SharedStringsFile implements IExcelFile {
 		}
 
 		folder.file("sharedStrings.xml", ExcelStrings.getSharedStringXML(
-						options.cachedValues.length,
+						data.cachedValues.length,
 						sortedValues.length,
 						sharedStrings.join(""))
 					);
