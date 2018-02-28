@@ -1,6 +1,7 @@
 # igx-radio
 
-**igx-radio** renders a set of radio buttons to allow the user make a choice and submit data. The user is able to select just one from the available options.
+**igx-radio** renders a set of radio buttons to allow the user make a choice and submit data. The user is able to select just one from the available options.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radio_button.html)
 
 # Usage
 

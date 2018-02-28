@@ -1,7 +1,8 @@
 # igxInput
 
 **igxInput** 
-With the igxInput directory you can add **inputs** in your markup.
+With the igxInput directory you can add **inputs** in your markup.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/label_input.html)
 
 # Usage
 
