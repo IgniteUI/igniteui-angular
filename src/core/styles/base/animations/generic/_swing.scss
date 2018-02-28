@@ -1,9 +1,10 @@
-/**
- * ----------------------------------------
- * animation swing-top-fwd
- * ----------------------------------------
- */
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// @requires {mixin} keyframes
 @mixin swing-top-fwd {
     @include keyframes(swing-top-fwd) {
         0% {
@@ -18,13 +19,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-bottom-right-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-bottom-right-fwd {
     @include keyframes(swing-bottom-right-fwd) {
         0% {
@@ -39,13 +34,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-left-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-left-fwd {
     @include keyframes(swing-left-fwd) {
         0% {
@@ -60,13 +49,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-top-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-top-bck {
     @include keyframes(swing-top-bck) {
         0% {
@@ -81,13 +64,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-bottom-right-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-bottom-right-bck {
     @include keyframes(swing-bottom-right-bck) {
         0% {
@@ -102,13 +79,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-left-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-left-bck {
     @include keyframes(swing-left-bck) {
         0% {
@@ -123,13 +94,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-top-right-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-top-right-fwd {
     @include keyframes(swing-top-right-fwd) {
         0% {
@@ -144,13 +109,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-bottom-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-bottom-fwd {
     @include keyframes(swing-bottom-fwd) {
         0% {
@@ -165,13 +124,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-top-left-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-top-left-fwd {
     @include keyframes(swing-top-left-fwd) {
         0% {
@@ -186,13 +139,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-top-right-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-top-right-bck {
     @include keyframes(swing-top-right-bck) {
         0% {
@@ -207,13 +154,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-bottom-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-bottom-bck {
     @include keyframes(swing-bottom-bck) {
         0% {
@@ -228,13 +169,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-top-left-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-top-left-bck {
     @include keyframes(swing-top-left-bck) {
         0% {
@@ -249,13 +184,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-right-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-right-fwd {
     @include keyframes(swing-right-fwd) {
         0% {
@@ -270,13 +199,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-bottom-left-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-bottom-left-fwd {
     @include keyframes(swing-bottom-left-fwd) {
         0% {
@@ -291,13 +214,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-right-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-right-bck {
     @include keyframes(swing-right-bck) {
         0% {
@@ -312,13 +229,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swing-bottom-left-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swing-bottom-left-bck {
     @include keyframes(swing-bottom-left-bck) {
         0% {

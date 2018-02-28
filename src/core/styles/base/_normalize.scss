@@ -1,31 +1,11 @@
-/* ==========================================================================
-   Normalize.scss settings
-   ========================================================================== */
-/**
- * Includes legacy browser support IE6/7
- *
- * Set to false if you want to drop support for IE6 and IE7
- */
-
 $legacy_browser_support: false;
-
-/* Base
-   ========================================================================== */
-
-/**
- * 1. Set default font family to sans-serif.
- * 2. Prevent iOS and IE text size adjust after device orientation change,
- *    without disabling user zoom.
- * 3. Corrects text resizing oddly in IE 6/7 when body `font-size` is set using
- *  `em` units.
- */
 
 html {
     box-sizing: border-box;
-    -ms-text-size-adjust: 100%; /* 2 */
-    -webkit-text-size-adjust: 100%; /* 2 */
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
     @if $legacy_browser_support {
-        *font-size: 100%; /* 3 */
+        *font-size: 100%;
     }
 }
 
@@ -34,9 +14,6 @@ html {
 *::after {
     box-sizing: border-box;
 }
-/**
- * Remove default margin.
- */
 
 body {
     margin: 0;
