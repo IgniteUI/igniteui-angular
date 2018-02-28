@@ -1,4 +1,4 @@
-//// Navdrawer
+////
 /// @group components
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 /// @requires {mixin} bem-block
@@ -13,7 +13,7 @@
 
     // Main aside element
     @include e(aside) {
-        @extend %adide !optional;
+        @extend %aside !optional;
 
         &.panning {
             overflow-x: hidden;
