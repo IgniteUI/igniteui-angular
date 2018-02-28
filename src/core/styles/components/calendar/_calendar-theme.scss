@@ -300,8 +300,11 @@
     }
 
     %cal-header-date-el--hover {
-        color: map-get($this, 'picker-text-hover-color');
-        cursor: pointer;
+        &:hover,
+        &:focus {
+            color: map-get($this, 'picker-text-hover-color');
+            cursor: pointer;
+        }
     }
 
     %cal-picker-display {

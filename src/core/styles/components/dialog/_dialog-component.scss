@@ -21,10 +21,6 @@
     }
     @include e(window-actions) {
         @extend %igx-dialog-actions !optional;
-
-        button ~ button {
-            margin-left: 8px;
-        }
     }
     @include m(hidden) {
         @extend %igx-dialog--hidden !optional;

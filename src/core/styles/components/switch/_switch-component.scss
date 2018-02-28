@@ -29,6 +29,6 @@
     }
 
     @include e(switch-text) {
-        padding-right: em(16px);
+        @extend %switch-text !optional;
     }
 }

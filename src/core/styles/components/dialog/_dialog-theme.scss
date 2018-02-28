@@ -120,5 +120,9 @@
         flex-flow: row nowrap;
         justify-content: flex-end;
         padding: $dialog-actions-padding;
+
+        button ~ button {
+            margin-left: 8px;
+        }
     }
 }

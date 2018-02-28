@@ -199,6 +199,37 @@
         grid-row: 3;
     }
 
+    %grid-display-container-thead {
+        overflow: visible;
+    }
+
+    %grid-display-container-tr {
+        width: 100%;
+    }
+    /// @todo Sorting should not be
+    /// forced to use Material Icons
+    %grid-sorting-display {
+        font-weight: 800;
+
+        > .title::before {
+            position: relative;
+            font-family: 'Material Icons', sans-serif;
+            margin-right: 8px;
+        }
+    }
+
+    %grid-sorting-asc {
+        > .title::before {
+            content: '\E5D8';
+        }
+    }
+
+    %grid-sorting-desc {
+        > .title::before {
+            content: '\E5DB';
+        }
+    }
+
     %grid-tbody {
         position: relative;
         grid-row: 2;

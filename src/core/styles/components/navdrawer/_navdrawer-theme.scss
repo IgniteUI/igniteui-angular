@@ -141,6 +141,11 @@
         border-right: 1px solid map-get($this, 'border-color');
     }
 
+    %aside-panning {
+        overflow-x: hidden;
+        transition: none;
+    }
+
     %aside--pinned {
         position: relative;
         max-width: 100%;
@@ -166,6 +171,11 @@
         border-left: 1px solid map-get($this, 'border-color');
     }
 
+    %aside--collapsed--right {
+        transform: translate3d(300px, 0, 0);
+        box-shadow: none;
+    }
+
     %aside--mini {
         width: rem(60px);
         transition-duration: .2s, .2s;
@@ -187,18 +197,27 @@
         z-index: 999;
     }
 
+    %overlay-panning {
+        transform: translate3d(0, 0, 0);
+        transition: none;
+    }
+
     %overlay--hidden {
         transition-timing-function: ease-in-out, step-end;
         visibility: hidden;
         opacity: 0;
     }
 
+    %overlay-panning--hidden {
+        /* must be visible during pan.. */
+        visibility: visible;
+    }
+
     %item {
-        display: flex;
-        flex: 1 0 100%;
-        flex-flow: row nowrap;
-        //for ripple
         position: relative;
+        display: flex;
+        // flex: 1 0 100%;
+        flex-flow: row nowrap;
         color: map-get($this, 'item-text-color');
         max-height: 48px;
         padding: 12px 16px;
@@ -216,8 +235,14 @@
             color: map-get($this, 'item-hover-text-color');
         }
 
-        > * + * {
+        > igx-icon + span {
             margin-left: 32px;
+        }
+
+        &[dir='rtl'] {
+            > igx-icon + span {
+                margin-right: 32px;
+            }
         }
 
         .igx-icon {
@@ -246,5 +271,13 @@
         padding: 12px 16px;
         white-space: nowrap;
         color: map-get($this, 'item-header-text-color');
+    }
+
+    %style-dummy {
+        height: 0;
+        background: none;
+        box-shadow: none;
+        transition: none;
+        visibility: hidden;
     }
 }

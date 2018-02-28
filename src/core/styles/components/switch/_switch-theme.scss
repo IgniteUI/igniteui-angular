@@ -142,4 +142,8 @@
             box-shadow: $switch-disabled-shadow;
         }
     }
+
+    %switch-text {
+        padding-right: rem(16px);
+    }
 }
