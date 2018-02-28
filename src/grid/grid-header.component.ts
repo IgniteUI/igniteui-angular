@@ -98,12 +98,12 @@ export class IgxGridHeaderComponent implements DoCheck {
 
     @HostBinding("class.fixed")
     get isFixed() {
-        return this.column.pinnedToLeft || this.column.pinnedToRight;
+        return this.column.pinned;
     }
 
     @HostBinding("class.last-fixed")
     get isLastFixed() {
-        const pinnedCols = this.grid.pinnedLeftColumns;
+        const pinnedCols = this.grid.pinnedStartColumns;
         if (pinnedCols.length === 0) {
             return false;
         } else {
@@ -113,7 +113,7 @@ export class IgxGridHeaderComponent implements DoCheck {
 
     @HostBinding("class.first-fixed")
     get isFirstFixed() {
-        const pinnedCols = this.grid.pinnedRightColumns;
+        const pinnedCols = this.grid.pinnedEndColumns;
         if (pinnedCols.length === 0) {
             return false;
         } else {

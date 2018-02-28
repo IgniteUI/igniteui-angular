@@ -74,12 +74,12 @@ export class IgxGridRowComponent implements OnInit {
         return this.grid.visibleColumns;
     }
 
-    get pinnedLeftColumns(): IgxColumnComponent[] {
-        return this.grid.pinnedLeftColumns;
+    get pinnedStartColumns(): IgxColumnComponent[] {
+        return this.grid.pinnedStartColumns;
     }
 
-    get pinnedRightColumns(): IgxColumnComponent[] {
-        return this.grid.pinnedRightColumns;
+    get pinnedEndColumns(): IgxColumnComponent[] {
+        return this.grid.pinnedEndColumns;
     }
 
     get unpinnedColumns(): IgxColumnComponent[] {
