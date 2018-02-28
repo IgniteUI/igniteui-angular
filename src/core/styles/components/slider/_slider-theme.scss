@@ -1,7 +1,20 @@
-$component-name: 'igx-slider';
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
-$components: register-component($components, #{$component-name});
-
+/// @param {Color} $track-on-color [null] - The color of the track when the switch is on.
+/// @param {Color} $thumb-off-color [null] - The color of the thumb when the switch is off.
+/// @param {Color} $thumb-disabled-color [null] - The color of the thumb when the switch is disabled.
+/// @param {Color} $track-disabled-color [null] - The color of the track when the switch is disabled.
+/// @param {Bool} $light [false] - Determines the default color scheme - light or not.
+/// Set light to true when the surrounding area is dark.
+/// @example scss Set custom track and thumb on colors
+///   $my-switch-theme: igx-toast-theme($thumb-on-color: black, $track-on-color: yellow);
+///   // Pass the theme to the igx-tabbar component mixin
+///   @include igx-switch($my-switch-theme);
 @function igx-slider-theme(
     $track-color: null,
     $thumb-color: null,
@@ -16,6 +29,13 @@ $components: register-component($components, #{$component-name});
     );
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-slider-theme
+/// @requires igx-color
+/// @requires hexrgba
+/// @requires extend
+/// @requires rem
 @mixin igx-slider($theme, $palette: $default-palette) {
     $dark-theme: (
         track-color: igx-color($palette, 'secondary'),
@@ -66,7 +86,7 @@ $components: register-component($components, #{$component-name});
     $slider-label-font-size: rem(11px);
     $slider-label-font-weight: 600;
     $slider-label-padding: 0 2px;
-    $slider-background--start: $white;
+    $slider-background--start: #fff;
 
     %igx-slider-display {
         display: flex;

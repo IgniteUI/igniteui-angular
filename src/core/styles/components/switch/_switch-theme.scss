@@ -1,6 +1,22 @@
-$component-name: 'igx-switch';
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
-$components: register-component($components, #{$component-name});
+/// @param {Color} $thumb-on-color [null] - The color of the thumb when the switch is on.
+/// @param {Color} $track-on-color [null] - The color of the track when the switch is on.
+/// @param {Color} $thumb-off-color [null] - The color of the thumb when the switch is off.
+/// @param {Color} $track-off-color [null] - The color of the track when the switch is off.
+/// @param {Color} $thumb-disabled-color [null] - The color of the thumb when the switch is disabled.
+/// @param {Color} $track-disabled-color [null] - The color of the track when the switch is disabled.
+/// @param {Bool} $light [false] - Determines the default color scheme - light or not.
+/// Set light to true when the surrounding area is dark.
+/// @example scss Set custom track and thumb on colors
+///   $my-switch-theme: igx-toast-theme($thumb-on-color: black, $track-on-color: yellow);
+///   // Pass the theme to the igx-tabbar component mixin
+///   @include igx-switch($my-switch-theme);
 @function igx-switch-theme(
     $thumb-on-color: null,
     $track-on-color: null,
@@ -27,6 +43,15 @@ $components: register-component($components, #{$component-name});
     );
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-switch-theme
+/// @requires igx-color
+/// @requires igx-elevation
+/// @requires extend
+/// @requires hexrgba
+/// @requires rem
+/// @requires $elevations
 @mixin igx-switch($theme, $palette: $default-palette) {
     $dark-theme: igx-switch-theme(
         $thumb-on-color: igx-color($palette, 'secondary', 500),
@@ -116,5 +141,9 @@ $components: register-component($components, #{$component-name});
             background: map-get($this, 'thumb-disabled-color');
             box-shadow: $switch-disabled-shadow;
         }
+    }
+
+    %switch-text {
+        padding-right: rem(16px);
     }
 }
