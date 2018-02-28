@@ -15,7 +15,7 @@
 8. Combo
 9. Mask directive (editor)
 10. Operations UI - column chooser (Data Operations UI)          
-11. Virtualization (target ship of January 2018)
+11. **[DONE] Virtualization
 12. Charting: Category Chart types Line (Area, Column, Point, StepLine, StepArea, Spline, SplineArea, Waterfall
 13. Design: Updated Design System (Sketch UI kits, UI patterns, screens)
 14. Design: Data dense theme for data grid 
