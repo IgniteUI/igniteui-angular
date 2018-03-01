@@ -2,7 +2,8 @@
 
 Use the **igxLayout** directive on a container element to specify the layout
 direction for its children: horizontally with `igxLayoutDir="row"` or vertically with
-`igxLayoutDir="column"`.
+`igxLayoutDir="column"`.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/layout.html)
 
 **Note**: the `igxLayout` directive affects the flow directions for that
 container's **immediate** children.

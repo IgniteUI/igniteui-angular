@@ -1,9 +1,10 @@
-/**
- * ----------------------------------------
- * animation scale-in-center
- * ----------------------------------------
- */
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// @requires {mixin} keyframes
 @mixin scale-in-center {
     @include keyframes(scale-in-center) {
         0% {
@@ -18,13 +19,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-in-bl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-in-bl {
     @include keyframes(scale-in-bl) {
         0% {
@@ -41,13 +36,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-in-ver-center
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-in-ver-center {
     @include keyframes(scale-in-ver-center) {
         0% {
@@ -62,13 +51,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-in-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-in-top {
     @include keyframes(scale-in-top) {
         0% {
@@ -85,13 +68,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-in-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-in-left {
     @include keyframes(scale-in-left) {
         0% {
@@ -108,13 +85,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-in-ver-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-in-ver-top {
     @include keyframes(scale-in-ver-top) {
         0% {
@@ -131,13 +102,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-in-tr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-in-tr {
     @include keyframes(scale-in-tr) {
         0% {
@@ -154,13 +119,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-in-tl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-in-tl {
     @include keyframes(scale-in-tl) {
         0% {
@@ -177,13 +136,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-in-ver-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-in-ver-bottom {
     @include keyframes(scale-in-ver-bottom) {
         0% {
@@ -200,13 +153,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-in-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-in-right {
     @include keyframes(scale-in-right) {
         0% {
@@ -223,13 +170,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-in-hor-center
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-in-hor-center {
     @include keyframes(scale-in-hor-center) {
         0% {
@@ -244,13 +185,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-in-br
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-in-br {
     @include keyframes(scale-in-br) {
         0% {
@@ -267,13 +202,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-in-hor-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-in-hor-left {
     @include keyframes(scale-in-hor-left) {
         0% {
@@ -290,13 +219,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-in-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-in-bottom {
     @include keyframes(scale-in-bottom) {
         0% {
@@ -313,13 +236,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-in-hor-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-in-hor-right {
     @include keyframes(scale-in-hor-right) {
         0% {

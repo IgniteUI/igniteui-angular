@@ -1,9 +1,10 @@
-/**
- * ----------------------------------------
- * animation fade-in-bck
- * ----------------------------------------
- */
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// @requires {mixin} keyframes
 @mixin fade-in-bck {
     @include keyframes(fade-in-bck) {
         0% {
@@ -18,13 +19,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation fade-in-bl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-bl {
     @include keyframes(fade-in-bl) {
         0% {
@@ -39,13 +34,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation fade-in-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-bottom {
     @include keyframes(fade-in-bottom) {
         0% {
@@ -60,13 +49,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation fade-in-br
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-br {
     @include keyframes(fade-in-br) {
         0% {
@@ -81,13 +64,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation fade-in-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-fwd {
     @include keyframes(fade-in-fwd) {
         0% {
@@ -103,12 +80,7 @@
 }
 
 
-/**
- * ----------------------------------------
- * animation fade-in-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-left {
     @include keyframes(fade-in-left) {
         0% {
@@ -123,13 +95,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation fade-in-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-right {
     @include keyframes(fade-in-right) {
         0% {
@@ -145,12 +111,7 @@
 }
 
 
-/**
- * ----------------------------------------
- * animation fade-in-tl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-tl {
     @include keyframes(fade-in-tl) {
         0% {
@@ -165,13 +126,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation fade-in-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-top {
     @include keyframes(fade-in-top) {
         0% {
@@ -186,13 +141,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation fade-in-tr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-tr {
     @include keyframes(fade-in-tr) {
         0% {
@@ -207,13 +156,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation fade-in
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in {
     @include keyframes(fade-in) {
         0% {
@@ -226,13 +169,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation fade-in-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-fwd {
     @include keyframes(fade-in-fwd) {
         0% {
@@ -247,13 +184,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation fade-in-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-bck {
     @include keyframes(fade-in-bck) {
         0% {
@@ -268,13 +199,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation fade-in-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-top {
     @include keyframes(fade-in-top) {
         0% {
@@ -289,13 +214,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation fade-in-tr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-tr {
     @include keyframes(fade-in-tr) {
         0% {
@@ -310,13 +229,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation fade-in-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-right {
     @include keyframes(fade-in-right) {
         0% {
@@ -331,13 +244,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation fade-in-br
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-br {
     @include keyframes(fade-in-br) {
         0% {
@@ -353,12 +260,7 @@
 }
 
 
-/**
- * ----------------------------------------
- * animation fade-in-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-bottom {
     @include keyframes(fade-in-bottom) {
         0% {
@@ -373,13 +275,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation fade-in-bl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-bl {
     @include keyframes(fade-in-bl) {
         0% {
@@ -394,13 +290,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation fade-in-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-left {
     @include keyframes(fade-in-left) {
         0% {
@@ -415,13 +305,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation fade-in-tl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin fade-in-tl {
     @include keyframes(fade-in-tl) {
         0% {

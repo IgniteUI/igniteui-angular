@@ -5,7 +5,8 @@ user action.
 
 By default a ripple is activated when the host element of the `igxRipple` directive
 receives a mouse or touch event. On `mousedown`/`touchstart` the ripple animation
-starts.
+starts.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/ripple.html)
 
 # Usage
 ```html

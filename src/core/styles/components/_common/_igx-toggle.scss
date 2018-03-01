@@ -1,5 +1,9 @@
+%igx-toggle--hidden {
+    display: none !important;
+}
+
 @include b(igx-toggle) {
     @include m(hidden) {
-        display: none !important;
+        @extend %igx-toggle--hidden !optional;
     }
 }
