@@ -276,13 +276,6 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
-        // Empty filter
-        grid.clearFilter("ReleaseDate");
-        fix.detectChanges();
-        grid.filter("ReleaseDate", null, DATE_FILTERS.empty);
-        fix.detectChanges();
-        expect(grid.rowList.length).toEqual(2);
-
         // LastMonth filter
         grid.clearFilter("ReleaseDate");
         fix.detectChanges();
@@ -350,6 +343,13 @@ describe("IgxGrid - Filtering actions", () => {
         grid.clearFilter("ReleaseDate");
         fix.detectChanges();
         grid.filter("ReleaseDate", null, DATE_FILTERS.today);
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+
+        // Yesterday filter
+        grid.clearFilter("ReleaseDate");
+        fix.detectChanges();
+        grid.filter("ReleaseDate", null, DATE_FILTERS.yesterday);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
     });
@@ -977,6 +977,255 @@ describe("IgxGrid - Filtering actions", () => {
 
         expect(grid.rowList.length).toEqual(7);
     });
+
+    // UI tests date column
+    it("UI - should correctly filter date column by 'today' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "today";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        // only one record is populated with "today" date, this is why rows must be 1
+        expect(grid.rowList.length).toEqual(1);
+    });
+
+    it("UI - should correctly filter date column by 'yesterday' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "yesterday";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        // only one record is populated with (today - 1 day)  date, this is why rows must be 1
+        expect(grid.rowList.length).toEqual(1);
+    });
+
+    it("UI - should correctly filter date column by 'this month' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const cal = fix.componentInstance.timeGenerator;
+        const today = fix.componentInstance.today;
+
+        // Fill expected results based on the current date
+        fillExpectedResults(grid, cal, today);
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "thisMonth";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(expectedResults[5]);
+    });
+
+    it("UI - should correctly filter date column by 'next month' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const cal = fix.componentInstance.timeGenerator;
+        const today = fix.componentInstance.today;
+
+        // Fill expected results based on the current date
+        fillExpectedResults(grid, cal, today);
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "nextMonth";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(expectedResults[1]);
+    });
+
+    it("UI - should correctly filter date column by 'last month' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const cal = fix.componentInstance.timeGenerator;
+        const today = fix.componentInstance.today;
+
+        // Fill expected results based on the current date
+        fillExpectedResults(grid, cal, today);
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "lastMonth";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(expectedResults[0]);
+    });
+
+    it("UI - should correctly filter date column by 'empty' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "empty";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(2);
+    });
+
+    it("UI - should correctly filter date column by 'notEmpty' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "notEmpty";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(6);
+    });
+
+    it("UI - should correctly filter date column by 'null' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "null";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(1);
+    });
+
+    it("UI - should correctly filter date column by 'notNull' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "notNull";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(7);
+    });
+
+    it("UI - should correctly filter date column by 'thisYear' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const cal = fix.componentInstance.timeGenerator;
+        const today = fix.componentInstance.today;
+
+        // Fill expected results based on the current date
+        fillExpectedResults(grid, cal, today);
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "thisYear";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(expectedResults[2]);
+    });
+
+    it("UI - should correctly filter date column by 'lastYear' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const cal = fix.componentInstance.timeGenerator;
+        const today = fix.componentInstance.today;
+
+        // Fill expected results based on the current date
+        fillExpectedResults(grid, cal, today);
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "lastYear";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(expectedResults[4]);
+    });
+
+    it("UI - should correctly filter date column by 'nextYear' filtering conditions", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const cal = fix.componentInstance.timeGenerator;
+        const today = fix.componentInstance.today;
+
+        // Fill expected results based on the current date
+        fillExpectedResults(grid, cal, today);
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "nextYear";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(expectedResults[3]);
+    });
 });
 
 @Component({
@@ -1084,6 +1333,7 @@ function fillExpectedResults(grid: IgxGridComponent, calendar: Calendar, today) 
     const dateItem6 = generateICalendarDate(grid.data[6].ReleaseDate,
         today.getFullYear(), today.getMonth());
 
+    let thisMonthCountItems = 1;
     let nextMonthCountItems = 1;
     let lastMonthCountItems = 1;
     let thisYearCountItems = 6;
@@ -1095,6 +1345,19 @@ function fillExpectedResults(grid: IgxGridComponent, calendar: Calendar, today) 
         lastMonthCountItems++;
     }
     expectedResults[0] = lastMonthCountItems;
+
+    // thisMonth filter
+    if (dateItem0.isCurrentMonth) {
+        thisMonthCountItems++;
+    }
+
+    if (dateItem3.isCurrentMonth) {
+        thisMonthCountItems++;
+    }
+
+    if (dateItem5.isCurrentMonth) {
+        thisMonthCountItems++;
+    }
 
     // NextMonth filter
     if (dateItem0.isNextMonth) {
@@ -1159,6 +1422,9 @@ function fillExpectedResults(grid: IgxGridComponent, calendar: Calendar, today) 
 
     // PreviousYear filter result
     expectedResults[4] = lastYearCountItems;
+
+    // ThisMonth filter result
+    expectedResults[5] = thisMonthCountItems;
 }
 
 function generateICalendarDate(date: Date, year: number, month: number) {
