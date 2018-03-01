@@ -350,15 +350,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get pinnedStartColumns(): IgxColumnComponent[] {
-        return this._pinnedStartColumns;
+        return this._pinnedStartColumns.filter((col) => !col.hidden);
     }
 
     get pinnedEndColumns(): IgxColumnComponent[] {
-        return this._pinnedEndColumns;
+        return this._pinnedEndColumns.filter((col) => !col.hidden);
     }
 
     get unpinnedColumns(): IgxColumnComponent[] {
-        return this._unpinnedColumns;
+        return this._unpinnedColumns.filter((col) => !col.hidden).sort((col1, col2) => col1.index - col2.index);
     }
 
     public getColumnByName(name: string): IgxColumnComponent {
@@ -510,7 +510,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         // update grid collections.
         if (location === PinLocation.Start && this._pinnedStartColumns.indexOf(col) === -1) {
-            this.pinnedStartColumns.splice(index, 0, col);
+            this._pinnedStartColumns.splice(index, 0, col);
 
             if (this._unpinnedColumns.indexOf(col) !== -1) {
                 this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);

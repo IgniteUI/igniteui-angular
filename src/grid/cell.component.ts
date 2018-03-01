@@ -267,7 +267,11 @@ export class IgxGridCellComponent {
                 target.nativeElement.focus();
                 this.syncRows();
             } else {
-                this.row.virtDirRow.scrollPrev();
+                if (!this.column.pinned) {
+                    this.row.virtDirRow.scrollPrev();
+                } else {
+                    this.row.virtDirRow.scrollTo(this.grid.unpinnedColumns.length - 1);
+                }
                 this.row.virtDirRow.onChunkLoad.first().subscribe({
                     next: (e: any) => {
                         this.row.cdr.detectChanges();
@@ -313,7 +317,11 @@ export class IgxGridCellComponent {
                 target.nativeElement.focus();
                 this.syncRows();
             } else {
-                this.row.virtDirRow.scrollNext();
+                if (!this.column.pinned) {
+                     this.row.virtDirRow.scrollNext();
+                } else {
+                    this.row.virtDirRow.scrollTo(0);
+                }
                 this.row.virtDirRow.onChunkLoad.first().subscribe({
                     next: (e: any) => {
                         this.row.cdr.detectChanges();

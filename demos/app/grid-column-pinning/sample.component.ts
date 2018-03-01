@@ -21,7 +21,7 @@ export class GridColumnPinningSampleComponent {
 	public columns: Array<any>;
 	public ngOnInit(): void {
 		this.columns = [
-			{ field: "ID", width: 100 },
+			{ field: "ID", width: 100, hidden:true },
 			{ field: "CompanyName", width: 300 },
 			{ field: "ContactName", width: 200, pinned: true, pinLocation: PinLocation.Start },
 			{ field: "ContactTitle", width: 200, pinned: true, pinLocation: PinLocation.End },
@@ -72,6 +72,11 @@ export class GridColumnPinningSampleComponent {
 		} else {
 			col.pin(PinLocation.End);
 		}
+	}
+
+	toggleVisibility(name: string){
+		var col = this.grid1.getColumnByName(name);
+		col.hidden = !col.hidden;
 	}
 
 }
