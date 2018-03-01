@@ -8,7 +8,7 @@ import { By } from "@angular/platform-browser";
 import { IgxInputModule } from "../input/input.directive";
 import { IgxMaskModule } from "./mask.directive";
 
-fdescribe("AppComponent", () => {
+describe("AppComponent", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
