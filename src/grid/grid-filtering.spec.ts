@@ -1226,6 +1226,118 @@ describe("IgxGrid - Filtering actions", () => {
 
         expect(grid.rowList.length).toEqual(expectedResults[3]);
     });
+
+    it("UI - should correctly filter date column by 'equals' filtering conditions", (done) => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        input.nativeElement.click();
+        fix.detectChanges();
+
+        // pick a date from the date picker
+        const calendar = fix.debugElement.query(By.css("igx-calendar"));
+        const currentDay = calendar.query(By.css("span.igx-calendar__date--current"));
+        currentDay.nativeElement.click();
+        fix.detectChanges();
+        input.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(1);
+    });
+
+    it("UI - should correctly filter date column by 'doesNotEqual' filtering conditions", (done) => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        input.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "doesNotEqual";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        // pick a date from the date picker
+        const calendar = fix.debugElement.query(By.css("igx-calendar"));
+        const currentDay = calendar.query(By.css("span.igx-calendar__date--current"));
+        currentDay.nativeElement.click();
+        fix.detectChanges();
+        input.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(7);
+    });
+
+    it("UI - should correctly filter date column by 'after' filtering conditions", (done) => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        input.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "after";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        // pick a date from the date picker
+        const calendar = fix.debugElement.query(By.css("igx-calendar"));
+        const currentDay = calendar.query(By.css("span.igx-calendar__date--current"));
+        currentDay.nativeElement.click();
+        fix.detectChanges();
+        input.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(3);
+    });
+
+    it("UI - should correctly filter date column by 'before' filtering conditions", (done) => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        input.nativeElement.click();
+        fix.detectChanges();
+        select.nativeElement.value = "before";
+        select.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        // pick a date from the date picker
+        const calendar = fix.debugElement.query(By.css("igx-calendar"));
+        const currentDay = calendar.query(By.css("span.igx-calendar__date--current"));
+        currentDay.nativeElement.click();
+        fix.detectChanges();
+        input.nativeElement.dispatchEvent(new Event("change"));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(3);
+    });
 });
 
 @Component({
