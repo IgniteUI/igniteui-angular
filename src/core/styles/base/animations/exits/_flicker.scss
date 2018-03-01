@@ -1,9 +1,10 @@
-/**
- * ----------------------------------------
- * animation flicker-out-1
- * ----------------------------------------
- */
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// @requires {mixin} keyframes
 @mixin flicker-out-1 {
     @include keyframes (flicker-out-1) {
         0% {
@@ -148,13 +149,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flicker-out-2
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flicker-out-2 {
     @include keyframes (flicker-out-2) {
         0% {

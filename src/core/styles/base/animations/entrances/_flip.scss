@@ -1,9 +1,10 @@
-/**
- * ----------------------------------------
- * animation flip-in-hor-bottom
- * ----------------------------------------
- */
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// @requires {mixin} keyframes
 @mixin flip-in-hor-bottom {
     @include keyframes(flip-in-hor-bottom) {
         0% {
@@ -18,13 +19,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-in-diag-2-tl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-in-diag-2-tl {
     @include keyframes(flip-in-diag-2-tl) {
         0% {
@@ -39,13 +34,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-in-hor-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-in-hor-top {
     @include keyframes(flip-in-hor-top) {
         0% {
@@ -60,13 +49,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-in-diag-2-br
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-in-diag-2-br {
     @include keyframes(flip-in-diag-2-br) {
         0% {
@@ -81,13 +64,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-in-ver-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-in-ver-right {
     @include keyframes(flip-in-ver-right) {
         0% {
@@ -102,13 +79,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-in-ver-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-in-ver-left {
     @include keyframes(flip-in-ver-left) {
         0% {
@@ -123,13 +94,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-in-diag-1-tr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-in-diag-1-tr {
     @include keyframes(flip-in-diag-1-tr) {
         0% {
@@ -144,13 +109,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-in-diag-1-bl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-in-diag-1-bl {
     @include keyframes(flip-in-diag-1-bl) {
         0% {

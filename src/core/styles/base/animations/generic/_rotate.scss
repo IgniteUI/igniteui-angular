@@ -1,3 +1,10 @@
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// @requires {mixin} keyframes
 @mixin rotate-center {
     @include keyframes(rotate-center) {
         0% {
@@ -10,6 +17,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-bl {
     @include keyframes(rotate-bl) {
         0% {
@@ -24,6 +32,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-vert-center {
     @include keyframes(rotate-vert-center) {
         0% {
@@ -36,6 +45,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-diagonal-br {
     @include keyframes(rotate-diagonal-br) {
         0% {
@@ -50,6 +60,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-top {
     @include keyframes(rotate-top) {
         0% {
@@ -64,6 +75,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-left {
     @include keyframes(rotate-left) {
         0% {
@@ -78,6 +90,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-vert-left {
     @include keyframes(rotate-vert-left) {
         0% {
@@ -92,6 +105,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-diagonal-bl {
     @include keyframes(rotate-diagonal-bl) {
         0% {
@@ -106,6 +120,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-tr {
     @include keyframes(rotate-tr) {
         0% {
@@ -120,6 +135,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-tl {
     @include keyframes(rotate-tl) {
         0% {
@@ -134,6 +150,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-scale-up {
     @include keyframes(rotate-scale-up) {
         0% {
@@ -150,6 +167,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-scale-up-diag-1 {
     @include keyframes(rotate-scale-up-diag-1) {
         0% {
@@ -166,6 +184,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-scale-down {
     @include keyframes(rotate-scale-down) {
         0% {
@@ -182,6 +201,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-scale-down-diag-1 {
     @include keyframes(rotate-scale-down-diag-1) {
         0% {
@@ -198,6 +218,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-scale-up-hor {
     @include keyframes(rotate-scale-up-hor) {
         0% {
@@ -214,6 +235,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-scale-up-diag-2 {
     @include keyframes(rotate-scale-up-diag-2) {
         0% {
@@ -230,6 +252,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-scale-down-hor {
     @include keyframes(rotate-scale-down-hor) {
         0% {
@@ -246,6 +269,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-scale-down-diag-2 {
     @include keyframes(rotate-scale-down-diag-2) {
         0% {
@@ -262,6 +286,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-scale-up-ver {
     @include keyframes(rotate-scale-up-ver) {
         0% {
@@ -278,6 +303,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin rotate-scale-down-ver {
     @include keyframes(rotate-scale-down-ver) {
         0% {
@@ -294,13 +320,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-cw
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-cw {
     @include keyframes(rotate-90-cw) {
         0% {
@@ -313,13 +333,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-right-cw
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-right-cw {
     @include keyframes(rotate-90-right-cw) {
         0% {
@@ -334,13 +348,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-bl-cw
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-bl-cw {
     @include keyframes(rotate-90-bl-cw) {
         0% {
@@ -355,13 +363,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-horizontal-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-horizontal-fwd {
     @include keyframes(rotate-90-horizontal-fwd) {
         0% {
@@ -374,13 +376,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-ccw
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-ccw {
     @include keyframes(rotate-90-ccw) {
         0% {
@@ -393,13 +389,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-right-ccw
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-right-ccw {
     @include keyframes(rotate-90-right-ccw) {
         0% {
@@ -414,13 +404,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-bl-ccw
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-bl-ccw {
     @include keyframes(rotate-90-bl-ccw) {
         0% {
@@ -435,13 +419,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-horizontal-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-horizontal-bck {
     @include keyframes(rotate-90-horizontal-bck) {
         0% {
@@ -454,13 +432,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-top-cw
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-top-cw {
     @include keyframes(rotate-90-top-cw) {
         0% {
@@ -475,13 +447,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-br-cw
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-br-cw {
     @include keyframes(rotate-90-br-cw) {
         0% {
@@ -496,13 +462,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-left-cw
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-left-cw {
     @include keyframes(rotate-90-left-cw) {
         0% {
@@ -517,13 +477,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-vertical-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-vertical-fwd {
     @include keyframes(rotate-90-vertical-fwd) {
         0% {
@@ -536,13 +490,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-top-ccw
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-top-ccw {
     @include keyframes(rotate-90-top-ccw) {
         0% {
@@ -557,13 +505,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-br-ccw
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-br-ccw {
     @include keyframes(rotate-90-br-ccw) {
         0% {
@@ -578,13 +520,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-left-ccw
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-left-ccw {
     @include keyframes(rotate-90-left-ccw) {
         0% {
@@ -599,13 +535,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-vertical-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-vertical-bck {
     @include keyframes(rotate-90-vertical-bck) {
         0% {
@@ -618,13 +548,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-tr-cw
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-tr-cw {
     @include keyframes(rotate-90-tr-cw) {
         0% {
@@ -639,13 +563,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-bottom-cw
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-bottom-cw {
     @include keyframes(rotate-90-bottom-cw) {
         0% {
@@ -660,13 +578,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-tl-cw
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-tl-cw {
     @include keyframes(rotate-90-tl-cw) {
         0% {
@@ -681,13 +593,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-tr-ccw
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-tr-ccw {
     @include keyframes(rotate-90-tr-ccw) {
         0% {
@@ -702,13 +608,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-bottom-ccw
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-bottom-ccw {
     @include keyframes(rotate-90-bottom-ccw) {
         0% {
@@ -723,13 +623,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation rotate-90-tl-ccw
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin rotate-90-tl-ccw {
     @include keyframes(rotate-90-tl-ccw) {
         0% {

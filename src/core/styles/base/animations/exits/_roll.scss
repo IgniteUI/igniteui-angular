@@ -1,9 +1,10 @@
-/**
- * ----------------------------------------
- * animation roll-out-left
- * ----------------------------------------
- */
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// @requires {mixin} keyframes
 @mixin roll-out-left {
     @include keyframes (roll-out-left) {
         0% {
@@ -18,13 +19,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation roll-out-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin roll-out-top {
     @include keyframes (roll-out-top) {
         0% {
@@ -39,13 +34,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation roll-out-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin roll-out-right {
     @include keyframes (roll-out-right) {
         0% {
@@ -60,13 +49,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation roll-out-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin roll-out-bottom {
     @include keyframes (roll-out-bottom) {
         0% {

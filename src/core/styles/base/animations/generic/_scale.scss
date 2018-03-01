@@ -1,3 +1,10 @@
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// @requires {mixin} keyframes
 @mixin scale-up-center {
     @include keyframes(scale-up-center) {
         0% {
@@ -10,6 +17,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-up-bl {
     @include keyframes(scale-up-bl) {
         0% {
@@ -24,6 +32,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-up-ver-center {
     @include keyframes(scale-up-ver-center) {
         0% {
@@ -36,6 +45,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-up-top {
     @include keyframes(scale-up-top) {
         0% {
@@ -50,6 +60,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-up-left {
     @include keyframes(scale-up-left) {
         0% {
@@ -64,6 +75,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-up-ver-top {
     @include keyframes(scale-up-ver-top) {
         0% {
@@ -78,6 +90,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-up-tr {
     @include keyframes(scale-up-tr) {
         0% {
@@ -92,6 +105,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-up-tl {
     @include keyframes(scale-up-tl) {
         0% {
@@ -106,6 +120,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-up-ver-bottom {
     @include keyframes(scale-up-ver-bottom) {
         0% {
@@ -120,6 +135,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-up-right {
     @include keyframes(scale-up-right) {
         0% {
@@ -134,6 +150,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-up-hor-center {
     @include keyframes(scale-up-hor-center) {
         0% {
@@ -146,6 +163,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-up-br {
     @include keyframes(scale-up-br) {
         0% {
@@ -160,6 +178,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-up-hor-left {
     @include keyframes(scale-up-hor-left) {
         0% {
@@ -174,6 +193,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-up-bottom {
     @include keyframes(scale-up-bottom) {
         0% {
@@ -188,6 +208,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-up-hor-right {
     @include keyframes(scale-up-hor-right) {
         0% {
@@ -202,6 +223,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-down-center {
     @include keyframes(scale-down-center) {
         0% {
@@ -214,6 +236,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-down-bl {
     @include keyframes(scale-down-bl) {
         0% {
@@ -228,6 +251,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-down-ver-center {
     @include keyframes(scale-down-ver-center) {
         0% {
@@ -240,6 +264,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-down-top {
     @include keyframes(scale-down-top) {
         0% {
@@ -254,6 +279,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-down-left {
     @include keyframes(scale-down-left) {
         0% {
@@ -268,6 +294,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-down-ver-top {
     @include keyframes(scale-down-ver-top) {
         0% {
@@ -282,6 +309,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-down-tr {
     @include keyframes(scale-down-tr) {
         0% {
@@ -296,6 +324,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-down-tl {
     @include keyframes(scale-down-tl) {
         0% {
@@ -310,6 +339,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-down-ver-top-bottom {
     @include keyframes(scale-down-ver-to-bottom) {
         0% {
@@ -324,6 +354,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-down-right {
     @include keyframes(scale-down-right) {
         0% {
@@ -338,6 +369,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-down-hor-center {
     @include keyframes(scale-down-hor-center) {
         0% {
@@ -350,6 +382,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-down-br {
     @include keyframes(scale-down-br) {
         0% {
@@ -364,6 +397,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-down-hor-left {
     @include keyframes(scale-down-hor-left) {
         0% {
@@ -378,6 +412,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-down-bottom {
     @include keyframes(scale-down-bottom) {
         0% {
@@ -392,6 +427,7 @@
     }
 }
 
+/// @requires {mixin} keyframes
 @mixin scale-down-hor-right {
     @include keyframes(scale-down-hor-right) {
         0% {
