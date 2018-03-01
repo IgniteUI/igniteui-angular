@@ -1,9 +1,10 @@
-/**
- * ----------------------------------------
- * animation slit-in-vertical
- * ----------------------------------------
- */
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// @requires {mixin} keyframes
 @mixin slit-in-vertical {
     @include keyframes(slit-in-vertical) {
         0% {
@@ -22,13 +23,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slit-in-horizontal
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slit-in-horizontal {
     @include keyframes(slit-in-horizontal) {
         0% {
@@ -47,13 +42,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slit-in-diagonal-1
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slit-in-diagonal-1 {
     @include keyframes(slit-in-diagonal-1) {
         0% {
@@ -75,13 +64,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slit-in-diagonal-2
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slit-in-diagonal-2 {
     @include keyframes(slit-in-diagonal-2) {
         0% {

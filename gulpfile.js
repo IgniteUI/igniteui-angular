@@ -38,11 +38,30 @@ gulp.task("make-packagejson", () => {
         if (err) throw err;
 
         data = JSON.parse(data.trim());
+        let hammerjs = data.dependencies.hammerjs;
         delete data.scripts;
+        data.dependencies["@types/hammerjs"] = data.devDependencies["@types/hammerjs"];
         delete data.devDependencies;
-        data.peerDependencies = data.dependencies;
-        delete data.dependencies;
-
+        data.peerDependencies = {
+            "@angular/animations": "" + data.dependencies["@angular/animations"] + "",
+            "@angular/common": "" + data.dependencies["@angular/common"] + "",
+            "@angular/compiler":"" + data.dependencies["@angular/compiler"] + "",
+            "@angular/core": "" + data.dependencies["@angular/core"] + "",
+            "@angular/forms":"" + data.dependencies["@angular/forms"] + "",
+            "@angular/platform-browser": "" + data.dependencies["@angular/platform-browser"] + "",
+            "@angular/platform-browser-dynamic": "" + data.dependencies["@angular/platform-browser-dynamic"] + "",
+            "rxjs": "" + data.dependencies["rxjs"] + "",
+            "web-animations-js": "^2.3.1"
+        } 
+        delete data.dependencies["@angular/animations"];
+        delete data.dependencies["@angular/common"];
+        delete data.dependencies["@angular/compiler"];
+        delete data.dependencies["@angular/core"];
+        delete data.dependencies["@angular/forms"];
+        delete data.dependencies["@angular/platform-browser"];
+        delete data.dependencies["@angular/platform-browser-dynamic"];
+        delete data.dependencies["rxjs"];
+        
         fs.writeFile("dist/package.json", JSON.stringify(data, null, 4), "utf8", (err) => {
             if (err) throw err;
         });

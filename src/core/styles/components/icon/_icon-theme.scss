@@ -1,7 +1,17 @@
-$component-name: 'igx-icon';
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
-$components: register-component($components, #{$component-name});
-
+/// @param {Color} $color [null] - The icon color.
+/// @param {String} $size [null] - The icon size.
+/// @param {Color} $disabled-color [null] - The disabled icon color.
+/// @example scss Change the icon color
+///   $my-icon-theme: igx-icon-theme($color: orange);
+///   // Pass the theme to the igx-icon component mixin
+///   @include igx-icon($my-icon-theme);
 @function igx-icon-theme(
     $color: null,
     $size: null,
@@ -13,6 +23,12 @@ $components: register-component($components, #{$component-name});
         disabled-color: $disabled-color);
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-icon-theme
+/// @requires igx-color
+/// @requires extend
+/// @requires rem
 @mixin igx-icon($theme, $palette: $default-palette) {
     $default-theme: igx-icon-theme(
         $color: currentColor,
@@ -56,6 +72,6 @@ $components: register-component($components, #{$component-name});
     }
 
     %igx-icon--inactive {
-        color: map-get($this, 'disabled-color');
+        color: map-get($this, 'disabled-color') !important;
     }
 }

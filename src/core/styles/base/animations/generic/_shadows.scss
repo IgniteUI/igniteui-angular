@@ -1,9 +1,10 @@
-/**
- * ----------------------------------------
- * animation shadow-drop-center
- * ----------------------------------------
- */
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// @requires {mixin} keyframes
 @mixin shadow-drop-center {
     @include keyframes(shadow-drop-center) {
         0% {
@@ -16,13 +17,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-tb
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-tb {
     @include keyframes(shadow-drop-tb) {
         0% {
@@ -35,13 +30,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-top {
     @include keyframes(shadow-drop-top) {
         0% {
@@ -54,13 +43,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-tr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-tr {
     @include keyframes(shadow-drop-tr) {
         0% {
@@ -73,13 +56,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-right {
     @include keyframes(shadow-drop-right) {
         0% {
@@ -92,13 +69,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-br
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-br {
     @include keyframes(shadow-drop-br) {
         0% {
@@ -111,13 +82,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-bottom {
     @include keyframes(shadow-drop-bottom) {
         0% {
@@ -130,13 +95,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-bl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-bl {
     @include keyframes(shadow-drop-bl) {
         0% {
@@ -149,13 +108,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-left {
     @include keyframes(shadow-drop-left) {
         0% {
@@ -168,13 +121,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-tl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-tl {
     @include keyframes(shadow-drop-tl) {
         0% {
@@ -187,13 +134,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-lr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-tl {
     @include keyframes(shadow-drop-lr) {
         0% {
@@ -206,13 +147,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-2-center
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-2-center {
     @include keyframes(shadow-drop-2-center) {
         0% {
@@ -227,13 +162,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-2-tb
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-2-tb {
     @include keyframes(shadow-drop-2-tb) {
         0% {
@@ -248,13 +177,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-2-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-2-top {
     @include keyframes(shadow-drop-2-top) {
         0% {
@@ -269,13 +192,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-2-tr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-2-tr {
     @include keyframes(shadow-drop-2-tr) {
         0% {
@@ -290,13 +207,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-2-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-2-right {
     @include keyframes(shadow-drop-2-right) {
         0% {
@@ -311,13 +222,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-2-br
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-2-br {
     @include keyframes(shadow-drop-2-br) {
         0% {
@@ -332,13 +237,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-2-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-2-bottom {
     @include keyframes(shadow-drop-2-bottom) {
         0% {
@@ -353,13 +252,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-2-bl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-2-bl {
     @include keyframes(shadow-drop-2-bl) {
         0% {
@@ -374,13 +267,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-2-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-2-left {
     @include keyframes(shadow-drop-2-left) {
         0% {
@@ -395,13 +282,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-2-tl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-2-tl {
     @include keyframes(shadow-drop-2-tl) {
         0% {
@@ -416,13 +297,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-drop-2-lr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-drop-2-lr {
     @include keyframes(shadow-drop-2-lr) {
         0% {
@@ -437,13 +312,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-pop-tr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-pop-tr {
     @include keyframes(shadow-pop-tr) {
         0% {
@@ -458,13 +327,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-pop-br
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-pop-br {
     @include keyframes(shadow-pop-br) {
         0% {
@@ -479,13 +342,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-pop-bl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-pop-bl {
     @include keyframes(shadow-pop-bl) {
         0% {
@@ -500,13 +357,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-pop-tl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-pop-tl {
     @include keyframes(shadow-pop-tl) {
         0% {
@@ -521,13 +372,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-inset-tb
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-inset-tb {
     @include keyframes(shadow-inset-tb) {
         0% {
@@ -540,13 +385,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-inset-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-inset-top {
     @include keyframes(shadow-inset-top) {
         0% {
@@ -559,13 +398,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-inset-center
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-inset-center {
     @include keyframes(shadow-inset-center) {
         0% {
@@ -578,13 +411,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-inset-tr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-inset-tr {
     @include keyframes(shadow-inset-tr) {
         0% {
@@ -597,13 +424,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-inset-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-inset-right {
     @include keyframes(shadow-inset-right) {
         0% {
@@ -616,13 +437,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-inset-br
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-inset-br {
     @include keyframes(shadow-inset-br) {
         0% {
@@ -635,13 +450,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-inset-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-inset-bottom {
     @include keyframes(shadow-inset-bottom) {
         0% {
@@ -654,13 +463,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-inset-bl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-inset-bl {
     @include keyframes(shadow-inset-bl) {
         0% {
@@ -673,13 +476,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-inset-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-inset-left {
     @include keyframes(shadow-inset-left) {
         0% {
@@ -692,13 +489,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-inset-tl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-inset-tl {
     @include keyframes(shadow-inset-tl) {
         0% {
@@ -711,13 +502,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation shadow-inset-lr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin shadow-inset-lr {
     @include keyframes(shadow-inset-lr) {
         0% {

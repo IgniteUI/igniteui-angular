@@ -1,6 +1,7 @@
 # igx-ButtonGroup
 
-The **igx-ButtonGroup** component aims at providing a button group functionality to developers that also allow horizontal/vertical alignment, single/multiple selection with toggling. The igx-ButtounGroup component makes use of the igxButton directive.
+The **igx-ButtonGroup** component aims at providing a button group functionality to developers that also allow horizontal/vertical alignment, single/multiple selection with toggling. The igx-ButtounGroup component makes use of the igxButton directive.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/buttongroup.html)
 
 # Usage
 ```html

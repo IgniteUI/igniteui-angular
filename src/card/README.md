@@ -1,7 +1,8 @@
 igx-card
 --------
 
-**igx-card** is a sheet of material that serves as an entry point to more detailed information.
+**igx-card** is a sheet of material that serves as an entry point to more detailed information.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/card.html)
 
 # Usage
 

@@ -1,6 +1,7 @@
 # igx-toast
 
-**igx-toast** IgxToast provides information and warning messages. They could not be dismissed, are non-interactive and can appear on top, middle and the bottom of the screen.
+**igx-toast** IgxToast provides information and warning messages. They could not be dismissed, are non-interactive and can appear on top, middle and the bottom of the screen.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast.html)
 
 # Usage
 

@@ -4,7 +4,8 @@
 _Components_
 
 ## Description
-_Igx-Tab-Bar represents a single content area with multiple panels, each associated with a tab._
+_Igx-Tab-Bar represents a single content area with multiple panels, each associated with a tab._  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabbar.html)
 
 ### More Info
 Igx-Tab-Bar provides two observable collections (QueryLists): one with panels and one with related tabs. 
