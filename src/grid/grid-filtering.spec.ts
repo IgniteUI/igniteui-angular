@@ -406,6 +406,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "NetAdvantage", fix).then(() => {
             fix.detectChanges();
+            verifyFilterUIisVisible(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(1);
             expect(grid.getCellByColumn(0, "ID").value).toEqual(2);
             expect(grid.getCellByColumn(0, "ProductName").value).toMatch("NetAdvantage");
@@ -423,11 +424,14 @@ describe("IgxGrid - Filtering actions", () => {
         const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
         const select = filterUIContainer.query(By.css("div > select"));
 
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
         select.nativeElement.value = "doesNotContain";
         select.nativeElement.dispatchEvent(new Event("change"));
 
         sendInput(input, "Ignite", fix).then(() => {
             fix.detectChanges();
+            verifyFilterUIisVisible(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(6);
             expect(grid.getCellByColumn(0, "ProductName").value).toMatch("NetAdvantage");
             expect(grid.getCellByColumn(1, "ProductName").value).toEqual(null);
@@ -454,6 +458,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "Net", fix).then(() => {
             fix.detectChanges();
+            verifyFilterUIisVisible(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(1);
             expect(grid.getCellByColumn(0, "ID").value).toEqual(2);
             expect(grid.getCellByColumn(0, "ProductName").value).toMatch("NetAdvantage");
@@ -471,11 +476,14 @@ describe("IgxGrid - Filtering actions", () => {
         const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
         const select = filterUIContainer.query(By.css("div > select"));
 
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
         select.nativeElement.value = "endsWith";
         select.nativeElement.dispatchEvent(new Event("change"));
 
         sendInput(input, "for", fix).then(() => {
             fix.detectChanges();
+            verifyFilterUIisVisible(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(0);
             done();
         });
@@ -491,11 +499,14 @@ describe("IgxGrid - Filtering actions", () => {
         const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
         const select = filterUIContainer.query(By.css("div > select"));
 
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
         select.nativeElement.value = "equals";
         select.nativeElement.dispatchEvent(new Event("change"));
 
         sendInput(input, "Some other item with Script", fix).then(() => {
             fix.detectChanges();
+            verifyFilterUIisVisible(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(1);
             expect(grid.getCellByColumn(0, "ID").value).toEqual(6);
             expect(grid.getCellByColumn(0, "ProductName").value).toMatch("Some other item with Script");
@@ -513,11 +524,14 @@ describe("IgxGrid - Filtering actions", () => {
         const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
         const select = filterUIContainer.query(By.css("div > select"));
 
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
         select.nativeElement.value = "doesNotEqual";
         select.nativeElement.dispatchEvent(new Event("change"));
 
         sendInput(input, "NetAdvantage", fix).then(() => {
             fix.detectChanges();
+            verifyFilterUIisVisible(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(7);
             expect(grid.getCellByColumn(0, "ProductName").value).toMatch("Ignite UI for JavaScript");
             expect(grid.getCellByColumn(1, "ProductName").value).toMatch("Ignite UI for Angular");
@@ -526,7 +540,7 @@ describe("IgxGrid - Filtering actions", () => {
         });
     });
 
-    it("UI - should correctly filter string column string columnter by 'Empty' filtering conditions", () => {
+    it("UI - should correctly filter string column by 'Empty' filtering conditions", () => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -537,11 +551,11 @@ describe("IgxGrid - Filtering actions", () => {
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
-
         select.nativeElement.value = "empty";
         select.nativeElement.dispatchEvent(new Event("change"));
 
         fix.detectChanges();
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(4);
         expect(grid.getCellByColumn(0, "ProductName").value).toMatch("");
         expect(grid.getCellByColumn(1, "ProductName").value).toMatch("");
@@ -561,11 +575,11 @@ describe("IgxGrid - Filtering actions", () => {
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
-
         select.nativeElement.value = "notEmpty";
         select.nativeElement.dispatchEvent(new Event("change"));
 
         fix.detectChanges();
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(4);
         expect(grid.getCellByColumn(0, "ProductName").value).toMatch("Ignite UI for JavaScript");
         expect(grid.getCellByColumn(1, "ProductName").value).toMatch("NetAdvantage");
@@ -584,11 +598,11 @@ describe("IgxGrid - Filtering actions", () => {
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
-
         select.nativeElement.value = "null";
         select.nativeElement.dispatchEvent(new Event("change"));
 
         fix.detectChanges();
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(3);
         expect(grid.getCellByColumn(0, "ProductName").value).toEqual(null);
         expect(grid.getCellByColumn(1, "ProductName").value).toEqual(null);
@@ -607,11 +621,11 @@ describe("IgxGrid - Filtering actions", () => {
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
-
         select.nativeElement.value = "notNull";
         select.nativeElement.dispatchEvent(new Event("change"));
 
         fix.detectChanges();
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(5);
         expect(grid.getCellByColumn(3, "ProductName").value).toMatch("");
     });
@@ -633,6 +647,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(3);
         expect(grid.getCellByColumn(0, "Released").value).toBe(true);
         expect(grid.getCellByColumn(1, "Released").value).toBe(true);
@@ -650,11 +665,11 @@ describe("IgxGrid - Filtering actions", () => {
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
-
         select.nativeElement.value = "false";
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(5);
         expect(grid.getCellByColumn(0, "Released").value).toBeFalsy();
         expect(grid.getCellByColumn(1, "Released").value).toBeFalsy();
@@ -679,6 +694,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(2);
         expect(grid.getCellByColumn(0, "Released").value).toEqual(null);
         expect(grid.getCellByColumn(1, "Released").value).toEqual(null);
@@ -700,6 +716,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(6);
         expect(grid.getCellByColumn(0, "Released").value).toBe(false);
         expect(grid.getCellByColumn(1, "Released").value).toBe(true);
@@ -725,6 +742,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(2);
         expect(grid.getCellByColumn(0, "Released").value).toEqual(null);
         expect(grid.getCellByColumn(1, "Released").value).toEqual(null);
@@ -746,6 +764,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(6);
         expect(grid.getCellByColumn(0, "Released").value).toBe(false);
         expect(grid.getCellByColumn(1, "Released").value).toBe(true);
@@ -770,6 +789,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "100", fix).then(() => {
             fix.detectChanges();
+            verifyFilterUIisVisible(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(1);
             expect(grid.getCellByColumn(0, "Downloads").value).toEqual(100);
             done();
@@ -793,6 +813,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "100", fix).then(() => {
             fix.detectChanges();
+            verifyFilterUIisVisible(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(7);
             expect(grid.getCellByColumn(6, "Downloads").value).toEqual(1000);
             done();
@@ -816,6 +837,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "300", fix).then(() => {
             fix.detectChanges();
+            verifyFilterUIisVisible(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(2);
             expect(grid.getCellByColumn(0, "Downloads").value).toEqual(702);
             expect(grid.getCellByColumn(1, "Downloads").value).toEqual(1000);
@@ -840,6 +862,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "100", fix).then(() => {
             fix.detectChanges();
+            verifyFilterUIisVisible(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(3);
             expect(grid.getCellByColumn(0, "Downloads").value).toEqual(20);
             expect(grid.getCellByColumn(1, "Downloads").value).toEqual(null);
@@ -865,6 +888,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "254", fix).then(() => {
             fix.detectChanges();
+            verifyFilterUIisVisible(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(3);
             expect(grid.getCellByColumn(0, "Downloads").value).toEqual(254);
             expect(grid.getCellByColumn(1, "Downloads").value).toEqual(702);
@@ -890,6 +914,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "20", fix).then(() => {
             fix.detectChanges();
+            verifyFilterUIisVisible(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(3);
             expect(grid.getCellByColumn(0, "Downloads").value).toEqual(20);
             expect(grid.getCellByColumn(1, "Downloads").value).toEqual(null);
@@ -914,6 +939,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(1);
         expect(grid.getCellByColumn(0, "ID").value).toEqual(4);
         expect(grid.getCellByColumn(0, "Downloads").value).toEqual(null);
@@ -935,6 +961,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(7);
     });
 
@@ -954,6 +981,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(1);
         expect(grid.getCellByColumn(0, "ID").value).toEqual(4);
         expect(grid.getCellByColumn(0, "Downloads").value).toEqual(null);
@@ -975,6 +1003,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(7);
     });
 
@@ -994,6 +1023,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         // only one record is populated with "today" date, this is why rows must be 1
         expect(grid.rowList.length).toEqual(1);
     });
@@ -1013,6 +1043,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         // only one record is populated with (today - 1 day)  date, this is why rows must be 1
         expect(grid.rowList.length).toEqual(1);
     });
@@ -1037,6 +1068,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(expectedResults[5]);
     });
 
@@ -1060,6 +1092,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(expectedResults[1]);
     });
 
@@ -1083,6 +1116,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(expectedResults[0]);
     });
 
@@ -1101,6 +1135,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(2);
     });
 
@@ -1119,6 +1154,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(6);
     });
 
@@ -1137,6 +1173,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(1);
     });
 
@@ -1155,6 +1192,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(7);
     });
 
@@ -1178,6 +1216,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(expectedResults[2]);
     });
 
@@ -1201,6 +1240,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(expectedResults[4]);
     });
 
@@ -1224,6 +1264,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(expectedResults[3]);
     });
 
@@ -1249,6 +1290,7 @@ describe("IgxGrid - Filtering actions", () => {
         input.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(1);
     });
 
@@ -1278,6 +1320,7 @@ describe("IgxGrid - Filtering actions", () => {
         input.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(7);
     });
 
@@ -1307,6 +1350,7 @@ describe("IgxGrid - Filtering actions", () => {
         input.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(3);
     });
 
@@ -1336,6 +1380,7 @@ describe("IgxGrid - Filtering actions", () => {
         input.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
+        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(3);
     });
 });
@@ -1425,6 +1470,15 @@ function sendInput(element, text: string, fix) {
     element.nativeElement.dispatchEvent(new Event("input"));
     fix.detectChanges();
     return fix.whenStable();
+}
+
+function verifyFilterUIisVisible(filterUIContainer, grid) {
+    const filterUiBottomBorder = filterUIContainer.nativeElement.offsetTop + filterUIContainer.nativeElement.offsetHeight;
+    expect(filterUiBottomBorder).toBeLessThanOrEqual(grid.nativeElement.offsetHeight);
+
+    const filterUiRightBorder = filterUIContainer.nativeElement.offsetParent.offsetLeft +
+        filterUIContainer.nativeElement.offsetLeft + filterUIContainer.nativeElement.offsetWidth;
+    expect(filterUiRightBorder).toBeLessThanOrEqual(grid.nativeElement.offsetWidth);
 }
 
 // Fill expected results for 'date' filtering conditions based on the current date
