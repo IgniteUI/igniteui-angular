@@ -2,6 +2,10 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 5.2.1
+- `hammerjs` and `@types/hammerjs` are removed from `peerDependencies` and are added as `dependencies`. So if you are using Igniteui-Angular version 5.2.1 or above it is enough to run `npm install igniteui-angular` in your project.
+- `web-animations-js` is added as Peer Dependency.
+
 ## 5.2.0
 - `igxForOf` directive added
     - `igxForOf` is now available as an alternative to `ngForOf` for templating large amounts of data. The `igxForOf` uses virtualization technology behind the scenes to optimize DOM rendering and memory consumption. Virtualization technology works similar to Paging by slicing the data into smaller chucks which are swapped from a container viewport while the user scrolls the data horizontally/vertically. The difference with the Paging is that virtualization mimics the natural behavior of the scrollbar.
