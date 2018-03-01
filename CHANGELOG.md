@@ -3,8 +3,10 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 5.2.1
-- `hammerjs` and `@types/hammerjs` are removed from `peerDependencies` and are added as `dependencies`. So if you are using Igniteui-Angular version 5.2.1 or above it is enough to run `npm install igniteui-angular` in your project for getting started. For more detailed information see [`Ignite UI for Angular Getting Started`](https://www.infragistics.com/products/ignite-ui-angular/getting-started)
+- `hammerjs` and `@types/hammerjs` are removed from `peerDependencies` and were added as `dependencies`. So if you are using Igniteui-Angular version 5.2.1 or above it is enough to run `npm install igniteui-angular` in your project for getting started. For more detailed information see [`Ignite UI for Angular Getting Started`](https://www.infragistics.com/products/ignite-ui-angular/getting-started)
 - `web-animations-js` is added as Peer Dependency.
+- `Theming` bug fixes and improvements.
+- Use the following command to generate `Ignite UI for Angular Themes` documentation - `npm run build:docs`. Navigate to `dist/docs/sass` and open `index.html` file.
 
 ## 5.2.0
 - `igxForOf` directive added
