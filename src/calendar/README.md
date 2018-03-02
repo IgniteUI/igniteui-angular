@@ -1,8 +1,7 @@
 # igxCalendar Component
 
-The **igxCalendar** provides a way for the user to select date(s).
-
-You can see it in action [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar.html)
+The **igxCalendar** provides a way for the user to select date(s).  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar.html)
 
 ## Dependencies
 In order to be able to use **igxCalendar** you should keep in mind that it is dependent on **BrowserAnimationsModule**,

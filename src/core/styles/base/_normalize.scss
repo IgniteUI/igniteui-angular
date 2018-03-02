@@ -1,13 +1,6 @@
 /* ==========================================================================
    Normalize.scss settings
    ========================================================================== */
-/**
- * Includes legacy browser support IE6/7
- *
- * Set to false if you want to drop support for IE6 and IE7
- */
-
-$legacy_browser_support: false;
 
 /* Base
    ========================================================================== */
@@ -24,9 +17,6 @@ html {
     box-sizing: border-box;
     -ms-text-size-adjust: 100%; /* 2 */
     -webkit-text-size-adjust: 100%; /* 2 */
-    @if $legacy_browser_support {
-        *font-size: 100%; /* 3 */
-    }
 }
 
 *,
@@ -46,24 +36,13 @@ body {
    ========================================================================== */
 
 /**
- * Correct `block` display not defined for any HTML5 element in IE 8/9.
  * Correct `block` display not defined for `details` or `summary` in IE 10/11
  * and Firefox.
  * Correct `block` display not defined for `main` in IE 11.
  */
 
-article,
-aside,
 details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
 main,
-menu,
-nav,
-section,
 summary {
     display: block;
 }
@@ -73,16 +52,10 @@ summary {
  * 2. Normalize vertical alignment of `progress` in Chrome, Firefox, and Opera.
  */
 
-audio,
-canvas,
-progress,
-video {
+
+progress {
     display: inline-block; /* 1 */
     vertical-align: baseline; /* 2 */
-    @if $legacy_browser_support {
-        *display: inline;
-        *zoom: 1;
-    }
 }
 
 /**
@@ -96,29 +69,11 @@ audio:not([controls]) {
 }
 
 /**
- * Address `[hidden]` styling not present in IE 8/9/10.
  * Hide the `template` element in IE 8/9/10/11, Safari, and Firefox < 22.
  */
 
-[hidden],
 template {
     display: none;
-}
-
-/* Links
-   ========================================================================== */
-
-/**
- * Remove the gray background color from active links in IE 10.
- */
-
-a {
-    background-color: transparent;
-
-    &:active,
-    &:hover {
-        outline: 0;
-    }
 }
 
 /* Text-level semantics
@@ -141,92 +96,12 @@ strong {
     font-weight: 600;
 }
 
-@if $legacy_browser_support {
-    blockquote {
-        margin: 1em 40px;
-    }
-}
-
 /**
  * Address styling not present in Safari and Chrome.
  */
 
 dfn {
     font-style: italic;
-}
-
-/**
- * Address variable `h1` font-size and margin within `section` and `article`
- * contexts in Firefox 4+, Safari, and Chrome.
- */
-
-h1 {
-    font-size: 2em;
-    margin: .67em 0;
-}
-
-@if $legacy_browser_support {
-    h2 {
-        font-size: 1.5em;
-        margin: .83em 0;
-    }
-
-    h3 {
-        font-size: 1.17em;
-        margin: 1em 0;
-    }
-
-    h4 {
-        font-size: 1em;
-        margin: 1.33em 0;
-    }
-
-    h5 {
-        font-size: .83em;
-        margin: 1.67em 0;
-    }
-
-    h6 {
-        font-size: .67em;
-        margin: 2.33em 0;
-    }
-}
-
-/**
- * Addresses styling not present in IE 8/9.
- */
-
-mark {
-    background: #ff0;
-    color: #000;
-}
-
-@if $legacy_browser_support {
-    /**
-   * Addresses margins set differently in IE 6/7.
-   */
-
-    p,
-    pre {
-        *margin: 1em 0;
-    }
-
-    /*
-   * Addresses CSS quotes not supported in IE 6/7.
-   */
-
-    q {
-        *quotes: none;
-    }
-
-    /*
-   * Addresses `quotes` property not supported in Safari 4.
-   */
-
-    q::before,
-    q::after {
-        content: '';
-    }
 }
 
 /**
@@ -257,61 +132,8 @@ sub {
     bottom: -.25em;
 }
 
-@if $legacy_browser_support {
-    /* ==========================================================================
-     Lists
-     ========================================================================== */
-
-    /*
-   * Addresses margins set differently in IE 6/7.
-   */
-
-    dl,
-    menu,
-    ol,
-    ul {
-        *margin: 1em 0;
-    }
-
-    dd {
-        *margin: 0 0 0 40px;
-    }
-
-    /*
-   * Addresses paddings set differently in IE 6/7.
-   */
-
-    menu,
-    ol,
-    ul {
-        *padding: 0 0 0 40px;
-    }
-
-    /*
-   * Corrects list images handled incorrectly in IE 7.
-   */
-
-    nav ul,
-    nav ol {
-        *list-style: none;
-        *list-style-image: none;
-    }
-}
-
 /* Embedded content
    ========================================================================== */
-
-/**
- * 1. Remove border when inside `a` element in IE 8/9/10.
- * 2. Improves image quality when scaled in IE 7.
- */
-
-img {
-    border: 0;
-    @if $legacy_browser_support {
-        *-ms-interpolation-mode: bicubic; /* 2 */
-    }
-}
 
 /**
  * Correct overflow not hidden in IE 9/10/11.
@@ -323,14 +145,6 @@ svg:not(:root) {
 
 /* Grouping content
    ========================================================================== */
-
-/**
- * Address margin not present in IE 8/9 and Safari.
- */
-
-figure {
-    margin: 1em 40px;
-}
 
 /**
  * Address differences between Firefox and other browsers.
@@ -351,7 +165,6 @@ pre {
 
 /**
  * Address odd `em`-unit font size rendering in all browsers.
- * Correct font family set oddly in IE 6, Safari 4/5, and Chrome.
  */
 
 code,
@@ -359,9 +172,6 @@ kbd,
 pre,
 samp {
     font-family: monospace;
-    @if $legacy_browser_support {
-        _font-family: 'courier new', monospace;
-    }
     font-size: 1em;
 }
 
@@ -389,9 +199,6 @@ textarea {
     color: inherit; /* 1 */
     font: inherit; /* 2 */
     margin: 0; /* 3 */
-    @if $legacy_browser_support {
-        vertical-align: baseline; /* 3 */
-    }
 }
 
 /**
@@ -426,14 +233,11 @@ select {
 
 button,
 html input[type='button'],
-/* 1 */
+    /* 1 */
 input[type='reset'],
 input[type='submit'] {
     -webkit-appearance: button; /* 2 */
     cursor: pointer; /* 3 */
-    @if $legacy_browser_support {
-        *overflow: visible; /* 4 */
-    }
 }
 
 /**
@@ -462,22 +266,6 @@ input::-moz-focus-inner {
 
 input {
     line-height: normal;
-}
-
-/**
- * 1. Address box sizing set to `content-box` in IE 8/9/10.
- * 2. Remove excess padding in IE 8/9/10.
- *  Known issue: excess padding remains in IE 6.
- */
-
-input[type='checkbox'],
-input[type='radio'] {
-    box-sizing: border-box; /* 1 */
-    padding: 0; /* 2 */
-    @if $legacy_browser_support {
-        *height: 13px; /* 3 */
-        *width: 13px; /* 3 */
-    }
 }
 
 /**
@@ -512,15 +300,6 @@ input[type='search']::-webkit-search-decoration {
     -webkit-appearance: none;
 }
 
-/**
- * Define consistent border, margin, and padding.
- */
-
-fieldset {
-    border: 1px solid #c0c0c0;
-    margin: 0 2px;
-    padding: .35em .625em .75em;
-}
 
 /**
  * 1. Correct `color` not being inherited in IE 8/9/10/11.
@@ -532,10 +311,6 @@ fieldset {
 legend {
     border: 0; /* 1 */
     padding: 0; /* 2 */
-    @if $legacy_browser_support {
-        white-space: normal; /* 3 */
-        *margin-left: -7px; /* 4 */
-    }
 }
 
 /**

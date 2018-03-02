@@ -1,9 +1,10 @@
-/**
- * ----------------------------------------
- * @animation flicker-in-1
- * ----------------------------------------
- */
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// @requires {mixin} keyframes
 @mixin flicker-in-1 {
     @include keyframes(flicker-in-1) {
         0% {
@@ -132,13 +133,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * @animation flicker-in-2
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flicker-in-2 {
     @include keyframes(flicker-in-2) {
         0% {

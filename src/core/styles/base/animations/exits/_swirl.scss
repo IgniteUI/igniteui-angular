@@ -1,9 +1,10 @@
-/**
- * ----------------------------------------
- * animation swirl-out-bck
- * ----------------------------------------
- */
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// @requires {mixin} keyframes
 @mixin swirl-out-bck {
     @include keyframes (swirl-out-bck) {
         0% {
@@ -18,13 +19,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swirl-out-right-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swirl-out-right-bck {
     @include keyframes (swirl-out-right-bck) {
         0% {
@@ -41,13 +36,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swirl-out-bl-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swirl-out-bl-bck {
     @include keyframes (swirl-out-bl-bck) {
         0% {
@@ -64,13 +53,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swirl-out-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swirl-out-fwd {
     @include keyframes (swirl-out-fwd) {
         0% {
@@ -85,13 +68,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swirl-out-right-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swirl-out-right-fwd {
     @include keyframes (swirl-out-right-fwd) {
         0% {
@@ -108,13 +85,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swirl-out-bl-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swirl-out-bl-fwd {
     @include keyframes (swirl-out-bl-fwd) {
         0% {
@@ -131,13 +102,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swirl-out-top-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swirl-out-top-bck {
     @include keyframes (swirl-out-top-bck) {
         0% {
@@ -154,13 +119,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swirl-out-br-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swirl-out-br-bck {
     @include keyframes (swirl-out-br-bck) {
         0% {
@@ -177,13 +136,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swirl-out-left-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swirl-out-left-bck {
     @include keyframes (swirl-out-left-bck) {
         0% {
@@ -200,13 +153,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swirl-out-top-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swirl-out-top-fwd {
     @include keyframes (swirl-out-top-fwd) {
         0% {
@@ -223,13 +170,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swirl-out-br-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swirl-out-br-fwd {
     @include keyframes (swirl-out-br-fwd) {
         0% {
@@ -246,13 +187,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swirl-out-left-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swirl-out-left-fwd {
     @include keyframes (swirl-out-left-fwd) {
         0% {
@@ -269,13 +204,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swirl-out-tr-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swirl-out-tr-bck {
     @include keyframes (swirl-out-tr-bck) {
         0% {
@@ -292,13 +221,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swirl-out-bottom-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swirl-out-bottom-bck {
     @include keyframes (swirl-out-bottom-bck) {
         0% {
@@ -315,13 +238,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swirl-out-tl-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swirl-out-tl-bck {
     @include keyframes (swirl-out-tl-bck) {
         0% {
@@ -338,13 +255,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swirl-out-tr-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swirl-out-tr-fwd {
     @include keyframes (swirl-out-tr-fwd) {
         0% {
@@ -361,13 +272,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swirl-out-bottom-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swirl-out-bottom-fwd {
     @include keyframes (swirl-out-bottom-fwd) {
         0% {
@@ -384,13 +289,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation swirl-out-tl-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin swirl-out-tl-fwd {
     @include keyframes (swirl-out-tl-fwd) {
         0% {

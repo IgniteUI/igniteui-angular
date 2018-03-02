@@ -1,8 +1,7 @@
 # IgxToggle Directive
 
-The **IgxToggle** provides a way for user to make a given content togglable.
-
-You can see it in action [here](http://139.59.168.161/demos/toggle)
+The **IgxToggle** provides a way for user to make a given content togglable.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toggle.html)
 
 #Usage
 ```typescript

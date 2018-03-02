@@ -1,6 +1,7 @@
 # igx-checkbox
 
 `igx-checkbox` is a selection component that allows users to make a binary choice for a certain condition. It behaves similar to the native browser checkbox.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/checkbox.html)
 
 # Usage
 

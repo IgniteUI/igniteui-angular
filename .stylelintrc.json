@@ -1,5 +1,6 @@
 {
     "plugins": ["stylelint-scss"],
+    "ignoreFiles": ["src/core/styles/*.md"],
     "rules": {
         "at-rule-blacklist": ["debug", {
             "severity": "warning"
