@@ -46,15 +46,15 @@
 
     %igx-icon-display {
         position: relative;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        color: map-get($this, 'color');
+        display: inline-block;
         width: $igx-icon-width;
         height: $igx-icon-height;
         font-size: $igx-icon-font-size;
+        text-align: center;
+        color: map-get($this, 'color');
 
         i {
+            display: inline-block;
             line-height: 1;
             text-transform: none;
             letter-spacing: normal;
