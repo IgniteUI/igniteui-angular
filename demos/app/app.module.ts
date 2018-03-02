@@ -22,7 +22,6 @@ import { NavbarSampleModule } from "./navbar/sample.module";
 import { NavdrawerSampleModule } from "./navdrawer/sample.module";
 import { ProgressBarSampleModule } from "./progressbar/sample.module";
 import { RippleSampleModule } from "./ripple/sample.module";
-import { IgxScrollSampleModule } from "./scroll/sample.module";
 import { IgxSliderSampleModule } from "./slider/sample.module";
 import { IgxSnackbarSampleModule } from "./snackbar/sample.module";
 import { IgxColorsSampleModule } from "./styleguide/colors/sample.module";
@@ -37,9 +36,7 @@ import { AppComponent } from "./app.component";
 import { routing } from "./app.routing";
 import { IgxNavigationDrawerModule, IgxRippleModule, IgxNavigationService } from "../lib/main";
 
-
 import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSwitchModule, IgxAvatarModule } from "../lib/main";
-
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -54,8 +51,8 @@ import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSw
         IgxRadioModule,
         IgxIconModule,
         IgxCheckboxModule,
-        IgxLabelModule, 
-        IgxSwitchModule, 
+        IgxLabelModule,
+        IgxSwitchModule,
         IgxAvatarModule,
         InputSampleModule,
         CarouselSampleModule,
@@ -75,7 +72,6 @@ import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSw
         GridPerformanceSampleModule,
         IgxCardSampleModule,
         IgxSliderSampleModule,
-        IgxScrollSampleModule,
         BadgeSampleModule,
         RippleSampleModule,
         IgxTypographySampleModule,

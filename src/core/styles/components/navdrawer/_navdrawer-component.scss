@@ -1,14 +1,22 @@
+////
+/// @group components
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
 @include b(igx-nav-drawer) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
 
     @extend %animation !optional;
 
     // Main aside element
     @include e(aside) {
-        @extend %adide !optional;
+        @extend %aside !optional;
 
         &.panning {
-            overflow-x: hidden;
-            transition: none;
+            @extend %aside-panning !optional;
         }
     }
 
@@ -16,10 +24,10 @@
         @extend %aside--collapsed !optional;
 
         &.igx-nav-drawer__aside--right {
-            transform: translate3d(300px, 0, 0);
-            box-shadow: none;
+            @extend %aside--collapsed--right !optional;
         }
     }
+
 
     @include e(aside, right) {
         @extend %aside--right !optional;
@@ -42,12 +50,10 @@
         @extend %overlay !optional;
 
         &.panning {
-            transform: translate3d(0, 0, 0);
-            transition: none;
+            @extend %overlay-panning !optional;
 
             &.igx-nav-drawer__overlay--hidden {
-                /* must be visible during pan.. */
-                visibility: visible;
+                @extend %overlay-panning--hidden !optional;
             }
         }
     }
@@ -58,11 +64,7 @@
 
     // Style Dummy(hidden) used for measures
     @include e(style-dummy) {
-        height: 0;
-        background: none;
-        box-shadow: none;
-        transition: none;
-        visibility: hidden;
+        @extend %style-dummy !optional;
     }
 
     // igxDrawerItem Items
@@ -72,7 +74,6 @@
 
     @include e(item, active) {
         @extend %item !optional;
-
         @extend %item--active !optional;
     }
 

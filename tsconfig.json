@@ -1,55 +1,55 @@
 {
-  "compilerOptions": {
-      "target": "es5",
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "noEmit": true,
-      "sourceMap": true,
-      "declaration": false,
-      "noImplicitAny": false,
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "removeComments": true,
-      "lib": [
-          "es2015",
-          "dom"
-      ],
-      "typeRoots": [
-          "./node_modules/@types"
-      ],
-      "types": [
-          "jasmine",
-          "hammerjs",
-          "karma",
-          "node",
-          "webpack",
-          "webpack-env"
-      ]
-  },
-  "typedocOptions": {
-    "mode": "modules",
-    "out": "dist/docs",
-    "exclude": "**/*.spec.ts",
-    "theme": "default",
-    "ignoreCompilerErrors": true,
-    "excludePrivate": true,
-    "excludeNotExported": true,
-    "name": "Ignite UI for Angular",
-    "target": "ES5",
-    "moduleResolution": "node",
-    "preserveConstEnums": true,
-    "stripInternal": true,
-    "suppressExcessPropertyErrors": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "module": "commonjs"
-  },
-  "include": [
-      "src/**/*.ts"
-  ],
-  "exclude": [
-      "src/**/*.spec.ts",
-      "node_modules",
-      "demos",
-      "dist"
-  ]
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "noEmit": true,
+        "sourceMap": true,
+        "declaration": false,
+        "noImplicitAny": false,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "removeComments": true,
+        "lib": [
+            "es2015",
+            "dom"
+        ],
+        "typeRoots": [
+            "./node_modules/@types"
+        ],
+        "types": [
+            "jasmine",
+            "hammerjs",
+            "karma",
+            "node",
+            "webpack",
+            "webpack-env"
+        ]
+    },
+    "typedocOptions": {
+        "mode": "modules",
+        "out": "dist/docs/typescript",
+        "exclude": "**/*.spec.ts",
+        "theme": "default",
+        "ignoreCompilerErrors": true,
+        "excludePrivate": true,
+        "excludeNotExported": true,
+        "name": "Ignite UI for Angular",
+        "target": "ES5",
+        "moduleResolution": "node",
+        "preserveConstEnums": true,
+        "stripInternal": true,
+        "suppressExcessPropertyErrors": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "module": "commonjs"
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "src/**/*.spec.ts",
+        "node_modules",
+        "demos",
+        "dist"
+    ]
 }

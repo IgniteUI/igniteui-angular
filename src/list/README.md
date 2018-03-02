@@ -4,7 +4,8 @@
 _Components_
 
 ## Description
-_Igx-List represents a list of identical items._
+_Igx-List represents a list of identical items._  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list.html)
 
 ## Usage
 ```html

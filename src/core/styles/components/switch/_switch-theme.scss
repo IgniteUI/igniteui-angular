@@ -1,6 +1,22 @@
-$component-name: 'igx-switch';
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
-$components: register-component($components, #{$component-name});
+/// @param {Color} $thumb-on-color [null] - The color of the thumb when the switch is on.
+/// @param {Color} $track-on-color [null] - The color of the track when the switch is on.
+/// @param {Color} $thumb-off-color [null] - The color of the thumb when the switch is off.
+/// @param {Color} $track-off-color [null] - The color of the track when the switch is off.
+/// @param {Color} $thumb-disabled-color [null] - The color of the thumb when the switch is disabled.
+/// @param {Color} $track-disabled-color [null] - The color of the track when the switch is disabled.
+/// @param {Bool} $light [false] - Determines the default color scheme - light or not.
+/// Set light to true when the surrounding area is dark.
+/// @example scss Set custom track and thumb on colors
+///   $my-switch-theme: igx-toast-theme($thumb-on-color: black, $track-on-color: yellow);
+///   // Pass the theme to the igx-tabbar component mixin
+///   @include igx-switch($my-switch-theme);
 @function igx-switch-theme(
     $thumb-on-color: null,
     $track-on-color: null,
@@ -27,6 +43,15 @@ $components: register-component($components, #{$component-name});
     );
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-switch-theme
+/// @requires igx-color
+/// @requires igx-elevation
+/// @requires extend
+/// @requires hexrgba
+/// @requires rem
+/// @requires $elevations
 @mixin igx-switch($theme, $palette: $default-palette) {
     $dark-theme: igx-switch-theme(
         $thumb-on-color: igx-color($palette, 'secondary', 500),
@@ -36,7 +61,7 @@ $components: register-component($components, #{$component-name});
         $track-off-color: rgba(0, 0, 0, .5),
 
         $track-disabled-color: rgba(0, 0, 0, .12),
-        $thumb-disabled-color: igx-color($palette, 'grays', 400)
+        $thumb-disabled-color: hexrgba(igx-color($palette, 'grays', 400))
     );
 
     $light-theme: igx-switch-theme(
@@ -47,7 +72,7 @@ $components: register-component($components, #{$component-name});
         $track-off-color: rgba(255, 255, 255, .3),
 
         $track-disabled-color: #424242,
-        $thumb-disabled-color: rgba(255, 255, 255, .1)
+        $thumb-disabled-color: #6c6c6c
     );
 
     $this: ();
@@ -62,8 +87,6 @@ $components: register-component($components, #{$component-name});
 
     // Defaults for all input controls
     // TODO: Rename to match component name
-    $input-font-size: em(16px) ;
-    $input-font-weight: 400 ;
     $input-transition: all .2s ease-in ;
     $switch-radius: 100px ;
     $switch-width: 35px ;
@@ -72,7 +95,6 @@ $components: register-component($components, #{$component-name});
     $switch-label-height: $switch-label-width ;
     $switch-shadow: igx-elevation($elevations, 1);
     $switch-disabled-shadow: igx-elevation($elevations, 1);
-    $switch-margin: 0 16px ;
 
     %igx-switch-lbl-display {
         display: inline-block;
@@ -119,5 +141,9 @@ $components: register-component($components, #{$component-name});
             background: map-get($this, 'thumb-disabled-color');
             box-shadow: $switch-disabled-shadow;
         }
+    }
+
+    %switch-text {
+        padding-right: rem(16px);
     }
 }

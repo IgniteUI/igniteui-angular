@@ -1,7 +1,18 @@
+//// Icon
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
 @include b(igx-icon) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
     @extend %igx-icon-display !optional;
 
     @include m(inactive) {
+        @extend %igx-icon-display !optional;
         @extend %igx-icon--inactive !optional;
     }
 }

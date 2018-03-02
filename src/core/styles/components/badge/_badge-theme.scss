@@ -1,15 +1,31 @@
-$component-name: 'igx-badge';
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
-$components: register-component($components, #{$component-name});
-
+/// If only background color is specified, text/icon color
+/// will be assigned automatically to a contrasting color.
+/// @param {Color} $icon-color [null] - The icon color used.
+/// @param {Color} $text-color [null] - The text color used.
+/// @param {Color} $border-color [null] - The border color used.
+/// @param {Color} $background-color [null] - The background color used.
+/// @param {Bool} $disable-shadow [true] - Sets the badge shadow visibility.
+/// @param {Bool} $disable-border [true] - Sets the badge border visibility.
+/// @requires text-contrast
+/// @example scss Change the text and icon colors in a badge
+///   $my-badge-theme: igx-badge-theme($icon-color: black, $background-color: white);
+///   // Pass the theme to the igx-badge component mixin
+///   @include igx-badge($my-badge-theme);
 @function igx-badge-theme(
     $icon-color: null,
     $text-color: null,
     $border-color: null,
-    $border-radius: null,
     $background-color: null,
-    $disable-shadow: true,
-    $disable-border: true
+
+    $disable-shadow: 'true',
+    $disable-border: 'true'
 ) {
 
     @if not($icon-color) and $background-color {
@@ -24,20 +40,27 @@ $components: register-component($components, #{$component-name});
         icon-color: $icon-color,
         text-color: $text-color,
         border-color: $border-color,
-        border-radius: $border-radius,
         background-color: $background-color,
+
         disable-shadow: $disable-shadow,
-        disable-border: $disable-border
+        disable-border: $disable-border,
     );
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-badge-theme
+/// @requires igx-elevation
+/// @requires igx-color
+/// @requires extend
+/// @requires rem
+/// @requires {variable} $elevations
 @mixin igx-badge($theme, $palette: $default-palette) {
     $default-theme: igx-badge-theme(
-        $icon-color: $white,
-        $text-color: $white,
-        $border-color: $white,
-        $background-color: igx-color($palette, 'primary', 500),
-        $border-radius: 4px
+        $icon-color: #fff,
+        $text-color: #fff,
+        $border-color: #fff,
+        $background-color: igx-color($palette, 'primary', 500)
     );
 
     $this: extend($default-theme, $theme);
@@ -53,17 +76,18 @@ $components: register-component($components, #{$component-name});
 
     $badge-icon-font-size: rem(12px);
 
-    $badge-value-padding: 4px;
+    $badge-value-padding: rem(4px);
     $badge-shadow: igx-elevation($elevations, 1);
-
-    $border-width: 1px;
     $border-type: solid;
 
-    @if map-get($this, 'disable-shadow') {
+    $border-width: rem(1px);
+
+
+    @if map-get($this, 'disable-shadow') == 'true' {
         $badge-shadow: none;
     }
 
-    @if map-get($this, 'disable-border') {
+    @if map-get($this, 'disable-border') == 'true' {
         $border-width: 0;
     }
 
@@ -77,15 +101,13 @@ $components: register-component($components, #{$component-name});
         font-weight: $badge-font-weight;
         color: map-get($this, 'text-color');
         line-height: $badge-line-height;
-        border: $border-width $border-type map-get($this, 'border-color');
-        border-radius: map-get($this, 'border-raduis');
-        box-shadow: $badge-shadow;
-        overflow: hidden;
 
-        i {
-            color: map-get($this, 'icon-color');
+        igx-icon {
+            width: $badge-icon-font-size;
+            height: $badge-icon-font-size;
             font-size: $badge-icon-font-size;
             font-weight: $badge-font-weight;
+            color: map-get($this, 'icon-color');
         }
     }
 
@@ -96,6 +118,9 @@ $components: register-component($components, #{$component-name});
 
     %igx-badge--circle {
         border-radius: $badge-border-radius-circle;
+        border: $border-width $border-type map-get($this, 'border-color');
+        box-shadow: $badge-shadow;
+        overflow: hidden;
     }
 
     %igx-badge--default {

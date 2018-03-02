@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 5.2.1
+- `hammerjs` and `@types/hammerjs` are removed from `peerDependencies` and were added as `dependencies`. So if you are using Igniteui-Angular version 5.2.1 or above it is enough to run `npm install igniteui-angular` in your project for getting started. For more detailed information see [`Ignite UI for Angular Getting Started`](https://www.infragistics.com/products/ignite-ui-angular/getting-started)
+- `web-animations-js` is added as Peer Dependency.
+- `Theming` bug fixes and improvements.
+- Use the following command to generate `Ignite UI for Angular Themes` documentation - `npm run build:docs`. Navigate to `dist/docs/sass` and open `index.html` file.
+
 ## 5.2.0
 - `igxForOf` directive added
     - `igxForOf` is now available as an alternative to `ngForOf` for templating large amounts of data. The `igxForOf` uses virtualization technology behind the scenes to optimize DOM rendering and memory consumption. Virtualization technology works similar to Paging by slicing the data into smaller chucks which are swapped from a container viewport while the user scrolls the data horizontally/vertically. The difference with the Paging is that virtualization mimics the natural behavior of the scrollbar.
@@ -9,6 +15,8 @@ All notable changes for each version of this project will be documented in this 
     - `igxToggle` allows users to implement toggleable components/views (eg. dropdowns), while `igxToggleAction` can control the
       `igxToggle` directive. Refer to the official documenation for more information.
     - `igxToggle` requires `BrowserAnimationsModule` to be imported in your application.
+- [`Ignite UI for Angular Theming`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes.html) - comprehensive set of **Sass** functions and mixins will give the ability to easily style your entire application or only certain parts of it.
+    - Previously bundled fonts, are now listed as external dependencies. You should supply both the [Material Icons](http://google.github.io/material-design-icons/) and [Titillium Web](https://fonts.google.com/selection?selection.family=Titillium+Web:300,400,600,700) fonts yourself by either hosting or using CDN.
 - `igx-grid` changes
     - The component now uses the new `igxForOf` directive to virtualize its content both vertically and horizontally dramatically improving performance for applications displaying large amounts of data.
     - Data-bound Input property `filtering` changed to `filterable`:
@@ -56,13 +64,17 @@ All notable changes for each version of this project will be documented in this 
     - CSS class `ig-nav-drawer` renamed to `igx-nav-drawer`
 - `igxInput` changes
     - CSS class `ig-form-group` to `igx-form-group`
+- `igxBadge` changes
+    - From now on, the Badge position is set by css class, which specifies an absolute position as well as top/bottom/left/right properties. The Badge position input should not be used.
 - `igx-avatar` changes
     - [Initials type avatar is using SVG element from now on](https://github.com/IgniteUI/igniteui-angular/issues/136)
 - `igx-calendar` changes
     - `formatViews` - Controls whether the date parts in the different calendar views should be formatted according to the provided `locale` and `formatOptions`.
     - `templating` - The **igxCalendar** supports now templating of its header and subheader parts.
     - `vertical` input - Controls the layout of the calendar component. When vertical is set to `true` the calendar header will be rendered to the side of the calendar body.
-    
+
+- `igx-nav-bar` changes
+    -   Currently `isActionButtonVisible` resolves to `false` if actionButtonIcon is not defined.
 - `igx-tab-bar` changes
     - custom content can be added for tabs
 
@@ -78,6 +90,9 @@ All notable changes for each version of this project will be documented in this 
     </igx-tab-bar>
     ```
 
+- `igx-scroll` component deleted
+    - `igx-scroll` component is not available anymore due newly implemented `igxForOf` directive.
+
 - [`igx-list` changes](https://github.com/IgniteUI/igniteui-angular/issues/528)
     - `igxEmptyList` directive added
         The list no longer has `emptyListImage`, `emptyListMessage`, `emptyListButtonText`, `emptyListButtonClick` and `hasNoItemsTemplate` members.
@@ -91,9 +106,9 @@ All notable changes for each version of this project will be documented in this 
         ```
     - `onItemClicked` event emitter added
         ```html
-        <igx-list (onItemClicked)="itemClicked()">    
+        <igx-list (onItemClicked)="itemClicked()">
             <igx-list-item>Item 1</igx-list-item>
-            <igx-list-item>Item 2</igx-list-item>    
+            <igx-list-item>Item 2</igx-list-item>
             <igx-list-item>Item 3</igx-list-item>
         </igx-list>
         ```
@@ -139,7 +154,6 @@ All notable changes for each version of this project will be documented in this 
     - `IgxCircularProgressBar` renamed to `IgxCircularProgressBarComponent`
     - `IgxLinearProgressBar ` renamed to `IgxLinearProgressBarComponent`
     - `IgxRadio` renamed to `IgxRadioComponent`
-    - `IgxScroll` renamed to `IgxScrollComponent`
     - `IgxSlider` renamed to `IgxSliderComponent`
     - `IgxSnackbar` renamed to `IgxSnackbarComponent`
     - `IgxSwitch ` renamed to `IgxSwitchComponent`

@@ -115,11 +115,6 @@ export class AppComponent {
             name: "Slider"
         },
         {
-            link: "/scroll",
-            icon: "swap_vert",
-            name: "Scroll"
-        },
-        {
             link: "/snackbar",
             icon: "feedback",
             name: "Snackbar"

@@ -1,3 +1,12 @@
+////
+/// @group elevations
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Level 1 - Umbra Shadows
+/// @access private
+/// @param {Color} $color - The color used to generate umbra shadows.
+/// @returns {Map} Returns a map of 24 shadow elevations with the umbra color.
 @function _l1-shadows($color) {
     @return (
         1: 0 1px 3px 0 $color,
@@ -27,6 +36,10 @@
     );
 }
 
+/// Level 2 - Penumbra Shadows
+/// @access private
+/// @param {Color} $color - The color used to generate penumbra shadows.
+/// @returns {Map} Returns a map of 24 shadow elevations with the penumbra color.
 @function _l2-shadows($color) {
     @return (
         1: 0 1px 1px 0 $color,
@@ -56,6 +69,10 @@
     );
 }
 
+/// Level 3 - Ambient Shadows
+/// @access private
+/// @param {Color} $color - The color used to generate ambient shadows.
+/// @returns {Map} Returns a map of 24 shadow elevations with the ambient color.
 @function _l3-shadows($color) {
     @return (
         1: 0 2px 1px -1px $color,
@@ -85,6 +102,13 @@
     );
 }
 
+/// Returns shadow based on elevation, umbra, penumbra, and ambient shadow colors.
+/// @access private
+/// @param {number} $elevation - The elevation level to generate a shadow for.
+/// @param {Color} $l1-color - The umbra color.
+/// @param {Color} $l2-color - The penumbra color.
+/// @param {Color} $l3-color - The ambient color.
+/// @returns {String} - A string to be used as box-shadow value.
 @function _elevation($elevation, $l1-color, $l2-color, $l3-color) {
     @return unquote(
         '#{map-get(_l1-shadows($l1-color), $elevation)},
@@ -93,6 +117,11 @@
     );
 }
 
+/// Returns an igx elevation from an igx-elevations produced map.
+/// @access public
+/// @param {Map} $elevations - The igx-elevations map to extract the elevation from.
+/// @param {number} $elevation - The elevation level from 1 to 24.
+/// @returns {String} Returns a box-shadow value.
 @function igx-elevation($elevations, $elevation) {
     @if type-of($elevation) != number or not unitless($elevation) {
         @error '$elevation must be a number';
@@ -105,6 +134,12 @@
     @return map-get($elevations, #{$elevation});
 }
 
+/// Generates a map of 24 shadows.
+/// @access public
+/// @requires _elevation
+/// @param {Color} $color-1 - The umbra shadow color.
+/// @param {Color} $color-2 - The penumbra shadow color.
+/// @param {Color} $color-3 - The ambient shadow color.
 @function igx-elevations($color-1, $color-2, $color-3) {
     $result: ();
 

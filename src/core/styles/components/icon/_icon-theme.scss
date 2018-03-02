@@ -1,20 +1,38 @@
-$component-name: 'igx-icon';
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
-$components: register-component($components, #{$component-name});
-
+/// @param {Color} $color [null] - The icon color.
+/// @param {String} $size [null] - The icon size.
+/// @param {Color} $disabled-color [null] - The disabled icon color.
+/// @example scss Change the icon color
+///   $my-icon-theme: igx-icon-theme($color: orange);
+///   // Pass the theme to the igx-icon component mixin
+///   @include igx-icon($my-icon-theme);
 @function igx-icon-theme(
     $color: null,
+    $size: null,
     $disabled-color: null
 ) {
     @return (
         color: $color,
-        disabled-color: $disabled-color
-    );
+        size: $size,
+        disabled-color: $disabled-color);
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-icon-theme
+/// @requires igx-color
+/// @requires extend
+/// @requires rem
 @mixin igx-icon($theme, $palette: $default-palette) {
     $default-theme: igx-icon-theme(
         $color: currentColor,
+        $size: 24px,
         $disabled-color: igx-color($palette, 'grays', 500)
     );
 
@@ -22,27 +40,38 @@ $components: register-component($components, #{$component-name});
 
     // @debug $this;
 
-    $igx-icon-font-size: rem(24px, 16px);
+    $igx-icon-font-size: rem(map-get($this, 'size'));
+    $igx-icon-width: map-get($this, 'size');
+    $igx-icon-height: map-get($this, 'size');
 
     %igx-icon-display {
-        display: flex;
-        color: map-get($this, 'color');
         position: relative;
-        font-size: $igx-icon-font-size;
+        display: inline-flex;
+        align-items: center;
         justify-content: center;
-        line-height: 1;
-        text-transform: none;
-        letter-spacing: normal;
-        word-wrap: normal;
-        white-space: nowrap;
-        direction: ltr;
-        -webkit-font-smoothing: antialiased;
-        text-rendering: optimizeLegibility;
-        -moz-osx-font-smoothing: grayscale;
-        font-feature-settings: 'liga';
+        color: map-get($this, 'color');
+        width: $igx-icon-width;
+        height: $igx-icon-height;
+        font-size: $igx-icon-font-size;
+
+        i {
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            width: inherit;
+            height: inherit;
+            font-size: inherit;
+            direction: ltr;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            -moz-osx-font-smoothing: grayscale;
+            font-feature-settings: 'liga';
+        }
     }
 
     %igx-icon--inactive {
-        color: map-get($this, 'disabled-color');
+        color: map-get($this, 'disabled-color') !important;
     }
 }

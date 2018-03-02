@@ -1,9 +1,10 @@
-/**
- * ----------------------------------------
- * animation scale-out-center
- * ----------------------------------------
- */
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// @requires {mixin} keyframes
 @mixin scale-out-center {
     @include keyframes (scale-out-center) {
         0% {
@@ -18,13 +19,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-out-bl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-out-bl {
     @include keyframes (scale-out-bl) {
         0% {
@@ -41,13 +36,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-out-vertical
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-out-vertical {
     @include keyframes (scale-out-vertical) {
         0% {
@@ -62,13 +51,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-out-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-out-top {
     @include keyframes (scale-out-top) {
         0% {
@@ -85,13 +68,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-out-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-out-left {
     @include keyframes (scale-out-left) {
         0% {
@@ -108,13 +85,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-out-ver-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-out-ver-top {
     @include keyframes (scale-out-ver-top) {
         0% {
@@ -131,13 +102,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-out-tr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-out-tr {
     @include keyframes (scale-out-tr) {
         0% {
@@ -154,13 +119,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-out-tl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-out-tl {
     @include keyframes (scale-out-tl) {
         0% {
@@ -177,13 +136,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-out-ver-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-out-ver-bottom {
     @include keyframes (scale-out-ver-bottom) {
         0% {
@@ -200,13 +153,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-out-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-out-right {
     @include keyframes (scale-out-right) {
         0% {
@@ -223,13 +170,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-out-horizontal
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-out-horizontal {
     @include keyframes (scale-out-horizontal) {
         0% {
@@ -244,13 +185,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * @animation scale-out-br
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-out-br {
     @include keyframes (scale-out-br) {
         0% {
@@ -267,13 +202,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-out-hor-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-out-hor-left {
     @include keyframes (scale-out-hor-left) {
         0% {
@@ -290,13 +219,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-out-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-out-bottom {
     @include keyframes (scale-out-bottom) {
         0% {
@@ -313,13 +236,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation scale-out-hor-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin scale-out-hor-right {
     @include keyframes (scale-out-hor-right) {
         0% {

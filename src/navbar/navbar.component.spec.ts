@@ -50,6 +50,8 @@ describe("IgxNavbar", () => {
     it("should trigger on action", async(() => {
         TestBed.compileComponents().then(() => {
             const fixture = TestBed.createComponent(NavbarIntializeTestComponent);
+            fixture.componentInstance.isActionButtonVisible = true;
+            fixture.componentInstance.actionButtonIcon = "home";
             fixture.detectChanges();
 
             spyOn(fixture.componentInstance.navbar.onAction, "emit");

@@ -12,6 +12,12 @@ import {
     ViewChild
 } from "@angular/core";
 
+export enum IgxTextAlign {
+    START = "start",
+    CENTER = "center",
+    END = "end"
+}
+
 export abstract class BaseProgress {
     protected requestAnimationId: number = undefined;
 
@@ -72,8 +78,24 @@ export abstract class BaseProgress {
 })
 export class IgxLinearProgressBarComponent extends BaseProgress {
 
-    @Input() public striped = false;
-    @Input() public type = "default";
+    @Input()
+    public textAlign: IgxTextAlign = IgxTextAlign.START;
+
+    @Input()
+    public textVisibility = true;
+
+    @Input()
+    public textTop = false;
+
+    @Input()
+    public text: string;
+
+    @Input()
+    public striped = false;
+
+    @Input()
+    public type = "default";
+
     @Input()
     set animate(animate: boolean) {
         this._animate = animate;
@@ -130,10 +152,14 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
 })
 export class IgxCircularProgressBarComponent extends BaseProgress implements AfterViewInit {
 
-    @Output() public onProgressChanged = new EventEmitter();
-
     private readonly STROKE_OPACITY_DVIDER = 100;
     private readonly STROKE_OPACITY_ADDITION = .2;
+
+    @Output()
+    public onProgressChanged = new EventEmitter();
+
+    @Input()
+    public textVisibility = true;
 
     @Input()
     set animate(animate: boolean) {

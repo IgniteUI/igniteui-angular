@@ -1,3 +1,8 @@
+////
+/// @group themes
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
 // Anything imported here shoulnd't affect
 // theme configuration
 @import '../base/index';
@@ -25,16 +30,18 @@
 @import '../components/list/list-component';
 @import '../components/navbar/navbar-component';
 @import '../components/navdrawer/navdrawer-component';
+@import '../components/paginator/paginator-component';
 @import '../components/progress/progress-component';
 @import '../components/radio/radio-component';
 @import '../components/ripple/ripple-component';
-@import '../components/scroll/scroll-component';
 @import '../components/slider/slider-component';
 @import '../components/snackbar/snackbar-component';
 @import '../components/switch/switch-component';
 @import '../components/tabbar/tabbar-component';
 @import '../components/toast/toast-component';
 
+/// Includes the base for each theme.
+/// Currently it only includes typography.
 @mixin igx-core() {
     @include igx-typography($config: ('font-family': 'Titillium Web'));
 }

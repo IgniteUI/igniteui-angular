@@ -1,6 +1,7 @@
 # igx-avatar
 
-The **igx-avatar** component allows you to add images or initials as avatars in your application.
+The **igx-avatar** component allows you to add images or initials as avatars in your application.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/avatar.html)
 
 # Usage
 ```html

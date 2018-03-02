@@ -1,7 +1,54 @@
-$component-name: 'igx-calendar';
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
-$components: register-component($components, #{$component-name});
-
+/// If only header background color is specified, that color will be
+/// used as the leading color for all accented elements, such as:
+/// - current date color
+/// - selected date background
+/// - picker elements hover colors
+/// - year/month hover/selected colors
+/// If only background colors are specified, text/icon colors
+/// will be assigned automatically to a contrasting color.
+/// @param {Color} $content-background [null] - The main content background color.
+/// @param {Color} $content-text-color [null] - The main content text color.
+///
+/// @param {Color} $header-background [null] - The header background color.
+/// @param {Color} $header-text-color [null] - The header text color.
+///
+/// @param {Color} $picker-arrow-color [null] - The idle picker arrow color.
+/// @param {Color} $picker-arrow-hover-color [null] - The picker hover arrow color.
+///
+/// @param {Color} $picker-text-color [null]- The idle picker month/year color.
+/// @param {Color} $picker-text-hover-color [null]-  The hover picker month/year color.
+///
+/// @param {Color} $inactive-text-color [null] - The text color for weekday labels and other month dates.
+/// @param {Color} $weekend-text-color [null] - The text color for weekend days.
+///
+/// @param {Color} $year-current-text-color [null] - The text color for the current/selected year.
+/// @param {Color} $month-current-text-color [null]- The text color for the current/selected month.
+///
+/// @param {Color} $year-hover-text-color [null] - The year hover text color.
+/// @param {Color} $month-hover-text-color [null] - The month hover text color.
+///
+/// @param {Color} $date-selected-background [null] - The background color for the selected date.
+/// @param {Color} $date-selected-text-color [null] - The text color for the selected date.
+///
+/// @param {Color} $date-current-text-color [null] - The text color for the current date.
+/// @param {Color} $date-hover-background [null] - The hover date background color.
+///
+/// @requires text-contrast
+///
+/// @example scss Change the header and content background colors
+///   $my-calendar-theme: igx-calendar-theme(
+///     $header-background: purple,
+///     $content-background: black
+///   );
+///   // Pass the theme to the igx-calendar component mixin
+///   @include igx-calendar($my-calendar-theme);
 @function igx-calendar-theme(
     $content-background: null,
     $content-text-color: null,
@@ -125,6 +172,15 @@ $components: register-component($components, #{$component-name});
         date-hover-background: $date-hover-background
     );
 }
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-calendar-theme
+/// @requires igx-color
+/// @requires igx-contrast-color
+/// @requires em
+/// @requires rem
+/// @requires extend
 @mixin igx-calendar($theme, $palette: $default-palette) {
 
     $default-theme: igx-calendar-theme(
@@ -244,8 +300,11 @@ $components: register-component($components, #{$component-name});
     }
 
     %cal-header-date-el--hover {
-        color: map-get($this, 'picker-text-hover-color');
-        cursor: pointer;
+        &:hover,
+        &:focus {
+            color: map-get($this, 'picker-text-hover-color');
+            cursor: pointer;
+        }
     }
 
     %cal-picker-display {
@@ -281,7 +340,7 @@ $components: register-component($components, #{$component-name});
     }
 
     %cal-body-display {
-        flex: 1;
+        flex: 1 0 auto;
         padding-top: $cal-picker-padding;
         padding-bottom: $cal-picker-padding;
         overflow: hidden;

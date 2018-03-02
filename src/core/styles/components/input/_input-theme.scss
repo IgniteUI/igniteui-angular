@@ -1,7 +1,33 @@
-$component-name: 'igx-input';
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
-$components: register-component($components, #{$component-name});
-
+/// @param {Color} $idle-text-color [null] - The idle input text color.
+/// @param {Color} $filled-text-color [null] - The filled input text color.
+/// @param {Color} $focused-text-color [null] - The focused input text color.
+/// @param {Color} $disabled-text-color [null] - The disabled input text color.
+///
+/// @param {Color} $placeholder-text-color [null] - The placeholder text color.
+///
+/// @param {Color} $idle-secondary-color [null] - The idle secondary(accent) color.
+/// @param {Color} $filled-secondary-color [null] - The filled secondary(accent) color.
+/// @param {Color} $focused-secondary-color [null] - The focused secondary(accent) color.
+/// @param {Color} $disabled-secondary-color [null] - The disabled secondary(accent) color.
+///
+/// @param {Color} $idle-bottom-line-color [null] - The idle bottom line color.
+/// @param {Color} $hover-bottom-line-color [null] - The hover bottom line color.
+/// @param {Color} $filled-bottom-line-color [null] - The filled bottom line color.
+/// @param {Color} $focused-bottom-line-color [null] - The focused bottom line color.
+/// @param {Color} $disabled-bottom-line-color [null] - The disabled bottom line color.
+///
+/// @param {Color} $success-secondary-color [null] - The success secondary(access) color.
+/// @param {Color} $warning-secondary-color [null] - The warning secondary(access) color.
+/// @param {Color} $error-secondary-color [null] - The error secondary(access) color.
+///
+/// @param {Bool} $light [false] - Set the idle colors to a lighter hue when used with dark backgrounds.
 @function igx-input-theme(
     $idle-text-color: null,
     $filled-text-color: null,
@@ -55,6 +81,15 @@ $components: register-component($components, #{$component-name});
     );
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-input-theme
+/// @requires igx-color
+/// @requires igx-elevation
+/// @requires $elevations
+/// @requires {mixin} linear-gradient
+/// @requires extend
+/// @requires rem
 @mixin igx-input($theme, $palette: $default-palette) {
     $dark-theme: igx-input-theme(
         $idle-text-color: igx-color($palette, 'grays', 600),
@@ -113,14 +148,11 @@ $components: register-component($components, #{$component-name});
     // @debug $this;
 
     // Input Field
-    $input-min-height: rem(70px);
     $input-font-size: rem(16px);
     $input-font-weight: 400;
     $input-line-height: rem(24px);
 
     // Floating Label
-    $label-font-size: rem(16px);
-    $label-focus-font-size: rem(12px);
     $input-search-padding: 12px 12px 12px 64px;
     $input-search-label-padding: 12px 16px;
     $input-margin: 20px 0;
@@ -249,7 +281,7 @@ $components: register-component($components, #{$component-name});
     }
 
     %igx-search-input {
-        background: $white;
+        background: #fff;
         padding: $input-search-padding;
         border-radius: 2px;
         font-size: $input-font-size;

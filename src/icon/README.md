@@ -2,7 +2,8 @@
 
 **igx-icon** supports icon component that unifies various icon/font sets to allow their usage interchangeably.
 
-With the igx-icon you can add **material-icons** in your markup
+With the igx-icon you can add **material-icons** in your markup  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon.html)
 
 # Usage
 
