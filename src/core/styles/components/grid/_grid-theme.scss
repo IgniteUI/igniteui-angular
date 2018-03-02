@@ -125,6 +125,7 @@
     %grid-display {
         display: grid;
         grid-template-rows: auto auto auto;
+        grid-template-columns: 1fr;
         border-radius: $grid-br;
         box-shadow: $grid-shadow;
         outline-style: none;
@@ -270,7 +271,7 @@
     }
 
     %grid-cell-display {
-        flex: 1;
+        flex: 1 1 0%;
         outline-style: none;
         padding: $grid-cell-padding;
         font-size: $grid-cell-fs;
