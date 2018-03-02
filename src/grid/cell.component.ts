@@ -390,7 +390,7 @@ export class IgxGridCellComponent {
         this.grid.markForCheck();
         const scrLeft = this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.scrollLeft;
         const headerDcElem = this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement;
-        headerDcElem.style.left = (-scrLeft) + "px";
+        headerDcElem.scrollLeft = scrLeft;
 
         this.row.grid.rowList.map((row) => {
             const elem = row.virtDirRow.dc.instance._viewContainer.element.nativeElement;

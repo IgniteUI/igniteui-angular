@@ -68,7 +68,7 @@ export class GridColumnPinningSampleComponent {
 		if(col.pinned && col.pinLocation === PinLocation.Start) {
 			col.unpin();
 		} else if (col.pinned && col.pinLocation === PinLocation.End) {
-			col.pin(PinLocation.Start);
+			col.pin();
 		} else {
 			col.pin(PinLocation.End);
 		}

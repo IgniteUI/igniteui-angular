@@ -9,10 +9,10 @@ import { IgxColumnComponent } from "./column.component";
     selector: "igx-grid-header",
     styles: [
         `
-        :host.last-fixed {
+        :host.last-pinned {
             border-right: 1px solid #666;
             }
-        :host.first-fixed {
+        :host.first-pinned {
             border-left: 1px solid #666;
         }
     `
@@ -96,13 +96,13 @@ export class IgxGridHeaderComponent implements DoCheck {
         return this.gridAPI.get(this.gridID);
     }
 
-    @HostBinding("class.fixed")
-    get isFixed() {
+    @HostBinding("class.pinned")
+    get isPinned() {
         return this.column.pinned;
     }
 
-    @HostBinding("class.last-fixed")
-    get isLastFixed() {
+    @HostBinding("class.last-pinned")
+    get isLastPinned() {
         const pinnedCols = this.grid.pinnedStartColumns;
         if (pinnedCols.length === 0) {
             return false;
@@ -111,8 +111,8 @@ export class IgxGridHeaderComponent implements DoCheck {
         }
     }
 
-    @HostBinding("class.first-fixed")
-    get isFirstFixed() {
+    @HostBinding("class.first-pinned")
+    get isFirstPinned() {
         const pinnedCols = this.grid.pinnedEndColumns;
         if (pinnedCols.length === 0) {
             return false;

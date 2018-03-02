@@ -138,8 +138,17 @@ export class IgxColumnComponent implements AfterContentInit {
 
     get visibleIndex(): number {
         const grid = this.gridAPI.get(this.gridID);
-        const orderedVisibleColumns = grid.pinnedStartColumns.concat(grid.unpinnedColumns).concat(grid.pinnedEndColumns);
-        return orderedVisibleColumns.indexOf(this);
+        let vIndex = -1;
+        if (!this.pinned) {
+            const indexInCollection = grid.unpinnedColumns.indexOf(this);
+            vIndex = indexInCollection === -1 ? -1 : grid.pinnedStartColumns.length + indexInCollection;
+        } else if (this.pinned && this.pinLocation === PinLocation.Start) {
+            vIndex =  grid.pinnedStartColumns.indexOf(this);
+        } else if (this.pinned && this.pinLocation === PinLocation.End) {
+            const indexInCollection = grid.pinnedEndColumns.indexOf(this);
+            vIndex = indexInCollection === -1 ? -1 : grid.pinnedStartColumns.length + grid.unpinnedColumns.length + indexInCollection;
+        }
+        return vIndex;
     }
 
     protected _bodyTemplate: TemplateRef<any>;
@@ -178,7 +187,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
-    public pin(location: PinLocation) {
+    public pin(location?: PinLocation) {
         this.gridAPI.get(this.gridID).pinColumn(this.field, location);
     }
     public unpin() {

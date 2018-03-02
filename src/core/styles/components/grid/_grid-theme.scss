@@ -200,7 +200,8 @@
     }
 
     %grid-display-container-thead {
-        overflow: visible;
+        overflow-x: hidden;
+        overflow-y:visible;
     }
 
     %grid-display-container-tr {

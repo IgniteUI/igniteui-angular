@@ -499,17 +499,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.gridAPI.clear_sort(this.id, name);
     }
 
-    public pinColumn(columnName: string, location: PinLocation) {
+    public pinColumn(columnName: string, location?: PinLocation) {
         const col = this.getColumnByName(columnName);
         col.pinned = true;
-        col.pinLocation = location;
-        const index = location === PinLocation.Start ? this._pinnedStartColumns.length : this._pinnedEndColumns.length;
+        col.pinLocation = location !== undefined ? location : PinLocation.Start;
+        const index = col.pinLocation === PinLocation.Start ? this._pinnedStartColumns.length : this._pinnedEndColumns.length;
 
         const args = { column: col, insertAtIndex: index};
         this.onColumnPinning.emit(args);
 
         // update grid collections.
-        if (location === PinLocation.Start && this._pinnedStartColumns.indexOf(col) === -1) {
+        if (col.pinLocation === PinLocation.Start && this._pinnedStartColumns.indexOf(col) === -1) {
             this._pinnedStartColumns.splice(index, 0, col);
 
             if (this._unpinnedColumns.indexOf(col) !== -1) {
@@ -518,7 +518,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if (this._pinnedEndColumns.indexOf(col) !== -1) {
                 this._pinnedEndColumns.splice(this._pinnedEndColumns.indexOf(col), 1);
             }
-        } else if (location === PinLocation.End && this._pinnedEndColumns.indexOf(col) === -1) {
+        } else if (col.pinLocation === PinLocation.End && this._pinnedEndColumns.indexOf(col) === -1) {
             this._pinnedEndColumns.splice(index, 0, col);
             if (this._unpinnedColumns.indexOf(col) !== -1) {
                 this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
