@@ -9,9 +9,11 @@ import {
     QueryList,
     TemplateRef
 } from "@angular/core";
+import { PinLocation } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { STRING_FILTERS } from "../data-operations/filtering-condition";
 import { IgxGridAPIService } from "./api.service";
+
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -91,10 +93,10 @@ export class IgxColumnComponent implements AfterContentInit {
     public dataType: DataType = DataType.String;
 
     @Input()
-    public pinnedToLeft: boolean = false;
+    public pinLocation: PinLocation = PinLocation.Start;
 
     @Input()
-    public pinnedToRight: boolean = false;
+    public pinned = false;
 
     public gridID: string;
 
@@ -134,6 +136,21 @@ export class IgxColumnComponent implements AfterContentInit {
         this.gridAPI.mark_for_check(this.gridID);
     }
 
+    get visibleIndex(): number {
+        const grid = this.gridAPI.get(this.gridID);
+        let vIndex = -1;
+        if (!this.pinned) {
+            const indexInCollection = grid.unpinnedColumns.indexOf(this);
+            vIndex = indexInCollection === -1 ? -1 : grid.pinnedStartColumns.length + indexInCollection;
+        } else if (this.pinned && this.pinLocation === PinLocation.Start) {
+            vIndex =  grid.pinnedStartColumns.indexOf(this);
+        } else if (this.pinned && this.pinLocation === PinLocation.End) {
+            const indexInCollection = grid.pinnedEndColumns.indexOf(this);
+            vIndex = indexInCollection === -1 ? -1 : grid.pinnedStartColumns.length + grid.unpinnedColumns.length + indexInCollection;
+        }
+        return vIndex;
+    }
+
     protected _bodyTemplate: TemplateRef<any>;
     protected _headerTemplate: TemplateRef<any>;
     protected _footerTemplate: TemplateRef<any>;
@@ -170,6 +187,12 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
+    public pin(location?: PinLocation) {
+        this.gridAPI.get(this.gridID).pinColumn(this.field, location);
+    }
+    public unpin() {
+        this.gridAPI.get(this.gridID).unpinColumn(this.field);
+    }
     protected check() {
         if (this.gridID) {
             this.gridAPI.mark_for_check(this.gridID);

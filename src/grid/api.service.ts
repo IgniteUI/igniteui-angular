@@ -51,6 +51,13 @@ export class IgxGridAPIService {
         }
     }
 
+    public get_cell_by_visible_index(id: string, rowIndex: number, columnIndex: number): IgxGridCellComponent {
+        const row = this.get_row(id, rowIndex);
+        if (row) {
+            return row.cells.find((cell) => cell.visibleColumnIndex === columnIndex);
+        }
+    }
+
     public update(id: string, cell: IgxGridCellComponent): void {
         const index = this.get(id).data.indexOf(cell.row.rowData);
         this.get(id).data[index][cell.column.field] = cell.value;

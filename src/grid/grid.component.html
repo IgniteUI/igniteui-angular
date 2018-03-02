@@ -21,16 +21,16 @@
 
 
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth'>
-    <div class="igx-grid__tr" role="row" style="width: calc(100% - 17px)" #theadRow>
-        <ng-container *ngIf="pinnedLeftColumns.length > 0">
-            <igx-grid-header [gridID]="id" *ngFor="let col of pinnedLeftColumns" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
+    <div class="igx-grid__tr" role="row" style="width: calc(100% - 18px)" #theadRow>
+        <ng-container *ngIf="pinnedStartColumns.length > 0">
+            <igx-grid-header [gridID]="id" *ngFor="let col of pinnedStartColumns" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
         </ng-container>
         <ng-template igxFor let-col [igxForOf]="unpinnedColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
             [igxForContainerSize]='unpinnedWidth' #headerContainer>
             <igx-grid-header [gridID]="id" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
         </ng-template>
-        <ng-container *ngIf="pinnedRightColumns.length > 0">
-            <igx-grid-header [gridID]="id" *ngFor="let col of pinnedRightColumns" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
+        <ng-container *ngIf="pinnedEndColumns.length > 0">
+            <igx-grid-header [gridID]="id" *ngFor="let col of pinnedEndColumns" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
         </ng-container>
     </div>
 </div>
@@ -43,10 +43,19 @@
                                 [igxForContainerSize]='calcHeight'
                                 [igxForItemSize]="rowHeight"
                                  let-dirty="dirty"
-                                #scrollContainer>
+                                 #verticalScrollContainer
+                               >
            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" [isDirty]="dirty">
            </igx-grid-row>
         </ng-template>
+</div>
+<div [style.width]='width' [style.height]="'17px'" #scr>
+	<div [style.width.px]='startPinnedWidth' style='float:left;height: 100%;'></div>
+	<div [style.width.px]='unpinnedWidth'  style='float:left;'>
+		<ng-template igxFor [igxForOf]='[]' #scrollContainer>
+		</ng-template>
+	</div>
+    <div [style.width.px]='endPinnedWidth' style='float:right;'></div>
 </div>
 
 <div class="igx-grid__tfoot" role="rowgroup" #tfoot>

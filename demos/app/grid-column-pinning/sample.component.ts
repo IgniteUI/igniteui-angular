@@ -5,6 +5,8 @@ import { DataType } from "../../lib/data-operations/data-util";
 import { IgxButtonDirective } from "../../lib/directives/button/button.directive";
 import { IgxColumnComponent } from "../../lib/grid/column.component";
 import { IgxGridComponent } from "../../lib/grid/grid.component";
+import { PinLocation } from "../../lib//core/utils";
+
 
 @Component({
 	providers: [],
@@ -19,10 +21,10 @@ export class GridColumnPinningSampleComponent {
 	public columns: Array<any>;
 	public ngOnInit(): void {
 		this.columns = [
-			{ field: "ID", width: 100 },
+			{ field: "ID", width: 100, hidden:true },
 			{ field: "CompanyName", width: 300 },
-			{ field: "ContactName", width: 200, pinnedToLeft: true },
-			{ field: "ContactTitle", width: 200 },
+			{ field: "ContactName", width: 200, pinned: true, pinLocation: PinLocation.Start },
+			{ field: "ContactTitle", width: 200, pinned: true, pinLocation: PinLocation.End },
 			{ field: "Address", width: 300 },
 			{ field: "City", width: 100 },
 			{ field: "Region", width: 100 },
@@ -63,13 +65,18 @@ export class GridColumnPinningSampleComponent {
 
 	toggleColumn(name: string) {
 		var col = this.grid1.getColumnByName(name);
-		if (col.pinnedToLeft) {
-			this.grid1.pinToRight(name);
-		} else if (col.pinnedToRight) {
-			this.grid1.unpinColumn(name);
+		if(col.pinned && col.pinLocation === PinLocation.Start) {
+			col.unpin();
+		} else if (col.pinned && col.pinLocation === PinLocation.End) {
+			col.pin();
 		} else {
-			this.grid1.pinToLeft(name);
+			col.pin(PinLocation.End);
 		}
+	}
+
+	toggleVisibility(name: string){
+		var col = this.grid1.getColumnByName(name);
+		col.hidden = !col.hidden;
 	}
 
 }

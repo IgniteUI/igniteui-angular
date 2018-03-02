@@ -16,8 +16,8 @@ import {
     Inject,
     Input,
     NgZone,
-    OnInit,
     OnDestroy,
+    OnInit,
     Output,
     QueryList,
     TemplateRef,
@@ -25,7 +25,7 @@ import {
     ViewChildren,
     ViewContainerRef
 } from "@angular/core";
-import { cloneArray } from "../core/utils";
+import { cloneArray, PinLocation } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
@@ -123,13 +123,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public evenRowCSS = "";
 
     @Input()
-	public oddRowCSS = "";
+    public oddRowCSS = "";
 
     @Input()
     public rowHeight = 50;
 
     @Output()
     public onSelection = new EventEmitter<any>();
+
+    @Output()
+    public onColumnPinning = new EventEmitter<any>();
 
     @Output()
     public onEditDone = new EventEmitter<any>();
@@ -160,6 +163,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @ViewChild("scrollContainer", { read: IgxForOfDirective })
     public parentVirtDir: IgxForOfDirective<any>;
+
+    @ViewChild("verticalScrollContainer", { read: IgxForOfDirective })
+    public verticalScrollContainer: IgxForOfDirective<any>;
 
     @ViewChild("scr", { read: ElementRef })
     public scr: ElementRef;
@@ -206,10 +212,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _page = 0;
     protected _paging = false;
     protected _pipeTrigger = 0;
-    protected _columns: Array<IgxColumnComponent> = [];
-    protected _pinnedLeftColumns: Array<IgxColumnComponent> = [];
-    protected _pinnedRightColumns: Array<IgxColumnComponent> = [];
-    protected _unpinnedColumns: Array<IgxColumnComponent> = [];
+    protected _columns: IgxColumnComponent[] = [];
+    protected _pinnedStartColumns: IgxColumnComponent[] = [];
+    protected _pinnedEndColumns: IgxColumnComponent[] = [];
+    protected _unpinnedColumns: IgxColumnComponent[] = [];
     protected _filteringLogic = FilteringLogic.And;
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
@@ -270,9 +276,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.onColumnInit.emit(col);
         });
         this._columns = this.columnList.toArray();
-        this._pinnedLeftColumns = this._columns.filter((c) => c.pinnedToLeft);
-        this._pinnedRightColumns = this._columns.filter((c) => c.pinnedToRight);
-        this._unpinnedColumns = this._columns.filter((c) => !c.pinnedToLeft && !c.pinnedToRight)
+        this._pinnedStartColumns = this._columns.filter((c) => c.pinned && c.pinLocation === PinLocation.Start);
+        this._pinnedEndColumns = this._columns.filter((c) => c.pinned && c.pinLocation === PinLocation.End);
+        this._unpinnedColumns = this._columns.filter((c) => !c.pinned);
     }
 
     public ngAfterViewInit() {
@@ -296,13 +302,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
             this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
                 this.theadRow.nativeElement.clientHeight -
-                footerHeight;
+                footerHeight -
+                this.scr.nativeElement.clientHeight;
         } else {
             const footerHeight = this.tfoot.nativeElement.firstElementChild ?
             this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
             this.calcHeight = parseInt(this.height, 10) -
                 this.theadRow.nativeElement.clientHeight -
-                footerHeight;
+                footerHeight -
+                this.scr.nativeElement.clientHeight;
         }
         this.cdr.detectChanges();
     }
@@ -315,42 +323,42 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.elementRef.nativeElement;
     }
 
-    get leftPinnedWidth() {
-        let fc = this.pinnedLeftColumns;
-        var sum = 0;
-        for (let i = 0; i < fc.length; i++) {
-            sum += parseInt(fc[i].width);
+    get startPinnedWidth() {
+        const fc = this.pinnedStartColumns;
+        let sum = 0;
+        for (const col of fc) {
+            sum += parseInt(col.width, 10);
         }
         return sum;
     }
 
-    get rightPinnedWidth() {
-        let fc = this.pinnedRightColumns;
-        var sum = 0;
-        for (let i = 0; i < fc.length; i++) {
-            sum += parseInt(fc[i].width);
+    get endPinnedWidth() {
+        const fc = this.pinnedEndColumns;
+        let sum = 0;
+        for (const col of fc) {
+            sum += parseInt(col.width, 10);
         }
         return sum;
     }
 
     get unpinnedWidth() {
-        return parseInt(this.width) - this.leftPinnedWidth - this.rightPinnedWidth;
+        return parseInt(this.width, 10) - this.startPinnedWidth - this.endPinnedWidth;
     }
 
     get columns(): IgxColumnComponent[] {
         return this._columns;
     }
 
-    get pinnedLeftColumns(): IgxColumnComponent[] {
-        return this._pinnedLeftColumns;
+    get pinnedStartColumns(): IgxColumnComponent[] {
+        return this._pinnedStartColumns.filter((col) => !col.hidden);
     }
 
-    get pinnedRightColumns(): IgxColumnComponent[] {
-        return this._pinnedRightColumns;
+    get pinnedEndColumns(): IgxColumnComponent[] {
+        return this._pinnedEndColumns.filter((col) => !col.hidden);
     }
 
     get unpinnedColumns(): IgxColumnComponent[] {
-        return this._unpinnedColumns;
+        return this._unpinnedColumns.filter((col) => !col.hidden).sort((col1, col2) => col1.index - col2.index);
     }
 
     public getColumnByName(name: string): IgxColumnComponent {
@@ -362,7 +370,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get visibleColumns(): IgxColumnComponent[] {
-        return this.columnList.filter((col) => !col.hidden).sort((col1, col2) => col1.index - col2.index);
+        return this.columnList.filter((col) => !col.hidden).sort((col1, col2) => col1.visibleIndex - col2.visibleIndex);
     }
 
     public getCellByColumn(rowIndex: number, columnField: string): IgxGridCellComponent {
@@ -491,40 +499,46 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.gridAPI.clear_sort(this.id, name);
     }
 
-    public pinToLeft(columnName: string) {
-        let col = this.getColumnByName(columnName);
-        col.pinnedToLeft = true;
-        if (this._pinnedLeftColumns.indexOf(col) === -1) {
-            this._pinnedLeftColumns.push(col);
-            this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
-            col.pinnedToRight = false;
-            this._pinnedRightColumns.splice(this._pinnedRightColumns.indexOf(col), 1);
-        }
-        this.markForCheck();
-    }
+    public pinColumn(columnName: string, location?: PinLocation) {
+        const col = this.getColumnByName(columnName);
+        col.pinned = true;
+        col.pinLocation = location !== undefined ? location : PinLocation.Start;
+        const index = col.pinLocation === PinLocation.Start ? this._pinnedStartColumns.length : this._pinnedEndColumns.length;
 
-    public pinToRight(columnName: string) {
-        let col = this.getColumnByName(columnName);
-        col.pinnedToRight = true;
-        if (this._pinnedRightColumns.indexOf(col) === -1) {
-            this._pinnedRightColumns.push(col);
-            this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
-            col.pinnedToLeft = false;
-            this._pinnedLeftColumns.splice(this._pinnedLeftColumns.indexOf(col), 1);
+        const args = { column: col, insertAtIndex: index};
+        this.onColumnPinning.emit(args);
+
+        // update grid collections.
+        if (col.pinLocation === PinLocation.Start && this._pinnedStartColumns.indexOf(col) === -1) {
+            this._pinnedStartColumns.splice(index, 0, col);
+
+            if (this._unpinnedColumns.indexOf(col) !== -1) {
+                this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
+            }
+            if (this._pinnedEndColumns.indexOf(col) !== -1) {
+                this._pinnedEndColumns.splice(this._pinnedEndColumns.indexOf(col), 1);
+            }
+        } else if (col.pinLocation === PinLocation.End && this._pinnedEndColumns.indexOf(col) === -1) {
+            this._pinnedEndColumns.splice(index, 0, col);
+            if (this._unpinnedColumns.indexOf(col) !== -1) {
+                this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
+            }
+            if (this._pinnedStartColumns.indexOf(col) !== -1) {
+                this._pinnedStartColumns.splice(this._pinnedStartColumns.indexOf(col), 1);
+            }
         }
+
         this.markForCheck();
     }
 
     public unpinColumn(columnName: string) {
-        let col = this.getColumnByName(columnName);
-        col.pinnedToLeft = false;
-        col.pinnedToRight = false;
-        if (this._pinnedRightColumns.indexOf(col) !== -1) {
-            this._pinnedRightColumns.splice(this._pinnedRightColumns.indexOf(col), 1);
-            this._unpinnedColumns.unshift(col);
-        } else if (this._pinnedLeftColumns.indexOf(col) !== -1) {
-            this._pinnedLeftColumns.splice(this._pinnedLeftColumns.indexOf(col), 1);
-            this._unpinnedColumns.unshift(col);
+        const col = this.getColumnByName(columnName);
+        col.pinned = false;
+        this._unpinnedColumns.splice(col.index, 0, col);
+        if (this._pinnedEndColumns.indexOf(col) !== -1) {
+            this._pinnedEndColumns.splice(this._pinnedEndColumns.indexOf(col), 1);
+        } else if (this._pinnedStartColumns.indexOf(col) !== -1) {
+            this._pinnedStartColumns.splice(this._pinnedStartColumns.indexOf(col), 1);
         }
         this.markForCheck();
     }

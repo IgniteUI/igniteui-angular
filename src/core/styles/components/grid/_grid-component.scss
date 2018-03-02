@@ -20,6 +20,7 @@
 
         igx-display-container {
             @extend %grid-display-container-thead !optional;
+            width: 100%;
         }
     }
 
@@ -29,10 +30,18 @@
 
     @include e(tbody) {
         @extend %grid-tbody !optional;
+
+        igx-display-container {
+            height: 100%;
+        }
     }
 
     @include e(tbody, $m: empty) {
         @extend %grid-tbody--empty !optional;
+        
+        igx-display-container {
+            height: 100%;
+        }
     }
 
     @include e(tr) {
