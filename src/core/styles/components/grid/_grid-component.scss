@@ -1,4 +1,14 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
 @include b(igx-grid) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
     @extend %grid-display !optional;
 
     @include e(caption) {
@@ -9,6 +19,7 @@
         @extend %grid-thead !optional;
 
         igx-display-container {
+            @extend %grid-display-container-thead !optional;
             width: 100%;
         }
     }
@@ -37,7 +48,7 @@
         @extend %grid-row !optional;
 
         igx-display-container {
-            width: 100%;
+            @extend %grid-display-container-tr !optional;
         }
     }
 
@@ -50,27 +61,14 @@
         @extend %grid-cell-header !optional;
         $block: bem--selector-to-string(&);
 
-        &.asc,
-        &.desc {
-            font-weight: 800;
-        }
-
-        &.desc {
-            > .title::before {
-                position: relative;
-                font-family: 'Material Icons', sans-serif;
-                content: '\E5DB';
-                margin-right: 8px;
-            }
-        }
-
         &.asc {
-            > .title::before {
-                position: relative;
-                font-family: 'Material Icons', sans-serif;
-                content: '\E5D8';
-                margin-right: 8px;
-            }
+            @extend %grid-sorting-display !optional;
+            @extend %grid-sorting-asc !optional;
+        }
+
+        &.desc {
+            @extend %grid-sorting-display !optional;
+            @extend %grid-sorting-desc !optional;
         }
     }
 

@@ -1,7 +1,11 @@
 # igx-linear-bar and igx-circular-bar
 
-The `linear` progress bar component provides the ability to display a progress bar and update its appearance as its state changes. The indicator can be styled with a choice of colors in stripes or solids. You can also manage where the text is aligned.
-The `circular` progress indicator component provides the ability to display progress in a circle and update its appearance as its state changes. You can also manage if the text is visible or not.
+The `linear` progress bar component provides the ability to display a progress bar and update its appearance as its state changes. The indicator can be styled with a choice of colors in stripes or solids. You can also manage where the text is aligned.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/linear_progress.html)
+
+
+The `circular` progress indicator component provides the ability to display progress in a circle and update its appearance as its state changes. You can also manage if the text is visible or not.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/circular_progress.html)
 
 # Usage
 To get started with the Ignite UI for Angular Linear and Circular Progress Indicator, we should first import the **IgxProgressBarModule** in the **app.module.ts** file:

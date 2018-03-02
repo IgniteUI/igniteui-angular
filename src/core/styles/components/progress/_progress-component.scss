@@ -1,4 +1,16 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+
+/// Linear Progress
 @include b(progress-linear) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
     @extend %linear-display !optional;
 
     @include e(bar) {
@@ -101,7 +113,11 @@
     }
 }
 
+/// Circular Progress
 @include b(progress-circular) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
     @extend %circular-display !optional;
 
     @include e(innercircle) {
