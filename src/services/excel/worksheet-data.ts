@@ -47,6 +47,13 @@ export class WorksheetData {
 			return;
 		}
 
+		var dataEntry = this._data[0];
+
+		if(typeof dataEntry === "string") {
+			this.prepareStringData();
+			return;
+		}
+
 		var keys = Object.keys(this._data[0]);
 		if(keys.length === 0) {
 			return;
@@ -74,6 +81,23 @@ export class WorksheetData {
 				this._dataDictionary.saveValue(value, j);
 				this._values[index] = this._dataDictionary.getValue(value);
 			}
+		}
+	}
+
+	private prepareStringData(): void {
+		this._columnCount = 1;
+		this._rowCount = this._data.length + 1;
+
+		this._values = new Array<number>(this._rowCount);
+		this._dataDictionary = new WorksheetDataDictionary(this._columnCount, this.calculateSizeMetricsResolved);
+
+		// Add default header
+		this._dataDictionary.saveValue("Column1", 0);
+		this._values[0] = this._dataDictionary.getValue("Column1");
+
+		for (let i = 0; i < this._data.length; i++) {
+			this._dataDictionary.saveValue(this._data[i], 0);
+			this._values[i + 1] = this._dataDictionary.getValue(this._data[i]);
 		}
 	}
 }
