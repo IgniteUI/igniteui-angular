@@ -97,6 +97,8 @@
         display: flex;
         position: relative;
         justify-content: center;
+        width: 100%;
+        height: 100%;
         align-items: center;
         flex-flow: column nowrap;
         transform-style: preserve-3d;
@@ -186,6 +188,7 @@
                 right: 1px;
                 border-radius: inherit;
                 background-color: map-get($this, 'indicator-dot-color');
+                opacity: 0;
                 @include animation('scale-out-center' .15s $ease-out-quad forwards);
             }
 
@@ -195,6 +198,7 @@
             }
 
             &.active::after {
+                opacity: 1;
                 @include animation('scale-in-center' .15s $ease-out-quad forwards);
             }
 

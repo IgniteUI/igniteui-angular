@@ -4,7 +4,6 @@
 }
 
 .sample-icons igx-icon {
-    display: flex;
     flex: 1 0 20%;
     margin-bottom: 72px;
 }

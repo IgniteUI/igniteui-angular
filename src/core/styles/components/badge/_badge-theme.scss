@@ -102,7 +102,7 @@
         color: map-get($this, 'text-color');
         line-height: $badge-line-height;
 
-        igx-icon {
+        .igx-icon {
             width: $badge-icon-font-size;
             height: $badge-icon-font-size;
             font-size: $badge-icon-font-size;
