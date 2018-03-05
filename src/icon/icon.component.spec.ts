@@ -35,7 +35,7 @@ describe("Icon", () => {
         expect(icon.getIconColor).toBeFalsy();
         expect(icon.getIconName).toBeFalsy();
         expect(icon.glyphName).toBeFalsy();
-        expect(icon.getFontSet).toEqual("material");
+        expect(icon.getFontSet).toEqual("material-icons");
         expect(icon.cssClass).toMatch("igx-icon");
         expect(icon.ariaHidden).toEqual(true);
 

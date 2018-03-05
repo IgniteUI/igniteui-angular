@@ -24,7 +24,7 @@ export class IgxIconComponent implements OnInit {
     public ariaHidden = true;
 
     @Input("fontSet")
-    public font = "material";
+    public font: string;
 
     @Input("isActive")
     public active = true;
@@ -39,6 +39,7 @@ export class IgxIconComponent implements OnInit {
     public glyphName: string;
 
     constructor(public el: ElementRef, private iconService: IgxIconService) {
+        this.font = this.iconService.defaultFontSet;
         this.iconService.registerFontSetAlias("material", "material-icons");
     }
 
