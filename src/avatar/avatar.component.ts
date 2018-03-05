@@ -9,7 +9,7 @@ import {
     TemplateRef,
     ViewChild
 } from "@angular/core";
-import { IgxIconModule } from "../icon/icon.component";
+import { IgxIconModule } from "../icon";
 
 export enum Size {
     SMALL = "small",
