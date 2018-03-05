@@ -4,9 +4,12 @@
         <article class="sample-column">
             <h4 class="sample-title">Default</h4>
             <div class="sample-icons">
-                <igx-icon name="3d_rotation"></igx-icon>
-                <igx-icon name="accessibility"></igx-icon>
-                <igx-icon name="accessible"></igx-icon>
+                <!-- Implicit ligature declaration -->
+                <igx-icon fontSet="material" name="accessibility"></igx-icon>
+                <!-- Using icon glyph fonts -->
+                <igx-icon fontSet="font-awesome" iconName="fa-headphones"></igx-icon>
+                <!-- Explicit ligature declaration -->
+                <igx-icon fontSet="material">accessible</igx-icon>
                 <igx-icon name="account_balance"></igx-icon>
                 <igx-icon name="account_box"></igx-icon>
                 <igx-icon name="account_circle"></igx-icon>
