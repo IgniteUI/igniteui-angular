@@ -19,30 +19,30 @@ describe("Icon", () => {
         }).compileComponents();
     }));
 
-    it("Initializes icon with initials", () => {
+    it("Initializes igx-icon", () => {
         const fixture = TestBed.createComponent(InitIconComponent);
         const icon = fixture.componentInstance.icon;
         fixture.detectChanges();
 
-        expect(icon.getActive).toBeTruthy();
+        expect(fixture.debugElement).toBeTruthy();
         expect(icon.getIconColor).toBeFalsy();
         expect(icon.getIconName).toBeFalsy();
         expect(icon.getFontSet).toEqual("material");
-        expect(icon.el.nativeElement.getElementsByClassName("igx-icon")).toBeTruthy();
-        expect(icon.themeIcon).toBeTruthy();
+        expect(icon.cssClass).toMatch("igx-icon");
+        expect(fixture.debugElement.query(By.css("igx-icon"))).toBeTruthy();
     });
 
-    it("Initializes material icon", () => {
+    it("Initializes igx-icon with material font", () => {
         const fixture = TestBed.createComponent(InitMaterialIconComponent);
         const icon = fixture.componentInstance.icon;
+        const cssClasses = "material-icons igx-icon";
         fixture.detectChanges();
 
-        expect(icon.themeIcon.nativeElement.classList.contains("material-icons")).toBeTruthy();
-        expect(icon.themeIcon.nativeElement.innerText).toEqual("home");
-
+        expect(icon.el.nativeElement.classList).toMatch(cssClasses);
+        expect(icon.el.nativeElement.innerText).toEqual("home");
     });
 
-    it("Initializes custom color icon", () => {
+    it("Initializes igx-icon with custom color", () => {
         const fixture = TestBed.createComponent(InitCustomColorIconComponent);
         const icon = fixture.componentInstance.icon;
         fixture.detectChanges();
@@ -51,15 +51,13 @@ describe("Icon", () => {
         expect(icon.el.nativeElement.style.color).toEqual("red");
     });
 
-    it("Initializes inactive icon", () => {
+    it("Initializes inactive igx-icon", () => {
         const fixture = TestBed.createComponent(InitInactiveIconComponent);
         const icon = fixture.componentInstance.icon;
-        const iconContainer = fixture.debugElement.query(By.css("igx-icon")).nativeElement;
-
         fixture.detectChanges();
 
         expect(icon.getActive).toEqual(false);
-        expect(iconContainer.classList).toMatch("igx-icon--inactive");
+        expect(icon.el.nativeElement.classList).toMatch("igx-icon--inactive");
     });
 });
 
