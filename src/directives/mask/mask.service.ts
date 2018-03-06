@@ -7,10 +7,7 @@ export class IgxMaskService {
     public get cursor() {
         return this._cursor;
     }
-    public data = {
-        newVal: "",
-        prevVal: ""
-    };
+    public data: boolean;
 
     public parseValueByMask(value, maskOptions, cursor): string {
         let inputValue: string = value;
@@ -131,7 +128,7 @@ export class IgxMaskService {
         const literalKeys: number[] = Array.from(literals.keys());
         const nonLiteralIndeces: number[] = this.getNonLiteralIndeces(mask, literalKeys);
 
-        if (this.data.newVal != null) {
+        if (!this.data) {
             this._cursor = cursor < 0 ? ++cursor : cursor;
             if (nonLiteralIndeces.indexOf(this._cursor) !== -1) {
                 isCharValid = this.validateCharOnPostion(char, this._cursor, mask);
@@ -196,12 +193,14 @@ export class IgxMaskService {
         return inputValue;
     }
 
-    public parseValueByMaskUponCopyPaste(value, maskOptions, cursor, clipboardData): string {
+    public parseValueByMaskUponCopyPaste(value, maskOptions, cursor, clipboardData, selection): string {
         let inputValue: string = value;
         const mask: string = maskOptions.format;
         const literals: Map<number, string> = this.getMaskLiterals(mask);
         const literalKeys: number[] = Array.from(literals.keys());
         const nonLiteralIndeces: number[] = this.getNonLiteralIndeces(mask, literalKeys);
+
+        const selectionEnd = cursor + selection;
 
         this._cursor = cursor;
         for (const clipboardSym of clipboardData) {
@@ -229,6 +228,18 @@ export class IgxMaskService {
                     }
                 }
             }
+
+            selection--;
+        }
+
+        if (selection > 0) {
+            for (let i = this._cursor; i < selectionEnd; i++) {
+                if (literalKeys.indexOf(this._cursor) !== -1) {
+                    this._cursor++;
+                } else {
+                    inputValue = this.replaceCharAt(inputValue, this._cursor++, maskOptions.promptChar);
+                }
+            }
         }
 
         return inputValue;
@@ -237,29 +248,44 @@ export class IgxMaskService {
     private validateCharOnPostion(inputChar: string, position: number, mask: string): boolean {
         let regex: RegExp;
         let isValid: boolean;
-        const  letterOrDigitRegEx = "[\\d\\u00C0-\\u1FFF\\u2C00-\\uD7FFa-zA-Z]";
+        const letterOrDigitRegEx = "[\\d\\u00C0-\\u1FFF\\u2C00-\\uD7FFa-zA-Z]";
+        const letterDigitOrSpaceRegEx = "[\\d\\u00C0-\\u1FFF\\u2C00-\\uD7FFa-zA-Z\\u0020]";
         const letterRegEx = "[\\u00C0-\\u1FFF\\u2C00-\\uD7FFa-zA-Z]";
+        const letteSpaceRegEx = "[\\u00C0-\\u1FFF\\u2C00-\\uD7FFa-zA-Z\\u0020]";
         const digitRegEx = "[\\d]";
-        const digitSpecialRegEx = "[\\d_\\+]";
+        const digitSpaceRegEx = "[\\d\\u0020]";
+        const digitSpecialRegEx = "[\\d-\\+]";
 
         switch (mask.charAt(position)) {
             case "C":
-            case "&":
                 isValid = inputChar !== "";
                 break;
+            case "&":
+                regex = new RegExp("[\\u0020]");
+                isValid = !regex.test(inputChar);
+                break;
             case "a":
+                regex = new RegExp(letterDigitOrSpaceRegEx);
+                isValid = regex.test(inputChar);
+                break;
             case "A":
                 regex = new RegExp(letterOrDigitRegEx);
                 isValid = regex.test(inputChar);
                 break;
             case "?":
+                regex = new RegExp(letteSpaceRegEx);
+                isValid = regex.test(inputChar);
+                break;
             case "L":
                 regex = new RegExp(letterRegEx);
                 isValid = regex.test(inputChar);
                 break;
             case "0":
-            case "9":
                 regex = new RegExp(digitRegEx);
+                isValid = regex.test(inputChar);
+                break;
+            case "9":
+                regex = new RegExp(digitSpaceRegEx);
                 isValid = regex.test(inputChar);
                 break;
             case "#":

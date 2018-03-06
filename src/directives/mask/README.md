@@ -5,13 +5,13 @@ The **igxMask** directive is intended to provide means for controlling user inpu
 The following built-in mask rules should be supported:
 
     0: requires a digit (0-9).
-    9: requires a digit (0-9).
+    9: requires a digit (0-9) or a space.
     #: requires a digit (0-9), plus (+), or minus (-) sign.
     L: requires a letter (a-Z).
-    ?: Requires a letter (a-Z).
+    ?: Requires a letter (a-Z) or a space.
     A: requires an alphanumeric (0-9, a-Z).
-    a: requires an alphanumeric (0-9, a-Z).
-    &: any keyboard character.
+    a: requires an alphanumeric (0-9, a-Z) or a space.
+    &: any keyboard character (excluding space).
     C: any keyboard character.
 
 Static symbols (literals) in the mask pattern are also supported.

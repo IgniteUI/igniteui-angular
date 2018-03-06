@@ -62,6 +62,9 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
         format: "",
         promptChar: ""
     };
+    private _key;
+    private _cursorOnPaste;
+    private _valOnPaste;
 
     private _onTouchedCallback: () => void = noop;
     private _onChangeCallback: (_: any) => void = noop;
@@ -85,6 +88,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
             event.preventDefault();
         }
 
+        this._key = key;
         this._selection = Math.abs(this.selectionEnd - this.selectionStart);
     }
 
@@ -99,29 +103,26 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
 
     @HostListener("paste", ["$event"])
     public onPaste(event): void {
-        const currentCursorPos = this.getCursorPosition();
-        const clipboardData = event.clipboardData.getData("Text");
-
-        if (clipboardData) {
-            this._cachedVal = this.maskHelper.parseValueByMaskUponCopyPaste(this.value, this._maskOptions, currentCursorPos, clipboardData);
-        }
-
         this._paste = true;
+
+        this._valOnPaste = this.value;
+        this._cursorOnPaste = this.getCursorPosition();
     }
 
     @HostListener("input", ["$event"])
     public onInputChanged(event): void {
         if (this._paste) {
-            if (this._cachedVal) {
-                this.value = this._cachedVal;
-                this.setCursorPosition(this.maskHelper.cursor);
-            }
-
             this._paste = false;
+
+            const clipboardData = this.value.substring(this._cursorOnPaste, this.getCursorPosition());
+            this.value = this.maskHelper.parseValueByMaskUponCopyPaste(
+                this._valOnPaste, this._maskOptions, this._cursorOnPaste, clipboardData, this._selection);
+
+            this.setCursorPosition(this.maskHelper.cursor);
         } else {
             const currentCursorPos = this.getCursorPosition();
 
-            this.maskHelper.data.newVal = event.data;
+            this.maskHelper.data = (this._key === KEYS.BACKSPACE) || (this._key === KEYS.DELETE);
 
             this.value = this._selection === 0 ? this.maskHelper.parseValueByMask(this.value, this._maskOptions, currentCursorPos - 1) :
                 this.value = this.maskHelper.parseValueByMaskUponSelection
@@ -153,10 +154,9 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
     public writeValue(value) {
         this.value = this.maskHelper.parseValueByMaskOnInit(value, this._maskOptions);
 
-        this.dataValue = this.includeLiterals ? this.value : value;
-        this._onChangeCallback(this.dataValue);
+        const rowVal = this.maskHelper.restoreValueFromMask(this.value, this._maskOptions);
 
-        this.dataValueChange.emit({rowValue: value, formattedVal: this.value});
+        this.dataValueChange.emit({rowValue: rowVal, formattedVal: this.value});
     }
 
     public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
