@@ -1,12 +1,17 @@
 import { CommonModule } from "@angular/common";
-import { Component, ElementRef, HostBinding, Input, NgModule, ViewChild } from "@angular/core";
+import { Component, ElementRef, HostBinding, Input, NgModule, OnInit, ViewChild } from "@angular/core";
 
+// only a temporary object holding aliases names
+// until the icon registration service gets built
+const fontAliases = {
+    material: "material-icons"
+};
 @Component({
     selector: "igx-icon",
     templateUrl: "icon.component.html"
 })
 
-export class IgxIconComponent {
+export class IgxIconComponent implements OnInit {
     @ViewChild("icon")
     public themeIcon: ElementRef;
 
@@ -26,6 +31,10 @@ export class IgxIconComponent {
     private iconName: string;
 
     constructor(public el: ElementRef) { }
+
+    ngOnInit() {
+        this.updateIconClass();
+    }
 
     get getFontSet(): string {
         return this.font;
@@ -47,6 +56,11 @@ export class IgxIconComponent {
 
     get getIconName(): string {
         return this.iconName;
+    }
+
+    private updateIconClass() {
+        this.font = fontAliases[this.font] ? this.font : "material-icons";
+        this.el.nativeElement.classList.add(fontAliases[this.font]);
     }
 }
 
