@@ -275,7 +275,7 @@
         justify-content: center;
         position: relative;
         min-width: $button-width;
-        min-height: $button-height;
+        height: $button-height;
         padding: $button-padding;
         font-size: $button-font-size;
         font-weight: $button-font-weight;
@@ -329,7 +329,7 @@
 
     %igx-button--round {
         $block: bem--selector-to-string(&);
-        display: flex;
+        display: inline-flex;
         position: relative;
         flex-direction: row;
         justify-content: center;
