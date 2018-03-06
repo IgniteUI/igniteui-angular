@@ -13,11 +13,11 @@ describe("Icon", () => {
             declarations: [
                 IgxIconComponent,
                 InitIconComponent,
-                InitWithMaterialFontSet,
-                InitWithCustomFontSet,
-                InitWithImplicitLigature,
-                InitWithExplicitLigature,
-                InitWithIconGlyph,
+                InitWithMaterialFontSetComponent,
+                InitWithCustomFontSetComponent,
+                InitWithImplicitLigatureComponent,
+                InitWithExplicitLigatureComponent,
+                InitWithIconGlyphComponent,
                 InitErroneousIconComponent,
                 InitCustomColorIconComponent,
                 InitInactiveIconComponent
@@ -46,7 +46,7 @@ describe("Icon", () => {
     });
 
     it("Initializes igx-icon with material-icons font set", () => {
-        const fixture = TestBed.createComponent(InitWithMaterialFontSet);
+        const fixture = TestBed.createComponent(InitWithMaterialFontSetComponent);
         const icon = fixture.componentInstance.icon;
         fixture.detectChanges();
 
@@ -55,7 +55,7 @@ describe("Icon", () => {
     });
 
     it("Initializes igx-icon with custom font set", () => {
-        const fixture = TestBed.createComponent(InitWithCustomFontSet);
+        const fixture = TestBed.createComponent(InitWithCustomFontSetComponent);
         const icon = fixture.componentInstance.icon;
         fixture.detectChanges();
 
@@ -64,7 +64,7 @@ describe("Icon", () => {
     });
 
     it("Initializes igx-icon with implicit ligature", () => {
-        const fixture = TestBed.createComponent(InitWithImplicitLigature);
+        const fixture = TestBed.createComponent(InitWithImplicitLigatureComponent);
         const icon = fixture.componentInstance.icon;
         const cssClasses = "material-icons igx-icon";
         fixture.detectChanges();
@@ -79,7 +79,7 @@ describe("Icon", () => {
     });
 
     it("Initializes igx-icon with explicit ligature", () => {
-        const fixture = TestBed.createComponent(InitWithExplicitLigature);
+        const fixture = TestBed.createComponent(InitWithExplicitLigatureComponent);
         const icon = fixture.componentInstance.icon;
         const cssClasses = "material-icons igx-icon";
         fixture.detectChanges();
@@ -94,7 +94,7 @@ describe("Icon", () => {
     });
 
     it("Initializes igx-icon with icon glyph", () => {
-        const fixture = TestBed.createComponent(InitWithIconGlyph);
+        const fixture = TestBed.createComponent(InitWithIconGlyphComponent);
         const icon = fixture.componentInstance.icon;
         const cssClasses = "fa fa-music igx-icon";
         fixture.detectChanges();
@@ -149,35 +149,35 @@ class InitIconComponent {
 @Component({
     template: `<igx-icon fontSet="material"></igx-icon>`
 })
-class InitWithMaterialFontSet {
+class InitWithMaterialFontSetComponent {
     @ViewChild(IgxIconComponent) public icon: IgxIconComponent;
 }
 
 @Component({
     template: `<igx-icon fontSet="my-icon-font"></igx-icon>`
 })
-class InitWithCustomFontSet {
+class InitWithCustomFontSetComponent {
     @ViewChild(IgxIconComponent) public icon: IgxIconComponent;
 }
 
 @Component({
     template: `<igx-icon fontSet="material" name="home"></igx-icon>`
 })
-class InitWithImplicitLigature {
+class InitWithImplicitLigatureComponent {
     @ViewChild(IgxIconComponent) public icon: IgxIconComponent;
 }
 
 @Component({
     template: `<igx-icon fontSet="material">home</igx-icon>`
 })
-class InitWithExplicitLigature {
+class InitWithExplicitLigatureComponent {
     @ViewChild(IgxIconComponent) public icon: IgxIconComponent;
 }
 
 @Component({
     template: `<igx-icon fontSet="fa" iconName="fa-music"></igx-icon>`
 })
-class InitWithIconGlyph {
+class InitWithIconGlyphComponent {
     @ViewChild(IgxIconComponent) public icon: IgxIconComponent;
 }
 
