@@ -131,6 +131,27 @@ export class IgxGridAPIService {
             this.get(id).sortingExpressions = sortingState;
         }
     }
+    public min(id, fieldName): number {
+        const minValue = 0;
+        this.get(id).rowList.map((x) => Number(x.rowData[fieldName].value)).reduce((a, b) => Math.min(a, b));
+        return minValue;
+    }
+
+    public max(id, fieldName) {
+
+    }
+
+    public average(id, fieldName) {
+
+    }
+
+    public sum(id, fieldName) {
+
+    }
+
+    public count(id, fieldName) {
+
+    }
 
     protected prepare_filtering_expression(state, fieldName, searchVal, condition, ignoreCase) {
 
