@@ -1,4 +1,3 @@
-import { Component, ViewChild } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { IgxIconService } from "./icon.service";
 

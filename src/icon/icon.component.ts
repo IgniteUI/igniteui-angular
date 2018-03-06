@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, ElementRef, HostBinding, Input, NgModule, OnInit, TemplateRef, ViewChild } from "@angular/core";
+import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { IgxIconService } from "./icon.service";
 
 @Component({
