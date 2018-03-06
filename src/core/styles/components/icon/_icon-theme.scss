@@ -41,34 +41,12 @@
     // @debug $this;
 
     $igx-icon-font-size: rem(map-get($this, 'size'));
-    $igx-icon-width: map-get($this, 'size');
-    $igx-icon-height: map-get($this, 'size');
 
     %igx-icon-display {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        color: map-get($this, 'color');
-        width: $igx-icon-width;
-        height: $igx-icon-height;
+        width: $igx-icon-font-size;
+        height: $igx-icon-font-size;
         font-size: $igx-icon-font-size;
-
-        i {
-            line-height: 1;
-            text-transform: none;
-            letter-spacing: normal;
-            word-wrap: normal;
-            white-space: nowrap;
-            width: inherit;
-            height: inherit;
-            font-size: inherit;
-            direction: ltr;
-            -webkit-font-smoothing: antialiased;
-            text-rendering: optimizeLegibility;
-            -moz-osx-font-smoothing: grayscale;
-            font-feature-settings: 'liga';
-        }
+        color: map-get($this, 'color');
     }
 
     %igx-icon--inactive {
