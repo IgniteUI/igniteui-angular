@@ -2,7 +2,8 @@
 
 **igx-dialog** supports dialog component that opens centered on top of the app content.
 
-With the igx-dialog you can create **alerts**, **dialogs** and **custom dialogs**.
+With the igx-dialog you can create **alerts**, **dialogs** and **custom dialogs**.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog.html)
 
 # Usage
 

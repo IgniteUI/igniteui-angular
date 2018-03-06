@@ -1,6 +1,17 @@
-$thumbs: 'from' 'to';
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
 
+/// Slider
 @include b(igx-slider) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    $thumbs: 'from' 'to';
     @extend %igx-slider-display !optional;
 
     @include e(track) {

@@ -1,8 +1,7 @@
 # IgxNavigationDrawer Component
 
-The **igx-nav-drawer** is a container element for side navigation, providing quick access between views. It can be used for navigation apps and with top-level views. Drawer will be hidden until invoked by the user.
-
-You can see it in action [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer.html).
+The **igx-nav-drawer** is a container element for side navigation, providing quick access between views. It can be used for navigation apps and with top-level views. Drawer will be hidden until invoked by the user.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer.html)
 
 ## Dependencies
 To started with all needed dependencies you can use the `IgxNavigationDrawerModule` and import it in your application's `AppModule`:

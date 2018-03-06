@@ -1,7 +1,32 @@
-$component-name: 'igx-grid-filtering';
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
-$components: register-component($components, #{$component-name});
-
+/// @param {Color} $toggle-icon-color [null] - The idle toggle icon color.
+/// @param {Color} $toggle-icon-hover-color [null] - The hover toggle icon color.
+/// @param {Color} $toggle-icon-active-color [null] - The active toggle icon color.
+/// @param {Color} $toggle-icon-filtered-color [null] - The filtered toggle icon color.
+/// @param {Color} $toggle-background [null] - The idle toggle background color.
+/// @param {Color} $toggle-hover-background [null] - The hover toggle background color.
+/// @param {Color} $toggle-active-background [null] - The active toggle background color.
+/// @param {Color} $toggle-filtered-background [null] - The filtered toggle background color.
+///
+/// @param {Color} $menu-background [null] - The idle menu background color.
+/// @param {Color} $menu-text-color [null] - The idle menu text color.
+/// @param {Color} $menu-button-text-color [null] - The menu button text color.
+/// @param {Color} $menu-button-disabled-text-color [null] - The menu disabled button text color.
+/// @requires text-contrast
+///
+/// @example scss Change the menu background color
+///   $my-filtering-theme: igx-grid-filtering-theme(
+///     $menu-background: black,
+///     $menu-text-color: white
+///   );
+///   // Pass the theme to the igx-grid-filtering component mixin
+///   @include igx-grid-filtering($my-filtering-theme);
 @function igx-grid-filtering-theme(
     $toggle-icon-color: null,
     $toggle-icon-hover-color: null,
@@ -50,17 +75,28 @@ $components: register-component($components, #{$component-name});
     );
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-grid-filtering-theme
+/// @requires igx-button-theme
+/// @requires {mixin} igx-button
+/// @requires igx-color
+/// @requires igx-contrast-color
+/// @requires igx-elevation
+/// @requires $elevations
+/// @requires extend
+/// @requires rem
 @mixin igx-grid-filtering($theme, $palette: $default-palette) {
     $default-theme: igx-grid-filtering-theme(
         $toggle-icon-color: inherit,
-        $toggle-icon-hover-color: $white,
+        $toggle-icon-hover-color: #fff,
         $toggle-icon-active-color: igx-contrast-color($palette, 'secondary'),
         $toggle-icon-filtered-color: igx-color($palette, 'secondary'),
         $toggle-hover-background: igx-color($palette, 'grays', 300),
         $toggle-active-background: igx-color($palette, 'secondary'),
         $toggle-filtered-background: transparent,
 
-        $menu-background: $white,
+        $menu-background: #fff,
         $menu-text-color: igx-color($palette, 'grays', 900),
         $menu-button-text-color: igx-color($palette, 'secondary')
     );
