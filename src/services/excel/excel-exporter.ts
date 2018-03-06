@@ -8,6 +8,7 @@ import { ExcelFolderTypes } from './excel-enums';
 
 import {
 	ColumnExportingEventArgs,
+	ExportEndedEventArgs,
 	RowExportingEventArgs
 } from "./excel-event-args";
 
@@ -27,11 +28,16 @@ export class IgxExcelExporterService {
 	private static ZIP_OPTIONS = { compression: "DEFLATE", type: "base64" };
 	private static DATA_URL_PREFIX = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
 
+	private _xlsx: JSZip;
+
 	@Output()
 	public onRowExport = new EventEmitter<RowExportingEventArgs>();
 
 	@Output()
 	public onColumnExport = new EventEmitter<ColumnExportingEventArgs>();
+
+	@Output()
+	public onExportEnded = new EventEmitter<ExportEndedEventArgs>();
 
 	public Export(grid: IgxGridComponent, fileName: string): void {
 		let rowList = grid.rowList.toArray();
@@ -83,12 +89,14 @@ export class IgxExcelExporterService {
 		worksheetData.calculateSizeMetrics = true;
 		worksheetData.data = data;
 
-		let xlsx = new JSZip();
+		this._xlsx = new JSZip();
 
-		IgxExcelExporterService.PopulateFolder(ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder), xlsx, worksheetData);
+		IgxExcelExporterService.PopulateFolder(ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder), this._xlsx, worksheetData);
 
-		xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((data) => {
+		this._xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((data) => {
 			self.SaveFile(data, fileName);
+
+			self.onExportEnded.emit(new ExportEndedEventArgs(self._xlsx));
 		});
 	}
 
@@ -104,7 +112,6 @@ export class IgxExcelExporterService {
 			fileInstance.WriteElement(zip, worksheetData);
 		}
 	}
-
 
 	private SaveFile(data: string, fileName: string): void {
 		var a = document.createElement("a");

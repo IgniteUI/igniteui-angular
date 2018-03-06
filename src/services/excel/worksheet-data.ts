@@ -54,7 +54,7 @@ export class WorksheetData {
 			return;
 		}
 
-		var keys = Object.keys(this._data[0]);
+		var keys = Object.keys(dataEntry);
 		if(keys.length === 0) {
 			return;
 		}
