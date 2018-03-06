@@ -12,6 +12,8 @@ import {
 	RowExportingEventArgs
 } from "./excel-event-args";
 
+import { IgxExcelExporterOptions } from "./excel-exporter-options";
+
 import {
 	IExcelFile,
 	IExcelFolder
@@ -39,7 +41,7 @@ export class IgxExcelExporterService {
 	@Output()
 	public onExportEnded = new EventEmitter<ExportEndedEventArgs>();
 
-	public Export(grid: IgxGridComponent, fileName: string): void {
+	public Export(grid: IgxGridComponent, options: IgxExcelExporterOptions): void {
 		let rowList = grid.rowList.toArray();
 		let columnList = grid.columnList.toArray();
 		let columns = new Array<string>();
@@ -80,21 +82,18 @@ export class IgxExcelExporterService {
 			}
 		}
 
-		this.ExportData(data, fileName);
+		this.ExportData(data, options);
 	}
 
-	public ExportData(data: any[], fileName: string): void {
+	public ExportData(data: any[], options: IgxExcelExporterOptions): void {
 		const self = this;
-		let worksheetData = new WorksheetData();
-		worksheetData.calculateSizeMetrics = true;
-		worksheetData.data = data;
-
+		let worksheetData = new WorksheetData(data, options);
 		this._xlsx = new JSZip();
 
 		IgxExcelExporterService.PopulateFolder(ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder), this._xlsx, worksheetData);
 
 		this._xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((data) => {
-			self.SaveFile(data, fileName);
+			self.SaveFile(data, options.fileName);
 
 			self.onExportEnded.emit(new ExportEndedEventArgs(self._xlsx));
 		});
