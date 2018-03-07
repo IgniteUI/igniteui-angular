@@ -261,11 +261,7 @@
     $button-icon-width: rem(36px, 16px);
     $button-icon-height: $button-icon-width;
     $button-icon-font-size: rem(24px, 24px);
-
-    // Navbar Buttons
-    $button-navbar-width: rem(24px, 16px);
-    $button-navbar-height: $button-navbar-width;
-    $button-navbar-padding: 0;
+    $button-icon-padding: 0;
 
     $this: extend($default-theme, $theme);
 
@@ -328,7 +324,6 @@
     }
 
     %igx-button--round {
-        $block: bem--selector-to-string(&);
         display: inline-flex;
         position: relative;
         flex-direction: row;
@@ -372,6 +367,7 @@
         font-size: $button-icon-font-size;
         color: map-get($this, 'icon-color');
         background: map-get($this, 'icon-background');
+        padding: $button-icon-padding;
 
         &:hover {
             transition: $button-transition;
