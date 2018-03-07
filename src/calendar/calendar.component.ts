@@ -106,7 +106,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      * Expects a valid BCP 47 language tag.
      */
     @Input()
-    public locale = "en-EN";
+    public locale = "en";
 
     /**
      * An @Input property controlling the selection mechanism of the calendar.
