@@ -49,3 +49,4 @@ export * from "./slider/slider.component";
 export * from "./date-picker/date-picker.component";
 export * from "./directives/toggle/toggle.directive";
 export * from "./directives/for-of/IForOfState";
+export * from "./time-picker/time-picker.component";

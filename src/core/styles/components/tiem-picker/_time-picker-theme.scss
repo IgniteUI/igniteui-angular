@@ -1,0 +1,23 @@
+$component-name: 'igx-time-picker';
+$components: register-component($components, #{$component-name});
+
+@function igx-time-picker-theme(
+    $background: null,
+    $text-color: null
+) {
+
+
+    @return (
+        background: $background,
+        text-color: $text-color,
+    );
+}
+
+@mixin igx-time-picker($theme, $palette: $default-palette) {
+    $default-theme: igx-time-picker-theme(
+
+    );
+
+    $this: extend($default-theme, $theme);
+}
+
