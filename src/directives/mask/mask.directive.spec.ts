@@ -10,7 +10,7 @@ import { By } from "@angular/platform-browser";
 import { IgxInputModule } from "../input/input.directive";
 import { IgxMaskModule } from "./mask.directive";
 
-describe("AppComponent", () => {
+fdescribe("AppComponent", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -22,7 +22,8 @@ describe("AppComponent", () => {
                 EventFiringComponent,
                 IncludeLiteralsComponent,
                 LetterSpaceMaskComponent,
-                MaskComponent
+                MaskComponent,
+                OneWayBindComponent
             ],
             imports: [
                 FormsModule,
@@ -221,6 +222,35 @@ describe("AppComponent", () => {
             expect(fixture.componentInstance.row).toEqual("123");
         });
     }));
+
+    it("One way binding", fakeAsync(() => {
+        const fixture = TestBed.createComponent(OneWayBindComponent);
+        fixture.detectChanges();
+
+        const comp = fixture.componentInstance;
+        const input = fixture.debugElement.query(By.css("input"));
+
+        expect(input.nativeElement.value).toEqual("3456");
+
+        input.triggerEventHandler("focus", null);
+        tick();
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toEqual("3456****");
+            expect(comp.value).toEqual(3456);
+
+            input.nativeElement.value = "A";
+            input.nativeElement.dispatchEvent(new Event("input"));
+            tick();
+
+            input.triggerEventHandler("focus", null);
+            tick();
+
+            expect(input.nativeElement.value).toEqual("A*******");
+        });
+    }));
 });
 
 @Component({ template: `<input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>` })
@@ -284,4 +314,10 @@ class EventFiringComponent {
         this.row = event.rowValue;
         this.formatted = event.formattedVal;
     }
+}
+
+@Component({ template: `<input type="text" igxInput [value]="value" [igxMask]="myMask" [includeLiterals]="true" [promptChar]="'*@#'"/>` })
+class OneWayBindComponent {
+    myMask = "AAAAAAAA";
+    value = 3456;
 }

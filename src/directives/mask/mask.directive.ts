@@ -75,6 +75,10 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
     }
 
     public ngOnInit(): void {
+        if (this.promptChar && this.promptChar.length > 1) {
+            this._maskOptions.promptChar = this.promptChar = this.promptChar.substring(0, 1);
+        }
+
         this._maskOptions.format = this.mask ? this.mask : "CCCCCCCCCC";
         this._maskOptions.promptChar = this.promptChar ? this.promptChar : "_";
     }
