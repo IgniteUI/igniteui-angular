@@ -28,6 +28,7 @@
 @import '../components/input/input-theme';
 @import '../components/icon/icon-theme';
 @import '../components/grid-filtering/grid-filtering-theme';
+@import '../components/tiem-picker/time-picker-theme';
 
 @mixin igx-theme($palette: $default-palette, $exclude: ()) {
     // Check for invalid components passed
@@ -113,5 +114,8 @@
     }
     @if not(index($exclude, 'igx-toast')) {
         @include igx-toast($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-time-picker')) {
+        @include igx-time-picker($theme: (), $palette: $palette);
     }
 }

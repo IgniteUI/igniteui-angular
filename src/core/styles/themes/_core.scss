@@ -34,6 +34,7 @@
 @import '../components/switch/switch-component';
 @import '../components/tabbar/tabbar-component';
 @import '../components/toast/toast-component';
+@import '../components/tiem-picker/time-picker-component';
 
 @mixin igx-core() {
     @include igx-typography($config: ('font-family': 'Titillium Web'));
