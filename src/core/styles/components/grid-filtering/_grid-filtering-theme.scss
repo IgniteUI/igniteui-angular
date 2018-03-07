@@ -121,7 +121,7 @@
         cursor: pointer;
         color: map-get($this, 'toggle-icon-color');
 
-        i {
+        igx-icon {
             font-size: $grid-head-icon-size !important;
             line-height: $grid-head-icon-lh;
             padding: $grid-head-icon-padding;

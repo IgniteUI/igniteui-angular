@@ -35,6 +35,40 @@ When working on an issue for the Ignite UI for Angular repository, you need to b
 1. `status: pending-localization` this status tells that there are changes in the localization strings that need to be translated. When you make such changes, put this status badge without removing the other applicable ones and assign a person to do the translations.
 2. `status: localized` this status is for issues that were with a pending translation status and have already been localized. Place this status label once these translation changes have been included in the current pull request, or the changes are already pulled with a different pull request.
 
+# Fixing a bug  
+When fixing a bug you need to follow these guidelines:
+
+1. Leave a comment above your change in the format `<initials> <date> <Issue Number|Issue Link> <Comment for the change>`
+   * e.g. `K.D. June 28th, 2016 #1234 Adding this comment as an example`
+   * e.g. `K.D. June 28th, 2016 https://github.com/IgniteUI/ignite-ui/issues/1234 Adding this comment as an example`
+2. Write unit tests that cover your change. The test should fail prior to your change and pass after it
+3. Run JSHint, JSCS, Unit tests and make sure they all pass
+4. Pull request your changes and reference the issue. Use the following title/description format.
+   * Title: `<Issue Number> <Change Title>` Description: `closes <Issue Number> <Longer Description>`
+   * e.g. Title: `#123 Changing foo to bar` Description: `closes #123`
+5. Don't forget to make the necessary status updates, as described in the workflow section.
+
+When bug fixes are applicable to multiple branches, there will be additional steps between 3 and 4. So if let’s say we have a 5.2.x, 5.3.x, and a master branch the process will look like this:
+
+1.	If the bug is in 5.2.x, then switch the branch your branching from to `5.2.x`. For code example purposes let's say the new branch is called `fixing-bug-52x`.
+2.	Commit your changes to your `fixing-bug-52x` branch.
+3.	Push and PR to the `5.2.x` branch.
+4.	Switch to the `5.3.x` branch.
+5.  Create a new branch.  For code example purposes let's say the new branch is called `fixing-bug-53x`.
+6.  Cherry pick your commit from the `fixing-bug-52x` branch: `git cherry-pick fixing-bug-52x`
+7.  Push to your `fixing-bug-53x` branch and PR to the `5.3.x` branch.
+8.	Repeat steps 4-7 for all other applicable branches including `master`.
+
+# New feature development
+In order to contribute code to a new feature, you need to follow these guidelines.
+
+1. Work on implementation in your fork
+2. Follow a test-driven development process (TDD) to ensure full code coverage, or make sure that you include unit tests that cover all of the newly added code
+3. Document all newly added public methods, inputs, outputs and properties.
+4. Make sure all static code analysis and tests pass before opening a pull request
+5. Reference the issue you've been working on in your commit message and pull request title/description.
+6. Don't forget to make the necessary status updates, as described in the workflow section.
+
 # Testing a PR
 In order to test a pull request that is awaiting test, perform the following actions.
 
