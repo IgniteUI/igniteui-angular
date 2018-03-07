@@ -324,25 +324,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get startPinnedWidth() {
-        const fc = this.pinnedStartColumns;
-        let sum = 0;
-        for (const col of fc) {
-            sum += parseInt(col.width, 10);
-        }
-        return sum;
+        return this.getStartPinnedWidth();
     }
 
     get endPinnedWidth() {
-        const fc = this.pinnedEndColumns;
-        let sum = 0;
-        for (const col of fc) {
-            sum += parseInt(col.width, 10);
-        }
-        return sum;
+        return this.getEndPinnedWidth();
     }
 
     get unpinnedWidth() {
-        return parseInt(this.width, 10) - this.startPinnedWidth - this.endPinnedWidth;
+        return this.getUpinnedWidth();
     }
 
     get columns(): IgxColumnComponent[] {
@@ -499,8 +489,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.gridAPI.clear_sort(this.id, name);
     }
 
-    public pinColumn(columnName: string, location?: PinLocation) {
+    public pinColumn(columnName: string, location?: PinLocation): boolean {
         const col = this.getColumnByName(columnName);
+
+        /**
+         * If the column that we want to pin is bigger or equal than the unpinned area we should not pin it.
+         * It should be also unpinned before pinning, since changing left/right pin area doesn't affect unpinned area.
+         */
+        if (parseInt(col.width, 10) >= this.getUpinnedWidth(true) && !col.pinned) {
+            return false;
+        }
+
         col.pinned = true;
         col.pinLocation = location !== undefined ? location : PinLocation.Start;
         const index = col.pinLocation === PinLocation.Start ? this._pinnedStartColumns.length : this._pinnedEndColumns.length;
@@ -529,6 +528,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         this.markForCheck();
+        return true;
     }
 
     public unpinColumn(columnName: string) {
@@ -561,6 +561,40 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 .reduce((a, b) => a.concat(b), []);
         }
         return [];
+    }
+
+    /**
+     * Gets calculated width of the start pinned area
+     * @param takeHidden If we should take into account the hidden columns in the pinned area
+     */
+    protected getStartPinnedWidth(takeHidden = false) {
+        const fc = takeHidden ? this._pinnedStartColumns : this.pinnedStartColumns;
+        let sum = 0;
+        for (const col of fc) {
+            sum += parseInt(col.width, 10);
+        }
+        return sum;
+    }
+
+    /**
+     * Gets calculated width of the end pinned area
+     * @param takeHidden If we should take into account the hidden columns in the pinned area
+     */
+    protected getEndPinnedWidth(takeHidden = false) {
+        const fc = takeHidden ? this._pinnedEndColumns : this.pinnedEndColumns;
+        let sum = 0;
+        for (const col of fc) {
+            sum += parseInt(col.width, 10);
+        }
+        return sum;
+    }
+
+    /**
+     * Gets calculated width of the unpinned area
+     * @param takeHidden If we should take into account the hidden columns in the pinned area
+     */
+    protected getUpinnedWidth(takeHidden = false) {
+        return parseInt(this.width, 10) - this.getStartPinnedWidth(takeHidden) - this.getEndPinnedWidth(takeHidden);
     }
 
     protected _sort(name: string, direction = SortingDirection.Asc, ignoreCase = true) {
