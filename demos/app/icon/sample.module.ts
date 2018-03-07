@@ -7,4 +7,4 @@ import { IconSampleComponent } from "./sample.component";
     declarations: [IconSampleComponent],
     imports: [IgxIconModule, PageHeaderModule]
 })
-export class IconSampleModule {}
+export class IconSampleModule { }

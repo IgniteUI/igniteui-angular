@@ -4,7 +4,7 @@ import {
     TestBed
 } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxIconComponent, IgxIconModule } from "../icon/icon.component";
+import { IgxIconModule } from "../icon";
 import { IgxBadgeComponent, IgxBadgeModule } from "./badge.component";
 
 describe("Badge", () => {
@@ -15,9 +15,9 @@ describe("Badge", () => {
                 InitBadgeWithDefaultsComponent,
                 InitBadgeWithIconComponent,
                 IgxBadgeComponent,
-                InitBadgeWithIconARIAComponent,
-                IgxIconComponent
-            ]
+                InitBadgeWithIconARIAComponent
+            ],
+            imports: [IgxIconModule.forRoot()]
         }).compileComponents();
     }));
 
