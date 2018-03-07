@@ -42,7 +42,6 @@ export class IgxExcelExporterService {
 	public onExportEnded = new EventEmitter<ExportEndedEventArgs>();
 
 	public Export(grid: IgxGridComponent, options: IgxExcelExporterOptions): void {
-		let rowList = grid.rowList.toArray();
 		let columnList = grid.columnList.toArray();
 		let columns = new Array<string>();
 		let hasSkippedColumns = false;
@@ -50,35 +49,38 @@ export class IgxExcelExporterService {
 		let data = new Array<any>();
 
 		for (const column of columnList) {
-
 			const columnHeader = column.header !== "" ? column.header : column.field;
 			var columnArgs = new ColumnExportingEventArgs(columnHeader, column.index);
+			const exportColumn = !column.hidden || options.exportHiddenColumns;
 
-			if (column.hidden === false) {
+			if (exportColumn) {
 				this.onColumnExport.emit(columnArgs);
 			}
 
-			if (!column.hidden && !columnArgs.cancel) {
+			if (exportColumn && !columnArgs.cancel) {
 				columns.push(columnHeader);
 			} else {
 				hasSkippedColumns = true;
 			}
 		}
 
-		for (const row of rowList) {
-			var rowData: any = null;
+		const exportFilteredRows = !options.exportFilteredRows &&
+									grid.filteringExpressions !== undefined &&
+									grid.filteringExpressions.length > 0;
 
-			if (hasSkippedColumns) {
-				rowData = columns.reduce((a, e) => (a[e] = row.rowData[e], a), {});
-			} else {
-				rowData = JSON.parse(JSON.stringify(row.rowData));
+		const exportAllPages = options.exportCurrentlyVisiblePageOnly && grid.paging;
+
+		let useRowList = exportFilteredRows || exportAllPages;
+
+		if(useRowList) {
+			for (const row of grid.rowList.toArray()) {
+				this.ExportRow(data, row.rowData, row.index, hasSkippedColumns, columns);
 			}
+		} else {
+			let index = -1;
 
-			var rowArgs = new RowExportingEventArgs(rowData, row.index);
-			this.onRowExport.emit(rowArgs);
-
-			if (!rowArgs.cancel) {
-				data.push(rowData);
+			for(const gridRowData of grid.data) {
+				this.ExportRow(data, gridRowData, ++index, hasSkippedColumns, columns);
 			}
 		}
 
@@ -122,5 +124,22 @@ export class IgxExcelExporterService {
 		0, 0, 0, 0, 0, false, false, false, false, 0, null);
 
 		a.dispatchEvent(e);
+	}
+
+	private ExportRow(data: any[], gridRowData: any, index: number, hasSkippedColumns: boolean, columns: string[]) {
+		var rowData: any = null;
+
+		if (hasSkippedColumns) {
+			rowData = columns.reduce((a, e) => (a[e] = gridRowData[e], a), {});
+		} else {
+			rowData = JSON.parse(JSON.stringify(gridRowData));
+		}
+
+		var rowArgs = new RowExportingEventArgs(rowData, index);
+		this.onRowExport.emit(rowArgs);
+
+		if (!rowArgs.cancel) {
+			data.push(rowData);
+		}
 	}
 }

@@ -36,78 +36,27 @@ import {
 } from "./excel-interfaces";
 
 export class ExcelElementsFactory {
-	// Folder types
-	private static _rootExcelFolder: RootExcelFolder = null;
-	private static _rootRelsExcelFolder: RootRelsExcelFolder = null;
-	private static _docPropsExcelFolder: DocPropsExcelFolder = null;
-	private static _xlExcelFolder: XLExcelFolder = null;
-	private static _xlRelsExcelFolder: XLRelsExcelFolder = null;
-	private static _themeExcelFolder: ThemeExcelFolder = null;
-	private static _worksheetsExcelFolder: WorksheetsExcelFolder = null;
-	private static _worksheetsRelsExcelFolder: WorksheetsRelsExcelFolder = null;
-	private static _tablesExcelFolder: TablesExcelFolder = null;
-
-	// File types
-	private static _rootRelsFile: RootRelsFile = null;
-	private static _appFile: AppFile = null;
-	private static _coreFile: CoreFile = null;
-	private static _workbookRelsFile: WorkbookRelsFile = null;
-	private static _themeFile: ThemeFile = null;
-	private static _worksheetFile: WorksheetFile = null;
-	private static _styleFile: StyleFile = null;
-	private static _workbookFile: WorkbookFile = null;
-	private static _contentTypesFile: ContentTypesFile = null;
-	private static _sharedStringsFile: SharedStringsFile = null;
-	private static _worksheetRelsFile: WorksheetRelsFile = null;
-	private static _tablesFile: TablesFile = null;
 
 	public static getExcelFolder(type: ExcelFolderTypes): IExcelFolder{
 		switch(type) {
 			case ExcelFolderTypes.RootExcelFolder:
-				if (ExcelElementsFactory._rootExcelFolder === null) {
-					ExcelElementsFactory._rootExcelFolder = new RootExcelFolder();
-				}
-				return ExcelElementsFactory._rootExcelFolder;
+				return new RootExcelFolder();
 			case ExcelFolderTypes.RootRelsExcelFolder:
-				if (ExcelElementsFactory._rootRelsExcelFolder === null) {
-					ExcelElementsFactory._rootRelsExcelFolder = new RootRelsExcelFolder();
-				}
-				return ExcelElementsFactory._rootRelsExcelFolder;
+				return new RootRelsExcelFolder();
 			case ExcelFolderTypes.DocPropsExcelFolder:
-				if (ExcelElementsFactory._docPropsExcelFolder === null) {
-					ExcelElementsFactory._docPropsExcelFolder = new DocPropsExcelFolder();
-				}
-				return ExcelElementsFactory._docPropsExcelFolder;
+				return new DocPropsExcelFolder();
 			case ExcelFolderTypes.XLExcelFolder:
-				if (ExcelElementsFactory._xlExcelFolder === null) {
-					ExcelElementsFactory._xlExcelFolder = new XLExcelFolder();
-				}
-				return ExcelElementsFactory._xlExcelFolder;
+				return new XLExcelFolder();
 			case ExcelFolderTypes.XLRelsExcelFolder:
-				if (ExcelElementsFactory._xlRelsExcelFolder === null) {
-					ExcelElementsFactory._xlRelsExcelFolder = new XLRelsExcelFolder();
-				}
-				return ExcelElementsFactory._xlRelsExcelFolder;
+				return new XLRelsExcelFolder();
 			case ExcelFolderTypes.ThemeExcelFolder:
-				if (ExcelElementsFactory._themeExcelFolder === null) {
-					ExcelElementsFactory._themeExcelFolder = new ThemeExcelFolder();
-				}
-				return ExcelElementsFactory._themeExcelFolder;
+				return new ThemeExcelFolder();
 			case ExcelFolderTypes.WorksheetsExcelFolder:
-				if (ExcelElementsFactory._worksheetsExcelFolder === null) {
-					ExcelElementsFactory._worksheetsExcelFolder = new WorksheetsExcelFolder();
-				}
-				return ExcelElementsFactory._worksheetsExcelFolder;
+				return  new WorksheetsExcelFolder();
 			case ExcelFolderTypes.WorksheetsRelsExcelFolder:
-				if (ExcelElementsFactory._worksheetsRelsExcelFolder === null ) {
-					ExcelElementsFactory._worksheetsRelsExcelFolder = new WorksheetsRelsExcelFolder();
-				}
-				return ExcelElementsFactory._worksheetsRelsExcelFolder;
+				return new WorksheetsRelsExcelFolder();
 			case ExcelFolderTypes.TablesExcelFolder:
-				if (ExcelElementsFactory._tablesExcelFolder === null ) {
-					ExcelElementsFactory._tablesExcelFolder = new TablesExcelFolder();
-				}
-				return ExcelElementsFactory._tablesExcelFolder;
+				return new TablesExcelFolder();
 			default:
 				throw new Error("Unknown excel folder type!");
 		}
@@ -116,65 +65,29 @@ export class ExcelElementsFactory {
 	public static getExcelFile(type: ExcelFileTypes): IExcelFile{
 		switch(type) {
 			case ExcelFileTypes.RootRelsFile:
-				if (ExcelElementsFactory._rootRelsFile === null) {
-					ExcelElementsFactory._rootRelsFile = new RootRelsFile();
-				}
-				return ExcelElementsFactory._rootRelsFile;
+				return  new RootRelsFile();
 			case ExcelFileTypes.AppFile:
-				if (ExcelElementsFactory._appFile === null) {
-					ExcelElementsFactory._appFile = new AppFile();
-				}
-				return ExcelElementsFactory._appFile;
+				return  new AppFile();
 			case ExcelFileTypes.CoreFile:
-				if (ExcelElementsFactory._coreFile === null) {
-					ExcelElementsFactory._coreFile = new CoreFile();
-				}
-				return ExcelElementsFactory._coreFile;
+				return new CoreFile();
 			case ExcelFileTypes.WorkbookRelsFile:
-				if (ExcelElementsFactory._workbookRelsFile === null) {
-					ExcelElementsFactory._workbookRelsFile = new WorkbookRelsFile();
-				}
-				return ExcelElementsFactory._workbookRelsFile;
+				return new WorkbookRelsFile();
 			case ExcelFileTypes.ThemeFile:
-				if (ExcelElementsFactory._themeFile === null) {
-					ExcelElementsFactory._themeFile = new ThemeFile();
-				}
-				return ExcelElementsFactory._themeFile;
+				return new ThemeFile();
 			case ExcelFileTypes.WorksheetFile:
-				if (ExcelElementsFactory._worksheetFile === null) {
-					ExcelElementsFactory._worksheetFile = new WorksheetFile();
-				}
-				return ExcelElementsFactory._worksheetFile;
+				return new WorksheetFile();
 			case ExcelFileTypes.StyleFile:
-				if (ExcelElementsFactory._styleFile === null) {
-					ExcelElementsFactory._styleFile = new StyleFile();
-				}
-				return ExcelElementsFactory._styleFile;
+				return new StyleFile();
 			case ExcelFileTypes.WorkbookFile:
-				if (ExcelElementsFactory._workbookFile === null) {
-					ExcelElementsFactory._workbookFile = new WorkbookFile();
-				}
-				return ExcelElementsFactory._workbookFile;
+				return new WorkbookFile();
 			case ExcelFileTypes.ContentTypesFile:
-				if (ExcelElementsFactory._contentTypesFile === null) {
-					ExcelElementsFactory._contentTypesFile = new ContentTypesFile();
-				}
-				return ExcelElementsFactory._contentTypesFile;
+				return new ContentTypesFile();
 			case ExcelFileTypes.SharedStringsFile:
-				if (ExcelElementsFactory._sharedStringsFile === null) {
-					ExcelElementsFactory._sharedStringsFile = new SharedStringsFile();
-				}
-				return ExcelElementsFactory._sharedStringsFile;
+				return new SharedStringsFile();
 			case ExcelFileTypes.WorksheetRelsFile:
-				if (ExcelElementsFactory._worksheetRelsFile === null) {
-					ExcelElementsFactory._worksheetRelsFile = new WorksheetRelsFile();
-				}
-				return ExcelElementsFactory._worksheetRelsFile;
+				return new WorksheetRelsFile();
 			case ExcelFileTypes.TablesFile:
-				if (ExcelElementsFactory._tablesFile === null) {
-					ExcelElementsFactory._tablesFile = new TablesFile();
-				}
-				return ExcelElementsFactory._tablesFile;
+				return new TablesFile();
 			default:
 				throw Error("Unknown excel file type!");
 		}

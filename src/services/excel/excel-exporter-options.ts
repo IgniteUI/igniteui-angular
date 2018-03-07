@@ -4,8 +4,12 @@ export class IgxExcelExporterOptions {
 
 	public exportHiddenColumns: boolean;
 	public exportFilteredRows: boolean;
+	public exportCurrentlyVisiblePageOnly: boolean;
 
 	constructor(public fileName: string) {
+		if(fileName.endsWith(".xlsx") === false) {
+			fileName += ".xlsx";
+		}
 	}
 
 	public get columnWidth(): number {
