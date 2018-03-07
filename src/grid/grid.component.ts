@@ -452,6 +452,10 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
         return this.columnList.some((col) => col.filterable);
     }
 
+    get hasSummarizedColumns(): boolean {
+        return this.columnList.some((col) => col.hasSummary);
+    }
+
     get selectedCells(): IgxGridCellComponent[] | any[] {
         if (this.rowList) {
             return this.rowList.map((row) => row.cells.filter((cell) => cell.selected))
