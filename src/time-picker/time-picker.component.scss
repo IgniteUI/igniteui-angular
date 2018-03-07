@@ -11,18 +11,83 @@ ul {
     text-align: center;
     
 }
-ul:hover{
-    background-color:rgb(209, 208, 208);
+ul:focus, ul:active{
+    outline:none;
 }
 li {
     min-height: 1.5em;
     cursor: pointer;
 }
-li:hover{
-    font-weight: bold;
-}
 
-li.selected{
+li.igx-time-picker__hour--selected{
     font-weight: bold;
     color:#E41C77;
+    font-size: 20px;
+}
+li.igx-time-picker__hour--active{
+    background-color:rgb(209, 208, 208);
+}
+li.igx-time-picker__hour--1{
+    font-weight: normal;
+    color: gray;
+    font-size: 16px;
+    opacity: 0.75;
+}
+
+li.igx-time-picker__hour--2{
+    font-weight: normal;
+    color: gray;
+    font-size: 16px;
+    opacity: 0.5;
+}
+
+li.igx-time-picker__hour--3{
+    font-weight: normal;
+    color: gray;
+    font-size: 16px;
+    opacity: 0.25;
+}
+
+li.igx-time-picker__minute--selected{
+    font-weight: bold;
+    color:#E41C77;
+    font-size: 20px;
+}
+li.igx-time-picker__minute--active{
+    background-color:rgb(209, 208, 208);
+}
+li.igx-time-picker__minute--1{
+    font-weight: normal;
+    color: gray;
+    font-size: 16px;
+    opacity: 0.75;
+}
+
+li.igx-time-picker__minute--2{
+    font-weight: normal;
+    color: gray;
+    font-size: 16px;
+    opacity: 0.5;
+}
+
+li.igx-time-picker__minute--3{
+    font-weight: normal;
+    color: gray;
+    font-size: 16px;
+    opacity: 0.25;
+}
+
+li.igx-time-picker__ampm--selected{
+    font-weight: bold;
+    color:#E41C77;
+    font-size: 20px;
+}
+li.igx-time-picker__ampm--active{
+    background-color:rgb(209, 208, 208);
+}
+li.igx-time-picker__ampm{
+    font-weight: normal;
+    color: gray;
+    font-size: 16px;
+    opacity: 0.75;
 }
