@@ -64,7 +64,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     @Input() public maxValue: string;
 
-    @Input() public vertical = false;
+    @Input() public vertical = true;
 
     @Input() public format = "hh:mm tt";
 
@@ -91,9 +91,9 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     @HostBinding("class")
     get styleClass(): string {
         if (this.vertical) {
-            return "igx-time-picker--vertical";
+            return "igx-time-picker";
         }
-        return "igx-time-picker";
+        return "igx-time-picker--horizontal";
     }
 
     public hourItems = [];
