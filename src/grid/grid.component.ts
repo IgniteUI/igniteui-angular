@@ -510,7 +510,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         // update grid collections.
         if (col.pinLocation === PinLocation.Start && this._pinnedStartColumns.indexOf(col) === -1) {
-            this._pinnedStartColumns.splice(index, 0, col);
+            this._pinnedStartColumns.splice(args.insertAtIndex, 0, col);
 
             if (this._unpinnedColumns.indexOf(col) !== -1) {
                 this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
@@ -519,7 +519,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this._pinnedEndColumns.splice(this._pinnedEndColumns.indexOf(col), 1);
             }
         } else if (col.pinLocation === PinLocation.End && this._pinnedEndColumns.indexOf(col) === -1) {
-            this._pinnedEndColumns.splice(index, 0, col);
+            this._pinnedEndColumns.splice(args.insertAtIndex, 0, col);
             if (this._unpinnedColumns.indexOf(col) !== -1) {
                 this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
             }
