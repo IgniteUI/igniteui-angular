@@ -1,8 +1,14 @@
-import { Injectable } from "@angular/core";
-import { MASK_FLAGS } from "./maskflags";
+export const MASK_FLAGS = [ "C", "&", "a", "A", "?", "L", "9", "0", "#" ];
+export const KEYS = {
+    Ctrl : 17,
+    Z : 90,
+    Y : 89,
+    X : 88,
+    BACKSPACE : 8,
+    DELETE : 46
+  };
 
-@Injectable()
-export class IgxMaskService {
+export class MaskHelper {
     private _cursor;
     public get cursor() {
         return this._cursor;
@@ -58,13 +64,18 @@ export class IgxMaskService {
         return inputValue;
     }
 
-    public parseValueByMaskOnInit(value, maskOptions): string {
+    public parseValueByMaskOnInit(inputVal, maskOptions): string {
         let outputVal = "";
+        let value = "";
         const mask: string = maskOptions.format;
         const literals: Map<number, string> = this.getMaskLiterals(mask);
         const literalKeys: number[] = Array.from(literals.keys());
         const nonLiteralIndeces: number[] = this.getNonLiteralIndeces(mask, literalKeys);
         const literalValues: string[] = Array.from(literals.values());
+
+        if (inputVal != null) {
+            value = inputVal.toString();
+        }
 
         for (const maskSym of mask) {
             outputVal += maskOptions.promptChar;

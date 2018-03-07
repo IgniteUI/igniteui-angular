@@ -10,8 +10,7 @@ import {
     Output
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { IgxMaskService } from "./mask.service";
-import { KEYS } from "./maskflags";
+import { KEYS, MaskHelper } from "./mask-helper";
 
 const noop = () => { };
 
@@ -66,10 +65,14 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
     private _cursorOnPaste;
     private _valOnPaste;
 
+    private maskHelper: MaskHelper;
+
     private _onTouchedCallback: () => void = noop;
     private _onChangeCallback: (_: any) => void = noop;
 
-    constructor(private maskHelper: IgxMaskService, private elementRef: ElementRef) {}
+    constructor(private elementRef: ElementRef) {
+        this.maskHelper = new MaskHelper();
+    }
 
     public ngOnInit(): void {
         this._maskOptions.format = this.mask ? this.mask : "CCCCCCCCCC";
@@ -166,7 +169,6 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
 @NgModule({
     declarations: [IgxMaskDirective],
     exports: [IgxMaskDirective],
-    imports: [CommonModule],
-    providers: [IgxMaskService]
+    imports: [CommonModule]
 })
 export class IgxMaskModule {}
