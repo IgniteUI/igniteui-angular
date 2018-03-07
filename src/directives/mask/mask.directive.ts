@@ -30,7 +30,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
     public includeLiterals: boolean;
 
     @Input()
-    public dataValue: string;
+    private dataValue: string;
 
     @Output()
     public dataValueChange = new EventEmitter<{rowValue: string, formattedVal: string}>();
@@ -155,11 +155,16 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
     }
 
     public writeValue(value) {
+        if (this.promptChar && this.promptChar.length > 1) {
+            this._maskOptions.promptChar = this.promptChar.substring(0, 1);
+        }
+
         this.value = this.maskHelper.parseValueByMaskOnInit(value, this._maskOptions);
 
-        const rowVal = this.maskHelper.restoreValueFromMask(this.value, this._maskOptions);
+        this.dataValue = this.includeLiterals ? this.value : value;
+        this._onChangeCallback(this.dataValue);
 
-        this.dataValueChange.emit({rowValue: rowVal, formattedVal: this.value});
+        this.dataValueChange.emit({rowValue: value, formattedVal: this.value});
     }
 
     public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
