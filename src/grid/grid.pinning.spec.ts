@@ -9,11 +9,13 @@ import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
 describe("IgxGrid - Column Pinning ", () => {
+    const COLUMN_HEADER_CLASS = ".igx-grid__th";
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                DefaultGridComponent
+                DefaultGridComponent,
+                GridPinningComponent
             ],
             imports: [IgxGridModule.forRoot()]
         }).compileComponents();
@@ -23,9 +25,179 @@ describe("IgxGrid - Column Pinning ", () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
+
+        // verify pinned/unpinned collections
         expect(grid.pinnedStartColumns.length).toEqual(1);
         expect(grid.unpinnedColumns.length).toEqual(9);
         expect(grid.pinnedEndColumns.length).toEqual(1);
+
+        // verify DOM
+        const firstIndexCell = grid.getCellByColumn(0, "CompanyName");
+        expect(firstIndexCell.visibleColumnIndex).toEqual(0);
+        expect(firstIndexCell.nativeElement.classList.contains("pinned")).toBe(true);
+        expect(firstIndexCell.nativeElement.classList.contains("last-pinned")).toBe(true);
+
+        const lastIndexCell = grid.getCellByColumn(0, "ContactName");
+        expect(lastIndexCell.visibleColumnIndex).toEqual(10);
+        expect(lastIndexCell.nativeElement.classList.contains("pinned")).toBe(true);
+        expect(lastIndexCell.nativeElement.classList.contains("first-pinned")).toBe(true);
+
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+
+        expect(headers[0].context.column.field).toEqual("CompanyName");
+        expect(headers[0].classes.pinned).toBe(true);
+        expect(headers[0].classes["last-pinned"]).toBe(true);
+
+        expect(headers[headers.length - 1].context.column.field).toEqual("ContactName");
+        expect(headers[headers.length - 1].classes.pinned).toBe(true);
+        expect(headers[headers.length - 1].classes["first-pinned"]).toBe(true);
+
+        // verify container widths
+        expect(grid.startPinnedWidth).toEqual(200);
+        expect(grid.unpinnedWidth).toEqual(400);
+        expect(grid.endPinnedWidth).toEqual(200);
+    });
+
+    it("should allow pinning/unpinning via the grid API", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+
+        // Unpin column
+        grid.unpinColumn("CompanyName");
+        fix.detectChanges();
+
+        // verify column is unpinned
+        expect(grid.pinnedStartColumns.length).toEqual(0);
+        expect(grid.unpinnedColumns.length).toEqual(10);
+        expect(grid.pinnedEndColumns.length).toEqual(1);
+
+        const col = grid.getColumnByName("CompanyName");
+        expect(col.pinned).toBe(false);
+        expect(col.visibleIndex).toEqual(1);
+
+        // verify DOM
+        let cell = grid.getCellByColumn(0, "CompanyName");
+        expect(cell.visibleColumnIndex).toEqual(1);
+        expect(cell.nativeElement.classList.contains("pinned")).toBe(false);
+
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+
+        expect(headers[1].context.column.field).toEqual("CompanyName");
+        expect(headers[1].classes.pinned).toBe(false);
+        expect(headers[1].classes["last-pinned"]).toBe(false);
+
+        // verify container widths
+        expect(grid.startPinnedWidth).toEqual(0);
+        expect(grid.unpinnedWidth).toEqual(600);
+        expect(grid.endPinnedWidth).toEqual(200);
+
+        // pin column to end.
+        grid.pinColumn("CompanyName", PinLocation.End);
+        fix.detectChanges();
+
+        // verify column is pinned
+        expect(grid.pinnedStartColumns.length).toEqual(0);
+        expect(grid.unpinnedColumns.length).toEqual(9);
+        expect(grid.pinnedEndColumns.length).toEqual(2);
+
+        // verify container widths
+        expect(grid.startPinnedWidth).toEqual(0);
+        expect(grid.unpinnedWidth).toEqual(400);
+        expect(grid.endPinnedWidth).toEqual(400);
+
+        expect(col.pinned).toBe(true);
+        expect(col.visibleIndex).toEqual(10);
+
+        cell = grid.getCellByColumn(0, "CompanyName");
+        expect(cell.visibleColumnIndex).toEqual(10);
+        expect(cell.nativeElement.classList.contains("pinned")).toBe(true);
+    });
+
+    it("should allow pinning/unpinning via the column API", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+
+        const col = grid.getColumnByName("ID");
+
+        col.pin();
+        fix.detectChanges();
+
+        // verify column is pinned
+        expect(col.pinned).toBe(true);
+        expect(col.visibleIndex).toEqual(1);
+
+        expect(grid.pinnedStartColumns.length).toEqual(2);
+        expect(grid.unpinnedColumns.length).toEqual(8);
+        expect(grid.pinnedEndColumns.length).toEqual(1);
+
+        // verify container widths
+        expect(grid.startPinnedWidth).toEqual(400);
+        expect(grid.unpinnedWidth).toEqual(200);
+        expect(grid.endPinnedWidth).toEqual(200);
+
+        col.unpin();
+
+        // verify column is unpinned
+        expect(col.pinned).toBe(false);
+        expect(col.visibleIndex).toEqual(1);
+
+        expect(grid.pinnedStartColumns.length).toEqual(1);
+        expect(grid.unpinnedColumns.length).toEqual(9);
+        expect(grid.pinnedEndColumns.length).toEqual(1);
+
+        // verify container widths
+        expect(grid.startPinnedWidth).toEqual(200);
+        expect(grid.unpinnedWidth).toEqual(400);
+        expect(grid.endPinnedWidth).toEqual(200);
+     });
+
+    it("on unpinning should restore the original location(index) of the column", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        const col = grid.getColumnByName("ContactName");
+        expect(col.index).toEqual(2);
+
+        // unpin
+        col.unpin();
+        fix.detectChanges();
+
+        // check props
+        expect(col.index).toEqual(2);
+        expect(col.visibleIndex).toEqual(2);
+
+        // check DOM
+
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+
+        expect(headers[2].context.column.field).toEqual("ContactName");
+        expect(headers[2].classes.pinned).toBe(false);
+
+    });
+
+    it("should emit onColumnPinning event and allow changing the insertAtIndex param.", () => {
+        const fix = TestBed.createComponent(GridPinningComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+
+        let col = grid.getColumnByName("ID");
+        col.pin();
+        fix.detectChanges();
+
+        expect(col.visibleIndex).toEqual(0);
+
+        col = grid.getColumnByName("City");
+        col.pin();
+
+        fix.detectChanges();
+        expect(col.visibleIndex).toEqual(0);
+
+        // check DOM
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        expect(headers[0].context.column.field).toEqual("City");
+        expect(headers[1].context.column.field).toEqual("ID");
     });
 });
 @Component({
@@ -69,7 +241,7 @@ export class DefaultGridComponent {
 	{ "ID": "FRANK", "CompanyName": "Frankenversand", "ContactName": "Peter Franken", "ContactTitle": "Marketing Manager", "Address": "Berliner Platz 43", "City": "München", "Region": null, "PostalCode": "80805", "Country": "Germany", "Phone": "089-0877310", "Fax": "089-0877451" },
 	{ "ID": "FRANR", "CompanyName": "France restauration", "ContactName": "Carine Schmitt", "ContactTitle": "Marketing Manager", "Address": "54, rue Royale", "City": "Nantes", "Region": null, "PostalCode": "44000", "Country": "France", "Phone": "40.32.21.21", "Fax": "40.32.21.20" },
 	{ "ID": "FRANS", "CompanyName": "Franchi S.p.A.", "ContactName": "Paolo Accorti", "ContactTitle": "Sales Representative", "Address": "Via Monte Bianco 34", "City": "Torino", "Region": null, "PostalCode": "10100", "Country": "Italy", "Phone": "011-4988260", "Fax": "011-4988261" }
-];
+    ];
 /* tslint:enable */
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
@@ -82,5 +254,53 @@ export class DefaultGridComponent {
             column.pinLocation = PinLocation.End;
         }
         column.width = "200px";
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [width]='"800px"'
+            [height]='"300px"'
+            [data]="data"
+            (onColumnPinning)="columnPinningHandler($event)"
+          >
+        <igx-column  *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width">
+        </igx-column>
+        </igx-grid>
+    `
+})
+export class GridPinningComponent {
+
+    public data = [{
+        ID: "ALFKI",
+        CompanyName: "Alfreds Futterkiste",
+        ContactName: "Maria Anders",
+        ContactTitle: "Sales Representative",
+        Address: "Obere Str. 57",
+        City: "Berlin",
+        Region: null,
+        PostalCode: "12209",
+        Country: "Germany",
+        Phone: "030-0074321",
+        Fax: "030-0076545" }];
+    public columns = [
+			{ field: "ID", width: 100 },
+			{ field: "CompanyName", width: 300 },
+			{ field: "ContactName", width: 200},
+			{ field: "ContactTitle", width: 200 },
+			{ field: "Address", width: 300 },
+			{ field: "City", width: 100 },
+			{ field: "Region", width: 100 },
+			{ field: "PostalCode", width: 100 },
+			{ field: "Phone", width: 150 },
+			{ field: "Fax", width: 150 }
+		];
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public instance: IgxGridComponent;
+
+    public columnPinningHandler($event) {
+        $event.insertAtIndex = 0;
     }
 }
