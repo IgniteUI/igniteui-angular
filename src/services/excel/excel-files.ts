@@ -39,35 +39,32 @@ export class WorksheetFile implements IExcelFile {
 	private static MIN_WIDTH = 8.34;
 
 	public WriteElement(folder: JSZip, data: WorksheetData) {
-
-		let sheetData: string;
-		let cols: string;
+		let sheetData = "";
+		let cols = "";
 		let dimension: string;
 		const values = data.cachedValues;
 		const dictionary = data.dataDictionary;
 
 		if (data.isEmpty) {
 			sheetData = "<sheetData/>";
-			cols = "";
 			dimension = "A1";
 		} else {
-			if	(data.calculateSizeMetrics) {
-				cols += "<cols>"
-				for (let i = 0; i < data.columnCount; i++) {
-					const width = dictionary.columnWidths[i];
-					const widthInTwips = Math.max(((width / 96) * 14.4), WorksheetFile.MIN_WIDTH);
+			cols += "<cols>"
+			for (let i = 0; i < data.columnCount; i++) {
+				const width = dictionary.columnWidths[i];
+				// TODO: Better calculation
+				const widthInTwips = Math.max(((width / 96) * 14.4), WorksheetFile.MIN_WIDTH);
 
-					cols += "<col min=\""+ (i + 1) + "\" max=\""+ (i + 1) + "\" width=\""+ widthInTwips + "\" customWidth=\"1\"/>";
-				}
-				cols += "</cols>"
-			} else {
-				cols = "";
+				cols += "<col min=\""+ (i + 1) + "\" max=\""+ (i + 1) + "\" width=\""+ widthInTwips + "\" customWidth=\"1\"/>";
 			}
+			cols += "</cols>"
 
 			sheetData += "<sheetData>";
 
 			for (let i = 0; i < data.rowCount; i++) {
-				sheetData += "<row r=\""+ (i + 1) +"\">";
+				const height =  data.options.rowHeight;
+				const rowHeight = height ? " ht=\"" + height + "\" customHeight=\"1\"" : "";
+				sheetData += "<row r=\""+ (i + 1) +"\""+ rowHeight +">";
 
 				for (let j =0; j < data.columnCount; j++) {
 					let column = String.fromCharCode(65 + j) + (i + 1);

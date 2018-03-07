@@ -10,20 +10,24 @@ export class WorksheetDataDictionary {
 	private _columnWidths: number[];
 	private _canvas: any;
 
-	constructor(columnCount: number, calculateColumnWidth: boolean) {
+	constructor(columnCount: number, columnWidth: number) {
 		this._dictionary = {};
 		this._index = 0;
 		this._sortedKeysIsValid = false;
-		this._calculateColumnWidth = calculateColumnWidth;
 
+		this._calculateColumnWidth = !columnWidth;
 		this._columnWidths = new Array<number>(columnCount);
+
+		if (!this._calculateColumnWidth) {
+			this._columnWidths.fill(columnWidth);
+		}
 	}
 
 	public get columnWidths() {
 		return this._columnWidths;
 	}
 
-	public saveValue(value: string, column: number): void {
+	public saveValue(value: string, column: number): number {
 		const sanitizedValue = this.santizieValue(value);
 
 		if(this._dictionary[sanitizedValue] === undefined) {
@@ -36,11 +40,12 @@ export class WorksheetDataDictionary {
 			var maxWidth = Math.max(this._columnWidths[column] || 0, width);
 			this._columnWidths[column] = maxWidth;
 		}
+
+		return this.getSanitizedValue(sanitizedValue);
 	}
 
 	public getValue(value: string): number{
-		var sanitizedValue = this.santizieValue(value);
-		return this._dictionary[sanitizedValue];
+		return this.getSanitizedValue(this.santizieValue(value));
 	}
 
 	public getSortedValues(): string[] {
@@ -69,5 +74,9 @@ export class WorksheetDataDictionary {
 					.replace(/>/g, "&gt;")
 					.replace(/"/g, "&quot;")
 					.replace(/'/g, "&apos;");
+	}
+
+	private getSanitizedValue(sanitizedValue: string): number {
+		return this._dictionary[sanitizedValue];
 	}
 }

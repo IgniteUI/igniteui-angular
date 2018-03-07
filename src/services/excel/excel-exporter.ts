@@ -8,8 +8,11 @@ import { ExcelFolderTypes } from './excel-enums';
 
 import {
 	ColumnExportingEventArgs,
+	ExportEndedEventArgs,
 	RowExportingEventArgs
 } from "./excel-event-args";
+
+import { IgxExcelExporterOptions } from "./excel-exporter-options";
 
 import {
 	IExcelFile,
@@ -27,13 +30,18 @@ export class IgxExcelExporterService {
 	private static ZIP_OPTIONS = { compression: "DEFLATE", type: "base64" };
 	private static DATA_URL_PREFIX = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
 
+	private _xlsx: JSZip;
+
 	@Output()
 	public onRowExport = new EventEmitter<RowExportingEventArgs>();
 
 	@Output()
 	public onColumnExport = new EventEmitter<ColumnExportingEventArgs>();
 
-	public Export(grid: IgxGridComponent, fileName: string): void {
+	@Output()
+	public onExportEnded = new EventEmitter<ExportEndedEventArgs>();
+
+	public Export(grid: IgxGridComponent, options: IgxExcelExporterOptions): void {
 		let rowList = grid.rowList.toArray();
 		let columnList = grid.columnList.toArray();
 		let columns = new Array<string>();
@@ -74,21 +82,20 @@ export class IgxExcelExporterService {
 			}
 		}
 
-		this.ExportData(data, fileName);
+		this.ExportData(data, options);
 	}
 
-	public ExportData(data: any[], fileName: string): void {
+	public ExportData(data: any[], options: IgxExcelExporterOptions): void {
 		const self = this;
-		let worksheetData = new WorksheetData();
-		worksheetData.calculateSizeMetrics = true;
-		worksheetData.data = data;
+		let worksheetData = new WorksheetData(data, options);
+		this._xlsx = new JSZip();
 
-		let xlsx = new JSZip();
+		IgxExcelExporterService.PopulateFolder(ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder), this._xlsx, worksheetData);
 
-		IgxExcelExporterService.PopulateFolder(ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder), xlsx, worksheetData);
+		this._xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((data) => {
+			self.SaveFile(data, options.fileName);
 
-		xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((data) => {
-			self.SaveFile(data, fileName);
+			self.onExportEnded.emit(new ExportEndedEventArgs(self._xlsx));
 		});
 	}
 
@@ -104,7 +111,6 @@ export class IgxExcelExporterService {
 			fileInstance.WriteElement(zip, worksheetData);
 		}
 	}
-
 
 	private SaveFile(data: string, fileName: string): void {
 		var a = document.createElement("a");
