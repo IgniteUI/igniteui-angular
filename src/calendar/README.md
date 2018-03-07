@@ -91,7 +91,7 @@ Defaults to Sunday.
 
 Controls the locale used for formatting and displaying the dates in the calendar.
 The expected string should be a [BCP 47 language tag](http://tools.ietf.org/html/rfc5646).
-The default value is `en-EN`.
+The default value is `en`.
 
 - `selection: CalendarSelection | string`
 
