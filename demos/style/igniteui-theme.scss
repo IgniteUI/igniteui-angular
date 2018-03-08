@@ -4,8 +4,11 @@
 @include igx-core();
 @include igx-theme();
 
-$dialog-theme: igx-dialog-theme(
-
+/*$timepicker-theme: igx-time-picker-theme(
+    $text-color: orange,
+    $hover-text-color: red,
+    $selected-text-color: green,
+    $activeList-item-background: pink
 );
 
-@include igx-dialog($dialog-theme);
+@include igx-time-picker($timepicker-theme);*/

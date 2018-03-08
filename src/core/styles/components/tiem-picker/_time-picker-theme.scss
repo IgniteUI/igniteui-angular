@@ -2,19 +2,35 @@ $component-name: 'igx-time-picker';
 $components: register-component($components, #{$component-name});
 
 @function igx-time-picker-theme(
-    $background: null,
-    $text-color: null
+    $text-color: null,
+    $hover-text-color: null,
+    $selected-text-color: null,
+    $activeList-item-background: null,
+    $igx-time-picker-header-background: null,
+    $igx-time-picker-header-text-color: null
+
 ) {
 
     @return (
-        background: $background,
         text-color: $text-color,
+        hover-text-color: $hover-text-color,
+        selected-text-color: $selected-text-color,
+        activeList-item-background: $activeList-item-background,
+        igx-time-picker-header-background: $igx-time-picker-header-background,
+        igx-time-picker-header-text-color: $igx-time-picker-header-text-color
     );
 }
 
 @mixin igx-time-picker($theme, $palette: $default-palette) {
 
-    $default-theme: igx-date-picker-theme();
+    $default-theme: igx-time-picker-theme(
+        $text-color: igx-color($palette, 'grays', 500),
+        $hover-text-color: igx-color($palette, 'secondary', 500),
+        $selected-text-color: igx-color($palette, 'secondary', 500),
+        $activeList-item-background: igx-color($palette, 'grays', 100),
+        $igx-time-picker-header-background: igx-color($palette, 'secondary', 500),
+        $igx-time-picker-header-text-color: white
+    );
 
     $this: extend($default-theme, $theme);
 
@@ -57,41 +73,44 @@ $components: register-component($components, #{$component-name});
     %igx-time-picker__ampmList {
         display: flex;
         flex-direction: column;
+        padding-top: 48px;
     }
 
     %igx-time-picker__column {
+        max-width: 64px;
         height: 325px;
-        margin: 0 0 0 8px;
-        padding: 0;
-        overflow: hidden;
         font-size: 16px;
+        padding: 0;
         cursor: pointer;
-        list-style: none inside;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: space-between;
         align-items: center;
-        justify-content: center;
-        width: 64px;
+        color: map-get($this, 'text-color');
+        overflow: hidden;
 
         &:focus,
         &:active {
-            outline: red;
-        }
-
-        &:first-of-type {
-            margin-left: 0;
+            outline: none;
         }
     }
 
-    %li {
-        width: 64px;
+    %span {
+        width: 54px;
         padding: 5px 10px;
         border-radius: 15px;
-        min-height: 50px;
+        min-height: 48px;
         display: flex;
         justify-content: center;
         align-items: center;
 
+        &:focus,
+        &:active {
+            outline: none;
+        }
+
         &:hover {
-            color: #e41c77;
+            color: map-get($this, 'hover-text-color');
         }
     }
 
@@ -99,13 +118,21 @@ $components: register-component($components, #{$component-name});
     %igx-time-picker__minuteList--selected,
     %igx-time-picker__ampmList--selected {
         font-size: 24px;
-        color: #e41c77;
+        color: map-get($this, 'selected-text-color');
     }
 
     %igx-time-picker__hourList--active,
     %igx-time-picker__minuteList--active,
     %igx-time-picker__ampmList--active {
-        background: #f9f9f9;
+        background: map-get($this, 'activeList-item-background');
+    }
+
+    %igx-calendar__header {
+        background: map-get($this, 'igx-time-picker-header-background')
+    }
+
+    %igx-calendar__header-text {
+        color: map-get($this, 'igx-time-picker-header-text-color')
     }
 }
 

@@ -13,21 +13,21 @@
                     </h2>
                 </div>
                 <div class="igx-time-picker__body">
-                    <ul #hourList class="igx-time-picker__column igx-time-picker__hourList" (wheel)="onHourWheel($event)" tabindex="0" (panmove)="onHourPan($event)" (mouseover)="onListHover($event)">
-                        <li [igxHourItem]="item" *ngFor="let item of hourItems" (click)="onHourClicked(item)">
+                    <div #hourList class="igx-time-picker__column igx-time-picker__hourList" (wheel)="onHourWheel($event)" tabindex="0" (panmove)="onHourPan($event)" (mouseover)="onListHover($event)">
+                        <span [igxHourItem]="item" *ngFor="let item of hourItems" (click)="onHourClicked(item)">
                             {{ item }}
-                        </li>
-                    </ul>
-                    <ul #minuteList class="igx-time-picker__column igx-time-picker__minuteList" (wheel)="onMinuteWheel($event)" tabindex="0" (panmove)="onMinutePan($event)" (mouseover)="onListHover($event)">
-                        <li [igxMinuteItem]="item" *ngFor="let item of minuteItems" (click)="onMinuteClicked(item)">
+                        </span>
+                    </div>
+                    <div #minuteList class="igx-time-picker__column igx-time-picker__minuteList" (wheel)="onMinuteWheel($event)" tabindex="0" (panmove)="onMinutePan($event)" (mouseover)="onListHover($event)">
+                        <span [igxMinuteItem]="item" *ngFor="let item of minuteItems" (click)="onMinuteClicked(item)">
                             {{ item }}
-                        </li>
-                    </ul>
-                    <ul #ampmList class="igx-time-picker__column igx-time-picker__ampmList" (wheel)="onAmPmWheel($event)" tabindex="0" (panmove)="onAmPmPan($event)" (mouseover)="onListHover($event)">
-                        <li [igxAmPmItem]="item" *ngFor="let item of ampmItems" (click)="onAmPmClicked(item)">
+                        </span>
+                    </div>
+                    <div #ampmList class="igx-time-picker__column igx-time-picker__ampmList" (wheel)="onAmPmWheel($event)" tabindex="0" (panmove)="onAmPmPan($event)" (mouseover)="onListHover($event)">
+                        <span [igxAmPmItem]="item" *ngFor="let item of ampmItems" (click)="onAmPmClicked(item)">
                             {{ item }}
-                        </li>
-                    </ul>
+                        </span>
+                    </div>
                 </div>
             </ng-container>
         </igx-dialog>

@@ -4,8 +4,8 @@
         @extend %igx-time-picker__column !optional;
     }
 
-    li {
-        @extend %li !optional;
+    span {
+        @extend %span !optional;
     }
 
     // HOUR
@@ -18,7 +18,7 @@
         @extend %igx-time-picker__hourList--selected !optional
     }
 
-    @include e(hourList, $m: active, $mod: selected) {
+    @include e(hourList, $m: active) {
         @extend %igx-time-picker__hourList--active !optional
     }
 
@@ -33,7 +33,7 @@
     }
 
     // MINUTE -- selected -- active
-    @include e(minuteList, $m: active, $mod: selected) {
+    @include e(minuteList, $m: active) {
         @extend %igx-time-picker__minuteList--active !optional
     }
 
@@ -47,7 +47,7 @@
         @extend %igx-time-picker__ampmList--selected !optional
     }
 
-    @include e(ampmList, $m: active, $mod: selected) {
+    @include e(ampmList, $m: active) {
         @extend %igx-time-picker__ampmList--active !optional
     }
 
@@ -71,6 +71,14 @@
     .igx-dialog__window-actions {
         @extend %time-picker-dialog-actions !optional;
     }
-}
 
+    .igx-calendar__header {
+        @extend %igx-calendar__header !optional;
+    }
+
+    .igx-calendar__header-year,
+    .igx-calendar__header-date{
+        @extend %igx-calendar__header-text !optional;
+    }
+}
 
