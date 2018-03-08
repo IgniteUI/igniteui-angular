@@ -410,9 +410,9 @@ describe("IgxGrid - Column Pinning ", () => {
         expect(headers[3].context.column.field).toEqual("ID");
         expect(headers[3].parent.name).toEqual("div");
     });
-});
 
     it("should allow horizontal keyboard navigation between start pinned area and unpinned area.",  fakeAsync(() => {
+        discardPeriodicTasks();
         const fix = TestBed.createComponent(GridPinningComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
@@ -455,9 +455,11 @@ describe("IgxGrid - Column Pinning ", () => {
         fix.detectChanges();
         expect(fix.componentInstance.selectedCell.value).toEqual("Sales Representative");
         expect(fix.componentInstance.selectedCell.column.field).toMatch("ContactTitle");
+        discardPeriodicTasks();
     }));
 
-    it("should allow vertical keyboard navigation in pinned area.",  fakeAsync(() => {
+    it("should allow vertical keyboard navigation in pinned area.", fakeAsync(() => {
+        discardPeriodicTasks();
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
@@ -486,9 +488,10 @@ describe("IgxGrid - Column Pinning ", () => {
 
         expect(fix.componentInstance.selectedCell.value).toEqual("Alfreds Futterkiste");
         expect(fix.componentInstance.selectedCell.column.field).toMatch("CompanyName");
+        discardPeriodicTasks();
     }));
 
-    it("should allow horizontal keyboard navigation from end pinned area to unpinned area.",  (done) => {
+    it("should allow horizontal keyboard navigation from end pinned area to unpinned area.", (done) => {
         const fix = TestBed.createComponent(GridPinningComponent);
         fix.detectChanges();
         const mockEvent = { preventDefault: () => {}};
@@ -511,6 +514,7 @@ describe("IgxGrid - Column Pinning ", () => {
         }, 500);
     });
     it("should allow keyboard navigation to first/last cell with Ctrl when there are the pinned columns.", fakeAsync(() => {
+        discardPeriodicTasks();
         const fix = TestBed.createComponent(GridPinningComponent);
         fix.detectChanges();
         const mockEvent = { preventDefault: () => {}};
@@ -539,6 +543,7 @@ describe("IgxGrid - Column Pinning ", () => {
 
         expect(fix.componentInstance.selectedCell.value).toEqual("Alfreds Futterkiste");
         expect(fix.componentInstance.selectedCell.column.field).toMatch("CompanyName");
+        discardPeriodicTasks();
     }));
 });
 @Component({
