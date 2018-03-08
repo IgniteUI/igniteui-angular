@@ -6,6 +6,6 @@ import { IgxAvatarModule } from "../../lib/main";
 
 @NgModule({
     declarations: [AvatarSampleComponent],
-    imports: [PageHeaderModule, IgxAvatarModule ]
+    imports: [PageHeaderModule, IgxAvatarModule]
 })
 export class AvatarSampleModule { }
