@@ -12,6 +12,7 @@ import {
 import { DataType } from "../data-operations/data-util";
 import { STRING_FILTERS } from "../data-operations/filtering-condition";
 import { IgxGridAPIService } from "./api.service";
+import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from "./grid-summary";
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -43,6 +44,9 @@ export class IgxColumnComponent implements AfterContentInit {
     public filterable = false;
 
     @Input()
+    public hasSummary = false;
+
+    @Input()
     get hidden(): boolean {
         return this._hidden;
     }
@@ -63,6 +67,9 @@ export class IgxColumnComponent implements AfterContentInit {
 
     @Input()
     public cellClasses = "";
+
+    @Input()
+    public summaryClasses = "";
 
     @Input()
     get index(): number {
@@ -91,6 +98,15 @@ export class IgxColumnComponent implements AfterContentInit {
     public dataType: DataType = DataType.String;
 
     public gridID: string;
+
+    @Input()
+    public get summaries(): any {
+        return this._summaries;
+    }
+
+    public set summaries(classRef: any) {
+        this._summaries = new classRef();
+    }
 
     get bodyTemplate(): TemplateRef<any> {
         return this._bodyTemplate;
@@ -128,6 +144,7 @@ export class IgxColumnComponent implements AfterContentInit {
         this.gridAPI.mark_for_check(this.gridID);
     }
 
+    protected _summaries = null;
     protected _bodyTemplate: TemplateRef<any>;
     protected _headerTemplate: TemplateRef<any>;
     protected _footerTemplate: TemplateRef<any>;
@@ -161,6 +178,20 @@ export class IgxColumnComponent implements AfterContentInit {
         }
         if (this.editorTemplate) {
             this._inlineEditorTemplate = this.editorTemplate.template;
+        }
+        if (!this.summaries) {
+            switch (this.dataType) {
+                case DataType.String:
+                case DataType.Boolean:
+                    this.summaries = IgxSummaryOperand;
+                    break;
+                case DataType.Number:
+                    this.summaries = IgxNumberSummaryOperand;
+                    break;
+                case DataType.Date:
+                    this.summaries = IgxDateSummaryOperand;
+                    break;
+            }
         }
     }
 

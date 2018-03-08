@@ -1,1 +1,7 @@
-{{min()}}
+<div *ngIf="column.hasSummary">
+    <ng-container *ngFor="let summary of resolveSummaries">
+        <tr>
+        <td>{{ summary.label }}: </td><td>{{ summary.summaryResult }}</td>
+        </tr>
+    </ng-container>
+</div>

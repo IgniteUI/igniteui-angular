@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs/Subject";
 import { cloneArray } from "../core/utils";
+import { DataUtil } from "../data-operations/data-util";
 import { IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridCellComponent } from "./cell.component";
@@ -132,25 +133,35 @@ export class IgxGridAPIService {
         }
     }
     public min(id, fieldName): number {
-        const minValue = 0;
-        this.get(id).rowList.map((x) => Number(x.rowData[fieldName].value)).reduce((a, b) => Math.min(a, b));
+        let minValue;
+        minValue = this.get(id).data.map((x) => x[fieldName]).reduce((a, b) => Math.min(a, b));
         return minValue;
     }
 
-    public max(id, fieldName) {
-
+    public max(id, fieldName): number {
+        let maxValue;
+        maxValue = this.get(id).data.map((x) => x[fieldName]).reduce((a, b) => Math.max(a, b));
+        return maxValue;
     }
 
-    public average(id, fieldName) {
-
+    public average(id, fieldName): number {
+        let average;
+        average = this.sum(id, fieldName) / this.count(id, fieldName);
+        return average;
     }
 
-    public sum(id, fieldName) {
-
+    public sum(id, fieldName): number {
+        let sumValue;
+        sumValue = this.get(id).data.map((x) => x[fieldName]).reduce((a, b) =>  a + b);
+        return sumValue;
     }
 
-    public count(id, fieldName) {
-
+    public count(id, fieldName): number {
+        let count;
+        count = this.get(id).data.map((x) => x[fieldName]).length;
+        return count;
+    }
+    public earliestDate(id, fieldName) {
     }
 
     protected prepare_filtering_expression(state, fieldName, searchVal, condition, ignoreCase) {
