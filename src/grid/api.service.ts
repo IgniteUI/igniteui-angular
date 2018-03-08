@@ -23,13 +23,6 @@ export class IgxGridAPIService {
         return this.state.get(id);
     }
 
-    public mark_for_check(id: string): void {
-        this.get(id).cdr.markForCheck();
-        if (this.get(id).rowList) {
-            this.get(id).rowList.forEach((row) => row.cdr.markForCheck());
-        }
-    }
-
     public get_column_by_name(id: string, name: string): IgxColumnComponent {
         return this.get(id).columnList.find((col) => col.field === name);
     }
@@ -43,6 +36,10 @@ export class IgxGridAPIService {
         if (row) {
             return row.cells.find((cell) => cell.column.field === field);
         }
+    }
+
+    public notify(id: string) {
+        this.get(id).eventBus.next(true);
     }
 
     public get_cell_by_index(id: string, rowIndex: number, columnIndex: number): IgxGridCellComponent {
