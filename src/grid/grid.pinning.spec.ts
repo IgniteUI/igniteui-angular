@@ -199,6 +199,216 @@ describe("IgxGrid - Column Pinning ", () => {
         expect(headers[0].context.column.field).toEqual("City");
         expect(headers[1].context.column.field).toEqual("ID");
     });
+
+    it("should not allow pinning new column if start pinned area becomes greater than the grid width", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        let tryPin = false;
+
+        // pin columns to start.
+        tryPin = grid.pinColumn("ContactName", PinLocation.Start);
+        fix.detectChanges();
+        expect(tryPin).toEqual(true);
+
+        tryPin = grid.pinColumn("ID", PinLocation.Start);
+        fix.detectChanges();
+        expect(tryPin).toEqual(true);
+
+        // try to pin the visible unpinned column
+        tryPin = grid.pinColumn("ContactTitle", PinLocation.Start);
+        fix.detectChanges();
+        expect(tryPin).toEqual(false);
+
+        // check DOM
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        expect(headers[0].context.column.field).toEqual("CompanyName");
+        expect(headers[0].parent.name).toEqual("div");
+        expect(headers[1].context.column.field).toEqual("ContactName");
+        expect(headers[1].parent.name).toEqual("div");
+        expect(headers[2].context.column.field).toEqual("ID");
+        expect(headers[2].parent.name).toEqual("div");
+        expect(headers[3].context.column.field).toEqual("ContactTitle");
+        expect(headers[3].parent.name).toEqual("igx-display-container");
+    });
+
+    it("should not allow pinning new column if end pinned area becomes greater than the grid width", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        let tryPin = false;
+
+        // pin columns to end.
+        tryPin = grid.pinColumn("CompanyName", PinLocation.End);
+        fix.detectChanges();
+        expect(tryPin).toEqual(true);
+
+        tryPin = grid.pinColumn("ID", PinLocation.End);
+        fix.detectChanges();
+        expect(tryPin).toEqual(true);
+
+        // try to pin the visible unpinned column
+        tryPin = grid.pinColumn("ContactTitle", PinLocation.End);
+        fix.detectChanges();
+        expect(tryPin).toEqual(false);
+
+        // check DOM
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        expect(headers[0].context.column.field).toEqual("ContactTitle");
+        expect(headers[0].parent.name).toEqual("igx-display-container");
+        expect(headers[1].context.column.field).toEqual("ContactName");
+        expect(headers[1].parent.name).toEqual("div");
+        expect(headers[2].context.column.field).toEqual("CompanyName");
+        expect(headers[2].parent.name).toEqual("div");
+        expect(headers[3].context.column.field).toEqual("ID");
+        expect(headers[3].parent.name).toEqual("div");
+    });
+
+    it("should not allow pinning new column if start + end pinned areas become greater than the grid width", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        let tryPin = false;
+
+        // pin column to end.
+        tryPin = grid.pinColumn("ID", PinLocation.End);
+        fix.detectChanges();
+        expect(tryPin).toEqual(true);
+
+        // try to pin the visible unpinned column
+        tryPin = grid.pinColumn("ContactTitle", PinLocation.End);
+        fix.detectChanges();
+        expect(tryPin).toEqual(false);
+
+        // check DOM
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        expect(headers[0].context.column.field).toEqual("CompanyName");
+        expect(headers[0].parent.name).toEqual("div");
+        expect(headers[1].context.column.field).toEqual("ContactTitle");
+        expect(headers[1].parent.name).toEqual("igx-display-container");
+        expect(headers[2].context.column.field).toEqual("ContactName");
+        expect(headers[2].parent.name).toEqual("div");
+        expect(headers[3].context.column.field).toEqual("ID");
+        expect(headers[3].parent.name).toEqual("div");
+    });
+
+    it("should not allow pinning if start + end pinned areas become greater than the grid width and there are hidden pinned cols", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        let tryPin = false;
+
+        // pin column to end.
+        tryPin = grid.pinColumn("ID", PinLocation.End);
+        fix.detectChanges();
+        expect(tryPin).toEqual(true);
+
+        grid.getColumnByName("ID").hidden = true;
+        fix.detectChanges();
+
+        // check DOM
+        let headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        expect(headers[0].context.column.field).toEqual("CompanyName");
+        expect(headers[0].parent.name).toEqual("div");
+        expect(headers[1].context.column.field).toEqual("ContactTitle");
+        expect(headers[1].parent.name).toEqual("igx-display-container");
+        expect(headers[2].context.column.field).toEqual("Address");
+        expect(headers[2].parent.name).toEqual("igx-display-container");
+        expect(headers[3].context.column.field).toEqual("ContactName");
+        expect(headers[3].parent.name).toEqual("div");
+
+        // try to pin the visible unpinned column
+        tryPin = grid.pinColumn("ContactTitle", PinLocation.End);
+        fix.detectChanges();
+        expect(tryPin).toEqual(false);
+
+        // check DOM
+        headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        expect(headers[0].context.column.field).toEqual("CompanyName");
+        expect(headers[0].parent.name).toEqual("div");
+        expect(headers[1].context.column.field).toEqual("ContactTitle");
+        expect(headers[1].parent.name).toEqual("igx-display-container");
+        expect(headers[2].context.column.field).toEqual("Address");
+        expect(headers[2].parent.name).toEqual("igx-display-container");
+        expect(headers[3].context.column.field).toEqual("ContactName");
+        expect(headers[3].parent.name).toEqual("div");
+    });
+
+    it("should allow pinning from end to start even if new cols cannot be pinned", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        let tryPin = false;
+
+        // pin column to end.
+        tryPin = grid.pinColumn("ID", PinLocation.End);
+        fix.detectChanges();
+        expect(tryPin).toEqual(true);
+
+        // try to pin the visible unpinned column
+        tryPin = grid.pinColumn("ContactTitle", PinLocation.End);
+        fix.detectChanges();
+        expect(tryPin).toEqual(false);
+
+        // check DOM
+        let headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        expect(headers[0].context.column.field).toEqual("CompanyName");
+        expect(headers[0].parent.name).toEqual("div");
+        expect(headers[1].context.column.field).toEqual("ContactTitle");
+        expect(headers[1].parent.name).toEqual("igx-display-container");
+        expect(headers[2].context.column.field).toEqual("ContactName");
+        expect(headers[2].parent.name).toEqual("div");
+        expect(headers[3].context.column.field).toEqual("ID");
+        expect(headers[3].parent.name).toEqual("div");
+
+        // pin same column to start.
+        tryPin = grid.pinColumn("ID", PinLocation.Start);
+        fix.detectChanges();
+        expect(tryPin).toEqual(true);
+
+        // check DOM
+        headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        expect(headers[0].context.column.field).toEqual("CompanyName");
+        expect(headers[0].parent.name).toEqual("div");
+        expect(headers[1].context.column.field).toEqual("ID");
+        expect(headers[1].parent.name).toEqual("div");
+        expect(headers[2].context.column.field).toEqual("ContactTitle");
+        expect(headers[2].parent.name).toEqual("igx-display-container");
+        expect(headers[3].context.column.field).toEqual("ContactName");
+        expect(headers[3].parent.name).toEqual("div");
+
+    });
+
+    it("should allow unpinning even if new cols cannot be pinned", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        let tryPin = false;
+
+        // pin column to end.
+        tryPin = grid.pinColumn("ID", PinLocation.End);
+        fix.detectChanges();
+        expect(tryPin).toEqual(true);
+
+        // try to pin the visible unpinned column
+        tryPin = grid.pinColumn("ContactTitle", PinLocation.End);
+        fix.detectChanges();
+        expect(tryPin).toEqual(false);
+
+        grid.unpinColumn("ContactName");
+        fix.detectChanges();
+
+        // check DOM
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        expect(headers[0].context.column.field).toEqual("CompanyName");
+        expect(headers[0].parent.name).toEqual("div");
+        expect(headers[1].context.column.field).toEqual("ContactName");
+        expect(headers[1].parent.name).toEqual("igx-display-container");
+        expect(headers[2].context.column.field).toEqual("ContactTitle");
+        expect(headers[2].parent.name).toEqual("igx-display-container");
+        expect(headers[3].context.column.field).toEqual("ID");
+        expect(headers[3].parent.name).toEqual("div");
+    });
 });
 @Component({
     template: `
