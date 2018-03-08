@@ -46,7 +46,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
         return data.reduce((a, b) => Math.max(a, b));
     }
     public sum(data?: any[]): any {
-        return data.reduce((a, b) => a + b);
+        return data.reduce((a, b) => +a + +b);
     }
     public average(data?: any[]): any {
         return this.sum(data) / this.count(data);

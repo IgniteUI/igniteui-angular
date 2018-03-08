@@ -1,9 +1,11 @@
-import { AfterContentInit, ChangeDetectionStrategy, Component, DoCheck, HostBinding, HostListener, Input, OnInit } from "@angular/core";
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
+    Component, DoCheck, HostBinding, HostListener, Input, OnDestroy, OnInit } from "@angular/core";
 import { Observable} from "rxjs/observable";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from "./grid-summary";
+import { autoWire, IGridBus } from "./grid.common";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -11,7 +13,7 @@ import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxS
     selector: "igx-grid-summary",
     templateUrl: "./grid-summary.component.html"
 })
-export class IgxGridSummaryComponent implements OnInit, AfterContentInit {
+export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, AfterContentInit {
 
     summaries: any[];
     summariesCache = [];
@@ -21,9 +23,6 @@ export class IgxGridSummaryComponent implements OnInit, AfterContentInit {
 
     @Input()
     public gridID: string;
-
-    @Input()
-    public isActive = false;
 
     get dataType(): DataType {
         return this.column.dataType;
@@ -41,19 +40,39 @@ export class IgxGridSummaryComponent implements OnInit, AfterContentInit {
         return this.column.width;
     }
 
-    constructor(private gridAPI: IgxGridAPIService) { }
+    protected subscriptionOnEdit$;
+    protected subscriptionOnAdd$;
+    protected subscriptionOnDelete$;
+
+    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
 
     public ngOnInit() {
     }
 
-    public max() {
-        if (this.column.dataType === DataType.Number) {
-            return this.gridAPI.max(this.gridID, this.column.field);
+    public ngOnDestroy() {
+        if (this.subscriptionOnEdit$) {
+            this.subscriptionOnEdit$.unsubscribe();
+        }
+        if (this.subscriptionOnAdd$) {
+            this.subscriptionOnAdd$.unsubscribe();
+        }
+        if (this.subscriptionOnDelete$) {
+            this.subscriptionOnDelete$.unsubscribe();
         }
     }
 
     ngAfterContentInit() {
+        if (this.column.hasSummary) {
+            this.subscriptionOnEdit$ = this.gridAPI.get(this.gridID).onEditDone.subscribe(this.clearCache.bind(this));
+            this.subscriptionOnAdd$ = this.gridAPI.get(this.gridID).onRowAdded.subscribe(this.clearCache.bind(this));
+            this.subscriptionOnDelete$ = this.gridAPI.get(this.gridID).onRowDeleted.subscribe(this.clearCache.bind(this));
+        }
+    }
 
+    @autoWire(true)
+    clearCache(ev) {
+        console.log(ev);
+        this.summariesCache = [];
     }
 
     get resolveSummaries(): any[] {
@@ -61,11 +80,6 @@ export class IgxGridSummaryComponent implements OnInit, AfterContentInit {
             this.summariesCache = this.column.summaries.operate(this.gridAPI.get(this.gridID).data.map((rec) => rec[this.column.field]));
             console.log("Called:", this.summariesCache);
         }
-        this.gridAPI.get(this.gridID).onEditDone.subscribe((x) => {
-            console.log(x);
-            this.summariesCache = this.column.summaries.operate(this.gridAPI.get(this.gridID).data.map((rec) => rec[this.column.field]));
-            // console.log(this.gridAPI.get(this.gridID).data);
-        });
         console.table("Cache:", this.summariesCache);
         return this.summariesCache;
     }
