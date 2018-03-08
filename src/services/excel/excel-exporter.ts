@@ -1,145 +1,144 @@
-import * as JSZip from 'jszip/dist/jszip';
+import * as JSZip from "jszip/dist/jszip";
 
 import { CommonModule } from "@angular/common";
-import { NgModule, Directive, EventEmitter, Output, Injectable } from "@angular/core";
+import { Directive, EventEmitter, Injectable, NgModule, Output } from "@angular/core";
 
 import { ExcelElementsFactory } from "./excel-elements-factory";
-import { ExcelFolderTypes } from './excel-enums';
+import { ExcelFolderTypes } from "./excel-enums";
 
 import {
-	ColumnExportingEventArgs,
-	ExportEndedEventArgs,
-	RowExportingEventArgs
+    ColumnExportingEventArgs,
+    ExportEndedEventArgs,
+    RowExportingEventArgs
 } from "./excel-event-args";
 
 import { IgxExcelExporterOptions } from "./excel-exporter-options";
 
 import {
-	IExcelFile,
-	IExcelFolder
-} from './excel-interfaces';
+    IExcelFile,
+    IExcelFolder
+} from "./excel-interfaces";
 
 import { IgxGridComponent } from "../../grid/grid.component";
-import { IgxGridModule } from "../../grid/index"
+import { IgxGridModule } from "../../grid/index";
 
 import { WorksheetData } from "./worksheet-data";
 
 @Injectable()
 export class IgxExcelExporterService {
 
-	private static ZIP_OPTIONS = { compression: "DEFLATE", type: "base64" };
-	private static DATA_URL_PREFIX = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
+    private static ZIP_OPTIONS = { compression: "DEFLATE", type: "base64" };
+    private static DATA_URL_PREFIX = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
 
-	private _xlsx: JSZip;
+    private _xlsx: JSZip;
 
-	@Output()
-	public onRowExport = new EventEmitter<RowExportingEventArgs>();
+    @Output()
+    public onRowExport = new EventEmitter<RowExportingEventArgs>();
 
-	@Output()
-	public onColumnExport = new EventEmitter<ColumnExportingEventArgs>();
+    @Output()
+    public onColumnExport = new EventEmitter<ColumnExportingEventArgs>();
 
-	@Output()
-	public onExportEnded = new EventEmitter<ExportEndedEventArgs>();
+    @Output()
+    public onExportEnded = new EventEmitter<ExportEndedEventArgs>();
 
-	public Export(grid: IgxGridComponent, options: IgxExcelExporterOptions): void {
-		let columnList = grid.columnList.toArray();
-		let columns = new Array<string>();
-		let hasSkippedColumns = false;
+    private static PopulateFolder(folder: IExcelFolder, zip: JSZip, worksheetData: WorksheetData): any {
+        for (const childFolder of folder.ChildFolders(worksheetData)) {
+            const folderIntance = ExcelElementsFactory.getExcelFolder(childFolder);
+            const zipFolder = zip.folder(folderIntance.folderName);
+            IgxExcelExporterService.PopulateFolder(folderIntance, zipFolder, worksheetData);
+        }
 
-		let data = new Array<any>();
+        for (const childFile of folder.ChildFiles(worksheetData)) {
+            const fileInstance = ExcelElementsFactory.getExcelFile(childFile);
+            fileInstance.WriteElement(zip, worksheetData);
+        }
+    }
 
-		for (const column of columnList) {
-			const columnHeader = column.header !== "" ? column.header : column.field;
-			var columnArgs = new ColumnExportingEventArgs(columnHeader, column.index);
-			const exportColumn = !column.hidden || options.exportHiddenColumns;
+    public Export(grid: IgxGridComponent, options: IgxExcelExporterOptions): void {
+        const columnList = grid.columnList.toArray();
+        const columns = new Array<string>();
+        let hasSkippedColumns = false;
 
-			if (exportColumn) {
-				this.onColumnExport.emit(columnArgs);
-			}
+        const data = new Array<any>();
 
-			if (exportColumn && !columnArgs.cancel) {
-				columns.push(columnHeader);
-			} else {
-				hasSkippedColumns = true;
-			}
-		}
+        for (const column of columnList) {
+            const columnHeader = column.header !== "" ? column.header : column.field;
+            const columnArgs = new ColumnExportingEventArgs(columnHeader, column.index);
+            const exportColumn = !column.hidden || options.exportHiddenColumns;
 
-		const exportFilteredRows = !options.exportFilteredRows &&
-									grid.filteringExpressions !== undefined &&
-									grid.filteringExpressions.length > 0;
+            if (exportColumn) {
+                this.onColumnExport.emit(columnArgs);
+            }
 
-		const exportAllPages = options.exportCurrentlyVisiblePageOnly && grid.paging;
+            if (exportColumn && !columnArgs.cancel) {
+                columns.push(columnHeader);
+            } else {
+                hasSkippedColumns = true;
+            }
+        }
 
-		let useRowList = exportFilteredRows || exportAllPages;
+        const exportFilteredRows = !options.exportFilteredRows &&
+                                    grid.filteringExpressions !== undefined &&
+                                    grid.filteringExpressions.length > 0;
 
-		if(useRowList) {
-			for (const row of grid.rowList.toArray()) {
-				this.ExportRow(data, row.rowData, row.index, hasSkippedColumns, columns);
-			}
-		} else {
-			let index = -1;
+        const exportAllPages = options.exportCurrentlyVisiblePageOnly && grid.paging;
 
-			for(const gridRowData of grid.data) {
-				this.ExportRow(data, gridRowData, ++index, hasSkippedColumns, columns);
-			}
-		}
+        const useRowList = exportFilteredRows || exportAllPages;
 
-		this.ExportData(data, options);
-	}
+        if (useRowList) {
+            for (const row of grid.rowList.toArray()) {
+                this.ExportRow(data, row.rowData, row.index, hasSkippedColumns, columns);
+            }
+        } else {
+            let index = -1;
 
-	public ExportData(data: any[], options: IgxExcelExporterOptions): void {
-		const self = this;
-		let worksheetData = new WorksheetData(data, options);
-		this._xlsx = new JSZip();
+            for (const gridRowData of grid.data) {
+                this.ExportRow(data, gridRowData, ++index, hasSkippedColumns, columns);
+            }
+        }
 
-		IgxExcelExporterService.PopulateFolder(ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder), this._xlsx, worksheetData);
+        this.ExportData(data, options);
+    }
 
-		this._xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((data) => {
-			self.SaveFile(data, options.fileName);
+    public ExportData(data: any[], options: IgxExcelExporterOptions): void {
+        const worksheetData = new WorksheetData(data, options);
+        this._xlsx = new JSZip();
 
-			self.onExportEnded.emit(new ExportEndedEventArgs(self._xlsx));
-		});
-	}
+        const rootFolder = ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder);
+        IgxExcelExporterService.PopulateFolder(rootFolder, this._xlsx, worksheetData);
 
-	private static PopulateFolder(folder: IExcelFolder, zip: JSZip, worksheetData: WorksheetData): any {
-		for (const childFolder of folder.ChildFolders(worksheetData)) {
-			let folderIntance = ExcelElementsFactory.getExcelFolder(childFolder);
-			let zipFolder = zip.folder(folderIntance.folderName);
-			IgxExcelExporterService.PopulateFolder(folderIntance, zipFolder, worksheetData);
-		}
+        this._xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((result) => {
+            this.SaveFile(result, options.fileName);
 
-		for (const childFile of folder.ChildFiles(worksheetData)) {
-			let fileInstance = ExcelElementsFactory.getExcelFile(childFile);
-			fileInstance.WriteElement(zip, worksheetData);
-		}
-	}
+            this.onExportEnded.emit(new ExportEndedEventArgs(this._xlsx));
+        });
+    }
 
-	private SaveFile(data: string, fileName: string): void {
-		var a = document.createElement("a");
-		a.download = fileName;
-		a.href = IgxExcelExporterService.DATA_URL_PREFIX + data;
+    private SaveFile(data: string, fileName: string): void {
+        const a = document.createElement("a");
+        a.download = fileName;
+        a.href = IgxExcelExporterService.DATA_URL_PREFIX + data;
 
-		var e = document.createEvent('MouseEvents');
-		e.initMouseEvent('click', true, false, window,
-		0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        const e = document.createEvent("MouseEvents");
+        e.initMouseEvent("click", true, false, window,
+        0, 0, 0, 0, 0, false, false, false, false, 0, null);
 
-		a.dispatchEvent(e);
-	}
+        a.dispatchEvent(e);
+    }
 
-	private ExportRow(data: any[], gridRowData: any, index: number, hasSkippedColumns: boolean, columns: string[]) {
-		var rowData: any = null;
+    private ExportRow(data: any[], gridRowData: any, index: number, hasSkippedColumns: boolean, columns: string[]) {
+        const rowData = hasSkippedColumns ?
+                columns.reduce((a, e) => {
+                    a[e] = gridRowData[e];
+                    return a;
+                }, {}) :
+                JSON.parse(JSON.stringify(gridRowData));
 
-		if (hasSkippedColumns) {
-			rowData = columns.reduce((a, e) => (a[e] = gridRowData[e], a), {});
-		} else {
-			rowData = JSON.parse(JSON.stringify(gridRowData));
-		}
+        const rowArgs = new RowExportingEventArgs(rowData, index);
+        this.onRowExport.emit(rowArgs);
 
-		var rowArgs = new RowExportingEventArgs(rowData, index);
-		this.onRowExport.emit(rowArgs);
-
-		if (!rowArgs.cancel) {
-			data.push(rowData);
-		}
-	}
+        if (!rowArgs.cancel) {
+            data.push(rowData);
+        }
+    }
 }
