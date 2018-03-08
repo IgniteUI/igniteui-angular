@@ -38,22 +38,22 @@ export class IgxHourItemDirective {
 
     @HostBinding("class.igx-time-picker__hour--1")
     get default0CSS(): boolean {
-        var index = this.timePicker.hourItems.indexOf(this.value);
-        var selectedHourIndex = this.timePicker.hourItems.indexOf(this.timePicker.selectedHour);
+        const index = this.timePicker.hourItems.indexOf(this.value);
+        const selectedHourIndex = this.timePicker.hourItems.indexOf(this.timePicker.selectedHour);
         return !this.isSelectedHour && (index + 1 === selectedHourIndex || index - 1 === selectedHourIndex);
     }
 
     @HostBinding("class.igx-time-picker__hour--2")
     get default1CSS(): boolean {
-        var index = this.timePicker.hourItems.indexOf(this.value);
-        var selectedHourIndex = this.timePicker.hourItems.indexOf(this.timePicker.selectedHour);
+        const index = this.timePicker.hourItems.indexOf(this.value);
+        const selectedHourIndex = this.timePicker.hourItems.indexOf(this.timePicker.selectedHour);
         return !this.isSelectedHour && (index + 2 === selectedHourIndex || index - 2 === selectedHourIndex);
     }
 
     @HostBinding("class.igx-time-picker__hour--3")
     get default2CSS(): boolean {
-        var index = this.timePicker.hourItems.indexOf(this.value);
-        var selectedHourIndex = this.timePicker.hourItems.indexOf(this.timePicker.selectedHour);
+        const index = this.timePicker.hourItems.indexOf(this.value);
+        const selectedHourIndex = this.timePicker.hourItems.indexOf(this.timePicker.selectedHour);
         return !this.isSelectedHour && (index + 3 === selectedHourIndex || index - 3 === selectedHourIndex);
     }
 
@@ -96,22 +96,22 @@ export class IgxMinuteItemDirective {
 
     @HostBinding("class.igx-time-picker__minute--1")
     get default0CSS(): boolean {
-        var index = this.timePicker.minuteItems.indexOf(this.value);
-        var selectedMinuteIndex = this.timePicker.minuteItems.indexOf(this.timePicker.selectedMinute);
+        const index = this.timePicker.minuteItems.indexOf(this.value);
+        const selectedMinuteIndex = this.timePicker.minuteItems.indexOf(this.timePicker.selectedMinute);
         return !this.isSelectedMinute && (index + 1 === selectedMinuteIndex || index - 1 === selectedMinuteIndex);
     }
 
     @HostBinding("class.igx-time-picker__minute--2")
     get default1CSS(): boolean {
-        var index = this.timePicker.minuteItems.indexOf(this.value);
-        var selectedMinuteIndex = this.timePicker.minuteItems.indexOf(this.timePicker.selectedMinute);
+        const index = this.timePicker.minuteItems.indexOf(this.value);
+        const selectedMinuteIndex = this.timePicker.minuteItems.indexOf(this.timePicker.selectedMinute);
         return !this.isSelectedMinute && (index + 2 === selectedMinuteIndex || index - 2 === selectedMinuteIndex);
     }
 
     @HostBinding("class.igx-time-picker__minute--3")
     get default2CSS(): boolean {
-        var index = this.timePicker.minuteItems.indexOf(this.value);
-        var selectedMinuteIndex = this.timePicker.minuteItems.indexOf(this.timePicker.selectedMinute);
+        const index = this.timePicker.minuteItems.indexOf(this.value);
+        const selectedMinuteIndex = this.timePicker.minuteItems.indexOf(this.timePicker.selectedMinute);
         return !this.isSelectedMinute && (index + 3 === selectedMinuteIndex || index - 3 === selectedMinuteIndex);
     }
 
@@ -154,8 +154,8 @@ export class IgxAmPmItemDirective {
 
     @HostBinding("class.igx-time-picker__ampm")
     get default0CSS(): boolean {
-        var index = this.timePicker.ampmItems.indexOf(this.value);
-        var selectedAmPmIndex = this.timePicker.ampmItems.indexOf(this.timePicker.selectedAmPm);
+        const index = this.timePicker.ampmItems.indexOf(this.value);
+        const selectedAmPmIndex = this.timePicker.ampmItems.indexOf(this.timePicker.selectedAmPm);
         return !this.isSelectedAmPm && (index + 1 === selectedAmPmIndex || index - 1 === selectedAmPmIndex);
     }
 

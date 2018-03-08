@@ -2,8 +2,8 @@
 <ng-container *ngTemplateOutlet="scroll" ></ng-container>
 <ng-template #scroll>
     <igx-dialog class="igx-date-picker__dialog-popup" closeOnOutsideSelect="true"
-            [leftButtonLabel]="cancelButtonLabel" (onLeftButtonSelect)="triggerCancelSelection()" 
-            [rightButtonLabel]="okButtonLabel" (onRightButtonSelect)="triggerOKSelection()">
+            [leftButtonLabel]="cancelButtonLabel" (onLeftButtonSelect)="CancelButtonClick()" 
+            [rightButtonLabel]="okButtonLabel" (onRightButtonSelect)="OKButtonClick()">
             <ng-container #container>
                 <div class="igx-calendar__header">
                     <h5 class="igx-calendar__header-year">{{ selectedAmPm }}</h5>
@@ -13,18 +13,18 @@
                 </div>
                 <div>
                     <ul #hourList class="igx-time-picker__hourList" (wheel)="onHourWheel($event)" tabindex="0" (panmove)="onHourPan($event)" (mouseover)="onListHover($event)">
-                        <li [igxHourItem]="item" *ngFor="let item of hourItems" (click)="onHourClicked(item)">
-                            {{ item }}
+                        <li [igxHourItem]="hour" *ngFor="let hour of hourItems" (click)="onHourClicked(hour)">
+                            {{ hour }}
                         </li>
                     </ul>
                     <ul #minuteList class="igx-time-picker__minuteList" (wheel)="onMinuteWheel($event)" tabindex="0" (panmove)="onMinutePan($event)" (mouseover)="onListHover($event)">
-                        <li [igxMinuteItem]="item" *ngFor="let item of minuteItems" (click)="onMinuteClicked(item)">
-                            {{ item }}
+                        <li [igxMinuteItem]="minute" *ngFor="let minute of minuteItems" (click)="onMinuteClicked(minute)">
+                            {{ minute }}
                         </li>
                     </ul>
                     <ul #ampmList class="igx-time-picker__ampmList" (wheel)="onAmPmWheel($event)" tabindex="0" (panmove)="onAmPmPan($event)" (mouseover)="onListHover($event)">
-                        <li [igxAmPmItem]="item" *ngFor="let item of ampmItems" (click)="onAmPmClicked(item)">
-                            {{ item }}
+                        <li [igxAmPmItem]="ampm" *ngFor="let ampm of ampmItems" (click)="onAmPmClicked(ampm)">
+                            {{ ampm }}
                         </li>
                     </ul>
                 </div>
