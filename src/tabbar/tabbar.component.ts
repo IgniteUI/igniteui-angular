@@ -20,7 +20,7 @@ import {
     ViewChildren
 } from "@angular/core";
 import { IgxBadgeModule } from "../badge/badge.component";
-import { IgxIconModule } from "../icon/icon.component";
+import { IgxIconModule } from "../icon";
 
 @Directive({
     selector: "[igxTab]"
@@ -28,7 +28,7 @@ import { IgxIconModule } from "../icon/icon.component";
 export class IgxTabTemplateDirective {
 
     constructor(public template: TemplateRef<any>) {
-     }
+    }
 }
 
 @Component({

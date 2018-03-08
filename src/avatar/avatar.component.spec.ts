@@ -4,7 +4,7 @@ import {
     TestBed
 } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxIconComponent, IgxIconModule } from "../icon/icon.component";
+import { IgxIconModule } from "../icon";
 import { IgxAvatarComponent, IgxAvatarModule } from "./avatar.component";
 
 describe("Avatar", () => {
@@ -14,11 +14,11 @@ describe("Avatar", () => {
                 InitAvatarComponent,
                 AvatarWithAttribsComponent,
                 IgxAvatarComponent,
-                IgxIconComponent,
                 InitIconAvatarComponent,
                 InitImageAvatarComponent,
                 InitAvatarWithAriaComponent
-            ]
+            ],
+            imports: [IgxIconModule.forRoot()]
         })
             .compileComponents();
     }));
