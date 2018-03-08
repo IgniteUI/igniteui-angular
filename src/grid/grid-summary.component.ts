@@ -78,9 +78,7 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, Aft
     get resolveSummaries(): any[] {
         if (this.summariesCache.length === 0) {
             this.summariesCache = this.column.summaries.operate(this.gridAPI.get(this.gridID).data.map((rec) => rec[this.column.field]));
-            console.log("Called:", this.summariesCache);
         }
-        console.table("Cache:", this.summariesCache);
         return this.summariesCache;
     }
 
