@@ -31,15 +31,12 @@
     // @debug $this;
 
     %igx-ripple-display {
-        display: inline-block;
+        display: block;
         position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
         border-radius: 50%;
         background: rgba(map-get($this, 'color'), .5);
         pointer-events: none;
+        transform-origin: center;
         transform: translate3d(0, 0, 0) scale(0);
         will-change: opacity, transform;
     }
