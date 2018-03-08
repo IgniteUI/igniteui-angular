@@ -219,7 +219,7 @@ export class Calendar {
             const formattedParts = (formatter as any).formatToParts(date);
 
             const toType = (partType: string) => {
-                const index = formattedParts.findIndex(({ type, value}) => type === partType);
+                const index = formattedParts.findIndex(({ type }) => type === partType);
                 const o: IFormattedParts = { value: "", literal: "", combined: ""};
 
                 if (partType === "era" && index > -1) {
