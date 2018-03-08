@@ -8,6 +8,7 @@ import {
     HostBinding,
     HostListener,
     Input,
+    OnDestroy,
     OnInit,
     QueryList,
     ViewChild,
@@ -17,6 +18,7 @@ import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
+import { autoWire, IGridBus } from "./grid.common";
 import { IgxGridComponent } from "./grid.component";
 
 @Component({
@@ -25,7 +27,7 @@ import { IgxGridComponent } from "./grid.component";
     selector: "igx-grid-row",
     templateUrl: "./row.component.html"
 })
-export class IgxGridRowComponent implements OnInit {
+export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy {
 
     @Input()
     public rowData: any[];
@@ -35,13 +37,6 @@ export class IgxGridRowComponent implements OnInit {
 
     @Input()
     public gridID: string;
-
-    @Input()
-    set isDirty(value: boolean) {
-        if (value) {
-           this.clearState();
-        }
-    }
 
     @ViewChild("igxDirRef", { read: IgxForOfDirective })
     public virtDirRow: IgxForOfDirective<any>;
@@ -96,17 +91,26 @@ export class IgxGridRowComponent implements OnInit {
 
     protected defaultCssClass = "igx-grid__tr";
     protected isFocused = false;
+    protected chunkLoaded$;
 
-    constructor(private gridAPI: IgxGridAPIService,
+    constructor(public gridAPI: IgxGridAPIService,
                 private element: ElementRef,
                 public cdr: ChangeDetectorRef) {}
 
+    @autoWire(true)
     public ngOnInit() {
-        this.virtDirRow.onChunkLoad.subscribe({
-            next: (event: any) => {
-                this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement.style.left = "0px";
+        this.chunkLoaded$ = this.virtDirRow.onChunkLoad.subscribe(() => {
+            if (this.grid.cellInEditMode) {
+                this.grid.cellInEditMode.inEditMode = false;
             }
+            this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement.style.left = "0px";
         });
+    }
+
+    public ngOnDestroy() {
+        if (this.chunkLoaded$) {
+            this.chunkLoaded$.unsubscribe();
+        }
     }
 
     @HostListener("focus", ["$event"])
@@ -121,12 +125,5 @@ export class IgxGridRowComponent implements OnInit {
         this.isFocused = false;
 
         // TODO: Emit de-selection event
-    }
-
-    private clearState() {
-        this.cdr.detectChanges();
-        if (this.cells) {
-            this.cells.map((cell) => cell.isDirty = true);
-        }
     }
 }
