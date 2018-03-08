@@ -42,7 +42,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
     }
 
     set value(val) {
-        if (!val.length) {
+        if (!val) {
             this.clearFiltering();
             return;
         }
@@ -251,8 +251,6 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
             value = parseFloat(value);
         } else if (this.dataType === DataType.Boolean) {
             value = Boolean(value);
-        } else if (this.dataType === DataType.Date) {
-            value = new Date(Date.parse(value));
         }
 
         return value;
