@@ -19,16 +19,6 @@ import { IgxColumnComponent } from "./column.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: "igx-grid-cell",
-    styles: [
-        `
-        :host.last-pinned {
-            border-right: 1px solid #666;
-        }
-        :host.first-pinned {
-            border-left: 1px solid #666;
-        }
-        `
-    ],
     templateUrl: "./cell.component.html"
 })
 export class IgxGridCellComponent {
@@ -48,7 +38,7 @@ export class IgxGridCellComponent {
     @Input()
     set isDirty(value: boolean) {
         if (value) {
-           this.clearState();
+            this.clearState();
         }
         value = false;
     }
@@ -159,12 +149,11 @@ export class IgxGridCellComponent {
         return this.column.dataType === DataType.Number;
     }
 
-    @HostBinding("class.pinned")
     get isFixed() {
         return this.column.pinned;
     }
 
-    @HostBinding("class.last-pinned")
+    @HostBinding("class.igx-grid__td--pinned-start")
     get isLastFixed() {
         const pinnedCols = this.grid.pinnedStartColumns;
         if (pinnedCols.length === 0) {
@@ -174,7 +163,7 @@ export class IgxGridCellComponent {
         }
     }
 
-    @HostBinding("class.first-pinned")
+    @HostBinding("class.igx-grid__td--pinned-end")
     get isFirstFixed() {
         const pinnedCols = this.grid.pinnedEndColumns;
         if (pinnedCols.length === 0) {
@@ -318,7 +307,7 @@ export class IgxGridCellComponent {
                 this.syncRows();
             } else {
                 if (!this.column.pinned) {
-                     this.row.virtDirRow.scrollNext();
+                    this.row.virtDirRow.scrollNext();
                 } else {
                     this.row.virtDirRow.scrollTo(0);
                 }

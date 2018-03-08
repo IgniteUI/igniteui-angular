@@ -7,16 +7,6 @@ import { IgxColumnComponent } from "./column.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: "igx-grid-header",
-    styles: [
-        `
-        :host.last-pinned {
-            border-right: 1px solid #666;
-            }
-        :host.first-pinned {
-            border-left: 1px solid #666;
-        }
-    `
-    ],
     templateUrl: "./grid-header.component.html"
 })
 export class IgxGridHeaderComponent implements DoCheck {
@@ -96,12 +86,11 @@ export class IgxGridHeaderComponent implements DoCheck {
         return this.gridAPI.get(this.gridID);
     }
 
-    @HostBinding("class.pinned")
     get isPinned() {
         return this.column.pinned;
     }
 
-    @HostBinding("class.last-pinned")
+    @HostBinding("class.igx-grid__th--pinned-start")
     get isLastPinned() {
         const pinnedCols = this.grid.pinnedStartColumns;
         if (pinnedCols.length === 0) {
@@ -111,7 +100,7 @@ export class IgxGridHeaderComponent implements DoCheck {
         }
     }
 
-    @HostBinding("class.first-pinned")
+    @HostBinding("class.igx-grid__th--pinned-end")
     get isFirstPinned() {
         const pinnedCols = this.grid.pinnedEndColumns;
         if (pinnedCols.length === 0) {

@@ -38,24 +38,20 @@
 <div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth'>
     <ng-template igxFor let-rowData [igxForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
                                 | gridSort:sortingExpressions:id:pipeTrigger
-                                | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index"
-                                [igxForScrollOrientation]="'vertical'"
-                                [igxForContainerSize]='calcHeight'
-                                [igxForItemSize]="rowHeight"
-                                 let-dirty="dirty"
-                                 #verticalScrollContainer
-                               >
-           <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" [isDirty]="dirty">
-           </igx-grid-row>
-        </ng-template>
+                                | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
+        [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" let-dirty="dirty" #verticalScrollContainer>
+        <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" [isDirty]="dirty">
+        </igx-grid-row>
+    </ng-template>
 </div>
-<div [style.width]='width' [style.height]="'17px'" #scr>
-	<div [style.width.px]='startPinnedWidth' style='float:left;height: 100%;'></div>
-	<div [style.width.px]='unpinnedWidth'  style='float:left;'>
-		<ng-template igxFor [igxForOf]='[]' #scrollContainer>
-		</ng-template>
-	</div>
-    <div [style.width.px]='endPinnedWidth' style='float:right;'></div>
+
+<div class="igx-grid__scroll" [style.width]='width' [style.height]="'18px'" #scr>
+    <div class="igx-grid__scroll-start" [style.width.px]='startPinnedWidth' [hidden]="startPinnedWidth === 0"></div>
+    <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth - 18'>
+        <ng-template igxFor [igxForOf]='[]' #scrollContainer>
+        </ng-template>
+    </div>
+    <div class="igx-grid__scroll-end" [style.width.px]='endPinnedWidth' [hidden]="endPinnedWidth === 0"></div>
 </div>
 
 <div class="igx-grid__tfoot" role="rowgroup" #tfoot>
