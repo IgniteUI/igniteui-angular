@@ -18,19 +18,8 @@
         @extend %igx-time-picker__hourList--selected !optional
     }
 
-    // HOUR -- 1
-    @include e(hourList, $mod: 1) {
-        @extend %igx-time-picker__hourList--1 !optional
-    }
-
-    // HOUR -- 1
-    @include e(hourList, $mod: 2) {
-        @extend %igx-time-picker__hourList--2 !optional
-    }
-
-    // HOUR -- 1
-    @include e(hourList, $mod: 3) {
-        @extend %igx-time-picker__hourList--3 !optional
+    @include e(hourList, $m: active, $mod: selected) {
+        @extend %igx-time-picker__hourList--active !optional
     }
 
     // MINUTE
@@ -43,19 +32,9 @@
         @extend %igx-time-picker__minuteList--selected !optional
     }
 
-    // MINUTE -- 1
-    @include e(minuteList, $mod: 1) {
-        @extend %igx-time-picker__minuteList--1 !optional
-    }
-
-    // MINUTE -- 2
-    @include e(minuteList, $mod: 2) {
-        @extend %igx-time-picker__minuteList--2 !optional
-    }
-
-    // MINUTE -- 3
-    @include e(minuteList, $mod: 3) {
-        @extend %igx-time-picker__minuteList--3 !optional
+    // MINUTE -- selected -- active
+    @include e(minuteList, $m: active, $mod: selected) {
+        @extend %igx-time-picker__minuteList--active !optional
     }
 
     // AM PM
@@ -68,19 +47,8 @@
         @extend %igx-time-picker__ampmList--selected !optional
     }
 
-    // AM PM -- 1
-    @include e(ampmList, $mod: 1) {
-        @extend %igx-time-picker__ampmList--1 !optional
-    }
-
-    // AM PM -- 2
-    @include e(ampmList, $mod: 2) {
-        @extend %igx-time-picker__ampmList--2 !optional
-    }
-
-    // AM PM -- 3
-    @include e(ampmList, $mod: 3) {
-        @extend %igx-time-picker__ampmList--3 !optional
+    @include e(ampmList, $m: active, $mod: selected) {
+        @extend %igx-time-picker__ampmList--active !optional
     }
 
     @include e(body) {
