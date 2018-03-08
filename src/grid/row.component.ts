@@ -124,6 +124,7 @@ export class IgxGridRowComponent implements OnInit {
     }
 
     private clearState() {
+        this.cdr.detectChanges();
         if (this.cells) {
             this.cells.map((cell) => cell.isDirty = true);
         }
