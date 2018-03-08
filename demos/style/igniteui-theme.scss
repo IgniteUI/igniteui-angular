@@ -5,7 +5,7 @@
 @include igx-theme();
 
 $dialog-theme: igx-dialog-theme(
-    $background: black
+
 );
 
 @include igx-dialog($dialog-theme);

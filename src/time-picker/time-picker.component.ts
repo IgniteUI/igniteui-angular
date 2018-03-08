@@ -1,4 +1,4 @@
-import { 
+import {
     CommonModule
 } from "@angular/common";
 import {
@@ -34,10 +34,10 @@ export class TimePickerHammerConfig extends HammerGestureConfig {
 @Component({
     encapsulation: ViewEncapsulation.None,
     providers:[
-        { 
+        {
             provide: NG_VALUE_ACCESSOR,
             useExisting: IgxTimePickerComponent,
-            multi: true 
+            multi: true
         },
         {
             provide: HAMMER_GESTURE_CONFIG,
@@ -45,7 +45,6 @@ export class TimePickerHammerConfig extends HammerGestureConfig {
         }
     ],
     selector: "igx-time-picker",
-    styleUrls: ["time-picker.component.scss"],
     templateUrl: "time-picker.component.html"
 })
 export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
@@ -79,7 +78,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     @ViewChild("minuteList") minuteList: ElementRef;
 
     @ViewChild("ampmList") ampmList: ElementRef;
-    
+
     @ViewChild(IgxDialogComponent)
     public alert: IgxDialogComponent;
 
@@ -119,7 +118,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         var selectedHourIndex = this.hourItems.indexOf(this.selectedHour);
         var selectedMinuteIndex = this.minuteItems.indexOf(this.selectedMinute);
         var selectedAmPmIndex = this.ampmItems.indexOf(this.selectedAmPm);
-        
+
         if (listName.indexOf("hourList") !== -1 && selectedHourIndex + 1 < this.hourItems.length - 3) {
             this.scrollHourIntoView(selectedHourIndex + 1);
         } else if (listName.indexOf("minuteList") !== -1 && selectedMinuteIndex + 1 < this.minuteItems.length - 3) {
@@ -140,7 +139,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         var selectedHourIndex = this.hourItems.indexOf(this.selectedHour);
         var selectedMinuteIndex = this.minuteItems.indexOf(this.selectedMinute);
         var selectedAmPmIndex = this.ampmItems.indexOf(this.selectedAmPm);
-        
+
         if (listName.indexOf("hourList") !== -1 && selectedHourIndex > 3) {
             this.scrollHourIntoView(selectedHourIndex - 1);
         } else if (listName.indexOf("minuteList") !== -1 && selectedMinuteIndex > 3) {
@@ -158,12 +157,12 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         event.preventDefault();
 
         var listName = event.srcElement.className;
-        
+
         if (listName.indexOf("hourList") !== -1) {
             this.minuteList.nativeElement.focus();
         } else if (listName.indexOf("minuteList") !== -1 && this.ampmItems.length !== 0) {
             this.ampmList.nativeElement.focus();
-        } 
+        }
     }
 
     /**
@@ -174,12 +173,12 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         event.preventDefault();
 
         var listName = event.srcElement.className;
-        
+
         if (listName.indexOf("minuteList") !== -1) {
             this.hourList.nativeElement.focus();
         } else if (listName.indexOf("ampmList") !== -1) {
             this.minuteList.nativeElement.focus();
-        } 
+        }
     }
 
     /**
@@ -206,10 +205,10 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      * @hidden
      */
     @HostListener("keydown.tab", ["$event"])
-    public onKeydownTab(event: KeyboardEvent) {        
+    public onKeydownTab(event: KeyboardEvent) {
 
         var listName = event.srcElement.className;
-        
+
         if (listName.indexOf("hourList") !== -1) {
             event.preventDefault();
             this.minuteList.nativeElement.focus();
@@ -228,7 +227,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     public onKeydownShiftTab(event: KeyboardEvent) {
 
         var listName = event.srcElement.className;
-        
+
         if (listName.indexOf("minuteList") !== -1) {
             event.preventDefault();
             this.hourList.nativeElement.focus();
@@ -462,7 +461,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         if (value) {
             var hour = value.getHours();
             var minute = value.getMinutes();
-            var formattedMinute;  
+            var formattedMinute;
             var formattedHour;
 
             if (format.indexOf("h") !== -1){
@@ -474,8 +473,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
                         formattedHour = "0" + hour;
                     } else {
                         formattedHour = hour.toString();
-                    }                
-                } else if (hour == 0) {                
+                    }
+                } else if (hour == 0) {
                     formattedHour = "12";
                 } else if (hour < 10 && format.indexOf("hh") !== -1) {
                     formattedHour = "0" + hour;
@@ -541,7 +540,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     private generateMinutes(): void {
-        var minuteItemsCount = 60 / this.itemsDelta.minutes; 
+        var minuteItemsCount = 60 / this.itemsDelta.minutes;
 
         this.addEmptyItems(this.minuteItems);
 

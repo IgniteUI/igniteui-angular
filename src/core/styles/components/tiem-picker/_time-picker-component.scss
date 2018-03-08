@@ -1,0 +1,76 @@
+@include b(igx-time-picker) {
+    // COLUMN
+    @include e(column) {
+        @extend %igx-time-picker__column !optional;
+    }
+
+    li {
+        @extend %li !optional;
+    }
+
+    // HOUR
+    @include e(hourList) {
+        @extend %igx-time-picker__hourList !optional
+    }
+
+    // HOUR -- selected
+    @include e(hourList, $mod: selected) {
+        @extend %igx-time-picker__hourList--selected !optional
+    }
+
+    @include e(hourList, $m: active, $mod: selected) {
+        @extend %igx-time-picker__hourList--active !optional
+    }
+
+    // MINUTE
+    @include e(minuteList) {
+        @extend %igx-time-picker__minuteList !optional
+    }
+
+    // MINUTE -- selected
+    @include e(minuteList, $mod: selected) {
+        @extend %igx-time-picker__minuteList--selected !optional
+    }
+
+    // MINUTE -- selected -- active
+    @include e(minuteList, $m: active, $mod: selected) {
+        @extend %igx-time-picker__minuteList--active !optional
+    }
+
+    // AM PM
+    @include e(ampmList) {
+        @extend %igx-time-picker__ampmList !optional
+    }
+
+    // AM PM -- selected
+    @include e(ampmList, $mod: selected) {
+        @extend %igx-time-picker__ampmList--selected !optional
+    }
+
+    @include e(ampmList, $m: active, $mod: selected) {
+        @extend %igx-time-picker__ampmList--active !optional
+    }
+
+    @include e(body) {
+        @extend %igx-time-picker__body !optional;
+    }
+
+    .igx-dialog__window {
+        @extend %time-picker-display !optional;
+    }
+
+    .igx-dialog__window,
+    .igx-dialog__window-content {
+        @extend %time-picker-content !optional;
+    }
+
+    .igx-dialog__window-title {
+        @extend %time-picker-dialog-title !optional;
+    }
+
+    .igx-dialog__window-actions {
+        @extend %time-picker-dialog-actions !optional;
+    }
+}
+
+

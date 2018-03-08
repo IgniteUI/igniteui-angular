@@ -6,7 +6,6 @@ $components: register-component($components, #{$component-name});
     $text-color: null
 ) {
 
-
     @return (
         background: $background,
         text-color: $text-color,
@@ -14,10 +13,100 @@ $components: register-component($components, #{$component-name});
 }
 
 @mixin igx-time-picker($theme, $palette: $default-palette) {
-    $default-theme: igx-time-picker-theme(
 
-    );
+    $default-theme: igx-date-picker-theme();
 
     $this: extend($default-theme, $theme);
+
+    %igx-time-picker__body {
+        display: flex;
+        padding: 10px 0;
+        justify-content: center;
+    }
+
+    %time-picker-display {
+        max-width: 340px;
+        min-width: 320px;
+        padding: 0;
+    }
+
+    %time-picker-content {
+        width: 100%;
+        padding: 0;
+        color: inherit;
+        font-size: initial;
+        line-height: initial;
+    }
+
+    %time-picker-dialog-title {
+        display: none;
+    }
+
+    %time-picker-dialog-actions {
+        margin: 0;
+    }
+
+    %igx-time-picker__hourList {
+        text-align: right;
+    }
+
+    %igx-time-picker__minuteList {
+        text-align: center;
+    }
+
+    %igx-time-picker__ampmList {
+        display: flex;
+        flex-direction: column;
+    }
+
+    %igx-time-picker__column {
+        height: 325px;
+        margin: 0 0 0 8px;
+        padding: 0;
+        overflow: hidden;
+        font-size: 16px;
+        cursor: pointer;
+        list-style: none inside;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+
+        &:focus,
+        &:active {
+            outline: red;
+        }
+
+        &:first-of-type {
+            margin-left: 0;
+        }
+    }
+
+    %li {
+        width: 64px;
+        padding: 5px 10px;
+        border-radius: 15px;
+        min-height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+            color: #e41c77;
+        }
+    }
+
+    %igx-time-picker__hourList--selected,
+    %igx-time-picker__minuteList--selected,
+    %igx-time-picker__ampmList--selected {
+        font-size: 24px;
+        color: #e41c77;
+    }
+
+    %igx-time-picker__hourList--active,
+    %igx-time-picker__minuteList--active,
+    %igx-time-picker__ampmList--active {
+        background: #f9f9f9;
+    }
 }
+
 
