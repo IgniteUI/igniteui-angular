@@ -163,7 +163,7 @@ describe("IgxGrid - CRUD operations", () => {
         expect(grid.data[0].index).toEqual(100);
     });
 
-    it("should support updating a cell value through the grid API", () => {
+    it("should support updating a cell value through the grid API", async(() => {
         const fix = TestBed.createComponent(DefaultCRUDGridComponent);
         fix.detectChanges();
 
@@ -171,20 +171,26 @@ describe("IgxGrid - CRUD operations", () => {
 
         // Update a non-existing cell
         grid.updateCell(-100, 100, "index");
-        fix.detectChanges();
 
-        expect(grid.rowList.first.cells.first.value).not.toEqual(-100);
-        expect(grid.rowList.first.cells.first.nativeElement.textContent).not.toMatch("-100");
+        fix.whenStable().then(() => {
+            fix.detectChanges();
 
-        // Update an existing cell
-        grid.updateCell(100, 0, "index");
-        fix.detectChanges();
+            expect(grid.rowList.first.cells.first.value).not.toEqual(-100);
+            expect(grid.rowList.first.cells.first.nativeElement.textContent).not.toMatch("-100");
 
-        expect(grid.rowList.first.cells.first.value).toEqual(100);
-        expect(grid.rowList.first.cells.first.nativeElement.textContent).toMatch("100");
-    });
+            // Update an existing cell
+            grid.updateCell(100, 0, "index");
 
-    it("should support updating a cell value through the cell object", () => {
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            expect(grid.rowList.first.cells.first.value).toEqual(100);
+            expect(grid.rowList.first.cells.first.nativeElement.textContent).toMatch("100");
+        });
+    }));
+
+    it("should support updating a cell value through the cell object", async(() => {
         const fix = TestBed.createComponent(DefaultCRUDGridComponent);
         fix.detectChanges();
 
@@ -193,11 +199,13 @@ describe("IgxGrid - CRUD operations", () => {
         const firstCell = grid.getCellByColumn(0, "index");
         firstCell.update(100);
 
-        fix.detectChanges();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
 
-        expect(grid.rowList.first.cells.first.value).toEqual(100);
-        expect(grid.rowList.first.cells.first.nativeElement.textContent).toMatch("100");
-    });
+            expect(grid.rowList.first.cells.first.value).toEqual(100);
+            expect(grid.rowList.first.cells.first.nativeElement.textContent).toMatch("100");
+        });
+    }));
 });
 
 @Component({
