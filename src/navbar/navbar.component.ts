@@ -8,7 +8,7 @@ import {
     Output
 } from "@angular/core";
 import { IgxButtonModule } from "../directives/button/button.directive";
-import { IgxIconModule } from "../icon/icon.component";
+import { IgxIconModule } from "../icon";
 
 @Component({
     selector: "igx-navbar",
