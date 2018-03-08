@@ -45,7 +45,6 @@ export class TimePickerHammerConfig extends HammerGestureConfig {
         }
     ],
     selector: "igx-time-picker",
-    styleUrls: ["time-picker.component.scss"],
     templateUrl: "time-picker.component.html"
 })
 export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
@@ -102,6 +101,10 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     public hourItems = [];
     public minuteItems = [];
     public ampmItems = [];
+
+    public hourView = [];
+    public minuteView = [];
+    public ampmView = [];
 
     public selectedHour: string;
     public selectedMinute: string;
@@ -279,6 +282,10 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         this._prevSelectedMinute = this.selectedMinute;
         this._prevSelectedAmPm = this.selectedAmPm;
 
+        this._updateHourView(0, 7);
+        this._updateMinuteView(0, 7);
+        this._updateAmPmView(0, 7);
+
         this._alert.open();
         this._onTouchedCallback();
 
@@ -340,17 +347,17 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     private _scrollHourIntoView(index): void {
-        this._hourList.nativeElement.children[index].scrollIntoView({block: "center"});
+        this._updateHourView(index - 3, index + 4);
         this.selectedHour = this.hourItems[index];
     }
 
     private _scrollMinuteIntoView(index): void {
-        this._minuteList.nativeElement.children[index].scrollIntoView({block: "center"});
+        this._updateMinuteView(index - 3, index + 4);
         this.selectedMinute = this.minuteItems[index];
     }
 
     private _scrollAmPmIntoView(index): void {
-        this._ampmList.nativeElement.children[index].scrollIntoView({block: "center"});
+        this._updateAmPmView(index - 3, index + 4);
         this.selectedAmPm = this.ampmItems[index];
     }
 
@@ -418,7 +425,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         const selectedIndex = this.hourItems.indexOf(this.selectedHour);
 
         if (selectedIndex + 1 < this.hourItems.length - 3) {
-            this._scrollHourIntoView(selectedIndex + 1);
+            this._updateHourView(selectedIndex - 2, selectedIndex + 5);
+            this.selectedHour = this.hourItems[selectedIndex + 1];
         }
     }
 
@@ -426,7 +434,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         const selectedIndex = this.hourItems.indexOf(this.selectedHour);
 
         if (selectedIndex > 3) {
-            this._scrollHourIntoView(selectedIndex - 1);
+            this._updateHourView(selectedIndex - 4, selectedIndex + 3);
+            this.selectedHour = this.hourItems[selectedIndex - 1];
         }
     }
 
@@ -434,7 +443,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         const selectedIndex = this.minuteItems.indexOf(this.selectedMinute);
 
         if (selectedIndex + 1 < this.minuteItems.length - 3) {
-            this._scrollMinuteIntoView(selectedIndex + 1);
+            this._updateMinuteView(selectedIndex - 2, selectedIndex + 5);
+            this.selectedMinute = this.minuteItems[selectedIndex + 1];
         }
     }
 
@@ -442,7 +452,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         const selectedIndex = this.minuteItems.indexOf(this.selectedMinute);
 
         if (selectedIndex > 3) {
-            this._scrollMinuteIntoView(selectedIndex - 1);
+            this._updateMinuteView(selectedIndex - 4, selectedIndex + 3);
+            this.selectedMinute = this.minuteItems[selectedIndex - 1];
         }
     }
 
@@ -450,7 +461,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         const selectedIndex = this.ampmItems.indexOf(this.selectedAmPm);
 
         if (selectedIndex + 1 < this.ampmItems.length - 3) {
-            this._scrollAmPmIntoView(selectedIndex + 1);
+            this._updateAmPmView(selectedIndex - 2, selectedIndex + 5);
+            this.selectedAmPm = this.ampmItems[selectedIndex + 1];
         }
     }
 
@@ -458,11 +470,12 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         const selectedIndex = this.ampmItems.indexOf(this.selectedAmPm);
 
         if (selectedIndex > 3) {
-            this._scrollAmPmIntoView(selectedIndex - 1);
+            this._updateAmPmView(selectedIndex - 4, selectedIndex + 3);
+            this.selectedAmPm = this.ampmItems[selectedIndex - 1];
         }
     }
 
-    public onListHover(event): void {
+    public onHover(event): void {
         if (event.currentTarget.className.indexOf("hour") !== -1) {
             this._hourList.nativeElement.focus();
         } else if (event.currentTarget.className.indexOf("minute") !== -1) {
@@ -510,6 +523,18 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         } else {
             return format;
         }
+    }
+
+    private _updateHourView(start: any, end: any): void {
+        this.hourView = this.hourItems.slice(start, end);
+    }
+
+    private _updateMinuteView(start: any, end: any): void {
+        this.minuteView = this.minuteItems.slice(start, end);
+    }
+
+    private _updateAmPmView(start: any, end: any): void {
+        this.ampmView = this.ampmItems.slice(start, end);
     }
 
     private _addEmptyItems(items: string[]): void {
