@@ -129,37 +129,6 @@ export class IgxGridAPIService {
             this.get(id).sortingExpressions = sortingState;
         }
     }
-    public min(id, fieldName): number {
-        let minValue;
-        minValue = this.get(id).data.map((x) => x[fieldName]).reduce((a, b) => Math.min(a, b));
-        return minValue;
-    }
-
-    public max(id, fieldName): number {
-        let maxValue;
-        maxValue = this.get(id).data.map((x) => x[fieldName]).reduce((a, b) => Math.max(a, b));
-        return maxValue;
-    }
-
-    public average(id, fieldName): number {
-        let average;
-        average = this.sum(id, fieldName) / this.count(id, fieldName);
-        return average;
-    }
-
-    public sum(id, fieldName): number {
-        let sumValue;
-        sumValue = this.get(id).data.map((x) => x[fieldName]).reduce((a, b) =>  a + b);
-        return sumValue;
-    }
-
-    public count(id, fieldName): number {
-        let count;
-        count = this.get(id).data.map((x) => x[fieldName]).length;
-        return count;
-    }
-    public earliestDate(id, fieldName) {
-    }
 
     protected prepare_filtering_expression(state, fieldName, searchVal, condition, ignoreCase) {
 
