@@ -20,6 +20,7 @@ import {
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective
 } from "./grid.common";
+import { IgxGridComponent } from "./grid.component";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -100,13 +101,17 @@ export class IgxColumnComponent implements AfterContentInit {
 
     public gridID: string;
 
+    get grid(): IgxGridComponent {
+        return this.gridAPI.get(this.gridID);
+    }
+
     get bodyTemplate(): TemplateRef<any> {
         return this._bodyTemplate;
     }
 
     set bodyTemplate(template: TemplateRef<any>) {
         this._bodyTemplate = template;
-        this.gridAPI.mark_for_check(this.gridID);
+        this.grid.markForCheck();
     }
 
     get headerTemplate(): TemplateRef<any> {
@@ -115,7 +120,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
     set headerTemplate(template: TemplateRef<any>) {
         this._headerTemplate = template;
-        this.gridAPI.mark_for_check(this.gridID);
+        this.grid.markForCheck();
     }
 
     get footerTemplate(): TemplateRef<any> {
@@ -124,7 +129,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
     set footerTemplate(template: TemplateRef<any>) {
         this._footerTemplate = template;
-        this.gridAPI.mark_for_check(this.gridID);
+        this.grid.markForCheck();
     }
 
     get inlineEditorTemplate(): TemplateRef<any> {
@@ -133,7 +138,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
     set inlineEditorTemplate(template: TemplateRef<any>) {
         this._inlineEditorTemplate = template;
-        this.gridAPI.mark_for_check(this.gridID);
+        this.grid.markForCheck();
     }
 
     get visibleIndex(): number {
@@ -170,7 +175,7 @@ export class IgxColumnComponent implements AfterContentInit {
     @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
-    constructor(private gridAPI: IgxGridAPIService, private cdr: ChangeDetectorRef) {}
+    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {}
 
     public ngAfterContentInit(): void {
         if (this.cellTemplate) {
@@ -195,7 +200,7 @@ export class IgxColumnComponent implements AfterContentInit {
     }
     protected check() {
         if (this.gridID) {
-            this.gridAPI.mark_for_check(this.gridID);
+            this.grid.markForCheck();
         }
     }
 }
