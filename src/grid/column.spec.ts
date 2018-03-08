@@ -1,5 +1,5 @@
 import { Component, DebugElement, TemplateRef, ViewChild } from "@angular/core";
-import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
+import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { DataType } from "../data-operations/data-util";
 import { IgxColumnComponent } from "./column.component";

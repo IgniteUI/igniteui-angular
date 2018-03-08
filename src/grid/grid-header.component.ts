@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, DoCheck, HostBinding, HostListener, Input } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, HostBinding, HostListener, Input, OnInit } from "@angular/core";
 import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
+import { autoWire, IGridBus } from "./grid.common";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -9,7 +10,7 @@ import { IgxColumnComponent } from "./column.component";
     selector: "igx-grid-header",
     templateUrl: "./grid-header.component.html"
 })
-export class IgxGridHeaderComponent implements DoCheck {
+export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
 
     @Input()
     public column: IgxColumnComponent;
@@ -57,13 +58,18 @@ export class IgxGridHeaderComponent implements DoCheck {
 
     protected sortDirection = SortingDirection.None;
 
-    constructor(private gridAPI: IgxGridAPIService) { }
+    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
+
+    public ngOnInit() {
+        this.cdr.markForCheck();
+    }
 
     public ngDoCheck() {
         this.getSortDirection();
     }
 
     @HostListener("click", ["$event"])
+    @autoWire(true)
     public onClick(event) {
         event.stopPropagation();
         if (this.column.sortable) {
