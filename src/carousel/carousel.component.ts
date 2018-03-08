@@ -9,7 +9,7 @@ import {
     OnInit,
     Output
 } from "@angular/core";
-import { IgxIconModule } from "../icon/icon.component";
+import { IgxIconModule } from "../icon";
 
 export enum Direction { NONE, NEXT, PREV }
 

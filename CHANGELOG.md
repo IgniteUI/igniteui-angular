@@ -1,9 +1,9 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
-
 ## 5.3.0
 - Removed the `dirty` local template variable previously exposed by the `igxFor` directive.
+- the `igx-icon` component can now work with both glyph and ligature-based icon font sets. We've also included a brand new Icon Service, which helps you create aliases for the icon fonts you've included in your project. The service also allows you to define the default icon set used throughout your app.
 
 ## 5.2.1
 - `hammerjs` and `@types/hammerjs` are removed from `peerDependencies` and were added as `dependencies`. So if you are using Igniteui-Angular version 5.2.1 or above it is enough to run `npm install igniteui-angular` in your project for getting started. For more detailed information see [`Ignite UI for Angular Getting Started`](https://www.infragistics.com/products/ignite-ui-angular/getting-started)
