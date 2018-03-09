@@ -19,7 +19,7 @@ export * from "./data-operations/data-container";
 export * from "./grid/";
 
 export * from "./navigation-drawer";
-export * from "./icon/icon.component";
+export * from "./icon";
 export * from "./directives/button/button.directive";
 export * from "./directives/filter/filter.directive";
 export * from "./directives/input/input.directive";
