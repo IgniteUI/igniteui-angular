@@ -1,8 +1,12 @@
 import { Component, ViewChild } from "@angular/core";
-import { async, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+import { async, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { Calendar } from "../calendar";
 import { KEYCODES, PinLocation } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
+import { STRING_FILTERS } from "../data-operations/filtering-condition";
+import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { IgxGridComponent } from "./grid.component";
@@ -10,14 +14,16 @@ import { IgxGridModule } from "./index";
 
 describe("IgxGrid - Column Pinning ", () => {
     const COLUMN_HEADER_CLASS = ".igx-grid__th";
+    const CELL_CSS_CLASS = ".igx-grid__td";
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,
-                GridPinningComponent
+                GridPinningComponent,
+                GridFeaturesComponent
             ],
-            imports: [IgxGridModule.forRoot()]
+            imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
         }).compileComponents();
     }));
 
@@ -198,6 +204,62 @@ describe("IgxGrid - Column Pinning ", () => {
         const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         expect(headers[0].context.column.field).toEqual("City");
         expect(headers[1].context.column.field).toEqual("ID");
+    });
+
+    it("should allow filter pinned columns", () => {
+        const fix = TestBed.createComponent(GridFeaturesComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        // Contains filter
+        grid.filter("ProductName", "Ignite", STRING_FILTERS.contains, true);
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(2);
+        expect(grid.getCellByColumn(0, "ID").value).toEqual(1);
+        expect(grid.getCellByColumn(1, "ID").value).toEqual(3);
+
+        // Unpin column
+        grid.unpinColumn("ProductName");
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(2);
+        expect(grid.getCellByColumn(0, "ID").value).toEqual(1);
+        expect(grid.getCellByColumn(1, "ID").value).toEqual(3);
+    });
+
+    it("should allow sorting pinned columns", () => {
+        const fix = TestBed.createComponent(GridFeaturesComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const currentColumn = "ProductName";
+        const releasedColumn = "Released";
+
+        grid.sort(currentColumn, SortingDirection.Asc);
+
+        fix.detectChanges();
+
+        let expectedResult: any = null;
+        expect(grid.getCellByColumn(0, currentColumn).value).toEqual(expectedResult);
+        expectedResult = true;
+        expect(grid.getCellByColumn(0, releasedColumn).value).toEqual(expectedResult);
+        expectedResult = "Some other item with Script";
+        expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual(expectedResult);
+        expectedResult = null;
+        expect(grid.getCellByColumn(grid.data.length - 1, releasedColumn).value).toEqual(expectedResult);
+
+        // Unpin column
+        grid.unpinColumn("ProductName");
+        fix.detectChanges();
+
+        expectedResult = null;
+        expect(grid.getCellByColumn(0, currentColumn).value).toEqual(expectedResult);
+        expectedResult = true;
+        expect(grid.getCellByColumn(0, releasedColumn).value).toEqual(expectedResult);
+        expectedResult = "Some other item with Script";
+        expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual(expectedResult);
+        expectedResult = null;
+        expect(grid.getCellByColumn(grid.data.length - 1, releasedColumn).value).toEqual(expectedResult);
     });
 
     it("should not allow pinning new column if start pinned area becomes greater than the grid width", () => {
@@ -409,6 +471,141 @@ describe("IgxGrid - Column Pinning ", () => {
         expect(headers[3].context.column.field).toEqual("ID");
         expect(headers[3].parent.name).toEqual("div");
     });
+
+    it("should allow horizontal keyboard navigation between start pinned area and unpinned area.",  fakeAsync(() => {
+        discardPeriodicTasks();
+        const fix = TestBed.createComponent(GridPinningComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        grid.getColumnByName("CompanyName").pin();
+        grid.getColumnByName("ContactName").pin(PinLocation.End);
+
+        fix.detectChanges();
+        const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+        let cell = cells[0];
+        const mockEvent = { preventDefault: () => {}};
+
+        cell.triggerEventHandler("focus", {});
+        tick();
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual("Alfreds Futterkiste");
+        expect(fix.componentInstance.selectedCell.column.field).toMatch("CompanyName");
+
+        cell.triggerEventHandler("keydown.arrowright", mockEvent);
+        fix.detectChanges();
+        expect(fix.componentInstance.selectedCell.value).toEqual("ALFKI");
+        expect(fix.componentInstance.selectedCell.column.field).toMatch("ID");
+        cell = cells[1];
+
+        cell.triggerEventHandler("keydown.arrowleft", mockEvent);
+        tick();
+        fix.detectChanges();
+        expect(fix.componentInstance.selectedCell.value).toEqual("Alfreds Futterkiste");
+        expect(fix.componentInstance.selectedCell.column.field).toMatch("CompanyName");
+        cell.triggerEventHandler("blur", {});
+        cell = cells[0];
+
+        cell.triggerEventHandler("keydown.arrowright", mockEvent);
+        tick();
+        fix.detectChanges();
+        cell = cells[1];
+
+        cell.triggerEventHandler("keydown.arrowright", mockEvent);
+        tick();
+        fix.detectChanges();
+        expect(fix.componentInstance.selectedCell.value).toEqual("Sales Representative");
+        expect(fix.componentInstance.selectedCell.column.field).toMatch("ContactTitle");
+        discardPeriodicTasks();
+    }));
+
+    it("should allow vertical keyboard navigation in pinned area.", fakeAsync(() => {
+        discardPeriodicTasks();
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+        let cell = cells[0];
+        const mockEvent = { preventDefault: () => {}};
+
+        cell.triggerEventHandler("focus", {});
+        tick();
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual("Alfreds Futterkiste");
+        expect(fix.componentInstance.selectedCell.column.field).toMatch("CompanyName");
+
+        cell.triggerEventHandler("keydown.arrowdown", mockEvent);
+        tick();
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual("Ana Trujillo Emparedados y helados");
+        expect(fix.componentInstance.selectedCell.column.field).toMatch("CompanyName");
+        cell = cells[4];
+        cell.triggerEventHandler("keydown.arrowup", mockEvent);
+        tick();
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual("Alfreds Futterkiste");
+        expect(fix.componentInstance.selectedCell.column.field).toMatch("CompanyName");
+        discardPeriodicTasks();
+    }));
+
+    it("should allow horizontal keyboard navigation from end pinned area to unpinned area.", (done) => {
+        const fix = TestBed.createComponent(GridPinningComponent);
+        fix.detectChanges();
+        const mockEvent = { preventDefault: () => {}};
+        const grid = fix.componentInstance.instance;
+        grid.getColumnByName("ContactName").pin(PinLocation.End);
+        fix.detectChanges();
+        const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+        // focus last cell
+        const cell = cells[cells.length - 1];
+        cell.triggerEventHandler("focus", {});
+        fix.detectChanges();
+        expect(fix.componentInstance.selectedCell.value).toEqual("Maria Anders");
+        expect(fix.componentInstance.selectedCell.column.field).toMatch("ContactName");
+        cell.triggerEventHandler("keydown.arrowleft", mockEvent);
+        fix.detectChanges();
+        setTimeout(() => {
+            expect(fix.componentInstance.selectedCell.value).toEqual("030-0076545");
+            expect(fix.componentInstance.selectedCell.column.field).toMatch("Fax");
+            done();
+        }, 500);
+    });
+    it("should allow keyboard navigation to first/last cell with Ctrl when there are the pinned columns.", fakeAsync(() => {
+        discardPeriodicTasks();
+        const fix = TestBed.createComponent(GridPinningComponent);
+        fix.detectChanges();
+        const mockEvent = { preventDefault: () => {}};
+        const grid = fix.componentInstance.instance;
+        grid.getColumnByName("CompanyName").pin();
+        grid.getColumnByName("ContactName").pin(PinLocation.End);
+        fix.detectChanges();
+        const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+        let cell = cells[0];
+        cell.triggerEventHandler("focus", {});
+        fix.detectChanges();
+        expect(fix.componentInstance.selectedCell.value).toEqual("Alfreds Futterkiste");
+        expect(fix.componentInstance.selectedCell.column.field).toMatch("CompanyName");
+
+        cell.triggerEventHandler("keydown.control.arrowright", null);
+        tick();
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual("Maria Anders");
+        expect(fix.componentInstance.selectedCell.column.field).toMatch("ContactName");
+        cell = cells[cells.length - 1];
+
+        cell.triggerEventHandler("keydown.control.arrowleft", null);
+        tick();
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual("Alfreds Futterkiste");
+        expect(fix.componentInstance.selectedCell.column.field).toMatch("CompanyName");
+        discardPeriodicTasks();
+    }));
 });
 @Component({
     template: `
@@ -417,12 +614,14 @@ describe("IgxGrid - Column Pinning ", () => {
             [height]='"300px"'
             [data]="data"
             (onColumnInit)="initColumns($event)"
+            (onSelection)="cellSelected($event)"
             [autoGenerate]="true">
         </igx-grid>
     `
 })
 export class DefaultGridComponent {
-    /* tslint:disable */
+    public selectedCell;
+/* tslint:disable */
     public data = [
         { "ID": "ALFKI", "CompanyName": "Alfreds Futterkiste", "ContactName": "Maria Anders", "ContactTitle": "Sales Representative", "Address": "Obere Str. 57", "City": "Berlin", "Region": null, "PostalCode": "12209", "Country": "Germany", "Phone": "030-0074321", "Fax": "030-0076545" },
         { "ID": "ANATR", "CompanyName": "Ana Trujillo Emparedados y helados", "ContactName": "Ana Trujillo", "ContactTitle": "Owner", "Address": "Avda. de la Constitución 2222", "City": "México D.F.", "Region": null, "PostalCode": "05021", "Country": "Mexico", "Phone": "(5) 555-4729", "Fax": "(5) 555-3745" },
@@ -465,6 +664,10 @@ export class DefaultGridComponent {
         }
         column.width = "200px";
     }
+
+    public cellSelected(event) {
+        this.selectedCell = event;
+    }
 }
 
 @Component({
@@ -473,6 +676,7 @@ export class DefaultGridComponent {
             [width]='"800px"'
             [height]='"300px"'
             [data]="data"
+            (onSelection)="cellSelected($event)"
             (onColumnPinning)="columnPinningHandler($event)"
           >
         <igx-column  *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width">
@@ -481,7 +685,7 @@ export class DefaultGridComponent {
     `
 })
 export class GridPinningComponent {
-
+    public selectedCell;
     public data = [{
         ID: "ALFKI",
         CompanyName: "Alfreds Futterkiste",
@@ -498,7 +702,7 @@ export class GridPinningComponent {
     public columns = [
         { field: "ID", width: 100 },
         { field: "CompanyName", width: 300 },
-        { field: "ContactName", width: 200 },
+        { field: "ContactName", width: 200},
         { field: "ContactTitle", width: 200 },
         { field: "Address", width: 300 },
         { field: "City", width: 100 },
@@ -506,7 +710,7 @@ export class GridPinningComponent {
         { field: "PostalCode", width: 100 },
         { field: "Phone", width: 150 },
         { field: "Fax", width: 150 }
-    ];
+        ];
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
@@ -514,4 +718,85 @@ export class GridPinningComponent {
     public columnPinningHandler($event) {
         $event.insertAtIndex = 0;
     }
+    public cellSelected(event) {
+        this.selectedCell = event;
+    }
+}
+
+@Component({
+    template: `<igx-grid [data]="data">
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ProductName'" [filterable]="true" [sortable]="true" [pinned]="true" dataType="string"></igx-column>
+        <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
+        <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'"
+            [filterable]="true" dataType="date">
+        </igx-column>
+    </igx-grid>`
+})
+export class GridFeaturesComponent {
+
+    public timeGenerator: Calendar = new Calendar();
+    public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+
+    public data = [
+        {
+            Downloads: 254,
+            ID: 1,
+            ProductName: "Ignite UI for JavaScript",
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", 15),
+            Released: false
+        },
+        {
+            Downloads: 127,
+            ID: 2,
+            ProductName: "NetAdvantage",
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "month", -1),
+            Released: true
+        },
+        {
+            Downloads: 20,
+            ID: 3,
+            ProductName: "Ignite UI for Angular",
+            ReleaseDate: null,
+            Released: null
+        },
+        {
+            Downloads: null,
+            ID: 4,
+            ProductName: null,
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", -1),
+            Released: true
+        },
+        {
+            Downloads: 100,
+            ID: 5,
+            ProductName: "",
+            ReleaseDate: undefined,
+            Released: ""
+        },
+        {
+            Downloads: 702,
+            ID: 6,
+            ProductName: "Some other item with Script",
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", 1),
+            Released: null
+        },
+        {
+            Downloads: 0,
+            ID: 7,
+            ProductName: null,
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "month", 1),
+            Released: true
+        },
+        {
+            Downloads: 1000,
+            ID: 8,
+            ProductName: null,
+            ReleaseDate: this.today,
+            Released: false
+        }
+    ];
+
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
 }
