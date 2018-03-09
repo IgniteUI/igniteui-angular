@@ -38,7 +38,7 @@ export class IgxHourItemDirective {
 
     @HostBinding("class.igx-time-picker__item")
     get defaultCSS(): boolean {
-        return !this.isSelectedHour;
+        return true;
     }
 
     @HostBinding("class.igx-time-picker__item--selected")

@@ -3,18 +3,18 @@
 <ng-template #scroll>
     <div class="igx-time-picker">
         <igx-dialog class="igx-date-picker__dialog-popup" closeOnOutsideSelect="true"
-                [leftButtonLabel]="cancelButtonLabel" (onLeftButtonSelect)="CancelButtonClick()" 
+                [leftButtonLabel]="cancelButtonLabel" (onLeftButtonSelect)="CancelButtonClick()"
                 [rightButtonLabel]="okButtonLabel" (onRightButtonSelect)="OKButtonClick()">
                 <ng-container #container>
-                    <div class="igx-calendar__header">
-                        <h5 class="igx-calendar__header-year">{{ selectedAmPm }}</h5>
-                        <h2 class="igx-calendar__header-date">
+                    <div class="igx-time-picker__header">
+                        <h5 class="igx-time-picker__header-ampm">{{ selectedAmPm }}</h5>
+                        <h2 class="igx-time-picker__header-hour">
                             <span>{{ selectedHour }}</span>:<span>{{ selectedMinute }}</span>
                         </h2>
                     </div>
                     <div class="igx-time-picker__body">
                         <div #hourList class="igx-time-picker__column igx-time-picker__hourList" (wheel)="onHourWheel($event)" tabindex="0" (panmove)="onHourPan($event)" (mouseover)="onHover($event)">
-                            <span [igxHourItem]="hour" *ngFor="let hour of hourView" (click)="onHourClicked(hour)" style="display: inline">
+                            <span [igxHourItem]="hour" *ngFor="let hour of hourView" (click)="onHourClicked(hour)">
                                 {{ hour }}
                             </span>
                         </div>

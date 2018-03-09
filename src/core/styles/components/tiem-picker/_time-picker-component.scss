@@ -1,11 +1,32 @@
 @include b(igx-time-picker) {
+
+    @include e(header) {
+        @extend %igx-time-picker__header !optional;
+    }
+
+    @include e(header-ampm) {
+        @extend %igx-time-picker__header-ampm !optional;
+    }
+
+    @include e(header-hour){
+        @extend %igx-time-picker__header-hour !optional;
+    }
+
     // COLUMN
     @include e(column) {
         @extend %igx-time-picker__column !optional;
     }
 
-    span {
-        @extend %span !optional;
+    @include e(item) {
+        @extend %igx-time-picker__item !optional;
+    }
+
+    @include e(item, $mod: selected) {
+        @extend %igx-time-picker__item--selected !optional
+    }
+
+    @include e(item, $m: active) {
+        @extend %igx-time-picker__item--active !optional
     }
 
     // HOUR
@@ -13,42 +34,15 @@
         @extend %igx-time-picker__hourList !optional
     }
 
-    // HOUR -- selected
-    @include e(hourList, $mod: selected) {
-        @extend %igx-time-picker__hourList--selected !optional
-    }
-
-    @include e(hourList, $m: active) {
-        @extend %igx-time-picker__hourList--active !optional
-    }
 
     // MINUTE
     @include e(minuteList) {
         @extend %igx-time-picker__minuteList !optional
     }
 
-    // MINUTE -- selected
-    @include e(minuteList, $mod: selected) {
-        @extend %igx-time-picker__minuteList--selected !optional
-    }
-
-    // MINUTE -- selected -- active
-    @include e(minuteList, $m: active) {
-        @extend %igx-time-picker__minuteList--active !optional
-    }
-
     // AM PM
     @include e(ampmList) {
         @extend %igx-time-picker__ampmList !optional
-    }
-
-    // AM PM -- selected
-    @include e(ampmList, $mod: selected) {
-        @extend %igx-time-picker__ampmList--selected !optional
-    }
-
-    @include e(ampmList, $m: active) {
-        @extend %igx-time-picker__ampmList--active !optional
     }
 
     @include e(body) {
@@ -71,14 +65,4 @@
     .igx-dialog__window-actions {
         @extend %time-picker-dialog-actions !optional;
     }
-
-    .igx-calendar__header {
-        @extend %igx-calendar__header !optional;
-    }
-
-    .igx-calendar__header-year,
-    .igx-calendar__header-date{
-        @extend %igx-calendar__header-text !optional;
-    }
 }
-
