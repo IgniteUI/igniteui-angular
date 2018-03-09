@@ -2,7 +2,7 @@
 <ng-container *ngTemplateOutlet="scroll" ></ng-container>
 <ng-template #scroll>
     <div class="igx-time-picker">
-        <igx-dialog class="igx-date-picker__dialog-popup" closeOnOutsideSelect="true"
+        <igx-dialog class="igx-time-picker__dialog-popup" closeOnOutsideSelect="true"
                 [leftButtonLabel]="cancelButtonLabel" (onLeftButtonSelect)="CancelButtonClick()"
                 [rightButtonLabel]="okButtonLabel" (onRightButtonSelect)="OKButtonClick()">
                 <ng-container #container>
