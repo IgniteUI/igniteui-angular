@@ -1,16 +1,16 @@
 import { Component, ViewChild } from "@angular/core";
 import { async, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { Calendar } from "../calendar";
 import { KEYCODES, PinLocation } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
+import { STRING_FILTERS } from "../data-operations/filtering-condition";
+import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
-import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { Calendar } from "../calendar";
-import { STRING_FILTERS } from "../data-operations/filtering-condition";
-import { SortingDirection } from "../data-operations/sorting-expression.interface";
 
 describe("IgxGrid - Column Pinning ", () => {
     const COLUMN_HEADER_CLASS = ".igx-grid__th";
@@ -576,7 +576,6 @@ export class GridPinningComponent {
         $event.insertAtIndex = 0;
     }
 }
-
 
 @Component({
     template: `<igx-grid [data]="data">
