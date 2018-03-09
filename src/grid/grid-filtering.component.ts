@@ -42,7 +42,8 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
     }
 
     set value(val) {
-        if (!val) {
+        // filtering needs to be cleared if value is null, undefined or empty string
+        if (!val && val !== 0) {
             this.clearFiltering();
             return;
         }
