@@ -36,33 +36,17 @@ export class IgxHourItemDirective {
         return this.elementRef.nativeElement;
     }
 
-    @HostBinding("class.igx-time-picker__hourList--1")
-    get default0CSS(): boolean {
-        var index = this.timePicker.hourItems.indexOf(this.value);
-        var selectedHourIndex = this.timePicker.hourItems.indexOf(this.timePicker.selectedHour);
-        return !this.isSelectedHour && (index + 1 === selectedHourIndex || index - 1 === selectedHourIndex);
+    @HostBinding("class.igx-time-picker__item")
+    get defaultCSS(): boolean {
+        return !this.isSelectedHour;
     }
 
-    @HostBinding("class.igx-time-picker__hourList--2")
-    get default1CSS(): boolean {
-        var index = this.timePicker.hourItems.indexOf(this.value);
-        var selectedHourIndex = this.timePicker.hourItems.indexOf(this.timePicker.selectedHour);
-        return !this.isSelectedHour && (index + 2 === selectedHourIndex || index - 2 === selectedHourIndex);
-    }
-
-    @HostBinding("class.igx-time-picker__hourList--3")
-    get default2CSS(): boolean {
-        var index = this.timePicker.hourItems.indexOf(this.value);
-        var selectedHourIndex = this.timePicker.hourItems.indexOf(this.timePicker.selectedHour);
-        return !this.isSelectedHour && (index + 3 === selectedHourIndex || index - 3 === selectedHourIndex);
-    }
-
-    @HostBinding("class.igx-time-picker__hourList--selected")
+    @HostBinding("class.igx-time-picker__item--selected")
     get selectedCSS(): boolean {
         return this.isSelectedHour;
     }
 
-    @HostBinding("class.igx-time-picker__hourList--active")
+    @HostBinding("class.igx-time-picker__item--active")
     get activeCSS(): boolean {
         return this.isSelectedHour && document.activeElement === this.nativeElement.parentElement;
     }
@@ -94,33 +78,17 @@ export class IgxMinuteItemDirective {
         return this.elementRef.nativeElement;
     }
 
-    @HostBinding("class.igx-time-picker__minuteList--1")
-    get default0CSS(): boolean {
-        var index = this.timePicker.minuteItems.indexOf(this.value);
-        var selectedMinuteIndex = this.timePicker.minuteItems.indexOf(this.timePicker.selectedMinute);
-        return !this.isSelectedMinute && (index + 1 === selectedMinuteIndex || index - 1 === selectedMinuteIndex);
+    @HostBinding("class.igx-time-picker__item")
+    get defaultCSS(): boolean {
+        return true;
     }
 
-    @HostBinding("class.igx-time-picker__minuteList--2")
-    get default1CSS(): boolean {
-        var index = this.timePicker.minuteItems.indexOf(this.value);
-        var selectedMinuteIndex = this.timePicker.minuteItems.indexOf(this.timePicker.selectedMinute);
-        return !this.isSelectedMinute && (index + 2 === selectedMinuteIndex || index - 2 === selectedMinuteIndex);
-    }
-
-    @HostBinding("class.igx-time-picker__minuteList--3")
-    get default2CSS(): boolean {
-        var index = this.timePicker.minuteItems.indexOf(this.value);
-        var selectedMinuteIndex = this.timePicker.minuteItems.indexOf(this.timePicker.selectedMinute);
-        return !this.isSelectedMinute && (index + 3 === selectedMinuteIndex || index - 3 === selectedMinuteIndex);
-    }
-
-    @HostBinding("class.igx-time-picker__minuteList--selected")
+    @HostBinding("class.igx-time-picker__item--selected")
     get selectedCSS(): boolean {
         return this.isSelectedMinute;
     }
 
-    @HostBinding("class.igx-time-picker__minuteList--active")
+    @HostBinding("class.igx-time-picker__item--active")
     get activeCSS(): boolean {
         return this.isSelectedMinute && document.activeElement === this.nativeElement.parentElement;
     }
@@ -152,19 +120,17 @@ export class IgxAmPmItemDirective {
         return this.elementRef.nativeElement;
     }
 
-    @HostBinding("class.igx-time-picker__ampm")
-    get default0CSS(): boolean {
-        var index = this.timePicker.ampmItems.indexOf(this.value);
-        var selectedAmPmIndex = this.timePicker.ampmItems.indexOf(this.timePicker.selectedAmPm);
-        return !this.isSelectedAmPm && (index + 1 === selectedAmPmIndex || index - 1 === selectedAmPmIndex);
+    @HostBinding("class.igx-time-picker__item")
+    get defaultCSS(): boolean {
+        return true;
     }
 
-    @HostBinding("class.igx-time-picker__ampmList--selected")
+    @HostBinding("class.igx-time-picker__item--selected")
     get selectedCSS(): boolean {
         return this.isSelectedAmPm;
     }
 
-    @HostBinding("class.igx-time-picker__ampmList--active")
+    @HostBinding("class.igx-time-picker__item--active")
     get activeCSS(): boolean {
         return this.isSelectedAmPm && document.activeElement === this.nativeElement.parentElement;
     }
