@@ -1,25 +1,30 @@
 import { CommonModule } from "@angular/common";
-import { Component, ElementRef, HostBinding, Input, NgModule, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild } from "@angular/core";
+import { IgxIconService } from "./icon.service";
 
-// only a temporary object holding aliases names
-// until the icon registration service gets built
-const fontAliases = {
-    material: "material-icons"
-};
 @Component({
     selector: "igx-icon",
     templateUrl: "icon.component.html"
 })
 
 export class IgxIconComponent implements OnInit {
-    @ViewChild("icon")
-    public themeIcon: ElementRef;
+    @ViewChild("noLigature", { read: TemplateRef })
+    private noLigature: TemplateRef<HTMLElement>;
+
+    @ViewChild("implicitLigature", { read: TemplateRef })
+    private implicitLigature: TemplateRef<HTMLElement>;
+
+    @ViewChild("explicitLigature", { read: TemplateRef })
+    private explicitLigature: TemplateRef<HTMLElement>;
 
     @HostBinding("class.igx-icon")
     public cssClass = "igx-icon";
 
+    @HostBinding("attr.aria-hidden")
+    public ariaHidden = true;
+
     @Input("fontSet")
-    public font = "material";
+    public font: string;
 
     @Input("isActive")
     public active = true;
@@ -28,11 +33,18 @@ export class IgxIconComponent implements OnInit {
     public iconColor: string;
 
     @Input("name")
-    private iconName: string;
+    public iconName: string;
 
-    constructor(public el: ElementRef) { }
+    @Input("iconName")
+    public glyphName: string;
+
+    constructor(public el: ElementRef, private iconService: IgxIconService) {
+        this.font = this.iconService.defaultFontSet;
+        this.iconService.registerFontSetAlias("material", "material-icons");
+    }
 
     ngOnInit() {
+        this.checkInputProps();
         this.updateIconClass();
     }
 
@@ -58,15 +70,32 @@ export class IgxIconComponent implements OnInit {
         return this.iconName;
     }
 
+    get template(): TemplateRef<HTMLElement> {
+        if (this.glyphName) {
+            return this.noLigature;
+        }
+
+        if (this.iconName) {
+            return this.implicitLigature;
+        }
+
+        return this.explicitLigature;
+    }
+
+    private checkInputProps() {
+        if (this.iconName && this.glyphName) {
+            throw new Error(
+                "You can provide either ligature `name` or glyph `iconName`, but not both at the same time."
+            );
+        }
+    }
+
     private updateIconClass() {
-        this.font = fontAliases[this.font] ? this.font : "material-icons";
-        this.el.nativeElement.classList.add(fontAliases[this.font]);
+        const className = this.iconService.fontSetClassName(this.font);
+        this.el.nativeElement.classList.add(className);
+
+        if (this.glyphName) {
+            this.el.nativeElement.classList.add(this.glyphName);
+        }
     }
 }
-
-@NgModule({
-    declarations: [IgxIconComponent],
-    exports: [IgxIconComponent],
-    imports: [CommonModule]
-})
-export class IgxIconModule { }
