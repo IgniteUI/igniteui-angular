@@ -42,7 +42,8 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
     }
 
     set value(val) {
-        if (!val.length) {
+        // filtering needs to be cleared if value is null, undefined or empty string
+        if (!val && val !== 0) {
             this.clearFiltering();
             return;
         }
@@ -251,8 +252,6 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
             value = parseFloat(value);
         } else if (this.dataType === DataType.Boolean) {
             value = Boolean(value);
-        } else if (this.dataType === DataType.Date) {
-            value = new Date(Date.parse(value));
         }
 
         return value;
