@@ -15,8 +15,7 @@ import { autoWire, IGridBus } from "./grid.common";
 })
 export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, AfterContentInit {
 
-    summaries: any[];
-    summariesCache = [];
+    summaryCacheMap: Map<string, any[]> = new Map<string, any[]>();
 
     @Input()
     public column: IgxColumnComponent;
@@ -71,15 +70,26 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, Aft
 
     @autoWire(true)
     clearCache(ev) {
-        console.log(ev);
-        this.summariesCache = [];
+        this.summaryCacheMap.delete(this.column.field);
     }
 
     get resolveSummaries(): any[] {
-        if (this.summariesCache.length === 0) {
-            this.summariesCache = this.column.summaries.operate(this.gridAPI.get(this.gridID).data.map((rec) => rec[this.column.field]));
+        if (!this.summaryCacheMap.get(this.column.field)) {
+            console.log(this.column.field);
+            this.summaryCacheMap.set(this.column.field,
+                this.column.summaries.operate(this.gridAPI.get(this.gridID).data.map((rec) => rec[this.column.field])));
         }
-        return this.summariesCache;
+        return this.summaryCacheMap.get(this.column.field);
     }
+    /* get resolveSummaries(): any[] {
+        if (this.summariesCache.length === 0) {
+            console.log(this.column.field);
+            this.summariesCache = this.column.summaries.operate(this.gridAPI.get(this.gridID).data.map((rec) => rec[this.column.field]));
+// console.table(this.summariesCache);
+        }
+        console.log(this.column.field);
+        console.table(this.summariesCache);
+        return this.summariesCache;
+    } */
 
 }
