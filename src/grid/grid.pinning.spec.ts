@@ -1,8 +1,12 @@
 import { Component, ViewChild } from "@angular/core";
 import { async, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { Calendar } from "../calendar";
 import { KEYCODES, PinLocation } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
+import { STRING_FILTERS } from "../data-operations/filtering-condition";
+import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { IgxGridComponent } from "./grid.component";
@@ -16,9 +20,10 @@ describe("IgxGrid - Column Pinning ", () => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,
-                GridPinningComponent
+                GridPinningComponent,
+                GridFeaturesComponent
             ],
-            imports: [IgxGridModule.forRoot()]
+            imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
         }).compileComponents();
     }));
 
@@ -199,6 +204,62 @@ describe("IgxGrid - Column Pinning ", () => {
         const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         expect(headers[0].context.column.field).toEqual("City");
         expect(headers[1].context.column.field).toEqual("ID");
+    });
+
+    it("should allow filter pinned columns", () => {
+        const fix = TestBed.createComponent(GridFeaturesComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        // Contains filter
+        grid.filter("ProductName", "Ignite", STRING_FILTERS.contains, true);
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(2);
+        expect(grid.getCellByColumn(0, "ID").value).toEqual(1);
+        expect(grid.getCellByColumn(1, "ID").value).toEqual(3);
+
+        // Unpin column
+        grid.unpinColumn("ProductName");
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(2);
+        expect(grid.getCellByColumn(0, "ID").value).toEqual(1);
+        expect(grid.getCellByColumn(1, "ID").value).toEqual(3);
+    });
+
+    it("should allow sorting pinned columns", () => {
+        const fix = TestBed.createComponent(GridFeaturesComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const currentColumn = "ProductName";
+        const releasedColumn = "Released";
+
+        grid.sort(currentColumn, SortingDirection.Asc);
+
+        fix.detectChanges();
+
+        let expectedResult: any = null;
+        expect(grid.getCellByColumn(0, currentColumn).value).toEqual(expectedResult);
+        expectedResult = true;
+        expect(grid.getCellByColumn(0, releasedColumn).value).toEqual(expectedResult);
+        expectedResult = "Some other item with Script";
+        expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual(expectedResult);
+        expectedResult = null;
+        expect(grid.getCellByColumn(grid.data.length - 1, releasedColumn).value).toEqual(expectedResult);
+
+        // Unpin column
+        grid.unpinColumn("ProductName");
+        fix.detectChanges();
+
+        expectedResult = null;
+        expect(grid.getCellByColumn(0, currentColumn).value).toEqual(expectedResult);
+        expectedResult = true;
+        expect(grid.getCellByColumn(0, releasedColumn).value).toEqual(expectedResult);
+        expectedResult = "Some other item with Script";
+        expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual(expectedResult);
+        expectedResult = null;
+        expect(grid.getCellByColumn(grid.data.length - 1, releasedColumn).value).toEqual(expectedResult);
     });
 
     it("should not allow pinning new column if start pinned area becomes greater than the grid width", () => {
@@ -660,4 +721,82 @@ export class GridPinningComponent {
     public cellSelected(event) {
         this.selectedCell = event;
     }
+}
+
+@Component({
+    template: `<igx-grid [data]="data">
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ProductName'" [filterable]="true" [sortable]="true" [pinned]="true" dataType="string"></igx-column>
+        <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
+        <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'"
+            [filterable]="true" dataType="date">
+        </igx-column>
+    </igx-grid>`
+})
+export class GridFeaturesComponent {
+
+    public timeGenerator: Calendar = new Calendar();
+    public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+
+    public data = [
+        {
+            Downloads: 254,
+            ID: 1,
+            ProductName: "Ignite UI for JavaScript",
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", 15),
+            Released: false
+        },
+        {
+            Downloads: 127,
+            ID: 2,
+            ProductName: "NetAdvantage",
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "month", -1),
+            Released: true
+        },
+        {
+            Downloads: 20,
+            ID: 3,
+            ProductName: "Ignite UI for Angular",
+            ReleaseDate: null,
+            Released: null
+        },
+        {
+            Downloads: null,
+            ID: 4,
+            ProductName: null,
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", -1),
+            Released: true
+        },
+        {
+            Downloads: 100,
+            ID: 5,
+            ProductName: "",
+            ReleaseDate: undefined,
+            Released: ""
+        },
+        {
+            Downloads: 702,
+            ID: 6,
+            ProductName: "Some other item with Script",
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", 1),
+            Released: null
+        },
+        {
+            Downloads: 0,
+            ID: 7,
+            ProductName: null,
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "month", 1),
+            Released: true
+        },
+        {
+            Downloads: 1000,
+            ID: 8,
+            ProductName: null,
+            ReleaseDate: this.today,
+            Released: false
+        }
+    ];
+
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
 }
