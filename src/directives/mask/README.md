@@ -36,7 +36,7 @@ public includeLiterals = true;
 <input type="text" igxInput [(ngModel)]="myValue" [igxMask]="myMask" [includeLiterals]="includeLiterals"/>
 ```
 
-Attach to the `dataValueChange` event to implement custom logic when the value changes. Both, raw and formatted value, are accessible through the event payload.
+Attach to the `onValueChange` event to implement custom logic when the value changes. Both, raw and formatted value, are accessible through the event payload.
 ```typescript
 let raw: string;
 let formatted: string;
