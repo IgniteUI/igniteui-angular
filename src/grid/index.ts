@@ -25,7 +25,6 @@ import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridPagingPipe, Ig
 import { IgxGridRowComponent } from "./row.component";
 
 @NgModule({
-<<<<<<< HEAD
   declarations: [
     IgxGridCellComponent,
     IgxColumnComponent,
@@ -71,51 +70,6 @@ import { IgxGridRowComponent } from "./row.component";
     IgxForOfModule
   ],
   providers: [IgxGridAPIService]
-=======
-    declarations: [
-        IgxGridCellComponent,
-        IgxColumnComponent,
-        IgxGridComponent,
-        IgxGridRowComponent,
-        IgxGridHeaderComponent,
-        IgxCellFooterTemplateDirective,
-        IgxCellHeaderTemplateDirective,
-        IgxCellEditorTemplateDirective,
-        IgxCellTemplateDirective,
-        IgxGridFilterComponent,
-        IgxGridSortingPipe,
-        IgxGridPagingPipe,
-        IgxGridFilteringPipe,
-        IgxGridFilterConditionPipe
-    ],
-    entryComponents: [
-        IgxColumnComponent
-    ],
-    exports: [
-        IgxGridComponent,
-        IgxGridCellComponent,
-        IgxGridRowComponent,
-        IgxColumnComponent,
-        IgxGridHeaderComponent,
-        IgxGridFilterComponent,
-        IgxCellFooterTemplateDirective,
-        IgxCellHeaderTemplateDirective,
-        IgxCellEditorTemplateDirective,
-        IgxCellTemplateDirective
-    ],
-    imports: [
-        CommonModule,
-        FormsModule,
-        IgxButtonModule,
-        IgxDatePickerModule,
-        IgxIconModule,
-        IgxRippleModule,
-        IgxInputModule,
-        IgxToggleModule,
-        IgxForOfModule
-    ],
-    providers: [IgxGridAPIService]
->>>>>>> 20efb1c710cbf7bb45f2ce04961e5390a3e44d3d
 })
 export class IgxGridModule {
     public static forRoot() {
