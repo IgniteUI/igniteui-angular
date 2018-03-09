@@ -33,7 +33,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
     private dataValue: string;
 
     @Output()
-    public dataValueChange = new EventEmitter<{rowValue: string, formattedVal: string}>();
+    public onValueChange = new EventEmitter<{rawValue: string, formattedValue: string}>();
 
     private get value() {
         return this.nativeElement.value;
@@ -131,19 +131,19 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
 
             this.maskHelper.data = (this._key === KEYS.BACKSPACE) || (this._key === KEYS.DELETE);
 
-            this.value = this._selection === 0 ? this.maskHelper.parseValueByMask(this.value, this._maskOptions, currentCursorPos - 1) :
-                this.value = this.maskHelper.parseValueByMaskUponSelection
-                    (this.value, this._maskOptions, currentCursorPos - 1, this._selection);
+            this.value = this._selection && this._selection !== 0 ?
+            this.maskHelper.parseValueByMaskUponSelection(this.value, this._maskOptions, currentCursorPos - 1, this._selection) :
+            this.maskHelper.parseValueByMask(this.value, this._maskOptions, currentCursorPos - 1);
 
             this.setCursorPosition(this.maskHelper.cursor);
         }
 
-        const rowVal = this.maskHelper.restoreValueFromMask(this.value, this._maskOptions);
+        const rawVal = this.maskHelper.restoreValueFromMask(this.value, this._maskOptions);
 
-        this.dataValue = this.includeLiterals ? this.value : rowVal;
+        this.dataValue = this.includeLiterals ? this.value : rawVal;
         this._onChangeCallback(this.dataValue);
 
-        this.dataValueChange.emit({rowValue: rowVal, formattedVal: this.value});
+        this.onValueChange.emit({rawValue: rawVal, formattedValue: this.value});
     }
 
     @HostListener("focus", ["$event"])
@@ -168,7 +168,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
         this.dataValue = this.includeLiterals ? this.value : value;
         this._onChangeCallback(this.dataValue);
 
-        this.dataValueChange.emit({rowValue: value, formattedVal: this.value});
+        this.onValueChange.emit({rawValue: value, formattedValue: this.value});
     }
 
     public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }

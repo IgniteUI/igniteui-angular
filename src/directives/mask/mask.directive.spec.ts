@@ -218,8 +218,7 @@ describe("AppComponent", () => {
             fixture.detectChanges();
             expect(input.nativeElement.value).toEqual("(123) ____-___");
 
-            // expect(fixture.componentInstance.formatted).toEqual("(123) ____-___");
-            expect(fixture.componentInstance.row).toEqual("123");
+            expect(fixture.componentInstance.raw).toEqual("123");
         });
     }));
 
@@ -250,6 +249,37 @@ describe("AppComponent", () => {
 
             expect(input.nativeElement.value).toEqual("A*******");
         });
+    }));
+
+    it("Selection", fakeAsync(() => {
+        const fixture = TestBed.createComponent(MaskComponent);
+        fixture.detectChanges();
+
+        const input = fixture.debugElement.query(By.css("input"));
+
+        input.nativeElement.focus();
+        tick();
+
+        input.nativeElement.select();
+        tick();
+
+        const keyEvent = new KeyboardEvent("keydown", {key : "57"});
+        input.nativeElement.dispatchEvent(keyEvent);
+        tick();
+
+        fixture.detectChanges();
+
+        input.nativeElement.value = "";
+        input.triggerEventHandler("input", {});
+        tick();
+
+        input.triggerEventHandler("focus", {});
+        tick();
+
+        fixture.detectChanges();
+
+        expect(input.nativeElement.value).toEqual("(___) ____-___");
+
     }));
 });
 
@@ -303,16 +333,16 @@ class AnyCharMaskComponent {
 }
 
 @Component({ template: `<input type="text" igxInput [(ngModel)]="myValue" [igxMask]="myMask"
-                        (dataValueChange)="handleValueChange($event)"/>` })
+                        (onValueChange)="handleValueChange($event)"/>` })
 class EventFiringComponent {
     myValue = "";
     myMask = "(000) 0000-000";
-    row: string;
+    raw: string;
     formatted: string;
 
     handleValueChange(event) {
-        this.row = event.rowValue;
-        this.formatted = event.formattedVal;
+        this.raw = event.rawValue;
+        this.formatted = event.formattedValue;
     }
 }
 

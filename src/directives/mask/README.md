@@ -36,18 +36,18 @@ public includeLiterals = true;
 <input type="text" igxInput [(ngModel)]="myValue" [igxMask]="myMask" [includeLiterals]="includeLiterals"/>
 ```
 
-Attach to the `dataValueChange` event to implement custom logic when the value changes. Both, row and formatted value, are accessible through the event payload.
+Attach to the `dataValueChange` event to implement custom logic when the value changes. Both, raw and formatted value, are accessible through the event payload.
 ```typescript
-let row: string;
+let raw: string;
 let formatted: string;
 
 handleValueChange(event) {
-  this.row = event.rowValue;
-  this.formatted = event.formattedVal;
+  this.raw = event.rawValue;
+  this.formatted = event.formattedValue;
 }
 ```
 ```html
-<input type="text" igxInput [(ngModel)]="1234567890" [igxMask]="'(000) 0000-000'" (dataValueChange)="handleValueChange($event)"/>
+<input type="text" igxInput [(ngModel)]="1234567890" [igxMask]="'(000) 0000-000'" (onValueChange)="handleValueChange($event)"/>
 ```
 
 ### API
@@ -62,4 +62,4 @@ handleValueChange(event) {
 ### Outputs
 | Name | Return Type | Description |
 |:--:|:---|:---|
-| `dataValueChange` | `void` | Fires each time the value changes. |
+| `onValueChange` | `void` | Fires each time the value changes. |
