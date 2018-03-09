@@ -336,7 +336,11 @@ export const BOOLEAN_FILTERS = {
 
 export const DATE_FILTERS = {
     equals(target: Date, searchVal: Date): boolean {
-        return +target === +searchVal;
+        const targetp = getDateParts(target, "yMd");
+        const searchp = getDateParts(searchVal, "yMd");
+        return targetp.year === searchp.year &&
+            targetp.month === searchp.month &&
+            targetp.day === searchp.day;
     },
     doesNotEqual(target: Date, searchVal: Date): boolean {
         return !DATE_FILTERS.equals(target, searchVal);
