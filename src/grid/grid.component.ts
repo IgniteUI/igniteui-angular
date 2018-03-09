@@ -238,32 +238,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         private viewRef: ViewContainerRef) {
 
             this.resizeHandler = () => {
-                const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
-                if (!this.width) {
-                    /*no width specified.*/
-                    this.calcWidth = null;
-                } else if (this.width && this.width.indexOf("%") !== -1) {
-                    /* width in %*/
-                    this.calcWidth = parseInt(computed.getPropertyValue("width"), 10);
-                }
-                if (!this.height) {
-                    /*no height specified.*/
-                    this.calcHeight = null;
-                } else if (this.height && this.height.indexOf("%") !== -1) {
-                    /*height in %*/
-                    const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-                        this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
-                    this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
-                        this.theadRow.nativeElement.clientHeight -
-                        footerHeight;
-                } else {
-                    const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-                    this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
-                    this.calcHeight = parseInt(this.height, 10) -
-                        this.theadRow.nativeElement.clientHeight -
-                        footerHeight;
-                }
-
+                this.calculateGridSizes();
                 this.zone.run(() => this.markForCheck());
             };
     }
@@ -295,34 +270,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.addEventListener("resize", this.resizeHandler);
         });
-        const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
-        if (!this.width) {
-            /*no width specified.*/
-            this.calcWidth = null;
-        } else if (this.width && this.width.indexOf("%") !== -1) {
-            /* width in %*/
-            this.calcWidth = parseInt(computed.getPropertyValue("width"), 10);
-        }
-        if (!this.height) {
-            /*no height specified.*/
-            this.calcHeight = null;
-        } else if (this.height && this.height.indexOf("%") !== -1) {
-            /*height in %*/
-            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-                this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
-            this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
-                this.theadRow.nativeElement.clientHeight -
-                footerHeight -
-                this.scr.nativeElement.clientHeight;
-        } else {
-            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-            this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
-            this.calcHeight = parseInt(this.height, 10) -
-                this.theadRow.nativeElement.clientHeight -
-                footerHeight -
-                this.scr.nativeElement.clientHeight;
-        }
-
+        
+        this.calculateGridSizes();
         this.setEventBusSubscription();
         this.setVerticalScrollSubscription();
         this.cdr.detectChanges();
@@ -579,6 +528,36 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 .reduce((a, b) => a.concat(b), []);
         }
         return [];
+    }
+
+    protected calculateGridSizes() {
+        const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+        if (!this.width) {
+            /*no width specified.*/
+            this.calcWidth = null;
+        } else if (this.width && this.width.indexOf("%") !== -1) {
+            /* width in %*/
+            this.calcWidth = parseInt(computed.getPropertyValue("width"), 10);
+        }
+        if (!this.height) {
+            /*no height specified.*/
+            this.calcHeight = null;
+        } else if (this.height && this.height.indexOf("%") !== -1) {
+            /*height in %*/
+            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
+                this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
+            this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
+                this.theadRow.nativeElement.clientHeight -
+                footerHeight -
+                this.scr.nativeElement.clientHeight;
+        } else {
+            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
+            this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
+            this.calcHeight = parseInt(this.height, 10) -
+                this.theadRow.nativeElement.clientHeight -
+                footerHeight -
+                this.scr.nativeElement.clientHeight;
+        }
     }
 
     /**
