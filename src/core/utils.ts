@@ -21,7 +21,3 @@ export const enum KEYCODES {
     F2 = 113
 }
 
-export const enum PinLocation {
- Start,
- End
-}

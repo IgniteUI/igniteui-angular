@@ -27,9 +27,6 @@ import { autoWire, IGridBus } from "./grid.common";
         :host.last-pinned {
             border-right: 1px solid #666;
         }
-        :host.first-pinned {
-            border-left: 1px solid #666;
-        }
         `
     ],
     templateUrl: "./cell.component.html"
@@ -156,27 +153,17 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     }
 
     @HostBinding("class.pinned")
-    get isFixed() {
+    get isPinned() {
         return this.column.pinned;
     }
 
     @HostBinding("class.last-pinned")
-    get isLastFixed() {
-        const pinnedCols = this.grid.pinnedStartColumns;
+    get isLastPinned() {
+        const pinnedCols = this.grid.pinnedColumns;
         if (pinnedCols.length === 0) {
             return false;
         } else {
             return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
-        }
-    }
-
-    @HostBinding("class.first-pinned")
-    get isFirstFixed() {
-        const pinnedCols = this.grid.pinnedEndColumns;
-        if (pinnedCols.length === 0) {
-            return false;
-        } else {
-            return pinnedCols.indexOf(this.column) === 0;
         }
     }
 
