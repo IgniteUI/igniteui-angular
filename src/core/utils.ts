@@ -20,8 +20,3 @@ export const enum KEYCODES {
     DOWN_ARROW = 40,
     F2 = 113
 }
-
-export const enum PinLocation {
- Start,
- End
-}

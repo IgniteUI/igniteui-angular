@@ -406,7 +406,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "NetAdvantage", fix).then(() => {
             fix.detectChanges();
-            verifyFilterUIisVisible(filterUIContainer, grid);
+            verifyFilterUIPosition(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(1);
             expect(grid.getCellByColumn(0, "ID").value).toEqual(2);
             expect(grid.getCellByColumn(0, "ProductName").value).toMatch("NetAdvantage");
@@ -431,7 +431,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "Ignite", fix).then(() => {
             fix.detectChanges();
-            verifyFilterUIisVisible(filterUIContainer, grid);
+            verifyFilterUIPosition(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(6);
             expect(grid.getCellByColumn(0, "ProductName").value).toMatch("NetAdvantage");
             expect(grid.getCellByColumn(1, "ProductName").value).toEqual(null);
@@ -458,7 +458,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "Net", fix).then(() => {
             fix.detectChanges();
-            verifyFilterUIisVisible(filterUIContainer, grid);
+            verifyFilterUIPosition(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(1);
             expect(grid.getCellByColumn(0, "ID").value).toEqual(2);
             expect(grid.getCellByColumn(0, "ProductName").value).toMatch("NetAdvantage");
@@ -483,7 +483,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "for", fix).then(() => {
             fix.detectChanges();
-            verifyFilterUIisVisible(filterUIContainer, grid);
+            verifyFilterUIPosition(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(0);
             done();
         });
@@ -506,7 +506,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "Some other item with Script", fix).then(() => {
             fix.detectChanges();
-            verifyFilterUIisVisible(filterUIContainer, grid);
+            verifyFilterUIPosition(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(1);
             expect(grid.getCellByColumn(0, "ID").value).toEqual(6);
             expect(grid.getCellByColumn(0, "ProductName").value).toMatch("Some other item with Script");
@@ -531,7 +531,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "NetAdvantage", fix).then(() => {
             fix.detectChanges();
-            verifyFilterUIisVisible(filterUIContainer, grid);
+            verifyFilterUIPosition(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(7);
             expect(grid.getCellByColumn(0, "ProductName").value).toMatch("Ignite UI for JavaScript");
             expect(grid.getCellByColumn(1, "ProductName").value).toMatch("Ignite UI for Angular");
@@ -555,7 +555,6 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
 
         fix.detectChanges();
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(4);
         expect(grid.getCellByColumn(0, "ProductName").value).toMatch("");
         expect(grid.getCellByColumn(1, "ProductName").value).toMatch("");
@@ -579,7 +578,6 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
 
         fix.detectChanges();
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(4);
         expect(grid.getCellByColumn(0, "ProductName").value).toMatch("Ignite UI for JavaScript");
         expect(grid.getCellByColumn(1, "ProductName").value).toMatch("NetAdvantage");
@@ -602,7 +600,6 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
 
         fix.detectChanges();
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(3);
         expect(grid.getCellByColumn(0, "ProductName").value).toEqual(null);
         expect(grid.getCellByColumn(1, "ProductName").value).toEqual(null);
@@ -625,7 +622,6 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
 
         fix.detectChanges();
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(5);
         expect(grid.getCellByColumn(3, "ProductName").value).toMatch("");
     });
@@ -647,7 +643,6 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(3);
         expect(grid.getCellByColumn(0, "Released").value).toBe(true);
         expect(grid.getCellByColumn(1, "Released").value).toBe(true);
@@ -669,7 +664,6 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(5);
         expect(grid.getCellByColumn(0, "Released").value).toBeFalsy();
         expect(grid.getCellByColumn(1, "Released").value).toBeFalsy();
@@ -694,7 +688,6 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(2);
         expect(grid.getCellByColumn(0, "Released").value).toEqual(null);
         expect(grid.getCellByColumn(1, "Released").value).toEqual(null);
@@ -716,7 +709,6 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(6);
         expect(grid.getCellByColumn(0, "Released").value).toBe(false);
         expect(grid.getCellByColumn(1, "Released").value).toBe(true);
@@ -742,7 +734,6 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(2);
         expect(grid.getCellByColumn(0, "Released").value).toEqual(null);
         expect(grid.getCellByColumn(1, "Released").value).toEqual(null);
@@ -764,7 +755,6 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(6);
         expect(grid.getCellByColumn(0, "Released").value).toBe(false);
         expect(grid.getCellByColumn(1, "Released").value).toBe(true);
@@ -789,7 +779,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "100", fix).then(() => {
             fix.detectChanges();
-            verifyFilterUIisVisible(filterUIContainer, grid);
+            verifyFilterUIPosition(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(1);
             expect(grid.getCellByColumn(0, "Downloads").value).toEqual(100);
             done();
@@ -813,7 +803,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "100", fix).then(() => {
             fix.detectChanges();
-            verifyFilterUIisVisible(filterUIContainer, grid);
+            verifyFilterUIPosition(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(7);
             expect(grid.getCellByColumn(6, "Downloads").value).toEqual(1000);
             done();
@@ -837,7 +827,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "300", fix).then(() => {
             fix.detectChanges();
-            verifyFilterUIisVisible(filterUIContainer, grid);
+            verifyFilterUIPosition(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(2);
             expect(grid.getCellByColumn(0, "Downloads").value).toEqual(702);
             expect(grid.getCellByColumn(1, "Downloads").value).toEqual(1000);
@@ -862,7 +852,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "100", fix).then(() => {
             fix.detectChanges();
-            verifyFilterUIisVisible(filterUIContainer, grid);
+            verifyFilterUIPosition(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(3);
             expect(grid.getCellByColumn(0, "Downloads").value).toEqual(20);
             expect(grid.getCellByColumn(1, "Downloads").value).toEqual(null);
@@ -888,7 +878,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "254", fix).then(() => {
             fix.detectChanges();
-            verifyFilterUIisVisible(filterUIContainer, grid);
+            verifyFilterUIPosition(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(3);
             expect(grid.getCellByColumn(0, "Downloads").value).toEqual(254);
             expect(grid.getCellByColumn(1, "Downloads").value).toEqual(702);
@@ -914,7 +904,7 @@ describe("IgxGrid - Filtering actions", () => {
 
         sendInput(input, "20", fix).then(() => {
             fix.detectChanges();
-            verifyFilterUIisVisible(filterUIContainer, grid);
+            verifyFilterUIPosition(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(3);
             expect(grid.getCellByColumn(0, "Downloads").value).toEqual(20);
             expect(grid.getCellByColumn(1, "Downloads").value).toEqual(null);
@@ -939,7 +929,6 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(1);
         expect(grid.getCellByColumn(0, "ID").value).toEqual(4);
         expect(grid.getCellByColumn(0, "Downloads").value).toEqual(null);
@@ -961,7 +950,6 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(7);
     });
 
@@ -981,7 +969,6 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(1);
         expect(grid.getCellByColumn(0, "ID").value).toEqual(4);
         expect(grid.getCellByColumn(0, "Downloads").value).toEqual(null);
@@ -1003,7 +990,6 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(7);
     });
 
@@ -1013,17 +999,18 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const select = filterUIContainer.query(By.css("div > select"));
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const select = filterIcon.query(By.css("div > select"));
 
+        filterIcon.triggerEventHandler("mousedown", null);
+        fix.detectChanges();
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        verifyFilterUIPosition(filterIcon, grid);
         select.nativeElement.value = "today";
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         // only one record is populated with "today" date, this is why rows must be 1
         expect(grid.rowList.length).toEqual(1);
     });
@@ -1033,17 +1020,18 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const select = filterUIContainer.query(By.css("div > select"));
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const select = filterIcon.query(By.css("div > select"));
 
+        filterIcon.triggerEventHandler("mousedown", null);
+        fix.detectChanges();
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        verifyFilterUIPosition(filterIcon, grid);
         select.nativeElement.value = "yesterday";
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         // only one record is populated with (today - 1 day)  date, this is why rows must be 1
         expect(grid.rowList.length).toEqual(1);
     });
@@ -1053,22 +1041,23 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const select = filterUIContainer.query(By.css("div > select"));
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const select = filterIcon.query(By.css("div > select"));
         const cal = fix.componentInstance.timeGenerator;
         const today = fix.componentInstance.today;
 
         // Fill expected results based on the current date
         fillExpectedResults(grid, cal, today);
 
+        filterIcon.triggerEventHandler("mousedown", null);
+        fix.detectChanges();
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        verifyFilterUIPosition(filterIcon, grid);
         select.nativeElement.value = "thisMonth";
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(expectedResults[5]);
     });
 
@@ -1077,22 +1066,24 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const select = filterUIContainer.query(By.css("div > select"));
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+
+        const select = filterIcon.query(By.css("div > select"));
         const cal = fix.componentInstance.timeGenerator;
         const today = fix.componentInstance.today;
 
         // Fill expected results based on the current date
         fillExpectedResults(grid, cal, today);
 
+        filterIcon.triggerEventHandler("mousedown", null);
+        fix.detectChanges();
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        verifyFilterUIPosition(filterIcon, grid);
         select.nativeElement.value = "nextMonth";
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(expectedResults[1]);
     });
 
@@ -1101,22 +1092,23 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const select = filterUIContainer.query(By.css("div > select"));
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const select = filterIcon.query(By.css("div > select"));
         const cal = fix.componentInstance.timeGenerator;
         const today = fix.componentInstance.today;
 
         // Fill expected results based on the current date
         fillExpectedResults(grid, cal, today);
 
+        filterIcon.triggerEventHandler("mousedown", null);
+        fix.detectChanges();
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        verifyFilterUIPosition(filterIcon, grid);
         select.nativeElement.value = "lastMonth";
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(expectedResults[0]);
     });
 
@@ -1125,17 +1117,18 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const select = filterUIContainer.query(By.css("div > select"));
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const select = filterIcon.query(By.css("div > select"));
 
+        filterIcon.triggerEventHandler("mousedown", null);
+        fix.detectChanges();
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        verifyFilterUIPosition(filterIcon, grid);
         select.nativeElement.value = "empty";
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(2);
     });
 
@@ -1144,17 +1137,18 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const select = filterUIContainer.query(By.css("div > select"));
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const select = filterIcon.query(By.css("div > select"));
 
+        filterIcon.triggerEventHandler("mousedown", null);
+        fix.detectChanges();
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        verifyFilterUIPosition(filterIcon, grid);
         select.nativeElement.value = "notEmpty";
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(6);
     });
 
@@ -1163,17 +1157,18 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const select = filterUIContainer.query(By.css("div > select"));
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const select = filterIcon.query(By.css("div > select"));
 
+        filterIcon.triggerEventHandler("mousedown", null);
+        fix.detectChanges();
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        verifyFilterUIPosition(filterIcon, grid);
         select.nativeElement.value = "null";
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(1);
     });
 
@@ -1182,17 +1177,18 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const select = filterUIContainer.query(By.css("div > select"));
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const select = filterIcon.query(By.css("div > select"));
 
+        filterIcon.triggerEventHandler("mousedown", null);
+        fix.detectChanges();
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        verifyFilterUIPosition(filterIcon, grid);
         select.nativeElement.value = "notNull";
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(7);
     });
 
@@ -1201,22 +1197,23 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const select = filterUIContainer.query(By.css("div > select"));
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const select = filterIcon.query(By.css("div > select"));
         const cal = fix.componentInstance.timeGenerator;
         const today = fix.componentInstance.today;
 
         // Fill expected results based on the current date
         fillExpectedResults(grid, cal, today);
 
+        filterIcon.triggerEventHandler("mousedown", null);
+        fix.detectChanges();
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        verifyFilterUIPosition(filterIcon, grid);
         select.nativeElement.value = "thisYear";
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(expectedResults[2]);
     });
 
@@ -1225,22 +1222,23 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const select = filterUIContainer.query(By.css("div > select"));
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const select = filterIcon.query(By.css("div > select"));
         const cal = fix.componentInstance.timeGenerator;
         const today = fix.componentInstance.today;
 
         // Fill expected results based on the current date
         fillExpectedResults(grid, cal, today);
 
+        filterIcon.triggerEventHandler("mousedown", null);
+        fix.detectChanges();
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        verifyFilterUIPosition(filterIcon, grid);
         select.nativeElement.value = "lastYear";
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(expectedResults[4]);
     });
 
@@ -1249,151 +1247,178 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const select = filterUIContainer.query(By.css("div > select"));
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const select = filterIcon.query(By.css("div > select"));
         const cal = fix.componentInstance.timeGenerator;
         const today = fix.componentInstance.today;
 
         // Fill expected results based on the current date
         fillExpectedResults(grid, cal, today);
 
+        filterIcon.triggerEventHandler("mousedown", null);
+        fix.detectChanges();
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        verifyFilterUIPosition(filterIcon, grid);
         select.nativeElement.value = "nextYear";
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        verifyFilterUIisVisible(filterUIContainer, grid);
         expect(grid.rowList.length).toEqual(expectedResults[3]);
     });
 
-    // fit("UI - should correctly filter date column by 'equals' filtering conditions", () => {
-    //     const fix = TestBed.createComponent(IgxGridFilteringComponent);
-    //     fix.detectChanges();
+    it("UI - should correctly filter date column by 'equals' filtering conditions", async(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
 
-    //     const grid = fix.componentInstance.grid;
-    //     const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-    //     const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-    //     const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const grid = fix.componentInstance.grid;
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const select = filterIcon.query(By.css("div > select"));
+        const input = filterIcon.query(By.css("input.igx-form-group__input"));
 
-    //     filterIcon.nativeElement.click();
-    //     fix.whenStable().then(() => {
-    //         fix.detectChanges();
-    //         input.nativeElement.click();
-    //         return fix.whenStable();
-    //     }).then(() => {
-    //         fix.detectChanges();
-    //          // pick a date from the date picker
-    //         const calendar = fix.debugElement.query(By.css("igx-calendar"));
-    //         const currentDay = calendar.query(By.css("span.igx-calendar__date--current"));
-    //         currentDay.nativeElement.click();
-    //         return fix.whenStable();
-    //     }).then(() => {
-    //         fix.detectChanges();
-    //         const calendar = fix.debugElement.query(By.css("igx-calendar"));
-    //         calendar.nativeElement.dispatchEvent(new Event("change"));
-    //         return fix.whenStable();
-    //     }).then(() => {
-    //         fix.detectChanges();
-    //         input.nativeElement.dispatchEvent(new Event("change"));
-    //         return fix.whenStable();
-    //     }).then(() => {
-    //         fix.detectChanges();
-    //         expect(grid.rowList.length).toEqual(1);
-    //     });
+        fix.whenStable().then(() => {
+            filterIcon.triggerEventHandler("mousedown", null);
+            fix.detectChanges();
+            filterIcon.nativeElement.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            verifyFilterUIPosition(filterIcon, grid);
+            select.nativeElement.value = "equals";
+            select.nativeElement.dispatchEvent(new Event("change"));
+            input.nativeElement.click();
+            return fix.whenRenderingDone();
+        }).then(() => {
+            fix.detectChanges();
+             // pick a date from the date picker
+            const calendar = fix.debugElement.query(By.css("igx-calendar"));
+            const currentDay = calendar.query(By.css("span.igx-calendar__date--current"));
+            currentDay.nativeElement.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            input.nativeElement.dispatchEvent(new Event("change"));
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(1);
+        });
 
-    // });
+    }));
 
-    // it("UI - should correctly filter date column by 'doesNotEqual' filtering conditions", (done) => {
-    //     const fix = TestBed.createComponent(IgxGridFilteringComponent);
-    //     fix.detectChanges();
+    it("UI - should correctly filter date column by 'doesNotEqual' filtering conditions", async(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
 
-    //     const grid = fix.componentInstance.grid;
-    //     const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-    //     const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-    //     const select = filterUIContainer.query(By.css("div > select"));
-    //     const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const grid = fix.componentInstance.grid;
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const select = filterIcon.query(By.css("div > select"));
+        const input = filterIcon.query(By.css("input.igx-form-group__input"));
 
-    //     filterIcon.nativeElement.click();
-    //     fix.detectChanges();
-    //     input.nativeElement.click();
-    //     fix.detectChanges();
-    //     select.nativeElement.value = "doesNotEqual";
-    //     select.nativeElement.dispatchEvent(new Event("change"));
-    //     fix.detectChanges();
+        fix.whenStable().then(() => {
+            filterIcon.triggerEventHandler("mousedown", null);
+            fix.detectChanges();
+            filterIcon.nativeElement.click();
+            verifyFilterUIPosition(filterIcon, grid);
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            select.nativeElement.value = "doesNotEqual";
+            select.nativeElement.dispatchEvent(new Event("change"));
+            input.nativeElement.click();
+            return fix.whenRenderingDone();
+        }).then(() => {
+            fix.detectChanges();
+             // pick a date from the date picker
+            const calendar = fix.debugElement.query(By.css("igx-calendar"));
+            const currentDay = calendar.query(By.css("span.igx-calendar__date--current"));
+            currentDay.nativeElement.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            input.nativeElement.dispatchEvent(new Event("change"));
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(7);
+        });
+    }));
 
-    //     // pick a date from the date picker
-    //     const calendar = fix.debugElement.query(By.css("igx-calendar"));
-    //     const currentDay = calendar.query(By.css("span.igx-calendar__date--current"));
-    //     currentDay.nativeElement.click();
-    //     fix.detectChanges();
-    //     input.nativeElement.dispatchEvent(new Event("change"));
-    //     fix.detectChanges();
+    it("UI - should correctly filter date column by 'after' filtering conditions", async(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
 
-    //     verifyFilterUIisVisible(filterUIContainer, grid);
-    //     expect(grid.rowList.length).toEqual(7);
-    // });
+        const grid = fix.componentInstance.grid;
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const select = filterIcon.query(By.css("div > select"));
+        const input = filterIcon.query(By.css("input.igx-form-group__input"));
 
-    // it("UI - should correctly filter date column by 'after' filtering conditions", (done) => {
-    //     const fix = TestBed.createComponent(IgxGridFilteringComponent);
-    //     fix.detectChanges();
+        fix.whenStable().then(() => {
+            filterIcon.triggerEventHandler("mousedown", null);
+            fix.detectChanges();
+            filterIcon.nativeElement.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            verifyFilterUIPosition(filterIcon, grid);
+            select.nativeElement.value = "after";
+            select.nativeElement.dispatchEvent(new Event("change"));
+            input.nativeElement.click();
+            return fix.whenRenderingDone();
+        }).then(() => {
+            fix.detectChanges();
+             // pick a date from the date picker
+            const calendar = fix.debugElement.query(By.css("igx-calendar"));
+            const currentDay = calendar.query(By.css("span.igx-calendar__date--current"));
+            currentDay.nativeElement.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            input.nativeElement.dispatchEvent(new Event("change"));
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(3);
+        });
+    }));
 
-    //     const grid = fix.componentInstance.grid;
-    //     const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-    //     const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-    //     const select = filterUIContainer.query(By.css("div > select"));
-    //     const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+    it("UI - should correctly filter date column by 'before' filtering conditions", async(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
 
-    //     filterIcon.nativeElement.click();
-    //     fix.detectChanges();
-    //     input.nativeElement.click();
-    //     fix.detectChanges();
-    //     select.nativeElement.value = "after";
-    //     select.nativeElement.dispatchEvent(new Event("change"));
-    //     fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const select = filterIcon.query(By.css("div > select"));
+        const input = filterIcon.query(By.css("input.igx-form-group__input"));
 
-    //     // pick a date from the date picker
-    //     const calendar = fix.debugElement.query(By.css("igx-calendar"));
-    //     const currentDay = calendar.query(By.css("span.igx-calendar__date--current"));
-    //     currentDay.nativeElement.click();
-    //     fix.detectChanges();
-    //     input.nativeElement.dispatchEvent(new Event("change"));
-    //     fix.detectChanges();
-
-    //     verifyFilterUIisVisible(filterUIContainer, grid);
-    //     expect(grid.rowList.length).toEqual(3);
-    // });
-
-    // it("UI - should correctly filter date column by 'before' filtering conditions", (done) => {
-    //     const fix = TestBed.createComponent(IgxGridFilteringComponent);
-    //     fix.detectChanges();
-
-    //     const grid = fix.componentInstance.grid;
-    //     const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-    //     const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-    //     const select = filterUIContainer.query(By.css("div > select"));
-    //     const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
-
-    //     filterIcon.nativeElement.click();
-    //     fix.detectChanges();
-    //     input.nativeElement.click();
-    //     fix.detectChanges();
-    //     select.nativeElement.value = "before";
-    //     select.nativeElement.dispatchEvent(new Event("change"));
-    //     fix.detectChanges();
-
-    //     // pick a date from the date picker
-    //     const calendar = fix.debugElement.query(By.css("igx-calendar"));
-    //     const currentDay = calendar.query(By.css("span.igx-calendar__date--current"));
-    //     currentDay.nativeElement.click();
-    //     fix.detectChanges();
-    //     input.nativeElement.dispatchEvent(new Event("change"));
-    //     fix.detectChanges();
-
-    //     verifyFilterUIisVisible(filterUIContainer, grid);
-    //     expect(grid.rowList.length).toEqual(4);
-    // });
+        fix.whenStable().then(() => {
+            filterIcon.triggerEventHandler("mousedown", null);
+            fix.detectChanges();
+            filterIcon.nativeElement.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            verifyFilterUIPosition(filterIcon, grid);
+            select.nativeElement.value = "before";
+            select.nativeElement.dispatchEvent(new Event("change"));
+            input.nativeElement.click();
+            return fix.whenRenderingDone();
+        }).then(() => {
+            fix.detectChanges();
+             // pick a date from the date picker
+            const calendar = fix.debugElement.query(By.css("igx-calendar"));
+            const currentDay = calendar.query(By.css("span.igx-calendar__date--current"));
+            currentDay.nativeElement.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            input.nativeElement.dispatchEvent(new Event("change"));
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(4);
+        });
+    }));
 });
 
 @Component({
@@ -1483,16 +1508,11 @@ function sendInput(element, text: string, fix) {
     return fix.whenStable();
 }
 
-function pickCurrentDate(element, fix) {
+function verifyFilterUIPosition(filterUIContainer, grid) {
+    const cont = filterUIContainer.queryAll(By.css("span"))[1];
 
-}
-
-function verifyFilterUIisVisible(filterUIContainer, grid) {
-    const filterUiBottomBorder = filterUIContainer.nativeElement.offsetTop + filterUIContainer.nativeElement.offsetHeight;
-    expect(filterUiBottomBorder).toBeLessThanOrEqual(grid.nativeElement.offsetHeight);
-
-    const filterUiRightBorder = filterUIContainer.nativeElement.offsetParent.offsetLeft +
-        filterUIContainer.nativeElement.offsetLeft + filterUIContainer.nativeElement.offsetWidth;
+    const filterUiRightBorder = cont.nativeElement.offsetParent.offsetLeft +
+        cont.nativeElement.offsetLeft + cont.nativeElement.offsetWidth;
     expect(filterUiRightBorder).toBeLessThanOrEqual(grid.nativeElement.offsetWidth);
 }
 
