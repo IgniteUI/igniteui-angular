@@ -1,9 +1,10 @@
-/**
- * ----------------------------------------
- * animation flip-out-hor-top
- * ----------------------------------------
- */
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// @requires {mixin} keyframes
 @mixin flip-out-hor-top {
     @include keyframes (flip-out-hor-top) {
         0% {
@@ -18,13 +19,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-out-hor-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-out-hor-bottom {
     @include keyframes (flip-out-hor-bottom) {
         0% {
@@ -39,13 +34,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-out-ver-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-out-ver-left {
     @include keyframes (flip-out-ver-left) {
         0% {
@@ -60,13 +49,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * @animation flip-out-ver-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-out-ver-right {
     @include keyframes (flip-out-ver-right) {
         0% {
@@ -81,13 +64,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-out-diag-1-tr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-out-diag-1-tr {
     @include keyframes (flip-out-diag-1-tr) {
         0% {
@@ -102,13 +79,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-out-diag-1-bl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-out-diag-1-bl {
     @include keyframes (flip-out-diag-1-bl) {
         0% {
@@ -123,13 +94,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-out-diag-2-tl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-out-diag-2-tl {
     @include keyframes (flip-out-diag-2-tl) {
         0% {
@@ -144,13 +109,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-out-diag-2-br
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-out-diag-2-br {
     @include keyframes (flip-out-diag-2-br) {
         0% {

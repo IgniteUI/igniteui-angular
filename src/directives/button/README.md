@@ -1,6 +1,7 @@
 # igxButton
 
-The **igxButton** directive is intended to be used on any button, span, div, or anchor element to turn it into a fully functional button.
+The **igxButton** directive is intended to be used on any button, span, div, or anchor element to turn it into a fully functional button.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/button.html)
 
 # Usage
 ```html

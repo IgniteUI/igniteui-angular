@@ -25,6 +25,9 @@ import {
     ViewChildren,
     ViewContainerRef
 } from "@angular/core";
+import { of } from "rxjs/observable/of";
+import { debounceTime, delay, merge, repeat, take, takeUntil } from "rxjs/operators";
+import { Subject } from "rxjs/Subject";
 import { cloneArray } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
@@ -36,6 +39,7 @@ import { IgxColumnComponent } from "./column.component";
 import { IgxGridRowComponent } from "./row.component";
 
 let NEXT_ID = 0;
+const DEBOUNCE_TIME = 16;
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -195,6 +199,9 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
 
     public cellInEditMode: IgxGridCellComponent;
 
+    public eventBus = new Subject<boolean>();
+    protected destroy$ = new Subject<boolean>();
+
     protected _perPage = 15;
     protected _page = 0;
     protected _paging = false;
@@ -213,6 +220,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
         public cdr: ChangeDetectorRef,
         private resolver: ComponentFactoryResolver,
         private viewRef: ViewContainerRef) {
+
             this.resizeHandler = () => {
                 const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
                 if (!this.width) {
@@ -240,7 +248,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
                         footerHeight;
                 }
 
-                this.zone.run(() => this.cdr.detectChanges());
+                this.zone.run(() => this.markForCheck());
             };
     }
 
@@ -254,11 +262,13 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
         if (this.autoGenerate) {
             this.autogenerateColumns();
         }
+
         this.columnList.forEach((col, idx) => {
             col.index = idx;
             col.gridID = this.id;
             this.onColumnInit.emit(col);
         });
+
         this._columns = this.columnList.toArray();
     }
 
@@ -291,11 +301,16 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
                 this.theadRow.nativeElement.clientHeight -
                 footerHeight;
         }
+
+        this.setEventBusSubscription();
+        this.setVerticalScrollSubscription();
         this.cdr.detectChanges();
     }
 
     public ngOnDestroy() {
         this.zone.runOutsideAngular(() => this.document.defaultView.removeEventListener("resize", this.resizeHandler));
+        this.destroy$.next(true);
+        this.destroy$.complete();
     }
 
     get nativeElement() {
@@ -359,7 +374,10 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     }
 
     public markForCheck() {
-        this.gridAPI.mark_for_check(this.id);
+        if (this.rowList) {
+            this.rowList.forEach((row) => row.cdr.markForCheck());
+        }
+        this.cdr.detectChanges();
     }
 
     public addRow(data: any): void {
@@ -508,5 +526,32 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
         });
 
         this.columnList.reset(columns);
+    }
+
+    protected setEventBusSubscription() {
+        this.eventBus.pipe(
+            debounceTime(DEBOUNCE_TIME),
+            takeUntil(this.destroy$)
+        ).subscribe(() => this.cdr.detectChanges());
+    }
+
+    protected setVerticalScrollSubscription() {
+        /*
+            Until the grid component is destroyed,
+            Take the first event and unsubscribe
+            then merge with an empty observable after DEBOUNCE_TIME,
+            re-subscribe and repeat the process
+        */
+        this.parentVirtDir.onChunkLoad.pipe(
+            takeUntil(this.destroy$),
+            take(1),
+            merge(of({})),
+            delay(DEBOUNCE_TIME),
+            repeat()
+        ).subscribe(() => {
+            if (this.cellInEditMode) {
+                this.cellInEditMode.inEditMode = false;
+            }
+        });
     }
 }

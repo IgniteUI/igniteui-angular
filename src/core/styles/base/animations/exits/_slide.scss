@@ -1,9 +1,10 @@
-/**
- * ----------------------------------------
- * animation slide-out-top
- * ----------------------------------------
- */
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// @requires {mixin} keyframes
 @mixin slide-out-top {
     @include keyframes (slide-out-top) {
         0% {
@@ -18,13 +19,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-tr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-tr {
     @include keyframes (slide-out-tr) {
         0% {
@@ -39,13 +34,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-right {
     @include keyframes (slide-out-right) {
         0% {
@@ -60,13 +49,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-br
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-br {
     @include keyframes (slide-out-br) {
         0% {
@@ -81,13 +64,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-bottom {
     @include keyframes (slide-out-bottom) {
         0% {
@@ -102,13 +79,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-bl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-bl {
     @include keyframes (slide-out-bl) {
         0% {
@@ -123,13 +94,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-left {
     @include keyframes (slide-out-left) {
         0% {
@@ -144,13 +109,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-tl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-tl {
     @include keyframes (slide-out-tl) {
         0% {
@@ -165,13 +124,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-bck-center
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-bck-center {
     @include keyframes (slide-out-bck-center) {
         0% {
@@ -186,13 +139,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-bck-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-bck-top {
     @include keyframes (slide-out-bck-top) {
         0% {
@@ -207,13 +154,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-bck-tr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-bck-tr {
     @include keyframes (slide-out-bck-tr) {
         0% {
@@ -228,13 +169,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-bck-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-bck-right {
     @include keyframes (slide-out-bck-right) {
         0% {
@@ -249,13 +184,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-bck-br
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-bck-br {
     @include keyframes (slide-out-bck-br) {
         0% {
@@ -270,13 +199,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-bck-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-bck-bottom {
     @include keyframes (slide-out-bck-bottom) {
         0% {
@@ -291,13 +214,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-bck-bl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-bck-bl {
     @include keyframes (slide-out-bck-bl) {
         0% {
@@ -312,13 +229,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-bck-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-bck-left {
     @include keyframes (slide-out-bck-left) {
         0% {
@@ -333,13 +244,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-bck-tl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-bck-tl {
     @include keyframes (slide-out-bck-tl) {
         0% {
@@ -354,13 +259,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-fwd-center
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-fwd-center {
     @include keyframes (slide-out-fwd-center) {
         0% {
@@ -375,13 +274,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-fwd-bl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-fwd-bl {
     @include keyframes (slide-out-fwd-bl) {
         0% {
@@ -396,13 +289,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-fwd-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-fwd-top {
     @include keyframes (slide-out-fwd-top) {
         0% {
@@ -417,13 +304,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-fwd-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-fwd-left {
     @include keyframes (slide-out-fwd-left) {
         0% {
@@ -438,13 +319,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-fwd-tr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-fwd-tr {
     @include keyframes (slide-out-fwd-tr) {
         0% {
@@ -459,13 +334,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-fwd-tl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-fwd-tl {
     @include keyframes (slide-out-fwd-tl) {
         0% {
@@ -480,13 +349,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-fwd-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-fwd-right {
     @include keyframes (slide-out-fwd-right) {
         0% {
@@ -501,13 +364,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-fwd-br
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-fwd-br {
     @include keyframes (slide-out-fwd-br) {
         0% {
@@ -522,13 +379,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-fwd-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-fwd-bottom {
     @include keyframes (slide-out-fwd-bottom) {
         0% {
@@ -543,13 +394,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-elliptic-top-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-elliptic-top-bck {
     @include keyframes (slide-out-elliptic-top-bck) {
         0% {
@@ -566,13 +411,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-elliptic-top-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-elliptic-top-fwd {
     @include keyframes (slide-out-elliptic-top-fwd) {
         0% {
@@ -589,13 +428,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-elliptic-right-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-elliptic-right-bck {
     @include keyframes (slide-out-elliptic-right-bck) {
         0% {
@@ -612,13 +445,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-elliptic-right-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-elliptic-right-fwd {
     @include keyframes (slide-out-elliptic-right-fwd) {
         0% {
@@ -635,13 +462,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-elliptic-bottom-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-elliptic-bottom-bck {
     @include keyframes (slide-out-elliptic-bottom-bck) {
         0% {
@@ -658,13 +479,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-elliptic-bottom-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-elliptic-bottom-fwd {
     @include keyframes (slide-out-elliptic-bottom-fwd) {
         0% {
@@ -681,13 +496,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-elliptic-left-bck 
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-elliptic-left-bck {
     @include keyframes (slide-out-elliptic-left-bck) {
         0% {
@@ -704,13 +513,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-out-elliptic-left-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-out-elliptic-left-fwd {
     @include keyframes (slide-out-elliptic-left-fwd) {
         0% {

@@ -1,7 +1,20 @@
-$component-name: 'igx-tabbar';
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
-$components: register-component($components, #{$component-name});
-
+/// If only background color is specified,
+/// the idle item color will be assigned automatically to a contrasting color.
+/// @param {Color} $background [null] - The background color used for the toast.
+/// @param {Color} $idle-item-color [null] - The text-color used for the idle color.
+/// @param {Color} $active-item-color [null] - The text-color used for the active color.
+/// @requires text-contrast
+/// @example scss Set a custom background color
+///   $my-tabbar-theme: igx-toast-theme($background: black);
+///   // Pass the theme to the igx-tabbar component mixin
+///   @include igx-tabbar($my-tabbar-theme);
 @function igx-tabbar-theme(
     $background: null,
     $idle-item-color: null,
@@ -18,6 +31,14 @@ $components: register-component($components, #{$component-name});
     );
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-tabbar-theme
+/// @requires igx-color
+/// @requires igx-elevation
+/// @requires extend
+/// @requires {mixin} ellipsis
+/// @requires rem
 @mixin igx-tabbar($theme, $palette: $default-palette) {
     $default-theme: igx-tabbar-theme(
         $background: #fff,

@@ -1,7 +1,19 @@
-$component-name: 'igx-toast';
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
-$components: register-component($components, #{$component-name});
-
+/// If only background color is specified,
+/// the text-color will be assigned automatically to a contrasting color.
+/// @param {Color} $background [null] - The background color used for the toast.
+/// @param {Color} $text-color [null] - The text-color used for the toast.
+/// @requires text-contrast
+/// @example scss Set a custom background color
+///   $my-toast-theme: igx-toast-theme($background: green);
+///   // Pass the theme to the igx-toast component mixin
+///   @include igx-toast($my-toast-theme);
 @function igx-toast-theme($background: null, $text-color: null) {
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -19,20 +31,27 @@ $components: register-component($components, #{$component-name});
     );
 }
 
+/// Toast Component
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-toast-theme
+/// @requires igx-color
+/// @requires extend
+/// @requires rem
 @mixin igx-toast($theme, $palette: $default-palette) {
     $default-theme: igx-toast-theme(
         $background: igx-color($palette, 'grays', 600),
-        $text-color: $white
+        $text-color: #fff
     );
 
     $this: extend($default-theme, $theme);
 
     $toast-width: 52px;
-    $toast-padding: em(16px, 16px) em(24px, 16px);
-    $toast-margin: em(42px, 16px) auto;
+    $toast-padding: rem(16px) rem(24px);
+    $toast-margin: rem(42px) auto;
     $toast-border-radius: ($toast-width / 2);
-    $toast-font-size: em(14px, 16px);
-    $toast-line-height: em(24px, 16px);
+    $toast-font-size: rem(14px);
+    $toast-line-height: rem(24px);
 
     // @debug $this;
 

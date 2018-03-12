@@ -1,9 +1,10 @@
-/**
- * ----------------------------------------
- * animation flip-horizontal-bottom
- * ----------------------------------------
- */
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// @requires {mixin} keyframes
 @mixin flip-horizontal-bottom {
     @include keyframes(flip-horizontal-bottom) {
         0% {
@@ -16,13 +17,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-vertical-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-vertical-bck {
     @include keyframes(flip-vertical-bck) {
         0% {
@@ -35,13 +30,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-diagonal-2-br
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-diagonal-2-br {
     @include keyframes(flip-diagonal-2-br) {
         0% {
@@ -54,13 +43,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-horizontal-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-horizontal-top {
     @include keyframes(flip-horizontal-top) {
         0% {
@@ -73,13 +56,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-vertical-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-vertical-fwd {
     @include keyframes(flip-vertical-fwd) {
         0% {
@@ -92,13 +69,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-diagonal-2-tl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-diagonal-2-tl {
     @include keyframes(flip-diagonal-2-tl) {
         0% {
@@ -111,13 +82,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-horizontal-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-horizontal-bck {
     @include keyframes(flip-horizontal-bck) {
         0% {
@@ -130,13 +95,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-diagonal-1-tr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-diagonal-1-tr {
     @include keyframes(flip-diagonal-1-tr) {
         0% {
@@ -149,13 +108,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-diagonal-2-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-diagonal-2-bck {
     @include keyframes(flip-diagonal-2-bck) {
         0% {
@@ -168,13 +121,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-horizontal-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-horizontal-fwd {
     @include keyframes(flip-horizontal-fwd) {
         0% {
@@ -187,13 +134,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-diagonal-2-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-diagonal-2-fwd {
     @include keyframes(flip-diagonal-2-fwd) {
         0% {
@@ -206,13 +147,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-diagonal-1-bl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-diagonal-1-bl {
     @include keyframes(flip-diagonal-1-bl) {
         0% {
@@ -225,13 +160,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-vertical-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-vertical-right {
     @include keyframes(flip-vertical-right) {
         0% {
@@ -244,13 +173,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-diagonal-1-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-diagonal-1-bck {
     @include keyframes(flip-diagonal-1-bck) {
         0% {
@@ -263,13 +186,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-vertical-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-vertical-left {
     @include keyframes(flip-vertical-left) {
         0% {
@@ -282,13 +199,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-diagonal-1-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-diagonal-1-fwd {
     @include keyframes(flip-diagonal-1-fwd) {
         0% {
@@ -301,13 +212,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-2-hor-top-1
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-2-hor-top-1 {
     @include keyframes(flip-2-hor-top-1) {
         0% {
@@ -322,13 +227,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-2-ver-right-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-2-ver-right-bck {
     @include keyframes(flip-2-ver-right-bck) {
         0% {
@@ -343,13 +242,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-2-ver-left-1
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-2-ver-left-1 {
     @include keyframes(flip-2-ver-left-1) {
         0% {
@@ -364,13 +257,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-2-hor-top-2
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-2-hor-top-2 {
     @include keyframes(flip-2-hor-top-2) {
         0% {
@@ -385,13 +272,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-2-ver-right-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-2-ver-right-fwd {
     @include keyframes(flip-2-ver-right-fwd) {
         0% {
@@ -406,13 +287,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-2-ver-left-2
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-2-ver-left-2 {
     @include keyframes(flip-2-ver-left-2) {
         0% {
@@ -427,13 +302,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-2-hor-top-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-2-hor-top-bck {
     @include keyframes(flip-2-hor-top-bck) {
         0% {
@@ -448,13 +317,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-2-hor-bottom-1
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-2-hor-bottom-1 {
     @include keyframes(flip-2-hor-bottom-1) {
         0% {
@@ -469,13 +332,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-2-ver-left-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-2-ver-left-bck {
     @include keyframes(flip-2-ver-left-bck) {
         0% {
@@ -490,13 +347,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-2-hor-top-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-2-hor-top-fwd {
     @include keyframes(flip-2-hor-top-fwd) {
         0% {
@@ -511,13 +362,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-2-hor-bottom-2
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-2-hor-bottom-2 {
     @include keyframes(flip-2-hor-bottom-2) {
         0% {
@@ -532,13 +377,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-2-ver-left-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-2-ver-left-fwd {
     @include keyframes(flip-2-ver-left-fwd) {
         0% {
@@ -553,13 +392,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-2-ver-right-1
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-2-ver-right-1 {
     @include keyframes(flip-2-ver-right-1) {
         0% {
@@ -574,13 +407,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-2-hor-bottom-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-2-hor-bottom-bck {
     @include keyframes(flip-2-hor-bottom-bck) {
         0% {
@@ -595,13 +422,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-2-ver-right-2
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-2-ver-right-2 {
     @include keyframes(flip-2-ver-right-2) {
         0% {
@@ -616,13 +437,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-2-hor-bottom-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-2-hor-bottom-fwd {
     @include keyframes(flip-2-hor-bottom-fwd) {
         0% {
@@ -637,13 +452,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-scale-up-hor
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-scale-up-hor {
     @include keyframes(flip-scale-up-hor) {
         0% {
@@ -660,13 +469,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-scale-up-diag-2
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-scale-up-diag-2 {
     @include keyframes(flip-scale-up-diag-2) {
         0% {
@@ -683,13 +486,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-scale-down-hor
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-scale-down-hor {
     @include keyframes(flip-scale-down-hor) {
         0% {
@@ -706,13 +503,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-scale-down-diag-2
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-scale-down-diag-2 {
     @include keyframes(flip-scale-down-diag-2) {
         0% {
@@ -729,13 +520,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-scale-up-ver
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-scale-up-ver {
     @include keyframes(flip-scale-up-ver) {
         0% {
@@ -752,13 +537,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-scale-down-ver
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-scale-down-ver {
     @include keyframes(flip-scale-down-ver) {
         0% {
@@ -775,13 +554,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-scale-up-diag-1
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-scale-up-diag-1 {
     @include keyframes(flip-scale-up-diag-1) {
         0% {
@@ -798,13 +571,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-scale-down-diag-1
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-scale-down-diag-1 {
     @include keyframes(flip-scale-down-diag-1) {
         0% {
@@ -821,13 +588,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-scale-2-hor-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-scale-2-hor-top {
     @include keyframes(flip-scale-2-hor-top) {
         0% {
@@ -847,13 +608,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-scale-2-ver-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-scale-2-ver-right {
     @include keyframes(flip-scale-2-ver-right) {
         0% {
@@ -873,13 +628,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-scale-2-hor-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-scale-2-hor-bottom {
     @include keyframes(flip-scale-2-hor-bottom) {
         0% {
@@ -899,13 +648,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation flip-scale-2-ver-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin flip-scale-2-ver-left {
     @include keyframes(flip-scale-2-ver-left) {
         0% {

@@ -10,7 +10,7 @@ import {
 } from "@angular/core";
 import { IgxButtonDirective, IgxButtonModule } from "../directives/button/button.directive";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
-import { IgxIconModule } from "../icon/icon.component";
+import { IgxIconModule } from "../icon";
 
 export enum ButtonGroupAlignment { horizontal, vertical }
 
