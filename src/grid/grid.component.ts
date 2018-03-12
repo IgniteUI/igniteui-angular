@@ -236,15 +236,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         private resolver: ComponentFactoryResolver,
         private viewRef: ViewContainerRef) {
 
-            this.resizeHandler = () => {
-                this.calculateGridSizes();
-                this.zone.run(() => this.markForCheck());
-            };
+        this.resizeHandler = () => {
+            this.calculateGridSizes();
+            this.zone.run(() => this.markForCheck());
+        };
     }
 
     public ngOnInit() {
         this.gridAPI.register(this);
-        this.calcWidth = this.width && this.width.indexOf("%") === -1 ?  parseInt(this.width, 10) : 0;
+        this.calcWidth = this.width && this.width.indexOf("%") === -1 ? parseInt(this.width, 10) : 0;
         this.calcHeight = 0;
     }
 
@@ -460,7 +460,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         col.pinned = true;
         const index = this._pinnedColumns.length;
 
-        const args = { column: col, insertAtIndex: index};
+        const args = { column: col, insertAtIndex: index };
         this.onColumnPinning.emit(args);
 
         // update grid collections.
@@ -528,7 +528,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.scr.nativeElement.clientHeight;
         } else {
             const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-            this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
+                this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
             this.calcHeight = parseInt(this.height, 10) -
                 this.theadRow.nativeElement.clientHeight -
                 footerHeight -
