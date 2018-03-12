@@ -270,7 +270,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.addEventListener("resize", this.resizeHandler);
         });
-        
+
         this.calculateGridSizes();
         this.setEventBusSubscription();
         this.setVerticalScrollSubscription();
@@ -591,7 +591,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @param takeHidden If we should take into account the hidden columns in the pinned area
      */
     protected getUpinnedWidth(takeHidden = false) {
-        return parseInt(this.width, 10) - this.getStartPinnedWidth(takeHidden) - this.getEndPinnedWidth(takeHidden);
+        const width = this.width && this.width.indexOf("%") !== -1 ?
+            this.calcWidth :
+            parseInt(this.width, 10);
+        return width - this.getStartPinnedWidth(takeHidden) - this.getEndPinnedWidth(takeHidden);
     }
 
     protected _sort(name: string, direction = SortingDirection.Asc, ignoreCase = true) {
