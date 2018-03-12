@@ -224,6 +224,17 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForRemote) {
             return;
         }
+        if (endingIndex === this.igxForOf.length) {
+            // scrolled to bottom
+            const h = this.dc.instance._viewContainer.element.nativeElement.clientHeight;
+            const diffContent = this.state.chunkSize * parseInt(this.igxForItemSize, 10) - parseInt(this.igxForContainerSize, 10);
+            const totalDiff = h - parseInt(this.igxForContainerSize, 10) - diffContent;
+            if (totalDiff < 0) {
+                this.dc.instance._viewContainer.element.nativeElement.firstElementChild.style.marginTop = totalDiff + "px";
+            }
+        } else {
+           this.dc.instance._viewContainer.element.nativeElement.firstElementChild.style.marginTop = "";
+        }
         for (let i = this.state.startIndex; i < endingIndex && this.igxForOf[i] !== undefined; i++) {
             const input = this.igxForOf[i];
             const embView = embeddedViewCopy.shift();
