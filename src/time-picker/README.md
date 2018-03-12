@@ -62,3 +62,6 @@
 -|:----------:|:------|:------|:------|
 -| `OKButtonClick` | | `void` | If current value is valid selects it and closes the dialog. |
 -| `CancelButtonClick` | | `void` | Closes the dialog without selecting the current value. |
+-| `HoursInView` | | `string[]` | Returns an array of the hours currently in view. |
+-| `MinutesInView` | | `string[]` | Returns an array of the minutes currently in view. |
+-| `AmPmInView` | | `string[]` | Returns an array of the ampm currently in view. |

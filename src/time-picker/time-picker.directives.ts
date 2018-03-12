@@ -47,6 +47,13 @@ export class IgxHourItemDirective {
     }
 
     constructor(@Host() public timePicker: IgxTimePickerComponent, private itemList: IgxItemListDirective) {}
+
+    @HostListener("click", ["value"])
+    public onClick(item) {
+        if (item !== "") {
+            this.timePicker.scrollHourIntoView(item);
+        }
+    }
 }
 
 @Directive({
@@ -77,6 +84,13 @@ export class IgxMinuteItemDirective {
     }
 
     constructor(@Host() public timePicker: IgxTimePickerComponent, private itemList: IgxItemListDirective) {}
+
+    @HostListener("click", ["value"])
+    public onClick(item) {
+        if (item !== "") {
+            this.timePicker.scrollMinuteIntoView(item);
+        }
+    }
 }
 
 @Directive({
@@ -107,6 +121,13 @@ export class IgxAmPmItemDirective {
     }
 
     constructor(@Host() public timePicker: IgxTimePickerComponent, private itemList: IgxItemListDirective) {}
+
+    @HostListener("click", ["value"])
+    public onClick(item) {
+        if (item !== "") {
+            this.timePicker.scrollAmPmIntoView(item);
+        }
+    }
 }
 
 @Directive({
@@ -116,10 +137,6 @@ export class IgxItemListDirective {
 
     @Input("igxItemList")
     public isActive: boolean;
-
-    get nativeElement() {
-        return this.elementRef.nativeElement;
-    }
 
     constructor(@Host() public timePicker: IgxTimePickerComponent, private elementRef: ElementRef) {}
 
@@ -131,5 +148,153 @@ export class IgxItemListDirective {
     @HostListener("blur")
     public onBlur() {
         this.isActive = false;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener("keydown.arrowdown", ["$event"])
+    public onKeydownArrowDown(event: KeyboardEvent) {
+        event.preventDefault();
+
+        const listName = (event.target as HTMLElement).className;
+
+        if (listName.indexOf("hourList") !== -1) {
+            this.timePicker.nextHour();
+        } else if (listName.indexOf("minuteList") !== -1) {
+            this.timePicker.nextMinute();
+        } else if (listName.indexOf("ampmList") !== -1) {
+            this.timePicker.nextAmPm();
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener("keydown.arrowup", ["$event"])
+    public onKeydownArrowUp(event: KeyboardEvent) {
+        event.preventDefault();
+
+        const listName = (event.target as HTMLElement).className;
+
+        if (listName.indexOf("hourList") !== -1) {
+            this.timePicker.prevHour();
+        } else if (listName.indexOf("minuteList") !== -1) {
+            this.timePicker.prevMinute();
+        } else if (listName.indexOf("ampmList") !== -1) {
+            this.timePicker.prevAmPm();
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener("keydown.arrowright", ["$event"])
+    public onKeydownArrowRight(event: KeyboardEvent) {
+        event.preventDefault();
+
+        const listName = (event.target as HTMLElement).className;
+
+        if (listName.indexOf("hourList") !== -1) {
+            this.timePicker.minuteList.nativeElement.focus();
+        } else if (listName.indexOf("minuteList") !== -1 && this.timePicker._ampmItems.length !== 0) {
+            this.timePicker.ampmList.nativeElement.focus();
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener("keydown.arrowleft", ["$event"])
+    public onKeydownArrowLeft(event: KeyboardEvent) {
+        event.preventDefault();
+
+        const listName = (event.target as HTMLElement).className;
+
+        if (listName.indexOf("minuteList") !== -1) {
+            this.timePicker.hourList.nativeElement.focus();
+        } else if (listName.indexOf("ampmList") !== -1) {
+            this.timePicker.minuteList.nativeElement.focus();
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener("keydown.enter", ["$event"])
+    public onKeydownEnter(event: KeyboardEvent) {
+        event.preventDefault();
+
+        this.timePicker.OKButtonClick();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener("keydown.escape", ["$event"])
+    public onKeydownEscape(event: KeyboardEvent) {
+        event.preventDefault();
+
+        this.timePicker.CancelButtonClick();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener("mouseover")
+    public onHover() {
+        this.elementRef.nativeElement.focus();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener("wheel", ["$event"])
+    public onScroll(event) {
+        const listName = (event.currentTarget as HTMLElement).className;
+
+        if (event.deltaY > 0) {
+            if (listName.indexOf("hourList") !== -1) {
+                this.timePicker.nextHour();
+            } else if (listName.indexOf("minuteList") !== -1) {
+                this.timePicker.nextMinute();
+            } else if (listName.indexOf("ampmList") !== -1) {
+                this.timePicker.nextAmPm();
+            }
+        } else if (event.deltaY < 0) {
+            if (listName.indexOf("hourList") !== -1) {
+                this.timePicker.prevHour();
+            } else if (listName.indexOf("minuteList") !== -1) {
+                this.timePicker.prevMinute();
+            } else if (listName.indexOf("ampmList") !== -1) {
+                this.timePicker.prevAmPm();
+            }
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener("panmove", ["$event"])
+    public onPanMove(event) {
+        const listName = (event.target.parentElement as HTMLElement).className;
+
+        if (event.deltaY < 0) {
+            if (listName.indexOf("hourList") !== -1) {
+                this.timePicker.nextHour();
+            } else if (listName.indexOf("minuteList") !== -1) {
+                this.timePicker.nextMinute();
+            } else if (listName.indexOf("ampmList") !== -1) {
+                this.timePicker.nextAmPm();
+            }
+        } else if (event.deltaY > 0) {
+            if (listName.indexOf("hourList") !== -1) {
+                this.timePicker.prevHour();
+            } else if (listName.indexOf("minuteList") !== -1) {
+                this.timePicker.prevMinute();
+            } else if (listName.indexOf("ampmList") !== -1) {
+                this.timePicker.prevAmPm();
+            }
+        }
     }
 }
