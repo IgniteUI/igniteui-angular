@@ -1,5 +1,6 @@
-﻿# igxForOf
-**igxForOf** directive extends `ngForOf` adding the ability to virtualize the iterable items over their grow direction.
+# igxForOf
+**igxForOf** directive extends `ngForOf` adding the ability to virtualize the iterable items over their grow direction.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/for_of.html)
 
 ## Usage
 ```html

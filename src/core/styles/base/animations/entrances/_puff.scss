@@ -1,9 +1,10 @@
-/**
- * ----------------------------------------
- * animation puff-in-center
- * ----------------------------------------
- */
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// @requires {mixin} keyframes
 @mixin puff-in-center {
     @include keyframes(puff-in-center) {
         0% {
@@ -20,13 +21,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation puff-in-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin puff-in-top {
     @include keyframes(puff-in-top) {
         0% {
@@ -45,13 +40,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation puff-in-tr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin puff-in-tr {
     @include keyframes(puff-in-tr) {
         0% {
@@ -70,13 +59,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation puff-in-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin puff-in-right {
     @include keyframes(puff-in-right) {
         0% {
@@ -95,13 +78,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation puff-in-br
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin puff-in-br {
     @include keyframes(puff-in-br) {
         0% {
@@ -120,13 +97,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation puff-in-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin puff-in-bottom {
     @include keyframes(puff-in-bottom) {
         0% {
@@ -145,13 +116,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation puff-in-bl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin puff-in-bl {
     @include keyframes(puff-in-bl) {
         0% {
@@ -170,13 +135,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation puff-in-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin puff-in-left {
     @include keyframes(puff-in-left) {
         0% {
@@ -195,13 +154,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation puff-in-tl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin puff-in-tl {
     @include keyframes(puff-in-tl) {
         0% {
@@ -220,13 +173,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation puff-in-hor
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin puff-in-hor {
     @include keyframes(puff-in-hor) {
         0% {
@@ -243,13 +190,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation puff-in-ver
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin puff-in-ver {
     @include keyframes(puff-in-ver) {
         0% {

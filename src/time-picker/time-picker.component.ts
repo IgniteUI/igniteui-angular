@@ -23,7 +23,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from "@angular/platform-browser";
 import { IgxDialogComponent, IgxDialogModule } from "../dialog/dialog.component";
 import { IgxInputModule } from "../directives/input/input.directive";
-import { 
+import {
     IgxAmPmItemDirective,
     IgxHourItemDirective,
     IgxItemListDirective,
@@ -68,7 +68,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     @Input() public maxValue: string;
 
-    @Input() public isSpinLoop = false;
+    @Input() public isSpinLoop = true;
 
     @Input() public vertical = false;
 
@@ -81,13 +81,13 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     @Output() public onOpen = new EventEmitter();
 
     @ViewChild("hourList")
-    private _hourList: ElementRef;
+    public hourList: ElementRef;
 
     @ViewChild("minuteList")
-    private _minuteList: ElementRef;
+    public minuteList: ElementRef;
 
     @ViewChild("ampmList")
-    private _ampmList: ElementRef;
+    public ampmList: ElementRef;
 
     @ViewChild(IgxDialogComponent)
     private _alert: IgxDialogComponent;
@@ -105,115 +105,42 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         return "igx-time-picker";
     }
 
-    private _hourItems = [];
-    private _minuteItems = [];
-    private _ampmItems = [];
+    /**
+     * @hidden
+     */
+    public _hourItems = [];
+    /**
+     * @hidden
+     */
+    public _minuteItems = [];
+    /**
+     * @hidden
+     */
+    public _ampmItems = [];
 
-    public hourView = [];
-    public minuteView = [];
-    public ampmView = [];
+    private _isHourListLoop = this.isSpinLoop;
+    private _isMinuteListLoop = this.isSpinLoop;
 
+    private _hourView = [];
+    private _minuteView = [];
+    private _ampmView = [];
+
+    /**
+     * @hidden
+     */
     public selectedHour: string;
+    /**
+     * @hidden
+     */
     public selectedMinute: string;
+    /**
+     * @hidden
+     */
     public selectedAmPm: string;
 
     private _prevSelectedHour: string;
     private _prevSelectedMinute: string;
     private _prevSelectedAmPm: string;
-
-    /**
-     * @hidden
-     */
-    @HostListener("keydown.arrowdown", ["$event"])
-    public onKeydownArrowDown(event: KeyboardEvent) {
-        event.preventDefault();
-
-        const listName = (event.target as HTMLElement).className;
-        const selectedHourIndex = this._hourItems.indexOf(this.selectedHour);
-        const selectedMinuteIndex = this._minuteItems.indexOf(this.selectedMinute);
-        const selectedAmPmIndex = this._ampmItems.indexOf(this.selectedAmPm);
-
-        if (listName.indexOf("hourList") !== -1 && selectedHourIndex + 1 < this._hourItems.length - 3) {
-            this.scrollHourIntoView(this._hourItems[selectedHourIndex + 1])
-        } else if (listName.indexOf("minuteList") !== -1 && selectedMinuteIndex + 1 < this._minuteItems.length - 3) {
-            this.scrollMinuteIntoView(this._minuteItems[selectedMinuteIndex + 1]);
-        } else if (listName.indexOf("ampmList") !== -1 && selectedAmPmIndex + 1 < this._ampmItems.length - 3) {
-            this.scrollAmPmIntoView(this._ampmItems[selectedAmPmIndex + 1]);
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener("keydown.arrowup", ["$event"])
-    public onKeydownArrowUp(event: KeyboardEvent) {
-        event.preventDefault();
-
-        const listName = (event.target as HTMLElement).className;
-        const selectedHourIndex = this._hourItems.indexOf(this.selectedHour);
-        const selectedMinuteIndex = this._minuteItems.indexOf(this.selectedMinute);
-        const selectedAmPmIndex = this._ampmItems.indexOf(this.selectedAmPm);
-
-        if (listName.indexOf("hourList") !== -1 && selectedHourIndex > 3) {
-            this.scrollHourIntoView(this._hourItems[selectedHourIndex - 1])
-        } else if (listName.indexOf("minuteList") !== -1 && selectedMinuteIndex > 3) {
-            this.scrollMinuteIntoView(this._minuteItems[selectedMinuteIndex - 1]);
-        } else if (listName.indexOf("ampmList") !== -1 && selectedAmPmIndex > 3) {
-            this.scrollAmPmIntoView(this._ampmItems[selectedAmPmIndex - 1]);
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener("keydown.arrowright", ["$event"])
-    public onKeydownArrowRight(event: KeyboardEvent) {
-        event.preventDefault();
-
-        const listName = (event.target as HTMLElement).className;
-
-        if (listName.indexOf("hourList") !== -1) {
-            this._minuteList.nativeElement.focus();
-        } else if (listName.indexOf("minuteList") !== -1 && this._ampmItems.length !== 0) {
-            this._ampmList.nativeElement.focus();
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener("keydown.arrowleft", ["$event"])
-    public onKeydownArrowLeft(event: KeyboardEvent) {
-        event.preventDefault();
-
-        const listName = (event.target as HTMLElement).className;
-
-        if (listName.indexOf("minuteList") !== -1) {
-            this._hourList.nativeElement.focus();
-        } else if (listName.indexOf("ampmList") !== -1) {
-            this._minuteList.nativeElement.focus();
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener("keydown.enter", ["$event"])
-    public onKeydownEnter(event: KeyboardEvent) {
-        event.preventDefault();
-
-        this.OKButtonClick();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener("keydown.escape", ["$event"])
-    public onKeydownEscape(event: KeyboardEvent) {
-        event.preventDefault();
-
-        this.CancelButtonClick();
-    }
 
     public get displayTime(): string {
         if (this.value) {
@@ -221,6 +148,18 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         }
 
         return "";
+    }
+
+    get hourView(): string[] {
+        return this._hourView;
+    }
+
+    get minuteView(): string[] {
+        return this._minuteView;
+    }
+
+    get ampmView(): string[] {
+        return this._ampmView;
     }
 
     public onClick(): void {
@@ -260,7 +199,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         setTimeout(() => {
             if (this.selectedHour) {
                 this.scrollHourIntoView(this.selectedHour);
-                this._hourList.nativeElement.focus();
+                this.hourList.nativeElement.focus();
             }
             if (this.selectedMinute) {
                 this.scrollMinuteIntoView(this.selectedMinute);
@@ -274,8 +213,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     public ngOnInit(): void {
-        this._generateHours(!this.isSpinLoop);
-        this._generateMinutes(!this.isSpinLoop);
+        this._generateHours();
+        this._generateMinutes();
         if (this.format.indexOf("tt") !== -1) {
             this._generateAmPm();
         }
@@ -296,32 +235,27 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     private _onChangeCallback: (_: Date) => void = () => {};
 
-    public onHourClicked(item): void {
-        if (item !== "") {
-            this.scrollHourIntoView(item);
-        }
-    }
-
-    public onMinuteClicked(item): void {
-        if (item !== "") {
-            this.scrollMinuteIntoView(item);
-        }
-    }
-
-    public onAmPmClicked(item): void {
-        if (item !== "") {
-            this.scrollAmPmIntoView(item);
-        }
-    }
-
     /**
      * Scrolls a hour item into view.
      * @param item to be scrolled in view.
      */
     public scrollHourIntoView(item: string): void {
         const index = this._hourItems.indexOf(item);
-        this._updateHourView(index - 3, index + 4);
-        this.selectedHour = this._hourItems[index];
+
+        if (index !== -1) {
+            if (this._isHourListLoop) {
+                if (index > 0) {
+                    this.selectedHour = this._hourItems[index - 1];
+                    this.nextHour();
+                } else {
+                    this.selectedHour = this._hourItems[1];
+                    this.prevHour();
+                }
+            } else {
+                this._updateHourView(index - 3, index + 4);
+                this.selectedHour = this._hourItems[index];
+            }
+        }
     }
 
     /**
@@ -330,8 +264,21 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      */
     public scrollMinuteIntoView(item: string): void {
         const index = this._minuteItems.indexOf(item);
-        this._updateMinuteView(index - 3, index + 4);
-        this.selectedMinute = this._minuteItems[index];
+
+        if (index !== -1) {
+            if (this._isMinuteListLoop) {
+                if (index > 0) {
+                    this.selectedMinute = this._minuteItems[index - 1];
+                    this.nextMinute();
+                } else {
+                    this.selectedMinute = this._minuteItems[1];
+                    this.prevMinute();
+                }
+            } else {
+                this._updateMinuteView(index - 3, index + 4);
+                this.selectedMinute = this._minuteItems[index];
+            }
+        }
     }
 
     /**
@@ -340,114 +287,117 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      */
     public scrollAmPmIntoView(item: string): void {
         const index = this._ampmItems.indexOf(item);
-        this._updateAmPmView(index - 3, index + 4);
-        this.selectedAmPm = this._ampmItems[index];
+
+        if (index !== -1) {
+            this._updateAmPmView(index - 3, index + 4);
+            this.selectedAmPm = this._ampmItems[index];
+        }
     }
 
-    public onHourWheel(event): void {
+    /**
+     * @hidden
+     */
+    public nextHour() {
         const selectedIndex = this._hourItems.indexOf(this.selectedHour);
+        const hourItemsCount = this._hourItems.length;
 
-        if (event.deltaY > 0) {
-            this._nextHour();
-        } else if (event.deltaY < 0) {
-            this._prevHour();
-        }
-    }
+        if (this._isHourListLoop) {
+            if (selectedIndex < 2) {
+                this._hourView = this._hourItems.slice(hourItemsCount - (2 - selectedIndex), hourItemsCount);
+                this._hourView = this._hourView.concat(this._hourItems.slice(0, selectedIndex + 5));
+            } else if (selectedIndex + 4 >= hourItemsCount) {
+                this._hourView = this._hourItems.slice(selectedIndex - 2, hourItemsCount);
+                this._hourView = this._hourView.concat(this._hourItems.slice(0, selectedIndex + 5 - hourItemsCount));
+            } else {
+                this._updateHourView(selectedIndex - 2, selectedIndex + 5);
+            }
 
-    public onHourPan(event): void {
-        const selectedIndex = this._hourItems.indexOf(this.selectedHour);
-
-        if (event.deltaY < 0) {
-            this._nextHour();
-        } else if (event.deltaY > 0) {
-            this._prevHour();
-        }
-    }
-
-    public onMinuteWheel(event): void {
-        const selectedIndex = this._minuteItems.indexOf(this.selectedMinute);
-
-        if (event.deltaY > 0) {
-            this._nextMinute();
-        } else if (event.deltaY < 0) {
-            this._prevMinute();
-        }
-    }
-
-    public onMinutePan(event): void {
-        const selectedIndex = this._minuteItems.indexOf(this.selectedMinute);
-
-        if (event.deltaY < 0) {
-            this._nextMinute();
-        } else if (event.deltaY > 0) {
-            this._prevMinute();
-        }
-    }
-
-    public onAmPmWheel(event): void {
-        const selectedIndex = this._ampmItems.indexOf(this.selectedAmPm);
-
-        if (event.deltaY > 0) {
-            this._nextAmPm();
-        } else if (event.deltaY < 0) {
-            this._prevAmPm();
-        }
-    }
-
-    public onAmPmPan(event): void {
-        const selectedIndex = this._ampmItems.indexOf(this.selectedAmPm);
-
-        if (event.deltaY < 0) {
-            this._nextAmPm();
-        } else if (event.deltaY > 0) {
-            this._prevAmPm();
-        }
-    }
-
-    private _nextHour() {
-        const selectedIndex = this._hourItems.indexOf(this.selectedHour);
-
-        // if (this.isSpinLoop) {
-        //     if (selectedIndex + 4 < 6) {
-        //         this.hourView = this._hourItems.slice(this._hourItems.length - selectedIndex + 4, this._hourItems.length);
-        //         this.hourView = this._hourItems.slice(0, selectedIndex + 5);
-        //         this.hourView.
-        //     }
-        // } else
-        if (selectedIndex + 1 < this._hourItems.length - 3) {
+            this.selectedHour = (selectedIndex === 0) ? this._hourItems[0] : this._hourItems[selectedIndex + 1];
+        } else if (selectedIndex + 1 < hourItemsCount - 3) {
             this._updateHourView(selectedIndex - 2, selectedIndex + 5);
             this.selectedHour = this._hourItems[selectedIndex + 1];
         }
     }
 
-    private _prevHour() {
+    /**
+     * @hidden
+     */
+    public prevHour() {
         const selectedIndex = this._hourItems.indexOf(this.selectedHour);
+        const hourItemsCount = this._hourItems.length;
 
-        if (selectedIndex > 3) {
+        if (this._isHourListLoop) {
+            if (selectedIndex - 4 < 0) {
+                this._hourView = this._hourItems.slice(hourItemsCount - (4 - selectedIndex), hourItemsCount);
+                this._hourView = this._hourView.concat(this._hourItems.slice(0, selectedIndex + 3));
+            } else if (selectedIndex + 4 > hourItemsCount) {
+                this._hourView = this._hourItems.slice(selectedIndex - 4, hourItemsCount);
+                this._hourView = this._hourView.concat(this._hourItems.slice(0, selectedIndex + 3 - hourItemsCount));
+            } else {
+                this._updateHourView(selectedIndex - 4, selectedIndex + 3);
+            }
+
+            this.selectedHour = (selectedIndex === 0) ? this._hourItems[hourItemsCount - 1] : this._hourItems[selectedIndex - 1];
+        } else if (selectedIndex > 3) {
             this._updateHourView(selectedIndex - 4, selectedIndex + 3);
             this.selectedHour = this._hourItems[selectedIndex - 1];
         }
     }
 
-    private _nextMinute() {
+    /**
+     * @hidden
+     */
+    public nextMinute() {
         const selectedIndex = this._minuteItems.indexOf(this.selectedMinute);
+        const minuteItemsCount = this._minuteItems.length;
 
-        if (selectedIndex + 1 < this._minuteItems.length - 3) {
+        if (this._isMinuteListLoop) {
+            if (selectedIndex < 2) {
+                this._minuteView = this._minuteItems.slice(minuteItemsCount - (2 - selectedIndex), minuteItemsCount);
+                this._minuteView = this._minuteView.concat(this._minuteItems.slice(0, selectedIndex + 5));
+            } else if (selectedIndex + 4 >= minuteItemsCount) {
+                this._minuteView = this._minuteItems.slice(selectedIndex - 2, minuteItemsCount);
+                this._minuteView = this._minuteView.concat(this._minuteItems.slice(0, selectedIndex + 5 - minuteItemsCount));
+            } else {
+                this._updateMinuteView(selectedIndex - 2, selectedIndex + 5);
+            }
+
+            this.selectedMinute = (selectedIndex === 0) ? this._minuteItems[0] : this._minuteItems[selectedIndex + 1];
+        } else if (selectedIndex + 1 < minuteItemsCount - 3) {
             this._updateMinuteView(selectedIndex - 2, selectedIndex + 5);
             this.selectedMinute = this._minuteItems[selectedIndex + 1];
         }
     }
 
-    private _prevMinute() {
+    /**
+     * @hidden
+     */
+    public prevMinute() {
         const selectedIndex = this._minuteItems.indexOf(this.selectedMinute);
+        const minuteItemsCount = this._minuteItems.length;
 
-        if (selectedIndex > 3) {
+        if (this._isMinuteListLoop) {
+            if (selectedIndex - 4 < 0) {
+                this._minuteView = this._minuteItems.slice(minuteItemsCount - (4 - selectedIndex), minuteItemsCount);
+                this._minuteView = this._minuteView.concat(this._minuteItems.slice(0, selectedIndex + 3));
+            } else if (selectedIndex + 4 > minuteItemsCount) {
+                this._minuteView = this._minuteItems.slice(selectedIndex - 4, minuteItemsCount);
+                this._minuteView = this._minuteView.concat(this._minuteItems.slice(0, selectedIndex + 3 - minuteItemsCount));
+            } else {
+                this._updateMinuteView(selectedIndex - 4, selectedIndex + 3);
+            }
+
+            this.selectedMinute = (selectedIndex === 0) ? this._minuteItems[minuteItemsCount - 1] : this._minuteItems[selectedIndex - 1];
+        } else if (selectedIndex > 3) {
             this._updateMinuteView(selectedIndex - 4, selectedIndex + 3);
             this.selectedMinute = this._minuteItems[selectedIndex - 1];
         }
     }
 
-    private _nextAmPm() {
+    /**
+     * @hidden
+     */
+    public nextAmPm() {
         const selectedIndex = this._ampmItems.indexOf(this.selectedAmPm);
 
         if (selectedIndex + 1 < this._ampmItems.length - 3) {
@@ -456,22 +406,15 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         }
     }
 
-    private _prevAmPm() {
+    /**
+     * @hidden
+     */
+    public prevAmPm() {
         const selectedIndex = this._ampmItems.indexOf(this.selectedAmPm);
 
         if (selectedIndex > 3) {
             this._updateAmPmView(selectedIndex - 4, selectedIndex + 3);
             this.selectedAmPm = this._ampmItems[selectedIndex - 1];
-        }
-    }
-
-    public onHover(event): void {
-        if (event.currentTarget.className.indexOf("hour") !== -1) {
-            this._hourList.nativeElement.focus();
-        } else if (event.currentTarget.className.indexOf("minute") !== -1) {
-            this._minuteList.nativeElement.focus();
-        } else {
-            this._ampmList.nativeElement.focus();
         }
     }
 
@@ -516,15 +459,15 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     private _updateHourView(start: any, end: any): void {
-        this.hourView = this._hourItems.slice(start, end);
+        this._hourView = this._hourItems.slice(start, end);
     }
 
     private _updateMinuteView(start: any, end: any): void {
-        this.minuteView = this._minuteItems.slice(start, end);
+        this._minuteView = this._minuteItems.slice(start, end);
     }
 
     private _updateAmPmView(start: any, end: any): void {
-        this.ampmView = this._ampmItems.slice(start, end);
+        this._ampmView = this._ampmItems.slice(start, end);
     }
 
     private _addEmptyItems(items: string[]): void {
@@ -533,7 +476,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         }
     }
 
-    private _generateHours(addEmptyItems: boolean): void {
+    private _generateHours(): void {
         let hourItemsCount = 24;
         if (this.format.indexOf("h") !== -1) {
             hourItemsCount = 13;
@@ -543,8 +486,9 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
         let i = this.format.indexOf("H") !== -1 ? 0 : 1;
 
-        if (addEmptyItems) {
+        if (hourItemsCount < 7 || !this.isSpinLoop) {
             this._addEmptyItems(this._hourItems);
+            this._isHourListLoop = false;
         }
 
         for (i; i < hourItemsCount; i++) {
@@ -555,16 +499,17 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
             }
         }
 
-        if (addEmptyItems) {
+        if (hourItemsCount < 7 || !this.isSpinLoop) {
             this._addEmptyItems(this._hourItems);
         }
     }
 
-    private _generateMinutes(addEmptyItems: boolean): void {
+    private _generateMinutes(): void {
         const minuteItemsCount = 60 / this.itemsDelta.minutes;
 
-        if (addEmptyItems) {
+        if (minuteItemsCount < 7 || !this.isSpinLoop) {
             this._addEmptyItems(this._minuteItems);
+            this._isMinuteListLoop = false;
         }
 
         for (let i = 0; i < minuteItemsCount; i++) {
@@ -575,7 +520,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
             }
         }
 
-        if (addEmptyItems) {
+        if (minuteItemsCount < 7 || !this.isSpinLoop) {
             this._addEmptyItems(this._minuteItems);
         }
     }
@@ -646,6 +591,18 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         this.selectedHour = this._prevSelectedHour;
         this.selectedMinute = this._prevSelectedMinute;
         this.selectedAmPm = this._prevSelectedAmPm;
+    }
+
+    public HoursInView(): string[] {
+        return this._hourView.filter((hour) => hour !== "");
+    }
+
+    public MinutesInView(): string[] {
+        return this._minuteView.filter((minute) => minute !== "");
+    }
+
+    public AmPmInView(): string[] {
+        return this._ampmView.filter((ampm) => ampm !== "");
     }
 }
 

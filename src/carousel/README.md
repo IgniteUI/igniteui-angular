@@ -2,7 +2,8 @@
 
 A carousel component is used to browse or navigate through a collection of slides - galleries of images,
 cards, on-boarding tutorials or page-based interfaces. It can be used as a separate full screen element
-or inside another component.
+or inside another component.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/carousel.html)
 
 # API Summary `igx-carousel`
 | Name   |      Type      |  Description |

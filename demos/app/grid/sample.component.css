@@ -22,9 +22,9 @@
 
 .toggles-container {
     margin: 24px 0;
-    display: flex; 
-    flex-flow: row wrap; 
-    justify-content: space-between; 
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
 }
 
 .toggle-group {
@@ -49,7 +49,7 @@
     margin-bottom: 48px;
 }
 
-.igx-form-group ~ .igx-form-group {
+.igx-form-group~.igx-form-group {
     margin-top: 16px;
     /*background: red;*/
 }
@@ -58,6 +58,10 @@
     max-width: 200px;
 }
 
-igx-card ~ igx-card {
-   margin-left: 16px;
+igx-card {
+    flex: 1 1 0%;
+}
+
+igx-card~igx-card {
+    margin-left: 16px;
 }

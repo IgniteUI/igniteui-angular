@@ -1,3 +1,13 @@
+////
+/// @group typography
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+
+/// Defines the typography used in
+/// the application.
+/// @param {Map} $config
 @mixin igx-typography($config) {
     $font-family: map-get($config, 'font-family');
     $font-weight: 400;
@@ -52,6 +62,10 @@
     $blockquote-line-height-tablet: rem(35px);
     $blockquote-font-size-phone: rem(20px);
     $blockquote-line-height-phone: rem(27px);
+
+
+    $medium-screen: 768px;
+    $large-screen: 1024px;
 
     a {
         text-decoration: none;

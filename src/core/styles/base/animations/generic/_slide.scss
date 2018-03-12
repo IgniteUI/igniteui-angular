@@ -1,9 +1,10 @@
-/**
- * ----------------------------------------
- * animation slide-top
- * ----------------------------------------
- */
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// @requires {mixin} keyframes
 @mixin slide-top {
     @include keyframes(slide-top) {
         0% {
@@ -16,13 +17,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-tr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-tr {
     @include keyframes(slide-tr) {
         0% {
@@ -35,13 +30,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-right {
     @include keyframes(slide-right) {
         0% {
@@ -54,13 +43,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-br
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-br {
     @include keyframes(slide-br) {
         0% {
@@ -73,13 +56,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-bottom {
     @include keyframes(slide-bottom) {
         0% {
@@ -92,13 +69,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-bl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-bl {
     @include keyframes(slide-bl) {
         0% {
@@ -111,13 +82,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-left {
     @include keyframes(slide-left) {
         0% {
@@ -130,13 +95,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-tl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-tl {
     @include keyframes(slide-tl) {
         0% {
@@ -149,13 +108,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-bck-center
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-bck-center {
     @include keyframes(slide-bck-center) {
         0% {
@@ -168,13 +121,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-bck-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-bck-top {
     @include keyframes(slide-bck-top) {
         0% {
@@ -187,13 +134,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-bck-tr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-bck-tr {
     @include keyframes(slide-bck-tr) {
         0% {
@@ -206,13 +147,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-bck-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-bck-right {
     @include keyframes(slide-bck-right) {
         0% {
@@ -225,13 +160,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-bck-br
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-bck-br {
     @include keyframes(slide-bck-br) {
         0% {
@@ -244,13 +173,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-bck-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-bck-bottom {
     @include keyframes(slide-bck-bottom) {
         0% {
@@ -263,13 +186,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-bck-bl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-bck-bl {
     @include keyframes(slide-bck-bl) {
         0% {
@@ -282,13 +199,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-bck-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-bck-left {
     @include keyframes(slide-bck-left) {
         0% {
@@ -301,13 +212,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-bck-tl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-bck-tl {
     @include keyframes(slide-bck-tl) {
         0% {
@@ -320,13 +225,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-fwd-center
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-fwd-center {
     @include keyframes(slide-fwd-center) {
         0% {
@@ -339,13 +238,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-fwd-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-fwd-top {
     @include keyframes(slide-fwd-top) {
         0% {
@@ -358,13 +251,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-fwd-tr
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-fwd-tr {
     @include keyframes(slide-fwd-tr) {
         0% {
@@ -377,13 +264,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-fwd-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-fwd-right {
     @include keyframes(slide-fwd-right) {
         0% {
@@ -396,13 +277,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-fwd-br
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-fwd-br {
     @include keyframes(slide-fwd-br) {
         0% {
@@ -415,13 +290,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-fwd-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-fwd-bottom {
     @include keyframes(slide-fwd-bottom) {
         0% {
@@ -434,13 +303,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-fwd-bl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-fwd-bl {
     @include keyframes(slide-fwd-bl) {
         0% {
@@ -453,13 +316,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-fwd-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-fwd-left {
     @include keyframes(slide-fwd-left) {
         0% {
@@ -472,13 +329,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-fwd-tl
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-fwd-tl {
     @include keyframes(slide-fwd-tl) {
         0% {
@@ -491,13 +342,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-rotate-hor-top
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-rotate-hor-top {
     @include keyframes(slide-rotate-hor-top) {
         0% {
@@ -510,13 +355,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-rotate-hor-t-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-rotate-hor-t-bck {
     @include keyframes(slide-rotate-hor-t-bck) {
         0% {
@@ -531,13 +370,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-rotate-hor-t-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-rotate-hor-t-fwd {
     @include keyframes(slide-rotate-hor-t-fwd) {
         0% {
@@ -552,13 +385,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-rotate-ver-right
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-rotate-ver-right {
     @include keyframes(slide-rotate-ver-right) {
         0% {
@@ -571,13 +398,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-rotate-ver-r-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-rotate-ver-r-bck {
     @include keyframes(slide-rotate-ver-r-bck) {
         0% {
@@ -592,13 +413,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-rotate-ver-r-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-rotate-ver-r-fwd {
     @include keyframes(slide-rotate-ver-r-fwd) {
         0% {
@@ -613,13 +428,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-rotate-ver-l-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-rotate-ver-l-fwd {
     @include keyframes(slide-rotate-ver-l-fwd) {
         0% {
@@ -634,13 +443,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-rotate-ver-l-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-rotate-ver-l-bck {
     @include keyframes(slide-rotate-ver-l-bck) {
         0% {
@@ -655,13 +458,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-rotate-ver-left
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-rotate-ver-left {
     @include keyframes(slide-rotate-ver-left) {
         0% {
@@ -674,13 +471,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-rotate-hor-b-fwd
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-rotate-hor-b-fwd {
     @include keyframes(slide-rotate-hor-b-fwd) {
         0% {
@@ -695,13 +486,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-rotate-hor-b-bck
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-rotate-hor-b-bck {
     @include keyframes(slide-rotate-hor-b-bck) {
         0% {
@@ -716,13 +501,7 @@
     }
 }
 
-
-/**
- * ----------------------------------------
- * animation slide-rotate-hor-bottom
- * ----------------------------------------
- */
-
+/// @requires {mixin} keyframes
 @mixin slide-rotate-hor-bottom {
     @include keyframes(slide-rotate-hor-bottom) {
         0% {

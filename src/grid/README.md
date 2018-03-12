@@ -1,5 +1,6 @@
 # igx-grid
-**igx-grid** component provides the capability to manipulate and represent tabular data.
+**igx-grid** component provides the capability to manipulate and represent tabular data.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
 
 ## Usage
 ```html
