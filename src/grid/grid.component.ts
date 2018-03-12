@@ -296,7 +296,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get unpinnedWidth() {
-        return this.getUpinnedWidth();
+        return this.getUnpinnedWidth();
     }
 
     get columns(): IgxColumnComponent[] {
@@ -463,7 +463,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
          * If the column that we want to pin is bigger or equal than the unpinned area we should not pin it.
          * It should be also unpinned before pinning, since changing left/right pin area doesn't affect unpinned area.
          */
-        if (parseInt(col.width, 10) >= this.getUpinnedWidth(true) && !col.pinned) {
+        if (parseInt(col.width, 10) >= this.getUnpinnedWidth(true) && !col.pinned) {
             return false;
         }
 
@@ -590,7 +590,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * Gets calculated width of the unpinned area
      * @param takeHidden If we should take into account the hidden columns in the pinned area
      */
-    protected getUpinnedWidth(takeHidden = false) {
+    protected getUnpinnedWidth(takeHidden = false) {
         const width = this.width && this.width.indexOf("%") !== -1 ?
             this.calcWidth :
             parseInt(this.width, 10);
