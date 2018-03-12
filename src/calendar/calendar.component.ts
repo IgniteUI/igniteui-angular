@@ -139,7 +139,8 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     }
 
     /**
-     * An @Input property controlling the
+     * An @Input property controlling the the year/month that will be presented in the default view when the calendar renders.
+     * By default it is the current year/month.
      */
     @Input()
     public get viewDate(): Date {
