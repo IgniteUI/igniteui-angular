@@ -6,9 +6,9 @@
               <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='"500px"'
-                [igxForItemSize]='"50px"'
+                [igxForItemSize]='"300px"'
                 let-rowIndex="index">
-                <div style='height:50px;'>{{rowIndex}} : {{item.text}}</div>
+                <div style='height:300px;'>{{rowIndex}} : {{item.text}}</div>
                 </ng-template>
             </div>
             <button (click)="scrNextRow()">Scroll Next Row</button>
@@ -20,7 +20,7 @@
             <br/>
             <table> 
                 <tbody style='display:grid;'>
-                <tr style='width:500px; height:118px;'>               
+                <tr style='width:500px; height:100px;'>
                     <ng-template igxFor let-item [igxForOf]="data" #virtDirHorizontal
                         [igxForScrollOrientation]="'horizontal'"
                         [igxForContainerSize]='"500px"'
