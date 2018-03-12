@@ -236,15 +236,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         private resolver: ComponentFactoryResolver,
         private viewRef: ViewContainerRef) {
 
-            this.resizeHandler = () => {
-                this.calculateGridSizes();
-                this.zone.run(() => this.markForCheck());
-            };
+        this.resizeHandler = () => {
+            this.calculateGridSizes();
+            this.zone.run(() => this.markForCheck());
+        };
     }
 
     public ngOnInit() {
         this.gridAPI.register(this);
-        this.calcWidth = this.width && this.width.indexOf("%") === -1 ?  parseInt(this.width, 10) : 0;
+        this.calcWidth = this.width && this.width.indexOf("%") === -1 ? parseInt(this.width, 10) : 0;
         this.calcHeight = 0;
     }
 
@@ -268,7 +268,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.addEventListener("resize", this.resizeHandler);
         });
-        
+
         this.calculateGridSizes();
         this.setEventBusSubscription();
         this.setVerticalScrollSubscription();
@@ -290,7 +290,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get unpinnedWidth() {
-        return this.getUpinnedWidth();
+        return this.getUnpinnedWidth();
     }
 
     get columns(): IgxColumnComponent[] {
@@ -314,7 +314,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get visibleColumns(): IgxColumnComponent[] {
-        return this.columnList.filter((col) => !col.hidden).sort((col1, col2) => col1.visibleIndex - col2.visibleIndex);
+        return this.columnList.filter((col) => !col.hidden);
     }
 
     public getCellByColumn(rowIndex: number, columnField: string): IgxGridCellComponent {
@@ -453,14 +453,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
          * If the column that we want to pin is bigger or equal than the unpinned area we should not pin it.
          * It should be also unpinned before pinning, since changing left/right pin area doesn't affect unpinned area.
          */
-        if (parseInt(col.width, 10) >= this.getUpinnedWidth(true) && !col.pinned) {
+        if (parseInt(col.width, 10) >= this.getUnpinnedWidth(true) && !col.pinned) {
             return false;
         }
 
         col.pinned = true;
         const index = this._pinnedColumns.length;
 
-        const args = { column: col, insertAtIndex: index};
+        const args = { column: col, insertAtIndex: index };
         this.onColumnPinning.emit(args);
 
         // update grid collections.
@@ -528,7 +528,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.scr.nativeElement.clientHeight;
         } else {
             const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-            this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
+                this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
             this.calcHeight = parseInt(this.height, 10) -
                 this.theadRow.nativeElement.clientHeight -
                 footerHeight -
@@ -553,8 +553,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * Gets calculated width of the unpinned area
      * @param takeHidden If we should take into account the hidden columns in the pinned area
      */
-    protected getUpinnedWidth(takeHidden = false) {
-        return parseInt(this.width, 10) - this.getPinnedWidth(takeHidden);
+    protected getUnpinnedWidth(takeHidden = false) {
+        const width = this.width && this.width.indexOf("%") !== -1 ?
+            this.calcWidth :
+            parseInt(this.width, 10);
+        return width - this.getPinnedWidth(takeHidden);
     }
 
     protected _sort(name: string, direction = SortingDirection.Asc, ignoreCase = true) {
