@@ -268,7 +268,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.addEventListener("resize", this.resizeHandler);
         });
-        
+
         this.calculateGridSizes();
         this.setEventBusSubscription();
         this.setVerticalScrollSubscription();
