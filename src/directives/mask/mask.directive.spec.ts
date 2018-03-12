@@ -234,21 +234,19 @@ describe("AppComponent", () => {
         input.triggerEventHandler("focus", null);
         tick();
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
+        fixture.detectChanges();
 
-            expect(input.nativeElement.value).toEqual("3456****");
-            expect(comp.value).toEqual(3456);
+        expect(input.nativeElement.value).toEqual("3456****");
+        expect(comp.value).toEqual(3456);
 
-            input.nativeElement.value = "A";
-            input.nativeElement.dispatchEvent(new Event("input"));
-            tick();
+        input.nativeElement.value = "A";
+        input.nativeElement.dispatchEvent(new Event("input"));
+        tick();
 
-            input.triggerEventHandler("focus", null);
-            tick();
+        input.triggerEventHandler("focus", null);
+        tick();
 
-            expect(input.nativeElement.value).toEqual("A*******");
-        });
+        expect(input.nativeElement.value).toEqual("A*******");
     }));
 
     it("Selection", fakeAsync(() => {
@@ -270,10 +268,10 @@ describe("AppComponent", () => {
         fixture.detectChanges();
 
         input.nativeElement.value = "";
-        input.triggerEventHandler("input", {});
+        input.nativeElement.dispatchEvent(new Event("input"));
         tick();
 
-        input.triggerEventHandler("focus", {});
+        input.nativeElement.dispatchEvent(new Event("focus"));
         tick();
 
         fixture.detectChanges();
