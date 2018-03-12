@@ -375,7 +375,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get visibleColumns(): IgxColumnComponent[] {
-        return this.columnList.filter((col) => !col.hidden).sort((col1, col2) => col1.visibleIndex - col2.visibleIndex);
+        return this.columnList.filter((col) => !col.hidden);
     }
 
     public getCellByColumn(rowIndex: number, columnField: string): IgxGridCellComponent {

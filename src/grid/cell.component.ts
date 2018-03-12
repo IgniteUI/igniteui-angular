@@ -250,12 +250,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         event.preventDefault();
         const visibleColumns = this.grid.visibleColumns;
         const rowIndex = this.rowIndex;
-        let visibleColumnIndex = this.visibleColumnIndex;
-        const rv = visibleColumns.findIndex((col) => col.visibleIndex === visibleColumnIndex);
+        const visibleColumnIndex = this.visibleColumnIndex - 1;
 
-        if (rv > 0) {
-            visibleColumnIndex = visibleColumns[rv - 1].visibleIndex;
-
+        if (visibleColumnIndex >= 0) {
             const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, visibleColumnIndex);
 
             if (target) {
@@ -300,12 +297,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         event.preventDefault();
         const visibleColumns = this.grid.visibleColumns;
         const rowIndex = this.rowIndex;
-        let visibleColumnIndex = this.visibleColumnIndex;
-        const rv = visibleColumns.findIndex((col) => col.visibleIndex === visibleColumnIndex);
-
-        if (rv > -1 && rv < visibleColumns.length - 1) {
-            visibleColumnIndex = visibleColumns[rv + 1].visibleIndex;
-
+        const visibleColumnIndex = this.visibleColumnIndex + 1;
+        if (visibleColumnIndex > -1 && visibleColumnIndex <= visibleColumns.length - 1) {
             const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, visibleColumnIndex);
 
             if (target) {
