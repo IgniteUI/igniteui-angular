@@ -12,18 +12,18 @@
                             <span>{{ selectedHour }}</span>:<span>{{ selectedMinute }}</span>
                         </h2>
                     </div>
-                    <div class="igx-time-picker__body">
-                        <div #hourList class="igx-time-picker__column igx-time-picker__hourList" (wheel)="onHourWheel($event)" tabindex="0" (panmove)="onHourPan($event)" (mouseover)="onHover($event)">
+                    <div class="igx-time-picker__body"> 
+                        <div #hourList [igxItemList] class="igx-time-picker__column igx-time-picker__hourList" (wheel)="onHourWheel($event)" tabindex="0" (panmove)="onHourPan($event)" (mouseover)="onHover($event)">
                             <span [igxHourItem]="hour" *ngFor="let hour of hourView" (click)="onHourClicked(hour)">
                                 {{ hour }}
                             </span>
                         </div>
-                        <div #minuteList class="igx-time-picker__column igx-time-picker__minuteList" (wheel)="onMinuteWheel($event)" tabindex="0" (panmove)="onMinutePan($event)" (mouseover)="onHover($event)">
+                        <div #minuteList [igxItemList] class="igx-time-picker__column igx-time-picker__minuteList" (wheel)="onMinuteWheel($event)" tabindex="0" (panmove)="onMinutePan($event)" (mouseover)="onHover($event)">
                             <span [igxMinuteItem]="minute" *ngFor="let minute of minuteView" (click)="onMinuteClicked(minute)">
                                 {{ minute }}
                             </span>
                         </div>
-                        <div #ampmList class="igx-time-picker__column igx-time-picker__ampmList" (wheel)="onAmPmWheel($event)" tabindex="0" (panmove)="onAmPmPan($event)" (mouseover)="onHover($event)">
+                        <div #ampmList [igxItemList] class="igx-time-picker__column igx-time-picker__ampmList" (wheel)="onAmPmWheel($event)" tabindex="0" (panmove)="onAmPmPan($event)" (mouseover)="onHover($event)">
                             <span [igxAmPmItem]="ampm" *ngFor="let ampm of ampmView" (click)="onAmPmClicked(ampm)">
                                 {{ ampm }}
                             </span>
