@@ -27,15 +27,6 @@ export class IgxHourItemDirective {
     @Input("igxHourItem")
     public value: string;
 
-    private index;
-
-    @Output()
-    public onHourSelection = new EventEmitter<string>();
-
-    get nativeElement() {
-        return this.elementRef.nativeElement;
-    }
-
     @HostBinding("class.igx-time-picker__item")
     get defaultCSS(): boolean {
         return true;
@@ -48,19 +39,14 @@ export class IgxHourItemDirective {
 
     @HostBinding("class.igx-time-picker__item--active")
     get activeCSS(): boolean {
-        return this.isSelectedHour && document.activeElement === this.nativeElement.parentElement;
+        return this.isSelectedHour && this.itemList.isActive;
     }
 
     get isSelectedHour(): boolean {
         return this.timePicker.selectedHour === this.value;
     }
 
-    constructor(@Host() public timePicker: IgxTimePickerComponent, private elementRef: ElementRef) {}
-
-    @HostListener("click")
-    public onClick() {
-        this.onHourSelection.emit(this.value);
-    }
+    constructor(@Host() public timePicker: IgxTimePickerComponent, private itemList: IgxItemListDirective) {}
 }
 
 @Directive({
@@ -70,13 +56,6 @@ export class IgxMinuteItemDirective {
 
     @Input("igxMinuteItem")
     public value: string;
-
-    @Output()
-    public onMinuteSelection = new EventEmitter<string>();
-
-    get nativeElement() {
-        return this.elementRef.nativeElement;
-    }
 
     @HostBinding("class.igx-time-picker__item")
     get defaultCSS(): boolean {
@@ -90,19 +69,14 @@ export class IgxMinuteItemDirective {
 
     @HostBinding("class.igx-time-picker__item--active")
     get activeCSS(): boolean {
-        return this.isSelectedMinute && document.activeElement === this.nativeElement.parentElement;
+        return this.isSelectedMinute && this.itemList.isActive;
     }
 
     get isSelectedMinute(): boolean {
         return this.timePicker.selectedMinute === this.value;
     }
 
-    constructor(@Host() public timePicker: IgxTimePickerComponent, private elementRef: ElementRef) {}
-
-    @HostListener("click")
-    public onClick() {
-        this.onMinuteSelection.emit(this.value);
-    }
+    constructor(@Host() public timePicker: IgxTimePickerComponent, private itemList: IgxItemListDirective) {}
 }
 
 @Directive({
@@ -112,13 +86,6 @@ export class IgxAmPmItemDirective {
 
     @Input("igxAmPmItem")
     public value: string;
-
-    @Output()
-    public onAmPmSelection = new EventEmitter<string>();
-
-    get nativeElement() {
-        return this.elementRef.nativeElement;
-    }
 
     @HostBinding("class.igx-time-picker__item")
     get defaultCSS(): boolean {
@@ -132,17 +99,37 @@ export class IgxAmPmItemDirective {
 
     @HostBinding("class.igx-time-picker__item--active")
     get activeCSS(): boolean {
-        return this.isSelectedAmPm && document.activeElement === this.nativeElement.parentElement;
+        return this.isSelectedAmPm && this.itemList.isActive;
     }
 
     get isSelectedAmPm(): boolean {
         return this.timePicker.selectedAmPm === this.value;
     }
 
+    constructor(@Host() public timePicker: IgxTimePickerComponent, private itemList: IgxItemListDirective) {}
+}
+
+@Directive({
+    selector: "[igxItemList]"
+})
+export class IgxItemListDirective {
+
+    @Input("igxItemList")
+    public isActive: boolean;
+
+    get nativeElement() {
+        return this.elementRef.nativeElement;
+    }
+
     constructor(@Host() public timePicker: IgxTimePickerComponent, private elementRef: ElementRef) {}
 
-    @HostListener("click")
-    public onClick() {
-        this.onAmPmSelection.emit(this.value);
+    @HostListener("focus")
+    public onFocus() {
+        this.isActive = true;
+    }
+
+    @HostListener("blur")
+    public onBlur() {
+        this.isActive = false;
     }
 }
