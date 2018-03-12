@@ -475,6 +475,80 @@ describe("IgxGrid - Column Pinning ", () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch("ContactName");
         discardPeriodicTasks();
     }));
+
+    it("should allow hiding/showing pinned column.", () => {
+        const fix = TestBed.createComponent(GridPinningComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        const col = grid.getColumnByName("CompanyName");
+        col.pin();
+        fix.detectChanges();
+        expect(grid.pinnedColumns.length).toEqual(1);
+        expect(grid.unpinnedColumns.length).toEqual(9);
+
+        col.hidden = true;
+        fix.detectChanges();
+
+        expect(grid.pinnedColumns.length).toEqual(0);
+        expect(grid.unpinnedColumns.length).toEqual(9);
+
+        let headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+
+        expect(headers[0].context.column.field).toEqual("ID");
+        expect(headers[0].classes.pinned).toBe(false);
+
+        col.hidden = false;
+        fix.detectChanges();
+
+        expect(grid.pinnedColumns.length).toEqual(1);
+        expect(grid.unpinnedColumns.length).toEqual(9);
+
+        headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+
+        expect(headers[0].context.column.field).toEqual("CompanyName");
+        expect(headers[0].classes.pinned).toBe(true);
+    });
+
+    it("should allow pinning a hidden column.", () => {
+        const fix = TestBed.createComponent(GridPinningComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        const col = grid.getColumnByName("CompanyName");
+
+        col.hidden = true;
+        col.pin();
+        fix.detectChanges();
+
+        expect(grid.pinnedColumns.length).toEqual(0);
+        expect(grid.unpinnedColumns.length).toEqual(9);
+
+        col.hidden = false;
+        fix.detectChanges();
+
+        expect(grid.pinnedColumns.length).toEqual(1);
+        expect(grid.unpinnedColumns.length).toEqual(9);
+    });
+    it("should allow hiding columns in the unpinned area.", () => {
+
+        const fix = TestBed.createComponent(GridPinningComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        const col1 = grid.getColumnByName("CompanyName");
+        const col2 = grid.getColumnByName("ID");
+
+        col1.pin();
+        fix.detectChanges();
+        col2.hidden = true;
+        fix.detectChanges();
+
+        expect(grid.pinnedColumns.length).toEqual(1);
+        expect(grid.unpinnedColumns.length).toEqual(8);
+
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+
+        expect(headers[0].context.column.field).toEqual("CompanyName");
+        expect(headers[1].context.column.field).toEqual("ContactName");
+    });
 });
 @Component({
     template: `
