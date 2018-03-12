@@ -28,7 +28,7 @@ import {
 import { of } from "rxjs/observable/of";
 import { debounceTime, delay, merge, repeat, take, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs/Subject";
-import { cloneArray, PinLocation } from "../core/utils";
+import { cloneArray } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
@@ -220,8 +220,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _paging = false;
     protected _pipeTrigger = 0;
     protected _columns: IgxColumnComponent[] = [];
-    protected _pinnedStartColumns: IgxColumnComponent[] = [];
-    protected _pinnedEndColumns: IgxColumnComponent[] = [];
+    protected _pinnedColumns: IgxColumnComponent[] = [];
     protected _unpinnedColumns: IgxColumnComponent[] = [];
     protected _filteringLogic = FilteringLogic.And;
     protected _filteringExpressions = [];
@@ -261,8 +260,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         });
 
         this._columns = this.columnList.toArray();
-        this._pinnedStartColumns = this._columns.filter((c) => c.pinned && c.pinLocation === PinLocation.Start);
-        this._pinnedEndColumns = this._columns.filter((c) => c.pinned && c.pinLocation === PinLocation.End);
+        this._pinnedColumns = this._columns.filter((c) => c.pinned);
         this._unpinnedColumns = this._columns.filter((c) => !c.pinned);
     }
 
@@ -287,12 +285,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.elementRef.nativeElement;
     }
 
-    get startPinnedWidth() {
-        return this.getStartPinnedWidth();
-    }
-
-    get endPinnedWidth() {
-        return this.getEndPinnedWidth();
+    get pinnedWidth() {
+        return this.getPinnedWidth();
     }
 
     get unpinnedWidth() {
@@ -303,12 +297,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this._columns;
     }
 
-    get pinnedStartColumns(): IgxColumnComponent[] {
-        return this._pinnedStartColumns.filter((col) => !col.hidden);
-    }
-
-    get pinnedEndColumns(): IgxColumnComponent[] {
-        return this._pinnedEndColumns.filter((col) => !col.hidden);
+    get pinnedColumns(): IgxColumnComponent[] {
+        return this._pinnedColumns.filter((col) => !col.hidden);
     }
 
     get unpinnedColumns(): IgxColumnComponent[] {
@@ -456,7 +446,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.gridAPI.clear_sort(this.id, name);
     }
 
-    public pinColumn(columnName: string, location?: PinLocation): boolean {
+    public pinColumn(columnName: string): boolean {
         const col = this.getColumnByName(columnName);
 
         /**
@@ -468,29 +458,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         col.pinned = true;
-        col.pinLocation = location !== undefined ? location : PinLocation.Start;
-        const index = col.pinLocation === PinLocation.Start ? this._pinnedStartColumns.length : this._pinnedEndColumns.length;
+        const index = this._pinnedColumns.length;
 
         const args = { column: col, insertAtIndex: index};
         this.onColumnPinning.emit(args);
 
         // update grid collections.
-        if (col.pinLocation === PinLocation.Start && this._pinnedStartColumns.indexOf(col) === -1) {
-            this._pinnedStartColumns.splice(args.insertAtIndex, 0, col);
+        if (this._pinnedColumns.indexOf(col) === -1) {
+            this._pinnedColumns.splice(args.insertAtIndex, 0, col);
 
             if (this._unpinnedColumns.indexOf(col) !== -1) {
                 this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
-            }
-            if (this._pinnedEndColumns.indexOf(col) !== -1) {
-                this._pinnedEndColumns.splice(this._pinnedEndColumns.indexOf(col), 1);
-            }
-        } else if (col.pinLocation === PinLocation.End && this._pinnedEndColumns.indexOf(col) === -1) {
-            this._pinnedEndColumns.splice(args.insertAtIndex, 0, col);
-            if (this._unpinnedColumns.indexOf(col) !== -1) {
-                this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
-            }
-            if (this._pinnedStartColumns.indexOf(col) !== -1) {
-                this._pinnedStartColumns.splice(this._pinnedStartColumns.indexOf(col), 1);
             }
         }
 
@@ -502,10 +480,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const col = this.getColumnByName(columnName);
         col.pinned = false;
         this._unpinnedColumns.splice(col.index, 0, col);
-        if (this._pinnedEndColumns.indexOf(col) !== -1) {
-            this._pinnedEndColumns.splice(this._pinnedEndColumns.indexOf(col), 1);
-        } else if (this._pinnedStartColumns.indexOf(col) !== -1) {
-            this._pinnedStartColumns.splice(this._pinnedStartColumns.indexOf(col), 1);
+        if (this._pinnedColumns.indexOf(col) !== -1) {
+            this._pinnedColumns.splice(this._pinnedColumns.indexOf(col), 1);
         }
         this.markForCheck();
     }
@@ -564,21 +540,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * Gets calculated width of the start pinned area
      * @param takeHidden If we should take into account the hidden columns in the pinned area
      */
-    protected getStartPinnedWidth(takeHidden = false) {
-        const fc = takeHidden ? this._pinnedStartColumns : this.pinnedStartColumns;
-        let sum = 0;
-        for (const col of fc) {
-            sum += parseInt(col.width, 10);
-        }
-        return sum;
-    }
-
-    /**
-     * Gets calculated width of the end pinned area
-     * @param takeHidden If we should take into account the hidden columns in the pinned area
-     */
-    protected getEndPinnedWidth(takeHidden = false) {
-        const fc = takeHidden ? this._pinnedEndColumns : this.pinnedEndColumns;
+    protected getPinnedWidth(takeHidden = false) {
+        const fc = takeHidden ? this._pinnedColumns : this.pinnedColumns;
         let sum = 0;
         for (const col of fc) {
             sum += parseInt(col.width, 10);
@@ -594,7 +557,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const width = this.width && this.width.indexOf("%") !== -1 ?
             this.calcWidth :
             parseInt(this.width, 10);
-        return width - this.getStartPinnedWidth(takeHidden) - this.getEndPinnedWidth(takeHidden);
+        return width - this.getPinnedWidth(takeHidden);
     }
 
     protected _sort(name: string, direction = SortingDirection.Asc, ignoreCase = true) {

@@ -9,7 +9,6 @@ import {
     QueryList,
     TemplateRef
 } from "@angular/core";
-import { PinLocation } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { STRING_FILTERS } from "../data-operations/filtering-condition";
 import { IgxGridAPIService } from "./api.service";
@@ -94,9 +93,6 @@ export class IgxColumnComponent implements AfterContentInit {
     public dataType: DataType = DataType.String;
 
     @Input()
-    public pinLocation: PinLocation = PinLocation.Start;
-
-    @Input()
     public pinned = false;
 
     public gridID: string;
@@ -146,12 +142,9 @@ export class IgxColumnComponent implements AfterContentInit {
         let vIndex = -1;
         if (!this.pinned) {
             const indexInCollection = grid.unpinnedColumns.indexOf(this);
-            vIndex = indexInCollection === -1 ? -1 : grid.pinnedStartColumns.length + indexInCollection;
-        } else if (this.pinned && this.pinLocation === PinLocation.Start) {
-            vIndex =  grid.pinnedStartColumns.indexOf(this);
-        } else if (this.pinned && this.pinLocation === PinLocation.End) {
-            const indexInCollection = grid.pinnedEndColumns.indexOf(this);
-            vIndex = indexInCollection === -1 ? -1 : grid.pinnedStartColumns.length + grid.unpinnedColumns.length + indexInCollection;
+            vIndex = indexInCollection === -1 ? -1 : grid.pinnedColumns.length + indexInCollection;
+        } else {
+            vIndex = grid.pinnedColumns.indexOf(this);
         }
         return vIndex;
     }
@@ -175,7 +168,7 @@ export class IgxColumnComponent implements AfterContentInit {
     @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
-    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {}
+    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
 
     public ngAfterContentInit(): void {
         if (this.cellTemplate) {
@@ -192,8 +185,8 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
-    public pin(location?: PinLocation) {
-        this.gridAPI.get(this.gridID).pinColumn(this.field, location);
+    public pin() {
+        this.gridAPI.get(this.gridID).pinColumn(this.field);
     }
     public unpin() {
         this.gridAPI.get(this.gridID).unpinColumn(this.field);
