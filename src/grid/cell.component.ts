@@ -358,7 +358,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     syncRows() {
         const scrLeft = this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.scrollLeft;
         const headerDcElem = this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement;
-        headerDcElem.scrollLeft = scrLeft;
+        headerDcElem.style.left = (-scrLeft) + "px";
 
         this.row.grid.rowList.map((row) => {
             const elem = row.virtDirRow.dc.instance._viewContainer.element.nativeElement;

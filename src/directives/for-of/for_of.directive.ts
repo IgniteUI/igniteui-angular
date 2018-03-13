@@ -407,7 +407,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     this.hCache,
                     0
                 ) + 1;
-                if (endIndex > this.igxForOf.length) {
+                if (endIndex >= this.igxForOf.length) {
                     endIndex = this.igxForOf.length;
                     /*At right edge. Check if last elem fits.*/
                     let diff = this.hCache[endIndex] - this.hCache[this.state.startIndex];

@@ -15,6 +15,7 @@ import { IgxGridModule } from "./index";
 describe("IgxGrid - Column Pinning ", () => {
     const COLUMN_HEADER_CLASS = ".igx-grid__th";
     const CELL_CSS_CLASS = ".igx-grid__td";
+    const FIXED_CELL_CSS = "igx-grid__th--pinned-start";
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -39,23 +40,17 @@ describe("IgxGrid - Column Pinning ", () => {
         // verify DOM
         const firstIndexCell = grid.getCellByColumn(0, "CompanyName");
         expect(firstIndexCell.visibleColumnIndex).toEqual(0);
-        expect(firstIndexCell.nativeElement.classList.contains("pinned")).toBe(true);
-        expect(firstIndexCell.nativeElement.classList.contains("last-pinned")).toBe(false);
 
         const lastIndexCell = grid.getCellByColumn(0, "ContactName");
         expect(lastIndexCell.visibleColumnIndex).toEqual(1);
-        expect(lastIndexCell.nativeElement.classList.contains("pinned")).toBe(true);
-        expect(lastIndexCell.nativeElement.classList.contains("last-pinned")).toBe(true);
+        expect(lastIndexCell.nativeElement.classList.contains(FIXED_CELL_CSS)).toBe(true);
 
         const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
         expect(headers[0].context.column.field).toEqual("CompanyName");
-        expect(headers[0].classes.pinned).toBe(true);
-        expect(headers[0].classes["last-pinned"]).toBe(false);
 
         expect(headers[1].context.column.field).toEqual("ContactName");
-        expect(headers[1].classes.pinned).toBe(true);
-        expect(headers[1].classes["last-pinned"]).toBe(true);
+        expect(headers[1].classes[FIXED_CELL_CSS]).toBe(true);
 
         // verify container widths
         expect(grid.pinnedWidth).toEqual(400);
@@ -82,13 +77,12 @@ describe("IgxGrid - Column Pinning ", () => {
         // verify DOM
         let cell = grid.getCellByColumn(0, "CompanyName");
         expect(cell.visibleColumnIndex).toEqual(2);
-        expect(cell.nativeElement.classList.contains("pinned")).toBe(false);
+        expect(cell.nativeElement.classList.contains(FIXED_CELL_CSS)).toBe(false);
 
         const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
         expect(headers[2].context.column.field).toEqual("CompanyName");
-        expect(headers[2].classes.pinned).toBe(false);
-        expect(headers[2].classes["last-pinned"]).toBe(false);
+        expect(headers[2].classes[FIXED_CELL_CSS]).toBe(false);
 
         // verify container widths
         expect(grid.pinnedWidth).toEqual(200);
@@ -111,7 +105,7 @@ describe("IgxGrid - Column Pinning ", () => {
 
         cell = grid.getCellByColumn(0, "CompanyName");
         expect(cell.visibleColumnIndex).toEqual(1);
-        expect(cell.nativeElement.classList.contains("pinned")).toBe(true);
+        expect(cell.nativeElement.classList.contains(FIXED_CELL_CSS)).toBe(true);
     });
 
     it("should allow pinning/unpinning via the column API", () => {
@@ -169,7 +163,7 @@ describe("IgxGrid - Column Pinning ", () => {
         const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
         expect(headers[2].context.column.field).toEqual("ContactName");
-        expect(headers[2].classes.pinned).toBe(false);
+        expect(headers[2].classes[FIXED_CELL_CSS]).toBe(false);
 
     });
 
@@ -495,7 +489,7 @@ describe("IgxGrid - Column Pinning ", () => {
         let headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
         expect(headers[0].context.column.field).toEqual("ID");
-        expect(headers[0].classes.pinned).toBe(false);
+        expect(headers[0].classes[FIXED_CELL_CSS]).toBe(false);
 
         col.hidden = false;
         fix.detectChanges();
@@ -506,7 +500,7 @@ describe("IgxGrid - Column Pinning ", () => {
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
         expect(headers[0].context.column.field).toEqual("CompanyName");
-        expect(headers[0].classes.pinned).toBe(true);
+        expect(headers[0].classes[FIXED_CELL_CSS]).toBe(true);
     });
 
     it("should allow pinning a hidden column.", () => {
