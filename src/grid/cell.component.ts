@@ -145,27 +145,17 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         return this.column.dataType === DataType.Number;
     }
 
-    get isFixed() {
+    get isPinned() {
         return this.column.pinned;
     }
 
     @HostBinding("class.igx-grid__th--pinned-start")
-    get isLastFixed() {
-        const pinnedCols = this.grid.pinnedStartColumns;
+    get isLastPinned() {
+        const pinnedCols = this.grid.pinnedColumns;
         if (pinnedCols.length === 0) {
             return false;
         } else {
             return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
-        }
-    }
-
-    @HostBinding("class.igx-grid__th--pinned-end")
-    get isFirstFixed() {
-        const pinnedCols = this.grid.pinnedEndColumns;
-        if (pinnedCols.length === 0) {
-            return false;
-        } else {
-            return pinnedCols.indexOf(this.column) === 0;
         }
     }
 
@@ -239,11 +229,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         event.preventDefault();
         const visibleColumns = this.grid.visibleColumns;
         const rowIndex = this.rowIndex;
-        let visibleColumnIndex = this.visibleColumnIndex;
-        const rv = visibleColumns.findIndex((col) => col.visibleIndex === visibleColumnIndex);
+        const visibleColumnIndex = this.visibleColumnIndex - 1;
 
-        if (rv > 0) {
-            visibleColumnIndex = visibleColumns[rv - 1].visibleIndex;
+        if (visibleColumnIndex >= 0) {
 
             const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, visibleColumnIndex);
 
@@ -289,11 +277,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         event.preventDefault();
         const visibleColumns = this.grid.visibleColumns;
         const rowIndex = this.rowIndex;
-        let visibleColumnIndex = this.visibleColumnIndex;
-        const rv = visibleColumns.findIndex((col) => col.visibleIndex === visibleColumnIndex);
-
-        if (rv > -1 && rv < visibleColumns.length - 1) {
-            visibleColumnIndex = visibleColumns[rv + 1].visibleIndex;
+        const visibleColumnIndex = this.visibleColumnIndex + 1;
+        if (visibleColumnIndex > -1 && visibleColumnIndex <= visibleColumns.length - 1) {
 
             const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, visibleColumnIndex);
 

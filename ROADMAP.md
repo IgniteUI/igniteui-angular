@@ -1,10 +1,10 @@
 # Roadmap - Ignite UI for Angular
 
 ## Milestone 2 (due April 16th, 2018)
-1. Expanding Ignite UI CLI views and templates with Ignite UI for Angular
-   1. Adding component views like App Host, Tabbar, List
-   2. Updating the default project look
-   3. Move the project navigation inside an App Host
+1.**[DONE]** Expanding Ignite UI CLI views and templates with Ignite UI for Angular
+   1. [DONE]Adding component views like App Host, Tabbar, List
+   2. [DONE]Updating the default project look
+   3. [DONE]Move the project navigation inside an App Host
 2. **[DONE]** Product Theming 
 3. Column Resizing 
 4. Column Hiding 

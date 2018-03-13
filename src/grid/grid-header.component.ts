@@ -98,21 +98,11 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
 
     @HostBinding("class.igx-grid__th--pinned-start")
     get isLastPinned() {
-        const pinnedCols = this.grid.pinnedStartColumns;
+        const pinnedCols = this.grid.pinnedColumns;
         if (pinnedCols.length === 0) {
             return false;
         } else {
             return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
-        }
-    }
-
-    @HostBinding("class.igx-grid__th--pinned-end")
-    get isFirstPinned() {
-        const pinnedCols = this.grid.pinnedEndColumns;
-        if (pinnedCols.length === 0) {
-            return false;
-        } else {
-            return pinnedCols.indexOf(this.column) === 0;
         }
     }
 
