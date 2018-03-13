@@ -52,10 +52,6 @@
         @extend %grid-scroll-main !optional;
     }
 
-    @include e(scroll-end) {
-        @extend %grid-scroll-end !optional;
-    }
-
     @include e(tfoot) {
         @extend %grid-tfoot !optional;
     }
@@ -94,10 +90,6 @@
 
     @include e(th, $m: pinned-start) {
         @extend %grid-cell-pinned--start !optional;
-    }
-
-    @include e(th, $m: pinned-end) {
-        @extend %grid-cell-pinned--end !optional;
     }
 
     @include e(th, $m: fw) {

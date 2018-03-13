@@ -166,7 +166,7 @@
 
     %igx-filtering-menu {
         display: block;
-        position: fixed;
+        position: absolute;
         font-size: initial;
         font-weight: initial;
 
@@ -206,7 +206,7 @@
     }
 
     %igx-filtering-menu--to-left {
-        transform: translateX(-84%);
+        right: 16px;
     }
 
     %igx-filtering-menu--to-right {

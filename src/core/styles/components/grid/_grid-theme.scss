@@ -213,8 +213,7 @@
     }
 
     %grid-display-container-thead {
-        overflow-x: hidden;
-        overflow-y: visible;
+        overflow: visible;
     }
 
     %grid-display-container-tr {
@@ -272,12 +271,8 @@
 
     %grid-scroll-main {
         igx-display-container {
-            height: 0 !important;
+            height: 0;
         }
-    }
-
-    %grid-scroll-end {
-        border-left: 1px solid igx-color($palette, 'grays', 400);
     }
 
     %grid-row {
@@ -336,10 +331,6 @@
         border-right: map-get($cell-pin, 'style') map-get($cell-pin, 'color') !important;
     }
 
-    %grid-cell-pinned--end {
-        border-left: map-get($cell-pin, 'style') map-get($cell-pin, 'color');
-    }
-
     %grid-cell-header {
         display: flex;
         position: relative;
@@ -348,7 +339,7 @@
         justify-content: space-between;
         font-size: $grid-head-fs;
         font-weight: $grid-head-fw;
-        overflow: hidden;
+        overflow: visible;
         min-width: 0;
         border-right: 1px dotted igx-color($palette, 'grays', 400);
 
