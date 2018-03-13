@@ -227,8 +227,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (endingIndex === this.igxForOf.length) {
             // scrolled to bottom
             const h = this.dc.instance._viewContainer.element.nativeElement.clientHeight;
-            const diffContent = this.state.chunkSize * parseInt(this.igxForItemSize, 10) - parseInt(this.igxForContainerSize, 10);
-            const totalDiff = h - parseInt(this.igxForContainerSize, 10) - diffContent;
+            const totalDiff = h - this.state.chunkSize * parseInt(this.igxForItemSize, 10);
             if (totalDiff < 0) {
                 this.dc.instance._viewContainer.element.nativeElement.firstElementChild.style.marginTop = totalDiff + "px";
             }
