@@ -28,7 +28,7 @@
 @import '../components/input/input-theme';
 @import '../components/icon/icon-theme';
 @import '../components/grid-filtering/grid-filtering-theme';
-@import '../components/tiem-picker/time-picker-theme';
+@import '../components/time-picker/time-picker-theme';
 
 @mixin igx-theme($palette: $default-palette, $exclude: ()) {
     // Check for invalid components passed
