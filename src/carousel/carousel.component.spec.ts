@@ -4,7 +4,7 @@ import {
   TestBed
 } from "@angular/core/testing";
 import {By} from "@angular/platform-browser";
-import {IgxCarouselComponent, IgxCarouselModule, IgxSlideComponent} from "./carousel.component";
+import {ICarouselEventArgs, IgxCarouselComponent, IgxCarouselModule, IgxSlideComponent, ISlideEventArgs} from "./carousel.component";
 
 function dispatchEv(element: HTMLElement, eventType: string) {
     const event = new Event(eventType);
@@ -151,27 +151,42 @@ describe("Carousel", () => {
         spyOn(carousel.onSlideChanged, "emit");
         carousel.next();
         fixture.detectChanges();
-        expect(carousel.onSlideChanged.emit).toHaveBeenCalledWith(carousel);
+        let args: ISlideEventArgs = {
+            carousel,
+            slide: carousel.get(carousel.current)
+        };
+        expect(carousel.onSlideChanged.emit).toHaveBeenCalledWith(args);
 
         spyOn(carousel.onSlideAdded, "emit");
         carousel.add(carousel.get(carousel.current));
         fixture.detectChanges();
-        expect(carousel.onSlideAdded.emit).toHaveBeenCalledWith(carousel);
+        args = {
+            carousel,
+            slide: carousel.get(carousel.current)
+        };
+        expect(carousel.onSlideAdded.emit).toHaveBeenCalledWith(args);
 
         spyOn(carousel.onSlideRemoved, "emit");
+        args = {
+            carousel,
+            slide: carousel.get(carousel.current)
+        };
         carousel.remove(carousel.get(carousel.current));
         fixture.detectChanges();
-        expect(carousel.onSlideRemoved.emit).toHaveBeenCalledWith(carousel);
+        expect(carousel.onSlideRemoved.emit).toHaveBeenCalledWith(args);
 
         spyOn(carousel.onCarouselPaused, "emit");
         carousel.stop();
         fixture.detectChanges();
-        expect(carousel.onCarouselPaused.emit).toHaveBeenCalledWith(carousel);
+        const args2: ICarouselEventArgs = {
+            carousel
+        };
+        expect(carousel.onCarouselPaused.emit).toHaveBeenCalledWith(args2);
 
         spyOn(carousel.onCarouselPlaying, "emit");
         carousel.play();
         fixture.detectChanges();
-        expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledWith(carousel);
+        expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledWith(args2);
     });
 
     it("Carousel click handlers", () => {

@@ -70,14 +70,14 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     public closeOnOutsideSelect = false;
 
     @Output()
-    public onOpen = new EventEmitter();
+    public onOpen = new EventEmitter<IDialogEventArgs>();
     @Output()
-    public onClose = new EventEmitter();
+    public onClose = new EventEmitter<IDialogEventArgs>();
 
     @Output()
-    public onLeftButtonSelect = new EventEmitter();
+    public onLeftButtonSelect = new EventEmitter<IDialogEventArgs>();
     @Output()
-    public onRightButtonSelect = new EventEmitter();
+    public onRightButtonSelect = new EventEmitter<IDialogEventArgs>();
 
     public get element() {
         return this.elementRef.nativeElement;
@@ -130,7 +130,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
         }
 
         this.toggleState("open");
-        this.onOpen.emit(this);
+        this.onOpen.emit({ dialog: this, event: null });
     }
 
     public close() {
@@ -139,7 +139,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
         }
 
         this.toggleState("close");
-        this.onClose.emit(this);
+        this.onClose.emit({ dialog: this, event: null });
     }
 
     public toggle() {
@@ -181,6 +181,11 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
         this._state = state;
         this._isOpen = state === "open" ? true : false;
     }
+}
+
+export interface IDialogEventArgs {
+    dialog: IgxDialogComponent;
+    event: any;
 }
 
 @NgModule({

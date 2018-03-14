@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
-import { IgxDialogComponent, IgxDialogModule } from "./dialog.component";
+import { IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from "./dialog.component";
 
 describe("Dialog", () => {
     beforeEach(async(() => {
@@ -110,18 +110,22 @@ describe("Dialog", () => {
     it("Should test events.", () => {
         const fixture = TestBed.createComponent(DialogComponent);
         const dialog = fixture.componentInstance.dialog;
+        const args: IDialogEventArgs = {
+            dialog,
+            event: null
+        };
 
         spyOn(dialog.onOpen, "emit");
         dialog.open();
         dialog.close();
         fixture.detectChanges();
-        expect(dialog.onOpen.emit).toHaveBeenCalledWith(dialog);
+        expect(dialog.onOpen.emit).toHaveBeenCalledWith(args);
 
         spyOn(dialog.onClose, "emit");
         dialog.open();
         dialog.close();
         fixture.detectChanges();
-        expect(dialog.onClose.emit).toHaveBeenCalledWith(dialog);
+        expect(dialog.onClose.emit).toHaveBeenCalledWith(args);
 
         dialog.open();
         fixture.detectChanges();

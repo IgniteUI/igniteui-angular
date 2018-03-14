@@ -84,7 +84,7 @@ export class IgxCarouselComponent implements OnDestroy {
      * @type {EventEmitter}
      * @memberOf IgxCarouselComponent
      */
-    @Output() public onSlideChanged = new EventEmitter();
+    @Output() public onSlideChanged = new EventEmitter<ISlideEventArgs>();
 
     /**
      * An event that is emitted after a slide has been added to the carousel.
@@ -93,7 +93,7 @@ export class IgxCarouselComponent implements OnDestroy {
      * @type {EventEmitter}
      * @memberOf IgxCarouselComponent
      */
-    @Output() public onSlideAdded = new EventEmitter();
+    @Output() public onSlideAdded = new EventEmitter<ISlideEventArgs>();
 
     /**
      * An event that is emitted after a slide has been removed from the carousel.
@@ -102,7 +102,7 @@ export class IgxCarouselComponent implements OnDestroy {
      * @type {EventEmitter}
      * @memberOf IgxCarouselComponent
      */
-    @Output() public onSlideRemoved = new EventEmitter();
+    @Output() public onSlideRemoved = new EventEmitter<ISlideEventArgs>();
 
     /**
      * An event that is emitted after the carousel has been paused.
@@ -111,7 +111,7 @@ export class IgxCarouselComponent implements OnDestroy {
      * @type {EventEmitter}
      * @memberOf IgxCarouselComponent
      */
-    @Output() public onCarouselPaused = new EventEmitter();
+    @Output() public onCarouselPaused = new EventEmitter<ICarouselEventArgs>();
 
     /**
      * An event that is emitted after the carousel has resumed transitioning between slides.
@@ -120,7 +120,7 @@ export class IgxCarouselComponent implements OnDestroy {
      * @type {EventEmitter}
      * @memberOf IgxCarouselComponent
      */
-    @Output() public onCarouselPlaying = new EventEmitter();
+    @Output() public onCarouselPlaying = new EventEmitter<ICarouselEventArgs>();
 
     /**
      * The collection of slides currently in the carousel
@@ -228,7 +228,7 @@ export class IgxCarouselComponent implements OnDestroy {
             slide.active = false;
         }
 
-        this.onSlideAdded.emit(this);
+        this.onSlideAdded.emit({ carousel: this, slide });
     }
 
     /**
@@ -252,7 +252,7 @@ export class IgxCarouselComponent implements OnDestroy {
             this.slides[i].index = i;
         }
 
-        this.onSlideRemoved.emit(this);
+        this.onSlideRemoved.emit({ carousel: this, slide });
     }
 
     /**
@@ -319,7 +319,7 @@ export class IgxCarouselComponent implements OnDestroy {
     public play() {
         if (!this._playing) {
             this._playing = true;
-            this.onCarouselPlaying.emit(this);
+            this.onCarouselPlaying.emit({ carousel: this });
             this._restartInterval();
         }
     }
@@ -334,7 +334,7 @@ export class IgxCarouselComponent implements OnDestroy {
     public stop() {
         if (this.pause) {
             this._playing = false;
-            this.onCarouselPaused.emit(this);
+            this.onCarouselPaused.emit({ carousel: this });
             this._resetInterval();
         }
     }
@@ -367,7 +367,7 @@ export class IgxCarouselComponent implements OnDestroy {
 
         this._currentSlide = slide;
 
-        this.onSlideChanged.emit(this);
+        this.onSlideChanged.emit({ carousel: this, slide });
         this._restartInterval();
     }
 
@@ -444,6 +444,15 @@ export class IgxSlideComponent implements OnInit, OnDestroy {
     public ngOnDestroy() {
         this.carousel.remove(this);
     }
+}
+
+export interface ISlideEventArgs {
+    carousel: IgxCarouselComponent;
+    slide: IgxSlideComponent;
+}
+
+export interface ICarouselEventArgs {
+    carousel: IgxCarouselComponent;
 }
 
 @NgModule({
