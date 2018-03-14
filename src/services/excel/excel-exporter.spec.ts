@@ -1,76 +1,86 @@
-import { IgxExcelExporterService } from './excel-exporter';
-import { ValueData, ExportTestDataService, JSZipWrapper, JSZipFiles, ObjectComparer } from './test-data.service';
-import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from "@angular/core/testing";
+import { ExcelFileTypes } from './excel-enums';
+import { IgxExcelExporterService } from './excel-exporter';
+import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { ExcelStrings } from './excel-strings';
+import { ExportTestDataService, ValueData, FileContentData } from './test-data.service';
+import { JSZipFiles } from './jsZip-helper';
+import { JSZipWrapper, ObjectComparer, IFileContent } from './jszip-verification-wrapper';
 
-fdescribe('Excel Exporter', () => {
-    let testData : ExportTestDataService;
+describe('Excel Exporter', () => {
+    let sourceData : ExportTestDataService;
     let exporter : IgxExcelExporterService;
+    let options : IgxExcelExporterOptions;
     let wrapper : JSZipWrapper;
+    let fileContents : IFileContent[];
     let timesCalled = 0;
+    let actualData : FileContentData;
 
     beforeEach(() => {
         exporter = new IgxExcelExporterService();
-        testData = new ExportTestDataService();
+        sourceData = new ExportTestDataService();
+        actualData = new FileContentData();
+        options = new IgxExcelExporterOptions("TestData");
 
-        exporter.onExportEnded.subscribe((value) => {
-            console.log("I was called with " + value.xlsx + " " + ++timesCalled + " time(s).");
-            wrapper = new JSZipWrapper(value.xlsx);
-        });
+        // Spy the private SaveFile method so the files are not really created
+        spyOn(exporter as any, "SaveFile");
     });
 
     /* ExportData() tests */
-   fit('should not fail when data is empty.', (done) => {
-        // exporter.ExportData([], new IgxExcelExporterOptions("EmptyData"));
-        exportData([], new IgxExcelExporterOptions("EmptyData"))
-        // setTimeout(() => {
-            .then(()=> {
-            let result = ObjectComparer.AreEqual(wrapper.filesAndFoldersNames, JSZipFiles.AllFilesList);
-            expect(result).toBe(true);
-            wrapper.readFile(JSZipFiles.FilesNamesList[0]);
+   it('should not fail when data is empty.', async(() => {
+        getExportedData([], options).then((wrapper) => {
+            wrapper.verifyStructure();
+            wrapper.verifyTemplateFilesContent();
         });
-        // }, 0);
-        // setTimeout(() => {
-            expect(wrapper.fileContent).toBe(ExcelStrings._RELS_XML);
-            done();
-        // }, 1000);
+    }));
 
-    });
-
-    it('should export empty objects successfully.', () => {
-        exporter.ExportData(testData.getEmptyObjectData(), new IgxExcelExporterOptions("EmptyObjectsData"));
-        // return Promise.resolve(exporter.ExportData(testData.getEmptyObjectData(), new IgxExcelExporterOptions("EmptyObjectsData")))
-        // .then(()=>
-        // {
-        expect(wrapper.fileContent).toBe(ExcelStrings._RELS_XML);
-            let result = ObjectComparer.AreEqual(wrapper.filesAndFoldersNames, JSZipFiles.AllFilesList);
-            expect(result).toBe(true);
-            // done();
-        // });
-
-
-    });
-
-    it('should export string data without headers successfully.', () => {
-        exporter.ExportData(testData.getNoHeadersStringData(), new IgxExcelExporterOptions("NoHeadersStringData"));
-    });
-
-    it('should export object data without headers successfully.', () => {
-        exporter.ExportData(testData.noHeadersObjectData, new IgxExcelExporterOptions("NoHeadersObjectData"));
-    });
-
-    it('should export regular data successfully.', () => {
-        exporter.ExportData(testData.contacts, new IgxExcelExporterOptions("Contacts"));
-    });
-
-    it('should export data with missing values successfully.', () => {
-        exporter.ExportData(testData.contactsMissing, new IgxExcelExporterOptions("MissingValues"));
-    });
-
-    function exportData(data, options) {
-        return Promise.resolve(() => {
-             exporter.ExportData(data, options);
+    it('should export empty objects successfully.', async(() => {
+        getExportedData(sourceData.emptyObjectData, options).then((wrapper) => {
+            wrapper.verifyStructure();
+            wrapper.verifyTemplateFilesContent();
         });
-    };
+    }));
+
+    it('should export string data without headers successfully.', async(() => {
+        getExportedData(sourceData.noHeadersStringData, options).then((wrapper) => {
+            wrapper.verifyStructure();
+            wrapper.verifyTemplateFilesContent();
+            wrapper.verifyDataFilesContent(actualData.noHeadersStringDataContent);
+        });
+    }));
+
+    it('should export object data without headers successfully.', async(() => {
+        getExportedData(sourceData.noHeadersObjectData, options).then((wrapper) => {
+            wrapper.verifyStructure();
+            wrapper.verifyTemplateFilesContent();
+            wrapper.verifyDataFilesContent(actualData.noHeadersObjectDataContent);
+        });
+    }));
+
+    it('should export regular data successfully.', async(() => {
+        getExportedData(sourceData.contactsData, options).then((wrapper) => {
+            wrapper.verifyStructure();
+            wrapper.verifyTemplateFilesContent();
+            wrapper.verifyDataFilesContent(actualData.contactsDataContent);
+        });
+    }));
+
+    it('should export data with missing values successfully.', async(() => {
+        getExportedData(sourceData.contactsPartialData, options).then((wrapper) => {
+            wrapper.verifyStructure();
+            wrapper.verifyTemplateFilesContent();
+            wrapper.verifyDataFilesContent(actualData.contactsPartialDataContent);
+        });
+    }));
+
+    async function getExportedData( data : any[], options : IgxExcelExporterOptions ) {
+        let result = await new Promise<JSZipWrapper>(resolve => {
+            exporter.onExportEnded.subscribe((value) => {
+                let wrapper = new JSZipWrapper(value.xlsx);
+                resolve(wrapper);
+            });
+            exporter.ExportData(data, options);
+        });
+        return result;
+    }
 });
