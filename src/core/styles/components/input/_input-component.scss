@@ -1,7 +1,15 @@
-
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
 @include b(igx-form-group) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
     @extend %igx-input-display !optional;
-    $block: bem--selector-to-string(&);
 
     label {
         @extend %igx-form-label !optional;
@@ -98,7 +106,7 @@
     }
 
     @include e(textarea) {
-        // @extend #{$block}__input;
+        // @extend #{$this}__input;
         @extend %igx-textarea !optional;
     }
 }

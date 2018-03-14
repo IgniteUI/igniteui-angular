@@ -1,8 +1,7 @@
 # igxCalendar Component
 
-The **igxCalendar** provides a way for the user to select date(s).
-
-You can see it in action [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar.html)
+The **igxCalendar** provides a way for the user to select date(s).  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar.html)
 
 ## Dependencies
 In order to be able to use **igxCalendar** you should keep in mind that it is dependent on **BrowserAnimationsModule**,
@@ -92,7 +91,7 @@ Defaults to Sunday.
 
 Controls the locale used for formatting and displaying the dates in the calendar.
 The expected string should be a [BCP 47 language tag](http://tools.ietf.org/html/rfc5646).
-The default value is `en-EN`.
+The default value is `en`.
 
 - `selection: CalendarSelection | string`
 

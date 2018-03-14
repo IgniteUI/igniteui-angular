@@ -1,10 +1,25 @@
-$component-names: 'igx-progress-linear' 'igx-progress-circular';
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
-@each $c in $component-names {
-    $components: register-component($components, #{$c});
-}
-
-// Linear Progress
+/// @param {Color} $track-color [null] - The main track color.
+/// @param {Color} $fill-color-default [null] - The track default fill color.
+/// @param {Color} $fill-color-danger [null] - The track danger fill color.
+/// @param {Color} $fill-color-warning [null] - The track warning fill color.
+/// @param {Color} $fill-color-info [null] - The track info fill color.
+/// @param {Color} $fill-color-success [null] - The track success fill color.
+/// @param {Color} $stripes-color [null] - The track stripes color.
+/// @param {Color} $text-color [null] - The track value text color.
+///
+/// @example scss Change the stripes color
+///   $my-progress-linear-theme: igx-progress-linear-theme(
+///     $stripes-color: orange
+///   );
+///   // Pass the theme to the igx-progress-linear component mixin
+///   @include igx-progress-linear($my-progress-linear-theme);
 @function igx-progress-linear-theme(
     $track-color: null,
     $fill-color-default: null,
@@ -27,6 +42,12 @@ $component-names: 'igx-progress-linear' 'igx-progress-circular';
     );
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-progress-linear-theme
+/// @requires igx-color
+/// @requires extend
+/// @requires em
 @mixin igx-progress-linear($theme, $palette: $default-palette) {
     $default-theme: igx-progress-linear-theme(
         $track-color: igx-color($palette, 'grays', 300),
@@ -141,7 +162,16 @@ $component-names: 'igx-progress-linear' 'igx-progress-circular';
     }
 }
 
-// Circular Progress
+/// @param {Color} $base-circle-color [null] - The base circle fill color.
+/// @param {Color} $progress-circle-color [null] - The progress circle fill color.
+/// @param {Color} $text-color [null] - The value text color.
+///
+/// @example scss Change the circle progress color
+///   $my-progress-circular-theme: igx-progress-circular-theme(
+///     $progress-circle-color: purple
+///   );
+///   // Pass the theme to the igx-progress-circular component mixin
+///   @include igx-progress-circular($my-progress-circle-theme);
 @function igx-progress-circular-theme(
     $base-circle-color: null,
     $progress-circle-color: null,
@@ -154,6 +184,12 @@ $component-names: 'igx-progress-linear' 'igx-progress-circular';
     );
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-progress-circular-theme
+/// @requires igx-color
+/// @requires extend
+/// @requires rem
 @mixin igx-progress-circular($theme, $palette: $default-palette) {
     $default-theme: igx-progress-circular-theme(
         $base-circle-color: igx-color($palette, 'grays', 300),

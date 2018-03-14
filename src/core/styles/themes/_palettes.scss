@@ -1,9 +1,68 @@
-$default-palette: igx-palette($primary: #09f, $secondary: #e41c77);
+/// Default theme palette.
+/// Will be the one used if no theme palette is specified.
+/// @group palettes
+/// @type Map
+/// @prop {Map} primary - The primary sub-palette created from the primary color.
+/// @prop {Map} secondary - The secondary sub-palette created from the secondary color.
+/// @prop {Map} grays - The grays sub-palette. Included by default in every igx-palette.
+/// @prop {Color} primary.100 [#a7d9fa] - The 100 variant of the `primary` color.
+/// @prop {Color} primary.200 [#6dbcf1] - The 200 variant of the `primary` color.
+/// @prop {Color} primary.300 [#3ca9f2] - The 300 variant of the `primary` color.
+/// @prop {Color} primary.400 [#1da0f7] - The 400 variant of the `primary` color.
+/// @prop {Color} primary.500 [#09f] - The 500 variant of the `primary` color (default).
+/// @prop {Color} primary.600 [#0089e5] - The 600 variant of the `primary` color.
+/// @prop {Color} primary.700 [#007ed2] - The 700 variant of the `primary` color.
+/// @prop {Color} primary.800 [#0072be] - The 800 variant of the `primary` color.
+/// @prop {Color} primary.900 [#0065a8] - The 900 variant of the `primary` color.
+/// @prop {Color} primary.A100 [#55bbff] - The A100 variant of the `primary` color.
+/// @prop {Color} primary.A200 [#27a9ff] - The A200 variant of the `primary` color.
+/// @prop {Color} primary.A400 [#008deb] - The A400 variant of the `primary` color.
+/// @prop {Color} primary.A700 [#0066aa] - The A700 variant of the `primary` color.
+/// @prop {Color} secondary.100 [#f0b2ce] - The 100 variant of the `secondary` color.
+/// @prop {Color} secondary.200 [#e17fab] - The 200 variant of the `secondary` color.
+/// @prop {Color} secondary.300 [#dc5391] - The 300 variant of the `secondary` color.
+/// @prop {Color} secondary.400 [#df3683] - The 400 variant of the `secondary` color.
+/// @prop {Color} secondary.500 [#e41c77] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} secondary.600 [#dc0a6a] - The 600 variant of the `secondary` color.
+/// @prop {Color} secondary.700 [#d30060] - The 700 variant of the `secondary` color.
+/// @prop {Color} secondary.800 [#bf0057] - The 800 variant of the `secondary` color.
+/// @prop {Color} secondary.900 [#a5044d] - The 900 variant of the `secondary` color.
+/// @prop {Color} secondary.A100 [#f65fa4] - The A100 variant of the `secondary` color.
+/// @prop {Color} secondary.A200 [#f3348b] - The A200 variant of the `secondary` color.
+/// @prop {Color} secondary.A400 [#df0d6d] - The A400 variant of the `secondary` color.
+/// @prop {Color} secondary.A700 [#a2094f] - The A700 variant of the `primary` color.
+/// @prop {Color} grays.100 [rgba(0, 0, 0, .04)] - The 100 variant of the `grays` color.
+/// @prop {Color} grays.200 [rgba(0, 0, 0, .08)] - The 200 variant of the `grays` color.
+/// @prop {Color} grays.300 [rgba(0, 0, 0, .12)] - The 300 variant of the `grays` color.
+/// @prop {Color} grays.400 [rgba(0, 0, 0, .26)] - The 400 variant of the `grays` color.
+/// @prop {Color} grays.500 [rgba(0, 0, 0, .38)] - The 500 variant of the `grays` color.
+/// @prop {Color} grays.600 [rgba(0, 0, 0, .54)] - The 600 variant of the `grays` color.
+/// @prop {Color} grays.700 [rgba(0, 0, 0, .62)] - The 700 variant of the `grays` color.
+/// @prop {Color} grays.800 [rgba(0, 0, 0, .74)] - The 800 variant of the `grays` color.
+/// @prop {Color} grays.900 [rgba(0, 0, 0, .87)] - The 900 variant of the `grays` color.
+/// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#4eb862] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#fbb13c] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#ff134a] - The `error`. Default for every palette if not specified.
+/// @requires igx-palette
+$default-palette: igx-palette($primary: #09f, $secondary: #e41c77) !default;
 
-$white: #fff !default;
+/// Global Overlay Color
+/// @group palettes
+/// @type Color
+/// @prop {Map} $palette [$default-palette] - The palette used to extract the color from.
+/// @prop {String} $color [grays] - The name of the sub-palette to take the color from.
+/// @requires igx-color
 $overlay-color: igx-color($default-palette, 'grays') !default;
 
-// Elevations, regardless of palette
+/// Default elevations. Work in progress.
+/// Subject to change.
+/// @group elevations
+/// @type Map
+/// @prop {Color} $color-1 [rgba(0, 0, 0, .26)] - The color used for the umbra shadow.
+/// @prop {Color} $color-2 [rgba(0, 0, 0, .12)] - The color used for the penumbra shadow.
+/// @prop {Color} $color-3 [rgba(0, 0, 0, .08)] - The color used for the ambient shadow.
+/// @requires igx-elevations
 $elevations: igx-elevations(
     rgba(0, 0, 0, .26),
     rgba(0, 0, 0, .12),

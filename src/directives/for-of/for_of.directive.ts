@@ -101,7 +101,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 const input = this.igxForOf[i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
                     this._template,
-                    { $implicit: input, index: this.igxForOf.indexOf(input), dirty: false }
+                    { $implicit: input, index: this.igxForOf.indexOf(input) }
                 );
                 this._embeddedViews.push(embeddedView);
             }
@@ -132,7 +132,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         if (this.igxForScrollOrientation === "horizontal") {
             this.dc.instance._viewContainer.element.nativeElement.style.height = "100%";
-            const directiveRef = this.igxForScrollContainer || this;
             this.func = (evt) => { this.onHScroll(evt); };
             if (!this.hScroll) {
                 const hvFactory: ComponentFactory<HVirtualHelperComponent> =
@@ -188,7 +187,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.state.startIndex = index;
         if (this.igxForScrollOrientation === "horizontal") {
             const sumWidths = this.igxForOf.reduce((acc, currentVal, currentIndex) => {
-                return (currentIndex <= index) ? acc + currentVal.width : acc;
+                return (currentIndex <= index) ? acc + parseFloat(currentVal.width) : acc;
             }, 0);
             this.hScroll.scrollLeft = sumWidths;
         } else {
@@ -225,15 +224,22 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForRemote) {
             return;
         }
+        if (endingIndex === this.igxForOf.length) {
+            // scrolled to bottom
+            const h = this.dc.instance._viewContainer.element.nativeElement.clientHeight;
+            const totalDiff = h - this.state.chunkSize * parseInt(this.igxForItemSize, 10);
+            if (totalDiff < 0) {
+                this.dc.instance._viewContainer.element.nativeElement.firstElementChild.style.marginTop = totalDiff + "px";
+            }
+        } else {
+           this.dc.instance._viewContainer.element.nativeElement.firstElementChild.style.marginTop = "";
+        }
         for (let i = this.state.startIndex; i < endingIndex && this.igxForOf[i] !== undefined; i++) {
             const input = this.igxForOf[i];
             const embView = embeddedViewCopy.shift();
             const cntx = (embView as EmbeddedViewRef<any>).context;
             cntx.$implicit = input;
             cntx.index = this.igxForOf.indexOf(input);
-            cntx.dirty = true;
-            embView.detectChanges();
-            cntx.dirty = false;
         }
         this.dc.changeDetectorRef.detectChanges();
         this.onChunkLoad.emit(this.state);
@@ -245,8 +251,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             return;
         }
         const scrollLeft = event.target.scrollLeft;
-        const hcWidth = event.target.children[0].scrollWidth;
-        const ratio = scrollLeft / hcWidth;
         this.state.startIndex = this.getHorizontalIndexAt(
             scrollLeft,
             this.hCache,
@@ -264,9 +268,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const cntx = (embView as EmbeddedViewRef<any>).context;
             cntx.$implicit = input;
             cntx.index = this.igxForOf.indexOf(input);
-            cntx.dirty = true;
-            embView.detectChanges();
-            cntx.dirty = false;
         }
         this.dc.changeDetectorRef.detectChanges();
         this.onChunkLoad.emit();
@@ -392,9 +393,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     const cntx = (embView as EmbeddedViewRef<any>).context;
                     cntx.$implicit = input;
                     cntx.index = this.igxForOf.indexOf(input);
-                    cntx.dirty = true;
-                    embView.detectChanges();
-                    cntx.dirty =  false;
             }
             this.onChunkLoad.emit();
             this.dc.changeDetectorRef.detectChanges();
@@ -495,8 +493,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     private _recalcOnContainerChange(changes: SimpleChanges) {
-        const containerSize = "igxForContainerSize";
-        const value = changes[containerSize].currentValue;
         this.applyChunkSizeChange();
         if (this.dc && this.state.chunkSize !== this.igxForOf.length) {
             this.dc.instance.notVirtual = false;
@@ -512,7 +508,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 const input = this.igxForOf[this.state.startIndex + this.state.chunkSize + i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
                     this._template,
-                    { $implicit: input, index: this.igxForOf.indexOf(input), dirty: false }
+                    { $implicit: input, index: this.igxForOf.indexOf(input) }
                 );
                 this._embeddedViews.push(embeddedView);
             }
@@ -527,10 +523,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
         this.state.chunkSize = chunkSize;
     }
-}
-
-class RecordViewTuple<T> {
-    constructor(public record: any, public view: EmbeddedViewRef<NgForOfContext<T>>) { }
 }
 
 export function getTypeNameForDebugging(type: any): string {

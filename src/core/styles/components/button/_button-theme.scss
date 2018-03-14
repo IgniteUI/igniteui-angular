@@ -1,7 +1,53 @@
-$component-name: 'igx-button';
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
-$components: register-component($components, #{$component-name});
-
+/// If only background color is specified, text/icon color
+/// will be assigned automatically to a contrasting color.
+/// Does ___not___ apply for disabled state colors.
+/// @param {String} $button-roundness [null]- The edge roundness(border-radius) for flat and raised buttons.
+///
+/// @param {Color} $flat-text-color [null] - The idle text color of a flat button.
+/// @param {Color} $flat-hover-text-color [null] - The hover text color of a flat button.
+/// @param {Color} $flat-background [null] - The background color of a flat button.
+/// @param {Color} $flat-hover-background [null] - The hover background color of a flat button.
+/// @param {Color} $flat-focus-background [null] - The focus background color of a flat button.
+///
+/// @param {Color} $raised-text-color [null] - The idle text color of a raised button.
+/// @param {Color} $raised-hover-text-color [null] - The hover text color of a raised button.
+/// @param {Color} $raised-background [null] - The background color of a raised button.
+/// @param {Color} $raised-hover-background [null] - The hover background of a raised button.
+/// @param {Color} $raised-focus-text-color [null] - The focus text color of a raised button.
+/// @param {Color} $raised-focus-background [null] - The focus background color of a raised button.
+///
+/// @param {Color} $fab-text-color [null] - The text color of a floating action button.
+/// @param {Color} $fab-hover-text-color [null] - The hover text color of a floating action button.
+/// @param {Color} $fab-background [null] - The background color of a floating action button.
+/// @param {Color} $fab-hover-background [null] - The hover background color of a floating action button.
+/// @param {Color} $fab-focus-text-color [null] - The focus text color of a floating action button.
+/// @param {Color} $fab-focus-background [null] - The focus background color of floating action button.
+///
+/// @param {Color} $icon-color [null] - The icon color of an icon button.
+/// @param {Color} $icon-hover-color [null] - The hover icon color of an icon button.
+/// @param {Color} $icon-background [null] - The background color of the an icon button.
+/// @param {Color} $icon-hover-background [null] - The hover background color of an icon button.
+/// @param {Color} $icon-focus-color [null] - The focus icon color of an icon button.
+/// @param {Color} $icon-focus-background [null] - The focus background color an icon button.
+///
+/// @param {Color} $disabled-color [null] - The disabled text/icon color of a button.
+/// @param {Color} $disabled-background [null] - The disabled background color of raised, fab, or icon buttons.
+///
+/// @requires text-contrast
+///
+/// @example scss Change the background and text colors in raised buttons
+///   $my-button-theme: igx-button-theme(
+///     $raised-text-color: white,
+///     $raised-background: black
+///   );
+///   // Pass the theme to the igx-button component mixin
+///   @include igx-button($my-button-theme);
 @function igx-button-theme(
     // Global Button
     $button-roundness: null,
@@ -136,6 +182,12 @@ $components: register-component($components, #{$component-name});
         disabled-background: $disabled-background,
     );
 }
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-button-theme
+/// @requires igx-color
+/// @requires igx-contrast-color
 @mixin igx-button($theme, $palette: $default-palette) {
     $default-theme: igx-button-theme(
         // Global
@@ -209,11 +261,7 @@ $components: register-component($components, #{$component-name});
     $button-icon-width: rem(36px, 16px);
     $button-icon-height: $button-icon-width;
     $button-icon-font-size: rem(24px, 24px);
-
-    // Navbar Buttons
-    $button-navbar-width: rem(24px, 16px);
-    $button-navbar-height: $button-navbar-width;
-    $button-navbar-padding: 0;
+    $button-icon-padding: 0;
 
     $this: extend($default-theme, $theme);
 
@@ -223,7 +271,7 @@ $components: register-component($components, #{$component-name});
         justify-content: center;
         position: relative;
         min-width: $button-width;
-        min-height: $button-height;
+        height: $button-height;
         padding: $button-padding;
         font-size: $button-font-size;
         font-weight: $button-font-weight;
@@ -276,8 +324,7 @@ $components: register-component($components, #{$component-name});
     }
 
     %igx-button--round {
-        $block: bem--selector-to-string(&);
-        display: flex;
+        display: inline-flex;
         position: relative;
         flex-direction: row;
         justify-content: center;
@@ -320,6 +367,7 @@ $components: register-component($components, #{$component-name});
         font-size: $button-icon-font-size;
         color: map-get($this, 'icon-color');
         background: map-get($this, 'icon-background');
+        padding: $button-icon-padding;
 
         &:hover {
             transition: $button-transition;

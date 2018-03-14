@@ -1,6 +1,7 @@
 # igx-navbar
 
-**igx-navbar** is position on top and represents current state and enables a user defined action.
+**igx-navbar** is position on top and represents current state and enables a user defined action.  
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navbar.html)
 
 # Usage
 

@@ -1,3 +1,8 @@
+////
+/// @group themes
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
 // Anything imported here shoulnd't affect
 // theme configuration
 @import '../base/index';
@@ -36,6 +41,8 @@
 @import '../components/toast/toast-component';
 @import '../components/time-picker/time-picker-component';
 
+/// Includes the base for each theme.
+/// Currently it only includes typography.
 @mixin igx-core() {
     @include igx-typography($config: ('font-family': 'Titillium Web'));
 }
