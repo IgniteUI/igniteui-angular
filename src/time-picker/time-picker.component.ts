@@ -189,25 +189,26 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         this._prevSelectedMinute = this.selectedMinute;
         this._prevSelectedAmPm = this.selectedAmPm;
 
-        this._updateHourView(0, 7);
-        this._updateMinuteView(0, 7);
-        this._updateAmPmView(0, 7);
-
         this._alert.open();
         this._onTouchedCallback();
 
-        setTimeout(() => {
-            if (this.selectedHour) {
-                this.scrollHourIntoView(this.selectedHour);
-                this.hourList.nativeElement.focus();
-            }
-            if (this.selectedMinute) {
-                this.scrollMinuteIntoView(this.selectedMinute);
-            }
-            if (this.selectedAmPm) {
-                this.scrollAmPmIntoView(this.selectedAmPm);
-            }
-        });
+        if (this.selectedHour) {
+            this.scrollHourIntoView(this.selectedHour);
+        } else {
+            this._updateHourView(0, 7);
+        }
+        if (this.selectedMinute) {
+            this.scrollMinuteIntoView(this.selectedMinute);
+        } else {
+            this._updateMinuteView(0, 7);
+        }
+        if (this.selectedAmPm) {
+            this.scrollAmPmIntoView(this.selectedAmPm);
+        } else {
+            this._updateAmPmView(0, 7);
+        }
+
+        this.hourList.nativeElement.focus();
 
         this.onOpen.emit(this);
     }
@@ -240,20 +241,22 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      * @param item to be scrolled in view.
      */
     public scrollHourIntoView(item: string): void {
-        const index = this._hourItems.indexOf(item);
+        if (this._hourItems) {
+            const index = this._hourItems.indexOf(item);
 
-        if (index !== -1) {
-            if (this._isHourListLoop) {
-                if (index > 0) {
-                    this.selectedHour = this._hourItems[index - 1];
-                    this.nextHour();
+            if (index !== -1) {
+                if (this._isHourListLoop) {
+                    if (index > 0) {
+                        this.selectedHour = this._hourItems[index - 1];
+                        this.nextHour();
+                    } else {
+                        this.selectedHour = this._hourItems[1];
+                        this.prevHour();
+                    }
                 } else {
-                    this.selectedHour = this._hourItems[1];
-                    this.prevHour();
+                    this._updateHourView(index - 3, index + 4);
+                    this.selectedHour = this._hourItems[index];
                 }
-            } else {
-                this._updateHourView(index - 3, index + 4);
-                this.selectedHour = this._hourItems[index];
             }
         }
     }
@@ -263,20 +266,22 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      * @param item to be scrolled in view.
      */
     public scrollMinuteIntoView(item: string): void {
-        const index = this._minuteItems.indexOf(item);
+        if (this._minuteItems) {
+            const index = this._minuteItems.indexOf(item);
 
-        if (index !== -1) {
-            if (this._isMinuteListLoop) {
-                if (index > 0) {
-                    this.selectedMinute = this._minuteItems[index - 1];
-                    this.nextMinute();
+            if (index !== -1) {
+                if (this._isMinuteListLoop) {
+                    if (index > 0) {
+                        this.selectedMinute = this._minuteItems[index - 1];
+                        this.nextMinute();
+                    } else {
+                        this.selectedMinute = this._minuteItems[1];
+                        this.prevMinute();
+                    }
                 } else {
-                    this.selectedMinute = this._minuteItems[1];
-                    this.prevMinute();
+                    this._updateMinuteView(index - 3, index + 4);
+                    this.selectedMinute = this._minuteItems[index];
                 }
-            } else {
-                this._updateMinuteView(index - 3, index + 4);
-                this.selectedMinute = this._minuteItems[index];
             }
         }
     }
@@ -286,11 +291,13 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      * @param item to be scrolled in view.
      */
     public scrollAmPmIntoView(item: string): void {
-        const index = this._ampmItems.indexOf(item);
+        if (this._ampmItems) {
+            const index = this._ampmItems.indexOf(item);
 
-        if (index !== -1) {
-            this._updateAmPmView(index - 3, index + 4);
-            this.selectedAmPm = this._ampmItems[index];
+            if (index !== -1) {
+                this._updateAmPmView(index - 3, index + 4);
+                this.selectedAmPm = this._ampmItems[index];
+            }
         }
     }
 
@@ -312,7 +319,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
                 this._updateHourView(selectedIndex - 2, selectedIndex + 5);
             }
 
-            this.selectedHour = (selectedIndex === 0) ? this._hourItems[0] : this._hourItems[selectedIndex + 1];
+            this.selectedHour = (selectedIndex === hourItemsCount - 1) ? this._hourItems[0] : this._hourItems[selectedIndex + 1];
         } else if (selectedIndex + 1 < hourItemsCount - 3) {
             this._updateHourView(selectedIndex - 2, selectedIndex + 5);
             this.selectedHour = this._hourItems[selectedIndex + 1];
@@ -362,7 +369,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
                 this._updateMinuteView(selectedIndex - 2, selectedIndex + 5);
             }
 
-            this.selectedMinute = (selectedIndex === 0) ? this._minuteItems[0] : this._minuteItems[selectedIndex + 1];
+            this.selectedMinute = (selectedIndex === minuteItemsCount - 1) ? this._minuteItems[0] : this._minuteItems[selectedIndex + 1];
         } else if (selectedIndex + 1 < minuteItemsCount - 3) {
             this._updateMinuteView(selectedIndex - 2, selectedIndex + 5);
             this.selectedMinute = this._minuteItems[selectedIndex + 1];
