@@ -164,6 +164,9 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     @ViewChild("headerContainer", { read: IgxForOfDirective })
     public headerContainer: IgxForOfDirective<any>;
 
+    @ViewChild("summaryContainer", { read: IgxForOfDirective })
+    public summaryContainer: IgxForOfDirective<any>;
+
     @ViewChild("theadRow")
     public theadRow: ElementRef;
 
