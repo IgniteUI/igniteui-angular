@@ -44,6 +44,10 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy {
     @ViewChildren(forwardRef(() => IgxGridCellComponent), { read: IgxGridCellComponent })
     public cells: QueryList<IgxGridCellComponent>;
 
+    @HostBinding("style.height.px")
+    get rowHeight() {
+        return this.grid.rowHeight;
+    }
     @HostBinding("attr.tabindex")
     public tabindex = 0;
 
