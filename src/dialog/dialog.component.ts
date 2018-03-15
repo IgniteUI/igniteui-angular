@@ -185,7 +185,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
 
 export interface IDialogEventArgs {
     dialog: IgxDialogComponent;
-    event: any;
+    event: Event;
 }
 
 @NgModule({

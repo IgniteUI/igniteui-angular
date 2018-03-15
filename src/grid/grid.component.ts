@@ -41,6 +41,11 @@ import { IgxGridRowComponent } from "./row.component";
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
 
+export interface IGridCellEventArgs {
+    cell: IgxGridCellComponent;
+    event: Event;
+}
+
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
@@ -129,7 +134,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     public rowHeight = 50;
 
     @Output()
-    public onSelection = new EventEmitter<any>();
+    public onSelection = new EventEmitter<IGridCellEventArgs>();
 
     @Output()
     public onEditDone = new EventEmitter<any>();
