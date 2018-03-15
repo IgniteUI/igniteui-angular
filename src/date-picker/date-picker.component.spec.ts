@@ -3,7 +3,7 @@ import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { IgxDatePickerComponent, IgxDatePickerModule, IDatePickerEventArgs } from "./date-picker.component";
+import { IDatePickerEventArgs, IgxDatePickerComponent, IgxDatePickerModule } from "./date-picker.component";
 
 describe("IgxDatePicker", () => {
     beforeEach(async(() => {
