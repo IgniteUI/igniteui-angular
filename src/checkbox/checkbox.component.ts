@@ -1,6 +1,5 @@
 import {
     Component,
-    EventEmitter,
     forwardRef,
     Input,
     NgModule,
