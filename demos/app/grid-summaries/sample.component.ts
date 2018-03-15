@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { IgxColumnComponent } from "../../lib/grid/column.component";
-import { IgxSummaryResult, IgxSummaryOperand, IgxNumberSummaryOperand } from "../../lib/grid/grid-summary";
+import { IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from "../../lib/grid/grid-summary";
 
 class MySummary extends IgxNumberSummaryOperand {
 
