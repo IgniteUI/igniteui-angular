@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 5.3.0
+- Added column pinning in the list of features available for `igxGrid`. Pinning is available though the API. Try the following:
+   ```typescript
+   const column = this.grid.getColumnByName(name);
+   column.pin();
+   ```
+   For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#pinning).
 - Removed the `dirty` local template variable previously exposed by the `igxFor` directive.
 - the `igx-icon` component can now work with both glyph and ligature-based icon font sets. We've also included a brand new Icon Service, which helps you create aliases for the icon fonts you've included in your project. The service also allows you to define the default icon set used throughout your app.
 

@@ -168,6 +168,7 @@ public deleteRow(event) {
 | onPagingDone  | Used when paginating to emit paginator event  |
 | onColumnInit  | Used when initializing a column to emit it  |
 | onBeforeProcess  | Emit binding behavior  |
+| onColumnPinning | Used when pinning a column; the index of the pin can be changed |
 
 
 ### Methods
@@ -187,6 +188,8 @@ public deleteRow(event) {
 | updateCell | Update grid cell by index, column field and passed value  |
 | sortColumn | Sort grid column  |
 | paginate | Change the current page by passed number  |
+| pinColumn | Pin a column by its name |
+| unpinColumn | Unpin a column by its name |
 
 
 # IgxColumnComponent
@@ -226,4 +229,5 @@ Column component is used to define grid's *columns* collection. Cell, header and
 | filteringCondition  | FilteringCondition  | Boolean, date, string or number conditions. Default is string *contains*  |
 | filteringIgnoreCase  | boolean  | Ignore capitalization of words |
 | dataType  | DataType  | String, number, Boolean or Date |
+| pinned | boolean | Set column to be pinned or not |
 
