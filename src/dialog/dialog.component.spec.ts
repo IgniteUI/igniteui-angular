@@ -46,10 +46,11 @@ describe("Dialog", () => {
         dialog.open();
         fixture.detectChanges();
 
-        const messageDebugElement = fixture.debugElement.query(By.css(".igx-dialog__window-content"));
-        const messageNativeElement = messageDebugElement.nativeElement;
-        expect(messageNativeElement.getElementsByClassName("custom-dialog__content").length).toEqual(1);
-        expect(messageNativeElement.getElementsByClassName("custom-dialog__content-input").length).toEqual(1);
+        const dialogWindow = fixture.debugElement.query(By.css(".igx-dialog__window"));
+        const customContent = fixture.debugElement.query(By.css(".custom-dialog__content"));
+        expect(customContent).toBeTruthy();
+        expect(dialogWindow.children.length).toEqual(2);
+        expect(customContent.children.length).toEqual(1);
     });
 
     it("Should set left and right button properties.", () => {
@@ -195,7 +196,8 @@ describe("Dialog", () => {
     }
 });
 
-@Component({ template: `<div #wrapper>
+@Component({
+    template: `<div #wrapper>
                             <igx-dialog #dialog
                                 title="alert"
                                 message="message"
@@ -207,7 +209,8 @@ class AlertComponent {
     @ViewChild("dialog") public dialog: IgxDialogComponent;
 }
 
-@Component({ template: `<div #wrapper>
+@Component({
+    template: `<div #wrapper>
                             <igx-dialog #dialog title="dialog" message="message"
                                 leftButtonLabel="left button"
                                 leftButtonType="raised"
@@ -226,7 +229,8 @@ class DialogComponent {
     @ViewChild("dialog") public dialog: IgxDialogComponent;
 }
 
-@Component({ template: `<div #wrapper>
+@Component({
+    template: `<div #wrapper>
                             <igx-dialog #dialog title="custom-dialog">
                                 <div class="custom-dialog__content">
                                     <input class="custom-dialog__content-input" type="text" />
@@ -237,7 +241,8 @@ class CustomDialogComponent {
     @ViewChild("dialog") public dialog: IgxDialogComponent;
 }
 
-@Component({ template: `<igx-dialog #main
+@Component({
+    template: `<igx-dialog #main
                             title="Main Dialog"
                             leftButtonLabel="Cancel"
                             rightButtonLabel="Sign In"
