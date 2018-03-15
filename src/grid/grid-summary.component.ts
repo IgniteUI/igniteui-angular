@@ -1,6 +1,5 @@
 import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
     Component, DoCheck, HostBinding, HostListener, Input, OnDestroy, OnInit } from "@angular/core";
-import { Observable} from "rxjs/observable";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
