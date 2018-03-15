@@ -268,7 +268,7 @@
         flex-flow: row nowrap;
 
         %cal-header-display {
-            width: 168px;
+            min-width: 168px;
         }
     }
 
@@ -318,6 +318,7 @@
     }
 
     %cal-picker-arrow {
+        display: inline-flex;
         color: map-get($this, 'picker-arrow-color');
         user-select: none;
         cursor: pointer;
@@ -340,7 +341,7 @@
     }
 
     %cal-body-display {
-        flex: 1 0 auto;
+        flex: 1 1 auto;
         padding-top: $cal-picker-padding;
         padding-bottom: $cal-picker-padding;
         overflow: hidden;
@@ -390,8 +391,13 @@
     }
 
     %cal-value--year {
+        display: flex;
+        margin: 0;
+        justify-content: center;
+        align-items: center;
         font-size: $cal-value-year-fs;
-        min-width: fit-content;
+        min-width: 8ch;
+        height: 52px;
     }
 
     %cal-value--year-current {
