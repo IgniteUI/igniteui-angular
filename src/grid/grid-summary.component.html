@@ -1,7 +1,9 @@
 <div *ngIf="column.hasSummary">
+    <table>
     <ng-container *ngFor="let summary of resolveSummaries">
         <tr>
-        <td>{{ summary.label }}: </td><td>{{ summary.summaryResult }}</td>
+            <td>{{ summary.label }}: </td><td>{{ summary.summaryResult }}</td>
         </tr>
     </ng-container>
+    </table>
 </div>
