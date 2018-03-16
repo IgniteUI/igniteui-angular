@@ -64,7 +64,8 @@ export class IgxExcelExporterService {
         for (const column of columnList) {
             const columnHeader = column.header !== "" ? column.header : column.field;
             const columnArgs = new ColumnExportingEventArgs(columnHeader, column.index);
-            const exportColumn = !column.hidden || options.exportHiddenColumns;
+            const exportColumn = (options === undefined || options.exportHiddenColumns === undefined) ?
+                                    true : (options.exportHiddenColumns === true) ? true : !column.hidden;
 
             if (exportColumn) {
                 this.onColumnExport.emit(columnArgs);
