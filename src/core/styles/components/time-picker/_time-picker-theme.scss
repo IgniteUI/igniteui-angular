@@ -38,7 +38,6 @@
 
 ) {
 
-
     @if not($text-color) and $background-color {
         $text-color: text-contrast($background-color);
     }
@@ -67,7 +66,6 @@
     );
 }
 
-
 /// @param {Map} $theme - The theme used to style the component.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @requires igx-time-picker
@@ -86,6 +84,8 @@
         $background-color: white
     );
 
+    $vertical-header-width: rem(168px);
+
     $this: extend($default-theme, $theme);
 
     %igx-time-picker__body {
@@ -95,10 +95,24 @@
         background: map-get($this, 'background-color');
     }
 
+    %igx-time-picker__body--vertical {
+        flex: 1 1 auto;
+    }
+
     %time-picker-display {
         max-width: 340px;
         min-width: 320px;
         padding: 0;
+    }
+
+    %time-picker-display--vertical {
+        width: 540px;
+    }
+
+    // Take effect only in vertical mode
+    %igx-time-picker__wrapper {
+        display: flex;
+        flex-wrap: nowrap;
     }
 
     %time-picker-content {
@@ -183,6 +197,22 @@
         padding: rem(24px) rem(16px);
     }
 
+    %igx-time-picker__header--vertical {
+        width: $vertical-header-width;
+        position: relative;
+    }
+
+    %igx-time-picker__header--vertical-after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 100%;
+        height: 100%;
+        background: map-get($this, 'header-background');
+    }
+
+
     %igx-time-picker__header-ampm {
         color: map-get($this, 'header-time-period-color');
         font-size: rem(16px);
@@ -199,5 +229,6 @@
         margin: 0;
     }
 }
+
 
 

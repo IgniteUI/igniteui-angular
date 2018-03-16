@@ -53,6 +53,28 @@
         @extend %time-picker-display !optional;
     }
 
+    @include m(vertical) {
+        .igx-dialog__window {
+            @extend %time-picker-display--vertical !optional;
+        }
+
+        .igx-time-picker__wrapper {
+            @extend %igx-time-picker__wrapper !optional;
+        }
+
+        .igx-time-picker__header {
+            @extend %igx-time-picker__header--vertical !optional;
+
+            &::after {
+                @extend %igx-time-picker__header--vertical-after !optional;
+            }
+        }
+
+        .igx-time-picker__body {
+            @extend %igx-time-picker__body--vertical !optional;
+        }
+    }
+
     .igx-dialog__window,
     .igx-dialog__window-content {
         @extend %time-picker-content !optional;
