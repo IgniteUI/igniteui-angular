@@ -48,18 +48,18 @@ describe("IgxGrid - Cell component", () => {
 
         expect(rv.nativeElement.getAttribute("aria-selected")).toMatch("false");
 
-        spyOn(grid.onSelection, "emit");
+        spyOn(grid.onSelection, "emit").and.callThrough();
         const event = new Event("focus");
         rv.nativeElement.dispatchEvent(event);
         const args: IGridCellEventArgs = {
             cell,
             event
         };
-        expect(grid.onSelection.emit).toHaveBeenCalledWith(args);
 
         fix.whenStable().then(() => {
             fix.detectChanges();
 
+            expect(grid.onSelection.emit).toHaveBeenCalledWith(args);
             expect(cell.focused).toBe(true);
             expect(cell.selected).toBe(true);
             expect(rv.nativeElement.getAttribute("aria-selected")).toMatch("true");
