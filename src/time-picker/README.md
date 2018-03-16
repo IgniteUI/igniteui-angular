@@ -48,7 +48,16 @@
 -| `minValue` | string | Sets minimum value. It should follow the `format` of the timePicker. |
 -| `maxValue` | string | Sets maximum value. It should follow the `format` of the timePicker. |
 -| `vertical` | boolean | Sets the orientation of the timePicker. By default `vertical` is set to true. |
--| `format` | string | Gets/Sets format of time while timePicker has no focus. |
+-| `format` | string | Gets/Sets format of time while timePicker has no focus. By default `format` is set to `hh:mm tt`.
+List of time-flags:
+"h": hours field in 12-hours format without leading zero
+"hh": hours field in 12-hours format with leading zero
+"H": hours field in 24-hours format without leading zero
+"HH": hours field in 24-hours format with leading zero
+"m": minutes field without leading zero
+"mm": minutes field with leading zero
+"tt": 2 characters of string which represents AM/PM field |
+-| `isSpinLoop` | boolean | Determines the spin behavior. By default `isSpinLoop` is set to true. |
 -
 -### Outputs
 -| Name | Description |

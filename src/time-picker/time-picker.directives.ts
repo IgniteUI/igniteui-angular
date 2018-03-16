@@ -27,9 +27,36 @@ import { IgxTimePickerComponent } from "./time-picker.component";
 export class IgxItemListDirective {
 
     @Input("igxItemList")
+    public type: string;
+
     public isActive: boolean;
 
-    constructor(@Host() @Inject(forwardRef(()=> IgxTimePickerComponent)) public timePicker: IgxTimePickerComponent, private elementRef: ElementRef) {}
+    constructor(@Host() @Inject(forwardRef(() => IgxTimePickerComponent))
+                public timePicker: IgxTimePickerComponent,
+                private elementRef: ElementRef) {}
+
+    @HostBinding("attr.tabindex")
+    public tabindex = 0;
+
+    @HostBinding("class.igx-time-picker__column")
+    get defaultCSS(): boolean {
+        return true;
+    }
+
+    @HostBinding("class.igx-time-picker__hourList")
+    get hourCSS(): boolean {
+        return this.type === "hourList";
+    }
+
+    @HostBinding("class.igx-time-picker__minuteList")
+    get minuteCSS(): boolean {
+        return this.type === "minuteList";
+    }
+
+    @HostBinding("class.igx-time-picker__ampmList")
+    get ampmCSS(): boolean {
+        return this.type === "ampmList";
+    }
 
     @HostListener("focus")
     public onFocus() {
@@ -41,6 +68,40 @@ export class IgxItemListDirective {
         this.isActive = false;
     }
 
+    private nextItem(): void {
+        switch (this.type) {
+            case "hourList": {
+                this.timePicker.nextHour();
+                break;
+            }
+            case "minuteList": {
+                this.timePicker.nextMinute();
+                break;
+            }
+            case "ampmList": {
+                this.timePicker.nextAmPm();
+                break;
+            }
+        }
+    }
+
+    private prevItem(): void {
+        switch (this.type) {
+            case "hourList": {
+                this.timePicker.prevHour();
+                break;
+            }
+            case "minuteList": {
+                this.timePicker.prevMinute();
+                break;
+            }
+            case "ampmList": {
+                this.timePicker.prevAmPm();
+                break;
+            }
+        }
+    }
+
     /**
      * @hidden
      */
@@ -48,15 +109,7 @@ export class IgxItemListDirective {
     public onKeydownArrowDown(event: KeyboardEvent) {
         event.preventDefault();
 
-        const listName = (event.target as HTMLElement).className;
-
-        if (listName.indexOf("hourList") !== -1) {
-            this.timePicker.nextHour();
-        } else if (listName.indexOf("minuteList") !== -1) {
-            this.timePicker.nextMinute();
-        } else if (listName.indexOf("ampmList") !== -1) {
-            this.timePicker.nextAmPm();
-        }
+        this.nextItem();
     }
 
     /**
@@ -66,15 +119,7 @@ export class IgxItemListDirective {
     public onKeydownArrowUp(event: KeyboardEvent) {
         event.preventDefault();
 
-        const listName = (event.target as HTMLElement).className;
-
-        if (listName.indexOf("hourList") !== -1) {
-            this.timePicker.prevHour();
-        } else if (listName.indexOf("minuteList") !== -1) {
-            this.timePicker.prevMinute();
-        } else if (listName.indexOf("ampmList") !== -1) {
-            this.timePicker.prevAmPm();
-        }
+        this.prevItem();
     }
 
     /**
@@ -116,7 +161,7 @@ export class IgxItemListDirective {
     public onKeydownEnter(event: KeyboardEvent) {
         event.preventDefault();
 
-        this.timePicker.OKButtonClick();
+        this.timePicker.okButtonClick();
     }
 
     /**
@@ -126,7 +171,7 @@ export class IgxItemListDirective {
     public onKeydownEscape(event: KeyboardEvent) {
         event.preventDefault();
 
-        this.timePicker.CancelButtonClick();
+        this.timePicker.cancelButtonClick();
     }
 
     /**
@@ -142,24 +187,10 @@ export class IgxItemListDirective {
      */
     @HostListener("wheel", ["$event"])
     public onScroll(event) {
-        const listName = (event.currentTarget as HTMLElement).className;
-
         if (event.deltaY > 0) {
-            if (listName.indexOf("hourList") !== -1) {
-                this.timePicker.nextHour();
-            } else if (listName.indexOf("minuteList") !== -1) {
-                this.timePicker.nextMinute();
-            } else if (listName.indexOf("ampmList") !== -1) {
-                this.timePicker.nextAmPm();
-            }
+            this.nextItem();
         } else if (event.deltaY < 0) {
-            if (listName.indexOf("hourList") !== -1) {
-                this.timePicker.prevHour();
-            } else if (listName.indexOf("minuteList") !== -1) {
-                this.timePicker.prevMinute();
-            } else if (listName.indexOf("ampmList") !== -1) {
-                this.timePicker.prevAmPm();
-            }
+            this.prevItem();
         }
     }
 
@@ -168,24 +199,10 @@ export class IgxItemListDirective {
      */
     @HostListener("panmove", ["$event"])
     public onPanMove(event) {
-        const listName = (event.target.parentElement as HTMLElement).className;
-
         if (event.deltaY < 0) {
-            if (listName.indexOf("hourList") !== -1) {
-                this.timePicker.nextHour();
-            } else if (listName.indexOf("minuteList") !== -1) {
-                this.timePicker.nextMinute();
-            } else if (listName.indexOf("ampmList") !== -1) {
-                this.timePicker.nextAmPm();
-            }
+            this.nextItem();
         } else if (event.deltaY > 0) {
-            if (listName.indexOf("hourList") !== -1) {
-                this.timePicker.prevHour();
-            } else if (listName.indexOf("minuteList") !== -1) {
-                this.timePicker.prevMinute();
-            } else if (listName.indexOf("ampmList") !== -1) {
-                this.timePicker.prevAmPm();
-            }
+            this.prevItem();
         }
     }
 }
@@ -217,7 +234,9 @@ export class IgxHourItemDirective {
         return this.timePicker.selectedHour === this.value;
     }
 
-    constructor(@Host() @Inject(forwardRef(()=> IgxTimePickerComponent)) public timePicker: IgxTimePickerComponent, private itemList: IgxItemListDirective) {}
+    constructor(@Host() @Inject(forwardRef(() => IgxTimePickerComponent))
+                public timePicker: IgxTimePickerComponent,
+                private itemList: IgxItemListDirective) {}
 
     @HostListener("click", ["value"])
     public onClick(item) {
@@ -254,7 +273,9 @@ export class IgxMinuteItemDirective {
         return this.timePicker.selectedMinute === this.value;
     }
 
-    constructor(@Host() @Inject(forwardRef(()=> IgxTimePickerComponent)) public timePicker: IgxTimePickerComponent, private itemList: IgxItemListDirective) {}
+    constructor(@Host() @Inject(forwardRef(() => IgxTimePickerComponent))
+                public timePicker: IgxTimePickerComponent,
+                private itemList: IgxItemListDirective) {}
 
     @HostListener("click", ["value"])
     public onClick(item) {
@@ -291,7 +312,9 @@ export class IgxAmPmItemDirective {
         return this.timePicker.selectedAmPm === this.value;
     }
 
-    constructor(@Host() @Inject(forwardRef(()=> IgxTimePickerComponent)) public timePicker: IgxTimePickerComponent, private itemList: IgxItemListDirective) {}
+    constructor(@Host() @Inject(forwardRef(() => IgxTimePickerComponent))
+                public timePicker: IgxTimePickerComponent,
+                private itemList: IgxItemListDirective) {}
 
     @HostListener("click", ["value"])
     public onClick(item) {
