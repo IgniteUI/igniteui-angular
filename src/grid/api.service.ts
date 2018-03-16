@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs/Subject";
 import { cloneArray } from "../core/utils";
+import { DataUtil } from "../data-operations/data-util";
 import { IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridCellComponent } from "./cell.component";

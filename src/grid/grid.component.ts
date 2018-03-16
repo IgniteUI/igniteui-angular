@@ -164,6 +164,9 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     @ViewChild("headerContainer", { read: IgxForOfDirective })
     public headerContainer: IgxForOfDirective<any>;
 
+    @ViewChild("summaryContainer", { read: IgxForOfDirective })
+    public summaryContainer: IgxForOfDirective<any>;
+
     @ViewChild("theadRow")
     public theadRow: ElementRef;
 
@@ -468,6 +471,10 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
 
     get hasFilterableColumns(): boolean {
         return this.columnList.some((col) => col.filterable);
+    }
+
+    get hasSummarizedColumns(): boolean {
+        return this.columnList.some((col) => col.hasSummary);
     }
 
     get selectedCells(): IgxGridCellComponent[] | any[] {
