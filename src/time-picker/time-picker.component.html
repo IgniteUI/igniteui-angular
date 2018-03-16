@@ -14,19 +14,19 @@
                 </div>
                 <div class="igx-time-picker__body">
                     <div #hourList [igxItemList]="'hourList'">
-                        <span [igxHourItem]="hour" *ngFor="let hour of hourView">
-                            {{ hour }}
-                        </span>
+                    <span [igxHourItem]="hour" *ngFor="let hour of hourView">
+                        {{ hour }}
+                    </span>
                     </div>
                     <div #minuteList [igxItemList]="'minuteList'">
-                        <span [igxMinuteItem]="minute" *ngFor="let minute of minuteView">
-                            {{ minute }}
-                        </span>
+                    <span [igxMinuteItem]="minute" *ngFor="let minute of minuteView">
+                        {{ minute }}
+                    </span>
                     </div>
                     <div #ampmList [igxItemList]="'ampmList'">
-                        <span [igxAmPmItem]="ampm" *ngFor="let ampm of ampmView">
-                            {{ ampm }}
-                        </span>
+                    <span [igxAmPmItem]="ampm" *ngFor="let ampm of ampmView">
+                        {{ ampm }}
+                    </span>
                     </div>
                 </div>
             </div>
