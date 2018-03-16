@@ -1,43 +1,42 @@
-import * as JSZip from 'jszip/dist/jszip';
-import { ExcelFileTypes } from './excel-enums';
-import { JSZipFiles } from './jsZip-helper';
+import * as JSZip from "jszip/dist/jszip";
+import { ExcelFileTypes } from "./excel-enums";
+import { JSZipFiles } from "./jsZip-helper";
 
 export class JSZipWrapper {
-    private _zip : JSZip;
-    private _filesAndFolders : JSZip.ZipObject[];
+    private _zip: JSZip;
+    private _filesAndFolders: JSZip.ZipObject[];
     private _fileContent = "";
-    private _files : any[];
-    // private _actualFiles : any[];
-    private _filesContent : IFileContent[] = [];
+    private _files: any[];
+    private _filesContent: IFileContent[] = [];
     private _hasValues = true;
 
-    constructor(currentZip : JSZip) {
+    constructor(currentZip: JSZip) {
         this._zip = currentZip;
         this._files = currentZip.files;
         this.createFilesAndFolders();
-        this._hasValues = this._filesAndFolders.length > JSZipFiles.TemplatesNames.length;
+        this._hasValues = this._filesAndFolders.length > JSZipFiles.templatesNames.length;
         this._filesContent = [];
     }
 
     private createFilesAndFolders() {
-        this._filesAndFolders = Object.keys(this._files).map(function(f : JSZip.ZipObject) {
+        this._filesAndFolders = Object.keys(this._files).map((f: JSZip.ZipObject) => {
             return f;
         });
     }
 
-    get templateFilesAndFolders() : JSZip.ZipObject[] {
-        return this._filesAndFolders.filter((name) => JSZipFiles.TemplatesNames.indexOf(name) != -1);
+    get templateFilesAndFolders(): JSZip.ZipObject[] {
+        return this._filesAndFolders.filter((name) => JSZipFiles.templatesNames.indexOf(name) !== -1);
     }
 
-    get dataFilesAndFolders() : JSZip.ZipObject[] {
-        return this._filesAndFolders.filter((name) => JSZipFiles.DataFilesAndFoldersNames.indexOf(name) != -1);
+    get dataFilesAndFolders(): JSZip.ZipObject[] {
+        return this._filesAndFolders.filter((name) => JSZipFiles.dataFilesAndFoldersNames.indexOf(name) !== -1);
     }
 
-    get dataFilesOnly() : JSZip.ZipObject[] {
+    get dataFilesOnly(): JSZip.ZipObject[] {
         return this.getFiles(this.dataFilesAndFolders);
     }
 
-    get templateFilesOnly() : JSZip.ZipObject[] {
+    get templateFilesOnly(): JSZip.ZipObject[] {
         return this.getFiles(this.templateFilesAndFolders);
     }
 
@@ -45,30 +44,30 @@ export class JSZipWrapper {
         return this._hasValues;
     }
 
-    private getFiles(collection : JSZip.ZipObject[] ) {
+    private getFiles(collection: JSZip.ZipObject[]) {
         return collection.filter((f) => this._files[f].dir === false);
-    };
+    }
 
     /* Loads and reads a file asynchronously. */
-    private async readFile(fileName : string) {
-        const self = this;
-        if (this._zip === undefined)
+    private async readFile(fileName: string) {
+        if (this._zip === undefined) {
             return "Zip file not found!";
+        }
 
         await this._files[fileName].async("string")
-        .then(function(txt) {
-                self._fileContent = txt;
+        .then((txt) => {
+                this._fileContent = txt;
         });
     }
 
     /* Reads all files and stores their contents in this._filesContent. */
-    private async readFiles(files : any[]) {
-        const self = this;
+    private async readFiles(files: any[]) {
+        // const self = this;
         this._filesContent = [];
-        for (let file of files) {
-            await self.readFile(file).then(() => {
-                let content = self._fileContent;
-                self._filesContent.push({
+        for (const file of files) {
+            await this.readFile(file).then(() => {
+                const content = this._fileContent;
+                this._filesContent.push({
                     fileName : file,
                     fileContent : content
                 });
@@ -81,21 +80,23 @@ export class JSZipWrapper {
     }
 
     private async readTemplateFiles() {
-        let actualTemplates = (this.hasValues) ? this.templateFilesOnly.filter((f) => f !== JSZipFiles.TemplatesNames[11]) : this.templateFilesOnly;
+        const actualTemplates = (this.hasValues) ? this.templateFilesOnly.filter((f) =>
+                                f !== JSZipFiles.templatesNames[11]) : this.templateFilesOnly;
         await this.readFiles(actualTemplates);
     }
 
-    get templateFilesContent() : IFileContent[] {
-        let actualTemplates = (this.hasValues) ? this.templateFilesOnly.filter((f) => f !== JSZipFiles.TemplatesNames[11]) : this.templateFilesOnly;
+    get templateFilesContent(): IFileContent[] {
+        const actualTemplates = (this.hasValues) ? this.templateFilesOnly.filter((f) =>
+                                f !== JSZipFiles.templatesNames[11]) : this.templateFilesOnly;
         return this._filesContent.filter((c) => actualTemplates.indexOf(c.fileName) > -1);
     }
 
-    get dataFilesContent() : IFileContent[] {
+    get dataFilesContent(): IFileContent[] {
         return this._filesContent.filter((c) => this.dataFilesOnly.indexOf(c.fileName) > -1);
     }
 
     /* Formats the result of two files comparison by displaying both the actual and expected content. */
-    private formatDifferences(differences, fileName, actualContent, expectedContent) : string {
+    private formatDifferences(differences, fileName, actualContent, expectedContent): string {
         differences = `${differences}
                         ------------------ ${fileName} ------------------
                         =================== Actual content ======================
@@ -107,23 +108,20 @@ export class JSZipWrapper {
 
     /* Asserts the JSZip contains the files it should contain. */
     public verifyStructure(message = "") {
-        let result = ObjectComparer.AreEqual(this.templateFilesAndFolders, JSZipFiles.TemplatesNames);
+        let result = ObjectComparer.AreEqual(this.templateFilesAndFolders, JSZipFiles.templatesNames);
 
-        if (this.hasValues) {
-            result = result && ObjectComparer.AreEqual(this.dataFilesAndFolders, JSZipFiles.DataFilesAndFoldersNames);
-        }
-        else {
-            result = result && this._filesAndFolders.length === JSZipFiles.TemplatesNames.length;
-        }
+        result = (this.hasValues) ?
+                    result && ObjectComparer.AreEqual(this.dataFilesAndFolders, JSZipFiles.dataFilesAndFoldersNames) :
+                    result && this._filesAndFolders.length === JSZipFiles.templatesNames.length;
 
-        expect(result).toBe(true, message + " Unexpected zip structure!")
+        expect(result).toBe(true, message + " Unexpected zip structure!");
     }
 
     /* Verifies the contents of all template files and asserts the result.
     Optionally, a message can be passed in, which, if specified, will be shown in the beginning of the comparison result. */
     public async verifyTemplateFilesContent(message = "") {
         let result;
-        let msg = (message !== "") ? message + "\r\n" : "";
+        const msg = (message !== "") ? message + "\r\n" : "";
 
         await this.readTemplateFiles().then(() => {
             result = this.compareFiles(this.templateFilesContent, undefined);
@@ -133,9 +131,9 @@ export class JSZipWrapper {
 
     /* Verifies the contents of all data files and asserts the result.
     Optionally, a message can be passed in, which, if specified, will be shown in the beginning of the comparison result. */
-    public async verifyDataFilesContent(expectedData : IFileContent[], message = "") {
+    public async verifyDataFilesContent(expectedData: IFileContent[], message = "") {
         let result;
-        let msg = (message !== "") ? message + "\r\n" : "";
+        const msg = (message !== "") ? message + "\r\n" : "";
 
         await this.readDataFiles().then(() => {
             result = this.compareFiles(this.dataFilesContent, expectedData);
@@ -145,101 +143,100 @@ export class JSZipWrapper {
 
     /* Verifies the contents of all files and asserts the result.
     Optionally, a message can be passed in, which, if specified, will be shown in the beginning of the comparison result. */
-    public async verifyFilesContent(expectedData : IFileContent[], message = "") {
-        const self = this;
+    public async verifyFilesContent(expectedData: IFileContent[], message = "") {
+        // const self = this;
         let result;
-        let msg = (message !== "") ? message + "\r\n" : "";
+        const msg = (message !== "") ? message + "\r\n" : "";
 
         await this.readFiles(this._files).then(() => {
-            result = this.compareFiles(self._filesContent, expectedData);
+            result = this.compareFiles(this._filesContent, expectedData);
             expect(result.areEqual).toBe(true, msg + result.differences);
         });
     }
 
     /* Compares the content of two files based on the provided file type and expected value data. */
-    private compareFilesContent(currentContent : string, fileType : ExcelFileTypes, fileData : string) {
+    private compareFilesContent(currentContent: string, fileType: ExcelFileTypes, fileData: string) {
         let result = true;
         let differences = "";
-        let expectedFile = JSZipFiles.createExpectedXML(fileType, fileData, this.hasValues);
-        let expectedContent = expectedFile.content;
+        const expectedFile = JSZipFiles.createExpectedXML(fileType, fileData, this.hasValues);
+        const expectedContent = expectedFile.content;
         result = ObjectComparer.AreEqualXmls(currentContent, expectedContent);
         if (!result) {
             differences = this.formatDifferences(differences, expectedFile.name, currentContent, expectedContent);
         }
 
-        return { areEqual: result, differences : differences };
+        return { areEqual: result, differences };
     }
 
-
-    private compareContent(currentFile : IFileContent, expectedData : string) {
+    private compareContent(currentFile: IFileContent, expectedData: string) {
         let result = true;
         let differences = "";
 
-        let fileType = this.getFileTypeByName(currentFile.fileName);
+        const fileType = this.getFileTypeByName(currentFile.fileName);
 
         if (fileType !== undefined) {
-            let comparisonResult = this.compareFilesContent(currentFile.fileContent, fileType, expectedData);
+            const comparisonResult = this.compareFilesContent(currentFile.fileContent, fileType, expectedData);
             result = comparisonResult.areEqual;
             if (!result) {
                 differences = comparisonResult.differences;
             }
         }
 
-        return { areEqual: result, differences : differences };
-
+        return { areEqual: result, differences };
 
     }
 
     /* Compares the contents of the provided files to their expected values. */
-    private compareFiles(actualFilesContent : IFileContent[], expectedFilesData : IFileContent[]) {
+    private compareFiles(actualFilesContent: IFileContent[], expectedFilesData: IFileContent[]) {
         let result = true;
         let differences = "";
-        for (let current of actualFilesContent) {
-            let index = (expectedFilesData !== undefined) ? expectedFilesData.findIndex((f) => f.fileName === current.fileName) : -1;
-            let excelData = (index > -1 && expectedFilesData[index] !== undefined) ? expectedFilesData[index].fileContent : "";
-            let comparisonResult = this.compareContent(current, excelData);
+        for (const current of actualFilesContent) {
+            const index = (expectedFilesData !== undefined) ? expectedFilesData.findIndex((f) => f.fileName === current.fileName) : -1;
+            const excelData = (index > -1 && expectedFilesData[index] !== undefined) ? expectedFilesData[index].fileContent : "";
+            const comparisonResult = this.compareContent(current, excelData);
             result = result && comparisonResult.areEqual;
             if (!comparisonResult.areEqual) {
                 differences = differences + comparisonResult.differences;
             }
         }
 
-        return { areEqual: result, differences : differences };
+        return { areEqual: result, differences };
     }
 
     /* Returns file's name based on its type. */
-    private getFileNameByType(type : ExcelFileTypes) {
-        let file = JSZipFiles.Files.find((f) => f.type === type);
+    private getFileNameByType(type: ExcelFileTypes) {
+        const file = JSZipFiles.files.find((f) => f.type === type);
         return (file !== undefined) ? file.name : "";
     }
 
     /* Returns file's type based on its name. */
-    private getFileTypeByName(name : string) {
-        let file = JSZipFiles.Files.find((f) => f.name === name);
+    private getFileTypeByName(name: string) {
+        const file = JSZipFiles.files.find((f) => f.name === name);
         return (file !== undefined) ? file.type : undefined;
     }
 }
 
 export interface IFileContent {
-    fileName : string;
-    fileContent : string;
+    fileName: string;
+    fileContent: string;
 }
 
 export class ObjectComparer {
-    public static AreEqual(actual, template) : boolean {
+    public static AreEqual(actual, template): boolean {
 
-        if (!ObjectComparer.compareTypesAndLength(actual, template))
+        if (!ObjectComparer.compareTypesAndLength(actual, template)) {
             return false;
+        }
 
         let result = true;
 
         // Compare properties
-        if (Object.prototype.toString.call(actual) === '[object Array]') {
-            for (var i = 0; i < actual.length; i++) {
+        if (Object.prototype.toString.call(actual) === "[object Array]") {
+            for (let i = 0; i < actual.length; i++) {
                 result = (result && actual[i] === template[i]);
             }
         } else {
-            for (var key in actual) {
+            for (const key in actual) {
                 if (actual.hasOwnProperty(key)) {
                     // Compare the item
                 }
@@ -249,20 +246,22 @@ export class ObjectComparer {
         return result;
     }
 
-    public static AreSimilar(actual, template) : boolean {
+    public static AreSimilar(actual, template): boolean {
 
-        if (!ObjectComparer.compareTypesAndLength(actual, template))
+        if (!ObjectComparer.compareTypesAndLength(actual, template)) {
             return false;
+        }
 
         let result = true;
 
         // Compare properties
-        if (Object.prototype.toString.call(actual) === '[object Array]') {
-            for (var i = 0; i < actual.length; i++) {
+        if (Object.prototype.toString.call(actual) === "[object Array]") {
+            // tslint:disable-next-line:prefer-for-of
+            for (let i = 0; i < actual.length; i++) {
                 result = (result && template.indexof(actual[i]) >= 0);
             }
         } else {
-            for (var key in actual) {
+            for (const key in actual) {
                 if (actual.hasOwnProperty(key)) {
                     // Compare the item
                 }
@@ -272,30 +271,33 @@ export class ObjectComparer {
         return result;
     }
 
-    public static AreEqualXmls(actualXML : string, expectedXML : string) {
-        let regex = /(\r\n|\n|\r|\t|\s+)/g;
+    public static AreEqualXmls(actualXML: string, expectedXML: string) {
+        const regex = /(\r\n|\n|\r|\t|\s+)/g;
         // /(\r\n|\n|\r|\t)/g;
-        let actual = actualXML.replace(regex,"");
-        let expected = expectedXML.replace(regex,"");
+        const actual = actualXML.replace(regex, "");
+        const expected = expectedXML.replace(regex, "");
 
         return actual === expected;
     }
 
-    protected static compareTypesAndLength(actual, template) : boolean {
+    protected static compareTypesAndLength(actual, template): boolean {
 
-        let actualType = Object.prototype.toString.call(actual);
-        let templateType = Object.prototype.toString.call(template);
+        const actualType = Object.prototype.toString.call(actual);
+        const templateType = Object.prototype.toString.call(template);
 
-        if (actualType !== templateType) return false;
-
+        if (actualType !== templateType) {
+            return false;
+        }
         // If items are not an object or array, return false
-        if (['[object Array]', '[object Object]'].indexOf(actualType) < 0) return false;
+        if (["[object Array]", "[object Object]"].indexOf(actualType) < 0) {
+            return false;
+        }
+        const actualLength = actualType === "[object Array]" ? actual.length : Object.keys(actual).length;
+        const templateLength = templateType === "[object Array]" ? template.length : Object.keys(template).length;
 
-        let actualLength = actualType === '[object Array]' ? actual.length : Object.keys(actual).length;
-        let templateLength = templateType === '[object Array]' ? template.length : Object.keys(template).length;
-
-        if (actualLength !== templateLength) return false;
-
+        if (actualLength !== templateLength) {
+            return false;
+        }
         return true;
     }
 }

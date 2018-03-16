@@ -1,24 +1,22 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
-import { IgxExcelExporterService } from './excel-exporter';
-import { IgxColumnComponent } from '../../grid/column.component';
-import { IgxGridComponent } from '../../grid/grid.component';
-import { IgxGridModule } from '../../grid';
-import { IgxExcelExporterOptions } from './excel-exporter-options';
-import { ExcelStrings } from './excel-strings';
-import { ValueData, ExportTestDataService, FileContentData } from './test-data.service';
-import { JSZipWrapper, ObjectComparer } from './jszip-verification-wrapper';
-import { JSZipFiles } from './jsZip-helper';
-import { STRING_FILTERS } from '../../data-operations/filtering-condition';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { resolve } from 'url';
-import { CallbackFunction } from 'tapable';
-import { ColumnExportingEventArgs, RowExportingEventArgs } from './excel-event-args';
+import { STRING_FILTERS } from "../../data-operations/filtering-condition";
+import { SortingDirection } from "../../data-operations/sorting-expression.interface";
+import { IgxGridModule } from "../../grid";
+import { IgxColumnComponent } from "../../grid/column.component";
+import { IgxGridComponent } from "../../grid/grid.component";
+import { ColumnExportingEventArgs, RowExportingEventArgs } from "./excel-event-args";
+import { IgxExcelExporterService } from "./excel-exporter";
+import { IgxExcelExporterOptions } from "./excel-exporter-options";
+import { ExcelStrings } from "./excel-strings";
+import { JSZipFiles } from "./jsZip-helper";
+import { JSZipWrapper, ObjectComparer } from "./jszip-verification-wrapper";
+import { ExportTestDataService, FileContentData, ValueData } from "./test-data.service";
 
-fdescribe('Excel Exporter', () => {
-    let exporter : IgxExcelExporterService;
-    let actualData : FileContentData;
-    let options : IgxExcelExporterOptions;
+describe("Excel Exporter", () => {
+    let exporter: IgxExcelExporterService;
+    let actualData: FileContentData;
+    let options: IgxExcelExporterOptions;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -30,7 +28,7 @@ fdescribe('Excel Exporter', () => {
             imports: [IgxGridModule.forRoot()],
             providers: [ ExportTestDataService ]
         })
-        .compileComponents().then(()=> {
+        .compileComponents().then(() => {
             exporter = new IgxExcelExporterService();
             actualData = new FileContentData();
             options = new IgxExcelExporterOptions("GridExport");
@@ -239,7 +237,8 @@ fdescribe('Excel Exporter', () => {
                                     fix.detectChanges();
                                     expect(grid.visibleColumns.length).toEqual(3, "Invalid number of visible columns!");
                                     getExportedData(grid, options).then((wrapper) => {
-                                        wrapper.verifyDataFilesContent(actualData.simpleGridDataFull, "All columns should have been exported!");
+                                        wrapper.verifyDataFilesContent(actualData.simpleGridDataFull,
+                                            "All columns should have been exported!");
 
                                     });
                                 });
@@ -268,7 +267,7 @@ fdescribe('Excel Exporter', () => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
-        grid.sort('Name', SortingDirection.Asc, true);
+        grid.sort("Name", SortingDirection.Asc, true);
 
         fix.whenStable().then(() => {
             fix.detectChanges();
@@ -282,14 +281,14 @@ fdescribe('Excel Exporter', () => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
-        grid.sort('Name', SortingDirection.Asc, true);
+        grid.sort("Name", SortingDirection.Asc, true);
 
         fix.whenStable().then(() => {
             fix.detectChanges();
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyDataFilesContent(actualData.simpleGridSortByName);
 
-                grid.sort('Name', SortingDirection.Desc, true);
+                grid.sort("Name", SortingDirection.Desc, true);
 
                 fix.whenStable().then(() => {
                     fix.detectChanges();
@@ -314,7 +313,7 @@ fdescribe('Excel Exporter', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
 
-        let columnWidths = [ 100, 200, 0, undefined, null ];
+        const columnWidths = [ 100, 200, 0, undefined, null ];
 
         fix.whenStable().then(() => {
             setColWidthAndExport(grid, options, fix, columnWidths[0]).then(() => {
@@ -334,7 +333,7 @@ fdescribe('Excel Exporter', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
 
-        let rowHeights = [ 20, 40, 0, undefined, null ];
+        const rowHeights = [ 20, 40, 0, undefined, null ];
 
         fix.whenStable().then(() => {
             setRowHeightAndExport(grid, options, fix, rowHeights[0]).then(() => {
@@ -354,7 +353,7 @@ fdescribe('Excel Exporter', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
 
-        let cols = [];
+        const cols = [];
         exporter.onColumnExport.subscribe((value) => {
             cols.push({ header: value.header, index: value.columnIndex });
         });
@@ -378,7 +377,7 @@ fdescribe('Excel Exporter', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
 
-        let cols = [];
+        const cols = [];
         exporter.onColumnExport.subscribe((value) => {
             cols.push({ header: value.header, index: value.columnIndex });
         });
@@ -404,7 +403,7 @@ fdescribe('Excel Exporter', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
 
-        exporter.onColumnExport.subscribe((value : ColumnExportingEventArgs) => {
+        exporter.onColumnExport.subscribe((value: ColumnExportingEventArgs) => {
             value.cancel = true;
         });
 
@@ -422,8 +421,8 @@ fdescribe('Excel Exporter', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
 
-        let rows = [];
-        exporter.onRowExport.subscribe((value : RowExportingEventArgs) => {
+        const rows = [];
+        exporter.onRowExport.subscribe((value: RowExportingEventArgs) => {
             rows.push({ data: value.rowData, index: value.rowIndex });
         });
 
@@ -443,8 +442,8 @@ fdescribe('Excel Exporter', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
 
-        let rows = [];
-        exporter.onRowExport.subscribe((value : RowExportingEventArgs) => {
+        const rows = [];
+        exporter.onRowExport.subscribe((value: RowExportingEventArgs) => {
             rows.push({ data: value.rowData, index: value.rowIndex });
         });
 
@@ -469,7 +468,7 @@ fdescribe('Excel Exporter', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
 
-        exporter.onRowExport.subscribe((value : RowExportingEventArgs) => {
+        exporter.onRowExport.subscribe((value: RowExportingEventArgs) => {
             value.cancel = true;
         });
 
@@ -482,32 +481,32 @@ fdescribe('Excel Exporter', () => {
         });
     }));
 
-    async function getExportedData( grid : IgxGridComponent, options : IgxExcelExporterOptions ) {
-        let data = await new Promise<JSZipWrapper>(resolve => {
+    async function getExportedData(grid: IgxGridComponent, exportOptions: IgxExcelExporterOptions) {
+        const exportData = await new Promise<JSZipWrapper>((resolve) => {
             exporter.onExportEnded.subscribe((value) => {
-                let wrapper = new JSZipWrapper(value.xlsx);
+                const wrapper = new JSZipWrapper(value.xlsx);
                 resolve(wrapper);
             });
-            exporter.Export(grid, options);
+            exporter.Export(grid, exportOptions);
         });
-        return data;
+        return exportData;
     }
 
-    function setColWidthAndExport(grid, options : IgxExcelExporterOptions, fix, value) {
-        return new Promise<void>(resolve => {
+    function setColWidthAndExport(grid, exportOptions: IgxExcelExporterOptions, fix, value) {
+        return new Promise<void>((resolve) => {
             options.columnWidth = value;
             fix.detectChanges();
-            getExportedData(grid, options).then((wrapper) => {
+            getExportedData(grid, exportOptions).then((wrapper) => {
                 wrapper.verifyDataFilesContent(actualData.simpleGridColumnWidth(value), " Width :" + value).then(() => resolve());
             });
         });
     }
 
-    function setRowHeightAndExport(grid, options : IgxExcelExporterOptions, fix, value) {
-        return new Promise<void>(resolve => {
+    function setRowHeightAndExport(grid, exportOptions: IgxExcelExporterOptions, fix, value) {
+        return new Promise<void>((resolve) => {
             options.rowHeight = value;
             fix.detectChanges();
-            getExportedData(grid, options).then((wrapper) => {
+            getExportedData(grid, exportOptions).then((wrapper) => {
                 wrapper.verifyDataFilesContent(actualData.simpleGridRowHeight(value), " Height :" + value).then(() => resolve());
             });
         });
@@ -565,4 +564,3 @@ export class GridReorderedColumnsComponent {
     @ViewChild("grid1", { read: IgxGridComponent })
     public grid1: IgxGridComponent;
 }
-
