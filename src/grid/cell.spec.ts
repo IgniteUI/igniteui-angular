@@ -55,11 +55,11 @@ describe("IgxGrid - Cell component", () => {
             cell,
             event
         };
+        expect(grid.onSelection.emit).toHaveBeenCalledWith(args);
 
         fix.whenStable().then(() => {
             fix.detectChanges();
 
-            expect(grid.onSelection.emit).toHaveBeenCalledWith(args);
             expect(cell.focused).toBe(true);
             expect(cell.selected).toBe(true);
             expect(rv.nativeElement.getAttribute("aria-selected")).toMatch("true");
