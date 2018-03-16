@@ -73,6 +73,23 @@ describe('Excel Exporter', () => {
         });
     }));
 
+    it("should throw an exception when setting negative width and height.", async(() => {
+        try {
+            options.columnWidth = -1;
+        }
+        catch (ex) {
+            expect((ex as Error).message).toBe("Invalid value for column width!");
+        }
+
+        try {
+            options.rowHeight = -1;
+        }
+        catch (ex) {
+            expect((ex as Error).message).toBe("Invalid value for row height");
+        }
+
+    }));
+
     async function getExportedData( data : any[], options : IgxExcelExporterOptions ) {
         let result = await new Promise<JSZipWrapper>(resolve => {
             exporter.onExportEnded.subscribe((value) => {

@@ -5,7 +5,7 @@ import { JSZipFiles } from './jsZip-helper';
 export class JSZipWrapper {
     private _zip : JSZip;
     private _filesAndFolders : JSZip.ZipObject[];
-    private _fileContent : string;
+    private _fileContent = "";
     private _files : any[];
     // private _actualFiles : any[];
     private _filesContent : IFileContent[] = [];
@@ -16,6 +16,7 @@ export class JSZipWrapper {
         this._files = currentZip.files;
         this.createFilesAndFolders();
         this._hasValues = this._filesAndFolders.length > JSZipFiles.TemplatesNames.length;
+        this._filesContent = [];
     }
 
     private createFilesAndFolders() {
@@ -105,7 +106,7 @@ export class JSZipWrapper {
     }
 
     /* Asserts the JSZip contains the files it should contain. */
-    public verifyStructure() {
+    public verifyStructure(message = "") {
         let result = ObjectComparer.AreEqual(this.templateFilesAndFolders, JSZipFiles.TemplatesNames);
 
         if (this.hasValues) {
@@ -115,37 +116,43 @@ export class JSZipWrapper {
             result = result && this._filesAndFolders.length === JSZipFiles.TemplatesNames.length;
         }
 
-        expect(result).toBe(true, "Unexpected zip structure!")
+        expect(result).toBe(true, message + " Unexpected zip structure!")
     }
 
-    /* Verifies the contents of all template files and asserts the result. */
-    public async verifyTemplateFilesContent() {
+    /* Verifies the contents of all template files and asserts the result.
+    Optionally, a message can be passed in, which, if specified, will be shown in the beginning of the comparison result. */
+    public async verifyTemplateFilesContent(message = "") {
         let result;
+        let msg = (message !== "") ? message + "\r\n" : "";
 
         await this.readTemplateFiles().then(() => {
             result = this.compareFiles(this.templateFilesContent, undefined);
-            expect(result.areEqual).toBe(true, result.differences);
+            expect(result.areEqual).toBe(true, msg + result.differences);
         });
     }
 
-    /* Verifies the contents of all data files and asserts the result. */
-    public async verifyDataFilesContent(expectedData : IFileContent[]) {
+    /* Verifies the contents of all data files and asserts the result.
+    Optionally, a message can be passed in, which, if specified, will be shown in the beginning of the comparison result. */
+    public async verifyDataFilesContent(expectedData : IFileContent[], message = "") {
         let result;
+        let msg = (message !== "") ? message + "\r\n" : "";
 
         await this.readDataFiles().then(() => {
             result = this.compareFiles(this.dataFilesContent, expectedData);
-            expect(result.areEqual).toBe(true, result.differences);
+            expect(result.areEqual).toBe(true, msg + result.differences);
         });
     }
 
-    /* Verifies the contents of all files and asserts the result. */
-    public async verifyFilesContent(expectedData : IFileContent[]) {
+    /* Verifies the contents of all files and asserts the result.
+    Optionally, a message can be passed in, which, if specified, will be shown in the beginning of the comparison result. */
+    public async verifyFilesContent(expectedData : IFileContent[], message = "") {
         const self = this;
         let result;
+        let msg = (message !== "") ? message + "\r\n" : "";
 
         await this.readFiles(this._files).then(() => {
             result = this.compareFiles(self._filesContent, expectedData);
-            expect(result.areEqual).toBe(true, result.differences);
+            expect(result.areEqual).toBe(true, msg + result.differences);
         });
     }
 
