@@ -142,7 +142,7 @@
         bottom: 0;
         left: 0;
         stroke: map-get($this, 'tick-color');
-        stroke-linecap: round;
+        stroke-linecap: square;
         stroke-width: $cbx-mark-stroke;
         stroke-dasharray: $cbx-mark-length;
         stroke-dashoffset: $cbx-mark-length;

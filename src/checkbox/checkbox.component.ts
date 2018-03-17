@@ -36,6 +36,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     @Input() public name: string;
     @Input() public tabindex: number = null;
     @Input() public labelPosition: LabelPosition | string = LabelPosition.AFTER;
+    @Input() public disableRipple = false;
 
     @HostBinding("class.igx-checkbox")
     public cssClass = "igx-checkbox";
