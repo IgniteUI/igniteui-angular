@@ -169,7 +169,6 @@
         color: map-get($this, 'label-color');
         font-size: $cbx-label-font-size;
         line-height: 1;
-        margin-left: $cbx-label-margin;
         cursor: pointer;
         user-select: none;
         word-wrap: break-all;
@@ -177,6 +176,15 @@
         &:empty {
             margin: 0;
         }
+    }
+
+    %cbx-label-pos--after {
+        margin-left: $cbx-label-margin;
+    }
+
+    %cbx-label-pos--before {
+        margin-right: $cbx-label-margin;
+        order: -1;
     }
 
     %cbx-label--disabled {

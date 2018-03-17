@@ -11,6 +11,11 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 
+export enum LabelPosition {
+    BEFORE = "before",
+    AFTER = "after"
+}
+
 const noop = () => { };
 let nextId = 0;
 
@@ -30,9 +35,10 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     @Input() public value: any;
     @Input() public name: string;
     @Input() public tabindex: number = null;
+    @Input() public labelPosition: LabelPosition | string = LabelPosition.AFTER;
 
     @HostBinding("class.igx-checkbox")
-    public cssClass = "igx-control";
+    public cssClass = "igx-checkbox";
 
     @HostBinding("class.igx-checkbox--indeterminate")
     @Input() public indeterminate = false;
@@ -71,6 +77,18 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
         }
         this._value = value;
         this.checked = !!this._value;
+    }
+
+    public get labelClass(): string {
+        switch (this.labelPosition) {
+            case LabelPosition.BEFORE:
+            case "before":
+                return `${this.cssClass}__label--before`;
+            case LabelPosition.AFTER:
+            case "after":
+            default:
+                return `${this.cssClass}__label`;
+        }
     }
 
     public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }

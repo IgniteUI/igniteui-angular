@@ -17,6 +17,12 @@
 
     @include e(label) {
         @extend %cbx-label !optional;
+        @extend %cbx-label-pos--after !optional;
+    }
+
+    @include e(label, $m: before) {
+        @extend %cbx-label !optional;
+        @extend %cbx-label-pos--before !optional;
     }
 
     @include e(composite) {

@@ -2,7 +2,7 @@
     [attr.disabled]="disabled ? true : null" [indeterminate]="indeterminate" [checked]="checked" [attr.aria-checked]="checked"
     (change)="onChange($event)" (focus)="onFocus($event)" (blur)="onBlur($event)">
 
-<label igxRipple [igxRippleCentered]="true" igxRippleDuration="100" igxRippleTarget=".igx-checkbox__ripple" class="igx-checkbox__composite"
+<label class="igx-checkbox__composite" igxRipple [igxRippleCentered]="true" [igxRippleDuration]="100" igxRippleTarget=".igx-checkbox__ripple"
     [attr.for]="id">
     <svg class="igx-checkbox__composite-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path d="M4.1,12.7 9,17.6 20.3,6.3" />
@@ -10,6 +10,6 @@
     <div class="igx-checkbox__ripple"></div>
 </label>
 
-<span class="igx-checkbox__label" (click)="onChange($event)">
+<span [class]="labelClass" (click)="onChange($event)">
     <ng-content></ng-content>
 </span>
