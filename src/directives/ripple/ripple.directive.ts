@@ -4,88 +4,101 @@ import { Directive, ElementRef, HostListener, Input, NgModule, NgZone, Renderer2
     selector: "[igxRipple]"
 })
 export class IgxRippleDirective {
-    @Input("igxRippleTarget") public rippleTarget = "";
-    @Input("igxRipple") public rippleColor: string;
-    @Input("igxRippleDuration") public rippleDuration = 600;
 
-    protected container: HTMLElement;
+    @Input("igxRippleTarget")
+    public rippleTarget = "";
 
-    private _centered = false;
-    private animationQueue = [];
+    @Input("igxRipple")
+    public rippleColor: string;
+
+    @Input("igxRippleDuration")
+    public rippleDuration = 600;
 
     @Input("igxRippleCentered") set centered(value: boolean) {
         this._centered = value || this.centered;
     }
 
-    constructor(protected el: ElementRef, protected renderer: Renderer2, private zone: NgZone) {
-        this.container = el.nativeElement;
+    @Input("igxRippleDisabled")
+    public rippleDisabled = false;
+
+    protected get nativeElement(): HTMLElement {
+        return this.elementRef.nativeElement;
     }
+
+    private rippleElementClass = "igx-ripple__inner";
+    private rippleHostClass = "igx-ripple";
+
+    private animationFrames = [
+        { opacity: 0.5, transform: "scale(.3)" },
+        { opacity: 0, transform: "scale(2)" }
+    ];
+    private animationOptions = {
+        duration: this.rippleDuration,
+        fill: "forwards"
+    };
+
+    private _centered = false;
+    private animationQueue = [];
+
+    constructor(
+        protected elementRef: ElementRef,
+        protected renderer: Renderer2,
+        private zone: NgZone) { }
 
     @HostListener("mousedown", ["$event"])
     public onMouseDown(event) {
         this.zone.runOutsideAngular(() => this._ripple(event));
     }
 
-    private _ripple(event) {
-        let target;
-        let top;
-        let left;
-        let radius;
-        let rippleEl;
-        let rectBounds;
+    private setStyles(rippleElement: HTMLElement, styleParams: any) {
+        this.renderer.addClass(rippleElement, this.rippleElementClass);
+        this.renderer.setStyle(rippleElement, "width", `${styleParams.radius}px`);
+        this.renderer.setStyle(rippleElement, "height", `${styleParams.radius}px`);
+        this.renderer.setStyle(rippleElement, "top", `${styleParams.top}px`);
+        this.renderer.setStyle(rippleElement, "left", `${styleParams.left}px`);
+        if (this.rippleColor) {
+            this.renderer.setStyle(rippleElement, "background", this.rippleColor);
+        }
+    }
 
-        // document.body.scrollX always returns 0 in Firefox. Use documentElement instead.
-        const scrollLeft = (document.body.scrollLeft || document.documentElement.scrollLeft);
-        const scrollTop = (document.body.scrollTop || document.documentElement.scrollTop);
+    private _ripple(event) {
+        if (this.rippleDisabled) {
+            return;
+        }
 
         event.stopPropagation();
 
-        target = (this.rippleTarget ?
-            this.container.querySelector(this.rippleTarget) || this.container
-            : this.container);
+        const target = (this.rippleTarget ? this.nativeElement.querySelector(this.rippleTarget) || this.nativeElement : this.nativeElement);
 
-        rectBounds = target.getBoundingClientRect();
-
-        this.renderer.addClass(target, "ig-ripple-host");
-        rippleEl = this.renderer.createElement("span");
-        this.renderer.appendChild(target, rippleEl);
-        this.renderer.addClass(rippleEl, "ig-ripple-host__ripple");
-
-        radius = Math.max(rectBounds.width, rectBounds.height);
-
-        left = event.pageX - rectBounds.left - radius / 2 - scrollLeft;
-        top = event.pageY - rectBounds.top - radius / 2 - scrollTop;
-
-        this.renderer.setStyle(rippleEl, "width", `${radius}px`);
-        this.renderer.setStyle(rippleEl, "height", `${radius}px`);
-        this.renderer.setStyle(rippleEl, "top", `${top}px`);
-        this.renderer.setStyle(rippleEl, "left", `${left}px`);
+        const rectBounds = target.getBoundingClientRect();
+        const radius = Math.max(rectBounds.width, rectBounds.height);
+        let left = event.clientX - rectBounds.left - radius / 2;
+        let top = event.clientY - rectBounds.top - radius / 2;
 
         if (this._centered) {
-            this.renderer.setStyle(rippleEl, "top", "0");
-            this.renderer.setStyle(rippleEl, "left", "0");
+            left = top = 0;
         }
 
-        if (this.rippleColor) {
-            this.renderer.setStyle(rippleEl, "background", this.rippleColor);
-        }
+        const dimensions = {
+            radius,
+            top,
+            left
+        };
 
-        const FRAMES = [
-            {opacity: 0.5, transform: "scale(0)"},
-            {opacity: 0, transform: "scale(2)"}
-        ];
+        const rippleElement = this.renderer.createElement("span");
 
-        const animation = rippleEl.animate(FRAMES, {
-            duration: this.rippleDuration,
-            fill: "forwards"
-        });
+        this.setStyles(rippleElement, dimensions);
+        this.renderer.addClass(target, this.rippleHostClass);
+        this.renderer.appendChild(target, rippleElement);
+
+        const animation = rippleElement.animate(this.animationFrames, this.animationOptions);
         this.animationQueue.push(animation);
 
         animation.onfinish = () => {
             this.animationQueue.splice(this.animationQueue.indexOf(animation), 1);
-            target.removeChild(rippleEl);
+            target.removeChild(rippleElement);
             if (this.animationQueue.length < 1) {
-                this.renderer.removeClass(target, "ig-ripple-host");
+                this.renderer.removeClass(target, this.rippleHostClass);
             }
         };
     }
