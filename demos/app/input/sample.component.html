@@ -25,7 +25,7 @@
             </form>
         </article>
 
-        <article class="sample-column">
+        <!-- <article class="sample-column">
             <h4 class="sample-title">Switch sample</h4>
             <div class="input-sample">
                 <h4 class="form-title">Settings</h4>
@@ -45,7 +45,7 @@
                     <igx-switch [(ngModel)]="!user.registered"></igx-switch>
                 </div>
             </div>
-        </article>
+        </article> -->
 
         <article class="sample-column">
             <h4 class="sample-title">Checkbox sample</h4>
@@ -55,7 +55,7 @@
                     <igx-avatar src="images/avatar/22.jpg" roundShape="true">
                     </igx-avatar>
                     <span igxLabel>Alicia Keys</span>
-                    <igx-checkbox [(ngModel)]="!user.registered"></igx-checkbox>
+                    <igx-checkbox [(ngModel)]="user.registered">Value</igx-checkbox>
                 </div>
                 <div class="switch-sample">
                     <igx-avatar src="images/avatar/8.jpg" roundShape="true">
@@ -67,7 +67,25 @@
                     <igx-avatar src="images/avatar/17.jpg" roundShape="true">
                     </igx-avatar>
                     <span igxLabel>Brian Vaughan</span>
-                    <igx-checkbox [(ngModel)]="!user.registered"></igx-checkbox>
+                    <igx-checkbox [(ngModel)]="user.registered" [disabled]="true">Value</igx-checkbox>
+                </div>
+                <div class="switch-sample">
+                    <igx-avatar src="images/avatar/17.jpg" roundShape="true">
+                    </igx-avatar>
+                    <span igxLabel>Brian Vaughan</span>
+                    <igx-checkbox [(ngModel)]="user.registered" [disabled]="true">Value</igx-checkbox>
+                </div>
+                <div class="switch-sample">
+                    <igx-avatar src="images/avatar/17.jpg" roundShape="true">
+                    </igx-avatar>
+                    <span igxLabel>Brian Vaughan</span>
+                    <igx-checkbox [(ngModel)]="user.registered" [indeterminate]="true">Value</igx-checkbox>
+                </div>
+                <div class="switch-sample">
+                    <igx-avatar src="images/avatar/17.jpg" roundShape="true">
+                    </igx-avatar>
+                    <span igxLabel>Brian Vaughan</span>
+                    <igx-checkbox [(ngModel)]="user.registered" [indeterminate]="true" [disabled]="true">Value</igx-checkbox>
                 </div>
             </div>
         </article>
