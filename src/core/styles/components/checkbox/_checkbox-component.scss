@@ -5,48 +5,73 @@
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
 ////
-@include b(igx-control) {
+@include b(igx-checkbox) {
+    $block: bem--selector-to-string(&);
     @include register-component('igx-checkbox');
 
-    $block: bem--selector-to-string(&);
+    @extend %cbx-display !optional;
 
-    @extend %igx-control-display !optional;
-
-    @include b(tick) {
-        @extend %igx-cbx-lbl-tick !optional;
+    @include e(input) {
+        @include hide-default();
     }
 
-    @include e(cbx) {
-        @include hide-default();
+    @include e(label) {
+        @extend %cbx-label !optional;
+    }
 
-        ~ #{$block}__label {
-            @extend %igx-cbx-lbl-display !optional;
+    @include e(composite) {
+        @extend %cbx-composite !optional;
+    }
+
+    @include e(composite-mark) {
+        @extend %cbx-composite-mark !optional;
+    }
+
+    @include e(ripple) {
+        @extend %cbx-ripple !optional;
+    }
+
+    @include m(indeterminate) {
+        @include  e(composite) {
+            @extend %cbx-composite--x !optional;
         }
 
-        &:checked ~ #{$block}__label {
-            .tick {
-                @extend %igx-cbx-lbl-checked-tick !optional;
-            }
+        @include e(composite-mark) {
+            @extend %cbx-composite-mark--in !optional;
+        }
+    }
+
+    @include m(checked) {
+        @include e(composite) {
+            @extend %cbx-composite--x !optional;
         }
 
-        &:not(:checked) ~ #{$block}__label::after {
-            @extend %igx-cbx-lbl-unchecked-after !optional;
+        @include e(composite-mark) {
+            @extend %cbx-composite-mark--x !optional;
+        }
+    }
+
+    @include m(disabled) {
+        @extend %cbx-display--disabled !optional;
+
+        @include e(label) {
+            @extend %cbx-label--disabled !optional;
         }
 
-        &:checked ~ #{$block}__label::after {
-            @extend %igx-cbx-lbl-checked-after !optional;
+        @include e(composite) {
+            @extend %cbx-composite--disabled !optional;
         }
+    }
 
-        &:disabled ~ #{$block}__label {
-            @extend %igx-cbx-lbl-disabled !optional;
+    @include mx(indeterminate, disabled) {
+        @include e(composite) {
+            @extend %cbx-composite--x--disabled !optional;
         }
+    }
 
-        &:disabled:checked ~ #{$block}__label::after {
-            @extend %igx-cbx-lbl-checked--disabled-after !optional;
-        }
-
-        &:disabled:not(:checked) ~ #{$block}__label::after {
-            @extend %igx-cbx-lbl-unchecked--disabled-after !optional;
+    @include mx(checked, disabled) {
+        @include e(composite) {
+            @extend %cbx-composite--x--disabled !optional;
         }
     }
 }
