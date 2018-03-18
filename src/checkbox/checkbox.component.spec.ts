@@ -32,11 +32,16 @@ describe("IgxCheckbox", () => {
         const placeholderLabel = fixture.debugElement.query(By.css(".igx-checkbox__label")).nativeElement;
 
         expect(nativeCheckbox).toBeTruthy();
+        expect(nativeCheckbox.id).toEqual("igx-checkbox-0");
+
         expect(nativeLabel).toBeTruthy();
+        expect(nativeLabel.getAttribute("for")).toEqual("igx-checkbox-0");
+
         expect(placeholderLabel.textContent.trim()).toEqual("Init");
+        expect(placeholderLabel.classList).toContain("igx-checkbox__label");
     });
 
-    it("Initialize with a ngModel", () => {
+    it("Initializes with ngModel", () => {
         const fixture = TestBed.createComponent(CheckboxSimpleComponent);
         fixture.detectChanges();
 
@@ -51,10 +56,31 @@ describe("IgxCheckbox", () => {
         expect(checkboxInstance.checked).toBe(false);
 
         testInstance.subscribed = true;
+        checkboxInstance.name = "my-checkbox";
         fixture.detectChanges();
 
         expect(nativeCheckbox.checked).toBe(true);
         expect(checkboxInstance.checked).toBe(true);
+        expect(checkboxInstance.name).toEqual("my-checkbox");
+    });
+
+    it("Positions label after checkbox", () => {
+        const fixture = TestBed.createComponent(CheckboxSimpleComponent);
+        const checkboxInstance = fixture.componentInstance.cb;
+        fixture.detectChanges();
+
+        const placeholderLabel = fixture.debugElement.query(By.css(".igx-checkbox__label"));
+        expect(placeholderLabel).toBeTruthy();
+    });
+
+    it("Positions label before checkbox", () => {
+        const fixture = TestBed.createComponent(CheckboxSimpleComponent);
+        const checkboxInstance = fixture.componentInstance.cb;
+        checkboxInstance.labelPosition = "before";
+        fixture.detectChanges();
+
+        const placeholderLabel = fixture.debugElement.query(By.css(".igx-checkbox__label--before"));
+        expect(placeholderLabel).toBeTruthy();
     });
 
     it("Indeterminate state", () => {
