@@ -218,7 +218,9 @@ Column component is used to define grid's *columns* collection. Cell, header and
 | header  | string  | Column header text |
 | sortable  | boolean  | Set column to be sorted or not |
 | editable  | boolean  | Set column values to be editable |
-| filtering  | boolean  | Set column values to be filterable |
+| filterable  | boolean  | Set column values to be filterable |
+| hasSummary  | boolean  | Set the specific column to have a summaries or not |
+| summaries  | IgxSummaryOperand | Set custom summary for the specific column |
 | hidden  | boolean  | Visibility of the column |
 | movable  | boolean  | Column moving |
 | width  | string  | Columns width |
