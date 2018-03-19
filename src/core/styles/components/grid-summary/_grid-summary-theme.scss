@@ -80,7 +80,6 @@
     %igx-grid-summary-item__label {
         color: map-get($this, 'label-color');
         margin-right: rem(10px);
-        flex: 1 1 auto;
         min-width: rem(80px);
         cursor: pointer;
     }
@@ -88,6 +87,7 @@
     %igx-grid-summary-item__result {
         color: map-get($this, 'result-color');
         font-weight: 800;
+        flex: 1 1 auto;
         text-align: right;
     }
 
@@ -102,6 +102,10 @@
 
     %igx-grid-summary__result--inactive {
         display: none;
+    }
+
+    %igx-grid-summary-item__result--left-align {
+        text-align: left;
     }
 }
 
