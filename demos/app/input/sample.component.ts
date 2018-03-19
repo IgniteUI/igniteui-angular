@@ -14,7 +14,7 @@ export class InputSampleComponent {
         gender: "Male",
         lastName: "Doe",
         password: "1337s3cr3t",
-        registered: true,
+        registered: false,
         subscribed: false
     };
 }
