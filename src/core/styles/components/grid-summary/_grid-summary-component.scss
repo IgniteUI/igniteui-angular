@@ -28,6 +28,10 @@
         @extend %igx-grid-summary-item__result !optional;
     }
 
+    @include e(result, $m: left-align) {
+        @extend %igx-grid-summary-item__result--left-align !optional;
+    }
+
     @include m(inactive) {
 
         @include e(label) {
