@@ -33,10 +33,21 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, Aft
         return this.column.width;
     }
 
+    get summaryItemClass(): string {
+        return this.summaryItemStyle;
+    }
+
+    get summaryValueClass(): string {
+        if (this.dataType === "number") {
+            return "";
+        } else {
+            return "igx-grid-summary-item__result--left-align";
+        }
+    }
     protected subscriptionOnEdit$;
     protected subscriptionOnAdd$;
     protected subscriptionOnDelete$;
-
+    protected summaryItemStyle = "igx-grid-summary-item";
     constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
 
     public ngOnInit() {
@@ -75,4 +86,11 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, Aft
         return this.summaryCacheMap.get(this.column.field);
     }
 
+    public hideShowSummary() {
+        if (this.summaryItemStyle === "igx-grid-summary-item") {
+            this.summaryItemStyle = "igx-grid-summary-item--inactive";
+        } else {
+            this.summaryItemStyle = "igx-grid-summary-item";
+        }
+    }
 }
