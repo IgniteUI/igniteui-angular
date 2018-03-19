@@ -26,14 +26,9 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, Aft
         return this.column.dataType;
     }
 
-    @HostBinding("class")
-    get styleClasses(): string {
-        return `igx-grid__td ${this.column.summaryClasses}`;
-    }
-
     @HostBinding("style.min-width")
     @HostBinding("style.flex-basis")
-    @HostBinding("class.igx-grid__td--fw")
+    @HostBinding("class.igx-grid-summary-wrapper")
     get width() {
         return this.column.width;
     }

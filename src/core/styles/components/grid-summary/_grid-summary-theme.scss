@@ -1,0 +1,110 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+///
+/// @param {Color} $background-color [null] - The summaries background color.
+/// @param {Color} $label-color [null] - The summaries label color.
+/// @param {Color} $result-color [null] - The summaries label value/result color.
+/// @param {Color} $border-color [null] - The summaries border color.
+/// @param {Color} $inactive-color [null] - The summaries inactive label color color.
+///
+///
+/// @requires text-contrast
+///
+/// @example scss Change the summaries background nad labels color
+///   $my-summary-theme: igx-grid-summary-theme(
+///     $$background-color: black,
+///     $label-color: white
+///   );
+///   // Pass the theme to the igx-grid-filtering component mixin
+///   @include igx-grid-summary($my-filtering-theme);
+
+@function igx-grid-summary-theme(
+    $background-color: null,
+    $label-color: null,
+    $result-color: null,
+    $border-color: null,
+    $inactive-color: null
+) {
+    @return (
+        background-color: $background-color,
+        label-color: $label-color,
+        result-color: $result-color,
+        border-color: $border-color,
+        inactive-color: $inactive-color
+    );
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires {mixin} igx-grid-summary
+/// @requires igx-grid-summary-theme
+/// @requires igx-color
+@mixin igx-grid-summary($theme, $palette: $default-palette) {
+    $default-theme: igx-grid-summary-theme(
+        $background-color: white,
+        $label-color: igx-color($palette, 'secondary', 500),
+        $result-color: igx-color($palette, 'grays', 800),
+        $border-color: igx-color($palette, 'grays', 300),
+        $inactive-color: igx-color($palette, 'grays', 400)
+    );
+
+    $this: extend($default-theme, $theme);
+
+    %igx-grid-summary-border {
+        border-left: 1px solid map-get($this, 'border-color');
+
+        &:first-of-type {
+            border-left: none;
+        }
+    }
+
+    %igx-grid-summary {
+        background: map-get($this, 'background-color');
+        overflow-x: auto;
+        overflow-y: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    %igx-grid-summary-item {
+        display: flex;
+        align-items: center;
+        padding: rem(5px) rem(24px);
+        font-size: rem(12px);
+        border-bottom: 1px solid map-get($this, 'border-color');
+    }
+
+    %igx-grid-summary-item__label {
+        color: map-get($this, 'label-color');
+        margin-right: rem(10px);
+        flex: 1 1 auto;
+        min-width: rem(80px);
+        cursor: pointer;
+    }
+
+    %igx-grid-summary-item__result {
+        color: map-get($this, 'result-color');
+        font-weight: 800;
+        text-align: right;
+    }
+
+    %igx-grid-summary-item__label,
+    %igx-grid-summary-item__result {
+        @include ellipsis();
+    }
+
+    %igx-grid-summary__label--inactive {
+        color: map-get($this, 'inactive-color');
+    }
+
+    %igx-grid-summary__result--inactive {
+        display: none;
+    }
+}
+
+
+
+
