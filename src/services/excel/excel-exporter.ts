@@ -56,7 +56,7 @@ export class IgxExcelExporterService {
 
     public Export(grid: IgxGridComponent, options: IgxExcelExporterOptions): void {
         const columnList = grid.columnList.toArray();
-        const columns = new Array<string>();
+        const columns = new Array<any>();
         let hasSkippedColumns = false;
 
         const data = new Array<any>();
@@ -71,7 +71,10 @@ export class IgxExcelExporterService {
             }
 
             if (exportColumn && !columnArgs.cancel) {
-                columns.push(columnHeader);
+                columns.push({
+					header: columnArgs.header,
+					name: column.field
+				});
             } else {
                 hasSkippedColumns = true;
             }
@@ -126,10 +129,10 @@ export class IgxExcelExporterService {
         a.dispatchEvent(e);
     }
 
-    private ExportRow(data: any[], gridRowData: any, index: number, hasSkippedColumns: boolean, columns: string[]) {
+    private ExportRow(data: any[], gridRowData: any, index: number, hasSkippedColumns: boolean, columns: any[]) {
         const rowData = hasSkippedColumns ?
                 columns.reduce((a, e) => {
-                    a[e] = gridRowData[e];
+                    a[e.header] = gridRowData[e.name];
                     return a;
                 }, {}) :
                 JSON.parse(JSON.stringify(gridRowData));

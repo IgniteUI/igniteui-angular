@@ -49,5 +49,9 @@ export * from "./slider/slider.component";
 export * from "./date-picker/date-picker.component";
 export * from "./directives/toggle/toggle.directive";
 export * from "./directives/for-of/IForOfState";
-export * from "./services/excel/excel-exporter";
 export * from "./directives/mask/mask.directive";
+
+// Export excel service 
+export * from "./services/excel/excel-exporter";
+export * from "./services/excel/excel-event-args"
+export * from "./services/excel/excel-exporter-options"

@@ -1,6 +1,6 @@
 export class WorksheetDataDictionary {
-    private static MIN_WIDTH = 8;
-    private static DEFAULT_FONT = "12pt Calibri";
+	private static DEFAULT_FONT = "11pt Calibri";
+	private static TEXT_PADDING = 5;
 
     private _dictionary: any;
     private _sortedKeys: string[];
@@ -65,7 +65,7 @@ export class WorksheetDataDictionary {
         const context = canvas.getContext("2d");
         context.font = WorksheetDataDictionary.DEFAULT_FONT;
         const metrics = context.measureText(text);
-        return metrics.width;
+        return metrics.width + WorksheetDataDictionary.TEXT_PADDING;
     }
 
     private santizieValue(value: string): string {
