@@ -83,10 +83,8 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     public get labelClass(): string {
         switch (this.labelPosition) {
             case LabelPosition.BEFORE:
-            case "before":
                 return `${this.cssClass}__label--before`;
             case LabelPosition.AFTER:
-            case "after":
             default:
                 return `${this.cssClass}__label`;
         }
