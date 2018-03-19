@@ -19,7 +19,7 @@ export * from "./data-operations/data-container";
 export * from "./grid/";
 
 export * from "./navigation-drawer";
-export * from "./icon/icon.component";
+export * from "./icon";
 export * from "./directives/button/button.directive";
 export * from "./directives/filter/filter.directive";
 export * from "./directives/input/input.directive";
@@ -50,3 +50,4 @@ export * from "./date-picker/date-picker.component";
 export * from "./directives/toggle/toggle.directive";
 export * from "./directives/for-of/IForOfState";
 export * from "./services/excel/excel-exporter";
+export * from "./directives/mask/mask.directive";

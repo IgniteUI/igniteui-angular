@@ -24,6 +24,7 @@ import {
 import { IgxToggleDirective } from "../directives/toggle/toggle.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
+import { autoWire, IGridBus } from "./grid.common";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,7 +32,7 @@ import { IgxColumnComponent } from "./column.component";
     selector: "igx-grid-filter",
     templateUrl: "./grid-filtering.component.html"
 })
-export class IgxGridFilterComponent implements OnInit, OnDestroy {
+export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
 
     @Input()
     public column;
@@ -41,7 +42,8 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy {
     }
 
     set value(val) {
-        if (!val) {
+        // filtering needs to be cleared if value is null, undefined or empty string
+        if (!val && val !== 0) {
             this.clearFiltering();
             return;
         }
@@ -126,7 +128,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy {
     @ViewChild(IgxToggleDirective, { read: IgxToggleDirective})
     protected toggleDirective: IgxToggleDirective;
 
-    constructor(private gridAPI: IgxGridAPIService, private cdr: ChangeDetectorRef, private elementRef: ElementRef) {
+    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
         this.filterChanged.pipe(
             debounceTime(250),
             distinctUntilChanged()
@@ -149,6 +151,10 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy {
 
     public refresh() {
         this.dialogShowing = !this.dialogShowing;
+        if (!this._filterCondition && this.dialogShowing) {
+            this._filterCondition = this.conditions[0];
+            this.column.filteringCondition = this.getCondition(this._filterCondition);
+        }
         this.cdr.detectChanges();
     }
 
@@ -165,6 +171,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy {
         return false;
     }
 
+    @autoWire(true)
     public filter(): void {
         const grid = this.gridAPI.get(this.gridID);
         this.gridAPI.filter(
@@ -178,29 +185,19 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy {
                 searchVal: this._value
             }
         });
-        this.cdr.markForCheck();
     }
 
+    @autoWire(true)
     public clearFiltering(): void {
         this._value = null;
         this._filterCondition = undefined;
         this.gridAPI.clear_filter(this.gridID, this.column.field);
-        this.cdr.markForCheck();
     }
 
     public conditionChanged(value): void {
 
         this._filterCondition = value;
-
-        if (this.dataType === DataType.String) {
-            this.column.filteringCondition = STRING_FILTERS[value];
-        } else if (this.dataType === DataType.Number) {
-            this.column.filteringCondition = NUMBER_FILTERS[value];
-        } else if (this.dataType === DataType.Boolean) {
-            this.column.filteringCondition = BOOLEAN_FILTERS[value];
-        } else if (this.dataType === DataType.Date) {
-            this.column.filteringCondition = DATE_FILTERS[value];
-        }
+        this.column.filteringCondition = this.getCondition(value);
         this.filter();
     }
 
@@ -217,9 +214,8 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy {
         return true;
     }
 
-    @HostListener("click", ["$event"])
-    public onClick(event) {
-        event.stopPropagation();
+    @HostListener("mousedown")
+    public onMouseDown() {
         const grid = this.gridAPI.get(this.gridID);
         const gridRect = grid.nativeElement.getBoundingClientRect();
         const dropdownRect = this.elementRef.nativeElement.getBoundingClientRect();
@@ -233,13 +229,29 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy {
         }
     }
 
+    @HostListener("click", ["$event"])
+    public onClick(event) {
+        event.stopPropagation();
+    }
+
+    protected getCondition(value) {
+        switch (this.dataType) {
+            case DataType.String:
+                return STRING_FILTERS[value];
+            case DataType.Number:
+                return NUMBER_FILTERS[value];
+            case DataType.Boolean:
+                return BOOLEAN_FILTERS[value];
+            case DataType.Date:
+                return DATE_FILTERS[value];
+        }
+    }
+
     protected transformValue(value) {
         if (this.dataType === DataType.Number) {
-            value = parseInt(value, 10);
+            value = parseFloat(value);
         } else if (this.dataType === DataType.Boolean) {
             value = Boolean(value);
-        } else if (this.dataType === DataType.Date) {
-            value = new Date(Date.parse(value));
         }
 
         return value;

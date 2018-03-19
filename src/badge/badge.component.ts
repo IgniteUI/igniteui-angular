@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, HostBinding, Input, NgModule } from "@angular/core";
-import { IgxIconModule } from "../icon/icon.component";
+import { IgxIconModule } from "../icon";
 
 export enum Type {
     DEFAULT = "default",
