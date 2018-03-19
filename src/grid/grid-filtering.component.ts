@@ -1,4 +1,5 @@
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -7,7 +8,6 @@ import {
     HostListener,
     Input,
     OnDestroy,
-    OnInit,
     TemplateRef,
     ViewChild
 } from "@angular/core";
@@ -32,7 +32,7 @@ import { autoWire, IGridBus } from "./grid.common";
     selector: "igx-grid-filter",
     templateUrl: "./grid-filtering.component.html"
 })
-export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
+export class IgxGridFilterComponent implements IGridBus, AfterViewInit, OnDestroy {
 
     @Input()
     public column;
@@ -135,7 +135,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
         ).subscribe((value) => this.value = value);
     }
 
-    public ngOnInit() {
+    public ngAfterViewInit() {
         this.chunkLoaded = this.gridAPI.get(this.gridID).headerContainer.onChunkPreload.subscribe(() => {
             if (!this.toggleDirective.collapsed) {
                 this.toggleDirective.collapsed = true;

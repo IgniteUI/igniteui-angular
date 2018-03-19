@@ -152,7 +152,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     @Output()
     public onRowDeleted = new EventEmitter<any>();
 
-    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
+    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
 
     @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
@@ -263,9 +263,14 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
             this.autogenerateColumns();
         }
 
-        this.columnList.forEach((col, idx) => {
-            col.index = idx;
+        let idx = 0;
+
+        this.columnList.forEach((col) => {
             col.gridID = this.id;
+            if (!col.isColumnGroup) {
+                col.index = idx;
+                idx++;
+            }
             this.onColumnInit.emit(col);
         });
 
@@ -325,7 +330,10 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
         return this.columnList.find((col) => col.field === name);
     }
 
-    get visibleColumns(): IgxColumnComponent[] {
+    public get visibleColumns(): IgxColumnComponent[] {
+        if (this.hasColumnGroups) {
+            return this.columnList.filter((col) => !col.hidden && !col.parent).sort((col1, col2) => col1.index - col2.index);
+        }
         return this.columnList.filter((col) => !col.hidden).sort((col1, col2) => col1.index - col2.index);
     }
 
@@ -468,6 +476,10 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
 
     get hasFilterableColumns(): boolean {
         return this.columnList.some((col) => col.filterable);
+    }
+
+    get hasColumnGroups(): boolean {
+        return this.columnList.some((col) => col.isColumnGroup);
     }
 
     get selectedCells(): IgxGridCellComponent[] | any[] {
