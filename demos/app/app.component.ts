@@ -151,6 +151,11 @@ export class AppComponent {
             link: "/virtualForDirective",
             icon: "view_column",
             name: "Virtual-For Directive"
+        },
+        {
+            link: "/mask",
+            icon: "view_column",
+            name: "Mask Directive"
         }
     ];
 
