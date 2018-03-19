@@ -53,8 +53,12 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     @Input()
     set value(value: Date) {
-        this._value = value;
-        this._onChangeCallback(value);
+        if (this._isValueValid(value)) {
+            this._value = value;
+            this._onChangeCallback(value);
+        } else {
+            this.onValidationFailed.emit({timePicker: this, currentValue: value, setThroughUI: false});
+        }
     }
 
     get value(): Date {
@@ -180,7 +184,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     public onClick(): void {
-        if (this.value !== undefined) {
+        if (this.value) {
             const foramttedTime = this._formatTime(this.value, this.format);
             const sections = foramttedTime.split(/[\s:]+/);
 
@@ -253,7 +257,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     private _onChangeCallback: (_: Date) => void = () => {};
 
-    private _scrollItemIntoView(item: string, items: any[], selectedItem: string, isListLoop: boolean): any {
+    private _scrollItemIntoView(item: string, items: any[], selectedItem: string, isListLoop: boolean, viewType: string): any {
         let itemIntoView;
         if (items) {
             const index = (item === "AM" || item === "PM") ? items.indexOf(item) : items.indexOf(parseInt(item, 10));
@@ -262,43 +266,46 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
             if (index !== -1) {
                 if (isListLoop) {
                     if (index > 0) {
-                        selectedItem = this._itemToString(items[index - 1]);
-                        itemIntoView = this._nextItem(items, selectedItem, isListLoop);
+                        selectedItem = this._itemToString(items[index - 1], viewType);
+                        itemIntoView = this._nextItem(items, selectedItem, isListLoop, viewType);
                     } else {
-                        selectedItem = this._itemToString(items[1]);
-                        itemIntoView = this._prevItem(items, selectedItem, isListLoop);
+                        selectedItem = this._itemToString(items[1], viewType);
+                        itemIntoView = this._prevItem(items, selectedItem, isListLoop, viewType);
                     }
                 } else {
                     view = items.slice(index - 3, index + 4);
-                    selectedItem = this._itemToString(items[index]);
+                    selectedItem = this._itemToString(items[index], viewType);
                     itemIntoView = {selectedItem, view};
                 }
-                itemIntoView.view = this._viewToString(itemIntoView.view);
+                itemIntoView.view = this._viewToString(itemIntoView.view, viewType);
             }
         }
         return itemIntoView;
     }
 
-    private _viewToString(view): any {
+    private _viewToString(view: any, viewType: string): any {
         for (let i = 0; i < view.length; i++) {
             if (typeof(view[i]) !== "string") {
-                view[i] = this._itemToString(view[i]);
+                view[i] = this._itemToString(view[i], viewType);
             }
         }
         return view;
     }
 
-    private _itemToString(item): string {
+    private _itemToString(item: any, viewType: string): string {
         if (item === null) {
             item = "";
-        } else {
-            const leadZero = (item < 10 && (this.format.indexOf("hh") !== -1 || this.format.indexOf("HH") !== -1));
+        } else if (viewType) {
+            const leadZeroHour = (item < 10 && (this.format.indexOf("hh") !== -1 || this.format.indexOf("HH") !== -1));
+            const leadZeroMinute = (item < 10 && this.format.indexOf("mm") !== -1);
+
+            const leadZero = (viewType === "hour") ? leadZeroHour : leadZeroMinute;
             item = (leadZero) ? "0" + item : `${item}`;
         }
         return item;
     }
 
-    private _prevItem(items: any[], selectedItem: string, isListLoop: boolean): any {
+    private _prevItem(items: any[], selectedItem: string, isListLoop: boolean, viewType: string): any {
         const selectedIndex = items.indexOf(parseInt(selectedItem, 10));
         const itemsCount = items.length;
         let view;
@@ -322,15 +329,15 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
             view = items.slice(selectedIndex - 4, selectedIndex + 3);
             selectedItem = items[selectedIndex - 1];
         }
-        view = this._viewToString(view);
-        selectedItem = this._itemToString(selectedItem);
+        view = this._viewToString(view, viewType);
+        selectedItem = this._itemToString(selectedItem, viewType);
         return {
             selectedItem,
             view
         };
     }
 
-    private _nextItem(items: any[], selectedItem: string, isListLoop: boolean): any {
+    private _nextItem(items: any[], selectedItem: string, isListLoop: boolean, viewType: string): any {
         const selectedIndex = items.indexOf(parseInt(selectedItem, 10));
         const itemsCount = items.length;
         let view;
@@ -354,8 +361,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
             view = items.slice(selectedIndex - 2, selectedIndex + 5);
             selectedItem = items[selectedIndex + 1];
         }
-        view = this._viewToString(view);
-        selectedItem = this._itemToString(selectedItem);
+        view = this._viewToString(view, viewType);
+        selectedItem = this._itemToString(selectedItem, viewType);
         return {
             selectedItem,
             view
@@ -403,15 +410,15 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     private _updateHourView(start: any, end: any): void {
-        this._hourView = this._viewToString(this._hourItems.slice(start, end));
+        this._hourView = this._viewToString(this._hourItems.slice(start, end), "hour");
     }
 
     private _updateMinuteView(start: any, end: any): void {
-        this._minuteView = this._viewToString(this._minuteItems.slice(start, end));
+        this._minuteView = this._viewToString(this._minuteItems.slice(start, end), "minute");
     }
 
     private _updateAmPmView(start: any, end: any): void {
-        this._ampmView = this._viewToString(this._ampmItems.slice(start, end));
+        this._ampmView = this._ampmItems.slice(start, end);
     }
 
     private _addEmptyItems(items: string[]): void {
@@ -502,10 +509,10 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         return date;
     }
 
-    private _isValueValid(): boolean {
-       if (this.maxValue && this._getSelectedTime() > this._convertMinMaxValue(this.maxValue)) {
+    private _isValueValid(value: Date): boolean {
+       if (this.maxValue && value > this._convertMinMaxValue(this.maxValue)) {
             return false;
-       } else if (this.minValue && this._getSelectedTime() < this._convertMinMaxValue(this.minValue)) {
+       } else if (this.minValue && value < this._convertMinMaxValue(this.minValue)) {
             return false;
        } else {
            return true;
@@ -517,7 +524,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      * @param item to be scrolled in view.
      */
     public scrollHourIntoView(item: string): void {
-        const hourIntoView = this._scrollItemIntoView(item, this._hourItems, this.selectedHour, this._isHourListLoop);
+        const hourIntoView = this._scrollItemIntoView(item, this._hourItems, this.selectedHour, this._isHourListLoop, "hour");
         if (hourIntoView) {
             this._hourView = hourIntoView.view;
             this.selectedHour = hourIntoView.selectedItem;
@@ -529,7 +536,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      * @param item to be scrolled in view.
      */
     public scrollMinuteIntoView(item: string): void {
-        const minuteIntoView = this._scrollItemIntoView(item, this._minuteItems, this.selectedMinute, this._isMinuteListLoop);
+        const minuteIntoView = this._scrollItemIntoView(item, this._minuteItems, this.selectedMinute, this._isMinuteListLoop, "minute");
         if (minuteIntoView) {
             this._minuteView = minuteIntoView.view;
             this.selectedMinute = minuteIntoView.selectedItem;
@@ -541,7 +548,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      * @param item to be scrolled in view.
      */
     public scrollAmPmIntoView(item: string): void {
-        const ampmIntoView = this._scrollItemIntoView(item, this._ampmItems, this.selectedAmPm, false);
+        const ampmIntoView = this._scrollItemIntoView(item, this._ampmItems, this.selectedAmPm, false, null);
         if (ampmIntoView) {
             this._ampmView = ampmIntoView.view;
             this.selectedAmPm = ampmIntoView.selectedItem;
@@ -552,7 +559,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      * @hidden
      */
     public nextHour() {
-        const nextHour = this._nextItem(this._hourItems, this.selectedHour, this._isHourListLoop);
+        const nextHour = this._nextItem(this._hourItems, this.selectedHour, this._isHourListLoop, "hour");
         this._hourView = nextHour.view;
         this.selectedHour = nextHour.selectedItem;
     }
@@ -561,7 +568,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      * @hidden
      */
     public prevHour() {
-        const prevHour = this._prevItem(this._hourItems, this.selectedHour, this._isHourListLoop);
+        const prevHour = this._prevItem(this._hourItems, this.selectedHour, this._isHourListLoop, "hour");
         this._hourView = prevHour.view;
         this.selectedHour = prevHour.selectedItem;
     }
@@ -570,7 +577,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      * @hidden
      */
     public nextMinute() {
-        const nextMinute = this._nextItem(this._minuteItems, this.selectedMinute, this._isMinuteListLoop);
+        const nextMinute = this._nextItem(this._minuteItems, this.selectedMinute, this._isMinuteListLoop, "minute");
         this._minuteView = nextMinute.view;
         this.selectedMinute = nextMinute.selectedItem;
     }
@@ -579,7 +586,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      * @hidden
      */
     public prevMinute() {
-        const prevMinute = this._prevItem(this._minuteItems, this.selectedMinute, this._isMinuteListLoop);
+        const prevMinute = this._prevItem(this._minuteItems, this.selectedMinute, this._isMinuteListLoop, "minute");
         this._minuteView = prevMinute.view;
         this.selectedMinute = prevMinute.selectedItem;
     }
@@ -609,12 +616,12 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     public okButtonClick(): void {
-        if (this._isValueValid()) {
+        if (this._isValueValid(this._getSelectedTime())) {
             this._alert.close();
             this.value = this._getSelectedTime();
-            this.onValueChanged.emit(this.value);
+            this.onValueChanged.emit({newValue: this.value});
         } else {
-            this.onValidationFailed.emit({timePicker: this, currentValue: this._getSelectedTime()});
+            this.onValidationFailed.emit({timePicker: this, currentValue: this._getSelectedTime(), setThroughUI: true});
         }
     }
 
