@@ -69,8 +69,8 @@ describe("Excel Exporter", () => {
 
                 options.exportCurrentlyVisiblePageOnly = false;
                 fix.detectChanges();
-                getExportedData(grid, options).then((wrapper) => {
-                    wrapper.verifyDataFilesContent(actualData.simpleGridDataFull, "All data should have been exported!");
+                getExportedData(grid, options).then((wrapper2) => {
+                    wrapper2.verifyDataFilesContent(actualData.simpleGridDataFull, "All data should have been exported!");
                 });
             });
         });
@@ -94,8 +94,8 @@ describe("Excel Exporter", () => {
                 grid.cdr.detectChanges();
                 fix.whenStable().then(() => {
                     fix.detectChanges();
-                    getExportedData(grid, options).then((wrapper) => {
-                        wrapper.verifyDataFilesContent(actualData.simpleGridDataPage2, "Page 2 should have been exported!");
+                    getExportedData(grid, options).then((wrapper2) => {
+                        wrapper2.verifyDataFilesContent(actualData.simpleGridDataPage2, "Page 2 should have been exported!");
                     });
                 });
             });
@@ -119,8 +119,8 @@ describe("Excel Exporter", () => {
                 fix.whenStable().then(() => {
                     fix.detectChanges();
                     expect(grid.rowList.length).toEqual(5, "Invalid number of rows initialized!");
-                    getExportedData(grid, options).then((wrapper) => {
-                        wrapper.verifyDataFilesContent(actualData.simpleGridDataPage1FiveRows, "5 rows should have been exported!");
+                    getExportedData(grid, options).then((wrapper2) => {
+                        wrapper2.verifyDataFilesContent(actualData.simpleGridDataPage1FiveRows, "5 rows should have been exported!");
                     });
                 });
             });
@@ -146,8 +146,8 @@ describe("Excel Exporter", () => {
 
                 options.exportFilteredRows = true;
                 fix.detectChanges();
-                getExportedData(grid, options).then((wrapper) => {
-                    wrapper.verifyDataFilesContent(actualData.simpleGridDataFull, "All 10 rows should have been exported!");
+                getExportedData(grid, options).then((wrapper2) => {
+                    wrapper2.verifyDataFilesContent(actualData.simpleGridDataFull, "All 10 rows should have been exported!");
                 });
             });
         });
@@ -175,8 +175,8 @@ describe("Excel Exporter", () => {
                 fix.whenStable().then(() => {
                     fix.detectChanges();
                     expect(grid.rowList.length).toEqual(2, "Invalid number of rows after filtering!");
-                    getExportedData(grid, options).then((wrapper) => {
-                        wrapper.verifyDataFilesContent(actualData.simpleGridDataDirectors, "Two rows should have been exported!");
+                    getExportedData(grid, options).then((wrapper2) => {
+                        wrapper2.verifyDataFilesContent(actualData.simpleGridDataDirectors, "Two rows should have been exported!");
                     });
                 });
             });
@@ -199,8 +199,8 @@ describe("Excel Exporter", () => {
 
                 options.exportHiddenColumns = true;
                 fix.detectChanges();
-                getExportedData(grid, options).then((wrapper) => {
-                    wrapper.verifyDataFilesContent(actualData.simpleGridDataFull, "All four columns should have been exported!");
+                getExportedData(grid, options).then((wrapper2) => {
+                    wrapper2.verifyDataFilesContent(actualData.simpleGridDataFull, "All four columns should have been exported!");
                 });
             });
         });
@@ -222,22 +222,22 @@ describe("Excel Exporter", () => {
                 fix.whenStable().then(() => {
                     fix.detectChanges();
                     expect(grid.visibleColumns.length).toEqual(2, "Invalid number of visible columns!");
-                    getExportedData(grid, options).then((wrapper) => {
-                        wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle, "Two columns should have been exported!");
+                    getExportedData(grid, options).then((wrapper2) => {
+                        wrapper2.verifyDataFilesContent(actualData.simpleGridNameJobTitle, "Two columns should have been exported!");
 
                         grid.columns[0].hidden = false;
                         fix.whenStable().then(() => {
                             fix.detectChanges();
                             expect(grid.visibleColumns.length).toEqual(3, "Invalid number of visible columns!");
-                            getExportedData(grid, options).then((wrapper) => {
-                                wrapper.verifyDataFilesContent(actualData.simpleGridDataFull, "All columns should have been exported!");
+                            getExportedData(grid, options).then((wrapper3) => {
+                                wrapper3.verifyDataFilesContent(actualData.simpleGridDataFull, "All columns should have been exported!");
 
                                 grid.columns[0].hidden = undefined;
                                 fix.whenStable().then(() => {
                                     fix.detectChanges();
                                     expect(grid.visibleColumns.length).toEqual(3, "Invalid number of visible columns!");
-                                    getExportedData(grid, options).then((wrapper) => {
-                                        wrapper.verifyDataFilesContent(actualData.simpleGridDataFull,
+                                    getExportedData(grid, options).then((wrapper4) => {
+                                        wrapper4.verifyDataFilesContent(actualData.simpleGridDataFull,
                                             "All columns should have been exported!");
 
                                     });
@@ -292,14 +292,14 @@ describe("Excel Exporter", () => {
 
                 fix.whenStable().then(() => {
                     fix.detectChanges();
-                    getExportedData(grid, options).then((wrapper) => {
-                        wrapper.verifyDataFilesContent(actualData.simpleGridSortByName);
+                    getExportedData(grid, options).then((wrapper2) => {
+                        wrapper2.verifyDataFilesContent(actualData.simpleGridSortByName);
                         grid.clearSort();
 
                         fix.whenStable().then(() => {
                             fix.detectChanges();
-                            getExportedData(grid, options).then((wrapper) => {
-                                wrapper.verifyDataFilesContent(actualData.simpleGridDataFull);
+                            getExportedData(grid, options).then((wrapper3) => {
+                                wrapper3.verifyDataFilesContent(actualData.simpleGridDataFull);
                             });
                         });
                     });
