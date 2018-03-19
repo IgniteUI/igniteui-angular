@@ -167,6 +167,9 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     @ViewChild("theadRow")
     public theadRow: ElementRef;
 
+    @ViewChild("tbody")
+    public tbody: ElementRef;
+
     @ViewChild("tfoot")
     public tfoot: ElementRef;
 
@@ -553,5 +556,46 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
                 this.cellInEditMode.inEditMode = false;
             }
         });
+    }
+
+
+    public resizer = {
+        x: 0,
+        show: false,
+        column: null
+    };
+
+    get calcResizerHeight(): number {
+        // TO DO: check for summary footer and add its height if summaries are enabled
+        return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight;
+    }
+
+    private _startResizePos;
+    startResizing(event) {
+      this._startResizePos = event.clientX;
+    }
+
+    resize(event) {
+        this.resizer.show = false;
+
+        const diff = event.clientX - this._startResizePos;
+
+        const resizedColumn = this.resizer.column;
+
+        if (resizedColumn) {
+            const initColWidth = parseInt(resizedColumn.width, 10);
+            const colMinWidth = parseInt(resizedColumn.minWidth, 10);
+            const colMaxWidth = parseInt(resizedColumn.maxWidth, 10);
+    
+            if (initColWidth + diff < colMinWidth) {
+                resizedColumn.width = resizedColumn.minWidth;
+            } else if (colMaxWidth && (initColWidth + diff > colMaxWidth)) {
+                resizedColumn.width = resizedColumn.maxWidth;
+            } else {
+                resizedColumn.width = (initColWidth + diff).toString();
+            }
+    
+            this.markForCheck();
+        }
     }
 }

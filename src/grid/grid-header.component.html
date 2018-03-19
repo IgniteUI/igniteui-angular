@@ -2,8 +2,13 @@
     {{ column.header || column.field }}
 </ng-template>
 
-<span class="title">
+<span class="title" #header>
     <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column }">
     </ng-container>
 </span>
 <igx-grid-filter [column]="column" *ngIf="column.filterable"></igx-grid-filter>
+<span (dblclick)="onResizeAreaDblClick($event)"
+      (mouseover)="onResizeAreaMouseOver()"
+      (mousedown)="onResizeAreaMouseDown($event)"
+      [style.cursor]="cursor" 
+      style="display: flex;background-color: rgba(163, 163, 163, 0.082);position: absolute;height: 100%;right:0%;width: 5px;"></span>

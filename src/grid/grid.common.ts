@@ -1,5 +1,56 @@
-import { ChangeDetectorRef, Directive, TemplateRef } from "@angular/core";
+import { ChangeDetectorRef, Directive, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, TemplateRef  } from "@angular/core";
 import { IgxGridAPIService } from "./api.service";
+import { Observable } from "rxjs/Observable";
+import "rxjs/Rx";
+
+@Directive({
+    selector: "[igxDrag]"
+})
+export class igxDragDirective implements OnInit {
+
+    @Input("igxDrag")
+    public draggable: boolean = true;
+
+    @Output()
+    public dragEnd = new EventEmitter<any>();
+
+    @Output()
+    public dragStart = new EventEmitter<any>();
+
+    @Output()
+    public drag = new EventEmitter<any>();
+
+    private _mousedrag: Observable<number>;
+
+    constructor(public element: ElementRef) {
+        this._mousedrag = this.dragStart.map(event => {
+            return event.clientX - this.element.nativeElement.getBoundingClientRect().left;
+        }).flatMap( offset => 
+            this.drag.map(event => (event.clientX - offset)).takeUntil(this.dragEnd)
+        );
+    }
+
+    ngOnInit() {
+        this._mousedrag.subscribe({ next: pos => 
+            this.element.nativeElement.style.left = pos + "px"
+        });
+    }
+
+    @HostListener('document:mouseup', ['$event'])
+    onMouseup(event) {
+        this.dragEnd.emit(event);
+    }
+
+    @HostListener('document:mousedown', ['$event'])
+    onMousedown(event) {
+        this.dragStart.emit(event);
+    }
+
+    @HostListener('document:mousemove', ['$event'])
+    onMousemove(event) {
+        this.drag.emit(event);
+    }
+}
 
 @Directive({
     selector: "[igxCell]"

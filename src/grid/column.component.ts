@@ -44,6 +44,9 @@ export class IgxColumnComponent implements AfterContentInit {
     public filterable = false;
 
     @Input()
+    public resizable = false;
+
+    @Input()
     get hidden(): boolean {
         return this._hidden;
     }
@@ -58,6 +61,12 @@ export class IgxColumnComponent implements AfterContentInit {
 
     @Input()
     public width: string;
+
+    @Input()
+    public minWidth: string = "20";
+
+    @Input()
+    public maxWidth: string;
 
     @Input()
     public headerClasses = "";

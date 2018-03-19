@@ -28,7 +28,7 @@
 	</div>
 </div>
 
-<div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' >
+<div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody>
         <ng-template igxFor let-rowData [igxForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
                                 | gridSort:sortingExpressions:id:pipeTrigger
                                 | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index"
@@ -45,3 +45,17 @@
     <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
     </ng-container>
 </div>
+
+<div *ngIf="resizer.show"
+      [igxDrag]="true"
+      (dragStart)="startResizing($event)"
+      (dragEnd)="resize($event)"
+      [style.left.px]="resizer.x"
+      [style.height.px]="calcResizerHeight"
+      style="width: 5px; background-color: #006db6; position: absolute;right:0%;cursor: col-resize;">
+</div>
+
+
+
+
+

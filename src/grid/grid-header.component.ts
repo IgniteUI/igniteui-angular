@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, HostBinding, HostListener, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, EventEmitter, ElementRef, HostBinding, HostListener, Input, OnInit, ViewChild } from "@angular/core";
 import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
 import { autoWire, IGridBus } from "./grid.common";
+import { DataType } from "../data-operations/data-util";
+import { IgxGridCellComponent } from "./cell.component";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -91,5 +93,57 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     protected getSortDirection() {
         const expr = this.gridAPI.get(this.gridID).sortingExpressions.find((x) => x.fieldName === this.column.field);
         this.sortDirection = expr ? expr.dir : SortingDirection.None;
+    }
+
+    public cursor;
+
+    public onResizeAreaMouseOver() {
+        if (this.column.resizable) {
+            this.cursor = "col-resize";
+        }
+    }
+
+    public onResizeAreaMouseDown(event) {
+
+        if (event.button === 0 && this.column.resizable) {
+            this.column.grid.resizer.show = true;
+            this.column.grid.resizer.column = this.column;
+
+            this.column.grid.resizer.x = event.clientX;
+        }
+    }
+
+
+
+    get cellValues(): IgxGridCellComponent[] {
+        return this.column.grid.rowList.map((row) => row.cells.filter((cell) => cell.columnIndex === this.column.index))
+        .reduce((a, b) => a.concat(b), []).map((cell) => cell.value);
+    }
+
+    @autoWire(true)
+    public onResizeAreaDblClick(event) {
+        var t  = this.column.bodyTemplate;
+
+        const dataType = this.column.dataType;
+        const index = this.column.index;
+
+        
+        var cells = this.column.grid.rowList.map((row) => row.cells.filter((cell) => cell.columnIndex === this.column.index))
+        .reduce((a, b) => a.concat(b), []).map((cell) => cell.value);
+
+        //var max = Math.max(...test);
+
+        // switch (dataType) {
+        //     case DataType.Boolean:
+        //     break;
+        //     case DataType.Date:
+        //     break;
+        //     case DataType.Number:
+        //     break;
+        //     case DataType.String:
+        //     break;
+        //     default:
+        //     break;
+        // }
     }
 }
