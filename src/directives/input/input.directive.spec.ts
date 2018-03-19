@@ -4,8 +4,7 @@ import {
   TestBed
 } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxLabelModule } from "../label/label.directive";
-import { IgxInputModule } from "./input.directive";
+import { IgxInputGroupModule } from "../../input-group/input-group.component";
 
 describe("IgxInput", () => {
     beforeEach(async(() => {
@@ -15,8 +14,7 @@ describe("IgxInput", () => {
                 InputWithAttribsComponent
             ],
             imports: [
-                IgxInputModule,
-                IgxLabelModule
+                IgxInputGroupModule
             ]
         })
         .compileComponents();

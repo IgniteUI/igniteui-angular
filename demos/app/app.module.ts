@@ -3,6 +3,8 @@ import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { AppComponent } from "./app.component";
+import { routing } from "./app.routing";
 import { AvatarSampleModule } from "./avatar/sample.module";
 import { BadgeSampleModule } from "./badge/sample.module";
 import { ButtonSampleModule } from "./button/sample.module";
@@ -12,11 +14,13 @@ import { IgxCardSampleModule } from "./card/sample.module";
 import { CarouselSampleModule } from "./carousel/sample.module";
 import { IgxDatePickerSampleModule } from "./date-picker/sample.module";
 import { DialogSampleModule } from "./dialog/sample.module";
-import { GridSampleModule } from "./grid/sample.module";
 import { GridPerformanceSampleModule } from "./grid-performance/sample.module";
+import { GridSampleModule } from "./grid/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
+import { InputGroupSampleModule } from "./input-group/sample.module";
 import { InputSampleModule } from "./input/sample.module";
 import { LayoutSampleModule } from "./layout/sample.module";
+import { ListPerformanceSampleModule } from "./list-performance/sample.module";
 import { ListSampleModule } from "./list/sample.module";
 import { NavbarSampleModule } from "./navbar/sample.module";
 import { NavdrawerSampleModule } from "./navdrawer/sample.module";
@@ -29,14 +33,10 @@ import { IgxShadowsSampleModule } from "./styleguide/shadows/sample.module";
 import { IgxTypographySampleModule } from "./styleguide/typography/sample.module";
 import { TabBarSampleModule } from "./tabbar/sample.module";
 import { IgxToastSampleModule } from "./toast/sample.module";
-import { ListPerformanceSampleModule } from "./list-performance/sample.module";
 import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
 
-import { AppComponent } from "./app.component";
-import { routing } from "./app.routing";
-import { IgxNavigationDrawerModule, IgxRippleModule, IgxNavigationService } from "../lib/main";
-
-import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSwitchModule, IgxAvatarModule } from "../lib/main";
+import { IgxAvatarModule, IgxCheckboxModule, IgxIconModule, IgxInputGroupModule,
+     IgxNavigationDrawerModule, IgxNavigationService, IgxRadioModule, IgxRippleModule, IgxSwitchModule } from "../lib/main";
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -51,7 +51,7 @@ import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSw
         IgxRadioModule,
         IgxIconModule,
         IgxCheckboxModule,
-        IgxLabelModule,
+        IgxInputGroupModule,
         IgxSwitchModule,
         IgxAvatarModule,
         InputSampleModule,
@@ -67,6 +67,7 @@ import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSw
         IgxSnackbarSampleModule,
         IgxToastSampleModule,
         DialogSampleModule,
+        InputGroupSampleModule,
         IconSampleModule,
         GridSampleModule,
         GridPerformanceSampleModule,

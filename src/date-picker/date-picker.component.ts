@@ -23,7 +23,7 @@ import {
     WEEKDAYS
 } from "../calendar";
 import { IgxDialogComponent, IgxDialogModule } from "../dialog/dialog.component";
-import { IgxInputModule } from "../directives/input/input.directive";
+import { IgxInputGroupModule } from "../input-group/input-group.component";
 
 @Component({
     providers:
@@ -235,6 +235,6 @@ class Constants {
     declarations: [IgxDatePickerComponent],
     entryComponents: [IgxCalendarComponent],
     exports: [IgxDatePickerComponent],
-    imports: [CommonModule, IgxInputModule, IgxDialogModule, IgxCalendarModule]
+    imports: [CommonModule, IgxInputGroupModule, IgxDialogModule, IgxCalendarModule]
 })
 export class IgxDatePickerModule { }

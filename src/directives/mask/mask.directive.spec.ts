@@ -7,7 +7,7 @@ import {
 } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { IgxInputModule } from "../input/input.directive";
+import { IgxInputGroupModule } from "../../input-group/input-group.component";
 import { IgxMaskModule } from "./mask.directive";
 
 describe("AppComponent", () => {
@@ -27,7 +27,7 @@ describe("AppComponent", () => {
             ],
             imports: [
                 FormsModule,
-                IgxInputModule,
+                IgxInputGroupModule,
                 IgxMaskModule
             ]
         })

@@ -138,6 +138,11 @@ export class AppComponent {
             name: "Buttons"
         },
         {
+            link: "/input-group",
+            icon: "web",
+            name: "Input Group"
+        },
+        {
             link: "/layout",
             icon: "view_quilt",
             name: "Layout"

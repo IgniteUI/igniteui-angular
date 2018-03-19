@@ -3,50 +3,84 @@ import {
     Directive,
     DoCheck,
     ElementRef,
+    forwardRef,
     HostBinding,
     HostListener,
-    NgModule
+    Inject,
+    NgModule,
+    Renderer2
 } from "@angular/core";
+import { FormGroup } from "@angular/forms";
+import { IgxInputGroupComponent } from "../../main";
 
 @Directive({
     selector: "[igxInput]"
 })
-export class IgxInputDirective implements DoCheck {
+export class IgxInputDirective {
+    constructor(@Inject(forwardRef(() => IgxInputGroupComponent))
+        public inputGroup: IgxInputGroupComponent,
+                protected element: ElementRef,
+                private _renderer: Renderer2) {
+        if (this.element.nativeElement.placeholder) {
+            inputGroup.hasPlaceholder = true;
+        }
 
-    @HostBinding("class.igx-form-group__input")
-    public isInput = true;
+        if (this.element.nativeElement.required) {
+            inputGroup.isRequired = true;
+        }
 
-    @HostBinding("class.igx-form-group__input--focused")
-    public focused = false;
+        if (this.element.nativeElement.disabled) {
+            inputGroup.isDisabled = true;
+        }
 
-    @HostBinding("class.igx-form-group__input--filled")
-    public filled = false;
-    @HostBinding("class.igx-form-group__input--placeholder")
-    public placeholder = false;
+        if (this.element.nativeElement.value &&
+            this.element.nativeElement.value.length > 0) {
+            inputGroup.isFilled = true;
+        }
 
-    constructor(protected el: ElementRef) {}
+        const elTag = this.element.nativeElement.tagName.toLowerCase();
+        if (elTag === "textarea") {
+            this.isTextArea = true;
+        } else {
+            this.isInput = true;
+        }
+    }
+
+    @HostBinding("class.igx-input-group__input")
+    public isInput = false;
+
+    @HostBinding("class.igx-input-group__textarea")
+    public isTextArea = false;
 
     @HostListener("focus", ["$event"])
     public onFocus(event) {
-        this.focused = true;
+        this.inputGroup.isFocused = true;
     }
 
     @HostListener("blur", ["$event"])
     public onBlur(event) {
-        this.focused = false;
+        this.inputGroup.isFocused = false;
     }
 
-    public ngDoCheck() {
-        const value = this.el.nativeElement.value;
+    @HostListener("input", ["$event"])
+    public onInput(event) {
+        const value: string = this.element.nativeElement.value;
+        this.inputGroup.isFilled = value && value.length > 0;
+    }
 
-        this.filled = value && (value !== "");
-        this.placeholder = this.el.nativeElement.getAttribute("placeholder") && !this.filled;
+    get isDisabled() {
+        return this.element.nativeElement.disabled;
+    }
+
+    get isRequired() {
+        return  this.element.nativeElement.required;
+    }
+
+    get hasPlaceholder() {
+        return this.element.nativeElement.placeholder;
+    }
+
+    public focus() {
+        this.element.nativeElement.focus();
     }
 }
-
-@NgModule({
-    declarations: [IgxInputDirective],
-    exports: [IgxInputDirective],
-    imports: [CommonModule]
-})
-export class IgxInputModule {}
