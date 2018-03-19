@@ -3,7 +3,7 @@ import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { DataType } from "../data-operations/data-util";
 import { IgxButtonModule } from "../directives/button/button.directive";
-import { IgxRippleModule } from "../directives/ripple/ripple.directive"
+import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
@@ -333,14 +333,14 @@ export class IgxGridPageChangeComponent {
     @ViewChild("grid1", { read: IgxGridComponent })
     public grid1: IgxGridComponent;
 
-    public GoToPage(val)
-	{
-		switch (val) {
-			case -2:
+    public GoToPage(val) {
+        switch (val) {
+            case -2:
 				this.grid1.previousPage();
-				break;
+                break;
 			case -1:
-				this.grid1.nextPage();
+                this.grid1.nextPage();
+                break;
 			default:
 				this.grid1.paginate(val);
 				break;
