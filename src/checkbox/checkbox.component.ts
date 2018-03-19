@@ -2,12 +2,19 @@ import {
     Component,
     EventEmitter,
     forwardRef,
+    HostBinding,
     Input,
     NgModule,
     Output,
     ViewChild
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { IgxRippleModule } from "../directives/ripple/ripple.directive";
+
+export enum LabelPosition {
+    BEFORE = "before",
+    AFTER = "after"
+}
 
 const noop = () => { };
 let nextId = 0;
@@ -15,21 +22,33 @@ let nextId = 0;
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxCheckboxComponent, multi: true }],
     selector: "igx-checkbox",
+    preserveWhitespaces: false,
     templateUrl: "checkbox.component.html"
 })
 export class IgxCheckboxComponent implements ControlValueAccessor {
     public focused = false;
-
-    @Input() public value: any;
-    @Input() public id = `igx-checkbox-${nextId++}`;
-    @Input() public name: string;
-    @Input() public disabled = false;
-    @Input() public tabindex: number = null;
-    @Input() public checked = false;
+    protected _value: any;
 
     @ViewChild("checkbox") public nativeCheckbox;
 
-    protected _value: any;
+    @Input() public id = `igx-checkbox-${nextId++}`;
+    @Input() public value: any;
+    @Input() public name: string;
+    @Input() public tabindex: number = null;
+    @Input() public labelPosition: LabelPosition | string = LabelPosition.AFTER;
+    @Input() public disableRipple = false;
+
+    @HostBinding("class.igx-checkbox")
+    public cssClass = "igx-checkbox";
+
+    @HostBinding("class.igx-checkbox--indeterminate")
+    @Input() public indeterminate = false;
+
+    @HostBinding("class.igx-checkbox--checked")
+    @Input() public checked = false;
+
+    @HostBinding("class.igx-checkbox--disabled")
+    @Input() public disabled = false;
 
     private _onTouchedCallback: () => void = noop;
     private _onChangeCallback: (_: any) => void = noop;
@@ -39,6 +58,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
             return;
         }
 
+        this.indeterminate = false;
         this.checked = !this.checked;
         this._onChangeCallback(this.checked);
     }
@@ -60,12 +80,23 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
         this.checked = !!this._value;
     }
 
+    public get labelClass(): string {
+        switch (this.labelPosition) {
+            case LabelPosition.BEFORE:
+                return `${this.cssClass}__label--before`;
+            case LabelPosition.AFTER:
+            default:
+                return `${this.cssClass}__label`;
+        }
+    }
+
     public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 }
 
 @NgModule({
     declarations: [IgxCheckboxComponent],
-    exports: [IgxCheckboxComponent]
+    exports: [IgxCheckboxComponent],
+    imports: [IgxRippleModule]
 })
 export class IgxCheckboxModule { }
