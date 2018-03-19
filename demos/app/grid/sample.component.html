@@ -48,8 +48,34 @@
                     </igx-card-actions>
                 </igx-card>
             </div>
+            
+            <div class="toggles-container">
+                <div class="toggle-group" *ngFor="let col of grid1.columns">
+                    <h4>{{ col.field }}</h4>
+                    <div class="switch-group">
+                        <span igxLabel>Filtering</span>
+                        <igx-switch [(ngModel)]="col.filtering"></igx-switch>
+                    </div>
+                    <div class="switch-group">
+                        <span igxLabel>Sorting</span>
+                        <igx-switch [(ngModel)]="col.sortable"></igx-switch>
+                    </div>
+                    <div class="switch-group">
+                        <span igxLabel>Editable</span>
+                        <igx-switch [(ngModel)]="col.editable"></igx-switch>
+                    </div>
+                    <div class="switch-group">
+                        <span igxLabel>Hidden</span>
+                        <igx-switch [(ngModel)]="col.hidden"></igx-switch>
+                    </div>
+                    <div class="switch-group">
+                        <span igxLabel>Movable</span>
+                        <igx-switch [(ngModel)]="col.movable"></igx-switch>
+                    </div>
+                </div>
+            </div>
 
-            <igx-grid #grid1 [data]="localData" [autoGenerate]="true" (onColumnInit)="initColumns($event)" (onCellSelection)="selectCell($event)">
+            <igx-grid #grid1 [data]="localData" [height]="'305px'" [autoGenerate]="true" (onColumnInit)="initColumns($event)" (onCellSelection)="selectCell($event)">
             </igx-grid>
 
         </article>

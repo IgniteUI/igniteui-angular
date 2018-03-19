@@ -171,14 +171,14 @@ export class GridSampleComponent {
         });
     }
 
-    /*public initColumns(event: IgxGridColumnInitEvent) {
-        const column: IgxColumnComponent = event.column;
+    public initColumns(event: IgxColumnComponent) {
+        const column: IgxColumnComponent = event;
         if (column.field === "Name") {
             column.filterable = true;
             column.sortable = true;
             column.editable = true;
         }
-    }*/
+    }
 
     public onPagination(event) {
         if (!this.grid2.paging) {
