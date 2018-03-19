@@ -5,22 +5,22 @@
           <form class="input-sample" action="/" method="POST">
             <h4>Personal Data</h4>
             <br />
-            <div class="igx-form-group">
+            <igx-input-group>
               <input igxInput name="name" type="text" [(ngModel)]="person.name" required  />
               <label igxLabel for="name">Name*</label>
-            </div>
-            <div class="igx-form-group">
+            </igx-input-group>
+            <igx-input-group>
                 <input igxInput #dateInput name="birthday" type="text" [igxMask]="'00/00/0000'" [(ngModel)]="person.birthday" (blur)="validateDate(dateInput, snackbar)"/>
                 <label igxLabel for="email">Birthday</label>
-            </div>
-            <div class="igx-form-group">
+            </igx-input-group>
+            <igx-input-group>
               <input igxInput #ssn name="socialSecurityNumber" type="text" [igxMask]="'###-##-####'" [(ngModel)]="person.socialSecurityNumber" (blur)="validateSSN(ssn, snackbar)"/>
               <label igxLabel for="socialSecurityNumber">Social Security Number</label>
-            </div>
-            <div class="igx-form-group">
+            </igx-input-group>
+            <igx-input-group>
                 <input igxInput #phone name="phone" type="text" [igxMask]="'(####) 00-00-00 Ext. 9999'" [(ngModel)]="person.phone" />
                 <label igxLabel for="phone">Phone</label>
-            </div>
+            </igx-input-group>
             <igx-snackbar #snackbar></igx-snackbar>
           </form>
         </article>
