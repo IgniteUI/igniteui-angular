@@ -19,6 +19,8 @@
 @import '../components/date-picker/date-picker-theme';
 @import '../components/dialog/dialog-theme';
 @import '../components/grid/grid-theme';
+@import '../components/grid-filtering/grid-filtering-theme';
+@import '../components/grid-summary/grid-summary-theme';
 @import '../components/toast/toast-theme';
 @import '../components/tabbar/tabbar-theme';
 @import '../components/switch/switch-theme';
@@ -32,7 +34,6 @@
 @import '../components/list/list-theme';
 @import '../components/input/input-theme';
 @import '../components/icon/icon-theme';
-@import '../components/grid-filtering/grid-filtering-theme';
 
 /// Generates an Ignite UI for Angular global theme.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
@@ -53,6 +54,7 @@
 /// @requires {mixin} igx-dialog
 /// @requires {mixin} igx-grid
 /// @requires {mixin} igx-grid-filtering
+/// @requires {mixin} igx-grid-summary
 /// @requires {mixin} igx-icon
 /// @requires {mixin} igx-input
 /// @requires {mixin} igx-list
@@ -117,6 +119,9 @@
     }
     @if not(index($exclude, 'igx-filtering')) {
         @include igx-grid-filtering($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-summary')) {
+        @include igx-grid-summary($theme: (), $palette: $palette);
     }
     @if not(index($exclude, 'igx-icon')) {
         @include igx-icon($theme: (), $palette: $palette);

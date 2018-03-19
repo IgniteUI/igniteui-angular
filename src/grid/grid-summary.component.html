@@ -1,9 +1,8 @@
-<div *ngIf="column.hasSummary">
-    <table>
+<div class="igx-grid-summary" *ngIf="column.hasSummary">
     <ng-container *ngFor="let summary of resolveSummaries">
-        <tr>
-            <td>{{ summary.label }}: </td><td>{{ summary.summaryResult }}</td>
-        </tr>
+        <div class="igx-grid-summary-item">
+            <span class="igx-grid-summary-item__label" title="{{ summary.label }}">{{ summary.label }}: </span>
+            <span class="igx-grid-summary-item__result" title="{{ summary.summaryResult }}">{{ summary.summaryResult }}</span>
+        </div>
     </ng-container>
-    </table>
 </div>
