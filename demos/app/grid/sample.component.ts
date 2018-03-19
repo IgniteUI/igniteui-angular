@@ -6,13 +6,17 @@ import { IgxGridComponent } from "../../lib/grid/grid.component";
 import {
     DataContainer,
     IDataState,
+    IgxExcelExporterService,
     IgxSnackbarComponent,
     IgxToastComponent,
     IPagingState,
     PagingError,
     SortingDirection,
-    StableSortingStrategy
+    StableSortingStrategy,
+    NUMBER_FILTERS,
+    STRING_FILTERS
 } from "../../lib/main";
+import { IgxExcelExporterOptions } from "../../lib/services/excel/excel-exporter-options";
 
 @Injectable()
 export class LocalService {
@@ -236,5 +240,37 @@ export class GridSampleComponent {
     public restore() {
         this.grid1.addRow(this.selectedRow.record);
         this.snax.hide();
+    }
+
+    public exportRaw() {
+        let exporter = new IgxExcelExporterService();
+        exporter.Export(this.grid3, new IgxExcelExporterOptions("Report"));
+    }
+
+    public export() {
+        this.grid3.clearFilter();
+        let exporter = new IgxExcelExporterService();
+
+        let options = new IgxExcelExporterOptions("Report");
+        options.exportCurrentlyVisiblePageOnly = true;
+        options.exportHiddenColumns = false;
+
+        exporter.Export(this.grid3, options);
+    }
+
+    public exportFilteredGrid() {
+        this.grid3.filter("ProductName", "Queso", STRING_FILTERS.contains, true);
+        this.grid3.cdr.detectChanges();
+
+        let exporter = new IgxExcelExporterService();
+        let options = new IgxExcelExporterOptions("Queso Report");
+        options.exportFilteredRows = false;
+        options.exportHiddenColumns = false;
+
+        exporter.Export(this.grid3, options);
+    }
+    public exportData() {
+        let exporter = new IgxExcelExporterService();
+        exporter.ExportData(this.grid3.data, new IgxExcelExporterOptions("Data"));
     }
 }

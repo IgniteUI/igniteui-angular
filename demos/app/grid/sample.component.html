@@ -120,12 +120,18 @@
 
         <article class="grid-sample">
             <h4 class="sample-title">Grid with templated cell remote data</h4>
+            <div class="button-sample">
+                <button igxButton="flat" (click)="exportData()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Data</button>
+                <button igxButton="flat" (click)="exportRaw()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Raw Grid Data</button>
+                <button igxButton="flat" (click)="export()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Grid</button>
+                <button igxButton="flat" (click)="exportFilteredGrid()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Cheese Products Report</button>
+            </div>
             <igx-grid #grid3 [data]="remote | async" [paging]="true" [perPage]="10" (onPagingDone)="process($event)" (onSortingDone)="process($event)"
                 (onBeforeProcess)="onProcess($event)">
-                <igx-column [sortable]="true" [field]="'ProductID'" [header]="'ID'"></igx-column>
-                <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
-                <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'In Stock'"></igx-column>
-                <igx-column [field]="'Discontinued'" [sortable]="true">
+                <igx-column [sortable]="true" [field]="'ProductID'" ></igx-column>
+                <igx-column [editable]="true" [field]="'ProductName'" ></igx-column>
+                <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
+                <igx-column [field]="'Discontinued'" [sortable]="true" [hidden]="true">
                     <ng-template igxHeader let-column="column">
                         <p style="color: crimson"></p>
                     </ng-template>
