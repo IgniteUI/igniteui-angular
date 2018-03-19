@@ -34,6 +34,7 @@ import { IgxTypographySampleModule } from "./styleguide/typography/sample.module
 import { TabBarSampleModule } from "./tabbar/sample.module";
 import { IgxToastSampleModule } from "./toast/sample.module";
 import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
+import { MaskSampleModule } from "./directives/mask/sample.module";
 
 import { IgxAvatarModule, IgxCheckboxModule, IgxIconModule, IgxInputGroupModule,
      IgxNavigationDrawerModule, IgxNavigationService, IgxRadioModule, IgxRippleModule, IgxSwitchModule } from "../lib/main";
@@ -83,7 +84,8 @@ import { IgxAvatarModule, IgxCheckboxModule, IgxIconModule, IgxInputGroupModule,
         IgxRippleModule,
         LayoutSampleModule,
         ListPerformanceSampleModule,
-        VirtualForSampleModule
+        VirtualForSampleModule,
+        MaskSampleModule
     ],
     providers: [IgxNavigationService]
 })
