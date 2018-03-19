@@ -51,7 +51,7 @@ export * from "./directives/toggle/toggle.directive";
 export * from "./directives/for-of/IForOfState";
 export * from "./directives/mask/mask.directive";
 
-// Export excel service 
+// Export excel service
 export * from "./services/excel/excel-exporter";
-export * from "./services/excel/excel-event-args"
-export * from "./services/excel/excel-exporter-options"
+export * from "./services/excel/excel-event-args";
+export * from "./services/excel/excel-exporter-options";

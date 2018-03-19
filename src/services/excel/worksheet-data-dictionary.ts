@@ -1,6 +1,6 @@
 export class WorksheetDataDictionary {
-	private static DEFAULT_FONT = "11pt Calibri";
-	private static TEXT_PADDING = 5;
+    private static DEFAULT_FONT = "11pt Calibri";
+    private static TEXT_PADDING = 5;
 
     private _dictionary: any;
     private _sortedKeys: string[];

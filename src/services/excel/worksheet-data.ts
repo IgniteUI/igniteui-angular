@@ -46,56 +46,41 @@ export class WorksheetData {
         }
 
         const dataEntry = this._data[0];
+        const exportStringData = typeof dataEntry === "string";
 
-        if (typeof dataEntry === "string") {
-            this.prepareStringData();
-            return;
-        }
+        const keys = exportStringData ? ["Column 1"] : Object.keys(dataEntry);
 
-        const keys = Object.keys(dataEntry);
         if (keys.length === 0) {
             return;
         }
 
-        this._columnCount = keys.length;
+        this._columnCount = exportStringData ? 1 : keys.length;
         this._rowCount = this._data.length + 1;
 
         this._values = new Array<number>(this._columnCount * this._rowCount);
 
         this._dataDictionary = new WorksheetDataDictionary(this._columnCount, this.options.columnWidth);
 
-        for (let i = 0; i < keys.length; i++) {
+        for (let i = 0; i < this._columnCount; i++) {
             this._values[i] = this._dataDictionary.saveValue(keys[i], i);
         }
 
-        for (let i = 0; i < this._data.length; i++) {
+        for (let i = 0; i < this._data.length ; i++) {
             const element = this._data[i];
 
-            for (let j = 0; j < keys.length; j++) {
+            for (let j = 0; j < this._columnCount; j++) {
                 const key = keys[j];
+
                 let value = "";
-                if (element[key] !== undefined && element[key] !== null) {
+                if (exportStringData) {
+                    value = element;
+                } else if (element[key] !== undefined && element[key] !== null) {
                     value = String(element[key]);
                 }
+
                 const index = ((i + 1) * this._columnCount) + j;
                 this._values[index] = this._dataDictionary.saveValue(value, j);
             }
-        }
-    }
-
-    // TODO Try to find a way to not have two paths.
-    private prepareStringData(): void {
-        this._columnCount = 1;
-        this._rowCount = this._data.length + 1;
-
-        this._values = new Array<number>(this._rowCount);
-        this._dataDictionary = new WorksheetDataDictionary(this._columnCount, this.options.columnWidth);
-
-        // Add default header
-        this._values[0] = this._dataDictionary.saveValue("Column1", 0);
-
-        for (let i = 0; i < this._data.length; i++) {
-            this._values[i + 1] = this._dataDictionary.saveValue(this._data[i], 0);
         }
     }
 }
