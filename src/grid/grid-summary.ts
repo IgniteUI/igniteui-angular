@@ -59,13 +59,13 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
     public operate(data?: any[]): IgxSummaryResult[] {
         const result = super.operate(data);
         result.push({
-            key: "latest",
-            label: "Latest",
-            summaryResult: this.latest(data)});
-        result.push({
             key: "earliest",
             label: "Earliest",
             summaryResult: this.earliest(data)});
+        result.push({
+            key: "latest",
+            label: "Latest",
+            summaryResult: this.latest(data)});
         return result;
     }
     public latest(data?: any[]) {
