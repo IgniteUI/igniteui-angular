@@ -73,7 +73,11 @@ export let FilteringCondition = {
     },
     date: {
         equals(target: Date, searchVal: Date): boolean {
-            return +target === +searchVal;
+            const targetp = getDateParts(target, "yMd");
+            const searchp = getDateParts(searchVal, "yMd");
+            return targetp.year === searchp.year &&
+                targetp.month === searchp.month &&
+                targetp.day === searchp.day;
         },
         doesNotEqual(target: Date, searchVal: Date): boolean {
             return !FilteringCondition.date.equals(target, searchVal);

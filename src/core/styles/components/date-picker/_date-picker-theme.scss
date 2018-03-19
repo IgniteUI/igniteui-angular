@@ -21,29 +21,11 @@
     $this: extend($default-theme, $theme);
 
     %date-picker-display {
-        max-width: 340px;
-        min-width: 320px;
-        padding: 0;
+        width: 340px;
     }
 
-    %date-picker-content {
-        width: 100%;
-        padding: 0;
-        color: inherit;
-        font-size: initial;
-        line-height: initial;
-    }
-
-    %date-picker-dialog-title {
-        display: none;
-    }
-
-    %date-picker-dialog-actions {
-        margin: 0;
-    }
-
-    %date-picker-calendar-body {
-        padding-bottom: 0 !important;
+    %date-picker-display--vertical {
+        width: 540px;
     }
 }
 

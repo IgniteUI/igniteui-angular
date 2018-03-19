@@ -52,7 +52,6 @@ export class WorksheetFile implements IExcelFile {
             cols += "<cols>";
             for (let i = 0; i < data.columnCount; i++) {
                 const width = dictionary.columnWidths[i];
-                // TODO: Better calculation
                 const widthInTwips = Math.max(((width / 96) * 14.4), WorksheetFile.MIN_WIDTH);
 
                 cols += "<col min=\"" + (i + 1) + "\" max=\"" + (i + 1) + "\" width=\"" + widthInTwips + "\" customWidth=\"1\"/>";

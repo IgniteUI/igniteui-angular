@@ -8,7 +8,7 @@ export class IgxLayoutDirective {
     @Input("igxLayoutReverse") public reverse = false;
     @Input("igxLayoutWrap") public wrap = "nowrap";
     @Input("igxLayoutJustify") public justify = "flex-start";
-    @Input("igxLayoutItemAlign") public itemAlign = "flex-start";
+    @Input("igxLayoutItemAlign") public itemAlign = "stretch";
 
     @HostBinding("style.display") public display = "flex";
     @HostBinding("style.flex-wrap") get flexwrap() { return this.wrap; }
@@ -32,13 +32,14 @@ export class IgxFlexDirective {
     @Input("igxFlexShrink") public shrink = 1;
     @Input("igxFlex") public flex = "";
     @Input("igxFlexOrder") public order = 0;
+    @Input("igxFlexBasis") public basis = "auto";
 
     @HostBinding("style.flex")
     get style() {
         if (this.flex) {
             return `${this.flex}`;
         }
-        return `${this.grow} ${this.shrink} auto`;
+        return `${this.grow} ${this.shrink} ${this.basis}`;
     }
 
     @HostBinding("style.order")
