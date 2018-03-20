@@ -7,8 +7,8 @@ export class IgxExcelExporterOptions {
     public exportCurrentlyVisiblePageOnly: boolean;
 
     constructor(public fileName: string) {
-        if (fileName.endsWith(".xlsx") === false) {
-            fileName += ".xlsx";
+        if (this.fileName.endsWith(".xlsx") === false) {
+            this.fileName += ".xlsx";
         }
     }
 

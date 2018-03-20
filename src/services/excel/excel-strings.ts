@@ -1,4 +1,3 @@
-// TODO: refactor the strings all have get method instead of constants and improve them viusally.
 export class ExcelStrings {
     /* tslint:disable max-line-length */
     private static XML_STRING = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
