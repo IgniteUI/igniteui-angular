@@ -354,8 +354,6 @@ describe("IgxTimePicker", () => {
             getAMPMColumn.triggerEventHandler("mouseover", {});
         }).then(() => {
             fixture.detectChanges();
-            tick();
-            // expect(getAMPMColumn.nativeElement.children[3].classList).toContain("igx-time-picker__item--active");
             expect(document.activeElement.classList).toContain("igx-time-picker__ampmList");
             getHourColumn.triggerEventHandler("blur", {});
             fixture.detectChanges();
@@ -381,11 +379,11 @@ describe("IgxTimePicker", () => {
         getHourColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: -100});
         fixture.detectChanges();
         // move the mouse wheel up and expect the selected element to be 2
-        expect(getHourColumn.children[3].nativeElement.innerText).toBe("2");
+        expect(getHourColumn.nativeElement.children[3].innerText).toBe("2");
         getHourColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 100});
         fixture.detectChanges();
         // move the mouse wheel down and expect the selected element to be 3 again
-        expect(getHourColumn.children[3].nativeElement.innerText).toBe("3");
+        expect(getHourColumn.nativeElement.children[3].innerText).toBe("3");
 
         // focus minutes
         getMinuteColumn.nativeElement.focus();
@@ -393,23 +391,24 @@ describe("IgxTimePicker", () => {
         getMinuteColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: -100});
         fixture.detectChanges();
         // move the mouse wheel up and expect the selected element to be 23
-        expect(getMinuteColumn.children[3].nativeElement.innerText).toBe("23");
+        expect(getMinuteColumn.nativeElement.children[3].innerText).toBe("23");
         getMinuteColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 100});
         fixture.detectChanges();
         // move the mouse wheel down and expect the selected element to be 24 again
-        expect(getMinuteColumn.children[3].nativeElement.innerText).toBe("24");
+        expect(getMinuteColumn.nativeElement.children[3].innerText).toBe("24");
 
         // focus ampm
         getAMPMColumn.nativeElement.focus();
         tick();
+        fixture.detectChanges();
         getAMPMColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 100});
         fixture.detectChanges();
         // move the mouse wheel down and expect the selected element to be PM
-        expect(getAMPMColumn.children[3].nativeElement.innerText).toBe("PM");
+        expect(getAMPMColumn.nativeElement.children[3].innerText).toBe("PM");
         getAMPMColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: -100});
         fixture.detectChanges();
         // move the mouse wheel up and expect the selected element to be AM again
-        expect(getAMPMColumn.children[3].nativeElement.innerText).toBe("AM");
+        expect(getAMPMColumn.nativeElement.children[3].innerText).toBe("AM");
     }));
 
     it("Timepicker Pan Move", fakeAsync(() => {
@@ -432,11 +431,11 @@ describe("IgxTimePicker", () => {
         getHourColumn.triggerEventHandler("panmove", {deltaX: 0, deltaY: -100});
         fixture.detectChanges();
         // swipe up and expect the selected element to be 4
-        expect(getHourColumn.children[3].nativeElement.innerText).toBe("4");
+        expect(getHourColumn.nativeElement.children[3].innerText).toBe("4");
         getHourColumn.triggerEventHandler("panmove", {deltaX: 0, deltaY: 100});
         fixture.detectChanges();
         // swipe down and expect the selected element to be 3 again
-        expect(getHourColumn.children[3].nativeElement.innerText).toBe("3");
+        expect(getHourColumn.nativeElement.children[3].innerText).toBe("3");
 
         // focus minutes
         getMinuteColumn.nativeElement.focus();
@@ -444,11 +443,11 @@ describe("IgxTimePicker", () => {
         getMinuteColumn.triggerEventHandler("panmove", {deltaX: 0, deltaY: -100});
         fixture.detectChanges();
         // swipe up and expect the selected element to be 25
-        expect(getMinuteColumn.children[3].nativeElement.innerText).toBe("25");
+        expect(getMinuteColumn.nativeElement.children[3].innerText).toBe("25");
         getMinuteColumn.triggerEventHandler("panmove", {deltaX: 0, deltaY: 100});
         fixture.detectChanges();
         // swipe down and expect the selected element to be 24 again
-        expect(getMinuteColumn.children[3].nativeElement.innerText).toBe("24");
+        expect(getMinuteColumn.nativeElement.children[3].innerText).toBe("24");
 
         // focus ampm
         getAMPMColumn.nativeElement.focus();
@@ -456,11 +455,11 @@ describe("IgxTimePicker", () => {
         getAMPMColumn.triggerEventHandler("panmove", {deltaX: 0, deltaY: -100});
         fixture.detectChanges();
         // swipe up and expect the selected element to be PM
-        expect(getAMPMColumn.children[3].nativeElement.innerText).toBe("PM");
+        expect(getAMPMColumn.nativeElement.children[3].innerText).toBe("PM");
         getAMPMColumn.triggerEventHandler("panmove", {deltaX: 0, deltaY: 100});
         fixture.detectChanges();
         // move the swipe up and expect the selected element to be AM again
-        expect(getAMPMColumn.children[3].nativeElement.innerText).toBe("AM");
+        expect(getAMPMColumn.nativeElement.children[3].innerText).toBe("AM");
     }));
 
     it("TimePicker 24 hour format", () => {
