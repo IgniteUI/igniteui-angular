@@ -32,7 +32,7 @@
         "clean": "rimraf coverage tmp dist",
         "codecov": "cat coverage/lcov.info | coveralls",
         "explorer": "source-map-explorer dist/index.umd.js",
-        "lint": "npm run tslint 'src/**/*.ts' && npm run stylelint 'src/core/styles'",
+        "lint": "npm run tslint --project 'src/**/*.ts' && npm run stylelint 'src/core/styles'",
         "ngcompile": "ngc -p tsconfig-aot.json",
         "prebuild": "rimraf dist tmp",
         "prebuild:watch": "rimraf dist tmp",
