@@ -55,9 +55,9 @@
 
     @include m(vertical) {
         .igx-dialog__window {
-        @extend %time-picker-display--vertical !optional;
+            @extend %time-picker-display--vertical !optional;
         }
-    
+
         .igx-time-picker__wrapper {
             @extend %igx-time-picker__wrapper !optional;
         }
