@@ -32,6 +32,7 @@ import { IgxToastSampleModule } from "./toast/sample.module";
 import { ListPerformanceSampleModule } from "./list-performance/sample.module";
 import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
 import { IgxTimePickerSampleModule } from "./time-picker/sample.module";
+import { MaskSampleModule } from "./directives/mask/sample.module";
 
 import { AppComponent } from "./app.component";
 import { routing } from "./app.routing";
@@ -84,7 +85,8 @@ import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSw
         LayoutSampleModule,
         ListPerformanceSampleModule,
         VirtualForSampleModule,
-        IgxTimePickerSampleModule
+        IgxTimePickerSampleModule,
+        MaskSampleModule
     ],
     providers: [IgxNavigationService]
 })
