@@ -5,7 +5,7 @@ import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxTimePickerComponent, IgxTimePickerModule } from "./time-picker.component";
 
-fdescribe("IgxTimePicker", () => {
+describe("IgxTimePicker", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
