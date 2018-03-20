@@ -213,7 +213,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
             this.grid.cellInEditMode = null;
         }
         this.grid.onSelection.emit(this);
-        this.syncRows();
     }
 
     @HostListener("blur", ["$event"])
@@ -237,7 +236,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
 
             if (target) {
                 target.nativeElement.focus();
-                this.syncRows();
             } else {
                 if (!this.column.pinned) {
                     this.row.virtDirRow.scrollPrev();
@@ -253,9 +251,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
                         } else {
                             this.row.cells.first.nativeElement.focus();
                         }
-                        setTimeout(() => {
-                            this.syncRows();
-                        });
                     }
                 });
             }
@@ -268,7 +263,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
 
         if (target) {
             target.nativeElement.focus();
-            this.syncRows();
         }
     }
 
@@ -284,7 +278,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
 
             if (target) {
                 target.nativeElement.focus();
-                this.syncRows();
             } else {
                 if (!this.column.pinned) {
                     this.row.virtDirRow.scrollNext();
@@ -300,9 +293,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
                         } else {
                             this.row.cells.last.nativeElement.focus();
                         }
-                        setTimeout(() => {
-                            this.syncRows();
-                        });
                     }
                 });
             }
@@ -315,7 +305,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
 
         if (target) {
             target.nativeElement.focus();
-            this.syncRows();
         }
     }
 
@@ -352,18 +341,5 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostListener("keydown.escape")
     public onKeydownExitEditMode() {
         this.inEditMode = false;
-    }
-
-    @autoWire()
-    syncRows() {
-        const scrLeft = this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.scrollLeft;
-        const headerDcElem = this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement;
-        headerDcElem.style.left = (-scrLeft) + "px";
-
-        this.row.grid.rowList.map((row) => {
-            const elem = row.virtDirRow.dc.instance._viewContainer.element.nativeElement;
-            elem.scrollLeft = scrLeft;
-            row.cdr.markForCheck();
-        });
     }
 }

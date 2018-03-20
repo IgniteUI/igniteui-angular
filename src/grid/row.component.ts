@@ -103,7 +103,6 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy {
             if (this.grid.cellInEditMode) {
                 this.grid.cellInEditMode.inEditMode = false;
             }
-            this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement.style.left = "0px";
         });
     }
 

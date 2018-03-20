@@ -5,8 +5,10 @@
 
 %vhelper--vertical {
     width: 18px;
-    height: calc(100% + 18px) !important;
-    float: right;
+    height: 100% !important;
+    position: absolute;
+    right: 0px;
+    z-index: 10;
 }
 
 %vhelper--horizontal {
