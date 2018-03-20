@@ -1,9 +1,9 @@
 <div class="samples">
     <form class="form">
         <!-- Basic text field -->
-        <igx-input-group>
-            <label igxLabel>Text Field</label>
-            <input igxInput type="text" />
+        <igx-input-group>            
+            <input igxInput name="firstName" type="text" [(ngModel)]="user.firstName" required="required" />
+            <label igxLabel for="firstName">Text Field</label>
         </igx-input-group>
 
         <!-- Basic text field w/ placeholder -->
@@ -50,7 +50,7 @@
         <igx-input-group>
             <igx-prefix>+359</igx-prefix>
             <label igxLabel>Phone</label>
-            <input igxInput type="tel" value="12345678" disabled />
+            <input igxInput type="tel" value="12345678" disabled="disabled" />
             <igx-suffix><igx-icon name="phone"></igx-icon></igx-suffix>
             <igx-hint position="start">Ex.: +359 888 123 456</igx-hint>
         </igx-input-group>
@@ -60,7 +60,7 @@
         <!-- Boxed text field -->
         <igx-input-group type="box">
             <label igxLabel>Text Field</label>
-            <input igxInput />
+            <input igxInput [(ngModel)]="user.lastName" name="lastName" />
         </igx-input-group>
 
         <!-- Boxed text field w/ icon suffix -->

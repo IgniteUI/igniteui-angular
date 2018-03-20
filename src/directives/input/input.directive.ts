@@ -8,9 +8,11 @@ import {
     HostListener,
     Inject,
     NgModule,
-    Renderer2
+    Optional,
+    Renderer2,
+    Self
 } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { FormGroup, NgModel } from "@angular/forms";
 import { IgxInputGroupComponent } from "../../main";
 
 @Directive({
@@ -18,7 +20,8 @@ import { IgxInputGroupComponent } from "../../main";
 })
 export class IgxInputDirective {
     constructor(@Inject(forwardRef(() => IgxInputGroupComponent))
-        public inputGroup: IgxInputGroupComponent,
+                public inputGroup: IgxInputGroupComponent,
+                @Optional() @Self() @Inject(NgModel) protected ngModel: NgModel,
                 protected element: ElementRef,
                 private _renderer: Renderer2) {
         if (this.element.nativeElement.placeholder) {
@@ -60,12 +63,28 @@ export class IgxInputDirective {
     @HostListener("blur", ["$event"])
     public onBlur(event) {
         this.inputGroup.isFocused = false;
+        if (this.ngModel) {
+            this.inputGroup.isValid = this.inputGroup.isInvalid = false;
+            if (!this.ngModel.control.valid && this.ngModel.control.touched) {
+                this.inputGroup.isInvalid = true;
+            }
+        }
     }
 
     @HostListener("input", ["$event"])
     public onInput(event) {
         const value: string = this.element.nativeElement.value;
         this.inputGroup.isFilled = value && value.length > 0;
+
+        if (this.ngModel) {
+            if (this.ngModel.control.valid) {
+                this.inputGroup.isValid = true;
+                this.inputGroup.isInvalid = false;
+            } else {
+                this.inputGroup.isInvalid = true;
+                this.inputGroup.isValid = false;
+            }
+        }
     }
 
     get isDisabled() {

@@ -44,6 +44,15 @@ export class IgxInputGroupComponent {
     @HostBinding("class.igx-input-group--disabled")
     public isDisabled = false;
 
+    @HostBinding("class.igx-input-group--valid")
+    public isValid = false;
+
+    @HostBinding("class.igx-input-group--invalid")
+    public isInvalid = false;
+
+    @HostBinding("class.igx-input-group--warning")
+    public hasWarning = false;
+
     @ContentChildren(IgxHintDirective, { read: IgxHintDirective })
     protected hints: QueryList<IgxHintDirective>;
 
