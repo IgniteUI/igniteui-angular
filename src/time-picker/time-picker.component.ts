@@ -295,7 +295,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     private _itemToString(item: any, viewType: string): string {
         if (item === null) {
             item = "";
-        } else if (viewType) {
+        } else if (viewType && typeof(item) !== "string") {
             const leadZeroHour = (item < 10 && (this.format.indexOf("hh") !== -1 || this.format.indexOf("HH") !== -1));
             const leadZeroMinute = (item < 10 && this.format.indexOf("mm") !== -1);
 
@@ -328,6 +328,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         } else if (selectedIndex > 3) {
             view = items.slice(selectedIndex - 4, selectedIndex + 3);
             selectedItem = items[selectedIndex - 1];
+        } else if (selectedIndex === 3) {
+            view = items.slice(0, 7);
         }
         view = this._viewToString(view, viewType);
         selectedItem = this._itemToString(selectedItem, viewType);
@@ -360,6 +362,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         } else if (selectedIndex + 1 < itemsCount - 3) {
             view = items.slice(selectedIndex - 2, selectedIndex + 5);
             selectedItem = items[selectedIndex + 1];
+        } else if (selectedIndex === itemsCount - 4) {
+            view = items.slice(selectedIndex - 3, itemsCount);
         }
         view = this._viewToString(view, viewType);
         selectedItem = this._itemToString(selectedItem, viewType);
@@ -618,8 +622,9 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     public okButtonClick(): void {
         if (this._isValueValid(this._getSelectedTime())) {
             this._alert.close();
+            const oldValue = this.value;
             this.value = this._getSelectedTime();
-            this.onValueChanged.emit({newValue: this.value});
+            this.onValueChanged.emit({oldValue, newValue: this.value});
         } else {
             this.onValidationFailed.emit({timePicker: this, currentValue: this._getSelectedTime(), setThroughUI: true});
         }
