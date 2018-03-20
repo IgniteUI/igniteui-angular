@@ -15,6 +15,7 @@ import { autoWire, IGridBus } from "./grid.common";
 export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, AfterContentInit {
 
     summaryCacheMap: Map<string, any[]> = new Map<string, any[]>();
+    summaryStyle: Map<string, string> = new Map<string, string>();
 
     @Input()
     public column: IgxColumnComponent;
@@ -33,21 +34,14 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, Aft
         return this.column.width;
     }
 
-    get summaryItemClass(): string {
-        return this.summaryItemStyle;
-    }
-
-    get summaryValueClass(): string {
-        if (this.dataType === "number") {
-            return "";
-        } else {
-            return "igx-grid-summary-item__result--left-align";
-        }
-    }
     protected subscriptionOnEdit$;
     protected subscriptionOnAdd$;
     protected subscriptionOnDelete$;
-    protected summaryItemStyle = "igx-grid-summary-item";
+    private itemClass = "igx-grid-summary-item";
+    private hiddenItemClass = "igx-grid-summary-item--inactive";
+    private summaryResultClass = "igx-grid-summary-item__result--left-align";
+    private numberSummaryResultClass = "igx-grid-summary-item__result";
+
     constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
 
     public ngOnInit() {
@@ -67,14 +61,14 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, Aft
 
     ngAfterContentInit() {
         if (this.column.hasSummary) {
-            this.subscriptionOnEdit$ = this.gridAPI.get(this.gridID).onEditDone.subscribe(this.clearCache.bind(this));
-            this.subscriptionOnAdd$ = this.gridAPI.get(this.gridID).onRowAdded.subscribe(this.clearCache.bind(this));
-            this.subscriptionOnDelete$ = this.gridAPI.get(this.gridID).onRowDeleted.subscribe(this.clearCache.bind(this));
+            this.subscriptionOnEdit$ = this.gridAPI.get(this.gridID).onEditDone.subscribe(() => this.clearCache());
+            this.subscriptionOnAdd$ = this.gridAPI.get(this.gridID).onRowAdded.subscribe(() => this.clearCache());
+            this.subscriptionOnDelete$ = this.gridAPI.get(this.gridID).onRowDeleted.subscribe(() => this.clearCache());
         }
     }
 
     @autoWire(true)
-    clearCache(ev) {
+    clearCache() {
         this.summaryCacheMap.delete(this.column.field);
     }
 
@@ -86,11 +80,31 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, Aft
         return this.summaryCacheMap.get(this.column.field);
     }
 
-    public hideShowSummary() {
-        if (this.summaryItemStyle === "igx-grid-summary-item") {
-            this.summaryItemStyle = "igx-grid-summary-item--inactive";
+    public summaryValueClass(result: any): string {
+        if (typeof result === "number") {
+            return this.numberSummaryResultClass;
         } else {
-            this.summaryItemStyle = "igx-grid-summary-item";
+            return this.summaryResultClass;
         }
+    }
+
+    public summaryClass(functionKey: string) {
+        const summaryKey = this.column.field + "_" + functionKey;
+        if (this.summaryStyle.has(summaryKey)) {
+            return this.summaryStyle.get(summaryKey);
+        } else {
+            this.summaryStyle.set(summaryKey, this.itemClass);
+            return this.summaryStyle.get(summaryKey);
+        }
+    }
+
+    @autoWire()
+    public changeSummaryClass(functionKey: string) {
+        const summaryKey = this.column.field + "_" + functionKey;
+        switch (this.summaryStyle.get(summaryKey)) {
+            case this.itemClass: this.summaryStyle.set(summaryKey, this.hiddenItemClass);  break;
+            case this.hiddenItemClass: this.summaryStyle.set(summaryKey, this.itemClass); break;
+        }
+        console.log("change");
     }
 }

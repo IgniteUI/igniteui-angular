@@ -41,18 +41,18 @@
         </ng-template>
 </div>
 
-<div *ngIf="hasSummarizedColumns" class="igx-grid__tr" role="row" style="width: calc(100% - 17px)">
+<!-- <div *ngIf="hasSummarizedColumns" class="igx-grid__tr" role="row" style="width: calc(100% - 17px)">
     <ng-template igxFor let-col [igxForOf]="visibleColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='calcWidth' #summaryContainer>
         <igx-grid-summary [gridID]="id" [column]="col" [style.min-width.px]="col.width"></igx-grid-summary>
     </ng-template>
-</div>
+</div> -->
 
 <div class="igx-grid__tfoot" role="rowgroup" [style.width.px]='calcWidth' #tfoot>
-    <!-- <div *ngIf="hasSummarizedColumns" class="igx-grid__tr" role="row" style="width: calc(100% - 17px)">
+    <div *ngIf="hasSummarizedColumns" class="igx-grid__tr" role="row" style="width: calc(100% - 17px)">
         <ng-template igxFor let-col [igxForOf]="visibleColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='calcWidth' #summaryContainer>
             <igx-grid-summary [gridID]="id" [column]="col" [style.min-width.px]="col.width"></igx-grid-summary>
         </ng-template>
-    </div> -->
+    </div>
     <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
     </ng-container>
 </div>
