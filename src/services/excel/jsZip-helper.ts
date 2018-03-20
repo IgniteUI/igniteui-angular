@@ -1,4 +1,3 @@
-
 import { ExcelFileTypes } from "./excel-enums";
 
 export class JSZipFiles {

@@ -28,6 +28,23 @@ export class ExportTestDataService {
         phone: "573-394-9254"
     }];
 
+    private _contactsData2 = [{
+        name: "Terrance Mc'Orta",
+        phone: "770-504-2217"
+    }, {
+        name: "Richard Mahoney /LongerName/",
+        phone: ""
+    }, {
+        name: "Donna, \/; Price",
+        phone: "859-496-28**"
+    }, {
+        name: "\n",
+        phone: "901-747-3428"
+    }, {
+        name: "Dorothy \"H.\" Spencer",
+        phone: "573-394-9254[fax]"
+    }];
+
     private _contactsPartial = [
         {
             name: "Terrance Orta",
@@ -81,7 +98,7 @@ export class ExportTestDataService {
     }
 
     get contactsData() {
-        return this._contactsData;
+        return this._contactsData2;
     }
     get contactsPartialData() {
         return this._contactsPartial;
