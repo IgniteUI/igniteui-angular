@@ -105,6 +105,6 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, Aft
             case this.itemClass: this.summaryStyle.set(summaryKey, this.hiddenItemClass);  break;
             case this.hiddenItemClass: this.summaryStyle.set(summaryKey, this.itemClass); break;
         }
-        console.log("change");
+
     }
 }
