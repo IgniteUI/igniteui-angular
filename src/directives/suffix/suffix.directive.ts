@@ -4,6 +4,6 @@ import { Directive, HostBinding } from "@angular/core";
     selector: "igx-suffix,[igxSuffix]"
 })
 export class IgxSuffixDirective {
-    @HostBinding("class.igx-form-group__bundle-suffix")
+    @HostBinding("class.igx-input-group__bundle-suffix")
     public defaultClass = true;
 }

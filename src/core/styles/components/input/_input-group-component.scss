@@ -1,0 +1,276 @@
+@include b(igx-input-group) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %form-group-display !optional;
+
+    &:hover {
+        @extend	%form-group-display--hover !optional;
+    }
+
+    @include e(bundle) {
+        @extend %form-group-bundle !optional;
+
+        &:hover {
+            @extend %form-group-bundle--hover !optional;
+        }
+    }
+
+    @include e(bundle-main) {
+        @extend %form-group-bundle-main !optional;
+    }
+
+    @include e(label) {
+        @extend %form-group-label !optional;
+    }
+
+    @include e(input) {
+        @extend %form-group-input !optional;
+        @extend %chrome-autofill-fix !optional;
+
+        &:hover {
+            @extend %form-group-input--hover !optional;
+        }
+
+        &:focus {
+            @extend %form-group-input--focus !optional;
+        }
+    }
+
+    @include e(textarea) {
+        @extend %form-group-input !optional;
+        @extend %form-group-textarea !optional;
+
+        &:hover {
+            @extend %form-group-input--hover !optional;
+        }
+
+        &:focus {
+            @extend %form-group-input--focus !optional;
+        }
+    }
+
+    @include e(bundle-prefix) {
+        @extend %form-group-prefix !optional;
+    }
+
+    @include e(bundle-suffix) {
+        @extend %form-group-suffix !optional;
+    }
+
+    @include e(border) {
+        @extend %form-group-border !optional;
+    }
+
+    @include e(hint) {
+        @extend %form-group-helper !optional;
+    }
+
+    @include e(hint-item) {
+        @extend %form-group-helper-item !optional;
+    }
+
+    @include e(hint-item, $m: start) {
+        @extend %form-group-helper-item !optional;
+        @extend %form-group-helper-item--start !optional;
+    }
+
+    @include e(hint-item, $m: end) {
+        @extend %form-group-helper-item !optional;
+        @extend %form-group-helper-item--end !optional;
+    }
+
+    @include m(focused) {
+        @extend %form-group-display !optional;
+
+        @include e(bundle) {
+            @extend %form-group-bundle--focus	!optional;
+        }
+
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--focus !optional;
+        }
+
+        @include e(border) {
+            @extend %form-group-border--focus !optional;
+        }
+    }
+
+    @include mx(focused, border) {
+        @include e(bundle) {
+            @extend %form-group-bundle-border--focus !optional;
+        }
+    }
+
+    @include m(placeholder) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--fixed !optional;
+        }
+    }
+
+    @include m(filled) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+        }
+    }
+
+    @include m(required) {
+        @include e(label) {
+            @extend %form-group-label--required !optional;
+        }
+    }
+
+    @include m(invalid) {
+        @include e(label) {
+            @extend %form-group-label--error !optional;
+        }
+
+        @include e(border) {
+            @extend %form-group-border--error !optional;
+        }
+
+        @include e(hint) {
+            @extend %form-group-helper--error !optional;
+        }
+
+        @include e(bundle) {
+            @extend %form-group-bundle--error !optional;
+        }
+
+        @include e(bundle-prefix) {
+            @extend %form-group-prefix--error !optional;
+        }
+
+        @include e(bundle-suffix) {
+            @extend %form-group-suffix--error !optional;
+        }
+    }
+
+    @include mx(invalid, border) {
+        @include e(bundle) {
+            @extend %form-group-bundle-border--error !optional;
+        }
+    }
+
+    @include m(valid) {
+        @include e(label) {
+            @extend %form-group-label--success !optional;
+        }
+
+        @include e(border) {
+            @extend %form-group-border--success !optional;
+        }
+
+        @include e(hint) {
+            @extend %form-group-helper--success !optional;
+        }
+
+        @include e(bundle) {
+            @extend %form-group-bundle--success !optional;
+        }
+    }
+
+    @include mx(valid, border) {
+        @include e(bundle) {
+            @extend %form-group-bundle-border--success !optional;
+        }
+    }
+
+    @include m(disabled) {
+        @extend %form-group-display--disabled !optional;
+
+        @include e(bundle) {
+            @extend %form-group-bundle--disabled !optional;
+        }
+
+        @include e(label) {
+            @extend %form-group-label--fixed !optional;
+        }
+
+        @include e(input) {
+            @extend %form-group-input--disabled !optional;
+        }
+    }
+
+    @include mx(disabled, box) {
+        @include e(bundle) {
+            @extend %form-group-bundle--box-disabled !optional;
+        }
+    }
+
+    @include mx(disabled, border) {
+        @include e(bundle) {
+            @extend %form-group-bundle-border--disabled !optional;
+        }
+    }
+
+    @include m(box) {
+        @extend %form-group-display--no-margin !optional;
+
+        @include e(wrapper) {
+            @extend %form-group-box-wrapper !optional;
+        }
+
+        @include e(bundle) {
+            @extend %form-group-bundle--box !optional;
+        }
+
+        @include e(label) {
+            @extend %form-group-label--box !optional;
+        }
+
+        @include e(textarea) {
+            @extend %form-group-textarea--box !optional;
+        }
+
+        @include e(bundle-prefix) {
+            @extend %form-group-prefix--box !optional;
+        }
+
+        @include e(bundle-suffix) {
+            @extend %form-group-suffix--box !optional;
+        }
+
+        @include e(hint) {
+            @extend %form-group-helper--box !optional;
+        }
+    }
+
+    @include m(border) {
+        @extend %form-group-display--no-margin !optional;
+
+        @include e(bundle) {
+            @extend %form-group-bundle--border !optional;
+
+            &:hover {
+                @extend %form-group-bundle-border--hover !optional;
+            }
+        }
+
+        @include e(border) {
+            @extend %form-group-border--hidden !optional;
+        }
+
+        @include e(label) {
+            @extend %form-group-label--box !optional;
+        }
+
+        @include e(textarea) {
+            @extend %form-group-textarea--box !optional;
+        }
+
+        @include e(bundle-prefix) {
+            @extend %form-group-prefix--box !optional;
+        }
+
+        @include e(bundle-suffix) {
+            @extend %form-group-suffix--box !optional;
+        }
+
+        @include e(hint) {
+            @extend %form-group-helper--box !optional;
+        }
+    }
+}

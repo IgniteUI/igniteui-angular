@@ -4,6 +4,6 @@ import { Directive, HostBinding } from "@angular/core";
     selector: "[igxLabel]"
 })
 export class IgxLabelDirective {
-    @HostBinding("class.igx-form-group__label")
+    @HostBinding("class.igx-input-group__label")
     public defaultClass = true;
 }

@@ -1,0 +1,8 @@
+.samples {
+    padding: 24px;
+}
+
+.igx-input-group+.igx-input-group,
+.form+.form {
+    margin-top: 24px;
+}
