@@ -335,15 +335,15 @@ export class IgxGridPageChangeComponent {
 
     public GoToPage(val) {
         switch (val) {
-            case -2:
-				this.grid1.previousPage();
-                break;
-			case -1:
-                this.grid1.nextPage();
-                break;
-			default:
-				this.grid1.paginate(val);
-				break;
-		}
-	}
+        case -2:
+            this.grid1.previousPage();
+            break;
+        case -1:
+            this.grid1.nextPage();
+            break;
+        default:
+            this.grid1.paginate(val);
+            break;
+    }
+}
 }
