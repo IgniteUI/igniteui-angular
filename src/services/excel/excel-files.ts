@@ -6,19 +6,19 @@ import * as JSZip from "jszip/dist/jszip";
 
 export class RootRelsFile implements IExcelFile {
     public WriteElement(folder: JSZip, data: WorksheetData) {
-        folder.file(".rels", ExcelStrings._RELS_XML);
+        folder.file(".rels", ExcelStrings.getRels());
     }
 }
 
 export class AppFile implements IExcelFile {
     public WriteElement(folder: JSZip, data: WorksheetData) {
-        folder.file("app.xml", ExcelStrings.APP_XML);
+        folder.file("app.xml", ExcelStrings.getApp());
     }
 }
 
 export class CoreFile implements IExcelFile {
     public WriteElement(folder: JSZip, data: WorksheetData) {
-        folder.file("core.xml", ExcelStrings.CORE_XML);
+        folder.file("core.xml", ExcelStrings.getCore());
     }
 }
 
@@ -31,7 +31,7 @@ export class WorkbookRelsFile implements IExcelFile {
 
 export class ThemeFile implements IExcelFile {
     public WriteElement(folder: JSZip, data: WorksheetData) {
-        folder.file("theme1.xml", ExcelStrings.THEME_XML);
+        folder.file("theme1.xml", ExcelStrings.getTheme());
     }
 }
 
@@ -80,13 +80,13 @@ export class WorksheetFile implements IExcelFile {
 
 export class StyleFile implements IExcelFile {
     public WriteElement(folder: JSZip, data: WorksheetData) {
-        folder.file("styles.xml", ExcelStrings.STYLES_XML);
+        folder.file("styles.xml", ExcelStrings.getStyles());
     }
 }
 
 export class WorkbookFile implements IExcelFile {
     public WriteElement(folder: JSZip, data: WorksheetData) {
-        folder.file("workbook.xml", ExcelStrings.WORKBOOK_XML);
+        folder.file("workbook.xml", ExcelStrings.getWorkbook());
     }
 }
 
@@ -136,6 +136,6 @@ export class TablesFile implements IExcelFile {
 
 export class WorksheetRelsFile implements IExcelFile {
     public WriteElement(folder: JSZip, data: WorksheetData) {
-        folder.file("sheet1.xml.rels", ExcelStrings.WORKSHEET_RELS_XML);
+        folder.file("sheet1.xml.rels", ExcelStrings.getWorksheetRels());
     }
 }

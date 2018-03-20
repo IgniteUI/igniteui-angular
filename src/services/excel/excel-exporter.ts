@@ -57,8 +57,6 @@ export class IgxExcelExporterService {
     public Export(grid: IgxGridComponent, options: IgxExcelExporterOptions): void {
         const columnList = grid.columnList.toArray();
         const columns = new Array<any>();
-        let hasSkippedColumns = false;
-
         const data = new Array<any>();
 
         for (const column of columnList) {
@@ -73,11 +71,9 @@ export class IgxExcelExporterService {
 
             if (exportColumn && !columnArgs.cancel) {
                 columns.push({
-					header: columnArgs.header,
-					name: column.field
-				});
-            } else {
-                hasSkippedColumns = true;
+                    header: columnArgs.header,
+                    field: column.field
+                });
             }
         }
 
@@ -91,13 +87,13 @@ export class IgxExcelExporterService {
 
         if (useRowList) {
             for (const row of grid.rowList.toArray()) {
-                this.ExportRow(data, row.rowData, row.index, hasSkippedColumns, columns);
+                this.ExportRow(data, row.rowData, row.index, columns);
             }
         } else {
             let index = -1;
 
             for (const gridRowData of grid.data) {
-                this.ExportRow(data, gridRowData, ++index, hasSkippedColumns, columns);
+                this.ExportRow(data, gridRowData, ++index, columns);
             }
         }
 
@@ -130,13 +126,11 @@ export class IgxExcelExporterService {
         a.dispatchEvent(e);
     }
 
-    private ExportRow(data: any[], gridRowData: any, index: number, hasSkippedColumns: boolean, columns: any[]) {
-        const rowData = hasSkippedColumns ?
-                columns.reduce((a, e) => {
-                    a[e.header] = gridRowData[e.name];
-                    return a;
-                }, {}) :
-                JSON.parse(JSON.stringify(gridRowData));
+    private ExportRow(data: any[], gridRowData: any, index: number, columns: any[]) {
+        const rowData = columns.reduce((a, e) => {
+                            a[e.header] = gridRowData[e.field];
+                            return a;
+                        }, {});
 
         const rowArgs = new RowExportingEventArgs(rowData, index);
         this.onRowExport.emit(rowArgs);
