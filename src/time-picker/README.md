@@ -35,6 +35,17 @@
 -</igx-time-picker>
 -```
 -
+-The TimePicker also has to spin options. Spin loop and limited scroll modes are available. By default `isSpinLoop` is set to true. 
+-```html
+-<igx-time-picker [isSpinLoop]="false">
+-</igx-time-picker>
+-```
+-
+-The TimePicker has vertical and horizontal layout. By default the `vertical` is set to false
+-```html
+-<igx-time-picker [vertical]="true">
+-</igx-time-picker>
+-```
 -# API
 -
 -###### Inputs
@@ -74,3 +85,6 @@ List of time-flags:
 -| `hoursInView` | | `string[]` | Returns an array of the hours currently in view. |
 -| `minutesInView` | | `string[]` | Returns an array of the minutes currently in view. |
 -| `ampmInView` | | `string[]` | Returns an array of the ampm currently in view. |
+-| `scrollHourIntoView` | `(item: string)` | `void` | Scrolls a hour item into view. |
+-| `scrollMinuteIntoView` | `(item: string)` | `void` | Scrolls a minute item into view. |
+-| `scrollAmPmIntoView` | `(item: string)` | `void` | Scrolls a period item into view. |

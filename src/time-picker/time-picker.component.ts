@@ -446,8 +446,12 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
             this._isHourListLoop = false;
         }
 
-        for (i; i < hourItemsCount; i++) {
-            this._hourItems.push(i * this.itemsDelta.hours);
+        if (hourItemsCount > 1) {
+            for (i; i < hourItemsCount; i++) {
+                this._hourItems.push(i * this.itemsDelta.hours);
+            }
+        } else {
+            this._hourItems.push(0);
         }
 
         if (hourItemsCount < 7 || !this.isSpinLoop) {
