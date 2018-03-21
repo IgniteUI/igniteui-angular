@@ -1,4 +1,4 @@
-<igx-grid #grid1 [data]="data" [autoGenerate]="false" height="800px" width="800px" (onColumnInit)="initColunm($event)" [paging]="true">
+<igx-grid #grid1 [data]="data" [autoGenerate]="false" height="800px" width="800px" (onColumnInit)="initColunm($event)" [paging]="false">
     <igx-column field="ProductID" header="Product ID" width="200px" [headerClasses]="'prodId'">
         <ng-template igxCell let-cell="cell" let-val>
         <button (click)="viewRecord(grid1.data)">{{val}}</button>
@@ -33,3 +33,8 @@
 
 
 <button (click)="enableSummary()"> Enable Summary for column ReorderLevel</button>
+<button (click)="updateData()">Update Data</button>
+<button (click)="addRow()">Add Row</button>
+<button (click)="deleteRow()">Delete Row</button>
+<button (click)="updateCell()">Update Cell</button>
+<button (click)="updateRow()">Update Row</button>
