@@ -2,6 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 5.3.0
+- `igx-time-picker` component added
 - Removed the `dirty` local template variable previously exposed by the `igxFor` directive.
 - the `igx-icon` component can now work with both glyph and ligature-based icon font sets. We've also included a brand new Icon Service, which helps you create aliases for the icon fonts you've included in your project. The service also allows you to define the default icon set used throughout your app.
 - Added the option to conditionally disable the `igx-ripple` directive through the `igxRippleDisabled` property.
