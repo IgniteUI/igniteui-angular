@@ -10,7 +10,7 @@ All notable changes for each version of this project will be documented in this 
 - Added `igx-ripple` effect to the checkbox component. The effect can be disabled through the `disableRipple` property.
 - Added the ability to specify the label location in the checkbox component through the `labelPosition` property. It can either be `before` or `after` the checkbox element.
 - `igxМask` directive added
-    - `igxМask` provide means for controlling user input and formatting the visible value based on a configurable mask rules. For more detailed information see [igxMask README file]
+    - `igxМask` provide means for controlling user input and formatting the visible value based on a configurable mask rules. For more detailed information see [`igxMask README file`]
     (https://github.com/IgniteUI/igniteui-angular/blob/master/src/directives/mask/README.md)
 
 ## 5.2.1
