@@ -74,15 +74,20 @@ export class IgxInputGroupComponent {
                     break;
                 case IgxInputGroupType.box:
                     this.isBox = true;
+                    this.isBorder = false;
                     break;
                 case IgxInputGroupType.border:
                     this.isBorder = true;
+                    this.isBox = false;
                     break;
                 default: break;
             }
 
             this._type = type;
         }
+    }
+    get type() {
+        return this._type.toString();
     }
 
     constructor(public element: ElementRef, private _renderer: Renderer2) {
@@ -95,6 +100,18 @@ export class IgxInputGroupComponent {
     get hasBorder() {
         return this._type === IgxInputGroupType.line ||
             this._type === IgxInputGroupType.box;
+    }
+
+    get isTypeLine() {
+        return  this._type === IgxInputGroupType.line;
+    }
+
+    get isTypeBox() {
+        return this._type === IgxInputGroupType.box;
+    }
+
+    get isTypeBorder() {
+        return this._type === IgxInputGroupType.border;
     }
 }
 

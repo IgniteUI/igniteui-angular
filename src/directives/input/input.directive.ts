@@ -8,6 +8,7 @@ import {
     HostListener,
     Inject,
     NgModule,
+    OnInit,
     Optional,
     Renderer2,
     Self
@@ -18,36 +19,13 @@ import { IgxInputGroupComponent } from "../../main";
 @Directive({
     selector: "[igxInput]"
 })
-export class IgxInputDirective {
-    constructor(@Inject(forwardRef(() => IgxInputGroupComponent))
-                public inputGroup: IgxInputGroupComponent,
-                @Optional() @Self() @Inject(NgModel) protected ngModel: NgModel,
-                protected element: ElementRef,
-                private _renderer: Renderer2) {
-        if (this.element.nativeElement.placeholder) {
-            inputGroup.hasPlaceholder = true;
-        }
-
-        if (this.element.nativeElement.required) {
-            inputGroup.isRequired = true;
-        }
-
-        if (this.element.nativeElement.disabled) {
-            inputGroup.isDisabled = true;
-        }
-
-        if (this.element.nativeElement.value &&
-            this.element.nativeElement.value.length > 0) {
-            inputGroup.isFilled = true;
-        }
-
-        const elTag = this.element.nativeElement.tagName.toLowerCase();
-        if (elTag === "textarea") {
-            this.isTextArea = true;
-        } else {
-            this.isInput = true;
-        }
-    }
+export class IgxInputDirective implements OnInit {
+    constructor(
+        @Inject(forwardRef(() => IgxInputGroupComponent))
+        public inputGroup: IgxInputGroupComponent,
+        @Optional() @Self() @Inject(NgModel) protected ngModel: NgModel,
+        protected element: ElementRef,
+        private _renderer: Renderer2) { }
 
     @HostBinding("class.igx-input-group__input")
     public isInput = false;
@@ -76,7 +54,7 @@ export class IgxInputDirective {
         const value: string = this.element.nativeElement.value;
         this.inputGroup.isFilled = value && value.length > 0;
 
-        if (this.ngModel) {
+        if (this.ngModel && (this.ngModel.validator || this.ngModel.asyncValidator)) {
             if (this.ngModel.control.valid) {
                 this.inputGroup.isValid = true;
                 this.inputGroup.isInvalid = false;
@@ -84,6 +62,32 @@ export class IgxInputDirective {
                 this.inputGroup.isInvalid = true;
                 this.inputGroup.isValid = false;
             }
+        }
+    }
+
+    ngOnInit() {
+        if (this.element.nativeElement.placeholder) {
+            this.inputGroup.hasPlaceholder = true;
+        }
+
+        if (this.element.nativeElement.required) {
+            this.inputGroup.isRequired = true;
+        }
+
+        if (this.element.nativeElement.disabled) {
+            this.inputGroup.isDisabled = true;
+        }
+
+        if (this.element.nativeElement.value &&
+            this.element.nativeElement.value.length > 0) {
+                this.inputGroup.isFilled = true;
+        }
+
+        const elTag = this.element.nativeElement.tagName.toLowerCase();
+        if (elTag === "textarea") {
+            this.isTextArea = true;
+        } else {
+            this.isInput = true;
         }
     }
 
