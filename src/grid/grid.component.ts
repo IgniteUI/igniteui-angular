@@ -36,6 +36,7 @@ import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
+import { ISummaryExpression } from "./grid-summary";
 import { IgxGridRowComponent } from "./row.component";
 
 let NEXT_ID = 0;
@@ -434,6 +435,15 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
         }
     }
 
+    public enableSummaries(...rest) {
+        if (rest.length === 1 && Array.isArray(rest[0])) {
+            this._multipleSummaries(rest[0]);
+        } else {
+            this._summaries(rest[0], rest[1]);
+        }
+        this.cdr.markForCheck();
+    }
+
     public filterGlobal(value: any, condition?, ignoreCase?) {
         this.gridAPI.filter_global(this.id, value, condition, ignoreCase);
     }
@@ -506,6 +516,20 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
 
     protected _filterMultiple(expressions: IFilteringExpression[]) {
         this.gridAPI.filter_multiple(this.id, expressions);
+    }
+
+    protected _summaries(fieldName, summaryOperand?) {
+        const column = this.gridAPI.get_column_by_name(this.id, fieldName);
+        column.hasSummary = true;
+        if (summaryOperand) {
+            column.summaries = summaryOperand;
+        }
+    }
+
+    protected _multipleSummaries(expressions: ISummaryExpression[]) {
+        expressions.forEach((element) => {
+            this._summaries(element.fieldName, element.customSummary);
+        });
     }
 
     protected resolveDataTypes(rec) {
