@@ -1,15 +1,14 @@
 import { ChangeDetectorRef, Directive, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, TemplateRef  } from "@angular/core";
-import { IgxGridAPIService } from "./api.service";
+import "rxjs/add/operator/map";
+import "rxjs/add/operator/mergeMap";
+import "rxjs/add/operator/takeUntil";
 import { Observable } from "rxjs/Observable";
-import "rxjs/Rx";
+import { IgxGridAPIService } from "./api.service";
 
 @Directive({
     selector: "[igxDrag]"
 })
-export class igxDragDirective implements OnInit {
-
-    @Input("igxDrag")
-    public draggable: boolean = true;
+export class IgxDragDirective implements OnInit {
 
     @Output()
     public dragEnd = new EventEmitter<any>();
@@ -23,31 +22,32 @@ export class igxDragDirective implements OnInit {
     private _mousedrag: Observable<number>;
 
     constructor(public element: ElementRef) {
-        this._mousedrag = this.dragStart.map(event => {
+        this._mousedrag = this.dragStart.map((event) => {
             return event.clientX - this.element.nativeElement.getBoundingClientRect().left;
-        }).flatMap( offset => 
-            this.drag.map(event => (event.clientX - offset)).takeUntil(this.dragEnd)
+        }).flatMap((offset) =>
+            this.drag.map((event) => (event.clientX - offset)).takeUntil(this.dragEnd)
         );
     }
 
     ngOnInit() {
-        this._mousedrag.subscribe({ next: pos => 
+        this._mousedrag.subscribe({ next: (pos) =>
             this.element.nativeElement.style.left = pos + "px"
         });
     }
 
-    @HostListener('document:mouseup', ['$event'])
+    @HostListener("document:mouseup", ["$event"])
     onMouseup(event) {
         this.dragEnd.emit(event);
     }
 
-    @HostListener('document:mousedown', ['$event'])
+    @HostListener("document:mousedown", ["$event"])
     onMousedown(event) {
         this.dragStart.emit(event);
     }
 
-    @HostListener('document:mousemove', ['$event'])
+    @HostListener("document:mousemove", ["$event"])
     onMousemove(event) {
+        event.preventDefault();
         this.drag.emit(event);
     }
 }

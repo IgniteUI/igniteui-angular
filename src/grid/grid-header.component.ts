@@ -1,10 +1,20 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, EventEmitter, ElementRef, HostBinding, HostListener, Input, OnInit, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    DoCheck,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Input,
+    OnInit
+} from "@angular/core";
 import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridAPIService } from "./api.service";
+import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { autoWire, IGridBus } from "./grid.common";
-import { DataType } from "../data-operations/data-util";
-import { IgxGridCellComponent } from "./cell.component";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,8 +69,9 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     }
 
     protected sortDirection = SortingDirection.None;
+    public cursor = null;
 
-    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
+    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, public elementRef: ElementRef) { }
 
     public ngOnInit() {
         this.cdr.markForCheck();
@@ -95,8 +106,6 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
         this.sortDirection = expr ? expr.dir : SortingDirection.None;
     }
 
-    public cursor;
-
     public onResizeAreaMouseOver() {
         if (this.column.resizable) {
             this.cursor = "col-resize";
@@ -104,46 +113,53 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     }
 
     public onResizeAreaMouseDown(event) {
-
         if (event.button === 0 && this.column.resizable) {
             this.column.grid.resizer.show = true;
-            this.column.grid.resizer.column = this.column;
 
-            this.column.grid.resizer.x = event.clientX;
+            this.column.grid.resizer.column = this.column;
+            this.column.grid.resizer.x = event.clientX + 1;
+            this.column.grid.resizer.actualWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
+        } else {
+            this.cursor = null;
         }
     }
 
+    public onResizeAreaDblClick() {
+        const range = this.column.grid.document.createRange();
 
+        if (this.column.bodyTemplate) {
+            const referenceNode = this.column.cells[0].nativeElement;
+            range.selectNode(referenceNode);
 
-    get cellValues(): IgxGridCellComponent[] {
-        return this.column.grid.rowList.map((row) => row.cells.filter((cell) => cell.columnIndex === this.column.index))
-        .reduce((a, b) => a.concat(b), []).map((cell) => cell.value);
-    }
+            this.column.width =  range.getBoundingClientRect().width.toString();
 
-    @autoWire(true)
-    public onResizeAreaDblClick(event) {
-        var t  = this.column.bodyTemplate;
+            // var getWidth = (child) => {
+            //     return child.getBoundingClientRect().width;
+            // };
+            // const children = Array.from(this.column.cells[0].nativeElement.children);
+            // const widths = children.map((child) => getWidth(child));
+            // const largestChild = Math.max(...widths);
+            // this.column.width = largestChild.toString();
+        } else {
+            const valToPxls = (element) => {
+                const referenceNode = element.nativeElement;
+                range.selectNodeContents(referenceNode);
 
-        const dataType = this.column.dataType;
-        const index = this.column.index;
+                return  range.getBoundingClientRect().width;
+            };
 
-        
-        var cells = this.column.grid.rowList.map((row) => row.cells.filter((cell) => cell.columnIndex === this.column.index))
-        .reduce((a, b) => a.concat(b), []).map((cell) => cell.value);
+            const cellsContentWidths = this.column.cells.map((cell) => valToPxls(cell));
+            const largestCell = Math.max(...cellsContentWidths);
 
-        //var max = Math.max(...test);
+            const index = cellsContentWidths.indexOf(largestCell);
+            const cellEl = this.column.cells[index].nativeElement;
+            const cellStyle = this.column.grid.document.defaultView.getComputedStyle(cellEl);
+            const padding = parseInt(cellStyle.paddingLeft, 10) + parseInt(cellStyle.paddingRight, 10);
 
-        // switch (dataType) {
-        //     case DataType.Boolean:
-        //     break;
-        //     case DataType.Date:
-        //     break;
-        //     case DataType.Number:
-        //     break;
-        //     case DataType.String:
-        //     break;
-        //     default:
-        //     break;
-        // }
+            this.column.width = (largestCell + padding).toString();
+        }
+
+        this.column.grid.markForCheck();
+        this.column.grid.onColumnResized.emit();
     }
 }

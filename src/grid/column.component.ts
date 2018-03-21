@@ -12,6 +12,7 @@ import {
 import { DataType } from "../data-operations/data-util";
 import { STRING_FILTERS } from "../data-operations/filtering-condition";
 import { IgxGridAPIService } from "./api.service";
+import { IgxGridCellComponent } from "./cell.component";
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -63,10 +64,10 @@ export class IgxColumnComponent implements AfterContentInit {
     public width: string;
 
     @Input()
-    public minWidth: string = "20";
+    public maxWidth: string;
 
     @Input()
-    public maxWidth: string;
+    public minWidth = "50";
 
     @Input()
     public headerClasses = "";
@@ -140,6 +141,11 @@ export class IgxColumnComponent implements AfterContentInit {
     set inlineEditorTemplate(template: TemplateRef<any>) {
         this._inlineEditorTemplate = template;
         this.grid.markForCheck();
+    }
+
+    get cells(): IgxGridCellComponent[] {
+        return this.grid.rowList.map((row) => row.cells.filter((cell) => cell.columnIndex === this.index))
+        .reduce((a, b) => a.concat(b), []);
     }
 
     protected _bodyTemplate: TemplateRef<any>;

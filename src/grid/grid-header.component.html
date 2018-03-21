@@ -7,8 +7,10 @@
     </ng-container>
 </span>
 <igx-grid-filter [column]="column" *ngIf="column.filterable"></igx-grid-filter>
-<span (dblclick)="onResizeAreaDblClick($event)"
+
+<span (dblclick)="onResizeAreaDblClick()"
       (mouseover)="onResizeAreaMouseOver()"
       (mousedown)="onResizeAreaMouseDown($event)"
       [style.cursor]="cursor" 
-      style="display: flex;background-color: rgba(163, 163, 163, 0.082);position: absolute;height: 100%;right:0%;width: 5px;"></span>
+      style="display: flex;background-color: rgba(163, 163, 163, 0.082);position: absolute;height: 100%;right:0%;width: 8px;">
+</span>

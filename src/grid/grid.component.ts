@@ -36,6 +36,7 @@ import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
+import { IgxDragDirective } from "./grid.common";
 import { IgxGridRowComponent } from "./row.component";
 
 let NEXT_ID = 0;
@@ -152,6 +153,9 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     @Output()
     public onRowDeleted = new EventEmitter<any>();
 
+    @Output()
+    public onColumnResized = new EventEmitter<any>();
+
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
 
@@ -182,6 +186,11 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     @HostBinding("attr.role")
     public hostRole = "grid";
 
+    @HostBinding("style.cursor")
+    get cursor() {
+        return this._cursor;
+    }
+
     get pipeTrigger(): number {
         return this._pipeTrigger;
     }
@@ -205,6 +214,13 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     public eventBus = new Subject<boolean>();
     protected destroy$ = new Subject<boolean>();
 
+    public resizer = {
+        x: 0,
+        show: false,
+        column: null,
+        actualWidth: 0
+    };
+
     protected _perPage = 15;
     protected _page = 0;
     protected _paging = false;
@@ -215,11 +231,14 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     protected _sortingExpressions = [];
     private resizeHandler;
 
+    private _startResizePos;
+    private _cursor;
+
     constructor(
         private gridAPI: IgxGridAPIService,
         private elementRef: ElementRef,
         private zone: NgZone,
-        @Inject(DOCUMENT) private document,
+        @Inject(DOCUMENT) public document,
         public cdr: ChangeDetectorRef,
         private resolver: ComponentFactoryResolver,
         private viewRef: ViewContainerRef) {
@@ -318,6 +337,11 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
 
     get nativeElement() {
         return this.elementRef.nativeElement;
+    }
+
+    get calcResizerHeight(): number {
+        // TO DO: check for summary footer and add its height if summaries are enabled
+        return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight - 17;
     }
 
     get columns(): IgxColumnComponent[] {
@@ -558,35 +582,28 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
         });
     }
 
-
-    public resizer = {
-        x: 0,
-        show: false,
-        column: null
-    };
-
-    get calcResizerHeight(): number {
-        // TO DO: check for summary footer and add its height if summaries are enabled
-        return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight;
-    }
-
-    private _startResizePos;
-    startResizing(event) {
+    public startResizing(event) {
       this._startResizePos = event.clientX;
+
+      if (event.button === 0) {
+        this._cursor = "col-resize";
+      }
     }
 
-    resize(event) {
+    public resize(event) {
+        this._cursor = null;
         this.resizer.show = false;
 
+        const resizedColumn = this.resizer.column;
         const diff = event.clientX - this._startResizePos;
 
-        const resizedColumn = this.resizer.column;
-
         if (resizedColumn) {
-            const initColWidth = parseInt(resizedColumn.width, 10);
+            let initColWidth = parseInt(resizedColumn.width, 10);
             const colMinWidth = parseInt(resizedColumn.minWidth, 10);
             const colMaxWidth = parseInt(resizedColumn.maxWidth, 10);
-    
+
+            initColWidth = (initColWidth < this.resizer.actualWidth) ? this.resizer.actualWidth : initColWidth;
+
             if (initColWidth + diff < colMinWidth) {
                 resizedColumn.width = resizedColumn.minWidth;
             } else if (colMaxWidth && (initColWidth + diff > colMaxWidth)) {
@@ -594,8 +611,9 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
             } else {
                 resizedColumn.width = (initColWidth + diff).toString();
             }
-    
+
             this.markForCheck();
+            this.onColumnResized.emit();
         }
     }
 }
