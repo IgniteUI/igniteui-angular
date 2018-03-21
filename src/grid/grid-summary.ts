@@ -1,5 +1,9 @@
 import { DataUtil } from "../data-operations/data-util";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
+export interface ISummaryExpression {
+    fieldName: string;
+    customSummary?: any;
+}
 export interface IgxSummaryResult {
     key: string;
     label: string;
