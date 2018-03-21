@@ -84,6 +84,10 @@
         @extend %grid-cell-pinned--start !optional;
     }
 
+    @include e(th, $m: pinned-start-last) {
+        @extend %grid-cell-pinned--start-last !optional;
+    }
+
     @include e(th, $m: fw) {
         @extend %grid-cell--fixed-width !optional;
     }
@@ -102,6 +106,10 @@
 
     @include e(td, $m: pinned-start) {
         @extend %grid-cell-pinned--start !optional;
+    }
+
+    @include e(td, $m: pinned-start-last) {
+        @extend %grid-cell-pinned--start-last !optional;
     }
 
     @include e(td, $m: pinned-end) {

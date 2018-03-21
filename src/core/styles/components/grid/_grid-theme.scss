@@ -159,14 +159,14 @@
     %grid-thead,
     %grid-tfoot {
         display: block;
-        background: map-get($this, 'header-background');
+        background: rgb(235, 235, 235);
         color: map-get($this, 'header-text-color');
 
         %grid-row {
-            background: transparent;
+            background: inherit;
 
             &:hover {
-                background: transparent;
+                background: inherit;
             }
         }
     }
@@ -247,7 +247,7 @@
 
     %grid-row {
         display: flex;
-        background: inherit;
+        background: #fff;
         border-bottom: 1px solid map-get($this, 'row-border-color');
         outline-style: none;
 
@@ -298,6 +298,11 @@
     }
 
     %grid-cell-pinned--start {
+        background-color: inherit;
+        z-index: 11;
+    }
+
+    %grid-cell-pinned--start-last {
         border-right: map-get($cell-pin, 'style') map-get($cell-pin, 'color') !important;
     }
 
