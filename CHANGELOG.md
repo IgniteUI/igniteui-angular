@@ -9,6 +9,12 @@ All notable changes for each version of this project will be documented in this 
 - Added `indeterminate` property and styling to the `igx-checkbox` component.
 - Added `igx-ripple` effect to the checkbox component. The effect can be disabled through the `disableRipple` property.
 - Added the ability to specify the label location in the checkbox component through the `labelPosition` property. It can either be `before` or `after` the checkbox element.
+- `igxМask` directive added
+    - `igxМask` provide means for controlling user input and formatting the visible value based on a configurable mask rules.
+
+    ```html
+    <input type="text" igxInput [igxMask]="'(000) 0000-000'"/>
+    ```
 
 ## 5.2.1
 - `hammerjs` and `@types/hammerjs` are removed from `peerDependencies` and were added as `dependencies`. So if you are using Igniteui-Angular version 5.2.1 or above it is enough to run `npm install igniteui-angular` in your project for getting started. For more detailed information see [`Ignite UI for Angular Getting Started`](https://www.infragistics.com/products/ignite-ui-angular/getting-started)
