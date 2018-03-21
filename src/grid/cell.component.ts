@@ -209,13 +209,13 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostListener("keydown.arrowleft", ["$event"])
     public onKeydownArrowLeft(event) {
         event.preventDefault();
-        const visibleColumns = this.grid.visibleColumns;
+        const visibleColumns = this.grid.columnList.filter((col) => !col.hidden);
         const rowIndex = this.rowIndex;
         let columnIndex = this.columnIndex;
-        const rv = visibleColumns.findIndex((col) => col.index === columnIndex);
+        const rv = visibleColumns.find((col) => col.index === columnIndex - 1);
 
-        if (rv > 0) {
-            columnIndex = visibleColumns[rv - 1].index;
+        if (rv) {
+            columnIndex = rv.index;
 
             const target = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
 
@@ -255,13 +255,13 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostListener("keydown.arrowright", ["$event"])
     public onKeydownArrowRight(event) {
         event.preventDefault();
-        const visibleColumns = this.grid.visibleColumns;
+        const visibleColumns = this.grid.columnList.filter((col) => !col.hidden);
         const rowIndex = this.rowIndex;
         let columnIndex = this.columnIndex;
-        const rv = visibleColumns.findIndex((col) => col.index === columnIndex);
+        const rv = visibleColumns.find((col) => col.index === columnIndex + 1);
 
-        if (rv > -1 && rv < visibleColumns.length - 1) {
-            columnIndex = visibleColumns[rv + 1].index;
+        if (rv) {
+            columnIndex = rv.index;
 
             const target = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
 

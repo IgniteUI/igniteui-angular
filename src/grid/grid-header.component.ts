@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, HostBinding, HostListener, Input, OnInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    DoCheck,
+    HostBinding,
+    HostListener,
+    Input,
+    OnInit
+} from "@angular/core";
 import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
@@ -66,6 +75,9 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
 
     public ngDoCheck() {
         this.getSortDirection();
+        if (this.column.isColumnGroup) {
+            this.cdr.detectChanges();
+        }
     }
 
     @HostListener("click", ["$event"])

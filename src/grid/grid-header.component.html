@@ -1,9 +1,17 @@
 <ng-template #defaultColumn>
-    {{ column.header || column.field }}
+    <ng-container *ngIf="!column.isColumnGroup">
+        {{ column.header || column.field }}
+    </ng-container>
+    <ng-container *ngIf="column.isColumnGroup">
+        <div style="text-align: center;">{{ column.header }}</div>
+        <div style="display: flex; flex-direction: row;">
+            <igx-grid-header [gridID]="column.gridID" [column]="child" *ngFor="let child of column.children"></igx-grid-header>
+        </div>
+    </ng-container>
 </ng-template>
 
 <span class="title">
     <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column }">
     </ng-container>
 </span>
-<igx-grid-filter [column]="column" *ngIf="column.filterable"></igx-grid-filter>
+<igx-grid-filter [column]="column" *ngIf="column.filterable && !column.isColumnGroup"></igx-grid-filter>
