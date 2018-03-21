@@ -1,6 +1,7 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { IgxColumnComponent } from "../../lib/grid/column.component";
 import { IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from "../../lib/grid/grid-summary";
+import { IgxGridComponent } from "../../lib/grid/grid.component";
 
 class MySummary extends IgxNumberSummaryOperand {
 
@@ -25,6 +26,9 @@ class MySummary extends IgxNumberSummaryOperand {
   templateUrl: "./sample.component.html"
 })
 export class GridSummaryComponent implements OnInit {
+
+  @ViewChild("grid1", { read: IgxGridComponent })
+  public grid1: IgxGridComponent;
 
   mySummary = MySummary;
 
@@ -665,5 +669,9 @@ export class GridSummaryComponent implements OnInit {
   }
   initColunm(po: IgxColumnComponent) {
 
+  }
+  public enableSummary() {
+    this.grid1.enableSummaries([{fieldName: "ReorderLevel", customSummary: this.mySummary},
+    {fieldName: "ProductID"}]);
   }
 }

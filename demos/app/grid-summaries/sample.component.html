@@ -4,7 +4,7 @@
         <button (click)="viewRecord(grid1.data)">{{val}}</button>
         </ng-template>
     </igx-column>
-    <igx-column field="ReorderLevel" width="200px" [sortable]="true" [formatter]="multiplier" editable="true" [dataType]="'number'" [hasSummary]="true"  >
+    <igx-column field="ReorderLevel" width="200px" [sortable]="true" [formatter]="multiplier" editable="true" [dataType]="'number'" >
         <ng-template igxCell let-cell="cell" let-val let-row>
         {{val}} {{row.gridID}}
         </ng-template>
@@ -14,7 +14,7 @@
         {{val['__deferred']['uri']}}
         </ng-template>
     </igx-column>
-    <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" [summaries]="mySummary"   [sortable]="true" [hasSummary]="true">
+    <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" [summaries]="mySummary"  editable="true" [sortable]="true" [hasSummary]="true">
         <ng-template igxCell let-cell="cell" let-val let-row>
         ${{val}}
         </ng-template>
@@ -30,3 +30,6 @@
         </ng-template>
     </igx-column>
 </igx-grid>
+
+
+<button (click)="enableSummary()"> Enable Summary for column ReorderLevel</button>
