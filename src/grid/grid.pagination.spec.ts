@@ -2,7 +2,8 @@ import { Component, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { DataType } from "../data-operations/data-util";
-import { IgxColumnComponent } from "./column.component";
+import { IgxButtonModule } from "../directives/button/button.directive";
+import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
@@ -13,9 +14,10 @@ describe("IgxGrid - Grid Paging", () => {
             declarations: [
                 GridMarkupPagingDeclarationComponent,
                 GridDeclarationComponent,
-                IgxGridMarkupEditingDeclarationComponent
+                IgxGridMarkupEditingDeclarationComponent,
+                IgxGridPageChangeComponent
             ],
-            imports: [IgxGridModule.forRoot()]
+            imports: [IgxGridModule.forRoot(), IgxButtonModule, IgxRippleModule]
         })
             .compileComponents();
     }));
@@ -198,6 +200,53 @@ describe("IgxGrid - Grid Paging", () => {
         expect(gridElement.querySelectorAll(".igx-paginator > select").length).toEqual(0);
     }));
 
+    it("change paging with button", async(() => {
+        const fix = TestBed.createComponent(IgxGridPageChangeComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid1;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        const nextBtn: HTMLElement = fix.nativeElement.querySelector("#nextPageBtn");
+        const prevBtn: HTMLElement = fix.nativeElement.querySelector("#prevPageBtn");
+        const idxPageBtn: HTMLElement = fix.nativeElement.querySelector("#idxPageBtn");
+
+        expect(nextBtn).toBeTruthy();
+        expect(prevBtn).toBeTruthy();
+        expect(idxPageBtn).toBeTruthy();
+
+        expect(grid.paging).toBeTruthy();
+        expect(grid.perPage).toMatch("4", "Invalid page size");
+        expect(grid.page).toEqual(0);
+        expect(grid.rowList.length).toEqual(4, "Invalid number of rows initialized");
+        expect(grid.getCellByColumn(0, "ID").value).toMatch("1");
+        expect(gridElement.querySelector(".igx-paginator")).toBeDefined();
+        expect(gridElement.querySelectorAll(".igx-paginator > select").length).toEqual(1);
+        expect(gridElement.querySelector(".igx-paginator > span").textContent).toMatch("1 of 3");
+
+        // Next page button click
+        nextBtn.click();
+        fix.detectChanges();
+
+        expect(grid.page).toEqual(1, "Invalid page index");
+        expect(grid.getCellByColumn(0, "ID").value).toMatch("5");
+        expect(gridElement.querySelector(".igx-paginator > span").textContent).toMatch("2 of 3");
+
+        // Previous page button click
+        prevBtn.click();
+        fix.detectChanges();
+
+        expect(grid.page).toEqual(0, "Invalid page index");
+        expect(grid.getCellByColumn(0, "ID").value).toMatch("1");
+        expect(gridElement.querySelector(".igx-paginator > span").textContent).toMatch("1 of 3");
+
+        // Go to 3rd page button click
+        idxPageBtn.click();
+        fix.detectChanges();
+
+        expect(grid.page).toEqual(2, "Invalid page index");
+        expect(grid.getCellByColumn(0, "ID").value).toMatch("9");
+        expect(gridElement.querySelector(".igx-paginator > span").textContent).toMatch("3 of 3");
+    }));
 });
 
 const data = [
@@ -263,4 +312,38 @@ export class IgxGridMarkupEditingDeclarationComponent {
 
     @ViewChild("grid1", { read: IgxGridComponent })
     public grid1: IgxGridComponent;
+}
+
+@Component({
+    template: `
+    <igx-grid #grid1 [data]="data" paging="true" perPage="4">
+        <igx-column field="ID"></igx-column>
+        <igx-column field="Name" [editable]="true"></igx-column>
+        <igx-column field="JobTitle" [editable]="true"></igx-column>
+    </igx-grid>
+    <button id="prevPageBtn" igxButton (click)="GoToPage(-2)">Prev page</button>
+    <button id="nextPageBtn" igxButton (click)="GoToPage(-1)">Next page</button>
+    <button id="idxPageBtn" igxButton (click)="GoToPage(2)">Go to 3rd page</button>
+    `
+})
+export class IgxGridPageChangeComponent {
+
+    public data = data;
+
+    @ViewChild("grid1", { read: IgxGridComponent })
+    public grid1: IgxGridComponent;
+
+    public GoToPage(val) {
+        switch (val) {
+        case -2:
+            this.grid1.previousPage();
+            break;
+        case -1:
+            this.grid1.nextPage();
+            break;
+        default:
+            this.grid1.paginate(val);
+            break;
+    }
+}
 }

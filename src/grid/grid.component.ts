@@ -93,6 +93,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
         }
         this.onPagingDone.emit({ previous: this._page, current: val });
         this._page = val;
+        this.cdr.markForCheck();
     }
 
     @Input()
