@@ -14,7 +14,9 @@ describe("IgxTimePicker", () => {
                 IgxTimePickerWithPmTimeComponent,
                 IgxTimePickerWithMInMaxTimeValueComponent,
                 IgxTimePickerWith24HTimeComponent,
-                IgxTimePickerWithAMPMLeadingZerosTimeComponent
+                IgxTimePickerWithAMPMLeadingZerosTimeComponent,
+                IgxTimePickerWithSpinLoopFalseValueComponent,
+                IgxTimePickerWithItemsDeltaValueComponent
             ],
             imports: [IgxTimePickerModule, FormsModule, BrowserAnimationsModule]
         })
@@ -376,6 +378,7 @@ describe("IgxTimePicker", () => {
         // focus hours
         getHourColumn.nativeElement.focus();
         tick();
+        getHourColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 0});
         getHourColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: -100});
         fixture.detectChanges();
         // move the mouse wheel up and expect the selected element to be 2
@@ -428,6 +431,7 @@ describe("IgxTimePicker", () => {
         // focus hours
         getHourColumn.nativeElement.focus();
         tick();
+        getHourColumn.triggerEventHandler("panmove", {deltaX: 0, deltaY: 0});
         getHourColumn.triggerEventHandler("panmove", {deltaX: 0, deltaY: -100});
         fixture.detectChanges();
         // swipe up and expect the selected element to be 4
@@ -474,6 +478,7 @@ describe("IgxTimePicker", () => {
         const getHourColumn = dom.query(By.css(".igx-time-picker__hourList"));
         const selectHour = getHourColumn.children[3];
         expect(selectHour.nativeElement.innerText).toBe("00");
+
     });
 
     it("TimePicker Items in view", () => {
@@ -492,6 +497,88 @@ describe("IgxTimePicker", () => {
         expect(getMinutessInview).toEqual([ "24", "25", "26", "27", "28", "29", "30" ]);
         expect(getAMPMInview).toEqual([ "AM", "PM" ]);
 
+    });
+
+    it("TimePicker scroll to end", () => {
+        const fixture = TestBed.createComponent(IgxTimePickerWithSpinLoopFalseValueComponent);
+        fixture.detectChanges();
+        const dom = fixture.debugElement;
+        const timePicker = fixture.componentInstance.timePicker;
+        const initialTime = fixture.componentInstance.dateValue;
+
+        openInput(fixture);
+
+        const getHourColumn: any = dom.query(By.css(".igx-time-picker__hourList"));
+        const getMinuteColumn: any = dom.query(By.css(".igx-time-picker__minuteList"));
+        const getAMPMColumn: any = dom.query(By.css(".igx-time-picker__ampmList"));
+
+        getHourColumn.nativeElement.focus();
+        spyOn(console, "error");
+        getHourColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: -100});
+        fixture.detectChanges();
+        getMinuteColumn.nativeElement.focus();
+        getMinuteColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: -100});
+        fixture.detectChanges();
+        getAMPMColumn.nativeElement.focus();
+        getAMPMColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: -100});
+        fixture.detectChanges();
+
+        // check console for error
+        expect(console.error).not.toHaveBeenCalled();
+
+        const formatedHours = initialTime.getHours() < 10 ? "0" + initialTime.getHours() : initialTime.getHours();
+        const formatedMinutes = initialTime.getMinutes() < 10 ? "0" + initialTime.getMinutes() : initialTime.getMinutes();
+
+        const formatedTestElementTime =
+           `${formatedHours}:${formatedMinutes} ${initialTime.getHours() >= 12 ? "PM" : "AM"}`;
+
+        // get time from dialog header
+        const getTimeFromPopupHeader: any = fixture.debugElement.query(By.css(".igx-time-picker__header")).nativeElement.children;
+        const formatedTimeFromPopupHeader =
+        `${getTimeFromPopupHeader[1].innerText.replace(/\n/g, "")} ${getTimeFromPopupHeader[0].innerText}`;
+
+        expect(formatedTestElementTime).toBe(formatedTimeFromPopupHeader);
+    });
+
+    it("TimePicker check isSpinLoop with Items Delta", () => {
+        const fixture = TestBed.createComponent(IgxTimePickerWithItemsDeltaValueComponent);
+        fixture.detectChanges();
+        const dom = fixture.debugElement;
+        const timePicker = fixture.componentInstance.timePicker;
+
+        openInput(fixture);
+
+        const getHourColumn: any = dom.query(By.css(".igx-time-picker__hourList"));
+        const getMinuteColumn: any = dom.query(By.css(".igx-time-picker__minuteList"));
+        const getAMPMColumn: any = dom.query(By.css(".igx-time-picker__ampmList"));
+
+        // check scrolling each element
+        getHourColumn.nativeElement.focus();
+        getHourColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 100});
+        fixture.detectChanges();
+        getMinuteColumn.nativeElement.focus();
+        getMinuteColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 100});
+        fixture.detectChanges();
+        getAMPMColumn.nativeElement.focus();
+        getAMPMColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 100});
+        fixture.detectChanges();
+
+        const getTimeFromPopupHeader: any = fixture.debugElement.query(By.css(".igx-time-picker__header")).nativeElement.children;
+        const formatedTimeFromPopupHeader =
+        `${getTimeFromPopupHeader[1].innerText.replace(/\n/g, "")} ${getTimeFromPopupHeader[0].innerText}`;
+        expect(formatedTimeFromPopupHeader).toBe("12:58 PM");
+
+        // check scrolling again up not to throw error
+        spyOn(console, "error");
+        getHourColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 100});
+        fixture.detectChanges();
+        getMinuteColumn.nativeElement.focus();
+        getMinuteColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 100});
+        fixture.detectChanges();
+        getAMPMColumn.nativeElement.focus();
+        getAMPMColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 100});
+        fixture.detectChanges();
+        expect(console.error).not.toHaveBeenCalled();
     });
 });
 
@@ -558,6 +645,31 @@ export class IgxTimePickerWithMInMaxTimeValueComponent {
     public dateValue: Date = new Date(2017, 7, 7, 4, 27);
     public myMinValue = "3:24 AM";
     public myMaxValue = "5:24 AM";
+    @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
+}
+
+@Component({
+    template: `
+        <igx-time-picker [isSpinLoop]=false
+         [value]="dateValue" [format]="customFormat"></igx-time-picker>
+    `
+})
+export class IgxTimePickerWithSpinLoopFalseValueComponent {
+    public dateValue: Date = new Date(2017, 7, 7, 1, 0);
+    public customFormat = "hh:mm tt";
+    @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
+}
+
+@Component({
+    template: `
+        <igx-time-picker [isSpinLoop]=false
+         [value]="dateValue" [format]="customFormat" [itemsDelta]="customitemsDelta"></igx-time-picker>
+    `
+})
+export class IgxTimePickerWithItemsDeltaValueComponent {
+    public dateValue: Date = new Date(2017, 7, 7, 10, 56);
+    public customFormat = "hh:mm tt";
+    public customitemsDelta: any = {hours: 2, minutes: 2};
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
 }
 
