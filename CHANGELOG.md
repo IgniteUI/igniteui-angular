@@ -4,6 +4,14 @@ All notable changes for each version of this project will be documented in this 
 ## 5.3.0
 - Removed the `dirty` local template variable previously exposed by the `igxFor` directive.
 - the `igx-icon` component can now work with both glyph and ligature-based icon font sets. We've also included a brand new Icon Service, which helps you create aliases for the icon fonts you've included in your project. The service also allows you to define the default icon set used throughout your app.
+- Added the option to conditionally disable the `igx-ripple` directive through the `igxRippleDisabled` property.
+- Updated styling and interaction animations of the `igx-checkbox` component.
+- Added `indeterminate` property and styling to the `igx-checkbox` component.
+- Added `igx-ripple` effect to the checkbox component. The effect can be disabled through the `disableRipple` property.
+- Added the ability to specify the label location in the checkbox component through the `labelPosition` property. It can either be `before` or `after` the checkbox element.
+- `igxМask` directive added
+    - `igxМask` provide means for controlling user input and formatting the visible value based on a configurable mask rules. For more detailed information see [`igxMask README file`]
+    (https://github.com/IgniteUI/igniteui-angular/blob/master/src/directives/mask/README.md)
 
 ## 5.2.1
 - `hammerjs` and `@types/hammerjs` are removed from `peerDependencies` and were added as `dependencies`. So if you are using Igniteui-Angular version 5.2.1 or above it is enough to run `npm install igniteui-angular` in your project for getting started. For more detailed information see [`Ignite UI for Angular Getting Started`](https://www.infragistics.com/products/ignite-ui-angular/getting-started)
