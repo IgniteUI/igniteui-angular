@@ -55,15 +55,19 @@ export class MaskHelper {
                 }
             } else {
                 inputValue = this.replaceCharAt(inputValue, cursor, "");
-                this._cursor++;
-                cursor++;
+                this._cursor = ++cursor;
                 for (let i = cursor; i < mask.length; i++) {
                     if (literalKeys.indexOf(this._cursor) !== -1) {
-                        this._cursor++;
+                        this._cursor = ++cursor;
                     } else {
-                        inputValue = this.replaceCharAt(inputValue, this._cursor, char);
-                        this._cursor++;
-                        break;
+                        const isCharValid = this.validateCharOnPostion(char, cursor, mask);
+                        if (isCharValid) {
+                            inputValue = this.replaceCharAt(inputValue, cursor, char);
+                            this._cursor = ++cursor;
+                            break;
+                        } else {
+                            break;
+                        }
                     }
                 }
             }
