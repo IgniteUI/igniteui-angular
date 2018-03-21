@@ -347,7 +347,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         if (selectedIndex === -1) {
             view = items.slice(0, 7);
             selectedItem = items[3];
-        } else if (this._isMinuteListLoop) {
+        } else if (isListLoop) {
             if (selectedIndex < 2) {
                 view = items.slice(itemsCount - (2 - selectedIndex), itemsCount);
                 view = view.concat(items.slice(0, selectedIndex + 5));
