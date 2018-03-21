@@ -44,7 +44,7 @@ export class MaskHelper {
             }
         } else {
             const char = inputValue[cursor];
-            const isCharValid = this.validateCharOnPostion(char, cursor, mask);
+            let isCharValid = this.validateCharOnPostion(char, cursor, mask);
             if (nonLiteralIndeces.indexOf(cursor) !== -1) {
                 inputValue = this.replaceCharAt(inputValue, cursor, "");
                 if (isCharValid) {
@@ -60,7 +60,7 @@ export class MaskHelper {
                     if (literalKeys.indexOf(this._cursor) !== -1) {
                         this._cursor = ++cursor;
                     } else {
-                        const isCharValid = this.validateCharOnPostion(char, cursor, mask);
+                        isCharValid = this.validateCharOnPostion(char, cursor, mask);
                         if (isCharValid) {
                             inputValue = this.replaceCharAt(inputValue, cursor, char);
                             this._cursor = ++cursor;
@@ -196,6 +196,11 @@ export class MaskHelper {
                 }
             }
         } else {
+            if (inputValue === "" && cursor === -1) {
+                this._cursor = 0;
+                return this.parseValueByMaskOnInit(value, maskOptions);
+            } // workaround for IE 'x' button
+
             if (this._cursor < 0) {
                 this._cursor++;
                 cursor++;
