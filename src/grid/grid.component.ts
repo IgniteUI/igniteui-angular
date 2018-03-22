@@ -151,6 +151,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Output()
     public onColumnPinning = new EventEmitter<any>();
 
+    /**
+     * An @Output property emitting an event when cell or row editing has been performed in the grid.
+     * On cell editing, both cell and row objects in the event arguments are defined for the corresponding
+     * cell that is being edited and the row the cell belongs to.
+     * On row editing, only the row object is defined, for the row that is being edited.
+     * The cell object is null on row editing.
+     */
     @Output()
     public onEditDone = new EventEmitter<IGridEditEventArgs>();
 
