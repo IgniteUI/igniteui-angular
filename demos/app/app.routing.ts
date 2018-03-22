@@ -10,8 +10,9 @@ import { IgxCardSampleComponent } from "./card/sample.component";
 import { CarouselSampleComponent } from "./carousel/sample.component";
 import { IgxDatePickerSampleComponent } from "./date-picker/sample.component";
 import { DialogSampleComponent } from "./dialog/sample.component";
-import { GridPerformanceSampleComponent } from "./grid-performance/sample.component";
 import { GridSampleComponent } from "./grid/sample.component";
+import { GridPerformanceSampleComponent } from "./grid-performance/sample.component";
+import { GridColumnPinningSampleComponent } from "./grid-column-pinning/sample.component";
 import { IconSampleComponent } from "./icon/sample.component";
 import { InputSampleComponent } from "./input/sample.component";
 import { LayoutSampleComponent } from "./layout/sample.component";
@@ -99,6 +100,10 @@ const appRoutes: Routes = [
     {
         component: GridSampleComponent,
         path: "grid"
+    },
+    {
+        component: GridColumnPinningSampleComponent,
+        path: "gridColumnPinning"
     },
     {
         component: GridPerformanceSampleComponent,
