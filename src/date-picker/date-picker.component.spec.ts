@@ -3,7 +3,7 @@ import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { IDatePickerEventArgs, IgxDatePickerComponent, IgxDatePickerModule } from "./date-picker.component";
+import { IgxDatePickerComponent, IgxDatePickerModule } from "./date-picker.component";
 
 describe("IgxDatePicker", () => {
     beforeEach(async(() => {
@@ -111,11 +111,8 @@ describe("IgxDatePicker", () => {
 
         fixture.detectChanges();
 
-        const args: IDatePickerEventArgs = {
-            datepicker
-        };
         expect(datepicker.onOpen.emit).toHaveBeenCalled();
-        expect(datepicker.onOpen.emit).toHaveBeenCalledWith(args);
+        expect(datepicker.onOpen.emit).toHaveBeenCalledWith(datepicker);
     });
 
     it("Datepicker onSelection event and selectDate method propagation", () => {

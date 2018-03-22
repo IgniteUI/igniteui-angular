@@ -70,7 +70,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     @Input() public cancelButtonLabel: string;
 
-    @Output() public onOpen = new EventEmitter<IDatePickerEventArgs>();
+    @Output() public onOpen = new EventEmitter<IgxDatePickerComponent>();
     /**
      * Propagate clanedar events.
      */
@@ -158,7 +158,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
 
         this.alert.open();
         this._onTouchedCallback();
-        this.onOpen.emit({ datepicker: this });
+        this.onOpen.emit(this);
     }
 
     /**
@@ -229,10 +229,6 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
 
 class Constants {
     public static readonly DEFAULT_LOCALE_DATE = "en";
-}
-
-export interface IDatePickerEventArgs {
-    datepicker: IgxDatePickerComponent;
 }
 
 @NgModule({

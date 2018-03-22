@@ -4,7 +4,7 @@ import {
   TestBed
 } from "@angular/core/testing";
 import {By} from "@angular/platform-browser";
-import {ICarouselEventArgs, IgxCarouselComponent, IgxCarouselModule, IgxSlideComponent, ISlideEventArgs} from "./carousel.component";
+import {IgxCarouselComponent, IgxCarouselModule, IgxSlideComponent, ISlideEventArgs} from "./carousel.component";
 
 function dispatchEv(element: HTMLElement, eventType: string) {
     const event = new Event(eventType);
@@ -178,15 +178,12 @@ describe("Carousel", () => {
         spyOn(carousel.onCarouselPaused, "emit");
         carousel.stop();
         fixture.detectChanges();
-        const args2: ICarouselEventArgs = {
-            carousel
-        };
-        expect(carousel.onCarouselPaused.emit).toHaveBeenCalledWith(args2);
+        expect(carousel.onCarouselPaused.emit).toHaveBeenCalledWith(carousel);
 
         spyOn(carousel.onCarouselPlaying, "emit");
         carousel.play();
         fixture.detectChanges();
-        expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledWith(args2);
+        expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledWith(carousel);
     });
 
     it("Carousel click handlers", () => {
