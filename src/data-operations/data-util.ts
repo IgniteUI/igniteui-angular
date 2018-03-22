@@ -49,6 +49,12 @@ export class DataUtil {
         // apply default settings for each sorting expression(if not set)
         return state.strategy.sort(data, state.expressions);
     }
+    public static group<T>(data: T[], state: ISortingState): T[] {
+        // set defaults
+        DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
+        // apply default settings for each grouping expression(if not set)
+        return state.strategy.groupBy(data, state.expressions);
+    }
     public static page<T>(data: T[], state: IPagingState): T[] {
         if (!state) {
             return data;

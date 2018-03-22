@@ -15,6 +15,7 @@ import { DialogSampleModule } from "./dialog/sample.module";
 import { GridSampleModule } from "./grid/sample.module";
 import { GridPerformanceSampleModule } from "./grid-performance/sample.module";
 import { GridColumnPinningSampleModule } from "./grid-column-pinning/sample.module";
+import { GridGroupBySampleModule } from "./grid-groupby/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
 import { InputSampleModule } from "./input/sample.module";
 import { LayoutSampleModule } from "./layout/sample.module";
@@ -73,6 +74,7 @@ import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSw
         GridSampleModule,
         GridColumnPinningSampleModule,
         GridPerformanceSampleModule,
+        GridGroupBySampleModule,
         IgxCardSampleModule,
         IgxSliderSampleModule,
         BadgeSampleModule,

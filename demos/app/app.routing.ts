@@ -13,6 +13,7 @@ import { DialogSampleComponent } from "./dialog/sample.component";
 import { GridSampleComponent } from "./grid/sample.component";
 import { GridPerformanceSampleComponent } from "./grid-performance/sample.component";
 import { GridColumnPinningSampleComponent } from "./grid-column-pinning/sample.component";
+import { GridGroupBySampleComponent } from "./grid-groupby/sample.component";
 import { IconSampleComponent } from "./icon/sample.component";
 import { InputSampleComponent } from "./input/sample.component";
 import { LayoutSampleComponent } from "./layout/sample.component";
@@ -104,6 +105,10 @@ const appRoutes: Routes = [
     {
         component: GridColumnPinningSampleComponent,
         path: "gridColumnPinning"
+    },
+    {
+        component: GridGroupBySampleComponent,
+        path: "gridGroupBy"
     },
     {
         component: GridPerformanceSampleComponent,

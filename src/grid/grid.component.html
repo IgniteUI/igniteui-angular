@@ -34,6 +34,7 @@
 <div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth'>
     <ng-template igxFor let-rowData [igxForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
                             | gridSort:sortingExpressions:id:pipeTrigger
+                            | gridGroupBy:groupingExpressions:id:pipeTrigger
                             | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
         [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer>
         <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">

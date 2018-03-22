@@ -1,0 +1,11 @@
+<div class="wrapper">
+    <igx-grid #grid1 [data]="data" [width]="'1200px'" [height]="'800px'">
+        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
+            [hidden]='c.hidden' [groupable]="true">
+        </igx-column>
+    </igx-grid>
+    <br />
+    <button igxButton="raised" (click)="groupBy('City')">Group/Ungroup 'City'</button>
+    <button igxButton="raised" (click)="groupBy('Region')">Group/Ungroup 'Region'</button>
+
+</div>

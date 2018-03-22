@@ -70,6 +70,11 @@ export class AppComponent {
             name: "Grid Column Pinning"
         },
         {
+            link: "/gridGroupBy",
+            icon: "view_column",
+            name: "Grid GroupBy"
+        },
+        {
             link: "/gridPerformance",
             icon: "view_column",
             name: "Grid Performance"

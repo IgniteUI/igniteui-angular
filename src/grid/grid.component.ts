@@ -72,6 +72,29 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     @Input()
+    get sortingExpressions() {
+        return this._sortingExpressions;
+    }
+
+    set sortingExpressions(value) {
+        this._sortingExpressions = cloneArray(value);
+        this.cdr.markForCheck();
+    }
+
+    @Input()
+    get groupingExpressions() {
+        return this._groupingExpressions;
+    }
+
+    set groupingExpressions(value) {
+        this._groupingExpressions = cloneArray(value);
+        /* grouping should work in conjunction with sorting
+        and without overriding seperate sorting expressions */
+        this._applyGrouping();
+        this.cdr.markForCheck();
+    }
+
+    @Input()
     get paging(): boolean {
         return this._paging;
     }
@@ -160,6 +183,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Output()
     public onRowDeleted = new EventEmitter<any>();
 
+    @Output()
+    public onGroupingDone = new EventEmitter<any>();
+
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
 
@@ -197,16 +223,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this._pipeTrigger;
     }
 
-    @Input()
-    get sortingExpressions() {
-        return this._sortingExpressions;
-    }
-
-    set sortingExpressions(value) {
-        this._sortingExpressions = cloneArray(value);
-        this.cdr.markForCheck();
-    }
-
     public pagingState;
     public calcWidth: number;
     public calcHeight: number;
@@ -226,6 +242,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _filteringLogic = FilteringLogic.And;
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
+    protected _groupingExpressions = [];
     private resizeHandler;
 
     constructor(
@@ -412,6 +429,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
+    public groupBy(...rest): void {
+        if (rest.length === 1 && rest[0] instanceof Array) {
+            this._groupByMultiple(rest[0]);
+        } else {
+            this._groupBy(rest[0], rest[1], rest[2]);
+        }
+    }
+
     public filter(...rest): void {
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._filterMultiple(rest[0]);
@@ -567,6 +592,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     protected _sortMultiple(expressions: ISortingExpression[]) {
         this.gridAPI.sort_multiple(this.id, expressions);
+    }
+
+    protected _groupBy(name: string, direction = SortingDirection.Asc, ignoreCase = true) {
+        this.gridAPI.groupBy(this.id, name, direction, ignoreCase);
+    }
+
+    protected _groupByMultiple(expressions: ISortingExpression[]) {
+        this.gridAPI.groupBy_multiple(this.id, expressions);
+    }
+
+    protected _applyGrouping() {
+        this.gridAPI.sort_multiple(this.id, this._groupingExpressions);
     }
 
     protected _filter(name: string, value: any, condition?, ignoreCase?) {

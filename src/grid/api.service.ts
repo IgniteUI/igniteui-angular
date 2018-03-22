@@ -83,6 +83,25 @@ export class IgxGridAPIService {
         this.get(id).sortingExpressions = sortingState;
     }
 
+    public groupBy(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
+        const groupingState = this.get(id).groupingExpressions;
+
+        this.prepare_sorting_expression(groupingState, fieldName, dir, ignoreCase);
+        this.get(id).groupingExpressions = groupingState;
+        this.sort(id, fieldName, dir, ignoreCase);
+    }
+
+    public groupBy_multiple(id: string, expressions: ISortingExpression[]): void {
+        const groupingState = this.get(id).groupingExpressions;
+
+        for (const each of expressions) {
+            this.prepare_sorting_expression(groupingState, each.fieldName, each.dir, each.ignoreCase);
+        }
+
+        this.get(id).groupingExpressions = groupingState;
+        this.sort_multiple(id, expressions);
+    }
+
     public filter(id, fieldName, term, condition, ignoreCase) {
         const filteringState = this.get(id).filteringExpressions;
         if (this.get(id).paging) {

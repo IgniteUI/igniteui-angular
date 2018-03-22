@@ -1,13 +1,19 @@
 import { ISortingExpression, SortingDirection } from "./sorting-expression.interface";
+import { IGroupByRecord } from "./groupby-record.interface";
+import { cloneArray } from "../core/utils";
 
 export interface ISortingStrategy {
     sort: (data: any[], expressions: ISortingExpression[]) => any[];
+    groupBy: (data: any[], expressions: ISortingExpression[]) => any[];
     compareValues: (a: any, b: any) => number;
 }
 
 export class SortingStrategy implements ISortingStrategy {
     public sort(data: any[], expressions: ISortingExpression[]): any[] {
         return this.sortDataRecursive(data, expressions);
+    }
+    public groupBy(data: any[], expressions: ISortingExpression[]): any[] {
+        return this.groupDataRecursive(data, expressions, 0);
     }
     public compareValues(a: any, b: any) {
         const an = (a === null || a === undefined);
@@ -69,7 +75,6 @@ export class SortingStrategy implements ISortingStrategy {
         };
         return this.arraySort(data, cmpFunc);
     }
-
     private sortDataRecursive<T>(data: T[],
                                  expressions: ISortingExpression[],
                                  expressionIndex: number = 0): T[] {
@@ -102,5 +107,27 @@ export class SortingStrategy implements ISortingStrategy {
             i += gbDataLen - 1;
         }
         return data;
+    }
+    private groupDataRecursive<T>(data: T[], expressions: ISortingExpression[], level: number): T[] {
+        let i = 0, result = [];
+        while (i < data.length) {
+            const group = this.groupedRecordsByExpression(data, i, expressions[level]);
+            const groupRow: IGroupByRecord = {
+                expression: expressions[level],
+                level: level,
+                records: cloneArray(group),
+                value: group[0][expressions[level].fieldName]
+            };
+            result.splice(
+                i,
+                0,
+                groupRow,
+                level < expressions.length - 1 ?
+                    this.groupDataRecursive(group, expressions, level + 1) :
+                    group
+            )
+            i += group.length;
+        }
+        return result;
     }
 }

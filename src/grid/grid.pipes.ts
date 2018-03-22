@@ -28,6 +28,28 @@ export class IgxGridSortingPipe implements PipeTransform {
 }
 
 @Pipe({
+    name: "gridGroupBy",
+    pure: true
+})
+export class igxGridGroupingPipe implements PipeTransform {
+
+    constructor(private gridAPI: IgxGridAPIService) {}
+
+    public transform(collection: any[], expression: ISortingExpression | ISortingExpression[],
+        id: string, pipeTrigger: number): any[] {
+
+        const state = { expressions: [] };
+        state.expressions = this.gridAPI.get(id).groupingExpressions;
+
+        if (!state.expressions.length) {
+            return collection;
+        }
+
+        return DataUtil.group(cloneArray(collection), state);
+    }
+}
+
+@Pipe({
     name: "gridPaging",
     pure: true
 })
