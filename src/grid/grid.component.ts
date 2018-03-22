@@ -46,6 +46,13 @@ export interface IGridCellEventArgs {
     event: Event;
 }
 
+export interface IGridEditEventArgs {
+    row: IgxGridRowComponent;
+    cell: IgxGridCellComponent;
+    currentValue: any;
+    newValue: any;
+}
+
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
@@ -137,8 +144,15 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     @Output()
     public onSelection = new EventEmitter<IGridCellEventArgs>();
 
+    /**
+     * An @Output property emitting an event when cell or row editing has been performed in the grid.
+     * On cell editing, both cell and row objects in the event arguments are defined for the corresponding
+     * cell that is being edited and the row the cell belongs to.
+     * On row editing, only the row object is defined, for the row that is being edited.
+     * The cell object is null on row editing.
+     */
     @Output()
-    public onEditDone = new EventEmitter<any>();
+    public onEditDone = new EventEmitter<IGridEditEventArgs>();
 
     @Output()
     public onColumnInit = new EventEmitter<any>();

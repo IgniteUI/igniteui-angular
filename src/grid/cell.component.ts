@@ -173,7 +173,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
 
     @autoWire(true)
     public update(val: any) {
-        this.grid.onEditDone.emit({ currentValue: this.value, newValue: val });
+        this.grid.onEditDone.emit({ row: this.row, cell: this, currentValue: this.value, newValue: val });
         this.value = val;
         this.gridAPI.update(this.gridID, this);
     }

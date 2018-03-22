@@ -55,7 +55,7 @@ export class IgxGridAPIService {
 
     public update_row(value: any, id: string, row: IgxGridRowComponent): void {
         const index = this.get(id).data.indexOf(row.rowData);
-        this.get(id).onEditDone.emit({ currentValue: this.get(id).data[index], newValue: value });
+        this.get(id).onEditDone.emit({ row, cell: null, currentValue: this.get(id).data[index], newValue: value });
         this.get(id).data[index] = value;
     }
 
