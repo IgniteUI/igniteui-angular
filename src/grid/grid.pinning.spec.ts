@@ -9,7 +9,7 @@ import { STRING_FILTERS } from "../data-operations/filtering-condition";
 import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
-import { IgxGridComponent } from "./grid.component";
+import { IgxGridComponent, IGridCellEventArgs } from "./grid.component";
 import { IgxGridModule } from "./index";
 
 describe("IgxGrid - Column Pinning ", () => {
@@ -652,8 +652,8 @@ export class GridPinningComponent {
     public columnPinningHandler($event) {
         $event.insertAtIndex = 0;
     }
-    public cellSelected(event) {
-        this.selectedCell = event;
+    public cellSelected(event: IGridCellEventArgs) {
+        this.selectedCell = event.cell;
     }
 }
 
