@@ -184,7 +184,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     public scrollTo(index) {
-        if (index < 0 || index > this.igxForOf.length - this.state.chunkSize) {
+        if (index < 0 || index > this.igxForOf.length) {
             return;
         }
         this.state.startIndex = index;
