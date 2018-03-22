@@ -1,15 +1,16 @@
 <div class="samples">
+    <h3>Line Style Input</h3>
     <form class="form">
         <!-- Basic text field -->
-        <igx-input-group>            
-            <input igxInput name="firstName" type="text" [(ngModel)]="user.firstName" required="required" />
+        <igx-input-group>
+            <input igxInput name="firstName" type="text" [(ngModel)]="user.firstName" required />
             <label igxLabel for="firstName">Text Field</label>
         </igx-input-group>
 
         <!-- Basic text field w/ placeholder -->
         <igx-input-group>
             <label igxLabel>Label</label>
-            <input igxInput type="text" placeholder="Placeholder" />
+            <input igxInput value="test" type="text" placeholder="Placeholder" readonly/>
         </igx-input-group>
 
         <!-- Text field w/ text prefix -->
@@ -25,7 +26,7 @@
                 <igx-icon name="email"></igx-icon>
             </igx-prefix>
             <label igxLabel>Email address</label>
-            <input igxInput type="email" required="required" />
+            <input igxInput type="email" required />
         </igx-input-group>
 
         <!-- Text field w/ icon suffix and hint at the beginning  -->
@@ -41,9 +42,9 @@
         <!-- Textarea group -->
         <igx-input-group>
             <label igxLabel>Message</label>
-            <textarea igxInput></textarea>
+            <textarea igxInput #textarea maxlength="140"></textarea>
             <igx-hint position="start">Helper text</igx-hint>
-            <igx-hint position="end">0/280</igx-hint>
+            <igx-hint position="end">{{textarea.value.length}}/140</igx-hint>
         </igx-input-group>
 
         <!-- Text field w/ text prefix - disabled -->
@@ -51,11 +52,14 @@
             <igx-prefix>+359</igx-prefix>
             <label igxLabel>Phone</label>
             <input igxInput type="tel" value="12345678" disabled="disabled" />
-            <igx-suffix><igx-icon name="phone"></igx-icon></igx-suffix>
+            <igx-suffix>
+                <igx-icon name="phone"></igx-icon>
+            </igx-suffix>
             <igx-hint position="start">Ex.: +359 888 123 456</igx-hint>
         </igx-input-group>
     </form>
 
+    <h3>Box Style Input</h3>
     <form class="form">
         <!-- Boxed text field -->
         <igx-input-group type="box">
@@ -67,7 +71,9 @@
         <igx-input-group type="box">
             <label igxLabel>Phone</label>
             <input igxInput type="tel" />
-            <igx-suffix><igx-icon name="phone"></igx-icon></igx-suffix>
+            <igx-suffix>
+                <igx-icon name="phone"></igx-icon>
+            </igx-suffix>
             <igx-hint>Call your mom</igx-hint>
         </igx-input-group>
 
@@ -81,10 +87,13 @@
         <igx-input-group type="box">
             <label igxLabel>Phone</label>
             <input igxInput type="tel" value="123456789" disabled />
-            <igx-suffix><igx-icon name="phone"></igx-icon></igx-suffix>
+            <igx-suffix>
+                <igx-icon name="phone"></igx-icon>
+            </igx-suffix>
         </igx-input-group>
     </form>
 
+    <h3>Border Style Input</h3>
     <form class="form">
         <!-- Border text field -->
         <igx-input-group type="border">
@@ -96,31 +105,58 @@
         <igx-input-group type="border">
             <label igxLabel>Phone</label>
             <input igxInput type="tel" required />
-            <igx-suffix><igx-icon name="phone"></igx-icon></igx-suffix>
+            <igx-suffix>
+                <igx-icon name="phone"></igx-icon>
+            </igx-suffix>
             <igx-hint>Call your mom</igx-hint>
         </igx-input-group>
-        
+
 
         <!-- Border textarea field -->
         <igx-input-group type="border">
             <label igxLabel>Message</label>
             <textarea igxInput></textarea>
         </igx-input-group>
-        
+
 
         <!-- Border text field w/ icon suffix - disabled -->
         <igx-input-group type="border">
             <label igxLabel>Phone</label>
             <input igxInput type="tel" value="123456789" disabled />
-            <igx-suffix><igx-icon name="phone"></igx-icon></igx-suffix>
+            <igx-suffix>
+                <igx-icon name="phone"></igx-icon>
+            </igx-suffix>
         </igx-input-group>
     </form>
 
+    <h3>Search Style Input</h3>
     <form class="form">
         <!-- Search text field -->
         <igx-input-group type="search">
-            <label igxLabel>Text Field</label>
-            <input igxInput />
+            <input #input igxInput placeholder="Search" />
+            <igx-prefix>
+                <i class="material-icons">search</i>
+            </igx-prefix>
+            <igx-suffix *ngIf="input.value.length > 0" (click)="input.value = input.defaultValue">
+                <i class="material-icons">clear</i>
+            </igx-suffix>
+            <igx-suffix>
+                <i class="material-icons">mic</i>
+            </igx-suffix>
+        </igx-input-group>
+
+        <!-- Search text field -->
+        <igx-input-group type="search">
+            <input #input1 igxInput placeholder="Search" disabled />
+            <igx-prefix>
+                <i class="material-icons">search</i>
+            </igx-prefix>
+            <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''">
+                <i class="material-icons">clear</i>
+            </igx-suffix>
+            <igx-suffix>
+                <i class="material-icons">mic</i>
+            </igx-suffix>
         </igx-input-group>
     </form>
 </div>

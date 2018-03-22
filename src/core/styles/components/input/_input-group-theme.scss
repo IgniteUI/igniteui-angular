@@ -19,6 +19,11 @@
     $border-background: null,
     $border-disabled-background: null,
 
+    $search-background: null,
+    $search-disabled-background: null,
+    $search-shadow-color: null,
+    $search-disabled-shadow-color: null,
+
     $success-secondary-color: null,
     $warning-secondary-color: null,
     $error-secondary-color: null,
@@ -43,8 +48,14 @@
 
         box-background: $box-background,
         box-disabled-background: $box-disabled-background,
+
         border-background: $border-background,
         border-disabled-background: $border-disabled-background,
+
+        search-background: $search-background,
+        search-disabled-background: $search-disabled-background,
+        search-shadow-color: $search-shadow-color,
+        search-disabled-shadow-color: $search-disabled-shadow-color,
 
         success-secondary-color: $success-secondary-color,
         warning-secondary-color: $warning-secondary-color,
@@ -73,8 +84,14 @@
 
         $box-background: rgba(0, 0, 0, .06),
         $box-disabled-background: rgba(0, 0, 0, .03),
+
         $border-background: transparent,
         $border-disabled-background: rgba(0, 0, 0, .03),
+
+        $search-background: white,
+        $search-disabled-background: white,
+        $search-shadow-color: igx-color($palette, 'grays', 600),
+        $search-disabled-shadow-color: igx-color($palette, 'grays', 300),
 
         $success-secondary-color: igx-color($palette, 'success'),
         $warning-secondary-color: igx-color($palette, 'warn'),
@@ -99,8 +116,14 @@
 
         $box-background: rgba(255, 255, 255, .1),
         $box-disabled-background: rgba(255, 255, 255, .06),
+
         $border-background: transparent,
         $border-disabled-background: rgba(255, 255, 255, .06),
+
+        $search-background: rgba(255, 255, 255, .1),
+        $search-disabled-background: rgba(255, 255, 255, .06),
+        $search-shadow-color: igx-color($palette, 'grays', 600),
+        $search-disabled-shadow-color: igx-color($palette, 'grays', 300),
 
         $success-secondary-color: igx-color($palette, 'success'),
         $warning-secondary-color: igx-color($palette, 'warn'),
@@ -116,6 +139,9 @@
     }
 
     $transition-timing: .25s $ease-out-cubic;
+    $search-shadow: igx-elevation($elevations, 1);
+    $search-shadow-hover: igx-elevation($elevations, 2);
+    $search-shadow-disabled: igx-elevation($elevations, 1);
 
     %form-group-display {
         position: relative;
@@ -169,14 +195,17 @@
     }
 
     %form-group-bundle--focus {
+        caret-color: map-get($this, 'focused-secondary-color');
         box-shadow: inset 0 -.125em 0 0 rgba(map-get($this, 'focused-bottom-line-color'), .12);
     }
 
     %form-group-bundle--success {
+        caret-color: map-get($this, 'success-secondary-color');
         box-shadow: inset 0 -.0625em 0 0 map-get($this, 'success-secondary-color');
     }
 
     %form-group-bundle--error {
+        caret-color: map-get($this, 'error-secondary-color');
         box-shadow: inset 0 -.0625em 0 0 map-get($this, 'error-secondary-color');
     }
 
@@ -222,6 +251,39 @@
     %form-group-bundle-border--disabled {
         background: map-get($this, 'border-disabled-background');
         box-shadow: inset 0 0 0 .0625em rgba(map-get($this, 'disabled-text-color'), .06);
+    }
+
+    %form-group-bundle--search {
+        padding: 1.125em 1em 0;
+        border-radius: 4px;
+        border-bottom: none;
+        background: map-get($this, 'search-background');
+        box-shadow: $search-shadow;
+
+        %form-group-label--box + %form-group-input--box {
+            transform: translateY(0);
+        }
+    }
+
+    %form-group-bundle-search--hover {
+        box-shadow: $search-shadow-hover;
+    }
+
+    %form-group-bundle-search--focus {
+        box-shadow: $search-shadow-hover;
+    }
+
+    %form-group-bundle-search--error {
+        box-shadow: $search-shadow-hover;
+    }
+
+    %form-group-bundle-search--success {
+        box-shadow: $search-shadow-hover;
+    }
+
+    %form-group-bundle-search--disabled {
+        background: map-get($this, 'search-disabled-background');
+        box-shadow: $search-shadow-disabled;
     }
 
     %form-group-bundle-main {
