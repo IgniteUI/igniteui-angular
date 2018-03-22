@@ -83,7 +83,7 @@
 /// @requires rem
 @mixin igx-grid($theme, $palette: $default-palette) {
     $default-theme: igx-grid-theme(
-        $header-background: #fff,
+        $header-background: igx-color($palette, 'grays', 100),
         $header-text-color: igx-color($palette, 'grays', 600),
 
         $content-background: #fff,
@@ -121,10 +121,18 @@
     $grid-cell-align-num: right;
     $grid-cell-fs: rem(13px);
     $grid-cell-lh: rem(16px);
+    $grid-cell-pinned-style: 1px solid;
+    $grid-cell-pinned-border-color: igx-color($palette, 'grays', 300);
+
+    // Pinning
+    $cell-pin: (
+        style: 1px solid,
+        color: igx-color($palette, 'grays', 400)
+    );
 
     %grid-display {
         display: grid;
-        grid-template-rows: auto auto auto;
+        grid-template-rows: auto auto auto auto;
         grid-template-columns: 1fr;
         border-radius: $grid-br;
         box-shadow: $grid-shadow;
@@ -134,8 +142,8 @@
 
     %vhelper-display {
         &::-webkit-scrollbar {
-            width: 17px;
-            height: 17px;
+            width: 18px;
+            height: 18px;
         }
 
         &::-webkit-scrollbar-track {
@@ -186,18 +194,22 @@
         color: map-get($this, 'header-text-color');
 
         %grid-row {
+            background: transparent;
+
             &:hover {
-                background-color: transparent;
+                background: transparent;
             }
         }
     }
 
     %grid-thead {
         grid-row: 1;
+        border-bottom: 1px dotted igx-color($palette, 'grays', 400);
     }
 
     %grid-tfoot {
-        grid-row: 3;
+        grid-row: 4;
+        border-top: 1px dotted igx-color($palette, 'grays', 400);
     }
 
     %grid-display-container-thead {
@@ -244,6 +256,23 @@
         display: flex;
         justify-content: center;
         text-align: center;
+    }
+
+    %grid-scroll {
+        display: flex;
+        flex-flow: row nowrap;
+        grid-row: 3;
+        background: igx-color($palette, 'grays', 100);
+    }
+
+    %grid-scroll-start {
+        border-right: 1px solid igx-color($palette, 'grays', 400);
+    }
+
+    %grid-scroll-main {
+        igx-display-container {
+            height: 0;
+        }
     }
 
     %grid-row {
@@ -298,6 +327,10 @@
         z-index: 10;
     }
 
+    %grid-cell-pinned--start {
+        border-right: map-get($cell-pin, 'style') map-get($cell-pin, 'color') !important;
+    }
+
     %grid-cell-header {
         display: flex;
         position: relative;
@@ -308,13 +341,16 @@
         font-weight: $grid-head-fw;
         overflow: visible;
         min-width: 0;
+        border-right: 1px dotted igx-color($palette, 'grays', 400);
 
         &.title {
+            @include ellipsis();
             cursor: pointer;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
             user-select: none;
+        }
+
+        &:last-of-type {
+            border-right: transparent;
         }
     }
 }

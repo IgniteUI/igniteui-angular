@@ -76,7 +76,7 @@ export class RemoteService {
     }
 
     private buildUrl(dataState: IDataState): string {
-        let qS: string = "";
+        let qS = "";
         if (dataState && dataState.paging) {
             const skip = dataState.paging.index * dataState.paging.recordsPerPage;
             const top = dataState.paging.recordsPerPage;
@@ -117,7 +117,7 @@ export class GridSampleComponent {
     public newRecord = "";
     public editCell;
     constructor(private localService: LocalService,
-        private remoteService: RemoteService) { }
+    private remoteService: RemoteService) { }
     public ngOnInit(): void {
         this.data = this.localService.records;
         this.remote = this.remoteService.remoteData;
@@ -171,14 +171,14 @@ export class GridSampleComponent {
         });
     }
 
-    /*public initColumns(event: IgxGridColumnInitEvent) {
-        const column: IgxColumnComponent = event.column;
+    public initColumns(event: IgxColumnComponent) {
+        const column: IgxColumnComponent = event;
         if (column.field === "Name") {
             column.filterable = true;
             column.sortable = true;
             column.editable = true;
         }
-    }*/
+    }
 
     public onPagination(event) {
         if (!this.grid2.paging) {
@@ -207,7 +207,7 @@ export class GridSampleComponent {
     }
 
     public selectCell(event) {
-        this.selectedCell = event.cell;
+        this.selectedCell = event;
     }
 
     public addRow() {

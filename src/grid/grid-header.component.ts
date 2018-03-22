@@ -101,6 +101,24 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
         }
     }
 
+    get grid(): any {
+        return this.gridAPI.get(this.gridID);
+    }
+
+    get isPinned() {
+        return this.column.pinned;
+    }
+
+    @HostBinding("class.igx-grid__th--pinned-start")
+    get isLastPinned() {
+        const pinnedCols = this.grid.pinnedColumns;
+        if (pinnedCols.length === 0) {
+            return false;
+        } else {
+            return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
+        }
+    }
+
     protected getSortDirection() {
         const expr = this.gridAPI.get(this.gridID).sortingExpressions.find((x) => x.fieldName === this.column.field);
         this.sortDirection = expr ? expr.dir : SortingDirection.None;
@@ -114,11 +132,11 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
 
     public onResizeAreaMouseDown(event) {
         if (event.button === 0 && this.column.resizable) {
-            this.column.grid.resizer.show = true;
+            this.grid.resizer.show = true;
 
-            this.column.grid.resizer.column = this.column;
-            this.column.grid.resizer.x = event.clientX + 1;
-            this.column.grid.resizer.actualWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
+            this.grid.resizer.column = this.column;
+            this.grid.resizer.x = event.clientX + 1;
+            this.grid.resizer.actualWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
         } else {
             this.cursor = null;
         }
@@ -142,13 +160,13 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
 
             const index = cellsContentWidths.indexOf(largestCell);
             const cellEl = this.column.cells[index].nativeElement;
-            const cellStyle = this.column.grid.document.defaultView.getComputedStyle(cellEl);
+            const cellStyle = this.grid.document.defaultView.getComputedStyle(cellEl);
             const padding = parseInt(cellStyle.paddingLeft, 10) + parseInt(cellStyle.paddingRight, 10);
 
             this.column.width = (largestCell + padding).toString();
 
-            this.column.grid.markForCheck();
-            this.column.grid.onColumnResized.emit({column: this.column, prevWidth: currentColWidth, newWidth: this.column.width});
+            this.grid.markForCheck();
+            this.grid.onColumnResized.emit({column: this.column, prevWidth: currentColWidth, newWidth: this.column.width});
         }
     }
 }
