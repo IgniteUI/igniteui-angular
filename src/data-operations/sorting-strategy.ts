@@ -118,14 +118,11 @@ export class SortingStrategy implements ISortingStrategy {
                 records: cloneArray(group),
                 value: group[0][expressions[level].fieldName]
             };
-            result.splice(
-                i,
-                0,
-                groupRow,
-                level < expressions.length - 1 ?
-                    this.groupDataRecursive(group, expressions, level + 1) :
-                    group
-            )
+            result.push(groupRow);
+            result = result.concat(level < expressions.length - 1 ?
+                this.groupDataRecursive(group, expressions, level + 1) :
+                group
+            );
             i += group.length;
         }
         return result;

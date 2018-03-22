@@ -37,6 +37,7 @@ import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { IgxGridRowComponent } from "./row.component";
+import { IgxGridGroupByRowComponent } from "./groupby-row.component";
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;

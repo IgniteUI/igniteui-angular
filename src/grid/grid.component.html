@@ -37,8 +37,14 @@
                             | gridGroupBy:groupingExpressions:id:pipeTrigger
                             | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
         [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer>
-        <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
-        </igx-grid-row>
+        <ng-container *ngIf="rowData.records && rowData.records.length > 0">
+            <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData">
+            </igx-grid-groupby-row>
+        </ng-container>
+        <ng-container *ngIf="!rowData.records">
+            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
+            </igx-grid-row>
+        </ng-container>
     </ng-template>
 </div>
 
