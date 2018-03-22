@@ -20,19 +20,40 @@
 
         igx-display-container {
             @extend %grid-display-container-thead !optional;
+            width: 100%;
         }
-    }
-
-    @include e(tfoot) {
-        @extend %grid-tfoot !optional;
     }
 
     @include e(tbody) {
         @extend %grid-tbody !optional;
+
+        igx-display-container {
+            height: 100%;
+        }
     }
 
     @include e(tbody, $m: empty) {
         @extend %grid-tbody--empty !optional;
+
+        igx-display-container {
+            height: 100%;
+        }
+    }
+
+    @include e(scroll) {
+        @extend %grid-scroll !optional;
+    }
+
+    @include e(scroll-start) {
+        @extend %grid-scroll-start !optional;
+    }
+
+    @include e(scroll-main) {
+        @extend %grid-scroll-main !optional;
+    }
+
+    @include e(tfoot) {
+        @extend %grid-tfoot !optional;
     }
 
     @include e(tr) {
@@ -67,6 +88,10 @@
         @extend %grid-cell-number !optional;
     }
 
+    @include e(th, $m: pinned-start) {
+        @extend %grid-cell-pinned--start !optional;
+    }
+
     @include e(th, $m: fw) {
         @extend %grid-cell--fixed-width !optional;
     }
@@ -81,6 +106,14 @@
 
     @include e(td, $m: number) {
         @extend %grid-cell-number !optional;
+    }
+
+    @include e(td, $m: pinned-start) {
+        @extend %grid-cell-pinned--start !optional;
+    }
+
+    @include e(td, $m: pinned-end) {
+        @extend %grid-cell-pinned--end !optional;
     }
 
     @include e(td, $m: fw) {
