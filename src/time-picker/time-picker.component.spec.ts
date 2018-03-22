@@ -580,6 +580,66 @@ describe("IgxTimePicker", () => {
         fixture.detectChanges();
         expect(console.error).not.toHaveBeenCalled();
     });
+
+    it("Timepicker with not valid element arrow up", () => {
+        const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
+        fixture.detectChanges();
+
+        const timePicker = fixture.componentInstance.timePicker;
+        const dom = fixture.debugElement;
+
+        const notValidHour = "700";
+        timePicker.selectedHour = notValidHour;
+
+        openInput(fixture);
+
+        const getHourColumn: any = dom.query(By.css(".igx-time-picker__hourList"));
+
+        const args = { key: "ArrowUp", bubbles: true };
+        getHourColumn.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        fixture.detectChanges();
+
+        expect(getHourColumn.nativeElement.children[3].innerText).not.toBe(notValidHour);
+    });
+
+    it("Timepicker with not valid element arrow down", () => {
+        const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
+        fixture.detectChanges();
+
+        const timePicker = fixture.componentInstance.timePicker;
+        const dom = fixture.debugElement;
+
+        const notValidValue = "700";
+        timePicker.selectedMinute = notValidValue;
+
+        openInput(fixture);
+
+        const getMinuteColumn: any = dom.query(By.css(".igx-time-picker__minuteList"));
+        const getAMPMColumn: any = dom.query(By.css(".igx-time-picker__ampmList"));
+        const args = { key: "ArrowDown", bubbles: true };
+        getMinuteColumn.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        getAMPMColumn.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        fixture.detectChanges();
+
+        expect(getMinuteColumn.nativeElement.children[3].innerText).not.toBe(notValidValue);
+    });
+
+    it("Timepicker vertical", () => {
+        const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
+        fixture.detectChanges();
+        const dom = fixture.debugElement;
+
+        const timePicker = fixture.componentInstance.timePicker;
+        timePicker.vertical = true;
+
+        openInput(fixture);
+
+        expect(dom.query(By.css(".igx-time-picker--vertical"))).not.toBeNull();
+
+        const dialog = dom.query(By.css(".igx-dialog__window")).nativeElement;
+
+        expect(dialog.offsetWidth).toBeGreaterThan(dialog.offsetHeight);
+    });
 });
 
 @Component({
@@ -713,4 +773,10 @@ function findByInnerText(collection, searchText) {
             return element;
         }
     }
+}
+function clickOkButton(fixture) {
+    const dom = fixture.debugElement;
+    const getOkButton = dom.queryAll(By.css(".igx-button--flat"))[1];
+    getOkButton.triggerEventHandler("click", {});
+    fixture.detectChanges();
 }
