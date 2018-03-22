@@ -217,6 +217,10 @@
             @extend %form-group-bundle--box !optional;
         }
 
+        @include e(input) {
+            @extend %form-group-input--box !optional;
+        }
+
         @include e(label) {
             @extend %form-group-label--box !optional;
         }
@@ -251,6 +255,10 @@
 
         @include e(border) {
             @extend %form-group-border--hidden !optional;
+        }
+
+        @include e(input) {
+            @extend %form-group-input--box !optional;
         }
 
         @include e(label) {
