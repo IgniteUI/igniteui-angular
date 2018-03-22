@@ -5,7 +5,7 @@ import { IFilteringExpression } from "../data-operations/filtering-expression.in
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
-import { IgxGridComponent, IGridEditEventArgs } from "./grid.component";
+import { IGridEditEventArgs, IgxGridComponent } from "./grid.component";
 import { IgxGridRowComponent } from "./row.component";
 
 @Injectable()
