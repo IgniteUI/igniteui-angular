@@ -150,55 +150,59 @@ public deleteRow(event) {
 Below is the list of all inputs that the developers may set to configure the grid look/behavior:
 |Name|Type|Description|
 |--- |--- |--- |
-|`id`|string|Unique identifier of the Grid. If not provided it will be automatically generated.|
-|`data`|Array|The data source for the grid.|
-|`autoGenerate`|boolean|Autogenerate grid's columns, default value is _false_|
-|`paging`|bool|Enables the paging feature. Defaults to _false_.|
-|`perPage`|number|Visible items per page, default is 15|
-|`filteringLogic`|FilteringLogic|The filtering logic of the grid. Defaults to _AND_.|
-|`filteringExpressions`|Array|The filtering state of the grid.|
-|`sortingExpressions`|Array|The sorting state of the grid.|
-|`height`|string|The height of the grid element. You can pass values such as `1000px`, `75%`, etc.|
-|`width`|string|The width of the grid element. You can pass values such as `1000px`, `75%`, etc.|
-|`evenRowCSS`|string|Additional styling classes applied to all even rows in the grid.|
-|`oddRowCSS`|string|Additional styling classses applied to all odd rows in the grid.|
-|`paginationTemplate`|TemplateRef|You can provide a custom `ng-template` for the pagination part of the grid.|
+|id|string|Unique identifier of the Grid. If not provided it will be automatically generated.|
+|data|Array|The data source for the grid.|
+|autoGenerate|boolean|Autogenerate grid's columns, default value is _false_|
+|paging|bool|Enables the paging feature. Defaults to _false_.|
+|perPage|number|Visible items per page, default is 15|
+|filteringLogic|FilteringLogic|The filtering logic of the grid. Defaults to _AND_.|
+|filteringExpressions|Array|The filtering state of the grid.|
+|sortingExpressions|Array|The sorting state of the grid.|
+|height|string|The height of the grid element. You can pass values such as `1000px`, `75%`, etc.|
+|width|string|The width of the grid element. You can pass values such as `1000px`, `75%`, etc.|
+|rowHeight|number|...|
+|evenRowCSS|string|Additional styling classes applied to all even rows in the grid.|
+|oddRowCSS|string|Additional styling classses applied to all odd rows in the grid.|
+|paginationTemplate|TemplateRef|You can provide a custom `ng-template` for the pagination part of the grid.|
 
 ### Outputs
 
-| Name | Description |
-| :--- | :--- |
-| *Event emitters* | *Notify for a change* |
-| onEditDone  | Used on update row to emit the updated row  |
-| onFilterDone  | Used when filtering data to emit the column and filtering expression  |
-| onSortingDone  | Used when sorting data to emit the column, direction and sorting expression  |
-| onMovingDone  | Used when moving column to emit the drop event  |
-| onCellSelection  | Used when focusing a cell to emit the cell  |
-| onRowSelection  | Used when focusing a row to emit the row  |
-| onPagingDone  | Used when paginating to emit paginator event  |
-| onColumnInit  | Used when initializing a column to emit it  |
-| onBeforeProcess  | Emit binding behavior  |
-| onColumnPinning | Used when pinning a column; the index of the pin can be changed |
+|Name|Description|
+|:--- |:--- |
+|*Event emitters* |*Notify for a change*|
+|onEditDone|Used on update row to emit the updated row|
+|onFilteringDone|Used when filtering data to emit the column and filtering expression|
+|onSortingDone|Used when sorting data to emit the column, direction and sorting expression|
+|onCellSelection|Used when focusing a cell to emit the cell|
+|onRowSelection|Used when focusing a row to emit the row|
+|onPagingDone|Used when paginating to emit paginator event|
+|onColumnInit|Used when initializing a column to emit it|
+|onColumnPinning|Used when pinning a column; the index of the pin can be changed|
 
 
 
-| Signature | Description |
-| :--- | :--- |
-| getColumnByIndex(index: number)  | Get grid column by index  |
-| getColumnByField(field: string)  | Get grid column by field name  |
-| getCell(rowIndex: number, columnField: string) | Returns the cell at rowIndex/columnIndex.  |
-| getRow(rowIndex: number) | Returns row  |
-| focusCell | Focuses the grid cell at position row x column  |
-| focusRow | Focuses the grid row at `index`.  |
-| filterData | Filter data by search term and column  |
-| addRow | Add record to the grid data container  |
-| deleteRow | Remove record from the grid data container  |
-| updateRow | Update record from teh grid data container  |
-| updateCell | Update grid cell by index, column field and passed value  |
-| sortColumn | Sort grid column  |
-| paginate | Change the current page by passed number  |
-| pinColumn | Pin a column by its name |
-| unpinColumn | Unpin a column by its name |
+|Signature|Description|
+|:--- |:--- |
+|getColumnByName(name: string)|Returns the column object with field property equal to `name` or `undefined` if no such column exists.|
+|getCellByColumn(rowIndex: number, columnField: string)|Returns the cell object in column with `columnField` and row with `rowIndex` or `undefined`.|
+|getRowByIndex(index: number)|Returns row|
+|addRow(data: any)|Creates a new row object and adds the `data` record to the end of the data source.|
+|deleteRow(rowIndex: number)|Removes the row object and the corresponding data record from the data source.|
+|updateRow(value: any, rowIndex: number)|Updates the row object and the data source record with the passed value.|
+|updateCell(value: any, rowIndex: number, column: string)|Updates the cell object and the record field in the data source.|
+|filter(column: string, value: any, condition?, ignoreCase?: boolean)|Filters a single column. Check the available [filtering conditions](#filtering-conditions)|
+|filter(expressions: Array)|Filters the grid columns based on the provided array of filtering expressions.|
+|filterGlobal(value: any, condition? ignoreCase?)|Filters all the columns in the grid.|
+|clearFilter(name?: string)|If `name` is provided, clears the filtering state of the corresponding column, otherwise clears the filtering state of all columns.|
+|sort(name: string, direction, ignorecase)|Sorts a single column.|
+|sort(expressions: Array)|Sorts the grid columns based on the provided array of sorting expressions.|
+|clearSort(name?: string)|If `name` is provided, clears the sorting state of the corresponding column, otherwise clears the sorting state of all columns.|
+|pinColumn(columnName: string)|Pin a column by its name|
+|unpinColumn(columnName: string)|Unpin a column by its name|
+|previousPage()|Goes to the previous page if paging is enabled and the current page is not the first.|
+|nextPage()|Goes to the next page if paging is enabled and current page is not the last.|
+|paginate(page: number)|Goes to the specified page if paging is enabled. Page indices are 0 based.|
+|markForCheck()|Manually triggers a change detection cycle for the grid and its children.|
 
 <div class="divider--half"></div>
 
