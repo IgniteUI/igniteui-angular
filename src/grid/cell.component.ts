@@ -17,7 +17,7 @@ import { DataType } from "../data-operations/data-util";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
 import { autoWire, IGridBus } from "./grid.common";
-import { IGridCellEventArgs } from "./grid.component";
+import { IGridCellEventArgs, IGridEditEventArgs } from "./grid.component";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -173,8 +173,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
 
     @autoWire(true)
     public update(val: any) {
-        this.grid.onEditDone.emit({ row: this.row, cell: this, currentValue: this.value, newValue: val });
-        this.value = val;
+        const args: IGridEditEventArgs = { row: this.row, cell: this, currentValue: this.value, newValue: val };
+        this.grid.onEditDone.emit(args);
+        this.value = args.newValue;
         this.gridAPI.update(this.gridID, this);
     }
 
