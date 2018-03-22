@@ -59,7 +59,7 @@ export interface IGridEditEventArgs {
     selector: "igx-grid",
     templateUrl: "./grid.component.html"
 })
-export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
+export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
 
     @Input()
     public data = [];
@@ -132,6 +132,10 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     @Input()
     public width;
 
+    get headerWidth() {
+        return parseInt(this.width, 10) - 17;
+    }
+
     @Input()
     public evenRowCSS = "";
 
@@ -144,13 +148,9 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     @Output()
     public onSelection = new EventEmitter<IGridCellEventArgs>();
 
-    /**
-     * An @Output property emitting an event when cell or row editing has been performed in the grid.
-     * On cell editing, both cell and row objects in the event arguments are defined for the corresponding
-     * cell that is being edited and the row the cell belongs to.
-     * On row editing, only the row object is defined, for the row that is being edited.
-     * The cell object is null on row editing.
-     */
+    @Output()
+    public onColumnPinning = new EventEmitter<any>();
+
     @Output()
     public onEditDone = new EventEmitter<IGridEditEventArgs>();
 
@@ -180,6 +180,12 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
 
     @ViewChild("scrollContainer", { read: IgxForOfDirective })
     public parentVirtDir: IgxForOfDirective<any>;
+
+    @ViewChild("verticalScrollContainer", { read: IgxForOfDirective })
+    public verticalScrollContainer: IgxForOfDirective<any>;
+
+    @ViewChild("scr", { read: ElementRef })
+    public scr: ElementRef;
 
     @ViewChild("headerContainer", { read: IgxForOfDirective })
     public headerContainer: IgxForOfDirective<any>;
@@ -226,7 +232,9 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     protected _page = 0;
     protected _paging = false;
     protected _pipeTrigger = 0;
-    protected _columns = [];
+    protected _columns: IgxColumnComponent[] = [];
+    protected _pinnedColumns: IgxColumnComponent[] = [];
+    protected _unpinnedColumns: IgxColumnComponent[] = [];
     protected _filteringLogic = FilteringLogic.And;
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
@@ -241,40 +249,15 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
         private resolver: ComponentFactoryResolver,
         private viewRef: ViewContainerRef) {
 
-            this.resizeHandler = () => {
-                const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
-                if (!this.width) {
-                    /*no width specified.*/
-                    this.calcWidth = null;
-                } else if (this.width && this.width.indexOf("%") !== -1) {
-                    /* width in %*/
-                    this.calcWidth = parseInt(computed.getPropertyValue("width"), 10);
-                }
-                if (!this.height) {
-                    /*no height specified.*/
-                    this.calcHeight = null;
-                } else if (this.height && this.height.indexOf("%") !== -1) {
-                    /*height in %*/
-                    const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-                        this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
-                    this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
-                        this.theadRow.nativeElement.clientHeight -
-                        footerHeight;
-                } else {
-                    const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-                    this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
-                    this.calcHeight = parseInt(this.height, 10) -
-                        this.theadRow.nativeElement.clientHeight -
-                        footerHeight;
-                }
-
-                this.zone.run(() => this.markForCheck());
-            };
+        this.resizeHandler = () => {
+            this.calculateGridSizes();
+            this.zone.run(() => this.markForCheck());
+        };
     }
 
     public ngOnInit() {
         this.gridAPI.register(this);
-        this.calcWidth = this.width && this.width.indexOf("%") === -1 ?  parseInt(this.width, 10) : 0;
+        this.calcWidth = this.width && this.width.indexOf("%") === -1 ? parseInt(this.width, 10) : 0;
         this.calcHeight = 0;
     }
 
@@ -290,38 +273,16 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
         });
 
         this._columns = this.columnList.toArray();
+        this._pinnedColumns = this._columns.filter((c) => c.pinned);
+        this._unpinnedColumns = this._columns.filter((c) => !c.pinned);
     }
 
     public ngAfterViewInit() {
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.addEventListener("resize", this.resizeHandler);
         });
-        const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
-        if (!this.width) {
-            /*no width specified.*/
-            this.calcWidth = null;
-        } else if (this.width && this.width.indexOf("%") !== -1) {
-            /* width in %*/
-            this.calcWidth = parseInt(computed.getPropertyValue("width"), 10);
-        }
-        if (!this.height) {
-            /*no height specified.*/
-            this.calcHeight = null;
-        } else if (this.height && this.height.indexOf("%") !== -1) {
-            /*height in %*/
-            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-                this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
-            this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
-                this.theadRow.nativeElement.clientHeight -
-                footerHeight;
-        } else {
-            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-            this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
-            this.calcHeight = parseInt(this.height, 10) -
-                this.theadRow.nativeElement.clientHeight -
-                footerHeight;
-        }
 
+        this.calculateGridSizes();
         this.setEventBusSubscription();
         this.setVerticalScrollSubscription();
         this.cdr.detectChanges();
@@ -337,16 +298,36 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
         return this.elementRef.nativeElement;
     }
 
+    get pinnedWidth() {
+        return this.getPinnedWidth();
+    }
+
+    get unpinnedWidth() {
+        return this.getUnpinnedWidth();
+    }
+
     get columns(): IgxColumnComponent[] {
         return this._columns;
+    }
+
+    get pinnedColumns(): IgxColumnComponent[] {
+        return this._pinnedColumns.filter((col) => !col.hidden);
+    }
+
+    get unpinnedColumns(): IgxColumnComponent[] {
+        return this._unpinnedColumns.filter((col) => !col.hidden).sort((col1, col2) => col1.index - col2.index);
     }
 
     public getColumnByName(name: string): IgxColumnComponent {
         return this.columnList.find((col) => col.field === name);
     }
 
+    public getRowByIndex(index: number): IgxGridRowComponent {
+        return this.rowList.toArray()[index];
+    }
+
     get visibleColumns(): IgxColumnComponent[] {
-        return this.columnList.filter((col) => !col.hidden).sort((col1, col2) => col1.index - col2.index);
+        return this.columnList.filter((col) => !col.hidden);
     }
 
     public getCellByColumn(rowIndex: number, columnField: string): IgxGridCellComponent {
@@ -478,6 +459,46 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
         this.gridAPI.clear_sort(this.id, name);
     }
 
+    public pinColumn(columnName: string): boolean {
+        const col = this.getColumnByName(columnName);
+
+        /**
+         * If the column that we want to pin is bigger or equal than the unpinned area we should not pin it.
+         * It should be also unpinned before pinning, since changing left/right pin area doesn't affect unpinned area.
+         */
+        if (parseInt(col.width, 10) >= this.getUnpinnedWidth(true) && !col.pinned) {
+            return false;
+        }
+
+        col.pinned = true;
+        const index = this._pinnedColumns.length;
+
+        const args = { column: col, insertAtIndex: index };
+        this.onColumnPinning.emit(args);
+
+        // update grid collections.
+        if (this._pinnedColumns.indexOf(col) === -1) {
+            this._pinnedColumns.splice(args.insertAtIndex, 0, col);
+
+            if (this._unpinnedColumns.indexOf(col) !== -1) {
+                this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
+            }
+        }
+
+        this.markForCheck();
+        return true;
+    }
+
+    public unpinColumn(columnName: string) {
+        const col = this.getColumnByName(columnName);
+        col.pinned = false;
+        this._unpinnedColumns.splice(col.index, 0, col);
+        if (this._pinnedColumns.indexOf(col) !== -1) {
+            this._pinnedColumns.splice(this._pinnedColumns.indexOf(col), 1);
+        }
+        this.markForCheck();
+    }
+
     get hasSortableColumns(): boolean {
         return this.columnList.some((col) => col.sortable);
     }
@@ -498,6 +519,60 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
         return [];
     }
 
+    protected calculateGridSizes() {
+        const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+        if (!this.width) {
+            /*no width specified.*/
+            this.calcWidth = null;
+        } else if (this.width && this.width.indexOf("%") !== -1) {
+            /* width in %*/
+            this.calcWidth = parseInt(computed.getPropertyValue("width"), 10);
+        }
+        if (!this.height) {
+            /*no height specified.*/
+            this.calcHeight = null;
+        } else if (this.height && this.height.indexOf("%") !== -1) {
+            /*height in %*/
+            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
+                this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
+            this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
+                this.theadRow.nativeElement.clientHeight -
+                footerHeight -
+                this.scr.nativeElement.clientHeight;
+        } else {
+            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
+                this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
+            this.calcHeight = parseInt(this.height, 10) -
+                this.theadRow.nativeElement.clientHeight -
+                footerHeight -
+                this.scr.nativeElement.clientHeight;
+        }
+    }
+
+    /**
+     * Gets calculated width of the start pinned area
+     * @param takeHidden If we should take into account the hidden columns in the pinned area
+     */
+    protected getPinnedWidth(takeHidden = false) {
+        const fc = takeHidden ? this._pinnedColumns : this.pinnedColumns;
+        let sum = 0;
+        for (const col of fc) {
+            sum += parseInt(col.width, 10);
+        }
+        return sum;
+    }
+
+    /**
+     * Gets calculated width of the unpinned area
+     * @param takeHidden If we should take into account the hidden columns in the pinned area
+     */
+    protected getUnpinnedWidth(takeHidden = false) {
+        const width = this.width && this.width.indexOf("%") !== -1 ?
+            this.calcWidth :
+            parseInt(this.width, 10);
+        return width - this.getPinnedWidth(takeHidden);
+    }
+
     protected _sort(name: string, direction = SortingDirection.Asc, ignoreCase = true) {
         this.gridAPI.sort(this.id, name, direction, ignoreCase);
     }
@@ -511,7 +586,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
         if (col) {
             this.gridAPI
                 .filter(this.id, name, value,
-                condition || col.filteringCondition, ignoreCase || col.filteringIgnoreCase);
+                    condition || col.filteringCondition, ignoreCase || col.filteringIgnoreCase);
         } else {
             this.gridAPI.filter(this.id, name, value, condition, ignoreCase);
         }

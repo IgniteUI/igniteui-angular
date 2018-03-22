@@ -77,6 +77,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         return this.column.index;
     }
 
+    get visibleColumnIndex(): number {
+        return this.column.visibleIndex;
+    }
+
     get nativeElement(): any {
         return this.element.nativeElement;
     }
@@ -140,6 +144,20 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostBinding("class.igx-grid__td--number")
     get applyNumberCSSClass() {
         return this.column.dataType === DataType.Number;
+    }
+
+    get isPinned() {
+        return this.column.pinned;
+    }
+
+    @HostBinding("class.igx-grid__th--pinned-start")
+    get isLastPinned() {
+        const pinnedCols = this.grid.pinnedColumns;
+        if (pinnedCols.length === 0) {
+            return false;
+        } else {
+            return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
+        }
     }
 
     get selected() {
@@ -217,23 +235,25 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         event.preventDefault();
         const visibleColumns = this.grid.visibleColumns;
         const rowIndex = this.rowIndex;
-        let columnIndex = this.columnIndex;
-        const rv = visibleColumns.findIndex((col) => col.index === columnIndex);
+        const visibleColumnIndex = this.visibleColumnIndex - 1;
 
-        if (rv > 0) {
-            columnIndex = visibleColumns[rv - 1].index;
+        if (visibleColumnIndex >= 0) {
 
-            const target = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
+            const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, visibleColumnIndex);
 
             if (target) {
                 target.nativeElement.focus();
                 this.syncRows();
             } else {
-                this.row.virtDirRow.scrollPrev();
+                if (!this.column.pinned) {
+                    this.row.virtDirRow.scrollPrev();
+                } else {
+                    this.row.virtDirRow.scrollTo(this.grid.unpinnedColumns.length - 1);
+                }
                 this.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
                     next: (e: any) => {
                         this.row.cdr.detectChanges();
-                        const currTarget = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
+                        const currTarget = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, visibleColumnIndex);
                         if (currTarget) {
                             currTarget.nativeElement.focus();
                         } else {
@@ -250,7 +270,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
 
     @HostListener("keydown.control.arrowleft")
     public onKeydownCtrlArrowLeft() {
-        const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex, this.row.cells.first.columnIndex);
+        const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.row.cells.first.visibleColumnIndex);
 
         if (target) {
             target.nativeElement.focus();
@@ -263,23 +283,24 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         event.preventDefault();
         const visibleColumns = this.grid.visibleColumns;
         const rowIndex = this.rowIndex;
-        let columnIndex = this.columnIndex;
-        const rv = visibleColumns.findIndex((col) => col.index === columnIndex);
+        const visibleColumnIndex = this.visibleColumnIndex + 1;
+        if (visibleColumnIndex > -1 && visibleColumnIndex <= visibleColumns.length - 1) {
 
-        if (rv > -1 && rv < visibleColumns.length - 1) {
-            columnIndex = visibleColumns[rv + 1].index;
-
-            const target = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
+            const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, visibleColumnIndex);
 
             if (target) {
                 target.nativeElement.focus();
                 this.syncRows();
             } else {
-                this.row.virtDirRow.scrollNext();
+                if (!this.column.pinned) {
+                    this.row.virtDirRow.scrollNext();
+                } else {
+                    this.row.virtDirRow.scrollTo(0);
+                }
                 this.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
                     next: (e: any) => {
                         this.row.cdr.detectChanges();
-                        const currTarget = this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
+                        const currTarget = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, visibleColumnIndex);
                         if (currTarget) {
                             currTarget.nativeElement.focus();
                         } else {
@@ -296,7 +317,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
 
     @HostListener("keydown.control.arrowright")
     public onKeydownCtrlArrowRight() {
-        const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex, this.row.cells.last.columnIndex);
+        const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.row.cells.last.visibleColumnIndex);
 
         if (target) {
             target.nativeElement.focus();
@@ -307,22 +328,22 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostListener("keydown.arrowup", ["$event"])
     public onKeydownArrowUp(event) {
         event.preventDefault();
-        const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex - 1, this.columnIndex);
+        const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex - 1, this.visibleColumnIndex);
         if (target) {
             target.nativeElement.focus();
         } else {
-            this.row.grid.parentVirtDir.scrollPrev();
+            this.row.grid.verticalScrollContainer.scrollPrev();
         }
     }
 
     @HostListener("keydown.arrowdown", ["$event"])
     public onKeydownArrowDown(event) {
         event.preventDefault();
-        const target = this.gridAPI.get_cell_by_index(this.gridID, this.rowIndex + 1, this.columnIndex);
+        const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex + 1, this.visibleColumnIndex);
         if (target) {
             target.nativeElement.focus();
         } else {
-            this.row.grid.parentVirtDir.scrollNext();
+            this.row.grid.verticalScrollContainer.scrollNext();
         }
     }
 
@@ -342,7 +363,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @autoWire()
     syncRows() {
         const scrLeft = this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.scrollLeft;
-        this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement.style.left = (-scrLeft) + "px";
+        const headerDcElem = this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement;
+        headerDcElem.style.left = (-scrLeft) + "px";
+
         this.row.grid.rowList.map((row) => {
             const elem = row.virtDirRow.dc.instance._viewContainer.element.nativeElement;
             elem.scrollLeft = scrLeft;

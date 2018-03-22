@@ -5,12 +5,12 @@
 
 %vhelper--vertical {
     width: 18px;
-    height: calc(100% - 18px);
+    height: calc(100% + 18px) !important;
     float: right;
 }
 
 %vhelper--horizontal {
-    width: calc(100% - 18px);
+    width: 100%;
 }
 
 %vhelper-content--vertical {
