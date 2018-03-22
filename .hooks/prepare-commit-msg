@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+'use strict';
+var validate = require('./scripts/validate'),
+    fs = require('fs');
+
+var options = {
+    style: "default",
+    // limits: {
+    //     firstLine: 100,
+    //     otherLine: 100
+    // },
+    // types: [
+    //     "feat", "fix", "docs", "style", "refactor", "perf", "test", "chore"
+    // ],
+    // ticketPattern: '(Closes) (#)[0-9]+',
+};
+
+var text = fs.readFileSync(process.argv[2]).toString();
+
+var errors = [];
+errors = validate(text, options, errors);
+
+// process.exitCode = 1;
+if (errors.length > 0) {
+    process.stdout.write(errors[0].toString());
+    process.exitCode = 1;
+}
