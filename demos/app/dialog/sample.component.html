@@ -34,13 +34,15 @@
 
             <igx-dialog #form title="Sign In" leftButtonLabel="Cancel" (onLeftButtonSelect)="form.close()" rightButtonLabel="Sign In"
                 rightButtonBackgroundColor="#0375be" rightButtonColor="white" backgroundClick="true" closeOnOutsideSelect="true">
-                <div class="igx-form-group">
-                    <input type="text" igxInput />
-                    <label igxLabel>Username</label>
-                </div>
-                <div class="igx-form-group">
-                    <input type="password" igxInput />
-                    <label igxLabel>Password</label>
+                <div style="padding: 0 24px">
+                    <div class="igx-form-group">
+                        <input type="text" igxInput />
+                        <label igxLabel>Username</label>
+                    </div>
+                    <div class="igx-form-group">
+                        <input type="password" igxInput />
+                        <label igxLabel>Password</label>
+                    </div>
                 </div>
             </igx-dialog>
         </article>
