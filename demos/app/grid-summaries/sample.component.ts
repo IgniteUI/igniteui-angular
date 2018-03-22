@@ -660,6 +660,7 @@ export class GridSummaryComponent implements OnInit {
     for (let i = 0; i < 10; i++) {
       this.data = this.data.concat(this.data);
     }
+    this.data = this.data.slice(0, 10);
   }
 
   ngOnInit() {
@@ -753,5 +754,14 @@ export class GridSummaryComponent implements OnInit {
         }
       }
     }, 0);
+  }
+  pin() {
+    for (const name of ["UnitsInStock", "CategoryID"]) {
+      if (this.grid1.getColumnByName(name).pinned) {
+        this.grid1.unpinColumn(name);
+      } else {
+        this.grid1.pinColumn(name);
+      }
+    }
   }
 }
