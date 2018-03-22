@@ -72,21 +72,16 @@ export class IgxInputGroupComponent {
     set type(value: string) {
         const type: IgxInputGroupType = (IgxInputGroupType as any)[value];
         if (type !== undefined) {
+            this.isBox = this.isBorder = this.isSearch = false;
             switch (type) {
-                case IgxInputGroupType.line:
-                    this.isBox = this.isBorder = this.isSearch = false;
-                    break;
                 case IgxInputGroupType.box:
                     this.isBox = true;
-                    this.isBorder = this.isSearch = false;
                     break;
                 case IgxInputGroupType.border:
                     this.isBorder = true;
-                    this.isBox = this.isSearch = false;
                     break;
                 case IgxInputGroupType.search:
                     this.isSearch = true;
-                    this.isBox = this.isBorder = false;
                     break;
                 default: break;
             }
