@@ -65,6 +65,11 @@ export class AppComponent {
             name: "Grid"
         },
         {
+            link: "/gridColumnPinning",
+            icon: "view_column",
+            name: "Grid Column Pinning"
+        },
+        {
             link: "/gridPerformance",
             icon: "view_column",
             name: "Grid Performance"

@@ -16,6 +16,7 @@ import { IgxDatePickerSampleModule } from "./date-picker/sample.module";
 import { DialogSampleModule } from "./dialog/sample.module";
 import { GridPerformanceSampleModule } from "./grid-performance/sample.module";
 import { GridSampleModule } from "./grid/sample.module";
+import { GridColumnPinningSampleModule } from "./grid-column-pinning/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
 import { InputGroupSampleModule } from "./input-group/sample.module";
 import { InputSampleModule } from "./input/sample.module";
@@ -71,6 +72,7 @@ import { IgxAvatarModule, IgxCheckboxModule, IgxIconModule, IgxInputGroupModule,
         InputGroupSampleModule,
         IconSampleModule,
         GridSampleModule,
+        GridColumnPinningSampleModule,
         GridPerformanceSampleModule,
         IgxCardSampleModule,
         IgxSliderSampleModule,
