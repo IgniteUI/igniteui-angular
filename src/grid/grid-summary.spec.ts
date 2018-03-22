@@ -4,7 +4,7 @@ import { By } from "@angular/platform-browser";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-fdescribe("IgxGrid - Summaries", () => {
+describe("IgxGrid - Summaries", () => {
     const SUMMARY_CLASS = ".igx-grid-summary";
     const SUMMARY_LABEL_CLASS = ".igx-grid-summary-item__label";
     const SUMMARY_VALUE_CLASS = "igx-grid-summary-item__result";
