@@ -88,6 +88,24 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
         }
     }
 
+    get grid(): any {
+        return this.gridAPI.get(this.gridID);
+    }
+
+    get isPinned() {
+        return this.column.pinned;
+    }
+
+    @HostBinding("class.igx-grid__th--pinned-start")
+    get isLastPinned() {
+        const pinnedCols = this.grid.pinnedColumns;
+        if (pinnedCols.length === 0) {
+            return false;
+        } else {
+            return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
+        }
+    }
+
     protected getSortDirection() {
         const expr = this.gridAPI.get(this.gridID).sortingExpressions.find((x) => x.fieldName === this.column.field);
         this.sortDirection = expr ? expr.dir : SortingDirection.None;

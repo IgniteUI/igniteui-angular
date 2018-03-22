@@ -19,26 +19,34 @@
     </div>
 </ng-template>
 
-
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth'>
-	<div class="igx-grid__tr" role="row" style="width: calc(100% - 17px)" #theadRow>
-		<ng-template igxFor let-col [igxForOf]="visibleColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='calcWidth' #headerContainer>
-			<igx-grid-header [gridID]="id" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
-		</ng-template>
-	</div>
+    <div class="igx-grid__tr" role="row" style="width: calc(100% - 18px)" #theadRow>
+        <ng-container *ngIf="pinnedColumns.length > 0">
+            <igx-grid-header [gridID]="id" *ngFor="let col of pinnedColumns" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
+        </ng-container>
+        <ng-template igxFor let-col [igxForOf]="unpinnedColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
+            [igxForContainerSize]='unpinnedWidth' #headerContainer>
+            <igx-grid-header [gridID]="id" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
+        </ng-template>
+    </div>
 </div>
 
-<div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' >
-        <ng-template igxFor let-rowData [igxForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
-                                | gridSort:sortingExpressions:id:pipeTrigger
-                                | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index"
-                                [igxForScrollOrientation]="'vertical'"
-                                [igxForContainerSize]='calcHeight'
-                                [igxForItemSize]="rowHeight"
-                                #scrollContainer>
-           <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
-           </igx-grid-row>
+<div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth'>
+    <ng-template igxFor let-rowData [igxForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
+                            | gridSort:sortingExpressions:id:pipeTrigger
+                            | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
+        [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer>
+        <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
+        </igx-grid-row>
+    </ng-template>
+</div>
+
+<div class="igx-grid__scroll" [style.width]='width' [style.height]="'18px'" #scr>
+    <div class="igx-grid__scroll-start" [style.width.px]='pinnedWidth' [hidden]="pinnedWidth === 0"></div>
+    <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth'>
+        <ng-template igxFor [igxForOf]='[]' #scrollContainer>
         </ng-template>
+    </div>
 </div>
 
 <!-- <div *ngIf="hasSummarizedColumns" class="igx-grid__tr" role="row" style="width: calc(100% - 17px)">

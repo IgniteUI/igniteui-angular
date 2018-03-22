@@ -166,44 +166,39 @@ Below is the list of all inputs that the developers may set to configure the gri
 
 ### Outputs
 
-A list of the events emitted by the **igx-grid**:
+| Name | Description |
+| :--- | :--- |
+| *Event emitters* | *Notify for a change* |
+| onEditDone  | Used on update row to emit the updated row  |
+| onFilterDone  | Used when filtering data to emit the column and filtering expression  |
+| onSortingDone  | Used when sorting data to emit the column, direction and sorting expression  |
+| onMovingDone  | Used when moving column to emit the drop event  |
+| onCellSelection  | Used when focusing a cell to emit the cell  |
+| onRowSelection  | Used when focusing a row to emit the row  |
+| onPagingDone  | Used when paginating to emit paginator event  |
+| onColumnInit  | Used when initializing a column to emit it  |
+| onBeforeProcess  | Emit binding behavior  |
+| onColumnPinning | Used when pinning a column; the index of the pin can be changed |
 
-|Name|Description|
-|--- |--- |
-|_Event emitters_|_Notify for a change_|
-|`onEditDone`|Emitted when a cell value changes. Returns `{ currentValue: any, newValue: any }`|
-|`onSelection`|Emitted when a cell is selected. Returns the cell object.|
-|`onColumnInit`|Emitted when the grid columns are initialized. Returns the column object.|
-|`onSortingDone`|Emitted when sorting is performed through the UI. Returns the sorting expression.|
-|`onFilteringDone`|Emitted when filtering is performed through the UI. Returns the filtering expression.|
-|`onPagingDone`|Emitted when paging is performed. Returns an object consisting of the previous and the new page.|
-|`onRowAdded`|Emitted when a row is being added to the grid through the API. Returns the data for the new row object.|
-|`onRowDeleted`|Emitted when a row is deleted through the grid API. Returns the row object being removed.|
 
 
-### Methods
-
-Here is a list of all public methods exposed by the **igx-grid**:
-
-|Signature|Description|
-|--- |--- |
-|`getColumnByName(name: string)`|Returns the column object with field property equal to `name` or `undefined` if no such column exists.|
-|`getCellByColumn(rowIndex: number, columnField: string)`|Returns the cell object in column with `columnField` and row with `rowIndex` or `undefined`.|
-|`addRow(data: any)`|Creates a new row object and adds the `data` record to the end of the data source.|
-|`deleteRow(rowIndex: number)`|Removes the row object and the corresponding data record from the data source.|
-|`updateRow(value: any, rowIndex: number)`|Updates the row object and the data source record with the passed value.|
-|`updateCell(value: any, rowIndex: number, column: string)`|Updates the cell object and the record field in the data source.|
-|`filter(column: string, value: any, condition?, ignoreCase?: boolean)`|Filters a single column. Check the available [filtering conditions](#filtering-conditions)|
-|`filter(expressions: Array)`|Filters the grid columns based on the provided array of filtering expressions.|
-|`filterGlobal(value: any, condition? ignoreCase?)`|Filters all the columns in the grid.|
-|`clearFilter(name?: string)`|If `name` is provided, clears the filtering state of the corresponding column, otherwise clears the filtering state of all columns.|
-|`sort(name: string, direction, ignorecase)`|Sorts a single column.|
-|`sort(expressions: Array)`|Sorts the grid columns based on the provided array of sorting expressions.|
-|`clearSort(name?: string)`|If `name` is provided, clears the sorting state of the corresponding column, otherwise clears the sorting state of all columns.|
-|`previousPage()`|Goes to the previous page if paging is enabled and the current page is not the first.|
-|`nextPage()`|Goes to the next page if paging is enabled and current page is not the last.|
-|`paginate(page: number)`|Goes to the specified page if paging is enabled. Page indices are 0 based.|
-|`markForCheck()`|Manually triggers a change detection cycle for the grid and its children.|
+| Signature | Description |
+| :--- | :--- |
+| getColumnByIndex(index: number)  | Get grid column by index  |
+| getColumnByField(field: string)  | Get grid column by field name  |
+| getCell(rowIndex: number, columnField: string) | Returns the cell at rowIndex/columnIndex.  |
+| getRow(rowIndex: number) | Returns row  |
+| focusCell | Focuses the grid cell at position row x column  |
+| focusRow | Focuses the grid row at `index`.  |
+| filterData | Filter data by search term and column  |
+| addRow | Add record to the grid data container  |
+| deleteRow | Remove record from the grid data container  |
+| updateRow | Update record from teh grid data container  |
+| updateCell | Update grid cell by index, column field and passed value  |
+| sortColumn | Sort grid column  |
+| paginate | Change the current page by passed number  |
+| pinColumn | Pin a column by its name |
+| unpinColumn | Unpin a column by its name |
 
 <div class="divider--half"></div>
 
@@ -241,6 +236,7 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`hasSummary`| boolean  |Set the specific column to have a summaries or not|
 |`summaries`| IgxSummaryOperand |Set custom summary for the specific column|
 |`hidden`|boolean|Visibility of the column|
+|`pinned`|boolean| Set column to be pinned or not |
 |`movable`|boolean|Column moving|
 |`width`|string|Columns width|
 |`headerClasses`|string|Additional CSS classes applied to the header element.|
@@ -251,6 +247,7 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`filteringIgnoreCase`|boolean|Ignore capitalization of strings when filtering is applied. Defaults to _true_.|
 |`sortingIgnoreCase`|boolean|Ignore capitalization of strings when sorting is applied. Defaults to _true_.|
 |`dataType`|DataType|One of string, number, boolean or Date. When filtering is enabled the filter UI conditions are based on the `dataType` of the column. Defaults to `string` if it is not provided. With `autoGenerate` enabled the grid will try to resolve the correct data type for each column based on the data source.|
+
 
 ### Getters/Setters
 
