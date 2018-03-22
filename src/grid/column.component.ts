@@ -70,9 +70,6 @@ export class IgxColumnComponent implements AfterContentInit {
     public cellClasses = "";
 
     @Input()
-    public summaryClasses = "";
-
-    @Input()
     get index(): number {
         return this._index;
     }

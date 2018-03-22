@@ -91,9 +91,11 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
 
     get resolveSummaries(): any[] {
         if (this.fieldName) {
-            this.gridAPI.set_summary_by_column_name(this.gridID, this.fieldName);
-            if (this.column.field === this.fieldName) {
-                return this.gridAPI.get_summaries(this.gridID).get(this.fieldName);
+            const field = this.fieldName;
+            this.fieldName = null;
+            this.gridAPI.set_summary_by_column_name(this.gridID, field);
+            if (this.column.field === field) {
+                return this.gridAPI.get_summaries(this.gridID).get(field);
             } else {
                 return this.gridAPI.get_summaries(this.gridID).get(this.column.field);
             }
