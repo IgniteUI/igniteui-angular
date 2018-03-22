@@ -23,6 +23,11 @@ export class MaskHelper {
         const nonLiteralIndeces: number[] = this.getNonLiteralIndeces(mask, literalKeys);
 
         if (inputValue.length < mask.length) { // BACKSPACE, DELETE
+            if (inputValue === "" && cursor === -1) {
+                this._cursor = 0;
+                return this.parseValueByMaskOnInit(value, maskOptions);
+            } // workaround for IE 'x' button
+
             if (nonLiteralIndeces.indexOf(cursor + 1) !== -1) {
                 inputValue = this.insertCharAt(inputValue, cursor + 1, maskOptions.promptChar);
                 this._cursor = cursor + 1;
@@ -39,7 +44,7 @@ export class MaskHelper {
             }
         } else {
             const char = inputValue[cursor];
-            const isCharValid = this.validateCharOnPostion(char, cursor, mask);
+            let isCharValid = this.validateCharOnPostion(char, cursor, mask);
             if (nonLiteralIndeces.indexOf(cursor) !== -1) {
                 inputValue = this.replaceCharAt(inputValue, cursor, "");
                 if (isCharValid) {
@@ -50,12 +55,19 @@ export class MaskHelper {
                 }
             } else {
                 inputValue = this.replaceCharAt(inputValue, cursor, "");
-                this._cursor = cursor;
+                this._cursor = ++cursor;
                 for (let i = cursor; i < mask.length; i++) {
                     if (literalKeys.indexOf(this._cursor) !== -1) {
-                        this._cursor++;
+                        this._cursor = ++cursor;
                     } else {
-                        break;
+                        isCharValid = this.validateCharOnPostion(char, cursor, mask);
+                        if (isCharValid) {
+                            inputValue = this.replaceCharAt(inputValue, cursor, char);
+                            this._cursor = ++cursor;
+                            break;
+                        } else {
+                            break;
+                        }
                     }
                 }
             }
@@ -184,6 +196,11 @@ export class MaskHelper {
                 }
             }
         } else {
+            if (inputValue === "" && cursor === -1) {
+                this._cursor = 0;
+                return this.parseValueByMaskOnInit(value, maskOptions);
+            } // workaround for IE 'x' button
+
             if (this._cursor < 0) {
                 this._cursor++;
                 cursor++;

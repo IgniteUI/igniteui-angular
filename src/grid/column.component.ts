@@ -12,6 +12,7 @@ import {
 import { DataType } from "../data-operations/data-util";
 import { STRING_FILTERS } from "../data-operations/filtering-condition";
 import { IgxGridAPIService } from "./api.service";
+
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -91,6 +92,9 @@ export class IgxColumnComponent implements AfterContentInit {
     @Input()
     public dataType: DataType = DataType.String;
 
+    @Input()
+    public pinned = false;
+
     public gridID: string;
 
     get grid(): IgxGridComponent {
@@ -133,6 +137,18 @@ export class IgxColumnComponent implements AfterContentInit {
         this.grid.markForCheck();
     }
 
+    get visibleIndex(): number {
+        const grid = this.gridAPI.get(this.gridID);
+        let vIndex = -1;
+        if (!this.pinned) {
+            const indexInCollection = grid.unpinnedColumns.indexOf(this);
+            vIndex = indexInCollection === -1 ? -1 : grid.pinnedColumns.length + indexInCollection;
+        } else {
+            vIndex = grid.pinnedColumns.indexOf(this);
+        }
+        return vIndex;
+    }
+
     protected _bodyTemplate: TemplateRef<any>;
     protected _headerTemplate: TemplateRef<any>;
     protected _footerTemplate: TemplateRef<any>;
@@ -152,7 +168,7 @@ export class IgxColumnComponent implements AfterContentInit {
     @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
-    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {}
+    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
 
     public ngAfterContentInit(): void {
         if (this.cellTemplate) {
@@ -169,6 +185,12 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
+    public pin() {
+        this.gridAPI.get(this.gridID).pinColumn(this.field);
+    }
+    public unpin() {
+        this.gridAPI.get(this.gridID).unpinColumn(this.field);
+    }
     protected check() {
         if (this.gridID) {
             this.grid.markForCheck();

@@ -10,8 +10,9 @@ import { IgxCardSampleComponent } from "./card/sample.component";
 import { CarouselSampleComponent } from "./carousel/sample.component";
 import { IgxDatePickerSampleComponent } from "./date-picker/sample.component";
 import { DialogSampleComponent } from "./dialog/sample.component";
-import { GridPerformanceSampleComponent } from "./grid-performance/sample.component";
 import { GridSampleComponent } from "./grid/sample.component";
+import { GridPerformanceSampleComponent } from "./grid-performance/sample.component";
+import { GridColumnPinningSampleComponent } from "./grid-column-pinning/sample.component";
 import { IconSampleComponent } from "./icon/sample.component";
 import { InputSampleComponent } from "./input/sample.component";
 import { LayoutSampleComponent } from "./layout/sample.component";
@@ -26,6 +27,7 @@ import { IgxSnackbarSampleComponent } from "./snackbar/sample.component";
 import { IgxColorsSampleComponent } from "./styleguide/colors/sample.component";
 import { IgxShadowsSampleComponent } from "./styleguide/shadows/sample.component";
 import { IgxTypographySampleComponent } from "./styleguide/typography/sample.component";
+import { MaskSampleComponent } from "./directives/mask/sample.component";
 import {
     CustomContentComponent,
     TabBarSampleComponent
@@ -100,6 +102,10 @@ const appRoutes: Routes = [
         path: "grid"
     },
     {
+        component: GridColumnPinningSampleComponent,
+        path: "gridColumnPinning"
+    },
+    {
         component: GridPerformanceSampleComponent,
         path: "gridPerformance"
     },
@@ -150,6 +156,10 @@ const appRoutes: Routes = [
     {
         component: VirtualForSampleComponent,
         path: "virtualForDirective"
+    },
+    {
+        component: MaskSampleComponent,
+        path: "mask"
     }
 ];
 

@@ -227,6 +227,16 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForRemote) {
             return;
         }
+        if (endingIndex === this.igxForOf.length) {
+            // scrolled to bottom
+            const h = this.dc.instance._viewContainer.element.nativeElement.clientHeight;
+            const totalDiff = h - this.state.chunkSize * parseInt(this.igxForItemSize, 10);
+            if (totalDiff < 0) {
+                this.dc.instance._viewContainer.element.nativeElement.firstElementChild.style.marginTop = totalDiff + "px";
+            }
+        } else {
+           this.dc.instance._viewContainer.element.nativeElement.firstElementChild.style.marginTop = "";
+        }
         for (let i = this.state.startIndex; i < endingIndex && this.igxForOf[i] !== undefined; i++) {
             const input = this.igxForOf[i];
             const embView = embeddedViewCopy.shift();
@@ -410,7 +420,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     this.hCache,
                     0
                 ) + 1;
-                if (endIndex > this.igxForOf.length) {
+                if (endIndex >= this.igxForOf.length) {
                     endIndex = this.igxForOf.length;
                     /*At right edge. Check if last elem fits.*/
                     let diff = this.hCache[endIndex] - this.hCache[this.state.startIndex];
