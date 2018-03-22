@@ -5,13 +5,7 @@ import { Directive, EventEmitter, Injectable, NgModule, Output } from "@angular/
 
 import { ExcelElementsFactory } from "./excel-elements-factory";
 import { ExcelFolderTypes } from "./excel-enums";
-
-import {
-    ColumnExportingEventArgs,
-    ExportEndedEventArgs,
-    RowExportingEventArgs
-} from "./excel-event-args";
-
+import { ExportEndedEventArgs } from "./excel-event-args";
 import { IgxExcelExporterOptions } from "./excel-exporter-options";
 
 import {
@@ -21,7 +15,7 @@ import {
 
 import { IgxGridComponent } from "../../grid/grid.component";
 import { IgxGridModule } from "../../grid/index";
-
+import { ColumnExportingEventArgs, RowExportingEventArgs } from "../exporter-common/event-args";
 import { WorksheetData } from "./worksheet-data";
 
 @Injectable()

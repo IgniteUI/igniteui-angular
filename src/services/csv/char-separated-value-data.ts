@@ -4,38 +4,47 @@ export class CharSeparatedValueData {
     private _headerRecord = "";
     private _dataRecords = "";
     private _eof = 0x1A;
-    private _eor = "\r\n";
-    private _data: any[];
+    private _eor = "\n";
     private _values;
-    private _delimiter = "\t";
+    private _delimiter = ",";
     private _escapeCharacters = ["\r", "\n", "\r\n"];
     private _delimiterLength = 1;
-    private _defaultColumnHeader = "Column1";
+    private _defaultColumnHeader = "Column 1";
 
-    constructor(data: any[], valueDelimiter: string) {
-        this._data = data;
+    constructor(private _data: any[], valueDelimiter: string) {
+        this.prepareData();
         this._delimiter = valueDelimiter;
-        this._delimiterLength = this._delimiter.length;
+        this._delimiterLength = valueDelimiter.length;
     }
 
-    public prepareData(): string {
+    public get data() {
+        return this._data;
+    }
+
+    public set data(value: any[]) {
+        this._data = value;
+
+        this.prepareData();
+    }
+
+    public prepareData() {
         if (!this._data || this._data.length === 0) {
-            return;
+            return "";
         }
 
         const dataEntry = this._data[0];
+        const exportStringData = typeof dataEntry === "string";
 
-        if (typeof dataEntry === "string") {
-            this.prepareStringData();
-            return;
+        const keys = exportStringData ? [this._defaultColumnHeader] : ExportUtilities.getKeysFromData(this._data);
+
+        if (keys.length === 0) {
+            return "";
         }
-
-        const keysFull = ExportUtilities.getKeysFromData(this._data);
 
         this._escapeCharacters.push(this._delimiter);
 
-        this._headerRecord = this.processHeaderRecord(keysFull, this._escapeCharacters);
-        this._dataRecords = this.processDataRecords(this._data, keysFull, this._escapeCharacters);
+        this._headerRecord = this.processHeaderRecord(keys, this._escapeCharacters);
+        this._dataRecords = this.processDataRecords(this._data, keys, this._escapeCharacters);
 
         return this._headerRecord + this._dataRecords;
     }
@@ -46,18 +55,6 @@ export class CharSeparatedValueData {
             safeValue = `"${safeValue}"`;
         }
         return safeValue + this._delimiter;
-    }
-
-    private prepareStringData(): string {
-        this._escapeCharacters.push(this._delimiter);
-
-        this._headerRecord += this._defaultColumnHeader + this._eor;
-        for (const row of this._data) {
-            this._dataRecords += this.processField(row, this._escapeCharacters)
-                                                    .slice(0, -this._delimiterLength) + this._eor;
-        }
-
-        return this._headerRecord + this._dataRecords;
     }
 
     private processHeaderRecord(keys, escapeChars): string {
@@ -72,7 +69,7 @@ export class CharSeparatedValueData {
     private processRecord(record, keys, escapeChars): string {
         let recordData = "";
         for (const keyName of keys) {
-            const value = (record[keyName] !== undefined) ? record[keyName] : "";
+            const value = (record[keyName] !== undefined) ? record[keyName] : (typeof record === "string") ? record : "";
             recordData += this.processField(value, this._escapeCharacters);
         }
 

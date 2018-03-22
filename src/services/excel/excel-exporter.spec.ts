@@ -20,7 +20,7 @@ describe("Excel Exporter", () => {
         options = new IgxExcelExporterOptions("TestData");
 
         // Spy the private SaveFile method so the files are not really created
-        spyOn(exporter as any, "SaveFile");
+        // spyOn(exporter as any, "SaveFile");
     });
 
     /* ExportData() tests */
@@ -64,6 +64,14 @@ describe("Excel Exporter", () => {
 
     it("should export data with missing values successfully.", async(() => {
         getExportedData(sourceData.contactsPartialData, options).then((wrapper) => {
+            wrapper.verifyStructure();
+            wrapper.verifyTemplateFilesContent();
+            wrapper.verifyDataFilesContent(actualData.contactsPartialDataContent);
+        });
+    }));
+
+    it("should export data with special characters successfully.", async(() => {
+        getExportedData(sourceData.contactsFunkyData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.contactsPartialDataContent);

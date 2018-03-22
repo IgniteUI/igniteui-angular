@@ -28,21 +28,24 @@ export class ExportTestDataService {
         phone: "573-394-9254"
     }];
 
-    private _contactsData2 = [{
+    private _contactsFunkyData = [{
         name: "Terrance Mc'Orta",
-        phone: "770-504-2217"
+        phone: "(+359)770-504-2217 | 2218"
     }, {
         name: "Richard Mahoney /LongerName/",
         phone: ""
     }, {
         name: "Donna, \/; Price",
-        phone: "859-496-28**"
+        phone: "859 496 28**"
     }, {
-        name: "\n",
+        name: "\r\n",
         phone: "901-747-3428"
     }, {
         name: "Dorothy \"H.\" Spencer",
         phone: "573-394-9254[fax]"
+    }, {
+        name: "Иван Иванов (1,2)",
+        phone: "№ 573-394-9254"
     }];
 
     private _contactsPartial = [
@@ -98,10 +101,13 @@ export class ExportTestDataService {
     }
 
     get contactsData() {
-        return this._contactsData2;
+        return this._contactsData;
     }
     get contactsPartialData() {
         return this._contactsPartial;
+    }
+    get contactsFunkyData() {
+        return this._contactsFunkyData;
     }
     get emptyObjectData() {
         return this._emptyObjectData;
@@ -256,12 +262,12 @@ export class FileContentData {
 
         this._worksheetData = `<dimension ref="A1:D11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
         `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="8.34" customWidth="1"/>` +
-        `<col min="2" max="2" width="16.52578125" customWidth="1"/><col min="3" max="3" width="33.287109375" customWidth="1"/>` +
-        `<col min="4" max="4" width="26.33203125" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c>` +
-        `<c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c><c r="D1" t="s"><v>3</v></c></row><row r="2"><c r="A2" t="s">` +
-        `<v>4</v></c><c r="B2" t="s"><v>5</v></c><c r="C2" t="s"><v>6</v></c><c r="D2" t="s"><v>7</v></c></row><row r="3">` +
-        `<c r="A3" t="s"><v>8</v></c><c r="B3" t="s"><v>9</v></c><c r="C3" t="s"><v>10</v></c><c r="D3" t="s"><v>11</v></c></row>` +
-        `<row r="4"><c r="A4" t="s"><v>12</v></c><c r="B4" t="s"><v>13</v></c><c r="C4" t="s"><v>10</v></c><c r="D4" t="s"><v>` +
+        `<col min="2" max="2" width="15.891735076904297" customWidth="1"/><col min="3" max="3" width="31.24928741455078" ` +
+        `customWidth="1"/><col min="4" max="4" width="26.33203125" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" ` +
+        `t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c><c r="D1" t="s"><v>3</v></c></row><row r="2">` +
+        `<c r="A2" t="s"><v>4</v></c><c r="B2" t="s"><v>5</v></c><c r="C2" t="s"><v>6</v></c><c r="D2" t="s"><v>7</v></c></row>` +
+        `<row r="3"><c r="A3" t="s"><v>8</v></c><c r="B3" t="s"><v>9</v></c><c r="C3" t="s"><v>10</v></c><c r="D3" t="s"><v>11</v>` +
+        `</c></row><row r="4"><c r="A4" t="s"><v>12</v></c><c r="B4" t="s"><v>13</v></c><c r="C4" t="s"><v>10</v></c><c r="D4" t="s"><v>` +
         `14</v></c></row><row r="5"><c r="A5" t="s"><v>15</v></c><c r="B5" t="s"><v>16</v></c><c r="C5" t="s"><v>17</v></c><c ` +
         `r="D5" t="s"><v>18</v></c></row><row r="6"><c r="A6" t="s"><v>19</v></c><c r="B6" t="s"><v>20</v></c><c r="C6" t="s">` +
         `<v>21</v></c><c r="D6" t="s"><v>22</v></c></row><row r="7"><c r="A7" t="s"><v>23</v></c><c r="B7" t="s"><v>24</v></c>` +
