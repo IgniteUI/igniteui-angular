@@ -25,7 +25,7 @@
                 <igx-icon name="email"></igx-icon>
             </igx-prefix>
             <label igxLabel>Email address</label>
-            <input igxInput type="email" required />
+            <input igxInput type="email" required="required" />
         </igx-input-group>
 
         <!-- Text field w/ icon suffix and hint at the beginning  -->
@@ -114,6 +114,13 @@
             <input igxInput type="tel" value="123456789" disabled />
             <igx-suffix><igx-icon name="phone"></igx-icon></igx-suffix>
         </igx-input-group>
+    </form>
 
+    <form class="form">
+        <!-- Search text field -->
+        <igx-input-group type="search">
+            <label igxLabel>Text Field</label>
+            <input igxInput />
+        </igx-input-group>
     </form>
 </div>

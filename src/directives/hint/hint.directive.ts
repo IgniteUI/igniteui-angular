@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostBinding, Input, Renderer2 } from "@angular/core";
+import { AfterViewInit, Directive, ElementRef, HostBinding, Input, OnInit, Renderer2 } from "@angular/core";
 
 enum IgxHintPosition {
     start = `start` as any,
@@ -8,15 +8,49 @@ enum IgxHintPosition {
 @Directive({
     selector: "igx-hint,[igxHint]"
 })
-export class IgxHintDirective {
-    constructor(private _element: ElementRef, private _renderer: Renderer2) { }
+export class IgxHintDirective implements OnInit {
+    private _position: IgxHintPosition = IgxHintPosition.start;
 
-    @Input("position") set position(value: string) {
-        let position: IgxHintPosition = (IgxHintPosition as any)[value];
-        if (position === undefined) {
-            position = IgxHintPosition.start;
+    @HostBinding("class.igx-input-group__hint-item--start")
+    public isPositionStart = false;
+
+    @HostBinding("class.igx-input-group__hint-item--end")
+    public isPositionEnd = false;
+
+    @HostBinding("class.test")
+    public test = false;
+
+    constructor(private _element: ElementRef, private _renderer: Renderer2) {
+    }
+
+    @Input("position")
+    set position(value: string) {
+        const position: IgxHintPosition = (IgxHintPosition as any)[value];
+        if (position !== undefined) {
+            this._position = position;
+            this._applyPosition(this._position);
         }
+    }
+    get position() {
+        return this._position.toString();
+    }
 
-        this._renderer.addClass(this._element.nativeElement, `igx-input-group__hint-item--${position}`);
+    ngOnInit() {
+        this._applyPosition(this._position);
+    }
+
+    private _applyPosition(position: IgxHintPosition) {
+        this.isPositionStart = this.isPositionEnd = false;
+        switch (position) {
+            case IgxHintPosition.start:
+                this.isPositionStart = true;
+                console.log("setting pos to start");
+                break;
+            case IgxHintPosition.end:
+                this.isPositionEnd = true;
+                console.log("setting pos to end");
+                break;
+            default: break;
+        }
     }
 }
