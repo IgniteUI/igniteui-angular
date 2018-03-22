@@ -1,5 +1,4 @@
 import { AfterViewInit, Directive, ElementRef, HostBinding, Input, OnInit, Renderer2 } from "@angular/core";
-import { hostElement } from "@angular/core/src/render3/instructions";
 
 enum IgxHintPosition {
     start = `start` as any,
