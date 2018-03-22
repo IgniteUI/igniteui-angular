@@ -262,6 +262,33 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
     }
 }
 
+/// Unrolls into a block--modifier.[block--modifier...] .block__el
+/// This mixin is useful when we want to apply classes to a block,
+/// or block element when two or more modifiers are applied in tandem
+/// @access public
+/// @param {List} $mods - A list of modifiers
+@mixin bem-mods($mods...) {
+    $this: bem--selector-to-string(&);
+    $mod-classes: ();
+    @each $mod in $mods {
+        @if $this == '' {
+            @error 'Detected a Modifier that is not inside a Block: ' + $mod;
+        }
+        @if (bem--contains-elem($this)) {
+            @error 'Nesting a Modifier inside an Element (#{$this} #{$mod}) ' + 'is not supported. Instead, use bem-elem(myelem, elem-mod) syntax.';
+        }
+        @if (bem--contains-pseudo($this)) {
+            @error 'Nesting a Modifier inside a pseudo-selector is not supported: #{$this} #{$mod}';
+        }
+        $mod-classes: append($mod-classes, #{bem-selector($block: $this, $m: $mod)})
+    }
+    @at-root {
+        #{implode($mod-classes)} {
+            @content;
+        }
+    }
+}
+
 /// @alias bem-selector
 @mixin bem($block, $e: null, $elem: null, $m: null, $mod: null, $mods: null) {
     #{bem-selector($block, $e: $e, $elem: $elem, $m: $m, $mod: $mod, $mods: $mods)} {
@@ -290,6 +317,13 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
     }
 }
 
+/// @alias bem-mods
+@mixin mods($mods...) {
+    @include bem-mods($mods...) {
+        @content;
+    }
+}
+
 /// @alias bem-block
 @mixin b($block) {
     @include bem-block($block) {
@@ -307,6 +341,13 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
 /// @alias bem-mod
 @mixin m($mod) {
     @include bem-mod($mod) {
+        @content;
+    }
+}
+
+/// @alias bem-mods
+@mixin mx($mods...) {
+    @include bem-mods($mods...) {
         @content;
     }
 }

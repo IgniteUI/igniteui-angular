@@ -73,6 +73,14 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy {
         return this.grid.visibleColumns;
     }
 
+    get pinnedColumns(): IgxColumnComponent[] {
+        return this.grid.pinnedColumns;
+    }
+
+    get unpinnedColumns(): IgxColumnComponent[] {
+        return this.grid.unpinnedColumns;
+    }
+
     get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
     }

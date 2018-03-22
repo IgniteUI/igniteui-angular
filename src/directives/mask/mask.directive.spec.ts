@@ -279,6 +279,46 @@ describe("AppComponent", () => {
         expect(input.nativeElement.value).toEqual("(___) ____-___");
 
     }));
+
+    it("Enter value over literal", fakeAsync(() => {
+        const fixture = TestBed.createComponent(MaskComponent);
+        fixture.detectChanges();
+
+        const input = fixture.debugElement.query(By.css("input"));
+
+        input.nativeElement.focus();
+        tick();
+
+        input.nativeElement.select();
+        tick();
+
+        const keyEvent = new KeyboardEvent("keydown", {key : "8"});
+        input.nativeElement.dispatchEvent(keyEvent);
+        tick();
+
+        fixture.detectChanges();
+
+        input.nativeElement.value = "";
+        input.nativeElement.dispatchEvent(new Event("input"));
+        tick();
+
+        input.nativeElement.dispatchEvent(new Event("focus"));
+        tick();
+
+        fixture.detectChanges();
+
+        expect(input.nativeElement.value).toEqual("(___) ____-___");
+
+        input.nativeElement.value = "6666";
+        input.nativeElement.dispatchEvent(new Event("input"));
+        tick();
+
+        input.triggerEventHandler("focus", {});
+        tick();
+
+        fixture.detectChanges();
+        expect(input.nativeElement.value).toEqual("(666) 6___-___");
+    }));
 });
 
 @Component({ template: `<input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>` })
