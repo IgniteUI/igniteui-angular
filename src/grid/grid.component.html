@@ -46,7 +46,7 @@
     </ng-container>
 </div>
 
-<div *ngIf="resizer.show" igxDrag #resizerDiv
+<div *ngIf="resizer.show" igxDrag
       (dragStart)="startResizing($event)"
       (dragEnd)="resize($event)"
       [style.left.px]="resizer.x"

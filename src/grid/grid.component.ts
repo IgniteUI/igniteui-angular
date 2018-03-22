@@ -154,7 +154,7 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
     public onRowDeleted = new EventEmitter<any>();
 
     @Output()
-    public onColumnResized = new EventEmitter<any>();
+    public onColumnResized = new EventEmitter<{column: any, prevWidth: string, newWidth: string}>();
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
@@ -598,22 +598,25 @@ export class IgxGridComponent implements OnInit, AfterContentInit, AfterViewInit
         const diff = event.clientX - this._startResizePos;
 
         if (resizedColumn) {
-            let initColWidth = parseInt(resizedColumn.width, 10);
+            let currentColWidth = parseInt(resizedColumn.width, 10);
             const colMinWidth = parseInt(resizedColumn.minWidth, 10);
             const colMaxWidth = parseInt(resizedColumn.maxWidth, 10);
 
-            initColWidth = (initColWidth < this.resizer.actualWidth) ? this.resizer.actualWidth : initColWidth;
+            currentColWidth = (currentColWidth < this.resizer.actualWidth) ? this.resizer.actualWidth : currentColWidth;
 
-            if (initColWidth + diff < colMinWidth) {
+            if (currentColWidth + diff < colMinWidth) {
                 resizedColumn.width = resizedColumn.minWidth;
-            } else if (colMaxWidth && (initColWidth + diff > colMaxWidth)) {
+            } else if (colMaxWidth && (currentColWidth + diff > colMaxWidth)) {
                 resizedColumn.width = resizedColumn.maxWidth;
             } else {
-                resizedColumn.width = (initColWidth + diff).toString();
+                resizedColumn.width = (currentColWidth + diff).toString();
             }
 
             this.markForCheck();
-            this.onColumnResized.emit();
+
+            if (currentColWidth.toString() !== resizedColumn.width) {
+                this.onColumnResized.emit({column: resizedColumn, prevWidth: currentColWidth.toString(), newWidth: resizedColumn.width});
+            }
         }
     }
 }

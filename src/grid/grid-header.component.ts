@@ -125,30 +125,19 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     }
 
     public onResizeAreaDblClick() {
-        const range = this.column.grid.document.createRange();
+        if (this.column.resizable) {
+            const currentColWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
 
-        if (this.column.bodyTemplate) {
-            const referenceNode = this.column.cells[0].nativeElement;
-            range.selectNode(referenceNode);
-
-            this.column.width =  range.getBoundingClientRect().width.toString();
-
-            // var getWidth = (child) => {
-            //     return child.getBoundingClientRect().width;
-            // };
-            // const children = Array.from(this.column.cells[0].nativeElement.children);
-            // const widths = children.map((child) => getWidth(child));
-            // const largestChild = Math.max(...widths);
-            // this.column.width = largestChild.toString();
-        } else {
-            const valToPxls = (element) => {
-                const referenceNode = element.nativeElement;
+            const range = this.column.grid.document.createRange();
+            const valToPxls = (referenceNode) => {
                 range.selectNodeContents(referenceNode);
-
                 return  range.getBoundingClientRect().width;
             };
 
-            const cellsContentWidths = this.column.cells.map((cell) => valToPxls(cell));
+            const cellsContentWidths = this.column.bodyTemplate ?
+                    Array.from(this.column.cells[0].nativeElement.children).map((child) => valToPxls(child)) :
+                    this.column.cells.map((cell) => valToPxls(cell.nativeElement));
+
             const largestCell = Math.max(...cellsContentWidths);
 
             const index = cellsContentWidths.indexOf(largestCell);
@@ -157,9 +146,9 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
             const padding = parseInt(cellStyle.paddingLeft, 10) + parseInt(cellStyle.paddingRight, 10);
 
             this.column.width = (largestCell + padding).toString();
-        }
 
-        this.column.grid.markForCheck();
-        this.column.grid.onColumnResized.emit();
+            this.column.grid.markForCheck();
+            this.column.grid.onColumnResized.emit({column: this.column, prevWidth: currentColWidth, newWidth: this.column.width});
+        }
     }
 }
