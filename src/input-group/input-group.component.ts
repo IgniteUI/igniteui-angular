@@ -10,7 +10,8 @@ import { IgxSuffixDirective } from "../directives/suffix/suffix.directive";
 enum IgxInputGroupType {
     line = `line` as any,
     box = `box` as any,
-    border = `border` as any
+    border = `border` as any,
+    search = `search` as any
 }
 
 @Component({
@@ -41,6 +42,9 @@ export class IgxInputGroupComponent {
     @HostBinding("class.igx-input-group--border")
     public isBorder = false;
 
+    @HostBinding("class.igx-input-group--search")
+    public isSearch = false;
+
     @HostBinding("class.igx-input-group--disabled")
     public isDisabled = false;
 
@@ -70,15 +74,19 @@ export class IgxInputGroupComponent {
         if (type !== undefined) {
             switch (type) {
                 case IgxInputGroupType.line:
-                    this.isBox = this.isBorder = false;
+                    this.isBox = this.isBorder = this.isSearch = false;
                     break;
                 case IgxInputGroupType.box:
                     this.isBox = true;
-                    this.isBorder = false;
+                    this.isBorder = this.isSearch = false;
                     break;
                 case IgxInputGroupType.border:
                     this.isBorder = true;
-                    this.isBox = false;
+                    this.isBox = this.isSearch = false;
+                    break;
+                case IgxInputGroupType.search:
+                    this.isSearch = true;
+                    this.isBox = this.isBorder = false;
                     break;
                 default: break;
             }
@@ -112,6 +120,10 @@ export class IgxInputGroupComponent {
 
     get isTypeBorder() {
         return this._type === IgxInputGroupType.border;
+    }
+
+    get isTypeSearch() {
+        return  this._type === IgxInputGroupType.search;
     }
 }
 
