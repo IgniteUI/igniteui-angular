@@ -1,7 +1,7 @@
 import { Component, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { DataType } from "../data-operations/data-util";
-import { IgxGridComponent } from "./grid.component";
+import { IGridEditEventArgs, IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
 describe("IgxGrid - CRUD operations", () => {
@@ -148,6 +148,8 @@ describe("IgxGrid - CRUD operations", () => {
         const grid = fix.componentInstance.instance;
         const data = fix.componentInstance.data;
 
+        spyOn(grid.onEditDone, "emit").and.callThrough();
+
         // Update non-existing row
         grid.updateRow({ index: -100, value: -100 }, 100);
         fix.detectChanges();
@@ -157,10 +159,22 @@ describe("IgxGrid - CRUD operations", () => {
 
         // Update an existing row
         grid.updateRow({ index: 100, value: 100 }, 0);
-        fix.detectChanges();
 
-        expect(grid.rowList.first.cells.first.value).toEqual(100);
-        expect(grid.data[0].index).toEqual(100);
+        const row = grid.rowList[0];
+        const args: IGridEditEventArgs = {
+            row,
+            cell: null,
+            currentValue: { index: 1, value: 1 },
+            newValue: { index: 100, value: 100 }
+        };
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+
+            expect(grid.onEditDone.emit).toHaveBeenCalledWith(args);
+            expect(grid.rowList.first.cells.first.value).toEqual(100);
+            expect(grid.data[0].index).toEqual(100);
+        });
     });
 
     it("should support updating a cell value through the grid API", async(() => {
@@ -169,8 +183,18 @@ describe("IgxGrid - CRUD operations", () => {
 
         const grid = fix.componentInstance.instance;
 
+        spyOn(grid.onEditDone, "emit").and.callThrough();
+
         // Update a non-existing cell
         grid.updateCell(-100, 100, "index");
+
+        const cell = grid.getCellByColumn(0, "index");
+        const args: IGridEditEventArgs = {
+            row: cell.row,
+            cell,
+            currentValue: 1,
+            newValue: 100
+        };
 
         fix.whenStable().then(() => {
             fix.detectChanges();
@@ -185,6 +209,7 @@ describe("IgxGrid - CRUD operations", () => {
         }).then(() => {
             fix.detectChanges();
 
+            expect(grid.onEditDone.emit).toHaveBeenCalledWith(args);
             expect(grid.rowList.first.cells.first.value).toEqual(100);
             expect(grid.rowList.first.cells.first.nativeElement.textContent).toMatch("100");
         });
