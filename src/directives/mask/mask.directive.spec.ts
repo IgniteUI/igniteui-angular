@@ -321,57 +321,77 @@ describe("AppComponent", () => {
     }));
 });
 
-@Component({ template: `<input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>` })
+@Component({ template: `<igx-input-group>
+                            <input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
+                        </igx-input-group>` })
 class DefMaskComponent {
     public mask;
     public value;
 }
 
-@Component({ template: `<input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>` })
+@Component({ template: `<igx-input-group>
+                            <input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
+                        </igx-input-group>` })
 class MaskComponent {
     public mask = "(000) 0000-000";
     public value = "1234567890";
 }
 
-@Component({ template: `<input type="text" igxInput [(ngModel)]="value" [igxMask]="mask" [includeLiterals]="true"/>
-                            <input [ngModel]="value"/>` })
+@Component({ template: `<igx-input-group>
+                            <input type="text" igxInput [(ngModel)]="value" [igxMask]="mask" [includeLiterals]="true"/>
+                        </igx-input-group>
+                        <igx-input-group>
+                            <input [ngModel]="value"/>
+                        </igx-input-group>` })
 class IncludeLiteralsComponent {
     public mask = "(000) 0000-000";
     @Input() public value = "55555";
 }
 
-@Component({ template: `<input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>` })
+@Component({ template: `<igx-input-group>
+                            <input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
+                        </igx-input-group>` })
 class DigitSpaceMaskComponent {
     public mask = "999999";
     public value = "555 555";
 }
 
-@Component({ template: `<input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>` })
+@Component({ template: `<igx-input-group>
+                            <input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
+                        </igx-input-group>` })
 class DigitPlusMinusMaskComponent {
     public mask = "####-### ## ## ##";
     public value = "+359884190854";
 }
 
-@Component({ template: `<input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>` })
+@Component({ template: `<igx-input-group>
+                            <input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
+                        </igx-input-group>` })
 class LetterSpaceMaskComponent {
     public mask = "LL??LL??";
     public value = "AB 2CD E";
 }
 
-@Component({ template: `<input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>` })
+@Component({ template: `<igx-input-group>
+                            <input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
+                        </igx-input-group>` })
 class AlphanumSpaceMaskComponent {
     public mask = "AAAaaa";
     public value = "7c  8u";
 }
 
-@Component({ template: `<input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>` })
+@Component({ template: `<igx-input-group>
+                            <input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
+                        </igx-input-group>` })
 class AnyCharMaskComponent {
     public mask = "&&&.CCC";
     public value = " =% p]";
 }
 
-@Component({ template: `<input type="text" igxInput [(ngModel)]="myValue" [igxMask]="myMask"
-                        (onValueChange)="handleValueChange($event)"/>` })
+@Component({ template: `<igx-input-group>
+                            <input type="text" igxInput [(ngModel)]="myValue" [igxMask]="myMask"
+                            (onValueChange)="handleValueChange($event)"/>
+                        </igx-input-group>` })
 class EventFiringComponent {
     myValue = "";
     myMask = "(000) 0000-000";
@@ -384,7 +404,9 @@ class EventFiringComponent {
     }
 }
 
-@Component({ template: `<input type="text" igxInput [value]="value" [igxMask]="myMask" [includeLiterals]="true" [promptChar]="'*@#'"/>` })
+@Component({ template: `<igx-input-group>
+                            <input type="text" igxInput [value]="value" [igxMask]="myMask" [includeLiterals]="true" [promptChar]="'*@#'"/>
+                        </igx-input-group>` })
 class OneWayBindComponent {
     myMask = "AAAAAAAA";
     value = 3456;
