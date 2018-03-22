@@ -1,7 +1,7 @@
 <div class="igx-grid-summary" *ngIf="column.hasSummary" [attr.aria-label]="column.field">
     <ng-container *ngFor="let summary of resolveSummaries">
         <div class="{{summaryClass(summary.key)}}">
-            <span class="igx-grid-summary-item__label" title="{{ summary.label }}" (click)="changeSummaryClass(summary.key)">{{ summary.label }}: </span>
+            <span class="igx-grid-summary-item__label" title="{{ summary.label }}" (click)="changeSummaryClass(summary.key)">{{ summary.label }} </span>
             <span class="igx-grid-summary-item__result {{summaryValueClass(summary.summaryResult)}}" title="{{ summary.summaryResult }}">{{ summary.summaryResult }}</span>
         </div>
     </ng-container>

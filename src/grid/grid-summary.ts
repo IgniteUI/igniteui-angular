@@ -40,7 +40,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
             summaryResult: this.sum(data)});
         result.push({
             key: "average",
-            label: "Average",
+            label: "Avg",
             summaryResult: this.average(data)});
         return result;
     }
