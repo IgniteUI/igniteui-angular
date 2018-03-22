@@ -200,11 +200,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @HostBinding("attr.role")
     public hostRole = "grid";
 
-    @HostBinding("style.cursor")
-    get cursor() {
-        return this._cursor;
-    }
-
     get pipeTrigger(): number {
         return this._pipeTrigger;
     }
@@ -248,7 +243,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private resizeHandler;
 
     private _startResizePos;
-    private _cursor;
 
     constructor(
         private gridAPI: IgxGridAPIService,
@@ -309,7 +303,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get calcResizerHeight(): number {
-        return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight - 17;
+        return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight;
     }
 
     get pinnedWidth() {
@@ -666,14 +660,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public startResizing(event) {
         this._startResizePos = event.clientX;
-
-        if (event.button === 0) {
-            this._cursor = "col-resize";
-        }
     }
 
     public resize(event) {
-        this._cursor = null;
         this.resizer.show = false;
 
         const resizedColumn = this.resizer.column;
