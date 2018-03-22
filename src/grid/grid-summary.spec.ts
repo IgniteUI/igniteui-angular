@@ -220,7 +220,7 @@ describe("IgxGrid - Summaries", () => {
         <button (click)="enableSummary()">Enable Summary</button>
     `
 })
-export class  NoActiveSummariesComponent{
+export class  NoActiveSummariesComponent {
 
     @ViewChild("grid1", { read: IgxGridComponent })
     public grid1: IgxGridComponent;
@@ -263,7 +263,7 @@ export class  NoActiveSummariesComponent{
         <button id="btnUpdateRow" (click)="updateRow()">Update first row</button>
     `
 })
-export class  SummaryColumnComponent{
+export class  SummaryColumnComponent {
 
     public data = [
         { ProductID: 1, ProductName: "Chai", InStock: true, UnitsInStock: 2760, OrderDate: new Date("2005-03-21") },
