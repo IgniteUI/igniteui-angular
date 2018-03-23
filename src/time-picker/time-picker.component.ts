@@ -32,6 +32,17 @@ export class TimePickerHammerConfig extends HammerGestureConfig {
     };
 }
 
+export interface IgxTimePickerValueChangedEventArgs {
+    oldValue: Date;
+    newValue: Date;
+}
+
+export interface IgxTimePickerValidationFailedEventArgs {
+    timePicker: IgxTimePickerComponent;
+    currentValue: Date;
+    setThroughUI: boolean;
+}
+
 @Component({
     providers: [
         {
@@ -57,7 +68,12 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
             this._value = value;
             this._onChangeCallback(value);
         } else {
-            this.onValidationFailed.emit({timePicker: this, currentValue: value, setThroughUI: false});
+            let args: IgxTimePickerValidationFailedEventArgs = {
+                timePicker: this,
+                currentValue: value,
+                setThroughUI: false
+            };
+            this.onValidationFailed.emit(args);
         }
     }
 
@@ -93,10 +109,10 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     public format = "hh:mm tt";
 
     @Output()
-    public onValueChanged = new EventEmitter<any>();
+    public onValueChanged = new EventEmitter<IgxTimePickerValueChangedEventArgs>();
 
     @Output()
-    public onValidationFailed = new EventEmitter<any>();
+    public onValidationFailed = new EventEmitter<IgxTimePickerValidationFailedEventArgs>();
 
     @Output()
     public onOpen = new EventEmitter();
@@ -628,9 +644,18 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
             this._alert.close();
             const oldValue = this.value;
             this.value = this._getSelectedTime();
-            this.onValueChanged.emit({oldValue, newValue: this.value});
+            let args: IgxTimePickerValueChangedEventArgs = {
+                oldValue: oldValue,
+                newValue: this.value
+            };
+            this.onValueChanged.emit(args);
         } else {
-            this.onValidationFailed.emit({timePicker: this, currentValue: this._getSelectedTime(), setThroughUI: true});
+            let args: IgxTimePickerValidationFailedEventArgs = {
+                timePicker: this,
+                currentValue: this._getSelectedTime(),
+                setThroughUI: true
+            };
+            this.onValidationFailed.emit(args);
         }
     }
 
