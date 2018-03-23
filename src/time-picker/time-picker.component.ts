@@ -68,7 +68,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
             this._value = value;
             this._onChangeCallback(value);
         } else {
-            let args: IgxTimePickerValidationFailedEventArgs = {
+            const args: IgxTimePickerValidationFailedEventArgs = {
                 timePicker: this,
                 currentValue: value,
                 setThroughUI: false
@@ -644,13 +644,13 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
             this._alert.close();
             const oldValue = this.value;
             this.value = this._getSelectedTime();
-            let args: IgxTimePickerValueChangedEventArgs = {
-                oldValue: oldValue,
+            const args: IgxTimePickerValueChangedEventArgs = {
+                oldValue,
                 newValue: this.value
             };
             this.onValueChanged.emit(args);
         } else {
-            let args: IgxTimePickerValidationFailedEventArgs = {
+            const args: IgxTimePickerValidationFailedEventArgs = {
                 timePicker: this,
                 currentValue: this._getSelectedTime(),
                 setThroughUI: true
