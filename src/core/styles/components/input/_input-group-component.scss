@@ -97,12 +97,6 @@
         }
     }
 
-    @include mx(focused, border) {
-        @include e(bundle) {
-            @extend %form-group-bundle-border--focus !optional;
-        }
-    }
-
     @include m(placeholder) {
         @include e(label) {
             @extend %form-group-label--float !optional;
@@ -148,12 +142,6 @@
         }
     }
 
-    @include mx(invalid, border) {
-        @include e(bundle) {
-            @extend %form-group-bundle-border--error !optional;
-        }
-    }
-
     @include m(valid) {
         @include e(label) {
             @extend %form-group-label--success !optional;
@@ -169,12 +157,6 @@
 
         @include e(bundle) {
             @extend %form-group-bundle--success !optional;
-        }
-    }
-
-    @include mx(valid, border) {
-        @include e(bundle) {
-            @extend %form-group-bundle-border--success !optional;
         }
     }
 
@@ -194,18 +176,6 @@
         }
     }
 
-    @include mx(disabled, box) {
-        @include e(bundle) {
-            @extend %form-group-bundle--box-disabled !optional;
-        }
-    }
-
-    @include mx(disabled, border) {
-        @include e(bundle) {
-            @extend %form-group-bundle-border--disabled !optional;
-        }
-    }
-
     @include m(box) {
         @extend %form-group-display--no-margin !optional;
 
@@ -215,6 +185,10 @@
 
         @include e(bundle) {
             @extend %form-group-bundle--box !optional;
+        }
+
+        @include e(input) {
+            @extend %form-group-input--box !optional;
         }
 
         @include e(label) {
@@ -235,6 +209,12 @@
 
         @include e(hint) {
             @extend %form-group-helper--box !optional;
+        }
+    }
+
+    @include mx(disabled, box) {
+        @include e(bundle) {
+            @extend %form-group-bundle--box-disabled !optional;
         }
     }
 
@@ -253,6 +233,10 @@
             @extend %form-group-border--hidden !optional;
         }
 
+        @include e(input) {
+            @extend %form-group-input--box !optional;
+        }
+
         @include e(label) {
             @extend %form-group-label--box !optional;
         }
@@ -271,6 +255,82 @@
 
         @include e(hint) {
             @extend %form-group-helper--box !optional;
+        }
+    }
+
+    @include mx(valid, border) {
+        @include e(bundle) {
+            @extend %form-group-bundle-border--success !optional;
+        }
+    }
+
+    @include mx(invalid, border) {
+        @include e(bundle) {
+            @extend %form-group-bundle-border--error !optional;
+        }
+    }
+
+    @include mx(focused, border) {
+        @include e(bundle) {
+            @extend %form-group-bundle-border--focus !optional;
+        }
+    }
+
+    @include mx(disabled, border) {
+        @include e(bundle) {
+            @extend %form-group-bundle-border--disabled !optional;
+        }
+    }
+
+    @include m(search) {
+        @extend %form-group-display--no-margin !optional;
+
+        @include e(bundle) {
+            @extend %form-group-bundle--search !optional;
+
+            &:hover {
+                @extend %form-group-bundle-search--hover !optional;
+            }
+        }
+
+        @include e(border) {
+            @extend %form-group-border--hidden !optional;
+        }
+
+        @include e(input) {
+            @extend %form-group-input--box !optional;
+        }
+
+        @include e(label) {
+            @extend %form-group-label--box !optional;
+        }
+
+        @include e(textarea) {
+            @extend %form-group-textarea--box !optional;
+        }
+
+        @include e(bundle-prefix) {
+            @extend %form-group-prefix--box !optional;
+        }
+
+        @include e(bundle-suffix) {
+            @extend %form-group-suffix--box !optional;
+        }
+
+        @include e(hint) {
+            @extend %form-group-helper--box !optional;
+        }
+    }
+
+    @include mx(focused, search) {
+        @include e(bundle) {
+            @extend %form-group-bundle-search--focus !optional;
+        }
+    }
+
+    @include mx(disabled, search) {
+        @include e(bundle) {
+            @extend %form-group-bundle-search--disabled !optional;
         }
     }
 }

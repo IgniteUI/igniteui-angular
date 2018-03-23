@@ -14,9 +14,21 @@
     $focused-bottom-line-color: null,
     $disabled-bottom-line-color: null,
 
+    $box-background: null,
+    $box-disabled-background: null,
+    $border-background: null,
+    $border-disabled-background: null,
+
+    $search-background: null,
+    $search-disabled-background: null,
+    $search-shadow-color: null,
+    $search-disabled-shadow-color: null,
+
     $success-secondary-color: null,
     $warning-secondary-color: null,
-    $error-secondary-color: null
+    $error-secondary-color: null,
+
+    $variant: 'dark'
 ) {
     @return (
         idle-text-color: $idle-text-color,
@@ -34,9 +46,22 @@
         focused-bottom-line-color: $focused-bottom-line-color,
         disabled-bottom-line-color: $disabled-bottom-line-color,
 
+        box-background: $box-background,
+        box-disabled-background: $box-disabled-background,
+
+        border-background: $border-background,
+        border-disabled-background: $border-disabled-background,
+
+        search-background: $search-background,
+        search-disabled-background: $search-disabled-background,
+        search-shadow-color: $search-shadow-color,
+        search-disabled-shadow-color: $search-disabled-shadow-color,
+
         success-secondary-color: $success-secondary-color,
         warning-secondary-color: $warning-secondary-color,
         error-secondary-color: $error-secondary-color,
+
+        variant: $variant
     );
 }
 
@@ -57,14 +82,66 @@
         $focused-bottom-line-color: igx-color($palette, 'primary'),
         $disabled-bottom-line-color: rgba(0, 0, 0, .42),
 
+        $box-background: rgba(0, 0, 0, .06),
+        $box-disabled-background: rgba(0, 0, 0, .03),
+
+        $border-background: transparent,
+        $border-disabled-background: rgba(0, 0, 0, .03),
+
+        $search-background: white,
+        $search-disabled-background: white,
+        $search-shadow-color: igx-color($palette, 'grays', 600),
+        $search-disabled-shadow-color: igx-color($palette, 'grays', 300),
+
         $success-secondary-color: igx-color($palette, 'success'),
         $warning-secondary-color: igx-color($palette, 'warn'),
         $error-secondary-color: igx-color($palette, 'error')
     );
 
-    $this: extend($theme, $dark-theme);
+    $light-theme: igx-input-group-theme(
+        $idle-text-color: white,
+        $filled-text-color: white,
+        $focused-text-color: white,
+        $disabled-text-color: rgba(255, 255, 255, .5),
+
+        $idle-secondary-color: rgba(255, 255, 255, .7),
+        $filled-secondary-color: rgba(255, 255, 255, .7),
+        $focused-secondary-color: igx-color($palette, 'primary'),
+
+        $idle-bottom-line-color: rgba(255, 255, 255, .7),
+        $hover-bottom-line-color: white,
+        $filled-bottom-line-color: rgba(255, 255, 255, .7),
+        $focused-bottom-line-color: igx-color($palette, 'primary'),
+        $disabled-bottom-line-color: rgba(255, 255, 255, .7),
+
+        $box-background: rgba(255, 255, 255, .1),
+        $box-disabled-background: rgba(255, 255, 255, .06),
+
+        $border-background: transparent,
+        $border-disabled-background: rgba(255, 255, 255, .06),
+
+        $search-background: rgba(255, 255, 255, .1),
+        $search-disabled-background: rgba(255, 255, 255, .06),
+        $search-shadow-color: igx-color($palette, 'grays', 600),
+        $search-disabled-shadow-color: igx-color($palette, 'grays', 300),
+
+        $success-secondary-color: igx-color($palette, 'success'),
+        $warning-secondary-color: igx-color($palette, 'warn'),
+        $error-secondary-color: igx-color($palette, 'error')
+    );
+
+    $this: ();
+
+    @if map-get($theme, 'variant') == 'light' {
+        $this: extend($theme, $light-theme);
+    } @else {
+        $this: extend($theme, $dark-theme);
+    }
 
     $transition-timing: .25s $ease-out-cubic;
+    $search-shadow: igx-elevation($elevations, 1);
+    $search-shadow-hover: igx-elevation($elevations, 2);
+    $search-shadow-disabled: igx-elevation($elevations, 1);
 
     %form-group-display {
         position: relative;
@@ -104,8 +181,12 @@
 
     %form-group-bundle--box {
         padding: 1.125em 1em 0;
-        background: rgba(0, 0, 0, .06);
+        background: map-get($this, 'box-background');
         box-shadow: inset 0 -.125em 0 0 map-get($this, 'idle-bottom-line-color');
+
+        %form-group-label--box + %form-group-input--box {
+            transform: translateY(0);
+        }
     }
 
     %form-group-bundle--hover {
@@ -114,14 +195,17 @@
     }
 
     %form-group-bundle--focus {
+        caret-color: map-get($this, 'focused-secondary-color');
         box-shadow: inset 0 -.125em 0 0 rgba(map-get($this, 'focused-bottom-line-color'), .12);
     }
 
     %form-group-bundle--success {
+        caret-color: map-get($this, 'success-secondary-color');
         box-shadow: inset 0 -.0625em 0 0 map-get($this, 'success-secondary-color');
     }
 
     %form-group-bundle--error {
+        caret-color: map-get($this, 'error-secondary-color');
         box-shadow: inset 0 -.0625em 0 0 map-get($this, 'error-secondary-color');
     }
 
@@ -134,14 +218,18 @@
     }
 
     %form-group-bundle--box-disabled {
-        background: rgba(0, 0, 0, .035);
+        background: map-get($this, 'box-disabled-background');
     }
 
     %form-group-bundle--border {
         padding: 1.125em 1em 0;
         box-shadow: inset 0 0 0 .0625em map-get($this, 'idle-bottom-line-color');
         border-radius: 4px;
-        background: transparent; /* this should be configurable by the user */
+        background: map-get($this, 'border-background');
+
+        %form-group-label--box + %form-group-input--box {
+            transform: translateY(0);
+        }
     }
 
     %form-group-bundle-border--hover {
@@ -161,8 +249,41 @@
     }
 
     %form-group-bundle-border--disabled {
-        background: rgba(0, 0, 0, .035);
+        background: map-get($this, 'border-disabled-background');
         box-shadow: inset 0 0 0 .0625em rgba(map-get($this, 'disabled-text-color'), .06);
+    }
+
+    %form-group-bundle--search {
+        padding: 1.125em 1em 0;
+        border-radius: 4px;
+        border-bottom: none;
+        background: map-get($this, 'search-background');
+        box-shadow: $search-shadow;
+
+        %form-group-label--box + %form-group-input--box {
+            transform: translateY(0);
+        }
+    }
+
+    %form-group-bundle-search--hover {
+        box-shadow: $search-shadow-hover;
+    }
+
+    %form-group-bundle-search--focus {
+        box-shadow: $search-shadow-hover;
+    }
+
+    %form-group-bundle-search--error {
+        box-shadow: $search-shadow-hover;
+    }
+
+    %form-group-bundle-search--success {
+        box-shadow: $search-shadow-hover;
+    }
+
+    %form-group-bundle-search--disabled {
+        background: map-get($this, 'search-disabled-background');
+        box-shadow: $search-shadow-disabled;
     }
 
     %form-group-bundle-main {
@@ -171,11 +292,7 @@
     }
 
     %form-group-label {
-        /// @todo replace with ellipsis mixin
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-
+        @include ellipsis();
         position: absolute;
         width: 100%;
         transform: translateY(.5em); /* 8px, base is 16px */
@@ -186,6 +303,10 @@
         will-change: transform;
         transform-origin: top left;
         transition: transform $transition-timing, color $transition-timing;
+
+        [dir="rtl"] & {
+            transform-origin: top right;
+        }
     }
 
     %form-group-label--box {
@@ -193,7 +314,6 @@
     }
 
     %form-group-label--float {
-        overflow: visible;
         transform: translateY(-50%) scale(.75);
     }
 
@@ -245,9 +365,11 @@
         &:-webkit-autofill,
         &:-webkit-autofill:hover,
         &:-webkit-autofill:focus,
-        &:-webkit-autofill:active {
-            -webkit-transition-delay: 99999s;
-        }
+        &:-webkit-autofill:active { -webkit-transition-delay: 99999s; }
+    }
+
+    %form-group-input--box {
+        transform: translateY(-25%);
     }
 
     %form-group-input--hover {
@@ -270,6 +392,11 @@
         line-height: 1.375em; /* 22px, base is 16px */
         resize: vertical;
         overflow: hidden;
+
+        [dir="rtl"] & {
+            margin-right: initial;
+            margin-left: -1em;
+        }
     }
 
     %form-group-textarea--box {
@@ -297,7 +424,7 @@
     %form-group-prefix {
         padding: .5em .5em .5em 0; /* 8px, base is 16px */
 
-        &[dir='rtl'] {
+        [dir="rtl"] & {
             padding: .5em 0 .5em .5em; /* 8px, base is 16px */
         }
     }
@@ -306,8 +433,18 @@
         padding: .5em 0; /* 8px, base is 16px */
     }
 
+    %form-group-prefix--box,
+    %form-group-suffix--box {
+        height: 100%;
+        transform: translateY(-25%);
+    }
+
     %form-group-prefix--box {
         padding: 0 .5em 0 0; /* 8px, base is 16px */
+
+        [dir="rtl"] & {
+            padding: 0 0 0 .5em; /* 8px, base is 16px */
+        }
     }
 
     %form-group-suffix--box {
@@ -325,11 +462,11 @@
         transform: scaleX(0);
         transform-origin: center;
         background: map-get($this, 'focused-secondary-color');
-        transition: transform $transition-timing;
     }
 
     %form-group-border--focus {
         transform: scaleX(1);
+        transition: transform $transition-timing;
     }
 
     %form-group-border--success {
@@ -350,10 +487,11 @@
 
     %form-group-helper {
         position: relative;
+        display: flex;
+        justify-content: space-between;
         font-size: .75em; /* 12px */
         padding-top: .6667em; /* 8px, base is 12px */
-        padding-bottom: 1em; /* 12px, base is 12px */
-        line-height: 1;
+        line-height: 1.125em; /* 13.5px, base is 12px */
     }
 
     %form-group-helper--box {
@@ -370,24 +508,17 @@
     }
 
     %form-group-helper-item {
-        position: absolute;
+        @include ellipsis();
+        position: relative;
+        min-width: 0;
+        max-width: 100%;
     }
 
     %form-group-helper-item--start {
-        left: 0;
-
-        &[dir='rtl'] {
-            right: 0;
-            left: initial;
-        }
+        order: 0;
     }
 
     %form-group-helper-item--end {
-        right: 0;
-
-        &[dir='rtl'] {
-            left: 0;
-            right: initial;
-        }
+        order: 1;
     }
 }
