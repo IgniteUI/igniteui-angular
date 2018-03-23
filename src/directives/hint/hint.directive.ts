@@ -1,8 +1,8 @@
 import { AfterViewInit, Directive, ElementRef, HostBinding, Input, OnInit, Renderer2 } from "@angular/core";
 
 enum IgxHintPosition {
-    START = `start` as any,
-    END = `end` as any
+    START,
+    END
 }
 
 @Directive({
@@ -25,7 +25,7 @@ export class IgxHintDirective implements OnInit {
 
     @Input("position")
     set position(value: string) {
-        const position: IgxHintPosition = (IgxHintPosition as any)[value];
+        const position: IgxHintPosition = (IgxHintPosition as any)[value.toUpperCase()];
         if (position !== undefined) {
             this._position = position;
             this._applyPosition(this._position);

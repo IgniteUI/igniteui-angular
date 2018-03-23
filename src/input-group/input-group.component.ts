@@ -8,10 +8,10 @@ import { IgxPrefixDirective } from "../directives/prefix/prefix.directive";
 import { IgxSuffixDirective } from "../directives/suffix/suffix.directive";
 
 enum IgxInputGroupType {
-    LINE = `line` as any,
-    BOX = `box` as any,
-    BORDER = `border` as any,
-    SEARCH = `search` as any
+    LINE,
+    BOX,
+    BORDER,
+    SEARCH
 }
 
 export enum IgxInputGroupState {
@@ -82,7 +82,7 @@ export class IgxInputGroupComponent {
 
     @Input("type")
     set type(value: string) {
-        const type: IgxInputGroupType = (IgxInputGroupType as any)[value];
+        const type: IgxInputGroupType = (IgxInputGroupType as any)[value.toUpperCase()];
         if (type !== undefined) {
             this.isBox = this.isBorder = this.isSearch = false;
             switch (type) {
