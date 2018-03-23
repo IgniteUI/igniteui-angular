@@ -660,7 +660,7 @@ export class GridSummaryComponent implements OnInit {
     for (let i = 0; i < 10; i++) {
       this.data = this.data.concat(this.data);
     }
-    this.data = this.data.slice(0, 10);
+    this.data = this.data.slice(0, 15);
   }
 
   ngOnInit() {
