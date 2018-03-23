@@ -95,7 +95,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.state.chunkSize = this._calculateChunkSize();
         const dcFactory: ComponentFactory<DisplayContainerComponent> = this.resolver.resolveComponentFactory(DisplayContainerComponent);
         this.dc = this._viewContainer.createComponent(dcFactory, 0);
-        this.dc.instance.notVirtual = this.igxForContainerSize ? false : true;
+        this.dc.instance.notVirtual = !(this.igxForContainerSize && this.state.chunkSize < this.igxForOf.length);
         if (this.igxForOf && this.igxForOf.length) {
             for (let i = 0; i < this.state.chunkSize && this.igxForOf[i] !== undefined; i++) {
                 const input = this.igxForOf[i];
@@ -383,8 +383,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     get ngForTrackBy(): TrackByFunction<T> { return this._trackByFn; }
 
     protected _applyChanges(changes: IterableChanges<T>) {
-        this._recalcScrollBarSize();
         this.applyChunkSizeChange();
+        this._recalcScrollBarSize();
         if (this.igxForOf && this.igxForOf.length && this.dc) {
             const embeddedViewCopy = Object.assign([], this._embeddedViews);
             let startIndex = this.state.startIndex;
@@ -489,6 +489,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     private _recalcScrollBarSize() {
+        this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < this.igxForOf.length);
         if (this.igxForScrollOrientation === "horizontal") {
             const totalWidth = this.igxForContainerSize ? this.initHCache(this.igxForOf) : 0;
             this.hScroll.children[0].style.width = totalWidth + "px";
@@ -503,9 +504,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     private _recalcOnContainerChange(changes: SimpleChanges) {
         this.applyChunkSizeChange();
-        if (this.dc && this.state.chunkSize !== this.igxForOf.length) {
-            this.dc.instance.notVirtual = false;
-        }
         this._recalcScrollBarSize();
     }
 
