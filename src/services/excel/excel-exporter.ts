@@ -56,8 +56,7 @@ export class IgxExcelExporterService {
         for (const column of columnList) {
             const columnHeader = column.header !== "" ? column.header : column.field;
             const columnArgs = new ColumnExportingEventArgs(columnHeader, column.index);
-            const exportColumn = (options === undefined || options.exportHiddenColumns === undefined) ?
-                                    true : (options.exportHiddenColumns === true) ? true : !column.hidden;
+            const exportColumn = !column.hidden || options.exportHiddenColumns;
 
             if (exportColumn) {
                 this.onColumnExport.emit(columnArgs);
@@ -111,13 +110,25 @@ export class IgxExcelExporterService {
     private SaveFile(data: string, fileName: string): void {
         const a = document.createElement("a");
         a.download = fileName;
-        a.href = IgxExcelExporterService.DATA_URL_PREFIX + data;
+        const blob = new Blob([this.StringToArrayBuffer(atob(data))], {
+            type: ""
+        });
 
-        const e = document.createEvent("MouseEvents");
-        e.initMouseEvent("click", true, false, window,
-        0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        a.href = window.URL.createObjectURL(blob);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
 
-        a.dispatchEvent(e);
+    private StringToArrayBuffer(s: string): ArrayBuffer {
+        const buf = new ArrayBuffer(s.length);
+        const view = new Uint8Array(buf);
+        for (let i = 0; i !== s.length; ++i) {
+            /* tslint:disable no-bitwise */
+            view[i] = s.charCodeAt(i) & 0xFF;
+            /* tslint:enable no-bitwise */
+        }
+        return buf;
     }
 
     private ExportRow(data: any[], gridRowData: any, index: number, columns: any[]) {

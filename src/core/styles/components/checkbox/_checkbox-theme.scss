@@ -65,98 +65,144 @@
         $this: extend($dark-theme, $theme);
     }
 
-    $input-font-size: rem(16px);
-    $input-font-weight: 400;
+    $label-font-size: em(16px);
+    $size: em(20px);
+    $border-width: 2px;
+    $label-margin: em(8px);
+    $radius: 2px;
 
-    $checkbox-min-width: 20px;
-    $checkbox-height: $checkbox-min-width;
-    $checkbox-label-padding: rem(24px, 16px);
-    $checkbox-radius: 2px;
-    $checkbox-border-style: 2px solid;
-    $checkbox-tick-width: 20px;
-    $checkbox-tick-height: 20px;
-    $checkbox-tick-weight: 3px;
-    $checkbox-tick-padding: 3px 2px 2px;
+    $mark-stroke: 3;
+    $mark-length: 24;
+    $mark-x-factor: $mark-stroke / $mark-length;
+
+    $ripple-size: em(48px);
+    $ripple-radius: $ripple-size / 2;
 
     @include scale-in-center();
 
-    %igx-cbx-lbl-display {
-        display: inline-block;
-        position: relative;
-        cursor: pointer;
-        min-width: $checkbox-min-width;
-        min-height: $checkbox-height;
-        line-height: $checkbox-height;
-        font-size: $input-font-size;
-        font-weight: $input-font-weight;
-        color: map-get($this, 'label-color');
+    %cbx-display {
+        display: inline-flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        font-size: rem(16px);
+    }
+
+    %cbx-display--disabled {
         user-select: none;
+        pointer-events: none;
+        cursor: initial;
+    }
+
+    %cbx-composite {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+        width: $size;
+        height: $size;
+        border-width: $border-width;
+        border-style: solid;
+        border-color: map-get($this, 'empty-color');
+        border-radius: $radius;
         -webkit-tap-highlight-color: transparent;
-        overflow: hidden;
-        padding-left: $checkbox-label-padding;
+        transition: border-color .2s $ease-out-quad;
 
         &::after {
             position: absolute;
             content: '';
             top: 0;
+            right: 0;
+            bottom: 0;
             left: 0;
-            border-radius: $checkbox-radius;
+            transition: background .2s $ease-out-quad;
         }
     }
 
-    %igx-cbx-lbl-box {
-        width: $checkbox-min-width;
-        height: $checkbox-height;
+    %cbx-composite--x {
+        border-color: map-get($this, 'fill-color');
+
+        &::after {
+            background: map-get($this, 'fill-color');
+        }
     }
 
-    %igx-cbx-lbl-tick {
+    %cbx-composite--disabled {
+        border-color: map-get($this, 'disabled-color');
+    }
+
+    %cbx-composite--x--disabled {
+        &::after {
+            background: map-get($this, 'disabled-color');
+        }
+    }
+
+    %cbx-composite-mark {
         position: absolute;
         top: 0;
+        right: 0;
+        bottom: 0;
         left: 0;
-        width: $checkbox-tick-width;
-        height: $checkbox-tick-height;
-        padding: $checkbox-tick-padding;
-        stroke: none;
-        stroke-linecap: round;
-        stroke-width: $checkbox-tick-weight;
-        fill: none;
-        z-index: 1;
-    }
-
-    %igx-cbx-lbl-checked-tick {
-        @include animation('scale-in-center' .3s $ease-out-back both);
         stroke: map-get($this, 'tick-color');
+        stroke-linecap: square;
+        stroke-width: $mark-stroke;
+        stroke-dasharray: $mark-length;
+        stroke-dashoffset: $mark-length;
+        fill: none;
+        opacity: 0;
+        z-index: 1;
+        transition: opacity .1s $ease-out-quad;
     }
 
-    %igx-cbx-lbl-unchecked-after {
-        @extend %igx-cbx-lbl-box;
-        border: $checkbox-border-style map-get($this, 'empty-color');
+    %cbx-composite-mark--x {
+        stroke-dashoffset: 0;
+        opacity: 1;
+        transition: all .2s $ease-out-quad, opacity .2s $ease-out-quad;
     }
 
-    %igx-cbx-lbl-checked-after {
-        @extend %igx-cbx-lbl-box;
-        background-color: map-get($this, fill-color);
-        border: $checkbox-border-style map-get($this, 'fill-color');
+    %cbx-composite-mark--in {
+        stroke-dashoffset: 41; /* length of path - adjacent line length */
+        opacity: 1;
+        transform: rotate(45deg) translateX(-#{$mark-x-factor}em);
     }
 
-    %igx-cbx-lbl-disabled {
+    %cbx-label {
+        display: inline-block;
+        color: map-get($this, 'label-color');
+        font-size: $label-font-size;
+        line-height: 1;
+        cursor: pointer;
+        user-select: none;
+        word-wrap: break-all;
+
+        &:empty {
+            margin: 0;
+        }
+    }
+
+    %cbx-label-pos--after {
+        margin-left: $label-margin;
+    }
+
+    %cbx-label-pos--before {
+        margin-right: $label-margin;
+        order: -1;
+    }
+
+    %cbx-label--disabled {
         color: map-get($this, 'disabled-color');
+    }
+
+    %cbx-ripple {
+        @include igx-ripple((
+            color: map-get($this, 'fill-color')
+        ));
+        position: absolute;
+        top: calc(50% - #{$ripple-radius});
+        left: calc(50% - #{$ripple-radius});
+        width: $ripple-size;
+        height: $ripple-size;
+        border-radius: $ripple-radius;
+        overflow: hidden;
         pointer-events: none;
-    }
-
-    %igx-cbx-lbl-checked--disabled-after {
-        background-color: map-get($this, 'disabled-color');
-        border-color: map-get($this, 'disabled-color');
-    }
-
-    %igx-cbx-lbl-unchecked--disabled-after {
-        border-color: map-get($this, 'disabled-color');
-    }
-
-    %igx-cbx-lbl--indeterminate-after {
-        background-color: map-get($this, 'fill-color');
-        border: $checkbox-border-style map-get($this, 'fill-color');
+        filter: opacity(1);
     }
 }
-
-

@@ -5,32 +5,32 @@ import { WorksheetData } from "./worksheet-data";
 import * as JSZip from "jszip/dist/jszip";
 
 export class RootRelsFile implements IExcelFile {
-    public WriteElement(folder: JSZip, data: WorksheetData) {
+    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file(".rels", ExcelStrings.getRels());
     }
 }
 
 export class AppFile implements IExcelFile {
-    public WriteElement(folder: JSZip, data: WorksheetData) {
+    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file("app.xml", ExcelStrings.getApp());
     }
 }
 
 export class CoreFile implements IExcelFile {
-    public WriteElement(folder: JSZip, data: WorksheetData) {
+    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file("core.xml", ExcelStrings.getCore());
     }
 }
 
 export class WorkbookRelsFile implements IExcelFile {
-    public WriteElement(folder: JSZip, data: WorksheetData) {
-        const hasSharedStrings = data.cachedValues && data.cachedValues.length > 0;
+    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
+        const hasSharedStrings = worksheetData.isEmpty === false;
         folder.file("workbook.xml.rels", ExcelStrings.getWorkbookRels(hasSharedStrings));
     }
 }
 
 export class ThemeFile implements IExcelFile {
-    public WriteElement(folder: JSZip, data: WorksheetData) {
+    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file("theme1.xml", ExcelStrings.getTheme());
     }
 }
@@ -38,93 +38,111 @@ export class ThemeFile implements IExcelFile {
 export class WorksheetFile implements IExcelFile {
     private static MIN_WIDTH = 8.34;
 
-    public WriteElement(folder: JSZip, data: WorksheetData) {
-        let sheetData = "";
-        let cols = "";
+    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
+        const sheetData = [];
+        const cols = [];
         let dimension: string;
-        const values = data.cachedValues;
-        const dictionary = data.dataDictionary;
+        const dictionary = worksheetData.dataDictionary;
 
-        if (data.isEmpty) {
-            sheetData = "<sheetData/>";
+        if (worksheetData.isEmpty) {
+            sheetData.push("<sheetData/>");
             dimension = "A1";
         } else {
-            cols += "<cols>";
-            for (let i = 0; i < data.columnCount; i++) {
-                const width = dictionary.columnWidths[i];
-                const widthInTwips = Math.max(((width / 96) * 14.4), WorksheetFile.MIN_WIDTH);
+            sheetData.push("<sheetData>");
+            const height =  worksheetData.options.rowHeight;
+            const rowHeight = height ? " ht=\"" + height + "\" customHeight=\"1\"" : "";
 
-                cols += "<col min=\"" + (i + 1) + "\" max=\"" + (i + 1) + "\" width=\"" + widthInTwips + "\" customWidth=\"1\"/>";
+            sheetData.push(`<row r="1"${rowHeight}>`);
+            for (let i = 0; i < worksheetData.columnCount; i++) {
+                const column = ExcelStrings.getExcelColumn(i) + 1;
+                const value = dictionary.saveValue(worksheetData.keys[i], i);
+                sheetData.push(`<c r="${column}" t="s"><v>${value}</v></c>`);
             }
-            cols += "</cols>";
+            sheetData.push("</row>");
 
-            sheetData += "<sheetData>";
+            for (let i = 1; i < worksheetData.rowCount; i++) {
+                sheetData.push(`<row r="${(i + 1)}"${rowHeight}>`);
 
-            for (let i = 0; i < data.rowCount; i++) {
-                const height =  data.options.rowHeight;
-                const rowHeight = height ? " ht=\"" + height + "\" customHeight=\"1\"" : "";
-                sheetData += "<row r=\"" + (i + 1) + "\"" + rowHeight + ">";
-
-                for (let j = 0; j < data.columnCount; j++) {
+                for (let j = 0; j < worksheetData.columnCount; j++) {
                     const column = ExcelStrings.getExcelColumn(j) + (i + 1);
-                    sheetData += "<c r=\"" + column + "\" t=\"s\"><v>" + values[i * data.columnCount + j] + "</v></c>";
+
+                    const cellValue = worksheetData.data[i - 1][worksheetData.keys[j]];
+                    let stringValue = "";
+                    if (worksheetData.isStringData) {
+                        stringValue = worksheetData.data[i - 1];
+                    } else if (cellValue !== undefined && cellValue !== null) {
+                        stringValue = String(cellValue);
+                    }
+                    const value = dictionary.saveValue(stringValue, j);
+
+                    sheetData.push(`<c r="${column}" t="s"><v>${value}</v></c>`);
                 }
-                sheetData += "</row>";
+                sheetData.push("</row>");
             }
-            sheetData += "</sheetData>";
-            dimension = "A1:" + ExcelStrings.getExcelColumn(data.columnCount - 1) + data.rowCount;
+            sheetData.push("</sheetData>");
+            dimension = "A1:" + ExcelStrings.getExcelColumn(worksheetData.columnCount - 1) + worksheetData.rowCount;
+
+            cols.push("<cols>");
+            for (let i = 0; i < worksheetData.columnCount; i++) {
+                const width = dictionary.columnWidths[i];
+                // Use the width provided in the options if it exists
+                const widthInTwips = worksheetData.options.columnWidth ?
+                                    worksheetData.options.columnWidth :
+                                    Math.max(((width / 96) * 14.4), WorksheetFile.MIN_WIDTH);
+
+                cols.push(`<col min="${(i + 1)}" max="${(i + 1)}" width="${widthInTwips}" customWidth="1"/>`);
+            }
+            cols.push("</cols>");
         }
-        folder.file("sheet1.xml", ExcelStrings.getSheetXML(dimension, cols, sheetData));
+        folder.file("sheet1.xml", ExcelStrings.getSheetXML(dimension, cols.join(""), sheetData.join("")));
     }
 }
 
 export class StyleFile implements IExcelFile {
-    public WriteElement(folder: JSZip, data: WorksheetData) {
+    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file("styles.xml", ExcelStrings.getStyles());
     }
 }
 
 export class WorkbookFile implements IExcelFile {
-    public WriteElement(folder: JSZip, data: WorksheetData) {
+    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file("workbook.xml", ExcelStrings.getWorkbook());
     }
 }
 
 export class ContentTypesFile implements IExcelFile {
-    public WriteElement(folder: JSZip, data: WorksheetData) {
-        folder.file("[Content_Types].xml", ExcelStrings.getContentTypesXML(!data.isEmpty));
+    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
+        folder.file("[Content_Types].xml", ExcelStrings.getContentTypesXML(!worksheetData.isEmpty));
     }
 }
 
 export class SharedStringsFile implements IExcelFile {
-    public WriteElement(folder: JSZip, data: WorksheetData) {
-        const dict = data.dataDictionary;
-        const sortedValues = dict.getSortedValues();
+    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
+        const dict = worksheetData.dataDictionary;
+        const sortedValues = dict.getKeys();
         const sharedStrings = new Array<string>(sortedValues.length);
 
-        for (let i = 0; i < sortedValues.length; i++) {
-            const value = sortedValues[i];
-            sharedStrings[i] = "<si><t>" + value + "</t></si>";
+        for (const value of sortedValues) {
+            sharedStrings[dict.getSanitizedValue(value)] = "<si><t>" + value + "</t></si>";
         }
 
         folder.file("sharedStrings.xml", ExcelStrings.getSharedStringXML(
-                        data.cachedValues.length,
+                        worksheetData.columnCount * worksheetData.rowCount,
                         sortedValues.length,
                         sharedStrings.join(""))
                     );
-
     }
 }
 
 export class TablesFile implements IExcelFile {
-    public WriteElement(folder: JSZip, data: WorksheetData) {
-        const columnCount = data.columnCount;
-        const dimension = "A1:" + ExcelStrings.getExcelColumn(columnCount - 1) + data.rowCount;
-        const values = data.cachedValues;
+    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
+        const columnCount = worksheetData.columnCount;
+        const dimension = "A1:" + ExcelStrings.getExcelColumn(columnCount - 1) + worksheetData.rowCount;
+        const values = worksheetData.keys;
 
         let tableColumns = "<tableColumns count=\"" + columnCount + "\">";
         for (let i = 0; i < columnCount; i++) {
-            const value =  data.dataDictionary.getKeyFromValue(values[i]);
+            const value =  values[i];
             tableColumns += "<tableColumn id=\"" + (i + 1) + "\" name=\"" + value + "\"/>";
         }
 
@@ -135,7 +153,7 @@ export class TablesFile implements IExcelFile {
 }
 
 export class WorksheetRelsFile implements IExcelFile {
-    public WriteElement(folder: JSZip, data: WorksheetData) {
+    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file("sheet1.xml.rels", ExcelStrings.getWorksheetRels());
     }
 }

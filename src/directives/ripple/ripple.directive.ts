@@ -18,6 +18,9 @@ export class IgxRippleDirective {
         this._centered = value || this.centered;
     }
 
+    @Input("igxRippleDisabled")
+    public rippleDisabled = false;
+
     protected get nativeElement(): HTMLElement {
         return this.elementRef.nativeElement;
     }
@@ -26,8 +29,8 @@ export class IgxRippleDirective {
     private rippleHostClass = "igx-ripple";
 
     private animationFrames = [
-        {opacity: 0.5, transform: "scale(.3)"},
-        {opacity: 0, transform: "scale(2)"}
+        { opacity: 0.5, transform: "scale(.3)" },
+        { opacity: 0, transform: "scale(2)" }
     ];
     private animationOptions = {
         duration: this.rippleDuration,
@@ -40,7 +43,7 @@ export class IgxRippleDirective {
     constructor(
         protected elementRef: ElementRef,
         protected renderer: Renderer2,
-        private zone: NgZone) {}
+        private zone: NgZone) { }
 
     @HostListener("mousedown", ["$event"])
     public onMouseDown(event) {
@@ -59,6 +62,10 @@ export class IgxRippleDirective {
     }
 
     private _ripple(event) {
+        if (this.rippleDisabled) {
+            return;
+        }
+
         event.stopPropagation();
 
         const target = (this.rippleTarget ? this.nativeElement.querySelector(this.rippleTarget) || this.nativeElement : this.nativeElement);
