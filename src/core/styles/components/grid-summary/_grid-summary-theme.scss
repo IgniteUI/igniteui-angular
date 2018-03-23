@@ -66,11 +66,11 @@
         }
     }
 
-    &igx-grid-summary--pinned {
+    %igx-grid-summary--pinned {
         border-right: 1px dotted map-get($this, '$pinned-border-color');
     }
 
-    .igx-grid-summary--empty {
+    %igx-grid-summary--empty {
         border-left: 1px dotted map-get($this, 'border-color');
     }
 
