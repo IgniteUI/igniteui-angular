@@ -149,7 +149,7 @@ public deleteRow(event) {
 
 Below is the list of all inputs that the developers may set to configure the grid look/behavior:
 |Name|Type|Description|
-|--- |--- |--- |
+|:--- |:--- |
 |id|string|Unique identifier of the Grid. If not provided it will be automatically generated.|
 |data|Array|The data source for the grid.|
 |autoGenerate|boolean|Autogenerate grid's columns, default value is _false_|
@@ -160,7 +160,6 @@ Below is the list of all inputs that the developers may set to configure the gri
 |sortingExpressions|Array|The sorting state of the grid.|
 |height|string|The height of the grid element. You can pass values such as `1000px`, `75%`, etc.|
 |width|string|The width of the grid element. You can pass values such as `1000px`, `75%`, etc.|
-|rowHeight|number|...|
 |evenRowCSS|string|Additional styling classes applied to all even rows in the grid.|
 |oddRowCSS|string|Additional styling classses applied to all odd rows in the grid.|
 |paginationTemplate|TemplateRef|You can provide a custom `ng-template` for the pagination part of the grid.|
