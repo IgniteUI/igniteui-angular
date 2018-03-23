@@ -4,7 +4,7 @@
         <button (click)="viewRecord(grid1.data)">{{val}}</button>
         </ng-template>
     </igx-column>
-    <igx-column field="ReorderLevel" width="200px" [sortable]="true" [formatter]="multiplier" editable="true" [dataType]="'number'" >
+    <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" [formatter]="multiplier" editable="true" [dataType]="'number'" >
         <ng-template igxCell let-cell="cell" let-val let-row>
         {{val}} {{row.gridID}}
         </ng-template>

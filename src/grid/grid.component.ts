@@ -457,6 +457,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.gridAPI.clear_sort(this.id, name);
     }
 
+    public clearSummaryCache() {
+        this.gridAPI.remove_summary(this.id);
+    }
+
     public pinColumn(columnName: string): boolean {
         const col = this.getColumnByName(columnName);
 

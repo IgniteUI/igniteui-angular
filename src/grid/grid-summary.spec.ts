@@ -52,9 +52,7 @@ describe("IgxGrid - Summaries", () => {
 
         let summaries = 0;
         const summariedColumns = fixture.componentInstance.grid1.columnList.filter((col) => col.hasSummary === true).length;
-        fixture.debugElement.queryAll(By.css(SUMMARY_CLASS)).forEach((x) => {
-            summaries ++;
-        });
+        summaries = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS)).length;
         expect(summaries).toBe(summariedColumns);
     });
     it("should have count summary for string and boolean data types", () => {
@@ -95,7 +93,7 @@ describe("IgxGrid - Summaries", () => {
             index++;
         });
     });
-    it("should have count, earliest and latest summary for numeric data types", () => {
+    it("should have count, earliest and latest summary for 'date' data types", () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
         fixture.detectChanges();
 
@@ -250,6 +248,23 @@ describe("IgxGrid - Summaries", () => {
 
         maxValue = summariesUnitOfStock.query(By.css("[title='Max']")).nativeElement.nextSibling.innerText;
         expect(+maxValue).toBe(newMaxValue);
+    });
+    it("should display all active summaries after column pinning", () => {
+        const fixture = TestBed.createComponent(SummaryColumnComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid1;
+        const summariedColumns = grid.columnList.filter((col) => col.hasSummary === true).length;
+        let displayedSummaries = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS)).length;
+        expect(displayedSummaries).toBe(summariedColumns);
+
+        grid.pinColumn("UnitsInStock");
+        grid.pinColumn("ProductID");
+        fixture.detectChanges();
+
+        displayedSummaries = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS)).length;
+        expect(displayedSummaries).toBe(summariedColumns);
+
     });
 });
 

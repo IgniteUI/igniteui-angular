@@ -42,10 +42,12 @@ export class IgxGridAPIService {
     }
 
     public remove_summary(id: string, name?: string) {
-        if (!name) {
-            this.summaryCacheMap.delete(id);
-        } else {
-            this.summaryCacheMap.get(id).delete(name);
+        if (this.summaryCacheMap.has(id)) {
+            if (!name) {
+                this.summaryCacheMap.delete(id);
+            } else {
+                this.summaryCacheMap.get(id).delete(name);
+            }
         }
     }
 

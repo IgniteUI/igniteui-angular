@@ -201,6 +201,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |unpinColumn(name: string): boolean|Unpins a column by field name to the leftmost position in the unpinned area. Returns whether the operation is successful.|
 |enableSummaries(fieldName: string, customSummary?: any)|Enable summaries for the specified column and apply your `customSummary`. If you do not provide `customSummary` default summary for the column data type will be applied.|
 |enableSummaries(expressions: Array)|Enable summaries for the listed columns and apply your `customSummary` if it is provided.|
+|clearSummaryCache()|Delete all cached summaries and force to recalculate them.|
 |previousPage()|Goes to the previous page if paging is enabled and the current page is not the first.|
 |nextPage()|Goes to the next page if paging is enabled and current page is not the last.|
 |paginate(page: number)|Goes to the specified page if paging is enabled. Page indices are 0 based.|
