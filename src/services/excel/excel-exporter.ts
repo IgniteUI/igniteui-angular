@@ -5,13 +5,7 @@ import { Directive, EventEmitter, Injectable, NgModule, Output } from "@angular/
 
 import { ExcelElementsFactory } from "./excel-elements-factory";
 import { ExcelFolderTypes } from "./excel-enums";
-
-import {
-    ColumnExportingEventArgs,
-    ExportEndedEventArgs,
-    RowExportingEventArgs
-} from "./excel-event-args";
-
+import { ExcelExportEndedEventArgs } from "./excel-event-args";
 import { IgxExcelExporterOptions } from "./excel-exporter-options";
 
 import {
@@ -21,7 +15,8 @@ import {
 
 import { IgxGridComponent } from "../../grid/grid.component";
 import { IgxGridModule } from "../../grid/index";
-
+import { ColumnExportingEventArgs, RowExportingEventArgs } from "../exporter-common/event-args";
+import { ExportUtilities } from "../exporter-common/export-utilities";
 import { WorksheetData } from "./worksheet-data";
 
 @Injectable()
@@ -39,7 +34,7 @@ export class IgxExcelExporterService {
     public onColumnExport = new EventEmitter<ColumnExportingEventArgs>();
 
     @Output()
-    public onExportEnded = new EventEmitter<ExportEndedEventArgs>();
+    public onExportEnded = new EventEmitter<ExcelExportEndedEventArgs>();
 
     private static PopulateFolder(folder: IExcelFolder, zip: JSZip, worksheetData: WorksheetData): any {
         for (const childFolder of folder.ChildFolders(worksheetData)) {
@@ -54,7 +49,7 @@ export class IgxExcelExporterService {
         }
     }
 
-    public Export(grid: IgxGridComponent, options: IgxExcelExporterOptions): void {
+    public export(grid: IgxGridComponent, options: IgxExcelExporterOptions): void {
         const columnList = grid.columnList.toArray();
         const columns = new Array<any>();
         const data = new Array<any>();
@@ -86,20 +81,20 @@ export class IgxExcelExporterService {
 
         if (useRowList) {
             for (const row of grid.rowList.toArray()) {
-                this.ExportRow(data, row.rowData, row.index, columns);
+                this.exportRow(data, row.rowData, row.index, columns);
             }
         } else {
             let index = -1;
 
             for (const gridRowData of grid.data) {
-                this.ExportRow(data, gridRowData, ++index, columns);
+                this.exportRow(data, gridRowData, ++index, columns);
             }
         }
 
-        this.ExportData(data, options);
+        this.exportData(data, options);
     }
 
-    public ExportData(data: any[], options: IgxExcelExporterOptions): void {
+    public exportData(data: any[], options: IgxExcelExporterOptions): void {
         const worksheetData = new WorksheetData(data, options);
         this._xlsx = new JSZip();
 
@@ -107,37 +102,21 @@ export class IgxExcelExporterService {
         IgxExcelExporterService.PopulateFolder(rootFolder, this._xlsx, worksheetData);
 
         this._xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((result) => {
-            this.SaveFile(result, options.fileName);
+            this.saveFile(result, options.fileName);
 
-            this.onExportEnded.emit(new ExportEndedEventArgs(this._xlsx));
+            this.onExportEnded.emit(new ExcelExportEndedEventArgs(this._xlsx));
         });
     }
 
-    private SaveFile(data: string, fileName: string): void {
-        const a = document.createElement("a");
-        a.download = fileName;
-        const blob = new Blob([this.StringToArrayBuffer(atob(data))], {
+    private saveFile(data: string, fileName: string): void {
+        const blob = new Blob([ExportUtilities.stringToArrayBuffer(atob(data))], {
             type: ""
         });
 
-        a.href = window.URL.createObjectURL(blob);
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        ExportUtilities.saveBlobToFile(blob, fileName);
     }
 
-    private StringToArrayBuffer(s: string): ArrayBuffer {
-        const buf = new ArrayBuffer(s.length);
-        const view = new Uint8Array(buf);
-        for (let i = 0; i !== s.length; ++i) {
-            /* tslint:disable no-bitwise */
-            view[i] = s.charCodeAt(i) & 0xFF;
-            /* tslint:enable no-bitwise */
-        }
-        return buf;
-    }
-
-    private ExportRow(data: any[], gridRowData: any, index: number, columns: any[]) {
+    private exportRow(data: any[], gridRowData: any, index: number, columns: any[]) {
         const rowData = columns.reduce((a, e) => {
                             a[e.header] = gridRowData[e.field];
                             return a;

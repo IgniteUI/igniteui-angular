@@ -1,4 +1,6 @@
-export class IgxExcelExporterOptions {
+import { IgxExporterOptionsBase } from "../exporter-common/exporter-options-base";
+
+export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
     private _columnWidth: number;
     private _rowHeight: number;
 
@@ -6,10 +8,8 @@ export class IgxExcelExporterOptions {
     public exportFilteredRows: boolean;
     public exportCurrentlyVisiblePageOnly: boolean;
 
-    constructor(public fileName: string) {
-        if (this.fileName.endsWith(".xlsx") === false) {
-            this.fileName += ".xlsx";
-        }
+    constructor(fileName: string) {
+        super(fileName, ".xlsx");
     }
 
     public get columnWidth(): number {
@@ -28,7 +28,7 @@ export class IgxExcelExporterOptions {
     }
     public set rowHeight(value: number) {
         if (value < 0) {
-            throw Error("Invalid value for row height");
+            throw Error("Invalid value for row height!");
         }
 
         this._rowHeight = value;

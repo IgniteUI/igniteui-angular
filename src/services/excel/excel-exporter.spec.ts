@@ -7,7 +7,7 @@ import { JSZipFiles } from "./jsZip-helper";
 import { IFileContent, JSZipWrapper, ObjectComparer  } from "./jszip-verification-wrapper";
 import { ExportTestDataService, FileContentData, ValueData } from "./test-data.service";
 
-describe("Excel Exporter", () => {
+fdescribe("Excel Exporter", () => {
     let sourceData: ExportTestDataService;
     let exporter: IgxExcelExporterService;
     let options: IgxExcelExporterOptions;
@@ -70,6 +70,14 @@ describe("Excel Exporter", () => {
         });
     }));
 
+    it("should export data with special characters successfully.", async(() => {
+        getExportedData(sourceData.contactsFunkyData, options).then((wrapper) => {
+            wrapper.verifyStructure();
+            wrapper.verifyTemplateFilesContent();
+            wrapper.verifyDataFilesContent(actualData.contactsPartialDataContent);
+        });
+    }));
+
     it("should throw an exception when setting negative width and height.", async(() => {
         try {
             options.columnWidth = -1;
@@ -91,7 +99,7 @@ describe("Excel Exporter", () => {
                 const wrapper = new JSZipWrapper(value.xlsx);
                 resolve(wrapper);
             });
-            exporter.ExportData(data, exportOptions);
+            exporter.exportData(data, exportOptions);
         });
         return result;
     }
