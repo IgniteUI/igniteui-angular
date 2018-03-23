@@ -23,6 +23,7 @@
     $label-color: null,
     $result-color: null,
     $border-color: null,
+    $pinned-border-color: null,
     $inactive-color: null,
     $label-hover-color: null
 ) {
@@ -31,6 +32,7 @@
         label-color: $label-color,
         result-color: $result-color,
         border-color: $border-color,
+        pinned-border-color: $pinned-border-color,
         inactive-color: $inactive-color,
         label-hover-color: $label-hover-color
     );
@@ -46,24 +48,33 @@
         $background-color: rgba(0, 0, 0, .02),
         $label-color: igx-color($palette, 'primary', 500),
         $label-hover-color: igx-color($palette, 'primary', 700),
-
         $result-color: igx-color($palette, 'grays', 800),
         $border-color: igx-color($palette, 'grays', 400),
+        $pinned-border-color: igx-color($palette, 'grays', 600),
         $inactive-color: igx-color($palette, 'grays', 400)
     );
 
     $this: extend($default-theme, $theme);
 
-    %igx-grid-summary-wrapper {
-        background: map-get($this, 'background-color');
-    }
-
     %igx-grid-summary {
         display: flex;
         flex-direction: column;
+        border-left: 1px dotted map-get($this, 'border-color');
+
+        &:first-of-type {
+            border-left: 0;
+        }
     }
 
-    %igx-grid-summary-item {
+    &igx-grid-summary--pinned {
+        border-right: 1px dotted map-get($this, '$pinned-border-color');
+    }
+
+    .igx-grid-summary--empty {
+        border-left: 1px dotted map-get($this, 'border-color');
+    }
+
+    %igx-grid-summary__item {
         display: flex;
         align-items: center;
         padding: rem(5px) rem(24px);
@@ -71,71 +82,37 @@
         position: relative;
     }
 
-    %separator {
-        &::before,
-        &::after {
-            content: '';
-            position: absolute;
-            height: 50%;
-            width: 1px;
-            top: 25%;
-        }
-
-        &::before {
-            left: 0;
-            border-left: 1px dotted map-get($this, 'border-color');
-        }
-
-        &::after {
-            right: 0;
-            border-right: 1px dotted map-get($this, 'border-color');
-        }
-    }
-
-    %separator-right {
-        &::after {
-            content: '';
-            position: absolute;
-            height: 50%;
-            width: 1px;
-            top: 25%;
-            right: 0;
-            border-right: 1px dotted map-get($this, 'border-color');
-        }
-    }
-
-    %igx-grid-summary-item__label {
+    %igx-grid-summary__label {
         color: map-get($this, 'label-color');
         margin-right: rem(10px);
         cursor: pointer;
+        min-width: rem(40px);
 
         &:hover {
             color: map-get($this, 'label-hover-color');
         }
     }
 
-    %igx-grid-summary-item__result {
+    %igx-grid-summary__result {
         color: map-get($this, 'result-color');
         font-weight: 800;
         flex: 1 1 auto;
         text-align: right;
     }
 
-    %igx-grid-summary-item__label,
-    %igx-grid-summary-item__result {
+    %igx-grid-summary__item--inactive {
+        %igx-grid-summary__label {
+            color: map-get($this, 'inactive-color');
+        }
+
+        %igx-grid-summary__result {
+            display: none;
+        }
+    }
+
+    %igx-grid-summary__label,
+    %igx-grid-summary__result {
         @include ellipsis();
-    }
-
-    %igx-grid-summary__label--inactive {
-        color: map-get($this, 'inactive-color');
-    }
-
-    %igx-grid-summary__result--inactive {
-        display: none;
-    }
-
-    %igx-grid-summary-item__result--left-align {
-        text-align: left;
     }
 }
 
