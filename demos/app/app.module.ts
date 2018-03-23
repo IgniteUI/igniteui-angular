@@ -14,9 +14,10 @@ import { IgxCardSampleModule } from "./card/sample.module";
 import { CarouselSampleModule } from "./carousel/sample.module";
 import { IgxDatePickerSampleModule } from "./date-picker/sample.module";
 import { DialogSampleModule } from "./dialog/sample.module";
+import { MaskSampleModule } from "./directives/mask/sample.module";
+import { GridColumnPinningSampleModule } from "./grid-column-pinning/sample.module";
 import { GridPerformanceSampleModule } from "./grid-performance/sample.module";
 import { GridSampleModule } from "./grid/sample.module";
-import { GridColumnPinningSampleModule } from "./grid-column-pinning/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
 import { InputGroupSampleModule } from "./input-group/sample.module";
 import { InputSampleModule } from "./input/sample.module";
@@ -35,7 +36,6 @@ import { IgxTypographySampleModule } from "./styleguide/typography/sample.module
 import { TabBarSampleModule } from "./tabbar/sample.module";
 import { IgxToastSampleModule } from "./toast/sample.module";
 import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
-import { MaskSampleModule } from "./directives/mask/sample.module";
 
 import { IgxAvatarModule, IgxCheckboxModule, IgxIconModule, IgxInputGroupModule,
      IgxNavigationDrawerModule, IgxNavigationService, IgxRadioModule, IgxRippleModule, IgxSwitchModule } from "../lib/main";

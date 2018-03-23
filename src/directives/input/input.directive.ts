@@ -1,5 +1,6 @@
 import {CommonModule} from "@angular/common";
 import {
+    AfterViewInit,
     Directive,
     DoCheck,
     ElementRef,
@@ -14,14 +15,15 @@ import {
     Renderer2,
     Self
 } from "@angular/core";
-import { FormGroup, NgModel } from "@angular/forms";
+import { FormGroup, FormsModule, NgControl, NgModel } from "@angular/forms";
+
 import { Subscription } from "rxjs/Subscription";
-import { IgxInputGroupComponent } from "../../main";
+import { IgxInputGroupComponent, IgxInputGroupState } from "../../main";
 
 @Directive({
     selector: "[igxInput]"
 })
-export class IgxInputDirective implements OnInit, OnDestroy {
+export class IgxInputDirective implements AfterViewInit, OnDestroy {
     private _statusChanges$: Subscription;
 
     constructor(
@@ -46,9 +48,9 @@ export class IgxInputDirective implements OnInit, OnDestroy {
     public onBlur(event) {
         this.inputGroup.isFocused = false;
         if (this.ngModel) {
-            this.inputGroup.isValid = this.inputGroup.isInvalid = false;
+            this.inputGroup.valid = IgxInputGroupState.INITIAL;
             if (!this.ngModel.valid && this.ngModel.touched) {
-                this.inputGroup.isInvalid = true;
+                this.inputGroup.valid = IgxInputGroupState.INVALID;
             }
         }
     }
@@ -59,7 +61,7 @@ export class IgxInputDirective implements OnInit, OnDestroy {
         this.inputGroup.isFilled = value && value.length > 0;
     }
 
-    ngOnInit() {
+    ngAfterViewInit() {
         if (this.element.nativeElement.placeholder) {
             this.inputGroup.hasPlaceholder = true;
         }
@@ -72,9 +74,9 @@ export class IgxInputDirective implements OnInit, OnDestroy {
             this.inputGroup.isDisabled = true;
         }
 
-        if (this.element.nativeElement.value &&
-            this.element.nativeElement.value.length > 0) {
-                this.inputGroup.isFilled = true;
+        if ((this.element.nativeElement.value && this.element.nativeElement.value.length > 0) ||
+            (this.ngModel && this.ngModel.model && this.ngModel.model.length > 0)) {
+            this.inputGroup.isFilled = true;
         }
 
         const elTag = this.element.nativeElement.tagName.toLowerCase();
@@ -97,8 +99,7 @@ export class IgxInputDirective implements OnInit, OnDestroy {
 
     protected onStatusChanged(status: string) {
         if (!this.ngModel.control.pristine && (this.ngModel.validator || this.ngModel.asyncValidator)) {
-            this.inputGroup.isValid = this.ngModel.valid;
-            this.inputGroup.isInvalid = this.ngModel.invalid;
+            this.inputGroup.valid = this.ngModel.valid ? IgxInputGroupState.VALID : IgxInputGroupState.INVALID;
         }
     }
 

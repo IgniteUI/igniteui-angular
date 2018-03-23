@@ -8,10 +8,16 @@ import { IgxPrefixDirective } from "../directives/prefix/prefix.directive";
 import { IgxSuffixDirective } from "../directives/suffix/suffix.directive";
 
 enum IgxInputGroupType {
-    line = `line` as any,
-    box = `box` as any,
-    border = `border` as any,
-    search = `search` as any
+    LINE = `line` as any,
+    BOX = `box` as any,
+    BORDER = `border` as any,
+    SEARCH = `search` as any
+}
+
+export enum IgxInputGroupState {
+    INITIAL,
+    VALID,
+    INVALID
 }
 
 @Component({
@@ -19,7 +25,9 @@ enum IgxInputGroupType {
     templateUrl: "input-group.component.html"
 })
 export class IgxInputGroupComponent {
-    private _type = IgxInputGroupType.line;
+    private _type = IgxInputGroupType.LINE;
+
+    protected _valid = IgxInputGroupState.INITIAL;
 
     @HostBinding("class.igx-input-group")
     public defaultClass = true;
@@ -49,10 +57,14 @@ export class IgxInputGroupComponent {
     public isDisabled = false;
 
     @HostBinding("class.igx-input-group--valid")
-    public isValid = false;
+    public get validClass(): boolean {
+        return this.valid === IgxInputGroupState.VALID;
+    }
 
     @HostBinding("class.igx-input-group--invalid")
-    public isInvalid = false;
+    public get invalidClass(): boolean {
+        return this.valid === IgxInputGroupState.INVALID;
+    }
 
     @HostBinding("class.igx-input-group--warning")
     public hasWarning = false;
@@ -74,13 +86,13 @@ export class IgxInputGroupComponent {
         if (type !== undefined) {
             this.isBox = this.isBorder = this.isSearch = false;
             switch (type) {
-                case IgxInputGroupType.box:
+                case IgxInputGroupType.BOX:
                     this.isBox = true;
                     break;
-                case IgxInputGroupType.border:
+                case IgxInputGroupType.BORDER:
                     this.isBorder = true;
                     break;
-                case IgxInputGroupType.search:
+                case IgxInputGroupType.SEARCH:
                     this.isSearch = true;
                     break;
                 default: break;
@@ -93,6 +105,14 @@ export class IgxInputGroupComponent {
         return this._type.toString();
     }
 
+    get valid(): IgxInputGroupState {
+        return this._valid;
+    }
+
+    set valid(value: IgxInputGroupState) {
+        this._valid = value;
+    }
+
     constructor(public element: ElementRef, private _renderer: Renderer2) {
     }
 
@@ -101,25 +121,26 @@ export class IgxInputGroupComponent {
     }
 
     get hasBorder() {
-        return this._type === IgxInputGroupType.line ||
-            this._type === IgxInputGroupType.box;
+        return this._type === IgxInputGroupType.LINE ||
+            this._type === IgxInputGroupType.BOX;
     }
 
     get isTypeLine() {
-        return  this._type === IgxInputGroupType.line;
+        return  this._type === IgxInputGroupType.LINE;
     }
 
     get isTypeBox() {
-        return this._type === IgxInputGroupType.box;
+        return this._type === IgxInputGroupType.BOX;
     }
 
     get isTypeBorder() {
-        return this._type === IgxInputGroupType.border;
+        return this._type === IgxInputGroupType.BORDER;
     }
 
     get isTypeSearch() {
-        return  this._type === IgxInputGroupType.search;
+        return  this._type === IgxInputGroupType.SEARCH;
     }
+
 }
 
 @NgModule({

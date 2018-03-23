@@ -7,7 +7,7 @@
             <br />
             <igx-input-group>
               <input igxInput name="name" type="text" [(ngModel)]="person.name" required  />
-              <label igxLabel for="name">Name*</label>
+              <label igxLabel for="name">Name</label>
             </igx-input-group>
             <igx-input-group>
                 <input igxInput #dateInput name="birthday" type="text" [igxMask]="'00/00/0000'" [(ngModel)]="person.birthday" (blur)="validateDate(dateInput, snackbar)"/>

@@ -8,7 +8,7 @@ import { Component } from "@angular/core";
 })
 export class InputGroupSampleComponent {
     public user = {
-        firstName: "",
-        lastName: ""
+        firstName: "Oke",
+        lastName: "Nduka"
     };
 }
