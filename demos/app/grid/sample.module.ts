@@ -10,10 +10,12 @@ import {
     IgxRippleModule,
     IgxSnackbarModule,
     IgxSwitchModule,
-    IgxToastModule
+    IgxToastModule,
+    IgxExcelExporterService
 } from "../../lib/main";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { GridSampleComponent } from "./sample.component";
+import { IgxCsvExporterService } from "../../lib/main";
 
 @NgModule({
     declarations: [
@@ -32,6 +34,9 @@ import { GridSampleComponent } from "./sample.component";
         IgxButtonModule,
         IgxRippleModule,
         IgxInputModule
+    ], providers: [
+        IgxExcelExporterService,
+        IgxCsvExporterService
     ]
 })
 export class GridSampleModule { }

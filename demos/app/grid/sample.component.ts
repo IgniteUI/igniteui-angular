@@ -17,6 +17,11 @@ import {
     STRING_FILTERS
 } from "../../lib/main";
 import { IgxExcelExporterOptions } from "../../lib/services/excel/excel-exporter-options";
+import { IgxCsvExporterService } from "../../lib/main";
+import { IgxExporterOptionsBase } from "../../lib/services/exporter-common/exporter-options-base";
+import { IgxCsvExporterOptions } from "../../lib/main";
+import { CsvFileTypes } from "../../lib/main";
+import { IgxBaseExporter } from "../../lib/services/exporter-common/base-export-service";
 
 @Injectable()
 export class LocalService {
@@ -120,8 +125,11 @@ export class GridSampleComponent {
     public selectedRow;
     public newRecord = "";
     public editCell;
+    public exportFormat = "XLSX";
     constructor(private localService: LocalService,
-    private remoteService: RemoteService) { }
+    private remoteService: RemoteService,
+    private excelExporterService: IgxExcelExporterService,
+    private csvExporterService: IgxCsvExporterService) { }
     public ngOnInit(): void {
         this.data = this.localService.records;
         this.remote = this.remoteService.remoteData;
@@ -243,34 +251,46 @@ export class GridSampleComponent {
     }
 
     public exportRaw() {
-        let exporter = new IgxExcelExporterService();
-        exporter.Export(this.grid3, new IgxExcelExporterOptions("Report"));
+        this.getExporterService().export(this.grid3, this.getOptions("Report"));
     }
 
     public export() {
         this.grid3.clearFilter();
-        let exporter = new IgxExcelExporterService();
 
-        let options = new IgxExcelExporterOptions("Report");
-        options.exportCurrentlyVisiblePageOnly = true;
-        options.exportHiddenColumns = false;
+        let options = this.getOptions("Report");
+        options.ignoreColumnsVisibility = false;
 
-        exporter.Export(this.grid3, options);
+        this.getExporterService().export(this.grid3, options);
     }
 
     public exportFilteredGrid() {
         this.grid3.filter("ProductName", "Queso", STRING_FILTERS.contains, true);
         this.grid3.cdr.detectChanges();
 
-        let exporter = new IgxExcelExporterService();
-        let options = new IgxExcelExporterOptions("Queso Report");
-        options.exportFilteredRows = false;
-        options.exportHiddenColumns = false;
+        let options = this.getOptions("Queso Report");
+        options.ignoreFiltering = false;
+        options.ignoreColumnsVisibility = false;
 
-        exporter.Export(this.grid3, options);
+        this.getExporterService().export(this.grid3, options);
     }
     public exportData() {
-        let exporter = new IgxExcelExporterService();
-        exporter.ExportData(this.grid3.data, new IgxExcelExporterOptions("Data"));
+        this.getExporterService().exportData(this.grid3.data, this.getOptions("Data"));
+    }
+
+    private getExporterService(): IgxBaseExporter {
+        return this.exportFormat === "XLSX" ? this.excelExporterService : this.csvExporterService;
+    }
+
+    private getOptions(fileName: string): IgxExporterOptionsBase {
+        switch(this.exportFormat){
+            case "XLSX":
+                return new IgxExcelExporterOptions(fileName);
+            case "CSV":
+                return new IgxCsvExporterOptions(fileName, CsvFileTypes.CSV);
+            case "TSV":
+                return new IgxCsvExporterOptions(fileName, CsvFileTypes.TSV);
+            case "TAB":
+                return new IgxCsvExporterOptions(fileName, CsvFileTypes.TAB)
+        }
     }
 }

@@ -48,7 +48,7 @@
                     </igx-card-actions>
                 </igx-card>
             </div>
-            
+
             <div class="toggles-container">
                 <div class="toggle-group" *ngFor="let col of grid1.columns">
                     <h4>{{ col.field }}</h4>
@@ -147,6 +147,13 @@
         <article class="grid-sample">
             <h4 class="sample-title">Grid with templated cell remote data</h4>
             <div class="button-sample">
+                <label>Choose export format</label>
+                <select [(ngModel)]="exportFormat">
+                    <option value="XLSX">XLSX</option>
+                    <option value="CSV">CSV</option>
+                    <option value="TSV">TSV</option>
+                    <option value="TAB">TAB</option>
+                </select>
                 <button igxButton="flat" (click)="exportData()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Data</button>
                 <button igxButton="flat" (click)="exportRaw()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Raw Grid Data</button>
                 <button igxButton="flat" (click)="export()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Grid</button>

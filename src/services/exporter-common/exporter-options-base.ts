@@ -1,19 +1,13 @@
 export abstract class IgxExporterOptionsBase {
     private _fileName: string;
 
-    public exportHiddenColumns: boolean;
-    public exportFilteredRows: boolean;
-    public exportCurrentlyVisiblePageOnly: boolean;
-    public exportSummaries: boolean;
-    public exportPinnedColumns: boolean;
-
-    // public ignoreColumnsVisibility: boolean;
-    // public ignoreColumnsOrder: boolean;
-    // public ignoreFiltering: boolean;
-    // public ignorePaging: boolean;
-    // public ignoreSummaries: boolean;
-    // public ignorePinning: boolean;
+    public ignoreColumnsVisibility = false;
+    public ignoreFiltering = false;
     // public ignoreSorting: boolean;
+
+    // public ignoreSummaries: boolean;
+    // public ignoreColumnsOrder: boolean;
+    // public ignorePinning: boolean;
 
     constructor(fileName: string, private _fileExtension: string) {
         this.setFileName(fileName);

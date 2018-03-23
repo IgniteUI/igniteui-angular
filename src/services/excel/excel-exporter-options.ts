@@ -3,11 +3,7 @@ import { IgxExporterOptionsBase } from "../exporter-common/exporter-options-base
 export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
     private _columnWidth: number;
     private _rowHeight: number;
-
-    public exportHiddenColumns: boolean;
-    public exportFilteredRows: boolean;
-    public exportCurrentlyVisiblePageOnly: boolean;
-
+    
     constructor(fileName: string) {
         super(fileName, ".xlsx");
     }
