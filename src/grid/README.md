@@ -197,10 +197,10 @@ Below is the list of all inputs that the developers may set to configure the gri
 |sort(name: string, direction, ignorecase)|Sorts a single column.|
 |sort(expressions: Array)|Sorts the grid columns based on the provided array of sorting expressions.|
 |clearSort(name?: string)|If `name` is provided, clears the sorting state of the corresponding column, otherwise clears the sorting state of all columns.|
-|pinColumn(columnName: string)|Pin a column by its name|
-|unpinColumn(columnName: string)|Unpin a column by its name|
+|pinColumn(name: string): boolean|Pins a column by field name to the left of the grid on the rightmost position. Returns whether the operation is successful.|
+|unpinColumn(name: string): boolean|Unpins a column by field name to the leftmost position in the unpinned area. Returns whether the operation is successful.|
 |enableSummaries(fieldName: string, customSummary?: any)|Enable summaries for the specified column and apply your `customSummary`. If you do not provide `customSummary` default summary for the column data type will be applied.|
-|enableSummaries(expressions: Array)|Enable summaries for the columns and apply your `customSummary` if it is provided.|
+|enableSummaries(expressions: Array)|Enable summaries for the listed columns and apply your `customSummary` if it is provided.|
 |previousPage()|Goes to the previous page if paging is enabled and the current page is not the first.|
 |nextPage()|Goes to the next page if paging is enabled and current page is not the last.|
 |paginate(page: number)|Goes to the specified page if paging is enabled. Page indices are 0 based.|
@@ -283,6 +283,7 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 
 ### Methods
 
-|Name|Return Type|Description|
-|--- |--- |--- |
-|`update(val: any)`|void|Emits the `onEditDone` event and updates the appropriate record in the data source.|
+| Signature | Description |
+| :--- | :--- |
+| pin(): boolean | Pin the column to the left of the grid on the rightmost position. Returns if the operation is successful. |
+| unpin(): boolean | Unpins the column to the leftmost position in the unpinned area. Returns if the operation is successful.  |
