@@ -1,3 +1,4 @@
+import { ExportUtilities } from "../exporter-common/export-utilities";
 import { IgxExcelExporterOptions } from "./excel-exporter-options";
 import { WorksheetDataDictionary } from "./worksheet-data-dictionary";
 
@@ -48,7 +49,7 @@ export class WorksheetData {
         const dataEntry = this._data[0];
         this._isStringData = typeof dataEntry === "string";
 
-        this._keys = this._isStringData ? ["Column 1"] : Object.keys(dataEntry);
+        this._keys = this._isStringData ? ["Column 1"] : ExportUtilities.getKeysFromData(this._data);
 
         if (this._keys.length === 0) {
             return;

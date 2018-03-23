@@ -1,6 +1,6 @@
 import * as JSZip from "jszip/dist/jszip";
 
-export class ExportEndedEventArgs {
+export class ExcelExportEndedEventArgs {
     constructor(public xlsx: JSZip) {
     }
 }

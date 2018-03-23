@@ -15,15 +15,12 @@ export abstract class IgxExporterOptionsBase {
     // public ignorePinning: boolean;
     // public ignoreSorting: boolean;
 
-    constructor(fileName: string, fileExtension: string) {
-        this._fileName = fileName;
+    constructor(fileName: string, private _fileExtension: string) {
+        this.setFileName(fileName);
     }
 
-    private setFileName(extension: string) {
-        if (this._fileName.endsWith(extension) === false) {
-            return this._fileName + extension;
-        }
-        return this._fileName;
+    private setFileName(fileName: string): void {
+        this._fileName = fileName + (fileName.endsWith(this._fileExtension) === false ? this._fileExtension : "");
     }
 
     get fileName() {
@@ -31,7 +28,7 @@ export abstract class IgxExporterOptionsBase {
     }
 
     set fileName(value) {
-        this._fileName = this.setFileName(value);
+        this.setFileName(value);
     }
 
 }

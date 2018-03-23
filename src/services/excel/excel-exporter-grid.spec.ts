@@ -488,7 +488,7 @@ describe("Excel Exporter", () => {
                 const wrapper = new JSZipWrapper(value.xlsx);
                 resolve(wrapper);
             });
-            exporter.Export(grid, exportOptions);
+            exporter.export(grid, exportOptions);
         });
         return exportData;
     }

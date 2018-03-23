@@ -7,7 +7,7 @@ import { JSZipFiles } from "./jsZip-helper";
 import { IFileContent, JSZipWrapper, ObjectComparer  } from "./jszip-verification-wrapper";
 import { ExportTestDataService, FileContentData, ValueData } from "./test-data.service";
 
-describe("Excel Exporter", () => {
+fdescribe("Excel Exporter", () => {
     let sourceData: ExportTestDataService;
     let exporter: IgxExcelExporterService;
     let options: IgxExcelExporterOptions;
@@ -20,7 +20,7 @@ describe("Excel Exporter", () => {
         options = new IgxExcelExporterOptions("TestData");
 
         // Spy the private SaveFile method so the files are not really created
-        // spyOn(exporter as any, "SaveFile");
+        spyOn(exporter as any, "SaveFile");
     });
 
     /* ExportData() tests */
@@ -99,7 +99,7 @@ describe("Excel Exporter", () => {
                 const wrapper = new JSZipWrapper(value.xlsx);
                 resolve(wrapper);
             });
-            exporter.ExportData(data, exportOptions);
+            exporter.exportData(data, exportOptions);
         });
         return result;
     }

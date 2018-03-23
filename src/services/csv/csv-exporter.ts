@@ -10,7 +10,7 @@ export class IgxCsvExporterService {
     private _stringData: string;
 
     @Output()
-    public onExportEnded = new EventEmitter<ExportEndedEventArgs>();
+    public onExportEnded = new EventEmitter<CSVExportEndedEventArgs>();
 
     @Output()
     public onColumnExport = new EventEmitter<ColumnExportingEventArgs>();
@@ -69,7 +69,7 @@ export class IgxCsvExporterService {
         this._stringData = csvData.prepareData();
 
         this.saveFile(options);
-        this.onExportEnded.emit(new ExportEndedEventArgs(this._stringData));
+        this.onExportEnded.emit(new CSVExportEndedEventArgs(this._stringData));
     }
 
     private saveFile(options: IgxCsvExporterOptions) {
@@ -106,17 +106,17 @@ export class IgxCsvExporterService {
         //     }
         // }
         const blob = new Blob(["\ufeff", data], { type: "text/csv;charset=utf-8;" });
-        ExportUtilities.saveBlobToFile(blob, fileName, ".csv");
+        ExportUtilities.saveBlobToFile(blob, fileName);
     }
 
     private saveTSVFile(data: string, fileName: string): void {
         const blob = new Blob(["\ufeff", data], { type: "text/tab-separated-values;charset=utf-8;" });
-        ExportUtilities.saveBlobToFile(blob, fileName, ".tsv");
+        ExportUtilities.saveBlobToFile(blob, fileName);
     }
 
     private saveTABFile(data: string, fileName: string): void {
         const blob = new Blob(["\ufeff", data], { type: "text/tab-separated-values;charset=utf-8;" });
-        ExportUtilities.saveBlobToFile(blob, fileName, ".tab");
+        ExportUtilities.saveBlobToFile(blob, fileName);
     }
 
     private exportRow(data: any[], gridRowData: any, index: number, columns: any[]) {
@@ -134,7 +134,7 @@ export class IgxCsvExporterService {
     }
 }
 
-export class ExportEndedEventArgs {
+export class CSVExportEndedEventArgs {
     constructor(public csvData: string) {
     }
 }
