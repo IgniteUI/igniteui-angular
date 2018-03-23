@@ -28,9 +28,19 @@ import { IGroupByRecord } from "../data-operations/groupby-record.interface";
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: "igx-grid-groupby-row",
-    templateUrl: "./groupby-row.component.html"
+    templateUrl: "./groupby-row.component.html",
+    styles: [ `:host { 
+        display: flex;
+        background: inherit;
+        outline-style: none;
+        height: 50px;
+    }`]
 })
 export class IgxGridGroupByRowComponent {
+
+    constructor(public gridAPI: IgxGridAPIService,
+        private element: ElementRef,
+        public cdr: ChangeDetectorRef) {}
 
     @Input()
     public index: number;
@@ -41,10 +51,21 @@ export class IgxGridGroupByRowComponent {
     @Input()
     public groupRow: IGroupByRecord;
 
-    @ViewChild("defaultGroupRow", { read: TemplateRef })
-    protected defaultGroupRowTemplate: TemplateRef<any>;
+    get expanded(): boolean {
+        return this.grid.isExpandedGroup(this.groupRow);
+    }
 
-    get template(): TemplateRef<any> {
-        return this.defaultGroupRowTemplate;
+    @HostBinding("style.padding-left")
+    get padding(): string {
+        return this.groupRow.level * 100 + "px";
+    }
+
+    @autoWire(true)
+    public toggle() {
+        this.grid.toggleGroup(this.groupRow);
+    }
+
+    get grid(): IgxGridComponent {
+        return this.gridAPI.get(this.gridID);
     }
 };

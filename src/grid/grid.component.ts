@@ -32,6 +32,8 @@ import { cloneArray } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
+import { IGroupByRecord } from "../data-operations/groupby-record.interface";
+import { IGroupByExpandState } from "../data-operations/groupby-expand-state.interface";
 import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
@@ -94,6 +96,19 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._applyGrouping();
         this.cdr.markForCheck();
     }
+
+    @Input()
+    get groupingExpansionState() {
+        return this._groupingExpandState;
+    }
+
+    set groupingExpansionState(value) {
+        this._groupingExpandState = cloneArray(value);
+        this.cdr.markForCheck();
+    }
+
+    @Input()
+    public groupByDefaultExpanded: boolean = true;
 
     @Input()
     get paging(): boolean {
@@ -244,6 +259,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
     protected _groupingExpressions = [];
+    protected _groupingExpandState: IGroupByExpandState[] = [];
     private resizeHandler;
 
     constructor(
@@ -438,6 +454,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
+    public isExpandedGroup(group: IGroupByRecord): boolean {
+        const state: IGroupByExpandState = this._getStateForGroupRow(group);
+        return state ? state.expanded : this.groupByDefaultExpanded;
+    }
+
+    public toggleGroup(groupRow: IGroupByRecord) {
+        this._toggleGroup(groupRow);
+    }
+
     public filter(...rest): void {
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._filterMultiple(rest[0]);
@@ -601,6 +626,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     protected _groupByMultiple(expressions: ISortingExpression[]) {
         this.gridAPI.groupBy_multiple(this.id, expressions);
+    }
+
+    protected _getStateForGroupRow(groupRow: IGroupByRecord): IGroupByExpandState {
+        return this.gridAPI.groupBy_get_expanded_for_group(this.id, groupRow);
+    }
+
+    protected _toggleGroup(groupRow: IGroupByRecord) {
+        this.gridAPI.groupBy_toggle_group(this.id, groupRow);
     }
 
     protected _applyGrouping() {

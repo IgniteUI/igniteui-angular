@@ -10,6 +10,7 @@ import { ISortingStrategy, SortingStrategy } from "./sorting-strategy";
 import { IPagingState, PagingError } from "./paging-state.interface";
 
 import { IDataState } from "./data-state.interface";
+import { IGroupingState } from "./groupby-state.interface";
 
 export enum DataType {
     String = "string",
@@ -49,11 +50,11 @@ export class DataUtil {
         // apply default settings for each sorting expression(if not set)
         return state.strategy.sort(data, state.expressions);
     }
-    public static group<T>(data: T[], state: ISortingState): T[] {
+    public static group<T>(data: T[], state: IGroupingState): T[] {
         // set defaults
         DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
         // apply default settings for each grouping expression(if not set)
-        return state.strategy.groupBy(data, state.expressions);
+        return state.strategy.groupBy(data, state.expressions, state.expansion, state.defaultExpanded);
     }
     public static page<T>(data: T[], state: IPagingState): T[] {
         if (!state) {

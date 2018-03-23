@@ -4,6 +4,8 @@ import { DataUtil } from "../data-operations/data-util";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { ISortingExpression } from "../data-operations/sorting-expression.interface";
 import { IgxGridAPIService } from "./api.service";
+import { IGroupByExpandState } from "../data-operations/groupby-expand-state.interface";
+import { IgxGridComponent } from "./grid.component";
 
 @Pipe({
   name: "gridSort",
@@ -36,14 +38,19 @@ export class igxGridGroupingPipe implements PipeTransform {
     constructor(private gridAPI: IgxGridAPIService) {}
 
     public transform(collection: any[], expression: ISortingExpression | ISortingExpression[],
+        expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
         id: string, pipeTrigger: number): any[] {
 
-        const state = { expressions: [] };
-        state.expressions = this.gridAPI.get(id).groupingExpressions;
+        const state = { expressions: [], expansion: [], defaultExpanded };
+        const grid: IgxGridComponent = this.gridAPI.get(id);
+        state.expressions = grid.groupingExpressions;
 
         if (!state.expressions.length) {
             return collection;
         }
+
+        state.expansion = grid.groupingExpansionState;
+        state.defaultExpanded = grid.groupByDefaultExpanded;
 
         return DataUtil.group(cloneArray(collection), state);
     }

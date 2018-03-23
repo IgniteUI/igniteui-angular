@@ -1,5 +1,7 @@
-<ng-template #defaultGroupRow>
-    <span>+</span><span>{{ groupRow.expression.fieldName }}: {{ groupRow.value }} ({{ groupRow.records.length }})</span>
-</ng-template>
-<ng-container *ngTemplateOutlet="template">
+<ng-container [style.padding-left]="padding" #defaultGroupRow >
+    <span (click)="toggle()">
+        <button *ngIf="expanded" igxButton="raised">-</button>
+        <button *ngIf="!expanded" igxButton="raised">+</button>
+    </span>
+    <span>{{ groupRow.expression.fieldName }}: {{ groupRow.value }} ({{ groupRow.records.length }})</span>
 </ng-container>

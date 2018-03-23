@@ -7,6 +7,8 @@ import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridRowComponent } from "./row.component";
+import { IGroupByRecord } from "../data-operations/groupby-record.interface";
+import { IGroupByExpandState } from "../data-operations/groupby-expand-state.interface";
 
 @Injectable()
 export class IgxGridAPIService {
@@ -102,6 +104,29 @@ export class IgxGridAPIService {
         this.sort_multiple(id, expressions);
     }
 
+    public groupBy_get_expanded_for_group(id: string, groupRow: IGroupByRecord): IGroupByExpandState {
+        const state = this.get(id).groupingExpansionState;
+        return state.find((state) =>
+            state.fieldName === groupRow.expression.fieldName && state.value === groupRow.value);
+    }
+
+    public groupBy_toggle_group(id: string, groupRow: IGroupByRecord) {
+        const grid = this.get(id);
+        const expansionState = grid.groupingExpansionState;
+
+        const state: IGroupByExpandState = this.groupBy_get_expanded_for_group(id, groupRow);
+        if (state) {
+            state.expanded = !state.expanded;
+        } else {
+            expansionState.push({
+                expanded: !grid.groupByDefaultExpanded,
+                value: groupRow.value,
+                fieldName: groupRow.expression.fieldName
+            });
+        }
+        this.get(id).groupingExpansionState = expansionState;
+    }
+
     public filter(id, fieldName, term, condition, ignoreCase) {
         const filteringState = this.get(id).filteringExpressions;
         if (this.get(id).paging) {
@@ -119,7 +144,7 @@ export class IgxGridAPIService {
 
         for (const each of expressions) {
             this.prepare_filtering_expression(filteringState, each.fieldName,
-                                              each.searchVal, each.condition, each.ignoreCase);
+                each.searchVal, each.condition, each.ignoreCase);
         }
         this.get(id).filteringExpressions = filteringState;
     }
