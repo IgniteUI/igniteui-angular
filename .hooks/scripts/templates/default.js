@@ -5,19 +5,20 @@ var path = require('path');
 var defaults = {
     default: {
         style: 'default',
-        limits: {
+        subjectLimits: 15,
+        lineLimits: {
             firstLine: 80,
-            otherLine: 80
+            otherLine: 80,
         },
-        ticketPattern: '(#)[0-9]+',
+        issuePattern: '(#)[0-9]+',
+        typesWithMandatoryIssue: [ 'feat', 'fix', 'test' ],
         guidelinesUrl: 'https://bit.ly/angular-guidelines',
         types: [
-            'feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'chore'
+            'feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'chore', 'build', 'ci', 'revert'
         ],
-        scipe: '\\S+.*'
+        // scope: '\\S+.*'
     },
-    oldMessagePath: path.join('.git', 'COMMIT_EDITMSG_OLD'),
-    oldMessageSeconds: 300
+    oldMessagePath: path.join('.git', 'COMMIT_EDITMSG_OLD')
 }
 
 module.exports = defaults;

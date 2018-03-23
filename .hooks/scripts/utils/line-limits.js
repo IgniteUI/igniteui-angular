@@ -1,5 +1,5 @@
 module.exports = function(lines, options, errors) {
-    var limits = options.limits;
+    var limits = options.lineLimits;
     lines.forEach(function(line, index) {
         if (index === 0) {
             if (line.length === 0) {
@@ -11,11 +11,10 @@ module.exports = function(lines, options, errors) {
         } else if (index === 1 && line.length > 0) {
             errors.push('Second line must always be empty!');
         } else if (line.length > limits.otherLine) {
-            // console.log("third iffff");
             errors.push(
                 'Commit message line ' + (index + 1) + ' is too long: ' +
                 line.length + ', only ' + limits.otherLine + ' are allowed.\n' +
-                'Was: ' + line.substring(0, 20) + '[...]!'
+                'The line is: ' + line.substring(0, 20) + '[...]!'
             );
         }
     });

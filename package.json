@@ -42,7 +42,7 @@
         "stylelint": "stylelint",
         "start:demos": "npm run build && cd demos && npm start",
         "start:dev": "concurrently --raw --kill-others \"npm run build:esm:watch\" \"npm run start:demos\"",
-        "postinstall": "copyfiles -f .hooks/prepare-commit-msg .git/hooks && copyfiles -u 1 .hooks/scripts/utils/*.js .git/hooks && copyfiles -u 1 .hooks/scripts/templates/*.js .git/hooks && copyfiles -u 1 .hooks/scripts/*.js .git/hooks"
+        "postinstall": "copyfiles -f .hooks/prepare-commit-msg .git/hooks && copyfiles -u 1 .hooks/scripts/utils/*.js .git/hooks && copyfiles -u 1 .hooks/scripts/templates/*.js .git/hooks && copyfiles -u 1 .hooks/scripts/*.js .git/hooks && copyfiles -u 1 .hooks/scripts/templateValidators/*.js .git/hooks"
     },
     "dependencies": {
         "@angular/animations": "^5.2.0",
