@@ -12,8 +12,28 @@
     @extend %igx-grid-summary !optional;
 }
 
-@include b(igx-grid-summary-wrapper)  {
-    @extend %igx-grid-summary-border !optional;
+@include b(igx-grid-summary-wrapper) {
+    @extend %igx-grid-summary-wrapper !optional;
+
+    &:first-of-type {
+        &::before {
+            border-left: none
+        }
+    }
+
+    &:last-of-type {
+        &::after {
+            border-right: none
+        }
+    }
+}
+
+.igx-grid-summary-wrapper:empty + .igx-grid-summary-wrapper .igx-grid-summary-item {
+    @extend %separator !optional;
+}
+
+.igx-grid-summary-wrapper + .igx-grid-summary-wrapper .igx-grid-summary-item {
+    @extend %separator-right !optional;
 }
 
 @include b(igx-grid-summary-item) {
@@ -33,6 +53,7 @@
     }
 
     @include m(inactive) {
+        @extend %igx-grid-summary-item__label !optional;
 
         @include e(label) {
             @extend %igx-grid-summary__label--inactive !optional;
