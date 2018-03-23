@@ -151,7 +151,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 
 
 |Name|Type|Description|
-|:--- |:--- |
+|:--- |:--- |:--- |
 |id|string|Unique identifier of the Grid. If not provided it will be automatically generated.|
 |data|Array|The data source for the grid.|
 |autoGenerate|boolean|Autogenerate grid's columns, default value is _false_|
