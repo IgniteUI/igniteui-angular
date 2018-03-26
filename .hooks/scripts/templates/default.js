@@ -16,7 +16,6 @@ var defaults = {
         types: [
             'feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'chore', 'build', 'ci', 'revert'
         ],
-        // scope: '\\S+.*'
     },
     oldMessagePath: path.join('.git', 'COMMIT_EDITMSG_OLD')
 }

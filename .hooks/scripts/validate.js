@@ -1,3 +1,4 @@
+'use strict';
 
 var defaultTemp = require('./templates/default'),
     commitValidator = require('./templateValidators/default-style-validator'),

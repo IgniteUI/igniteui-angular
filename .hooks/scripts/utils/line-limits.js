@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function(lines, options, errors) {
     var limits = options.lineLimits;
     lines.forEach(function(line, index) {

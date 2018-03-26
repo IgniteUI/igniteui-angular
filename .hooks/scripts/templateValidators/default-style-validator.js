@@ -70,6 +70,6 @@ module.exports = function (lines, options, errors) {
     }
 
     if (subject.length < options.subjectLimits) {
-        errors.push('<subject> should contains atleast ' + options.subjectLimits + ' characters');
+        errors.push('<subject> should contains at least ' + options.subjectLimits + ' characters');
     }
 }
