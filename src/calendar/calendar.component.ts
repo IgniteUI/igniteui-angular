@@ -48,7 +48,7 @@ export class CalendarHammerConfig extends HammerGestureConfig {
  * 
  * Here's an example that allows users to select a date range by only selecting the beginning and end dates:
  * ```html
- * <igx-calendar selection="range"/>
+ * <igx-calendar selection="range"></igx-calendar>
  * ```
  */
 @Component({
