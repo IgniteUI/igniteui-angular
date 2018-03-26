@@ -8,11 +8,11 @@
 2. **[DONE]** Product Theming 
 3. Column Resizing 
 4. Column Hiding 
-5. Column pinning
+5. **[DONE]** Column pinning
 6. Row Selection 
 7. Export to excel (Exporting CSV)  
 8. Context Menu event (output)
-9. Mask directive (editor)
+9. **[DONE]** Mask directive (editor)
 10. Summaries 
 11. Tabs
 12. Operations UI - column chooser (Data Operations UI)          
