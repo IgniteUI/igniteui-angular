@@ -53,6 +53,11 @@ export interface IGridEditEventArgs {
     newValue: any;
 }
 
+export interface IPinColumnEventArgs {
+    column: IgxColumnComponent;
+    insertAtIndex: number;
+}
+
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
@@ -149,7 +154,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public onSelection = new EventEmitter<IGridCellEventArgs>();
 
     @Output()
-    public onColumnPinning = new EventEmitter<any>();
+    public onColumnPinning = new EventEmitter<IPinColumnEventArgs>();
 
     /**
      * An @Output property emitting an event when cell or row editing has been performed in the grid.
@@ -162,13 +167,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public onEditDone = new EventEmitter<IGridEditEventArgs>();
 
     @Output()
-    public onColumnInit = new EventEmitter<any>();
+    public onColumnInit = new EventEmitter<IgxColumnComponent>();
 
     @Output()
-    public onSortingDone = new EventEmitter<any>();
+    public onSortingDone = new EventEmitter<ISortingExpression>();
 
     @Output()
-    public onFilteringDone = new EventEmitter<any>();
+    public onFilteringDone = new EventEmitter<IFilteringExpression>();
 
     @Output()
     public onPagingDone = new EventEmitter<any>();
