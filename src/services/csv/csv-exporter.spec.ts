@@ -17,7 +17,7 @@ fdescribe("Export to", () => {
         actualData = new FileContentData();
 
         // Spy the private SaveFile method so the files are not really created
-        spyOn(exporter as any, "saveFile");
+        // spyOn(exporter as any, "saveFile");
     });
 
     /* ExportData() tests */
@@ -37,9 +37,21 @@ fdescribe("Export to", () => {
             });
         }));
 
-        fit(typeName + " should export string data without headers successfully.", async(() => {
+        it(typeName + " should export string data without headers successfully.", async(() => {
             getExportedData(sourceData.noHeadersStringData, options).then((wrapper) => {
                 wrapper.verifyData(wrapper.noHeadersStringData);
+            });
+        }));
+
+        it(typeName + " should export number data without headers successfully.", async(() => {
+            getExportedData(sourceData.noHeadersNumberData, options).then((wrapper) => {
+                wrapper.verifyData(wrapper.noHeadersNumberData);
+            });
+        }));
+
+        it(typeName + " should export date time data without headers successfully.", async(() => {
+            getExportedData(sourceData.noHeadersDateTimeData, options).then((wrapper) => {
+                wrapper.verifyData(wrapper.noHeadersDateTimeData);
             });
         }));
 
@@ -66,7 +78,6 @@ fdescribe("Export to", () => {
                 wrapper.verifyData(wrapper.contactsFunkyData);
             });
         }));
-
 
     }
 

@@ -10,11 +10,11 @@ import {
     RowExportingEventArgs
 } from "./event-args";
 
-import { IgxExporterOptionsBase } from "./exporter-options-base";
 import { ExportUtilities } from "./export-utilities";
+import { IgxExporterOptionsBase } from "./exporter-options-base";
 
 export abstract class IgxBaseExporter {
-    private _columnList: Array<any>;
+    private _columnList: any[];
     protected _indexOfLastPinnedColumn = -1;
 
     @Output()
@@ -24,7 +24,7 @@ export abstract class IgxBaseExporter {
     public onColumnExport = new EventEmitter<ColumnExportingEventArgs>();
 
     public export(grid: IgxGridComponent, options: IgxExporterOptionsBase): void {
-        if(options === undefined || options === null) {
+        if (options === undefined || options === null) {
             throw Error("No options provided!");
         }
 
@@ -42,7 +42,7 @@ export abstract class IgxBaseExporter {
                 skip: !exportColumn
             };
 
-            if(column.pinned && exportColumn) {
+            if (column.pinned && exportColumn) {
                 this._indexOfLastPinnedColumn = index;
             }
         });
@@ -57,18 +57,18 @@ export abstract class IgxBaseExporter {
     }
 
     public exportData(data: any[], options: IgxExporterOptionsBase): void {
-        if(options === undefined || options === null) {
+        if (options === undefined || options === null) {
             throw Error("No options provided!");
         }
 
-        if(!this._columnList || this._columnList.length === 0) {
+        if (!this._columnList || this._columnList.length === 0) {
             const keys = ExportUtilities.getKeysFromData(data);
-            this._columnList = keys.map(k => ({ header: k, field: k, skip: false}));
+            this._columnList = keys.map((k) => ({ header: k, field: k, skip: false}));
         }
 
         let columnIndex = 0;
         let skippedPinnedColumnsCount = 0;
-        this._columnList.forEach(column => {
+        this._columnList.forEach((column) => {
             if (!column.skip) {
                 const columnExportArgs = new ColumnExportingEventArgs(column.header, columnIndex);
                 this.onColumnExport.emit(columnExportArgs);
@@ -89,9 +89,9 @@ export abstract class IgxBaseExporter {
         const dataToExport = new Array<any>();
 
         let rowIndex = 0;
-        data.forEach(row => {
-            this.exportRow(dataToExport, row, rowIndex++);
-        });
+        data.forEach((row) => {
+                    this.exportRow(dataToExport, row, rowIndex++);
+                });
 
         this.exportDataImplementation(dataToExport, options);
         this.resetDefaults();
@@ -101,7 +101,7 @@ export abstract class IgxBaseExporter {
 
     private exportRow(data: any[], gridRowData: any, index: number) {
         const rowData = this._columnList.reduce((a, e) => {
-                            if(!e.skip) {
+                            if (!e.skip) {
                                 a[e.header] = gridRowData[e.field];
                             }
                             return a;

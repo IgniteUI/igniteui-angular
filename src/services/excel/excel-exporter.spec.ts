@@ -7,7 +7,7 @@ import { JSZipFiles } from "./jsZip-helper";
 import { IFileContent, JSZipWrapper, ObjectComparer  } from "./jszip-verification-wrapper";
 import { ExportTestDataService, FileContentData, ValueData } from "./test-data.service";
 
-fdescribe("Excel Exporter", () => {
+describe("Excel Exporter", () => {
     let sourceData: ExportTestDataService;
     let exporter: IgxExcelExporterService;
     let options: IgxExcelExporterOptions;
@@ -20,7 +20,7 @@ fdescribe("Excel Exporter", () => {
         options = new IgxExcelExporterOptions("TestData");
 
         // Spy the private SaveFile method so the files are not really created
-        spyOn(exporter as any, "SaveFile");
+        // spyOn(exporter as any, "saveFile");
     });
 
     /* ExportData() tests */
@@ -43,6 +43,22 @@ fdescribe("Excel Exporter", () => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.noHeadersStringDataContent);
+        });
+    }));
+
+    it("should export date time data without headers successfully.", async(() => {
+        getExportedData(sourceData.noHeadersDateTimeData, options).then((wrapper) => {
+            wrapper.verifyStructure();
+            wrapper.verifyTemplateFilesContent();
+            wrapper.verifyDataFilesContent(actualData.noHeadersDateTimeContent);
+        });
+    }));
+
+    it("should export number data without headers successfully.", async(() => {
+        getExportedData(sourceData.noHeadersNumberData, options).then((wrapper) => {
+            wrapper.verifyStructure();
+            wrapper.verifyTemplateFilesContent();
+            wrapper.verifyDataFilesContent(actualData.noHeadersNumberDataContent);
         });
     }));
 
@@ -74,7 +90,7 @@ fdescribe("Excel Exporter", () => {
         getExportedData(sourceData.contactsFunkyData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
-            wrapper.verifyDataFilesContent(actualData.contactsPartialDataContent);
+            wrapper.verifyDataFilesContent(actualData.contactsFunkyDataContent);
         });
     }));
 
@@ -88,7 +104,7 @@ fdescribe("Excel Exporter", () => {
         try {
             options.rowHeight = -1;
         } catch (ex) {
-            expect((ex as Error).message).toBe("Invalid value for row height");
+            expect((ex as Error).message).toBe("Invalid value for row height!");
         }
 
     }));

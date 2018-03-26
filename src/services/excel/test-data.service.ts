@@ -65,7 +65,20 @@ export class ExportTestDataService {
         "Donna Price",
         "Lisa Landers",
         "Dorothy H. Spencer"
-        ];
+    ];
+
+    private _noHeadersNumberData = [
+        10,
+        20,
+        30
+    ];
+
+    private _noHeadersDateTime = [
+        new Date("2018"),
+        new Date(2018, 3, 23),
+        new Date(30),
+        new Date("2018/03/23")
+    ];
 
     private _noHeadersObjectData = [
         new ValueData("1"),
@@ -119,6 +132,12 @@ export class ExportTestDataService {
 
     get noHeadersStringData() {
         return this._noHeadersStringData;
+    }
+    get noHeadersNumberData() {
+        return this._noHeadersNumberData;
+    }
+    get noHeadersDateTimeData() {
+        return this._noHeadersDateTime;
     }
 
     get simpleGridData() {
@@ -182,8 +201,8 @@ export class FileContentData {
         `</tableColumns>`;
 
         this._worksheetData = `<dimension ref="A1:B6"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
-        `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="30.169921875" ` +
-        `customWidth="1"/><col min="2" max="2" width="13.633593750000001" customWidth="1"/></cols><sheetData><row r="1">` +
+        `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="28.393164825439456" ` +
+        `customWidth="1"/><col min="2" max="2" width="13.241766357421875" customWidth="1"/></cols><sheetData><row r="1">` +
         `<c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c></row><row r="2"><c r="A2" t="s"><v>2</v></c><c r="B2" t="s">` +
         `<v>3</v></c></row><row r="3"><c r="A3" t="s"><v>4</v></c><c r="B3" t="s"><v>5</v></c></row><row r="4"><c r="A4" t="s">` +
         `<v>6</v></c><c r="B4" t="s"><v>7</v></c></row><row r="5"><c r="A5" t="s"><v>5</v></c><c r="B5" t="s"><v>8</v></c></row>` +
@@ -201,11 +220,33 @@ export class FileContentData {
         `</tableColumns>`;
 
         this._worksheetData = `<dimension ref="A1:B4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
-        `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="30.169921875" customWidth="1"/>` +
-        `<col min="2" max="2" width="13.633593750000001" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c>` +
+        `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="28.393164825439456" customWidth` +
+        `="1"/><col min="2" max="2" width="13.241766357421875" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c>` +
         `<c r="B1" t="s"><v>1</v></c></row><row r="2"><c r="A2" t="s"><v>2</v></c><c r="B2" t="s"><v>3</v></c></row><row r="3"><c r="A3" ` +
         `t="s"><v>4</v></c><c r="B3" t="s"><v>5</v></c></row><row r="4"><c r="A4" t="s"><v>5</v></c><c r="B4" t="s"><v>6</v></c></row>` +
         `</sheetData>`;
+
+        return this.createData();
+    }
+
+    get contactsFunkyDataContent() {
+        this._sharedStringsData = `count="14" uniqueCount="14"><si><t>name</t></si><si><t>phone</t></si><si><t>Terrance ` +
+        `Mc&apos;Orta</t></si><si><t>(+359)770-504-2217 | 2218</t></si><si><t>Richard Mahoney /LongerName/</t></si><si><t></t>` +
+        `</si><si><t>Donna, /; Price</t></si><si><t>859 496 28**</t></si><si><t>
+        </t></si><si><t>901-747-3428</t></si><si><t>Dorothy &quot;H.&quot; Spencer</t></si><si><t>573-394-9254[fax]</t></si>` +
+        `<si><t>Иван Иванов (1,2)</t></si><si><t>№ 573-394-9254</t></si>`;
+
+        this._tableData = `ref="A1:B7" totalsRowShown="0">
+        <autoFilter ref="A1:B7"/><tableColumns count="2"><tableColumn id="1" name="name"/><tableColumn id="2" name="phone"/>` +
+        `</tableColumns>`;
+
+        this._worksheetData = `<dimension ref="A1:B7"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
+        `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="30.09180221557617" customWidth` +
+        `="1"/><col min="2" max="2" width="25.47905731201172" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v>` +
+        `</c><c r="B1" t="s"><v>1</v></c></row><row r="2"><c r="A2" t="s"><v>2</v></c><c r="B2" t="s"><v>3</v></c></row><row r="3">` +
+        `<c r="A3" t="s"><v>4</v></c><c r="B3" t="s"><v>5</v></c></row><row r="4"><c r="A4" t="s"><v>6</v></c><c r="B4" t="s"><v>7</v>` +
+        `</c></row><row r="5"><c r="A5" t="s"><v>8</v></c><c r="B5" t="s"><v>9</v></c></row><row r="6"><c r="A6" t="s"><v>10</v></c>` +
+        `<c r="B6" t="s"><v>11</v></c></row><row r="7"><c r="A7" t="s"><v>12</v></c><c r="B7" t="s"><v>13</v></c></row></sheetData>`;
 
         return this.createData();
     }
@@ -220,9 +261,43 @@ export class FileContentData {
 
         this._worksheetData = `<dimension ref="A1:A6"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/>` +
         `</sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" ` +
-        `width="30.169921875" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2">` +
+        `width="28.393164825439456" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2">` +
         `<c r="A2" t="s"><v>1</v></c></row><row r="3"><c r="A3" t="s"><v>2</v></c></row><row r="4"><c r="A4" t="s"><v>3</v>` +
         `</c></row><row r="5"><c r="A5" t="s"><v>4</v></c></row><row r="6"><c r="A6" t="s"><v>5</v></c></row></sheetData>`;
+
+        return this.createData();
+    }
+
+    get noHeadersNumberDataContent() {
+        this._sharedStringsData = `count="4" uniqueCount="4"><si><t>Column 1</t></si><si><t>10</t></si>` +
+        `<si><t>20</t></si><si><t>30</t></si>`;
+
+        this._tableData = `ref="A1:A4" totalsRowShown="0"><autoFilter ref="A1:A4"/><tableColumns count="1">` +
+        `<tableColumn id="1" name="Column1"/></tableColumns>`;
+
+        this._worksheetData = `<dimension ref="A1:A4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/>` +
+        `</sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width=` +
+        `"9.265750122070314" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2">` +
+        `<c r="A2" t="s"><v>1</v></c></row><row r="3"><c r="A3" t="s"><v>2</v></c></row><row r="4"><c r="A4" t="s"><v>3</v>` +
+        `</c></row></sheetData>`;
+
+        return this.createData();
+    }
+
+    get noHeadersDateTimeContent() {
+        this._sharedStringsData = `count="5" uniqueCount="5"><si><t>Column 1</t></si><si><t>Mon Jan 01 2018 02:00:00 ` +
+        `GMT+0200 (FLE Standard Time)</t></si><si><t>Mon Apr 23 2018 00:00:00 GMT+0300 (FLE Daylight Time)</t></si><si>` +
+        `<t>Thu Jan 01 1970 02:00:00 GMT+0200 (FLE Standard Time)</t></si><si><t>Fri Mar 23 2018 00:00:00 GMT+0200 (FLE ` +
+        `Standard Time)</t></si>`;
+
+        this._tableData = `ref="A1:A5" totalsRowShown="0"><autoFilter ref="A1:A5"/><tableColumns count="1">` +
+        `<tableColumn id="1" name="Column1"/></tableColumns>`;
+
+        this._worksheetData = `<dimension ref="A1:A5"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/>` +
+        `</sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width=` +
+        `"53.07389831542969" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2">` +
+        `<c r="A2" t="s"><v>1</v></c></row><row r="3"><c r="A3" t="s"><v>2</v></c></row><row r="4"><c r="A4" t="s"><v>3</v>` +
+        `</c></row><row r="5"><c r="A5" t="s"><v>4</v></c></row></sheetData>`;
 
         return this.createData();
     }
@@ -238,6 +313,42 @@ export class FileContentData {
         `</sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="8.34" ` +
         `customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2"><c r="A2" t="s"><v>1</v>` +
         `</c></row><row r="3"><c r="A3" t="s"><v>2</v></c></row><row r="4"><c r="A4" t="s"><v>3</v></c></row></sheetData>`;
+
+        return this.createData();
+    }
+
+    get simpleGridData() {
+        this._sharedStringsData = `count="44" uniqueCount="42"><si><t>ID</t></si><si><t>Name</t></si><si><t>JobTitle</t>` +
+        `</si><si><t>HireDate</t></si><si><t>1</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si>` +
+        `<t>2017-06-19T11:43:07.714Z</t></si><si><t>2</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si>` +
+        `<t>2015-12-18T11:23:17.714Z</t></si><si><t>3</t></si><si><t>Tanya Bennett</t></si><si><t>2005-11-18T11:23:17.714Z` +
+        `</t></si><si><t>4</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>2008-12-18T11:23:17.714Z` +
+        `</t></si><si><t>5</t></si><si><t>Celia Martinez</t></si><si><t>Senior Software Developer</t></si><si><t>6</t></si>` +
+        `<si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>7</t></si><si><t>Debra Morton</t></si><si><t>Associate Software ` +
+        `Developer</t></si><si><t>8</t></si><si><t>Erika Wells</t></si><si><t>Software Development Team Lead</t></si><si><t>9</t>` +
+        `</si><si><t>Leslie Hansen</t></si><si><t>10</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si>`;
+
+        this._tableData = `ref="A1:C11" totalsRowShown="0">
+        <autoFilter ref="A1:C11"/><tableColumns count="3"><tableColumn id="1" name="ID"/><tableColumn id="2" name="Name"/>` +
+        `<tableColumn id="3" name="JobTitle"/></tableColumns>`;
+
+        this._worksheetData = `<dimension ref="A1:C11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
+        `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="8.34" customWidth="1"/>` +
+        `<col min="2" max="2" width="15.891735076904297" customWidth="1"/><col min="3" max="3" width="31.24928741455078" ` +
+        `customWidth="1"/><col min="4" max="4" width="24.876695251464845" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" ` +
+        `t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c><c r="D1" t="s"><v>3</v></c></row><row r="2">` +
+        `<c r="A2" t="s"><v>4</v></c><c r="B2" t="s"><v>5</v></c><c r="C2" t="s"><v>6</v></c><c r="D2" t="s"><v>7</v></c></row>` +
+        `<row r="3"><c r="A3" t="s"><v>8</v></c><c r="B3" t="s"><v>9</v></c><c r="C3" t="s"><v>10</v></c><c r="D3" t="s"><v>11</v>` +
+        `</c></row><row r="4"><c r="A4" t="s"><v>12</v></c><c r="B4" t="s"><v>13</v></c><c r="C4" t="s"><v>10</v></c><c r="D4" t="s"><v>` +
+        `14</v></c></row><row r="5"><c r="A5" t="s"><v>15</v></c><c r="B5" t="s"><v>16</v></c><c r="C5" t="s"><v>17</v></c><c ` +
+        `r="D5" t="s"><v>18</v></c></row><row r="6"><c r="A6" t="s"><v>19</v></c><c r="B6" t="s"><v>20</v></c><c r="C6" t="s">` +
+        `<v>21</v></c><c r="D6" t="s"><v>22</v></c></row><row r="7"><c r="A7" t="s"><v>23</v></c><c r="B7" t="s"><v>24</v></c>` +
+        `<c r="C7" t="s"><v>25</v></c><c r="D7" t="s"><v>26</v></c></row><row r="8"><c r="A8" t="s"><v>27</v></c><c r="B8" t="s">` +
+        `<v>28</v></c><c r="C8" t="s"><v>29</v></c><c r="D8" t="s"><v>30</v></c></row><row r="9"><c r="A9" t="s"><v>31</v></c>` +
+        `<c r="B9" t="s"><v>32</v></c><c r="C9" t="s"><v>33</v></c><c r="D9" t="s"><v>34</v></c></row><row r="10"><c r="A10" t="s">` +
+        `<v>35</v></c><c r="B10" t="s"><v>36</v></c><c r="C10" t="s"><v>29</v></c><c r="D10" t="s"><v>37</v></c></row><row r="11">` +
+        `<c r="A11" t="s"><v>38</v></c><c r="B11" t="s"><v>39</v></c><c r="C11" t="s"><v>40</v></c><c r="D11" t="s"><v>41</v></c>` +
+        `</row></sheetData>`;
 
         return this.createData();
     }
@@ -263,7 +374,7 @@ export class FileContentData {
         this._worksheetData = `<dimension ref="A1:D11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
         `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="8.34" customWidth="1"/>` +
         `<col min="2" max="2" width="15.891735076904297" customWidth="1"/><col min="3" max="3" width="31.24928741455078" ` +
-        `customWidth="1"/><col min="4" max="4" width="26.33203125" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" ` +
+        `customWidth="1"/><col min="4" max="4" width="24.876695251464845" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" ` +
         `t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c><c r="D1" t="s"><v>3</v></c></row><row r="2">` +
         `<c r="A2" t="s"><v>4</v></c><c r="B2" t="s"><v>5</v></c><c r="C2" t="s"><v>6</v></c><c r="D2" t="s"><v>7</v></c></row>` +
         `<row r="3"><c r="A3" t="s"><v>8</v></c><c r="B3" t="s"><v>9</v></c><c r="C3" t="s"><v>10</v></c><c r="D3" t="s"><v>11</v>` +

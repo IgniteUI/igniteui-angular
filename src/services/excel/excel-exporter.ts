@@ -21,6 +21,7 @@ import {
     RowExportingEventArgs
 } from "../exporter-common/event-args";
 
+import { inherits } from "util";
 import { IgxBaseExporter } from "../exporter-common/base-export-service";
 import { ExportUtilities } from "../exporter-common/export-utilities";
 import { WorksheetData } from "./worksheet-data";

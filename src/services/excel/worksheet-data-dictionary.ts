@@ -35,7 +35,7 @@ export class WorksheetDataDictionary {
     }
 
     public saveValue(value: string, column: number): number {
-        const sanitizedValue = this.santizieValue(value);
+        const sanitizedValue = this.sanitizeValue(value);
 
         if (this._dictionary[sanitizedValue] === undefined) {
             this._dictionary[sanitizedValue] = this._counter++;
@@ -52,7 +52,7 @@ export class WorksheetDataDictionary {
     }
 
     public getValue(value: string): number {
-        return this.getSanitizedValue(this.santizieValue(value));
+        return this.getSanitizedValue(this.sanitizeValue(value));
     }
 
     public getSanitizedValue(sanitizedValue: string): number {
@@ -88,7 +88,7 @@ export class WorksheetDataDictionary {
         return this._context;
     }
 
-    private santizieValue(value: string): string {
+    private sanitizeValue(value: string): string {
         return value.replace(/&/g, "&amp;")
                     .replace(/</g, "&lt;")
                     .replace(/>/g, "&gt;")

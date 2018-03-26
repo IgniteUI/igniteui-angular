@@ -1,6 +1,10 @@
 export class ExportUtilities {
     public static getKeysFromData(data: any[]) {
         const length = data.length;
+        if (length === 0) {
+            return [];
+        }
+
         const dataEntry = data[0];
         const dataEntryMiddle = data[Math.floor(length / 2)];
         const dataEntryLast = data[length - 1];
@@ -11,7 +15,7 @@ export class ExportUtilities {
 
         const keys = new Set(keys1.concat(keys2).concat(keys3));
 
-        return keys.size !== 0 ? Array.from(keys) : [];
+        return keys.size !== 0 && !ExportUtilities.isSpecialData(data) ? Array.from(keys) : [ "Column 1" ];
     }
 
     public static saveBlobToFile(blob: Blob, fileName) {
@@ -34,4 +38,12 @@ export class ExportUtilities {
         }
         return buf;
     }
+
+    public static isSpecialData(data: any[]): boolean {
+        const dataEntry = data[0];
+        return (typeof dataEntry === "string" ||
+                typeof dataEntry === "number" ||
+                dataEntry instanceof Date);
+    }
+
 }
