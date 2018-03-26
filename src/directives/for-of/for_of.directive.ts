@@ -417,6 +417,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     hScroll.scrollLeft + parseInt(this.igxForContainerSize, 10) :
                     parseInt(this.igxForContainerSize, 10);
 
+                if (!this.hCache) {
+                    this.initHCache(this.igxForOf);
+                }
+
                 let endIndex = this.getHorizontalIndexAt(
                     left,
                     this.hCache,
