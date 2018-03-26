@@ -5,7 +5,6 @@ import { Directive, EventEmitter, Injectable, NgModule, Output } from "@angular/
 
 import { ExcelElementsFactory } from "./excel-elements-factory";
 import { ExcelFolderTypes } from "./excel-enums";
-import {  } from "./excel-event-args";
 import { IgxExcelExporterOptions } from "./excel-exporter-options";
 
 import {
@@ -52,7 +51,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
     }
 
     protected exportDataImplementation(data: any[], options: IgxExcelExporterOptions): void {
-        const worksheetData = new WorksheetData(data, options);
+        const worksheetData = new WorksheetData(data, options, this._indexOfLastPinnedColumn);
         this._xlsx = new JSZip();
 
         const rootFolder = ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder);

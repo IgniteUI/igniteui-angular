@@ -3,11 +3,10 @@ export abstract class IgxExporterOptionsBase {
 
     public ignoreColumnsVisibility = false;
     public ignoreFiltering = false;
-    // public ignoreSorting: boolean;
+    public ignoreColumnsOrder = false;
 
+    // public ignoreSorting: boolean;
     // public ignoreSummaries: boolean;
-    // public ignoreColumnsOrder: boolean;
-    // public ignorePinning: boolean;
 
     constructor(fileName: string, private _fileExtension: string) {
         this.setFileName(fileName);
