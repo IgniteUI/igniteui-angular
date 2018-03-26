@@ -1,3 +1,5 @@
+import * as JSZip from "jszip/dist/jszip";
+
 export class RowExportingEventArgs {
     constructor(public rowData: any, public rowIndex: number) {
     }
@@ -10,4 +12,14 @@ export class ColumnExportingEventArgs {
     }
 
     public cancel = false;
+}
+
+export class CSVExportEndedEventArgs {
+    constructor(public csvData: string) {
+    }
+}
+
+export class ExcelExportEndedEventArgs {
+    constructor(public xlsx: JSZip) {
+    }
 }

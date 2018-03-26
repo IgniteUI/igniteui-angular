@@ -50,7 +50,7 @@ export class CharSeparatedValueData {
     }
 
     private processField(value, escapeChars): string {
-        let safeValue: string = (value !== undefined) ? value : "";
+        let safeValue: string = (value !== undefined && value !== null) ? String(value) : "";
         if (escapeChars.some((v) => safeValue.includes(v))) {
             safeValue = `"${safeValue}"`;
         }

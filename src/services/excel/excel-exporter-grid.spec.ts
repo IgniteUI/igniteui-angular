@@ -55,78 +55,78 @@ describe("Excel Exporter", () => {
         });
     }));
 
-    it("should honor 'exportCurrentlyVisiblePageOnly' option.", async(() => {
-        const fix = TestBed.createComponent(GridMarkupPagingDeclarationComponent);
-        fix.detectChanges();
+    // it("should honor 'exportCurrentlyVisiblePageOnly' option.", async(() => {
+    //     const fix = TestBed.createComponent(GridMarkupPagingDeclarationComponent);
+    //     fix.detectChanges();
 
-        const grid = fix.componentInstance.grid1;
-        grid.paging = true;
-        options.exportCurrentlyVisiblePageOnly = true;
+    //     const grid = fix.componentInstance.grid1;
+    //     grid.paging = true;
+    //     options.exportCurrentlyVisiblePageOnly = true;
 
-        fix.whenStable().then(() => {
-            fix.detectChanges();
-            getExportedData(grid, options).then((wrapper) => {
-                wrapper.verifyDataFilesContent(actualData.simpleGridDataPage1, "Only page 1 should have been exported!");
+    //     fix.whenStable().then(() => {
+    //         fix.detectChanges();
+    //         getExportedData(grid, options).then((wrapper) => {
+    //             wrapper.verifyDataFilesContent(actualData.simpleGridDataPage1, "Only page 1 should have been exported!");
 
-                options.exportCurrentlyVisiblePageOnly = false;
-                fix.detectChanges();
-                getExportedData(grid, options).then((wrapper2) => {
-                    wrapper2.verifyDataFilesContent(actualData.simpleGridDataFull, "All data should have been exported!");
-                });
-            });
-        });
-    }));
+    //             options.exportCurrentlyVisiblePageOnly = false;
+    //             fix.detectChanges();
+    //             getExportedData(grid, options).then((wrapper2) => {
+    //                 wrapper2.verifyDataFilesContent(actualData.simpleGridDataFull, "All data should have been exported!");
+    //             });
+    //         });
+    //     });
+    // }));
 
-    it("should export currently visible grid page only.", async(() => {
-        const fix = TestBed.createComponent(GridMarkupPagingDeclarationComponent);
-        fix.detectChanges();
+    // it("should export currently visible grid page only.", async(() => {
+    //     const fix = TestBed.createComponent(GridMarkupPagingDeclarationComponent);
+    //     fix.detectChanges();
 
-        const grid = fix.componentInstance.grid1;
-        fix.whenStable().then(() => {
-            expect(grid.rowList.length).toEqual(3, "Invalid number of rows initialized!");
-            options.exportCurrentlyVisiblePageOnly = true;
+    //     const grid = fix.componentInstance.grid1;
+    //     fix.whenStable().then(() => {
+    //         expect(grid.rowList.length).toEqual(3, "Invalid number of rows initialized!");
+    //         options.exportCurrentlyVisiblePageOnly = true;
 
-            getExportedData(grid, options).then((wrapper) => {
-                wrapper.verifyStructure();
-                wrapper.verifyTemplateFilesContent();
-                wrapper.verifyDataFilesContent(actualData.simpleGridDataPage1, "Page 1 should have been exported!");
+    //         getExportedData(grid, options).then((wrapper) => {
+    //             wrapper.verifyStructure();
+    //             wrapper.verifyTemplateFilesContent();
+    //             wrapper.verifyDataFilesContent(actualData.simpleGridDataPage1, "Page 1 should have been exported!");
 
-                grid.paginate(1);
-                grid.cdr.detectChanges();
-                fix.whenStable().then(() => {
-                    fix.detectChanges();
-                    getExportedData(grid, options).then((wrapper2) => {
-                        wrapper2.verifyDataFilesContent(actualData.simpleGridDataPage2, "Page 2 should have been exported!");
-                    });
-                });
-            });
-        });
-    }));
+    //             grid.paginate(1);
+    //             grid.cdr.detectChanges();
+    //             fix.whenStable().then(() => {
+    //                 fix.detectChanges();
+    //                 getExportedData(grid, options).then((wrapper2) => {
+    //                     wrapper2.verifyDataFilesContent(actualData.simpleGridDataPage2, "Page 2 should have been exported!");
+    //                 });
+    //             });
+    //         });
+    //     });
+    // }));
 
-    it("should honor the change of items per page.", async(() => {
-        const fix = TestBed.createComponent(GridMarkupPagingDeclarationComponent);
-        fix.detectChanges();
+    // it("should honor the change of items per page.", async(() => {
+    //     const fix = TestBed.createComponent(GridMarkupPagingDeclarationComponent);
+    //     fix.detectChanges();
 
-        const grid = fix.componentInstance.grid1;
-        fix.whenStable().then(() => {
-            expect(grid.rowList.length).toEqual(3, "Invalid number of rows initialized!");
-            options.exportCurrentlyVisiblePageOnly = true;
+    //     const grid = fix.componentInstance.grid1;
+    //     fix.whenStable().then(() => {
+    //         expect(grid.rowList.length).toEqual(3, "Invalid number of rows initialized!");
+    //         options.exportCurrentlyVisiblePageOnly = true;
 
-            getExportedData(grid, options).then((wrapper) => {
-                wrapper.verifyDataFilesContent(actualData.simpleGridDataPage1, "Three rows should have been exported!");
+    //         getExportedData(grid, options).then((wrapper) => {
+    //             wrapper.verifyDataFilesContent(actualData.simpleGridDataPage1, "Three rows should have been exported!");
 
-                grid.perPage = 5;
-                grid.cdr.detectChanges();
-                fix.whenStable().then(() => {
-                    fix.detectChanges();
-                    expect(grid.rowList.length).toEqual(5, "Invalid number of rows initialized!");
-                    getExportedData(grid, options).then((wrapper2) => {
-                        wrapper2.verifyDataFilesContent(actualData.simpleGridDataPage1FiveRows, "5 rows should have been exported!");
-                    });
-                });
-            });
-        });
-    }));
+    //             grid.perPage = 5;
+    //             grid.cdr.detectChanges();
+    //             fix.whenStable().then(() => {
+    //                 fix.detectChanges();
+    //                 expect(grid.rowList.length).toEqual(5, "Invalid number of rows initialized!");
+    //                 getExportedData(grid, options).then((wrapper2) => {
+    //                     wrapper2.verifyDataFilesContent(actualData.simpleGridDataPage1FiveRows, "5 rows should have been exported!");
+    //                 });
+    //             });
+    //         });
+    //     });
+    // }));
 
     it("should honor 'exportFilteredRows' option.", async(() => {
         const fix = TestBed.createComponent(GridMarkupPagingDeclarationComponent);
@@ -138,14 +138,14 @@ describe("Excel Exporter", () => {
         grid.filter("JobTitle", "Senior", STRING_FILTERS.contains, true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
-        options.exportFilteredRows = false;
+        options.ignoreFiltering = false;
 
         fix.whenStable().then(() => {
             fix.detectChanges();
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyDataFilesContent(actualData.simpleGridDataRecord5, "One row only should have been exported!");
 
-                options.exportFilteredRows = true;
+                options.ignoreFiltering = true;
                 fix.detectChanges();
                 getExportedData(grid, options).then((wrapper2) => {
                     wrapper2.verifyDataFilesContent(actualData.simpleGridDataFull, "All 10 rows should have been exported!");
@@ -164,7 +164,7 @@ describe("Excel Exporter", () => {
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
-        options.exportFilteredRows = false;
+        options.ignoreFiltering = false;
 
         fix.whenStable().then(() => {
 
@@ -190,7 +190,7 @@ describe("Excel Exporter", () => {
 
         const grid = fix.componentInstance.grid1;
         grid.columns[0].hidden = true;
-        options.exportHiddenColumns = false;
+        options.ignoreColumnsVisibility = false;
 
         fix.whenStable().then(() => {
             fix.detectChanges();
@@ -198,7 +198,7 @@ describe("Excel Exporter", () => {
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle, "Two columns should have been exported!");
 
-                options.exportHiddenColumns = true;
+                options.ignoreColumnsVisibility = true;
                 fix.detectChanges();
                 getExportedData(grid, options).then((wrapper2) => {
                     wrapper2.verifyDataFilesContent(actualData.simpleGridDataFull, "All four columns should have been exported!");
@@ -212,7 +212,7 @@ describe("Excel Exporter", () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid1;
-        options.exportHiddenColumns = false;
+        options.ignoreColumnsVisibility = false;
 
         fix.whenStable().then(() => {
             expect(grid.visibleColumns.length).toEqual(3, "Invalid number of visible columns!");
@@ -384,7 +384,7 @@ describe("Excel Exporter", () => {
         });
 
         grid.columns[0].hidden = true;
-        options.exportHiddenColumns = false;
+        options.ignoreColumnsVisibility = false;
 
         fix.whenStable().then(() => {
             getExportedData(grid, options).then((wrapper) => {
@@ -450,7 +450,6 @@ describe("Excel Exporter", () => {
 
         grid.paging = true;
         grid.perPage = 3;
-        options.exportCurrentlyVisiblePageOnly = true;
 
         fix.whenStable().then(() => {
             fix.detectChanges();

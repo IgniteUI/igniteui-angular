@@ -53,7 +53,7 @@ export * from "./directives/mask/mask.directive";
 
 // Export services
 export * from "./services/excel/excel-exporter";
-export * from "./services/excel/excel-event-args";
 export * from "./services/excel/excel-exporter-options";
 export * from "./services/csv/csv-exporter";
 export * from "./services/csv/csv-exporter-options";
+export * from "./services/exporter-common/event-args"
