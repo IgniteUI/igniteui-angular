@@ -41,7 +41,7 @@
     </ng-template>
 </div>
 
-<div class="igx-grid__scroll" [style.width]='width' [style.height]="'18px'" #scr>
+<div class="igx-grid__scroll" [style.height]="'18px'" #scr>
     <div class="igx-grid__scroll-start" [style.width.px]='pinnedWidth' [hidden]="pinnedWidth === 0"></div>
     <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth'>
         <ng-template igxFor [igxForOf]='[]' #scrollContainer>
