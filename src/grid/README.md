@@ -141,53 +141,74 @@ public deleteRow(event) {
 }
 ```
 
+<div class="divider--half"></div>
+
 ## API
 
 ### Inputs
 
-| Name | Type | Description |
-| :--- |:--- | :--- |
-| id  | string  | Unique identifier of the Grid |
-| paging  | bool  | Enables paging feature |
-| perPage  | number  | Visible items per page, default is 25 |
-| state  | IDataState  | Define filtering, sorting and paging state  |
-| autoGenerate  | boolean  | Autogenerate grid's columns, default value is *false* |
+Below is the list of all inputs that the developers may set to configure the grid look/behavior:
 
+
+|Name|Type|Description|
+|:--- |:--- |:--- |
+|id|string|Unique identifier of the Grid. If not provided it will be automatically generated.|
+|data|Array|The data source for the grid.|
+|autoGenerate|boolean|Autogenerate grid's columns, default value is _false_|
+|paging|bool|Enables the paging feature. Defaults to _false_.|
+|perPage|number|Visible items per page, default is 15|
+|filteringLogic|FilteringLogic|The filtering logic of the grid. Defaults to _AND_.|
+|filteringExpressions|Array|The filtering state of the grid.|
+|sortingExpressions|Array|The sorting state of the grid.|
+|height|string|The height of the grid element. You can pass values such as `1000px`, `75%`, etc.|
+|width|string|The width of the grid element. You can pass values such as `1000px`, `75%`, etc.|
+|evenRowCSS|string|Additional styling classes applied to all even rows in the grid.|
+|oddRowCSS|string|Additional styling classses applied to all odd rows in the grid.|
+|paginationTemplate|TemplateRef|You can provide a custom `ng-template` for the pagination part of the grid.|
 
 ### Outputs
 
-| Name | Description |
-| :--- | :--- |
-| *Event emitters* | *Notify for a change* |
-| onEditDone  | Used on update row to emit the updated row  |
-| onFilterDone  | Used when filtering data to emit the column and filtering expression  |
-| onSortingDone  | Used when sorting data to emit the column, direction and sorting expression  |
-| onMovingDone  | Used when moving column to emit the drop event  |
-| onCellSelection  | Used when focusing a cell to emit the cell  |
-| onRowSelection  | Used when focusing a row to emit the row  |
-| onPagingDone  | Used when paginating to emit paginator event  |
-| onColumnInit  | Used when initializing a column to emit it  |
-| onBeforeProcess  | Emit binding behavior  |
+|Name|Description|
+|:--- |:--- |
+|*Event emitters* |*Notify for a change*|
+|onEditDone|Used on update row to emit the updated row|
+|onFilteringDone|Used when filtering data to emit the column and filtering expression|
+|onSortingDone|Used when sorting data to emit the column, direction and sorting expression|
+|onCellSelection|Used when focusing a cell to emit the cell|
+|onRowSelection|Used when focusing a row to emit the row|
+|onPagingDone|Used when paginating to emit paginator event|
+|onColumnInit|Used when initializing a column to emit it|
+|onColumnPinning|Used when pinning a column; the index of the pin can be changed|
 
 
-### Methods
 
-| Signature | Description |
-| :--- | :--- |
-| getColumnByIndex(index: number)  | Get grid column by index  |
-| getColumnByField(field: string)  | Get grid column by field name  |
-| getCell(rowIndex: number, columnField: string) | Returns the cell at rowIndex/columnIndex.  |
-| getRow(rowIndex: number) | Returns row  |
-| focusCell | Focuses the grid cell at position row x column  |
-| focusRow | Focuses the grid row at `index`.  |
-| filterData | Filter data by search term and column  |
-| addRow | Add record to the grid data container  |
-| deleteRow | Remove record from the grid data container  |
-| updateRow | Update record from teh grid data container  |
-| updateCell | Update grid cell by index, column field and passed value  |
-| sortColumn | Sort grid column  |
-| paginate | Change the current page by passed number  |
+|Signature|Description|
+|:--- |:--- |
+|getColumnByName(name: string)|Returns the column object with field property equal to `name` or `undefined` if no such column exists.|
+|getCellByColumn(rowIndex: number, columnField: string)|Returns the cell object in column with `columnField` and row with `rowIndex` or `undefined`.|
+|getRowByIndex(index: number)|Returns row|
+|addRow(data: any)|Creates a new row object and adds the `data` record to the end of the data source.|
+|deleteRow(rowIndex: number)|Removes the row object and the corresponding data record from the data source.|
+|updateRow(value: any, rowIndex: number)|Updates the row object and the data source record with the passed value.|
+|updateCell(value: any, rowIndex: number, column: string)|Updates the cell object and the record field in the data source.|
+|filter(column: string, value: any, condition?, ignoreCase?: boolean)|Filters a single column. Check the available [filtering conditions](#filtering-conditions)|
+|filter(expressions: Array)|Filters the grid columns based on the provided array of filtering expressions.|
+|filterGlobal(value: any, condition? ignoreCase?)|Filters all the columns in the grid.|
+|clearFilter(name?: string)|If `name` is provided, clears the filtering state of the corresponding column, otherwise clears the filtering state of all columns.|
+|sort(name: string, direction, ignorecase)|Sorts a single column.|
+|sort(expressions: Array)|Sorts the grid columns based on the provided array of sorting expressions.|
+|clearSort(name?: string)|If `name` is provided, clears the sorting state of the corresponding column, otherwise clears the sorting state of all columns.|
+|pinColumn(name: string): boolean|Pins a column by field name to the left of the grid on the rightmost position. Returns whether the operation is successful.|
+|unpinColumn(name: string): boolean|Unpins a column by field name to the leftmost position in the unpinned area. Returns whether the operation is successful.|
+|enableSummaries(fieldName: string, customSummary?: any)|Enable summaries for the specified column and apply your `customSummary`. If you do not provide `customSummary` default summary for the column data type will be applied.|
+|enableSummaries(expressions: Array)|Enable summaries for the listed columns and apply your `customSummary` if it is provided.|
+|clearSummaryCache()|Delete all cached summaries and force to recalculate them.|
+|previousPage()|Goes to the previous page if paging is enabled and the current page is not the first.|
+|nextPage()|Goes to the next page if paging is enabled and current page is not the last.|
+|paginate(page: number)|Goes to the specified page if paging is enabled. Page indices are 0 based.|
+|markForCheck()|Manually triggers a change detection cycle for the grid and its children.|
 
+<div class="divider--half"></div>
 
 # IgxColumnComponent
 
@@ -212,18 +233,59 @@ Column component is used to define grid's *columns* collection. Cell, header and
 
 ### Inputs
 
-| Name | Type | Description |
-| :--- |:--- | :--- |
-| field  | string  | Column field name |
-| header  | string  | Column header text |
-| sortable  | boolean  | Set column to be sorted or not |
-| editable  | boolean  | Set column values to be editable |
-| filtering  | boolean  | Set column values to be filterable |
-| hidden  | boolean  | Visibility of the column |
-| movable  | boolean  | Column moving |
-| width  | string  | Columns width |
-| index  | string  | Column index |
-| filteringCondition  | FilteringCondition  | Boolean, date, string or number conditions. Default is string *contains*  |
-| filteringIgnoreCase  | boolean  | Ignore capitalization of words |
-| dataType  | DataType  | String, number, Boolean or Date |
+Inputs available on the **IgxGridColumnComponent** to define columns:
+|Name|Type|Description|
+|--- |--- |--- |
+|`field`|string|Column field name|
+|`header`|string|Column header text|
+|`sortable`|boolean|Set column to be sorted or not|
+|`editable`|boolean|Set column values to be editable|
+|`filterable`|boolean|Set column values to be filterable|
+|`hasSummary`| boolean  |Set the specific column to have a summaries or not|
+|`summaries`| IgxSummaryOperand |Set custom summary for the specific column|
+|`hidden`|boolean|Visibility of the column|
+|`pinned`|boolean| Set column to be pinned or not |
+|`movable`|boolean|Column moving|
+|`width`|string|Columns width|
+|`headerClasses`|string|Additional CSS classes applied to the header element.|
+|`cellClasses`|string|Additional CSS classes applied to the cells in this column.|
+|`formatter`|Function|A function used to "template" the values of the cells without the need to pass a cell template the column.|
+|`index`|string|Column index|
+|`filteringCondition`|FilteringCondition|Boolean, date, string or number conditions. Default is string _contains_|
+|`filteringIgnoreCase`|boolean|Ignore capitalization of strings when filtering is applied. Defaults to _true_.|
+|`sortingIgnoreCase`|boolean|Ignore capitalization of strings when sorting is applied. Defaults to _true_.|
+|`dataType`|DataType|One of string, number, boolean or Date. When filtering is enabled the filter UI conditions are based on the `dataType` of the column. Defaults to `string` if it is not provided. With `autoGenerate` enabled the grid will try to resolve the correct data type for each column based on the data source.|
 
+
+### Getters/Setters
+
+|Name|Type|Getter|Setter|Description|
+|--- |--- |--- |--- |--- |
+|`bodyTemplate`|TemplateRef|Yes|Yes|Get/Set a reference to a template which will be applied to the cells in the column.|
+|`headerTemplate`|TemplateRef|Yes|Yes|Get/Set a reference to a template which will be applied to the column header.|
+|`footerTemplate`|TemplateRef|Yes|Yes|Get/Set a reference to a template which will be applied to the column footer.|
+|`inlineEditorTemplate`|TemplateRef|Yes|Yes|Get/Set a reference to a template which will be applied as a cell enters edit mode.|
+
+<div class="divider--half"></div>
+
+## IgxGridCellComponent
+
+### Getters/Setters
+
+|Name|Type|Getter|Setter|Description|
+|--- |--- |--- |--- |--- |
+|`column`|IgxColumnComponent|Yes|No|The column to which the cell belongs.|
+|`row`|IgxGridRowComponent|Yes|No|The row to which the cell belongs.|
+|`value`|any|Yes|No|The value in the cell.|
+|`rowIndex`|number|Yes|No|The index of the row this cell belongs to.|
+|`columnIndex`|number|Yes|No|The index of the column this cell belongs to.|
+|`grid`|IgxGridComponent|Yes|No|The grid component itself.|
+|`inEditMode`|boolean|Yes|Yes|Gets/Sets the cell in edit mode.|
+|`nativeElement`|HTMLElement|Yes|No|The native DOM element representing the cell. Could be `null` in certain environments.|
+
+### Methods
+
+| Signature | Description |
+| :--- | :--- |
+| pin(): boolean | Pin the column to the left of the grid on the rightmost position. Returns if the operation is successful. |
+| unpin(): boolean | Unpins the column to the leftmost position in the unpinned area. Returns if the operation is successful.  |

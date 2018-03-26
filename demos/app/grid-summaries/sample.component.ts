@@ -1,6 +1,7 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { IgxColumnComponent } from "../../lib/grid/column.component";
 import { IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from "../../lib/grid/grid-summary";
+import { IgxGridComponent } from "../../lib/grid/grid.component";
 
 class MySummary extends IgxNumberSummaryOperand {
 
@@ -25,6 +26,9 @@ class MySummary extends IgxNumberSummaryOperand {
   templateUrl: "./sample.component.html"
 })
 export class GridSummaryComponent implements OnInit {
+
+  @ViewChild("grid1", { read: IgxGridComponent })
+  public grid1: IgxGridComponent;
 
   mySummary = MySummary;
 
@@ -656,14 +660,110 @@ export class GridSummaryComponent implements OnInit {
     for (let i = 0; i < 10; i++) {
       this.data = this.data.concat(this.data);
     }
+    this.data = this.data.slice(0, 15);
   }
 
   ngOnInit() {
+  }
+
+  updateData() {
+    const d = [].concat(this.data).concat(this.data.slice(0, 15));
+    this.data = d;
+    // this.grid1.markForCheck();
+    this.grid1.clearSummaryCache();
   }
 
   viewRecord(aRecord) {
   }
   initColunm(po: IgxColumnComponent) {
 
+  }
+  public enableSummary() {
+    this.grid1.enableSummaries([{fieldName: "ReorderLevel", customSummary: this.mySummary},
+    {fieldName: "ProductID"}]);
+  }
+  public addRow() {
+    this.grid1.addRow({
+      __metadata: {
+        uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)",
+        type: "NorthwindModel.Product"
+      },
+      ProductID: 21,
+      ProductName: "Sir Rodneys Marmalade",
+      SupplierID: 8,
+      CategoryID: 3,
+      QuantityPerUnit: undefined,
+      UnitPrice: undefined,
+      UnitsInStock: 999,
+      UnitsOnOrder: 0,
+      ReorderLevel: 0,
+      Discontinued: false,
+      OrderDate: new Date("1905-03-17"),
+      Category: {
+        __deferred: {
+          uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)/Category"
+        }
+      },
+      Order_Details: {
+        __deferred: {
+          uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)/Order_Details"
+        }
+      },
+      Supplier: {
+        __deferred: {
+          uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)/Supplier"
+        }
+      }
+    });
+  }
+
+  public deleteRow() {
+    this.grid1.deleteRow(0);
+  }
+  public updateCell() {
+    this.grid1.updateCell(70, 0, "ReorderLevel");
+  }
+  public updateRow() {
+    this.grid1.updateRow({
+      __metadata: {
+        uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)",
+        type: "NorthwindModel.Product"
+      },
+      ProductID: 28,
+      ProductName: "Sir Rodneys Marmalade",
+      SupplierID: 8,
+      CategoryID: 3,
+      QuantityPerUnit: undefined,
+      UnitPrice: undefined,
+      UnitsInStock: -99,
+      UnitsOnOrder: 0,
+      ReorderLevel: -12,
+      Discontinued: false,
+      OrderDate: new Date("1905-03-17"),
+      Category: {
+        __deferred: {
+          uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)/Category"
+        }
+      },
+      Order_Details: {
+        __deferred: {
+          uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)/Order_Details"
+        }
+      },
+      Supplier: {
+        __deferred: {
+          uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)/Supplier"
+        }
+      }
+    }, 0);
+  }
+  pin() {
+    for (const name of ["UnitsInStock", "CategoryID"]) {
+      if (this.grid1.getColumnByName(name).pinned) {
+        this.grid1.unpinColumn(name);
+      } else {
+        this.grid1.pinColumn(name);
+      }
+    }
   }
 }

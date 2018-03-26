@@ -1,5 +1,9 @@
 import { DataUtil } from "../data-operations/data-util";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
+export interface ISummaryExpression {
+    fieldName: string;
+    customSummary?: any;
+}
 export interface IgxSummaryResult {
     key: string;
     label: string;
@@ -36,7 +40,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
             summaryResult: this.sum(data)});
         result.push({
             key: "average",
-            label: "Average",
+            label: "Avg",
             summaryResult: this.average(data)});
         return result;
     }
@@ -59,13 +63,13 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
     public operate(data?: any[]): IgxSummaryResult[] {
         const result = super.operate(data);
         result.push({
-            key: "latest",
-            label: "Latest",
-            summaryResult: this.latest(data)});
-        result.push({
             key: "earliest",
             label: "Earliest",
             summaryResult: this.earliest(data)});
+        result.push({
+            key: "latest",
+            label: "Latest",
+            summaryResult: this.latest(data)});
         return result;
     }
     public latest(data?: any[]) {

@@ -12,9 +12,10 @@ import { autoWire, IGridBus } from "./grid.common";
     selector: "igx-grid-summary",
     templateUrl: "./grid-summary.component.html"
 })
-export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, AfterContentInit {
+export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoCheck, AfterContentInit {
 
-    summaryCacheMap: Map<string, any[]> = new Map<string, any[]>();
+    summaryStyle: Map<string, string> = new Map<string, string>();
+    fieldName: string;
 
     @Input()
     public column: IgxColumnComponent;
@@ -26,9 +27,28 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, Aft
         return this.column.dataType;
     }
 
+    @HostBinding("class.igx-grid-summary--pinned")
+    get isLastPinned() {
+        const pinnedCols = this.gridAPI.get(this.gridID).pinnedColumns;
+        if (pinnedCols.length === 0) {
+            return false;
+        } else {
+            return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
+        }
+    }
+
+    @HostBinding("class.igx-grid-summary--empty")
+    get emptyClass(): boolean {
+        return !this.column.hasSummary;
+    }
+
+    @HostBinding("class.igx-grid-summary")
+    get defaultClass(): boolean {
+        return this.column.hasSummary;
+    }
+
     @HostBinding("style.min-width")
     @HostBinding("style.flex-basis")
-    @HostBinding("class.igx-grid-summary-wrapper")
     get width() {
         return this.column.width;
     }
@@ -36,9 +56,14 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, Aft
     protected subscriptionOnEdit$;
     protected subscriptionOnAdd$;
     protected subscriptionOnDelete$;
+    private itemClass = "igx-grid-summary__item";
+    private hiddenItemClass = "igx-grid-summary__item--inactive";
+    private summaryResultClass = "igx-grid-summary-item__result--left-align";
+    private numberSummaryResultClass = "igx-grid-summary-item__result";
 
     constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
 
+    @autoWire(true)
     public ngOnInit() {
     }
 
@@ -54,25 +79,75 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, Aft
         }
     }
 
+    ngDoCheck() {
+        this.cdr.detectChanges();
+    }
+
     ngAfterContentInit() {
         if (this.column.hasSummary) {
-            this.subscriptionOnEdit$ = this.gridAPI.get(this.gridID).onEditDone.subscribe(this.clearCache.bind(this));
-            this.subscriptionOnAdd$ = this.gridAPI.get(this.gridID).onRowAdded.subscribe(this.clearCache.bind(this));
-            this.subscriptionOnDelete$ = this.gridAPI.get(this.gridID).onRowDeleted.subscribe(this.clearCache.bind(this));
+            this.subscriptionOnEdit$ = this.gridAPI.get(this.gridID).onEditDone.subscribe((editCell) => {
+                if (editCell.cell) {
+                    this.fieldName = editCell.cell.column.field;
+                    this.clearCache(editCell.cell.column.field);
+                } else {
+                    this.clearAll();
+                }
+                });
+            this.subscriptionOnAdd$ = this.gridAPI.get(this.gridID).onRowAdded.subscribe(() => this.clearAll());
+            this.subscriptionOnDelete$ = this.gridAPI.get(this.gridID).onRowDeleted.subscribe(() => this.clearAll());
         }
     }
 
     @autoWire(true)
-    clearCache(ev) {
-        this.summaryCacheMap.delete(this.column.field);
+    clearCache(field) {
+        this.gridAPI.remove_summary(this.gridID, field);
+    }
+
+    @autoWire(true)
+    clearAll() {
+        this.gridAPI.remove_summary(this.gridID);
     }
 
     get resolveSummaries(): any[] {
-        if (!this.summaryCacheMap.get(this.column.field)) {
-            this.summaryCacheMap.set(this.column.field,
-                this.column.summaries.operate(this.gridAPI.get(this.gridID).data.map((rec) => rec[this.column.field])));
+        if (this.fieldName) {
+            const field = this.fieldName;
+            this.fieldName = null;
+            this.gridAPI.set_summary_by_column_name(this.gridID, field);
+            if (this.column.field === field) {
+                return this.gridAPI.get_summaries(this.gridID).get(field);
+            } else {
+                return this.gridAPI.get_summaries(this.gridID).get(this.column.field);
+            }
+        } else {
+            this.gridAPI.set_summary_by_column_name(this.gridID, this.column.field);
+            return this.gridAPI.get_summaries(this.gridID).get(this.column.field);
         }
-        return this.summaryCacheMap.get(this.column.field);
     }
 
+    public summaryValueClass(result: any): string {
+        if (typeof result === "number") {
+            return this.numberSummaryResultClass;
+        } else {
+            return this.summaryResultClass;
+        }
+    }
+
+    public summaryClass(functionKey: string) {
+        const summaryKey = this.column.field + "_" + functionKey;
+        if (this.summaryStyle.has(summaryKey)) {
+            return this.summaryStyle.get(summaryKey);
+        } else {
+            this.summaryStyle.set(summaryKey, this.itemClass);
+            return this.summaryStyle.get(summaryKey);
+        }
+    }
+
+    @autoWire()
+    public changeSummaryClass(functionKey: string) {
+        const summaryKey = this.column.field + "_" + functionKey;
+        switch (this.summaryStyle.get(summaryKey)) {
+            case this.itemClass: this.summaryStyle.set(summaryKey, this.hiddenItemClass);  break;
+            case this.hiddenItemClass: this.summaryStyle.set(summaryKey, this.itemClass); break;
+        }
+    }
 }

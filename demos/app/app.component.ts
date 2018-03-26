@@ -65,6 +65,11 @@ export class AppComponent {
             name: "Grid"
         },
         {
+            link: "/gridColumnPinning",
+            icon: "view_column",
+            name: "Grid Column Pinning"
+        },
+        {
             link: "/gridPerformance",
             icon: "view_column",
             name: "Grid Performance"
@@ -156,6 +161,11 @@ export class AppComponent {
             link: "/virtualForDirective",
             icon: "view_column",
             name: "Virtual-For Directive"
+        },
+        {
+            link: "/mask",
+            icon: "view_column",
+            name: "Mask Directive"
         }
     ];
 
