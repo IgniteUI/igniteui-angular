@@ -11,7 +11,7 @@ export enum Type {
 }
 /**
  * **IgniteUI Angular Badge** - [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/badge.html)  
- * This component is used to decorate avatars, navigation menus, or other components in the 
+ * The IgniteUI Badge is used to decorate avatars, navigation menus, or other components in the 
  * application when visual notification is needed. They are usually designed as icons with a predefined 
  * style to communicate information, success, warnings, or errors.
  * 

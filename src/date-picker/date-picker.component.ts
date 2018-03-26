@@ -26,7 +26,7 @@ import { IgxDialogComponent, IgxDialogModule } from "../dialog/dialog.component"
 import { IgxInputModule } from "../directives/input/input.directive";
 /**
  * **IgniteUI Angular Date Picker** - [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date_picker.html)  
- * This component displays a popup calendar that lets users select a single date.
+ * The IgniteUI Date Picker displays a popup calendar that lets users select a single date.
  * 
  * Here's a basic example of a date picker with two-way binding:
  * ```html

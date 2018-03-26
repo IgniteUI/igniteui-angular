@@ -16,7 +16,7 @@ export enum ButtonGroupAlignment { horizontal, vertical }
 
 /**
  * **IgniteUI Angular Button Group** - [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/buttongroup.html)  
- * This component displays a group of buttons either vertically or horizontally.  The group supports 
+ * The IgniteUI Button Group displays a group of buttons either vertically or horizontally.  The group supports 
  * single, multiple and toggle selection.
  * 
  * Here is a simple example that displays text formatting options:

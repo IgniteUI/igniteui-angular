@@ -20,8 +20,8 @@ import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 /**
  * **IgniteUI Angular Dialog Window** - [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog.html)  
- * This component presents a dialog window to the user which can simply display messages or display
- * more complicated visuals such as a user sign-in form.  The component also provides a right and left button
+ * The IgniteUI Dialog Window presents a dialog window to the user which can simply display messages or display
+ * more complicated visuals such as a user sign-in form.  It also provides a right and left button
  * which can be used for custom actions.
  * 
  * Here's a basic example for a user sign-in form:

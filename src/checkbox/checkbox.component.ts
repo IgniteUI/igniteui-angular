@@ -20,7 +20,7 @@ const noop = () => { };
 let nextId = 0;
 /**
  * **IgniteUI Angular Checkbox** - [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/checkbox.html)  
- * This component is a selection control that allows users to make a binary choice. It behaves similarly
+ * The IgniteUI Checkbox is a selection control that allows users to make a binary choice. It behaves similarly
  * to the native browser checkbox.
  * 
  * Here's a basic example of a checkbox:
