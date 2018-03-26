@@ -262,6 +262,7 @@
         display: flex;
         flex-flow: row nowrap;
         grid-row: 3;
+        width: 100%;
         background: igx-color($palette, 'grays', 100);
     }
 
