@@ -33,6 +33,7 @@
 @import '../components/input/input-theme';
 @import '../components/icon/icon-theme';
 @import '../components/grid-filtering/grid-filtering-theme';
+@import '../components/time-picker/time-picker-theme';
 
 /// Generates an Ignite UI for Angular global theme.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
@@ -159,5 +160,8 @@
     }
     @if not(index($exclude, 'igx-toast')) {
         @include igx-toast($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-time-picker')) {
+        @include igx-time-picker($theme: (), $palette: $palette);
     }
 }
