@@ -40,7 +40,6 @@ export class IgxTabsComponent implements AfterViewInit {
     @ViewChildren(forwardRef(() => IgxTabItemComponent)) public tabs: QueryList<IgxTabItemComponent>;
     @ContentChildren(forwardRef(() => IgxTabsGroupComponent)) public groups: QueryList<IgxTabsGroupComponent>;
 
-
     @Output() public onTabItemSelected = new EventEmitter();
     @Output() public onTabItemDeselected = new EventEmitter();
 
@@ -48,7 +47,7 @@ export class IgxTabsComponent implements AfterViewInit {
     public tabsContainer: ElementRef;
 
     public selectedIndex = -1;
-    public addScroll : boolean = false;
+    public addScroll = false;
 
     public calculatedWidth: number;
 
@@ -80,29 +79,28 @@ export class IgxTabsComponent implements AfterViewInit {
             }
         }, 0);
 
-        debugger;
-
         // Get container width
-        let containerWidth = this.tabsContainer.nativeElement.offsetWidth;
+        const containerWidth = this.tabsContainer.nativeElement.offsetWidth;
         console.log("containerWidth " + containerWidth);
 
         // Get tabs number
         const tabsNumber = this.tabs.length;
+
         // Get calculated tabs width
-        this.calculatedWidth = containerWidth/tabsNumber;
+        this.calculatedWidth = containerWidth / tabsNumber;
         console.log("tabs number " + this.tabs.length + " calculatedWidth " + this.calculatedWidth);
 
         let totalItemsWidth = 0;
+
         // Calculate total tabs width
-        for (let tab of this.tabs.toArray()) {
+        for (const tab of this.tabs.toArray()) {
             console.log("tab.index " + tab.index + " width " + tab.nativeTabItem.nativeElement.offsetWidth);
             totalItemsWidth += tab.nativeTabItem.nativeElement.offsetWidth;
         }
 
         console.log("totalItemsWidth " + totalItemsWidth);
 
-        if (containerWidth <= totalItemsWidth)
-        {
+        if (containerWidth <= totalItemsWidth) {
             this.addScroll = true;
         }
     }
@@ -232,7 +230,7 @@ export class IgxTabItemComponent {
 
     get nativeTabItem() {
         return this._nativeTabItem;
-    } 
+    }
 
     get isDisabled(): boolean {
         const group = this.relatedGroup;
