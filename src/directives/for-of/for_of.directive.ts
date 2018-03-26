@@ -214,7 +214,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     public getHorizontalScroll() {
-        return this.getElement(this._viewContainer, "igx-horizontal-virtual-helper");;
+        return this.getElement(this._viewContainer, "igx-horizontal-virtual-helper");
     }
 
     /** Function that is called when scrolling vertically */

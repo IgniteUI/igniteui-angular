@@ -379,15 +379,16 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         event.preventDefault();
         const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex + 1, this.visibleColumnIndex);
         const verticalScroll = this.row.grid.verticalScrollContainer.getVerticalScroll();
-        if (!verticalScroll) {
+        if (!verticalScroll && !target) {
             return;
         }
 
         if (target) {
-            const containerHeight = this.grid.calcHeight;
-            const containerTopOffset = parseInt(this.row.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            const containerHeight = this.grid.calcHeight; // null when there is no vertical virtualization
+            const containerTopOffset =
+                parseInt(this.row.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const targetEndTopOffset = target.row.element.nativeElement.offsetTop + this.grid.rowHeight + containerTopOffset;
-            if (targetEndTopOffset > containerHeight) {
+            if (containerHeight && targetEndTopOffset > containerHeight) {
                 verticalScroll.scrollTop += targetEndTopOffset - containerHeight;
                 this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
                     next: (e: any) => {
