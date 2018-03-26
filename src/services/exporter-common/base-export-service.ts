@@ -31,20 +31,35 @@ export abstract class IgxBaseExporter {
         const columns = grid.columnList.toArray();
         this._columnList = new Array<any>(columns.length);
 
+        const hiddenColumns = [];
+        let lastVisbleColumnIndex = -1;
+
         columns.forEach((column) => {
             const columnHeader = column.header !== "" ? column.header : column.field;
             const exportColumn = !column.hidden || options.ignoreColumnsVisibility;
             const index = options.ignoreColumnsOrder ? column.index : column.visibleIndex;
 
-            this._columnList[index] = {
+            const columnInfo = {
                 header: columnHeader,
                 field: column.field,
                 skip: !exportColumn
             };
 
+            if (index !== -1) {
+                this._columnList[index] = columnInfo;
+                lastVisbleColumnIndex = Math.max(lastVisbleColumnIndex, index);
+            } else {
+                hiddenColumns.push(columnInfo);
+            }
+
             if (column.pinned && exportColumn) {
                 this._indexOfLastPinnedColumn = index;
             }
+        });
+
+        // Append the hidden columns to the end of the list
+        hiddenColumns.forEach((hiddenColumn) => {
+           this._columnList[++lastVisbleColumnIndex] = hiddenColumn;
         });
 
         const useRowList = !options.ignoreFiltering &&
@@ -87,11 +102,12 @@ export abstract class IgxBaseExporter {
         this._indexOfLastPinnedColumn -= skippedPinnedColumnsCount;
 
         const dataToExport = new Array<any>();
+        const isSpecialData = ExportUtilities.isSpecialData(data);
 
         let rowIndex = 0;
         data.forEach((row) => {
-                    this.exportRow(dataToExport, row, rowIndex++);
-                });
+            this.exportRow(dataToExport, row, rowIndex++, isSpecialData);
+        });
 
         this.exportDataImplementation(dataToExport, options);
         this.resetDefaults();
@@ -99,19 +115,25 @@ export abstract class IgxBaseExporter {
 
     protected abstract exportDataImplementation(data: any[], options: IgxExporterOptionsBase): void;
 
-    private exportRow(data: any[], gridRowData: any, index: number) {
-        const rowData = this._columnList.reduce((a, e) => {
-                            if (!e.skip) {
-                                a[e.header] = gridRowData[e.field];
-                            }
-                            return a;
-                        }, {});
+    private exportRow(data: any[], rowData: any, index: number, isSpecialData: boolean) {
+        let row;
 
-        const rowArgs = new RowExportingEventArgs(rowData, index);
+        if (!isSpecialData) {
+            row = this._columnList.reduce((a, e) => {
+                if (!e.skip) {
+                    a[e.header] = rowData[e.field];
+                }
+                return a;
+            }, {});
+        } else {
+            row = rowData;
+        }
+
+        const rowArgs = new RowExportingEventArgs(row, index);
         this.onRowExport.emit(rowArgs);
 
         if (!rowArgs.cancel) {
-            data.push(rowData);
+            data.push(rowArgs.rowData);
         }
     }
 

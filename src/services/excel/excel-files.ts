@@ -95,7 +95,7 @@ export class WorksheetFile implements IExcelFile {
             }
             cols.push("</cols>");
 
-            if (worksheetData.indexOfLastPinnedColumn != -1 &&
+            if (worksheetData.indexOfLastPinnedColumn !== -1 &&
                 !worksheetData.options.ignorePinning &&
                 !worksheetData.options.ignoreColumnsOrder) {
                 const frozenColumnCount = worksheetData.indexOfLastPinnedColumn + 1;
