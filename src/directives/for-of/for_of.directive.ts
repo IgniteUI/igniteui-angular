@@ -188,10 +188,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     public scrollTo(index) {
         this.state.startIndex = index;
         if (this.igxForScrollOrientation === "horizontal") {
-            const sumWidths = this.igxForOf.reduce((acc, currentVal, currentIndex) => {
-                return (currentIndex <= index) ? acc + parseFloat(currentVal.width) : acc;
-            }, 0);
-            this.hScroll.scrollLeft = sumWidths;
+            this.hScroll.scrollLeft = this.hCache[index] + 1;
         } else {
             this.vh.instance.elementRef.nativeElement.scrollTop = parseInt(this.igxForItemSize, 10) * index;
         }
@@ -203,6 +200,21 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     public scrollPrev() {
         this.scrollTo(this.state.startIndex - 1);
+    }
+
+    public getColumnScrollLeft(colIndex) {
+        return this.hCache[colIndex];
+    }
+
+    public getVerticalScroll() {
+        if (this.vh) {
+            return this.vh.instance.elementRef.nativeElement;
+        }
+        return null;
+    }
+
+    public getHorizontalScroll() {
+        return this.getElement(this._viewContainer, "igx-horizontal-virtual-helper");;
     }
 
     /** Function that is called when scrolling vertically */
@@ -253,12 +265,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (!parseInt(this.hScroll.children[0].style.width, 10)) {
             return;
         }
-        var curScrollLeft = event.target.scrollLeft;
+        const curScrollLeft = event.target.scrollLeft;
 
-        //Updating horizontal chunks
+        // Updating horizontal chunks
         const scrollOffset = this.fixUpdateAllCols(curScrollLeft);
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + "px";
-        
+
         this.dc.changeDetectorRef.detectChanges();
         this.onChunkLoad.emit();
     }
@@ -426,12 +438,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     hScroll.scrollLeft + parseInt(this.igxForContainerSize, 10) :
                     parseInt(this.igxForContainerSize, 10);
 
-                let endIndex = this.getHorizontalIndexAt(
+                const endIndex = this.getHorizontalIndexAt(
                     left,
                     this.hCache,
                     0
                 ) + 1;
                 chunkSize = endIndex - this.state.startIndex;
+                chunkSize = chunkSize > this.igxForOf.length ? this.igxForOf.length : chunkSize;
             } else {
                 chunkSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
                     parseInt(this.igxForItemSize, 10));
@@ -507,7 +520,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     protected addLastElem() {
         const elemIndex = this.state.startIndex + this.state.chunkSize;
-        if(elemIndex >= this.igxForOf.length) {
+        if (elemIndex >= this.igxForOf.length) {
             return;
         }
 

@@ -217,8 +217,10 @@ describe("IgxVirtual directive - simple template", () => {
 
         const rowChildren = displayContainer.querySelectorAll("igx-display-container");
         for (let i = 0; i < rowChildren.length; i++) {
-            expect(rowChildren[i].children.length).toBe(1);
+            expect(rowChildren[i].children.length).toBe(2);
             expect(rowChildren[i].children[0].textContent)
+                .toBe(fix.componentInstance.data[i][298].toString());
+            expect(rowChildren[i].children[1].textContent)
                 .toBe(fix.componentInstance.data[i][299].toString());
         }
     });
@@ -904,7 +906,7 @@ export class HorizontalVirtualComponent implements OnInit {
 /** Both vertically and horizontally virtualized component */
 @Component({
     template: `
-        <div #container [style.width]='width' [style.height]='height'>
+        <div #container [style.width]='width' [style.height]='height' [style.position]="'relative'">
             <ng-template #scrollContainer igxForTest let-rowData [igxForOf]="data"
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='height'

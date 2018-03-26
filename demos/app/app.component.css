@@ -1,4 +1,12 @@
+.ig-drawer-content ::-webkit-scrollbar {
+    width: 3px;
+    background: #e4e4e4;
+}
 
+.ig-drawer-content ::-webkit-scrollbar-thumb {
+    background: #ec6f74;
+    border-radius: 0;
+}
 
 .main {
     position: absolute;

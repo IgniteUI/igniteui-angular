@@ -5,7 +5,7 @@
 
 %vhelper--vertical {
     width: 18px;
-    height: 100% !important;
+    height: calc(100% + 18px) !important;
     position: absolute;
     right: 0px;
     z-index: 10;
