@@ -29,7 +29,8 @@ describe("IgxVirtual directive - simple template", () => {
                 VerticalVirtualComponent,
                 HorizontalVirtualComponent,
                 VirtualComponent,
-                VirtualVariableSizeComponent
+                VirtualVariableSizeComponent,
+                VerticalVirtualNoDataComponent
             ],
             imports: [IgxForOfModule]
         }).compileComponents();
@@ -709,6 +710,23 @@ describe("IgxVirtual directive - simple template", () => {
         expect(displayContainer[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(false);
     });
 
+    it("should allow having initually undefined value for igxForOf and then detect changes correctly once the value is updated. ", () => {
+        const fix = TestBed.createComponent(VerticalVirtualNoDataComponent);
+        expect(() => {
+            fix.detectChanges();
+        }).not.toThrow();
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+        expect(displayContainer).not.toBeNull();
+        expect(verticalScroller).not.toBeNull();
+        let rowsRendered = displayContainer.querySelectorAll("div");
+        expect(rowsRendered.length).toBe(0);
+        fix.componentInstance.data = fix.componentInstance.generateData();
+        fix.detectChanges();
+        rowsRendered = displayContainer.querySelectorAll("div");
+        expect(rowsRendered.length).not.toBe(0);
+    });
+
     it("should prevent scrollTo() when called with numbers outside the scope of the data records.", () => {
         const fix = TestBed.createComponent(VirtualComponent);
         fix.componentRef.hostView.detectChanges();
@@ -720,7 +738,6 @@ describe("IgxVirtual directive - simple template", () => {
         fix.componentInstance.parentVirtDir.testScrollTo(fix.componentInstance.data.length + 1);
         expect(fix.componentInstance.parentVirtDir.state.startIndex).toBe(0);
     });
-
 });
 
 /** igxFor for testing */
@@ -1055,11 +1072,11 @@ export class VirtualComponent implements OnInit {
     template: `
         <div #container [style.width]='width' [style.height]='height'>
             <ng-template #scrollContainer igxForTest let-rowData [igxForOf]="data"
-                [igxForScrollOrientation]="'vertical'"
+            [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='height'
                 [igxForItemSize]='"50px"'>
                 <div [style.display]="'flex'" [style.height]="'50px'">
-                   {{rowData}}
+                    {{rowData}}
                 </div>
             </ng-template>
         </div>
@@ -1077,6 +1094,35 @@ export class VirtualVariableSizeComponent {
     public generateData(count) {
         const dummyData = [];
         for (let i = 0; i < count; i++) {
+            dummyData.push(10 * i);
+        }
+        return dummyData;
+    }
+}
+
+/** Vertically virtualized component with no initial data */
+@Component({
+    template: `
+        <div #container [style.width]='width' [style.height]='height'>
+            <ng-template #scrollContainer let-rowData [igxForOf]="data" igxForTest
+                [igxForScrollOrientation]="'vertical'"
+                [igxForContainerSize]='height'
+                [igxForItemSize]='"50px"'>
+                <div [style.display]="'flex'" [style.height]="'50px'">
+                    {{rowData}}
+                </div>
+            </ng-template>
+        </div>
+    `
+})
+export class VerticalVirtualNoDataComponent {
+    public width = "450px";
+    public height = "300px";
+    public data;
+
+    public generateData() {
+        const dummyData = [];
+        for (let i = 0; i < 50000; i++) {
             dummyData.push(10 * i);
         }
         return dummyData;
