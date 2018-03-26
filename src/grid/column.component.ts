@@ -20,7 +20,12 @@ import {
     IgxCellTemplateDirective
 } from "./grid.common";
 import { IgxGridComponent } from "./grid.component";
-
+/**
+ * **IgniteUI Angular Column** - [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)  
+ * This component is used within an `igx-grid` element to define what data the column will show. Features such as sorting,
+ * filtering & editing are enabled at the column level.  You can also provide a template containing custom content inside the column using `ng-template`
+ * which will be used for all cells within the column.
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,

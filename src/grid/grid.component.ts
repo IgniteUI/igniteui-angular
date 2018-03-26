@@ -40,7 +40,20 @@ import { IgxGridRowComponent } from "./row.component";
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
-
+/**
+ * **IgniteUI Angular Grid** - [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)  
+ * This component is used for presenting and manipulating tabular data in the simplest way possible.  Once data 
+ * has been bound, it can be manipulated through filtering, sorting & editing operations.
+ * 
+ * Here's a basic example of a grid binding to some employee data:
+ * ```html
+ * <igx-grid [data]="employeeData" autoGenerate="false">
+ *   <igx-column field="first" header="First Name"></igx-column>
+ *   <igx-column field="last" header="Last Name"></igx-column>
+ *   <igx-column field="role" header="Role"></igx-column>
+ * </igx-grid>
+ * ```
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,

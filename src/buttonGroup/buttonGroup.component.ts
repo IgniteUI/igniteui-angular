@@ -14,8 +14,23 @@ import { IgxIconModule } from "../icon";
 
 export enum ButtonGroupAlignment { horizontal, vertical }
 
-// ====================== BUTTON GROUP ================================
-// The `<igx-buttonGroup>` component is a  container for buttons
+/**
+ * **IgniteUI Angular Button Group** - [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/buttongroup.html)  
+ * This component displays a group of buttons either vertically or horizontally.  The group supports 
+ * single, multiple and toggle selection.
+ * 
+ * Here is a simple example that displays text formatting options:
+ * ```html
+ * <igx-buttongroup multiSelection="true" [values]="fontOptions"/>
+ * ```
+ * The `fontOptions` value defined in the above snippet is defined as:
+ * ```typescript
+ * this.fontOptions = [
+ *   { icon: 'format_bold', selected: false },
+ *   { icon: 'format_italic', selected: false },
+ *   { icon: 'format_underlined', selected: false }];
+ * ```
+ */
 @Component({
     selector: "igx-buttongroup",
     templateUrl: "buttongroup-content.component.html"

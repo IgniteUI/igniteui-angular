@@ -18,7 +18,18 @@ export enum LabelPosition {
 
 const noop = () => { };
 let nextId = 0;
-
+/**
+ * **IgniteUI Angular Checkbox** - [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/checkbox.html)  
+ * This component is a selection control that allows users to make a binary choice. It behaves similarly
+ * to the native browser checkbox.
+ * 
+ * Here's a basic example of a checkbox:
+ * ```html
+ * <igx-checkbox checked="true">
+ *   simple checkbox
+ * </igx-checkbox>
+ * ```
+ */
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxCheckboxComponent, multi: true }],
     selector: "igx-checkbox",

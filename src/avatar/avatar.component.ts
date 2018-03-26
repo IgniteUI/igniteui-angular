@@ -16,7 +16,16 @@ export enum Size {
     MEDIUM = "medium",
     LARGE = "large"
 }
-
+/**
+ * **IgniteUI Angular Avatar** - [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/avatar.html)  
+ * This component provides an easy way to add an avatar icon to your application.  This icon can be an
+ * image, someone's initials or a material icon from the google material icon set.
+ * 
+ * Here's a basic example that will render someone's initials:
+ * ```html
+ * <igx-avatar initials="MS" roundShape="true" size="large"/>
+ * ```
+ */
 @Component({
     selector: "igx-avatar",
     templateUrl: "avatar.component.html"
