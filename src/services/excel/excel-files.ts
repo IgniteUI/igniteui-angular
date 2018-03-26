@@ -68,8 +68,8 @@ export class WorksheetFile implements IExcelFile {
 
                     const cellValue = worksheetData.data[i - 1][worksheetData.keys[j]];
                     let stringValue = "";
-                    if (worksheetData.isStringData) {
-                        stringValue = worksheetData.data[i - 1];
+                    if (worksheetData.isSpecialData) {
+                        stringValue = String(worksheetData.data[i - 1]);
                     } else if (cellValue !== undefined && cellValue !== null) {
                         stringValue = String(cellValue);
                     }

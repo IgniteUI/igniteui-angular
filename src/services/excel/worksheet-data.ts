@@ -7,7 +7,7 @@ export class WorksheetData {
     private _rowCount: number;
     private _dataDictionary: WorksheetDataDictionary;
     private _keys: string[];
-    private _isStringData: boolean;
+    private _isSpecialData: boolean;
 
     constructor(private _data: any[], public options: IgxExcelExporterOptions) {
         this.initializeData();
@@ -33,8 +33,8 @@ export class WorksheetData {
         return this._keys;
     }
 
-    public get isStringData(): boolean {
-        return this._isStringData;
+    public get isSpecialData(): boolean {
+        return this._isSpecialData;
     }
 
     public get dataDictionary() {
@@ -46,14 +46,15 @@ export class WorksheetData {
             return;
         }
 
-        const dataEntry = this._data[0];
-        this._isStringData = typeof dataEntry === "string";
+        // const dataEntry = this._data[0];
 
         this._keys = ExportUtilities.getKeysFromData(this._data);
 
         if (this._keys.length === 0) {
             return;
         }
+
+        this._isSpecialData = ExportUtilities.isSpecialData(this._data);
 
         this._columnCount = this._keys.length;
         this._rowCount = this._data.length + 1;

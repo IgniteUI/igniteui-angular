@@ -44,9 +44,22 @@ describe("Excel Exporter", () => {
         });
     }));
 
+    it("should export grid as displayed.", async(() => {
+        const currentGrid: IgxGridComponent = null;
+        TestMethods.testRawData(currentGrid, (grid) => {
+            getExportedData(grid, options).then((wrapper) => {
+                wrapper.verifyStructure();
+                wrapper.verifyTemplateFilesContent();
+                wrapper.verifyDataFilesContent(actualData.simpleGridData);
+            });
+        });
+    }));
+
     it("should export grid with raw data.", async(() => {
         const currentGrid: IgxGridComponent = null;
         TestMethods.testRawData(currentGrid, (grid) => {
+            options.ignoreColumnsVisibility = true;
+            options.ignoreFiltering = true;
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyStructure();
                 wrapper.verifyTemplateFilesContent();
@@ -128,7 +141,7 @@ describe("Excel Exporter", () => {
     //     });
     // }));
 
-    it("should honor 'exportFilteredRows' option.", async(() => {
+    it("should honor 'ignoreFiltering' option.", async(() => {
         const fix = TestBed.createComponent(GridMarkupPagingDeclarationComponent);
         fix.detectChanges();
 
@@ -184,7 +197,7 @@ describe("Excel Exporter", () => {
         });
     }));
 
-    it("should honor 'exportHiddenColumns' option.", async(() => {
+    it("should honor 'ignoreColumnsVisibility' option.", async(() => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
 

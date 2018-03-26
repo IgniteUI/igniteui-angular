@@ -33,6 +33,23 @@ Dorothy H. Spencer
 `;
     }
 
+    get noHeadersNumberData() {
+        return `Column 1
+10
+20
+30
+`;
+    }
+
+    get noHeadersDateTimeData() {
+        return `Column 1
+Mon Jan 01 2018 02:00:00 GMT+0200 (FLE Standard Time)
+Mon Apr 23 2018 00:00:00 GMT+0300 (FLE Daylight Time)
+Thu Jan 01 1970 02:00:00 GMT+0200 (FLE Standard Time)
+Fri Mar 23 2018 00:00:00 GMT+0200 (FLE Standard Time)
+`;
+    }
+
     get contactsData() {
         return `name${this._delimiter}phone
 Terrance Orta${this._delimiter}770-504-2217

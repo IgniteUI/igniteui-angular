@@ -3,7 +3,7 @@ import { IgxExporterOptionsBase } from "../exporter-common/exporter-options-base
 export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
     private _columnWidth: number;
     private _rowHeight: number;
-    
+
     constructor(fileName: string) {
         super(fileName, ".xlsx");
     }

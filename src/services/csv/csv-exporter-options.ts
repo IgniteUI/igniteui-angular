@@ -22,8 +22,6 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
             case CsvFileTypes.TAB:
                 extension = ".tab";
                 break;
-            // case CsvFileTypes.Other:
-            //     break;
         }
         return extension;
     }
@@ -54,5 +52,4 @@ export enum CsvFileTypes {
     CSV,
     TSV,
     TAB
-    // Other
 }

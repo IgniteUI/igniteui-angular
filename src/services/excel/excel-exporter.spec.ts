@@ -7,7 +7,7 @@ import { JSZipFiles } from "./jsZip-helper";
 import { IFileContent, JSZipWrapper, ObjectComparer  } from "./jszip-verification-wrapper";
 import { ExportTestDataService, FileContentData, ValueData } from "./test-data.service";
 
-fdescribe("Excel Exporter", () => {
+describe("Excel Exporter", () => {
     let sourceData: ExportTestDataService;
     let exporter: IgxExcelExporterService;
     let options: IgxExcelExporterOptions;
@@ -32,13 +32,13 @@ fdescribe("Excel Exporter", () => {
     }));
 
     it("should export empty objects successfully.", async(() => {
-        // getExportedData(sourceData.emptyObjectData, options).then((wrapper) => {
-        //     wrapper.verifyStructure();
-        //     wrapper.verifyTemplateFilesContent();
-        // });
+        getExportedData(sourceData.emptyObjectData, options).then((wrapper) => {
+            wrapper.verifyStructure();
+            wrapper.verifyTemplateFilesContent();
+        });
     }));
 
-    fit("should export string data without headers successfully.", async(() => {
+    it("should export string data without headers successfully.", async(() => {
         getExportedData(sourceData.noHeadersStringData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
@@ -47,18 +47,18 @@ fdescribe("Excel Exporter", () => {
     }));
 
     it("should export date time data without headers successfully.", async(() => {
-        getExportedData(sourceData.noHeadersNumberData, options).then((wrapper) => {
-            wrapper.verifyStructure();
-            wrapper.verifyTemplateFilesContent();
-            wrapper.verifyDataFilesContent(actualData.noHeadersNumberDataContent);
-        });
-    }));
-
-    it("should export number data without headers successfully.", async(() => {
         getExportedData(sourceData.noHeadersDateTimeData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.noHeadersDateTimeContent);
+        });
+    }));
+
+    it("should export number data without headers successfully.", async(() => {
+        getExportedData(sourceData.noHeadersNumberData, options).then((wrapper) => {
+            wrapper.verifyStructure();
+            wrapper.verifyTemplateFilesContent();
+            wrapper.verifyDataFilesContent(actualData.noHeadersNumberDataContent);
         });
     }));
 

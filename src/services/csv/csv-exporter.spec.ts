@@ -4,7 +4,7 @@ import { IgxCsvExporterService } from "./csv-exporter";
 import { CsvFileTypes, IgxCsvExporterOptions } from "./csv-exporter-options";
 import { CSVWrapper } from "./csv-verification-wrapper";
 
-fdescribe("Export to", () => {
+describe("Export to", () => {
     let sourceData: ExportTestDataService;
     let exporter: IgxCsvExporterService;
     let options: IgxCsvExporterOptions;
@@ -37,9 +37,21 @@ fdescribe("Export to", () => {
             });
         }));
 
-        fit(typeName + " should export string data without headers successfully.", async(() => {
+        it(typeName + " should export string data without headers successfully.", async(() => {
             getExportedData(sourceData.noHeadersStringData, options).then((wrapper) => {
                 wrapper.verifyData(wrapper.noHeadersStringData);
+            });
+        }));
+
+        it(typeName + " should export number data without headers successfully.", async(() => {
+            getExportedData(sourceData.noHeadersNumberData, options).then((wrapper) => {
+                wrapper.verifyData(wrapper.noHeadersNumberData);
+            });
+        }));
+
+        it(typeName + " should export date time data without headers successfully.", async(() => {
+            getExportedData(sourceData.noHeadersDateTimeData, options).then((wrapper) => {
+                wrapper.verifyData(wrapper.noHeadersDateTimeData);
             });
         }));
 
@@ -66,7 +78,6 @@ fdescribe("Export to", () => {
                 wrapper.verifyData(wrapper.contactsFunkyData);
             });
         }));
-
 
     }
 

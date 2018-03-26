@@ -10,8 +10,8 @@ import {
     RowExportingEventArgs
 } from "./event-args";
 
-import { IgxExporterOptionsBase } from "./exporter-options-base";
 import { ExportUtilities } from "./export-utilities";
+import { IgxExporterOptionsBase } from "./exporter-options-base";
 
 export abstract class IgxBaseExporter {
     private _columnList = [];
@@ -23,7 +23,7 @@ export abstract class IgxBaseExporter {
     public onColumnExport = new EventEmitter<ColumnExportingEventArgs>();
 
     public export(grid: IgxGridComponent, options: IgxExporterOptionsBase): void {
-        if(options === undefined || options === null) {
+        if (options === undefined || options === null) {
             throw Error("No options provided!");
         }
 
@@ -50,17 +50,17 @@ export abstract class IgxBaseExporter {
     }
 
     public exportData(data: any[], options: IgxExporterOptionsBase): void {
-        if(options === undefined || options === null) {
+        if (options === undefined || options === null) {
             throw Error("No options provided!");
         }
 
-        if(this._columnList.length === 0) {
+        if (this._columnList.length === 0) {
             const keys = ExportUtilities.getKeysFromData(data);
-            this._columnList = keys.map(k => ({ header: k, field: k}));
+            this._columnList = keys.map((k) => ({ header: k, field: k}));
         }
 
         let columnIndex = 0;
-        this._columnList.forEach(column => {
+        this._columnList.forEach((column) => {
             const columnExportArgs = new ColumnExportingEventArgs(column.header, columnIndex++);
             this.onColumnExport.emit(columnExportArgs);
 
@@ -71,7 +71,7 @@ export abstract class IgxBaseExporter {
         const dataToExport = new Array<any>();
 
         let rowIndex = 0;
-        data.forEach(row => {
+        data.forEach((row) => {
             this.exportRow(dataToExport, row, rowIndex++);
         });
 
@@ -84,7 +84,7 @@ export abstract class IgxBaseExporter {
 
     private exportRow(data: any[], gridRowData: any, index: number) {
         const rowData = this._columnList.reduce((a, e) => {
-                            if(e.skip === false) {
+                            if (e.skip === false) {
                                 a[e.header] = gridRowData[e.field];
                             }
                             return a;

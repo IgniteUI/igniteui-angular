@@ -10,11 +10,24 @@ export class CharSeparatedValueData {
     private _escapeCharacters = ["\r", "\n", "\r\n"];
     private _delimiterLength = 1;
     private _defaultColumnHeader = "Column 1";
+    private _isSpecialData = false;
 
     constructor(private _data: any[], valueDelimiter: string) {
+        this.setDelimiter(valueDelimiter);
         this.prepareData();
-        this._delimiter = valueDelimiter;
-        this._delimiterLength = valueDelimiter.length;
+    }
+
+    public get valueDelimiter() {
+        return this._delimiter;
+    }
+
+    public set valueDelimiter(value) {
+        this.setDelimiter(value);
+    }
+
+    private setDelimiter(value) {
+        this._delimiter = value;
+        this._delimiterLength = value.length;
     }
 
     public get data() {
@@ -32,15 +45,13 @@ export class CharSeparatedValueData {
             return "";
         }
 
-        const dataEntry = this._data[0];
-        const exportStringData = typeof dataEntry === "string";
-
-        const keys = exportStringData ? [this._defaultColumnHeader] : ExportUtilities.getKeysFromData(this._data);
+        const keys = ExportUtilities.getKeysFromData(this._data);
 
         if (keys.length === 0) {
             return "";
         }
 
+        this._isSpecialData = ExportUtilities.isSpecialData(this._data);
         this._escapeCharacters.push(this._delimiter);
 
         this._headerRecord = this.processHeaderRecord(keys, this._escapeCharacters);
@@ -69,16 +80,17 @@ export class CharSeparatedValueData {
     private processRecord(record, keys, escapeChars): string {
         let recordData = "";
         for (const keyName of keys) {
-            const value = (record[keyName] !== undefined) ? record[keyName] : (typeof record === "string") ? record : "";
+
+            const value = (record[keyName] !== undefined) ? record[keyName] : this._isSpecialData ? record : "";
             recordData += this.processField(value, this._escapeCharacters);
         }
 
         return recordData.slice(0, -this._delimiterLength) + this._eor;
     }
 
-    private processDataRecords(data, keys, escapeChars) {
+    private processDataRecords(currentData, keys, escapeChars) {
         let dataRecords = "";
-        for (const row of data) {
+        for (const row of currentData) {
             dataRecords += this.processRecord(row, keys, escapeChars);
         }
 
