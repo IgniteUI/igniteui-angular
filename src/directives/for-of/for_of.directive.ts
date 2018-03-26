@@ -237,7 +237,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this.dc.instance._viewContainer.element.nativeElement.firstElementChild.style.marginTop = totalDiff + "px";
             }
         } else {
-           this.dc.instance._viewContainer.element.nativeElement.firstElementChild.style.marginTop = "";
+            this.dc.instance._viewContainer.element.nativeElement.firstElementChild.style.marginTop = "";
         }
         for (let i = this.state.startIndex; i < endingIndex && this.igxForOf[i] !== undefined; i++) {
             const input = this.igxForOf[i];
@@ -393,20 +393,20 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForOf && this.igxForOf.length && this.dc) {
             const embeddedViewCopy = Object.assign([], this._embeddedViews);
             let startIndex = this.state.startIndex;
-            let endIndex =  this.state.chunkSize + this.state.startIndex;
+            let endIndex = this.state.chunkSize + this.state.startIndex;
             if (this.igxForRemote) {
                 startIndex = 0;
                 endIndex = this.igxForOf.length;
             }
             for (let i = startIndex; i < endIndex && this.igxForOf[i] !== undefined; i++) {
-                    const input = this.igxForOf[i];
-                    const embView = embeddedViewCopy.shift();
-                    const cntx = (embView as EmbeddedViewRef<any>).context;
-                    cntx.$implicit = input;
-                    cntx.index = this.igxForOf.indexOf(input);
-                    cntx.dirty = true;
-                    embView.detectChanges();
-                    cntx.dirty =  false;
+                const input = this.igxForOf[i];
+                const embView = embeddedViewCopy.shift();
+                const cntx = (embView as EmbeddedViewRef<any>).context;
+                cntx.$implicit = input;
+                cntx.index = this.igxForOf.indexOf(input);
+                cntx.dirty = true;
+                embView.detectChanges();
+                cntx.dirty = false;
             }
             this.onChunkLoad.emit();
             this.dc.changeDetectorRef.detectChanges();
@@ -425,6 +425,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 const left = hScroll && hScroll.scrollLeft !== 0 ?
                     hScroll.scrollLeft + parseInt(this.igxForContainerSize, 10) :
                     parseInt(this.igxForContainerSize, 10);
+
+                if (!this.hCache) {
+                    this.initHCache(this.igxForOf);
+                }
 
                 let endIndex = this.getHorizontalIndexAt(
                     left,
@@ -452,7 +456,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 chunkSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
                     parseInt(this.igxForItemSize, 10));
                 if (chunkSize > this.igxForOf.length) {
-                     chunkSize = this.igxForOf.length;
+                    chunkSize = this.igxForOf.length;
                 }
             }
         } else {
