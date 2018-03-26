@@ -1,0 +1,33 @@
+<div #tabsContainer style="display: flex; flex-direction: column; align-items: flex-start;">
+
+<div #headerContainer style="display: flex; flex-direction: row; flex-wrap: nowrap; align-items: flex-start;">
+
+<div *ngIf="addScroll" style="display: flex">
+    <button igxButton="icon">
+        <igx-icon fontSet="material" name="chevron_left"></igx-icon>
+    </button>
+</div>
+
+<div #tablist class="{{itemStyle}}__menu {{itemStyle}}__menu" role="tablist" aria-orientation="horizontal" >
+    <igx-tab-item *ngFor="let group of groups" [id]="'igx-tab-item-' + group.index" [attr.aria-label]="group.label" [attr.aria-disabled]="group.isDisabled"
+        [attr.aria-selected]="group.isSelected" [attr.aria-controls]="'igx-tab-item-group-'+ group.index" [ngClass]="{
+                 'igx-tabs__menu-item': !group.isSelected && !group.isDisabled,
+                 'igx-tabs__menu-item--selected': group.isSelected,
+                 'igx-tabs__menu-item--disabled': group.isDisabled
+             }" [relatedGroup]="group" (click)="group.select()" role="tab" [style.width.px]='calculatedWidth'>
+    </igx-tab-item>
+</div>
+
+<div *ngIf="addScroll" style="display: flex">
+    <button igxButton="icon">
+        <igx-icon fontSet="material" name="chevron_right"></igx-icon>
+    </button>
+</div>
+
+</div>
+
+<div>
+    <ng-content></ng-content>
+</div>
+
+</div>

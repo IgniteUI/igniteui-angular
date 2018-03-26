@@ -31,6 +31,7 @@ export * from "./list/list.component";
 export * from "./list/list-item.component";
 export * from "./list/list.common";
 export * from "./tabbar/tabbar.component";
+export * from "./tabs/tabs.component";
 export * from "./calendar";
 export * from "./carousel/carousel.component";
 export * from "./checkbox/checkbox.component";

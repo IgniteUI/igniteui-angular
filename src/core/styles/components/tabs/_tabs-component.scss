@@ -1,0 +1,56 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-tabs) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @include e(group) {
+        @extend %igx-tabs-group !optional;
+    }
+
+    @include e(group, $m: selected) {
+        @extend %igx-tabs-group !optional;
+        @extend %igx-tabs-group--selected !optional;
+    }
+
+    @include e(menu) {
+        @extend %igx-tabs-menu !optional;
+    }
+
+    @include e(menu-item) {
+        @extend %igx-tabs-menu-item !optional;
+
+        .tab-item-icon {
+            @extend %igx-tab-item-icon !optional;
+        }
+
+        .tab-item-label {
+            @extend %igx-tab-item-label !optional;
+        }
+    }
+
+    @include e(menu-item, $m: selected) {
+        @extend %igx-tabs-menu-item !optional;
+        @extend %igx-tabs-menu-item--selected !optional;
+
+        .tab-item-icon {
+            @extend %igx-tab-item-icon !optional;
+            @extend %igx-tab-item-icon--selected !optional;
+        }
+
+        .tab-item-label {
+            @extend %igx-tab-item-label !optional;
+            @extend %igx-tab-item-label--selected !optional;
+        }
+    }
+
+    @include e(menu-item, $m: disabled) {
+        @extend %igx-tabs-menu-item !optional;
+        @extend %igx-tabs-menu-item--disabled !optional;
+    }
+}

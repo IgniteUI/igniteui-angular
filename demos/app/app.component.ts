@@ -135,6 +135,11 @@ export class AppComponent {
             name: "Tabbar"
         },
         {
+            link: "/tabs",
+            icon: "tab",
+            name: "Tabs"
+        },
+        {
             link: "/toast",
             icon: "android",
             name: "Toast"
