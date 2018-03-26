@@ -56,8 +56,8 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
     protected subscriptionOnEdit$;
     protected subscriptionOnAdd$;
     protected subscriptionOnDelete$;
-    private itemClass = "igx-grid-summary-item";
-    private hiddenItemClass = "igx-grid-summary-item--inactive";
+    private itemClass = "igx-grid-summary__item";
+    private hiddenItemClass = "igx-grid-summary__item--inactive";
     private summaryResultClass = "igx-grid-summary-item__result--left-align";
     private numberSummaryResultClass = "igx-grid-summary-item__result";
 
