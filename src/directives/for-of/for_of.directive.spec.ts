@@ -708,6 +708,19 @@ describe("IgxVirtual directive - simple template", () => {
         // Has size and enough data to be virtualized - display container should be active.
         expect(displayContainer[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(false);
     });
+
+    it("should prevent scrollTo() when called with numbers outside the scope of the data records.", () => {
+        const fix = TestBed.createComponent(VirtualComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+
+        fix.componentInstance.parentVirtDir.testScrollTo(-1);
+        expect(fix.componentInstance.parentVirtDir.state.startIndex).toBe(0);
+
+        fix.componentInstance.parentVirtDir.testScrollTo(fix.componentInstance.data.length + 1);
+        expect(fix.componentInstance.parentVirtDir.state.startIndex).toBe(0);
+    });
+
 });
 
 /** igxFor for testing */
@@ -729,6 +742,10 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
 
     public testScrollNext() {
         super.scrollNext();
+    }
+
+    public testScrollTo(index) {
+        super.scrollTo(index);
     }
 
     public testOnScroll(target) {
