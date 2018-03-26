@@ -49,7 +49,7 @@ export class WorksheetData {
         const dataEntry = this._data[0];
         this._isStringData = typeof dataEntry === "string";
 
-        this._keys = this._isStringData ? ["Column 1"] : ExportUtilities.getKeysFromData(this._data);
+        this._keys = ExportUtilities.getKeysFromData(this._data);
 
         if (this._keys.length === 0) {
             return;

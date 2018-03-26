@@ -40,7 +40,7 @@ describe("Excel Exporter", () => {
             options = new IgxExcelExporterOptions("GridExport");
 
             // Spy the private SaveFile method so the files are not really created
-            spyOn(exporter as any, "SaveFile");
+            spyOn(exporter as any, "saveFile");
         });
     }));
 

@@ -11,7 +11,7 @@ export class ExportUtilities {
 
         const keys = new Set(keys1.concat(keys2).concat(keys3));
 
-        return keys.size !== 0 ? Array.from(keys) : [];
+        return keys.size !== 0 ? Array.from(keys) : [ "Column 1" ];
     }
 
     public static saveBlobToFile(blob: Blob, fileName) {
