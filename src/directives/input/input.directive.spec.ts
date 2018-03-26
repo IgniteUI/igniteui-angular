@@ -6,7 +6,7 @@ import {
 import { By } from "@angular/platform-browser";
 import { IgxInputGroupModule } from "../../input-group/input-group.component";
 
-describe("IgxInput", () => {
+xdescribe("IgxInput", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
