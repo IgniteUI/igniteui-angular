@@ -112,36 +112,35 @@ gulp.task("copy-git-hooks", () => {
         defaultCopyHookDir + "utils"
     ];
 
-    const callback = function (err) { if(err) { throw err; } };
-
     dirs.forEach(dir => {
         if(!fs.existsSync(dir)) {
-            fs.mkdir(dir, callback);
+            fs.mkdir(dir, (err) => { 
+                if(err) { throw err; } 
+            });
         }
     });
 
     const defaultHookDir = "./.hooks/scripts/";
 
-    fs.copyFile(defaultHookDir + "templates/default.js",
-        defaultCopyHookDir + "templates/default.js",
-        callback);
-    fs.copyFile(defaultHookDir + "templateValidators/default-style-validator.js",
-        defaultCopyHookDir + "templateValidators/default-style-validator.js",
-        callback);
-    fs.copyFile(defaultHookDir + "utils/issue-validator.js",
-        defaultCopyHookDir + "utils/issue-validator.js",
-        callback);
-    fs.copyFile(defaultHookDir + "utils/line-limits.js",
-        defaultCopyHookDir + "utils/line-limits.js",
-        callback);
-    fs.copyFile(defaultHookDir + "common.js",
-        defaultCopyHookDir + "common.js",
-        callback);
-    fs.copyFile(defaultHookDir + "validate.js",
-        defaultCopyHookDir + "validate.js",
-        callback);
-    fs.copyFile("./.hooks/prepare-commit-msg",
-        "./.git/prepare-commit-msg",
-        callback);
+    fs.createReadStream(defaultHookDir + "templates/default.js")
+        .pipe(fs.createWriteStream(defaultCopyHookDir + "templates/default.js"));
+
+    fs.createReadStream(defaultHookDir +"templateValidators/default-style-validator.js")
+        .pipe(fs.createWriteStream(defaultCopyHookDir + "templateValidators/default-style-validator.js"));
+
+    fs.createReadStream(defaultHookDir + "utils/issue-validator.js")
+        .pipe(fs.createWriteStream(defaultCopyHookDir + "utils/issue-validator.js"));
+
+    fs.createReadStream(defaultHookDir + "utils/line-limits.js")
+        .pipe(fs.createWriteStream(defaultCopyHookDir + "utils/line-limits.js"));
+
+    fs.createReadStream(defaultHookDir + "common.js")
+        .pipe(fs.createWriteStream(defaultCopyHookDir + "common.js"));
+
+    fs.createReadStream(defaultHookDir + "validate.js")
+        .pipe(fs.createWriteStream(defaultCopyHookDir + "validate.js"));
+
+    fs.createReadStream("./.hooks/prepare-commit-msg")
+        .pipe(fs.createWriteStream("./.git/prepare-commit-msg"));
 });
 
