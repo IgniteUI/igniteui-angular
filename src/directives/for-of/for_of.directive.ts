@@ -42,7 +42,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     @Input() public igxForItemSize: any;
     public dc: ComponentRef<DisplayContainerComponent>;
     public state: IForOfState = {
-        startIndex: 0
+        startIndex: 0,
+        chunkSize: 0
     };
     public totalItemCount: number;
 
@@ -83,20 +84,21 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         private _zone: NgZone) { }
 
     public ngOnInit(): void {
-        let totalWidth: number;
+        let totalWidth = 0;
         const vc = this.igxForScrollContainer ? this.igxForScrollContainer._viewContainer : this._viewContainer;
-        if (this.igxForScrollOrientation === "horizontal") {
-            totalWidth = this.initHCache(this.igxForOf);
-            this.hScroll = this.getElement(vc, "igx-horizontal-virtual-helper");
-            if (this.hScroll) {
-                this.state.startIndex = this.getHorizontalIndexAt(this.hScroll.scrollLeft, this.hCache, 0);
-            }
-        }
-        this.state.chunkSize = this._calculateChunkSize();
+
         const dcFactory: ComponentFactory<DisplayContainerComponent> = this.resolver.resolveComponentFactory(DisplayContainerComponent);
         this.dc = this._viewContainer.createComponent(dcFactory, 0);
         this.dc.instance.notVirtual = this.igxForContainerSize ? false : true;
         if (this.igxForOf && this.igxForOf.length) {
+            if (this.igxForScrollOrientation === "horizontal") {
+                totalWidth = this.initHCache(this.igxForOf);
+                this.hScroll = this.getElement(vc, "igx-horizontal-virtual-helper");
+                if (this.hScroll) {
+                    this.state.startIndex = this.getHorizontalIndexAt(this.hScroll.scrollLeft, this.hCache, 0);
+                }
+            }
+            this.state.chunkSize = this._calculateChunkSize();
             for (let i = 0; i < this.state.chunkSize && this.igxForOf[i] !== undefined; i++) {
                 const input = this.igxForOf[i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
@@ -110,7 +112,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForScrollOrientation === "vertical") {
             const factory: ComponentFactory<VirtualHelperComponent> = this.resolver.resolveComponentFactory(VirtualHelperComponent);
             this.vh = this._viewContainer.createComponent(factory, 1);
-            this.vh.instance.height = this.igxForOf.length * parseInt(this.igxForItemSize, 10);
+            this.vh.instance.height = this.igxForOf ? this.igxForOf.length * parseInt(this.igxForItemSize, 10) : 0;
             this._zone.runOutsideAngular(() => {
                 this.vh.instance.elementRef.nativeElement.addEventListener("scroll", (evt) => { this.onScroll(evt); });
                 this.dc.instance._viewContainer.element.nativeElement.addEventListener("wheel",
@@ -414,6 +416,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 const left = hScroll && hScroll.scrollLeft !== 0 ?
                     hScroll.scrollLeft + parseInt(this.igxForContainerSize, 10) :
                     parseInt(this.igxForContainerSize, 10);
+
+                if (!this.hCache) {
+                    this.initHCache(this.igxForOf);
+                }
 
                 let endIndex = this.getHorizontalIndexAt(
                     left,
