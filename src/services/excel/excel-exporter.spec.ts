@@ -86,7 +86,7 @@ describe("Excel Exporter", () => {
         });
     }));
 
-    it("should export data with special characters successfully.", async(() => {
+    it("should export data with special characters successully.", async(() => {
         getExportedData(sourceData.contactsFunkyData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();

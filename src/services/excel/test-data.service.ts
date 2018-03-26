@@ -182,7 +182,8 @@ export class FileContentData {
         this._tableData = `ref="A1:A6" totalsRowShown="0"><autoFilter ref="A1:A6"/><tableColumns count="1">` +
         `<tableColumn id="1" name="Column1"/></tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:A6"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
+        this._worksheetData =
+        `<dimension ref="A1:A6"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
         `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="30.169921875" customWidth="1"/>` +
         `</cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2"><c r="A2" t="s"><v>1</v></c></row><row r="3"><c ` +
         `r="A3" t="s"><v>2</v></c></row><row r="4"><c r="A4" t="s"><v>3</v></c></row><row r="5"><c r="A5" t="s"><v>4</v></c></row>` +
@@ -200,7 +201,8 @@ export class FileContentData {
         <autoFilter ref="A1:B6"/><tableColumns count="2"><tableColumn id="1" name="name"/><tableColumn id="2" name="phone"/>` +
         `</tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:B6"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
+        this._worksheetData =
+        `<dimension ref="A1:B6"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
         `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="28.393164825439456" ` +
         `customWidth="1"/><col min="2" max="2" width="13.241766357421875" customWidth="1"/></cols><sheetData><row r="1">` +
         `<c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c></row><row r="2"><c r="A2" t="s"><v>2</v></c><c r="B2" t="s">` +
@@ -219,7 +221,8 @@ export class FileContentData {
         <autoFilter ref="A1:B4"/><tableColumns count="2"><tableColumn id="1" name="name"/><tableColumn id="2" name="phone"/>` +
         `</tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:B4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
+        this._worksheetData =
+        `<dimension ref="A1:B4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
         `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="28.393164825439456" customWidth` +
         `="1"/><col min="2" max="2" width="13.241766357421875" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c>` +
         `<c r="B1" t="s"><v>1</v></c></row><row r="2"><c r="A2" t="s"><v>2</v></c><c r="B2" t="s"><v>3</v></c></row><row r="3"><c r="A3" ` +
@@ -240,7 +243,8 @@ export class FileContentData {
         <autoFilter ref="A1:B7"/><tableColumns count="2"><tableColumn id="1" name="name"/><tableColumn id="2" name="phone"/>` +
         `</tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:B7"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
+        this._worksheetData =
+        `<dimension ref="A1:B7"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
         `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="30.09180221557617" customWidth` +
         `="1"/><col min="2" max="2" width="25.47905731201172" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v>` +
         `</c><c r="B1" t="s"><v>1</v></c></row><row r="2"><c r="A2" t="s"><v>2</v></c><c r="B2" t="s"><v>3</v></c></row><row r="3">` +
@@ -259,7 +263,7 @@ export class FileContentData {
         this._tableData = `ref="A1:A6" totalsRowShown="0"><autoFilter ref="A1:A6"/><tableColumns count="1">` +
         `<tableColumn id="1" name="Column1"/></tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:A6"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/>` +
+        this._worksheetData = `<dimension ref="A1:A6"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView>` +
         `</sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" ` +
         `width="28.393164825439456" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2">` +
         `<c r="A2" t="s"><v>1</v></c></row><row r="3"><c r="A3" t="s"><v>2</v></c></row><row r="4"><c r="A4" t="s"><v>3</v>` +
@@ -275,7 +279,7 @@ export class FileContentData {
         this._tableData = `ref="A1:A4" totalsRowShown="0"><autoFilter ref="A1:A4"/><tableColumns count="1">` +
         `<tableColumn id="1" name="Column1"/></tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:A4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/>` +
+        this._worksheetData = `<dimension ref="A1:A4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView>` +
         `</sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width=` +
         `"9.265750122070314" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2">` +
         `<c r="A2" t="s"><v>1</v></c></row><row r="3"><c r="A3" t="s"><v>2</v></c></row><row r="4"><c r="A4" t="s"><v>3</v>` +
@@ -293,7 +297,7 @@ export class FileContentData {
         this._tableData = `ref="A1:A5" totalsRowShown="0"><autoFilter ref="A1:A5"/><tableColumns count="1">` +
         `<tableColumn id="1" name="Column1"/></tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:A5"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/>` +
+        this._worksheetData = `<dimension ref="A1:A5"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView>` +
         `</sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width=` +
         `"53.07389831542969" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2">` +
         `<c r="A2" t="s"><v>1</v></c></row><row r="3"><c r="A3" t="s"><v>2</v></c></row><row r="4"><c r="A4" t="s"><v>3</v>` +
@@ -309,7 +313,7 @@ export class FileContentData {
         this._tableData = `ref="A1:A4" totalsRowShown="0"><autoFilter ref="A1:A4"/><tableColumns count="1">` +
         `<tableColumn id="1" name="value"/></tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:A4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/>` +
+        this._worksheetData = `<dimension ref="A1:A4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView>` +
         `</sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="8.34" ` +
         `customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2"><c r="A2" t="s"><v>1</v>` +
         `</c></row><row r="3"><c r="A3" t="s"><v>2</v></c></row><row r="4"><c r="A4" t="s"><v>3</v></c></row></sheetData>`;
@@ -332,7 +336,8 @@ export class FileContentData {
         <autoFilter ref="A1:C11"/><tableColumns count="3"><tableColumn id="1" name="ID"/><tableColumn id="2" name="Name"/>` +
         `<tableColumn id="3" name="JobTitle"/></tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:C11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
+        this._worksheetData =
+        `<dimension ref="A1:C11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
         `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="8.34" customWidth="1"/>` +
         `<col min="2" max="2" width="15.891735076904297" customWidth="1"/><col min="3" max="3" width="31.24928741455078" ` +
         `customWidth="1"/><col min="4" max="4" width="24.876695251464845" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" ` +
@@ -371,7 +376,8 @@ export class FileContentData {
         <autoFilter ref="A1:D11"/><tableColumns count="4"><tableColumn id="1" name="ID"/><tableColumn id="2" name="Name"/>` +
         `<tableColumn id="3" name="JobTitle"/><tableColumn id="4" name="HireDate"/></tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:D11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
+        this._worksheetData =
+        `<dimension ref="A1:D11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
         `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="8.34" customWidth="1"/>` +
         `<col min="2" max="2" width="15.891735076904297" customWidth="1"/><col min="3" max="3" width="31.24928741455078" ` +
         `customWidth="1"/><col min="4" max="4" width="24.876695251464845" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" ` +
@@ -402,7 +408,8 @@ export class FileContentData {
             <autoFilter ref="A1:D4"/><tableColumns count="4"><tableColumn id="1" name="ID"/><tableColumn id="2" name="Name"/>` +
             `<tableColumn id="3" name="JobTitle"/><tableColumn id="4" name="HireDate"/></tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:D4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
+        this._worksheetData =
+        `<dimension ref="A1:D4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
         `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="8.34" customWidth="1"/>` +
         `<col min="2" max="2" width="14.416406250000001" customWidth="1"/><col min="3" max="3" width="13.890234375" customWidth="1"/>` +
         `<col min="4" max="4" width="26.33203125" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c>` +
@@ -424,7 +431,8 @@ export class FileContentData {
             <autoFilter ref="A1:D4"/><tableColumns count="4"><tableColumn id="1" name="ID"/><tableColumn id="2" name="Name"/>` +
             `<tableColumn id="3" name="JobTitle"/><tableColumn id="4" name="HireDate"/></tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:D4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
+        this._worksheetData =
+        `<dimension ref="A1:D4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
         `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="8.34" customWidth="1"/>` +
         `<col min="2" max="2" width="14.022656249999999" customWidth="1"/><col min="3" max="3" width="26.001562500000002" customWidth=` +
         `"1"/><col min="4" max="4" width="26.33203125" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c ` +
@@ -448,7 +456,8 @@ export class FileContentData {
         <autoFilter ref="A1:D6"/><tableColumns count="4"><tableColumn id="1" name="ID"/><tableColumn id="2" name="Name"/>` +
         `<tableColumn id="3" name="JobTitle"/><tableColumn id="4" name="HireDate"/></tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:D6"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
+        this._worksheetData =
+        `<dimension ref="A1:D6"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
         `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="8.34" customWidth="1"/>` +
         `<col min="2" max="2" width="14.416406250000001" customWidth="1"/><col min="3" max="3" width="26.001562500000002" ` +
         `customWidth="1"/><col min="4" max="4" width="26.33203125" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" ` +
@@ -472,7 +481,8 @@ export class FileContentData {
         <autoFilter ref="A1:D2"/><tableColumns count="4"><tableColumn id="1" name="ID"/><tableColumn id="2" name="Name"/>` +
         `<tableColumn id="3" name="JobTitle"/><tableColumn id="4" name="HireDate"/></tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:D2"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
+        this._worksheetData =
+        `<dimension ref="A1:D2"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
         `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="8.34" customWidth="1"/>` +
         `<col min="2" max="2" width="14.022656249999999" customWidth="1"/><col min="3" max="3" width="26.001562500000002" ` +
         `customWidth="1"/><col min="4" max="4" width="26.33203125" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s">` +
@@ -492,7 +502,8 @@ export class FileContentData {
         <autoFilter ref="A1:D3"/><tableColumns count="4"><tableColumn id="1" name="ID"/><tableColumn id="2" name="Name"/>` +
         `<tableColumn id="3" name="JobTitle"/><tableColumn id="4" name="HireDate"/></tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:D3"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
+        this._worksheetData =
+        `<dimension ref="A1:D3"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
         `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="8.34" customWidth="1"/>` +
         `<col min="2" max="2" width="13.815234375" customWidth="1"/><col min="3" max="3" width="8.34" customWidth="1"/><col ` +
         `min="4" max="4" width="26.33203125" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" ` +
@@ -515,7 +526,8 @@ export class FileContentData {
         <autoFilter ref="A1:B11"/><tableColumns count="2"><tableColumn id="1" name="Name"/><tableColumn id="2" name="JobTitle"/>` +
         `</tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:B11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
+        this._worksheetData =
+        `<dimension ref="A1:B11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
         `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="16.52578125" customWidth="1"/>` +
         `<col min="2" max="2" width="33.287109375" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c>` +
         `<c r="B1" t="s"><v>1</v></c></row><row r="2"><c r="A2" t="s"><v>2</v></c><c r="B2" t="s"><v>3</v></c></row><row r="3">` +
@@ -578,7 +590,8 @@ export class FileContentData {
         <autoFilter ref="A1:D11"/><tableColumns count="4"><tableColumn id="1" name="ID"/><tableColumn id="2" name="Name"/>` +
         `<tableColumn id="3" name="JobTitle"/><tableColumn id="4" name="HireDate"/></tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:D11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
+        this._worksheetData =
+        `<dimension ref="A1:D11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
         `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="8.34" customWidth="1"/><col ` +
         `min="2" max="2" width="16.52578125" customWidth="1"/><col min="3" max="3" width="33.287109375" customWidth="1"/><col min="4" ` +
         `max="4" width="26.33203125" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v>` +
@@ -642,7 +655,8 @@ export class FileContentData {
         <autoFilter ref="A1:D11"/><tableColumns count="4"><tableColumn id="1" name="ID"/><tableColumn id="2" name="Name"/>` +
         `<tableColumn id="3" name="JobTitle"/><tableColumn id="4" name="HireDate"/></tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:D11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
+        this._worksheetData =
+        `<dimension ref="A1:D11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
         `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/>${ wsDataColSettings }<sheetData><row r="1"><c r="A1" t="s">` +
         `<v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c><c r="D1" t="s"><v>3</v></c></row><row r="2"><c r="A2" ` +
         `t="s"><v>4</v></c><c r="B2" t="s"><v>5</v></c><c r="C2" t="s"><v>6</v></c><c r="D2" t="s"><v>7</v></c></row><row r="3">` +
@@ -661,7 +675,7 @@ export class FileContentData {
     }
 
     private updateRowHeight(height: number) {
-        let wsSettings = `<dimension ref="A1:D11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/>` +
+        let wsSettings = `<dimension ref="A1:D11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView>` +
         `</sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" ` +
         `width="8.34" customWidth="1"/><col min="2" max="2" width="16.52578125" customWidth="1"/><col min="3" max="3" ` +
         `width="33.287109375" customWidth="1"/><col min="4" max="4" width="26.33203125" customWidth="1"/></cols>` +
@@ -683,7 +697,7 @@ export class FileContentData {
 
         switch (height) {
             case 20:
-                wsSettings = `<dimension ref="A1:D11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/>` +
+                wsSettings = `<dimension ref="A1:D11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView>` +
                 `</sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" ` +
                 `width="8.34" customWidth="1"/><col min="2" max="2" width="16.52578125" customWidth="1"/><col min="3" ` +
                 `max="3" width="33.287109375" customWidth="1"/><col min="4" max="4" width="26.33203125" customWidth="1"/>` +
@@ -706,7 +720,8 @@ export class FileContentData {
                 `</c><c r="D11" t="s"><v>41</v></c></row></sheetData>`;
                 break;
             case 40:
-                wsSettings = `<dimension ref="A1:D11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"/></sheetViews>` +
+                wsSettings =
+                `<dimension ref="A1:D11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
                 `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="8.34" customWidth="1"/>` +
                 `<col min="2" max="2" width="16.52578125" customWidth="1"/><col min="3" max="3" width="33.287109375" customWidth="1"/>` +
                 `<col min="4" max="4" width="26.33203125" customWidth="1"/></cols><sheetData><row r="1" ht="40" customHeight="1"><c ` +
