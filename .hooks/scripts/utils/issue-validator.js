@@ -1,6 +1,7 @@
 'use strict';
 
-var matchType = require('../common').matchType;
+var matchType = require('../common').matchType,
+    errorFactory = require('../common').errorFactory;
 
 module.exports = function(lines, options, errors) {
     var ticket = new RegExp(options.issuePattern);
@@ -10,9 +11,10 @@ module.exports = function(lines, options, errors) {
         if(line !== "" && 
             matchType(options.typesWithMandatoryIssue, line) && 
             !ticket.test(line)) {
-            errors.push(
-                'Invalid ticket reference, template for the tickets should be (etc. #123 #456)\n The line is: ' + line
-            );
+            errors.push(errorFactory(
+                'The issue reference for (' + options.typesWithMandatoryIssue.join(', ') + ') types is mandatory!\n',
+                'First line must be: <type>(<scope>): <subject> <#issue>\n', 'The line is: ' + line
+            ));
         }
     });
 }

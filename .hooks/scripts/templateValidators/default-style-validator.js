@@ -5,7 +5,7 @@ var matchType = require('../common').matchType,
     errMessages = require('../common').errorMessages;
 
 module.exports = function (lines, options, errors) {
-    var scheme = '<type>(<scope>): <subject> <#ticketNumber>';
+    var scheme = '<type>(<scope>): <subject> <#issue|optional>';
     var prefix = 'First line must be ' + scheme + '\n';
 
     var line = lines[0];
