@@ -1,0 +1,35 @@
+<input igxInput (click)="onClick()" [value]="displayTime" [disabled]="isDisabled" tabindex="0" readonly/>
+<ng-container *ngTemplateOutlet="scroll" ></ng-container>
+<ng-template #scroll>
+    <igx-dialog class="igx-time-picker__dialog-popup" closeOnOutsideSelect="true"
+        [leftButtonLabel]="cancelButtonLabel" (onLeftButtonSelect)="cancelButtonClick()"
+        [rightButtonLabel]="okButtonLabel" (onRightButtonSelect)="okButtonClick()">
+        <ng-container #container>
+            <div class="igx-time-picker__wrapper">
+                <div class="igx-time-picker__header">
+                    <h5 class="igx-time-picker__header-ampm">{{ selectedAmPm }}</h5>
+                    <h2 class="igx-time-picker__header-hour">
+                        <span>{{ selectedHour }}</span>:<span>{{ selectedMinute }}</span>
+                    </h2>
+                </div>
+                <div class="igx-time-picker__body">
+                    <div #hourList [igxItemList]="'hourList'">
+                    <span [igxHourItem]="hour" *ngFor="let hour of hourView">
+                        {{ hour }}
+                    </span>
+                    </div>
+                    <div #minuteList [igxItemList]="'minuteList'">
+                    <span [igxMinuteItem]="minute" *ngFor="let minute of minuteView">
+                        {{ minute }}
+                    </span>
+                    </div>
+                    <div #ampmList [igxItemList]="'ampmList'">
+                    <span [igxAmPmItem]="ampm" *ngFor="let ampm of ampmView">
+                        {{ ampm }}
+                    </span>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </igx-dialog>
+</ng-template>
