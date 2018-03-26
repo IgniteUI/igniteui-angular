@@ -4,12 +4,12 @@ import { By } from "@angular/platform-browser";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-describe("IgxGrid - Summaries", () => {
+fdescribe("IgxGrid - Summaries", () => {
     const SUMMARY_CLASS = ".igx-grid-summary";
-    const SUMMARY_LABEL_CLASS = ".igx-grid-summary-item__label";
-    const SUMMARY_VALUE_CLASS = "igx-grid-summary-item__result";
-    const ITEM_CLASS = "igx-grid-summary-item";
-    const HIDDEN_ITEM_CLASS = "igx-grid-summary-item--inactive";
+    const SUMMARY_LABEL_CLASS = ".igx-grid-summary__label";
+    const SUMMARY_VALUE_CLASS = "igx-grid-summary__result";
+    const ITEM_CLASS = "igx-grid-summary__item";
+    const HIDDEN_ITEM_CLASS = "igx-grid-summary__item--inactive";
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
