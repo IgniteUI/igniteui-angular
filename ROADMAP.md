@@ -13,13 +13,14 @@
 7. Export to excel (Exporting CSV)  
 8. Context Menu event (output)
 9. **[DONE]** Mask directive (editor)
-10. Summaries 
-11. Tabs
-12. Operations UI - column chooser (Data Operations UI)          
-13. **[DONE]** Virtualization
-14. Charting: Category Chart types Line (Area, Column, Point, StepLine, StepArea, Spline, SplineArea, Waterfall
-15. Design: Updated Design System (Sketch UI kits, UI patterns, screens)
-16. Design: Data dense theme for data grid 
+10 **[DONE]** igxTimePicker
+11. Summaries 
+12. Tabs
+13. Operations UI - column chooser (Data Operations UI)          
+14. **[DONE]** Virtualization
+15. Charting: Category Chart types Line (Area, Column, Point, StepLine, StepArea, Spline, SplineArea, Waterfall
+16. Design: Updated Design System (Sketch UI kits, UI patterns, screens)
+17. Design: Data dense theme for data grid 
   
 # Next Milestone
 
