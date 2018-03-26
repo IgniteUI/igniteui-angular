@@ -102,3 +102,46 @@ gulp.task("build:esm", ["inline-templates"], (callback) => {
 gulp.task("build:esm:watch", ["build:esm"], () => {
     gulp.watch("src/**/*", ["build:esm"]);
 });
+
+gulp.task("copy-git-hooks", () => {
+    const defaultCopyHookDir = "./.git/hooks/scripts/";
+    const dirs = [
+        defaultCopyHookDir,
+        defaultCopyHookDir + "templates",
+        defaultCopyHookDir + "templateValidators",
+        defaultCopyHookDir + "utils"
+    ];
+
+    const callback = function (err) { if(err) { throw err; } };
+
+    dirs.forEach(dir => {
+        if(!fs.existsSync(dir)) {
+            fs.mkdir(dir, callback);
+        }
+    });
+
+    const defaultHookDir = "./.hooks/scripts/";
+
+    fs.copyFile(defaultHookDir + "templates/default.js",
+        defaultCopyHookDir + "templates/default.js",
+        callback);
+    fs.copyFile(defaultHookDir + "templateValidators/default-style-validator.js",
+        defaultCopyHookDir + "templateValidators/default-style-validator.js",
+        callback);
+    fs.copyFile(defaultHookDir + "utils/issue-validator.js",
+        defaultCopyHookDir + "utils/issue-validator.js",
+        callback);
+    fs.copyFile(defaultHookDir + "utils/line-limits.js",
+        defaultCopyHookDir + "utils/line-limits.js",
+        callback);
+    fs.copyFile(defaultHookDir + "common.js",
+        defaultCopyHookDir + "common.js",
+        callback);
+    fs.copyFile(defaultHookDir + "validate.js",
+        defaultCopyHookDir + "validate.js",
+        callback);
+    fs.copyFile("./.hooks/prepare-commit-msg",
+        "./.git/prepare-commit-msg",
+        callback);
+});
+
