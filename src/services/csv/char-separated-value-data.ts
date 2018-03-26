@@ -4,9 +4,9 @@ export class CharSeparatedValueData {
     private _headerRecord = "";
     private _dataRecords = "";
     private _eof = 0x1A;
-    private _eor = "\n";
+    private _eor = "\r\n";
     private _values;
-    private _delimiter = ",";
+    private _delimiter;
     private _escapeCharacters = ["\r", "\n", "\r\n"];
     private _delimiterLength = 1;
     private _defaultColumnHeader = "Column 1";

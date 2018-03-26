@@ -2,12 +2,13 @@ import { IgxExporterOptionsBase } from "../exporter-common/exporter-options-base
 
 export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
 
-    private _valueDelimiter = ",";
+    private _valueDelimiter;
     private _fileType: CsvFileTypes;
 
     constructor(fileName: string, public fileType: CsvFileTypes) {
         super(fileName, IgxCsvExporterOptions.getExtensionFromFileType(fileType));
         this._fileType = fileType;
+        this.setDelimiter();
     }
 
     private static getExtensionFromFileType(fileType: CsvFileTypes) {
@@ -27,7 +28,17 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
     }
 
     get valueDelimiter() {
-        if (!this._valueDelimiter) {
+        return this._valueDelimiter;
+    }
+
+    set valueDelimiter(value) {
+        this.setDelimiter(value);
+    }
+
+    private setDelimiter(value?) {
+        if (value !== undefined && value !== "") {
+            this._valueDelimiter = value;
+        } else {
             switch (this._fileType) {
                 case CsvFileTypes.CSV:
                     this._valueDelimiter = ",";
@@ -37,13 +48,6 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
                     this._valueDelimiter = "\t";
                     break;
             }
-        }
-        return this._valueDelimiter;
-    }
-
-    set valueDelimiter(value) {
-        if (value !== undefined || value !== "") {
-            this._valueDelimiter = value;
         }
     }
 }

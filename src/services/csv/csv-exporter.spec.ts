@@ -4,7 +4,7 @@ import { IgxCsvExporterService } from "./csv-exporter";
 import { CsvFileTypes, IgxCsvExporterOptions } from "./csv-exporter-options";
 import { CSVWrapper } from "./csv-verification-wrapper";
 
-describe("Export to", () => {
+fdescribe("Export to", () => {
     let sourceData: ExportTestDataService;
     let exporter: IgxCsvExporterService;
     let options: IgxCsvExporterOptions;
@@ -17,7 +17,7 @@ describe("Export to", () => {
         actualData = new FileContentData();
 
         // Spy the private SaveFile method so the files are not really created
-        spyOn(exporter as any, "saveFile");
+        // spyOn(exporter as any, "saveFile");
     });
 
     /* ExportData() tests */
