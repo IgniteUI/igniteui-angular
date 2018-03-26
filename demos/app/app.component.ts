@@ -60,6 +60,11 @@ export class AppComponent {
             name: "DatePicker"
         },
         {
+            link: "/timePicker",
+            icon: "date_range",
+            name: "TimePicker"
+        },
+        {
             link: "/grid",
             icon: "view_column",
             name: "Grid"

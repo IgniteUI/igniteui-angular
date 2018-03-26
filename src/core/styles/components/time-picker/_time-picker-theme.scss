@@ -1,0 +1,230 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// If only background color is specified, text/icon color
+/// will be assigned automatically to a contrasting color.
+/// Does ___not___ apply for disabled state colors.
+///
+/// @param {Color} $text-color [null] - The text color of a open time picker.
+/// @param {Color} $hover-text-color [null] - The hover text color of a open time picker.
+/// @param {Color} $selected-text-color [null] -  The text color of a selected item in time picker.
+/// @param {Color} $activeList-item-background [null] - The background color for current item in focused column inside the time picker.
+/// @param {Color} $header-background [null] - The header background color of a time picker.
+/// @param {Color} $header-hour-text-color [null] - The header hour text color of a time picker.
+/// @param {Color} $header-time-period-color [null] - The header AM/PM text color of a time picker.
+///
+/// @requires text-contrast
+///
+/// @example scss Change the background and text colors in  time picker
+///   $my-time-picker-theme: igx-time-picker-theme(
+///     $text-color: white,
+///     $background-color: black
+///   );
+///   // Pass the theme to the igx-time-picker component mixin
+///   @include igx-time-picker($my-button-theme);
+
+@function igx-time-picker-theme(
+    $text-color: null,
+    $hover-text-color: null,
+    $selected-text-color: null,
+    $activeList-item-background: null,
+    $header-background: null,
+    $header-hour-text-color: null,
+    $header-time-period-color: null,
+    $background-color: null
+
+) {
+
+    @if not($text-color) and $background-color {
+        $text-color: text-contrast($background-color);
+    }
+
+    @if not($header-hour-text-color) and $header-background {
+        $header-hour-text-color: text-contrast($header-background);
+    }
+
+    @if not($header-time-period-color) and $header-background {
+        $header-time-period-color: rgba(text-contrast($header-background), .8);
+    }
+
+    @if not($selected-text-color) and $activeList-item-background {
+        $selected-text-color: text-contrast($activeList-item-background);
+    }
+
+    @return (
+        text-color: $text-color,
+        hover-text-color: $hover-text-color,
+        selected-text-color: $selected-text-color,
+        activeList-item-background: $activeList-item-background,
+        header-background: $header-background,
+        header-hour-text-color: $header-hour-text-color,
+        header-time-period-color: $header-time-period-color,
+        background-color: $background-color
+    );
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-time-picker
+/// @requires igx-time-picker-theme
+/// @requires igx-color
+@mixin igx-time-picker($theme, $palette: $default-palette) {
+
+    $default-theme: igx-time-picker-theme(
+        $text-color: igx-color($palette, 'grays', 500),
+        $hover-text-color: igx-color($palette, 'secondary', 500),
+        $selected-text-color: igx-color($palette, 'secondary', 500),
+        $activeList-item-background: igx-color($palette, 'grays', 100),
+        $header-background: igx-color($palette, 'secondary', 500),
+        $header-hour-text-color: white,
+        $header-time-period-color: rgba(255, 255, 255, .8),
+        $background-color: white
+    );
+
+    $vertical-header-width: rem(168px);
+
+    $this: extend($default-theme, $theme);
+
+    %igx-time-picker__body {
+        display: flex;
+        padding: 10px 0;
+        justify-content: center;
+        background: map-get($this, 'background-color');
+    }
+
+    %igx-time-picker__body--vertical {
+        flex: 1 1 auto;
+    }
+
+    %time-picker-display {
+        max-width: 340px;
+        min-width: 320px;
+        padding: 0;
+    }
+
+    %time-picker-display--vertical {
+        width: 540px;
+    }
+
+    // Take effect only in vertical mode
+    %igx-time-picker__wrapper {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+
+    %time-picker-content {
+        width: 100%;
+        padding: 0;
+        color: inherit;
+        font-size: initial;
+        line-height: initial;
+    }
+
+    %time-picker-dialog-title {
+        display: none;
+    }
+
+    %time-picker-dialog-actions {
+        margin: 0;
+    }
+
+    %igx-time-picker__hourList {
+        text-align: right;
+    }
+
+    %igx-time-picker__minuteList {
+        text-align: center;
+    }
+
+    %igx-time-picker__ampmList {
+        display: flex;
+        flex-direction: column;
+        padding-top: 48px;
+    }
+
+    %igx-time-picker__column {
+        max-width: 64px;
+        height: 325px;
+        font-size: 16px;
+        padding: 0;
+        cursor: pointer;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: space-between;
+        align-items: center;
+        color: map-get($this, 'text-color');
+        overflow: hidden;
+
+        &:focus,
+        &:active {
+            outline: none;
+        }
+    }
+
+    %igx-time-picker__item {
+        width: 54px;
+        padding: 5px 10px;
+        border-radius: 15px;
+        height: 48px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:focus,
+        &:active {
+            outline: none;
+        }
+
+        &:hover {
+            color: map-get($this, 'hover-text-color');
+        }
+    }
+
+    %igx-time-picker__item--selected {
+        font-size: 24px;
+        color: map-get($this, 'selected-text-color');
+    }
+
+    %igx-time-picker__item--active {
+        background: map-get($this, 'activeList-item-background');
+    }
+
+    %igx-time-picker__header {
+        background: map-get($this, 'header-background');
+        padding: rem(24px) rem(16px);
+    }
+
+    %igx-time-picker__header-ampm {
+        color: map-get($this, 'header-time-period-color');
+        font-size: rem(16px);
+    }
+
+    %igx-time-picker__header--vertical {
+        width: $vertical-header-width;
+        position: relative;
+    }
+
+    %igx-time-picker__header--vertical-after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 100%;
+        height: 100%;
+        background: map-get($this, 'header-background');
+    }
+
+    %igx-time-picker__header-hour {
+        color: map-get($this, 'header-hour-text-color');
+        font-size: rem(40px);
+        display: flex;
+    }
+
+    %igx-time-picker__header-ampm,
+    %igx-time-picker__header-hour {
+        margin: 0;
+    }
+}

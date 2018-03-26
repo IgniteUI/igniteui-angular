@@ -36,6 +36,7 @@ import { IgxTypographySampleModule } from "./styleguide/typography/sample.module
 import { TabBarSampleModule } from "./tabbar/sample.module";
 import { IgxToastSampleModule } from "./toast/sample.module";
 import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
+import { IgxTimePickerSampleModule } from "./time-picker/sample.module";
 
 import { IgxAvatarModule, IgxCheckboxModule, IgxIconModule, IgxInputGroupModule,
      IgxNavigationDrawerModule, IgxNavigationService, IgxRadioModule, IgxRippleModule, IgxSwitchModule } from "../lib/main";
@@ -87,6 +88,7 @@ import { IgxAvatarModule, IgxCheckboxModule, IgxIconModule, IgxInputGroupModule,
         LayoutSampleModule,
         ListPerformanceSampleModule,
         VirtualForSampleModule,
+        IgxTimePickerSampleModule,
         MaskSampleModule
     ],
     providers: [IgxNavigationService]
