@@ -176,6 +176,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild("scr", { read: ElementRef })
     public scr: ElementRef;
 
+    @ViewChild("paginator", { read: ElementRef })
+    public paginator: ElementRef;
+
     @ViewChild("headerContainer", { read: IgxForOfDirective })
     public headerContainer: IgxForOfDirective<any>;
 
@@ -431,7 +434,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this._summaries(rest[0], rest[1]);
         }
-        this.cdr.markForCheck();
+        this.markForCheck();
+        this.calculateGridSizes();
     }
 
     public clearFilter(name?: string) {
@@ -539,18 +543,22 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.calcHeight = null;
         } else if (this.height && this.height.indexOf("%") !== -1) {
             /*height in %*/
+            const pagingHeight = this.paginator.nativeElement.firstElementChild ?
+            this.paginator.nativeElement.clientHeight : 0;
             const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-                this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
+                this.tfoot.nativeElement.clientHeight : 0;
             this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
                 this.theadRow.nativeElement.clientHeight -
-                footerHeight -
+                footerHeight - pagingHeight -
                 this.scr.nativeElement.clientHeight;
         } else {
+            const pagingHeight = this.paginator.nativeElement.firstElementChild ?
+            this.paginator.nativeElement.clientHeight : 0;
             const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-                this.tfoot.nativeElement.firstElementChild.clientHeight : 0;
+               this.tfoot.nativeElement.clientHeight : 0;
             this.calcHeight = parseInt(this.height, 10) -
                 this.theadRow.nativeElement.clientHeight -
-                footerHeight -
+                footerHeight - pagingHeight -
                 this.scr.nativeElement.clientHeight;
         }
     }
