@@ -27,6 +27,16 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
         return this.column.dataType;
     }
 
+    @HostBinding("class.igx-grid-summary--pinned")
+    get isLastPinned() {
+        const pinnedCols = this.gridAPI.get(this.gridID).pinnedColumns;
+        if (pinnedCols.length === 0) {
+            return false;
+        } else {
+            return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
+        }
+    }
+
     @HostBinding("class.igx-grid-summary--empty")
     get emptyClass(): boolean {
         return !this.column.hasSummary;
