@@ -9,7 +9,7 @@ export class WorksheetData {
     private _keys: string[];
     private _isStringData: boolean;
 
-    constructor(private _data: any[], public options: IgxExcelExporterOptions) {
+    constructor(private _data: any[], public options: IgxExcelExporterOptions, public indexOfLastPinnedColumn) {
         this.initializeData();
     }
 

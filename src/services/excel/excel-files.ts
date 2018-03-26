@@ -43,6 +43,7 @@ export class WorksheetFile implements IExcelFile {
         const cols = [];
         let dimension: string;
         const dictionary = worksheetData.dataDictionary;
+        let freezePane = "";
 
         if (worksheetData.isEmpty) {
             sheetData.push("<sheetData/>");
@@ -93,8 +94,16 @@ export class WorksheetFile implements IExcelFile {
                 cols.push(`<col min="${(i + 1)}" max="${(i + 1)}" width="${widthInTwips}" customWidth="1"/>`);
             }
             cols.push("</cols>");
+
+            if (worksheetData.indexOfLastPinnedColumn != -1 &&
+                !worksheetData.options.ignorePinning &&
+                !worksheetData.options.ignoreColumnsOrder) {
+                const frozenColumnCount = worksheetData.indexOfLastPinnedColumn + 1;
+                const firstCell = ExcelStrings.getExcelColumn(frozenColumnCount) + "1";
+                freezePane = `<pane xSplit="${frozenColumnCount}" topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
+            }
         }
-        folder.file("sheet1.xml", ExcelStrings.getSheetXML(dimension, cols.join(""), sheetData.join("")));
+        folder.file("sheet1.xml", ExcelStrings.getSheetXML(dimension, freezePane, cols.join(""), sheetData.join("")));
     }
 }
 
