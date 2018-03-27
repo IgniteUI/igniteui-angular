@@ -14,7 +14,7 @@ import { TestMethods } from "../exporter-common/test-methods";
 import { IgxExcelExporterService } from "./excel-exporter";
 import { IgxExcelExporterOptions } from "./excel-exporter-options";
 import { ExcelStrings } from "./excel-strings";
-import { JSZipFiles } from "./jsZip-helper";
+import { JSZipFiles } from "./jszip-helper";
 import { JSZipWrapper, ObjectComparer } from "./jszip-verification-wrapper";
 import { ExportTestDataService, FileContentData, ValueData } from "./test-data.service";
 

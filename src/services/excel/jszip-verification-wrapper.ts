@@ -1,6 +1,6 @@
 import * as JSZip from "jszip/dist/jszip";
 import { ExcelFileTypes } from "./excel-enums";
-import { JSZipFiles } from "./jsZip-helper";
+import { JSZipFiles } from "./jszip-helper";
 
 export class JSZipWrapper {
     private _zip: JSZip;
