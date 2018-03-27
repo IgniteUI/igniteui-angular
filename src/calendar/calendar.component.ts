@@ -42,11 +42,11 @@ export class CalendarHammerConfig extends HammerGestureConfig {
 }
 
 /**
- * **IgniteUI Angular Calendar** - [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar.html)  
- * The IgniteUI Calendar provides an easy way to display a calendar and allow users to select dates using single, multiple
+ * **Ignite UI for Angular Calendar** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar.html)  
+ * The Ignite UI Calendar provides an easy way to display a calendar and allow users to select dates using single, multiple
  * or range selection.
  * 
- * Here's an example that allows users to select a date range by only selecting the beginning and end dates:
+ * Example:
  * ```html
  * <igx-calendar selection="range"></igx-calendar>
  * ```

@@ -25,16 +25,12 @@ import {
 import { IgxDialogComponent, IgxDialogModule } from "../dialog/dialog.component";
 import { IgxInputModule } from "../directives/input/input.directive";
 /**
- * **IgniteUI Angular Date Picker** - [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date_picker.html)  
- * The IgniteUI Date Picker displays a popup calendar that lets users select a single date.
+ * **Ignite UI for Angular Date Picker** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date_picker.html)  
+ * The Ignite UI Date Picker displays a popup calendar that lets users select a single date.
  * 
- * Here's a basic example of a date picker with two-way binding:
+ * Example:
  * ```html
  * <igx-datePicker [(ngModel)]="selectedDate"></igx-datePicker>
- * ```
- * The `selectedDate` value above is defined as follows:
- * ```typescript
- * this.selectedDate = new Date(Date.now());
  * ```
  */
 @Component({

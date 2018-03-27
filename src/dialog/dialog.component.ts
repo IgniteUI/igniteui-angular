@@ -19,12 +19,12 @@ import { IgxNavigationService, IToggleView } from "../core/navigation";
 import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 /**
- * **IgniteUI Angular Dialog Window** - [Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog.html)  
- * The IgniteUI Dialog Window presents a dialog window to the user which can simply display messages or display
+ * **Ignite UI for Angular Dialog Window** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog.html)  
+ * The Ignite UI Dialog Window presents a dialog window to the user which can simply display messages or display
  * more complicated visuals such as a user sign-in form.  It also provides a right and left button
  * which can be used for custom actions.
  * 
- * Here's a basic example for a user sign-in form:
+ * Example:
  * ```html
  * <div>
  *   <button (click)="form.open()">Show Dialog</button>
