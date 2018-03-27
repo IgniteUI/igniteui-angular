@@ -14,6 +14,7 @@ import { IgxDatePickerSampleModule } from "./date-picker/sample.module";
 import { DialogSampleModule } from "./dialog/sample.module";
 import { GridSampleModule } from "./grid/sample.module";
 import { GridPerformanceSampleModule } from "./grid-performance/sample.module";
+import { GridColumnPinningSampleModule } from "./grid-column-pinning/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
 import { InputSampleModule } from "./input/sample.module";
 import { LayoutSampleModule } from "./layout/sample.module";
@@ -31,6 +32,7 @@ import { TabBarSampleModule } from "./tabbar/sample.module";
 import { IgxToastSampleModule } from "./toast/sample.module";
 import { ListPerformanceSampleModule } from "./list-performance/sample.module";
 import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
+import { IgxTimePickerSampleModule } from "./time-picker/sample.module";
 import { MaskSampleModule } from "./directives/mask/sample.module";
 
 import { AppComponent } from "./app.component";
@@ -70,6 +72,7 @@ import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSw
         DialogSampleModule,
         IconSampleModule,
         GridSampleModule,
+        GridColumnPinningSampleModule,
         GridPerformanceSampleModule,
         IgxCardSampleModule,
         IgxSliderSampleModule,
@@ -84,6 +87,7 @@ import { IgxRadioModule, IgxIconModule, IgxCheckboxModule, IgxLabelModule, IgxSw
         LayoutSampleModule,
         ListPerformanceSampleModule,
         VirtualForSampleModule,
+        IgxTimePickerSampleModule,
         MaskSampleModule
     ],
     providers: [IgxNavigationService]

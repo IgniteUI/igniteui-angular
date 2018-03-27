@@ -168,6 +168,7 @@ public deleteRow(event) {
 | onPagingDone  | Used when paginating to emit paginator event  |
 | onColumnInit  | Used when initializing a column to emit it  |
 | onBeforeProcess  | Emit binding behavior  |
+| onColumnPinning | Used when pinning a column; the index of the pin can be changed |
 
 
 ### Methods
@@ -187,6 +188,8 @@ public deleteRow(event) {
 | updateCell | Update grid cell by index, column field and passed value  |
 | sortColumn | Sort grid column  |
 | paginate | Change the current page by passed number  |
+| pinColumn(name: string): boolean | Pins a column by field name to the left of the grid on the rightmost position. Returns whether the operation is successful. |
+| unpinColumn(name: string): boolean | Unpins a column by field name to the leftmost position in the unpinned area. Returns whether the operation is successful. |
 
 
 # IgxColumnComponent
@@ -226,4 +229,11 @@ Column component is used to define grid's *columns* collection. Cell, header and
 | filteringCondition  | FilteringCondition  | Boolean, date, string or number conditions. Default is string *contains*  |
 | filteringIgnoreCase  | boolean  | Ignore capitalization of words |
 | dataType  | DataType  | String, number, Boolean or Date |
+| pinned | boolean | Set column to be pinned or not |
 
+### Methods
+
+| Signature | Description |
+| :--- | :--- |
+| pin(): boolean | Pin the column to the left of the grid on the rightmost position. Returns if the operation is successful. |
+| unpin(): boolean | Unpins the column to the leftmost position in the unpinned area. Returns if the operation is successful.  |

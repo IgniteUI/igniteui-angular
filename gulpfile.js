@@ -102,3 +102,45 @@ gulp.task("build:esm", ["inline-templates"], (callback) => {
 gulp.task("build:esm:watch", ["build:esm"], () => {
     gulp.watch("src/**/*", ["build:esm"]);
 });
+
+gulp.task("copy-git-hooks", () => {
+    const defaultCopyHookDir = "./.git/hooks/scripts/";
+    const dirs = [
+        defaultCopyHookDir,
+        defaultCopyHookDir + "templates",
+        defaultCopyHookDir + "templateValidators",
+        defaultCopyHookDir + "utils"
+    ];
+
+    dirs.forEach((dir) => {
+        if(!fs.existsSync(dir)) {
+            fs.mkdir(dir, (err) => { 
+                if(err) { throw err; } 
+            });
+        }
+    });
+
+    const defaultHookDir = "./.hooks/scripts/";
+
+    fs.createReadStream(defaultHookDir + "templates/default.js")
+        .pipe(fs.createWriteStream(defaultCopyHookDir + "templates/default.js"));
+
+    fs.createReadStream(defaultHookDir +"templateValidators/default-style-validator.js")
+        .pipe(fs.createWriteStream(defaultCopyHookDir + "templateValidators/default-style-validator.js"));
+
+    fs.createReadStream(defaultHookDir + "utils/issue-validator.js")
+        .pipe(fs.createWriteStream(defaultCopyHookDir + "utils/issue-validator.js"));
+
+    fs.createReadStream(defaultHookDir + "utils/line-limits.js")
+        .pipe(fs.createWriteStream(defaultCopyHookDir + "utils/line-limits.js"));
+
+    fs.createReadStream(defaultHookDir + "common.js")
+        .pipe(fs.createWriteStream(defaultCopyHookDir + "common.js"));
+
+    fs.createReadStream(defaultHookDir + "validate.js")
+        .pipe(fs.createWriteStream(defaultCopyHookDir + "validate.js"));
+
+    fs.createReadStream("./.hooks/prepare-commit-msg")
+        .pipe(fs.createWriteStream("./.git/prepare-commit-msg"));
+});
+

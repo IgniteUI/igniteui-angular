@@ -7,11 +7,13 @@ import { ButtonsSampleComponent } from "./button/sample.component";
 import { ButtonGroupSampleComponent } from "./buttonGroup/sample.component";
 import { IgxCalendarSampleComponent } from "./calendar/sample.component";
 import { IgxCardSampleComponent } from "./card/sample.component";
+import { IgxTimePickerSampleComponent } from "./time-picker/sample.component";
 import { CarouselSampleComponent } from "./carousel/sample.component";
 import { IgxDatePickerSampleComponent } from "./date-picker/sample.component";
 import { DialogSampleComponent } from "./dialog/sample.component";
-import { GridPerformanceSampleComponent } from "./grid-performance/sample.component";
 import { GridSampleComponent } from "./grid/sample.component";
+import { GridPerformanceSampleComponent } from "./grid-performance/sample.component";
+import { GridColumnPinningSampleComponent } from "./grid-column-pinning/sample.component";
 import { IconSampleComponent } from "./icon/sample.component";
 import { InputSampleComponent } from "./input/sample.component";
 import { LayoutSampleComponent } from "./layout/sample.component";
@@ -101,6 +103,10 @@ const appRoutes: Routes = [
         path: "grid"
     },
     {
+        component: GridColumnPinningSampleComponent,
+        path: "gridColumnPinning"
+    },
+    {
         component: GridPerformanceSampleComponent,
         path: "gridPerformance"
     },
@@ -151,6 +157,10 @@ const appRoutes: Routes = [
     {
         component: VirtualForSampleComponent,
         path: "virtualForDirective"
+    },
+    {
+        component: IgxTimePickerSampleComponent,
+        path: "timePicker"
     },
     {
         component: MaskSampleComponent,
