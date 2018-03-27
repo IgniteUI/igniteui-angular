@@ -20,6 +20,7 @@ import { By } from "@angular/platform-browser";
 import { IgxForOfDirective, IgxForOfModule} from "./for_of.directive";
 
 describe("IgxVirtual directive - simple template", () => {
+    const INACTIVE_VIRT_CONTAINER = "igx-display-container--inactive";
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -27,7 +28,9 @@ describe("IgxVirtual directive - simple template", () => {
                 EmptyVirtualComponent,
                 VerticalVirtualComponent,
                 HorizontalVirtualComponent,
-                VirtualComponent
+                VirtualComponent,
+                VirtualVariableSizeComponent,
+                VerticalVirtualNoDataComponent
             ],
             imports: [IgxForOfModule]
         }).compileComponents();
@@ -673,6 +676,68 @@ describe("IgxVirtual directive - simple template", () => {
                 .toBe(fix.componentInstance.data[9 + i][1].toString());
         }
     });
+
+    it("should update display container classes when content state changes from virtualized to non-virtualzied.", () => {
+        const fix = TestBed.createComponent(VirtualVariableSizeComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        let displayContainer = fix.debugElement.queryAll(By.css("igx-display-container"));
+        // No size and no data - display container should be inactive
+        expect(displayContainer[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(true);
+
+        // set size
+        fix.componentInstance.height = "500px";
+        fix.detectChanges();
+
+        displayContainer = fix.debugElement.queryAll(By.css("igx-display-container"));
+        // Has size but no data - display container should be inactive
+        expect(displayContainer[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(true);
+
+        // set data with 1 rec.
+        fix.componentInstance.data = fix.componentInstance.generateData(1);
+        fix.detectChanges();
+
+        displayContainer = fix.debugElement.queryAll(By.css("igx-display-container"));
+        // Has size but not enough data to be virtualized - display container should be inactive
+        expect(displayContainer[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(true);
+
+        // set data with 1000 recs.
+        fix.componentInstance.data = fix.componentInstance.generateData(1000);
+        fix.detectChanges();
+
+        displayContainer = fix.debugElement.queryAll(By.css("igx-display-container"));
+        // Has size and enough data to be virtualized - display container should be active.
+        expect(displayContainer[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(false);
+    });
+
+    it("should allow having initually undefined value for igxForOf and then detect changes correctly once the value is updated. ", () => {
+        const fix = TestBed.createComponent(VerticalVirtualNoDataComponent);
+        expect(() => {
+            fix.detectChanges();
+        }).not.toThrow();
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+        expect(displayContainer).not.toBeNull();
+        expect(verticalScroller).not.toBeNull();
+        let rowsRendered = displayContainer.querySelectorAll("div");
+        expect(rowsRendered.length).toBe(0);
+        fix.componentInstance.data = fix.componentInstance.generateData();
+        fix.detectChanges();
+        rowsRendered = displayContainer.querySelectorAll("div");
+        expect(rowsRendered.length).not.toBe(0);
+    });
+
+    it("should prevent scrollTo() when called with numbers outside the scope of the data records.", () => {
+        const fix = TestBed.createComponent(VirtualComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+
+        fix.componentInstance.parentVirtDir.testScrollTo(-1);
+        expect(fix.componentInstance.parentVirtDir.state.startIndex).toBe(0);
+
+        fix.componentInstance.parentVirtDir.testScrollTo(fix.componentInstance.data.length + 1);
+        expect(fix.componentInstance.parentVirtDir.state.startIndex).toBe(0);
+    });
 });
 
 /** igxFor for testing */
@@ -694,6 +759,10 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
 
     public testScrollNext() {
         super.scrollNext();
+    }
+
+    public testScrollTo(index) {
+        super.scrollTo(index);
     }
 
     public testOnScroll(target) {
@@ -995,5 +1064,67 @@ export class VirtualComponent implements OnInit {
         }
 
         this.data = dummyData;
+    }
+}
+
+/** Only vertically virtualized component */
+@Component({
+    template: `
+        <div #container [style.width]='width' [style.height]='height'>
+            <ng-template #scrollContainer igxForTest let-rowData [igxForOf]="data"
+            [igxForScrollOrientation]="'vertical'"
+                [igxForContainerSize]='height'
+                [igxForItemSize]='"50px"'>
+                <div [style.display]="'flex'" [style.height]="'50px'">
+                    {{rowData}}
+                </div>
+            </ng-template>
+        </div>
+    `
+})
+export class VirtualVariableSizeComponent {
+    public height = "0px";
+    public data = [];
+
+    @ViewChild("container") public container;
+
+    @ViewChild("scrollContainer", { read: TestIgxForOfDirective })
+    public parentVirtDir: TestIgxForOfDirective<any>;
+
+    public generateData(count) {
+        const dummyData = [];
+        for (let i = 0; i < count; i++) {
+            dummyData.push(10 * i);
+        }
+        return dummyData;
+    }
+}
+
+/** Vertically virtualized component with no initial data */
+@Component({
+    template: `
+        <div #container [style.width]='width' [style.height]='height'>
+            <ng-template #scrollContainer let-rowData [igxForOf]="data" igxForTest
+                [igxForScrollOrientation]="'vertical'"
+                [igxForContainerSize]='height'
+                [igxForItemSize]='"50px"'>
+                <div [style.display]="'flex'" [style.height]="'50px'">
+                    {{rowData}}
+                </div>
+            </ng-template>
+        </div>
+    `
+})
+export class VerticalVirtualNoDataComponent {
+    public width = "450px";
+    public height = "300px";
+    public data;
+
+    public generateData() {
+        const dummyData = [];
+        for (let i = 0; i < 50000; i++) {
+            dummyData.push(10 * i);
+        }
+        return dummyData;
     }
 }

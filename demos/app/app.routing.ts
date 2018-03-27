@@ -7,6 +7,7 @@ import { ButtonsSampleComponent } from "./button/sample.component";
 import { ButtonGroupSampleComponent } from "./buttonGroup/sample.component";
 import { IgxCalendarSampleComponent } from "./calendar/sample.component";
 import { IgxCardSampleComponent } from "./card/sample.component";
+import { IgxTimePickerSampleComponent } from "./time-picker/sample.component";
 import { CarouselSampleComponent } from "./carousel/sample.component";
 import { IgxDatePickerSampleComponent } from "./date-picker/sample.component";
 import { DialogSampleComponent } from "./dialog/sample.component";
@@ -161,6 +162,10 @@ const appRoutes: Routes = [
     {
         component: VirtualForSampleComponent,
         path: "virtualForDirective"
+    },
+    {
+        component: IgxTimePickerSampleComponent,
+        path: "timePicker"
     },
     {
         component: MaskSampleComponent,

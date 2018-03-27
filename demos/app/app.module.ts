@@ -43,6 +43,7 @@ import { IgxTypographySampleModule } from "./styleguide/typography/sample.module
 import { TabBarSampleModule } from "./tabbar/sample.module";
 import { IgxToastSampleModule } from "./toast/sample.module";
 import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
+import { IgxTimePickerSampleModule } from "./time-picker/sample.module";
 
 import { AppComponent } from "./app.component";
 import { routing } from "./app.routing";
@@ -94,6 +95,7 @@ import { routing } from "./app.routing";
         LayoutSampleModule,
         ListPerformanceSampleModule,
         VirtualForSampleModule,
+        IgxTimePickerSampleModule,
         MaskSampleModule
     ],
     providers: [IgxNavigationService]
