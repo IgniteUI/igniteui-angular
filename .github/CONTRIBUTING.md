@@ -47,6 +47,7 @@ When committing a message you need to follow this template convention:
 4. `<issue>` - The issue is the refenrece of the github task you have. Be aware that you are able to link more than one issue. For instance `(#123 #456)`. 
 	Also there is another important point, for `(fix, feat, test) types` you are obliged to add at least one issue reference.
 5. The limits you have per line is `80` characters.
+### example: "feat(checkbox): add ripple, indeterminate state, and label #123"
 
 # Fixing a bug  
 When fixing a bug you need to follow these guidelines:
