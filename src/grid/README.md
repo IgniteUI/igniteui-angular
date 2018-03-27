@@ -200,8 +200,10 @@ Below is the list of all inputs that the developers may set to configure the gri
 |clearSort(name?: string)|If `name` is provided, clears the sorting state of the corresponding column, otherwise clears the sorting state of all columns.|
 |pinColumn(name: string): boolean|Pins a column by field name to the left of the grid on the rightmost position. Returns whether the operation is successful.|
 |unpinColumn(name: string): boolean|Unpins a column by field name to the leftmost position in the unpinned area. Returns whether the operation is successful.|
-|enableSummaries(fieldName: string, customSummary?: any)|Enable summaries for the specified column and apply your `customSummary`. If you do not provide `customSummary` default summary for the column data type will be applied.|
-|enableSummaries(expressions: Array)|Enable summaries for the listed columns and apply your `customSummary` if it is provided.|
+|enableSummaries(fieldName: string, customSummary?: any)|Enable summaries for the specified column and apply your `customSummary`. If you do not provide the `customSummary`, then the default summary for the column data type will be applied.|
+|enableSummaries(expressions: Array)|Enable summaries for the columns and apply your `customSummary` if it is provided.|
+|disableSummaries(fieldName: string)|Disable summaries for the specified column.|
+|disableSummaries(columns: string[])|Disable summaries for the listed columns.|
 |clearSummaryCache()|Delete all cached summaries and force to recalculate them.|
 |previousPage()|Goes to the previous page if paging is enabled and the current page is not the first.|
 |nextPage()|Goes to the next page if paging is enabled and current page is not the last.|
