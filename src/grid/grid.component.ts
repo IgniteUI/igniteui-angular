@@ -58,6 +58,15 @@ export interface IPinColumnEventArgs {
     insertAtIndex: number;
 }
 
+export interface IPageEventArgs {
+    previous: number;
+    current: number;
+}
+
+export interface IRowDataEventArgs {
+    data: any;
+}
+
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
@@ -176,13 +185,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public onFilteringDone = new EventEmitter<IFilteringExpression>();
 
     @Output()
-    public onPagingDone = new EventEmitter<any>();
+    public onPagingDone = new EventEmitter<IPageEventArgs>();
 
     @Output()
-    public onRowAdded = new EventEmitter<any>();
+    public onRowAdded = new EventEmitter<IRowDataEventArgs>();
 
     @Output()
-    public onRowDeleted = new EventEmitter<any>();
+    public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
@@ -405,7 +414,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (row) {
             const index = this.data.indexOf(row.rowData);
             this.data.splice(index, 1);
-            this.onRowDeleted.emit({ row });
+            this.onRowDeleted.emit({ data: row.rowData });
             this._pipeTrigger++;
             this.cdr.markForCheck();
         }

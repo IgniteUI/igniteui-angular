@@ -30,7 +30,7 @@ export class IgxRadioComponent implements ControlValueAccessor {
 
     @Input() public tabindex: number = null;
 
-    @Output() public change: EventEmitter<any> = new EventEmitter();
+    @Output() public change: EventEmitter<Event> = new EventEmitter();
 
     @ViewChild("radio") public nativeRadio;
 
