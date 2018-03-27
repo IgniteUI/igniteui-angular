@@ -70,44 +70,36 @@ export class IgxDragDirective implements OnDestroy {
                 top: event.clientY - offset.top
             })).takeUntil(this.dragEnd))
         .subscribe((pos) => {
+            let left = pos.left + "px";
+            let top = pos.top + "px";
+
+            if (pos.left < this.restrictHDragMin) {
+                left = this.restrictHDragMin + "px";
+            }
+            if (pos.left > this.restrictHDragMax) {
+                left = this.restrictHDragMax + "px";
+            }
+
+            if (pos.top < this.restrictVDragMin) {
+                top = this.restrictVDragMin + "px";
+            }
+            if (pos.top > this.restrictVDragMax) {
+                top = this.restrictVDragMax + "px";
+            }
+
             switch (this.restrictDrag) {
                 case RestrictDrag.HORIZONTALLY:
-                    if (pos.left < this.restrictHDragMin) {
-                        this.left = this.restrictHDragMin + "px";
-                    } else if (pos.left > this.restrictHDragMax) {
-                        this.left = this.restrictHDragMax + "px";
-                    } else {
-                        this.left = pos.left + "px";
-                    }
+                    this.left = left;
                     break;
 
                 case RestrictDrag.VERTICALLY:
-                    if (pos.top < this.restrictVDragMin) {
-                        this.top = this.restrictVDragMin + "px";
-                    } else if (pos.top > this.restrictVDragMax) {
-                        this.top = this.restrictVDragMax + "px";
-                    } else {
-                        this.top = pos.top + "px";
-                    }
+                    this.top = top;
                     break;
 
                 case RestrictDrag.NONE:
                 default:
-                    if (pos.left < this.restrictHDragMin) {
-                        this.left = this.restrictHDragMin + "px";
-                    } else if (pos.left > this.restrictHDragMax) {
-                        this.left = this.restrictHDragMax + "px";
-                    } else {
-                        this.left = pos.left + "px";
-                    }
-
-                    if (pos.top < this.restrictVDragMin) {
-                        this.top = this.restrictVDragMin + "px";
-                    } else if (pos.top > this.restrictVDragMax) {
-                        this.top = this.restrictVDragMax + "px";
-                    } else {
-                        this.top = pos.top + "px";
-                    }
+                    this.left = left;
+                    this.top = top;
                     break;
             }
         });
