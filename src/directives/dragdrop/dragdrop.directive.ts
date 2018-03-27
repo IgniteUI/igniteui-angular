@@ -32,7 +32,7 @@ export enum RestrictDrag {
 @Directive({
     selector: "[igxDrag]"
 })
-export class IgxDragDirective {
+export class IgxDragDirective implements OnDestroy {
     @Input()
     public restrictDrag: RestrictDrag = RestrictDrag.NONE;
 
@@ -111,6 +111,12 @@ export class IgxDragDirective {
                     break;
             }
         });
+    }
+
+    ngOnDestroy() {
+        this.drag.unsubscribe();
+        this.dragStart.unsubscribe();
+        this.dragEnd.unsubscribe();
     }
 
     public get left() {
