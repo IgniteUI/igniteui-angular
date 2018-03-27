@@ -1,3 +1,44 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// @param {Color} $idle-text-color [null] - The input text color in the idle state.
+/// @param {Color} $filled-text-color [null] - The input text color in the filled state.
+/// @param {Color} $focused-text-color [null] - The input text color in the focused state.
+/// @param {Color} $disabled-text-color [null] - The input text color in the disabled state.
+///
+/// @param {Color} $idle-secondary-color [null] - The label color in the idle state.
+/// @param {Color} $filled-secondary-color [null] - The label color in the filled state.
+/// @param {Color} $focused-secondary-color [null] - The label color in the focused state.
+///
+/// @param {Color} $idle-bottom-line-color [null] - The bottom line and border colors in the idle state.
+/// @param {Color} $hover-bottom-line-color [null] - The bottom line and border colors in the hover state.
+/// @param {Color} $focused-bottom-line-color [null] - The bottom line and border colors in the focused state.
+/// @param {Color} $disabled-bottom-line-color [null] - The bottom line and border colors in the disabled state.
+///
+/// @param {Color} $box-background [null] - The background color of an input group of type box.
+/// @param {Color} $box-disabled-background [null] - The background color of an input group of type box in the disabled state.
+///
+/// @param {Color} $border-background [null] - The background color of an input group of type border.
+/// @param {Color} $border-disabled-background [null] - The background color of an input group of type border in the disabled state.
+///
+/// @param {Color} $search-background [null] - The background color of an input group of type search.
+/// @param {Color} $search-disabled-background [null] - The background color of an input group of type search in the disabled state.
+/// @param {Color} $search-shadow-color [null] - The shadow color of an input group of type search.
+/// @param {Color} $search-disabled-shadow-color [null] - The shadow color of an input group of type search in the disabled state.
+///
+/// @param {Color} $success-secondary-color [igx-color($palette, 'success')] - The success color used in the valid state.
+/// @param {Color} $warning-secondary-color [igx-color($palette, 'warn')] - The warning color used in the warning state.
+/// @param {Color} $error-secondary-color [igx-color($palette, 'error)] - The error color used in the error state.
+///
+/// @param {String} $variant ['dark'] - Can be either 'dark' or 'light'. Use 'light' when the input is used on dark backgrounds.
+///
+/// @example scss Change the focused border and label colors
+///   $my-input-group-theme: igx-input-group-theme($focused-secondary-color: pink, $focused-bottom-line-color: pink);
+///   // Pass the theme to the igx-input-group component mixin
+///   @include igx-input-group($my-input-group-theme);
 @function igx-input-group-theme(
     $idle-text-color: null,
     $filled-text-color: null,
@@ -65,6 +106,14 @@
     );
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-input-group-theme
+/// @requires igx-color
+/// @requires igx-elevation
+/// @requires $elevations
+/// @requires extend
+/// @requires em
 @mixin igx-input-group($theme, $palette: $default-palette) {
     $dark-theme: igx-input-group-theme(
         $idle-text-color: igx-color($palette, 'grays', 600),
@@ -143,11 +192,40 @@
     $search-shadow-hover: igx-elevation($elevations, 2);
     $search-shadow-disabled: igx-elevation($elevations, 1);
 
+    $group-font-size: em(16px);
+    $group-top-margin: em(12px);
+    $group-bundle-border-radius: 4px;
+    $group-bundle--box-padding: 0 em(16px);
+    $group-bundle-main--box-padding: em(18px);
+
+    $label-font-size: em(16px);
+    $label-height: em(18px);
+    $required-symbol: '*';
+    $required-symbol-margin: 2px;
+
+    $input-font-size: em(16px);
+    $input-line-height: em(16px);
+    $input-height: em(32px);
+    $input-padding: 0 0 em(8px);
+    $input-border-top: em(8px) solid rgba(0, 0, 0, 0);
+
+    $textarea-min-height: em(82px);
+    $textarea-line-height: em(22px);
+    $textarea-padding: em(16px);
+
+    $prefix-height: em(32px);
+
+    $_hint-base-font-size: 12px;
+    $hint-font-size: em($_hint-base-font-size);
+    $hint-line-height: em(14px, $_hint-base-font-size);
+    $hint-padding-top: em(8px, $_hint-base-font-size);
+    $hint--box-margin: em(16px, $_hint-base-font-size);
+
     %form-group-display {
         position: relative;
         display: block;
-        font-size: 1em; /* 16px, when base is 16px(html) */
-        margin-top: .75em; /* 12px when base is 16px (self) */
+        font-size: $group-font-size; /* 16px, when base is 16px(html) */
+        margin-top: $group-top-margin; /* 12px when base is 16px (self) */
         color: map-get($this, 'idle-text-color');
     }
 
@@ -156,7 +234,7 @@
     }
 
     %form-group-box-wrapper {
-        border-radius: 4px;
+        border-radius: $group-bundle-border-radius;
         overflow: hidden;
     }
 
@@ -180,9 +258,9 @@
     }
 
     %form-group-bundle--box {
-        padding: 1.125em 1em 0;
+        padding: $group-bundle--box-padding;
         background: map-get($this, 'box-background');
-        box-shadow: inset 0 -.125em 0 0 map-get($this, 'idle-bottom-line-color');
+        box-shadow: inset 0 -2px 0 0 map-get($this, 'idle-bottom-line-color');
 
         %form-group-label--box + %form-group-input--box {
             transform: translateY(0);
@@ -191,22 +269,22 @@
 
     %form-group-bundle--hover {
         cursor: pointer;
-        box-shadow: inset 0 -.125em 0 0 map-get($this, 'hover-bottom-line-color');
+        box-shadow: inset 0 -2px 0 0 map-get($this, 'hover-bottom-line-color');
     }
 
     %form-group-bundle--focus {
         caret-color: map-get($this, 'focused-secondary-color');
-        box-shadow: inset 0 -.125em 0 0 rgba(map-get($this, 'focused-bottom-line-color'), .12);
+        box-shadow: inset 0 -2px 0 0 rgba(map-get($this, 'focused-bottom-line-color'), .12);
     }
 
     %form-group-bundle--success {
         caret-color: map-get($this, 'success-secondary-color');
-        box-shadow: inset 0 -.0625em 0 0 map-get($this, 'success-secondary-color');
+        box-shadow: inset 0 -1px 0 0 map-get($this, 'success-secondary-color');
     }
 
     %form-group-bundle--error {
         caret-color: map-get($this, 'error-secondary-color');
-        box-shadow: inset 0 -.0625em 0 0 map-get($this, 'error-secondary-color');
+        box-shadow: inset 0 -1px 0 0 map-get($this, 'error-secondary-color');
     }
 
     %form-group-bundle--disabled {
@@ -222,9 +300,9 @@
     }
 
     %form-group-bundle--border {
-        padding: 1.125em 1em 0;
-        box-shadow: inset 0 0 0 .0625em map-get($this, 'idle-bottom-line-color');
-        border-radius: 4px;
+        padding: $group-bundle--box-padding;
+        box-shadow: inset 0 0 0 1px map-get($this, 'idle-bottom-line-color');
+        border-radius: $group-bundle-border-radius;
         background: map-get($this, 'border-background');
 
         %form-group-label--box + %form-group-input--box {
@@ -233,29 +311,29 @@
     }
 
     %form-group-bundle-border--hover {
-        box-shadow: inset 0 0 0 .125em map-get($this, 'idle-text-color');
+        box-shadow: inset 0 0 0 2px map-get($this, 'idle-text-color');
     }
 
     %form-group-bundle-border--focus {
-        box-shadow: inset 0 0 0 .125em map-get($this, 'focused-bottom-line-color');
+        box-shadow: inset 0 0 0 2px map-get($this, 'focused-bottom-line-color');
     }
 
     %form-group-bundle-border--error {
-        box-shadow: inset 0 0 0 .125em map-get($this, 'error-secondary-color');
+        box-shadow: inset 0 0 0 2px map-get($this, 'error-secondary-color');
     }
 
     %form-group-bundle-border--success {
-        box-shadow: inset 0 0 0 .125em map-get($this, 'success-secondary-color');
+        box-shadow: inset 0 0 0 2px map-get($this, 'success-secondary-color');
     }
 
     %form-group-bundle-border--disabled {
         background: map-get($this, 'border-disabled-background');
-        box-shadow: inset 0 0 0 .0625em rgba(map-get($this, 'disabled-text-color'), .06);
+        box-shadow: inset 0 0 0 1px rgba(map-get($this, 'disabled-text-color'), .06);
     }
 
     %form-group-bundle--search {
-        padding: 1.125em 1em 0;
-        border-radius: 4px;
+        padding: $group-bundle--box-padding;
+        border-radius: $group-bundle-border-radius;
         border-bottom: none;
         background: map-get($this, 'search-background');
         box-shadow: $search-shadow;
@@ -291,20 +369,24 @@
         flex-grow: 1;
     }
 
+    %form-group-bundle-main--box {
+        padding-top: $group-bundle-main--box-padding;
+    }
+
     %form-group-label {
         @include ellipsis();
         position: absolute;
         width: 100%;
-        transform: translateY(.5em); /* 8px, base is 16px */
-        font-size: 1em; /* 16px, base is 16px */
+        transform: translateY(50%); /* 8px, base is 16px */
+        font-size: $label-font-size; /* 16px, base is 16px */
         line-height: 1;
-        height: 1.125em; /* 18px, base is 16px(self) */
+        height: $label-height; /* 18px, base is 16px(self) */
         backface-visibility: hidden;
         will-change: transform;
         transform-origin: top left;
         transition: transform $transition-timing, color $transition-timing;
 
-        [dir="rtl"] & {
+        [dir='rtl'] & {
             transform-origin: top right;
         }
     }
@@ -335,22 +417,23 @@
 
     %form-group-label--required {
         &::after {
-            content: '*';
+            content: '#{$required-symbol}';
             font-size: inherit;
             vertical-align: top;
-            margin-left: .125em; /* 2px base is 16px */
+            margin-left: $required-symbol-margin; /* 2px base is 16px */
             line-height: 1;
         }
     }
 
     %form-group-input {
         position: relative;
+        display: block;
         border: none;
-        font-size: 1em;
-        line-height: 1em;
-        height: 2em; /* 32px, base is 16px */
-        padding: 0 0 .5em; /* 8px, base is 16px */
-        border-top: .5em solid rgba(0, 0, 0, 0);
+        font-size: $input-font-size;
+        line-height: $input-line-height;
+        height: $input-height; /* 32px, base is 16px */
+        padding: $input-padding; /* 8px, base is 16px */
+        border-top: $input-border-top;
         width: 100%;
         min-width: 0;
         overflow: visible;
@@ -359,6 +442,15 @@
         color: map-get($this, 'filled-text-color');
         outline-style: none;
         box-shadow: none;
+
+        &::-webkit-input-placeholder {
+            padding: 4px 0;
+        }
+
+        &::placeholder {
+            color: igx-color($palette, 'grays', 500);
+            opacity: 1;
+        }
     }
 
     %chrome-autofill-fix {
@@ -383,48 +475,46 @@
 
     %form-group-input--disabled {
         color: map-get($this, 'disabled-text-color');
+
+        &::placeholder {
+            color: igx-color($palette, 'grays', 400);
+        }
     }
 
     %form-group-textarea {
-        min-height: 5.125em; /* 3 lines * 22px + 8px bottom padding + 8px top padding */
-        margin-right: -1em; /* this fixes resizing in chrome !?!? */
+        min-height: $textarea-min-height; /* 3 lines * 22px + 8px bottom padding + 8px top padding */
+        margin-right: -#{$textarea-padding}; /* this fixes resizing in chrome !?!? */
         height: auto;
-        line-height: 1.375em; /* 22px, base is 16px */
+        line-height: $textarea-line-height; /* 22px, base is 16px */
         resize: vertical;
         overflow: hidden;
 
-        [dir="rtl"] & {
+        [dir='rtl'] & {
             margin-right: initial;
-            margin-left: -1em;
+            margin-left: -#{$textarea-padding};
         }
     }
 
     %form-group-textarea--box {
-        width: calc(100% + 2em); /* add the padding to the width */
-        margin: 0 -1em;
-        padding-left: 1em;
-        padding-right: 1em;
+        width: calc(100% + #{$textarea-padding * 2}); /* add the padding to the width */
+        margin: 0 -#{$textarea-padding};
+        padding-left: $textarea-padding;
+        padding-right: $textarea-padding;
     }
 
     %form-group-prefix,
     %form-group-suffix {
+        display: inline-flex;
+        align-items: center;
         line-height: 1;
-        height: 2em; /* 32px, base is 16px */
+        height: $prefix-height; /* 32px, base is 16px */
         transition: all $transition-timing;
-
-        igx-icon {
-            display: inline-flex;
-            align-items: center;
-            font-size: 1.5em;
-            height: .75em; /* 24px, base is 32px */
-            line-height: .6667em; /* 16px, base is 24px */
-        }
     }
 
     %form-group-prefix {
         padding: .5em .5em .5em 0; /* 8px, base is 16px */
 
-        [dir="rtl"] & {
+        [dir='rtl'] & {
             padding: .5em 0 .5em .5em; /* 8px, base is 16px */
         }
     }
@@ -436,13 +526,12 @@
     %form-group-prefix--box,
     %form-group-suffix--box {
         height: 100%;
-        transform: translateY(-25%);
     }
 
     %form-group-prefix--box {
         padding: 0 .5em 0 0; /* 8px, base is 16px */
 
-        [dir="rtl"] & {
+        [dir='rtl'] & {
             padding: 0 0 0 .5em; /* 8px, base is 16px */
         }
     }
@@ -457,8 +546,8 @@
     }
 
     %form-group-border {
-        height: .125em; /* 2px, when base is 16px */
-        margin-top: -.125em; /* 2px, when base is 16px */
+        height: 2px; /* 2px, when base is 16px */
+        margin-top: -2px; /* 2px, when base is 16px */
         transform: scaleX(0);
         transform-origin: center;
         background: map-get($this, 'focused-secondary-color');
@@ -489,14 +578,14 @@
         position: relative;
         display: flex;
         justify-content: space-between;
-        font-size: .75em; /* 12px */
-        padding-top: .6667em; /* 8px, base is 12px */
-        line-height: 1.125em; /* 13.5px, base is 12px */
+        font-size: $hint-font-size; /* 12px */
+        line-height: $hint-line-height; /* 13.5px, base is 12px */
+        padding-top: $hint-padding-top; /* 8px, base is 12px */
     }
 
     %form-group-helper--box {
-        margin-left: 1.3333em; /* 16px, base is 12px */
-        margin-right: 1.3333em; /* 16px, base is 12px */
+        margin-left: $hint--box-margin; /* 16px, base is 12px */
+        margin-right: $hint--box-margin; /* 16px, base is 12px */
     }
 
     %form-group-helper--success {

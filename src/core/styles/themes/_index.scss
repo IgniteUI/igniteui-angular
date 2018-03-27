@@ -30,7 +30,6 @@
 @import '../components/navbar/navbar-theme';
 @import '../components/navdrawer/navdrawer-theme';
 @import '../components/list/list-theme';
-@import '../components/input/input-theme';
 @import '../components/input/input-group-theme';
 @import '../components/icon/icon-theme';
 @import '../components/grid-filtering/grid-filtering-theme';
@@ -55,7 +54,6 @@
 /// @requires {mixin} igx-grid
 /// @requires {mixin} igx-grid-filtering
 /// @requires {mixin} igx-icon
-/// @requires {mixin} igx-input
 /// @requires {mixin} igx-input-group
 /// @requires {mixin} igx-list
 /// @requires {mixin} igx-navbar
@@ -125,9 +123,6 @@
     }
     @if not(index($exclude, 'igx-input-group')) {
         @include igx-input-group($theme: (), $palette: $palette);
-    }
-    @if not(index($exclude, 'igx-form-group')) {
-        @include igx-input($theme: (), $palette: $palette);
     }
     @if not(index($exclude, 'igx-list')) {
         @include igx-list($theme: (), $palette: $palette);
