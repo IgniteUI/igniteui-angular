@@ -317,6 +317,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.rowList.toArray()[index];
     }
 
+    public getRowByKey(keyValue: any): IgxGridRowComponent {
+        return this.rowList.find((row) => row.primaryValue === keyValue);
+    }
+
     get visibleColumns(): IgxColumnComponent[] {
         return this.columnList.filter((col) => !col.hidden);
     }
