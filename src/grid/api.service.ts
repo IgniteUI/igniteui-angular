@@ -26,12 +26,13 @@ export class IgxGridAPIService {
         return this.get(id).columnList.find((col) => col.field === name);
     }
 
-    public get_row(id: string, index: number): IgxGridRowComponent {
-        return this.get(id).rowList.find((row) => row.index === index);
+    public get_row(id: string, rowSelector: any): IgxGridRowComponent {
+        const primaryKey = this.get(id).primaryKey;
+        return this.get(id).rowList.find((row) => primaryKey ? row.rowData[primaryKey] === rowSelector : row.index === rowSelector);
     }
 
-    public get_cell_by_field(id: string, rowIndex: number, field: string): IgxGridCellComponent {
-        const row = this.get_row(id, rowIndex);
+    public get_cell_by_field(id: string, rowSelector: any, field: string): IgxGridCellComponent {
+        const row = this.get_row(id, rowSelector);
         if (row) {
             return row.cells.find((cell) => cell.column.field === field);
         }
@@ -41,15 +42,15 @@ export class IgxGridAPIService {
         this.get(id).eventBus.next(true);
     }
 
-    public get_cell_by_index(id: string, rowIndex: number, columnIndex: number): IgxGridCellComponent {
-        const row = this.get_row(id, rowIndex);
+    public get_cell_by_index(id: string, rowSelector: any, columnIndex: number): IgxGridCellComponent {
+        const row = this.get_row(id, rowSelector);
         if (row) {
             return row.cells.find((cell) => cell.columnIndex === columnIndex);
         }
     }
 
-    public get_cell_by_visible_index(id: string, rowIndex: number, columnIndex: number): IgxGridCellComponent {
-        const row = this.get_row(id, rowIndex);
+    public get_cell_by_visible_index(id: string, rowSelector: any, columnIndex: number): IgxGridCellComponent {
+        const row = this.get_row(id, rowSelector);
         if (row) {
             return row.cells.find((cell) => cell.visibleColumnIndex === columnIndex);
         }

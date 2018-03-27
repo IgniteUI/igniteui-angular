@@ -142,12 +142,16 @@
                     </ng-template>
                 </igx-column>
             </igx-grid>
+            <button (click)="grid2.updateRow({'ProductName' : 'Mozzarella di Giovanni', 'UnitsInStock' : 1337, 'ProductID' : 17, 'Discontinued': true}, 3)">
+                Update using rowIndex
+                <!-- {"ProductID":17,"ProductName":"Alice Mutton","SupplierID":7,"CategoryID":6,"QuantityPerUnit":"20 - 1 kg tins","UnitPrice":39.0000,"UnitsInStock":0,"UnitsOnOrder":0,"ReorderLevel":0,"Discontinued":true} -->
+            </button>
         </article>
 
         <article class="grid-sample">
             <h4 class="sample-title">Grid with templated cell remote data</h4>
             <igx-grid #grid3 [data]="remote | async" [paging]="true" [perPage]="10" (onPagingDone)="process($event)" (onSortingDone)="process($event)"
-                (onBeforeProcess)="onProcess($event)">
+                (onBeforeProcess)="onProcess($event)" [primaryKey]="'ProductID'">
                 <igx-column [sortable]="true" [field]="'ProductID'" [header]="'ID'"></igx-column>
                 <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
                 <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'In Stock'"></igx-column>
@@ -160,7 +164,12 @@
                     </ng-template>
                 </igx-column>
             </igx-grid>
+            <button (click)="grid3.updateRow({'ProductName' : 'Mozzarella di Giovanni', 'UnitsInStock' : 1337, 'ProductID' : 17, 'Discontinued': true}, 17)">
+                Update using primaryKey
+                <!-- {"ProductID":17,"ProductName":"Alice Mutton","SupplierID":7,"CategoryID":6,"QuantityPerUnit":"20 - 1 kg tins","UnitPrice":39.0000,"UnitsInStock":0,"UnitsOnOrder":0,"ReorderLevel":0,"Discontinued":true} -->
+            </button>
         </article>
+        
     </section>
 
     <igx-toast #toast></igx-toast>

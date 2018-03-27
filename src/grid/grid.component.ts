@@ -133,6 +133,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public rowHeight = 50;
 
+    @Input()
+    public primaryKey;
+
     @Output()
     public onSelection = new EventEmitter<any>();
 
@@ -318,8 +321,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.columnList.filter((col) => !col.hidden);
     }
 
-    public getCellByColumn(rowIndex: number, columnField: string): IgxGridCellComponent {
-        return this.gridAPI.get_cell_by_field(this.id, rowIndex, columnField);
+    public getCellByColumn(rowSelector: any, columnField: string): IgxGridCellComponent {
+        return this.gridAPI.get_cell_by_field(this.id, rowSelector, columnField);
     }
 
     get totalPages(): number {
@@ -376,8 +379,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.cdr.markForCheck();
     }
 
-    public deleteRow(rowIndex: number): void {
-        const row = this.gridAPI.get_row(this.id, rowIndex);
+    public deleteRow(rowSelector: any): void {
+        const row = this.gridAPI.get_row(this.id, rowSelector);
         if (row) {
             const index = this.data.indexOf(row.rowData);
             this.data.splice(index, 1);
@@ -387,16 +390,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    public updateCell(value: any, rowIndex: number, column: string): void {
-        const cell = this.gridAPI.get_cell_by_field(this.id, rowIndex, column);
+    public updateCell(value: any, rowSelector: any, column: string): void {
+        const cell = this.gridAPI.get_cell_by_field(this.id, rowSelector, column);
         if (cell) {
             cell.update(value);
             this._pipeTrigger++;
         }
     }
 
-    public updateRow(value: any, rowIndex: number): void {
-        const row = this.gridAPI.get_row(this.id, rowIndex);
+    public updateRow(value: any, rowSelector: any): void {
+        const row = this.gridAPI.get_row(this.id, rowSelector);
         if (row) {
             this.gridAPI.update_row(value, this.id, row);
             this._pipeTrigger++;
