@@ -244,8 +244,8 @@ export class FileContentData {
 
         this._worksheetData =
         `<dimension ref="A1:B6"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
-        `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="28.393164825439456" ` +
-        `customWidth="1"/><col min="2" max="2" width="13.241766357421875" customWidth="1"/></cols><sheetData><row r="1">` +
+        `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="50" ` +
+        `customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/></cols><sheetData><row r="1">` +
         `<c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c></row><row r="2"><c r="A2" t="s"><v>2</v></c><c r="B2" t="s">` +
         `<v>3</v></c></row><row r="3"><c r="A3" t="s"><v>4</v></c><c r="B3" t="s"><v>5</v></c></row><row r="4"><c r="A4" t="s">` +
         `<v>6</v></c><c r="B4" t="s"><v>7</v></c></row><row r="5"><c r="A5" t="s"><v>5</v></c><c r="B5" t="s"><v>8</v></c></row>` +
@@ -264,8 +264,8 @@ export class FileContentData {
 
         this._worksheetData =
         `<dimension ref="A1:B4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
-        `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="28.393164825439456" customWidth` +
-        `="1"/><col min="2" max="2" width="13.241766357421875" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c>` +
+        `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="50" customWidth` +
+        `="1"/><col min="2" max="2" width="50" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c>` +
         `<c r="B1" t="s"><v>1</v></c></row><row r="2"><c r="A2" t="s"><v>2</v></c><c r="B2" t="s"><v>3</v></c></row><row r="3"><c r="A3" ` +
         `t="s"><v>4</v></c><c r="B3" t="s"><v>5</v></c></row><row r="4"><c r="A4" t="s"><v>5</v></c><c r="B4" t="s"><v>6</v></c></row>` +
         `</sheetData>`;
@@ -286,8 +286,8 @@ export class FileContentData {
 
         this._worksheetData =
         `<dimension ref="A1:B7"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
-        `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="30.09180221557617" customWidth` +
-        `="1"/><col min="2" max="2" width="25.47905731201172" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v>` +
+        `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="50" customWidth` +
+        `="1"/><col min="2" max="2" width="50" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v>` +
         `</c><c r="B1" t="s"><v>1</v></c></row><row r="2"><c r="A2" t="s"><v>2</v></c><c r="B2" t="s"><v>3</v></c></row><row r="3">` +
         `<c r="A3" t="s"><v>4</v></c><c r="B3" t="s"><v>5</v></c></row><row r="4"><c r="A4" t="s"><v>6</v></c><c r="B4" t="s"><v>7</v>` +
         `</c></row><row r="5"><c r="A5" t="s"><v>8</v></c><c r="B5" t="s"><v>9</v></c></row><row r="6"><c r="A6" t="s"><v>10</v></c>` +
@@ -306,7 +306,7 @@ export class FileContentData {
 
         this._worksheetData = `<dimension ref="A1:A6"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView>` +
         `</sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" ` +
-        `width="28.393164825439456" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2">` +
+        `width="50" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2">` +
         `<c r="A2" t="s"><v>1</v></c></row><row r="3"><c r="A3" t="s"><v>2</v></c></row><row r="4"><c r="A4" t="s"><v>3</v>` +
         `</c></row><row r="5"><c r="A5" t="s"><v>4</v></c></row><row r="6"><c r="A6" t="s"><v>5</v></c></row></sheetData>`;
 
@@ -322,7 +322,7 @@ export class FileContentData {
 
         this._worksheetData = `<dimension ref="A1:A4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView>` +
         `</sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width=` +
-        `"9.265750122070314" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2">` +
+        `"50" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2">` +
         `<c r="A2" t="s"><v>1</v></c></row><row r="3"><c r="A3" t="s"><v>2</v></c></row><row r="4"><c r="A4" t="s"><v>3</v>` +
         `</c></row></sheetData>`;
 
@@ -339,7 +339,7 @@ export class FileContentData {
 
         this._worksheetData = `<dimension ref="A1:A5"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView>` +
         `</sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width=` +
-        `"53.07389831542969" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2">` +
+        `"50" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2">` +
         `<c r="A2" t="s"><v>1</v></c></row><row r="3"><c r="A3" t="s"><v>2</v></c></row><row r="4"><c r="A4" t="s"><v>3</v>` +
         `</c></row><row r="5"><c r="A5" t="s"><v>4</v></c></row></sheetData>`;
 

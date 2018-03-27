@@ -7,7 +7,7 @@ import { JSZipFiles } from "./jszip-helper";
 import { IFileContent, JSZipWrapper, ObjectComparer  } from "./jszip-verification-wrapper";
 import { ExportTestDataService, FileContentData, ValueData } from "./test-data.service";
 
-describe("Excel Exporter", () => {
+fdescribe("Excel Exporter", () => {
     let sourceData: ExportTestDataService;
     let exporter: IgxExcelExporterService;
     let options: IgxExcelExporterOptions;
@@ -39,6 +39,7 @@ describe("Excel Exporter", () => {
     }));
 
     it("should export string data without headers successfully.", async(() => {
+        options.columnWidth = 50;
         getExportedData(sourceData.noHeadersStringData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
@@ -47,6 +48,7 @@ describe("Excel Exporter", () => {
     }));
 
     it("should export date time data without headers successfully.", async(() => {
+        options.columnWidth = 50;
         getExportedData(sourceData.noHeadersDateTimeData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
@@ -55,6 +57,7 @@ describe("Excel Exporter", () => {
     }));
 
     it("should export number data without headers successfully.", async(() => {
+        options.columnWidth = 50;
         getExportedData(sourceData.noHeadersNumberData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
@@ -71,6 +74,7 @@ describe("Excel Exporter", () => {
     }));
 
     it("should export regular data successfully.", async(() => {
+        options.columnWidth = 50;
         getExportedData(sourceData.contactsData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
@@ -79,6 +83,7 @@ describe("Excel Exporter", () => {
     }));
 
     it("should export data with missing values successfully.", async(() => {
+        options.columnWidth = 50;
         getExportedData(sourceData.contactsPartialData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
@@ -87,6 +92,7 @@ describe("Excel Exporter", () => {
     }));
 
     it("should export data with special characters successully.", async(() => {
+        options.columnWidth = 50;
         getExportedData(sourceData.contactsFunkyData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
