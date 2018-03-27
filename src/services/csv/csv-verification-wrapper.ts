@@ -40,10 +40,10 @@ export class CSVWrapper {
 
     get noHeadersDateTimeData() {
         return `Column 1${this._eor}` +
-`Mon Jan 01 2018 02:00:00 GMT+0200 (FLE Standard Time)${this._eor}` +
-`Mon Apr 23 2018 00:00:00 GMT+0300 (FLE Daylight Time)${this._eor}` +
-`Thu Jan 01 1970 02:00:00 GMT+0200 (FLE Standard Time)${this._eor}` +
-`Fri Mar 23 2018 00:00:00 GMT+0200 (FLE Standard Time)${this._eor}`;
+`${new Date("2018").toString()}${this._eor}` +
+`${new Date(2018, 3, 23).toString()}${this._eor}` +
+`${new Date(30).toString()}${this._eor}` +
+`${new Date("2018/03/23").toString()}${this._eor}`;
     }
 
     get contactsData() {

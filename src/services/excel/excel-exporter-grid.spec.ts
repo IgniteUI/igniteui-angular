@@ -39,6 +39,10 @@ describe("Excel Exporter", () => {
             actualData = new FileContentData();
             options = new IgxExcelExporterOptions("GridExcelExport");
 
+            // Set column width to a specific value to workaround the issue where
+            // different platforms measure text differently
+            options.columnWidth = 50;
+
             // Spy the private saveFile method so the files are not really created
             spyOn(exporter as any, "saveFile");
         });
@@ -47,6 +51,7 @@ describe("Excel Exporter", () => {
     it("should export grid as displayed.", async(() => {
         const currentGrid: IgxGridComponent = null;
         TestMethods.testRawData(currentGrid, (grid) => {
+
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyStructure();
                 wrapper.verifyTemplateFilesContent();
@@ -328,7 +333,8 @@ describe("Excel Exporter", () => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
-
+        grid.columns[1].hidden = true;
+        grid.columns[2].hidden = true;
         const columnWidths = [ 100, 200, 0, undefined, null ];
 
         fix.whenStable().then(() => {
@@ -500,4 +506,5 @@ describe("Excel Exporter", () => {
             });
         });
     }
+
 });

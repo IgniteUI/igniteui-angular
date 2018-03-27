@@ -80,6 +80,14 @@ describe("Export to", () => {
 
     }
 
+    it("should export data with a custom delimiter successfully.", async(() => {
+        const options = new IgxCsvExporterOptions("CustomDelimiter", CsvFileTypes.CSV);
+        options.valueDelimiter = "###";
+        getExportedData(sourceData.getContactsFunkyData(options.valueDelimiter), options).then((wrapper) => {
+            wrapper.verifyData(wrapper.contactsFunkyData);
+        });
+    }));
+
     async function getExportedData(data: any[], csvOptions: IgxCsvExporterOptions) {
         const result = await new Promise<CSVWrapper>((resolve) => {
             exporter.onExportEnded.subscribe((value) => {
