@@ -6,6 +6,7 @@ import { BOOLEAN_FILTERS, DATE_FILTERS, FilteringCondition,
     NUMBER_FILTERS, STRING_FILTERS } from "../../src/data-operations/filtering-condition";
 import { Calendar, ICalendarDate } from "../calendar/calendar";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
+import { IgxInputDirective } from "../directives/input/input.directive";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
@@ -399,7 +400,7 @@ describe("IgxGrid - Filtering actions", () => {
         const grid = fix.componentInstance.grid;
         const filterUIContainer = fix.debugElement.query(By.css("igx-grid-filter"));
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
@@ -421,7 +422,7 @@ describe("IgxGrid - Filtering actions", () => {
         const grid = fix.componentInstance.grid;
         const filterUIContainer = fix.debugElement.query(By.css("igx-grid-filter"));
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
         const select = filterUIContainer.query(By.css("div > select"));
 
         filterIcon.nativeElement.click();
@@ -448,7 +449,7 @@ describe("IgxGrid - Filtering actions", () => {
         const grid = fix.componentInstance.grid;
         const filterUIContainer = fix.debugElement.query(By.css("igx-grid-filter"));
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
         const select = filterUIContainer.query(By.css("div > select"));
 
         filterIcon.nativeElement.click();
@@ -473,7 +474,7 @@ describe("IgxGrid - Filtering actions", () => {
         const grid = fix.componentInstance.grid;
         const filterUIContainer = fix.debugElement.query(By.css("igx-grid-filter"));
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
         const select = filterUIContainer.query(By.css("div > select"));
 
         filterIcon.nativeElement.click();
@@ -496,7 +497,7 @@ describe("IgxGrid - Filtering actions", () => {
         const grid = fix.componentInstance.grid;
         const filterUIContainer = fix.debugElement.query(By.css("igx-grid-filter"));
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
         const select = filterUIContainer.query(By.css("div > select"));
 
         filterIcon.nativeElement.click();
@@ -521,7 +522,7 @@ describe("IgxGrid - Filtering actions", () => {
         const grid = fix.componentInstance.grid;
         const filterUIContainer = fix.debugElement.query(By.css("igx-grid-filter"));
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
         const select = filterUIContainer.query(By.css("div > select"));
 
         filterIcon.nativeElement.click();
@@ -680,7 +681,7 @@ describe("IgxGrid - Filtering actions", () => {
         const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[2];
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
         const select = filterUIContainer.query(By.css("div > select"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
@@ -701,7 +702,7 @@ describe("IgxGrid - Filtering actions", () => {
         const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[2];
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
         const select = filterUIContainer.query(By.css("div > select"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
@@ -726,7 +727,7 @@ describe("IgxGrid - Filtering actions", () => {
         const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[2];
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
         const select = filterUIContainer.query(By.css("div > select"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
@@ -747,7 +748,7 @@ describe("IgxGrid - Filtering actions", () => {
         const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[2];
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
         const select = filterUIContainer.query(By.css("div > select"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
@@ -772,7 +773,7 @@ describe("IgxGrid - Filtering actions", () => {
         const grid = fix.componentInstance.grid;
         const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
@@ -794,7 +795,7 @@ describe("IgxGrid - Filtering actions", () => {
         const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
         const select = filterUIContainer.query(By.css("div > select"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
@@ -818,7 +819,7 @@ describe("IgxGrid - Filtering actions", () => {
         const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
         const select = filterUIContainer.query(By.css("div > select"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
@@ -843,7 +844,7 @@ describe("IgxGrid - Filtering actions", () => {
         const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
         const select = filterUIContainer.query(By.css("div > select"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
@@ -869,7 +870,7 @@ describe("IgxGrid - Filtering actions", () => {
         const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
         const select = filterUIContainer.query(By.css("div > select"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
@@ -895,7 +896,7 @@ describe("IgxGrid - Filtering actions", () => {
         const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
         const select = filterUIContainer.query(By.css("div > select"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
@@ -921,7 +922,7 @@ describe("IgxGrid - Filtering actions", () => {
         const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
         const select = filterUIContainer.query(By.css("div > select"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
@@ -942,7 +943,7 @@ describe("IgxGrid - Filtering actions", () => {
         const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
         const select = filterUIContainer.query(By.css("div > select"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
@@ -961,7 +962,7 @@ describe("IgxGrid - Filtering actions", () => {
         const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
         const select = filterUIContainer.query(By.css("div > select"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
@@ -982,7 +983,7 @@ describe("IgxGrid - Filtering actions", () => {
         const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[1];
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
         const select = filterUIContainer.query(By.css("div > select"));
-        const input = filterUIContainer.query(By.css("input.igx-form-group__input"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
@@ -1274,7 +1275,7 @@ describe("IgxGrid - Filtering actions", () => {
         const grid = fix.componentInstance.grid;
         const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
         const select = filterIcon.query(By.css("div > select"));
-        const input = filterIcon.query(By.css("input.igx-form-group__input"));
+        const input = filterIcon.query(By.directive(IgxInputDirective));
 
         fix.whenStable().then(() => {
             filterIcon.triggerEventHandler("mousedown", null);
@@ -1313,7 +1314,7 @@ describe("IgxGrid - Filtering actions", () => {
         const grid = fix.componentInstance.grid;
         const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
         const select = filterIcon.query(By.css("div > select"));
-        const input = filterIcon.query(By.css("input.igx-form-group__input"));
+        const input = filterIcon.query(By.directive(IgxInputDirective));
 
         fix.whenStable().then(() => {
             filterIcon.triggerEventHandler("mousedown", null);
@@ -1351,7 +1352,7 @@ describe("IgxGrid - Filtering actions", () => {
         const grid = fix.componentInstance.grid;
         const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
         const select = filterIcon.query(By.css("div > select"));
-        const input = filterIcon.query(By.css("input.igx-form-group__input"));
+        const input = filterIcon.query(By.directive(IgxInputDirective));
 
         fix.whenStable().then(() => {
             filterIcon.triggerEventHandler("mousedown", null);
@@ -1389,7 +1390,7 @@ describe("IgxGrid - Filtering actions", () => {
         const grid = fix.componentInstance.grid;
         const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
         const select = filterIcon.query(By.css("div > select"));
-        const input = filterIcon.query(By.css("input.igx-form-group__input"));
+        const input = filterIcon.query(By.directive(IgxInputDirective));
 
         fix.whenStable().then(() => {
             filterIcon.triggerEventHandler("mousedown", null);

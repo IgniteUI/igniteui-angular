@@ -1,6 +1,7 @@
 import {CommonModule} from "@angular/common";
 import {
     AfterViewInit,
+    ChangeDetectorRef,
     Directive,
     DoCheck,
     ElementRef,
@@ -16,9 +17,10 @@ import {
     Self
 } from "@angular/core";
 import { FormGroup, FormsModule, NgControl, NgModel } from "@angular/forms";
-
 import { Subscription } from "rxjs/Subscription";
 import { IgxInputGroupComponent, IgxInputGroupState } from "../../main";
+
+const nativeValidationAttributes = ["required", "pattern", "minlength", "maxlength", "min", "max"];
 
 @Directive({
     selector: "[igxInput]"
@@ -31,7 +33,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         public inputGroup: IgxInputGroupComponent,
         @Optional() @Self() @Inject(NgModel) protected ngModel: NgModel,
         protected element: ElementRef,
-        private _renderer: Renderer2) { }
+        protected cdr: ChangeDetectorRef) { }
 
     @HostBinding("class.igx-input-group__input")
     public isInput = false;
@@ -47,39 +49,48 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @HostListener("blur", ["$event"])
     public onBlur(event) {
         this.inputGroup.isFocused = false;
+        this.inputGroup.valid = IgxInputGroupState.INITIAL;
         if (this.ngModel) {
-            this.inputGroup.valid = IgxInputGroupState.INITIAL;
-            if (!this.ngModel.valid && this.ngModel.touched) {
+            if (!this.ngModel.valid) {
                 this.inputGroup.valid = IgxInputGroupState.INVALID;
             }
+        } else if (this._hasValidators() && !this.nativeElement.checkValidity()) {
+            this.inputGroup.valid = IgxInputGroupState.INVALID;
         }
     }
 
     @HostListener("input", ["$event"])
     public onInput(event) {
-        const value: string = this.element.nativeElement.value;
+        const value: string = this.nativeElement.value;
         this.inputGroup.isFilled = value && value.length > 0;
+        if (!this.ngModel && this._hasValidators()) {
+            if (this.nativeElement.checkValidity()) {
+                this.inputGroup.valid = IgxInputGroupState.VALID;
+            } else if (this.inputGroup.valid === IgxInputGroupState.VALID) {
+                this.inputGroup.valid = IgxInputGroupState.INVALID;
+            }
+        }
     }
 
     ngAfterViewInit() {
-        if (this.element.nativeElement.placeholder) {
+        if (this.nativeElement.placeholder) {
             this.inputGroup.hasPlaceholder = true;
         }
 
-        if (this.element.nativeElement.required) {
+        if (this.nativeElement.required) {
             this.inputGroup.isRequired = true;
         }
 
-        if (this.element.nativeElement.disabled) {
+        if (this.nativeElement.disabled) {
             this.inputGroup.isDisabled = true;
         }
 
-        if ((this.element.nativeElement.value && this.element.nativeElement.value.length > 0) ||
+        if ((this.nativeElement.value && this.nativeElement.value.length > 0) ||
             (this.ngModel && this.ngModel.model && this.ngModel.model.length > 0)) {
             this.inputGroup.isFilled = true;
         }
 
-        const elTag = this.element.nativeElement.tagName.toLowerCase();
+        const elTag = this.nativeElement.tagName.toLowerCase();
         if (elTag === "textarea") {
             this.isTextArea = true;
         } else {
@@ -89,12 +100,22 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         if (this.ngModel) {
             this._statusChanges$ = this.ngModel.statusChanges.subscribe(this.onStatusChanged.bind(this));
         }
+
+        this.cdr.detectChanges();
     }
 
     ngOnDestroy() {
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
         }
+    }
+
+    public focus() {
+        this.nativeElement.focus();
+    }
+
+    public get nativeElement() {
+        return this.element.nativeElement;
     }
 
     protected onStatusChanged(status: string) {
@@ -104,18 +125,24 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
 
     get isDisabled() {
-        return this.element.nativeElement.disabled;
+        return this.nativeElement.disabled;
     }
 
     get isRequired() {
-        return  this.element.nativeElement.required;
+        return  this.nativeElement.required;
     }
 
     get hasPlaceholder() {
-        return this.element.nativeElement.placeholder;
+        return this.nativeElement.placeholder;
     }
 
-    public focus() {
-        this.element.nativeElement.focus();
+    private _hasValidators(): boolean {
+        for (const nativeValidationAttribute of nativeValidationAttributes) {
+            if (this.nativeElement.hasAttribute(nativeValidationAttribute)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

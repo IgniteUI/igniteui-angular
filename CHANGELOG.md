@@ -2,6 +2,9 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 5.3.0
+- `igx-time-picker` component added
+    - `igx-time-picker` allows user to select time, from a dialog with spinners, which is presented into input field.
+    - For more information navigate to `src\time-picker\README.md`.
 - Added column pinning in the list of features available for `igxGrid`. Pinning is available though the API. Try the following:
    ```typescript
    const column = this.grid.getColumnByName(name);

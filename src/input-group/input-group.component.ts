@@ -26,8 +26,7 @@ export enum IgxInputGroupState {
 })
 export class IgxInputGroupComponent {
     private _type = IgxInputGroupType.LINE;
-
-    protected _valid = IgxInputGroupState.INITIAL;
+    private _valid = IgxInputGroupState.INITIAL;
 
     @HostBinding("class.igx-input-group")
     public defaultClass = true;
@@ -140,7 +139,6 @@ export class IgxInputGroupComponent {
     get isTypeSearch() {
         return  this._type === IgxInputGroupType.SEARCH;
     }
-
 }
 
 @NgModule({
