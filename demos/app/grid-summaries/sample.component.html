@@ -1,4 +1,4 @@
-<igx-grid #grid1 [data]="data" [autoGenerate]="false" height="800px" width="1000px" (onColumnInit)="initColunm($event)" [paging]="false">
+<igx-grid #grid1 [data]="data" [autoGenerate]="false" height="800px" width="1000px" (onColumnInit)="initColunm($event)" [paging]="true">
     <igx-column field="ProductID" header="Product ID" width="200px" [headerClasses]="'prodId'">
         <ng-template igxCell let-cell="cell" let-val>
         <button (click)="viewRecord(grid1.data)">{{val}}</button>
@@ -14,17 +14,17 @@
         {{val['__deferred']['uri']}}
         </ng-template>
     </igx-column>
-    <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" [summaries]="mySummary"  editable="true" [sortable]="true" [hasSummary]="true">
+    <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" [summaries]="mySummary"  editable="true" [sortable]="true" [hasSummary]="false">
         <ng-template igxCell let-cell="cell" let-val let-row>
         ${{val}}
         </ng-template>
     </igx-column>
-    <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="true">
+    <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="false">
         <ng-template igxCell let-cell="cell" let-val let-row>
         {{val}}
         </ng-template>
     </igx-column>
-    <igx-column field="CategoryID" header="CategoryID" width="200px" [hasSummary]="true">
+    <igx-column field="CategoryID" header="CategoryID" width="200px" [hasSummary]="false">
         <ng-template igxCell let-cell="cell" let-val>
         {{val}}
         </ng-template>
