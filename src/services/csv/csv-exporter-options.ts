@@ -3,11 +3,9 @@ import { IgxExporterOptionsBase } from "../exporter-common/exporter-options-base
 export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
 
     private _valueDelimiter;
-    private _fileType: CsvFileTypes;
 
     constructor(fileName: string, public fileType: CsvFileTypes) {
         super(fileName, IgxCsvExporterOptions.getExtensionFromFileType(fileType));
-        this._fileType = fileType;
         this.setDelimiter();
     }
 
@@ -39,7 +37,7 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
         if (value !== undefined && value !== "") {
             this._valueDelimiter = value;
         } else {
-            switch (this._fileType) {
+            switch (this.fileType) {
                 case CsvFileTypes.CSV:
                     this._valueDelimiter = ",";
                     break;

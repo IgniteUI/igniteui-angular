@@ -17,10 +17,10 @@ describe("Excel Exporter", () => {
         exporter = new IgxExcelExporterService();
         sourceData = new ExportTestDataService();
         actualData = new FileContentData();
-        options = new IgxExcelExporterOptions("TestData");
+        options = new IgxExcelExporterOptions("ExcelExport");
 
-        // Spy the private SaveFile method so the files are not really created
-        // spyOn(exporter as any, "saveFile");
+        // Spy the private saveFile method so the files are not really created
+        spyOn(exporter as any, "saveFile");
     });
 
     /* ExportData() tests */

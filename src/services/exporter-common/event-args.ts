@@ -14,7 +14,7 @@ export class ColumnExportingEventArgs {
     public cancel = false;
 }
 
-export class CSVExportEndedEventArgs {
+export class CsvExportEndedEventArgs {
     constructor(public csvData: string) {
     }
 }
