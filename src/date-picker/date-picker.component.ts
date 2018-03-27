@@ -23,6 +23,7 @@ import {
     WEEKDAYS
 } from "../calendar";
 import { IgxDialogComponent, IgxDialogModule } from "../dialog/dialog.component";
+import { IgxIconModule } from "../icon";
 import { IgxInputGroupModule } from "../input-group/input-group.component";
 
 @Component({
@@ -90,7 +91,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     @ContentChild(IgxCalendarSubheaderTemplateDirective, { read: IgxCalendarSubheaderTemplateDirective })
     public subheaderTemplate: IgxCalendarSubheaderTemplateDirective;
 
-    @ViewChild("container", {read: ViewContainerRef})
+    @ViewChild("container", { read: ViewContainerRef })
     public container: ViewContainerRef;
 
     @ViewChild(IgxDialogComponent)
@@ -235,6 +236,6 @@ class Constants {
     declarations: [IgxDatePickerComponent],
     entryComponents: [IgxCalendarComponent],
     exports: [IgxDatePickerComponent],
-    imports: [CommonModule, IgxInputGroupModule, IgxDialogModule, IgxCalendarModule]
+    imports: [CommonModule, IgxIconModule, IgxInputGroupModule, IgxDialogModule, IgxCalendarModule]
 })
 export class IgxDatePickerModule { }

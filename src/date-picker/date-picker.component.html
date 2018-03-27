@@ -1,6 +1,10 @@
 <div [ngClass]="{'igx-date-picker': !vertical, 'igx-date-picker--vertical': vertical}">
-    <igx-input-group>
-        <input class="igx-date-picker__input-date" igxInput (click)="onOpenEvent($event)" [value]="displayData" [disabled]="isDisabled" />
+    <igx-input-group (click)="onOpenEvent($event)">
+        <igx-prefix>
+            <igx-icon>today</igx-icon>
+        </igx-prefix>
+        <label igxLabel>Date</label>
+        <input class="igx-date-picker__input-date" igxInput [value]="displayData" [disabled]="isDisabled" />
     </igx-input-group>
     <igx-dialog class="igx-date-picker__dialog-popup" closeOnOutsideSelect="true" [leftButtonLabel]="cancelButtonLabel" (onLeftButtonSelect)="alert.close()"
         [rightButtonLabel]="todayButtonLabel" (onRightButtonSelect)="triggerTodaySelection()">
