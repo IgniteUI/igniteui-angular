@@ -31,11 +31,23 @@ export class IgxTabTemplateDirective {
     }
 }
 
+/**
+* **Ignite UI for Angular Tabbar** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabbar.html)  
+* The Ignite UI Tab Bar enables the user to navigate among a number of content panels displayed in a single view.
+*
+* Example:
+* ```html
+* <igx-tab-bar>
+*   <igx-tab-panel label="Tab 1">Tab 1 Content</igx-tab-panel>
+*   <igx-tab-panel label="Tab 2">Tab 2 Content</igx-tab-panel>
+*   <igx-tab-panel label="Tab 3">Tab 3 Content</igx-tab-panel>
+* </igx-tab-bar>
+* ```
+*/
 @Component({
     selector: "igx-tab-bar",
     templateUrl: "tab-bar-content.component.html"
 })
-
 export class IgxTabBarComponent implements AfterViewInit {
     @ViewChildren(forwardRef(() => IgxTabComponent)) public tabs: QueryList<IgxTabComponent>;
     @ContentChildren(forwardRef(() => IgxTabPanelComponent)) public panels: QueryList<IgxTabPanelComponent>;

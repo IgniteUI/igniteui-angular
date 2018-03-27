@@ -26,19 +26,17 @@ import { IgxRippleModule } from "../directives/ripple/ripple.directive";
  * 
  * Example:
  * ```html
- * <div>
- *   <button (click)="form.open()">Show Dialog</button>
- *   <igx-dialog #form title="Sign In" rightButtonLabel="OK">
- *     <div>
- *       <input type="text" igxInput/>
- *       <label igxLabel>Username</label>
- *     </div>
- *     <div>
- *       <input type="password" igxInput/>
- *       <label igxLabel>Password</label>
- *     </div>
- *   </igx-dialog>
- * </div>
+ * <button (click)="form.open()">Show Dialog</button>
+ * <igx-dialog #form title="Sign In" rightButtonLabel="OK">
+ *   <div>
+ *     <input type="text" igxInput/>
+ *     <label igxLabel>Username</label>
+ *   </div>
+ *   <div>
+ *     <input type="password" igxInput/>
+ *     <label igxLabel>Password</label>
+ *   </div>
+ * </igx-dialog>
  * ```
  */
 @Component({

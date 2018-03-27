@@ -13,6 +13,17 @@ let nextId = 0;
 
 const noop = () => { };
 
+/**
+* **Ignite UI for Angular Radio Button** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radio_button.html)  
+* The Ignite UI Radio Button allows the user to select a single option from an available set of options that are listed side by side.
+*
+* Example:
+* ```html
+* <igx-radio>
+*   Simple radio button
+* </igx-radio>
+* ```
+*/
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxRadioComponent, multi: true }],
     selector: "igx-radio",
