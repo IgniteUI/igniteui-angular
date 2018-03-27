@@ -112,7 +112,7 @@ gulp.task("copy-git-hooks", () => {
         defaultCopyHookDir + "utils"
     ];
 
-    dirs.forEach(dir => {
+    dirs.forEach((dir) => {
         if(!fs.existsSync(dir)) {
             fs.mkdir(dir, (err) => { 
                 if(err) { throw err; } 

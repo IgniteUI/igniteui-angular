@@ -43,7 +43,7 @@ When committing a message you need to follow this template convention:
 2. `<scope>` - The scope is the context on which you are worked on. It could be current directive, component etc. 
 	If you are unable to determine your working context you can leave it as "(*)".
 3. `<subject>` - The subject (first line of the Commit message) is the most critical. So be sure you have clear and easy understandable description about the commit.
-	The limit of the subject is `15` characters.
+	The limit of the subject is at least `15` characters.
 4. `<issue>` - The issue is the refenrece of the github task you have. Be aware that you are able to link more than one issue. For instance `(#123 #456)`. 
 	Also there is another important point, for `(fix, feat, test) types` you are obliged to add at least one issue reference.
 5. The limits you have per line is `80` characters.
