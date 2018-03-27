@@ -21,6 +21,7 @@
 @import '../components/grid/grid-theme';
 @import '../components/grid-filtering/grid-filtering-theme';
 @import '../components/grid-summary/grid-summary-theme';
+@import '../components/grid-paginator/grid-paginator-theme';
 @import '../components/toast/toast-theme';
 @import '../components/tabbar/tabbar-theme';
 @import '../components/switch/switch-theme';
@@ -55,11 +56,13 @@
 /// @requires {mixin} igx-grid
 /// @requires {mixin} igx-grid-filtering
 /// @requires {mixin} igx-grid-summary
+/// @requires {mixin} igx-grid-paginator
 /// @requires {mixin} igx-icon
 /// @requires {mixin} igx-input
 /// @requires {mixin} igx-list
 /// @requires {mixin} igx-navbar
 /// @requires {mixin} igx-navdrawer
+/// @requires {mixin} igx-paginator
 /// @requires {mixin} igx-progress-linear
 /// @requires {mixin} igx-progress-circular
 /// @requires {mixin} igx-radio
@@ -137,6 +140,9 @@
     }
     @if not(index($exclude, 'igx-nav-drawer')) {
         @include igx-navdrawer($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-grid-paginator')) {
+        @include igx-grid-paginator($theme: (), $palette: $palette);
     }
     @if not(index($exclude, 'progress-circular')) {
         @include igx-progress-circular($theme: (), $palette: $palette);

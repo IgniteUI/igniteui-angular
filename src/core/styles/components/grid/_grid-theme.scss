@@ -132,7 +132,7 @@
 
     %grid-display {
         display: grid;
-        grid-template-rows: auto auto auto auto;
+        grid-template-rows: auto 1fr auto auto;
         grid-template-columns: 1fr;
         border-radius: $grid-br;
         box-shadow: $grid-shadow;
