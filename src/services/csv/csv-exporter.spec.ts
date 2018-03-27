@@ -7,24 +7,23 @@ import { CSVWrapper } from "./csv-verification-wrapper";
 describe("Export to", () => {
     let sourceData: ExportTestDataService;
     let exporter: IgxCsvExporterService;
-    let options: IgxCsvExporterOptions;
+    // let options: IgxCsvExporterOptions;
     let actualData: FileContentData;
-    const fileTypes = [ CsvFileTypes.CSV, CsvFileTypes.TAB, CsvFileTypes.TSV ];
+    const fileTypes = [ CsvFileTypes.CSV, CsvFileTypes.TSV, CsvFileTypes.TAB ];
 
     beforeEach(() => {
         exporter = new IgxCsvExporterService();
         sourceData = new ExportTestDataService();
         actualData = new FileContentData();
 
-        // Spy the private SaveFile method so the files are not really created
-        // spyOn(exporter as any, "saveFile");
+        // Spy the private saveFile method so the files are not really created
+        spyOn(exporter as any, "saveFile");
     });
 
     /* ExportData() tests */
     for (const fileType of fileTypes) {
         const typeName = CsvFileTypes[fileType];
-        options = new IgxCsvExporterOptions("Test" + typeName, fileType);
-
+        const options = new IgxCsvExporterOptions("Test" + typeName, fileType);
         it(typeName + " should not fail when data is empty.", async(() => {
             getExportedData([], options).then((wrapper) => {
                 wrapper.verifyData("");
@@ -74,7 +73,7 @@ describe("Export to", () => {
         }));
 
         it(typeName + " should export data with special characters successfully.", async(() => {
-            getExportedData(sourceData.contactsFunkyData, options).then((wrapper) => {
+            getExportedData(sourceData.getContactsFunkyData(options.valueDelimiter), options).then((wrapper) => {
                 wrapper.verifyData(wrapper.contactsFunkyData);
             });
         }));

@@ -15,17 +15,19 @@ export class ExportUtilities {
 
         const keys = new Set(keys1.concat(keys2).concat(keys3));
 
-        return keys.size !== 0 && !ExportUtilities.isSpecialData(data) ? Array.from(keys) : [ "Column 1" ];
+        return !ExportUtilities.isSpecialData(data) ? Array.from(keys) : [ "Column 1" ];
     }
 
     public static saveBlobToFile(blob: Blob, fileName) {
         const a = document.createElement("a");
+        const url = window.URL.createObjectURL(blob);
         a.download = fileName;
 
-        a.href = window.URL.createObjectURL(blob);
+        a.href = url;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
     }
 
     public static stringToArrayBuffer(s: string): ArrayBuffer {

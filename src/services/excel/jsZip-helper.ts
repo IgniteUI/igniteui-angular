@@ -111,11 +111,11 @@ export class JSZipFiles {
         "[Content_Types].xml"
     ];
 
+    /* tslint:disable max-line-length */
     public static getTablesXML(tableData: string) {
-        return `<?xml version="1.0" encoding="UTF-8"?>
-<table xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" id="1" name="Table1" displayName="Table1" ` +
-`${ tableData }<tableStyleInfo name="TableStyleMedium2" showFirstColumn="0" showLastColumn="0" showRowStripes="1" ` +
-`showColumnStripes="0"/></table>`;
+        return `<?xml version="1.0" encoding="UTF-8"?>\r\n<table xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" id="1" name="Table1" displayName="Table1" ` +
+`${ tableData }<tableStyleInfo name="TableStyleMedium2" showFirstColumn="0" showLastColumn="0" showRowStripes="1" showColumnStripes="0"/>
+</table>`;
     }
 
     public static getSharedStringsXML(stringsData: string) {
@@ -291,4 +291,6 @@ export class JSZipFiles {
 
         return resultXml;
     }
+
+    /* tslint:enable max-line-length */
 }

@@ -3,18 +3,14 @@ import { ExportUtilities } from "../exporter-common/export-utilities";
 export class CharSeparatedValueData {
     private _headerRecord = "";
     private _dataRecords = "";
-    private _eof = 0x1A;
     private _eor = "\r\n";
-    private _values;
     private _delimiter;
     private _escapeCharacters = ["\r", "\n", "\r\n"];
     private _delimiterLength = 1;
-    private _defaultColumnHeader = "Column 1";
     private _isSpecialData = false;
 
     constructor(private _data: any[], valueDelimiter: string) {
         this.setDelimiter(valueDelimiter);
-        this.prepareData();
     }
 
     public get valueDelimiter() {
@@ -36,8 +32,6 @@ export class CharSeparatedValueData {
 
     public set data(value: any[]) {
         this._data = value;
-
-        this.prepareData();
     }
 
     public prepareData() {

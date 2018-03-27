@@ -26,7 +26,7 @@ export class WorksheetData {
     }
 
     public get isEmpty() {
-        return !this.data || this.data.length === 0;
+        return !this.rowCount || !this._columnCount;
     }
 
     public get keys(): string[] {
