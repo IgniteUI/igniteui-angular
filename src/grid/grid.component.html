@@ -19,8 +19,8 @@
     </ng-container>
 </ng-template>
 
-<div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth'>
-    <div class="igx-grid__tr" role="row" style="width: calc(100% - 18px)" #theadRow>
+<div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
+    <div class="igx-grid__tr" role="row" style="width: calc(100% - 18px)">
         <ng-container *ngIf="pinnedColumns.length > 0">
             <igx-grid-header [gridID]="id" *ngFor="let col of pinnedColumns" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
         </ng-container>
@@ -49,12 +49,6 @@
     </div>
 </div>
 
-<!-- <div *ngIf="hasSummarizedColumns" class="igx-grid__tr" role="row" style="width: calc(100% - 17px)">
-    <ng-template igxFor let-col [igxForOf]="visibleColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='calcWidth' #summaryContainer>
-        <igx-grid-summary [gridID]="id" [column]="col" [style.min-width.px]="col.width"></igx-grid-summary>
-    </ng-template>
-</div> -->
-
 <div class="igx-grid__tfoot" role="rowgroup" [style.width.px]='calcWidth' #tfoot>
     <div *ngIf="hasSummarizedColumns" class="igx-grid__tr" role="row">
         <ng-container *ngIf="pinnedColumns.length > 0">
@@ -65,7 +59,8 @@
         </ng-template>
     </div>
 </div>
-<div class="igx-paginator" #paginator>
-<ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
-</ng-container>
+
+<div class="igx-paginator" *ngIf="paging && totalPages > 0" #paginator>
+    <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
+    </ng-container>
 </div>

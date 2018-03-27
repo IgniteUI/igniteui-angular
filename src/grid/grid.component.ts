@@ -430,9 +430,19 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public enableSummaries(...rest) {
         if (rest.length === 1 && Array.isArray(rest[0])) {
-            this._multipleSummaries(rest[0]);
+            this._multipleSummaries(rest[0], true);
         } else {
-            this._summaries(rest[0], rest[1]);
+            this._summaries(rest[0], true, rest[1]);
+        }
+        this.markForCheck();
+        this.calculateGridSizes();
+    }
+
+    public disableSummaries(...rest) {
+        if (rest.length === 1 && Array.isArray(rest[0])) {
+            this._multipleSummaries(rest[0], false);
+        } else {
+            this._summaries(rest[0], false);
         }
         this.markForCheck();
         this.calculateGridSizes();
@@ -543,24 +553,31 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.calcHeight = null;
         } else if (this.height && this.height.indexOf("%") !== -1) {
             /*height in %*/
-            const pagingHeight = this.paginator.nativeElement.firstElementChild ?
-            this.paginator.nativeElement.clientHeight : 0;
+            let pagingHeight = 0;
+            if (this.paging) {
+                pagingHeight = this.paginator.nativeElement.firstElementChild ?
+                this.paginator.nativeElement.clientHeight : 0;
+            }
             const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-                this.tfoot.nativeElement.clientHeight : 0;
+            this.tfoot.nativeElement.clientHeight : 0;
             this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
                 this.theadRow.nativeElement.clientHeight -
                 footerHeight - pagingHeight -
                 this.scr.nativeElement.clientHeight;
         } else {
-            const pagingHeight = this.paginator.nativeElement.firstElementChild ?
-            this.paginator.nativeElement.clientHeight : 0;
+            let pagingHeight = 0;
+            if (this.paging) {
+                pagingHeight = this.paginator.nativeElement.firstElementChild ?
+                this.paginator.nativeElement.clientHeight : 0;
+            }
             const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-               this.tfoot.nativeElement.clientHeight : 0;
+            this.tfoot.nativeElement.clientHeight : 0;
             this.calcHeight = parseInt(this.height, 10) -
-                this.theadRow.nativeElement.clientHeight -
+                this.theadRow.nativeElement.getBoundingClientRect().height -
                 footerHeight - pagingHeight -
                 this.scr.nativeElement.clientHeight;
         }
+        this.cdr.detectChanges();
     }
 
     /**
@@ -610,17 +627,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.gridAPI.filter_multiple(this.id, expressions);
     }
 
-    protected _summaries(fieldName, summaryOperand?) {
+    protected _summaries(fieldName: string, hasSummary: boolean, summaryOperand?: any) {
         const column = this.gridAPI.get_column_by_name(this.id, fieldName);
-        column.hasSummary = true;
+        column.hasSummary = hasSummary;
         if (summaryOperand) {
             column.summaries = summaryOperand;
         }
     }
 
-    protected _multipleSummaries(expressions: ISummaryExpression[]) {
+    protected _multipleSummaries(expressions: ISummaryExpression[], hasSummary: boolean) {
         expressions.forEach((element) => {
-            this._summaries(element.fieldName, element.customSummary);
+            this._summaries(element.fieldName, hasSummary, element.customSummary);
         });
     }
 

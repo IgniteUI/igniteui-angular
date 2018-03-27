@@ -679,8 +679,13 @@ export class GridSummaryComponent implements OnInit {
 
   }
   public enableSummary() {
-    this.grid1.enableSummaries([{fieldName: "ReorderLevel", customSummary: this.mySummary},
-    {fieldName: "ProductID"}]);
+    for (const name of ["ReorderLevel", "ProductID"]) {
+      if (this.grid1.getColumnByName(name).hasSummary) {
+        this.grid1.disableSummaries(name);
+      } else {
+        this.grid1.enableSummaries(name, this.mySummary);
+      }
+    }
   }
   public addRow() {
     this.grid1.addRow({
