@@ -46,16 +46,46 @@ export class IgxTabsComponent implements AfterViewInit {
     @ViewChild("tabsContainer")
     public tabsContainer: ElementRef;
 
+    @ViewChild("headerContainer")
+    public headerContainer: ElementRef;
+
+    @ViewChild("tabmenu")
+    public tabmenu: ElementRef;
+
+    @ViewChild("tablist")
+    public tablist: ElementRef;
+
     public selectedIndex = -1;
-    public addScroll = false;
+    public isScrollable = false;
 
     public calculatedWidth: number;
+    public visibleItemsWidth: number;
+
+    private _itemStyle = "igx-tabs";
 
     public get itemStyle(): string {
         return this._itemStyle;
     }
 
-    private _itemStyle = "igx-tabs";
+    private offsetRight = 0;
+    private offsetLeft = 0;
+    private offset = 0;
+    private  step = 180;
+
+    public left(event) {
+
+    }
+
+    public right(event) {
+        const parentContainerWidth = this.tabmenu.nativeElement.offsetWidth;
+
+        if (parentContainerWidth >= this.offsetRight) {
+            this.offsetRight += this.step;
+            this.tabmenu.nativeElement.style.transform = "translate(" + -this.offsetRight + "px)";
+
+            console.log("right parentContainerWidth " + parentContainerWidth + " offset " + this.offsetRight);
+        }
+    }
 
     get selectedTab(): IgxTabItemComponent {
         if (this.tabs && this.selectedIndex !== undefined) {
@@ -90,6 +120,10 @@ export class IgxTabsComponent implements AfterViewInit {
         this.calculatedWidth = containerWidth / tabsNumber;
         console.log("tabs number " + this.tabs.length + " calculatedWidth " + this.calculatedWidth);
 
+        const visibleItemsWidth = containerWidth - 80;
+
+        console.log("visibleItemsWidth " + visibleItemsWidth);
+
         let totalItemsWidth = 0;
 
         // Calculate total tabs width
@@ -101,7 +135,7 @@ export class IgxTabsComponent implements AfterViewInit {
         console.log("totalItemsWidth " + totalItemsWidth);
 
         if (containerWidth <= totalItemsWidth) {
-            this.addScroll = true;
+            this.isScrollable = true;
         }
     }
 

@@ -82,12 +82,13 @@
         height: $menu-height;
         background: map-get($this, 'background');
         overflow: hidden;
-        z-index: 8;
+        z-index: 1;
         top: 0;
         bottom: inherit;
-        width: 100%;
+        //width: 100%;
         border-width: 2px;
         border-bottom: 2px #ECEBE9 solid;
+        flex-grow: 1;
     }
 
     %igx-tabs-menu-item {
@@ -106,7 +107,9 @@
         overflow: hidden;
         padding: $item-padding;
         -webkit-tap-highlight-color: transparent;
-        
+        text-align: center;
+        flex-basis: auto;
+        width: 100%;
     }
 
     %igx-tabs-menu-item--selected {
