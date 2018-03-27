@@ -440,7 +440,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public disableSummaries(...rest) {
         if (rest.length === 1 && Array.isArray(rest[0])) {
-            this._multipleSummaries(rest[0], false);
+            this._disableMultipleSummaries(rest[0], false);
         } else {
             this._summaries(rest[0], false);
         }
@@ -639,6 +639,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         expressions.forEach((element) => {
             this._summaries(element.fieldName, hasSummary, element.customSummary);
         });
+    }
+    protected _disableMultipleSummaries(expressions: string[], hasSummary: boolean) {
+        expressions.forEach((column) => { this._summaries(column, false); });
     }
 
     protected resolveDataTypes(rec) {
