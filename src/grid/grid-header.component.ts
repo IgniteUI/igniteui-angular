@@ -136,6 +136,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
 
             this.grid.resizer.column = this.column;
             this.grid.resizer.x = event.clientX + 1;
+            this.grid.resizer.left = this.elementRef.nativeElement.getBoundingClientRect().left;
             this.grid.resizer.actualWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
         } else {
             this.cursor = null;

@@ -67,7 +67,7 @@ export class IgxColumnComponent implements AfterContentInit {
     public maxWidth: string;
 
     @Input()
-    public minWidth = "50";
+    public minWidth = "48";
 
     @Input()
     public headerClasses = "";

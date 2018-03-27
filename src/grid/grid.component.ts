@@ -32,11 +32,11 @@ import { cloneArray } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
+import { IgxDragDirective, RestrictDrag } from "../directives/dragdrop/dragdrop.directive";
 import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
-import { IgxDragDirective } from "./grid.common";
 import { IgxGridRowComponent } from "./row.component";
 
 let NEXT_ID = 0;
@@ -219,6 +219,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public calcHeight: number;
 
     public cellInEditMode: IgxGridCellComponent;
+    public dragDirection: RestrictDrag = RestrictDrag.HORIZONTALLY;
 
     public eventBus = new Subject<boolean>();
     protected destroy$ = new Subject<boolean>();
@@ -227,7 +228,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         x: 0,
         show: false,
         column: null,
-        actualWidth: 0
+        actualWidth: 0,
+        left: 0
     };
 
     protected _perPage = 15;
@@ -304,6 +306,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     get calcResizerHeight(): number {
         return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight;
+    }
+
+    get restrictResizeMin(): number {
+        return this.resizer.left + parseInt(this.resizer.column.minWidth, 10);
+    }
+
+    get restrictResizeMax(): number {
+        if (this.resizer.column.maxWidth) {
+            return this.resizer.left + parseInt(this.resizer.column.maxWidth, 10) - 4;
+        } else {
+            return Number.MAX_SAFE_INTEGER;
+        }
     }
 
     get pinnedWidth() {

@@ -1,4 +1,5 @@
 import {
+    ChangeDetectorRef,
     Directive,
     ElementRef,
     EventEmitter,
@@ -11,11 +12,140 @@ import {
     Output,
     Renderer2
 } from "@angular/core";
+import "rxjs/add/operator/map";
+import "rxjs/add/operator/switchMap";
+import "rxjs/add/operator/takeUntil";
+import { Subject } from "rxjs/Subject";
 
 export interface IgxDropEvent {
     dragData: any;
     dropData: any;
     event: MouseEvent;
+}
+
+export enum RestrictDrag {
+    VERTICALLY,
+    HORIZONTALLY,
+    NONE
+}
+
+@Directive({
+    selector: "[igxDrag]"
+})
+export class IgxDragDirective {
+    @Input()
+    public restrictDrag: RestrictDrag = RestrictDrag.NONE;
+
+    @Input()
+    public restrictHDragMin: number = Number.MIN_SAFE_INTEGER;
+
+    @Input()
+    public restrictHDragMax: number = Number.MAX_SAFE_INTEGER;
+
+    @Input()
+    public restrictVDragMin: number = Number.MIN_SAFE_INTEGER;
+
+    @Input()
+    public restrictVDragMax: number = Number.MAX_SAFE_INTEGER;
+
+    @Output()
+    public dragEnd = new Subject<any>();
+
+    @Output()
+    public dragStart = new Subject<any>();
+
+    @Output()
+    public drag = new Subject<any>();
+
+    constructor(public element: ElementRef, public cdr: ChangeDetectorRef) {
+
+        this.dragStart.map((event) => {
+            return {
+                left: event.clientX - this.left,
+                top: event.clientY - this.top
+            };
+        }).switchMap((offset) =>
+            this.drag.map((event) => ({
+                left: event.clientX - offset.left,
+                top: event.clientY - offset.top
+            })).takeUntil(this.dragEnd))
+        .subscribe((pos) => {
+            switch (this.restrictDrag) {
+                case RestrictDrag.HORIZONTALLY:
+                    if (pos.left < this.restrictHDragMin) {
+                        this.left = this.restrictHDragMin + "px";
+                    } else if (pos.left > this.restrictHDragMax) {
+                        this.left = this.restrictHDragMax + "px";
+                    } else {
+                        this.left = pos.left + "px";
+                    }
+                    break;
+
+                case RestrictDrag.VERTICALLY:
+                    if (pos.top < this.restrictVDragMin) {
+                        this.top = this.restrictVDragMin + "px";
+                    } else if (pos.top > this.restrictVDragMax) {
+                        this.top = this.restrictVDragMax + "px";
+                    } else {
+                        this.top = pos.top + "px";
+                    }
+                    break;
+
+                case RestrictDrag.NONE:
+                default:
+                    if (pos.left < this.restrictHDragMin) {
+                        this.left = this.restrictHDragMin + "px";
+                    } else if (pos.left > this.restrictHDragMax) {
+                        this.left = this.restrictHDragMax + "px";
+                    } else {
+                        this.left = pos.left + "px";
+                    }
+
+                    if (pos.top < this.restrictVDragMin) {
+                        this.top = this.restrictVDragMin + "px";
+                    } else if (pos.top > this.restrictVDragMax) {
+                        this.top = this.restrictVDragMax + "px";
+                    } else {
+                        this.top = pos.top + "px";
+                    }
+                    break;
+            }
+        });
+    }
+
+    public get left() {
+        return this.element.nativeElement.getBoundingClientRect().left;
+    }
+
+    public set left(val) {
+        this.element.nativeElement.style.left = val;
+    }
+
+    public get top() {
+        return this.element.nativeElement.getBoundingClientRect().top;
+    }
+
+    public set top(val) {
+        this.element.nativeElement.style.top = val;
+    }
+
+    @HostListener("document:mouseup", ["$event"])
+    onMouseup(event) {
+        this.dragEnd.next(event);
+        this.cdr.reattach();
+    }
+
+    @HostListener("document:mousedown", ["$event"])
+    onMousedown(event) {
+        this.dragStart.next(event);
+        this.cdr.detach();
+    }
+
+    @HostListener("document:mousemove", ["$event"])
+    onMousemove(event) {
+        event.preventDefault();
+        this.drag.next(event);
+    }
 }
 
 @Directive({
@@ -113,7 +243,7 @@ export class IgxDroppableDirective {
 }
 
 @NgModule({
-    declarations: [IgxDraggableDirective, IgxDroppableDirective],
-    exports: [IgxDraggableDirective, IgxDroppableDirective]
+    declarations: [IgxDraggableDirective, IgxDroppableDirective, IgxDragDirective],
+    exports: [IgxDraggableDirective, IgxDroppableDirective, IgxDragDirective]
 })
 export class IgxDragDropModule {}
