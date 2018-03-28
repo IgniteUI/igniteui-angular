@@ -18,7 +18,9 @@ export class CharSeparatedValueData {
     }
 
     public set valueDelimiter(value) {
-        this.setDelimiter(value);
+        if (value !== undefined && value !== null) {
+            this.setDelimiter(value);
+        }
     }
 
     private setDelimiter(value) {

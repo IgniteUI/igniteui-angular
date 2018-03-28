@@ -4,7 +4,7 @@ import { IgxCsvExporterService } from "./csv-exporter";
 import { CsvFileTypes, IgxCsvExporterOptions } from "./csv-exporter-options";
 import { CSVWrapper } from "./csv-verification-wrapper";
 
-describe("Export to", () => {
+fdescribe("Export to", () => {
     let sourceData: ExportTestDataService;
     let exporter: IgxCsvExporterService;
     // let options: IgxCsvExporterOptions;
@@ -24,6 +24,7 @@ describe("Export to", () => {
     for (const fileType of fileTypes) {
         const typeName = CsvFileTypes[fileType];
         const options = new IgxCsvExporterOptions("Test" + typeName, fileType);
+
         it(typeName + " should not fail when data is empty.", async(() => {
             getExportedData([], options).then((wrapper) => {
                 wrapper.verifyData("");
@@ -80,11 +81,27 @@ describe("Export to", () => {
 
     }
 
-    it("should export data with a custom delimiter successfully.", async(() => {
+    it("CSV should export data with a custom delimiter successfully.", async(() => {
         const options = new IgxCsvExporterOptions("CustomDelimiter", CsvFileTypes.CSV);
         options.valueDelimiter = "###";
         getExportedData(sourceData.getContactsFunkyData(options.valueDelimiter), options).then((wrapper) => {
             wrapper.verifyData(wrapper.contactsFunkyData);
+        });
+    }));
+
+    it("CSV should use a default delimiter when given an invalid one.", async(() => {
+        const options = new IgxCsvExporterOptions("InvalidDelimiter", CsvFileTypes.CSV);
+        options.valueDelimiter = "";
+        getExportedData(sourceData.contactsData, options).then((wrapper) => {
+            expect(options.valueDelimiter).toBe(",");
+        });
+    }));
+
+    it("CSV should overwrite file type successfully.", async(() => {
+        const options = new IgxCsvExporterOptions("Export", CsvFileTypes.CSV);
+        options.fileType = CsvFileTypes.TAB;
+        getExportedData(sourceData.getContactsFunkyData("\t"), options).then((wrapper) => {
+            expect(options.fileName.endsWith(".tab")).toBe(true);
         });
     }));
 
