@@ -10,7 +10,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 
 # Usage
 ```html
-<target-element igxRipple [..options]>Click me</target-element>
+<target-element igxRipple [...options]>Click me</target-element>
 ```
 
 # API Summary
@@ -20,6 +20,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | `igxRippleTarget` |    string   |   Set the ripple to activate on a child element inside the parent of the `igxRipple`. Accepts a CSS selector. Defaults to the parent of the `igxRipple`.  |
 | `igxRippleCentered` | boolean | If true, the ripple animation originates from the center of the element rather than the location of the click event. |
 | `igxRippleDuration` | number | The duration of the ripple animation. Defaults to 600 milliseconds. |
+| `igxRippleDisabled` | boolean | Specify whether the ripple instance should be disabled. |
 
 # Examples
 
