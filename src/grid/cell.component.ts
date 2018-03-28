@@ -288,9 +288,30 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostListener("keydown.control.arrowleft")
     public onKeydownCtrlArrowLeft() {
         const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.row.cells.first.visibleColumnIndex);
-
+        const targetIndex = target.visibleColumnIndex;
         if (target) {
-            target.nativeElement.focus();
+            const containerLeftOffset = parseInt(this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
+            const targetEndLeftOffset = target.nativeElement.offsetLeft + containerLeftOffset;
+
+            if (!target.isPinned && targetEndLeftOffset < 0) {
+                // Target cell is not pinned and is partialy visible (left part is cut). Scroll so it is fully visible and then focus.
+                const horVirtScroll =  this.grid.parentVirtDir.getHorizontalScroll();
+                horVirtScroll.scrollLeft = this.row.virtDirRow.getColumnScrollLeft(target.unpinnedColumnIndex);
+
+                this.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
+                    next: (e: any) => {
+                        this.row.cdr.detectChanges();
+                        const currTarget = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, targetIndex);
+                        if (currTarget) {
+                            currTarget.nativeElement.focus();
+                        } else {
+                            this.row.cells.first.nativeElement.focus();
+                        }
+                    }
+                });
+            } else {
+                target.nativeElement.focus();
+            }
         }
     }
 
@@ -357,9 +378,26 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostListener("keydown.control.arrowright")
     public onKeydownCtrlArrowRight() {
         const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.row.cells.last.visibleColumnIndex);
-
+        const targetIndex = target.visibleColumnIndex;
         if (target) {
-            target.nativeElement.focus();
+            const containerLeftOffset = parseInt(this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
+            const targetEndLeftOffset = target.nativeElement.offsetLeft + parseInt(target.column.width, 10) + containerLeftOffset;
+            const virtContainerSize = parseInt(this.row.virtDirRow.igxForContainerSize, 10);
+            if (targetEndLeftOffset > virtContainerSize) {
+                // Target cell is partially visible (right part of it is cut). Scroll to it so it is fully visible then focus.
+                const horVirtScroll =  this.grid.parentVirtDir.getHorizontalScroll();
+                horVirtScroll.scrollLeft = this.row.virtDirRow.getColumnScrollLeft(target.unpinnedColumnIndex + 1) - virtContainerSize;
+
+                this.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
+                    next: (e: any) => {
+                        this.row.cdr.detectChanges();
+                        const currTarget = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, targetIndex);
+                        currTarget.nativeElement.focus();
+                    }
+                });
+            } else {
+                target.nativeElement.focus();
+            }
         }
     }
 

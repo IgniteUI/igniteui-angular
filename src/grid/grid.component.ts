@@ -514,7 +514,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.calcWidth = null;
         } else if (this.width && this.width.indexOf("%") !== -1) {
             /* width in %*/
-            this.calcWidth = parseInt(computed.getPropertyValue("width"), 10);
+            this.calcWidth = parseInt(computed.getPropertyValue("width"), 10)  -
+                parseInt(this.verticalScrollContainer.getVerticalScroll().offsetWidth, 10);
         }
         if (!this.height) {
             /*no height specified.*/
