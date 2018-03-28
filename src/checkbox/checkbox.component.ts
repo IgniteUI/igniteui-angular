@@ -30,6 +30,8 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     protected _value: any;
 
     @ViewChild("checkbox") public nativeCheckbox;
+    @ViewChild("label") public nativeLabel;
+    @ViewChild("placeholderLabel") public placeholderLabel;
 
     @Input() public id = `igx-checkbox-${nextId++}`;
     @Input() public value: any;

@@ -128,6 +128,7 @@ describe("IgxCheckbox", () => {
         const nativeCheckbox = fixture.debugElement.query(By.css("input")).nativeElement;
         const checkboxInstance = fixture.componentInstance.cb;
         const testInstance = fixture.componentInstance;
+        const nativeLabel = fixture.componentInstance.cb.nativeLabel.nativeElement;
 
         nativeCheckbox.dispatchEvent(new Event("focus"));
         fixture.detectChanges();
@@ -138,9 +139,10 @@ describe("IgxCheckbox", () => {
         fixture.detectChanges();
         expect(checkboxInstance.focused).toBe(false);
 
-        nativeCheckbox.click();
+        nativeLabel.click();
         fixture.detectChanges();
 
+        expect(testInstance.clickCount).toEqual(1);
         expect(testInstance.changeEventCalled).toBe(true);
         expect(testInstance.subscribed).toBe(true);
 
@@ -152,13 +154,19 @@ class InitCheckboxComponent { }
 
 @Component({
     template: `<igx-checkbox #cb (change)="onChange($event)"
-[(ngModel)]="subscribed" [checked]="subscribed">Simple</igx-checkbox>`})
+[(ngModel)]="subscribed" [checked]="subscribed" (click)="onClick()">Simple</igx-checkbox>`})
 class CheckboxSimpleComponent {
     @ViewChild("cb") public cb: IgxCheckboxComponent;
     public changeEventCalled = false;
     public subscribed = false;
+    public clickCount = 0;
+
     public onChange(event) {
         this.changeEventCalled = true;
+    }
+
+    public onClick() {
+        this.clickCount++;
     }
 }
 @Component({
