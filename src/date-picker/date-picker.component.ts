@@ -198,8 +198,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     private updateCalendarInstance() {
-        this.calendar.formatOptions = this.formatOptions;
-        this.calendar.formatViews = this.formatViews;
+        this.calendar.formatOptions = this._formatOptions;
+        this.calendar.formatViews = this._formatViews;
         this.calendar.locale = this.locale;
         this.calendar.vertical = this.vertical;
 
