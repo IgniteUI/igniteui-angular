@@ -4,8 +4,7 @@ import {
     ContentChild,
     ElementRef,
     HostBinding,
-    Input,
-    NgModule
+    Input
 } from "@angular/core";
 
 import { IgxBadgeModule } from "../badge/badge.component";
