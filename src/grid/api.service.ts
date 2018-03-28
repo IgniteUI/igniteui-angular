@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs/Subject";
 import { cloneArray } from "../core/utils";
+import { DataUtil } from "../data-operations/data-util";
 import { IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridCellComponent } from "./cell.component";
@@ -13,6 +14,7 @@ export class IgxGridAPIService {
 
     public change: Subject<any> = new Subject<any>();
     protected state: Map<string, IgxGridComponent> = new Map<string, IgxGridComponent>();
+    protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, any[]>>();
 
     public register(grid: IgxGridComponent) {
         this.state.set(grid.id, grid);
@@ -24,6 +26,29 @@ export class IgxGridAPIService {
 
     public get_column_by_name(id: string, name: string): IgxColumnComponent {
         return this.get(id).columnList.find((col) => col.field === name);
+    }
+    public set_summary_by_column_name(id: string, name: string) {
+        if (!this.summaryCacheMap.get(id)) {
+            this.summaryCacheMap.set(id, new Map<string, any[]>());
+        }
+        const column = this.get_column_by_name(id, name);
+        if (!this.summaryCacheMap.get(id).get(column.field)) {
+            this.summaryCacheMap.get(id).set(column.field,
+                column.summaries.operate(this.get(id).data.map((rec) => rec[column.field])));
+        }
+    }
+    public get_summaries(id: string) {
+        return this.summaryCacheMap.get(id);
+    }
+
+    public remove_summary(id: string, name?: string) {
+        if (this.summaryCacheMap.has(id)) {
+            if (!name) {
+                this.summaryCacheMap.delete(id);
+            } else {
+                this.summaryCacheMap.get(id).delete(name);
+            }
+        }
     }
 
     public get_row(id: string, rowSelector: any): IgxGridRowComponent {

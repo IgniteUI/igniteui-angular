@@ -13,6 +13,7 @@ import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { IgxGridFilterComponent } from "./grid-filtering.component";
 import { IgxGridHeaderComponent } from "./grid-header.component";
+import { IgxGridSummaryComponent } from "./grid-summary.component";
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -24,49 +25,51 @@ import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridPagingPipe, Ig
 import { IgxGridRowComponent } from "./row.component";
 
 @NgModule({
-    declarations: [
-        IgxGridCellComponent,
-        IgxColumnComponent,
-        IgxGridComponent,
-        IgxGridRowComponent,
-        IgxGridHeaderComponent,
-        IgxCellFooterTemplateDirective,
-        IgxCellHeaderTemplateDirective,
-        IgxCellEditorTemplateDirective,
-        IgxCellTemplateDirective,
-        IgxGridFilterComponent,
-        IgxGridSortingPipe,
-        IgxGridPagingPipe,
-        IgxGridFilteringPipe,
-        IgxGridFilterConditionPipe
-    ],
-    entryComponents: [
-        IgxColumnComponent
-    ],
-    exports: [
-        IgxGridComponent,
-        IgxGridCellComponent,
-        IgxGridRowComponent,
-        IgxColumnComponent,
-        IgxGridHeaderComponent,
-        IgxGridFilterComponent,
-        IgxCellFooterTemplateDirective,
-        IgxCellHeaderTemplateDirective,
-        IgxCellEditorTemplateDirective,
-        IgxCellTemplateDirective
-    ],
-    imports: [
-        CommonModule,
-        FormsModule,
-        IgxButtonModule,
-        IgxDatePickerModule,
-        IgxIconModule,
-        IgxRippleModule,
-        IgxInputModule,
-        IgxToggleModule,
-        IgxForOfModule
-    ],
-    providers: [IgxGridAPIService]
+  declarations: [
+    IgxGridCellComponent,
+    IgxColumnComponent,
+    IgxGridComponent,
+    IgxGridRowComponent,
+    IgxGridHeaderComponent,
+    IgxGridSummaryComponent,
+    IgxCellFooterTemplateDirective,
+    IgxCellHeaderTemplateDirective,
+    IgxCellEditorTemplateDirective,
+    IgxCellTemplateDirective,
+    IgxGridFilterComponent,
+    IgxGridSortingPipe,
+    IgxGridPagingPipe,
+    IgxGridFilteringPipe,
+    IgxGridFilterConditionPipe
+  ],
+  entryComponents: [
+    IgxColumnComponent
+  ],
+  exports: [
+    IgxGridComponent,
+    IgxGridCellComponent,
+    IgxGridRowComponent,
+    IgxColumnComponent,
+    IgxGridHeaderComponent,
+    IgxGridFilterComponent,
+    IgxGridSummaryComponent,
+    IgxCellFooterTemplateDirective,
+    IgxCellHeaderTemplateDirective,
+    IgxCellEditorTemplateDirective,
+    IgxCellTemplateDirective
+  ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IgxButtonModule,
+    IgxDatePickerModule,
+    IgxIconModule,
+    IgxRippleModule,
+    IgxInputModule,
+    IgxToggleModule,
+    IgxForOfModule
+  ],
+  providers: [IgxGridAPIService]
 })
 export class IgxGridModule {
     public static forRoot() {

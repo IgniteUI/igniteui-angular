@@ -1,0 +1,40 @@
+////
+/// @group components
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-grid-summary) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %igx-grid-summary !optional;
+
+    @include e(item) {
+        @extend %igx-grid-summary__item !optional;
+    }
+
+    @include e(item, $m: inactive) {
+        @extend %igx-grid-summary__item !optional;
+        @extend %igx-grid-summary__item--inactive !optional;
+    }
+
+    @include e(label) {
+        @extend %igx-grid-summary__label !optional;
+    }
+
+    @include e(result) {
+        @extend %igx-grid-summary__result !optional;
+    }
+
+    @include m(pinned) {
+        @extend %igx-grid-summary !optional;
+        @extend %igx-grid-summary--pinned !optional;
+    }
+
+    @include m(empty) {
+        @extend %igx-grid-summary !optional;
+        @extend %igx-grid-summary--empty !optional;
+    }
+}
