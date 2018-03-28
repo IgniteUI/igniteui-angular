@@ -68,7 +68,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         return this.gridAPI.get(this.gridID);
     }
 
-    get rowIndex(): any {
+    get rowIndex(): number {
         return this.row.index;
     }
 

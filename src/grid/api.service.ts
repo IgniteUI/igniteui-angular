@@ -53,7 +53,10 @@ export class IgxGridAPIService {
 
     public get_row(id: string, rowSelector: any): IgxGridRowComponent {
         const primaryKey = this.get(id).primaryKey;
-        return this.get(id).rowList.find((row) => primaryKey ? row.rowData[primaryKey] === rowSelector : row.index === rowSelector);
+        if (primaryKey !== undefined && primaryKey !== null) {
+            return this.get(id).rowList.find((row) => row.rowData[primaryKey] === rowSelector);
+        }
+        return this.get(id).rowList.find((row) => row.index === rowSelector);
     }
 
     public get_cell_by_field(id: string, rowSelector: any, field: string): IgxGridCellComponent {
