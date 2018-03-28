@@ -4,12 +4,13 @@ import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { Calendar, IgxCalendarComponent, IgxCalendarModule, isLeap, monthRange, weekDay, WEEKDAYS } from "./index";
+import { format } from "path";
 
 describe("IgxCalendar", () => {
     beforeEach(
         async(() => {
             TestBed.configureTestingModule({
-                declarations: [IgxCalendarRenderingComponent],
+                declarations: [IgxCalendarRenderingComponent, IgxCalendarComponentFormats],
                 imports: [IgxCalendarModule, FormsModule, BrowserAnimationsModule]
             }).compileComponents();
         })
@@ -201,6 +202,68 @@ describe("IgxCalendar", () => {
         );
 
         expect(() => (calendar.selection = "non-existant")).toThrow();
+    });
+
+    it("@Complex Input properties formatOptions and formatViews", () => {
+        const fixture = TestBed.createComponent(IgxCalendarComponentFormats);
+        fixture.detectChanges();
+
+        const calendar = fixture.componentInstance.calendar;
+        const dom = fixture.debugElement;
+        const defaultOptions = {
+            day: "numeric",
+            month: "short",
+            weekday: "short",
+            year: "numeric"
+        };
+        const defaultViews = { day: false, month: true, year: false};
+        const bodyMonth = dom.query(By.css(".date .date__el"));
+        const headerYear = dom.query(By.css(".igx-calendar__header-year"));
+        const bodyYear = dom.queryAll(By.css(".date .date__el"))[1];
+        const headerWeekday = dom.queryAll(By.css(".igx-calendar__header-date span"))[0];
+        const headerDate = dom.queryAll(By.css(".igx-calendar__header-date span"))[1];
+
+        calendar.selectDate(calendar.viewDate);
+        fixture.detectChanges();
+
+        expect(calendar.formatOptions).toEqual(jasmine.objectContaining(defaultOptions));
+        expect(calendar.formatViews).toEqual(jasmine.objectContaining(defaultViews));
+        expect(headerYear.nativeElement.textContent.trim()).toMatch("2018");
+        expect(headerWeekday.nativeElement.textContent.trim()).toMatch("Mon");
+        expect(headerDate.nativeElement.textContent.trim()).toMatch("Sep 17");
+        expect(bodyYear.nativeElement.textContent.trim()).toMatch("2018");
+        expect(bodyMonth.nativeElement.textContent.trim()).toMatch("Sep");
+
+        // change formatOptions and formatViews
+        const formatOptions: any = { month: "long", year: "2-digit" };
+        const formatViews: any = { month: true, year: true};
+        calendar.formatOptions = formatOptions;
+        calendar.formatViews = formatViews;
+        fixture.detectChanges();
+
+        expect(calendar.formatOptions).toEqual(jasmine.objectContaining(Object.assign(defaultOptions, formatOptions)));
+        expect(calendar.formatViews).toEqual(jasmine.objectContaining(Object.assign(defaultViews, formatViews)));
+        expect(headerYear.nativeElement.textContent.trim()).toMatch("18");
+        expect(headerWeekday.nativeElement.textContent.trim()).toMatch("Mon");
+        expect(headerDate.nativeElement.textContent.trim()).toMatch("September 17");
+        expect(bodyYear.nativeElement.textContent.trim()).toMatch("18");
+        expect(bodyMonth.nativeElement.textContent.trim()).toMatch("September");
+
+        // change formatOptions and formatViews
+        formatOptions.year = "numeric";
+        formatViews.day = true;
+        formatViews.month = false;
+        calendar.formatOptions = formatOptions;
+        calendar.formatViews = formatViews;
+        fixture.detectChanges();
+
+        expect(calendar.formatOptions).toEqual(jasmine.objectContaining(Object.assign(defaultOptions, formatOptions)));
+        expect(calendar.formatViews).toEqual(jasmine.objectContaining(Object.assign(defaultViews, formatViews)));
+        expect(headerYear.nativeElement.textContent.trim()).toMatch("2018");
+        expect(headerWeekday.nativeElement.textContent.trim()).toMatch("Mon");
+        expect(headerDate.nativeElement.textContent.trim()).toMatch("8 17");
+        expect(bodyYear.nativeElement.textContent.trim()).toMatch("2018");
+        expect(bodyMonth.nativeElement.textContent.trim()).toMatch("8");
     });
 
     it("Calendar DOM structure", () => {
@@ -866,5 +929,15 @@ describe("IgxCalendar", () => {
 export class IgxCalendarRenderingComponent {
     public model: Date | Date[] = new Date(2017, 5, 13);
     public viewDate = new Date(2017, 5, 13);
+    @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
+}
+@Component({
+    template: `
+        <igx-calendar [viewDate]="viewDate" [(ngModel)]="model"></igx-calendar>
+    `
+})
+export class IgxCalendarComponentFormats {
+    public model: Date | Date[] = new Date();
+    public viewDate = new Date(2018, 8, 17);
     @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
 }
