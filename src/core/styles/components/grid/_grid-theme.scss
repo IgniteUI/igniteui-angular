@@ -132,7 +132,7 @@
 
     %grid-display {
         display: grid;
-        grid-template-rows: auto auto auto auto;
+        grid-template-rows: auto 1fr auto auto;
         grid-template-columns: 1fr;
         border-radius: $grid-br;
         box-shadow: $grid-shadow;
@@ -261,7 +261,8 @@
     %grid-scroll {
         display: flex;
         flex-flow: row nowrap;
-        grid-row: 3;
+        grid-row: 5;
+        width: 100%;
         background: igx-color($palette, 'grays', 100);
     }
 

@@ -60,6 +60,11 @@ export class AppComponent {
             name: "DatePicker"
         },
         {
+            link: "/timePicker",
+            icon: "date_range",
+            name: "TimePicker"
+        },
+        {
             link: "/grid",
             icon: "view_column",
             name: "Grid"
@@ -78,6 +83,11 @@ export class AppComponent {
             link: "/gridPerformance",
             icon: "view_column",
             name: "Grid Performance"
+        },
+        {
+            link: "/gridSummary",
+            icon: "view_column",
+            name: "Grid Summary"
         },
         {
             link: "/dialog",

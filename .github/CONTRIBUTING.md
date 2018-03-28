@@ -35,6 +35,20 @@ When working on an issue for the Ignite UI for Angular repository, you need to b
 1. `status: pending-localization` this status tells that there are changes in the localization strings that need to be translated. When you make such changes, put this status badge without removing the other applicable ones and assign a person to do the translations.
 2. `status: localized` this status is for issues that were with a pending translation status and have already been localized. Place this status label once these translation changes have been included in the current pull request, or the changes are already pulled with a different pull request.
 
+# Commit message conventions
+When committing a message you need to follow this template convention:
+`<type>(<scope>): <subject> <issue|optional>`
+
+1. `<type>` - The type is the conventional type of the commit message. All possible choices you can find [here](https://github.com/pvdlg/conventional-commit-types#commit-types).
+2. `<scope>` - The scope is the context on which you are worked on. It could be current directive, component etc. 
+	If you are unable to determine your working context you can leave it as "(*)".
+3. `<subject>` - The subject (first line of the Commit message) is the most critical. So be sure you have clear and easy understandable description about the commit.
+	The limit of the subject is at least `15` characters.
+4. `<issue>` - The issue is the refenrece of the github task you have. Be aware that you are able to link more than one issue. For instance `(#123 #456)`. 
+	Also there is another important point, for `(fix, feat, test) types` you are obliged to add at least one issue reference.
+5. The limits you have per line is `80` characters.
+### example: "feat(checkbox): add ripple, indeterminate state, and label #123"
+
 # Fixing a bug  
 When fixing a bug you need to follow these guidelines:
 
