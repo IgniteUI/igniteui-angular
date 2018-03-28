@@ -50,11 +50,20 @@ export class IgxTabsComponent implements AfterViewInit {
     @ViewChild("headerContainer")
     public headerContainer: ElementRef;
 
-    @ViewChild("tabmenu")
-    public tabmenu: ElementRef;
+    @ViewChild("itemsContainer")
+    public itemsContainer: ElementRef;
 
     @ViewChild("tablist")
     public tablist: ElementRef;
+
+    @HostBinding("style.width")
+    @Input()
+    public width;
+
+    @HostBinding("style.width")
+    get viewPortWidth(){
+        return this.width - 60;
+    }
 
     public selectedIndex = -1;
     public isScrollable = false;
@@ -68,23 +77,24 @@ export class IgxTabsComponent implements AfterViewInit {
         return this._itemStyle;
     }
 
-    private offsetRight = 0;
-    private offsetLeft = 0;
     private offset = 0;
     private  step = 180;
 
     public left(event) {
-
+        if(this.offset !== 0) {
+            this.offset+= this.step;
+            this.itemsContainer.nativeElement.style.transform = `translate(${this.offset}px)`;
+           }
     }
 
     public right(event) {
-        const parentContainerWidth = this.tabmenu.nativeElement.offsetWidth;
+        const parentContainerWidth = this.itemsContainer.nativeElement.offsetWidth;
 
-        if (parentContainerWidth >= this.offsetRight) {
-            this.offsetRight += this.step;
-            this.tabmenu.nativeElement.style.transform = "translate(" + -this.offsetRight + "px)";
+        if (parentContainerWidth - this.viewPortWidth >= Math.abs(this.offset)) {
+            this.offset -= this.step;
+            this.itemsContainer.nativeElement.style.transform = `translate(${this.offset}px)`;
 
-            console.log("right parentContainerWidth " + parentContainerWidth + " offset " + this.offsetRight);
+            //console.log("right parentContainerWidth " + parentContainerWidth + " offset " + this.offsetRight);
         }
     }
 
