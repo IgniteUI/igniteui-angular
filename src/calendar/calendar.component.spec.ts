@@ -204,7 +204,7 @@ describe("IgxCalendar", () => {
         expect(() => (calendar.selection = "non-existant")).toThrow();
     });
 
-    it("@Complex Input properties formatOptions and formatViews", () => {
+    fit("@Complex Input properties formatOptions and formatViews", () => {
         const fixture = TestBed.createComponent(IgxCalendarComponentFormats);
         fixture.detectChanges();
 
@@ -261,7 +261,7 @@ describe("IgxCalendar", () => {
         expect(calendar.formatViews).toEqual(jasmine.objectContaining(Object.assign(defaultViews, formatViews)));
         expect(headerYear.nativeElement.textContent.trim()).toMatch("2018");
         expect(headerWeekday.nativeElement.textContent.trim()).toMatch("Mon");
-        expect(headerDate.nativeElement.textContent.trim()).toMatch("8 17");
+        expect(headerDate.nativeElement.textContent.trim()).toMatch("September 17");
         expect(bodyYear.nativeElement.textContent.trim()).toMatch("2018");
         expect(bodyMonth.nativeElement.textContent.trim()).toMatch("8");
     });
