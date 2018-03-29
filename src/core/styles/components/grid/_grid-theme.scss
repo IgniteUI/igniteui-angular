@@ -140,6 +140,10 @@
         overflow: hidden;
     }
 
+    %grid-tbody > %vhelper--vertical {
+        height: calc(100% + 18px) !important;
+    }
+
     %vhelper-display {
         &::-webkit-scrollbar {
             width: 18px;
