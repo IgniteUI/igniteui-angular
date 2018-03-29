@@ -115,11 +115,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const factory: ComponentFactory<VirtualHelperComponent> = this.resolver.resolveComponentFactory(VirtualHelperComponent);
             this.vh = this._viewContainer.createComponent(factory, 1);
             this._maxSize = this._calcMaxBrowserHeight();
-            this.vh.instance.height = this.igxForOf ? this.igxForOf.length * parseInt(this.igxForItemSize, 10) : 0;
-            if (this.vh.instance.height > this._maxSize) {
-                this._virtSizeRatio = this.vh.instance.height / this._maxSize;
-                this.vh.instance.height = this._maxSize;
-            }
+            this.vh.instance.height = this.igxForOf ? this._calcHeight() : 0;
             this._zone.runOutsideAngular(() => {
                 this.vh.instance.elementRef.nativeElement.addEventListener("scroll", (evt) => { this.onScroll(evt); });
                 this.dc.instance._viewContainer.element.nativeElement.addEventListener("wheel",
@@ -527,8 +523,18 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForScrollOrientation === "vertical") {
             const count = this.totalItemCount || this.igxForOf.length;
             this.vh.instance.elementRef.nativeElement.style.height = parseInt(this.igxForContainerSize, 10) + "px";
-            this.vh.instance.height = count * parseInt(this.igxForItemSize, 10);
+            this.vh.instance.height = this._calcHeight();
         }
+    }
+
+    private _calcHeight() {
+        const count = this.totalItemCount || this.igxForOf.length;
+        let height = count * parseInt(this.igxForItemSize, 10);
+        if (height > this._maxSize) {
+            this._virtSizeRatio = height / this._maxSize;
+            height = this._maxSize;
+        }
+        return height;
     }
 
     private _recalcOnContainerChange(changes: SimpleChanges) {
