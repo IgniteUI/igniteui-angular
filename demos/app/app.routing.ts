@@ -11,9 +11,11 @@ import { IgxTimePickerSampleComponent } from "./time-picker/sample.component";
 import { CarouselSampleComponent } from "./carousel/sample.component";
 import { IgxDatePickerSampleComponent } from "./date-picker/sample.component";
 import { DialogSampleComponent } from "./dialog/sample.component";
-import { GridSampleComponent } from "./grid/sample.component";
-import { GridPerformanceSampleComponent } from "./grid-performance/sample.component";
+import { MaskSampleComponent } from "./directives/mask/sample.component";
 import { GridColumnPinningSampleComponent } from "./grid-column-pinning/sample.component";
+import { GridPerformanceSampleComponent } from "./grid-performance/sample.component";
+import { GridSummaryComponent } from "./grid-summaries/sample.component";
+import { GridSampleComponent } from "./grid/sample.component";
 import { IconSampleComponent } from "./icon/sample.component";
 import { InputGroupSampleComponent } from "./input-group/input-group.component";
 import { InputSampleComponent } from "./input/sample.component";
@@ -29,7 +31,6 @@ import { IgxSnackbarSampleComponent } from "./snackbar/sample.component";
 import { IgxColorsSampleComponent } from "./styleguide/colors/sample.component";
 import { IgxShadowsSampleComponent } from "./styleguide/shadows/sample.component";
 import { IgxTypographySampleComponent } from "./styleguide/typography/sample.component";
-import { MaskSampleComponent } from "./directives/mask/sample.component";
 import {
     CustomContentComponent,
     TabBarSampleComponent
@@ -114,6 +115,10 @@ const appRoutes: Routes = [
     {
         component: GridPerformanceSampleComponent,
         path: "gridPerformance"
+    },
+    {
+        component: GridSummaryComponent,
+        path: "gridSummary"
     },
     {
         component: IgxCardSampleComponent,

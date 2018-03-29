@@ -3,6 +3,10 @@ import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import {
+    IgxAvatarModule, IgxCheckboxModule, IgxIconModule, IgxInputGroupModule,
+    IgxNavigationDrawerModule, IgxNavigationService, IgxRadioModule, IgxRippleModule, IgxSwitchModule
+} from "../lib/main";
 import { AppComponent } from "./app.component";
 import { routing } from "./app.routing";
 import { AvatarSampleModule } from "./avatar/sample.module";
@@ -17,6 +21,7 @@ import { DialogSampleModule } from "./dialog/sample.module";
 import { MaskSampleModule } from "./directives/mask/sample.module";
 import { GridColumnPinningSampleModule } from "./grid-column-pinning/sample.module";
 import { GridPerformanceSampleModule } from "./grid-performance/sample.module";
+import { GridSummarySampleModule } from "./grid-summaries/sample.module";
 import { GridSampleModule } from "./grid/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
 import { InputGroupSampleModule } from "./input-group/sample.module";
@@ -37,11 +42,6 @@ import { TabBarSampleModule } from "./tabbar/sample.module";
 import { IgxTimePickerSampleModule } from "./time-picker/sample.module";
 import { IgxToastSampleModule } from "./toast/sample.module";
 import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
-
-import {
-    IgxAvatarModule, IgxCheckboxModule, IgxIconModule, IgxInputGroupModule,
-    IgxNavigationDrawerModule, IgxNavigationService, IgxRadioModule, IgxRippleModule, IgxSwitchModule
-} from "../lib/main";
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -77,6 +77,7 @@ import {
         GridSampleModule,
         GridColumnPinningSampleModule,
         GridPerformanceSampleModule,
+        GridSummarySampleModule,
         IgxCardSampleModule,
         IgxSliderSampleModule,
         BadgeSampleModule,
