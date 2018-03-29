@@ -18,8 +18,13 @@ All notable changes for each version of this project will be documented in this 
 - Added the option to conditionally disable the `igx-ripple` directive through the `igxRippleDisabled` property.
 - Updated styling and interaction animations of the `igx-checkbox` component.
 - Added `indeterminate` property and styling to the `igx-checkbox` component.
-- Added `igx-ripple` effect to the checkbox component. The effect can be disabled through the `disableRipple` property.
+- Added `igx-ripple` effect to the `igx-checkbox` component. The effect can be disabled through the `disableRipple` property.
 - Added the ability to specify the label location in the checkbox component through the `labelPosition` property. It can either be `before` or `after` the checkbox element.
+- You can now use any element as label on the `igx-checkbox` component via the aria-labelledby property. 
+- You can now have invisible label on the `igx-checkbox` component via the aria-label property. 
+- Added the ability to toggle the `igx-checkbox` checked state programmatically via toggle method on the component instance.
+- Fixed a bug on the `igx-checkbox` component where the click event was being triggered twice on click.
+- Fixed a bug where the `igx-checkbox` change event was not being triggered on label click.
 - `igxМask` directive added
     - `igxМask` provide means for controlling user input and formatting the visible value based on a configurable mask rules. For more detailed information see [`igxMask README file`]
     (https://github.com/IgniteUI/igniteui-angular/blob/master/src/directives/mask/README.md)
