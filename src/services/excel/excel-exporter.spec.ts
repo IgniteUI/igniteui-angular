@@ -1,4 +1,5 @@
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from "@angular/core/testing";
+import { ExportUtilities } from "../exporter-common/export-utilities";
 import { ExcelFileTypes } from "./excel-enums";
 import { IgxExcelExporterService } from "./excel-exporter";
 import { IgxExcelExporterOptions } from "./excel-exporter-options";
@@ -19,8 +20,8 @@ describe("Excel Exporter", () => {
         actualData = new FileContentData();
         options = new IgxExcelExporterOptions("ExcelExport");
 
-        // Spy the private saveFile method so the files are not really created
-        spyOn(exporter as any, "saveFile");
+        // Spy the saveBlobToFile method so the files are not really created
+        spyOn(ExportUtilities as any, "saveBlobToFile");
     });
 
     /* ExportData() tests */

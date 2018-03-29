@@ -10,6 +10,7 @@ import {
     GridMarkupPagingDeclarationComponent,
     GridReorderedColumnsComponent } from "../exporter-common/components-declarations";
 import { ColumnExportingEventArgs, RowExportingEventArgs } from "../exporter-common/event-args";
+import { ExportUtilities } from "../exporter-common/export-utilities";
 import { TestMethods } from "../exporter-common/test-methods";
 import { IgxExcelExporterService } from "./excel-exporter";
 import { IgxExcelExporterOptions } from "./excel-exporter-options";
@@ -43,8 +44,8 @@ describe("Excel Exporter", () => {
             // different platforms measure text differently
             options.columnWidth = 50;
 
-            // Spy the private saveFile method so the files are not really created
-            spyOn(exporter as any, "saveFile");
+            // Spy the saveBlobToFile method so the files are not really created
+            spyOn(ExportUtilities as any, "saveBlobToFile");
         });
     }));
 

@@ -1,5 +1,6 @@
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { ExportTestDataService, FileContentData, ValueData } from "../excel/test-data.service";
+import { ExportUtilities } from "../exporter-common/export-utilities";
 import { IgxCsvExporterService } from "./csv-exporter";
 import { CsvFileTypes, IgxCsvExporterOptions } from "./csv-exporter-options";
 import { CSVWrapper } from "./csv-verification-wrapper";
@@ -16,8 +17,8 @@ describe("Export to", () => {
         sourceData = new ExportTestDataService();
         actualData = new FileContentData();
 
-        // Spy the private saveFile method so the files are not really created
-        spyOn(exporter as any, "saveFile");
+        // Spy the saveBlobToFile method so the files are not really created
+        spyOn(ExportUtilities as any, "saveBlobToFile");
     });
 
     /* ExportData() tests */

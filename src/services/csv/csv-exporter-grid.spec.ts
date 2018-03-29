@@ -12,6 +12,7 @@ import {
     GridReorderedColumnsComponent } from "../exporter-common/components-declarations";
 
 import { ColumnExportingEventArgs, RowExportingEventArgs } from "../exporter-common/event-args";
+import { ExportUtilities } from "../exporter-common/export-utilities";
 import { TestMethods } from "../exporter-common/test-methods";
 import { IgxCsvExporterService } from "./csv-exporter";
 import { CsvFileTypes, IgxCsvExporterOptions } from "./csv-exporter-options";
@@ -40,8 +41,8 @@ describe("CSV Grid Exporter", () => {
             actualData = new FileContentData();
             options = new IgxCsvExporterOptions("CsvGridExport", CsvFileTypes.CSV);
 
-            // Spy the private saveFile method so the files are not really created
-            spyOn(exporter as any, "saveFile");
+            // Spy the saveBlobToFile method so the files are not really created
+            spyOn(ExportUtilities as any, "saveBlobToFile");
         });
     }));
 
