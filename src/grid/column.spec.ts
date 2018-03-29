@@ -13,6 +13,7 @@ describe("IgxGrid - Column properties", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
+                ColumnsFromIterableComponent,
                 TemplatedColumnsComponent,
                 ColumnHiddenFromMarkupComponent,
                 ColumnCellFormatterComponent
@@ -142,7 +143,50 @@ describe("IgxGrid - Column properties", () => {
         expect(headers[0].nativeElement.textContent).toMatch("Name");
         expect(headers[1].nativeElement.textContent).toMatch("ID");
     });
+
+    it("should support adding and removing columns through a declared iterable", () => {
+        const fix = TestBed.createComponent(ColumnsFromIterableComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+
+        expect(grid.columnList.length).toEqual(2);
+
+        fix.componentInstance.declarations.push("MyNewColumn");
+        fix.detectChanges();
+
+        expect(grid.columnList.length).toEqual(3);
+        expect(grid.columnList.last.field).toMatch("MyNewColumn");
+
+        fix.componentInstance.declarations.pop();
+        fix.detectChanges();
+
+        expect(grid.columnList.length).toEqual(2);
+        expect(grid.columnList.last.field).toMatch("Name");
+    });
 });
+
+@Component({
+    template: `
+        <igx-grid [data]="data">
+            <igx-column *ngFor="let each of declarations" [field]="each"></igx-column>
+        </igx-grid>
+    `
+})
+export class ColumnsFromIterableComponent {
+
+    public data = [
+        { ID: 1, Name: "Johny" },
+        { ID: 2, Name: "Sally" },
+        { ID: 3, Name: "Tim" }
+    ];
+
+    public declarations = ["ID", "Name"];
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public instance: IgxGridComponent;
+}
+
 
 @Component({
     template: `
