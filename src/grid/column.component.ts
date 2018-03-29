@@ -13,6 +13,7 @@ import { DataType } from "../data-operations/data-util";
 import { STRING_FILTERS } from "../data-operations/filtering-condition";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
+import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from "./grid-summary";
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -46,6 +47,9 @@ export class IgxColumnComponent implements AfterContentInit {
 
     @Input()
     public resizable = false;
+
+    @Input()
+    public hasSummary = false;
 
     @Input()
     get hidden(): boolean {
@@ -105,6 +109,15 @@ export class IgxColumnComponent implements AfterContentInit {
     public pinned = false;
 
     public gridID: string;
+
+    @Input()
+    public get summaries(): any {
+        return this._summaries;
+    }
+
+    public set summaries(classRef: any) {
+        this._summaries = new classRef();
+    }
 
     get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
@@ -167,6 +180,7 @@ export class IgxColumnComponent implements AfterContentInit {
     protected _headerTemplate: TemplateRef<any>;
     protected _footerTemplate: TemplateRef<any>;
     protected _inlineEditorTemplate: TemplateRef<any>;
+    protected _summaries = null;
     protected _hidden = false;
     protected _index: number;
 
@@ -196,6 +210,20 @@ export class IgxColumnComponent implements AfterContentInit {
         }
         if (this.editorTemplate) {
             this._inlineEditorTemplate = this.editorTemplate.template;
+        }
+        if (!this.summaries) {
+            switch (this.dataType) {
+                case DataType.String:
+                case DataType.Boolean:
+                    this.summaries = IgxSummaryOperand;
+                    break;
+                case DataType.Number:
+                    this.summaries = IgxNumberSummaryOperand;
+                    break;
+                case DataType.Date:
+                    this.summaries = IgxDateSummaryOperand;
+                    break;
+            }
         }
     }
 

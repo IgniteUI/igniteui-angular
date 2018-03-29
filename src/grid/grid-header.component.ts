@@ -12,10 +12,10 @@ import {
     ViewChild
 } from "@angular/core";
 import { SortingDirection } from "../data-operations/sorting-expression.interface";
+import { RestrictDrag } from "../directives/dragdrop/dragdrop.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
-import { RestrictDrag } from "../directives/dragdrop/dragdrop.directive";
 import { autoWire, IGridBus } from "./grid.common";
 
 @Component({
@@ -70,8 +70,13 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
         return `${this.gridID}_${this.column.field}`;
     }
 
-    protected sortDirection = SortingDirection.None;
     public cursor = null;
+    public show = false;
+    public resizerHeight;
+    public dragDirection: RestrictDrag = RestrictDrag.HORIZONTALLY;
+
+    protected sortDirection = SortingDirection.None;
+    private _startResizePos;
 
     constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, public elementRef: ElementRef) { }
 
@@ -103,6 +108,18 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
         }
     }
 
+    get restrictResizeMin(): number {
+        return parseInt(this.column.minWidth, 10) - this.elementRef.nativeElement.getBoundingClientRect().width;
+    }
+
+    get restrictResizeMax(): number {
+        if (this.column.maxWidth) {
+            return parseInt(this.column.maxWidth, 10) - this.elementRef.nativeElement.getBoundingClientRect().width;
+        } else {
+            return Number.MAX_SAFE_INTEGER;
+        }
+    }
+
     get grid(): any {
         return this.gridAPI.get(this.gridID);
     }
@@ -124,23 +141,6 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     protected getSortDirection() {
         const expr = this.gridAPI.get(this.gridID).sortingExpressions.find((x) => x.fieldName === this.column.field);
         this.sortDirection = expr ? expr.dir : SortingDirection.None;
-    }
-
-    public dragDirection: RestrictDrag = RestrictDrag.HORIZONTALLY;
-    public show = false;
-    public resizerHeight;
-    private _startResizePos;
-
-    get restrictResizeMin(): number {
-        return parseInt(this.column.minWidth, 10) - this.elementRef.nativeElement.getBoundingClientRect().width;
-    }
-
-    get restrictResizeMax(): number {
-        if (this.column.maxWidth) {
-            return parseInt(this.column.maxWidth, 10) - this.elementRef.nativeElement.getBoundingClientRect().width;
-        } else {
-            return Number.MAX_SAFE_INTEGER;
-        }
     }
 
     public onResizeAreaMouseOver() {
