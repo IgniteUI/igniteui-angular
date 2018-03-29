@@ -18,7 +18,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from "@angular/platform-browser";
 import { IgxDialogComponent, IgxDialogModule } from "../dialog/dialog.component";
-import { IgxInputModule } from "../directives/input/input.directive";
+import { IgxInputGroupModule } from "../main";
 import {
     IgxAmPmItemDirective,
     IgxHourItemDirective,
@@ -692,7 +692,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     ],
     imports: [
         CommonModule,
-        IgxInputModule,
+        IgxInputGroupModule,
         IgxDialogModule
     ],
     providers: []

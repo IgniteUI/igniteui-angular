@@ -17,9 +17,6 @@ export class IgxHintDirective implements OnInit {
     @HostBinding("class.igx-input-group__hint-item--end")
     public isPositionEnd = false;
 
-    @HostBinding("class.test")
-    public test = false;
-
     constructor(private _element: ElementRef, private _renderer: Renderer2) {
     }
 

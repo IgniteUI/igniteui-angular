@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, ContentChild, ContentChildren, ElementRef, HostBinding,
     HostListener, Input, NgModule, QueryList, Renderer2 } from "@angular/core";
 import { IgxHintDirective } from "../directives/hint/hint.directive";
-import { IgxInputDirective } from "../directives/input/input.directive";
+import { IgxInputDirective, IgxInputState } from "../directives/input/input.directive";
 import { IgxLabelDirective } from "../directives/label/label.directive";
 import { IgxPrefixDirective } from "../directives/prefix/prefix.directive";
 import { IgxSuffixDirective } from "../directives/suffix/suffix.directive";
@@ -14,19 +14,12 @@ enum IgxInputGroupType {
     SEARCH
 }
 
-export enum IgxInputGroupState {
-    INITIAL,
-    VALID,
-    INVALID
-}
-
 @Component({
     selector: "igx-input-group",
     templateUrl: "input-group.component.html"
 })
 export class IgxInputGroupComponent {
     private _type = IgxInputGroupType.LINE;
-    private _valid = IgxInputGroupState.INITIAL;
 
     @HostBinding("class.igx-input-group")
     public defaultClass = true;
@@ -57,12 +50,12 @@ export class IgxInputGroupComponent {
 
     @HostBinding("class.igx-input-group--valid")
     public get validClass(): boolean {
-        return this.valid === IgxInputGroupState.VALID;
+        return this.input.valid === IgxInputState.VALID;
     }
 
     @HostBinding("class.igx-input-group--invalid")
     public get invalidClass(): boolean {
-        return this.valid === IgxInputGroupState.INVALID;
+        return this.input.valid === IgxInputState.INVALID;
     }
 
     @HostBinding("class.igx-input-group--warning")
@@ -104,14 +97,6 @@ export class IgxInputGroupComponent {
         return this._type.toString();
     }
 
-    get valid(): IgxInputGroupState {
-        return this._valid;
-    }
-
-    set valid(value: IgxInputGroupState) {
-        this._valid = value;
-    }
-
     constructor(public element: ElementRef, private _renderer: Renderer2) {
     }
 
@@ -124,7 +109,7 @@ export class IgxInputGroupComponent {
             this._type === IgxInputGroupType.BOX;
     }
 
-    get isTypeLine() {
+    public get isTypeLine(): boolean {
         return  this._type === IgxInputGroupType.LINE;
     }
 
