@@ -187,7 +187,6 @@ export class ColumnsFromIterableComponent {
     public instance: IgxGridComponent;
 }
 
-
 @Component({
     template: `
         <igx-grid [data]="data">
