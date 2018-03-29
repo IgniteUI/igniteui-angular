@@ -8,9 +8,21 @@
 </span>
 <igx-grid-filter [column]="column" *ngIf="column.filterable"></igx-grid-filter>
 
-<span (dblclick)="onResizeAreaDblClick()"
+<span (mousedown)="onResizeAreaMouseDown($event)"
+      (dblclick)="onResizeAreaDblClick()"
       (mouseover)="onResizeAreaMouseOver()"
-      (mousedown)="onResizeAreaMouseDown($event)"
       [style.cursor]="cursor"
       style="display: flex;position: absolute;height: 100%;right:0%;width: 4px;">
+    <div *ngIf="show" igxDrag
+        [dragEndTimeout]="200"
+        [restrictDrag]="dragDirection"
+        [restrictHDragMax]="restrictResizeMax"
+        [restrictHDragMin]="restrictResizeMin"
+        (dragStart)="startResizing($event)"
+        (dragEnd)="resize($event)"
+        [style.height.px]="resizerHeight"
+        style="width: 4px;z-index: 5;background-color: #006db6; position: absolute;cursor:col-resize">
+    </div>
 </span>
+
+

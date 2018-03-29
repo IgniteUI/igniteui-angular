@@ -32,7 +32,6 @@ import { cloneArray } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
-import { IgxDragDirective, RestrictDrag } from "../directives/dragdrop/dragdrop.directive";
 import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
@@ -219,18 +218,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public calcHeight: number;
 
     public cellInEditMode: IgxGridCellComponent;
-    public dragDirection: RestrictDrag = RestrictDrag.HORIZONTALLY;
 
     public eventBus = new Subject<boolean>();
     protected destroy$ = new Subject<boolean>();
-
-    public resizer = {
-        x: 0,
-        show: false,
-        column: null,
-        actualWidth: 0,
-        left: 0
-    };
 
     protected _perPage = 15;
     protected _page = 0;
@@ -243,8 +233,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
     private resizeHandler;
-
-    private _startResizePos;
 
     constructor(
         private gridAPI: IgxGridAPIService,
@@ -306,18 +294,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     get calcResizerHeight(): number {
         return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight;
-    }
-
-    get restrictResizeMin(): number {
-        return this.resizer.left + parseInt(this.resizer.column.minWidth, 10);
-    }
-
-    get restrictResizeMax(): number {
-        if (this.resizer.column.maxWidth) {
-            return this.resizer.left + parseInt(this.resizer.column.maxWidth, 10) - 4;
-        } else {
-            return Number.MAX_SAFE_INTEGER;
-        }
     }
 
     get pinnedWidth() {
@@ -670,38 +646,5 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.cellInEditMode.inEditMode = false;
             }
         });
-    }
-
-    public startResizing(event) {
-        this._startResizePos = event.clientX;
-    }
-
-    public resize(event) {
-        this.resizer.show = false;
-
-        const resizedColumn = this.resizer.column;
-        const diff = event.clientX - this._startResizePos;
-
-        if (resizedColumn) {
-            let currentColWidth = parseInt(resizedColumn.width, 10);
-            const colMinWidth = parseInt(resizedColumn.minWidth, 10);
-            const colMaxWidth = parseInt(resizedColumn.maxWidth, 10);
-
-            currentColWidth = (currentColWidth < this.resizer.actualWidth) ? this.resizer.actualWidth : currentColWidth;
-
-            if (currentColWidth + diff < colMinWidth) {
-                resizedColumn.width = resizedColumn.minWidth;
-            } else if (colMaxWidth && (currentColWidth + diff > colMaxWidth)) {
-                resizedColumn.width = resizedColumn.maxWidth;
-            } else {
-                resizedColumn.width = (currentColWidth + diff).toString();
-            }
-
-            this.markForCheck();
-
-            if (currentColWidth.toString() !== resizedColumn.width) {
-                this.onColumnResized.emit({column: resizedColumn, prevWidth: currentColWidth.toString(), newWidth: resizedColumn.width});
-            }
-        }
     }
 }

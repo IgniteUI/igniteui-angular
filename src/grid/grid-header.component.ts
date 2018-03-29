@@ -8,12 +8,14 @@ import {
     HostBinding,
     HostListener,
     Input,
-    OnInit
+    OnInit,
+    ViewChild
 } from "@angular/core";
 import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
+import { RestrictDrag } from "../directives/dragdrop/dragdrop.directive";
 import { autoWire, IGridBus } from "./grid.common";
 
 @Component({
@@ -124,6 +126,23 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
         this.sortDirection = expr ? expr.dir : SortingDirection.None;
     }
 
+    public dragDirection: RestrictDrag = RestrictDrag.HORIZONTALLY;
+    public show = false;
+    public resizerHeight;
+    private _startResizePos;
+
+    get restrictResizeMin(): number {
+        return parseInt(this.column.minWidth, 10) - this.elementRef.nativeElement.getBoundingClientRect().width;
+    }
+
+    get restrictResizeMax(): number {
+        if (this.column.maxWidth) {
+            return parseInt(this.column.maxWidth, 10) - this.elementRef.nativeElement.getBoundingClientRect().width;
+        } else {
+            return Number.MAX_SAFE_INTEGER;
+        }
+    }
+
     public onResizeAreaMouseOver() {
         if (this.column.resizable) {
             this.cursor = "col-resize";
@@ -132,12 +151,8 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
 
     public onResizeAreaMouseDown(event) {
         if (event.button === 0 && this.column.resizable) {
-            this.grid.resizer.show = true;
-
-            this.grid.resizer.column = this.column;
-            this.grid.resizer.x = event.clientX + 1;
-            this.grid.resizer.left = this.elementRef.nativeElement.getBoundingClientRect().left;
-            this.grid.resizer.actualWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
+            this.show = true;
+            this.resizerHeight = this.grid.calcResizerHeight;
         } else {
             this.cursor = null;
         }
@@ -168,6 +183,40 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
 
             this.grid.markForCheck();
             this.grid.onColumnResized.emit({column: this.column, prevWidth: currentColWidth, newWidth: this.column.width});
+        }
+    }
+
+    public startResizing(event) {
+        this._startResizePos = event.clientX;
+    }
+
+    public resize(event) {
+        this.show = false;
+
+        const diff = event.clientX - this._startResizePos;
+
+        if (this.column.resizable) {
+            let currentColWidth = parseInt(this.column.width, 10);
+            const colMinWidth = parseInt(this.column.minWidth, 10);
+            const colMaxWidth = parseInt(this.column.maxWidth, 10);
+
+            const actualWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
+
+            currentColWidth = (currentColWidth < actualWidth) ? actualWidth : currentColWidth;
+
+            if (currentColWidth + diff < colMinWidth) {
+                this.column.width = colMinWidth + "px";
+            } else if (colMaxWidth && (currentColWidth + diff > colMaxWidth)) {
+                this.column.width = colMaxWidth + "px";
+            } else {
+                this.column.width = currentColWidth + diff + "px";
+            }
+
+            this.grid.markForCheck();
+
+            if (currentColWidth.toString() !== this.column.width) {
+                this.grid.onColumnResized.emit({column: this.column, prevWidth: currentColWidth.toString(), newWidth: this.column.width});
+            }
         }
     }
 }

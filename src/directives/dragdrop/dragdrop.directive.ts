@@ -1,3 +1,4 @@
+import { DOCUMENT } from "@angular/common";
 import {
     ChangeDetectorRef,
     Directive,
@@ -5,6 +6,7 @@ import {
     EventEmitter,
     HostBinding,
     HostListener,
+    Inject,
     Input,
     NgModule,
     OnDestroy,
@@ -32,7 +34,7 @@ export enum RestrictDrag {
 @Directive({
     selector: "[igxDrag]"
 })
-export class IgxDragDirective implements OnDestroy {
+export class IgxDragDirective {
     @Input()
     public restrictDrag: RestrictDrag = RestrictDrag.NONE;
 
@@ -48,6 +50,9 @@ export class IgxDragDirective implements OnDestroy {
     @Input()
     public restrictVDragMax: number = Number.MAX_SAFE_INTEGER;
 
+    @Input()
+    public dragEndTimeout = 0;
+
     @Output()
     public dragEnd = new Subject<any>();
 
@@ -57,12 +62,15 @@ export class IgxDragDirective implements OnDestroy {
     @Output()
     public drag = new Subject<any>();
 
-    constructor(public element: ElementRef, public cdr: ChangeDetectorRef) {
+    private _tempLeft;
+    private _tempTop;
+
+    constructor(public element: ElementRef, public cdr: ChangeDetectorRef, @Inject(DOCUMENT) public document) {
 
         this.dragStart.map((event) => {
             return {
-                left: event.clientX - this.left,
-                top: event.clientY - this.top
+                left: event.clientX,
+                top: event.clientY
             };
         }).switchMap((offset) =>
             this.drag.map((event) => ({
@@ -70,57 +78,35 @@ export class IgxDragDirective implements OnDestroy {
                 top: event.clientY - offset.top
             })).takeUntil(this.dragEnd))
         .subscribe((pos) => {
-            let left = pos.left + "px";
-            let top = pos.top + "px";
+            const left = this._tempLeft + pos.left;
+            const top = this._tempTop + pos.top;
 
-            if (pos.left < this.restrictHDragMin) {
-                left = this.restrictHDragMin + "px";
-            }
-            if (pos.left > this.restrictHDragMax) {
-                left = this.restrictHDragMax + "px";
-            }
+            if (this.restrictDrag === RestrictDrag.HORIZONTALLY || this.restrictDrag === RestrictDrag.NONE) {
 
-            if (pos.top < this.restrictVDragMin) {
-                top = this.restrictVDragMin + "px";
-            }
-            if (pos.top > this.restrictVDragMax) {
-                top = this.restrictVDragMax + "px";
+                this.left = left < this.restrictHDragMin ? this.restrictHDragMin + "px" : left + "px";
+
+                if (left > this.restrictHDragMax) {
+                    this.left = this.restrictHDragMax + "px";
+                } else if (left > this.restrictHDragMin) {
+                    this.left = left + "px";
+                }
             }
 
-            switch (this.restrictDrag) {
-                case RestrictDrag.HORIZONTALLY:
-                    this.left = left;
-                    break;
+            if (this.restrictDrag === RestrictDrag.VERTICALLY || this.restrictDrag === RestrictDrag.NONE) {
 
-                case RestrictDrag.VERTICALLY:
-                    this.top = top;
-                    break;
+                this.top = top < this.restrictVDragMin ? this.restrictVDragMin + "px" : top + "px";
 
-                case RestrictDrag.NONE:
-                default:
-                    this.left = left;
-                    this.top = top;
-                    break;
+                if (top > this.restrictVDragMax) {
+                    this.top = this.restrictVDragMax + "px";
+                } else if (top > this.restrictVDragMin) {
+                    this.top = top + "px";
+                }
             }
         });
     }
 
-    ngOnDestroy() {
-        this.drag.unsubscribe();
-        this.dragStart.unsubscribe();
-        this.dragEnd.unsubscribe();
-    }
-
-    public get left() {
-        return this.element.nativeElement.getBoundingClientRect().left;
-    }
-
     public set left(val) {
         this.element.nativeElement.style.left = val;
-    }
-
-    public get top() {
-        return this.element.nativeElement.getBoundingClientRect().top;
     }
 
     public set top(val) {
@@ -129,12 +115,22 @@ export class IgxDragDirective implements OnDestroy {
 
     @HostListener("document:mouseup", ["$event"])
     onMouseup(event) {
-        this.dragEnd.next(event);
-        this.cdr.reattach();
+        setTimeout(() => {
+            this.dragEnd.next(event);
+            this.cdr.reattach();
+        }, this.dragEndTimeout);
     }
 
     @HostListener("document:mousedown", ["$event"])
     onMousedown(event) {
+        const elStyle = this.document.defaultView.getComputedStyle(this.element.nativeElement);
+
+        const tempLeft = parseInt(elStyle.left, 10);
+        const tempTop = parseInt(elStyle.top, 10);
+
+        this._tempLeft = Number.isNaN(tempLeft) ? 0 : tempLeft;
+        this._tempTop = Number.isNaN(tempTop) ? 0 : tempTop;
+
         this.dragStart.next(event);
         this.cdr.detach();
     }
