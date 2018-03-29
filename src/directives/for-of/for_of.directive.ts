@@ -203,7 +203,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             }, 0);
             this.hScroll.scrollLeft = sumWidths;
         } else {
-            this.vh.instance.elementRef.nativeElement.scrollTop = parseInt(this.igxForItemSize, 10) * index;
+            const vhElem = this.vh.instance.elementRef.nativeElement;
+            const containerSize = parseInt(this.igxForContainerSize, 10);
+            const vcHeight = (vhElem.children[0].scrollHeight - containerSize) * this._virtSizeRatio + containerSize;
+            const count = this.totalItemCount || this.igxForOf.length;
+            const scrolllTop = ((index / count) * vcHeight) / this._virtSizeRatio;
+            this.vh.instance.elementRef.nativeElement.scrollTop = scrolllTop;
         }
     }
 
