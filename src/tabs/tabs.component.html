@@ -1,34 +1,28 @@
-<div #tabsGroup [style.width.px]='width'>
-    <div #headerContainer [style.width.px]='width' style="overflow: hidden; height: 48px; display: inline-block;">
-       
-        <div style="width: 30px;float: left;">
-            <button style="height:48px" igxButton="icon" (click)="left($event)">
-                <igx-icon fontSet="material" name="<"></igx-icon>
-            </button>
-        </div>
 
-        <div #viewPort [style.width.px]='viewPortWidth' style="float: left;overflow: hidden;" > 
-            <div #itemsContainer style="display:flex; flex-direction: row; width:1600px;height: 48px;" >
-                <igx-tab-item *ngFor="let group of groups" [id]="'igx-tab-item-' + group.index" [attr.aria-label]="group.label" [attr.aria-disabled]="group.isDisabled"
-                    [attr.aria-selected]="group.isSelected" [attr.aria-controls]="'igx-tab-item-group-'+ group.index" [ngClass]="{
+<!-- TODO Remove tab container from here -->
+<div #tabsContainer>
+    <div class="igx-tabs__header" #headerContainer>
+        <button class="igx-tabs__scroller__indicator igx-tabs__scroller__indicator--left" igxButton="icon" (click)="left($event)">
+            <igx-icon fontSet="material" name="navigate_before"></igx-icon>
+        </button>
+        <div class="igx-tabs__wrapper" #viewPort>
+            <div #itemsContainer class="igx-tabs__items-holder">
+                <igx-tab-item igxRipple="#FBB13C" *ngFor="let group of groups" [id]="'igx-tab-item-' + group.index" [attr.aria-label]="group.label" [attr.aria-disabled]="group.isDisabled"
+                                             [attr.aria-selected]="group.isSelected" [attr.aria-controls]="'igx-tab-item-group-'+ group.index" [ngClass]="{
                 'igx-tabs__menu-item': !group.isSelected && !group.isDisabled,
                 'igx-tabs__menu-item--selected': group.isSelected,
-                'igx-tabs__menu-item--disabled': group.isDisabled }" 
-                [relatedGroup]="group" (click)="group.select()" role="tab" >
+                'igx-tabs__menu-item--disabled': group.isDisabled }"
+                                             [relatedGroup]="group" (click)="group.select()" role="tab" >
                 </igx-tab-item>
+                <div class="igx-tabs__indicator"></div>
             </div>
-            </div>
-
-        <div style="width: 30px;float: right;">
-            <button style="height:48px" igxButton="icon" (click)="right($event)">
-                <igx-icon fontSet="material" name=">"></igx-icon>
-            </button>
         </div>
-
+        <button class="igx-tabs__scroller__indicator igx-tabs__scroller__indicator--right" igxButton="icon" (click)="right($event)">
+            <igx-icon fontSet="material" name="navigate_next"></igx-icon>
+        </button>
     </div>
 
-    <div>
+    <div class="igx-tabs__content">
         <ng-content></ng-content>
     </div>
-
 </div>

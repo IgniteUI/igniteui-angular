@@ -50,8 +50,7 @@
 
         <article class="sample-column" >
             <h4 class="sample-title">Three item tabbar</h4>
-            <div class="tabbar-wrapper" #tabbarEl style="width: 600px">
-                <igx-tabs>
+            <igx-tabs>
                     <igx-tabs-group label="Tab1">
                         <div class="tab-content">
                             <h3>Tab 1 Content</h3>
@@ -65,7 +64,7 @@
                         </div>
                     </igx-tabs-group>
                     <igx-tabs-group label="Tab2 Tab2 Tab2">
-                        <div class="tab-content">
+                        <div igxRipple="yellow" class="tab-content">
                             <h3>Tab 2 Content</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
                                 ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
@@ -88,7 +87,7 @@
                             <router-outlet name="tabPanelOutlet"></router-outlet>
                         </div>
                     </igx-tabs-group>
-                    <igx-tabs-group label="Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5">
+                    <igx-tabs-group label="Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5">
                         <div class="tab-content">
                             <router-outlet name="tabPanelOutlet"></router-outlet>
                         </div>
@@ -98,8 +97,8 @@
                             <router-outlet name="tabPanelOutlet"></router-outlet>
                         </div>
                     </igx-tabs-group>
-                    <igx-tabs-group label="Tab7 Tab7 Tab7 Tab7 Tab7 Tab7 Tab7 Tab7 Tab7 Tab7 Tab7">
-                      
+                    <igx-tabs-group label="Tab7 Tab7 Tab7 Tab7 Tab7">
+
                     </igx-tabs-group>
                     <igx-tabs-group label="Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8">
                         <div class="tab-content">
@@ -111,12 +110,12 @@
                             <router-outlet name="tabPanelOutlet"></router-outlet>
                         </div>
                     </igx-tabs-group>
-                    <igx-tabs-group label="Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10">
+                    <igx-tabs-group label="Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10">
                         <div class="tab-content">
                             <router-outlet name="tabPanelOutlet"></router-outlet>
                         </div>
                     </igx-tabs-group>
-                    <igx-tabs-group label="Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11">
+                    <igx-tabs-group label="Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 ">
                         <div class="tab-content">
                             <router-outlet name="tabPanelOutlet"></router-outlet>
                         </div>
@@ -127,7 +126,6 @@
                         </div>
                     </igx-tabs-group>
                 </igx-tabs>
-            </div>
         </article>
 
         <!-- <article class="sample-column">
@@ -173,6 +171,6 @@
         </article>
     </div> -->
 
-   
+
 </div>
 

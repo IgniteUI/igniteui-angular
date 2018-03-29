@@ -9,18 +9,22 @@
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
 
-    @include e(group) {
-        @extend %igx-tabs-group !optional;
+    @include e(header) {
+        @extend %igx-tabs__header !optional;
     }
 
-    @include e(group, $m: selected) {
-        @extend %igx-tabs-group !optional;
-        @extend %igx-tabs-group--selected !optional;
+    @include e(wrapper) {
+        @extend %igx-tabs__wrapper !optional;
     }
 
-    @include e(menu) {
-        @extend %igx-tabs-menu !optional;
+    @include e(items-holder) {
+        @extend %igx-tabs__items-holder !optional;
     }
+
+    @include e(indicator) {
+        @extend %igx-tabs__indicator !optional;
+    }
+
 
     @include e(menu-item) {
         @extend %igx-tabs-menu-item !optional;
@@ -52,5 +56,18 @@
     @include e(menu-item, $m: disabled) {
         @extend %igx-tabs-menu-item !optional;
         @extend %igx-tabs-menu-item--disabled !optional;
+    }
+
+
+    @include e(content) {
+        @extend %igx-tabs__content !optional;
+    }
+
+    @include e(group) {
+        @extend %igx-tabs__group !optional;
+    }
+
+    @include e(group, $m: selected) {
+        @extend %igx-tabs__group--selected !optional;
     }
 }

@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import {CommonModule} from "@angular/common";
 import {
     AfterContentInit,
     AfterViewInit,
@@ -19,9 +19,10 @@ import {
     ViewChild,
     ViewChildren
 } from "@angular/core";
-import { IgxBadgeModule } from "../badge/badge.component";
-import { IgxIconModule } from "../icon";
-import { IgxTabItemComponent } from "./tab-item.component";
+import {IgxBadgeModule} from "../badge/badge.component";
+import {IgxIconModule} from "../icon";
+import {IgxTabItemComponent} from "./tab-item.component";
+import {IgxRippleModule} from "../directives/ripple/ripple.directive";
 
 @Directive({
     selector: "[igxTab]"
@@ -56,12 +57,15 @@ export class IgxTabsComponent implements AfterViewInit {
     @ViewChild("tablist")
     public tablist: ElementRef;
 
+    @HostBinding("class.igx-tabs")
+    public cssClass = "igx-tabs";
+
     @HostBinding("style.width")
     @Input()
     public width;
 
     @HostBinding("style.width")
-    get viewPortWidth(){
+    get viewPortWidth() {
         return this.width - 60;
     }
 
@@ -78,24 +82,24 @@ export class IgxTabsComponent implements AfterViewInit {
     }
 
     private offset = 0;
-    private  step = 180;
+    private step = 180;
 
     public left(event) {
-        if(this.offset !== 0) {
-            this.offset+= this.step;
+        if (this.offset !== 0) {
+            this.offset += this.step;
             this.itemsContainer.nativeElement.style.transform = `translate(${this.offset}px)`;
-           }
+        }
     }
 
     public right(event) {
         const parentContainerWidth = this.itemsContainer.nativeElement.offsetWidth;
 
-        if (parentContainerWidth - this.viewPortWidth >= Math.abs(this.offset)) {
+        // if (parentContainerWidth - this.viewPortWidth >= Math.abs(this.offset)) {
             this.offset -= this.step;
             this.itemsContainer.nativeElement.style.transform = `translate(${this.offset}px)`;
 
-            //console.log("right parentContainerWidth " + parentContainerWidth + " offset " + this.offsetRight);
-        }
+            // console.log("right parentContainerWidth " + parentContainerWidth + " offset " + this.offsetRight);
+        // }
     }
 
     get selectedTab(): IgxTabItemComponent {
@@ -168,7 +172,7 @@ export class IgxTabsComponent implements AfterViewInit {
         }
 
         group.isSelected = false;
-        this.onTabItemDeselected.emit({ tab: this.tabs[group.index], group });
+        this.onTabItemDeselected.emit({tab: this.tabs[group.index], group});
     }
 }
 
@@ -193,10 +197,12 @@ export class IgxTabsGroupComponent implements AfterContentInit {
     get styleClass(): boolean {
         return (!this.isSelected);
     }
+
     @HostBinding("class.igx-tabs__group--selected")
     get selected(): boolean {
         return this.isSelected;
     }
+
     @HostBinding("attr.aria-labelledby")
     get labelledBy(): string {
         return "igx-tab-item-" + this.index;
@@ -216,6 +222,7 @@ export class IgxTabsGroupComponent implements AfterContentInit {
             return this._tabs.tabs.toArray()[this.index];
         }
     }
+
     get index() {
         return this._tabs.groups.toArray().indexOf(this);
     }
@@ -230,7 +237,7 @@ export class IgxTabsGroupComponent implements AfterContentInit {
 
     private _tabTemplate: TemplateRef<any>;
 
-    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
+    @ContentChild(IgxTabItemTemplateDirective, {read: IgxTabItemTemplateDirective})
     protected tabTemplate: IgxTabItemTemplateDirective;
 
     constructor(private _tabs: IgxTabsComponent) {
@@ -248,14 +255,14 @@ export class IgxTabsGroupComponent implements AfterContentInit {
         }
 
         this.isSelected = true;
-        this._tabs.onTabItemSelected.emit({ tab: this._tabs.tabs.toArray()[this.index], group: this });
+        this._tabs.onTabItemSelected.emit({tab: this._tabs.tabs.toArray()[this.index], group: this});
     }
 }
 
 @NgModule({
     declarations: [IgxTabsComponent, IgxTabsGroupComponent, IgxTabItemComponent, IgxTabItemTemplateDirective],
     exports: [IgxTabsComponent, IgxTabsGroupComponent, IgxTabItemComponent, IgxTabItemTemplateDirective],
-    imports: [CommonModule, IgxBadgeModule, IgxIconModule]
+    imports: [CommonModule, IgxBadgeModule, IgxIconModule, IgxRippleModule]
 })
 
 export class IgxTabsModule {
