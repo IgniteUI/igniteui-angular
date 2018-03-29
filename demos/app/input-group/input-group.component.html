@@ -1,5 +1,6 @@
+<page-header title="Input Group" description=""></page-header>
 <div class="samples">
-    <h3>Line Style Input</h3>
+    <h3 class="sample-title">Line Style Input</h3>
     <form class="form">
         <!-- Basic text field -->
         <igx-input-group>
@@ -10,14 +11,14 @@
         <!-- Basic text field w/ placeholder -->
         <igx-input-group>
             <label igxLabel>Label</label>
-            <input igxInput value="test" type="text" placeholder="Placeholder" readonly/>
+            <input igxInput value="read-only" type="text" placeholder="Placeholder" readonly/>
         </igx-input-group>
 
         <!-- Text field w/ text prefix -->
         <igx-input-group>
             <igx-prefix>+359</igx-prefix>
             <label igxLabel>Phone</label>
-            <input igxInput type="tel" />
+            <input igxInput [igxMask]="'000 000 000'" promptChar=" " ype="text" />
         </igx-input-group>
 
         <!-- Text field w/ icon prefix -->
@@ -42,9 +43,9 @@
         <!-- Textarea group -->
         <igx-input-group>
             <label igxLabel>Message</label>
-            <textarea igxInput #textarea maxlength="140"></textarea>
+            <textarea igxInput #textarea maxlength="280"></textarea>
             <igx-hint position="start">Helper text</igx-hint>
-            <igx-hint position="end">{{textarea.value.length}}/140</igx-hint>
+            <igx-hint position="end">{{textarea.value.length}}/280</igx-hint>
         </igx-input-group>
 
         <!-- Text field w/ text prefix - disabled -->
@@ -59,7 +60,7 @@
         </igx-input-group>
     </form>
 
-    <h3>Box Style Input</h3>
+    <h3 class="sample-title">Box Style Input</h3>
     <form class="form">
         <!-- Boxed text field -->
         <igx-input-group type="box">
@@ -93,7 +94,7 @@
         </igx-input-group>
     </form>
 
-    <h3>Border Style Input</h3>
+    <h3 class="sample-title">Border Style Input</h3>
     <form class="form">
         <!-- Border text field -->
         <igx-input-group type="border">
@@ -129,19 +130,19 @@
         </igx-input-group>
     </form>
 
-    <h3>Search Style Input</h3>
+    <h3 class="sample-title">Search Style Input</h3>
     <form class="form">
         <!-- Search text field -->
         <igx-input-group type="search">
             <input #input igxInput placeholder="Search" />
             <igx-prefix>
-                <i class="material-icons">search</i>
+                <igx-icon>search</igx-icon>
             </igx-prefix>
             <igx-suffix *ngIf="input.value.length > 0" (click)="input.value = input.defaultValue">
-                <i class="material-icons">clear</i>
+                <igx-icon>clear</igx-icon>
             </igx-suffix>
             <igx-suffix>
-                <i class="material-icons">mic</i>
+                <igx-icon>mic</igx-icon>
             </igx-suffix>
         </igx-input-group>
 
@@ -149,13 +150,13 @@
         <igx-input-group type="search">
             <input #input1 igxInput placeholder="Search" disabled />
             <igx-prefix>
-                <i class="material-icons">search</i>
+                <igx-icon>search</igx-icon>
             </igx-prefix>
             <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''">
-                <i class="material-icons">clear</i>
+                <igx-icon>clear</igx-icon>
             </igx-suffix>
             <igx-suffix>
-                <i class="material-icons">mic</i>
+                <igx-icon>mic</igx-icon>
             </igx-suffix>
         </igx-input-group>
     </form>

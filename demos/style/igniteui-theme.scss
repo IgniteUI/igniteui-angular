@@ -15,7 +15,7 @@ $exclude: (
     // igx-filtering,
     // igx-icon,
     // igx-form-group,
-    igx-input-group,
+    // igx-input-group,
     // igx-list,
     // igx-navbar,
     // igx-nav-drawer,
@@ -33,8 +33,6 @@ $exclude: (
 // Generating a palette
 @include igx-core();
 @include igx-theme($default-palette, $exclude);
-
-@include igx-input-group((variant: 'dark'));
 
 // @mixin gen-color-class($name, $variant, $prefix, $suffix) {
 //     $prefix: if($prefix, '#{$prefix}-', '');

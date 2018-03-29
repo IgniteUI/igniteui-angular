@@ -38,8 +38,10 @@ import { IgxTimePickerSampleModule } from "./time-picker/sample.module";
 import { IgxToastSampleModule } from "./toast/sample.module";
 import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
 
-import { IgxAvatarModule, IgxCheckboxModule, IgxIconModule, IgxInputGroupModule,
-     IgxNavigationDrawerModule, IgxNavigationService, IgxRadioModule, IgxRippleModule, IgxSwitchModule } from "../lib/main";
+import {
+    IgxAvatarModule, IgxCheckboxModule, IgxIconModule, IgxInputGroupModule,
+    IgxNavigationDrawerModule, IgxNavigationService, IgxRadioModule, IgxRippleModule, IgxSwitchModule
+} from "../lib/main";
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -52,7 +54,7 @@ import { IgxAvatarModule, IgxCheckboxModule, IgxIconModule, IgxInputGroupModule,
         routing,
         IgxNavigationDrawerModule,
         IgxRadioModule,
-        IgxIconModule,
+        IgxIconModule.forRoot(),
         IgxCheckboxModule,
         IgxInputGroupModule,
         IgxSwitchModule,

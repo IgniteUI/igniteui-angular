@@ -1,6 +1,11 @@
 .samples {
     padding: 24px;
-    background: white;
+    /* background: #202020; */
+}
+
+.sample-title {
+    margin-bottom: 24px;
+    font-size: 24px;
 }
 
 .igx-input-group+.igx-input-group,

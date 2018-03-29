@@ -1,3 +1,11 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+/// @requires {mixin} bem-mods
+////
 @include b(igx-input-group) {
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
@@ -187,6 +195,10 @@
             @extend %form-group-bundle--box !optional;
         }
 
+        @include e(bundle-main) {
+            @extend %form-group-bundle-main--box !optional;
+        }
+
         @include e(input) {
             @extend %form-group-input--box !optional;
         }
@@ -227,6 +239,10 @@
             &:hover {
                 @extend %form-group-bundle-border--hover !optional;
             }
+        }
+
+        @include e(bundle-main) {
+            @extend %form-group-bundle-main--box !optional;
         }
 
         @include e(border) {
@@ -291,6 +307,10 @@
             &:hover {
                 @extend %form-group-bundle-search--hover !optional;
             }
+        }
+
+        @include e(bundle-main) {
+            @extend %form-group-bundle-main--box !optional;
         }
 
         @include e(border) {

@@ -18,7 +18,8 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from "@angular/platform-browser";
 import { IgxDialogComponent, IgxDialogModule } from "../dialog/dialog.component";
-import { IgxInputGroupModule } from "../main";
+import { IgxIconModule } from "../icon";
+import { IgxInputGroupModule } from "../input-group/input-group.component";
 import {
     IgxAmPmItemDirective,
     IgxHourItemDirective,
@@ -91,7 +92,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     public cancelButtonLabel = "Cancel";
 
     @Input()
-    public itemsDelta = {hours: 1, minutes: 1};
+    public itemsDelta = { hours: 1, minutes: 1 };
 
     @Input()
     public minValue: string;
@@ -269,9 +270,9 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 
-    private _onTouchedCallback: () => void = () => {};
+    private _onTouchedCallback: () => void = () => { };
 
-    private _onChangeCallback: (_: Date) => void = () => {};
+    private _onChangeCallback: (_: Date) => void = () => { };
 
     private _scrollItemIntoView(item: string, items: any[], selectedItem: string, isListLoop: boolean, viewType: string): any {
         let itemIntoView;
@@ -291,7 +292,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
                 } else {
                     view = items.slice(index - 3, index + 4);
                     selectedItem = this._itemToString(items[index], viewType);
-                    itemIntoView = {selectedItem, view};
+                    itemIntoView = { selectedItem, view };
                 }
                 itemIntoView.view = this._viewToString(itemIntoView.view, viewType);
             }
@@ -301,7 +302,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     private _viewToString(view: any, viewType: string): any {
         for (let i = 0; i < view.length; i++) {
-            if (typeof(view[i]) !== "string") {
+            if (typeof (view[i]) !== "string") {
                 view[i] = this._itemToString(view[i], viewType);
             }
         }
@@ -311,7 +312,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     private _itemToString(item: any, viewType: string): string {
         if (item === null) {
             item = "";
-        } else if (viewType && typeof(item) !== "string") {
+        } else if (viewType && typeof (item) !== "string") {
             const leadZeroHour = (item < 10 && (this.format.indexOf("hh") !== -1 || this.format.indexOf("HH") !== -1));
             const leadZeroMinute = (item < 10 && this.format.indexOf("mm") !== -1);
 
@@ -423,9 +424,9 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
             formattedMinute = minute < 10 && format.indexOf("mm") !== -1 ? "0" + minute : `${minute}`;
 
             return format.replace("hh", formattedHour).replace("h", formattedHour)
-                        .replace("HH", formattedHour).replace("H", formattedHour)
-                        .replace("mm", formattedMinute).replace("m", formattedMinute)
-                        .replace("tt" , amPM);
+                .replace("HH", formattedHour).replace("H", formattedHour)
+                .replace("mm", formattedMinute).replace("m", formattedMinute)
+                .replace("tt", amPM);
         }
     }
 
@@ -534,13 +535,13 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     private _isValueValid(value: Date): boolean {
-       if (this.maxValue && value > this._convertMinMaxValue(this.maxValue)) {
+        if (this.maxValue && value > this._convertMinMaxValue(this.maxValue)) {
             return false;
-       } else if (this.minValue && value < this._convertMinMaxValue(this.minValue)) {
+        } else if (this.minValue && value < this._convertMinMaxValue(this.minValue)) {
             return false;
-       } else {
-           return true;
-       }
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -693,7 +694,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     imports: [
         CommonModule,
         IgxInputGroupModule,
-        IgxDialogModule
+        IgxDialogModule,
+        IgxIconModule
     ],
     providers: []
 })
