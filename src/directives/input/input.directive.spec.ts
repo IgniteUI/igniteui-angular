@@ -17,7 +17,7 @@ const INPUT_GROUP_REQUIRED_CSS_CLASS = "igx-input-group--required";
 const INPUT_GROUP_VALID_CSS_CLASS = "igx-input-group--valid";
 const INPUT_GROUP_INVALID_CSS_CLASS = "igx-input-group--invalid";
 
-fdescribe("IgxInput", () => {
+describe("IgxInput", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -66,13 +66,13 @@ fdescribe("IgxInput", () => {
         const igxInput = fixture.componentInstance.igxInput;
         const inputGroupElement = fixture.debugElement.query(By.css("igx-input-group")).nativeElement;
         expect(inputGroupElement.classList.contains(INPUT_GROUP_FOCUSED_CSS_CLASS)).toBe(true);
-        expect(igxInput.isFocused).toBe(true);
+        expect(igxInput.focused).toBe(true);
 
         inputElement.dispatchEvent(new Event("blur"));
         fixture.detectChanges();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_FOCUSED_CSS_CLASS)).toBe(false);
-        expect(igxInput.isFocused).toBe(false);
+        expect(igxInput.focused).toBe(false);
     });
 
     it("Should have a placeholder style. Placeholder API.", () => {

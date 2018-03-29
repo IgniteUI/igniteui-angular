@@ -8,7 +8,7 @@ const INPUT_GROUP_BOX_CSS_CLASS = "igx-input-group--box";
 const INPUT_GROUP_BORDER_CSS_CLASS = "igx-input-group--border";
 const INPUT_GROUP_SEARCH_CSS_CLASS = "igx-input-group--search";
 
-fdescribe("IgxInputGroup", () => {
+describe("IgxInputGroup", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
