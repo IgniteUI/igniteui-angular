@@ -4,7 +4,7 @@ import { IgxCsvExporterService } from "./csv-exporter";
 import { CsvFileTypes, IgxCsvExporterOptions } from "./csv-exporter-options";
 import { CSVWrapper } from "./csv-verification-wrapper";
 
-fdescribe("Export to", () => {
+describe("Export to", () => {
     let sourceData: ExportTestDataService;
     let exporter: IgxCsvExporterService;
     // let options: IgxCsvExporterOptions;
