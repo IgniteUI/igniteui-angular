@@ -105,6 +105,40 @@ describe("Export to", () => {
         });
     }));
 
+    it("should fire 'onColumnExport' for each data field.", async(() => {
+        const options = new IgxCsvExporterOptions("ExportEvents", CsvFileTypes.CSV);
+        const cols = [];
+        exporter.onColumnExport.subscribe((value) => {
+            cols.push({ header: value.header, index: value.columnIndex });
+        });
+
+        getExportedData(sourceData.simpleGridData, options).then((wrapper) => {
+            expect(cols.length).toBe(3);
+            expect(cols[0].header).toBe("ID");
+            expect(cols[0].index).toBe(0);
+            expect(cols[1].header).toBe("Name");
+            expect(cols[1].index).toBe(1);
+            expect(cols[2].header).toBe("JobTitle");
+            expect(cols[2].index).toBe(2);
+        });
+    }));
+
+    it("should fire 'onRowExport' for each data row.", async(() => {
+        const options = new IgxCsvExporterOptions("ExportEvents", CsvFileTypes.CSV);
+        const rows = [];
+        exporter.onRowExport.subscribe((value) => {
+            rows.push({ data: value.rowData, index: value.rowIndex });
+        });
+
+        getExportedData(sourceData.simpleGridData, options).then(() => {
+            expect(rows.length).toBe(10);
+            for (let i = 0; i < rows.length; i++) {
+                expect(rows[i].index).toBe(i);
+                expect(JSON.stringify(rows[i].data)).toBe(JSON.stringify(sourceData.simpleGridData[i]));
+            }
+        });
+    }));
+
     async function getExportedData(data: any[], csvOptions: IgxCsvExporterOptions) {
         const result = await new Promise<CSVWrapper>((resolve) => {
             exporter.onExportEnded.subscribe((value) => {

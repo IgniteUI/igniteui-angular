@@ -147,15 +147,11 @@ describe("Excel Exporter", () => {
     // }));
 
     it("should honor 'ignoreFiltering' option.", async(() => {
-        const fix = TestBed.createComponent(GridMarkupPagingDeclarationComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid1;
-
-        // Contains filter
-        grid.filter("JobTitle", "Senior", STRING_FILTERS.contains, true);
-        fix.detectChanges();
+        const result = TestMethods.createGridAndFilter();
+        const fix = result.fixture;
+        const grid = result.grid;
         expect(grid.rowList.length).toEqual(1);
+
         options.ignoreFiltering = false;
 
         fix.whenStable().then(() => {
@@ -173,13 +169,9 @@ describe("Excel Exporter", () => {
     }));
 
     it("should honor filter criteria changes.", async(() => {
-        const fix = TestBed.createComponent(GridDeclarationComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid1;
-        // Contains filter
-        grid.filter("JobTitle", "Senior", STRING_FILTERS.contains, true);
-        fix.detectChanges();
+        const result = TestMethods.createGridAndFilter();
+        const fix = result.fixture;
+        const grid = result.grid;
         expect(grid.rowList.length).toEqual(1);
 
         options.ignoreFiltering = false;
@@ -280,6 +272,48 @@ describe("Excel Exporter", () => {
             fix.detectChanges();
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitleID);
+            });
+        });
+    }));
+
+    it("should honor 'ignorePinning' option.", async(() => {
+        const result = TestMethods.createGridAndPinColumn([1]);
+        const fix = result.fixture;
+        const grid = result.grid;
+
+        options.ignorePinning = false;
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            getExportedData(grid, options).then((wrapper) => {
+                wrapper.verifyStructure();
+                wrapper.verifyTemplateFilesContent();
+                wrapper.verifyDataFilesContent(actualData.gridNameFrozen, "One frozen column should have been exported!");
+
+                options.ignorePinning = true;
+                fix.detectChanges();
+                getExportedData(grid, options).then((wrapper2) => {
+                    wrapper2.verifyDataFilesContent(actualData.gridNameIDJobTitle, "No frozen columns should have been exported!");
+                });
+            });
+        });
+    }));
+
+    it("should honor pinned state changes.", async(() => {
+        const result = TestMethods.createGridAndPinColumn([1]);
+        const fix = result.fixture;
+        const grid = result.grid;
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            getExportedData(grid, options).then((wrapper) => {
+                wrapper.verifyDataFilesContent(actualData.gridNameFrozen, "One frozen column should have been exported!");
+
+                grid.columns[1].unpin();
+                fix.detectChanges();
+                getExportedData(grid, options).then((wrapper2) => {
+                    wrapper2.verifyDataFilesContent(actualData.simpleGridData, "No frozen columns should have been exported!");
+                });
             });
         });
     }));
