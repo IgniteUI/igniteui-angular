@@ -4,13 +4,12 @@ import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { Calendar, IgxCalendarComponent, IgxCalendarModule, isLeap, monthRange, weekDay, WEEKDAYS } from "./index";
-import { format } from "path";
 
 describe("IgxCalendar", () => {
     beforeEach(
         async(() => {
             TestBed.configureTestingModule({
-                declarations: [IgxCalendarRenderingComponent, IgxCalendarComponentFormats],
+                declarations: [IgxCalendarRenderingComponent, IgxCalendarFormatsComponent],
                 imports: [IgxCalendarModule, FormsModule, BrowserAnimationsModule]
             }).compileComponents();
         })
@@ -205,7 +204,7 @@ describe("IgxCalendar", () => {
     });
 
     it("@Complex Input properties formatOptions and formatViews", () => {
-        const fixture = TestBed.createComponent(IgxCalendarComponentFormats);
+        const fixture = TestBed.createComponent(IgxCalendarFormatsComponent);
         fixture.detectChanges();
 
         const calendar = fixture.componentInstance.calendar;
@@ -936,7 +935,7 @@ export class IgxCalendarRenderingComponent {
         <igx-calendar [viewDate]="viewDate" [(ngModel)]="model"></igx-calendar>
     `
 })
-export class IgxCalendarComponentFormats {
+export class IgxCalendarFormatsComponent {
     public model: Date | Date[] = new Date();
     public viewDate = new Date(2018, 8, 17);
     @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
