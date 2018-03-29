@@ -204,7 +204,7 @@ describe("IgxCalendar", () => {
         expect(() => (calendar.selection = "non-existant")).toThrow();
     });
 
-    fit("@Complex Input properties formatOptions and formatViews", () => {
+    it("@Complex Input properties formatOptions and formatViews", () => {
         const fixture = TestBed.createComponent(IgxCalendarComponentFormats);
         fixture.detectChanges();
 
