@@ -189,7 +189,7 @@ export class IgxItemListDirective {
     public onScroll(event) {
         event.preventDefault();
         event.stopPropagation();
-        
+
         if (event.deltaY > 0) {
             this.nextItem();
         } else if (event.deltaY < 0) {
