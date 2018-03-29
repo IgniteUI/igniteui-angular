@@ -225,7 +225,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const vcHeight = (event.target.children[0].scrollHeight - containerSize) * this._virtSizeRatio + containerSize;
         const ratio = vcHeight !== 0 ? scrollTop / vcHeight : 0;
         const count = this.totalItemCount || this.igxForOf.length;
-        let currIndex = Math.round(ratio * count);
+        const currIndex = Math.round(ratio * count);
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
         const endingIndex = this.state.chunkSize + currIndex;
         if (this.state.startIndex !== currIndex) {
