@@ -518,8 +518,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForScrollOrientation === "vertical") {
             const count = this.totalItemCount || this.igxForOf.length;
             this.vh.instance.elementRef.nativeElement.style.height = parseInt(this.igxForContainerSize, 10) + "px";
-            this.vh.instance.elementRef.nativeElement.children[0].style.height =
-                (count * parseInt(this.igxForItemSize, 10)) + "px";
+            this.vh.instance.height = count * parseInt(this.igxForItemSize, 10);
         }
     }
 
