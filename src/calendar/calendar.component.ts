@@ -180,9 +180,10 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     }
 
     /**
-     * An @Input property controlling whether the date components should be rendered in the appropriate view,
-     * using the locale formatting if any,
-     * where `day` is the default view, `month` is the month view and `year` is the year view.
+     * An @Input property controlling whether the 'day', 'month' and 'year' should be rendered
+     * according to the locale and formatOptions, if any.
+     * Affects rendering in the default view, month view and year view.
+     * Does not affect rendering in the header.
      */
     @Input()
     public get formatViews(): object {
