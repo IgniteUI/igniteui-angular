@@ -10,7 +10,7 @@ import { By } from "@angular/platform-browser";
 import { IgxInputGroupModule } from "../../input-group/input-group.component";
 import { IgxMaskModule } from "./mask.directive";
 
-describe("AppComponent", () => {
+describe("igxMask", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -341,7 +341,7 @@ class MaskComponent {
                             <input type="text" igxInput [(ngModel)]="value" [igxMask]="mask" [includeLiterals]="true"/>
                         </igx-input-group>
                         <igx-input-group>
-                            <input [ngModel]="value"/>
+                            <input igxInput [ngModel]="value"/>
                         </igx-input-group>` })
 class IncludeLiteralsComponent {
     public mask = "(000) 0000-000";

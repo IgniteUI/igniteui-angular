@@ -110,7 +110,7 @@ describe("IgxTimePicker", () => {
 
         spyOn(timePicker.onOpen, "emit");
 
-        target.triggerEventHandler("click", { target: dom.nativeElement.children[0] });
+        target.nativeElement.dispatchEvent(new Event("click", { bubbles: true }));
 
         fixture.detectChanges();
 
@@ -265,6 +265,7 @@ describe("IgxTimePicker", () => {
 
         let args = { key: "ArrowRight", bubbles: true };
         openInput(fixture);
+        tick();
 
         const getHourColumn: any = dom.query(By.css(".igx-time-picker__hourList"));
         getHourColumn.nativeElement.focus();
@@ -332,6 +333,7 @@ describe("IgxTimePicker", () => {
         fixture.detectChanges();
 
         openInput(fixture);
+        tick();
         fixture.detectChanges();
 
         // const timePicker = fixture.componentInstance.timePicker;
@@ -737,8 +739,7 @@ export class IgxTimePickerWithItemsDeltaValueComponent {
 function openInput(fixture) {
     const dom = fixture.debugElement;
     const timePickerTarget = dom.query(By.directive(IgxInputDirective));
-
-    timePickerTarget.triggerEventHandler("click", { target: dom.nativeElement.children[0] });
+    timePickerTarget.nativeElement.dispatchEvent(new Event("click", { bubbles: true }));
     fixture.detectChanges();
 }
 

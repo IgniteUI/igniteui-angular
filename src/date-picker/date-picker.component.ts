@@ -207,7 +207,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     // Focus the dialog element, after its appearence into DOM.
     private _focusTheDialog() {
-        requestAnimationFrame(() => this.alert.dialogEl.nativeElement.focus());
+        requestAnimationFrame(() => this.alert.element.focus());
     }
 
     private _setLocaleToDate(value: Date, locale: string = Constants.DEFAULT_LOCALE_DATE): string {

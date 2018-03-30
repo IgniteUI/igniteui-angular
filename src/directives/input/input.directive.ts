@@ -3,17 +3,14 @@ import {
     AfterViewInit,
     ChangeDetectorRef,
     Directive,
-    DoCheck,
     ElementRef,
     forwardRef,
     HostBinding,
     HostListener,
     Inject,
-    NgModule,
+    Input,
     OnDestroy,
-    OnInit,
     Optional,
-    Renderer2,
     Self
 } from "@angular/core";
 import { FormGroup, FormsModule, NgControl, NgModel } from "@angular/forms";
@@ -41,6 +38,15 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         @Optional() @Self() @Inject(NgModel) protected ngModel: NgModel,
         protected element: ElementRef,
         protected cdr: ChangeDetectorRef) { }
+
+    @Input("value")
+    set value(value: any) {
+        this.nativeElement.value = value;
+        this.inputGroup.isFilled = value && value.length > 0;
+    }
+    get value() {
+        return this.nativeElement.value;
+    }
 
     @HostBinding("class.igx-input-group__input")
     public isInput = false;
@@ -115,14 +121,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     public focus() {
         this.nativeElement.focus();
-    }
-
-    public get value() {
-        return this.element.nativeElement.value;
-    }
-
-    public set value(val: string) {
-        this.element.nativeElement.value = val;
     }
 
     public get nativeElement() {
