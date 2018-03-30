@@ -77,6 +77,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
 
     protected sortDirection = SortingDirection.None;
     private _startResizePos;
+    private _pinnedWidth;
 
     constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, public elementRef: ElementRef) { }
 
@@ -113,10 +114,23 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     }
 
     get restrictResizeMax(): number {
-        if (this.column.maxWidth) {
-            return parseInt(this.column.maxWidth, 10) - this.elementRef.nativeElement.getBoundingClientRect().width;
+        const actualWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
+
+        if (this.column.pinned) {
+            const maxWidth = this._pinnedWidth = this.grid.calcPinnedContainerMaxWidth - this.grid.pinnedWidth + actualWidth;
+
+            if (this.column.maxWidth && parseInt(this.column.maxWidth, 10) < maxWidth) {
+                this._pinnedWidth = this.column.maxWidth;
+                return parseInt(this.column.maxWidth, 10) - actualWidth;
+            } else {
+                return maxWidth - actualWidth;
+            }
         } else {
-            return Number.MAX_SAFE_INTEGER;
+            if (this.column.maxWidth) {
+                return parseInt(this.column.maxWidth, 10) - actualWidth;
+            } else {
+                return Number.MAX_SAFE_INTEGER;
+            }
         }
     }
 
@@ -179,7 +193,16 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
             const cellStyle = this.grid.document.defaultView.getComputedStyle(cellEl);
             const padding = parseInt(cellStyle.paddingLeft, 10) + parseInt(cellStyle.paddingRight, 10);
 
-            this.column.width = (largestCell + padding).toString();
+            if (this.column.pinned) {
+                const newPinnedWidth  = this.grid.pinnedWidth - this.elementRef.nativeElement.getBoundingClientRect().width +
+                    largestCell + padding;
+
+                if (newPinnedWidth <= this.grid.calcPinnedContainerMaxWidth) {
+                    this.column.width = (largestCell + padding).toString();
+                }
+            } else {
+                this.column.width = (largestCell + padding).toString();
+            }
 
             this.grid.markForCheck();
             this.grid.onColumnResized.emit({column: this.column, prevWidth: currentColWidth, newWidth: this.column.width});
@@ -198,7 +221,8 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
         if (this.column.resizable) {
             let currentColWidth = parseInt(this.column.width, 10);
             const colMinWidth = parseInt(this.column.minWidth, 10);
-            const colMaxWidth = parseInt(this.column.maxWidth, 10);
+
+            const colMaxWidth = this.column.pinned ? this._pinnedWidth : parseInt(this.column.maxWidth, 10);
 
             const actualWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
 

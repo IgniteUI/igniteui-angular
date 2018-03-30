@@ -304,6 +304,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight;
     }
 
+    get calcPinnedContainerMaxWidth(): number {
+        return (parseInt(this.width.toString(), 10) * 80) / 100;
+    }
+
     get pinnedWidth() {
         return this.getPinnedWidth();
     }
