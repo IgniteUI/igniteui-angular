@@ -62,8 +62,8 @@ export class IgxDragDirective {
     @Output()
     public drag = new Subject<any>();
 
-    private _tempLeft;
-    private _tempTop;
+    private _left;
+    private _top;
 
     constructor(public element: ElementRef, public cdr: ChangeDetectorRef, @Inject(DOCUMENT) public document) {
 
@@ -78,8 +78,8 @@ export class IgxDragDirective {
                 top: event.clientY - offset.top
             })).takeUntil(this.dragEnd))
         .subscribe((pos) => {
-            const left = this._tempLeft + pos.left;
-            const top = this._tempTop + pos.top;
+            const left = this._left + pos.left;
+            const top = this._top + pos.top;
 
             if (this.restrictDrag === RestrictDrag.HORIZONTALLY || this.restrictDrag === RestrictDrag.NONE) {
 
@@ -125,11 +125,8 @@ export class IgxDragDirective {
     onMousedown(event) {
         const elStyle = this.document.defaultView.getComputedStyle(this.element.nativeElement);
 
-        const tempLeft = parseInt(elStyle.left, 10);
-        const tempTop = parseInt(elStyle.top, 10);
-
-        this._tempLeft = Number.isNaN(tempLeft) ? 0 : tempLeft;
-        this._tempTop = Number.isNaN(tempTop) ? 0 : tempTop;
+        this._left = Number.isNaN(parseInt(elStyle.left, 10)) ? 0 : parseInt(elStyle.left, 10);
+        this._top = Number.isNaN(parseInt(elStyle.top, 10)) ? 0 : parseInt(elStyle.top, 10);
 
         this.dragStart.next(event);
         this.cdr.detach();

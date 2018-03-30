@@ -297,6 +297,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get calcResizerHeight(): number {
+        if (this.hasSummarizedColumns) {
+            return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight +
+                this.tfoot.nativeElement.clientHeight;
+        }
         return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight;
     }
 

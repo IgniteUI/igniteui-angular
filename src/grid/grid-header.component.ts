@@ -191,8 +191,8 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     }
 
     public resize(event) {
-        this.show = false;
 
+        this.show = false;
         const diff = event.clientX - this._startResizePos;
 
         if (this.column.resizable) {
