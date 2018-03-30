@@ -21,43 +21,35 @@
         @extend %igx-tabs__items-holder !optional;
     }
 
-    @include e(indicator) {
-        @extend %igx-tabs__indicator !optional;
+    @include e(menu-item-indicator) {
+        @extend %igx-tabs__menu-item-indicator !optional;
     }
 
+    @include e(item-label) {
+        @extend %igx-tabs__item-label !optional;
+    }
+
+    @include e(scroller-button) {
+        @extend %igx-tabs__scroller-button !optional;
+    }
+
+    @include e(scroller-button, $m: active) {
+        @extend %igx-tabs__scroller-button !optional;
+    }
 
     @include e(menu-item) {
-        @extend %igx-tabs-menu-item !optional;
-
-        .tab-item-icon {
-            @extend %igx-tab-item-icon !optional;
-        }
-
-        .tab-item-label {
-            @extend %igx-tab-item-label !optional;
-        }
+        @extend %igx-tabs__menu-item !optional;
     }
 
     @include e(menu-item, $m: selected) {
-        @extend %igx-tabs-menu-item !optional;
-        @extend %igx-tabs-menu-item--selected !optional;
-
-        .tab-item-icon {
-            @extend %igx-tab-item-icon !optional;
-            @extend %igx-tab-item-icon--selected !optional;
-        }
-
-        .tab-item-label {
-            @extend %igx-tab-item-label !optional;
-            @extend %igx-tab-item-label--selected !optional;
-        }
+        @extend %igx-tabs__menu-item !optional;
+        @extend %igx-tabs__menu-item--selected !optional;
     }
 
     @include e(menu-item, $m: disabled) {
-        @extend %igx-tabs-menu-item !optional;
-        @extend %igx-tabs-menu-item--disabled !optional;
+        @extend %igx-tabs__menu-item !optional;
+        @extend %igx-tabs__menu-item--disabled !optional;
     }
-
 
     @include e(content) {
         @extend %igx-tabs__content !optional;

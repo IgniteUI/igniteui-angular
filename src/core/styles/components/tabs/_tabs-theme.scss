@@ -1,34 +1,33 @@
 ////
 /// @group themes
 /// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
 /// If only background color is specified,
 /// the idle item color will be assigned automatically to a contrasting color.
-/// @param {Color} $background [null] - The background color used for the toast.
+/// @param {Color} $header-background [null] - The background color used for the tabs header.
 /// @param {Color} $idle-item-color [null] - The text-color used for the idle color.
 /// @param {Color} $active-item-color [null] - The text-color used for the active color.
 /// @requires text-contrast
 /// @example scss Set a custom background color
-///   $my-tabs-theme: igx-toast-theme($background: black);
+///   $my-tabs-theme: igx-toast-theme($header-background: black);
 ///   // Pass the theme to the igx-tabs component mixin
 ///   @include igx-tabs($my-tabs-theme);
 @function igx-tabs-theme(
-    $background: null,
+    $header-background: null,
     $text-color: null,
     $active-item-color: null,
     $indicator-bg: null,
     $item-focus-bg: null,
     $item-hover-bg: null
 ) {
-    @if not($text-color) and $background {
-        $idle-item-color: rgba(text-contrast($background), .7);
+    @if not($text-color) and $header-background {
+        $idle-item-color: rgba(text-contrast($header-background), .7);
     }
 
     @return (
-        background: $background,
+        header-background: $header-background,
         idle-item-color: $text-color,
         active-item-color: $active-item-color,
         indicator-bg: $indicator-bg,
@@ -47,7 +46,7 @@
 /// @requires rem
 @mixin igx-tabs($theme, $palette: $default-palette) {
     $default-theme: igx-tabs-theme(
-        $background: transparent,
+        $header-background: transparent,
         $text-color: igx-color($palette, 'grays', 600),
         $active-item-color: igx-color($palette, 'primary'),
         $indicator-bg: igx-color($palette, 'secondary', 500),
@@ -58,11 +57,6 @@
     $this: extend($default-theme, $theme);
 
     // @debug $this;
-
-    $menu-height: 56px;
-    $top-menu-shadow: igx-elevation($elevations, 8);
-    $bottom-menu-shadow: 0 -2px 4px -1px igx-color($palette, 'grays', 400), 0 -4px 5px 0 igx-color($palette, 'grays', 300), 0 -1px 10px 0 igx-color($palette, 'grays', 200);
-
     $item-min-width: 160px;
     $item-max-width: 264px;
     $item-padding: 0 rem(24px);
@@ -75,7 +69,7 @@
     %igx-tabs__header {
         display: flex;
         align-items: center;
-        background: map-get($this, 'background');
+        background: map-get($this, 'header-background');
         overflow: hidden;
     }
 
@@ -93,8 +87,8 @@
         flex-wrap: nowrap;
     }
 
-    // ITEM
-    %igx-tabs-menu-item {
+    // MENU ITEM
+    %igx-tabs__menu-item {
         display: inline-flex;
         flex-direction: column;
         justify-content: center;
@@ -102,6 +96,11 @@
         min-width: $item-min-width;
         max-width: $item-max-width;
         height: $tabs-height;
+
+        // Flex basis & shrink are Needed for IE11
+        flex-basis: auto;
+        flex-shrink: 0;
+
         color: map-get($this, 'text-color');
         padding: $item-padding;
         overflow: hidden;
@@ -117,17 +116,26 @@
         }
     }
 
-    %igx-tabs__indicator {
+    %igx-tabs__menu-item--disabled {
+        opacity: .5;
+        cursor: default;
+    }
+
+    %igx-tabs__menu-item--selected {
+        background: map-get($this, 'item-focus-bg');
+    }
+
+    %igx-tabs__menu-item-indicator {
         position: absolute;
         bottom: 0;
         transform: translateX(0);
         height: 2px;
-        width: 100px;
+        min-width: rem(160px);
         background: map-get($this, 'indicator-bg');
     }
 
-    // SCROLL INDICATOR
-    .igx-tabs__scroller__indicator {
+    // SCROLL BUTTONS
+    %igx-tabs__scroller-button {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -139,45 +147,30 @@
         min-height: $tabs-height;
         height: $tabs-height;
         cursor: pointer;
-        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12);
+        box-shadow: igx-elevation($elevations, 8);
         position: relative;
+
+        &:focus {
+            outline: none;
+        }
 
         .igx-icon {
             line-height: rem(28px, 16px);
         }
     }
 
-    %igx-tabs-menu-item--disabled {
-        opacity: .5;
-        cursor: default;
+    %igx-tabs__scroller-button--active {
+        box-shadow: igx-elevation($elevations, 8);
     }
 
-    %igx-active-tab {
-        color: map-get($this, 'active-item-color');
-    }
 
-    %igx-tab-item-label {
+    // LABELS
+    %igx-tabs__item-label {
         @include ellipsis();
         font-size: $label-font-size;
         line-height: $label-line-height;
         max-width: 100%;
         text-align: center;
-    }
-
-    %igx-tab-item-icon {
-        display: flex;
-        position: relative;
-        justify-content: center;
-        height: 24px;
-        padding: 0 8px;
-    }
-
-    %igx-tab-item-icon--selected {
-        @extend %igx-active-tab;
-    }
-
-    %igx-tab-item-label--selected {
-        @extend %igx-active-tab;
     }
 
     %igx-tabs__content {
