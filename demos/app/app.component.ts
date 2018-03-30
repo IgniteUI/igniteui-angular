@@ -80,11 +80,6 @@ export class AppComponent {
             name: "Grid Performance"
         },
         {
-            link: "/gridSummary",
-            icon: "view_column",
-            name: "Grid Summary"
-        },
-        {
             link: "/dialog",
             icon: "all_out",
             name: "Dialog"

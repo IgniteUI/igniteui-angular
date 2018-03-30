@@ -20,7 +20,6 @@ import { By } from "@angular/platform-browser";
 import { IgxForOfDirective, IgxForOfModule} from "./for_of.directive";
 
 describe("IgxVirtual directive - simple template", () => {
-    const INACTIVE_VIRT_CONTAINER = "igx-display-container--inactive";
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -29,7 +28,6 @@ describe("IgxVirtual directive - simple template", () => {
                 VerticalVirtualComponent,
                 HorizontalVirtualComponent,
                 VirtualComponent,
-                VirtualVariableSizeComponent,
                 VerticalVirtualNoDataComponent
             ],
             imports: [IgxForOfModule]
@@ -677,39 +675,6 @@ describe("IgxVirtual directive - simple template", () => {
         }
     });
 
-    it("should update display container classes when content state changes from virtualized to non-virtualzied.", () => {
-        const fix = TestBed.createComponent(VirtualVariableSizeComponent);
-        fix.componentRef.hostView.detectChanges();
-        fix.detectChanges();
-        let displayContainer = fix.debugElement.queryAll(By.css("igx-display-container"));
-        // No size and no data - display container should be inactive
-        expect(displayContainer[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(true);
-
-        // set size
-        fix.componentInstance.height = "500px";
-        fix.detectChanges();
-
-        displayContainer = fix.debugElement.queryAll(By.css("igx-display-container"));
-        // Has size but no data - display container should be inactive
-        expect(displayContainer[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(true);
-
-        // set data with 1 rec.
-        fix.componentInstance.data = fix.componentInstance.generateData(1);
-        fix.detectChanges();
-
-        displayContainer = fix.debugElement.queryAll(By.css("igx-display-container"));
-        // Has size but not enough data to be virtualized - display container should be inactive
-        expect(displayContainer[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(true);
-
-        // set data with 1000 recs.
-        fix.componentInstance.data = fix.componentInstance.generateData(1000);
-        fix.detectChanges();
-
-        displayContainer = fix.debugElement.queryAll(By.css("igx-display-container"));
-        // Has size and enough data to be virtualized - display container should be active.
-        expect(displayContainer[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(false);
-    });
-
     it("should allow having initually undefined value for igxForOf and then detect changes correctly once the value is updated. ", () => {
         const fix = TestBed.createComponent(VerticalVirtualNoDataComponent);
         expect(() => {
@@ -738,6 +703,7 @@ describe("IgxVirtual directive - simple template", () => {
         fix.componentInstance.parentVirtDir.testScrollTo(fix.componentInstance.data.length + 1);
         expect(fix.componentInstance.parentVirtDir.state.startIndex).toBe(0);
     });
+
 });
 
 /** igxFor for testing */
@@ -1064,39 +1030,6 @@ export class VirtualComponent implements OnInit {
         }
 
         this.data = dummyData;
-    }
-}
-
-/** Only vertically virtualized component */
-@Component({
-    template: `
-        <div #container [style.width]='width' [style.height]='height'>
-            <ng-template #scrollContainer igxForTest let-rowData [igxForOf]="data"
-            [igxForScrollOrientation]="'vertical'"
-                [igxForContainerSize]='height'
-                [igxForItemSize]='"50px"'>
-                <div [style.display]="'flex'" [style.height]="'50px'">
-                    {{rowData}}
-                </div>
-            </ng-template>
-        </div>
-    `
-})
-export class VirtualVariableSizeComponent {
-    public height = "0px";
-    public data = [];
-
-    @ViewChild("container") public container;
-
-    @ViewChild("scrollContainer", { read: TestIgxForOfDirective })
-    public parentVirtDir: TestIgxForOfDirective<any>;
-
-    public generateData(count) {
-        const dummyData = [];
-        for (let i = 0; i < count; i++) {
-            dummyData.push(10 * i);
-        }
-        return dummyData;
     }
 }
 

@@ -14,20 +14,24 @@ import { IgxIconModule } from "../icon";
 export enum Direction { NONE, NEXT, PREV }
 
 /**
- * A carousel component is used to browse or navigate through a collection of slides - galleries of images,
- * cards, on-boarding tutorials or page-based interfaces. It can be used as a separate fulls creen element
- * or inside another component
+ * **Ignite UI for Angular Carousel** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/carousel.html)  
+ * The Ignite UI Carousel is used to browse or navigate through a collection of slides. Slides can contain custom
+ * content such as images or cards and be used for things such as on-boarding tutorials or page-based interfaces.
+ * It can be used as a separate fullscreen element or inside another component.
  *
- * ```
- * <igx-carousel (event output bindings) [input bindings] >
- *     ....
+ * Example:
+ * ```html
+ * <igx-carousel>
+ *   <igx-slide>
+ *     <h3>First Slide Header</h3>
+ *     <p>First slide Content</p>
+ *   <igx-slide>
+ *   <igx-slide>
+ *     <h3>Second Slide Header</h3>
+ *     <p>Second Slide Content</p>
  * </igx-carousel>
  * ```
- * @export
- * @class IgxCarouselComponent
- * @implements {OnDestroy}
  */
-
 @Component({
     selector: "igx-carousel",
     templateUrl: "carousel.component.html"

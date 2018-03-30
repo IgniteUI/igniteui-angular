@@ -24,7 +24,15 @@ import {
 } from "../calendar";
 import { IgxDialogComponent, IgxDialogModule } from "../dialog/dialog.component";
 import { IgxInputModule } from "../directives/input/input.directive";
-
+/**
+ * **Ignite UI for Angular Date Picker** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date_picker.html)  
+ * The Ignite UI Date Picker displays a popup calendar that lets users select a single date.
+ * 
+ * Example:
+ * ```html
+ * <igx-datePicker [(ngModel)]="selectedDate"></igx-datePicker>
+ * ```
+ */
 @Component({
     providers:
         [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true }],
@@ -47,21 +55,18 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     @Input() public weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;
 
-    @Input()
-    public get formatOptions(): object {
-        return this._formatOptions;
-    }
-    public set formatOptions(formatOptions: object) {
-        this._formatOptions = Object.assign(this._formatOptions, formatOptions);
-    }
+    @Input() public formatOptions = {
+        day: "numeric",
+        month: "short",
+        weekday: "short",
+        year: "numeric"
+    };
 
-    @Input()
-    public get formatViews(): object {
-        return this._formatViews;
-    }
-    public set formatViews(formatViews: object) {
-        this._formatViews = Object.assign(this._formatViews, formatViews);
-    }
+    @Input() public formatViews = {
+        day: false,
+        month: true,
+        year: false
+    };
 
     @Input()
     public vertical = false;
@@ -104,18 +109,6 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     public get calendar() {
         return this.calendarRef.instance;
     }
-
-    private _formatOptions = {
-        day: "numeric",
-        month: "short",
-        weekday: "short",
-        year: "numeric"
-    };
-    private _formatViews = {
-        day: false,
-        month: true,
-        year: false
-    };
 
     constructor(private resolver: ComponentFactoryResolver) { }
 
@@ -198,8 +191,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     private updateCalendarInstance() {
-        this.calendar.formatOptions = this._formatOptions;
-        this.calendar.formatViews = this._formatViews;
+        this.calendar.formatOptions = this.formatOptions;
+        this.calendar.formatViews = this.formatViews;
         this.calendar.locale = this.locale;
         this.calendar.vertical = this.vertical;
 
