@@ -19,7 +19,9 @@
     $background: null,
     $text-color: null,
     $active-item-color: null,
-    $indicator-bg: null
+    $indicator-bg: null,
+    $item-focus-bg: null,
+    $item-hover-bg: null
 ) {
     @if not($text-color) and $background {
         $idle-item-color: rgba(text-contrast($background), .7);
@@ -29,7 +31,9 @@
         background: $background,
         idle-item-color: $text-color,
         active-item-color: $active-item-color,
-        indicator-bg: $indicator-bg
+        indicator-bg: $indicator-bg,
+        item-focus-bg: $item-focus-bg,
+        item-hover-bg: $item-hover-bg
     );
 }
 
@@ -46,7 +50,9 @@
         $background: transparent,
         $text-color: igx-color($palette, 'grays', 600),
         $active-item-color: igx-color($palette, 'primary'),
-        $indicator-bg: igx-color($palette, 'secondary', 500)
+        $indicator-bg: igx-color($palette, 'secondary', 500),
+        $item-focus-bg: igx-color($palette, 'grays', 200),
+        $item-hover-bg: igx-color($palette, 'grays', 200)
     );
 
     $this: extend($default-theme, $theme);
@@ -70,6 +76,7 @@
         display: flex;
         align-items: center;
         background: map-get($this, 'background');
+        overflow: hidden;
     }
 
     // ITEM WRAPPER
@@ -80,9 +87,10 @@
 
     // ITEM HOLDER (The element that scrolls)
     %igx-tabs__items-holder {
-        display: flex;
+        display: inline-flex;
         align-items: center;
         position: relative;
+        width: 100vw;
     }
 
     // ITEM
@@ -99,6 +107,14 @@
         overflow: hidden;
         cursor: pointer;
         position: relative;
+
+        &:focus {
+            background: map-get($this, 'item-focus-bg');
+        }
+
+        &:hover {
+            background: map-get($this, 'item-hover-bg');
+        }
     }
 
     %igx-tabs__indicator {
@@ -118,9 +134,17 @@
         background: none;
         border: none;
         padding: 0;
-        height: 100%;
+        min-width: rem(48px);
         width: rem(48px);
+        min-height: $tabs-height;
+        height: $tabs-height;
         cursor: pointer;
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12);
+        position: relative;
+
+        .igx-icon {
+            line-height: rem(28px, 16px);
+        }
     }
 
     %igx-tabs-menu-item--disabled {
@@ -130,7 +154,6 @@
 
     %igx-active-tab {
         color: map-get($this, 'active-item-color');
-        transition: color .15s $ease-in-out-quad, opacity .25s $ease-in-out-quad;
     }
 
     %igx-tab-item-label {
@@ -139,8 +162,6 @@
         line-height: $label-line-height;
         max-width: 100%;
         text-align: center;
-        transform: translateZ(0);
-        transition: transform .15s $ease-in-out-quad;
     }
 
     %igx-tab-item-icon {
@@ -149,37 +170,27 @@
         justify-content: center;
         height: 24px;
         padding: 0 8px;
-        transform: translateZ(0);
-        transition: transform .15s $ease-in-out-quad;
-
-        igx-badge {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            padding: 1px;
-        }
     }
 
     %igx-tab-item-icon--selected {
         @extend %igx-active-tab;
-        transform: translateY(-2px);
     }
 
     %igx-tab-item-label--selected {
         @extend %igx-active-tab;
-        transform: translateY(-2px) scale(1.166667);
     }
 
     %igx-tabs__content {
         display: flex;
-        overflow: hidden;
+        overflow-x: hidden;
     }
 
     %igx-tabs__group {
         visibility: hidden;
         min-width: 100%;
         transform: translateX(-100%);
-        transition: transform .5s cubic-bezier(.35, 0, .25, 1);
+
+        position: absolute;
     }
 
     %igx-tabs__group--selected {
