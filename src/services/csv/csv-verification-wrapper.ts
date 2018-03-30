@@ -40,10 +40,10 @@ export class CSVWrapper {
 
     get noHeadersDateTimeData() {
         return `Column 1${this._eor}` +
-`Mon Jan 01 2018 02:00:00 GMT+0200 (FLE Standard Time)${this._eor}` +
-`Mon Apr 23 2018 00:00:00 GMT+0300 (FLE Daylight Time)${this._eor}` +
-`Thu Jan 01 1970 02:00:00 GMT+0200 (FLE Standard Time)${this._eor}` +
-`Fri Mar 23 2018 00:00:00 GMT+0200 (FLE Standard Time)${this._eor}`;
+`${new Date("2018").toString()}${this._eor}` +
+`${new Date(2018, 3, 23).toString()}${this._eor}` +
+`${new Date(30).toString()}${this._eor}` +
+`${new Date("2018/03/23").toString()}${this._eor}`;
     }
 
     get contactsData() {
@@ -130,5 +130,19 @@ export class CSVWrapper {
         `Erika Wells${this._delimiter}Software Development Team Lead${this._delimiter}8${this._eor}` +
         `Leslie Hansen${this._delimiter}Associate Software Developer${this._delimiter}9${this._eor}` +
         `Eduardo Ramirez${this._delimiter}Manager${this._delimiter}10${this._eor}`;
+    }
+
+    get gridNameIDJobTitle() {
+        return `Name${this._delimiter}ID${this._delimiter}JobTitle${this._eor}` +
+        `Casey Houston${this._delimiter}1${this._delimiter}Vice President${this._eor}` +
+        `Gilberto Todd${this._delimiter}2${this._delimiter}Director${this._eor}` +
+        `Tanya Bennett${this._delimiter}3${this._delimiter}Director${this._eor}` +
+        `Jack Simon${this._delimiter}4${this._delimiter}Software Developer${this._eor}` +
+        `Celia Martinez${this._delimiter}5${this._delimiter}Senior Software Developer${this._eor}` +
+        `Erma Walsh${this._delimiter}6${this._delimiter}CEO${this._eor}` +
+        `Debra Morton${this._delimiter}7${this._delimiter}Associate Software Developer${this._eor}` +
+        `Erika Wells${this._delimiter}8${this._delimiter}Software Development Team Lead${this._eor}` +
+        `Leslie Hansen${this._delimiter}9${this._delimiter}Associate Software Developer${this._eor}` +
+        `Eduardo Ramirez${this._delimiter}10${this._delimiter}Manager${this._eor}`;
     }
 }

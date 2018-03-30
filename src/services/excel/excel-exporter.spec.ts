@@ -1,4 +1,5 @@
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from "@angular/core/testing";
+import { ExportUtilities } from "../exporter-common/export-utilities";
 import { ExcelFileTypes } from "./excel-enums";
 import { IgxExcelExporterService } from "./excel-exporter";
 import { IgxExcelExporterOptions } from "./excel-exporter-options";
@@ -19,8 +20,8 @@ describe("Excel Exporter", () => {
         actualData = new FileContentData();
         options = new IgxExcelExporterOptions("ExcelExport");
 
-        // Spy the private saveFile method so the files are not really created
-        spyOn(exporter as any, "saveFile");
+        // Spy the saveBlobToFile method so the files are not really created
+        spyOn(ExportUtilities as any, "saveBlobToFile");
     });
 
     /* ExportData() tests */
@@ -39,6 +40,7 @@ describe("Excel Exporter", () => {
     }));
 
     it("should export string data without headers successfully.", async(() => {
+        options.columnWidth = 50;
         getExportedData(sourceData.noHeadersStringData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
@@ -47,6 +49,7 @@ describe("Excel Exporter", () => {
     }));
 
     it("should export date time data without headers successfully.", async(() => {
+        options.columnWidth = 50;
         getExportedData(sourceData.noHeadersDateTimeData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
@@ -55,6 +58,7 @@ describe("Excel Exporter", () => {
     }));
 
     it("should export number data without headers successfully.", async(() => {
+        options.columnWidth = 50;
         getExportedData(sourceData.noHeadersNumberData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
@@ -71,6 +75,7 @@ describe("Excel Exporter", () => {
     }));
 
     it("should export regular data successfully.", async(() => {
+        options.columnWidth = 50;
         getExportedData(sourceData.contactsData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
@@ -79,6 +84,7 @@ describe("Excel Exporter", () => {
     }));
 
     it("should export data with missing values successfully.", async(() => {
+        options.columnWidth = 50;
         getExportedData(sourceData.contactsPartialData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
@@ -87,6 +93,7 @@ describe("Excel Exporter", () => {
     }));
 
     it("should export data with special characters successully.", async(() => {
+        options.columnWidth = 50;
         getExportedData(sourceData.contactsFunkyData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();

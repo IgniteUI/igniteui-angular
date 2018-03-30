@@ -8,7 +8,7 @@ export abstract class IgxExporterOptionsBase {
     // public ignoreSorting: boolean;
     // public ignoreSummaries: boolean;
 
-    constructor(fileName: string, private _fileExtension: string) {
+    constructor(fileName: string, protected _fileExtension: string) {
         this.setFileName(fileName);
     }
 

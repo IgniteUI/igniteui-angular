@@ -3,15 +3,17 @@ import { IgxExporterOptionsBase } from "../exporter-common/exporter-options-base
 export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
 
     private _valueDelimiter;
+    private _fileType;
 
-    constructor(fileName: string, public fileType: CsvFileTypes) {
+    constructor(fileName: string, fileType: CsvFileTypes) {
         super(fileName, IgxCsvExporterOptions.getExtensionFromFileType(fileType));
+        this.setFileType(fileType);
         this.setDelimiter();
     }
 
-    private static getExtensionFromFileType(fileType: CsvFileTypes) {
+    private static getExtensionFromFileType(fType: CsvFileTypes) {
         let extension = "";
-        switch (fileType) {
+        switch (fType) {
             case CsvFileTypes.CSV:
                 extension = ".csv";
                 break;
@@ -33,8 +35,29 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
         this.setDelimiter(value);
     }
 
+    get fileType() {
+        return this._fileType;
+    }
+
+    set fileType(value) {
+        this.setFileType(value);
+    }
+
+    private setFileType(value) {
+        if (value !== undefined && value !== null && value !== this._fileType) {
+            this._fileType = value;
+            const extension = IgxCsvExporterOptions.getExtensionFromFileType(value);
+            if (!this.fileName.endsWith(extension)) {
+                const oldExt = "." + this.fileName.split(".").pop();
+                const newName = this.fileName.replace(oldExt, extension);
+                this._fileExtension = extension;
+                this.fileName = newName;
+            }
+        }
+    }
+
     private setDelimiter(value?) {
-        if (value !== undefined && value !== "") {
+        if (value !== undefined && value !== "" && value !== null) {
             this._valueDelimiter = value;
         } else {
             switch (this.fileType) {

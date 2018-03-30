@@ -18,6 +18,8 @@ export class TestMethods {
         });
     }
 
+    /* Creates an instance of GridDeclarationComponent; If filterParams is not specified,
+    applies the following filter: ["JobTitle", "Senior", STRING_FILTERS.contains, true]. */
     public static createGridAndFilter(...filterParams: any[]) {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
@@ -32,30 +34,19 @@ export class TestMethods {
         return { fixture: fix, grid: myGrid };
     }
 
-    public static async testIgnoreFiltering(myGrid: IgxGridComponent, options: IgxExporterOptionsBase, action: (grid) => void) {
+    /* Creates an instance of GridDeclarationComponent and pins the columns with the specified indices. */
+    public static createGridAndPinColumn(...colIndices: any[]) {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
-        myGrid = fix.componentInstance.grid1;
 
-        // Contains filter
-        myGrid.filter("JobTitle", "Senior", STRING_FILTERS.contains, true);
-        fix.detectChanges();
-        expect(myGrid.rowList.length).toEqual(1);
-        options.ignoreFiltering = false;
+        const myGrid = fix.componentInstance.grid1;
 
-        fix.whenStable().then(() => {
-            action(myGrid);
+        // Pin columns
+        colIndices.forEach((i) => {
+            myGrid.columns[i].pin();
         });
+
+        return { fixture: fix, grid: myGrid };
     }
 
-    public static async testFilterChanges(myGrid: IgxGridComponent, action: (grid) => void) {
-        const fix = TestBed.createComponent(GridDeclarationComponent);
-        fix.detectChanges();
-        myGrid = fix.componentInstance.grid1;
-
-        fix.whenStable().then(() => {
-            expect(myGrid.rowList.length).toEqual(10, "Invalid number of rows initialized!");
-            action(myGrid);
-        });
-    }
 }

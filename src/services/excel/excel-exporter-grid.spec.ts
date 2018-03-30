@@ -10,6 +10,7 @@ import {
     GridMarkupPagingDeclarationComponent,
     GridReorderedColumnsComponent } from "../exporter-common/components-declarations";
 import { ColumnExportingEventArgs, RowExportingEventArgs } from "../exporter-common/event-args";
+import { ExportUtilities } from "../exporter-common/export-utilities";
 import { TestMethods } from "../exporter-common/test-methods";
 import { IgxExcelExporterService } from "./excel-exporter";
 import { IgxExcelExporterOptions } from "./excel-exporter-options";
@@ -39,14 +40,19 @@ describe("Excel Exporter", () => {
             actualData = new FileContentData();
             options = new IgxExcelExporterOptions("GridExcelExport");
 
-            // Spy the private saveFile method so the files are not really created
-            spyOn(exporter as any, "saveFile");
+            // Set column width to a specific value to workaround the issue where
+            // different platforms measure text differently
+            options.columnWidth = 50;
+
+            // Spy the saveBlobToFile method so the files are not really created
+            spyOn(ExportUtilities as any, "saveBlobToFile");
         });
     }));
 
     it("should export grid as displayed.", async(() => {
         const currentGrid: IgxGridComponent = null;
         TestMethods.testRawData(currentGrid, (grid) => {
+
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyStructure();
                 wrapper.verifyTemplateFilesContent();
@@ -142,15 +148,11 @@ describe("Excel Exporter", () => {
     // }));
 
     it("should honor 'ignoreFiltering' option.", async(() => {
-        const fix = TestBed.createComponent(GridMarkupPagingDeclarationComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid1;
-
-        // Contains filter
-        grid.filter("JobTitle", "Senior", STRING_FILTERS.contains, true);
-        fix.detectChanges();
+        const result = TestMethods.createGridAndFilter();
+        const fix = result.fixture;
+        const grid = result.grid;
         expect(grid.rowList.length).toEqual(1);
+
         options.ignoreFiltering = false;
 
         fix.whenStable().then(() => {
@@ -168,13 +170,9 @@ describe("Excel Exporter", () => {
     }));
 
     it("should honor filter criteria changes.", async(() => {
-        const fix = TestBed.createComponent(GridDeclarationComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid1;
-        // Contains filter
-        grid.filter("JobTitle", "Senior", STRING_FILTERS.contains, true);
-        fix.detectChanges();
+        const result = TestMethods.createGridAndFilter();
+        const fix = result.fixture;
+        const grid = result.grid;
         expect(grid.rowList.length).toEqual(1);
 
         options.ignoreFiltering = false;
@@ -279,6 +277,48 @@ describe("Excel Exporter", () => {
         });
     }));
 
+    it("should honor 'ignorePinning' option.", async(() => {
+        const result = TestMethods.createGridAndPinColumn([1]);
+        const fix = result.fixture;
+        const grid = result.grid;
+
+        options.ignorePinning = false;
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            getExportedData(grid, options).then((wrapper) => {
+                wrapper.verifyStructure();
+                wrapper.verifyTemplateFilesContent();
+                wrapper.verifyDataFilesContent(actualData.gridNameFrozen, "One frozen column should have been exported!");
+
+                options.ignorePinning = true;
+                fix.detectChanges();
+                getExportedData(grid, options).then((wrapper2) => {
+                    wrapper2.verifyDataFilesContent(actualData.gridNameIDJobTitle, "No frozen columns should have been exported!");
+                });
+            });
+        });
+    }));
+
+    it("should honor pinned state changes.", async(() => {
+        const result = TestMethods.createGridAndPinColumn([1]);
+        const fix = result.fixture;
+        const grid = result.grid;
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            getExportedData(grid, options).then((wrapper) => {
+                wrapper.verifyDataFilesContent(actualData.gridNameFrozen, "One frozen column should have been exported!");
+
+                grid.columns[1].unpin();
+                fix.detectChanges();
+                getExportedData(grid, options).then((wrapper2) => {
+                    wrapper2.verifyDataFilesContent(actualData.simpleGridData, "No frozen columns should have been exported!");
+                });
+            });
+        });
+    }));
+
     // it("should honor applied sorting.", async(() => {
     //     const fix = TestBed.createComponent(GridDeclarationComponent);
     //     fix.detectChanges();
@@ -328,7 +368,8 @@ describe("Excel Exporter", () => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
-
+        grid.columns[1].hidden = true;
+        grid.columns[2].hidden = true;
         const columnWidths = [ 100, 200, 0, undefined, null ];
 
         fix.whenStable().then(() => {
@@ -500,4 +541,5 @@ describe("Excel Exporter", () => {
             });
         });
     }
+
 });
