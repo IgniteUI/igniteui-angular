@@ -5,8 +5,8 @@
         <button igxRipple class="igx-tabs__scroller-button igx-tabs__scroller__indicator--left" igxButton="icon" (click)="left($event)">
             <igx-icon fontSet="material" name="navigate_before"></igx-icon>
         </button>
-        <div class="igx-tabs__wrapper" #viewPort>
-            <div #itemsContainer class="igx-tabs__items-holder">
+        <div class="igx-tabs__wrapper-fixed" #viewPort>
+            <div #itemsContainer class="igx-tabs__wrapper-fluid">
                 <igx-tab-item igxRipple *ngFor="let group of groups" [id]="'igx-tab-item-' + group.index" [attr.aria-label]="group.label" [attr.aria-disabled]="group.isDisabled"
                                              [attr.aria-selected]="group.isSelected" [attr.aria-controls]="'igx-tab-item-group-'+ group.index" [ngClass]="{
                 'igx-tabs__menu-item': !group.isSelected && !group.isDisabled,
@@ -22,7 +22,9 @@
         </button>
     </div>
 
-    <div class="igx-tabs__content">
-        <ng-content></ng-content>
+    <div class="igx-tabs__content-fixed">
+        <div class="igx-tabs__content-fluid">
+            <ng-content></ng-content>
+        </div>
     </div>
 </div>

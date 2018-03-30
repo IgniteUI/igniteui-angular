@@ -9,16 +9,18 @@
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
 
+    @extend %igx-tabs !optional;
+
     @include e(header) {
         @extend %igx-tabs__header !optional;
     }
 
-    @include e(wrapper) {
-        @extend %igx-tabs__wrapper !optional;
+    @include e(wrapper-fixed) {
+        @extend %igx-tabs__wrapper-fixed !optional;
     }
 
-    @include e(items-holder) {
-        @extend %igx-tabs__items-holder !optional;
+    @include e(wrapper-fluid) {
+        @extend %igx-tabs__wrapper-fluid !optional;
     }
 
     @include e(menu-item-indicator) {
@@ -51,9 +53,14 @@
         @extend %igx-tabs__menu-item--disabled !optional;
     }
 
-    @include e(content) {
-        @extend %igx-tabs__content !optional;
+    @include e(content-fixed) {
+        @extend %igx-tabs__content-fixed !optional;
     }
+
+    @include e(content-fluid) {
+        @extend %igx-tabs__content-fluid !optional;
+    }
+
 
     @include e(group) {
         @extend %igx-tabs__group !optional;
