@@ -41,6 +41,7 @@ export * from "./slider/slider.component";
 export * from "./snackbar/snackbar.component";
 export * from "./switch/switch.component";
 export * from "./tabbar/tabbar.component";
+export * from "./time-picker/time-picker.component";
 export * from "./toast/toast.component";
 
 // directives
@@ -51,5 +52,4 @@ export * from "./directives/for-of/IForOfState";
 export * from "./directives/layout/layout.directive";
 export * from "./directives/mask/mask.directive";
 export * from "./directives/ripple/ripple.directive";
-export * from "./time-picker/time-picker.component";
 export * from "./directives/toggle/toggle.directive";

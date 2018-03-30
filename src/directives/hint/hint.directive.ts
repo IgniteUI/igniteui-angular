@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, HostBinding, Input, OnInit, Renderer2 } from "@angular/core";
+import { Directive, ElementRef, HostBinding, Input, OnInit } from "@angular/core";
 
 enum IgxHintPosition {
     START,
@@ -17,7 +17,7 @@ export class IgxHintDirective implements OnInit {
     @HostBinding("class.igx-input-group__hint-item--end")
     public isPositionEnd = false;
 
-    constructor(private _element: ElementRef, private _renderer: Renderer2) {
+    constructor(private _element: ElementRef) {
     }
 
     @Input("position")

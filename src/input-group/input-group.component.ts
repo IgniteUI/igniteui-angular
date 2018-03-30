@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, ContentChild, ContentChildren, ElementRef, HostBinding,
-    HostListener, Input, NgModule, QueryList, Renderer2 } from "@angular/core";
+    HostListener, Input, NgModule, QueryList } from "@angular/core";
 import { IgxHintDirective } from "../directives/hint/hint.directive";
 import { IgxInputDirective, IgxInputState } from "../directives/input/input.directive";
 import { IgxLabelDirective } from "../directives/label/label.directive";
@@ -97,7 +97,7 @@ export class IgxInputGroupComponent {
         return this._type.toString();
     }
 
-    constructor(public element: ElementRef, private _renderer: Renderer2) {
+    constructor(public element: ElementRef) {
     }
 
     get hasHints() {
