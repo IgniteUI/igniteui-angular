@@ -318,11 +318,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public getRowByIndex(index: number): IgxGridRowComponent {
-        return this.rowList.toArray()[index];
+        return this.gridAPI.get_row_by_index(this.id, index);
     }
 
     public getRowByKey(keyValue: any): IgxGridRowComponent {
-        return this.rowList.find((row) => row.primaryValue === keyValue);
+        return this.gridAPI.get_row_by_key(this.id, keyValue);
     }
 
     get visibleColumns(): IgxColumnComponent[] {
@@ -388,7 +388,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public deleteRow(rowSelector: any): void {
-        const row = this.gridAPI.get_row(this.id, rowSelector);
+        const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
         if (row) {
             const index = this.data.indexOf(row.rowData);
             this.data.splice(index, 1);
@@ -407,8 +407,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public updateRow(value: any, rowSelector: any): void {
-        const row = this.gridAPI.get_row(this.id, rowSelector);
+        const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
         if (row) {
+            if (this.primaryKey !== undefined && this.primaryKey !== null) {
+                value[this.primaryKey] = row.rowData[this.primaryKey];
+            }
             this.gridAPI.update_row(value, this.id, row);
             this._pipeTrigger++;
             this.cdr.markForCheck();
