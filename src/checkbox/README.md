@@ -67,6 +67,7 @@ To disable the ripple effect, do:
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
 | `@Input()` id |    string   | The unique `id` attribute to be used for the checkbox. If you do not provide a value, it will be auto-generated. |
+| `@Input()` labelId |    string   | The unique `id` attribute to be used for the checkbox label. If you do not provide a value, it will be auto-generated. |
 | `@Input()` name |  string | The `name` attribute to be used for the checkbox. |
 | `@Input()` value | any | The value to be set for the checkbox. |
 | `@Input()` tabindex | number | Specifies the tabbing order of the checkbox. |
@@ -75,3 +76,11 @@ To disable the ripple effect, do:
 | `@Input()` disabled | boolean | Specifies the disabled state of the checkbox. |
 | `@Input()` disableRipple | boolean | Specifies the whether the ripple effect should be disabled for the checkbox. |
 | `@Input()` labelPosition | string `|` enum LabelPosition | Specifies the position of the text label relative to the checkbox element. |
+| `@Input("aria-labelledby")` ariaLabelledBy | string | Specify an external element by id to be used as label for the checkbox. |
+| `@Output()` change | EventEmitter<IgxCheckboxChange> | Emitted when the checkbox checked value changes. |
+
+### Methods
+
+| toggle |
+|:----------|
+| Toggles the checked state of the checkbox. |
