@@ -90,12 +90,12 @@
         display: inline-flex;
         align-items: center;
         position: relative;
-        width: 100vw;
+        flex-wrap: nowrap;
     }
 
     // ITEM
     %igx-tabs-menu-item {
-        display: flex;
+        display: inline-flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
