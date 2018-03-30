@@ -54,20 +54,14 @@ export class IgxTabsComponent implements AfterViewInit {
     @ViewChild("itemsContainer")
     public itemsContainer: ElementRef;
 
-    @ViewChild("tablist")
-    public tablist: ElementRef;
+    @ViewChild("selectedIndicator")
+    public selectedIndicator: ElementRef;
+
+    @ViewChild("viewPort")
+    public viewPort: ElementRef;
 
     @HostBinding("class.igx-tabs")
     public cssClass = "igx-tabs";
-
-    @HostBinding("style.width")
-    @Input()
-    public width;
-
-    @HostBinding("style.width")
-    get viewPortWidth() {
-        return this.width - 60;
-    }
 
     public selectedIndex = -1;
     public isScrollable = false;
@@ -81,25 +75,38 @@ export class IgxTabsComponent implements AfterViewInit {
         return this._itemStyle;
     }
 
-    private offset = 0;
-    private step = 180;
+    public offset = 0;
 
-    public left(event) {
-        if (this.offset !== 0) {
-            this.offset += this.step;
-            this.itemsContainer.nativeElement.style.transform = `translate(${this.offset}px)`;
+    public scrollLeft(event) {
+        this._scroll(false);
+    }
+
+    public scrollRight(event) {
+        this._scroll(true);
+    }
+
+    private _scroll(scrollRight: boolean) {
+        const tabsArray = this.tabs.toArray();
+        for (let index = 0; index < tabsArray.length; index++) {
+            const element = tabsArray[index].nativeTabItem.nativeElement;
+            if (scrollRight) {
+                if (element.offsetWidth + element.offsetLeft > this.viewPort.nativeElement.offsetWidth + this.offset) {
+                    this.scrollElement(element, scrollRight);
+                    break;
+                }
+            } else {
+                if(element.offsetWidth + element.offsetLeft >= this.offset) {
+                    this.scrollElement(element, scrollRight);
+                    break;
+                }
+            }
         }
     }
 
-    public right(event) {
-        const parentContainerWidth = this.itemsContainer.nativeElement.offsetWidth;
-
-        // if (parentContainerWidth - this.viewPortWidth >= Math.abs(this.offset)) {
-            this.offset -= this.step;
-            this.itemsContainer.nativeElement.style.transform = `translate(${this.offset}px)`;
-
-            // console.log("right parentContainerWidth " + parentContainerWidth + " offset " + this.offsetRight);
-        // }
+    public scrollElement(element: any, scrollRight: boolean): void {
+        const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
+        this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
+        this.itemsContainer.nativeElement.style.transform = `translate(${-this.offset}px)`;
     }
 
     get selectedTab(): IgxTabItemComponent {
@@ -121,6 +128,8 @@ export class IgxTabsComponent implements AfterViewInit {
                 if (group) {
                     group.select();
                 }
+                this.selectedIndicator.nativeElement.style.width = `${this.selectedTab.nativeTabItem.nativeElement.offsetWidth}px`;
+                this.selectedIndicator.nativeElement.style.transform = `translate(${this.selectedTab.nativeTabItem.nativeElement.offsetLeft}px)`;
             }
         }, 0);
 

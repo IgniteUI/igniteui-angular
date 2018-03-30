@@ -2,7 +2,7 @@
 <!-- TODO Remove tab container from here -->
 <div #tabsContainer>
     <div class="igx-tabs__header" #headerContainer>
-        <button igxRipple class="igx-tabs__scroller-button igx-tabs__scroller__indicator--left" igxButton="icon" (click)="left($event)">
+        <button igxRipple class="igx-tabs__scroller-button igx-tabs__scroller__indicator--left" igxButton="icon" (click)="scrollLeft($event)">
             <igx-icon fontSet="material" name="navigate_before"></igx-icon>
         </button>
         <div class="igx-tabs__wrapper-fixed" #viewPort>
@@ -14,10 +14,10 @@
                 'igx-tabs__menu-item--disabled': group.isDisabled }"
                                              [relatedGroup]="group" (click)="group.select()" role="tab" >
                 </igx-tab-item>
-                <div class="igx-tabs__menu-item-indicator"></div>
+                <div #selectedIndicator class="igx-tabs__menu-item-indicator"></div>
             </div>
         </div>
-        <button igxRipple class="igx-tabs__scroller-button igx-tabs__scroller__indicator--right" igxButton="icon" (click)="right($event)">
+        <button igxRipple class="igx-tabs__scroller-button igx-tabs__scroller__indicator--right" igxButton="icon" (click)="scrollRight($event)">
             <igx-icon fontSet="material" name="navigate_next"></igx-icon>
         </button>
     </div>

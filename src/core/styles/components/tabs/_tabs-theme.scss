@@ -136,6 +136,7 @@
         height: 2px;
         min-width: rem(160px);
         background: map-get($this, 'indicator-bg');
+        transition: transform .5s cubic-bezier(.35, 0, .25, 1), width .5s cubic-bezier(.35, 0, .25, 1);
     }
 
     // SCROLL BUTTONS
