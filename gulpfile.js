@@ -141,6 +141,6 @@ gulp.task("copy-git-hooks", () => {
         .pipe(fs.createWriteStream(defaultCopyHookDir + "validate.js"));
 
     fs.createReadStream("./.hooks/prepare-commit-msg")
-        .pipe(fs.createWriteStream("./.git/prepare-commit-msg"));
+        .pipe(fs.createWriteStream("./.git/hooks/prepare-commit-msg"));
 });
 
