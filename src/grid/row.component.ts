@@ -3,6 +3,7 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChildren,
+    DoCheck,
     ElementRef,
     forwardRef,
     HostBinding,
@@ -14,6 +15,7 @@ import {
     ViewChild,
     ViewChildren
 } from "@angular/core";
+import { IgxSelectionAPIService } from "../core/selection";
 import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
@@ -27,7 +29,7 @@ import { IgxGridComponent } from "./grid.component";
     selector: "igx-grid-row",
     templateUrl: "./row.component.html"
 })
-export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy {
+export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck {
 
     @Input()
     public rowData: any[];
@@ -81,8 +83,24 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy {
         return this.grid.unpinnedColumns;
     }
 
+    public get rowSelectable() {
+        return this.grid.rowSelectable;
+    }
+
+    @HostBinding("attr.aria-selected")
+    @HostBinding("class.igx-grid__tr--selected")
+    public isSelected: boolean;
+
     get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
+    }
+
+    private get _rowID() {
+        // A row in the grid is identified either by:
+        // primaryKey data value,
+        // or if the primaryKey is omitted, then the whole rowData is used instead.
+        const primaryKey = this.grid.primaryKey;
+        return primaryKey ? this.rowData[primaryKey] : this.rowData;
     }
 
     get nativeElement() {
@@ -90,10 +108,12 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy {
     }
 
     protected defaultCssClass = "igx-grid__tr";
+    protected _rowSelection = false;
     protected isFocused = false;
     protected chunkLoaded$;
 
     constructor(public gridAPI: IgxGridAPIService,
+                private selectionAPI: IgxSelectionAPIService,
                 private element: ElementRef,
                 public cdr: ChangeDetectorRef) {}
 
@@ -125,5 +145,39 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy {
         this.isFocused = false;
 
         // TODO: Emit de-selection event
+    }
+
+    public onCheckboxClick(event) {
+        if (event.checked) {
+            this.select();
+        } else {
+            this.deselect();
+        }
+        this.grid.onRowSelection.emit(this);
+    }
+
+    public ngDoCheck() {
+        if (this.rowSelectable) {
+            this.isSelected = this.grid.allRowsSelected ? true : this.selectionAPI.is_item_selected(this.gridID, this._rowID);
+            this.cdr.markForCheck();
+        } else {
+            this.isSelected = this.selectionAPI.is_item_selected(this.gridID, this._rowID);
+        }
+    }
+
+    public select() {
+        if (this.rowSelectable) {
+            this.selectionAPI.select_item(this.gridID, this._rowID);
+            this.grid.allRowsSelected = this.selectionAPI.are_all_selected(this.gridID, this.grid.data);
+            this.grid.headerCheckbox.indeterminate = this.grid.allRowsSelected ? false : true;
+        }
+    }
+
+    public deselect() {
+        if (this.rowSelectable) {
+            this.selectionAPI.deselect_item(this.gridID, this._rowID);
+            this.grid.allRowsSelected = false;
+            this.grid.headerCheckbox.indeterminate = !this.selectionAPI.are_none_selected(this.gridID);
+        }
     }
 }

@@ -28,11 +28,13 @@ import {
 import { of } from "rxjs/observable/of";
 import { debounceTime, delay, merge, repeat, take, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs/Subject";
+import { IgxSelectionAPIService } from "../core/selection";
 import { cloneArray } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
+import { IgxCheckboxComponent } from "./../checkbox/checkbox.component";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
@@ -113,6 +115,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public paginationTemplate: TemplateRef<any>;
 
+    @Input()
+    get rowSelectable(): boolean {
+        return this._rowSelection;
+    }
+
+    set rowSelectable(val: boolean) {
+        this._rowSelection = val;
+    }
+
     @HostBinding("style.height")
     @Input()
     public height;
@@ -136,6 +147,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @Output()
     public onSelection = new EventEmitter<any>();
+
+    @Output()
+    public onRowSelection = new EventEmitter<any>();
 
     @Output()
     public onColumnPinning = new EventEmitter<any>();
@@ -218,11 +232,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public cellInEditMode: IgxGridCellComponent;
 
     public eventBus = new Subject<boolean>();
+
+    public allRowsSelected = false;
+
     protected destroy$ = new Subject<boolean>();
 
     protected _perPage = 15;
     protected _page = 0;
     protected _paging = false;
+    protected _rowSelection = false;
     protected _pipeTrigger = 0;
     protected _columns: IgxColumnComponent[] = [];
     protected _pinnedColumns: IgxColumnComponent[] = [];
@@ -234,6 +252,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     constructor(
         private gridAPI: IgxGridAPIService,
+        private selectionAPI: IgxSelectionAPIService,
         private elementRef: ElementRef,
         private zone: NgZone,
         @Inject(DOCUMENT) private document,
@@ -316,6 +335,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public getRowByIndex(index: number): IgxGridRowComponent {
         return this.rowList.toArray()[index];
+    }
+
+    public getRowByKey(keyValue: any): IgxGridRowComponent {
+        return this.gridAPI.get_row_by_key(this.id, keyValue);
     }
 
     get visibleColumns(): IgxColumnComponent[] {
@@ -696,5 +719,34 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.cellInEditMode.inEditMode = false;
             }
         });
+    }
+
+    public onHeaderCheckboxClick(event) {
+        this.allRowsSelected = event.checked;
+        if (event.checked) {
+            this.selectionAPI.select_all(this.id, this.data, this.primaryKey);
+        } else {
+            this.selectionAPI.deselect_all(this.id);
+        }
+    }
+
+    get selectedRows() {
+        return;
+    }
+
+    public selectRows(rows: IgxGridRowComponent[]) {
+        return;
+    }
+
+    public selectAllRows() {
+        return;
+    }
+
+    public deselectRows(rows: IgxGridRowComponent[]) {
+        return;
+    }
+
+    public deselectAllRows() {
+        return;
     }
 }
