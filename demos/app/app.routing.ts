@@ -17,6 +17,7 @@ import { GridPerformanceSampleComponent } from "./grid-performance/sample.compon
 import { GridSummaryComponent } from "./grid-summaries/sample.component";
 import { GridSampleComponent } from "./grid/sample.component";
 import { IconSampleComponent } from "./icon/sample.component";
+import { InputGroupSampleComponent } from "./input-group/input-group.component";
 import { InputSampleComponent } from "./input/sample.component";
 import { LayoutSampleComponent } from "./layout/sample.component";
 import { ListPerformanceSampleComponent } from "./list-performance/sample.component";
@@ -94,6 +95,10 @@ const appRoutes: Routes = [
     {
         component: DialogSampleComponent,
         path: "dialog"
+    },
+    {
+        component: InputGroupSampleComponent,
+        path: "input-group"
     },
     {
         component: IconSampleComponent,
