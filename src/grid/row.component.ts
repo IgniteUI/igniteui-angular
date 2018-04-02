@@ -38,9 +38,6 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
     public index: number;
 
     @Input()
-    public primaryValue: any;
-
-    @Input()
     public gridID: string;
 
     @ViewChild("igxDirRef", { read: IgxForOfDirective })
