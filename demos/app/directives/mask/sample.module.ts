@@ -1,13 +1,12 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { PageHeaderModule } from "../../pageHeading/pageHeading.module";
 import {
-    IgxInputModule,
-    IgxLabelModule,
-    IgxSnackbarModule,
-    IgxMaskModule
+    IgxInputGroupModule,
+    IgxMaskModule,
+    IgxSnackbarModule
 } from "../../../lib/main";
+import { PageHeaderModule } from "../../pageHeading/pageHeading.module";
 
 import { MaskSampleComponent } from "./sample.component";
 
@@ -16,10 +15,9 @@ import { MaskSampleComponent } from "./sample.component";
     imports: [
         FormsModule,
         CommonModule,
-        IgxInputModule,
+        IgxInputGroupModule,
         IgxMaskModule,
         IgxSnackbarModule,
-        IgxLabelModule,
         PageHeaderModule
     ]
 })

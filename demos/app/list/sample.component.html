@@ -4,15 +4,14 @@
         <article class="sample-column">
             <h4 class="sample-title">Declarative filtered list</h4>
             <igx-switch [checked]="true" #checkbox>Filter</igx-switch>
-            <div class="igx-form-group">
-                <input class="igx-form-group__input--search" placeholder="Search List" [(ngModel)]="search2" />
-                <label igxLabel>
-                    <igx-icon fontSet="material" name="search"></igx-icon>
-                </label>
-                <span class="igx-form-group__clear--hidden">
-                    <igx-icon fontSet="material" name="clear"></igx-icon>
-                </span>
-            </div>
+
+            <igx-input-group type="search" style="margin-bottom: 16px">
+                <igx-prefix>
+                    <igx-icon>search</igx-icon>
+                </igx-prefix>
+                <input #searchBox1 igxInput type="text" placeholder="Search List" [(ngModel)]="search2" />
+            </igx-input-group>
+
             <div class="list-sample">
                 <igx-list #declarativeList [igxFilter]="fo2" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)">
                     <igx-list-item [isHeader]="true">Mildly Sweet</igx-list-item>
@@ -29,15 +28,14 @@
 
         <article class="sample-column">
             <h4 class="sample-title">Data source filtered list</h4>
-            <div class="igx-form-group">
-                <input class="igx-form-group__input--search" placeholder="Search Contacts" [(ngModel)]="search1" />
-                <label igxLabel>
-                    <igx-icon fontSet="material" name="search"></igx-icon>
-                </label>
-                <span class="igx-form-group__clear--hidden">
-                    <igx-icon fontSet="material" name="clear"></igx-icon>
-                </span>
-            </div>
+
+            <igx-input-group type="search" style="margin-bottom: 16px">
+                <igx-prefix>
+                    <igx-icon>search</igx-icon>
+                </igx-prefix>
+                <input #searchContacts igxInput type="text" placeholder="Search Contacts" [(ngModel)]="search1" />
+            </igx-input-group>
+
             <div class="list-sample">
                 <igx-list>
                     <igx-list-item [isHeader]="true">Contacts</igx-list-item>
@@ -72,16 +70,20 @@
         </article>
 
         <article class="sample-column">
-            <h4 class="sample-title">Empty list <i class="light">w/ Default template</i></h4>
-            <div class="igx-form-group" [hidden]="fruits.length === 0">
-                <input #searchFruits class="igx-form-group__input--search" placeholder="Search List" [(ngModel)]="fruitsSearch" />
-                <label igxLabel>
-                    <igx-icon fontSet="material" name="search"></igx-icon>
-                </label>
-                <span class="igx-form-group__clear--hidden">
-                    <igx-icon fontSet="material" name="clear"></igx-icon>
-                </span>
-            </div>
+            <h4 class="sample-title">Empty list
+                <i class="light">w/ Default template</i>
+            </h4>
+
+            <igx-input-group type="search" style="margin-bottom: 16px" [hidden]="fruits.length === 0">
+                <igx-prefix>
+                    <igx-icon>search</igx-icon>
+                </igx-prefix>
+                <input #searchFruits igxInput type="text" placeholder="Search List" [(ngModel)]="fruitsSearch" />
+                <igx-suffix *ngIf="searchFruits.value.length > 0" (click)="searchFruits.value = ''">
+                    <igx-icon>clear</igx-icon>
+                </igx-suffix>
+            </igx-input-group>
+
             <div class="list-sample">
                 <igx-list [hidden]="fruitsFilteredItemsCount === 0" emptyListMessage="No fruits." emptyListImage="images/list/empty.png"
                     (emptyListButtonClick)="addFruitDialog.open()" [igxFilter]="fruitsFilterOptions" (filtered)="fruitsFiltered($event)">
@@ -97,13 +99,15 @@
                 </div>
                 <button igxButton="fab" igxButtonColor="white" igxButtonBackground="#0375be" igRipple="white" (click)="addFruitDialog.open()"
                     [hidden]="fruits.length === 0" style="position: absolute; bottom: 24px; right: 24px">
-                        <igx-icon fontSet="material" name="add"></igx-icon>
+                    <igx-icon fontSet="material" name="add"></igx-icon>
                 </button>
             </div>
         </article>
 
         <article class="sample-column">
-            <h4 class="sample-title">Empty list <i class="light">w/ Custom template</i></h4>
+            <h4 class="sample-title">Empty list
+                <i class="light">w/ Custom template</i>
+            </h4>
             <div class="list-sample">
                 <igx-list hasNoItemsTemplate="true">
                     <igx-list-item *ngFor="let fruit of fruits">
@@ -115,14 +119,16 @@
                 </igx-list>
             </div>
         </article>
+
     </section>
+
 </div>
 
 <igx-dialog #addFruitDialog title="Add Fruit" leftButtonLabel="Cancel" (onLeftButtonSelect)="addFruitDialog.close()" rightButtonLabel="Add"
     rightButtonBackgroundColor="#0375be" rightButtonColor="white" (onRightButtonSelect)="onAddFruitButtonClicked(newFruitName.value);newFruitName.value='';"
     backgroundClick="true" closeOnOutsideSelect="true">
-    <div class="igx-form-group">
-        <input #newFruitName type="text" igxInput />
-        <label igxLabel>Fruit Name</label>
-    </div>
+    <igx-input-group>
+        <label for="newFruit">Fruit Name</label>
+        <input id="newFruit" igxInput #newFruitName type="text" />
+    </igx-input-group>
 </igx-dialog>
