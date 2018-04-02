@@ -4,17 +4,29 @@ import { FormsModule } from "@angular/forms";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { ListSampleComponent } from "./sample.component";
 
-import { IgxSwitchModule, IgxIconModule, IgxListModule, IgxAvatarModule , IgxDialogModule, IgxFilterModule   } from "../../lib/main";
+import {
+    IgxAvatarModule,
+    IgxDialogModule,
+    IgxFilterModule,
+    IgxIconModule,
+    IgxInputGroupModule,
+    IgxListModule,
+    IgxSwitchModule
+} from "../../lib/main";
 
 @NgModule({
     declarations: [ListSampleComponent],
     imports: [
-         CommonModule,
-         FormsModule,
-         CommonModule,
-         FormsModule,
-         PageHeaderModule,
-         IgxSwitchModule, IgxIconModule, IgxListModule , IgxAvatarModule , IgxDialogModule, IgxFilterModule 
-       ]
+        CommonModule,
+        FormsModule,
+        PageHeaderModule,
+        IgxSwitchModule,
+        IgxIconModule,
+        IgxListModule,
+        IgxAvatarModule,
+        IgxDialogModule,
+        IgxFilterModule,
+        IgxInputGroupModule
+    ]
 })
-export class ListSampleModule {}
+export class ListSampleModule { }
