@@ -81,6 +81,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
 
         this._maskOptions.format = this.mask ? this.mask : "CCCCCCCCCC";
         this._maskOptions.promptChar = this.promptChar ? this.promptChar : "_";
+        this.nativeElement.setAttribute("placeholder", this.mask);
     }
 
     @HostListener("keydown", ["$event"])

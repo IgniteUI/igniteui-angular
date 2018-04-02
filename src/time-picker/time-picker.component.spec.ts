@@ -3,6 +3,7 @@ import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { IgxInputDirective } from "../directives/input/input.directive";
 import { IgxTimePickerComponent, IgxTimePickerModule } from "./time-picker.component";
 
 describe("IgxTimePicker", () => {
@@ -51,7 +52,7 @@ describe("IgxTimePicker", () => {
 
         const dom = fixture.debugElement;
 
-        const getValueFromInput = dom.query(By.css(".igx-form-group__input")).nativeElement.value;
+        const getValueFromInput = dom.query(By.directive(IgxInputDirective)).nativeElement.value;
         expect(getValueFromInput).toEqual(formattedTime);
     });
 
@@ -105,11 +106,11 @@ describe("IgxTimePicker", () => {
         const timePicker = fixture.componentInstance.timePicker;
         const dom = fixture.debugElement;
 
-        const target = dom.query(By.css(".igx-form-group__input"));
+        const target = dom.query(By.directive(IgxInputDirective));
 
         spyOn(timePicker.onOpen, "emit");
 
-        target.triggerEventHandler("click", { target: dom.nativeElement.children[0] });
+        target.nativeElement.dispatchEvent(new Event("click", { bubbles: true }));
 
         fixture.detectChanges();
 
@@ -142,7 +143,7 @@ describe("IgxTimePicker", () => {
         const timePicker = fixture.componentInstance.timePicker;
         const dom = fixture.debugElement;
 
-        const initialTime = dom.query(By.css(".igx-form-group__input")).nativeElement.value;
+        const initialTime = dom.query(By.directive(IgxInputDirective)).nativeElement.value;
 
         openInput(fixture);
 
@@ -152,7 +153,7 @@ describe("IgxTimePicker", () => {
         getCancelButton.triggerEventHandler("click", {});
         fixture.detectChanges();
 
-        const selectedTime = dom.query(By.css(".igx-form-group__input")).nativeElement.value;
+        const selectedTime = dom.query(By.directive(IgxInputDirective)).nativeElement.value;
         expect(initialTime).toEqual(selectedTime);
 
     });
@@ -192,7 +193,7 @@ describe("IgxTimePicker", () => {
 
         expect(timePicker.onValueChanged.emit).toHaveBeenCalled();
 
-        const getValueFromInput = dom.query(By.css(".igx-form-group__input")).nativeElement.value;
+        const getValueFromInput = dom.query(By.directive(IgxInputDirective)).nativeElement.value;
         const selectedTime = `${hourValue}:${minuteValue} ${aMPMValue}`;
 
         expect(getValueFromInput).toEqual(selectedTime);
@@ -249,7 +250,7 @@ describe("IgxTimePicker", () => {
         getHourColumn.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
         fixture.detectChanges();
 
-        const getValueFromInput = dom.query(By.css(".igx-form-group__input")).nativeElement.value;
+        const getValueFromInput = dom.query(By.directive(IgxInputDirective)).nativeElement.value;
 
         expect(formatedTimeFromPopupHeader).toBe(getValueFromInput);
     });
@@ -260,10 +261,11 @@ describe("IgxTimePicker", () => {
 
         const timePicker = fixture.componentInstance.timePicker;
         const dom = fixture.debugElement;
-        const initialTime = dom.query(By.css(".igx-form-group__input")).nativeElement.value;
+        const initialTime = dom.query(By.directive(IgxInputDirective)).nativeElement.value;
 
         let args = { key: "ArrowRight", bubbles: true };
         openInput(fixture);
+        tick();
 
         const getHourColumn: any = dom.query(By.css(".igx-time-picker__hourList"));
         getHourColumn.nativeElement.focus();
@@ -320,7 +322,7 @@ describe("IgxTimePicker", () => {
             document.activeElement.dispatchEvent(new KeyboardEvent("keydown", args));
         }).then(() => {
             fixture.detectChanges();
-            const selectedTime = dom.query(By.css(".igx-form-group__input")).nativeElement.value;
+            const selectedTime = dom.query(By.directive(IgxInputDirective)).nativeElement.value;
             tick();
             expect(initialTime).toEqual(selectedTime);
         });
@@ -331,6 +333,7 @@ describe("IgxTimePicker", () => {
         fixture.detectChanges();
 
         openInput(fixture);
+        tick();
         fixture.detectChanges();
 
         // const timePicker = fixture.componentInstance.timePicker;
@@ -474,7 +477,6 @@ describe("IgxTimePicker", () => {
         openInput(fixture);
         const getAMPMColumn: any = dom.query(By.css(".igx-time-picker__ampmList"));
         expect(getAMPMColumn.children.length).toBe(0);
-
         const getHourColumn = dom.query(By.css(".igx-time-picker__hourList"));
         const selectHour = getHourColumn.children[3];
         expect(selectHour.nativeElement.innerText).toBe("00");
@@ -736,9 +738,8 @@ export class IgxTimePickerWithItemsDeltaValueComponent {
 // helper functions
 function openInput(fixture) {
     const dom = fixture.debugElement;
-    const timePickerTarget = dom.query(By.css(".igx-form-group__input"));
-
-    timePickerTarget.triggerEventHandler("click", { target: dom.nativeElement.children[0] });
+    const timePickerTarget = dom.query(By.directive(IgxInputDirective));
+    timePickerTarget.nativeElement.dispatchEvent(new Event("click", { bubbles: true }));
     fixture.detectChanges();
 }
 
