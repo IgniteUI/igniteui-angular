@@ -1,7 +1,8 @@
 <ng-template #defaultFilterUI>
     <div *ngIf="!unaryCondition" class="igx-filtering__op">
-        <input type="text" igxInput placeholder="value" autocomplete="off" [value]="value" (input)="onInputChanged($event.target.value)"
-        />
+        <igx-input-group>
+            <input type="text" igxInput placeholder="value" autocomplete="off" [value]="value" (input)="onInputChanged($event.target.value)" />
+        </igx-input-group>
     </div>
     <br>
 </ng-template>
