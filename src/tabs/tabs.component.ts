@@ -1,4 +1,4 @@
-import {CommonModule} from "@angular/common";
+import { CommonModule } from "@angular/common";
 import {
     AfterContentInit,
     AfterViewInit,
@@ -19,10 +19,15 @@ import {
     ViewChild,
     ViewChildren
 } from "@angular/core";
-import {IgxBadgeModule} from "../badge/badge.component";
-import {IgxIconModule} from "../icon";
-import {IgxTabItemComponent} from "./tab-item.component";
-import {IgxRippleModule} from "../directives/ripple/ripple.directive";
+import { IgxBadgeModule } from "../badge/badge.component";
+import { IgxIconModule } from "../icon";
+import { IgxTabItemComponent } from "./tab-item.component";
+import { IgxRippleModule } from "../directives/ripple/ripple.directive";
+
+export enum TabsType {
+    FIXED = "fixed",
+    CONTENTFIT = "contentfit"
+}
 
 @Directive({
     selector: "[igxTab]"
@@ -41,6 +46,9 @@ export class IgxTabItemTemplateDirective {
 export class IgxTabsComponent implements AfterViewInit {
     @ViewChildren(forwardRef(() => IgxTabItemComponent)) public tabs: QueryList<IgxTabItemComponent>;
     @ContentChildren(forwardRef(() => IgxTabsGroupComponent)) public groups: QueryList<IgxTabsGroupComponent>;
+
+    @Input("tabsType")
+    public tabsType: string | TabsType = "contentfit";
 
     @Output() public onTabItemSelected = new EventEmitter();
     @Output() public onTabItemDeselected = new EventEmitter();
@@ -69,12 +77,6 @@ export class IgxTabsComponent implements AfterViewInit {
     public calculatedWidth: number;
     public visibleItemsWidth: number;
 
-    private _itemStyle = "igx-tabs";
-
-    public get itemStyle(): string {
-        return this._itemStyle;
-    }
-
     public offset = 0;
 
     public scrollLeft(event) {
@@ -95,7 +97,7 @@ export class IgxTabsComponent implements AfterViewInit {
                     break;
                 }
             } else {
-                if(element.offsetWidth + element.offsetLeft >= this.offset) {
+                if (element.offsetWidth + element.offsetLeft >= this.offset) {
                     this.scrollElement(element, scrollRight);
                     break;
                 }
@@ -181,7 +183,7 @@ export class IgxTabsComponent implements AfterViewInit {
         }
 
         group.isSelected = false;
-        this.onTabItemDeselected.emit({tab: this.tabs[group.index], group});
+        this.onTabItemDeselected.emit({ tab: this.tabs[group.index], group });
     }
 }
 
@@ -246,7 +248,7 @@ export class IgxTabsGroupComponent implements AfterContentInit {
 
     private _tabTemplate: TemplateRef<any>;
 
-    @ContentChild(IgxTabItemTemplateDirective, {read: IgxTabItemTemplateDirective})
+    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
     protected tabTemplate: IgxTabItemTemplateDirective;
 
     constructor(private _tabs: IgxTabsComponent) {
@@ -264,7 +266,7 @@ export class IgxTabsGroupComponent implements AfterContentInit {
         }
 
         this.isSelected = true;
-        this._tabs.onTabItemSelected.emit({tab: this._tabs.tabs.toArray()[this.index], group: this});
+        this._tabs.onTabItemSelected.emit({ tab: this._tabs.tabs.toArray()[this.index], group: this });
     }
 }
 

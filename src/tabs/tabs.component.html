@@ -1,4 +1,3 @@
-
 <!-- TODO Remove tab container from here -->
 <div #tabsContainer>
     <div class="igx-tabs__header" #headerContainer>
@@ -7,12 +6,13 @@
         </button>
         <div class="igx-tabs__header-wrapper-fixed" #viewPort>
             <div #itemsContainer class="igx-tabs__header-wrapper-fluid">
-                <igx-tab-item igxRipple *ngFor="let group of groups" [id]="'igx-tab-item-' + group.index" [attr.aria-label]="group.label" [attr.aria-disabled]="group.isDisabled"
-                                             [attr.aria-selected]="group.isSelected" [attr.aria-controls]="'igx-tab-item-group-'+ group.index" [ngClass]="{
+                <igx-tab-item igxRipple *ngFor="let group of groups" [id]="'igx-tab-item-' + group.index" [attr.aria-label]="group.label"
+                    [attr.aria-disabled]="group.isDisabled" [attr.aria-selected]="group.isSelected" [attr.aria-controls]="'igx-tab-item-group-'+ group.index"
+                    [ngClass]="{
                 'igx-tabs__header-menu-item': !group.isSelected && !group.isDisabled,
                 'igx-tabs__header-menu-item--selected': group.isSelected,
-                'igx-tabs__header-menu-item--disabled': group.isDisabled }"
-                                             [relatedGroup]="group" (click)="group.select()" role="tab" >
+                'igx-tabs__header-menu-item--disabled': group.isDisabled }" [relatedGroup]="group" (click)="group.select()"
+                    role="tab" tabindex="0">
                 </igx-tab-item>
                 <div #selectedIndicator class="igx-tabs__header-menu-item-indicator"></div>
             </div>
