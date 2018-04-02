@@ -1,0 +1,7 @@
+<igx-grid #grid1 [data]="remote | async" [primaryKey]="'ProductID'"
+    [rowSelectable]="true" (onRowSelection)="onRowSelection($event)" (onSelection)="onSelection($event)"
+    [width]="'800px'" [height]="'600px'">
+    <igx-column [field]="'ProductID'" [editable]="true"></igx-column>
+    <igx-column [field]="'ProductName'"></igx-column>
+    <igx-column [field]="'UnitsInStock'"></igx-column>
+</igx-grid>
