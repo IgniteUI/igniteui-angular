@@ -172,7 +172,7 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
         if (this.rowSelectable) {
             this.selectionAPI.select_item(this.gridID, this._rowID);
             this.grid.allRowsSelected = this.selectionAPI.are_all_selected(this.gridID, this.grid.data);
-            this.grid.headerCheckbox.indeterminate = this.grid.allRowsSelected ? false : true;
+            this.grid.headerCheckbox.indeterminate = !this.grid.allRowsSelected;
         }
     }
 

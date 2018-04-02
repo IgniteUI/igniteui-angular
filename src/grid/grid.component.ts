@@ -199,6 +199,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild("headerContainer", { read: IgxForOfDirective })
     public headerContainer: IgxForOfDirective<any>;
 
+    @ViewChildren("headerCheckbox", { read: IgxCheckboxComponent })
+    public headerCheckbox: IgxCheckboxComponent;
+
     @ViewChild("theadRow")
     public theadRow: ElementRef;
 
@@ -338,10 +341,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public getRowByIndex(index: number): IgxGridRowComponent {
         return this.gridAPI.get_row_by_index(this.id, index);
-    }
-
-    public getRowByKey(keyValue: any): IgxGridRowComponent {
-        return this.gridAPI.get_row_by_key(this.id, keyValue);
     }
 
     public getRowByKey(keyValue: any): IgxGridRowComponent {
