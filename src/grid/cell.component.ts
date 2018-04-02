@@ -12,6 +12,7 @@ import {
     ViewContainerRef
 } from "@angular/core";
 import { take } from "rxjs/operators";
+import { IgxSelectionAPIService } from "../core/selection";
 import { KEYCODES } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridAPIService } from "./api.service";
@@ -80,6 +81,13 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         return this.column.visibleIndex;
     }
 
+    private get _cellID() {
+        const primaryKey = this.grid.primaryKey;
+        const rowID = primaryKey ? this.row.rowData[primaryKey] : this.row.rowData;
+        const columnID = this.columnIndex;
+        return { rowID, columnID };
+    }
+
     get nativeElement(): any {
         return this.element.nativeElement;
     }
@@ -133,7 +141,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostBinding("class.igx-grid__td--selected")
     @autoWire(true)
     get focused(): boolean {
-        return this.isFocused || this.isSelected;
+        return this.isSelected = this.selectionApi.is_single_item_selected(this.gridID, this._cellID);
     }
 
     set focused(val: boolean) {
@@ -181,6 +189,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
 
     constructor(
         public gridAPI: IgxGridAPIService,
+        public selectionApi: IgxSelectionAPIService,
         public cdr: ChangeDetectorRef,
         private element: ElementRef) { }
 
@@ -207,6 +216,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     public onFocus(event) {
         this.isFocused = true;
         this.isSelected = true;
+        this.selectionApi.select_single_item(this.gridID, this._cellID);
         this.row.focused = true;
         if (this.grid.cellInEditMode && this.grid.cellInEditMode !== this) {
             this.grid.cellInEditMode.inEditMode = false;
@@ -221,6 +231,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     public onBlur(event) {
         this.isFocused = false;
         this.isSelected = false;
+        this.selectionApi.deselect_single_item(this.gridID);
         this.row.focused = false;
     }
 
