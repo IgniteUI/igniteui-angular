@@ -18,11 +18,23 @@ All notable changes for each version of this project will be documented in this 
 - Added the option to conditionally disable the `igx-ripple` directive through the `igxRippleDisabled` property.
 - Updated styling and interaction animations of the `igx-checkbox` component.
 - Added `indeterminate` property and styling to the `igx-checkbox` component.
-- Added `igx-ripple` effect to the checkbox component. The effect can be disabled through the `disableRipple` property.
+- Added `igx-ripple` effect to the `igx-checkbox` component. The effect can be disabled through the `disableRipple` property.
 - Added the ability to specify the label location in the checkbox component through the `labelPosition` property. It can either be `before` or `after` the checkbox element.
+- You can now use any element as label on the `igx-checkbox` component via the aria-labelledby property. 
+- You can now have invisible label on the `igx-checkbox` component via the aria-label property. 
+- Added the ability to toggle the `igx-checkbox` checked state programmatically via toggle method on the component instance.
+- Fixed a bug on the `igx-checkbox` component where the click event was being triggered twice on click.
+- Fixed a bug where the `igx-checkbox` change event was not being triggered on label click.
 - `igxМask` directive added
     - `igxМask` provide means for controlling user input and formatting the visible value based on a configurable mask rules. For more detailed information see [`igxMask README file`]
     (https://github.com/IgniteUI/igniteui-angular/blob/master/src/directives/mask/README.md)
+- `igxInputGroup` component added - used as a container for the `igxLabel`, `igxInput`, `igxPrefix`, `igxSuffix` and `igxHint` directives.
+- `igxPrefix` directive added - used for input prefixes.
+- `igxSuffix` directive added - used for input suffixes.
+- `igxHint` directive added - used for input hints.
+- `igxInput` directive breaking changes:
+    - the directive should be wrapped by `igxInputGroup` component
+    - `IgxInputGroupModule` should be imported instead of `IgxInputModule`
 
 ## 5.2.1
 - `hammerjs` and `@types/hammerjs` are removed from `peerDependencies` and were added as `dependencies`. So if you are using Igniteui-Angular version 5.2.1 or above it is enough to run `npm install igniteui-angular` in your project for getting started. For more detailed information see [`Ignite UI for Angular Getting Started`](https://www.infragistics.com/products/ignite-ui-angular/getting-started)
