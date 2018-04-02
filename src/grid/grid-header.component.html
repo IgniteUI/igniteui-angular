@@ -11,16 +11,13 @@
 <span (mousedown)="onResizeAreaMouseDown($event)"
       (dblclick)="onResizeAreaDblClick()"
       (mouseover)="onResizeAreaMouseOver()"
-      [style.cursor]="cursor"
+      [style.cursor]="resizeCursor"
       style="display: flex;position: absolute;height: 100%;right:0%;width: 4px;">
-    <div *ngIf="show" igxResizer
+    <div *ngIf="showResizer" igxResizer
         [restrictHDragMax]="restrictResizeMax"
         [restrictHDragMin]="restrictResizeMin"
-        (dragEnd)="resize($event)"
+        (dragEnd)="onResize($event)"
         [style.height.px]="resizerHeight"
         style="width: 4.5px;z-index: 5;background-color: #006db6; position: absolute;cursor:col-resize">
     </div>
 </span>
-
-
-

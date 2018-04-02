@@ -70,8 +70,8 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
         return `${this.gridID}_${this.column.field}`;
     }
 
-    public cursor = null;
-    public show = false;
+    public resizeCursor = null;
+    public showResizer = false;
     public resizerHeight;
     public dragDirection: RestrictDrag = RestrictDrag.HORIZONTALLY;
 
@@ -163,18 +163,18 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
 
     public onResizeAreaMouseOver() {
         if (this.column.resizable) {
-            this.cursor = "col-resize";
+            this.resizeCursor = "col-resize";
         }
     }
 
     public onResizeAreaMouseDown(event) {
         if (event.button === 0 && this.column.resizable) {
-            this.show = true;
+            this.showResizer = true;
             this._isResiznig = true;
             this.resizerHeight = this.grid.calcResizerHeight;
             this._startResizePos = event.clientX;
         } else {
-            this.cursor = null;
+            this.resizeCursor = null;
         }
     }
 
@@ -216,10 +216,10 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
         }
     }
 
-    public resize(event) {
+    public onResize(event) {
         this._isResiznig = false;
 
-        this.show = false;
+        this.showResizer = false;
         const diff = event.clientX - this._startResizePos;
 
         if (this.column.resizable) {
