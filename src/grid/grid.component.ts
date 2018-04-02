@@ -753,8 +753,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public selectRows(rows: IgxGridRowComponent[]) {
 
         // awaiting spec, temporary implementation for sample
-        rows.forEach((row) => row.primaryValue ?
-        this.selectionAPI.select_item(this.id, row.primaryValue) :
+        rows.forEach((row) => row.grid.primaryKey ?
+        this.selectionAPI.select_item(this.id, row.grid.primaryKey) :
         this.selectionAPI.select_item(this.id, row.rowData)
         );
         return;
