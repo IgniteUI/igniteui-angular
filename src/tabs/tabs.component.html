@@ -11,8 +11,7 @@
                     [ngClass]="{
                 'igx-tabs__header-menu-item': !group.isSelected && !group.isDisabled,
                 'igx-tabs__header-menu-item--selected': group.isSelected,
-                'igx-tabs__header-menu-item--disabled': group.isDisabled }" [relatedGroup]="group" (click)="group.select()"
-                    role="tab" tabindex="0">
+                'igx-tabs__header-menu-item--disabled': group.isDisabled }" [relatedGroup]="group" role="tab" tabindex="0">
                 </igx-tab-item>
                 <div #selectedIndicator class="igx-tabs__header-menu-item-indicator"></div>
             </div>

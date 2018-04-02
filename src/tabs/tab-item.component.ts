@@ -4,8 +4,8 @@ import {
     ContentChild,
     ElementRef,
     HostBinding,
-    Input,
-    HostListener
+    HostListener,
+    Input
 } from "@angular/core";
 
 import { IgxBadgeModule } from "../badge/badge.component";
@@ -18,28 +18,21 @@ import { IgxTabsComponent, IgxTabsGroupComponent } from "./tabs.component";
 })
 
 export class IgxTabItemComponent {
+    private _nativeTabItem;
+    private _changesCount = 0; // changes and updates accordingly applied to the tab.
 
     @HostBinding("attr.role") public role = "tab";
 
     @Input() public relatedGroup: IgxTabsGroupComponent;
 
-    private _nativeTabItem;
+    @HostListener("focus", ["$event"])
+    public onFocus(event) {
+        this.select();
+    }
 
-    private _changesCount = 0; // changes and updates accordingly applied to the tab.
-
-    @HostListener("click", ["$event"]) 
-    public onClick(event){
-        const tabElement = this._nativeTabItem.nativeElement;
-        const viewPortOffsetWidth = this._tabs.viewPort.nativeElement.offsetWidth;
-
-        if (tabElement.offsetLeft < this._tabs.offset) {
-            this._tabs.scrollElement(tabElement, false);
-        } else if (tabElement.offsetLeft + tabElement.offsetWidth > viewPortOffsetWidth + this._tabs.offset) {
-            this._tabs.scrollElement(tabElement, true);
-        }
-
-        this._tabs.selectedIndicator.nativeElement.style.width = `${tabElement.offsetWidth}px`;
-        this._tabs.selectedIndicator.nativeElement.style.transform = `translate(${tabElement.offsetLeft}px)`;
+    @HostListener("click", ["$event"])
+    public onClick(event) {
+        this.select();
     }
 
     get changesCount(): number {

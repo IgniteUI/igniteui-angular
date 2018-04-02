@@ -19,10 +19,11 @@ import {
     ViewChild,
     ViewChildren
 } from "@angular/core";
+
 import { IgxBadgeModule } from "../badge/badge.component";
+import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxIconModule } from "../icon";
 import { IgxTabItemComponent } from "./tab-item.component";
-import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 
 export enum TabsType {
     FIXED = "fixed",
@@ -89,8 +90,8 @@ export class IgxTabsComponent implements AfterViewInit {
 
     private _scroll(scrollRight: boolean) {
         const tabsArray = this.tabs.toArray();
-        for (let index = 0; index < tabsArray.length; index++) {
-            const element = tabsArray[index].nativeTabItem.nativeElement;
+        for (const tab of tabsArray) {
+            const element = tab.nativeTabItem.nativeElement;
             if (scrollRight) {
                 if (element.offsetWidth + element.offsetLeft > this.viewPort.nativeElement.offsetWidth + this.offset) {
                     this.scrollElement(element, scrollRight);
@@ -130,8 +131,12 @@ export class IgxTabsComponent implements AfterViewInit {
                 if (group) {
                     group.select();
                 }
-                this.selectedIndicator.nativeElement.style.width = `${this.selectedTab.nativeTabItem.nativeElement.offsetWidth}px`;
-                this.selectedIndicator.nativeElement.style.transform = `translate(${this.selectedTab.nativeTabItem.nativeElement.offsetLeft}px)`;
+
+                const tabWidth = this.selectedTab.nativeTabItem.nativeElement.offsetWidth;
+                const offsetLeft = this.selectedTab.nativeTabItem.nativeElement.offsetLeft;
+
+                this.selectedIndicator.nativeElement.style.width = `${tabWidth}px`;
+                this.selectedIndicator.nativeElement.style.transform = `translate(${offsetLeft}px)`;
             }
         }, 0);
 
@@ -266,7 +271,22 @@ export class IgxTabsGroupComponent implements AfterContentInit {
         }
 
         this.isSelected = true;
+        this.handleSelection();
         this._tabs.onTabItemSelected.emit({ tab: this._tabs.tabs.toArray()[this.index], group: this });
+    }
+
+    private handleSelection() {
+        const tabElement = this.relatedTab.nativeTabItem.nativeElement;
+        const viewPortOffsetWidth = this._tabs.viewPort.nativeElement.offsetWidth;
+
+        if (tabElement.offsetLeft < this._tabs.offset) {
+            this._tabs.scrollElement(tabElement, false);
+        } else if (tabElement.offsetLeft + tabElement.offsetWidth > viewPortOffsetWidth + this._tabs.offset) {
+            this._tabs.scrollElement(tabElement, true);
+        }
+
+        this._tabs.selectedIndicator.nativeElement.style.width = `${tabElement.offsetWidth}px`;
+        this._tabs.selectedIndicator.nativeElement.style.transform = `translate(${tabElement.offsetLeft}px)`;
     }
 }
 
