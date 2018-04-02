@@ -26,7 +26,9 @@ describe("IgxGrid - Row Selection", () => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
             declarations: [
-                GridWithPrimaryKeyComponent
+                GridWithPrimaryKeyComponent,
+                GridWithPagingAndSelectionComponent,
+                GridWithSelection
             ],
             imports: [IgxGridModule.forRoot()]
         })
@@ -156,6 +158,83 @@ describe("IgxGrid - Row Selection", () => {
             expect(grid.selectedCells[0].row.rowData[grid.primaryKey]).toEqual(3);
         });
     }));
+    it("Should persist through paging", async(() => {
+        const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection2;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        const nextBtn: HTMLElement = fix.nativeElement.querySelector(".nextPageBtn");
+        const prevBtn: HTMLElement = fix.nativeElement.querySelector(".prevPageBtn");
+        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
+        const selectedRow = grid.getRowByIndex(5);
+        expect(selectedRow).toBeDefined();
+        const checkboxElement: HTMLElement = selectedRow.nativeElement.querySelector(".igx-checkbox__input");
+        // query(By.css(".igx-checkbox__input"))
+        expect(selectedRow.isSelected).toBeFalsy();
+        checkboxElement.click();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(selectedRow.isSelected).toBeTruthy();
+            // expect(selectedRow.nativeElement.class).toContain("igx-grid__tr--selected");
+            nextBtn.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(selectedRow.isSelected).toBeFalsy();
+            prevBtn.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(selectedRow.isSelected).toBeTruthy();
+        });
+    }));
+    xit("Should persist through scrolling", async(() => {
+        let selectedCell;
+        const fix = TestBed.createComponent(GridWithSelection);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection3;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        const nextBtn: HTMLElement = fix.nativeElement.querySelector(".nextPageBtn");
+        const prevBtn: HTMLElement = fix.nativeElement.querySelector(".prevPageBtn");
+        expect(grid.rowList.length).toBeLessThan(500, "Not all 500 rows should be in the viewport");
+        const selectedRow = grid.getRowByIndex(0);
+        expect(selectedRow).toBeDefined();
+        const checkboxElement: HTMLElement = selectedRow.nativeElement.querySelector(".igx-checkbox__input");
+        // query(By.css(".igx-checkbox__input"))
+        expect(selectedRow.isSelected).toBeFalsy();
+        checkboxElement.click();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(selectedRow.isSelected).toBeTruthy();
+            selectedCell = grid.getCellByColumn("2_0", "Column2");
+            // tslint:disable-next-line:no-debugger
+            debugger;
+            // expect(selectedRow.nativeElement.class).toContain("igx-grid__tr--selected");
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            selectedCell.nativeElement.dispatchEvent(new KeyboardEvent("keydown", {
+                key: "arrowdown",
+                code: "40"
+            }));
+            // tslint:disable-next-line:no-debugger
+            debugger;
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            // tslint:disable-next-line:no-debugger
+            debugger;
+            expect(grid.getRowByIndex(0).isSelected).toBeFalsy();
+            selectedCell.nativeElement.dispatchEvent(new KeyboardEvent("keydown", {
+                key: "arrowup",
+                code: "38"
+            }));
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(selectedRow.isSelected).toBeTruthy();
+        });
+    }));
 });
 
 @Component({
@@ -173,4 +252,79 @@ export class GridWithPrimaryKeyComponent {
 
     @ViewChild("gridSelection1", { read: IgxGridComponent })
     public gridSelection1: IgxGridComponent;
+}
+
+@Component({
+    template: `
+        <igx-grid #gridSelection2 [data]="data" [primaryKey]="'ID'"
+        [autoGenerate]="true" rowSelectable="true" [paging]="true" [perPage]="50">
+        </igx-grid>
+        <button class="prevPageBtn" (click)="ChangePage(-1)">Prev page</button>
+        <button class="nextPageBtn" (click)="ChangePage(1)">Next page</button>
+    `
+})
+export class GridWithPagingAndSelectionComponent {
+    public data = [];
+
+    @ViewChild("gridSelection2", { read: IgxGridComponent })
+    public gridSelection2: IgxGridComponent;
+
+    ngOnInit() {
+        const bigData = [];
+        for (let i = 0; i < 100; i++) {
+            for (let j = 0; j < 5; j++) {
+                bigData.push({
+                    ID: i.toString() + "_" + j.toString(),
+                    Column1: i * j,
+                    Column2: i * j * Math.pow(10, i),
+                    Column3: i * j * Math.pow(100, i)
+                });
+            }
+        }
+        this.data = bigData;
+    }
+
+    public ChangePage(val) {
+        console.log("Changing page: ", val);
+        switch (val) {
+            case -1:
+                this.gridSelection2.previousPage();
+                break;
+            case 1:
+                this.gridSelection2.nextPage();
+                break;
+            default:
+                this.gridSelection2.paginate(val);
+                break;
+        }
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid #gridSelection3 [data]="data" [primaryKey]="'ID'" [width]="'800px'" [height]="'600px'"
+        [autoGenerate]="true" rowSelectable="true">
+        </igx-grid>
+    `
+})
+export class GridWithSelection {
+    public data = [];
+
+    @ViewChild("gridSelection3", { read: IgxGridComponent })
+    public gridSelection3: IgxGridComponent;
+
+    ngOnInit() {
+        const bigData = [];
+        for (let i = 0; i < 100; i++) {
+            for (let j = 0; j < 5; j++) {
+                bigData.push({
+                    ID: i.toString() + "_" + j.toString(),
+                    Column1: i * j,
+                    Column2: i * j * Math.pow(10, i),
+                    Column3: i * j * Math.pow(100, i)
+                });
+            }
+        }
+        this.data = bigData;
+    }
 }
