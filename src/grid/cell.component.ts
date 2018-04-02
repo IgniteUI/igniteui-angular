@@ -327,11 +327,12 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
             const targetUnpinnedIndex = this.unpinnedColumnIndex + 1;
             const horVirtScroll = this.grid.parentVirtDir.getHorizontalScroll();
             const verticalVirtScroll = this.grid.verticalScrollContainer.getVerticalScroll();
-            const verticalVirtScrollWidth = verticalVirtScroll && verticalVirtScroll.offsetHeight < verticalVirtScroll.children[0].offsetHeight ? 
+            const verticalVirtScrollWidth = verticalVirtScroll &&
+                verticalVirtScroll.offsetHeight < verticalVirtScroll.children[0].offsetHeight ?
                 this.grid.verticalScrollContainer.getVerticalScroll().offsetWidth :
                 0;
-            
-            //We take into consideration the vertical scroll width sinse it is not calculated in the container inside the row
+
+            // We take into consideration the vertical scroll width sinse it is not calculated in the container inside the row
             const virtContainerSize = parseInt(this.row.virtDirRow.igxForContainerSize, 10) - verticalVirtScrollWidth;
             let bVirtSubscribe = true;
 
@@ -395,11 +396,12 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
             const containerLeftOffset = parseInt(this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
             const targetEndLeftOffset = target.nativeElement.offsetLeft + parseInt(target.column.width, 10) + containerLeftOffset;
             const verticalVirtScroll = this.grid.verticalScrollContainer.getVerticalScroll();
-            const verticalVirtScrollWidth = verticalVirtScroll && verticalVirtScroll.offsetHeight < verticalVirtScroll.children[0].offsetHeight ? 
+            const verticalVirtScrollWidth = verticalVirtScroll &&
+                verticalVirtScroll.offsetHeight < verticalVirtScroll.children[0].offsetHeight ?
                 this.grid.verticalScrollContainer.getVerticalScroll().offsetWidth :
                 0;
-            
-            //We take into consideration the vertical scroll width sinse it is not calculated in the container inside the row
+
+            // We take into consideration the vertical scroll width sinse it is not calculated in the container inside the row
             const virtContainerSize = parseInt(this.row.virtDirRow.igxForContainerSize, 10) - verticalVirtScrollWidth;
             if (targetEndLeftOffset > virtContainerSize) {
                 // Target cell is partially visible (right part of it is cut). Scroll to it so it is fully visible then focus.

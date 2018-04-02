@@ -1031,17 +1031,17 @@ export class VirtualComponent implements OnInit {
     public isVerticalScrollbarVisible() {
         const verticalScrollbar = this.container.element.nativeElement.querySelector("igx-virtual-helper");
         /**
-         * Due to current implementation the width is set to 17px.
-         * That's why when scrollWidth is less than 2px it means it's space is filled with the scrollbar
+         * Due to current implementation the height is set explicitly.
+         * That's why we check if the content is bigger than the vertical scrollbar height
          */
-        return verticalScrollbar.scrollWidth <= 2;
+        return verticalScrollbar.offsetHeight < verticalScrollbar.children[0].offsetHeight;
     }
 
     public isHorizontalScrollbarVisible() {
         const horizontalScrollbar = this.container.element.nativeElement.querySelector("igx-horizontal-virtual-helper");
         /**
          * Due to current implementation the height is automatically calculated.
-         *  That's why when it's less than 16 there is not scrollbar
+         *  That's why when it's less than 16 there is no scrollbar
          */
         return horizontalScrollbar.offsetHeight >= 16;
     }
