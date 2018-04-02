@@ -1,7 +1,11 @@
-<igx-grid #grid1 [data]="remote | async" [primaryKey]="'ProductID'"
-    [rowSelectable]="true" (onRowSelection)="onRowSelection($event)" (onSelection)="onSelection($event)"
+<div class="sample-container">
+    <span igxLabel>Toggle Multiple Selection</span>
+    <igx-switch [(ngModel)]="selection"></igx-switch>
+    <igx-grid #grid1 [data]="remote | async" [primaryKey]="'ProductID'"
+    [rowSelectable]="selection" (onSelection)="handleRowSelection($event)"
     [width]="'800px'" [height]="'600px'">
     <igx-column [field]="'ProductID'" [editable]="true"></igx-column>
     <igx-column [field]="'ProductName'"></igx-column>
     <igx-column [field]="'UnitsInStock'"></igx-column>
 </igx-grid>
+</div>
