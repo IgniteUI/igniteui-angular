@@ -7,32 +7,61 @@
 /// If only background color is specified,
 /// the idle item color will be assigned automatically to a contrasting color.
 /// @param {Color} $header-background [null] - The background color used for the tabs header.
-/// @param {Color} $idle-item-color [null] - The text-color used for the idle color.
-/// @param {Color} $active-item-color [null] - The text-color used for the active color.
+/// @param {Color} $text-color [null] - The text-color used for the tabs.
+/// @param {Color} $active-item-color [null] - The color used for the active tab text color.
+/// @param {Color} $indicator-color [null] - The color used for the active tab indicator.
+/// @param {Color} $item-focus-bg [null] - The background color used for the focused tab color.
+/// @param {Color} $button-icon-color [null] - The color used for the button icon/text color.
+/// @param {Color} $button-background [null] - The color used for the button background.
+/// @param {Color} $button-background [null] - The color used for the button background when is on :hover.
 /// @requires text-contrast
 /// @example scss Set a custom background color
-///   $my-tabs-theme: igx-toast-theme($header-background: black);
+///   $my-tabs-theme: igx-tabs-theme(
+//      $header-background: black
+//    );
 ///   // Pass the theme to the igx-tabs component mixin
 ///   @include igx-tabs($my-tabs-theme);
 @function igx-tabs-theme(
     $header-background: null,
     $text-color: null,
     $active-item-color: null,
-    $indicator-bg: null,
+    $indicator-color: null,
     $item-focus-bg: null,
-    $item-hover-bg: null
+    $item-hover-bg: null,
+    $button-icon-color: null,
+    $button-background: null,
+    $button-hover-background: null
 ) {
     @if not($text-color) and $header-background {
-        $idle-item-color: rgba(text-contrast($header-background), .7);
+        $text-color: text-contrast($header-background);
+    }
+
+    @if not($text-color) and $item-focus-bg {
+        $text-color: text-contrast($item-focus-bg);
+    }
+
+    @if not($text-color) and $item-hover-bg {
+        $text-color: text-contrast($item-hover-bg);
+    }
+
+    @if not($button-background) and $header-background {
+        $button-background: $header-background;
+    }
+
+    @if not($button-icon-color) and $header-background {
+        $button-icon-color: text-contrast($header-background);
     }
 
     @return (
         header-background: $header-background,
         idle-item-color: $text-color,
         active-item-color: $active-item-color,
-        indicator-bg: $indicator-bg,
+        indicator-color: $indicator-color,
         item-focus-bg: $item-focus-bg,
-        item-hover-bg: $item-hover-bg
+        item-hover-bg: $item-hover-bg,
+        button-icon-color: $button-icon-color,
+        button-background: $button-background,
+        button-hover-background:$button-hover-background
     );
 }
 
@@ -46,12 +75,15 @@
 /// @requires rem
 @mixin igx-tabs($theme, $palette: $default-palette) {
     $default-theme: igx-tabs-theme(
-        $header-background: transparent,
+        $header-background: igx-color($palette, 'grays', 100),
         $text-color: igx-color($palette, 'grays', 600),
         $active-item-color: igx-color($palette, 'primary'),
-        $indicator-bg: igx-color($palette, 'secondary', 500),
+        $indicator-color: igx-color($palette, 'secondary', 500),
         $item-focus-bg: igx-color($palette, 'grays', 200),
-        $item-hover-bg: igx-color($palette, 'grays', 200)
+        $item-hover-bg: igx-color($palette, 'grays', 200),
+        $button-icon-color: igx-color($palette, 'grays', 500),
+        $button-background: null,
+        $button-hover-background: igx-color($palette, 'grays', 200)
     );
 
     $this: extend($default-theme, $theme);
@@ -61,9 +93,9 @@
     $item-max-width: 264px;
     $item-padding: 0 rem(24px);
     $tabs-height: rem(48px);
-
     $label-font-size: rem(12px, 16px);
     $label-line-height: rem(12px, 16px);
+    $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
 
     %igx-tabs {
         display: flex;
@@ -79,22 +111,22 @@
     }
 
     // ITEM WRAPPER
-    %igx-tabs__wrapper-fixed {
+    %igx-tabs__header-wrapper-fixed {
         flex: 1 1 auto;
         overflow: hidden;
     }
 
     // ITEM HOLDER (The element that scrolls)
-    %igx-tabs__wrapper-fluid {
+    %igx-tabs__header-wrapper-fluid {
         display: inline-flex;
         align-items: center;
         position: relative;
         flex-wrap: nowrap;
-        transition: transform .5s cubic-bezier(.35, 0, .25, 1);
+        transition: transform .2s $tabs-animation-function;
     }
 
     // MENU ITEM
-    %igx-tabs__menu-item {
+    %igx-tabs__header-menu-item {
         display: inline-flex;
         flex-direction: column;
         justify-content: center;
@@ -110,6 +142,8 @@
         overflow: hidden;
         cursor: pointer;
         position: relative;
+        transition: background .3s $tabs-animation-function;
+        user-select: none;
 
         &:focus {
             background: map-get($this, 'item-focus-bg');
@@ -120,27 +154,27 @@
         }
     }
 
-    %igx-tabs__menu-item--disabled {
+    %igx-tabs__header-menu-item--disabled {
         opacity: .5;
         cursor: default;
     }
 
-    %igx-tabs__menu-item--selected {
+    %igx-tabs__header-menu-item--selected {
         background: map-get($this, 'item-focus-bg');
     }
 
-    %igx-tabs__menu-item-indicator {
+    %igx-tabs__header-menu-item-indicator {
         position: absolute;
         bottom: 0;
         transform: translateX(0);
         height: 2px;
         min-width: rem(160px);
-        background: map-get($this, 'indicator-bg');
-        transition: transform .5s cubic-bezier(.35, 0, .25, 1), width .5s cubic-bezier(.35, 0, .25, 1);
+        background: map-get($this, 'indicator-color');
+        transition: transform .3s $tabs-animation-function, width .5s $tabs-animation-function;
     }
 
     // SCROLL BUTTONS
-    %igx-tabs__scroller-button {
+    %igx-tabs__header-button {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -155,8 +189,17 @@
         box-shadow: igx-elevation($elevations, 8);
         position: relative;
 
+        &:hover {
+            background: map-get($this, 'button-hover-background');
+        }
+
         &:focus {
-            outline: none;
+            outline: 0;
+            background: map-get($this, 'button-hover-background');
+        }
+
+        &::-moz-focus-inner {
+            border: 0;
         }
 
         .igx-icon {
@@ -164,10 +207,9 @@
         }
     }
 
-    %igx-tabs__scroller-button--active {
+    %igx-tabs__header-button--active {
         box-shadow: igx-elevation($elevations, 8);
     }
-
 
     // LABELS
     %igx-tabs__item-label {
@@ -193,13 +235,13 @@
     %igx-tabs__group {
         display: inline-flex;
         min-width: 100%;
-        transition: transform .5s cubic-bezier(.35, 0, .25, 1);
+        transition: transform .3s $tabs-animation-function;
     }
 
     %igx-tabs__group--selected {
         display: inline-flex;
         min-width: 100%;
-        transition: transform .5s cubic-bezier(.35, 0, .25, 1);
+        transition: transform .3s $tabs-animation-function;
     }
 }
 
