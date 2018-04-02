@@ -6,7 +6,7 @@ import {
     IgxCardModule,
     IgxCheckboxModule,
     IgxGridModule,
-    IgxInputModule,
+    IgxInputGroupModule,
     IgxRippleModule,
     IgxSnackbarModule,
     IgxSwitchModule,
@@ -33,7 +33,7 @@ import { IgxCsvExporterService } from "../../lib/main";
         IgxCheckboxModule,
         IgxButtonModule,
         IgxRippleModule,
-        IgxInputModule
+        IgxInputGroupModule
     ], providers: [
         IgxExcelExporterService,
         IgxCsvExporterService
