@@ -16,7 +16,6 @@
     <div *ngIf="show" igxResizer
         [restrictHDragMax]="restrictResizeMax"
         [restrictHDragMin]="restrictResizeMin"
-        (dragStart)="startResizing($event)"
         (dragEnd)="resize($event)"
         [style.height.px]="resizerHeight"
         style="width: 4.5px;z-index: 5;background-color: #006db6; position: absolute;cursor:col-resize">

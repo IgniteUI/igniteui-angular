@@ -172,6 +172,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
             this.show = true;
             this._isResiznig = true;
             this.resizerHeight = this.grid.calcResizerHeight;
+            this._startResizePos = event.clientX;
         } else {
             this.cursor = null;
         }
@@ -213,10 +214,6 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
             this.grid.markForCheck();
             this.grid.onColumnResized.emit({column: this.column, prevWidth: currentColWidth, newWidth: this.column.width});
         }
-    }
-
-    public startResizing(event) {
-        this._startResizePos = event.clientX;
     }
 
     public resize(event) {
