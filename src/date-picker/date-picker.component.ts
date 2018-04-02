@@ -23,7 +23,9 @@ import {
     WEEKDAYS
 } from "../calendar";
 import { IgxDialogComponent, IgxDialogModule } from "../dialog/dialog.component";
-import { IgxInputModule } from "../directives/input/input.directive";
+import { IgxIconModule } from "../icon";
+import { IgxInputGroupModule } from "../input-group/input-group.component";
+
 /**
  * **Ignite UI for Angular Date Picker** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date_picker.html)  
  * The Ignite UI Date Picker displays a popup calendar that lets users select a single date.
@@ -101,7 +103,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     @ContentChild(IgxCalendarSubheaderTemplateDirective, { read: IgxCalendarSubheaderTemplateDirective })
     public subheaderTemplate: IgxCalendarSubheaderTemplateDirective;
 
-    @ViewChild("container", {read: ViewContainerRef})
+    @ViewChild("container", { read: ViewContainerRef })
     public container: ViewContainerRef;
 
     @ViewChild(IgxDialogComponent)
@@ -229,7 +231,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     // Focus the dialog element, after its appearence into DOM.
     private _focusTheDialog() {
-        requestAnimationFrame(() => this.alert.dialogEl.nativeElement.focus());
+        requestAnimationFrame(() => this.alert.element.focus());
     }
 
     private _setLocaleToDate(value: Date, locale: string = Constants.DEFAULT_LOCALE_DATE): string {
@@ -258,6 +260,6 @@ class Constants {
     declarations: [IgxDatePickerComponent],
     entryComponents: [IgxCalendarComponent],
     exports: [IgxDatePickerComponent],
-    imports: [CommonModule, IgxInputModule, IgxDialogModule, IgxCalendarModule]
+    imports: [CommonModule, IgxIconModule, IgxInputGroupModule, IgxDialogModule, IgxCalendarModule]
 })
 export class IgxDatePickerModule { }
