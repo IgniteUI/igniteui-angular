@@ -39,7 +39,7 @@
                             | gridSort:sortingExpressions:id:pipeTrigger
                             | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
         [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer>
-        <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
+        <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" [primaryValue]="rowData[primaryKey] || null">
         </igx-grid-row>
     </ng-template>
 </div>

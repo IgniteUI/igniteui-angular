@@ -152,12 +152,13 @@
                     </ng-template>
                 </igx-column>
             </igx-grid>
+            
         </article>
 
         <article class="grid-sample">
             <h4 class="sample-title">Grid with templated cell remote data</h4>
             <igx-grid #grid3 [data]="remote | async" [paging]="true" [perPage]="10" (onPagingDone)="process($event)" (onSortingDone)="process($event)"
-                (onBeforeProcess)="onProcess($event)">
+                (onBeforeProcess)="onProcess($event)" [primaryKey]="'ProductID'">
                 <igx-column [sortable]="true" [field]="'ProductID'" [header]="'ID'"></igx-column>
                 <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
                 <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'In Stock'"></igx-column>
@@ -170,7 +171,9 @@
                     </ng-template>
                 </igx-column>
             </igx-grid>
+            <button (click)="updateRow11()">Update Row With primaryKey</button>
         </article>
+        
     </section>
 
     <igx-toast #toast></igx-toast>

@@ -117,7 +117,7 @@ export class GridSampleComponent {
     public newRecord = "";
     public editCell;
     constructor(private localService: LocalService,
-    private remoteService: RemoteService) { }
+        private remoteService: RemoteService) { }
     public ngOnInit(): void {
         this.data = this.localService.records;
         this.remote = this.remoteService.remoteData;
@@ -236,5 +236,39 @@ export class GridSampleComponent {
     public restore() {
         this.grid1.addRow(this.selectedRow.record);
         this.snax.hide();
+    }
+
+    public updateRow11() {
+        this.grid3.updateRow({
+            __metadata: {
+                uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)",
+                type: "NorthwindModel.Product"
+            },
+            ProductName: "Example Change",
+            ProductID: 12,
+            SupplierID: 8,
+            CategoryID: 3,
+            QuantityPerUnit: undefined,
+            UnitsInStock: -99,
+            UnitsOnOrder: 0,
+            ReorderLevel: -12,
+            Discontinued: false,
+            OrderDate: new Date("1905-03-17"),
+            Category: {
+                __deferred: {
+                    uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)/Category"
+                }
+            },
+            Order_Details: {
+                __deferred: {
+                    uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)/Order_Details"
+                }
+            },
+            Supplier: {
+                __deferred: {
+                    uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)/Supplier"
+                }
+            }
+        }, 11);
     }
 }
