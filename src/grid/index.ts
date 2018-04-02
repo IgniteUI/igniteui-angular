@@ -3,7 +3,6 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { IgxDatePickerModule } from "../date-picker/date-picker.component";
 import { IgxButtonModule } from "../directives/button/button.directive";
-import { IgxDragDropModule } from "../directives/dragdrop/dragdrop.directive";
 import { IgxForOfModule } from "../directives/for-of/for_of.directive";
 import { IgxInputModule } from "../directives/input/input.directive";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
@@ -19,7 +18,8 @@ import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
-    IgxCellTemplateDirective
+    IgxCellTemplateDirective,
+    IgxColumnResizerDirective
 } from "./grid.common";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridPagingPipe, IgxGridSortingPipe } from "./grid.pipes";
@@ -37,6 +37,7 @@ import { IgxGridRowComponent } from "./row.component";
     IgxCellHeaderTemplateDirective,
     IgxCellEditorTemplateDirective,
     IgxCellTemplateDirective,
+    IgxColumnResizerDirective,
     IgxGridFilterComponent,
     IgxGridSortingPipe,
     IgxGridPagingPipe,
@@ -57,14 +58,14 @@ import { IgxGridRowComponent } from "./row.component";
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellEditorTemplateDirective,
-    IgxCellTemplateDirective
+    IgxCellTemplateDirective,
+    IgxColumnResizerDirective
   ],
   imports: [
     CommonModule,
     FormsModule,
     IgxButtonModule,
     IgxDatePickerModule,
-    IgxDragDropModule,
     IgxIconModule,
     IgxRippleModule,
     IgxInputModule,

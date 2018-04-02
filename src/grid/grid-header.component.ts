@@ -77,7 +77,8 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
 
     protected sortDirection = SortingDirection.None;
     private _startResizePos;
-    private _pinnedWidth;
+    private _pinnedMaxWidth;
+    private _isResiznig = false;
 
     constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, public elementRef: ElementRef) { }
 
@@ -92,42 +93,45 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     @HostListener("click", ["$event"])
     @autoWire(true)
     public onClick(event) {
-        event.stopPropagation();
-        if (this.column.sortable) {
-            const grid = this.gridAPI.get(this.gridID);
+        if (!this._isResiznig) {
+            event.stopPropagation();
+            if (this.column.sortable) {
+                const grid = this.gridAPI.get(this.gridID);
 
-            this.sortDirection = ++this.sortDirection > SortingDirection.Desc ? SortingDirection.None
-                : this.sortDirection;
-            this.gridAPI.sort(this.gridID, this.column.field, this.sortDirection, this.column.sortingIgnoreCase);
-            grid.onSortingDone.emit({
-                expression: {
-                    dir: this.sortDirection,
-                    fieldName: this.column.field,
-                    ignoreCase: this.column.sortingIgnoreCase
-                }
-            });
+                this.sortDirection = ++this.sortDirection > SortingDirection.Desc ? SortingDirection.None
+                    : this.sortDirection;
+                this.gridAPI.sort(this.gridID, this.column.field, this.sortDirection, this.column.sortingIgnoreCase);
+                grid.onSortingDone.emit({
+                    expression: {
+                        dir: this.sortDirection,
+                        fieldName: this.column.field,
+                        ignoreCase: this.column.sortingIgnoreCase
+                    }
+                });
+            }
         }
     }
 
     get restrictResizeMin(): number {
-        return parseInt(this.column.minWidth, 10) - this.elementRef.nativeElement.getBoundingClientRect().width;
+        return parseFloat(this.column.minWidth) - this.elementRef.nativeElement.getBoundingClientRect().width;
     }
 
     get restrictResizeMax(): number {
         const actualWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
 
         if (this.column.pinned) {
-            const maxWidth = this._pinnedWidth = this.grid.calcPinnedContainerMaxWidth - this.grid.pinnedWidth + actualWidth;
+            const pinnedMaxWidth = this._pinnedMaxWidth = this.grid.calcPinnedContainerMaxWidth - this.grid.pinnedWidth + actualWidth;
 
-            if (this.column.maxWidth && parseInt(this.column.maxWidth, 10) < maxWidth) {
-                this._pinnedWidth = this.column.maxWidth;
-                return parseInt(this.column.maxWidth, 10) - actualWidth;
+            if (this.column.maxWidth && parseFloat(this.column.maxWidth) < pinnedMaxWidth) {
+                this._pinnedMaxWidth = this.column.maxWidth;
+
+                return parseFloat(this.column.maxWidth) - actualWidth;
             } else {
-                return maxWidth - actualWidth;
+                return pinnedMaxWidth - actualWidth;
             }
         } else {
             if (this.column.maxWidth) {
-                return parseInt(this.column.maxWidth, 10) - actualWidth;
+                return parseFloat(this.column.maxWidth) - actualWidth;
             } else {
                 return Number.MAX_SAFE_INTEGER;
             }
@@ -166,6 +170,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     public onResizeAreaMouseDown(event) {
         if (event.button === 0 && this.column.resizable) {
             this.show = true;
+            this._isResiznig = true;
             this.resizerHeight = this.grid.calcResizerHeight;
         } else {
             this.cursor = null;
@@ -191,17 +196,18 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
             const index = cellsContentWidths.indexOf(largestCell);
             const cellEl = this.column.cells[index].nativeElement;
             const cellStyle = this.grid.document.defaultView.getComputedStyle(cellEl);
-            const padding = parseInt(cellStyle.paddingLeft, 10) + parseInt(cellStyle.paddingRight, 10);
+            const padding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight);
+
+            const size = Math.ceil(largestCell + padding) + "px";
 
             if (this.column.pinned) {
-                const newPinnedWidth  = this.grid.pinnedWidth - this.elementRef.nativeElement.getBoundingClientRect().width +
-                    largestCell + padding;
+                const newPinnedWidth  = this.grid.pinnedWidth - currentColWidth + parseFloat(size);
 
                 if (newPinnedWidth <= this.grid.calcPinnedContainerMaxWidth) {
-                    this.column.width = (largestCell + padding).toString();
+                    this.column.width = size;
                 }
             } else {
-                this.column.width = (largestCell + padding).toString();
+                this.column.width = size;
             }
 
             this.grid.markForCheck();
@@ -214,16 +220,16 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     }
 
     public resize(event) {
+        this._isResiznig = false;
 
         this.show = false;
         const diff = event.clientX - this._startResizePos;
 
         if (this.column.resizable) {
-            let currentColWidth = parseInt(this.column.width, 10);
-            const colMinWidth = parseInt(this.column.minWidth, 10);
+            let currentColWidth = parseFloat(this.column.width);
 
-            const colMaxWidth = this.column.pinned ? this._pinnedWidth : parseInt(this.column.maxWidth, 10);
-
+            const colMinWidth = parseFloat(this.column.minWidth);
+            const colMaxWidth = this.column.pinned ? this._pinnedMaxWidth : parseFloat(this.column.maxWidth);
             const actualWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
 
             currentColWidth = (currentColWidth < actualWidth) ? actualWidth : currentColWidth;
@@ -233,7 +239,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
             } else if (colMaxWidth && (currentColWidth + diff > colMaxWidth)) {
                 this.column.width = colMaxWidth + "px";
             } else {
-                this.column.width = currentColWidth + diff + "px";
+                this.column.width = (currentColWidth + diff) + "px";
             }
 
             this.grid.markForCheck();

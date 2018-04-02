@@ -50,9 +50,6 @@ export class IgxDragDirective {
     @Input()
     public restrictVDragMax: number = Number.MAX_SAFE_INTEGER;
 
-    @Input()
-    public dragEndTimeout = 0;
-
     @Output()
     public dragEnd = new Subject<any>();
 
@@ -115,20 +112,19 @@ export class IgxDragDirective {
 
     @HostListener("document:mouseup", ["$event"])
     onMouseup(event) {
-        setTimeout(() => {
-            this.dragEnd.next(event);
-            this.cdr.reattach();
-        }, this.dragEndTimeout);
+        this.dragEnd.next(event);
+        this.cdr.reattach();
     }
 
-    @HostListener("document:mousedown", ["$event"])
+    @HostListener("mousedown", ["$event"])
     onMousedown(event) {
+        this.dragStart.next(event);
+
         const elStyle = this.document.defaultView.getComputedStyle(this.element.nativeElement);
 
         this._left = Number.isNaN(parseInt(elStyle.left, 10)) ? 0 : parseInt(elStyle.left, 10);
         this._top = Number.isNaN(parseInt(elStyle.top, 10)) ? 0 : parseInt(elStyle.top, 10);
 
-        this.dragStart.next(event);
         this.cdr.detach();
     }
 

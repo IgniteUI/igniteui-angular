@@ -13,9 +13,7 @@
       (mouseover)="onResizeAreaMouseOver()"
       [style.cursor]="cursor"
       style="display: flex;position: absolute;height: 100%;right:0%;width: 4px;">
-    <div *ngIf="show" igxDrag
-        [dragEndTimeout]="200"
-        [restrictDrag]="dragDirection"
+    <div *ngIf="show" igxResizer
         [restrictHDragMax]="restrictResizeMax"
         [restrictHDragMin]="restrictResizeMin"
         (dragStart)="startResizing($event)"
@@ -24,5 +22,6 @@
         style="width: 4.5px;z-index: 5;background-color: #006db6; position: absolute;cursor:col-resize">
     </div>
 </span>
+
 
 
