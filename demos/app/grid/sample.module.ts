@@ -6,7 +6,7 @@ import {
     IgxCardModule,
     IgxCheckboxModule,
     IgxGridModule,
-    IgxInputModule,
+    IgxInputGroupModule,
     IgxRippleModule,
     IgxSnackbarModule,
     IgxSwitchModule,
@@ -31,7 +31,7 @@ import { GridSampleComponent } from "./sample.component";
         IgxCheckboxModule,
         IgxButtonModule,
         IgxRippleModule,
-        IgxInputModule
+        IgxInputGroupModule
     ]
 })
 export class GridSampleModule { }

@@ -28,6 +28,13 @@ All notable changes for each version of this project will be documented in this 
 - `igxМask` directive added
     - `igxМask` provide means for controlling user input and formatting the visible value based on a configurable mask rules. For more detailed information see [`igxMask README file`]
     (https://github.com/IgniteUI/igniteui-angular/blob/master/src/directives/mask/README.md)
+- `igxInputGroup` component added - used as a container for the `igxLabel`, `igxInput`, `igxPrefix`, `igxSuffix` and `igxHint` directives.
+- `igxPrefix` directive added - used for input prefixes.
+- `igxSuffix` directive added - used for input suffixes.
+- `igxHint` directive added - used for input hints.
+- `igxInput` directive breaking changes:
+    - the directive should be wrapped by `igxInputGroup` component
+    - `IgxInputGroupModule` should be imported instead of `IgxInputModule`
 
 ## 5.2.1
 - `hammerjs` and `@types/hammerjs` are removed from `peerDependencies` and were added as `dependencies`. So if you are using Igniteui-Angular version 5.2.1 or above it is enough to run `npm install igniteui-angular` in your project for getting started. For more detailed information see [`Ignite UI for Angular Getting Started`](https://www.infragistics.com/products/ignite-ui-angular/getting-started)
