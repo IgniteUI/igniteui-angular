@@ -27,7 +27,6 @@ module.exports = function(lines, options, errors) {
     if (!wheterMatchAnyIssueRef && !wheterMatchAnyIssueRef) {
         errors.push(errorFactory(
             'The issue reference for (' + options.typesWithMandatoryIssue.join(', ') + ') types is mandatory!\n',
-            'First line must be: <type>(<scope>): <subject> <#issue>\n', 'The line is: ' + line
-        ));
+            'List any ISSUES CLOSED by this change. E.g: Closes #31, Closes #45'));
     }
 }
