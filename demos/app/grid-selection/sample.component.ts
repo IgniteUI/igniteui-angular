@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs/Rx";
+import { IgxGridCellComponent } from "../../lib/grid/cell.component";
 import { IgxColumnComponent } from "../../lib/grid/column.component";
 import { IgxGridComponent } from "../../lib/grid/grid.component";
 import {
@@ -21,6 +22,7 @@ export class GridSelectionComponent implements OnInit, AfterViewInit {
     public localData: any[];
     public selectedCell;
     public selectedRow;
+    public selectable;
     public newRecord = "";
     public editCell;
     public selectionConfig = {
@@ -56,5 +58,12 @@ export class GridSelectionComponent implements OnInit, AfterViewInit {
 
     private onSelection(event) {
 
+    }
+
+    public handleRowSelection(cell: IgxGridCellComponent) {
+        if  (this.selectable) {
+            this.grid1.deselectAllRows();
+            this.grid1.selectRows([cell.row]);
+        }
     }
 }

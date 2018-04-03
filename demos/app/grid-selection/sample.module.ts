@@ -1,7 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { IgxGridModule } from "../../lib/grid";
-import { IgxCheckboxModule } from "../../lib/main";
+import { IgxCheckboxModule, IgxSwitchModule } from "../../lib/main";
 import { GridSelectionComponent } from "./sample.component";
 
 @NgModule({
@@ -11,7 +12,9 @@ import { GridSelectionComponent } from "./sample.component";
     imports: [
         CommonModule,
         IgxGridModule,
-        IgxCheckboxModule
+        IgxCheckboxModule,
+        IgxSwitchModule,
+        FormsModule
     ]
 })
 export class GridSelectionModule { }

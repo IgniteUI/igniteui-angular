@@ -122,6 +122,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     set rowSelectable(val: boolean) {
         this._rowSelection = val;
+        if (this.gridAPI.get(this.id)) {
+
+            // should selection persist?
+            this.allRowsSelected = false;
+            this.deselectAllRows();
+            this.markForCheck();
+        }
     }
 
     @HostBinding("style.height")
@@ -744,6 +751,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public selectRows(rows: IgxGridRowComponent[]) {
+
+        // awaiting spec, temporary implementation for sample
+        rows.forEach((row) => row.grid.primaryKey ?
+        this.selectionAPI.select_item(this.id, row.grid.primaryKey) :
+        this.selectionAPI.select_item(this.id, row.rowData)
+        );
         return;
     }
 
@@ -756,6 +769,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public deselectAllRows() {
+        console.log("deselect all rows");
+        this.selectionAPI.deselect_all(this.id);
         return;
     }
 }
