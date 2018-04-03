@@ -1,24 +1,27 @@
 import { EventEmitter, Injectable, Output } from "@angular/core";
 import { IgxGridComponent } from "../../grid/grid.component";
 import { IgxBaseExporter } from "../exporter-common/base-export-service";
-import { ColumnExportingEventArgs, CsvExportEndedEventArgs, RowExportingEventArgs } from "../exporter-common/event-args";
 import { ExportUtilities } from "../exporter-common/export-utilities";
 import { CharSeparatedValueData } from "./char-separated-value-data";
 import { CsvFileTypes, IgxCsvExporterOptions } from "./csv-exporter-options";
+
+export interface ICsvExportEndedEventArgs {
+    csvData: string;
+}
 
 @Injectable()
 export class IgxCsvExporterService extends IgxBaseExporter {
     private _stringData: string;
 
     @Output()
-    public onExportEnded = new EventEmitter<CsvExportEndedEventArgs>();
+    public onExportEnded = new EventEmitter<ICsvExportEndedEventArgs>();
 
     protected exportDataImplementation(data: any[], options: IgxCsvExporterOptions) {
         const csvData = new CharSeparatedValueData(data, options.valueDelimiter);
         this._stringData = csvData.prepareData();
 
         this.saveFile(options);
-        this.onExportEnded.emit(new CsvExportEndedEventArgs(this._stringData));
+        this.onExportEnded.emit({ csvData: this._stringData });
     }
 
     private saveFile(options: IgxCsvExporterOptions) {

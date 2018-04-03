@@ -6,12 +6,12 @@ import { IgxGridModule } from "../../grid";
 import { IgxColumnComponent } from "../../grid/column.component";
 import { IgxGridComponent } from "../../grid/grid.component";
 import { ExportTestDataService, FileContentData, ValueData } from "../excel/test-data.service";
+import { IColumnExportingEventArgs, IRowExportingEventArgs } from "../exporter-common/base-export-service";
 import {
     GridDeclarationComponent,
     GridMarkupPagingDeclarationComponent,
-    GridReorderedColumnsComponent } from "../exporter-common/components-declarations";
-
-import { ColumnExportingEventArgs, RowExportingEventArgs } from "../exporter-common/event-args";
+    GridReorderedColumnsComponent
+} from "../exporter-common/components-declarations";
 import { ExportUtilities } from "../exporter-common/export-utilities";
 import { TestMethods } from "../exporter-common/test-methods";
 import { IgxCsvExporterService } from "./csv-exporter";
@@ -312,7 +312,7 @@ describe("CSV Grid Exporter", () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
 
-        exporter.onColumnExport.subscribe((value: ColumnExportingEventArgs) => {
+        exporter.onColumnExport.subscribe((value: IColumnExportingEventArgs) => {
             value.cancel = true;
         });
 
@@ -329,7 +329,7 @@ describe("CSV Grid Exporter", () => {
         const grid = fix.componentInstance.grid1;
 
         const rows = [];
-        exporter.onRowExport.subscribe((value: RowExportingEventArgs) => {
+        exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
             rows.push({ data: value.rowData, index: value.rowIndex });
         });
 
@@ -349,7 +349,7 @@ describe("CSV Grid Exporter", () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
 
-        exporter.onRowExport.subscribe((value: RowExportingEventArgs) => {
+        exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
             value.cancel = true;
         });
 
