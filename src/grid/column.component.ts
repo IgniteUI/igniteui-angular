@@ -59,8 +59,10 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     set hidden(value: boolean) {
-        this._hidden = value;
-        this.check();
+        if (this._hidden !== value) {
+            this._hidden = value;
+            this.check();
+        }
     }
 
     @Input()
@@ -81,8 +83,10 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     set index(value: number) {
-        this._index = value;
-        this.check();
+        if (this._index !== value) {
+            this._index = value;
+            this.check();
+        }
     }
 
     @Input()
@@ -225,7 +229,7 @@ export class IgxColumnComponent implements AfterContentInit {
         this.gridAPI.get(this.gridID).unpinColumn(this.field);
     }
     protected check() {
-        if (this.gridID) {
+        if (this.grid) {
             this.grid.markForCheck();
         }
     }
