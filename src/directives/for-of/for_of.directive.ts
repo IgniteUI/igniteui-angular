@@ -66,6 +66,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     private _lastTouchY = 0;
     private _pointerCapture;
     private _gestureObject;
+    private _maxHeight;
+    private _virtHeightRatio = 1;
 
     @ViewChild(DisplayContainerComponent)
     private displayContiner: DisplayContainerComponent;
@@ -98,7 +100,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     this.state.startIndex = this.getHorizontalIndexAt(this.hScroll.scrollLeft, this.hCache, 0);
                 }
             }
-            this.state.chunkSize = this._calculateChunkSize();
+            this.state.chunkSize = this._calcChunkSize();
             for (let i = 0; i < this.state.chunkSize && this.igxForOf[i] !== undefined; i++) {
                 const input = this.igxForOf[i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
@@ -112,7 +114,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForScrollOrientation === "vertical") {
             const factory: ComponentFactory<VirtualHelperComponent> = this.resolver.resolveComponentFactory(VirtualHelperComponent);
             this.vh = this._viewContainer.createComponent(factory, 1);
-            this.vh.instance.height = this.igxForOf ? this.igxForOf.length * parseInt(this.igxForItemSize, 10) : 0;
+            this._maxHeight = this._calcMaxBrowserHeight();
+            this.vh.instance.height = this.igxForOf ? this._calcHeight() : 0;
             this._zone.runOutsideAngular(() => {
                 this.vh.instance.elementRef.nativeElement.addEventListener("scroll", (evt) => { this.onScroll(evt); });
                 this.dc.instance._viewContainer.element.nativeElement.addEventListener("wheel",
@@ -196,7 +199,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             }, 0);
             this.hScroll.scrollLeft = sumWidths;
         } else {
-            this.vh.instance.elementRef.nativeElement.scrollTop = parseInt(this.igxForItemSize, 10) * index;
+            const vhElem = this.vh.instance.elementRef.nativeElement;
+            const containerSize = parseInt(this.igxForContainerSize, 10);
+            const vcHeight = (vhElem.children[0].scrollHeight - containerSize) * this._virtHeightRatio + containerSize;
+            const count = this.totalItemCount || this.igxForOf.length;
+            const scrollTop = ((index / count) * vcHeight) / this._virtHeightRatio;
+            this.vh.instance.elementRef.nativeElement.scrollTop = scrollTop;
         }
     }
 
@@ -213,14 +221,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (!parseInt(this.vh.instance.elementRef.nativeElement.style.height, 10)) {
             return;
         }
-        const scrollTop = event.target.scrollTop;
-        const vcHeight = event.target.children[0].scrollHeight;
+        const scrollTop = event.target.scrollTop * this._virtHeightRatio;
+        const containerSize = parseInt(this.igxForContainerSize, 10);
+        const vcHeight = (event.target.children[0].scrollHeight - containerSize) * this._virtHeightRatio + containerSize;
         const ratio = vcHeight !== 0 ? scrollTop / vcHeight : 0;
-        const embeddedViewCopy = Object.assign([], this._embeddedViews);
-
         const count = this.totalItemCount || this.igxForOf.length;
         const currIndex = Math.round(ratio * count);
-
+        const embeddedViewCopy = Object.assign([], this._embeddedViews);
         const endingIndex = this.state.chunkSize + currIndex;
         if (this.state.startIndex !== currIndex) {
             this.state.startIndex = currIndex;
@@ -288,8 +295,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         /** runs only on the vertical directive */
         const scrollStepX = 10;
         const scrollStepY = /Edge/.test(navigator.userAgent) ? 25 : 100;
-
-        this.vh.instance.elementRef.nativeElement.scrollTop += Math.sign(event.deltaY) * scrollStepY;
+        this.vh.instance.elementRef.nativeElement.scrollTop += (Math.sign(event.deltaY) * scrollStepY) / this._virtHeightRatio;
         const hScroll = this.getElement(this._viewContainer, "igx-horizontal-virtual-helper");
         if (hScroll) {
             hScroll.scrollLeft += Math.sign(event.deltaX) * scrollStepX;
@@ -413,7 +419,18 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
-    protected _calculateChunkSize(): number {
+    protected _calcMaxBrowserHeight(): number {
+        const div = document.createElement("div");
+        const style = div.style;
+        style.position = "absolute";
+        style.top = "9999999999999999px";
+        document.body.appendChild(div);
+        const size = Math.abs(div.getBoundingClientRect()["top"]);
+        document.body.removeChild(div);
+        return size;
+    }
+
+    protected _calcChunkSize(): number {
         let chunkSize = 0;
         if (this.igxForContainerSize !== null && this.igxForContainerSize !== undefined) {
             if (this.igxForScrollOrientation === "horizontal") {
@@ -506,8 +523,18 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForScrollOrientation === "vertical") {
             const count = this.totalItemCount || this.igxForOf.length;
             this.vh.instance.elementRef.nativeElement.style.height = parseInt(this.igxForContainerSize, 10) + "px";
-            this.vh.instance.height = count * parseInt(this.igxForItemSize, 10);
+            this.vh.instance.height = this._calcHeight();
         }
+    }
+
+    private _calcHeight(): number {
+        const count = this.totalItemCount || this.igxForOf.length;
+        let height = count * parseInt(this.igxForItemSize, 10);
+        if (height > this._maxHeight) {
+            this._virtHeightRatio = height / this._maxHeight;
+            height = this._maxHeight;
+        }
+        return height;
     }
 
     private _recalcOnContainerChange(changes: SimpleChanges) {
@@ -516,7 +543,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     private applyChunkSizeChange() {
-        const chunkSize = this._calculateChunkSize();
+        const chunkSize = this._calcChunkSize();
         if (chunkSize > this.state.chunkSize) {
             const diff = chunkSize - this.state.chunkSize;
             for (let i = 0; i < diff; i++) {
