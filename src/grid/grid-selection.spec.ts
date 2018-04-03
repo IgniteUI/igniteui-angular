@@ -235,6 +235,39 @@ describe("IgxGrid - Row Selection", () => {
             expect(selectedRow.isSelected).toBeTruthy();
         });
     }));
+
+    it("Header checkbox should select/deselect all rows", async(() => {
+        const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection2;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
+        const headerRow: HTMLElement = fix.nativeElement.querySelector(".igx-grid__thead");
+        const firstRow = grid.getRowByIndex(0);
+        const middleRow = grid.getRowByIndex(25);
+        const lastRow = grid.getRowByIndex(49);
+        expect(headerRow).toBeDefined();
+        expect(firstRow).toBeDefined();
+        expect(middleRow).toBeDefined();
+        expect(lastRow).toBeDefined();
+        const headerCheckboxElement: HTMLElement = headerRow.querySelector(".igx-checkbox__input");
+        expect(firstRow.isSelected).toBeFalsy();
+        expect(middleRow.isSelected).toBeFalsy();
+        expect(lastRow.isSelected).toBeFalsy();
+        headerCheckboxElement.click();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(middleRow.isSelected).toBeTruthy();
+            expect(lastRow.isSelected).toBeTruthy();
+            headerCheckboxElement.click();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+            expect(middleRow.isSelected).toBeFalsy();
+            expect(lastRow.isSelected).toBeFalsy();
+        });
+    }));
 });
 
 @Component({
