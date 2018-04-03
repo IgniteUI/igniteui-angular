@@ -18,6 +18,11 @@ export enum IgxTextAlign {
     END = "end"
 }
 
+export interface IChangeProgressEventArgs {
+    previousValue: number;
+    currentValue: number;
+}
+
 export abstract class BaseProgress {
     protected requestAnimationId: number = undefined;
 
@@ -139,7 +144,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
         this.onProgressChanged.emit(changedValues);
     }
 
-    @Output() public onProgressChanged = new EventEmitter();
+    @Output() public onProgressChanged = new EventEmitter<IChangeProgressEventArgs>();
 
     constructor(private elementRef: ElementRef) {
         super();
@@ -156,7 +161,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     private readonly STROKE_OPACITY_ADDITION = .2;
 
     @Output()
-    public onProgressChanged = new EventEmitter();
+    public onProgressChanged = new EventEmitter<IChangeProgressEventArgs>();
 
     @Input()
     public textVisibility = true;

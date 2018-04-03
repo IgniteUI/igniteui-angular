@@ -178,12 +178,10 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
             this.column.gridID, this.column.field,
             this._value, this.column.filteringCondition, this.column.filteringIgnoreCase);
         grid.onFilteringDone.emit({
-            expression: {
-                fieldName: this.column.field,
-                filteringCondition: this.column.filteringCondition,
-                filteringIgnoreCase: this.column.filteringIgnoreCase,
-                searchVal: this._value
-            }
+            fieldName: this.column.field,
+            condition: this.column.filteringCondition,
+            ignoreCase: this.column.filteringIgnoreCase,
+            searchVal: this._value
         });
     }
 

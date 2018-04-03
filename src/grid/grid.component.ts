@@ -43,6 +43,32 @@ import { IgxGridRowComponent } from "./row.component";
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
 
+export interface IGridCellEventArgs {
+    cell: IgxGridCellComponent;
+    event: Event;
+}
+
+export interface IGridEditEventArgs {
+    row: IgxGridRowComponent;
+    cell: IgxGridCellComponent;
+    currentValue: any;
+    newValue: any;
+}
+
+export interface IPinColumnEventArgs {
+    column: IgxColumnComponent;
+    insertAtIndex: number;
+}
+
+export interface IPageEventArgs {
+    previous: number;
+    current: number;
+}
+
+export interface IRowDataEventArgs {
+    data: any;
+}
+
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
@@ -139,31 +165,38 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public remoteVirtualization: boolean;
 
     @Output()
-    public onSelection = new EventEmitter<any>();
+    public onSelection = new EventEmitter<IGridCellEventArgs>();
 
     @Output()
-    public onColumnPinning = new EventEmitter<any>();
+    public onColumnPinning = new EventEmitter<IPinColumnEventArgs>();
+
+    /**
+     * An @Output property emitting an event when cell or row editing has been performed in the grid.
+     * On cell editing, both cell and row objects in the event arguments are defined for the corresponding
+     * cell that is being edited and the row the cell belongs to.
+     * On row editing, only the row object is defined, for the row that is being edited.
+     * The cell object is null on row editing.
+     */
+    @Output()
+    public onEditDone = new EventEmitter<IGridEditEventArgs>();
 
     @Output()
-    public onEditDone = new EventEmitter<any>();
+    public onColumnInit = new EventEmitter<IgxColumnComponent>();
 
     @Output()
-    public onColumnInit = new EventEmitter<any>();
+    public onSortingDone = new EventEmitter<ISortingExpression>();
 
     @Output()
-    public onSortingDone = new EventEmitter<any>();
+    public onFilteringDone = new EventEmitter<IFilteringExpression>();
 
     @Output()
-    public onFilteringDone = new EventEmitter<any>();
+    public onPagingDone = new EventEmitter<IPageEventArgs>();
 
     @Output()
-    public onPagingDone = new EventEmitter<any>();
+    public onRowAdded = new EventEmitter<IRowDataEventArgs>();
 
     @Output()
-    public onRowAdded = new EventEmitter<any>();
-
-    @Output()
-    public onRowDeleted = new EventEmitter<any>();
+    public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
 
     @Output()
     public onDataPreLoad = new EventEmitter<any>();
@@ -411,7 +444,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (row) {
             const index = this.data.indexOf(row.rowData);
             this.data.splice(index, 1);
-            this.onRowDeleted.emit({ row });
+            this.onRowDeleted.emit({ data: row.rowData });
             this._pipeTrigger++;
             this.cdr.markForCheck();
         }
