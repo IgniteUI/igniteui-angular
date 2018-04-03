@@ -24,6 +24,7 @@ import { IgxBadgeModule } from "../badge/badge.component";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxIconModule } from "../icon";
 import { IgxTabItemComponent } from "./tab-item.component";
+import { isNullOrUndefined } from "util";
 
 export enum TabsType {
     FIXED = "fixed",
@@ -69,15 +70,32 @@ export class IgxTabsComponent implements AfterViewInit {
     @ViewChild("viewPort")
     public viewPort: ElementRef;
 
-    // @HostBinding("class.igx-tabs")
-    // public cssClass = "igx-tabs";
-
     @HostBinding("attr.class")
     public get class() {
-        if (TabsType[this.tabsType.toUpperCase()] === TabsType.FIXED) {
-            return `igx-tabs--${this.tabsType}`;
+        const defaultStyle = `igx-tabs`;
+        const fixedStyle = `igx-tabs--fixed`;
+        const iconStyle = `igx-tabs--icons`;
+        const iconFound = this.groups.find((group) => group.icon != null);
+
+        let css;
+
+        switch (TabsType[this.tabsType.toUpperCase()]) {
+            case TabsType.FIXED: {
+                css = fixedStyle;
+                break;
+            }
+            default: {
+                css = defaultStyle;
+                break;
+            }
         }
-        return `igx-tabs`;
+
+        // Layout fix for items with icons
+        if (!isNullOrUndefined(iconFound)) {
+            css = css + " " + iconStyle;
+        }
+
+        return css;
     }
 
     public selectedIndex = -1;
@@ -147,35 +165,6 @@ export class IgxTabsComponent implements AfterViewInit {
                 this.selectedIndicator.nativeElement.style.transform = `translate(${offsetLeft}px)`;
             }
         }, 0);
-
-        // Get container width
-        const containerWidth = this.tabsContainer.nativeElement.offsetWidth;
-        console.log("containerWidth " + containerWidth);
-
-        // Get tabs number
-        const tabsNumber = this.tabs.length;
-
-        // Get calculated tabs width
-        this.calculatedWidth = containerWidth / tabsNumber;
-        console.log("tabs number " + this.tabs.length + " calculatedWidth " + this.calculatedWidth);
-
-        const visibleItemsWidth = containerWidth - 80;
-
-        console.log("visibleItemsWidth " + visibleItemsWidth);
-
-        let totalItemsWidth = 0;
-
-        // Calculate total tabs width
-        for (const tab of this.tabs.toArray()) {
-            console.log("tab.index " + tab.index + " width " + tab.nativeTabItem.nativeElement.offsetWidth);
-            totalItemsWidth += tab.nativeTabItem.nativeElement.offsetWidth;
-        }
-
-        console.log("totalItemsWidth " + totalItemsWidth);
-
-        if (containerWidth <= totalItemsWidth) {
-            this.isScrollable = true;
-        }
     }
 
     @HostListener("onTabItemSelected", ["$event"])
