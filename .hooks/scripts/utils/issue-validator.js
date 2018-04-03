@@ -30,16 +30,4 @@ module.exports = function(lines, options, errors) {
             'First line must be: <type>(<scope>): <subject> <#issue>\n', 'The line is: ' + line
         ));
     }
-
-    // lines.forEach(function (line) {
-    //     line = line.trim();
-    //     if(line !== "" && 
-    //         whetherIssueIsMondatory && 
-    //         wheterMatchAnyIssueRef) {
-    //         errors.push(errorFactory(
-    //             'The issue reference for (' + options.typesWithMandatoryIssue.join(', ') + ') types is mandatory!\n',
-    //             'First line must be: <type>(<scope>): <subject> <#issue>\n', 'The line is: ' + line
-    //         ));
-    //     }
-    // });
 }
