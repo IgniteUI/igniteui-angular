@@ -206,8 +206,6 @@
 
     %igx-tabs__header-menu-item--selected {
         outline: 0;
-        background: map-get($this, 'item-active-background');
-        color: map-get($this, 'item-active-color');
 
         &:hover {
             background: map-get($this, 'item-active-background');
