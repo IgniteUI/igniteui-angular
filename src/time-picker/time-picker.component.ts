@@ -116,7 +116,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     public onValidationFailed = new EventEmitter<IgxTimePickerValidationFailedEventArgs>();
 
     @Output()
-    public onOpen = new EventEmitter();
+    public onOpen = new EventEmitter<IgxTimePickerComponent>();
 
     @ViewChild("hourList")
     public hourList: ElementRef;

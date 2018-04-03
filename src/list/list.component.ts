@@ -18,7 +18,18 @@ import {
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 
 import { IgxListItemComponent } from "./list-item.component";
-import { IgxEmptyListTemplateDirective } from "./list.common";
+import { IgxEmptyListTemplateDirective, IgxListPanState } from "./list.common";
+
+export interface IPanStateChangeEventArgs {
+    oldState: IgxListPanState;
+    newState: IgxListPanState;
+    item: IgxListItemComponent;
+}
+
+export interface IListItemClickEventArgs {
+    item: IgxListItemComponent;
+    event: Event;
+}
 
 // ====================== LIST ================================
 // The `<igx-list>` directive is a list container for items and headers
@@ -46,13 +57,13 @@ export class IgxListComponent {
     public allowRightPanning = false;
 
     @Output()
-    public onLeftPan = new EventEmitter();
+    public onLeftPan = new EventEmitter<IgxListItemComponent>();
     @Output()
-    public onRightPan = new EventEmitter();
+    public onRightPan = new EventEmitter<IgxListItemComponent>();
     @Output()
-    public onPanStateChange = new EventEmitter();
+    public onPanStateChange = new EventEmitter<IPanStateChangeEventArgs>();
     @Output()
-    public onItemClicked = new EventEmitter();
+    public onItemClicked = new EventEmitter<IListItemClickEventArgs>();
 
     @HostBinding("attr.role")
     public get role() {

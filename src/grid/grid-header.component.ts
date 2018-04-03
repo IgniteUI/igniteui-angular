@@ -79,11 +79,9 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
                 : this.sortDirection;
             this.gridAPI.sort(this.gridID, this.column.field, this.sortDirection, this.column.sortingIgnoreCase);
             grid.onSortingDone.emit({
-                expression: {
-                    dir: this.sortDirection,
-                    fieldName: this.column.field,
-                    ignoreCase: this.column.sortingIgnoreCase
-                }
+                dir: this.sortDirection,
+                fieldName: this.column.field,
+                ignoreCase: this.column.sortingIgnoreCase
             });
         }
     }
