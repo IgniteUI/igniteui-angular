@@ -206,7 +206,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild("headerContainer", { read: IgxForOfDirective })
     public headerContainer: IgxForOfDirective<any>;
 
-    @ViewChildren("headerCheckbox", { read: IgxCheckboxComponent })
+    @ViewChild("headerCheckbox", { read: IgxCheckboxComponent })
     public headerCheckbox: IgxCheckboxComponent;
 
     @ViewChild("theadRow")
@@ -742,7 +742,49 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (event.checked) {
             this.selectionAPI.select_all(this.id, this.data, this.primaryKey);
         } else {
-            this.selectionAPI.deselect_all(this.id);
+            this.selectionAPI.deselect_all(this.id, this.primaryKey);
+        }
+    }
+
+    public updateSelectionStatus(filteredData?: any[]) {
+        if (filteredData) {
+            this.selectionAPI.save_filtered_data(this.id, filteredData);
+            this.updateHeaderChecboxStatus(filteredData);
+        } else {
+            this.selectionAPI.clear_filtered_data(this.id);
+            this.updateHeaderChecboxStatus(this.data);
+        }
+    }
+
+    public updateHeaderChecboxStatus(data) {
+        switch (this.selectionAPI.filtered_items_status(this.id, data)) {
+            case "allSelected": {
+                if (!this.allRowsSelected) {
+                    this.allRowsSelected = true;
+                }
+                if (this.headerCheckbox.indeterminate) {
+                    this.headerCheckbox.indeterminate = false;
+                }
+                break;
+            }
+            case "noneSelected": {
+                if (this.allRowsSelected) {
+                    this.allRowsSelected = false;
+                }
+                if (this.headerCheckbox.indeterminate) {
+                    this.headerCheckbox.indeterminate = false;
+                }
+                break;
+            }
+            default: {
+                if (!this.headerCheckbox.indeterminate) {
+                    this.headerCheckbox.indeterminate = true;
+                }
+                if (this.allRowsSelected) {
+                    this.allRowsSelected = false;
+                }
+                break;
+            }
         }
     }
 
@@ -770,7 +812,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public deselectAllRows() {
         console.log("deselect all rows");
-        this.selectionAPI.deselect_all(this.id);
+        this.selectionAPI.deselect_all(this.id, this.primaryKey);
         return;
     }
 }

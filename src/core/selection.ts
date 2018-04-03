@@ -7,6 +7,9 @@ export class IgxSelectionAPIService {
     // E.g. cell selection, can be used together with row selection.
     protected singleSelection: Map<string,  any> = new Map<string, any>();
 
+    // Filtering data is saved when filtering pipe is applied and cleared when filtergin is cleared.
+    protected filteredSelection: Map<string,  any[]> = new Map<string, any[]>();
+
     public get_selection(componentID: string): any[] {
         return this.selection.get(componentID);
     }
@@ -53,11 +56,19 @@ export class IgxSelectionAPIService {
     }
 
     public select_all(componentID: string, data, primaryKey?) {
-        this.selection.set(componentID, this.get_all_ids(data, primaryKey));
+        if (this.is_filtering_applied(componentID)) {
+            this.select_filtered_items(componentID, primaryKey);
+        } else {
+            this.selection.set(componentID, this.get_all_ids(data, primaryKey));
+        }
     }
 
-    public deselect_all(componentID: string) {
-        this.selection.set(componentID, []);
+    public deselect_all(componentID: string, primaryKey?) {
+        if (this.is_filtering_applied(componentID)) {
+            this.deselect_filtered_items(componentID, primaryKey);
+        } else {
+            this.selection.set(componentID, []);
+        }
     }
 
     public are_all_selected(componentID: string, data): boolean {
@@ -87,5 +98,57 @@ export class IgxSelectionAPIService {
             return true;
         }
         return false;
+    }
+
+    public save_filtered_data(componentID: string, filteredData: any[]) {
+        this.filteredSelection.set(componentID, filteredData);
+    }
+
+    public clear_filtered_data(componentID: string) {
+        this.filteredSelection.set(componentID, null);
+    }
+
+    public is_filtering_applied(componentID: string) {
+        return !!this.filteredSelection.get(componentID);
+    }
+
+    public select_filtered_items(componentID: string, primaryKey?) {
+        let currSelection = this.get_selection(componentID);
+        const currFilteredSelection = this.filteredSelection.get(componentID);
+        const currFilteredID = this.get_all_ids(currFilteredSelection, primaryKey);
+        if (currSelection === undefined) {
+            currSelection = [];
+        }
+        this.selection.set(componentID, [...currSelection, ...currFilteredSelection]);
+    }
+
+    public deselect_filtered_items(componentID: string, primaryKey?) {
+        const currSelection = this.get_selection(componentID);
+        const currFilteredSelection = this.filteredSelection.get(componentID);
+        const currFilteredID = this.get_all_ids(currFilteredSelection, primaryKey);
+        this.selection.set(componentID, currSelection.filter((item) => currFilteredID.indexOf(item) === -1));
+    }
+
+    public filtered_items_status(componentID: string, filteredData: any[], primaryKey?) {
+        const currSelection = this.get_selection(componentID);
+        let atLeastOneSelected = false;
+        let notAllSelected = false;
+        if (currSelection) {
+            for (const key of Object.keys(filteredData)) {
+                const dataItem = primaryKey ? filteredData[key][primaryKey] : filteredData[key];
+                if (currSelection.find((item) => item === dataItem) !== undefined) {
+                    atLeastOneSelected = true;
+                    if (notAllSelected) {
+                        return "indeterminate";
+                    }
+                } else {
+                    notAllSelected = true;
+                    if (atLeastOneSelected) {
+                        return "indeterminate";
+                    }
+                }
+            }
+        }
+        return atLeastOneSelected ? "allSelected" : "noneSelected";
     }
 }
