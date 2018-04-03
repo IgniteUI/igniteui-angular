@@ -23,7 +23,8 @@ import {
     WEEKDAYS
 } from "../calendar";
 import { IgxDialogComponent, IgxDialogModule } from "../dialog/dialog.component";
-import { IgxInputModule } from "../directives/input/input.directive";
+import { IgxIconModule } from "../icon";
+import { IgxInputGroupModule } from "../input-group/input-group.component";
 
 @Component({
     providers:
@@ -47,18 +48,21 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     @Input() public weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;
 
-    @Input() public formatOptions = {
-        day: "numeric",
-        month: "short",
-        weekday: "short",
-        year: "numeric"
-    };
+    @Input()
+    public get formatOptions(): object {
+        return this._formatOptions;
+    }
+    public set formatOptions(formatOptions: object) {
+        this._formatOptions = Object.assign(this._formatOptions, formatOptions);
+    }
 
-    @Input() public formatViews = {
-        day: false,
-        month: true,
-        year: false
-    };
+    @Input()
+    public get formatViews(): object {
+        return this._formatViews;
+    }
+    public set formatViews(formatViews: object) {
+        this._formatViews = Object.assign(this._formatViews, formatViews);
+    }
 
     @Input()
     public vertical = false;
@@ -70,7 +74,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     @Input() public cancelButtonLabel: string;
 
-    @Output() public onOpen = new EventEmitter();
+    @Output() public onOpen = new EventEmitter<IgxDatePickerComponent>();
     /**
      * Propagate clanedar events.
      */
@@ -90,7 +94,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     @ContentChild(IgxCalendarSubheaderTemplateDirective, { read: IgxCalendarSubheaderTemplateDirective })
     public subheaderTemplate: IgxCalendarSubheaderTemplateDirective;
 
-    @ViewChild("container", {read: ViewContainerRef})
+    @ViewChild("container", { read: ViewContainerRef })
     public container: ViewContainerRef;
 
     @ViewChild(IgxDialogComponent)
@@ -101,6 +105,18 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     public get calendar() {
         return this.calendarRef.instance;
     }
+
+    private _formatOptions = {
+        day: "numeric",
+        month: "short",
+        weekday: "short",
+        year: "numeric"
+    };
+    private _formatViews = {
+        day: false,
+        month: true,
+        year: false
+    };
 
     constructor(private resolver: ComponentFactoryResolver) { }
 
@@ -183,8 +199,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     private updateCalendarInstance() {
-        this.calendar.formatOptions = this.formatOptions;
-        this.calendar.formatViews = this.formatViews;
+        this.calendar.formatOptions = this._formatOptions;
+        this.calendar.formatViews = this._formatViews;
         this.calendar.locale = this.locale;
         this.calendar.vertical = this.vertical;
 
@@ -206,7 +222,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     // Focus the dialog element, after its appearence into DOM.
     private _focusTheDialog() {
-        requestAnimationFrame(() => this.alert.dialogEl.nativeElement.focus());
+        requestAnimationFrame(() => this.alert.element.focus());
     }
 
     private _setLocaleToDate(value: Date, locale: string = Constants.DEFAULT_LOCALE_DATE): string {
@@ -235,6 +251,6 @@ class Constants {
     declarations: [IgxDatePickerComponent],
     entryComponents: [IgxCalendarComponent],
     exports: [IgxDatePickerComponent],
-    imports: [CommonModule, IgxInputModule, IgxDialogModule, IgxCalendarModule]
+    imports: [CommonModule, IgxIconModule, IgxInputGroupModule, IgxDialogModule, IgxCalendarModule]
 })
 export class IgxDatePickerModule { }

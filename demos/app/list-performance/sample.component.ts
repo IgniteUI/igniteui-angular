@@ -4,7 +4,7 @@ import {
     IgxDialogModule,
     IgxFilterModule,
     IgxFilterOptions,
-    IgxInputDirective,
+    IgxInputGroupModule,
     IgxListComponent,
     IgxListItemComponent,
     IgxListModule,
@@ -21,7 +21,7 @@ export class ListPerformanceSampleComponent {
     public search1: string;
     public data: any[] = [];
 	public options: any = {};
-public ngOnInit(): void {
+    public ngOnInit(): void {
     let data = [{
             key: 1,
             avatar: "images/avatar/1.jpg",
@@ -62,7 +62,7 @@ public ngOnInit(): void {
             avatar: "images/avatar/13.jpg",
             favorite: false,           
             link: "#",
-            phone: "323-668-1482",
+             phone: "323-668-1482",
             text: "Stephanie May"
         }, {
             key: 7,
@@ -93,7 +93,7 @@ public ngOnInit(): void {
             phone: "724-742-0979",
             text: "Ward Riley"
         }];
-	for(let i = 10; i < 100000; i++) {
+	   for(let i = 10; i < 100000; i++) {
         var obj = Object.assign({}, data[i % 10]);
         obj["key"] = i;
         data.push(obj);
