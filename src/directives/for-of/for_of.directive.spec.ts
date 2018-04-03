@@ -1,9 +1,11 @@
 ﻿import { CommonModule, NgForOf, NgForOfContext } from "@angular/common";
 import {
+    AfterViewInit,
     ChangeDetectorRef,
     Component,
     ComponentFactoryResolver,
     Directive,
+    Injectable,
     IterableChanges,
     IterableDiffers,
     NgZone,
@@ -17,7 +19,10 @@ import {
 } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { Observable } from "rxjs/Observable";
 import { IgxForOfDirective, IgxForOfModule} from "./for_of.directive";
+import { IForOfState} from "./IForOfState";
 
 describe("IgxVirtual directive - simple template", () => {
     const INACTIVE_VIRT_CONTAINER = "igx-display-container--inactive";
@@ -30,7 +35,8 @@ describe("IgxVirtual directive - simple template", () => {
                 HorizontalVirtualComponent,
                 VirtualComponent,
                 VirtualVariableSizeComponent,
-                VerticalVirtualNoDataComponent
+                VerticalVirtualNoDataComponent,
+                RemoteVirtualizationComponent
             ],
             imports: [IgxForOfModule]
         }).compileComponents();
@@ -738,6 +744,38 @@ describe("IgxVirtual directive - simple template", () => {
         fix.componentInstance.parentVirtDir.testScrollTo(fix.componentInstance.data.length + 1);
         expect(fix.componentInstance.parentVirtDir.state.startIndex).toBe(0);
     });
+
+    it("should allow remote virtualization", () => {
+        const fix = TestBed.createComponent(RemoteVirtualizationComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+
+        // verify data is loaded
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+
+        let rowsRendered = displayContainer.children;
+        let data = fix.componentInstance.data.source.getValue();
+        for (let i = 0; i < rowsRendered.length; i++) {
+            expect(rowsRendered[i].textContent.trim())
+                .toBe(data[i].toString());
+        }
+
+        // scroll down
+        expect(() => {
+            verticalScroller.scrollTop = 10000;
+            fix.detectChanges();
+            fix.componentRef.hostView.detectChanges();
+        }).not.toThrow();
+
+        // verify data is loaded
+        rowsRendered = displayContainer.children;
+        data = fix.componentInstance.data.source.getValue();
+        for (let i = fix.componentInstance.parentVirtDir.state.startIndex; i < rowsRendered.length; i++) {
+            expect(rowsRendered[i].textContent.trim())
+                .toBe(data[i].toString());
+        }
+    });
 });
 
 /** igxFor for testing */
@@ -1126,5 +1164,82 @@ export class VerticalVirtualNoDataComponent {
             dummyData.push(10 * i);
         }
         return dummyData;
+    }
+}
+
+@Injectable()
+export class LocalService {
+    public records: Observable<any[]>;
+    private _records: BehaviorSubject<any[]>;
+    private dataStore: any[];
+
+    constructor() {
+        this.dataStore = [];
+        this._records = new BehaviorSubject([]);
+        this.records = this._records.asObservable();
+    }
+
+    public getData(data?: IForOfState, cb?: (any) => void): any {
+        const size = data.chunkSize === 0 ? 10 : data.chunkSize;
+        this.dataStore = this.generateData(data.startIndex, data.startIndex + size);
+        this._records.next(this.dataStore);
+        const count = 1000;
+        if (cb) {
+            cb(count);
+        }
+    }
+
+    public generateData(start, end) {
+        const dummyData = [];
+        for (let i = start; i < end; i++) {
+            dummyData.push(10 * i);
+        }
+        return dummyData;
+    }
+}
+
+/** Vertically virtualized component with remote virtualization */
+@Component({
+    template: `
+        <div #container [style.width]='width' [style.height]='height'>
+            <ng-template #scrollContainer let-rowData [igxForOf]="data | async" igxForTest
+                [igxForScrollOrientation]="'vertical'"
+                [igxForContainerSize]='height'
+                [igxForItemSize]='"50px"'
+                [igxForRemote]='true'
+                (onChunkPreload)="dataLoading($event)">
+                <div [style.display]="'flex'" [style.height]="'50px'">
+                    {{rowData}}
+                </div>
+            </ng-template>
+        </div>
+    `,
+    providers: [LocalService]
+})
+export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
+    public height = "500px";
+    public data;
+
+    @ViewChild("scrollContainer", { read: TestIgxForOfDirective })
+    public parentVirtDir: TestIgxForOfDirective<any>;
+
+    @ViewChild("container", { read: ViewContainerRef })
+    public container: ViewContainerRef;
+
+    constructor(private localService: LocalService) { }
+    public ngOnInit(): void {
+        this.data = this.localService.records;
+    }
+
+    public ngAfterViewInit() {
+        this.localService.getData(this.parentVirtDir.state, (count) => {
+            this.parentVirtDir.totalItemCount = count;
+        });
+    }
+
+    dataLoading(evt) {
+        this.localService.getData(evt, () => {
+            this.parentVirtDir.cdr.detectChanges();
+        });
     }
 }
