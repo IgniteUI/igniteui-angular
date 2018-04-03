@@ -77,7 +77,7 @@ To disable the ripple effect, do:
 | `@Input()` disableRipple | boolean | Specifies the whether the ripple effect should be disabled for the checkbox. |
 | `@Input()` labelPosition | string `|` enum LabelPosition | Specifies the position of the text label relative to the checkbox element. |
 | `@Input("aria-labelledby")` ariaLabelledBy | string | Specify an external element by id to be used as label for the checkbox. |
-| `@Output()` change | EventEmitter<IgxCheckboxChange> | Emitted when the checkbox checked value changes. |
+| `@Output()` change | EventEmitter<IChangeCheckboxEventArgs> | Emitted when the checkbox checked value changes. |
 
 ### Methods
 
