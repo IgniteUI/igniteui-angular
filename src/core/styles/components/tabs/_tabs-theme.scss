@@ -21,6 +21,7 @@
 //    );
 ///   // Pass the theme to the igx-tabs component mixin
 ///   @include igx-tabs($my-tabs-theme);
+
 @function igx-tabs-theme(
     // Normal/hover
     $item-background: null,
@@ -175,6 +176,7 @@
         user-select: none;
         background: map-get($this, 'item-background');
         color: map-get($this, 'item-text-color');
+        outline: 0;
 
         &::-moz-focus-inner {
             border: 0;
@@ -196,12 +198,14 @@
     }
 
     %igx-tabs__header-menu-item--disabled {
+        outline: 0;
         opacity: .5;
         cursor: default;
         pointer-events: none;
     }
 
     %igx-tabs__header-menu-item--selected {
+        outline: 0;
         background: map-get($this, 'item-active-background');
         color: map-get($this, 'item-active-color');
 
@@ -248,6 +252,7 @@
         position: relative;
         background: map-get($this, 'button-background');
         color: map-get($this, 'button-color');
+        outline: 0;
 
         &:hover {
             background: map-get($this, 'button-hover-background');
@@ -260,6 +265,7 @@
         }
 
         &::-moz-focus-inner {
+            // remove focus dotted border in firefox
             border: 0;
         }
 
@@ -319,11 +325,10 @@
     }
 
     %igx-tabs--icons {
-        %igx-tabs__header-button
+        %igx-tabs__header-button,
         %igx-tabs__header-menu-item {
             min-height: $tabs-height-icon;
             height: $tabs-height-icon;
         }
     }
 }
-
