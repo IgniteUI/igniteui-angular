@@ -12,7 +12,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 const noop = () => { };
 let nextId = 0;
 /**
- * **Ignite UI for Angular Switch** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/switch.html)  
+ * **Ignite UI for Angular Switch**
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/switch.html)
  * The Ignite UI Switch lets the user toggle between on/off or true/false states.
  *
  * Example:

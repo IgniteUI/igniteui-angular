@@ -17,14 +17,16 @@ import {
 } from "@angular/core";
 import { fadeIn, fadeOut, slideInBottom, slideOutBottom } from "../animations/main";
 /**
- * **Ignite UI for Angular Snackbar** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/snackbar.html)  
- * The Ignite UI Snack Bar provides feedback about an operation with a single-line message, which can include a link to an action such as Undo.
+ * **Ignite UI for Angular Snackbar**
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/snackbar.html)
+ * The Ignite UI Snack Bar provides feedback about an operation with a single-line message,
+ * which can include a link to an action such as Undo.
  *
  * Example:
  * ```html
  * <button (click)="snackbar.show()">Send message</button>
  * <div>
- *   <igx-snackbar #snackbar message="Message sent"> 
+ *   <igx-snackbar #snackbar message="Message sent">
  *   </igx-snackbar>
  * </div>
  * ```

@@ -27,9 +27,10 @@ import { IgxIconModule } from "../icon";
 import { IgxInputGroupModule } from "../input-group/input-group.component";
 
 /**
- * **Ignite UI for Angular Date Picker** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date_picker.html)  
+ * **Ignite UI for Angular Date Picker**
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date_picker.html)
  * The Ignite UI Date Picker displays a popup calendar that lets users select a single date.
- * 
+ *
  * Example:
  * ```html
  * <igx-datePicker [(ngModel)]="selectedDate"></igx-datePicker>

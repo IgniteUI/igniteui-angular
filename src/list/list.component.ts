@@ -21,8 +21,10 @@ import { IgxListItemComponent } from "./list-item.component";
 import { IgxEmptyListTemplateDirective } from "./list.common";
 
 /**
- * **Ignite UI for Angular List** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list.html)  
- * The Ignite UI List displays rows of items and supports one or more header items as well as search and filtering of list items. Each list item is completely templateable and will support any valid HTML or Angular component.
+ * **Ignite UI for Angular List**
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list.html)
+ * The Ignite UI List displays rows of items and supports one or more header items as well as searchand filtering of list items.
+ * Each list item is completely templateable and will support any valid HTML or Angular component.
  *
  * Example:
  * ```html

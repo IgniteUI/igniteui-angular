@@ -42,10 +42,10 @@ import { IgxGridRowComponent } from "./row.component";
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
 /**
- * **Ignite UI for Angular Grid** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)  
- * The Ignite UI Grid is used for presenting and manipulating tabular data in the simplest way possible.  Once data 
+ * **Ignite UI for Angular Grid** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
+ * The Ignite UI Grid is used for presenting and manipulating tabular data in the simplest way possible.  Once data
  * has been bound, it can be manipulated through filtering, sorting & editing operations.
- * 
+ *
  * Example:
  * ```html
  * <igx-grid [data]="employeeData" autoGenerate="false">

@@ -27,7 +27,8 @@ import { HammerGesturesManager } from "../core/touch";
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from "./navigation-drawer.directives";
 
 /**
- * **Ignite UI for Angular Navigation Drawer** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer.html)  
+ * **Ignite UI for Angular Navigation Drawer**
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer.html)
  * The Ignite UI Navigation Drawer is a collapsible side navigation container commonly used in combination with the Navbar.
  *
  * Example:

@@ -43,10 +43,10 @@ export class IgxCardFooterDirective {
 }
 
 /**
- * **Ignite UI for Angular Card** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/card.html)  
- * The Ignite UI Card serves as a container that allows custom content to be organized in an appealing way.  There are 
+ * **Ignite UI for Angular Card** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/card.html)
+ * The Ignite UI Card serves as a container that allows custom content to be organized in an appealing way.  There are
  * four sections in a card that you can use to organize your content.  These are header, footer, content & actions.
- * 
+ *
  * Example:
  * ```html
  * <igx-card>
