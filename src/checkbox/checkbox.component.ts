@@ -16,16 +16,26 @@ export enum LabelPosition {
     AFTER = "after"
 }
 
-export class IgxCheckboxChange {
-    constructor(
-        private checked: boolean,
-        private source: IgxCheckboxComponent
-    ) { }
+export interface IChangeCheckboxEventArgs {
+    checked: boolean;
+    checkbox: IgxCheckboxComponent;
 }
 
 const noop = () => { };
 let nextId = 0;
-
+/**
+ * **Ignite UI for Angular Checkbox**
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/checkbox.html)
+ * The Ignite UI Checkbox is a selection control that allows users to make a binary choice. It behaves similarly
+ * to the native browser checkbox.
+ *
+ * Example:
+ * ```html
+ * <igx-checkbox checked="true">
+ *   simple checkbox
+ * </igx-checkbox>
+ * ```
+ */
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxCheckboxComponent, multi: true }],
     selector: "igx-checkbox",
@@ -55,7 +65,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     public ariaLabel: string | null = null;
 
     @Output()
-    readonly change: EventEmitter<IgxCheckboxChange> = new EventEmitter<IgxCheckboxChange>();
+    readonly change: EventEmitter<IChangeCheckboxEventArgs> = new EventEmitter<IChangeCheckboxEventArgs>();
 
     @HostBinding("class.igx-checkbox")
     public cssClass = "igx-checkbox";
@@ -80,7 +90,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
         this.indeterminate = false;
         this.checked = !this.checked;
 
-        this.change.emit(new IgxCheckboxChange(this.checked, this));
+        this.change.emit({ checked: this.checked, checkbox: this });
         this._onChangeCallback(this.checked);
     }
 
@@ -117,9 +127,6 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     }
 
     public writeValue(value) {
-        if (this.disabled) {
-            return;
-        }
         this._value = value;
         this.checked = !!this._value;
     }

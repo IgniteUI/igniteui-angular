@@ -11,7 +11,18 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 const noop = () => { };
 let nextId = 0;
-
+/**
+ * **Ignite UI for Angular Switch**
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/switch.html)
+ * The Ignite UI Switch lets the user toggle between on/off or true/false states.
+ *
+ * Example:
+ * ```html
+ * <igx-switch checked="true">
+ *   Simple switch
+ * </igx-switch>
+ * ```
+ */
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSwitchComponent, multi: true }],
     selector: "igx-switch",
@@ -30,7 +41,7 @@ export class IgxSwitchComponent implements ControlValueAccessor {
     @Input() public tabindex: number = null;
     @Input() public checked = false;
 
-    @Output() public change = new EventEmitter();
+    @Output() public change = new EventEmitter<Event>();
 
     @ViewChild("checkbox") public nativeCheckbox;
 

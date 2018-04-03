@@ -9,13 +9,13 @@ import { STRING_FILTERS } from "../data-operations/filtering-condition";
 import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
-import { IgxGridComponent } from "./grid.component";
+import { IGridCellEventArgs, IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
 describe("IgxGrid - Column Pinning ", () => {
     const COLUMN_HEADER_CLASS = ".igx-grid__th";
     const CELL_CSS_CLASS = ".igx-grid__td";
-    const FIXED_CELL_CSS = "igx-grid__th--pinned-start";
+    const FIXED_CELL_CSS = "igx-grid__th--pinned";
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -599,8 +599,8 @@ export class DefaultGridComponent {
         column.width = "200px";
     }
 
-    public cellSelected(event) {
-        this.selectedCell = event;
+    public cellSelected(event: IGridCellEventArgs) {
+        this.selectedCell = event.cell;
     }
 }
 
@@ -652,8 +652,8 @@ export class GridPinningComponent {
     public columnPinningHandler($event) {
         $event.insertAtIndex = 0;
     }
-    public cellSelected(event) {
-        this.selectedCell = event;
+    public cellSelected(event: IGridCellEventArgs) {
+        this.selectedCell = event.cell;
     }
 }
 
