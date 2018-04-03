@@ -22,15 +22,9 @@ export class GridSelectionComponent implements OnInit, AfterViewInit {
     public localData: any[];
     public selectedCell;
     public selectedRow;
-    public selectable;
+    public selection;
     public newRecord = "";
     public editCell;
-    public selectionConfig = {
-        enabled: true, // Kendo ???
-        checkboxOnly: false, // Kendo , suppressRowClickSelection - agGrid
-        mode: "multiple", // Kendo , rowSelection - agGrid
-        rowMultiSelectWithClick: true // agGrid; Clicking a selected row in this mode will deselect the row
-    };
     constructor(private localService: LocalService,
                 private remoteService: RemoteService) { }
     public ngOnInit(): void {
@@ -61,8 +55,9 @@ export class GridSelectionComponent implements OnInit, AfterViewInit {
     }
 
     public handleRowSelection(cell: IgxGridCellComponent) {
-        if  (this.selectable) {
+        if  (!this.selection) {
             this.grid1.deselectAllRows();
+            console.log("Row selection");
             this.grid1.selectRows([cell.row]);
         }
     }

@@ -119,4 +119,8 @@
     @include e(td, $m: fw) {
         @extend %grid-cell--fixed-width !optional;
     }
+
+    @include e(cbx-selection) {
+        @extend %grid__cbx-selection !optional;
+    }
 }
