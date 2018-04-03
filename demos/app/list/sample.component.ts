@@ -4,7 +4,7 @@ import {
     IgxDialogModule,
     IgxFilterModule,
     IgxFilterOptions,
-    IgxInputModule,
+    IgxInputGroupModule,
     IgxListComponent,
     IgxListItemComponent,
     IgxListModule,

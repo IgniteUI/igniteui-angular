@@ -61,6 +61,9 @@ src/**/*.css.map
 
 dist/
 
+# vs
+.vs/
+
 # vscode
 .vscode
 

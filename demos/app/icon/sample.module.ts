@@ -6,5 +6,6 @@ import { IconSampleComponent } from "./sample.component";
 @NgModule({
     declarations: [IconSampleComponent],
     imports: [IgxIconModule, PageHeaderModule]
+
 })
 export class IconSampleModule { }
