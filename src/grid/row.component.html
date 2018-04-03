@@ -1,5 +1,7 @@
 <ng-container *ngIf="rowSelectable">
-    <igx-checkbox [checked]="isSelected" (change)="onCheckboxClick($event)" disableRipple="true"></igx-checkbox>
+    <div class="igx-grid__cbx-selection">
+        <igx-checkbox [checked]="isSelected" (change)="onCheckboxClick($event)" disableRipple="true"></igx-checkbox>
+    </div>
 </ng-container>
 <ng-container *ngIf="pinnedColumns.length > 0">
     <igx-grid-cell *ngFor="let col of pinnedColumns" [column]="col" [row]="this" [style.min-width.px]="col.width" [value]="rowData[col.field]" [cellTemplate]="col.bodyTemplate"></igx-grid-cell>

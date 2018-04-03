@@ -58,15 +58,12 @@
     @return (
         header-background: $header-background,
         header-text-color: $header-text-color,
-
         content-background: $content-background,
         content-text-color: $content-text-color,
-
         row-selected-background: $row-selected-background,
         row-selected-text-color: $row-selected-text-color,
         row-hover-background: $row-hover-background,
         row-border-color: $row-border-color,
-
         cell-selected-background: $cell-selected-background,
         cell-selected-text-color: $cell-selected-text-color
     );
@@ -85,15 +82,12 @@
     $default-theme: igx-grid-theme(
         $header-background: igx-color($palette, 'grays', 100),
         $header-text-color: igx-color($palette, 'grays', 600),
-
         $content-background: #fff,
         $content-text-color: igx-color($palette, 'grays', 800),
-
         $row-selected-background: igx-color($palette, 'grays', 800),
         $row-selected-text-color: igx-contrast-color($palette, 'grays', 900),
         $row-hover-background: igx-color($palette, 'grays', 100),
         $row-border-color: igx-color($palette, 'grays', 300),
-
         $cell-selected-background: igx-color($palette, 'primary'),
         $cell-selected-text-color: igx-contrast-color($palette, 'primary')
     );
@@ -353,6 +347,13 @@
         &:last-of-type {
             border-right: transparent;
         }
+    }
+
+    %grid__cbx-selection {
+        padding: 0 rem(24px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 }
 
