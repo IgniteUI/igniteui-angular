@@ -2,15 +2,15 @@ import { Component, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { Calendar, IgxCalendarComponent, IgxCalendarModule, isLeap, monthRange, weekDay, WEEKDAYS } from "./index";
 
 describe("IgxCalendar", () => {
     beforeEach(
         async(() => {
             TestBed.configureTestingModule({
-                declarations: [IgxCalendarRenderingComponent],
-                imports: [IgxCalendarModule, FormsModule, BrowserAnimationsModule]
+                declarations: [IgxCalendarRenderingComponent, IgxCalendarFormatsComponent],
+                imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
             }).compileComponents();
         })
     );
@@ -203,6 +203,68 @@ describe("IgxCalendar", () => {
         expect(() => (calendar.selection = "non-existant")).toThrow();
     });
 
+    it("@Complex Input properties formatOptions and formatViews", () => {
+        const fixture = TestBed.createComponent(IgxCalendarFormatsComponent);
+        fixture.detectChanges();
+
+        const calendar = fixture.componentInstance.calendar;
+        const dom = fixture.debugElement;
+        const defaultOptions = {
+            day: "numeric",
+            month: "short",
+            weekday: "short",
+            year: "numeric"
+        };
+        const defaultViews = { day: false, month: true, year: false};
+        const bodyMonth = dom.query(By.css(".date .date__el"));
+        const headerYear = dom.query(By.css(".igx-calendar__header-year"));
+        const bodyYear = dom.queryAll(By.css(".date .date__el"))[1];
+        const headerWeekday = dom.queryAll(By.css(".igx-calendar__header-date span"))[0];
+        const headerDate = dom.queryAll(By.css(".igx-calendar__header-date span"))[1];
+
+        calendar.selectDate(calendar.viewDate);
+        fixture.detectChanges();
+
+        expect(calendar.formatOptions).toEqual(jasmine.objectContaining(defaultOptions));
+        expect(calendar.formatViews).toEqual(jasmine.objectContaining(defaultViews));
+        expect(headerYear.nativeElement.textContent.trim()).toMatch("2018");
+        expect(headerWeekday.nativeElement.textContent.trim()).toMatch("Mon");
+        expect(headerDate.nativeElement.textContent.trim()).toMatch("Sep 17");
+        expect(bodyYear.nativeElement.textContent.trim()).toMatch("2018");
+        expect(bodyMonth.nativeElement.textContent.trim()).toMatch("Sep");
+
+        // change formatOptions and formatViews
+        const formatOptions: any = { month: "long", year: "2-digit" };
+        const formatViews: any = { month: true, year: true};
+        calendar.formatOptions = formatOptions;
+        calendar.formatViews = formatViews;
+        fixture.detectChanges();
+
+        expect(calendar.formatOptions).toEqual(jasmine.objectContaining(Object.assign(defaultOptions, formatOptions)));
+        expect(calendar.formatViews).toEqual(jasmine.objectContaining(Object.assign(defaultViews, formatViews)));
+        expect(headerYear.nativeElement.textContent.trim()).toMatch("18");
+        expect(headerWeekday.nativeElement.textContent.trim()).toMatch("Mon");
+        expect(headerDate.nativeElement.textContent.trim()).toMatch("September 17");
+        expect(bodyYear.nativeElement.textContent.trim()).toMatch("18");
+        expect(bodyMonth.nativeElement.textContent.trim()).toMatch("September");
+
+        // change formatOptions and formatViews
+        formatOptions.year = "numeric";
+        formatViews.day = true;
+        formatViews.month = false;
+        calendar.formatOptions = formatOptions;
+        calendar.formatViews = formatViews;
+        fixture.detectChanges();
+
+        expect(calendar.formatOptions).toEqual(jasmine.objectContaining(Object.assign(defaultOptions, formatOptions)));
+        expect(calendar.formatViews).toEqual(jasmine.objectContaining(Object.assign(defaultViews, formatViews)));
+        expect(headerYear.nativeElement.textContent.trim()).toMatch("2018");
+        expect(headerWeekday.nativeElement.textContent.trim()).toMatch("Mon");
+        expect(headerDate.nativeElement.textContent.trim()).toMatch("September 17");
+        expect(bodyYear.nativeElement.textContent.trim()).toMatch("2018");
+        expect(bodyMonth.nativeElement.textContent.trim()).toMatch("8");
+    });
+
     it("Calendar DOM structure", () => {
         const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         fixture.detectChanges();
@@ -281,19 +343,14 @@ describe("IgxCalendar", () => {
         expect(calendar.viewDate.getFullYear()).toEqual(2014);
     });
 
-    it(
-        "Calendar selection - single with event",
-        fakeAsync(() => {
-            const fixture = TestBed.createComponent(
-                IgxCalendarRenderingComponent
-            );
-            fixture.detectChanges();
-            tick();
-            fixture.detectChanges();
+    it("Calendar selection - single with event", () => {
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
+        fixture.detectChanges();
+        const calendar = fixture.componentInstance.calendar;
+        const dom = fixture.debugElement;
 
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
-
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
             const target = dom.query(By.css(".igx-calendar__date--selected"));
             const weekDiv = target.parent;
             const weekDays = weekDiv.queryAll(By.css("span"));
@@ -327,22 +384,18 @@ describe("IgxCalendar", () => {
                     "igx-calendar__date--selected"
                 )
             ).toBe(false);
-        })
-    );
+        });
+    });
 
-    it(
-        "Calendar selection - outside of current month - 1",
-        fakeAsync(() => {
-            const fixture = TestBed.createComponent(
-                IgxCalendarRenderingComponent
-            );
+    it("Calendar selection - outside of current month - 1", () => {
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
+        fixture.detectChanges();
+
+        const calendar = fixture.componentInstance.calendar;
+        const dom = fixture.debugElement;
+
+        fixture.whenStable().then(() => {
             fixture.detectChanges();
-            tick();
-            fixture.detectChanges();
-
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
-
             const parent = dom.query(
                 By.css(".igx-calendar__body-row:last-child")
             );
@@ -359,22 +412,18 @@ describe("IgxCalendar", () => {
                     .query(By.css(".igx-calendar__header-date"))
                     .nativeElement.textContent.includes("Jul")
             ).toBe(true);
-        })
-    );
+        });
+    });
 
-    it(
-        "Calendar selection - outside of current month - 2",
-        fakeAsync(() => {
-            const fixture = TestBed.createComponent(
-                IgxCalendarRenderingComponent
-            );
+    it("Calendar selection - outside of current month - 2", () => {
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
+        fixture.detectChanges();
+
+        const calendar = fixture.componentInstance.calendar;
+        const dom = fixture.debugElement;
+
+        fixture.whenStable().then(() => {
             fixture.detectChanges();
-            tick();
-            fixture.detectChanges();
-
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
-
             const parent = dom.queryAll(By.css(".igx-calendar__body-row"))[1];
             const target = parent.queryAll(By.css("span")).shift();
 
@@ -389,22 +438,18 @@ describe("IgxCalendar", () => {
                     .query(By.css(".igx-calendar__header-date"))
                     .nativeElement.textContent.includes("May")
             ).toBe(true);
-        })
-    );
+        });
+    });
 
-    it(
-        "Calendar selection - single through API",
-        fakeAsync(() => {
-            const fixture = TestBed.createComponent(
-                IgxCalendarRenderingComponent
-            );
+    it("Calendar selection - single through API", () => {
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
+        fixture.detectChanges();
+
+        const calendar = fixture.componentInstance.calendar;
+        const dom = fixture.debugElement;
+
+        fixture.whenStable().then(() => {
             fixture.detectChanges();
-            tick();
-            fixture.detectChanges();
-
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
-
             const target = dom.query(By.css(".igx-calendar__date--selected"));
             const weekDiv = target.parent;
             const weekDays = weekDiv.queryAll(By.css("span"));
@@ -433,22 +478,18 @@ describe("IgxCalendar", () => {
                     "igx-calendar__date--selected"
                 )
             ).toBe(false);
-        })
-    );
+        });
+    });
 
-    it(
-        "Calendar selection - multiple with event",
-        fakeAsync(() => {
-            const fixture = TestBed.createComponent(
-                IgxCalendarRenderingComponent
-            );
+    it("Calendar selection - multiple with event", () => {
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
+        fixture.detectChanges();
+
+        const calendar = fixture.componentInstance.calendar;
+        const dom = fixture.debugElement;
+
+        fixture.whenStable().then(() => {
             fixture.detectChanges();
-            tick();
-            fixture.detectChanges();
-
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
-
             const target = dom.query(By.css(".igx-calendar__date--selected"));
             const weekDiv = target.parent;
             const weekDays = weekDiv.queryAll(By.css("span"));
@@ -495,22 +536,18 @@ describe("IgxCalendar", () => {
                     "igx-calendar__date--selected"
                 )
             ).toBe(false);
-        })
-    );
+        });
+    });
 
-    it(
-        "Calendar selection - multiple through API",
-        fakeAsync(() => {
-            const fixture = TestBed.createComponent(
-                IgxCalendarRenderingComponent
-            );
+    it("Calendar selection - multiple through API", () => {
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
+        fixture.detectChanges();
+
+        const calendar = fixture.componentInstance.calendar;
+        const dom = fixture.debugElement;
+
+        fixture.whenStable().then(() => {
             fixture.detectChanges();
-            tick();
-            fixture.detectChanges();
-
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
-
             const target = dom.query(By.css(".igx-calendar__date--selected"));
             const weekDiv = target.parent;
             const weekDays = weekDiv.queryAll(By.css("span"));
@@ -556,24 +593,18 @@ describe("IgxCalendar", () => {
                     "igx-calendar__date--selected"
                 )
             ).toBe(true);
+        });
+    });
 
-            // TODO: Multiple dates deselect on overlapping
-        })
-    );
+    it("Calendar selection - range with event", () => {
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
+        fixture.detectChanges();
 
-    it(
-        "Calendar selection - range with event",
-        fakeAsync(() => {
-            const fixture = TestBed.createComponent(
-                IgxCalendarRenderingComponent
-            );
+        const calendar = fixture.componentInstance.calendar;
+        const dom = fixture.debugElement;
+
+        fixture.whenStable().then(() => {
             fixture.detectChanges();
-            tick();
-            fixture.detectChanges();
-
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
-
             const target = dom.query(By.css(".igx-calendar__date--selected"));
             const weekDiv = target.parent;
             const weekDays = weekDiv.queryAll(By.css("span"));
@@ -642,22 +673,18 @@ describe("IgxCalendar", () => {
                     )
                 ).toBe(true);
             });
-        })
-    );
+        });
+    });
 
-    it(
-        "Calendar selection - range through API",
-        fakeAsync(() => {
-            const fixture = TestBed.createComponent(
-                IgxCalendarRenderingComponent
-            );
+    it("Calendar selection - range through API", () => {
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
+        fixture.detectChanges();
+
+        const calendar = fixture.componentInstance.calendar;
+        const dom = fixture.debugElement;
+
+        fixture.whenStable().then(() => {
             fixture.detectChanges();
-            tick();
-            fixture.detectChanges();
-
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
-
             const target = dom.query(By.css(".igx-calendar__date--selected"));
             const weekDiv = target.parent;
             const weekDays = weekDiv.queryAll(By.css("span"));
@@ -714,15 +741,11 @@ describe("IgxCalendar", () => {
                     )
                 ).toBe(true);
             }
-        })
-    );
+        });
+    });
 
-    it("Calendar keyboard navigation - PageUp/PageDown", fakeAsync(() => {
-        const fixture = TestBed.createComponent(
-            IgxCalendarRenderingComponent
-        );
-        fixture.detectChanges();
-        tick();
+    it("Calendar keyboard navigation - PageUp/PageDown", () => {
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         fixture.detectChanges();
 
         const calendar = fixture.componentInstance.calendar;
@@ -762,100 +785,96 @@ describe("IgxCalendar", () => {
         fixture.detectChanges();
 
         expect(calendar.viewDate.getFullYear()).toEqual(2018);
-    }));
+    });
 
-    it("Calendar keyboard navigation - Home/End/Enter", fakeAsync(() => {
-        const fixture = TestBed.createComponent(
-            IgxCalendarRenderingComponent
-        );
-        fixture.detectChanges();
-        tick();
+    it("Calendar keyboard navigation - Home/End/Enter", () => {
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         fixture.detectChanges();
 
-        const calendar = fixture.componentInstance.calendar;
-        const dom = fixture.debugElement;
-        const component = dom.query(By.css(".igx-calendar"));
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const calendar = fixture.componentInstance.calendar;
+            const dom = fixture.debugElement;
+            const component = dom.query(By.css(".igx-calendar"));
 
-        let args: KeyboardEventInit = { key: "Home", bubbles: true };
+            let args: KeyboardEventInit = { key: "Home", bubbles: true };
 
-        const days = calendar.dates.filter((day) => day.isCurrentMonth);
-        const firstDay = days[0];
-        const lastDay = days[days.length - 1];
+            const days = calendar.dates.filter((day) => day.isCurrentMonth);
+            const firstDay = days[0];
+            const lastDay = days[days.length - 1];
 
-        component.triggerEventHandler("keydown.home", new KeyboardEvent("keydown", args));
+            component.triggerEventHandler("keydown.home", new KeyboardEvent("keydown", args));
+            fixture.detectChanges();
+
+            expect(document.activeElement.textContent).toMatch(firstDay.nativeElement.textContent);
+            expect(document.activeElement.textContent.trim()).toMatch("1");
+
+            args = { key: "End", bubbles: true };
+
+            component.triggerEventHandler("keydown.end", new KeyboardEvent("keydown", args));
+            fixture.detectChanges();
+
+            expect(document.activeElement.textContent).toMatch(lastDay.nativeElement.textContent);
+            expect(document.activeElement.textContent.trim()).toMatch("30");
+
+            args = { key: "Enter", bubbles: true };
+
+            firstDay.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+            fixture.detectChanges();
+
+            expect((calendar.value as Date).toDateString()).toMatch(new Date(2017, 5, 1).toDateString());
+        });
+    });
+
+    it("Calendar keyboard navigation - Arrow keys", () => {
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         fixture.detectChanges();
 
-        expect(document.activeElement.textContent).toMatch(firstDay.nativeElement.textContent);
-        expect(document.activeElement.textContent.trim()).toMatch("1");
+        fixture.whenStable().then(() => {
+            const calendar = fixture.componentInstance.calendar;
+            const dom = fixture.debugElement;
+            const component = dom.query(By.css(".igx-calendar"));
 
-        args = { key: "End", bubbles: true };
+            let args: KeyboardEventInit = { key: "Home", bubbles: true };
 
-        component.triggerEventHandler("keydown.end", new KeyboardEvent("keydown", args));
-        fixture.detectChanges();
+            const days = calendar.dates.filter((day) => day.isCurrentMonth);
+            const firstDay = days[0];
 
-        expect(document.activeElement.textContent).toMatch(lastDay.nativeElement.textContent);
-        expect(document.activeElement.textContent.trim()).toMatch("30");
+            component.triggerEventHandler("keydown.home", new KeyboardEvent("keydown", args));
+            fixture.detectChanges();
 
-        args = { key: "Enter", bubbles: true };
+            expect(document.activeElement.textContent).toMatch(firstDay.nativeElement.textContent);
+            expect(document.activeElement.textContent.trim()).toMatch("1");
 
-        firstDay.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
-        fixture.detectChanges();
+            args = { key: "ArrowDown", bubbles: true };
 
-        expect((calendar.value as Date).toDateString()).toMatch(new Date(2017, 5, 1).toDateString());
-    }));
+            document.activeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+            fixture.detectChanges();
 
-    it("Calendar keyboard navigation - Arrow keys", fakeAsync(() => {
-        const fixture = TestBed.createComponent(
-            IgxCalendarRenderingComponent
-        );
-        fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+            expect(document.activeElement.textContent.trim()).toMatch("8");
 
-        const calendar = fixture.componentInstance.calendar;
-        const dom = fixture.debugElement;
-        const component = dom.query(By.css(".igx-calendar"));
+            args = { key: "ArrowLeft", bubbles: true };
 
-        let args: KeyboardEventInit = { key: "Home", bubbles: true };
+            document.activeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+            fixture.detectChanges();
 
-        const days = calendar.dates.filter((day) => day.isCurrentMonth);
-        const firstDay = days[0];
+            expect(document.activeElement.textContent.trim()).toMatch("7");
 
-        component.triggerEventHandler("keydown.home", new KeyboardEvent("keydown", args));
-        fixture.detectChanges();
+            args = { key: "ArrowRight", bubbles: true };
 
-        expect(document.activeElement.textContent).toMatch(firstDay.nativeElement.textContent);
-        expect(document.activeElement.textContent.trim()).toMatch("1");
+            document.activeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+            fixture.detectChanges();
 
-        args = { key: "ArrowDown", bubbles: true };
+            expect(document.activeElement.textContent.trim()).toMatch("8");
 
-        document.activeElement.dispatchEvent(new KeyboardEvent("keydown", args));
-        fixture.detectChanges();
+            args = { key: "ArrowUp", bubbles: true };
 
-        expect(document.activeElement.textContent.trim()).toMatch("8");
+            document.activeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+            fixture.detectChanges();
 
-        args = { key: "ArrowLeft", bubbles: true };
-
-        document.activeElement.dispatchEvent(new KeyboardEvent("keydown", args));
-        fixture.detectChanges();
-
-        expect(document.activeElement.textContent.trim()).toMatch("7");
-
-        args = { key: "ArrowRight", bubbles: true };
-
-        document.activeElement.dispatchEvent(new KeyboardEvent("keydown", args));
-        fixture.detectChanges();
-
-        expect(document.activeElement.textContent.trim()).toMatch("8");
-
-        args = { key: "ArrowUp", bubbles: true };
-
-        document.activeElement.dispatchEvent(new KeyboardEvent("keydown", args));
-        fixture.detectChanges();
-
-        expect(document.activeElement.textContent.trim()).toMatch("1");
-
-    }));
+            expect(document.activeElement.textContent.trim()).toMatch("1");
+        });
+    });
 });
 
 @Component({
@@ -866,5 +885,15 @@ describe("IgxCalendar", () => {
 export class IgxCalendarRenderingComponent {
     public model: Date | Date[] = new Date(2017, 5, 13);
     public viewDate = new Date(2017, 5, 13);
+    @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
+}
+@Component({
+    template: `
+        <igx-calendar [viewDate]="viewDate" [(ngModel)]="model"></igx-calendar>
+    `
+})
+export class IgxCalendarFormatsComponent {
+    public model: Date | Date[] = new Date();
+    public viewDate = new Date(2018, 8, 17);
     @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
 }
