@@ -31,8 +31,23 @@ export interface IListItemClickEventArgs {
     event: Event;
 }
 
-// ====================== LIST ================================
-// The `<igx-list>` directive is a list container for items and headers
+/**
+ * **Ignite UI for Angular List**
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list.html)
+ * The Ignite UI List displays rows of items and supports one or more header items as well as searchand filtering of list items.
+ * Each list item is completely templateable and will support any valid HTML or Angular component.
+ *
+ * Example:
+ * ```html
+ * <igx-list>
+ *   <igx-list-item isHeader="true">Contacts</igx-list-item>
+ *   <igx-list-item *ngFor="let contact of contacts">
+ *     <span class="name">{{ contact.name }}</span>
+ *     <span class="phone">{{ contact.phone }}</span>
+ *   </igx-list-item>
+ * </igx-list>
+ * ```
+ */
 @Component({
     selector: "igx-list",
     templateUrl: "list.component.html"
