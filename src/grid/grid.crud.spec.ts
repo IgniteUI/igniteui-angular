@@ -1,7 +1,7 @@
 import { Component, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { DataType } from "../data-operations/data-util";
-import { IgxGridComponent } from "./grid.component";
+import { IGridEditEventArgs, IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
 describe("IgxGrid - CRUD operations", () => {
@@ -148,6 +148,8 @@ describe("IgxGrid - CRUD operations", () => {
         const grid = fix.componentInstance.instance;
         const data = fix.componentInstance.data;
 
+        spyOn(grid.onEditDone, "emit").and.callThrough();
+
         // Update non-existing row
         grid.updateRow({ index: -100, value: -100 }, 100);
         fix.detectChanges();
@@ -156,11 +158,23 @@ describe("IgxGrid - CRUD operations", () => {
         expect(grid.data[0].index).not.toEqual(-100);
 
         // Update an existing row
-        grid.updateRow({ index: 100, value: 100 }, 0);
-        fix.detectChanges();
+        grid.updateRow("change", 0);
 
-        expect(grid.rowList.first.cells.first.value).toEqual(100);
-        expect(grid.data[0].index).toEqual(100);
+        const row = grid.rowList[0];
+        const args: IGridEditEventArgs = {
+            row,
+            cell: null,
+            currentValue: { index: 1, value: 1 },
+            newValue: { index: 200, value: 200 }
+        };
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+
+            expect(grid.onEditDone.emit).toHaveBeenCalledWith(args);
+            expect(grid.rowList.first.cells.first.value).toEqual(200);
+            expect(grid.data[0].index).toEqual(200);
+        });
     });
 
     it("should support updating a cell value through the grid API", async(() => {
@@ -169,8 +183,18 @@ describe("IgxGrid - CRUD operations", () => {
 
         const grid = fix.componentInstance.instance;
 
+        spyOn(grid.onEditDone, "emit").and.callThrough();
+
         // Update a non-existing cell
         grid.updateCell(-100, 100, "index");
+
+        const cell = grid.getCellByColumn(0, "index");
+        const args: IGridEditEventArgs = {
+            row: cell.row,
+            cell,
+            currentValue: 1,
+            newValue: 200
+        };
 
         fix.whenStable().then(() => {
             fix.detectChanges();
@@ -179,14 +203,15 @@ describe("IgxGrid - CRUD operations", () => {
             expect(grid.rowList.first.cells.first.nativeElement.textContent).not.toMatch("-100");
 
             // Update an existing cell
-            grid.updateCell(100, 0, "index");
+            grid.updateCell("change", 0, "index");
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
 
-            expect(grid.rowList.first.cells.first.value).toEqual(100);
-            expect(grid.rowList.first.cells.first.nativeElement.textContent).toMatch("100");
+            expect(grid.onEditDone.emit).toHaveBeenCalledWith(args);
+            expect(grid.rowList.first.cells.first.value).toEqual(200);
+            expect(grid.rowList.first.cells.first.nativeElement.textContent).toMatch("200");
         });
     }));
 
@@ -214,6 +239,7 @@ describe("IgxGrid - CRUD operations", () => {
             [data]="data"
             (onRowAdded)="rowAdded($event)"
             (onRowDeleted)="rowDeleted($event)"
+            (onEditDone)="editDone($event)"
             [autoGenerate]="true">
         </igx-grid>
     `
@@ -236,5 +262,11 @@ export class DefaultCRUDGridComponent {
 
     public rowDeleted(event) {
         this.rowsDeleted++;
+    }
+
+    public editDone(event: IGridEditEventArgs) {
+        if (event.newValue === "change") {
+            event.newValue = event.cell ? 200 : { index: 200, value: 200 };
+        }
     }
 }

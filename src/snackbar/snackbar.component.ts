@@ -8,6 +8,7 @@ import {
 } from "@angular/animations";
 import { CommonModule } from "@angular/common";
 import {
+    AnimationTransitionEvent,
     Component,
     EventEmitter,
     Input,
@@ -17,12 +18,18 @@ import {
 } from "@angular/core";
 import { fadeIn, fadeOut, slideInBottom, slideOutBottom } from "../animations/main";
 /**
- * IgxSnackbar provides feedback about an operation by showing brief message at the bottom of the screen on mobile
- * and lower left on larger devices. IgxSnackbar will appear above all
- * other elements on screen and only one can be displayed at a time.
- * ```
- * <igx-snackbar (event output bindings) [input bindings]>
- * </igx-snackbar>
+ * **Ignite UI for Angular Snackbar**
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/snackbar.html)
+ * The Ignite UI Snack Bar provides feedback about an operation with a single-line message,
+ * which can include a link to an action such as Undo.
+ *
+ * Example:
+ * ```html
+ * <button (click)="snackbar.show()">Send message</button>
+ * <div>
+ *   <igx-snackbar #snackbar message="Message sent">
+ *   </igx-snackbar>
+ * </div>
  * ```
  */
 @Component({
@@ -111,19 +118,19 @@ export class IgxSnackbarComponent {
      * provides reference to the IgxSnackbar component as argument
      * @type {EventEmitter}
      */
-    @Output() public onAction = new EventEmitter();
+    @Output() public onAction = new EventEmitter<IgxSnackbarComponent>();
 
     /**
      * The event that will be thrown when the snackbar animation starts
      * @type {EventEmitter<AnimationTransitionEvent>}
      */
-    @Output() public animationStarted = new EventEmitter<any>();
+    @Output() public animationStarted = new EventEmitter<AnimationTransitionEvent>();
 
     /**
      * The event that will be thrown when the snackbar animation ends
      * @type {EventEmitter<AnimationTransitionEvent>}
      */
-    @Output() public animationDone = new EventEmitter<any>();
+    @Output() public animationDone = new EventEmitter<AnimationTransitionEvent>();
 
     private timeoutId;
 
@@ -157,13 +164,13 @@ export class IgxSnackbarComponent {
         this.onAction.emit(this);
     }
 
-    public snackbarAnimationStarted(evt?: any): void {
+    public snackbarAnimationStarted(evt: AnimationTransitionEvent): void {
         if (evt.fromState === "void") {
             this.animationStarted.emit(evt);
         }
     }
 
-    public snackbarAnimationDone(evt?: any): void {
+    public snackbarAnimationDone(evt: AnimationTransitionEvent): void {
         if (evt.fromState === "show") {
             this.animationDone.emit(evt);
         }
