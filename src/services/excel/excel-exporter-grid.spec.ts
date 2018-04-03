@@ -5,11 +5,12 @@ import { SortingDirection } from "../../data-operations/sorting-expression.inter
 import { IgxGridModule } from "../../grid";
 import { IgxColumnComponent } from "../../grid/column.component";
 import { IgxGridComponent } from "../../grid/grid.component";
+import { IColumnExportingEventArgs, IRowExportingEventArgs } from "../exporter-common/base-export-service";
 import {
     GridDeclarationComponent,
     GridMarkupPagingDeclarationComponent,
-    GridReorderedColumnsComponent } from "../exporter-common/components-declarations";
-import { IColumnExportingEventArgs, IRowExportingEventArgs } from "../exporter-common/event-args";
+    GridReorderedColumnsComponent
+} from "../exporter-common/components-declarations";
 import { ExportUtilities } from "../exporter-common/export-utilities";
 import { TestMethods } from "../exporter-common/test-methods";
 import { IgxExcelExporterService } from "./excel-exporter";

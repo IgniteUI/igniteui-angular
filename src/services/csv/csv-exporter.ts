@@ -1,10 +1,13 @@
 import { EventEmitter, Injectable, Output } from "@angular/core";
 import { IgxGridComponent } from "../../grid/grid.component";
 import { IgxBaseExporter } from "../exporter-common/base-export-service";
-import { ICsvExportEndedEventArgs } from "../exporter-common/event-args";
 import { ExportUtilities } from "../exporter-common/export-utilities";
 import { CharSeparatedValueData } from "./char-separated-value-data";
 import { CsvFileTypes, IgxCsvExporterOptions } from "./csv-exporter-options";
+
+export interface ICsvExportEndedEventArgs {
+    csvData: string;
+}
 
 @Injectable()
 export class IgxCsvExporterService extends IgxBaseExporter {

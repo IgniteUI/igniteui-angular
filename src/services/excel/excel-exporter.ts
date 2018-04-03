@@ -15,12 +15,13 @@ import {
 import { IgxGridComponent } from "../../grid/grid.component";
 import { IgxGridModule } from "../../grid/index";
 
-import { IExcelExportEndedEventArgs } from "../exporter-common/event-args";
-
-import { inherits } from "util";
 import { IgxBaseExporter } from "../exporter-common/base-export-service";
 import { ExportUtilities } from "../exporter-common/export-utilities";
 import { WorksheetData } from "./worksheet-data";
+
+export interface IExcelExportEndedEventArgs {
+    xlsx: JSZip;
+}
 
 @Injectable()
 export class IgxExcelExporterService extends IgxBaseExporter {

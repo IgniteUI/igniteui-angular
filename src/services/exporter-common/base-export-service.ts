@@ -5,13 +5,20 @@ import {
 
 import { IgxGridComponent } from "../../grid/grid.component";
 
-import {
-    IColumnExportingEventArgs,
-    IRowExportingEventArgs
-} from "./event-args";
-
 import { ExportUtilities } from "./export-utilities";
 import { IgxExporterOptionsBase } from "./exporter-options-base";
+
+export interface IRowExportingEventArgs {
+    rowData: any;
+    rowIndex: number;
+    cancel: boolean;
+}
+
+export interface IColumnExportingEventArgs {
+    header: string;
+    columnIndex: number;
+    cancel: boolean;
+}
 
 export abstract class IgxBaseExporter {
     private _columnList: any[];
