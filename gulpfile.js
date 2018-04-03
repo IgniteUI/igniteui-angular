@@ -104,8 +104,10 @@ gulp.task("build:esm:watch", ["build:esm"], () => {
 });
 
 gulp.task("copy-git-hooks", () => {
-    const defaultCopyHookDir = "./.git/hooks/scripts/";
+    const gitHooksDir = "./.git/hooks/";
+    const defaultCopyHookDir = gitHooksDir + "scripts/";
     const dirs = [
+        gitHooksDir,
         defaultCopyHookDir,
         defaultCopyHookDir + "templates",
         defaultCopyHookDir + "templateValidators",
