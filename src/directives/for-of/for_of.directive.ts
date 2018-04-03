@@ -50,10 +50,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     @Input() public igxForRemote = false;
 
     @Output()
-    public onChunkLoad = new EventEmitter<any>();
+    public onChunkLoad = new EventEmitter<IForOfState>();
 
     @Output()
-    public onChunkPreload = new EventEmitter<any>();
+    public onChunkPreload = new EventEmitter<IForOfState>();
 
     private hScroll;
     private func;

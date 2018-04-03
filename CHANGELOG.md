@@ -48,6 +48,11 @@ All notable changes for each version of this project will be documented in this 
 - `igxInput` directive breaking changes:
     - the directive should be wrapped by `igxInputGroup` component
     - `IgxInputGroupModule` should be imported instead of `IgxInputModule`
+- General
+    - Added event argument types to all `EventEmitter` `@Output`s. #798 #740
+    - Reviewed and added missing argument types to the following `EventEmitter`s
+        - The `igxGrid` `onEditDone` now exposes arguments of type `IGridEditEventArgs`. The arguments expose `row` and `cell` objects where if the editing is performed on a cell, the edited `cell` and the `row` the cell belongs to are exposed. If row editing is performed, the `cell` object is null. In addition the `currentValue` and `newValue` arguments are exposed. If you assign a value to the `newValue` in your handler, then the editing will conclude with the value you've supplied.
+        - The `igxGrid` `onSelection` now correctly propagates the original `event` in the `IGridCellEventArgs`.
 
 ## 5.2.1
 - `hammerjs` and `@types/hammerjs` are removed from `peerDependencies` and were added as `dependencies`. So if you are using Igniteui-Angular version 5.2.1 or above it is enough to run `npm install igniteui-angular` in your project for getting started. For more detailed information see [`Ignite UI for Angular Getting Started`](https://www.infragistics.com/products/ignite-ui-angular/getting-started)
