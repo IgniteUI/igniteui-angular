@@ -5,7 +5,7 @@ var matchType = require('../common').matchType,
 
 module.exports = function(lines, options, errors) {
     var ticket = new RegExp(options.issuePattern);
-    var whetherIssueIsMondatory = false,
+    var whetherIssueIsMandatory = false,
         wheterMatchAnyIssueRef = false; 
 
     lines.forEach(function (line) {
@@ -15,7 +15,7 @@ module.exports = function(lines, options, errors) {
         }
 
         if (matchType(options.typesWithMandatoryIssue, line)) {
-            whetherIssueIsMondatory = true;
+            whetherIssueIsMandatory = true;
         }
 
         if (ticket.test(line)) {
@@ -24,7 +24,7 @@ module.exports = function(lines, options, errors) {
         }
     });
 
-    if (!wheterMatchAnyIssueRef && !wheterMatchAnyIssueRef) {
+    if (!whetherIssueIsMandatory && !wheterMatchAnyIssueRef) {
         errors.push(errorFactory(
             'The issue reference for (' + options.typesWithMandatoryIssue.join(', ') + ') types is mandatory!\n',
             'List any ISSUES CLOSED by this change. E.g: Closes #31, Closes #45'));
