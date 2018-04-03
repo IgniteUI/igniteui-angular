@@ -26,6 +26,11 @@ export interface IRangeSliderValue {
     upper: number;
 }
 
+export interface ISliderValueChangeEventArgs {
+    oldValue: number | IRangeSliderValue;
+    value: number | IRangeSliderValue;
+}
+
 const noop = () => {
 };
 
@@ -75,7 +80,7 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
      * @type {EventEmitter}
      */
     @Output()
-    public onValueChange = new EventEmitter();
+    public onValueChange = new EventEmitter<ISliderValueChangeEventArgs>();
 
     public isActiveLabel = false;
 
@@ -379,7 +384,7 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
 
     public onPanEnd($event) {
         this.hideThumbsLabels();
-        this.emitValueChanged();
+        this.emitValueChanged(null);
     }
 
     public hideThumbLabelsOnBlur() {
@@ -438,7 +443,7 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
         }
 
         if (this.hasValueChanged(value)) {
-            this.emitValueChanged();
+            this.emitValueChanged(value);
         }
 
         this.showThumbsLabels();
@@ -449,7 +454,7 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
         this.update($event);
 
         if (this.hasValueChanged(value)) {
-            this.emitValueChanged();
+            this.emitValueChanged(value);
         }
     }
 
@@ -664,8 +669,8 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
         return isSliderWithDifferentValue || isRangeWithOneDifferentValue;
     }
 
-    private emitValueChanged() {
-        this.onValueChange.emit({ value: this.value });
+    private emitValueChanged(oldValue: number | IRangeSliderValue) {
+        this.onValueChange.emit({ oldValue, value: this.value });
     }
 }
 
