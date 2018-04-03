@@ -8,14 +8,15 @@ module.exports = function(lines, options, errors) {
     var whetherIssueIsMandatory = false,
         wheterMatchAnyIssueRef = false; 
 
+    
+    if (matchType(options.typesWithMandatoryIssue, lines[0])) {
+        whetherIssueIsMandatory = true;
+    }
+
     lines.forEach(function (line) {
         line = line.trim();
         if (line === "") {
             return;
-        }
-
-        if (matchType(options.typesWithMandatoryIssue, line)) {
-            whetherIssueIsMandatory = true;
         }
 
         if (ticket.test(line)) {
@@ -24,7 +25,7 @@ module.exports = function(lines, options, errors) {
         }
     });
 
-    if (!whetherIssueIsMandatory && !wheterMatchAnyIssueRef) {
+    if (whetherIssueIsMandatory && !wheterMatchAnyIssueRef) {
         errors.push(errorFactory(
             'The issue reference for (' + options.typesWithMandatoryIssue.join(', ') + ') types is mandatory!\n',
             'List any ISSUES CLOSED by this change. E.g: Closes #31, Closes #45'));
