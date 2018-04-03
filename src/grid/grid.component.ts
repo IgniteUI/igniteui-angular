@@ -176,6 +176,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public rowHeight = 50;
 
+    @Input()
+    public columnWidth: string = null;
+
     @Output()
     public onSelection = new EventEmitter<IGridCellEventArgs>();
 
@@ -742,6 +745,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         collection.forEach((column: IgxColumnComponent, index: number) => {
             column.gridID = this.id;
             column.index = index;
+            if (!column.width) {
+                column.width = this.columnWidth;
+            }
             if (cb) {
                 cb(column);
             }

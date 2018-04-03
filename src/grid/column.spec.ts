@@ -164,6 +164,18 @@ describe("IgxGrid - Column properties", () => {
         expect(grid.columnList.length).toEqual(2);
         expect(grid.columnList.last.field).toMatch("Name");
     });
+
+    it("should apply columnWidth on columns that don't have explicit width", () => {
+        const fix = TestBed.createComponent(ColumnCellFormatterComponent);
+        fix.componentInstance.instance.columnWidth = "200px";
+        fix.detectChanges();
+        const cols = fix.componentInstance.instance.columnList;
+        cols.forEach((item) => {
+            expect(item.width).toEqual("200px");
+        });
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        expect(headers[0].nativeElement.style["min-width"]).toEqual("200px");
+    });
 });
 
 @Component({
