@@ -16,11 +16,9 @@ export enum LabelPosition {
     AFTER = "after"
 }
 
-export class IgxCheckboxChange {
-    constructor(
-        private checked: boolean,
-        private source: IgxCheckboxComponent
-    ) { }
+export interface IChangeCheckboxEventArgs {
+    checked: boolean;
+    checkbox: IgxCheckboxComponent;
 }
 
 const noop = () => { };
@@ -67,7 +65,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     public ariaLabel: string | null = null;
 
     @Output()
-    readonly change: EventEmitter<IgxCheckboxChange> = new EventEmitter<IgxCheckboxChange>();
+    readonly change: EventEmitter<IChangeCheckboxEventArgs> = new EventEmitter<IChangeCheckboxEventArgs>();
 
     @HostBinding("class.igx-checkbox")
     public cssClass = "igx-checkbox";
@@ -92,7 +90,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
         this.indeterminate = false;
         this.checked = !this.checked;
 
-        this.change.emit(new IgxCheckboxChange(this.checked, this));
+        this.change.emit({ checked: this.checked, checkbox: this });
         this._onChangeCallback(this.checked);
     }
 
@@ -129,9 +127,6 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     }
 
     public writeValue(value) {
-        if (this.disabled) {
-            return;
-        }
         this._value = value;
         this.checked = !!this._value;
     }

@@ -59,28 +59,28 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
      * @type {EventEmitter}
      */
     @Output()
-    public onShowing = new EventEmitter();
+    public onShowing = new EventEmitter<IgxToastComponent>();
 
     /**
      * Event is shown when toast is shown
      * @type {EventEmitter}
      */
     @Output()
-    public onShown = new EventEmitter();
+    public onShown = new EventEmitter<IgxToastComponent>();
 
     /**
      * Event is thrown prior toast hidden
      * @type {EventEmitter}
      */
     @Output()
-    public onHiding = new EventEmitter();
+    public onHiding = new EventEmitter<IgxToastComponent>();
 
     /**
      * Event is thrown when toast hidden
      * @type {EventEmitter}
      */
     @Output()
-    public onHidden = new EventEmitter();
+    public onHidden = new EventEmitter<IgxToastComponent>();
 
     @Input()
     public role = "alert";

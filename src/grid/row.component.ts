@@ -30,7 +30,7 @@ import { IgxGridComponent } from "./grid.component";
 export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy {
 
     @Input()
-    public rowData: any[];
+    public rowData: any;
 
     @Input()
     public index: number;

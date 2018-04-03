@@ -84,7 +84,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     @Input() public cancelButtonLabel: string;
 
-    @Output() public onOpen = new EventEmitter();
+    @Output() public onOpen = new EventEmitter<IgxDatePickerComponent>();
     /**
      * Propagate clanedar events.
      */

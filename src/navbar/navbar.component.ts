@@ -64,7 +64,7 @@ export class IgxNavbarComponent {
      * provides reference to the IgxNavbar component as argument
      * @type {EventEmitter}
      */
-    @Output() public onAction = new EventEmitter();
+    @Output() public onAction = new EventEmitter<IgxNavbarComponent>();
 
     @Input()
     public titleId = `igx-navbar-${IgxNavbarComponent.NEXT_ID++}`;

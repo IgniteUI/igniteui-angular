@@ -22,6 +22,11 @@ import {
 import { IgxBadgeModule } from "../badge/badge.component";
 import { IgxIconModule } from "../icon";
 
+export interface ISelectTabEventArgs {
+    tab: IgxTabComponent;
+    panel: IgxTabPanelComponent;
+}
+
 @Directive({
     selector: "[igxTab]"
 })
@@ -53,8 +58,8 @@ export class IgxTabBarComponent implements AfterViewInit {
     @ViewChildren(forwardRef(() => IgxTabComponent)) public tabs: QueryList<IgxTabComponent>;
     @ContentChildren(forwardRef(() => IgxTabPanelComponent)) public panels: QueryList<IgxTabPanelComponent>;
 
-    @Output() public onTabSelected = new EventEmitter();
-    @Output() public onTabDeselected = new EventEmitter();
+    @Output() public onTabSelected = new EventEmitter<ISelectTabEventArgs>();
+    @Output() public onTabDeselected = new EventEmitter<ISelectTabEventArgs>();
 
     public selectedIndex = -1;
 

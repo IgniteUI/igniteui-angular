@@ -59,8 +59,8 @@ export class IgxButtonGroupComponent implements AfterViewInit {
         return this._isVertical ? ButtonGroupAlignment.vertical : ButtonGroupAlignment.horizontal;
     }
 
-    @Output() public onSelect = new EventEmitter();
-    @Output() public onUnselect = new EventEmitter();
+    @Output() public onSelect = new EventEmitter<IButtonGroupEventArgs>();
+    @Output() public onUnselect = new EventEmitter<IButtonGroupEventArgs>();
 
     public get isVertical(): boolean {
         return this._isVertical;
@@ -129,6 +129,11 @@ export class IgxButtonGroupComponent implements AfterViewInit {
             this.selectButton(i);
         }
     }
+}
+
+export interface IButtonGroupEventArgs {
+    button: IgxButtonGroupComponent;
+    index: number;
 }
 
 @NgModule({

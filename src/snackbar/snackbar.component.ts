@@ -8,6 +8,7 @@ import {
 } from "@angular/animations";
 import { CommonModule } from "@angular/common";
 import {
+    AnimationTransitionEvent,
     Component,
     EventEmitter,
     Input,
@@ -117,19 +118,19 @@ export class IgxSnackbarComponent {
      * provides reference to the IgxSnackbar component as argument
      * @type {EventEmitter}
      */
-    @Output() public onAction = new EventEmitter();
+    @Output() public onAction = new EventEmitter<IgxSnackbarComponent>();
 
     /**
      * The event that will be thrown when the snackbar animation starts
      * @type {EventEmitter<AnimationTransitionEvent>}
      */
-    @Output() public animationStarted = new EventEmitter<any>();
+    @Output() public animationStarted = new EventEmitter<AnimationTransitionEvent>();
 
     /**
      * The event that will be thrown when the snackbar animation ends
      * @type {EventEmitter<AnimationTransitionEvent>}
      */
-    @Output() public animationDone = new EventEmitter<any>();
+    @Output() public animationDone = new EventEmitter<AnimationTransitionEvent>();
 
     private timeoutId;
 
@@ -163,13 +164,13 @@ export class IgxSnackbarComponent {
         this.onAction.emit(this);
     }
 
-    public snackbarAnimationStarted(evt?: any): void {
+    public snackbarAnimationStarted(evt: AnimationTransitionEvent): void {
         if (evt.fromState === "void") {
             this.animationStarted.emit(evt);
         }
     }
 
-    public snackbarAnimationDone(evt?: any): void {
+    public snackbarAnimationDone(evt: AnimationTransitionEvent): void {
         if (evt.fromState === "show") {
             this.animationDone.emit(evt);
         }

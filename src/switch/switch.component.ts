@@ -41,7 +41,7 @@ export class IgxSwitchComponent implements ControlValueAccessor {
     @Input() public tabindex: number = null;
     @Input() public checked = false;
 
-    @Output() public change = new EventEmitter();
+    @Output() public change = new EventEmitter<Event>();
 
     @ViewChild("checkbox") public nativeCheckbox;
 

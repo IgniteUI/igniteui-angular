@@ -45,6 +45,12 @@ import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from
  * </igx-nav-drawer>
  * ```
  */
+
+export interface IChangePinEventArgs {
+    pinned: boolean;
+    event: Event;
+}
+
 @Component({
     providers: [HammerGesturesManager],
     selector: "igx-nav-drawer",
@@ -103,7 +109,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     @Input() public miniWidth = "60px";
 
     /** Pinned state change output for two-way binding  */
-    @Output() public pinChange = new EventEmitter();
+    @Output() public pinChange = new EventEmitter<IChangePinEventArgs>();
     /** Event fired as the Navigation Drawer is about to open. */
     @Output() public opening = new EventEmitter();
     /** Event fired when the Navigation Drawer has opened. */
@@ -328,7 +334,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
             return;
         }
         if (fireEvents) {
-            this.opening.emit("opening");
+            this.opening.emit();
         }
         this.isOpen = true;
 
@@ -355,7 +361,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
             return;
         }
         if (fireEvents) {
-            this.closing.emit("closing");
+            this.closing.emit();
         }
 
         this.isOpen = false;
@@ -475,10 +481,10 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
             windowWidth = this.getWindowWidth();
             if (!this.pin && windowWidth >= this.pinThreshold) {
                 this.pin = true;
-                this.pinChange.emit(true);
+                this.pinChange.emit({ pinned: true, event: evt });
             } else if (this.pin && windowWidth < this.pinThreshold) {
                 this.pin = false;
-                this.pinChange.emit(false);
+                this.pinChange.emit({ pinned: false, event: evt });
             }
         }
     }
@@ -621,11 +627,11 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
 
     private toggleOpenedEvent = (evt?, fireEvents?) => {
         this.elementRef.nativeElement.removeEventListener("transitionend", this.toggleOpenedEvent, false);
-        this.opened.emit("opened");
+        this.opened.emit();
     }
 
     private toggleClosedEvent = (evt?) => {
         this.elementRef.nativeElement.removeEventListener("transitionend", this.toggleClosedEvent, false);
-        this.closed.emit("closed");
+        this.closed.emit();
     }
 }
