@@ -28,6 +28,10 @@
     $row-hover-background: null,
     $row-border-color: null,
 
+    $pinned-border-width: null,
+    $pinned-border-style: null,
+    $pinned-border-color: null,
+
     $cell-selected-background: null,
     $cell-selected-text-color: null
 ) {
@@ -55,6 +59,10 @@
         $row-border-color: rgba(text-contrast($content-background), .08)
     }
 
+    @if not($pinned-border-color) and $content-background {
+        $pinned-border-color: rgba(text-contrast($content-background), .08)
+    }
+
     @return (
         header-background: $header-background,
         header-text-color: $header-text-color,
@@ -66,6 +74,10 @@
         row-selected-text-color: $row-selected-text-color,
         row-hover-background: $row-hover-background,
         row-border-color: $row-border-color,
+
+        pinned-border-width: $pinned-border-width,
+        pinned-border-style: $pinned-border-style,
+        pinned-border-color: $pinned-border-color,
 
         cell-selected-background: $cell-selected-background,
         cell-selected-text-color: $cell-selected-text-color
@@ -83,16 +95,20 @@
 /// @requires rem
 @mixin igx-grid($theme, $palette: $default-palette) {
     $default-theme: igx-grid-theme(
-        $header-background: igx-color($palette, 'grays', 100),
+        $header-background: hexrgba(igx-color($palette, 'grays', 100)),
         $header-text-color: igx-color($palette, 'grays', 600),
 
         $content-background: #fff,
         $content-text-color: igx-color($palette, 'grays', 800),
 
-        $row-selected-background: igx-color($palette, 'grays', 800),
+        $row-selected-background: hexrgba(igx-color($palette, 'grays', 800)),
         $row-selected-text-color: igx-contrast-color($palette, 'grays', 900),
-        $row-hover-background: igx-color($palette, 'grays', 100),
+        $row-hover-background: hexrgba(igx-color($palette, 'grays', 100)),
         $row-border-color: igx-color($palette, 'grays', 300),
+
+        $pinned-border-width: 2px,
+        $pinned-border-style: solid,
+        $pinned-border-color: igx-color($palette, 'grays', 400),
 
         $cell-selected-background: igx-color($palette, 'primary'),
         $cell-selected-text-color: igx-contrast-color($palette, 'primary')
@@ -126,8 +142,8 @@
 
     // Pinning
     $cell-pin: (
-        style: 1px solid,
-        color: igx-color($palette, 'grays', 400)
+        style: map-get($this, 'pinned-border-width') map-get($this, 'pinned-border-style'),
+        color: map-get($this, 'pinned-border-color')
     );
 
     %grid-display {
@@ -146,11 +162,6 @@
 
     %vhelper-display {
         &::-webkit-scrollbar {
-            width: 18px;
-            height: 18px;
-        }
-
-        &::-webkit-scrollbar-track {
             background: rgba(text-contrast(map-get($this, 'content-background')), .12);
 
             /* stylelint-disable selector-pseudo-class-no-unknown */
@@ -173,10 +184,6 @@
                 background: rgba(text-contrast(map-get($this, 'content-background')), .37);
             }
         }
-
-        &::-webkit-scrollbar-corner {
-            background: map-get($this, 'content-background');
-        }
     }
 
     %grid-caption {
@@ -198,10 +205,10 @@
         color: map-get($this, 'header-text-color');
 
         %grid-row {
-            background: transparent;
+            background: inherit;
 
             &:hover {
-                background: transparent;
+                background: inherit;
             }
         }
     }
@@ -217,11 +224,13 @@
     }
 
     %grid-display-container-thead {
+        width: 100%;
         overflow: visible;
     }
 
     %grid-display-container-tr {
         width: 100%;
+        overflow: visible;
     }
     /// @todo Sorting should not be
     /// forced to use Material Icons
@@ -267,11 +276,11 @@
         flex-flow: row nowrap;
         grid-row: 5;
         width: 100%;
-        background: igx-color($palette, 'grays', 100);
+        background: map-get($this, 'content-background');
     }
 
     %grid-scroll-start {
-        border-right: 1px solid igx-color($palette, 'grays', 400);
+        border-right: map-get($cell-pin, 'style') map-get($cell-pin, 'color');
     }
 
     %grid-scroll-main {
@@ -282,7 +291,7 @@
 
     %grid-row {
         display: flex;
-        background: inherit;
+        background-color: map-get($this, 'content-background');
         border-bottom: 1px solid map-get($this, 'row-border-color');
         outline-style: none;
 
@@ -291,7 +300,7 @@
         }
 
         &:hover {
-            background: map-get($this, 'row-hover-background');
+            background-color: map-get($this, 'row-hover-background');
         }
     }
 
@@ -300,7 +309,7 @@
         background-color: map-get($this, 'row-selected-background');
 
         &:hover {
-            background: map-get($this, 'row-selected-background');
+            background-color: map-get($this, 'row-selected-background');
         }
     }
 
@@ -329,10 +338,15 @@
         color: map-get($this, 'cell-selected-text-color');
         background-color: map-get($this, 'cell-selected-background') !important;
         border-bottom: 0;
-        z-index: 10;
     }
 
-    %grid-cell-pinned--start {
+    %grid-cell--pinned {
+        position: relative;
+        background-color: inherit;
+        z-index: 1;
+    }
+
+    %grid-cell--pinned-last {
         border-right: map-get($cell-pin, 'style') map-get($cell-pin, 'color') !important;
     }
 

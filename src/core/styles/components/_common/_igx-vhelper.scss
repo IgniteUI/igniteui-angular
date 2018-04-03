@@ -4,8 +4,9 @@
 }
 
 %vhelper--vertical {
+    position: absolute;
     width: 18px;
-    float: right;
+    right: 0;
 }
 
 %vhelper--horizontal {

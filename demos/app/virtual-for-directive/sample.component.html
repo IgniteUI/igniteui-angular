@@ -2,7 +2,7 @@
     <article class="sample-column">
             <span>Vertical Virtualization</span>
             <br/>
-            <div style='height:500px;'>
+            <div style='height:500px; position: relative; overflow: hidden'>
               <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='"500px"'
@@ -21,12 +21,14 @@
             <table> 
                 <tbody style='display:grid;'>
                 <tr style='width:500px; height:100px;'>
-                    <ng-template igxFor let-item [igxForOf]="data" #virtDirHorizontal
-                        [igxForScrollOrientation]="'horizontal'"
-                        [igxForContainerSize]='"500px"'
-                        let-rowIndex="index">
-                            <td  [style.width.px]='item.width' style='height:100px;'>{{rowIndex}} : {{item.text}}</td>
+                    <div style='position: relative; overflow: hidden'>
+                        <ng-template igxFor let-item [igxForOf]="data" #virtDirHorizontal
+                            [igxForScrollOrientation]="'horizontal'"
+                            [igxForContainerSize]='"500px"'
+                            let-rowIndex="index">
+                                <td  [style.width.px]='item.width' style='height:100px;'>{{rowIndex}} : {{item.text}}</td>
                         </ng-template>
+                    </div>
                 </tr>
                 </tbody>
             </table>
@@ -37,7 +39,7 @@
     <article class="sample-column">
             <span>Remote Virtualization</span>
             <br/>
-            <div style='height:500px;'>
+            <div style='height:500px; position: relative; overflow: hidden'>
               <ng-template igxFor let-item [igxForOf]="remoteData | async" (onChunkPreload)="chunkLoading($event)"
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='"500px"'

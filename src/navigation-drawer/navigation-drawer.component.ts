@@ -27,18 +27,23 @@ import { HammerGesturesManager } from "../core/touch";
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from "./navigation-drawer.directives";
 
 /**
- * Navigation Drawer component supports collapsible side navigation container.
- * Usage:
- * ```
- * <igx-nav-drawer id="ID" (event output bindings) [input bindings]>
- *  <ng-template igxDrawer>
- *   <!-- expanded template -->
- *  </ng-template>
+ * **Ignite UI for Angular Navigation Drawer**
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer.html)
+ * The Ignite UI Navigation Drawer is a collapsible side navigation container commonly used in combination with the Navbar.
+ *
+ * Example:
+ * ```html
+ * <igx-nav-drawer id="navigation" [isOpen]="true">
+ *   <ng-template igxDrawer>
+ *     <nav>
+ *       <span igxDrawerItem [isHeader]="true">Email</span>
+ *       <span igxDrawerItem igxRipple>Inbox</span>
+ *       <span igxDrawerItem igxRipple>Deleted</span>
+ *       <span igxDrawerItem igxRipple>Sent</span>
+ *     </nav>
+ *   </ng-template>
  * </igx-nav-drawer>
  * ```
- * Can also include an optional `<ng-template igxDrawerMini>`.
- * Items inside can be styled with `igxDrawerItem` directive.
- * ID required to register with provided `IgxNavigationService` allow directives to target the control from other template files.
  */
 
 export interface IChangePinEventArgs {
