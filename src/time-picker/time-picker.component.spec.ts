@@ -378,15 +378,21 @@ describe("IgxTimePicker", () => {
         const getMinuteColumn: any = dom.query(By.css(".igx-time-picker__minuteList"));
         const getAMPMColumn: any = dom.query(By.css(".igx-time-picker__ampmList"));
 
+        let event = new WheelEvent("wheel", {deltaX: 0, deltaY: 0});
+
         // focus hours
         getHourColumn.nativeElement.focus();
         tick();
-        getHourColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 0});
-        getHourColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: -100});
+        getHourColumn.triggerEventHandler("wheel", event);
+
+        event = new WheelEvent("wheel", {deltaX: 0, deltaY: -100});
+        getHourColumn.triggerEventHandler("wheel", event);
         fixture.detectChanges();
         // move the mouse wheel up and expect the selected element to be 2
         expect(getHourColumn.nativeElement.children[3].innerText).toBe("2");
-        getHourColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 100});
+
+        event = new WheelEvent("wheel", {deltaX: 0, deltaY: 100});
+        getHourColumn.triggerEventHandler("wheel", event);
         fixture.detectChanges();
         // move the mouse wheel down and expect the selected element to be 3 again
         expect(getHourColumn.nativeElement.children[3].innerText).toBe("3");
@@ -394,11 +400,14 @@ describe("IgxTimePicker", () => {
         // focus minutes
         getMinuteColumn.nativeElement.focus();
         tick();
-        getMinuteColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: -100});
+        event = new WheelEvent("wheel", {deltaX: 0, deltaY: -100});
+        getMinuteColumn.triggerEventHandler("wheel", event);
         fixture.detectChanges();
         // move the mouse wheel up and expect the selected element to be 23
         expect(getMinuteColumn.nativeElement.children[3].innerText).toBe("23");
-        getMinuteColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 100});
+
+        event = new WheelEvent("wheel", {deltaX: 0, deltaY: 100});
+        getMinuteColumn.triggerEventHandler("wheel", event);
         fixture.detectChanges();
         // move the mouse wheel down and expect the selected element to be 24 again
         expect(getMinuteColumn.nativeElement.children[3].innerText).toBe("24");
@@ -407,11 +416,15 @@ describe("IgxTimePicker", () => {
         getAMPMColumn.nativeElement.focus();
         tick();
         fixture.detectChanges();
-        getAMPMColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 100});
+
+        event = new WheelEvent("wheel", {deltaX: 0, deltaY: 100});
+        getAMPMColumn.triggerEventHandler("wheel", event);
         fixture.detectChanges();
         // move the mouse wheel down and expect the selected element to be PM
         expect(getAMPMColumn.nativeElement.children[3].innerText).toBe("PM");
-        getAMPMColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: -100});
+
+        event = new WheelEvent("wheel", {deltaX: 0, deltaY: -100});
+        getAMPMColumn.triggerEventHandler("wheel", event);
         fixture.detectChanges();
         // move the mouse wheel up and expect the selected element to be AM again
         expect(getAMPMColumn.nativeElement.children[3].innerText).toBe("AM");
@@ -431,15 +444,19 @@ describe("IgxTimePicker", () => {
         const getAMPMColumn: any = dom.query(By.css(".igx-time-picker__ampmList"));
 
         // panmove is in reverse direction of mouse wheel
+        const event = new WheelEvent("wheel", {deltaX: 0, deltaY: 0});
+        const eventUp = new WheelEvent("wheel", {deltaX: 0, deltaY: 100});
+        const eventDown = new WheelEvent("wheel", {deltaX: 0, deltaY: -100});
+
         // focus hours
         getHourColumn.nativeElement.focus();
         tick();
-        getHourColumn.triggerEventHandler("panmove", {deltaX: 0, deltaY: 0});
-        getHourColumn.triggerEventHandler("panmove", {deltaX: 0, deltaY: -100});
+        getHourColumn.triggerEventHandler("panmove", event);
+        getHourColumn.triggerEventHandler("panmove", eventDown);
         fixture.detectChanges();
         // swipe up and expect the selected element to be 4
         expect(getHourColumn.nativeElement.children[3].innerText).toBe("4");
-        getHourColumn.triggerEventHandler("panmove", {deltaX: 0, deltaY: 100});
+        getHourColumn.triggerEventHandler("panmove", eventUp);
         fixture.detectChanges();
         // swipe down and expect the selected element to be 3 again
         expect(getHourColumn.nativeElement.children[3].innerText).toBe("3");
@@ -447,11 +464,11 @@ describe("IgxTimePicker", () => {
         // focus minutes
         getMinuteColumn.nativeElement.focus();
         tick();
-        getMinuteColumn.triggerEventHandler("panmove", {deltaX: 0, deltaY: -100});
+        getMinuteColumn.triggerEventHandler("panmove", eventDown);
         fixture.detectChanges();
         // swipe up and expect the selected element to be 25
         expect(getMinuteColumn.nativeElement.children[3].innerText).toBe("25");
-        getMinuteColumn.triggerEventHandler("panmove", {deltaX: 0, deltaY: 100});
+        getMinuteColumn.triggerEventHandler("panmove", eventUp);
         fixture.detectChanges();
         // swipe down and expect the selected element to be 24 again
         expect(getMinuteColumn.nativeElement.children[3].innerText).toBe("24");
@@ -459,11 +476,11 @@ describe("IgxTimePicker", () => {
         // focus ampm
         getAMPMColumn.nativeElement.focus();
         tick();
-        getAMPMColumn.triggerEventHandler("panmove", {deltaX: 0, deltaY: -100});
+        getAMPMColumn.triggerEventHandler("panmove", eventDown);
         fixture.detectChanges();
         // swipe up and expect the selected element to be PM
         expect(getAMPMColumn.nativeElement.children[3].innerText).toBe("PM");
-        getAMPMColumn.triggerEventHandler("panmove", {deltaX: 0, deltaY: 100});
+        getAMPMColumn.triggerEventHandler("panmove", eventUp);
         fixture.detectChanges();
         // move the swipe up and expect the selected element to be AM again
         expect(getAMPMColumn.nativeElement.children[3].innerText).toBe("AM");
@@ -516,13 +533,16 @@ describe("IgxTimePicker", () => {
 
         getHourColumn.nativeElement.focus();
         spyOn(console, "error");
-        getHourColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: -100});
+
+        const event = new WheelEvent("wheel", {deltaX: 0, deltaY: -100});
+
+        getHourColumn.triggerEventHandler("wheel", event);
         fixture.detectChanges();
         getMinuteColumn.nativeElement.focus();
-        getMinuteColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: -100});
+        getMinuteColumn.triggerEventHandler("wheel", event);
         fixture.detectChanges();
         getAMPMColumn.nativeElement.focus();
-        getAMPMColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: -100});
+        getAMPMColumn.triggerEventHandler("wheel", event);
         fixture.detectChanges();
 
         // check console for error
@@ -554,15 +574,17 @@ describe("IgxTimePicker", () => {
         const getMinuteColumn: any = dom.query(By.css(".igx-time-picker__minuteList"));
         const getAMPMColumn: any = dom.query(By.css(".igx-time-picker__ampmList"));
 
+        const event = new WheelEvent("wheel", {deltaX: 0, deltaY: 100});
+
         // check scrolling each element
         getHourColumn.nativeElement.focus();
-        getHourColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 100});
+        getHourColumn.triggerEventHandler("wheel", event);
         fixture.detectChanges();
         getMinuteColumn.nativeElement.focus();
-        getMinuteColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 100});
+        getMinuteColumn.triggerEventHandler("wheel", event);
         fixture.detectChanges();
         getAMPMColumn.nativeElement.focus();
-        getAMPMColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 100});
+        getAMPMColumn.triggerEventHandler("wheel", event);
         fixture.detectChanges();
 
         const getTimeFromPopupHeader: any = fixture.debugElement.query(By.css(".igx-time-picker__header")).nativeElement.children;
@@ -572,13 +594,13 @@ describe("IgxTimePicker", () => {
 
         // check scrolling again up not to throw error
         spyOn(console, "error");
-        getHourColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 100});
+        getHourColumn.triggerEventHandler("wheel", event);
         fixture.detectChanges();
         getMinuteColumn.nativeElement.focus();
-        getMinuteColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 100});
+        getMinuteColumn.triggerEventHandler("wheel", event);
         fixture.detectChanges();
         getAMPMColumn.nativeElement.focus();
-        getAMPMColumn.triggerEventHandler("wheel", {deltaX: 0, deltaY: 100});
+        getAMPMColumn.triggerEventHandler("wheel", event);
         fixture.detectChanges();
         expect(console.error).not.toHaveBeenCalled();
     });
@@ -719,6 +741,7 @@ export class IgxTimePickerWithMInMaxTimeValueComponent {
 export class IgxTimePickerWithSpinLoopFalseValueComponent {
     public dateValue: Date = new Date(2017, 7, 7, 1, 0);
     public customFormat = "hh:mm tt";
+    public customitemsDelta: any = {hours: 2, minutes: 2};
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
 }
 
