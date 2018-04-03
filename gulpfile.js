@@ -52,7 +52,7 @@ gulp.task("make-packagejson", () => {
             "@angular/platform-browser-dynamic": "" + data.dependencies["@angular/platform-browser-dynamic"] + "",
             "rxjs": "" + data.dependencies["rxjs"] + "",
             "web-animations-js": "^2.3.1",
-            "jszip": "^3.1.5"
+            "jszip": "" + data.dependencies["jszip"] + ""
         }
         delete data.dependencies["@angular/animations"];
         delete data.dependencies["@angular/common"];
@@ -62,6 +62,7 @@ gulp.task("make-packagejson", () => {
         delete data.dependencies["@angular/platform-browser"];
         delete data.dependencies["@angular/platform-browser-dynamic"];
         delete data.dependencies["rxjs"];
+        delete data.dependencies["jszip"];
 
         fs.writeFile("dist/package.json", JSON.stringify(data, null, 4), "utf8", (err) => {
             if (err) throw err;
