@@ -4,7 +4,7 @@
         <!-- <article class="sample-column">
             <h4 class="sample-title">Three item tabbar</h4>
             <div class="tabbar-wrapper" #tabbarEl > -->
-                <!-- <igx-tabs>
+        <!-- <igx-tabs>
                     <igx-tab-panel icon="phone">
                         <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                             <igx-list-item [isHeader]="true">History</igx-list-item>
@@ -45,97 +45,97 @@
                         </div>
                     </igx-tab-panel>
                 </igx-tabs> -->
-            <!-- </div>
+        <!-- </div>
         </article> -->
 
-        <article class="sample-column" >
+        <article class="sample-column">
             <h4 class="sample-title">Three item tabbar</h4>
-            <igx-tabs>
-                    <igx-tabs-group label="Tab1">
-                        <div class="tab-content">
-                            <h3>Tab 1 Content</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula. Donec
-                                consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus. Vestibulum
-                                urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra lacus.
-                                </p>
-                            <h4>Tab 1 Content</h4>
-                            <p>
-                                Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id lacus
-                                a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula a
-                                arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula diam.
-                                Mauris vel quam at velit venenatis vulputate in quis nisl.
-                            </p>
-                        </div>
-                    </igx-tabs-group>
-                    <igx-tabs-group label="Tab2 Tab2 Tab2">
-                        <div class="tab-content">
-                            <h3>Tab 2 Content</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
-                                ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
-                                rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat. Vivamus risus ipsum, pharetra
-                                a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper nunc.
-                                Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam. Nullam elementum, libero
-                                vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. In hendrerit,
-                                sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo.
-                                Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.</p>
-                        </div>
-                    </igx-tabs-group>
-                    <!-- <igx-tabs-group label="Tab3 Tab3 Tab3 Tab3">
+            <igx-tabs tabsType="fixed">
+                <igx-tabs-group label="Tab1" icon="movies">
+                    <div class="tab-content">
+                        <h3>Tab 1 Content</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula. Donec
+                            consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus. Vestibulum urna
+                            arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra lacus.
+                        </p>
+                        <h4>Tab 1 Content</h4>
+                        <p>
+                            Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id lacus a magna euismod volutpat id
+                            in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula a arcu sollicitudin finibus. Vivamus
+                            id lorem pulvinar, accumsan justo vitae, vehicula diam. Mauris vel quam at velit venenatis vulputate
+                            in quis nisl.
+                        </p>
+                    </div>
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab2 Tab2 Tab2 tab">
+                    <div class="tab-content">
+                        <h3>Tab 2 Content</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent ante
+                            lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus rhoncus
+                            quis non ex. Cras ac nulla sed arcu finibus volutpat. Vivamus risus ipsum, pharetra a augue nec,
+                            euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper nunc. Phasellus ultrices
+                            tincidunt imperdiet. Nullam vulputate mauris diam. Nullam elementum, libero vel varius fermentum,
+                            lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. In hendrerit, sapien ac mollis
+                            iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo. Curabitur consequat
+                            sit amet nulla at consequat. Duis volutpat tristique luctus.</p>
+                    </div>
+                </igx-tabs-group>
+                <!-- <igx-tabs-group label="Tab3 Tab3 Tab3 Tab3">
                         <ng-template igxTab>
                             <igx-avatar initials="T1">
                             </igx-avatar>
                             </ng-template>
                     </igx-tabs-group> -->
-                    <igx-tabs-group label="Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4">
-                        <div class="tab-content">
-                            <router-outlet name="tabPanelOutlet"></router-outlet>
-                        </div>
-                    </igx-tabs-group>
-                    <igx-tabs-group label="Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5">
-                        <div class="tab-content">
-                            <router-outlet name="tabPanelOutlet"></router-outlet>
-                        </div>
-                    </igx-tabs-group>
-                    <igx-tabs-group label="Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6">
-                        <div class="tab-content">
-                            <router-outlet name="tabPanelOutlet"></router-outlet>
-                        </div>
-                    </igx-tabs-group>
-                    <igx-tabs-group label="Tab7 Tab7 Tab7 Tab7 Tab7">
-
-                    </igx-tabs-group>
-                    <igx-tabs-group label="Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8">
-                        <div class="tab-content">
-                            <router-outlet name="tabPanelOutlet"></router-outlet>
-                        </div>
-                    </igx-tabs-group>
-                    <igx-tabs-group label="Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9">
-                        <div class="tab-content">
-                            <router-outlet name="tabPanelOutlet"></router-outlet>
-                        </div>
-                    </igx-tabs-group>
-                    <igx-tabs-group label="Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10">
-                        <div class="tab-content">
-                            <router-outlet name="tabPanelOutlet"></router-outlet>
-                        </div>
-                    </igx-tabs-group>
-                    <igx-tabs-group label="Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 ">
-                        <div class="tab-content">
-                            <router-outlet name="tabPanelOutlet"></router-outlet>
-                        </div>
-                    </igx-tabs-group>
-                    <igx-tabs-group label="Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12">
-                        <div class="tab-content">
-                            <router-outlet name="tabPanelOutlet"></router-outlet>
-                        </div>
-                    </igx-tabs-group>
-                </igx-tabs>
+                <igx-tabs-group label="Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4">
+                    <div class="tab-content">
+                        Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4
+                    </div>
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5">
+                    <div class="tab-content">
+                        Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5
+                    </div>
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6">
+                    <div class="tab-content">
+                        Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6"
+                    </div>
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab7 Tab7 Tab7 Tab7 Tab7">
+                    Tab7 Tab7 Tab7 Tab7 Tab7
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8">
+                    <div class="tab-content">
+                        Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8
+                    </div>
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9">
+                    <div class="tab-content">
+                        Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9
+                    </div>
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10">
+                    <div class="tab-content">
+                        Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10
+                    </div>
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 ">
+                    <div class="tab-content">
+                        Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11
+                    </div>
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12">
+                    <div class="tab-content">
+                        Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12
+                    </div>
+                </igx-tabs-group>
+            </igx-tabs>
         </article>
 
         <!-- <article class="sample-column">
             <h4 class="sample-title">Three item tabbar</h4>
             <div class="tabbar-wrapper" #tabbarEl> -->
-                <!-- <igx-tabs #tabbar (onTabSelected)="route($event)" >
+        <!-- <igx-tabs #tabbar (onTabSelected)="route($event)" >
 
                     <igx-tab-panel label="Movies" icon="local_movies">
                         <div class="tab-content">
@@ -171,7 +171,7 @@
                     </igx-tab-panel>
 
                 </igx-tabs> -->
-            <!-- </div>
+        <!-- </div>
         </article>
     </div> -->
     </div>

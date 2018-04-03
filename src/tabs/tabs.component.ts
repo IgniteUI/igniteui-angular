@@ -69,8 +69,16 @@ export class IgxTabsComponent implements AfterViewInit {
     @ViewChild("viewPort")
     public viewPort: ElementRef;
 
-    @HostBinding("class.igx-tabs")
-    public cssClass = "igx-tabs";
+    // @HostBinding("class.igx-tabs")
+    // public cssClass = "igx-tabs";
+
+    @HostBinding("attr.class")
+    public get class() {
+        if (TabsType[this.tabsType.toUpperCase()] === TabsType.FIXED) {
+            return `igx-tabs--${this.tabsType}`;
+        }
+        return `igx-tabs`;
+    }
 
     public selectedIndex = -1;
     public isScrollable = false;
