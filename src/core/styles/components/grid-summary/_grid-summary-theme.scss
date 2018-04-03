@@ -23,6 +23,8 @@
     $label-color: null,
     $result-color: null,
     $border-color: null,
+    $pinned-border-width: null,
+    $pinned-border-style: null,
     $pinned-border-color: null,
     $inactive-color: null,
     $label-hover-color: null
@@ -32,6 +34,8 @@
         label-color: $label-color,
         result-color: $result-color,
         border-color: $border-color,
+        pinned-border-width: $pinned-border-width,
+        pinned-border-style: $pinned-border-style,
         pinned-border-color: $pinned-border-color,
         inactive-color: $inactive-color,
         label-hover-color: $label-hover-color
@@ -50,11 +54,18 @@
         $label-hover-color: igx-color($palette, 'primary', 700),
         $result-color: igx-color($palette, 'grays', 800),
         $border-color: igx-color($palette, 'grays', 400),
-        $pinned-border-color: igx-color($palette, 'grays', 600),
+        $pinned-border-width: 2px,
+        $pinned-border-style: solid,
+        $pinned-border-color: igx-color($palette, 'grays', 400),
         $inactive-color: igx-color($palette, 'grays', 400)
     );
 
     $this: extend($default-theme, $theme);
+
+    $cell-pin: (
+        style: map-get($this, 'pinned-border-width') map-get($this, 'pinned-border-style'),
+        color: map-get($this, 'pinned-border-color')
+    );
 
     %igx-grid-summary {
         display: flex;
@@ -67,7 +78,13 @@
     }
 
     %igx-grid-summary--pinned {
-        border-right: 1px dotted map-get($this, '$pinned-border-color');
+        position: relative;
+        background-color: inherit;
+        z-index: 1;
+    }
+
+    %igx-grid-summary--pinned-last {
+        border-right: map-get($cell-pin, 'style') map-get($cell-pin, 'color');
     }
 
     %igx-grid-summary--empty {

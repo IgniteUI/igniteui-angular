@@ -15,7 +15,7 @@ import { IgxGridModule } from "./index";
 describe("IgxGrid - Column Pinning ", () => {
     const COLUMN_HEADER_CLASS = ".igx-grid__th";
     const CELL_CSS_CLASS = ".igx-grid__td";
-    const FIXED_CELL_CSS = "igx-grid__th--pinned-start";
+    const FIXED_CELL_CSS = "igx-grid__th--pinned";
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
