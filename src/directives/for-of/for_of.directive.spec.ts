@@ -804,7 +804,7 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
     }
 
     public testCalculateChunkSize(): number {
-        return super._calculateChunkSize();
+        return super._calcChunkSize();
     }
 
     public testInitHCache(cols: any[]): number {
