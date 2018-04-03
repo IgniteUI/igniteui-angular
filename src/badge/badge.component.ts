@@ -9,7 +9,28 @@ export enum Type {
     WARNING = "warning",
     ERROR = "error"
 }
-
+/**
+ * **Ignite UI for Angular Badge** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/badge.html)
+ * The Ignite UI Badge is used to decorate avatars, navigation menus, or other components in the
+ * application when visual notification is needed. They are usually designed as icons with a predefined
+ * style to communicate information, success, warnings, or errors.
+ *
+ * Example:
+ * ```html
+ * <igx-avatar icon="person" roundShape="true" size="small">
+ *   <igx-badge icon="check" type="success" class="badge-style">
+ *   </igx-badge>
+ * </igx-avatar>
+ * ```
+ * The `badge-style` class is used to position the badge:
+ * ```css
+ * .badge-style {
+ *   position: absolute;
+ *   bottom: -6px;
+ *   right:-50px;
+ * }
+ * ```
+ */
 @Component({
     selector: "igx-badge",
     templateUrl: "badge.component.html"
