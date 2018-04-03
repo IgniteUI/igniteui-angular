@@ -156,16 +156,16 @@ describe("Navigation Drawer", () => {
                 fixture.debugElement.children[0].nativeElement.dispatchEvent(new Event("transitionend"));
             })
             .then((value) => {
-                expect(drawer.opening.emit).toHaveBeenCalledWith("opening");
-                expect(drawer.opened.emit).toHaveBeenCalledWith("opened");
+                expect(drawer.opening.emit).toHaveBeenCalled();
+                expect(drawer.opened.emit).toHaveBeenCalled();
 
                 const re = drawer.toggle(true);
                 fixture.detectChanges();
                 fixture.debugElement.children[0].nativeElement.dispatchEvent(new Event("transitionend"));
             })
             .then((value) => {
-                    expect(drawer.closing.emit).toHaveBeenCalledWith("closing");
-                    expect(drawer.closed.emit).toHaveBeenCalledWith("closed");
+                    expect(drawer.closing.emit).toHaveBeenCalled();
+                    expect(drawer.closed.emit).toHaveBeenCalled();
                     // resolver();
             });
          }));

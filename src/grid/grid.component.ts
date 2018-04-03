@@ -42,6 +42,46 @@ import { IgxGridRowComponent } from "./row.component";
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
 
+export interface IGridCellEventArgs {
+    cell: IgxGridCellComponent;
+    event: Event;
+}
+
+export interface IGridEditEventArgs {
+    row: IgxGridRowComponent;
+    cell: IgxGridCellComponent;
+    currentValue: any;
+    newValue: any;
+}
+
+export interface IPinColumnEventArgs {
+    column: IgxColumnComponent;
+    insertAtIndex: number;
+}
+
+export interface IPageEventArgs {
+    previous: number;
+    current: number;
+}
+
+export interface IRowDataEventArgs {
+    data: any;
+}
+
+/**
+ * **Ignite UI for Angular Grid** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
+ * The Ignite UI Grid is used for presenting and manipulating tabular data in the simplest way possible.  Once data
+ * has been bound, it can be manipulated through filtering, sorting & editing operations.
+ *
+ * Example:
+ * ```html
+ * <igx-grid [data]="employeeData" autoGenerate="false">
+ *   <igx-column field="first" header="First Name"></igx-column>
+ *   <igx-column field="last" header="Last Name"></igx-column>
+ *   <igx-column field="role" header="Role"></igx-column>
+ * </igx-grid>
+ * ```
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
@@ -134,32 +174,42 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public rowHeight = 50;
 
-    @Output()
-    public onSelection = new EventEmitter<any>();
+    @Input()
+    public columnWidth: string = null;
 
     @Output()
-    public onColumnPinning = new EventEmitter<any>();
+    public onSelection = new EventEmitter<IGridCellEventArgs>();
 
     @Output()
-    public onEditDone = new EventEmitter<any>();
+    public onColumnPinning = new EventEmitter<IPinColumnEventArgs>();
+
+    /**
+     * An @Output property emitting an event when cell or row editing has been performed in the grid.
+     * On cell editing, both cell and row objects in the event arguments are defined for the corresponding
+     * cell that is being edited and the row the cell belongs to.
+     * On row editing, only the row object is defined, for the row that is being edited.
+     * The cell object is null on row editing.
+     */
+    @Output()
+    public onEditDone = new EventEmitter<IGridEditEventArgs>();
 
     @Output()
-    public onColumnInit = new EventEmitter<any>();
+    public onColumnInit = new EventEmitter<IgxColumnComponent>();
 
     @Output()
-    public onSortingDone = new EventEmitter<any>();
+    public onSortingDone = new EventEmitter<ISortingExpression>();
 
     @Output()
-    public onFilteringDone = new EventEmitter<any>();
+    public onFilteringDone = new EventEmitter<IFilteringExpression>();
 
     @Output()
-    public onPagingDone = new EventEmitter<any>();
+    public onPagingDone = new EventEmitter<IPageEventArgs>();
 
     @Output()
-    public onRowAdded = new EventEmitter<any>();
+    public onRowAdded = new EventEmitter<IRowDataEventArgs>();
 
     @Output()
-    public onRowDeleted = new EventEmitter<any>();
+    public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
 
     @Output()
     public onColumnResized = new EventEmitter<{column: any, prevWidth: string, newWidth: string}>();
@@ -268,6 +318,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             col.index = idx;
             col.gridID = this.id;
             this.onColumnInit.emit(col);
+            if (!col.width) {
+                col.width = this.columnWidth;
+            }
         });
 
         this._columns = this.columnList.toArray();
@@ -403,7 +456,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (row) {
             const index = this.data.indexOf(row.rowData);
             this.data.splice(index, 1);
-            this.onRowDeleted.emit({ row });
+            this.onRowDeleted.emit({ data: row.rowData });
             this._pipeTrigger++;
             this.cdr.markForCheck();
         }
