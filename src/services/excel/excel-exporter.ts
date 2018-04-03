@@ -37,16 +37,16 @@ export class IgxExcelExporterService extends IgxBaseExporter {
     @Output()
     public onExportEnded = new EventEmitter<ExcelExportEndedEventArgs>();
 
-    private static PopulateFolder(folder: IExcelFolder, zip: JSZip, worksheetData: WorksheetData): any {
-        for (const childFolder of folder.ChildFolders(worksheetData)) {
+    private static populateFolder(folder: IExcelFolder, zip: JSZip, worksheetData: WorksheetData): any {
+        for (const childFolder of folder.childFolders(worksheetData)) {
             const folderIntance = ExcelElementsFactory.getExcelFolder(childFolder);
             const zipFolder = zip.folder(folderIntance.folderName);
-            IgxExcelExporterService.PopulateFolder(folderIntance, zipFolder, worksheetData);
+            IgxExcelExporterService.populateFolder(folderIntance, zipFolder, worksheetData);
         }
 
-        for (const childFile of folder.ChildFiles(worksheetData)) {
+        for (const childFile of folder.childFiles(worksheetData)) {
             const fileInstance = ExcelElementsFactory.getExcelFile(childFile);
-            fileInstance.WriteElement(zip, worksheetData);
+            fileInstance.writeElement(zip, worksheetData);
         }
     }
 
@@ -55,7 +55,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         this._xlsx = new JSZip();
 
         const rootFolder = ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder);
-        IgxExcelExporterService.PopulateFolder(rootFolder, this._xlsx, worksheetData);
+        IgxExcelExporterService.populateFolder(rootFolder, this._xlsx, worksheetData);
 
         this._xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((result) => {
             this.saveFile(result, options.fileName);

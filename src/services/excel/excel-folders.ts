@@ -11,11 +11,11 @@ export class RootExcelFolder implements IExcelFolder {
         return  "";
     }
 
-    ChildFiles(data: WorksheetData) {
+    childFiles(data: WorksheetData) {
         return [ExcelFileTypes.ContentTypesFile];
     }
 
-    ChildFolders(data: WorksheetData) {
+    childFolders(data: WorksheetData) {
         return [
             ExcelFolderTypes.RootRelsExcelFolder,
             ExcelFolderTypes.DocPropsExcelFolder,
@@ -29,11 +29,11 @@ export class RootRelsExcelFolder implements IExcelFolder {
         return  "_rels";
     }
 
-    ChildFiles(data: WorksheetData) {
+    childFiles(data: WorksheetData) {
         return [ExcelFileTypes.RootRelsFile];
     }
 
-    ChildFolders(data: WorksheetData) {
+    childFolders(data: WorksheetData) {
         return [];
     }
 }
@@ -43,14 +43,14 @@ export class DocPropsExcelFolder implements IExcelFolder {
         return  "docProps";
     }
 
-    ChildFiles(data: WorksheetData) {
+    childFiles(data: WorksheetData) {
         return [
             ExcelFileTypes.AppFile,
             ExcelFileTypes.CoreFile
         ];
     }
 
-    ChildFolders(data: WorksheetData) {
+    childFolders(data: WorksheetData) {
         return [];
     }
 }
@@ -60,7 +60,7 @@ export class XLExcelFolder implements IExcelFolder {
         return  "xl";
     }
 
-    ChildFiles(data: WorksheetData) {
+    childFiles(data: WorksheetData) {
         const retVal = [
             ExcelFileTypes.StyleFile,
             ExcelFileTypes.WorkbookFile
@@ -73,7 +73,7 @@ export class XLExcelFolder implements IExcelFolder {
         return retVal;
     }
 
-    ChildFolders(data: WorksheetData) {
+    childFolders(data: WorksheetData) {
         const retVal = [
             ExcelFolderTypes.XLRelsExcelFolder,
             ExcelFolderTypes.ThemeExcelFolder,
@@ -93,11 +93,11 @@ export class XLRelsExcelFolder implements IExcelFolder {
         return  "_rels";
     }
 
-    ChildFiles(data: WorksheetData) {
+    childFiles(data: WorksheetData) {
         return [ExcelFileTypes.WorkbookRelsFile];
     }
 
-    ChildFolders(data: WorksheetData) {
+    childFolders(data: WorksheetData) {
         return [];
     }
 }
@@ -107,11 +107,11 @@ export class ThemeExcelFolder implements IExcelFolder {
         return  "theme";
     }
 
-    ChildFiles(data: WorksheetData) {
+    childFiles(data: WorksheetData) {
         return [ExcelFileTypes.ThemeFile];
     }
 
-    ChildFolders(data: WorksheetData) {
+    childFolders(data: WorksheetData) {
         return [];
     }
 }
@@ -121,11 +121,11 @@ export class WorksheetsExcelFolder implements IExcelFolder {
         return  "worksheets";
     }
 
-    ChildFiles(data: WorksheetData) {
+    childFiles(data: WorksheetData) {
         return [ExcelFileTypes.WorksheetFile];
     }
 
-    ChildFolders(data: WorksheetData) {
+    childFolders(data: WorksheetData) {
         return data.isEmpty ? [] : [ExcelFolderTypes.WorksheetsRelsExcelFolder];
     }
 }
@@ -135,11 +135,11 @@ export class TablesExcelFolder implements IExcelFolder {
         return "tables";
     }
 
-    ChildFiles(data: WorksheetData) {
+    childFiles(data: WorksheetData) {
         return [ExcelFileTypes.TablesFile];
     }
 
-    ChildFolders(data: WorksheetData) {
+    childFolders(data: WorksheetData) {
         return [];
     }
 }
@@ -149,11 +149,11 @@ export class WorksheetsRelsExcelFolder implements IExcelFolder {
         return "_rels";
     }
 
-    ChildFiles(data: WorksheetData) {
+    childFiles(data: WorksheetData) {
         return [ExcelFileTypes.WorksheetRelsFile];
     }
 
-    ChildFolders(data: WorksheetData) {
+    childFolders(data: WorksheetData) {
         return [];
     }
 }

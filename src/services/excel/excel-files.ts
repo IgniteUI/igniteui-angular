@@ -5,32 +5,32 @@ import { WorksheetData } from "./worksheet-data";
 import * as JSZip from "jszip/dist/jszip";
 
 export class RootRelsFile implements IExcelFile {
-    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file(".rels", ExcelStrings.getRels());
     }
 }
 
 export class AppFile implements IExcelFile {
-    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file("app.xml", ExcelStrings.getApp());
     }
 }
 
 export class CoreFile implements IExcelFile {
-    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file("core.xml", ExcelStrings.getCore());
     }
 }
 
 export class WorkbookRelsFile implements IExcelFile {
-    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         const hasSharedStrings = worksheetData.isEmpty === false;
         folder.file("workbook.xml.rels", ExcelStrings.getWorkbookRels(hasSharedStrings));
     }
 }
 
 export class ThemeFile implements IExcelFile {
-    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file("theme1.xml", ExcelStrings.getTheme());
     }
 }
@@ -38,7 +38,7 @@ export class ThemeFile implements IExcelFile {
 export class WorksheetFile implements IExcelFile {
     private static MIN_WIDTH = 8.34;
 
-    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         const sheetData = [];
         const cols = [];
         let dimension: string;
@@ -108,25 +108,25 @@ export class WorksheetFile implements IExcelFile {
 }
 
 export class StyleFile implements IExcelFile {
-    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file("styles.xml", ExcelStrings.getStyles());
     }
 }
 
 export class WorkbookFile implements IExcelFile {
-    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file("workbook.xml", ExcelStrings.getWorkbook());
     }
 }
 
 export class ContentTypesFile implements IExcelFile {
-    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file("[Content_Types].xml", ExcelStrings.getContentTypesXML(!worksheetData.isEmpty));
     }
 }
 
 export class SharedStringsFile implements IExcelFile {
-    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         const dict = worksheetData.dataDictionary;
         const sortedValues = dict.getKeys();
         const sharedStrings = new Array<string>(sortedValues.length);
@@ -144,7 +144,7 @@ export class SharedStringsFile implements IExcelFile {
 }
 
 export class TablesFile implements IExcelFile {
-    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         const columnCount = worksheetData.columnCount;
         const dimension = "A1:" + ExcelStrings.getExcelColumn(columnCount - 1) + worksheetData.rowCount;
         const values = worksheetData.keys;
@@ -162,7 +162,7 @@ export class TablesFile implements IExcelFile {
 }
 
 export class WorksheetRelsFile implements IExcelFile {
-    public WriteElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file("sheet1.xml.rels", ExcelStrings.getWorksheetRels());
     }
 }

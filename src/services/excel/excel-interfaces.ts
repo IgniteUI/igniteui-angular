@@ -8,12 +8,12 @@ import {
 import { WorksheetData } from "./worksheet-data";
 
 export interface IExcelFile {
-    WriteElement(folder: JSZip, data: WorksheetData): void;
+    writeElement(folder: JSZip, data: WorksheetData): void;
 }
 
 export interface IExcelFolder {
     folderName: string;
 
-    ChildFiles(data: WorksheetData): ExcelFileTypes[];
-    ChildFolders(data: WorksheetData): ExcelFolderTypes[];
+    childFiles(data: WorksheetData): ExcelFileTypes[];
+    childFolders(data: WorksheetData): ExcelFolderTypes[];
 }
