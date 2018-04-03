@@ -18,10 +18,36 @@ import {
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 
 import { IgxListItemComponent } from "./list-item.component";
-import { IgxEmptyListTemplateDirective } from "./list.common";
+import { IgxEmptyListTemplateDirective, IgxListPanState } from "./list.common";
 
-// ====================== LIST ================================
-// The `<igx-list>` directive is a list container for items and headers
+export interface IPanStateChangeEventArgs {
+    oldState: IgxListPanState;
+    newState: IgxListPanState;
+    item: IgxListItemComponent;
+}
+
+export interface IListItemClickEventArgs {
+    item: IgxListItemComponent;
+    event: Event;
+}
+
+/**
+ * **Ignite UI for Angular List**
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list.html)
+ * The Ignite UI List displays rows of items and supports one or more header items as well as searchand filtering of list items.
+ * Each list item is completely templateable and will support any valid HTML or Angular component.
+ *
+ * Example:
+ * ```html
+ * <igx-list>
+ *   <igx-list-item isHeader="true">Contacts</igx-list-item>
+ *   <igx-list-item *ngFor="let contact of contacts">
+ *     <span class="name">{{ contact.name }}</span>
+ *     <span class="phone">{{ contact.phone }}</span>
+ *   </igx-list-item>
+ * </igx-list>
+ * ```
+ */
 @Component({
     selector: "igx-list",
     templateUrl: "list.component.html"
@@ -46,13 +72,13 @@ export class IgxListComponent {
     public allowRightPanning = false;
 
     @Output()
-    public onLeftPan = new EventEmitter();
+    public onLeftPan = new EventEmitter<IgxListItemComponent>();
     @Output()
-    public onRightPan = new EventEmitter();
+    public onRightPan = new EventEmitter<IgxListItemComponent>();
     @Output()
-    public onPanStateChange = new EventEmitter();
+    public onPanStateChange = new EventEmitter<IPanStateChangeEventArgs>();
     @Output()
-    public onItemClicked = new EventEmitter();
+    public onItemClicked = new EventEmitter<IListItemClickEventArgs>();
 
     @HostBinding("attr.role")
     public get role() {

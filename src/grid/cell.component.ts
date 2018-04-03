@@ -1,4 +1,4 @@
-import {
+﻿import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -18,6 +18,7 @@ import { DataType } from "../data-operations/data-util";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
 import { autoWire, IGridBus } from "./grid.common";
+import { IGridCellEventArgs, IGridEditEventArgs } from "./grid.component";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -79,6 +80,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
 
     get visibleColumnIndex(): number {
         return this.column.visibleIndex;
+    }
+
+    get unpinnedColumnIndex(): number {
+        return this.grid.unpinnedColumns.indexOf(this.column);
     }
 
     private get _cellID() {
@@ -153,11 +158,12 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         return this.column.dataType === DataType.Number;
     }
 
+    @HostBinding("class.igx-grid__th--pinned")
     get isPinned() {
         return this.column.pinned;
     }
 
-    @HostBinding("class.igx-grid__th--pinned-start")
+    @HostBinding("class.igx-grid__th--pinned-last")
     get isLastPinned() {
         const pinnedCols = this.grid.pinnedColumns;
         if (pinnedCols.length === 0) {
@@ -199,8 +205,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
 
     @autoWire(true)
     public update(val: any) {
-        this.grid.onEditDone.emit({cell: this, currentValue: this.value, newValue: val });
-        this.value = val;
+        const args: IGridEditEventArgs = { row: this.row, cell: this, currentValue: this.value, newValue: val };
+        this.grid.onEditDone.emit(args);
+        this.value = args.newValue;
         this.gridAPI.update(this.gridID, this);
     }
 
@@ -222,8 +229,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
             this.grid.cellInEditMode.inEditMode = false;
             this.grid.cellInEditMode = null;
         }
-        this.grid.onSelection.emit(this);
-        this.syncRows();
+        const args: IGridCellEventArgs = {
+            cell: this,
+            event
+        };
+        this.grid.onSelection.emit(args);
     }
 
     @HostListener("blur", ["$event"])
@@ -243,18 +253,40 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         const visibleColumnIndex = this.visibleColumnIndex - 1;
 
         if (visibleColumnIndex >= 0) {
-
             const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, visibleColumnIndex);
+            const targetUnpinnedIndex = this.unpinnedColumnIndex - 1;
+            const horVirtScroll = this.grid.parentVirtDir.getHorizontalScroll();
+            let bVirtSubscribe = true;
+
+            if (!horVirtScroll && !target) {
+                return;
+            }
 
             if (target) {
-                target.nativeElement.focus();
-                this.syncRows();
+                const containerLeftOffset = parseInt(this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
+                const targetEndLeftOffset = target.nativeElement.offsetLeft + containerLeftOffset;
+                if (!target.isPinned && targetEndLeftOffset < 0) {
+                    // Target cell is not pinned and is partialy visible (left part is cut). Scroll so it is fully visible and then focus.
+                    horVirtScroll.scrollLeft = this.row.virtDirRow.getColumnScrollLeft(targetUnpinnedIndex);
+                } else {
+                    // Target cell is fully visible. Just focus it.
+                    target.nativeElement.focus();
+                    bVirtSubscribe = false;
+                }
             } else {
                 if (!this.column.pinned) {
                     this.row.virtDirRow.scrollPrev();
                 } else {
                     this.row.virtDirRow.scrollTo(this.grid.unpinnedColumns.length - 1);
                 }
+            }
+
+            /**
+             * Determine if we need to subscribe, otherwise if we use navigation and don't scroll, it will bind n-times times.
+             * If we scroll the virtual container above, we need to subscribe to onChunkLoad.
+             * We do this because it takes time to detect change in scrollLeft of an element
+             */
+            if (bVirtSubscribe) {
                 this.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
                     next: (e: any) => {
                         this.row.cdr.detectChanges();
@@ -264,9 +296,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
                         } else {
                             this.row.cells.first.nativeElement.focus();
                         }
-                        setTimeout(() => {
-                            this.syncRows();
-                        });
                     }
                 });
             }
@@ -276,10 +305,30 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostListener("keydown.control.arrowleft")
     public onKeydownCtrlArrowLeft() {
         const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.row.cells.first.visibleColumnIndex);
-
+        const targetIndex = target.visibleColumnIndex;
         if (target) {
-            target.nativeElement.focus();
-            this.syncRows();
+            const containerLeftOffset = parseInt(this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
+            const targetEndLeftOffset = target.nativeElement.offsetLeft + containerLeftOffset;
+
+            if (!target.isPinned && targetEndLeftOffset < 0) {
+                // Target cell is not pinned and is partialy visible (left part is cut). Scroll so it is fully visible and then focus.
+                const horVirtScroll = this.grid.parentVirtDir.getHorizontalScroll();
+                horVirtScroll.scrollLeft = this.row.virtDirRow.getColumnScrollLeft(target.unpinnedColumnIndex);
+
+                this.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
+                    next: (e: any) => {
+                        this.row.cdr.detectChanges();
+                        const currTarget = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, targetIndex);
+                        if (currTarget) {
+                            currTarget.nativeElement.focus();
+                        } else {
+                            this.row.cells.first.nativeElement.focus();
+                        }
+                    }
+                });
+            } else {
+                target.nativeElement.focus();
+            }
         }
     }
 
@@ -289,19 +338,58 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         const visibleColumns = this.grid.visibleColumns;
         const rowIndex = this.rowIndex;
         const visibleColumnIndex = this.visibleColumnIndex + 1;
-        if (visibleColumnIndex > -1 && visibleColumnIndex <= visibleColumns.length - 1) {
 
+        if (visibleColumnIndex > -1 && visibleColumnIndex <= visibleColumns.length - 1) {
             const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, visibleColumnIndex);
+            const targetUnpinnedIndex = this.unpinnedColumnIndex + 1;
+            const horVirtScroll = this.grid.parentVirtDir.getHorizontalScroll();
+            const verticalVirtScroll = this.grid.verticalScrollContainer.getVerticalScroll();
+            const verticalVirtScrollWidth = verticalVirtScroll &&
+                verticalVirtScroll.offsetHeight < verticalVirtScroll.children[0].offsetHeight ?
+                this.grid.verticalScrollContainer.getVerticalScroll().offsetWidth :
+                0;
+
+            // We take into consideration the vertical scroll width sinse it is not calculated in the container inside the row
+            const virtContainerSize = parseInt(this.row.virtDirRow.igxForContainerSize, 10) - verticalVirtScrollWidth;
+            let bVirtSubscribe = true;
+
+            if (!horVirtScroll && !target) {
+                return;
+            }
 
             if (target) {
-                target.nativeElement.focus();
-                this.syncRows();
-            } else {
-                if (!this.column.pinned) {
-                    this.row.virtDirRow.scrollNext();
+                const containerLeftOffset = parseInt(this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
+                const targetStartLeftOffset = target.nativeElement.offsetLeft + containerLeftOffset;
+                const targetEndLeftOffset = target.nativeElement.offsetLeft +
+                    parseInt(visibleColumns[visibleColumnIndex].width, 10) +
+                    containerLeftOffset;
+                if (!target.isPinned && targetEndLeftOffset > virtContainerSize) {
+                    const oldScrollLeft = horVirtScroll.scrollLeft;
+                    // Target cell is partially visible (right part of it is cut). Scroll to it so it is fully visible then focus.
+                    horVirtScroll.scrollLeft = this.row.virtDirRow.getColumnScrollLeft(targetUnpinnedIndex + 1) - virtContainerSize;
+
+                    if (oldScrollLeft === horVirtScroll.scrollLeft) {
+                        target.nativeElement.focus();
+                        bVirtSubscribe = false;
+                    }
+                } else if (!target.isPinned && targetStartLeftOffset < 0) {
+                    // Target cell is partially visible (left part of it is cut). Happens when going from pinned to unpinned area.
+                    horVirtScroll.scrollLeft = 0;
                 } else {
-                    this.row.virtDirRow.scrollTo(0);
+                    // Target cell is fully visible. Just focus it.
+                    target.nativeElement.focus();
+                    bVirtSubscribe = false;
                 }
+            } else {
+                horVirtScroll.scrollLeft = this.row.virtDirRow.getColumnScrollLeft(targetUnpinnedIndex + 1) - virtContainerSize;
+            }
+
+            /**
+             * Determine if we need to subscribe, otherwise if we use navigation and don't scroll, it will bind n-times.
+             * If we scroll the virtual container above, we need to subscribe to onChunkLoad.
+             * We do this because it takes time to detect change in scrollLeft of an element
+             */
+            if (bVirtSubscribe) {
                 this.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
                     next: (e: any) => {
                         this.row.cdr.detectChanges();
@@ -311,9 +399,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
                         } else {
                             this.row.cells.last.nativeElement.focus();
                         }
-                        setTimeout(() => {
-                            this.syncRows();
-                        });
                     }
                 });
             }
@@ -323,10 +408,38 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostListener("keydown.control.arrowright")
     public onKeydownCtrlArrowRight() {
         const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.row.cells.last.visibleColumnIndex);
-
+        const targetIndex = target.visibleColumnIndex;
         if (target) {
-            target.nativeElement.focus();
-            this.syncRows();
+            const containerLeftOffset = parseInt(this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
+            const targetEndLeftOffset = target.nativeElement.offsetLeft + parseInt(target.column.width, 10) + containerLeftOffset;
+            const verticalVirtScroll = this.grid.verticalScrollContainer.getVerticalScroll();
+            const verticalVirtScrollWidth = verticalVirtScroll &&
+                verticalVirtScroll.offsetHeight < verticalVirtScroll.children[0].offsetHeight ?
+                this.grid.verticalScrollContainer.getVerticalScroll().offsetWidth :
+                0;
+
+            // We take into consideration the vertical scroll width sinse it is not calculated in the container inside the row
+            const virtContainerSize = parseInt(this.row.virtDirRow.igxForContainerSize, 10) - verticalVirtScrollWidth;
+            if (targetEndLeftOffset > virtContainerSize) {
+                // Target cell is partially visible (right part of it is cut). Scroll to it so it is fully visible then focus.
+                const horVirtScroll = this.grid.parentVirtDir.getHorizontalScroll();
+                const oldScrollLeft = horVirtScroll.scrollLeft;
+                horVirtScroll.scrollLeft = this.row.virtDirRow.getColumnScrollLeft(target.unpinnedColumnIndex + 1) - virtContainerSize;
+
+                if (oldScrollLeft === horVirtScroll.scrollLeft) {
+                    target.nativeElement.focus();
+                } else {
+                    this.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
+                        next: (e: any) => {
+                            this.row.cdr.detectChanges();
+                            const currTarget = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, targetIndex);
+                            currTarget.nativeElement.focus();
+                        }
+                    });
+                }
+            } else {
+                target.nativeElement.focus();
+            }
         }
     }
 
@@ -345,10 +458,29 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     public onKeydownArrowDown(event) {
         event.preventDefault();
         const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex + 1, this.visibleColumnIndex);
+        const verticalScroll = this.row.grid.verticalScrollContainer.getVerticalScroll();
+        if (!verticalScroll && !target) {
+            return;
+        }
+
         if (target) {
-            target.nativeElement.focus();
+            const containerHeight = this.grid.calcHeight; // null when there is no vertical virtualization
+            const containerTopOffset =
+                parseInt(this.row.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            const targetEndTopOffset = target.row.element.nativeElement.offsetTop + this.grid.rowHeight + containerTopOffset;
+            if (containerHeight && targetEndTopOffset > containerHeight) {
+                verticalScroll.scrollTop += targetEndTopOffset - containerHeight;
+                this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+                    next: (e: any) => {
+                        target.nativeElement.focus();
+                        this.row.cdr.detectChanges();
+                    }
+                });
+            } else {
+                target.nativeElement.focus();
+            }
         } else {
-            this.row.grid.verticalScrollContainer.scrollNext();
+            verticalScroll.scrollTop += this.grid.rowHeight;
         }
     }
 
@@ -363,18 +495,5 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostListener("keydown.escape")
     public onKeydownExitEditMode() {
         this.inEditMode = false;
-    }
-
-    @autoWire()
-    syncRows() {
-        const scrLeft = this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.scrollLeft;
-        const headerDcElem = this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement;
-        headerDcElem.style.left = (-scrLeft) + "px";
-
-        this.row.grid.rowList.map((row) => {
-            const elem = row.virtDirRow.dc.instance._viewContainer.element.nativeElement;
-            elem.scrollLeft = scrLeft;
-            row.cdr.markForCheck();
-        });
     }
 }
