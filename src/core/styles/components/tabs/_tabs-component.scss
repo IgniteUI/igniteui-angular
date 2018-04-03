@@ -69,5 +69,17 @@
     @include e(group, $m: selected) {
         @extend %igx-tabs__group--selected !optional;
     }
+
+    @include e(header-menu-item-icon) {
+        @extend  %igx-tabs__header-menu-item-icon !optional;
+    }
+
+    @include m(fixed) {
+        @extend %igx-tabs--fixed !optional;
+    }
+
+    @include m(icons) {
+        @extend %igx-tabs--icons !optional;
+    }
 }
 

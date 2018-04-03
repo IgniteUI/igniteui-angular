@@ -30,8 +30,8 @@
 
     // Focus/Active
     $item-active-color: null,
+    $item-active-icon-color: null,
     $item-active-background: null,
-
     $indicator-color: null,
 
     $button-color: null,
@@ -49,10 +49,6 @@
 
     @if not($item-hover-color) and $item-hover-background {
         $item-hover-color: text-contrast($item-hover-background);
-    }
-
-    @if not($item-active-color) and $item-active-background {
-        $item-active-color: text-contrast($item-active-background);
     }
 
     @if not($button-color) and $button-background {
@@ -81,6 +77,7 @@
         item-hover-color: $item-hover-color,
         item-hover-background: $item-hover-background,
         item-active-color: $item-active-color,
+        item-active-icon-color: $item-active-icon-color,
         item-active-background: $item-active-background,
         indicator-color: $indicator-color,
         button-color: $button-color,
@@ -88,7 +85,7 @@
         button-hover-background:$button-hover-background,
         button-hover-color:$button-hover-color,
         tabs-riple-color: $tabs-riple-color,
-        buttons-riple-color: $buttons-riple-color
+        buttons-riple-color: $buttons-riple-color,
     );
 }
 
@@ -107,6 +104,7 @@
         $item-hover-color: igx-color($palette, 'grays', 600),
         $item-hover-background: igx-color($palette, 'grays', 200),
         $item-active-color: igx-color($palette, 'grays', 800),
+        $item-active-icon-color: igx-color($palette, 'primary', 500),
         $item-active-background: igx-color($palette, 'grays', 200),
         $indicator-color: igx-color($palette, 'primary', 500),
         $button-color: igx-color($palette, 'grays', 500),
@@ -124,6 +122,7 @@
     $item-max-width: 264px;
     $item-padding: 0 rem(24px);
     $tabs-height: rem(48px);
+    $tabs-height-icon: rem(77px);
     $label-font-size: rem(14px, 16px);
     $label-line-height: rem(12px, 16px);
     $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
@@ -210,6 +209,17 @@
             background: map-get($this, 'item-active-background');
             color: map-get($this, 'item-active-color');
         }
+
+        %igx-tabs__header-menu-item-icon {
+            color: map-get($this, 'item-active-icon-color')
+        }
+    }
+
+    %igx-tabs__header-menu-item-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-bottom: rem(10px);
     }
 
     %igx-tabs__header-menu-item-indicator {
@@ -296,7 +306,24 @@
     %igx-tabs__group--selected {
         display: inline-flex;
         min-width: 100%;
-        transition: transform .3s $tabs-animation-function;
+    }
+
+    %igx-tabs--fixed {
+        %igx-tabs__header-wrapper-fluid {
+            display: flex;
+        }
+
+        %igx-tabs__header-menu-item {
+            flex: 1 1 auto;
+        }
+    }
+
+    %igx-tabs--icons {
+        %igx-tabs__header-button
+        %igx-tabs__header-menu-item {
+            min-height: $tabs-height-icon;
+            height: $tabs-height-icon;
+        }
     }
 }
 
