@@ -6,8 +6,8 @@ import {
 import { IgxGridComponent } from "../../grid/grid.component";
 
 import {
-    ColumnExportingEventArgs,
-    RowExportingEventArgs
+    IColumnExportingEventArgs,
+    IRowExportingEventArgs
 } from "./event-args";
 
 import { ExportUtilities } from "./export-utilities";
@@ -18,10 +18,10 @@ export abstract class IgxBaseExporter {
     protected _indexOfLastPinnedColumn = -1;
 
     @Output()
-    public onRowExport = new EventEmitter<RowExportingEventArgs>();
+    public onRowExport = new EventEmitter<IRowExportingEventArgs>();
 
     @Output()
-    public onColumnExport = new EventEmitter<ColumnExportingEventArgs>();
+    public onColumnExport = new EventEmitter<IColumnExportingEventArgs>();
 
     public export(grid: IgxGridComponent, options: IgxExporterOptionsBase): void {
         if (options === undefined || options === null) {
@@ -81,21 +81,22 @@ export abstract class IgxBaseExporter {
             this._columnList = keys.map((k) => ({ header: k, field: k, skip: false}));
         }
 
-        let columnIndex = 0;
         let skippedPinnedColumnsCount = 0;
-        this._columnList.forEach((column) => {
+        this._columnList.forEach((column, index) => {
             if (!column.skip) {
-                const columnExportArgs = new ColumnExportingEventArgs(column.header, columnIndex);
+                const columnExportArgs = {
+                    header: column.header,
+                    columnIndex: index,
+                    cancel: false
+                };
                 this.onColumnExport.emit(columnExportArgs);
 
                 column.header = columnExportArgs.header;
                 column.skip = columnExportArgs.cancel;
 
-                if (column.skip && columnIndex <= this._indexOfLastPinnedColumn) {
+                if (column.skip && index <= this._indexOfLastPinnedColumn) {
                     skippedPinnedColumnsCount++;
                 }
-
-                columnIndex++;
             }
         });
 
@@ -104,9 +105,8 @@ export abstract class IgxBaseExporter {
         const dataToExport = new Array<any>();
         const isSpecialData = ExportUtilities.isSpecialData(data);
 
-        let rowIndex = 0;
-        data.forEach((row) => {
-            this.exportRow(dataToExport, row, rowIndex++, isSpecialData);
+        data.forEach((row, index) => {
+            this.exportRow(dataToExport, row, index, isSpecialData);
         });
 
         this.exportDataImplementation(dataToExport, options);
@@ -129,7 +129,11 @@ export abstract class IgxBaseExporter {
             row = rowData;
         }
 
-        const rowArgs = new RowExportingEventArgs(row, index);
+        const rowArgs = {
+            rowData: row,
+            rowIndex: index,
+            cancel: false
+        };
         this.onRowExport.emit(rowArgs);
 
         if (!rowArgs.cancel) {

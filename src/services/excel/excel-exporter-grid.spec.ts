@@ -9,7 +9,7 @@ import {
     GridDeclarationComponent,
     GridMarkupPagingDeclarationComponent,
     GridReorderedColumnsComponent } from "../exporter-common/components-declarations";
-import { ColumnExportingEventArgs, RowExportingEventArgs } from "../exporter-common/event-args";
+import { IColumnExportingEventArgs, IRowExportingEventArgs } from "../exporter-common/event-args";
 import { ExportUtilities } from "../exporter-common/export-utilities";
 import { TestMethods } from "../exporter-common/test-methods";
 import { IgxExcelExporterService } from "./excel-exporter";
@@ -459,7 +459,7 @@ describe("Excel Exporter", () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
 
-        exporter.onColumnExport.subscribe((value: ColumnExportingEventArgs) => {
+        exporter.onColumnExport.subscribe((value: IColumnExportingEventArgs) => {
             value.cancel = true;
         });
 
@@ -478,7 +478,7 @@ describe("Excel Exporter", () => {
         const grid = fix.componentInstance.grid1;
 
         const rows = [];
-        exporter.onRowExport.subscribe((value: RowExportingEventArgs) => {
+        exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
             rows.push({ data: value.rowData, index: value.rowIndex });
         });
 
@@ -498,7 +498,7 @@ describe("Excel Exporter", () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
 
-        exporter.onRowExport.subscribe((value: RowExportingEventArgs) => {
+        exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
             value.cancel = true;
         });
 

@@ -15,11 +15,7 @@ import {
 import { IgxGridComponent } from "../../grid/grid.component";
 import { IgxGridModule } from "../../grid/index";
 
-import {
-    ColumnExportingEventArgs,
-    ExcelExportEndedEventArgs,
-    RowExportingEventArgs
-} from "../exporter-common/event-args";
+import { IExcelExportEndedEventArgs } from "../exporter-common/event-args";
 
 import { inherits } from "util";
 import { IgxBaseExporter } from "../exporter-common/base-export-service";
@@ -35,7 +31,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
     private _xlsx: JSZip;
 
     @Output()
-    public onExportEnded = new EventEmitter<ExcelExportEndedEventArgs>();
+    public onExportEnded = new EventEmitter<IExcelExportEndedEventArgs>();
 
     private static populateFolder(folder: IExcelFolder, zip: JSZip, worksheetData: WorksheetData): any {
         for (const childFolder of folder.childFolders(worksheetData)) {
@@ -60,7 +56,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         this._xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((result) => {
             this.saveFile(result, options.fileName);
 
-            this.onExportEnded.emit(new ExcelExportEndedEventArgs(this._xlsx));
+            this.onExportEnded.emit({ xlsx: this._xlsx });
         });
     }
 

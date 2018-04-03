@@ -1,25 +1,21 @@
 import * as JSZip from "jszip/dist/jszip";
 
-export class RowExportingEventArgs {
-    constructor(public rowData: any, public rowIndex: number) {
-    }
-
-    public cancel = false;
+export interface IRowExportingEventArgs {
+    rowData: any;
+    rowIndex: number;
+    cancel: boolean;
 }
 
-export class ColumnExportingEventArgs {
-    constructor(public header: string, public columnIndex: number) {
-    }
-
-    public cancel = false;
+export interface IColumnExportingEventArgs {
+    header: string;
+    columnIndex: number;
+    cancel: boolean;
 }
 
-export class CsvExportEndedEventArgs {
-    constructor(public csvData: string) {
-    }
+export interface ICsvExportEndedEventArgs {
+    csvData: string;
 }
 
-export class ExcelExportEndedEventArgs {
-    constructor(public xlsx: JSZip) {
-    }
+export interface IExcelExportEndedEventArgs {
+    xlsx: JSZip;
 }
