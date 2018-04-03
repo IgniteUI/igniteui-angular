@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Output, ViewChild } from "@angular/core";
+import { Component, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
 import { NavigationStart, Router } from "@angular/router";
 import "rxjs/add/operator/filter";
+import { IgxIconService } from "../lib/icon/icon.service";
 import { IgxNavigationDrawerComponent, IgxNavigationDrawerModule } from "../lib/main";
 import "../style/igniteui-theme.scss";
 
@@ -9,7 +10,7 @@ import "../style/igniteui-theme.scss";
     styleUrls: ["app.component.css"],
     templateUrl: "app.component.html"
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
     @ViewChild("navdrawer") public navdrawer: IgxNavigationDrawerComponent;
 
     public drawerState = {
@@ -153,6 +154,11 @@ export class AppComponent {
             name: "Buttons"
         },
         {
+            link: "/input-group",
+            icon: "web",
+            name: "Input Group"
+        },
+        {
             link: "/layout",
             icon: "view_quilt",
             name: "Layout"
@@ -192,7 +198,11 @@ export class AppComponent {
         }
     ];
 
-    constructor(private router: Router) { }
+    constructor(private router: Router, private iconService: IgxIconService) {
+        iconService.registerFontSetAlias("fa-solid", "fa");
+        iconService.registerFontSetAlias("fa-brands", "fab");
+    }
+
     public ngOnInit(): void {
         this.router.events
             .filter((x) => x instanceof NavigationStart)
