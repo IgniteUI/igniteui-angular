@@ -33,7 +33,20 @@ export interface ISliderValueChangeEventArgs {
 
 const noop = () => {
 };
-
+/**
+ * **Ignite UI for Angular Slider**
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/slider.html)
+ * The Ignite UI Slider allows selection in a given range by moving the thumb along the track.
+ * The track can be defined as continuous or stepped, and you can choose between single and range slider types.
+ *
+ * Example:
+ * ```html
+ * <igx-slider id="slider"
+ *            [minValue]="0" [maxValue]="100"
+ *            [isContinuous]=true [(ngModel)]="volume">
+ * </igx-slider>
+ * ```
+ */
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSliderComponent, multi: true }],
     selector: "igx-slider",
