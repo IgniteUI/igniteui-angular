@@ -15,6 +15,8 @@ import {
     HostBinding,
     Inject,
     Input,
+    IterableChangeRecord,
+    IterableDiffers,
     NgZone,
     OnDestroy,
     OnInit,
@@ -174,6 +176,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public rowHeight = 50;
 
+    @Input()
+    public columnWidth: string = null;
+
     @Output()
     public onSelection = new EventEmitter<IGridCellEventArgs>();
 
@@ -278,6 +283,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
     private resizeHandler;
+    private columnListDiffer;
 
     constructor(
         private gridAPI: IgxGridAPIService,
@@ -286,6 +292,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         @Inject(DOCUMENT) private document,
         public cdr: ChangeDetectorRef,
         private resolver: ComponentFactoryResolver,
+        private differs: IterableDiffers,
         private viewRef: ViewContainerRef) {
 
         this.resizeHandler = () => {
@@ -296,6 +303,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public ngOnInit() {
         this.gridAPI.register(this);
+        this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this.width && this.width.indexOf("%") === -1 ? parseInt(this.width, 10) : 0;
         this.calcHeight = 0;
     }
@@ -305,15 +313,30 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.autogenerateColumns();
         }
 
-        this.columnList.forEach((col, idx) => {
-            col.index = idx;
-            col.gridID = this.id;
-            this.onColumnInit.emit(col);
-        });
+        this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
+        this.columnListDiffer.diff(this.columnList);
 
-        this._columns = this.columnList.toArray();
-        this._pinnedColumns = this._columns.filter((c) => c.pinned);
-        this._unpinnedColumns = this._columns.filter((c) => !c.pinned);
+        this.columnList.changes
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((change: QueryList<IgxColumnComponent>) => {
+                const diff = this.columnListDiffer.diff(change);
+                if (diff) {
+
+                    this.initColumns(this.columnList);
+
+                    diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => this.onColumnInit.emit(record.item));
+
+                    diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+
+                        // Clear Filtering
+                        this.gridAPI.clear_filter(this.id, record.item.field);
+
+                        // Clear Sorting
+                        this.gridAPI.clear_sort(this.id, record.item.field);
+                    });
+                }
+                this.markForCheck();
+        });
     }
 
     public ngAfterViewInit() {
@@ -716,6 +739,22 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         });
 
         this.columnList.reset(columns);
+    }
+
+    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: any = null) {
+        collection.forEach((column: IgxColumnComponent, index: number) => {
+            column.gridID = this.id;
+            column.index = index;
+            if (!column.width) {
+                column.width = this.columnWidth;
+            }
+            if (cb) {
+                cb(column);
+            }
+        });
+        this._columns = this.columnList.toArray();
+        this._pinnedColumns = this.columnList.filter((c) => c.pinned);
+        this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
     }
 
     protected setEventBusSubscription() {
