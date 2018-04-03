@@ -640,7 +640,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         }
     }
 
-    public okButtonClick(): void {
+    public okButtonClick(): boolean {
         if (this._isValueValid(this._getSelectedTime())) {
             this._alert.close();
             const oldValue = this.value;
@@ -650,6 +650,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
                 newValue: this.value
             };
             this.onValueChanged.emit(args);
+            return true;
         } else {
             const args: IgxTimePickerValidationFailedEventArgs = {
                 timePicker: this,
@@ -657,6 +658,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
                 setThroughUI: true
             };
             this.onValidationFailed.emit(args);
+            return false;
         }
     }
 
