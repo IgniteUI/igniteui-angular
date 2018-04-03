@@ -33,6 +33,7 @@ import { DataType } from "../data-operations/data-util";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
+import { IForOfState } from "../directives/for-of/IForOfState";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
@@ -174,6 +175,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public rowHeight = 50;
 
+    @Input()
+    public remoteVirtualization: boolean;
+
     @Output()
     public onSelection = new EventEmitter<IGridCellEventArgs>();
 
@@ -207,6 +211,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @Output()
     public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
+
+    @Output()
+    public onDataPreLoad = new EventEmitter<any>();
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
@@ -256,6 +263,21 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     set sortingExpressions(value) {
         this._sortingExpressions = cloneArray(value);
         this.cdr.markForCheck();
+    }
+
+    get virtualizationState() {
+        return this.verticalScrollContainer.state;
+    }
+    set virtualizationState(state) {
+        this.verticalScrollContainer.state = state;
+    }
+
+    get totalItemCount() {
+        return this.verticalScrollContainer.totalItemCount;
+    }
+    set totalItemCount(count) {
+        this.verticalScrollContainer.totalItemCount = count;
+        this.cdr.detectChanges();
     }
 
     public pagingState;
@@ -331,6 +353,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.zone.runOutsideAngular(() => this.document.defaultView.removeEventListener("resize", this.resizeHandler));
         this.destroy$.next(true);
         this.destroy$.complete();
+    }
+
+    public dataLoading(event) {
+        this.onDataPreLoad.emit(event);
     }
 
     get nativeElement() {
