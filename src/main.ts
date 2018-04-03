@@ -53,3 +53,5 @@ export * from "./directives/layout/layout.directive";
 export * from "./directives/mask/mask.directive";
 export * from "./directives/ripple/ripple.directive";
 export * from "./directives/toggle/toggle.directive";
+export * from "./directives/auto-selection/auto-selection.directive";
+export * from "./directives/auto-focus/auto-focus.directive";

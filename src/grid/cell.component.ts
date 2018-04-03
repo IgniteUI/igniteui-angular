@@ -346,12 +346,14 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     public onKeydownEnterEditMode() {
         if (this.column.editable) {
             this.inEditMode = !this.inEditMode;
+            this.nativeElement.focus();
         }
     }
 
     @HostListener("keydown.escape")
     public onKeydownExitEditMode() {
         this.inEditMode = false;
+        this.nativeElement.focus();
     }
 
     @autoWire()
