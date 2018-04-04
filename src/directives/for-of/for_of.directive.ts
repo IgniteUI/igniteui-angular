@@ -244,8 +244,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
         const curScrollTop = event.target.scrollTop;
 
-        const scrollOffset = this.fixedUpdateAllRows(curScrollTop, event.target.children[0].scrollHeight);
-        this.dc.instance._viewContainer.element.nativeElement.style.top = -scrollOffset + "px";
+        let scrollOffset = this.fixedUpdateAllRows(curScrollTop, event.target.children[0].scrollHeight);
+        scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
+        this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + "px";
 
         this.dc.changeDetectorRef.detectChanges();
         this.onChunkLoad.emit(this.state);
@@ -256,7 +257,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
 
         const count = this.totalItemCount || this.igxForOf.length;
-        const currIndex = Math.round(ratio * count);
+        const currIndex = Math.floor(ratio * count);
 
         const endingIndex = this.state.chunkSize + currIndex;
         if (this.state.startIndex !== currIndex) {
