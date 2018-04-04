@@ -75,9 +75,9 @@ export class ExcelStrings {
         return contentTypes;
     }
 
-    public static getTablesXML(dimension: string, tableColumns: string): string {
+    public static getTablesXML(dimension: string, tableColumns: string, sort: string): string {
         return `${ExcelStrings.XML_STRING}<table xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" id="1" name="Table1" displayName="Table1" ref="${dimension}" totalsRowShown="0">
-    <autoFilter ref="${dimension}"/>${tableColumns}<tableStyleInfo name="TableStyleMedium2" showFirstColumn="0" showLastColumn="0" showRowStripes="1" showColumnStripes="0"/>
+    <autoFilter ref="${dimension}"/>${sort}${tableColumns}<tableStyleInfo name="TableStyleMedium2" showFirstColumn="0" showLastColumn="0" showRowStripes="1" showColumnStripes="0"/>
 </table>`;
     }
     /* tslint:enable max-line-length */

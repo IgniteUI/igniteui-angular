@@ -3,8 +3,8 @@ import {
     Output
 } from "@angular/core";
 
-import { IgxGridComponent } from "../../grid/grid.component";
 import { DataUtil } from "../../data-operations/data-util";
+import { IgxGridComponent } from "../../grid/grid.component";
 
 import { ExportUtilities } from "./export-utilities";
 import { IgxExporterOptionsBase } from "./exporter-options-base";
@@ -24,6 +24,8 @@ export interface IColumnExportingEventArgs {
 export abstract class IgxBaseExporter {
     private _columnList: any[];
     protected _indexOfLastPinnedColumn = -1;
+
+    protected _sort = null;
 
     @Output()
     public onRowExport = new EventEmitter<IRowExportingEventArgs>();
@@ -50,7 +52,8 @@ export abstract class IgxBaseExporter {
             const columnInfo = {
                 header: columnHeader,
                 field: column.field,
-                skip: !exportColumn
+                skip: !exportColumn,
+                formatter: column.formatter
             };
 
             if (index !== -1) {
@@ -100,6 +103,14 @@ export abstract class IgxBaseExporter {
                 if (column.skip && index <= this._indexOfLastPinnedColumn) {
                     skippedPinnedColumnsCount++;
                 }
+
+                if (this._sort && this._sort.fieldName === column.field) {
+                    if (column.skip) {
+                        this._sort = null;
+                    } else {
+                        this._sort.fieldName = column.header;
+                    }
+                }
             }
         });
 
@@ -124,7 +135,8 @@ export abstract class IgxBaseExporter {
         if (!isSpecialData) {
             row = this._columnList.reduce((a, e) => {
                 if (!e.skip) {
-                    a[e.header] = rowData[e.field];
+                    const rawValue = rowData[e.field];
+                    a[e.header] = e.formatter ? e.formatter(rawValue) : rawValue;
                 }
                 return a;
             }, {});
@@ -144,11 +156,6 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private resetDefaults() {
-        this._columnList = [];
-        this._indexOfLastPinnedColumn = -1;
-    }
-
     private prepareData(grid: IgxGridComponent, options: IgxExporterOptionsBase): any[] {
         let data = grid.data;
 
@@ -156,10 +163,10 @@ export abstract class IgxBaseExporter {
             grid.filteringExpressions.length > 0 &&
             !options.ignoreFiltering) {
 
-            var filteringState = {
+            const filteringState = {
                 expressions: grid.filteringExpressions,
                 logic: grid.filteringLogic
-            }
+            };
 
             data = DataUtil.filter(data, filteringState);
         }
@@ -168,13 +175,21 @@ export abstract class IgxBaseExporter {
             grid.sortingExpressions.length > 0 &&
             !options.ignoreSorting) {
 
-            var sortingState = {
+            const sortingState = {
                 expressions: grid.sortingExpressions
             };
+
+            this._sort = grid.sortingExpressions[0];
 
             data =  DataUtil.sort(grid.data, sortingState);
         }
 
         return data;
+    }
+
+    private resetDefaults() {
+        this._columnList = [];
+        this._indexOfLastPinnedColumn = -1;
+        this._sort = null;
     }
 }

@@ -97,6 +97,7 @@ export class WorksheetFile implements IExcelFile {
         folder.file("sheet1.xml", ExcelStrings.getSheetXML(dimension, freezePane, cols.join(""), sheetData.join("")));
     }
 
+    /* tslint:disable member-ordering */
     private static getCellData(worksheetData: WorksheetData, row: number, column: number): string {
         const dictionary = worksheetData.dataDictionary;
         const columnName = ExcelStrings.getExcelColumn(column) + (row + 1);
@@ -115,6 +116,7 @@ export class WorksheetFile implements IExcelFile {
 
         return `<c r="${column}"${type}${format}><v>${value}</v></c>`;
     }
+    /* tslint:enable member-ordering */
 }
 
 export class StyleFile implements IExcelFile {
@@ -156,8 +158,10 @@ export class SharedStringsFile implements IExcelFile {
 export class TablesFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         const columnCount = worksheetData.columnCount;
-        const dimension = "A1:" + ExcelStrings.getExcelColumn(columnCount - 1) + worksheetData.rowCount;
+        const lastColumn = ExcelStrings.getExcelColumn(columnCount - 1) + worksheetData.rowCount;
+        const dimension = "A1:" + lastColumn;
         const values = worksheetData.keys;
+        let sortString = "";
 
         let tableColumns = "<tableColumns count=\"" + columnCount + "\">";
         for (let i = 0; i < columnCount; i++) {
@@ -167,7 +171,14 @@ export class TablesFile implements IExcelFile {
 
         tableColumns += "</tableColumns>";
 
-        folder.file("table1.xml", ExcelStrings.getTablesXML(dimension, tableColumns));
+        if (worksheetData.sort) {
+            const sortingExpression = worksheetData.sort;
+            const sc = ExcelStrings.getExcelColumn(values.indexOf(sortingExpression.fieldName));
+            const dir = sortingExpression.dir - 1;
+            sortString = `<sortState ref="A2:${lastColumn}"><sortCondition descending="${dir}" ref="${sc}1:${sc}15"/></sortState>`;
+        }
+
+        folder.file("table1.xml", ExcelStrings.getTablesXML(dimension, tableColumns, sortString));
     }
 }
 
