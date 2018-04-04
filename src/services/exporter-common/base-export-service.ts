@@ -4,6 +4,7 @@ import {
 } from "@angular/core";
 
 import { IgxGridComponent } from "../../grid/grid.component";
+import { DataUtil } from "../../data-operations/data-util";
 
 import { ExportUtilities } from "./export-utilities";
 import { IgxExporterOptionsBase } from "./exporter-options-base";
@@ -69,12 +70,7 @@ export abstract class IgxBaseExporter {
            this._columnList[++lastVisbleColumnIndex] = hiddenColumn;
         });
 
-        const useRowList = !options.ignoreFiltering &&
-                            grid.filteringExpressions !== undefined &&
-                            grid.filteringExpressions.length > 0;
-
-        const data = useRowList ? grid.rowList.toArray().sort((r) => r.index).
-                                                        map((r) => r.rowData) : grid.data;
+        const data = this.prepareData(grid, options);
         this.exportData(data, options);
     }
 
@@ -151,5 +147,34 @@ export abstract class IgxBaseExporter {
     private resetDefaults() {
         this._columnList = [];
         this._indexOfLastPinnedColumn = -1;
+    }
+
+    private prepareData(grid: IgxGridComponent, options: IgxExporterOptionsBase): any[] {
+        let data = grid.data;
+
+        if (grid.filteringExpressions &&
+            grid.filteringExpressions.length > 0 &&
+            !options.ignoreFiltering) {
+
+            var filteringState = {
+                expressions: grid.filteringExpressions,
+                logic: grid.filteringLogic
+            }
+
+            data = DataUtil.filter(data, filteringState);
+        }
+
+        if (grid.sortingExpressions &&
+            grid.sortingExpressions.length > 0 &&
+            !options.ignoreSorting) {
+
+            var sortingState = {
+                expressions: grid.sortingExpressions
+            };
+
+            data =  DataUtil.sort(grid.data, sortingState);
+        }
+
+        return data;
     }
 }

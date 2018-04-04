@@ -1,9 +1,11 @@
+import { ExportUtilities } from "../exporter-common/export-utilities";
+
 export class WorksheetDataDictionary {
     private static DEFAULT_FONT = "11pt Calibri";
     private static TEXT_PADDING = 5;
 
     private _dictionary: any;
-    private _stringWidthDictionary: any;
+    private _widthsDictionary: any;
 
     private _sortedKeysByValue: string[];
     private _sortedKeysByValueAreValid: boolean;
@@ -16,14 +18,18 @@ export class WorksheetDataDictionary {
     private _columnWidths: number[];
     private _context: any;
 
+    private _columnTypeInfo: boolean[];
+    public hasNonStringValues = false;
+
     constructor(columnCount: number, columnWidth: number) {
         this._dictionary = {};
-        this._stringWidthDictionary = {};
+        this._widthsDictionary = {};
         this._counter = 0;
         this.dirtyKeyCollections();
 
         this._calculateColumnWidth = !columnWidth;
         this._columnWidths = new Array<number>(columnCount);
+        this._columnTypeInfo = new Array<boolean>(columnCount);
 
         if (!this._calculateColumnWidth) {
             this._columnWidths.fill(columnWidth);
@@ -34,12 +40,23 @@ export class WorksheetDataDictionary {
         return this._columnWidths;
     }
 
-    public saveValue(value: string, column: number): number {
-        const sanitizedValue = this.sanitizeValue(value);
+    public saveValue(value: any, column: number, isHeader: boolean): number {
+        if (this._columnTypeInfo[column] === undefined && isHeader === false) {
+            this._columnTypeInfo[column] = typeof value === "string";
+        }
 
-        if (this._dictionary[sanitizedValue] === undefined) {
-            this._dictionary[sanitizedValue] = this._counter++;
-            this.dirtyKeyCollections();
+        let sanitizedValue = "";
+        const isString = this._columnTypeInfo[column] || isHeader;
+
+        if (isString) {
+            sanitizedValue = this.sanitizeValue(value);
+
+            if (this._dictionary[sanitizedValue] === undefined) {
+                this._dictionary[sanitizedValue] = this._counter++;
+                this.dirtyKeyCollections();
+            }
+        } else {
+            this.hasNonStringValues = true;
         }
 
         if (this._calculateColumnWidth) {
@@ -48,7 +65,7 @@ export class WorksheetDataDictionary {
             this._columnWidths[column] = maxWidth;
         }
 
-        return this.getSanitizedValue(sanitizedValue);
+        return isString ? this.getSanitizedValue(sanitizedValue) : -1;
     }
 
     public getValue(value: string): number {
@@ -68,14 +85,14 @@ export class WorksheetDataDictionary {
         return this._keys;
     }
 
-    private getTextWidth(text): number {
-        if (this._stringWidthDictionary[text] === undefined) {
+    private getTextWidth(value: any): number {
+        if (this._widthsDictionary[value] === undefined) {
             const context = this.getContext();
-            const metrics = context.measureText(text);
-            this._stringWidthDictionary[text] = metrics.width + WorksheetDataDictionary.TEXT_PADDING;
+            const metrics = context.measureText(value);
+            this._widthsDictionary[value] = metrics.width + WorksheetDataDictionary.TEXT_PADDING;
         }
 
-        return this._stringWidthDictionary[text];
+        return this._widthsDictionary[value];
     }
 
     private getContext(): any {
@@ -89,11 +106,15 @@ export class WorksheetDataDictionary {
     }
 
     private sanitizeValue(value: string): string {
-        return value.replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")
-                    .replace(/"/g, "&quot;")
-                    .replace(/'/g, "&apos;");
+        if (ExportUtilities.hasValue(value) === false) {
+            return "";
+        } else {
+            return value.replace(/&/g, "&amp;")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;")
+                        .replace(/"/g, "&quot;")
+                        .replace(/'/g, "&apos;");
+        }
     }
 
     private dirtyKeyCollections(): void {

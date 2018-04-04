@@ -3,6 +3,7 @@ import { ExcelStrings } from "./excel-strings";
 import { WorksheetData } from "./worksheet-data";
 
 import * as JSZip from "jszip/dist/jszip";
+import { ExportUtilities } from "../exporter-common/export-utilities";
 
 export class RootRelsFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
@@ -56,7 +57,7 @@ export class WorksheetFile implements IExcelFile {
             sheetData.push(`<row r="1"${rowHeight}>`);
             for (let i = 0; i < worksheetData.columnCount; i++) {
                 const column = ExcelStrings.getExcelColumn(i) + 1;
-                const value = dictionary.saveValue(worksheetData.keys[i], i);
+                const value = dictionary.saveValue(worksheetData.keys[i], i, true);
                 sheetData.push(`<c r="${column}" t="s"><v>${value}</v></c>`);
             }
             sheetData.push("</row>");
@@ -65,18 +66,8 @@ export class WorksheetFile implements IExcelFile {
                 sheetData.push(`<row r="${(i + 1)}"${rowHeight}>`);
 
                 for (let j = 0; j < worksheetData.columnCount; j++) {
-                    const column = ExcelStrings.getExcelColumn(j) + (i + 1);
-
-                    const cellValue = worksheetData.data[i - 1][worksheetData.keys[j]];
-                    let stringValue = "";
-                    if (worksheetData.isSpecialData) {
-                        stringValue = String(worksheetData.data[i - 1]);
-                    } else if (cellValue !== undefined && cellValue !== null) {
-                        stringValue = String(cellValue);
-                    }
-                    const value = dictionary.saveValue(stringValue, j);
-
-                    sheetData.push(`<c r="${column}" t="s"><v>${value}</v></c>`);
+                    const cellData = WorksheetFile.getCellData(worksheetData, i, j);
+                    sheetData.push(cellData);
                 }
                 sheetData.push("</row>");
             }
@@ -105,11 +96,30 @@ export class WorksheetFile implements IExcelFile {
         }
         folder.file("sheet1.xml", ExcelStrings.getSheetXML(dimension, freezePane, cols.join(""), sheetData.join("")));
     }
+
+    private static getCellData(worksheetData: WorksheetData, row: number, column: number): string {
+        const dictionary = worksheetData.dataDictionary;
+        const columnName = ExcelStrings.getExcelColumn(column) + (row + 1);
+        const columnHeader = worksheetData.keys[column];
+
+        const cellValue = worksheetData.isSpecialData ?
+                            worksheetData.data[row - 1] :
+                            worksheetData.data[row - 1][columnHeader];
+
+        const savedValue = dictionary.saveValue(cellValue, column, false);
+        const isString = savedValue !== -1;
+
+        const value = isString ? savedValue : cellValue;
+        const type = isString ? ` t="s"` : "";
+        const format = isString ? "" : ` s="1"`;
+
+        return `<c r="${column}"${type}${format}><v>${value}</v></c>`;
+    }
 }
 
 export class StyleFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        folder.file("styles.xml", ExcelStrings.getStyles());
+        folder.file("styles.xml", ExcelStrings.getStyles(worksheetData.dataDictionary.hasNonStringValues));
     }
 }
 
