@@ -17,4 +17,22 @@ export class InputSampleComponent {
         registered: false,
         subscribed: false
     };
+
+    public user2 = {
+        comment: "",
+        firstName: "John",
+        gender: "Male",
+        lastName: "Doe",
+        password: "1337s3cr3t",
+        registered: true,
+        subscribed: false
+    };
+
+    public onClick(event) {
+        console.log(event);
+    }
+
+    public onChange(event) {
+        console.log(event);
+    }
 }

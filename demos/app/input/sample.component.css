@@ -9,7 +9,7 @@
     margin-bottom: 48px;
 }
 
-.igx-form-group + .igx-form-group {
+.igx-form-group+.igx-form-group {
     margin-top: 32px;
 }
 
@@ -22,11 +22,20 @@
     height: 48px;
 }
 
-.switch-sample + .switch-sample {
+.switch-sample+.switch-sample {
     margin-top: 16px;
 }
 
-.switch-sample > [igxLabel] {
+.switch-sample>[igxLabel] {
     position: absolute;
     margin-left: 56px;
+}
+
+.radio-group {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.radio-group igx-radio+igx-radio {
+    margin-top: 8px;
 }
