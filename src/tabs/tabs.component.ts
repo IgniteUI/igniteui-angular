@@ -61,8 +61,11 @@ export class IgxTabsComponent implements AfterViewInit {
     @ViewChild("headerContainer")
     public headerContainer: ElementRef;
 
-    @ViewChild("itemsContainer")
+    @ViewChild("itemsContainer") 
     public itemsContainer: ElementRef;
+
+    @ViewChild("contentsContainer") 
+    public contentsContainer: ElementRef;
 
     @ViewChild("selectedIndicator")
     public selectedIndicator: ElementRef;
@@ -114,7 +117,7 @@ export class IgxTabsComponent implements AfterViewInit {
         this._scroll(true);
     }
 
-    private _scroll(scrollRight: boolean) {
+    private _scroll(scrollRight: boolean): void {
         const tabsArray = this.tabs.toArray();
         for (const tab of tabsArray) {
             const element = tab.nativeTabItem.nativeElement;
@@ -133,9 +136,11 @@ export class IgxTabsComponent implements AfterViewInit {
     }
 
     public scrollElement(element: any, scrollRight: boolean): void {
-        const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
-        this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
-        this.itemsContainer.nativeElement.style.transform = `translate(${-this.offset}px)`;
+        requestAnimationFrame(() => {
+            const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
+            this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
+            this.itemsContainer.nativeElement.style.transform = `translate(${-this.offset}px)`;
+        });
     }
 
     get selectedTab(): IgxTabItemComponent {
@@ -157,12 +162,6 @@ export class IgxTabsComponent implements AfterViewInit {
                 if (group) {
                     group.select();
                 }
-
-                const tabWidth = this.selectedTab.nativeTabItem.nativeElement.offsetWidth;
-                const offsetLeft = this.selectedTab.nativeTabItem.nativeElement.offsetLeft;
-
-                this.selectedIndicator.nativeElement.style.width = `${tabWidth}px`;
-                this.selectedIndicator.nativeElement.style.transform = `translate(${offsetLeft}px)`;
             }
         }, 0);
     }
@@ -178,6 +177,26 @@ export class IgxTabsComponent implements AfterViewInit {
         });
     }
 
+    @HostListener("keydown.arrowright", ["$event"])
+    public onKeydownArrowRight(event: KeyboardEvent) {
+        this._onArrowKeyDown(false);
+    }
+
+    @HostListener("keydown.arrowleft", ["$event"])
+    public onKeydownArrowLeft(event: KeyboardEvent) {
+        this._onArrowKeyDown(true);
+    }
+
+    private _onArrowKeyDown(isLeftArrow: boolean) : void {
+        const tabsArray = this.tabs.toArray();
+        const index = (isLeftArrow)
+                      ? (this.selectedIndex === 0) ? tabsArray.length - 1 : this.selectedIndex - 1
+                      : (this.selectedIndex === tabsArray.length - 1) ? 0 : this.selectedIndex + 1;
+        const focusDelay = (this.selectedIndex === 0) ? 200 : 100;
+        const tab = tabsArray[index];
+        tab.select(focusDelay);
+    }
+
     private _deselectGroup(group: IgxTabsGroupComponent) {
         // Cannot deselect the selected tab - this will mean that there will be not selected tab left
         if (group.isDisabled || this.selectedTab.index === group.index) {
@@ -185,6 +204,7 @@ export class IgxTabsComponent implements AfterViewInit {
         }
 
         group.isSelected = false;
+        group.relatedTab.tabindex = -1;
         this.onTabItemDeselected.emit({ tab: this.tabs[group.index], group });
     }
 }
@@ -200,20 +220,20 @@ export class IgxTabsGroupComponent implements AfterContentInit {
     private _itemStyle = "igx-tabs-group";
     public isSelected = false;
 
-    @Input() public label: string;
-    @Input() public icon: string;
-    @Input() public isDisabled: boolean;
+    @Input() 
+    public label: string;
+
+    @Input()
+    public icon: string;
+
+    @Input()
+    public isDisabled: boolean;
 
     @HostBinding("attr.role") public role = "tabpanel";
 
     @HostBinding("class.igx-tabs__group")
     get styleClass(): boolean {
-        return (!this.isSelected);
-    }
-
-    @HostBinding("class.igx-tabs__group--selected")
-    get selected(): boolean {
-        return this.isSelected;
+        return true;
     }
 
     @HostBinding("attr.aria-labelledby")
@@ -262,12 +282,17 @@ export class IgxTabsGroupComponent implements AfterContentInit {
         }
     }
 
-    public select() {
+    public select(focusDelay = 50) {
         if (this.isDisabled || this._tabs.selectedIndex === this.index) {
             return;
         }
 
         this.isSelected = true;
+        this.relatedTab.tabindex = 0;
+
+        setTimeout(() => {
+            this.relatedTab.nativeTabItem.nativeElement.focus();
+        }, focusDelay);
         this.handleSelection();
         this._tabs.onTabItemSelected.emit({ tab: this._tabs.tabs.toArray()[this.index], group: this });
     }
@@ -281,6 +306,9 @@ export class IgxTabsGroupComponent implements AfterContentInit {
         } else if (tabElement.offsetLeft + tabElement.offsetWidth > viewPortOffsetWidth + this._tabs.offset) {
             this._tabs.scrollElement(tabElement, true);
         }
+
+        const contentOffset = this._tabs.tabsContainer.nativeElement.offsetWidth * this.index;
+        this._tabs.contentsContainer.nativeElement.style.transform = `translate(${-contentOffset}px)`;
 
         this._tabs.selectedIndicator.nativeElement.style.width = `${tabElement.offsetWidth}px`;
         this._tabs.selectedIndicator.nativeElement.style.transform = `translate(${tabElement.offsetLeft}px)`;

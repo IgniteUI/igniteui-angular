@@ -23,17 +23,16 @@ export class IgxTabItemComponent {
 
     @HostBinding("attr.role") public role = "tab";
 
-    @Input() public relatedGroup: IgxTabsGroupComponent;
-
-    @HostListener("focus", ["$event"])
-    public onFocus(event) {
-        this.select();
-    }
+    @Input() 
+    public relatedGroup: IgxTabsGroupComponent;
 
     @HostListener("click", ["$event"])
     public onClick(event) {
         this.select();
     }
+
+    @HostBinding("attr.tabindex")
+    public tabindex;
 
     get changesCount(): number {
         return this._changesCount;
@@ -67,7 +66,7 @@ export class IgxTabItemComponent {
         this._nativeTabItem = _element;
     }
 
-    public select() {
-        this.relatedGroup.select();
+    public select(focusDelay = 50) {
+        this.relatedGroup.select(focusDelay);
     }
 }
