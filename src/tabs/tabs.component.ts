@@ -76,7 +76,6 @@ export class IgxTabsComponent implements AfterViewInit {
     @ViewChild("rightBtn")
     public rightButton: ElementRef;
 
-
     @ViewChild("viewPort")
     public viewPort: ElementRef;
 
@@ -86,9 +85,7 @@ export class IgxTabsComponent implements AfterViewInit {
         const fixedStyle = `igx-tabs--fixed`;
         const iconStyle = `igx-tabs--icons`;
         const iconLabelFound = this.groups.find((group) => group.icon != null && group.label != null);
-
         let css;
-
         switch (TabsType[this.tabsType.toUpperCase()]) {
             case TabsType.FIXED: {
                 css = fixedStyle;
@@ -140,6 +137,7 @@ export class IgxTabsComponent implements AfterViewInit {
                 }
             }
         }
+
     }
 
     public scrollElement(element: any, scrollRight: boolean): void {
@@ -147,21 +145,28 @@ export class IgxTabsComponent implements AfterViewInit {
             const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
             this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
             this.itemsContainer.nativeElement.style.transform = `translate(${-this.offset}px)`;
+
+            if (this.offset == 0 && !scrollRight) {
+                this._hideScrollButton(this.leftButton);
+            } else {
+                this._showScrollButton(this.leftButton);
+            }
+            if (this.offset + viewPortWidth == this.itemsContainer.nativeElement.offsetWidth && scrollRight) {
+                this._hideScrollButton(this.rightButton);
+            } else {
+                this._showScrollButton(this.rightButton);
+            }
         });
+    }
 
-        // if (this.offset == 0 && !scrollRight) {
-        //     this.leftButton.nativeElement.style.visibility = "hidden";
-        // }
-        // else {
-        //     this.leftButton.nativeElement.style.visibility = "visible";
-        // }
+    private _showScrollButton(element) {
+        const elementStyle = element.nativeElement.style;
+        elementStyle.display = "flex";
+        elementStyle.visibility = "visible";
+    }
 
-        // if (this.offset + viewPortWidth == this.itemsContainer.nativeElement.offsetWidth && scrollRight) {
-        //     this.rightButton.nativeElement.style.visibility = "hidden";
-        // }
-        // else {
-        //     this.rightButton.nativeElement.style.visibility = "visible";
-        // }
+    private _hideScrollButton(element) {
+        element.nativeElement.style.visibility = "hidden";
     }
 
     get selectedTab(): IgxTabItemComponent {
@@ -183,8 +188,18 @@ export class IgxTabsComponent implements AfterViewInit {
                 if (group) {
                     group.select();
                 }
+
             }
         }, 0);
+
+        const itemsContainerWidth = this.itemsContainer.nativeElement.offsetWidth;
+        const headerContainerWidth = this.headerContainer.nativeElement.offsetWidth;
+
+        if (itemsContainerWidth > headerContainerWidth) {
+            this._showScrollButton(this.rightButton);
+    }
+        // check sizes 
+        console.log("itemsContainer " + itemsContainerWidth + " headercontainer " + headerContainerWidth);
     }
 
     @HostListener("onTabItemSelected", ["$event"])
@@ -267,6 +282,11 @@ export class IgxTabsGroupComponent implements AfterContentInit {
         return "igx-tabs__group-" + this.index;
     }
 
+    @HostListener("resize", ["$event"])
+    public onResize(event) {
+        console.log("resize");
+    }
+
     public get itemStyle(): string {
         return this._itemStyle;
     }
@@ -314,11 +334,11 @@ export class IgxTabsGroupComponent implements AfterContentInit {
         setTimeout(() => {
             this.relatedTab.nativeTabItem.nativeElement.focus();
         }, focusDelay);
-        this.handleSelection();
+        this._handleSelection();
         this._tabs.onTabItemSelected.emit({ tab: this._tabs.tabs.toArray()[this.index], group: this });
     }
 
-    private handleSelection() {
+    private _handleSelection() {
         const tabElement = this.relatedTab.nativeTabItem.nativeElement;
         const viewPortOffsetWidth = this._tabs.viewPort.nativeElement.offsetWidth;
 
