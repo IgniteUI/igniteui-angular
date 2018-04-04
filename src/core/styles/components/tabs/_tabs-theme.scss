@@ -167,6 +167,10 @@
     }
 
     // ITEM WRAPPER
+    %igx-tabs__content-fixed {
+        min-width: $item-min-width
+    }
+
     %igx-tabs__content-fixed,
     %igx-tabs__header-wrapper-fixed {
         flex: 1 1 auto;
@@ -174,13 +178,21 @@
     }
 
     // ITEM HOLDER (The element that scrolls)
+
     %igx-tabs__content-fluid,
     %igx-tabs__header-wrapper-fluid {
-        display: inline-flex;
-        align-items: center;
         position: relative;
         flex-wrap: nowrap;
         transition: transform .2s $tabs-animation-function;
+    }
+
+    %igx-tabs__header-wrapper-fluid {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    %igx-tabs__content-fluid {
+        display: flex;
     }
 
     // MENU ITEM
