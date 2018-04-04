@@ -26,9 +26,15 @@ import { IgxNavigationService, IToggleView } from "../core/navigation";
 import { HammerGesturesManager } from "../core/touch";
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from "./navigation-drawer.directives";
 
+export interface IChangePinEventArgs {
+    pinned: boolean;
+    event: Event;
+}
+
 /**
- * **Ignite UI for Angular Navigation Drawer**
+ * **Ignite UI for Angular Navigation Drawer** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer.html)
+ *
  * The Ignite UI Navigation Drawer is a collapsible side navigation container commonly used in combination with the Navbar.
  *
  * Example:
@@ -45,12 +51,6 @@ import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from
  * </igx-nav-drawer>
  * ```
  */
-
-export interface IChangePinEventArgs {
-    pinned: boolean;
-    event: Event;
-}
-
 @Component({
     providers: [HammerGesturesManager],
     selector: "igx-nav-drawer",

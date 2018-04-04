@@ -14,8 +14,9 @@ import { IgxIconModule } from "../icon";
 export enum Direction { NONE, NEXT, PREV }
 
 /**
- * **Ignite UI for Angular Carousel**
+ * **Ignite UI for Angular Carousel** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/carousel.html)
+ *
  * The Ignite UI Carousel is used to browse or navigate through a collection of slides. Slides can contain custom
  * content such as images or cards and be used for things such as on-boarding tutorials or page-based interfaces.
  * It can be used as a separate fullscreen element or inside another component.
