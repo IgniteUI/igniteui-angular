@@ -833,12 +833,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public updateSelectionStatus(filteredData?: any[]) {
-        if (filteredData) {
-            this.selectionAPI.save_filtered_data(this.id, filteredData);
-            this.updateHeaderChecboxStatus(filteredData);
-        } else {
-            this.selectionAPI.clear_filtered_data(this.id);
-            this.updateHeaderChecboxStatus(this.data);
+        if (this.rowSelectable) {
+            if (filteredData) {
+                this.selectionAPI.save_filtered_data(this.id, filteredData);
+                this.updateHeaderChecboxStatus(filteredData);
+            } else {
+                this.selectionAPI.clear_filtered_data(this.id);
+                this.updateHeaderChecboxStatus(this.data);
+            }
         }
     }
 
