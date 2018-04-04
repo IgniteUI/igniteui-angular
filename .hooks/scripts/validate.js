@@ -9,8 +9,7 @@ var defaultTemp = require('./templates/default'),
     errorFactory = require('./common').errorFactory;
   
 module.exports = function (message, options, errors) {
-    var checkForFixupAndSquashMessages = new RegExp("");
-
+    
     if (message === undefined) {
         return errorFactory(errMessages.UNDEFINED_OF_COMMIT_MSG);
     } else if (!(typeof message === 'string' || message instanceof String)) {
