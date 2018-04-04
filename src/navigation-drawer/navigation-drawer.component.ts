@@ -26,11 +26,6 @@ import { IgxNavigationService, IToggleView } from "../core/navigation";
 import { HammerGesturesManager } from "../core/touch";
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from "./navigation-drawer.directives";
 
-export interface IChangePinEventArgs {
-    pinned: boolean;
-    event: Event;
-}
-
 /**
  * **Ignite UI for Angular Navigation Drawer** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer.html)
@@ -109,7 +104,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     @Input() public miniWidth = "60px";
 
     /** Pinned state change output for two-way binding  */
-    @Output() public pinChange = new EventEmitter<IChangePinEventArgs>();
+    @Output() public pinChange = new EventEmitter<boolean>(true);
     /** Event fired as the Navigation Drawer is about to open. */
     @Output() public opening = new EventEmitter();
     /** Event fired when the Navigation Drawer has opened. */
@@ -481,10 +476,10 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
             windowWidth = this.getWindowWidth();
             if (!this.pin && windowWidth >= this.pinThreshold) {
                 this.pin = true;
-                this.pinChange.emit({ pinned: true, event: evt });
+                this.pinChange.emit(true);
             } else if (this.pin && windowWidth < this.pinThreshold) {
                 this.pin = false;
-                this.pinChange.emit({ pinned: false, event: evt });
+                this.pinChange.emit(false);
             }
         }
     }
