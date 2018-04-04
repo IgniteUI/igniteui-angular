@@ -55,17 +55,18 @@ export class IgxTabsComponent implements AfterViewInit {
     @Output() public onTabItemSelected = new EventEmitter();
     @Output() public onTabItemDeselected = new EventEmitter();
 
-    @ViewChild("tabsContainer")
-    public tabsContainer: ElementRef;
-
-    @ViewChild("headerContainer")
-    public headerContainer: ElementRef;
-
     @ViewChild("itemsContainer")
     public itemsContainer: ElementRef;
 
     @ViewChild("selectedIndicator")
     public selectedIndicator: ElementRef;
+
+    @ViewChild("leftBtn")
+    public leftButton: ElementRef;
+
+    @ViewChild("rightBtn")
+    public rightButton: ElementRef;
+
 
     @ViewChild("viewPort")
     public viewPort: ElementRef;
@@ -75,7 +76,7 @@ export class IgxTabsComponent implements AfterViewInit {
         const defaultStyle = `igx-tabs`;
         const fixedStyle = `igx-tabs--fixed`;
         const iconStyle = `igx-tabs--icons`;
-        const iconFound = this.groups.find((group) => group.icon != null);
+        const iconLabelFound = this.groups.find((group) => group.icon != null && group.label != null);
 
         let css;
 
@@ -91,8 +92,8 @@ export class IgxTabsComponent implements AfterViewInit {
         }
 
         // Layout fix for items with icons
-        if (!isNullOrUndefined(iconFound)) {
-            css = css + " " + iconStyle;
+        if (!isNullOrUndefined(iconLabelFound)) {
+            css = `${css} ${iconStyle}`;
         }
 
         return css;
@@ -136,6 +137,20 @@ export class IgxTabsComponent implements AfterViewInit {
         const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
         this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
         this.itemsContainer.nativeElement.style.transform = `translate(${-this.offset}px)`;
+
+        // if (this.offset == 0 && !scrollRight) {
+        //     this.leftButton.nativeElement.style.visibility = "hidden";
+        // }
+        // else {
+        //     this.leftButton.nativeElement.style.visibility = "visible";
+        // }
+
+        // if (this.offset + viewPortWidth == this.itemsContainer.nativeElement.offsetWidth && scrollRight) {
+        //     this.rightButton.nativeElement.style.visibility = "hidden";
+        // }
+        // else {
+        //     this.rightButton.nativeElement.style.visibility = "visible";
+        // }
     }
 
     get selectedTab(): IgxTabItemComponent {
