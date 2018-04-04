@@ -137,6 +137,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.dc.instance._viewContainer.element.nativeElement.style.height = "100%";
             this.dc.instance._viewContainer.element.nativeElement.style.left = "0px";
             this.func = (evt) => { this.onHScroll(evt); };
+            this.hScroll = this.getElement(vc, "igx-horizontal-virtual-helper");
             if (!this.hScroll) {
                 const hvFactory: ComponentFactory<HVirtualHelperComponent> =
                     this.resolver.resolveComponentFactory(HVirtualHelperComponent);
@@ -542,7 +543,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     private applyChunkSizeChange() {
-        const chunkSize = this._calculateChunkSize();
+        const chunkSize = this.igxForRemote ? this.igxForOf.length : this._calculateChunkSize();
         if (chunkSize > this.state.chunkSize) {
             const diff = chunkSize - this.state.chunkSize;
             for (let i = 0; i < diff; i++) {
