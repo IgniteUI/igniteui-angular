@@ -14,8 +14,9 @@ import {
 import { IgxNavigationService, IToggleView } from "../core/navigation";
 
 /**
- * **Ignite UI for Angular Toast**
+ * **Ignite UI for Angular Toast** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast.html)
+ *
  * The Ignite UI Toast provides information and warning messages that are non-interactive and cannot
  * be dismissed by the user. Toasts can be displayed at the bottom, middle, or top of the page.
  *
