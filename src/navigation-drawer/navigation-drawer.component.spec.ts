@@ -384,11 +384,11 @@ describe("Navigation Drawer", () => {
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentPin);
-                expect(() => fixture.detectChanges()).not.toThrow();
+                expect(() => fixture.detectChanges()).toThrow();
 
                 // defaults:
-                expect(fixture.componentInstance.viewChild.pin).toBe(false);
-                expect(fixture.componentInstance.pin).toBe(false);
+                expect(fixture.componentInstance.viewChild.pin).toBe(false, "Should be initially unpinned");
+                expect(fixture.componentInstance.pin).toBe(false, "Parent component pin should remain false");
 
                 widthSpyOverride.and.returnValue(fixture.componentInstance.pinThreshold);
                 window.dispatchEvent(new Event("resize"));
@@ -398,8 +398,8 @@ describe("Navigation Drawer", () => {
                 });
             })
             .then(() => {
-                expect(fixture.componentInstance.viewChild.pin).toBe(true);
-                expect(fixture.componentInstance.pin).toBe(true);
+                expect(fixture.componentInstance.viewChild.pin).toBe(true, "Should pin on window resize over threshold");
+                expect(fixture.componentInstance.pin).toBe(true, "Parent pin update on window resize over threshold");
 
                 widthSpyOverride.and.returnValue(768);
                 window.dispatchEvent(new Event("resize"));
@@ -409,12 +409,12 @@ describe("Navigation Drawer", () => {
                 });
             })
             .then(() => {
-                expect(fixture.componentInstance.viewChild.pin).toBe(false);
-                expect(fixture.componentInstance.pin).toBe(false);
+                expect(fixture.componentInstance.viewChild.pin).toBe(false, "Should un-pin on window resize below threshold");
+                expect(fixture.componentInstance.pin).toBe(false, "Parent pin update on window resize below threshold");
                 fixture.componentInstance.pinThreshold = 500;
-                fixture.detectChanges();
-                expect(fixture.componentInstance.viewChild.pin).toBe(true);
-                expect(fixture.componentInstance.pin).toBe(true);
+                expect(() => fixture.detectChanges()).toThrow();
+                expect(fixture.componentInstance.viewChild.pin).toBe(true, "Should re-pin on window resize over threshold");
+                expect(fixture.componentInstance.pin).toBe(true, "Parent pin update on re-pin");
                 done();
             }).catch ((reason) => {
                 return Promise.reject(reason);

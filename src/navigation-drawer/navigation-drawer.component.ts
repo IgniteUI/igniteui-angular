@@ -40,12 +40,6 @@ import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from
  * Items inside can be styled with `igxDrawerItem` directive.
  * ID required to register with provided `IgxNavigationService` allow directives to target the control from other template files.
  */
-
-export interface IChangePinEventArgs {
-    pinned: boolean;
-    event: Event;
-}
-
 @Component({
     providers: [HammerGesturesManager],
     selector: "igx-nav-drawer",
@@ -104,7 +98,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     @Input() public miniWidth = "60px";
 
     /** Pinned state change output for two-way binding  */
-    @Output() public pinChange = new EventEmitter<IChangePinEventArgs>();
+    @Output() public pinChange = new EventEmitter<boolean>();
     /** Event fired as the Navigation Drawer is about to open. */
     @Output() public opening = new EventEmitter();
     /** Event fired when the Navigation Drawer has opened. */
@@ -476,10 +470,10 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
             windowWidth = this.getWindowWidth();
             if (!this.pin && windowWidth >= this.pinThreshold) {
                 this.pin = true;
-                this.pinChange.emit({ pinned: true, event: evt });
+                this.pinChange.emit(true);
             } else if (this.pin && windowWidth < this.pinThreshold) {
                 this.pin = false;
-                this.pinChange.emit({ pinned: false, event: evt });
+                this.pinChange.emit(false);
             }
         }
     }
