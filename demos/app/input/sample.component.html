@@ -5,27 +5,26 @@
             <h4 class="sample-title">Input fieds w/ radio buttons</h4>
             <form class="input-sample" action="/" method="POST">
                 <h4 class="form-title">Personal Info</h4>
-                <div class="igx-form-group">
+                <igx-input-group>
                     <input igxInput name="firstName" type="text" [(ngModel)]="user.firstName" required disabled/>
-                    <label igxLabel for="firstName">First Name*</label>
-                </div>
-                <div class="igx-form-group">
+                    <label igxLabel for="firstName">First Name</label>
+                </igx-input-group>
+                <igx-input-group>
                     <input igxInput name="lastName" type="text" [(ngModel)]="user.lastName" />
-                    <label igxLabel for="lastName">Last Name*</label>
-                </div>
-                <div class="igx-form-group">
+                    <label igxLabel for="lastName">Last Name</label>
+                </igx-input-group>
+                <igx-input-group>
                     <input igxInput name="password" type="password" placeholder="{{placeholder}}" [(ngModel)]="user.password" required/>
-                    <label igxLabel for="password">Password*</label>
-                </div>
-                <div class="igx-form-group">
+                    <label igxLabel for="password">Password</label>
+                </igx-input-group>
+                <igx-input-group>
                     <textarea igxInput name="comment" placeholder="{{placeholder}}" [(ngModel)]="user.comment"></textarea>
                     <label igxLabel for="comment">Additional Information</label>
-                </div>
-                <div class="radio-group">
-                    <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group" [(ngModel)]="user.gender" (click)="onClick($event)"
-                        (change)="onChange($event)">{{item}}</igx-radio>
-                    <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group2" [disabled]="true" [(ngModel)]="user.gender">{{item}}</igx-radio>
-                </div>
+                    <div class="radio-group">
+                        <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group" [(ngModel)]="user.gender" (click)="onClick($event)"
+                            (change)="onChange($event)">{{item}}</igx-radio>
+                        <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group2" [disabled]="true" [(ngModel)]="user.gender">{{item}}</igx-radio>
+                    </div>
             </form>
         </article>
 

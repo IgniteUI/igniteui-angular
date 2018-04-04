@@ -6,14 +6,16 @@ import {
     IgxCardModule,
     IgxCheckboxModule,
     IgxGridModule,
-    IgxInputModule,
+    IgxInputGroupModule,
     IgxRippleModule,
     IgxSnackbarModule,
     IgxSwitchModule,
-    IgxToastModule
+    IgxToastModule,
+    IgxExcelExporterService
 } from "../../lib/main";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { GridSampleComponent } from "./sample.component";
+import { IgxCsvExporterService } from "../../lib/main";
 
 @NgModule({
     declarations: [
@@ -31,7 +33,10 @@ import { GridSampleComponent } from "./sample.component";
         IgxCheckboxModule,
         IgxButtonModule,
         IgxRippleModule,
-        IgxInputModule
+        IgxInputGroupModule
+    ], providers: [
+        IgxExcelExporterService,
+        IgxCsvExporterService
     ]
 })
 export class GridSampleModule { }
