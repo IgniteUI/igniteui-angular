@@ -8,8 +8,7 @@ import {
     HostBinding,
     HostListener,
     Input,
-    OnInit,
-    ViewChild
+    OnInit
 } from "@angular/core";
 import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { RestrictDrag } from "../directives/dragdrop/dragdrop.directive";
@@ -208,10 +207,9 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
                 largest.set(Math.max(...summariesContentWidths), padding);
             }
 
-            const templHeaderContentWidths = Array.from(this.elementRef.nativeElement.children)
+            const headerContentWidths = Array.from(this.elementRef.nativeElement.children)
                     .map((child) => valToPxls(child));
-            const headerCell = this.column.headerTemplate ? Math.max(...templHeaderContentWidths) :
-                    valToPxls(this.elementRef.nativeElement);
+            const headerCell = Math.max(...headerContentWidths);
             const headerStyle = this.grid.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
             const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight);
             largest.set(headerCell, headerPadding);
