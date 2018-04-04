@@ -1,11 +1,114 @@
 <div class="sample-wrapper">
     <page-header title="Tabs" description="Allows the user to navigate between different content displayed in one view. The tabs are placed at the top and allows scrolling."></page-header>
-    <div class="item-wrapp">
-        <!-- <article class="sample-column">
-            <h4 class="sample-title">Three item tabbar</h4>
-            <div class="tabbar-wrapper" #tabbarEl > -->
-        <!-- <igx-tabs>
-                    <igx-tab-panel icon="phone">
+    <div class="item-wrapp" style="display: flex; flex-direction: row; flex-wrap: wrap;">
+        <div style="display: flex; flex-direction: column;">
+            <igx-navbar title="Fixed" actionButtonIcon="menu">
+                <igx-icon name="search"></igx-icon>
+                <igx-icon name="favorite"></igx-icon>
+                <igx-icon name="more_vert"></igx-icon>
+            </igx-navbar>
+            <article class="sample-column" style="width: 600px">
+                <div>
+                    <igx-tabs tabsType="fixed">
+                        <igx-tabs-group icon="phone">
+                            <div class="tab-content">
+                                <h3>Tab 1 Content</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                                    Donec consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus.
+                                    Vestibulum urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor
+                                    viverra lacus. Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque.
+                                    Vestibulum id lacus a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum
+                                    porta. Donec in ligula a arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan
+                                    justo vitae, vehicula diam. Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
+                            </div>
+                        </igx-tabs-group>
+                        <igx-tabs-group icon="supervisor_account">
+                            <div class="tab-content">
+                                <h3>Tab 2 Content</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                                    Donec consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus.
+                                    Vestibulum urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor
+                                    viverra lacus. Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque.
+                                    Vestibulum id lacus a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum
+                                    porta. Donec in ligula a arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan
+                                    justo vitae, vehicula diam. Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
+                            </div>
+                        </igx-tabs-group>
+                        <igx-tabs-group icon="format_list_bulleted">
+                            <div class="tab-content">
+                                <h3>Tab 3 Content</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                                    Donec consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus.
+                                    Vestibulum urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor
+                                    viverra lacus. Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque.
+                                    Vestibulum id lacus a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum
+                                    porta. Donec in ligula a arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan
+                                    justo vitae, vehicula diam. Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
+                            </div>
+                        </igx-tabs-group>
+                    </igx-tabs>
+                </div>
+            </article>
+        </div>
+
+        <div div style="display: flex; flex-direction: column;">
+            <igx-navbar title="Content Fit" actionButtonIcon="menu">
+                <igx-icon name="search"></igx-icon>
+                <igx-icon name="favorite"></igx-icon>
+                <igx-icon name="more_vert"></igx-icon>
+            </igx-navbar>
+            <article class="sample-column" style="width: 600px">
+                <igx-tabs tabsType="contentfit">
+                    <igx-tabs-group label="Tab 1 Looooooooooong Cooooooooooooontent">
+                        <div class="tab-content">
+                            <h3>Tab 1 Content</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula. Donec
+                                consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus. Vestibulum
+                                urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra lacus.
+                                Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id lacus
+                                a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula a
+                                arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula diam.
+                                Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
+                        </div>
+                    </igx-tabs-group>
+                    <igx-tabs-group label="Tab2">
+                        <div class="tab-content">
+                            <h3>Tab 2 Content</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula. Donec
+                                consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus. Vestibulum
+                                urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra lacus.
+                                Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id lacus
+                                a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula a
+                                arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula diam.
+                                Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
+                        </div>
+                    </igx-tabs-group>
+                    <igx-tabs-group label="Tab3 Tab3 Tab3">
+                        <div class="tab-content">
+                            <h3>Tab 3 Content</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula. Donec
+                                consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus. Vestibulum
+                                urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra lacus.
+                                Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id lacus
+                                a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula a
+                                arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula diam.
+                                Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
+                        </div>
+                    </igx-tabs-group>
+                </igx-tabs>
+
+            </article>
+        </div>
+
+        <div div style="display: flex; flex-direction: column;">
+            <igx-navbar title="Labels and icons content" actionButtonIcon="menu">
+                <igx-icon name="search"></igx-icon>
+                <igx-icon name="favorite"></igx-icon>
+                <igx-icon name="more_vert"></igx-icon>
+            </igx-navbar>
+            <article class="sample-column" style="width: 600px">
+                <igx-tabs>
+                    <igx-tabs-group label="Contacts" icon="phone">
                         <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                             <igx-list-item [isHeader]="true">History</igx-list-item>
                             <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item" *ngFor="let contact of contacts">
@@ -19,141 +122,8 @@
                                 </div>
                             </igx-list-item>
                         </igx-list>
-                    </igx-tab-panel>
-                    <igx-tab-panel icon="supervisor_account">
-                        <div class="tab-content">
-                            <h3>Tab 2 Content</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula. Donec
-                                consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus. Vestibulum
-                                urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra lacus.
-                                Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id lacus
-                                a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula a
-                                arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula diam.
-                                Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
-                        </div>
-                    </igx-tab-panel>
-                    <igx-tab-panel icon="format_list_bulleted">
-                        <div class="tab-content">
-                            <h3>Tab 3 Content</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula. Donec
-                                consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus. Vestibulum
-                                urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra lacus.
-                                Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id lacus
-                                a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula a
-                                arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula diam.
-                                Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
-                        </div>
-                    </igx-tab-panel>
-                </igx-tabs> -->
-        <!-- </div>
-        </article> -->
-
-        <article class="sample-column">
-            <h4 class="sample-title">Three item tabbar</h4>
-
-            <div class="tabs-costume-theme">
-                <igx-tabs tabsType="fixed">
-                    <igx-tabs-group label="Tab1" icon="movies">
-                        <div class="tab-content">
-                            <h3>Tab 1 Content</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula. Donec
-                                consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus. Vestibulum urna
-                                arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra lacus.
-                            </p>
-                            <h4>Tab 1 Content</h4>
-                            <p>
-                                Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id lacus a magna euismod volutpat id
-                                in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula a arcu sollicitudin finibus. Vivamus
-                                id lorem pulvinar, accumsan justo vitae, vehicula diam. Mauris vel quam at velit venenatis vulputate
-                                in quis nisl.
-                            </p>
-                        </div>
                     </igx-tabs-group>
                     <igx-tabs-group label="Tab2 Tab2 Tab2 tab" icon="movies">
-                        <div class="tab-content">
-                            <h3>Tab 2 Content</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent ante
-                                lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus rhoncus
-                                quis non ex. Cras ac nulla sed arcu finibus volutpat. Vivamus risus ipsum, pharetra a augue nec,
-                                euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper nunc. Phasellus ultrices
-                                tincidunt imperdiet. Nullam vulputate mauris diam. Nullam elementum, libero vel varius fermentum,
-                                lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. In hendrerit, sapien ac mollis
-                                iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo. Curabitur consequat
-                                sit amet nulla at consequat. Duis volutpat tristique luctus.</p>
-                        </div>
-                    </igx-tabs-group>
-                    <!-- <igx-tabs-group label="Tab3 Tab3 Tab3 Tab3">
-                            <ng-template igxTab>
-                                <igx-avatar initials="T1">
-                                </igx-avatar>
-                                </ng-template>
-                        </igx-tabs-group> -->
-                    <igx-tabs-group label="Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4" icon="movies">
-                        <div class="tab-content">
-                            Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4
-                        </div>
-                    </igx-tabs-group>
-                    <igx-tabs-group label="Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5" icon="movies">
-                        <div class="tab-content">
-                            Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5
-                        </div>
-                    </igx-tabs-group>
-                    <igx-tabs-group label="Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6" icon="movies">
-                        <div class="tab-content">
-                            Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6"
-                        </div>
-                    </igx-tabs-group>
-                    <igx-tabs-group label="Tab7 Tab7 Tab7 Tab7 Tab7" icon="movies">
-                        Tab7 Tab7 Tab7 Tab7 Tab7
-                    </igx-tabs-group>
-                    <igx-tabs-group label="Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8" icon="movies">
-                        <div class="tab-content">
-                            Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8
-                        </div>
-                    </igx-tabs-group>
-                    <igx-tabs-group label="Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9" icon="movies">
-                        <div class="tab-content">
-                            Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9
-                        </div>
-                    </igx-tabs-group>
-                    <igx-tabs-group label="Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10" icon="movies">
-                        <div class="tab-content">
-                            Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10
-                        </div>
-                    </igx-tabs-group>
-                    <igx-tabs-group label="Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11" icon="movies">
-                        <div class="tab-content">
-                            Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11
-                        </div>
-                    </igx-tabs-group>
-                    <igx-tabs-group label="Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12" icon="movies">
-                        <div class="tab-content">
-                            Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12
-                        </div>
-                    </igx-tabs-group>
-                </igx-tabs>
-            </div>
-        </article>
-
-        <!-- <article class="sample-column">
-            <h4 class="sample-title">Three item tabbar</h4>
-            <div class="tabbar-wrapper" #tabbarEl> -->
-        <!-- <igx-tabs #tabbar (onTabSelected)="route($event)" >
-
-                    <igx-tab-panel label="Movies" icon="local_movies">
-                        <div class="tab-content">
-                            <h3>Tab 1 Content</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula. Donec
-                                consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus. Vestibulum
-                                urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra lacus.
-                                Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id lacus
-                                a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula a
-                                arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula diam.
-                                Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
-                        </div>
-                    </igx-tab-panel>
-
-                    <igx-tab-panel label="favorite" icon="favorite">
                         <div class="tab-content">
                             <h3>Tab 2 Content</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
@@ -165,17 +135,127 @@
                                 sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo.
                                 Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.</p>
                         </div>
-                    </igx-tab-panel>
+                    </igx-tabs-group>
 
-                    <igx-tab-panel label="watchlist" icon="list">
+                    <igx-tabs-group label="Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4" icon="movies">
                         <div class="tab-content">
-                            <router-outlet name="tabPanelOutlet"></router-outlet>
+                            <h3>Tab 4 Content</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
+                                ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
+                                rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat. Vivamus risus ipsum, pharetra
+                                a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper nunc.
+                                Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam. Nullam elementum, libero
+                                vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. In hendrerit,
+                                sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo.
+                                Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.</p>
                         </div>
-                    </igx-tab-panel>
-
-                </igx-tabs> -->
-        <!-- </div>
-        </article>
-    </div> -->
+                    </igx-tabs-group>
+                    <igx-tabs-group label="Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5" icon="movies">
+                        <div class="tab-content">
+                            <h3>Tab 5 Content</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
+                                ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
+                                rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat. Vivamus risus ipsum, pharetra
+                                a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper nunc.
+                                Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam. Nullam elementum, libero
+                                vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. In hendrerit,
+                                sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo.
+                                Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.</p>
+                        </div>
+                    </igx-tabs-group>
+                    <igx-tabs-group label="Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6" icon="movies">
+                        <div class="tab-content">
+                            <h3>Tab 6 Content</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
+                                ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
+                                rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat. Vivamus risus ipsum, pharetra
+                                a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper nunc.
+                                Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam. Nullam elementum, libero
+                                vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. In hendrerit,
+                                sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo.
+                                Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.</p>
+                        </div>
+                    </igx-tabs-group>
+                    <igx-tabs-group label="Tab7 Tab7 Tab7 Tab7 Tab7" icon="movies">
+                        <div class="tab-content">
+                            <h3>Tab 7 Content</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
+                                ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
+                                rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat. Vivamus risus ipsum, pharetra
+                                a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper nunc.
+                                Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam. Nullam elementum, libero
+                                vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. In hendrerit,
+                                sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo.
+                                Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.</p>
+                        </div>
+                    </igx-tabs-group>
+                    <igx-tabs-group label="Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8" icon="movies">
+                        <div class="tab-content">
+                            <h3>Tab 8 Content</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
+                                ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
+                                rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat. Vivamus risus ipsum, pharetra
+                                a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper nunc.
+                                Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam. Nullam elementum, libero
+                                vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. In hendrerit,
+                                sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo.
+                                Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.</p>
+                        </div>
+                    </igx-tabs-group>
+                    <igx-tabs-group label="Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9" icon="movies">
+                        <div class="tab-content">
+                            <h3>Tab 9 Content</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
+                                ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
+                                rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat. Vivamus risus ipsum, pharetra
+                                a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper nunc.
+                                Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam. Nullam elementum, libero
+                                vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. In hendrerit,
+                                sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo.
+                                Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.</p>
+                        </div>
+                    </igx-tabs-group>
+                    <igx-tabs-group label="Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10" icon="movies">
+                        <div class="tab-content">
+                            <h3>Tab 10 Content</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
+                                ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
+                                rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat. Vivamus risus ipsum, pharetra
+                                a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper nunc.
+                                Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam. Nullam elementum, libero
+                                vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. In hendrerit,
+                                sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo.
+                                Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.</p>
+                        </div>
+                    </igx-tabs-group>
+                    <igx-tabs-group label="Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11" icon="movies">
+                        <div class="tab-content">
+                            <h3>Tab 11 Content</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
+                                ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
+                                rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat. Vivamus risus ipsum, pharetra
+                                a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper nunc.
+                                Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam. Nullam elementum, libero
+                                vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. In hendrerit,
+                                sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo.
+                                Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.</p>
+                        </div>
+                    </igx-tabs-group>
+                    <igx-tabs-group label="Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12" icon="movies">
+                        <div class="tab-content">
+                            <h3>Tab 12 Content</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
+                                ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
+                                rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat. Vivamus risus ipsum, pharetra
+                                a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper nunc.
+                                Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam. Nullam elementum, libero
+                                vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. In hendrerit,
+                                sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo.
+                                Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.</p>
+                        </div>
+                    </igx-tabs-group>
+                </igx-tabs>
+            </article>
+        </div>
     </div>
 </div>

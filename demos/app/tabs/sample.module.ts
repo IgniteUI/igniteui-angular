@@ -4,7 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { CustomContentComponent, TabsSampleComponent } from "./sample.component";
-import { IgxTabsModule, IgxListModule, IgxAvatarModule, IgxIconModule } from "../../lib/main";
+import { IgxTabsModule, IgxListModule, IgxAvatarModule, IgxIconModule, IgxNavbarModule } from "../../lib/main";
 
 const tabbarRoutes: Routes = [
     {
@@ -29,7 +29,8 @@ const tabbarRoutes: Routes = [
         IgxTabsModule,
         IgxListModule,
         IgxAvatarModule,
-        IgxIconModule
+        IgxIconModule,
+        IgxNavbarModule
     ]
 })
 export class TabsSampleModule { }
