@@ -9,9 +9,7 @@ var defaultTemp = require('./templates/default'),
     errorFactory = require('./common').errorFactory;
   
 module.exports = function (message, options, errors) {
-    var checkForMergeMessages = new RegExp("^Merge branch|^Merge [0-9a-f]+ into [0-9a-f]+"),
-        checkForFixupAndSquashMessages = new RegExp("");
-
+    
     if (message === undefined) {
         return errorFactory(errMessages.UNDEFINED_OF_COMMIT_MSG);
     } else if (!(typeof message === 'string' || message instanceof String)) {
@@ -25,7 +23,7 @@ module.exports = function (message, options, errors) {
         return [];
     }
   
-    if (checkForMergeMessages.test(lines[0])) {
+    if(lines[0].toLocaleLowerCase().startsWith("merge")) {
         return [];
     }
 
