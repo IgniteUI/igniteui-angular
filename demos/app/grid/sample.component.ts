@@ -234,7 +234,7 @@ export class GridSampleComponent {
 
     public updateRecord(event) {
         this.grid1.updateCell(this.selectedCell.rowIndex, this.selectedCell.columnField, event);
-        //this.grid1.getCell(this.selectedCell.rowIndex, this.selectedCell.columnField);
+        // this.grid1.getCell(this.selectedCell.rowIndex, this.selectedCell.columnField);
     }
 
     public deleteRow(event) {
@@ -257,7 +257,7 @@ export class GridSampleComponent {
     public export() {
         this.grid3.clearFilter();
 
-        let options = this.getOptions("Report");
+        const options = this.getOptions("Report");
         options.ignoreColumnsVisibility = false;
 
         this.getExporterService().export(this.grid3, options);
@@ -267,7 +267,7 @@ export class GridSampleComponent {
         this.grid3.filter("ProductName", "Queso", STRING_FILTERS.contains, true);
         this.grid3.cdr.detectChanges();
 
-        let options = this.getOptions("Queso Report");
+        const options = this.getOptions("Queso Report");
         options.ignoreFiltering = false;
         options.ignoreColumnsVisibility = false;
 

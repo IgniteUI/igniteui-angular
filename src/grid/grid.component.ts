@@ -897,7 +897,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public deselectAllRows() {
-        console.log("deselect all rows");
         this.selectionAPI.deselect_all(this.id, this.primaryKey);
         return;
     }
