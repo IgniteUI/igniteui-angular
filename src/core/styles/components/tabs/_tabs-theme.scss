@@ -167,12 +167,14 @@
     }
 
     // ITEM WRAPPER
+    %igx-tabs__content-fixed,
     %igx-tabs__header-wrapper-fixed {
         flex: 1 1 auto;
         overflow: hidden;
     }
 
     // ITEM HOLDER (The element that scrolls)
+    %igx-tabs__content-fluid,
     %igx-tabs__header-wrapper-fluid {
         display: inline-flex;
         align-items: center;
@@ -324,25 +326,7 @@
         }
     }
 
-    %igx-tabs__content-fixed {
-        flex: 1 1 auto;
-        overflow: hidden;
-    }
-
-    %igx-tabs__content-fluid {
-        display: flex;
-        align-items: center;
-        position: relative;
-        flex-wrap: nowrap;
-    }
-
     %igx-tabs__group {
-        min-width: 100%;
-        display: none;
-        transition: transform .3s $tabs-animation-function;
-    }
-
-    %igx-tabs__group--selected {
         display: inline-block;
         min-width: 100%;
     }
