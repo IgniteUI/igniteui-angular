@@ -98,7 +98,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     @Input() public miniWidth = "60px";
 
     /** Pinned state change output for two-way binding  */
-    @Output() public pinChange = new EventEmitter<boolean>();
+    @Output() public pinChange = new EventEmitter<boolean>(true);
     /** Event fired as the Navigation Drawer is about to open. */
     @Output() public opening = new EventEmitter();
     /** Event fired when the Navigation Drawer has opened. */

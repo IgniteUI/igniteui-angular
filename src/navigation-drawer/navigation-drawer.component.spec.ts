@@ -384,11 +384,14 @@ describe("Navigation Drawer", () => {
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentPin);
-                expect(() => fixture.detectChanges()).toThrow();
+                expect(() => fixture.detectChanges()).not.toThrow();
+                return fixture.whenStable();
+            })
+            .then(() => {
 
                 // defaults:
                 expect(fixture.componentInstance.viewChild.pin).toBe(false, "Should be initially unpinned");
-                expect(fixture.componentInstance.pin).toBe(false, "Parent component pin should remain false");
+                expect(fixture.componentInstance.pin).toBe(false, "Parent component pin should update initially");
 
                 widthSpyOverride.and.returnValue(fixture.componentInstance.pinThreshold);
                 window.dispatchEvent(new Event("resize"));
@@ -412,7 +415,10 @@ describe("Navigation Drawer", () => {
                 expect(fixture.componentInstance.viewChild.pin).toBe(false, "Should un-pin on window resize below threshold");
                 expect(fixture.componentInstance.pin).toBe(false, "Parent pin update on window resize below threshold");
                 fixture.componentInstance.pinThreshold = 500;
-                expect(() => fixture.detectChanges()).toThrow();
+                expect(() => fixture.detectChanges()).not.toThrow();
+                return fixture.whenStable();
+            })
+            .then(() => {
                 expect(fixture.componentInstance.viewChild.pin).toBe(true, "Should re-pin on window resize over threshold");
                 expect(fixture.componentInstance.pin).toBe(true, "Parent pin update on re-pin");
                 done();
