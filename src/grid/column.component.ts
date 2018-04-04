@@ -14,6 +14,7 @@ import { STRING_FILTERS } from "../data-operations/filtering-condition";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from "./grid-summary";
+import { IgxGridSummaryComponent } from "./grid-summary.component";
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -161,6 +162,11 @@ export class IgxColumnComponent implements AfterContentInit {
 
     get cells(): IgxGridCellComponent[] {
         return this.grid.rowList.map((row) => row.cells.filter((cell) => cell.columnIndex === this.index))
+        .reduce((a, b) => a.concat(b), []);
+    }
+
+    get summary(): IgxGridSummaryComponent[] {
+        return this.grid.summaryList.filter((sum) => sum.column.index === this.index)
         .reduce((a, b) => a.concat(b), []);
     }
 

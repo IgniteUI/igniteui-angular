@@ -188,18 +188,38 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
                 return  range.getBoundingClientRect().width;
             };
 
+            const largest = new Map<number, number>();
+
             const cellsContentWidths = this.column.bodyTemplate ?
                     Array.from(this.column.cells[0].nativeElement.children).map((child) => valToPxls(child)) :
                     this.column.cells.map((cell) => valToPxls(cell.nativeElement));
 
-            const largestCell = Math.max(...cellsContentWidths);
+            const ind = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
+            const cellStyle = this.grid.document.defaultView.getComputedStyle(this.column.cells[ind].nativeElement);
+            const cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight);
+            largest.set(Math.max(...cellsContentWidths), cellPadding);
 
-            const index = cellsContentWidths.indexOf(largestCell);
-            const cellEl = this.column.cells[index].nativeElement;
-            const cellStyle = this.grid.document.defaultView.getComputedStyle(cellEl);
-            const padding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight);
+            if (this.column.hasSummary) {
+                const summariesContentWidths = Array.from(this.column.summary[0].nativeElement.children)
+                        .map((child) => valToPxls(child));
+                const index = summariesContentWidths.indexOf(Math.max(...summariesContentWidths));
+                const style = this.grid.document.defaultView.getComputedStyle(this.column.summary[0].nativeElement.children[index]);
+                const padding = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
 
-            const size = Math.ceil(largestCell + padding) + "px";
+                largest.set(Math.max(...summariesContentWidths), padding);
+            }
+
+            const templHeaderContentWidths = Array.from(this.elementRef.nativeElement.children)
+                    .map((child) => valToPxls(child));
+            const headerCell = this.column.headerTemplate ? Math.max(...templHeaderContentWidths) :
+                    valToPxls(this.elementRef.nativeElement);
+            const headerStyle = this.grid.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
+            const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight);
+            largest.set(headerCell, headerPadding);
+
+            const largestCell = Math.max(...Array.from(largest.keys()));
+            const largestCellPadding = largest.get(largestCell);
+            const size = Math.ceil(largestCell + largestCellPadding) + "px";
 
             if (this.column.pinned) {
                 const newPinnedWidth  = this.grid.pinnedWidth - currentColWidth + parseFloat(size);

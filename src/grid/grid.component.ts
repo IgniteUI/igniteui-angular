@@ -37,6 +37,7 @@ import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { ISummaryExpression } from "./grid-summary";
+import { IgxGridSummaryComponent } from "./grid-summary.component";
 import { IgxGridRowComponent } from "./row.component";
 
 let NEXT_ID = 0;
@@ -169,6 +170,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
     public rowList: QueryList<IgxGridRowComponent>;
+
+    @ViewChildren(IgxGridSummaryComponent, { read: IgxGridSummaryComponent })
+    public summaryList: QueryList<IgxGridSummaryComponent>;
 
     @ViewChild("scrollContainer", { read: IgxForOfDirective })
     public parentVirtDir: IgxForOfDirective<any>;
