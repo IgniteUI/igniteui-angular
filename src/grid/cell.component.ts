@@ -372,11 +372,13 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
                     parseInt(visibleColumns[visibleColumnIndex].width, 10) +
                     containerLeftOffset;
                 if (!target.isPinned && targetEndLeftOffset > virtContainerSize) {
-                    const oldScrollLeft = horVirtScroll.scrollLeft;
                     // Target cell is partially visible (right part of it is cut). Scroll to it so it is fully visible then focus.
-                    horVirtScroll.scrollLeft = this.row.virtDirRow.getColumnScrollLeft(targetUnpinnedIndex + 1) - virtContainerSize;
+                    const oldScrollLeft = horVirtScroll.scrollLeft;
+                    const targetScrollLeft = this.row.virtDirRow.getColumnScrollLeft(targetUnpinnedIndex + 1) - virtContainerSize;
+                    horVirtScroll.scrollLeft = targetScrollLeft;
 
-                    if (oldScrollLeft === horVirtScroll.scrollLeft) {
+                    if (oldScrollLeft === horVirtScroll.scrollLeft && oldScrollLeft !== targetScrollLeft) {
+                        // There is nowhere to scroll more. Don't subscribe since there won't be triggered event.
                         target.nativeElement.focus();
                         bVirtSubscribe = false;
                     }
@@ -432,9 +434,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
                 // Target cell is partially visible (right part of it is cut). Scroll to it so it is fully visible then focus.
                 const horVirtScroll = this.grid.parentVirtDir.getHorizontalScroll();
                 const oldScrollLeft = horVirtScroll.scrollLeft;
-                horVirtScroll.scrollLeft = this.row.virtDirRow.getColumnScrollLeft(target.unpinnedColumnIndex + 1) - virtContainerSize;
+                const targetScrollLeft = this.row.virtDirRow.getColumnScrollLeft(target.unpinnedColumnIndex + 1) - virtContainerSize;
+                horVirtScroll.scrollLeft = targetScrollLeft;
 
-                if (oldScrollLeft === horVirtScroll.scrollLeft) {
+                if (oldScrollLeft === horVirtScroll.scrollLeft && oldScrollLeft !== targetScrollLeft) {
+                    // There is nowhere to scroll more. Don't subscribe since there won't be triggered event.
                     target.nativeElement.focus();
                 } else {
                     this.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
@@ -476,11 +480,15 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
             const containerTopOffset =
                 parseInt(this.row.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const targetEndTopOffset = target.row.element.nativeElement.offsetTop + this.grid.rowHeight + containerTopOffset;
+            const oldChunkIndex = this.row.grid.verticalScrollContainer.state.startIndex;
             if (containerHeight && targetEndTopOffset > containerHeight) {
                 verticalScroll.scrollTop += targetEndTopOffset - containerHeight;
+
                 this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
                     next: (e: any) => {
-                        target.nativeElement.focus();
+                        if (oldChunkIndex === e.startIndex) {
+                            target.nativeElement.focus();
+                        }
                         this.row.cdr.detectChanges();
                     }
                 });

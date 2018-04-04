@@ -73,7 +73,9 @@ export interface IRowDataEventArgs {
 }
 
 /**
- * **Ignite UI for Angular Grid** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
+ * **Ignite UI for Angular Grid** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
+ *
  * The Ignite UI Grid is used for presenting and manipulating tabular data in the simplest way possible.  Once data
  * has been bound, it can be manipulated through filtering, sorting & editing operations.
  *
@@ -352,6 +354,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
+        this.markForCheck();
 
         this.columnList.changes
             .pipe(takeUntil(this.destroy$))
