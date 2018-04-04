@@ -25,6 +25,7 @@
                             (change)="onChange($event)">{{item}}</igx-radio>
                         <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group2" [disabled]="true" [(ngModel)]="user.gender">{{item}}</igx-radio>
                     </div>
+                </igx-input-group>
             </form>
         </article>
 
