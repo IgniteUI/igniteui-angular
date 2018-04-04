@@ -56,8 +56,8 @@ export class GridSelectionComponent implements OnInit, AfterViewInit {
 
     public handleRowSelection(cell: IgxGridCellComponent) {
         if  (!this.selection) {
+            console.log([cell.row]);
             this.grid1.deselectAllRows();
-            console.log("Row selection");
             this.grid1.selectRows([cell.row]);
         }
     }

@@ -113,9 +113,9 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
     protected chunkLoaded$;
 
     constructor(public gridAPI: IgxGridAPIService,
-                private selectionAPI: IgxSelectionAPIService,
-                private element: ElementRef,
-                public cdr: ChangeDetectorRef) {}
+        private selectionAPI: IgxSelectionAPIService,
+        private element: ElementRef,
+        public cdr: ChangeDetectorRef) { }
 
     @autoWire(true)
     public ngOnInit() {
@@ -178,6 +178,29 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
             this.selectionAPI.deselect_item(this.gridID, this._rowID);
             this.grid.allRowsSelected = false;
             this.grid.headerCheckbox.indeterminate = !this.selectionAPI.are_none_selected(this.gridID);
+        }
+    }
+    public handleArrows(event) {
+        console.log(event);
+        switch (event.keyCode) {
+            case (39):
+                this.cells.first.nativeElement.focus();
+                break;
+            case (38):
+                if (this.index === 0) {
+
+                } else {
+                    this.grid.getRowByIndex(this.index - 1).nativeElement.querySelector(".igx-checkbox__input").focus();
+                }
+                break;
+            case (40):
+                if (this.grid.rowList.toArray().indexOf(this) >=  this.grid.rowList.length - 1) {
+
+                } else {
+                    this.grid.getRowByIndex(this.index + 1).nativeElement.querySelector(".igx-checkbox__input").focus();
+                }
+                break;
+            default:
         }
     }
 }

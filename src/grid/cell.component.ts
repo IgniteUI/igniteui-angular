@@ -270,6 +270,14 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
                     }
                 });
             }
+        } else if (this.grid.rowSelectable === true) {
+            const rowContainer: HTMLElement = this.row.nativeElement;
+            const checkboxElement: HTMLElement = rowContainer.querySelector(".igx-checkbox__input");
+            if (checkboxElement) {
+                this.nativeElement.blur();
+                checkboxElement.focus();
+            }
+            console.log(rowContainer.querySelector(".igx-checkbox"));
         }
     }
 
