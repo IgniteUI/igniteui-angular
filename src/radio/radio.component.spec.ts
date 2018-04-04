@@ -25,7 +25,7 @@ describe("IgxRadio", () => {
             .compileComponents();
     }));
 
-    fit("Init a radio", () => {
+    it("Init a radio", () => {
         const fixture = TestBed.createComponent(InitRadioComponent);
         const testInstance = fixture.componentInstance;
         const radioInstance = fixture.componentInstance.radio;
@@ -44,7 +44,7 @@ describe("IgxRadio", () => {
         expect(placeholderLabel.textContent.trim()).toEqual("Radio");
     });
 
-    fit("Binding to ngModel", async(() => {
+    it("Binding to ngModel", async(() => {
         const fixture = TestBed.createComponent(RadioWithModelComponent);
         fixture.detectChanges();
 
@@ -81,7 +81,7 @@ describe("IgxRadio", () => {
         });
     }));
 
-    fit("Positions label before and after radio button", () => {
+    it("Positions label before and after radio button", () => {
         const fixture = TestBed.createComponent(InitRadioComponent);
         const radioInstance = fixture.componentInstance.radio;
         const placeholderLabel = radioInstance.placeholderLabel.nativeElement;
@@ -96,7 +96,7 @@ describe("IgxRadio", () => {
         expect(labelStyles.order).toEqual("-1");
     });
 
-    fit("Initializes with external label", () => {
+    it("Initializes with external label", () => {
         const fixture = TestBed.createComponent(RadioExternalLabelComponent);
         const radioInstance = fixture.componentInstance.radio;
         const nativeRadio = radioInstance.nativeRadio.nativeElement;
@@ -107,7 +107,7 @@ describe("IgxRadio", () => {
         expect(externalLabel.textContent).toMatch(fixture.componentInstance.label);
     });
 
-    fit("Initializes with invisible label", () => {
+    it("Initializes with invisible label", () => {
         const fixture = TestBed.createComponent(RadioInvisibleLabelComponent);
         const radioInstance = fixture.componentInstance.radio;
         const nativeRadio = radioInstance.nativeRadio.nativeElement;
@@ -116,7 +116,7 @@ describe("IgxRadio", () => {
         expect(nativeRadio.getAttribute("aria-label")).toMatch(fixture.componentInstance.label);
     });
 
-    fit("Disabled state", () => {
+    it("Disabled state", () => {
         const fixture = TestBed.createComponent(DisabledRadioComponent);
         fixture.detectChanges();
 
