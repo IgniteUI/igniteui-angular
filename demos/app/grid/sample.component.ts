@@ -6,13 +6,22 @@ import { IgxGridComponent } from "../../lib/grid/grid.component";
 import {
     DataContainer,
     IDataState,
+    IgxExcelExporterService,
     IgxSnackbarComponent,
     IgxToastComponent,
     IPagingState,
     PagingError,
     SortingDirection,
-    StableSortingStrategy
+    StableSortingStrategy,
+    NUMBER_FILTERS,
+    STRING_FILTERS
 } from "../../lib/main";
+import { IgxExcelExporterOptions } from "../../lib/services/excel/excel-exporter-options";
+import { IgxCsvExporterService } from "../../lib/main";
+import { IgxExporterOptionsBase } from "../../lib/services/exporter-common/exporter-options-base";
+import { IgxCsvExporterOptions } from "../../lib/main";
+import { CsvFileTypes } from "../../lib/main";
+import { IgxBaseExporter } from "../../lib/services/exporter-common/base-export-service";
 
 @Injectable()
 export class LocalService {
@@ -116,8 +125,11 @@ export class GridSampleComponent {
     public selectedRow;
     public newRecord = "";
     public editCell;
+    public exportFormat = "XLSX";
     constructor(private localService: LocalService,
-        private remoteService: RemoteService) { }
+    private remoteService: RemoteService,
+    private excelExporterService: IgxExcelExporterService,
+    private csvExporterService: IgxCsvExporterService) { }
     public ngOnInit(): void {
         this.data = this.localService.records;
         this.remote = this.remoteService.remoteData;
@@ -222,7 +234,7 @@ export class GridSampleComponent {
 
     public updateRecord(event) {
         this.grid1.updateCell(this.selectedCell.rowIndex, this.selectedCell.columnField, event);
-        //this.grid1.getCell(this.selectedCell.rowIndex, this.selectedCell.columnField);
+        // this.grid1.getCell(this.selectedCell.rowIndex, this.selectedCell.columnField);
     }
 
     public deleteRow(event) {
@@ -270,5 +282,48 @@ export class GridSampleComponent {
                 }
             }
         }, 11);
+    }
+    public exportRaw() {
+        this.getExporterService().export(this.grid3, this.getOptions("Report"));
+    }
+
+    public export() {
+        this.grid3.clearFilter();
+
+        const options = this.getOptions("Report");
+        options.ignoreColumnsVisibility = false;
+
+        this.getExporterService().export(this.grid3, options);
+    }
+
+    public exportFilteredGrid() {
+        this.grid3.filter("ProductName", "Queso", STRING_FILTERS.contains, true);
+        this.grid3.cdr.detectChanges();
+
+        const options = this.getOptions("Queso Report");
+        options.ignoreFiltering = false;
+        options.ignoreColumnsVisibility = false;
+
+        this.getExporterService().export(this.grid3, options);
+    }
+    public exportData() {
+        this.getExporterService().exportData(this.grid3.data, this.getOptions("Data"));
+    }
+
+    private getExporterService(): IgxBaseExporter {
+        return this.exportFormat === "XLSX" ? this.excelExporterService : this.csvExporterService;
+    }
+
+    private getOptions(fileName: string): IgxExporterOptionsBase {
+        switch (this.exportFormat) {
+            case "XLSX":
+                return new IgxExcelExporterOptions(fileName);
+            case "CSV":
+                return new IgxCsvExporterOptions(fileName, CsvFileTypes.CSV);
+            case "TSV":
+                return new IgxCsvExporterOptions(fileName, CsvFileTypes.TSV);
+            case "TAB":
+                return new IgxCsvExporterOptions(fileName, CsvFileTypes.TAB)
+        }
     }
 }

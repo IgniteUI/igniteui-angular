@@ -23,7 +23,19 @@ export interface IChangeCheckboxEventArgs {
 
 const noop = () => { };
 let nextId = 0;
-
+/**
+ * **Ignite UI for Angular Checkbox**
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/checkbox.html)
+ * The Ignite UI Checkbox is a selection control that allows users to make a binary choice. It behaves similarly
+ * to the native browser checkbox.
+ *
+ * Example:
+ * ```html
+ * <igx-checkbox checked="true">
+ *   simple checkbox
+ * </igx-checkbox>
+ * ```
+ */
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxCheckboxComponent, multi: true }],
     selector: "igx-checkbox",
