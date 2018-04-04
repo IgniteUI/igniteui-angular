@@ -33,14 +33,13 @@ All notable changes for each version of this project will be documented in this 
 - Added `indeterminate` property and styling to the `igx-checkbox` component.
 - Added `igx-ripple` effect to the `igx-checkbox` component. The effect can be disabled through the `disableRipple` property.
 - Added the ability to specify the label location in the checkbox component through the `labelPosition` property. It can either be `before` or `after` the checkbox element.
-- You can now use any element as label on the `igx-checkbox` component via the aria-labelledby property. 
-- You can now have invisible label on the `igx-checkbox` component via the aria-label property. 
+- You can now use any element as label on the `igx-checkbox` component via the aria-labelledby property.
+- You can now have invisible label on the `igx-checkbox` component via the aria-label property.
 - Added the ability to toggle the `igx-checkbox` checked state programmatically via toggle method on the component instance.
 - Fixed a bug on the `igx-checkbox` component where the click event was being triggered twice on click.
 - Fixed a bug where the `igx-checkbox` change event was not being triggered on label click.
 - `igxМask` directive added
-    - `igxМask` provide means for controlling user input and formatting the visible value based on a configurable mask rules. For more detailed information see [`igxMask README file`]
-    (https://github.com/IgniteUI/igniteui-angular/blob/master/src/directives/mask/README.md)
+    - `igxМask` provide means for controlling user input and formatting the visible value based on a configurable mask rules. For more detailed information see [`igxMask README file`](https://github.com/IgniteUI/igniteui-angular/blob/master/src/directives/mask/README.md)
 - `igxInputGroup` component added - used as a container for the `igxLabel`, `igxInput`, `igxPrefix`, `igxSuffix` and `igxHint` directives.
 - `igxPrefix` directive added - used for input prefixes.
 - `igxSuffix` directive added - used for input suffixes.
@@ -48,11 +47,13 @@ All notable changes for each version of this project will be documented in this 
 - `igxInput` directive breaking changes:
     - the directive should be wrapped by `igxInputGroup` component
     - `IgxInputGroupModule` should be imported instead of `IgxInputModule`
+- `igxExcelExportService` and `igxCSVExportService` added. They add export capabilities to the `igxGrid`. For more information, please visit the [igxExcelExportService specification](https://github.com/IgniteUI/igniteui-angular/wiki/IgxExcelExporterService-Specification) and the [igxCSVExportService specification](https://github.com/IgniteUI/igniteui-angular/wiki/CSV-Exporter-Service-Specification).
 - General
     - Added event argument types to all `EventEmitter` `@Output`s. #798 #740
     - Reviewed and added missing argument types to the following `EventEmitter`s
         - The `igxGrid` `onEditDone` now exposes arguments of type `IGridEditEventArgs`. The arguments expose `row` and `cell` objects where if the editing is performed on a cell, the edited `cell` and the `row` the cell belongs to are exposed. If row editing is performed, the `cell` object is null. In addition the `currentValue` and `newValue` arguments are exposed. If you assign a value to the `newValue` in your handler, then the editing will conclude with the value you've supplied.
         - The `igxGrid` `onSelection` now correctly propagates the original `event` in the `IGridCellEventArgs`.
+    - Added `jsZip` as a Peer Dependency.
 
 ## 5.2.1
 - `hammerjs` and `@types/hammerjs` are removed from `peerDependencies` and were added as `dependencies`. So if you are using Igniteui-Angular version 5.2.1 or above it is enough to run `npm install igniteui-angular` in your project for getting started. For more detailed information see [`Ignite UI for Angular Getting Started`](https://www.infragistics.com/products/ignite-ui-angular/getting-started)
