@@ -6,42 +6,57 @@
 
 /// If only background color is specified,
 /// the idle item color will be assigned automatically to a contrasting color.
-/// @param {Color} $header-background [null] - The background color used for the tabs header.
-/// @param {Color} $item-text-color [null] - The text-color used for the tabs.
-/// @param {Color} $item-active-color [null] - The color used for the active tab text color.
+/// @param {Color} $item-background [null] - The background color used for the tabs header.
+/// @param {Color} $item-hover-background [null] - The text-color used for the tabs.
+/// @param {Color} $item-text-color [null] - The color used for the tab text color.
+/// @param {Color} $item-hover-color [null] - The color used for the tab text color when is on :hover.
+///
+/// @param {Color} $item-active-color [null] - The color used for the active tabs text.
+/// @param {Color} $item-active-icon-color [null] - The color used for the active tabs icon.
+/// @param {Color} $item-active-background [null] - The color used for the active/focused tab background.
+///
 /// @param {Color} $indicator-color [null] - The color used for the active tab indicator.
 /// @param {Color} $item-focus-bg [null] - The background color used for the selected/focused tab.
-/// @param {Color} $button-icon-color [null] - The color used for the button icon/text color.
+/// @param {Color} $button-color [null] - The color used for the button icon/text color.
+/// @param {Color} $button-hover-color [null] - The color used for the button icon/text color when is on :hover.
 /// @param {Color} $button-background [null] - The color used for the button background.
-/// @param {Color} $button-background [null] - The color used for the button background when is on :hover.
+/// @param {Color} $button-hover-background [null] - The color used for the button background when is on :hover.
+///
+/// @param {Color} $tabs-riple-color [null] - The color used for the button background.
+/// @param {Color} $buttons-riple-color [null] - The color used for the button background when is on :hover.
+///
 /// @requires text-contrast
 /// @example scss Set a custom background color
 ///   $my-tabs-theme: igx-tabs-theme(
-//      $header-background: black
+//      $item-background: orange
 //    );
 ///   // Pass the theme to the igx-tabs component mixin
 ///   @include igx-tabs($my-tabs-theme);
 
 @function igx-tabs-theme(
-    // Normal/hover
+    // Normal
     $item-background: null,
-    $item-hover-background: null,
     $item-text-color: null,
+
+    //Hover
+    $item-hover-background: null,
     $item-hover-color: null,
 
-    // Focus/Active
+    // Active/Focus
     $item-active-color: null,
     $item-active-icon-color: null,
     $item-active-background: null,
     $indicator-color: null,
 
+    // Buttons
     $button-color: null,
     $button-background: null,
     $button-hover-background: null,
     $button-hover-color: null,
 
-    $tabs-riple-color: null,
-    $buttons-riple-color: null
+    // Ripple
+    $tabs-ripple-color: null,
+    $buttons-ripple-color: null
 ) {
 
     @if not($item-text-color) and $item-background {
@@ -68,16 +83,16 @@
         $button-hover-color: text-contrast($button-hover-background);
     }
 
-    @if not($tabs-riple-color) and $item-active-background {
-        $tabs-riple-color: text-contrast($item-active-background);
+    @if not($tabs-ripple-color) and $item-active-background {
+        $tabs-ripple-color: text-contrast($item-active-background);
     }
 
-    @if not($tabs-riple-color) and $item-background {
-        $tabs-riple-color: text-contrast($item-background);
+    @if not($tabs-ripple-color) and $item-background {
+        $tabs-ripple-color: text-contrast($item-background);
     }
 
-    @if not($buttons-riple-color) and $button-background {
-        $buttons-riple-color: text-contrast($button-background);
+    @if not($buttons-ripple-color) and $button-background {
+        $buttons-ripple-color: text-contrast($button-background);
     }
 
     @return (
@@ -93,8 +108,8 @@
         button-background: $button-background,
         button-hover-background:$button-hover-background,
         button-hover-color:$button-hover-color,
-        tabs-riple-color: $tabs-riple-color,
-        buttons-riple-color: $buttons-riple-color,
+        tabs-ripple-color: $tabs-ripple-color,
+        buttons-ripple-color: $buttons-ripple-color,
     );
 }
 
@@ -203,7 +218,7 @@
         }
 
         @include igx-ripple((
-            color: map-get($this, 'tabs-riple-color')
+            color: map-get($this, 'tabs-ripple-color')
         ));
     }
 
@@ -293,7 +308,7 @@
         }
 
         @include igx-ripple((
-            color: map-get($this, 'buttons-riple-color')
+            color: map-get($this, 'buttons-ripple-color')
         ));
     }
 
