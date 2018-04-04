@@ -18,7 +18,29 @@ import { fadeIn, fadeOut, slideInBottom } from "../animations/main";
 import { IgxNavigationService, IToggleView } from "../core/navigation";
 import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
-
+/**
+ * **Ignite UI for Angular Dialog Window** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog.html)
+ *
+ * The Ignite UI Dialog Window presents a dialog window to the user which can simply display messages or display
+ * more complicated visuals such as a user sign-in form.  It also provides a right and left button
+ * which can be used for custom actions.
+ *
+ * Example:
+ * ```html
+ * <button (click)="form.open()">Show Dialog</button>
+ * <igx-dialog #form title="Sign In" rightButtonLabel="OK">
+ *   <div>
+ *     <input type="text" igxInput/>
+ *     <label igxLabel>Username</label>
+ *   </div>
+ *   <div>
+ *     <input type="password" igxInput/>
+ *     <label igxLabel>Password</label>
+ *   </div>
+ * </igx-dialog>
+ * ```
+ */
 @Component({
     animations: [
         trigger("fadeInOut", [

@@ -165,6 +165,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |evenRowCSS|string|Additional styling classes applied to all even rows in the grid.|
 |oddRowCSS|string|Additional styling classses applied to all odd rows in the grid.|
 |paginationTemplate|TemplateRef|You can provide a custom `ng-template` for the pagination part of the grid.|
+|columnWidth|string|Default width that will be applied to columns that have no width set. |
 
 ### Outputs
 

@@ -9,7 +9,22 @@ import {
 } from "@angular/core";
 import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxIconModule } from "../icon";
-
+/**
+ * **Ignite UI for Angular Navbar** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navbar.html)
+ *
+ * The Ignite UI Navbar is most commonly used to provide an app header with a hamburger menu and navigation
+ * state such as a "Go Back" button. It also supports other actions represented by icons.
+ *
+ * Example:
+ * ```html
+ * <igx-navbar title="Sample App" actionButtonIcon="menu">
+ *   <igx-icon name="search"></igx-icon>
+ *   <igx-icon name="favorite"></igx-icon>
+ *   <igx-icon name="more_vert"></igx-icon>
+ * </igx-navbar>
+ * ```
+ */
 @Component({
     selector: "igx-navbar",
     templateUrl: "navbar.component.html"

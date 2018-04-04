@@ -20,8 +20,12 @@
                 <igx-input-group>
                     <textarea igxInput name="comment" placeholder="{{placeholder}}" [(ngModel)]="user.comment"></textarea>
                     <label igxLabel for="comment">Additional Information</label>
+                    <div class="radio-group">
+                        <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group" [(ngModel)]="user.gender" (click)="onClick($event)"
+                            (change)="onChange($event)">{{item}}</igx-radio>
+                        <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group2" [disabled]="true" [(ngModel)]="user.gender">{{item}}</igx-radio>
+                    </div>
                 </igx-input-group>
-                <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group" [(ngModel)]="user.gender">{{item}}</igx-radio>
             </form>
         </article>
 
@@ -61,7 +65,7 @@
                     <igx-avatar src="images/avatar/8.jpg" roundShape="true">
                     </igx-avatar>
                     <span igxLabel>Petar Vasilev</span>
-                    <igx-checkbox [(ngModel)]="user.registered" [disableRipple]="true"></igx-checkbox>
+                    <igx-checkbox [(ngModel)]="user2.registered" [disableRipple]="true"></igx-checkbox>
                 </div>
                 <div class="switch-sample">
                     <igx-avatar src="images/avatar/17.jpg" roundShape="true">
@@ -73,7 +77,7 @@
                     <igx-avatar src="images/avatar/17.jpg" roundShape="true">
                     </igx-avatar>
                     <span igxLabel>Brian Vaughan</span>
-                    <igx-checkbox [(ngModel)]="user.registered" [disabled]="true">Value</igx-checkbox>
+                    <igx-checkbox [(ngModel)]="user2.registered" [disabled]="true">Value</igx-checkbox>
                 </div>
                 <div class="switch-sample">
                     <igx-avatar src="images/avatar/17.jpg" roundShape="true">
