@@ -20,7 +20,7 @@ export default {
     },
     externals: [
         function(context, request, callback) {
-            if (request.startsWith('jszip')) {
+            if (/^jszip/i.test(request)) {
                 return callback(null, {
                   commonjs: request,
                   commonjs2: request,
