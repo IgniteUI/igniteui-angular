@@ -5,53 +5,52 @@
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
 ////
-@include b(igx-control) {
+@include b(igx-radio) {
+    $block: bem--selector-to-string(&);
     @include register-component(igx-radio);
 
-    $block: bem--selector-to-string(&);
+    @extend %radio-display !optional;
 
-    @extend %igx-control-display !optional;
-
-    @include e(radio) {
-        //hide default radio control
-
+    @include e(input) {
+        //hide the default radio control
         @include hide-default();
+    }
 
-        ~ #{$block}__label {
-            @extend %igx-radio-lbl-display !optional;
+    @include e(composite) {
+        @extend %radio-composite !optional;
+    }
+
+    @include e(label) {
+        @extend %radio-label !optional;
+        @extend %radio-label--after !optional;
+    }
+
+    @include e(label, $m: before) {
+        @extend %radio-label !optional;
+        @extend %radio-label--before !optional;
+    }
+
+    @include e(ripple) {
+        @extend %radio-ripple !optional;
+    }
+
+    @include m(checked) {
+        @include e(composite) {
+            @extend %radio-composite--x !optional;
         }
+    }
 
-        &:not(:checked) ~ #{$block}__label::before {
-            @extend %igx-radio-lbl-unchecked--before !optional;
+    @include m(disabled) {
+        @extend %radio-display--disabled !optional;
+
+        @include e(composite) {
+            @extend %radio-composite--disabled !optional;
         }
+    }
 
-        &:not(:checked) ~ #{$block}__label::after {
-            @extend %igx-radio-lbl-unchecked--after !optional;
-        }
-
-        &:checked ~ #{$block}__label::before {
-            @extend %igx-radio-lbl-checked--before !optional;
-        }
-
-        &:checked ~ #{$block}__label::after {
-            @extend %igx-radio-lbl-checked--after !optional;
-        }
-
-        &:disabled ~ #{$block}__label {
-            @extend %igx-radio-lbl--disabled !optional;
-        }
-
-        &:disabled:checked ~ #{$block}__label::before {
-            @extend %igx-radio-lbl-checked--disabled-before !optional;
-        }
-
-        &:disabled:checked ~ #{$block}__label::after {
-            @extend %igx-radio-lbl-checked--disabled-after !optional;
-        }
-
-        &:disabled:not(:checked) ~ #{$block}__label::after {
-            @extend %igx-radio-lbl-unchecked--disabled-after !optional;
+    @include mx(checked, disabled) {
+        @include e(composite) {
+            @extend %radio-composite--x--disabled !optional;
         }
     }
 }
-
