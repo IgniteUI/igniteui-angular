@@ -320,6 +320,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
+        this.markForCheck();
 
         this.columnList.changes
             .pipe(takeUntil(this.destroy$))
