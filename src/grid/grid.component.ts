@@ -258,6 +258,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild("headerContainer", { read: IgxForOfDirective })
     public headerContainer: IgxForOfDirective<any>;
 
+    @ViewChild("headerCheckboxContainer")
+    public headerCheckboxContainer: ElementRef;
+
     @ViewChild("headerCheckbox", { read: IgxCheckboxComponent })
     public headerCheckbox: IgxCheckboxComponent;
 
@@ -292,6 +295,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public pagingState;
     public calcWidth: number;
+    public calcRowCheckboxWidth: number;
     public calcHeight: number;
 
     public cellInEditMode: IgxGridCellComponent;
@@ -338,6 +342,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this.width && this.width.indexOf("%") === -1 ? parseInt(this.width, 10) : 0;
         this.calcHeight = 0;
+        this.calcRowCheckboxWidth = 0;
     }
 
     public ngAfterContentInit() {
@@ -686,6 +691,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 footerHeight - pagingHeight -
                 this.scr.nativeElement.clientHeight;
         }
+        this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.clientWidth;
         this.cdr.detectChanges();
     }
 
@@ -698,6 +704,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         let sum = 0;
         for (const col of fc) {
             sum += parseInt(col.width, 10);
+        }
+        if (this.rowSelectable) {
+            sum += this.calcRowCheckboxWidth;
         }
         return sum;
     }

@@ -22,7 +22,7 @@
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
     <div class="igx-grid__tr" role="row" style="width: calc(100% - 18px)">
         <ng-container *ngIf="rowSelectable">
-            <div class="igx-grid__cbx-selection">
+            <div class="igx-grid__cbx-selection" #headerCheckboxContainer>
                 <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event)" disableRipple="true" #headerCheckbox></igx-checkbox>
             </div>
         </ng-container>
