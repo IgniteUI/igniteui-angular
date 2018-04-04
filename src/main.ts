@@ -54,9 +54,3 @@ export * from "./directives/mask/mask.directive";
 export * from "./time-picker/time-picker.component";
 export * from "./directives/ripple/ripple.directive";
 export * from "./directives/toggle/toggle.directive";
-
-// Export services
-export * from "./services/excel/excel-exporter";
-export * from "./services/excel/excel-exporter-options";
-export * from "./services/csv/csv-exporter";
-export * from "./services/csv/csv-exporter-options";
