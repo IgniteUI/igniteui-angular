@@ -61,10 +61,10 @@ export class IgxTabsComponent implements AfterViewInit {
     @ViewChild("headerContainer")
     public headerContainer: ElementRef;
 
-    @ViewChild("itemsContainer") 
+    @ViewChild("itemsContainer")
     public itemsContainer: ElementRef;
 
-    @ViewChild("contentsContainer") 
+    @ViewChild("contentsContainer")
     public contentsContainer: ElementRef;
 
     @ViewChild("selectedIndicator")
@@ -106,7 +106,6 @@ export class IgxTabsComponent implements AfterViewInit {
     }
 
     public selectedIndex = -1;
-    public isScrollable = false;
 
     public calculatedWidth: number;
     public visibleItemsWidth: number;
@@ -197,9 +196,30 @@ export class IgxTabsComponent implements AfterViewInit {
 
         if (itemsContainerWidth > headerContainerWidth) {
             this._showScrollButton(this.rightButton);
-    }
+        }
         // check sizes 
         console.log("itemsContainer " + itemsContainerWidth + " headercontainer " + headerContainerWidth);
+    }
+
+    @HostListener('window:resize')
+    public onResize() {
+        const itemsContainerWidth = this.itemsContainer.nativeElement.offsetWidth;
+        const headerContainerWidth = this.headerContainer.nativeElement.offsetWidth;
+        const viewPortContainerWidth = this.viewPort.nativeElement.offsetWidth;
+
+        if (itemsContainerWidth <= headerContainerWidth) {
+            this._hideScrollButton(this.rightButton);
+            this._hideScrollButton(this.leftButton);
+        }
+        else {
+            console.log("offset " + this.offset + " view port " + this.viewPort.nativeElement.offsetWidth + " itemsContainerWidth " + itemsContainerWidth);
+            if (this.offset != 0) {
+                this._showScrollButton(this.leftButton);
+            }
+            if (this.offset + viewPortContainerWidth <= itemsContainerWidth) {
+                this._showScrollButton(this.rightButton);
+            }
+        }
     }
 
     @HostListener("onTabItemSelected", ["$event"])
@@ -223,11 +243,11 @@ export class IgxTabsComponent implements AfterViewInit {
         this._onArrowKeyDown(true);
     }
 
-    private _onArrowKeyDown(isLeftArrow: boolean) : void {
+    private _onArrowKeyDown(isLeftArrow: boolean): void {
         const tabsArray = this.tabs.toArray();
         const index = (isLeftArrow)
-                      ? (this.selectedIndex === 0) ? tabsArray.length - 1 : this.selectedIndex - 1
-                      : (this.selectedIndex === tabsArray.length - 1) ? 0 : this.selectedIndex + 1;
+            ? (this.selectedIndex === 0) ? tabsArray.length - 1 : this.selectedIndex - 1
+            : (this.selectedIndex === tabsArray.length - 1) ? 0 : this.selectedIndex + 1;
         const focusDelay = (this.selectedIndex === 0) ? 200 : 100;
         const tab = tabsArray[index];
         tab.select(focusDelay);
@@ -256,7 +276,7 @@ export class IgxTabsGroupComponent implements AfterContentInit {
     private _itemStyle = "igx-tabs-group";
     public isSelected = false;
 
-    @Input() 
+    @Input()
     public label: string;
 
     @Input()
@@ -280,11 +300,6 @@ export class IgxTabsGroupComponent implements AfterContentInit {
     @HostBinding("attr.id")
     get id(): string {
         return "igx-tabs__group-" + this.index;
-    }
-
-    @HostListener("resize", ["$event"])
-    public onResize(event) {
-        console.log("resize");
     }
 
     public get itemStyle(): string {
