@@ -224,7 +224,6 @@
 
     %igx-tabs__header-menu-item--selected {
         outline: 0;
-        background: map-get($this, 'item-active-background');
         color: map-get($this, 'item-active-color');
 
         &:focus {
@@ -267,7 +266,7 @@
         height: 2px;
         min-width: rem(160px);
         background: map-get($this, 'indicator-color');
-        transition: transform .3s $tabs-animation-function, width .5s $tabs-animation-function;
+        transition: transform .3s $tabs-animation-function, width .2s $tabs-animation-function;
     }
 
     // SCROLL BUTTONS

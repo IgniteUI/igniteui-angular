@@ -8,6 +8,14 @@
     padding: 20px;
     width: 100%;
     max-width: 50%;
+    min-width: 350px;
+}
+
+@media only screen and (max-width: 710px) {
+    .items-wrapper__item {
+        max-width: 100%;
+        padding: 0;
+    }
 }
 
 .my-tab-content {

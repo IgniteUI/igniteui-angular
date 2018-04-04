@@ -42,14 +42,13 @@ $my-tabs-theme: igx-tabs-theme(
     $item-hover-background: igx-color($default-palette, 'primary', 400),
 
     $item-active-background: igx-color($default-palette, 'primary', 600),
-    $indicator-color: rgba(255, 255, 255, .8),
+    $indicator-color: #fbb13c,
 
     $button-color: rgba(255, 255, 255, .8),
     $button-background: igx-color($default-palette, 'primary', 500),
     $button-hover-background: igx-color($default-palette, 'primary', 600),
     $button-hover-color: #fff
 );
-
 
 .items-wrapper__item--blue {
     @include igx-tabs($my-tabs-theme);
