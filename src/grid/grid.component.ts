@@ -694,7 +694,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 footerHeight - pagingHeight -
                 this.scr.nativeElement.clientHeight;
         }
-        this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.clientWidth;
+        if (this.rowSelectable) {
+            this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.clientWidth;
+        }
         this.cdr.detectChanges();
     }
 
