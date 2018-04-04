@@ -62,76 +62,134 @@
         $this: extend($dark-theme, $theme);
     }
 
-    $input-font-size: rem(16px);
-    $input-transition: all .2s ease-in;
-    $checkbox-label-padding: rem(24px, 16px);
-    $radio-border-style: 2px solid;
-    $radio-width: 20px;
-    $radio-height: $radio-width;
-    $radio-radius: 50% 50%;
+    $font-size: 16px;
+    $label-margin: em(8px);
 
-    %igx-radio-lbl-display {
-        display: inline-block;
-        position: relative;
-        cursor: pointer;
-        height: $radio-height;
-        line-height: $radio-height;
-        font-size: $input-font-size;
+    $size: em(20px);
+
+    $border-style: 2px solid;
+    $border-radius: 50% 50%;
+
+    $transition: all .2s ease-in;
+
+    $ripple-size: em(48px);
+    $ripple-radius: $ripple-size / 2;
+
+    %radio-display {
+        display: inline-flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        font-size: $font-size;
         color: map-get($this, 'label-color');
-        padding-left: $checkbox-label-padding;
+    }
+
+    %radio-display--disabled {
+        pointer-events: none;
+        color: map-get($this, 'disabled-color');
+        user-select: none;
+    }
+
+    %radio-composite {
+        position: relative;
+        display: inline-block;
+        width: $size;
+        height: $size;
+        line-height: $size;
+        cursor: pointer;
+        color: map-get($this, 'label-color');
         user-select: none;
 
         &::before,
         &::after {
             position: absolute;
             content: '';
-            width: $radio-width;
-            height: $radio-height;
+            width: $size;
+            height: $size;
             left: 0;
             top: 0;
-            border-radius: $radio-radius;
+            border-radius: $border-radius;
         }
 
         &::before {
             backface-visibility: hidden;
-            transform: translateZ(0);
-            transition: $input-transition;
+            transform: scale3d(0, 0, 0);
+            transition: $transition;
+        }
+
+        &::after {
+            border: $border-style map-get($this, 'empty-color');
         }
     }
 
-    %igx-radio-lbl-unchecked--before {
-        transform: scale3d(0, 0, 0);
+    %radio-composite--x {
+        &::before {
+            border: $border-style map-get($this, 'fill-color');
+            background-color: map-get($this, 'fill-color');
+            transform: scale3d(.5, .5, .5);
+        }
+
+        &::after {
+            border: $border-style map-get($this, 'fill-color');
+        }
     }
 
-    %igx-radio-lbl-unchecked--after {
-        border: $radio-border-style map-get($this, 'empty-color');
+    %radio-composite--disabled {
+        &::after {
+            border: $border-style map-get($this, 'disabled-color');
+        }
     }
 
-    %igx-radio-lbl-checked--before {
-        border: $radio-border-style map-get($this, 'fill-color');
-        background-color: map-get($this, 'fill-color');
-        transform: scale3d(.5, .5, .5);
+    %radio-composite--x--disabled {
+        &::after {
+            border: $border-style map-get($this, 'disabled-color');
+        }
+
+        &::before {
+            background-color: map-get($this, 'disabled-color');
+            border: $border-style transparent;
+        }
     }
 
-    %igx-radio-lbl-checked--after {
-        border: $radio-border-style map-get($this, 'fill-color');
+    %radio-label {
+        color: currentColor;
+        font-size: $font-size;
+        line-height: 1;
+        cursor: pointer;
+        user-select: none;
+        word-wrap: break-all;
     }
 
-    %igx-radio-lbl--disabled {
+    %radio-label--after {
+        margin-left: $label-margin;
+
+        [dir='rtl'] & {
+            margin-left: initial;
+            margin-right: $label-margin;
+        }
+    }
+
+    %radio-label--before {
+        order: -1;
+        margin-right: $label-margin;
+
+        [dir='rtl'] & {
+            margin-right: initial;
+            margin-left: $label-margin;
+        }
+    }
+
+    %radio-ripple {
+        @include igx-ripple((
+            color: map-get($this, 'fill-color')
+        ));
+        position: absolute;
+        top: calc(50% - #{$ripple-radius});
+        left: calc(50% - #{$ripple-radius});
+        width: $ripple-size;
+        height: $ripple-size;
+        border-radius: $ripple-radius;
+        overflow: hidden;
         pointer-events: none;
-        color: map-get($this, 'disabled-color');
-    }
-
-    %igx-radio-lbl-unchecked--disabled-after {
-        border: $radio-border-style map-get($this, 'disabled-color');
-    }
-
-    %igx-radio-lbl-checked--disabled-before {
-        background-color: map-get($this, 'disabled-color');
-        border: $radio-border-style transparent;
-    }
-
-    %igx-radio-lbl-checked--disabled-after {
-        border: $radio-border-style map-get($this, 'disabled-color');
+        filter: opacity(1);
     }
 }
