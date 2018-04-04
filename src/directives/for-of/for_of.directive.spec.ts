@@ -601,8 +601,8 @@ describe("IgxVirtual directive - simple template", () => {
         }
 
         expect(() => {
-            fix.componentInstance.parentVirtDir.testOnTouchStart();
-            fix.componentInstance.parentVirtDir.testOnTouchMove(1000, 0);
+            fix.componentInstance.childVirtDirs.first.testOnTouchStart();
+            fix.componentInstance.childVirtDirs.first.testOnTouchMove(1000, 0);
             // Trigger onScroll
             fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
             fix.detectChanges();
