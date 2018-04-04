@@ -251,7 +251,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected fixedUpdateAllRows(inScrollTop: number, scrollHeight: number): number {
         const ratio = scrollHeight !== 0 ? inScrollTop / scrollHeight : 0;
         const count = this.totalItemCount || this.igxForOf.length;
-        const currIndex = Math.round(ratio * count);
+        const currIndex = Math.floor(ratio * count);
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
         const endingIndex = this.state.chunkSize + currIndex;
         if (this.state.startIndex !== currIndex) {
