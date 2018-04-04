@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, HostBinding, HostListener, Input, OnInit } from "@angular/core";
+import { DataType } from "../data-operations/data-util";
 import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
@@ -38,6 +39,11 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     @HostBinding("class.desc")
     get descending() {
         return this.sortDirection === SortingDirection.Desc;
+    }
+
+    @HostBinding("class.igx-grid__th--number")
+    get columnType() {
+        return this.column.dataType === DataType.Number;
     }
 
     @HostBinding("class.igx-grid__th--sorted")
