@@ -893,7 +893,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         // awaiting spec, temporary implementation for sample
         rows.forEach((row) => row.grid.primaryKey ?
-        this.selectionAPI.select_item(this.id, row.grid.primaryKey) :
+        this.selectionAPI.select_item(this.id, row.rowData[row.grid.primaryKey]) :
         this.selectionAPI.select_item(this.id, row.rowData)
         );
         return;
@@ -908,7 +908,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public deselectAllRows() {
-        console.log("deselect all rows");
         this.selectionAPI.deselect_all(this.id, this.primaryKey);
         return;
     }

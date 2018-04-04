@@ -15,6 +15,7 @@ import {
     ViewChild,
     ViewChildren
 } from "@angular/core";
+import { take } from "rxjs/operators";
 import { IgxSelectionAPIService } from "../core/selection";
 import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
 import { IgxGridAPIService } from "./api.service";
@@ -113,9 +114,9 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
     protected chunkLoaded$;
 
     constructor(public gridAPI: IgxGridAPIService,
-                private selectionAPI: IgxSelectionAPIService,
-                private element: ElementRef,
-                public cdr: ChangeDetectorRef) {}
+        private selectionAPI: IgxSelectionAPIService,
+        private element: ElementRef,
+        public cdr: ChangeDetectorRef) { }
 
     @autoWire(true)
     public ngOnInit() {
@@ -177,6 +178,59 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
             this.selectionAPI.deselect_item(this.gridID, this._rowID);
             this.grid.allRowsSelected = false;
             this.grid.headerCheckbox.indeterminate = !this.selectionAPI.are_none_selected(this.gridID);
+        }
+    }
+    public handleArrows(event) {
+        console.log(event);
+        let currentIndex = 0;
+        let target;
+        switch (event.keyCode) {
+            case (39): // rightArrow
+                this.cells.first.nativeElement.focus();
+                break;
+            case (38): // upArrow
+                currentIndex = this.grid.rowList.toArray().indexOf(this);
+                if (currentIndex === 0) {
+                    const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
+                    if (!verticalScroll) {
+                        return;
+                    }
+                    this.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+                        next: (e: any) => {
+                            target = this.grid.rowList.toArray()[currentIndex - 1];
+                            if (target) {
+                                this.grid.getRowByIndex(currentIndex - 1).nativeElement.querySelector(".igx-checkbox__input").focus();
+                                this.cdr.detectChanges();
+                            }
+                        }
+                    });
+                    verticalScroll.scrollTop -= this.rowHeight;
+                } else {
+                    this.grid.getRowByIndex(this.index - 1).nativeElement.querySelector(".igx-checkbox__input").focus();
+                }
+                break;
+            case (40): // downArrow
+                currentIndex = this.grid.rowList.toArray().indexOf(this);
+                if (currentIndex >= this.grid.rowList.length - 1) {
+                    const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
+                    if (!verticalScroll) {
+                        return;
+                    }
+                    this.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+                        next: (e: any) => {
+                            target = this.grid.rowList.toArray()[currentIndex + 1];
+                            if (target) {
+                                target.nativeElement.querySelector(".igx-checkbox__input").focus();
+                                target.cdr.detectChanges();
+                            }
+                        }
+                    });
+                    verticalScroll.scrollTop += this.rowHeight;
+                } else {
+                    this.grid.getRowByIndex(this.index + 1).nativeElement.querySelector(".igx-checkbox__input").focus();
+                }
+                break;
+            default:
         }
     }
 }
