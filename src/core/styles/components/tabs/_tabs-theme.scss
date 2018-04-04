@@ -168,7 +168,7 @@
 
     // ITEM WRAPPER
     %igx-tabs__content-fixed {
-        min-width: $item-min-width
+        min-width: $item-max-width
     }
 
     %igx-tabs__content-fixed,
@@ -344,10 +344,6 @@
     }
 
     %igx-tabs--fixed {
-        %igx-tabs__header-wrapper-fluid {
-            display: flex;
-        }
-
         %igx-tabs__header-menu-item {
             flex: 1 1 auto;
         }
