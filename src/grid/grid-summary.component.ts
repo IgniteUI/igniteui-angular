@@ -28,6 +28,11 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
     }
 
     @HostBinding("class.igx-grid-summary--pinned")
+    get isPinned() {
+        return this.column.pinned;
+    }
+
+    @HostBinding("class.igx-grid-summary--pinned-last")
     get isLastPinned() {
         const pinnedCols = this.gridAPI.get(this.gridID).pinnedColumns;
         if (pinnedCols.length === 0) {
@@ -92,7 +97,7 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
                 } else {
                     this.clearAll();
                 }
-                });
+            });
             this.subscriptionOnAdd$ = this.gridAPI.get(this.gridID).onRowAdded.subscribe(() => this.clearAll());
             this.subscriptionOnDelete$ = this.gridAPI.get(this.gridID).onRowDeleted.subscribe(() => this.clearAll());
         }
@@ -150,7 +155,7 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
     public changeSummaryClass(functionKey: string) {
         const summaryKey = this.column.field + "_" + functionKey;
         switch (this.summaryStyle.get(summaryKey)) {
-            case this.itemClass: this.summaryStyle.set(summaryKey, this.hiddenItemClass);  break;
+            case this.itemClass: this.summaryStyle.set(summaryKey, this.hiddenItemClass); break;
             case this.hiddenItemClass: this.summaryStyle.set(summaryKey, this.itemClass); break;
         }
     }

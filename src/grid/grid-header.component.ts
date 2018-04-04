@@ -102,11 +102,9 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
                     : this.sortDirection;
                 this.gridAPI.sort(this.gridID, this.column.field, this.sortDirection, this.column.sortingIgnoreCase);
                 grid.onSortingDone.emit({
-                    expression: {
-                        dir: this.sortDirection,
-                        fieldName: this.column.field,
-                        ignoreCase: this.column.sortingIgnoreCase
-                    }
+                    dir: this.sortDirection,
+                    fieldName: this.column.field,
+                    ignoreCase: this.column.sortingIgnoreCase
                 });
             }
         }
@@ -142,11 +140,12 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
         return this.gridAPI.get(this.gridID);
     }
 
+    @HostBinding("class.igx-grid__th--pinned")
     get isPinned() {
         return this.column.pinned;
     }
 
-    @HostBinding("class.igx-grid__th--pinned-start")
+    @HostBinding("class.igx-grid__th--pinned-last")
     get isLastPinned() {
         const pinnedCols = this.grid.pinnedColumns;
         if (pinnedCols.length === 0) {

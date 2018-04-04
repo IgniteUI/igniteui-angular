@@ -13,6 +13,19 @@ All notable changes for each version of this project will be documented in this 
    For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#pinning).
 - Added `summaries` feature to `igxGrid`, enabled on a per-column level. **Grid summaries** gives you a predefined set of default summaries, depending on the type of data in the column.
     For more detailed information read `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#summaries).
+- Added smooth scrolling for the `igxForOf` directive making the scrolling experience both vertically and horizontally much more natural and similar to a native scroll.
+- `igxForOf` now requires that its parent container's `overflow` is set to `hidden`. It is recommended that its height is set as well so that the display container of the virtualized content can be positioned with an offset inside without visually affecting other elements on the page.
+    ```html
+    <div style='position: relative; height: 500px; overflow: hidden'>
+        <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical
+                [igxForScrollOrientation]="'vertical'"
+                [igxForContainerSize]='"500px"'
+                [igxForItemSize]='"50px"'
+                let-rowIndex="index">
+                <div style='height:50px;'>{{rowIndex}} : {{item.text}}</div>
+        </ng-template>
+    </div>
+    ```
 - Removed the `dirty` local template variable previously exposed by the `igxFor` directive.
 - the `igx-icon` component can now work with both glyph and ligature-based icon font sets. We've also included a brand new Icon Service, which helps you create aliases for the icon fonts you've included in your project. The service also allows you to define the default icon set used throughout your app.
 - Added the option to conditionally disable the `igx-ripple` directive through the `igxRippleDisabled` property.
@@ -35,6 +48,11 @@ All notable changes for each version of this project will be documented in this 
 - `igxInput` directive breaking changes:
     - the directive should be wrapped by `igxInputGroup` component
     - `IgxInputGroupModule` should be imported instead of `IgxInputModule`
+- General
+    - Added event argument types to all `EventEmitter` `@Output`s. #798 #740
+    - Reviewed and added missing argument types to the following `EventEmitter`s
+        - The `igxGrid` `onEditDone` now exposes arguments of type `IGridEditEventArgs`. The arguments expose `row` and `cell` objects where if the editing is performed on a cell, the edited `cell` and the `row` the cell belongs to are exposed. If row editing is performed, the `cell` object is null. In addition the `currentValue` and `newValue` arguments are exposed. If you assign a value to the `newValue` in your handler, then the editing will conclude with the value you've supplied.
+        - The `igxGrid` `onSelection` now correctly propagates the original `event` in the `IGridCellEventArgs`.
 
 ## 5.2.1
 - `hammerjs` and `@types/hammerjs` are removed from `peerDependencies` and were added as `dependencies`. So if you are using Igniteui-Angular version 5.2.1 or above it is enough to run `npm install igniteui-angular` in your project for getting started. For more detailed information see [`Ignite UI for Angular Getting Started`](https://www.infragistics.com/products/ignite-ui-angular/getting-started)
