@@ -133,7 +133,7 @@
     $tabs-height: rem(48px);
     $tabs-height-icon: rem(77px);
     $label-font-size: rem(14px, 16px);
-    $label-line-height: rem(12px, 16px);
+    $label-line-height: $label-font-size;
     $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
     $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
     $icon-label-space: rem(10px);
@@ -148,6 +148,7 @@
         display: flex;
         align-items: center;
         overflow: hidden;
+        background: map-get($this, 'item-background');
     }
 
     // ITEM WRAPPER
@@ -267,7 +268,6 @@
         min-height: $tabs-height;
         height: $tabs-height;
         cursor: pointer;
-        box-shadow: igx-elevation($elevations, 8);
         position: relative;
         background: map-get($this, 'button-background');
         color: map-get($this, 'button-color');
@@ -297,10 +297,6 @@
         ));
     }
 
-    %igx-tabs__header-button--active {
-        box-shadow: igx-elevation($elevations, 8);
-    }
-
     // LABELS
     %igx-tabs__item-label {
         @include ellipsis();
@@ -320,7 +316,7 @@
     }
 
     %igx-tabs__content-fluid {
-        display: inline-flex;
+        display: flex;
         align-items: center;
         position: relative;
         flex-wrap: nowrap;
@@ -333,9 +329,8 @@
     }
 
     %igx-tabs__group--selected {
-        display: inline-flex;
+        display: inline-block;
         min-width: 100%;
-        padding: 0 rem(20px);
     }
 
     %igx-tabs--fixed {

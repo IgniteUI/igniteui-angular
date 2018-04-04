@@ -1,17 +1,16 @@
 <div class="sample-wrapper">
     <page-header title="Tabs" description="Allows the user to navigate between different content displayed in one view. The tabs are placed at the top and allows scrolling."></page-header>
-    <div class="item-wrapp" style="display: flex; flex-direction: row; flex-wrap: wrap;">
-        <div style="display: flex; flex-direction: column;">
+
+    <div class="items-wrapper">
+        <div class="items-wrapper__item items-wrapper__item--blue">
             <igx-navbar title="Fixed" actionButtonIcon="menu">
                 <igx-icon name="search"></igx-icon>
                 <igx-icon name="favorite"></igx-icon>
                 <igx-icon name="more_vert"></igx-icon>
             </igx-navbar>
-            <article class="sample-column" style="width: 600px">
-                <div>
-                    <igx-tabs tabsType="fixed">
+            <igx-tabs tabsType="fixed">
                         <igx-tabs-group icon="phone">
-                            <div class="tab-content">
+                            <div class="my-tab-content">
                                 <h3>Tab 1 Content</h3>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
                                     Donec consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus.
@@ -23,7 +22,7 @@
                             </div>
                         </igx-tabs-group>
                         <igx-tabs-group icon="supervisor_account">
-                            <div class="tab-content">
+                            <div class="my-tab-content">
                                 <h3>Tab 2 Content</h3>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
                                     Donec consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus.
@@ -35,7 +34,7 @@
                             </div>
                         </igx-tabs-group>
                         <igx-tabs-group icon="format_list_bulleted">
-                            <div class="tab-content">
+                            <div class="my-tab-content">
                                 <h3>Tab 3 Content</h3>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
                                     Donec consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus.
@@ -47,20 +46,16 @@
                             </div>
                         </igx-tabs-group>
                     </igx-tabs>
-                </div>
-            </article>
         </div>
-
-        <div div style="display: flex; flex-direction: column;">
+        <div class="items-wrapper__item ">
             <igx-navbar title="Content Fit" actionButtonIcon="menu">
                 <igx-icon name="search"></igx-icon>
                 <igx-icon name="favorite"></igx-icon>
                 <igx-icon name="more_vert"></igx-icon>
             </igx-navbar>
-            <article class="sample-column" style="width: 600px">
-                <igx-tabs tabsType="contentfit">
+            <igx-tabs tabsType="contentfit">
                     <igx-tabs-group label="Tab 1 Looooooooooong Cooooooooooooontent">
-                        <div class="tab-content">
+                        <div class="my-tab-content">
                             <h3>Tab 1 Content</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula. Donec
                                 consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus. Vestibulum
@@ -72,7 +67,7 @@
                         </div>
                     </igx-tabs-group>
                     <igx-tabs-group label="Tab2">
-                        <div class="tab-content">
+                        <div class="my-tab-content">
                             <h3>Tab 2 Content</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula. Donec
                                 consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus. Vestibulum
@@ -84,7 +79,7 @@
                         </div>
                     </igx-tabs-group>
                     <igx-tabs-group label="Tab3 Tab3 Tab3">
-                        <div class="tab-content">
+                        <div class="my-tab-content">
                             <h3>Tab 3 Content</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula. Donec
                                 consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus. Vestibulum
@@ -96,18 +91,14 @@
                         </div>
                     </igx-tabs-group>
                 </igx-tabs>
-
-            </article>
         </div>
-
-        <div div style="display: flex; flex-direction: column;">
+        <div class="items-wrapper__item items-wrapper__item--blue">
             <igx-navbar title="Labels and icons content" actionButtonIcon="menu">
                 <igx-icon name="search"></igx-icon>
                 <igx-icon name="favorite"></igx-icon>
                 <igx-icon name="more_vert"></igx-icon>
             </igx-navbar>
-            <article class="sample-column" style="width: 600px">
-                <igx-tabs>
+            <igx-tabs>
                     <igx-tabs-group label="Contacts" icon="phone">
                         <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                             <igx-list-item [isHeader]="true">History</igx-list-item>
@@ -124,7 +115,7 @@
                         </igx-list>
                     </igx-tabs-group>
                     <igx-tabs-group label="Tab2 Tab2 Tab2 tab" icon="movies">
-                        <div class="tab-content">
+                        <div class="my-tab-content">
                             <h3>Tab 2 Content</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
                                 ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
@@ -138,7 +129,7 @@
                     </igx-tabs-group>
 
                     <igx-tabs-group label="Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4 Tab4" icon="movies">
-                        <div class="tab-content">
+                        <div class="my-tab-content">
                             <h3>Tab 4 Content</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
                                 ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
@@ -151,7 +142,7 @@
                         </div>
                     </igx-tabs-group>
                     <igx-tabs-group label="Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5 Tab5" icon="movies">
-                        <div class="tab-content">
+                        <div class="my-tab-content">
                             <h3>Tab 5 Content</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
                                 ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
@@ -164,7 +155,7 @@
                         </div>
                     </igx-tabs-group>
                     <igx-tabs-group label="Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6 Tab6" icon="movies">
-                        <div class="tab-content">
+                        <div class="my-tab-content">
                             <h3>Tab 6 Content</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
                                 ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
@@ -177,7 +168,7 @@
                         </div>
                     </igx-tabs-group>
                     <igx-tabs-group label="Tab7 Tab7 Tab7 Tab7 Tab7" icon="movies">
-                        <div class="tab-content">
+                        <div class="my-tab-content">
                             <h3>Tab 7 Content</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
                                 ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
@@ -190,7 +181,7 @@
                         </div>
                     </igx-tabs-group>
                     <igx-tabs-group label="Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8 Tab8" icon="movies">
-                        <div class="tab-content">
+                        <div class="my-tab-content">
                             <h3>Tab 8 Content</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
                                 ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
@@ -203,7 +194,7 @@
                         </div>
                     </igx-tabs-group>
                     <igx-tabs-group label="Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9 Tab9" icon="movies">
-                        <div class="tab-content">
+                        <div class="my-tab-content">
                             <h3>Tab 9 Content</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
                                 ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
@@ -216,7 +207,7 @@
                         </div>
                     </igx-tabs-group>
                     <igx-tabs-group label="Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10 Tab10" icon="movies">
-                        <div class="tab-content">
+                        <div class="my-tab-content">
                             <h3>Tab 10 Content</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
                                 ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
@@ -229,7 +220,7 @@
                         </div>
                     </igx-tabs-group>
                     <igx-tabs-group label="Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11 Tab11" icon="movies">
-                        <div class="tab-content">
+                        <div class="my-tab-content">
                             <h3>Tab 11 Content</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
                                 ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
@@ -242,7 +233,7 @@
                         </div>
                     </igx-tabs-group>
                     <igx-tabs-group label="Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12 Tab12" icon="movies">
-                        <div class="tab-content">
+                        <div class="my-tab-content">
                             <h3>Tab 12 Content</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
                                 ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
@@ -255,7 +246,6 @@
                         </div>
                     </igx-tabs-group>
                 </igx-tabs>
-            </article>
         </div>
     </div>
 </div>

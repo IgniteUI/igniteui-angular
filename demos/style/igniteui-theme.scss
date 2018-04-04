@@ -51,7 +51,7 @@ $my-tabs-theme: igx-tabs-theme(
 );
 
 
-.tabs-costume-theme {
+.items-wrapper__item--blue {
     @include igx-tabs($my-tabs-theme);
 }
 

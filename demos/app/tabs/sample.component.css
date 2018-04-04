@@ -1,3 +1,22 @@
-.item-wrapp {
-    max-width: 600px;
+.items-wrapper {
+    display: flex;
+    flex-flow: wrap;
+}
+
+.items-wrapper__item {
+    flex: 1 1 0%;
+    padding: 20px;
+    width: 100%;
+    max-width: 50%;
+}
+
+.my-tab-content {
+    padding: 0 15px;
+}
+
+.items-wrapper__item--blue .igx-tabs,
+.items-wrapper__item--blue .igx-tabs--fixed
+{
+    z-index: 5;
+    position: relative;
 }
