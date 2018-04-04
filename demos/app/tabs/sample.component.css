@@ -1,3 +1,52 @@
-.item-wrapp {
-    max-width: 600px;
+.items-wrapper {
+    display: flex;
+    flex-flow: wrap;
+}
+
+.items-wrapper__item {
+    flex: 1 1 0%;
+    padding: 20px;
+    width: 100%;
+    max-width: 50%;
+    min-width: 350px;
+}
+
+@media only screen and (max-width: 710px) {
+    .items-wrapper__item {
+        max-width: 100%;
+        padding: 0;
+    }
+}
+
+.my-tab-content {
+    padding: 0 15px;
+}
+
+.items-wrapper__item--blue .igx-tabs,
+.items-wrapper__item--blue .igx-tabs--fixed
+{
+    z-index: 5;
+    position: relative;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.item > [igxLabel],
+.item > .person {
+    position: absolute;
+    margin-left: 72px;
+}
+
+.person .name {
+    padding: 0;
+    margin: 0;
+}
+
+.person .phone {
+    font-size: 12px;
+    color: gray;
 }
