@@ -34,6 +34,7 @@
 .radio-group {
     display: flex;
     flex-flow: column nowrap;
+    margin-top: 16px;
 }
 
 .radio-group igx-radio+igx-radio {
