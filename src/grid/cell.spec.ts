@@ -3,6 +3,7 @@ import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridCellComponent } from "./cell.component";
+import { IgxColumnComponent } from "./column.component";
 import { IGridCellEventArgs, IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
@@ -14,7 +15,8 @@ describe("IgxGrid - Cell component", () => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,
-                CtrlKeyKeyboardNagivationComponent
+                CtrlKeyKeyboardNagivationComponent,
+                VirtualtGridComponent
             ],
             imports: [IgxGridModule.forRoot()]
         }).compileComponents();
@@ -233,6 +235,14 @@ describe("IgxGrid - Cell component", () => {
 
         });
     }));
+    it("should fit last cell in the available display container when there is vertical scroll.", () => {
+        const fix = TestBed.createComponent(VirtualtGridComponent);
+        fix.detectChanges();
+        const rows = fix.componentInstance.instance.rowList;
+        rows.forEach((item) => {
+            expect(item.cells.last.width).toEqual("182px");
+        });
+    });
 });
 
 @Component({
@@ -280,5 +290,31 @@ export class CtrlKeyKeyboardNagivationComponent {
 
     public cellSelected(event: IGridCellEventArgs) {
         this.selectedCell = event.cell;
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid [height]="'300px'" [width]="'800px'" [data]="data"
+        [autoGenerate]="true" (onColumnInit)="columnCreated($event)"></igx-grid>
+    `
+})
+export class VirtualtGridComponent {
+    public data = [];
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public instance: IgxGridComponent;
+    constructor() {
+        this.data = this.generateData();
+    }
+    public generateData() {
+        const data = [];
+        for (let i = 0; i < 1000; i++) {
+            data.push({ index: i, value: i, other: i, another: i });
+        }
+        return data;
+    }
+
+    public columnCreated(column: IgxColumnComponent) {
+        column.width = "200px";
     }
 }
