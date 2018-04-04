@@ -22,8 +22,8 @@
 /// @param {Color} $button-background [null] - The color used for the button background.
 /// @param {Color} $button-hover-background [null] - The color used for the button background when is on :hover.
 ///
-/// @param {Color} $tabs-riple-color [null] - The color used for the button background.
-/// @param {Color} $buttons-riple-color [null] - The color used for the button background when is on :hover.
+/// @param {Color} $tabs-ripple-color [null] - The color used for the button background.
+/// @param {Color} $buttons-ripple-color [null] - The color used for the button background when is on :hover.
 ///
 /// @requires text-contrast
 /// @example scss Set a custom background color
@@ -135,8 +135,8 @@
         $button-background: white,
         $button-hover-background: igx-color($palette, 'grays', 100),
         $button-hover-color: igx-color($palette, 'grays', 600),
-        $tabs-riple-color: igx-color($palette, 'grays', 100),
-        $buttons-riple-color: igx-color($palette, 'grays', 100)
+        $tabs-ripple-color: igx-color($palette, 'grays', 100),
+        $buttons-ripple-color: igx-color($palette, 'grays', 100)
     );
 
     $this: extend($default-theme, $theme);
