@@ -33,6 +33,11 @@
         @extend %igx-grid-summary--pinned !optional;
     }
 
+    @include m(pinned-last) {
+        @extend %igx-grid-summary--pinned !optional;
+        @extend %igx-grid-summary--pinned-last !optional;
+    }
+
     @include m(empty) {
         @extend %igx-grid-summary !optional;
         @extend %igx-grid-summary--empty !optional;
