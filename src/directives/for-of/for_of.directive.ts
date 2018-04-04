@@ -240,8 +240,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const containerSize = parseInt(this.igxForContainerSize, 10);
         const curScrollTop = event.target.scrollTop * this._virtHeightRatio;
         const vcHeight = (event.target.children[0].scrollHeight - containerSize) * this._virtHeightRatio + containerSize;
-        const scrollOffset = this.fixedUpdateAllRows(curScrollTop, vcHeight);
-        this.dc.instance._viewContainer.element.nativeElement.style.top = -scrollOffset + "px";
+        let scrollOffset = this.fixedUpdateAllRows(curScrollTop, vcHeight);
+        scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
+        this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + "px";
 
         this.dc.changeDetectorRef.detectChanges();
         this.onChunkLoad.emit(this.state);
