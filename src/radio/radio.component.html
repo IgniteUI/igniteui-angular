@@ -1,14 +1,30 @@
-<div class="igx-control">
-    <input class="igx-control__radio" type="radio" #radio
-        [attr.id]="id"
-        [attr.name]="name"
-        [attr.value]="value"
-        [attr.tabindex]="tabindex"
-        [attr.aria-checked]="checked"
-        [disabled]="disabled"
-        [checked]="checked"
-        (change)="onChange($event)"
-        (focus)="onFocus($event)"
-        (blur)="onBlur($event)"/>
-    <label class ="igx-control__label" [attr.for]="id"><ng-content></ng-content></label>
-</div>
+<input #radio class="igx-radio__input" type="radio"
+    [id]="id"
+    [name]="name"
+    [value]="value"
+    [tabindex]="tabindex"
+    [disabled]="disabled"
+    [checked]="checked"
+    [attr.aria-checked]="checked"
+    [attr.aria-labelledby]="ariaLabelledBy"
+    [attr.aria-label]="ariaLabel"
+    (click)="_onRadioClick($event)"
+    (change)="_onRadioChange($event)"
+    (focus)="onFocus($event)"
+    (blur)="onBlur($event)" />
+
+<label #nativeLabel class="igx-radio__composite" igxRipple
+    igxRippleTarget=".igx-radio__ripple"
+    [igxRippleDisabled]="disableRipple"
+    [igxRippleCentered]="true"
+    [igxRippleDuration]="100"
+    [for]="id">
+    <div class="igx-radio__ripple"></div>
+</label>
+
+<span #placeholderLabel role="label"
+    [id]="labelId"
+    [class]="labelClass"
+    (click)="_onLabelClick()">
+    <ng-content></ng-content>
+</span>
