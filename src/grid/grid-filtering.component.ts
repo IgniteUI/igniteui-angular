@@ -214,17 +214,19 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
 
     @HostListener("mousedown")
     public onMouseDown() {
-        const grid = this.gridAPI.get(this.gridID);
-        const gridRect = grid.nativeElement.getBoundingClientRect();
-        const dropdownRect = this.elementRef.nativeElement.getBoundingClientRect();
+        requestAnimationFrame(() => {
+            const grid = this.gridAPI.get(this.gridID);
+            const gridRect = grid.nativeElement.getBoundingClientRect();
+            const dropdownRect = this.elementRef.nativeElement.getBoundingClientRect();
 
-        let x = dropdownRect.left;
-        let x1 = gridRect.left + gridRect.width;
-        x += window.pageXOffset;
-        x1 += window.pageXOffset;
-        if (Math.abs(x - x1) < this.MINIMUM_VIABLE_SIZE) {
-            this.dialogPosition = "igx-filtering__options--to-left";
-        }
+            let x = dropdownRect.left;
+            let x1 = gridRect.left + gridRect.width;
+            x += window.pageXOffset;
+            x1 += window.pageXOffset;
+            if (Math.abs(x - x1) < this.MINIMUM_VIABLE_SIZE) {
+                this.dialogPosition = "igx-filtering__options--to-left";
+            }
+        });
     }
 
     @HostListener("click", ["$event"])
