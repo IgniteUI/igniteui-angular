@@ -29,6 +29,10 @@ export class IgxSelectionAPIService {
         }
     }
 
+    public select_items(componentID: string, itemIDs: any[]) {
+        itemIDs.forEach((item) => this.select_item(componentID, item));
+    }
+
     public deselect_item(componentID: string, itemID) {
         const currSelection = this.get_selection(componentID);
         if (currSelection === undefined) {

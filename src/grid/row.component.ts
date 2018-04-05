@@ -96,7 +96,7 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
         return this.gridAPI.get(this.gridID);
     }
 
-    private get _rowID() {
+    public get rowID() {
         // A row in the grid is identified either by:
         // primaryKey data value,
         // or if the primaryKey is omitted, then the whole rowData is used instead.
@@ -114,9 +114,9 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
     protected chunkLoaded$;
 
     constructor(public gridAPI: IgxGridAPIService,
-        private selectionAPI: IgxSelectionAPIService,
-        private element: ElementRef,
-        public cdr: ChangeDetectorRef) { }
+                private selectionAPI: IgxSelectionAPIService,
+                private element: ElementRef,
+                public cdr: ChangeDetectorRef) { }
 
     @autoWire(true)
     public ngOnInit() {
@@ -136,15 +136,11 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
     @HostListener("focus", ["$event"])
     public onFocus(event) {
         this.isFocused = true;
-
-        // TODO: Emit selection event
     }
 
     @HostListener("blur", ["$event"])
     public onBlur(event) {
         this.isFocused = false;
-
-        // TODO: Emit de-selection event
     }
 
     public onCheckboxClick(event) {
@@ -153,31 +149,43 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
         } else {
             this.deselect();
         }
-        this.grid.onRowSelection.emit(this);
+        this.grid.onRowSelection.emit({
+            selection: this.selectionAPI.get_selection(this.gridID),
+            row: this,
+            rowID: this.rowID
+        });
+    }
+
+    get rowCheckboxAriaLabel() {
+        return this.grid.primaryKey ? "Select row with key " + this.rowID : "Select row";
     }
 
     public ngDoCheck() {
         if (this.rowSelectable) {
-            this.isSelected = this.grid.allRowsSelected ? true : this.selectionAPI.is_item_selected(this.gridID, this._rowID);
+            this.isSelected = this.grid.allRowsSelected ? true : this.selectionAPI.is_item_selected(this.gridID, this.rowID);
             this.cdr.markForCheck();
         } else {
-            this.isSelected = this.selectionAPI.is_item_selected(this.gridID, this._rowID);
+            this.isSelected = this.selectionAPI.is_item_selected(this.gridID, this.rowID);
         }
     }
 
     public select() {
         if (this.rowSelectable) {
-            this.selectionAPI.select_item(this.gridID, this._rowID);
+            this.selectionAPI.select_item(this.gridID, this.rowID);
             this.grid.allRowsSelected = this.selectionAPI.are_all_selected(this.gridID, this.grid.data);
             this.grid.headerCheckbox.indeterminate = !this.grid.allRowsSelected;
+        } else {
+            this.cells.first.nativeElement.focus();
         }
     }
 
     public deselect() {
         if (this.rowSelectable) {
-            this.selectionAPI.deselect_item(this.gridID, this._rowID);
+            this.selectionAPI.deselect_item(this.gridID, this.rowID);
             this.grid.allRowsSelected = false;
             this.grid.headerCheckbox.indeterminate = !this.selectionAPI.are_none_selected(this.gridID);
+        } else {
+            // TODO
         }
     }
     public handleArrows(event) {

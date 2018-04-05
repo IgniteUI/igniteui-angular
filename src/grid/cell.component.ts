@@ -86,7 +86,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         return this.grid.unpinnedColumns.indexOf(this.column);
     }
 
-    private get _cellID() {
+    public get cellID() {
         const primaryKey = this.grid.primaryKey;
         const rowID = primaryKey ? this.row.rowData[primaryKey] : this.row.rowData;
         const columnID = this.columnIndex;
@@ -146,7 +146,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostBinding("class.igx-grid__td--selected")
     @autoWire(true)
     get focused(): boolean {
-        return this.isSelected = this.selectionApi.is_single_item_selected(this.gridID, this._cellID);
+        return this.isSelected = this.selectionApi.is_single_item_selected(this.gridID, this.cellID);
     }
 
     set focused(val: boolean) {
@@ -223,7 +223,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     public onFocus(event) {
         this.isFocused = true;
         this.isSelected = true;
-        this.selectionApi.select_single_item(this.gridID, this._cellID);
+        this.selectionApi.select_single_item(this.gridID, this.cellID);
         this.row.focused = true;
         if (this.grid.cellInEditMode && this.grid.cellInEditMode !== this) {
             this.grid.cellInEditMode.inEditMode = false;

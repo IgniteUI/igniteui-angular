@@ -54,12 +54,11 @@ export class GridSelectionComponent implements OnInit, AfterViewInit {
 
     }
 
-    public handleRowSelection(cell) {
-        const targetCell = cell.cell as IgxGridCellComponent;
+    public handleRowSelection(args) {
+        const targetCell = args.cell as IgxGridCellComponent;
         if  (!this.selection) {
-            console.log([targetCell.row]);
             this.grid1.deselectAllRows();
-            this.grid1.selectRows([targetCell.row]);
+            this.grid1.selectRows([targetCell.row.rowID]);
         }
     }
 }
