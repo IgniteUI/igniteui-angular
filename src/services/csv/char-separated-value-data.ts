@@ -23,11 +23,6 @@ export class CharSeparatedValueData {
         }
     }
 
-    private setDelimiter(value) {
-        this._delimiter = value;
-        this._delimiterLength = value.length;
-    }
-
     public get data() {
         return this._data;
     }
@@ -91,5 +86,10 @@ export class CharSeparatedValueData {
         }
 
         return dataRecords;
+    }
+
+    private setDelimiter(value) {
+        this._delimiter = value;
+        this._delimiterLength = value.length;
     }
 }

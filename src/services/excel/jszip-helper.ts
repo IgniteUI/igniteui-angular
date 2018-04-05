@@ -287,6 +287,8 @@ export class JSZipFiles {
                     content : JSZipFiles.getTablesXML(currentData)
                 };
                 break;
+            default:
+                throw Error("Unexpected Excel file type!");
         }
 
         return resultXml;

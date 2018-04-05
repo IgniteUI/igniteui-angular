@@ -23,6 +23,8 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
             case CsvFileTypes.TAB:
                 extension = ".tab";
                 break;
+            default:
+                throw Error("Unsupported CSV file type!");
         }
         return extension;
     }

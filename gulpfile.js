@@ -8,6 +8,7 @@ const postcss = require("gulp-postcss");
 const inlineTemplates = require("gulp-inline-ng2-template");
 const exec = require("child_process").exec;
 const fs = require("fs");
+const process = require("process");
 
 const INLINE_TEMPLATES = {
     SRC: "./src/**/*.ts",
@@ -106,8 +107,15 @@ gulp.task("build:esm:watch", ["build:esm"], () => {
 });
 
 gulp.task("copy-git-hooks", () => {
-    const defaultCopyHookDir = "./.git/hooks/scripts/";
+
+    if (process.env.TRAVIS || process.env.CI) {
+        return;
+    }
+
+    const gitHooksDir = "./.git/hooks/";
+    const defaultCopyHookDir = gitHooksDir + "scripts/";
     const dirs = [
+        gitHooksDir,
         defaultCopyHookDir,
         defaultCopyHookDir + "templates",
         defaultCopyHookDir + "templateValidators",
