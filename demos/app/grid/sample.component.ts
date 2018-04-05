@@ -234,7 +234,7 @@ export class GridSampleComponent {
 
     public updateRecord(event) {
         this.grid1.updateCell(this.selectedCell.rowIndex, this.selectedCell.columnField, event);
-        //this.grid1.getCell(this.selectedCell.rowIndex, this.selectedCell.columnField);
+        // this.grid1.getCell(this.selectedCell.rowIndex, this.selectedCell.columnField);
     }
 
     public deleteRow(event) {
@@ -250,6 +250,39 @@ export class GridSampleComponent {
         this.snax.hide();
     }
 
+    public updateRow11() {
+        this.grid3.updateRow({
+            __metadata: {
+                uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)",
+                type: "NorthwindModel.Product"
+            },
+            ProductName: "Example Change",
+            ProductID: 12,
+            SupplierID: 8,
+            CategoryID: 3,
+            QuantityPerUnit: undefined,
+            UnitsInStock: -99,
+            UnitsOnOrder: 0,
+            ReorderLevel: -12,
+            Discontinued: false,
+            OrderDate: new Date("1905-03-17"),
+            Category: {
+                __deferred: {
+                    uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)/Category"
+                }
+            },
+            Order_Details: {
+                __deferred: {
+                    uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)/Order_Details"
+                }
+            },
+            Supplier: {
+                __deferred: {
+                    uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)/Supplier"
+                }
+            }
+        }, 11);
+    }
     public exportRaw() {
         this.getExporterService().export(this.grid3, this.getOptions("Report"));
     }
@@ -257,7 +290,7 @@ export class GridSampleComponent {
     public export() {
         this.grid3.clearFilter();
 
-        let options = this.getOptions("Report");
+        const options = this.getOptions("Report");
         options.ignoreColumnsVisibility = false;
 
         this.getExporterService().export(this.grid3, options);
@@ -267,7 +300,7 @@ export class GridSampleComponent {
         this.grid3.filter("ProductName", "Queso", STRING_FILTERS.contains, true);
         this.grid3.cdr.detectChanges();
 
-        let options = this.getOptions("Queso Report");
+        const options = this.getOptions("Queso Report");
         options.ignoreFiltering = false;
         options.ignoreColumnsVisibility = false;
 
@@ -282,7 +315,7 @@ export class GridSampleComponent {
     }
 
     private getOptions(fileName: string): IgxExporterOptionsBase {
-        switch(this.exportFormat){
+        switch (this.exportFormat) {
             case "XLSX":
                 return new IgxExcelExporterOptions(fileName);
             case "CSV":
