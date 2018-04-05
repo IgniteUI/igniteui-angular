@@ -17,21 +17,23 @@ import { IgxTabsGroupComponent } from "./tabs-group.component";
 })
 
 export class IgxTabItemComponent {
-    private _nativeTabItem;
-    private _changesCount = 0; // changes and updates accordingly applied to the tab.
 
-    @HostBinding("attr.role") public role = "tab";
-
-    @Input() 
+    @Input()
     public relatedGroup: IgxTabsGroupComponent;
+
+    @HostBinding("attr.role")
+    public role = "tab";
+
+    @HostBinding("attr.tabindex")
+    public tabindex;
 
     @HostListener("click", ["$event"])
     public onClick(event) {
         this.select();
     }
 
-    @HostBinding("attr.tabindex")
-    public tabindex;
+    private _nativeTabItem;
+    private _changesCount = 0; // changes and updates accordingly applied to the tab.
 
     get changesCount(): number {
         return this._changesCount;

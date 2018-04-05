@@ -1,6 +1,5 @@
 import { CommonModule } from "@angular/common";
 import {
-    AfterContentInit,
     AfterViewInit,
     Component,
     ContentChild,
@@ -15,7 +14,6 @@ import {
     NgModule,
     Output,
     QueryList,
-    TemplateRef,
     ViewChild,
     ViewChildren
 } from "@angular/core";
@@ -98,10 +96,8 @@ export class IgxTabsComponent implements AfterViewInit {
     }
 
     public selectedIndex = -1;
-
     public calculatedWidth: number;
     public visibleItemsWidth: number;
-
     public offset = 0;
 
     public scrollLeft(event) {
@@ -189,28 +185,25 @@ export class IgxTabsComponent implements AfterViewInit {
         if (itemsContainerWidth > headerContainerWidth) {
             this._showScrollButton(this.rightButton);
         }
-        // check sizes 
-        console.log("itemsContainer " + itemsContainerWidth + " headercontainer " + headerContainerWidth);
     }
 
     @HostListener('window:resize')
     public onResize() {
         const itemsContainerWidth = this.itemsContainer.nativeElement.offsetWidth;
-        const headerContainerWidth = this.headerContainer.nativeElement.offsetWidth;
         const viewPortContainerWidth = this.viewPort.nativeElement.offsetWidth;
 
-        if (itemsContainerWidth <= headerContainerWidth) {
+        if (itemsContainerWidth <= viewPortContainerWidth + this.offset) {
             this._hideScrollButton(this.rightButton);
-            this._hideScrollButton(this.leftButton);
         }
         else {
-            console.log("offset " + this.offset + " view port " + this.viewPort.nativeElement.offsetWidth + " itemsContainerWidth " + itemsContainerWidth);
-            if (this.offset != 0) {
-                this._showScrollButton(this.leftButton);
-            }
-            if (this.offset + viewPortContainerWidth <= itemsContainerWidth) {
-                this._showScrollButton(this.rightButton);
-            }
+            this._showScrollButton(this.rightButton);
+        }
+
+        if (this.offset > 0) {
+            this._showScrollButton(this.leftButton);
+        }
+        else {
+            this._hideScrollButton(this.leftButton);
         }
     }
 
