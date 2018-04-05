@@ -188,9 +188,14 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
 
             const largest = new Map<number, number>();
 
-            const cellsContentWidths = this.column.bodyTemplate ?
-                    Array.from(this.column.cells[0].nativeElement.children).map((child) => valToPxls(child)) :
-                    this.column.cells.map((cell) => valToPxls(cell.nativeElement));
+            let cellsContentWidths = [];
+            if (this.column.bodyTemplate && this.column.cells[0].nativeElement.children.length > 0) {
+                this.column.cells.forEach((cell) => {
+                    cellsContentWidths.push(Math.max(...Array.from(cell.nativeElement.children).map((child) => valToPxls(child))));
+                });
+            } else {
+                cellsContentWidths = this.column.cells.map((cell) => valToPxls(cell.nativeElement));
+            }
 
             const ind = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
             const cellStyle = this.grid.document.defaultView.getComputedStyle(this.column.cells[ind].nativeElement);
