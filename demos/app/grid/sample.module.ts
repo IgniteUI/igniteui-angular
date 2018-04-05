@@ -12,6 +12,7 @@ import {
     IgxSwitchModule,
     IgxToastModule
 } from "../../lib/main";
+import { IgxCsvExporterService, IgxExcelExporterService } from "../../lib/services";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { GridSampleComponent } from "./sample.component";
 
@@ -32,6 +33,9 @@ import { GridSampleComponent } from "./sample.component";
         IgxButtonModule,
         IgxRippleModule,
         IgxInputGroupModule
+    ], providers: [
+        IgxExcelExporterService,
+        IgxCsvExporterService
     ]
 })
 export class GridSampleModule { }

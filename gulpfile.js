@@ -8,6 +8,7 @@ const postcss = require("gulp-postcss");
 const inlineTemplates = require("gulp-inline-ng2-template");
 const exec = require("child_process").exec;
 const fs = require("fs");
+const process = require("process");
 
 const INLINE_TEMPLATES = {
     SRC: "./src/**/*.ts",
@@ -51,8 +52,9 @@ gulp.task("make-packagejson", () => {
             "@angular/platform-browser": "" + data.dependencies["@angular/platform-browser"] + "",
             "@angular/platform-browser-dynamic": "" + data.dependencies["@angular/platform-browser-dynamic"] + "",
             "rxjs": "" + data.dependencies["rxjs"] + "",
-            "web-animations-js": "^2.3.1"
-        } 
+            "web-animations-js": "^2.3.1",
+            "jszip": "" + data.dependencies["jszip"] + ""
+        }
         delete data.dependencies["@angular/animations"];
         delete data.dependencies["@angular/common"];
         delete data.dependencies["@angular/compiler"];
@@ -61,7 +63,8 @@ gulp.task("make-packagejson", () => {
         delete data.dependencies["@angular/platform-browser"];
         delete data.dependencies["@angular/platform-browser-dynamic"];
         delete data.dependencies["rxjs"];
-        
+        delete data.dependencies["jszip"];
+
         fs.writeFile("dist/package.json", JSON.stringify(data, null, 4), "utf8", (err) => {
             if (err) throw err;
         });
@@ -104,8 +107,15 @@ gulp.task("build:esm:watch", ["build:esm"], () => {
 });
 
 gulp.task("copy-git-hooks", () => {
-    const defaultCopyHookDir = "./.git/hooks/scripts/";
+
+    if (process.env.TRAVIS || process.env.CI) {
+        return;
+    }
+
+    const gitHooksDir = "./.git/hooks/";
+    const defaultCopyHookDir = gitHooksDir + "scripts/";
     const dirs = [
+        gitHooksDir,
         defaultCopyHookDir,
         defaultCopyHookDir + "templates",
         defaultCopyHookDir + "templateValidators",
@@ -114,8 +124,8 @@ gulp.task("copy-git-hooks", () => {
 
     dirs.forEach((dir) => {
         if(!fs.existsSync(dir)) {
-            fs.mkdir(dir, (err) => { 
-                if(err) { throw err; } 
+            fs.mkdir(dir, (err) => {
+                if(err) { throw err; }
             });
         }
     });
