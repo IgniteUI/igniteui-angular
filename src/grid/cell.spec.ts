@@ -3,7 +3,8 @@ import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridCellComponent } from "./cell.component";
-import { IgxGridComponent } from "./grid.component";
+import { IgxColumnComponent } from "./column.component";
+import { IGridCellEventArgs, IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
 describe("IgxGrid - Cell component", () => {
@@ -14,7 +15,8 @@ describe("IgxGrid - Cell component", () => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,
-                CtrlKeyKeyboardNagivationComponent
+                CtrlKeyKeyboardNagivationComponent,
+                VirtualtGridComponent
             ],
             imports: [IgxGridModule.forRoot()]
         }).compileComponents();
@@ -48,11 +50,18 @@ describe("IgxGrid - Cell component", () => {
 
         expect(rv.nativeElement.getAttribute("aria-selected")).toMatch("false");
 
-        rv.nativeElement.dispatchEvent(new Event("focus"));
+        spyOn(grid.onSelection, "emit").and.callThrough();
+        const event = new Event("focus");
+        rv.nativeElement.dispatchEvent(event);
+        const args: IGridCellEventArgs = {
+            cell,
+            event
+        };
 
         fix.whenStable().then(() => {
             fix.detectChanges();
 
+            expect(grid.onSelection.emit).toHaveBeenCalledWith(args);
             expect(cell.focused).toBe(true);
             expect(cell.selected).toBe(true);
             expect(rv.nativeElement.getAttribute("aria-selected")).toMatch("true");
@@ -226,6 +235,14 @@ describe("IgxGrid - Cell component", () => {
 
         });
     }));
+    it("should fit last cell in the available display container when there is vertical scroll.", () => {
+        const fix = TestBed.createComponent(VirtualtGridComponent);
+        fix.detectChanges();
+        const rows = fix.componentInstance.instance.rowList;
+        rows.forEach((item) => {
+            expect(item.cells.last.width).toEqual("182px");
+        });
+    });
 });
 
 @Component({
@@ -244,13 +261,13 @@ export class DefaultGridComponent {
         { index: 2, value: 2}
     ];
 
-    public selectedCell;
+    public selectedCell: IgxGridCellComponent;
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
 
-    public cellSelected(event) {
-        this.selectedCell = event;
+    public cellSelected(event: IGridCellEventArgs) {
+        this.selectedCell = event.cell;
     }
 }
 
@@ -266,12 +283,38 @@ export class CtrlKeyKeyboardNagivationComponent {
         { index: 2, value: 2, other: 2, another: 2}
     ];
 
-    public selectedCell;
+    public selectedCell: IgxGridCellComponent;
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
 
-    public cellSelected(event) {
-        this.selectedCell = event;
+    public cellSelected(event: IGridCellEventArgs) {
+        this.selectedCell = event.cell;
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid [height]="'300px'" [width]="'800px'" [data]="data"
+        [autoGenerate]="true" (onColumnInit)="columnCreated($event)"></igx-grid>
+    `
+})
+export class VirtualtGridComponent {
+    public data = [];
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public instance: IgxGridComponent;
+    constructor() {
+        this.data = this.generateData();
+    }
+    public generateData() {
+        const data = [];
+        for (let i = 0; i < 1000; i++) {
+            data.push({ index: i, value: i, other: i, another: i });
+        }
+        return data;
+    }
+
+    public columnCreated(column: IgxColumnComponent) {
+        column.width = "200px";
     }
 }

@@ -14,10 +14,18 @@ import {
 import { IgxNavigationService, IToggleView } from "../core/navigation";
 
 /**
- * IgxToast provides information and warning messages. They could not be dismissed, are non-interactive and can appear
- * on top, middle and the bottom of the screen.
- * ```
- * <igx-toast (event output bindings) [input bindings]>
+ * **Ignite UI for Angular Toast** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast.html)
+ *
+ * The Ignite UI Toast provides information and warning messages that are non-interactive and cannot
+ * be dismissed by the user. Toasts can be displayed at the bottom, middle, or top of the page.
+ *
+ * Example:
+ * ```html
+ * <button (click)="toast.show()">Show notification</button>
+ * <igx-toast #toast
+ *           message="Notification displayed"
+ *           displayTime="1000">
  * </igx-toast>
  * ```
  */
@@ -52,28 +60,28 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
      * @type {EventEmitter}
      */
     @Output()
-    public onShowing = new EventEmitter();
+    public onShowing = new EventEmitter<IgxToastComponent>();
 
     /**
      * Event is shown when toast is shown
      * @type {EventEmitter}
      */
     @Output()
-    public onShown = new EventEmitter();
+    public onShown = new EventEmitter<IgxToastComponent>();
 
     /**
      * Event is thrown prior toast hidden
      * @type {EventEmitter}
      */
     @Output()
-    public onHiding = new EventEmitter();
+    public onHiding = new EventEmitter<IgxToastComponent>();
 
     /**
      * Event is thrown when toast hidden
      * @type {EventEmitter}
      */
     @Output()
-    public onHidden = new EventEmitter();
+    public onHidden = new EventEmitter<IgxToastComponent>();
 
     @Input()
     public role = "alert";

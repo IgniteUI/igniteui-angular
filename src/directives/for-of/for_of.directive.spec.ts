@@ -220,8 +220,10 @@ describe("IgxVirtual directive - simple template", () => {
 
         const rowChildren = displayContainer.querySelectorAll("igx-display-container");
         for (let i = 0; i < rowChildren.length; i++) {
-            expect(rowChildren[i].children.length).toBe(1);
+            expect(rowChildren[i].children.length).toBe(2);
             expect(rowChildren[i].children[0].textContent)
+                .toBe(fix.componentInstance.data[i][298].toString());
+            expect(rowChildren[i].children[1].textContent)
                 .toBe(fix.componentInstance.data[i][299].toString());
         }
     });
@@ -599,8 +601,8 @@ describe("IgxVirtual directive - simple template", () => {
         }
 
         expect(() => {
-            fix.componentInstance.parentVirtDir.testOnTouchStart();
-            fix.componentInstance.parentVirtDir.testOnTouchMove(1000, 0);
+            fix.componentInstance.childVirtDirs.first.testOnTouchStart();
+            fix.componentInstance.childVirtDirs.first.testOnTouchMove(1000, 0);
             // Trigger onScroll
             fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
             fix.detectChanges();
@@ -973,7 +975,7 @@ export class HorizontalVirtualComponent implements OnInit {
 /** Both vertically and horizontally virtualized component */
 @Component({
     template: `
-        <div #container [style.width]='width' [style.height]='height'>
+        <div #container [style.width]='width' [style.height]='height' [style.position]="'relative'">
             <ng-template #scrollContainer igxForTest let-rowData [igxForOf]="data"
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='height'
@@ -1029,17 +1031,17 @@ export class VirtualComponent implements OnInit {
     public isVerticalScrollbarVisible() {
         const verticalScrollbar = this.container.element.nativeElement.querySelector("igx-virtual-helper");
         /**
-         * Due to current implementation the width is set to 17px.
-         * That's why when scrollWidth is less than 2px it means it's space is filled with the scrollbar
+         * Due to current implementation the height is set explicitly.
+         * That's why we check if the content is bigger than the vertical scrollbar height
          */
-        return verticalScrollbar.scrollWidth <= 2;
+        return verticalScrollbar.offsetHeight < verticalScrollbar.children[0].offsetHeight;
     }
 
     public isHorizontalScrollbarVisible() {
         const horizontalScrollbar = this.container.element.nativeElement.querySelector("igx-horizontal-virtual-helper");
         /**
          * Due to current implementation the height is automatically calculated.
-         *  That's why when it's less than 16 there is not scrollbar
+         *  That's why when it's less than 16 there is no scrollbar
          */
         return horizontalScrollbar.offsetHeight >= 16;
     }

@@ -207,7 +207,7 @@ export class AppComponent implements OnInit {
         this.router.events
             .filter((x) => x instanceof NavigationStart)
             .subscribe((event: NavigationStart) => {
-                if (event.url !== "/" && !this.drawerState.pin) {
+                if (event.url !== "/" && !this.navdrawer.pin) {
                     // Close drawer when a sample is selected
                     this.navdrawer.close();
                 }

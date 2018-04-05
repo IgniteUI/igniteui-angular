@@ -178,12 +178,10 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
             this.column.gridID, this.column.field,
             this._value, this.column.filteringCondition, this.column.filteringIgnoreCase);
         grid.onFilteringDone.emit({
-            expression: {
-                fieldName: this.column.field,
-                filteringCondition: this.column.filteringCondition,
-                filteringIgnoreCase: this.column.filteringIgnoreCase,
-                searchVal: this._value
-            }
+            fieldName: this.column.field,
+            condition: this.column.filteringCondition,
+            ignoreCase: this.column.filteringIgnoreCase,
+            searchVal: this._value
         });
     }
 
@@ -216,17 +214,19 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
 
     @HostListener("mousedown")
     public onMouseDown() {
-        const grid = this.gridAPI.get(this.gridID);
-        const gridRect = grid.nativeElement.getBoundingClientRect();
-        const dropdownRect = this.elementRef.nativeElement.getBoundingClientRect();
+        requestAnimationFrame(() => {
+            const grid = this.gridAPI.get(this.gridID);
+            const gridRect = grid.nativeElement.getBoundingClientRect();
+            const dropdownRect = this.elementRef.nativeElement.getBoundingClientRect();
 
-        let x = dropdownRect.left;
-        let x1 = gridRect.left + gridRect.width;
-        x += window.pageXOffset;
-        x1 += window.pageXOffset;
-        if (Math.abs(x - x1) < this.MINIMUM_VIABLE_SIZE) {
-            this.dialogPosition = "igx-filtering__options--to-left";
-        }
+            let x = dropdownRect.left;
+            let x1 = gridRect.left + gridRect.width;
+            x += window.pageXOffset;
+            x1 += window.pageXOffset;
+            if (Math.abs(x - x1) < this.MINIMUM_VIABLE_SIZE) {
+                this.dialogPosition = "igx-filtering__options--to-left";
+            }
+        });
     }
 
     @HostListener("click", ["$event"])

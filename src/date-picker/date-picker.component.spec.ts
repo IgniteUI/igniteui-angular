@@ -100,18 +100,19 @@ describe("IgxDatePicker", () => {
         const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
         fixture.detectChanges();
 
-        const datePicker = fixture.componentInstance.datePicker;
+        const datepicker = fixture.componentInstance.datePicker;
         const dom = fixture.debugElement;
 
         const target = dom.query(By.css(".igx-date-picker__input-date"));
 
-        spyOn(datePicker.onOpen, "emit");
+        spyOn(datepicker.onOpen, "emit");
 
         target.nativeElement.dispatchEvent(new Event("click", { bubbles: true }));
 
         fixture.detectChanges();
 
-        expect(datePicker.onOpen.emit).toHaveBeenCalled();
+        expect(datepicker.onOpen.emit).toHaveBeenCalled();
+        expect(datepicker.onOpen.emit).toHaveBeenCalledWith(datepicker);
     });
 
     it("Datepicker onSelection event and selectDate method propagation", () => {

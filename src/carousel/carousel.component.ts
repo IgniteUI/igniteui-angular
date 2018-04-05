@@ -14,20 +14,26 @@ import { IgxIconModule } from "../icon";
 export enum Direction { NONE, NEXT, PREV }
 
 /**
- * A carousel component is used to browse or navigate through a collection of slides - galleries of images,
- * cards, on-boarding tutorials or page-based interfaces. It can be used as a separate fulls creen element
- * or inside another component
+ * **Ignite UI for Angular Carousel** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/carousel.html)
  *
- * ```
- * <igx-carousel (event output bindings) [input bindings] >
- *     ....
+ * The Ignite UI Carousel is used to browse or navigate through a collection of slides. Slides can contain custom
+ * content such as images or cards and be used for things such as on-boarding tutorials or page-based interfaces.
+ * It can be used as a separate fullscreen element or inside another component.
+ *
+ * Example:
+ * ```html
+ * <igx-carousel>
+ *   <igx-slide>
+ *     <h3>First Slide Header</h3>
+ *     <p>First slide Content</p>
+ *   <igx-slide>
+ *   <igx-slide>
+ *     <h3>Second Slide Header</h3>
+ *     <p>Second Slide Content</p>
  * </igx-carousel>
  * ```
- * @export
- * @class IgxCarouselComponent
- * @implements {OnDestroy}
  */
-
 @Component({
     selector: "igx-carousel",
     templateUrl: "carousel.component.html"
@@ -84,7 +90,7 @@ export class IgxCarouselComponent implements OnDestroy {
      * @type {EventEmitter}
      * @memberOf IgxCarouselComponent
      */
-    @Output() public onSlideChanged = new EventEmitter();
+    @Output() public onSlideChanged = new EventEmitter<ISlideEventArgs>();
 
     /**
      * An event that is emitted after a slide has been added to the carousel.
@@ -93,7 +99,7 @@ export class IgxCarouselComponent implements OnDestroy {
      * @type {EventEmitter}
      * @memberOf IgxCarouselComponent
      */
-    @Output() public onSlideAdded = new EventEmitter();
+    @Output() public onSlideAdded = new EventEmitter<ISlideEventArgs>();
 
     /**
      * An event that is emitted after a slide has been removed from the carousel.
@@ -102,7 +108,7 @@ export class IgxCarouselComponent implements OnDestroy {
      * @type {EventEmitter}
      * @memberOf IgxCarouselComponent
      */
-    @Output() public onSlideRemoved = new EventEmitter();
+    @Output() public onSlideRemoved = new EventEmitter<ISlideEventArgs>();
 
     /**
      * An event that is emitted after the carousel has been paused.
@@ -111,7 +117,7 @@ export class IgxCarouselComponent implements OnDestroy {
      * @type {EventEmitter}
      * @memberOf IgxCarouselComponent
      */
-    @Output() public onCarouselPaused = new EventEmitter();
+    @Output() public onCarouselPaused = new EventEmitter<IgxCarouselComponent>();
 
     /**
      * An event that is emitted after the carousel has resumed transitioning between slides.
@@ -120,7 +126,7 @@ export class IgxCarouselComponent implements OnDestroy {
      * @type {EventEmitter}
      * @memberOf IgxCarouselComponent
      */
-    @Output() public onCarouselPlaying = new EventEmitter();
+    @Output() public onCarouselPlaying = new EventEmitter<IgxCarouselComponent>();
 
     /**
      * The collection of slides currently in the carousel
@@ -228,7 +234,7 @@ export class IgxCarouselComponent implements OnDestroy {
             slide.active = false;
         }
 
-        this.onSlideAdded.emit(this);
+        this.onSlideAdded.emit({ carousel: this, slide });
     }
 
     /**
@@ -252,7 +258,7 @@ export class IgxCarouselComponent implements OnDestroy {
             this.slides[i].index = i;
         }
 
-        this.onSlideRemoved.emit(this);
+        this.onSlideRemoved.emit({ carousel: this, slide });
     }
 
     /**
@@ -367,7 +373,7 @@ export class IgxCarouselComponent implements OnDestroy {
 
         this._currentSlide = slide;
 
-        this.onSlideChanged.emit(this);
+        this.onSlideChanged.emit({ carousel: this, slide });
         this._restartInterval();
     }
 
@@ -444,6 +450,11 @@ export class IgxSlideComponent implements OnInit, OnDestroy {
     public ngOnDestroy() {
         this.carousel.remove(this);
     }
+}
+
+export interface ISlideEventArgs {
+    carousel: IgxCarouselComponent;
+    slide: IgxSlideComponent;
 }
 
 @NgModule({

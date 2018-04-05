@@ -27,18 +27,24 @@ import { HammerGesturesManager } from "../core/touch";
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from "./navigation-drawer.directives";
 
 /**
- * Navigation Drawer component supports collapsible side navigation container.
- * Usage:
- * ```
- * <igx-nav-drawer id="ID" (event output bindings) [input bindings]>
- *  <ng-template igxDrawer>
- *   <!-- expanded template -->
- *  </ng-template>
+ * **Ignite UI for Angular Navigation Drawer** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer.html)
+ *
+ * The Ignite UI Navigation Drawer is a collapsible side navigation container commonly used in combination with the Navbar.
+ *
+ * Example:
+ * ```html
+ * <igx-nav-drawer id="navigation" [isOpen]="true">
+ *   <ng-template igxDrawer>
+ *     <nav>
+ *       <span igxDrawerItem [isHeader]="true">Email</span>
+ *       <span igxDrawerItem igxRipple>Inbox</span>
+ *       <span igxDrawerItem igxRipple>Deleted</span>
+ *       <span igxDrawerItem igxRipple>Sent</span>
+ *     </nav>
+ *   </ng-template>
  * </igx-nav-drawer>
  * ```
- * Can also include an optional `<ng-template igxDrawerMini>`.
- * Items inside can be styled with `igxDrawerItem` directive.
- * ID required to register with provided `IgxNavigationService` allow directives to target the control from other template files.
  */
 @Component({
     providers: [HammerGesturesManager],
@@ -98,7 +104,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
     @Input() public miniWidth = "60px";
 
     /** Pinned state change output for two-way binding  */
-    @Output() public pinChange = new EventEmitter();
+    @Output() public pinChange = new EventEmitter<boolean>(true);
     /** Event fired as the Navigation Drawer is about to open. */
     @Output() public opening = new EventEmitter();
     /** Event fired when the Navigation Drawer has opened. */
@@ -323,7 +329,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
             return;
         }
         if (fireEvents) {
-            this.opening.emit("opening");
+            this.opening.emit();
         }
         this.isOpen = true;
 
@@ -350,7 +356,7 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
             return;
         }
         if (fireEvents) {
-            this.closing.emit("closing");
+            this.closing.emit();
         }
 
         this.isOpen = false;
@@ -616,11 +622,11 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
 
     private toggleOpenedEvent = (evt?, fireEvents?) => {
         this.elementRef.nativeElement.removeEventListener("transitionend", this.toggleOpenedEvent, false);
-        this.opened.emit("opened");
+        this.opened.emit();
     }
 
     private toggleClosedEvent = (evt?) => {
         this.elementRef.nativeElement.removeEventListener("transitionend", this.toggleClosedEvent, false);
-        this.closed.emit("closed");
+        this.closed.emit();
     }
 }

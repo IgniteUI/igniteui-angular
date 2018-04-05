@@ -5,16 +5,29 @@ var matchType = require('../common').matchType,
 
 module.exports = function(lines, options, errors) {
     var ticket = new RegExp(options.issuePattern);
+    var whetherIssueIsMandatory = false,
+        wheterMatchAnyIssueRef = false; 
+
+    
+    if (matchType(options.typesWithMandatoryIssue, lines[0])) {
+        whetherIssueIsMandatory = true;
+    }
+
     lines.forEach(function (line) {
         line = line.trim();
+        if (line === "") {
+            return;
+        }
 
-        if(line !== "" && 
-            matchType(options.typesWithMandatoryIssue, line) && 
-            !ticket.test(line)) {
-            errors.push(errorFactory(
-                'The issue reference for (' + options.typesWithMandatoryIssue.join(', ') + ') types is mandatory!\n',
-                'First line must be: <type>(<scope>): <subject> <#issue>\n', 'The line is: ' + line
-            ));
+        if (ticket.test(line)) {
+            wheterMatchAnyIssueRef = true;
+            return;
         }
     });
+
+    if (whetherIssueIsMandatory && !wheterMatchAnyIssueRef) {
+        errors.push(errorFactory(
+            'The issue reference for (' + options.typesWithMandatoryIssue.join(', ') + ') types is mandatory!\n',
+            'List any ISSUES CLOSED by this change. E.g: Closes #31, Closes #45'));
+    }
 }

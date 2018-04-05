@@ -15,6 +15,8 @@ import {
     HostBinding,
     Inject,
     Input,
+    IterableChangeRecord,
+    IterableDiffers,
     NgZone,
     OnDestroy,
     OnInit,
@@ -42,6 +44,48 @@ import { IgxGridRowComponent } from "./row.component";
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
 
+export interface IGridCellEventArgs {
+    cell: IgxGridCellComponent;
+    event: Event;
+}
+
+export interface IGridEditEventArgs {
+    row: IgxGridRowComponent;
+    cell: IgxGridCellComponent;
+    currentValue: any;
+    newValue: any;
+}
+
+export interface IPinColumnEventArgs {
+    column: IgxColumnComponent;
+    insertAtIndex: number;
+}
+
+export interface IPageEventArgs {
+    previous: number;
+    current: number;
+}
+
+export interface IRowDataEventArgs {
+    data: any;
+}
+
+/**
+ * **Ignite UI for Angular Grid** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
+ *
+ * The Ignite UI Grid is used for presenting and manipulating tabular data in the simplest way possible.  Once data
+ * has been bound, it can be manipulated through filtering, sorting & editing operations.
+ *
+ * Example:
+ * ```html
+ * <igx-grid [data]="employeeData" autoGenerate="false">
+ *   <igx-column field="first" header="First Name"></igx-column>
+ *   <igx-column field="last" header="Last Name"></igx-column>
+ *   <igx-column field="role" header="Role"></igx-column>
+ * </igx-grid>
+ * ```
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
@@ -134,32 +178,42 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public rowHeight = 50;
 
-    @Output()
-    public onSelection = new EventEmitter<any>();
+    @Input()
+    public columnWidth: string = null;
 
     @Output()
-    public onColumnPinning = new EventEmitter<any>();
+    public onSelection = new EventEmitter<IGridCellEventArgs>();
 
     @Output()
-    public onEditDone = new EventEmitter<any>();
+    public onColumnPinning = new EventEmitter<IPinColumnEventArgs>();
+
+    /**
+     * An @Output property emitting an event when cell or row editing has been performed in the grid.
+     * On cell editing, both cell and row objects in the event arguments are defined for the corresponding
+     * cell that is being edited and the row the cell belongs to.
+     * On row editing, only the row object is defined, for the row that is being edited.
+     * The cell object is null on row editing.
+     */
+    @Output()
+    public onEditDone = new EventEmitter<IGridEditEventArgs>();
 
     @Output()
-    public onColumnInit = new EventEmitter<any>();
+    public onColumnInit = new EventEmitter<IgxColumnComponent>();
 
     @Output()
-    public onSortingDone = new EventEmitter<any>();
+    public onSortingDone = new EventEmitter<ISortingExpression>();
 
     @Output()
-    public onFilteringDone = new EventEmitter<any>();
+    public onFilteringDone = new EventEmitter<IFilteringExpression>();
 
     @Output()
-    public onPagingDone = new EventEmitter<any>();
+    public onPagingDone = new EventEmitter<IPageEventArgs>();
 
     @Output()
-    public onRowAdded = new EventEmitter<any>();
+    public onRowAdded = new EventEmitter<IRowDataEventArgs>();
 
     @Output()
-    public onRowDeleted = new EventEmitter<any>();
+    public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
@@ -231,6 +285,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
     private resizeHandler;
+    private columnListDiffer;
 
     constructor(
         private gridAPI: IgxGridAPIService,
@@ -239,6 +294,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         @Inject(DOCUMENT) private document,
         public cdr: ChangeDetectorRef,
         private resolver: ComponentFactoryResolver,
+        private differs: IterableDiffers,
         private viewRef: ViewContainerRef) {
 
         this.resizeHandler = () => {
@@ -249,6 +305,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public ngOnInit() {
         this.gridAPI.register(this);
+        this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this.width && this.width.indexOf("%") === -1 ? parseInt(this.width, 10) : 0;
         this.calcHeight = 0;
     }
@@ -258,15 +315,31 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.autogenerateColumns();
         }
 
-        this.columnList.forEach((col, idx) => {
-            col.index = idx;
-            col.gridID = this.id;
-            this.onColumnInit.emit(col);
-        });
+        this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
+        this.columnListDiffer.diff(this.columnList);
+        this.markForCheck();
 
-        this._columns = this.columnList.toArray();
-        this._pinnedColumns = this._columns.filter((c) => c.pinned);
-        this._unpinnedColumns = this._columns.filter((c) => !c.pinned);
+        this.columnList.changes
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((change: QueryList<IgxColumnComponent>) => {
+                const diff = this.columnListDiffer.diff(change);
+                if (diff) {
+
+                    this.initColumns(this.columnList);
+
+                    diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => this.onColumnInit.emit(record.item));
+
+                    diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+
+                        // Clear Filtering
+                        this.gridAPI.clear_filter(this.id, record.item.field);
+
+                        // Clear Sorting
+                        this.gridAPI.clear_sort(this.id, record.item.field);
+                    });
+                }
+                this.markForCheck();
+        });
     }
 
     public ngAfterViewInit() {
@@ -385,7 +458,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (row) {
             const index = this.data.indexOf(row.rowData);
             this.data.splice(index, 1);
-            this.onRowDeleted.emit({ row });
+            this.onRowDeleted.emit({ data: row.rowData });
             this._pipeTrigger++;
             this.cdr.markForCheck();
         }
@@ -669,6 +742,22 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         });
 
         this.columnList.reset(columns);
+    }
+
+    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: any = null) {
+        collection.forEach((column: IgxColumnComponent, index: number) => {
+            column.gridID = this.id;
+            column.index = index;
+            if (!column.width) {
+                column.width = this.columnWidth;
+            }
+            if (cb) {
+                cb(column);
+            }
+        });
+        this._columns = this.columnList.toArray();
+        this._pinnedColumns = this.columnList.filter((c) => c.pinned);
+        this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
     }
 
     protected setEventBusSubscription() {
