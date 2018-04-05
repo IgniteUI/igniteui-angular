@@ -1,97 +1,115 @@
 <div class="sample-wrapper">
-    <page-header title="Forms" description=""></page-header>
+    <page-header title="Form Controls" description=""></page-header>
+
     <section class="sample-content">
+
         <article class="sample-column">
-            <h4 class="sample-title">Input fieds w/ radio buttons</h4>
+            <h4 class="sample-title">Input fields w/ radio buttons</h4>
+
             <form class="input-sample" action="/" method="POST">
                 <h4 class="form-title">Personal Info</h4>
+
                 <igx-input-group>
                     <input igxInput name="firstName" type="text" [(ngModel)]="user.firstName" required disabled/>
                     <label igxLabel for="firstName">First Name</label>
                 </igx-input-group>
+
                 <igx-input-group>
                     <input igxInput name="lastName" type="text" [(ngModel)]="user.lastName" />
                     <label igxLabel for="lastName">Last Name</label>
                 </igx-input-group>
+
                 <igx-input-group>
                     <input igxInput name="password" type="password" placeholder="{{placeholder}}" [(ngModel)]="user.password" required/>
                     <label igxLabel for="password">Password</label>
                 </igx-input-group>
+
                 <igx-input-group>
                     <textarea igxInput name="comment" placeholder="{{placeholder}}" [(ngModel)]="user.comment"></textarea>
                     <label igxLabel for="comment">Additional Information</label>
-                    <div class="radio-group">
-                        <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group" [(ngModel)]="user.gender" (click)="onClick($event)"
-                            (change)="onChange($event)">{{item}}</igx-radio>
-                        <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group2" [disabled]="true" [(ngModel)]="user.gender">{{item}}</igx-radio>
-                    </div>
                 </igx-input-group>
+
+                <div class="radio-group">
+                    <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group" [(ngModel)]="user.gender" (click)="onClick($event)"
+                        (change)="onChange($event)">{{item}}</igx-radio>
+                    <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group2" [disabled]="true" [(ngModel)]="user.gender">{{item}}</igx-radio>
+                </div>
+
             </form>
+
         </article>
 
-        <!-- <article class="sample-column">
+        <article class="sample-column">
+
             <h4 class="sample-title">Switch sample</h4>
+
             <div class="input-sample">
                 <h4 class="form-title">Settings</h4>
-                <div class="switch-sample">
-                    <igx-icon name="wifi"></igx-icon>
-                    <span igxLabel>WiFi</span>
-                    <igx-switch [(ngModel)]="user.registered"></igx-switch>
+
+                <div *ngFor="let item of settings" class="switch-sample">
+                    <igx-icon>{{item.icon}}</igx-icon>
+                    <igx-switch class="settings" labelPosition="before" [(ngModel)]="item.active" [value]="item.active" [disabled]="item.disabled">{{item.name}}</igx-switch>
                 </div>
-                <div class="switch-sample">
-                    <igx-icon name="bluetooth"></igx-icon>
-                    <span igxLabel>Bluetooth</span>
-                    <igx-switch [(ngModel)]="user.registered"></igx-switch>
-                </div>
-                <div class="switch-sample">
-                    <igx-icon name="visibility"></igx-icon>
-                    <span igxLabel>Device visibility</span>
-                    <igx-switch [(ngModel)]="!user.registered"></igx-switch>
-                </div>
+
             </div>
-        </article> -->
+        </article>
 
         <article class="sample-column">
             <h4 class="sample-title">Checkbox sample</h4>
+
             <div class="input-sample">
                 <h4 class="form-title">Delete Contacts</h4>
-                <div class="switch-sample">
-                    <igx-avatar src="images/avatar/22.jpg" roundShape="true">
-                    </igx-avatar>
-                    <span igxLabel>Alicia Keys</span>
+
+                <div class="checkbox-sample">
+                    <div>
+                        <igx-avatar src="images/avatar/22.jpg" roundShape="true"></igx-avatar>
+                        <span class="name">Alicia Keys</span>
+                    </div>
                     <igx-checkbox [(ngModel)]="user.registered">Value</igx-checkbox>
                 </div>
-                <div class="switch-sample">
-                    <igx-avatar src="images/avatar/8.jpg" roundShape="true">
-                    </igx-avatar>
-                    <span igxLabel>Petar Vasilev</span>
+
+                <div class="checkbox-sample">
+                    <div>
+                        <igx-avatar src="images/avatar/8.jpg" roundShape="true"></igx-avatar>
+                        <span class="name">Petar Vasilev</span>
+                    </div>
                     <igx-checkbox [(ngModel)]="user2.registered" [disableRipple]="true"></igx-checkbox>
                 </div>
-                <div class="switch-sample">
-                    <igx-avatar src="images/avatar/17.jpg" roundShape="true">
-                    </igx-avatar>
-                    <span igxLabel>Brian Vaughan</span>
+
+                <div class="checkbox-sample">
+                    <div>
+                        <igx-avatar src="images/avatar/17.jpg" roundShape="true"></igx-avatar>
+                        <span class="name">Brian Vaughan</span>
+                    </div>
                     <igx-checkbox [(ngModel)]="user.registered" [disabled]="true">Value</igx-checkbox>
                 </div>
-                <div class="switch-sample">
-                    <igx-avatar src="images/avatar/17.jpg" roundShape="true">
-                    </igx-avatar>
-                    <span igxLabel>Brian Vaughan</span>
+
+                <div class="checkbox-sample">
+                    <div>
+                        <igx-avatar src="images/avatar/17.jpg" roundShape="true"></igx-avatar>
+                        <span class="name">Brian Vaughan</span>
+                    </div>
                     <igx-checkbox [(ngModel)]="user2.registered" [disabled]="true">Value</igx-checkbox>
                 </div>
-                <div class="switch-sample">
-                    <igx-avatar src="images/avatar/17.jpg" roundShape="true">
-                    </igx-avatar>
-                    <span igxLabel>Brian Vaughan</span>
+
+                <div class="checkbox-sample">
+                    <div>
+                        <igx-avatar src="images/avatar/17.jpg" roundShape="true"></igx-avatar>
+                        <span class="name">Brian Vaughan</span>
+                    </div>
                     <igx-checkbox [(ngModel)]="user.registered" [indeterminate]="true">Value</igx-checkbox>
                 </div>
-                <div class="switch-sample">
-                    <igx-avatar src="images/avatar/17.jpg" roundShape="true">
-                    </igx-avatar>
-                    <span igxLabel>Brian Vaughan</span>
+
+                <div class="checkbox-sample">
+                    <div>
+                        <igx-avatar src="images/avatar/17.jpg" roundShape="true"></igx-avatar>
+                        <span class="name">Brian Vaughan</span>
+                    </div>
                     <igx-checkbox [(ngModel)]="user.registered" [indeterminate]="true" [disabled]="true">Value</igx-checkbox>
                 </div>
+
             </div>
         </article>
+
     </section>
 </div>

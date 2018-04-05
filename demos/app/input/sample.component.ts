@@ -28,6 +28,24 @@ export class InputSampleComponent {
         subscribed: false
     };
 
+    public settings = [{
+        name: "WiFi",
+        icon: "wifi",
+        active: true,
+        disabled: false
+    },
+    {
+        name: "Bluetooth",
+        icon: "bluetooth",
+        active: true,
+        disabled: false
+    }, {
+        name: "Device Visibility",
+        icon: "visibility",
+        active: false,
+        disabled: true
+    }];
+
     public onClick(event) {
         console.log(event);
     }
