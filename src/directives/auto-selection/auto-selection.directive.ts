@@ -8,9 +8,6 @@ export class IgxAutoSelectDirective {
 
     private selectionState = true;
 
-    @Input()
-    public selectionDirection: SelectionDirectionEnum = SelectionDirectionEnum.backward;
-
     @Input("igxAutoSelect")
     get selected(): boolean {
         return this.selectionState;
@@ -28,26 +25,10 @@ export class IgxAutoSelectDirective {
     constructor(private element: ElementRef) { }
 
     trigger() {
-        if (this.selected) {
-            if (this.selectionDirection === SelectionDirectionEnum.backward) {
-                this.selection(0,
-                    1, "backward");
-            } else {
-                this.selection(this.nativeElement.value.length,
-                    0,
-                    SelectionDirectionEnum.forward);
-            }
+        if (this.selected && this.nativeElement.value.length) {
+            requestAnimationFrame(() => this.nativeElement.setSelectionRange(0, this.nativeElement.value.length));
         }
     }
-
-    selection(selecitonStart, selectionEnd, selectionDirection) {
-        requestAnimationFrame(() => this.nativeElement.setSelectionRange(selecitonStart, selectionEnd, selectionDirection));
-    }
-}
-
-export enum SelectionDirectionEnum {
-    backward = "backward",
-    forward = "forward"
 }
 
 @NgModule({
