@@ -206,6 +206,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @Input()
     public remoteVirtualization: boolean;
+    public primaryKey;
 
     @Output()
     public onSelection = new EventEmitter<IGridCellEventArgs>();
@@ -392,8 +393,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
                         // Clear Sorting
                         this.gridAPI.clear_sort(this.id, record.item.field);
-                    });
-                }
+        });
+    }
                 this.markForCheck();
         });
     }
@@ -448,15 +449,19 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public getRowByIndex(index: number): IgxGridRowComponent {
-        return this.rowList.toArray()[index];
+        return this.gridAPI.get_row_by_index(this.id, index);
+    }
+
+    public getRowByKey(keyValue: any): IgxGridRowComponent {
+        return this.gridAPI.get_row_by_key(this.id, keyValue);
     }
 
     get visibleColumns(): IgxColumnComponent[] {
         return this.columnList.filter((col) => !col.hidden);
     }
 
-    public getCellByColumn(rowIndex: number, columnField: string): IgxGridCellComponent {
-        return this.gridAPI.get_cell_by_field(this.id, rowIndex, columnField);
+    public getCellByColumn(rowSelector: any, columnField: string): IgxGridCellComponent {
+        return this.gridAPI.get_cell_by_field(this.id, rowSelector, columnField);
     }
 
     get totalPages(): number {
@@ -513,8 +518,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.cdr.markForCheck();
     }
 
-    public deleteRow(rowIndex: number): void {
-        const row = this.gridAPI.get_row(this.id, rowIndex);
+    public deleteRow(rowSelector: any): void {
+        const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
         if (row) {
             const index = this.data.indexOf(row.rowData);
             this.data.splice(index, 1);
@@ -524,17 +529,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    public updateCell(value: any, rowIndex: number, column: string): void {
-        const cell = this.gridAPI.get_cell_by_field(this.id, rowIndex, column);
+    public updateCell(value: any, rowSelector: any, column: string): void {
+        const cell = this.gridAPI.get_cell_by_field(this.id, rowSelector, column);
         if (cell) {
             cell.update(value);
             this._pipeTrigger++;
         }
     }
 
-    public updateRow(value: any, rowIndex: number): void {
-        const row = this.gridAPI.get_row(this.id, rowIndex);
+    public updateRow(value: any, rowSelector: any): void {
+        const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
         if (row) {
+            if (this.primaryKey !== undefined && this.primaryKey !== null) {
+                value[this.primaryKey] = row.rowData[this.primaryKey];
+            }
             this.gridAPI.update_row(value, this.id, row);
             this._pipeTrigger++;
             this.cdr.markForCheck();
