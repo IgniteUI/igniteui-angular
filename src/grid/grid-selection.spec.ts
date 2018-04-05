@@ -188,6 +188,52 @@ describe("IgxGrid - Row Selection", () => {
             expect(selectedRow.isSelected).toBeTruthy();
         });
     }));
+    it("Should persist through paging - multiple selection", async(() => {
+        const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection2;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        const nextBtn: HTMLElement = fix.nativeElement.querySelector(".nextPageBtn");
+        const prevBtn: HTMLElement = fix.nativeElement.querySelector(".prevPageBtn");
+        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
+        const selectedRow1 = grid.getRowByIndex(5);
+        const selectedRow2 = grid.getRowByIndex(3);
+        const selectedRow3 = grid.getRowByIndex(0);
+        expect(selectedRow1).toBeDefined();
+        expect(selectedRow2).toBeDefined();
+        expect(selectedRow3).toBeDefined();
+        const checkboxElement1: HTMLElement = selectedRow1.nativeElement.querySelector(".igx-checkbox__input");
+        const checkboxElement2: HTMLElement = selectedRow2.nativeElement.querySelector(".igx-checkbox__input");
+        const checkboxElement3: HTMLElement = selectedRow3.nativeElement.querySelector(".igx-checkbox__input");
+        // query(By.css(".igx-checkbox__input"))
+        expect(selectedRow1.isSelected).toBeFalsy();
+        expect(selectedRow2.isSelected).toBeFalsy();
+        expect(selectedRow3.isSelected).toBeFalsy();
+        checkboxElement1.click();
+        checkboxElement2.click();
+        checkboxElement3.click();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(selectedRow1.isSelected).toBeTruthy();
+            expect(selectedRow2.isSelected).toBeTruthy();
+            expect(selectedRow3.isSelected).toBeTruthy();
+            // expect(selectedRow.nativeElement.class).toContain("igx-grid__tr--selected");
+            nextBtn.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(selectedRow1.isSelected).toBeFalsy();
+            expect(selectedRow2.isSelected).toBeFalsy();
+            expect(selectedRow3.isSelected).toBeFalsy();
+            prevBtn.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(selectedRow1.isSelected).toBeTruthy();
+            expect(selectedRow2.isSelected).toBeTruthy();
+            expect(selectedRow3.isSelected).toBeTruthy();
+        });
+    }));
     xit("Should persist through scrolling", async(() => {
         let selectedCell;
         const fix = TestBed.createComponent(GridWithSelection);
@@ -268,6 +314,7 @@ describe("IgxGrid - Row Selection", () => {
             expect(lastRow.isSelected).toBeFalsy();
         });
     }));
+
 });
 
 @Component({
