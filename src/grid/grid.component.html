@@ -42,7 +42,7 @@
             </igx-grid-groupby-row>
         </ng-container>
         <ng-container *ngIf="!rowData.records">
-            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
+            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" [primaryValue]="rowData[primaryKey] || null">
             </igx-grid-row>
         </ng-container>
     </ng-template>

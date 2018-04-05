@@ -3,8 +3,10 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { IgxDatePickerModule } from "../date-picker/date-picker.component";
 import { IgxButtonModule } from "../directives/button/button.directive";
+import { IgxFocusModule } from "../directives/focus/focus.directive";
 import { IgxForOfModule } from "../directives/for-of/for_of.directive";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
+import { IgxTextSelectionModule } from "../directives/text-selection/text-selection.directive";
 import { IgxToggleModule } from "../directives/toggle/toggle.directive";
 import { IgxIconModule } from "../icon";
 import { IgxInputGroupModule } from "../input-group/input-group.component";
@@ -26,54 +28,56 @@ import { IgxGridRowComponent } from "./row.component";
 import { IgxGridGroupByRowComponent } from "./groupby-row.component";
 
 @NgModule({
-    declarations: [
-        IgxGridCellComponent,
-        IgxColumnComponent,
-        IgxGridComponent,
-        IgxGridRowComponent,
-        IgxGridGroupByRowComponent,
-        IgxGridHeaderComponent,
-        IgxGridSummaryComponent,
-        IgxCellFooterTemplateDirective,
-        IgxCellHeaderTemplateDirective,
-        IgxCellEditorTemplateDirective,
-        IgxCellTemplateDirective,
-        IgxGridFilterComponent,
-        IgxGridSortingPipe,
-        igxGridGroupingPipe,
-        IgxGridPagingPipe,
-        IgxGridFilteringPipe,
-        IgxGridFilterConditionPipe
-    ],
-    entryComponents: [
-        IgxColumnComponent
-    ],
-    exports: [
-        IgxGridComponent,
-        IgxGridCellComponent,
-        IgxGridRowComponent,
-        IgxGridGroupByRowComponent,
-        IgxColumnComponent,
-        IgxGridHeaderComponent,
-        IgxGridFilterComponent,
-        IgxGridSummaryComponent,
-        IgxCellFooterTemplateDirective,
-        IgxCellHeaderTemplateDirective,
-        IgxCellEditorTemplateDirective,
-        IgxCellTemplateDirective
-    ],
-    imports: [
-        CommonModule,
-        FormsModule,
-        IgxButtonModule,
-        IgxDatePickerModule,
-        IgxIconModule,
-        IgxRippleModule,
-        IgxInputGroupModule,
-        IgxToggleModule,
-        IgxForOfModule
-    ],
-    providers: [IgxGridAPIService]
+  declarations: [
+    IgxGridCellComponent,
+    IgxColumnComponent,
+    IgxGridComponent,
+    IgxGridRowComponent,
+    IgxGridGroupByRowComponent,
+    IgxGridHeaderComponent,
+    IgxGridSummaryComponent,
+    IgxCellFooterTemplateDirective,
+    IgxCellHeaderTemplateDirective,
+    IgxCellEditorTemplateDirective,
+    IgxCellTemplateDirective,
+    IgxGridFilterComponent,
+    igxGridGroupingPipe,
+    IgxGridSortingPipe,
+    IgxGridPagingPipe,
+    IgxGridFilteringPipe,
+    IgxGridFilterConditionPipe
+  ],
+  entryComponents: [
+    IgxColumnComponent
+  ],
+  exports: [
+    IgxGridComponent,
+    IgxGridCellComponent,
+    IgxGridGroupByRowComponent,
+    IgxGridRowComponent,
+    IgxColumnComponent,
+    IgxGridHeaderComponent,
+    IgxGridFilterComponent,
+    IgxGridSummaryComponent,
+    IgxCellFooterTemplateDirective,
+    IgxCellHeaderTemplateDirective,
+    IgxCellEditorTemplateDirective,
+    IgxCellTemplateDirective
+  ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IgxButtonModule,
+    IgxDatePickerModule,
+    IgxIconModule,
+    IgxRippleModule,
+    IgxInputGroupModule,
+    IgxToggleModule,
+    IgxForOfModule,
+    IgxFocusModule,
+    IgxTextSelectionModule
+  ],
+  providers: [IgxGridAPIService]
 })
 export class IgxGridModule {
     public static forRoot() {
