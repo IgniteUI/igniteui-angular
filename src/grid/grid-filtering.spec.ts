@@ -1,7 +1,7 @@
 import { Component, DebugElement, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BOOLEAN_FILTERS, DATE_FILTERS, FilteringCondition,
     NUMBER_FILTERS, STRING_FILTERS } from "../../src/data-operations/filtering-condition";
 import { Calendar, ICalendarDate } from "../calendar/calendar";
@@ -17,7 +17,7 @@ describe("IgxGrid - Filtering actions", () => {
                 IgxGridFilteringComponent
             ],
             imports: [
-                NoopAnimationsModule,
+                BrowserAnimationsModule,
                 IgxGridModule.forRoot()]
         })
         .compileComponents();
@@ -924,6 +924,8 @@ describe("IgxGrid - Filtering actions", () => {
         const select = filterUIContainer.query(By.css("div > select"));
         const input = filterUIContainer.query(By.directive(IgxInputDirective));
 
+        filterIcon.triggerEventHandler("mousedown", null);
+        fix.detectChanges();
         filterIcon.nativeElement.click();
         fix.detectChanges();
         select.nativeElement.value = "null";
@@ -1000,14 +1002,15 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        const select = filterIcon.query(By.css("div > select"));
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
 
-        filterIcon.triggerEventHandler("mousedown", null);
+        filterUIContainer.triggerEventHandler("mousedown", null);
         fix.detectChanges();
         filterIcon.nativeElement.click();
         fix.detectChanges();
-        verifyFilterUIPosition(filterIcon, grid);
+        verifyFilterUIPosition(filterUIContainer, grid);
         select.nativeElement.value = "today";
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
@@ -1021,14 +1024,16 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        const select = filterIcon.query(By.css("div > select"));
+        const filterUIContainer = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const select = filterUIContainer.query(By.css("div > select"));
 
-        filterIcon.triggerEventHandler("mousedown", null);
+        filterUIContainer.triggerEventHandler("mousedown", null);
         fix.detectChanges();
         filterIcon.nativeElement.click();
         fix.detectChanges();
-        verifyFilterUIPosition(filterIcon, grid);
+        verifyFilterUIPosition(filterUIContainer, grid);
+
         select.nativeElement.value = "yesterday";
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
@@ -1510,10 +1515,8 @@ function sendInput(element, text: string, fix) {
 }
 
 function verifyFilterUIPosition(filterUIContainer, grid) {
-    const cont = filterUIContainer.queryAll(By.css("span"))[1];
-
-    const filterUiRightBorder = cont.nativeElement.offsetParent.offsetLeft +
-        cont.nativeElement.offsetLeft + cont.nativeElement.offsetWidth;
+    const filterUiRightBorder = filterUIContainer.nativeElement.offsetParent.offsetLeft +
+    filterUIContainer.nativeElement.offsetLeft + filterUIContainer.nativeElement.offsetWidth;
     expect(filterUiRightBorder).toBeLessThanOrEqual(grid.nativeElement.offsetWidth);
 }
 
