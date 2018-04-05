@@ -206,6 +206,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @Input()
     public remoteVirtualization: boolean;
+
+    @Input()
     public primaryKey;
 
     @Output()
