@@ -27,6 +27,10 @@ describe("Navigation Drawer", () => {
                     TestComponentPin],
                 imports: [Infragistics.IgxNavigationDrawerModule]
             });
+            // Using Window through DI causes AOT error (https://github.com/angular/angular/issues/15640)
+            // so for tests just force override the the `getWindowWidth`
+            this.widthSpyOverride = spyOn(Infragistics.IgxNavigationDrawerComponent.prototype as any, "getWindowWidth")
+                .and.returnValue(915 /* chosen at random by fair dice roll*/);
         }));
 
         afterEach(() => {
@@ -368,11 +372,8 @@ describe("Navigation Drawer", () => {
         }));
 
         it("should update pin based on window width (pinThreshold)", (done) => {
-            const template = `'<igx-nav-drawer [pin]="pin" [pinThreshold]="pinThreshold"></igx-nav-drawer>'`;
-            const originalWidth = window.innerWidth;
+            const template = `'<igx-nav-drawer [(pin)]="pin" [pinThreshold]="pinThreshold"></igx-nav-drawer>'`;
             let fixture: ComponentFixture<TestComponentPin>;
-            let widthSpyOverride: jasmine.Spy;
-
             TestBed.overrideComponent(TestComponentPin, {
             set: {
                 template
@@ -381,16 +382,16 @@ describe("Navigation Drawer", () => {
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentPin);
-                fixture.detectChanges();
+                expect(() => fixture.detectChanges()).not.toThrow();
+                return fixture.whenStable();
+            })
+            .then(() => {
 
                 // defaults:
-                expect(fixture.componentInstance.viewChild.pin)
-                    .toBe(originalWidth >= fixture.componentInstance.pinThreshold);
+                expect(fixture.componentInstance.viewChild.pin).toBe(false, "Should be initially unpinned");
+                expect(fixture.componentInstance.pin).toBe(false, "Parent component pin should update initially");
 
-                // Using Window through DI causes AOT error (https://github.com/angular/angular/issues/15640)
-                // so for tests just force override the the `getWindowWidth`
-                widthSpyOverride = spyOn(fixture.componentInstance.viewChild as any, "getWindowWidth")
-                    .and.returnValue(fixture.componentInstance.pinThreshold);
+                this.widthSpyOverride.and.returnValue(fixture.componentInstance.pinThreshold);
                 window.dispatchEvent(new Event("resize"));
                 // wait for debounce
                 return new Promise((resolve) => {
@@ -398,9 +399,10 @@ describe("Navigation Drawer", () => {
                 });
             })
             .then(() => {
-                expect(fixture.componentInstance.viewChild.pin).toBe(true);
+                expect(fixture.componentInstance.viewChild.pin).toBe(true, "Should pin on window resize over threshold");
+                expect(fixture.componentInstance.pin).toBe(true, "Parent pin update on window resize over threshold");
 
-                widthSpyOverride.and.returnValue(768);
+                this.widthSpyOverride.and.returnValue(768);
                 window.dispatchEvent(new Event("resize"));
                 // wait for debounce
                 return new Promise((resolve) => {
@@ -408,14 +410,30 @@ describe("Navigation Drawer", () => {
                 });
             })
             .then(() => {
-                expect(fixture.componentInstance.viewChild.pin).toBe(false);
+                expect(fixture.componentInstance.viewChild.pin).toBe(false, "Should un-pin on window resize below threshold");
+                expect(fixture.componentInstance.pin).toBe(false, "Parent pin update on window resize below threshold");
                 fixture.componentInstance.pinThreshold = 500;
-                fixture.detectChanges();
-                expect(fixture.componentInstance.viewChild.pin).toBe(true);
+                expect(() => fixture.detectChanges()).not.toThrow();
+                return fixture.whenStable();
+            })
+            .then(() => {
+                expect(fixture.componentInstance.viewChild.pin).toBe(true, "Should re-pin on window resize over threshold");
+                expect(fixture.componentInstance.pin).toBe(true, "Parent pin update on re-pin");
                 done();
             }).catch ((reason) => {
                 return Promise.reject(reason);
             });
+        });
+
+        it("should get correct window width", (done) => {
+            const originalWidth = window.innerWidth;
+            // re-enable `getWindowWidth`
+            const widthSpy = (this.widthSpyOverride as jasmine.Spy).and.callThrough();
+            expect(widthSpy.call(null)).toEqual(originalWidth);
+            (window as any).innerWidth = 0; // not that readonly in Chrome
+            expect(widthSpy.call(null)).toEqual(screen.width);
+            (window as any).innerWidth = originalWidth;
+            done();
         });
 
         function swipe(element, posX, posY, duration, deltaX, deltaY) {
