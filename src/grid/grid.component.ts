@@ -72,6 +72,12 @@ export interface IRowDataEventArgs {
     data: any;
 }
 
+export interface IRowSelectionEventArgs {
+    selection: any[];
+    row: IgxGridRowComponent;
+    rowID: any;
+}
+
 /**
  * **Ignite UI for Angular Grid** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
@@ -206,7 +212,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public onSelection = new EventEmitter<IGridCellEventArgs>();
 
     @Output()
-    public onRowSelection = new EventEmitter<any>();
+    public onRowSelection = new EventEmitter<IRowSelectionEventArgs>();
 
     @Output()
     public onColumnPinning = new EventEmitter<IPinColumnEventArgs>();
@@ -846,6 +852,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
+    get headerCheckboxAriaLabel() {
+        return this.selectionAPI.is_filtering_applied(this.id) ? "Select all filtered" : "Select all";
+    }
+
     public updateSelectionStatus(filteredData?: any[]) {
         if (this.rowSelectable) {
             if (filteredData) {
@@ -890,30 +900,19 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    get selectedRows() {
-        return;
+    public selectedRows() {
+        return this.selectionAPI.get_selection(this.id);
     }
 
-    public selectRows(rows: IgxGridRowComponent[]) {
-
-        // awaiting spec, temporary implementation for sample
-        rows.forEach((row) => row.grid.primaryKey ?
-        this.selectionAPI.select_item(this.id, row.rowData[row.grid.primaryKey]) :
-        this.selectionAPI.select_item(this.id, row.rowData)
-        );
-        return;
+    public selectRows(rowIDs: any[]) {
+        this.selectionAPI.select_items(this.id, rowIDs);
     }
 
     public selectAllRows() {
-        return;
-    }
-
-    public deselectRows(rows: IgxGridRowComponent[]) {
-        return;
+        this.selectionAPI.select_all(this.id, this.primaryKey);
     }
 
     public deselectAllRows() {
         this.selectionAPI.deselect_all(this.id, this.primaryKey);
-        return;
     }
 }
