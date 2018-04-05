@@ -160,14 +160,36 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @HostBinding("style.height")
     @Input()
-    public height;
+    public get height() {
+        return this._height;
+    }
+    public set height(value: any) {
+        if (this._height !== value) {
+            this._height = value;
+            requestAnimationFrame(() => {
+                this.calculateGridHeight();
+                this.cdr.markForCheck();
+              });
+        }
+    }
 
     @HostBinding("style.width")
     @Input()
-    public width;
+    public get width() {
+        return this._width;
+    }
+    public set width(value: any) {
+        if (this._width !== value) {
+            this._width = value;
+            requestAnimationFrame(() => {
+                this.calculateGridWidth();
+                this.cdr.markForCheck();
+            });
+        }
+    }
 
     get headerWidth() {
-        return parseInt(this.width, 10) - 17;
+        return parseInt(this._width, 10) - 17;
     }
 
     @Input()
@@ -308,6 +330,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _sortingExpressions = [];
     private resizeHandler;
     private columnListDiffer;
+    private _height;
+    private _width;
 
     constructor(
         private gridAPI: IgxGridAPIService,
@@ -328,7 +352,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public ngOnInit() {
         this.gridAPI.register(this);
         this.columnListDiffer = this.differs.find([]).create(null);
-        this.calcWidth = this.width && this.width.indexOf("%") === -1 ? parseInt(this.width, 10) : 0;
+        this.calcWidth = this._width && this._width.indexOf("%") === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
     }
 
@@ -534,7 +558,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._summaries(rest[0], true, rest[1]);
         }
         this.markForCheck();
-        this.calculateGridSizes();
+        this.calculateGridHeight();
+        this.cdr.detectChanges();
     }
 
     public disableSummaries(...rest) {
@@ -544,7 +569,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._summaries(rest[0], false);
         }
         this.markForCheck();
-        this.calculateGridSizes();
+        this.calculateGridHeight();
+        this.cdr.detectChanges();
     }
 
     public clearFilter(name?: string) {
@@ -638,19 +664,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return [];
     }
 
-    protected calculateGridSizes() {
+    protected calculateGridHeight() {
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
-        if (!this.width) {
-            /*no width specified.*/
-            this.calcWidth = null;
-        } else if (this.width && this.width.indexOf("%") !== -1) {
-            /* width in %*/
-            this.calcWidth = parseInt(computed.getPropertyValue("width"), 10);
-        }
-        if (!this.height) {
+        if (!this._height) {
             /*no height specified.*/
             this.calcHeight = null;
-        } else if (this.height && this.height.indexOf("%") !== -1) {
+        } else if (this._height && this._height.indexOf("%") !== -1) {
             /*height in %*/
             let pagingHeight = 0;
             if (this.paging) {
@@ -671,11 +690,29 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             }
             const footerHeight = this.tfoot.nativeElement.firstElementChild ?
             this.tfoot.nativeElement.clientHeight : 0;
-            this.calcHeight = parseInt(this.height, 10) -
+            this.calcHeight = parseInt(this._height, 10) -
                 this.theadRow.nativeElement.getBoundingClientRect().height -
                 footerHeight - pagingHeight -
                 this.scr.nativeElement.clientHeight;
         }
+    }
+
+    protected calculateGridWidth() {
+        const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+        if (!this._width) {
+            /*no width specified.*/
+            this.calcWidth = null;
+        } else if (this._width && this._width.indexOf("%") !== -1) {
+            /* width in %*/
+            this.calcWidth = parseInt(computed.getPropertyValue("width"), 10);
+        } else {
+            this.calcWidth = parseInt(this._width, 10);
+        }
+    }
+
+    protected calculateGridSizes() {
+        this.calculateGridWidth();
+        this.calculateGridHeight();
         this.cdr.detectChanges();
     }
 
@@ -697,9 +734,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @param takeHidden If we should take into account the hidden columns in the pinned area
      */
     protected getUnpinnedWidth(takeHidden = false) {
-        const width = this.width && this.width.indexOf("%") !== -1 ?
+        const width = this._width && this._width.indexOf("%") !== -1 ?
             this.calcWidth :
-            parseInt(this.width, 10);
+            parseInt(this._width, 10);
         return width - this.getPinnedWidth(takeHidden);
     }
 

@@ -38,7 +38,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     @Input() public igxForOf: any[];
     @Input() public igxForScrollOrientation: string;
     @Input() public igxForScrollContainer: any;
-    @Input() public igxForContainerSize: any;
+    @Input()
+    public get igxForContainerSize() {
+        return this._containerSize;
+    }
+    public set igxForContainerSize(value: any) {
+        this._containerSize = value;
+    }
     @Input() public igxForItemSize: any;
     public dc: ComponentRef<DisplayContainerComponent>;
     public state: IForOfState = {
@@ -66,6 +72,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     private _lastTouchY = 0;
     private _pointerCapture;
     private _gestureObject;
+    private _containerSize;
 
     @ViewChild(DisplayContainerComponent)
     private displayContiner: DisplayContainerComponent;
@@ -90,7 +97,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const dcFactory: ComponentFactory<DisplayContainerComponent> = this.resolver.resolveComponentFactory(DisplayContainerComponent);
         this.dc = this._viewContainer.createComponent(dcFactory, 0);
         if (this.igxForOf && this.igxForOf.length) {
-            this.dc.instance.notVirtual = !(this.igxForContainerSize && this.state.chunkSize < this.igxForOf.length);
+            this.dc.instance.notVirtual = !(this._containerSize && this.state.chunkSize < this.igxForOf.length);
             if (this.igxForScrollOrientation === "horizontal") {
                 totalWidth = this.initHCache(this.igxForOf);
                 this.hScroll = this.getElement(vc, "igx-horizontal-virtual-helper");
@@ -455,7 +462,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     protected _calculateChunkSize(): number {
         let chunkSize = 0;
-        if (this.igxForContainerSize !== null && this.igxForContainerSize !== undefined) {
+        if (this._containerSize !== null && this._containerSize !== undefined) {
             if (this.igxForScrollOrientation === "horizontal") {
                 const vc = this.igxForScrollContainer ?
                     this.igxForScrollContainer._viewContainer :
@@ -463,8 +470,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 const hScroll = this.getElement(vc, "igx-horizontal-virtual-helper");
 
                 const left = hScroll && hScroll.scrollLeft !== 0 ?
-                    hScroll.scrollLeft + parseInt(this.igxForContainerSize, 10) :
-                    parseInt(this.igxForContainerSize, 10);
+                    hScroll.scrollLeft + parseInt(this._containerSize, 10) :
+                    parseInt(this._containerSize, 10);
 
                 if (!this.hCache) {
                     this.initHCache(this.igxForOf);
@@ -478,7 +485,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 chunkSize = endIndex - this.state.startIndex;
                 chunkSize = chunkSize > this.igxForOf.length ? this.igxForOf.length : chunkSize;
             } else {
-                chunkSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
+                chunkSize = Math.ceil(parseInt(this._containerSize, 10) /
                     parseInt(this.igxForItemSize, 10));
                 if (chunkSize > this.igxForOf.length) {
                      chunkSize = this.igxForOf.length;
@@ -524,13 +531,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     private _recalcScrollBarSize() {
         const count = this.totalItemCount || this.igxForOf.length;
-        this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
+        this.dc.instance.notVirtual = !(this._containerSize && this.dc && this.state.chunkSize < count);
         if (this.igxForScrollOrientation === "horizontal") {
-            const totalWidth = this.igxForContainerSize ? this.initHCache(this.igxForOf) : 0;
+            const totalWidth = this._containerSize ? this.initHCache(this.igxForOf) : 0;
             this.hScroll.children[0].style.width = totalWidth + "px";
         }
         if (this.igxForScrollOrientation === "vertical") {
-            this.vh.instance.elementRef.nativeElement.style.height = parseInt(this.igxForContainerSize, 10) + "px";
+            this.vh.instance.elementRef.nativeElement.style.height = parseInt(this._containerSize, 10) + "px";
             this.vh.instance.height = count * parseInt(this.igxForItemSize, 10);
         }
     }
