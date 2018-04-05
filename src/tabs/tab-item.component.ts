@@ -8,9 +8,8 @@ import {
     Input
 } from "@angular/core";
 
-import { IgxBadgeModule } from "../badge/badge.component";
-import { IgxIconModule } from "../icon";
-import { IgxTabsComponent, IgxTabsGroupComponent } from "./tabs.component";
+import { IgxTabsComponent, } from "./tabs.component";
+import { IgxTabsGroupComponent } from "./tabs-group.component";
 
 @Component({
     selector: "igx-tab-item",

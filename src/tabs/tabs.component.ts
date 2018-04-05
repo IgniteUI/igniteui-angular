@@ -24,20 +24,12 @@ import { IgxBadgeModule } from "../badge/badge.component";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxIconModule } from "../icon";
 import { IgxTabItemComponent } from "./tab-item.component";
+import { IgxTabsGroupComponent, IgxTabItemTemplateDirective } from "./tabs-group.component";
 import { isNullOrUndefined } from "util";
 
 export enum TabsType {
     FIXED = "fixed",
     CONTENTFIT = "contentfit"
-}
-
-@Directive({
-    selector: "[igxTab]"
-})
-export class IgxTabItemTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) {
-    }
 }
 
 @Component({
@@ -235,20 +227,32 @@ export class IgxTabsComponent implements AfterViewInit {
 
     @HostListener("keydown.arrowright", ["$event"])
     public onKeydownArrowRight(event: KeyboardEvent) {
-        this._onArrowKeyDown(false);
+        this._onKeyDown(false);
     }
 
     @HostListener("keydown.arrowleft", ["$event"])
     public onKeydownArrowLeft(event: KeyboardEvent) {
-        this._onArrowKeyDown(true);
+        this._onKeyDown(true);
     }
 
-    private _onArrowKeyDown(isLeftArrow: boolean): void {
+    @HostListener("keydown.home", ["$event"])
+    public onKeydownHome(event: KeyboardEvent) {
+        this._onKeyDown(false, 0);
+    }
+
+    @HostListener("keydown.end", ["$event"])
+    public onKeydownEnd(event: KeyboardEvent) {
+        this._onKeyDown(false, this.tabs.toArray().length - 1);
+    }
+
+    private _onKeyDown(isLeftArrow: boolean, index = null): void {
         const tabsArray = this.tabs.toArray();
-        const index = (isLeftArrow)
-            ? (this.selectedIndex === 0) ? tabsArray.length - 1 : this.selectedIndex - 1
-            : (this.selectedIndex === tabsArray.length - 1) ? 0 : this.selectedIndex + 1;
-        const focusDelay = (this.selectedIndex === 0) ? 200 : 100;
+        if (index === null) {
+            index = (isLeftArrow)
+                ? (this.selectedIndex === 0) ? tabsArray.length - 1 : this.selectedIndex - 1
+                : (this.selectedIndex === tabsArray.length - 1) ? 0 : this.selectedIndex + 1;
+        }
+        const focusDelay = (Math.abs(index - this.selectedIndex) > tabsArray.length / 2) ? 200 : 50;
         const tab = tabsArray[index];
         tab.select(focusDelay);
     }
@@ -262,112 +266,6 @@ export class IgxTabsComponent implements AfterViewInit {
         group.isSelected = false;
         group.relatedTab.tabindex = -1;
         this.onTabItemDeselected.emit({ tab: this.tabs[group.index], group });
-    }
-}
-
-// ================================= IgxTabsGroupComponent ======================================
-
-@Component({
-    selector: "igx-tabs-group",
-    templateUrl: "tabs-group.component.html"
-})
-
-export class IgxTabsGroupComponent implements AfterContentInit {
-    private _itemStyle = "igx-tabs-group";
-    public isSelected = false;
-
-    @Input()
-    public label: string;
-
-    @Input()
-    public icon: string;
-
-    @Input()
-    public isDisabled: boolean;
-
-    @HostBinding("attr.role") public role = "tabpanel";
-
-    @HostBinding("class.igx-tabs__group")
-    get styleClass(): boolean {
-        return true;
-    }
-
-    @HostBinding("attr.aria-labelledby")
-    get labelledBy(): string {
-        return "igx-tab-item-" + this.index;
-    }
-
-    @HostBinding("attr.id")
-    get id(): string {
-        return "igx-tabs__group-" + this.index;
-    }
-
-    public get itemStyle(): string {
-        return this._itemStyle;
-    }
-
-    get relatedTab(): IgxTabItemComponent {
-        if (this._tabs.tabs) {
-            return this._tabs.tabs.toArray()[this.index];
-        }
-    }
-
-    get index() {
-        return this._tabs.groups.toArray().indexOf(this);
-    }
-
-    get customTabTemplate(): TemplateRef<any> {
-        return this._tabTemplate;
-    }
-
-    set customTabTemplate(template: TemplateRef<any>) {
-        this._tabTemplate = template;
-    }
-
-    private _tabTemplate: TemplateRef<any>;
-
-    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
-    protected tabTemplate: IgxTabItemTemplateDirective;
-
-    constructor(private _tabs: IgxTabsComponent) {
-    }
-
-    public ngAfterContentInit(): void {
-        if (this.tabTemplate) {
-            this._tabTemplate = this.tabTemplate.template;
-        }
-    }
-
-    public select(focusDelay = 50) {
-        if (this.isDisabled || this._tabs.selectedIndex === this.index) {
-            return;
-        }
-
-        this.isSelected = true;
-        this.relatedTab.tabindex = 0;
-
-        setTimeout(() => {
-            this.relatedTab.nativeTabItem.nativeElement.focus();
-        }, focusDelay);
-        this._handleSelection();
-        this._tabs.onTabItemSelected.emit({ tab: this._tabs.tabs.toArray()[this.index], group: this });
-    }
-
-    private _handleSelection() {
-        const tabElement = this.relatedTab.nativeTabItem.nativeElement;
-        const viewPortOffsetWidth = this._tabs.viewPort.nativeElement.offsetWidth;
-
-        if (tabElement.offsetLeft < this._tabs.offset) {
-            this._tabs.scrollElement(tabElement, false);
-        } else if (tabElement.offsetLeft + tabElement.offsetWidth > viewPortOffsetWidth + this._tabs.offset) {
-            this._tabs.scrollElement(tabElement, true);
-        }
-
-        const contentOffset = this._tabs.tabsContainer.nativeElement.offsetWidth * this.index;
-        this._tabs.contentsContainer.nativeElement.style.transform = `translate(${-contentOffset}px)`;
-
-        this._tabs.selectedIndicator.nativeElement.style.width = `${tabElement.offsetWidth}px`;
-        this._tabs.selectedIndicator.nativeElement.style.transform = `translate(${tabElement.offsetLeft}px)`;
     }
 }
 
