@@ -6,7 +6,7 @@ import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxFocusModule } from "../directives/focus/focus.directive";
 import { IgxForOfModule } from "../directives/for-of/for_of.directive";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
-import { IgxSelectionModule } from "../directives/selection/selection.directive";
+import { IgxTextSelectionModule } from "../directives/text-selection/text-selection.directive";
 import { IgxToggleModule } from "../directives/toggle/toggle.directive";
 import { IgxIconModule } from "../icon";
 import { IgxInputGroupModule } from "../input-group/input-group.component";
@@ -71,7 +71,7 @@ import { IgxGridRowComponent } from "./row.component";
     IgxToggleModule,
     IgxForOfModule,
     IgxFocusModule,
-    IgxSelectionModule
+    IgxTextSelectionModule
   ],
   providers: [IgxGridAPIService]
 })
