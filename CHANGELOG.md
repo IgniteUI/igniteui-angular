@@ -57,7 +57,9 @@ All notable changes for each version of this project will be documented in this 
         - The `igxGrid` `onSelection` now correctly propagates the original `event` in the `IGridCellEventArgs`.
     - Added `jsZip` as a Peer Dependency.
 - `primaryKey` attribute added to `igxGrid`
-    - `primaryKey` allows for a property name from the `data` source to be specified. If specified, `primaryKey` can be used instead of `index` to indentify grid rows from the `igxGrid.rowList`. As such, `primaryKey` can be used for selecting rows for the following `igxGrid` methods - `deleteRow`, `updateRow`, `updateCell`, `getCellByColumn`, `getRowByKey`
+    - `primaryKey` allows for a property name from the data source to be specified. If specified, `primaryKey` can be used instead of `index` to indentify grid rows from the `igxGrid.rowList`. As such, `primaryKey` can be used for selecting rows for the following `igxGrid` methods - `deleteRow`, `updateRow`, `updateCell`, `getCellByColumn`, `getRowByKey`
+    - `primaryKey` requires all of the data for the specified property name to have unique values in order to function as expected.
+    - as it provides a unique identifier for each data member (and therefore row), `primaryKey` is best suited for addressing grid row entries. If DOM virtualization is in place for the grid data, the row `index` property can be reused (for instance, when filtering/sorting the data), whereas `primaryKey` remains unique. Ideally, when a persistent reference to a row has to be established, `primaryKey` should be used. 
 
 
 ## 5.2.1
