@@ -240,7 +240,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostListener("keydown.arrowleft", ["$event"])
     public onKeydownArrowLeft(event) {
         event.preventDefault();
-        const visibleColumns = this.grid.visibleColumns;
         const rowIndex = this.rowIndex;
         const visibleColumnIndex = this.visibleColumnIndex - 1;
 
