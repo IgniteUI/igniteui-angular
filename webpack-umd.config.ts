@@ -6,8 +6,8 @@ import * as rxjsExternals from "webpack-rxjs-externals";
 
 export default {
     entry: {
-        "index.umd": "./src/main.ts",
-        "index.umd.min": "./src/main.ts"
+        "index.umd": ["./src/main.ts", "./src/services/index.ts"],
+        "index.umd.min": ["./src/main.ts", "./src/services/index.ts"]
     },
     output: {
         path: path.join(__dirname, "dist"),
@@ -19,6 +19,16 @@ export default {
         extensions: [".ts", ".js", ".json"]
     },
     externals: [
+        function(context, request, callback) {
+            if (/^jszip/i.test(request)) {
+                return callback(null, {
+                  commonjs: request,
+                  commonjs2: request,
+                  amd: request
+                });
+              }
+              callback();
+        },
         angularExternals(),
         rxjsExternals()
     ],

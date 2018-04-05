@@ -6,7 +6,7 @@ import { IFilteringExpression } from "../data-operations/filtering-expression.in
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
-import { IgxGridComponent } from "./grid.component";
+import { IGridEditEventArgs, IgxGridComponent } from "./grid.component";
 import { IgxGridRowComponent } from "./row.component";
 import { IGroupByRecord } from "../data-operations/groupby-record.interface";
 import { IGroupByExpandState } from "../data-operations/groupby-expand-state.interface";
@@ -89,8 +89,9 @@ export class IgxGridAPIService {
 
     public update_row(value: any, id: string, row: IgxGridRowComponent): void {
         const index = this.get(id).data.indexOf(row.rowData);
-        this.get(id).onEditDone.emit({ currentValue: this.get(id).data[index], newValue: value });
-        this.get(id).data[index] = value;
+        const args: IGridEditEventArgs = { row, cell: null, currentValue: this.get(id).data[index], newValue: value };
+        this.get(id).onEditDone.emit(args);
+        this.get(id).data[index] = args.newValue;
     }
 
     public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {

@@ -43,7 +43,29 @@ export class IgxCardFooterDirective {
 }
 
 /**
- * IgxCardComponent is a sheet of material that serves as an entry point to more detailed information.
+ * **Ignite UI for Angular Card** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/card.html)
+ *
+ * The Ignite UI Card serves as a container that allows custom content to be organized in an appealing way.  There are
+ * four sections in a card that you can use to organize your content.  These are header, footer, content & actions.
+ *
+ * Example:
+ * ```html
+ * <igx-card>
+ *   <igx-card-header>
+ *     <div>
+ *       <h3 class="igx-card-header__title--small">{{title}}</h3>
+ *       <h5 class="igx-card-header__subtitle">{{subtitle}}</h5>
+ *     </div>
+ *   </igx-card-header>
+ *   <igx-card-actions>
+ *     <div>
+ *       <button igxButton igxRipple>Share</button>
+ *       <button igxButton igxRipple>Play Album</button>
+ *     </div>
+ *   </igx-card-actions>
+ * </igx-card>
+ * ```
  */
 @Component({
     selector: "igx-card",

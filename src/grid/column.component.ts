@@ -20,7 +20,14 @@ import {
     IgxCellTemplateDirective
 } from "./grid.common";
 import { IgxGridComponent } from "./grid.component";
-
+/**
+ * **Ignite UI for Angular Column** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)
+ *
+ * The Ignite UI Column is used within an `igx-grid` element to define what data the column will show. Features such as sorting,
+ * filtering & editing are enabled at the column level.  You can also provide a template containing custom content inside
+ * the column using `ng-template` which will be used for all cells within the column.
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
@@ -56,8 +63,10 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     set hidden(value: boolean) {
-        this._hidden = value;
-        this.check();
+        if (this._hidden !== value) {
+            this._hidden = value;
+            this.check();
+        }
     }
 
     @Input()
@@ -78,8 +87,10 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     set index(value: number) {
-        this._index = value;
-        this.check();
+        if (this._index !== value) {
+            this._index = value;
+            this.check();
+        }
     }
 
     @Input()
@@ -222,7 +233,7 @@ export class IgxColumnComponent implements AfterContentInit {
         this.gridAPI.get(this.gridID).unpinColumn(this.field);
     }
     protected check() {
-        if (this.gridID) {
+        if (this.grid) {
             this.grid.markForCheck();
         }
     }
