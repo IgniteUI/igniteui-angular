@@ -61,4 +61,28 @@ export class GridSelectionComponent implements OnInit, AfterViewInit {
             this.grid1.selectRows([targetCell.row.rowID]);
         }
     }
+
+    public toggle() {
+        if (this.grid1.selectedRows().length === 0) {
+            this.grid1.selectRows([1, 2, 5]);
+        } else {
+            this.grid1.selectRows([]);
+        }
+    }
+
+    public toggleSingle() {
+        this.grid1.rowList.toArray()[6].isSelected = !this.grid1.rowList.first.isSelected;
+    }
+
+    public toggleAll() {
+        if (this.grid1.selectedRows().length === 0) {
+            this.grid1.selectAllRows();
+        } else {
+            this.grid1.selectRows([]);
+        }
+    }
+
+    public isThirdSelected() {
+        return this.grid1.getRowByKey(3).isSelected;
+    }
 }

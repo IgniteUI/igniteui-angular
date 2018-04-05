@@ -905,14 +905,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public selectRows(rowIDs: any[]) {
-        this.selectionAPI.select_items(this.id, rowIDs);
+        rowIDs.forEach((rowID) => this.getRowByKey(rowID).select());
     }
 
     public selectAllRows() {
         this.selectionAPI.select_all(this.id, this.primaryKey);
+        this.cdr.markForCheck();
     }
 
     public deselectAllRows() {
         this.selectionAPI.deselect_all(this.id, this.primaryKey);
+        this.cdr.markForCheck();
     }
 }

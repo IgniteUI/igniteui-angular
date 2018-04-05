@@ -174,8 +174,7 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
             this.selectionAPI.select_item(this.gridID, this.rowID);
             this.grid.allRowsSelected = this.selectionAPI.are_all_selected(this.gridID, this.grid.data);
             this.grid.headerCheckbox.indeterminate = !this.grid.allRowsSelected;
-        } else {
-            this.cells.first.nativeElement.focus();
+            this.cdr.markForCheck();
         }
     }
 
@@ -184,8 +183,7 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
             this.selectionAPI.deselect_item(this.gridID, this.rowID);
             this.grid.allRowsSelected = false;
             this.grid.headerCheckbox.indeterminate = !this.selectionAPI.are_none_selected(this.gridID);
-        } else {
-            // TODO
+            this.cdr.markForCheck();
         }
     }
     public handleArrows(event) {
