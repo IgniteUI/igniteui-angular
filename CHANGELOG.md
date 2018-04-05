@@ -30,16 +30,16 @@ All notable changes for each version of this project will be documented in this 
 - Removed the `dirty` local template variable previously exposed by the `igxFor` directive.
 - the `igx-icon` component can now work with both glyph and ligature-based icon font sets. We've also included a brand new Icon Service, which helps you create aliases for the icon fonts you've included in your project. The service also allows you to define the default icon set used throughout your app.
 - Added the option to conditionally disable the `igx-ripple` directive through the `igxRippleDisabled` property.
-- Updated styling and interaction animations of the `igx-checkbox` and `igx-radio` components.
+- Updated styling and interaction animations of the `igx-checkbox`, `igx-switch`, and `igx-radio` components.
 - Added `indeterminate` property and styling to the `igx-checkbox` component.
-- Added `igx-ripple` effect to the `igx-checkbox` and `igx-radio` components. The effect can be disabled through the `disableRipple` property.
-- Added the ability to specify the label location in the `igx-checkbox` and `igx-radio` components through the `labelPosition` property. It can either be `before` or `after` the checkbox/radio element.
-- You can now use any element as label on the `igx-checkbox` and `igx-radio` components via the aria-labelledby property. 
-- You can now have invisible label on the `igx-checkbox` and `igx-radio` components via the aria-label property. 
-- Added the ability to toggle the `igx-checkbox` checked state programmatically via `toggle` method on the component instance.
+- Added `igx-ripple` effect to the `igx-checkbox`, `igx-switch`, and `igx-radio` components. The effect can be disabled through the `disableRipple` property.
+- Added the ability to specify the label location in the `igx-checkbox`, `igx-switch`, and `igx-radio` components through the `labelPosition` property. It can either be `before` or `after`.
+- You can now use any element as label on the `igx-checkbox`, `igx-switch`, and `igx-radio` components via the aria-labelledby property. 
+- You can now have invisible label on the `igx-checkbox`, `igx-switch`, and `igx-radio` components via the aria-label property. 
+- Added the ability to toggle the `igx-checkbox` and `igx-switch` checked state programmatically via `toggle` method on the component instance.
 - Added the ability to select an `igx-radio` programmatically via `select` method on the component instance.
 - Fixed a bug on the `igx-checkbox` and `igx-radio` components where the click event was being triggered twice on click.
-- Fixed a bug where the `igx-checkbox` and `igx-radio` component's change event was not being triggered on label click.
+- Fixed a bug where the `igx-checkbox`, `igx-switch`, and `igx-radio` change event was not being triggered on label click.
 - `igxМask` directive added
     - `igxМask` provide means for controlling user input and formatting the visible value based on a configurable mask rules. For more detailed information see [`igxMask README file`](https://github.com/IgniteUI/igniteui-angular/blob/master/src/directives/mask/README.md)
 - `igxInputGroup` component added - used as a container for the `igxLabel`, `igxInput`, `igxPrefix`, `igxSuffix` and `igxHint` directives.
