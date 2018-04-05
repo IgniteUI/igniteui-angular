@@ -2,7 +2,9 @@ import { CommonModule } from "@angular/common";
 import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { IgxIconService } from "./icon.service";
 /**
- * **Ignite UI for Angular Icon** - [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon.html)
+ * **Ignite UI for Angular Icon** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon.html)
+ *
  * The Ignite UI Icon makes it easy for developers to include material design icons directly in their markup. The icons
  * support custom colors and can be marked as active or disabled using the `isActive` property. This will change the appearence
  * of the icon.

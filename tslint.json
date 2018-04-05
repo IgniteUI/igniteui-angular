@@ -6,7 +6,7 @@
   "rules": {
 	  "interface-name": [true, "always-prefix"],
 	  "trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
-		"no-submodule-imports": [true, "rxjs", "@angular/platform-browser", "@angular/core/testing"],
+		"no-submodule-imports": [true, "rxjs", "@angular/platform-browser", "@angular/core/testing", "jszip"],
 	  "max-classes-per-file": [false],
 		"prefer-object-spread": false,
     "arrow-return-shorthand": true,
