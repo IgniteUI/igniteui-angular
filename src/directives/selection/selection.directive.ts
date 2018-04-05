@@ -2,13 +2,13 @@ import { Directive, ElementRef, Input, NgModule } from "@angular/core";
 
 @Directive({
     exportAs: "igxSelection",
-    selector: "[igxAutoSelect]"
+    selector: "[igxSelection]"
 })
-export class IgxAutoSelectDirective {
+export class IgxSelectionDirective {
 
     private selectionState = true;
 
-    @Input("igxAutoSelect")
+    @Input("igxSelection")
     get selected(): boolean {
         return this.selectionState;
     }
@@ -32,7 +32,7 @@ export class IgxAutoSelectDirective {
 }
 
 @NgModule({
-    declarations: [IgxAutoSelectDirective],
-    exports: [IgxAutoSelectDirective]
+    declarations: [IgxSelectionDirective],
+    exports: [IgxSelectionDirective]
 })
-export class IgxAutoSelectModule { }
+export class IgxSelectionModule { }

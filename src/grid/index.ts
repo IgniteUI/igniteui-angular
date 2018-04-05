@@ -2,8 +2,8 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { IgxDatePickerModule } from "../date-picker/date-picker.component";
-import { IgxAutoFocusModule } from "../directives/auto-focus/auto-focus.directive";
-import { IgxAutoSelectModule } from "../directives/auto-selection/auto-selection.directive";
+import { IgxFocusModule } from "../directives/focus/focus.directive";
+import { IgxSelectionModule } from "../directives/selection/selection.directive";
 import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxForOfModule } from "../directives/for-of/for_of.directive";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
@@ -70,8 +70,8 @@ import { IgxGridRowComponent } from "./row.component";
     IgxInputGroupModule,
     IgxToggleModule,
     IgxForOfModule,
-    IgxAutoSelectModule,
-    IgxAutoFocusModule
+    IgxSelectionModule,
+    IgxFocusModule
   ],
   providers: [IgxGridAPIService]
 })

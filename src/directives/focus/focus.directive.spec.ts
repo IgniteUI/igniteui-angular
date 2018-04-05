@@ -4,21 +4,21 @@ import {
     TestBed
 } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxAutoFocusDirective } from "./auto-focus.directive";
+import { IgxFocusDirective } from "./focus.directive";
 
-describe("igxAutoFocus", () => {
+describe("igxFocus", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxAutoFocusDirective,
-                SetAutoFocusComponent,
+                IgxFocusDirective,
+                SetFocusComponent,
                 TriggerFocusOnClickComponent
             ]
         }).compileComponents();
     }));
 
     it("The second element should be focused", () => {
-        const fix = TestBed.createComponent(SetAutoFocusComponent);
+        const fix = TestBed.createComponent(SetFocusComponent);
         fix.detectChanges();
 
         const secondElem: HTMLElement = fix.debugElement.queryAll(By.all())[1].nativeElement;
@@ -50,17 +50,17 @@ describe("igxAutoFocus", () => {
         const template =
         `
             <input type="text" value="First" />
-            <input type="text" [igxAutoFocus]="false" value="Fifth" />
+            <input type="text" [igxFocus]="false" value="Fifth" />
             <input type="text" value="Seventh" />
         `;
-        TestBed.overrideComponent(SetAutoFocusComponent, {
+        TestBed.overrideComponent(SetFocusComponent, {
             set: {
                 template
             }
         });
 
         TestBed.compileComponents().then(() => {
-            const fix = TestBed.createComponent(SetAutoFocusComponent);
+            const fix = TestBed.createComponent(SetFocusComponent);
             fix.detectChanges();
 
             const secondInput = fix.debugElement.queryAll(By.all())[1].nativeElement;
@@ -78,28 +78,26 @@ describe("igxAutoFocus", () => {
     template:
     `
         <input type="text" value="First" />
-        <input type="text" [igxAutoFocus]="true" value="Fifth" />
+        <input type="text" [igxFocus]="true" value="Fifth" />
         <input type="text" value="Seventh" />
     `
 })
-class SetAutoFocusComponent {
-    @ViewChild(IgxAutoFocusDirective) public autoFocusDir: IgxAutoFocusDirective;
-}
+class SetFocusComponent { }
 
 @Component({
     template:
     `
     <div>First</div>
     <div>Second</div>
-    <div [igxAutoFocus] #autoFocus="igxFocus" (focus)="autoFocus.trigger()">Third</div>
+    <div [igxFocus]>Third</div>
     <button (click)="focus()">Focus the third one</button>
     `
 })
 class TriggerFocusOnClickComponent {
-    @ViewChild(IgxAutoFocusDirective) public autoFocus: IgxAutoFocusDirective;
+    @ViewChild(IgxFocusDirective) public focusRef: IgxFocusDirective;
 
     focus() {
-        this.autoFocus.trigger();
+        this.focusRef.trigger();
     }
 
 }

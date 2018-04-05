@@ -2,13 +2,13 @@ import { Directive, ElementRef, Input, NgModule } from "@angular/core";
 
 @Directive({
     exportAs: "igxFocus",
-    selector: "[igxAutoFocus]"
+    selector: "[igxFocus]"
 })
-export class IgxAutoFocusDirective {
+export class IgxFocusDirective {
 
     private focusState = true;
 
-    @Input("igxAutoFocus")
+    @Input("igxFocus")
     get focused(): boolean {
         return this.focusState;
     }
@@ -32,7 +32,7 @@ export class IgxAutoFocusDirective {
 }
 
 @NgModule({
-    declarations: [IgxAutoFocusDirective],
-    exports: [IgxAutoFocusDirective]
+    declarations: [IgxFocusDirective],
+    exports: [IgxFocusDirective]
 })
-export class IgxAutoFocusModule { }
+export class IgxFocusModule { }
