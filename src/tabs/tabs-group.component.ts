@@ -6,20 +6,12 @@ import {
     Directive,
     HostBinding,
     Input,
-    TemplateRef,
+    TemplateRef
 } from "@angular/core";
 
 import { IgxTabItemComponent } from "./tab-item.component";
 import { IgxTabsComponent } from "./tabs.component";
-
-@Directive({
-    selector: "[igxTab]"
-})
-export class IgxTabItemTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) {
-    }
-}
+import { IgxTabItemTemplateDirective } from "./tabs.directives";
 
 @Component({
     selector: "igx-tabs-group",

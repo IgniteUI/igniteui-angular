@@ -8,8 +8,8 @@ import {
     Input
 } from "@angular/core";
 
-import { IgxTabsComponent, } from "./tabs.component";
 import { IgxTabsGroupComponent } from "./tabs-group.component";
+import { IgxTabsComponent } from "./tabs.component";
 
 @Component({
     selector: "igx-tab-item",
@@ -17,6 +17,8 @@ import { IgxTabsGroupComponent } from "./tabs-group.component";
 })
 
 export class IgxTabItemComponent {
+    private _nativeTabItem;
+    private _changesCount = 0; // changes and updates accordingly applied to the tab.
 
     @Input()
     public relatedGroup: IgxTabsGroupComponent;
@@ -31,9 +33,6 @@ export class IgxTabItemComponent {
     public onClick(event) {
         this.select();
     }
-
-    private _nativeTabItem;
-    private _changesCount = 0; // changes and updates accordingly applied to the tab.
 
     get changesCount(): number {
         return this._changesCount;

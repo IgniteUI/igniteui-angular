@@ -8,8 +8,10 @@ import {
     ElementRef,
     EventEmitter,
     forwardRef,
+    Host,
     HostBinding,
     HostListener,
+    Inject,
     Input,
     NgModule,
     Output,
@@ -18,12 +20,13 @@ import {
     ViewChildren
 } from "@angular/core";
 
+import { isNullOrUndefined } from "util";
 import { IgxBadgeModule } from "../badge/badge.component";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxIconModule } from "../icon";
 import { IgxTabItemComponent } from "./tab-item.component";
-import { IgxTabsGroupComponent, IgxTabItemTemplateDirective } from "./tabs-group.component";
-import { isNullOrUndefined } from "util";
+import { IgxTabsGroupComponent } from "./tabs-group.component";
+import { IgxLeftButtonStyleDirective, IgxRightButtonStyleDirective, IgxTabItemTemplateDirective } from "./tabs.directives";
 
 export enum TabsType {
     FIXED = "fixed",
@@ -99,6 +102,8 @@ export class IgxTabsComponent implements AfterViewInit {
     public calculatedWidth: number;
     public visibleItemsWidth: number;
     public offset = 0;
+    public isRightButtonVisible = false;
+    public isLeftButtonVisible = false;
 
     public scrollLeft(event) {
         this._scroll(false);
@@ -130,30 +135,14 @@ export class IgxTabsComponent implements AfterViewInit {
     public scrollElement(element: any, scrollRight: boolean): void {
         requestAnimationFrame(() => {
             const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
+            const itemsContainerWidth = this.itemsContainer.nativeElement.offsetWidth;
+
             this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
             this.itemsContainer.nativeElement.style.transform = `translate(${-this.offset}px)`;
 
-            if (this.offset == 0 && !scrollRight) {
-                this._hideScrollButton(this.leftButton);
-            } else {
-                this._showScrollButton(this.leftButton);
-            }
-            if (this.offset + viewPortWidth == this.itemsContainer.nativeElement.offsetWidth && scrollRight) {
-                this._hideScrollButton(this.rightButton);
-            } else {
-                this._showScrollButton(this.rightButton);
-            }
+            this.isLeftButtonVisible = (this.offset === 0 && !scrollRight) ? false : true;
+            this.isRightButtonVisible = (this.offset + viewPortWidth === itemsContainerWidth && scrollRight) ? false : true;
         });
-    }
-
-    private _showScrollButton(element) {
-        const elementStyle = element.nativeElement.style;
-        elementStyle.display = "flex";
-        elementStyle.visibility = "visible";
-    }
-
-    private _hideScrollButton(element) {
-        element.nativeElement.style.visibility = "hidden";
     }
 
     get selectedTab(): IgxTabItemComponent {
@@ -183,28 +172,17 @@ export class IgxTabsComponent implements AfterViewInit {
         const headerContainerWidth = this.headerContainer.nativeElement.offsetWidth;
 
         if (itemsContainerWidth > headerContainerWidth) {
-            this._showScrollButton(this.rightButton);
+            this.isRightButtonVisible = true;
         }
     }
 
-    @HostListener('window:resize')
+    @HostListener("window:resize")
     public onResize() {
         const itemsContainerWidth = this.itemsContainer.nativeElement.offsetWidth;
         const viewPortContainerWidth = this.viewPort.nativeElement.offsetWidth;
 
-        if (itemsContainerWidth <= viewPortContainerWidth + this.offset) {
-            this._hideScrollButton(this.rightButton);
-        }
-        else {
-            this._showScrollButton(this.rightButton);
-        }
-
-        if (this.offset > 0) {
-            this._showScrollButton(this.leftButton);
-        }
-        else {
-            this._hideScrollButton(this.leftButton);
-        }
+        this.isRightButtonVisible = (itemsContainerWidth <= viewPortContainerWidth + this.offset) ? false : true;
+        this.isLeftButtonVisible = (this.offset > 0) ? true : false;
     }
 
     @HostListener("onTabItemSelected", ["$event"])
@@ -263,8 +241,18 @@ export class IgxTabsComponent implements AfterViewInit {
 }
 
 @NgModule({
-    declarations: [IgxTabsComponent, IgxTabsGroupComponent, IgxTabItemComponent, IgxTabItemTemplateDirective],
-    exports: [IgxTabsComponent, IgxTabsGroupComponent, IgxTabItemComponent, IgxTabItemTemplateDirective],
+    declarations: [IgxTabsComponent,
+        IgxTabsGroupComponent,
+        IgxTabItemComponent,
+        IgxTabItemTemplateDirective,
+        IgxRightButtonStyleDirective,
+        IgxLeftButtonStyleDirective],
+    exports: [IgxTabsComponent,
+        IgxTabsGroupComponent,
+        IgxTabItemComponent,
+        IgxTabItemTemplateDirective,
+        IgxRightButtonStyleDirective,
+        IgxLeftButtonStyleDirective],
     imports: [CommonModule, IgxBadgeModule, IgxIconModule, IgxRippleModule]
 })
 
