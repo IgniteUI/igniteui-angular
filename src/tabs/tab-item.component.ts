@@ -3,8 +3,10 @@ import {
     Component,
     ContentChild,
     ElementRef,
+    forwardRef,
     HostBinding,
     HostListener,
+    Inject,
     Input
 } from "@angular/core";
 
@@ -62,7 +64,7 @@ export class IgxTabItemComponent {
         return this._tabs.tabs.toArray().indexOf(this);
     }
 
-    constructor(private _tabs: IgxTabsComponent, private _element: ElementRef) {
+    constructor(@Inject(forwardRef(() => IgxTabsComponent)) private _tabs: IgxTabsComponent, private _element: ElementRef) {
         this._nativeTabItem = _element;
     }
 

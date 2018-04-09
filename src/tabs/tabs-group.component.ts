@@ -4,7 +4,9 @@ import {
     Component,
     ContentChild,
     Directive,
+    forwardRef,
     HostBinding,
+    Inject,
     Input,
     TemplateRef
 } from "@angular/core";
@@ -75,7 +77,8 @@ export class IgxTabsGroupComponent implements AfterContentInit {
     @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
     protected tabTemplate: IgxTabItemTemplateDirective;
 
-    constructor(private _tabs: IgxTabsComponent) {
+    constructor(@Inject(forwardRef(() => IgxTabsComponent))
+    private _tabs: IgxTabsComponent) {
     }
 
     public ngAfterContentInit(): void {

@@ -24,13 +24,11 @@ export class IgxRightButtonStyleDirective {
 
     @HostBinding("class.igx-tabs__header-button_visible")
     get visibleCSS(): boolean {
-        console.log("right visible " + this.tabs.isRightButtonVisible);
         return this.tabs.isRightButtonVisible;
     }
 
     @HostBinding("class.igx-tabs__header-button__hidden")
     get hiddenCSS(): boolean {
-        console.log("right hidden " + !this.tabs.isRightButtonVisible);
         return !this.tabs.isRightButtonVisible;
     }
 }
@@ -51,13 +49,11 @@ export class IgxLeftButtonStyleDirective {
 
     @HostBinding("class.igx-tabs__header-button_visible")
     get visibleCSS(): boolean {
-        console.log("left visible " + this.tabs.isLeftButtonVisible);
         return this.tabs.isLeftButtonVisible;
     }
 
     @HostBinding("class.igx-tabs__header-button__hidden")
     get hiddenCSS(): boolean {
-        console.log("left hidden " + !this.tabs.isLeftButtonVisible);
         return !this.tabs.isLeftButtonVisible;
     }
 }
