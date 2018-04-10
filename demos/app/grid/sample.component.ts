@@ -9,10 +9,10 @@ import {
     IgxSnackbarComponent,
     IgxToastComponent,
     IPagingState,
+    NUMBER_FILTERS,
     PagingError,
     SortingDirection,
     StableSortingStrategy,
-    NUMBER_FILTERS,
     STRING_FILTERS
 } from "../../lib/main";
 
@@ -130,9 +130,9 @@ export class GridSampleComponent {
     public editCell;
     public exportFormat = "XLSX";
     constructor(private localService: LocalService,
-    private remoteService: RemoteService,
-    private excelExporterService: IgxExcelExporterService,
-    private csvExporterService: IgxCsvExporterService) { }
+                private remoteService: RemoteService,
+                private excelExporterService: IgxExcelExporterService,
+                private csvExporterService: IgxCsvExporterService) { }
     public ngOnInit(): void {
         this.data = this.localService.records;
         this.remote = this.remoteService.remoteData;
@@ -326,7 +326,7 @@ export class GridSampleComponent {
             case "TSV":
                 return new IgxCsvExporterOptions(fileName, CsvFileTypes.TSV);
             case "TAB":
-                return new IgxCsvExporterOptions(fileName, CsvFileTypes.TAB)
+                return new IgxCsvExporterOptions(fileName, CsvFileTypes.TAB);
         }
     }
 }
