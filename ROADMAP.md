@@ -7,14 +7,14 @@
    3. [DONE]Move the project navigation inside an App Host
 2. **[DONE]** Product Theming 
 3. Column Resizing 
-4. Column Hiding 
+4. **[DONE]** Column Hiding 
 5. **[DONE]** Column pinning
-6. Row Selection 
-7. Export to excel (Exporting CSV)  
+6. Multiple Row Selection 
+7. Export to excel (Exporting CSV,TSV)  
 8. Context Menu event (output)
-9. **[DONE]** Mask directive (editor)
-10 **[DONE]** igxTimePicker
-11. Summaries 
+9. **[DONE]** Mask directive (editor) 
+10. **[DONE]** igxTimeicker
+11. **[DONE]** Summaries 
 12. Tabs
 13. Operations UI - column chooser (Data Operations UI)          
 14. **[DONE]** Virtualization
