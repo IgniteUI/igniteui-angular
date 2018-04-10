@@ -22,6 +22,8 @@ describe("IgxSelection", () => {
         fix.detectChanges();
 
         const input = fix.debugElement.query(By.css("input")).nativeElement;
+        input.focus();
+        fix.detectChanges();
 
         fix.whenStable().then(() => {
             expect(input.selectionEnd).toEqual(input.value.length);
