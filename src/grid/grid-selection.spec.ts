@@ -315,6 +315,30 @@ describe("IgxGrid - Row Selection", () => {
         });
     }));
 
+    it("Checkbox should select/deselect row", async(() => {
+        const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection2;
+        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
+        const firstRow = grid.getRowByIndex(0);
+        const secondRow = grid.getRowByIndex(1);
+        expect(firstRow).toBeDefined();
+        expect(secondRow).toBeDefined();
+        const targetCheckbox: HTMLElement = fix.nativeElement.querySelector("#igx-checkbox-1");
+        expect(firstRow.isSelected).toBeFalsy();
+        expect(secondRow.isSelected).toBeFalsy();
+        targetCheckbox.click();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(secondRow.isSelected).toBeFalsy();
+            targetCheckbox.click();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+            expect(secondRow.isSelected).toBeFalsy();
+        });
+    }));
 });
 
 @Component({
