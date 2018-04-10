@@ -38,7 +38,9 @@
 /// @requires igx-radio-theme
 /// @requires igx-color
 /// @requires extend
-/// @requires rem
+/// @requires em
+/// @requires animation
+/// @requires scale-in-out
 @mixin igx-radio($theme, $palette: $default-palette) {
     @include scale-in-out($start-scale: .9);
 

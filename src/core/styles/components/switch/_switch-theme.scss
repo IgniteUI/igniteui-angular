@@ -56,8 +56,10 @@
 /// @requires igx-elevation
 /// @requires extend
 /// @requires hexrgba
-/// @requires rem
+/// @requires em
 /// @requires $elevations
+/// @requires animation
+/// @requires scale-in-out
 @mixin igx-switch($theme, $palette: $default-palette) {
     @include scale-in-out($start-scale: .9);
 
