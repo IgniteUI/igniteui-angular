@@ -3,7 +3,7 @@
 </ng-template>
 <ng-template #inlineEditor let-cell="cell">
     <igx-input-group>
-        <input igxInput [value]="value" (keydown.enter)="cell.update($event.target.value)">
+        <input igxInput [value]="value" [igxFocus]="true" [igxTextSelection]="true" (keydown.enter)="cell.update($event.target.value)">
     </igx-input-group>
 </ng-template>
 <ng-container *ngTemplateOutlet="template; context: context">

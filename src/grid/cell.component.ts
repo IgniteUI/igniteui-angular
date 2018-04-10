@@ -134,7 +134,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostBinding("style.flex-basis")
     @HostBinding("class.igx-grid__td--fw")
     get width() {
-        return this.column.width;
+         const visibleCols = this.grid.visibleColumns;
+         const isLastVisibleColumn = visibleCols[visibleCols.length - 1].field === this.column.field;
+         const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
+         return isLastVisibleColumn && hasVerticalScroll ? (parseInt(this.column.width, 10) - 18) + "px" : this.column.width;
     }
 
     @HostBinding("class.igx-grid__td--editing")
@@ -505,11 +508,13 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     public onKeydownEnterEditMode() {
         if (this.column.editable) {
             this.inEditMode = !this.inEditMode;
+            this.nativeElement.focus();
         }
     }
 
     @HostListener("keydown.escape")
     public onKeydownExitEditMode() {
         this.inEditMode = false;
+        this.nativeElement.focus();
     }
 }

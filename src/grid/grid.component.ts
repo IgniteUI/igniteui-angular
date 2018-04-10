@@ -380,8 +380,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
                         // Clear Sorting
                         this.gridAPI.clear_sort(this.id, record.item.field);
-                    });
-                }
+        });
+    }
                 this.markForCheck();
         });
     }

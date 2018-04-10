@@ -66,12 +66,15 @@
     @return (
         header-background: $header-background,
         header-text-color: $header-text-color,
+
         content-background: $content-background,
         content-text-color: $content-text-color,
+
         row-selected-background: $row-selected-background,
         row-selected-text-color: $row-selected-text-color,
         row-hover-background: $row-hover-background,
         row-border-color: $row-border-color,
+
         pinned-border-width: $pinned-border-width,
         pinned-border-style: $pinned-border-style,
         pinned-border-color: $pinned-border-color,
@@ -94,12 +97,15 @@
     $default-theme: igx-grid-theme(
         $header-background: hexrgba(igx-color($palette, 'grays', 100)),
         $header-text-color: igx-color($palette, 'grays', 600),
+
         $content-background: #fff,
         $content-text-color: igx-color($palette, 'grays', 800),
+
         $row-selected-background: hexrgba(igx-color($palette, 'grays', 800)),
         $row-selected-text-color: igx-contrast-color($palette, 'grays', 900),
         $row-hover-background: hexrgba(igx-color($palette, 'grays', 100)),
         $row-border-color: igx-color($palette, 'grays', 300),
+
         $pinned-border-width: 2px,
         $pinned-border-style: solid,
         $pinned-border-color: igx-color($palette, 'grays', 400),
@@ -320,10 +326,6 @@
         flex-grow: 0;
     }
 
-    %grid-cell-number {
-        text-align: $grid-cell-align-num;
-    }
-
     %grid-cell--selected {
         color: map-get($this, 'cell-selected-text-color');
         background-color: map-get($this, 'cell-selected-background') !important;
@@ -352,7 +354,7 @@
         min-width: 0;
         border-right: 1px dotted igx-color($palette, 'grays', 400);
 
-        &.title {
+        .title {
             @include ellipsis();
             cursor: pointer;
             user-select: none;
@@ -363,7 +365,12 @@
         }
     }
 
-    %grid__cbx-selection {
+    %grid-cell-number {
+        text-align: $grid-cell-align-num;
+        justify-content: flex-end;
+    }
+
+	%grid__cbx-selection {
         padding: 0 rem(24px);
         display: flex;
         justify-content: center;
