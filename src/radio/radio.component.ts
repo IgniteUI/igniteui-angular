@@ -54,6 +54,7 @@ export class IgxRadioComponent implements ControlValueAccessor {
     @Input() public name: string;
     @Input() public tabindex: number = null;
     @Input() public disableRipple = false;
+    @Input() public required = false;
 
     @Input("aria-labelledby")
     public ariaLabelledBy = this.labelId;
