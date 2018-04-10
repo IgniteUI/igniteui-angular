@@ -93,6 +93,10 @@
         cursor: initial;
     }
 
+    %cbx-input {
+        @include hide-default();
+    }
+
     %cbx-composite {
         position: relative;
         display: inline-block;
@@ -204,5 +208,10 @@
         overflow: hidden;
         pointer-events: none;
         filter: opacity(1);
+    }
+
+    %cbx-ripple--focused {
+        transition: background-color .2s $ease-out-quad;
+        background-color: rgba(map-get($this, 'fill-color'), .12);
     }
 }
