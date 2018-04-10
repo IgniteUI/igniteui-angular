@@ -241,25 +241,25 @@ describe("Carousel", () => {
         fixture.detectChanges();
 
         let carousel;
-	let carouselNative;
+        let carouselNative;
 
-	carouselNative = fixture.debugElement.query(By.css(".igx-carousel"));
+        carouselNative = fixture.debugElement.query(By.css(".igx-carousel"));
         carousel = fixture.componentInstance.carousel;
 
-	//carousel.navigation = true;
+        //carousel.navigation = true;
         fixture.detectChanges();
-	expect(carouselNative.query(By.css(".igx-carousel__arrow--prev")) === null).toBe(false);
-	expect(carouselNative.query(By.css(".igx-carousel__arrow--next")) === null).toBe(false);
+        expect(carouselNative.query(By.css(".igx-carousel__arrow--prev")) === null).toBe(false);
+        expect(carouselNative.query(By.css(".igx-carousel__arrow--next")) === null).toBe(false);
 
-	carousel.navigation = false;
+        carousel.navigation = false;
         fixture.detectChanges();
-	expect(carouselNative.query(By.css(".igx-carousel__arrow--prev")) === null).toBe(true);
-	expect(carouselNative.query(By.css(".igx-carousel__arrow--next")) === null).toBe(true);
+        expect(carouselNative.query(By.css(".igx-carousel__arrow--prev")) === null).toBe(true);
+        expect(carouselNative.query(By.css(".igx-carousel__arrow--next")) === null).toBe(true);
 
-	carousel.navigation = true;
+        carousel.navigation = true;
         fixture.detectChanges();
-	expect(carouselNative.query(By.css(".igx-carousel__arrow--prev")) === null).toBe(false);
-	expect(carouselNative.query(By.css(".igx-carousel__arrow--next")) === null).toBe(false);
+        expect(carouselNative.query(By.css(".igx-carousel__arrow--prev")) === null).toBe(false);
+        expect(carouselNative.query(By.css(".igx-carousel__arrow--next")) === null).toBe(false);
     });
 });
 
