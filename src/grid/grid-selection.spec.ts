@@ -4,11 +4,11 @@ import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { Calendar } from "../calendar";
 import { DataType } from "../data-operations/data-util";
+import { IgxInputDirective } from "../directives/input/input.directive";
+import { STRING_FILTERS } from "../main";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
-import { IgxInputDirective } from "../directives/input/input.directive";
-import { STRING_FILTERS } from "../main";
 
 const selectedCellClass = ".igx-grid__td--selected";
 let data = [
