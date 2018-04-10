@@ -294,7 +294,7 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[0].width).toEqual("60px");
+        expect(grid.columns[0].width).toEqual("61px");
 
         headers[1].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
         tick();
@@ -318,7 +318,7 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[5].width).toEqual("88px");
+        expect(grid.columns[5].width).toEqual("89px");
 
         discardPeriodicTasks();
     }));
@@ -357,7 +357,7 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[5].width).toEqual("88px");
+        expect(grid.columns[5].width).toEqual("89px");
 
         discardPeriodicTasks();
     }));
@@ -376,7 +376,7 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[5].width).toEqual("88px");
+        expect(grid.columns[5].width).toEqual("89px");
 
         discardPeriodicTasks();
     }));
@@ -418,25 +418,6 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         expect(grid.columns[0].width).toEqual("280px");
         expect(grid.columns[1].width).toEqual("100px");
         expect(grid.columns[2].width).toEqual("100px");
-
-        discardPeriodicTasks();
-    }));
-
-    it("Autoresize column with summary on double click.", fakeAsync(() => {
-        const fixture = TestBed.createComponent(GridFeaturesComponent);
-        fixture.detectChanges();
-
-        const dblclick = new Event("dblclick");
-        const grid = fixture.componentInstance.grid;
-        const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-
-        expect(grid.columns[6].width).toEqual("60px");
-
-        headers[6].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
-        tick();
-        fixture.detectChanges();
-
-        expect(grid.columns[6].width).toEqual("105px");
 
         discardPeriodicTasks();
     }));

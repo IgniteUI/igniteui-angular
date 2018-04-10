@@ -176,11 +176,6 @@ export class IgxColumnComponent implements AfterContentInit {
         .reduce((a, b) => a.concat(b), []);
     }
 
-    get summary(): IgxGridSummaryComponent[] {
-        return this.grid.summaryList.filter((sum) => sum.column.index === this.index)
-        .reduce((a, b) => a.concat(b), []);
-    }
-
     get visibleIndex(): number {
         const grid = this.gridAPI.get(this.gridID);
         let vIndex = -1;

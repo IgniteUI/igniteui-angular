@@ -1,5 +1,5 @@
 import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, DoCheck, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit } from "@angular/core";
+    Component, DoCheck, HostBinding, HostListener, Input, OnDestroy, OnInit } from "@angular/core";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
@@ -66,7 +66,7 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
     private summaryResultClass = "igx-grid-summary-item__result--left-align";
     private numberSummaryResultClass = "igx-grid-summary-item__result";
 
-    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, public element: ElementRef) { }
+    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
 
     @autoWire(true)
     public ngOnInit() {
@@ -111,10 +111,6 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
     @autoWire(true)
     clearAll() {
         this.gridAPI.remove_summary(this.gridID);
-    }
-
-    get nativeElement(): any {
-        return this.element.nativeElement;
     }
 
     get resolveSummaries(): any[] {

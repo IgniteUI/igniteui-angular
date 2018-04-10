@@ -212,21 +212,12 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
             const cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight);
             largest.set(Math.max(...cellsContentWidths), cellPadding);
 
-            if (this.column.hasSummary) {
-                const summariesContentWidths = Array.from(this.column.summary[0].nativeElement.children)
-                        .map((child) => valToPxls(child));
-                const index = summariesContentWidths.indexOf(Math.max(...summariesContentWidths));
-                const style = this.grid.document.defaultView.getComputedStyle(this.column.summary[0].nativeElement.children[index]);
-                const padding = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
-
-                largest.set(Math.max(...summariesContentWidths), padding);
-            }
-
             const headerContentWidths = Array.from(this.elementRef.nativeElement.children)
                     .map((child) => valToPxls(child));
             const headerCell = Math.max(...headerContentWidths);
             const headerStyle = this.grid.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
-            const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight);
+            const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
+                    parseFloat(headerStyle.borderRight);
             largest.set(headerCell, headerPadding);
 
             const largestCell = Math.max(...Array.from(largest.keys()));
