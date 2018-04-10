@@ -188,6 +188,54 @@ describe("IgxGrid - Row Selection", () => {
             expect(selectedRow.isSelected).toBeTruthy();
         });
     }));
+
+    it("Should persist through paging - multiple", async(() => {
+        const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection2;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        const nextBtn: HTMLElement = fix.nativeElement.querySelector(".nextPageBtn");
+        const prevBtn: HTMLElement = fix.nativeElement.querySelector(".prevPageBtn");
+        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
+        const firstRow = grid.getRowByIndex(0);
+        const middleRow = grid.getRowByIndex(4);
+        const lastRow = grid.getRowByIndex(9);
+        expect(firstRow).toBeDefined();
+        expect(middleRow).toBeDefined();
+        expect(lastRow).toBeDefined();
+        const checkboxElement1: HTMLElement = firstRow.nativeElement.querySelector(".igx-checkbox__input");
+        const checkboxElement2: HTMLElement = middleRow.nativeElement.querySelector(".igx-checkbox__input");
+        const checkboxElement3: HTMLElement = lastRow.nativeElement.querySelector(".igx-checkbox__input");
+        // query(By.css(".igx-checkbox__input"))
+        expect(firstRow.isSelected).toBeFalsy();
+        expect(middleRow.isSelected).toBeFalsy();
+        expect(lastRow.isSelected).toBeFalsy();
+        checkboxElement1.click();
+        checkboxElement2.click();
+        checkboxElement3.click();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(middleRow.isSelected).toBeTruthy();
+            expect(lastRow.isSelected).toBeTruthy();
+            // expect(selectedRow.nativeElement.class).toContain("igx-grid__tr--selected");
+            nextBtn.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+            expect(middleRow.isSelected).toBeFalsy();
+            expect(lastRow.isSelected).toBeFalsy();
+            prevBtn.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(middleRow.isSelected).toBeTruthy();
+            expect(lastRow.isSelected).toBeTruthy();
+        });
+    }));
+
     it("Should persist through paging - multiple selection", async(() => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
         fix.detectChanges();
@@ -324,7 +372,7 @@ describe("IgxGrid - Row Selection", () => {
         const secondRow = grid.getRowByIndex(1);
         expect(firstRow).toBeDefined();
         expect(secondRow).toBeDefined();
-        const targetCheckbox: HTMLElement = fix.nativeElement.querySelector("#igx-checkbox-1");
+        const targetCheckbox: HTMLElement = firstRow.nativeElement.querySelector(".igx-checkbox__input");
         expect(firstRow.isSelected).toBeFalsy();
         expect(secondRow.isSelected).toBeFalsy();
         targetCheckbox.click();
@@ -337,6 +385,66 @@ describe("IgxGrid - Row Selection", () => {
             fix.detectChanges();
             expect(firstRow.isSelected).toBeFalsy();
             expect(secondRow.isSelected).toBeFalsy();
+        });
+    }));
+
+    // API Methods
+
+    it("Should be able to select/deselect rows programatically", async(() => {
+        const fix = TestBed.createComponent(GridWithSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection3;
+        let rowsCollection = [];
+        const firstRow = grid.getRowByKey("0_0");
+        const secondRow = grid.getRowByKey("0_1");
+        const thirdRow = grid.getRowByKey("0_2");
+        rowsCollection = grid.selectedRows();
+        expect(rowsCollection).toBeUndefined();
+        expect(firstRow.isSelected).toBeFalsy();
+        expect(secondRow.isSelected).toBeFalsy();
+        expect(thirdRow.isSelected).toBeFalsy();
+        grid.selectRows(["0_0", "0_1", "0_2"], false);
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(secondRow.isSelected).toBeTruthy();
+            expect(thirdRow.isSelected).toBeTruthy();
+            rowsCollection = grid.selectedRows();
+            expect(rowsCollection.length).toEqual(3);
+            grid.deselectRows(["0_0", "0_1", "0_2"]);
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+            expect(secondRow.isSelected).toBeFalsy();
+            expect(thirdRow.isSelected).toBeFalsy();
+            rowsCollection = grid.selectedRows();
+            expect(rowsCollection.length).toEqual(0);
+        });
+    }));
+
+    it("Should be able to select/deselect ALL rows programatically", async(() => {
+        const fix = TestBed.createComponent(GridWithSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection3;
+        let rowsCollection = [];
+        const firstRow = grid.getRowByKey("0_0");
+        rowsCollection = grid.selectedRows();
+        expect(rowsCollection).toBeUndefined();
+        expect(firstRow.isSelected).toBeFalsy();
+        grid.selectAllRows();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            rowsCollection = grid.selectedRows();
+            expect(rowsCollection.length).toEqual(500);
+            grid.deselectAllRows();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+            rowsCollection = grid.selectedRows();
+            expect(rowsCollection.length).toEqual(0);
         });
     }));
 });
