@@ -6,12 +6,13 @@ import {
     IgxCardModule,
     IgxCheckboxModule,
     IgxGridModule,
-    IgxInputModule,
+    IgxInputGroupModule,
     IgxRippleModule,
     IgxSnackbarModule,
     IgxSwitchModule,
     IgxToastModule
 } from "../../lib/main";
+import { IgxCsvExporterService, IgxExcelExporterService } from "../../lib/services";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { GridSampleComponent } from "./sample.component";
 
@@ -31,7 +32,10 @@ import { GridSampleComponent } from "./sample.component";
         IgxCheckboxModule,
         IgxButtonModule,
         IgxRippleModule,
-        IgxInputModule
+        IgxInputGroupModule
+    ], providers: [
+        IgxExcelExporterService,
+        IgxCsvExporterService
     ]
 })
 export class GridSampleModule { }

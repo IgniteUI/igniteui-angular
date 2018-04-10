@@ -2,7 +2,9 @@
     {{ formatter ? formatter(value) : value }}
 </ng-template>
 <ng-template #inlineEditor let-cell="cell">
-    <input igxInput [value]="value" (keydown.enter)="cell.update($event.target.value)">
+    <igx-input-group>
+        <input igxInput [value]="value" [igxFocus]="true" [igxTextSelection]="true" (keydown.enter)="cell.update($event.target.value)">
+    </igx-input-group>
 </ng-template>
 <ng-container *ngTemplateOutlet="template; context: context">
 </ng-container>

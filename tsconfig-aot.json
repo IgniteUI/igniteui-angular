@@ -22,7 +22,8 @@
       ]
     },
     "files": [
-      "./tmp/src-inlined/main.ts"
+      "./tmp/src-inlined/main.ts",
+      "./tmp/src-inlined/services/index.ts"
     ],
     "angularCompilerOptions": {
       "genDir": "dist",

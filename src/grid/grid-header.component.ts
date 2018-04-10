@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, HostBinding, HostListener, Input, OnInit } from "@angular/core";
+import { DataType } from "../data-operations/data-util";
 import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
@@ -40,6 +41,11 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
         return this.sortDirection === SortingDirection.Desc;
     }
 
+    @HostBinding("class.igx-grid__th--number")
+    get columnType() {
+        return this.column.dataType === DataType.Number;
+    }
+
     @HostBinding("class.igx-grid__th--sorted")
     get sorted() {
         return this.sortDirection !== SortingDirection.None;
@@ -79,11 +85,9 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
                 : this.sortDirection;
             this.gridAPI.sort(this.gridID, this.column.field, this.sortDirection, this.column.sortingIgnoreCase);
             grid.onSortingDone.emit({
-                expression: {
-                    dir: this.sortDirection,
-                    fieldName: this.column.field,
-                    ignoreCase: this.column.sortingIgnoreCase
-                }
+                dir: this.sortDirection,
+                fieldName: this.column.field,
+                ignoreCase: this.column.sortingIgnoreCase
             });
         }
     }
@@ -92,11 +96,12 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
         return this.gridAPI.get(this.gridID);
     }
 
+    @HostBinding("class.igx-grid__th--pinned")
     get isPinned() {
         return this.column.pinned;
     }
 
-    @HostBinding("class.igx-grid__th--pinned-start")
+    @HostBinding("class.igx-grid__th--pinned-last")
     get isLastPinned() {
         const pinnedCols = this.grid.pinnedColumns;
         if (pinnedCols.length === 0) {

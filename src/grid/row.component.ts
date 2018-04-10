@@ -30,10 +30,13 @@ import { IgxGridComponent } from "./grid.component";
 export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy {
 
     @Input()
-    public rowData: any[];
+    public rowData: any;
 
     @Input()
     public index: number;
+
+    @Input()
+    public primaryValue: any;
 
     @Input()
     public gridID: string;
@@ -103,7 +106,6 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy {
             if (this.grid.cellInEditMode) {
                 this.grid.cellInEditMode.inEditMode = false;
             }
-            this.grid.headerContainer.dc.instance._viewContainer.element.nativeElement.style.left = "0px";
         });
     }
 

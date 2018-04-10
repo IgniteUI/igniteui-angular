@@ -1,12 +1,12 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { BrowserModule } from "@angular/platform-browser";
 import {
     IgxAvatarModule,
     IgxCheckboxModule,
     IgxIconModule,
-    IgxInputModule,
-    IgxLabelModule,
+    IgxInputGroupModule,
     IgxRadioModule,
     IgxSwitchModule
 } from "../../lib/main";
@@ -21,9 +21,8 @@ import { InputSampleComponent } from "./sample.component";
         PageHeaderModule,
         IgxRadioModule,
         IgxIconModule,
-        IgxInputModule,
+        IgxInputGroupModule,
         IgxCheckboxModule,
-        IgxLabelModule,
         IgxSwitchModule,
         IgxAvatarModule
     ]
