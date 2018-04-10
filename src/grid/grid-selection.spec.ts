@@ -1,10 +1,14 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { Calendar } from "../calendar";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
+import { IgxInputDirective } from "../directives/input/input.directive";
+import { STRING_FILTERS } from "../main";
 
 const selectedCellClass = ".igx-grid__td--selected";
 let data = [
@@ -28,9 +32,13 @@ describe("IgxGrid - Row Selection", () => {
             declarations: [
                 GridWithPrimaryKeyComponent,
                 GridWithPagingAndSelectionComponent,
-                GridWithSelectionComponent
+                GridWithSelectionComponent,
+                GridWithSelectionFilteringComponent
             ],
-            imports: [IgxGridModule.forRoot()]
+            imports: [
+                BrowserAnimationsModule,
+                IgxGridModule.forRoot()
+            ]
         })
             .compileComponents();
         data = [
@@ -324,7 +332,7 @@ describe("IgxGrid - Row Selection", () => {
         const secondRow = grid.getRowByIndex(1);
         expect(firstRow).toBeDefined();
         expect(secondRow).toBeDefined();
-        const targetCheckbox: HTMLElement = fix.nativeElement.querySelector("#igx-checkbox-1");
+        const targetCheckbox: HTMLElement = firstRow.nativeElement.querySelector(".igx-checkbox__input");
         expect(firstRow.isSelected).toBeFalsy();
         expect(secondRow.isSelected).toBeFalsy();
         targetCheckbox.click();
@@ -338,6 +346,83 @@ describe("IgxGrid - Row Selection", () => {
             expect(firstRow.isSelected).toBeFalsy();
             expect(secondRow.isSelected).toBeFalsy();
         });
+    }));
+
+    it("Filtering and row selection", async(() => {
+        const fix = TestBed.createComponent(GridWithSelectionFilteringComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection4;
+        const headerRow: HTMLElement = fix.nativeElement.querySelector(".igx-grid__thead");
+        const headerCheckbox: HTMLInputElement = headerRow.querySelector(".igx-checkbox__input");
+
+        const secondRow = grid.getRowByIndex(1);
+        expect(secondRow).toBeDefined();
+        const targetCheckbox: HTMLElement = secondRow.nativeElement.querySelector(".igx-checkbox__input");
+        expect(secondRow.isSelected).toBeFalsy();
+
+        targetCheckbox.click();
+        fix.detectChanges();
+        expect(secondRow.isSelected).toBeTruthy();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeTruthy();
+        expect(secondRow.isSelected).toBeTruthy();
+
+        grid.filter("ProductName", "Ignite", STRING_FILTERS.contains, true);
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeFalsy();
+
+        headerCheckbox.click();
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeTruthy();
+        expect(headerCheckbox.indeterminate).toBeFalsy();
+
+        grid.clearFilter("ProductName");
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeTruthy();
+        expect(grid.getRowByIndex(0).isSelected).toBeTruthy();
+        expect(grid.getRowByIndex(1).isSelected).toBeTruthy();
+        expect(grid.getRowByIndex(2).isSelected).toBeTruthy();
+
+        grid.filter("ProductName", "Ignite", STRING_FILTERS.contains, true);
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeTruthy();
+        expect(headerCheckbox.indeterminate).toBeFalsy();
+        headerCheckbox.click();
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeFalsy();
+
+        grid.clearFilter("ProductName");
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeTruthy();
+        expect(grid.getRowByIndex(0).isSelected).toBeFalsy();
+        expect(grid.getRowByIndex(1).isSelected).toBeTruthy();
+        expect(grid.getRowByIndex(2).isSelected).toBeFalsy();
+
+        grid.getRowByIndex(0).nativeElement.querySelector(".igx-checkbox__input").click();
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeTruthy();
+
+        grid.filter("ProductName", "Ignite", STRING_FILTERS.contains, true);
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeTruthy();
+
+        headerCheckbox.click();
+        fix.detectChanges();
+        headerCheckbox.click();
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeFalsy();
+
+        grid.clearFilter("ProductName");
+        fix.detectChanges();
+        expect(grid.getRowByIndex(0).isSelected).toBeFalsy();
+        expect(grid.getRowByIndex(1).isSelected).toBeTruthy();
     }));
 });
 
@@ -431,4 +516,85 @@ export class GridWithSelectionComponent implements OnInit {
         }
         this.data = bigData;
     }
+}
+
+@Component({
+    template: `<igx-grid #gridSelection4 [data]="data" height="500px" [rowSelectable]="true">
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
+        <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
+        <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'"
+            [filterable]="true" dataType="date">
+        </igx-column>
+    </igx-grid>`
+})
+export class GridWithSelectionFilteringComponent {
+
+    public timeGenerator: Calendar = new Calendar();
+    public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+
+    @ViewChild("gridSelection4", { read: IgxGridComponent })
+    public gridSelection4: IgxGridComponent;
+
+    public data = [
+        {
+            Downloads: 254,
+            ID: 1,
+            ProductName: "Ignite UI for JavaScript",
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", 15),
+            Released: false
+        },
+        {
+            Downloads: 127,
+            ID: 2,
+            ProductName: "NetAdvantage",
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "month", -1),
+            Released: true
+        },
+        {
+            Downloads: 20,
+            ID: 3,
+            ProductName: "Ignite UI for Angular",
+            ReleaseDate: null,
+            Released: null
+        },
+        {
+            Downloads: null,
+            ID: 4,
+            ProductName: null,
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", -1),
+            Released: true
+        },
+        {
+            Downloads: 100,
+            ID: 5,
+            ProductName: "",
+            ReleaseDate: undefined,
+            Released: ""
+        },
+        {
+            Downloads: 702,
+            ID: 6,
+            ProductName: "Some other item with Script",
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", 1),
+            Released: null
+        },
+        {
+            Downloads: 0,
+            ID: 7,
+            ProductName: null,
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "month", 1),
+            Released: true
+        },
+        {
+            Downloads: 1000,
+            ID: 8,
+            ProductName: null,
+            ReleaseDate: this.today,
+            Released: false
+        }
+    ];
+
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
 }
