@@ -9,7 +9,7 @@
 3. Column Resizing 
 4. **[DONE]** Column Hiding 
 5. **[DONE]** Column pinning
-6. Multiple Row Selection 
+6. Row Selection 
 7. Export to excel (Exporting CSV,TSV)  
 8. Context Menu event (output)
 9. **[DONE]** Mask directive (editor) 
