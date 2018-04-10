@@ -17,8 +17,9 @@ export enum Size {
     LARGE = "large"
 }
 /**
- * **Ignite UI for Angular Avatar**
+ * **Ignite UI for Angular Avatar** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/avatar.html)
+ *
  * The Ignite UI Avatar provides an easy way to add an avatar icon to your application.  This icon can be an
  * image, someone's initials or a material icon from the google material icon set.
  *

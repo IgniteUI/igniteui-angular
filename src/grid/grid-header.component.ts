@@ -11,6 +11,7 @@ import {
     OnInit,
     ViewChild
 } from "@angular/core";
+import { DataType } from "../data-operations/data-util";
 import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { RestrictDrag } from "../directives/dragdrop/dragdrop.directive";
 import { IgxGridAPIService } from "./api.service";
@@ -52,6 +53,11 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     @HostBinding("class.desc")
     get descending() {
         return this.sortDirection === SortingDirection.Desc;
+    }
+
+    @HostBinding("class.igx-grid__th--number")
+    get columnType() {
+        return this.column.dataType === DataType.Number;
     }
 
     @HostBinding("class.igx-grid__th--sorted")

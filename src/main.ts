@@ -51,5 +51,8 @@ export * from "./directives/for-of/for_of.directive";
 export * from "./directives/for-of/IForOfState";
 export * from "./directives/layout/layout.directive";
 export * from "./directives/mask/mask.directive";
+export * from "./time-picker/time-picker.component";
 export * from "./directives/ripple/ripple.directive";
 export * from "./directives/toggle/toggle.directive";
+export * from "./directives/text-selection/text-selection.directive";
+export * from "./directives/focus/focus.directive";
