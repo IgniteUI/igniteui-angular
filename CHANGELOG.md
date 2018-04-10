@@ -2,6 +2,10 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 5.3.0
+- `igxTextSelection` directive added
+    - `igxTextSelection` directive allows you to select the whole text range for every element with text content it is applied.
+- `igxFocus` directive added
+    - `igxFocus` directive allows you to force focus for every element it is applied.
 - `igx-time-picker` component added
     - `igx-time-picker` allows user to select time, from a dialog with spinners, which is presented into input field.
     - For more information navigate to `src\time-picker\README.md`.
@@ -13,8 +17,9 @@ All notable changes for each version of this project will be documented in this 
    For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#pinning).
 - Added `summaries` feature to `igxGrid`, enabled on a per-column level. **Grid summaries** gives you a predefined set of default summaries, depending on the type of data in the column.
     For more detailed information read `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#summaries).
+- Added `columnWidth` option to `igxGrid`. The option sets the default width that will be applied to columns that have no explicit width set. For more detailed information read `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md)
 - Added smooth scrolling for the `igxForOf` directive making the scrolling experience both vertically and horizontally much more natural and similar to a native scroll.
-- `igxForOf` now requires that its parent container's `overflow` is set to `hidden`. It is recommended that its height is set as well so that the display container of the virtualized content can be positioned with an offset inside without visually affecting other elements on the page.
+- `igxForOf` now requires that its parent container's `overflow` is set to `hidden` and `position` to `relative`. It is recommended that its height is set as well so that the display container of the virtualized content can be positioned with an offset inside without visually affecting other elements on the page.
     ```html
     <div style='position: relative; height: 500px; overflow: hidden'>
         <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical
@@ -55,6 +60,11 @@ All notable changes for each version of this project will be documented in this 
         - The `igxGrid` `onEditDone` now exposes arguments of type `IGridEditEventArgs`. The arguments expose `row` and `cell` objects where if the editing is performed on a cell, the edited `cell` and the `row` the cell belongs to are exposed. If row editing is performed, the `cell` object is null. In addition the `currentValue` and `newValue` arguments are exposed. If you assign a value to the `newValue` in your handler, then the editing will conclude with the value you've supplied.
         - The `igxGrid` `onSelection` now correctly propagates the original `event` in the `IGridCellEventArgs`.
     - Added `jsZip` as a Peer Dependency.
+- `primaryKey` attribute added to `igxGrid`
+    - `primaryKey` allows for a property name from the data source to be specified. If specified, `primaryKey` can be used instead of `index` to indentify grid rows from the `igxGrid.rowList`. As such, `primaryKey` can be used for selecting rows for the following `igxGrid` methods - `deleteRow`, `updateRow`, `updateCell`, `getCellByColumn`, `getRowByKey`
+    - `primaryKey` requires all of the data for the specified property name to have unique values in order to function as expected.
+    - as it provides a unique identifier for each data member (and therefore row), `primaryKey` is best suited for addressing grid row entries. If DOM virtualization is in place for the grid data, the row `index` property can be reused (for instance, when filtering/sorting the data), whereas `primaryKey` remains unique. Ideally, when a persistent reference to a row has to be established, `primaryKey` should be used. 
+
 
 ## 5.2.1
 - `hammerjs` and `@types/hammerjs` are removed from `peerDependencies` and were added as `dependencies`. So if you are using Igniteui-Angular version 5.2.1 or above it is enough to run `npm install igniteui-angular` in your project for getting started. For more detailed information see [`Ignite UI for Angular Getting Started`](https://www.infragistics.com/products/ignite-ui-angular/getting-started)

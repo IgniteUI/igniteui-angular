@@ -176,7 +176,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |onFilteringDone|Used when filtering data to emit the column and filtering expression|
 |onSortingDone|Used when sorting data to emit the column, direction and sorting expression|
 |onCellSelection|Used when focusing a cell to emit the cell|
-|onRowSelection|Used when focusing a row to emit the row|
+|onRowSelectionChange|Used when selecting a row to emit the row and selection status|
 |onPagingDone|Used when paginating to emit paginator event|
 |onColumnInit|Used when initializing a column to emit it|
 |onColumnPinning|Used when pinning a column; the index of the pin can be changed|

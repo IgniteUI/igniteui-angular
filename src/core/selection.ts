@@ -30,11 +30,7 @@ export class IgxSelectionAPIService {
     }
 
     public select_items(componentID: string, itemIDs: any[]) {
-        if (itemIDs.length === 0) {
-            this.selection.set(componentID, []);
-        } else {
-            itemIDs.forEach((item) => this.select_item(componentID, item));
-        }
+        itemIDs.forEach((item) => this.select_item(componentID, item));
     }
 
     public deselect_item(componentID: string, itemID) {
@@ -48,6 +44,10 @@ export class IgxSelectionAPIService {
             this.selection.set(componentID, currSelection);
         }*/
         this.selection.set(componentID, currSelection.filter((item) => item !== itemID));
+    }
+
+    public deselect_items(componentID: string, itemIDs: any[]) {
+        itemIDs.forEach((item) => this.deselect_item(componentID, item));
     }
 
     public is_item_selected(componentID: string, itemID) {

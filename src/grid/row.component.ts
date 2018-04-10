@@ -144,16 +144,28 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
     }
 
     public onCheckboxClick(event) {
+        const oldSelection = Object.assign([], this.selectionAPI.get_selection(this.gridID));
         if (event.checked) {
-            this.select();
+            this.selectionAPI.select_item(this.gridID, this.rowID);
         } else {
-            this.deselect();
+            this.selectionAPI.deselect_item(this.gridID, this.rowID);
         }
-        this.grid.onRowSelection.emit({
-            selection: this.selectionAPI.get_selection(this.gridID),
+        const newSelection = this.selectionAPI.get_selection(this.gridID);
+        this.grid.onRowSelectionChange.emit({
+            oldSelection,
+            newSelection,
             row: this,
-            rowID: this.rowID
+            event
         });
+        if (oldSelection === newSelection) {
+            if (event.checked) {
+                this.selectionAPI.deselect_item(this.gridID, this.rowID);
+            } else {
+                this.selectionAPI.select_item(this.gridID, this.rowID);
+            }
+        } else {
+            this.grid.checkHeaderChecboxStatus();
+        }
     }
 
     get rowCheckboxAriaLabel() {
@@ -169,23 +181,6 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
         }
     }
 
-    public select() {
-        if (this.rowSelectable) {
-            this.selectionAPI.select_item(this.gridID, this.rowID);
-            this.grid.allRowsSelected = this.selectionAPI.are_all_selected(this.gridID, this.grid.data);
-            this.grid.headerCheckbox.indeterminate = !this.grid.allRowsSelected;
-            this.cdr.markForCheck();
-        }
-    }
-
-    public deselect() {
-        if (this.rowSelectable) {
-            this.selectionAPI.deselect_item(this.gridID, this.rowID);
-            this.grid.allRowsSelected = false;
-            this.grid.headerCheckbox.indeterminate = !this.selectionAPI.are_none_selected(this.gridID);
-            this.cdr.markForCheck();
-        }
-    }
     public handleArrows(event) {
         console.log(event);
         let currentIndex = 0;
