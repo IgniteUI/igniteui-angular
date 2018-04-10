@@ -2,6 +2,10 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 5.3.0
+- `igxTextSelection` directive added
+    - `igxTextSelection` directive allows you to select the whole text range for every element with text content it is applied.
+- `igxFocus` directive added
+    - `igxFocus` directive allows you to force focus for every element it is applied.
 - `igx-time-picker` component added
     - `igx-time-picker` allows user to select time, from a dialog with spinners, which is presented into input field.
     - For more information navigate to `src\time-picker\README.md`.
@@ -15,7 +19,7 @@ All notable changes for each version of this project will be documented in this 
     For more detailed information read `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#summaries).
 - Added `columnWidth` option to `igxGrid`. The option sets the default width that will be applied to columns that have no explicit width set. For more detailed information read `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md)
 - Added smooth scrolling for the `igxForOf` directive making the scrolling experience both vertically and horizontally much more natural and similar to a native scroll.
-- `igxForOf` now requires that its parent container's `overflow` is set to `hidden`. It is recommended that its height is set as well so that the display container of the virtualized content can be positioned with an offset inside without visually affecting other elements on the page.
+- `igxForOf` now requires that its parent container's `overflow` is set to `hidden` and `position` to `relative`. It is recommended that its height is set as well so that the display container of the virtualized content can be positioned with an offset inside without visually affecting other elements on the page.
     ```html
     <div style='position: relative; height: 500px; overflow: hidden'>
         <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical

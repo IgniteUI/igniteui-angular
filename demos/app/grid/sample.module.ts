@@ -10,12 +10,11 @@ import {
     IgxRippleModule,
     IgxSnackbarModule,
     IgxSwitchModule,
-    IgxToastModule,
-    IgxExcelExporterService
+    IgxToastModule
 } from "../../lib/main";
+import { IgxCsvExporterService, IgxExcelExporterService } from "../../lib/services";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { GridSampleComponent } from "./sample.component";
-import { IgxCsvExporterService } from "../../lib/main";
 
 @NgModule({
     declarations: [
