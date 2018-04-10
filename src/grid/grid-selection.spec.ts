@@ -28,7 +28,7 @@ describe("IgxGrid - Row Selection", () => {
             declarations: [
                 GridWithPrimaryKeyComponent,
                 GridWithPagingAndSelectionComponent,
-                GridWithSelection
+                GridWithSelectionComponent
             ],
             imports: [IgxGridModule.forRoot()]
         })
@@ -236,7 +236,7 @@ describe("IgxGrid - Row Selection", () => {
     }));
     xit("Should persist through scrolling", async(() => {
         let selectedCell;
-        const fix = TestBed.createComponent(GridWithSelection);
+        const fix = TestBed.createComponent(GridWithSelectionComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection3;
         const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
@@ -387,7 +387,7 @@ export class GridWithPagingAndSelectionComponent {
         </igx-grid>
     `
 })
-export class GridWithSelection {
+export class GridWithSelectionComponent {
     public data = [];
 
     @ViewChild("gridSelection3", { read: IgxGridComponent })
