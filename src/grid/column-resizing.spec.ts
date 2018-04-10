@@ -436,7 +436,7 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[6].width).toEqual("106px");
+        expect(grid.columns[6].width).toEqual("105px");
 
         discardPeriodicTasks();
     }));
