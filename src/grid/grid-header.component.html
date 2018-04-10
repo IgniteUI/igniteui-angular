@@ -8,15 +8,15 @@
 </span>
 <igx-grid-filter [column]="column" *ngIf="column.filterable"></igx-grid-filter>
 
-<span (mousedown)="onResizeAreaMouseDown($event)"
+<span (mousedown)="onResizeAreaMouseDown($event)" #resizeArea
       (dblclick)="onResizeAreaDblClick()"
       (mouseover)="onResizeAreaMouseOver()"
       [style.cursor]="resizeCursor"
       style="display: flex;position: absolute;height: 100%;right:0%;width: 4px;">
     <div *ngIf="showResizer" igxResizer
-        [restrictHDragMax]="restrictResizeMax"
-        [restrictHDragMin]="restrictResizeMin"
-        (dragEnd)="onResize($event)"
+        [restrictHResizeMax]="restrictResizeMax"
+        [restrictHResizeMin]="restrictResizeMin"
+        (resizeEnd)="onResize($event)"
         [style.height.px]="resizerHeight"
         style="width: 4.5px;z-index: 4;background-color: #006db6; position:absolute;cursor:col-resize">
     </div>

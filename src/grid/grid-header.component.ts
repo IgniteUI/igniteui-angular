@@ -8,7 +8,8 @@ import {
     HostBinding,
     HostListener,
     Input,
-    OnInit
+    OnInit,
+    ViewChild
 } from "@angular/core";
 import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { RestrictDrag } from "../directives/dragdrop/dragdrop.directive";
@@ -68,6 +69,9 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     get headerID() {
         return `${this.gridID}_${this.column.field}`;
     }
+
+    @ViewChild("resizeArea")
+    public resizeArea: ElementRef;
 
     public resizeCursor = null;
     public showResizer = false;
@@ -229,12 +233,14 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
                 if (newPinnedWidth <= this.grid.calcPinnedContainerMaxWidth) {
                     this.column.width = size;
                 }
+            } else if (this.column.maxWidth && (parseFloat(size) > parseFloat(this.column.maxWidth))) {
+                this.column.width = parseFloat(this.column.maxWidth) + "px";
             } else {
                 this.column.width = size;
             }
 
             this.grid.markForCheck();
-            this.grid.onColumnResized.emit({column: this.column, prevWidth: currentColWidth, newWidth: this.column.width});
+            this.grid.onColumnResized.emit({column: this.column, prevWidth: currentColWidth.toString(), newWidth: this.column.width});
         }
     }
 
@@ -248,7 +254,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
             let currentColWidth = parseFloat(this.column.width);
 
             const colMinWidth = parseFloat(this.column.minWidth);
-            const colMaxWidth = this.column.pinned ? this._pinnedMaxWidth : parseFloat(this.column.maxWidth);
+            const colMaxWidth = this.column.pinned ? parseFloat(this._pinnedMaxWidth) : parseFloat(this.column.maxWidth);
             const actualWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
 
             currentColWidth = (currentColWidth < actualWidth) ? actualWidth : currentColWidth;
@@ -263,7 +269,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
 
             this.grid.markForCheck();
 
-            if (currentColWidth.toString() !== this.column.width) {
+            if (currentColWidth !== parseFloat(this.column.width)) {
                 this.grid.onColumnResized.emit({column: this.column, prevWidth: currentColWidth.toString(), newWidth: this.column.width});
             }
         }

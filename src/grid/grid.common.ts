@@ -12,39 +12,39 @@ import { IgxGridAPIService } from "./api.service";
 export class IgxColumnResizerDirective {
 
     @Input()
-    public restrictHDragMin: number = Number.MIN_SAFE_INTEGER;
+    public restrictHResizeMin: number = Number.MIN_SAFE_INTEGER;
 
     @Input()
-    public restrictHDragMax: number = Number.MAX_SAFE_INTEGER;
+    public restrictHResizeMax: number = Number.MAX_SAFE_INTEGER;
 
     @Input()
-    public dragEndTimeout = 0;
+    public resizeEndTimeout = 0;
 
     @Output()
-    public dragEnd = new Subject<any>();
+    public resizeEnd = new Subject<any>();
 
     @Output()
-    public dragStart = new Subject<any>();
+    public resizeStart = new Subject<any>();
 
     @Output()
-    public drag = new Subject<any>();
+    public resize = new Subject<any>();
 
     private _left;
 
     constructor(public element: ElementRef, @Inject(DOCUMENT) public document) {
 
-        this.dragStart.map((event) => {
+        this.resizeStart.map((event) => {
             return event.clientX;
         }).switchMap((offset) =>
-            this.drag.map((event) => (event.clientX - offset)).takeUntil(this.dragEnd))
+            this.resize.map((event) => (event.clientX - offset)).takeUntil(this.resizeEnd))
         .subscribe((pos) => {
             const left = this._left + pos;
 
-            this.left = left < this.restrictHDragMin ? this.restrictHDragMin + "px" : left + "px";
+            this.left = left < this.restrictHResizeMin ? this.restrictHResizeMin + "px" : left + "px";
 
-            if (left > this.restrictHDragMax) {
-                this.left = this.restrictHDragMax + "px";
-            } else if (left > this.restrictHDragMin) {
+            if (left > this.restrictHResizeMax) {
+                this.left = this.restrictHResizeMax + "px";
+            } else if (left > this.restrictHResizeMin) {
                 this.left = left + "px";
             }
         });
@@ -57,13 +57,13 @@ export class IgxColumnResizerDirective {
     @HostListener("document:mouseup", ["$event"])
     onMouseup(event) {
         setTimeout(() => {
-            this.dragEnd.next(event);
-        }, this.dragEndTimeout);
+            this.resizeEnd.next(event);
+        }, this.resizeEndTimeout);
     }
 
     @HostListener("document:mousedown", ["$event"])
     onMousedown(event) {
-        this.dragStart.next(event);
+        this.resizeStart.next(event);
 
         const elStyle = this.document.defaultView.getComputedStyle(this.element.nativeElement);
         this._left = Number.isNaN(parseInt(elStyle.left, 10)) ? 0 : parseInt(elStyle.left, 10);
@@ -71,8 +71,8 @@ export class IgxColumnResizerDirective {
 
     @HostListener("document:mousemove", ["$event"])
     onMousemove(event) {
-        event.preventDefault();
-        this.drag.next(event);
+        event.preventDefault(event);
+        this.resize.next(event);
     }
 }
 
