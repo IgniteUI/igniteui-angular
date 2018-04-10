@@ -73,9 +73,10 @@ export interface IRowDataEventArgs {
 }
 
 export interface IRowSelectionEventArgs {
-    selection: any[];
-    row: IgxGridRowComponent;
-    rowID: any;
+    oldSelection: any[];
+    newSelection: any[];
+    row?: IgxGridRowComponent;
+    event: Event;
 }
 
 /**
@@ -212,7 +213,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public onSelection = new EventEmitter<IGridCellEventArgs>();
 
     @Output()
-    public onRowSelection = new EventEmitter<IRowSelectionEventArgs>();
+    public onRowSelectionChange = new EventEmitter<IRowSelectionEventArgs>();
 
     @Output()
     public onColumnPinning = new EventEmitter<IPinColumnEventArgs>();
@@ -856,6 +857,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.selectionAPI.is_filtering_applied(this.id) ? "Select all filtered" : "Select all";
     }
 
+    public checkHeaderChecboxStatus() {
+        this.allRowsSelected = this.selectionAPI.are_all_selected(this.id, this.data);
+        if (this.headerCheckbox) {
+            this.headerCheckbox.indeterminate = !this.allRowsSelected && !this.selectionAPI.are_none_selected(this.id);
+        }
+        this.cdr.markForCheck();
+    }
+
     public updateSelectionStatus(filteredData?: any[]) {
         if (this.rowSelectable) {
             if (filteredData) {
@@ -904,17 +913,26 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.selectionAPI.get_selection(this.id);
     }
 
-    public selectRows(rowIDs: any[]) {
-        rowIDs.forEach((rowID) => this.getRowByKey(rowID).select());
+    public selectRows(rowIDs: any[], clearCurrentSelection: boolean) {
+        if (clearCurrentSelection) {
+            this.deselectAllRows();
+        }
+        this.selectionAPI.select_items(this.id, rowIDs);
+        this.checkHeaderChecboxStatus();
+    }
+
+    public deselectRows(rowIDs: any[]) {
+        this.selectionAPI.deselect_items(this.id, rowIDs);
+        this.checkHeaderChecboxStatus();
     }
 
     public selectAllRows() {
-        this.selectionAPI.select_all(this.id, this.primaryKey);
-        this.cdr.markForCheck();
+        this.selectionAPI.select_all(this.id, this.data, this.primaryKey);
+        this.checkHeaderChecboxStatus();
     }
 
     public deselectAllRows() {
         this.selectionAPI.deselect_all(this.id, this.primaryKey);
-        this.cdr.markForCheck();
+        this.checkHeaderChecboxStatus();
     }
 }

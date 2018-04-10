@@ -25,6 +25,7 @@ export class GridSelectionComponent implements OnInit, AfterViewInit {
     public selection;
     public newRecord = "";
     public editCell;
+    private _125 = false;
     constructor(private localService: LocalService,
                 private remoteService: RemoteService) { }
     public ngOnInit(): void {
@@ -46,7 +47,7 @@ export class GridSelectionComponent implements OnInit, AfterViewInit {
         this.remoteService.getData(this.grid1.data);
     }
 
-    private onRowSelection(event) {
+    private onRowSelectionChange(event) {
 
     }
 
@@ -57,32 +58,25 @@ export class GridSelectionComponent implements OnInit, AfterViewInit {
     public handleRowSelection(args) {
         const targetCell = args.cell as IgxGridCellComponent;
         if  (!this.selection) {
-            this.grid1.deselectAllRows();
-            this.grid1.selectRows([targetCell.row.rowID]);
+            this.grid1.selectRows([targetCell.row.rowID], true);
         }
     }
 
     public toggle() {
-        if (this.grid1.selectedRows().length === 0) {
+        if (!this._125) {
+            this._125 = true;
             this.grid1.selectRows([1, 2, 5]);
         } else {
-            this.grid1.selectRows([]);
+            this._125 = false;
+            this.grid1.deselectRows([1, 2, 5]);
         }
-    }
-
-    public toggleSingle() {
-        this.grid1.rowList.toArray()[6].isSelected = !this.grid1.rowList.first.isSelected;
     }
 
     public toggleAll() {
         if (this.grid1.selectedRows().length === 0) {
             this.grid1.selectAllRows();
         } else {
-            this.grid1.selectRows([]);
+            this.grid1.deselectAllRows();
         }
-    }
-
-    public isThirdSelected() {
-        return this.grid1.getRowByKey(3).isSelected;
     }
 }

@@ -8,9 +8,6 @@
     <igx-column [field]="'ProductName'"></igx-column>
     <igx-column [field]="'UnitsInStock'"></igx-column>
 </igx-grid>
-<button igxButton="flat" (click)="toggle()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Toggle 1,2,5 (grid)</button>
-<button igxButton="flat" (click)="toggleSingle()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Toggle 7 (row)</button>
-<button igxButton="flat" (click)="toggleAll()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Toggle All (grid)</button>
-<!-- <span igxLabel>?3rd selected?</span>
-<igx-switch [(ngModel)]="isThirdSelected"></igx-switch> -->
+<button igxButton="flat" (click)="toggle()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Toggle rows with ID 1,2,5 </button>
+<button igxButton="flat" (click)="toggleAll()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Toggle All rows</button>
 </div>
