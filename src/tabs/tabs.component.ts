@@ -208,11 +208,13 @@ export class IgxTabsComponent implements AfterViewInit {
 
     @HostListener("keydown.home", ["$event"])
     public onKeydownHome(event: KeyboardEvent) {
+        event.preventDefault();
         this._onKeyDown(false, 0);
     }
 
     @HostListener("keydown.end", ["$event"])
     public onKeydownEnd(event: KeyboardEvent) {
+        event.preventDefault();
         this._onKeyDown(false, this.tabs.toArray().length - 1);
     }
 

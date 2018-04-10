@@ -18,16 +18,11 @@ export class IgxRightButtonStyleDirective {
     }
 
     @HostBinding("class.igx-tabs__header-button")
-    get defaultCSS(): boolean {
-        return true;
-    }
-
-    @HostBinding("class.igx-tabs__header-button_visible")
     get visibleCSS(): boolean {
         return this.tabs.isRightButtonVisible;
     }
 
-    @HostBinding("class.igx-tabs__header-button__hidden")
+    @HostBinding("class.igx-tabs__header-button--hidden")
     get hiddenCSS(): boolean {
         return !this.tabs.isRightButtonVisible;
     }
@@ -43,16 +38,11 @@ export class IgxLeftButtonStyleDirective {
     }
 
     @HostBinding("class.igx-tabs__header-button")
-    get defaultCSS(): boolean {
-        return true;
-    }
-
-    @HostBinding("class.igx-tabs__header-button_visible")
     get visibleCSS(): boolean {
         return this.tabs.isLeftButtonVisible;
     }
 
-    @HostBinding("class.igx-tabs__header-button__hidden")
+    @HostBinding("class.igx-tabs__header-button--hidden")
     get hiddenCSS(): boolean {
         return !this.tabs.isLeftButtonVisible;
     }

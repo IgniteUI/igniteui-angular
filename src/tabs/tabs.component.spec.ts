@@ -6,7 +6,7 @@ import { IgxTabsGroupComponent } from "./tabs-group.component";
 import { IgxTabsComponent, IgxTabsModule } from "./tabs.component";
 import { IgxTabItemTemplateDirective } from "./tabs.directives";
 
-describe("Tabs Component", () => {
+describe("IgxTabs", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [TabsTestComponent, TemplatedTabsTestComponent],
@@ -103,7 +103,7 @@ describe("Tabs Component", () => {
 
         fixture.componentInstance.tabSelectedHandler = () => { };
 
-        tab2.select(50);
+        tab2.select();
         fixture.detectChanges();
 
         expect(tabs.selectedIndex).toBe(1);
