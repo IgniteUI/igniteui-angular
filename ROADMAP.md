@@ -6,11 +6,11 @@
    2. [DONE]Updating the default project look
    3. [DONE]Move the project navigation inside an App Host
 2. **[DONE]** Product Theming 
-3. Column Resizing 
-4. **[DONE]** Column Hiding 
+3. **[DONE]** Column Resizing 
+4. Column Hiding 
 5. **[DONE]** Column pinning
 6. Row Selection 
-7. Export to excel (Exporting CSV,TSV)  
+7. **[DONE]** Export to excel (Exporting CSV,TSV)  
 8. Context Menu event (output)
 9. **[DONE]** Mask directive (editor) 
 10. **[DONE]** igxTimeicker
