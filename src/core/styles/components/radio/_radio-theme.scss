@@ -40,6 +40,8 @@
 /// @requires extend
 /// @requires rem
 @mixin igx-radio($theme, $palette: $default-palette) {
+    @include scale-in-out($start-scale: .9);
+
     $dark-theme: igx-radio-theme(
         $label-color: igx-color($palette, 'grays', 900),
         $empty-color: igx-color($palette, 'grays', 600),
@@ -194,6 +196,7 @@
     }
 
     %radio-ripple--focused {
+        @include animation('scale-in-out' 1s $ease-out-quad infinite);
         background-color: rgba(map-get($this, 'fill-color'), .12);
         transition: background-color .2s $ease-out-quad;
     }

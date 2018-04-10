@@ -41,6 +41,8 @@
 /// @requires extend
 /// @requires rem
 @mixin igx-checkbox($theme, $palette: $default-palette) {
+    @include scale-in-out($start-scale: .9);
+
     $dark-theme: igx-checkbox-theme(
         $label-color: igx-color($palette, grays, 900),
         $empty-color: igx-color($palette, 'grays', 600),
@@ -211,6 +213,7 @@
     }
 
     %cbx-ripple--focused {
+        @include animation('scale-in-out' 1s $ease-out-quad infinite);
         transition: background-color .2s $ease-out-quad;
         background-color: rgba(map-get($this, 'fill-color'), .12);
     }
