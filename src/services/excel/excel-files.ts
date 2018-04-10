@@ -94,7 +94,8 @@ export class WorksheetFile implements IExcelFile {
                 freezePane = `<pane xSplit="${frozenColumnCount}" topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
             }
         }
-        folder.file("sheet1.xml", ExcelStrings.getSheetXML(dimension, freezePane, cols.join(""), sheetData.join("")));
+        const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
+        folder.file("sheet1.xml", ExcelStrings.getSheetXML(dimension, freezePane, cols.join(""), sheetData.join(""), hasTable));
     }
 
     /* tslint:disable member-ordering */
@@ -133,7 +134,7 @@ export class WorkbookFile implements IExcelFile {
 
 export class ContentTypesFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        folder.file("[Content_Types].xml", ExcelStrings.getContentTypesXML(!worksheetData.isEmpty));
+        folder.file("[Content_Types].xml", ExcelStrings.getContentTypesXML(!worksheetData.isEmpty, worksheetData.options.exportAsTable));
     }
 }
 

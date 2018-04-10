@@ -181,7 +181,7 @@ export abstract class IgxBaseExporter {
 
             this._sort = grid.sortingExpressions[0];
 
-            data =  DataUtil.sort(grid.data, sortingState);
+            data =  DataUtil.sort(data, sortingState);
         }
 
         return data;
