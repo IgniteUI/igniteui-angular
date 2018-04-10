@@ -58,6 +58,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     @Input() public tabindex: number = null;
     @Input() public labelPosition: LabelPosition | string = LabelPosition.AFTER;
     @Input() public disableRipple = false;
+    @Input() public required = false;
 
     @Input("aria-labelledby")
     public ariaLabelledBy = this.labelId;
