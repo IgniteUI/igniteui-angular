@@ -192,4 +192,9 @@
         pointer-events: none;
         filter: opacity(1);
     }
+
+    %radio-ripple--focused {
+        background-color: rgba(map-get($this, 'fill-color'), .12);
+        transition: background-color .2s $ease-out-quad;
+    }
 }
