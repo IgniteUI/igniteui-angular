@@ -35,6 +35,11 @@
         @extend %igx-tabs__header-button !optional;
     }
 
+    @include e(header-button, $m: hidden) {
+        @extend %igx-tabs__header-button !optional;
+        @extend %igx-tabs__header-button--hidden !optional;
+    }
+
     @include e(header-button, $m: active) {
         @extend %igx-tabs__header-button !optional;
     }

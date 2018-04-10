@@ -284,7 +284,8 @@
     }
 
     // SCROLL BUTTONS
-    %igx-tabs__header-button {
+    %igx-tabs__header-button
+    {
         z-index: 1;
         display: flex;
         align-items: center;
@@ -323,6 +324,10 @@
         @include igx-ripple((
             color: map-get($this, 'buttons-ripple-color')
         ));
+    }
+
+    %igx-tabs__header-button--hidden {
+        visibility: hidden;
     }
 
     // LABELS
