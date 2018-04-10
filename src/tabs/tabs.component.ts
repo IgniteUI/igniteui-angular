@@ -63,12 +63,6 @@ export class IgxTabsComponent implements AfterViewInit {
     @ViewChild("selectedIndicator")
     public selectedIndicator: ElementRef;
 
-    @ViewChild("leftBtn")
-    public leftButton: ElementRef;
-
-    @ViewChild("rightBtn")
-    public rightButton: ElementRef;
-
     @ViewChild("viewPort")
     public viewPort: ElementRef;
 
