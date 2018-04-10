@@ -246,7 +246,7 @@ describe("Carousel", () => {
         carouselNative = fixture.debugElement.query(By.css(".igx-carousel"));
         carousel = fixture.componentInstance.carousel;
 
-        //carousel.navigation = true;
+        // carousel.navigation = true;
         fixture.detectChanges();
         expect(carouselNative.query(By.css(".igx-carousel__arrow--prev")) === null).toBe(false);
         expect(carouselNative.query(By.css(".igx-carousel__arrow--next")) === null).toBe(false);
