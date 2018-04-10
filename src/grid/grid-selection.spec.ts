@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { DataType } from "../data-operations/data-util";
@@ -343,7 +343,7 @@ export class GridWithPrimaryKeyComponent {
         <button class="nextPageBtn" (click)="ChangePage(1)">Next page</button>
     `
 })
-export class GridWithPagingAndSelectionComponent {
+export class GridWithPagingAndSelectionComponent implements OnInit {
     public data = [];
 
     @ViewChild("gridSelection2", { read: IgxGridComponent })
@@ -387,7 +387,7 @@ export class GridWithPagingAndSelectionComponent {
         </igx-grid>
     `
 })
-export class GridWithSelectionComponent {
+export class GridWithSelectionComponent implements OnInit {
     public data = [];
 
     @ViewChild("gridSelection3", { read: IgxGridComponent })
