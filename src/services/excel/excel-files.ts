@@ -109,11 +109,11 @@ export class WorksheetFile implements IExcelFile {
                             worksheetData.data[row - 1][columnHeader];
 
         const savedValue = dictionary.saveValue(cellValue, column, false);
-        const isString = savedValue !== -1;
+        const isSavedAsString = savedValue !== -1;
 
-        const value = isString ? savedValue : cellValue;
-        const type = isString ? ` t="s"` : "";
-        const format = isString ? "" : ` s="1"`;
+        const value = isSavedAsString ? savedValue : cellValue;
+        const type = isSavedAsString ? ` t="s"` : "";
+        const format = isSavedAsString ? "" : ` s="1"`;
 
         return `<c r="${column}"${type}${format}><v>${value}</v></c>`;
     }
