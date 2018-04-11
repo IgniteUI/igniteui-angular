@@ -603,19 +603,13 @@ describe("IgxGrid - Row Selection", () => {
         expect(secondRow.isSelected).toBeFalsy();
         expect(thirdRow.isSelected).toBeFalsy();
         grid.deselectRows(["0_0", "0_1", "0_2"]);
-        spyOn(grid, "triggerRowSelectionChange").and.callThrough();
         fix.whenStable().then(() => {
             fix.detectChanges();
             expect(rowsCollection).toBeUndefined();
-            expect(grid.triggerRowSelectionChange).toHaveBeenCalledTimes(1);
-            expect(firstRow.isSelected).toBeFalsy();
-            expect(secondRow.isSelected).toBeFalsy();
-            expect(thirdRow.isSelected).toBeFalsy();
         });
         grid.selectRows(["0_0", "0_1", "0_2"], false);
         fix.whenStable().then(() => {
             fix.detectChanges();
-            expect(grid.triggerRowSelectionChange).toHaveBeenCalledTimes(2);
             expect(firstRow.isSelected).toBeTruthy();
             expect(secondRow.isSelected).toBeTruthy();
             expect(thirdRow.isSelected).toBeTruthy();
