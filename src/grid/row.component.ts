@@ -155,11 +155,9 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
     }
 
     public ngDoCheck() {
-        if (this.rowSelectable) {
-            this.isSelected = this.grid.allRowsSelected ? true : this.selectionAPI.is_item_selected(this.gridID, this.rowID);
-            this.cdr.markForCheck();
-        } else {
-            this.isSelected = this.selectionAPI.is_item_selected(this.gridID, this.rowID);
-        }
+        this.isSelected = this.rowSelectable ?
+            this.grid.allRowsSelected ? true : this.selectionAPI.is_item_selected(this.gridID, this.rowID) :
+            this.selectionAPI.is_item_selected(this.gridID, this.rowID);
+        this.cdr.markForCheck();
     }
 }
