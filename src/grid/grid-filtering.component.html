@@ -1,7 +1,10 @@
 <ng-template #defaultFilterUI>
     <div *ngIf="!unaryCondition" class="igx-filtering__op">
         <igx-input-group>
-            <input type="text" igxInput placeholder="value" autocomplete="off" [value]="value" (input)="onInputChanged($event.target.value)" />
+            <igx-prefix>
+                <igx-icon>filter_list</igx-icon>
+            </igx-prefix>
+            <input type="text" igxInput placeholder="Value" autocomplete="off" [value]="value" (input)="onInputChanged($event.target.value)" />
         </igx-input-group>
     </div>
     <br>
@@ -14,7 +17,7 @@
 <div class="igx-filtering">
     <div [attr.class]="filterCSS">
         <span class="toggle-icon" [igxToggleAction]="directive">
-            <igx-icon fontSet="material" name="filter_list"></igx-icon>
+            <igx-icon>more_vert</igx-icon>
         </span>
     </div>
 </div>

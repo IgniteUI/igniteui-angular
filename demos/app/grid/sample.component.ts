@@ -6,22 +6,25 @@ import { IgxGridComponent } from "../../lib/grid/grid.component";
 import {
     DataContainer,
     IDataState,
-    IgxExcelExporterService,
     IgxSnackbarComponent,
     IgxToastComponent,
     IPagingState,
+    NUMBER_FILTERS,
     PagingError,
     SortingDirection,
     StableSortingStrategy,
-    NUMBER_FILTERS,
     STRING_FILTERS
 } from "../../lib/main";
-import { IgxExcelExporterOptions } from "../../lib/services/excel/excel-exporter-options";
-import { IgxCsvExporterService } from "../../lib/main";
-import { IgxExporterOptionsBase } from "../../lib/services/exporter-common/exporter-options-base";
-import { IgxCsvExporterOptions } from "../../lib/main";
-import { CsvFileTypes } from "../../lib/main";
-import { IgxBaseExporter } from "../../lib/services/exporter-common/base-export-service";
+
+import {
+    CsvFileTypes,
+    IgxBaseExporter,
+    IgxCsvExporterOptions,
+    IgxCsvExporterService,
+    IgxExcelExporterOptions,
+    IgxExporterOptionsBase,
+    IgxExcelExporterService
+} from "../../lib/services/index";
 
 @Injectable()
 export class LocalService {
@@ -127,9 +130,9 @@ export class GridSampleComponent {
     public editCell;
     public exportFormat = "XLSX";
     constructor(private localService: LocalService,
-    private remoteService: RemoteService,
-    private excelExporterService: IgxExcelExporterService,
-    private csvExporterService: IgxCsvExporterService) { }
+                private remoteService: RemoteService,
+                private excelExporterService: IgxExcelExporterService,
+                private csvExporterService: IgxCsvExporterService) { }
     public ngOnInit(): void {
         this.data = this.localService.records;
         this.remote = this.remoteService.remoteData;
@@ -323,7 +326,7 @@ export class GridSampleComponent {
             case "TSV":
                 return new IgxCsvExporterOptions(fileName, CsvFileTypes.TSV);
             case "TAB":
-                return new IgxCsvExporterOptions(fileName, CsvFileTypes.TAB)
+                return new IgxCsvExporterOptions(fileName, CsvFileTypes.TAB);
         }
     }
 }

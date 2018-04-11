@@ -9,26 +9,35 @@
     margin-bottom: 48px;
 }
 
-.igx-form-group+.igx-form-group {
+igx-input-group+igx-input-group {
     margin-top: 32px;
 }
 
-.switch-sample {
+.switch-sample,
+.checkbox-sample {
     display: flex;
-    flex-flow: row nowrap;
     align-items: center;
-    justify-content: space-between;
-    width: 100%;
+    flex-flow: row nowrap;
     height: 48px;
 }
 
-.switch-sample+.switch-sample {
-    margin-top: 16px;
+.checkbox-sample {
+    justify-content: space-between;
 }
 
-.switch-sample>[igxLabel] {
-    position: absolute;
-    margin-left: 56px;
+.switch-sample+.switch-sample,
+.checkbox-sample+.checkbox-sample {
+    margin-top: 8px;
+}
+
+.checkbox-sample .name {
+    margin-left: 16px;
+}
+
+.checkbox-sample>div {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
 }
 
 .radio-group {
@@ -39,4 +48,10 @@
 
 .radio-group igx-radio+igx-radio {
     margin-top: 8px;
+}
+
+.settings {
+    margin-left: 16px;
+    width: 100%;
+    justify-content: space-between;
 }
