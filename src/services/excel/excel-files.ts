@@ -149,7 +149,7 @@ export class SharedStringsFile implements IExcelFile {
         }
 
         folder.file("sharedStrings.xml", ExcelStrings.getSharedStringXML(
-                        worksheetData.columnCount * worksheetData.rowCount,
+                        dict.stringsCount,
                         sortedValues.length,
                         sharedStrings.join(""))
                     );

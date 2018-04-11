@@ -21,6 +21,8 @@ export class WorksheetDataDictionary {
     private _columnTypeInfo: boolean[];
     public hasNonStringValues = false;
 
+    public stringsCount: number;
+
     constructor(columnCount: number, columnWidth: number) {
         this._dictionary = {};
         this._widthsDictionary = {};
@@ -34,6 +36,8 @@ export class WorksheetDataDictionary {
         if (!this._calculateColumnWidth) {
             this._columnWidths.fill(columnWidth);
         }
+
+        this.stringsCount = 0;
     }
 
     public get columnWidths() {
@@ -57,6 +61,8 @@ export class WorksheetDataDictionary {
                 this._dictionary[sanitizedValue] = this._counter++;
                 this.dirtyKeyCollections();
             }
+
+            this.stringsCount ++;
         } else {
             this.hasNonStringValues = true;
         }
