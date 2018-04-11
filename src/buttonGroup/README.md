@@ -12,6 +12,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 # API Summary
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
+| `id` | string | Unique identifier of the component. If not provided it will be automatically generated.|
 | `multiSelection` |  boolean | Enables selecting multiple buttons. Value by default is false.  |
 | `alignment` |    enum   |   Set the button group alignment. Available enum members are ButtonGroupAlignment.horizontal (default) or ButtonGroupAlignment.vertical. |
 | `disabled` | boolean | Disables the igxButtounGroup component. False by default. |

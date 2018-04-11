@@ -51,6 +51,7 @@
 -###### Inputs
 -| Name   |      Type      |  Description |
 -|:----------|:-------------:|:------|
+-| `id` | string | Unique identifier of the component. If not provided it will be automatically generated.|
 -| `okButtonLabel` | string | Renders OK button with custom name, which commits the selected time, and fill the timePicker input. By default `okButtonLabel` is set to 'OK'. |
 -| `cancelButtonLabel` | string | Renders cancel button with custom name, which closes the dialog. By default `cancelButtonLabel` is set to 'Cancel'. |
 -| `value` | Date | Value of the timePicker. |

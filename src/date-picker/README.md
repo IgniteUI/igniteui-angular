@@ -64,6 +64,7 @@ The DatePicker also supports binding through `ngModel` if two-way date-bind is n
 ###### Inputs
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
+| `id` | string | Unique identifier of the component. If not provided it will be automatically generated.|
 | `todayBottonLabel` | `string` | Renders today button with custom name, which selects today date from calendar, and fill the datePicker input. |
 | `cancelButtonLabel` | `string` | Renders cancel button with custom name, which closes the calendar. |
 | `formatter` | `function` | Applied custom formatter on the selected or passed date. |
