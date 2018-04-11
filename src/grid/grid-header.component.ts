@@ -209,7 +209,10 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
 
             const ind = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
             const cellStyle = this.grid.document.defaultView.getComputedStyle(this.column.cells[ind].nativeElement);
-            const cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight);
+            let cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight);
+            if (this.isLastPinned) {
+                cellPadding += parseFloat(cellStyle.borderRightWidth);
+            }
             largest.set(Math.max(...cellsContentWidths), cellPadding);
 
             const headerContentWidths = Array.from(this.elementRef.nativeElement.children)
@@ -217,7 +220,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
             const headerCell = Math.max(...headerContentWidths);
             const headerStyle = this.grid.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
             const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
-                    parseFloat(headerStyle.borderRight);
+                    parseFloat(headerStyle.borderRightWidth);
             largest.set(headerCell, headerPadding);
 
             const largestCell = Math.max(...Array.from(largest.keys()));
