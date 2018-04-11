@@ -26,6 +26,7 @@ describe("Badge", () => {
         fixture.detectChanges();
         const badge = fixture.componentInstance.badge;
 
+        expect(badge.id).toBe("igx-badge-0");
         expect(badge.value).toBeTruthy();
         expect(badge.type).toBeTruthy();
 
