@@ -199,10 +199,6 @@
             outline-style: none;
             border-radius: 4px;
         }
-
-        [igxinput] {
-            margin: 24px 0;
-        }
     }
 
     %igx-filtering-menu--to-left {
@@ -226,5 +222,9 @@
                 margin-right: 8px;
             }
         }
+    }
+
+    %igx-filtering-op {
+        margin: 24px 0 12px;
     }
 }
