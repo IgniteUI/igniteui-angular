@@ -22,6 +22,7 @@ describe("List", () => {
         const list = fixture.componentInstance.list;
 
         expect(list).toBeDefined();
+        expect(list.id).toContain("igx-list-");
         expect(list instanceof IgxListComponent).toBeTruthy();
         expect(list.innerStyle).toBe("igx-list-empty");
         expect(list.items instanceof Array).toBeTruthy();
