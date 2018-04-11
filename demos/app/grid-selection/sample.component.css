@@ -5,3 +5,8 @@
     flex-flow: column;
     align-items: flex-start;
 }
+.separator {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    box-shadow: 1px 1px #336caf;
+}
