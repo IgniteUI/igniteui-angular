@@ -134,14 +134,89 @@ describe("IgxTabs", () => {
     it("should initialize igx-tab custom template", () => {
         const fixture = TestBed.createComponent(TemplatedTabsTestComponent);
         const tabs = fixture.componentInstance.tabs;
-
         fixture.detectChanges();
 
         const tabItems: IgxTabItemComponent[] = tabs.tabs.toArray();
-
         expect(tabs.tabs.length).toBe(3);
 
         tabs.tabs.forEach((tabItem) => expect(tabItem.relatedGroup.customTabTemplate).toBeDefined());
+    });
+
+    it("should select next/previous tab when pressing right/left arrow", () => {
+        const fixture = TestBed.createComponent(TabsTestComponent);
+        const tabs = fixture.componentInstance.tabs;
+        fixture.detectChanges();
+
+        tabs.tabs.toArray()[0].nativeTabItem.nativeElement.focus();
+        let args = { key: "ArrowRight", bubbles: true };
+        tabs.tabsContainer.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        tabs.tabsContainer.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        expect(tabs.selectedIndex).toBe(1);
+
+        tabs.tabsContainer.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        expect(tabs.selectedIndex).toBe(2);
+
+        args = { key: "ArrowLeft", bubbles: true };
+        tabs.tabsContainer.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        expect(tabs.selectedIndex).toBe(1);
+    });
+
+    it("should select first/last tab when pressing home/end button", () => {
+        const fixture = TestBed.createComponent(TabsTestComponent);
+        const tabs = fixture.componentInstance.tabs;
+        fixture.detectChanges();
+
+        tabs.tabs.toArray()[0].nativeTabItem.nativeElement.focus();
+
+        let args = { key: "End", bubbles: true };
+        tabs.tabsContainer.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        expect(tabs.selectedIndex).toBe(2);
+
+        args = { key: "Home", bubbles: true };
+        tabs.tabsContainer.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        expect(tabs.selectedIndex).toBe(0);
+    });
+
+    it("should scroll tab area when clicking left/right scroll buttons", () => {
+        const fixture = TestBed.createComponent(TabsTestComponent);
+        const tabs = fixture.componentInstance.tabs;
+        fixture.detectChanges();
+
+        fixture.componentInstance.wrapperDiv.nativeElement.style.width = "500px";
+        window.dispatchEvent(new Event("resize"));
+        fixture.detectChanges();
+
+        const rightScrollButton = tabs.headerContainer.nativeElement.children[2];
+        rightScrollButton.dispatchEvent(new Event("click", { bubbles: true }));
+        fixture.detectChanges();
+
+        requestAnimationFrame(() => {
+            expect(tabs.offset).toBeGreaterThan(0);
+        });
+
+        tabs.scrollLeft(null);
+
+        requestAnimationFrame(() => {
+            expect(tabs.offset).toBe(0);
+        });
+    });
+
+    it("should select tab on click", () => {
+        const fixture = TestBed.createComponent(TabsTestComponent);
+        const tabs = fixture.componentInstance.tabs;
+        fixture.detectChanges();
+
+        fixture.componentInstance.wrapperDiv.nativeElement.style.width = "500px";
+        window.dispatchEvent(new Event("resize"));
+        fixture.detectChanges();
+
+        tabs.tabs.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(new Event("click", { bubbles: true }));
+        fixture.detectChanges();
+        expect(tabs.selectedIndex).toBe(2);
+
+        tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(new Event("click", { bubbles: true }));
+        fixture.detectChanges();
+        expect(tabs.selectedIndex).toBe(0);
     });
 });
 
@@ -187,9 +262,8 @@ class TabsTestComponent {
 @Component({
     template: `
         <div #wrapperDiv>
-
-        <igx-tabs>
-            <igx-tabs-group label="dede">
+        <igx-tabs tabsType="fixed">
+            <igx-tabs-group label="Tab111111111111111111111111">
                 <ng-template igxTab>
                     <div>T1</div>
                  </ng-template>
