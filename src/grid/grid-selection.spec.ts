@@ -456,7 +456,7 @@ describe("IgxGrid - Row Selection", () => {
         });
     }));
 
-    it("Filtering and row selection", async(() => {
+    fit("Filtering and row selection", async(() => {
         const fix = TestBed.createComponent(GridWithSelectionFilteringComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection4;
@@ -467,6 +467,20 @@ describe("IgxGrid - Row Selection", () => {
         expect(secondRow).toBeDefined();
         const targetCheckbox: HTMLElement = secondRow.nativeElement.querySelector(".igx-checkbox__input");
         expect(secondRow.isSelected).toBeFalsy();
+
+        let rowsCollection = [];
+
+        rowsCollection = grid.selectedRows();
+        expect(rowsCollection).toBeUndefined();
+
+        grid.filter("ProductName", "Ignite", STRING_FILTERS.contains, true);
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeFalsy();
+        rowsCollection = grid.selectedRows();
+        expect(rowsCollection).toBeUndefined();
+        grid.clearFilter("ProductName");
+        fix.detectChanges();
 
         targetCheckbox.click();
         fix.detectChanges();
