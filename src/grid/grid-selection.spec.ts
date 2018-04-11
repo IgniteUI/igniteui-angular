@@ -9,6 +9,7 @@ import { STRING_FILTERS } from "../main";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
+import { IgxColumnComponent } from "./column.component";
 
 const selectedCellClass = ".igx-grid__td--selected";
 let data = [
@@ -403,6 +404,15 @@ describe("IgxGrid - Row Selection", () => {
         const fix = TestBed.createComponent(GridWithScrollsComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection5;
+
+        grid.rowSelectable = false;
+
+        for (const row of grid.rowList.toArray()) {
+            const checkBoxElement = row.nativeElement.querySelector("div.igx-grid__cbx-selection");
+            expect(checkBoxElement).toBeNull();
+        }
+
+        grid.rowSelectable = true;
         for (const row of grid.rowList.toArray()) {
             const checkBoxElement = row.nativeElement.querySelector("div.igx-grid__cbx-selection");
             expect(checkBoxElement).toBeDefined();
@@ -414,29 +424,18 @@ describe("IgxGrid - Row Selection", () => {
         const horScroll = grid.parentVirtDir.getHorizontalScroll();
         horScroll.scrollLeft = 1000;
         fix.whenStable().then(() => {
-            const a = 2 + 2;
             for (const row of grid.rowList.toArray()) {
+                // ensure we were scroll - the first cell's column index should not be 0
+                const firstCellColumnIndex = row.cells.toArray()[0].columnIndex;
+                expect(firstCellColumnIndex).not.toEqual(0);
+
                 const checkBoxElement = row.nativeElement.querySelector("div.igx-grid__cbx-selection");
                 expect(checkBoxElement).toBeDefined();
 
                 const checkboxInputElement = checkBoxElement.querySelector(".igx-checkbox__input");
                 expect(checkboxInputElement).toBeDefined();
-
-                const firstCellElement = row.cells.toArray()[0].nativeElement;
-                expect(firstCellElement).toBeUndefined();
             }
         });
-
-        grid.rowSelectable = false;
-        fix.detectChanges();
-
-        for (const row of grid.rowList.toArray()) {
-            const checkBoxElement = row.nativeElement.querySelector("div.igx-grid__cbx-selection");
-            expect(checkBoxElement).toBeUndefined();
-
-            const checkboxInputElement = checkBoxElement.querySelector(".igx-checkbox__input");
-            expect(checkboxInputElement).toBeUndefined();
-        }
     }));
 
     // API Methods
@@ -818,7 +817,8 @@ export class GridWithSelectionFilteringComponent {
             [width]="'800px'"
             [height]="'600px'"
             [autoGenerate]="true"
-            rowSelectable="true"
+            [rowSelectable]="true"
+            (onColumnInit)="columnCreated($event)"
         >
         </igx-grid>
     `
@@ -845,5 +845,9 @@ export class GridWithScrollsComponent implements OnInit {
             bigData.push(row);
         }
         return bigData;
+    }
+
+    public columnCreated(column: IgxColumnComponent) {
+        column.width = "50px";
     }
 }
