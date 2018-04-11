@@ -185,7 +185,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public primaryKey;
 
     @Output()
-    public onClick = new EventEmitter<IGridCellEventArgs>();
+    public onCellClick = new EventEmitter<IGridCellEventArgs>();
 
     @Output()
     public onSelection = new EventEmitter<IGridCellEventArgs>();
