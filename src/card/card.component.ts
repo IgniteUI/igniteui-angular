@@ -1,6 +1,8 @@
 import { Component, Directive, Input, NgModule } from "@angular/core";
 import { IgxButtonModule } from "../directives/button/button.directive";
 
+let NEXT_ID = 0;
+
 /**
  * IgxCardHeader is container for the card header
  */
@@ -71,7 +73,10 @@ export class IgxCardFooterDirective {
     selector: "igx-card",
     templateUrl: "card.component.html"
 })
-export class IgxCardComponent { }
+export class IgxCardComponent {
+    @Input()
+    public id = `igx-card-${NEXT_ID++}`;
+}
 
 @NgModule({
     declarations: [IgxCardComponent, IgxCardHeaderDirective,
