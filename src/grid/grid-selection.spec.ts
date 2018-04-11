@@ -9,6 +9,7 @@ import { STRING_FILTERS } from "../main";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
+import { IgxColumnComponent } from "./column.component";
 
 const selectedCellClass = ".igx-grid__td--selected";
 let data = [
@@ -46,7 +47,8 @@ describe("IgxGrid - Row Selection", () => {
                 GridWithPrimaryKeyComponent,
                 GridWithPagingAndSelectionComponent,
                 GridWithSelectionComponent,
-                GridWithSelectionFilteringComponent
+                GridWithSelectionFilteringComponent,
+                GridWithScrollsComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -179,6 +181,7 @@ describe("IgxGrid - Row Selection", () => {
             expect(grid.selectedCells[0].row.rowData[grid.primaryKey]).toEqual(3);
         });
     }));
+
     it("Should persist through paging", async(() => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
         fix.detectChanges();
@@ -542,6 +545,44 @@ describe("IgxGrid - Row Selection", () => {
             fix.detectChanges();
             expect(firstRow.isSelected).toBeFalsy();
             expect(secondRow.isSelected).toBeFalsy();
+        });
+    }));
+
+    it("Should have checkbox on each row if rowSelectable is true", async(() => {
+        const fix = TestBed.createComponent(GridWithScrollsComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection5;
+
+        grid.rowSelectable = false;
+
+        for (const row of grid.rowList.toArray()) {
+            const checkBoxElement = row.nativeElement.querySelector("div.igx-grid__cbx-selection");
+            expect(checkBoxElement).toBeNull();
+        }
+
+        grid.rowSelectable = true;
+        for (const row of grid.rowList.toArray()) {
+            const checkBoxElement = row.nativeElement.querySelector("div.igx-grid__cbx-selection");
+            expect(checkBoxElement).toBeDefined();
+
+            const checkboxInputElement = checkBoxElement.querySelector(".igx-checkbox__input");
+            expect(checkboxInputElement).toBeDefined();
+        }
+
+        const horScroll = grid.parentVirtDir.getHorizontalScroll();
+        horScroll.scrollLeft = 1000;
+        fix.whenStable().then(() => {
+            for (const row of grid.rowList.toArray()) {
+                // ensure we were scroll - the first cell's column index should not be 0
+                const firstCellColumnIndex = row.cells.toArray()[0].columnIndex;
+                expect(firstCellColumnIndex).not.toEqual(0);
+
+                const checkBoxElement = row.nativeElement.querySelector("div.igx-grid__cbx-selection");
+                expect(checkBoxElement).toBeDefined();
+
+                const checkboxInputElement = checkBoxElement.querySelector(".igx-checkbox__input");
+                expect(checkboxInputElement).toBeDefined();
+            }
         });
     }));
 
@@ -918,4 +959,47 @@ export class GridWithSelectionFilteringComponent {
     ];
 
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+}
+
+@Component({
+    template: `
+            <igx-grid #gridSelection3
+            [data]="data"
+            [primaryKey]="'ID'"
+            [width]="'800px'"
+            [height]="'600px'"
+            [autoGenerate]="true"
+            [rowSelectable]="true"
+            (onColumnInit)="columnCreated($event)"
+        >
+        </igx-grid>
+    `
+})
+export class GridWithScrollsComponent implements OnInit {
+    public data = [];
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public gridSelection5: IgxGridComponent;
+
+    ngOnInit() {
+        this.data = this.getData();
+    }
+
+    public getData(rows: number = 100, cols: number = 100): any[] {
+        const bigData = [];
+        for (let i = 0; i < rows; i++) {
+            const row = {};
+            row["ID"] = i.toString();
+            for (let j = 1; j < cols; j++) {
+                row["Column " + j] = i * j;
+            }
+
+            bigData.push(row);
+        }
+        return bigData;
+    }
+
+    public columnCreated(column: IgxColumnComponent) {
+        column.width = "50px";
+    }
 }
