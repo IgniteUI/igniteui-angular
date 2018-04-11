@@ -456,7 +456,7 @@ describe("IgxGrid - Row Selection", () => {
         });
     }));
 
-    fit("Filtering and row selection", async(() => {
+    it("Filtering and row selection", async(() => {
         const fix = TestBed.createComponent(GridWithSelectionFilteringComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection4;
