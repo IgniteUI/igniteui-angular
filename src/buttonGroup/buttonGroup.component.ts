@@ -34,6 +34,7 @@ export enum ButtonGroupAlignment { horizontal, vertical }
  *   { icon: 'format_underlined', selected: false }];
  * ```
  */
+let NEXT_ID = 0;
 @Component({
     selector: "igx-buttongroup",
     templateUrl: "buttongroup-content.component.html"
@@ -41,6 +42,10 @@ export enum ButtonGroupAlignment { horizontal, vertical }
 
 export class IgxButtonGroupComponent implements AfterViewInit {
     @ViewChildren(IgxButtonDirective) public buttons: QueryList<IgxButtonGroupComponent>;
+
+    @Input()
+    public id = `igx-buttongroup-${NEXT_ID++}`;
+
     @Input() set itemContentCssClass(value: string) {
         this._itemContentCssClass = value || this._itemContentCssClass;
     }
