@@ -8,9 +8,9 @@ import { SortingDirection } from "../data-operations/sorting-expression.interfac
 import { IgxInputDirective } from "../directives/input/input.directive";
 import { STRING_FILTERS } from "../main";
 import { IgxGridCellComponent } from "./cell.component";
+import { IgxColumnComponent } from "./column.component";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
-import { IgxColumnComponent } from "./column.component";
 
 const selectedCellClass = ".igx-grid__td--selected";
 let data = [
