@@ -182,7 +182,7 @@ export class LocalService {
 
 @Component({
     template: `
-        <igx-grid [data]="data | async" (onDataPreLoad)="dataLoading($event)" [height]="'600px'" [remoteVirtualization]='true'>
+        <igx-grid [data]="data | async" (onDataPreLoad)="dataLoading($event)" [height]="'600px'">
             <igx-column [sortable]="true" [filterable]="true" [field]="'Col1'" [header]="'Col1'">
             </igx-column>
         </igx-grid>

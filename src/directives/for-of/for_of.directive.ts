@@ -45,7 +45,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         startIndex: 0,
         chunkSize: 0
     };
-    public totalItemCount: number;
+    public totalItemCount: number = null;
 
     @Input() public igxForRemote = false;
 
@@ -82,6 +82,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         private resolver: ComponentFactoryResolver,
         public cdr: ChangeDetectorRef,
         private _zone: NgZone) { }
+
+    protected get isRemote(): boolean {
+        return this.totalItemCount !== null;
+    }
 
     public ngOnInit(): void {
         let totalWidth = 0;
@@ -151,7 +155,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this._zone.runOutsideAngular(() => {
                     this.hScroll.addEventListener("scroll", this.func);
                     this.dc.instance._viewContainer.element.nativeElement.addEventListener("wheel",
-                    (evt) => { this.onWheel(evt); });
+                        (evt) => { this.onWheel(evt); });
                     this.dc.instance._viewContainer.element.nativeElement.addEventListener("touchstart",
                         (evt) => { this.onTouchStart(evt); });
                     this.dc.instance._viewContainer.element.nativeElement.addEventListener("touchmove",
@@ -257,7 +261,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const ratio = scrollHeight !== 0 ? inScrollTop / scrollHeight : 0;
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
 
-        const count = this.totalItemCount || this.igxForOf.length;
+        const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
         const currIndex = Math.floor(ratio * count);
 
         const endingIndex = this.state.chunkSize + currIndex;
@@ -265,7 +269,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.state.startIndex = currIndex;
             this.onChunkPreload.emit(this.state);
         }
-        if (this.igxForRemote) {
+        if (this.isRemote) {
             return;
         }
 
@@ -436,17 +440,17 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForOf && this.igxForOf.length && this.dc) {
             const embeddedViewCopy = Object.assign([], this._embeddedViews);
             let startIndex = this.state.startIndex;
-            let endIndex =  this.state.chunkSize + this.state.startIndex;
-            if (this.igxForRemote) {
+            let endIndex = this.state.chunkSize + this.state.startIndex;
+            if (this.isRemote) {
                 startIndex = 0;
                 endIndex = this.igxForOf.length;
             }
             for (let i = startIndex; i < endIndex && this.igxForOf[i] !== undefined; i++) {
-                    const input = this.igxForOf[i];
-                    const embView = embeddedViewCopy.shift();
-                    const cntx = (embView as EmbeddedViewRef<any>).context;
-                    cntx.$implicit = input;
-                    cntx.index = this.igxForOf.indexOf(input);
+                const input = this.igxForOf[i];
+                const embView = embeddedViewCopy.shift();
+                const cntx = (embView as EmbeddedViewRef<any>).context;
+                cntx.$implicit = input;
+                cntx.index = this.igxForOf.indexOf(input);
             }
             this.onChunkLoad.emit();
             this.dc.changeDetectorRef.detectChanges();
@@ -481,7 +485,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 chunkSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
                     parseInt(this.igxForItemSize, 10));
                 if (chunkSize > this.igxForOf.length) {
-                     chunkSize = this.igxForOf.length;
+                    chunkSize = this.igxForOf.length;
                 }
             }
         } else {
@@ -523,7 +527,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     private _recalcScrollBarSize() {
-        const count = this.totalItemCount || this.igxForOf.length;
+        const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
         this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
         if (this.igxForScrollOrientation === "horizontal") {
             const totalWidth = this.igxForContainerSize ? this.initHCache(this.igxForOf) : 0;
@@ -564,7 +568,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     private applyChunkSizeChange() {
-        const chunkSize = this.igxForRemote ? this.igxForOf.length : this._calculateChunkSize();
+        const chunkSize = this.isRemote ? this.igxForOf.length : this._calculateChunkSize();
         if (chunkSize > this.state.chunkSize) {
             const diff = chunkSize - this.state.chunkSize;
             for (let i = 0; i < diff; i++) {
