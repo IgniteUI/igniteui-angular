@@ -35,6 +35,7 @@ describe("IgLinearBar", () => {
         const defaultStriped = false;
         const defaultType = "default";
 
+        expect(progress.id).toContain("igx-linear-bar-");
         expect(progress.max).toBe(defaultMaxValue);
         expect(progress.striped).toBe(defaultStriped);
         expect(progress.type).toBe(defaultType);

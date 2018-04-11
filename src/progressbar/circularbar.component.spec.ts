@@ -33,6 +33,7 @@ describe("IgCircularBar", () => {
         const value = 0;
         const defaultMaxValue = 100;
 
+        expect(progress.id).toContain("igx-circular-bar-");
         expect(progress.max).toBe(defaultMaxValue);
         expect(progress.value).toBe(0);
     }));
