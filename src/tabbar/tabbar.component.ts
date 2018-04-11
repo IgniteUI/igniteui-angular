@@ -50,6 +50,7 @@ export class IgxTabTemplateDirective {
  * </igx-tab-bar>
  * ```
  */
+let NEXT_ID = 0;
 @Component({
     selector: "igx-tab-bar",
     templateUrl: "tab-bar-content.component.html"
@@ -59,6 +60,8 @@ export class IgxTabBarComponent implements AfterViewInit {
     @ViewChildren(forwardRef(() => IgxTabComponent)) public tabs: QueryList<IgxTabComponent>;
     @ContentChildren(forwardRef(() => IgxTabPanelComponent)) public panels: QueryList<IgxTabPanelComponent>;
 
+    @Input()
+    public id = `igx-tab-bar-${NEXT_ID++}`;
     @Output() public onTabSelected = new EventEmitter<ISelectTabEventArgs>();
     @Output() public onTabDeselected = new EventEmitter<ISelectTabEventArgs>();
 

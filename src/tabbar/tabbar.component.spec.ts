@@ -25,6 +25,7 @@ describe("TabBar", () => {
 
         expect(tabbar).toBeDefined();
         expect(tabbar instanceof IgxTabBarComponent).toBeTruthy();
+        expect(tabbar.id).toContain("igx-tab-bar-");
         expect(tabbar.panels instanceof QueryList).toBeTruthy();
         expect(tabbar.panels.length).toBe(3);
 
