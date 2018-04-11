@@ -64,6 +64,10 @@
             @extend %cbx-label--disabled !optional;
         }
 
+        @include e(label, $m: before) {
+            @extend %cbx-label--disabled !optional;
+        }
+
         @include e(composite) {
             @extend %cbx-composite--disabled !optional;
         }
