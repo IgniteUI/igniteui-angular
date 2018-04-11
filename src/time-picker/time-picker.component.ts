@@ -27,6 +27,7 @@ import {
     IgxMinuteItemDirective
 } from "./time-picker.directives";
 
+let NEXT_ID = 0;
 export class TimePickerHammerConfig extends HammerGestureConfig {
     public overrides = {
         pan: { direction: Hammer.DIRECTION_VERTICAL, threshold: 1 }
@@ -62,6 +63,9 @@ export interface IgxTimePickerValidationFailedEventArgs {
 export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
     private _value: Date;
+
+    @Input()
+    public id = `igx-time-picker-${NEXT_ID++}`;
 
     @Input()
     set value(value: Date) {

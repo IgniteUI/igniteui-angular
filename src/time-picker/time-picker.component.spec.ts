@@ -33,6 +33,7 @@ describe("IgxTimePicker", () => {
 
         expect(fixture.componentInstance).toBeDefined();
         expect(timePicker.displayTime).toEqual(result);
+        expect(timePicker.id).toContain("igx-time-picker-");
     });
 
     it("@Input properties", () => {
