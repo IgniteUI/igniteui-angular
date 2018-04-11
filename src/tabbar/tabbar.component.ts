@@ -20,8 +20,8 @@ import {
     ViewChildren
 } from "@angular/core";
 import { IgxBadgeModule } from "../badge/badge.component";
-import { IgxIconModule } from "../icon";
 import { DeprecateClass } from "../core/deprecateDecorators";
+import { IgxIconModule } from "../icon";
 
 export interface ISelectTabEventArgs {
     tab: IgxTabComponent;
