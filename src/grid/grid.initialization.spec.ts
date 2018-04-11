@@ -1,6 +1,6 @@
 import { Component, ViewChild } from "@angular/core";
-import { By } from "@angular/platform-browser";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { DataType } from "../data-operations/data-util";
 import { IgxColumnComponent } from "./column.component";
