@@ -114,9 +114,9 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
     protected chunkLoaded$;
 
     constructor(public gridAPI: IgxGridAPIService,
-        private selectionAPI: IgxSelectionAPIService,
-        private element: ElementRef,
-        public cdr: ChangeDetectorRef) { }
+                private selectionAPI: IgxSelectionAPIService,
+                private element: ElementRef,
+                public cdr: ChangeDetectorRef) { }
 
     @autoWire(true)
     public ngOnInit() {
