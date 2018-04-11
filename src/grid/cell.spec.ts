@@ -70,15 +70,13 @@ describe("IgxGrid - Cell component", () => {
         });
     }));
 
-    fit("Should trigger onCellClick event when click into cell", async(() => {
+    it("Should trigger onCellClick event when click into cell", async(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
         const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
         const firstCell = grid.getCellByColumn(0, "index");
-
-        expect(cellElem.nativeElement.getAttribute("aria-selected")).toBe("false");
 
         spyOn(grid.onCellClick, "emit").and.callThrough();
         const event = new Event("click");
@@ -92,7 +90,6 @@ describe("IgxGrid - Cell component", () => {
             fix.detectChanges();
 
             expect(grid.onCellClick.emit).toHaveBeenCalledWith(args);
-            expect(cellElem.nativeElement.getAttribute("aria-selected")).toBe("true");
             expect(firstCell).toBe(fix.componentInstance.clickedCell);
         });
     }));
