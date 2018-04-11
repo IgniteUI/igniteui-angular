@@ -229,6 +229,14 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         });
     }
 
+    @HostListener("contextmenu", ["$event"])
+    public onContextMenu(event) {
+        this.grid.onContextMenu.emit({
+            cell: this,
+            event
+        });
+    }
+
     @HostListener("focus", ["$event"])
     @autoWire()
     public onFocus(event) {
