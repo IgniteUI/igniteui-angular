@@ -20,7 +20,7 @@ import { JSZipFiles } from "./jszip-helper";
 import { JSZipWrapper, ObjectComparer } from "./jszip-verification-wrapper";
 import { ExportTestDataService, FileContentData, ValueData } from "./test-data.service";
 
-fdescribe("Excel Exporter", () => {
+describe("Excel Exporter", () => {
     let exporter: IgxExcelExporterService;
     let actualData: FileContentData;
     let options: IgxExcelExporterOptions;
@@ -148,7 +148,7 @@ fdescribe("Excel Exporter", () => {
     //     });
     // }));
 
-    fit("should honor 'ignoreFiltering' option.", async(() => {
+    it("should honor 'ignoreFiltering' option.", async(() => {
         const result = TestMethods.createGridAndFilter();
         const fix = result.fixture;
         const grid = result.grid;
