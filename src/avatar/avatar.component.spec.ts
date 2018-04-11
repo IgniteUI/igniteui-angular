@@ -23,6 +23,14 @@ describe("Avatar", () => {
             .compileComponents();
     }));
 
+    it("Initializes round avatar with autoincremented id", () => {
+        const fixture = TestBed.createComponent(InitAvatarComponent);
+        fixture.detectChanges();
+        const avatar = fixture.componentInstance.avatar;
+
+        expect(avatar.id).toBe("igx-avatar-0");
+    });
+
     it("Initializes avatar with initials", () => {
         const fixture = TestBed.createComponent(InitAvatarComponent);
         fixture.detectChanges();
