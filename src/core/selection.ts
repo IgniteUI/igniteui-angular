@@ -19,7 +19,7 @@ export class IgxSelectionAPIService {
     }
 
     public get_selection_length(componentID: string): number {
-        return this.get_selection(componentID).length;
+        return (this.get_selection(componentID) || []).length;
     }
 
     public select_item(componentID: string, itemID, currSelection?: any[]): any[] {

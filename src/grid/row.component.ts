@@ -114,9 +114,9 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
     protected chunkLoaded$;
 
     constructor(public gridAPI: IgxGridAPIService,
-                private selectionAPI: IgxSelectionAPIService,
-                private element: ElementRef,
-                public cdr: ChangeDetectorRef) { }
+        private selectionAPI: IgxSelectionAPIService,
+        private element: ElementRef,
+        public cdr: ChangeDetectorRef) { }
 
     @autoWire(true)
     public ngOnInit() {
@@ -164,14 +164,22 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
     }
 
     public handleArrows(event) {
-        console.log(event);
         let currentIndex = 0;
         let target;
-        switch (event.keyCode) {
+        let eventCode = event.keyCode ? event.keyCode : event.which;
+        const eventKey = event.key ? event.key.toLowerCase() : "";
+        if (eventKey !== undefined && !eventCode) {
+            eventCode = eventKey;
+        }
+        switch (eventCode) {
             case (39): // rightArrow
+            case ("arrowright"):
+                event.preventDefault();
                 this.cells.first.nativeElement.focus();
                 break;
             case (38): // upArrow
+            case ("arrowup"):
+                event.preventDefault();
                 currentIndex = this.grid.rowList.toArray().indexOf(this);
                 if (currentIndex === 0) {
                     const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
@@ -193,6 +201,8 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
                 }
                 break;
             case (40): // downArrow
+            case ("arrowdown"):
+                event.preventDefault();
                 currentIndex = this.grid.rowList.toArray().indexOf(this);
                 if (currentIndex >= this.grid.rowList.length - 1) {
                     const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
@@ -210,6 +220,7 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
                     });
                     verticalScroll.scrollTop += this.rowHeight;
                 } else {
+                    console.log(this.grid.getRowByIndex(this.index + 1).nativeElement.querySelector(".igx-checkbox__input"));
                     this.grid.getRowByIndex(this.index + 1).nativeElement.querySelector(".igx-checkbox__input").focus();
                 }
                 break;

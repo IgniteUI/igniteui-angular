@@ -24,6 +24,19 @@ let data = [
     { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" }
 ];
 
+function simulateKeyDown(element, key) {
+    const keyOptions: KeyboardEventInit = {
+        key
+    };
+
+    const keypressEvent = new KeyboardEvent("keydown", keyOptions);
+
+    return new Promise((resolve, reject) => {
+        element.dispatchEvent(keypressEvent);
+        resolve();
+    });
+}
+
 describe("IgxGrid - Row Selection", () => {
 
     beforeEach(async(() => {
@@ -290,7 +303,7 @@ describe("IgxGrid - Row Selection", () => {
             expect(selectedRow3.isSelected).toBeTruthy();
         });
     }));
-    xit("Should persist through scrolling", async(() => {
+    it("Should persist through scrolling", async(() => {
         let selectedCell;
         const fix = TestBed.createComponent(GridWithSelectionComponent);
         fix.detectChanges();
@@ -308,33 +321,169 @@ describe("IgxGrid - Row Selection", () => {
         fix.whenStable().then(() => {
             fix.detectChanges();
             expect(selectedRow.isSelected).toBeTruthy();
+            expect(grid.selectedRows()).toBeDefined();
+            expect(grid.rowList.first).toBeDefined();
+            expect(grid.rowList.first.isSelected).toBeTruthy();
             selectedCell = grid.getCellByColumn("2_0", "Column2");
-            // tslint:disable-next-line:no-debugger
-            debugger;
+            const scrollBar = gridElement.querySelector(".igx-vhelper--vertical");
+            scrollBar.scrollTop = 500;
+            setTimeout(() => {
+                fix.detectChanges();
+                return fix.whenStable().then(() => {
+                    expect(grid.selectedRows()).toBeDefined();
+                    expect(grid.rowList.first).toBeDefined();
+                    expect(grid.rowList.first.isSelected).toBeFalsy();
+                    scrollBar.scrollTop = 0;
+                    setTimeout(() => {
+                        fix.detectChanges();
+                        return fix.whenStable().then(() => {
+                            expect(selectedRow.isSelected).toBeTruthy();
+                            expect(grid.selectedRows()).toBeDefined();
+                            expect(grid.rowList.first).toBeDefined();
+                            expect(grid.rowList.first.isSelected).toBeTruthy();
+                        });
+                    });
+                });
+            }, 500);
             // expect(selectedRow.nativeElement.class).toContain("igx-grid__tr--selected");
+        });
+    }));
+
+    it("Should support keyboard navigation when moving in and out of selection column", async(() => {
+        const fix = TestBed.createComponent(GridWithSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection3;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        const firstRow = grid.getRowByIndex(0);
+        const secondRow = grid.getRowByIndex(0);
+        const firstRowCell = grid.getCellByColumn("0_0", "ID");
+        spyOn(firstRow, "handleArrows").and.callThrough();
+        // tslint:disable-next-line:no-debugger
+        firstRowCell.nativeElement.focus();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(firstRowCell.focused).toBeTruthy();
             return fix.whenStable();
         }).then(() => {
+            simulateKeyDown(firstRowCell.nativeElement, "ArrowLeft").then(() => {
+                fix.detectChanges();
+                return fix.whenStable();
+            });
+        }).then(() => {
+            setTimeout(() => {
+                expect(firstRowCell.focused).toBeFalsy();
+                return simulateKeyDown(firstRow.nativeElement.querySelector(".igx-grid__cbx-selection"), "ArrowRight").then(() => {
+                    fix.detectChanges();
+                    return fix.whenStable();
+                }).then(() => {
+                    setTimeout(() => {
+                        expect(firstRowCell.focused).toBeTruthy();
+                        expect(firstRow.handleArrows).toHaveBeenCalled();
+                    }, 500);
+                });
+            }, 500);
+        });
+    }));
+
+    it("Should support keyboard navigation in selection column between rows - Down", async(() => {
+        const fix = TestBed.createComponent(GridWithSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection3;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        const firstRow = grid.getRowByIndex(0);
+        const secondRow = grid.getRowByIndex(1);
+        const firstRowCell = grid.getCellByColumn("0_0", "ID");
+        const secondRowCell = grid.getCellByColumn("0_1", "ID");
+        spyOn(firstRow, "handleArrows").and.callThrough();
+        spyOn(secondRow, "handleArrows").and.callThrough();
+        // tslint:disable-next-line:no-debugger
+        expect(firstRowCell.focused).toBeFalsy();
+        expect(secondRowCell.focused).toBeFalsy();
+        firstRowCell.nativeElement.focus();
+        fix.whenStable().then(() => {
             fix.detectChanges();
-            selectedCell.nativeElement.dispatchEvent(new KeyboardEvent("keydown", {
-                key: "arrowdown",
-                code: "40"
-            }));
-            // tslint:disable-next-line:no-debugger
-            debugger;
+            expect(firstRowCell.focused).toBeTruthy();
+            expect(secondRowCell.focused).toBeFalsy();
             return fix.whenStable();
         }).then(() => {
+            return simulateKeyDown(firstRowCell.nativeElement, "ArrowLeft").then(() => {
+                fix.detectChanges();
+                return fix.whenStable();
+            });
+        }).then(() => {
+            setTimeout(() => {
+                expect(firstRowCell.focused).toBeFalsy();
+                return simulateKeyDown(firstRow.nativeElement.querySelector(".igx-grid__cbx-selection"), "ArrowDown").then(() => {
+                    fix.detectChanges();
+                    return fix.whenStable();
+                }).then(() => {
+                    fix.detectChanges();
+                    setTimeout(() => {
+                        return simulateKeyDown(secondRow.nativeElement.querySelector(".igx-grid__cbx-selection"), "ArrowRight").then(() => {
+                            fix.detectChanges();
+                            return fix.whenStable();
+                        }).then(() => {
+                            setTimeout(() => {
+                                expect(firstRow.handleArrows).toHaveBeenCalledTimes(1);
+                                expect(secondRow.handleArrows).toHaveBeenCalledTimes(1);
+                                expect(secondRowCell.focused).toBeTruthy();
+                            }, 100);
+                        });
+                    }, 100);
+                });
+            }, 100);
+        });
+    }));
+
+    it("Should support keyboard navigation in selection column between rows - Up", async(() => {
+        const fix = TestBed.createComponent(GridWithSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection3;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        const firstRow = grid.getRowByIndex(0);
+        const secondRow = grid.getRowByIndex(1);
+        const firstRowCell = grid.getCellByColumn("0_0", "ID");
+        const secondRowCell = grid.getCellByColumn("0_1", "ID");
+        spyOn(firstRow, "handleArrows").and.callThrough();
+        spyOn(secondRow, "handleArrows").and.callThrough();
+        // tslint:disable-next-line:no-debugger
+        expect(secondRowCell.focused).toBeFalsy();
+        expect(firstRowCell.focused).toBeFalsy();
+        secondRowCell.nativeElement.focus();
+        fix.whenStable().then(() => {
             fix.detectChanges();
-            // tslint:disable-next-line:no-debugger
-            debugger;
-            expect(grid.getRowByIndex(0).isSelected).toBeFalsy();
-            selectedCell.nativeElement.dispatchEvent(new KeyboardEvent("keydown", {
-                key: "arrowup",
-                code: "38"
-            }));
+            expect(secondRowCell.focused).toBeTruthy();
+            expect(firstRowCell.focused).toBeFalsy();
             return fix.whenStable();
         }).then(() => {
-            fix.detectChanges();
-            expect(selectedRow.isSelected).toBeTruthy();
+            return simulateKeyDown(secondRowCell.nativeElement, "ArrowLeft").then(() => {
+                fix.detectChanges();
+                return fix.whenStable();
+            });
+        }).then(() => {
+            setTimeout(() => {
+                expect(secondRowCell.focused).toBeFalsy();
+                return simulateKeyDown(secondRow.nativeElement.querySelector(".igx-grid__cbx-selection"),
+                "ArrowUp").then(() => {
+                    fix.detectChanges();
+                    return fix.whenStable();
+                }).then(() => {
+                    fix.detectChanges();
+                    setTimeout(() => {
+                        return simulateKeyDown(firstRow.nativeElement.querySelector(".igx-grid__cbx-selection"),
+                        "ArrowRight").then(() => {
+                            fix.detectChanges();
+                            return fix.whenStable();
+                        }).then(() => {
+                            setTimeout(() => {
+                                expect(firstRow.handleArrows).toHaveBeenCalledTimes(1);
+                                expect(secondRow.handleArrows).toHaveBeenCalledTimes(1);
+                                expect(firstRowCell.focused).toBeTruthy();
+                            }, 100);
+                        });
+                    }, 100);
+                });
+            }, 100);
         });
     }));
 
@@ -411,6 +560,11 @@ describe("IgxGrid - Row Selection", () => {
         expect(firstRow.isSelected).toBeFalsy();
         expect(secondRow.isSelected).toBeFalsy();
         expect(thirdRow.isSelected).toBeFalsy();
+        grid.deselectRows(["0_0", "0_1", "0_2"]);
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(rowsCollection).toBeUndefined();
+        });
         grid.selectRows(["0_0", "0_1", "0_2"], false);
         fix.whenStable().then(() => {
             fix.detectChanges();
@@ -614,7 +768,7 @@ export class GridWithPrimaryKeyComponent {
 @Component({
     template: `
         <igx-grid #gridSelection2 [data]="data" [primaryKey]="'ID'"
-        [autoGenerate]="true" rowSelectable="true" [paging]="true" [perPage]="50">
+        [autoGenerate]="true" [rowSelectable]="true" [paging]="true" [perPage]="50">
         </igx-grid>
         <button class="prevPageBtn" (click)="ChangePage(-1)">Prev page</button>
         <button class="nextPageBtn" (click)="ChangePage(1)">Next page</button>
@@ -642,7 +796,6 @@ export class GridWithPagingAndSelectionComponent implements OnInit {
     }
 
     public ChangePage(val) {
-        console.log("Changing page: ", val);
         switch (val) {
             case -1:
                 this.gridSelection2.previousPage();
@@ -660,7 +813,7 @@ export class GridWithPagingAndSelectionComponent implements OnInit {
 @Component({
     template: `
         <igx-grid #gridSelection3 [data]="data" [primaryKey]="'ID'" [width]="'800px'" [height]="'600px'"
-        [autoGenerate]="true" rowSelectable="true">
+        [autoGenerate]="true" [rowSelectable]="true">
         </igx-grid>
     `
 })
