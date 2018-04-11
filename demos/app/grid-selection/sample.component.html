@@ -1,6 +1,6 @@
 <div class="sample-container">
     <span igxLabel>Toggle Multiple Selection</span>
-    <igx-switch [(ngModel)]="selection"></igx-switch>
+    <igx-switch [(ngModel)]="selection" (change)="this.grid1.deselectAllRows()"></igx-switch>
     <igx-grid #grid1 [data]="remote | async" [primaryKey]="'ProductID'"
     [rowSelectable]="selection" (onSelection)="handleRowSelection($event)"
     [width]="'800px'" [height]="'600px'">
@@ -8,6 +8,8 @@
     <igx-column [field]="'ProductName'"></igx-column>
     <igx-column [field]="'UnitsInStock'"></igx-column>
 </igx-grid>
-<button igxButton="flat" (click)="toggle()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Toggle rows with ID 1,2,5 </button>
-<button igxButton="flat" (click)="toggleAll()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Toggle All rows</button>
+<ng-container *ngIf="selection">
+    <button igxButton="flat" (click)="toggle()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Toggle rows with ID 1,2,5 </button>
+    <button igxButton="flat" (click)="toggleAll()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Toggle All rows</button>
+</ng-container>
 </div>

@@ -25,7 +25,6 @@ export class GridSelectionComponent implements OnInit, AfterViewInit {
     public selection;
     public newRecord = "";
     public editCell;
-    private _125 = false;
     constructor(private localService: LocalService,
                 private remoteService: RemoteService) { }
     public ngOnInit(): void {
@@ -63,13 +62,15 @@ export class GridSelectionComponent implements OnInit, AfterViewInit {
     }
 
     public toggle() {
-        if (!this._125) {
-            this._125 = true;
-            this.grid1.selectRows([1, 2, 5], false);
-        } else {
-            this._125 = false;
-            this.grid1.deselectRows([1, 2, 5]);
+        const currentSelection = this.grid1.selectedRows();
+        if (currentSelection !== undefined) {
+            const currentSelectionSet = new Set(currentSelection);
+            if (currentSelectionSet.has(1) && currentSelectionSet.has(2) && currentSelectionSet.has(5)) {
+                this.grid1.deselectRows([1, 2, 5]);
+                return;
+            }
         }
+        this.grid1.selectRows([1, 2, 5], false);
     }
 
     public toggleAll() {
