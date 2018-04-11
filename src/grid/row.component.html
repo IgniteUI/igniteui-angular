@@ -1,5 +1,5 @@
 <ng-container *ngIf="rowSelectable">
-    <div class="igx-grid__cbx-selection" (keydown)="handleArrows($event)">
+    <div class="igx-grid__cbx-selection">
         <igx-checkbox [checked]="isSelected" (change)="onCheckboxClick($event)" disableRipple="true" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>
     </div>
 </ng-container>
