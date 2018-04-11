@@ -1,11 +1,14 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { Calendar } from "../calendar";
 import { DataType } from "../data-operations/data-util";
+import { IgxInputDirective } from "../directives/input/input.directive";
+import { STRING_FILTERS } from "../main";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
-import { IgxGridRowComponent } from "./row.component";
 
 const selectedCellClass = ".igx-grid__td--selected";
 let data = [
@@ -30,9 +33,12 @@ describe("IgxGrid - Row Selection", () => {
                 GridWithPrimaryKeyComponent,
                 GridWithPagingAndSelectionComponent,
                 GridWithSelectionComponent,
-                GridWithScrollsComponent
+                GridWithSelectionFilteringComponent
             ],
-            imports: [IgxGridModule.forRoot()]
+            imports: [
+                BrowserAnimationsModule,
+                IgxGridModule.forRoot()
+            ]
         })
             .compileComponents();
         data = [
@@ -192,6 +198,53 @@ describe("IgxGrid - Row Selection", () => {
         });
     }));
 
+    it("Should persist through paging - multiple", async(() => {
+        const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection2;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        const nextBtn: HTMLElement = fix.nativeElement.querySelector(".nextPageBtn");
+        const prevBtn: HTMLElement = fix.nativeElement.querySelector(".prevPageBtn");
+        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
+        const firstRow = grid.getRowByIndex(0);
+        const middleRow = grid.getRowByIndex(4);
+        const lastRow = grid.getRowByIndex(9);
+        expect(firstRow).toBeDefined();
+        expect(middleRow).toBeDefined();
+        expect(lastRow).toBeDefined();
+        const checkboxElement1: HTMLElement = firstRow.nativeElement.querySelector(".igx-checkbox__input");
+        const checkboxElement2: HTMLElement = middleRow.nativeElement.querySelector(".igx-checkbox__input");
+        const checkboxElement3: HTMLElement = lastRow.nativeElement.querySelector(".igx-checkbox__input");
+        // query(By.css(".igx-checkbox__input"))
+        expect(firstRow.isSelected).toBeFalsy();
+        expect(middleRow.isSelected).toBeFalsy();
+        expect(lastRow.isSelected).toBeFalsy();
+        checkboxElement1.click();
+        checkboxElement2.click();
+        checkboxElement3.click();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(middleRow.isSelected).toBeTruthy();
+            expect(lastRow.isSelected).toBeTruthy();
+            // expect(selectedRow.nativeElement.class).toContain("igx-grid__tr--selected");
+            nextBtn.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+            expect(middleRow.isSelected).toBeFalsy();
+            expect(lastRow.isSelected).toBeFalsy();
+            prevBtn.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(middleRow.isSelected).toBeTruthy();
+            expect(lastRow.isSelected).toBeTruthy();
+        });
+    }));
+
     it("Should persist through paging - multiple selection", async(() => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
         fix.detectChanges();
@@ -320,10 +373,35 @@ describe("IgxGrid - Row Selection", () => {
         });
     }));
 
+    it("Checkbox should select/deselect row", async(() => {
+        const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection2;
+        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
+        const firstRow = grid.getRowByIndex(0);
+        const secondRow = grid.getRowByIndex(1);
+        expect(firstRow).toBeDefined();
+        expect(secondRow).toBeDefined();
+        const targetCheckbox: HTMLElement = firstRow.nativeElement.querySelector(".igx-checkbox__input");
+        expect(firstRow.isSelected).toBeFalsy();
+        expect(secondRow.isSelected).toBeFalsy();
+        targetCheckbox.click();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(secondRow.isSelected).toBeFalsy();
+            targetCheckbox.click();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+            expect(secondRow.isSelected).toBeFalsy();
+        });
+    }));
+
     fit("Should have checkbox on each row if rowSelectable is true", async(() => {
         const fix = TestBed.createComponent(GridWithScrollsComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.gridSelection4;
+        const grid = fix.componentInstance.gridSelection5;
         for (const row of grid.rowList.toArray()) {
             const checkBoxElement = row.nativeElement.querySelector("div.igx-grid__cbx-selection");
             expect(checkBoxElement).toBeDefined();
@@ -345,6 +423,203 @@ describe("IgxGrid - Row Selection", () => {
                 const firstCellElement = row.cells.toArray()[0].nativeElement;
                 expect(firstCellElement).toBeUndefined();
             }
+        });
+    }));
+
+    // API Methods
+
+    it("Should be able to select/deselect rows programatically", async(() => {
+        const fix = TestBed.createComponent(GridWithSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection3;
+        let rowsCollection = [];
+        const firstRow = grid.getRowByKey("0_0");
+        const secondRow = grid.getRowByKey("0_1");
+        const thirdRow = grid.getRowByKey("0_2");
+        rowsCollection = grid.selectedRows();
+        expect(rowsCollection).toBeUndefined();
+        expect(firstRow.isSelected).toBeFalsy();
+        expect(secondRow.isSelected).toBeFalsy();
+        expect(thirdRow.isSelected).toBeFalsy();
+        grid.selectRows(["0_0", "0_1", "0_2"], false);
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(secondRow.isSelected).toBeTruthy();
+            expect(thirdRow.isSelected).toBeTruthy();
+            rowsCollection = grid.selectedRows();
+            expect(rowsCollection.length).toEqual(3);
+            grid.deselectRows(["0_0", "0_1", "0_2"]);
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+            expect(secondRow.isSelected).toBeFalsy();
+            expect(thirdRow.isSelected).toBeFalsy();
+            rowsCollection = grid.selectedRows();
+            expect(rowsCollection.length).toEqual(0);
+        });
+    }));
+
+    it("Should be able to select/deselect ALL rows programatically", async(() => {
+        const fix = TestBed.createComponent(GridWithSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection3;
+        let rowsCollection = [];
+        const firstRow = grid.getRowByKey("0_0");
+        rowsCollection = grid.selectedRows();
+        expect(rowsCollection).toBeUndefined();
+        expect(firstRow.isSelected).toBeFalsy();
+        grid.selectAllRows();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            rowsCollection = grid.selectedRows();
+            expect(rowsCollection.length).toEqual(500);
+            grid.deselectAllRows();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+            rowsCollection = grid.selectedRows();
+            expect(rowsCollection.length).toEqual(0);
+        });
+    }));
+
+    it("Filtering and row selection", async(() => {
+        const fix = TestBed.createComponent(GridWithSelectionFilteringComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection4;
+        const headerRow: HTMLElement = fix.nativeElement.querySelector(".igx-grid__thead");
+        const headerCheckbox: HTMLInputElement = headerRow.querySelector(".igx-checkbox__input");
+
+        const secondRow = grid.getRowByIndex(1);
+        expect(secondRow).toBeDefined();
+        const targetCheckbox: HTMLElement = secondRow.nativeElement.querySelector(".igx-checkbox__input");
+        expect(secondRow.isSelected).toBeFalsy();
+
+        let rowsCollection = [];
+
+        rowsCollection = grid.selectedRows();
+        expect(rowsCollection).toBeUndefined();
+
+        grid.filter("ProductName", "Ignite", STRING_FILTERS.contains, true);
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeFalsy();
+        rowsCollection = grid.selectedRows();
+        expect(rowsCollection).toBeUndefined();
+        grid.clearFilter("ProductName");
+        fix.detectChanges();
+
+        targetCheckbox.click();
+        fix.detectChanges();
+        expect(secondRow.isSelected).toBeTruthy();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeTruthy();
+        expect(secondRow.isSelected).toBeTruthy();
+
+        grid.filter("ProductName", "Ignite", STRING_FILTERS.contains, true);
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeFalsy();
+
+        headerCheckbox.click();
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeTruthy();
+        expect(headerCheckbox.indeterminate).toBeFalsy();
+
+        grid.clearFilter("ProductName");
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeTruthy();
+        expect(grid.getRowByIndex(0).isSelected).toBeTruthy();
+        expect(grid.getRowByIndex(1).isSelected).toBeTruthy();
+        expect(grid.getRowByIndex(2).isSelected).toBeTruthy();
+
+        grid.filter("ProductName", "Ignite", STRING_FILTERS.contains, true);
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeTruthy();
+        expect(headerCheckbox.indeterminate).toBeFalsy();
+        headerCheckbox.click();
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeFalsy();
+
+        grid.clearFilter("ProductName");
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeTruthy();
+        expect(grid.getRowByIndex(0).isSelected).toBeFalsy();
+        expect(grid.getRowByIndex(1).isSelected).toBeTruthy();
+        expect(grid.getRowByIndex(2).isSelected).toBeFalsy();
+
+        grid.getRowByIndex(0).nativeElement.querySelector(".igx-checkbox__input").click();
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeTruthy();
+
+        grid.filter("ProductName", "Ignite", STRING_FILTERS.contains, true);
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeTruthy();
+
+        headerCheckbox.click();
+        fix.detectChanges();
+        headerCheckbox.click();
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeFalsy();
+
+        grid.clearFilter("ProductName");
+        fix.detectChanges();
+        expect(grid.getRowByIndex(0).isSelected).toBeFalsy();
+        expect(grid.getRowByIndex(1).isSelected).toBeTruthy();
+    }));
+
+    it("Clicking any other cell is not selecting the row", async(() => {
+        const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection2;
+        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
+        const firstRow = grid.getRowByIndex(0);
+        const rv =  fix.debugElement.query(By.css(".igx-grid__td"));
+        expect(firstRow).toBeDefined();
+        expect(firstRow.isSelected).toBeFalsy();
+
+        rv.nativeElement.dispatchEvent(new Event("focus"));
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            rv.triggerEventHandler("click", {});
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+        });
+    }));
+
+    it("Clicking any other cell is not deselecting the row", async(() => {
+        const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection2;
+        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
+        const firstRow = grid.getRowByIndex(0);
+        const rv =  fix.debugElement.query(By.css(".igx-grid__td"));
+        expect(rv).toBeDefined();
+        expect(firstRow).toBeDefined();
+        const targetCheckbox: HTMLElement = firstRow.nativeElement.querySelector(".igx-checkbox__input");
+        expect(firstRow.isSelected).toBeFalsy();
+        targetCheckbox.click();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            rv.nativeElement.dispatchEvent(new Event("focus"));
+            rv.triggerEventHandler("click", {});
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
         });
     }));
 });
@@ -442,6 +717,87 @@ export class GridWithSelectionComponent implements OnInit {
 }
 
 @Component({
+    template: `<igx-grid #gridSelection4 [data]="data" height="500px" [rowSelectable]="true">
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
+        <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
+        <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'"
+            [filterable]="true" dataType="date">
+        </igx-column>
+    </igx-grid>`
+})
+export class GridWithSelectionFilteringComponent {
+
+    public timeGenerator: Calendar = new Calendar();
+    public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+
+    @ViewChild("gridSelection4", { read: IgxGridComponent })
+    public gridSelection4: IgxGridComponent;
+
+    public data = [
+        {
+            Downloads: 254,
+            ID: 1,
+            ProductName: "Ignite UI for JavaScript",
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", 15),
+            Released: false
+        },
+        {
+            Downloads: 127,
+            ID: 2,
+            ProductName: "NetAdvantage",
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "month", -1),
+            Released: true
+        },
+        {
+            Downloads: 20,
+            ID: 3,
+            ProductName: "Ignite UI for Angular",
+            ReleaseDate: null,
+            Released: null
+        },
+        {
+            Downloads: null,
+            ID: 4,
+            ProductName: null,
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", -1),
+            Released: true
+        },
+        {
+            Downloads: 100,
+            ID: 5,
+            ProductName: "",
+            ReleaseDate: undefined,
+            Released: ""
+        },
+        {
+            Downloads: 702,
+            ID: 6,
+            ProductName: "Some other item with Script",
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", 1),
+            Released: null
+        },
+        {
+            Downloads: 0,
+            ID: 7,
+            ProductName: null,
+            ReleaseDate: this.timeGenerator.timedelta(this.today, "month", 1),
+            Released: true
+        },
+        {
+            Downloads: 1000,
+            ID: 8,
+            ProductName: null,
+            ReleaseDate: this.today,
+            Released: false
+        }
+    ];
+
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+}
+
+@Component({
     template: `
             <igx-grid #gridSelection3
             [data]="data"
@@ -458,7 +814,7 @@ export class GridWithScrollsComponent implements OnInit {
     public data = [];
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
-    public gridSelection4: IgxGridComponent;
+    public gridSelection5: IgxGridComponent;
 
     ngOnInit() {
         this.data = this.getData();

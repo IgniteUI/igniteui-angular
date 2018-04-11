@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, NgModule } from "@angular/core";
+import { Directive, ElementRef, HostListener, Input, NgModule } from "@angular/core";
 
 @Directive({
     exportAs: "igxTextSelection",
@@ -15,11 +15,15 @@ export class IgxTextSelectionDirective {
 
     set selected(val: boolean) {
         this.selectionState = val;
-        this.trigger();
     }
 
     get nativeElement() {
         return this.element.nativeElement;
+    }
+
+    @HostListener("focus")
+    onFocus() {
+        this.trigger();
     }
 
     constructor(private element: ElementRef) { }

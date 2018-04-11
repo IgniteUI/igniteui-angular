@@ -913,7 +913,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.selectionAPI.get_selection(this.id);
     }
 
-    public selectRows(rowIDs: any[], clearCurrentSelection: boolean) {
+    public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
         if (clearCurrentSelection) {
             this.deselectAllRows();
         }
