@@ -19,6 +19,7 @@ describe("IgxNavbar", () => {
             const fixture = TestBed.createComponent(NavbarIntializeTestComponent);
             fixture.detectChanges();
 
+            expect(fixture.componentInstance.navbar.id).toContain("igx-navbar-");
             expect(fixture.componentInstance.navbar.title).toBeUndefined();
             expect(fixture.componentInstance.navbar.isActionButtonVisible).toBeFalsy();
             expect(fixture.componentInstance.navbar.actionButtonIcon).toBeUndefined();

@@ -25,6 +25,8 @@ import { IgxIconModule } from "../icon";
  * </igx-navbar>
  * ```
  */
+
+let NEXT_ID = 0;
 @Component({
     selector: "igx-navbar",
     templateUrl: "navbar.component.html"
@@ -33,6 +35,9 @@ import { IgxIconModule } from "../icon";
 export class IgxNavbarComponent {
     private static NEXT_ID = 1;
     private isVisible = true;
+
+    @Input()
+    public id = `igx-navbar-${NEXT_ID++}`;
     /**
      * The IgxNavbar action button visual state state
      * @type {boolean}
