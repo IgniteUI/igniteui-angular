@@ -622,6 +622,20 @@ describe("IgxGrid - Row Selection", () => {
         const targetCheckbox: HTMLElement = secondRow.nativeElement.querySelector(".igx-checkbox__input");
         expect(secondRow.isSelected).toBeFalsy();
 
+        let rowsCollection = [];
+
+        rowsCollection = grid.selectedRows();
+        expect(rowsCollection).toBeUndefined();
+
+        grid.filter("ProductName", "Ignite", STRING_FILTERS.contains, true);
+        fix.detectChanges();
+        expect(headerCheckbox.checked).toBeFalsy();
+        expect(headerCheckbox.indeterminate).toBeFalsy();
+        rowsCollection = grid.selectedRows();
+        expect(rowsCollection).toBeUndefined();
+        grid.clearFilter("ProductName");
+        fix.detectChanges();
+
         targetCheckbox.click();
         fix.detectChanges();
         expect(secondRow.isSelected).toBeTruthy();
@@ -685,6 +699,52 @@ describe("IgxGrid - Row Selection", () => {
         fix.detectChanges();
         expect(grid.getRowByIndex(0).isSelected).toBeFalsy();
         expect(grid.getRowByIndex(1).isSelected).toBeTruthy();
+    }));
+
+    it("Clicking any other cell is not selecting the row", async(() => {
+        const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection2;
+        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
+        const firstRow = grid.getRowByIndex(0);
+        const rv =  fix.debugElement.query(By.css(".igx-grid__td"));
+        expect(firstRow).toBeDefined();
+        expect(firstRow.isSelected).toBeFalsy();
+
+        rv.nativeElement.dispatchEvent(new Event("focus"));
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            rv.triggerEventHandler("click", {});
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+        });
+    }));
+
+    it("Clicking any other cell is not deselecting the row", async(() => {
+        const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection2;
+        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
+        const firstRow = grid.getRowByIndex(0);
+        const rv =  fix.debugElement.query(By.css(".igx-grid__td"));
+        expect(rv).toBeDefined();
+        expect(firstRow).toBeDefined();
+        const targetCheckbox: HTMLElement = firstRow.nativeElement.querySelector(".igx-checkbox__input");
+        expect(firstRow.isSelected).toBeFalsy();
+        targetCheckbox.click();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            rv.nativeElement.dispatchEvent(new Event("focus"));
+            rv.triggerEventHandler("click", {});
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+        });
     }));
 });
 
