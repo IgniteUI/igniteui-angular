@@ -145,11 +145,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         return this._inEditMode;
     }
 
-    @HostBinding("attr.aria-selected")
-    @HostBinding("class.igx-grid__td--selected")
     @autoWire(true)
     get focused(): boolean {
-        return this.isSelected = this.selectionApi.is_single_item_selected(this.gridID, this.cellID);
+        return this.isFocused;
     }
 
     set focused(val: boolean) {
@@ -177,9 +175,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     }
 
     get selected() {
-        return this.isSelected;
+        return this.isSelected = this.selectionApi.is_single_item_selected(this.gridID, this.cellID);
     }
 
+    @HostBinding("attr.aria-selected")
+    @HostBinding("class.igx-grid__td--selected")
     @autoWire(true)
     set selected(val: boolean) {
         this.isSelected = val;
@@ -233,7 +233,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @autoWire()
     public onFocus(event) {
         this.isFocused = true;
-        this.isSelected = true;
+        this.selected = true;
         this.selectionApi.select_single_item(this.gridID, this.cellID);
         this.row.focused = true;
         if (this.grid.cellInEditMode && this.grid.cellInEditMode !== this) {
@@ -251,8 +251,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @autoWire()
     public onBlur(event) {
         this.isFocused = false;
-        this.isSelected = false;
-        this.selectionApi.deselect_single_item(this.gridID);
         this.row.focused = false;
     }
 
