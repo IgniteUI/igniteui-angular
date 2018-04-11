@@ -326,10 +326,6 @@
         flex-grow: 0;
     }
 
-    %grid-cell-number {
-        text-align: $grid-cell-align-num;
-    }
-
     %grid-cell--selected {
         color: map-get($this, 'cell-selected-text-color');
         background-color: map-get($this, 'cell-selected-background') !important;
@@ -358,7 +354,7 @@
         min-width: 0;
         border-right: 1px dotted igx-color($palette, 'grays', 400);
 
-        &.title {
+        .title {
             @include ellipsis();
             cursor: pointer;
             user-select: none;
@@ -367,6 +363,11 @@
         &:last-of-type {
             border-right: transparent;
         }
+    }
+
+    %grid-cell-number {
+        text-align: $grid-cell-align-num;
+        justify-content: flex-end;
     }
 }
 
