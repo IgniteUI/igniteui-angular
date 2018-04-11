@@ -1,17 +1,32 @@
-<div class="igx-control">
-    <input class="igx-control__switch" #checkbox type="checkbox" role="checkbox"
-        [attr.id]="id"
-        [attr.name]="name"
-        [attr.value]="value"
-        [attr.tabindex]="tabindex"
-        [disabled]="disabled"
-        [checked]="checked"
-        [attr.aria-checked]="checked"
-        [attr.aria-labelledby]="labelId"
-        (change)="onChange($event)"
-        (focus)="onFocus($event)"
-        (blur)="onBlur($event)">
-    <span class="igx-control__text" [attr.id]="labelId"><ng-content></ng-content>
-    </span>
-    <label class ="igx-control__label" [attr.for]="id"></label>
-</div>
+<input #checkbox class="igx-switch__input" type="checkbox"
+    [id]="id"
+    [name]="name"
+    [value]="value"
+    [tabindex]="tabindex"
+    [disabled]="disabled"
+    [checked]="checked"
+    [attr.aria-checked]="checked"
+    [attr.aria-labelledby]="ariaLabelledBy"
+    [attr.aria-label]="ariaLabel"
+    (change)="_onSwitchChange($event)"
+    (click)="_onSwitchClick($event)"
+    (focus)="onFocus($event)"
+    (blur)="onBlur($event)" />
+
+<label #label class ="igx-switch__composite" [for]="id"
+    igxRipple
+    igxRippleTarget=".igx-switch__ripple"
+    [igxRippleDisabled]="disableRipple"
+    [igxRippleCentered]="true"
+    [igxRippleDuration]="100">
+    <div class="igx-switch__composite-thumb">
+        <div class="igx-switch__ripple"></div>
+    </div>
+</label>
+
+<span #placeholderLabel role="label"
+    [class]="labelClass"
+    [id]="labelId"
+    (click)="_onLabelClick($event)">
+    <ng-content></ng-content>
+</span>
