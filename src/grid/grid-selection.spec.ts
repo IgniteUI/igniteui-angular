@@ -33,7 +33,8 @@ describe("IgxGrid - Row Selection", () => {
                 GridWithPrimaryKeyComponent,
                 GridWithPagingAndSelectionComponent,
                 GridWithSelectionComponent,
-                GridWithSelectionFilteringComponent
+                GridWithSelectionFilteringComponent,
+                GridWithScrollsComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -413,6 +414,7 @@ describe("IgxGrid - Row Selection", () => {
         const horScroll = grid.parentVirtDir.getHorizontalScroll();
         horScroll.scrollLeft = 1000;
         fix.whenStable().then(() => {
+            const a = 2 + 2;
             for (const row of grid.rowList.toArray()) {
                 const checkBoxElement = row.nativeElement.querySelector("div.igx-grid__cbx-selection");
                 expect(checkBoxElement).toBeDefined();
@@ -424,6 +426,17 @@ describe("IgxGrid - Row Selection", () => {
                 expect(firstCellElement).toBeUndefined();
             }
         });
+
+        grid.rowSelectable = false;
+        fix.detectChanges();
+
+        for (const row of grid.rowList.toArray()) {
+            const checkBoxElement = row.nativeElement.querySelector("div.igx-grid__cbx-selection");
+            expect(checkBoxElement).toBeUndefined();
+
+            const checkboxInputElement = checkBoxElement.querySelector(".igx-checkbox__input");
+            expect(checkboxInputElement).toBeUndefined();
+        }
     }));
 
     // API Methods
