@@ -4,6 +4,7 @@ import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { Calendar } from "../calendar";
 import { DataType } from "../data-operations/data-util";
+import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxInputDirective } from "../directives/input/input.directive";
 import { STRING_FILTERS } from "../main";
 import { IgxGridCellComponent } from "./cell.component";
@@ -464,25 +465,25 @@ describe("IgxGrid - Row Selection", () => {
             setTimeout(() => {
                 expect(secondRowCell.focused).toBeFalsy();
                 return simulateKeyDown(secondRow.nativeElement.querySelector(".igx-grid__cbx-selection"),
-                "ArrowUp").then(() => {
-                    fix.detectChanges();
-                    return fix.whenStable();
-                }).then(() => {
-                    fix.detectChanges();
-                    setTimeout(() => {
-                        return simulateKeyDown(firstRow.nativeElement.querySelector(".igx-grid__cbx-selection"),
-                        "ArrowRight").then(() => {
-                            fix.detectChanges();
-                            return fix.whenStable();
-                        }).then(() => {
-                            setTimeout(() => {
-                                expect(firstRow.handleArrows).toHaveBeenCalledTimes(1);
-                                expect(secondRow.handleArrows).toHaveBeenCalledTimes(1);
-                                expect(firstRowCell.focused).toBeTruthy();
-                            }, 100);
-                        });
-                    }, 100);
-                });
+                    "ArrowUp").then(() => {
+                        fix.detectChanges();
+                        return fix.whenStable();
+                    }).then(() => {
+                        fix.detectChanges();
+                        setTimeout(() => {
+                            return simulateKeyDown(firstRow.nativeElement.querySelector(".igx-grid__cbx-selection"),
+                                "ArrowRight").then(() => {
+                                    fix.detectChanges();
+                                    return fix.whenStable();
+                                }).then(() => {
+                                    setTimeout(() => {
+                                        expect(firstRow.handleArrows).toHaveBeenCalledTimes(1);
+                                        expect(secondRow.handleArrows).toHaveBeenCalledTimes(1);
+                                        expect(firstRowCell.focused).toBeTruthy();
+                                    }, 100);
+                                });
+                        }, 100);
+                    });
             }, 100);
         });
     }));
@@ -561,13 +562,19 @@ describe("IgxGrid - Row Selection", () => {
         expect(secondRow.isSelected).toBeFalsy();
         expect(thirdRow.isSelected).toBeFalsy();
         grid.deselectRows(["0_0", "0_1", "0_2"]);
+        spyOn(grid, "triggerRowSelectionChange").and.callThrough();
         fix.whenStable().then(() => {
             fix.detectChanges();
             expect(rowsCollection).toBeUndefined();
+            expect(grid.triggerRowSelectionChange).toHaveBeenCalledTimes(1);
+            expect(firstRow.isSelected).toBeFalsy();
+            expect(secondRow.isSelected).toBeFalsy();
+            expect(thirdRow.isSelected).toBeFalsy();
         });
         grid.selectRows(["0_0", "0_1", "0_2"], false);
         fix.whenStable().then(() => {
             fix.detectChanges();
+            expect(grid.triggerRowSelectionChange).toHaveBeenCalledTimes(2);
             expect(firstRow.isSelected).toBeTruthy();
             expect(secondRow.isSelected).toBeTruthy();
             expect(thirdRow.isSelected).toBeTruthy();
@@ -701,13 +708,51 @@ describe("IgxGrid - Row Selection", () => {
         expect(grid.getRowByIndex(1).isSelected).toBeTruthy();
     }));
 
+    it("Should have persistent selection through data operations - sorting", async(() => {
+        const fix = TestBed.createComponent(GridWithSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection3;
+        const headerRow: HTMLElement = fix.nativeElement.querySelector(".igx-grid__thead");
+        const headerCheckbox: HTMLInputElement = headerRow.querySelector(".igx-checkbox__input");
+        const firstRow = grid.getRowByIndex(0);
+        const secondRow = grid.getRowByIndex(1);
+        expect(firstRow).toBeDefined();
+        expect(secondRow).toBeDefined();
+        const targetCheckbox: HTMLElement = secondRow.nativeElement.querySelector(".igx-checkbox__input");
+        expect(firstRow.isSelected).toBeFalsy();
+        expect(secondRow.isSelected).toBeFalsy();
+        let rowsCollection = [];
+        rowsCollection = grid.selectedRows();
+        expect(rowsCollection).toBeUndefined();
+
+        grid.selectRows(["0_0", "0_1"], false);
+        fix.detectChanges();
+        expect(firstRow.isSelected).toBeTruthy();
+        expect(secondRow.isSelected).toBeTruthy();
+        expect(grid.rowList.find((row) => row === firstRow)).toBeTruthy();
+
+        grid.sort("Column1", SortingDirection.Desc, true);
+        console.log("Sorting started");
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+            expect(secondRow.isSelected).toBeFalsy();
+            grid.clearSort("Column1");
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(secondRow.isSelected).toBeTruthy();
+        });
+    }));
+
     it("Clicking any other cell is not selecting the row", async(() => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection2;
         expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
         const firstRow = grid.getRowByIndex(0);
-        const rv =  fix.debugElement.query(By.css(".igx-grid__td"));
+        const rv = fix.debugElement.query(By.css(".igx-grid__td"));
         expect(firstRow).toBeDefined();
         expect(firstRow.isSelected).toBeFalsy();
 
@@ -729,7 +774,7 @@ describe("IgxGrid - Row Selection", () => {
         const grid = fix.componentInstance.gridSelection2;
         expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
         const firstRow = grid.getRowByIndex(0);
-        const rv =  fix.debugElement.query(By.css(".igx-grid__td"));
+        const rv = fix.debugElement.query(By.css(".igx-grid__td"));
         expect(rv).toBeDefined();
         expect(firstRow).toBeDefined();
         const targetCheckbox: HTMLElement = firstRow.nativeElement.querySelector(".igx-checkbox__input");
