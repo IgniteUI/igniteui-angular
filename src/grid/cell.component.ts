@@ -212,6 +212,14 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         }
     }
 
+    @HostListener("click", ["$event"])
+    public onClick(event) {
+        this.grid.onCellClick.emit({
+            cell: this,
+            event
+        });
+    }
+
     @HostListener("focus", ["$event"])
     @autoWire()
     public onFocus(event) {
@@ -222,11 +230,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
             this.grid.cellInEditMode.inEditMode = false;
             this.grid.cellInEditMode = null;
         }
-        const args: IGridCellEventArgs = {
+
+        this.grid.onSelection.emit({
             cell: this,
             event
-        };
-        this.grid.onSelection.emit(args);
+        });
     }
 
     @HostListener("blur", ["$event"])
@@ -489,11 +497,13 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     public onKeydownEnterEditMode() {
         if (this.column.editable) {
             this.inEditMode = !this.inEditMode;
+            this.nativeElement.focus();
         }
     }
 
     @HostListener("keydown.escape")
     public onKeydownExitEditMode() {
         this.inEditMode = false;
+        this.nativeElement.focus();
     }
 }
