@@ -31,8 +31,8 @@ export class IgxSelectionAPIService {
         }
         if (currSelection.find((item) => item === itemID) === undefined) {
             currSelection.push(itemID);
-            return currSelection;
         }
+        return currSelection;
     }
 
     public select_items(componentID: string, itemIDs: any[]): any[] {
@@ -53,7 +53,7 @@ export class IgxSelectionAPIService {
 
     public deselect_items(componentID: string, itemIDs: any[]): any[] {
         let selection: any[];
-        itemIDs.forEach((deselectedItem) => selection = this.select_item(componentID, deselectedItem, selection));
+        itemIDs.forEach((deselectedItem) => selection = this.deselect_item(componentID, deselectedItem, selection));
         return selection;
     }
 
