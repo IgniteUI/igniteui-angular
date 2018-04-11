@@ -12,7 +12,7 @@ describe("TabBar", () => {
             .compileComponents();
     }));
 
-    it("should initialize igx-tab-bar, igx-tab-panel and igx-tab", () => {
+    it("should initialize igx-bottom-nav, igx-tab-panel and igx-tab", () => {
         const fixture = TestBed.createComponent(TabBarTestComponent);
         const tabbar = fixture.componentInstance.tabbar;
         let panels: IgxTabPanelComponent[];
@@ -145,7 +145,7 @@ describe("TabBar", () => {
 @Component({
     template: `
         <div #wrapperDiv>
-            <igx-tab-bar (onTabSelected)="tabSelectedHandler($event)">
+            <igx-bottom-nav (onTabSelected)="tabSelectedHandler($event)">
                 <igx-tab-panel label="Tab 1" icon="library_music">
                     <h1>Tab 1 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
@@ -170,7 +170,7 @@ describe("TabBar", () => {
                         Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.
                     </p>
                 </igx-tab-panel>
-            </igx-tab-bar>
+            </igx-bottom-nav>
         </div>`
 })
 class TabBarTestComponent {
@@ -184,7 +184,7 @@ class TabBarTestComponent {
 @Component({
     template: `
         <div #wrapperDiv>
-            <igx-tab-bar alignment="bottom">
+            <igx-bottom-nav alignment="bottom">
                 <igx-tab-panel label="Tab 1" icon="library_music">
                     <h1>Tab 1 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
@@ -209,7 +209,7 @@ class TabBarTestComponent {
                         Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.
                     </p>
                 </igx-tab-panel>
-            </igx-tab-bar>
+            </igx-bottom-nav>
         </div>`
 })
 class BottomTabBarTestComponent {
@@ -221,7 +221,7 @@ class BottomTabBarTestComponent {
     template: `
         <div #wrapperDiv>
 
-        <igx-tab-bar>
+        <igx-bottom-nav>
             <igx-tab-panel label="dede">
                 <ng-template igxTab>
                     <div>T1</div>
@@ -240,7 +240,7 @@ class BottomTabBarTestComponent {
                 </ng-template>
                 <h1>Tab 3 Content</h1>
             </igx-tab-panel>
-        </igx-tab-bar>
+        </igx-bottom-nav>
         </div>`
 })
 class TemplatedTabBarTestComponent {

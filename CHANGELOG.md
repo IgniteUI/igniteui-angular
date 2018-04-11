@@ -140,10 +140,11 @@ All notable changes for each version of this project will be documented in this 
 - `igx-nav-bar` changes
     -   Currently `isActionButtonVisible` resolves to `false` if actionButtonIcon is not defined.
 - `igx-tab-bar` changes
+    - `igx-tab-bar` selector is deprecated. Use `igx-bottom-nav` selector instead
     - custom content can be added for tabs
 
     ```html
-    <igx-tab-bar>
+    <igx-bottom-nav>
         <igx-tab-panel>
             <ng-template igxTab>
                 <igx-avatar initials="T1">
@@ -151,7 +152,7 @@ All notable changes for each version of this project will be documented in this 
             </ng-template>
             <h1>Tab 1 Content</h1>
         </igx-tab-panel>
-    </igx-tab-bar>
+    </igx-bottom-nav>
     ```
 
 - `igx-scroll` component deleted

@@ -21,6 +21,7 @@ import {
 } from "@angular/core";
 import { IgxBadgeModule } from "../badge/badge.component";
 import { IgxIconModule } from "../icon";
+import { DeprecateClass } from "../core/deprecateDecorators";
 
 export interface ISelectTabEventArgs {
     tab: IgxTabComponent;
@@ -43,18 +44,18 @@ export class IgxTabTemplateDirective {
  *
  * Example:
  * ```html
- * <igx-tab-bar>
+ * <igx-bottom-nav>
  *   <igx-tab-panel label="Tab 1">Tab 1 Content</igx-tab-panel>
  *   <igx-tab-panel label="Tab 2">Tab 2 Content</igx-tab-panel>
  *   <igx-tab-panel label="Tab 3">Tab 3 Content</igx-tab-panel>
- * </igx-tab-bar>
+ * </igx-bottom-nav>
  * ```
  */
 @Component({
-    selector: "igx-tab-bar",
+    selector: "igx-tab-bar, igx-bottom-nav",
     templateUrl: "tab-bar-content.component.html"
 })
-
+@DeprecateClass("'igx-tab-bar' selector is deprecated. Use 'igx-bottom-nav' selector instead.")
 export class IgxTabBarComponent implements AfterViewInit {
     @ViewChildren(forwardRef(() => IgxTabComponent)) public tabs: QueryList<IgxTabComponent>;
     @ContentChildren(forwardRef(() => IgxTabPanelComponent)) public panels: QueryList<IgxTabPanelComponent>;
@@ -68,7 +69,7 @@ export class IgxTabBarComponent implements AfterViewInit {
         return this._itemStyle;
     }
 
-    private _itemStyle = "igx-tab-bar";
+    private _itemStyle = "igx-bottom-nav";
 
     get selectedTab(): IgxTabComponent {
         if (this.tabs && this.selectedIndex !== undefined) {
@@ -132,11 +133,11 @@ export class IgxTabPanelComponent implements AfterContentInit {
 
     @HostBinding("attr.role") public role = "tabpanel";
 
-    @HostBinding("class.igx-tab-bar__panel")
+    @HostBinding("class.igx-bottom-nav__panel")
     get styleClass(): boolean {
         return (!this.isSelected);
     }
-    @HostBinding("class.igx-tab-bar__panel--selected")
+    @HostBinding("class.igx-bottom-nav__panel--selected")
     get selected(): boolean {
         return this.isSelected;
     }
@@ -147,7 +148,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
 
     @HostBinding("attr.id")
     get id(): string {
-        return "igx-tab-bar__panel-" + this.index;
+        return "igx-bottom-nav__panel-" + this.index;
     }
 
     public get itemStyle(): string {
