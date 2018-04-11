@@ -30,6 +30,7 @@ describe("IgxToast", () => {
             fixture.detectChanges();
             const element = fixture.debugElement.query(By.css(".igx-toast--bottom"));
 
+            expect(fixture.componentInstance.toast.id).toContain("igx-toast-");
             expect(fixture.componentInstance.toast.message).toBeUndefined();
             expect(fixture.componentInstance.toast.displayTime).toBe(4000);
             expect(fixture.componentInstance.toast.autoHide).toBeTruthy();
