@@ -22,7 +22,7 @@ import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { autoWire, IGridBus } from "./grid.common";
-import { IgxGridComponent } from "./grid.component";
+import { IgxGridComponent, IRowSelectionEventArgs } from "./grid.component";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -144,28 +144,10 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
     }
 
     public onCheckboxClick(event) {
-        const oldSelection = Object.assign([], this.selectionAPI.get_selection(this.gridID));
-        if (event.checked) {
-            this.selectionAPI.select_item(this.gridID, this.rowID);
-        } else {
-            this.selectionAPI.deselect_item(this.gridID, this.rowID);
-        }
-        const newSelection = this.selectionAPI.get_selection(this.gridID);
-        this.grid.onRowSelectionChange.emit({
-            oldSelection,
-            newSelection,
-            row: this,
-            event
-        });
-        if (oldSelection === newSelection) {
-            if (event.checked) {
-                this.selectionAPI.deselect_item(this.gridID, this.rowID);
-            } else {
-                this.selectionAPI.select_item(this.gridID, this.rowID);
-            }
-        } else {
-            this.grid.checkHeaderChecboxStatus();
-        }
+        const newSelection = (event.checked) ?
+                            this.selectionAPI.select_item(this.gridID, this.rowID) :
+                            this.selectionAPI.deselect_item(this.gridID, this.rowID);
+        this.grid.triggerRowSelectionChange(newSelection, this, event);
     }
 
     get rowCheckboxAriaLabel() {

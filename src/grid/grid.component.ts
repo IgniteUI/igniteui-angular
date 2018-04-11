@@ -76,7 +76,7 @@ export interface IRowSelectionEventArgs {
     oldSelection: any[];
     newSelection: any[];
     row?: IgxGridRowComponent;
-    event: Event;
+    event?: Event;
 }
 
 /**
@@ -914,25 +914,28 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
-        if (clearCurrentSelection) {
-            this.deselectAllRows();
-        }
-        this.selectionAPI.select_items(this.id, rowIDs);
-        this.checkHeaderChecboxStatus();
+        const newSelection = clearCurrentSelection ? rowIDs : this.selectionAPI.select_items(this.id, rowIDs);
+        this.triggerRowSelectionChange(newSelection);
     }
 
     public deselectRows(rowIDs: any[]) {
-        this.selectionAPI.deselect_items(this.id, rowIDs);
-        this.checkHeaderChecboxStatus();
+        const newSelection = this.selectionAPI.deselect_items(this.id, rowIDs);
+        this.triggerRowSelectionChange(newSelection);
     }
 
     public selectAllRows() {
-        this.selectionAPI.select_all(this.id, this.data, this.primaryKey);
-        this.checkHeaderChecboxStatus();
+        this.triggerRowSelectionChange(this.selectionAPI.get_all_ids(this.data, this.id));
     }
 
     public deselectAllRows() {
-        this.selectionAPI.deselect_all(this.id, this.primaryKey);
+        this.triggerRowSelectionChange([]);
+    }
+
+    public triggerRowSelectionChange(newSelection: any[], row?: IgxGridRowComponent, event?: Event) {
+        const oldSelection = this.selectionAPI.get_selection(this.id);
+        const args: IRowSelectionEventArgs = { oldSelection, newSelection, row, event };
+        this.onRowSelectionChange.emit(args);
+        this.selectionAPI.set_selection(this.id, args.newSelection);
         this.checkHeaderChecboxStatus();
     }
 }
