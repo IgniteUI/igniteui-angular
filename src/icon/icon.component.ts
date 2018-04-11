@@ -15,6 +15,7 @@ import { IgxIconService } from "./icon.service";
  * </igx-icon>
  * ```
  */
+let NEXT_ID = 0;
 @Component({
     selector: "igx-icon",
     templateUrl: "icon.component.html"
@@ -35,6 +36,9 @@ export class IgxIconComponent implements OnInit {
 
     @HostBinding("attr.aria-hidden")
     public ariaHidden = true;
+
+    @Input()
+    public id = `igx-icon-${NEXT_ID++}`;
 
     @Input("fontSet")
     public font: string;

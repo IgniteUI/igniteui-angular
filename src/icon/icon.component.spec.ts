@@ -31,6 +31,7 @@ describe("Icon", () => {
         const icon = fixture.componentInstance.icon;
         fixture.detectChanges();
 
+        expect(icon.id).toContain("igx-icon-");
         expect(fixture.debugElement).toBeTruthy();
         expect(icon.getIconColor).toBeFalsy();
         expect(icon.getIconName).toBeFalsy();
