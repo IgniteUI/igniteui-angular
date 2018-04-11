@@ -332,16 +332,20 @@ describe("IgxGrid - Row Selection", () => {
             expect(checkboxInputElement).toBeDefined();
         }
 
-        const horScroll = grid.nativeElement.querySelector(".igx-grid__scroll");
-        expect(horScroll).toBeDefined();
-        horScroll.scrollLeft = 200;
-        for (const row of grid.rowList.toArray()) {
-            const checkBoxElement = row.nativeElement.querySelector("div.igx-grid__cbx-selection");
-            expect(checkBoxElement).toBeDefined();
+        const horScroll = grid.parentVirtDir.getHorizontalScroll();
+        horScroll.scrollLeft = 1000;
+        fix.whenStable().then(() => {
+            for (const row of grid.rowList.toArray()) {
+                const checkBoxElement = row.nativeElement.querySelector("div.igx-grid__cbx-selection");
+                expect(checkBoxElement).toBeDefined();
 
-            const checkboxInputElement = checkBoxElement.querySelector(".igx-checkbox__input");
-            expect(checkboxInputElement).toBeDefined();
-        }
+                const checkboxInputElement = checkBoxElement.querySelector(".igx-checkbox__input");
+                expect(checkboxInputElement).toBeDefined();
+
+                const firstCellElement = row.cells.toArray()[0].nativeElement;
+                expect(firstCellElement).toBeUndefined();
+            }
+        });
     }));
 });
 
