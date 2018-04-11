@@ -393,6 +393,8 @@ describe("IgxGrid - Row Selection", () => {
         expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
         const firstRow = grid.getRowByIndex(0);
         const secondRow = grid.getRowByIndex(1);
+        spyOn(grid, "triggerRowSelectionChange").and.callThrough();
+        spyOn(grid.onRowSelectionChange, "emit").and.callThrough();
         expect(firstRow).toBeDefined();
         expect(secondRow).toBeDefined();
         const targetCheckbox: HTMLElement = firstRow.nativeElement.querySelector(".igx-checkbox__input");
@@ -408,6 +410,8 @@ describe("IgxGrid - Row Selection", () => {
             fix.detectChanges();
             expect(firstRow.isSelected).toBeFalsy();
             expect(secondRow.isSelected).toBeFalsy();
+            expect(grid.triggerRowSelectionChange).toHaveBeenCalledTimes(2);
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
         });
     }));
 
@@ -459,6 +463,8 @@ describe("IgxGrid - Row Selection", () => {
         const firstRow = grid.getRowByKey("0_0");
         const secondRow = grid.getRowByKey("0_1");
         const thirdRow = grid.getRowByKey("0_2");
+        spyOn(grid, "triggerRowSelectionChange").and.callThrough();
+        spyOn(grid.onRowSelectionChange, "emit").and.callThrough();
         rowsCollection = grid.selectedRows();
         expect(rowsCollection).toBeUndefined();
         expect(firstRow.isSelected).toBeFalsy();
@@ -486,6 +492,8 @@ describe("IgxGrid - Row Selection", () => {
             expect(thirdRow.isSelected).toBeFalsy();
             rowsCollection = grid.selectedRows();
             expect(rowsCollection.length).toEqual(0);
+            expect(grid.triggerRowSelectionChange).toHaveBeenCalledTimes(3);
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(3);
         });
     }));
 
@@ -498,6 +506,8 @@ describe("IgxGrid - Row Selection", () => {
         rowsCollection = grid.selectedRows();
         expect(rowsCollection).toBeUndefined();
         expect(firstRow.isSelected).toBeFalsy();
+        spyOn(grid, "triggerRowSelectionChange").and.callThrough();
+        spyOn(grid.onRowSelectionChange, "emit").and.callThrough();
         grid.selectAllRows();
         fix.whenStable().then(() => {
             fix.detectChanges();
@@ -511,6 +521,8 @@ describe("IgxGrid - Row Selection", () => {
             expect(firstRow.isSelected).toBeFalsy();
             rowsCollection = grid.selectedRows();
             expect(rowsCollection.length).toEqual(0);
+            expect(grid.triggerRowSelectionChange).toHaveBeenCalledTimes(2);
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
         });
     }));
 
