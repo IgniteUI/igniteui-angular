@@ -207,10 +207,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     public scrollTo(index) {
-        if (index < 0 || index > this.igxForOf.length) {
+        if (index < 0 || index > (this.isRemote ? this.totalItemCount :this.igxForOf.length)) {
             return;
         }
-        this.state.startIndex = index;
+        //this.state.startIndex = index;
         if (this.igxForScrollOrientation === "horizontal") {
             this.hScroll.scrollLeft = this.hCache[index] + 1;
         } else {
@@ -250,6 +250,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const curScrollTop = event.target.scrollTop;
 
         let scrollOffset = this.fixedUpdateAllRows(curScrollTop, event.target.children[0].scrollHeight);
+        if (scrollOffset === undefined) {
+            this.onChunkLoad.emit(this.state);
+            return;
+        }
         scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + "px";
 

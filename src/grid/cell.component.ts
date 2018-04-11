@@ -129,7 +129,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
          const visibleCols = this.grid.visibleColumns;
          const isLastVisibleColumn = visibleCols[visibleCols.length - 1].field === this.column.field;
          const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
-         return isLastVisibleColumn && hasVerticalScroll ? (parseInt(this.column.width, 10) - 18) + "px" : this.column.width;
+         return isLastVisibleColumn && hasVerticalScroll && !!this.column.width ? (parseInt(this.column.width, 10) - 18) + "px" : this.column.width;
     }
 
     @HostBinding("class.igx-grid__td--editing")
