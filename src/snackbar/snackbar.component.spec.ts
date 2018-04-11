@@ -28,6 +28,7 @@ describe("IgxSnackbar", () => {
             const fixture = TestBed.createComponent(SnackbarInitializeTestComponent);
             fixture.detectChanges();
 
+            expect(fixture.componentInstance.snackbar.id).toContain("igx-snackbar-");
             expect(fixture.componentInstance.snackbar.message).toBeUndefined();
             expect(fixture.componentInstance.snackbar.actionText).toBeUndefined();
             expect(fixture.componentInstance.snackbar.displayTime).toBe(4000);

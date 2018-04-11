@@ -33,6 +33,7 @@ import { fadeIn, fadeOut, slideInBottom, slideOutBottom } from "../animations/ma
  * </div>
  * ```
  */
+let NEXT_ID = 0;
 @Component({
     animations: [
         trigger("slideInOut", [
@@ -81,6 +82,9 @@ import { fadeIn, fadeOut, slideInBottom, slideOutBottom } from "../animations/ma
     templateUrl: "snackbar.component.html"
 })
 export class IgxSnackbarComponent {
+
+    @Input()
+    public id = `igx-snackbar-${NEXT_ID++}`;
     /**
      * The message that will be shown message by the IgxSnackbar component
      * @type {string}
