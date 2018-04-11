@@ -28,6 +28,7 @@ describe("IgxDatePicker", () => {
         const result = "";
 
         expect(fixture.componentInstance).toBeDefined();
+        expect(datePicker.id).toBe("igx-datePicker-0");
         expect(datePicker.displayData).toEqual(result);
     });
 
