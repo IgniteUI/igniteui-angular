@@ -134,8 +134,12 @@ export class IgxTabsComponent implements AfterViewInit {
             this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
             this.itemsContainer.nativeElement.style.transform = `translate(${-this.offset}px)`;
 
+
+            let total = this.offset + viewPortWidth;
             this.isLeftButtonVisible = (this.offset === 0 && !scrollRight) ? false : true;
-            this.isRightButtonVisible = (this.offset + viewPortWidth === itemsContainerWidth && scrollRight) ? false : true;
+            this.isRightButtonVisible = (itemsContainerWidth <= total) ? false : true;
+
+            console.log("viewPortWidth " + viewPortWidth + " itemsContainerWidth " + itemsContainerWidth + " this.offset + viewPortWidth " + total);
         });
     }
 
@@ -219,8 +223,10 @@ export class IgxTabsComponent implements AfterViewInit {
                 ? (this.selectedIndex === 0) ? tabsArray.length - 1 : this.selectedIndex - 1
                 : (this.selectedIndex === tabsArray.length - 1) ? 0 : this.selectedIndex + 1;
         }
-        const focusDelay = (Math.abs(index - this.selectedIndex) > tabsArray.length / 2) ? 200 : 50;
         const tab = tabsArray[index];
+        const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
+        const nativeTabElement = tab.nativeTabItem.nativeElement;
+        const focusDelay = (nativeTabElement.offsetWidth + nativeTabElement.offsetLeft - this.offset > viewPortWidth) ? 200 : 50;
         tab.select(focusDelay);
     }
 
