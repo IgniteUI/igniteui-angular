@@ -175,6 +175,13 @@ describe("IgxCalendar", () => {
         expect(fixture.componentInstance).toBeDefined();
     });
 
+    it("Initialize a calendar component with `id` property", () => {
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.calendar.id).toBe("igx-calendar-1");
+    });
+
     it("@Input properties and setters", () => {
         const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         fixture.detectChanges();
