@@ -14,40 +14,47 @@ export class IgxSelectionAPIService {
         return this.selection.get(componentID);
     }
 
-    public get_selection_length(componentID: string): number {
-        return this.get_selection(componentID).length;
+    public set_selection(componentID: string, currSelection: any[]) {
+        this.selection.set(componentID, currSelection);
     }
 
-    public select_item(componentID: string, itemID) {
-        let currSelection = this.get_selection(componentID);
+    public get_selection_length(componentID: string): number {
+        return (this.get_selection(componentID) || []).length;
+    }
+
+    public select_item(componentID: string, itemID, currSelection?: any[]): any[] {
+        if (!currSelection) {
+            currSelection = this.get_selection(componentID);
+        }
         if (currSelection === undefined) {
             currSelection = [];
         }
         if (currSelection.find((item) => item === itemID) === undefined) {
             currSelection.push(itemID);
-            this.selection.set(componentID, currSelection);
         }
+        return currSelection;
     }
 
-    public select_items(componentID: string, itemIDs: any[]) {
-        itemIDs.forEach((item) => this.select_item(componentID, item));
+    public select_items(componentID: string, itemIDs: any[]): any[] {
+        let selection: any[];
+        itemIDs.forEach((item) => selection = this.select_item(componentID, item, selection));
+        return selection;
     }
 
-    public deselect_item(componentID: string, itemID) {
-        const currSelection = this.get_selection(componentID);
+    public deselect_item(componentID: string, itemID, currSelection?: any[]) {
+        if (!currSelection) {
+            currSelection = this.get_selection(componentID);
+        }
         if (currSelection === undefined) {
             return;
         }
-        /*const index = currSelection.indexOf(itemID, 0);
-        if (index > -1) {
-            currSelection.splice(index, 1);
-            this.selection.set(componentID, currSelection);
-        }*/
-        this.selection.set(componentID, currSelection.filter((item) => item !== itemID));
+        return currSelection.filter((item) => item !== itemID);
     }
 
-    public deselect_items(componentID: string, itemIDs: any[]) {
-        itemIDs.forEach((item) => this.deselect_item(componentID, item));
+    public deselect_items(componentID: string, itemIDs: any[]): any[] {
+        let selection: any[];
+        itemIDs.forEach((deselectedItem) => selection = this.deselect_item(componentID, deselectedItem, selection));
+        return selection;
     }
 
     public is_item_selected(componentID: string, itemID) {

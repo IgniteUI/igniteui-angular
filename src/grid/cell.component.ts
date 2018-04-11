@@ -309,7 +309,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
                 this.nativeElement.blur();
                 checkboxElement.focus();
             }
-            console.log(rowContainer.querySelector(".igx-checkbox"));
         }
     }
 
