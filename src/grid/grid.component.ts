@@ -218,6 +218,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Output()
     public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
 
+    @Output()
+    public onContextMenu = new EventEmitter<IGridCellEventArgs>();
+
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
 
