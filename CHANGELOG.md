@@ -2,6 +2,10 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 5.3.0
+- `igxTextSelection` directive added
+    - `igxTextSelection` directive allows you to select the whole text range for every element with text content it is applied.
+- `igxFocus` directive added
+    - `igxFocus` directive allows you to force focus for every element it is applied.
 - `igx-time-picker` component added
     - `igx-time-picker` allows user to select time, from a dialog with spinners, which is presented into input field.
     - For more information navigate to `src\time-picker\README.md`.
@@ -15,7 +19,7 @@ All notable changes for each version of this project will be documented in this 
     For more detailed information read `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#summaries).
 - Added `columnWidth` option to `igxGrid`. The option sets the default width that will be applied to columns that have no explicit width set. For more detailed information read `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md)
 - Added smooth scrolling for the `igxForOf` directive making the scrolling experience both vertically and horizontally much more natural and similar to a native scroll.
-- `igxForOf` now requires that its parent container's `overflow` is set to `hidden`. It is recommended that its height is set as well so that the display container of the virtualized content can be positioned with an offset inside without visually affecting other elements on the page.
+- `igxForOf` now requires that its parent container's `overflow` is set to `hidden` and `position` to `relative`. It is recommended that its height is set as well so that the display container of the virtualized content can be positioned with an offset inside without visually affecting other elements on the page.
     ```html
     <div style='position: relative; height: 500px; overflow: hidden'>
         <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical
@@ -30,16 +34,16 @@ All notable changes for each version of this project will be documented in this 
 - Removed the `dirty` local template variable previously exposed by the `igxFor` directive.
 - the `igx-icon` component can now work with both glyph and ligature-based icon font sets. We've also included a brand new Icon Service, which helps you create aliases for the icon fonts you've included in your project. The service also allows you to define the default icon set used throughout your app.
 - Added the option to conditionally disable the `igx-ripple` directive through the `igxRippleDisabled` property.
-- Updated styling and interaction animations of the `igx-checkbox` and `igx-radio` components.
+- Updated styling and interaction animations of the `igx-checkbox`, `igx-switch`, and `igx-radio` components.
 - Added `indeterminate` property and styling to the `igx-checkbox` component.
-- Added `igx-ripple` effect to the `igx-checkbox` and `igx-radio` components. The effect can be disabled through the `disableRipple` property.
-- Added the ability to specify the label location in the `igx-checkbox` and `igx-radio` components through the `labelPosition` property. It can either be `before` or `after` the checkbox/radio element.
-- You can now use any element as label on the `igx-checkbox` and `igx-radio` components via the aria-labelledby property. 
-- You can now have invisible label on the `igx-checkbox` and `igx-radio` components via the aria-label property. 
-- Added the ability to toggle the `igx-checkbox` checked state programmatically via `toggle` method on the component instance.
+- Added `igx-ripple` effect to the `igx-checkbox`, `igx-switch`, and `igx-radio` components. The effect can be disabled through the `disableRipple` property.
+- Added the ability to specify the label location in the `igx-checkbox`, `igx-switch`, and `igx-radio` components through the `labelPosition` property. It can either be `before` or `after`.
+- You can now use any element as label on the `igx-checkbox`, `igx-switch`, and `igx-radio` components via the aria-labelledby property. 
+- You can now have invisible label on the `igx-checkbox`, `igx-switch`, and `igx-radio` components via the aria-label property. 
+- Added the ability to toggle the `igx-checkbox` and `igx-switch` checked state programmatically via `toggle` method on the component instance.
 - Added the ability to select an `igx-radio` programmatically via `select` method on the component instance.
 - Fixed a bug on the `igx-checkbox` and `igx-radio` components where the click event was being triggered twice on click.
-- Fixed a bug where the `igx-checkbox` and `igx-radio` component's change event was not being triggered on label click.
+- Fixed a bug where the `igx-checkbox`, `igx-switch`, and `igx-radio` change event was not being triggered on label click.
 - `igxМask` directive added
     - `igxМask` provide means for controlling user input and formatting the visible value based on a configurable mask rules. For more detailed information see [`igxMask README file`](https://github.com/IgniteUI/igniteui-angular/blob/master/src/directives/mask/README.md)
 - `igxInputGroup` component added - used as a container for the `igxLabel`, `igxInput`, `igxPrefix`, `igxSuffix` and `igxHint` directives.
