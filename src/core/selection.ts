@@ -70,19 +70,19 @@ export class IgxSelectionAPIService {
         return primaryKey ? data.map((x) => x[primaryKey]) : data;
     }
 
-    public select_all(componentID: string, data, primaryKey?) {
+    public select_all(componentID: string, data, primaryKey?): any[] {
         if (this.is_filtering_applied(componentID)) {
-            this.select_filtered_items(componentID, primaryKey);
+            return this.select_filtered_items(componentID, primaryKey);
         } else {
-            this.selection.set(componentID, this.get_all_ids(data, primaryKey));
+            return this.get_all_ids(data, primaryKey);
         }
     }
 
-    public deselect_all(componentID: string, primaryKey?) {
+    public deselect_all(componentID: string, primaryKey?): any[] {
         if (this.is_filtering_applied(componentID)) {
-            this.deselect_filtered_items(componentID, primaryKey);
+            return this.deselect_filtered_items(componentID, primaryKey);
         } else {
-            this.selection.set(componentID, []);
+            return [];
         }
     }
 
@@ -127,21 +127,21 @@ export class IgxSelectionAPIService {
         return !!this.filteredSelection.get(componentID);
     }
 
-    public select_filtered_items(componentID: string, primaryKey?) {
+    public select_filtered_items(componentID: string, primaryKey?): any[] {
         let currSelection = this.get_selection(componentID);
         const currFilteredSelection = this.filteredSelection.get(componentID);
         const currFilteredID = this.get_all_ids(currFilteredSelection, primaryKey);
         if (currSelection === undefined) {
             currSelection = [];
         }
-        this.selection.set(componentID, [...currSelection, ...currFilteredSelection]);
+        return [...currSelection, ...currFilteredSelection];
     }
 
-    public deselect_filtered_items(componentID: string, primaryKey?) {
+    public deselect_filtered_items(componentID: string, primaryKey?): any[] {
         const currSelection = this.get_selection(componentID);
         const currFilteredSelection = this.filteredSelection.get(componentID);
         const currFilteredID = this.get_all_ids(currFilteredSelection, primaryKey);
-        this.selection.set(componentID, currSelection.filter((item) => currFilteredID.indexOf(item) === -1));
+        return currSelection.filter((item) => currFilteredID.indexOf(item) === -1);
     }
 
     public filtered_items_status(componentID: string, filteredData: any[], primaryKey?) {

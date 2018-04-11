@@ -848,24 +848,25 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public onHeaderCheckboxClick(event) {
-        this.allRowsSelected = event.checked;
-        if (event.checked) {
-            this.selectionAPI.select_all(this.id, this.data, this.primaryKey);
-        } else {
+        const newSelecion = (event.checked) ?
+            this.selectionAPI.select_all(this.id, this.data, this.primaryKey) :
             this.selectionAPI.deselect_all(this.id, this.primaryKey);
-        }
+        this.triggerRowSelectionChange(newSelecion, null, event, event.checked);
+        this.checkHeaderChecboxStatus(event.checked);
     }
 
     get headerCheckboxAriaLabel() {
         return this.selectionAPI.is_filtering_applied(this.id) ? "Select all filtered" : "Select all";
     }
 
-    public checkHeaderChecboxStatus() {
-        this.allRowsSelected = this.selectionAPI.are_all_selected(this.id, this.data);
-        if (this.headerCheckbox) {
-            this.headerCheckbox.indeterminate = !this.allRowsSelected && !this.selectionAPI.are_none_selected(this.id);
+    public checkHeaderChecboxStatus(headerStatus?: boolean) {
+        if (headerStatus === undefined) {
+            this.allRowsSelected = this.selectionAPI.are_all_selected(this.id, this.data);
+            if (this.headerCheckbox) {
+                this.headerCheckbox.indeterminate = !this.allRowsSelected && !this.selectionAPI.are_none_selected(this.id);
+            }
+            this.cdr.markForCheck();
         }
-        this.cdr.markForCheck();
     }
 
     public updateSelectionStatus(filteredData?: any[]) {
@@ -934,11 +935,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.triggerRowSelectionChange([]);
     }
 
-    public triggerRowSelectionChange(newSelection: any[], row?: IgxGridRowComponent, event?: Event) {
+    public triggerRowSelectionChange(newSelection: any[], row?: IgxGridRowComponent, event?: Event, headerStatus?: boolean) {
         const oldSelection = this.selectionAPI.get_selection(this.id);
         const args: IRowSelectionEventArgs = { oldSelection, newSelection, row, event };
         this.onRowSelectionChange.emit(args);
         this.selectionAPI.set_selection(this.id, args.newSelection);
-        this.checkHeaderChecboxStatus();
+        this.checkHeaderChecboxStatus(headerStatus);
     }
 }

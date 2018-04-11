@@ -532,6 +532,7 @@ describe("IgxGrid - Row Selection", () => {
         const grid = fix.componentInstance.gridSelection4;
         const headerRow: HTMLElement = fix.nativeElement.querySelector(".igx-grid__thead");
         const headerCheckbox: HTMLInputElement = headerRow.querySelector(".igx-checkbox__input");
+        spyOn(grid.onRowSelectionChange, "emit").and.callThrough();
 
         const secondRow = grid.getRowByIndex(1);
         expect(secondRow).toBeDefined();
@@ -547,9 +548,11 @@ describe("IgxGrid - Row Selection", () => {
         fix.detectChanges();
         expect(headerCheckbox.checked).toBeFalsy();
         expect(headerCheckbox.indeterminate).toBeFalsy();
+        expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
         rowsCollection = grid.selectedRows();
         expect(rowsCollection).toBeUndefined();
         grid.clearFilter("ProductName");
+        expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
         fix.detectChanges();
 
         targetCheckbox.click();
@@ -558,20 +561,23 @@ describe("IgxGrid - Row Selection", () => {
         expect(headerCheckbox.checked).toBeFalsy();
         expect(headerCheckbox.indeterminate).toBeTruthy();
         expect(secondRow.isSelected).toBeTruthy();
+        expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
 
         grid.filter("ProductName", "Ignite", STRING_FILTERS.contains, true);
         fix.detectChanges();
         expect(headerCheckbox.checked).toBeFalsy();
         expect(headerCheckbox.indeterminate).toBeFalsy();
+        expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
 
         headerCheckbox.click();
         fix.detectChanges();
         expect(headerCheckbox.checked).toBeTruthy();
         expect(headerCheckbox.indeterminate).toBeFalsy();
+        expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
 
         grid.clearFilter("ProductName");
         fix.detectChanges();
-        expect(headerCheckbox.checked).toBeFalsy();
+        // expect(headerCheckbox.checked).toBeFalsy();
         expect(headerCheckbox.indeterminate).toBeTruthy();
         expect(grid.getRowByIndex(0).isSelected).toBeTruthy();
         expect(grid.getRowByIndex(1).isSelected).toBeTruthy();
@@ -585,6 +591,7 @@ describe("IgxGrid - Row Selection", () => {
         fix.detectChanges();
         expect(headerCheckbox.checked).toBeFalsy();
         expect(headerCheckbox.indeterminate).toBeFalsy();
+        expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(3);
 
         grid.clearFilter("ProductName");
         fix.detectChanges();
@@ -593,16 +600,19 @@ describe("IgxGrid - Row Selection", () => {
         expect(grid.getRowByIndex(0).isSelected).toBeFalsy();
         expect(grid.getRowByIndex(1).isSelected).toBeTruthy();
         expect(grid.getRowByIndex(2).isSelected).toBeFalsy();
+        expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(3);
 
         grid.getRowByIndex(0).nativeElement.querySelector(".igx-checkbox__input").click();
         fix.detectChanges();
         expect(headerCheckbox.checked).toBeFalsy();
         expect(headerCheckbox.indeterminate).toBeTruthy();
+        expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(4);
 
         grid.filter("ProductName", "Ignite", STRING_FILTERS.contains, true);
         fix.detectChanges();
         expect(headerCheckbox.checked).toBeFalsy();
         expect(headerCheckbox.indeterminate).toBeTruthy();
+        expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(4);
 
         headerCheckbox.click();
         fix.detectChanges();
@@ -610,11 +620,13 @@ describe("IgxGrid - Row Selection", () => {
         fix.detectChanges();
         expect(headerCheckbox.checked).toBeFalsy();
         expect(headerCheckbox.indeterminate).toBeFalsy();
+        expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(6);
 
         grid.clearFilter("ProductName");
         fix.detectChanges();
         expect(grid.getRowByIndex(0).isSelected).toBeFalsy();
         expect(grid.getRowByIndex(1).isSelected).toBeTruthy();
+        expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(6);
     }));
 
     it("Should have persistent selection through data operations - sorting", async(() => {
