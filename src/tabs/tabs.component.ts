@@ -134,12 +134,9 @@ export class IgxTabsComponent implements AfterViewInit {
             this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
             this.itemsContainer.nativeElement.style.transform = `translate(${-this.offset}px)`;
 
-
-            let total = this.offset + viewPortWidth;
+            const total = this.offset + viewPortWidth;
             this.isLeftButtonVisible = (this.offset === 0 && !scrollRight) ? false : true;
             this.isRightButtonVisible = (itemsContainerWidth <= total) ? false : true;
-
-            console.log("viewPortWidth " + viewPortWidth + " itemsContainerWidth " + itemsContainerWidth + " this.offset + viewPortWidth " + total);
         });
     }
 
