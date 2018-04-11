@@ -259,6 +259,7 @@ describe("IgxGrid - Cell component", () => {
 
         });
     }));
+
     it("should fit last cell in the available display container when there is vertical scroll.", () => {
         const fix = TestBed.createComponent(VirtualtGridComponent);
         fix.detectChanges();
@@ -267,6 +268,43 @@ describe("IgxGrid - Cell component", () => {
             expect(item.cells.last.width).toEqual("182px");
         });
     });
+
+    it("should scroll first row into view when pressing arrow up", async(() => {
+        const fix = TestBed.createComponent(VirtualtGridComponent);
+        fix.detectChanges();
+
+        // the 2nd sell on the row with index 1
+        const cell =  fix.debugElement.queryAll(By.css(`${CELL_CSS_CLASS}:nth-child(2)`))[1];
+
+        fix.componentInstance.scrollTop(25);
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            const scrollContainer = fix.componentInstance.instance.verticalScrollContainer.dc.instance._viewContainer;
+            const scrollContainerOffset = scrollContainer.element.nativeElement.offsetTop;
+
+            expect(scrollContainerOffset).toEqual(-25);
+
+            cell.nativeElement.dispatchEvent(new Event("focus"));
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(fix.componentInstance.selectedCell.value).toEqual(1);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch("value");
+
+            cell.nativeElement.dispatchEvent(new KeyboardEvent("keydown", { key: "arrowup", code: "38" }));
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            const scrollContainer = fix.componentInstance.instance.verticalScrollContainer.dc.instance._viewContainer;
+            const scrollContainerOffset = scrollContainer.element.nativeElement.offsetTop;
+
+            expect(scrollContainerOffset).toEqual(0);
+            expect(fix.componentInstance.selectedCell.value).toEqual(0);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch("value");
+        });
+    }));
 });
 
 @Component({
@@ -325,17 +363,23 @@ export class CtrlKeyKeyboardNagivationComponent {
 
 @Component({
     template: `
-        <igx-grid [height]="'300px'" [width]="'800px'" [data]="data"
-        [autoGenerate]="true" (onColumnInit)="columnCreated($event)"></igx-grid>
+        <igx-grid [height]="'300px'" [width]="'800px'" [columnWidth]="'200px'" [data]="data" [autoGenerate]="true"
+         (onSelection)="cellSelected($event)">
+        </igx-grid>
     `
 })
 export class VirtualtGridComponent {
-    public data = [];
+
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
+
+    public data = [];
+    public selectedCell: IgxGridCellComponent;
+
     constructor() {
         this.data = this.generateData();
     }
+
     public generateData() {
         const data = [];
         for (let i = 0; i < 1000; i++) {
@@ -344,7 +388,15 @@ export class VirtualtGridComponent {
         return data;
     }
 
-    public columnCreated(column: IgxColumnComponent) {
-        column.width = "200px";
+    public cellSelected(event: IGridCellEventArgs) {
+        this.selectedCell = event.cell;
+    }
+
+    public scrollTop(newTop: number) {
+        this.instance.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+    }
+
+    public scrollLeft(newLeft: number) {
+        this.instance.parentVirtDir.getHorizontalScroll().scrollLeft = newLeft;
     }
 }
