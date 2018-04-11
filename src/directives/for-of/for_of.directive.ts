@@ -66,7 +66,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     private _lastTouchY = 0;
     private _pointerCapture;
     private _gestureObject;
-    private _containerSize;
 
     @ViewChild(DisplayContainerComponent)
     private displayContiner: DisplayContainerComponent;
