@@ -28,6 +28,7 @@ describe("Carousel", () => {
 
         fixture.detectChanges();
         expect(instance.carousel).toBeDefined();
+        expect(instance.carousel.id).toBe("igx-carousel-0");
         expect(instance.carousel instanceof IgxCarouselComponent).toBe(true);
         expect(instance.carousel.slides[0] instanceof IgxSlideComponent).toBe(true);
 

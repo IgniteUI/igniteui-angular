@@ -11,6 +11,8 @@ import {
 } from "@angular/core";
 import { IgxIconModule } from "../icon";
 
+let NEXT_ID = 0;
+
 export enum Direction { NONE, NEXT, PREV }
 
 /**
@@ -42,6 +44,9 @@ export enum Direction { NONE, NEXT, PREV }
 export class IgxCarouselComponent implements OnDestroy {
 
     @HostBinding("attr.role") public role = "region";
+
+    @Input()
+    public id = `igx-carousel-${NEXT_ID++}`;
     /**
      * Sets whether the carousel should loop back to the first slide
      * after reaching the last slide.
