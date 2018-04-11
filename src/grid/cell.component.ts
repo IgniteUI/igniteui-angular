@@ -214,11 +214,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
 
     @HostListener("contextmenu", ["$event"])
     public onContextMenu(event) {
-        const args: IGridCellEventArgs = {
+        this.grid.onContextMenu.emit({
             cell: this,
             event
-        };
-        this.grid.onContextMenu.emit(args);
+        });
     }
 
     @HostListener("focus", ["$event"])
