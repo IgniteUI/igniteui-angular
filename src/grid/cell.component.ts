@@ -219,7 +219,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
             event
         };
 
-        this.grid.onClick.emit(args);
+        this.grid.onCellClick.emit(args);
     }
 
     @HostListener("focus", ["$event"])
