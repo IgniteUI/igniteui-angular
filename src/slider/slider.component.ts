@@ -48,12 +48,16 @@ const noop = () => {
  * </igx-slider>
  * ```
  */
+let NEXT_ID = 0;
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSliderComponent, multi: true }],
     selector: "igx-slider",
     templateUrl: "slider.component.html"
 })
 export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterViewInit {
+
+    @Input()
+    public id = `igx-slider-${NEXT_ID++}`;
     /**
      * Disables or enables UI interaction.
      */

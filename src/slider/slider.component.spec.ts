@@ -24,6 +24,7 @@ describe("IgxSlider", () => {
         const fixture = TestBed.createComponent(SliderInitializeTestComponent);
         fixture.detectChanges();
 
+        expect(fixture.componentInstance.slider.id).toContain("igx-slider-");
         expect(fixture.componentInstance.slider.lowerBound)
             .toBe(fixture.componentInstance.slider.minValue);
     });
