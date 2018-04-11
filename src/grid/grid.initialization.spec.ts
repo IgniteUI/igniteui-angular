@@ -71,7 +71,7 @@ describe("IgxGrid - Grid initialization", () => {
         });
     });
 
-    fit("should initialize a grid without scrollbar container", () => {
+    it("should initialize a grid without scrollbar container", () => {
         const fix = TestBed.createComponent(GridColumnsWidthComponent);
         fix.detectChanges();
 
