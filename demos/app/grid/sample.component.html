@@ -57,24 +57,19 @@
                 <div class="toggle-group" *ngFor="let col of grid1.columns">
                     <h4>{{ col.field }}</h4>
                     <div class="switch-group">
-                        <span igxLabel>Filtering</span>
-                        <igx-switch [(ngModel)]="col.filtering"></igx-switch>
+                        <igx-switch [(ngModel)]="col.filtering">Filtering</igx-switch>
                     </div>
                     <div class="switch-group">
-                        <span igxLabel>Sorting</span>
-                        <igx-switch [(ngModel)]="col.sortable"></igx-switch>
+                        <igx-switch [(ngModel)]="col.sortable">Sorting</igx-switch>
                     </div>
                     <div class="switch-group">
-                        <span igxLabel>Editable</span>
-                        <igx-switch [(ngModel)]="col.editable"></igx-switch>
+                        <igx-switch [(ngModel)]="col.editable">Editable</igx-switch>
                     </div>
                     <div class="switch-group">
-                        <span igxLabel>Hidden</span>
-                        <igx-switch [(ngModel)]="col.hidden"></igx-switch>
+                        <igx-switch [(ngModel)]="col.hidden">Hidden</igx-switch>
                     </div>
                     <div class="switch-group">
-                        <span igxLabel>Movable</span>
-                        <igx-switch [(ngModel)]="col.movable"></igx-switch>
+                        <igx-switch [(ngModel)]="col.movable">Movable</igx-switch>
                     </div>
                 </div>
             </div>
@@ -90,32 +85,26 @@
                 <div class="toggle-group" *ngFor="let col of grid2.columns">
                     <h4>{{ col.field }}</h4>
                     <div class="switch-group">
-                        <span igxLabel>Filtering</span>
-                        <igx-switch [(ngModel)]="col.filtering"></igx-switch>
+                        <igx-switch [(ngModel)]="col.filtering">Filtering</igx-switch>
                     </div>
                     <div class="switch-group">
-                        <span igxLabel>Sorting</span>
-                        <igx-switch [(ngModel)]="col.sortable"></igx-switch>
+                        <igx-switch [(ngModel)]="col.sortable">Sorting</igx-switch>
                     </div>
                     <div class="switch-group">
-                        <span igxLabel>Editable</span>
-                        <igx-switch [(ngModel)]="col.editable"></igx-switch>
+                        <igx-switch [(ngModel)]="col.editable">Editable</igx-switch>
                     </div>
                     <div class="switch-group">
-                        <span igxLabel>Hidden</span>
-                        <igx-switch [(ngModel)]="col.hidden"></igx-switch>
+                        <igx-switch [(ngModel)]="col.hidden">Hidden</igx-switch>
                     </div>
                     <div class="switch-group">
-                        <span igxLabel>Movable</span>
-                        <igx-switch [(ngModel)]="col.movable"></igx-switch>
+                        <igx-switch [(ngModel)]="col.movable">Movable</igx-switch>
                     </div>
                 </div>
             </div>
 
             <div class="paging-config">
                 <div class="switch-group">
-                    <span igxLabel>Enable Paging</span>
-                    <igx-switch [checked]="grid2.paging" (change)="grid2.paging = $event.target.checked"></igx-switch>
+                    <igx-switch [checked]="grid2.paging" (change)="grid2.paging = $event.target.checked">Enable Paging</igx-switch>
                 </div>
                 <div class="igx-form-group">
                     <igx-input-group>
@@ -152,6 +141,7 @@
                     </ng-template>
                 </igx-column>
             </igx-grid>
+            
         </article>
 
         <article class="grid-sample">
@@ -170,7 +160,7 @@
                 <button igxButton="flat" (click)="exportFilteredGrid()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Cheese Products Report</button>
             </div>
             <igx-grid #grid3 [data]="remote | async" [paging]="true" [perPage]="10" (onPagingDone)="process($event)" (onSortingDone)="process($event)"
-                (onBeforeProcess)="onProcess($event)">
+                (onBeforeProcess)="onProcess($event)" [primaryKey]="'ProductID'">
                 <igx-column [sortable]="true" [field]="'ProductID'" ></igx-column>
                 <igx-column [editable]="true" [field]="'ProductName'" ></igx-column>
                 <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
@@ -183,7 +173,9 @@
                     </ng-template>
                 </igx-column>
             </igx-grid>
+            <button (click)="updateRow11()">Update Row With primaryKey</button>
         </article>
+        
     </section>
 
     <igx-toast #toast></igx-toast>

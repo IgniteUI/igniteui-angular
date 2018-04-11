@@ -6,22 +6,25 @@ import { IgxGridComponent } from "../../lib/grid/grid.component";
 import {
     DataContainer,
     IDataState,
-    IgxExcelExporterService,
     IgxSnackbarComponent,
     IgxToastComponent,
     IPagingState,
+    NUMBER_FILTERS,
     PagingError,
     SortingDirection,
     StableSortingStrategy,
-    NUMBER_FILTERS,
     STRING_FILTERS
 } from "../../lib/main";
-import { IgxExcelExporterOptions } from "../../lib/services/excel/excel-exporter-options";
-import { IgxCsvExporterService } from "../../lib/main";
-import { IgxExporterOptionsBase } from "../../lib/services/exporter-common/exporter-options-base";
-import { IgxCsvExporterOptions } from "../../lib/main";
-import { CsvFileTypes } from "../../lib/main";
-import { IgxBaseExporter } from "../../lib/services/exporter-common/base-export-service";
+
+import {
+    CsvFileTypes,
+    IgxBaseExporter,
+    IgxCsvExporterOptions,
+    IgxCsvExporterService,
+    IgxExcelExporterOptions,
+    IgxExporterOptionsBase,
+    IgxExcelExporterService
+} from "../../lib/services/index";
 
 @Injectable()
 export class LocalService {
@@ -127,9 +130,9 @@ export class GridSampleComponent {
     public editCell;
     public exportFormat = "XLSX";
     constructor(private localService: LocalService,
-    private remoteService: RemoteService,
-    private excelExporterService: IgxExcelExporterService,
-    private csvExporterService: IgxCsvExporterService) { }
+                private remoteService: RemoteService,
+                private excelExporterService: IgxExcelExporterService,
+                private csvExporterService: IgxCsvExporterService) { }
     public ngOnInit(): void {
         this.data = this.localService.records;
         this.remote = this.remoteService.remoteData;
@@ -234,7 +237,7 @@ export class GridSampleComponent {
 
     public updateRecord(event) {
         this.grid1.updateCell(this.selectedCell.rowIndex, this.selectedCell.columnField, event);
-        //this.grid1.getCell(this.selectedCell.rowIndex, this.selectedCell.columnField);
+        // this.grid1.getCell(this.selectedCell.rowIndex, this.selectedCell.columnField);
     }
 
     public deleteRow(event) {
@@ -250,6 +253,39 @@ export class GridSampleComponent {
         this.snax.hide();
     }
 
+    public updateRow11() {
+        this.grid3.updateRow({
+            __metadata: {
+                uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)",
+                type: "NorthwindModel.Product"
+            },
+            ProductName: "Example Change",
+            ProductID: 12,
+            SupplierID: 8,
+            CategoryID: 3,
+            QuantityPerUnit: undefined,
+            UnitsInStock: -99,
+            UnitsOnOrder: 0,
+            ReorderLevel: -12,
+            Discontinued: false,
+            OrderDate: new Date("1905-03-17"),
+            Category: {
+                __deferred: {
+                    uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)/Category"
+                }
+            },
+            Order_Details: {
+                __deferred: {
+                    uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)/Order_Details"
+                }
+            },
+            Supplier: {
+                __deferred: {
+                    uri: "http://services.odata.org/Northwind/Northwind.svc/Products(20)/Supplier"
+                }
+            }
+        }, 11);
+    }
     public exportRaw() {
         this.getExporterService().export(this.grid3, this.getOptions("Report"));
     }
@@ -257,7 +293,7 @@ export class GridSampleComponent {
     public export() {
         this.grid3.clearFilter();
 
-        let options = this.getOptions("Report");
+        const options = this.getOptions("Report");
         options.ignoreColumnsVisibility = false;
 
         this.getExporterService().export(this.grid3, options);
@@ -267,7 +303,7 @@ export class GridSampleComponent {
         this.grid3.filter("ProductName", "Queso", STRING_FILTERS.contains, true);
         this.grid3.cdr.detectChanges();
 
-        let options = this.getOptions("Queso Report");
+        const options = this.getOptions("Queso Report");
         options.ignoreFiltering = false;
         options.ignoreColumnsVisibility = false;
 
@@ -282,7 +318,7 @@ export class GridSampleComponent {
     }
 
     private getOptions(fileName: string): IgxExporterOptionsBase {
-        switch(this.exportFormat){
+        switch (this.exportFormat) {
             case "XLSX":
                 return new IgxExcelExporterOptions(fileName);
             case "CSV":
@@ -290,7 +326,7 @@ export class GridSampleComponent {
             case "TSV":
                 return new IgxCsvExporterOptions(fileName, CsvFileTypes.TSV);
             case "TAB":
-                return new IgxCsvExporterOptions(fileName, CsvFileTypes.TAB)
+                return new IgxCsvExporterOptions(fileName, CsvFileTypes.TAB);
         }
     }
 }
