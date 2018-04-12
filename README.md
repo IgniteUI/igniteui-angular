@@ -82,6 +82,15 @@ npm run build:umd
 npm run build:umd:watch // run in watch mode
 ```
 
+## Build API Docs
+The API docs are produced using TypeDoc and SassDoc. In order to build the docs, all you need to do is run:
+
+```
+npm run build:docs
+```
+
+The output of the API docs build is located under `dist/docs`.
+
 ## Run Experimental Demos
 
 The `demos` directory contains a sample application for development/experimental samples of the components and directives of the library.
