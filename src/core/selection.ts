@@ -86,27 +86,4 @@ export class IgxSelectionAPIService {
             return true;
         }
     }
-
-    public filtered_items_status(componentID: string, filteredData: any[], primaryKey?) {
-        const currSelection = this.get_selection(componentID);
-        let atLeastOneSelected = false;
-        let notAllSelected = false;
-        if (currSelection) {
-            for (const key of Object.keys(filteredData)) {
-                const dataItem = primaryKey ? filteredData[key][primaryKey] : filteredData[key];
-                if (currSelection.find((item) => item === dataItem) !== undefined) {
-                    atLeastOneSelected = true;
-                    if (notAllSelected) {
-                        return "indeterminate";
-                    }
-                } else {
-                    notAllSelected = true;
-                    if (atLeastOneSelected) {
-                        return "indeterminate";
-                    }
-                }
-            }
-        }
-        return atLeastOneSelected ? "allSelected" : "noneSelected";
-    }
 }

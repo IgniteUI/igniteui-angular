@@ -132,7 +132,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     set filteredData(value) {
         if (this.rowSelectable) {
             this._filteredData = value;
-            this.updateHeaderChecboxStatus(this._filteredData);
+            this.updateHeaderChecboxStatusOnFilter(this._filteredData);
         }
     }
 
@@ -892,11 +892,34 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    public updateHeaderChecboxStatus(data) {
+    public filteredItemsStatus(componentID: string, filteredData: any[], primaryKey?) {
+        const currSelection = this.selectionAPI.get_selection(componentID);
+        let atLeastOneSelected = false;
+        let notAllSelected = false;
+        if (currSelection) {
+            for (const key of Object.keys(filteredData)) {
+                const dataItem = primaryKey ? filteredData[key][primaryKey] : filteredData[key];
+                if (currSelection.find((item) => item === dataItem) !== undefined) {
+                    atLeastOneSelected = true;
+                    if (notAllSelected) {
+                        return "indeterminate";
+                    }
+                } else {
+                    notAllSelected = true;
+                    if (atLeastOneSelected) {
+                        return "indeterminate";
+                    }
+                }
+            }
+        }
+        return atLeastOneSelected ? "allSelected" : "noneSelected";
+    }
+
+    public updateHeaderChecboxStatusOnFilter(data) {
         if (!data) {
             data = this.data;
         }
-        switch (this.selectionAPI.filtered_items_status(this.id, data)) {
+        switch (this.filteredItemsStatus(this.id, data)) {
             case "allSelected": {
                 if (!this.allRowsSelected) {
                     this.allRowsSelected = true;
