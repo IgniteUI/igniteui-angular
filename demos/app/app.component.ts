@@ -81,6 +81,11 @@ export class AppComponent implements OnInit {
             name: "Grid Performance"
         },
         {
+            link: "/gridRemoteVirtualization",
+            icon: "view_column",
+            name: "Grid Remote Virtualization"
+        },
+        {
             link: "/gridSummary",
             icon: "view_column",
             name: "Grid Summary"

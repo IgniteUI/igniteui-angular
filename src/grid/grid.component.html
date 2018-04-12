@@ -35,7 +35,7 @@
     <ng-template igxFor let-rowData [igxForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
                             | gridSort:sortingExpressions:id:pipeTrigger
                             | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
-        [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer>
+        [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
         <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" [primaryValue]="rowData[primaryKey] || null">
         </igx-grid-row>
     </ng-template>
