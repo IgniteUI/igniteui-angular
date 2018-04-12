@@ -2,6 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 5.3.0
+- Added `onContextMenu` output to `igxGrid` to emit the clicked cell.
 - `igxTextSelection` directive added
     - `igxTextSelection` directive allows you to select the whole text range for every element with text content it is applied.
 - `igxFocus` directive added
