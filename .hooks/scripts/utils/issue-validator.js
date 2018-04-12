@@ -3,7 +3,7 @@
 var matchType = require('../common').matchType,
     errorFactory = require('../common').errorFactory;
 
-module.exports = function(lines, options, errors) {
+module.exports = (lines, options, errors) => {
     var ticket = new RegExp(options.issuePattern);
     var whetherIssueIsMandatory = false,
         wheterMatchAnyIssueRef = false; 
@@ -13,7 +13,7 @@ module.exports = function(lines, options, errors) {
         whetherIssueIsMandatory = true;
     }
 
-    lines.forEach(function (line) {
+    lines.forEach((line) => {
         line = line.trim();
         if (line === "") {
             return;
@@ -27,7 +27,7 @@ module.exports = function(lines, options, errors) {
 
     if (whetherIssueIsMandatory && !wheterMatchAnyIssueRef) {
         errors.push(errorFactory(
-            'The issue reference for (' + options.typesWithMandatoryIssue.join(', ') + ') types is mandatory!\n',
-            'List any ISSUES CLOSED by this change. E.g: Closes #31, Closes #45'));
+            `The issue reference for (${options.typesWithMandatoryIssue.join(', ')}) types is mandatory!\n`, 
+            "Please add at least one related issue. E.g: Closes #31, Closes #45"));
     }
 }
