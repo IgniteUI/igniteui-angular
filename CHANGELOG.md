@@ -2,6 +2,21 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 5.3.0
+- Added `rowSelectable` property to `igxGrid`
+    - Setting `rowSelectable` to `true` enables multiple row selection for the `igx-grid` component. Adds a checkbox column that allows (de)selection of one, multiple or all (via header checkbox) rows.
+    - Selection is persistent through data virtualization, paging and all data operations (filtering, sorting).
+    - Added methods for (de)selection of rows in a `igx-grid`:
+        - `selectRows` and `deselectRows` - allows setting the selection state of an array of rows in the `igx-grid` programmatically.
+        - `selectAllRows` and `deselectAllRows` - allows setting the selection state of ALL rows in the `igx-grid` programatically.
+        - `selectedRows` - getter. Returns an array with references to all of the selected rows in the `igx-grid`.
+    - `onRowSelectionChange` - emitter. Emitts an object every time a selection method is called (either via user interaction or via script). 
+    The emitted object contains the following:
+        - `oldSelection` - an array with references to the selected rows at the time the selection method was called, but *before* it finishes execution.
+        - `newSelection` - an array with refenreces to the selected rows that will be present *after* the selection method finishes execution.
+        - `row` - a reference to the row object that triggered the selection method (if any).
+        - `event` - a reference to the event object that triggered the selection method (if any). 
+- Added `IgxSelectionAPIService` to support item selection. Currently used for the implementation of `rowSelectable` in `igx-grid`.
+- Added `onContextMenu` output to `igxGrid` to emit the clicked cell.
 - `igxTextSelection` directive added
     - `igxTextSelection` directive allows you to select the whole text range for every element with text content it is applied.
 - `igxFocus` directive added

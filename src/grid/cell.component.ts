@@ -12,6 +12,7 @@
     ViewContainerRef
 } from "@angular/core";
 import { take } from "rxjs/operators";
+import { IgxSelectionAPIService } from "../core/selection";
 import { KEYCODES } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridAPIService } from "./api.service";
@@ -85,6 +86,13 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         return this.grid.unpinnedColumns.indexOf(this.column);
     }
 
+    public get cellID() {
+        const primaryKey = this.grid.primaryKey;
+        const rowID = primaryKey ? this.row.rowData[primaryKey] : this.row.rowData;
+        const columnID = this.columnIndex;
+        return { rowID, columnID };
+    }
+
     get nativeElement(): any {
         return this.element.nativeElement;
     }
@@ -137,11 +145,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         return this._inEditMode;
     }
 
-    @HostBinding("attr.aria-selected")
-    @HostBinding("class.igx-grid__td--selected")
     @autoWire(true)
     get focused(): boolean {
-        return this.isFocused || this.isSelected;
+        return this.isFocused;
     }
 
     set focused(val: boolean) {
@@ -169,9 +175,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     }
 
     get selected() {
-        return this.isSelected;
+        return this.isSelected = this.selectionApi.is_item_selected(this.cellSelectionID, this.cellID);
     }
 
+    @HostBinding("attr.aria-selected")
+    @HostBinding("class.igx-grid__td--selected")
     @autoWire(true)
     set selected(val: boolean) {
         this.isSelected = val;
@@ -187,14 +195,17 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     protected isFocused = false;
     protected isSelected = false;
     protected _inEditMode = false;
+    private cellSelectionID: string;
 
     constructor(
         public gridAPI: IgxGridAPIService,
+        public selectionApi: IgxSelectionAPIService,
         public cdr: ChangeDetectorRef,
         private element: ElementRef) { }
 
     @autoWire(true)
     public ngOnInit() {
+        this.cellSelectionID = this.gridID + "-cells";
     }
 
     @autoWire(true)
@@ -220,11 +231,20 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         });
     }
 
+    @HostListener("contextmenu", ["$event"])
+    public onContextMenu(event) {
+        this.grid.onContextMenu.emit({
+            cell: this,
+            event
+        });
+    }
+
     @HostListener("focus", ["$event"])
     @autoWire()
     public onFocus(event) {
         this.isFocused = true;
-        this.isSelected = true;
+        this.selected = true;
+        this.selectionApi.set_selection(this.cellSelectionID, this.selectionApi.select_item(this.cellSelectionID, this.cellID));
         this.row.focused = true;
         if (this.grid.cellInEditMode && this.grid.cellInEditMode !== this) {
             this.grid.cellInEditMode.inEditMode = false;
@@ -241,7 +261,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @autoWire()
     public onBlur(event) {
         this.isFocused = false;
-        this.isSelected = false;
         this.row.focused = false;
     }
 
@@ -298,6 +317,13 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
                         }
                     }
                 });
+            }
+        } else if (this.grid.rowSelectable === true) {
+            const rowContainer: HTMLElement = this.row.nativeElement;
+            const checkboxElement: HTMLElement = rowContainer.querySelector(".igx-checkbox__input");
+            if (checkboxElement) {
+                this.nativeElement.blur();
+                checkboxElement.focus();
             }
         }
     }
