@@ -7,7 +7,7 @@ import { Calendar } from "../calendar";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-fdescribe("IgxGrid - Deferred Column Resizing", () => {
+describe("IgxGrid - Deferred Column Resizing", () => {
     const COLUMN_HEADER_CLASS = ".igx-grid__th";
 
     beforeEach(async(() => {
