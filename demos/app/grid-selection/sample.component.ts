@@ -74,7 +74,7 @@ export class GridSelectionComponent implements OnInit, AfterViewInit {
     }
 
     public toggleAll() {
-        if (this.grid1.selectedRows().length === 0) {
+        if ((this.grid1.selectedRows() || []).length === 0) {
             this.grid1.selectAllRows();
         } else {
             this.grid1.deselectAllRows();

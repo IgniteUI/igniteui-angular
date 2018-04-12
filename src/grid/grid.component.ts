@@ -887,6 +887,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             }
             this.cdr.markForCheck();
         }
+        if (this.headerCheckbox) {
+            this.headerCheckbox.checked = headerStatus !== undefined ? headerStatus : false;
+        }
     }
 
     public updateHeaderChecboxStatus(data) {
