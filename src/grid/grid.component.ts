@@ -72,6 +72,12 @@ export interface IRowDataEventArgs {
     data: any;
 }
 
+export interface IColumnResizeEventArgs {
+    column: IgxColumnComponent;
+    prevWidth: string;
+    newWidth: string;
+}
+
 export interface IRowSelectionEventArgs {
     oldSelection: any[];
     newSelection: any[];
@@ -130,9 +136,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     set filteredData(value) {
+        this._filteredData = value;
         if (this.rowSelectable) {
-            this._filteredData = value;
-            this.updateHeaderChecboxStatus(this._filteredData);
+            this.updateHeaderChecboxStatusOnFilter(this._filteredData);
         }
     }
 
@@ -261,6 +267,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
 
     @Output()
+    public onColumnResized = new EventEmitter<IColumnResizeEventArgs>();
+
+    @Output()
     public onContextMenu = new EventEmitter<IGridCellEventArgs>();
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
@@ -292,6 +301,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @ViewChild("theadRow")
     public theadRow: ElementRef;
+
+    @ViewChild("tbody")
+    public tbody: ElementRef;
 
     @ViewChild("tfoot")
     public tfoot: ElementRef;
@@ -352,7 +364,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         private selectionAPI: IgxSelectionAPIService,
         private elementRef: ElementRef,
         private zone: NgZone,
-        @Inject(DOCUMENT) private document,
+        @Inject(DOCUMENT) public document,
         public cdr: ChangeDetectorRef,
         private resolver: ComponentFactoryResolver,
         private differs: IterableDiffers,
@@ -423,6 +435,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     get nativeElement() {
         return this.elementRef.nativeElement;
+    }
+
+    get calcResizerHeight(): number {
+        if (this.hasSummarizedColumns) {
+            return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight +
+                this.tfoot.nativeElement.clientHeight;
+        }
+        return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight;
+    }
+
+    get calcPinnedContainerMaxWidth(): number {
+        return (parseInt(this.width.toString(), 10) * 80) / 100;
     }
 
     get pinnedWidth() {
@@ -672,7 +696,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     get hasSummarizedColumns(): boolean {
         return this.columnList.some((col) => col.hasSummary);
     }
-
     get selectedCells(): IgxGridCellComponent[] | any[] {
         if (this.rowList) {
             return this.rowList.map((row) => row.cells.filter((cell) => cell.selected))
@@ -887,13 +910,39 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             }
             this.cdr.markForCheck();
         }
+        if (this.headerCheckbox) {
+            this.headerCheckbox.checked = headerStatus !== undefined ? headerStatus : false;
+        }
     }
 
-    public updateHeaderChecboxStatus(data) {
+    public filteredItemsStatus(componentID: string, filteredData: any[], primaryKey?) {
+        const currSelection = this.selectionAPI.get_selection(componentID);
+        let atLeastOneSelected = false;
+        let notAllSelected = false;
+        if (currSelection) {
+            for (const key of Object.keys(filteredData)) {
+                const dataItem = primaryKey ? filteredData[key][primaryKey] : filteredData[key];
+                if (currSelection.find((item) => item === dataItem) !== undefined) {
+                    atLeastOneSelected = true;
+                    if (notAllSelected) {
+                        return "indeterminate";
+                    }
+                } else {
+                    notAllSelected = true;
+                    if (atLeastOneSelected) {
+                        return "indeterminate";
+                    }
+                }
+            }
+        }
+        return atLeastOneSelected ? "allSelected" : "noneSelected";
+    }
+
+    public updateHeaderChecboxStatusOnFilter(data) {
         if (!data) {
             data = this.data;
         }
-        switch (this.selectionAPI.filtered_items_status(this.id, data)) {
+        switch (this.filteredItemsStatus(this.id, data)) {
             case "allSelected": {
                 if (!this.allRowsSelected) {
                     this.allRowsSelected = true;

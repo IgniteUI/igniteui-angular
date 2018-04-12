@@ -89,8 +89,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     public get cellID() {
         const primaryKey = this.grid.primaryKey;
         const rowID = primaryKey ? this.row.rowData[primaryKey] : this.row.rowData;
-        const columnID = this.columnIndex;
-        return { rowID, columnID };
+        return { rowID, columnID: this.columnIndex, rowIndex: this.rowIndex };
     }
 
     get nativeElement(): any {
@@ -203,6 +202,18 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         public cdr: ChangeDetectorRef,
         private element: ElementRef) { }
 
+    private _updateCellSelectionStatus() {
+        const selection = this.selectionApi.get_selection(this.cellSelectionID);
+        if (selection && selection.length > 0) {
+            const cellID = selection[0];
+            const cell = this.gridAPI.get_cell_by_visible_index(this.gridID, cellID.rowIndex, cellID.columnID);
+            if (cell) {
+                cell.selected = false;
+            }
+            this.selectionApi.set_selection(this.cellSelectionID, []);
+        }
+        this.selectionApi.set_selection(this.cellSelectionID, this.selectionApi.select_item(this.cellSelectionID, this.cellID));
+    }
     @autoWire(true)
     public ngOnInit() {
         this.cellSelectionID = this.gridID + "-cells";
@@ -244,7 +255,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     public onFocus(event) {
         this.isFocused = true;
         this.selected = true;
-        this.selectionApi.set_selection(this.cellSelectionID, this.selectionApi.select_item(this.cellSelectionID, this.cellID));
+        this._updateCellSelectionStatus();
         this.row.focused = true;
         if (this.grid.cellInEditMode && this.grid.cellInEditMode !== this) {
             this.grid.cellInEditMode.inEditMode = false;
