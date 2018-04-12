@@ -204,16 +204,20 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         private element: ElementRef) { }
 
     private _updateCellSelectionStatus() {
+        const cell = this._getLastSelectedCell();
+        if (cell) {
+            cell.selected = false;
+        }
+        this.selectionApi.set_selection(this.cellSelectionID, []);
+        this.selectionApi.set_selection(this.cellSelectionID, this.selectionApi.select_item(this.cellSelectionID, this.cellID));
+    }
+
+    private _getLastSelectedCell() {
         const selection = this.selectionApi.get_selection(this.cellSelectionID);
         if (selection && selection.length > 0) {
             const cellID = selection[0];
-            const cell = this.gridAPI.get_cell_by_visible_index(this.gridID, cellID.rowIndex, cellID.columnID);
-            if (cell) {
-                cell.selected = false;
-            }
-            this.selectionApi.set_selection(this.cellSelectionID, []);
+            return this.gridAPI.get_cell_by_visible_index(this.gridID, cellID.rowIndex, cellID.columnID);
         }
-        this.selectionApi.set_selection(this.cellSelectionID, this.selectionApi.select_item(this.cellSelectionID, this.cellID));
     }
 
     public isCellSelected() {
@@ -503,18 +507,28 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostListener("keydown.arrowup", ["$event"])
     public onKeydownArrowUp(event) {
         event.preventDefault();
-        const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex - 1, this.visibleColumnIndex);
+        const lastCell = this._getLastSelectedCell();
+        const rowIndex = lastCell ? lastCell.rowIndex - 1 : this.grid.rowList.last.index;
+        const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, this.visibleColumnIndex);
         if (target) {
             target.nativeElement.focus();
         } else {
             this.row.grid.verticalScrollContainer.scrollPrev();
+            this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+                next: (e: any) => {
+                    const cell = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.visibleColumnIndex);
+                    cell.nativeElement.focus();
+                }
+            });
         }
     }
 
     @HostListener("keydown.arrowdown", ["$event"])
     public onKeydownArrowDown(event) {
         event.preventDefault();
-        const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex + 1, this.visibleColumnIndex);
+        const lastCell = this._getLastSelectedCell();
+        const rowIndex = lastCell ? lastCell.rowIndex + 1 : this.grid.rowList.first.index;
+        const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, this.visibleColumnIndex);
         const verticalScroll = this.row.grid.verticalScrollContainer.getVerticalScroll();
         if (!verticalScroll && !target) {
             return;
@@ -542,6 +556,14 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
             }
         } else {
             verticalScroll.scrollTop += this.grid.rowHeight;
+            this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+                next: (e: any) => {
+                    const prevCell = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex - 1, this.visibleColumnIndex);
+                    prevCell.nativeElement.focus();
+                    const cell = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.visibleColumnIndex);
+                    cell.nativeElement.focus();
+                }
+            });
         }
     }
 
