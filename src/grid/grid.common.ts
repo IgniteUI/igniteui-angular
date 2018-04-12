@@ -1,5 +1,81 @@
-import { ChangeDetectorRef, Directive, TemplateRef } from "@angular/core";
+import { DOCUMENT } from "@angular/common";
+import { ChangeDetectorRef, Directive, ElementRef, HostListener, Inject, Input, Output, TemplateRef  } from "@angular/core";
+import "rxjs/add/operator/map";
+import "rxjs/add/operator/switchMap";
+import "rxjs/add/operator/takeUntil";
+import { Subject } from "rxjs/Subject";
 import { IgxGridAPIService } from "./api.service";
+
+@Directive({
+    selector: "[igxResizer]"
+})
+export class IgxColumnResizerDirective {
+
+    @Input()
+    public restrictHResizeMin: number = Number.MIN_SAFE_INTEGER;
+
+    @Input()
+    public restrictHResizeMax: number = Number.MAX_SAFE_INTEGER;
+
+    @Input()
+    public resizeEndTimeout = 0;
+
+    @Output()
+    public resizeEnd = new Subject<any>();
+
+    @Output()
+    public resizeStart = new Subject<any>();
+
+    @Output()
+    public resize = new Subject<any>();
+
+    private _left;
+
+    constructor(public element: ElementRef, @Inject(DOCUMENT) public document) {
+
+        this.resizeStart.map((event) => {
+            return event.clientX;
+        }).switchMap((offset) =>
+            this.resize.map((event) => (event.clientX - offset)).takeUntil(this.resizeEnd))
+        .subscribe((pos) => {
+            const left = this._left + pos;
+
+            this.left = left < this.restrictHResizeMin ? this.restrictHResizeMin + "px" : left + "px";
+
+            if (left > this.restrictHResizeMax) {
+                this.left = this.restrictHResizeMax + "px";
+            } else if (left > this.restrictHResizeMin) {
+                this.left = left + "px";
+            }
+        });
+    }
+
+    public set left(val) {
+        this.element.nativeElement.style.left = val;
+    }
+
+    @HostListener("document:mouseup", ["$event"])
+    onMouseup(event) {
+        setTimeout(() => {
+            this.resizeEnd.next(event);
+        }, this.resizeEndTimeout);
+    }
+
+    @HostListener("document:mousedown", ["$event"])
+    onMousedown(event) {
+        this.resizeStart.next(event);
+        event.preventDefault();
+
+        const elStyle = this.document.defaultView.getComputedStyle(this.element.nativeElement);
+        this._left = Number.isNaN(parseInt(elStyle.left, 10)) ? 0 : parseInt(elStyle.left, 10);
+    }
+
+    @HostListener("document:mousemove", ["$event"])
+    onMousemove(event) {
+        this.resize.next(event);
+        event.preventDefault();
+    }
+}
 
 @Directive({
     selector: "[igxCell]"

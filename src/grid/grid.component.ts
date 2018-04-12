@@ -71,6 +71,12 @@ export interface IRowDataEventArgs {
     data: any;
 }
 
+export interface IColumnResizeEventArgs {
+    column: IgxColumnComponent;
+    prevWidth: string;
+    newWidth: string;
+}
+
 /**
  * **Ignite UI for Angular Grid** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
@@ -226,6 +232,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public onDataPreLoad = new EventEmitter<any>();
 
     @Output()
+    public onColumnResized = new EventEmitter<IColumnResizeEventArgs>();
+
+    @Output()
     public onContextMenu = new EventEmitter<IGridCellEventArgs>();
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
@@ -251,6 +260,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @ViewChild("theadRow")
     public theadRow: ElementRef;
+
+    @ViewChild("tbody")
+    public tbody: ElementRef;
 
     @ViewChild("tfoot")
     public tfoot: ElementRef;
@@ -319,7 +331,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         private gridAPI: IgxGridAPIService,
         private elementRef: ElementRef,
         private zone: NgZone,
-        @Inject(DOCUMENT) private document,
+        @Inject(DOCUMENT) public document,
         public cdr: ChangeDetectorRef,
         private resolver: ComponentFactoryResolver,
         private differs: IterableDiffers,
@@ -393,6 +405,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     get nativeElement() {
         return this.elementRef.nativeElement;
+    }
+
+    get calcResizerHeight(): number {
+        if (this.hasSummarizedColumns) {
+            return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight +
+                this.tfoot.nativeElement.clientHeight;
+        }
+        return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight;
+    }
+
+    get calcPinnedContainerMaxWidth(): number {
+        return (parseInt(this.width.toString(), 10) * 80) / 100;
     }
 
     get pinnedWidth() {
@@ -642,7 +666,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     get hasSummarizedColumns(): boolean {
         return this.columnList.some((col) => col.hasSummary);
     }
-
     get selectedCells(): IgxGridCellComponent[] | any[] {
         if (this.rowList) {
             return this.rowList.map((row) => row.cells.filter((cell) => cell.selected))
