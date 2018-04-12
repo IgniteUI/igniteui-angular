@@ -889,17 +889,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const newSelection =
             event.checked ?
             this.filteredData ?
-                this.selectionAPI.select_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
+                this.selectionAPI.append_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
                 this.selectionAPI.get_all_ids(this.data, this.primaryKey) :
             this.filteredData ?
-                this.selectionAPI.deselect_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
+                this.selectionAPI.subtract_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
                 [];
         this.triggerRowSelectionChange(newSelection, null, event, event.checked);
         this.checkHeaderChecboxStatus(event.checked);
     }
 
     get headerCheckboxAriaLabel() {
-        return this._filteringExpressions ? "Select all filtered" : "Select all";
+        return this._filteringExpressions.length > 0 ? "Select all filtered" : "Select all";
     }
 
     public checkHeaderChecboxStatus(headerStatus?: boolean) {

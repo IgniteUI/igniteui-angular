@@ -133,10 +133,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostBinding("style.flex-basis")
     @HostBinding("class.igx-grid__td--fw")
     get width() {
-         const visibleCols = this.grid.visibleColumns;
-         const isLastVisibleColumn = visibleCols[visibleCols.length - 1].field === this.column.field;
-         const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
-         return isLastVisibleColumn && hasVerticalScroll ? (parseInt(this.column.width, 10) - 18) + "px" : this.column.width;
+        const visibleCols = this.grid.visibleColumns;
+        const isLastVisibleColumn = visibleCols[visibleCols.length - 1].field === this.column.field;
+        const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
+        return isLastVisibleColumn && hasVerticalScroll ? (parseInt(this.column.width, 10) - 18) + "px" : this.column.width;
     }
 
     @HostBinding("class.igx-grid__td--editing")
@@ -174,7 +174,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     }
 
     get selected() {
-        return this.isSelected = this.selectionApi.is_item_selected(this.cellSelectionID, this.cellID);
+        return this.isSelected = this.isCellSelected();
     }
 
     @HostBinding("attr.aria-selected")
@@ -214,6 +214,21 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         }
         this.selectionApi.set_selection(this.cellSelectionID, this.selectionApi.select_item(this.cellSelectionID, this.cellID));
     }
+
+    public isCellSelected() {
+        const selection = this.selectionApi.get_selection(this.cellSelectionID);
+        if (selection) {
+            const selectedCellID = selection[0];
+            for (const prop in selectedCellID) {
+                if (selectedCellID[prop] !== this.cellID[prop]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     @autoWire(true)
     public ngOnInit() {
         this.cellSelectionID = this.gridID + "-cells";
