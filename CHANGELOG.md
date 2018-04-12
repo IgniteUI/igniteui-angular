@@ -141,7 +141,8 @@ All notable changes for each version of this project will be documented in this 
 - `igx-nav-bar` changes
     -   Currently `isActionButtonVisible` resolves to `false` if actionButtonIcon is not defined.
 - `igx-tab-bar` changes
-    - `igx-tab-bar` selector is deprecated. Use `igx-bottom-nav` selector instead
+    - **Breaking changes**: `IgxTabBarComponent` is renamed to `IgxBottomNavComponent` and `IgxTabBarModule` is renamed to `IgxBottomNavModule`.
+    - `igx-tab-bar` selector is deprecated. Use `igx-bottom-nav` selector instead.
     - custom content can be added for tabs
 
     ```html
@@ -223,7 +224,7 @@ All notable changes for each version of this project will be documented in this 
     - `IgxSlider` renamed to `IgxSliderComponent`
     - `IgxSnackbar` renamed to `IgxSnackbarComponent`
     - `IgxSwitch ` renamed to `IgxSwitchComponent`
-    - `IgxTabBar` renamed to `IgxTabBarComponent`
+    - `IgxTabBar` renamed to `IgxBottomNavComponent`
     - `IgxTabPanel` renamed to `IgxTabPanelComponent`
     - `IgxTab` renamed to `IgxTabComponent`
     - `IgxToast` renamed to `IgxToastComponent`

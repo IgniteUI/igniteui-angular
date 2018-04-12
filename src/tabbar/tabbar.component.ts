@@ -56,7 +56,7 @@ export class IgxTabTemplateDirective {
     templateUrl: "tab-bar-content.component.html"
 })
 @DeprecateClass("'igx-tab-bar' selector is deprecated. Use 'igx-bottom-nav' selector instead.")
-export class IgxTabBarComponent implements AfterViewInit {
+export class IgxBottomNavComponent implements AfterViewInit {
     @ViewChildren(forwardRef(() => IgxTabComponent)) public tabs: QueryList<IgxTabComponent>;
     @ContentChildren(forwardRef(() => IgxTabPanelComponent)) public panels: QueryList<IgxTabPanelComponent>;
 
@@ -177,7 +177,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
     @ContentChild(IgxTabTemplateDirective, { read: IgxTabTemplateDirective })
     protected tabTemplate: IgxTabTemplateDirective;
 
-    constructor(private _tabBar: IgxTabBarComponent) {
+    constructor(private _tabBar: IgxBottomNavComponent) {
     }
 
     public ngAfterContentInit(): void {
@@ -235,7 +235,7 @@ export class IgxTabComponent {
         return this._tabBar.tabs.toArray().indexOf(this);
     }
 
-    constructor(private _tabBar: IgxTabBarComponent, private _element: ElementRef) {
+    constructor(private _tabBar: IgxBottomNavComponent, private _element: ElementRef) {
     }
 
     public select() {
@@ -244,9 +244,9 @@ export class IgxTabComponent {
 }
 
 @NgModule({
-    declarations: [IgxTabBarComponent, IgxTabPanelComponent, IgxTabComponent, IgxTabTemplateDirective],
-    exports: [IgxTabBarComponent, IgxTabPanelComponent, IgxTabComponent, IgxTabTemplateDirective],
+    declarations: [IgxBottomNavComponent, IgxTabPanelComponent, IgxTabComponent, IgxTabTemplateDirective],
+    exports: [IgxBottomNavComponent, IgxTabPanelComponent, IgxTabComponent, IgxTabTemplateDirective],
     imports: [CommonModule, IgxBadgeModule, IgxIconModule]
 })
-export class IgxTabBarModule {
+export class IgxBottomNavModule {
 }
