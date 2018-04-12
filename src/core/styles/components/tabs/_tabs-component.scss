@@ -40,6 +40,10 @@
         @extend %igx-tabs__header-button--hidden !optional;
     }
 
+    @include e(header-button, $m: none) {
+        @extend %igx-tabs__header-button--none !optional;
+    }
+
     @include e(header-button, $m: active) {
         @extend %igx-tabs__header-button !optional;
     }
