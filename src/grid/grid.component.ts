@@ -224,6 +224,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Output()
     public onColumnResized = new EventEmitter<{column: any, prevWidth: string, newWidth: string}>();
 
+    @Output()
+    public onContextMenu = new EventEmitter<IGridCellEventArgs>();
+
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
 
