@@ -159,7 +159,7 @@ export class IgxGridAPIService {
             filteringState.splice(index, 1);
             this.get(id).filteringExpressions = filteringState;
         }
-        this.get(id).updateSelectionStatus();
+        this.get(id).filteredData = null;
     }
 
     public clear_sort(id, fieldName) {

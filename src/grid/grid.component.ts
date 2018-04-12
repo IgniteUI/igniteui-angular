@@ -125,6 +125,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.cdr.markForCheck();
     }
 
+    get filteredData() {
+        return this._filteredData;
+    }
+
+    set filteredData(value) {
+        if (this.rowSelectable) {
+            this._filteredData = value;
+            this.updateHeaderChecboxStatus(this._filteredData);
+        }
+    }
+
     @Input()
     get paging(): boolean {
         return this._paging;
@@ -332,6 +343,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _filteringLogic = FilteringLogic.And;
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
+    private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;
 
@@ -851,15 +863,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public onHeaderCheckboxClick(event) {
-        const newSelecion = (event.checked) ?
-            this.selectionAPI.select_all(this.id, this.data, this.primaryKey) :
-            this.selectionAPI.deselect_all(this.id, this.primaryKey);
-        this.triggerRowSelectionChange(newSelecion, null, event, event.checked);
+        const newSelection =
+            event.checked ?
+            this.filteredData ?
+                this.selectionAPI.select_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
+                this.selectionAPI.get_all_ids(this.data, this.primaryKey) :
+            this.filteredData ?
+                this.selectionAPI.deselect_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
+                [];
+        this.triggerRowSelectionChange(newSelection, null, event, event.checked);
         this.checkHeaderChecboxStatus(event.checked);
     }
 
     get headerCheckboxAriaLabel() {
-        return this.selectionAPI.is_filtering_applied(this.id) ? "Select all filtered" : "Select all";
+        return this._filteringExpressions ? "Select all filtered" : "Select all";
     }
 
     public checkHeaderChecboxStatus(headerStatus?: boolean) {
@@ -872,19 +889,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    public updateSelectionStatus(filteredData?: any[]) {
-        if (this.rowSelectable) {
-            if (filteredData) {
-                this.selectionAPI.save_filtered_data(this.id, filteredData);
-                this.updateHeaderChecboxStatus(filteredData);
-            } else {
-                this.selectionAPI.clear_filtered_data(this.id);
-                this.updateHeaderChecboxStatus(this.data);
-            }
-        }
-    }
-
     public updateHeaderChecboxStatus(data) {
+        if (!data) {
+            data = this.data;
+        }
         switch (this.selectionAPI.filtered_items_status(this.id, data)) {
             case "allSelected": {
                 if (!this.allRowsSelected) {

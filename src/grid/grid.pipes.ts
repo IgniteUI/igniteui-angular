@@ -70,7 +70,7 @@ export class IgxGridFilteringPipe implements PipeTransform {
         }
 
         const result = DataUtil.filter(cloneArray(collection), state);
-        this.gridAPI.get(id).updateSelectionStatus(result);
+        this.gridAPI.get(id).filteredData = result;
         return result;
     }
 }

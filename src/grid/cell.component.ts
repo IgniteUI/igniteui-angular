@@ -175,7 +175,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     }
 
     get selected() {
-        return this.isSelected = this.selectionApi.is_single_item_selected(this.gridID, this.cellID);
+        return this.isSelected = this.selectionApi.is_item_selected(this.cellSelectionID, this.cellID);
     }
 
     @HostBinding("attr.aria-selected")
@@ -195,6 +195,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     protected isFocused = false;
     protected isSelected = false;
     protected _inEditMode = false;
+    private cellSelectionID: string;
 
     constructor(
         public gridAPI: IgxGridAPIService,
@@ -204,6 +205,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
 
     @autoWire(true)
     public ngOnInit() {
+        this.cellSelectionID = this.gridID + "-cells";
     }
 
     @autoWire(true)
@@ -242,7 +244,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     public onFocus(event) {
         this.isFocused = true;
         this.selected = true;
-        this.selectionApi.select_single_item(this.gridID, this.cellID);
+        this.selectionApi.set_selection(this.cellSelectionID, this.selectionApi.select_item(this.cellSelectionID, this.cellID));
         this.row.focused = true;
         if (this.grid.cellInEditMode && this.grid.cellInEditMode !== this) {
             this.grid.cellInEditMode.inEditMode = false;

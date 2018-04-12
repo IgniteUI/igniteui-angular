@@ -3,10 +3,6 @@ export class IgxSelectionAPIService {
     // If the primaryKey is omitted, then selection is based on the item data
     protected selection: Map<string,  any[]> = new Map<string, any[]>();
 
-    // Single selection is saved in a different map, because it may be independant from multiple selection.
-    // E.g. cell selection, can be used together with row selection.
-    protected singleSelection: Map<string,  any> = new Map<string, any>();
-
     // Filtering data is saved when filtering pipe is applied and cleared when filtergin is cleared.
     protected filteredSelection: Map<string,  any[]> = new Map<string, any[]>();
 
@@ -59,7 +55,7 @@ export class IgxSelectionAPIService {
 
     public is_item_selected(componentID: string, itemID) {
         const selection = this.get_selection(componentID);
-        if (selection && selection.find((item) => item === itemID) !== undefined) {
+        if (selection && selection.find((item) => this.compare(item, itemID)) !== undefined) {
             return true;
         } else {
             return false;
@@ -70,22 +66,6 @@ export class IgxSelectionAPIService {
         return primaryKey ? data.map((x) => x[primaryKey]) : data;
     }
 
-    public select_all(componentID: string, data, primaryKey?): any[] {
-        if (this.is_filtering_applied(componentID)) {
-            return this.select_filtered_items(componentID, primaryKey);
-        } else {
-            return this.get_all_ids(data, primaryKey);
-        }
-    }
-
-    public deselect_all(componentID: string, primaryKey?): any[] {
-        if (this.is_filtering_applied(componentID)) {
-            return this.deselect_filtered_items(componentID, primaryKey);
-        } else {
-            return [];
-        }
-    }
-
     public are_all_selected(componentID: string, data): boolean {
         return this.get_selection_length(componentID) === data.length;
     }
@@ -94,54 +74,17 @@ export class IgxSelectionAPIService {
         return this.get_selection_length(componentID) === 0;
     }
 
-    public select_single_item(componentID: string, itemID) {
-        this.singleSelection.set(componentID, itemID);
-    }
-
-    public deselect_single_item(componentID: string) {
-        this.singleSelection.set(componentID, null);
-    }
-
-    public is_single_item_selected(componentID: string, itemID) {
-        const currSelection = this.singleSelection.get(componentID);
-        if (currSelection) {
-            for (const prop in currSelection) {
-                if (currSelection[prop] !== itemID[prop]) {
+    public compare(item1, item2) {
+        if (item1 !== Object(item1)) {
+            return item1 === item2;
+        } else {
+            for (const prop in item1) {
+                if (item1[prop] !== item2[prop]) {
                     return false;
                 }
             }
             return true;
         }
-        return false;
-    }
-
-    public save_filtered_data(componentID: string, filteredData: any[]) {
-        this.filteredSelection.set(componentID, filteredData);
-    }
-
-    public clear_filtered_data(componentID: string) {
-        this.filteredSelection.set(componentID, null);
-    }
-
-    public is_filtering_applied(componentID: string) {
-        return !!this.filteredSelection.get(componentID);
-    }
-
-    public select_filtered_items(componentID: string, primaryKey?): any[] {
-        let currSelection = this.get_selection(componentID);
-        const currFilteredSelection = this.filteredSelection.get(componentID);
-        const currFilteredID = this.get_all_ids(currFilteredSelection, primaryKey);
-        if (currSelection === undefined) {
-            currSelection = [];
-        }
-        return [...currSelection, ...currFilteredSelection];
-    }
-
-    public deselect_filtered_items(componentID: string, primaryKey?): any[] {
-        const currSelection = this.get_selection(componentID);
-        const currFilteredSelection = this.filteredSelection.get(componentID);
-        const currFilteredID = this.get_all_ids(currFilteredSelection, primaryKey);
-        return currSelection.filter((item) => currFilteredID.indexOf(item) === -1);
     }
 
     public filtered_items_status(componentID: string, filteredData: any[], primaryKey?) {
