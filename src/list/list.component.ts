@@ -87,12 +87,12 @@ export class IgxListComponent {
     }
 
     @HostBinding("class.igx-list-empty")
-    public get emptyStyle(): boolean {
+    public get isListEmpty(): boolean {
         return !this.children || this.children.length === 0;
     }
 
     @HostBinding("class.igx-list")
-    public get listStyle(): boolean {
+    public get cssClass(): boolean {
         return this.children && this.children.length > 0;
     }
 
