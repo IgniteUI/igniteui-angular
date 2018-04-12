@@ -24,6 +24,7 @@ import { GridPerformanceSampleModule } from "./grid-performance/sample.module";
 import { GridSummarySampleModule } from "./grid-summaries/sample.module";
 import { GridSelectionModule } from "./grid-selection/sample.module";
 import { GridSampleModule } from "./grid/sample.module";
+import { GridVirtualizationSampleModule } from "./grid-remote-virtualization/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
 import { InputGroupSampleModule } from "./input-group/sample.module";
 import { InputSampleModule } from "./input/sample.module";
@@ -79,6 +80,7 @@ import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
         GridColumnPinningSampleModule,
         GridPerformanceSampleModule,
         GridSummarySampleModule,
+        GridVirtualizationSampleModule,
         GridSelectionModule,
         IgxCardSampleModule,
         IgxSliderSampleModule,
