@@ -35,6 +35,7 @@ import { DataType } from "../data-operations/data-util";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
+import { IForOfState } from "../directives/for-of/IForOfState";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
@@ -68,6 +69,12 @@ export interface IPageEventArgs {
 
 export interface IRowDataEventArgs {
     data: any;
+}
+
+export interface IColumnResizeEventArgs {
+    column: IgxColumnComponent;
+    prevWidth: string;
+    newWidth: string;
 }
 
 /**
@@ -185,6 +192,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public primaryKey;
 
     @Output()
+    public onCellClick = new EventEmitter<IGridCellEventArgs>();
+
+    @Output()
     public onSelection = new EventEmitter<IGridCellEventArgs>();
 
     @Output()
@@ -218,6 +228,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Output()
     public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
 
+    @Output()
+    public onDataPreLoad = new EventEmitter<any>();
+
+    @Output()
+    public onColumnResized = new EventEmitter<IColumnResizeEventArgs>();
+
+    @Output()
+    public onContextMenu = new EventEmitter<IGridCellEventArgs>();
+
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
 
@@ -241,6 +260,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @ViewChild("theadRow")
     public theadRow: ElementRef;
+
+    @ViewChild("tbody")
+    public tbody: ElementRef;
 
     @ViewChild("tfoot")
     public tfoot: ElementRef;
@@ -266,6 +288,21 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     set sortingExpressions(value) {
         this._sortingExpressions = cloneArray(value);
         this.cdr.markForCheck();
+    }
+
+    get virtualizationState() {
+        return this.verticalScrollContainer.state;
+    }
+    set virtualizationState(state) {
+        this.verticalScrollContainer.state = state;
+    }
+
+    get totalItemCount() {
+        return this.verticalScrollContainer.totalItemCount;
+    }
+    set totalItemCount(count) {
+        this.verticalScrollContainer.totalItemCount = count;
+        this.cdr.detectChanges();
     }
 
     public pagingState;
@@ -294,7 +331,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         private gridAPI: IgxGridAPIService,
         private elementRef: ElementRef,
         private zone: NgZone,
-        @Inject(DOCUMENT) private document,
+        @Inject(DOCUMENT) public document,
         public cdr: ChangeDetectorRef,
         private resolver: ComponentFactoryResolver,
         private differs: IterableDiffers,
@@ -362,8 +399,24 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.destroy$.complete();
     }
 
+    public dataLoading(event) {
+        this.onDataPreLoad.emit(event);
+    }
+
     get nativeElement() {
         return this.elementRef.nativeElement;
+    }
+
+    get calcResizerHeight(): number {
+        if (this.hasSummarizedColumns) {
+            return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight +
+                this.tfoot.nativeElement.clientHeight;
+        }
+        return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight;
+    }
+
+    get calcPinnedContainerMaxWidth(): number {
+        return (parseInt(this.width.toString(), 10) * 80) / 100;
     }
 
     get pinnedWidth() {
@@ -613,7 +666,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     get hasSummarizedColumns(): boolean {
         return this.columnList.some((col) => col.hasSummary);
     }
-
     get selectedCells(): IgxGridCellComponent[] | any[] {
         if (this.rowList) {
             return this.rowList.map((row) => row.cells.filter((cell) => cell.selected))

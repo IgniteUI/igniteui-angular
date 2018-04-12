@@ -126,10 +126,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostBinding("style.flex-basis")
     @HostBinding("class.igx-grid__td--fw")
     get width() {
-         const visibleCols = this.grid.visibleColumns;
-         const isLastVisibleColumn = visibleCols[visibleCols.length - 1].field === this.column.field;
-         const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
-         return isLastVisibleColumn && hasVerticalScroll ? (parseInt(this.column.width, 10) - 18) + "px" : this.column.width;
+        const visibleCols = this.grid.visibleColumns;
+        const isLastVisibleColumn = visibleCols[visibleCols.length - 1].field === this.column.field;
+        const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
+        return isLastVisibleColumn && hasVerticalScroll && !!this.column.width ?
+            (parseInt(this.column.width, 10) - 18) + "px" : this.column.width;
     }
 
     @HostBinding("class.igx-grid__td--editing")
@@ -212,6 +213,22 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         }
     }
 
+    @HostListener("click", ["$event"])
+    public onClick(event) {
+        this.grid.onCellClick.emit({
+            cell: this,
+            event
+        });
+    }
+
+    @HostListener("contextmenu", ["$event"])
+    public onContextMenu(event) {
+        this.grid.onContextMenu.emit({
+            cell: this,
+            event
+        });
+    }
+
     @HostListener("focus", ["$event"])
     @autoWire()
     public onFocus(event) {
@@ -222,11 +239,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
             this.grid.cellInEditMode.inEditMode = false;
             this.grid.cellInEditMode = null;
         }
-        const args: IGridCellEventArgs = {
+
+        this.grid.onSelection.emit({
             cell: this,
             event
-        };
-        this.grid.onSelection.emit(args);
+        });
     }
 
     @HostListener("blur", ["$event"])
