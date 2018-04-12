@@ -330,6 +330,10 @@
         visibility: hidden;
     }
 
+    %igx-tabs__header-button--none {
+        display: none;
+    }
+
     // LABELS
     %igx-tabs__item-label {
         @include ellipsis();
