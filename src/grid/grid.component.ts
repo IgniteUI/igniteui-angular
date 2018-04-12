@@ -70,6 +70,12 @@ export interface IRowDataEventArgs {
     data: any;
 }
 
+export interface IColumnResizeEventArgs {
+    column: IgxColumnComponent;
+    prevWidth: string;
+    newWidth: string;
+}
+
 /**
  * **Ignite UI for Angular Grid** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
@@ -219,7 +225,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
 
     @Output()
-    public onColumnResized = new EventEmitter<{column: any, prevWidth: string, newWidth: string}>();
+    public onColumnResized = new EventEmitter<IColumnResizeEventArgs>();
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;

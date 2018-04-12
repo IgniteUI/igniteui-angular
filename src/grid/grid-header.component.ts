@@ -83,6 +83,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     public showResizer = false;
     public resizerHeight;
     public dragDirection: RestrictDrag = RestrictDrag.HORIZONTALLY;
+    public resizeEndTimeout = /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent) ? 200 : 0;
 
     protected sortDirection = SortingDirection.None;
     private _startResizePos;

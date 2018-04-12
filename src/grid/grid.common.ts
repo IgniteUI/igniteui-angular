@@ -32,9 +32,6 @@ export class IgxColumnResizerDirective {
     private _left;
 
     constructor(public element: ElementRef, @Inject(DOCUMENT) public document) {
-        if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
-            this.resizeEndTimeout = 200;
-        }
 
         this.resizeStart.map((event) => {
             return event.clientX;
@@ -66,10 +63,8 @@ export class IgxColumnResizerDirective {
 
     @HostListener("document:mousedown", ["$event"])
     onMousedown(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
         this.resizeStart.next(event);
+        event.preventDefault();
 
         const elStyle = this.document.defaultView.getComputedStyle(this.element.nativeElement);
         this._left = Number.isNaN(parseInt(elStyle.left, 10)) ? 0 : parseInt(elStyle.left, 10);
@@ -77,10 +72,8 @@ export class IgxColumnResizerDirective {
 
     @HostListener("document:mousemove", ["$event"])
     onMousemove(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
         this.resize.next(event);
+        event.preventDefault();
     }
 }
 

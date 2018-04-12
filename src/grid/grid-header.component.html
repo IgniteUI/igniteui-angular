@@ -16,6 +16,7 @@
     <div *ngIf="showResizer" igxResizer
         [restrictHResizeMax]="restrictResizeMax"
         [restrictHResizeMin]="restrictResizeMin"
+        [resizeEndTimeout]="resizeEndTimeout"
         (resizeEnd)="onResize($event)"
         [style.height.px]="resizerHeight"
         style="width: 4.5px;z-index: 4;background-color: #006db6; position:absolute;cursor:col-resize">

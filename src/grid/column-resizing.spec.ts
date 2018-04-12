@@ -363,20 +363,20 @@ describe("IgxGrid - Deferred Column Resizing", () => {
     }));
 
     it("Autoresize pinned column on double click.", fakeAsync(() => {
-        const fixture = TestBed.createComponent(GridFeaturesComponent);
+        const fixture = TestBed.createComponent(LargePinnedColGridComponent);
         fixture.detectChanges();
 
         const dblclick = new Event("dblclick");
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
-        expect(grid.columns[5].width).toEqual("150px");
+        expect(grid.columns[2].width).toEqual("100px");
 
-        headers[5].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
+        headers[2].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[5].width).toEqual("89px");
+        expect(grid.columns[2].width).toEqual("97px");
 
         discardPeriodicTasks();
     }));
