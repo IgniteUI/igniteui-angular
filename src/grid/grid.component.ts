@@ -130,8 +130,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     set filteredData(value) {
+        this._filteredData = value;
         if (this.rowSelectable) {
-            this._filteredData = value;
             this.updateHeaderChecboxStatusOnFilter(this._filteredData);
         }
     }
