@@ -20,7 +20,8 @@ import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
-    IgxCellTemplateDirective
+    IgxCellTemplateDirective,
+    IgxColumnResizerDirective
 } from "./grid.common";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridPagingPipe, IgxGridSortingPipe } from "./grid.pipes";
@@ -38,6 +39,7 @@ import { IgxGridRowComponent } from "./row.component";
     IgxCellHeaderTemplateDirective,
     IgxCellEditorTemplateDirective,
     IgxCellTemplateDirective,
+    IgxColumnResizerDirective,
     IgxGridFilterComponent,
     IgxGridSortingPipe,
     IgxGridPagingPipe,
@@ -58,7 +60,8 @@ import { IgxGridRowComponent } from "./row.component";
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellEditorTemplateDirective,
-    IgxCellTemplateDirective
+    IgxCellTemplateDirective,
+    IgxColumnResizerDirective
   ],
   imports: [
     CommonModule,
