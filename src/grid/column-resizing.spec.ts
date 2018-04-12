@@ -7,7 +7,7 @@ import { Calendar } from "../calendar";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-describe("IgxGrid - Deferred Column Resizing", () => {
+fdescribe("IgxGrid - Deferred Column Resizing", () => {
     const COLUMN_HEADER_CLASS = ".igx-grid__th";
 
     beforeEach(async(() => {
@@ -41,6 +41,10 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         const headerResArea = headers[0].nativeElement.children[1];
         simulateMouseEvent("mouseover", headerResArea, 100, 0);
         simulateMouseEvent("mousedown", headerResArea, 100, 0);
+        simulateMouseEvent("mousedup", headerResArea, 100, 0);
+        tick();
+        fixture.detectChanges();
+        simulateMouseEvent("mousedown", headerResArea, 100, 0);
         tick();
         fixture.detectChanges();
 
@@ -49,7 +53,7 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         let resizer = headers[0].nativeElement.children[1].children[0];
         expect(resizer).toBeDefined();
         simulateMouseEvent("mousemove", resizer, 250, 5);
-        tick();
+        tick(100);
 
         simulateMouseEvent("mouseup", resizer, 250, 5);
         tick();
