@@ -922,7 +922,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get headerCheckboxAriaLabel() {
-        return this._filteringExpressions.length > 0 ? "Select all filtered" : "Select all";
+        return this._filteringExpressions.length > 0 ?
+            this.headerCheckbox && this.headerCheckbox.checked ? "Deselect all filtered" : "Select all filtered" :
+            this.headerCheckbox && this.headerCheckbox.checked ? "Deselect all" : "Select all";
     }
 
     public checkHeaderChecboxStatus(headerStatus?: boolean) {

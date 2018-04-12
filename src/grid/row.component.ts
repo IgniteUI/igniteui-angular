@@ -155,7 +155,9 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
     }
 
     get rowCheckboxAriaLabel() {
-        return this.grid.primaryKey ? "Select row with key " + this.rowID : "Select row";
+        return this.grid.primaryKey ?
+            this.isSelected ? "Deselect row with key " + this.rowID : "Select row with key " + this.rowID :
+            this.isSelected ? "Deselect row" : "Select row";
     }
 
     public ngDoCheck() {
