@@ -1,13 +1,13 @@
 import { AfterContentChecked, AfterViewChecked, Component, ContentChildren, QueryList, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxTabBarComponent, IgxTabBarModule, IgxTabComponent, IgxTabPanelComponent, IgxTabTemplateDirective } from "./tabbar.component";
+import { IgxBottomNavComponent, IgxBottomNavModule, IgxTabComponent, IgxTabPanelComponent, IgxTabTemplateDirective } from "./tabbar.component";
 
 describe("TabBar", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [TabBarTestComponent, BottomTabBarTestComponent, TemplatedTabBarTestComponent],
-            imports: [IgxTabBarModule]
+            imports: [IgxBottomNavModule]
         })
             .compileComponents();
     }));
@@ -24,7 +24,7 @@ describe("TabBar", () => {
         tabs = tabbar.tabs.toArray();
 
         expect(tabbar).toBeDefined();
-        expect(tabbar instanceof IgxTabBarComponent).toBeTruthy();
+        expect(tabbar instanceof IgxBottomNavComponent).toBeTruthy();
         expect(tabbar.panels instanceof QueryList).toBeTruthy();
         expect(tabbar.panels.length).toBe(3);
 
@@ -174,7 +174,7 @@ describe("TabBar", () => {
         </div>`
 })
 class TabBarTestComponent {
-    @ViewChild(IgxTabBarComponent) public tabbar: IgxTabBarComponent;
+    @ViewChild(IgxBottomNavComponent) public tabbar: IgxBottomNavComponent;
     @ViewChild("wrapperDiv") public wrapperDiv: any;
 
     public tabSelectedHandler(args) {
@@ -213,7 +213,7 @@ class TabBarTestComponent {
         </div>`
 })
 class BottomTabBarTestComponent {
-    @ViewChild(IgxTabBarComponent) public tabbar: IgxTabBarComponent;
+    @ViewChild(IgxBottomNavComponent) public tabbar: IgxBottomNavComponent;
     @ViewChild("wrapperDiv") public wrapperDiv: any;
 }
 
@@ -244,6 +244,6 @@ class BottomTabBarTestComponent {
         </div>`
 })
 class TemplatedTabBarTestComponent {
-    @ViewChild(IgxTabBarComponent) public tabbar: IgxTabBarComponent;
+    @ViewChild(IgxBottomNavComponent) public tabbar: IgxBottomNavComponent;
     @ViewChild("wrapperDiv") public wrapperDiv: any;
 }
