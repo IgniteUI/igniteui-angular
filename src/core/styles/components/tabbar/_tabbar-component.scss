@@ -5,7 +5,7 @@
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
 ////
-@include b(igx-tab-bar) {
+@include b(igx-bottom-nav) {
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
 
@@ -19,21 +19,21 @@
     }
 
     @include e(menu) {
-        @extend %igx-tabbar-menu !optional;
+        @extend %igx-bottom-nav-menu !optional;
     }
 
     @include e(menu, $m: top) {
-        @extend %igx-tabbar-menu !optional;
-        @extend %igx-tabbar-menu--top !optional;
+        @extend %igx-bottom-nav-menu !optional;
+        @extend %igx-bottom-nav-menu--top !optional;
     }
 
     @include e(menu, $m: bottom) {
-        @extend %igx-tabbar-menu !optional;
-        @extend %igx-tabbar-menu--bottom !optional;
+        @extend %igx-bottom-nav-menu !optional;
+        @extend %igx-bottom-nav-menu--bottom !optional;
     }
 
     @include e(menu-item) {
-        @extend %igx-tabbar-menu-item !optional;
+        @extend %igx-bottom-nav-menu-item !optional;
 
         .tab-icon {
             @extend %igx-tab-icon !optional;
@@ -45,7 +45,7 @@
     }
 
     @include e(menu-item, $m: selected) {
-        @extend %igx-tabbar-menu-item !optional;
+        @extend %igx-bottom-nav-menu-item !optional;
 
         .tab-icon {
             @extend %igx-tab-icon !optional;
@@ -59,7 +59,7 @@
     }
 
     @include e(menu-item, $m: disabled) {
-        @extend %igx-tabbar-menu-item !optional;
-        @extend %igx-tabbar-menu-item--disabled !optional;
+        @extend %igx-bottom-nav-menu-item !optional;
+        @extend %igx-bottom-nav-menu-item--disabled !optional;
     }
 }
