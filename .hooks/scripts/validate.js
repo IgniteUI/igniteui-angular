@@ -8,14 +8,14 @@ var defaultTemp = require('./templates/default'),
     errMessages = require('./common').errorMessages,
     errorFactory = require('./common').errorFactory;
   
-module.exports = function (message, options, errors) {
-    
+module.exports = (message, options, errors) => {
+    message = message.trim();
     if (message === undefined) {
-        return errorFactory(errMessages.UNDEFINED_OF_COMMIT_MSG);
+        errors.push(errMessages.UNDEFINED_OF_COMMIT_MSG);
     } else if (!(typeof message === 'string' || message instanceof String)) {
-        return errorFactory(errMessages.MSG_IS_NOT_A_STRING);
+        errors.push(errMessages.MSG_IS_NOT_A_STRING);
     } else if (message.length === 0) {
-        return errorFactory(errMessages.MSG_IS_EMPTY);
+        errors.push(errMessages.MSG_IS_EMPTY);
     }
   
     var lines = message.split('\n');
