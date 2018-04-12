@@ -1,7 +1,11 @@
 import { AfterContentChecked, AfterViewChecked, Component, ContentChildren, QueryList, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { IgxBottomNavComponent, IgxBottomNavModule, IgxTabComponent, IgxTabPanelComponent, IgxTabTemplateDirective } from "./tabbar.component";
+import { IgxBottomNavComponent,
+         IgxBottomNavModule,
+         IgxTabComponent,
+         IgxTabPanelComponent,
+         IgxTabTemplateDirective } from "./tabbar.component";
 
 describe("TabBar", () => {
     beforeEach(async(() => {
