@@ -12,7 +12,7 @@
     <div class="igx-carousel__inner" role="list">
         <ng-content></ng-content>
     </div>
-    <div ng-template="ngIf navigation">
+    <div *ngIf="navigation">
         <a role="button" tabindex="0" class="igx-carousel__arrow--prev" (click)="prev()" [hidden]="!slides.length">
             <igx-icon fontSet="material" name="arrow_back"></igx-icon>
         </a>

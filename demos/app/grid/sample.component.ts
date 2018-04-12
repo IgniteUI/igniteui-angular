@@ -15,10 +15,16 @@ import {
     StableSortingStrategy,
     STRING_FILTERS
 } from "../../lib/main";
-import { IgxCsvExporterOptions, IgxExcelExporterService, IgxCsvExporterService, CsvFileTypes } from "../../lib/services";
-import { IgxExcelExporterOptions } from "../../lib/services/excel/excel-exporter-options";
-import { IgxBaseExporter } from "../../lib/services/exporter-common/base-export-service";
-import { IgxExporterOptionsBase } from "../../lib/services/exporter-common/exporter-options-base";
+
+import {
+    CsvFileTypes,
+    IgxBaseExporter,
+    IgxCsvExporterOptions,
+    IgxCsvExporterService,
+    IgxExcelExporterOptions,
+    IgxExporterOptionsBase,
+    IgxExcelExporterService
+} from "../../lib/services/index";
 
 @Injectable()
 export class LocalService {
