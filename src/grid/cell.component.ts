@@ -126,10 +126,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostBinding("style.flex-basis")
     @HostBinding("class.igx-grid__td--fw")
     get width() {
-        const visibleCols = this.grid.visibleColumns;
-        const isLastVisibleColumn = visibleCols[visibleCols.length - 1].field === this.column.field;
         const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
-        return isLastVisibleColumn && hasVerticalScroll && !!this.column.width ?
+        return this.isLastUnpinned && hasVerticalScroll && !!this.column.width ?
             (parseInt(this.column.width, 10) - 18) + "px" : this.column.width;
     }
 
@@ -162,11 +160,12 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostBinding("class.igx-grid__th--pinned-last")
     get isLastPinned() {
         const pinnedCols = this.grid.pinnedColumns;
-        if (pinnedCols.length === 0) {
-            return false;
-        } else {
-            return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
-        }
+        return pinnedCols[pinnedCols.length - 1] === this.column;
+    }
+
+    get isLastUnpinned() {
+        const unpinnedColumns = this.grid.unpinnedColumns;
+        return unpinnedColumns[unpinnedColumns.length - 1] === this.column;
     }
 
     get selected() {
