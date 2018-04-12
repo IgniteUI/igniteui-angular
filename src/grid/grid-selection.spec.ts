@@ -455,6 +455,23 @@ describe("IgxGrid - Row Selection", () => {
 
     // API Methods
 
+    it("Filtering and row selection", async(() => {
+        const fix = TestBed.createComponent(GridWithSelectionFilteringComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection4;
+        const secondRow = grid.getRowByIndex(1);
+        const targetCheckbox: HTMLElement = secondRow.nativeElement.querySelector(".igx-checkbox__input");
+
+        targetCheckbox.click();
+        fix.detectChanges();
+        expect(grid.getRowByIndex(1).isSelected).toBeTruthy();
+        spyOn(grid.onRowSelectionChange, "emit").and.callFake((args) => { args.newSelection = args.oldSelection; });
+        targetCheckbox.click();
+        fix.detectChanges();
+        expect(grid.getRowByIndex(1).isSelected).toBeTruthy();
+        expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
+    }));
+
     it("Should be able to select/deselect rows programatically", async(() => {
         const fix = TestBed.createComponent(GridWithSelectionComponent);
         fix.detectChanges();

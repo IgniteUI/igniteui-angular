@@ -18,6 +18,7 @@ import {
 import { take } from "rxjs/operators";
 import { IgxSelectionAPIService } from "../core/selection";
 import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
+import { IgxCheckboxComponent } from "../main";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
@@ -43,6 +44,9 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
 
     @ViewChild("igxDirRef", { read: IgxForOfDirective })
     public virtDirRow: IgxForOfDirective<any>;
+
+    @ViewChild(forwardRef(() => IgxCheckboxComponent), {read: IgxCheckboxComponent})
+    public checkboxElement: IgxCheckboxComponent;
 
     @ViewChildren(forwardRef(() => IgxGridCellComponent), { read: IgxGridCellComponent })
     public cells: QueryList<IgxGridCellComponent>;
@@ -159,5 +163,8 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
             this.grid.allRowsSelected ? true : this.selectionAPI.is_item_selected(this.gridID, this.rowID) :
             this.selectionAPI.is_item_selected(this.gridID, this.rowID);
         this.cdr.markForCheck();
+        if (this.checkboxElement) {
+            this.checkboxElement.checked = this.isSelected;
+        }
     }
 }
