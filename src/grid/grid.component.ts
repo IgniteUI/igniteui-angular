@@ -140,6 +140,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this.rowSelectable) {
             this.updateHeaderChecboxStatusOnFilter(this._filteredData);
         }
+        if (this.hasSummarizedColumns) {
+            this._filteredData = value;
+        }
     }
 
     @Input()
@@ -623,6 +626,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!this.gridAPI.get_column_by_name(this.id, name)) {
             return;
         }
+        this.clearSummaryCache();
         this.gridAPI.clear_filter(this.id, name);
     }
 

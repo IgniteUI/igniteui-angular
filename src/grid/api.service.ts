@@ -32,9 +32,23 @@ export class IgxGridAPIService {
             this.summaryCacheMap.set(id, new Map<string, any[]>());
         }
         const column = this.get_column_by_name(id, name);
-        if (!this.summaryCacheMap.get(id).get(column.field)) {
-            this.summaryCacheMap.get(id).set(column.field,
-                column.summaries.operate(this.get(id).data.map((rec) => rec[column.field])));
+        if (this.get(id).filteredData) {
+            if (this.get(id).filteredData.length > 0) {
+                if (!this.summaryCacheMap.get(id).get(column.field)) {
+                    this.summaryCacheMap.get(id).set(column.field,
+                        column.summaries.operate(this.get(id).filteredData.map((rec) => rec[column.field])));
+                }
+            } else {
+                if (!this.summaryCacheMap.get(id).get(column.field)) {
+                    this.summaryCacheMap.get(id).set(column.field,
+                        column.summaries.operate(this.get(id).data.map((rec) => rec[column.field])));
+                }
+            }
+        } else {
+            if (!this.summaryCacheMap.get(id).get(column.field)) {
+                this.summaryCacheMap.get(id).set(column.field,
+                    column.summaries.operate(this.get(id).data.map((rec) => rec[column.field])));
+            }
         }
     }
     public get_summaries(id: string) {
