@@ -47,7 +47,7 @@ export default (config) => {
             level: "log"
         },
 
-        singleRun: false,
+        singleRun: true,
         colors: true
     } as ConfigOptions);
 };

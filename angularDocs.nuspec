@@ -1,0 +1,16 @@
+<?xml version="1.0"?> 
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"> 
+  <metadata> 
+    <id>AngularDocs$lang$</id> 
+    <title>Infragistics AngularDocs$lang$</title> 
+		<version>1.0.0</version> 
+		<authors>Infragistics</authors> 
+		<owners>Infragistics, Inc.</owners> 
+		<requireLicenseAcceptance>false</requireLicenseAcceptance> 
+ 		<description>This is a package that can be used with Octopus deployer</description> 
+ 	</metadata> 
+ 	<files> 
+ 		<file src="dist\docs\**\*.*" target="\" /> 
+ 		<!-- <file src="web.config" target="" /> -->
+ 	</files>
+</package> 
