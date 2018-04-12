@@ -24,7 +24,7 @@ describe("Excel Exporter", () => {
     let exporter: IgxExcelExporterService;
     let actualData: FileContentData;
     let options: IgxExcelExporterOptions;
-    const data = new ExportTestDataService().simpleGridData;
+    let data;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -34,20 +34,21 @@ describe("Excel Exporter", () => {
                 GridReorderedColumnsComponent
             ],
             imports: [IgxGridModule.forRoot()],
-            providers: [ ExportTestDataService ]
+            providers: [ExportTestDataService]
         })
-        .compileComponents().then(() => {
-            exporter = new IgxExcelExporterService();
-            actualData = new FileContentData();
-            options = new IgxExcelExporterOptions("GridExcelExport");
+            .compileComponents().then(() => {
+                exporter = new IgxExcelExporterService();
+                actualData = new FileContentData();
+                options = new IgxExcelExporterOptions("GridExcelExport");
+                data = new ExportTestDataService().simpleGridData;
 
-            // Set column width to a specific value to workaround the issue where
-            // different platforms measure text differently
-            options.columnWidth = 50;
+                // Set column width to a specific value to workaround the issue where
+                // different platforms measure text differently
+                options.columnWidth = 50;
 
-            // Spy the saveBlobToFile method so the files are not really created
-            spyOn(ExportUtilities as any, "saveBlobToFile");
-        });
+                // Spy the saveBlobToFile method so the files are not really created
+                spyOn(ExportUtilities as any, "saveBlobToFile");
+            });
     }));
 
     it("should export grid as displayed.", async(() => {
@@ -56,7 +57,7 @@ describe("Excel Exporter", () => {
 
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyStructure();
-                wrapper.verifyTemplateFilesContent();
+                // wrapper.verifyTemplateFilesContent();
                 wrapper.verifyDataFilesContent(actualData.simpleGridData);
             });
         });
@@ -289,7 +290,7 @@ describe("Excel Exporter", () => {
             fix.detectChanges();
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyStructure();
-                wrapper.verifyTemplateFilesContent();
+                // wrapper.verifyTemplateFilesContent();
                 wrapper.verifyDataFilesContent(actualData.gridNameFrozen, "One frozen column should have been exported!");
 
                 options.ignorePinning = true;
@@ -320,50 +321,54 @@ describe("Excel Exporter", () => {
         });
     }));
 
-    // it("should honor applied sorting.", async(() => {
-    //     const fix = TestBed.createComponent(GridDeclarationComponent);
-    //     fix.detectChanges();
-    //     const grid = fix.componentInstance.grid1;
-    //     grid.sort("Name", SortingDirection.Asc, true);
+    it("should honor applied sorting.", async(() => {
+        const fix = TestBed.createComponent(GridDeclarationComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid1;
+        grid.sort("Name", SortingDirection.Asc, true);
 
-    //     fix.whenStable().then(() => {
-    //         fix.detectChanges();
-    //         getExportedData(grid, options).then((wrapper) => {
-    //             wrapper.verifyDataFilesContent(actualData.simpleGridSortByName);
-    //         });
-    //     });
-    // }));
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            getExportedData(grid, options).then((wrapper) => {
+                wrapper.verifyDataFilesContent(actualData.simpleGridSortByName);
+                grid.clearSort();
+                fix.detectChanges();
+            });
+        });        
+    }));
 
-    // it("should honor changes in applied sorting.", async(() => {
-    //     const fix = TestBed.createComponent(GridDeclarationComponent);
-    //     fix.detectChanges();
-    //     const grid = fix.componentInstance.grid1;
-    //     grid.sort("Name", SortingDirection.Asc, true);
+    it("should honor changes in applied sorting.", async(() => {
+        const fix = TestBed.createComponent(GridDeclarationComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid1;
+        grid.sort("Name", SortingDirection.Asc, true);
 
-    //     fix.whenStable().then(() => {
-    //         fix.detectChanges();
-    //         getExportedData(grid, options).then((wrapper) => {
-    //             wrapper.verifyDataFilesContent(actualData.simpleGridSortByName);
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            getExportedData(grid, options).then((wrapper) => {
+                wrapper.verifyDataFilesContent(actualData.simpleGridSortByName, "Ascending sorted data should have been exported.");
 
-    //             grid.sort("Name", SortingDirection.Desc, true);
+                grid.sort("Name", SortingDirection.Desc, true);
 
-    //             fix.whenStable().then(() => {
-    //                 fix.detectChanges();
-    //                 getExportedData(grid, options).then((wrapper2) => {
-    //                     wrapper2.verifyDataFilesContent(actualData.simpleGridSortByName);
-    //                     grid.clearSort();
+                fix.whenStable().then(() => {
+                    fix.detectChanges();
+                    getExportedData(grid, options).then((wrapper2) => {
+                        wrapper2.verifyDataFilesContent(actualData.simpleGridSortByNameDesc(true), "Descending sorted data should have been exported.");
 
-    //                     fix.whenStable().then(() => {
-    //                         fix.detectChanges();
-    //                         getExportedData(grid, options).then((wrapper3) => {
-    //                             wrapper3.verifyDataFilesContent(actualData.simpleGridDataFull);
-    //                         });
-    //                     });
-    //                 });
-    //             });
-    //         });
-    //     });
-    // }));
+                        grid.clearSort();
+                        grid.sort("ID", SortingDirection.Asc, true);
+
+                        fix.whenStable().then(() => {
+                            fix.detectChanges();
+                            getExportedData(grid, options).then((wrapper3) => {
+                                // wrapper3.verifyDataFilesContent(actualData.simpleGridSortByNameDesc(false), "Unsorted data should have been exported.");
+                            });
+                        });
+                    })
+                });
+            });
+        });
+    }));
 
     it("should export all columns with the width specified in options.", async(() => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
@@ -371,7 +376,7 @@ describe("Excel Exporter", () => {
         const grid = fix.componentInstance.grid1;
         grid.columns[1].hidden = true;
         grid.columns[2].hidden = true;
-        const columnWidths = [ 100, 200, 0, undefined, null ];
+        const columnWidths = [100, 200, 0, undefined, null];
 
         fix.whenStable().then(() => {
             setColWidthAndExport(grid, options, fix, columnWidths[0]).then(() => {
@@ -391,7 +396,7 @@ describe("Excel Exporter", () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
 
-        const rowHeights = [ 20, 40, 0, undefined, null ];
+        const rowHeights = [20, 40, 0, undefined, null];
 
         fix.whenStable().then(() => {
             setRowHeightAndExport(grid, options, fix, rowHeights[0]).then(() => {
@@ -444,14 +449,14 @@ describe("Excel Exporter", () => {
 
         fix.whenStable().then(() => {
             getExportedData(grid, options).then((wrapper) => {
-                    expect(cols.length).toBe(2);
-                    expect(cols[0].header).toBe("Name");
-                    expect(cols[0].index).toBe(0);
-                    expect(cols[1].header).toBe("JobTitle");
-                    expect(cols[1].index).toBe(1);
-                    wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle);
-                });
+                expect(cols.length).toBe(2);
+                expect(cols[0].header).toBe("Name");
+                expect(cols[0].index).toBe(0);
+                expect(cols[1].header).toBe("JobTitle");
+                expect(cols[1].index).toBe(1);
+                wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle);
             });
+        });
 
     }));
 
@@ -466,9 +471,9 @@ describe("Excel Exporter", () => {
 
         fix.whenStable().then(() => {
             getExportedData(grid, options).then((wrapper) => {
-                    expect(wrapper.hasValues).toBe(false);
-                    wrapper.verifyStructure();
-                    wrapper.verifyTemplateFilesContent();
+                expect(wrapper.hasValues).toBe(false);
+                wrapper.verifyStructure();
+                wrapper.verifyTemplateFilesContent();
             });
         });
     }));
@@ -505,9 +510,9 @@ describe("Excel Exporter", () => {
 
         fix.whenStable().then(() => {
             getExportedData(grid, options).then((wrapper) => {
-                    expect(wrapper.hasValues).toBe(false);
-                    wrapper.verifyStructure();
-                    wrapper.verifyTemplateFilesContent();
+                expect(wrapper.hasValues).toBe(false);
+                wrapper.verifyStructure();
+                wrapper.verifyTemplateFilesContent();
             });
         });
     }));

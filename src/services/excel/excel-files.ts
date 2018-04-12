@@ -111,18 +111,18 @@ export class WorksheetFile implements IExcelFile {
         const savedValue = dictionary.saveValue(cellValue, column, false);
         const isSavedAsString = savedValue !== -1;
 
-        const value = isSavedAsString ? savedValue : cellValue;
+        const value = isSavedAsString ? savedValue : (cellValue === undefined ? "" : cellValue);
         const type = isSavedAsString ? ` t="s"` : "";
         const format = isSavedAsString ? "" : ` s="1"`;
 
-        return `<c r="${column}"${type}${format}><v>${value}</v></c>`;
+        return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
     }
     /* tslint:enable member-ordering */
 }
 
 export class StyleFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        folder.file("styles.xml", ExcelStrings.getStyles(worksheetData.dataDictionary.hasNonStringValues));
+        folder.file("styles.xml", ExcelStrings.getStyles(worksheetData.dataDictionary && worksheetData.dataDictionary.hasNonStringValues));
     }
 }
 
