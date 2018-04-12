@@ -18,7 +18,7 @@ describe("CSV exporter", () => {
         actualData = new FileContentData();
 
         // Spy the saveBlobToFile method so the files are not really created
-        spyOn(ExportUtilities as any, "saveBlobToFile"); 
+        spyOn(ExportUtilities as any, "saveBlobToFile");
     });
 
     /* ExportData() tests */

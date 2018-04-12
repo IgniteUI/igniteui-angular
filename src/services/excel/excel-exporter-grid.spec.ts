@@ -334,7 +334,7 @@ describe("Excel Exporter", () => {
                 grid.clearSort();
                 fix.detectChanges();
             });
-        });        
+        });
     }));
 
     it("should honor changes in applied sorting.", async(() => {
@@ -346,14 +346,16 @@ describe("Excel Exporter", () => {
         fix.whenStable().then(() => {
             fix.detectChanges();
             getExportedData(grid, options).then((wrapper) => {
-                wrapper.verifyDataFilesContent(actualData.simpleGridSortByName, "Ascending sorted data should have been exported.");
+                wrapper.verifyDataFilesContent(actualData.simpleGridSortByName,
+                    "Ascending sorted data should have been exported.");
 
                 grid.sort("Name", SortingDirection.Desc, true);
 
                 fix.whenStable().then(() => {
                     fix.detectChanges();
                     getExportedData(grid, options).then((wrapper2) => {
-                        wrapper2.verifyDataFilesContent(actualData.simpleGridSortByNameDesc(true), "Descending sorted data should have been exported.");
+                        wrapper2.verifyDataFilesContent(actualData.simpleGridSortByNameDesc(true),
+                        "Descending sorted data should have been exported.");
 
                         grid.clearSort();
                         grid.sort("ID", SortingDirection.Asc, true);
@@ -361,10 +363,11 @@ describe("Excel Exporter", () => {
                         fix.whenStable().then(() => {
                             fix.detectChanges();
                             getExportedData(grid, options).then((wrapper3) => {
-                                // wrapper3.verifyDataFilesContent(actualData.simpleGridSortByNameDesc(false), "Unsorted data should have been exported.");
+                                // wrapper3.verifyDataFilesContent(actualData.simpleGridSortByNameDesc(false),
+                                // "Unsorted data should have been exported.");
                             });
                         });
-                    })
+                    });
                 });
             });
         });

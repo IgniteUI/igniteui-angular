@@ -55,7 +55,7 @@ export class WorksheetDataDictionary {
         const isSavedAsString = this._columnTypeInfo[column] || isHeader;
 
         if (isSavedAsString) {
-            sanitizedValue = this.sanitizeValue(String(value));
+            sanitizedValue = this.sanitizeValue(value);
 
             if (this._dictionary[sanitizedValue] === undefined) {
                 this._dictionary[sanitizedValue] = this._counter++;
@@ -113,15 +113,16 @@ export class WorksheetDataDictionary {
         return this._context;
     }
 
-    private sanitizeValue(value: string): string {
+    private sanitizeValue(value: any): string {
         if (ExportUtilities.hasValue(value) === false) {
             return "";
         } else {
-            return value.replace(/&/g, "&amp;")
-                        .replace(/</g, "&lt;")
-                        .replace(/>/g, "&gt;")
-                        .replace(/"/g, "&quot;")
-                        .replace(/'/g, "&apos;");
+            const stringValue = String(value);
+            return stringValue.replace(/&/g, "&amp;")
+                            .replace(/</g, "&lt;")
+                            .replace(/>/g, "&gt;")
+                            .replace(/"/g, "&quot;")
+                            .replace(/'/g, "&apos;");
         }
     }
 
