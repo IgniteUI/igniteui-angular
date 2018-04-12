@@ -71,7 +71,7 @@
 /// @requires {mixin} igx-slider
 /// @requires {mixin} igx-snackbar
 /// @requires {mixin} igx-switch
-/// @requires {mixin} igx-tabbar
+/// @requires {mixin} igx-bottom-nav
 /// @requires {mixin} igx-toast
 @mixin igx-theme($palette, $exclude: ()) {
     // Stores all excluded component styles
@@ -166,8 +166,8 @@
     @if not(index($exclude, 'igx-switch')) {
         @include igx-switch($theme: (), $palette: $palette);
     }
-    @if not(index($exclude, 'igx-tab-bar')) {
-        @include igx-tabbar($theme: (), $palette: $palette);
+    @if not(index($exclude, 'igx-bottom-nav')) {
+        @include igx-bottom-nav($theme: (), $palette: $palette);
     }
     @if not(index($exclude, 'igx-toast')) {
         @include igx-toast($theme: (), $palette: $palette);
