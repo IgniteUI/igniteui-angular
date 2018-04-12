@@ -260,7 +260,7 @@ describe("IgxGrid - Cell component", () => {
 
         });
     }));
-    
+
     it("should fit last cell in the available display container when there is vertical scroll.", () => {
         const fix = TestBed.createComponent(VirtualtGridComponent);
         fix.detectChanges();
