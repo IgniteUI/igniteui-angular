@@ -286,7 +286,7 @@ describe("IgxGrid - Cell component", () => {
         });
     });
 
-    fit("should not make last column width 0 when no column width is set", () => {
+    it("should not make last column width 0 when no column width is set", () => {
         const fix = TestBed.createComponent(NoColumnWidthGridComponent);
         fix.detectChanges();
         const columns = fix.componentInstance.instance.columnList;
