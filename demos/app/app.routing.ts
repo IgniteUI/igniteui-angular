@@ -37,6 +37,9 @@ import {
     CustomContentComponent,
     TabBarSampleComponent
 } from "./tabbar/sample.component";
+import {
+    TabsSampleComponent
+} from "./tabs/sample.component";
 import { IgxToastSampleComponent } from "./toast/sample.component";
 import { VirtualForSampleComponent } from "./virtual-for-directive/sample.component";
 
@@ -57,6 +60,10 @@ const appRoutes: Routes = [
     {
         component: TabBarSampleComponent,
         path: "tabbar"
+    },
+    {
+        component: TabsSampleComponent,
+        path: "tabs"
     },
     {
         component: ButtonsSampleComponent,

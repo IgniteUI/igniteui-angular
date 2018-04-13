@@ -9,7 +9,7 @@ export class WorksheetData {
     private _keys: string[];
     private _isSpecialData: boolean;
 
-    constructor(private _data: any[], public options: IgxExcelExporterOptions, public indexOfLastPinnedColumn) {
+    constructor(private _data: any[], public options: IgxExcelExporterOptions, public indexOfLastPinnedColumn, public sort: any) {
         this.initializeData();
     }
 
@@ -45,8 +45,6 @@ export class WorksheetData {
         if (!this._data || this._data.length === 0) {
             return;
         }
-
-        // const dataEntry = this._data[0];
 
         this._keys = ExportUtilities.getKeysFromData(this._data);
 
