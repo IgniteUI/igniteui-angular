@@ -13,7 +13,6 @@ import {
 } from "./excel-interfaces";
 
 import { IgxGridComponent } from "../../grid/grid.component";
-import { IgxGridModule } from "../../grid/index";
 
 import { IgxBaseExporter } from "../exporter-common/base-export-service";
 import { ExportUtilities } from "../exporter-common/export-utilities";
@@ -48,7 +47,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
     }
 
     protected exportDataImplementation(data: any[], options: IgxExcelExporterOptions): void {
-        const worksheetData = new WorksheetData(data, options, this._indexOfLastPinnedColumn);
+        const worksheetData = new WorksheetData(data, options, this._indexOfLastPinnedColumn, this._sort);
         this._xlsx = new JSZip();
 
         const rootFolder = ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder);

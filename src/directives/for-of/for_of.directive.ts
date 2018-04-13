@@ -28,6 +28,7 @@ import {
     ViewContainerRef
 } from "@angular/core";
 
+import { DeprecateProperty } from "../../core/deprecateDecorators";
 import { DisplayContainerComponent } from "./display.container";
 import { HVirtualHelperComponent } from "./horizontal.virtual.helper.component";
 import { IForOfState } from "./IForOfState";
@@ -47,6 +48,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     };
     public totalItemCount: number = null;
 
+    @DeprecateProperty(`igxForRemote is deprecated, setting this property is no longer needed for remote virtualization`)
     @Input() public igxForRemote = false;
 
     @Output()

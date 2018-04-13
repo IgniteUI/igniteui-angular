@@ -52,4 +52,8 @@ export class ExportUtilities {
                 dataEntry instanceof Date);
     }
 
+    public static hasValue(value: any): boolean {
+        return value !== undefined && value !== null;
+    }
+
 }
