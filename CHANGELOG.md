@@ -2,6 +2,9 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 5.3.0
+- Added `rowSelectable` property to `igxGrid`
+    - Setting `rowSelectable` to `true` enables multiple row selection for the `igx-grid` component. Adds a checkbox column that allows (de)selection of one, multiple or all (via header checkbox) rows.
+    - For more information about the `rowSelectable` property and working with grid row, please read the `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) selection see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid-selection.html)  
 - Added `onContextMenu` output to `igxGrid` to emit the clicked cell.
 - `igxTextSelection` directive added
     - `igxTextSelection` directive allows you to select the whole text range for every element with text content it is applied.
