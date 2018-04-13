@@ -551,8 +551,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
             verticalScroll.scrollTop += this.grid.rowHeight;
             this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
                 next: (e: any) => {
-                    const prevCell = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex - 1, this.visibleColumnIndex);
-                    prevCell.nativeElement.focus();
                     const cell = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.visibleColumnIndex);
                     cell.nativeElement.focus();
                 }
