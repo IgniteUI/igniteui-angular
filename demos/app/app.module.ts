@@ -22,6 +22,7 @@ import { MaskSampleModule } from "./directives/mask/sample.module";
 import { GridColumnPinningSampleModule } from "./grid-column-pinning/sample.module";
 import { GridPerformanceSampleModule } from "./grid-performance/sample.module";
 import { GridSummarySampleModule } from "./grid-summaries/sample.module";
+import { GridSelectionModule } from "./grid-selection/sample.module";
 import { GridSampleModule } from "./grid/sample.module";
 import { GridVirtualizationSampleModule } from "./grid-remote-virtualization/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
@@ -80,6 +81,7 @@ import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
         GridPerformanceSampleModule,
         GridSummarySampleModule,
         GridVirtualizationSampleModule,
+        GridSelectionModule,
         IgxCardSampleModule,
         IgxSliderSampleModule,
         BadgeSampleModule,
