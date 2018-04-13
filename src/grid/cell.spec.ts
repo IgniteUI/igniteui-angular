@@ -94,6 +94,30 @@ describe("IgxGrid - Cell component", () => {
         });
     }));
 
+    it("Should trigger onContextMenu event when right click into cell", async(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
+        const firstCell = grid.getCellByColumn(0, "index");
+
+        spyOn(grid.onContextMenu, "emit").and.callThrough();
+        const event = new Event("contextmenu");
+        cellElem.nativeElement.dispatchEvent(event);
+        const args: IGridCellEventArgs = {
+            cell: firstCell,
+            event
+        };
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+
+            expect(grid.onContextMenu.emit).toHaveBeenCalledWith(args);
+            expect(firstCell).toBe(fix.componentInstance.clickedCell);
+        });
+    }));
+
     it("edit mode", async(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
@@ -274,6 +298,7 @@ describe("IgxGrid - Cell component", () => {
         <igx-grid
             (onSelection)="cellSelected($event)"
             (onCellClick)="cellClick($event)"
+            (onContextMenu)="cellRightClick($event)"
             [data]="data"
             [autoGenerate]="true">
         </igx-grid>
@@ -297,6 +322,10 @@ export class DefaultGridComponent {
     }
 
     public cellClick(evt) {
+        this.clickedCell = evt.cell;
+    }
+
+    public cellRightClick(evt) {
         this.clickedCell = evt.cell;
     }
 }
