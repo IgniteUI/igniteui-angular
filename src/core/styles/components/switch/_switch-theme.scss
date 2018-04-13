@@ -56,9 +56,13 @@
 /// @requires igx-elevation
 /// @requires extend
 /// @requires hexrgba
-/// @requires rem
+/// @requires em
 /// @requires $elevations
+/// @requires animation
+/// @requires scale-in-out
 @mixin igx-switch($theme, $palette: $default-palette) {
+    @include scale-in-out($start-scale: .9);
+
     $dark-theme: igx-switch-theme(
         $thumb-on-color: igx-color($palette, 'secondary', 500),
         $track-on-color: rgba(igx-color($palette, 'secondary', 500), .5),
@@ -191,6 +195,12 @@
         overflow: hidden;
         pointer-events: none;
         filter: opacity(1);
+    }
+
+    %switch-ripple--focused {
+        @include animation('scale-in-out' 1s $ease-out-quad infinite);
+        background-color: rgba(map-get($this, 'thumb-on-color'), .12);
+        transition: background-color .2s $ease-out-quad;
     }
 
     %switch-label {

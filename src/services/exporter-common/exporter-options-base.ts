@@ -4,9 +4,7 @@ export abstract class IgxExporterOptionsBase {
     public ignoreColumnsVisibility = false;
     public ignoreFiltering = false;
     public ignoreColumnsOrder = false;
-
-    // public ignoreSorting: boolean;
-    // public ignoreSummaries: boolean;
+    public ignoreSorting = false;
 
     constructor(fileName: string, protected _fileExtension: string) {
         this.setFileName(fileName);

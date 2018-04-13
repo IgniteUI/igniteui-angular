@@ -266,6 +266,27 @@ describe("IgxGrid - Summaries", () => {
         expect(displayedSummaries).toBe(summariedColumns);
 
     });
+    it("should calc tfoot height according number of summary functions", () => {
+        const fixture = TestBed.createComponent(SummaryColumnComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid1;
+        const summaries = fixture.debugElement.queryAll(By.css("igx-grid-summary"));
+        const tfootSize = fixture.debugElement.query(By.css(".igx-grid__tfoot")).query(By.css(".igx-grid__tr")).nativeElement.clientHeight;
+
+        let maxSummaryLength = 0;
+        let index = 0;
+        grid.columnList.filter((col) => col.hasSummary).forEach((column) => {
+            const currentLength = summaries[index].queryAll(By.css(SUMMARY_LABEL_CLASS)).length;
+            if (maxSummaryLength < currentLength) {
+                maxSummaryLength = currentLength;
+            }
+            index++;
+        });
+
+        const expectedHeight = maxSummaryLength * 36;
+        expect(tfootSize).toBe(expectedHeight);
+    });
 });
 
 @Component({

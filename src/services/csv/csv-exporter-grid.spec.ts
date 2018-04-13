@@ -194,7 +194,7 @@ describe("CSV Grid Exporter", () => {
         fix.whenStable().then(() => {
             fix.detectChanges();
             getExportedData(grid, options).then((wrapper) => {
-                wrapper.verifyData(wrapper.simpleGridData);
+                wrapper.verifyData(wrapper.sortedSimpleGridData);
             });
         });
     }));
@@ -208,15 +208,16 @@ describe("CSV Grid Exporter", () => {
         fix.whenStable().then(() => {
             fix.detectChanges();
             getExportedData(grid, options).then((wrapper) => {
-                wrapper.verifyData(wrapper.simpleGridData);
+                wrapper.verifyData(wrapper.sortedSimpleGridData);
 
                 grid.sort("Name", SortingDirection.Desc, true);
 
                 fix.whenStable().then(() => {
                     fix.detectChanges();
                     getExportedData(grid, options).then((wrapper2) => {
-                        wrapper2.verifyData(wrapper2.simpleGridData);
+                        wrapper2.verifyData(wrapper2.sortedDescSimpleGridData);
                         grid.clearSort();
+                        grid.sort("ID", SortingDirection.Asc, true);
 
                         fix.whenStable().then(() => {
                             fix.detectChanges();
