@@ -533,6 +533,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.page + 1 >= this.totalPages;
     }
 
+    get totalWidth(): number {
+        const cols = this.visibleColumns;
+        let totalWidth = 0;
+        let i = 0;
+        for (i; i < cols.length; i++) {
+            totalWidth += parseInt(cols[i].width, 10) || 0;
+        }
+        return totalWidth;
+    }
+
     public nextPage(): void {
         if (!this.isLastPage) {
             this.page += 1;
