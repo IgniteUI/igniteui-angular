@@ -223,6 +223,10 @@
         [dir='rtl'] & {
             margin-left: initial;
             margin-right: $label-margin;
+
+            &:empty {
+                margin: 0;
+            }
         }
     }
 
@@ -233,6 +237,10 @@
         [dir='rtl'] & {
             margin-right: initial;
             margin-left: $label-margin;
+
+            &:empty {
+                margin: 0;
+            }
         }
     }
 
