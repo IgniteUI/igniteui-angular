@@ -6,6 +6,7 @@
     HostBinding,
     HostListener,
     Input,
+    OnDestroy,
     OnInit,
     TemplateRef,
     ViewChild,
@@ -26,7 +27,7 @@ import { IGridCellEventArgs, IGridEditEventArgs } from "./grid.component";
     selector: "igx-grid-cell",
     templateUrl: "./cell.component.html"
 })
-export class IgxGridCellComponent implements IGridBus, OnInit {
+export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
 
     @Input()
     public column: IgxColumnComponent;
@@ -194,6 +195,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     protected isFocused = false;
     protected isSelected = false;
     protected _inEditMode = false;
+    protected chunkLoadedHor;
+    protected chunkLoadedVer;
     private cellSelectionID: string;
 
     constructor(
@@ -203,12 +206,17 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         private element: ElementRef) { }
 
     private _updateCellSelectionStatus() {
+        this._clearCellSelection();
+        this.selectionApi.set_selection(this.cellSelectionID, this.selectionApi.select_item(this.cellSelectionID, this.cellID));
+    }
+
+    private _clearCellSelection() {
         const cell = this._getLastSelectedCell();
         if (cell) {
             cell.selected = false;
+            cell.focused = false;
         }
         this.selectionApi.set_selection(this.cellSelectionID, []);
-        this.selectionApi.set_selection(this.cellSelectionID, this.selectionApi.select_item(this.cellSelectionID, this.cellID));
     }
 
     private _getLastSelectedCell() {
@@ -236,6 +244,27 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @autoWire(true)
     public ngOnInit() {
         this.cellSelectionID = this.gridID + "-cells";
+        this.chunkLoadedHor = this.row.virtDirRow.onChunkLoad.subscribe(
+            () => {
+                if (!this.selected) {
+                    this.nativeElement.blur();
+                }
+            });
+        this.chunkLoadedVer = this.grid.verticalScrollContainer.onChunkLoad.subscribe(
+            () => {
+                if (!this.selected) {
+                    this.nativeElement.blur();
+                }
+            });
+    }
+
+    public ngOnDestroy() {
+        if (this.chunkLoadedHor) {
+            this.chunkLoadedHor.unsubscribe();
+        }
+        if (this.chunkLoadedVer) {
+            this.chunkLoadedVer.unsubscribe();
+        }
     }
 
     @autoWire(true)
@@ -550,8 +579,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
             verticalScroll.scrollTop += this.grid.rowHeight;
             this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
                 next: (e: any) => {
-                    const prevCell = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex - 1, this.visibleColumnIndex);
-                    prevCell.nativeElement.focus();
                     const cell = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.visibleColumnIndex);
                     cell.nativeElement.focus();
                 }
