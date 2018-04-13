@@ -151,6 +151,11 @@ export class AppComponent implements OnInit {
             name: "Tabbar"
         },
         {
+            link: "/tabs",
+            icon: "tab",
+            name: "Tabs"
+        },
+        {
             link: "/toast",
             icon: "android",
             name: "Toast"

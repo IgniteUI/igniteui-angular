@@ -24,6 +24,7 @@
 @import '../components/grid-paginator/grid-paginator-theme';
 @import '../components/toast/toast-theme';
 @import '../components/tabbar/tabbar-theme';
+@import '../components/tabs/tabs-theme';
 @import '../components/switch/switch-theme';
 @import '../components/snackbar/snackbar-theme';
 @import '../components/slider/slider-theme';
@@ -71,6 +72,7 @@
 /// @requires {mixin} igx-slider
 /// @requires {mixin} igx-snackbar
 /// @requires {mixin} igx-switch
+/// @requires {mixin} igx-tabs
 /// @requires {mixin} igx-bottom-nav
 /// @requires {mixin} igx-toast
 @mixin igx-theme($palette, $exclude: ()) {
@@ -168,6 +170,9 @@
     }
     @if not(index($exclude, 'igx-bottom-nav')) {
         @include igx-bottom-nav($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-tabs')) {
+        @include igx-tabs($theme: (), $palette: $palette);
     }
     @if not(index($exclude, 'igx-toast')) {
         @include igx-toast($theme: (), $palette: $palette);

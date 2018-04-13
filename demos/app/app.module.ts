@@ -41,6 +41,7 @@ import { IgxColorsSampleModule } from "./styleguide/colors/sample.module";
 import { IgxShadowsSampleModule } from "./styleguide/shadows/sample.module";
 import { IgxTypographySampleModule } from "./styleguide/typography/sample.module";
 import { TabBarSampleModule } from "./tabbar/sample.module";
+import { TabsSampleModule } from "./tabs/sample.module";
 import { IgxTimePickerSampleModule } from "./time-picker/sample.module";
 import { IgxToastSampleModule } from "./toast/sample.module";
 import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
@@ -64,6 +65,7 @@ import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
         InputSampleModule,
         CarouselSampleModule,
         TabBarSampleModule,
+        TabsSampleModule,
         ListSampleModule,
         ButtonSampleModule,
         ButtonGroupSampleModule,
