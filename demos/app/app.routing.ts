@@ -14,6 +14,7 @@ import { DialogSampleComponent } from "./dialog/sample.component";
 import { MaskSampleComponent } from "./directives/mask/sample.component";
 import { GridColumnPinningSampleComponent } from "./grid-column-pinning/sample.component";
 import { GridPerformanceSampleComponent } from "./grid-performance/sample.component";
+import { GridSelectionComponent } from "./grid-selection/sample.component";
 import { GridSummaryComponent } from "./grid-summaries/sample.component";
 import { GridSampleComponent } from "./grid/sample.component";
 import { GridVirtualizationSampleComponent } from "./grid-remote-virtualization/sample.component";
@@ -127,6 +128,10 @@ const appRoutes: Routes = [
     {
         component: GridSummaryComponent,
         path: "gridSummary"
+    },
+    {
+        component: GridSelectionComponent,
+        path: "gridSelection"
     },
     {
         component: IgxCardSampleComponent,

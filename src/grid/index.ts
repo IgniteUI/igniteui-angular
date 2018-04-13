@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { IgxSelectionAPIService } from "../core/selection";
 import { IgxDatePickerModule } from "../date-picker/date-picker.component";
 import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxFocusModule } from "../directives/focus/focus.directive";
@@ -10,6 +11,7 @@ import { IgxTextSelectionModule } from "../directives/text-selection/text-select
 import { IgxToggleModule } from "../directives/toggle/toggle.directive";
 import { IgxIconModule } from "../icon";
 import { IgxInputGroupModule } from "../input-group/input-group.component";
+import { IgxCheckboxModule } from "../main";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
@@ -74,15 +76,16 @@ import { IgxGridRowComponent } from "./row.component";
     IgxToggleModule,
     IgxForOfModule,
     IgxFocusModule,
-    IgxTextSelectionModule
+    IgxTextSelectionModule,
+    IgxCheckboxModule
   ],
-  providers: [IgxGridAPIService]
+  providers: [IgxGridAPIService, IgxSelectionAPIService]
 })
 export class IgxGridModule {
     public static forRoot() {
         return {
             ngModule: IgxGridModule,
-            providers: [IgxGridAPIService]
+            providers: [IgxGridAPIService, IgxSelectionAPIService]
         };
     }
 }
