@@ -83,7 +83,8 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         player.onDone(() => {
             this.collapsed = !this.collapsed;
             // When using directive into component with OnPush it is necessary to
-            // trigger detection again when close animation ends. Due to late updated @collapsed property.
+            // trigger change detection again when close animation ends
+            // due to late updated @collapsed property.
             this.cdr.markForCheck();
             player.destroy();
             if (fireEvents) {
