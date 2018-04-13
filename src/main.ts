@@ -21,6 +21,7 @@ export * from "./data-operations/data-container";
 export * from "./avatar/avatar.component";
 export * from "./badge/badge.component";
 export * from "./buttonGroup/buttonGroup.component";
+export * from "./tabs/tabs.component";
 export * from "./calendar";
 export * from "./card/card.component";
 export * from "./carousel/carousel.component";
