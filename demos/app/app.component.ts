@@ -91,6 +91,11 @@ export class AppComponent implements OnInit {
             name: "Grid Summary"
         },
         {
+            link: "/gridSelection",
+            icon: "view_column",
+            name: "Grid Selection"
+        },
+        {
             link: "/dialog",
             icon: "all_out",
             name: "Dialog"
@@ -144,6 +149,11 @@ export class AppComponent implements OnInit {
             link: "/tabbar",
             icon: "tab",
             name: "Tabbar"
+        },
+        {
+            link: "/tabs",
+            icon: "tab",
+            name: "Tabs"
         },
         {
             link: "/toast",

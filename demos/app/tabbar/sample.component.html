@@ -5,7 +5,7 @@
         <article class="sample-column">
             <h4 class="sample-title">Three item tabbar</h4>
             <div class="tabbar-wrapper" #tabbarEl>
-                <igx-tab-bar>
+                <igx-bottom-nav>
                     <igx-tab-panel icon="phone">
                         <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                             <igx-list-item [isHeader]="true">History</igx-list-item>
@@ -45,14 +45,14 @@
                                 Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
                         </div>
                     </igx-tab-panel>
-                </igx-tab-bar>
+                </igx-bottom-nav>
             </div>
         </article>
 
         <article class="sample-column">
             <h4 class="sample-title">Three item tabbar</h4>
             <div class="tabbar-wrapper" #tabbarEl>
-                <igx-tab-bar>
+                <igx-bottom-nav>
                     <igx-tab-panel icon="library_music">
                         <div class="tab-content">
                             <h3>Tab 1 Content</h3>
@@ -83,14 +83,14 @@
                             <router-outlet name="tabPanelOutlet"></router-outlet>
                         </div>
                     </igx-tab-panel>
-                </igx-tab-bar>
+                </igx-bottom-nav>
             </div>
         </article>
 
         <article class="sample-column">
             <h4 class="sample-title">Three item tabbar</h4>
             <div class="tabbar-wrapper" #tabbarEl>
-                <igx-tab-bar #tabbar (onTabSelected)="route($event)">
+                <igx-bottom-nav #tabbar (onTabSelected)="route($event)">
 
                     <igx-tab-panel label="Movies" icon="local_movies">
                         <div class="tab-content">
@@ -125,7 +125,7 @@
                         </div>
                     </igx-tab-panel>
 
-                </igx-tab-bar>
+                </igx-bottom-nav>
             </div>
         </article>
     </div>
