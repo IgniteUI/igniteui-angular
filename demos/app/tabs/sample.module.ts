@@ -3,22 +3,22 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
-import { CustomContentComponent, TabBarSampleComponent } from "./sample.component";
-import { IgxBottomNavModule, IgxListModule, IgxAvatarModule, IgxIconModule } from "../../lib/main";
+import { CustomContentComponent, TabsSampleComponent } from "./sample.component";
+import { IgxTabsModule, IgxListModule, IgxAvatarModule, IgxIconModule, IgxNavbarModule } from "../../lib/main";
 
 const tabbarRoutes: Routes = [
     {
         children: [
             { path: "tabbarInnerPath", component: CustomContentComponent, outlet: "tabPanelOutlet" }
         ],
-        component: TabBarSampleComponent,
-        path: "tabbar"
+        component: TabsSampleComponent,
+        path: "tabs"
     }
 ];
 
 @NgModule({
     declarations: [
-        TabBarSampleComponent,
+        TabsSampleComponent,
         CustomContentComponent
     ],
     imports: [
@@ -26,10 +26,11 @@ const tabbarRoutes: Routes = [
         FormsModule,
         PageHeaderModule,
         RouterModule.forChild(tabbarRoutes),
-        IgxBottomNavModule,
+        IgxTabsModule,
         IgxListModule,
         IgxAvatarModule,
-        IgxIconModule
+        IgxIconModule,
+        IgxNavbarModule
     ]
 })
-export class TabBarSampleModule { }
+export class TabsSampleModule { }
