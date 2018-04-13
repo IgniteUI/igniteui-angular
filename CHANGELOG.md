@@ -9,10 +9,10 @@ All notable changes for each version of this project will be documented in this 
     - `igxFocus` directive allows you to force focus for every element it is applied.
 - `igx-time-picker` component added
     - `igx-time-picker` allows user to select time, from a dialog with spinners, which is presented into input field.
-    - For more information navigate to `src\time-picker\README.md`.
+    - For more information navigate to the [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/time-piker/README.md).
 - `igx-tabs` component added
     - `igx-tabs` allows users to switch between different views. The `igx-tabs` component places the tabs headers at the top and allows scrolling when there are multiple tab items outside the visible area. Tabs are ordered in a single row above their associated content.
-    - For more information navigate to `src\tabs\README.md`.
+    - For more information navigate to [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/tabs/README.md).
 - Added column pinning in the list of features available for `igxGrid`. Pinning is available though the API. Try the following:
    ```typescript
    const column = this.grid.getColumnByName(name);
