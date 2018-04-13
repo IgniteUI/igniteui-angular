@@ -91,7 +91,7 @@ describe("IgxGrid - Grid initialization", () => {
 
         expect(hScrollContainer.nativeElement.hidden).toBeFalsy();
     });
-    
+
     it("should initialize grid with remove virtualization", (done) => {
         const fix = TestBed.createComponent(GridRemoteVirtualizationComponent);
         fix.detectChanges();
