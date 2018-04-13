@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-    matchType: function(types, line) {
+    matchType: (types, line) => {
         return types.some(function(type) {
             if (line.startsWith(type)) {
                 return true;
@@ -11,7 +11,7 @@ module.exports = {
         });
     },
 
-    errorFactory: function (prefix, message, additionalParams) {
+    errorFactory: (prefix, message, additionalParams) => {
         var result = '';
         if (prefix) {
             result = prefix;
@@ -20,7 +20,7 @@ module.exports = {
         result += message;
 
         if (additionalParams) {
-            result += additionalParams
+            result += additionalParams;
         }
         
         return result;

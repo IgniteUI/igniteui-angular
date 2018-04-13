@@ -4,14 +4,14 @@ var matchType = require('../common').matchType,
     errorFactory = require('../common').errorFactory,
     errMessages = require('../common').errorMessages;
 
-module.exports = function (lines, options, errors) {
+module.exports = (lines, options, errors) => {
     var scheme = '<type>(<scope>): <subject> <#issue|optional>';
-    var prefix = 'First line must be ' + scheme + '\n';
+    var prefix = `First line must be ${scheme}\n`;
 
     var line = lines[0];
     if (line.startsWith('revert: ')) {
         line = line.replace(/^revert: /, '');
-        prefix = 'First line must be revert: ' + scheme + '\n';
+        prefix = `First line must be revert: ${scheme}\n`;
     } else if (line.startsWith('revert')) {
         errors.push(errorFactory(errMessages.WRONG_REVERT_STRUCT, 'revert: ' + scheme));
         
@@ -70,6 +70,6 @@ module.exports = function (lines, options, errors) {
     }
 
     if (subject.length < options.subjectLimits) {
-        errors.push('<subject> should contains at least ' + options.subjectLimits + ' characters');
+        errors.push(`<subject> should contains at least ${options.subjectLimits} characters`);
     }
 }

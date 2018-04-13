@@ -13,9 +13,9 @@
 /// @requires text-contrast
 /// @example scss Set a custom background color
 ///   $my-tabbar-theme: igx-toast-theme($background: black);
-///   // Pass the theme to the igx-tabbar component mixin
-///   @include igx-tabbar($my-tabbar-theme);
-@function igx-tabbar-theme(
+///   // Pass the theme to the igx-bottom-nav component mixin
+///   @include igx-bottom-nav($my-tabbar-theme);
+@function igx-bottom-nav-theme(
     $background: null,
     $idle-item-color: null,
     $active-item-color: null
@@ -33,14 +33,14 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @requires igx-tabbar-theme
+/// @requires igx-bottom-nav-theme
 /// @requires igx-color
 /// @requires igx-elevation
 /// @requires extend
 /// @requires {mixin} ellipsis
 /// @requires rem
-@mixin igx-tabbar($theme, $palette: $default-palette) {
-    $default-theme: igx-tabbar-theme(
+@mixin igx-bottom-nav($theme, $palette: $default-palette) {
+    $default-theme: igx-bottom-nav-theme(
         $background: #fff,
         $idle-item-color: igx-color($palette, 'grays', 600),
         $active-item-color: igx-color($palette, 'primary')
@@ -72,7 +72,7 @@
         display: block;
     }
 
-    %igx-tabbar-menu {
+    %igx-bottom-nav-menu {
         display: flex;
         position: fixed;
         justify-content: center;
@@ -85,19 +85,19 @@
         z-index: 8;
     }
 
-    %igx-tabbar-menu--top {
+    %igx-bottom-nav-menu--top {
         top: 0;
         bottom: inherit;
         box-shadow: $top-menu-shadow;
     }
 
-    %igx-tabbar-menu--bottom {
+    %igx-bottom-nav-menu--bottom {
         top: inherit;
         bottom: 0;
         box-shadow: $bottom-menu-shadow
     }
 
-    %igx-tabbar-menu-item {
+    %igx-bottom-nav-menu-item {
         display: flex;
         position: relative;
         flex-flow: column nowrap;
@@ -115,7 +115,7 @@
         -webkit-tap-highlight-color: transparent;
     }
 
-    %igx-tabbar-menu-item--disabled {
+    %igx-bottom-nav-menu-item--disabled {
         opacity: .5;
         cursor: default;
     }
