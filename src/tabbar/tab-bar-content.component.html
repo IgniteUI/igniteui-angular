@@ -4,9 +4,9 @@
 <div #tablist class="{{itemStyle}}__menu {{itemStyle}}__menu--bottom" role="tablist" aria-orientation="horizontal">
     <igx-tab *ngFor="let panel of panels" [id]="'igx-tab-' + panel.index" [attr.aria-label]="panel.label" [attr.aria-disabled]="panel.isDisabled"
         [attr.aria-selected]="panel.isSelected" [attr.aria-controls]="'igx-tab-panel-'+ panel.index" [ngClass]="{
-                 'igx-tab-bar__menu-item': !panel.isSelected && !panel.isDisabled,
-                 'igx-tab-bar__menu-item--selected': panel.isSelected,
-                 'igx-tab-bar__menu-item--disabled': panel.isDisabled
+                 'igx-bottom-nav__menu-item': !panel.isSelected && !panel.isDisabled,
+                 'igx-bottom-nav__menu-item--selected': panel.isSelected,
+                 'igx-bottom-nav__menu-item--disabled': panel.isDisabled
              }" [relatedPanel]="panel" (click)="panel.select()" role="tab">
     </igx-tab>
 </div>
