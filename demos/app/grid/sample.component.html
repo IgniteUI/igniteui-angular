@@ -160,7 +160,7 @@
                 <button igxButton="flat" (click)="exportFilteredGrid()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Cheese Products Report</button>
             </div>
             <igx-grid #grid3 [data]="remote | async" [paging]="true" [perPage]="10" (onPagingDone)="process($event)" (onSortingDone)="process($event)"
-                (onBeforeProcess)="onProcess($event)" [primaryKey]="'ProductID'">
+                (onBeforeProcess)="onProcess($event)" [primaryKey]="'ProductID'" [rowSelectable]="true">
                 <igx-column [sortable]="true" [field]="'ProductID'" ></igx-column>
                 <igx-column [editable]="true" [field]="'ProductName'" ></igx-column>
                 <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
