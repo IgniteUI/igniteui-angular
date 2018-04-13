@@ -183,7 +183,7 @@ describe("IgxGrid - Row Selection", () => {
         });
     }));
 
-    fit("Should properly move focus when loading new row chunk", async(() => {
+    it("Should properly move focus when loading new row chunk", async(() => {
         const fix = TestBed.createComponent(GridWithSelectionComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection3;
