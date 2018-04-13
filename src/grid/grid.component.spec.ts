@@ -44,8 +44,7 @@ describe("IgxGrid - input properties", () => {
         fix.detectChanges();
         let gridBodyHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
             - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10);
 
         expect(grid.rowList.length).toEqual(30);
         expect(window.getComputedStyle(grid.nativeElement).width).toMatch("200px");
@@ -57,8 +56,7 @@ describe("IgxGrid - input properties", () => {
         fix.detectChanges();
         gridBodyHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
             - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10);
 
         expect(grid.rowList.length).toEqual(30);
         expect(window.getComputedStyle(grid.nativeElement).height).toMatch("300px");
