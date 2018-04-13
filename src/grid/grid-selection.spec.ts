@@ -568,6 +568,8 @@ describe("IgxGrid - Row Selection", () => {
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
         rowsCollection = grid.selectedRows();
         expect(rowsCollection).toBeUndefined();
+        expect(headerCheckbox.getAttribute("aria-checked")).toMatch("false");
+        expect(headerCheckbox.getAttribute("aria-label")).toMatch("Select all filtered");
         grid.clearFilter("ProductName");
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
         fix.detectChanges();
@@ -590,6 +592,8 @@ describe("IgxGrid - Row Selection", () => {
         fix.detectChanges();
         expect(headerCheckbox.checked).toBeTruthy();
         expect(headerCheckbox.indeterminate).toBeFalsy();
+        expect(headerCheckbox.getAttribute("aria-checked")).toMatch("true");
+        expect(headerCheckbox.getAttribute("aria-label")).toMatch("Deselect all filtered");
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
 
         grid.clearFilter("ProductName");
@@ -727,6 +731,34 @@ describe("IgxGrid - Row Selection", () => {
         }).then(() => {
             fix.detectChanges();
             expect(firstRow.isSelected).toBeTruthy();
+        });
+    }));
+
+    it("ARIA support", async(() => {
+        const fix = TestBed.createComponent(GridWithSelectionFilteringComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection4;
+        const firstRow = grid.getRowByIndex(0).nativeElement;
+        const headerRow: HTMLElement = fix.nativeElement.querySelector(".igx-grid__thead");
+        const headerCheckboxElement: HTMLElement = headerRow.querySelector(".igx-checkbox__input");
+
+        fix.detectChanges();
+
+        expect(firstRow.getAttribute("aria-selected")).toMatch("false");
+        expect(headerCheckboxElement.getAttribute("aria-checked")).toMatch("false");
+        expect(headerCheckboxElement.getAttribute("aria-label")).toMatch("Select all");
+        headerCheckboxElement.click();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(firstRow.getAttribute("aria-selected")).toMatch("true");
+            expect(headerCheckboxElement.getAttribute("aria-checked")).toMatch("true");
+            expect(headerCheckboxElement.getAttribute("aria-label")).toMatch("Deselect all");
+            headerCheckboxElement.click();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.getAttribute("aria-selected")).toMatch("false");
+            expect(headerCheckboxElement.getAttribute("aria-checked")).toMatch("false");
+            expect(headerCheckboxElement.getAttribute("aria-label")).toMatch("Select all");
         });
     }));
 });
