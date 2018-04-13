@@ -12,6 +12,7 @@
     ViewContainerRef
 } from "@angular/core";
 import { take } from "rxjs/operators";
+import { IgxSelectionAPIService } from "../core/selection";
 import { KEYCODES } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridAPIService } from "./api.service";
@@ -85,6 +86,12 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         return this.grid.unpinnedColumns.indexOf(this.column);
     }
 
+    public get cellID() {
+        const primaryKey = this.grid.primaryKey;
+        const rowID = primaryKey ? this.row.rowData[primaryKey] : this.row.rowData;
+        return { rowID, columnID: this.columnIndex, rowIndex: this.rowIndex };
+    }
+
     get nativeElement(): any {
         return this.element.nativeElement;
     }
@@ -138,11 +145,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
         return this._inEditMode;
     }
 
-    @HostBinding("attr.aria-selected")
-    @HostBinding("class.igx-grid__td--selected")
     @autoWire(true)
     get focused(): boolean {
-        return this.isFocused || this.isSelected;
+        return this.isFocused;
     }
 
     set focused(val: boolean) {
@@ -170,9 +175,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     }
 
     get selected() {
-        return this.isSelected;
+        return this.isSelected = this.isCellSelected();
     }
 
+    @HostBinding("attr.aria-selected")
+    @HostBinding("class.igx-grid__td--selected")
     @autoWire(true)
     set selected(val: boolean) {
         this.isSelected = val;
@@ -188,14 +195,48 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     protected isFocused = false;
     protected isSelected = false;
     protected _inEditMode = false;
+    private cellSelectionID: string;
 
     constructor(
         public gridAPI: IgxGridAPIService,
+        public selectionApi: IgxSelectionAPIService,
         public cdr: ChangeDetectorRef,
         private element: ElementRef) { }
 
+    private _updateCellSelectionStatus() {
+        const cell = this._getLastSelectedCell();
+        if (cell) {
+            cell.selected = false;
+        }
+        this.selectionApi.set_selection(this.cellSelectionID, []);
+        this.selectionApi.set_selection(this.cellSelectionID, this.selectionApi.select_item(this.cellSelectionID, this.cellID));
+    }
+
+    private _getLastSelectedCell() {
+        const selection = this.selectionApi.get_selection(this.cellSelectionID);
+        if (selection && selection.length > 0) {
+            const cellID = selection[0];
+            return this.gridAPI.get_cell_by_visible_index(this.gridID, cellID.rowIndex, cellID.columnID);
+        }
+    }
+
+    public isCellSelected() {
+        const selection = this.selectionApi.get_selection(this.cellSelectionID);
+        if (selection) {
+            const selectedCellID = selection[0];
+            for (const prop in selectedCellID) {
+                if (selectedCellID[prop] !== this.cellID[prop]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     @autoWire(true)
     public ngOnInit() {
+        this.cellSelectionID = this.gridID + "-cells";
     }
 
     @autoWire(true)
@@ -233,7 +274,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @autoWire()
     public onFocus(event) {
         this.isFocused = true;
-        this.isSelected = true;
+        this.selected = true;
+        this._updateCellSelectionStatus();
         this.row.focused = true;
         if (this.grid.cellInEditMode && this.grid.cellInEditMode !== this) {
             this.grid.cellInEditMode.inEditMode = false;
@@ -250,7 +292,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @autoWire()
     public onBlur(event) {
         this.isFocused = false;
-        this.isSelected = false;
         this.row.focused = false;
     }
 
@@ -459,18 +500,28 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @HostListener("keydown.arrowup", ["$event"])
     public onKeydownArrowUp(event) {
         event.preventDefault();
-        const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex - 1, this.visibleColumnIndex);
+        const lastCell = this._getLastSelectedCell();
+        const rowIndex = lastCell ? lastCell.rowIndex - 1 : this.grid.rowList.last.index;
+        const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, this.visibleColumnIndex);
         if (target) {
             target.nativeElement.focus();
         } else {
             this.row.grid.verticalScrollContainer.scrollPrev();
+            this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+                next: (e: any) => {
+                    const cell = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.visibleColumnIndex);
+                    cell.nativeElement.focus();
+                }
+            });
         }
     }
 
     @HostListener("keydown.arrowdown", ["$event"])
     public onKeydownArrowDown(event) {
         event.preventDefault();
-        const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex + 1, this.visibleColumnIndex);
+        const lastCell = this._getLastSelectedCell();
+        const rowIndex = lastCell ? lastCell.rowIndex + 1 : this.grid.rowList.first.index;
+        const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, this.visibleColumnIndex);
         const verticalScroll = this.row.grid.verticalScrollContainer.getVerticalScroll();
         if (!verticalScroll && !target) {
             return;
@@ -498,6 +549,14 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
             }
         } else {
             verticalScroll.scrollTop += this.grid.rowHeight;
+            this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+                next: (e: any) => {
+                    const prevCell = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex - 1, this.visibleColumnIndex);
+                    prevCell.nativeElement.focus();
+                    const cell = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.visibleColumnIndex);
+                    cell.nativeElement.focus();
+                }
+            });
         }
     }
 

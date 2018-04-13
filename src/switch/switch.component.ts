@@ -42,7 +42,6 @@ let nextId = 0;
     templateUrl: "switch.component.html"
 })
 export class IgxSwitchComponent implements ControlValueAccessor {
-    public focused = false;
     protected _value: any;
 
     @ViewChild("checkbox") public nativeCheckbox;
@@ -78,6 +77,9 @@ export class IgxSwitchComponent implements ControlValueAccessor {
 
     @HostBinding("class.igx-switch--disabled")
     @Input() public disabled = false;
+
+    @HostBinding("class.igx-switch--focused")
+    public focused = false;
 
     public toggle() {
         if (this.disabled) {

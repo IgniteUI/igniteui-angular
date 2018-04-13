@@ -2,6 +2,9 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 5.3.0
+- Added `rowSelectable` property to `igxGrid`
+    - Setting `rowSelectable` to `true` enables multiple row selection for the `igx-grid` component. Adds a checkbox column that allows (de)selection of one, multiple or all (via header checkbox) rows.
+    - For more information about the `rowSelectable` property and working with grid row, please read the `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) selection see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid-selection.html)  
 - Added `onContextMenu` output to `igxGrid` to emit the clicked cell.
 - `igxTextSelection` directive added
     - `igxTextSelection` directive allows you to select the whole text range for every element with text content it is applied.
@@ -9,7 +12,10 @@ All notable changes for each version of this project will be documented in this 
     - `igxFocus` directive allows you to force focus for every element it is applied.
 - `igx-time-picker` component added
     - `igx-time-picker` allows user to select time, from a dialog with spinners, which is presented into input field.
-    - For more information navigate to `src\time-picker\README.md`.
+    - For more information navigate to the [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/time-piker/README.md).
+- `igx-tabs` component added
+    - `igx-tabs` allows users to switch between different views. The `igx-tabs` component places the tabs headers at the top and allows scrolling when there are multiple tab items outside the visible area. Tabs are ordered in a single row above their associated content.
+    - For more information navigate to [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/tabs/README.md).
 - Added column pinning in the list of features available for `igxGrid`. Pinning is available though the API. Try the following:
    ```typescript
    const column = this.grid.getColumnByName(name);
@@ -145,10 +151,12 @@ All notable changes for each version of this project will be documented in this 
 - `igx-nav-bar` changes
     -   Currently `isActionButtonVisible` resolves to `false` if actionButtonIcon is not defined.
 - `igx-tab-bar` changes
+    - **Breaking changes**: `IgxTabBarComponent` is renamed to `IgxBottomNavComponent` and `IgxTabBarModule` is renamed to `IgxBottomNavModule`.
+    - `igx-tab-bar` selector is deprecated. Use `igx-bottom-nav` selector instead.
     - custom content can be added for tabs
 
     ```html
-    <igx-tab-bar>
+    <igx-bottom-nav>
         <igx-tab-panel>
             <ng-template igxTab>
                 <igx-avatar initials="T1">
@@ -156,7 +164,7 @@ All notable changes for each version of this project will be documented in this 
             </ng-template>
             <h1>Tab 1 Content</h1>
         </igx-tab-panel>
-    </igx-tab-bar>
+    </igx-bottom-nav>
     ```
 
 - `igx-scroll` component deleted
@@ -226,7 +234,7 @@ All notable changes for each version of this project will be documented in this 
     - `IgxSlider` renamed to `IgxSliderComponent`
     - `IgxSnackbar` renamed to `IgxSnackbarComponent`
     - `IgxSwitch ` renamed to `IgxSwitchComponent`
-    - `IgxTabBar` renamed to `IgxTabBarComponent`
+    - `IgxTabBar` renamed to `IgxBottomNavComponent`
     - `IgxTabPanel` renamed to `IgxTabPanelComponent`
     - `IgxTab` renamed to `IgxTabComponent`
     - `IgxToast` renamed to `IgxToastComponent`

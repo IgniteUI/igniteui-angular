@@ -1,0 +1,368 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// If only background color is specified,
+/// the idle item color will be assigned automatically to a contrasting color.
+/// @param {Color} $item-background [null] - The background color used for the tabs header.
+/// @param {Color} $item-hover-background [null] - The text-color used for the tabs.
+/// @param {Color} $item-text-color [null] - The color used for the tab text color.
+/// @param {Color} $item-hover-color [null] - The color used for the tab text color when is on :hover.
+///
+/// @param {Color} $item-active-color [null] - The color used for the active tabs text.
+/// @param {Color} $item-active-icon-color [null] - The color used for the active tabs icon.
+/// @param {Color} $item-active-background [null] - The color used for the active/focused tab background.
+///
+/// @param {Color} $indicator-color [null] - The color used for the active tab indicator.
+/// @param {Color} $item-focus-bg [null] - The background color used for the selected/focused tab.
+/// @param {Color} $button-color [null] - The color used for the button icon/text color.
+/// @param {Color} $button-hover-color [null] - The color used for the button icon/text color when is on :hover.
+/// @param {Color} $button-background [null] - The color used for the button background.
+/// @param {Color} $button-hover-background [null] - The color used for the button background when is on :hover.
+///
+/// @param {Color} $tabs-ripple-color [null] - The color used for the button background.
+/// @param {Color} $buttons-ripple-color [null] - The color used for the button background when is on :hover.
+///
+/// @requires text-contrast
+/// @example scss Set a custom background color
+///   $my-tabs-theme: igx-tabs-theme(
+//      $item-background: orange
+//    );
+///   // Pass the theme to the igx-tabs component mixin
+///   @include igx-tabs($my-tabs-theme);
+
+@function igx-tabs-theme(
+    // Normal
+    $item-background: null,
+    $item-text-color: null,
+
+    //Hover
+    $item-hover-background: null,
+    $item-hover-color: null,
+
+    // Active/Focus
+    $item-active-color: null,
+    $item-active-icon-color: null,
+    $item-active-background: null,
+    $indicator-color: null,
+
+    // Buttons
+    $button-color: null,
+    $button-background: null,
+    $button-hover-background: null,
+    $button-hover-color: null,
+
+    // Ripple
+    $tabs-ripple-color: null,
+    $buttons-ripple-color: null
+) {
+
+    @if not($item-text-color) and $item-background {
+        $item-text-color: text-contrast($item-background);
+    }
+
+    @if not($item-hover-color) and $item-hover-background {
+        $item-hover-color: text-contrast($item-hover-background);
+    }
+
+    @if not($item-active-color) and $item-active-background {
+        $item-active-color: text-contrast($item-active-background);
+    }
+
+    @if not($item-active-icon-color) and $item-active-background {
+        $item-active-icon-color: text-contrast($item-active-background);
+    }
+
+    @if not($button-color) and $button-background {
+        $button-color: text-contrast($button-background);
+    }
+
+    @if not($button-hover-color) and $button-hover-background {
+        $button-hover-color: text-contrast($button-hover-background);
+    }
+
+    @if not($tabs-ripple-color) and $item-active-background {
+        $tabs-ripple-color: text-contrast($item-active-background);
+    }
+
+    @if not($tabs-ripple-color) and $item-background {
+        $tabs-ripple-color: text-contrast($item-background);
+    }
+
+    @if not($buttons-ripple-color) and $button-background {
+        $buttons-ripple-color: text-contrast($button-background);
+    }
+
+    @return (
+        item-text-color: $item-text-color,
+        item-background: $item-background,
+        item-hover-color: $item-hover-color,
+        item-hover-background: $item-hover-background,
+        item-active-color: $item-active-color,
+        item-active-icon-color: $item-active-icon-color,
+        item-active-background: $item-active-background,
+        indicator-color: $indicator-color,
+        button-color: $button-color,
+        button-background: $button-background,
+        button-hover-background:$button-hover-background,
+        button-hover-color:$button-hover-color,
+        tabs-ripple-color: $tabs-ripple-color,
+        buttons-ripple-color: $buttons-ripple-color,
+    );
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-tabs-theme
+/// @requires igx-color
+/// @requires igx-elevation
+/// @requires extend
+/// @requires {mixin} ellipsis
+/// @requires rem
+@mixin igx-tabs($theme, $palette: $default-palette) {
+    $default-theme: igx-tabs-theme(
+        $item-text-color: igx-color($palette, 'grays', 600),
+        $item-background: white,
+        $item-hover-color: igx-color($palette, 'grays', 600),
+        $item-hover-background: igx-color($palette, 'grays', 200),
+        $item-active-color: igx-color($palette, 'grays', 800),
+        $item-active-icon-color: igx-color($palette, 'primary', 500),
+        $item-active-background: igx-color($palette, 'grays', 200),
+        $indicator-color: igx-color($palette, 'primary', 500),
+        $button-color: igx-color($palette, 'grays', 500),
+        $button-background: white,
+        $button-hover-background: igx-color($palette, 'grays', 100),
+        $button-hover-color: igx-color($palette, 'grays', 600),
+        $tabs-ripple-color: igx-color($palette, 'grays', 100),
+        $buttons-ripple-color: igx-color($palette, 'grays', 100)
+    );
+
+    $this: extend($default-theme, $theme);
+
+    // @debug $this;
+    $item-min-width: 160px;
+    $item-max-width: 264px;
+    $item-padding: 0 rem(24px);
+    $tabs-height: rem(48px);
+    $tabs-height-icon: rem(77px);
+    $label-font-size: rem(14px, 16px);
+    $label-line-height: rem(16px, 16px);
+    $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
+    $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
+    $icon-label-space: rem(10px);
+
+    %igx-tabs {
+        display: flex;
+        flex-direction: column;
+    }
+
+    // HEADER
+    %igx-tabs__header {
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        background: map-get($this, 'item-background');
+    }
+
+    // ITEM WRAPPER
+    %igx-tabs__content-fixed {
+        min-width: $item-max-width
+    }
+
+    %igx-tabs__content-fixed,
+    %igx-tabs__header-wrapper-fixed {
+        flex: 1 1 auto;
+        overflow: hidden;
+    }
+
+    // ITEM HOLDER (The element that scrolls)
+
+    %igx-tabs__content-fluid,
+    %igx-tabs__header-wrapper-fluid {
+        position: relative;
+        flex-wrap: nowrap;
+        transition: transform .2s $tabs-animation-function;
+    }
+
+    %igx-tabs__header-wrapper-fluid {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    %igx-tabs__content-fluid {
+        display: flex;
+    }
+
+    // MENU ITEM
+    %igx-tabs__header-menu-item {
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-width: $item-min-width;
+        max-width: $item-max-width;
+        height: $tabs-height;
+        // Flex basis & shrink are Needed for IE11
+        flex-basis: auto;
+        flex-shrink: 0;
+        padding: $item-padding;
+        overflow: hidden;
+        cursor: pointer;
+        position: relative;
+        transition: background .3s $tabs-animation-function;
+        user-select: none;
+        background: map-get($this, 'item-background');
+        color: map-get($this, 'item-text-color');
+        outline: 0;
+
+        &::-moz-focus-inner {
+            border: 0;
+        }
+
+        &:focus {
+            background: map-get($this, 'item-active-background');
+            color: map-get($this, 'item-active-hover-color');
+        }
+
+        &:hover {
+            background: map-get($this, 'item-hover-background');
+            color: map-get($this, 'item-hover-color');
+        }
+
+        @include igx-ripple((
+            color: map-get($this, 'tabs-ripple-color')
+        ));
+    }
+
+    %igx-tabs__header-menu-item--selected {
+        outline: 0;
+        color: map-get($this, 'item-active-color');
+
+        &:focus {
+            background: map-get($this, 'item-active-background');
+            color: map-get($this, 'item-active-color');
+        }
+
+        &:hover {
+            background: map-get($this, 'item-active-background');
+            color: map-get($this, 'item-active-color');
+        }
+
+        %igx-tabs__header-menu-item-icon {
+            color: map-get($this, 'item-active-icon-color');
+        }
+    }
+
+
+    %igx-tabs__header-menu-item--disabled {
+        outline: 0;
+        opacity: .5;
+        cursor: default;
+        pointer-events: none;
+    }
+
+    %igx-tabs__header-menu-item-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        + %igx-tabs__item-label {
+            padding-top: $icon-label-space;
+        }
+    }
+
+    %igx-tabs__header-menu-item-indicator {
+        position: absolute;
+        bottom: 0;
+        transform: translateX(0);
+        height: 2px;
+        min-width: rem(160px);
+        background: map-get($this, 'indicator-color');
+        transition: transform .3s $tabs-animation-function, width .2s $tabs-animation-function;
+    }
+
+    // SCROLL BUTTONS
+    %igx-tabs__header-button
+    {
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        padding: 0;
+        min-width: rem(48px);
+        width: rem(48px);
+        min-height: $tabs-height;
+        height: $tabs-height;
+        cursor: pointer;
+        position: relative;
+        background: map-get($this, 'button-background');
+        color: map-get($this, 'button-color');
+        outline: 0;
+
+        &:hover {
+            background: map-get($this, 'button-hover-background');
+            color: map-get($this, 'button-hover-color');
+        }
+
+        &:focus {
+            outline: 0;
+            background: map-get($this, 'button-hover-background');
+        }
+
+        &::-moz-focus-inner {
+            // remove focus dotted border in firefox
+            border: 0;
+        }
+
+        .igx-icon {
+            line-height: rem(28px, 16px);
+        }
+
+        @include igx-ripple((
+            color: map-get($this, 'buttons-ripple-color')
+        ));
+    }
+
+    %igx-tabs__header-button--hidden {
+        visibility: hidden;
+    }
+
+    %igx-tabs__header-button--none {
+        display: none;
+    }
+
+    // LABELS
+    %igx-tabs__item-label {
+        @include ellipsis();
+        font-size: $label-font-size;
+        line-height: $label-line-height;
+        max-width: 100%;
+        text-align: center;
+
+        + %igx-tabs__header-menu-item-icon {
+            padding-top: $icon-label-space;
+        }
+    }
+
+    %igx-tabs__group {
+        display: inline-block;
+        min-width: 100%;
+    }
+
+    %igx-tabs--fixed {
+        %igx-tabs__header-menu-item {
+            flex: 1 1 auto;
+        }
+    }
+
+    %igx-tabs--icons {
+        %igx-tabs__header-button,
+        %igx-tabs__header-menu-item {
+            min-height: $tabs-height-icon;
+            height: $tabs-height-icon;
+        }
+    }
+}

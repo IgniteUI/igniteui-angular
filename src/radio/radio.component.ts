@@ -74,8 +74,10 @@ export class IgxRadioComponent implements ControlValueAccessor {
     @HostBinding("class.igx-radio--disabled")
     @Input() public disabled = false;
 
+    @HostBinding("class.igx-radio--focused")
+    public focused = false;
+
     protected _value: any = null;
-    protected focused: boolean;
 
     constructor() { }
 
