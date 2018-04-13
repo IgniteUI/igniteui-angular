@@ -44,7 +44,6 @@ let nextId = 0;
     templateUrl: "checkbox.component.html"
 })
 export class IgxCheckboxComponent implements ControlValueAccessor {
-    public focused = false;
     protected _value: any;
 
     @ViewChild("checkbox") public nativeCheckbox;
@@ -70,6 +69,9 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
 
     @HostBinding("class.igx-checkbox")
     public cssClass = "igx-checkbox";
+
+    @HostBinding("class.igx-checkbox--focused")
+    public focused = false;
 
     @HostBinding("class.igx-checkbox--indeterminate")
     @Input() public indeterminate = false;
