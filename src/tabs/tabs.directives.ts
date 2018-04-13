@@ -19,12 +19,32 @@ export class IgxRightButtonStyleDirective {
 
     @HostBinding("class.igx-tabs__header-button")
     get visibleCSS(): boolean {
-        return this.tabs.isRightButtonVisible;
+        if (this.tabs.applyRightButtonVisibleStyle) {
+            this.tabs.applyRightButtonHiddenStyle = false;
+            this.tabs.applyRightButtonNotDisplayedStyle = false;
+        }
+
+        return this.tabs.applyRightButtonVisibleStyle;
     }
 
     @HostBinding("class.igx-tabs__header-button--hidden")
     get hiddenCSS(): boolean {
-        return !this.tabs.isRightButtonVisible;
+        if (this.tabs.applyRightButtonHiddenStyle) {
+            this.tabs.applyRightButtonVisibleStyle = false;
+            this.tabs.applyRightButtonNotDisplayedStyle = false;
+        }
+
+        return this.tabs.applyRightButtonHiddenStyle;
+    }
+
+    @HostBinding("class.igx-tabs__header-button--none")
+    get notDisplayedCSS(): boolean {
+        if (this.tabs.applyRightButtonNotDisplayedStyle) {
+            this.tabs.applyRightButtonVisibleStyle = false;
+            this.tabs.applyRightButtonHiddenStyle = false;
+        }
+
+        return this.tabs.applyRightButtonNotDisplayedStyle;
     }
 }
 
@@ -39,12 +59,32 @@ export class IgxLeftButtonStyleDirective {
 
     @HostBinding("class.igx-tabs__header-button")
     get visibleCSS(): boolean {
-        return this.tabs.isLeftButtonVisible;
+        if (this.tabs.applyLeftButtonVisibleStyle) {
+            this.tabs.applyLeftButtonHiddenStyle = false;
+            this.tabs.applyLeftButtonNotDisplayedStyle = false;
+        }
+
+        return this.tabs.applyLeftButtonVisibleStyle;
     }
 
     @HostBinding("class.igx-tabs__header-button--hidden")
     get hiddenCSS(): boolean {
-        return !this.tabs.isLeftButtonVisible;
+        if (this.tabs.applyLeftButtonHiddenStyle) {
+            this.tabs.applyLeftButtonVisibleStyle = false;
+            this.tabs.applyLeftButtonNotDisplayedStyle = false;
+        }
+
+        return this.tabs.applyLeftButtonHiddenStyle;
+    }
+
+    @HostBinding("class.igx-tabs__header-button--none")
+    get notDisplayedCSS(): boolean {
+        if (this.tabs.applyLeftButtonNotDisplayedStyle) {
+            this.tabs.applyLeftButtonVisibleStyle = false;
+            this.tabs.applyLeftButtonHiddenStyle = false;
+        }
+
+        return this.tabs.applyLeftButtonNotDisplayedStyle;
     }
 }
 

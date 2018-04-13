@@ -72,12 +72,8 @@
 /// @requires {mixin} igx-slider
 /// @requires {mixin} igx-snackbar
 /// @requires {mixin} igx-switch
-<<<<<<< HEAD
-/// @requires {mixin} igx-tabbar
 /// @requires {mixin} igx-tabs
-=======
 /// @requires {mixin} igx-bottom-nav
->>>>>>> 5.3.x
 /// @requires {mixin} igx-toast
 @mixin igx-theme($palette, $exclude: ()) {
     // Stores all excluded component styles
