@@ -37,6 +37,12 @@
         @extend %switch-label--before !optional;
     }
 
+    @include m(focused) {
+        @include e(ripple) {
+            @extend %switch-ripple--focused !optional;
+        }
+    }
+
     @include m(checked) {
         @include e(composite) {
             @extend %switch-composite--x !optional;

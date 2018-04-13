@@ -86,9 +86,14 @@ export class IgxListComponent {
         return "list";
     }
 
-    @HostBinding("class")
-    public get innerStyle(): string {
-        return !this.children || this.children.length === 0 ? "igx-list-empty" : "igx-list";
+    @HostBinding("class.igx-list-empty")
+    public get isListEmpty(): boolean {
+        return !this.children || this.children.length === 0;
+    }
+
+    @HostBinding("class.igx-list")
+    public get cssClass(): boolean {
+        return this.children && this.children.length > 0;
     }
 
     public get items(): IgxListItemComponent[] {
