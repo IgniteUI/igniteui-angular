@@ -101,9 +101,7 @@
 
     %igx-grid-summary__label {
         color: map-get($this, 'label-color');
-        margin-right: rem(10px);
         cursor: pointer;
-        min-width: rem(40px);
 
         &:hover {
             color: map-get($this, 'label-hover-color');
