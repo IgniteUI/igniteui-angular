@@ -48,7 +48,7 @@
 
 
 <div class="igx-grid__tfoot" role="rowgroup" [style.width.px]='calcWidth' #tfoot>
-    <div *ngIf="hasSummarizedColumns" class="igx-grid__tr" role="row">
+    <div *ngIf="hasSummarizedColumns" class="igx-grid__tr" role="row" [style.marginLeft.px]="summariesMargin">
         <ng-container *ngIf="pinnedColumns.length > 0">
             <igx-grid-summary [gridID]="id" *ngFor="let col of pinnedColumns"  [column]="col" [style.min-width.px]="col.width"></igx-grid-summary>
         </ng-container>
