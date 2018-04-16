@@ -183,20 +183,22 @@ describe("IgxTabs", () => {
         fixture.detectChanges();
 
         fixture.componentInstance.wrapperDiv.nativeElement.style.width = "500px";
-        window.dispatchEvent(new Event("resize"));
         fixture.detectChanges();
 
         const rightScrollButton = tabs.headerContainer.nativeElement.children[2];
         rightScrollButton.dispatchEvent(new Event("click", { bubbles: true }));
-        fixture.detectChanges();
 
-        requestAnimationFrame(() => {
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
             expect(tabs.offset).toBeGreaterThan(0);
         });
 
         tabs.scrollLeft(null);
 
-        requestAnimationFrame(() => {
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
             expect(tabs.offset).toBe(0);
         });
     });
@@ -207,7 +209,6 @@ describe("IgxTabs", () => {
         fixture.detectChanges();
 
         fixture.componentInstance.wrapperDiv.nativeElement.style.width = "500px";
-        window.dispatchEvent(new Event("resize"));
         fixture.detectChanges();
 
         tabs.tabs.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(new Event("click", { bubbles: true }));
