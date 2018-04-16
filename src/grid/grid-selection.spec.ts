@@ -804,6 +804,23 @@ describe("IgxGrid - Row Selection", () => {
         const grid = fixture.componentInstance.gridSummaries;
         expect(grid.summariesMargin).toBe(grid.calcRowCheckboxWidth);
     });
+    it("Cell selection and sorting", () => {
+        const fixture = TestBed.createComponent(GridSummaryComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.gridSummaries;
+        const oldCell = grid.getCellByColumn(3, "UnitsInStock");
+        const oldCellID = oldCell.cellID;
+        oldCell.nativeElement.focus();
+        oldCell.nativeElement.click();
+        grid.sort("UnitsInStock", SortingDirection.Asc, true);
+        fixture.detectChanges();
+        const cellAfterSorting =  fixture.debugElement.query(By.css(".igx-grid__td--selected"));
+        expect(grid.selectedCells).toBeDefined();
+        expect(grid.selectedCells.length).toBe(1);
+        expect(grid.selectedCells[0].cellID.rowID).toEqual(oldCellID.rowID);
+        expect(grid.selectedCells[0].cellID.columnID).toEqual(oldCellID.columnID);
+    });
 });
 
 @Component({
@@ -1023,7 +1040,7 @@ export class GridWithScrollsComponent implements OnInit {
 
 @Component({
     template: `
-        <igx-grid #grid1 [data]="data" [rowSelectable]="true">
+        <igx-grid #grid1 [data]="data" [rowSelectable]="true" [primaryKey]="'ProductID'">
             <igx-column field="ProductID" header="Product ID">
             </igx-column>
             <igx-column field="ProductName" [hasSummary]="true">
