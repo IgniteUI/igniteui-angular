@@ -97,15 +97,6 @@ export class IgxTabsComponent implements AfterViewInit {
     public visibleItemsWidth: number;
     public offset = 0;
 
-    public applyRightButtonVisibleStyle = false;
-    public applyLeftButtonVisibleStyle = false;
-
-    public applyRightButtonNotDisplayedStyle = true;
-    public applyLeftButtonNotDisplayedStyle = true;
-
-    public applyRightButtonHiddenStyle = false;
-    public applyLeftButtonHiddenStyle = false;
-
     public scrollLeft(event) {
         this._scroll(false);
     }
@@ -140,26 +131,10 @@ export class IgxTabsComponent implements AfterViewInit {
 
             this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
             this.itemsContainer.nativeElement.style.transform = `translate(${-this.offset}px)`;
-
-            const total = this.offset + viewPortWidth;
-
-            if (this.offset === 0 && !scrollRight) {
-                this.applyLeftButtonVisibleStyle = false;
-                this.applyLeftButtonHiddenStyle = true;
-            } else {
-                this.applyLeftButtonVisibleStyle = true;
-            }
-
-            if (itemsContainerWidth <= total) {
-                this.applyRightButtonVisibleStyle = false;
-                this.applyRightButtonHiddenStyle = true;
-            } else {
-                this.applyRightButtonVisibleStyle = true;
-            }
         });
     }
 
-    get selectedTab(): IgxTabItemComponent {
+    get selectedTabItem(): IgxTabItemComponent {
         if (this.tabs && this.selectedIndex !== undefined) {
             return this.tabs.toArray()[this.selectedIndex];
         }
@@ -181,40 +156,6 @@ export class IgxTabsComponent implements AfterViewInit {
 
             }
         }, 0);
-
-        const itemsContainerWidth = this.itemsContainer.nativeElement.offsetWidth;
-        const headerContainerWidth = this.headerContainer.nativeElement.offsetWidth;
-        const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
-
-        if (itemsContainerWidth > headerContainerWidth) {
-            this.applyRightButtonVisibleStyle = true;
-            this.applyLeftButtonHiddenStyle = true;
-        }
-
-        // No space for scroll buttons when all tabs are visible initially
-        if (itemsContainerWidth <= headerContainerWidth && this.offset === 0) {
-            this.applyLeftButtonNotDisplayedStyle = true;
-            this.applyRightButtonNotDisplayedStyle = true;
-        }
-    }
-
-    @HostListener("window:resize")
-    public onResize() {
-        const itemsContainerWidth = this.itemsContainer.nativeElement.offsetWidth;
-        const viewPortContainerWidth = this.viewPort.nativeElement.offsetWidth;
-
-        if (itemsContainerWidth <= viewPortContainerWidth + this.offset) {
-            this.applyRightButtonVisibleStyle = false;
-            this.applyRightButtonHiddenStyle = true;
-        } else {
-            this.applyRightButtonVisibleStyle = true;
-        }
-
-        if (this.offset > 0) {
-            this.applyLeftButtonVisibleStyle = true;
-        } else {
-            this.applyLeftButtonHiddenStyle = true;
-        }
     }
 
     @HostListener("onTabItemSelected", ["$event"])
@@ -266,7 +207,7 @@ export class IgxTabsComponent implements AfterViewInit {
 
     private _deselectGroup(group: IgxTabsGroupComponent) {
         // Cannot deselect the selected tab - this will mean that there will be not selected tab left
-        if (group.isDisabled || this.selectedTab.index === group.index) {
+        if (group.isDisabled || this.selectedTabItem.index === group.index) {
             return;
         }
 

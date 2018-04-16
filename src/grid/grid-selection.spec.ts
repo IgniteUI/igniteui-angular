@@ -49,7 +49,8 @@ describe("IgxGrid - Row Selection", () => {
                 GridWithPagingAndSelectionComponent,
                 GridWithSelectionComponent,
                 GridWithSelectionFilteringComponent,
-                GridWithScrollsComponent
+                GridWithScrollsComponent,
+                GridSummaryComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -175,11 +176,45 @@ describe("IgxGrid - Row Selection", () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            expect(targetCell.gridAPI.get_cell_by_visible_index).toHaveBeenCalledTimes(3);
+            expect(targetCell.gridAPI.get_cell_by_visible_index).toHaveBeenCalledTimes(1);
             expect(grid.getCellByColumn(3, "Name").focused).toEqual(true);
             expect(targetCell.focused).toEqual(false);
             expect(grid.selectedCells.length).toEqual(1);
             expect(grid.selectedCells[0].row.rowData[grid.primaryKey]).toEqual(3);
+        });
+    }));
+
+    it("Should properly move focus when loading new row chunk", async(() => {
+        const fix = TestBed.createComponent(GridWithSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection3;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        const targetCellPrimaryKey = grid.rowList.last.rowID;
+        const targetCell = grid.getCellByColumn(targetCellPrimaryKey, "Column1");
+        const initialValue = targetCell.value;
+        const targetCellElement: HTMLElement = targetCell.nativeElement;
+        spyOn(targetCell, "onFocus").and.callThrough();
+        expect(targetCell.focused).toEqual(false);
+        targetCellElement.focus();
+        spyOn(targetCell.gridAPI, "get_cell_by_visible_index").and.callThrough();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(targetCell.focused).toEqual(true);
+            const targetCellDebugElement = fix.debugElement.query(By.css(".igx-grid__td--selected"));
+            simulateKeyDown(targetCellElement, "ArrowDown").then(() => {
+                setTimeout(() => {
+                    fix.whenStable().then(() => {
+                        fix.detectChanges();
+                        const newLastRow = grid.rowList.last.rowID;
+                        expect(grid.getCellByColumn(newLastRow, "Column1").value === initialValue).toBeFalsy();
+                        expect(grid.getCellByColumn(newLastRow, "Column1").focused).toEqual(true);
+                        expect(grid.getCellByColumn(newLastRow, "Column1").selected).toEqual(true);
+                        expect(grid.getCellByColumn(newLastRow, "Column1").nativeElement.class).toContain("igx-grid__td--selected");
+                        expect(grid.getCellByColumn(targetCellPrimaryKey, "Column1").focused).toEqual(false);
+                        expect(grid.selectedCells.length).toEqual(1);
+                    });
+                }, 100);
+            });
         });
     }));
 
@@ -761,6 +796,31 @@ describe("IgxGrid - Row Selection", () => {
             expect(headerCheckboxElement.getAttribute("aria-label")).toMatch("Select all");
         });
     }));
+
+    it("Summaries integration", () => {
+        const fixture = TestBed.createComponent(GridSummaryComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.gridSummaries;
+        expect(grid.summariesMargin).toBe(grid.calcRowCheckboxWidth);
+    });
+    it("Cell selection and sorting", () => {
+        const fixture = TestBed.createComponent(GridSummaryComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.gridSummaries;
+        const oldCell = grid.getCellByColumn(3, "UnitsInStock");
+        const oldCellID = oldCell.cellID;
+        oldCell.nativeElement.focus();
+        oldCell.nativeElement.click();
+        grid.sort("UnitsInStock", SortingDirection.Asc, true);
+        fixture.detectChanges();
+        const cellAfterSorting =  fixture.debugElement.query(By.css(".igx-grid__td--selected"));
+        expect(grid.selectedCells).toBeDefined();
+        expect(grid.selectedCells.length).toBe(1);
+        expect(grid.selectedCells[0].cellID.rowID).toEqual(oldCellID.rowID);
+        expect(grid.selectedCells[0].cellID.columnID).toEqual(oldCellID.columnID);
+    });
 });
 
 @Component({
@@ -976,4 +1036,39 @@ export class GridWithScrollsComponent implements OnInit {
     public columnCreated(column: IgxColumnComponent) {
         column.width = "50px";
     }
+}
+
+@Component({
+    template: `
+        <igx-grid #grid1 [data]="data" [rowSelectable]="true">
+            <igx-column field="ProductID" header="Product ID">
+            </igx-column>
+            <igx-column field="ProductName" [hasSummary]="true">
+            </igx-column>
+            <igx-column field="InStock" [dataType]="'boolean'" [hasSummary]="true">
+            </igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true">
+            </igx-column>
+            <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="true">
+            </igx-column>
+        </igx-grid>
+    `
+})
+export class  GridSummaryComponent {
+
+    public data = [
+        { ProductID: 1, ProductName: "Chai", InStock: true, UnitsInStock: 2760, OrderDate: new Date("2005-03-21") },
+        { ProductID: 2, ProductName: "Aniseed Syrup", InStock: false, UnitsInStock: 198, OrderDate: new Date("2008-01-15") },
+        { ProductID: 3, ProductName: "Chef Antons Cajun Seasoning", InStock: true, UnitsInStock: 52, OrderDate: new Date("2010-11-20") },
+        { ProductID: 4, ProductName: "Grandmas Boysenberry Spread", InStock: false, UnitsInStock: 0, OrderDate: new Date("2007-10-11") },
+        { ProductID: 5, ProductName: "Uncle Bobs Dried Pears", InStock: false, UnitsInStock: 0, OrderDate: new Date("2001-07-27") },
+        { ProductID: 6, ProductName: "Northwoods Cranberry Sauce", InStock: true, UnitsInStock: 1098, OrderDate: new Date("1990-05-17") },
+        { ProductID: 7, ProductName: "Queso Cabrales", InStock: false, UnitsInStock: 0, OrderDate: new Date("2005-03-03") },
+        { ProductID: 8, ProductName: "Tofu", InStock: true, UnitsInStock: 7898, OrderDate: new Date("2017-09-09") },
+        { ProductID: 9, ProductName: "Teatime Chocolate Biscuits", InStock: true, UnitsInStock: 6998, OrderDate: new Date("2025-12-25") },
+        { ProductID: 10, ProductName: "Chocolate", InStock: true, UnitsInStock: 20000, OrderDate: new Date("2018-03-01") }
+    ];
+    @ViewChild("grid1", { read: IgxGridComponent })
+    public gridSummaries: IgxGridComponent;
+
 }

@@ -16,6 +16,7 @@ describe("IgxCheckbox", () => {
                 CheckboxSimpleComponent,
                 CheckboxDisabledComponent,
                 CheckboxIndeterminateComponent,
+                CheckboxRequiredComponent,
                 CheckboxExternalLabelComponent,
                 CheckboxInvisibleLabelComponent,
                 IgxCheckboxComponent
@@ -152,6 +153,23 @@ describe("IgxCheckbox", () => {
         expect(testInstance.subscribed).toBe(false);
     });
 
+    it("Required state", () => {
+        const fixture = TestBed.createComponent(CheckboxRequiredComponent);
+        const testInstance = fixture.componentInstance;
+        const checkboxInstance = testInstance.cb;
+        const nativeCheckbox = checkboxInstance.nativeCheckbox.nativeElement;
+        fixture.detectChanges();
+
+        expect(checkboxInstance.required).toBe(true);
+        expect(nativeCheckbox.required).toBeTruthy();
+
+        checkboxInstance.required = false;
+        fixture.detectChanges();
+
+        expect(checkboxInstance.required).toBe(false);
+        expect(nativeCheckbox.required).toBe(false);
+    });
+
     it("Event handling", () => {
         const fixture = TestBed.createComponent(CheckboxSimpleComponent);
         const testInstance = fixture.componentInstance;
@@ -212,6 +230,13 @@ class CheckboxIndeterminateComponent {
     @ViewChild("cb") public cb: IgxCheckboxComponent;
 
     public subscribed = false;
+}
+
+@Component({
+    template: `<igx-checkbox #cb [required]="true">Required</igx-checkbox>`
+})
+class CheckboxRequiredComponent {
+    @ViewChild("cb") public cb: IgxCheckboxComponent;
 }
 
 @Component({
