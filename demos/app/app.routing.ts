@@ -17,6 +17,7 @@ import { GridPerformanceSampleComponent } from "./grid-performance/sample.compon
 import { GridSelectionComponent } from "./grid-selection/sample.component";
 import { GridSummaryComponent } from "./grid-summaries/sample.component";
 import { GridSampleComponent } from "./grid/sample.component";
+import { GridVirtualizationSampleComponent } from "./grid-remote-virtualization/sample.component";
 import { IconSampleComponent } from "./icon/sample.component";
 import { InputGroupSampleComponent } from "./input-group/input-group.component";
 import { InputSampleComponent } from "./input/sample.component";
@@ -36,6 +37,9 @@ import {
     CustomContentComponent,
     TabBarSampleComponent
 } from "./tabbar/sample.component";
+import {
+    TabsSampleComponent
+} from "./tabs/sample.component";
 import { IgxToastSampleComponent } from "./toast/sample.component";
 import { VirtualForSampleComponent } from "./virtual-for-directive/sample.component";
 
@@ -56,6 +60,10 @@ const appRoutes: Routes = [
     {
         component: TabBarSampleComponent,
         path: "tabbar"
+    },
+    {
+        component: TabsSampleComponent,
+        path: "tabs"
     },
     {
         component: ButtonsSampleComponent,
@@ -180,6 +188,10 @@ const appRoutes: Routes = [
     {
         component: MaskSampleComponent,
         path: "mask"
+    },
+    {
+        component: GridVirtualizationSampleComponent,
+        path: "gridRemoteVirtualization"
     }
 ];
 

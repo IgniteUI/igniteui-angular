@@ -175,11 +175,45 @@ describe("IgxGrid - Row Selection", () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            expect(targetCell.gridAPI.get_cell_by_visible_index).toHaveBeenCalledTimes(2);
+            expect(targetCell.gridAPI.get_cell_by_visible_index).toHaveBeenCalledTimes(1);
             expect(grid.getCellByColumn(3, "Name").focused).toEqual(true);
             expect(targetCell.focused).toEqual(false);
             expect(grid.selectedCells.length).toEqual(1);
             expect(grid.selectedCells[0].row.rowData[grid.primaryKey]).toEqual(3);
+        });
+    }));
+
+    it("Should properly move focus when loading new row chunk", async(() => {
+        const fix = TestBed.createComponent(GridWithSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection3;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        const targetCellPrimaryKey = grid.rowList.last.rowID;
+        const targetCell = grid.getCellByColumn(targetCellPrimaryKey, "Column1");
+        const initialValue = targetCell.value;
+        const targetCellElement: HTMLElement = targetCell.nativeElement;
+        spyOn(targetCell, "onFocus").and.callThrough();
+        expect(targetCell.focused).toEqual(false);
+        targetCellElement.focus();
+        spyOn(targetCell.gridAPI, "get_cell_by_visible_index").and.callThrough();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(targetCell.focused).toEqual(true);
+            const targetCellDebugElement = fix.debugElement.query(By.css(".igx-grid__td--selected"));
+            simulateKeyDown(targetCellElement, "ArrowDown").then(() => {
+                setTimeout(() => {
+                    fix.whenStable().then(() => {
+                        fix.detectChanges();
+                        const newLastRow = grid.rowList.last.rowID;
+                        expect(grid.getCellByColumn(newLastRow, "Column1").value === initialValue).toBeFalsy();
+                        expect(grid.getCellByColumn(newLastRow, "Column1").focused).toEqual(true);
+                        expect(grid.getCellByColumn(newLastRow, "Column1").selected).toEqual(true);
+                        expect(grid.getCellByColumn(newLastRow, "Column1").nativeElement.class).toContain("igx-grid__td--selected");
+                        expect(grid.getCellByColumn(targetCellPrimaryKey, "Column1").focused).toEqual(false);
+                        expect(grid.selectedCells.length).toEqual(1);
+                    });
+                }, 100);
+            });
         });
     }));
 
@@ -568,6 +602,8 @@ describe("IgxGrid - Row Selection", () => {
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
         rowsCollection = grid.selectedRows();
         expect(rowsCollection).toBeUndefined();
+        expect(headerCheckbox.getAttribute("aria-checked")).toMatch("false");
+        expect(headerCheckbox.getAttribute("aria-label")).toMatch("Select all filtered");
         grid.clearFilter("ProductName");
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
         fix.detectChanges();
@@ -590,6 +626,8 @@ describe("IgxGrid - Row Selection", () => {
         fix.detectChanges();
         expect(headerCheckbox.checked).toBeTruthy();
         expect(headerCheckbox.indeterminate).toBeFalsy();
+        expect(headerCheckbox.getAttribute("aria-checked")).toMatch("true");
+        expect(headerCheckbox.getAttribute("aria-label")).toMatch("Deselect all filtered");
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
 
         grid.clearFilter("ProductName");
@@ -727,6 +765,34 @@ describe("IgxGrid - Row Selection", () => {
         }).then(() => {
             fix.detectChanges();
             expect(firstRow.isSelected).toBeTruthy();
+        });
+    }));
+
+    it("ARIA support", async(() => {
+        const fix = TestBed.createComponent(GridWithSelectionFilteringComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection4;
+        const firstRow = grid.getRowByIndex(0).nativeElement;
+        const headerRow: HTMLElement = fix.nativeElement.querySelector(".igx-grid__thead");
+        const headerCheckboxElement: HTMLElement = headerRow.querySelector(".igx-checkbox__input");
+
+        fix.detectChanges();
+
+        expect(firstRow.getAttribute("aria-selected")).toMatch("false");
+        expect(headerCheckboxElement.getAttribute("aria-checked")).toMatch("false");
+        expect(headerCheckboxElement.getAttribute("aria-label")).toMatch("Select all");
+        headerCheckboxElement.click();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(firstRow.getAttribute("aria-selected")).toMatch("true");
+            expect(headerCheckboxElement.getAttribute("aria-checked")).toMatch("true");
+            expect(headerCheckboxElement.getAttribute("aria-label")).toMatch("Deselect all");
+            headerCheckboxElement.click();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.getAttribute("aria-selected")).toMatch("false");
+            expect(headerCheckboxElement.getAttribute("aria-checked")).toMatch("false");
+            expect(headerCheckboxElement.getAttribute("aria-label")).toMatch("Select all");
         });
     }));
 });

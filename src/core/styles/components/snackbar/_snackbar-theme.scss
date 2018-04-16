@@ -14,7 +14,7 @@
 /// @todo Add light option
 /// @example scss Set a custom background color
 ///   $my-snackbar-theme: igx-snackbar-theme($background: white);
-///   // Pass the theme to the igx-tabbar component mixin
+///   // Pass the theme to the igx-bottom-nav component mixin
 ///   @include igx-snackbar($my-snackbar-theme);
 @function igx-snackbar-theme(
     $background: null,

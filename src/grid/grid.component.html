@@ -1,5 +1,4 @@
 <ng-template #defaultPager let-api>
-    <ng-container *ngIf="api.paging && api.totalPages > 0">
         <button [disabled]="api.isFirstPage" (click)="api.paginate(0)" igxButton="icon" igxRipple igxRippleCentered="true">
             <igx-icon fontSet="material" name="first_page"></igx-icon>
         </button>
@@ -16,7 +15,6 @@
         <select style="margin-left: 1rem;" (change)="api.perPage = $event.target.value">
             <option [value]="val" [selected]="api.perPage == val" *ngFor="let val of [5, 10, 15, 25, 50, 100, 500]">{{ val }}</option>
         </select>
-    </ng-container>
 </ng-template>
 
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
@@ -40,7 +38,7 @@
     <ng-template igxFor let-rowData [igxForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
                             | gridSort:sortingExpressions:id:pipeTrigger
                             | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
-        [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer>
+        [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
         <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
         </igx-grid-row>
     </ng-template>
@@ -48,7 +46,7 @@
 
 
 <div class="igx-grid__tfoot" role="rowgroup" [style.width.px]='calcWidth' #tfoot>
-    <div *ngIf="hasSummarizedColumns" class="igx-grid__tr" role="row">
+    <div *ngIf="hasSummarizedColumns" class="igx-grid__tr" [style.height.px]="tfootHeight" role="row">
         <ng-container *ngIf="pinnedColumns.length > 0">
             <igx-grid-summary [gridID]="id" *ngFor="let col of pinnedColumns"  [column]="col" [style.min-width.px]="col.width"></igx-grid-summary>
         </ng-container>
@@ -58,7 +56,7 @@
     </div>
 </div>
 
-<div class="igx-grid__scroll" [style.height]="'18px'" #scr>
+<div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="calcWidth - totalWidth >= 0">
     <div class="igx-grid__scroll-start" [style.width.px]='pinnedWidth' [hidden]="pinnedWidth === 0"></div>
     <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth'>
         <ng-template igxFor [igxForOf]='[]' #scrollContainer>
@@ -66,7 +64,7 @@
     </div>
 </div>
 
-<div class="igx-paginator igx-grid-paginator" *ngIf="paging && totalPages > 0" #paginator>
+<div class="igx-paginator igx-grid-paginator" *ngIf="paging" #paginator>
     <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
     </ng-container>
 </div>

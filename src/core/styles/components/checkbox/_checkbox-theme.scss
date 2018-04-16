@@ -40,7 +40,12 @@
 /// @requires igx-color
 /// @requires extend
 /// @requires rem
+/// @requires em
+/// @requires animation
+/// @requires scale-in-out
 @mixin igx-checkbox($theme, $palette: $default-palette) {
+    @include scale-in-out($start-scale: .9);
+
     $dark-theme: igx-checkbox-theme(
         $label-color: igx-color($palette, grays, 900),
         $empty-color: igx-color($palette, 'grays', 600),
@@ -91,6 +96,10 @@
         user-select: none;
         pointer-events: none;
         cursor: initial;
+    }
+
+    %cbx-input {
+        @include hide-default();
     }
 
     %cbx-composite {
@@ -180,11 +189,29 @@
 
     %cbx-label-pos--after {
         margin-left: $label-margin;
+
+        [dir='rtl'] & {
+            margin-left: initial;
+            margin-right: $label-margin;
+
+            &:empty {
+                margin: 0;
+            }
+        }
     }
 
     %cbx-label-pos--before {
         margin-right: $label-margin;
         order: -1;
+
+        [dir='rtl'] & {
+            margin-right: initial;
+            margin-left: $label-margin;
+
+            &:empty {
+                margin: 0;
+            }
+        }
     }
 
     %cbx-label--disabled {
@@ -204,5 +231,11 @@
         overflow: hidden;
         pointer-events: none;
         filter: opacity(1);
+    }
+
+    %cbx-ripple--focused {
+        @include animation('scale-in-out' 1s $ease-out-quad infinite);
+        transition: background-color .2s $ease-out-quad;
+        background-color: rgba(map-get($this, 'fill-color'), .12);
     }
 }

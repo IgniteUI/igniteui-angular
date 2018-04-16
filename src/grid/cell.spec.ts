@@ -16,7 +16,8 @@ describe("IgxGrid - Cell component", () => {
             declarations: [
                 DefaultGridComponent,
                 CtrlKeyKeyboardNagivationComponent,
-                VirtualtGridComponent
+                VirtualtGridComponent,
+                NoColumnWidthGridComponent
             ],
             imports: [IgxGridModule.forRoot()]
         }).compileComponents();
@@ -90,6 +91,30 @@ describe("IgxGrid - Cell component", () => {
             fix.detectChanges();
 
             expect(grid.onCellClick.emit).toHaveBeenCalledWith(args);
+            expect(firstCell).toBe(fix.componentInstance.clickedCell);
+        });
+    }));
+
+    it("Should trigger onContextMenu event when right click into cell", async(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
+        const firstCell = grid.getCellByColumn(0, "index");
+
+        spyOn(grid.onContextMenu, "emit").and.callThrough();
+        const event = new Event("contextmenu");
+        cellElem.nativeElement.dispatchEvent(event);
+        const args: IGridCellEventArgs = {
+            cell: firstCell,
+            event
+        };
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+
+            expect(grid.onContextMenu.emit).toHaveBeenCalledWith(args);
             expect(firstCell).toBe(fix.componentInstance.clickedCell);
         });
     }));
@@ -259,12 +284,39 @@ describe("IgxGrid - Cell component", () => {
 
         });
     }));
+
     it("should fit last cell in the available display container when there is vertical scroll.", () => {
         const fix = TestBed.createComponent(VirtualtGridComponent);
         fix.detectChanges();
         const rows = fix.componentInstance.instance.rowList;
         rows.forEach((item) => {
             expect(item.cells.last.width).toEqual("182px");
+        });
+    });
+
+    it("should not reduce the width of last pinned cell when there is vertical scroll.", () => {
+        const fix = TestBed.createComponent(VirtualtGridComponent);
+        fix.detectChanges();
+        const columns = fix.componentInstance.instance.columnList;
+        const lastCol: IgxColumnComponent = columns.last;
+        lastCol.pin();
+        fix.detectChanges();
+        lastCol.cells.forEach((cell) => {
+            expect(cell.width).toEqual("200px");
+        });
+        const rows = fix.componentInstance.instance.rowList;
+        rows.forEach((item) => {
+            expect(item.cells.last.width).toEqual("182px");
+        });
+    });
+
+    it("should not make last column width 0 when no column width is set", () => {
+        const fix = TestBed.createComponent(NoColumnWidthGridComponent);
+        fix.detectChanges();
+        const columns = fix.componentInstance.instance.columnList;
+        const lastCol: IgxColumnComponent = columns.last;
+        lastCol.cells.forEach((cell) => {
+            expect(cell.nativeElement.clientWidth).toBeGreaterThan(100);
         });
     });
 });
@@ -274,6 +326,7 @@ describe("IgxGrid - Cell component", () => {
         <igx-grid
             (onSelection)="cellSelected($event)"
             (onCellClick)="cellClick($event)"
+            (onContextMenu)="cellRightClick($event)"
             [data]="data"
             [autoGenerate]="true">
         </igx-grid>
@@ -297,6 +350,10 @@ export class DefaultGridComponent {
     }
 
     public cellClick(evt) {
+        this.clickedCell = evt.cell;
+    }
+
+    public cellRightClick(evt) {
         this.clickedCell = evt.cell;
     }
 }
@@ -346,5 +403,26 @@ export class VirtualtGridComponent {
 
     public columnCreated(column: IgxColumnComponent) {
         column.width = "200px";
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid [height]="'300px'" [width]="'800px'" [data]="data" [autoGenerate]="true"></igx-grid>
+    `
+})
+export class NoColumnWidthGridComponent {
+    public data = [];
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public instance: IgxGridComponent;
+    constructor() {
+        this.data = this.generateData();
+    }
+    public generateData() {
+        const data = [];
+        for (let i = 0; i < 1000; i++) {
+            data.push({ index: i, value: i, other: i, another: i });
+        }
+        return data;
     }
 }

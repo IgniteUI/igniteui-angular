@@ -37,6 +37,14 @@ export class IgxSelectionAPIService {
         return selection;
     }
 
+    public append_items(componentID: string, itemIDs: any[]): any[] {
+        let selection = this.get_selection(componentID);
+        if (selection === undefined) {
+            selection = [];
+        }
+        return [...selection, ...itemIDs];
+    }
+
     public deselect_item(componentID: string, itemID, currSelection?: any[]) {
         if (!currSelection) {
             currSelection = this.get_selection(componentID);
@@ -53,9 +61,14 @@ export class IgxSelectionAPIService {
         return selection;
     }
 
+    public subtract_items(componentID: string, itemIDs: any[]) {
+        const selection = this.get_selection(componentID);
+        return selection.filter((selectedItemID) => itemIDs.indexOf(selectedItemID) === -1);
+    }
+
     public is_item_selected(componentID: string, itemID) {
         const selection = this.get_selection(componentID);
-        if (selection && selection.find((item) => this.compare(item, itemID)) !== undefined) {
+        if (selection && selection.find((item) => item === itemID) !== undefined) {
             return true;
         } else {
             return false;
@@ -72,18 +85,5 @@ export class IgxSelectionAPIService {
 
     public are_none_selected(componentID: string): boolean {
         return this.get_selection_length(componentID) === 0;
-    }
-
-    public compare(item1, item2) {
-        if (item1 !== Object(item1)) {
-            return item1 === item2;
-        } else {
-            for (const prop in item1) {
-                if (item1[prop] !== item2[prop]) {
-                    return false;
-                }
-            }
-            return true;
-        }
     }
 }
