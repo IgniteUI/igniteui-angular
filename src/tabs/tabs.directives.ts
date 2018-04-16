@@ -8,6 +8,12 @@ import {
 } from "@angular/core";
 import { IgxTabsComponent } from "./tabs.component";
 
+enum ButtonStyle {
+    VISIBLE = "visible",
+    HIDDEN = "hidden",
+    NOT_DISPLAYED = "not_displayed"
+}
+
 @Directive({
     selector: "[igxRightButtonStyle]"
 })
@@ -17,34 +23,37 @@ export class IgxRightButtonStyleDirective {
     public tabs: IgxTabsComponent) {
     }
 
-    @HostBinding("class.igx-tabs__header-button")
-    get visibleCSS(): boolean {
-        if (this.tabs.applyRightButtonVisibleStyle) {
-            this.tabs.applyRightButtonHiddenStyle = false;
-            this.tabs.applyRightButtonNotDisplayedStyle = false;
+    private getRightButtonStyle() {
+        const viewPortWidth = this.tabs.viewPort.nativeElement.offsetWidth;
+        const itemsContainerWidth = this.tabs.itemsContainer.nativeElement.offsetWidth;
+        const headerContainerWidth = this.tabs.headerContainer.nativeElement.offsetWidth;
+        const offset = this.tabs.offset;
+        const total = offset + viewPortWidth;
+
+        if (itemsContainerWidth <= headerContainerWidth && offset === 0) {
+            return ButtonStyle.NOT_DISPLAYED;
         }
 
-        return this.tabs.applyRightButtonVisibleStyle;
+        if (itemsContainerWidth > total) {
+            return ButtonStyle.VISIBLE;
+        } else {
+            return ButtonStyle.HIDDEN;
+        }
+    }
+
+    @HostBinding("class.igx-tabs__header-button")
+    get visibleCSS(): boolean {
+        return (this.getRightButtonStyle() === ButtonStyle.VISIBLE) ? true : false;
     }
 
     @HostBinding("class.igx-tabs__header-button--hidden")
     get hiddenCSS(): boolean {
-        if (this.tabs.applyRightButtonHiddenStyle) {
-            this.tabs.applyRightButtonVisibleStyle = false;
-            this.tabs.applyRightButtonNotDisplayedStyle = false;
-        }
-
-        return this.tabs.applyRightButtonHiddenStyle;
+        return (this.getRightButtonStyle() === ButtonStyle.HIDDEN) ? true : false;
     }
 
     @HostBinding("class.igx-tabs__header-button--none")
     get notDisplayedCSS(): boolean {
-        if (this.tabs.applyRightButtonNotDisplayedStyle) {
-            this.tabs.applyRightButtonVisibleStyle = false;
-            this.tabs.applyRightButtonHiddenStyle = false;
-        }
-
-        return this.tabs.applyRightButtonNotDisplayedStyle;
+        return (this.getRightButtonStyle() === ButtonStyle.NOT_DISPLAYED) ? true : false;
     }
 }
 
@@ -57,34 +66,34 @@ export class IgxLeftButtonStyleDirective {
     public tabs: IgxTabsComponent) {
     }
 
+    private getLeftButtonStyle() {
+        const itemsContainerWidth = this.tabs.itemsContainer.nativeElement.offsetWidth;
+        const headerContainerWidth = this.tabs.headerContainer.nativeElement.offsetWidth;
+        const offset = this.tabs.offset;
+
+        if (offset === 0) {
+            if (itemsContainerWidth <= headerContainerWidth) {
+                return ButtonStyle.NOT_DISPLAYED;
+            }
+            return ButtonStyle.HIDDEN;
+        } else {
+            return ButtonStyle.VISIBLE;
+        }
+    }
+
     @HostBinding("class.igx-tabs__header-button")
     get visibleCSS(): boolean {
-        if (this.tabs.applyLeftButtonVisibleStyle) {
-            this.tabs.applyLeftButtonHiddenStyle = false;
-            this.tabs.applyLeftButtonNotDisplayedStyle = false;
-        }
-
-        return this.tabs.applyLeftButtonVisibleStyle;
+        return (this.getLeftButtonStyle() === ButtonStyle.VISIBLE) ? true : false;
     }
 
     @HostBinding("class.igx-tabs__header-button--hidden")
     get hiddenCSS(): boolean {
-        if (this.tabs.applyLeftButtonHiddenStyle) {
-            this.tabs.applyLeftButtonVisibleStyle = false;
-            this.tabs.applyLeftButtonNotDisplayedStyle = false;
-        }
-
-        return this.tabs.applyLeftButtonHiddenStyle;
+        return (this.getLeftButtonStyle() === ButtonStyle.HIDDEN) ? true : false;
     }
 
     @HostBinding("class.igx-tabs__header-button--none")
     get notDisplayedCSS(): boolean {
-        if (this.tabs.applyLeftButtonNotDisplayedStyle) {
-            this.tabs.applyLeftButtonVisibleStyle = false;
-            this.tabs.applyLeftButtonHiddenStyle = false;
-        }
-
-        return this.tabs.applyLeftButtonNotDisplayedStyle;
+        return (this.getLeftButtonStyle() === ButtonStyle.NOT_DISPLAYED) ? true : false;
     }
 }
 

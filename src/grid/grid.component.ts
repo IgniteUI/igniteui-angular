@@ -517,6 +517,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.getUnpinnedWidth();
     }
 
+    get summariesMargin() {
+        return this.rowSelectable ? this.calcRowCheckboxWidth : 0;
+    }
+
     get columns(): IgxColumnComponent[] {
         return this._columns;
     }
