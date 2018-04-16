@@ -943,7 +943,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             then merge with an empty observable after DEBOUNCE_TIME,
             re-subscribe and repeat the process
         */
-        this.parentVirtDir.onChunkLoad.pipe(
+        this.verticalScrollContainer.onChunkLoad.pipe(
             takeUntil(this.destroy$),
             take(1),
             merge(of({})),
@@ -953,6 +953,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if (this.cellInEditMode) {
                 this.cellInEditMode.inEditMode = false;
             }
+            this.cdr.detectChanges();
         });
     }
 

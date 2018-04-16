@@ -2,6 +2,7 @@
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    DoCheck,
     ElementRef,
     HostBinding,
     HostListener,
@@ -26,7 +27,7 @@ import { IGridCellEventArgs, IGridEditEventArgs } from "./grid.component";
     selector: "igx-grid-cell",
     templateUrl: "./cell.component.html"
 })
-export class IgxGridCellComponent implements IGridBus, OnInit {
+export class IgxGridCellComponent implements IGridBus, OnInit, DoCheck {
 
     @Input()
     public column: IgxColumnComponent;
@@ -237,6 +238,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     @autoWire(true)
     public ngOnInit() {
         this.cellSelectionID = this.gridID + "-cells";
+    }
+
+    public ngDoCheck() {
+        this.cdr.markForCheck();
     }
 
     @autoWire(true)
