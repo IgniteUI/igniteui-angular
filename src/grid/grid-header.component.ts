@@ -65,6 +65,14 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
         return this.sortDirection !== SortingDirection.None;
     }
 
+    @HostBinding("style.z-index")
+    get zIndex() {
+        if (!this.column.pinned) {
+            return null;
+        }
+        return 9999 - this.grid.pinnedColumns.indexOf(this.column);
+    }
+
     @HostBinding("attr.role")
     public hostRole = "columnheader";
 
