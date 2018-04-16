@@ -94,6 +94,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
         }
 
         this.indeterminate = false;
+        this.focused = false;
         this.checked = !this.checked;
 
         this.change.emit({ checked: this.checked, checkbox: this });
