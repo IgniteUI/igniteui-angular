@@ -46,6 +46,7 @@ All notable changes for each version of this project will be documented in this 
 - Added the option to conditionally disable the `igx-ripple` directive through the `igxRippleDisabled` property.
 - Updated styling and interaction animations of the `igx-checkbox`, `igx-switch`, and `igx-radio` components.
 - Added `indeterminate` property and styling to the `igx-checkbox` component.
+- Added `required` property to the `igx-checkbox`, `igx-radio`, and `igx-switch` components.
 - Added `igx-ripple` effect to the `igx-checkbox`, `igx-switch`, and `igx-radio` components. The effect can be disabled through the `disableRipple` property.
 - Added the ability to specify the label location in the `igx-checkbox`, `igx-switch`, and `igx-radio` components through the `labelPosition` property. It can either be `before` or `after`.
 - You can now use any element as label on the `igx-checkbox`, `igx-switch`, and `igx-radio` components via the aria-labelledby property.
