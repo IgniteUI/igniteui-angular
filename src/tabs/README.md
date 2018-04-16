@@ -21,8 +21,9 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 
 ## Tabs Type
 There are two tabs types that specify the sizing mechanism of the items.
- - `fixed` (default)
- - `contentfit`
+ - `contentfit` (default)
+ - `fixed` 
+
 
 You can set the tabs type using the `tabsType` input.
 
@@ -43,17 +44,11 @@ If the total visible items width exceeds the vew port width, scroll buttons are 
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
 | `selectedIndex` |  number | The index of the selected tab. |
-| `selectedTab` | IgxTabItemComponent | The last selected tab. |
+| `selectedTabItem` | IgxTabItemComponent | The last selected tab. |
 | `icon` | string | Set the icon to the item. Currently all icons from the material icon set are supported. |
 | `label` | string | Set the tab item text. |
 | `isDisabled` | boolean | 	Set if the tab is enabled/disabled.	 |
-| `tabsType` | TabsType | 	Set the tab item sizing mode. By default, the sizing type is `fixed` and all tabs have equal size to fit the view port. When `contentfit` is set, the tab item width is sized to its content in the range of min/max width. |
-
-## Methods
-
-| Name   |      Description      |  Return type  |   Parameters   |
-|:----------|:-------------:|:------|:------|
-| `select` |  Selects tab and its content. |  |
+| `tabsType` | TabsType | 	Set the tab item sizing mode. By default, `contentfit` is set, the tab item width is sized to its content in the range of min/max width. When the sizing type is `fixed` - all tabs have equal size to fit the view port. |
 
 ## Events
 
