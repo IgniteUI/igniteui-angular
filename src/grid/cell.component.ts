@@ -231,12 +231,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         const selection = this.selectionApi.get_selection(this.cellSelectionID);
         if (selection) {
             const selectedCellID = selection[0];
-            for (const prop in selectedCellID) {
-                if (selectedCellID[prop] !== this.cellID[prop]) {
-                    return false;
-                }
-            }
-            return true;
+            return this.cellID.rowID === selectedCellID.rowID &&
+                this.cellID.columnID === selectedCellID.columnID;
         }
         return false;
     }
