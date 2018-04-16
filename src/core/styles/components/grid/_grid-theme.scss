@@ -219,6 +219,7 @@
     %grid-thead {
         grid-row: 1;
         border-bottom: 1px dotted igx-color($palette, 'grays', 400);
+        z-index: 2;
     }
 
     %grid-tfoot {
@@ -266,6 +267,7 @@
         color: map-get($this, 'content-text-color');
         overflow: hidden;
         will-change: transform;
+        z-index: 1;
     }
 
     %grid-tbody--empty {
@@ -342,7 +344,7 @@
     %grid-cell--pinned {
         position: relative;
         background-color: inherit;
-        z-index: 1;
+        z-index: 9999;
     }
 
     %grid-cell--pinned-last {
@@ -391,6 +393,7 @@
         position: absolute;
         cursor: col-resize;
         width: 4px;
+        top: 0;
         right: -2px;
         height: 100%;
         z-index: 2;
@@ -401,5 +404,6 @@
         cursor: col-resize;
         width: 4px;
         background-color: map-get($this, 'resize-line-color');
+        z-index: 2;
     }
 }
