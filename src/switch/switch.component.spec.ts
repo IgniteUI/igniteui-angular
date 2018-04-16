@@ -14,6 +14,7 @@ describe("IgxSwitch", () => {
             declarations: [
                 InitSwitchComponent,
                 SwitchSimpleComponent,
+                SwitchRequiredComponent,
                 SwitchDisabledComponent,
                 SwitchExternalLabelComponent,
                 SwitchInvisibleLabelComponent,
@@ -102,6 +103,23 @@ describe("IgxSwitch", () => {
         expect(labelStyles.order).toEqual("-1");
     });
 
+    it("Required state", () => {
+        const fixture = TestBed.createComponent(SwitchRequiredComponent);
+        const testInstance = fixture.componentInstance;
+        const switchInstance = testInstance.switch;
+        const nativeCheckbox = switchInstance.nativeCheckbox.nativeElement;
+        fixture.detectChanges();
+
+        expect(switchInstance.required).toBe(true);
+        expect(nativeCheckbox.required).toBeTruthy();
+
+        switchInstance.required = false;
+        fixture.detectChanges();
+
+        expect(switchInstance.required).toBe(false);
+        expect(nativeCheckbox.required).toBe(false);
+    });
+
     it("Disabled state", () => {
         const fixture = TestBed.createComponent(SwitchDisabledComponent);
         const testInstance = fixture.componentInstance;
@@ -183,6 +201,13 @@ class SwitchIndeterminateComponent {
     @ViewChild("switch") public switch: IgxSwitchComponent;
 
     public subscribed = false;
+}
+
+@Component({
+    template: `<igx-switch #switch [required]="true">Required</igx-switch>`
+})
+class SwitchRequiredComponent {
+    @ViewChild("switch") public switch: IgxSwitchComponent;
 }
 
 @Component({

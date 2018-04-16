@@ -1,14 +1,16 @@
 import {
     Component,
+    Directive,
     EventEmitter,
     forwardRef,
     HostBinding,
     Input,
     NgModule,
     Output,
+    Provider,
     ViewChild
 } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 
 export enum SwitchLabelPosition {
@@ -55,6 +57,7 @@ export class IgxSwitchComponent implements ControlValueAccessor {
     @Input() public tabindex: number = null;
     @Input() public labelPosition: SwitchLabelPosition | string = "after";
     @Input() public disableRipple = false;
+    @Input() public required = false;
 
     @Input("aria-labelledby")
     public ariaLabelledBy = this.labelId;
@@ -131,9 +134,24 @@ export class IgxSwitchComponent implements ControlValueAccessor {
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 }
 
+export const IGX_SWITCH_REQUIRED_VALIDATOR: Provider = {
+    provide: NG_VALIDATORS,
+    useExisting: forwardRef(() => IgxSwitchRequiredDirective),
+    multi: true
+};
+
+/* tslint:disable directive-selector */
+@Directive({
+    selector: `igx-switch[required][formControlName],
+    igx-switch[required][formControl],
+    igx-switch[required][ngModel]`,
+    providers: [IGX_SWITCH_REQUIRED_VALIDATOR]
+})
+export class IgxSwitchRequiredDirective extends CheckboxRequiredValidator { }
+
 @NgModule({
-    declarations: [IgxSwitchComponent],
-    exports: [IgxSwitchComponent],
+    declarations: [IgxSwitchComponent, IgxSwitchRequiredDirective],
+    exports: [IgxSwitchComponent, IgxSwitchRequiredDirective],
     imports: [IgxRippleModule]
 })
 export class IgxSwitchModule { }
