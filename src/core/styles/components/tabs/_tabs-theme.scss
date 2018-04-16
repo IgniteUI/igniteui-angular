@@ -143,6 +143,10 @@
 
     // @debug $this;
     $item-min-width: 160px;
+
+    @media only screen and (max-width: 600px) {
+        $item-min-width: 160px;
+    }
     $item-max-width: 264px;
     $item-padding: 0 rem(24px);
     $tabs-height: rem(48px);
@@ -189,6 +193,7 @@
     %igx-tabs__header-wrapper-fluid {
         display: inline-flex;
         align-items: center;
+        min-width: 100%;
     }
 
     %igx-tabs__content-fluid {
@@ -255,7 +260,6 @@
         }
     }
 
-
     %igx-tabs__header-menu-item--disabled {
         outline: 0;
         opacity: .5;
@@ -276,6 +280,8 @@
     %igx-tabs__header-menu-item-indicator {
         position: absolute;
         bottom: 0;
+        // We need to explicitly set the default for IE 11
+        left: 0;
         transform: translateX(0);
         height: 2px;
         min-width: rem(160px);
@@ -284,8 +290,7 @@
     }
 
     // SCROLL BUTTONS
-    %igx-tabs__header-button
-    {
+    %igx-tabs__header-button {
         z-index: 1;
         display: flex;
         align-items: center;
@@ -301,6 +306,7 @@
         background: map-get($this, 'button-background');
         color: map-get($this, 'button-color');
         outline: 0;
+        box-shadow: igx-elevation($elevations, 4);
 
         &:hover {
             background: map-get($this, 'button-hover-background');
@@ -315,10 +321,6 @@
         &::-moz-focus-inner {
             // remove focus dotted border in firefox
             border: 0;
-        }
-
-        .igx-icon {
-            line-height: rem(28px, 16px);
         }
 
         @include igx-ripple((
@@ -355,6 +357,7 @@
     %igx-tabs--fixed {
         %igx-tabs__header-menu-item {
             flex: 1 1 auto;
+            width: 100%;
         }
     }
 
@@ -366,3 +369,4 @@
         }
     }
 }
+
