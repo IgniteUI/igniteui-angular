@@ -182,7 +182,7 @@ describe("IgxTabs", () => {
         const tabs = fixture.componentInstance.tabs;
         fixture.detectChanges();
 
-        fixture.componentInstance.wrapperDiv.nativeElement.style.width = "500px";
+        fixture.componentInstance.wrapperDiv.nativeElement.style.width = "400px";
         fixture.detectChanges();
 
         const rightScrollButton = tabs.headerContainer.nativeElement.children[2];
@@ -208,7 +208,7 @@ describe("IgxTabs", () => {
         const tabs = fixture.componentInstance.tabs;
         fixture.detectChanges();
 
-        fixture.componentInstance.wrapperDiv.nativeElement.style.width = "500px";
+        fixture.componentInstance.wrapperDiv.nativeElement.style.width = "400px";
         fixture.detectChanges();
 
         tabs.tabs.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(new Event("click", { bubbles: true }));
