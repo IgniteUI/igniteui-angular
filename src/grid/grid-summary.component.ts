@@ -119,6 +119,8 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
     @autoWire(true)
     clearAll() {
         this.gridAPI.remove_summary(this.gridID);
+        this.gridAPI.get(this.gridID).markForCheck();
+        this.cdr.detectChanges();
     }
 
     get resolveSummaries(): any[] {
