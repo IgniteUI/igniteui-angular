@@ -16,9 +16,9 @@ import {
     ViewChildren
 } from "@angular/core";
 import { take } from "rxjs/operators";
+import { IgxCheckboxComponent } from "../checkbox/checkbox.component";
 import { IgxSelectionAPIService } from "../core/selection";
 import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
-import { IgxCheckboxComponent } from "../main";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
