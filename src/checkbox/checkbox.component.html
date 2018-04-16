@@ -1,16 +1,37 @@
-<input #checkbox class="igx-checkbox__input" type="checkbox" [attr.id]="id" [attr.name]="name" [attr.value]="value" [attr.tabindex]="tabindex"
-    [attr.disabled]="disabled ? true : null" [indeterminate]="indeterminate" [checked]="checked" [attr.aria-checked]="checked"
-    [attr.aria-labelledby]="ariaLabelledBy" [attr.aria-label]="ariaLabel" (change)="_onCheckboxChange($event)" (click)="_onCheckboxClick($event)"
-    (focus)="onFocus($event)" (blur)="onBlur($event)">
+<input #checkbox class="igx-checkbox__input"
+    type="checkbox"
+    [id]="id"
+    [name]="name"
+    [value]="value"
+    [tabindex]="tabindex"
+    [disabled]="disabled"
+    [indeterminate]="indeterminate"
+    [checked]="checked"
+    [required]="required"
+    [attr.aria-checked]="checked"
+    [attr.aria-labelledby]="ariaLabelledBy"
+    [attr.aria-label]="ariaLabel"
+    (change)="_onCheckboxChange($event)"
+    (click)="_onCheckboxClick($event)"
+    (focus)="onFocus($event)"
+    (blur)="onBlur($event)" />
 
-<label #label class="igx-checkbox__composite" igxRipple [igxRippleDisabled]="disableRipple" [igxRippleCentered]="true" [igxRippleDuration]="100"
-    igxRippleTarget=".igx-checkbox__ripple" [attr.for]="id">
+<label #label class="igx-checkbox__composite"
+    igxRipple
+    igxRippleTarget=".igx-checkbox__ripple"
+    [igxRippleDisabled]="disableRipple"
+    [igxRippleCentered]="true"
+    [igxRippleDuration]="100"
+    [attr.for]="id">
     <svg class="igx-checkbox__composite-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path d="M4.1,12.7 9,17.6 20.3,6.3" />
     </svg>
     <div class="igx-checkbox__ripple"></div>
 </label>
 
-<span #placeholderLabel [attr.id]="labelId" [class]="labelClass" role="label" (click)="_onLabelClick($event)">
+<span #placeholderLabel role="label"
+    [class]="labelClass"
+    [id]="labelId"
+    (click)="_onLabelClick($event)">
     <ng-content></ng-content>
 </span>
