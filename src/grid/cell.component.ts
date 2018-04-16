@@ -223,7 +223,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         const selection = this.selectionApi.get_selection(this.cellSelectionID);
         if (selection && selection.length > 0) {
             const cellID = selection[0];
-            return this.gridAPI.get_cell_by_visible_index(this.gridID, cellID.rowIndex, cellID.columnID);
+            return this.gridAPI.get_cell_by_index(this.gridID, cellID.rowIndex, cellID.columnID);
         }
     }
 
