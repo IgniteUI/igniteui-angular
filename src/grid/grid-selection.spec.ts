@@ -1040,7 +1040,7 @@ export class GridWithScrollsComponent implements OnInit {
 
 @Component({
     template: `
-        <igx-grid #grid1 [data]="data" [rowSelectable]="true" [primaryKey]="'ProductID'">
+        <igx-grid #grid1 [data]="data" [rowSelectable]="true">
             <igx-column field="ProductID" header="Product ID">
             </igx-column>
             <igx-column field="ProductName" [hasSummary]="true">
