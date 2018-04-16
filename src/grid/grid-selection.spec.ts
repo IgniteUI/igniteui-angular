@@ -176,7 +176,7 @@ describe("IgxGrid - Row Selection", () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            expect(targetCell.gridAPI.get_cell_by_visible_index).toHaveBeenCalledTimes(3);
+            expect(targetCell.gridAPI.get_cell_by_visible_index).toHaveBeenCalledTimes(1);
             expect(grid.getCellByColumn(3, "Name").focused).toEqual(true);
             expect(targetCell.focused).toEqual(false);
             expect(grid.selectedCells.length).toEqual(1);
