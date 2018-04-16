@@ -244,7 +244,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public rowHeight = 50;
 
     @Input()
-    public remoteVirtualization: boolean;
     public columnWidth: string = null;
 
     @Input()
@@ -377,6 +376,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public calcWidth: number;
     public calcRowCheckboxWidth: number;
     public calcHeight: number;
+    public tfootHeight: number;
 
     public cellInEditMode: IgxGridCellComponent;
 
@@ -435,6 +435,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
+        this.clearSummaryCache();
+        this.tfootHeight = this.calcMaxSummaryHeight();
         this.markForCheck();
 
         this.columnList.changes
@@ -445,9 +447,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
                     this.initColumns(this.columnList);
 
-                    diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => this.onColumnInit.emit(record.item));
+                    diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                        this.clearSummaryCache();
+                        this.calculateGridSizes();
+                        this.onColumnInit.emit(record.item);
+                    });
 
                     diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                        // Recalculate Summaries
+                        this.clearSummaryCache();
+                        this.calculateGridSizes();
 
                         // Clear Filtering
                         this.gridAPI.clear_filter(this.id, record.item.field);
@@ -658,6 +667,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this._summaries(rest[0], true, rest[1]);
         }
+        this.tfootHeight = 0;
         this.markForCheck();
         this.calculateGridHeight();
         this.cdr.detectChanges();
@@ -669,6 +679,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this._summaries(rest[0], false);
         }
+        this.tfootHeight = 0;
         this.markForCheck();
         this.calculateGridHeight();
         this.cdr.detectChanges();
@@ -776,11 +787,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 pagingHeight = this.paginator.nativeElement.firstElementChild ?
                 this.paginator.nativeElement.clientHeight : 0;
             }
-            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-            this.tfoot.nativeElement.clientHeight : 0;
+            if (!this.tfootHeight) {
+                this.tfootHeight =  this.tfoot.nativeElement.firstElementChild ?
+                this.calcMaxSummaryHeight() : 0;
+            }
             this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
                 this.theadRow.nativeElement.clientHeight -
-                footerHeight - pagingHeight -
+                this.tfootHeight - pagingHeight -
                 this.scr.nativeElement.clientHeight;
         } else {
             let pagingHeight = 0;
@@ -788,11 +801,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 pagingHeight = this.paginator.nativeElement.firstElementChild ?
                 this.paginator.nativeElement.clientHeight : 0;
             }
-            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-            this.tfoot.nativeElement.clientHeight : 0;
+            if (!this.tfootHeight) {
+                this.tfootHeight =  this.tfoot.nativeElement.firstElementChild ?
+                this.calcMaxSummaryHeight() : 0;
+            }
             this.calcHeight = parseInt(this._height, 10) -
                 this.theadRow.nativeElement.getBoundingClientRect().height -
-                footerHeight - pagingHeight -
+                this.tfootHeight - pagingHeight -
                 this.scr.nativeElement.clientHeight;
         }
     }
@@ -808,6 +823,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this.calcWidth = parseInt(this._width, 10);
         }
+    }
+
+    protected calcMaxSummaryHeight() {
+        let maxSummaryLength = 0;
+        this.columnList.filter((col) => col.hasSummary).forEach((column) => {
+            this.gridAPI.set_summary_by_column_name(this.id, column.field);
+            const currentLength = this.gridAPI.get_summaries(this.id).get(column.field).length;
+            if (maxSummaryLength < currentLength) {
+                maxSummaryLength = currentLength;
+            }
+        });
+        return maxSummaryLength * (this.tfoot.nativeElement.clientHeight ? this.tfoot.nativeElement.clientHeight : 36);
     }
 
     protected calculateGridSizes() {
