@@ -7,6 +7,7 @@
 
 /// @param {Color} $header-background [null] - The table header background color.
 /// @param {Color} $header-text-color [null] - The table header text color.
+/// @param {Color} $resize-line-color [null] - The table header resize line color.
 /// @param {Color} $content-background [null] - The table body background color.
 /// @param {Color} $content-text-color [null] - The table body text color.
 /// @param {Color} $row-border-color [null] - The row bottom border color.
@@ -33,7 +34,9 @@
     $pinned-border-color: null,
 
     $cell-selected-background: null,
-    $cell-selected-text-color: null
+    $cell-selected-text-color: null,
+
+    $resize-line-color: null
 ) {
     @if not($header-text-color) and $header-background {
         $header-text-color: text-contrast($header-background);
@@ -80,7 +83,9 @@
         pinned-border-color: $pinned-border-color,
 
         cell-selected-background: $cell-selected-background,
-        cell-selected-text-color: $cell-selected-text-color
+        cell-selected-text-color: $cell-selected-text-color,
+
+        resize-line-color: $resize-line-color
     );
 }
 
@@ -111,7 +116,9 @@
         $pinned-border-color: igx-color($palette, 'grays', 400),
 
         $cell-selected-background: igx-color($palette, 'primary'),
-        $cell-selected-text-color: igx-contrast-color($palette, 'primary')
+        $cell-selected-text-color: igx-contrast-color($palette, 'primary'),
+
+        $resize-line-color: igx-color($palette, 'secondary')
     );
 
     $this: extend($default-theme, $theme);
@@ -379,5 +386,19 @@
         position: relative;
         background: inherit;
     }
-}
 
+    %grid__resize-handle {
+        position: absolute;
+        cursor: col-resize;
+        width: 4px;
+        right: -2px;
+        height: 100%;
+    }
+
+    %grid__resize-line {
+        position: absolute;
+        cursor: col-resize;
+        width: 4px;
+        background-color: map-get($this, 'resize-line-color');
+    }
+}
