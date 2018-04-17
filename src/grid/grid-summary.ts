@@ -46,16 +46,32 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
     }
 
     public min(data?: any[]): any {
-        return data.reduce((a, b) => Math.min(a, b));
+        if (data.length > 0) {
+            return data.reduce((a, b) => Math.min(a, b));
+        } else {
+            return;
+        }
     }
     public max(data?: any[]): any {
-        return data.reduce((a, b) => Math.max(a, b));
+        if (data.length > 0) {
+            return data.reduce((a, b) => Math.max(a, b));
+        } else {
+            return;
+        }
     }
     public sum(data?: any[]): any {
-        return data.reduce((a, b) => +a + +b);
+        if (data.length > 0) {
+            return data.reduce((a, b) => +a + +b);
+        } else {
+            return;
+        }
     }
     public average(data?: any[]): any {
-        return this.sum(data) / this.count(data);
+        if (data.length > 0) {
+            return this.sum(data) / this.count(data);
+        } else {
+            return;
+        }
     }
 }
 export class IgxDateSummaryOperand extends IgxSummaryOperand {
@@ -73,9 +89,17 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
         return result;
     }
     public latest(data?: any[]) {
-        return data.sort((a, b) => b.valueOf() - a.valueOf())[0];
+        if (data.length > 0) {
+            return data.sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())[0];
+        } else {
+            return;
+        }
     }
     public earliest(data?: any[]) {
-        return data.sort((a, b) => b.valueOf() - a.valueOf())[data.length - 1];
+        if (data.length > 0) {
+            return data.sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())[data.length - 1];
+        } else {
+            return;
+        }
     }
 }

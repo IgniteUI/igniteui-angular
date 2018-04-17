@@ -5,8 +5,8 @@
     height: 34px;
 }
 
-.item > [igxLabel],
-.item > .person {
+.item>[igxLabel],
+.item>.person {
     position: absolute;
     margin-left: 72px;
 }
@@ -22,4 +22,9 @@
 .item .delete-item:hover {
     color: crimson;
     cursor: pointer;
+}
+
+.virtualized-items {
+    position: relative;
+    overflow: hidden;
 }

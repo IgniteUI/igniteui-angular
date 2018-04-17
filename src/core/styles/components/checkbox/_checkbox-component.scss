@@ -12,7 +12,7 @@
     @extend %cbx-display !optional;
 
     @include e(input) {
-        @include hide-default();
+        @extend %cbx-input !optional;
     }
 
     @include e(label) {
@@ -35,6 +35,12 @@
 
     @include e(ripple) {
         @extend %cbx-ripple !optional;
+    }
+
+    @include m(focused) {
+        @include e(ripple) {
+            @extend %cbx-ripple--focused !optional;
+        }
     }
 
     @include m(indeterminate) {
@@ -61,6 +67,10 @@
         @extend %cbx-display--disabled !optional;
 
         @include e(label) {
+            @extend %cbx-label--disabled !optional;
+        }
+
+        @include e(label, $m: before) {
             @extend %cbx-label--disabled !optional;
         }
 

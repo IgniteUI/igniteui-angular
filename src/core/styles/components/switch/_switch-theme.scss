@@ -15,7 +15,7 @@
 /// Set light to true when the surrounding area is dark.
 /// @example scss Set custom track and thumb on colors
 ///   $my-switch-theme: igx-toast-theme($thumb-on-color: black, $track-on-color: yellow);
-///   // Pass the theme to the igx-tabbar component mixin
+///   // Pass the theme to the igx-bottom-nav component mixin
 ///   @include igx-switch($my-switch-theme);
 @function igx-switch-theme(
     $thumb-on-color: null,
@@ -56,9 +56,13 @@
 /// @requires igx-elevation
 /// @requires extend
 /// @requires hexrgba
-/// @requires rem
+/// @requires em
 /// @requires $elevations
+/// @requires animation
+/// @requires scale-in-out
 @mixin igx-switch($theme, $palette: $default-palette) {
+    @include scale-in-out($start-scale: .9);
+
     $dark-theme: igx-switch-theme(
         $thumb-on-color: igx-color($palette, 'secondary', 500),
         $track-on-color: rgba(igx-color($palette, 'secondary', 500), .5),
@@ -154,6 +158,7 @@
         display: block;
         width: $switch-thumb-width;
         height: $switch-thumb-height;
+        min-width: $switch-thumb-width;
         border-radius: 50%;
         background: map-get($this, 'thumb-off-color');
         box-shadow: $switch-shadow;
@@ -193,6 +198,12 @@
         filter: opacity(1);
     }
 
+    %switch-ripple--focused {
+        @include animation('scale-in-out' 1s $ease-out-quad infinite);
+        background-color: rgba(map-get($this, 'thumb-on-color'), .12);
+        transition: background-color .2s $ease-out-quad;
+    }
+
     %switch-label {
         display: inline-block;
         color: map-get($this, 'label-color');
@@ -213,6 +224,10 @@
         [dir='rtl'] & {
             margin-left: initial;
             margin-right: $label-margin;
+
+            &:empty {
+                margin: 0;
+            }
         }
     }
 
@@ -223,6 +238,10 @@
         [dir='rtl'] & {
             margin-right: initial;
             margin-left: $label-margin;
+
+            &:empty {
+                margin: 0;
+            }
         }
     }
 

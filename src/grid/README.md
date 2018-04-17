@@ -160,6 +160,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |filteringLogic|FilteringLogic|The filtering logic of the grid. Defaults to _AND_.|
 |filteringExpressions|Array|The filtering state of the grid.|
 |sortingExpressions|Array|The sorting state of the grid.|
+|rowSelectable|Boolean|Enables multiple row selection, default is _false_.|
 |height|string|The height of the grid element. You can pass values such as `1000px`, `75%`, etc.|
 |width|string|The width of the grid element. You can pass values such as `1000px`, `75%`, etc.|
 |evenRowCSS|string|Additional styling classes applied to all even rows in the grid.|
@@ -177,7 +178,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |onSortingDone|Used when sorting data to emit the column, direction and sorting expression|
 |onCellClick|Used when clicking a cell to emit the cell|
 |onCellSelection|Used when focusing a cell to emit the cell|
-|onRowSelection|Used when focusing a row to emit the row|
+|onRowSelectionChange|Used when selecting a row to emit the row and selection status|
 |onPagingDone|Used when paginating to emit paginator event|
 |onColumnInit|Used when initializing a column to emit it|
 |onColumnPinning|Used when pinning a column; the index of the pin can be changed|
@@ -208,6 +209,10 @@ Below is the list of all inputs that the developers may set to configure the gri
 |disableSummaries(fieldName: string)|Disable summaries for the specified column.|
 |disableSummaries(columns: string[])|Disable summaries for the listed columns.|
 |clearSummaryCache()|Delete all cached summaries and force to recalculate them.|
+|selectRows(rowIDs: any[], clearCurrentSelection?: boolean)|Marks the specified row(s) as selected in the grid `selectionAPI`. `clearCurrentSelection` first empties the grid's selection array.|
+|deselectRows(rowIDs: any[])|Removes the specified row(s) from the grid's selection in the `selectionAPI`.|
+|selectAllRows()|Marks all rows as selected in the grid `selectionAPI`.|
+|deselectAllRows()|Sets the grid's row selection in the `selectionAPI` to `[]`.|
 |previousPage()|Goes to the previous page if paging is enabled and the current page is not the first.|
 |nextPage()|Goes to the next page if paging is enabled and current page is not the last.|
 |paginate(page: number)|Goes to the specified page if paging is enabled. Page indices are 0 based.|
