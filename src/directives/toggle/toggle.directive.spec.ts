@@ -1,4 +1,4 @@
-import { Component, DebugElement, EventEmitter, Output, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, DebugElement, EventEmitter, Output, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
@@ -12,7 +12,8 @@ describe("IgxToggler", () => {
             declarations: [
                 IgxToggleActionTestComponent,
                 IgxToggleServiceInjectComponent,
-                IgxToggleTestComponent
+                IgxToggleTestComponent,
+                TestWithOnPushComponent
             ],
             imports: [NoopAnimationsModule, IgxToggleModule]
         })
@@ -96,24 +97,23 @@ describe("IgxToggler", () => {
 
         expect(divEl.classes[TOGGLER_CLASS]).toBeTruthy();
     }));
-    // it("should close toggle when IgxToggleActionDiretive is clicked and toggle is opened", fakeAsync(() => {
-    //     const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
-    //     fixture.detectChanges();
+    it("should close toggle when IgxToggleActionDiretive is clicked and toggle is opened", fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
+        fixture.detectChanges();
 
-    //     const divEl: DebugElement = fixture.debugElement.query(By.directive(IgxToggleDirective));
-    //     const button: DebugElement = fixture.debugElement.query(By.directive(IgxToggleActionDirective));
+        const divEl = fixture.debugElement.query(By.directive(IgxToggleDirective)).nativeElement;
+        const button: DebugElement = fixture.debugElement.query(By.directive(IgxToggleActionDirective));
 
-    //     expect(divEl.classes[TOGGLER_CLASS]).toBeTruthy();
+        expect(divEl.classList.contains(TOGGLER_CLASS)).toBeTruthy();
 
-    //     button.triggerEventHandler("click", null);
+        button.triggerEventHandler("click", null);
 
-    //     fixture.whenStable().then(() => {
-    //         tick();
-    //         fixture.detectChanges();
-    //         const t = divEl.classes["igx-toggle--hidden"];
-    //         expect(t).toBeTruthy();
-    //     });
-    // }));
+        fixture.whenStable().then(() => {
+            tick();
+            fixture.detectChanges();
+            expect(divEl.classList.contains(HIDDEN_TOGGLER_CLASS)).toBeTruthy();
+        });
+    }));
 
     it("should hide content and emit 'onClose' event when you click outside the toggler's content", fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
@@ -142,6 +142,35 @@ describe("IgxToggler", () => {
 
         expect(toggleFromService instanceof IgxToggleDirective).toBeTruthy();
         expect(toggleFromService.id).toEqual(toggleFromComponent.id);
+    }));
+
+    it("Toggle should working with parrent component and OnPush strategy applied.", fakeAsync(() => {
+        const fix = TestBed.createComponent(TestWithOnPushComponent);
+        fix.detectChanges();
+
+        const toggle = fix.componentInstance.toggle;
+        const toggleElm = fix.debugElement.query(By.directive(IgxToggleDirective)).nativeElement;
+        const button: DebugElement = fix.debugElement.query(By.css("button"));
+
+        spyOn(toggle.onOpen, "emit");
+        spyOn(toggle.onClose, "emit");
+        button.triggerEventHandler("click", null);
+
+        fix.whenStable().then(() => {
+            tick();
+            fix.detectChanges();
+
+            expect(toggle.onOpen.emit).toHaveBeenCalled();
+            expect(toggleElm.classList.contains(TOGGLER_CLASS)).toBe(true);
+        }).then(() => {
+            button.triggerEventHandler("click", null);
+
+            tick();
+            fix.detectChanges();
+
+            expect(toggle.onClose.emit).toHaveBeenCalled();
+            expect(toggleElm.classList.contains(HIDDEN_TOGGLER_CLASS)).toBe(true);
+        });
     }));
 });
 
@@ -196,4 +225,17 @@ export class IgxToggleActionTestComponent {
 export class IgxToggleServiceInjectComponent {
     @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
     @ViewChild(IgxToggleActionDirective) public toggleAction: IgxToggleActionDirective;
+}
+
+@Component({
+    template: `
+        <button igxToggleAction="toggleID">Open/Close Toggle</button>
+        <div igxToggle id="toggleID">
+            <p>Some content</p>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestWithOnPushComponent {
+    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
 }

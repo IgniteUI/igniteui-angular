@@ -51,11 +51,11 @@ describe("IgxTabs", () => {
         let tabItems;
 
         expect(tabs.selectedIndex).toBe(-1);
-        expect(tabs.selectedTab).toBeUndefined();
+        expect(tabs.selectedTabItem).toBeUndefined();
 
         fixture.componentInstance.tabSelectedHandler = () => {
             expect(tabs.selectedIndex).toBe(0);
-            expect(tabs.selectedTab).toBe(tabItems[0]);
+            expect(tabs.selectedTabItem).toBe(tabItems[0]);
         };
 
         fixture.detectChanges();
@@ -93,7 +93,7 @@ describe("IgxTabs", () => {
         expect(tabs.selectedIndex).toBe(-1);
         fixture.componentInstance.tabSelectedHandler = () => {
             expect(tabs.selectedIndex).toBe(0);
-            expect(tabs.selectedTab).toBe(tab1);
+            expect(tabs.selectedTabItem).toBe(tab1);
         };
 
         fixture.detectChanges();
@@ -107,7 +107,7 @@ describe("IgxTabs", () => {
         fixture.detectChanges();
 
         expect(tabs.selectedIndex).toBe(1);
-        expect(tabs.selectedTab).toBe(tab2);
+        expect(tabs.selectedTabItem).toBe(tab2);
         expect(tabs.selectedIndex).toBe(1);
         expect(tab2.isSelected).toBeTruthy();
         expect(tab1.isSelected).toBeFalsy();
@@ -116,7 +116,7 @@ describe("IgxTabs", () => {
         fixture.detectChanges();
 
         expect(tabs.selectedIndex).toBe(0);
-        expect(tabs.selectedTab).toBe(tab1);
+        expect(tabs.selectedTabItem).toBe(tab1);
         expect(tab1.isSelected).toBeTruthy();
         expect(tab2.isSelected).toBeFalsy();
 
@@ -126,7 +126,7 @@ describe("IgxTabs", () => {
         fixture.detectChanges();
 
         expect(tabs.selectedIndex).toBe(0);
-        expect(tabs.selectedTab).toBe(tab1);
+        expect(tabs.selectedTabItem).toBe(tab1);
         expect(tab1.isSelected).toBeTruthy();
         expect(tab2.isSelected).toBeFalsy();
     });
@@ -182,21 +182,24 @@ describe("IgxTabs", () => {
         const tabs = fixture.componentInstance.tabs;
         fixture.detectChanges();
 
-        fixture.componentInstance.wrapperDiv.nativeElement.style.width = "500px";
-        window.dispatchEvent(new Event("resize"));
+        fixture.componentInstance.wrapperDiv.nativeElement.style.width = "400px";
         fixture.detectChanges();
 
         const rightScrollButton = tabs.headerContainer.nativeElement.children[2];
+        window.dispatchEvent(new Event("resize"));
         rightScrollButton.dispatchEvent(new Event("click", { bubbles: true }));
-        fixture.detectChanges();
 
-        requestAnimationFrame(() => {
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
             expect(tabs.offset).toBeGreaterThan(0);
         });
 
         tabs.scrollLeft(null);
 
-        requestAnimationFrame(() => {
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
             expect(tabs.offset).toBe(0);
         });
     });
@@ -206,8 +209,7 @@ describe("IgxTabs", () => {
         const tabs = fixture.componentInstance.tabs;
         fixture.detectChanges();
 
-        fixture.componentInstance.wrapperDiv.nativeElement.style.width = "500px";
-        window.dispatchEvent(new Event("resize"));
+        fixture.componentInstance.wrapperDiv.nativeElement.style.width = "400px";
         fixture.detectChanges();
 
         tabs.tabs.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(new Event("click", { bubbles: true }));
