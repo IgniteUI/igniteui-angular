@@ -59,6 +59,7 @@ To disable the ripple effect, do:
 | `@Input()` value | any | The value to be set for the switch. |
 | `@Input()` tabindex | number | Specifies the tabbing order of the switch. |
 | `@Input()` checked | boolean | Specifies the checked state of the switch. |
+| `@Input()` required | boolean | Specifies the required state of the switch. |
 | `@Input()` disabled | boolean | Specifies the disabled state of the switch. |
 | `@Input()` disableRipple | boolean | Specifies the whether the ripple effect should be disabled for the switch. |
 | `@Input()` labelPosition | string `|` enum LabelPosition | Specifies the position of the text label relative to the switch element. |

@@ -3,6 +3,7 @@ import { ExcelStrings } from "./excel-strings";
 import { WorksheetData } from "./worksheet-data";
 
 import * as JSZip from "jszip/dist/jszip";
+import { ExportUtilities } from "../exporter-common/export-utilities";
 
 export class RootRelsFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
@@ -56,7 +57,7 @@ export class WorksheetFile implements IExcelFile {
             sheetData.push(`<row r="1"${rowHeight}>`);
             for (let i = 0; i < worksheetData.columnCount; i++) {
                 const column = ExcelStrings.getExcelColumn(i) + 1;
-                const value = dictionary.saveValue(worksheetData.keys[i], i);
+                const value = dictionary.saveValue(worksheetData.keys[i], i, true);
                 sheetData.push(`<c r="${column}" t="s"><v>${value}</v></c>`);
             }
             sheetData.push("</row>");
@@ -65,18 +66,8 @@ export class WorksheetFile implements IExcelFile {
                 sheetData.push(`<row r="${(i + 1)}"${rowHeight}>`);
 
                 for (let j = 0; j < worksheetData.columnCount; j++) {
-                    const column = ExcelStrings.getExcelColumn(j) + (i + 1);
-
-                    const cellValue = worksheetData.data[i - 1][worksheetData.keys[j]];
-                    let stringValue = "";
-                    if (worksheetData.isSpecialData) {
-                        stringValue = String(worksheetData.data[i - 1]);
-                    } else if (cellValue !== undefined && cellValue !== null) {
-                        stringValue = String(cellValue);
-                    }
-                    const value = dictionary.saveValue(stringValue, j);
-
-                    sheetData.push(`<c r="${column}" t="s"><v>${value}</v></c>`);
+                    const cellData = WorksheetFile.getCellData(worksheetData, i, j);
+                    sheetData.push(cellData);
                 }
                 sheetData.push("</row>");
             }
@@ -103,13 +94,35 @@ export class WorksheetFile implements IExcelFile {
                 freezePane = `<pane xSplit="${frozenColumnCount}" topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
             }
         }
-        folder.file("sheet1.xml", ExcelStrings.getSheetXML(dimension, freezePane, cols.join(""), sheetData.join("")));
+        const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
+        folder.file("sheet1.xml", ExcelStrings.getSheetXML(dimension, freezePane, cols.join(""), sheetData.join(""), hasTable));
     }
+
+    /* tslint:disable member-ordering */
+    private static getCellData(worksheetData: WorksheetData, row: number, column: number): string {
+        const dictionary = worksheetData.dataDictionary;
+        const columnName = ExcelStrings.getExcelColumn(column) + (row + 1);
+        const columnHeader = worksheetData.keys[column];
+
+        const cellValue = worksheetData.isSpecialData ?
+                            worksheetData.data[row - 1] :
+                            worksheetData.data[row - 1][columnHeader];
+
+        const savedValue = dictionary.saveValue(cellValue, column, false);
+        const isSavedAsString = savedValue !== -1;
+
+        const value = isSavedAsString ? savedValue : (cellValue === undefined ? "" : cellValue);
+        const type = isSavedAsString ? ` t="s"` : "";
+        const format = isSavedAsString ? "" : ` s="1"`;
+
+        return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
+    }
+    /* tslint:enable member-ordering */
 }
 
 export class StyleFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        folder.file("styles.xml", ExcelStrings.getStyles());
+        folder.file("styles.xml", ExcelStrings.getStyles(worksheetData.dataDictionary && worksheetData.dataDictionary.hasNonStringValues));
     }
 }
 
@@ -121,7 +134,7 @@ export class WorkbookFile implements IExcelFile {
 
 export class ContentTypesFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        folder.file("[Content_Types].xml", ExcelStrings.getContentTypesXML(!worksheetData.isEmpty));
+        folder.file("[Content_Types].xml", ExcelStrings.getContentTypesXML(!worksheetData.isEmpty, worksheetData.options.exportAsTable));
     }
 }
 
@@ -136,7 +149,7 @@ export class SharedStringsFile implements IExcelFile {
         }
 
         folder.file("sharedStrings.xml", ExcelStrings.getSharedStringXML(
-                        worksheetData.columnCount * worksheetData.rowCount,
+                        dict.stringsCount,
                         sortedValues.length,
                         sharedStrings.join(""))
                     );
@@ -146,8 +159,10 @@ export class SharedStringsFile implements IExcelFile {
 export class TablesFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         const columnCount = worksheetData.columnCount;
-        const dimension = "A1:" + ExcelStrings.getExcelColumn(columnCount - 1) + worksheetData.rowCount;
+        const lastColumn = ExcelStrings.getExcelColumn(columnCount - 1) + worksheetData.rowCount;
+        const dimension = "A1:" + lastColumn;
         const values = worksheetData.keys;
+        let sortString = "";
 
         let tableColumns = "<tableColumns count=\"" + columnCount + "\">";
         for (let i = 0; i < columnCount; i++) {
@@ -157,7 +172,14 @@ export class TablesFile implements IExcelFile {
 
         tableColumns += "</tableColumns>";
 
-        folder.file("table1.xml", ExcelStrings.getTablesXML(dimension, tableColumns));
+        if (worksheetData.sort) {
+            const sortingExpression = worksheetData.sort;
+            const sc = ExcelStrings.getExcelColumn(values.indexOf(sortingExpression.fieldName));
+            const dir = sortingExpression.dir - 1;
+            sortString = `<sortState ref="A2:${lastColumn}"><sortCondition descending="${dir}" ref="${sc}1:${sc}15"/></sortState>`;
+        }
+
+        folder.file("table1.xml", ExcelStrings.getTablesXML(dimension, tableColumns, sortString));
     }
 }
 

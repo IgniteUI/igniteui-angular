@@ -1,7 +1,5 @@
-import {
-    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, DoCheck, HostBinding, HostListener, Input, OnDestroy, OnInit
-} from "@angular/core";
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
+    Component, DoCheck, HostBinding, HostListener, Input, OnDestroy, OnInit } from "@angular/core";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
@@ -63,6 +61,7 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
     protected subscriptionOnEdit$;
     protected subscriptionOnAdd$;
     protected subscriptionOnDelete$;
+    protected subscriptionOnFilter$;
     private itemClass = "igx-grid-summary__item";
     private hiddenItemClass = "igx-grid-summary__item--inactive";
     private summaryResultClass = "igx-grid-summary-item__result--left-align";
@@ -84,6 +83,9 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
         if (this.subscriptionOnDelete$) {
             this.subscriptionOnDelete$.unsubscribe();
         }
+        if (this.subscriptionOnFilter$) {
+            this.subscriptionOnFilter$.unsubscribe();
+        }
     }
 
     ngDoCheck() {
@@ -100,6 +102,10 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
                     this.clearAll();
                 }
             });
+            this.subscriptionOnFilter$ = this.gridAPI.get(this.gridID).onFilteringDone.subscribe((data) => {
+                this.fieldName = data.fieldName;
+                this.clearAll();
+            });
             this.subscriptionOnAdd$ = this.gridAPI.get(this.gridID).onRowAdded.subscribe(() => this.clearAll());
             this.subscriptionOnDelete$ = this.gridAPI.get(this.gridID).onRowDeleted.subscribe(() => this.clearAll());
         }
@@ -113,6 +119,8 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
     @autoWire(true)
     clearAll() {
         this.gridAPI.remove_summary(this.gridID);
+        this.gridAPI.get(this.gridID).markForCheck();
+        this.cdr.detectChanges();
     }
 
     get resolveSummaries(): any[] {

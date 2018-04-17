@@ -27,16 +27,23 @@ export class IgxGridAPIService {
     public get_column_by_name(id: string, name: string): IgxColumnComponent {
         return this.get(id).columnList.find((col) => col.field === name);
     }
+
     public set_summary_by_column_name(id: string, name: string) {
         if (!this.summaryCacheMap.get(id)) {
             this.summaryCacheMap.set(id, new Map<string, any[]>());
         }
         const column = this.get_column_by_name(id, name);
-        if (!this.summaryCacheMap.get(id).get(column.field)) {
-            this.summaryCacheMap.get(id).set(column.field,
-                column.summaries.operate(this.get(id).data.map((rec) => rec[column.field])));
+        if (this.get(id).filteredData) {
+            if (this.get(id).filteredData.length > 0) {
+                this.calculateSummaries(id, column, this.get(id).filteredData.map((rec) => rec[column.field]));
+            } else {
+                this.calculateSummaries(id, column, this.get(id).filteredData.map((rec) => rec[column.field]));
+            }
+        } else {
+            this.calculateSummaries(id, column, this.get(id).data.map((rec) => rec[column.field]));
         }
     }
+
     public get_summaries(id: string) {
         return this.summaryCacheMap.get(id);
     }
@@ -158,6 +165,14 @@ export class IgxGridAPIService {
         if (index > -1) {
             filteringState.splice(index, 1);
             this.get(id).filteringExpressions = filteringState;
+        }
+        this.get(id).filteredData = null;
+    }
+
+    protected calculateSummaries(id: string, column, data) {
+        if (!this.summaryCacheMap.get(id).get(column.field)) {
+            this.summaryCacheMap.get(id).set(column.field,
+                column.summaries.operate(data));
         }
     }
 

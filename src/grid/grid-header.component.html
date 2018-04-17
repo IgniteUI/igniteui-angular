@@ -6,4 +6,22 @@
     <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column }">
     </ng-container>
 </span>
+
 <igx-grid-filter [column]="column" *ngIf="column.filterable"></igx-grid-filter>
+
+<span (mousedown)="onResizeAreaMouseDown($event)" #resizeArea
+    class="igx-grid__th-resize-handle"
+    [style.cursor]="resizeCursor"
+    (dblclick)="onResizeAreaDblClick()"
+    (mouseover)="onResizeAreaMouseOver()">
+
+    <div *ngIf="showResizer" igxResizer
+        class="igx-grid__th-resize-line"
+        [style.height.px]="resizerHeight"
+        [restrictHResizeMax]="restrictResizeMax"
+        [restrictHResizeMin]="restrictResizeMin"
+        [resizeEndTimeout]="resizeEndTimeout"
+        (resizeEnd)="onResize($event)">
+    </div>
+
+</span>
