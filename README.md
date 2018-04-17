@@ -9,6 +9,8 @@
 You can find source files under the [`src`](https://github.com/IgniteUI/igniteui-angular/tree/master/src) folder, including samples and tests.
 
 #### [**View running samples here**](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
+#### [**Install our VSCode tooltip extension**](https://marketplace.visualstudio.com/items?itemName=Infragistics.igniteui-angular-tooltips)
+![](https://dl.infragistics.com/tools/extensions/angular-tooltips/tooltip_preview.gif)
 
 **IMPORTANT** The repository has been renamed from `igniteui-js-blocks` to `igniteui-angular`. Read more on our new [naming convention](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-github-repo-name-changes). 
 
