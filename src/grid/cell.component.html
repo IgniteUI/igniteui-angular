@@ -1,4 +1,4 @@
-<ng-template #defaultCell>
+<ng-template #defaultCell igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass">
     {{ formatter ? formatter(value) : value }}
 </ng-template>
 <ng-template #inlineEditor let-cell="cell">

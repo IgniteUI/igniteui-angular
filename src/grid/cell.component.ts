@@ -2,13 +2,16 @@
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ContentChild,
     ElementRef,
+    forwardRef,
     HostBinding,
     HostListener,
     Input,
     OnInit,
     TemplateRef,
     ViewChild,
+    ViewChildren,
     ViewContainerRef
 } from "@angular/core";
 import { take } from "rxjs/operators";
@@ -18,6 +21,7 @@ import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
 import { autoWire, IGridBus } from "./grid.common";
 import { IGridCellEventArgs, IGridEditEventArgs } from "./grid.component";
+import { IgxTextHighlightDirective } from "../main";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -182,6 +186,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
 
     @ViewChild("inlineEditor", { read: TemplateRef })
     protected inlineEditorTemplate: TemplateRef<any>;
+
+    @ViewChild(forwardRef(() =>IgxTextHighlightDirective), { read: IgxTextHighlightDirective })
+    private highlight: IgxTextHighlightDirective;
 
     protected defaultCssClass = "igx-grid__td";
     protected isFocused = false;
@@ -505,5 +512,24 @@ export class IgxGridCellComponent implements IGridBus, OnInit {
     public onKeydownExitEditMode() {
         this.inEditMode = false;
         this.nativeElement.focus();
+    }
+
+    public highlightClass = "igx-highlight";
+    public activeHighlightClass = "igx-highlight__active";
+
+    public highlightText(text: string, caseSensitive?: boolean): number {
+        return this.highlight ? this.highlight.highlight(text, caseSensitive) : 0;
+    }
+
+    public clearHighlight() {
+        if (this.highlight) {
+            this.highlight.clearHighlight();
+        }
+    }
+
+    public activate(highlightIndex: number) {
+        if (this.highlight) {
+            this.highlight.activate(highlightIndex);
+        }
     }
 }

@@ -94,6 +94,10 @@ export interface IRowDataEventArgs {
 })
 export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
 
+    private _lastSearchedText: string;
+    private _lastSearchMatchesCount: number;
+    private _matchOccurrenceToActivate: number;
+
     @Input()
     public data = [];
 
@@ -599,6 +603,61 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._pinnedColumns.splice(this._pinnedColumns.indexOf(col), 1);
         }
         this.markForCheck();
+    }
+
+    public findNext(text: string, caseSensitive?: boolean): number {
+        return this.find(text, 1, caseSensitive);
+    }
+
+    public findPrev(text: string, caseSensitive?: boolean): number {
+        return this.find(text, -1, caseSensitive)
+    }
+
+    private find(text: string, increment: number, caseSensitive?: boolean) {
+        if (this.cellInEditMode) {
+            this.cellInEditMode.inEditMode = false;
+        }
+
+        if(text === this._lastSearchedText && this._lastSearchedText) {
+            this._matchOccurrenceToActivate += increment;
+
+            if (this._matchOccurrenceToActivate < 1) {
+                this._matchOccurrenceToActivate = this._lastSearchMatchesCount;
+            }
+
+            if (this._matchOccurrenceToActivate > this._lastSearchMatchesCount) {
+                this._matchOccurrenceToActivate = 1;
+            }
+        } else {
+            this._matchOccurrenceToActivate = 1;
+            this._lastSearchedText = text;
+        }
+
+        this._lastSearchMatchesCount = 0;
+        let occurrencesToActivation = this._matchOccurrenceToActivate;
+
+        this.rowList.forEach((row) => {
+            row.cells.forEach((c) => {
+                const occurrences = c.highlightText(text, caseSensitive);
+                this._lastSearchMatchesCount += occurrences;
+
+                if (occurrencesToActivation - occurrences <= 0 && occurrencesToActivation > 0) {
+                    c.activate(occurrencesToActivation - 1);
+                }
+
+                occurrencesToActivation -= occurrences;
+            });
+        });
+
+        return this._lastSearchMatchesCount;
+    }
+
+    public clearHighlights() {
+        this.rowList.forEach((row) => {
+            row.cells.forEach((c) => {
+                c.clearHighlight();
+            });
+        });
     }
 
     get hasSortableColumns(): boolean {
