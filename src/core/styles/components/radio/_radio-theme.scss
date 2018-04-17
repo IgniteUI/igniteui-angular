@@ -98,6 +98,7 @@
         display: inline-block;
         width: $size;
         height: $size;
+        min-width: $size;
         line-height: $size;
         cursor: pointer;
         color: map-get($this, 'label-color');

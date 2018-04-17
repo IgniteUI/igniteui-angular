@@ -46,7 +46,7 @@ import { IgxGridRowComponent } from "./row.component";
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
-
+const DEFAULT_SUMMARY_HEIGHT = 36.36;
 export interface IGridCellEventArgs {
     cell: IgxGridCellComponent;
     event: Event;
@@ -698,6 +698,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!this.gridAPI.get_column_by_name(this.id, name)) {
             return;
         }
+        this.clearSummaryCache();
         this.gridAPI.clear_filter(this.id, name);
     }
 
@@ -741,7 +742,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
             }
         }
-
         this.markForCheck();
         return true;
     }
@@ -838,7 +838,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 maxSummaryLength = currentLength;
             }
         });
-        return maxSummaryLength * (this.tfoot.nativeElement.clientHeight ? this.tfoot.nativeElement.clientHeight : 36);
+        return maxSummaryLength * (this.tfoot.nativeElement.clientHeight ? this.tfoot.nativeElement.clientHeight : DEFAULT_SUMMARY_HEIGHT);
     }
 
     protected calculateGridSizes() {

@@ -158,6 +158,7 @@
         display: block;
         width: $switch-thumb-width;
         height: $switch-thumb-height;
+        min-width: $switch-thumb-width;
         border-radius: 50%;
         background: map-get($this, 'thumb-off-color');
         box-shadow: $switch-shadow;
