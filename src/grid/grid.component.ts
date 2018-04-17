@@ -244,7 +244,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public rowHeight = 50;
 
     @Input()
-    public columnWidth: string = null;
+    public columnWidth = "136";
 
     @Input()
     public primaryKey;
