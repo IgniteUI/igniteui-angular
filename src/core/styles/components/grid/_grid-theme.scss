@@ -130,7 +130,6 @@
     // Heading
     $grid-head-fs: rem(12px);
     $grid-head-fw: 600;
-    $grid-head-icon-size: rem(16px);
 
     // Cell
     $grid-cell-padding: rem(16px) rem(24px);
@@ -190,10 +189,6 @@
         padding: $grid-caption-padding;
     }
 
-    %grid-thead i {
-        font-size: $grid-head-icon-size;
-    }
-
     %grid-thead,
     %grid-tfoot {
         display: block;
@@ -227,29 +222,6 @@
     %grid-display-container-tr {
         width: 100%;
         overflow: visible;
-    }
-    /// @todo Sorting should not be
-    /// forced to use Material Icons
-    %grid-sorting-display {
-        font-weight: 800;
-
-        > .title::before {
-            position: relative;
-            font-family: 'Material Icons', sans-serif;
-            margin-right: 8px;
-        }
-    }
-
-    %grid-sorting-asc {
-        > .title::before {
-            content: '\E5D8';
-        }
-    }
-
-    %grid-sorting-desc {
-        > .title::before {
-            content: '\E5DB';
-        }
     }
 
     %grid-tbody {
@@ -354,20 +326,40 @@
         min-width: 0;
         border-right: 1px dotted igx-color($palette, 'grays', 400);
 
-        .title {
-            @include ellipsis();
-            cursor: pointer;
-            user-select: none;
-        }
-
         &:last-of-type {
             border-right: transparent;
         }
     }
 
+    %grid-cell-header-title {
+        @include ellipsis();
+        user-select: none;
+        cursor: initial;
+    }
+
+    %grid-cell-header-icons {
+        display: flex;
+        align-items: center;
+        user-select: none;
+        height: 24px;
+
+        .sort-icon {
+            width: rem(15px);
+            height: rem(15px);
+            font-size: rem(15px);
+        }
+    }
+
     %grid-cell-number {
         text-align: $grid-cell-align-num;
-        justify-content: flex-end;
+
+        %grid-cell-header-icons {
+            order: -1;
+
+            .sort-icon {
+                order: 1;
+            }
+        }
     }
 
     %grid__cbx-selection {
