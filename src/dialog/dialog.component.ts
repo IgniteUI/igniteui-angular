@@ -4,6 +4,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    HostBinding,
     Input,
     NgModule,
     OnDestroy,
@@ -105,7 +106,13 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
         return this.elementRef.nativeElement;
     }
 
-    @ViewChild("dialog") public dialogEl: ElementRef;
+    /**
+     * The default `tabindex` attribute for the component
+     *
+     * @hidden
+     */
+    @HostBinding("attr.tabindex")
+    public tabindex = -1;
 
     private _isOpen = false;
     private _titleId: string;

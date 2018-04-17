@@ -88,6 +88,14 @@
         @extend %grid-cell-header-icons !optional;
     }
 
+    @include e(th-resize-handle) {
+        @extend %grid__resize-handle !optional;
+    }
+
+    @include e(th-resize-line) {
+        @extend %grid__resize-line !optional;
+    }
+
     @include e(td) {
         @extend %grid-cell-display !optional;
     }
