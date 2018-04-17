@@ -232,7 +232,6 @@
         background: map-get($this, 'content-background');
         color: map-get($this, 'content-text-color');
         overflow: hidden;
-        will-change: transform;
     }
 
     %grid-tbody--empty {
