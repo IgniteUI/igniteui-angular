@@ -1,13 +1,16 @@
 import { Component, DebugElement, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { IgxInputDirective } from "../directives/input/input.directive";
+import { IgxDateSummaryOperand, IgxNumberSummaryOperand } from "./grid-summary";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
 describe("IgxGrid - Summaries", () => {
     const SUMMARY_CLASS = ".igx-grid-summary";
     const SUMMARY_LABEL_CLASS = ".igx-grid-summary__label";
-    const SUMMARY_VALUE_CLASS = "igx-grid-summary__result";
+    const SUMMARY_VALUE_CLASS = ".igx-grid-summary__result";
     const ITEM_CLASS = "igx-grid-summary__item";
     const HIDDEN_ITEM_CLASS = "igx-grid-summary__item--inactive";
 
@@ -17,7 +20,7 @@ describe("IgxGrid - Summaries", () => {
                 NoActiveSummariesComponent,
                 SummaryColumnComponent
             ],
-            imports: [IgxGridModule.forRoot()]
+            imports: [BrowserAnimationsModule, IgxGridModule.forRoot()]
         })
             .compileComponents();
     }));
@@ -266,6 +269,108 @@ describe("IgxGrid - Summaries", () => {
         expect(displayedSummaries).toBe(summariedColumns);
 
     });
+    it("should calc tfoot height according number of summary functions", () => {
+        const fixture = TestBed.createComponent(SummaryColumnComponent);
+        fixture.detectChanges();
+        const initialSummarySize = 36.36;
+        const grid = fixture.componentInstance.grid1;
+        const summaries = fixture.debugElement.queryAll(By.css("igx-grid-summary"));
+        const footerRow = fixture.debugElement.query(By.css(".igx-grid__tfoot")).query(By.css(".igx-grid__tr"))
+        .nativeElement.style["height"].match(/\d+\.+\d/);
+        const tfootSize = +footerRow;
+
+        let maxSummaryLength = 0;
+        let index = 0;
+        grid.columnList.filter((col) => col.hasSummary).forEach((column) => {
+            const currentLength = summaries[index].queryAll(By.css(SUMMARY_LABEL_CLASS)).length;
+            if (maxSummaryLength < currentLength) {
+                maxSummaryLength = currentLength;
+            }
+            index++;
+        });
+        const expectedHeight = maxSummaryLength * initialSummarySize;
+        expect(tfootSize).toBe(expectedHeight);
+    });
+    it("should calculate summaries for 'number' dataType or return if no data is provided", () => {
+        const fixture = TestBed.createComponent(SummaryColumnComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid1;
+        const summaryClass = fixture.componentInstance.numberSummary;
+
+        const summaries = summaryClass.operate(fixture.componentInstance.data.map((x) => x["UnitsInStock"]));
+        expect(summaries[0].summaryResult).toBe(10);
+        expect(summaries[1].summaryResult).toBe(0);
+        expect(summaries[2].summaryResult).toBe(20000);
+        expect(summaries[3].summaryResult).toBe(39004);
+        expect(summaries[4].summaryResult).toBe(3900.4);
+
+        const emptySummaries = summaryClass.operate([]);
+        expect(emptySummaries[0].summaryResult).toBe(0);
+        expect(emptySummaries[1].summaryResult).toBe(undefined);
+        expect(emptySummaries[2].summaryResult).toBe(undefined);
+        expect(emptySummaries[3].summaryResult).toBe(undefined);
+        expect(emptySummaries[4].summaryResult).toBe(undefined);
+    });
+    it("should calculate summaries for 'date' dataType or return if no data is provided", () => {
+        const fixture = TestBed.createComponent(SummaryColumnComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid1;
+        const summaryClass = fixture.componentInstance.dateSummary;
+
+        const summaries = summaryClass.operate(fixture.componentInstance.data.map((x) => x["OrderDate"]));
+        expect(summaries[0].summaryResult).toBe(10);
+        expect(summaries[1].summaryResult.toLocaleDateString()).toBe("5/17/1990");
+        expect(summaries[2].summaryResult.toLocaleDateString()).toBe("12/25/2025");
+
+        const emptySummaries = summaryClass.operate([]);
+        expect(emptySummaries[0].summaryResult).toBe(0);
+        expect(emptySummaries[1].summaryResult).toBe(undefined);
+        expect(emptySummaries[2].summaryResult).toBe(undefined);
+    });
+    it("should calculate summaries only over filteredData",  (done) => {
+        const fixture = TestBed.createComponent(SummaryColumnComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid1;
+        const filterUIContainer = fixture.debugElement.query(By.css("igx-grid-filter"));
+        const filterIcon = filterUIContainer.query(By.css("igx-icon"));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
+        const select = filterUIContainer.query(By.css("div > select"));
+        const summaries = fixture.debugElement.queryAll(By.css("igx-grid-summary"));
+
+        filterIcon.nativeElement.click();
+        fixture.detectChanges();
+        select.nativeElement.value = "equals";
+        select.nativeElement.dispatchEvent(new Event("change"));
+
+        sendInput(input, "0", fixture).then(() => {
+            fixture.detectChanges();
+            const filterResult = grid.rowList.length;
+            expect(filterResult).toEqual(3);
+            let index = 0;
+            grid.columnList.forEach((col) => {
+                if (col.hasSummary) {
+                    const values = summaries[index].queryAll(By.css(SUMMARY_VALUE_CLASS));
+                    expect(+values[0].nativeElement.innerText).toBe(filterResult);
+                    if (col.field === "UnitsInStock") {
+                        expect(values[1].nativeElement.innerText).toBe("0");
+                        expect(values[2].nativeElement.innerText).toBe("0");
+                    }
+                }
+                index++;
+            });
+            done();
+        });
+    });
+    function sendInput(element, text: string, fix) {
+        element.nativeElement.value = text;
+        element.nativeElement.dispatchEvent(new Event("input"));
+        fix.detectChanges();
+        return fix.whenStable();
+    }
+
 });
 
 @Component({
@@ -290,16 +395,16 @@ export class  NoActiveSummariesComponent {
     public grid1: IgxGridComponent;
 
     public data = [
-        { ProductID: 1, ProductName: "Chai", InStock: true, UnitsInStock: 2760, OrderDate: new Date("2005-03-21") },
-        { ProductID: 2, ProductName: "Aniseed Syrup", InStock: false, UnitsInStock: 198, OrderDate: new Date("2008-01-15") },
-        { ProductID: 3, ProductName: "Chef Antons Cajun Seasoning", InStock: true, UnitsInStock: 52, OrderDate: new Date("2010-11-20") },
-        { ProductID: 4, ProductName: "Grandmas Boysenberry Spread", InStock: false, UnitsInStock: 0, OrderDate: new Date("2007-10-11") },
-        { ProductID: 5, ProductName: "Uncle Bobs Dried Pears", InStock: false, UnitsInStock: 0, OrderDate: new Date("2001-07-27") },
-        { ProductID: 6, ProductName: "Northwoods Cranberry Sauce", InStock: true, UnitsInStock: 1098, OrderDate: new Date("1990-05-17") },
-        { ProductID: 7, ProductName: "Queso Cabrales", InStock: false, UnitsInStock: 0, OrderDate: new Date("2005-03-03") },
-        { ProductID: 8, ProductName: "Tofu", InStock: true, UnitsInStock: 7898, OrderDate: new Date("2017-09-09") },
-        { ProductID: 9, ProductName: "Teatime Chocolate Biscuits", InStock: true, UnitsInStock: 6998, OrderDate: new Date("2025-12-25") },
-        { ProductID: 10, ProductName: "Chocolate", InStock: true, UnitsInStock: 20000, OrderDate: new Date("2018-03-01") }
+        { ProductID: 1, ProductName: "Chai", InStock: true, UnitsInStock: 2760, OrderDate: "2005-03-21" },
+        { ProductID: 2, ProductName: "Aniseed Syrup", InStock: false, UnitsInStock: 198, OrderDate: "2008-01-15" },
+        { ProductID: 3, ProductName: "Chef Antons Cajun Seasoning", InStock: true, UnitsInStock: 52, OrderDate: "2010-11-20" },
+        { ProductID: 4, ProductName: "Grandmas Boysenberry Spread", InStock: false, UnitsInStock: 0, OrderDate: "2007-10-11" },
+        { ProductID: 5, ProductName: "Uncle Bobs Dried Pears", InStock: false, UnitsInStock: 0, OrderDate: "2001-07-27" },
+        { ProductID: 6, ProductName: "Northwoods Cranberry Sauce", InStock: true, UnitsInStock: 1098, OrderDate: "1990-05-17" },
+        { ProductID: 7, ProductName: "Queso Cabrales", InStock: false, UnitsInStock: 0, OrderDate: "2005-03-03" },
+        { ProductID: 8, ProductName: "Tofu", InStock: true, UnitsInStock: 7898, OrderDate: "2017-09-09" },
+        { ProductID: 9, ProductName: "Teatime Chocolate Biscuits", InStock: true, UnitsInStock: 6998, OrderDate: "2025-12-25" },
+        { ProductID: 10, ProductName: "Chocolate", InStock: true, UnitsInStock: 20000, OrderDate: "2018-03-01" }
     ];
 }
 
@@ -312,7 +417,7 @@ export class  NoActiveSummariesComponent {
             </igx-column>
             <igx-column field="InStock" [dataType]="'boolean'" [hasSummary]="true">
             </igx-column>
-            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true">
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [filterable]="true">
             </igx-column>
             <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="true">
             </igx-column>
@@ -336,4 +441,6 @@ export class  SummaryColumnComponent {
     @ViewChild("grid1", { read: IgxGridComponent })
     public grid1: IgxGridComponent;
 
+    public numberSummary = new IgxNumberSummaryOperand();
+    public dateSummary = new IgxDateSummaryOperand();
 }

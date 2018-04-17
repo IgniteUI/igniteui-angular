@@ -13,9 +13,12 @@ import { IgxDatePickerSampleComponent } from "./date-picker/sample.component";
 import { DialogSampleComponent } from "./dialog/sample.component";
 import { MaskSampleComponent } from "./directives/mask/sample.component";
 import { GridColumnPinningSampleComponent } from "./grid-column-pinning/sample.component";
+import { GridColumnResizingSampleComponent } from "./grid-column-resizing/sample.component"
 import { GridPerformanceSampleComponent } from "./grid-performance/sample.component";
+import { GridSelectionComponent } from "./grid-selection/sample.component";
 import { GridSummaryComponent } from "./grid-summaries/sample.component";
 import { GridSampleComponent } from "./grid/sample.component";
+import { GridVirtualizationSampleComponent } from "./grid-remote-virtualization/sample.component";
 import { IconSampleComponent } from "./icon/sample.component";
 import { InputGroupSampleComponent } from "./input-group/input-group.component";
 import { InputSampleComponent } from "./input/sample.component";
@@ -35,6 +38,9 @@ import {
     CustomContentComponent,
     TabBarSampleComponent
 } from "./tabbar/sample.component";
+import {
+    TabsSampleComponent
+} from "./tabs/sample.component";
 import { IgxToastSampleComponent } from "./toast/sample.component";
 import { VirtualForSampleComponent } from "./virtual-for-directive/sample.component";
 
@@ -55,6 +61,10 @@ const appRoutes: Routes = [
     {
         component: TabBarSampleComponent,
         path: "tabbar"
+    },
+    {
+        component: TabsSampleComponent,
+        path: "tabs"
     },
     {
         component: ButtonsSampleComponent,
@@ -113,12 +123,20 @@ const appRoutes: Routes = [
         path: "gridColumnPinning"
     },
     {
+        component: GridColumnResizingSampleComponent,
+        path: "gridColumnResizing"
+    },
+    {
         component: GridPerformanceSampleComponent,
         path: "gridPerformance"
     },
     {
         component: GridSummaryComponent,
         path: "gridSummary"
+    },
+    {
+        component: GridSelectionComponent,
+        path: "gridSelection"
     },
     {
         component: IgxCardSampleComponent,
@@ -175,6 +193,10 @@ const appRoutes: Routes = [
     {
         component: MaskSampleComponent,
         path: "mask"
+    },
+    {
+        component: GridVirtualizationSampleComponent,
+        path: "gridRemoteVirtualization"
     }
 ];
 

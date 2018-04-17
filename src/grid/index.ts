@@ -1,10 +1,14 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { IgxCheckboxModule } from "../checkbox/checkbox.component";
+import { IgxSelectionAPIService } from "../core/selection";
 import { IgxDatePickerModule } from "../date-picker/date-picker.component";
 import { IgxButtonModule } from "../directives/button/button.directive";
+import { IgxFocusModule } from "../directives/focus/focus.directive";
 import { IgxForOfModule } from "../directives/for-of/for_of.directive";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
+import { IgxTextSelectionModule } from "../directives/text-selection/text-selection.directive";
 import { IgxToggleModule } from "../directives/toggle/toggle.directive";
 import { IgxIconModule } from "../icon";
 import { IgxInputGroupModule } from "../input-group/input-group.component";
@@ -18,7 +22,8 @@ import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
-    IgxCellTemplateDirective
+    IgxCellTemplateDirective,
+    IgxColumnResizerDirective
 } from "./grid.common";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridPagingPipe, IgxGridSortingPipe } from "./grid.pipes";
@@ -36,6 +41,7 @@ import { IgxGridRowComponent } from "./row.component";
     IgxCellHeaderTemplateDirective,
     IgxCellEditorTemplateDirective,
     IgxCellTemplateDirective,
+    IgxColumnResizerDirective,
     IgxGridFilterComponent,
     IgxGridSortingPipe,
     IgxGridPagingPipe,
@@ -56,7 +62,8 @@ import { IgxGridRowComponent } from "./row.component";
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellEditorTemplateDirective,
-    IgxCellTemplateDirective
+    IgxCellTemplateDirective,
+    IgxColumnResizerDirective
   ],
   imports: [
     CommonModule,
@@ -67,15 +74,18 @@ import { IgxGridRowComponent } from "./row.component";
     IgxRippleModule,
     IgxInputGroupModule,
     IgxToggleModule,
-    IgxForOfModule
+    IgxForOfModule,
+    IgxFocusModule,
+    IgxTextSelectionModule,
+    IgxCheckboxModule
   ],
-  providers: [IgxGridAPIService]
+  providers: [IgxGridAPIService, IgxSelectionAPIService]
 })
 export class IgxGridModule {
     public static forRoot() {
         return {
             ngModule: IgxGridModule,
-            providers: [IgxGridAPIService]
+            providers: [IgxGridAPIService, IgxSelectionAPIService]
         };
     }
 }

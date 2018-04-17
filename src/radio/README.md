@@ -83,6 +83,7 @@ export class RadioSampleComponent {
 | `@Input()` value | any | The value to be set for the radio button. |
 | `@Input()` tabindex | number | Specifies the tabbing order of the radio button. |
 | `@Input()` checked | boolean | Specifies the checked state of the radio button. |
+| `@Input()` required | boolean | Specifies the required state of the radio button. |
 | `@Input()` disabled | boolean | Specifies the disabled state of the radio button. |
 | `@Input()` disableRipple | boolean | Specifies the whether the ripple effect should be disabled for the radio button. |
 | `@Input()` labelPosition | string `|` enum RadioLabelPosition | Specifies the position of the text label relative to the radio button element. Possible values are "before" and "after". |

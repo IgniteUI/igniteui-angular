@@ -9,6 +9,7 @@ import { STRING_FILTERS } from "../data-operations/filtering-condition";
 import { SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
+import { IgxGridHeaderComponent } from "./grid-header.component";
 import { IGridCellEventArgs, IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
@@ -542,6 +543,25 @@ describe("IgxGrid - Column Pinning ", () => {
 
         expect(headers[0].context.column.field).toEqual("CompanyName");
         expect(headers[1].context.column.field).toEqual("ContactName");
+    });
+
+    it("should correctly initialize pinned columns z-index values.", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+
+        let headers = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent));
+
+        // First two headers are pinned
+        expect(headers[0].componentInstance.zIndex).toEqual(9999);
+        expect(headers[1].componentInstance.zIndex).toEqual(9998);
+
+        grid.pinColumn("Region");
+        fix.detectChanges();
+
+        // First three headers are pinned
+        headers = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent));
+        expect(headers[2].componentInstance.zIndex).toEqual(9997);
     });
 });
 @Component({
