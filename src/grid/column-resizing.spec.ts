@@ -258,6 +258,8 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
+        expect(parseInt(grid.columns[0].width, 10)).toBeNaN();
+
         let headerResArea = headers[0].nativeElement.children[1];
         simulateMouseEvent("mousedown", headerResArea, 126, 5);
         tick();
@@ -289,9 +291,11 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         expect(grid.columns[0].width).toEqual("70px");
 
         headerResArea = headers[1].nativeElement.children[1];
-        simulateMouseEvent("mousedown", headerResArea, 202, 5);
+        simulateMouseEvent("mousedown", headerResArea, 197, 5);
         tick();
         fixture.detectChanges();
+
+        expect(parseInt(grid.columns[1].width, 10)).toBeNaN();
 
         resizer = headers[1].nativeElement.children[1].children[0];
         expect(resizer).toBeDefined();
@@ -302,7 +306,7 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         tick(100);
         fixture.detectChanges();
 
-        expect(parseInt(grid.columns[1].width, 10)).toBeGreaterThanOrEqual(228);
+        expect(parseInt(grid.columns[1].width, 10)).toBeGreaterThanOrEqual(100);
 
         simulateMouseEvent("mousedown", headerResArea, 300, 5);
         tick();
