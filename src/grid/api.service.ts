@@ -37,7 +37,7 @@ export class IgxGridAPIService {
             if (this.get(id).filteredData.length > 0) {
                 this.calculateSummaries(id, column, this.get(id).filteredData.map((rec) => rec[column.field]));
             } else {
-                this.calculateSummaries(id, column, this.get(id).data.map((rec) => rec[column.field]));
+                this.calculateSummaries(id, column, this.get(id).filteredData.map((rec) => rec[column.field]));
             }
         } else {
             this.calculateSummaries(id, column, this.get(id).data.map((rec) => rec[column.field]));
