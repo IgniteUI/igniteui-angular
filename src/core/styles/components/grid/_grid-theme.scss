@@ -405,5 +405,21 @@
         width: 4px;
         background-color: map-get($this, 'resize-line-color');
         z-index: 2;
+
+        &::before,
+        &::after {
+            position: absolute;
+            content: '';
+            height: 100%;
+            width: 96px;
+        }
+
+        &::before {
+            right: 100%;
+        }
+
+        &::after {
+            left: 100%;
+        }
     }
 }
