@@ -6,7 +6,10 @@
     <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column }">
     </ng-container>
 </span>
-<igx-grid-filter [column]="column" *ngIf="column.filterable"></igx-grid-filter>
+
+<div class="igx-grid__th-icons">
+    <igx-grid-filter [column]="column" *ngIf="column.filterable"></igx-grid-filter>
+</div>
 
 <span (mousedown)="onResizeAreaMouseDown($event)" #resizeArea
       (dblclick)="onResizeAreaDblClick()"
