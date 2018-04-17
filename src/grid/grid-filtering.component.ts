@@ -190,6 +190,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
         this._value = null;
         this._filterCondition = undefined;
         this.gridAPI.clear_filter(this.gridID, this.column.field);
+        this.gridAPI.get(this.gridID).clearSummaryCache();
     }
 
     public conditionChanged(value): void {
