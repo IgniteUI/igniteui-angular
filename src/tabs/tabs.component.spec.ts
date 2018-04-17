@@ -186,6 +186,7 @@ describe("IgxTabs", () => {
         fixture.detectChanges();
 
         const rightScrollButton = tabs.headerContainer.nativeElement.children[2];
+        window.dispatchEvent(new Event("resize"));
         rightScrollButton.dispatchEvent(new Event("click", { bubbles: true }));
 
         fixture.whenStable().then(() => {
