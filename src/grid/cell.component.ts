@@ -532,7 +532,20 @@ export class IgxGridCellComponent implements DoCheck, IGridBus, OnInit, OnDestro
         const lastCell = this._getLastSelectedCell();
         const rowIndex = lastCell ? lastCell.rowIndex - 1 : this.grid.rowList.last.index;
         const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, this.visibleColumnIndex);
+        const verticalScroll = this.row.grid.verticalScrollContainer.getVerticalScroll();
+
+        if (!verticalScroll && !target) {
+            return;
+        }
+
         if (target) {
+            const targetRowOffset = target.row.nativeElement.offsetTop;
+            const containerOffset = target.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.offsetTop;
+
+            if (targetRowOffset === 0 && containerOffset < 0) {
+                // Target is part of the first row in the container that is partially visible
+                verticalScroll.scrollTop += containerOffset;
+            }
             target.nativeElement.focus();
         } else {
             this.row.grid.verticalScrollContainer.scrollPrev();
