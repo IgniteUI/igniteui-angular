@@ -108,6 +108,7 @@
         cursor: pointer;
         width: $size;
         height: $size;
+        min-width: $size;
         border-width: $border-width;
         border-style: solid;
         border-color: map-get($this, 'empty-color');

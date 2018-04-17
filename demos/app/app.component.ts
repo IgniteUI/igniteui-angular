@@ -76,6 +76,11 @@ export class AppComponent implements OnInit {
             name: "Grid Column Pinning"
         },
         {
+            link: "/gridColumnResizing",
+            icon: "view_column",
+            name: "Grid Column Resizing"
+        },
+        {
             link: "/gridPerformance",
             icon: "view_column",
             name: "Grid Performance"
