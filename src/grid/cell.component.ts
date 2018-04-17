@@ -19,11 +19,11 @@ import { take } from "rxjs/operators";
 import { IgxSelectionAPIService } from "../core/selection";
 import { KEYCODES } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
+import { IgxTextHighlightDirective } from "../directives/text-highlight/text-highlight.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
 import { autoWire, IGridBus } from "./grid.common";
 import { IGridCellEventArgs, IGridEditEventArgs } from "./grid.component";
-import { IgxTextHighlightDirective } from "../main";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,6 +44,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
 
     @Input()
     public value: any;
+
+    public highlightClass = "igx-highlight";
+    public activeHighlightClass = "igx-highlight__active";
 
     get formatter(): (value: any) => any {
         return this.column.formatter;
@@ -107,6 +110,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
 
     @autoWire(true)
     set inEditMode(value: boolean) {
+        if (value && this.highlight && !this._inEditMode) {
+            this.highlight.store();
+        }
+
         this._inEditMode = value;
         if (this._inEditMode) {
             this.grid.cellInEditMode = this;
@@ -195,7 +202,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
     @ViewChild("inlineEditor", { read: TemplateRef })
     protected inlineEditorTemplate: TemplateRef<any>;
 
-    @ViewChild(forwardRef(() =>IgxTextHighlightDirective), { read: IgxTextHighlightDirective })
+    @ViewChild(forwardRef(() => IgxTextHighlightDirective), { read: IgxTextHighlightDirective })
     private highlight: IgxTextHighlightDirective;
 
     protected defaultCssClass = "igx-grid__td";
@@ -616,9 +623,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         this.inEditMode = false;
         this.nativeElement.focus();
     }
-
-    public highlightClass = "igx-highlight";
-    public activeHighlightClass = "igx-highlight__active";
 
     public highlightText(text: string, caseSensitive?: boolean): number {
         return this.highlight ? this.highlight.highlight(text, caseSensitive) : 0;

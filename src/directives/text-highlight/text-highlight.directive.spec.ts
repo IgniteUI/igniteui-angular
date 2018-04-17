@@ -9,13 +9,12 @@ import { By } from "@angular/platform-browser";
 
 import { IgxTextHighlightDirective } from "./text-highlight.directive";
 
-
 fdescribe("IgxHighlight", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTextHighlightDirective,
-                HighlightLoremIpsumComponent,
+                HighlightLoremIpsumComponent
             ]
         });
     }));
@@ -157,17 +156,15 @@ fdescribe("IgxHighlight", () => {
 
 @Component({
     template:
-        `
-            <div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vulputate luctus dui ut maximus. Quisque sed suscipit lorem. Vestibulum sit.</div>
-        `
+        // tslint:disable-next-line:max-line-length
+        `<div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vulputate luctus dui ut maximus. Quisque sed suscipit lorem. Vestibulum sit.</div>`
 })
 class HighlightLoremIpsumComponent {
     public highlightClass = "igx-highlight";
     public activeHighlightClass = "igx-highlight__active";
 
-    @ViewChild(forwardRef(() =>IgxTextHighlightDirective), { read: IgxTextHighlightDirective })
+    @ViewChild(forwardRef(() => IgxTextHighlightDirective), { read: IgxTextHighlightDirective })
     private highlight: IgxTextHighlightDirective;
-
 
     public highlightText(text: string, caseSensitive?: boolean) {
         return this.highlight.highlight(text, caseSensitive);
@@ -180,7 +177,6 @@ class HighlightLoremIpsumComponent {
     public activateHighlight(highlightNumber: number) {
         this.highlight.activate(highlightNumber);
     }
-
 
     public get textContent(): string {
         return this.highlight.parentElement.innerText;

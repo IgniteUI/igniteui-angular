@@ -765,7 +765,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public findPrev(text: string, caseSensitive?: boolean): number {
-        return this.find(text, -1, caseSensitive)
+        return this.find(text, -1, caseSensitive);
     }
 
     private find(text: string, increment: number, caseSensitive?: boolean) {
@@ -773,7 +773,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.cellInEditMode.inEditMode = false;
         }
 
-        if(text === this._lastSearchedText && this._lastSearchedText) {
+        if (text === this._lastSearchedText && this._lastSearchedText) {
             this._matchOccurrenceToActivate += increment;
 
             if (this._matchOccurrenceToActivate < 1) {

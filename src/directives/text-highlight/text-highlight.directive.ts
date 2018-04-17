@@ -17,18 +17,20 @@ export class IgxTextHighlightDirective {
     @Input("activeCssClass")
     public activeCssClass: string;
 
-    public parentElement;
+    public parentElement: any;
 
-    private _lastSearchString = null;
+    private _lastSearchedText: string = null;
     private _lastSearchCount = -1;
 
-    constructor(element: ElementRef, private renderer: Renderer2){
+    private _storedText: string = null;
+
+    constructor(element: ElementRef, private renderer: Renderer2) {
         this.parentElement = this.renderer.parentNode(element.nativeElement);
     }
 
     public highlight(text: string, caseSensitive?: boolean): number {
-        if (this._lastSearchString || this._lastSearchString !== text) {
-            this._lastSearchString = text;
+        if (this._lastSearchedText || this._lastSearchedText !== text) {
+            this._lastSearchedText = text;
 
             if (text === "" || text === undefined || text === null) {
                 this.clearHighlight();
@@ -50,9 +52,23 @@ export class IgxTextHighlightDirective {
     public activate(highlightIndex: number) {
         const spans = this.parentElement.querySelectorAll("." + this.cssClass);
 
-        if(spans.length > highlightIndex) {
+        if (spans.length > highlightIndex) {
             this.renderer.addClass(spans[highlightIndex], this.activeCssClass);
             this.renderer.setAttribute(spans[highlightIndex], "style", "background:orange;font-weight:bold");
+        }
+    }
+
+    public store() {
+        if (this._lastSearchedText) {
+            this._storedText = this._lastSearchedText;
+            this._lastSearchedText = null;
+            this.clearChildElements();
+        }
+    }
+
+    public restore() {
+        if (this._storedText) {
+            this.highlight(this._storedText);
         }
     }
 
@@ -74,18 +90,19 @@ export class IgxTextHighlightDirective {
     }
 
     private getHighlightedText(contentString: string, searchText: string, caseSensitive: boolean) {
-        let contentStringResolved = !caseSensitive ? contentString.toLowerCase() : contentString;
-        let searchTextResolved = !caseSensitive ? searchText.toLowerCase() : searchText;
+        const contentStringResolved = !caseSensitive ? contentString.toLowerCase() : contentString;
+        const searchTextResolved = !caseSensitive ? searchText.toLowerCase() : searchText;
 
         let foundIndex = contentStringResolved.indexOf(searchTextResolved, 0);
         let previousMatchEnd = 0;
         let matchCount = 0;
 
-        while (foundIndex != -1) {
+        while (foundIndex !== -1) {
             const start = foundIndex;
             const end = foundIndex + searchTextResolved.length;
 
             this.appendText(contentString.substring(previousMatchEnd, start));
+            // tslint:disable-next-line:max-line-length
             this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;font-weight:bold">${contentString.substring(start, end)}</span>`);
 
             previousMatchEnd = end;
