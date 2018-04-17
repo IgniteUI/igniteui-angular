@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from "./dialog.component";
 
-fdescribe("Dialog", () => {
+describe("Dialog", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [AlertComponent, DialogComponent, CustomDialogComponent, NestedDialogsComponent],
