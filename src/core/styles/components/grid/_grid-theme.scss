@@ -163,32 +163,6 @@
         overflow: hidden;
     }
 
-    %vhelper-display {
-        &::-webkit-scrollbar {
-            background: rgba(text-contrast(map-get($this, 'content-background')), .12);
-
-            /* stylelint-disable selector-pseudo-class-no-unknown */
-            &:vertical {
-                border-left: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
-                border-right: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
-            }
-
-            &:horizontal {
-                border-top: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
-                border-bottom: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
-            }
-            /* stylelint-enable */
-        }
-
-        &::-webkit-scrollbar-thumb {
-            background: rgba(text-contrast(map-get($this, 'content-background')), .24);
-
-            &:hover {
-                background: rgba(text-contrast(map-get($this, 'content-background')), .37);
-            }
-        }
-    }
-
     %grid-caption {
         display: flex;
         align-items: center;
@@ -266,7 +240,6 @@
         background: map-get($this, 'content-background');
         color: map-get($this, 'content-text-color');
         overflow: hidden;
-        will-change: transform;
         z-index: 1;
     }
 
@@ -281,11 +254,11 @@
         flex-flow: row nowrap;
         grid-row: 5;
         width: 100%;
-        background: map-get($this, 'content-background');
+        background: map-get($this, 'header-background');
     }
 
     %grid-scroll-start {
-        border-right: map-get($cell-pin, 'style') map-get($cell-pin, 'color');
+        background: igx-color($palette, 'grays', 200);
     }
 
     %grid-scroll-main {
