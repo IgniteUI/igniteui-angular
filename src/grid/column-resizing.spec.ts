@@ -16,7 +16,8 @@ describe("IgxGrid - Deferred Column Resizing", () => {
                 ResizableColumnsComponent,
                 PinnedColumnsComponent,
                 GridFeaturesComponent,
-                LargePinnedColGridComponent
+                LargePinnedColGridComponent,
+                NullColumnsComponent
             ],
             imports: [
                 FormsModule,
@@ -246,6 +247,80 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         fixture.detectChanges();
 
         expect(grid.columns[0].width).toEqual("100px");
+
+        discardPeriodicTasks();
+    }));
+
+    it("Resize columns with initial width of null.", fakeAsync(() => {
+        const fixture = TestBed.createComponent(NullColumnsComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+
+        expect(parseInt(grid.columns[0].width, 10)).toBeNaN();
+
+        let headerResArea = headers[0].nativeElement.children[1];
+        simulateMouseEvent("mousedown", headerResArea, 126, 5);
+        tick();
+        fixture.detectChanges();
+
+        let resizer = headers[0].nativeElement.children[1].children[0];
+        expect(resizer).toBeDefined();
+        simulateMouseEvent("mousemove", resizer, 250, 5);
+        tick();
+
+        simulateMouseEvent("mouseup", resizer, 250, 5);
+        tick(100);
+        fixture.detectChanges();
+
+        expect(grid.columns[0].width).toEqual("200px");
+
+        simulateMouseEvent("mousedown", headerResArea, 200, 0);
+        tick();
+        fixture.detectChanges();
+
+        resizer = headers[0].nativeElement.children[1].children[0];
+        simulateMouseEvent("mousemove", resizer, 50, 5);
+        tick();
+
+        simulateMouseEvent("mouseup", resizer, 50, 5);
+        tick();
+        fixture.detectChanges();
+
+        expect(grid.columns[0].width).toEqual("70px");
+
+        headerResArea = headers[1].nativeElement.children[1];
+        simulateMouseEvent("mousedown", headerResArea, 197, 5);
+        tick();
+        fixture.detectChanges();
+
+        expect(parseInt(grid.columns[1].width, 10)).toBeNaN();
+
+        resizer = headers[1].nativeElement.children[1].children[0];
+        expect(resizer).toBeDefined();
+        simulateMouseEvent("mousemove", resizer, 300, 5);
+        tick();
+
+        simulateMouseEvent("mouseup", resizer, 300, 5);
+        tick(100);
+        fixture.detectChanges();
+
+        expect(parseInt(grid.columns[1].width, 10)).toBeGreaterThanOrEqual(100);
+
+        simulateMouseEvent("mousedown", headerResArea, 300, 5);
+        tick();
+        fixture.detectChanges();
+
+        resizer = headers[1].nativeElement.children[1].children[0];
+        simulateMouseEvent("mousemove", resizer, 50, 5);
+        tick();
+
+        simulateMouseEvent("mouseup", resizer, 50, 5);
+        tick();
+        fixture.detectChanges();
+
+        expect(grid.columns[1].width).toEqual("48px");
 
         discardPeriodicTasks();
     }));
@@ -701,5 +776,184 @@ export class GridFeaturesComponent {
         this.column = event.column;
         this.prevWidth = event.prevWidth;
         this.newWidth = event.newWidth;
+    }
+}
+
+@Component({
+    template: `
+    <igx-grid [data]="data" [height]="'800px'">
+        <igx-column *ngFor="let c of columns" [field]="c.field"
+                                              [header]="c.field"
+                                              [resizable]="c.resizable"
+                                              [width]="c.width"
+                                              [minWidth]="c.minWidth"
+                                              [maxWidth]="c.maxWidth">
+        </igx-column>
+    </igx-grid>
+    `
+})
+export class NullColumnsComponent implements OnInit {
+
+    public data = [];
+    public columns = [];
+
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+
+    public ngOnInit(): void {
+        this.columns = [
+            { field: "ID", resizable: true, maxWidth: 200, minWidth: 70 },
+            { field: "CompanyName", resizable: true },
+            { field: "ContactName", resizable: true },
+            { field: "ContactTitle", resizable: true},
+            { field: "Address", resizable: true },
+            { field: "City", resizable: true },
+            { field: "Region", resizable: true },
+            { field: "PostalCode", resizable: true },
+            { field: "Phone", resizable: true },
+            { field: "Fax", resizable: true }
+        ];
+        this.data = [
+            {
+                ID: "ALFKI",
+                CompanyName: "Alfreds Futterkiste",
+                ContactName: "Maria Anders",
+                ContactTitle: "Sales Representative",
+                Address: "Obere Str. 57",
+                City: "Berlin",
+                Region: null,
+                PostalCode: "12209",
+                Country: "Germany",
+                Phone: "030-0074321",
+                Fax: "030-0076545"
+            },
+            {
+                ID: "ANATR",
+                CompanyName: "Ana Trujillo Emparedados y helados",
+                ContactName: "Ana Trujillo",
+                ContactTitle: "Owner",
+                Address: "Avda. de la Constitución 2222",
+                City: "México D.F.",
+                Region: null,
+                PostalCode: "05021",
+                Country: "Mexico",
+                Phone: "(5) 555-4729",
+                Fax: "(5) 555-3745"
+            },
+            {
+                ID: "ANTON",
+                CompanyName: "Antonio Moreno Taquería",
+                ContactName: "Antonio Moreno",
+                ContactTitle: "Owner",
+                Address: "Mataderos 2312",
+                City: "México D.F.",
+                Region: null,
+                PostalCode: "05023",
+                Country: "Mexico",
+                Phone: "(5) 555-3932",
+                Fax: null
+            },
+            {
+                ID: "AROUT",
+                CompanyName: "Around the Horn",
+                ContactName: "Thomas Hardy",
+                ContactTitle: "Sales Representative",
+                Address: "120 Hanover Sq.",
+                City: "London",
+                Region: null,
+                PostalCode: "WA1 1DP",
+                Country: "UK",
+                Phone: "(171) 555-7788",
+                Fax: "(171) 555-6750"
+            },
+            {
+                ID: "BERGS",
+                CompanyName: "Berglunds snabbköp",
+                ContactName: "Christina Berglund",
+                ContactTitle: "Order Administrator",
+                Address: "Berguvsvägen 8",
+                City: "Luleå",
+                Region: null,
+                PostalCode: "S-958 22",
+                Country: "Sweden",
+                Phone: "0921-12 34 65",
+                Fax: "0921-12 34 67"
+            },
+            {
+                ID: "BLAUS",
+                CompanyName: "Blauer See Delikatessen",
+                ContactName: "Hanna Moos",
+                ContactTitle: "Sales Representative",
+                Address: "Forsterstr. 57",
+                City: "Mannheim",
+                Region: null,
+                PostalCode: "68306",
+                Country: "Germany",
+                Phone: "0621-08460",
+                Fax: "0621-08924"
+            },
+            {
+                ID: "BLONP",
+                CompanyName: "Blondesddsl père et fils",
+                ContactName: "Frédérique Citeaux",
+                ContactTitle: "Marketing Manager",
+                Address: "24, place Kléber",
+                City: "Strasbourg",
+                Region: null,
+                PostalCode: "67000",
+                Country: "France",
+                Phone: "88.60.15.31",
+                Fax: "88.60.15.32"
+            },
+            {
+                ID: "BOLID",
+                CompanyName: "Bólido Comidas preparadas",
+                ContactName: "Martín Sommer",
+                ContactTitle: "Owner",
+                Address: "C/ Araquil, 67",
+                City: "Madrid",
+                Region: null,
+                PostalCode: "28023",
+                Country: "Spain",
+                Phone: "(91) 555 22 82",
+                Fax: "(91) 555 91 99"
+            },
+            {
+                ID: "BONAP",
+                CompanyName: "Bon app'",
+                ContactName: "Laurence Lebihan",
+                ContactTitle: "Owner",
+                Address: "12, rue des Bouchers",
+                City: "Marseille",
+                Region: null,
+                PostalCode: "13008",
+                Country: "France",
+                Phone: "91.24.45.40",
+                Fax: "91.24.45.41"
+            },
+            {
+                ID: "BOTTM",
+                CompanyName: "Bottom-Dollar Markets",
+                ContactName: "Elizabeth Lincoln",
+                ContactTitle: "Accounting Manager",
+                Address: "23 Tsawassen Blvd.",
+                City: "Tsawassen",
+                Region: "BC",
+                PostalCode: "T2F 8M4",
+                Country: "Canada",
+                Phone: "(604) 555-4729",
+                Fax: "(604) 555-3745"
+            },
+            {
+                ID: "BSBEV",
+                CompanyName: "B's Beverages",
+                ContactName: "Victoria Ashworth",
+                ContactTitle: "Sales Representative",
+                Address: "Fauntleroy Circus", City: "London",
+                Region: null, PostalCode: "EC2 5NT",
+                Country: "UK",
+                Phone: "(171) 555-1212",
+                Fax: null
+            }
+        ];
     }
 }
