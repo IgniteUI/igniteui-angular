@@ -129,7 +129,8 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     }
 
     get restrictResizeMin(): number {
-        return parseFloat(this.column.minWidth) - this.elementRef.nativeElement.getBoundingClientRect().width;
+        const minWidth = Number.isNaN(parseFloat(this.column.minWidth)) ? 48 : parseFloat(this.column.minWidth);
+        return minWidth - this.elementRef.nativeElement.getBoundingClientRect().width;
     }
 
     get restrictResizeMax(): number {
@@ -262,11 +263,11 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
         if (this.column.resizable) {
             let currentColWidth = parseFloat(this.column.width);
 
-            const colMinWidth = parseFloat(this.column.minWidth);
+            const colMinWidth = Number.isNaN(parseFloat(this.column.minWidth)) ? 48 : parseFloat(this.column.minWidth);
             const colMaxWidth = this.column.pinned ? parseFloat(this._pinnedMaxWidth) : parseFloat(this.column.maxWidth);
             const actualWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
 
-            currentColWidth = (currentColWidth < actualWidth) ? actualWidth : currentColWidth;
+            currentColWidth = Number.isNaN(currentColWidth) || (currentColWidth < actualWidth) ? actualWidth : currentColWidth;
 
             if (currentColWidth + diff < colMinWidth) {
                 this.column.width = colMinWidth + "px";
