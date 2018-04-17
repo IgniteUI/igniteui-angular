@@ -2,7 +2,6 @@
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    DoCheck,
     ElementRef,
     HostBinding,
     HostListener,
@@ -28,7 +27,7 @@ import { IGridCellEventArgs, IGridEditEventArgs } from "./grid.component";
     selector: "igx-grid-cell",
     templateUrl: "./cell.component.html"
 })
-export class IgxGridCellComponent implements DoCheck, IGridBus, OnInit, OnDestroy {
+export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
 
     @Input()
     public column: IgxColumnComponent;
@@ -246,12 +245,14 @@ export class IgxGridCellComponent implements DoCheck, IGridBus, OnInit, OnDestro
                 if (!this.selected) {
                     this.nativeElement.blur();
                 }
+                this.cdr.markForCheck();
             });
         this.chunkLoadedVer = this.grid.verticalScrollContainer.onChunkLoad.subscribe(
             () => {
                 if (!this.selected) {
                     this.nativeElement.blur();
                 }
+                this.cdr.markForCheck();
             });
     }
 
@@ -262,10 +263,6 @@ export class IgxGridCellComponent implements DoCheck, IGridBus, OnInit, OnDestro
         if (this.chunkLoadedVer) {
             this.chunkLoadedVer.unsubscribe();
         }
-    }
-
-    public ngDoCheck() {
-        this.cdr.markForCheck();
     }
 
     @autoWire(true)

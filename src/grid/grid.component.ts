@@ -211,7 +211,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             requestAnimationFrame(() => {
                 this.calculateGridHeight();
                 this.cdr.markForCheck();
-              });
+            });
         }
     }
 
@@ -463,10 +463,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
                         // Clear Sorting
                         this.gridAPI.clear_sort(this.id, record.item.field);
-        });
-    }
+                    });
+                }
                 this.markForCheck();
-        });
+            });
     }
 
     public ngAfterViewInit() {
@@ -789,11 +789,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             let pagingHeight = 0;
             if (this.paging) {
                 pagingHeight = this.paginator.nativeElement.firstElementChild ?
-                this.paginator.nativeElement.clientHeight : 0;
+                    this.paginator.nativeElement.clientHeight : 0;
             }
             if (!this.tfootHeight) {
-                this.tfootHeight =  this.tfoot.nativeElement.firstElementChild ?
-                this.calcMaxSummaryHeight() : 0;
+                this.tfootHeight = this.tfoot.nativeElement.firstElementChild ?
+                    this.calcMaxSummaryHeight() : 0;
             }
             this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
                 this.theadRow.nativeElement.clientHeight -
@@ -803,11 +803,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             let pagingHeight = 0;
             if (this.paging) {
                 pagingHeight = this.paginator.nativeElement.firstElementChild ?
-                this.paginator.nativeElement.clientHeight : 0;
+                    this.paginator.nativeElement.clientHeight : 0;
             }
             if (!this.tfootHeight) {
-                this.tfootHeight =  this.tfoot.nativeElement.firstElementChild ?
-                this.calcMaxSummaryHeight() : 0;
+                this.tfootHeight = this.tfoot.nativeElement.firstElementChild ?
+                    this.calcMaxSummaryHeight() : 0;
             }
             this.calcHeight = parseInt(this._height, 10) -
                 this.theadRow.nativeElement.getBoundingClientRect().height -
@@ -984,19 +984,19 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if (this.cellInEditMode) {
                 this.cellInEditMode.inEditMode = false;
             }
-            this.cdr.detectChanges();
+            this.eventBus.next();
         });
     }
 
     public onHeaderCheckboxClick(event) {
         const newSelection =
             event.checked ?
-            this.filteredData ?
-                this.selectionAPI.append_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
-                this.selectionAPI.get_all_ids(this.data, this.primaryKey) :
-            this.filteredData ?
-                this.selectionAPI.subtract_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
-                [];
+                this.filteredData ?
+                    this.selectionAPI.append_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
+                    this.selectionAPI.get_all_ids(this.data, this.primaryKey) :
+                this.filteredData ?
+                    this.selectionAPI.subtract_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
+                    [];
         this.triggerRowSelectionChange(newSelection, null, event, event.checked);
         this.checkHeaderChecboxStatus(event.checked);
     }
