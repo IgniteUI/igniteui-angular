@@ -36,6 +36,14 @@ export class IgxTabItemComponent {
         this.select();
     }
 
+    @HostListener("window:resize", ["$event"])
+    public onResize(event) {
+        if (this.isSelected) {
+            this._tabs.selectedIndicator.nativeElement.style.width = `${this.nativeTabItem.nativeElement.offsetWidth}px`;
+            this._tabs.selectedIndicator.nativeElement.style.transform = `translate(${this.nativeTabItem.nativeElement.offsetLeft}px)`;
+        }
+    }
+
     get changesCount(): number {
         return this._changesCount;
     }
