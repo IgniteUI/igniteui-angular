@@ -84,7 +84,7 @@ export class IgxTabsComponent implements AfterViewInit {
         }
 
         // Layout fix for items with icons
-        if (iconLabelFound != undefined) {
+        if (iconLabelFound !== undefined) {
             css = `${css} ${iconStyle}`;
         }
 
