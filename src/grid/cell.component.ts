@@ -245,12 +245,14 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
                 if (!this.selected) {
                     this.nativeElement.blur();
                 }
+                this.cdr.markForCheck();
             });
         this.chunkLoadedVer = this.grid.verticalScrollContainer.onChunkLoad.subscribe(
             () => {
                 if (!this.selected) {
                     this.nativeElement.blur();
                 }
+                this.cdr.markForCheck();
             });
     }
 
