@@ -177,6 +177,7 @@
 
     %grid-thead,
     %grid-tfoot {
+        position: relative;
         display: block;
         background: map-get($this, 'header-background');
         color: map-get($this, 'header-text-color');

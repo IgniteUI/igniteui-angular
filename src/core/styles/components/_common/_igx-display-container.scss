@@ -1,8 +1,9 @@
 ﻿%display-container {
     display: inherit;
     position: relative;
-    width: calc(100% - 18px);
+    width: 100%;
     overflow: hidden;
+    z-index: 0;
 }
 
 %display-container--inactive {
