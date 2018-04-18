@@ -529,7 +529,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         const lastCell = this._getLastSelectedCell();
         const rowIndex = lastCell ? lastCell.rowIndex - 1 : this.grid.rowList.last.index;
         const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, this.visibleColumnIndex);
-        const verticalScroll = this.row.grid.verticalScrollContainer.getVerticalScroll();
+        const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
 
         if (!verticalScroll && !target) {
             return;
@@ -537,16 +537,20 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
 
         if (target) {
             const targetRowOffset = target.row.nativeElement.offsetTop;
-            const containerOffset = target.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.offsetTop;
+            const containerOffset =
+                parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
 
             if (targetRowOffset === 0 && containerOffset < 0) {
                 // Target is part of the first row in the container that is partially visible
-                verticalScroll.scrollTop += containerOffset;
+                this.grid.verticalScrollContainer.addScrollTop(containerOffset);
             }
             target.nativeElement.focus();
         } else {
-            this.row.grid.verticalScrollContainer.scrollPrev();
-            this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+            const scrollOffset =
+                -parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            const scrollAmount = this.grid.rowHeight + scrollOffset;
+            this.grid.verticalScrollContainer.addScrollTop(-scrollAmount);
+            this.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
                 next: (e: any) => {
                     const cell = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.visibleColumnIndex);
                     cell.nativeElement.focus();
@@ -569,11 +573,12 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         if (target) {
             const containerHeight = this.grid.calcHeight; // null when there is no vertical virtualization
             const containerTopOffset =
-                parseInt(this.row.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+                parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const targetEndTopOffset = target.row.element.nativeElement.offsetTop + this.grid.rowHeight + containerTopOffset;
-            const oldChunkIndex = this.row.grid.verticalScrollContainer.state.startIndex;
+            const oldChunkIndex = this.grid.verticalScrollContainer.state.startIndex;
             if (containerHeight && targetEndTopOffset > containerHeight) {
-                verticalScroll.scrollTop += targetEndTopOffset - containerHeight;
+                const scrollAmount = targetEndTopOffset - containerHeight;
+                this.grid.verticalScrollContainer.addScrollTop(scrollAmount);
 
                 this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
                     next: (e: any) => {
@@ -587,8 +592,13 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
                 target.nativeElement.focus();
             }
         } else {
-            verticalScroll.scrollTop += this.grid.rowHeight;
-            this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+            const containerHeight = this.grid.calcHeight;
+            const contentHeight = this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.offsetHeight;
+            const scrollOffset = parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            const lastRowOffset = contentHeight + scrollOffset - this.grid.calcHeight;
+            const scrollAmount = this.grid.rowHeight + lastRowOffset;
+            this.grid.verticalScrollContainer.addScrollTop(scrollAmount);
+            this.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
                 next: (e: any) => {
                     const cell = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.visibleColumnIndex);
                     cell.nativeElement.focus();

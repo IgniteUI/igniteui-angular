@@ -68,8 +68,26 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     private _lastTouchY = 0;
     private _pointerCapture;
     private _gestureObject;
+
+    // Start properties related to virtual height handling due to browser limitation
+    /** Maximum height for an element of the browser. */
     private _maxHeight;
+
+    /** Height that is being virtualized. */
+    private _virtHeight = 0;
+
+    /**
+     * Ratio for height that's being virtualizaed and the one visible
+     * If _virtHeightRatio = 1, the visible height and the virtualized are the same, also _maxHeight > _virtHeight.
+     */
     private _virtHeightRatio = 1;
+
+    /** Internal track for scroll top that is being virtualized */
+    private _virtScrollTop = 0;
+
+    /** If the next onScroll event is triggered due to internal setting of scrollTop */
+    private _bScrollInternal =  false;
+    // End properties related to virtual height handling
 
     @ViewChild(DisplayContainerComponent)
     private displayContiner: DisplayContainerComponent;
@@ -211,6 +229,44 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
+    public addScrollTop(addTop: number) {
+        if (addTop === 0 && this.igxForScrollOrientation === "horizontal") {
+            return;
+        }
+
+        const containerSize = parseInt(this.igxForContainerSize, 10);
+        const maxVirtScrollTop = this._virtHeight - containerSize;
+
+        this._bScrollInternal = true;
+        this._virtScrollTop += addTop;
+        this._virtScrollTop = this._virtScrollTop > 0 ?
+                                (this._virtScrollTop < maxVirtScrollTop ? this._virtScrollTop : maxVirtScrollTop) :
+                                0;
+
+        this.vh.instance.elementRef.nativeElement.scrollTop += addTop / this._virtHeightRatio;
+        if (Math.abs(addTop / this._virtHeightRatio) < 1) {
+            // Actual scroll delta that was added is smaller than 1 and onScroll handler doesn't trigger when scrolling < 1px
+            let scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop, this._virtHeight);
+            scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
+            this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + "px";
+        }
+
+        const curScrollTop = this.vh.instance.elementRef.nativeElement.scrollTop;
+        const maxRealScrollTop = this.vh.instance.elementRef.nativeElement.scrollHeight - containerSize;
+        if ((this._virtScrollTop > 0 && curScrollTop === 0) ||
+            (this._virtScrollTop < maxVirtScrollTop && curScrollTop === maxRealScrollTop))  {
+            // Actual scroll position is at the top or bottom, but virtual one is not at the top or bottom (there's more to scroll)
+            // Recalculate actual scroll position based on the virtual scroll.
+            this.vh.instance.elementRef.nativeElement.scrollTop = this._virtScrollTop / this._virtHeightRatio;
+        } else if (this._virtScrollTop === 0 && curScrollTop > 0) {
+            // Actual scroll position is not at the top, but virtual scroll is. Just update the actual scroll
+            this.vh.instance.elementRef.nativeElement.scrollTop = 0;
+        } else if (this._virtScrollTop === maxVirtScrollTop && curScrollTop < maxRealScrollTop) {
+            // Actual scroll position is not at the bottom, but virtual scroll is. Just update the acual scroll
+            this.vh.instance.elementRef.nativeElement.scrollTop = maxRealScrollTop;
+        }
+    }
+
     public scrollTo(index) {
         if (index < 0 || index > (this.isRemote ? this.totalItemCount : this.igxForOf.length)) {
             return;
@@ -219,12 +275,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForScrollOrientation === "horizontal") {
             this.hScroll.scrollLeft = this.hCache[index] + 1;
         } else {
-            const vhElem = this.vh.instance.elementRef.nativeElement;
-            const containerSize = parseInt(this.igxForContainerSize, 10);
-            const vcHeight = (vhElem.children[0].scrollHeight - containerSize) * this._virtHeightRatio + containerSize;
-            const count = this.totalItemCount || this.igxForOf.length;
-            const scrollTop = ((index / count) * vcHeight) / this._virtHeightRatio;
-            this.vh.instance.elementRef.nativeElement.scrollTop = scrollTop;
+            this._bScrollInternal = true;
+            this._virtScrollTop = index *  parseInt(this.igxForItemSize, 10);
+            this.vh.instance.elementRef.nativeElement.scrollTop = this._virtScrollTop * this._virtHeightRatio;
         }
     }
 
@@ -259,9 +312,16 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
 
         const containerSize = parseInt(this.igxForContainerSize, 10);
-        const curScrollTop = event.target.scrollTop * this._virtHeightRatio;
-        const vcHeight = (event.target.children[0].scrollHeight - containerSize) * this._virtHeightRatio + containerSize;
-        let scrollOffset = this.fixedUpdateAllRows(curScrollTop, vcHeight);
+        const maxRealScrollTop = event.target.children[0].scrollHeight - containerSize;
+        const realPercentScrolled = event.target.scrollTop / maxRealScrollTop;
+        if (!this._bScrollInternal) {
+            const maxVirtScrollTop = this._virtHeight - containerSize;
+            this._virtScrollTop = realPercentScrolled * maxVirtScrollTop;
+        } else {
+            this._bScrollInternal = false;
+        }
+
+        let scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop, this._virtHeight);
         if (scrollOffset === undefined) {
             this.onChunkLoad.emit(this.state);
             return;
@@ -569,6 +629,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     private _calcHeight(): number {
         const count = this.totalItemCount || this.igxForOf.length;
         let height = count * parseInt(this.igxForItemSize, 10);
+        this._virtHeight = height;
         if (height > this._maxHeight) {
             this._virtHeightRatio = height / this._maxHeight;
             height = this._maxHeight;
