@@ -46,7 +46,7 @@ import { IgxGridRowComponent } from "./row.component";
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
-
+const DEFAULT_SUMMARY_HEIGHT = 36.36;
 export interface IGridCellEventArgs {
     cell: IgxGridCellComponent;
     event: Event;
@@ -211,7 +211,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             requestAnimationFrame(() => {
                 this.calculateGridHeight();
                 this.cdr.markForCheck();
-              });
+            });
         }
     }
 
@@ -463,10 +463,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
                         // Clear Sorting
                         this.gridAPI.clear_sort(this.id, record.item.field);
-        });
-    }
+                    });
+                }
                 this.markForCheck();
-        });
+            });
     }
 
     public ngAfterViewInit() {
@@ -698,6 +698,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!this.gridAPI.get_column_by_name(this.id, name)) {
             return;
         }
+        this.clearSummaryCache();
         this.gridAPI.clear_filter(this.id, name);
     }
 
@@ -741,7 +742,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
             }
         }
-
         this.markForCheck();
         return true;
     }
@@ -789,11 +789,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             let pagingHeight = 0;
             if (this.paging) {
                 pagingHeight = this.paginator.nativeElement.firstElementChild ?
-                this.paginator.nativeElement.clientHeight : 0;
+                    this.paginator.nativeElement.clientHeight : 0;
             }
             if (!this.tfootHeight) {
-                this.tfootHeight =  this.tfoot.nativeElement.firstElementChild ?
-                this.calcMaxSummaryHeight() : 0;
+                this.tfootHeight = this.tfoot.nativeElement.firstElementChild ?
+                    this.calcMaxSummaryHeight() : 0;
             }
             this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
                 this.theadRow.nativeElement.clientHeight -
@@ -803,11 +803,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             let pagingHeight = 0;
             if (this.paging) {
                 pagingHeight = this.paginator.nativeElement.firstElementChild ?
-                this.paginator.nativeElement.clientHeight : 0;
+                    this.paginator.nativeElement.clientHeight : 0;
             }
             if (!this.tfootHeight) {
-                this.tfootHeight =  this.tfoot.nativeElement.firstElementChild ?
-                this.calcMaxSummaryHeight() : 0;
+                this.tfootHeight = this.tfoot.nativeElement.firstElementChild ?
+                    this.calcMaxSummaryHeight() : 0;
             }
             this.calcHeight = parseInt(this._height, 10) -
                 this.theadRow.nativeElement.getBoundingClientRect().height -
@@ -838,7 +838,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 maxSummaryLength = currentLength;
             }
         });
-        return maxSummaryLength * (this.tfoot.nativeElement.clientHeight ? this.tfoot.nativeElement.clientHeight : 36);
+        return maxSummaryLength * (this.tfoot.nativeElement.clientHeight ? this.tfoot.nativeElement.clientHeight : DEFAULT_SUMMARY_HEIGHT);
     }
 
     protected calculateGridSizes() {
@@ -974,7 +974,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             then merge with an empty observable after DEBOUNCE_TIME,
             re-subscribe and repeat the process
         */
-        this.parentVirtDir.onChunkLoad.pipe(
+        this.verticalScrollContainer.onChunkLoad.pipe(
             takeUntil(this.destroy$),
             take(1),
             merge(of({})),
@@ -984,18 +984,19 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if (this.cellInEditMode) {
                 this.cellInEditMode.inEditMode = false;
             }
+            this.eventBus.next();
         });
     }
 
     public onHeaderCheckboxClick(event) {
         const newSelection =
             event.checked ?
-            this.filteredData ?
-                this.selectionAPI.append_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
-                this.selectionAPI.get_all_ids(this.data, this.primaryKey) :
-            this.filteredData ?
-                this.selectionAPI.subtract_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
-                [];
+                this.filteredData ?
+                    this.selectionAPI.append_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
+                    this.selectionAPI.get_all_ids(this.data, this.primaryKey) :
+                this.filteredData ?
+                    this.selectionAPI.subtract_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
+                    [];
         this.triggerRowSelectionChange(newSelection, null, event, event.checked);
         this.checkHeaderChecboxStatus(event.checked);
     }

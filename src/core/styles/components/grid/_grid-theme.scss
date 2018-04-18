@@ -7,6 +7,7 @@
 
 /// @param {Color} $header-background [null] - The table header background color.
 /// @param {Color} $header-text-color [null] - The table header text color.
+/// @param {Color} $resize-line-color [null] - The table header resize line color.
 /// @param {Color} $content-background [null] - The table body background color.
 /// @param {Color} $content-text-color [null] - The table body text color.
 /// @param {Color} $row-border-color [null] - The row bottom border color.
@@ -33,7 +34,9 @@
     $pinned-border-color: null,
 
     $cell-selected-background: null,
-    $cell-selected-text-color: null
+    $cell-selected-text-color: null,
+
+    $resize-line-color: null
 ) {
     @if not($header-text-color) and $header-background {
         $header-text-color: text-contrast($header-background);
@@ -80,7 +83,9 @@
         pinned-border-color: $pinned-border-color,
 
         cell-selected-background: $cell-selected-background,
-        cell-selected-text-color: $cell-selected-text-color
+        cell-selected-text-color: $cell-selected-text-color,
+
+        resize-line-color: $resize-line-color
     );
 }
 
@@ -111,7 +116,9 @@
         $pinned-border-color: igx-color($palette, 'grays', 400),
 
         $cell-selected-background: igx-color($palette, 'primary'),
-        $cell-selected-text-color: igx-contrast-color($palette, 'primary')
+        $cell-selected-text-color: igx-contrast-color($palette, 'primary'),
+
+        $resize-line-color: igx-color($palette, 'secondary')
     );
 
     $this: extend($default-theme, $theme);
@@ -156,32 +163,6 @@
         overflow: hidden;
     }
 
-    %vhelper-display {
-        &::-webkit-scrollbar {
-            background: rgba(text-contrast(map-get($this, 'content-background')), .12);
-
-            /* stylelint-disable selector-pseudo-class-no-unknown */
-            &:vertical {
-                border-left: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
-                border-right: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
-            }
-
-            &:horizontal {
-                border-top: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
-                border-bottom: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
-            }
-            /* stylelint-enable */
-        }
-
-        &::-webkit-scrollbar-thumb {
-            background: rgba(text-contrast(map-get($this, 'content-background')), .24);
-
-            &:hover {
-                background: rgba(text-contrast(map-get($this, 'content-background')), .37);
-            }
-        }
-    }
-
     %grid-caption {
         display: flex;
         align-items: center;
@@ -212,6 +193,7 @@
     %grid-thead {
         grid-row: 1;
         border-bottom: 1px dotted igx-color($palette, 'grays', 400);
+        z-index: 2;
     }
 
     %grid-tfoot {
@@ -258,7 +240,7 @@
         background: map-get($this, 'content-background');
         color: map-get($this, 'content-text-color');
         overflow: hidden;
-        will-change: transform;
+        z-index: 1;
     }
 
     %grid-tbody--empty {
@@ -272,11 +254,11 @@
         flex-flow: row nowrap;
         grid-row: 5;
         width: 100%;
-        background: map-get($this, 'content-background');
+        background: map-get($this, 'header-background');
     }
 
     %grid-scroll-start {
-        border-right: map-get($cell-pin, 'style') map-get($cell-pin, 'color');
+        background: igx-color($palette, 'grays', 200);
     }
 
     %grid-scroll-main {
@@ -335,7 +317,7 @@
     %grid-cell--pinned {
         position: relative;
         background-color: inherit;
-        z-index: 1;
+        z-index: 9999;
     }
 
     %grid-cell--pinned-last {
@@ -379,5 +361,37 @@
         position: relative;
         background: inherit;
     }
-}
 
+    %grid__resize-handle {
+        position: absolute;
+        width: 4px;
+        top: 0;
+        right: -2px;
+        height: 100%;
+        z-index: 2;
+    }
+
+    %grid__resize-line {
+        position: absolute;
+        cursor: col-resize;
+        width: 4px;
+        background-color: map-get($this, 'resize-line-color');
+        z-index: 2;
+
+        &::before,
+        &::after {
+            position: absolute;
+            content: '';
+            height: 100%;
+            width: 96px;
+        }
+
+        &::before {
+            right: 100%;
+        }
+
+        &::after {
+            left: 100%;
+        }
+    }
+}
