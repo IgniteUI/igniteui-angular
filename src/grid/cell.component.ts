@@ -18,6 +18,7 @@ import { KEYCODES } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
+import { IgxGridHeaderComponent } from "./grid-header.component";
 import { autoWire, IGridBus } from "./grid.common";
 import { IGridCellEventArgs, IGridEditEventArgs } from "./grid.component";
 
@@ -136,13 +137,18 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
     get width() {
         const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
 
-        const header = this.grid.headerList.filter((h) => h.column.index === this.columnIndex)[0];
-        const headerWidth = header.elementRef.nativeElement.getBoundingClientRect().width;
+        const header = Array.from(this.grid.headerList)[this.columnIndex] as IgxGridHeaderComponent;
+        if (!this.column.width && header) {
 
-        const cellWidth = !this.column.width ? headerWidth + "px" : parseInt(this.column.width, 10) + "px";
+            const headerWidth = header.elementRef.nativeElement.getBoundingClientRect().width;
+
+            return this.isLastUnpinned && hasVerticalScroll ?
+                (headerWidth - 18) + "px" : headerWidth + "px";
+        }
 
         return this.isLastUnpinned && hasVerticalScroll && !!this.column.width ?
-            (parseInt(cellWidth, 10) - 18) + "px" : cellWidth;
+            (parseInt(this.column.width, 10) - 18) + "px" : this.column.width;
+
     }
 
     @HostBinding("class.igx-grid__td--editing")
