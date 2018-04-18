@@ -9,6 +9,7 @@
 /// @param {Color} $text-color [null] - The navbar text color.
 /// @param {Color} $idle-icon-color [null] - The navbar idle icon color.
 /// @param {Color} $hover-icon-color [null] - The navbar hover icon color.
+/// @param {Bool} $disable-shadow [true] - Sets the navbar shadow visibility.
 /// @requires text-contrast
 ///
 /// @example scss Change the background color
@@ -20,7 +21,7 @@
     $text-color: null,
     $idle-icon-color: null,
     $hover-icon-color: null,
-    $disable-shadow: 'false'
+    $disable-shadow: false
 ) {
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -62,7 +63,7 @@
 
     $nav-shadow: igx-elevation($elevations, 4);
 
-    @if map-get($this, 'disable-shadow') == 'true' {
+    @if map-get($this, 'disable-shadow') == true {
         $nav-shadow: none;
     }
 
