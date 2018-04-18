@@ -14,7 +14,6 @@ import { autoWire, IGridBus } from "./grid.common";
 })
 export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoCheck, AfterContentInit {
 
-    summaryStyle: Map<string, string> = new Map<string, string>();
     fieldName: string;
 
     @Input()
@@ -149,20 +148,20 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
 
     public summaryClass(functionKey: string) {
         const summaryKey = this.column.field + "_" + functionKey;
-        if (this.summaryStyle.has(summaryKey)) {
-            return this.summaryStyle.get(summaryKey);
+        if (this.gridAPI.summaryStyle.has(summaryKey)) {
+            return this.gridAPI.summaryStyle.get(summaryKey);
         } else {
-            this.summaryStyle.set(summaryKey, this.itemClass);
-            return this.summaryStyle.get(summaryKey);
+            this.gridAPI.summaryStyle.set(summaryKey, this.itemClass);
+            return this.gridAPI.summaryStyle.get(summaryKey);
         }
     }
 
     @autoWire()
     public changeSummaryClass(functionKey: string) {
         const summaryKey = this.column.field + "_" + functionKey;
-        switch (this.summaryStyle.get(summaryKey)) {
-            case this.itemClass: this.summaryStyle.set(summaryKey, this.hiddenItemClass); break;
-            case this.hiddenItemClass: this.summaryStyle.set(summaryKey, this.itemClass); break;
+        switch (this.gridAPI.summaryStyle.get(summaryKey)) {
+            case this.itemClass: this.gridAPI.summaryStyle.set(summaryKey, this.hiddenItemClass); break;
+            case this.hiddenItemClass: this.gridAPI.summaryStyle.set(summaryKey, this.itemClass); break;
         }
     }
 }

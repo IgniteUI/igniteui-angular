@@ -15,6 +15,7 @@ export class IgxGridAPIService {
     public change: Subject<any> = new Subject<any>();
     protected state: Map<string, IgxGridComponent> = new Map<string, IgxGridComponent>();
     protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, any[]>>();
+    public summaryStyle: Map<string, string> = new Map<string, string>();
 
     public register(grid: IgxGridComponent) {
         this.state.set(grid.id, grid);
@@ -58,6 +59,13 @@ export class IgxGridAPIService {
         }
     }
 
+    public resetSummaryStyle(colmnName) {
+        this.summaryStyle.forEach((value, key) => {
+            if (key.startsWith(colmnName)) {
+                this.summaryStyle.delete(key);
+            }
+        });
+    }
     public get_row_by_key(id: string, rowSelector: any): IgxGridRowComponent {
         const primaryKey = this.get(id).primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
