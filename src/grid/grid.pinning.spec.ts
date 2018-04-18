@@ -570,17 +570,19 @@ describe("IgxGrid - Column Pinning ", () => {
 
         let col = grid.getColumnByName("CompanyName");
 
-        col.pin();
+        let result = col.pin();
         fix.detectChanges();
 
-        expect(grid.pinnedColumns.length).toEqual(2);
+        expect(grid.pinnedColumns.length).toEqual(pinnedColumnsLength);
+        expect(result).toBe(false);
 
         col = grid.getColumnByName("City");
 
-        col.unpin();
+        result = col.unpin();
         fix.detectChanges();
 
         expect(grid.unpinnedColumns.length).toEqual(unpinnedColumnsLength);
+        expect(result).toBe(false);
     });
 });
 @Component({

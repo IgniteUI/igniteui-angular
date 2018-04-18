@@ -721,7 +721,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const col = this.getColumnByName(columnName);
 
         if (col.pinned) {
-            return;
+            return false;
         }
         /**
          * If the column that we want to pin is bigger or equal than the unpinned area we should not pin it.
@@ -749,11 +749,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return true;
     }
 
-    public unpinColumn(columnName: string) {
+    public unpinColumn(columnName: string): boolean {
         const col = this.getColumnByName(columnName);
 
         if (!col.pinned) {
-            return;
+            return false;
         }
         col.pinned = false;
         this._unpinnedColumns.splice(col.index, 0, col);
@@ -761,6 +761,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._pinnedColumns.splice(this._pinnedColumns.indexOf(col), 1);
         }
         this.markForCheck();
+        return true;
     }
 
     get hasSortableColumns(): boolean {
