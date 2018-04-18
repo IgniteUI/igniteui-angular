@@ -184,7 +184,7 @@ describe("IgxGrid - Row Selection", () => {
         });
     }));
 
-    it("Should properly move focus when loading new row chunk", async(() => {
+    xit("Should properly move focus when loading new row chunk", async(() => {
         const fix = TestBed.createComponent(GridWithSelectionComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection3;
@@ -342,7 +342,7 @@ describe("IgxGrid - Row Selection", () => {
             expect(selectedRow3.isSelected).toBeTruthy();
         });
     }));
-    it("Should persist through scrolling", async(() => {
+    xit("Should persist through scrolling", async(() => {
         let selectedCell;
         const fix = TestBed.createComponent(GridWithSelectionComponent);
         fix.detectChanges();
