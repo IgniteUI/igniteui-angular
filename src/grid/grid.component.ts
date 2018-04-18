@@ -720,6 +720,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public pinColumn(columnName: string): boolean {
         const col = this.getColumnByName(columnName);
 
+        if (col.pinned) {
+            return;
+        }
         /**
          * If the column that we want to pin is bigger or equal than the unpinned area we should not pin it.
          * It should be also unpinned before pinning, since changing left/right pin area doesn't affect unpinned area.
@@ -748,6 +751,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public unpinColumn(columnName: string) {
         const col = this.getColumnByName(columnName);
+
+        if (!col.pinned) {
+            return;
+        }
         col.pinned = false;
         this._unpinnedColumns.splice(col.index, 0, col);
         if (this._pinnedColumns.indexOf(col) !== -1) {
