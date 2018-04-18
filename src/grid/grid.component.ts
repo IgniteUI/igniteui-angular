@@ -771,12 +771,21 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     get hasSummarizedColumns(): boolean {
         return this.columnList.some((col) => col.hasSummary);
     }
+
     get selectedCells(): IgxGridCellComponent[] | any[] {
         if (this.rowList) {
             return this.rowList.map((row) => row.cells.filter((cell) => cell.selected))
                 .reduce((a, b) => a.concat(b), []);
         }
         return [];
+    }
+
+    get hasVerticalScroll(): boolean {
+        return !this.verticalScrollContainer.dc.instance.notVirtual;
+    }
+
+    get headerRowWidth(): string {
+        return "calc(100% " + (this.hasVerticalScroll ? "- 18px" : "") + ")";
     }
 
     protected calculateGridHeight() {
