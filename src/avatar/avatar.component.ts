@@ -56,10 +56,6 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     @HostBinding("class.igx-avatar")
     public cssClass = "igx-avatar";
 
-    public get classes() {
-        return `igx-avatar--${this._size}`;
-    }
-
     public roleDescription: string;
     private _size: string | Size = "small";
 
