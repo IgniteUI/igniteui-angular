@@ -71,6 +71,8 @@
         display: flex;
         flex-direction: column;
         border-left: 1px dotted map-get($this, 'border-color');
+        flex: 1 1 0%;
+        padding: 0 rem(24px);
 
         &:first-of-type {
             border-left: 0;
@@ -81,6 +83,10 @@
         position: relative;
         background-color: inherit;
         z-index: 1;
+    }
+
+    %grid-summary--fixed-width {
+        flex-grow: 0;
     }
 
     %igx-grid-summary--pinned-last {
@@ -94,7 +100,7 @@
     %igx-grid-summary__item {
         display: flex;
         align-items: center;
-        padding: rem(5px) rem(24px);
+        padding: rem(5px) 0;
         font-size: rem(12px);
         position: relative;
     }
@@ -130,7 +136,4 @@
         @include ellipsis();
     }
 }
-
-
-
 
