@@ -63,6 +63,19 @@ describe("IgxGrid - input properties", () => {
         expect(window.getComputedStyle(grid.nativeElement).width).toMatch("400px");
         expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toEqual(gridBodyHeight);
     }));
+
+    it("should not have column misalignment when no vertical scrollbar is shown", () => {
+        const fix = TestBed.createComponent(IgxGridTestComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const gridBody = fix.debugElement.query(By.css(".igx-grid__tbody"));
+        const gridHeader = fix.debugElement.query(By.css(".igx-grid__thead"));
+
+        expect(window.getComputedStyle(gridBody.children[0].nativeElement).width).toEqual(
+            window.getComputedStyle(gridHeader.children[0].nativeElement).width
+        );
+    });
 });
 
 @Component({
