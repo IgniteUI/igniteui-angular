@@ -61,7 +61,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
             // are material icons ligature strings
             return this.sortDirection === SortingDirection.Asc ? "arrow_upward" : "arrow_downward";
         }
-        return "";
+        return "none";
     }
 
     @HostBinding("class.igx-grid__th--number")
