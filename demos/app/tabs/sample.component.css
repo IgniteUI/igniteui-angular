@@ -27,12 +27,6 @@
     padding: 0 15px;
 }
 
-.items-wrapper__item--blue .igx-tabs,
-.items-wrapper__item--blue .igx-tabs--fixed {
-    z-index: 5;
-    position: relative;
-}
-
 .design-1 .my-tab-content {
     background: #f9f3c9;
     padding: 15px;
