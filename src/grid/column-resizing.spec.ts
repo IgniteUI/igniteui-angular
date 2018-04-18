@@ -371,7 +371,7 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[0].width).toEqual("64px");
+        expect(grid.columns[0].width).toEqual("85px");
 
         headers[1].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
         tick();
@@ -383,13 +383,13 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[2].width).toEqual("77px");
+        expect(grid.columns[2].width).toEqual("85px");
 
         headers[3].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[3].width).toEqual("76px");
+        expect(grid.columns[3].width).toEqual("85px");
 
         headers[5].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
         tick();
@@ -660,7 +660,7 @@ export class LargePinnedColGridComponent implements OnInit {
 
 @Component({
     template: `<igx-grid [data]="data" (onColumnResized)="handleResize($event)">
-        <igx-column [field]="'ID'" [width]="'150px'" [resizable]="true"></igx-column>
+        <igx-column [field]="'ID'" [width]="'150px'" [sortable]="true" [resizable]="true"></igx-column>
         <igx-column [field]="'ProductName'" [width]="'150px'" [resizable]="true" dataType="string"></igx-column>
         <igx-column [field]="'Downloads'" [sortable]="true" [header]="'D'" [width]="'150px'" [resizable]="true" dataType="number">
         </igx-column>
