@@ -318,6 +318,7 @@
         @include ellipsis();
         user-select: none;
         cursor: initial;
+        flex-grow: 1; /* hey IE, the text should take most of the space */
     }
 
     %grid-cell-header-icons {
@@ -329,6 +330,7 @@
         .sort-icon {
             width: rem(15px);
             height: rem(15px);
+            min-width: rem(15px); /* yeah IE, it really needs to be 15px wide... */
             font-size: rem(15px);
         }
     }
