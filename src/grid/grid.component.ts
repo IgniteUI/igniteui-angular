@@ -989,6 +989,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public onHeaderCheckboxClick(event) {
+        this.allRowsSelected = event.checked;
         const newSelection =
             event.checked ?
                 this.filteredData ?
