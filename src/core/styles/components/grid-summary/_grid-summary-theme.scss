@@ -104,12 +104,13 @@
         padding: rem(5px) 0;
         font-size: rem(12px);
         position: relative;
-        margin-right: rem(3px);
     }
 
     %igx-grid-summary__label {
         color: map-get($this, 'label-color');
         cursor: pointer;
+        min-width: rem(30px);
+        margin-right: rem(3px);
 
         &:hover {
             color: map-get($this, 'label-hover-color');
