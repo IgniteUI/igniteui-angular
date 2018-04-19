@@ -6,7 +6,11 @@
 .items-wrapper__item {
     width: 100%;
     padding: 20px;
-    min-width: 350px;
+    min-width: 250px;
+}
+
+.items-wrapper__item-small {
+    max-width: 40%;
 }
 
 @media only screen and (max-width: 710px) {
@@ -17,10 +21,6 @@
     .items-wrapper__item-small {
         max-width: 100%;
     }
-}
-
-.items-wrapper__item-small {
-    max-width: 40%;
 }
 
 .my-tab-content {
