@@ -884,26 +884,27 @@ describe("IgxCalendar", () => {
         let args: KeyboardEventInit = { key: "Home", bubbles: true };
         let event = new KeyboardEvent("keydown", args);
 
+        const calendar = fix.componentInstance.calendar;
+        const calendarMonth = calendar.getCalendarMonth;
+
+        const value = calendarMonth[4][6];
+
         fix.whenStable().then(() => {
             component.triggerEventHandler("keydown.home", event);
             fix.detectChanges();
 
-            const calendar = fix.componentInstance.calendar;
-            const calendarMonth = calendar.getCalendarMonth;
-
-            const value = calendarMonth[4][6];
             const date = calendar.dates.find((d) => d.date.date.toString() === value.date.toString()).nativeElement;
 
-            args = { key: "enter", bubbles: true };
+            args = { key: "Enter", bubbles: true };
             event = new KeyboardEvent("keydown", args);
             date.dispatchEvent(event);
+            return fix.whenRenderingDone();
+        }).then(() => {
             fix.detectChanges();
-
-            // Wait to end the animation of month changing and then the date became focused.
-            setTimeout(() => {
-                expect(document.activeElement).toBe(date);
-            });
-
+            return fix.whenStable();
+        }).then(() => {
+            const date = calendar.dates.find((d) => d.date.date.toString() === value.date.toString()).nativeElement;
+            expect(document.activeElement).toBe(date);
             args = { key: "ArrowRight", bubbles: true };
             event = new KeyboardEvent("keydown", args);
             document.activeElement.dispatchEvent(event);
