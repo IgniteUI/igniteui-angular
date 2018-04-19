@@ -47,6 +47,8 @@ import { IgxGridRowComponent } from "./row.component";
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
 const DEFAULT_SUMMARY_HEIGHT = 36.36;
+const MINIMUM_COLUMN_WIDTH = 136;
+
 export interface IGridCellEventArgs {
     cell: IgxGridCellComponent;
     event: Event;
@@ -400,8 +402,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;
-    private _height;
-    private _width;
+    private _height = "100%";
+    private _width = "100%";
 
     constructor(
         private gridAPI: IgxGridAPIService,
@@ -474,10 +476,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.document.defaultView.addEventListener("resize", this.resizeHandler);
         });
 
+        this._derivePossibleHeight();
+        this._derivePossibleWidth();
+
         this.calculateGridSizes();
         this.setEventBusSubscription();
         this.setVerticalScrollSubscription();
-        this.cdr.detectChanges();
+        requestAnimationFrame(() => this.calculateGridSizes());
     }
 
     public ngOnDestroy() {
@@ -779,12 +784,40 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return [];
     }
 
+    protected get rowBasedHeight() {
+        if (this.data && this.data.length) {
+            return this.data.length * this.rowHeight;
+        }
+        return 0;
+    }
+
+    protected _derivePossibleHeight() {
+        if (!this.nativeElement.parentNode.clientHeight) {
+            const viewPortHeight = screen.height;
+            this._height = this.rowBasedHeight <= viewPortHeight ? null : viewPortHeight.toString();
+        } else {
+            const parentHeight = this.nativeElement.parentNode.getBoundingClientRect().height;
+            this._height = this.rowBasedHeight <= parentHeight ? null : "100%";
+        }
+        this.cdr.detectChanges();
+    }
+
+    protected _derivePossibleWidth() {
+        if (!this.columnWidth) {
+            this.columnWidth = this.getPossibleColumnWidth();
+            this.initColumns(this.columnList);
+        }
+    }
+
     protected calculateGridHeight() {
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+
         if (!this._height) {
-            /*no height specified.*/
             this.calcHeight = null;
-        } else if (this._height && this._height.indexOf("%") !== -1) {
+            return;
+        }
+
+        if (this._height && this._height.indexOf("%") !== -1) {
             /*height in %*/
             let pagingHeight = 0;
             if (this.paging) {
@@ -816,17 +849,30 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
+    protected getPossibleColumnWidth() {
+        const computedWidth = parseInt(
+            this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue("width"), 10);
+
+        let p = Math.max(
+            ...this.columnList.map((col) => parseInt(col.width, 10))
+                .filter((width) => !isNaN(width))
+        );
+
+        p = !Number.isFinite(p) ? Math.max(computedWidth / this.columnList.length, MINIMUM_COLUMN_WIDTH) :
+                Math.max((computedWidth - p) / this.columnList.length, MINIMUM_COLUMN_WIDTH);
+
+        return p.toString();
+    }
+
     protected calculateGridWidth() {
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
-        if (!this._width) {
-            /*no width specified.*/
-            this.calcWidth = null;
-        } else if (this._width && this._width.indexOf("%") !== -1) {
+
+        if (this._width && this._width.indexOf("%") !== -1) {
             /* width in %*/
             this.calcWidth = parseInt(computed.getPropertyValue("width"), 10);
-        } else {
-            this.calcWidth = parseInt(this._width, 10);
+            return;
         }
+        this.calcWidth = parseInt(this._width, 10);
     }
 
     protected calcMaxSummaryHeight() {
