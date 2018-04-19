@@ -42,4 +42,8 @@
         @extend %igx-grid-summary !optional;
         @extend %igx-grid-summary--empty !optional;
     }
+
+    @include m(fw) {
+        @extend %grid-summary--fixed-width !optional;
+    }
 }

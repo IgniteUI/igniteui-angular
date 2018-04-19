@@ -51,6 +51,11 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
         return this.column.hasSummary;
     }
 
+    @HostBinding("class.igx-grid-summary--fw")
+    get widthPersistenceClass(): boolean {
+        return this.column.width !== null;
+    }
+
     @HostBinding("style.min-width")
     @HostBinding("style.flex-basis")
     get width() {
