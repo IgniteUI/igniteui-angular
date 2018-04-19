@@ -61,7 +61,7 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
     protected subscriptionOnAdd$;
     protected subscriptionOnDelete$;
     protected subscriptionOnFilter$;
-    private itemClass = "igx-grid-summary__item";
+    public itemClass = "igx-grid-summary__item";
     private hiddenItemClass = "igx-grid-summary__item--inactive";
     private summaryResultClass = "igx-grid-summary-item__result--left-align";
     private numberSummaryResultClass = "igx-grid-summary-item__result";
@@ -146,7 +146,4 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
         }
     }
 
-    public summaryClass() {
-        return this.itemClass;
-    }
 }
