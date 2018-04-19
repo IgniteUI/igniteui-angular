@@ -7,18 +7,18 @@ import { ButtonsSampleComponent } from "./button/sample.component";
 import { ButtonGroupSampleComponent } from "./buttonGroup/sample.component";
 import { IgxCalendarSampleComponent } from "./calendar/sample.component";
 import { IgxCardSampleComponent } from "./card/sample.component";
-import { IgxTimePickerSampleComponent } from "./time-picker/sample.component";
 import { CarouselSampleComponent } from "./carousel/sample.component";
 import { IgxDatePickerSampleComponent } from "./date-picker/sample.component";
 import { DialogSampleComponent } from "./dialog/sample.component";
 import { MaskSampleComponent } from "./directives/mask/sample.component";
+import { DropDownSampleComponent } from "./drop-down/sample.component";
 import { GridColumnPinningSampleComponent } from "./grid-column-pinning/sample.component";
 import { GridColumnResizingSampleComponent } from "./grid-column-resizing/sample.component"
 import { GridPerformanceSampleComponent } from "./grid-performance/sample.component";
+import { GridVirtualizationSampleComponent } from "./grid-remote-virtualization/sample.component";
 import { GridSelectionComponent } from "./grid-selection/sample.component";
 import { GridSummaryComponent } from "./grid-summaries/sample.component";
 import { GridSampleComponent } from "./grid/sample.component";
-import { GridVirtualizationSampleComponent } from "./grid-remote-virtualization/sample.component";
 import { IconSampleComponent } from "./icon/sample.component";
 import { InputGroupSampleComponent } from "./input-group/input-group.component";
 import { InputSampleComponent } from "./input/sample.component";
@@ -41,6 +41,7 @@ import {
 import {
     TabsSampleComponent
 } from "./tabs/sample.component";
+import { IgxTimePickerSampleComponent } from "./time-picker/sample.component";
 import { IgxToastSampleComponent } from "./toast/sample.component";
 import { VirtualForSampleComponent } from "./virtual-for-directive/sample.component";
 
@@ -49,6 +50,10 @@ const appRoutes: Routes = [
         path: "",
         pathMatch: "full",
         redirectTo: "/avatar"
+    },
+    {
+        component: DropDownSampleComponent,
+        path: "drop-down"
     },
     {
         component: InputSampleComponent,

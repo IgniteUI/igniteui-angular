@@ -26,6 +26,11 @@ export class AppComponent implements OnInit {
 
     public componentLinks = [
         {
+            link: "/drop-down",
+            icon: "account_circle",
+            name: "DropDown"
+        },
+        {
             link: "/avatar",
             icon: "account_circle",
             name: "Avatar"

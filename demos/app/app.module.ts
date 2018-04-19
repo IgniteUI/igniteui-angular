@@ -19,13 +19,14 @@ import { CarouselSampleModule } from "./carousel/sample.module";
 import { IgxDatePickerSampleModule } from "./date-picker/sample.module";
 import { DialogSampleModule } from "./dialog/sample.module";
 import { MaskSampleModule } from "./directives/mask/sample.module";
+import { DropDownSampleModule } from "./drop-down/sample.module";
 import { GridColumnPinningSampleModule } from "./grid-column-pinning/sample.module";
 import { GridColumnResizingSampleModule } from "./grid-column-resizing/sample.module";
 import { GridPerformanceSampleModule } from "./grid-performance/sample.module";
-import { GridSummarySampleModule } from "./grid-summaries/sample.module";
-import { GridSelectionModule } from "./grid-selection/sample.module";
-import { GridSampleModule } from "./grid/sample.module";
 import { GridVirtualizationSampleModule } from "./grid-remote-virtualization/sample.module";
+import { GridSelectionModule } from "./grid-selection/sample.module";
+import { GridSummarySampleModule } from "./grid-summaries/sample.module";
+import { GridSampleModule } from "./grid/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
 import { InputGroupSampleModule } from "./input-group/sample.module";
 import { InputSampleModule } from "./input/sample.module";
@@ -100,7 +101,8 @@ import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
         ListPerformanceSampleModule,
         VirtualForSampleModule,
         IgxTimePickerSampleModule,
-        MaskSampleModule
+        MaskSampleModule,
+        DropDownSampleModule
     ],
     providers: [IgxNavigationService]
 })
