@@ -324,6 +324,7 @@
     %grid-cell-header-icons {
         display: flex;
         align-items: center;
+        justify-content: flex-end;
         user-select: none;
         min-width: 39px; /* sort-icon width + filtering toggle icon width */
         height: 24px;
@@ -340,6 +341,7 @@
         text-align: $grid-cell-align-num;
 
         %grid-cell-header-icons {
+            justify-content: flex-start;
             order: -1;
 
             .sort-icon {
