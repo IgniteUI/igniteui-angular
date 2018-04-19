@@ -421,6 +421,46 @@ describe("IgxGrid - Row Selection", () => {
         });
     }));
 
+    it("Header checkbox should deselect all rows - scenario when clicking first row, while header checkbox is clicked", async(() => {
+        const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection2;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
+        const headerRow: HTMLElement = fix.nativeElement.querySelector(".igx-grid__thead");
+        const firstRow = grid.getRowByIndex(0);
+        expect(headerRow).toBeDefined();
+        expect(firstRow).toBeDefined();
+        const headerCheckboxElement: HTMLInputElement = headerRow.querySelector(".igx-checkbox__input");
+        expect(firstRow.isSelected).toBeFalsy();
+        headerCheckboxElement.click();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(headerCheckboxElement.checked).toBeTruthy();
+            expect(headerCheckboxElement.indeterminate).toBeFalsy();
+
+            const targetCheckbox: HTMLElement = firstRow.nativeElement.querySelector(".igx-checkbox__input");
+            targetCheckbox.click();
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+            expect(headerCheckboxElement.checked).toBeFalsy();
+            expect(headerCheckboxElement.indeterminate).toBeTruthy();
+
+            targetCheckbox.click();
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(headerCheckboxElement.checked).toBeTruthy();
+            expect(headerCheckboxElement.indeterminate).toBeFalsy();
+
+            headerCheckboxElement.click();
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+            expect(headerCheckboxElement.checked).toBeFalsy();
+            expect(headerCheckboxElement.indeterminate).toBeFalsy();
+        });
+    }));
+
     it("Checkbox should select/deselect row", async(() => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
         fix.detectChanges();
