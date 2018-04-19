@@ -47,6 +47,22 @@ describe("IgxGrid - Summaries", () => {
         expect(grid.getColumnByName("ProductName").hasSummary).toBe(true);
         expect(grid.getColumnByName("OrderDate").hasSummary).toBe(false);
     });
+    it("should disableSummaries through grid API ", () => {
+        const fixture = TestBed.createComponent(SummaryColumnComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid1;
+        const summariedColumns = [];
+        grid.columnList.forEach((col) => {
+            if (col.hasSummary) {
+                summariedColumns.push(col.field);
+            }
+        });
+        grid.disableSummaries(summariedColumns);
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.query(By.css(SUMMARY_CLASS))).toBeNull();
+    });
     it("should have summary per each column that 'hasSummary'= true", () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
         fixture.detectChanges();
@@ -115,7 +131,7 @@ describe("IgxGrid - Summaries", () => {
             index++;
         });
     });
-    it("should make inactive/active summary function by click on it's label", () => {
+    it("should summary function stay active when is clicked on it's label", () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
         fixture.detectChanges();
 
@@ -126,11 +142,11 @@ describe("IgxGrid - Summaries", () => {
         min.triggerEventHandler("click", null);
         fixture.detectChanges();
 
-        expect(min.parent.nativeElement.classList.contains(HIDDEN_ITEM_CLASS)).toBeTruthy();
-        min.triggerEventHandler("click", null);
-        fixture.detectChanges();
-
         expect(min.parent.nativeElement.classList.contains(ITEM_CLASS)).toBeTruthy();
+        expect(summary.query(By.css("[title='Count']")).parent.nativeElement.classList.contains(ITEM_CLASS)).toBeTruthy();
+        expect(summary.query(By.css("[title='Max']")).parent.nativeElement.classList.contains(ITEM_CLASS)).toBeTruthy();
+        expect(summary.query(By.css("[title='Sum']")).parent.nativeElement.classList.contains(ITEM_CLASS)).toBeTruthy();
+        expect(summary.query(By.css("[title='Avg']")).parent.nativeElement.classList.contains(ITEM_CLASS)).toBeTruthy();
     });
     it("should recalculate summary functions onRowAdded", () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
