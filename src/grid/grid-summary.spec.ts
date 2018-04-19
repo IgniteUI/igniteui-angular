@@ -47,6 +47,22 @@ describe("IgxGrid - Summaries", () => {
         expect(grid.getColumnByName("ProductName").hasSummary).toBe(true);
         expect(grid.getColumnByName("OrderDate").hasSummary).toBe(false);
     });
+    it("should disableSummaries through grid API ", () => {
+        const fixture = TestBed.createComponent(SummaryColumnComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid1;
+        const summariedColumns = [];
+        grid.columnList.forEach((col) => {
+            if (col.hasSummary) {
+                summariedColumns.push(col.field);
+            }
+        });
+        grid.disableSummaries(summariedColumns);
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.query(By.css(SUMMARY_CLASS))).toBeNull();
+    });
     it("should have summary per each column that 'hasSummary'= true", () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
         fixture.detectChanges();
