@@ -37,13 +37,10 @@ $exclude: (
 $my-tabs-theme: igx-tabs-theme(
     $item-text-color: rgba(255, 255, 255, .8),
     $item-hover-color: rgba(255, 255, 255, .8),
-
     $item-background: igx-color($default-palette, 'primary', 500),
     $item-hover-background: igx-color($default-palette, 'primary', 400),
-
     $item-active-background: igx-color($default-palette, 'primary', 600),
     $indicator-color: #fbb13c,
-
     $button-color: rgba(255, 255, 255, .8),
     $button-background: igx-color($default-palette, 'primary', 500),
     $button-hover-background: igx-color($default-palette, 'primary', 600),
@@ -54,6 +51,13 @@ $my-tabs-theme: igx-tabs-theme(
     @include igx-tabs($my-tabs-theme);
 }
 
+$my-nav-theme: igx-navbar-theme(
+    $disable-shadow: 'true'
+);
+
+.tabs-demo {
+    @include igx-navbar($my-nav-theme);
+}
 
 // @mixin gen-color-class($name, $variant, $prefix, $suffix) {
 //     $prefix: if($prefix, '#{$prefix}-', '');

@@ -1,5 +1,6 @@
 import { CommonModule } from "@angular/common";
 import {
+    AfterViewInit,
     Component,
     ElementRef,
     HostBinding,
@@ -33,7 +34,7 @@ export enum Size {
     selector: "igx-avatar",
     templateUrl: "avatar.component.html"
 })
-export class IgxAvatarComponent implements OnInit {
+export class IgxAvatarComponent implements OnInit, AfterViewInit {
     @ViewChild("image")
     public image: ElementRef;
 
@@ -52,17 +53,13 @@ export class IgxAvatarComponent implements OnInit {
     @HostBinding("attr.role")
     public role = "img";
 
-    @HostBinding("attr.class")
-    public get classes() {
-        if (this.roundShape) {
-            return `igx-avatar--rounded igx-avatar--${this._size}`;
-        }
-        return `igx-avatar igx-avatar--${this._size}`;
-    }
+    @HostBinding("class.igx-avatar")
+    public cssClass = "igx-avatar";
 
     public roleDescription: string;
     private _size: string | Size = "small";
 
+    @HostBinding("class.igx-avatar--rounded")
     @Input()
     public roundShape = false;
 
@@ -114,6 +111,10 @@ export class IgxAvatarComponent implements OnInit {
 
     public ngOnInit() {
         this.roleDescription = this.getRole();
+    }
+
+    public ngAfterViewInit() {
+        this.elementRef.nativeElement.classList.add(`igx-avatar--${this._size}`);
     }
 
     private getRole() {

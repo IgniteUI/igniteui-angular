@@ -239,12 +239,14 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
-    public pin() {
-        this.gridAPI.get(this.gridID).pinColumn(this.field);
+    public pin(): boolean {
+        return this.gridAPI.get(this.gridID).pinColumn(this.field);
     }
-    public unpin() {
-        this.gridAPI.get(this.gridID).unpinColumn(this.field);
+
+    public unpin(): boolean {
+        return this.gridAPI.get(this.gridID).unpinColumn(this.field);
     }
+
     protected check() {
         if (this.grid) {
             this.grid.markForCheck();
