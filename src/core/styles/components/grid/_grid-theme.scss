@@ -325,6 +325,7 @@
         display: flex;
         align-items: center;
         user-select: none;
+        min-width: 39px; /* sort-icon width + filtering toggle icon width */
         height: 24px;
 
         .sort-icon {
