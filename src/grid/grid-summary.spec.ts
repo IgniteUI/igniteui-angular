@@ -115,7 +115,7 @@ describe("IgxGrid - Summaries", () => {
             index++;
         });
     });
-    it("should make inactive/active summary function by click on it's label", () => {
+    it("should summary function stay active when is clicked on it's label", () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
         fixture.detectChanges();
 
@@ -126,39 +126,7 @@ describe("IgxGrid - Summaries", () => {
         min.triggerEventHandler("click", null);
         fixture.detectChanges();
 
-        expect(min.parent.nativeElement.classList.contains(HIDDEN_ITEM_CLASS)).toBeTruthy();
-        min.triggerEventHandler("click", null);
-        fixture.detectChanges();
-
         expect(min.parent.nativeElement.classList.contains(ITEM_CLASS)).toBeTruthy();
-    });
-    it("should make all summary functions active on enableSummaries", () => {
-        const fixture = TestBed.createComponent(SummaryColumnComponent);
-        fixture.detectChanges();
-
-        const grid = fixture.componentInstance.grid1;
-        const summary = fixture.debugElement.queryAll(By.css("igx-grid-summary"))[3];
-        let min: DebugElement = summary.query(By.css("[title='Min']"));
-        let avg: DebugElement = summary.query(By.css("[title='Avg']"));
-
-        min.triggerEventHandler("click", null);
-        avg.triggerEventHandler("click", null);
-        fixture.detectChanges();
-
-        expect(min.parent.nativeElement.classList.contains(HIDDEN_ITEM_CLASS)).toBeTruthy();
-        expect(avg.parent.nativeElement.classList.contains(HIDDEN_ITEM_CLASS)).toBeTruthy();
-        grid.disableSummaries("UnitsInStock");
-        fixture.detectChanges();
-
-        grid.enableSummaries("UnitsInStock");
-        fixture.detectChanges();
-
-        min = summary.query(By.css("[title='Min']"));
-        avg = summary.query(By.css("[title='Avg']"));
-        expect(min.parent.nativeElement.classList.contains(ITEM_CLASS)).toBeTruthy();
-        expect(avg.parent.nativeElement.classList.contains(ITEM_CLASS)).toBeTruthy();
-        const activSummaries = summary.queryAll(By.css(".igx-grid-summary__item")).length;
-        expect(activSummaries).toBe(5);
     });
     it("should recalculate summary functions onRowAdded", () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);

@@ -910,7 +910,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     protected _summaries(fieldName: string, hasSummary: boolean, summaryOperand?: any) {
         const column = this.gridAPI.get_column_by_name(this.id, fieldName);
-        this.gridAPI.resetSummaryStyle(column.field);
         column.hasSummary = hasSummary;
         if (summaryOperand) {
             column.summaries = summaryOperand;

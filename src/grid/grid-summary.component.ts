@@ -146,22 +146,7 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
         }
     }
 
-    public summaryClass(functionKey: string) {
-        const summaryKey = this.column.field + "_" + functionKey;
-        if (this.gridAPI.summaryStyle.has(summaryKey)) {
-            return this.gridAPI.summaryStyle.get(summaryKey);
-        } else {
-            this.gridAPI.summaryStyle.set(summaryKey, this.itemClass);
-            return this.gridAPI.summaryStyle.get(summaryKey);
-        }
-    }
-
-    @autoWire()
-    public changeSummaryClass(functionKey: string) {
-        const summaryKey = this.column.field + "_" + functionKey;
-        switch (this.gridAPI.summaryStyle.get(summaryKey)) {
-            case this.itemClass: this.gridAPI.summaryStyle.set(summaryKey, this.hiddenItemClass); break;
-            case this.hiddenItemClass: this.gridAPI.summaryStyle.set(summaryKey, this.itemClass); break;
-        }
+    public summaryClass() {
+        return this.itemClass;
     }
 }
