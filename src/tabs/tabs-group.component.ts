@@ -87,7 +87,7 @@ export class IgxTabsGroupComponent implements AfterContentInit {
         }
     }
 
-    public select(focusDelay = 50) {
+    public select(focusDelay = 50, onInit = false) {
         if (this.isDisabled || this._tabs.selectedIndex === this.index) {
             return;
         }
@@ -95,9 +95,11 @@ export class IgxTabsGroupComponent implements AfterContentInit {
         this.isSelected = true;
         this.relatedTab.tabindex = 0;
 
-        setTimeout(() => {
-            this.relatedTab.nativeTabItem.nativeElement.focus();
-        }, focusDelay);
+        if (!onInit) {
+            setTimeout(() => {
+                this.relatedTab.nativeTabItem.nativeElement.focus();
+            }, focusDelay);
+        }
         this._handleSelection();
         this._tabs.onTabItemSelected.emit({ tab: this._tabs.tabs.toArray()[this.index], group: this });
     }
