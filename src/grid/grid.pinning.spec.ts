@@ -254,10 +254,6 @@ describe("IgxGrid - Column Pinning ", () => {
         let tryPin = false;
 
         // pin columns to start.
-        tryPin = grid.pinColumn("ContactName");
-        fix.detectChanges();
-        expect(tryPin).toEqual(true);
-
         tryPin = grid.pinColumn("ID");
         fix.detectChanges();
         expect(tryPin).toEqual(true);
@@ -562,6 +558,31 @@ describe("IgxGrid - Column Pinning ", () => {
         // First three headers are pinned
         headers = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent));
         expect(headers[2].componentInstance.zIndex).toEqual(9997);
+    });
+
+    it("should not pin/unpin columns which are already pinned/unpinned", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const pinnedColumnsLength = grid.pinnedColumns.length;
+        const unpinnedColumnsLength = grid.unpinnedColumns.length;
+
+        let col = grid.getColumnByName("CompanyName");
+
+        let result = col.pin();
+        fix.detectChanges();
+
+        expect(grid.pinnedColumns.length).toEqual(pinnedColumnsLength);
+        expect(result).toBe(false);
+
+        col = grid.getColumnByName("City");
+
+        result = col.unpin();
+        fix.detectChanges();
+
+        expect(grid.unpinnedColumns.length).toEqual(unpinnedColumnsLength);
+        expect(result).toBe(false);
     });
 });
 @Component({
