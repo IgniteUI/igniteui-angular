@@ -127,6 +127,10 @@ describe("IgxGrid - Summaries", () => {
         fixture.detectChanges();
 
         expect(min.parent.nativeElement.classList.contains(ITEM_CLASS)).toBeTruthy();
+        expect(summary.query(By.css("[title='Count']")).parent.nativeElement.classList.contains(ITEM_CLASS)).toBeTruthy();
+        expect(summary.query(By.css("[title='Max']")).parent.nativeElement.classList.contains(ITEM_CLASS)).toBeTruthy();
+        expect(summary.query(By.css("[title='Sum']")).parent.nativeElement.classList.contains(ITEM_CLASS)).toBeTruthy();
+        expect(summary.query(By.css("[title='Avg']")).parent.nativeElement.classList.contains(ITEM_CLASS)).toBeTruthy();
     });
     it("should recalculate summary functions onRowAdded", () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
