@@ -24,7 +24,8 @@ describe("List", () => {
         expect(list).toBeDefined();
         expect(list.id).toContain("igx-list-");
         expect(list instanceof IgxListComponent).toBeTruthy();
-        expect(list.innerStyle).toBe("igx-list-empty");
+        expect(list.cssClass).toBeFalsy();
+        expect(list.isListEmpty).toBeTruthy();
         expect(list.items instanceof Array).toBeTruthy();
         expect(list.items.length).toBe(0);
         expect(list.headers instanceof Array).toBeTruthy();
@@ -32,7 +33,8 @@ describe("List", () => {
 
         fixture.detectChanges();
         expect(list.items instanceof Array).toBeTruthy();
-        expect(list.innerStyle).toBe("igx-list");
+        expect(list.cssClass).toBeTruthy();
+        expect(list.isListEmpty).toBeFalsy();
         expect(list.items.length).toBe(3);
         expect(list.items[0] instanceof IgxListItemComponent).toBeTruthy();
         expect(list.headers instanceof Array).toBeTruthy();
@@ -225,7 +227,8 @@ describe("List", () => {
         fixture.detectChanges();
 
         verifyItemsCount(list, 0);
-        expect(list.innerStyle).toBe("igx-list-empty");
+        expect(list.cssClass).toBeFalsy();
+        expect(list.isListEmpty).toBeTruthy();
 
         const noItemsParagraphEl = fixture.debugElement.query(By.css("p"));
         expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listNoItemsMessage);
@@ -239,7 +242,8 @@ describe("List", () => {
         fixture.detectChanges();
 
         verifyItemsCount(list, 0);
-        expect(list.innerStyle).toBe("igx-list-empty");
+        expect(list.cssClass).toBeFalsy();
+        expect(list.isListEmpty).toBeTruthy();
 
         const noItemsParagraphEl = fixture.debugElement.query(By.css("h3"));
         expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listCustomNoItemsTemplateContent);

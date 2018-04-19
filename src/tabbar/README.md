@@ -1,15 +1,15 @@
-# Igx-Tab-Bar
+# igx-bottom-nav
 
 #### Category
 _Components_
 
 ## Description
-_Igx-Tab-Bar represents a single content area with multiple panels, each associated with a tab._  
+_igx-bottom-nav represents a single content area with multiple panels, each associated with a tab. Tabs are located at the bottom of the component._  
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabbar.html)
 
 ### More Info
-Igx-Tab-Bar provides two observable collections (QueryLists): one with panels and one with related tabs. 
-The children components of the Igx-Tab-Bar are: 
+igx-bottom-nav provides two observable collections (QueryLists): one with panels and one with related tabs. 
+The children components of the igx-bottom-nav are: 
 
 -  *Igx-Tab-Panel* - represents the wrapper of the content that needs to be displayed
 - *Igx-Tab* - button that triggers displaying of the associated panel
@@ -35,7 +35,7 @@ There should always be a selected tab. Only one tab can be selected at a time.
 _Child components_
 
 ## Description
-_Child component of Igx-Tab-Bar, that represents the container of the content need to be displayed._
+_Child component of igx-bottom-nav, that represents the container of the content need to be displayed._
 
 ## Properties
 - `isSelected` - Determines whether the panel is selected
@@ -57,7 +57,7 @@ _Child component of Igx-Tab-Bar, that represents the container of the content ne
 _Child components_
 
 ## Description
-_Child component of Igx-Tab-Bar, that represents the button that triggers displaying of the associated panel._
+_Child component of igx-bottom-nav, that represents the button that triggers displaying of the associated panel._
 
 ## Properties
 - `id` - Unique identifier of the component. If not provided it will be automatically generated.
@@ -72,7 +72,7 @@ _Child component of Igx-Tab-Bar, that represents the button that triggers displa
 ----------
 ## Usage
 
-    <igx-tab-bar>
+    <igx-bottom-nav>
 		<igx-tab-panel label="Tab 1">
     		<h1>Tab 1 Content</h1>
     		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
@@ -85,4 +85,4 @@ _Child component of Igx-Tab-Bar, that represents the button that triggers displa
 	    	<h1>Tab 3 Content</h1>
 	    	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio.</p>
     	</igx-tab-panel>
-	</igx-tab-bar>
+	</igx-bottom-nav>

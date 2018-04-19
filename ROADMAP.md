@@ -1,20 +1,20 @@
 # Roadmap - Ignite UI for Angular
 
-## Milestone 2 (due April 16th, 2018)
+## Milestone 2 (due April 23rd, 2018)
 1.**[DONE]** Expanding Ignite UI CLI views and templates with Ignite UI for Angular
    1. [DONE]Adding component views like App Host, Tabbar, List
    2. [DONE]Updating the default project look
    3. [DONE]Move the project navigation inside an App Host
 2. **[DONE]** Product Theming 
-3. Column Resizing 
+3. **[DONE]** Column Resizing 
 4. Column Hiding 
 5. **[DONE]** Column pinning
 6. Row Selection 
-7. Export to excel (Exporting CSV)  
+7. **[DONE]** Export to excel (Exporting CSV,TSV)  
 8. Context Menu event (output)
-9. **[DONE]** Mask directive (editor)
-10 **[DONE]** igxTimePicker
-11. Summaries 
+9. **[DONE]** Mask directive (editor) 
+10. **[DONE]** igxTimeicker
+11. **[DONE]** Summaries 
 12. Tabs
 13. Operations UI - column chooser (Data Operations UI)          
 14. **[DONE]** Virtualization

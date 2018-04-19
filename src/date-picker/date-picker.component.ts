@@ -175,7 +175,9 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     /**
-     * Emits the open event and focus the dialog.
+     * Emits the open event and update the calendar.
+     *
+     * @hidden
      */
     public onOpenEvent(event): void {
         const factory = this.resolver.resolveComponentFactory(IgxCalendarComponent);
