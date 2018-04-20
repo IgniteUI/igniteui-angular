@@ -5,9 +5,9 @@ import { IgxDropDownComponent, ISelectionEventArgs } from "./dropDown.component"
     selector: "igx-drop-down-item",
     templateUrl: "dropDownItem.component.html",
     styles: [
-        ":host { display: block; color: red; }",
-        ":host.selected { background-color: rebeccapurple; }",
-        ":host.focused { border: 1px solid green; }"
+        ":host { display: block; }",
+        ":host.selected { background-color: #1A73E8; }",
+        ":host.focused { border: 1px solid #8bb8f4; }"
     ]
 })
 export class IgxDropDownItemComponent implements OnInit {
@@ -31,7 +31,8 @@ export class IgxDropDownItemComponent implements OnInit {
         return this.isSelected;
     }
 
-    @HostBinding("class.focused") public isFocused = false;
+    @HostBinding("class.focused")
+    public isFocused = false;
 
     constructor(
         @Inject(forwardRef(() => IgxDropDownComponent)) public dropDown: IgxDropDownComponent,

@@ -33,15 +33,12 @@ export class IgxDropDownComponent implements OnInit {
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
     private _focusedItem: IgxDropDownItemComponent = null;
     public _initialSelectionChanged = false;
-    public overflowY = "auto";
 
     @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
     @ViewChild(IgxToggleActionDirective) public toggleAction: IgxToggleActionDirective;
     @ContentChildren(IgxDropDownItemComponent, { read: IgxDropDownItemComponent }) public items: QueryList<IgxDropDownItemComponent>;
     @Output() public itemClicked = new EventEmitter<IgxDropDownItemComponent>();
     @Output() public onSelection = new EventEmitter<ISelectionEventArgs>();
-    @Input() public width = "80px";
-    @Input() public height = "120px";
 
     constructor(private elementRef: ElementRef, private renderer: Renderer) { }
 
@@ -52,6 +49,9 @@ export class IgxDropDownComponent implements OnInit {
     set selectedItem(item: IgxDropDownItemComponent) {
         this._selectedItem = item;
     }
+
+    @Input() public width = "80px";
+    @Input() public height = "120px";
 
     @HostListener("keydown.Space", ["$event"])
     public onSpaceKeyDown(event) {
@@ -111,7 +111,7 @@ export class IgxDropDownComponent implements OnInit {
 
     ngOnInit() {
         this.toggleAction.target = this.toggle;
-        this.toggleAction.closeOnOutsideClick = false;
+        this.toggleAction.closeOnOutsideClick = true;
     }
 
     public close() {
