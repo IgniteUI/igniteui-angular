@@ -270,7 +270,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
         const currIndex = Math.floor(ratio * count);
-        var endingIndex = this.state.chunkSize + currIndex;
+        let endingIndex = this.state.chunkSize + currIndex;
 
         if (endingIndex > this.igxForOf.length) {
             // shrink the size of the chunk (remove the extra non-visible view) when the scroll is at the bottom.
@@ -573,12 +573,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     protected addLastElem() {
-        var elemIndex = this.state.startIndex + this.state.chunkSize;
+        let elemIndex = this.state.startIndex + this.state.chunkSize;
         if (elemIndex > this.igxForOf.length) {
             return;
         }
 
-        // if the end of the igxForOf array is reached add the last element. This is to ensure the smooth scrolling by providing one additional non-visible view.
+        // If the end of the igxForOf array is reached add the last element.
+        // This is to ensure the smooth scrolling by providing one additional non-visible view.
         if (elemIndex === this.igxForOf.length) {
             elemIndex = this.igxForOf.length - 1;
         }

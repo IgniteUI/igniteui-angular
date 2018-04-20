@@ -577,7 +577,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         }
 
         if (target) {
-            const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : null; // null when there is no vertical virtualization
+            const containerHeight = this.grid.calcHeight ?
+                                    Math.ceil(this.grid.calcHeight) :
+                                    null; // null when there is no vertical virtualization
             const containerTopOffset =
                 parseInt(this.row.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const targetEndTopOffset = target.row.element.nativeElement.offsetTop + this.grid.rowHeight + containerTopOffset;
