@@ -1,4 +1,4 @@
-# igx-grid
+﻿# igx-grid
 **igx-grid** component provides the capability to manipulate and represent tabular data.  
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
 
@@ -217,6 +217,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |nextPage()|Goes to the next page if paging is enabled and current page is not the last.|
 |paginate(page: number)|Goes to the specified page if paging is enabled. Page indices are 0 based.|
 |markForCheck()|Manually triggers a change detection cycle for the grid and its children.|
+|reflow()|Recalculates grid width/height dimensions. Should be run when changing DOM elements dimentions manually that affect the grid's size.|
 
 <div class="divider--half"></div>
 
@@ -277,6 +278,13 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`footerTemplate`|TemplateRef|Yes|Yes|Get/Set a reference to a template which will be applied to the column footer.|
 |`inlineEditorTemplate`|TemplateRef|Yes|Yes|Get/Set a reference to a template which will be applied as a cell enters edit mode.|
 
+### Methods
+
+| Signature | Description |
+| :--- | :--- |
+| pin(): boolean | Pin the column to the left of the grid on the rightmost position. Returns if the operation is successful. |
+| unpin(): boolean | Unpins the column to the leftmost position in the unpinned area. Returns if the operation is successful.  |
+
 <div class="divider--half"></div>
 
 ## IgxGridCellComponent
@@ -296,7 +304,6 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 
 ### Methods
 
-| Signature | Description |
-| :--- | :--- |
-| pin(): boolean | Pin the column to the left of the grid on the rightmost position. Returns if the operation is successful. |
-| unpin(): boolean | Unpins the column to the leftmost position in the unpinned area. Returns if the operation is successful.  |
+|Name|Return Type|Description|
+|--- |--- |--- |
+|`update(val: any)`|void|Emits the `onEditDone` event and updates the appropriate record in the data source.|

@@ -68,6 +68,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     private _lastTouchY = 0;
     private _pointerCapture;
     private _gestureObject;
+    private _isScrolledToBottom = false;
 
     @ViewChild(DisplayContainerComponent)
     private displayContiner: DisplayContainerComponent;
@@ -269,8 +270,19 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
         const currIndex = Math.floor(ratio * count);
+        let endingIndex = this.state.chunkSize + currIndex;
 
-        const endingIndex = this.state.chunkSize + currIndex;
+        if (endingIndex > this.igxForOf.length) {
+            // shrink the size of the chunk (remove the extra non-visible view) when the scroll is at the bottom.
+            endingIndex = this.igxForOf.length;
+            this._isScrolledToBottom = true;
+            this.applyChunkSizeChange();
+        } else if (this._isScrolledToBottom && this.state.startIndex !== currIndex) {
+            // add one more non-visible view in the chunk to ensure smooth scrolling when we scroll up from the bottom.
+            this._isScrolledToBottom = false;
+            this.applyChunkSizeChange();
+        }
+
         if (this.state.startIndex !== currIndex) {
             this.state.startIndex = currIndex;
             this.onChunkPreload.emit(this.state);
@@ -490,6 +502,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             } else {
                 chunkSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
                     parseInt(this.igxForItemSize, 10));
+                if (chunkSize !== 0 && !this._isScrolledToBottom) {
+                    chunkSize ++;
+                }
                 if (chunkSize > this.igxForOf.length) {
                     chunkSize = this.igxForOf.length;
                 }
@@ -546,6 +561,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     private _recalcOnContainerChange(changes: SimpleChanges) {
+        this.dc.instance._viewContainer.element.nativeElement.style.top = "0px";
+        this.dc.instance._viewContainer.element.nativeElement.style.left = "0px";
+        if (this.hCache && this.state.startIndex !== 0) {
+            this.scrollTo(0);
+        }
         this.applyChunkSizeChange();
         this._recalcScrollBarSize();
     }
@@ -558,9 +578,15 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     protected addLastElem() {
-        const elemIndex = this.state.startIndex + this.state.chunkSize;
-        if (elemIndex >= this.igxForOf.length) {
+        let elemIndex = this.state.startIndex + this.state.chunkSize;
+        if (elemIndex > this.igxForOf.length) {
             return;
+        }
+
+        // If the end of the igxForOf array is reached add the last element.
+        // This is to ensure the smooth scrolling by providing one additional non-visible view.
+        if (elemIndex === this.igxForOf.length) {
+            elemIndex = this.igxForOf.length - 1;
         }
 
         const input = this.igxForOf[elemIndex];
