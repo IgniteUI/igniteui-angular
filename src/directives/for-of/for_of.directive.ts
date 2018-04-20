@@ -201,14 +201,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     public ngDoCheck(): void {
         if (this._differ) {
-            if (this.igxForScrollOrientation === "horizontal") {
-                // Resize scrollbar and hCache in case width of a cell has changed or etc. This cannot be detected with differ.
-                this._recalcScrollBarSize();
-            }
-
             const changes = this._differ.diff(this.igxForOf);
             if (changes) {
                 this._applyChanges(changes);
+            } else if (this.igxForScrollOrientation === "horizontal") {
+                // Resize scrollbar and hCache in case width of a cell has changed or etc. This cannot be detected with differ.
+                this.applyChunkSizeChange();
+                this._recalcScrollBarSize();
             }
         }
     }
