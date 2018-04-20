@@ -278,6 +278,13 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`footerTemplate`|TemplateRef|Yes|Yes|Get/Set a reference to a template which will be applied to the column footer.|
 |`inlineEditorTemplate`|TemplateRef|Yes|Yes|Get/Set a reference to a template which will be applied as a cell enters edit mode.|
 
+### Methods
+
+| Signature | Description |
+| :--- | :--- |
+| pin(): boolean | Pin the column to the left of the grid on the rightmost position. Returns if the operation is successful. |
+| unpin(): boolean | Unpins the column to the leftmost position in the unpinned area. Returns if the operation is successful.  |
+
 <div class="divider--half"></div>
 
 ## IgxGridCellComponent
@@ -297,7 +304,6 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 
 ### Methods
 
-| Signature | Description |
-| :--- | :--- |
-| pin(): boolean | Pin the column to the left of the grid on the rightmost position. Returns if the operation is successful. |
-| unpin(): boolean | Unpins the column to the leftmost position in the unpinned area. Returns if the operation is successful.  |
+|Name|Return Type|Description|
+|--- |--- |--- |
+|`update(val: any)`|void|Emits the `onEditDone` event and updates the appropriate record in the data source.|
