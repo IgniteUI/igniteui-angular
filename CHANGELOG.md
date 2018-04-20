@@ -13,6 +13,9 @@ All notable changes for each version of this project will be documented in this 
 - `igx-time-picker` component added
     - `igx-time-picker` allows user to select time, from a dialog with spinners, which is presented into input field.
     - For more information navigate to the [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/time-piker/README.md).
+- `igx-tab-bar` changes
+    - **Breaking changes**: `IgxTabBarComponent` is renamed to `IgxBottomNavComponent` and `IgxTabBarModule` is renamed to `IgxBottomNavModule`.
+    - `igx-tab-bar` selector is deprecated. Use `igx-bottom-nav` selector instead.
 - `igx-tabs` component added
     - `igx-tabs` allows users to switch between different views. The `igx-tabs` component places the tabs headers at the top and allows scrolling when there are multiple tab items outside the visible area. Tabs are ordered in a single row above their associated content.
     - For more information navigate to [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/tabs/README.md).
@@ -151,8 +154,6 @@ All notable changes for each version of this project will be documented in this 
 - `igx-nav-bar` changes
     -   Currently `isActionButtonVisible` resolves to `false` if actionButtonIcon is not defined.
 - `igx-tab-bar` changes
-    - **Breaking changes**: `IgxTabBarComponent` is renamed to `IgxBottomNavComponent` and `IgxTabBarModule` is renamed to `IgxBottomNavModule`.
-    - `igx-tab-bar` selector is deprecated. Use `igx-bottom-nav` selector instead.
     - custom content can be added for tabs
 
     ```html
