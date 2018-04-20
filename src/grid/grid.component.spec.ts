@@ -1,4 +1,4 @@
-import { Component, DebugElement, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { ChangeDetectorRef, Component, DebugElement, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
@@ -6,7 +6,7 @@ import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-describe("IgxGrid - input properties", () => {
+fdescribe("IgxGrid - input properties", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -96,16 +96,18 @@ describe("IgxGrid - input properties", () => {
 
         expect(grid.columns[0].width).not.toBeLessThan(136);
         expect(grid.columns[4].width).not.toBeLessThan(136);
+        expect(grid.columns[6].width).not.toBeLessThan(136);
         expect(grid.width).toMatch("100%");
     });
 
-    fit("col width should be >=136px - grid 30x1000", () => {
+    it("col width should be >=136px - grid 30x1000", () => {
         const fix = TestBed.createComponent(IgGridTest30x1000Component);
         fix.detectChanges();
 
         const grid = fix.componentInstance.gridMinDefaultColWidth;
         expect(grid.columns[0].width).not.toBeLessThan(136);
         expect(grid.columns[4].width).not.toBeLessThan(136);
+        expect(grid.columns[14].width).not.toBeLessThan(136);
         expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
     });
 
@@ -117,7 +119,8 @@ describe("IgxGrid - input properties", () => {
 
         expect(grid.columns[0].width).not.toBeLessThan(136);
         expect(grid.columns[4].width).not.toBeLessThan(136);
-        expect(grid.calcHeight - grid.calcWidth).toBeLessThan(0);
+        expect(grid.columns[100].width).not.toBeLessThan(136);
+        expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
     });
 });
 
@@ -315,5 +318,9 @@ export class IgGridTest150x20000Component {
             });
         }
         return this.cols;
+    }
+    public isHorizonatScrollbarVisible() {
+        const scrollbar = this.gridMinDefaultColWidth.parentVirtDir.getHorizontalScroll();
+        return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
     }
 }
