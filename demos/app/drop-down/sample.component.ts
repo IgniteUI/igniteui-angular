@@ -22,6 +22,9 @@ export class DropDownSampleComponent {
     }
 
     itemClicked(ev) {
-        console.log(ev);
+    }
+
+    onSelection(ev) {
+        console.dir(ev);
     }
 }

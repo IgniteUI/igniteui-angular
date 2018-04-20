@@ -1,5 +1,5 @@
 import { Component, ElementRef, forwardRef, HostBinding, HostListener, Inject, Input, OnInit } from "@angular/core";
-import { IgxDropDownComponent } from "./dropDown.component";
+import { IgxDropDownComponent, ISelectionEventArgs } from "./dropDown.component";
 
 @Component({
     selector: "igx-drop-down-item",
@@ -18,7 +18,10 @@ export class IgxDropDownItemComponent {
             return;
         }
 
+        const oldSelection = this.dropDown.selectedItem;
         this.dropDown.selectedItem = value ? this : null;
+        const args: ISelectionEventArgs = { oldSelection, newSelection: this.dropDown.selectedItem };
+        this.dropDown.onSelection.emit(args);
     }
 
     @HostBinding("class.selected")
@@ -33,7 +36,10 @@ export class IgxDropDownItemComponent {
 
     @HostListener("click", ["$event"]) clicked(event) {
         this.dropDown.itemClicked.emit(this);
+        const oldSelection = this.dropDown.selectedItem;
         this.dropDown.selectedItem = this;
+        const args: ISelectionEventArgs = { oldSelection, newSelection: this.dropDown.selectedItem, event };
+        this.dropDown.onSelection.emit(args);
         this.dropDown.toggleDropDown();
     }
 

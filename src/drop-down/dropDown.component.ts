@@ -15,6 +15,12 @@ import {
 import { IgxToggleDirective, IgxToggleModule } from "../directives/toggle/toggle.directive";
 import { IgxDropDownItemComponent } from "./dropDownItem.component";
 
+export interface ISelectionEventArgs {
+    oldSelection: IgxDropDownItemComponent;
+    newSelection: IgxDropDownItemComponent;
+    event?: Event;
+}
+
 @Component({
     selector: "igx-drop-down",
     templateUrl: "./dropDown.component.html",
@@ -35,8 +41,7 @@ export class IgxDropDownComponent {
     @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
     @ContentChildren(IgxDropDownItemComponent, { read: IgxDropDownItemComponent }) public items: QueryList<IgxDropDownItemComponent>;
     @Output() public itemClicked = new EventEmitter<IgxDropDownItemComponent>();
-    // tslint:disable-next-line:max-line-length
-    @Output() public onSelection = new EventEmitter<{ oldValue: IgxDropDownItemComponent, newValue: IgxDropDownItemComponent, event: Event }>();
+    @Output() public onSelection = new EventEmitter<ISelectionEventArgs>();
 
     constructor(private elementRef: ElementRef, private renderer: Renderer) { }
 
@@ -77,7 +82,10 @@ export class IgxDropDownComponent {
             selectedItemIndex = this.selectedItem.index;
         }
         if (selectedItemIndex < this.items.length - 1) {
+            const oldSelection = this.selectedItem;
             this.selectedItem = this.items.toArray()[selectedItemIndex + 1];
+            const args: ISelectionEventArgs = { oldSelection, newSelection: this.selectedItem, event };
+            this.onSelection.emit(args);
         }
 
         const rect = this.selectedItem.element.nativeElement.getBoundingClientRect();
@@ -92,7 +100,10 @@ export class IgxDropDownComponent {
         if (this.selectedItem) {
             const selectedItemIndex = this.selectedItem.index;
             if (selectedItemIndex > 0) {
+                const oldSelection = this.selectedItem;
                 this.selectedItem = this.items.toArray()[selectedItemIndex - 1];
+                const args: ISelectionEventArgs = { oldSelection, newSelection: this.selectedItem, event };
+                this.onSelection.emit(args);
             }
 
             const rect = this.selectedItem.element.nativeElement.getBoundingClientRect();
@@ -106,7 +117,10 @@ export class IgxDropDownComponent {
     public close() {
         console.log(this._initialSelectionChanged);
         if (!this._initialSelectionChanged) {
+            const oldSelection = this.selectedItem;
             this.selectedItem = this._initiallySelectedItem;
+            const args: ISelectionEventArgs = {oldSelection, newSelection: this.selectedItem, event};
+            this.onSelection.emit(args);
             this._initialSelectionChanged = false;
         }
     }
@@ -114,9 +128,9 @@ export class IgxDropDownComponent {
     public open() {
         this.elementRef.nativeElement.tabIndex = 0;
         this.elementRef.nativeElement.focus();
-        if (this._selectedItem) {
-            this._initiallySelectedItem = this._selectedItem;
-            this.scrollToItem(this._selectedItem);
+        if (this.selectedItem) {
+            this._initiallySelectedItem = this.selectedItem;
+            this.scrollToItem(this.selectedItem);
         }
     }
 
