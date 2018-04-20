@@ -146,3 +146,31 @@ export function autoWire(markForCheck = false) {
         return descriptor;
     };
 }
+
+/**
+ * Decorates a method of a component implementing the IGridBus
+ * It applies on igxCellComponent events and prevent them
+ * when the cell is in edit mode.
+ */
+export function stopImmediatePropagation() {
+    return function decorator(target: IGridBus, name: string, descriptor: any) {
+        const old = descriptor.value;
+        const wrapped = function(...args) {
+            const event = args.find((e) => e.type);
+            const stopPropagation = args.find((x) => typeof x === "boolean");
+            if (stopPropagation) {
+                event.stopImmediatePropagation();
+            } else {
+                old.apply(this, args);
+            }
+        }
+
+        if(descriptor.value) {
+            descriptor.value = wrapped;
+        } else {
+            throw Error("Can bind only to methods");
+        }
+
+        return descriptor;
+    };
+}
