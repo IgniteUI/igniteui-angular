@@ -424,6 +424,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public ngOnInit() {
         this.gridAPI.register(this);
+        this.setEventBusSubscription();
+        this.setVerticalScrollSubscription();
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this._width && this._width.indexOf("%") === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
@@ -439,6 +441,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.columnListDiffer.diff(this.columnList);
         this.clearSummaryCache();
         this.tfootHeight = this.calcMaxSummaryHeight();
+        this._derivePossibleHeight();
         this.markForCheck();
 
         this.columnList.changes
@@ -469,20 +472,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
                 this.markForCheck();
             });
-    }
+}
 
     public ngAfterViewInit() {
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.addEventListener("resize", this.resizeHandler);
         });
-
-        this._derivePossibleHeight();
         this._derivePossibleWidth();
-
         this.calculateGridSizes();
-        this.setEventBusSubscription();
-        this.setVerticalScrollSubscription();
-        requestAnimationFrame(() => this.calculateGridSizes());
+
     }
 
     public ngOnDestroy() {
@@ -802,6 +800,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const parentHeight = this.nativeElement.parentNode.getBoundingClientRect().height;
             this._height = this.rowBasedHeight <= parentHeight ? null : "100%";
         }
+        this.calculateGridHeight();
         this.cdr.detectChanges();
     }
 
@@ -810,6 +809,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.columnWidth = this.getPossibleColumnWidth();
             this.initColumns(this.columnList);
         }
+        this.calculateGridWidth();
     }
 
     protected calculateGridHeight() {
@@ -856,15 +856,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const computedWidth = parseInt(
             this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue("width"), 10);
 
-        let p = Math.max(
+        let maxColumnWidth = Math.max(
             ...this.columnList.map((col) => parseInt(col.width, 10))
                 .filter((width) => !isNaN(width))
         );
 
-        p = !Number.isFinite(p) ? Math.max(computedWidth / this.columnList.length, MINIMUM_COLUMN_WIDTH) :
-                Math.max((computedWidth - p) / this.columnList.length, MINIMUM_COLUMN_WIDTH);
+        maxColumnWidth = !Number.isFinite(maxColumnWidth) ? Math.max(computedWidth / this.columnList.length, MINIMUM_COLUMN_WIDTH) :
+                Math.max((computedWidth - maxColumnWidth) / this.columnList.length, MINIMUM_COLUMN_WIDTH);
 
-        return p.toString();
+        return maxColumnWidth.toString();
     }
 
     protected calculateGridWidth() {
