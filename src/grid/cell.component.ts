@@ -554,6 +554,16 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
             if (targetRowOffset === 0 && containerOffset < 0) {
                 // Target is part of the first row in the container that is partially visible
                 verticalScroll.scrollTop += containerOffset;
+                const oldChunkIndex = target.row.grid.verticalScrollContainer.state.startIndex;
+
+                this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+                    next: (e: any) => {
+                        if (oldChunkIndex === e.startIndex) {
+                            target.nativeElement.focus();
+                        }
+                        this.row.cdr.detectChanges();
+                    }
+                });
             }
             target.nativeElement.focus();
         } else {

@@ -141,7 +141,6 @@
         @extend %igx-filtering-icon;
 
         user-select: none;
-        margin-left: 4px;
         background: map-get($this, 'toggle-background');
         border-radius: 50%;
     }

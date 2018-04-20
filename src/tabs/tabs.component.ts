@@ -150,7 +150,7 @@ export class IgxTabsComponent implements AfterViewInit {
                 const group = selectableGroups[0];
 
                 if (group) {
-                    group.select();
+                    group.select(50, true);
                 }
 
             }
