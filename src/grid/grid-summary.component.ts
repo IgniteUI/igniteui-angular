@@ -14,7 +14,6 @@ import { autoWire, IGridBus } from "./grid.common";
 })
 export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoCheck, AfterContentInit {
 
-    summaryStyle: Map<string, string> = new Map<string, string>();
     fieldName: string;
 
     @Input()
@@ -52,6 +51,11 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
         return this.column.hasSummary;
     }
 
+    @HostBinding("class.igx-grid-summary--fw")
+    get widthPersistenceClass(): boolean {
+        return this.column.width !== null;
+    }
+
     @HostBinding("style.min-width")
     @HostBinding("style.flex-basis")
     get width() {
@@ -62,7 +66,7 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
     protected subscriptionOnAdd$;
     protected subscriptionOnDelete$;
     protected subscriptionOnFilter$;
-    private itemClass = "igx-grid-summary__item";
+    public itemClass = "igx-grid-summary__item";
     private hiddenItemClass = "igx-grid-summary__item--inactive";
     private summaryResultClass = "igx-grid-summary-item__result--left-align";
     private numberSummaryResultClass = "igx-grid-summary-item__result";
@@ -147,22 +151,4 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
         }
     }
 
-    public summaryClass(functionKey: string) {
-        const summaryKey = this.column.field + "_" + functionKey;
-        if (this.summaryStyle.has(summaryKey)) {
-            return this.summaryStyle.get(summaryKey);
-        } else {
-            this.summaryStyle.set(summaryKey, this.itemClass);
-            return this.summaryStyle.get(summaryKey);
-        }
-    }
-
-    @autoWire()
-    public changeSummaryClass(functionKey: string) {
-        const summaryKey = this.column.field + "_" + functionKey;
-        switch (this.summaryStyle.get(summaryKey)) {
-            case this.itemClass: this.summaryStyle.set(summaryKey, this.hiddenItemClass); break;
-            case this.hiddenItemClass: this.summaryStyle.set(summaryKey, this.itemClass); break;
-        }
-    }
 }

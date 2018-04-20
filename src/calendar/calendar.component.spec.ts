@@ -1,9 +1,9 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, DebugElement, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { Calendar, IgxCalendarComponent, IgxCalendarModule, isLeap, monthRange, weekDay, WEEKDAYS } from "./index";
+import { Calendar, ICalendarDate, IgxCalendarComponent, IgxCalendarModule, isLeap, monthRange, weekDay, WEEKDAYS } from "./index";
 
 describe("IgxCalendar", () => {
     beforeEach(
@@ -873,6 +873,44 @@ describe("IgxCalendar", () => {
             fixture.detectChanges();
 
             expect(document.activeElement.textContent.trim()).toMatch("1");
+        });
+    });
+
+    it("Calendar date should persist the focus when select date in the (next/prev) month.", () => {
+        const fix = TestBed.createComponent(IgxCalendarRenderingComponent);
+        fix.detectChanges();
+
+        const component = fix.debugElement.query(By.css(".igx-calendar"));
+        let args: KeyboardEventInit = { key: "Home", bubbles: true };
+        let event = new KeyboardEvent("keydown", args);
+
+        const calendar = fix.componentInstance.calendar;
+        const calendarMonth = calendar.getCalendarMonth;
+
+        const value = calendarMonth[4][6];
+
+        fix.whenStable().then(() => {
+            component.triggerEventHandler("keydown.home", event);
+            fix.detectChanges();
+
+            const date = calendar.dates.find((d) => d.date.date.toString() === value.date.toString()).nativeElement;
+
+            args = { key: "Enter", bubbles: true };
+            event = new KeyboardEvent("keydown", args);
+            date.dispatchEvent(event);
+            return fix.whenRenderingDone();
+        }).then(() => {
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            const date = calendar.dates.find((d) => d.date.date.toString() === value.date.toString()).nativeElement;
+            expect(document.activeElement).toBe(date);
+            args = { key: "ArrowRight", bubbles: true };
+            event = new KeyboardEvent("keydown", args);
+            document.activeElement.dispatchEvent(event);
+            fix.detectChanges();
+
+            expect(document.activeElement.textContent.trim()).toMatch("2");
         });
     });
 });
