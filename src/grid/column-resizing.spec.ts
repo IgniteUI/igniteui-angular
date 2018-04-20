@@ -537,6 +537,54 @@ describe("IgxGrid - Deferred Column Resizing", () => {
 
     //     discardPeriodicTasks();
     // }));
+
+    it("should update grid after resizing a column to be bigger.", fakeAsync(() => {
+        const fixture = TestBed.createComponent(ResizableColumnsComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        const displayContainer: HTMLElement = fixture.componentInstance.grid.tbody.nativeElement.querySelector("igx-display-container");
+        let rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        let colsRendered = rowsRendered[0].children;
+        
+        expect(grid.columns[0].width).toEqual("100px");
+        expect(colsRendered.length).toEqual(4);
+
+        // Resize first column
+        const headerResArea = headers[0].nativeElement.children[2];
+        simulateMouseEvent("mousedown", headerResArea, 100, 0);
+        tick();
+        fixture.detectChanges();
+
+        const resizer = headers[0].nativeElement.children[1].children[0];
+        expect(resizer).toBeDefined();
+        simulateMouseEvent("mousemove", resizer, 700, 5);
+        tick();
+
+        simulateMouseEvent("mouseup", resizer, 700, 5);
+        tick();
+        fixture.detectChanges();
+
+        // We call this again becuase for some reason in test it is not called the same amount of time as in real use.
+        // To be investigated.
+        grid.markForCheck();
+        tick();
+        fixture.detectChanges();
+
+        expect(grid.columns[0].width).toEqual("700px");
+
+        // Check grid has updated cells and scrollbar
+        const hScroll = fixture.componentInstance.grid.parentVirtDir.getHorizontalScroll();
+        const hScrollVisible = hScroll.offsetWidth < hScroll.children[0].offsetWidth;
+        rowsRendered = displayContainer.querySelectorAll("igx-display-container");
+        colsRendered = rowsRendered[0].children;
+
+        expect(hScrollVisible).toBe(true);
+        expect(colsRendered.length).toEqual(1);
+
+        discardPeriodicTasks();
+    }));
 });
 
 function simulateMouseEvent(eventName: string, element, x, y) {
