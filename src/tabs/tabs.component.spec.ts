@@ -1,5 +1,5 @@
 import { AfterContentChecked, AfterViewChecked, Component, ContentChildren, QueryList, ViewChild } from "@angular/core";
-import { async, TestBed } from "@angular/core/testing";
+import { async, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { IgxTabItemComponent } from "./tab-item.component";
 import { IgxTabsGroupComponent } from "./tabs-group.component";
@@ -177,7 +177,7 @@ describe("IgxTabs", () => {
         expect(tabs.selectedIndex).toBe(0);
     });
 
-    it("should scroll tab area when clicking left/right scroll buttons", () => {
+    it("should scroll tab area when clicking left/right scroll buttons", fakeAsync(() => {
         const fixture = TestBed.createComponent(TabsTestComponent);
         const tabs = fixture.componentInstance.tabs;
         fixture.detectChanges();
@@ -189,20 +189,16 @@ describe("IgxTabs", () => {
         window.dispatchEvent(new Event("resize"));
         rightScrollButton.dispatchEvent(new Event("click", { bubbles: true }));
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-
-            expect(tabs.offset).toBeGreaterThan(0);
-        });
+        tick(100);
+        fixture.detectChanges();
+        expect(tabs.offset).toBeGreaterThan(0);
 
         tabs.scrollLeft(null);
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-
-            expect(tabs.offset).toBe(0);
-        });
-    });
+        tick(100);
+        fixture.detectChanges();
+        expect(tabs.offset).toBe(0);
+    }));
 
     it("should select tab on click", () => {
         const fixture = TestBed.createComponent(TabsTestComponent);
