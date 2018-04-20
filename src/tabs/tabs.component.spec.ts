@@ -1,5 +1,5 @@
 import { AfterContentChecked, AfterViewChecked, Component, ContentChildren, QueryList, ViewChild } from "@angular/core";
-import { async, TestBed, fakeAsync, tick } from "@angular/core/testing";
+import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { IgxTabItemComponent } from "./tab-item.component";
 import { IgxTabsGroupComponent } from "./tabs-group.component";
