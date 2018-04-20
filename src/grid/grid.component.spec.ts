@@ -99,15 +99,11 @@ describe("IgxGrid - input properties", () => {
             const width = parseInt(column.width, 10);
             const minWidth = parseInt(MIN_COL_WIDTH, 10);
             if (column.index !== 0 && column.index !== 4) {
-                if (width >= minWidth) {
-                    expect(true);
-                } else {
-                    expect(false);
-                }
+                expect(width).toBeGreaterThanOrEqual(minWidth);
             }
         });
 
-        expect(grid.calcWidth - grid.totalWidth >= 0).toEqual(true);
+        expect(grid.calcWidth - grid.totalWidth).toBeGreaterThanOrEqual(0);
     });
 
     it("Test rendering of data with 5 columns and 5 rows where 2 of the columns have width set and grid has width", () => {
@@ -130,14 +126,10 @@ describe("IgxGrid - input properties", () => {
             const width = parseInt(column.width, 10);
             const minWidth = parseInt(MIN_COL_WIDTH, 10);
             if (column.index !== 0 && column.index !== 4) {
-                if (width >= minWidth) {
-                    expect(true);
-                } else {
-                    expect(false);
-                }
+                expect(width).toBeGreaterThanOrEqual(minWidth);
             }
         });
-        expect(grid.calcWidth - grid.totalWidth >= 0).toEqual(false);
+        expect(grid.calcWidth - grid.totalWidth).toBeLessThan(0);
     });
 
     it("Test rendering of data with 5 columns and 30 rows where 3 of the columns have width set", () => {
@@ -159,15 +151,11 @@ describe("IgxGrid - input properties", () => {
             const width = parseInt(column.width, 10);
             const minWidth = parseInt(MIN_COL_WIDTH, 10);
             if (column.index !== 0 && column.index !== 4) {
-                if (width >= minWidth) {
-                    expect(true);
-                } else {
-                    expect(false);
-                }
+                expect(width).toBeGreaterThanOrEqual(minWidth);
             }
         });
 
-        expect(grid.calcWidth - grid.totalWidth >= 0).toEqual(true);
+        expect(grid.calcWidth - grid.totalWidth).toBeGreaterThanOrEqual(0);
     });
 
     it("Test rendering of data with 30 columns and 1000 rows where 5 of the columns have width set", () => {
@@ -193,15 +181,11 @@ describe("IgxGrid - input properties", () => {
             const minWidth = parseInt(MIN_COL_WIDTH, 10);
             if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
                     column.index !== 10 && column.index !== 25) {
-                if (width >= minWidth) {
-                    expect(true);
-                } else {
-                    expect(false);
-                }
+                expect(width).toEqual(minWidth);
             }
         });
 
-        expect(grid.calcWidth - grid.totalWidth >= 0).toEqual(false);
+        expect(grid.calcWidth - grid.totalWidth).toBeLessThan(0);
     });
 
     it("Test rendering of data with 30 columns and 1000 rows where 5 of the columns have width set and grid has width", () => {
@@ -225,14 +209,10 @@ describe("IgxGrid - input properties", () => {
             const minWidth = parseInt(MIN_COL_WIDTH, 10);
             if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
                     column.index !== 10 && column.index !== 25) {
-                if (width >= minWidth) {
-                    expect(true);
-                } else {
-                    expect(false);
-                }
+                expect(width).toEqual(minWidth);
             }
         });
-        expect(grid.calcWidth - grid.totalWidth >= 0).toEqual(false);
+        expect(grid.calcWidth - grid.totalWidth).toBeLessThan(0);
     });
 
     it("Test rendering of data with 150 columns and 20000 rows where 5 of the columns have width set", () => {
@@ -255,15 +235,11 @@ describe("IgxGrid - input properties", () => {
             const minWidth = parseInt(MIN_COL_WIDTH, 10);
             if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
                     column.index !== 10 && column.index !== 50) {
-                if (width >= minWidth) {
-                    expect(true);
-                } else {
-                    expect(false);
-                }
+                expect(width).toEqual(minWidth);
             }
         });
 
-        expect(grid.calcWidth - grid.totalWidth >= 0).toEqual(true);
+        expect(grid.calcWidth - grid.totalWidth).toBeGreaterThanOrEqual(0);
     });
 
     it("Test rendering of data with 150 columns and 20000 rows where 5 of the columns have width set and grid has width", () => {
@@ -287,15 +263,11 @@ describe("IgxGrid - input properties", () => {
             const minWidth = parseInt(MIN_COL_WIDTH, 10);
             if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
                     column.index !== 10 && column.index !== 50) {
-                if (width >= minWidth) {
-                    expect(true);
-                } else {
-                    expect(false);
-                }
+                expect(width).toEqual(minWidth);
             }
         });
 
-        expect(grid.calcWidth - grid.totalWidth >= 0).toEqual(false);
+        expect(grid.calcWidth - grid.totalWidth).toBeLessThan(0);
     });
 });
 
