@@ -581,6 +581,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return totalWidth;
     }
 
+    get computedWidth(): number {
+        const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+        return parseInt(computed.width, 10);
+    }
+
+    get hideHScroll(): boolean {
+        return this.computedWidth - this.totalWidth >= 0;
+    }
+
     public nextPage(): void {
         if (!this.isLastPage) {
             this.page += 1;
