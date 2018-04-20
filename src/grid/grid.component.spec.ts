@@ -80,7 +80,7 @@ describe("IgxGrid - input properties", () => {
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
-    <igx-grid #grid [data]="data" [autoGenerate]="false">
+    <igx-grid #grid [data]="data" [autoGenerate]="false" [columnWidth]="null">
         <igx-column field="index" header="index" dataType="number"></igx-column>
         <igx-column field="value" header="value" dataType="number"></igx-column>
     </igx-grid></div>`

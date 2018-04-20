@@ -779,7 +779,7 @@ export class GridFeaturesComponent {
 
 @Component({
     template: `
-    <igx-grid [data]="data" [height]="'800px'">
+    <igx-grid [data]="data" [height]="'800px'" [columnWidth]="null">
         <igx-column *ngFor="let c of columns" [field]="c.field"
                                               [header]="c.field"
                                               [resizable]="c.resizable"
