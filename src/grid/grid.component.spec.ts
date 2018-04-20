@@ -96,13 +96,18 @@ describe("IgxGrid - input properties", () => {
         expect(parseInt(grid.columns[2].width, 10)).toEqual(parseInt(grid.columns[1].width, 10));
 
         grid.columns.forEach((column) => {
+            let width = parseInt(column.width, 10),
+                minWidth = parseInt(MIN_COL_WIDTH, 10);
             if (column.index != 0 && column.index != 4) {
-                expect(column.width).toEqual(MIN_COL_WIDTH) || expect(column.width > MIN_COL_WIDTH).toEqual(true);
+                if (width == minWidth || width > minWidth) {
+                    expect(true);
+                } else {
+                    expect(false);
+                }
             }
         });
 
-        expect(grid.scr.nativeElement.firstElementChild.hidden).toEqual(true);
-        expect(grid.scr.nativeElement.style.display).toEqual("");
+        expect(grid.calcWidth - grid.totalWidth >= 0).toEqual(true);
     });
 
     it("Test rendering of data with 5 columns and 5 rows where 2 of the columns have width set and grid has width", () => {
@@ -122,14 +127,17 @@ describe("IgxGrid - input properties", () => {
         expect(parseInt(grid.columns[2].width, 10)).toEqual(parseInt(grid.columns[1].width, 10));
 
         grid.columns.forEach((column) => {
+            let width = parseInt(column.width, 10),
+                minWidth = parseInt(MIN_COL_WIDTH, 10);
             if (column.index != 0 && column.index != 4) {
-                expect(column.width).toEqual(MIN_COL_WIDTH) || expect(column.width > MIN_COL_WIDTH).toEqual(true);
+                if (width == minWidth || width > minWidth) {
+                    expect(true);
+                } else {
+                    expect(false);
+                }
             }
         });
-
-        expect(grid.scr.nativeElement.firstElementChild.hidden).toEqual(true);
-        //expect(grid.scr.nativeElement.style.display).toEqual("");
-        expect(grid.calcWidth - grid.totalWidth < 0).toEqual(true);
+        expect(grid.calcWidth - grid.totalWidth >= 0).toEqual(false);
     });
 
     it("Test rendering of data with 5 columns and 30 rows where 3 of the columns have width set", () => {
@@ -148,13 +156,18 @@ describe("IgxGrid - input properties", () => {
         expect(parseInt(grid.columns[2].width, 10)).toEqual(parseInt(grid.columns[1].width, 10));
 
         grid.columns.forEach((column) => {
+            let width = parseInt(column.width, 10),
+            minWidth = parseInt(MIN_COL_WIDTH, 10);
             if (column.index != 0 && column.index != 4) {
-                expect(column.width).toEqual(MIN_COL_WIDTH) || expect(column.width > MIN_COL_WIDTH).toEqual(true);
+                if (width == minWidth || width > minWidth) {
+                    expect(true);
+                } else {
+                    expect(false);
+                }
             }
         });
 
-        expect(grid.scr.nativeElement.firstElementChild.hidden).toEqual(true);
-        //expect(grid.scr.nativeElement.style.display).toEqual("");
+        expect(grid.calcWidth - grid.totalWidth >= 0).toEqual(true);
     });
 
     it("Test rendering of data with 30 columns and 1000 rows where 5 of the columns have width set", () => {
@@ -176,14 +189,19 @@ describe("IgxGrid - input properties", () => {
         expect(parseInt(grid.columns[2].width, 10)).toEqual(parseInt(grid.columns[1].width, 10));
 
         grid.columns.forEach((column) => {
+            let width = parseInt(column.width, 10),
+            minWidth = parseInt(MIN_COL_WIDTH, 10);
             if (column.index != 0 && column.index != 3 && column.index != 5 &&
                     column.index != 10 && column.index != 25) {
-                expect(column.width).toEqual(MIN_COL_WIDTH) || expect(column.width > MIN_COL_WIDTH).toEqual(true);
+                        if (width == minWidth || width > minWidth) {
+                            expect(true);
+                        } else {
+                            expect(false);
+                        }
             }
         });
 
-        expect(grid.scr.nativeElement.firstElementChild.hidden).toEqual(true);
-        //expect(grid.scr.nativeElement.style.display).toEqual("");
+        expect(grid.calcWidth - grid.totalWidth >= 0).toEqual(true);
     });
 
     it("Test rendering of data with 30 columns and 1000 rows where 5 of the columns have width set and grid has width", () => {
@@ -203,15 +221,18 @@ describe("IgxGrid - input properties", () => {
         expect(grid.columns[25].width).toEqual("200px");
 
         grid.columns.forEach((column) => {
+            let width = parseInt(column.width, 10),
+            minWidth = parseInt(MIN_COL_WIDTH, 10);
             if (column.index != 0 && column.index != 3 && column.index != 5 &&
                     column.index != 10 && column.index != 25) {
-                expect(column.width).toEqual(MIN_COL_WIDTH) || expect(column.width > MIN_COL_WIDTH).toEqual(true);
+                    if (width == minWidth || width > minWidth) {
+                        expect(true);
+                    } else {
+                        expect(false);
+                    }
             }
         });
-
-        expect(grid.scr.nativeElement.firstElementChild.hidden).toEqual(false);
-        expect(grid.calcWidth - grid.totalWidth < 0).toEqual(true);
-        //expect(grid.scr.nativeElement.style.display).toEqual("");
+        expect(grid.calcWidth - grid.totalWidth >= 0).toEqual(false);
     });
 
     it("Test rendering of data with 150 columns and 20000 rows where 5 of the columns have width set", () => {
@@ -230,15 +251,19 @@ describe("IgxGrid - input properties", () => {
         expect(grid.columns[50].width).toEqual("500px");
 
         grid.columns.forEach((column) => {
+            let width = parseInt(column.width, 10),
+            minWidth = parseInt(MIN_COL_WIDTH, 10);
             if (column.index != 0 && column.index != 3 && column.index != 5 &&
                     column.index != 10 && column.index != 50) {
-                expect(column.width).toEqual(MIN_COL_WIDTH) || expect(column.width > MIN_COL_WIDTH).toEqual(true);
+                    if (width == minWidth || width > minWidth) {
+                        expect(true);
+                    } else {
+                        expect(false);
+                    }
             }
         });
 
-        expect(grid.scr.nativeElement.firstElementChild.hidden).toEqual(false);
-        expect(grid.calcWidth - grid.totalWidth < 0).toEqual(true);
-        //expect(grid.scr.nativeElement.style.display).toEqual("");
+        expect(grid.calcWidth - grid.totalWidth >= 0).toEqual(true);
     });
 
     it("Test rendering of data with 150 columns and 20000 rows where 5 of the columns have width set and grid has width", () => {
@@ -258,15 +283,19 @@ describe("IgxGrid - input properties", () => {
         expect(grid.columns[50].width).toEqual("500px");
 
         grid.columns.forEach((column) => {
+            let width = parseInt(column.width, 10),
+            minWidth = parseInt(MIN_COL_WIDTH, 10);
             if (column.index != 0 && column.index != 3 && column.index != 5 &&
                     column.index != 10 && column.index != 50) {
-                expect(column.width).toEqual(MIN_COL_WIDTH) || expect(column.width > MIN_COL_WIDTH).toEqual(true);
+                    if (width == minWidth || width > minWidth) {
+                        expect(true);
+                    } else {
+                        expect(false);
+                    }
             }
         });
 
-        expect(grid.scr.nativeElement.firstElementChild.hidden).toEqual(false);
-        expect(grid.calcWidth - grid.totalWidth < 0).toEqual(true);
-        //expect(grid.scr.nativeElement.style.display).toEqual("");
+        expect(grid.calcWidth - grid.totalWidth >= 0).toEqual(false);
     });
 });
 
@@ -294,8 +323,8 @@ export class IgxGridTestDefaultWidthHeight {
     @ViewChild("grid2") public grid2: IgxGridComponent;
     
     ngOnInit () {
-        //this.cols = this.generateColumns(5);
-        //this.data = this.generateData(5, 5);
+        this.cols = this.generateColumns(5);
+        this.data = this.generateData(5, 5);
     }
     initColumns(column) {
         switch (this.grid2.columnList.length) {
