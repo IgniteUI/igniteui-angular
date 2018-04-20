@@ -13,7 +13,7 @@
 /// Set light to true when the surrounding area is dark.
 /// @example scss Set custom track and thumb on colors
 ///   $my-switch-theme: igx-toast-theme($thumb-on-color: black, $track-on-color: yellow);
-///   // Pass the theme to the igx-tabbar component mixin
+///   // Pass the theme to the igx-bottom-nav component mixin
 ///   @include igx-switch($my-switch-theme);
 @function igx-slider-theme(
     $track-color: null,

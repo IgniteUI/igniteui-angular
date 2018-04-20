@@ -1,8 +1,8 @@
 <ng-container *ngIf="column.hasSummary">
     <ng-container *ngFor="let summary of resolveSummaries">
-        <div class="{{summaryClass(summary.key)}}">
-            <span class="igx-grid-summary__label" title="{{ summary.label }}" (click)="changeSummaryClass(summary.key)">{{ summary.label }}</span>
-            <span class="igx-grid-summary__result {{summaryValueClass(summary.summaryResult)}}" title="{{ summary.summaryResult }}">{{ summary.summaryResult }}</span>
+        <div class="{{itemClass}}">
+            <span class="igx-grid-summary__label" title="{{ summary.label }}">{{ summary.label }}</span>
+            <span class="igx-grid-summary__result" title="{{ summary.summaryResult }}">{{ summary.summaryResult }}</span>
         </div>
     </ng-container>
 </ng-container>

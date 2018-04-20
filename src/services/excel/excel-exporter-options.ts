@@ -6,6 +6,8 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
 
     public ignorePinning = false;
 
+    public exportAsTable = true;
+
     constructor(fileName: string) {
         super(fileName, ".xlsx");
     }
