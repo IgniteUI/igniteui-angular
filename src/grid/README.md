@@ -1,4 +1,4 @@
-# igx-grid
+﻿# igx-grid
 **igx-grid** component provides the capability to manipulate and represent tabular data.  
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
 
@@ -217,6 +217,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |nextPage()|Goes to the next page if paging is enabled and current page is not the last.|
 |paginate(page: number)|Goes to the specified page if paging is enabled. Page indices are 0 based.|
 |markForCheck()|Manually triggers a change detection cycle for the grid and its children.|
+|reflow()|Recalculates grid width/height dimensions. Should be run when changing DOM elements dimentions manually that affect the grid's size.|
 
 <div class="divider--half"></div>
 
