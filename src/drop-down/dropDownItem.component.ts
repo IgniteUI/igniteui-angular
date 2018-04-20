@@ -38,6 +38,7 @@ export class IgxDropDownItemComponent {
         this.dropDown.itemClicked.emit(this);
         const oldSelection = this.dropDown.selectedItem;
         this.dropDown.selectedItem = this;
+        this.dropDown._initialSelectionChanged = true;
         const args: ISelectionEventArgs = { oldSelection, newSelection: this.dropDown.selectedItem, event };
         this.dropDown.onSelection.emit(args);
         this.dropDown.toggleDropDown();

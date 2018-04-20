@@ -36,7 +36,7 @@ export interface ISelectionEventArgs {
 export class IgxDropDownComponent {
     private _selectedItem: IgxDropDownItemComponent = null;
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
-    private _initialSelectionChanged = false;
+    public _initialSelectionChanged = false;
 
     @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
     @ContentChildren(IgxDropDownItemComponent, { read: IgxDropDownItemComponent }) public items: QueryList<IgxDropDownItemComponent>;
@@ -50,7 +50,6 @@ export class IgxDropDownComponent {
     }
 
     set selectedItem(item: IgxDropDownItemComponent) {
-        this._initialSelectionChanged = true;
         this._selectedItem = item;
     }
 
@@ -67,6 +66,7 @@ export class IgxDropDownComponent {
 
     @HostListener("keydown.Enter", ["$event"])
     public onEnterKeyDown(event) {
+        this._initialSelectionChanged = true;
         this.toggle.close(true);
     }
 
@@ -115,14 +115,13 @@ export class IgxDropDownComponent {
     }
 
     public close() {
-        console.log(this._initialSelectionChanged);
         if (!this._initialSelectionChanged) {
             const oldSelection = this.selectedItem;
             this.selectedItem = this._initiallySelectedItem;
             const args: ISelectionEventArgs = {oldSelection, newSelection: this.selectedItem, event};
             this.onSelection.emit(args);
-            this._initialSelectionChanged = false;
         }
+        this._initialSelectionChanged = false;
     }
 
     public open() {
