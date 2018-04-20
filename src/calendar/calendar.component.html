@@ -40,7 +40,8 @@
         </span>
     </div>
 
-    <div *ngFor="let week of getCalendarMonth; index as i; trackBy: rowTracker" class="igx-calendar__body-row" [@animateChange]="monthAction">
+    <div *ngFor="let week of getCalendarMonth; index as i; trackBy: rowTracker" class="igx-calendar__body-row" [@animateChange]="monthAction"
+        (@animateChange.done)="animationDone()">
         <span [igxCalendarDate]="day" (onDateSelection)="childClicked($event)" *ngFor="let day of week; trackBy: dateTracker">
             {{ formattedDate(day.date) }}
         </span>

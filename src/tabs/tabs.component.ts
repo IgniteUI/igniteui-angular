@@ -20,7 +20,6 @@ import {
     ViewChildren
 } from "@angular/core";
 
-import { isNullOrUndefined } from "util";
 import { IgxBadgeModule } from "../badge/badge.component";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxIconModule } from "../icon";
@@ -85,7 +84,7 @@ export class IgxTabsComponent implements AfterViewInit {
         }
 
         // Layout fix for items with icons
-        if (!isNullOrUndefined(iconLabelFound)) {
+        if (iconLabelFound !== undefined) {
             css = `${css} ${iconStyle}`;
         }
 
@@ -151,7 +150,7 @@ export class IgxTabsComponent implements AfterViewInit {
                 const group = selectableGroups[0];
 
                 if (group) {
-                    group.select();
+                    group.select(50, true);
                 }
 
             }

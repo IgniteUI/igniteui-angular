@@ -245,12 +245,14 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
                 if (!this.selected) {
                     this.nativeElement.blur();
                 }
+                this.cdr.markForCheck();
             });
         this.chunkLoadedVer = this.grid.verticalScrollContainer.onChunkLoad.subscribe(
             () => {
                 if (!this.selected) {
                     this.nativeElement.blur();
                 }
+                this.cdr.markForCheck();
             });
     }
 
@@ -527,7 +529,30 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         const lastCell = this._getLastSelectedCell();
         const rowIndex = lastCell ? lastCell.rowIndex - 1 : this.grid.rowList.last.index;
         const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, this.visibleColumnIndex);
+        const verticalScroll = this.row.grid.verticalScrollContainer.getVerticalScroll();
+
+        if (!verticalScroll && !target) {
+            return;
+        }
+
         if (target) {
+            const targetRowOffset = target.row.nativeElement.offsetTop;
+            const containerOffset = target.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.offsetTop;
+
+            if (targetRowOffset === 0 && containerOffset < 0) {
+                // Target is part of the first row in the container that is partially visible
+                verticalScroll.scrollTop += containerOffset;
+                const oldChunkIndex = target.row.grid.verticalScrollContainer.state.startIndex;
+
+                this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+                    next: (e: any) => {
+                        if (oldChunkIndex === e.startIndex) {
+                            target.nativeElement.focus();
+                        }
+                        this.row.cdr.detectChanges();
+                    }
+                });
+            }
             target.nativeElement.focus();
         } else {
             this.row.grid.verticalScrollContainer.scrollPrev();
