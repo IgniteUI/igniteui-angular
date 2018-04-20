@@ -764,6 +764,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return true;
     }
 
+    /**
+     * Recalculates grid width/height dimensions. Should be run when changing DOM elements dimentions manually that affect the grid's size.
+     */
+    public reflow() {
+        this.calculateGridSizes();
+    }
+
     get hasSortableColumns(): boolean {
         return this.columnList.some((col) => col.sortable);
     }
