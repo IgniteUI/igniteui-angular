@@ -1,4 +1,4 @@
-import { Component, DebugElement, ViewChild } from "@angular/core";
+import { Component, DebugElement, OnInit, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
@@ -13,7 +13,7 @@ describe("IgxGrid - input properties", () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridTestComponent,
-                IgxGridTestDefaultWidthHeight
+                IgxGridTestDefaultWidthHeightComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule.forRoot()]
@@ -81,7 +81,7 @@ describe("IgxGrid - input properties", () => {
     });
 
     it("Test rendering of data with 5 columns and 5 rows where 2 of the columns have width set", () => {
-        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeight);
+        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid2;
         fix.componentInstance.generateColumns(5);
@@ -96,10 +96,10 @@ describe("IgxGrid - input properties", () => {
         expect(parseInt(grid.columns[2].width, 10)).toEqual(parseInt(grid.columns[1].width, 10));
 
         grid.columns.forEach((column) => {
-            let width = parseInt(column.width, 10),
-                minWidth = parseInt(MIN_COL_WIDTH, 10);
-            if (column.index != 0 && column.index != 4) {
-                if (width == minWidth || width > minWidth) {
+            const width = parseInt(column.width, 10);
+            const minWidth = parseInt(MIN_COL_WIDTH, 10);
+            if (column.index !== 0 && column.index !== 4) {
+                if (width >= minWidth) {
                     expect(true);
                 } else {
                     expect(false);
@@ -111,7 +111,7 @@ describe("IgxGrid - input properties", () => {
     });
 
     it("Test rendering of data with 5 columns and 5 rows where 2 of the columns have width set and grid has width", () => {
-        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeight);
+        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid2;
         grid.width = "800px";
@@ -127,10 +127,10 @@ describe("IgxGrid - input properties", () => {
         expect(parseInt(grid.columns[2].width, 10)).toEqual(parseInt(grid.columns[1].width, 10));
 
         grid.columns.forEach((column) => {
-            let width = parseInt(column.width, 10),
-                minWidth = parseInt(MIN_COL_WIDTH, 10);
-            if (column.index != 0 && column.index != 4) {
-                if (width == minWidth || width > minWidth) {
+            const width = parseInt(column.width, 10);
+            const minWidth = parseInt(MIN_COL_WIDTH, 10);
+            if (column.index !== 0 && column.index !== 4) {
+                if (width >= minWidth) {
                     expect(true);
                 } else {
                     expect(false);
@@ -141,7 +141,7 @@ describe("IgxGrid - input properties", () => {
     });
 
     it("Test rendering of data with 5 columns and 30 rows where 3 of the columns have width set", () => {
-        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeight);
+        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid2;
         fix.componentInstance.generateColumns(5);
@@ -156,10 +156,10 @@ describe("IgxGrid - input properties", () => {
         expect(parseInt(grid.columns[2].width, 10)).toEqual(parseInt(grid.columns[1].width, 10));
 
         grid.columns.forEach((column) => {
-            let width = parseInt(column.width, 10),
-            minWidth = parseInt(MIN_COL_WIDTH, 10);
-            if (column.index != 0 && column.index != 4) {
-                if (width == minWidth || width > minWidth) {
+            const width = parseInt(column.width, 10);
+            const minWidth = parseInt(MIN_COL_WIDTH, 10);
+            if (column.index !== 0 && column.index !== 4) {
+                if (width >= minWidth) {
                     expect(true);
                 } else {
                     expect(false);
@@ -171,7 +171,7 @@ describe("IgxGrid - input properties", () => {
     });
 
     it("Test rendering of data with 30 columns and 1000 rows where 5 of the columns have width set", () => {
-        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeight);
+        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid2;
         fix.componentInstance.generateColumns(30);
@@ -189,11 +189,11 @@ describe("IgxGrid - input properties", () => {
         expect(parseInt(grid.columns[2].width, 10)).toEqual(parseInt(grid.columns[1].width, 10));
 
         grid.columns.forEach((column) => {
-            let width = parseInt(column.width, 10),
-            minWidth = parseInt(MIN_COL_WIDTH, 10);
-            if (column.index != 0 && column.index != 3 && column.index != 5 &&
-                    column.index != 10 && column.index != 25) {
-                        if (width == minWidth || width > minWidth) {
+            const width = parseInt(column.width, 10);
+            const minWidth = parseInt(MIN_COL_WIDTH, 10);
+            if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
+                    column.index !== 10 && column.index !== 25) {
+                        if (width >= minWidth) {
                             expect(true);
                         } else {
                             expect(false);
@@ -205,7 +205,7 @@ describe("IgxGrid - input properties", () => {
     });
 
     it("Test rendering of data with 30 columns and 1000 rows where 5 of the columns have width set and grid has width", () => {
-        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeight);
+        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid2;
         grid.width = "800px";
@@ -221,11 +221,11 @@ describe("IgxGrid - input properties", () => {
         expect(grid.columns[25].width).toEqual("200px");
 
         grid.columns.forEach((column) => {
-            let width = parseInt(column.width, 10),
-            minWidth = parseInt(MIN_COL_WIDTH, 10);
-            if (column.index != 0 && column.index != 3 && column.index != 5 &&
-                    column.index != 10 && column.index != 25) {
-                    if (width == minWidth || width > minWidth) {
+            const width = parseInt(column.width, 10);
+            const minWidth = parseInt(MIN_COL_WIDTH, 10);
+            if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
+                    column.index !== 10 && column.index !== 25) {
+                    if (width >= minWidth) {
                         expect(true);
                     } else {
                         expect(false);
@@ -236,7 +236,7 @@ describe("IgxGrid - input properties", () => {
     });
 
     it("Test rendering of data with 150 columns and 20000 rows where 5 of the columns have width set", () => {
-        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeight);
+        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid2;
         fix.componentInstance.generateColumns(150);
@@ -251,11 +251,11 @@ describe("IgxGrid - input properties", () => {
         expect(grid.columns[50].width).toEqual("500px");
 
         grid.columns.forEach((column) => {
-            let width = parseInt(column.width, 10),
-            minWidth = parseInt(MIN_COL_WIDTH, 10);
-            if (column.index != 0 && column.index != 3 && column.index != 5 &&
-                    column.index != 10 && column.index != 50) {
-                    if (width == minWidth || width > minWidth) {
+            const width = parseInt(column.width, 10);
+            const minWidth = parseInt(MIN_COL_WIDTH, 10);
+            if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
+                    column.index !== 10 && column.index !== 50) {
+                    if (width >= minWidth) {
                         expect(true);
                     } else {
                         expect(false);
@@ -267,7 +267,7 @@ describe("IgxGrid - input properties", () => {
     });
 
     it("Test rendering of data with 150 columns and 20000 rows where 5 of the columns have width set and grid has width", () => {
-        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeight);
+        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid2;
         grid.width = "800px";
@@ -283,11 +283,11 @@ describe("IgxGrid - input properties", () => {
         expect(grid.columns[50].width).toEqual("500px");
 
         grid.columns.forEach((column) => {
-            let width = parseInt(column.width, 10),
-            minWidth = parseInt(MIN_COL_WIDTH, 10);
-            if (column.index != 0 && column.index != 3 && column.index != 5 &&
-                    column.index != 10 && column.index != 50) {
-                    if (width == minWidth || width > minWidth) {
+            const width = parseInt(column.width, 10);
+            const minWidth = parseInt(MIN_COL_WIDTH, 10);
+            if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
+                    column.index !== 10 && column.index !== 50) {
+                    if (width >= minWidth) {
                         expect(true);
                     } else {
                         expect(false);
@@ -317,34 +317,34 @@ export class IgxGridTestComponent {
                 </igx-column>
                 </igx-grid>`
 })
-export class IgxGridTestDefaultWidthHeight {
-    public data =[];
-    public cols = []
+export class IgxGridTestDefaultWidthHeightComponent implements OnInit {
+    public data = [];
+    public cols = [];
     @ViewChild("grid2") public grid2: IgxGridComponent;
-    
-    ngOnInit () {
+
+    ngOnInit() {
         this.cols = this.generateColumns(5);
         this.data = this.generateData(5, 5);
     }
     initColumns(column) {
         switch (this.grid2.columnList.length) {
-            case 5: 
-                if (column.index == 0 || column.index == 4) {
+            case 5:
+                if (column.index === 0 || column.index === 4) {
                     column.width = "200px";
                 }
-            break;
-            case 30: 
-                if (column.index == 0 || column.index == 5 || column.index == 3 || column.index == 10 || column.index == 25) {
+                break;
+            case 30:
+                if (column.index === 0 || column.index === 5 || column.index === 3 || column.index === 10 || column.index === 25) {
                     column.width = "200px";
                 }
-            break;
-            case 150: 
-                if (column.index == 0 || column.index == 5 || column.index == 3 || column.index == 10 || column.index == 50) {
+                break;
+            case 150:
+                if (column.index === 0 || column.index === 5 || column.index === 3 || column.index === 10 || column.index === 50) {
                     column.width = "500px";
                 }
-            break;
+                break;
         }
-        
+
       }
     public generateColumns(count) {
         this.cols = [];
@@ -352,13 +352,14 @@ export class IgxGridTestDefaultWidthHeight {
             this.cols.push({
                 field: "col" + i,
                 header: "col" + i
-            })
+            });
         }
         return this.cols;
     }
     public generateData(columns, rows) {
-        const data = [], cols = [];
-     
+        const data = [];
+        const cols = [];
+
         for (let r = 0; r < rows; r++) {
           const record = {};
           for (let c = 0; c < columns; c++) {
@@ -366,7 +367,7 @@ export class IgxGridTestDefaultWidthHeight {
           }
           this.data.push(record);
         }
-     
+
         return this.data;
     }
 }
