@@ -107,7 +107,7 @@ public ngAfterViewInit() {
 public initColumns(event: IgxGridColumnInitEvent) {
     const column: IgxColumnComponent = event.column;
     if (column.field === "Name") {
-    column.filtering = true;
+    column.filterable = true;
     column.sortable = true;
     column.editable = true;
     }
@@ -237,6 +237,7 @@ Column component is used to define grid's *columns* collection. Cell, header and
 ### Inputs
 
 Inputs available on the **IgxGridColumnComponent** to define columns:
+
 |Name|Type|Description|
 |--- |--- |--- |
 |`field`|string|Column field name|
