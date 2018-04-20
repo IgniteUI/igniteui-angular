@@ -6,7 +6,6 @@ import {
     EventEmitter,
     HostListener,
     NgModule,
-    OnInit,
     Output,
     QueryList,
     Renderer,
@@ -19,11 +18,19 @@ import { IgxDropDownItemComponent } from "./dropDownItem.component";
 @Component({
     selector: "igx-drop-down",
     templateUrl: "./dropDown.component.html",
-    styles: [".igx-toggle { background-color: yellow; }"]
+    styles: [
+        `.igx-toggle {
+            background-color: yellow;
+            width: 80px;
+            height: 120px;
+            overflow-y: auto;
+        }`
+    ]
 })
-export class IgxDropDownComponent implements OnInit {
+export class IgxDropDownComponent {
     private _selectedItem: IgxDropDownItemComponent = null;
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
+    private _initialSelectionChanged = false;
 
     @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
     @ContentChildren(IgxDropDownItemComponent, { read: IgxDropDownItemComponent }) public items: QueryList<IgxDropDownItemComponent>;
@@ -36,10 +43,8 @@ export class IgxDropDownComponent implements OnInit {
     }
 
     set selectedItem(item: IgxDropDownItemComponent) {
+        this._initialSelectionChanged = true;
         this._selectedItem = item;
-    }
-
-    public ngOnInit() {
     }
 
     @HostListener("blur", ["$event"])
@@ -47,36 +52,9 @@ export class IgxDropDownComponent implements OnInit {
         this.toggle.close(true);
     }
 
-    public toggleDropDown() {
-        if (this.toggle.collapsed) {
-            this.toggle.open(true);
-        } else {
-            this.toggle.close(true);
-        }
-    }
-
-    private scrollToItem(item: IgxDropDownItemComponent) {
-        const totalHeight: number = this.items.reduce((sum, currentItem) => sum + currentItem.elementHeight, 0);
-        let itemPosition = 0;
-        itemPosition = this.items
-            .filter((itemToFilter) => itemToFilter.index < item.index)
-            .reduce((sum, currentItem) => sum + currentItem.elementHeight, 0);
-
-        itemPosition += item.elementHeight / 2;
-        this.toggle.element.scrollTop = (Math.floor(itemPosition));
-    }
-
-    public dropDown() {
-        this.elementRef.nativeElement.tabIndex = 0;
-        this.elementRef.nativeElement.focus();
-        if (this._selectedItem) {
-            this._initiallySelectedItem = this._selectedItem;
-            this.scrollToItem(this._selectedItem);
-        }
-    }
-
     @HostListener("keydown.Space", ["$event"])
     public onSpaceKeyDown(event) {
+        this._initialSelectionChanged = true;
         this.toggle.close(true);
     }
 
@@ -87,7 +65,6 @@ export class IgxDropDownComponent implements OnInit {
 
     @HostListener("keydown.Escape", ["$event"])
     public onEscapeKeyDown(event) {
-        this.selectedItem = this._initiallySelectedItem;
         this.toggle.close(true);
     }
 
@@ -100,6 +77,12 @@ export class IgxDropDownComponent implements OnInit {
         if (selectedItemIndex < this.items.length - 1) {
             this.selectedItem = this.items.toArray()[selectedItemIndex + 1];
         }
+
+        const rect = this.selectedItem.element.nativeElement.getBoundingClientRect();
+        const parentRect = this.toggle.element.getBoundingClientRect();
+        if (parentRect.bottom < rect.bottom) {
+            this.toggle.element.scrollTop += (rect.bottom - parentRect.bottom);
+        }
     }
 
     @HostListener("keydown.ArrowUp", ["$event"])
@@ -109,7 +92,44 @@ export class IgxDropDownComponent implements OnInit {
             if (selectedItemIndex > 0) {
                 this.selectedItem = this.items.toArray()[selectedItemIndex - 1];
             }
+
+            const rect = this.selectedItem.element.nativeElement.getBoundingClientRect();
+            const parentRect = this.toggle.element.getBoundingClientRect();
+            if (parentRect.top > rect.top) {
+                this.toggle.element.scrollTop -= (parentRect.top - rect.bottom + rect.height);
+            }
         }
+    }
+
+    public close() {
+        console.log(this._initialSelectionChanged);
+        if (!this._initialSelectionChanged) {
+            this.selectedItem = this._initiallySelectedItem;
+            this._initialSelectionChanged = false;
+        }
+    }
+
+    public open() {
+        this.elementRef.nativeElement.tabIndex = 0;
+        this.elementRef.nativeElement.focus();
+        if (this._selectedItem) {
+            this._initiallySelectedItem = this._selectedItem;
+            this.scrollToItem(this._selectedItem);
+        }
+    }
+
+    public toggleDropDown() {
+        this.toggle.toggle(true);
+    }
+
+    private scrollToItem(item: IgxDropDownItemComponent) {
+        const totalHeight: number = this.items.reduce((sum, currentItem) => sum + currentItem.elementHeight, 0);
+        let itemPosition = 0;
+        itemPosition = this.items
+            .filter((itemToFilter) => itemToFilter.index < item.index)
+            .reduce((sum, currentItem) => sum + currentItem.elementHeight, 0);
+
+        this.toggle.element.scrollTop = (Math.floor(itemPosition));
     }
 }
 

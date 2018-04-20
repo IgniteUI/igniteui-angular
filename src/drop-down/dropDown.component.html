@@ -1,4 +1,4 @@
-<div igxToggle (onOpen)="dropDown()">
+<div igxToggle (onOpen)="open()" (onClose)="close()">
     <div *ngIf="!toggle.collapsed">
         <ng-content></ng-content>
     </div>

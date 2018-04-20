@@ -6,7 +6,7 @@ import { IgxDropDownComponent } from "./dropDown.component";
     templateUrl: "dropDownItem.component.html",
     styleUrls: ["dropDownItem.component.css"]
 })
-export class IgxDropDownItemComponent implements OnInit {
+export class IgxDropDownItemComponent {
     get isSelected() {
         return this.dropDown.selectedItem === this;
     }
@@ -29,10 +29,6 @@ export class IgxDropDownItemComponent implements OnInit {
         private elementRef: ElementRef
     ) { }
 
-    ngOnInit() {
-
-    }
-
     @HostListener("click", ["$event"]) clicked(event) {
         this.dropDown.itemClicked.emit(this);
         this.dropDown.selectedItem = this;
@@ -45,5 +41,9 @@ export class IgxDropDownItemComponent implements OnInit {
 
     public get elementHeight(): number {
         return this.elementRef.nativeElement.clientHeight;
+    }
+
+    public get element() {
+        return this.elementRef;
     }
 }
