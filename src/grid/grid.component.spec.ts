@@ -6,7 +6,7 @@ import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-fdescribe("IgxGrid - input properties", () => {
+describe("IgxGrid - input properties", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
