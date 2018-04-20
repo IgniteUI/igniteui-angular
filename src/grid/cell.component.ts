@@ -18,6 +18,7 @@ import { KEYCODES } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
+import { IgxGridHeaderComponent } from "./grid-header.component";
 import { autoWire, IGridBus } from "./grid.common";
 import { IGridCellEventArgs, IGridEditEventArgs } from "./grid.component";
 
@@ -135,8 +136,19 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
     @HostBinding("class.igx-grid__td--fw")
     get width() {
         const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
+
+        const header = Array.from(this.grid.headerList)[this.columnIndex] as IgxGridHeaderComponent;
+        if (!this.column.width && header) {
+
+            const headerWidth = header.elementRef.nativeElement.getBoundingClientRect().width;
+
+            return this.isLastUnpinned && hasVerticalScroll ?
+                (headerWidth - 18) + "px" : headerWidth + "px";
+        }
+
         return this.isLastUnpinned && hasVerticalScroll && !!this.column.width ?
             (parseInt(this.column.width, 10) - 18) + "px" : this.column.width;
+
     }
 
     @HostBinding("class.igx-grid__td--editing")
