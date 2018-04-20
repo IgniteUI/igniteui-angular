@@ -4,7 +4,9 @@ import { IgxDropDownComponent } from "./dropDown.component";
 @Component({
     selector: "igx-drop-down-item",
     templateUrl: "dropDownItem.component.html",
-    styleUrls: ["dropDownItem.component.css"]
+    styles: [
+        ":host { display: block; color: red; }",
+        ":host.selected { background-color: rebeccapurple; }"]
 })
 export class IgxDropDownItemComponent {
     get isSelected() {

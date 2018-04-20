@@ -35,6 +35,8 @@ export class IgxDropDownComponent {
     @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
     @ContentChildren(IgxDropDownItemComponent, { read: IgxDropDownItemComponent }) public items: QueryList<IgxDropDownItemComponent>;
     @Output() public itemClicked = new EventEmitter<IgxDropDownItemComponent>();
+    // tslint:disable-next-line:max-line-length
+    @Output() public onSelection = new EventEmitter<{ oldValue: IgxDropDownItemComponent, newValue: IgxDropDownItemComponent, event: Event }>();
 
     constructor(private elementRef: ElementRef, private renderer: Renderer) { }
 
