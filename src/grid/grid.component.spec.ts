@@ -82,7 +82,6 @@ describe("IgxGrid - input properties", () => {
 
     it("Test rendering of data with 5 columns and 5 rows where 2 of the columns have width set", () => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
-        fix.detectChanges();
         const grid = fix.componentInstance.grid2;
         fix.componentInstance.generateColumns(5);
         fix.componentInstance.generateData(5, 5);
@@ -97,18 +96,17 @@ describe("IgxGrid - input properties", () => {
 
         grid.columns.forEach((column) => {
             const width = parseInt(column.width, 10);
-            const minWidth = parseInt(MIN_COL_WIDTH, 10);
+            const minWidth = parseInt(grid.columnWidth, 10);
             if (column.index !== 0 && column.index !== 4) {
                 expect(width).toBeGreaterThanOrEqual(minWidth);
             }
         });
 
-        expect(grid.calcWidth - grid.totalWidth).toBeGreaterThanOrEqual(0);
+        expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
     });
 
     it("Test rendering of data with 5 columns and 5 rows where 2 of the columns have width set and grid has width", () => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
-        fix.detectChanges();
         const grid = fix.componentInstance.grid2;
         grid.width = "800px";
         fix.componentInstance.generateColumns(5);
@@ -124,17 +122,16 @@ describe("IgxGrid - input properties", () => {
 
         grid.columns.forEach((column) => {
             const width = parseInt(column.width, 10);
-            const minWidth = parseInt(MIN_COL_WIDTH, 10);
+            const minWidth = parseInt(grid.columnWidth, 10);
             if (column.index !== 0 && column.index !== 4) {
                 expect(width).toBeGreaterThanOrEqual(minWidth);
             }
         });
-        expect(grid.calcWidth - grid.totalWidth).toBeLessThan(0);
+        expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
     });
 
     it("Test rendering of data with 5 columns and 30 rows where 3 of the columns have width set", () => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
-        fix.detectChanges();
         const grid = fix.componentInstance.grid2;
         fix.componentInstance.generateColumns(5);
         fix.componentInstance.generateData(5, 30);
@@ -149,18 +146,17 @@ describe("IgxGrid - input properties", () => {
 
         grid.columns.forEach((column) => {
             const width = parseInt(column.width, 10);
-            const minWidth = parseInt(MIN_COL_WIDTH, 10);
+            const minWidth = parseInt(grid.columnWidth, 10);
             if (column.index !== 0 && column.index !== 4) {
                 expect(width).toBeGreaterThanOrEqual(minWidth);
             }
         });
 
-        expect(grid.calcWidth - grid.totalWidth).toBeGreaterThanOrEqual(0);
+        expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
     });
 
     it("Test rendering of data with 30 columns and 1000 rows where 5 of the columns have width set", () => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
-        fix.detectChanges();
         const grid = fix.componentInstance.grid2;
         fix.componentInstance.generateColumns(30);
         fix.componentInstance.generateData(30, 1000);
@@ -178,19 +174,18 @@ describe("IgxGrid - input properties", () => {
 
         grid.columns.forEach((column) => {
             const width = parseInt(column.width, 10);
-            const minWidth = parseInt(MIN_COL_WIDTH, 10);
+            const minWidth = parseInt(grid.columnWidth, 10);
             if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
-                    column.index !== 10 && column.index !== 25) {
+                column.index !== 10 && column.index !== 25) {
                 expect(width).toEqual(minWidth);
             }
         });
 
-        expect(grid.calcWidth - grid.totalWidth).toBeLessThan(0);
+        expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
     });
 
     it("Test rendering of data with 30 columns and 1000 rows where 5 of the columns have width set and grid has width", () => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
-        fix.detectChanges();
         const grid = fix.componentInstance.grid2;
         grid.width = "800px";
         fix.componentInstance.generateColumns(30);
@@ -206,18 +201,17 @@ describe("IgxGrid - input properties", () => {
 
         grid.columns.forEach((column) => {
             const width = parseInt(column.width, 10);
-            const minWidth = parseInt(MIN_COL_WIDTH, 10);
+            const minWidth = parseInt(grid.columnWidth, 10);
             if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
-                    column.index !== 10 && column.index !== 25) {
+                column.index !== 10 && column.index !== 25) {
                 expect(width).toEqual(minWidth);
             }
         });
-        expect(grid.calcWidth - grid.totalWidth).toBeLessThan(0);
+        expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
     });
 
     it("Test rendering of data with 150 columns and 20000 rows where 5 of the columns have width set", () => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
-        fix.detectChanges();
         const grid = fix.componentInstance.grid2;
         fix.componentInstance.generateColumns(150);
         fix.componentInstance.generateData(150, 20000);
@@ -232,19 +226,18 @@ describe("IgxGrid - input properties", () => {
 
         grid.columns.forEach((column) => {
             const width = parseInt(column.width, 10);
-            const minWidth = parseInt(MIN_COL_WIDTH, 10);
+            const minWidth = parseInt(grid.columnWidth, 10);
             if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
-                    column.index !== 10 && column.index !== 50) {
+                column.index !== 10 && column.index !== 50) {
                 expect(width).toEqual(minWidth);
             }
         });
 
-        expect(grid.calcWidth - grid.totalWidth).toBeGreaterThanOrEqual(0);
+        expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
     });
 
     it("Test rendering of data with 150 columns and 20000 rows where 5 of the columns have width set and grid has width", () => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
-        fix.detectChanges();
         const grid = fix.componentInstance.grid2;
         grid.width = "800px";
         fix.componentInstance.generateColumns(150);
@@ -260,14 +253,14 @@ describe("IgxGrid - input properties", () => {
 
         grid.columns.forEach((column) => {
             const width = parseInt(column.width, 10);
-            const minWidth = parseInt(MIN_COL_WIDTH, 10);
+            const minWidth = parseInt(grid.columnWidth, 10);
             if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
-                    column.index !== 10 && column.index !== 50) {
+                column.index !== 10 && column.index !== 50) {
                 expect(width).toEqual(minWidth);
             }
         });
 
-        expect(grid.calcWidth - grid.totalWidth).toBeLessThan(0);
+        expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
     });
 });
 
@@ -289,15 +282,11 @@ export class IgxGridTestComponent {
                 </igx-column>
                 </igx-grid>`
 })
-export class IgxGridTestDefaultWidthHeightComponent implements OnInit {
+export class IgxGridTestDefaultWidthHeightComponent {
     public data = [];
     public cols = [];
     @ViewChild("grid2") public grid2: IgxGridComponent;
 
-    ngOnInit() {
-        this.cols = this.generateColumns(5);
-        this.data = this.generateData(5, 5);
-    }
     initColumns(column) {
         switch (this.grid2.columnList.length) {
             case 5:
@@ -339,5 +328,10 @@ export class IgxGridTestDefaultWidthHeightComponent implements OnInit {
             this.data.push(record);
         }
         return this.data;
+    }
+
+    public isHorizonatScrollbarVisible() {
+        const scrollbar = this.grid2.parentVirtDir.getHorizontalScroll();
+        return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
     }
 }
