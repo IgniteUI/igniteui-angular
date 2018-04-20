@@ -1,4 +1,4 @@
-<div igxToggle (onOpen)="open()" (onClose)="close()">
+<div igxToggle (onOpen)="open()" (onClose)="close()" igxToggleAction [style.width]="width" [style.height]="height" [style.overflow-y]="overflowY">
     <div *ngIf="!toggle.collapsed">
         <ng-content></ng-content>
     </div>

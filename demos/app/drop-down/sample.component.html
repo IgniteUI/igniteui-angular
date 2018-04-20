@@ -1,5 +1,5 @@
 <button (click)="toggleDropDown()">Toggle</button>
-<igx-drop-down (itemClicked)="itemClicked($event)" (onSelection)="onSelection($event)">
+<igx-drop-down [width]="width" (itemClicked)="itemClicked($event)" (onSelection)="onSelection($event)">
     <igx-drop-down-item *ngFor="let item of items">
         {{ item }}
     </igx-drop-down-item>

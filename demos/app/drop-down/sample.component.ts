@@ -6,6 +6,7 @@ import { IgxDropDownComponent } from "../../lib/main";
     templateUrl: "./sample.component.html"
 })
 export class DropDownSampleComponent {
+    private width = "120px";
     @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
 
     itemsCount = 10;
@@ -25,6 +26,5 @@ export class DropDownSampleComponent {
     }
 
     onSelection(ev) {
-        console.dir(ev);
     }
 }

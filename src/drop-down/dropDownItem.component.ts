@@ -6,9 +6,11 @@ import { IgxDropDownComponent, ISelectionEventArgs } from "./dropDown.component"
     templateUrl: "dropDownItem.component.html",
     styles: [
         ":host { display: block; color: red; }",
-        ":host.selected { background-color: rebeccapurple; }"]
+        ":host.selected { background-color: rebeccapurple; }",
+        ":host.focused { border: 1px solid green; }"
+    ]
 })
-export class IgxDropDownItemComponent {
+export class IgxDropDownItemComponent implements OnInit {
     get isSelected() {
         return this.dropDown.selectedItem === this;
     }
@@ -29,6 +31,8 @@ export class IgxDropDownItemComponent {
         return this.isSelected;
     }
 
+    @HostBinding("class.focused") public isFocused = false;
+
     constructor(
         @Inject(forwardRef(() => IgxDropDownComponent)) public dropDown: IgxDropDownComponent,
         private elementRef: ElementRef
@@ -41,7 +45,11 @@ export class IgxDropDownItemComponent {
         this.dropDown._initialSelectionChanged = true;
         const args: ISelectionEventArgs = { oldSelection, newSelection: this.dropDown.selectedItem, event };
         this.dropDown.onSelection.emit(args);
-        this.dropDown.toggleDropDown();
+        this.dropDown.close();
+    }
+
+    ngOnInit() {
+        this.element.nativeElement.tabIndex = 0;
     }
 
     public get index(): number {
