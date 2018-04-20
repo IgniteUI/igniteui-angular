@@ -228,9 +228,11 @@ Here is a list of all public methods exposed by **igx-grid**:
 
 
 ## IgxColumnComponent
+
 ### Inputs
 
 Inputs available on the **IgxGridColumnComponent** to define columns:
+
 |Name|Type|Description|
 |--- |--- |--- |
 |`field`|string|Column field name|
@@ -255,6 +257,7 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`sortingIgnoreCase`|boolean|Ignore capitalization of strings when sorting is applied. Defaults to _true_.|
 |`dataType`|DataType|One of string, number, boolean or Date. When filtering is enabled the filter UI conditions are based on the `dataType` of the column. Defaults to `string` if it is not provided. With `autoGenerate` enabled the grid will try to resolve the correct data type for each column based on the data source.|
 |`pinned`|boolean|Set column to be pinned or not|
+
 
 ### Methods
 Here is a list of all public methods exposed by **IgxGridColumnComponent**:
@@ -384,15 +387,3 @@ import {
 |Name|Return Type|Description|
 |--- |--- |--- |
 |`update(val: any)`|void|Emits the `onEditDone` event and updates the appropriate record in the data source.|
-
-
-### Additional Resources
-
-* [Virtualization and Performance](grid_virtualization.html)
-* [Paging](grid_paging.html)
-* [Filtering](grid_filtering.html)
-* [Sorting](grid_sorting.html)
-* [Summaries](grid_summaries.html)
-* [Column Pinning](grid_column_pinning.html)
-* [Column Resizing](grid_column_resizing.html)
-* [Selection](grid_selection.html)
