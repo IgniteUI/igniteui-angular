@@ -150,6 +150,8 @@ public deleteRow(event) {
 ### Inputs
 
 Below is the list of all inputs that the developers may set to configure the grid look/behavior:
+
+
 |Name|Type|Description|
 |--- |--- |--- |
 |`id`|string|Unique identifier of the Grid. If not provided it will be automatically generated.|
