@@ -18,7 +18,7 @@ describe("IgxGrid - input properties", () => {
             imports: [
                 NoopAnimationsModule, IgxGridModule.forRoot()]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     it("height/width should be calculated depending on number of records", async(() => {
@@ -35,7 +35,7 @@ describe("IgxGrid - input properties", () => {
         expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch("50px");
 
         for (let i = 2; i < 31; i++) {
-            grid.addRow({ index: i, value: i});
+            grid.addRow({ index: i, value: i });
         }
 
         fix.detectChanges();
@@ -185,7 +185,7 @@ describe("IgxGrid - input properties", () => {
         expect(grid.columns[10].width).toEqual("200px");
         expect(grid.columns[25].width).toEqual("200px");
 
-        expect(parseInt(grid.columns[1].width, 10)).toEqual(parseInt(grid.columns[3].width, 10));
+        expect(parseInt(grid.columns[1].width, 10)).toEqual(parseInt(grid.columns[4].width, 10));
         expect(parseInt(grid.columns[2].width, 10)).toEqual(parseInt(grid.columns[1].width, 10));
 
         grid.columns.forEach((column) => {
@@ -193,15 +193,15 @@ describe("IgxGrid - input properties", () => {
             const minWidth = parseInt(MIN_COL_WIDTH, 10);
             if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
                     column.index !== 10 && column.index !== 25) {
-                        if (width >= minWidth) {
-                            expect(true);
-                        } else {
-                            expect(false);
-                        }
+                if (width >= minWidth) {
+                    expect(true);
+                } else {
+                    expect(false);
+                }
             }
         });
 
-        expect(grid.calcWidth - grid.totalWidth >= 0).toEqual(true);
+        expect(grid.calcWidth - grid.totalWidth >= 0).toEqual(false);
     });
 
     it("Test rendering of data with 30 columns and 1000 rows where 5 of the columns have width set and grid has width", () => {
@@ -225,11 +225,11 @@ describe("IgxGrid - input properties", () => {
             const minWidth = parseInt(MIN_COL_WIDTH, 10);
             if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
                     column.index !== 10 && column.index !== 25) {
-                    if (width >= minWidth) {
-                        expect(true);
-                    } else {
-                        expect(false);
-                    }
+                if (width >= minWidth) {
+                    expect(true);
+                } else {
+                    expect(false);
+                }
             }
         });
         expect(grid.calcWidth - grid.totalWidth >= 0).toEqual(false);
@@ -255,11 +255,11 @@ describe("IgxGrid - input properties", () => {
             const minWidth = parseInt(MIN_COL_WIDTH, 10);
             if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
                     column.index !== 10 && column.index !== 50) {
-                    if (width >= minWidth) {
-                        expect(true);
-                    } else {
-                        expect(false);
-                    }
+                if (width >= minWidth) {
+                    expect(true);
+                } else {
+                    expect(false);
+                }
             }
         });
 
@@ -287,11 +287,11 @@ describe("IgxGrid - input properties", () => {
             const minWidth = parseInt(MIN_COL_WIDTH, 10);
             if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
                     column.index !== 10 && column.index !== 50) {
-                    if (width >= minWidth) {
-                        expect(true);
-                    } else {
-                        expect(false);
-                    }
+                if (width >= minWidth) {
+                    expect(true);
+                } else {
+                    expect(false);
+                }
             }
         });
 
@@ -307,7 +307,7 @@ describe("IgxGrid - input properties", () => {
     </igx-grid></div>`
 })
 export class IgxGridTestComponent {
-    public data = [{ index: 1, value: 1}];
+    public data = [{ index: 1, value: 1 }];
     @ViewChild("grid") public grid: IgxGridComponent;
 }
 
@@ -344,8 +344,7 @@ export class IgxGridTestDefaultWidthHeightComponent implements OnInit {
                 }
                 break;
         }
-
-      }
+    }
     public generateColumns(count) {
         this.cols = [];
         for (let i = 0; i < count; i++) {
@@ -361,13 +360,12 @@ export class IgxGridTestDefaultWidthHeightComponent implements OnInit {
         const cols = [];
 
         for (let r = 0; r < rows; r++) {
-          const record = {};
-          for (let c = 0; c < columns; c++) {
-            record[this.cols[c].field] = c * r;
-          }
-          this.data.push(record);
+            const record = {};
+            for (let c = 0; c < columns; c++) {
+                record[this.cols[c].field] = c * r;
+            }
+            this.data.push(record);
         }
-
         return this.data;
     }
 }
