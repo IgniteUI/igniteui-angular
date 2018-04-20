@@ -6,7 +6,11 @@
 .items-wrapper__item {
     width: 100%;
     padding: 20px;
-    min-width: 350px;
+    min-width: 250px;
+}
+
+.items-wrapper__item-small {
+    max-width: 40%;
 }
 
 @media only screen and (max-width: 710px) {
@@ -19,18 +23,8 @@
     }
 }
 
-.items-wrapper__item-small {
-    max-width: 40%;
-}
-
 .my-tab-content {
     padding: 0 15px;
-}
-
-.items-wrapper__item--blue .igx-tabs,
-.items-wrapper__item--blue .igx-tabs--fixed {
-    z-index: 5;
-    position: relative;
 }
 
 .design-1 .my-tab-content {
