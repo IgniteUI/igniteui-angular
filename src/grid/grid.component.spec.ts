@@ -6,7 +6,7 @@ import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-fdescribe("IgxGrid - input properties", () => {
+describe("IgxGrid - input properties", () => {
     const MIN_COL_WIDTH = "136px";
 
     beforeEach(async(() => {
@@ -241,7 +241,7 @@ fdescribe("IgxGrid - input properties", () => {
         //expect(grid.scr.nativeElement.style.display).toEqual("");
     });
 
-    fit("Test rendering of data with 150 columns and 20000 rows where 5 of the columns have width set and grid has width", () => {
+    it("Test rendering of data with 150 columns and 20000 rows where 5 of the columns have width set and grid has width", () => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeight);
         fix.detectChanges();
         const grid = fix.componentInstance.grid2;
