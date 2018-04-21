@@ -54,6 +54,7 @@ export class IgxRadioComponent implements ControlValueAccessor {
     @Input() public name: string;
     @Input() public tabindex: number = null;
     @Input() public disableRipple = false;
+    @Input() public required = false;
 
     @Input("aria-labelledby")
     public ariaLabelledBy = this.labelId;
@@ -73,8 +74,10 @@ export class IgxRadioComponent implements ControlValueAccessor {
     @HostBinding("class.igx-radio--disabled")
     @Input() public disabled = false;
 
+    @HostBinding("class.igx-radio--focused")
+    public focused = false;
+
     protected _value: any = null;
-    protected focused: boolean;
 
     constructor() { }
 
@@ -100,6 +103,7 @@ export class IgxRadioComponent implements ControlValueAccessor {
         }
 
         this.checked = true;
+        this.focused = false;
         this.change.emit({ value: this.value, radio: this });
         this._onChangeCallback(this.value);
     }

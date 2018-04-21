@@ -30,11 +30,14 @@ import {
 import { of } from "rxjs/observable/of";
 import { debounceTime, delay, merge, repeat, take, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs/Subject";
+import { IgxSelectionAPIService } from "../core/selection";
 import { cloneArray } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
+import { IForOfState } from "../directives/for-of/IForOfState";
+import { IgxCheckboxComponent } from "./../checkbox/checkbox.component";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
@@ -43,6 +46,8 @@ import { IgxGridRowComponent } from "./row.component";
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
+const DEFAULT_SUMMARY_HEIGHT = 36.36;
+const MINIMUM_COLUMN_WIDTH = 136;
 
 export interface IGridCellEventArgs {
     cell: IgxGridCellComponent;
@@ -68,6 +73,19 @@ export interface IPageEventArgs {
 
 export interface IRowDataEventArgs {
     data: any;
+}
+
+export interface IColumnResizeEventArgs {
+    column: IgxColumnComponent;
+    prevWidth: string;
+    newWidth: string;
+}
+
+export interface IRowSelectionEventArgs {
+    oldSelection: any[];
+    newSelection: any[];
+    row?: IgxGridRowComponent;
+    event?: Event;
 }
 
 /**
@@ -116,6 +134,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.cdr.markForCheck();
     }
 
+    get filteredData() {
+        return this._filteredData;
+    }
+
+    set filteredData(value) {
+        this._filteredData = value;
+        if (this.rowSelectable) {
+            this.updateHeaderChecboxStatusOnFilter(this._filteredData);
+        }
+    }
+
     @Input()
     get paging(): boolean {
         return this._paging;
@@ -157,16 +186,54 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public paginationTemplate: TemplateRef<any>;
 
+    @Input()
+    get rowSelectable(): boolean {
+        return this._rowSelection;
+    }
+
+    set rowSelectable(val: boolean) {
+        this._rowSelection = val;
+        if (this.gridAPI.get(this.id)) {
+
+            // should selection persist?
+            this.allRowsSelected = false;
+            this.deselectAllRows();
+            this.markForCheck();
+        }
+    }
+
     @HostBinding("style.height")
     @Input()
-    public height;
+    public get height() {
+        return this._height;
+    }
+    public set height(value: any) {
+        if (this._height !== value) {
+            this._height = value;
+            requestAnimationFrame(() => {
+                this.calculateGridHeight();
+                this.cdr.markForCheck();
+            });
+        }
+    }
 
     @HostBinding("style.width")
     @Input()
-    public width;
+    public get width() {
+        return this._width;
+    }
+    public set width(value: any) {
+        if (this._width !== value) {
+            this._width = value;
+            requestAnimationFrame(() => {
+                this.calculateGridWidth();
+                this.cdr.markForCheck();
+            });
+        }
+    }
 
     get headerWidth() {
-        return parseInt(this.width, 10) - 17;
+        return parseInt(this._width, 10) - 17;
     }
 
     @Input()
@@ -185,7 +252,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public primaryKey;
 
     @Output()
+    public onCellClick = new EventEmitter<IGridCellEventArgs>();
+
+    @Output()
     public onSelection = new EventEmitter<IGridCellEventArgs>();
+
+    @Output()
+    public onRowSelectionChange = new EventEmitter<IRowSelectionEventArgs>();
 
     @Output()
     public onColumnPinning = new EventEmitter<IPinColumnEventArgs>();
@@ -218,6 +291,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Output()
     public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
 
+    @Output()
+    public onDataPreLoad = new EventEmitter<any>();
+
+    @Output()
+    public onColumnResized = new EventEmitter<IColumnResizeEventArgs>();
+
+    @Output()
+    public onContextMenu = new EventEmitter<IGridCellEventArgs>();
+
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
 
@@ -239,8 +321,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild("headerContainer", { read: IgxForOfDirective })
     public headerContainer: IgxForOfDirective<any>;
 
+    @ViewChild("headerCheckboxContainer")
+    public headerCheckboxContainer: ElementRef;
+
+    @ViewChild("headerCheckbox", { read: IgxCheckboxComponent })
+    public headerCheckbox: IgxCheckboxComponent;
+
     @ViewChild("theadRow")
     public theadRow: ElementRef;
+
+    @ViewChild("tbody")
+    public tbody: ElementRef;
 
     @ViewChild("tfoot")
     public tfoot: ElementRef;
@@ -268,18 +359,39 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.cdr.markForCheck();
     }
 
+    get virtualizationState() {
+        return this.verticalScrollContainer.state;
+    }
+    set virtualizationState(state) {
+        this.verticalScrollContainer.state = state;
+    }
+
+    get totalItemCount() {
+        return this.verticalScrollContainer.totalItemCount;
+    }
+    set totalItemCount(count) {
+        this.verticalScrollContainer.totalItemCount = count;
+        this.cdr.detectChanges();
+    }
+
     public pagingState;
     public calcWidth: number;
+    public calcRowCheckboxWidth: number;
     public calcHeight: number;
+    public tfootHeight: number;
 
     public cellInEditMode: IgxGridCellComponent;
 
     public eventBus = new Subject<boolean>();
+
+    public allRowsSelected = false;
+
     protected destroy$ = new Subject<boolean>();
 
     protected _perPage = 15;
     protected _page = 0;
     protected _paging = false;
+    protected _rowSelection = false;
     protected _pipeTrigger = 0;
     protected _columns: IgxColumnComponent[] = [];
     protected _pinnedColumns: IgxColumnComponent[] = [];
@@ -287,14 +399,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _filteringLogic = FilteringLogic.And;
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
+    private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;
+    private _height = "100%";
+    private _width = "100%";
 
     constructor(
         private gridAPI: IgxGridAPIService,
+        private selectionAPI: IgxSelectionAPIService,
         private elementRef: ElementRef,
         private zone: NgZone,
-        @Inject(DOCUMENT) private document,
+        @Inject(DOCUMENT) public document,
         public cdr: ChangeDetectorRef,
         private resolver: ComponentFactoryResolver,
         private differs: IterableDiffers,
@@ -308,9 +424,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public ngOnInit() {
         this.gridAPI.register(this);
+        this.setEventBusSubscription();
+        this.setVerticalScrollSubscription();
         this.columnListDiffer = this.differs.find([]).create(null);
-        this.calcWidth = this.width && this.width.indexOf("%") === -1 ? parseInt(this.width, 10) : 0;
+        this.calcWidth = this._width && this._width.indexOf("%") === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
+        this.calcRowCheckboxWidth = 0;
     }
 
     public ngAfterContentInit() {
@@ -320,6 +439,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
+        this.clearSummaryCache();
+        this.tfootHeight = this.calcMaxSummaryHeight();
+        this._derivePossibleHeight();
         this.markForCheck();
 
         this.columnList.changes
@@ -330,30 +452,35 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
                     this.initColumns(this.columnList);
 
-                    diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => this.onColumnInit.emit(record.item));
+                    diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                        this.clearSummaryCache();
+                        this.calculateGridSizes();
+                        this.onColumnInit.emit(record.item);
+                    });
 
                     diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                        // Recalculate Summaries
+                        this.clearSummaryCache();
+                        this.calculateGridSizes();
 
                         // Clear Filtering
                         this.gridAPI.clear_filter(this.id, record.item.field);
 
                         // Clear Sorting
                         this.gridAPI.clear_sort(this.id, record.item.field);
-        });
-    }
+                    });
+                }
                 this.markForCheck();
-        });
-    }
+            });
+}
 
     public ngAfterViewInit() {
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.addEventListener("resize", this.resizeHandler);
         });
-
+        this._derivePossibleWidth();
         this.calculateGridSizes();
-        this.setEventBusSubscription();
-        this.setVerticalScrollSubscription();
-        this.cdr.detectChanges();
+
     }
 
     public ngOnDestroy() {
@@ -362,8 +489,24 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.destroy$.complete();
     }
 
+    public dataLoading(event) {
+        this.onDataPreLoad.emit(event);
+    }
+
     get nativeElement() {
         return this.elementRef.nativeElement;
+    }
+
+    get calcResizerHeight(): number {
+        if (this.hasSummarizedColumns) {
+            return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight +
+                this.tfoot.nativeElement.clientHeight;
+        }
+        return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight;
+    }
+
+    get calcPinnedContainerMaxWidth(): number {
+        return (parseInt(this.width.toString(), 10) * 80) / 100;
     }
 
     get pinnedWidth() {
@@ -372,6 +515,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     get unpinnedWidth() {
         return this.getUnpinnedWidth();
+    }
+
+    get summariesMargin() {
+        return this.rowSelectable ? this.calcRowCheckboxWidth : 0;
     }
 
     get columns(): IgxColumnComponent[] {
@@ -425,6 +572,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     get isLastPage(): boolean {
         return this.page + 1 >= this.totalPages;
+    }
+
+    get totalWidth(): number {
+        const cols = this.visibleColumns;
+        let totalWidth = 0;
+        let i = 0;
+        for (i; i < cols.length; i++) {
+            totalWidth += parseInt(cols[i].width, 10) || 0;
+        }
+        return totalWidth;
     }
 
     public nextPage(): void {
@@ -517,8 +674,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this._summaries(rest[0], true, rest[1]);
         }
+        this.tfootHeight = 0;
         this.markForCheck();
-        this.calculateGridSizes();
+        this.calculateGridHeight();
+        this.cdr.detectChanges();
     }
 
     public disableSummaries(...rest) {
@@ -527,8 +686,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this._summaries(rest[0], false);
         }
+        this.tfootHeight = 0;
         this.markForCheck();
-        this.calculateGridSizes();
+        this.calculateGridHeight();
+        this.cdr.detectChanges();
     }
 
     public clearFilter(name?: string) {
@@ -540,6 +701,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!this.gridAPI.get_column_by_name(this.id, name)) {
             return;
         }
+        this.clearSummaryCache();
         this.gridAPI.clear_filter(this.id, name);
     }
 
@@ -561,6 +723,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public pinColumn(columnName: string): boolean {
         const col = this.getColumnByName(columnName);
 
+        if (col.pinned) {
+            return false;
+        }
         /**
          * If the column that we want to pin is bigger or equal than the unpinned area we should not pin it.
          * It should be also unpinned before pinning, since changing left/right pin area doesn't affect unpinned area.
@@ -583,19 +748,30 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
             }
         }
-
         this.markForCheck();
         return true;
     }
 
-    public unpinColumn(columnName: string) {
+    public unpinColumn(columnName: string): boolean {
         const col = this.getColumnByName(columnName);
+
+        if (!col.pinned) {
+            return false;
+        }
         col.pinned = false;
         this._unpinnedColumns.splice(col.index, 0, col);
         if (this._pinnedColumns.indexOf(col) !== -1) {
             this._pinnedColumns.splice(this._pinnedColumns.indexOf(col), 1);
         }
         this.markForCheck();
+        return true;
+    }
+
+    /**
+     * Recalculates grid width/height dimensions. Should be run when changing DOM elements dimentions manually that affect the grid's size.
+     */
+    public reflow() {
+        this.calculateGridSizes();
     }
 
     get hasSortableColumns(): boolean {
@@ -613,7 +789,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     get hasSummarizedColumns(): boolean {
         return this.columnList.some((col) => col.hasSummary);
     }
-
     get selectedCells(): IgxGridCellComponent[] | any[] {
         if (this.rowList) {
             return this.rowList.map((row) => row.cells.filter((cell) => cell.selected))
@@ -622,43 +797,123 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return [];
     }
 
-    protected calculateGridSizes() {
-        const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
-        if (!this.width) {
-            /*no width specified.*/
-            this.calcWidth = null;
-        } else if (this.width && this.width.indexOf("%") !== -1) {
-            /* width in %*/
-            this.calcWidth = parseInt(computed.getPropertyValue("width"), 10);
+    protected get rowBasedHeight() {
+        if (this.data && this.data.length) {
+            return this.data.length * this.rowHeight;
         }
-        if (!this.height) {
-            /*no height specified.*/
+        return 0;
+    }
+
+    protected _derivePossibleHeight() {
+        if (this._height && this._height.indexOf("%") === -1) {
+            return;
+        }
+        if (!this.nativeElement.parentNode.clientHeight) {
+            const viewPortHeight = screen.height;
+            this._height = this.rowBasedHeight <= viewPortHeight ? null : viewPortHeight.toString();
+        } else {
+            const parentHeight = this.nativeElement.parentNode.getBoundingClientRect().height;
+            this._height = this.rowBasedHeight <= parentHeight ? null : "100%";
+        }
+        this.calculateGridHeight();
+        this.cdr.detectChanges();
+    }
+
+    protected _derivePossibleWidth() {
+        if (!this.columnWidth) {
+            this.columnWidth = this.getPossibleColumnWidth();
+            this.initColumns(this.columnList);
+        }
+        this.calculateGridWidth();
+    }
+
+    protected calculateGridHeight() {
+        const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+
+        if (!this._height) {
             this.calcHeight = null;
-        } else if (this.height && this.height.indexOf("%") !== -1) {
+            return;
+        }
+
+        if (this._height && this._height.indexOf("%") !== -1) {
             /*height in %*/
             let pagingHeight = 0;
             if (this.paging) {
                 pagingHeight = this.paginator.nativeElement.firstElementChild ?
-                this.paginator.nativeElement.clientHeight : 0;
+                    this.paginator.nativeElement.clientHeight : 0;
             }
-            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-            this.tfoot.nativeElement.clientHeight : 0;
+            if (!this.tfootHeight) {
+                this.tfootHeight = this.tfoot.nativeElement.firstElementChild ?
+                    this.calcMaxSummaryHeight() : 0;
+            }
             this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
                 this.theadRow.nativeElement.clientHeight -
-                footerHeight - pagingHeight -
+                this.tfootHeight - pagingHeight -
                 this.scr.nativeElement.clientHeight;
         } else {
             let pagingHeight = 0;
             if (this.paging) {
                 pagingHeight = this.paginator.nativeElement.firstElementChild ?
-                this.paginator.nativeElement.clientHeight : 0;
+                    this.paginator.nativeElement.clientHeight : 0;
             }
-            const footerHeight = this.tfoot.nativeElement.firstElementChild ?
-            this.tfoot.nativeElement.clientHeight : 0;
-            this.calcHeight = parseInt(this.height, 10) -
+            if (!this.tfootHeight) {
+                this.tfootHeight = this.tfoot.nativeElement.firstElementChild ?
+                    this.calcMaxSummaryHeight() : 0;
+            }
+            this.calcHeight = parseInt(this._height, 10) -
                 this.theadRow.nativeElement.getBoundingClientRect().height -
-                footerHeight - pagingHeight -
+                this.tfootHeight - pagingHeight -
                 this.scr.nativeElement.clientHeight;
+        }
+    }
+
+    protected getPossibleColumnWidth() {
+        let computedWidth = parseInt(
+            this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue("width"), 10);
+
+        let maxColumnWidth = Math.max(
+            ...this.columnList.map((col) => parseInt(col.width, 10))
+                .filter((width) => !isNaN(width))
+        );
+
+        if (this.rowSelectable) {
+            computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
+        }
+
+        maxColumnWidth = !Number.isFinite(maxColumnWidth) ? Math.max(computedWidth / this.columnList.length, MINIMUM_COLUMN_WIDTH) :
+                Math.max((computedWidth - maxColumnWidth) / this.columnList.length, MINIMUM_COLUMN_WIDTH);
+
+        return maxColumnWidth.toString();
+    }
+
+    protected calculateGridWidth() {
+        const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+
+        if (this._width && this._width.indexOf("%") !== -1) {
+            /* width in %*/
+            this.calcWidth = parseInt(computed.getPropertyValue("width"), 10);
+            return;
+        }
+        this.calcWidth = parseInt(this._width, 10);
+    }
+
+    protected calcMaxSummaryHeight() {
+        let maxSummaryLength = 0;
+        this.columnList.filter((col) => col.hasSummary).forEach((column) => {
+            this.gridAPI.set_summary_by_column_name(this.id, column.field);
+            const currentLength = this.gridAPI.get_summaries(this.id).get(column.field).length;
+            if (maxSummaryLength < currentLength) {
+                maxSummaryLength = currentLength;
+            }
+        });
+        return maxSummaryLength * (this.tfoot.nativeElement.clientHeight ? this.tfoot.nativeElement.clientHeight : DEFAULT_SUMMARY_HEIGHT);
+    }
+
+    protected calculateGridSizes() {
+        this.calculateGridWidth();
+        this.calculateGridHeight();
+        if (this.rowSelectable) {
+            this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.clientWidth;
         }
         this.cdr.detectChanges();
     }
@@ -673,6 +928,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         for (const col of fc) {
             sum += parseInt(col.width, 10);
         }
+        if (this.rowSelectable) {
+            sum += this.calcRowCheckboxWidth;
+        }
         return sum;
     }
 
@@ -681,9 +939,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @param takeHidden If we should take into account the hidden columns in the pinned area
      */
     protected getUnpinnedWidth(takeHidden = false) {
-        const width = this.width && this.width.indexOf("%") !== -1 ?
+        const width = this._width && this._width.indexOf("%") !== -1 ?
             this.calcWidth :
-            parseInt(this.width, 10);
+            parseInt(this._width, 10);
         return width - this.getPinnedWidth(takeHidden);
     }
 
@@ -784,7 +1042,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             then merge with an empty observable after DEBOUNCE_TIME,
             re-subscribe and repeat the process
         */
-        this.parentVirtDir.onChunkLoad.pipe(
+        this.verticalScrollContainer.onChunkLoad.pipe(
             takeUntil(this.destroy$),
             take(1),
             merge(of({})),
@@ -794,6 +1052,128 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if (this.cellInEditMode) {
                 this.cellInEditMode.inEditMode = false;
             }
+            this.eventBus.next();
         });
+    }
+
+    public onHeaderCheckboxClick(event) {
+        this.allRowsSelected = event.checked;
+        const newSelection =
+            event.checked ?
+                this.filteredData ?
+                    this.selectionAPI.append_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
+                    this.selectionAPI.get_all_ids(this.data, this.primaryKey) :
+                this.filteredData ?
+                    this.selectionAPI.subtract_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
+                    [];
+        this.triggerRowSelectionChange(newSelection, null, event, event.checked);
+        this.checkHeaderChecboxStatus(event.checked);
+    }
+
+    get headerCheckboxAriaLabel() {
+        return this._filteringExpressions.length > 0 ?
+            this.headerCheckbox && this.headerCheckbox.checked ? "Deselect all filtered" : "Select all filtered" :
+            this.headerCheckbox && this.headerCheckbox.checked ? "Deselect all" : "Select all";
+    }
+
+    public checkHeaderChecboxStatus(headerStatus?: boolean) {
+        if (headerStatus === undefined) {
+            this.allRowsSelected = this.selectionAPI.are_all_selected(this.id, this.data);
+            if (this.headerCheckbox) {
+                this.headerCheckbox.indeterminate = !this.allRowsSelected && !this.selectionAPI.are_none_selected(this.id);
+            }
+            this.cdr.markForCheck();
+        }
+        if (this.headerCheckbox) {
+            this.headerCheckbox.checked = headerStatus !== undefined ? headerStatus : false;
+        }
+    }
+
+    public filteredItemsStatus(componentID: string, filteredData: any[], primaryKey?) {
+        const currSelection = this.selectionAPI.get_selection(componentID);
+        let atLeastOneSelected = false;
+        let notAllSelected = false;
+        if (currSelection) {
+            for (const key of Object.keys(filteredData)) {
+                const dataItem = primaryKey ? filteredData[key][primaryKey] : filteredData[key];
+                if (currSelection.find((item) => item === dataItem) !== undefined) {
+                    atLeastOneSelected = true;
+                    if (notAllSelected) {
+                        return "indeterminate";
+                    }
+                } else {
+                    notAllSelected = true;
+                    if (atLeastOneSelected) {
+                        return "indeterminate";
+                    }
+                }
+            }
+        }
+        return atLeastOneSelected ? "allSelected" : "noneSelected";
+    }
+
+    public updateHeaderChecboxStatusOnFilter(data) {
+        if (!data) {
+            data = this.data;
+        }
+        switch (this.filteredItemsStatus(this.id, data)) {
+            case "allSelected": {
+                if (!this.allRowsSelected) {
+                    this.allRowsSelected = true;
+                }
+                if (this.headerCheckbox.indeterminate) {
+                    this.headerCheckbox.indeterminate = false;
+                }
+                break;
+            }
+            case "noneSelected": {
+                if (this.allRowsSelected) {
+                    this.allRowsSelected = false;
+                }
+                if (this.headerCheckbox.indeterminate) {
+                    this.headerCheckbox.indeterminate = false;
+                }
+                break;
+            }
+            default: {
+                if (!this.headerCheckbox.indeterminate) {
+                    this.headerCheckbox.indeterminate = true;
+                }
+                if (this.allRowsSelected) {
+                    this.allRowsSelected = false;
+                }
+                break;
+            }
+        }
+    }
+
+    public selectedRows() {
+        return this.selectionAPI.get_selection(this.id);
+    }
+
+    public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
+        const newSelection = clearCurrentSelection ? rowIDs : this.selectionAPI.select_items(this.id, rowIDs);
+        this.triggerRowSelectionChange(newSelection);
+    }
+
+    public deselectRows(rowIDs: any[]) {
+        const newSelection = this.selectionAPI.deselect_items(this.id, rowIDs);
+        this.triggerRowSelectionChange(newSelection);
+    }
+
+    public selectAllRows() {
+        this.triggerRowSelectionChange(this.selectionAPI.get_all_ids(this.data, this.id));
+    }
+
+    public deselectAllRows() {
+        this.triggerRowSelectionChange([]);
+    }
+
+    public triggerRowSelectionChange(newSelection: any[], row?: IgxGridRowComponent, event?: Event, headerStatus?: boolean) {
+        const oldSelection = this.selectionAPI.get_selection(this.id);
+        const args: IRowSelectionEventArgs = { oldSelection, newSelection, row, event };
+        this.onRowSelectionChange.emit(args);
+        this.selectionAPI.set_selection(this.id, args.newSelection);
+        this.checkHeaderChecboxStatus(headerStatus);
     }
 }

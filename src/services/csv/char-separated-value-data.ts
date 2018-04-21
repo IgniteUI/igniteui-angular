@@ -13,24 +13,6 @@ export class CharSeparatedValueData {
         this.setDelimiter(valueDelimiter);
     }
 
-    public get valueDelimiter() {
-        return this._delimiter;
-    }
-
-    public set valueDelimiter(value) {
-        if (value !== undefined && value !== null) {
-            this.setDelimiter(value);
-        }
-    }
-
-    public get data() {
-        return this._data;
-    }
-
-    public set data(value: any[]) {
-        this._data = value;
-    }
-
     public prepareData() {
         if (!this._data || this._data.length === 0) {
             return "";
@@ -52,7 +34,7 @@ export class CharSeparatedValueData {
     }
 
     private processField(value, escapeChars): string {
-        let safeValue: string = (value !== undefined && value !== null) ? String(value) : "";
+        let safeValue = ExportUtilities.hasValue(value) ? String(value) : "";
         if (escapeChars.some((v) => safeValue.includes(v))) {
             safeValue = `"${safeValue}"`;
         }

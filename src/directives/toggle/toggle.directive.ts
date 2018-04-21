@@ -5,6 +5,7 @@ import {
     AnimationPlayer,
     style} from "@angular/animations";
 import {
+    ChangeDetectorRef,
     Component,
     Directive,
     ElementRef,
@@ -57,6 +58,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     constructor(
         private elementRef: ElementRef,
         private builder: AnimationBuilder,
+        private cdr: ChangeDetectorRef,
         @Optional() private navigationService: IgxNavigationService) { }
 
     public open(fireEvents?: boolean, handler?) {
@@ -80,6 +82,10 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         const player = this.animationActivation();
         player.onDone(() => {
             this.collapsed = !this.collapsed;
+            // When using directive into component with OnPush it is necessary to
+            // trigger change detection again when close animation ends
+            // due to late updated @collapsed property.
+            this.cdr.markForCheck();
             player.destroy();
             if (fireEvents) {
                 this.onClose.emit();

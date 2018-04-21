@@ -111,7 +111,7 @@
     $filtering-menu-min-width: 240px;
     $filtering-menu-shadow: igx-elevation($elevations, 8);
     $filtering-menu-radius: 4px;
-    $filtering-menu-distance-to-toggle: 4px;
+    $filtering-menu-distance-to-toggle: 24px;
 
     %igx-filtering-display {
         position: static;
@@ -141,7 +141,6 @@
         @extend %igx-filtering-icon;
 
         user-select: none;
-        margin-left: 4px;
         background: map-get($this, 'toggle-background');
         border-radius: 50%;
     }
@@ -199,10 +198,6 @@
             outline-style: none;
             border-radius: 4px;
         }
-
-        [igxinput] {
-            margin: 24px 0;
-        }
     }
 
     %igx-filtering-menu--to-left {
@@ -226,5 +221,9 @@
                 margin-right: 8px;
             }
         }
+    }
+
+    %igx-filtering-op {
+        margin: 24px 0 12px;
     }
 }

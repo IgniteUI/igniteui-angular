@@ -73,6 +73,7 @@ To disable the ripple effect, do:
 | `@Input()` tabindex | number | Specifies the tabbing order of the checkbox. |
 | `@Input()` checked | boolean | Specifies the checked state of the checkbox. |
 | `@Input()` indeterminate | boolean | Specifies the indeterminate state of the checkbox. |
+| `@Input()` required | boolean | Specifies the required state of the checkbox. |
 | `@Input()` disabled | boolean | Specifies the disabled state of the checkbox. |
 | `@Input()` disableRipple | boolean | Specifies the whether the ripple effect should be disabled for the checkbox. |
 | `@Input()` labelPosition | string `|` enum LabelPosition | Specifies the position of the text label relative to the checkbox element. |

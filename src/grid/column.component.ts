@@ -12,7 +12,9 @@ import {
 import { DataType } from "../data-operations/data-util";
 import { STRING_FILTERS } from "../data-operations/filtering-condition";
 import { IgxGridAPIService } from "./api.service";
+import { IgxGridCellComponent } from "./cell.component";
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from "./grid-summary";
+import { IgxGridSummaryComponent } from "./grid-summary.component";
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -52,6 +54,9 @@ export class IgxColumnComponent implements AfterContentInit {
     public filterable = false;
 
     @Input()
+    public resizable = false;
+
+    @Input()
     public hasSummary = false;
 
     @Input()
@@ -71,6 +76,12 @@ export class IgxColumnComponent implements AfterContentInit {
 
     @Input()
     public width: string;
+
+    @Input()
+    public maxWidth: string;
+
+    @Input()
+    public minWidth = this.defaultMinWidth;
 
     @Input()
     public headerClasses = "";
@@ -120,6 +131,10 @@ export class IgxColumnComponent implements AfterContentInit {
         this._summaries = new classRef();
     }
 
+    get defaultMinWidth(): string {
+        return this._defaultMinWidth;
+    }
+
     get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
     }
@@ -160,6 +175,11 @@ export class IgxColumnComponent implements AfterContentInit {
         this.grid.markForCheck();
     }
 
+    get cells(): IgxGridCellComponent[] {
+        return this.grid.rowList.map((row) => row.cells.filter((cell) => cell.columnIndex === this.index))
+        .reduce((a, b) => a.concat(b), []);
+    }
+
     get visibleIndex(): number {
         const grid = this.gridAPI.get(this.gridID);
         let vIndex = -1;
@@ -179,6 +199,8 @@ export class IgxColumnComponent implements AfterContentInit {
     protected _summaries = null;
     protected _hidden = false;
     protected _index: number;
+
+    private _defaultMinWidth = "88";
 
     @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective })
     protected cellTemplate: IgxCellTemplateDirective;
@@ -223,12 +245,14 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
-    public pin() {
-        this.gridAPI.get(this.gridID).pinColumn(this.field);
+    public pin(): boolean {
+        return this.gridAPI.get(this.gridID).pinColumn(this.field);
     }
-    public unpin() {
-        this.gridAPI.get(this.gridID).unpinColumn(this.field);
+
+    public unpin(): boolean {
+        return this.gridAPI.get(this.gridID).unpinColumn(this.field);
     }
+
     protected check() {
         if (this.grid) {
             this.grid.markForCheck();
