@@ -76,7 +76,7 @@ describe("IgxGrid - Grid initialization", () => {
         });
     });
 
-    it("should initialize a grid without scrollbar container", () => {
+    it("should initialize a grid without scrollbar container", async(() => {
         const fix = TestBed.createComponent(GridColumnsWidthComponent);
         fix.detectChanges();
 
@@ -85,12 +85,19 @@ describe("IgxGrid - Grid initialization", () => {
 
         expect(hScrollContainer.nativeElement.hidden).toBeTruthy();
 
-        grid.columns[2].hidden = false;
-        grid.columns[3].hidden = false;
-        fix.detectChanges();
+        grid.width = "600px";
+        expect(hScrollContainer.nativeElement.hidden).toBeTruthy();
 
-        expect(hScrollContainer.nativeElement.hidden).toBeFalsy();
-    });
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            grid.columns[2].hidden = false;
+            grid.columns[3].hidden = false;
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(hScrollContainer.nativeElement.hidden).toBeFalsy();
+        });
+    }));
 
     it("should initialize grid with remove virtualization", (done) => {
         const fix = TestBed.createComponent(GridRemoteVirtualizationComponent);
@@ -232,7 +239,7 @@ export class GridRemoteVirtualizationComponent implements OnInit, AfterViewInit 
 
 @Component({
     template: `
-        <igx-grid [data]="data" width="600px">
+        <igx-grid [data]="data">
             <igx-column field="ID"></igx-column>
             <igx-column field="Name" width="200px"></igx-column>
             <igx-column field="Value2" width="200px" [hidden]="true"></igx-column>
