@@ -547,12 +547,12 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         const displayContainer: HTMLElement = fixture.componentInstance.grid.tbody.nativeElement.querySelector("igx-display-container");
         let rowsRendered = displayContainer.querySelectorAll("igx-display-container");
         let colsRendered = rowsRendered[0].children;
-        
+
         expect(grid.columns[0].width).toEqual("100px");
         expect(colsRendered.length).toEqual(4);
 
         // Resize first column
-        const headerResArea = headers[0].nativeElement.children[2];
+        const headerResArea = headers[0].nativeElement.children[1];
         simulateMouseEvent("mousedown", headerResArea, 100, 0);
         tick();
         fixture.detectChanges();

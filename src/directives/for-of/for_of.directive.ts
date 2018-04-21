@@ -388,7 +388,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         } else if (this.igxForScrollOrientation === "vertical") {
             const maxScrollTop = this.vh.instance.elementRef.nativeElement.children[0].offsetHeight -
                 this.dc.instance._viewContainer.element.nativeElement.offsetHeight;
-            const hScroll = this.getElement(this._viewContainer, "igx-horizontal-virtual-helper");
             const movedY = this._lastTouchY - event.changedTouches[0].screenY;
 
             this.vh.instance.elementRef.nativeElement.scrollTop += movedY;
