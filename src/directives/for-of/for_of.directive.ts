@@ -205,6 +205,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const changes = this._differ.diff(this.igxForOf);
             if (changes) {
                 this._applyChanges(changes);
+            } else if (this.igxForScrollOrientation === "horizontal" && !!this.igxForContainerSize) {
+                // Resize scrollbar and hCache in case width of a cell has changed or etc. This cannot be detected with differ.
+                this.applyChunkSizeChange();
+                this._recalcScrollBarSize();
             }
         }
     }
@@ -384,7 +388,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         } else if (this.igxForScrollOrientation === "vertical") {
             const maxScrollTop = this.vh.instance.elementRef.nativeElement.children[0].offsetHeight -
                 this.dc.instance._viewContainer.element.nativeElement.offsetHeight;
-            const hScroll = this.getElement(this._viewContainer, "igx-horizontal-virtual-helper");
             const movedY = this._lastTouchY - event.changedTouches[0].screenY;
 
             this.vh.instance.elementRef.nativeElement.scrollTop += movedY;
