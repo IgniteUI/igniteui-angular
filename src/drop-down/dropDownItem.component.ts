@@ -7,10 +7,12 @@ import { IgxDropDownComponent, ISelectionEventArgs } from "./dropDown.component"
     styles: [
         ":host { display: block; }",
         ":host.selected { background-color: #1A73E8; }",
-        ":host.focused { border: 1px solid #8bb8f4; }"
+        ":host.focused { border: 1px solid #8bb8f4; }",
+        ":host.disabled { background-color: grey; }"
     ]
 })
 export class IgxDropDownItemComponent implements OnInit {
+    private _disabled = false;
     get isSelected() {
         return this.dropDown.selectedItem === this;
     }
@@ -26,9 +28,26 @@ export class IgxDropDownItemComponent implements OnInit {
         this.dropDown.onSelection.emit(args);
     }
 
+    get isDisabled() {
+        return this._disabled;
+    }
+
+    @Input() set isDisabled(value: boolean) {
+        if (this._disabled === value) {
+            return;
+        }
+
+        this._disabled = value;
+    }
+
     @HostBinding("class.selected")
     get selectedStyle(): boolean {
         return this.isSelected;
+    }
+
+    @HostBinding("class.disabled")
+    get disabledStyle(): boolean {
+        return this.isDisabled;
     }
 
     @HostBinding("class.focused")
@@ -40,7 +59,9 @@ export class IgxDropDownItemComponent implements OnInit {
     ) { }
 
     @HostListener("click", ["$event"]) clicked(event) {
-        this.dropDown.itemClicked.emit(this);
+        if (this.isDisabled) {
+            return;
+        }
         const oldSelection = this.dropDown.selectedItem;
         this.dropDown.selectedItem = this;
         this.dropDown._initialSelectionChanged = true;
