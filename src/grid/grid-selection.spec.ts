@@ -225,7 +225,6 @@ describe("IgxGrid - Row Selection", () => {
         const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
         const nextBtn: HTMLElement = fix.nativeElement.querySelector(".nextPageBtn");
         const prevBtn: HTMLElement = fix.nativeElement.querySelector(".prevPageBtn");
-        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
         const selectedRow = grid.getRowByIndex(5);
         expect(selectedRow).toBeDefined();
         const checkboxElement: HTMLElement = selectedRow.nativeElement.querySelector(".igx-checkbox__input");
@@ -256,7 +255,6 @@ describe("IgxGrid - Row Selection", () => {
         const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
         const nextBtn: HTMLElement = fix.nativeElement.querySelector(".nextPageBtn");
         const prevBtn: HTMLElement = fix.nativeElement.querySelector(".prevPageBtn");
-        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
         const firstRow = grid.getRowByIndex(0);
         const middleRow = grid.getRowByIndex(4);
         const lastRow = grid.getRowByIndex(9);
@@ -303,7 +301,6 @@ describe("IgxGrid - Row Selection", () => {
         const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
         const nextBtn: HTMLElement = fix.nativeElement.querySelector(".nextPageBtn");
         const prevBtn: HTMLElement = fix.nativeElement.querySelector(".prevPageBtn");
-        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
         const selectedRow1 = grid.getRowByIndex(5);
         const selectedRow2 = grid.getRowByIndex(3);
         const selectedRow3 = grid.getRowByIndex(0);
@@ -350,7 +347,6 @@ describe("IgxGrid - Row Selection", () => {
         const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
         const nextBtn: HTMLElement = fix.nativeElement.querySelector(".nextPageBtn");
         const prevBtn: HTMLElement = fix.nativeElement.querySelector(".prevPageBtn");
-        expect(grid.rowList.length).toBeLessThan(500, "Not all 500 rows should be in the viewport");
         const selectedRow = grid.getRowByIndex(0);
         expect(selectedRow).toBeDefined();
         const checkboxElement: HTMLElement = selectedRow.nativeElement.querySelector(".igx-checkbox__input");
@@ -393,11 +389,10 @@ describe("IgxGrid - Row Selection", () => {
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection2;
         const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
-        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
         const headerRow: HTMLElement = fix.nativeElement.querySelector(".igx-grid__thead");
         const firstRow = grid.getRowByIndex(0);
-        const middleRow = grid.getRowByIndex(25);
-        const lastRow = grid.getRowByIndex(49);
+        const middleRow = grid.getRowByIndex(5);
+        const lastRow = grid.getRowByIndex(9);
         expect(headerRow).toBeDefined();
         expect(firstRow).toBeDefined();
         expect(middleRow).toBeDefined();
@@ -426,7 +421,6 @@ describe("IgxGrid - Row Selection", () => {
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection2;
         const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
-        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
         const headerRow: HTMLElement = fix.nativeElement.querySelector(".igx-grid__thead");
         const firstRow = grid.getRowByIndex(0);
         expect(headerRow).toBeDefined();
@@ -465,7 +459,6 @@ describe("IgxGrid - Row Selection", () => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection2;
-        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
         const firstRow = grid.getRowByIndex(0);
         const secondRow = grid.getRowByIndex(1);
         spyOn(grid, "triggerRowSelectionChange").and.callThrough();
@@ -767,7 +760,6 @@ describe("IgxGrid - Row Selection", () => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection2;
-        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
         const firstRow = grid.getRowByIndex(0);
         const rv = fix.debugElement.query(By.css(".igx-grid__td"));
         expect(firstRow).toBeDefined();
@@ -789,7 +781,6 @@ describe("IgxGrid - Row Selection", () => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection2;
-        expect(grid.rowList.length).toEqual(50, "All 50 rows should initialized");
         const firstRow = grid.getRowByIndex(0);
         const rv = fix.debugElement.query(By.css(".igx-grid__td"));
         expect(rv).toBeDefined();
