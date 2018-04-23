@@ -96,7 +96,7 @@ describe("IgxDatePicker", () => {
         expect(datePicker.displayData).toBe(dateConvertedToDeLocale);
     });
 
-    it("Datepicker open event", () => {
+    it("Datepicker open/close event", () => {
         const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
         fixture.detectChanges();
 
@@ -106,6 +106,7 @@ describe("IgxDatePicker", () => {
         const target = dom.query(By.css(".igx-date-picker__input-date"));
 
         spyOn(datepicker.onOpen, "emit");
+        spyOn(datepicker.onClose, "emit");
 
         target.nativeElement.dispatchEvent(new Event("click", { bubbles: true }));
 
@@ -113,6 +114,12 @@ describe("IgxDatePicker", () => {
 
         expect(datepicker.onOpen.emit).toHaveBeenCalled();
         expect(datepicker.onOpen.emit).toHaveBeenCalledWith(datepicker);
+
+        const overlay = dom.query(By.css(".igx-dialog"));
+        overlay.nativeElement.dispatchEvent(new Event("click", { bubbles: true }));
+
+        expect(datepicker.onClose.emit).toHaveBeenCalled();
+        expect(datepicker.onClose.emit).toHaveBeenCalledWith(datepicker);
     });
 
     it("Datepicker onSelection event and selectDate method propagation", () => {
