@@ -549,9 +549,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
                         cell.nativeElement.focus();
                     }
                 });
-            } else {
-                target.nativeElement.focus();
             }
+            target.nativeElement.focus();
         } else {
             this.row.grid.verticalScrollContainer.scrollPrev();
             this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
