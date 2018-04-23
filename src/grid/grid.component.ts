@@ -1096,7 +1096,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (currSelection) {
             for (const key of Object.keys(filteredData)) {
                 const dataItem = primaryKey ? filteredData[key][primaryKey] : filteredData[key];
-                if (currSelection.find((item) => item === dataItem) !== undefined) {
+                if (currSelection.indexOf(dataItem) !== -1) {
                     atLeastOneSelected = true;
                     if (notAllSelected) {
                         return "indeterminate";
