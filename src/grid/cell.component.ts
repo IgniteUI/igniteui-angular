@@ -556,7 +556,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
             this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
                 next: (e: any) => {
                     const cell = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.visibleColumnIndex);
-                    cell.selected = true;
                     cell.nativeElement.focus();
                 }
             });
@@ -576,8 +575,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
 
         if (target) {
             const containerHeight = this.grid.calcHeight ?
-                Math.ceil(this.grid.calcHeight) :
-                null; // null when there is no vertical virtualization
+                                    Math.ceil(this.grid.calcHeight) :
+                                    null; // null when there is no vertical virtualization
             const containerTopOffset =
                 parseInt(this.row.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const targetEndTopOffset = target.row.element.nativeElement.offsetTop + this.grid.rowHeight + containerTopOffset;
