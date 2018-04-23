@@ -552,6 +552,14 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         this.onSelection.emit(this.selectedDates);
     }
 
+    public animationDone() {
+        const date = this.dates.find((d) => d.selected);
+
+        if (date) {
+            date.nativeElement.focus();
+        }
+    }
+
     /**
      * Performs date selection through the API of the calendar component.
      * Does not trigger `onSelection` event.
