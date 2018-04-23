@@ -13,7 +13,8 @@ export class DropDownSampleComponent {
     items: any[] = [
         { field: "Cables" },
         { field: "Switches", disabled: true },
-        { field: "Batteries" }
+        { field: "Switches", disabled: true },
+        { field: "Batteries",  disabled: true }
     ];
 
     constructor() {

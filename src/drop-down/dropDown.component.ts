@@ -86,6 +86,9 @@ export class IgxDropDownComponent implements OnInit {
         if (this._focusedItem) {
             focusedItemIndex = this._focusedItem.index;
         }
+        while ((this.items.toArray()[focusedItemIndex + 1]) && (this.items.toArray()[focusedItemIndex + 1]).isDisabled) {
+            focusedItemIndex++;
+        }
         if (focusedItemIndex < this.items.length - 1) {
             this._focusedItem.isFocused = false;
             this._focusedItem = this.items.toArray()[focusedItemIndex + 1];
