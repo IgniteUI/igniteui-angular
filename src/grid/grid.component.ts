@@ -767,6 +767,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return true;
     }
 
+    /**
+     * Recalculates grid width/height dimensions. Should be run when changing DOM elements dimentions manually that affect the grid's size.
+     */
+    public reflow() {
+        this.calculateGridSizes();
+    }
+
     get hasSortableColumns(): boolean {
         return this.columnList.some((col) => col.sortable);
     }
@@ -861,13 +868,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     protected getPossibleColumnWidth() {
-        const computedWidth = parseInt(
+        let computedWidth = parseInt(
             this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue("width"), 10);
 
         let maxColumnWidth = Math.max(
             ...this.columnList.map((col) => parseInt(col.width, 10))
                 .filter((width) => !isNaN(width))
         );
+
+        if (this.rowSelectable) {
+            computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
+        }
 
         maxColumnWidth = !Number.isFinite(maxColumnWidth) ? Math.max(computedWidth / this.columnList.length, MINIMUM_COLUMN_WIDTH) :
                 Math.max((computedWidth - maxColumnWidth) / this.columnList.length, MINIMUM_COLUMN_WIDTH);

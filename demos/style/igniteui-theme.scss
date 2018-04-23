@@ -30,7 +30,8 @@ $exclude: (
     // igx-bottom-nav,
     // igx-toast
 );
-// Generating a palette
+
+// Generating a theme
 @include igx-core();
 @include igx-theme($default-palette, $exclude);
 
@@ -52,37 +53,9 @@ $my-tabs-theme: igx-tabs-theme(
 }
 
 $my-nav-theme: igx-navbar-theme(
-    $disable-shadow: 'true'
+    $disable-shadow: true
 );
 
 .tabs-demo {
     @include igx-navbar($my-nav-theme);
 }
-
-// @mixin gen-color-class($name, $variant, $prefix, $suffix) {
-//     $prefix: if($prefix, '#{$prefix}-', '');
-//     $suffix: if($suffix, '-#{$suffix}', '');
-
-//     .#{$prefix}#{$name}-#{$variant}#{$suffix} {
-//         @content;
-//     }
-// }
-
-// @mixin gen-color-classes($prop, $prefix, $suffix) {
-//     @each $palette-name, $sub-palette in $default-palette {
-//         @each $variant, $color in $sub-palette {
-//             @if type-of($color) != 'map' {
-//                 @include gen-color-class($palette-name, $variant, $prefix, $suffix) {
-//                     #{$prop}: $color;
-//                 }
-//             }
-//         }
-//     }
-// }
-
-// @mixin igx-color-classes($prop, $suffix: null, $prefix: 'igx') {
-//     @include gen-color-classes($prop, $prefix, $suffix);
-// }
-
-// @include igx-color-classes($prop: 'background-color', $prefix: 'my', $suffix: 'bg');
-// @include igx-color-classes($prop: 'color');

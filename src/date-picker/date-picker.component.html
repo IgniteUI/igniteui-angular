@@ -4,7 +4,7 @@
             <igx-icon>today</igx-icon>
         </igx-prefix>
         <label igxLabel>Date</label>
-        <input class="igx-date-picker__input-date" igxInput [value]="displayData" [disabled]="isDisabled" />
+        <input class="igx-date-picker__input-date" igxInput [value]="displayData" [disabled]="isDisabled" readonly />
     </igx-input-group>
     <igx-dialog class="igx-date-picker__dialog-popup" closeOnOutsideSelect="true" [leftButtonLabel]="cancelButtonLabel" (onLeftButtonSelect)="alert.close()"
         [rightButtonLabel]="todayButtonLabel" (onRightButtonSelect)="triggerTodaySelection()">

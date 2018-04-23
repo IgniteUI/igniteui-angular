@@ -81,7 +81,7 @@ export class IgxColumnComponent implements AfterContentInit {
     public maxWidth: string;
 
     @Input()
-    public minWidth = "48";
+    public minWidth = this.defaultMinWidth;
 
     @Input()
     public headerClasses = "";
@@ -129,6 +129,10 @@ export class IgxColumnComponent implements AfterContentInit {
 
     public set summaries(classRef: any) {
         this._summaries = new classRef();
+    }
+
+    get defaultMinWidth(): string {
+        return this._defaultMinWidth;
     }
 
     get grid(): IgxGridComponent {
@@ -195,6 +199,8 @@ export class IgxColumnComponent implements AfterContentInit {
     protected _summaries = null;
     protected _hidden = false;
     protected _index: number;
+
+    private _defaultMinWidth = "88";
 
     @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective })
     protected cellTemplate: IgxCellTemplateDirective;
