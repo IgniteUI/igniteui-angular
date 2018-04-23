@@ -62,12 +62,12 @@ export class IgxDropDownItemComponent implements OnInit {
         if (this.isDisabled) {
             return;
         }
+
         const oldSelection = this.dropDown.selectedItem;
         this.dropDown.selectedItem = this;
-        this.dropDown._initialSelectionChanged = true;
         const args: ISelectionEventArgs = { oldSelection, newSelection: this.dropDown.selectedItem, event };
         this.dropDown.onSelection.emit(args);
-        this.dropDown.close();
+        // this.dropDown.toggleDropDown();
     }
 
     ngOnInit() {

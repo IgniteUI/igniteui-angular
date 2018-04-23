@@ -26,9 +26,7 @@ export class DropDownSampleComponent {
         this.igxDropDown.toggleDropDown();
     }
 
-    itemClicked(ev) {
-    }
-
     onSelection(ev) {
+        console.log(ev);
     }
 }

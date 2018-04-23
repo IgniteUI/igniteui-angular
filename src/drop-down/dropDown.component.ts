@@ -4,16 +4,16 @@ import {
     ContentChildren,
     ElementRef,
     EventEmitter,
+    HostBinding,
     HostListener,
+    Input,
     NgModule,
+    OnInit,
     Output,
     QueryList,
     Renderer,
     ViewChild,
-    ViewChildren,
-    OnInit,
-    HostBinding,
-    Input
+    ViewChildren
 } from "@angular/core";
 import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule } from "../directives/toggle/toggle.directive";
 import { IgxDropDownItemComponent } from "./dropDownItem.component";
@@ -32,12 +32,10 @@ export class IgxDropDownComponent implements OnInit {
     private _selectedItem: IgxDropDownItemComponent = null;
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
     private _focusedItem: IgxDropDownItemComponent = null;
-    public _initialSelectionChanged = false;
 
     @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
     @ViewChild(IgxToggleActionDirective) public toggleAction: IgxToggleActionDirective;
     @ContentChildren(IgxDropDownItemComponent, { read: IgxDropDownItemComponent }) public items: QueryList<IgxDropDownItemComponent>;
-    @Output() public itemClicked = new EventEmitter<IgxDropDownItemComponent>();
     @Output() public onSelection = new EventEmitter<ISelectionEventArgs>();
 
     constructor(private elementRef: ElementRef, private renderer: Renderer) { }
@@ -47,7 +45,15 @@ export class IgxDropDownComponent implements OnInit {
     }
 
     set selectedItem(item: IgxDropDownItemComponent) {
+        if (item === this.selectedItem) {
+            return;
+        }
+
         this._selectedItem = item;
+    }
+
+    get initialSelectionChanged() {
+        return this.selectedItem !== this._initiallySelectedItem;
     }
 
     @Input() public width = "80px";
@@ -55,21 +61,23 @@ export class IgxDropDownComponent implements OnInit {
 
     @HostListener("keydown.Space", ["$event"])
     public onSpaceKeyDown(event) {
-        this._initialSelectionChanged = true;
+        const oldItem = this.selectedItem;
         this.selectedItem = this._focusedItem;
-        this.toggle.close(true);
+        this.fireOnSelection(oldItem, this.selectedItem, event);
+        this.toggleDropDown();
     }
 
     @HostListener("keydown.Enter", ["$event"])
     public onEnterKeyDown(event) {
-        this._initialSelectionChanged = true;
+        const oldItem = this.selectedItem;
         this.selectedItem = this._focusedItem;
-        this.toggle.close(true);
+        this.fireOnSelection(oldItem, this.selectedItem, event);
+        this.toggleDropDown();
     }
 
     @HostListener("keydown.Escape", ["$event"])
     public onEscapeKeyDown(event) {
-        this.toggle.close(true);
+        this.toggleDropDown();
     }
 
     @HostListener("keydown.ArrowDown", ["$event"])
@@ -114,18 +122,13 @@ export class IgxDropDownComponent implements OnInit {
         this.toggleAction.closeOnOutsideClick = true;
     }
 
-    public close() {
-        if (!this._initialSelectionChanged) {
-            const oldSelection = this.selectedItem;
-            this.selectedItem = this._initiallySelectedItem;
-            const args: ISelectionEventArgs = { oldSelection, newSelection: this.selectedItem, event };
-            this.onSelection.emit(args);
+    public onClose() {
+        if (this._focusedItem) {
+            this._focusedItem.isFocused = false;
         }
-        this._initialSelectionChanged = false;
-        this._focusedItem.isFocused = false;
     }
 
-    public open() {
+    public onOpen() {
         this.elementRef.nativeElement.tabIndex = 0;
         this.elementRef.nativeElement.focus();
         if (this.selectedItem) {
@@ -147,6 +150,11 @@ export class IgxDropDownComponent implements OnInit {
             .reduce((sum, currentItem) => sum + currentItem.elementHeight, 0);
 
         this.toggle.element.scrollTop = (Math.floor(itemPosition));
+    }
+
+    private fireOnSelection(oldItem: IgxDropDownItemComponent, newItem: IgxDropDownItemComponent, event?) {
+        const args: ISelectionEventArgs = {oldSelection: oldItem, newSelection: newItem, event};
+        this.onSelection.emit(args);
     }
 }
 
