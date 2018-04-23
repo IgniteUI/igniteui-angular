@@ -329,6 +329,10 @@
         min-width: 39px; /* sort-icon width + filtering toggle icon width */
         height: 24px;
 
+        &:empty {
+            min-width: 0;
+        }
+
         .sort-icon {
             width: rem(15px);
             height: rem(15px);
