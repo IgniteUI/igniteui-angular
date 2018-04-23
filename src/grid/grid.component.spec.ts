@@ -174,8 +174,7 @@ describe("IgxGrid - input properties", () => {
             }
         });
 
-        // TODO: This needs to be investigated
-        // expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+        expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
     });
 
     it("Test rendering of data with 5 columns and 30 rows where 2 of the columns have width set", () => {
