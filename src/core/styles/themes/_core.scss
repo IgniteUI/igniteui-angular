@@ -3,16 +3,20 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-// Anything imported here shoulnd't affect
+// Anything imported here shouldn't affect
 // theme configuration
-@import '../base/index';
-@import '../typography/index';
 
+// Import normalize and utilities
+@import '../base/normalize';
+@import './utilities';
+
+// Common component modules
 @import '../components/_common/igx-control';
 @import '../components/_common/igx-display-container';
 @import '../components/_common/igx-vhelper';
 @import '../components/_common/igx-toggle';
 
+// Component composition styles
 @import '../components/avatar/avatar-component';
 @import '../components/badge/badge-component';
 @import '../components/button/button-component';
