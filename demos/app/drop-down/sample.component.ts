@@ -10,12 +10,16 @@ export class DropDownSampleComponent {
     @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
 
     itemsCount = 10;
-    items: any[] = [];
+    items: any[] = [
+        { field: "Cables" },
+        { field: "Switches", disabled: true },
+        { field: "Batteries" }
+    ];
 
     constructor() {
-        for (let i = 0; i < this.itemsCount; i += 1) {
-            this.items.push("Item " + i);
-        }
+        //for (let i = 0; i < this.itemsCount; i += 1) {
+        //    this.items.push("Item " + i);
+        //}
     }
 
     public toggleDropDown() {
