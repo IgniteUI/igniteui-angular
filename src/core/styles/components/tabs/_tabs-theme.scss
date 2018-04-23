@@ -141,12 +141,9 @@
 
     $this: extend($default-theme, $theme);
 
-    // @debug $this;
+    $item-min-width-small-res: 74px;
     $item-min-width: 160px;
 
-    @media only screen and (max-width: 600px) {
-        $item-min-width: 160px;
-    }
     $item-max-width: 264px;
     $item-padding: 0 rem(24px);
     $tabs-height: rem(48px);
@@ -207,6 +204,9 @@
         justify-content: center;
         align-items: center;
         min-width: $item-min-width;
+        @media only screen and (max-width: 600px) {
+            min-width: $item-min-width-small-res;
+        }
         max-width: $item-max-width;
         height: $tabs-height;
         // Flex basis & shrink are Needed for IE11
@@ -284,7 +284,10 @@
         left: 0;
         transform: translateX(0);
         height: 2px;
-        min-width: rem(160px);
+        min-width: $item-min-width;
+        @media only screen and (max-width: 600px) {
+            min-width: $item-min-width-small-res;
+        }
         background: map-get($this, 'indicator-color');
         transition: transform .3s $tabs-animation-function, width .2s $tabs-animation-function;
     }
