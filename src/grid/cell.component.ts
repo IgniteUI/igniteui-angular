@@ -529,35 +529,35 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         const rowIndex = lastCell ? lastCell.rowIndex - 1 : this.grid.rowList.last.index;
         const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, this.visibleColumnIndex);
         const verticalScroll = this.row.grid.verticalScrollContainer.getVerticalScroll();
-
         if (!verticalScroll && !target) {
             return;
         }
 
         if (target) {
-            const targetRowOffset = target.row.nativeElement.offsetTop;
-            const containerOffset = target.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.offsetTop;
-
-            if (targetRowOffset === 0 && containerOffset < 0) {
-                // Target is part of the first row in the container that is partially visible
-                verticalScroll.scrollTop += containerOffset;
-                const oldChunkIndex = target.row.grid.verticalScrollContainer.state.startIndex;
-
+            const containerHeight = this.grid.calcHeight ?
+                Math.ceil(this.grid.calcHeight) :
+                null; // null when there is no vertical virtualization
+            const containerTopOffset =
+                parseInt(this.row.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            if (this.grid.rowHeight - 1 > -1 * containerTopOffset
+                && verticalScroll.scrollTop && containerHeight
+                && target.row.element.nativeElement.offsetTop < this.grid.rowHeight - 1) {
+                verticalScroll.scrollTop -= this.grid.rowHeight;
                 this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
                     next: (e: any) => {
-                        if (oldChunkIndex === e.startIndex) {
-                            target.nativeElement.focus();
-                        }
-                        this.row.cdr.detectChanges();
+                        const cell = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, this.visibleColumnIndex);
+                        cell.nativeElement.focus();
                     }
                 });
+            } else {
+                target.nativeElement.focus();
             }
-            target.nativeElement.focus();
         } else {
             this.row.grid.verticalScrollContainer.scrollPrev();
             this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
                 next: (e: any) => {
                     const cell = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.visibleColumnIndex);
+                    cell.selected = true;
                     cell.nativeElement.focus();
                 }
             });
@@ -577,8 +577,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
 
         if (target) {
             const containerHeight = this.grid.calcHeight ?
-                                    Math.ceil(this.grid.calcHeight) :
-                                    null; // null when there is no vertical virtualization
+                Math.ceil(this.grid.calcHeight) :
+                null; // null when there is no vertical virtualization
             const containerTopOffset =
                 parseInt(this.row.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const targetEndTopOffset = target.row.element.nativeElement.offsetTop + this.grid.rowHeight + containerTopOffset;
