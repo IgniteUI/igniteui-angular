@@ -529,19 +529,17 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         const rowIndex = lastCell ? lastCell.rowIndex - 1 : this.grid.rowList.last.index;
         const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, this.visibleColumnIndex);
         const verticalScroll = this.row.grid.verticalScrollContainer.getVerticalScroll();
+
         if (!verticalScroll && !target) {
             return;
         }
 
         if (target) {
-            const containerHeight = this.grid.calcHeight ?
-                Math.ceil(this.grid.calcHeight) :
-                null; // null when there is no vertical virtualization
             const containerTopOffset =
                 parseInt(this.row.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-            if (this.grid.rowHeight - 1 > -1 * containerTopOffset
-                && verticalScroll.scrollTop && containerHeight
-                && target.row.element.nativeElement.offsetTop < this.grid.rowHeight - 1) {
+            if (this.grid.rowHeight > -containerTopOffset // not the entire row is visible, due to grid offset
+                && verticalScroll.scrollTop // the scrollbar is not at the first item
+                && target.row.element.nativeElement.offsetTop < this.grid.rowHeight) { // the target is in the first row
                 verticalScroll.scrollTop -= this.grid.rowHeight;
                 this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
                     next: (e: any) => {
