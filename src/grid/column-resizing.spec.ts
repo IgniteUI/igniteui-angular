@@ -615,7 +615,7 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         // We call this again becuase for some reason in test it is not called the same amount of time as in real use.
         // To be investigated.
         grid.markForCheck();
-        tick();
+        tick(500);
         fixture.detectChanges();
 
         expect(grid.columns[0].width).toEqual("250px");
