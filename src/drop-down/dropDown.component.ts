@@ -126,6 +126,27 @@ export class IgxDropDownComponent implements OnInit, AfterViewInit {
         }
     }
 
+    @HostListener("keydown.End", ["$event"])
+    public onEndKeyDown(event) {
+        let focusedItemIndex = (this.items.length - 1);
+        while ((this.items.toArray()[focusedItemIndex]) && ((this.items.toArray()[focusedItemIndex]).isDisabled 
+            || (this.items.toArray()[focusedItemIndex]).isHeader)) {
+                focusedItemIndex--;
+            }
+        if (focusedItemIndex < this.items.length - 1) {
+                if (this._focusedItem) {
+                    this._focusedItem.isFocused = false;
+                }
+                this._focusedItem = this.items.toArray()[focusedItemIndex];
+                this._focusedItem.isFocused = true;
+            }
+        const rect = this._focusedItem.element.nativeElement.getBoundingClientRect();
+        const parentRect = this.toggle.element.getBoundingClientRect();
+        if (parentRect.bottom < rect.bottom) {
+                this.toggle.element.scrollTop += (rect.bottom - parentRect.bottom);
+            }
+    }
+
     ngOnInit() {
         this.toggleAction.target = this.toggle;
         this.toggleAction.closeOnOutsideClick = true;
