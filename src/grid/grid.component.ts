@@ -805,7 +805,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     protected _derivePossibleHeight() {
-        if (this._height && this._height.indexOf("%") === -1) {
+        if ((this._height && this._height.indexOf("%") === -1) || !this._height) {
             return;
         }
         if (!this.nativeElement.parentNode.clientHeight) {
