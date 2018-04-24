@@ -177,7 +177,7 @@ describe("IgxTabs", () => {
         expect(tabs.selectedIndex).toBe(0);
     });
 
-    it("should scroll tab area when clicking left/right scroll buttons", () => {
+    it("should scroll tab area when clicking left/right scroll buttons", async(() => {
         const fixture = TestBed.createComponent(TabsTestComponent);
         const tabs = fixture.componentInstance.tabs;
         fixture.detectChanges();
@@ -202,7 +202,7 @@ describe("IgxTabs", () => {
 
             expect(tabs.offset).toBe(0);
         });
-    });
+    }));
 
     it("should select tab on click", () => {
         const fixture = TestBed.createComponent(TabsTestComponent);
