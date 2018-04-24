@@ -44,6 +44,42 @@ export class IgxTabItemComponent {
         }
     }
 
+    @HostListener("keydown.arrowright", ["$event"])
+    public onKeydownArrowRight(event: KeyboardEvent) {
+        this._onKeyDown(false);
+    }
+
+    @HostListener("keydown.arrowleft", ["$event"])
+    public onKeydownArrowLeft(event: KeyboardEvent) {
+        this._onKeyDown(true);
+    }
+
+    @HostListener("keydown.home", ["$event"])
+    public onKeydownHome(event: KeyboardEvent) {
+        event.preventDefault();
+        this._onKeyDown(false, 0);
+    }
+
+    @HostListener("keydown.end", ["$event"])
+    public onKeydownEnd(event: KeyboardEvent) {
+        event.preventDefault();
+        this._onKeyDown(false, this._tabs.tabs.toArray().length - 1);
+    }
+
+    private _onKeyDown(isLeftArrow: boolean, index = null): void {
+        const tabsArray = this._tabs.tabs.toArray();
+        if (index === null) {
+            index = (isLeftArrow)
+                ? (this._tabs.selectedIndex === 0) ? tabsArray.length - 1 : this._tabs.selectedIndex - 1
+                : (this._tabs.selectedIndex === tabsArray.length - 1) ? 0 : this._tabs.selectedIndex + 1;
+        }
+        const tab = tabsArray[index];
+        const viewPortWidth = this._tabs.viewPort.nativeElement.offsetWidth;
+        const nativeTabElement = tab.nativeTabItem.nativeElement;
+        const focusDelay = (nativeTabElement.offsetWidth + nativeTabElement.offsetLeft - this._tabs.offset > viewPortWidth) ? 200 : 50;
+        tab.select(focusDelay);
+    }
+
     get changesCount(): number {
         return this._changesCount;
     }
