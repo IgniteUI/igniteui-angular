@@ -179,6 +179,23 @@ describe("IgxVirtual directive - simple template", () => {
         }
     });
 
+    it("should scroll render one row less when scrolled to bottom", () => {
+        const fix = TestBed.createComponent(VirtualComponent);
+        fix.detectChanges();
+        const container = fix.componentInstance.container;
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector("igx-display-container");
+        const verticalScroller: HTMLElement = fix.nativeElement.querySelector("igx-virtual-helper");
+        const horizontalScroller: HTMLElement = fix.nativeElement.querySelector("igx-horizontal-virtual-helper");
+
+        let rows = displayContainer.querySelectorAll("igx-display-container");
+        expect(rows.length).toBe(9);
+
+        fix.componentInstance.scrollTop(2500000);
+
+        rows = displayContainer.querySelectorAll("igx-display-container");
+        expect(rows.length).toBe(8);
+    });
+
     it("should scroll to wheel event correctly", () => {
         const fix = TestBed.createComponent(VirtualComponent);
         fix.detectChanges();
@@ -248,7 +265,7 @@ describe("IgxVirtual directive - simple template", () => {
         expect(horizontalScroller).not.toBeNull();
 
         let rows = displayContainer.querySelectorAll("igx-display-container");
-        expect(rows.length).toBe(8);
+        expect(rows.length).toBe(9);
         for (let i = 0; i < rows.length; i++) {
             expect(rows[i].children.length).toBe(4);
             expect(rows[i].children[3].textContent)
@@ -260,7 +277,7 @@ describe("IgxVirtual directive - simple template", () => {
         fix.detectChanges();
 
         rows = displayContainer.querySelectorAll("igx-display-container");
-        expect(rows.length).toBe(8);
+        expect(rows.length).toBe(9);
         for (let i = 0; i < rows.length; i++) {
             expect(rows[i].children.length).toBe(5);
             expect(rows[i].children[4].textContent)
@@ -282,7 +299,7 @@ describe("IgxVirtual directive - simple template", () => {
         expect(horizontalScroller).not.toBeNull();
 
         let rows = displayContainer.querySelectorAll("igx-display-container");
-        expect(rows.length).toBe(8);
+        expect(rows.length).toBe(9);
         for (let i = 0; i < rows.length; i++) {
             expect(rows[i].children.length).toBe(4);
             expect(rows[i].children[2].textContent)
@@ -294,7 +311,7 @@ describe("IgxVirtual directive - simple template", () => {
         fix.detectChanges();
 
         rows = displayContainer.querySelectorAll("igx-display-container");
-        expect(rows.length).toBe(14);
+        expect(rows.length).toBe(15);
         for (let i = 0; i < rows.length; i++) {
             expect(rows[i].children.length).toBe(4);
             expect(rows[i].children[2].textContent)
@@ -317,7 +334,7 @@ describe("IgxVirtual directive - simple template", () => {
         expect(horizontalScroller).not.toBeNull();
         expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
         expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
-        expect(rowsRendered.length).toBe(8);
+        expect(rowsRendered.length).toBe(9);
 
         /** Step 1. Lower the amount of rows to 5. The vertical scrollbar then should not be rendered */
         expect(() => {
@@ -358,7 +375,7 @@ describe("IgxVirtual directive - simple template", () => {
         expect(horizontalScroller.scrollLeft).toBe(1000);
         expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
         expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
-        expect(rowsRendered.length).toBe(8);
+        expect(rowsRendered.length).toBe(9);
     });
 
     it("should not render vertical scrollbars when number of rows change to 0 after scrolling down", () => {
@@ -376,7 +393,7 @@ describe("IgxVirtual directive - simple template", () => {
         expect(horizontalScroller).not.toBeNull();
         expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
         expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
-        expect(rowsRendered.length).toBe(8);
+        expect(rowsRendered.length).toBe(9);
 
         fix.componentInstance.generateData(300, 50000);
         fix.detectChanges();
@@ -414,7 +431,7 @@ describe("IgxVirtual directive - simple template", () => {
         expect(verticalScroller.scrollTop).toBe(0);
         expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
         expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
-        expect(rowsRendered.length).toBe(8);
+        expect(rowsRendered.length).toBe(9);
     });
 
     it("should not render vertical scrollbar when number of rows change to 0 after scrolling right", () => {
@@ -433,7 +450,7 @@ describe("IgxVirtual directive - simple template", () => {
         expect(horizontalScroller).not.toBeNull();
         expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
         expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
-        expect(rowsRendered.length).toBe(8);
+        expect(rowsRendered.length).toBe(9);
         expect(colsRendered.length).toBe(4);
 
          /** Step 1. Scroll to the right. */
@@ -478,7 +495,7 @@ describe("IgxVirtual directive - simple template", () => {
         // expect(horizontalScroller.scrollLeft).toBe(0); To be investigated
         expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
         expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
-        expect(rowsRendered.length).toBe(8);
+        expect(rowsRendered.length).toBe(9);
         // expect(colsRendered.length).toBe(4); To be investigated
 
         for (let i = 0; i < rowsRendered.length; i++) {
@@ -504,7 +521,7 @@ describe("IgxVirtual directive - simple template", () => {
         expect(horizontalScroller).not.toBeNull();
         expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
         expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
-        expect(rowsRendered.length).toBe(8);
+        expect(rowsRendered.length).toBe(9);
         expect(colsRendered.length).toBe(4);
 
         /** Step 1. Lower the amount of cols to 3 so there would be no horizontal scrollbar */
@@ -522,7 +539,7 @@ describe("IgxVirtual directive - simple template", () => {
 
         expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
         expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
-        expect(rowsRendered.length).toBe(8);
+        expect(rowsRendered.length).toBe(9);
         expect(colsRendered.length).toBe(3);
 
         /** Step 2. Scroll down. There should be no errors then and everything should be still the same */
@@ -540,7 +557,7 @@ describe("IgxVirtual directive - simple template", () => {
 
         expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
         expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
-        expect(rowsRendered.length).toBe(8);
+        expect(rowsRendered.length).toBe(9);
         expect(colsRendered.length).toBe(3);
 
         /** Step 3. Set the data back to have 300 columns and the horizontal scrollbar should render now. */
@@ -558,7 +575,7 @@ describe("IgxVirtual directive - simple template", () => {
         expect(verticalScroller.scrollTop).toBe(1000);
         expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
         expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
-        expect(rowsRendered.length).toBe(8);
+        expect(rowsRendered.length).toBe(9);
         expect(colsRendered.length).toBe(4);
     });
 

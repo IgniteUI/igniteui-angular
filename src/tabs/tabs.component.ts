@@ -126,7 +126,6 @@ export class IgxTabsComponent implements AfterViewInit {
     public scrollElement(element: any, scrollRight: boolean): void {
         requestAnimationFrame(() => {
             const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
-            const itemsContainerWidth = this.itemsContainer.nativeElement.offsetWidth;
 
             this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
             this.itemsContainer.nativeElement.style.transform = `translate(${-this.offset}px)`;
@@ -150,7 +149,7 @@ export class IgxTabsComponent implements AfterViewInit {
                 const group = selectableGroups[0];
 
                 if (group) {
-                    group.select();
+                    group.select(50, true);
                 }
 
             }
