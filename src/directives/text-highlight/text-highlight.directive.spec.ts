@@ -7,7 +7,8 @@ import {
 
 import { By } from "@angular/platform-browser";
 
-import { IgxTextHighlightDirective } from "./text-highlight.directive";
+import { ActiveHighlightManager } from "./active-higlight-manager";
+import { IgxTextHighlightDirective} from "./text-highlight.directive";
 
 fdescribe("IgxHighlight", () => {
     beforeEach(async(() => {
@@ -102,13 +103,24 @@ fdescribe("IgxHighlight", () => {
 
         const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
         component.highlightText("a");
-        component.activateHighlight(2);
+        component.activateNext();
         fix.detectChanges();
 
-        const spans = fix.debugElement.nativeElement.querySelectorAll("." + component.highlightClass);
+        let spans = fix.debugElement.nativeElement.querySelectorAll("." + component.highlightClass);
         let activeSpan = fix.debugElement.nativeElement.querySelector("." + component.activeHighlightClass);
 
-        expect(activeSpan).toBe(spans[2]);
+        expect(activeSpan).toBe(spans[0]);
+
+        component.activateNext();
+        fix.detectChanges();
+
+        spans = fix.debugElement.nativeElement.querySelectorAll("." + component.highlightClass);
+        activeSpan = fix.debugElement.nativeElement.querySelector("." + component.activeHighlightClass);
+
+        expect(activeSpan).toBe(spans[1]);
+
+        spans = fix.debugElement.nativeElement.querySelectorAll("." + component.highlightClass);
+        activeSpan = fix.debugElement.nativeElement.querySelector("." + component.activeHighlightClass);
 
         component.clearHighlight();
         activeSpan = fix.debugElement.nativeElement.querySelector("." + component.activeHighlightClass);
@@ -157,11 +169,12 @@ fdescribe("IgxHighlight", () => {
 @Component({
     template:
         // tslint:disable-next-line:max-line-length
-        `<div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vulputate luctus dui ut maximus. Quisque sed suscipit lorem. Vestibulum sit.</div>`
+        `<div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vulputate luctus dui ut maximus. Quisque sed suscipit lorem. Vestibulum sit.</div>`
 })
 class HighlightLoremIpsumComponent {
     public highlightClass = "igx-highlight";
     public activeHighlightClass = "igx-highlight__active";
+    public groupName = "test";
 
     @ViewChild(forwardRef(() => IgxTextHighlightDirective), { read: IgxTextHighlightDirective })
     private highlight: IgxTextHighlightDirective;
@@ -174,8 +187,8 @@ class HighlightLoremIpsumComponent {
         this.highlight.clearHighlight();
     }
 
-    public activateHighlight(highlightNumber: number) {
-        this.highlight.activate(highlightNumber);
+    public activateNext() {
+        ActiveHighlightManager.moveNext(this.groupName);
     }
 
     public get textContent(): string {

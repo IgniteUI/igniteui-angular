@@ -43,6 +43,7 @@ import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { ISummaryExpression } from "./grid-summary";
 import { IgxGridRowComponent } from "./row.component";
+import { ActiveHighlightManager } from "../main";
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -779,50 +780,34 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public findNext(text: string, caseSensitive?: boolean): number {
-        return this.find(text, 1, caseSensitive);
+        return this.find(text, true, caseSensitive);
     }
 
     public findPrev(text: string, caseSensitive?: boolean): number {
-        return this.find(text, -1, caseSensitive);
+        return this.find(text, false, caseSensitive);
     }
 
-    private find(text: string, increment: number, caseSensitive?: boolean) {
+    private find(text: string, moveNext: boolean, caseSensitive?: boolean) {
         if (this.cellInEditMode) {
             this.cellInEditMode.inEditMode = false;
         }
 
-        if (text === this._lastSearchedText && this._lastSearchedText) {
-            this._matchOccurrenceToActivate += increment;
-
-            if (this._matchOccurrenceToActivate < 1) {
-                this._matchOccurrenceToActivate = this._lastSearchMatchesCount;
-            }
-
-            if (this._matchOccurrenceToActivate > this._lastSearchMatchesCount) {
-                this._matchOccurrenceToActivate = 1;
-            }
-        } else {
-            this._matchOccurrenceToActivate = 1;
-            this._lastSearchedText = text;
-        }
-
-        this._lastSearchMatchesCount = 0;
-        let occurrencesToActivation = this._matchOccurrenceToActivate;
+        let matchCount = 0;
 
         this.rowList.forEach((row) => {
             row.cells.forEach((c) => {
                 const occurrences = c.highlightText(text, caseSensitive);
-                this._lastSearchMatchesCount += occurrences;
-
-                if (occurrencesToActivation - occurrences <= 0 && occurrencesToActivation > 0) {
-                    c.activate(occurrencesToActivation - 1);
-                }
-
-                occurrencesToActivation -= occurrences;
+                matchCount += occurrences;
             });
         });
 
-        return this._lastSearchMatchesCount;
+        if (moveNext) {
+            ActiveHighlightManager.moveNext(this.id);
+        } else {
+            ActiveHighlightManager.movePrev(this.id);
+        }
+
+        return matchCount;
     }
 
     public clearHighlights() {

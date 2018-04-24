@@ -4,12 +4,14 @@
 // you recreate them with the exact same content they still don't work, so I had to wrokaround
 // this by using appendChild and removeChild to modify the DOM without touching the comment nodes.
 
-import { Directive, ElementRef, Input, NgModule, Renderer2 } from "@angular/core";
+import { AfterViewInit, Directive, ElementRef, Input, NgModule, OnDestroy, Renderer2 } from "@angular/core";
+
+import { ActiveHighlightManager } from "./active-higlight-manager";
 
 @Directive({
     selector: "[igxTextHighlight]"
 })
-export class IgxTextHighlightDirective {
+export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit {
 
     @Input("cssClass")
     public cssClass: string;
@@ -17,19 +19,30 @@ export class IgxTextHighlightDirective {
     @Input("activeCssClass")
     public activeCssClass: string;
 
+    @Input("groupName")
+    public groupName: string = "";
+
     public parentElement: any;
 
     private _lastSearchedText: string = null;
     private _lastSearchCount = -1;
 
-    private _storedText: string = null;
+    private _storedText:string = null;
 
-    constructor(element: ElementRef, private renderer: Renderer2) {
+    constructor(element: ElementRef, public renderer: Renderer2) {
         this.parentElement = this.renderer.parentNode(element.nativeElement);
     }
 
+    ngAfterViewInit() {
+        ActiveHighlightManager.registerHighlightInfo(this);
+    }
+
+    ngOnDestroy() {
+        ActiveHighlightManager.unregisterHighlightInfo(this);
+    }
+
     public highlight(text: string, caseSensitive?: boolean): number {
-        if (this._lastSearchedText || this._lastSearchedText !== text) {
+        if (this._lastSearchedText === null || this._lastSearchedText !== text || this._storedText !== null) {
             this._lastSearchedText = text;
 
             if (text === "" || text === undefined || text === null) {
@@ -37,7 +50,7 @@ export class IgxTextHighlightDirective {
                 return 0;
             }
 
-            const content = this.clearChildElements();
+            const content = this.clearChildElements(false);
             this._lastSearchCount = this.getHighlightedText(content, text, caseSensitive);
         }
 
@@ -45,34 +58,28 @@ export class IgxTextHighlightDirective {
     }
 
     public clearHighlight() {
-        const textContent = this.clearChildElements();
+        const textContent = this.clearChildElements(false);
         this.appendText(textContent);
-    }
-
-    public activate(highlightIndex: number) {
-        const spans = this.parentElement.querySelectorAll("." + this.cssClass);
-
-        if (spans.length > highlightIndex) {
-            this.renderer.addClass(spans[highlightIndex], this.activeCssClass);
-            this.renderer.setAttribute(spans[highlightIndex], "style", "background:orange;font-weight:bold");
-        }
     }
 
     public store() {
         if (this._lastSearchedText) {
             this._storedText = this._lastSearchedText;
-            this._lastSearchedText = null;
-            this.clearChildElements();
+            this.clearChildElements(true);
         }
     }
 
     public restore() {
-        if (this._storedText) {
-            this.highlight(this._storedText);
-        }
+        setTimeout(() => {
+            if (this._storedText) {
+                this.highlight(this._storedText);
+                ActiveHighlightManager.restoreHighlight(this.groupName);
+                this._storedText = null;
+            }
+        }, 0);
     }
 
-    private clearChildElements(): string {
+    private clearChildElements(store: boolean): string {
         let child = this.parentElement.firstChild;
         let text = "";
 
@@ -83,6 +90,7 @@ export class IgxTextHighlightDirective {
             if (elementToRemove.nodeName !== "#comment") {
                 text += elementToRemove.textContent;
                 this.renderer.removeChild(this.parentElement, elementToRemove);
+                ActiveHighlightManager.unregisterHighlight(this, elementToRemove, store);
             }
         }
 
@@ -124,7 +132,10 @@ export class IgxTextHighlightDirective {
     private appendSpan(outerHTML: string) {
         const span = this.renderer.createElement("span");
         this.renderer.appendChild(this.parentElement, span);
-        span.outerHTML = outerHTML;
+        this.renderer.setProperty(span, "outerHTML", outerHTML);
+
+        const childNodes = this.parentElement.childNodes;
+        ActiveHighlightManager.registerHighlight(this, childNodes[childNodes.length - 1], this._storedText !== null);
     }
 }
 

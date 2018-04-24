@@ -32,7 +32,6 @@ import { IGridCellEventArgs, IGridEditEventArgs } from "./grid.component";
     templateUrl: "./cell.component.html"
 })
 export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
-
     @Input()
     public column: IgxColumnComponent;
 
@@ -118,6 +117,14 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         if (this._inEditMode) {
             this.grid.cellInEditMode = this;
         }
+    }
+
+    get callback() {
+        return () => {
+            if(this.highlight && this.inEditMode === false) {
+                this.highlight.restore();
+            }
+        };
     }
 
     @HostBinding("attr.tabindex")
@@ -645,9 +652,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         }
     }
 
-    public activate(highlightIndex: number) {
-        if (this.highlight) {
-            this.highlight.activate(highlightIndex);
-        }
-    }
+    // public activate(highlightIndex: number) {
+    //     if (this.highlight) {
+    //         this.highlight.activate(highlightIndex);
+    //     }
+    // }
 }
