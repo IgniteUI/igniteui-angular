@@ -1,15 +1,17 @@
 import { DOCUMENT } from "@angular/common";
-import { ChangeDetectorRef, Directive, ElementRef, HostListener, Inject, Input, Output, TemplateRef  } from "@angular/core";
+import { ChangeDetectorRef, Directive, ElementRef, HostListener, Inject, Input, Output, TemplateRef, AfterViewInit, NgZone  } from "@angular/core";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/switchMap";
 import "rxjs/add/operator/takeUntil";
 import { Subject } from "rxjs/Subject";
 import { IgxGridAPIService } from "./api.service";
+import { Observable } from "rxjs/Observable";
+import { debounce, throttle, switchMap } from "rxjs/operators";
 
 @Directive({
     selector: "[igxResizer]"
 })
-export class IgxColumnResizerDirective {
+export class IgxColumnResizerDirective implements AfterViewInit {
 
     @Input()
     public restrictHResizeMin: number = Number.MIN_SAFE_INTEGER;
@@ -31,13 +33,15 @@ export class IgxColumnResizerDirective {
 
     private _left;
 
-    constructor(public element: ElementRef, @Inject(DOCUMENT) public document) {
+    constructor(public element: ElementRef, @Inject(DOCUMENT) public document, public zone: NgZone) {
 
         this.resizeStart.map((event) => {
             return event.clientX;
-        }).switchMap((offset) =>
-            this.resize.map((event) => (event.clientX - offset)).takeUntil(this.resizeEnd))
-        .subscribe((pos) => {
+        }).pipe(
+            debounce(() => Observable.interval(250)),
+            throttle(() => Observable.interval(250)),
+            switchMap((offset) => this.resize.map((event) => (event.clientX - offset)).takeUntil(this.resizeEnd))
+        ).subscribe((pos) => {
             const left = this._left + pos;
 
             this.left = left < this.restrictHResizeMin ? this.restrictHResizeMin + "px" : left + "px";
@@ -48,20 +52,37 @@ export class IgxColumnResizerDirective {
                 this.left = left + "px";
             }
         });
+
+    }
+
+    ngAfterViewInit() {
+        this.zone.runOutsideAngular(() => {
+            Observable.fromEvent(this.document, "mousedown").subscribe(res => {
+                this.onMousedown(res);
+            });
+
+            Observable.fromEvent(this.document, "mousemove").subscribe(res => {
+                this.onMousemove(res);
+            });
+
+            Observable.fromEvent(this.document, "mouseup").subscribe(res => {
+                this.onMouseup(res);
+            });
+        });
     }
 
     public set left(val) {
         this.element.nativeElement.style.left = val;
     }
 
-    @HostListener("document:mouseup", ["$event"])
+    // @HostListener("document:mouseup", ["$event"])
     onMouseup(event) {
         setTimeout(() => {
             this.resizeEnd.next(event);
         }, this.resizeEndTimeout);
     }
 
-    @HostListener("document:mousedown", ["$event"])
+    // @HostListener("document:mousedown", ["$event"])
     onMousedown(event) {
         this.resizeStart.next(event);
         event.preventDefault();
@@ -70,7 +91,7 @@ export class IgxColumnResizerDirective {
         this._left = Number.isNaN(parseInt(elStyle.left, 10)) ? 0 : parseInt(elStyle.left, 10);
     }
 
-    @HostListener("document:mousemove", ["$event"])
+    // @HostListener("document:mousemove", ["$event"])
     onMousemove(event) {
         this.resize.next(event);
         event.preventDefault();
