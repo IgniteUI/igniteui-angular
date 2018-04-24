@@ -28,25 +28,9 @@ export class IgxDropDownItemComponent implements OnInit {
         this.dropDown.onSelection.emit(args);
     }
 
-    get isDisabled() {
-        return this._disabled;
-    }
-    @Input() set isDisabled(value: boolean) {
-        if (this._disabled === value) {
-            return;
-        }
-
-        this._disabled = value;
-    }
-
     @HostBinding("class.selected")
     get selectedStyle(): boolean {
         return this.isSelected;
-    }
-
-    @HostBinding("class.disabled")
-    get disabledStyle(): boolean {
-        return this.isDisabled;
     }
 
     @HostBinding("class.focused")
@@ -55,6 +39,10 @@ export class IgxDropDownItemComponent implements OnInit {
     @Input()
     @HostBinding("class.header")
     public isHeader = false;
+
+    @Input()
+    @HostBinding("class.disabled")
+    public isDisabled = false;
 
     constructor(
         @Inject(forwardRef(() => IgxDropDownComponent)) public dropDown: IgxDropDownComponent,
