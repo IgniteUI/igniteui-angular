@@ -167,42 +167,6 @@ export class IgxTabsComponent implements AfterViewInit {
         });
     }
 
-    @HostListener("keydown.arrowright", ["$event"])
-    public onKeydownArrowRight(event: KeyboardEvent) {
-        this._onKeyDown(false);
-    }
-
-    @HostListener("keydown.arrowleft", ["$event"])
-    public onKeydownArrowLeft(event: KeyboardEvent) {
-        this._onKeyDown(true);
-    }
-
-    @HostListener("keydown.home", ["$event"])
-    public onKeydownHome(event: KeyboardEvent) {
-        event.preventDefault();
-        this._onKeyDown(false, 0);
-    }
-
-    @HostListener("keydown.end", ["$event"])
-    public onKeydownEnd(event: KeyboardEvent) {
-        event.preventDefault();
-        this._onKeyDown(false, this.tabs.toArray().length - 1);
-    }
-
-    private _onKeyDown(isLeftArrow: boolean, index = null): void {
-        const tabsArray = this.tabs.toArray();
-        if (index === null) {
-            index = (isLeftArrow)
-                ? (this.selectedIndex === 0) ? tabsArray.length - 1 : this.selectedIndex - 1
-                : (this.selectedIndex === tabsArray.length - 1) ? 0 : this.selectedIndex + 1;
-        }
-        const tab = tabsArray[index];
-        const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
-        const nativeTabElement = tab.nativeTabItem.nativeElement;
-        const focusDelay = (nativeTabElement.offsetWidth + nativeTabElement.offsetLeft - this.offset > viewPortWidth) ? 200 : 50;
-        tab.select(focusDelay);
-    }
-
     private _deselectGroup(group: IgxTabsGroupComponent) {
         // Cannot deselect the selected tab - this will mean that there will be not selected tab left
         if (group.isDisabled || this.selectedTabItem.index === group.index) {

@@ -14,7 +14,8 @@ describe("IgxGrid - input properties", () => {
             declarations: [
                 IgxGridTestComponent, IgGridTest5x5Component, IgGridTest10x30Component,
                 IgGridTest30x1000Component, IgGridTest150x20000Component,
-                IgxGridTestDefaultWidthHeightComponent
+                IgxGridTestDefaultWidthHeightComponent,
+                IgGridNullHeightComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule.forRoot()]
@@ -174,8 +175,7 @@ describe("IgxGrid - input properties", () => {
             }
         });
 
-        // TODO: This needs to be investigated
-        // expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+        expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
     });
 
     it("Test rendering of data with 5 columns and 30 rows where 2 of the columns have width set", () => {
@@ -309,6 +309,16 @@ describe("IgxGrid - input properties", () => {
         });
 
         expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+    });
+
+    it("should render all records if height is explicitly set to null.", () => {
+        const fix = TestBed.createComponent(IgGridNullHeightComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        const recsCount = grid.data.length;
+
+        // tbody should have height equal to all items * item height
+        expect(grid.tbody.nativeElement.clientHeight).toEqual(recsCount * 50);
     });
 });
 
@@ -568,5 +578,37 @@ export class IgGridTest150x20000Component {
     public isHorizonatScrollbarVisible() {
         const scrollbar = this.gridMinDefaultColWidth.parentVirtDir.getHorizontalScroll();
         return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
+    }
+}
+
+@Component({
+    template: `
+    <div style='height: 200px; overflow: auto;'>
+        <igx-grid #grid [data]="data" [height]='null' [autoGenerate]="true">
+        </igx-grid>
+    </div>
+    `
+})
+export class IgGridNullHeightComponent {
+    public cols;
+    public data;
+
+    @ViewChild("grid", { read: IgxGridComponent })
+    public instance: IgxGridComponent;
+
+    constructor(private _cdr: ChangeDetectorRef) {
+        this.data = this.generateData(5, 20);
+    }
+    public generateData(columns, rows) {
+        const data = [];
+
+        for (let r = 0; r < rows; r++) {
+            const record = {};
+            for (let c = 0; c < columns; c++) {
+                record["col" + c] = c * r;
+            }
+            data.push(record);
+        }
+        return data;
     }
 }

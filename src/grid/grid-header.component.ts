@@ -272,6 +272,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
             }
 
             this.grid.markForCheck();
+            this.grid.reflow();
             this.grid.onColumnResized.emit({ column: this.column, prevWidth: currentColWidth.toString(), newWidth: this.column.width });
         }
     }
@@ -305,6 +306,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
             }
 
             this.grid.markForCheck();
+            this.grid.reflow();
 
             if (currentColWidth !== parseFloat(this.column.width)) {
                 this.grid.onColumnResized.emit({ column: this.column, prevWidth: currentColWidth.toString(), newWidth: this.column.width });
