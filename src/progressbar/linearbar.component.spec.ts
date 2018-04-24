@@ -29,13 +29,14 @@ describe("IgLinearBar", () => {
         tick(tickTime);
 
         const progress = fixture.componentInstance.linearBar;
-
+        const domProgress = fixture.debugElement.query(By.css("igx-linear-bar")).nativeElement;
         const defaultMaxValue = 100;
         const defaultValue = 0;
         const defaultStriped = false;
         const defaultType = "default";
 
         expect(progress.id).toContain("igx-linear-bar-");
+        expect(domProgress.id).toContain("igx-linear-bar-");
         expect(progress.max).toBe(defaultMaxValue);
         expect(progress.striped).toBe(defaultStriped);
         expect(progress.type).toBe(defaultType);

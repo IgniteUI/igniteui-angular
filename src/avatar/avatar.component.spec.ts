@@ -27,8 +27,16 @@ describe("Avatar", () => {
         const fixture = TestBed.createComponent(InitAvatarComponent);
         fixture.detectChanges();
         const avatar = fixture.componentInstance.avatar;
+        const domAvatar = fixture.debugElement.query(By.css("igx-avatar")).nativeElement;
 
-        expect(avatar.id).toBe("igx-avatar-0");
+        expect(avatar.id).toContain("igx-avatar-");
+        expect(domAvatar.id).toContain("igx-avatar-");
+
+        avatar.id = "customAvatar";
+        fixture.detectChanges();
+
+        expect(avatar.id).toBe("customAvatar");
+        expect(domAvatar.id).toBe("customAvatar");
     });
 
     it("Initializes avatar with initials", () => {

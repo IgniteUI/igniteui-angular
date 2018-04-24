@@ -4,6 +4,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    HostBinding,
     Input,
     NgModule,
     OnChanges,
@@ -85,6 +86,7 @@ let NEXT_CIRCULAR_ID = 0;
 export class IgxLinearProgressBarComponent extends BaseProgress {
 
     /** ID of the component */
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-linear-bar-${NEXT_LINEAR_ID++}`;
 
@@ -168,6 +170,8 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     @Output()
     public onProgressChanged = new EventEmitter<IChangeProgressEventArgs>();
 
+    /** ID of the component */
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-circular-bar-${NEXT_CIRCULAR_ID++}`;
 

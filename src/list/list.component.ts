@@ -68,6 +68,7 @@ export class IgxListComponent {
     @ViewChild("defaultEmptyList", { read: TemplateRef })
     protected defaultEmptyListTemplate: TemplateRef<any>;
 
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-list-${NEXT_ID++}`;
     @Input()

@@ -1,4 +1,4 @@
-import { Component, Directive, Input, NgModule } from "@angular/core";
+import { Component, Directive, HostBinding, Input, NgModule } from "@angular/core";
 import { IgxButtonModule } from "../directives/button/button.directive";
 
 let NEXT_ID = 0;
@@ -74,6 +74,7 @@ export class IgxCardFooterDirective {
     templateUrl: "card.component.html"
 })
 export class IgxCardComponent {
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-card-${NEXT_ID++}`;
 }

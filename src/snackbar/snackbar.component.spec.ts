@@ -1,5 +1,6 @@
 import {Component, ViewChild} from "@angular/core";
 import {async, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import {IgxSnackbarComponent, IgxSnackbarModule} from "./snackbar.component";
 
@@ -28,6 +29,8 @@ describe("IgxSnackbar", () => {
             const fixture = TestBed.createComponent(SnackbarInitializeTestComponent);
             fixture.detectChanges();
 
+            const domSnackbar = fixture.debugElement.query(By.css("igx-snackbar")).nativeElement;
+
             expect(fixture.componentInstance.snackbar.id).toContain("igx-snackbar-");
             expect(fixture.componentInstance.snackbar.message).toBeUndefined();
             expect(fixture.componentInstance.snackbar.actionText).toBeUndefined();
@@ -35,6 +38,14 @@ describe("IgxSnackbar", () => {
             expect(fixture.componentInstance.snackbar.autoHide).toBeTruthy();
             expect(fixture.componentInstance.snackbar.isVisible).toBeFalsy();
             expect(fixture.componentInstance.snackbar.actionText).toBeUndefined();
+
+            expect(domSnackbar.id).toContain("igx-snackbar-");
+            fixture.componentInstance.snackbar.id = "customId";
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.snackbar.id).toBe("customId");
+            expect(domSnackbar.id).toBe("customId");
+
         }).catch((reason) => {
             return Promise.reject(reason);
         });

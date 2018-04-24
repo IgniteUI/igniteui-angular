@@ -20,15 +20,33 @@ describe("Carousel", () => {
         .compileComponents();
     }));
 
+    it("should initialize a carousel with id property", () => {
+        const fixture = TestBed.createComponent(CarouselTestComponent);
+        fixture.detectChanges();
+
+        const carousel = fixture.componentInstance.carousel;
+        const domCarousel = fixture.debugElement.query(By.css("igx-carousel")).nativeElement;
+
+        expect(carousel.id).toContain("igx-carousel-");
+        expect(domCarousel.id).toContain("igx-carousel-");
+
+        carousel.id = "cusrtomCarousel";
+        fixture.detectChanges();
+
+        expect(carousel.id).toBe("cusrtomCarousel");
+        expect(domCarousel.id).toBe("cusrtomCarousel");
+    });
     it("should initialize a carousel with two slides and then destroy it", () => {
         const fixture = TestBed.createComponent(CarouselTestComponent);
         fixture.detectChanges();
 
         const instance = fixture.componentInstance;
+        const domCarousel = fixture.debugElement.query(By.css("igx-carousel")).nativeElement;
 
         fixture.detectChanges();
         expect(instance.carousel).toBeDefined();
-        expect(instance.carousel.id).toBe("igx-carousel-0");
+        expect(instance.carousel.id).toBe("igx-carousel-1");
+        expect(domCarousel.id).toBe("igx-carousel-1");
         expect(instance.carousel instanceof IgxCarouselComponent).toBe(true);
         expect(instance.carousel.slides[0] instanceof IgxSlideComponent).toBe(true);
 

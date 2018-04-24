@@ -37,6 +37,7 @@ export class IgxIconComponent implements OnInit {
     @HostBinding("attr.aria-hidden")
     public ariaHidden = true;
 
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-icon-${NEXT_ID++}`;
 

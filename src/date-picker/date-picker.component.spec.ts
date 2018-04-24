@@ -28,8 +28,23 @@ describe("IgxDatePicker", () => {
         const result = "";
 
         expect(fixture.componentInstance).toBeDefined();
-        expect(datePicker.id).toBe("igx-datePicker-0");
         expect(datePicker.displayData).toEqual(result);
+    });
+    it("Initialize a datepicker component with id", () => {
+        const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
+        fixture.detectChanges();
+
+        const datePicker = fixture.componentInstance.datePicker;
+        const domDatePicker = fixture.debugElement.query(By.css("igx-datePicker")).nativeElement;
+
+        expect(datePicker.id).toContain("igx-datePicker-");
+        expect(domDatePicker.id).toContain("igx-datePicker-");
+
+        datePicker.id = "customDatePicker";
+        fixture.detectChanges();
+
+        expect(datePicker.id).toBe("customDatePicker");
+        expect(domDatePicker.id).toBe("customDatePicker");
     });
 
     it("@Input properties", () => {

@@ -4,6 +4,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    HostBinding,
     Input,
     NgModule,
     OnDestroy,
@@ -54,6 +55,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
      * Identifier of the component
      * @type {string}
      */
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-toast-${NEXT_ID++}`;
 

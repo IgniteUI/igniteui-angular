@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import {
-    AfterViewInit, Component, ElementRef, EventEmitter, forwardRef, Input, NgModule, OnInit, Output, Renderer2,
+    AfterViewInit, Component, ElementRef, EventEmitter,
+    forwardRef, HostBinding, Input, NgModule, OnInit, Output, Renderer2,
     ViewChild
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
@@ -56,6 +57,8 @@ let NEXT_ID = 0;
 })
 export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterViewInit {
 
+    /** ID of the component */
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-slider-${NEXT_ID++}`;
     /**

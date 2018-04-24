@@ -29,11 +29,19 @@ describe("IgxTimePicker", () => {
         fixture.detectChanges();
 
         const timePicker = fixture.componentInstance.timePicker;
+        const domTimePicker = fixture.debugElement.query(By.css("igx-time-picker")).nativeElement;
         const result = "";
 
         expect(fixture.componentInstance).toBeDefined();
         expect(timePicker.displayTime).toEqual(result);
         expect(timePicker.id).toContain("igx-time-picker-");
+        expect(domTimePicker.id).toContain("igx-time-picker-");
+
+        timePicker.id = "customTimePicker";
+        fixture.detectChanges();
+
+        expect(timePicker.id).toBe("customTimePicker");
+        expect(domTimePicker.id).toBe("customTimePicker");
     });
 
     it("@Input properties", () => {

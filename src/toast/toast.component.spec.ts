@@ -28,14 +28,22 @@ describe("IgxToast", () => {
             const fixture = TestBed.createComponent(ToastInitializeTestComponent);
             fixture.componentInstance.toast.isVisible = true;
             fixture.detectChanges();
+            const domToast = fixture.debugElement.query(By.css("igx-toast")).nativeElement;
             const element = fixture.debugElement.query(By.css(".igx-toast--bottom"));
 
             expect(fixture.componentInstance.toast.id).toContain("igx-toast-");
+            expect(domToast.id).toContain("igx-toast-");
             expect(fixture.componentInstance.toast.message).toBeUndefined();
             expect(fixture.componentInstance.toast.displayTime).toBe(4000);
             expect(fixture.componentInstance.toast.autoHide).toBeTruthy();
             expect(fixture.componentInstance.toast.isVisible).toBeTruthy();
             expect(element.classes[fixture.componentInstance.toast.CSS_CLASSES.IGX_TOAST_BOTTOM]).toBeTruthy();
+
+            fixture.componentInstance.toast.id = "customToast";
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.toast.id).toBe("customToast");
+            expect(domToast.id).toBe("customToast");
 
         }).catch((reason) => {
             return Promise.reject(reason);

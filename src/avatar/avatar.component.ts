@@ -62,6 +62,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     private _size: string | Size = "small";
 
     @HostBinding("class.igx-avatar--rounded")
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-avatar-${NEXT_ID++}`;
 

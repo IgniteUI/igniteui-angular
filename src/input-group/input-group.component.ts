@@ -23,6 +23,7 @@ enum IgxInputGroupType {
 export class IgxInputGroupComponent {
     private _type = IgxInputGroupType.LINE;
 
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-input-group-${NEXT_ID++}`;
 

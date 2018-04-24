@@ -60,6 +60,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     private static NEXT_ID = 1;
     private static readonly DIALOG_CLASS = "igx-dialog";
 
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-dialog-${DIALOG_ID++}`;
 

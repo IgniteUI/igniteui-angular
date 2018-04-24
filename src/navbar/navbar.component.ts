@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import {
     Component,
     EventEmitter,
+    HostBinding,
     Input,
     NgModule,
     OnInit,
@@ -36,6 +37,7 @@ export class IgxNavbarComponent {
     private static NEXT_ID = 1;
     private isVisible = true;
 
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-navbar-${NEXT_ID++}`;
     /**

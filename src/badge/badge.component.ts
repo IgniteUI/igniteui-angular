@@ -41,6 +41,7 @@ export enum Type {
 })
 export class IgxBadgeComponent {
 
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-badge-${NEXT_ID++}`;
 

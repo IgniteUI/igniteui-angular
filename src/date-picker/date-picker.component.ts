@@ -47,6 +47,7 @@ let NEXT_ID = 0;
 })
 export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-datePicker-${NEXT_ID++}`;
     // Custom formatter function

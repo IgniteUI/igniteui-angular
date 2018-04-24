@@ -11,6 +11,7 @@ import {
     AnimationTransitionEvent,
     Component,
     EventEmitter,
+    HostBinding,
     Input,
     NgModule,
     NgZone,
@@ -83,6 +84,8 @@ let NEXT_ID = 0;
 })
 export class IgxSnackbarComponent {
 
+    /** ID of the component */
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-snackbar-${NEXT_ID++}`;
     /**

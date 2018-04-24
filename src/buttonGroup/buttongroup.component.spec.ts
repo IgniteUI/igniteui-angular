@@ -60,7 +60,7 @@ describe("IgxButtonGroup", () => {
 
         expect(instance.buttonGroup).toBeDefined();
         expect(buttongroup instanceof IgxButtonGroupComponent).toBe(true);
-        expect(instance.buttonGroup.id).toBe("igx-buttongroup-0");
+        expect(instance.buttonGroup.id).toContain("igx-buttongroup-");
         expect(buttongroup.disabled).toBeFalsy();
         expect(buttongroup.alignment).toBe(ButtonGroupAlignment.horizontal);
         expect(buttongroup.multiSelection).toBeFalsy();

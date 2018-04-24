@@ -45,6 +45,7 @@ export class IgxCarouselComponent implements OnDestroy {
 
     @HostBinding("attr.role") public role = "region";
 
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-carousel-${NEXT_ID++}`;
     /**

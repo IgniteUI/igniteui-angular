@@ -61,8 +61,10 @@ export class IgxBottomNavComponent implements AfterViewInit {
     @ViewChildren(forwardRef(() => IgxTabComponent)) public tabs: QueryList<IgxTabComponent>;
     @ContentChildren(forwardRef(() => IgxTabPanelComponent)) public panels: QueryList<IgxTabPanelComponent>;
 
+    /** ID of the component */
+    @HostBinding("attr.id")
     @Input()
-    public id = `igx-tab-bar-${NEXT_ID++}`;
+    public id = `igx-bottom-nav-${NEXT_ID++}`;
     @Output() public onTabSelected = new EventEmitter<ISelectTabEventArgs>();
     @Output() public onTabDeselected = new EventEmitter<ISelectTabEventArgs>();
 

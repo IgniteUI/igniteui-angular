@@ -64,6 +64,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     private _value: Date;
 
+    /** ID of the component */
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-time-picker-${NEXT_ID++}`;
 

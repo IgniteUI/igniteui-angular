@@ -6,7 +6,8 @@ import {
     ElementRef,
     EventEmitter,
     forwardRef,
-    Inject, Input, NgModule, Output, QueryList, Renderer2, ViewChildren
+    HostBinding, Inject,
+    Input, NgModule, Output, QueryList, Renderer2, ViewChildren
 } from "@angular/core";
 import { IgxButtonDirective, IgxButtonModule } from "../directives/button/button.directive";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
@@ -43,6 +44,7 @@ let NEXT_ID = 0;
 export class IgxButtonGroupComponent implements AfterViewInit {
     @ViewChildren(IgxButtonDirective) public buttons: QueryList<IgxButtonGroupComponent>;
 
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-buttongroup-${NEXT_ID++}`;
 

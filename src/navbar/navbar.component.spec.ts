@@ -1,5 +1,6 @@
 import { Component, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 import { IgxNavbarComponent, IgxNavbarModule } from "./navbar.component";
 
 describe("IgxNavbar", () => {
@@ -19,10 +20,19 @@ describe("IgxNavbar", () => {
             const fixture = TestBed.createComponent(NavbarIntializeTestComponent);
             fixture.detectChanges();
 
+            const domNavbar = fixture.debugElement.query(By.css("igx-navbar")).nativeElement;
+
             expect(fixture.componentInstance.navbar.id).toContain("igx-navbar-");
+            expect(domNavbar.id).toContain("igx-navbar-");
             expect(fixture.componentInstance.navbar.title).toBeUndefined();
             expect(fixture.componentInstance.navbar.isActionButtonVisible).toBeFalsy();
             expect(fixture.componentInstance.navbar.actionButtonIcon).toBeUndefined();
+
+            fixture.componentInstance.navbar.id = "customNavbar";
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.navbar.id).toBe("customNavbar");
+            expect(domNavbar.id).toBe("customNavbar");
         }).catch((reason) => {
             return Promise.reject(reason);
         });
