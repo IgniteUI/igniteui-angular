@@ -91,6 +91,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     @Input() public cancelButtonLabel: string;
 
     @Output() public onOpen = new EventEmitter<IgxDatePickerComponent>();
+
+    @Output() public onClose = new EventEmitter<IgxDatePickerComponent>();
     /**
      * Propagate clanedar events.
      */
@@ -199,6 +201,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      * Closes the dialog, after was clearing all calendar items from dom.
      */
     public handleDialogCloseAction() {
+        this.onClose.emit(this);
         setTimeout(() => this.calendarRef.destroy(), 350);
     }
 
