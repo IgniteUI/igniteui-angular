@@ -179,6 +179,7 @@ A list of the events emitted by the **igx-grid**:
 |`onEditDone`|Emitted when a cell value changes. Returns `{ currentValue: any, newValue: any }`|
 |`onCellClick`|Emitted when a cell is clicked. Returns the cell object.|
 |`onSelection`|Emitted when a cell is selected. Returns the cell object.|
+|`onRowSelectionChange`|Emitted when a row selection has changed. Returns array with old and new selected rows' IDs and the target row, if available.|
 |`onColumnInit`|Emitted when the grid columns are initialized. Returns the column object.|
 |`onSortingDone`|Emitted when sorting is performed through the UI. Returns the sorting expression.|
 |`onFilteringDone`|Emitted when filtering is performed through the UI. Returns the filtering expression.|
