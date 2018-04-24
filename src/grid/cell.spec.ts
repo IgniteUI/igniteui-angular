@@ -358,7 +358,7 @@ describe("IgxGrid - Cell component", () => {
         });
     });
 
-    fit("When cell in edit mode and try to navigate the caret around the cell text the focus should remain.", async(() => {
+    it("When cell in edit mode and try to navigate the caret around the cell text the focus should remain.", async(() => {
         const fix = TestBed.createComponent(GridWithEditableColumnComponent);
         fix.detectChanges();
 
