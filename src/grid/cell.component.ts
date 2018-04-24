@@ -273,6 +273,24 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         this.gridAPI.update(this.gridID, this);
     }
 
+    private subscribeNext(virtualContainer: any, callback: (elem?) => void) {
+        virtualContainer.onChunkLoad.pipe(take(1)).subscribe({
+            next: (e: any) => {
+                callback(e);
+            }
+        });
+    }
+
+    private _focusNextVerticalCell(rowIndex?: number) {
+        this.subscribeNext(this.row.grid.verticalScrollContainer, () => {
+            this.gridAPI.get_cell_by_visible_index(
+                this.gridID,
+                rowIndex ? rowIndex : this.rowIndex,
+                this.visibleColumnIndex
+            ).nativeElement.focus();
+        });
+    }
+
     @HostListener("dblclick", ["$event"])
     public onDoubleClick(event) {
         if (this.column.editable) {
@@ -362,15 +380,13 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
              * We do this because it takes time to detect change in scrollLeft of an element
              */
             if (bVirtSubscribe) {
-                this.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
-                    next: (e: any) => {
-                        this.row.cdr.detectChanges();
-                        const currTarget = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, visibleColumnIndex);
-                        if (currTarget) {
-                            currTarget.nativeElement.focus();
-                        } else {
-                            this.row.cells.first.nativeElement.focus();
-                        }
+                this.subscribeNext(this.row.virtDirRow, () => {
+                    this.row.cdr.detectChanges();
+                    const currTarget = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, visibleColumnIndex);
+                    if (currTarget) {
+                        currTarget.nativeElement.focus();
+                    } else {
+                        this.row.cells.first.nativeElement.focus();
                     }
                 });
             }
@@ -390,15 +406,13 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
                 const horVirtScroll = this.grid.parentVirtDir.getHorizontalScroll();
                 horVirtScroll.scrollLeft = this.row.virtDirRow.getColumnScrollLeft(target.unpinnedColumnIndex);
 
-                this.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
-                    next: (e: any) => {
-                        this.row.cdr.detectChanges();
-                        const currTarget = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, targetIndex);
-                        if (currTarget) {
-                            currTarget.nativeElement.focus();
-                        } else {
-                            this.row.cells.first.nativeElement.focus();
-                        }
+                this.subscribeNext(this.row.virtDirRow, () => {
+                    this.row.cdr.detectChanges();
+                    const currTarget = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, targetIndex);
+                    if (currTarget) {
+                        currTarget.nativeElement.focus();
+                    } else {
+                        this.row.cells.first.nativeElement.focus();
                     }
                 });
             } else {
@@ -467,15 +481,13 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
              * We do this because it takes time to detect change in scrollLeft of an element
              */
             if (bVirtSubscribe) {
-                this.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
-                    next: (e: any) => {
-                        this.row.cdr.detectChanges();
-                        const currTarget = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, visibleColumnIndex);
-                        if (currTarget) {
-                            currTarget.nativeElement.focus();
-                        } else {
-                            this.row.cells.last.nativeElement.focus();
-                        }
+                this.subscribeNext(this.row.virtDirRow, () => {
+                    this.row.cdr.detectChanges();
+                    const currTarget = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, visibleColumnIndex);
+                    if (currTarget) {
+                        currTarget.nativeElement.focus();
+                    } else {
+                        this.row.cells.last.nativeElement.focus();
                     }
                 });
             }
@@ -508,12 +520,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
                     // There is nowhere to scroll more. Don't subscribe since there won't be triggered event.
                     target.nativeElement.focus();
                 } else {
-                    this.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
-                        next: (e: any) => {
-                            this.row.cdr.detectChanges();
-                            const currTarget = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, targetIndex);
-                            currTarget.nativeElement.focus();
-                        }
+                    this.subscribeNext(this.row.virtDirRow, () => {
+                        this.row.cdr.detectChanges();
+                        const currTarget = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, targetIndex);
+                        currTarget.nativeElement.focus();
                     });
                 }
             } else {
@@ -540,23 +550,14 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
             if (this.grid.rowHeight > -containerTopOffset // not the entire row is visible, due to grid offset
                 && verticalScroll.scrollTop // the scrollbar is not at the first item
                 && target.row.element.nativeElement.offsetTop < this.grid.rowHeight) { // the target is in the first row
+
                 verticalScroll.scrollTop -= this.grid.rowHeight;
-                this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
-                    next: (e: any) => {
-                        const cell = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, this.visibleColumnIndex);
-                        cell.nativeElement.focus();
-                    }
-                });
+                this._focusNextVerticalCell(rowIndex);
             }
             target.nativeElement.focus();
         } else {
             this.row.grid.verticalScrollContainer.scrollPrev();
-            this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
-                next: (e: any) => {
-                    const cell = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.visibleColumnIndex);
-                    cell.nativeElement.focus();
-                }
-            });
+            this._focusNextVerticalCell();
         }
     }
 
@@ -573,32 +574,21 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
 
         if (target) {
             const containerHeight = this.grid.calcHeight ?
-                                    Math.ceil(this.grid.calcHeight) :
-                                    null; // null when there is no vertical virtualization
+                Math.ceil(this.grid.calcHeight) :
+                null; // null when there is no vertical virtualization
             const containerTopOffset =
                 parseInt(this.row.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const targetEndTopOffset = target.row.element.nativeElement.offsetTop + this.grid.rowHeight + containerTopOffset;
             if (containerHeight && targetEndTopOffset > containerHeight) {
                 verticalScroll.scrollTop += targetEndTopOffset - containerHeight;
 
-                this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
-                    next: (e: any) => {
-                        const cell = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, this.visibleColumnIndex);
-                        cell.nativeElement.focus();
-                        this.row.cdr.detectChanges();
-                    }
-                });
+                this._focusNextVerticalCell(rowIndex);
             } else {
                 target.nativeElement.focus();
             }
         } else if (rowIndex < this.grid.data.length) {
             verticalScroll.scrollTop += this.grid.rowHeight;
-            this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
-                next: (e: any) => {
-                    const cell = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.visibleColumnIndex);
-                    cell.nativeElement.focus();
-                }
-            });
+            this._focusNextVerticalCell();
         }
     }
 
