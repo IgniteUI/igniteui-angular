@@ -18,7 +18,7 @@ import { KEYCODES } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
-import { autoWire, stopImmediatePropagation, IGridBus } from "./grid.common";
+import { autoWire, IGridBus, stopImmediatePropagation } from "./grid.common";
 import { IGridCellEventArgs, IGridEditEventArgs } from "./grid.component";
 
 @Component({
@@ -295,7 +295,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
             event
         });
     }
-    
+
     @HostListener("focus", ["$event"])
     @autoWire()
     public onFocus(event) {
