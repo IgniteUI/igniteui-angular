@@ -568,12 +568,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
                 verticalScroll.scrollTop += targetEndTopOffset - containerHeight;
 
                 this._focusNextCell(rowIndex, this.visibleColumnIndex);
-            }
-            if (rowIndex < this.grid.rowList.last.index || rowIndex === this.grid.data.length - 1) {
+            } else {
                 target.nativeElement.focus();
             }
         } else {
-            this.row.grid.verticalScrollContainer.scrollNext();
+            verticalScroll.scrollTop += this.grid.rowHeight;
             this._focusNextCell(this.rowIndex, this.visibleColumnIndex);
         }
     }
