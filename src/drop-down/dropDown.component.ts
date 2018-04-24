@@ -109,7 +109,8 @@ export class IgxDropDownComponent implements OnInit, AfterViewInit {
     public onArrowUpKeyDown(event) {
         if (this._focusedItem) {
             let focusedItemIndex = this._focusedItem.index;
-            while ((this.items.toArray()[focusedItemIndex - 1]) && (this.items.toArray()[focusedItemIndex - 1]).isDisabled) {
+            while ((this.items.toArray()[focusedItemIndex - 1]) &&
+                 (this.items.toArray()[focusedItemIndex - 1].isDisabled || this.items.toArray()[focusedItemIndex - 1].isHeader)) {
                 focusedItemIndex--;
             }
             if (focusedItemIndex > 0) {
@@ -129,7 +130,7 @@ export class IgxDropDownComponent implements OnInit, AfterViewInit {
     @HostListener("keydown.End", ["$event"])
     public onEndKeyDown(event) {
         let focusedItemIndex = (this.items.length - 1);
-        while ((this.items.toArray()[focusedItemIndex]) && ((this.items.toArray()[focusedItemIndex]).isDisabled 
+        while ((this.items.toArray()[focusedItemIndex]) && ((this.items.toArray()[focusedItemIndex]).isDisabled
             || (this.items.toArray()[focusedItemIndex]).isHeader)) {
                 focusedItemIndex--;
             }
@@ -144,6 +145,27 @@ export class IgxDropDownComponent implements OnInit, AfterViewInit {
         const parentRect = this.toggle.element.getBoundingClientRect();
         if (parentRect.bottom < rect.bottom) {
                 this.toggle.element.scrollTop += (rect.bottom - parentRect.bottom);
+            }
+    }
+
+    @HostListener("keydown.Home", ["$event"])
+    public onHomeKeyDown(event) {
+        let focusedItemIndex = 0;
+        while ((this.items.toArray()[focusedItemIndex]) && ((this.items.toArray()[focusedItemIndex]).isDisabled
+            || (this.items.toArray()[focusedItemIndex]).isHeader)) {
+                focusedItemIndex++;
+            }
+        if (focusedItemIndex < this.items.length - 1) {
+                if (this._focusedItem) {
+                    this._focusedItem.isFocused = false;
+                }
+                this._focusedItem = this.items.toArray()[focusedItemIndex];
+                this._focusedItem.isFocused = true;
+            }
+        const rect = this._focusedItem.element.nativeElement.getBoundingClientRect();
+        const parentRect = this.toggle.element.getBoundingClientRect();
+        if (parentRect.top > rect.top) {
+                this.toggle.element.scrollTop -= (parentRect.top - rect.bottom + rect.height);
             }
     }
 
