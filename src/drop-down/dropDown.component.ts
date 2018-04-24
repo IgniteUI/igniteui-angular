@@ -1,5 +1,6 @@
 import { CommonModule } from "@angular/common";
 import {
+    AfterViewInit,
     Component,
     ContentChildren,
     ElementRef,
@@ -28,7 +29,7 @@ export interface ISelectionEventArgs {
     selector: "igx-drop-down",
     templateUrl: "./dropDown.component.html"
 })
-export class IgxDropDownComponent implements OnInit {
+export class IgxDropDownComponent implements OnInit, AfterViewInit {
     private _selectedItem: IgxDropDownItemComponent = null;
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
     private _focusedItem: IgxDropDownItemComponent = null;
@@ -55,8 +56,8 @@ export class IgxDropDownComponent implements OnInit {
         return this.selectedItem !== this._initiallySelectedItem;
     }
 
-    @Input() public width = "80px";
-    @Input() public height = "120px";
+    @Input() public width = "100px";
+    @Input() public height = "200px";
 
     @HostListener("keydown.Space", ["$event"])
     public onSpaceKeyDown(event) {
@@ -85,11 +86,14 @@ export class IgxDropDownComponent implements OnInit {
         if (this._focusedItem) {
             focusedItemIndex = this._focusedItem.index;
         }
-        while ((this.items.toArray()[focusedItemIndex + 1]) && (this.items.toArray()[focusedItemIndex + 1]).isDisabled) {
+        while (this.items.toArray()[focusedItemIndex + 1] &&
+            (this.items.toArray()[focusedItemIndex + 1].isDisabled || this.items.toArray()[focusedItemIndex + 1].isHeader)) {
             focusedItemIndex++;
         }
         if (focusedItemIndex < this.items.length - 1) {
-            this._focusedItem.isFocused = false;
+            if (this._focusedItem) {
+                this._focusedItem.isFocused = false;
+            }
             this._focusedItem = this.items.toArray()[focusedItemIndex + 1];
             this._focusedItem.isFocused = true;
         }
@@ -124,6 +128,12 @@ export class IgxDropDownComponent implements OnInit {
         this.toggleAction.closeOnOutsideClick = true;
     }
 
+    ngAfterViewInit() {
+        this.toggle.element.style.zIndex = 10000;
+        this.toggle.element.style.position = "absolute";
+        this.toggle.element.style.overflowY = "auto";
+    }
+
     public onClose() {
         if (this._focusedItem) {
             this._focusedItem.isFocused = false;
@@ -138,10 +148,6 @@ export class IgxDropDownComponent implements OnInit {
             this._focusedItem = this.selectedItem;
             this.scrollToItem(this.selectedItem);
         }
-
-        this.toggle.element.style.zIndex = 10000;
-        this.toggle.element.style.position = "absolute";
-        this.toggle.element.style.overflowY = "auto";
     }
 
     public toggleDropDown() {
@@ -159,7 +165,7 @@ export class IgxDropDownComponent implements OnInit {
     }
 
     private fireOnSelection(oldItem: IgxDropDownItemComponent, newItem: IgxDropDownItemComponent, event?) {
-        const args: ISelectionEventArgs = {oldSelection: oldItem, newSelection: newItem, event};
+        const args: ISelectionEventArgs = { oldSelection: oldItem, newSelection: newItem, event };
         this.onSelection.emit(args);
     }
 }

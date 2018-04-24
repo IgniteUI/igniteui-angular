@@ -5,7 +5,7 @@ import { IgxDropDownComponent, ISelectionEventArgs } from "./dropDown.component"
     selector: "igx-drop-down-item",
     templateUrl: "dropDownItem.component.html",
     styles: [
-        ":host { display: block; }",
+        ":host { display: block; background-color: white; }",
         ":host.selected { background-color: #1A73E8; }",
         ":host.focused { border: 1px solid #8bb8f4; color: red; }",
         ":host.disabled { background-color: grey; }",
