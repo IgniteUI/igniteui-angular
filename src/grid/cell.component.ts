@@ -595,7 +595,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
             } else {
                 target.nativeElement.focus();
             }
-        } else if (rowIndex < this.grid.data.length) {
+        } else {
             verticalScroll.scrollTop += this.grid.rowHeight;
             this.row.grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
                 next: (e: any) => {
