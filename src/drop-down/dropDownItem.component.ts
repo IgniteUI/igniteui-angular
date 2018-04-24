@@ -7,7 +7,7 @@ import { IgxDropDownComponent, ISelectionEventArgs } from "./dropDown.component"
     styles: [
         ":host { display: block; }",
         ":host.selected { background-color: #1A73E8; }",
-        ":host.focused { border: 1px solid #8bb8f4; }",
+        ":host.focused { border: 1px solid #8bb8f4; color: red; }",
         ":host.disabled { background-color: grey; }"
     ]
 })
@@ -16,7 +16,6 @@ export class IgxDropDownItemComponent implements OnInit {
     get isSelected() {
         return this.dropDown.selectedItem === this;
     }
-
     @Input() set isSelected(value: boolean) {
         if (this.isSelected === value) {
             return;
@@ -31,7 +30,6 @@ export class IgxDropDownItemComponent implements OnInit {
     get isDisabled() {
         return this._disabled;
     }
-
     @Input() set isDisabled(value: boolean) {
         if (this._disabled === value) {
             return;

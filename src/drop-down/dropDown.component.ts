@@ -43,7 +43,6 @@ export class IgxDropDownComponent implements OnInit {
     get selectedItem(): IgxDropDownItemComponent {
         return this._selectedItem;
     }
-
     set selectedItem(item: IgxDropDownItemComponent) {
         if (item === this.selectedItem) {
             return;
@@ -139,6 +138,10 @@ export class IgxDropDownComponent implements OnInit {
             this._focusedItem = this.selectedItem;
             this.scrollToItem(this.selectedItem);
         }
+
+        this.toggle.element.style.zIndex = 10000;
+        this.toggle.element.style.position = "absolute";
+        this.toggle.element.style.overflowY = "auto";
     }
 
     public toggleDropDown() {
