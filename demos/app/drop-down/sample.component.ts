@@ -11,16 +11,24 @@ export class DropDownSampleComponent {
 
     itemsCount = 10;
     items: any[] = [
-        { field: "Cables" },
-        { field: "Switches", disabled: true },
-        { field: "Switches", disabled: true },
-        { field: "Batteries",  disabled: true }
+        // { field: "Cables" },
+        // { field: "Switches", disabled: true },
+        // { field: "Switches", disabled: true },
+        // { field: "Batteries", disabled: true }
     ];
 
     constructor() {
-        //for (let i = 0; i < this.itemsCount; i += 1) {
-        //    this.items.push("Item " + i);
-        //}
+        for (let i = 0; i < this.itemsCount; i += 1) {
+            const item = { field: "Item " + i };
+            if (i % 3 === 0 || i % 4 === 0) {
+                item["disabled"] = true;
+            }
+
+            if (i % 5 === 0) {
+                item["header"] = true;
+            }
+            this.items.push(item);
+        }
     }
 
     public toggleDropDown() {

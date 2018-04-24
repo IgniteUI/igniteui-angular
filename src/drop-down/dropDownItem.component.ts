@@ -8,7 +8,8 @@ import { IgxDropDownComponent, ISelectionEventArgs } from "./dropDown.component"
         ":host { display: block; }",
         ":host.selected { background-color: #1A73E8; }",
         ":host.focused { border: 1px solid #8bb8f4; color: red; }",
-        ":host.disabled { background-color: grey; }"
+        ":host.disabled { background-color: grey; }",
+        ":host.header { font-weight: bold; }"
     ]
 })
 export class IgxDropDownItemComponent implements OnInit {
@@ -51,13 +52,17 @@ export class IgxDropDownItemComponent implements OnInit {
     @HostBinding("class.focused")
     public isFocused = false;
 
+    @Input()
+    @HostBinding("class.header")
+    public isHeader = false;
+
     constructor(
         @Inject(forwardRef(() => IgxDropDownComponent)) public dropDown: IgxDropDownComponent,
         private elementRef: ElementRef
     ) { }
 
     @HostListener("click", ["$event"]) clicked(event) {
-        if (this.isDisabled) {
+        if (this.isDisabled || this.isHeader) {
             return;
         }
 
