@@ -281,37 +281,26 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         });
     }
 
-    private _focusNextCell(targetIndex?: number, dir?: string) {
+    private _focusNextCell(rowIndex: number, columnIndex: number, dir?: string) {
         const virtualDir = dir !== undefined ? this.row.virtDirRow : this.row.grid.verticalScrollContainer;
         this.subscribeNext(virtualDir, () => {
-            let rowIndex;
-            let columnIndex;
-            if (dir) {
-                this.row.cdr.detectChanges();
-                rowIndex = this.rowIndex;
-                columnIndex = targetIndex !== undefined ? targetIndex : this.visibleColumnIndex;
-            } else {
-                columnIndex = this.columnIndex;
-                rowIndex = targetIndex !== undefined ? targetIndex : this.rowIndex;
-            }
-            let currTarget = this.gridAPI.get_cell_by_visible_index(
+            let target;
+            target = this.gridAPI.get_cell_by_visible_index(
                 this.gridID,
                 rowIndex,
                 columnIndex);
-            if (currTarget) {
-                currTarget.nativeElement.focus();
-            } else {
+            if (!target) {
                 if (dir) {
-                    dir === "left" ? this.row.cells.first.nativeElement.focus() : this.row.cells.last.nativeElement.focus();
+                    target = dir === "left" ? this.row.cells.first : this.row.cells.last;
                 } else {
-                    currTarget = this.gridAPI.get_cell_by_visible_index(
+                    target = this.gridAPI.get_cell_by_visible_index(
                         this.gridID,
                         this.rowIndex,
                         this.visibleColumnIndex
                     );
-                    currTarget.nativeElement.focus();
                 }
             }
+            target.nativeElement.focus();
         });
     }
 
@@ -367,10 +356,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
     public onKeydownArrowLeft(event) {
         event.preventDefault();
         const rowIndex = this.rowIndex;
-        const visibleColumnIndex = this.visibleColumnIndex - 1;
+        const columnIndex = this.visibleColumnIndex - 1;
 
-        if (visibleColumnIndex >= 0) {
-            const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, visibleColumnIndex);
+        if (columnIndex >= 0) {
+            const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, columnIndex);
             const targetUnpinnedIndex = this.unpinnedColumnIndex - 1;
             const horVirtScroll = this.grid.parentVirtDir.getHorizontalScroll();
             let bVirtSubscribe = true;
@@ -404,7 +393,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
              * We do this because it takes time to detect change in scrollLeft of an element
              */
             if (bVirtSubscribe) {
-                this._focusNextCell(visibleColumnIndex, "left");
+                this._focusNextCell(this.rowIndex, columnIndex, "left");
             }
         }
     }
@@ -412,7 +401,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
     @HostListener("keydown.control.arrowleft")
     public onKeydownCtrlArrowLeft() {
         const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.row.cells.first.visibleColumnIndex);
-        const targetIndex = target.visibleColumnIndex;
+        const columnIndex = target.visibleColumnIndex;
         if (target) {
             const containerLeftOffset = parseInt(this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
             const targetEndLeftOffset = target.nativeElement.offsetLeft + containerLeftOffset;
@@ -422,7 +411,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
                 const horVirtScroll = this.grid.parentVirtDir.getHorizontalScroll();
                 horVirtScroll.scrollLeft = this.row.virtDirRow.getColumnScrollLeft(target.unpinnedColumnIndex);
 
-                this._focusNextCell(targetIndex, "left");
+                this._focusNextCell(this.rowIndex, columnIndex, "left");
             } else {
                 target.nativeElement.focus();
             }
@@ -434,10 +423,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         event.preventDefault();
         const visibleColumns = this.grid.visibleColumns;
         const rowIndex = this.rowIndex;
-        const visibleColumnIndex = this.visibleColumnIndex + 1;
+        const columnIndex = this.visibleColumnIndex + 1;
 
-        if (visibleColumnIndex > -1 && visibleColumnIndex <= visibleColumns.length - 1) {
-            const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, visibleColumnIndex);
+        if (columnIndex > -1 && columnIndex <= visibleColumns.length - 1) {
+            const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, columnIndex);
             const targetUnpinnedIndex = this.unpinnedColumnIndex + 1;
             const horVirtScroll = this.grid.parentVirtDir.getHorizontalScroll();
             const verticalVirtScroll = this.grid.verticalScrollContainer.getVerticalScroll();
@@ -458,7 +447,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
                 const containerLeftOffset = parseInt(this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
                 const targetStartLeftOffset = target.nativeElement.offsetLeft + containerLeftOffset;
                 const targetEndLeftOffset = target.nativeElement.offsetLeft +
-                    parseInt(visibleColumns[visibleColumnIndex].width, 10) +
+                    parseInt(visibleColumns[columnIndex].width, 10) +
                     containerLeftOffset;
                 if (!target.isPinned && targetEndLeftOffset > virtContainerSize) {
                     // Target cell is partially visible (right part of it is cut). Scroll to it so it is fully visible then focus.
@@ -489,7 +478,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
              * We do this because it takes time to detect change in scrollLeft of an element
              */
             if (bVirtSubscribe) {
-                this._focusNextCell(visibleColumnIndex, "right");
+                this._focusNextCell(this.rowIndex, columnIndex, "right");
             }
         }
     }
@@ -497,7 +486,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
     @HostListener("keydown.control.arrowright")
     public onKeydownCtrlArrowRight() {
         const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.row.cells.last.visibleColumnIndex);
-        const targetIndex = target.visibleColumnIndex;
+        const columnIndex = target.visibleColumnIndex;
         if (target) {
             const containerLeftOffset = parseInt(this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
             const targetEndLeftOffset = target.nativeElement.offsetLeft + parseInt(target.column.width, 10) + containerLeftOffset;
@@ -520,7 +509,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
                     // There is nowhere to scroll more. Don't subscribe since there won't be triggered event.
                     target.nativeElement.focus();
                 } else {
-                    this._focusNextCell(targetIndex, "right");
+                    this._focusNextCell(this.rowIndex, columnIndex, "right");
                 }
             } else {
                 target.nativeElement.focus();
@@ -548,12 +537,12 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
                 && target.row.element.nativeElement.offsetTop < this.grid.rowHeight) { // the target is in the first row
 
                 verticalScroll.scrollTop -= this.grid.rowHeight;
-                this._focusNextCell(rowIndex);
+                this._focusNextCell(rowIndex, this.visibleColumnIndex);
             }
             target.nativeElement.focus();
         } else {
             this.row.grid.verticalScrollContainer.scrollPrev();
-            this._focusNextCell();
+            this._focusNextCell(this.rowIndex, this.visibleColumnIndex);
         }
     }
 
@@ -578,14 +567,14 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
             if (containerHeight && targetEndTopOffset > containerHeight) {
                 verticalScroll.scrollTop += targetEndTopOffset - containerHeight;
 
-                this._focusNextCell(rowIndex);
+                this._focusNextCell(rowIndex, this.visibleColumnIndex);
             }
             if (rowIndex < this.grid.rowList.last.index || rowIndex === this.grid.data.length - 1) {
                 target.nativeElement.focus();
             }
         } else if (rowIndex < this.grid.data.length) {
             this.row.grid.verticalScrollContainer.scrollNext();
-            this._focusNextCell();
+            this._focusNextCell(this.rowIndex, this.visibleColumnIndex);
         }
     }
 
