@@ -22,10 +22,12 @@ export class DropDownSampleComponent {
             const item = { field: "Item " + i };
             if (i % 3 === 1 || i % 4 === 1) {
                 item["disabled"] = true;
+                item.field += " I am Disabled!";
             }
 
             if (i % 5 === 1) {
                 item["header"] = true;
+                item.field += "I am Header!";
             }
             this.items.push(item);
         }

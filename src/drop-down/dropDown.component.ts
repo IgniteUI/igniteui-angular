@@ -64,7 +64,7 @@ export class IgxDropDownComponent implements OnInit, AfterViewInit {
         const oldItem = this.selectedItem;
         this.selectedItem = this._focusedItem;
         this.fireOnSelection(oldItem, this.selectedItem, event);
-        this.toggleDropDown();
+        this.toggle.close(true);
     }
 
     @HostListener("keydown.Enter", ["$event"])
@@ -72,12 +72,12 @@ export class IgxDropDownComponent implements OnInit, AfterViewInit {
         const oldItem = this.selectedItem;
         this.selectedItem = this._focusedItem;
         this.fireOnSelection(oldItem, this.selectedItem, event);
-        this.toggleDropDown();
+        this.toggle.close(true);
     }
 
     @HostListener("keydown.Escape", ["$event"])
     public onEscapeKeyDown(event) {
-        this.toggleDropDown();
+        this.toggle.close(true);
     }
 
     @HostListener("keydown.ArrowDown", ["$event"])
