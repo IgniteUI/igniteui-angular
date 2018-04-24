@@ -28,6 +28,7 @@ export class IgxDropDownItemComponent implements OnInit {
         this.dropDown.onSelection.emit(args);
     }
 
+    @HostBinding("attr.aria-selected")
     @HostBinding("class.selected")
     get selectedStyle(): boolean {
         return this.isSelected;
