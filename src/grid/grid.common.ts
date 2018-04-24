@@ -1,17 +1,29 @@
 import { DOCUMENT } from "@angular/common";
-import { ChangeDetectorRef, Directive, ElementRef, HostListener, Inject, Input, Output, TemplateRef, AfterViewInit, NgZone  } from "@angular/core";
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Directive,
+    ElementRef,
+    HostListener,
+    Inject,
+    Input,
+    NgZone,
+    OnDestroy,
+    Output,
+    TemplateRef
+} from "@angular/core";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/switchMap";
 import "rxjs/add/operator/takeUntil";
+import { Observable } from "rxjs/Observable";
+import { debounce, switchMap, throttle } from "rxjs/operators";
 import { Subject } from "rxjs/Subject";
 import { IgxGridAPIService } from "./api.service";
-import { Observable } from "rxjs/Observable";
-import { debounce, throttle, switchMap } from "rxjs/operators";
 
 @Directive({
     selector: "[igxResizer]"
 })
-export class IgxColumnResizerDirective implements AfterViewInit {
+export class IgxColumnResizerDirective implements AfterViewInit, OnDestroy {
 
     @Input()
     public restrictHResizeMin: number = Number.MIN_SAFE_INTEGER;
@@ -32,6 +44,9 @@ export class IgxColumnResizerDirective implements AfterViewInit {
     public resize = new Subject<any>();
 
     private _left;
+    private _mouseDown: any;
+    private _mouseMove: any;
+    private _mouseUp: any;
 
     constructor(public element: ElementRef, @Inject(DOCUMENT) public document, public zone: NgZone) {
 
@@ -57,32 +72,36 @@ export class IgxColumnResizerDirective implements AfterViewInit {
 
     ngAfterViewInit() {
         this.zone.runOutsideAngular(() => {
-            Observable.fromEvent(this.document, "mousedown").subscribe(res => {
+            this._mouseDown = Observable.fromEvent(this.document, "mousedown").subscribe((res) => {
                 this.onMousedown(res);
             });
 
-            Observable.fromEvent(this.document, "mousemove").subscribe(res => {
+            this._mouseMove = Observable.fromEvent(this.document, "mousemove").subscribe((res) => {
                 this.onMousemove(res);
             });
 
-            Observable.fromEvent(this.document, "mouseup").subscribe(res => {
+            this._mouseMove = Observable.fromEvent(this.document, "mouseup").subscribe((res) => {
                 this.onMouseup(res);
             });
         });
+    }
+
+    ngOnDestroy() {
+        this._mouseDown.unsubscribe();
+        this._mouseMove.unsubscribe();
+        this._mouseUp.unsubscribe();
     }
 
     public set left(val) {
         this.element.nativeElement.style.left = val;
     }
 
-    // @HostListener("document:mouseup", ["$event"])
     onMouseup(event) {
         setTimeout(() => {
             this.resizeEnd.next(event);
         }, this.resizeEndTimeout);
     }
 
-    // @HostListener("document:mousedown", ["$event"])
     onMousedown(event) {
         this.resizeStart.next(event);
         event.preventDefault();
@@ -91,7 +110,6 @@ export class IgxColumnResizerDirective implements AfterViewInit {
         this._left = Number.isNaN(parseInt(elStyle.left, 10)) ? 0 : parseInt(elStyle.left, 10);
     }
 
-    // @HostListener("document:mousemove", ["$event"])
     onMousemove(event) {
         this.resize.next(event);
         event.preventDefault();
