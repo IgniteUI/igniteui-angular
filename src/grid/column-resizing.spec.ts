@@ -585,6 +585,51 @@ describe("IgxGrid - Deferred Column Resizing", () => {
 
         discardPeriodicTasks();
     }));
+
+    it("should recalculate grid heights after resizing so the horizontal scrollbar appears.", fakeAsync(() => {
+        const fixture = TestBed.createComponent(ResizableColumnsComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        const displayContainer: HTMLElement = fixture.componentInstance.grid.tbody.nativeElement.querySelector("igx-display-container");
+
+        expect(grid.calcHeight).toEqual(243);
+        expect(grid.columns[0].width).toEqual("100px");
+
+        // Resize first column
+        const headerResArea = headers[0].nativeElement.children[2];
+        simulateMouseEvent("mousedown", headerResArea, 100, 0);
+        tick();
+        fixture.detectChanges();
+
+        const resizer = headers[0].nativeElement.children[2].children[0];
+        expect(resizer).toBeDefined();
+        simulateMouseEvent("mousemove", resizer, 250, 5);
+        tick();
+
+        simulateMouseEvent("mouseup", resizer, 250, 5);
+        tick();
+        fixture.detectChanges();
+
+        // We call this again becuase for some reason in test it is not called the same amount of time as in real use.
+        // To be investigated.
+        grid.markForCheck();
+        tick();
+        fixture.detectChanges();
+
+        expect(grid.columns[0].width).toEqual("250px");
+
+        // Check grid has updated cells and scrollbar
+        const hScroll = fixture.componentInstance.grid.parentVirtDir.getHorizontalScroll();
+        const hScrollVisible = hScroll.offsetWidth < hScroll.children[0].offsetWidth;
+
+        // Should 243 - 18, because the horizontal scrollbar has 18px height
+        expect(grid.calcHeight).toEqual(243 - 18);
+        expect(hScrollVisible).toBe(true);
+
+        discardPeriodicTasks();
+    }));
 });
 
 function simulateMouseEvent(eventName: string, element, x, y) {
@@ -604,7 +649,7 @@ function simulateMouseEvent(eventName: string, element, x, y) {
 
 @Component({
     template: `
-        <igx-grid [data]="data" width="500px">
+        <igx-grid [data]="data" width="500px" height="300px">
             <igx-column [resizable]="true" field="ID" width="100px"></igx-column>
             <igx-column [resizable]="true" [minWidth]="'70px'" [maxWidth]="'250px'" field="Name" width="100px"></igx-column>
             <igx-column [resizable]="false" [sortable]="true" field="LastName" width="100px"></igx-column>

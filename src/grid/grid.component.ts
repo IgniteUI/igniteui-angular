@@ -608,6 +608,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.rowList.forEach((row) => row.cdr.markForCheck());
         }
         this.cdr.detectChanges();
+        this.reflow();
     }
 
     public addRow(data: any): void {
