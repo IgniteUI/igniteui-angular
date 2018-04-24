@@ -104,7 +104,10 @@ export class IgxDropDownComponent implements OnInit {
     @HostListener("keydown.ArrowUp", ["$event"])
     public onArrowUpKeyDown(event) {
         if (this._focusedItem) {
-            const focusedItemIndex = this._focusedItem.index;
+            let focusedItemIndex = this._focusedItem.index;
+            while ((this.items.toArray()[focusedItemIndex - 1]) && (this.items.toArray()[focusedItemIndex - 1]).isDisabled) {
+                focusedItemIndex--;
+            }
             if (focusedItemIndex > 0) {
                 this._focusedItem.isFocused = false;
                 this._focusedItem = this.items.toArray()[focusedItemIndex - 1];
