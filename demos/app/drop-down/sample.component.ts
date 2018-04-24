@@ -9,7 +9,7 @@ export class DropDownSampleComponent {
     private width = "160px";
     @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
 
-    itemsCount = 10;
+    itemsCount = 50;
     items: any[] = [
         // { field: "Cables" },
         // { field: "Switches", disabled: true },
@@ -20,11 +20,11 @@ export class DropDownSampleComponent {
     constructor() {
         for (let i = 0; i < this.itemsCount; i += 1) {
             const item = { field: "Item " + i };
-            if (i % 3 === 0 || i % 4 === 0) {
+            if (i % 3 === 1 || i % 4 === 1) {
                 item["disabled"] = true;
             }
 
-            if (i % 5 === 0) {
+            if (i % 5 === 1) {
                 item["header"] = true;
             }
             this.items.push(item);
