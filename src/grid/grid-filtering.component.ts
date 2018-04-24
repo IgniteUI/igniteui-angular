@@ -116,8 +116,8 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
     protected _value;
     protected _filterCondition;
     protected filterChanged = new Subject();
-    protected filterConditionChanged = new Subject();
-    protected filterUnaryConditionChanged = new Subject();
+    protected conditionChanged = new Subject();
+    protected unaryConditionChanged = new Subject();
     protected chunkLoaded = new Subscription();
     private MINIMUM_VIABLE_SIZE = 240;
 
@@ -135,9 +135,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
             debounceTime(250)
         ).subscribe((value) => this.value = value);
         // when condition is unary
-        this.filterUnaryConditionChanged.subscribe((value) => this.filter());
+        this.unaryConditionChanged.subscribe((value) => this.filter());
         // when condition is NOT unary
-        this.filterConditionChanged.subscribe((value) => { if (!!this._value || this._value === 0) { this.filter(); }});
+        this.conditionChanged.subscribe((value) => { if (!!this._value || this._value === 0) { this.filter(); }});
     }
 
     public ngOnInit() {
@@ -151,8 +151,8 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this.filterChanged.unsubscribe();
-        this.filterConditionChanged.unsubscribe();
-        this.filterUnaryConditionChanged.unsubscribe();
+        this.conditionChanged.unsubscribe();
+        this.unaryConditionChanged.unsubscribe();
         this.chunkLoaded.unsubscribe();
     }
 
@@ -199,9 +199,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
         this._filterCondition = value;
         this.column.filteringCondition = this.getCondition(value);
         if (this.unaryCondition) {
-            this.filterUnaryConditionChanged.next(value);
+            this.unaryConditionChanged.next(value);
         } else {
-            this.filterConditionChanged.next(value);
+            this.conditionChanged.next(value);
         }
     }
 
