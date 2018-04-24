@@ -1,6 +1,5 @@
 import { DOCUMENT } from "@angular/common";
 import {
-    AfterViewInit,
     ChangeDetectorRef,
     Directive,
     ElementRef,
@@ -8,7 +7,7 @@ import {
     Inject,
     Input,
     NgZone,
-    OnDestroy,
+    OnInit,
     Output,
     TemplateRef
 } from "@angular/core";
@@ -23,7 +22,7 @@ import { IgxGridAPIService } from "./api.service";
 @Directive({
     selector: "[igxResizer]"
 })
-export class IgxColumnResizerDirective implements AfterViewInit, OnDestroy {
+export class IgxColumnResizerDirective implements OnInit {
 
     @Input()
     public restrictHResizeMin: number = Number.MIN_SAFE_INTEGER;
@@ -44,17 +43,13 @@ export class IgxColumnResizerDirective implements AfterViewInit, OnDestroy {
     public resize = new Subject<any>();
 
     private _left;
-    private _mouseDown: any;
-    private _mouseMove: any;
-    private _mouseUp: any;
 
     constructor(public element: ElementRef, @Inject(DOCUMENT) public document, public zone: NgZone) {
 
         this.resizeStart.map((event) => {
             return event.clientX;
         }).pipe(
-            debounce(() => Observable.interval(250)),
-            throttle(() => Observable.interval(250)),
+            throttle(() => Observable.interval(150)),
             switchMap((offset) => this.resize.map((event) => (event.clientX - offset)).takeUntil(this.resizeEnd))
         ).subscribe((pos) => {
             const left = this._left + pos;
@@ -70,26 +65,20 @@ export class IgxColumnResizerDirective implements AfterViewInit, OnDestroy {
 
     }
 
-    ngAfterViewInit() {
+    ngOnInit() {
         this.zone.runOutsideAngular(() => {
-            this._mouseDown = Observable.fromEvent(this.document, "mousedown").subscribe((res) => {
+            Observable.fromEvent(this.document, "mousedown").subscribe((res) => {
                 this.onMousedown(res);
             });
 
-            this._mouseMove = Observable.fromEvent(this.document, "mousemove").subscribe((res) => {
+            Observable.fromEvent(this.document, "mousemove").subscribe((res) => {
                 this.onMousemove(res);
             });
 
-            this._mouseMove = Observable.fromEvent(this.document, "mouseup").subscribe((res) => {
+            Observable.fromEvent(this.document, "mouseup").subscribe((res) => {
                 this.onMouseup(res);
             });
         });
-    }
-
-    ngOnDestroy() {
-        this._mouseDown.unsubscribe();
-        this._mouseMove.unsubscribe();
-        this._mouseUp.unsubscribe();
     }
 
     public set left(val) {

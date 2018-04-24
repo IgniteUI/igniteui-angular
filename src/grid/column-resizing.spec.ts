@@ -43,10 +43,10 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         simulateMouseEvent("mouseover", headerResArea, 100, 5);
         simulateMouseEvent("mousedown", headerResArea, 100, 5);
         simulateMouseEvent("mousedup", headerResArea, 100, 5);
-        tick();
+        tick(100);
         fixture.detectChanges();
         simulateMouseEvent("mousedown", headerResArea, 100, 5);
-        tick();
+        tick(100);
         fixture.detectChanges();
 
         let resizer = headers[0].nativeElement.children[2].children[0];
