@@ -778,10 +778,10 @@ describe("IgxGrid - Filtering actions", () => {
         filterIcon.nativeElement.click();
         fix.detectChanges();
 
-        sendInput(input, "100", fix).then(() => {
+        sendInput(input, 100, fix).then(() => {
             fix.detectChanges();
             verifyFilterUIPosition(filterUIContainer, grid);
-            expect(grid.rowList.length).toEqual(1);
+            expect(grid.rowList.length).toEqual(2);
             expect(grid.getCellByColumn(0, "Downloads").value).toEqual(100);
             done();
         });
@@ -802,7 +802,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.value = "doesNotEqual";
         select.nativeElement.dispatchEvent(new Event("change"));
 
-        sendInput(input, "100", fix).then(() => {
+        sendInput(input, 100, fix).then(() => {
             fix.detectChanges();
             verifyFilterUIPosition(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(7);
@@ -826,7 +826,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.value = "greaterThan";
         select.nativeElement.dispatchEvent(new Event("change"));
 
-        sendInput(input, "300", fix).then(() => {
+        sendInput(input, 300, fix).then(() => {
             fix.detectChanges();
             verifyFilterUIPosition(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(2);
@@ -851,7 +851,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.value = "lessThan";
         select.nativeElement.dispatchEvent(new Event("change"));
 
-        sendInput(input, "100", fix).then(() => {
+        sendInput(input, 100, fix).then(() => {
             fix.detectChanges();
             verifyFilterUIPosition(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(3);
@@ -877,7 +877,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.value = "greaterThanOrEqualTo";
         select.nativeElement.dispatchEvent(new Event("change"));
 
-        sendInput(input, "254", fix).then(() => {
+        sendInput(input, 254, fix).then(() => {
             fix.detectChanges();
             verifyFilterUIPosition(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(3);
@@ -903,7 +903,7 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.value = "lessThanOrEqualTo";
         select.nativeElement.dispatchEvent(new Event("change"));
 
-        sendInput(input, "20", fix).then(() => {
+        sendInput(input, 20, fix).then(() => {
             fix.detectChanges();
             verifyFilterUIPosition(filterUIContainer, grid);
             expect(grid.rowList.length).toEqual(3);
@@ -1507,7 +1507,7 @@ export class IgxGridFilteringComponent {
 
 const expectedResults = [];
 
-function sendInput(element, text: string, fix) {
+function sendInput(element, text, fix) {
     element.nativeElement.value = text;
     element.nativeElement.dispatchEvent(new Event("input"));
     fix.detectChanges();

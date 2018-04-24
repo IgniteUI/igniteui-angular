@@ -11,7 +11,7 @@ import {
     TemplateRef,
     ViewChild
 } from "@angular/core";
-import { debounceTime, distinctUntilChanged } from "rxjs/operators";
+import { debounceTime } from "rxjs/operators";
 import { Subject } from "rxjs/Subject";
 import { Subscription } from "rxjs/Subscription";
 import { DataType } from "../data-operations/data-util";
@@ -116,6 +116,8 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
     protected _value;
     protected _filterCondition;
     protected filterChanged = new Subject();
+    protected filterConditionChanged = new Subject();
+    protected filterUnaryConditionChanged = new Subject();
     protected chunkLoaded = new Subscription();
     private MINIMUM_VIABLE_SIZE = 240;
 
@@ -130,9 +132,12 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
 
     constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
         this.filterChanged.pipe(
-            debounceTime(250),
-            distinctUntilChanged()
+            debounceTime(250)
         ).subscribe((value) => this.value = value);
+        // when condition is unary
+        this.filterUnaryConditionChanged.subscribe((value) => this.conditionChanged(value));
+        // when condition is NOT unary
+        this.filterConditionChanged.subscribe((value) => this.checkValue(value));
     }
 
     public ngOnInit() {
@@ -146,15 +151,19 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this.filterChanged.unsubscribe();
+        this.filterConditionChanged.unsubscribe();
+        this.filterUnaryConditionChanged.unsubscribe();
         this.chunkLoaded.unsubscribe();
+    }
+
+    public checkValue(value) {
+        if (!!this._value || this._value === 0) {
+            this.conditionChanged(value);
+        }
     }
 
     public refresh() {
         this.dialogShowing = !this.dialogShowing;
-        if (!this._filterCondition && this.dialogShowing) {
-            this._filterCondition = this.conditions[0];
-            this.column.filteringCondition = this.getCondition(this._filterCondition);
-        }
         this.cdr.detectChanges();
     }
 
@@ -188,15 +197,21 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
     @autoWire(true)
     public clearFiltering(): void {
         this._value = null;
-        this._filterCondition = undefined;
         this.gridAPI.clear_filter(this.gridID, this.column.field);
         this.gridAPI.get(this.gridID).clearSummaryCache();
     }
 
-    public conditionChanged(value): void {
-
+    public selectionChanged(value): void {
         this._filterCondition = value;
         this.column.filteringCondition = this.getCondition(value);
+        if (this.unaryCondition) {
+            this.filterUnaryConditionChanged.next(value);
+        } else {
+            this.filterConditionChanged.next(value);
+        }
+    }
+
+    public conditionChanged(value): void {
         this.filter();
     }
 
