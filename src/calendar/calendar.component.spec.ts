@@ -179,7 +179,16 @@ describe("IgxCalendar", () => {
         const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         fixture.detectChanges();
 
+        const domCalendar = fixture.debugElement.query(By.css("igx-calendar")).nativeElement;
+
         expect(fixture.componentInstance.calendar.id).toBe("igx-calendar-1");
+        expect(domCalendar.id).toBe("igx-calendar-1");
+
+        fixture.componentInstance.calendar.id = "customCalendar";
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.calendar.id).toBe("customCalendar");
+        expect(domCalendar.id).toBe("customCalendar");
     });
 
     it("@Input properties and setters", () => {

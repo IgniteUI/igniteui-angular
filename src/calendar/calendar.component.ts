@@ -95,6 +95,7 @@ export class CalendarHammerConfig extends HammerGestureConfig {
 })
 export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-calendar-${NEXT_ID++}`;
     /**
