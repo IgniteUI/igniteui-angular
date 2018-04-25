@@ -122,8 +122,17 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
         }
     }
 
+    private _miniTemplate: IgxNavDrawerMiniTemplateDirective;
+    public get miniTemplate(): IgxNavDrawerMiniTemplateDirective {
+        return this._miniTemplate;
+    }
     @ContentChild(IgxNavDrawerMiniTemplateDirective, { read: IgxNavDrawerMiniTemplateDirective })
-    public miniTemplate: IgxNavDrawerMiniTemplateDirective;
+    public set miniTemplate(v: IgxNavDrawerMiniTemplateDirective) {
+        if (!this.isOpen) {
+            this.setDrawerWidth(v ? this.miniWidth : "");
+        }
+        this._miniTemplate = v;
+    }
 
     @ContentChild(IgxNavDrawerTemplateDirective, { read: IgxNavDrawerTemplateDirective })
     protected contentTemplate: IgxNavDrawerTemplateDirective;
