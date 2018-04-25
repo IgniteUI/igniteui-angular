@@ -25,11 +25,11 @@
             </div>
         </ng-container>
         <ng-container *ngIf="pinnedColumns.length > 0">
-            <igx-grid-header [gridID]="id" *ngFor="let col of pinnedColumns" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
+            <igx-grid-header [gridID]="id" *ngFor="let col of pinnedColumns" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header>
         </ng-container>
         <ng-template igxFor let-col [igxForOf]="unpinnedColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
             [igxForContainerSize]='unpinnedWidth' #headerContainer>
-            <igx-grid-header [gridID]="id" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
+            <igx-grid-header [gridID]="id" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-header>
         </ng-template>
     </div>
 </div>
