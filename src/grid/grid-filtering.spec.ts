@@ -1,5 +1,6 @@
 import { Component, DebugElement, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BOOLEAN_FILTERS, DATE_FILTERS, FilteringCondition,
     NUMBER_FILTERS, STRING_FILTERS } from "../../src/data-operations/filtering-condition";
 import { Calendar, ICalendarDate } from "../calendar/calendar";
@@ -14,6 +15,7 @@ describe("IgxGrid - Filtering actions", () => {
                 IgxGridFilteringComponent
             ],
             imports: [
+                BrowserAnimationsModule,
                 IgxGridModule.forRoot()]
         })
         .compileComponents();
