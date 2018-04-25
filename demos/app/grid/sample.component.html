@@ -141,7 +141,7 @@
                     </ng-template>
                 </igx-column>
             </igx-grid>
-            
+
         </article>
 
         <article class="grid-sample">
@@ -158,6 +158,7 @@
                 <button igxButton="flat" (click)="exportRaw()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Raw Grid Data</button>
                 <button igxButton="flat" (click)="export()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Grid</button>
                 <button igxButton="flat" (click)="exportFilteredGrid()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Cheese Products Report</button>
+                <input class="igx-form-group__input--search" type="text" placeholder="Search Grid" (input)="onSearchChange($event.target.value)" (keydown)="onSearch($event)" />
             </div>
             <igx-grid #grid3 [data]="remote | async" [paging]="true" [perPage]="10" (onPagingDone)="process($event)" (onSortingDone)="process($event)"
                 (onBeforeProcess)="onProcess($event)" [primaryKey]="'ProductID'" [rowSelectable]="true">
@@ -175,7 +176,7 @@
             </igx-grid>
             <button (click)="updateRow11()">Update Row With primaryKey</button>
         </article>
-        
+
     </section>
 
     <igx-toast #toast></igx-toast>

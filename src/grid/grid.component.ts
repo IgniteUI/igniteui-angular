@@ -37,13 +37,13 @@ import { FilteringLogic, IFilteringExpression } from "../data-operations/filteri
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
 import { IForOfState } from "../directives/for-of/IForOfState";
+import { ActiveHighlightManager } from "../main";
 import { IgxCheckboxComponent } from "./../checkbox/checkbox.component";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { ISummaryExpression } from "./grid-summary";
 import { IgxGridRowComponent } from "./row.component";
-import { ActiveHighlightManager } from "../main";
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;

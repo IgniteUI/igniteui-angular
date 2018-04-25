@@ -2,22 +2,22 @@ import { ElementRef } from "@angular/core";
 import { IgxTextHighlightDirective } from "./text-highlight.directive";
 
 interface IHighlightGroupInfo {
-    elements: Array<ElementRef>,
-    activeIndex: number,
-    restoreIndex: number
+    elements: ElementRef[];
+    activeIndex: number;
+    restoreIndex: number;
 }
 
 export class ActiveHighlightManager {
 
     private static highlightGroupsMap = new Map<string, IHighlightGroupInfo>();
-    private static highlightDirectivesMap = new Map<IgxTextHighlightDirective, Array<ElementRef>>();
+    private static highlightDirectivesMap = new Map<IgxTextHighlightDirective, ElementRef[]>();
 
     public static registerHighlightInfo(highlight: IgxTextHighlightDirective): void {
         if (ActiveHighlightManager.highlightGroupsMap.has(highlight.groupName) === false) {
             ActiveHighlightManager.highlightGroupsMap.set(highlight.groupName, {
-                "elements": new Array<ElementRef>(),
-                "activeIndex": -1,
-                "restoreIndex": -1
+                elements: [],
+                activeIndex: -1,
+                restoreIndex: -1
             });
         }
 
@@ -27,13 +27,10 @@ export class ActiveHighlightManager {
     }
 
     public static registerHighlight(highlight: IgxTextHighlightDirective, element: ElementRef, restore: boolean): void {
-        if (!element) {
-            debugger;
-        }
-
         const groupInfo = ActiveHighlightManager.highlightGroupsMap.get(highlight.groupName);
 
         if (restore) {
+            groupInfo.restoreIndex = Math.max(groupInfo.restoreIndex, 0);
             groupInfo.elements.splice(groupInfo.restoreIndex++, 0, element);
         } else {
             groupInfo.elements.push(element);
@@ -54,7 +51,7 @@ export class ActiveHighlightManager {
             const groupInfo = ActiveHighlightManager.highlightGroupsMap.get(highlight.groupName);
             const currentElements = groupInfo.elements;
 
-            elementToRemove.forEach(element => {
+            elementToRemove.forEach((element) => {
                 const index = currentElements.indexOf(element);
                 if (index !== -1) {
                     if (groupInfo.activeIndex === index) {

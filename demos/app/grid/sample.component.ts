@@ -329,4 +329,21 @@ export class GridSampleComponent {
                 return new IgxCsvExporterOptions(fileName, CsvFileTypes.TAB);
         }
     }
+
+    public onSearchChange(text: string) {
+        this.grid3.findNext(text);
+    }
+
+    public onSearch(ev) {
+        if (ev.key === "Enter" || ev.key === "ArrowDown"|| ev.key === "ArrowRight") {
+            this.grid3.findNext(ev.target.value);
+        }
+        else if (ev.key === "ArrowUp" || ev.key === "ArrowLeft") {
+            this.grid3.findPrev(ev.target.value);
+        }
+    }
+
+    public onColumnInit(column: IgxColumnComponent) {
+        column.editable = true;
+    }
 }

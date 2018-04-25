@@ -8,10 +8,18 @@ import { AfterViewInit, Directive, ElementRef, Input, NgModule, OnDestroy, Rende
 
 import { ActiveHighlightManager } from "./active-higlight-manager";
 
+interface ISearchInfo {
+    searchedText: string;
+    matchCount: number;
+    caseSensitive: boolean;
+    stored: boolean;
+}
+
 @Directive({
     selector: "[igxTextHighlight]"
 })
 export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit {
+    private _lastSearchInfo: ISearchInfo;
 
     @Input("cssClass")
     public cssClass: string;
@@ -20,17 +28,19 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit {
     public activeCssClass: string;
 
     @Input("groupName")
-    public groupName: string = "";
+    public groupName = "";
 
     public parentElement: any;
 
-    private _lastSearchedText: string = null;
-    private _lastSearchCount = -1;
-
-    private _storedText:string = null;
-
     constructor(element: ElementRef, public renderer: Renderer2) {
         this.parentElement = this.renderer.parentNode(element.nativeElement);
+
+        this._lastSearchInfo = {
+            searchedText: "",
+            matchCount: 0,
+            caseSensitive: false,
+            stored: false
+        };
     }
 
     ngAfterViewInit() {
@@ -42,8 +52,9 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit {
     }
 
     public highlight(text: string, caseSensitive?: boolean): number {
-        if (this._lastSearchedText === null || this._lastSearchedText !== text || this._storedText !== null) {
-            this._lastSearchedText = text;
+        if (this.searchNeedsEvaluation(text, caseSensitive ? true : false)) {
+            this._lastSearchInfo.searchedText = text;
+            this._lastSearchInfo.caseSensitive = caseSensitive ? true : false;
 
             if (text === "" || text === undefined || text === null) {
                 this.clearHighlight();
@@ -51,10 +62,10 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit {
             }
 
             const content = this.clearChildElements(false);
-            this._lastSearchCount = this.getHighlightedText(content, text, caseSensitive);
+            this._lastSearchInfo.matchCount = this.getHighlightedText(content, text, caseSensitive);
         }
 
-        return this._lastSearchCount;
+        return this._lastSearchInfo.matchCount;
     }
 
     public clearHighlight() {
@@ -63,20 +74,20 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit {
     }
 
     public store() {
-        if (this._lastSearchedText) {
-            this._storedText = this._lastSearchedText;
+        const searchedText = this._lastSearchInfo.searchedText;
+
+        if (searchedText) {
+            this._lastSearchInfo.stored = true;
             this.clearChildElements(true);
         }
     }
 
     public restore() {
-        setTimeout(() => {
-            if (this._storedText) {
-                this.highlight(this._storedText);
-                ActiveHighlightManager.restoreHighlight(this.groupName);
-                this._storedText = null;
-            }
-        }, 0);
+        if (this._lastSearchInfo.stored) {
+            this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive);
+            ActiveHighlightManager.restoreHighlight(this.groupName);
+            this._lastSearchInfo.stored = true;
+        }
     }
 
     private clearChildElements(store: boolean): string {
@@ -135,7 +146,16 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit {
         this.renderer.setProperty(span, "outerHTML", outerHTML);
 
         const childNodes = this.parentElement.childNodes;
-        ActiveHighlightManager.registerHighlight(this, childNodes[childNodes.length - 1], this._storedText !== null);
+        ActiveHighlightManager.registerHighlight(this, childNodes[childNodes.length - 1], this._lastSearchInfo.stored);
+    }
+
+    private searchNeedsEvaluation(text: string, caseSensitive: boolean): boolean {
+        const searchedText = this._lastSearchInfo.searchedText;
+
+        return searchedText === null ||
+                searchedText !== text ||
+                this._lastSearchInfo.stored ||
+                this._lastSearchInfo.caseSensitive !== caseSensitive;
     }
 }
 

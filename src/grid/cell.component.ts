@@ -121,9 +121,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
 
     get callback() {
         return () => {
-            if(this.highlight && this.inEditMode === false) {
-                this.highlight.restore();
-            }
+            setTimeout(() => {
+                if (this.highlight && this.inEditMode === false) {
+                    this.highlight.restore();
+                }
+            }, 0);
         };
     }
 
