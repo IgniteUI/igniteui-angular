@@ -742,7 +742,6 @@ describe("IgxGrid - Row Selection", () => {
         expect(grid.rowList.find((row) => row === firstRow)).toBeTruthy();
 
         grid.sort("Column1", SortingDirection.Desc, true);
-        console.log("Sorting started");
         fix.whenStable().then(() => {
             fix.detectChanges();
             expect(firstRow.isSelected).toBeFalsy();
