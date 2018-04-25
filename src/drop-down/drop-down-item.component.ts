@@ -1,9 +1,9 @@
 import { Component, ElementRef, forwardRef, HostBinding, HostListener, Inject, Input, OnInit } from "@angular/core";
-import { IgxDropDownComponent, ISelectionEventArgs } from "./dropDown.component";
+import { IgxDropDownComponent, ISelectionEventArgs } from "./drop-down.component";
 
 @Component({
     selector: "igx-drop-down-item",
-    templateUrl: "dropDownItem.component.html",
+    templateUrl: "drop-down-item.component.html",
     styles: [
         ":host { display: block; background-color: white; }",
         ":host.selected { background-color: #1A73E8; }",

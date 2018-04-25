@@ -44,7 +44,7 @@ export * from "./switch/switch.component";
 export * from "./tabbar/tabbar.component";
 export * from "./time-picker/time-picker.component";
 export * from "./toast/toast.component";
-export * from "./drop-down/dropDown.component";
+export * from "./drop-down/drop-down.component";
 
 // directives
 export * from "./directives/button/button.directive";

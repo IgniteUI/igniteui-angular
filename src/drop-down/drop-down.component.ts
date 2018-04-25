@@ -17,7 +17,7 @@ import {
     ViewChildren
 } from "@angular/core";
 import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule } from "../directives/toggle/toggle.directive";
-import { IgxDropDownItemComponent } from "./dropDownItem.component";
+import { IgxDropDownItemComponent } from "./drop-down-item.component";
 
 export interface ISelectionEventArgs {
     oldSelection: IgxDropDownItemComponent;
@@ -27,7 +27,7 @@ export interface ISelectionEventArgs {
 
 @Component({
     selector: "igx-drop-down",
-    templateUrl: "./dropDown.component.html"
+    templateUrl: "./drop-down.component.html"
 })
 export class IgxDropDownComponent implements OnInit, AfterViewInit {
     private _selectedItem: IgxDropDownItemComponent = null;
