@@ -30,7 +30,7 @@ describe("IgxGrid - Filtering actions", () => {
         const grid = fix.componentInstance.grid;
         const filterUIContainer = fix.debugElement.query(By.css("igx-grid-filter"));
         const filterIcon = filterUIContainer.query(By.css("igx-icon"));
-        const input = filterUIContainer.query(By.directive(IgxInputDirective));
+        let input = filterUIContainer.query(By.directive(IgxInputDirective));
         const select = filterUIContainer.query(By.css("div > select"));
         const options = select.nativeElement.options;
         const resetButt = filterUIContainer.queryAll(By.css("button"))[0];
@@ -129,6 +129,7 @@ describe("IgxGrid - Filtering actions", () => {
             options[0].selected = true;
             select.nativeElement.dispatchEvent(new Event("change"));
             fix.detectChanges();
+            input = filterUIContainer.query(By.directive(IgxInputDirective));
             expect(grid.rowList.length).toEqual(4);
             expect(filtButt.nativeElement.classList.contains("igx-button--disabled")).toBeTruthy();
             expect(resetButt.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
