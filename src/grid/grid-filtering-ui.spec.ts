@@ -1420,4 +1420,3 @@ function isLastYear(date: Date, year: number): boolean {
 function isNextYear(date: Date, year: number): boolean {
     return date.getFullYear() > year;
 }
-
