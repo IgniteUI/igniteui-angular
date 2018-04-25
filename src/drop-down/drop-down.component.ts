@@ -9,14 +9,13 @@ import {
     HostListener,
     Input,
     NgModule,
-    OnInit,
     Output,
     QueryList,
     Renderer,
     ViewChild,
     ViewChildren
 } from "@angular/core";
-import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule } from "../directives/toggle/toggle.directive";
+import { IgxToggleDirective, IgxToggleModule } from "../directives/toggle/toggle.directive";
 import { IgxDropDownItemComponent } from "./drop-down-item.component";
 
 export interface ISelectionEventArgs {
@@ -29,13 +28,12 @@ export interface ISelectionEventArgs {
     selector: "igx-drop-down",
     templateUrl: "./drop-down.component.html"
 })
-export class IgxDropDownComponent implements OnInit, AfterViewInit {
+export class IgxDropDownComponent implements AfterViewInit {
     private _selectedItem: IgxDropDownItemComponent = null;
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
     private _focusedItem: IgxDropDownItemComponent = null;
 
     @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
-    @ViewChild(IgxToggleActionDirective) public toggleAction: IgxToggleActionDirective;
     @ContentChildren(IgxDropDownItemComponent, { read: IgxDropDownItemComponent }) public items: QueryList<IgxDropDownItemComponent>;
     @Output() public onSelection = new EventEmitter<ISelectionEventArgs>();
 
@@ -167,11 +165,6 @@ export class IgxDropDownComponent implements OnInit, AfterViewInit {
         if (parentRect.top > rect.top) {
                 this.toggle.element.scrollTop -= (parentRect.top - rect.bottom + rect.height);
             }
-    }
-
-    ngOnInit() {
-        this.toggleAction.target = this.toggle;
-        this.toggleAction.closeOnOutsideClick = true;
     }
 
     ngAfterViewInit() {

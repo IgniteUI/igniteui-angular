@@ -59,7 +59,7 @@ export class IgxDropDownItemComponent implements OnInit {
         this.dropDown.selectedItem = this;
         const args: ISelectionEventArgs = { oldSelection, newSelection: this.dropDown.selectedItem, event };
         this.dropDown.onSelection.emit(args);
-        // this.dropDown.toggleDropDown();
+        this.dropDown.toggleDropDown();
     }
 
     ngOnInit() {
