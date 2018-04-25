@@ -8,7 +8,7 @@
 </span>
 
 <div class="igx-grid__th-icons">
-    <igx-icon class="sort-icon">{{sortingIcon}}</igx-icon>
+    <igx-icon class="sort-icon" *ngIf="column.sortable">{{sortingIcon}}</igx-icon>
     <igx-grid-filter [column]="column" *ngIf="column.filterable"></igx-grid-filter>
 </div>
 

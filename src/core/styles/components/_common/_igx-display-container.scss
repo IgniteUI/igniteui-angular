@@ -3,12 +3,10 @@
     position: relative;
     width: 100%;
     overflow: hidden;
-    z-index: 0;
 }
 
 %display-container--inactive {
     width: 100%;
-    height: 100%;
 }
 
 @include b(igx-display-container) {

@@ -6,6 +6,7 @@ All notable changes for each version of this project will be documented in this 
     - Setting `rowSelectable` to `true` enables multiple row selection for the `igx-grid` component. Adds a checkbox column that allows (de)selection of one, multiple or all (via header checkbox) rows.
     - For more information about the `rowSelectable` property and working with grid row, please read the `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) about selection or see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid-selection.html)  
 - Added `onContextMenu` output to `igxGrid` to emit the clicked cell.
+- `igx-datePicker`: Added `onClose` event.
 - `igxTextSelection` directive added
     - `igxTextSelection` directive allows you to select the whole text range for every element with text content it is applied.
 - `igxFocus` directive added
@@ -13,6 +14,9 @@ All notable changes for each version of this project will be documented in this 
 - `igx-time-picker` component added
     - `igx-time-picker` allows user to select time, from a dialog with spinners, which is presented into input field.
     - For more information navigate to the [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/time-piker/README.md).
+- `igx-tab-bar` changes
+    - **Breaking changes**: `IgxTabBarComponent` is renamed to `IgxBottomNavComponent` and `IgxTabBarModule` is renamed to `IgxBottomNavModule`.
+    - `igx-tab-bar` selector is deprecated. Use `igx-bottom-nav` selector instead.
 - `igx-tabs` component added
     - `igx-tabs` allows users to switch between different views. The `igx-tabs` component places the tabs headers at the top and allows scrolling when there are multiple tab items outside the visible area. Tabs are ordered in a single row above their associated content.
     - For more information navigate to [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/tabs/README.md).
@@ -65,7 +69,7 @@ All notable changes for each version of this project will be documented in this 
     - the directive should be wrapped by `igxInputGroup` component
     - `IgxInputGroupModule` should be imported instead of `IgxInputModule`
 - `igxExcelExportService` and `igxCSVExportService` added. They add export capabilities to the `igxGrid`. For more information, please visit the [igxExcelExportService specification](https://github.com/IgniteUI/igniteui-angular/wiki/IgxExcelExporterService-Specification) and the [igxCSVExportService specification](https://github.com/IgniteUI/igniteui-angular/wiki/CSV-Exporter-Service-Specification).
-- General
+- **General**
     - Added event argument types to all `EventEmitter` `@Output`s. #798 #740
     - Reviewed and added missing argument types to the following `EventEmitter`s
         - The `igxGrid` `onEditDone` now exposes arguments of type `IGridEditEventArgs`. The arguments expose `row` and `cell` objects where if the editing is performed on a cell, the edited `cell` and the `row` the cell belongs to are exposed. If row editing is performed, the `cell` object is null. In addition the `currentValue` and `newValue` arguments are exposed. If you assign a value to the `newValue` in your handler, then the editing will conclude with the value you've supplied.
@@ -75,7 +79,8 @@ All notable changes for each version of this project will be documented in this 
     - `primaryKey` allows for a property name from the data source to be specified. If specified, `primaryKey` can be used instead of `index` to indentify grid rows from the `igxGrid.rowList`. As such, `primaryKey` can be used for selecting rows for the following `igxGrid` methods - `deleteRow`, `updateRow`, `updateCell`, `getCellByColumn`, `getRowByKey`
     - `primaryKey` requires all of the data for the specified property name to have unique values in order to function as expected.
     - as it provides a unique identifier for each data member (and therefore row), `primaryKey` is best suited for addressing grid row entries. If DOM virtualization is in place for the grid data, the row `index` property can be reused (for instance, when filtering/sorting the data), whereas `primaryKey` remains unique. Ideally, when a persistent reference to a row has to be established, `primaryKey` should be used.
-
+- **Theming**
+    - Added a `utilities` module to the theming engine to allow for easier import of theming functions and mixins, such as igx-color, igx-palette, igx-elevation, etc. To import the utilities do ```@import '~igniteui-angular/core/styles/themes/utilities';```
 
 ## 5.2.1
 - `hammerjs` and `@types/hammerjs` are removed from `peerDependencies` and were added as `dependencies`. So if you are using Igniteui-Angular version 5.2.1 or above it is enough to run `npm install igniteui-angular` in your project for getting started. For more detailed information see [`Ignite UI for Angular Getting Started`](https://www.infragistics.com/products/ignite-ui-angular/getting-started)
@@ -151,8 +156,6 @@ All notable changes for each version of this project will be documented in this 
 - `igx-nav-bar` changes
     -   Currently `isActionButtonVisible` resolves to `false` if actionButtonIcon is not defined.
 - `igx-tab-bar` changes
-    - **Breaking changes**: `IgxTabBarComponent` is renamed to `IgxBottomNavComponent` and `IgxTabBarModule` is renamed to `IgxBottomNavModule`.
-    - `igx-tab-bar` selector is deprecated. Use `igx-bottom-nav` selector instead.
     - custom content can be added for tabs
 
     ```html

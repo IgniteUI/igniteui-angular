@@ -126,7 +126,6 @@ export class IgxTabsComponent implements AfterViewInit {
     public scrollElement(element: any, scrollRight: boolean): void {
         requestAnimationFrame(() => {
             const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
-            const itemsContainerWidth = this.itemsContainer.nativeElement.offsetWidth;
 
             this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
             this.itemsContainer.nativeElement.style.transform = `translate(${-this.offset}px)`;
@@ -166,42 +165,6 @@ export class IgxTabsComponent implements AfterViewInit {
                 this._deselectGroup(p);
             }
         });
-    }
-
-    @HostListener("keydown.arrowright", ["$event"])
-    public onKeydownArrowRight(event: KeyboardEvent) {
-        this._onKeyDown(false);
-    }
-
-    @HostListener("keydown.arrowleft", ["$event"])
-    public onKeydownArrowLeft(event: KeyboardEvent) {
-        this._onKeyDown(true);
-    }
-
-    @HostListener("keydown.home", ["$event"])
-    public onKeydownHome(event: KeyboardEvent) {
-        event.preventDefault();
-        this._onKeyDown(false, 0);
-    }
-
-    @HostListener("keydown.end", ["$event"])
-    public onKeydownEnd(event: KeyboardEvent) {
-        event.preventDefault();
-        this._onKeyDown(false, this.tabs.toArray().length - 1);
-    }
-
-    private _onKeyDown(isLeftArrow: boolean, index = null): void {
-        const tabsArray = this.tabs.toArray();
-        if (index === null) {
-            index = (isLeftArrow)
-                ? (this.selectedIndex === 0) ? tabsArray.length - 1 : this.selectedIndex - 1
-                : (this.selectedIndex === tabsArray.length - 1) ? 0 : this.selectedIndex + 1;
-        }
-        const tab = tabsArray[index];
-        const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
-        const nativeTabElement = tab.nativeTabItem.nativeElement;
-        const focusDelay = (nativeTabElement.offsetWidth + nativeTabElement.offsetLeft - this.offset > viewPortWidth) ? 200 : 50;
-        tab.select(focusDelay);
     }
 
     private _deselectGroup(group: IgxTabsGroupComponent) {
