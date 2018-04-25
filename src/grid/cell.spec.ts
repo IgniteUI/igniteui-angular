@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, DebugElement, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { DataType } from "../data-operations/data-util";
@@ -17,6 +17,7 @@ describe("IgxGrid - Cell component", () => {
                 DefaultGridComponent,
                 CtrlKeyKeyboardNagivationComponent,
                 VirtualtGridComponent,
+                GridWithEditableColumnComponent,
                 NoColumnWidthGridComponent
             ],
             imports: [IgxGridModule.forRoot()]
@@ -356,6 +357,108 @@ describe("IgxGrid - Cell component", () => {
             expect(cell.nativeElement.clientWidth).toBeGreaterThan(100);
         });
     });
+
+    it("When cell in edit mode and try to navigate the caret around the cell text the focus should remain.", async(() => {
+        const fix = TestBed.createComponent(GridWithEditableColumnComponent);
+        fix.detectChanges();
+
+        // const firstCellOfColumn: DebugElement = fix.componentInstance.grid.columnList.first.cells[0];
+        const firstCell: DebugElement = fix.debugElement.query(By.css(CELL_CSS_CLASS));
+        const cellElem = firstCell.nativeElement;
+        const component = fix.debugElement.query(By.css("igx-grid"));
+
+        component.triggerEventHandler("keydown.home" , null);
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            cellElem.dispatchEvent(new MouseEvent("dblclick"));
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            const elem = findCellByInputElem(cellElem, document.activeElement);
+            expect(cellElem).toBe(elem);
+
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            triggerKeyDownEvtUponElem("ArrowRight", inputElem);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            const elem = findCellByInputElem(cellElem, document.activeElement);
+            expect(cellElem).toBe(elem);
+
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            triggerKeyDownEvtUponElem("ArrowLeft", inputElem);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            const elem = findCellByInputElem(cellElem, document.activeElement);
+            expect(cellElem).toBe(elem);
+        }).then(() => {
+            fix.detectChanges();
+
+            const elem = findCellByInputElem(cellElem, document.activeElement);
+            expect(cellElem).toBe(elem);
+
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            triggerKeyDownEvtUponElem("control.ArrowLeft", inputElem);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            const elem = findCellByInputElem(cellElem, document.activeElement);
+            expect(cellElem).toBe(elem);
+
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            triggerKeyDownEvtUponElem("control.ArrowRight", inputElem);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            const elem = findCellByInputElem(cellElem, document.activeElement);
+            expect(cellElem).toBe(elem);
+
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            triggerKeyDownEvtUponElem("ArrowUp", inputElem);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            const elem = findCellByInputElem(cellElem, document.activeElement);
+            expect(cellElem).toBe(elem);
+
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            triggerKeyDownEvtUponElem("ArrowDown", inputElem);
+
+            return fix.whenStable();
+        });
+
+        function triggerKeyDownEvtUponElem(evtName, elem) {
+            const evtArgs: KeyboardEventInit = { key: evtName, bubbles: true};
+            elem.dispatchEvent(new KeyboardEvent("keydown", evtArgs));
+            fix.detectChanges();
+        }
+
+        function findCellByInputElem(elem, focusedElem) {
+            if (!focusedElem.parentElement) {
+                return null;
+            }
+
+            if (elem === focusedElem) {
+                return elem;
+            }
+
+            return findCellByInputElem(elem, focusedElem.parentElement);
+        }
+    }));
 });
 
 @Component({
@@ -476,4 +579,25 @@ export class NoColumnWidthGridComponent {
         }
         return data;
     }
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data">
+            <igx-column [editable]="true" field="FirstName"></igx-column>
+            <igx-column field="LastName"></igx-column>
+            <igx-column field="age"></igx-column>
+        </igx-grid>
+        <input type="text" value="text" id="input-test" />
+    `
+})
+export class GridWithEditableColumnComponent {
+
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+
+    public data = [
+        { FirstName: "John", LastName: "Brown", age: 20 },
+        { FirstName: "Ben", LastName: "Affleck", age: 30 },
+        { FirstName: "Tom", LastName: "Riddle", age: 50 }
+    ];
 }
