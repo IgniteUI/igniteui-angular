@@ -25,7 +25,7 @@ export class IgxSelectionAPIService {
         if (currSelection === undefined) {
             currSelection = [];
         }
-        if (currSelection.find((item) => item === itemID) === undefined) {
+        if (currSelection.indexOf(itemID) === -1) {
             currSelection.push(itemID);
         }
         return currSelection;
@@ -68,7 +68,7 @@ export class IgxSelectionAPIService {
 
     public is_item_selected(componentID: string, itemID) {
         const selection = this.get_selection(componentID);
-        if (selection && selection.find((item) => item === itemID) !== undefined) {
+        if (selection && selection.indexOf(itemID) !== -1) {
             return true;
         } else {
             return false;

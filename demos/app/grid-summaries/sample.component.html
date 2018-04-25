@@ -1,4 +1,4 @@
-<igx-grid #grid1 [data]="data" [autoGenerate]="false" height="800px" width="1000px" (onColumnInit)="initColunm($event)" [paging]="true">
+<igx-grid #grid1 [data]="data" [autoGenerate]="false" height="800px" width="600px" (onColumnInit)="initColunm($event)" [paging]="true">
     <igx-column field="ProductID" header="Product ID" width="200px" [headerClasses]="'prodId'">
         <ng-template igxCell let-cell="cell" let-val>
         <button (click)="viewRecord(grid1.data)">{{val}}</button>

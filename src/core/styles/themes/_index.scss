@@ -3,11 +3,10 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-// Import the core modules first
+// Import the core module first
 @import 'core';
 
 // Import all component mixins
-@import 'palettes';
 @import '../components/avatar/avatar-theme';
 @import '../components/badge/badge-theme';
 @import '../components/button/button-theme';

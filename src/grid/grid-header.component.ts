@@ -55,6 +55,15 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
         return this.sortDirection === SortingDirection.Desc;
     }
 
+    get sortingIcon(): string {
+        if (this.sortDirection !== SortingDirection.None) {
+            // arrow_downward and arrow_upward
+            // are material icons ligature strings
+            return this.sortDirection === SortingDirection.Asc ? "arrow_upward" : "arrow_downward";
+        }
+        return "none";
+    }
+
     @HostBinding("class.igx-grid__th--number")
     get columnType() {
         return this.column.dataType === DataType.Number;
@@ -129,7 +138,12 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     }
 
     get restrictResizeMin(): number {
-        const minWidth = Number.isNaN(parseFloat(this.column.minWidth)) ? 48 : parseFloat(this.column.minWidth);
+        const actualMinWidth = parseFloat(this.column.minWidth);
+        const defaultMinWidth  = parseFloat(this.column.defaultMinWidth);
+
+        let minWidth = Number.isNaN(actualMinWidth) || actualMinWidth < defaultMinWidth ? defaultMinWidth : actualMinWidth;
+        minWidth = minWidth < parseFloat(this.column.width) ? minWidth : parseFloat(this.column.width);
+
         return minWidth - this.elementRef.nativeElement.getBoundingClientRect().width;
     }
 
@@ -203,7 +217,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
             const range = this.column.grid.document.createRange();
             const valToPxls = (referenceNode) => {
                 range.selectNodeContents(referenceNode);
-                return  range.getBoundingClientRect().width;
+                return range.getBoundingClientRect().width;
             };
 
             const largest = new Map<number, number>();
@@ -225,12 +239,20 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
             }
             largest.set(Math.max(...cellsContentWidths), cellPadding);
 
-            const headerContentWidths = Array.from(this.elementRef.nativeElement.children)
-                    .map((child) => valToPxls(child));
-            const headerCell = Math.max(...headerContentWidths);
+            let headerCell;
+            if (this.column.headerTemplate && this.elementRef.nativeElement.children[0].children.length > 0) {
+                headerCell =  Math.max(...Array.from(this.elementRef.nativeElement.children[0].children)
+                .map((child) => valToPxls(child)));
+            } else {
+                headerCell = valToPxls(this.elementRef.nativeElement.children[0]);
+            }
+            if (this.column.sortable || this.column.filterable) {
+                headerCell += this.elementRef.nativeElement.children[1].getBoundingClientRect().width;
+            }
+
             const headerStyle = this.grid.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
             const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
-                    parseFloat(headerStyle.borderRightWidth);
+                parseFloat(headerStyle.borderRightWidth);
             largest.set(headerCell, headerPadding);
 
             const largestCell = Math.max(...Array.from(largest.keys()));
@@ -238,7 +260,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
             const size = Math.ceil(largestCell + largestCellPadding) + "px";
 
             if (this.column.pinned) {
-                const newPinnedWidth  = this.grid.pinnedWidth - currentColWidth + parseFloat(size);
+                const newPinnedWidth = this.grid.pinnedWidth - currentColWidth + parseFloat(size);
 
                 if (newPinnedWidth <= this.grid.calcPinnedContainerMaxWidth) {
                     this.column.width = size;
@@ -250,7 +272,8 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
             }
 
             this.grid.markForCheck();
-            this.grid.onColumnResized.emit({column: this.column, prevWidth: currentColWidth.toString(), newWidth: this.column.width});
+            this.grid.reflow();
+            this.grid.onColumnResized.emit({ column: this.column, prevWidth: currentColWidth.toString(), newWidth: this.column.width });
         }
     }
 
@@ -263,11 +286,16 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
         if (this.column.resizable) {
             let currentColWidth = parseFloat(this.column.width);
 
-            const colMinWidth = Number.isNaN(parseFloat(this.column.minWidth)) ? 48 : parseFloat(this.column.minWidth);
+            const actualMinWidth = parseFloat(this.column.minWidth);
+            const defaultMinWidth = parseFloat(this.column.defaultMinWidth);
+
+            let colMinWidth = Number.isNaN(actualMinWidth) || actualMinWidth < defaultMinWidth ? defaultMinWidth : actualMinWidth;
             const colMaxWidth = this.column.pinned ? parseFloat(this._pinnedMaxWidth) : parseFloat(this.column.maxWidth);
+
             const actualWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
 
             currentColWidth = Number.isNaN(currentColWidth) || (currentColWidth < actualWidth) ? actualWidth : currentColWidth;
+            colMinWidth = colMinWidth < currentColWidth ? colMinWidth : currentColWidth;
 
             if (currentColWidth + diff < colMinWidth) {
                 this.column.width = colMinWidth + "px";
@@ -278,9 +306,10 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
             }
 
             this.grid.markForCheck();
+            this.grid.reflow();
 
             if (currentColWidth !== parseFloat(this.column.width)) {
-                this.grid.onColumnResized.emit({column: this.column, prevWidth: currentColWidth.toString(), newWidth: this.column.width});
+                this.grid.onColumnResized.emit({ column: this.column, prevWidth: currentColWidth.toString(), newWidth: this.column.width });
             }
         }
     }

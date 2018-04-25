@@ -111,7 +111,7 @@
     $filtering-menu-min-width: 240px;
     $filtering-menu-shadow: igx-elevation($elevations, 8);
     $filtering-menu-radius: 4px;
-    $filtering-menu-distance-to-toggle: 4px;
+    $filtering-menu-distance-to-toggle: 24px;
 
     %igx-filtering-display {
         position: static;
@@ -141,7 +141,6 @@
         @extend %igx-filtering-icon;
 
         user-select: none;
-        margin-left: 4px;
         background: map-get($this, 'toggle-background');
         border-radius: 50%;
     }
