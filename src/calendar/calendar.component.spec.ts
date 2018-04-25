@@ -272,7 +272,7 @@ describe("IgxCalendar", () => {
         expect(bodyMonth.nativeElement.textContent.trim()).toMatch("8");
     });
 
-    it("Calendar DOM structure", () => {
+    it("Calendar DOM structure", async(() => {
         const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         fixture.detectChanges();
 
@@ -298,13 +298,19 @@ describe("IgxCalendar", () => {
                 .nativeElement.textContent.trim()
         ).toMatch(today.getDate().toString());
 
-        // Hide calendar header when not single selection
-        calendar.selection = "multi";
-        fixture.detectChanges();
+        fixture.whenStable().then(() => {
+            // Hide calendar header when not single selection
+            calendar.selection = "multi";
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            const calendarHeader = dom.query(By.css(".igx-calendar__header"));
+            expect(calendarHeader).toBeFalsy();
+        });
+        // fixture.componentInstance.model = new Date();
+        // fixture.detectChanges();
 
-        const calendarHeader = dom.query(By.css(".igx-calendar__header"));
-        expect(calendarHeader).toBeFalsy();
-    });
+    }));
 
     it("Calendar DOM structure - year view | month view", () => {
         const fixture = TestBed.createComponent(
