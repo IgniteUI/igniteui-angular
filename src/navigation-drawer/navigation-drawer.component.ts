@@ -53,7 +53,7 @@ let NEXT_ID = 0;
     selector: "igx-nav-drawer",
     templateUrl: "navigation-drawer.component.html"
 })
-export class IgxNavigationDrawerComponent extends BaseComponent implements
+export class IgxNavigationDrawerComponent implements
     IToggleView,
     OnInit,
     AfterContentInit,
@@ -226,7 +226,6 @@ export class IgxNavigationDrawerComponent extends BaseComponent implements
         // private animate: AnimationBuilder, TODO
         protected renderer: Renderer,
         private _touchManager: HammerGesturesManager) {
-        super(renderer);
     }
 
     public ngOnInit() {
