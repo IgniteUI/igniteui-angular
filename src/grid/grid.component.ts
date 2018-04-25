@@ -872,16 +872,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue("width"), 10);
 
         let maxColumnWidth = Math.max(
-            ...this.columnList.map((col) => parseInt(col.width, 10))
+            ...this.visibleColumns.map((col) => parseInt(col.width, 10))
                 .filter((width) => !isNaN(width))
         );
+        const sumExistingWidths = this.visibleColumns
+        .filter((col) =>  col.width !== null)
+        .reduce((prev, curr) => prev + parseInt(curr.width, 10), 0);
 
         if (this.rowSelectable) {
             computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
         }
-
-        maxColumnWidth = !Number.isFinite(maxColumnWidth) ? Math.max(computedWidth / this.columnList.length, MINIMUM_COLUMN_WIDTH) :
-                Math.max((computedWidth - maxColumnWidth) / this.columnList.length, MINIMUM_COLUMN_WIDTH);
+        const visibleColsWithNoWidth = this.visibleColumns.filter((col) => col.width === null);
+        maxColumnWidth = !Number.isFinite(sumExistingWidths) ?
+            Math.max(computedWidth / visibleColsWithNoWidth.length, MINIMUM_COLUMN_WIDTH) :
+            Math.max((computedWidth - sumExistingWidths) / visibleColsWithNoWidth.length, MINIMUM_COLUMN_WIDTH);
 
         return maxColumnWidth.toString();
     }
