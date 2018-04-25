@@ -149,15 +149,15 @@ describe("IgxTabs", () => {
 
         tabs.tabs.toArray()[0].nativeTabItem.nativeElement.focus();
         let args = { key: "ArrowRight", bubbles: true };
-        tabs.tabsContainer.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
-        tabs.tabsContainer.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
         expect(tabs.selectedIndex).toBe(1);
 
-        tabs.tabsContainer.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        tabs.tabs.toArray()[1].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
         expect(tabs.selectedIndex).toBe(2);
 
         args = { key: "ArrowLeft", bubbles: true };
-        tabs.tabsContainer.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        tabs.tabs.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
         expect(tabs.selectedIndex).toBe(1);
     });
 
@@ -169,11 +169,11 @@ describe("IgxTabs", () => {
         tabs.tabs.toArray()[0].nativeTabItem.nativeElement.focus();
 
         let args = { key: "End", bubbles: true };
-        tabs.tabsContainer.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
         expect(tabs.selectedIndex).toBe(2);
 
         args = { key: "Home", bubbles: true };
-        tabs.tabsContainer.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
+        tabs.tabs.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent("keydown", args));
         expect(tabs.selectedIndex).toBe(0);
     });
 
