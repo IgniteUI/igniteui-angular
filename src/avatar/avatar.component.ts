@@ -12,6 +12,8 @@ import {
 } from "@angular/core";
 import { IgxIconModule } from "../icon";
 
+let NEXT_ID = 0;
+
 export enum Size {
     SMALL = "small",
     MEDIUM = "medium",
@@ -60,6 +62,10 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     private _size: string | Size = "small";
 
     @HostBinding("class.igx-avatar--rounded")
+    @HostBinding("attr.id")
+    @Input()
+    public id = `igx-avatar-${NEXT_ID++}`;
+
     @Input()
     public roundShape = false;
 

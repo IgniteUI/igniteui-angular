@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import {
     Component,
     EventEmitter,
+    HostBinding,
     Input,
     NgModule,
     OnInit,
@@ -25,6 +26,8 @@ import { IgxIconModule } from "../icon";
  * </igx-navbar>
  * ```
  */
+
+let NEXT_ID = 0;
 @Component({
     selector: "igx-navbar",
     templateUrl: "navbar.component.html"
@@ -33,6 +36,10 @@ import { IgxIconModule } from "../icon";
 export class IgxNavbarComponent {
     private static NEXT_ID = 1;
     private isVisible = true;
+
+    @HostBinding("attr.id")
+    @Input()
+    public id = `igx-navbar-${NEXT_ID++}`;
     /**
      * The IgxNavbar action button visual state state
      * @type {boolean}

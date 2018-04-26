@@ -20,8 +20,10 @@ describe("List", () => {
     it("should initialize igx-list with item and header", () => {
         const fixture = TestBed.createComponent(ListTestComponent);
         const list = fixture.componentInstance.list;
+        const domList = fixture.debugElement.query(By.css("igx-list")).nativeElement;
 
         expect(list).toBeDefined();
+        expect(list.id).toContain("igx-list-");
         expect(list instanceof IgxListComponent).toBeTruthy();
         expect(list.cssClass).toBeFalsy();
         expect(list.isListEmpty).toBeTruthy();
@@ -31,6 +33,7 @@ describe("List", () => {
         expect(list.headers.length).toBe(0);
 
         fixture.detectChanges();
+        expect(domList.id).toContain("igx-list-");
         expect(list.items instanceof Array).toBeTruthy();
         expect(list.cssClass).toBeTruthy();
         expect(list.isListEmpty).toBeFalsy();
@@ -39,6 +42,12 @@ describe("List", () => {
         expect(list.headers instanceof Array).toBeTruthy();
         expect(list.headers.length).toBe(1);
         expect(list.headers[0] instanceof IgxListItemComponent).toBeTruthy();
+
+        list.id = "customList";
+        fixture.detectChanges();
+
+        expect(list.id).toBe("customList");
+        expect(domList.id).toBe("customList");
     });
 
     it("should set/get properly layout properties: width, left, maxLeft, maxRight", () => {

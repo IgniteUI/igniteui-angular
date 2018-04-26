@@ -6,7 +6,8 @@ import {
     ElementRef,
     EventEmitter,
     forwardRef,
-    Inject, Input, NgModule, Output, QueryList, Renderer2, ViewChildren
+    HostBinding, Inject,
+    Input, NgModule, Output, QueryList, Renderer2, ViewChildren
 } from "@angular/core";
 import { IgxButtonDirective, IgxButtonModule } from "../directives/button/button.directive";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
@@ -34,6 +35,7 @@ export enum ButtonGroupAlignment { horizontal, vertical }
  *   { icon: 'format_underlined', selected: false }];
  * ```
  */
+let NEXT_ID = 0;
 @Component({
     selector: "igx-buttongroup",
     templateUrl: "buttongroup-content.component.html"
@@ -41,6 +43,11 @@ export enum ButtonGroupAlignment { horizontal, vertical }
 
 export class IgxButtonGroupComponent implements AfterViewInit {
     @ViewChildren(IgxButtonDirective) public buttons: QueryList<IgxButtonGroupComponent>;
+
+    @HostBinding("attr.id")
+    @Input()
+    public id = `igx-buttongroup-${NEXT_ID++}`;
+
     @Input() set itemContentCssClass(value: string) {
         this._itemContentCssClass = value || this._itemContentCssClass;
     }
