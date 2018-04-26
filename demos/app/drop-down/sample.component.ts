@@ -20,12 +20,12 @@ export class DropDownSampleComponent {
     constructor() {
         for (let i = 0; i < this.itemsCount; i += 1) {
             const item = { field: "Item " + i };
-            if (i % 3 === 1 || i % 4 === 1) {
+            if (i % 6 === 1 || i % 7 === 1) {
                 item["disabled"] = true;
                 item.field += " I am Disabled!";
             }
 
-            if (i % 5 === 1) {
+            if (i % 9 === 1) {
                 item["header"] = true;
                 item.field += "I am Header!";
             }

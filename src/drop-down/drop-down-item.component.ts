@@ -46,11 +46,10 @@ export class IgxDropDownItemComponent implements OnInit {
             return;
         }
 
-        // if (value) {
-        //     this.element.nativeElement.focus();
-        // } else {
-        //     this.element.nativeElement.blur();
-        // }
+        if (value) {
+            this.element.nativeElement.focus();
+            this.element.nativeElement.scrollIntoView(true);
+        }
         this._isFocused = value;
     }
 
@@ -79,8 +78,22 @@ export class IgxDropDownItemComponent implements OnInit {
         this.dropDown.toggleDropDown();
     }
 
+    @HostListener("keydown.ArrowDown", ["$event"])
+    onArrowDownKeyDown(event) {
+        this.dropDown.focusNext();
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
+    @HostListener("keydown.ArrowUp", ["$event"])
+    onArrowUpKeyDown(event) {
+        this.dropDown.focusPrev();
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
     ngOnInit() {
-        // this.element.nativeElement.tabIndex = 0;
+        this.element.nativeElement.tabIndex = 0;
     }
 
     public get index(): number {

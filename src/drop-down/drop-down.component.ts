@@ -78,9 +78,7 @@ export class IgxDropDownComponent implements AfterViewInit {
         this.toggle.close(true);
     }
 
-    @HostListener("keydown.ArrowDown", ["$event"])
-    onArrowDownKeyDown(event) {
-        console.log(this._focusedItem);
+    focusNext() {
         let focusedItemIndex = -1;
         if (this._focusedItem) {
             focusedItemIndex = this._focusedItem.index;
@@ -97,17 +95,14 @@ export class IgxDropDownComponent implements AfterViewInit {
             this._focusedItem.isFocused = true;
         }
 
-        const rect = this._focusedItem.element.nativeElement.getBoundingClientRect();
-        const parentRect = this.toggle.element.getBoundingClientRect();
-        if (parentRect.bottom < rect.bottom) {
-            console.log(this.toggle.element.scrollTop);
-            this.toggle.element.scrollTop += (rect.bottom - parentRect.bottom);
-            console.log(this.toggle.element.scrollTop);
-        }
+        // const rect = this._focusedItem.element.nativeElement.getBoundingClientRect();
+        // const parentRect = this.toggle.element.getBoundingClientRect();
+        // if (parentRect.bottom < rect.bottom) {
+        //     this.toggle.element.scrollTop += (rect.bottom - parentRect.bottom);
+        // }
     }
 
-    @HostListener("keydown.ArrowUp", ["$event"])
-    onArrowUpKeyDown(event) {
+    focusPrev() {
         if (this._focusedItem) {
             let focusedItemIndex = this._focusedItem.index;
             while ((this.items.toArray()[focusedItemIndex - 1]) &&
@@ -120,11 +115,11 @@ export class IgxDropDownComponent implements AfterViewInit {
                 this._focusedItem.isFocused = true;
             }
 
-            const rect = this._focusedItem.element.nativeElement.getBoundingClientRect();
-            const parentRect = this.toggle.element.getBoundingClientRect();
-            if (parentRect.top > rect.top) {
-                this.toggle.element.scrollTop -= (parentRect.top - rect.bottom + rect.height);
-            }
+            // const rect = this._focusedItem.element.nativeElement.getBoundingClientRect();
+            // const parentRect = this.toggle.element.getBoundingClientRect();
+            // if (parentRect.top > rect.top) {
+            //     this.toggle.element.scrollTop -= (parentRect.top - rect.bottom + rect.height);
+            // }
         }
     }
 
@@ -185,8 +180,9 @@ export class IgxDropDownComponent implements AfterViewInit {
     }
 
     open() {
-        this.elementRef.nativeElement.tabIndex = 0;
-        this.elementRef.nativeElement.focus();
+        if (!this.selectedItem && this.items.length > 0) {
+            this.selectedItem = this.items.toArray()[0];
+        }
         this._initiallySelectedItem = this.selectedItem;
         this._focusedItem = this.selectedItem;
         if (this.selectedItem) {
