@@ -6,7 +6,7 @@
 1. Grouping
 2. Grid Multi-column Headers [issue](https://github.com/IgniteUI/igniteui-angular/issues/488)
 3. Combo
-4. Column Hiding 
+4. Column Hiding UI
 5. Operations UI - column chooser
 6. Advanced Filtering
 7. Design: Release Updated Design System (Sketch UI kits, UI patterns, screens, documentation)
