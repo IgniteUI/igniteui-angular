@@ -464,7 +464,7 @@ describe("IgxGrid - Cell component", () => {
     it("keyboard navigation - should allow horizontal navigation in virtualized grid.", (done) => {
         const fix = TestBed.createComponent(VirtualtGridComponent);
         const cols = [];
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 10; i++) {
             cols.push({field: "col" + i});
         }
         fix.componentInstance.cols = cols;
@@ -474,7 +474,7 @@ describe("IgxGrid - Cell component", () => {
         const cell = grid.getCellByColumn(0, "col3");
 
         const cbFunc = () => {
-            expect(fix.componentInstance.selectedCell.columnIndex).toEqual(99);
+            expect(fix.componentInstance.selectedCell.columnIndex).toEqual(9);
             fix.detectChanges();
             const cbFunc2 = () => {
                 expect(fix.componentInstance.selectedCell.columnIndex).toEqual(1);
@@ -482,7 +482,7 @@ describe("IgxGrid - Cell component", () => {
             };
             navigateHorizontallyToIndex(grid, fix.componentInstance.selectedCell, 1, cbFunc2);
         };
-        navigateHorizontallyToIndex(grid, cell, 99, cbFunc);
+        navigateHorizontallyToIndex(grid, cell, 9, cbFunc);
     });
 
     it("When cell in edit mode and try to navigate the caret around the cell text the focus should remain.", async(() => {
