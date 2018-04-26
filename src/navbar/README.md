@@ -25,6 +25,8 @@ You can be more descriptive and set title `title="User settings"`.
 </igx-navbar>
 ```
 
+You can set the id of the component by `id="myNavbar"` or will be automatically generated;
+
 You can set the title of the navbar by setting `title="Settings"`;
 
 You can set the action button icon of the navbar by setting `actionButtonIcon="arrow_back"`;

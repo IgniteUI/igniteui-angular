@@ -27,7 +27,8 @@ describe("IgxInput", () => {
                 FilledInputComponent,
                 DisabledInputComponent,
                 RequiredInputComponent,
-                RequiredTwoWayDataBoundInputComponent
+                RequiredTwoWayDataBoundInputComponent,
+                DataBoundDisabledInputComponent
             ],
             imports: [
                 IgxInputGroupModule,
@@ -127,6 +128,25 @@ describe("IgxInput", () => {
         expect(igxInput.disabled).toBe(false);
     });
 
+    it("Should have a disabled style via binding", () => {
+        const fixture = TestBed.createComponent(DataBoundDisabledInputComponent);
+        fixture.detectChanges();
+
+        const igxInput = fixture.componentInstance.igxInput;
+        const inputElement = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+        const inputGroupElement = fixture.debugElement.query(By.css("igx-input-group")).nativeElement;
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_DISABLED_CSS_CLASS)).toBe(false);
+        expect(inputElement.disabled).toBe(false);
+        expect(igxInput.disabled).toBe(false);
+
+        fixture.componentInstance.isDisabled = true;
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_DISABLED_CSS_CLASS)).toBe(true);
+        expect(inputElement.disabled).toBe(true);
+        expect(igxInput.disabled).toBe(true);
+    });
+
     it("Should style required input correctly.", () => {
         const fixture = TestBed.createComponent(RequiredInputComponent);
         fixture.detectChanges();
@@ -206,6 +226,17 @@ class RequiredTwoWayDataBoundInputComponent {
     public user = {
         firstName: ""
     };
+}
+
+@Component({ template: `<igx-input-group #igxInputGroup>
+                            <label for="test" igxLabel>Test</label>
+                            <input name="test" #igxInput type="text" igxInput [disabled]="isDisabled" />
+                        </igx-input-group>` })
+class DataBoundDisabledInputComponent {
+    @ViewChild("igxInputGroup") public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective) public igxInput: IgxInputDirective;
+
+    public isDisabled = false;
 }
 
 function testRequiredValidation(inputElement, fixture) {
