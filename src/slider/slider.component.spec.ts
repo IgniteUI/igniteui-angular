@@ -1,5 +1,6 @@
 import { Component, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 import {IgxSliderComponent, IgxSliderModule, IRangeSliderValue, SliderType} from "./slider.component";
 
 declare var Simulator: any;
@@ -23,7 +24,10 @@ describe("IgxSlider", () => {
     it("should have lower bound equal to min value when lower bound is not set", () => {
         const fixture = TestBed.createComponent(SliderInitializeTestComponent);
         fixture.detectChanges();
+        const domSlider = fixture.debugElement.query(By.css("igx-slider")).nativeElement;
 
+        expect(fixture.componentInstance.slider.id).toContain("igx-slider-");
+        expect(domSlider.id).toContain("igx-slider-");
         expect(fixture.componentInstance.slider.lowerBound)
             .toBe(fixture.componentInstance.slider.minValue);
     });

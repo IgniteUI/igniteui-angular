@@ -416,6 +416,35 @@ describe("IgxGrid - Row Selection", () => {
         });
     }));
 
+    it("Should handle the deleteion on a selected row propertly", async(() => {
+        const fix = TestBed.createComponent(GridWithSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection3;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        const headerRow: HTMLElement = fix.nativeElement.querySelector(".igx-grid__thead");
+        const firstRow = grid.getRowByKey("0_0");
+        const firstRowCheckbox: HTMLInputElement = firstRow.nativeElement.querySelector(".igx-checkbox__input");
+        const headerCheckboxElement: HTMLInputElement = headerRow.querySelector(".igx-checkbox__input");
+        firstRowCheckbox.click();
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(headerCheckboxElement.checked).toBeFalsy();
+            expect(headerCheckboxElement.indeterminate).toBeTruthy();
+
+            grid.deleteRow("0_0");
+            return fix.whenStable();
+        }).then(() => {
+
+            fix.detectChanges();
+            expect(grid.getRowByKey("0_0")).toBeUndefined();
+            expect(headerCheckboxElement.checked).toBeFalsy();
+            expect(headerCheckboxElement.indeterminate).toBeFalsy();
+        });
+    }));
+
     it("Header checkbox should deselect all rows - scenario when clicking first row, while header checkbox is clicked", async(() => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
         fix.detectChanges();
@@ -742,7 +771,6 @@ describe("IgxGrid - Row Selection", () => {
         expect(grid.rowList.find((row) => row === firstRow)).toBeTruthy();
 
         grid.sort("Column1", SortingDirection.Desc, true);
-        console.log("Sorting started");
         fix.whenStable().then(() => {
             fix.detectChanges();
             expect(firstRow.isSelected).toBeFalsy();
@@ -846,7 +874,7 @@ describe("IgxGrid - Row Selection", () => {
         oldCell.nativeElement.click();
         grid.sort("UnitsInStock", SortingDirection.Asc, true);
         fixture.detectChanges();
-        const cellAfterSorting =  fixture.debugElement.query(By.css(".igx-grid__td--selected"));
+        const cellAfterSorting = fixture.debugElement.query(By.css(".igx-grid__td--selected"));
         expect(grid.selectedCells).toBeDefined();
         expect(grid.selectedCells.length).toBe(1);
         expect(grid.selectedCells[0].cellID.rowID).toEqual(oldCellID.rowID);
@@ -1085,7 +1113,7 @@ export class GridWithScrollsComponent implements OnInit {
         </igx-grid>
     `
 })
-export class  GridSummaryComponent {
+export class GridSummaryComponent {
 
     public data = [
         { ProductID: 1, ProductName: "Chai", InStock: true, UnitsInStock: 2760, OrderDate: new Date("2005-03-21") },

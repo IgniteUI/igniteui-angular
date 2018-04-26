@@ -7,6 +7,8 @@ import { IgxLabelDirective } from "../directives/label/label.directive";
 import { IgxPrefixDirective } from "../directives/prefix/prefix.directive";
 import { IgxSuffixDirective } from "../directives/suffix/suffix.directive";
 
+let NEXT_ID = 0;
+
 enum IgxInputGroupType {
     LINE,
     BOX,
@@ -20,6 +22,10 @@ enum IgxInputGroupType {
 })
 export class IgxInputGroupComponent {
     private _type = IgxInputGroupType.LINE;
+
+    @HostBinding("attr.id")
+    @Input()
+    public id = `igx-input-group-${NEXT_ID++}`;
 
     @HostBinding("class.igx-input-group")
     public defaultClass = true;

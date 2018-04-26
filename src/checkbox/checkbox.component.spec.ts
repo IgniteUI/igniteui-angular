@@ -35,12 +35,12 @@ describe("IgxCheckbox", () => {
         const placeholderLabel = fixture.debugElement.query(By.css(".igx-checkbox__label")).nativeElement;
 
         expect(nativeCheckbox).toBeTruthy();
-        expect(nativeCheckbox.id).toEqual("igx-checkbox-0");
+        expect(nativeCheckbox.id).toEqual("igx-checkbox-0-input");
         expect(nativeCheckbox.getAttribute("aria-label")).toEqual(null);
         expect(nativeCheckbox.getAttribute("aria-labelledby")).toMatch("igx-checkbox-0-label");
 
         expect(nativeLabel).toBeTruthy();
-        expect(nativeLabel.getAttribute("for")).toEqual("igx-checkbox-0");
+        expect(nativeLabel.getAttribute("for")).toEqual("igx-checkbox-0-input");
 
         expect(placeholderLabel.textContent.trim()).toEqual("Init");
         expect(placeholderLabel.classList).toContain("igx-checkbox__label");
