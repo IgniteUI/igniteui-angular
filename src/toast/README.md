@@ -15,6 +15,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
            message="Something happened!">
 </igx-toast>
 ```
+You can set the id of the component by `id="myToast"` or will be automatically generated;
 
 You can be more descriptive and set message `message="Something happened!"`.
 
