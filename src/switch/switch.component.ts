@@ -50,6 +50,8 @@ export class IgxSwitchComponent implements ControlValueAccessor {
     @ViewChild("label") public nativeLabel;
     @ViewChild("placeholderLabel") public placeholderLabel;
 
+    /** ID of the component */
+    @HostBinding("attr.id")
     @Input() public id = `igx-switch-${nextId++}`;
     @Input() public labelId = `${this.id}-label`;
     @Input() public value: any;
@@ -83,6 +85,7 @@ export class IgxSwitchComponent implements ControlValueAccessor {
     @HostBinding("class.igx-switch--focused")
     public focused = false;
 
+    public inputId = `${this.id}-input`;
     public toggle() {
         if (this.disabled) {
             return;

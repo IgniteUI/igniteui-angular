@@ -29,17 +29,19 @@ describe("IgxSwitch", () => {
         const fixture = TestBed.createComponent(InitSwitchComponent);
         fixture.detectChanges();
 
+        const domSwitch = fixture.debugElement.query(By.css("igx-switch")).nativeElement;
         const nativeCheckbox = fixture.debugElement.query(By.css("input")).nativeElement;
         const nativeLabel = fixture.debugElement.query(By.css("label")).nativeElement;
         const placeholderLabel = fixture.debugElement.query(By.css(".igx-switch__label")).nativeElement;
 
+        expect(domSwitch.id).toBe("igx-switch-0");
         expect(nativeCheckbox).toBeTruthy();
-        expect(nativeCheckbox.id).toEqual("igx-switch-0");
+        expect(nativeCheckbox.id).toEqual("igx-switch-0-input");
         expect(nativeCheckbox.getAttribute("aria-label")).toEqual(null);
         expect(nativeCheckbox.getAttribute("aria-labelledby")).toMatch("igx-switch-0-label");
 
         expect(nativeLabel).toBeTruthy();
-        expect(nativeLabel.getAttribute("for")).toEqual("igx-switch-0");
+        expect(nativeLabel.getAttribute("for")).toEqual("igx-switch-0-input");
 
         expect(placeholderLabel.textContent.trim()).toEqual("Init");
         expect(placeholderLabel.classList).toContain("igx-switch__label");
