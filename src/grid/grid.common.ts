@@ -14,7 +14,8 @@ import {
 } from "@angular/core";
 import "rxjs/add/operator/map";
 import { Observable } from "rxjs/Observable";
-import { switchMap, takeUntil } from "rxjs/operators";
+import { switchMap, takeUntil, throttle } from "rxjs/operators";
+import { animationFrame } from "rxjs/scheduler/animationFrame";
 import { Subject } from "rxjs/Subject";
 import { IgxGridAPIService } from "./api.service";
 
@@ -68,8 +69,10 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
             Observable.fromEvent(this.document.defaultView, "mousedown").pipe(takeUntil(this._destroy))
                 .subscribe((res) => this.onMousedown(res));
 
-            Observable.fromEvent(this.document.defaultView, "mousemove").pipe(takeUntil(this._destroy))
-                .subscribe((res) => this.onMousemove(res));
+            Observable.fromEvent(this.document.defaultView, "mousemove").pipe(
+                takeUntil(this._destroy),
+                throttle(() => Observable.interval(0, animationFrame))
+            ).subscribe((res) => this.onMousemove(res));
 
             Observable.fromEvent(this.document.defaultView, "mouseup").pipe(takeUntil(this._destroy))
                 .subscribe((res) => this.onMouseup(res));

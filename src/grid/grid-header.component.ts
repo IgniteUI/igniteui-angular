@@ -269,6 +269,8 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
                 }
             } else if (this.column.maxWidth && (parseFloat(size) > parseFloat(this.column.maxWidth))) {
                 this.column.width = parseFloat(this.column.maxWidth) + "px";
+            } else if (parseFloat(size) < parseFloat(this.column.defaultMinWidth)) {
+                this.column.width = this.column.defaultMinWidth + "px";
             } else {
                 this.column.width = size;
             }

@@ -382,7 +382,7 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[3].width).toEqual("76px");
+        expect(grid.columns[3].width).toEqual("88px");
 
         headers[5].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
         tick();
