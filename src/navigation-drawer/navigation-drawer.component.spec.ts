@@ -24,7 +24,9 @@ describe("Navigation Drawer", () => {
                     Infragistics.IgxNavigationToggleDirective,
                     TestComponent,
                     TestComponentDIComponent,
-                    TestComponentPin],
+                    TestComponentPin,
+                    TestComponentMini
+                ],
                 imports: [Infragistics.IgxNavigationDrawerModule]
             });
             // Using Window through DI causes AOT error (https://github.com/angular/angular/issues/15640)
@@ -78,11 +80,20 @@ describe("Navigation Drawer", () => {
             TestBed.compileComponents().then(() => {
                 const fixture = TestBed.createComponent(TestComponentDIComponent);
                 fixture.detectChanges();
+                const domNavDrawer = fixture.debugElement.query(By.css("igx-nav-drawer")).nativeElement;
 
+                expect(fixture.componentInstance.viewChild.id).toContain("igx-nav-drawer-");
+                expect(domNavDrawer.id).toContain("igx-nav-drawer-");
                 expect(fixture.componentInstance.viewChild.drawer.classList).toContain("igx-nav-drawer__aside");
                 expect(fixture.componentInstance.viewChild.overlay.classList).toContain("igx-nav-drawer__overlay");
                 expect(fixture.componentInstance.viewChild.styleDummy.classList).toContain("igx-nav-drawer__style-dummy");
                 expect(fixture.componentInstance.viewChild.hasAnimateWidth).toBeFalsy();
+
+                fixture.componentInstance.viewChild.id = "customNavDrawer";
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.viewChild.id).toBe("customNavDrawer");
+                expect(domNavDrawer.id).toBe("customNavDrawer");
 
             }).catch ((reason) => {
                 return Promise.reject(reason);
@@ -191,6 +202,40 @@ describe("Navigation Drawer", () => {
                 expect(fixture.componentInstance.viewChild.hasAnimateWidth).toBeTruthy();
                 expect(fixture.debugElement.query((x) => x.nativeNode.nodeName === "ASIDE").nativeElement.classList)
                     .toContain("igx-nav-drawer__aside--mini");
+            }).catch ((reason) => {
+                return Promise.reject(reason);
+            });
+        }));
+
+        it("should update with dynamic min template", async(() => {
+            // immediate requestAnimationFrame for testing
+            spyOn(window, "requestAnimationFrame").and.callFake((callback) => callback());
+            const template = `<igx-nav-drawer>
+                                <ng-template igxDrawer></ng-template>
+                                <ng-template *ngIf="miniView" igxDrawerMini></ng-template>
+                              </igx-nav-drawer>`;
+            TestBed.overrideComponent(TestComponentMini, {
+            set: {
+                template
+            }});
+            let fixture;
+            let asideElem;
+            // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
+            TestBed.compileComponents().then(() => {
+                fixture = TestBed.createComponent(TestComponentMini);
+                fixture.detectChanges();
+                asideElem = fixture.debugElement.query(By.css(".igx-nav-drawer__aside"));
+
+                expect(asideElem.styles["width"]).toEqual("60px");
+
+                fixture.componentInstance.miniView = false;
+                fixture.detectChanges();
+
+                expect(asideElem.styles["width"]).toBeFalsy();
+                fixture.componentInstance.miniView = true;
+                fixture.detectChanges();
+
+                expect(asideElem.styles["width"]).toEqual(fixture.componentInstance.viewChild.miniWidth);
             }).catch ((reason) => {
                 return Promise.reject(reason);
             });
@@ -494,4 +539,8 @@ class TestComponentPin extends TestComponentDIComponent {
      public pin = true;
      public enableGestures = "";
      public pinThreshold = 1024;
+}
+
+class TestComponentMini extends TestComponentDIComponent {
+    public miniView = true;
 }

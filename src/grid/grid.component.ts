@@ -118,6 +118,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public autoGenerate = false;
 
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-grid-${NEXT_ID++}`;
 
@@ -506,7 +507,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get calcPinnedContainerMaxWidth(): number {
-        return (parseInt(this.width.toString(), 10) * 80) / 100;
+        return (this.calcWidth * 80) / 100;
     }
 
     get pinnedWidth() {
@@ -621,6 +622,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
         if (row) {
             const index = this.data.indexOf(row.rowData);
+            if (this.rowSelectable === true) {
+                this.deselectRows([row.rowID]);
+            }
             this.data.splice(index, 1);
             this.onRowDeleted.emit({ data: row.rowData });
             this._pipeTrigger++;
@@ -805,7 +809,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     protected _derivePossibleHeight() {
-        if (this._height && this._height.indexOf("%") === -1) {
+        if ((this._height && this._height.indexOf("%") === -1) || !this._height) {
             return;
         }
         if (!this.nativeElement.parentNode.clientHeight) {
@@ -1096,7 +1100,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (currSelection) {
             for (const key of Object.keys(filteredData)) {
                 const dataItem = primaryKey ? filteredData[key][primaryKey] : filteredData[key];
-                if (currSelection.find((item) => item === dataItem) !== undefined) {
+                if (currSelection.indexOf(dataItem) !== -1) {
                     atLeastOneSelected = true;
                     if (notAllSelected) {
                         return "indeterminate";

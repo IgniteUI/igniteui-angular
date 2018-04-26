@@ -11,4 +11,7 @@ export class IgxDatePickerSampleComponent {
     public formatter = (_: Date) => {
         return _.toDateString();
     }
+    onCloseHandler(evt) {
+        console.log("third picker closed");
+    }
 }
