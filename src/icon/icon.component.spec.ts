@@ -31,6 +31,7 @@ describe("Icon", () => {
         const icon = fixture.componentInstance.icon;
         fixture.detectChanges();
 
+        expect(icon.id).toContain("igx-icon-");
         expect(fixture.debugElement).toBeTruthy();
         expect(icon.getIconColor).toBeFalsy();
         expect(icon.getIconName).toBeFalsy();
@@ -42,7 +43,14 @@ describe("Icon", () => {
         const el = fixture.debugElement.query(By.css("igx-icon"));
 
         expect(el).toBeTruthy();
+        expect(el.nativeElement.id).toContain("igx-icon-");
         expect(el.nativeElement.getAttribute("aria-hidden")).toMatch("true");
+
+        icon.id = "customIcon";
+        fixture.detectChanges();
+
+        expect(icon.id).toBe("customIcon");
+        expect(el.nativeElement.id).toBe("customIcon");
     });
 
     it("Initializes igx-icon with material-icons font set", () => {

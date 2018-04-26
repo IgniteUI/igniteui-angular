@@ -22,6 +22,8 @@ You can attach set the icon to active/inactive by providing setting `isActive="t
 
 You can access all properties of the button component with the following attributes:
 
+`id`
+
 `fontSet`
 
 `name`

@@ -36,6 +36,22 @@ describe("Badge", () => {
         expect(badge.type).toMatch("error");
     });
 
+    it("Initializes badge with id", () => {
+        const fixture = TestBed.createComponent(InitBadgeComponent);
+        fixture.detectChanges();
+        const badge = fixture.componentInstance.badge;
+        const domBadge = fixture.debugElement.query(By.css("igx-badge")).nativeElement;
+
+        expect(badge.id).toContain("igx-badge-");
+        expect(domBadge.id).toContain("igx-badge-");
+
+        badge.id = "customBadge";
+        fixture.detectChanges();
+
+        expect(badge.id).toBe("customBadge");
+        expect(domBadge.id).toBe("customBadge");
+    });
+
     it("Initializes badge defaults", () => {
         const fixture = TestBed.createComponent(InitBadgeWithDefaultsComponent);
         fixture.detectChanges();
