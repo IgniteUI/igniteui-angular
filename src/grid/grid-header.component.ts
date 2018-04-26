@@ -196,6 +196,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     public onResizeAreaMouseOver() {
         if (this.column.resizable) {
             this.resizeCursor = "col-resize";
+            this.cdr.detectChanges();
         }
     }
 
@@ -208,6 +209,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
         } else {
             this.resizeCursor = null;
         }
+        this.cdr.detectChanges();
     }
 
     public onResizeAreaDblClick() {
