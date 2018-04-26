@@ -60,6 +60,7 @@ _Child components_
 _Child component of igx-bottom-nav, that represents the button that triggers displaying of the associated panel._
 
 ## Properties
+- `id` - Unique identifier of the component. If not provided it will be automatically generated.
 - `isDisabled` - Determines whether the tab is disabled
 - `isSelected` - Determines whether the tab is selected
 - `index` - Gets the index of a tab in the tab collection
