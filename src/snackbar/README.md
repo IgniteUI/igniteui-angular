@@ -31,6 +31,7 @@ You can show the snacbar by using `snacbar.show()` method.
              (onAction)="snackbar.hide()">
 </igx-snackbar>
 ```
+You can set the id of the component by `id="Snackbar"` or will be automatically generated;
 
 You can set the title of the button by setting `actionName="Dissmis"`;
 

@@ -118,6 +118,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public autoGenerate = false;
 
+    @HostBinding("attr.id")
     @Input()
     public id = `igx-grid-${NEXT_ID++}`;
 

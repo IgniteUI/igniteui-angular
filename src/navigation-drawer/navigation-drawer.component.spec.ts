@@ -80,11 +80,20 @@ describe("Navigation Drawer", () => {
             TestBed.compileComponents().then(() => {
                 const fixture = TestBed.createComponent(TestComponentDIComponent);
                 fixture.detectChanges();
+                const domNavDrawer = fixture.debugElement.query(By.css("igx-nav-drawer")).nativeElement;
 
+                expect(fixture.componentInstance.viewChild.id).toContain("igx-nav-drawer-");
+                expect(domNavDrawer.id).toContain("igx-nav-drawer-");
                 expect(fixture.componentInstance.viewChild.drawer.classList).toContain("igx-nav-drawer__aside");
                 expect(fixture.componentInstance.viewChild.overlay.classList).toContain("igx-nav-drawer__overlay");
                 expect(fixture.componentInstance.viewChild.styleDummy.classList).toContain("igx-nav-drawer__style-dummy");
                 expect(fixture.componentInstance.viewChild.hasAnimateWidth).toBeFalsy();
+
+                fixture.componentInstance.viewChild.id = "customNavDrawer";
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.viewChild.id).toBe("customNavDrawer");
+                expect(domNavDrawer.id).toBe("customNavDrawer");
 
             }).catch ((reason) => {
                 return Promise.reject(reason);

@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import {
-    AfterViewInit, Component, ElementRef, EventEmitter, forwardRef, Input, NgModule, OnInit, Output, Renderer2,
+    AfterViewInit, Component, ElementRef, EventEmitter,
+    forwardRef, HostBinding, Input, NgModule, OnInit, Output, Renderer2,
     ViewChild
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
@@ -48,12 +49,18 @@ const noop = () => {
  * </igx-slider>
  * ```
  */
+let NEXT_ID = 0;
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSliderComponent, multi: true }],
     selector: "igx-slider",
     templateUrl: "slider.component.html"
 })
 export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterViewInit {
+
+    /** ID of the component */
+    @HostBinding("attr.id")
+    @Input()
+    public id = `igx-slider-${NEXT_ID++}`;
     /**
      * Disables or enables UI interaction.
      */
