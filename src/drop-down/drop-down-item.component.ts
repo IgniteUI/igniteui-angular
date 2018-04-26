@@ -5,15 +5,16 @@ import { IgxDropDownComponent, ISelectionEventArgs } from "./drop-down.component
     selector: "igx-drop-down-item",
     templateUrl: "drop-down-item.component.html",
     styles: [
-        ":host { display: block; background-color: white; }",
-        ":host.selected { background-color: #1A73E8; }",
+        ":host { display: block; background-color: white; border: 1px solid white; }",
+        ":host.selected { background-color: #1A73E8; border: 1px solid #1A73E8; }",
         ":host.focused { border: 1px solid #8bb8f4; color: red; }",
-        ":host.disabled { background-color: grey; }",
+        ":host.disabled { background-color: grey; border: 1px solid grey; }",
         ":host.header { font-weight: bold; }"
     ]
 })
 export class IgxDropDownItemComponent implements OnInit {
-    private _disabled = false;
+    private _isFocused = false;
+
     get isSelected() {
         return this.dropDown.selectedItem === this;
     }
@@ -35,7 +36,23 @@ export class IgxDropDownItemComponent implements OnInit {
     }
 
     @HostBinding("class.focused")
-    public isFocused = false;
+    get isFocused() {
+        return this._isFocused;
+    }
+    set isFocused(value: boolean) {
+        if (this.isDisabled || this.isHeader) {
+            this._isFocused = false;
+            this.element.nativeElement.blur();
+            return;
+        }
+
+        // if (value) {
+        //     this.element.nativeElement.focus();
+        // } else {
+        //     this.element.nativeElement.blur();
+        // }
+        this._isFocused = value;
+    }
 
     @Input()
     @HostBinding("class.header")
@@ -63,7 +80,7 @@ export class IgxDropDownItemComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.element.nativeElement.tabIndex = 0;
+        // this.element.nativeElement.tabIndex = 0;
     }
 
     public get index(): number {

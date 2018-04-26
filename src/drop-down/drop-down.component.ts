@@ -32,10 +32,14 @@ export class IgxDropDownComponent implements AfterViewInit {
     private _selectedItem: IgxDropDownItemComponent = null;
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
     private _focusedItem: IgxDropDownItemComponent = null;
+    private _defaultWidth = "200px";
+    private _defaultHeight = "200px";
 
     @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
     @ContentChildren(IgxDropDownItemComponent, { read: IgxDropDownItemComponent }) public items: QueryList<IgxDropDownItemComponent>;
     @Output() public onSelection = new EventEmitter<ISelectionEventArgs>();
+    @Output() public onOpen = new EventEmitter();
+    @Output() public onClose = new EventEmitter();
 
     constructor(private elementRef: ElementRef, private renderer: Renderer) { }
 
@@ -54,32 +58,29 @@ export class IgxDropDownComponent implements AfterViewInit {
         return this.selectedItem !== this._initiallySelectedItem;
     }
 
-    @Input() public width = "100px";
-    @Input() public height = "200px";
+    @Input() public width = this._defaultWidth;
+    @Input() public height = this._defaultHeight;
 
     @HostListener("keydown.Space", ["$event"])
-    public onSpaceKeyDown(event) {
-        const oldItem = this.selectedItem;
-        this.selectedItem = this._focusedItem;
-        this.fireOnSelection(oldItem, this.selectedItem, event);
+    onSpaceKeyDown(event) {
+        this.changeSelectedItem(this.selectedItem, this._focusedItem, event);
         this.toggle.close(true);
     }
 
     @HostListener("keydown.Enter", ["$event"])
-    public onEnterKeyDown(event) {
-        const oldItem = this.selectedItem;
-        this.selectedItem = this._focusedItem;
-        this.fireOnSelection(oldItem, this.selectedItem, event);
+    onEnterKeyDown(event) {
+        this.changeSelectedItem(this.selectedItem, this._focusedItem, event);
         this.toggle.close(true);
     }
 
     @HostListener("keydown.Escape", ["$event"])
-    public onEscapeKeyDown(event) {
+    onEscapeKeyDown(event) {
         this.toggle.close(true);
     }
 
     @HostListener("keydown.ArrowDown", ["$event"])
-    public onArrowDownKeyDown(event) {
+    onArrowDownKeyDown(event) {
+        console.log(this._focusedItem);
         let focusedItemIndex = -1;
         if (this._focusedItem) {
             focusedItemIndex = this._focusedItem.index;
@@ -99,12 +100,14 @@ export class IgxDropDownComponent implements AfterViewInit {
         const rect = this._focusedItem.element.nativeElement.getBoundingClientRect();
         const parentRect = this.toggle.element.getBoundingClientRect();
         if (parentRect.bottom < rect.bottom) {
+            console.log(this.toggle.element.scrollTop);
             this.toggle.element.scrollTop += (rect.bottom - parentRect.bottom);
+            console.log(this.toggle.element.scrollTop);
         }
     }
 
     @HostListener("keydown.ArrowUp", ["$event"])
-    public onArrowUpKeyDown(event) {
+    onArrowUpKeyDown(event) {
         if (this._focusedItem) {
             let focusedItemIndex = this._focusedItem.index;
             while ((this.items.toArray()[focusedItemIndex - 1]) &&
@@ -126,13 +129,13 @@ export class IgxDropDownComponent implements AfterViewInit {
     }
 
     @HostListener("keydown.End", ["$event"])
-    public onEndKeyDown(event) {
+    onEndKeyDown(event) {
         let focusedItemIndex = (this.items.length - 1);
         while ((this.items.toArray()[focusedItemIndex]) && ((this.items.toArray()[focusedItemIndex]).isDisabled
             || (this.items.toArray()[focusedItemIndex]).isHeader)) {
                 focusedItemIndex--;
             }
-        if (focusedItemIndex < this.items.length - 1) {
+        if (focusedItemIndex < this.items.length) {
                 if (this._focusedItem) {
                     this._focusedItem.isFocused = false;
                 }
@@ -147,7 +150,7 @@ export class IgxDropDownComponent implements AfterViewInit {
     }
 
     @HostListener("keydown.Home", ["$event"])
-    public onHomeKeyDown(event) {
+    onHomeKeyDown(event) {
         let focusedItemIndex = 0;
         while ((this.items.toArray()[focusedItemIndex]) && ((this.items.toArray()[focusedItemIndex]).isDisabled
             || (this.items.toArray()[focusedItemIndex]).isHeader)) {
@@ -173,20 +176,25 @@ export class IgxDropDownComponent implements AfterViewInit {
         this.toggle.element.style.overflowY = "auto";
     }
 
-    public onClose() {
+    close() {
         if (this._focusedItem) {
             this._focusedItem.isFocused = false;
         }
+
+        this.onClose.emit();
     }
 
-    public onOpen() {
+    open() {
         this.elementRef.nativeElement.tabIndex = 0;
         this.elementRef.nativeElement.focus();
+        this._initiallySelectedItem = this.selectedItem;
+        this._focusedItem = this.selectedItem;
         if (this.selectedItem) {
-            this._initiallySelectedItem = this.selectedItem;
-            this._focusedItem = this.selectedItem;
+            this._focusedItem.isFocused = true;
             this.scrollToItem(this.selectedItem);
         }
+
+        this.onOpen.emit();
     }
 
     public toggleDropDown() {
@@ -203,7 +211,8 @@ export class IgxDropDownComponent implements AfterViewInit {
         this.toggle.element.scrollTop = (Math.floor(itemPosition));
     }
 
-    private fireOnSelection(oldItem: IgxDropDownItemComponent, newItem: IgxDropDownItemComponent, event?) {
+    private changeSelectedItem(oldItem: IgxDropDownItemComponent, newItem: IgxDropDownItemComponent, event?) {
+        this.selectedItem = newItem;
         const args: ISelectionEventArgs = { oldSelection: oldItem, newSelection: newItem, event };
         this.onSelection.emit(args);
     }
