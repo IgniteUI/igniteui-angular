@@ -52,6 +52,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     @ViewChild("label") public nativeLabel;
     @ViewChild("placeholderLabel") public placeholderLabel;
 
+    @HostBinding("attr.id")
     @Input() public id = `igx-checkbox-${nextId++}`;
     @Input() public labelId = `${this.id}-label`;
     @Input() public value: any;
@@ -85,6 +86,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     @HostBinding("class.igx-checkbox--disabled")
     @Input() public disabled = false;
 
+    public inputId = `${this.id}-input`;
     private _onTouchedCallback: () => void = noop;
     private _onChangeCallback: (_: any) => void = noop;
 
