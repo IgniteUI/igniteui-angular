@@ -1,0 +1,33 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-drop-down) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %igx-drop-down !optional;
+
+    @include e(item) {
+        @extend %igx-drop-down__item !optional;
+    }
+
+    @include e(item, $m: selected) {
+        @extend %igx-drop-down__item--selected !optional;
+    }
+
+    @include e(item, $m: focused) {
+        @extend %igx-drop-down__item--focused !optional;
+    }
+
+    @include e(item, $m: disabled) {
+        @extend %igx-drop-down__item--disabled !optional;
+    }
+
+    @include e(header) {
+        @extend %igx-drop-down__header !optional;
+    }
+}
