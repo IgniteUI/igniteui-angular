@@ -622,6 +622,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
         if (row) {
             const index = this.data.indexOf(row.rowData);
+            if (this.rowSelectable === true) {
+                this.deselectRows([row.rowID]);
+            }
             this.data.splice(index, 1);
             this.onRowDeleted.emit({ data: row.rowData });
             this._pipeTrigger++;
