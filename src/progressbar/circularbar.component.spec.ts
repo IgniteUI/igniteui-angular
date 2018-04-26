@@ -29,10 +29,12 @@ describe("IgCircularBar", () => {
         tick(tickTime);
 
         const progress = fixture.componentInstance.circularBar;
-
+        const domProgress = fixture.debugElement.query(By.css("igx-circular-bar")).nativeElement;
         const value = 0;
         const defaultMaxValue = 100;
 
+        expect(progress.id).toContain("igx-circular-bar-");
+        expect(domProgress.id).toContain("igx-circular-bar-");
         expect(progress.max).toBe(defaultMaxValue);
         expect(progress.value).toBe(0);
     }));

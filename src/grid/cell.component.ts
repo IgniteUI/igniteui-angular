@@ -354,6 +354,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
 
     @HostListener("keydown.arrowleft", ["$event"])
     public onKeydownArrowLeft(event) {
+        if (this.inEditMode) {
+            return;
+        }
+
         event.preventDefault();
         const rowIndex = this.rowIndex;
         const columnIndex = this.visibleColumnIndex - 1;
@@ -400,6 +404,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
 
     @HostListener("keydown.control.arrowleft")
     public onKeydownCtrlArrowLeft() {
+        if (this.inEditMode) {
+            return;
+        }
+
         const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.row.cells.first.visibleColumnIndex);
         const columnIndex = target.visibleColumnIndex;
         if (target) {
@@ -420,6 +428,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
 
     @HostListener("keydown.arrowright", ["$event"])
     public onKeydownArrowRight(event) {
+        if (this.inEditMode) {
+            return;
+        }
+
         event.preventDefault();
         const visibleColumns = this.grid.visibleColumns;
         const rowIndex = this.rowIndex;
@@ -485,6 +497,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
 
     @HostListener("keydown.control.arrowright")
     public onKeydownCtrlArrowRight() {
+        if (this.inEditMode) {
+            return;
+        }
+
         const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.row.cells.last.visibleColumnIndex);
         const columnIndex = target.visibleColumnIndex;
         if (target) {
@@ -519,6 +535,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
 
     @HostListener("keydown.arrowup", ["$event"])
     public onKeydownArrowUp(event) {
+        if (this.inEditMode) {
+            return;
+        }
+
         event.preventDefault();
         const lastCell = this._getLastSelectedCell();
         const rowIndex = lastCell ? lastCell.rowIndex - 1 : this.grid.rowList.last.index;
@@ -548,6 +568,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
 
     @HostListener("keydown.arrowdown", ["$event"])
     public onKeydownArrowDown(event) {
+        if (this.inEditMode) {
+            return;
+        }
+
         event.preventDefault();
         const lastCell = this._getLastSelectedCell();
         const rowIndex = lastCell ? lastCell.rowIndex + 1 : this.grid.rowList.first.index;
@@ -568,12 +592,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
                 verticalScroll.scrollTop += targetEndTopOffset - containerHeight;
 
                 this._focusNextCell(rowIndex, this.visibleColumnIndex);
-            }
-            if (rowIndex < this.grid.rowList.last.index || rowIndex === this.grid.data.length - 1) {
+            } else {
                 target.nativeElement.focus();
             }
-        } else if (rowIndex < this.grid.data.length) {
-            this.row.grid.verticalScrollContainer.scrollNext();
+        } else {
+            verticalScroll.scrollTop += this.grid.rowHeight;
             this._focusNextCell(this.rowIndex, this.visibleColumnIndex);
         }
     }
