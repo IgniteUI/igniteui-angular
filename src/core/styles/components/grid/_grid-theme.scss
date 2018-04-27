@@ -7,6 +7,7 @@
 
 /// @param {Color} $header-background [null] - The table header background color.
 /// @param {Color} $header-text-color [null] - The table header text color.
+/// @param {Color} $resize-line-color [null] - The table header resize line color.
 /// @param {Color} $content-background [null] - The table body background color.
 /// @param {Color} $content-text-color [null] - The table body text color.
 /// @param {Color} $row-border-color [null] - The row bottom border color.
@@ -33,7 +34,9 @@
     $pinned-border-color: null,
 
     $cell-selected-background: null,
-    $cell-selected-text-color: null
+    $cell-selected-text-color: null,
+
+    $resize-line-color: null
 ) {
     @if not($header-text-color) and $header-background {
         $header-text-color: text-contrast($header-background);
@@ -80,7 +83,9 @@
         pinned-border-color: $pinned-border-color,
 
         cell-selected-background: $cell-selected-background,
-        cell-selected-text-color: $cell-selected-text-color
+        cell-selected-text-color: $cell-selected-text-color,
+
+        resize-line-color: $resize-line-color
     );
 }
 
@@ -111,7 +116,9 @@
         $pinned-border-color: igx-color($palette, 'grays', 400),
 
         $cell-selected-background: igx-color($palette, 'primary'),
-        $cell-selected-text-color: igx-contrast-color($palette, 'primary')
+        $cell-selected-text-color: igx-contrast-color($palette, 'primary'),
+
+        $resize-line-color: igx-color($palette, 'secondary')
     );
 
     $this: extend($default-theme, $theme);
@@ -130,7 +137,6 @@
     // Heading
     $grid-head-fs: rem(12px);
     $grid-head-fw: 600;
-    $grid-head-icon-size: rem(16px);
 
     // Cell
     $grid-cell-padding: rem(16px) rem(24px);
@@ -156,32 +162,6 @@
         overflow: hidden;
     }
 
-    %vhelper-display {
-        &::-webkit-scrollbar {
-            background: rgba(text-contrast(map-get($this, 'content-background')), .12);
-
-            /* stylelint-disable selector-pseudo-class-no-unknown */
-            &:vertical {
-                border-left: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
-                border-right: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
-            }
-
-            &:horizontal {
-                border-top: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
-                border-bottom: 1px solid rgba(text-contrast(map-get($this, 'content-background')), .08);
-            }
-            /* stylelint-enable */
-        }
-
-        &::-webkit-scrollbar-thumb {
-            background: rgba(text-contrast(map-get($this, 'content-background')), .24);
-
-            &:hover {
-                background: rgba(text-contrast(map-get($this, 'content-background')), .37);
-            }
-        }
-    }
-
     %grid-caption {
         display: flex;
         align-items: center;
@@ -190,12 +170,9 @@
         padding: $grid-caption-padding;
     }
 
-    %grid-thead i {
-        font-size: $grid-head-icon-size;
-    }
-
     %grid-thead,
     %grid-tfoot {
+        position: relative;
         display: block;
         background: map-get($this, 'header-background');
         color: map-get($this, 'header-text-color');
@@ -212,6 +189,7 @@
     %grid-thead {
         grid-row: 1;
         border-bottom: 1px dotted igx-color($palette, 'grays', 400);
+        z-index: 2;
     }
 
     %grid-tfoot {
@@ -228,29 +206,6 @@
         width: 100%;
         overflow: visible;
     }
-    /// @todo Sorting should not be
-    /// forced to use Material Icons
-    %grid-sorting-display {
-        font-weight: 800;
-
-        > .title::before {
-            position: relative;
-            font-family: 'Material Icons', sans-serif;
-            margin-right: 8px;
-        }
-    }
-
-    %grid-sorting-asc {
-        > .title::before {
-            content: '\E5D8';
-        }
-    }
-
-    %grid-sorting-desc {
-        > .title::before {
-            content: '\E5DB';
-        }
-    }
 
     %grid-tbody {
         position: relative;
@@ -258,7 +213,7 @@
         background: map-get($this, 'content-background');
         color: map-get($this, 'content-text-color');
         overflow: hidden;
-        will-change: transform;
+        z-index: 1;
     }
 
     %grid-tbody--empty {
@@ -272,11 +227,11 @@
         flex-flow: row nowrap;
         grid-row: 5;
         width: 100%;
-        background: map-get($this, 'content-background');
+        background: map-get($this, 'header-background');
     }
 
     %grid-scroll-start {
-        border-right: map-get($cell-pin, 'style') map-get($cell-pin, 'color');
+        background: igx-color($palette, 'grays', 200);
     }
 
     %grid-scroll-main {
@@ -335,7 +290,7 @@
     %grid-cell--pinned {
         position: relative;
         background-color: inherit;
-        z-index: 1;
+        z-index: 9999;
     }
 
     %grid-cell--pinned-last {
@@ -354,20 +309,91 @@
         min-width: 0;
         border-right: 1px dotted igx-color($palette, 'grays', 400);
 
-        .title {
-            @include ellipsis();
-            cursor: pointer;
-            user-select: none;
-        }
-
         &:last-of-type {
             border-right: transparent;
         }
     }
 
+    %grid-cell-header-title {
+        @include ellipsis();
+        user-select: none;
+        cursor: initial;
+        flex-grow: 1; /* hey IE, the text should take most of the space */
+    }
+
+    %grid-cell-header-icons {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        user-select: none;
+        min-width: 39px; /* sort-icon width + filtering toggle icon width */
+        height: 24px;
+
+        &:empty {
+            min-width: 0;
+        }
+
+        .sort-icon {
+            width: rem(15px);
+            height: rem(15px);
+            min-width: rem(15px); /* yeah IE, it really needs to be 15px wide... */
+            font-size: rem(15px);
+        }
+    }
+
     %grid-cell-number {
         text-align: $grid-cell-align-num;
-        justify-content: flex-end;
+
+        %grid-cell-header-icons {
+            justify-content: flex-start;
+            order: -1;
+
+            .sort-icon {
+                order: 1;
+            }
+        }
+    }
+
+    %grid__cbx-selection {
+        padding: 0 rem(24px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+        position: relative;
+        background: inherit;
+    }
+
+    %grid__resize-handle {
+        position: absolute;
+        width: 4px;
+        top: 0;
+        right: -2px;
+        height: 100%;
+        z-index: 2;
+    }
+
+    %grid__resize-line {
+        position: absolute;
+        cursor: col-resize;
+        width: 4px;
+        background-color: map-get($this, 'resize-line-color');
+        z-index: 2;
+
+        &::before,
+        &::after {
+            position: absolute;
+            content: '';
+            height: 100%;
+            width: 96px;
+        }
+
+        &::before {
+            right: 100%;
+        }
+
+        &::after {
+            left: 100%;
+        }
     }
 }
-

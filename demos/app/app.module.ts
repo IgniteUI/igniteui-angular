@@ -21,9 +21,12 @@ import { DialogSampleModule } from "./dialog/sample.module";
 import { MaskSampleModule } from "./directives/mask/sample.module";
 import { GridColumnPinningSampleModule } from "./grid-column-pinning/sample.module";
 import { GridGroupBySampleModule } from "./grid-groupby/sample.module";
+import { GridColumnResizingSampleModule } from "./grid-column-resizing/sample.module";
 import { GridPerformanceSampleModule } from "./grid-performance/sample.module";
 import { GridSummarySampleModule } from "./grid-summaries/sample.module";
+import { GridSelectionModule } from "./grid-selection/sample.module";
 import { GridSampleModule } from "./grid/sample.module";
+import { GridVirtualizationSampleModule } from "./grid-remote-virtualization/sample.module";
 import { IconSampleModule } from "./icon/sample.module";
 import { InputGroupSampleModule } from "./input-group/sample.module";
 import { InputSampleModule } from "./input/sample.module";
@@ -40,6 +43,7 @@ import { IgxColorsSampleModule } from "./styleguide/colors/sample.module";
 import { IgxShadowsSampleModule } from "./styleguide/shadows/sample.module";
 import { IgxTypographySampleModule } from "./styleguide/typography/sample.module";
 import { TabBarSampleModule } from "./tabbar/sample.module";
+import { TabsSampleModule } from "./tabs/sample.module";
 import { IgxTimePickerSampleModule } from "./time-picker/sample.module";
 import { IgxToastSampleModule } from "./toast/sample.module";
 import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
@@ -63,6 +67,7 @@ import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
         InputSampleModule,
         CarouselSampleModule,
         TabBarSampleModule,
+        TabsSampleModule,
         ListSampleModule,
         ButtonSampleModule,
         ButtonGroupSampleModule,
@@ -77,9 +82,12 @@ import { VirtualForSampleModule } from "./virtual-for-directive/sample.module";
         IconSampleModule,
         GridSampleModule,
         GridColumnPinningSampleModule,
+        GridColumnResizingSampleModule,
         GridPerformanceSampleModule,
         GridGroupBySampleModule,
         GridSummarySampleModule,
+        GridVirtualizationSampleModule,
+        GridSelectionModule,
         IgxCardSampleModule,
         IgxSliderSampleModule,
         BadgeSampleModule,

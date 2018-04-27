@@ -20,6 +20,7 @@ import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxListItemComponent } from "./list-item.component";
 import { IgxEmptyListTemplateDirective, IgxListPanState } from "./list.common";
 
+let NEXT_ID = 0;
 export interface IPanStateChangeEventArgs {
     oldState: IgxListPanState;
     newState: IgxListPanState;
@@ -67,6 +68,9 @@ export class IgxListComponent {
     @ViewChild("defaultEmptyList", { read: TemplateRef })
     protected defaultEmptyListTemplate: TemplateRef<any>;
 
+    @HostBinding("attr.id")
+    @Input()
+    public id = `igx-list-${NEXT_ID++}`;
     @Input()
     public allowLeftPanning = false;
     @Input()
@@ -86,9 +90,14 @@ export class IgxListComponent {
         return "list";
     }
 
-    @HostBinding("class")
-    public get innerStyle(): string {
-        return !this.children || this.children.length === 0 ? "igx-list-empty" : "igx-list";
+    @HostBinding("class.igx-list-empty")
+    public get isListEmpty(): boolean {
+        return !this.children || this.children.length === 0;
+    }
+
+    @HostBinding("class.igx-list")
+    public get cssClass(): boolean {
+        return this.children && this.children.length > 0;
     }
 
     public get items(): IgxListItemComponent[] {

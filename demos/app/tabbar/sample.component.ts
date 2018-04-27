@@ -79,7 +79,7 @@ export class TabBarSampleComponent implements AfterViewInit {
 
     public ngAfterViewInit() {
         this.tabbar.map((e) => {
-            menubar = e.nativeElement.querySelector(".igx-tab-bar__menu");
+            menubar = e.nativeElement.querySelector(".igx-bottom-nav__menu");
             this.renderer.setStyle(menubar, "position", "absolute");
         });
     }

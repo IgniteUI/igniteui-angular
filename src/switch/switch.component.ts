@@ -1,13 +1,27 @@
 import {
     Component,
+    Directive,
     EventEmitter,
     forwardRef,
+    HostBinding,
     Input,
     NgModule,
     Output,
+    Provider,
     ViewChild
 } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { IgxRippleModule } from "../directives/ripple/ripple.directive";
+
+export enum SwitchLabelPosition {
+    BEFORE = "before",
+    AFTER = "after"
+}
+
+export interface IChangeSwitchEventArgs {
+    checked: boolean;
+    switch: IgxSwitchComponent;
+}
 
 const noop = () => { };
 let nextId = 0;
@@ -19,7 +33,7 @@ let nextId = 0;
  *
  * Example:
  * ```html
- * <igx-switch checked="true">
+ * <igx-switch [checked]="true">
  *   Simple switch
  * </igx-switch>
  * ```
@@ -30,37 +44,70 @@ let nextId = 0;
     templateUrl: "switch.component.html"
 })
 export class IgxSwitchComponent implements ControlValueAccessor {
-
-    @Input() public value: any;
-    @Input() public id = `igx-switch-${nextId++}`;
-    @Input()
-    get labelId() {
-        return this.id + "_label";
-    }
-    @Input() public name: string;
-    @Input() public disabled = false;
-    @Input() public tabindex: number = null;
-    @Input() public checked = false;
-
-    @Output() public change = new EventEmitter<Event>();
+    protected _value: any;
 
     @ViewChild("checkbox") public nativeCheckbox;
+    @ViewChild("label") public nativeLabel;
+    @ViewChild("placeholderLabel") public placeholderLabel;
 
-    public focused = false;
+    /** ID of the component */
+    @HostBinding("attr.id")
+    @Input() public id = `igx-switch-${nextId++}`;
+    @Input() public labelId = `${this.id}-label`;
+    @Input() public value: any;
+    @Input() public name: string;
+    @Input() public tabindex: number = null;
+    @Input() public labelPosition: SwitchLabelPosition | string = "after";
+    @Input() public disableRipple = false;
+    @Input() public required = false;
 
-    protected _value: any;
+    @Input("aria-labelledby")
+    public ariaLabelledBy = this.labelId;
+
+    @Input("aria-label")
+    public ariaLabel: string | null = null;
+
+    @Output()
+    readonly change: EventEmitter<IChangeSwitchEventArgs> = new EventEmitter<IChangeSwitchEventArgs>();
 
     private _onTouchedCallback: () => void = noop;
     private _onChangeCallback: (_: any) => void = noop;
 
-    public onChange(event) {
+    @HostBinding("class.igx-switch")
+    public cssClass = "igx-switch";
+
+    @HostBinding("class.igx-switch--checked")
+    @Input() public checked = false;
+
+    @HostBinding("class.igx-switch--disabled")
+    @Input() public disabled = false;
+
+    @HostBinding("class.igx-switch--focused")
+    public focused = false;
+
+    public inputId = `${this.id}-input`;
+    public toggle() {
         if (this.disabled) {
             return;
         }
 
         this.checked = !this.checked;
+        this.focused = false;
+        this.change.emit({ checked: this.checked, switch: this });
         this._onChangeCallback(this.checked);
-        this.change.emit(event);
+    }
+
+    public _onSwitchChange(event) {
+        event.stopPropagation();
+    }
+
+    public _onSwitchClick(event) {
+        event.stopPropagation();
+        this.toggle();
+    }
+
+    public _onLabelClick(event) {
+        this.toggle();
     }
 
     public onFocus(event) {
@@ -73,19 +120,42 @@ export class IgxSwitchComponent implements ControlValueAccessor {
     }
 
     public writeValue(value) {
-        if (this.disabled) {
-            return;
-        }
         this._value = value;
-        this.checked = this._value;
+        this.checked = !!this._value;
+    }
+
+    public get labelClass(): string {
+        switch (this.labelPosition) {
+            case SwitchLabelPosition.BEFORE:
+                return `${this.cssClass}__label--before`;
+            case SwitchLabelPosition.AFTER:
+            default:
+                return `${this.cssClass}__label`;
+        }
     }
 
     public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 }
 
+export const IGX_SWITCH_REQUIRED_VALIDATOR: Provider = {
+    provide: NG_VALIDATORS,
+    useExisting: forwardRef(() => IgxSwitchRequiredDirective),
+    multi: true
+};
+
+/* tslint:disable directive-selector */
+@Directive({
+    selector: `igx-switch[required][formControlName],
+    igx-switch[required][formControl],
+    igx-switch[required][ngModel]`,
+    providers: [IGX_SWITCH_REQUIRED_VALIDATOR]
+})
+export class IgxSwitchRequiredDirective extends CheckboxRequiredValidator { }
+
 @NgModule({
-    declarations: [IgxSwitchComponent],
-    exports: [IgxSwitchComponent]
+    declarations: [IgxSwitchComponent, IgxSwitchRequiredDirective],
+    exports: [IgxSwitchComponent, IgxSwitchRequiredDirective],
+    imports: [IgxRippleModule]
 })
 export class IgxSwitchModule { }

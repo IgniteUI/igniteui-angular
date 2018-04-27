@@ -9,6 +9,8 @@
 You can find source files under the [`src`](https://github.com/IgniteUI/igniteui-angular/tree/master/src) folder, including samples and tests.
 
 #### [**View running samples here**](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
+#### [**Install our VSCode tooltip extension**](https://marketplace.visualstudio.com/items?itemName=Infragistics.igniteui-angular-tooltips)
+![](https://dl.infragistics.com/tools/extensions/angular-tooltips/tooltip_preview.gif)
 
 **IMPORTANT** The repository has been renamed from `igniteui-js-blocks` to `igniteui-angular`. Read more on our new [naming convention](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-github-repo-name-changes). 
 
@@ -82,6 +84,15 @@ npm run build:umd
 npm run build:umd:watch // run in watch mode
 ```
 
+## Build API Docs
+The API docs are produced using TypeDoc and SassDoc. In order to build the docs, all you need to do is run:
+
+```
+npm run build:docs
+```
+
+The output of the API docs build is located under `dist/docs`.
+
 ## Run Experimental Demos
 
 The `demos` directory contains a sample application for development/experimental samples of the components and directives of the library.
@@ -114,9 +125,9 @@ You can include Ignite UI for Angular in your project as a dependency using the 
 `npm install igniteui-angular --save-dev`
 
 ## Contributing
-[Coding Guidelines](../../wiki//Coding-guidelines-for-Ignite-UI-JS-Blocks)
+[Coding Guidelines](../../wiki//Coding-guidelines-for-Ignite-UI-for-Angular)
 
-[General Naming Guidelines](../../wiki//General-Naming-Guidelines-for-Ignite-UI-JS-Blocks)
+[General Naming Guidelines](../../wiki//General-Naming-Guidelines-for-Ignite-UI-for-Angular)
 
 
 ## Quickstart App

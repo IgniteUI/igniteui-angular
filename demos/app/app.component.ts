@@ -81,14 +81,29 @@ export class AppComponent implements OnInit {
             name: "Grid GroupBy"
         },
         {
+            link: "/gridColumnResizing",
+            icon: "view_column",
+            name: "Grid Column Resizing"
+        },
+        {
             link: "/gridPerformance",
             icon: "view_column",
             name: "Grid Performance"
         },
         {
+            link: "/gridRemoteVirtualization",
+            icon: "view_column",
+            name: "Grid Remote Virtualization"
+        },
+        {
             link: "/gridSummary",
             icon: "view_column",
             name: "Grid Summary"
+        },
+        {
+            link: "/gridSelection",
+            icon: "view_column",
+            name: "Grid Selection"
         },
         {
             link: "/dialog",
@@ -144,6 +159,11 @@ export class AppComponent implements OnInit {
             link: "/tabbar",
             icon: "tab",
             name: "Tabbar"
+        },
+        {
+            link: "/tabs",
+            icon: "tab",
+            name: "Tabs"
         },
         {
             link: "/toast",

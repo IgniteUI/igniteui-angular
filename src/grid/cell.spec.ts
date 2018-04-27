@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, DebugElement, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { DataType } from "../data-operations/data-util";
@@ -16,7 +16,9 @@ describe("IgxGrid - Cell component", () => {
             declarations: [
                 DefaultGridComponent,
                 CtrlKeyKeyboardNagivationComponent,
-                VirtualtGridComponent
+                VirtualtGridComponent,
+                GridWithEditableColumnComponent,
+                NoColumnWidthGridComponent
             ],
             imports: [IgxGridModule.forRoot()]
         }).compileComponents();
@@ -67,6 +69,54 @@ describe("IgxGrid - Cell component", () => {
             expect(rv.nativeElement.getAttribute("aria-selected")).toMatch("true");
             expect(cell).toBe(fix.componentInstance.selectedCell);
 
+        });
+    }));
+
+    it("Should trigger onCellClick event when click into cell", async(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
+        const firstCell = grid.getCellByColumn(0, "index");
+
+        spyOn(grid.onCellClick, "emit").and.callThrough();
+        const event = new Event("click");
+        cellElem.nativeElement.dispatchEvent(event);
+        const args: IGridCellEventArgs = {
+            cell: firstCell,
+            event
+        };
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+
+            expect(grid.onCellClick.emit).toHaveBeenCalledWith(args);
+            expect(firstCell).toBe(fix.componentInstance.clickedCell);
+        });
+    }));
+
+    it("Should trigger onContextMenu event when right click into cell", async(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
+        const firstCell = grid.getCellByColumn(0, "index");
+
+        spyOn(grid.onContextMenu, "emit").and.callThrough();
+        const event = new Event("contextmenu");
+        cellElem.nativeElement.dispatchEvent(event);
+        const args: IGridCellEventArgs = {
+            cell: firstCell,
+            event
+        };
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+
+            expect(grid.onContextMenu.emit).toHaveBeenCalledWith(args);
+            expect(firstCell).toBe(fix.componentInstance.clickedCell);
         });
     }));
 
@@ -235,6 +285,7 @@ describe("IgxGrid - Cell component", () => {
 
         });
     }));
+
     it("should fit last cell in the available display container when there is vertical scroll.", () => {
         const fix = TestBed.createComponent(VirtualtGridComponent);
         fix.detectChanges();
@@ -243,12 +294,179 @@ describe("IgxGrid - Cell component", () => {
             expect(item.cells.last.width).toEqual("182px");
         });
     });
+
+    it("should scroll first row into view when pressing arrow up", async(() => {
+        const fix = TestBed.createComponent(VirtualtGridComponent);
+        fix.detectChanges();
+
+        // the 2nd sell on the row with index 1
+        const cell =  fix.debugElement.queryAll(By.css(`${CELL_CSS_CLASS}:nth-child(2)`))[1];
+
+        fix.componentInstance.scrollTop(25);
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            const scrollContainer = fix.componentInstance.instance.verticalScrollContainer.dc.instance._viewContainer;
+            const scrollContainerOffset = scrollContainer.element.nativeElement.offsetTop;
+
+            expect(scrollContainerOffset).toEqual(-25);
+
+            cell.nativeElement.dispatchEvent(new Event("focus"));
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(fix.componentInstance.selectedCell.value).toEqual(1);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch("value");
+
+            cell.nativeElement.dispatchEvent(new KeyboardEvent("keydown", { key: "arrowup", code: "38" }));
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            const scrollContainer = fix.componentInstance.instance.verticalScrollContainer.dc.instance._viewContainer;
+            const scrollContainerOffset = scrollContainer.element.nativeElement.offsetTop;
+
+            expect(scrollContainerOffset).toEqual(0);
+            expect(fix.componentInstance.selectedCell.value).toEqual(0);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch("value");
+        });
+    }));
+
+    it("should not reduce the width of last pinned cell when there is vertical scroll.", () => {
+        const fix = TestBed.createComponent(VirtualtGridComponent);
+        fix.detectChanges();
+        const columns = fix.componentInstance.instance.columnList;
+        const lastCol: IgxColumnComponent = columns.last;
+        lastCol.pin();
+        fix.detectChanges();
+        lastCol.cells.forEach((cell) => {
+            expect(cell.width).toEqual("200px");
+        });
+        const rows = fix.componentInstance.instance.rowList;
+        rows.forEach((item) => {
+            expect(item.cells.last.width).toEqual("182px");
+        });
+    });
+
+    it("should not make last column width 0 when no column width is set", () => {
+        const fix = TestBed.createComponent(NoColumnWidthGridComponent);
+        fix.detectChanges();
+        const columns = fix.componentInstance.instance.columnList;
+        const lastCol: IgxColumnComponent = columns.last;
+        lastCol.cells.forEach((cell) => {
+            expect(cell.nativeElement.clientWidth).toBeGreaterThan(100);
+        });
+    });
+
+    it("When cell in edit mode and try to navigate the caret around the cell text the focus should remain.", async(() => {
+        const fix = TestBed.createComponent(GridWithEditableColumnComponent);
+        fix.detectChanges();
+
+        // const firstCellOfColumn: DebugElement = fix.componentInstance.grid.columnList.first.cells[0];
+        const firstCell: DebugElement = fix.debugElement.query(By.css(CELL_CSS_CLASS));
+        const cellElem = firstCell.nativeElement;
+        const component = fix.debugElement.query(By.css("igx-grid"));
+
+        component.triggerEventHandler("keydown.home" , null);
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            cellElem.dispatchEvent(new MouseEvent("dblclick"));
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            const elem = findCellByInputElem(cellElem, document.activeElement);
+            expect(cellElem).toBe(elem);
+
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            triggerKeyDownEvtUponElem("ArrowRight", inputElem);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            const elem = findCellByInputElem(cellElem, document.activeElement);
+            expect(cellElem).toBe(elem);
+
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            triggerKeyDownEvtUponElem("ArrowLeft", inputElem);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            const elem = findCellByInputElem(cellElem, document.activeElement);
+            expect(cellElem).toBe(elem);
+        }).then(() => {
+            fix.detectChanges();
+
+            const elem = findCellByInputElem(cellElem, document.activeElement);
+            expect(cellElem).toBe(elem);
+
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            triggerKeyDownEvtUponElem("control.ArrowLeft", inputElem);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            const elem = findCellByInputElem(cellElem, document.activeElement);
+            expect(cellElem).toBe(elem);
+
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            triggerKeyDownEvtUponElem("control.ArrowRight", inputElem);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            const elem = findCellByInputElem(cellElem, document.activeElement);
+            expect(cellElem).toBe(elem);
+
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            triggerKeyDownEvtUponElem("ArrowUp", inputElem);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            const elem = findCellByInputElem(cellElem, document.activeElement);
+            expect(cellElem).toBe(elem);
+
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            triggerKeyDownEvtUponElem("ArrowDown", inputElem);
+
+            return fix.whenStable();
+        });
+
+        function triggerKeyDownEvtUponElem(evtName, elem) {
+            const evtArgs: KeyboardEventInit = { key: evtName, bubbles: true};
+            elem.dispatchEvent(new KeyboardEvent("keydown", evtArgs));
+            fix.detectChanges();
+        }
+
+        function findCellByInputElem(elem, focusedElem) {
+            if (!focusedElem.parentElement) {
+                return null;
+            }
+
+            if (elem === focusedElem) {
+                return elem;
+            }
+
+            return findCellByInputElem(elem, focusedElem.parentElement);
+        }
+    }));
 });
 
 @Component({
     template: `
         <igx-grid
             (onSelection)="cellSelected($event)"
+            (onCellClick)="cellClick($event)"
+            (onContextMenu)="cellRightClick($event)"
             [data]="data"
             [autoGenerate]="true">
         </igx-grid>
@@ -262,12 +480,21 @@ export class DefaultGridComponent {
     ];
 
     public selectedCell: IgxGridCellComponent;
+    public clickedCell: IgxGridCellComponent;
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
 
     public cellSelected(event: IGridCellEventArgs) {
         this.selectedCell = event.cell;
+    }
+
+    public cellClick(evt) {
+        this.clickedCell = evt.cell;
+    }
+
+    public cellRightClick(evt) {
+        this.clickedCell = evt.cell;
     }
 }
 
@@ -295,11 +522,50 @@ export class CtrlKeyKeyboardNagivationComponent {
 
 @Component({
     template: `
-        <igx-grid [height]="'300px'" [width]="'800px'" [data]="data"
-        [autoGenerate]="true" (onColumnInit)="columnCreated($event)"></igx-grid>
+        <igx-grid [height]="'300px'" [width]="'800px'" [columnWidth]="'200px'" [data]="data" [autoGenerate]="true"
+         (onSelection)="cellSelected($event)">
+        </igx-grid>
     `
 })
 export class VirtualtGridComponent {
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public instance: IgxGridComponent;
+
+    public data = [];
+    public selectedCell: IgxGridCellComponent;
+
+    constructor() {
+        this.data = this.generateData();
+    }
+
+    public generateData() {
+        const data = [];
+        for (let i = 0; i < 1000; i++) {
+            data.push({ index: i, value: i, other: i, another: i });
+        }
+        return data;
+    }
+
+    public cellSelected(event: IGridCellEventArgs) {
+        this.selectedCell = event.cell;
+    }
+
+    public scrollTop(newTop: number) {
+        this.instance.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+    }
+
+    public scrollLeft(newLeft: number) {
+        this.instance.parentVirtDir.getHorizontalScroll().scrollLeft = newLeft;
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid [height]="'300px'" [width]="'800px'" [data]="data" [autoGenerate]="true"></igx-grid>
+    `
+})
+export class NoColumnWidthGridComponent {
     public data = [];
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
@@ -313,8 +579,25 @@ export class VirtualtGridComponent {
         }
         return data;
     }
+}
 
-    public columnCreated(column: IgxColumnComponent) {
-        column.width = "200px";
-    }
+@Component({
+    template: `
+        <igx-grid [data]="data">
+            <igx-column [editable]="true" field="FirstName"></igx-column>
+            <igx-column field="LastName"></igx-column>
+            <igx-column field="age"></igx-column>
+        </igx-grid>
+        <input type="text" value="text" id="input-test" />
+    `
+})
+export class GridWithEditableColumnComponent {
+
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+
+    public data = [
+        { FirstName: "John", LastName: "Brown", age: 20 },
+        { FirstName: "Ben", LastName: "Affleck", age: 30 },
+        { FirstName: "Tom", LastName: "Riddle", age: 50 }
+    ];
 }
