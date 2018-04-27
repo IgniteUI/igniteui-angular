@@ -42,6 +42,7 @@ import { IgxRippleModule } from "../directives/ripple/ripple.directive";
  * </igx-dialog>
  * ```
  */
+let DIALOG_ID = 0;
 @Component({
     animations: [
         trigger("fadeInOut", [
@@ -59,8 +60,9 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     private static NEXT_ID = 1;
     private static readonly DIALOG_CLASS = "igx-dialog";
 
+    @HostBinding("attr.id")
     @Input()
-    public id: string;
+    public id = `igx-dialog-${DIALOG_ID++}`;
 
     @Input()
     public title = "";
