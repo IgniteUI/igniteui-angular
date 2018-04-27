@@ -13,7 +13,7 @@ import { IgxGridHeaderComponent } from "./grid-header.component";
 import { IGridCellEventArgs, IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-fdescribe("IgxGrid - Column Pinning ", () => {
+describe("IgxGrid - Column Pinning ", () => {
     const COLUMN_HEADER_CLASS = ".igx-grid__th";
     const CELL_CSS_CLASS = ".igx-grid__td";
     const FIXED_CELL_CSS = "igx-grid__th--pinned";
