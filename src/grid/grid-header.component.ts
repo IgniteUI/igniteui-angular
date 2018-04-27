@@ -1,4 +1,5 @@
 import {
+    AfterViewChecked,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -8,6 +9,7 @@ import {
     HostBinding,
     HostListener,
     Input,
+    NgZone,
     OnInit,
     ViewChild
 } from "@angular/core";
@@ -25,7 +27,7 @@ import { autoWire, IGridBus } from "./grid.common";
     selector: "igx-grid-header",
     templateUrl: "./grid-header.component.html"
 })
-export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
+export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterViewChecked {
 
     @Input()
     public column: IgxColumnComponent;
@@ -107,7 +109,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     private _pinnedMaxWidth;
     private _isResiznig = false;
 
-    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, public elementRef: ElementRef) { }
+    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, public elementRef: ElementRef, public zone: NgZone) { }
 
     public ngOnInit() {
         this.cdr.markForCheck();
@@ -115,6 +117,13 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
 
     public ngDoCheck() {
         this.getSortDirection();
+    }
+
+    ngAfterViewChecked() {
+        this.zone.runOutsideAngular(() => {
+            this.resizeArea.nativeElement.addEventListener("mouseover", this.onResizeAreaMouseOver.bind(this));
+            this.resizeArea.nativeElement.addEventListener("mousedown", this.onResizeAreaMouseDown.bind(this));
+        });
     }
 
     @HostListener("click", ["$event"])

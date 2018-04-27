@@ -81,7 +81,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this._destroy.next(true);
-        this._destroy.complete();
+        this._destroy.unsubscribe();
     }
 
     public set left(val) {
