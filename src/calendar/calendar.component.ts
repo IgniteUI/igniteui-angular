@@ -23,6 +23,8 @@ import {
     IgxCalendarSubheaderTemplateDirective
 } from "./calendar.directives";
 
+let NEXT_ID = 0;
+
 export enum CalendarView {
     DEFAULT,
     YEAR,
@@ -93,6 +95,9 @@ export class CalendarHammerConfig extends HammerGestureConfig {
 })
 export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 
+    @HostBinding("attr.id")
+    @Input()
+    public id = `igx-calendar-${NEXT_ID++}`;
     /**
      * An `@Input` property indicating the start of the week.
      * Defaults to Sunday.

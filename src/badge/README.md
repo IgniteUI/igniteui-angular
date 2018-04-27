@@ -12,6 +12,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 # API Summary
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
+| `id` | string | Unique identifier of the component. If not provided it will be automatically generated.|
 | `type` | string | Set the type of the badge to either `default`, `info`, `success`, `warning`, or `error`. This will change the background color of the badge according to the values set in the default theme. |
 | `position` | string | Set the position of the badge relative to its parent container to either `top-right`, `top-left`, `bottom-right`, or `bottom-left`. |
 | `value` | string | Set the value to be displayed inside the badge. |
