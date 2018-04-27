@@ -218,7 +218,6 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
         return true;
     }
 
-    @HostListener("mousedown")
     public onMouseDown() {
         requestAnimationFrame(() => {
             const grid = this.gridAPI.get(this.gridID);

@@ -17,7 +17,7 @@
 <div class="igx-filtering">
     <div [attr.class]="filterCSS">
         <span class="toggle-icon" [igxToggleAction]="directive">
-            <igx-icon>more_vert</igx-icon>
+            <igx-icon (mousedown)="onMouseDown()">more_vert</igx-icon>
         </span>
     </div>
 </div>
