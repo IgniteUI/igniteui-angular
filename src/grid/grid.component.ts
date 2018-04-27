@@ -946,10 +946,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     protected getUnpinnedWidth(takeHidden = false) {
         const width = this._width && this._width.indexOf("%") !== -1 ?
-            this.calcWidth :
-            parseInt(this._width, 10);
+            this.calcWidth : parseInt(this._width, 10);
         return width - this.getPinnedWidth(takeHidden);
-    } 
+    }
 
     protected _sort(name: string, direction = SortingDirection.Asc, ignoreCase = true) {
         this.gridAPI.sort(this.id, name, direction, ignoreCase);
