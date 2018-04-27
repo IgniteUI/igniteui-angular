@@ -13,7 +13,7 @@ import { IgxGridHeaderComponent } from "./grid-header.component";
 import { IGridCellEventArgs, IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-describe("IgxGrid - Column Pinning ", () => {
+fdescribe("IgxGrid - Column Pinning ", () => {
     const COLUMN_HEADER_CLASS = ".igx-grid__th";
     const CELL_CSS_CLASS = ".igx-grid__td";
     const FIXED_CELL_CSS = "igx-grid__th--pinned";
@@ -583,6 +583,24 @@ describe("IgxGrid - Column Pinning ", () => {
 
         expect(grid.unpinnedColumns.length).toEqual(unpinnedColumnsLength);
         expect(result).toBe(false);
+    });
+
+    it("Test minimal visible unpinned area width", () => {
+        const fix = TestBed.createComponent(GridPinningComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.columns.forEach((column) => {
+            if (column.index === 0 || column.index === 1 || column.index === 4 ||
+                    column.index === 6) {
+                column.pin();
+            }
+        });
+        fix.detectChanges();
+        expect(grid.columns[0].pinned).toBe(true);
+        expect(grid.columns[1].pinned).toBe(true);
+        expect(grid.columns[4].pinned).toBe(false);
+        expect(grid.columns[6].pinned).toBe(true);
+        expect(grid.unpinnedWidth).toBeGreaterThanOrEqual(grid.unpinnedAreaMinWidth);
     });
 });
 @Component({

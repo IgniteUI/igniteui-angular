@@ -509,6 +509,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return (this.calcWidth * 80) / 100;
     }
 
+    get unpinnedAreaMinWidth(): number {
+        return (this.calcWidth * 20) / 100;
+    }
+
     get pinnedWidth() {
         return this.getPinnedWidth();
     }
@@ -722,7 +726,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public pinColumn(columnName: string): boolean {
         const col = this.getColumnByName(columnName);
-
+        const colWidth = parseInt(col.width, 10);
         if (col.pinned) {
             return false;
         }
@@ -730,10 +734,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
          * If the column that we want to pin is bigger or equal than the unpinned area we should not pin it.
          * It should be also unpinned before pinning, since changing left/right pin area doesn't affect unpinned area.
          */
-        if (parseInt(col.width, 10) >= this.getUnpinnedWidth(true) && !col.pinned) {
+        if (colWidth >= this.getUnpinnedWidth(true) && !col.pinned) {
             return false;
         }
-
+        if (this.getUnpinnedWidth(true) - colWidth < this.unpinnedAreaMinWidth) {
+            return false;
+        }
         col.pinned = true;
         const index = this._pinnedColumns.length;
 
@@ -943,7 +949,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.calcWidth :
             parseInt(this._width, 10);
         return width - this.getPinnedWidth(takeHidden);
-    }
+    } 
 
     protected _sort(name: string, direction = SortingDirection.Asc, ignoreCase = true) {
         this.gridAPI.sort(this.id, name, direction, ignoreCase);
