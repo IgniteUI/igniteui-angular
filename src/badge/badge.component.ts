@@ -2,6 +2,8 @@ import { CommonModule } from "@angular/common";
 import { Component, HostBinding, Input, NgModule } from "@angular/core";
 import { IgxIconModule } from "../icon";
 
+let NEXT_ID = 0;
+
 export enum Type {
     DEFAULT = "default",
     INFO = "info",
@@ -38,6 +40,10 @@ export enum Type {
     templateUrl: "badge.component.html"
 })
 export class IgxBadgeComponent {
+
+    @HostBinding("attr.id")
+    @Input()
+    public id = `igx-badge-${NEXT_ID++}`;
 
     @Input()
     public type: string | Type = "default";

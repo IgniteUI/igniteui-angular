@@ -24,13 +24,13 @@
 
 <span igxToggle (onOpen)="refresh()" (onClose)="refresh()" #directive="toggle" [attr.class]="dialogPosition">
     <div>
-        <select (change)="conditionChanged($event.target.value)">
+        <select (change)="selectionChanged($event.target.value)">
             <option [selected]="isActive(each)" *ngFor="let each of conditions" [value]="each">{{ each | filterCondition | titlecase }}</option>
         </select>
     </div>
     <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
     <div class="igx-filtering__options-bgroup">
-        <button igxButton igxRipple (click)="clearFiltering()" [disabled]="disabled">Reset</button>
+        <button igxButton igxRipple (click)="clearFiltering()">Reset</button>
         <button igxButton igxRipple (click)="filter()" [disabled]="disabled">Filter</button>
     </div>
 </span>

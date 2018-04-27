@@ -260,7 +260,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         let scrollOffset = this.fixedUpdateAllRows(curScrollTop, event.target.children[0].scrollHeight);
         if (scrollOffset === undefined) {
-            this.onChunkLoad.emit(this.state);
             return;
         }
         scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
@@ -475,8 +474,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 cntx.$implicit = input;
                 cntx.index = this.igxForOf.indexOf(input);
             }
-            this.onChunkLoad.emit();
             this.dc.changeDetectorRef.detectChanges();
+            this.onChunkLoad.emit();
         }
     }
 

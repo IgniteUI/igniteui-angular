@@ -45,6 +45,23 @@ describe("IgxRadio", () => {
         expect(placeholderLabel.textContent.trim()).toEqual("Radio");
     });
 
+    it("Init a radio with id property", () => {
+        const fixture = TestBed.createComponent(InitRadioComponent);
+        fixture.detectChanges();
+
+        const radio = fixture.componentInstance.radio;
+        const domRadio = fixture.debugElement.query(By.css("igx-radio")).nativeElement;
+
+        expect(radio.id).toContain("igx-radio-");
+        expect(domRadio.id).toContain("igx-radio-");
+
+        radio.id = "customRadio";
+        fixture.detectChanges();
+        expect(radio.id).toBe("customRadio");
+        expect(domRadio.id).toBe("customRadio");
+
+    });
+
     it("Binding to ngModel", async(() => {
         const fixture = TestBed.createComponent(RadioWithModelComponent);
         fixture.detectChanges();

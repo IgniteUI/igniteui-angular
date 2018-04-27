@@ -56,6 +56,7 @@ In order to use your own custom template, you can use the `igxEmptyList` directi
 
 | Name | Description |
 | :--- | :--- |
+| id | Unique identifier of the component. If not provided it will be automatically generated.|
 | allowLeftPanning  | Determines whether the left panning of an item is allowed  |
 | allowRightPanning  | Determines whether the right panning of an item is allowed  |
 | emptyListTemplate  | The custom template to be used when the list is empty  |
