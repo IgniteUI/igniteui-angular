@@ -569,6 +569,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.dc.instance._viewContainer.element.nativeElement.style.left = "0px";
         if (this.hCache && this.state.startIndex !== 0) {
             requestAnimationFrame(() => {
+                this.state.startIndex = 0;
                 this.scrollTo(0);
             });
             return;
