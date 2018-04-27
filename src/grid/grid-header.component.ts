@@ -1,5 +1,5 @@
 import {
-    AfterViewChecked,
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -27,7 +27,7 @@ import { autoWire, IGridBus } from "./grid.common";
     selector: "igx-grid-header",
     templateUrl: "./grid-header.component.html"
 })
-export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterViewChecked {
+export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterViewInit {
 
     @Input()
     public column: IgxColumnComponent;
@@ -119,7 +119,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
         this.getSortDirection();
     }
 
-    ngAfterViewChecked() {
+    ngAfterViewInit() {
         this.zone.runOutsideAngular(() => {
             this.resizeArea.nativeElement.addEventListener("mouseover", this.onResizeAreaMouseOver.bind(this));
             this.resizeArea.nativeElement.addEventListener("mousedown", this.onResizeAreaMouseDown.bind(this));
