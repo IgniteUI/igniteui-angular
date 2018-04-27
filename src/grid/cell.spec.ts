@@ -57,10 +57,10 @@ describe("IgxGrid - Cell component", () => {
             // index - the index to which to navigate
             // cb - callback function that will be called when index is reached.
 
-            const currIndex = cell.columnIndex;
+            const currIndex = cell.visibleColumnIndex;
             const dir = currIndex < index ? "ArrowRight" : "ArrowLeft";
             const nextIndex = dir === "ArrowRight" ? currIndex + 1 : currIndex - 1;
-            const nextCol = grid.columnList.toArray()[nextIndex];
+            const nextCol = grid.visibleColumns[nextIndex];
             const nextCell = nextCol ? grid.getCellByColumn(0, nextCol.field) : null;
             const keyboardEvent = new KeyboardEvent("keydown", {
                 code: dir,
@@ -484,7 +484,54 @@ describe("IgxGrid - Cell component", () => {
         };
         navigateHorizontallyToIndex(grid, cell, 9, cbFunc);
     });
+    it("keyboard navigation - should allow horizontal navigation in virtualized grid with pinned cols.", (done) => {
+        const fix = TestBed.createComponent(VirtualtGridComponent);
+        const cols = [];
+        for (let i = 0; i < 10; i++) {
+            cols.push({field: "col" + i});
+        }
+        fix.componentInstance.cols = cols;
+        fix.componentInstance.data = fix.componentInstance.generateData();
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
 
+        grid.pinColumn("col1");
+        grid.pinColumn("col3");
+        const cell = grid.getCellByColumn(0, "col1");
+        const cbFunc = () => {
+            expect(fix.componentInstance.selectedCell.visibleColumnIndex).toEqual(9);
+            const cbFunc2 = () => {
+                expect(fix.componentInstance.selectedCell.visibleColumnIndex).toEqual(1);
+                done();
+            };
+            navigateHorizontallyToIndex(grid, fix.componentInstance.selectedCell, 1, cbFunc2);
+        };
+        navigateHorizontallyToIndex(grid, cell, 9, cbFunc);
+
+    });
+
+    it("keyboard navigation - should allow vertical navigation in virtualized grid with pinned cols.", (done) => {
+        const fix = TestBed.createComponent(VirtualtGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        grid.pinColumn("index");
+        const cell = grid.getCellByColumn(4, "index");
+        const cbFunc = () => {
+            // verify first cell 100th row is selected.
+            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
+            fix.detectChanges();
+            const cbFunc2 = () => {
+                expect(fix.componentInstance.selectedCell.rowIndex).toEqual(0);
+                done();
+            };
+
+            // navigate back up to 0
+            navigateVerticallyToIndex(grid, fix.componentInstance.selectedCell, 0, cbFunc2);
+
+        };
+        // navigate down to 100th row.
+        navigateVerticallyToIndex(grid, cell, 100, cbFunc);
+    });
     it("When cell in edit mode and try to navigate the caret around the cell text the focus should remain.", async(() => {
         const fix = TestBed.createComponent(GridWithEditableColumnComponent);
         fix.detectChanges();
