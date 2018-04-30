@@ -28,6 +28,7 @@ describe("TabBar", () => {
         tabs = tabbar.tabs.toArray();
 
         expect(tabbar).toBeDefined();
+        expect(tabbar.id).toContain("igx-bottom-nav-");
         expect(tabbar instanceof IgxBottomNavComponent).toBeTruthy();
         expect(tabbar.panels instanceof QueryList).toBeTruthy();
         expect(tabbar.panels.length).toBe(3);

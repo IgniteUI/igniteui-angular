@@ -8,6 +8,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 # API Summary `igx-carousel`
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
+| `id` | string | Unique identifier of the component. If not provided it will be automatically generated.|
 | `loop` |  boolean | Should the carousel wrap back to the first slide after it reaches the last. Defaults to `true`. |
 | `pause` | boolean | Should the carousel stop playing on user interaction. Defaults to `true`.  |
 | `interval` | number | The amount of time in milliseconds between slides transition. |
