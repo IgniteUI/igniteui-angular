@@ -738,9 +738,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
          * If the column that we want to pin is bigger or equal than the unpinned area we should not pin it.
          * It should be also unpinned before pinning, since changing left/right pin area doesn't affect unpinned area.
          */
-        if (colWidth >= this.getUnpinnedWidth(true) && !col.pinned) {
-            return false;
-        }
         if (this.getUnpinnedWidth(true) - colWidth < this.unpinnedAreaMinWidth) {
             return false;
         }
