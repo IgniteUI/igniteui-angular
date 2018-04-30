@@ -33,6 +33,7 @@ export class AppModule {}
 ## igx-linear-bar
 | Name   |       Type      |  Description |
 |:----------|:-------------:|:------|
+| `id` | string | Unique identifier of the component. If not provided it will be automatically generated.|
 | `max` |  number | Set maximum value that can be passed. By default it is set to 100. |
 | `type` |  string | Set type of the linear bar. Possible options - `default`, `success`, `info`, `warning`, and `danger`. |
 | `value` |  number | Set value that indicates the completed bar position. |
@@ -45,6 +46,7 @@ export class AppModule {}
 ## igx-circular-bar
 | Name   |       Type      |  Description |
 |:----------|:-------------:|:------|
+| `id` | string | Unique identifier of the component. If not provided it will be automatically generated.|
 | `max` |  number | Set maximum value that can be passed. Default `max` value is 100. |
 | `value` |  number | Set value that indicates the completed bar position. |
 | `animate` |  boolean | animation on progress bar. |

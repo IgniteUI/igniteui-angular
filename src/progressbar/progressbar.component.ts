@@ -4,6 +4,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    HostBinding,
     Input,
     NgModule,
     OnChanges,
@@ -76,12 +77,18 @@ export abstract class BaseProgress {
         return -1;
     }
 }
-
+let NEXT_LINEAR_ID = 0;
+let NEXT_CIRCULAR_ID = 0;
 @Component({
     selector: "igx-linear-bar",
     templateUrl: "templates/linear-bar.component.html"
 })
 export class IgxLinearProgressBarComponent extends BaseProgress {
+
+    /** ID of the component */
+    @HostBinding("attr.id")
+    @Input()
+    public id = `igx-linear-bar-${NEXT_LINEAR_ID++}`;
 
     @Input()
     public textAlign: IgxTextAlign = IgxTextAlign.START;
@@ -162,6 +169,11 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
 
     @Output()
     public onProgressChanged = new EventEmitter<IChangeProgressEventArgs>();
+
+    /** ID of the component */
+    @HostBinding("attr.id")
+    @Input()
+    public id = `igx-circular-bar-${NEXT_CIRCULAR_ID++}`;
 
     @Input()
     public textVisibility = true;

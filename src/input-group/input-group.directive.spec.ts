@@ -32,6 +32,8 @@ describe("IgxInputGroup", () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_CSS_CLASS)).toBe(true);
 
         const igxInputGroup = fixture.componentInstance.igxInputGroup;
+        expect(igxInputGroup.id).toContain("igx-input-group-");
+        expect(inputGroupElement.id).toContain("igx-input-group-");
         // the default type should be line
         testInputGroupType("line", igxInputGroup, inputGroupElement);
     });

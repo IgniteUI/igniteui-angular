@@ -26,6 +26,7 @@ import { IgxDialogComponent, IgxDialogModule } from "../dialog/dialog.component"
 import { IgxIconModule } from "../icon";
 import { IgxInputGroupModule } from "../input-group/input-group.component";
 
+let NEXT_ID = 0;
 /**
  * **Ignite UI for Angular Date Picker** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date_picker.html)
@@ -45,6 +46,10 @@ import { IgxInputGroupModule } from "../input-group/input-group.component";
     templateUrl: "date-picker.component.html"
 })
 export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+
+    @HostBinding("attr.id")
+    @Input()
+    public id = `igx-datePicker-${NEXT_ID++}`;
     // Custom formatter function
     @Input() public formatter: (val: Date) => string;
 
