@@ -162,6 +162,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`filteringLogic`|FilteringLogic|The filtering logic of the grid. Defaults to _AND_.|
 |`filteringExpressions`|Array|The filtering state of the grid.|
 |`sortingExpressions`|Array|The sorting state of the grid.|
+|`rowSelectable`|Boolean|Enables multiple row selection, default is _false_.|
 |`height`|string|The height of the grid element. You can pass values such as `1000px`, `75%`, etc.|
 |`width`|string|The width of the grid element. You can pass values such as `1000px`, `75%`, etc.|
 |`evenRowCSS`|string|Additional styling classes applied to all even rows in the grid.|
@@ -179,6 +180,7 @@ A list of the events emitted by the **igx-grid**:
 |`onEditDone`|Emitted when a cell value changes. Returns `{ currentValue: any, newValue: any }`|
 |`onCellClick`|Emitted when a cell is clicked. Returns the cell object.|
 |`onSelection`|Emitted when a cell is selected. Returns the cell object.|
+|`onRowSelectionChange`|Emitted when a row selection has changed. Returns array with old and new selected rows' IDs and the target row, if available.|
 |`onColumnInit`|Emitted when the grid columns are initialized. Returns the column object.|
 |`onSortingDone`|Emitted when sorting is performed through the UI. Returns the sorting expression.|
 |`onFilteringDone`|Emitted when filtering is performed through the UI. Returns the filtering expression.|
@@ -227,6 +229,11 @@ Here is a list of all public methods exposed by **igx-grid**:
 |`markForCheck()`|Manually triggers a change detection cycle for the grid and its children.|
 |`pinColumn(name: string): boolean`|Pins a column by field name. Returns whether the operation is successful.|
 |`unpinColumn(name: string): boolean`|Unpins a column by field name. Returns whether the operation is successful.|
+|`selectedRows()`|Returns array of the currently selected rows' IDs|
+|`selectRows(rowIDs: any[], clearCurrentSelection?: boolean)`|Marks the specified row(s) as selected in the grid `selectionAPI`. `clearCurrentSelection` first empties the grid's selection array.|
+|`deselectRows(rowIDs: any[])`|Removes the specified row(s) from the grid's selection in the `selectionAPI`.|
+|`selectAllRows()`|Marks all rows as selected in the grid `selectionAPI`.|
+|`deselectAllRows()`|Sets the grid's row selection in the `selectionAPI` to `[]`.|
 
 
 ## IgxColumnComponent

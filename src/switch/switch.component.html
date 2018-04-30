@@ -1,5 +1,5 @@
 <input #checkbox class="igx-switch__input" type="checkbox"
-    [id]="id"
+    [id]="inputId"
     [name]="name"
     [value]="value"
     [tabindex]="tabindex"
@@ -14,7 +14,7 @@
     (focus)="onFocus($event)"
     (blur)="onBlur($event)" />
 
-<label #label class ="igx-switch__composite" [for]="id"
+<label #label class ="igx-switch__composite" [for]="inputId"
     igxRipple
     igxRippleTarget=".igx-switch__ripple"
     [igxRippleDisabled]="disableRipple"
