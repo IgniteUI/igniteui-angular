@@ -17,6 +17,7 @@
 @import '../components/checkbox/checkbox-theme';
 @import '../components/date-picker/date-picker-theme';
 @import '../components/dialog/dialog-theme';
+@import '../components/drop-down/drop-down-theme';
 @import '../components/grid/grid-theme';
 @import '../components/grid-filtering/grid-filtering-theme';
 @import '../components/grid-summary/grid-summary-theme';
@@ -54,6 +55,7 @@
 /// @requires {mixin} igx-checkbox
 /// @requires {mixin} igx-date-picker
 /// @requires {mixin} igx-dialog
+/// @requires {mixin} igx-drop-down
 /// @requires {mixin} igx-grid
 /// @requires {mixin} igx-grid-filtering
 /// @requires {mixin} igx-grid-summary
@@ -118,6 +120,9 @@
     }
     @if not(index($exclude, 'igx-dialog')) {
         @include igx-dialog($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-drop-down')) {
+        @include igx-drop-down($theme: (), $palette: $palette);
     }
     @if not(index($exclude, 'igx-grid')) {
         @include igx-grid($theme: (), $palette: $palette);
