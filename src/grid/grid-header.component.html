@@ -12,11 +12,9 @@
     <igx-grid-filter [column]="column" *ngIf="column.filterable"></igx-grid-filter>
 </div>
 
-<span (mousedown)="onResizeAreaMouseDown($event)" #resizeArea
+<span [style.cursor]="resizeCursor" #resizeArea
     class="igx-grid__th-resize-handle"
-    [style.cursor]="resizeCursor"
-    (dblclick)="onResizeAreaDblClick()"
-    (mouseover)="onResizeAreaMouseOver()">
+    (dblclick)="onResizeAreaDblClick()">
 
     <div *ngIf="showResizer" igxResizer
         class="igx-grid__th-resize-line"
