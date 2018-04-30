@@ -8,7 +8,7 @@ import { async, TestBed } from "@angular/core/testing";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-fdescribe("IgxGrid - search API", () => {
+describe("IgxGrid - search API", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [

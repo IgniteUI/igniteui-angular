@@ -109,13 +109,18 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
 
     @autoWire(true)
     set inEditMode(value: boolean) {
+        const originalValue = this._inEditMode;
+
         if (value && this.highlight && !this._inEditMode) {
             this.highlight.store();
         }
 
         this._inEditMode = value;
+
         if (this._inEditMode) {
             this.grid.cellInEditMode = this;
+        } else if (!originalValue){
+            this.grid.cellInEditMode = null;
         }
     }
 
@@ -125,7 +130,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
                 if (this.highlight && this.inEditMode === false) {
                     this.highlight.restore();
                 }
-            }, 0);
+            });
         };
     }
 
@@ -359,7 +364,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         this.row.focused = true;
         if (this.grid.cellInEditMode && this.grid.cellInEditMode !== this) {
             this.grid.cellInEditMode.inEditMode = false;
-            this.grid.cellInEditMode = null;
         }
 
         this.grid.onSelection.emit({

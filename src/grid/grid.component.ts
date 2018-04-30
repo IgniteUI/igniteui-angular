@@ -779,17 +779,28 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calculateGridSizes();
     }
 
-    public findNext(text: string, caseSensitive?: boolean): number {
+    public findNext(text: string, caseSensitive?: boolean): number | Promise<number>{
         return this.find(text, true, caseSensitive);
     }
 
-    public findPrev(text: string, caseSensitive?: boolean): number {
+    public findPrev(text: string, caseSensitive?: boolean): number | Promise<number>{
         return this.find(text, false, caseSensitive);
     }
 
     private find(text: string, moveNext: boolean, caseSensitive?: boolean) {
         if (this.cellInEditMode) {
             this.cellInEditMode.inEditMode = false;
+
+            // When a cell exits edit mode, the DOM is updated asynchronously. We need the
+            // DOM to be up to date for the highlights to work properly, so we also need to
+            // execute this function asynchronously.
+            const promise = new Promise<number>((resolve, reject) => {
+                setTimeout(() => {
+                    this.find(text, moveNext, caseSensitive);
+                });
+            });
+
+            return promise;
         }
 
         let matchCount = 0;

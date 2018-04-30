@@ -73,12 +73,10 @@ export class ActiveHighlightManager {
         const indexInGroupElements = groupElements.indexOf(element);
 
         if (indexInGroupElements !== -1) {
-            if (store === false) {
-                if (groupInfo.activeIndex === indexInGroupElements) {
-                    groupInfo.activeIndex = -1;
-                } else if (groupInfo.activeIndex > indexInGroupElements) {
-                    groupInfo.activeIndex--;
-                }
+            if (groupInfo.activeIndex === indexInGroupElements) {
+                groupInfo.activeIndex = -1;
+            } else if (groupInfo.activeIndex > indexInGroupElements) {
+                groupInfo.activeIndex--;
             }
 
             groupElements.splice(indexInGroupElements, 1);
@@ -93,6 +91,10 @@ export class ActiveHighlightManager {
 
         if (indexInDirectiveElements !== -1) {
             directiveElements.splice(indexInDirectiveElements, 1);
+        }
+
+        if (!store && groupElements.length <= groupInfo.activeIndex) {
+            groupInfo.activeIndex = 0;
         }
     }
 

@@ -20,6 +20,17 @@ fdescribe("IgxHighlight", () => {
         });
     }));
 
+    it("Highlight inputs should have the proper values", () => {
+        const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
+        fix.detectChanges();
+
+        const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
+
+        expect(component.highlight.cssClass).toBe("igx-highlight");
+        expect(component.highlight.activeCssClass).toBe("igx-highlight__active");
+        expect(component.highlight.groupName).toBe("test");
+    });
+
     it("Should highlight all instances of text", () => {
         const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
         fix.detectChanges();
@@ -164,7 +175,7 @@ fdescribe("IgxHighlight", () => {
         expect(count).toBe(0);
     });
 
-    it("Should properly store and restore the highlight", () => {
+    fit("Should properly store and restore the highlight", () => {
         const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
         fix.detectChanges();
 
@@ -299,7 +310,7 @@ class HighlightLoremIpsumComponent {
     public groupName = "test";
 
     @ViewChild(forwardRef(() => IgxTextHighlightDirective), { read: IgxTextHighlightDirective })
-    private highlight: IgxTextHighlightDirective;
+    public highlight: IgxTextHighlightDirective;
 
     constructor(private element: ElementRef){}
 

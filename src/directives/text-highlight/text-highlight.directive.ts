@@ -86,7 +86,7 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit {
         if (this._lastSearchInfo.stored) {
             this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive);
             ActiveHighlightManager.restoreHighlight(this.groupName);
-            this._lastSearchInfo.stored = true;
+            this._lastSearchInfo.stored = false;
         }
     }
 
