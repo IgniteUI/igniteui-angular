@@ -20,7 +20,7 @@ export class DropDownSampleComponent {
     constructor() {
         for (let i = 0; i < this.itemsCount; i += 1) {
             const item = { field: "Item " + i };
-            if (i % 6 === 1 || i % 7 === 1) {
+            if (i % 6 === 1 || i % 7 === 1 || i > 30) {
                 item["disabled"] = true;
                 item.field += " I am Disabled!";
             }

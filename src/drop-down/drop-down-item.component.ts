@@ -23,10 +23,7 @@ export class IgxDropDownItemComponent implements OnInit {
             return;
         }
 
-        const oldSelection = this.dropDown.selectedItem;
         this.dropDown.selectedItem = value ? this : null;
-        const args: ISelectionEventArgs = { oldSelection, newSelection: this.dropDown.selectedItem };
-        this.dropDown.onSelection.emit(args);
     }
 
     @HostBinding("attr.aria-selected")
@@ -73,9 +70,24 @@ export class IgxDropDownItemComponent implements OnInit {
 
         const oldSelection = this.dropDown.selectedItem;
         this.dropDown.selectedItem = this;
-        const args: ISelectionEventArgs = { oldSelection, newSelection: this.dropDown.selectedItem, event };
+        const args: ISelectionEventArgs = { oldSelection, newSelection: this, event };
         this.dropDown.onSelection.emit(args);
-        this.dropDown.toggleDropDown();
+        this.dropDown.toggle.close(true);
+    }
+
+    @HostListener("keydown.Escape", ["$event"])
+    onEscapeKeyDown(event) {
+        this.dropDown.toggle.close(true);
+    }
+
+    @HostListener("keydown.Space", ["$event"])
+    onSpaceKeyDown(event) {
+        this.dropDown.changeSelectedItem(true, event);
+    }
+
+    @HostListener("keydown.Enter", ["$event"])
+    onEnterKeyDown(event) {
+        this.dropDown.changeSelectedItem(true, event);
     }
 
     @HostListener("keydown.ArrowDown", ["$event"])
@@ -88,6 +100,20 @@ export class IgxDropDownItemComponent implements OnInit {
     @HostListener("keydown.ArrowUp", ["$event"])
     onArrowUpKeyDown(event) {
         this.dropDown.focusPrev();
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
+    @HostListener("keydown.End", ["$event"])
+    onEndKeyDown(event) {
+        this.dropDown.focusLast();
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
+    @HostListener("keydown.Home", ["$event"])
+    onHomeKeyDown(event) {
+        this.dropDown.focusFirst();
         event.stopPropagation();
         event.preventDefault();
     }
