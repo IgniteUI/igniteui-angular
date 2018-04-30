@@ -238,7 +238,7 @@ describe("IgxVirtual directive - simple template", () => {
         expect(horizontalScroller).not.toBeNull();
 
         // scroll to the last right pos
-        fix.componentInstance.scrollLeft(80000);
+        fix.componentInstance.scrollLeft(90000);
         fix.detectChanges();
 
         const rowChildren = displayContainer.querySelectorAll("igx-display-container");
@@ -795,6 +795,34 @@ describe("IgxVirtual directive - simple template", () => {
                 .toBe(data[i].toString());
         }
     });
+
+    it("should set correct left offset when scrolling to right, clearing data and then setting new data", async(() => {
+        const fix = TestBed.createComponent(VirtualComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+
+        /**  Scroll left 1500px */
+        expect(() => {
+            fix.componentInstance.scrollLeft(1500);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        /** Timeout for scroll event to trigger during test */
+        setTimeout(() => {
+            let firstRowDisplayContainer = fix.nativeElement.querySelectorAll("igx-display-container")[1];
+            expect(firstRowDisplayContainer.style.left).toEqual("-82px");
+
+            fix.componentInstance.generateData(300, 0);
+            fix.detectChanges();
+
+            fix.componentInstance.generateData(300, 50000);
+            fix.detectChanges();
+
+            /** Offset should be equal to the offset before so there is no misalignment */
+            firstRowDisplayContainer = fix.nativeElement.querySelectorAll("igx-display-container")[1];
+            expect(firstRowDisplayContainer.style.left).toEqual("-82px");
+        }, 0);
+    }));
 });
 
 /** igxFor for testing */
@@ -1107,7 +1135,7 @@ export class VirtualComponent implements OnInit {
         for (let j = 0; j < numCols; j++) {
             this.cols.push({
                 field: j.toString(),
-                width: j % 8 < 2 ? 100 : (j % 6) * 125
+                width: j % 8 < 2 ? 100 : (j % 6 + 0.25) * 125
             });
         }
 

@@ -125,9 +125,9 @@ You can include Ignite UI for Angular in your project as a dependency using the 
 `npm install igniteui-angular --save-dev`
 
 ## Contributing
-[Coding Guidelines](../../wiki//Coding-guidelines-for-Ignite-UI-JS-Blocks)
+[Coding Guidelines](../../wiki//Coding-guidelines-for-Ignite-UI-for-Angular)
 
-[General Naming Guidelines](../../wiki//General-Naming-Guidelines-for-Ignite-UI-JS-Blocks)
+[General Naming Guidelines](../../wiki//General-Naming-Guidelines-for-Ignite-UI-for-Angular)
 
 
 ## Quickstart App

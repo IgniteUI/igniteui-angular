@@ -141,8 +141,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
 
         if (this.igxForScrollOrientation === "horizontal") {
-            this.dc.instance._viewContainer.element.nativeElement.style.height = "100%";
-            this.dc.instance._viewContainer.element.nativeElement.style.left = "0px";
             this.func = (evt) => { this.onHScroll(evt); };
             this.hScroll = this.getElement(vc, "igx-horizontal-virtual-helper");
             if (!this.hScroll) {
@@ -173,6 +171,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                         (evt) => { this.onMSGestureChange(evt); });
                 });
             }
+
+            const scrollOffset = this.hScroll.scrollLeft - (this.hCache && this.hCache.length ? this.hCache[this.state.startIndex] : 0);
+            this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + "px";
+            this.dc.instance._viewContainer.element.nativeElement.style.height = "100%";
         }
     }
     public ngOnDestroy() {
@@ -258,7 +260,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         let scrollOffset = this.fixedUpdateAllRows(curScrollTop, event.target.children[0].scrollHeight);
         if (scrollOffset === undefined) {
-            this.onChunkLoad.emit(this.state);
             return;
         }
         scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
@@ -473,8 +474,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 cntx.$implicit = input;
                 cntx.index = this.igxForOf.indexOf(input);
             }
-            this.onChunkLoad.emit();
             this.dc.changeDetectorRef.detectChanges();
+            this.onChunkLoad.emit();
         }
     }
 

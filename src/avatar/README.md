@@ -12,6 +12,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 # API Summary
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
+| `id` | string | Unique identifier of the component. If not provided it will be automatically generated.|
 | `src` |  string | Set the image source of the avatar. |
 | `initials` | string | Set the initials of the avatar. |
 | `icon` | string | Set the icon of the avatar. Currently all icons from the material icon set are supported. Not applicable for initials and image avatars. |

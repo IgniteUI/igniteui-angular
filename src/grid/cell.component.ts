@@ -18,7 +18,7 @@ import { KEYCODES } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
-import { autoWire, IGridBus, stopImmediatePropagation } from "./grid.common";
+import { autoWire, IGridBus } from "./grid.common";
 import { IGridCellEventArgs, IGridEditEventArgs } from "./grid.component";
 
 @Component({
@@ -352,9 +352,12 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         this.row.focused = false;
     }
 
-    @stopImmediatePropagation()
-    @HostListener("keydown.arrowleft", ["$event", "this.inEditMode"])
-    public onKeydownArrowLeft(event, inEditMode) {
+    @HostListener("keydown.arrowleft", ["$event"])
+    public onKeydownArrowLeft(event) {
+        if (this.inEditMode) {
+            return;
+        }
+
         event.preventDefault();
         const rowIndex = this.rowIndex;
         const columnIndex = this.visibleColumnIndex - 1;
@@ -399,9 +402,12 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         }
     }
 
-    @stopImmediatePropagation()
-    @HostListener("keydown.control.arrowleft", ["this.inEditMode"])
-    public onKeydownCtrlArrowLeft(inEditMode) {
+    @HostListener("keydown.control.arrowleft")
+    public onKeydownCtrlArrowLeft() {
+        if (this.inEditMode) {
+            return;
+        }
+
         const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.row.cells.first.visibleColumnIndex);
         const columnIndex = target.visibleColumnIndex;
         if (target) {
@@ -420,9 +426,12 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         }
     }
 
-    @stopImmediatePropagation()
-    @HostListener("keydown.arrowright", ["$event", "this.inEditMode"])
-    public onKeydownArrowRight(event, inEditMode) {
+    @HostListener("keydown.arrowright", ["$event"])
+    public onKeydownArrowRight(event) {
+        if (this.inEditMode) {
+            return;
+        }
+
         event.preventDefault();
         const visibleColumns = this.grid.visibleColumns;
         const rowIndex = this.rowIndex;
@@ -486,9 +495,12 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         }
     }
 
-    @stopImmediatePropagation()
-    @HostListener("keydown.control.arrowright", ["this.inEditMode"])
-    public onKeydownCtrlArrowRight(inEditMode) {
+    @HostListener("keydown.control.arrowright")
+    public onKeydownCtrlArrowRight() {
+        if (this.inEditMode) {
+            return;
+        }
+
         const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.row.cells.last.visibleColumnIndex);
         const columnIndex = target.visibleColumnIndex;
         if (target) {
@@ -521,9 +533,12 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         }
     }
 
-    @stopImmediatePropagation()
-    @HostListener("keydown.arrowup", ["$event", "this.inEditMode"])
-    public onKeydownArrowUp(event, inEditMode) {
+    @HostListener("keydown.arrowup", ["$event"])
+    public onKeydownArrowUp(event) {
+        if (this.inEditMode) {
+            return;
+        }
+
         event.preventDefault();
         const lastCell = this._getLastSelectedCell();
         const rowIndex = lastCell ? lastCell.rowIndex - 1 : this.grid.rowList.last.index;
@@ -551,9 +566,12 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         }
     }
 
-    @stopImmediatePropagation()
-    @HostListener("keydown.arrowdown", ["$event", "this.inEditMode"])
-    public onKeydownArrowDown(event, inEditMode) {
+    @HostListener("keydown.arrowdown", ["$event"])
+    public onKeydownArrowDown(event) {
+        if (this.inEditMode) {
+            return;
+        }
+
         event.preventDefault();
         const lastCell = this._getLastSelectedCell();
         const rowIndex = lastCell ? lastCell.rowIndex + 1 : this.grid.rowList.first.index;
@@ -574,12 +592,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
                 verticalScroll.scrollTop += targetEndTopOffset - containerHeight;
 
                 this._focusNextCell(rowIndex, this.visibleColumnIndex);
-            }
-            if (rowIndex < this.grid.rowList.last.index || rowIndex === this.grid.data.length - 1) {
+            } else {
                 target.nativeElement.focus();
             }
-        } else if (rowIndex < this.grid.data.length) {
-            this.row.grid.verticalScrollContainer.scrollNext();
+        } else {
+            verticalScroll.scrollTop += this.grid.rowHeight;
             this._focusNextCell(this.rowIndex, this.visibleColumnIndex);
         }
     }

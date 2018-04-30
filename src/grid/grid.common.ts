@@ -1,15 +1,28 @@
 import { DOCUMENT } from "@angular/common";
-import { ChangeDetectorRef, Directive, ElementRef, HostListener, Inject, Input, Output, TemplateRef  } from "@angular/core";
+import {
+    ChangeDetectorRef,
+    Directive,
+    ElementRef,
+    HostListener,
+    Inject,
+    Input,
+    NgZone,
+    OnDestroy,
+    OnInit,
+    Output,
+    TemplateRef
+} from "@angular/core";
 import "rxjs/add/operator/map";
-import "rxjs/add/operator/switchMap";
-import "rxjs/add/operator/takeUntil";
+import { Observable } from "rxjs/Observable";
+import { switchMap, takeUntil, throttle } from "rxjs/operators";
+import { animationFrame } from "rxjs/scheduler/animationFrame";
 import { Subject } from "rxjs/Subject";
 import { IgxGridAPIService } from "./api.service";
 
 @Directive({
     selector: "[igxResizer]"
 })
-export class IgxColumnResizerDirective {
+export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     @Input()
     public restrictHResizeMin: number = Number.MIN_SAFE_INTEGER;
@@ -30,14 +43,14 @@ export class IgxColumnResizerDirective {
     public resize = new Subject<any>();
 
     private _left;
+    private _destroy = new Subject<boolean>();
 
-    constructor(public element: ElementRef, @Inject(DOCUMENT) public document) {
+    constructor(public element: ElementRef, @Inject(DOCUMENT) public document, public zone: NgZone) {
 
-        this.resizeStart.map((event) => {
-            return event.clientX;
-        }).switchMap((offset) =>
-            this.resize.map((event) => (event.clientX - offset)).takeUntil(this.resizeEnd))
-        .subscribe((pos) => {
+        this.resizeStart.map((event) => event.clientX).pipe(
+            takeUntil(this._destroy),
+            switchMap((offset) => this.resize.map((event) => event.clientX - offset).takeUntil(this.resizeEnd))
+        ).subscribe((pos) => {
             const left = this._left + pos;
 
             this.left = left < this.restrictHResizeMin ? this.restrictHResizeMin + "px" : left + "px";
@@ -48,20 +61,40 @@ export class IgxColumnResizerDirective {
                 this.left = left + "px";
             }
         });
+
+    }
+
+    ngOnInit() {
+        this.zone.runOutsideAngular(() => {
+            Observable.fromEvent(this.document.defaultView, "mousedown").pipe(takeUntil(this._destroy))
+                .subscribe((res) => this.onMousedown(res));
+
+            Observable.fromEvent(this.document.defaultView, "mousemove").pipe(
+                takeUntil(this._destroy),
+                throttle(() => Observable.interval(0, animationFrame))
+            ).subscribe((res) => this.onMousemove(res));
+
+            Observable.fromEvent(this.document.defaultView, "mouseup").pipe(takeUntil(this._destroy))
+                .subscribe((res) => this.onMouseup(res));
+        });
+    }
+
+    ngOnDestroy() {
+        this._destroy.next(true);
+        this._destroy.unsubscribe();
     }
 
     public set left(val) {
-        this.element.nativeElement.style.left = val;
+        requestAnimationFrame(() => this.element.nativeElement.style.left = val);
     }
 
-    @HostListener("document:mouseup", ["$event"])
     onMouseup(event) {
         setTimeout(() => {
             this.resizeEnd.next(event);
+            this.resizeEnd.complete();
         }, this.resizeEndTimeout);
     }
 
-    @HostListener("document:mousedown", ["$event"])
     onMousedown(event) {
         this.resizeStart.next(event);
         event.preventDefault();
@@ -70,7 +103,6 @@ export class IgxColumnResizerDirective {
         this._left = Number.isNaN(parseInt(elStyle.left, 10)) ? 0 : parseInt(elStyle.left, 10);
     }
 
-    @HostListener("document:mousemove", ["$event"])
     onMousemove(event) {
         this.resize.next(event);
         event.preventDefault();
@@ -141,36 +173,6 @@ export function autoWire(markForCheck = false) {
             descriptor.value = wrapped;
         } else {
             throw Error("Can bind only to setter properties and methods");
-        }
-
-        return descriptor;
-    };
-}
-
-/**
- * Decorates a method of a component implementing the IGridBus
- * It applies on every method which handles an event of the host element
- * and prevents them when the passed parameter is true.
- */
-export function stopImmediatePropagation() {
-    return function decorator(target: IGridBus, name: string, descriptor: any) {
-        const old = descriptor.value;
-        const wrapped = function(...args) {
-            const event = args.find((e) => e.type);
-            const stopPropagation = args.find((x) => typeof x === "boolean");
-            if (stopPropagation && event) {
-                event.stopImmediatePropagation();
-            } else if (!event && stopPropagation) {
-                return;
-            } else {
-                old.apply(this, args);
-            }
-        };
-
-        if (descriptor.value) {
-            descriptor.value = wrapped;
-        } else {
-            throw Error("Can bind only on methods");
         }
 
         return descriptor;

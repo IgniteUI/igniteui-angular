@@ -1,8 +1,8 @@
 # Overview  
 Ignite UI for Angular version accepts contributions, as long as they follow the guidelines explained below. When contributing you would have to follow these steps:
 
-1. Fork the repository
-2. Perform the changes in your fork
+1. Fork the repository or make a branch (if you have the necessary rights)
+2. Perform the changes in your fork/branch
 3. Create a pull request with your changes and reference the issue you're working on
 
 Your pull request will undergo a review and if approved will be merged. All checks for the pull request should pass before a pull request is merged.
@@ -18,18 +18,58 @@ In order to perform all the necessary checks before pulling your changes in, you
 # Workflow
 When working on an issue for the Ignite UI for Angular repository, you need to be aware of and to follow a correct status workflow. We have created a number of status labels in order to communicate well what the current status of a single issue/pull request is. The statuses are as follows:
 
-## Development - applicable to issues and pull requests
+## Development - applicable to issues
+
+### Statuses
 1. `status: in-review` this is the initial status of an issue. If the label is not placed, go ahead and place it.
 2. `status: in-development` this is the status once you start working on an issue. Assign the issue to yourself if it hasn't been assigned already and remove the previous status and assign it an in development status.
 3. `status: by-design` this is the status of an issue that has been reviewed and has been determined that the current design of the feature is such that the issue describes the correct behavior as incorrect. Remove other statuses and place this status if you've reviewed the issue.
 4. `status: third-party-issue` this is the status of an issue that has been reviewed, has been determined to be an issue, but the root case is not in the Ignite UI for Angular code. Example would be browser specific bugs caused by the particular browser's rendering or JavaScript engines, or an issue with the Angular framework. Remove other statuses and place only this one if you're the one performing the investigation.
 5. `status: not-to-fix` this is the status of issues that derive from our code, but have been decided to leave as is. This is done when fixes require general design and/or architecture changes and are very risky.
+6. `status: already-fixed` this status indicates that the issue is already fixed in the source code. When setting this status assign the person that logged the issue so that he can verify the issue is fixed in the respective development branch. Remove other statuses and place this status if you've reviewed the issue.
+7. `status: cannot-reproduce` this status indicates that you cannot reproduce the issue in the source code. A reason may be because the issue is already fixed. When setting this status assign the person that logged the issue so that he can respond with more details on how to reproduce it.
+8. `status: not a bug` this is the status of an issue that you reviewed and concluded that it's not a bug. You should comment explaining the reasons why you think the issue is not a bug.
+9. `status: resolved` this is the status of an issue that has been fixed and there are active pull requests related to it.
+
+Example status workflows:
+
+`status: in-review` => `status: in-development` => `status: resolved` (PR is created)
+
+`status: in-review` => `status: by-design` (Issue can be closed)
+
+`status: in-review` => `status: third-party-issue` (Issue can be closed)
+
+`status: in-review` => `status: not-to-fix` (Issue can be closed)
+
+### Versioning
+
+When creating an issue assign a `version:` label. Add `version:` labels for each version for which the issue is applicable.
+
+### Severity
+
+When logging issue you should assign `severity:` label. If you cannot determine the issue severity use the `severity: medium` as initial label and a developer will re-evaluate it when doing investigation.
+
+1. `severity: low` this serverity means that the issue has low impact on the product.
+2. `severity: medium` this severity means that the issue can be seen by users occasionally, but it won't prevent them to complete their action/interaction. For example if there is a styling problem or misalignment in the UI, but this doesn't break any use cases.
+3. `severity: high` this severity means that the issue impacts a common use case of the control. For example filtering by dates for "last month" condition is not possible in the `igx-grid`.
+4. `severity: critical` this serverity means that the issue has big impact on the product and can easily be seen by the users. For example if there is na exception in the console and the control is not working.
+
+### Triaging
+
+Before release a triaging is done. Issues that need to be fixed for the release are makred with `triage: blocking` status.
 
 ## Testing - applicable to pull requests
 1. `status: awaiting-test` this is the initial status of pull requests. If you're performing the pull request, please place this status on it. Pull requests are accepted if and only if all status checks pass, review is performed, and the pull request has been tested and contains `status: verified`.
 2. `status: in-test` place this status once you pick up the pull request for testing.
 3. `status: verified` place this status once you've tested the pull request, have verified that the issue is fixed, and have included all necessary automated tests for the issue.
 4. `status: not-fixed` place this status once you've tested the pull request and you are still able to reproduce the issue it's attempting to fix. Then assign the developer back on the pull request.
+
+Example status workflows:
+
+`status: awaiting-test` => `status: in-test` => `status: verified` (PR can be merged if all prerequisites are met)
+
+`status: awaiting-test` => `status: in-test` => `status: not-fixed` => `status: in-development` => `status: awaiting-test`
+
 
 ## Localization - applicable to issues and pull requests
 1. `status: pending-localization` this status tells that there are changes in the localization strings that need to be translated. When you make such changes, put this status badge without removing the other applicable ones and assign a person to do the translations.

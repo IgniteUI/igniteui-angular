@@ -51,6 +51,7 @@ export class IgxTabTemplateDirective {
  * </igx-bottom-nav>
  * ```
  */
+let NEXT_ID = 0;
 @Component({
     selector: "igx-tab-bar, igx-bottom-nav",
     templateUrl: "tab-bar-content.component.html"
@@ -60,6 +61,10 @@ export class IgxBottomNavComponent implements AfterViewInit {
     @ViewChildren(forwardRef(() => IgxTabComponent)) public tabs: QueryList<IgxTabComponent>;
     @ContentChildren(forwardRef(() => IgxTabPanelComponent)) public panels: QueryList<IgxTabPanelComponent>;
 
+    /** ID of the component */
+    @HostBinding("attr.id")
+    @Input()
+    public id = `igx-bottom-nav-${NEXT_ID++}`;
     @Output() public onTabSelected = new EventEmitter<ISelectTabEventArgs>();
     @Output() public onTabDeselected = new EventEmitter<ISelectTabEventArgs>();
 

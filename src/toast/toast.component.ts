@@ -4,6 +4,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    HostBinding,
     Input,
     NgModule,
     OnDestroy,
@@ -29,6 +30,7 @@ import { IgxNavigationService, IToggleView } from "../core/navigation";
  * </igx-toast>
  * ```
  */
+let NEXT_ID = 0;
 @Component({
     animations: [
         trigger("animate", [
@@ -53,7 +55,9 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
      * Identifier of the component
      * @type {string}
      */
-    @Input() public id: string;
+    @HostBinding("attr.id")
+    @Input()
+    public id = `igx-toast-${NEXT_ID++}`;
 
     /**
      * Event is thrown prior toast is shown
