@@ -93,14 +93,14 @@
         padding: rem(8px) 0;
         min-width: rem(128px);
         max-width: rem(192px);
+        min-height: rem(200px);
         background: map-get($this, 'background-color');
     }
 
     %igx-drop-down__header {
+        font-weight: 800;
         font-size: rem(14px);
         color: map-get($this, 'header-text-color');
-        // TODO Remove the important after we remove the "igx-drop-down__item" from the element with class header
-        padding: rem(8px) rem(16px) !important;
     }
 
     %igx-drop-down__item {
@@ -147,6 +147,8 @@
         }
     }
 }
+
+
 
 
 
