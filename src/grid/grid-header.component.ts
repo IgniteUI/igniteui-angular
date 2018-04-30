@@ -1,4 +1,5 @@
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -8,6 +9,7 @@ import {
     HostBinding,
     HostListener,
     Input,
+    NgZone,
     OnInit,
     ViewChild
 } from "@angular/core";
@@ -25,7 +27,7 @@ import { autoWire, IGridBus } from "./grid.common";
     selector: "igx-grid-header",
     templateUrl: "./grid-header.component.html"
 })
-export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
+export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterViewInit {
 
     @Input()
     public column: IgxColumnComponent;
@@ -107,7 +109,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     private _pinnedMaxWidth;
     private _isResiznig = false;
 
-    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, public elementRef: ElementRef) { }
+    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, public elementRef: ElementRef, public zone: NgZone) { }
 
     public ngOnInit() {
         this.cdr.markForCheck();
@@ -115,6 +117,13 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
 
     public ngDoCheck() {
         this.getSortDirection();
+    }
+
+    ngAfterViewInit() {
+        this.zone.runOutsideAngular(() => {
+            this.resizeArea.nativeElement.addEventListener("mouseover", this.onResizeAreaMouseOver.bind(this));
+            this.resizeArea.nativeElement.addEventListener("mousedown", this.onResizeAreaMouseDown.bind(this));
+        });
     }
 
     @HostListener("click", ["$event"])
@@ -196,6 +205,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
     public onResizeAreaMouseOver() {
         if (this.column.resizable) {
             this.resizeCursor = "col-resize";
+            this.cdr.detectChanges();
         }
     }
 
@@ -208,6 +218,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
         } else {
             this.resizeCursor = null;
         }
+        this.cdr.detectChanges();
     }
 
     public onResizeAreaDblClick() {
@@ -267,6 +278,8 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck {
                 }
             } else if (this.column.maxWidth && (parseFloat(size) > parseFloat(this.column.maxWidth))) {
                 this.column.width = parseFloat(this.column.maxWidth) + "px";
+            } else if (parseFloat(size) < parseFloat(this.column.defaultMinWidth)) {
+                this.column.width = this.column.defaultMinWidth + "px";
             } else {
                 this.column.width = size;
             }
