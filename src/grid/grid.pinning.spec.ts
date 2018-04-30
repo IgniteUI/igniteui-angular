@@ -585,7 +585,7 @@ describe("IgxGrid - Column Pinning ", () => {
         expect(result).toBe(false);
     });
 
-    it("should minimal visible unpinned area width be 20% of the grid width", () => {
+    it("should reject pinning a column if minimal visible unpinned area width is less than 20% of the grid width", () => {
         const fix = TestBed.createComponent(GridPinningComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
