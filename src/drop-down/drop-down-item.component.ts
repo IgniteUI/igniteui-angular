@@ -8,7 +8,9 @@ import { IgxDropDownComponent, ISelectionEventArgs } from "./drop-down.component
 
 export class IgxDropDownItemComponent implements OnInit {
     @HostBinding("class.igx-drop-down__item")
-    public cssClass = "igx-drop-down__item";
+    get itemStyle(): boolean {
+        return !this.isHeader;
+    }
 
     private _isFocused = false;
 
@@ -111,8 +113,6 @@ export class IgxDropDownItemComponent implements OnInit {
     ngOnInit() {
         const shouldSetTabIndex = this.dropDown.allowItemsFocus && !(this.isDisabled || this.isHeader);
         if (shouldSetTabIndex) {
-            console.log("shouldSetTabIndex");
-            console.log(shouldSetTabIndex);
             this.element.nativeElement.tabIndex = 0;
         }
     }

@@ -21,7 +21,6 @@ import { IgxDropDownItemComponent } from "./drop-down-item.component";
 export interface ISelectionEventArgs {
     oldSelection: IgxDropDownItemComponent;
     newSelection: IgxDropDownItemComponent;
-    event?: Event;
 }
 
 @Component({
