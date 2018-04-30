@@ -37,29 +37,34 @@ export class IgxDropDownComponent implements AfterViewInit {
 
     @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
     @ContentChildren(IgxDropDownItemComponent, { read: IgxDropDownItemComponent }) public items: QueryList<IgxDropDownItemComponent>;
+
     @Output() public onSelection = new EventEmitter<ISelectionEventArgs>();
     @Output() public onOpen = new EventEmitter();
     @Output() public onClose = new EventEmitter();
+
+    @Input() public width = this._defaultWidth;
+    @Input() public height = this._defaultHeight;
 
     constructor(private elementRef: ElementRef, private renderer: Renderer) { }
 
     get selectedItem(): IgxDropDownItemComponent {
         return this._selectedItem;
     }
-    set selectedItem(item: IgxDropDownItemComponent) {
-        if (item === this.selectedItem) {
+
+    public setSelectedItem(index: number) {
+        if (index < 0 || index >= this.items.length) {
+            //  TODO: should we throw here!!!
             return;
         }
 
-        this._selectedItem = item;
-    }
+        const newSelection = this.items.toArray().find((item) => item.index === index);
+        if (newSelection.isDisabled || newSelection.isHeader) {
+            //  TODO: should we throw here!!!
+            return;
+        }
 
-    get initialSelectionChanged() {
-        return this.selectedItem !== this._initiallySelectedItem;
+        this.changeSelectedItem(true, null, newSelection);
     }
-
-    @Input() public width = this._defaultWidth;
-    @Input() public height = this._defaultHeight;
 
     focusFirst() {
         let focusedItemIndex = 0;
@@ -154,17 +159,6 @@ export class IgxDropDownComponent implements AfterViewInit {
         this.toggle.element.style.overflowY = "auto";
     }
 
-    changeSelectedItem(closeDropDown: boolean, event?) {
-        const oldSelection = this.selectedItem;
-        const newSelection = this._focusedItem;
-        this.selectedItem = newSelection;
-        const args: ISelectionEventArgs = { oldSelection, newSelection, event };
-        this.onSelection.emit(args);
-        if (closeDropDown) {
-            this.toggle.close(true);
-        }
-    }
-
     close() {
         if (this._focusedItem) {
             this._focusedItem.isFocused = false;
@@ -175,7 +169,7 @@ export class IgxDropDownComponent implements AfterViewInit {
 
     open() {
         if (!this.selectedItem && this.items.length > 0) {
-            this.selectedItem = this.items.toArray()[0];
+            this.setSelectedItem(0);
         }
         this._initiallySelectedItem = this.selectedItem;
         this._focusedItem = this.selectedItem;
@@ -199,6 +193,20 @@ export class IgxDropDownComponent implements AfterViewInit {
             .reduce((sum, currentItem) => sum + currentItem.elementHeight, 0);
 
         this.toggle.element.scrollTop = (Math.floor(itemPosition));
+    }
+
+    changeSelectedItem(closeDropDown: boolean, event?, newSelection?: IgxDropDownItemComponent) {
+        const oldSelection = this.selectedItem;
+        if (!newSelection) {
+            newSelection = this._focusedItem;
+        }
+
+        this._selectedItem = newSelection;
+        const args: ISelectionEventArgs = { oldSelection, newSelection, event };
+        this.onSelection.emit(args);
+        if (closeDropDown) {
+            this.toggle.close(true);
+        }
     }
 }
 

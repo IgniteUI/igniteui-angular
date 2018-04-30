@@ -18,13 +18,6 @@ export class IgxDropDownItemComponent implements OnInit {
     get isSelected() {
         return this.dropDown.selectedItem === this;
     }
-    @Input() set isSelected(value: boolean) {
-        if (this.isSelected === value) {
-            return;
-        }
-
-        this.dropDown.selectedItem = value ? this : null;
-    }
 
     @HostBinding("attr.aria-selected")
     @HostBinding("class.selected")
@@ -69,7 +62,7 @@ export class IgxDropDownItemComponent implements OnInit {
         }
 
         const oldSelection = this.dropDown.selectedItem;
-        this.dropDown.selectedItem = this;
+        this.dropDown.setSelectedItem(this.index);
         const args: ISelectionEventArgs = { oldSelection, newSelection: this, event };
         this.dropDown.onSelection.emit(args);
         this.dropDown.toggle.close(true);
