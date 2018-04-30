@@ -22,6 +22,38 @@ describe("IgxDropDown ", () => {
         expect(list).toBeDefined();
         expect(list.length).toEqual(4);
     });
+
+    xit("should select item by click", () => {
+        //To DO
+    });
+
+    xit("should select item by SPACE/ENTER", () => {
+        //To DO
+    });
+
+    xit("should change the selected values indefinitely", () => {
+        //To DO
+    });
+
+    xit("Should persist selection through scrolling", () => {
+        //To DO
+    });
+
+    xit("Should navigate through the items using Up/Down/Home/End keys", () => {
+        //To DO
+    });
+
+    xit("Should support disabled items and headers", () => {
+        //To DO
+    });
+
+    xit("Should notify when selection has changed", () => {
+        //To DO
+    });
+
+    xit("Should be able to implement to any kind of anchor", () => {
+        //To DO
+    });
 });
 
 @Component({
