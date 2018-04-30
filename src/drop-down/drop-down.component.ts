@@ -44,6 +44,7 @@ export class IgxDropDownComponent implements AfterViewInit {
 
     @Input() public width = this._defaultWidth;
     @Input() public height = this._defaultHeight;
+    @Input() public allowItemsFocus = true;
 
     constructor(private elementRef: ElementRef, private renderer: Renderer) { }
 
@@ -63,7 +64,7 @@ export class IgxDropDownComponent implements AfterViewInit {
             return;
         }
 
-        this.changeSelectedItem(true, null, newSelection);
+        this.changeSelectedItem(newSelection);
     }
 
     focusFirst() {
@@ -195,18 +196,16 @@ export class IgxDropDownComponent implements AfterViewInit {
         this.toggle.element.scrollTop = (Math.floor(itemPosition));
     }
 
-    changeSelectedItem(closeDropDown: boolean, event?, newSelection?: IgxDropDownItemComponent) {
+    private changeSelectedItem(newSelection?: IgxDropDownItemComponent) {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
             newSelection = this._focusedItem;
         }
 
         this._selectedItem = newSelection;
-        const args: ISelectionEventArgs = { oldSelection, newSelection, event };
+        const args: ISelectionEventArgs = { oldSelection, newSelection };
         this.onSelection.emit(args);
-        if (closeDropDown) {
-            this.toggle.close(true);
-        }
+        this.toggle.close(true);
     }
 }
 

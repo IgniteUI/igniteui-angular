@@ -1,11 +1,11 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { IgxDropDownComponent } from "../../lib/main";
 @Component({
     // tslint:disable-next-line:component-selector
     selector: "drop-down-sample",
     templateUrl: "./sample.component.html"
 })
-export class DropDownSampleComponent {
+export class DropDownSampleComponent implements OnInit {
     private width = "160px";
     @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
 
@@ -16,6 +16,10 @@ export class DropDownSampleComponent {
         // { field: "Switches", disabled: true },
         // { field: "Batteries", disabled: true }
     ];
+
+    ngOnInit() {
+        this.igxDropDown.allowItemsFocus = true;
+    }
 
     constructor() {
         for (let i = 0; i < this.itemsCount; i += 1) {

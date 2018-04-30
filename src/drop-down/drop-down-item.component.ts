@@ -1,5 +1,5 @@
-import {Component, ElementRef, forwardRef, HostBinding, HostListener, Inject, Input, OnInit} from "@angular/core";
-import {IgxDropDownComponent, ISelectionEventArgs} from "./drop-down.component";
+import { Component, ElementRef, forwardRef, HostBinding, HostListener, Inject, Input, OnInit } from "@angular/core";
+import { IgxDropDownComponent, ISelectionEventArgs } from "./drop-down.component";
 
 @Component({
     selector: "igx-drop-down-item",
@@ -41,10 +41,12 @@ export class IgxDropDownItemComponent implements OnInit {
         this._isFocused = value;
     }
 
+    // TODO: change tabIndex runtime when isHeader changes
     @Input()
     @HostBinding("class.igx-drop-down__header")
     public isHeader = false;
 
+    // TODO: change tabIndex runtime when isDisabled changes
     @Input()
     @HostBinding("class.igx-drop-down__item--disabled")
     public isDisabled = false;
@@ -60,11 +62,7 @@ export class IgxDropDownItemComponent implements OnInit {
             return;
         }
 
-        const oldSelection = this.dropDown.selectedItem;
         this.dropDown.setSelectedItem(this.index);
-        const args: ISelectionEventArgs = { oldSelection, newSelection: this, event };
-        this.dropDown.onSelection.emit(args);
-        this.dropDown.toggle.close(true);
     }
 
     @HostListener("keydown.Escape", ["$event"])
@@ -74,12 +72,12 @@ export class IgxDropDownItemComponent implements OnInit {
 
     @HostListener("keydown.Space", ["$event"])
     onSpaceKeyDown(event) {
-        this.dropDown.changeSelectedItem(true, event);
+        this.dropDown.setSelectedItem(this.index);
     }
 
     @HostListener("keydown.Enter", ["$event"])
     onEnterKeyDown(event) {
-        this.dropDown.changeSelectedItem(true, event);
+        this.dropDown.setSelectedItem(this.index);
     }
 
     @HostListener("keydown.ArrowDown", ["$event"])
@@ -111,7 +109,12 @@ export class IgxDropDownItemComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.element.nativeElement.tabIndex = 0;
+        const shouldSetTabIndex = this.dropDown.allowItemsFocus && !(this.isDisabled || this.isHeader);
+        if (shouldSetTabIndex) {
+            console.log("shouldSetTabIndex");
+            console.log(shouldSetTabIndex);
+            this.element.nativeElement.tabIndex = 0;
+        }
     }
 
     public get index(): number {
