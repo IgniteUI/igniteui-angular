@@ -15,7 +15,7 @@ describe("IgxGrid - input properties", () => {
                 IgxGridTestComponent, IgGridTest5x5Component, IgGridTest10x30Component,
                 IgGridTest30x1000Component, IgGridTest150x20000Component,
                 IgxGridTestDefaultWidthHeightComponent,
-                IgGridNullHeightComponent, IgxGridTestPercentWidthHeight
+                IgGridNullHeightComponent, IgxGridTestPercentWidthHeightComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule.forRoot()]
@@ -355,7 +355,7 @@ describe("IgxGrid - input properties", () => {
     });
 
     it("Test rendering when width and height are set in %", () => {
-        const fix = TestBed.createComponent(IgxGridTestPercentWidthHeight);
+        const fix = TestBed.createComponent(IgxGridTestPercentWidthHeightComponent);
         const grid = fix.componentInstance.grid;
 
         fix.detectChanges();
@@ -654,13 +654,13 @@ export class IgGridNullHeightComponent {
 }
 
 @Component({
-    template: 
+    template:
     `<div style="width: 800px; height: 600px;">
         <igx-grid #grid [data]="data" [autoGenerate]="true" height="50%" width="50%">
         </igx-grid>
     </div>`
 })
-export class IgxGridTestPercentWidthHeight {
+export class IgxGridTestPercentWidthHeightComponent {
     public cols;
     public data;
 
