@@ -441,7 +441,7 @@ export class IgxGridFilteringComponent {
             ID: 5,
             ProductName: "",
             ReleaseDate: undefined,
-            Released: ""
+            Released: false
         },
         {
             Downloads: 702,
