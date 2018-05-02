@@ -12,6 +12,23 @@ describe("Dialog", () => {
             imports: [BrowserAnimationsModule, IgxDialogModule]
         }).compileComponents();
     }));
+    it("Initialize a datepicker component with id", () => {
+        const fixture = TestBed.createComponent(AlertComponent);
+        fixture.detectChanges();
+
+        const dialog = fixture.componentInstance.dialog;
+        const domDialog = fixture.debugElement.query(By.css("igx-dialog")).nativeElement;
+
+        expect(dialog.id).toContain("igx-dialog-");
+        expect(domDialog.id).toContain("igx-dialog-");
+
+        dialog.id = "customDialog";
+        fixture.detectChanges();
+
+        expect(dialog.id).toBe("customDialog");
+        expect(domDialog.id).toBe("customDialog");
+    });
+
     it("Should set dialog title.", () => {
         const fixture = TestBed.createComponent(AlertComponent);
         const dialog = fixture.componentInstance.dialog;
@@ -78,34 +95,40 @@ describe("Dialog", () => {
         const dialog = fixture.componentInstance.dialog;
 
         fixture.detectChanges();
-        testDialogIsOpen(fixture.debugElement, dialog, false);
+        expect(dialog.isOpen).toEqual(false);
 
         dialog.open();
         fixture.detectChanges();
-        testDialogIsOpen(fixture.debugElement, dialog, true);
+        expect(dialog.isOpen).toEqual(true);
 
         dialog.close();
         fixture.detectChanges();
-        testDialogIsOpen(fixture.debugElement, dialog, false);
+        expect(dialog.isOpen).toEqual(false);
     });
 
     it("Should set closeOnOutsideSelect.", () => {
         const fixture = TestBed.createComponent(AlertComponent);
-        const dialog = fixture.componentInstance.dialog;
+        fixture.detectChanges();
 
+        const dialog = fixture.componentInstance.dialog;
         dialog.open();
         fixture.detectChanges();
 
-        fixture.componentInstance.dialog.dialogEl.nativeElement.click();
-        testDialogIsOpen(fixture.debugElement, dialog, false);
+        const dialogElem = fixture.debugElement.query(By.css(".igx-dialog")).nativeElement;
+        dialogElem.click();
+        fixture.detectChanges();
+
+        expect(dialog.isOpen).toEqual(false);
 
         dialog.closeOnOutsideSelect = false;
         dialog.open();
-        fixture.componentInstance.dialog.dialogEl.nativeElement.click();
+        fixture.detectChanges();
+
+        dialogElem.click();
 
         fixture.detectChanges();
 
-        testDialogIsOpen(fixture.debugElement, dialog, true);
+        expect(dialog.isOpen).toEqual(true);
     });
 
     it("Should test events.", () => {
@@ -164,6 +187,8 @@ describe("Dialog", () => {
 
     it("Should close only inner dialog on closeOnOutsideSelect.", () => {
         const fixture = TestBed.createComponent(NestedDialogsComponent);
+        fixture.detectChanges();
+
         const mainDialog = fixture.componentInstance.main;
         const childDialog = fixture.componentInstance.child;
 
@@ -171,24 +196,22 @@ describe("Dialog", () => {
         childDialog.open();
         fixture.detectChanges();
 
-        fixture.componentInstance.child.dialogEl.nativeElement.click();
+        const dialogs = fixture.debugElement.queryAll(By.css(".igx-dialog"));
+        const maindDialogElem = dialogs[0].nativeElement;
+        const childDialogElem = dialogs[1].nativeElement;
+
+        childDialogElem.click();
         fixture.detectChanges();
 
-        testDialogIsOpen(fixture.debugElement, mainDialog, true);
-        testDialogIsOpen(fixture.debugElement, childDialog, false);
+        expect(mainDialog.isOpen).toEqual(true);
+        expect(childDialog.isOpen).toEqual(false);
 
-        fixture.componentInstance.main.dialogEl.nativeElement.click();
+        maindDialogElem.click();
         fixture.detectChanges();
 
-        testDialogIsOpen(fixture.debugElement, mainDialog, false);
-        testDialogIsOpen(fixture.debugElement, childDialog, false);
+        expect(mainDialog.isOpen).toEqual(false);
+        expect(childDialog.isOpen).toEqual(false);
     });
-
-    function testDialogIsOpen(debugElement: DebugElement, dialog: IgxDialogComponent, isOpen: boolean) {
-        const dialogDebugElement = debugElement.query(By.css(".igx-dialog"));
-
-        expect(dialog.isOpen).toEqual(isOpen);
-    }
 
     function dispatchEvent(element: HTMLElement, eventType: string) {
         const event = new Event(eventType);

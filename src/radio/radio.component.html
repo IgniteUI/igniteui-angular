@@ -1,10 +1,11 @@
 <input #radio class="igx-radio__input" type="radio"
-    [id]="id"
+    [id]="inputId"
     [name]="name"
     [value]="value"
     [tabindex]="tabindex"
     [disabled]="disabled"
     [checked]="checked"
+    [required]="required"
     [attr.aria-checked]="checked"
     [attr.aria-labelledby]="ariaLabelledBy"
     [attr.aria-label]="ariaLabel"
@@ -18,7 +19,7 @@
     [igxRippleDisabled]="disableRipple"
     [igxRippleCentered]="true"
     [igxRippleDuration]="100"
-    [for]="id">
+    [for]="inputId">
     <div class="igx-radio__ripple"></div>
 </label>
 

@@ -17,7 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 export class AppModule {
 }
 ```
-Also the **igxCaledar** uses the [Intl](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat) WebAPI for localization and formatting of dates. Consider using the [appropriate polyfills](https://github.com/andyearnshaw/Intl.js/) if your target platform does not support them.
+Also the **igxCalendar** uses the [Intl](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat) WebAPI for localization and formatting of dates. Consider using the [appropriate polyfills](https://github.com/andyearnshaw/Intl.js/) if your target platform does not support them.
 
 
 ## Usage
@@ -75,6 +75,10 @@ When a day inside the current month is focused:
 ## API Summary
 
 ### Inputs
+
+- `id: string` 
+
+Unique identifier of the component. If not provided it will be automatically generated.
 
 - `vertical: boolean`
 
@@ -174,7 +178,7 @@ Example:
 
 | Name      | Type     | Description                                                                  |
 | :-------- | :------: | :--------------------------------------------------------------------------- |
-| date      | Date     | The date object in the context of the template. See * below for details.       |
+| date      | Date     | The date object in the context of the template. See * below for details.     |
 | full      | string   | The full date representation returned after applying the `formatOptions`.    |
 | monthView | Function | A function which when called puts the calendar in month view.                |
 | yearView  | Function | A function which when called puts the calendar in year view.                 |

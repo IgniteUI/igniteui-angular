@@ -20,23 +20,34 @@ describe("List", () => {
     it("should initialize igx-list with item and header", () => {
         const fixture = TestBed.createComponent(ListTestComponent);
         const list = fixture.componentInstance.list;
+        const domList = fixture.debugElement.query(By.css("igx-list")).nativeElement;
 
         expect(list).toBeDefined();
+        expect(list.id).toContain("igx-list-");
         expect(list instanceof IgxListComponent).toBeTruthy();
-        expect(list.innerStyle).toBe("igx-list-empty");
+        expect(list.cssClass).toBeFalsy();
+        expect(list.isListEmpty).toBeTruthy();
         expect(list.items instanceof Array).toBeTruthy();
         expect(list.items.length).toBe(0);
         expect(list.headers instanceof Array).toBeTruthy();
         expect(list.headers.length).toBe(0);
 
         fixture.detectChanges();
+        expect(domList.id).toContain("igx-list-");
         expect(list.items instanceof Array).toBeTruthy();
-        expect(list.innerStyle).toBe("igx-list");
+        expect(list.cssClass).toBeTruthy();
+        expect(list.isListEmpty).toBeFalsy();
         expect(list.items.length).toBe(3);
         expect(list.items[0] instanceof IgxListItemComponent).toBeTruthy();
         expect(list.headers instanceof Array).toBeTruthy();
         expect(list.headers.length).toBe(1);
         expect(list.headers[0] instanceof IgxListItemComponent).toBeTruthy();
+
+        list.id = "customList";
+        fixture.detectChanges();
+
+        expect(list.id).toBe("customList");
+        expect(domList.id).toBe("customList");
     });
 
     it("should set/get properly layout properties: width, left, maxLeft, maxRight", () => {
@@ -224,7 +235,8 @@ describe("List", () => {
         fixture.detectChanges();
 
         verifyItemsCount(list, 0);
-        expect(list.innerStyle).toBe("igx-list-empty");
+        expect(list.cssClass).toBeFalsy();
+        expect(list.isListEmpty).toBeTruthy();
 
         const noItemsParagraphEl = fixture.debugElement.query(By.css("p"));
         expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listNoItemsMessage);
@@ -238,7 +250,8 @@ describe("List", () => {
         fixture.detectChanges();
 
         verifyItemsCount(list, 0);
-        expect(list.innerStyle).toBe("igx-list-empty");
+        expect(list.cssClass).toBeFalsy();
+        expect(list.isListEmpty).toBeTruthy();
 
         const noItemsParagraphEl = fixture.debugElement.query(By.css("h3"));
         expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listCustomNoItemsTemplateContent);
