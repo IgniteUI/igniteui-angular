@@ -29,7 +29,7 @@ export class ActiveHighlightManager {
     public static registerHighlight(highlight: IgxTextHighlightDirective, element: ElementRef, restore: boolean): void {
         const groupInfo = ActiveHighlightManager.highlightGroupsMap.get(highlight.groupName);
 
-        if (restore) {
+        if (restore && groupInfo.restoreIndex !== -1) {
             groupInfo.restoreIndex = Math.max(groupInfo.restoreIndex, 0);
             groupInfo.elements.splice(groupInfo.restoreIndex++, 0, element);
         } else {
@@ -73,17 +73,17 @@ export class ActiveHighlightManager {
         const indexInGroupElements = groupElements.indexOf(element);
 
         if (indexInGroupElements !== -1) {
-            if (groupInfo.activeIndex === indexInGroupElements) {
-                groupInfo.activeIndex = -1;
-            } else if (groupInfo.activeIndex > indexInGroupElements) {
-                groupInfo.activeIndex--;
+            if (store) {
+                if (groupInfo.activeIndex === indexInGroupElements) {
+                    groupInfo.activeIndex = -1;
+                } else if (groupInfo.activeIndex > indexInGroupElements) {
+                    groupInfo.activeIndex--;
+                }
+            } else {
+                groupInfo.restoreIndex = indexInGroupElements;
             }
 
             groupElements.splice(indexInGroupElements, 1);
-
-            if (store && groupInfo.restoreIndex === -1) {
-                groupInfo.restoreIndex = indexInGroupElements;
-            }
         }
 
         const directiveElements = ActiveHighlightManager.highlightDirectivesMap.get(highlight);
@@ -91,10 +91,6 @@ export class ActiveHighlightManager {
 
         if (indexInDirectiveElements !== -1) {
             directiveElements.splice(indexInDirectiveElements, 1);
-        }
-
-        if (!store && groupElements.length <= groupInfo.activeIndex) {
-            groupInfo.activeIndex = 0;
         }
     }
 

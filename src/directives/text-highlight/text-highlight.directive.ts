@@ -1,25 +1,25 @@
-// Note: Currently this directive can't directly set the innerHTML of the parent element,
-// as this breaks any existing ngTemplateOutlet (and possibly other) bindings. This happens, because the
-// comment nodes that Angular uses for them get recreated by setting innerHTML. It seems like even if
-// you recreate them with the exact same content they still don't work, so I had to wrokaround
-// this by using appendChild and removeChild to modify the DOM without touching the comment nodes.
-
-import { AfterViewInit, Directive, ElementRef, Input, NgModule, OnDestroy, Renderer2 } from "@angular/core";
+import { AfterViewInit, Directive, ElementRef, Input, NgModule, OnChanges, OnDestroy, Renderer2, SimpleChanges } from "@angular/core";
 
 import { ActiveHighlightManager } from "./active-higlight-manager";
 
 interface ISearchInfo {
     searchedText: string;
+    content: string;
     matchCount: number;
     caseSensitive: boolean;
     stored: boolean;
 }
 
+// TODO: Remove a dependency of a container with id of cellContent.
 @Directive({
     selector: "[igxTextHighlight]"
 })
-export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit {
+export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit, OnChanges {
     private _lastSearchInfo: ISearchInfo;
+    private _addedElements = [];
+    private _observer: MutationObserver;
+    private _nodeWasRemoved = false;
+    private _forceEvaluation = false;
 
     @Input("cssClass")
     public cssClass: string;
@@ -30,6 +30,9 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit {
     @Input("groupName")
     public groupName = "";
 
+    @Input("value")
+    public value: any = "";
+
     public parentElement: any;
 
     constructor(element: ElementRef, public renderer: Renderer2) {
@@ -37,79 +40,98 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit {
 
         this._lastSearchInfo = {
             searchedText: "",
+            content: this.value,
             matchCount: 0,
             caseSensitive: false,
             stored: false
         };
+
+        const callback = (mutationList) => {
+            mutationList.forEach(mutation => {
+                mutation.removedNodes.forEach(n => {
+                    if (n.id === "cellContent") {
+                        this._nodeWasRemoved = true;
+                        this.clearChildElements(false, false);
+                    }
+                });
+
+                mutation.addedNodes.forEach(n => {
+                    if (n.id === "cellContent" && this._nodeWasRemoved) {
+                        this._nodeWasRemoved = false;
+
+                        this._forceEvaluation = true;
+                        this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive);
+                        this._forceEvaluation = false;
+                        // ActiveHighlightManager.restoreHighlight(this.groupName);
+                    }
+                });
+            });
+        }
+
+        this._observer = new MutationObserver(callback);
+        this._observer.observe(this.parentElement, {childList: true});
     }
 
     ngAfterViewInit() {
-        ActiveHighlightManager.registerHighlightInfo(this);
+        //ActiveHighlightManager.registerHighlightInfo(this);
     }
 
     ngOnDestroy() {
-        ActiveHighlightManager.unregisterHighlightInfo(this);
+        //ActiveHighlightManager.unregisterHighlightInfo(this);
+
+        this._observer.disconnect();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.value && !changes.value.firstChange) {
+            this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive);
+        }
     }
 
     public highlight(text: string, caseSensitive?: boolean): number {
-        if (this.searchNeedsEvaluation(text, caseSensitive ? true : false)) {
+        if (!this.value) {
+            return 0;
+        }
+        const caseSensitiveResolved = caseSensitive ? true : false;
+
+        if (this.searchNeedsEvaluation(text, caseSensitiveResolved)) {
             this._lastSearchInfo.searchedText = text;
-            this._lastSearchInfo.caseSensitive = caseSensitive ? true : false;
+            this._lastSearchInfo.caseSensitive = caseSensitiveResolved;
+            this._lastSearchInfo.content = this.value;
 
             if (text === "" || text === undefined || text === null) {
                 this.clearHighlight();
                 return 0;
             }
 
-            const content = this.clearChildElements(false);
-            this._lastSearchInfo.matchCount = this.getHighlightedText(content, text, caseSensitive);
+            this.clearChildElements(true, this._forceEvaluation === false);
+            this._lastSearchInfo.matchCount = this.getHighlightedText(text, caseSensitive);
         }
 
         return this._lastSearchInfo.matchCount;
     }
 
     public clearHighlight() {
-        const textContent = this.clearChildElements(false);
-        this.appendText(textContent);
+        this.clearChildElements(false, true);
     }
 
-    public store() {
-        const searchedText = this._lastSearchInfo.searchedText;
+    private clearChildElements(originalContentHidden: boolean, updateActiveIndex: boolean): void {
+        const content = this.parentElement.querySelector("#cellContent");
+        if (content) {
+            this.renderer.setProperty(content, "hidden", originalContentHidden);
+        }
 
-        if (searchedText) {
-            this._lastSearchInfo.stored = true;
-            this.clearChildElements(true);
+        while (this._addedElements.length) {
+            const el = this._addedElements.pop();
+
+            this.renderer.removeChild(this.parentElement, el);
+            //ActiveHighlightManager.unregisterHighlight(this, el, updateActiveIndex);
         }
     }
 
-    public restore() {
-        if (this._lastSearchInfo.stored) {
-            this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive);
-            ActiveHighlightManager.restoreHighlight(this.groupName);
-            this._lastSearchInfo.stored = false;
-        }
-    }
-
-    private clearChildElements(store: boolean): string {
-        let child = this.parentElement.firstChild;
-        let text = "";
-
-        while (child) {
-            const elementToRemove = child;
-            child = this.renderer.nextSibling(child);
-
-            if (elementToRemove.nodeName !== "#comment") {
-                text += elementToRemove.textContent;
-                this.renderer.removeChild(this.parentElement, elementToRemove);
-                ActiveHighlightManager.unregisterHighlight(this, elementToRemove, store);
-            }
-        }
-
-        return text;
-    }
-
-    private getHighlightedText(contentString: string, searchText: string, caseSensitive: boolean) {
-        const contentStringResolved = !caseSensitive ? contentString.toLowerCase() : contentString;
+    private getHighlightedText(searchText: string, caseSensitive: boolean) {
+        const stringValue = String(this.value);
+        const contentStringResolved = !caseSensitive ? stringValue.toLowerCase() : stringValue;
         const searchTextResolved = !caseSensitive ? searchText.toLowerCase() : searchText;
 
         let foundIndex = contentStringResolved.indexOf(searchTextResolved, 0);
@@ -120,9 +142,9 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit {
             const start = foundIndex;
             const end = foundIndex + searchTextResolved.length;
 
-            this.appendText(contentString.substring(previousMatchEnd, start));
+            this.appendText(stringValue.substring(previousMatchEnd, start));
             // tslint:disable-next-line:max-line-length
-            this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;font-weight:bold">${contentString.substring(start, end)}</span>`);
+            this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;font-weight:bold">${stringValue.substring(start, end)}</span>`);
 
             previousMatchEnd = end;
             matchCount++;
@@ -130,7 +152,7 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit {
             foundIndex = contentStringResolved.indexOf(searchTextResolved, end);
         }
 
-        this.appendText(contentString.substring(previousMatchEnd, contentString.length));
+        this.appendText(stringValue.substring(previousMatchEnd, stringValue.length));
 
         return matchCount;
     }
@@ -138,6 +160,7 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit {
     private appendText(text: string) {
         const textElement = this.renderer.createText(text);
         this.renderer.appendChild(this.parentElement, textElement);
+        this._addedElements.push(textElement);
     }
 
     private appendSpan(outerHTML: string) {
@@ -146,16 +169,21 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit {
         this.renderer.setProperty(span, "outerHTML", outerHTML);
 
         const childNodes = this.parentElement.childNodes;
-        ActiveHighlightManager.registerHighlight(this, childNodes[childNodes.length - 1], this._lastSearchInfo.stored);
+        this._addedElements.push(childNodes[childNodes.length - 1]);
+
+        //ActiveHighlightManager.registerHighlight(this, childNodes[childNodes.length - 1], this._forceEvaluation);
     }
 
     private searchNeedsEvaluation(text: string, caseSensitive: boolean): boolean {
         const searchedText = this._lastSearchInfo.searchedText;
 
-        return searchedText === null ||
+        return !this._nodeWasRemoved &&
+                (searchedText === null ||
                 searchedText !== text ||
+                this._lastSearchInfo.content !== this.value ||
                 this._lastSearchInfo.stored ||
-                this._lastSearchInfo.caseSensitive !== caseSensitive;
+                this._lastSearchInfo.caseSensitive !== caseSensitive ||
+                this._forceEvaluation);
     }
 }
 
