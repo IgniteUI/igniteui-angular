@@ -50,7 +50,8 @@ describe("IgxGrid - Row Selection", () => {
                 GridWithSelectionComponent,
                 GridWithSelectionFilteringComponent,
                 GridWithScrollsComponent,
-                GridSummaryComponent
+                GridSummaryComponent,
+                GridCancelableComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -880,6 +881,41 @@ describe("IgxGrid - Row Selection", () => {
         expect(grid.selectedCells[0].cellID.rowID).toEqual(oldCellID.rowID);
         expect(grid.selectedCells[0].cellID.columnID).toEqual(oldCellID.columnID);
     });
+
+    fit("Should be able to programatically overwrite the selection using onRowSelectionChange event", async(() => {
+        const fixture = TestBed.createComponent(GridCancelableComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.gridCancelable;
+        const gridElement: HTMLElement = fixture.nativeElement.querySelector(".igx-grid");
+        const firstRow = grid.getRowByIndex(0);
+        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector(".igx-checkbox__input");
+        const secondRow = grid.getRowByIndex(1);
+        const secondRowCheckbox: HTMLElement = secondRow.nativeElement.querySelector(".igx-checkbox__input");
+        const thirdRow = grid.getRowByIndex(2);
+        const thirdRowCheckbox: HTMLElement = thirdRow.nativeElement.querySelector(".igx-checkbox__input");
+        expect(firstRow.isSelected).toBeFalsy();
+        expect(secondRow.isSelected).toBeFalsy();
+        expect(thirdRow.isSelected).toBeFalsy();
+        firstRowCheckbox.dispatchEvent(new Event("click", {}));
+        fixture.whenStable().then(() => {
+
+            fixture.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(secondRow.isSelected).toBeFalsy();
+            expect(thirdRow.isSelected).toBeFalsy();
+
+            firstRowCheckbox.dispatchEvent(new Event("click", {}));
+            secondRowCheckbox.dispatchEvent(new Event("click", {}));
+            return fixture.whenStable();
+
+        }).then(() => {
+            fixture.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+            expect(secondRow.isSelected).toBeFalsy();
+            expect(thirdRow.isSelected).toBeFalsy();
+        });
+    }));
 });
 
 @Component({
@@ -1130,4 +1166,44 @@ export class GridSummaryComponent {
     @ViewChild("grid1", { read: IgxGridComponent })
     public gridSummaries: IgxGridComponent;
 
+}
+
+@Component({
+    template: `
+        <igx-grid #gridCancelable [data]="data" [rowSelectable]="true" (onRowSelectionChange)="cancelClick($event)">
+            <igx-column field="ProductID" header="Product ID">
+            </igx-column>
+            <igx-column field="ProductName">
+            </igx-column>
+            <igx-column field="InStock" [dataType]="'boolean'">
+            </igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'">
+            </igx-column>
+            <igx-column field="OrderDate" width="200px" [dataType]="'date'">
+            </igx-column>
+        </igx-grid>
+    `
+})
+export class GridCancelableComponent {
+
+    public data = [
+        { ProductID: 1, ProductName: "Chai", InStock: true, UnitsInStock: 2760, OrderDate: new Date("2005-03-21") },
+        { ProductID: 2, ProductName: "Aniseed Syrup", InStock: false, UnitsInStock: 198, OrderDate: new Date("2008-01-15") },
+        { ProductID: 3, ProductName: "Chef Antons Cajun Seasoning", InStock: true, UnitsInStock: 52, OrderDate: new Date("2010-11-20") },
+        { ProductID: 4, ProductName: "Grandmas Boysenberry Spread", InStock: false, UnitsInStock: 0, OrderDate: new Date("2007-10-11") },
+        { ProductID: 5, ProductName: "Uncle Bobs Dried Pears", InStock: false, UnitsInStock: 0, OrderDate: new Date("2001-07-27") },
+        { ProductID: 6, ProductName: "Northwoods Cranberry Sauce", InStock: true, UnitsInStock: 1098, OrderDate: new Date("1990-05-17") },
+        { ProductID: 7, ProductName: "Queso Cabrales", InStock: false, UnitsInStock: 0, OrderDate: new Date("2005-03-03") },
+        { ProductID: 8, ProductName: "Tofu", InStock: true, UnitsInStock: 7898, OrderDate: new Date("2017-09-09") },
+        { ProductID: 9, ProductName: "Teatime Chocolate Biscuits", InStock: true, UnitsInStock: 6998, OrderDate: new Date("2025-12-25") },
+        { ProductID: 10, ProductName: "Chocolate", InStock: true, UnitsInStock: 20000, OrderDate: new Date("2018-03-01") }
+    ];
+    @ViewChild("gridCancelable", { read: IgxGridComponent })
+    public gridCancelable: IgxGridComponent;
+
+    public cancelClick(evt) {
+        if (evt.row && (evt.row.index + 1) % 2 === 0) {
+            evt.newSelection = evt.oldSelection || [];
+        }
+    }
 }
