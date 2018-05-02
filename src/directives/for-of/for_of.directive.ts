@@ -318,9 +318,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         // Updating horizontal chunks
         const scrollOffset = this.fixUpdateAllCols(curScrollLeft);
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + "px";
-
-        this.dc.changeDetectorRef.detectChanges();
-        this.onChunkLoad.emit();
+        this._zone.run(() => {
+            this.dc.changeDetectorRef.detectChanges();
+            this.onChunkLoad.emit();
+        });
     }
 
     protected fixUpdateAllCols(inScrollLeft) {
