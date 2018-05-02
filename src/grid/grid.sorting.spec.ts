@@ -345,7 +345,7 @@ describe("IgxGrid - Grid Sorting", () => {
             expect(grid.getCellByColumn(index, "ID").value).toEqual(gridData[index].ID));
     });
 
-    fit("Should have a valid sorting icon when sorting using the API.", () => {
+    it("Should have a valid sorting icon when sorting using the API.", () => {
         const fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
         fixture.detectChanges();
 
