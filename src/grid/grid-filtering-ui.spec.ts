@@ -10,7 +10,7 @@ import { IgxInputDirective } from "../directives/input/input.directive";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-describe("IgxGrid - Filtering actions", () => {
+fdescribe("IgxGrid - Filtering actions", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -410,12 +410,9 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        expect(grid.rowList.length).toEqual(5);
+        expect(grid.rowList.length).toEqual(2);
         expect(grid.getCellByColumn(0, "Released").value).toBeFalsy();
         expect(grid.getCellByColumn(1, "Released").value).toBeFalsy();
-        expect(grid.getCellByColumn(2, "Released").value).toBeFalsy();
-        expect(grid.getCellByColumn(1, "Released").value).toBeFalsy();
-        expect(grid.getCellByColumn(2, "Released").value).toBeFalsy();
     });
 
     it("UI - should correctly filter boolean by 'null' filtering conditions", () => {
@@ -461,7 +458,7 @@ describe("IgxGrid - Filtering actions", () => {
         expect(grid.getCellByColumn(2, "Released").value).toBe(true);
         expect(grid.getCellByColumn(3, "Released").value).toMatch("");
         expect(grid.getCellByColumn(4, "Released").value).toBe(true);
-        expect(grid.getCellByColumn(5, "Released").value).toBe(false);
+        expect(grid.getCellByColumn(5, "Released").value).toBe(undefined);
     });
 
     it("UI - should correctly filter boolean by 'empty' filtering conditions", () => {
@@ -480,9 +477,10 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        expect(grid.rowList.length).toEqual(2);
+        expect(grid.rowList.length).toEqual(3);
         expect(grid.getCellByColumn(0, "Released").value).toEqual(null);
         expect(grid.getCellByColumn(1, "Released").value).toEqual(null);
+        expect(grid.getCellByColumn(2, "Released").value).toEqual(undefined);
     });
 
     it("UI - should correctly filter boolean by 'notEmpty' filtering conditions", () => {
@@ -501,13 +499,12 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        expect(grid.rowList.length).toEqual(6);
+        expect(grid.rowList.length).toEqual(5);
         expect(grid.getCellByColumn(0, "Released").value).toBe(false);
         expect(grid.getCellByColumn(1, "Released").value).toBe(true);
         expect(grid.getCellByColumn(2, "Released").value).toBe(true);
         expect(grid.getCellByColumn(3, "Released").value).toMatch("");
         expect(grid.getCellByColumn(4, "Released").value).toBe(true);
-        expect(grid.getCellByColumn(5, "Released").value).toBe(false);
     });
 
     // UI tests number column
@@ -1249,7 +1246,7 @@ export class IgxGridFilteringComponent {
             ID: 8,
             ProductName: null,
             ReleaseDate: this.today,
-            Released: false
+            Released: undefined
         }
     ];
 
