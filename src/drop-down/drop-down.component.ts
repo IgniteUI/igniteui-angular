@@ -204,7 +204,6 @@ export class IgxDropDownComponent implements AfterViewInit {
         this._selectedItem = newSelection;
         const args: ISelectionEventArgs = { oldSelection, newSelection };
         this.onSelection.emit(args);
-        this.toggle.close(true);
     }
 }
 

@@ -33,6 +33,8 @@ export class DropDownSampleComponent implements OnInit {
     }
 
     public toggleDropDown() {
+        // tslint:disable-next-line:no-debugger
+        debugger;
         this.igxDropDown.toggleDropDown();
     }
 

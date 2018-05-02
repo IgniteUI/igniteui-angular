@@ -65,6 +65,7 @@ export class IgxDropDownItemComponent implements OnInit {
         }
 
         this.dropDown.setSelectedItem(this.index);
+        this.dropDown.toggle.close(true);
     }
 
     @HostListener("keydown.Escape", ["$event"])
@@ -75,11 +76,13 @@ export class IgxDropDownItemComponent implements OnInit {
     @HostListener("keydown.Space", ["$event"])
     onSpaceKeyDown(event) {
         this.dropDown.setSelectedItem(this.index);
+        this.dropDown.toggle.close(true);
     }
 
     @HostListener("keydown.Enter", ["$event"])
     onEnterKeyDown(event) {
         this.dropDown.setSelectedItem(this.index);
+        this.dropDown.toggle.close(true);
     }
 
     @HostListener("keydown.ArrowDown", ["$event"])
