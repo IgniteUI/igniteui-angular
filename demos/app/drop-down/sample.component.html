@@ -1,8 +1,15 @@
-<button igxButton="raised" igxRipple (click)="toggleDropDown()">Toggle</button>
-<igx-drop-down (onSelection)="onSelection($event)">
-    <igx-drop-down-item *ngFor="let item of items" isDisabled={{item.disabled}} isHeader={{item.header}}>
-        {{ item.field }}
-    </igx-drop-down-item>
-</igx-drop-down>
-<div style="position: fixed; width: 100px; height: 100px; background-color: red; top: 50px; left: 300px; z-index: 9000;"></div>
+<div class="sample-wrapper">
+    <page-header title="Dropdown menu" description="description for dropdown menu"></page-header>
+    <section class="sample-content">
 
+        <button igxButton="raised" igxRipple (click)="toggleDropDown()">Toggle</button>
+        <igx-drop-down (onSelection)="onSelection($event)">
+            <igx-drop-down-item *ngFor="let item of items" isDisabled={{item.disabled}} isHeader={{item.header}}>
+                {{ item.field }}
+            </igx-drop-down-item>
+        </igx-drop-down>
+        <div class=""></div>
+        <div style="position: fixed; width: 100px; height: 100px; background-color: red; top:400px; left: 350px; z-index: 9000;"></div>
+
+    </section>
+</div>
