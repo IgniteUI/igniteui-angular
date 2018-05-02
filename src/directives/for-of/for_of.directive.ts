@@ -209,6 +209,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const value = changes[forOf].currentValue;
             if (!this._differ && value) {
                 try {
+                    if (this.igxForScrollOrientation === "horizontal" && !this.ngForTrackBy) {
+                        this.ngForTrackBy = (index: number, item: any) => {
+                            // track width option change by default if no other trackBy func is defined
+                            return item.width;
+                        };
+                    }
                     this._differ = this._differs.find(value).create(this.ngForTrackBy);
                 } catch (e) {
                     throw new Error(
@@ -227,11 +233,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this._differ) {
             const changes = this._differ.diff(this.igxForOf);
             if (changes) {
+                if (this.igxForScrollOrientation === "horizontal") {
+                    // after changes in columns have occured re-init cache.
+                    this.initHCache(this.igxForOf);
+                }
                 this._applyChanges(changes);
-            } else if (this.igxForScrollOrientation === "horizontal" && !!this.igxForContainerSize) {
-                // Resize scrollbar and hCache in case width of a cell has changed or etc. This cannot be detected with differ.
-                this.applyChunkSizeChange();
-                this._recalcScrollBarSize();
             }
         }
     }
@@ -525,6 +531,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     get ngForTrackBy(): TrackByFunction<T> { return this._trackByFn; }
+    set ngForTrackBy(fn: TrackByFunction<T>) { this._trackByFn = fn; }
 
     protected _applyChanges(changes: IterableChanges<T>) {
         this.applyChunkSizeChange();
