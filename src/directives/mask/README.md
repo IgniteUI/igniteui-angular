@@ -1,6 +1,6 @@
 # igxMask
 
-The **igxMask** directive is intended to provide means for controlling user input and formatting the visible value based on a configurable mask rules. It is applied
+The **igxMask** directive is intended to provide means for controlling user input and formatting the visible value based on a configurable mask rules.
 
 The following built-in mask rules should be supported:
 
