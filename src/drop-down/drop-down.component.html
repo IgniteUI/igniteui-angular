@@ -1,5 +1,5 @@
 <div class="igx-drop-down" igxToggle (onOpen)="open()" (onClose)="close()" [style.width]="width" [style.height]="height">
-    <div *ngIf="!toggle.collapsed">
+    <ng-container *ngIf="!toggle.collapsed">
         <ng-content></ng-content>
-    </div>
+    </ng-container>
 </div>
