@@ -410,10 +410,8 @@ describe("IgxGrid - Filtering actions", () => {
         select.nativeElement.dispatchEvent(new Event("change"));
         fix.detectChanges();
 
-        expect(grid.rowList.length).toEqual(5);
+        expect(grid.rowList.length).toEqual(3);
         expect(grid.getCellByColumn(0, "Released").value).toBeFalsy();
-        expect(grid.getCellByColumn(1, "Released").value).toBeFalsy();
-        expect(grid.getCellByColumn(2, "Released").value).toBeFalsy();
         expect(grid.getCellByColumn(1, "Released").value).toBeFalsy();
         expect(grid.getCellByColumn(2, "Released").value).toBeFalsy();
     });
