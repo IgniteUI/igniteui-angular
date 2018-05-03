@@ -68,6 +68,10 @@ describe("IgxDropDown ", () => {
     xit("Should be able to implement to any kind of anchor", () => {
         //To DO
     });
+
+    xit("Items can be disabled/enabled at runtime", () => {
+        //To DO
+    });
 });
 
 @Component({
