@@ -15,7 +15,7 @@ describe("IgxGrid - Grid Sorting", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [
-                GridDeclaredColumnsComponent
+                GridDeclaredColumnsComponent, GridWithoutSortableColumnsComponent
             ],
             imports: [IgxGridModule.forRoot()]
         })
@@ -366,6 +366,20 @@ describe("IgxGrid - Grid Sorting", () => {
         fixture.detectChanges();
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_NONE_CONTENT);
     });
+
+    it("Grid shouldn't be sorted when sorting using the API and the column is not sortable", () => {
+        const fixture = TestBed.createComponent(GridWithoutSortableColumnsComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+
+        grid.sort("ID", SortingDirection.Asc);
+        fixture.detectChanges();
+
+        const firstRowSecondCell = getCurrentCellFromGrid(grid, 0, 1);
+        const expectedResult = "Jane";
+        expect(getValueFromCellElement(firstRowSecondCell)).toEqual(expectedResult);
+    });
 });
 
 @Component({
@@ -378,6 +392,31 @@ describe("IgxGrid - Grid Sorting", () => {
     `
 })
 export class GridDeclaredColumnsComponent {
+
+    public data = [
+        { ID: 2, Name: "Jane", LastName: "Brown" },
+        { ID: 1, Name: "Brad", LastName: "Williams" },
+        { ID: 6, Name: "Rick", LastName: "Jones"},
+        { ID: 7, Name: "Rick", LastName: "BRown" },
+        { ID: 5, Name: "ALex", LastName: "Smith" },
+        { ID: 4, Name: "Alex", LastName: "Wilson" },
+        { ID: 3, Name: "Connor", LastName: "Walker" }
+    ];
+
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    @ViewChild("nameColumn") public nameColumn;
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data">
+            <igx-column headerClasses="header-id" field="ID"></igx-column>
+            <igx-column field="Name"></igx-column>
+            <igx-column field="LastName"></igx-column>
+        </igx-grid>
+    `
+})
+export class GridWithoutSortableColumnsComponent {
 
     public data = [
         { ID: 2, Name: "Jane", LastName: "Brown" },
