@@ -882,7 +882,7 @@ describe("IgxGrid - Row Selection", () => {
         expect(grid.selectedCells[0].cellID.columnID).toEqual(oldCellID.columnID);
     });
 
-    fit("Should be able to programatically overwrite the selection using onRowSelectionChange event", async(() => {
+    it("Should be able to programatically overwrite the selection using onRowSelectionChange event", async(() => {
         const fixture = TestBed.createComponent(GridCancelableComponent);
         fixture.detectChanges();
 
