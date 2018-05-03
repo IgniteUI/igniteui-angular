@@ -66,8 +66,6 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
         return `${this.defaultCssClass} ${this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS}`;
     }
 
-    @HostBinding("attr.aria-selected")
-    @HostBinding("class.igx-grid__tr--selected")
     get focused(): boolean {
         return this.isFocused;
     }

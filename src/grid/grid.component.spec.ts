@@ -14,7 +14,8 @@ describe("IgxGrid - input properties", () => {
             declarations: [
                 IgxGridTestComponent, IgGridTest5x5Component, IgGridTest10x30Component,
                 IgGridTest30x1000Component, IgGridTest150x20000Component,
-                IgxGridTestDefaultWidthHeightComponent
+                IgxGridTestDefaultWidthHeightComponent,
+                IgGridNullHeightComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule.forRoot()]
@@ -130,15 +131,22 @@ describe("IgxGrid - input properties", () => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
         const grid = fix.componentInstance.grid2;
         fix.componentInstance.generateColumns(5);
-        fix.componentInstance.generateData(5, 5);
+        fix.componentInstance.generateData(5);
         fix.detectChanges();
-
         expect(grid.width).toEqual("100%");
         expect(grid.columns[0].width).toEqual("200px");
         expect(grid.columns[4].width).toEqual("200px");
 
-        expect(parseInt(grid.columns[1].width, 10)).toEqual(parseInt(grid.columns[3].width, 10));
-        expect(parseInt(grid.columns[2].width, 10)).toEqual(parseInt(grid.columns[1].width, 10));
+        const actualGridWidth = grid.nativeElement.clientWidth;
+        const expectedDefWidth = Math.max(Math.floor((actualGridWidth -
+            parseInt(grid.columns[0].width, 10) -
+            parseInt(grid.columns[4].width, 10)) / 3),
+            parseInt(MIN_COL_WIDTH, 10));
+        expect(parseInt(grid.columnWidth, 10)).toEqual(expectedDefWidth);
+
+        expect(parseInt(grid.columns[1].width, 10)).toEqual(expectedDefWidth);
+        expect(parseInt(grid.columns[2].width, 10)).toEqual(expectedDefWidth);
+        expect(parseInt(grid.columns[3].width, 10)).toEqual(expectedDefWidth);
 
         grid.columns.forEach((column) => {
             const width = parseInt(column.width, 10);
@@ -156,15 +164,23 @@ describe("IgxGrid - input properties", () => {
         const grid = fix.componentInstance.grid2;
         grid.width = "800px";
         fix.componentInstance.generateColumns(5);
-        fix.componentInstance.generateData(5, 5);
+        fix.componentInstance.generateData(5);
         fix.detectChanges();
 
         expect(grid.width).toEqual("800px");
         expect(grid.columns[0].width).toEqual("200px");
         expect(grid.columns[4].width).toEqual("200px");
 
-        expect(parseInt(grid.columns[1].width, 10)).toEqual(parseInt(grid.columns[3].width, 10));
-        expect(parseInt(grid.columns[2].width, 10)).toEqual(parseInt(grid.columns[1].width, 10));
+        const actualGridWidth = grid.nativeElement.clientWidth;
+        const expectedDefWidth = Math.max(Math.floor((actualGridWidth -
+            parseInt(grid.columns[0].width, 10) -
+            parseInt(grid.columns[4].width, 10)) / 3),
+            parseInt(MIN_COL_WIDTH, 10));
+        expect(parseInt(grid.columnWidth, 10)).toEqual(expectedDefWidth);
+
+        expect(parseInt(grid.columns[1].width, 10)).toEqual(expectedDefWidth);
+        expect(parseInt(grid.columns[2].width, 10)).toEqual(expectedDefWidth);
+        expect(parseInt(grid.columns[3].width, 10)).toEqual(expectedDefWidth);
 
         grid.columns.forEach((column) => {
             const width = parseInt(column.width, 10);
@@ -174,23 +190,31 @@ describe("IgxGrid - input properties", () => {
             }
         });
 
-        // TODO: This needs to be investigated
-        // expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+        expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
     });
 
     it("Test rendering of data with 5 columns and 30 rows where 2 of the columns have width set", () => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
         const grid = fix.componentInstance.grid2;
         fix.componentInstance.generateColumns(5);
-        fix.componentInstance.generateData(5, 30);
+        fix.componentInstance.generateData(30);
         fix.detectChanges();
 
         expect(grid.width).toEqual("100%");
         expect(grid.columns[0].width).toEqual("200px");
         expect(grid.columns[4].width).toEqual("200px");
 
-        expect(parseInt(grid.columns[1].width, 10)).toEqual(parseInt(grid.columns[3].width, 10));
-        expect(parseInt(grid.columns[2].width, 10)).toEqual(parseInt(grid.columns[1].width, 10));
+        const actualGridWidth = grid.nativeElement.clientWidth;
+
+        const expectedDefWidth = Math.max(Math.floor((actualGridWidth -
+            parseInt(grid.columns[0].width, 10) -
+            parseInt(grid.columns[4].width, 10)) / 3),
+            parseInt(MIN_COL_WIDTH, 10));
+        expect(parseInt(grid.columnWidth, 10)).toEqual(expectedDefWidth);
+
+        expect(parseInt(grid.columns[1].width, 10)).toEqual(expectedDefWidth);
+        expect(parseInt(grid.columns[2].width, 10)).toEqual(expectedDefWidth);
+        expect(parseInt(grid.columns[3].width, 10)).toEqual(expectedDefWidth);
 
         grid.columns.forEach((column) => {
             const width = parseInt(column.width, 10);
@@ -207,7 +231,7 @@ describe("IgxGrid - input properties", () => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
         const grid = fix.componentInstance.grid2;
         fix.componentInstance.generateColumns(30);
-        fix.componentInstance.generateData(30, 1000);
+        fix.componentInstance.generateData(1000);
         fix.detectChanges();
 
         expect(grid.width).toEqual("100%");
@@ -217,8 +241,13 @@ describe("IgxGrid - input properties", () => {
         expect(grid.columns[10].width).toEqual("200px");
         expect(grid.columns[25].width).toEqual("200px");
 
-        expect(parseInt(grid.columns[1].width, 10)).toEqual(parseInt(grid.columns[4].width, 10));
-        expect(parseInt(grid.columns[2].width, 10)).toEqual(parseInt(grid.columns[1].width, 10));
+        const actualGridWidth = grid.nativeElement.clientWidth;
+
+        const expectedDefWidth = Math.max(Math.floor((actualGridWidth - 5 * 200) / 25), parseInt(MIN_COL_WIDTH, 10));
+        expect(parseInt(grid.columnWidth, 10)).toEqual(expectedDefWidth);
+        expect(parseInt(grid.columns[1].width, 10)).toEqual(expectedDefWidth);
+        expect(parseInt(grid.columns[2].width, 10)).toEqual(expectedDefWidth);
+        expect(parseInt(grid.columns[4].width, 10)).toEqual(expectedDefWidth);
 
         grid.columns.forEach((column) => {
             const width = parseInt(column.width, 10);
@@ -237,7 +266,7 @@ describe("IgxGrid - input properties", () => {
         const grid = fix.componentInstance.grid2;
         grid.width = "800px";
         fix.componentInstance.generateColumns(30);
-        fix.componentInstance.generateData(30, 1000);
+        fix.componentInstance.generateData(1000);
         fix.detectChanges();
 
         expect(grid.width).toEqual("800px");
@@ -246,6 +275,10 @@ describe("IgxGrid - input properties", () => {
         expect(grid.columns[5].width).toEqual("200px");
         expect(grid.columns[10].width).toEqual("200px");
         expect(grid.columns[25].width).toEqual("200px");
+
+        const actualGridWidth = grid.nativeElement.clientWidth;
+        const expectedDefWidth = Math.max(Math.floor((actualGridWidth - 5 * 200) / 25), parseInt(MIN_COL_WIDTH, 10));
+        expect(parseInt(grid.columnWidth, 10)).toEqual(expectedDefWidth);
 
         grid.columns.forEach((column) => {
             const width = parseInt(column.width, 10);
@@ -262,7 +295,7 @@ describe("IgxGrid - input properties", () => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
         const grid = fix.componentInstance.grid2;
         fix.componentInstance.generateColumns(150);
-        fix.componentInstance.generateData(150, 20000);
+        fix.componentInstance.generateData(20000);
         fix.detectChanges();
 
         expect(grid.width).toEqual("100%");
@@ -289,7 +322,7 @@ describe("IgxGrid - input properties", () => {
         const grid = fix.componentInstance.grid2;
         grid.width = "800px";
         fix.componentInstance.generateColumns(150);
-        fix.componentInstance.generateData(150, 20000);
+        fix.componentInstance.generateData(20000);
         fix.detectChanges();
 
         expect(grid.width).toEqual("800px");
@@ -309,6 +342,16 @@ describe("IgxGrid - input properties", () => {
         });
 
         expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+    });
+
+    it("should render all records if height is explicitly set to null.", () => {
+        const fix = TestBed.createComponent(IgGridNullHeightComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        const recsCount = grid.data.length;
+
+        // tbody should have height equal to all items * item height
+        expect(grid.tbody.nativeElement.clientHeight).toEqual(recsCount * 50);
     });
 });
 
@@ -364,13 +407,10 @@ export class IgxGridTestDefaultWidthHeightComponent {
         }
         return this.cols;
     }
-    public generateData(columns, rows) {
-        const data = [];
-        const cols = [];
-
+    public generateData(rows) {
         for (let r = 0; r < rows; r++) {
             const record = {};
-            for (let c = 0; c < columns; c++) {
+            for (let c = 0; c < this.cols.length; c++) {
                 record[this.cols[c].field] = c * r;
             }
             this.data.push(record);
@@ -568,5 +608,37 @@ export class IgGridTest150x20000Component {
     public isHorizonatScrollbarVisible() {
         const scrollbar = this.gridMinDefaultColWidth.parentVirtDir.getHorizontalScroll();
         return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
+    }
+}
+
+@Component({
+    template: `
+    <div style='height: 200px; overflow: auto;'>
+        <igx-grid #grid [data]="data" [height]='null' [autoGenerate]="true">
+        </igx-grid>
+    </div>
+    `
+})
+export class IgGridNullHeightComponent {
+    public cols;
+    public data;
+
+    @ViewChild("grid", { read: IgxGridComponent })
+    public instance: IgxGridComponent;
+
+    constructor(private _cdr: ChangeDetectorRef) {
+        this.data = this.generateData(5, 20);
+    }
+    public generateData(columns, rows) {
+        const data = [];
+
+        for (let r = 0; r < rows; r++) {
+            const record = {};
+            for (let c = 0; c < columns; c++) {
+                record["col" + c] = c * r;
+            }
+            data.push(record);
+        }
+        return data;
     }
 }

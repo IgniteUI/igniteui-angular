@@ -12,6 +12,23 @@ describe("Dialog", () => {
             imports: [BrowserAnimationsModule, IgxDialogModule]
         }).compileComponents();
     }));
+    it("Initialize a datepicker component with id", () => {
+        const fixture = TestBed.createComponent(AlertComponent);
+        fixture.detectChanges();
+
+        const dialog = fixture.componentInstance.dialog;
+        const domDialog = fixture.debugElement.query(By.css("igx-dialog")).nativeElement;
+
+        expect(dialog.id).toContain("igx-dialog-");
+        expect(domDialog.id).toContain("igx-dialog-");
+
+        dialog.id = "customDialog";
+        fixture.detectChanges();
+
+        expect(dialog.id).toBe("customDialog");
+        expect(domDialog.id).toBe("customDialog");
+    });
+
     it("Should set dialog title.", () => {
         const fixture = TestBed.createComponent(AlertComponent);
         const dialog = fixture.componentInstance.dialog;
