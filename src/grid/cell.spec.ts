@@ -536,7 +536,6 @@ describe("IgxGrid - Cell component", () => {
         const fix = TestBed.createComponent(GridWithEditableColumnComponent);
         fix.detectChanges();
 
-        // const firstCellOfColumn: DebugElement = fix.componentInstance.grid.columnList.first.cells[0];
         const firstCell: DebugElement = fix.debugElement.query(By.css(CELL_CSS_CLASS));
         const cellElem = firstCell.nativeElement;
         const component = fix.debugElement.query(By.css("igx-grid"));
@@ -632,6 +631,32 @@ describe("IgxGrid - Cell component", () => {
 
             return findCellByInputElem(elem, focusedElem.parentElement);
         }
+    }));
+
+    it("When we have undefined column and we are in edit mode the value should be empty string", async(() => {
+        const fix = TestBed.createComponent(GridWithEditableColumnComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const lastCellOfFirstRow: DebugElement = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[grid.columnList.length - 1];
+        const cellElem = lastCellOfFirstRow.nativeElement;
+        const component = fix.debugElement.query(By.css("igx-grid"));
+
+        component.triggerEventHandler("keydown.home" , null);
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            cellElem.dispatchEvent(new MouseEvent("dblclick"));
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            const input = lastCellOfFirstRow.query(By.css("input")).nativeElement;
+            const firstRowLastCell = grid.columnList.last.cells[0];
+            expect(firstRowLastCell.value).toBe(undefined);
+            expect(input.value).toBe("");
+        });
+
     }));
 });
 
@@ -766,8 +791,8 @@ export class NoColumnWidthGridComponent {
             <igx-column [editable]="true" field="FirstName"></igx-column>
             <igx-column field="LastName"></igx-column>
             <igx-column field="age"></igx-column>
+            <igx-column [editable]="true" field="undef"></igx-column>
         </igx-grid>
-        <input type="text" value="text" id="input-test" />
     `
 })
 export class GridWithEditableColumnComponent {
@@ -775,8 +800,8 @@ export class GridWithEditableColumnComponent {
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
 
     public data = [
-        { FirstName: "John", LastName: "Brown", age: 20 },
-        { FirstName: "Ben", LastName: "Affleck", age: 30 },
-        { FirstName: "Tom", LastName: "Riddle", age: 50 }
+        { FirstName: "John", LastName: "Brown", age: 20, undef: undefined },
+        { FirstName: "Ben", LastName: "Affleck", age: 30, undef: undefined },
+        { FirstName: "Tom", LastName: "Riddle", age: 50, undef: undefined }
     ];
 }
