@@ -110,7 +110,7 @@ export class IgxGridAPIService {
     public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
         const sortingState = this.get(id).sortingExpressions;
 
-        this.prepare_sorting_expression(sortingState, fieldName, dir, ignoreCase);
+        this.prepare_sorting_expression(id, sortingState, fieldName, dir, ignoreCase);
         this.get(id).sortingExpressions = sortingState;
     }
 
@@ -118,7 +118,7 @@ export class IgxGridAPIService {
         const sortingState = this.get(id).sortingExpressions;
 
         for (const each of expressions) {
-            this.prepare_sorting_expression(sortingState, each.fieldName, each.dir, each.ignoreCase);
+            this.prepare_sorting_expression(id, sortingState, each.fieldName, each.dir, each.ignoreCase);
         }
 
         this.get(id).sortingExpressions = sortingState;
@@ -129,7 +129,7 @@ export class IgxGridAPIService {
         if (this.get(id).paging) {
             this.get(id).page = 0;
         }
-        this.prepare_filtering_expression(filteringState, fieldName, term, condition, ignoreCase);
+        this.prepare_filtering_expression(id, filteringState, fieldName, term, condition, ignoreCase);
         this.get(id).filteringExpressions = filteringState;
     }
 
@@ -140,7 +140,7 @@ export class IgxGridAPIService {
         }
 
         for (const each of expressions) {
-            this.prepare_filtering_expression(filteringState, each.fieldName,
+            this.prepare_filtering_expression(id, filteringState, each.fieldName,
                                               each.searchVal, each.condition, each.ignoreCase);
         }
         this.get(id).filteringExpressions = filteringState;
@@ -153,7 +153,7 @@ export class IgxGridAPIService {
         }
 
         for (const column of this.get(id).columns) {
-            this.prepare_filtering_expression(filteringState, column.field, term,
+            this.prepare_filtering_expression(id, filteringState, column.field, term,
                 condition || column.filteringCondition, ignoreCase || column.filteringIgnoreCase);
         }
         this.get(id).filteringExpressions = filteringState;
@@ -185,30 +185,34 @@ export class IgxGridAPIService {
         }
     }
 
-    protected prepare_filtering_expression(state, fieldName, searchVal, condition, ignoreCase) {
+    protected prepare_filtering_expression(id, state, fieldName, searchVal, condition, ignoreCase) {
 
-        const expression = state.find((expr) => expr.fieldName === fieldName);
-        const newExpression = { fieldName, searchVal, condition, ignoreCase };
-        if (!expression) {
-            state.push(newExpression);
-        } else {
-            Object.assign(expression, newExpression);
+        if (this.get_column_by_name(id, fieldName).filterable) {
+            const expression = state.find((expr) => expr.fieldName === fieldName);
+            const newExpression = { fieldName, searchVal, condition, ignoreCase };
+            if (!expression) {
+                state.push(newExpression);
+            } else {
+                Object.assign(expression, newExpression);
+            }
         }
     }
 
-    protected prepare_sorting_expression(state, fieldName, dir, ignoreCase) {
+    protected prepare_sorting_expression(id: string, state, fieldName, dir, ignoreCase) {
 
-        if (dir === SortingDirection.None) {
-            state.splice(state.findIndex((expr) => expr.fieldName === fieldName), 1);
-            return;
-        }
+        if (this.get_column_by_name(id, fieldName).sortable) {
+            if (dir === SortingDirection.None) {
+                state.splice(state.findIndex((expr) => expr.fieldName === fieldName), 1);
+                return;
+            }
 
-        const expression = state.find((expr) => expr.fieldName === fieldName);
+            const expression = state.find((expr) => expr.fieldName === fieldName);
 
-        if (!expression) {
-            state.push({ fieldName, dir, ignoreCase });
-        } else {
-            Object.assign(expression, { fieldName, dir, ignoreCase });
+            if (!expression) {
+                state.push({ fieldName, dir, ignoreCase });
+            } else {
+                Object.assign(expression, { fieldName, dir, ignoreCase });
+            }
         }
     }
 }

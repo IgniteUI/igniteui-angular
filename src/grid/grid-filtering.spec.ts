@@ -12,7 +12,7 @@ describe("IgxGrid - Filtering actions", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxGridFilteringComponent
+                IgxGridFilteringComponent, GridWithoutFilterableColumnsComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -389,11 +389,28 @@ describe("IgxGrid - Filtering actions", () => {
         expect(grid.filteringExpressions.length).toEqual(grid.columns.length);
         expect(grid.rowList.length).toEqual(1);
     });
+
+    it("Grid shouldn't be filtered when filter using the API and the column is not filterable", () => {
+        const fix = TestBed.createComponent(GridWithoutFilterableColumnsComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const exprs: IFilteringExpression[] = [
+            { fieldName: "Name", searchVal: "Rick", condition: STRING_FILTERS.contains },
+            { fieldName: "ID", searchVal: 4, condition: NUMBER_FILTERS.greaterThan }
+        ];
+
+        grid.filter(exprs);
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(7);
+        expect(grid.filteringExpressions.length).toEqual(0);
+    });
 });
 
 @Component({
     template: `<igx-grid [data]="data" height="500px">
-        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ID'" [header]="'ID'" [filterable]="true"></igx-column>
         <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
         <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
         <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
@@ -467,6 +484,31 @@ export class IgxGridFilteringComponent {
     ];
 
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data">
+            <igx-column headerClasses="header-id" field="ID"></igx-column>
+            <igx-column field="Name"></igx-column>
+            <igx-column field="LastName"></igx-column>
+        </igx-grid>
+    `
+})
+export class GridWithoutFilterableColumnsComponent {
+
+    public data = [
+        { ID: 2, Name: "Jane", LastName: "Brown" },
+        { ID: 1, Name: "Brad", LastName: "Williams" },
+        { ID: 6, Name: "Rick", LastName: "Jones"},
+        { ID: 7, Name: "Rick", LastName: "BRown" },
+        { ID: 5, Name: "ALex", LastName: "Smith" },
+        { ID: 4, Name: "Alex", LastName: "Wilson" },
+        { ID: 3, Name: "Connor", LastName: "Walker" }
+    ];
+
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    @ViewChild("nameColumn") public nameColumn;
 }
 
 const expectedResults = [];
