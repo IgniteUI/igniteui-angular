@@ -1,4 +1,4 @@
-import { Component, ContentChildren, ViewChild, DebugElement } from "@angular/core";
+import { Component, ContentChildren, DebugElement, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule, NoopAnimationsModule } from "@angular/platform-browser/animations";
@@ -42,8 +42,48 @@ fdescribe("IgxDropDown ", () => {
         });
     }));
 
-    xit("should select item by SPACE/ENTER", () => {
-        //To DO
+    it("should select item by SPACE/ENTER", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        const list = fixture.componentInstance.dropdown;
+        const listItems = list.items.toArray();
+        let currentItem: DebugElement;
+        expect(list).toBeDefined();
+        expect(list.items.length).toEqual(4);
+        button.click({stopPropagation : () => null});
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(list.selectedItem).toEqual(list.items.first);
+            currentItem = fixture.debugElement.query(By.css(".igx-drop-down__item--focused"));
+            expect(currentItem.componentInstance.index).toEqual(0);
+            currentItem.triggerEventHandler("keydown.ArrowDown", {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            currentItem = fixture.debugElement.query(By.css(".igx-drop-down__item--focused"));
+            expect(currentItem).toBeDefined();
+            expect(currentItem.componentInstance.index).toEqual(1);
+            currentItem.triggerEventHandler("keydown.Space", {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(list.selectedItem).toEqual(list.items.toArray()[1]);
+            button.click({stopPropagation : () => null});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            currentItem = fixture.debugElement.query(By.css(".igx-drop-down__item--selected"));
+            currentItem.triggerEventHandler("keydown.ArrowDown", {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            currentItem = fixture.debugElement.query(By.css(".igx-drop-down__item--focused"));
+            currentItem.triggerEventHandler("keydown.Enter", {});
+            return fixture.whenStable();
+        }).then(() => {
+            expect(list.selectedItem).toEqual(list.items.toArray()[2]);
+        });
     });
 
     xit("should change the selected values indefinitely", () => {
