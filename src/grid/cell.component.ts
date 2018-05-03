@@ -244,6 +244,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
             () => {
                 if (!this.selected) {
                     this.nativeElement.blur();
+                } else if (this.selected && !this.focused) {
+                    this.nativeElement.focus();
                 }
                 this.cdr.markForCheck();
             });
@@ -251,6 +253,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
             () => {
                 if (!this.selected) {
                     this.nativeElement.blur();
+                } else if (this.selected && !this.focused) {
+                    this.nativeElement.focus();
                 }
                 this.cdr.markForCheck();
             });
