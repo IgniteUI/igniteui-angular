@@ -1174,7 +1174,7 @@ describe("IgxGrid - Filtering actions", () => {
         });
     }));
 
-    fit("Should correctly select month from month view datepicker/calendar component", async(() => {
+    it("Should correctly select month from month view datepicker/calendar component", async(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
         const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
@@ -1212,7 +1212,7 @@ describe("IgxGrid - Filtering actions", () => {
         });
     }));
 
-    fit("Should correctly select year from year view datepicker/calendar component", async(() => {
+    it("Should correctly select year from year view datepicker/calendar component", async(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
         const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
