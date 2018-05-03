@@ -38,7 +38,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
     public column;
 
     get value() {
-        return this._value || "";
+        return this._value;
     }
 
     set value(val) {
@@ -130,6 +130,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
     @ViewChild(IgxToggleDirective, { read: IgxToggleDirective})
     protected toggleDirective: IgxToggleDirective;
 
+    @ViewChild("select", { read: ElementRef})
+    protected select: ElementRef;
+
     constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
         this.filterChanged.pipe(
             debounceTime(250)
@@ -177,6 +180,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
     @autoWire(true)
     public filter(): void {
         const grid = this.gridAPI.get(this.gridID);
+        this.column.filteringCondition = this.getCondition(this.select.nativeElement.value);
         this.gridAPI.filter(
             this.column.gridID, this.column.field,
             this._value, this.column.filteringCondition, this.column.filteringIgnoreCase);
@@ -210,7 +214,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
     }
 
     public get disabled() {
-        if (this.value && !this.unaryCondition) {
+        if ((!!this.value || this.value === 0) && !this.unaryCondition) {
             return false;
         } else if (this.unaryCondition) {
             return false;
