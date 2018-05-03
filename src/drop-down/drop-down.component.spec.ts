@@ -87,7 +87,7 @@ fdescribe("IgxDropDown ", () => {
     });
 
     xit("should change the selected values indefinitely", () => {
-        //To DO
+        // To DO
     });
 
     it("Should navigate through the items using Up/Down/Home/End keys", () => {
@@ -140,7 +140,7 @@ fdescribe("IgxDropDown ", () => {
     });
 
     xit("Should support disabled items and headers", () => {
-        //To DO
+        // To DO
     });
 
     it("Should notify when selection has changed", async(() => {
@@ -206,11 +206,11 @@ fdescribe("IgxDropDown ", () => {
     }));
 
     xit("Should be able to implement to any kind of anchor", () => {
-        //To DO
+        // To DO
     });
 
     xit("Items can be disabled/enabled at runtime", () => {
-        //To DO
+        // To DO
     });
 });
 
