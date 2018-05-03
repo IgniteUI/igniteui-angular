@@ -3,7 +3,8 @@ import { IgxDropDownComponent } from "../../lib/main";
 @Component({
     // tslint:disable-next-line:component-selector
     selector: "drop-down-sample",
-    templateUrl: "./sample.component.html"
+    templateUrl: "./sample.component.html",
+    styleUrls: ["sample.component.css"]
 })
 export class DropDownSampleComponent implements OnInit {
     private width = "160px";

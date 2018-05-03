@@ -30,4 +30,8 @@
     @include e(header) {
         @extend %igx-drop-down__header !optional;
     }
+
+    @include e(separator) {
+        @extend %igx-drop-down__separator !optional;
+    }
 }
