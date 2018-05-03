@@ -1,4 +1,4 @@
-import { Component, DebugElement, ViewChild } from "@angular/core";
+﻿import { Component, DebugElement, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -18,7 +18,8 @@ describe("IgxGrid - Summaries", () => {
         TestBed.configureTestingModule({
             declarations: [
                 NoActiveSummariesComponent,
-                SummaryColumnComponent
+                SummaryColumnComponent,
+                VirtualSummaryColumnComponent
             ],
             imports: [BrowserAnimationsModule, IgxGridModule.forRoot()]
         })
@@ -380,13 +381,45 @@ describe("IgxGrid - Summaries", () => {
             done();
         });
     });
+    it("should render correct data after hiding summaries when scrolled to the bottom",  (done) => {
+        const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid1;
+        const summariedColumns = ["ProductName", "InStock", "UnitsInStock", "OrderDate"];
+
+        fixture.componentInstance.scrollTop(10000);
+        fixture.detectChanges();
+
+        let rowsRendered = fixture.nativeElement.querySelectorAll("igx-grid-row");
+        expect(rowsRendered.length).toEqual(9);
+
+        setTimeout(() => {
+            grid.disableSummaries(summariedColumns);
+            fixture.detectChanges();
+
+            setTimeout(() => {
+                rowsRendered = Array.from(fixture.nativeElement.querySelectorAll("igx-grid-row"));
+                const firstCells = rowsRendered.map((item) => {
+                    return item.querySelectorAll("igx-grid-cell")[0];
+                });
+                expect(rowsRendered.length).toEqual(12);
+
+                for (let i = 0; i < rowsRendered.length - 1; i++) {
+                    expect(firstCells[i].textContent.trim()).toEqual((i + 9).toString());
+                }
+
+                done();
+            }, 0);
+        }, 0);
+    });
+
     function sendInput(element, text: string, fix) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event("input"));
         fix.detectChanges();
         return fix.whenStable();
     }
-
 });
 
 @Component({
@@ -459,4 +492,64 @@ export class  SummaryColumnComponent {
 
     public numberSummary = new IgxNumberSummaryOperand();
     public dateSummary = new IgxDateSummaryOperand();
+}
+
+@Component({
+    template: `
+        <igx-grid #grid1 [data]="data" [width]="width" [height]="height">
+            <igx-column field="ProductID" header="Product ID">
+            </igx-column>
+            <igx-column field="ProductName" [hasSummary]="true">
+            </igx-column>
+            <igx-column field="InStock" [dataType]="'boolean'" [hasSummary]="true">
+            </igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [filterable]="true">
+            </igx-column>
+            <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="true">
+            </igx-column>
+        </igx-grid>
+    `
+})
+export class  VirtualSummaryColumnComponent {
+
+    public data = [
+        { ProductID: 1, ProductName: "Chai", InStock: true, UnitsInStock: 2760, OrderDate: new Date("2005-03-21") },
+        { ProductID: 2, ProductName: "Aniseed Syrup", InStock: false, UnitsInStock: 198, OrderDate: new Date("2008-01-15") },
+        { ProductID: 3, ProductName: "Chef Antons Cajun Seasoning", InStock: true, UnitsInStock: 52, OrderDate: new Date("2010-11-20") },
+        { ProductID: 4, ProductName: "Grandmas Boysenberry Spread", InStock: false, UnitsInStock: 0, OrderDate: new Date("2007-10-11") },
+        { ProductID: 5, ProductName: "Uncle Bobs Dried Pears", InStock: false, UnitsInStock: 0, OrderDate: new Date("2001-07-27") },
+        { ProductID: 6, ProductName: "Northwoods Cranberry Sauce", InStock: true, UnitsInStock: 1098, OrderDate: new Date("1990-05-17") },
+        { ProductID: 7, ProductName: "Queso Cabrales", InStock: false, UnitsInStock: 0, OrderDate: new Date("2005-03-03") },
+        { ProductID: 8, ProductName: "Tofu", InStock: true, UnitsInStock: 7898, OrderDate: new Date("2017-09-09") },
+        { ProductID: 9, ProductName: "Teatime Chocolate Biscuits", InStock: true, UnitsInStock: 6998, OrderDate: new Date("2025-12-25") },
+        { ProductID: 10, ProductName: "Pie", InStock: true, UnitsInStock: 1000, OrderDate: new Date("2017-05-07") },
+        { ProductID: 11, ProductName: "Pasta", InStock: false, UnitsInStock: 198, OrderDate: new Date("2001-02-15") },
+        { ProductID: 12, ProductName: "Krusty krab's burger", InStock: true, UnitsInStock: 52, OrderDate: new Date("2012-09-25") },
+        { ProductID: 13, ProductName: "Lasagna", InStock: false, UnitsInStock: 0, OrderDate: new Date("2015-02-09") },
+        { ProductID: 14, ProductName: "Uncle Bobs Dried Pears", InStock: false, UnitsInStock: 0, OrderDate: new Date("2008-03-17") },
+        { ProductID: 15, ProductName: "Cheese", InStock: true, UnitsInStock: 1098, OrderDate: new Date("1990-11-27") },
+        { ProductID: 16, ProductName: "Devil's Hot Chilli Sauce", InStock: false, UnitsInStock: 0, OrderDate: new Date("2012-08-14") },
+        { ProductID: 17, ProductName: "Parmesan", InStock: true, UnitsInStock: 4898, OrderDate: new Date("2017-09-09") },
+        { ProductID: 18, ProductName: "Steaks", InStock: true, UnitsInStock: 3098, OrderDate: new Date("2025-12-25") },
+        { ProductID: 19, ProductName: "Biscuits", InStock: true, UnitsInStock: 10570, OrderDate: new Date("2018-03-01") }
+    ];
+
+    @ViewChild("grid1", { read: IgxGridComponent })
+    public grid1: IgxGridComponent;
+
+    public width = "800px";
+    public height = "600px";
+
+    public numberSummary = new IgxNumberSummaryOperand();
+    public dateSummary = new IgxDateSummaryOperand();
+
+    public scrollTop(newTop: number) {
+        const vScrollbar = this.grid1.verticalScrollContainer.getVerticalScroll();
+        vScrollbar.scrollTop = newTop;
+    }
+
+    public scrollLeft(newLeft: number) {
+        const hScrollbar = this.grid1.parentVirtDir.getHorizontalScroll();
+        hScrollbar.scrollLeft = newLeft;
+    }
 }
