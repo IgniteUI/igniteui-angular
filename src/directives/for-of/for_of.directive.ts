@@ -347,19 +347,22 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const currIndex = Math.floor(ratio * count);
         let endingIndex = this.state.chunkSize + currIndex;
 
+        // We update the startIndex before recalculating the chunkSize.
+        const bUpdatedStart = this.state.startIndex !== currIndex;
+        this.state.startIndex = currIndex;
+
         if (endingIndex > this.igxForOf.length) {
             // shrink the size of the chunk (remove the extra non-visible view) when the scroll is at the bottom.
             endingIndex = this.igxForOf.length;
             this._isScrolledToBottom = true;
             this.applyChunkSizeChange();
-        } else if (this._isScrolledToBottom && this.state.startIndex !== currIndex) {
+        } else if (this._isScrolledToBottom && bUpdatedStart) {
             // add one more non-visible view in the chunk to ensure smooth scrolling when we scroll up from the bottom.
             this._isScrolledToBottom = false;
             this.applyChunkSizeChange();
         }
 
-        if (this.state.startIndex !== currIndex) {
-            this.state.startIndex = currIndex;
+        if (bUpdatedStart) {
             this.onChunkPreload.emit(this.state);
         }
         if (this.isRemote) {
@@ -386,14 +389,14 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const curScrollLeft = event.target.scrollLeft;
 
         // Updating horizontal chunks
-        const scrollOffset = this.fixUpdateAllCols(curScrollLeft);
+        const scrollOffset = this.fixedUpdateAllCols(curScrollLeft);
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + "px";
 
         this.dc.changeDetectorRef.detectChanges();
         this.onChunkLoad.emit();
     }
 
-    protected fixUpdateAllCols(inScrollLeft) {
+    protected fixedUpdateAllCols(inScrollLeft) {
         this.state.startIndex = this.getHorizontalIndexAt(
             inScrollLeft,
             this.hCache,
@@ -560,6 +563,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return size;
     }
 
+    /**
+     * Recalculates the chunkSize based on current startIndex and returns the new size.
+     * This should be called after this.state.startIndex is updated, not before.
+     */
     protected _calculateChunkSize(): number {
         let chunkSize = 0;
         if (this.igxForContainerSize !== null && this.igxForContainerSize !== undefined) {
@@ -670,6 +677,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this._recalcScrollBarSize();
     }
 
+    /** Removes an elemenet from the embedded views and updates chunkSize */
     protected removeLastElem() {
         const oldElem = this._embeddedViews.pop();
         oldElem.destroy();
@@ -677,6 +685,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.state.chunkSize--;
     }
 
+    /** If there exists an element that we can create embedded view for creates it, appends it and updates chunkSize */
     protected addLastElem() {
         let elemIndex = this.state.startIndex + this.state.chunkSize;
         if (elemIndex > this.igxForOf.length) {
@@ -699,6 +708,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.state.chunkSize++;
     }
 
+    /**
+     * Recalculates chunkSize and adds/removes elements if need due to the change.
+     * this.state.chunkSize is updated in @addLastElem() or @removeLastElem()
+     */
     private applyChunkSizeChange() {
         const chunkSize = this.isRemote ? this.igxForOf.length : this._calculateChunkSize();
         if (chunkSize > this.state.chunkSize) {
