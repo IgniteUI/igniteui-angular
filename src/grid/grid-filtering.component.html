@@ -24,7 +24,7 @@
 
 <span igxToggle (onOpen)="refresh()" (onClose)="refresh()" #directive="toggle" [attr.class]="dialogPosition">
     <div>
-        <select (change)="selectionChanged($event.target.value)">
+        <select (change)="selectionChanged($event.target.value)" #select>
             <option [selected]="isActive(each)" *ngFor="let each of conditions" [value]="each">{{ each | filterCondition | titlecase }}</option>
         </select>
     </div>
