@@ -38,7 +38,6 @@ export class IgxDropDownItemComponent implements OnInit {
 
         if (value) {
             this.element.nativeElement.focus();
-            this.element.nativeElement.scrollIntoView(true);
         }
         this._isFocused = value;
     }
