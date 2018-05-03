@@ -187,7 +187,8 @@ export class IgxGridAPIService {
 
     protected prepare_filtering_expression(id, state, fieldName, searchVal, condition, ignoreCase) {
 
-        if (this.get_column_by_name(id, fieldName).filterable) {
+        const column = this.get_column_by_name(id, fieldName);
+        if (column && column.filterable) {
             const expression = state.find((expr) => expr.fieldName === fieldName);
             const newExpression = { fieldName, searchVal, condition, ignoreCase };
             if (!expression) {
@@ -200,7 +201,8 @@ export class IgxGridAPIService {
 
     protected prepare_sorting_expression(id: string, state, fieldName, dir, ignoreCase) {
 
-        if (this.get_column_by_name(id, fieldName).sortable) {
+        const column = this.get_column_by_name(id, fieldName);
+        if (column && column.sortable) {
             if (dir === SortingDirection.None) {
                 state.splice(state.findIndex((expr) => expr.fieldName === fieldName), 1);
                 return;
