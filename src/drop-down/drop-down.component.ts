@@ -122,14 +122,16 @@ export class IgxDropDownComponent implements AfterViewInit {
                 this._focusedItem.isFocused = false;
             }
             this._focusedItem = this.items.toArray()[focusedItemIndex + 1];
+
+            const elementRect = this._focusedItem.element.nativeElement.getBoundingClientRect();
+            const parentRect = this.toggle.element.getBoundingClientRect();
+            if (parentRect.bottom < elementRect.bottom) {
+                this.toggle.element.scrollTop += (elementRect.bottom - parentRect.bottom);
+            }
+
             this._focusedItem.isFocused = true;
         }
 
-        // const rect = this._focusedItem.element.nativeElement.getBoundingClientRect();
-        // const parentRect = this.toggle.element.getBoundingClientRect();
-        // if (parentRect.bottom < rect.bottom) {
-        //     this.toggle.element.scrollTop += (rect.bottom - parentRect.bottom);
-        // }
     }
 
     focusPrev() {
@@ -142,14 +144,15 @@ export class IgxDropDownComponent implements AfterViewInit {
             if (focusedItemIndex > 0) {
                 this._focusedItem.isFocused = false;
                 this._focusedItem = this.items.toArray()[focusedItemIndex - 1];
+
+                const elementRect = this._focusedItem.element.nativeElement.getBoundingClientRect();
+                const parentRect = this.toggle.element.getBoundingClientRect();
+                if (parentRect.top > elementRect.top) {
+                    this.toggle.element.scrollTop -= (parentRect.top - elementRect.top);
+                }
+
                 this._focusedItem.isFocused = true;
             }
-
-            // const rect = this._focusedItem.element.nativeElement.getBoundingClientRect();
-            // const parentRect = this.toggle.element.getBoundingClientRect();
-            // if (parentRect.top > rect.top) {
-            //     this.toggle.element.scrollTop -= (parentRect.top - rect.bottom + rect.height);
-            // }
         }
     }
 
@@ -175,7 +178,8 @@ export class IgxDropDownComponent implements AfterViewInit {
         this._focusedItem = this.selectedItem;
         if (this.selectedItem) {
             this._focusedItem.isFocused = true;
-            this.selectedItem.element.nativeElement.scrollIntoView(true);
+            // this.selectedItem.element.nativeElement.scrollIntoView(true);
+            this.scrollToItem(this.selectedItem);
         }
 
         this.onOpen.emit();
@@ -191,6 +195,11 @@ export class IgxDropDownComponent implements AfterViewInit {
         itemPosition = this.items
             .filter((itemToFilter) => itemToFilter.index < item.index)
             .reduce((sum, currentItem) => sum + currentItem.elementHeight, 0);
+
+        // TODO: find how to calculate height without padding. We are remove padding now by -16
+        const dropDownHeight = this.toggle.element.clientHeight - 16;
+        itemPosition -= dropDownHeight / 2;
+        itemPosition += item.elementHeight / 2;
 
         this.toggle.element.scrollTop = (Math.floor(itemPosition));
     }
