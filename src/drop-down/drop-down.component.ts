@@ -54,7 +54,7 @@ export class IgxDropDownComponent implements AfterViewInit {
     public setSelectedItem(index: number) {
         if (index < 0 || index >= this.items.length) {
             //  TODO: should we throw here!!!
-            return;
+            throw new Error("Selected item index should be between 0 an " + (this.items.length - 1).toString());
         }
 
         const newSelection = this.items.toArray().find((item) => item.index === index);
