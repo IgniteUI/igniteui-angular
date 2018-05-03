@@ -182,11 +182,6 @@ export class IgxDropDownComponent implements AfterViewInit {
             this.scrollToItem(this.selectedItem);
         }
 
-        this.toggle.element.onscroll = () => {
-            // tslint:disable-next-line:no-debugger
-            debugger;
-        };
-
         this.onOpen.emit();
     }
 
