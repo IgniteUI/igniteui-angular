@@ -1,7 +1,7 @@
 import { Component, ContentChildren, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { BrowserAnimationsModule, NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule } from "../directives/toggle/toggle.directive";
 import { IgxDropDownItemComponent } from "./drop-down-item.component";
 import { IgxDropDownComponent, IgxDropDownModule } from "./drop-down.component";
@@ -12,7 +12,7 @@ describe("IgxDropDown ", () => {
             declarations: [
                 IgxDropDownTestComponent
             ],
-            imports: [IgxDropDownModule, BrowserAnimationsModule, NoopAnimationsModule, IgxToggleModule]
+            imports: [IgxDropDownModule, BrowserAnimationsModule, IgxToggleModule]
         })
         .compileComponents();
     }));
@@ -35,7 +35,10 @@ describe("IgxDropDown ", () => {
         // tslint:disable-next-line:no-debugger
         debugger;
         button.click();
-        expect(item.isFocused).toBe(true);
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(item.isFocused).toBe(true);
+        });
     });
 
     xit("should select item by SPACE/ENTER", () => {
@@ -79,7 +82,8 @@ describe("IgxDropDown ", () => {
 })
  class IgxDropDownTestComponent {
 
-    @ViewChild(IgxDropDownComponent) public dropdown: IgxDropDownComponent;
+    @ViewChild(IgxDropDownComponent, {read: IgxDropDownComponent}) 
+    public dropdown: IgxDropDownComponent;
 
     public items: any[] = [
         { field: "Nav1" },
