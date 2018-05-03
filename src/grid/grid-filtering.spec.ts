@@ -202,7 +202,7 @@ describe("IgxGrid - Filtering actions", () => {
         expect(grid.rowList.length).toEqual(8);
         grid.filter("Released", null, BOOLEAN_FILTERS.false);
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(5);
+        expect(grid.rowList.length).toEqual(3);
 
         // True filter
         grid.clearFilter("Released");
@@ -441,7 +441,7 @@ export class IgxGridFilteringComponent {
             ID: 5,
             ProductName: "",
             ReleaseDate: undefined,
-            Released: ""
+            Released: false
         },
         {
             Downloads: 702,
