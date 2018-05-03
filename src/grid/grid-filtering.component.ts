@@ -6,6 +6,7 @@ import {
     HostBinding,
     HostListener,
     Input,
+    NgZone,
     OnDestroy,
     OnInit,
     TemplateRef,
@@ -197,6 +198,10 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
         this._value = null;
         this.gridAPI.clear_filter(this.gridID, this.column.field);
         this.gridAPI.get(this.gridID).clearSummaryCache();
+        // XXX - Temp fix for (#1183, #1177) (Should be deleted)
+        if (this.dataType === DataType.Date) {
+            this.cdr.detectChanges();
+        }
     }
 
     public selectionChanged(value): void {
@@ -221,7 +226,6 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
         return true;
     }
 
-    @HostListener("mousedown")
     public onMouseDown() {
         requestAnimationFrame(() => {
             const grid = this.gridAPI.get(this.gridID);
@@ -236,6 +240,11 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
                 this.dialogPosition = "igx-filtering__options--to-left";
             }
         });
+    }
+
+    // XXX - Temp fix for (#1183, #1177) (Should be deleted)
+    onDatePickerClick() {
+        this.zone.run(() => {});
     }
 
     @HostListener("click", ["$event"])

@@ -11,13 +11,13 @@
 </ng-template>
 
 <ng-template #defaultDateUI>
-    <igx-datePicker *ngIf="!unaryCondition" [(ngModel)]="value"></igx-datePicker>
+    <igx-datePicker (click)="onDatePickerClick()" *ngIf="!unaryCondition" [(ngModel)]="value"></igx-datePicker>
 </ng-template>
 
 <div class="igx-filtering">
     <div [attr.class]="filterCSS">
         <span class="toggle-icon" [igxToggleAction]="directive">
-            <igx-icon>more_vert</igx-icon>
+            <igx-icon (mousedown)="onMouseDown()">more_vert</igx-icon>
         </span>
     </div>
 </div>
