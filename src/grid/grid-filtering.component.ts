@@ -134,7 +134,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
     @ViewChild("select", { read: ElementRef})
     protected select: ElementRef;
 
-    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
+    constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
         this.filterChanged.pipe(
             debounceTime(250)
         ).subscribe((value) => this.value = value);

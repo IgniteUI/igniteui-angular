@@ -485,7 +485,6 @@ describe("IgxGrid - Filtering actions", () => {
             expect(filtButt.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
             expect(resetButt.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
 
-
             // true condition
             options[0].selected = true;
             select.nativeElement.dispatchEvent(new Event("change"));
