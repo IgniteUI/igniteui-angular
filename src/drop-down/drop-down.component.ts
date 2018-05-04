@@ -138,6 +138,11 @@ export class IgxDropDownComponent implements AfterViewInit {
             this._focusedItem.isFocused = true;
         }
 
+        // const rect = this._focusedItem.element.nativeElement.getBoundingClientRect();
+        // const parentRect = this.toggle.element.getBoundingClientRect();
+        // if (parentRect.bottom < rect.bottom) {
+        //     this.toggle.element.scrollTop += (rect.bottom - parentRect.bottom);
+        // }
     }
 
     focusPrev() {
@@ -159,6 +164,12 @@ export class IgxDropDownComponent implements AfterViewInit {
 
                 this._focusedItem.isFocused = true;
             }
+
+            // const rect = this._focusedItem.element.nativeElement.getBoundingClientRect();
+            // const parentRect = this.toggle.element.getBoundingClientRect();
+            // if (parentRect.top > rect.top) {
+            //     this.toggle.element.scrollTop -= (parentRect.top - rect.bottom + rect.height);
+            // }
         }
     }
 
