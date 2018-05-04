@@ -192,6 +192,43 @@ describe("IgxDropDown ", () => {
     xit("Items can be disabled/enabled at runtime", () => {
         // To DO
     });
+
+    xit("Esc key closes the dropdown and does not change selection", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        const list = fixture.componentInstance.dropdown;
+        const mockObj = { stopPropagation : () => null };
+        let currentItem: DebugElement;
+        spyOn(list.onSelection, "emit").and.callThrough();
+        spyOn(list.onClose, "emit").and.callThrough();
+        spyOn(list.onOpen, "emit").and.callThrough();
+        spyOn(fixture.componentInstance, "onSelection");
+        expect(list).toBeDefined();
+        expect(list.items.length).toEqual(4);
+        button.click(mockObj);
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            currentItem = fixture.debugElement.query(By.css(".igx-drop-down__item--focused"));
+            expect(currentItem).toBeDefined();
+            expect(currentItem.componentInstance.index).toEqual(0);
+            currentItem.triggerEventHandler("keydown.ArrowDown", {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            currentItem = fixture.debugElement.query(By.css(".igx-drop-down__item--focused"));
+            expect(currentItem).toBeDefined();
+            expect(currentItem.componentInstance.index).toEqual(1);
+            currentItem.triggerEventHandler("keydown.escape", {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(list.selectedItem).toEqual(list.items.first);
+            expect(list.onOpen.emit).toHaveBeenCalledTimes(1);
+            expect(list.onClose.emit).toHaveBeenCalledTimes(1);
+            expect(list.onSelection.emit).toHaveBeenCalledTimes(1);
+        });
+    });
 });
 
 @Component({
