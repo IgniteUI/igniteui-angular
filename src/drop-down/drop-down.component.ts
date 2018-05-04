@@ -1,12 +1,14 @@
 import { CommonModule } from "@angular/common";
 import {
     AfterViewInit,
+    ChangeDetectorRef,
     Component,
     ContentChildren,
     EventEmitter,
     HostListener,
     Input,
     NgModule,
+    OnInit,
     Output,
     QueryList,
     ViewChild
@@ -24,7 +26,7 @@ export interface ISelectionEventArgs {
     selector: "igx-drop-down",
     templateUrl: "./drop-down.component.html"
 })
-export class IgxDropDownComponent implements AfterViewInit {
+export class IgxDropDownComponent implements AfterViewInit, OnInit {
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
     private _focusedItem: IgxDropDownItemComponent = null;
     private _defaultWidth = "128px";
@@ -43,6 +45,7 @@ export class IgxDropDownComponent implements AfterViewInit {
     @Input() public allowItemsFocus = true;
 
     constructor(
+        private cdr: ChangeDetectorRef,
         private selectionAPI: IgxSelectionAPIService) { }
 
     get id(): string {
@@ -173,14 +176,19 @@ export class IgxDropDownComponent implements AfterViewInit {
         }
     }
 
-    ngAfterViewInit() {
+    ngOnInit() {
         this.toggleDirective.id = this.id;
         this.toggleDirective.element.style.zIndex = 1;
         this.toggleDirective.element.style.position = "absolute";
         this.toggleDirective.element.style.overflowY = "auto";
+    }
 
+    ngAfterViewInit() {
         if (!this.selectedItem && this.items.length > 0) {
-            this.setSelectedItem(0);
+            //  TODO: check if we can remove timeout without introducing ExpressionChangedAfterItHasBeenCheckedError
+            setTimeout(() => {
+                this.setSelectedItem(0);
+            });
         }
         this._initiallySelectedItem = this.selectedItem;
     }
@@ -202,6 +210,7 @@ export class IgxDropDownComponent implements AfterViewInit {
     }
 
     onToggleOpening() {
+        this.cdr.detectChanges();
         this.scrollToItem(this.selectedItem);
     }
 
