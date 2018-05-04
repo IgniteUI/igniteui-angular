@@ -36,7 +36,6 @@ export class IgxDropDownItemComponent {
         }
 
         if (value && !this.dropDown.toggleDirective.collapsed) {
-            console.log(document.activeElement);
             this.element.nativeElement.focus();
         }
         this._isFocused = value;
@@ -52,7 +51,7 @@ export class IgxDropDownItemComponent {
     @HostBinding("class.igx-drop-down__item--disabled")
     public isDisabled = false;
 
-    @HostBinding("attr.tab-index")
+    @HostBinding("attr.tabindex")
     get removeTabIndex() {
         const shouldSetTabIndex = this.dropDown.allowItemsFocus && !(this.isDisabled || this.isHeader);
         if (shouldSetTabIndex) {
