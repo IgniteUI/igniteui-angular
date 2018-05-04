@@ -377,6 +377,16 @@ describe("IgxGrid - Cell component", () => {
         });
     });
 
+    it("should use default column width for cells with width in %.", () => {
+        const fix = TestBed.createComponent(VirtualtGridComponent);
+        fix.componentInstance.defaultWidth = "25%";
+        fix.detectChanges();
+        const rows = fix.componentInstance.instance.rowList;
+        rows.forEach((item) => {
+            expect(item.cells.last.width).toEqual("25%");
+        });
+    });
+
     it("should scroll first row into view when pressing arrow up", async(() => {
         const fix = TestBed.createComponent(VirtualtGridComponent);
         fix.detectChanges();
@@ -696,7 +706,7 @@ export class CtrlKeyKeyboardNagivationComponent {
 
 @Component({
     template: `
-        <igx-grid [height]="'300px'" [width]="'800px'" [columnWidth]="'200px'" [data]="data" [autoGenerate]="true"
+        <igx-grid [height]="'300px'" [width]="'800px'" [columnWidth]="defaultWidth" [data]="data" [autoGenerate]="true"
          (onSelection)="cellSelected($event)">
         </igx-grid>
     `
@@ -708,6 +718,7 @@ export class VirtualtGridComponent {
 
     public data = [];
     public cols = [{ field: "index" }, { field: "value" }, { field: "other" }, { field: "another"}];
+    public defaultWidth = "200px";
     public selectedCell: IgxGridCellComponent;
 
     constructor() {
