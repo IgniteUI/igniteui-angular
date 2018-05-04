@@ -7,6 +7,10 @@ import { IgxGridFilterComponent } from "./grid-filtering.component";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
+const SORTING_ICON_NONE_CONTENT = "none";
+const SORTING_ICON_ASC_CONTENT = "arrow_upward";
+const SORTING_ICON_DESC_CONTENT = "arrow_downward";
+
 describe("IgxGrid - Grid Sorting", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -340,12 +344,34 @@ describe("IgxGrid - Grid Sorting", () => {
         grid.rowList.map((item, index) =>
             expect(grid.getCellByColumn(index, "ID").value).toEqual(gridData[index].ID));
     });
+
+    it("Should have a valid sorting icon when sorting using the API.", () => {
+        const fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const firstHeaderCell = fixture.debugElement.query(By.css(".header-id"));
+        const sortingIcon = fixture.debugElement.query(By.css(".sort-icon"));
+        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_NONE_CONTENT);
+
+        grid.sort("ID", SortingDirection.Asc);
+        fixture.detectChanges();
+        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
+
+        grid.sort("ID", SortingDirection.Desc);
+        fixture.detectChanges();
+        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_DESC_CONTENT);
+
+        grid.clearSort();
+        fixture.detectChanges();
+        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_NONE_CONTENT);
+    });
 });
 
 @Component({
     template: `
         <igx-grid [data]="data">
-            <igx-column [sortable]="true" field="ID"></igx-column>
+            <igx-column headerClasses="header-id" [sortable]="true" field="ID"></igx-column>
             <igx-column [sortable]="true" field="Name"></igx-column>
             <igx-column [sortable]="true" field="LastName"></igx-column>
         </igx-grid>

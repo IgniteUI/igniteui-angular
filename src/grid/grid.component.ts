@@ -919,7 +919,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._height = this.rowBasedHeight <= viewPortHeight ? null : viewPortHeight.toString();
         } else {
             const parentHeight = this.nativeElement.parentNode.getBoundingClientRect().height;
-            this._height = this.rowBasedHeight <= parentHeight ? null : "100%";
+            this._height = this.rowBasedHeight <= parentHeight ? null : this._height;
         }
         this.calculateGridHeight();
         this.cdr.detectChanges();
@@ -938,6 +938,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         if (!this._height) {
             this.calcHeight = null;
+            if (this.hasSummarizedColumns && !this.tfootHeight) {
+                this.tfootHeight = this.tfoot.nativeElement.firstElementChild ?
+                    this.calcMaxSummaryHeight() : 0;
+            }
             return;
         }
 
@@ -1021,6 +1025,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     protected calculateGridSizes() {
         this.calculateGridWidth();
+        this.cdr.detectChanges();
         this.calculateGridHeight();
         if (this.rowSelectable) {
             this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.clientWidth;
