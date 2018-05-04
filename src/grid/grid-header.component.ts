@@ -117,6 +117,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
 
     public ngDoCheck() {
         this.getSortDirection();
+        this.cdr.markForCheck();
     }
 
     ngAfterViewInit() {
