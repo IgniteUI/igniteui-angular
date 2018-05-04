@@ -187,6 +187,8 @@ fdescribe("IgxDropDown ", () => {
             expect(list.selectedItem).toEqual(list.items.first);
             currentItem = fixture.debugElement.queryAll(By.css(".igx-drop-down__item--focused"))[0];
             expect(currentItem.componentInstance.index).toEqual(0);
+            expect(document.getElementsByClassName("igx-drop-down__item--focused").length).toEqual(1);
+            expect(document.getElementsByClassName("igx-drop-down__item--focused")[0].innerHTML.trim()).toEqual("Item 1");
             const scrollElement = list.toggle.element as HTMLElement;
             console.log("LOGGING: 1 ", scrollElement.scrollTop);
             scrollElement.scrollTop += 150;
@@ -247,6 +249,7 @@ class IgxDropDownTestComponent {
 @Component({
     template: `
     <button (click)="toggleDropDown()">Show</button>
+    <button (click)="selectItem5()">Select 5</button>
     <igx-drop-down #scrollDropDown>
         <igx-drop-down-item *ngFor="let item of items">
             {{ item.field }}
@@ -279,5 +282,9 @@ class IgxDropDownTestScrollComponent {
 
     public toggleDropDown() {
         this.dropdownScroll.toggleDropDown();
+    }
+
+    public selectItem5() {
+        this.dropdownScroll.setSelectedItem(4);
     }
 }
