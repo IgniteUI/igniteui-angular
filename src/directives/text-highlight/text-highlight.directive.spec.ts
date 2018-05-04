@@ -187,12 +187,25 @@ fdescribe("IgxHighlight", () => {
         const spans = fix.debugElement.nativeElement.querySelectorAll("." + component.highlightClass);
         expect(spans.length).toBe(0);
     });
+
+    it("Should properly handle value changes - case sensitive",() => {
+        const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
+        fix.detectChanges();
+
+        const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
+        component.highlightText("a", true);
+        component.html = "AAAAAAAAAA";
+        fix.detectChanges();
+
+        const spans = fix.debugElement.nativeElement.querySelectorAll("." + component.highlightClass);
+        expect(spans.length).toBe(0);
+    });
 });
 
 @Component({
     template:
         // tslint:disable-next-line:max-line-length
-        `<div igxTextHighlight id="cellContent" [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName" [value]="html">
+        `<div igxTextHighlight id="content" [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName" [value]="html">
             {{html}}
         </div>`
 })
@@ -224,15 +237,4 @@ class HighlightLoremIpsumComponent {
     public get textContent(): string {
         return this.highlight.parentElement.innerText;
     }
-
-    // public store() {
-    //     this.highlight.store();
-    // }
-
-    // public restore(innerHTML?: string) {
-    //     this.element.nativeElement.innerHTML = innerHTML ? innerHTML :
-    //     // tslint:disable-next-line:max-line-length
-    //     `<div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vulputate luctus dui ut maximus. Quisque sed suscipit lorem. Vestibulum sit.</div>`;
-    //     this.highlight.restore();
-    // }
 }

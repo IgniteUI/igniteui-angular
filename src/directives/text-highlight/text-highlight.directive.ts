@@ -1,6 +1,17 @@
-import { AfterViewInit, Directive, ElementRef, Input, NgModule, OnChanges, OnDestroy, Renderer2, SimpleChanges } from "@angular/core";
-
-import { ActiveHighlightManager } from "./active-higlight-manager";
+import {
+    AfterViewInit,
+    Directive,
+    ElementRef,
+    EventEmitter,
+    Input,
+    NgModule,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    Renderer2,
+    SimpleChanges
+} from "@angular/core";
 
 interface ISearchInfo {
     searchedText: string;
@@ -10,16 +21,23 @@ interface ISearchInfo {
     stored: boolean;
 }
 
-// TODO: Remove a dependency of a container with id of cellContent.
+interface IActiveHighlightInfo {
+    row: number;
+    column: number;
+}
+
 @Directive({
     selector: "[igxTextHighlight]"
 })
-export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit, OnChanges {
+export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
     private _lastSearchInfo: ISearchInfo;
     private _addedElements = [];
     private _observer: MutationObserver;
     private _nodeWasRemoved = false;
     private _forceEvaluation = false;
+    private _activeElementIndex = -1;
+
+    private static _highlightGroupsMap = new Map<string, IActiveHighlightInfo>();
 
     @Input("cssClass")
     public cssClass: string;
@@ -32,6 +50,15 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit, OnCh
 
     @Input("value")
     public value: any = "";
+
+    @Input("row")
+    public row: number;
+
+    @Input("column")
+    public column: number;
+
+    @Output()
+    public static onActiveElementChanged = new EventEmitter();
 
     public parentElement: any;
 
@@ -49,20 +76,23 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit, OnCh
         const callback = (mutationList) => {
             mutationList.forEach(mutation => {
                 mutation.removedNodes.forEach(n => {
-                    if (n.id === "cellContent") {
+                    if (n.id === "content") {
                         this._nodeWasRemoved = true;
-                        this.clearChildElements(false, false);
+                        this.clearChildElements(false);
                     }
                 });
 
                 mutation.addedNodes.forEach(n => {
-                    if (n.id === "cellContent" && this._nodeWasRemoved) {
+                    if (n.id === "content" && this._nodeWasRemoved) {
                         this._nodeWasRemoved = false;
 
                         this._forceEvaluation = true;
                         this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive);
                         this._forceEvaluation = false;
-                        // ActiveHighlightManager.restoreHighlight(this.groupName);
+
+                        if (this._activeElementIndex !== -1) {
+                            this.activate(this._activeElementIndex);
+                        }
                     }
                 });
             });
@@ -70,15 +100,28 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit, OnCh
 
         this._observer = new MutationObserver(callback);
         this._observer.observe(this.parentElement, {childList: true});
+
+        IgxTextHighlightDirective.onActiveElementChanged.subscribe((ev) => {
+            if (this.groupName === ev.groupName &&
+                this.column === ev.column &&
+                this.row === ev.row) {
+                this.activate(0);
+            } else if (this._activeElementIndex !== -1) {
+                this.deactivate();
+            }
+        });
     }
 
-    ngAfterViewInit() {
-        //ActiveHighlightManager.registerHighlightInfo(this);
+    ngOnInit() {
+        if (IgxTextHighlightDirective._highlightGroupsMap.has(this.groupName) === false) {
+            IgxTextHighlightDirective._highlightGroupsMap.set(this.groupName, {
+                row: -1,
+                column: -1
+            });
+        }
     }
 
     ngOnDestroy() {
-        //ActiveHighlightManager.unregisterHighlightInfo(this);
-
         this._observer.disconnect();
     }
 
@@ -86,6 +129,31 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit, OnCh
         if (changes.value && !changes.value.firstChange) {
             this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive);
         }
+
+        if ((changes.row && !changes.row.firstChange) || (changes.column && !changes.column.firstChange)) {
+            if (this._activeElementIndex !== -1) {
+                this.deactivate();
+            } else {
+                const group = IgxTextHighlightDirective._highlightGroupsMap.get(this.groupName);
+
+                if (group.column === this.column && group.row === this.row) {
+                    this.activate(0);
+                }
+            }
+        }
+    }
+
+    public static setActiveHighlight(groupName: string, column: number, row: number) {
+        const group = IgxTextHighlightDirective._highlightGroupsMap.get(groupName);
+
+        group.column = column;
+        group.row = row;
+
+        IgxTextHighlightDirective.onActiveElementChanged.emit({
+            groupName: groupName,
+            column: column,
+            row: row
+        })
     }
 
     public highlight(text: string, caseSensitive?: boolean): number {
@@ -104,7 +172,7 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit, OnCh
                 return 0;
             }
 
-            this.clearChildElements(true, this._forceEvaluation === false);
+            this.clearChildElements(true);
             this._lastSearchInfo.matchCount = this.getHighlightedText(text, caseSensitive);
         }
 
@@ -112,11 +180,42 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit, OnCh
     }
 
     public clearHighlight() {
-        this.clearChildElements(false, true);
+        this.clearChildElements(false);
     }
 
-    private clearChildElements(originalContentHidden: boolean, updateActiveIndex: boolean): void {
-        const content = this.parentElement.querySelector("#cellContent");
+    public activate(index: number) {
+        const spans = this._addedElements.filter(el => el.nodeName === "SPAN");
+
+        if (spans.length <= index) {
+            return;
+        }
+
+        this._activeElementIndex = index;
+        const elementToActivate = spans[index];
+        this.renderer.addClass(elementToActivate, this.activeCssClass);
+        this.renderer.setAttribute(elementToActivate, "style", "background:orange;font-weight:bold");
+    }
+
+    public deactivate() {
+        if (this._activeElementIndex === -1) {
+            return;
+        }
+
+        const spans = this._addedElements.filter(el => el.nodeName === "SPAN");
+
+        if (spans.length <= this._activeElementIndex) {
+            this._activeElementIndex = -1;
+            return;
+        }
+
+        const elementToDeactivate = spans[this._activeElementIndex];
+        this.renderer.removeClass(elementToDeactivate, this.activeCssClass);
+        this.renderer.setAttribute(elementToDeactivate, "style", "background:yellow;font-weight:bold");
+        this._activeElementIndex = -1;
+    }
+
+    private clearChildElements(originalContentHidden: boolean): void {
+        const content = this.parentElement.querySelector("#content");
         if (content) {
             this.renderer.setProperty(content, "hidden", originalContentHidden);
         }
@@ -125,8 +224,9 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit, OnCh
             const el = this._addedElements.pop();
 
             this.renderer.removeChild(this.parentElement, el);
-            //ActiveHighlightManager.unregisterHighlight(this, el, updateActiveIndex);
         }
+
+        this._activeElementIndex = -1;
     }
 
     private getHighlightedText(searchText: string, caseSensitive: boolean) {
@@ -170,8 +270,6 @@ export class IgxTextHighlightDirective implements OnDestroy, AfterViewInit, OnCh
 
         const childNodes = this.parentElement.childNodes;
         this._addedElements.push(childNodes[childNodes.length - 1]);
-
-        //ActiveHighlightManager.registerHighlight(this, childNodes[childNodes.length - 1], this._forceEvaluation);
     }
 
     private searchNeedsEvaluation(text: string, caseSensitive: boolean): boolean {

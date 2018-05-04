@@ -1,5 +1,6 @@
-<ng-template #defaultCell igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="gridID" [value]="value">
-    <div id="cellContent">{{ formatter ? formatter(value) : value }}</div>
+<ng-template #defaultCell igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="gridID"
+        [value]="formatter ? formatter(value) : value" [row]="rowIndex" [column]="columnIndex">
+    <div id="content">{{ formatter ? formatter(value) : value }}</div>
 </ng-template>
 <ng-template #inlineEditor let-cell="cell">
     <igx-input-group>

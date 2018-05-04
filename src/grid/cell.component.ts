@@ -111,10 +111,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
     set inEditMode(value: boolean) {
         const originalValue = this._inEditMode;
 
-        // if (value && this.highlight && !this._inEditMode) {
-        //     this.highlight.store();
-        // }
-
         this._inEditMode = value;
 
         if (this._inEditMode) {
@@ -122,16 +118,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         } else if (!originalValue){
             this.grid.cellInEditMode = null;
         }
-    }
-
-    get callback() {
-        return () => {
-            setTimeout(() => {
-                // if (this.highlight && this.inEditMode === false) {
-                //     this.highlight.restore();
-                // }
-            });
-        };
     }
 
     @HostBinding("attr.tabindex")

@@ -37,13 +37,14 @@ import { FilteringLogic, IFilteringExpression } from "../data-operations/filteri
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
 import { IForOfState } from "../directives/for-of/IForOfState";
-import { ActiveHighlightManager } from "../main";
+import { IgxTextHighlightDirective } from "../main";
 import { IgxCheckboxComponent } from "./../checkbox/checkbox.component";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { ISummaryExpression } from "./grid-summary";
 import { IgxGridRowComponent } from "./row.component";
+import { IgxGridSortingPipe } from "./grid.pipes";
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -783,46 +784,79 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calculateGridSizes();
     }
 
-    public findNext(text: string, caseSensitive?: boolean): number | Promise<number>{
-        return this.find(text, true, caseSensitive);
+    public findNext(text: string, caseSensitive?: boolean): number {
+        return this.find(text, 1, caseSensitive);
     }
 
-    public findPrev(text: string, caseSensitive?: boolean): number | Promise<number>{
-        return this.find(text, false, caseSensitive);
+    public findPrev(text: string, caseSensitive?: boolean): number{
+        return this.find(text, -1, caseSensitive);
     }
 
-    private find(text: string, moveNext: boolean, caseSensitive?: boolean) {
+    private find(text: string, increment: number, caseSensitive?: boolean) {
         if (this.cellInEditMode) {
             this.cellInEditMode.inEditMode = false;
-
-            // When a cell exits edit mode, the DOM is updated asynchronously. We need the
-            // DOM to be up to date for the highlights to work properly, so we also need to
-            // execute this function asynchronously.
-            const promise = new Promise<number>((resolve, reject) => {
-                setTimeout(() => {
-                    this.find(text, moveNext, caseSensitive);
-                });
-            });
-
-            return promise;
         }
 
-        let matchCount = 0;
+        if (this._lastSearchedText !== text) {
+            this._matchOccurrenceToActivate = 0;
+            this._lastSearchedText = text;
+        } else {
+            this._matchOccurrenceToActivate += increment;
+        }
 
         this.rowList.forEach((row) => {
             row.cells.forEach((c) => {
-                const occurrences = c.highlightText(text, caseSensitive);
-                matchCount += occurrences;
+                c.highlightText(text, caseSensitive);
             });
         });
 
-        if (moveNext) {
-            ActiveHighlightManager.moveNext(this.id);
-        } else {
-            ActiveHighlightManager.movePrev(this.id);
+        const matchesInfo = [];
+        const data = this.getFilteredSortedData();
+        let searchText = caseSensitive ? text : text.toLowerCase();
+
+        data.forEach((dataRow, i) => {
+            Object.keys(dataRow).forEach((key, j) => {
+                const value = dataRow[key];
+                if(value !== undefined && value !== null) {
+                    let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
+                    if(searchValue.indexOf(searchText) !== -1) {
+                        matchesInfo.push({
+                            row: i,
+                            column: j,
+                        })
+                    }
+                }
+            });
+        });
+
+        if (this._matchOccurrenceToActivate >= matchesInfo.length) {
+            this._matchOccurrenceToActivate = 0;
+        } else if (this._matchOccurrenceToActivate < 0) {
+            this._matchOccurrenceToActivate = matchesInfo.length - 1;
         }
 
-        return matchCount;
+        if (matchesInfo.length) {
+            const matchInfo = matchesInfo[this._matchOccurrenceToActivate];
+
+            IgxTextHighlightDirective.setActiveHighlight(this.id, matchInfo.column, matchInfo.row);
+
+            const verticalState = this.verticalScrollContainer.state;
+            const verticalSize = verticalState.chunkSize - 2;
+            if (verticalState.startIndex > matchInfo.row) {
+                this.verticalScrollContainer.scrollTo(matchInfo.row);
+            } else if (verticalState.startIndex + verticalSize <= matchInfo.row) {
+                this.verticalScrollContainer.scrollTo(matchInfo.row - verticalSize);
+            }
+
+            // const horizontalState = this.parentVirtDir.state;
+            // const horizontalSize = horizontalState.chunkSize - 2;
+            // if (horizontalState.startIndex > matchInfo.column) {
+            //     this.parentVirtDir.scrollTo(matchInfo.column);
+            // } else if (horizontalState.startIndex + horizontalSize <= matchInfo.column) {
+            //     this.parentVirtDir.scrollTo(matchInfo.column - horizontalSize);
+            // }
+        }
+        return matchesInfo.length;
     }
 
     public clearHighlights() {
@@ -831,6 +865,19 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 c.clearHighlight();
             });
         });
+    }
+
+    private getFilteredSortedData(): any[] {
+        let data = this.filteredData ? this.filteredData : this.data;
+
+        if (this.sortingExpressions &&
+            this.sortingExpressions.length > 0) {
+
+            const sortingPipe = new IgxGridSortingPipe(this.gridAPI);
+            data = sortingPipe.transform(data, this.sortingExpressions, this.id, -1);
+        }
+
+        return data;
     }
 
     get hasSortableColumns(): boolean {

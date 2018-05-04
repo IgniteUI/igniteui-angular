@@ -146,7 +146,6 @@ export interface IGridBus {
     gridID: string;
     cdr: ChangeDetectorRef;
     gridAPI: IgxGridAPIService;
-    callback?: () => void;
 }
 
 /**
@@ -165,11 +164,6 @@ export function autoWire(markForCheck = false) {
                 this.cdr.markForCheck();
             }
             this.gridAPI.notify(this.gridID);
-
-            if (this.callback) {
-                this.callback();
-            }
-
             return result;
         };
 
