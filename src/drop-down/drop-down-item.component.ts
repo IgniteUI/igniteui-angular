@@ -31,12 +31,11 @@ export class IgxDropDownItemComponent {
     set isFocused(value: boolean) {
         if (this.isDisabled || this.isHeader) {
             this._isFocused = false;
-            this.element.nativeElement.blur();
             return;
         }
 
         if (value && !this.dropDown.toggleDirective.collapsed) {
-            this.element.nativeElement.focus();
+            this.elementRef.nativeElement.focus();
         }
         this._isFocused = value;
     }
@@ -52,7 +51,7 @@ export class IgxDropDownItemComponent {
     public isDisabled = false;
 
     @HostBinding("attr.tabindex")
-    get removeTabIndex() {
+    get setTabIndex() {
         const shouldSetTabIndex = this.dropDown.allowItemsFocus && !(this.isDisabled || this.isHeader);
         if (shouldSetTabIndex) {
             return 0;

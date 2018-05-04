@@ -14,20 +14,17 @@ export class DropDownSampleComponent implements OnInit {
     items: any[] = [];
 
     ngOnInit() {
-        this.igxDropDown.allowItemsFocus = true;
     }
 
     constructor() {
         for (let i = 0; i < this.itemsCount; i += 1) {
             const item = { field: "Item " + i };
-            if (i % 7 === 1 || i > 30) {
+            if (i % 7 === 4 || i > 49) {
                 item["disabled"] = true;
-                item.field += " I am Disabled!";
-            }
-
-            if (i % 6 === 1) {
+                item.field = "Disabled" + i;
+            } else if (i % 6 === 5) {
                 item["header"] = true;
-                item.field += "I am Header!";
+                item.field = "Header" + i;
             }
             this.items.push(item);
         }
@@ -38,6 +35,5 @@ export class DropDownSampleComponent implements OnInit {
     }
 
     onSelection(ev) {
-        console.log(ev);
     }
 }
