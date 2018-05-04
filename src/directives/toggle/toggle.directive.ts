@@ -31,6 +31,9 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     public onOpen = new EventEmitter();
 
     @Output()
+    public onOpening = new EventEmitter();
+
+    @Output()
     public onClose = new EventEmitter();
 
     @Input()
@@ -65,7 +68,13 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         if (!this.collapsed) { return; }
 
         const player = this.animationActivation();
-        player.onStart(() => this.collapsed = !this.collapsed);
+        player.onStart(() => {
+            this.collapsed = !this.collapsed;
+            this.cdr.detectChanges();
+            if (fireEvents) {
+                this.onOpening.emit();
+            }
+        });
         player.onDone(() =>  {
             player.destroy();
             if (fireEvents) {

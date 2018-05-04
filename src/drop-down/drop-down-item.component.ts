@@ -1,4 +1,4 @@
-import { Component, ElementRef, forwardRef, HostBinding, HostListener, Inject, Input, OnInit } from "@angular/core";
+import { Component, ElementRef, forwardRef, HostBinding, HostListener, Inject, Input } from "@angular/core";
 import { IgxDropDownComponent, ISelectionEventArgs } from "./drop-down.component";
 
 @Component({
@@ -6,7 +6,7 @@ import { IgxDropDownComponent, ISelectionEventArgs } from "./drop-down.component
     templateUrl: "drop-down-item.component.html"
 })
 
-export class IgxDropDownItemComponent implements OnInit {
+export class IgxDropDownItemComponent {
     @HostBinding("class.igx-drop-down__item")
     get itemStyle(): boolean {
         return !this.isHeader;
@@ -28,7 +28,6 @@ export class IgxDropDownItemComponent implements OnInit {
     get isFocused() {
         return this._isFocused;
     }
-
     set isFocused(value: boolean) {
         if (this.isDisabled || this.isHeader) {
             this._isFocused = false;
@@ -36,7 +35,7 @@ export class IgxDropDownItemComponent implements OnInit {
             return;
         }
 
-        if (value) {
+        if (value && !this.dropDown.toggleDirective.collapsed) {
             this.element.nativeElement.focus();
         }
         this._isFocused = value;
@@ -52,6 +51,16 @@ export class IgxDropDownItemComponent implements OnInit {
     @HostBinding("class.igx-drop-down__item--disabled")
     public isDisabled = false;
 
+    @HostBinding("attr.tabindex")
+    get removeTabIndex() {
+        const shouldSetTabIndex = this.dropDown.allowItemsFocus && !(this.isDisabled || this.isHeader);
+        if (shouldSetTabIndex) {
+            return 0;
+        } else {
+            return null;
+        }
+    }
+
     constructor(
         @Inject(forwardRef(() => IgxDropDownComponent)) public dropDown: IgxDropDownComponent,
         private elementRef: ElementRef
@@ -64,24 +73,24 @@ export class IgxDropDownItemComponent implements OnInit {
         }
 
         this.dropDown.setSelectedItem(this.index);
-        this.dropDown.toggle.close(true);
+        this.dropDown.toggleDirective.close(true);
     }
 
     @HostListener("keydown.Escape", ["$event"])
     onEscapeKeyDown(event) {
-        this.dropDown.toggle.close(true);
+        this.dropDown.toggleDirective.close(true);
     }
 
     @HostListener("keydown.Space", ["$event"])
     onSpaceKeyDown(event) {
         this.dropDown.setSelectedItem(this.index);
-        this.dropDown.toggle.close(true);
+        this.dropDown.toggleDirective.close(true);
     }
 
     @HostListener("keydown.Enter", ["$event"])
     onEnterKeyDown(event) {
         this.dropDown.setSelectedItem(this.index);
-        this.dropDown.toggle.close(true);
+        this.dropDown.toggleDirective.close(true);
     }
 
     @HostListener("keydown.ArrowDown", ["$event"])
@@ -110,13 +119,6 @@ export class IgxDropDownItemComponent implements OnInit {
         this.dropDown.focusFirst();
         event.stopPropagation();
         event.preventDefault();
-    }
-
-    ngOnInit() {
-        const shouldSetTabIndex = this.dropDown.allowItemsFocus && !(this.isDisabled || this.isHeader);
-        if (shouldSetTabIndex) {
-            this.element.nativeElement.tabIndex = 0;
-        }
     }
 
     public get index(): number {

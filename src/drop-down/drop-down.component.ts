@@ -3,18 +3,15 @@ import {
     AfterViewInit,
     Component,
     ContentChildren,
-    ElementRef,
     EventEmitter,
-    HostBinding,
     HostListener,
     Input,
     NgModule,
     Output,
     QueryList,
-    Renderer,
-    ViewChild,
-    ViewChildren
+    ViewChild
 } from "@angular/core";
+import { IgxSelectionAPIService } from "../core/selection";
 import { IgxToggleDirective, IgxToggleModule } from "../directives/toggle/toggle.directive";
 import { IgxDropDownItemComponent } from "./drop-down-item.component";
 
@@ -28,13 +25,13 @@ export interface ISelectionEventArgs {
     templateUrl: "./drop-down.component.html"
 })
 export class IgxDropDownComponent implements AfterViewInit {
-    private _selectedItem: IgxDropDownItemComponent = null;
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
     private _focusedItem: IgxDropDownItemComponent = null;
-    private _defaultWidth = "200px";
+    private _defaultWidth = "128px";
     private _defaultHeight = "200px";
+    private _id = "DropDown_0";
 
-    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
+    @ViewChild(IgxToggleDirective) public toggleDirective: IgxToggleDirective;
     @ContentChildren(IgxDropDownItemComponent, { read: IgxDropDownItemComponent }) public items: QueryList<IgxDropDownItemComponent>;
 
     @Output() public onSelection = new EventEmitter<ISelectionEventArgs>();
@@ -45,13 +42,24 @@ export class IgxDropDownComponent implements AfterViewInit {
     @Input() public height = this._defaultHeight;
     @Input() public allowItemsFocus = true;
 
-    constructor(private elementRef: ElementRef, private renderer: Renderer) { }
+    constructor(
+        private selectionAPI: IgxSelectionAPIService) { }
 
-    get selectedItem(): IgxDropDownItemComponent {
-        return this._selectedItem;
+    get id(): string {
+        return this._id;
+    }
+    @Input()
+    set id(value: string) {
+        this._id = value;
+        this.toggleDirective.id = value;
     }
 
-    public setSelectedItem(index: number) {
+    get selectedItem(): IgxDropDownItemComponent {
+        const selection = this.selectionAPI.get_selection(this.id);
+        return selection && selection.length > 0 ? selection[0] as IgxDropDownItemComponent : null;
+    }
+
+    setSelectedItem(index: number) {
         if (index < 0 || index >= this.items.length) {
             return;
         }
@@ -120,6 +128,13 @@ export class IgxDropDownComponent implements AfterViewInit {
                 this._focusedItem.isFocused = false;
             }
             this._focusedItem = this.items.toArray()[focusedItemIndex + 1];
+
+            const elementRect = this._focusedItem.element.nativeElement.getBoundingClientRect();
+            const parentRect = this.toggleDirective.element.getBoundingClientRect();
+            if (parentRect.bottom < elementRect.bottom) {
+                this.toggleDirective.element.scrollTop += (elementRect.bottom - parentRect.bottom);
+            }
+
             this._focusedItem.isFocused = true;
         }
 
@@ -140,6 +155,13 @@ export class IgxDropDownComponent implements AfterViewInit {
             if (focusedItemIndex > 0) {
                 this._focusedItem.isFocused = false;
                 this._focusedItem = this.items.toArray()[focusedItemIndex - 1];
+
+                const elementRect = this._focusedItem.element.nativeElement.getBoundingClientRect();
+                const parentRect = this.toggleDirective.element.getBoundingClientRect();
+                if (parentRect.top > elementRect.top) {
+                    this.toggleDirective.element.scrollTop -= (parentRect.top - elementRect.top);
+                }
+
                 this._focusedItem.isFocused = true;
             }
 
@@ -152,12 +174,18 @@ export class IgxDropDownComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.toggle.element.style.zIndex = 10000;
-        this.toggle.element.style.position = "absolute";
-        this.toggle.element.style.overflowY = "auto";
+        this.toggleDirective.id = this.id;
+        this.toggleDirective.element.style.zIndex = 1;
+        this.toggleDirective.element.style.position = "absolute";
+        this.toggleDirective.element.style.overflowY = "auto";
+
+        if (!this.selectedItem && this.items.length > 0) {
+            this.setSelectedItem(0);
+        }
+        this._initiallySelectedItem = this.selectedItem;
     }
 
-    close() {
+    onToggleClose() {
         if (this._focusedItem) {
             this._focusedItem.isFocused = false;
         }
@@ -165,32 +193,37 @@ export class IgxDropDownComponent implements AfterViewInit {
         this.onClose.emit();
     }
 
-    open() {
-        if (!this.selectedItem && this.items.length > 0) {
-            this.setSelectedItem(0);
-        }
-        this._initiallySelectedItem = this.selectedItem;
+    onToggleOpen() {
         this._focusedItem = this.selectedItem;
-        if (this.selectedItem) {
+        if (this._focusedItem) {
             this._focusedItem.isFocused = true;
-            this.selectedItem.element.nativeElement.scrollIntoView(true);
         }
-
         this.onOpen.emit();
     }
 
-    toggleDropDown() {
-        this.toggle.toggle(true);
+    onToggleOpening() {
+        this.scrollToItem(this.selectedItem);
+    }
+
+    open() {
+        this.toggleDirective.open(true);
+    }
+
+    close() {
+        this.toggleDirective.close(true);
+    }
+
+    toggle() {
+        if (this.toggleDirective.collapsed) {
+            this.open();
+        } else {
+            this.close();
+        }
     }
 
     private scrollToItem(item: IgxDropDownItemComponent) {
-        const totalHeight: number = this.items.reduce((sum, currentItem) => sum + currentItem.elementHeight, 0);
-        let itemPosition = 0;
-        itemPosition = this.items
-            .filter((itemToFilter) => itemToFilter.index < item.index)
-            .reduce((sum, currentItem) => sum + currentItem.elementHeight, 0);
-
-        this.toggle.element.scrollTop = (Math.floor(itemPosition));
+        const itemPosition = this.calculateScrollPosition(item);
+        this.toggleDirective.element.scrollTop = (itemPosition);
     }
 
     private changeSelectedItem(newSelection?: IgxDropDownItemComponent) {
@@ -199,9 +232,24 @@ export class IgxDropDownComponent implements AfterViewInit {
             newSelection = this._focusedItem;
         }
 
-        this._selectedItem = newSelection;
+        this.selectionAPI.set_selection(this.id, [newSelection]);
         const args: ISelectionEventArgs = { oldSelection, newSelection };
         this.onSelection.emit(args);
+    }
+
+    private calculateScrollPosition(item: IgxDropDownItemComponent): number {
+        const totalHeight: number = this.items.reduce((sum, currentItem) => sum + currentItem.elementHeight, 0);
+        let itemPosition = 0;
+        itemPosition = this.items
+            .filter((itemToFilter) => itemToFilter.index < item.index)
+            .reduce((sum, currentItem) => sum + currentItem.elementHeight, 0);
+
+        // TODO: find how to calculate height without padding. We are remove padding now by -16
+        const dropDownHeight = this.toggleDirective.element.clientHeight - 16;
+        itemPosition -= dropDownHeight / 2;
+        itemPosition += item.elementHeight / 2;
+
+        return Math.floor(itemPosition);
     }
 }
 
