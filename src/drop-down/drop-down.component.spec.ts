@@ -172,7 +172,7 @@ fdescribe("IgxDropDown ", () => {
         });
     }));
 
-    xit("Should persist selection through scrolling", async(() => {
+    fit("Should persist selection through scrolling", async(() => {
         const fixture = TestBed.createComponent(IgxDropDownTestScrollComponent);
         fixture.detectChanges();
         const button = fixture.debugElement.query(By.css("button")).nativeElement;
@@ -185,21 +185,20 @@ fdescribe("IgxDropDown ", () => {
         fixture.whenStable().then(() => {
             fixture.detectChanges();
             expect(list.selectedItem).toEqual(list.items.first);
-            currentItem = fixture.debugElement.query(By.css(".igx-drop-down__item--focused"));
+            currentItem = fixture.debugElement.queryAll(By.css(".igx-drop-down__item--focused"))[0];
             expect(currentItem.componentInstance.index).toEqual(0);
             const scrollElement = list.toggle.element as HTMLElement;
             console.log("LOGGING: 1 ", scrollElement.scrollTop);
+            scrollElement.scrollTop += 150;
+
             // tslint:disable-next-line:no-debugger
             debugger;
-            scrollElement.scrollTop = 150;
-            console.log("LOGGING: 2 ", scrollElement.scrollTop);
-            fixture.detectChanges();
-            console.log("LOGGING: 3 ", scrollElement.scrollTop);
-
-            currentItem = fixture.debugElement.query(By.css(".igx-drop-down__item--focused"));
-            expect(currentItem).toBeUndefined();
+            // currentItem = fixture.debugElement.queryAll(By.css(".igx-drop-down__item--focused"))[0];
+            // expect(currentItem).toBeUndefined();
+            expect(document.getElementsByClassName("igx-drop-down__item--focused").length).toEqual(1);
+            expect(document.getElementsByClassName("igx-drop-down__item--focused")[0].innerHTML.trim()).toEqual("Item 1");
             scrollElement.scrollTop = 0;
-            currentItem = fixture.debugElement.query(By.css(".igx-drop-down__item--focused"));
+            currentItem = fixture.debugElement.queryAll(By.css(".igx-drop-down__item--focused"))[0];
             expect(currentItem).toBeDefined();
             expect(currentItem.componentInstance.index).toEqual(0);
         });
