@@ -517,6 +517,26 @@ fdescribe("IgxDropDown ", () => {
             expect(currentItem.componentInstance.index).toEqual(1);
         });
     });
+
+    it("Change width/height at runtime", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestDisabledComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        const list = fixture.componentInstance.dropdownDisabled;
+        const listItems = list.items;
+        expect(list).toBeDefined();
+        expect(list.items.length).toEqual(13);
+        fixture.componentInstance.dropdownDisabled.width = "80%";
+        fixture.componentInstance.dropdownDisabled.height = "400px";
+        button.click();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            // tslint:disable-next-line:no-debugger
+            debugger;
+            expect(fixture.componentInstance.dropdownDisabled.height).toEqual("400px");
+            expect(fixture.componentInstance.dropdownDisabled.width).toEqual("80%");
+        });
+    });
 });
 
 @Component({
