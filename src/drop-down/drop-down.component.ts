@@ -1,12 +1,10 @@
 import { CommonModule } from "@angular/common";
 import {
-    AfterViewInit,
     ChangeDetectorRef,
     Component,
     ContentChildren,
     EventEmitter,
     forwardRef,
-    HostListener,
     Input,
     NgModule,
     OnInit,
@@ -27,7 +25,7 @@ export interface ISelectionEventArgs {
     selector: "igx-drop-down",
     templateUrl: "./drop-down.component.html"
 })
-export class IgxDropDownComponent implements AfterViewInit, OnInit {
+export class IgxDropDownComponent implements OnInit {
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
     private _focusedItem: IgxDropDownItemComponent = null;
     private _defaultWidth = "128px";
@@ -65,7 +63,6 @@ export class IgxDropDownComponent implements AfterViewInit, OnInit {
         const selection = this.selectionAPI.get_selection(this.id);
         return selection && selection.length > 0 ? selection[0] as IgxDropDownItemComponent : null;
     }
-
 
     public get items(): IgxDropDownItemComponent[] {
         const items: IgxDropDownItemComponent[] = [];
@@ -208,9 +205,6 @@ export class IgxDropDownComponent implements AfterViewInit, OnInit {
         this.toggleDirective.element.style.zIndex = 1;
         this.toggleDirective.element.style.position = "absolute";
         this.toggleDirective.element.style.overflowY = "auto";
-    }
-
-    ngAfterViewInit() {
     }
 
     onToggleClose() {
