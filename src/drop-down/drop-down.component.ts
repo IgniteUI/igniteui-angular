@@ -5,6 +5,7 @@ import {
     ContentChildren,
     EventEmitter,
     forwardRef,
+    HostBinding,
     Input,
     NgModule,
     OnInit,
@@ -28,8 +29,8 @@ export interface ISelectionEventArgs {
 export class IgxDropDownComponent implements OnInit {
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
     private _focusedItem: IgxDropDownItemComponent = null;
-    private _defaultWidth = "128px";
-    private _defaultHeight = "200px";
+    private _width;
+    private _height;
     private _id = "DropDown_0";
 
     @ViewChild(IgxToggleDirective)
@@ -42,8 +43,24 @@ export class IgxDropDownComponent implements OnInit {
     @Output() public onOpen = new EventEmitter();
     @Output() public onClose = new EventEmitter();
 
-    @Input() public width = this._defaultWidth;
-    @Input() public height = this._defaultHeight;
+    @Input()
+    get width() {
+        return this._width;
+    }
+    set width(value) {
+        this._width = value;
+        this.toggleDirective.element.style.width = value;
+    }
+
+    @Input()
+    get height() {
+        return this._height;
+    }
+    set height(value) {
+        this._height = value;
+        this.toggleDirective.element.style.height = value;
+    }
+
     @Input() public allowItemsFocus = true;
 
     constructor(
@@ -115,12 +132,6 @@ export class IgxDropDownComponent implements OnInit {
             this._focusedItem = this.items[focusedItemIndex];
             this._focusedItem.isFocused = true;
         }
-
-        // const rect = this._focusedItem.element.nativeElement.getBoundingClientRect();
-        // const parentRect = this.toggle.element.getBoundingClientRect();
-        // if (parentRect.top > rect.top) {
-        //     this.toggle.element.scrollTop -= (parentRect.top - rect.bottom + rect.height);
-        // }
     }
 
     focusLast() {
@@ -135,12 +146,6 @@ export class IgxDropDownComponent implements OnInit {
             this._focusedItem = this.items[focusedItemIndex];
             this._focusedItem.isFocused = true;
         }
-
-        // const rect = this._focusedItem.element.nativeElement.getBoundingClientRect();
-        // const parentRect = this.toggle.element.getBoundingClientRect();
-        // if (parentRect.bottom < rect.bottom) {
-        //     this.toggle.element.scrollTop += (rect.bottom - parentRect.bottom);
-        // }
     }
 
     focusNext() {
@@ -165,12 +170,6 @@ export class IgxDropDownComponent implements OnInit {
 
             this._focusedItem.isFocused = true;
         }
-
-        // const rect = this._focusedItem.element.nativeElement.getBoundingClientRect();
-        // const parentRect = this.toggle.element.getBoundingClientRect();
-        // if (parentRect.bottom < rect.bottom) {
-        //     this.toggle.element.scrollTop += (rect.bottom - parentRect.bottom);
-        // }
     }
 
     focusPrev() {
@@ -191,12 +190,6 @@ export class IgxDropDownComponent implements OnInit {
 
                 this._focusedItem.isFocused = true;
             }
-
-            // const rect = this._focusedItem.element.nativeElement.getBoundingClientRect();
-            // const parentRect = this.toggle.element.getBoundingClientRect();
-            // if (parentRect.top > rect.top) {
-            //     this.toggle.element.scrollTop -= (parentRect.top - rect.bottom + rect.height);
-            // }
         }
     }
 

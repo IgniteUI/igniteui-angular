@@ -10,10 +10,10 @@ export class DropDownSampleComponent implements OnInit {
     private width = "160px";
     @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
 
-    itemsCount = 50;
     items: any[] = [];
 
     ngOnInit() {
+        this.igxDropDown.height = "250px";
     }
 
     constructor() {

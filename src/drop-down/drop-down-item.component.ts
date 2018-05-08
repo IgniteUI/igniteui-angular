@@ -40,12 +40,10 @@ export class IgxDropDownItemComponent {
         this._isFocused = value;
     }
 
-    // TODO: change tabIndex runtime when isHeader changes
     @Input()
     @HostBinding("class.igx-drop-down__header")
     public isHeader = false;
 
-    // TODO: change tabIndex runtime when isDisabled changes
     @Input()
     @HostBinding("class.igx-drop-down__item--disabled")
     public isDisabled = false;
@@ -63,8 +61,7 @@ export class IgxDropDownItemComponent {
     constructor(
         @Inject(forwardRef(() => IgxDropDownComponent)) public dropDown: IgxDropDownComponent,
         private elementRef: ElementRef
-    ) {
-    }
+    ) { }
 
     @HostListener("click", ["$event"]) clicked(event) {
         if (this.isDisabled || this.isHeader) {
