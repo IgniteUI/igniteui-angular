@@ -283,6 +283,45 @@ describe("IgxDropDown ", () => {
             expect(list.onSelection.emit).toHaveBeenCalledTimes(1);
         });
     });
+
+    it("Should not change selection when setting it to non-existing item", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestScrollComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        const list = fixture.componentInstance.dropdownScroll;
+        const listItems = list.items.toArray();
+        let currentItem: DebugElement;
+        expect(list).toBeDefined();
+        expect(list.items.length).toEqual(15);
+        button.click();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(list.selectedItem).toEqual(list.items.first);
+            currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_SELECTED));
+            expect(currentItem.componentInstance.index).toEqual(0);
+            this.dropdown.setSelectedItem(-4);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(list.selectedItem).toEqual(list.items.first);
+            currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_SELECTED));
+            expect(currentItem.componentInstance.index).toEqual(0);
+            this.dropdown.setSelectedItem(24);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(list.selectedItem).toEqual(list.items.first);
+            currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_SELECTED));
+            expect(currentItem.componentInstance.index).toEqual(0);
+            this.dropdown.setSelectedItem(5);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(list.selectedItem).toEqual(listItems[4]);
+            currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_SELECTED));
+            expect(currentItem.componentInstance.index).toEqual(5);
+        });
+    });
 });
 
 @Component({
