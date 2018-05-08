@@ -1,6 +1,7 @@
-import { Component, DebugElement, ViewChild } from "@angular/core";
+﻿import { Component, DebugElement, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { take } from "rxjs/operators";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
@@ -10,7 +11,88 @@ import { IgxGridModule } from "./index";
 describe("IgxGrid - Cell component", () => {
 
     const CELL_CSS_CLASS = ".igx-grid__td";
+    const navigateVerticallyToIndex = (grid: IgxGridComponent, cell: IgxGridCellComponent, index: number, cb?) => {
+            // grid - the grid in which to navigate.
+            // cell - current cell from which the navigation will start.
+            // index - the index to which to navigate
+            // cb - callback function that will be called when index is reached.
+            const currIndex = cell.rowIndex;
+            const dir = currIndex < index ? "ArrowDown" : "ArrowUp";
+            const nextIndex = dir === "ArrowDown" ? currIndex + 1 : currIndex - 1;
+            const nextRow = grid.getRowByIndex(nextIndex);
+            const keyboardEvent = new KeyboardEvent("keydown", {
+                code: dir,
+                key: dir
+            });
+            if (!cell.focused) {
+                cell.nativeElement.dispatchEvent(new Event("focus"));
+                grid.cdr.detectChanges();
+            }
+            // if index reached return
+            if (currIndex === index) { if (cb) { cb(); } return; }
+            // else call arrow up/down
+            cell.nativeElement.dispatchEvent(keyboardEvent);
+            grid.cdr.detectChanges();
+            // if next row exists navigate next
+            if (nextRow) {
+                setTimeout(() => {
+                    cell = grid.selectedCells[0];
+                    navigateVerticallyToIndex(grid, cell, index, cb);
+                });
+            } else {
+                // else wait for chunk to load.
+                cell.row.
+                grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+                    next: () => {
+                        grid.cdr.detectChanges();
+                        cell = grid.selectedCells[0];
+                        navigateVerticallyToIndex(grid, cell, index, cb);
+                    }
+                });
+            }
+        };
+    const navigateHorizontallyToIndex = (grid: IgxGridComponent, cell: IgxGridCellComponent, index: number, cb?) => {
+            // grid - the grid in which to navigate.
+            // cell - current cell from which the navigation will start.
+            // index - the index to which to navigate
+            // cb - callback function that will be called when index is reached.
 
+            const currIndex = cell.visibleColumnIndex;
+            const dir = currIndex < index ? "ArrowRight" : "ArrowLeft";
+            const nextIndex = dir === "ArrowRight" ? currIndex + 1 : currIndex - 1;
+            const nextCol = grid.visibleColumns[nextIndex];
+            const nextCell = nextCol ? grid.getCellByColumn(0, nextCol.field) : null;
+            const keyboardEvent = new KeyboardEvent("keydown", {
+                code: dir,
+                key: dir
+            });
+            if (!cell.focused) {
+                cell.nativeElement.dispatchEvent(new Event("focus"));
+                grid.cdr.detectChanges();
+            }
+            // if index reached return
+            if (currIndex === index) { if (cb) { cb(); } return; }
+            // else call arrow up/down
+            cell.nativeElement.dispatchEvent(keyboardEvent);
+
+            grid.cdr.detectChanges();
+            // if next row exists navigate next
+            if (nextCell) {
+                setTimeout(() => {
+                    cell = grid.selectedCells[0];
+                    navigateHorizontallyToIndex(grid, cell, index, cb);
+                });
+            } else {
+                // else wait for chunk to load.
+                cell.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
+                    next: () => {
+                        grid.cdr.detectChanges();
+                        cell = grid.selectedCells[0];
+                        navigateHorizontallyToIndex(grid, cell, index, cb);
+                    }
+                });
+            }
+    };
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -295,6 +377,34 @@ describe("IgxGrid - Cell component", () => {
         });
     });
 
+    it("should fit last cell in the available display container when there is vertical and horizontal scroll.", async(() => {
+        const fix = TestBed.createComponent(VirtualtGridComponent);
+        fix.componentInstance.cols = fix.componentInstance.generateCols(100);
+        fix.componentInstance.data = fix.componentInstance.generateData(1000);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const rows = fix.nativeElement.querySelectorAll("igx-grid-row");
+        const firsCell = rows[1].querySelectorAll("igx-grid-cell")[0];
+
+        expect(firsCell.textContent.trim()).toEqual("0");
+
+        fix.componentInstance.scrollLeft(999999);
+        fix.whenStable().then(() => {
+            // This won't work always in debugging mode due to the angular native events behavior, so errors are expected
+            fix.detectChanges();
+            const lastCell = rows[1].querySelectorAll("igx-grid-cell")[3];
+            const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
+
+            expect(lastCell.textContent.trim()).toEqual("990");
+
+            // Calculate where the end of the cell is. Relative left position should equal the grid calculated width
+            expect(lastCell.getBoundingClientRect().left +
+                    lastCell.offsetWidth +
+                    verticalScroll.offsetWidth).toEqual(grid.calcWidth);
+        });
+    }));
+
     it("should scroll first row into view when pressing arrow up", async(() => {
         const fix = TestBed.createComponent(VirtualtGridComponent);
         fix.detectChanges();
@@ -315,7 +425,7 @@ describe("IgxGrid - Cell component", () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            expect(fix.componentInstance.selectedCell.value).toEqual(1);
+            expect(fix.componentInstance.selectedCell.value).toEqual(10);
             expect(fix.componentInstance.selectedCell.column.field).toMatch("value");
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent("keydown", { key: "arrowup", code: "38" }));
@@ -356,6 +466,237 @@ describe("IgxGrid - Cell component", () => {
         lastCol.cells.forEach((cell) => {
             expect(cell.nativeElement.clientWidth).toBeGreaterThan(100);
         });
+    });
+
+    it("keyboard navigation - should allow vertical navigation in virtualized grid.", (done) => {
+        const fix = TestBed.createComponent(VirtualtGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        const cell = grid.getCellByColumn(4, "index");
+        const cbFunc = () => {
+            // verify first cell 100th row is selected.
+            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
+            fix.detectChanges();
+            const cbFunc2 = () => {
+                expect(fix.componentInstance.selectedCell.rowIndex).toEqual(0);
+                done();
+            };
+
+            // navigate back up to 0
+            navigateVerticallyToIndex(grid, fix.componentInstance.selectedCell, 0, cbFunc2);
+
+        };
+        // navigate down to 100th row.
+        navigateVerticallyToIndex(grid, cell, 100, cbFunc);
+    });
+    it("keyboard navigation - should allow horizontal navigation in virtualized grid.", (done) => {
+        const fix = TestBed.createComponent(VirtualtGridComponent);
+        const cols = [];
+        for (let i = 0; i < 10; i++) {
+            cols.push({field: "col" + i});
+        }
+        fix.componentInstance.cols = cols;
+        fix.componentInstance.data = fix.componentInstance.generateData(1000);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        const cell = grid.getCellByColumn(0, "col3");
+
+        const cbFunc = () => {
+            expect(fix.componentInstance.selectedCell.columnIndex).toEqual(9);
+            fix.detectChanges();
+            const cbFunc2 = () => {
+                expect(fix.componentInstance.selectedCell.columnIndex).toEqual(1);
+                done();
+            };
+            navigateHorizontallyToIndex(grid, fix.componentInstance.selectedCell, 1, cbFunc2);
+        };
+        navigateHorizontallyToIndex(grid, cell, 9, cbFunc);
+    });
+    it("keyboard navigation - should allow horizontal navigation in virtualized grid with pinned cols.", (done) => {
+        const fix = TestBed.createComponent(VirtualtGridComponent);
+        const cols = [];
+        for (let i = 0; i < 10; i++) {
+            cols.push({field: "col" + i});
+        }
+        fix.componentInstance.cols = cols;
+        fix.componentInstance.data = fix.componentInstance.generateData(1000);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+
+        grid.pinColumn("col1");
+        grid.pinColumn("col3");
+        const cell = grid.getCellByColumn(0, "col1");
+        const cbFunc = () => {
+            expect(fix.componentInstance.selectedCell.visibleColumnIndex).toEqual(9);
+            const cbFunc2 = () => {
+                expect(fix.componentInstance.selectedCell.visibleColumnIndex).toEqual(1);
+                done();
+            };
+            navigateHorizontallyToIndex(grid, fix.componentInstance.selectedCell, 1, cbFunc2);
+        };
+        navigateHorizontallyToIndex(grid, cell, 9, cbFunc);
+
+    });
+
+    it("keyboard navigation - should allow vertical navigation in virtualized grid with pinned cols.", (done) => {
+        const fix = TestBed.createComponent(VirtualtGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        grid.pinColumn("index");
+        const cell = grid.getCellByColumn(4, "index");
+        const cbFunc = () => {
+            // verify first cell 100th row is selected.
+            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
+            fix.detectChanges();
+            const cbFunc2 = () => {
+                expect(fix.componentInstance.selectedCell.rowIndex).toEqual(0);
+                done();
+            };
+
+            // navigate back up to 0
+            navigateVerticallyToIndex(grid, fix.componentInstance.selectedCell, 0, cbFunc2);
+
+        };
+        // navigate down to 100th row.
+        navigateVerticallyToIndex(grid, cell, 100, cbFunc);
+    });
+
+    it("keyboard navigation - should scroll into view the not fully visible cells when navigating down", (done) => {
+        const fix = TestBed.createComponent(VirtualtGridComponent);
+        fix.componentInstance.cols = fix.componentInstance.generateCols(100);
+        fix.componentInstance.data = fix.componentInstance.generateData(1000);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const rows = fix.nativeElement.querySelectorAll("igx-grid-row");
+        const cell = rows[3].querySelectorAll("igx-grid-cell")[1];
+
+        cell.dispatchEvent(new Event("focus"));
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(30);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch("1");
+
+        const curCell = grid.getCellByColumn(3, "1");
+        curCell.onKeydownArrowDown(new KeyboardEvent("keydown", { key: "arrowdown", code: "40" }));
+
+        // We use setTimout to execute scroll events in the event queue
+        setTimeout(() => {
+            const displayContainer = fix.nativeElement.querySelectorAll("igx-display-container")[1];
+            expect(displayContainer.parentElement.scrollTop).toEqual(0);
+            expect(fix.componentInstance.selectedCell.value).toEqual(40);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch("1");
+            done();
+        }, 0);
+    });
+
+    it("keyboard navigation - should scroll into view the not fully visible cells when navigating up", (done) => {
+        const fix = TestBed.createComponent(VirtualtGridComponent);
+        fix.componentInstance.cols = fix.componentInstance.generateCols(100);
+        fix.componentInstance.data = fix.componentInstance.generateData(1000);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const displayContainer = fix.nativeElement.querySelectorAll("igx-display-container")[1];
+
+        fix.componentInstance.scrollTop(25);
+        // We use setTimout to execute scroll events in the event queue
+        setTimeout(() => {
+            fix.detectChanges();
+
+            expect(displayContainer.style.top).toEqual("-25px");
+
+            const rows = fix.nativeElement.querySelectorAll("igx-grid-row");
+            const cell = rows[1].querySelectorAll("igx-grid-cell")[1];
+
+            cell.dispatchEvent(new Event("focus"));
+            fix.detectChanges();
+
+            expect(fix.componentInstance.selectedCell.value).toEqual(10);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch("1");
+
+            const curCell = grid.getCellByColumn(1, "1");
+            curCell.onKeydownArrowUp(new KeyboardEvent("keydown", { key: "arrowup", code: "38" }));
+            fix.detectChanges();
+
+            // We use setTimout to execute scroll events in the event queue
+            setTimeout(() => {
+                expect(displayContainer.style.top).toEqual("0px");
+
+                expect(fix.componentInstance.selectedCell.value).toEqual(0);
+                expect(fix.componentInstance.selectedCell.column.field).toMatch("1");
+
+                done();
+            }, 0);
+        }, 0);
+    });
+
+    it("keyboard navigation - should scroll into view the not fully visible cells when navigating left", (done) => {
+        const fix = TestBed.createComponent(VirtualtGridComponent);
+        fix.componentInstance.cols = fix.componentInstance.generateCols(100);
+        fix.componentInstance.data = fix.componentInstance.generateData(1000);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const rows = fix.nativeElement.querySelectorAll("igx-grid-row");
+        const rowDisplayContainer = rows[1].querySelector("igx-display-container");
+
+        fix.componentInstance.scrollLeft(50);
+        // We use setTimout to execute scroll events in the event queue
+        setTimeout(() => {
+            fix.detectChanges();
+
+            expect(rowDisplayContainer.style.left).toEqual("-50px");
+
+            const cell = rows[1].querySelectorAll("igx-grid-cell")[1];
+            cell.dispatchEvent(new Event("focus"));
+            fix.detectChanges();
+
+            expect(fix.componentInstance.selectedCell.value).toEqual(10);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch("1");
+
+            const curCell = grid.getCellByColumn(1, "1");
+            curCell.onKeydownArrowLeft(new KeyboardEvent("keydown", { key: "arrowleft", code: "37" }));
+
+            // We use setTimout to execute scroll events in the event queue
+            setTimeout(() => {
+                expect(rowDisplayContainer.style.left).toEqual("0px");
+                expect(fix.componentInstance.selectedCell.value).toEqual(0);
+                expect(fix.componentInstance.selectedCell.column.field).toMatch("0");
+                done();
+            }, 0);
+        }, 0);
+    });
+
+    it("keyboard navigation - should scroll into view the not fully visible cells when navigating right", (done) => {
+        const fix = TestBed.createComponent(VirtualtGridComponent);
+        fix.componentInstance.cols = fix.componentInstance.generateCols(100);
+        fix.componentInstance.data = fix.componentInstance.generateData(1000);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const rows = fix.nativeElement.querySelectorAll("igx-grid-row");
+        const rowDisplayContainer = rows[1].querySelector("igx-display-container");
+
+        expect(rowDisplayContainer.style.left).toEqual("0px");
+
+        const cell = rows[1].querySelectorAll("igx-grid-cell")[2];
+        cell.dispatchEvent(new Event("focus"));
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(20);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch("2");
+
+        const curCell = grid.getCellByColumn(1, "2");
+        curCell.onKeydownArrowRight(new KeyboardEvent("keydown", { key: "arrowright", code: "39" }));
+
+        // We use setTimout to execute scroll events in the event queue
+        setTimeout(() => {
+            expect(rowDisplayContainer.style.left).toEqual("-43px");
+            expect(fix.componentInstance.selectedCell.value).toEqual(30);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch("3");
+            done();
+        }, 0);
     });
 
     it("When cell in edit mode and try to navigate the caret around the cell text the focus should remain.", async(() => {
@@ -522,8 +863,9 @@ export class CtrlKeyKeyboardNagivationComponent {
 
 @Component({
     template: `
-        <igx-grid [height]="'300px'" [width]="'800px'" [columnWidth]="'200px'" [data]="data" [autoGenerate]="true"
-         (onSelection)="cellSelected($event)">
+        <igx-grid [height]="gridHeight" [width]="gridWidth" [data]="data" (onSelection)="cellSelected($event)">
+            <igx-column *ngFor="let c of cols" [field]="c.field" [header]="c.field" [width]="c.width">
+            </igx-column>
         </igx-grid>
     `
 })
@@ -532,17 +874,42 @@ export class VirtualtGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
 
+    public gridWidth = "800px";
+    public gridHeight = "300px";
     public data = [];
+    public cols = [
+        { field: "index", width: "200px" },
+        { field: "value", width: "200px" },
+        { field: "other", width: "200px" },
+        { field: "another", width: "200px" }
+    ];
     public selectedCell: IgxGridCellComponent;
 
     constructor() {
-        this.data = this.generateData();
+        this.data = this.generateData(1000);
     }
 
-    public generateData() {
+    public generateCols(numCols: number, defaultColWidth = null) {
+        const cols = [];
+        for (let j = 0; j < numCols; j++) {
+            cols.push({
+                field: j.toString(),
+                width: defaultColWidth !== null ? defaultColWidth : j % 8 < 2 ? 100 : (j % 6) * 125
+            });
+        }
+        return cols;
+    }
+
+    public generateData(numRows: number) {
         const data = [];
-        for (let i = 0; i < 1000; i++) {
-            data.push({ index: i, value: i, other: i, another: i });
+
+        for (let i = 0; i < numRows; i++) {
+            const obj = {};
+            for (let j = 0; j <  this.cols.length; j++) {
+                const col = this.cols[j].field;
+                obj[col] = 10 * i * j;
+            }
+            data.push(obj);
         }
         return data;
     }

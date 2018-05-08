@@ -25,11 +25,11 @@
             </div>
         </ng-container>
         <ng-container *ngIf="pinnedColumns.length > 0">
-            <igx-grid-header [gridID]="id" *ngFor="let col of pinnedColumns" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
+            <igx-grid-header [gridID]="id" *ngFor="let col of pinnedColumns" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header>
         </ng-container>
         <ng-template igxFor let-col [igxForOf]="unpinnedColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
             [igxForContainerSize]='unpinnedWidth' #headerContainer>
-            <igx-grid-header [gridID]="id" [column]="col" [style.min-width.px]="col.width"></igx-grid-header>
+            <igx-grid-header [gridID]="id" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-header>
         </ng-template>
     </div>
 </div>
@@ -55,10 +55,10 @@
 <div class="igx-grid__tfoot" role="rowgroup" [style.width.px]='calcWidth' #tfoot>
     <div *ngIf="hasSummarizedColumns" class="igx-grid__tr" [style.height.px]="tfootHeight" [style.marginLeft.px]="summariesMargin" role="row">
         <ng-container *ngIf="pinnedColumns.length > 0">
-            <igx-grid-summary [gridID]="id" *ngFor="let col of pinnedColumns"  [column]="col" [style.min-width.px]="col.width"></igx-grid-summary>
+            <igx-grid-summary [gridID]="id" *ngFor="let col of pinnedColumns"  [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-summary>
         </ng-container>
         <ng-template igxFor let-col [igxForOf]="unpinnedColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='unpinnedWidth' #summaryContainer>
-            <igx-grid-summary [gridID]="id" [column]="col" [style.min-width.px]="col.width"></igx-grid-summary>
+            <igx-grid-summary [gridID]="id" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-summary>
         </ng-template>
     </div>
 </div>

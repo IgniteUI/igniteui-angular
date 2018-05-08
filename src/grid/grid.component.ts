@@ -869,7 +869,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._height = this.rowBasedHeight <= viewPortHeight ? null : viewPortHeight.toString();
         } else {
             const parentHeight = this.nativeElement.parentNode.getBoundingClientRect().height;
-            this._height = this.rowBasedHeight <= parentHeight ? null : "100%";
+            this._height = this.rowBasedHeight <= parentHeight ? null : this._height;
         }
         this.calculateGridHeight();
         this.cdr.detectChanges();
@@ -888,6 +888,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         if (!this._height) {
             this.calcHeight = null;
+            if (this.hasSummarizedColumns && !this.tfootHeight) {
+                this.tfootHeight = this.tfoot.nativeElement.firstElementChild ?
+                    this.calcMaxSummaryHeight() : 0;
+            }
             return;
         }
 
@@ -928,16 +932,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue("width"), 10);
 
         let maxColumnWidth = Math.max(
-            ...this.columnList.map((col) => parseInt(col.width, 10))
+            ...this.visibleColumns.map((col) => parseInt(col.width, 10))
                 .filter((width) => !isNaN(width))
         );
+        const sumExistingWidths = this.visibleColumns
+        .filter((col) =>  col.width !== null)
+        .reduce((prev, curr) => prev + parseInt(curr.width, 10), 0);
 
         if (this.rowSelectable) {
             computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
         }
-
-        maxColumnWidth = !Number.isFinite(maxColumnWidth) ? Math.max(computedWidth / this.columnList.length, MINIMUM_COLUMN_WIDTH) :
-                Math.max((computedWidth - maxColumnWidth) / this.columnList.length, MINIMUM_COLUMN_WIDTH);
+        const visibleColsWithNoWidth = this.visibleColumns.filter((col) => col.width === null);
+        maxColumnWidth = !Number.isFinite(sumExistingWidths) ?
+            Math.max(computedWidth / visibleColsWithNoWidth.length, MINIMUM_COLUMN_WIDTH) :
+            Math.max((computedWidth - sumExistingWidths) / visibleColsWithNoWidth.length, MINIMUM_COLUMN_WIDTH);
 
         return maxColumnWidth.toString();
     }
@@ -967,6 +975,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     protected calculateGridSizes() {
         this.calculateGridWidth();
+        this.cdr.detectChanges();
         this.calculateGridHeight();
         if (this.rowSelectable) {
             this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.clientWidth;
