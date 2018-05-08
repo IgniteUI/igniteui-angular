@@ -1,6 +1,6 @@
 ////
 /// @group components
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 /// @requires {mixin} bem-block
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
@@ -15,12 +15,12 @@
         @extend %igx-drop-down__item !optional;
     }
 
-    @include e(item, $m: selected) {
-        @extend %igx-drop-down__item--selected !optional;
-    }
-
     @include e(item, $m: focused) {
         @extend %igx-drop-down__item--focused !optional;
+    }
+
+    @include e(item, $m: selected) {
+        @extend %igx-drop-down__item--selected !optional;
     }
 
     @include e(item, $m: disabled) {
@@ -29,9 +29,5 @@
 
     @include e(header) {
         @extend %igx-drop-down__header !optional;
-    }
-
-    @include e(separator) {
-        @extend %igx-drop-down__separator !optional;
     }
 }

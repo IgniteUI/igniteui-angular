@@ -415,6 +415,14 @@ fdescribe("IgxDropDown ", () => {
             expect(listItems[5].isSelected).toBeTruthy();
             const currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_SELECTED));
             expect(currentItem.componentInstance.index).toEqual(5);
+            // Verify selecting the already selected element is not affecting selection
+            list.setSelectedItem(5);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(listItems[5].isSelected).toBeTruthy();
+            const currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_SELECTED));
+            expect(currentItem.componentInstance.index).toEqual(5);
         });
     });
 
@@ -472,6 +480,61 @@ fdescribe("IgxDropDown ", () => {
             expect(listItems[11].isFocused).toBeTruthy();
             const currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_FOCUSED));
             expect(currentItem.componentInstance.index).toEqual(11);
+        });
+    });
+
+    it("Key navigation through disabled items", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestDisabledComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        const list = fixture.componentInstance.dropdownDisabled;
+        const listItems = list.items;
+        expect(list).toBeDefined();
+        expect(list.items.length).toEqual(13);
+        button.click();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const currentItem = fixture.debugElement.queryAll(By.css(".igx-drop-down__item"))[0];
+            currentItem.triggerEventHandler("keydown.ArrowDown", jasmine.createSpyObj("mockEvt", ["stopPropagation", "preventDefault"]));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(list.items[1].isFocused).toBeTruthy();
+            const currentItem = fixture.debugElement.queryAll(By.css(".igx-drop-down__item"))[0];
+            currentItem.triggerEventHandler("keydown.ArrowDown", jasmine.createSpyObj("mockEvt", ["stopPropagation", "preventDefault"]));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(listItems[3].isFocused).toBeTruthy();
+            const currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_FOCUSED));
+            expect(currentItem.componentInstance.index).toEqual(3);
+            currentItem.triggerEventHandler("keydown.ArrowUp", jasmine.createSpyObj("mockEvt", ["stopPropagation", "preventDefault"]));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(listItems[1].isFocused).toBeTruthy();
+            const currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_FOCUSED));
+            expect(currentItem.componentInstance.index).toEqual(1);
+        });
+    });
+
+    it("Change width/height at runtime", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestDisabledComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        const list = fixture.componentInstance.dropdownDisabled;
+        const listItems = list.items;
+        expect(list).toBeDefined();
+        expect(list.items.length).toEqual(13);
+        fixture.componentInstance.dropdownDisabled.width = "80%";
+        fixture.componentInstance.dropdownDisabled.height = "400px";
+        fixture.componentInstance.dropdownDisabled.id = "newDD";
+        button.click();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(fixture.componentInstance.dropdownDisabled.height).toEqual("400px");
+            expect(fixture.componentInstance.dropdownDisabled.width).toEqual("80%");
+            expect(fixture.componentInstance.dropdownDisabled.id).toEqual("newDD");
         });
     });
 });
