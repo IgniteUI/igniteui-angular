@@ -302,6 +302,8 @@ describe("IgxGrid - Filtering actions", () => {
             expect(grid.getCellByColumn(0, "Downloads").value).toEqual(0);
             expect(close.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
             expect(reset.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
+            const clear = filterUIContainer.query(By.css("igx-suffix"));
+            expect(clear.nativeElement.offsetHeight).toBeGreaterThan(0);
             // clear input value
             input.nativeElement.value = "";
             input.nativeElement.dispatchEvent(new Event("input"));
@@ -374,6 +376,7 @@ describe("IgxGrid - Filtering actions", () => {
             input = filterUIContainer.query(By.directive(IgxInputDirective));
             expect(grid.rowList.length).toEqual(7);
             expect(close.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
+            expect(reset.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
             expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
             // iterate over not unary conditions and fill the input
@@ -386,6 +389,8 @@ describe("IgxGrid - Filtering actions", () => {
             expect(grid.getCellByColumn(0, "Downloads").value).toEqual(100);
             expect(close.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
             expect(reset.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
+            const clear = filterUIContainer.query(By.css("igx-suffix"));
+            expect(clear.nativeElement.offsetHeight).toBeGreaterThan(0);
             expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
             // does not equal
@@ -420,6 +425,7 @@ describe("IgxGrid - Filtering actions", () => {
             expect(close.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
             expect(reset.nativeElement.classList.contains("igx-button--disabled")).toBeTruthy();
             expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+            expect(select.nativeElement.value).toMatch("equals");
 
             // less than
             options[3].selected = true;
@@ -433,6 +439,19 @@ describe("IgxGrid - Filtering actions", () => {
             expect(close.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
             expect(reset.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
             expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+
+            // use clear button
+            const clear = filterUIContainer.query(By.css("igx-suffix"));
+            clear.nativeElement.click();
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(8);
+            expect(close.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
+            expect(reset.nativeElement.classList.contains("igx-button--disabled")).toBeTruthy();
+            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+            expect(select.nativeElement.value).toMatch("lessThan");
 
             // greater than or equal to
             options[4].selected = true;

@@ -46,7 +46,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     set value(val) {
         // filtering needs to be cleared if value is null, undefined or empty string
         if (!val && val !== 0) {
-            this.clearFiltering();
+            this.clearFiltering(false);
             return;
         }
         this._value = this.transformValue(val);
@@ -202,8 +202,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     }
 
     @autoWire(true)
-    public clearFiltering(): void {
+    public clearFiltering(resetCondition: boolean): void {
         this._value = null;
+        this._filterCondition = resetCondition ? undefined : this._filterCondition;
         this.gridAPI.clear_filter(this.gridID, this.column.field);
         this.gridAPI.get(this.gridID).clearSummaryCache();
         // XXX - Temp fix for (#1183, #1177) (Should be deleted)
@@ -223,6 +224,10 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
 
     public onInputChanged(val): void {
         this.filterChanged.next(val);
+    }
+
+    public clearInput(): void {
+        this.clearFiltering(false);
     }
 
     public get disabled() {
