@@ -268,6 +268,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
                 }
                 this.cdr.markForCheck();
             });
+
+        if (this.highlight && this.grid.lastSearchInfo.searchText) {
+            this.highlight.highlight(this.grid.lastSearchInfo.searchText, this.grid.lastSearchInfo.caseSensitive);
+        }
     }
 
     public ngOnDestroy() {

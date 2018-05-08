@@ -18,12 +18,12 @@ interface ISearchInfo {
     content: string;
     matchCount: number;
     caseSensitive: boolean;
-    stored: boolean;
 }
 
 interface IActiveHighlightInfo {
-    row: number;
-    column: number;
+    rowIndex: number;
+    columnIndex: number;
+    index: number;
 }
 
 @Directive({
@@ -65,14 +65,6 @@ export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
     constructor(element: ElementRef, public renderer: Renderer2) {
         this.parentElement = this.renderer.parentNode(element.nativeElement);
 
-        this._lastSearchInfo = {
-            searchedText: "",
-            content: this.value,
-            matchCount: 0,
-            caseSensitive: false,
-            stored: false
-        };
-
         const callback = (mutationList) => {
             mutationList.forEach(mutation => {
                 mutation.removedNodes.forEach(n => {
@@ -102,12 +94,14 @@ export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
         this._observer.observe(this.parentElement, {childList: true});
 
         IgxTextHighlightDirective.onActiveElementChanged.subscribe((ev) => {
+            if (this._activeElementIndex !== -1) {
+                this.deactivate();
+            }
+
             if (this.groupName === ev.groupName &&
                 this.column === ev.column &&
                 this.row === ev.row) {
-                this.activate(0);
-            } else if (this._activeElementIndex !== -1) {
-                this.deactivate();
+                this.activate(ev.index);
             }
         });
     }
@@ -115,10 +109,20 @@ export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
     ngOnInit() {
         if (IgxTextHighlightDirective._highlightGroupsMap.has(this.groupName) === false) {
             IgxTextHighlightDirective._highlightGroupsMap.set(this.groupName, {
-                row: -1,
-                column: -1
+                rowIndex: -1,
+                columnIndex: -1,
+                index: -1
             });
         }
+
+        this._lastSearchInfo = {
+            searchedText: "",
+            content: this.value,
+            matchCount: 0,
+            caseSensitive: false
+        };
+
+        console.log(this.value);
     }
 
     ngOnDestroy() {
@@ -133,26 +137,31 @@ export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
         if ((changes.row && !changes.row.firstChange) || (changes.column && !changes.column.firstChange)) {
             if (this._activeElementIndex !== -1) {
                 this.deactivate();
-            } else {
-                const group = IgxTextHighlightDirective._highlightGroupsMap.get(this.groupName);
+            }
 
-                if (group.column === this.column && group.row === this.row) {
-                    this.activate(0);
+            const group = IgxTextHighlightDirective._highlightGroupsMap.get(this.groupName);
+            if (group.columnIndex === this.column && group.rowIndex === this.row) {
+                if (this._activeElementIndex !== -1) {
+                    this.deactivate();
                 }
+                this.activate(group.index);
             }
         }
+
     }
 
-    public static setActiveHighlight(groupName: string, column: number, row: number) {
+    public static setActiveHighlight(groupName: string, column: number, row: number, index: number) {
         const group = IgxTextHighlightDirective._highlightGroupsMap.get(groupName);
 
-        group.column = column;
-        group.row = row;
+        group.columnIndex = column;
+        group.rowIndex = row;
+        group.index = index;
 
         IgxTextHighlightDirective.onActiveElementChanged.emit({
             groupName: groupName,
             column: column,
-            row: row
+            row: row,
+            index: index
         })
     }
 
@@ -181,6 +190,9 @@ export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
 
     public clearHighlight() {
         this.clearChildElements(false);
+
+        this._lastSearchInfo.searchedText = "";
+        this._lastSearchInfo.matchCount = 0;
     }
 
     public activate(index: number) {
@@ -279,7 +291,6 @@ export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
                 (searchedText === null ||
                 searchedText !== text ||
                 this._lastSearchInfo.content !== this.value ||
-                this._lastSearchInfo.stored ||
                 this._lastSearchInfo.caseSensitive !== caseSensitive ||
                 this._forceEvaluation);
     }
