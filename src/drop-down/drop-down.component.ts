@@ -211,13 +211,6 @@ export class IgxDropDownComponent implements AfterViewInit, OnInit {
     }
 
     ngAfterViewInit() {
-        if (!this.selectedItem && this.items.length > 0) {
-            //  TODO: check if we can remove timeout without introducing ExpressionChangedAfterItHasBeenCheckedError
-            setTimeout(() => {
-                this.setSelectedItem(0);
-            });
-        }
-        this._initiallySelectedItem = this.selectedItem;
     }
 
     onToggleClose() {
@@ -238,6 +231,10 @@ export class IgxDropDownComponent implements AfterViewInit, OnInit {
 
     onToggleOpening() {
         this.cdr.detectChanges();
+        if (!this.selectedItem && this.items.length > 0) {
+            this.setSelectedItem(0);
+        }
+        this._initiallySelectedItem = this.selectedItem;
         this.scrollToItem(this.selectedItem);
     }
 
@@ -283,7 +280,7 @@ export class IgxDropDownComponent implements AfterViewInit, OnInit {
         // TODO: find how to calculate height without padding. We are remove padding now by -16
         const dropDownHeight = this.toggleDirective.element.clientHeight - 16;
         itemPosition -= dropDownHeight / 2;
-        itemPosition += item.elementHeight / 2;
+        itemPosition += item.elementHeight + item.elementHeight / 2;
 
         return Math.floor(itemPosition);
     }
