@@ -2,8 +2,10 @@ import { transition, trigger, useAnimation } from "@angular/animations";
 import { CommonModule } from "@angular/common";
 import {
     Component,
+    ContentChild,
     ElementRef,
     EventEmitter,
+    forwardRef,
     HostBinding,
     Input,
     NgModule,
@@ -19,6 +21,8 @@ import { fadeIn, fadeOut, slideInBottom } from "../animations/main";
 import { IgxNavigationService, IToggleView } from "../core/navigation";
 import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
+import { IgxDialogButtonsDirective, IgxDialogTitleDirective } from "./dialog.directives";
+
 /**
  * **Ignite UI for Angular Dialog Window** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog.html)
@@ -148,6 +152,34 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
         return this._titleId;
     }
 
+    get titleTemplate(): any {
+        if (this.titleTemplateDirective) {
+            return this.titleTemplateDirective.template;
+        }
+        return null;
+    }
+
+    set titleTemplate(directive: any) {
+        this.titleTemplateDirective = directive;
+    }
+
+    get buttonsTemplate(): any {
+        if (this.buttonsTemplateDirective) {
+            return this.buttonsTemplateDirective.template;
+        }
+        return null;
+    }
+
+    set buttonsTemplate(directive: any) {
+        this.buttonsTemplateDirective = directive;
+    }
+
+    @ContentChild(forwardRef(() => IgxDialogTitleDirective), { read: IgxDialogTitleDirective })
+    private titleTemplateDirective: IgxDialogTitleDirective;
+
+    @ContentChild(forwardRef(() => IgxDialogButtonsDirective), { read: IgxDialogButtonsDirective })
+    private buttonsTemplateDirective: IgxDialogButtonsDirective;
+
     constructor(
         private elementRef: ElementRef,
         @Optional() private navService: IgxNavigationService
@@ -220,8 +252,8 @@ export interface IDialogEventArgs {
 }
 
 @NgModule({
-    declarations: [IgxDialogComponent],
-    exports: [IgxDialogComponent],
+    declarations: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogButtonsDirective],
+    exports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogButtonsDirective],
     imports: [CommonModule, IgxButtonModule, IgxRippleModule]
 })
 export class IgxDialogModule { }
