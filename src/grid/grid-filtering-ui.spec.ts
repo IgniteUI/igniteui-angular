@@ -10,7 +10,7 @@ import { IgxInputDirective } from "../directives/input/input.directive";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-fdescribe("IgxGrid - Filtering actions", () => {
+describe("IgxGrid - Filtering actions", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -142,7 +142,7 @@ fdescribe("IgxGrid - Filtering actions", () => {
     }));
 
     // UI tests string column with value in input
-    fit("UI tests on string column", async(() => {
+    it("UI tests on string column", async(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
