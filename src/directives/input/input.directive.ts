@@ -48,6 +48,16 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         return this.nativeElement.value;
     }
 
+    @Input()
+    public set disabled(value: boolean) {
+        this.nativeElement.disabled = value;
+        this.inputGroup.isDisabled = value;
+    }
+
+    public get disabled() {
+        return this.nativeElement.hasAttribute("disabled");
+    }
+
     @HostBinding("class.igx-input-group__input")
     public isInput = false;
 
@@ -131,15 +141,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         if (!this.ngModel.control.pristine && (this.ngModel.validator || this.ngModel.asyncValidator)) {
             this._valid = this.ngModel.valid ? IgxInputState.VALID : IgxInputState.INVALID;
         }
-    }
-
-    public get disabled() {
-        return this.nativeElement.hasAttribute("disabled");
-    }
-
-    public set disabled(value: boolean) {
-        this.nativeElement.disabled = value;
-        this.inputGroup.isDisabled = value;
     }
 
     public get required() {

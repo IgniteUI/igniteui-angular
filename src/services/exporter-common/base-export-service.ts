@@ -3,6 +3,7 @@ import {
     Output
 } from "@angular/core";
 
+import { DataUtil } from "../../data-operations/data-util";
 import { IgxGridComponent } from "../../grid/grid.component";
 
 import { ExportUtilities } from "./export-utilities";
@@ -23,6 +24,8 @@ export interface IColumnExportingEventArgs {
 export abstract class IgxBaseExporter {
     private _columnList: any[];
     protected _indexOfLastPinnedColumn = -1;
+
+    protected _sort = null;
 
     @Output()
     public onRowExport = new EventEmitter<IRowExportingEventArgs>();
@@ -49,7 +52,8 @@ export abstract class IgxBaseExporter {
             const columnInfo = {
                 header: columnHeader,
                 field: column.field,
-                skip: !exportColumn
+                skip: !exportColumn,
+                formatter: column.formatter
             };
 
             if (index !== -1) {
@@ -69,12 +73,7 @@ export abstract class IgxBaseExporter {
            this._columnList[++lastVisbleColumnIndex] = hiddenColumn;
         });
 
-        const useRowList = !options.ignoreFiltering &&
-                            grid.filteringExpressions !== undefined &&
-                            grid.filteringExpressions.length > 0;
-
-        const data = useRowList ? grid.rowList.toArray().sort((r) => r.index).
-                                                        map((r) => r.rowData) : grid.data;
+        const data = this.prepareData(grid, options);
         this.exportData(data, options);
     }
 
@@ -104,6 +103,14 @@ export abstract class IgxBaseExporter {
                 if (column.skip && index <= this._indexOfLastPinnedColumn) {
                     skippedPinnedColumnsCount++;
                 }
+
+                if (this._sort && this._sort.fieldName === column.field) {
+                    if (column.skip) {
+                        this._sort = null;
+                    } else {
+                        this._sort.fieldName = column.header;
+                    }
+                }
             }
         });
 
@@ -128,7 +135,8 @@ export abstract class IgxBaseExporter {
         if (!isSpecialData) {
             row = this._columnList.reduce((a, e) => {
                 if (!e.skip) {
-                    a[e.header] = rowData[e.field];
+                    const rawValue = rowData[e.field];
+                    a[e.header] = e.formatter ? e.formatter(rawValue) : rawValue;
                 }
                 return a;
             }, {});
@@ -148,8 +156,40 @@ export abstract class IgxBaseExporter {
         }
     }
 
+    private prepareData(grid: IgxGridComponent, options: IgxExporterOptionsBase): any[] {
+        let data = grid.data;
+
+        if (grid.filteringExpressions &&
+            grid.filteringExpressions.length > 0 &&
+            !options.ignoreFiltering) {
+
+            const filteringState = {
+                expressions: grid.filteringExpressions,
+                logic: grid.filteringLogic
+            };
+
+            data = DataUtil.filter(data, filteringState);
+        }
+
+        if (grid.sortingExpressions &&
+            grid.sortingExpressions.length > 0 &&
+            !options.ignoreSorting) {
+
+            const sortingState = {
+                expressions: grid.sortingExpressions
+            };
+
+            this._sort = grid.sortingExpressions[0];
+
+            data =  DataUtil.sort(data, sortingState);
+        }
+
+        return data;
+    }
+
     private resetDefaults() {
         this._columnList = [];
         this._indexOfLastPinnedColumn = -1;
+        this._sort = null;
     }
 }

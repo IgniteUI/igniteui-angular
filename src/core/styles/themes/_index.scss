@@ -3,11 +3,10 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-// Import the core modules first
+// Import the core module first
 @import 'core';
 
 // Import all component mixins
-@import 'palettes';
 @import '../components/avatar/avatar-theme';
 @import '../components/badge/badge-theme';
 @import '../components/button/button-theme';
@@ -24,6 +23,7 @@
 @import '../components/grid-paginator/grid-paginator-theme';
 @import '../components/toast/toast-theme';
 @import '../components/tabbar/tabbar-theme';
+@import '../components/tabs/tabs-theme';
 @import '../components/switch/switch-theme';
 @import '../components/snackbar/snackbar-theme';
 @import '../components/slider/slider-theme';
@@ -71,7 +71,8 @@
 /// @requires {mixin} igx-slider
 /// @requires {mixin} igx-snackbar
 /// @requires {mixin} igx-switch
-/// @requires {mixin} igx-tabbar
+/// @requires {mixin} igx-tabs
+/// @requires {mixin} igx-bottom-nav
 /// @requires {mixin} igx-toast
 @mixin igx-theme($palette, $exclude: ()) {
     // Stores all excluded component styles
@@ -166,8 +167,11 @@
     @if not(index($exclude, 'igx-switch')) {
         @include igx-switch($theme: (), $palette: $palette);
     }
-    @if not(index($exclude, 'igx-tab-bar')) {
-        @include igx-tabbar($theme: (), $palette: $palette);
+    @if not(index($exclude, 'igx-bottom-nav')) {
+        @include igx-bottom-nav($theme: (), $palette: $palette);
+    }
+    @if not(index($exclude, 'igx-tabs')) {
+        @include igx-tabs($theme: (), $palette: $palette);
     }
     @if not(index($exclude, 'igx-toast')) {
         @include igx-toast($theme: (), $palette: $palette);

@@ -80,7 +80,7 @@
         left: 0;
         bottom: 0;
         background: $overlay-color;
-        z-index: 24;
+        z-index: 99999;
     }
 
     %igx-dialog--hidden {

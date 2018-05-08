@@ -1,0 +1,28 @@
+<!-- TODO Remove tab container from here -->
+<div #tabsContainer>
+    <div class="igx-tabs__header" #headerContainer>
+        <button igxRipple class="igx-tabs__header-button" igxButton="icon" (click)="scrollLeft($event)" igxLeftButtonStyle>
+            <igx-icon fontSet="material" name="navigate_before"></igx-icon>
+        </button>
+        <div class="igx-tabs__header-wrapper-fixed" #viewPort>
+            <div #itemsContainer class="igx-tabs__header-wrapper-fluid">
+                <igx-tab-item igxRipple *ngFor="let group of groups" [id]="'igx-tab-item-' + group.index" [attr.aria-label]="group.label"
+                    [attr.aria-disabled]="group.isDisabled" [attr.aria-selected]="group.isSelected" [attr.aria-controls]="'igx-tab-item-group-'+ group.index"
+                    [ngClass]="{
+                'igx-tabs__header-menu-item': !group.isSelected && !group.isDisabled,
+                'igx-tabs__header-menu-item--selected': group.isSelected,
+                'igx-tabs__header-menu-item--disabled': group.isDisabled }" [relatedGroup]="group" role="tab">
+                </igx-tab-item>
+                <div #selectedIndicator class="igx-tabs__header-menu-item-indicator"></div>
+            </div>
+        </div>
+        <button igxRipple class="igx-tabs__header-button" igxButton="icon" (click)="scrollRight($event)" igxRightButtonStyle>
+            <igx-icon fontSet="material" name="navigate_next"></igx-icon>
+        </button>
+    </div>
+    <div class="igx-tabs__content-fixed">
+        <div #contentsContainer class="igx-tabs__content-fluid">
+            <ng-content></ng-content>
+        </div>
+    </div>
+</div>

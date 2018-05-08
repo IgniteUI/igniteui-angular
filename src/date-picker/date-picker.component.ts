@@ -26,6 +26,7 @@ import { IgxDialogComponent, IgxDialogModule } from "../dialog/dialog.component"
 import { IgxIconModule } from "../icon";
 import { IgxInputGroupModule } from "../input-group/input-group.component";
 
+let NEXT_ID = 0;
 /**
  * **Ignite UI for Angular Date Picker** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date_picker.html)
@@ -45,6 +46,10 @@ import { IgxInputGroupModule } from "../input-group/input-group.component";
     templateUrl: "date-picker.component.html"
 })
 export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+
+    @HostBinding("attr.id")
+    @Input()
+    public id = `igx-datePicker-${NEXT_ID++}`;
     // Custom formatter function
     @Input() public formatter: (val: Date) => string;
 
@@ -86,6 +91,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     @Input() public cancelButtonLabel: string;
 
     @Output() public onOpen = new EventEmitter<IgxDatePickerComponent>();
+
+    @Output() public onClose = new EventEmitter<IgxDatePickerComponent>();
     /**
      * Propagate clanedar events.
      */
@@ -171,7 +178,9 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     /**
-     * Emits the open event and focus the dialog.
+     * Emits the open event and update the calendar.
+     *
+     * @hidden
      */
     public onOpenEvent(event): void {
         const factory = this.resolver.resolveComponentFactory(IgxCalendarComponent);
@@ -192,6 +201,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      * Closes the dialog, after was clearing all calendar items from dom.
      */
     public handleDialogCloseAction() {
+        this.onClose.emit(this);
         setTimeout(() => this.calendarRef.destroy(), 350);
     }
 

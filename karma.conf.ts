@@ -9,6 +9,7 @@ export default (config) => {
 
         files: [
             "./dist/styles/igniteui-angular.css",
+            "./test.css",
             "./node_modules/hammerjs/hammer.js",
             "./node_modules/hammer-simulator/index.js",
             "karma-test-entry.ts"

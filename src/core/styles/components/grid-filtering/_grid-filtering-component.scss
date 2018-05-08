@@ -46,4 +46,8 @@
     @include e(options-bgroup) {
         @extend %igx-filtering-menu-buttons !optional;
     }
+
+    @include e(op) {
+        @extend %igx-filtering-op !optional;
+    }
 }

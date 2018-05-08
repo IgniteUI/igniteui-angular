@@ -2,8 +2,27 @@
     {{ column.header || column.field }}
 </ng-template>
 
-<span class="title">
+<span class="igx-grid__th-title">
     <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column }">
     </ng-container>
 </span>
-<igx-grid-filter [column]="column" *ngIf="column.filterable"></igx-grid-filter>
+
+<div class="igx-grid__th-icons">
+    <igx-icon class="sort-icon" *ngIf="column.sortable">{{sortingIcon}}</igx-icon>
+    <igx-grid-filter [column]="column" *ngIf="column.filterable"></igx-grid-filter>
+</div>
+
+<span [style.cursor]="resizeCursor" #resizeArea
+    class="igx-grid__th-resize-handle"
+    (dblclick)="onResizeAreaDblClick()">
+
+    <div *ngIf="showResizer" igxResizer
+        class="igx-grid__th-resize-line"
+        [style.height.px]="resizerHeight"
+        [restrictHResizeMax]="restrictResizeMax"
+        [restrictHResizeMin]="restrictResizeMin"
+        [resizeEndTimeout]="resizeEndTimeout"
+        (resizeEnd)="onResize($event)">
+    </div>
+
+</span>

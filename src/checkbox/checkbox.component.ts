@@ -1,14 +1,16 @@
 import {
     Component,
+    Directive,
     EventEmitter,
     forwardRef,
     HostBinding,
     Input,
     NgModule,
     Output,
+    Provider,
     ViewChild
 } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 
 export enum LabelPosition {
@@ -44,13 +46,13 @@ let nextId = 0;
     templateUrl: "checkbox.component.html"
 })
 export class IgxCheckboxComponent implements ControlValueAccessor {
-    public focused = false;
     protected _value: any;
 
     @ViewChild("checkbox") public nativeCheckbox;
     @ViewChild("label") public nativeLabel;
     @ViewChild("placeholderLabel") public placeholderLabel;
 
+    @HostBinding("attr.id")
     @Input() public id = `igx-checkbox-${nextId++}`;
     @Input() public labelId = `${this.id}-label`;
     @Input() public value: any;
@@ -58,6 +60,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     @Input() public tabindex: number = null;
     @Input() public labelPosition: LabelPosition | string = LabelPosition.AFTER;
     @Input() public disableRipple = false;
+    @Input() public required = false;
 
     @Input("aria-labelledby")
     public ariaLabelledBy = this.labelId;
@@ -71,6 +74,9 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     @HostBinding("class.igx-checkbox")
     public cssClass = "igx-checkbox";
 
+    @HostBinding("class.igx-checkbox--focused")
+    public focused = false;
+
     @HostBinding("class.igx-checkbox--indeterminate")
     @Input() public indeterminate = false;
 
@@ -80,6 +86,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     @HostBinding("class.igx-checkbox--disabled")
     @Input() public disabled = false;
 
+    public inputId = `${this.id}-input`;
     private _onTouchedCallback: () => void = noop;
     private _onChangeCallback: (_: any) => void = noop;
 
@@ -89,6 +96,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
         }
 
         this.indeterminate = false;
+        this.focused = false;
         this.checked = !this.checked;
 
         this.change.emit({ checked: this.checked, checkbox: this });
@@ -146,9 +154,24 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 }
 
+export const IGX_CHECKBOX_REQUIRED_VALIDATOR: Provider = {
+    provide: NG_VALIDATORS,
+    useExisting: forwardRef(() => IgxCheckboxRequiredDirective),
+    multi: true
+};
+
+/* tslint:disable directive-selector */
+@Directive({
+    selector: `igx-checkbox[required][formControlName],
+    igx-checkbox[required][formControl],
+    igx-checkbox[required][ngModel]`,
+    providers: [IGX_CHECKBOX_REQUIRED_VALIDATOR]
+})
+export class IgxCheckboxRequiredDirective extends CheckboxRequiredValidator { }
+
 @NgModule({
-    declarations: [IgxCheckboxComponent],
-    exports: [IgxCheckboxComponent],
+    declarations: [IgxCheckboxComponent, IgxCheckboxRequiredDirective],
+    exports: [IgxCheckboxComponent, IgxCheckboxRequiredDirective],
     imports: [IgxRippleModule]
 })
 export class IgxCheckboxModule { }

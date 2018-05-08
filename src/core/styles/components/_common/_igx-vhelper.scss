@@ -1,11 +1,13 @@
 %vhelper-display {
     display: block;
     overflow: auto;
+    z-index: 24;
 }
 
 %vhelper--vertical {
     position: absolute;
     width: 18px;
+    top: 0;
     right: 0;
 }
 

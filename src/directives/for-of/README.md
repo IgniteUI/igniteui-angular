@@ -5,7 +5,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 ## Usage
 ```html
 <igx-list>
-    <div [style.height]="height" [style.overflow]="'hidden'">
+    <div [style.height]="height" [style.overflow]="'hidden'" [style.position]="'relative'">
         <igx-list-item *igxFor="let item of data | igxFilter: fo1; scrollOrientation : 'vertical'; containerSize: '500px'; itemSize: '50px'">
             <span igxLabel>{{item.text}}</span>
         </igx-list-item>
@@ -46,7 +46,7 @@ Using `igxFor` will do the following changes to the templated DOM:
 - A number of items will be rendered that is enough to cover the dimensions of the container
 - When the end-user scrolls the rendered items will be reused but their bindings will be updated to refer to items that would usually be visible in the new scroll position
 
-***Note:*** As of version 5.3.0, `igxFor` will simulate smooth scrolling by utilizing offset positioning of its display container. This requires that its parent element has the appropriate dimensions and `overflow: hidden` rule applied for the best end-user experience.
+***Note:*** As of version 5.3.0, `igxFor` will simulate smooth scrolling by utilizing offset positioning of its display container. This requires that its parent element has the appropriate dimensions and `overflow: hidden; position: relative;` rules applied for the best end-user experience.
 
 
 ### Change Propagation
@@ -96,7 +96,6 @@ List of exported values by the `igxForOf` that can be aliased to local variables
 | :--------- |:------- | :---------------------------------------------------- |
 | $implicit  | T       | The value of the individual items in the iterable     |
 | index      | number  | The index of the current item in the iterable.        |
-| dirty      | boolean | True when the current item needs to reset their state |
 
 <div class="divider--half"></div>
 

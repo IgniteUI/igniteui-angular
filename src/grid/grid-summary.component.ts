@@ -1,7 +1,5 @@
-import {
-    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, DoCheck, HostBinding, HostListener, Input, OnDestroy, OnInit
-} from "@angular/core";
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
+    Component, DoCheck, HostBinding, HostListener, Input, OnDestroy, OnInit } from "@angular/core";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
@@ -16,7 +14,6 @@ import { autoWire, IGridBus } from "./grid.common";
 })
 export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoCheck, AfterContentInit {
 
-    summaryStyle: Map<string, string> = new Map<string, string>();
     fieldName: string;
 
     @Input()
@@ -54,6 +51,11 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
         return this.column.hasSummary;
     }
 
+    @HostBinding("class.igx-grid-summary--fw")
+    get widthPersistenceClass(): boolean {
+        return this.column.width !== null;
+    }
+
     @HostBinding("style.min-width")
     @HostBinding("style.flex-basis")
     get width() {
@@ -63,7 +65,8 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
     protected subscriptionOnEdit$;
     protected subscriptionOnAdd$;
     protected subscriptionOnDelete$;
-    private itemClass = "igx-grid-summary__item";
+    protected subscriptionOnFilter$;
+    public itemClass = "igx-grid-summary__item";
     private hiddenItemClass = "igx-grid-summary__item--inactive";
     private summaryResultClass = "igx-grid-summary-item__result--left-align";
     private numberSummaryResultClass = "igx-grid-summary-item__result";
@@ -84,6 +87,9 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
         if (this.subscriptionOnDelete$) {
             this.subscriptionOnDelete$.unsubscribe();
         }
+        if (this.subscriptionOnFilter$) {
+            this.subscriptionOnFilter$.unsubscribe();
+        }
     }
 
     ngDoCheck() {
@@ -100,6 +106,10 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
                     this.clearAll();
                 }
             });
+            this.subscriptionOnFilter$ = this.gridAPI.get(this.gridID).onFilteringDone.subscribe((data) => {
+                this.fieldName = data.fieldName;
+                this.clearAll();
+            });
             this.subscriptionOnAdd$ = this.gridAPI.get(this.gridID).onRowAdded.subscribe(() => this.clearAll());
             this.subscriptionOnDelete$ = this.gridAPI.get(this.gridID).onRowDeleted.subscribe(() => this.clearAll());
         }
@@ -113,6 +123,8 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
     @autoWire(true)
     clearAll() {
         this.gridAPI.remove_summary(this.gridID);
+        this.gridAPI.get(this.gridID).markForCheck();
+        this.cdr.detectChanges();
     }
 
     get resolveSummaries(): any[] {
@@ -139,22 +151,4 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
         }
     }
 
-    public summaryClass(functionKey: string) {
-        const summaryKey = this.column.field + "_" + functionKey;
-        if (this.summaryStyle.has(summaryKey)) {
-            return this.summaryStyle.get(summaryKey);
-        } else {
-            this.summaryStyle.set(summaryKey, this.itemClass);
-            return this.summaryStyle.get(summaryKey);
-        }
-    }
-
-    @autoWire()
-    public changeSummaryClass(functionKey: string) {
-        const summaryKey = this.column.field + "_" + functionKey;
-        switch (this.summaryStyle.get(summaryKey)) {
-            case this.itemClass: this.summaryStyle.set(summaryKey, this.hiddenItemClass); break;
-            case this.hiddenItemClass: this.summaryStyle.set(summaryKey, this.itemClass); break;
-        }
-    }
 }

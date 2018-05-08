@@ -1,9 +1,9 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, DebugElement, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { Calendar, IgxCalendarComponent, IgxCalendarModule, isLeap, monthRange, weekDay, WEEKDAYS } from "./index";
+import { Calendar, ICalendarDate, IgxCalendarComponent, IgxCalendarModule, isLeap, monthRange, weekDay, WEEKDAYS } from "./index";
 
 describe("IgxCalendar", () => {
     beforeEach(
@@ -175,6 +175,22 @@ describe("IgxCalendar", () => {
         expect(fixture.componentInstance).toBeDefined();
     });
 
+    it("Initialize a calendar component with `id` property", () => {
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
+        fixture.detectChanges();
+
+        const domCalendar = fixture.debugElement.query(By.css("igx-calendar")).nativeElement;
+
+        expect(fixture.componentInstance.calendar.id).toBe("igx-calendar-1");
+        expect(domCalendar.id).toBe("igx-calendar-1");
+
+        fixture.componentInstance.calendar.id = "customCalendar";
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.calendar.id).toBe("customCalendar");
+        expect(domCalendar.id).toBe("customCalendar");
+    });
+
     it("@Input properties and setters", () => {
         const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         fixture.detectChanges();
@@ -265,7 +281,7 @@ describe("IgxCalendar", () => {
         expect(bodyMonth.nativeElement.textContent.trim()).toMatch("8");
     });
 
-    it("Calendar DOM structure", () => {
+    it("Calendar DOM structure", async(() => {
         const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         fixture.detectChanges();
 
@@ -291,13 +307,19 @@ describe("IgxCalendar", () => {
                 .nativeElement.textContent.trim()
         ).toMatch(today.getDate().toString());
 
-        // Hide calendar header when not single selection
-        calendar.selection = "multi";
-        fixture.detectChanges();
+        fixture.whenStable().then(() => {
+            // Hide calendar header when not single selection
+            calendar.selection = "multi";
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            const calendarHeader = dom.query(By.css(".igx-calendar__header"));
+            expect(calendarHeader).toBeFalsy();
+        });
+        // fixture.componentInstance.model = new Date();
+        // fixture.detectChanges();
 
-        const calendarHeader = dom.query(By.css(".igx-calendar__header"));
-        expect(calendarHeader).toBeFalsy();
-    });
+    }));
 
     it("Calendar DOM structure - year view | month view", () => {
         const fixture = TestBed.createComponent(
@@ -873,6 +895,44 @@ describe("IgxCalendar", () => {
             fixture.detectChanges();
 
             expect(document.activeElement.textContent.trim()).toMatch("1");
+        });
+    });
+
+    it("Calendar date should persist the focus when select date in the (next/prev) month.", () => {
+        const fix = TestBed.createComponent(IgxCalendarRenderingComponent);
+        fix.detectChanges();
+
+        const component = fix.debugElement.query(By.css(".igx-calendar"));
+        let args: KeyboardEventInit = { key: "Home", bubbles: true };
+        let event = new KeyboardEvent("keydown", args);
+
+        const calendar = fix.componentInstance.calendar;
+        const calendarMonth = calendar.getCalendarMonth;
+
+        const value = calendarMonth[4][6];
+
+        fix.whenStable().then(() => {
+            component.triggerEventHandler("keydown.home", event);
+            fix.detectChanges();
+
+            const date = calendar.dates.find((d) => d.date.date.toString() === value.date.toString()).nativeElement;
+
+            args = { key: "Enter", bubbles: true };
+            event = new KeyboardEvent("keydown", args);
+            date.dispatchEvent(event);
+            return fix.whenRenderingDone();
+        }).then(() => {
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            const date = calendar.dates.find((d) => d.date.date.toString() === value.date.toString()).nativeElement;
+            expect(document.activeElement).toBe(date);
+            args = { key: "ArrowRight", bubbles: true };
+            event = new KeyboardEvent("keydown", args);
+            document.activeElement.dispatchEvent(event);
+            fix.detectChanges();
+
+            expect(document.activeElement.textContent.trim()).toMatch("2");
         });
     });
 });

@@ -16,6 +16,7 @@ describe("IgxRadio", () => {
                 IgxRadioComponent,
                 InitRadioComponent,
                 DisabledRadioComponent,
+                RequiredRadioComponent,
                 RadioWithModelComponent,
                 RadioExternalLabelComponent,
                 RadioInvisibleLabelComponent
@@ -42,6 +43,23 @@ describe("IgxRadio", () => {
 
         expect(placeholderLabel).toBeTruthy();
         expect(placeholderLabel.textContent.trim()).toEqual("Radio");
+    });
+
+    it("Init a radio with id property", () => {
+        const fixture = TestBed.createComponent(InitRadioComponent);
+        fixture.detectChanges();
+
+        const radio = fixture.componentInstance.radio;
+        const domRadio = fixture.debugElement.query(By.css("igx-radio")).nativeElement;
+
+        expect(radio.id).toContain("igx-radio-");
+        expect(domRadio.id).toContain("igx-radio-");
+
+        radio.id = "customRadio";
+        fixture.detectChanges();
+        expect(radio.id).toBe("customRadio");
+        expect(domRadio.id).toBe("customRadio");
+
     });
 
     it("Binding to ngModel", async(() => {
@@ -142,6 +160,21 @@ describe("IgxRadio", () => {
         expect(nativeRadio.checked).toBe(false);
         expect(testInstance.selected).not.toEqual("Bar");
     });
+
+    it("Required state", () => {
+        const fixture = TestBed.createComponent(RequiredRadioComponent);
+        fixture.detectChanges();
+
+        const testInstance = fixture.componentInstance;
+        const radios = testInstance.radios.toArray();
+
+        // get the required radio button
+        const radioInstance = radios[1];
+        const nativeRadio = radioInstance.nativeRadio.nativeElement;
+
+        expect(radioInstance.required).toBe(true);
+        expect(nativeRadio.required).toBe(true);
+    });
 });
 
 @Component({ template: `<igx-radio #radio>Radio</igx-radio>` })
@@ -182,6 +215,19 @@ class DisabledRadioComponent {
     }];
 
     public selected = "Foo";
+}
+
+@Component({
+    template: `
+    <igx-radio #radios *ngFor="let item of ['Foo', 'Bar']"
+        [value]="item"
+        [(ngModel)]="Foo"
+        [required]="true">
+        {{item}}
+    </igx-radio>`
+})
+class RequiredRadioComponent {
+    @ViewChildren(IgxRadioComponent) public radios;
 }
 
 @Component({

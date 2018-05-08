@@ -27,37 +27,35 @@ $exclude: (
     // igx-slider,
     // igx-snackbar,
     // igx-switch,
-    // igx-tab-bar,
+    // igx-bottom-nav,
     // igx-toast
 );
-// Generating a palette
+
+// Generating a theme
 @include igx-core();
 @include igx-theme($default-palette, $exclude);
 
-// @mixin gen-color-class($name, $variant, $prefix, $suffix) {
-//     $prefix: if($prefix, '#{$prefix}-', '');
-//     $suffix: if($suffix, '-#{$suffix}', '');
+$my-tabs-theme: igx-tabs-theme(
+    $item-text-color: rgba(255, 255, 255, .8),
+    $item-hover-color: rgba(255, 255, 255, .8),
+    $item-background: igx-color($default-palette, 'primary', 500),
+    $item-hover-background: igx-color($default-palette, 'primary', 400),
+    $item-active-background: igx-color($default-palette, 'primary', 600),
+    $indicator-color: #fbb13c,
+    $button-color: rgba(255, 255, 255, .8),
+    $button-background: igx-color($default-palette, 'primary', 500),
+    $button-hover-background: igx-color($default-palette, 'primary', 600),
+    $button-hover-color: #fff
+);
 
-//     .#{$prefix}#{$name}-#{$variant}#{$suffix} {
-//         @content;
-//     }
-// }
+.items-wrapper__item--blue {
+    @include igx-tabs($my-tabs-theme);
+}
 
-// @mixin gen-color-classes($prop, $prefix, $suffix) {
-//     @each $palette-name, $sub-palette in $default-palette {
-//         @each $variant, $color in $sub-palette {
-//             @if type-of($color) != 'map' {
-//                 @include gen-color-class($palette-name, $variant, $prefix, $suffix) {
-//                     #{$prop}: $color;
-//                 }
-//             }
-//         }
-//     }
-// }
+$my-nav-theme: igx-navbar-theme(
+    $disable-shadow: true
+);
 
-// @mixin igx-color-classes($prop, $suffix: null, $prefix: 'igx') {
-//     @include gen-color-classes($prop, $prefix, $suffix);
-// }
-
-// @include igx-color-classes($prop: 'background-color', $prefix: 'my', $suffix: 'bg');
-// @include igx-color-classes($prop: 'color');
+.tabs-demo {
+    @include igx-navbar($my-nav-theme);
+}

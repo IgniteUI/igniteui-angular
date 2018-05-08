@@ -2,20 +2,37 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 5.3.0
+- Added `rowSelectable` property to `igxGrid`
+    - Setting `rowSelectable` to `true` enables multiple row selection for the `igx-grid` component. Adds a checkbox column that allows (de)selection of one, multiple or all (via header checkbox) rows.
+    - For more information about the `rowSelectable` property and working with grid row, please read the `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) about selection or see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid-selection.html)  
+- Added `onContextMenu` output to `igxGrid` to emit the clicked cell.
+- `igx-datePicker`: Added `onClose` event.
+- `igxTextSelection` directive added
+    - `igxTextSelection` directive allows you to select the whole text range for every element with text content it is applied.
+- `igxFocus` directive added
+    - `igxFocus` directive allows you to force focus for every element it is applied.
 - `igx-time-picker` component added
     - `igx-time-picker` allows user to select time, from a dialog with spinners, which is presented into input field.
-    - For more information navigate to `src\time-picker\README.md`.
+    - For more information navigate to the [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/time-piker/README.md).
+- `igx-tab-bar` changes
+    - **Breaking changes**: `IgxTabBarComponent` is renamed to `IgxBottomNavComponent` and `IgxTabBarModule` is renamed to `IgxBottomNavModule`.
+    - `igx-tab-bar` selector is deprecated. Use `igx-bottom-nav` selector instead.
+- `igx-tabs` component added
+    - `igx-tabs` allows users to switch between different views. The `igx-tabs` component places the tabs headers at the top and allows scrolling when there are multiple tab items outside the visible area. Tabs are ordered in a single row above their associated content.
+    - For more information navigate to [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/tabs/README.md).
 - Added column pinning in the list of features available for `igxGrid`. Pinning is available though the API. Try the following:
    ```typescript
    const column = this.grid.getColumnByName(name);
    column.pin();
    ```
-   For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#pinning).
+   For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_column_pinning.html).
 - Added `summaries` feature to `igxGrid`, enabled on a per-column level. **Grid summaries** gives you a predefined set of default summaries, depending on the type of data in the column.
-    For more detailed information read `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#summaries).
+    For more detailed information read `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_summaries.html).
 - Added `columnWidth` option to `igxGrid`. The option sets the default width that will be applied to columns that have no explicit width set. For more detailed information read `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md)
+- Added API to `igxGrid` that allows for vertical remote virtualization. For guidance on how to implement such in your application, please refer to the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_virtualization.html)
 - Added smooth scrolling for the `igxForOf` directive making the scrolling experience both vertically and horizontally much more natural and similar to a native scroll.
-- `igxForOf` now requires that its parent container's `overflow` is set to `hidden`. It is recommended that its height is set as well so that the display container of the virtualized content can be positioned with an offset inside without visually affecting other elements on the page.
+- Added `onCellClick` event.
+- `igxForOf` now requires that its parent container's `overflow` is set to `hidden` and `position` to `relative`. It is recommended that its height is set as well so that the display container of the virtualized content can be positioned with an offset inside without visually affecting other elements on the page.
     ```html
     <div style='position: relative; height: 500px; overflow: hidden'>
         <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical
@@ -28,18 +45,20 @@ All notable changes for each version of this project will be documented in this 
     </div>
     ```
 - Removed the `dirty` local template variable previously exposed by the `igxFor` directive.
+- The `igxForRemote` input for the `igxFor` directive is now **deprecated**. Setting the required `totalItemCount` property after receiving the first data chunk is enough to trigger the required functionality.
 - the `igx-icon` component can now work with both glyph and ligature-based icon font sets. We've also included a brand new Icon Service, which helps you create aliases for the icon fonts you've included in your project. The service also allows you to define the default icon set used throughout your app.
 - Added the option to conditionally disable the `igx-ripple` directive through the `igxRippleDisabled` property.
-- Updated styling and interaction animations of the `igx-checkbox` and `igx-radio` components.
+- Updated styling and interaction animations of the `igx-checkbox`, `igx-switch`, and `igx-radio` components.
 - Added `indeterminate` property and styling to the `igx-checkbox` component.
-- Added `igx-ripple` effect to the `igx-checkbox` and `igx-radio` components. The effect can be disabled through the `disableRipple` property.
-- Added the ability to specify the label location in the `igx-checkbox` and `igx-radio` components through the `labelPosition` property. It can either be `before` or `after` the checkbox/radio element.
-- You can now use any element as label on the `igx-checkbox` and `igx-radio` components via the aria-labelledby property. 
-- You can now have invisible label on the `igx-checkbox` and `igx-radio` components via the aria-label property. 
-- Added the ability to toggle the `igx-checkbox` checked state programmatically via `toggle` method on the component instance.
+- Added `required` property to the `igx-checkbox`, `igx-radio`, and `igx-switch` components.
+- Added `igx-ripple` effect to the `igx-checkbox`, `igx-switch`, and `igx-radio` components. The effect can be disabled through the `disableRipple` property.
+- Added the ability to specify the label location in the `igx-checkbox`, `igx-switch`, and `igx-radio` components through the `labelPosition` property. It can either be `before` or `after`.
+- You can now use any element as label on the `igx-checkbox`, `igx-switch`, and `igx-radio` components via the aria-labelledby property.
+- You can now have invisible label on the `igx-checkbox`, `igx-switch`, and `igx-radio` components via the aria-label property.
+- Added the ability to toggle the `igx-checkbox` and `igx-switch` checked state programmatically via `toggle` method on the component instance.
 - Added the ability to select an `igx-radio` programmatically via `select` method on the component instance.
 - Fixed a bug on the `igx-checkbox` and `igx-radio` components where the click event was being triggered twice on click.
-- Fixed a bug where the `igx-checkbox` and `igx-radio` component's change event was not being triggered on label click.
+- Fixed a bug where the `igx-checkbox`, `igx-switch`, and `igx-radio` change event was not being triggered on label click.
 - `igxМask` directive added
     - `igxМask` provide means for controlling user input and formatting the visible value based on a configurable mask rules. For more detailed information see [`igxMask README file`](https://github.com/IgniteUI/igniteui-angular/blob/master/src/directives/mask/README.md)
 - `igxInputGroup` component added - used as a container for the `igxLabel`, `igxInput`, `igxPrefix`, `igxSuffix` and `igxHint` directives.
@@ -50,7 +69,7 @@ All notable changes for each version of this project will be documented in this 
     - the directive should be wrapped by `igxInputGroup` component
     - `IgxInputGroupModule` should be imported instead of `IgxInputModule`
 - `igxExcelExportService` and `igxCSVExportService` added. They add export capabilities to the `igxGrid`. For more information, please visit the [igxExcelExportService specification](https://github.com/IgniteUI/igniteui-angular/wiki/IgxExcelExporterService-Specification) and the [igxCSVExportService specification](https://github.com/IgniteUI/igniteui-angular/wiki/CSV-Exporter-Service-Specification).
-- General
+- **General**
     - Added event argument types to all `EventEmitter` `@Output`s. #798 #740
     - Reviewed and added missing argument types to the following `EventEmitter`s
         - The `igxGrid` `onEditDone` now exposes arguments of type `IGridEditEventArgs`. The arguments expose `row` and `cell` objects where if the editing is performed on a cell, the edited `cell` and the `row` the cell belongs to are exposed. If row editing is performed, the `cell` object is null. In addition the `currentValue` and `newValue` arguments are exposed. If you assign a value to the `newValue` in your handler, then the editing will conclude with the value you've supplied.
@@ -59,8 +78,9 @@ All notable changes for each version of this project will be documented in this 
 - `primaryKey` attribute added to `igxGrid`
     - `primaryKey` allows for a property name from the data source to be specified. If specified, `primaryKey` can be used instead of `index` to indentify grid rows from the `igxGrid.rowList`. As such, `primaryKey` can be used for selecting rows for the following `igxGrid` methods - `deleteRow`, `updateRow`, `updateCell`, `getCellByColumn`, `getRowByKey`
     - `primaryKey` requires all of the data for the specified property name to have unique values in order to function as expected.
-    - as it provides a unique identifier for each data member (and therefore row), `primaryKey` is best suited for addressing grid row entries. If DOM virtualization is in place for the grid data, the row `index` property can be reused (for instance, when filtering/sorting the data), whereas `primaryKey` remains unique. Ideally, when a persistent reference to a row has to be established, `primaryKey` should be used. 
-
+    - as it provides a unique identifier for each data member (and therefore row), `primaryKey` is best suited for addressing grid row entries. If DOM virtualization is in place for the grid data, the row `index` property can be reused (for instance, when filtering/sorting the data), whereas `primaryKey` remains unique. Ideally, when a persistent reference to a row has to be established, `primaryKey` should be used.
+- **Theming**
+    - Added a `utilities` module to the theming engine to allow for easier import of theming functions and mixins, such as igx-color, igx-palette, igx-elevation, etc. To import the utilities do ```@import '~igniteui-angular/core/styles/themes/utilities';```
 
 ## 5.2.1
 - `hammerjs` and `@types/hammerjs` are removed from `peerDependencies` and were added as `dependencies`. So if you are using Igniteui-Angular version 5.2.1 or above it is enough to run `npm install igniteui-angular` in your project for getting started. For more detailed information see [`Ignite UI for Angular Getting Started`](https://www.infragistics.com/products/ignite-ui-angular/getting-started)
@@ -139,7 +159,7 @@ All notable changes for each version of this project will be documented in this 
     - custom content can be added for tabs
 
     ```html
-    <igx-tab-bar>
+    <igx-bottom-nav>
         <igx-tab-panel>
             <ng-template igxTab>
                 <igx-avatar initials="T1">
@@ -147,7 +167,7 @@ All notable changes for each version of this project will be documented in this 
             </ng-template>
             <h1>Tab 1 Content</h1>
         </igx-tab-panel>
-    </igx-tab-bar>
+    </igx-bottom-nav>
     ```
 
 - `igx-scroll` component deleted
@@ -217,7 +237,7 @@ All notable changes for each version of this project will be documented in this 
     - `IgxSlider` renamed to `IgxSliderComponent`
     - `IgxSnackbar` renamed to `IgxSnackbarComponent`
     - `IgxSwitch ` renamed to `IgxSwitchComponent`
-    - `IgxTabBar` renamed to `IgxTabBarComponent`
+    - `IgxTabBar` renamed to `IgxBottomNavComponent`
     - `IgxTabPanel` renamed to `IgxTabPanelComponent`
     - `IgxTab` renamed to `IgxTabComponent`
     - `IgxToast` renamed to `IgxToastComponent`
