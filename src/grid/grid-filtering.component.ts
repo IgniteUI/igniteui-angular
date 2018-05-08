@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    DoCheck,
     ElementRef,
     HostBinding,
     HostListener,
@@ -33,7 +34,7 @@ import { autoWire, IGridBus } from "./grid.common";
     selector: "igx-grid-filter",
     templateUrl: "./grid-filtering.component.html"
 })
-export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
+export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCheck {
 
     @Input()
     public column;
@@ -151,6 +152,10 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
                 this.refresh();
             }
         });
+    }
+
+    public ngDoCheck() {
+        this.cdr.markForCheck();
     }
 
     public ngOnDestroy() {
