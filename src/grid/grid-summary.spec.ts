@@ -381,7 +381,7 @@ describe("IgxGrid - Summaries", () => {
             done();
         });
     });
-    it("should render correct data after hiding summaries when scrolled to the bottom",  (done) => {
+    it("should render correct data after hiding all summaries when scrolled to the bottom",  (done) => {
         const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
         fixture.detectChanges();
 
@@ -410,8 +410,57 @@ describe("IgxGrid - Summaries", () => {
                 }
 
                 done();
-            }, 0);
-        }, 0);
+            });
+        });
+    });
+    it("should render correct data after hiding one bigger and then one smaller summary when scrolled to the bottom",  (done) => {
+        const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid1;
+        const summariedColumns = ["ProductName", "InStock", "UnitsInStock", "OrderDate"];
+
+        fixture.componentInstance.scrollTop(10000);
+        fixture.detectChanges();
+
+        let rowsRendered = fixture.nativeElement.querySelectorAll("igx-grid-row");
+        expect(rowsRendered.length).toEqual(9);
+
+        setTimeout(() => {
+            fixture.detectChanges();
+
+            grid.disableSummaries(["ProductName", "InStock", "UnitsInStock"]);
+
+            setTimeout(() => {
+                fixture.detectChanges();
+
+                rowsRendered = Array.from(fixture.nativeElement.querySelectorAll("igx-grid-row"));
+                let firstCellsText = rowsRendered.map((item) => {
+                    return item.querySelectorAll("igx-grid-cell")[0].textContent.trim();
+                });
+                expect(rowsRendered.length).toEqual(9);
+
+                for (let i = 0; i < rowsRendered.length - 1; i++) {
+                    expect(firstCellsText[i]).toEqual((i + 11).toString());
+                }
+
+                grid.disableSummaries(["OrderDate"]);
+                setTimeout(() => {
+                    fixture.detectChanges();
+
+                    rowsRendered = Array.from(fixture.nativeElement.querySelectorAll("igx-grid-row"));
+                    firstCellsText = rowsRendered.map((item) => {
+                        return item.querySelectorAll("igx-grid-cell")[0].textContent.trim();
+                    });
+                    expect(rowsRendered.length).toEqual(12);
+
+                    for (let i = 0; i < rowsRendered.length - 1; i++) {
+                        expect(firstCellsText[i]).toEqual((i + 9).toString());
+                    }
+                    done();
+                });
+            });
+        }, 100);
     });
 
     function sendInput(element, text: string, fix) {
