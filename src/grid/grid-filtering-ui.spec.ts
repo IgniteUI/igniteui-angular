@@ -1173,6 +1173,85 @@ describe("IgxGrid - Filtering actions", () => {
             expect(grid.rowList.length).toEqual(4);
         });
     }));
+
+    it("Should correctly select month from month view datepicker/calendar component", async(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const input = filterIcon.query(By.directive(IgxInputDirective));
+
+        fix.whenStable().then(() => {
+            filterIcon.triggerEventHandler("mousedown", null);
+            fix.detectChanges();
+            filterIcon.nativeElement.click();
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            input.nativeElement.click();
+            fix.detectChanges();
+
+            const calendar = fix.debugElement.query(By.css("igx-calendar"));
+            const monthView = calendar.queryAll(By.css(".date__el"))[0];
+            monthView.nativeElement.click();
+
+            fix.detectChanges();
+
+            const firstMonth = calendar.queryAll(By.css(".igx-calendar__month"))[0];
+            firstMonth.nativeElement.click();
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            const calendar = fix.debugElement.query(By.css("igx-calendar"));
+            const month = calendar.queryAll(By.css(".date__el"))[0];
+
+            expect(month.nativeElement.textContent.trim()).toEqual("Jan");
+        });
+    }));
+
+    it("Should correctly select year from year view datepicker/calendar component", async(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        const input = filterIcon.query(By.directive(IgxInputDirective));
+
+        fix.whenStable().then(() => {
+            filterIcon.triggerEventHandler("mousedown", null);
+            fix.detectChanges();
+            filterIcon.nativeElement.click();
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            input.nativeElement.click();
+            fix.detectChanges();
+
+            const calendar = fix.debugElement.query(By.css("igx-calendar"));
+            const monthView = calendar.queryAll(By.css(".date__el"))[1];
+            monthView.nativeElement.click();
+
+            fix.detectChanges();
+
+            const firstMonth = calendar.queryAll(By.css(".igx-calendar__year"))[0];
+            firstMonth.nativeElement.click();
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            const calendar = fix.debugElement.query(By.css("igx-calendar"));
+            const month = calendar.queryAll(By.css(".date__el"))[1];
+
+            const today = new Date(Date.now());
+
+            const expectedResult = today.getFullYear() - 3;
+            expect(month.nativeElement.textContent.trim()).toEqual(expectedResult.toString());
+        });
+    }));
 });
 
 @Component({
