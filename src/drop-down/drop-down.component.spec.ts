@@ -396,28 +396,28 @@ fdescribe("IgxDropDown ", () => {
         button.click();
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            expect(list.selectedItem).toEqual(list.items[0]);
+            expect(listItems[0].isSelected).toBeTruthy();
             currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_SELECTED));
             expect(currentItem.componentInstance.index).toEqual(0);
             list.setSelectedItem(-4);
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
-            expect(list.selectedItem).toEqual(list.items[0]);
+            expect(listItems[0].isSelected).toBeTruthy();
             currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_SELECTED));
             expect(currentItem.componentInstance.index).toEqual(0);
             list.setSelectedItem(24);
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
-            expect(list.selectedItem).toEqual(list.items[0]);
+            expect(listItems[0].isSelected).toBeTruthy();
             currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_SELECTED));
             expect(currentItem.componentInstance.index).toEqual(0);
             list.setSelectedItem(5);
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
-            expect(list.selectedItem).toEqual(listItems[4]);
+            expect(listItems[5].isSelected).toBeTruthy();
             currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_SELECTED));
             expect(currentItem.componentInstance.index).toEqual(5);
         });
@@ -451,7 +451,7 @@ fdescribe("IgxDropDown ", () => {
         }).then(() => {
             fixture.detectChanges();
             expect(list.selectedItem).toEqual(listItems[2]);
-            currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_SELECTED));
+            currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_FOCUSED));
             expect(currentItem.componentInstance.index).toEqual(2);
         });
     });
