@@ -245,6 +245,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
             () => {
                 if (!this.selected) {
                     this.nativeElement.blur();
+                } else if (this.selected && !this.focused) {
+                    this.nativeElement.focus();
                 }
                 this.cdr.markForCheck();
             });
@@ -252,6 +254,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
             () => {
                 if (!this.selected) {
                     this.nativeElement.blur();
+                } else if (this.selected && !this.focused) {
+                    this.nativeElement.focus();
                 }
                 this.cdr.markForCheck();
             });
@@ -557,13 +561,13 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
                 && verticalScroll.scrollTop // the scrollbar is not at the first item
                 && target.row.element.nativeElement.offsetTop < this.grid.rowHeight) { // the target is in the first row
 
-                verticalScroll.scrollTop -= this.grid.rowHeight;
+                verticalScroll.scrollTop += containerTopOffset;
                 this._focusNextCell(rowIndex, this.visibleColumnIndex);
             }
             target.nativeElement.focus();
         } else {
-            this.row.grid.verticalScrollContainer.scrollPrev();
-            this._focusNextCell(this.rowIndex, this.visibleColumnIndex);
+            verticalScroll.scrollTop -= this.grid.rowHeight;
+            this._focusNextCell(rowIndex, this.visibleColumnIndex);
         }
     }
 
@@ -598,7 +602,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
             }
         } else {
             verticalScroll.scrollTop += this.grid.rowHeight;
-            this._focusNextCell(this.rowIndex, this.visibleColumnIndex);
+            this._focusNextCell(rowIndex, this.visibleColumnIndex);
         }
     }
 
