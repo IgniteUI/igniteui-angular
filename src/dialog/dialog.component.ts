@@ -159,19 +159,11 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
         return null;
     }
 
-    set titleTemplate(directive: any) {
-        this.titleTemplateDirective = directive;
-    }
-
     get buttonsTemplate(): any {
         if (this.buttonsTemplateDirective) {
             return this.buttonsTemplateDirective.template;
         }
         return null;
-    }
-
-    set buttonsTemplate(directive: any) {
-        this.buttonsTemplateDirective = directive;
     }
 
     @ContentChild(forwardRef(() => IgxDialogTitleDirective), { read: IgxDialogTitleDirective })
