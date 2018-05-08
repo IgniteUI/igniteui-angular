@@ -10,7 +10,7 @@ import { IgxInputDirective } from "../directives/input/input.directive";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-describe("IgxGrid - Filtering actions", () => {
+fdescribe("IgxGrid - Filtering actions", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -142,7 +142,7 @@ describe("IgxGrid - Filtering actions", () => {
     }));
 
     // UI tests string column with value in input
-    it("UI tests on string column", async(() => {
+    fit("UI tests on string column", async(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -249,7 +249,7 @@ describe("IgxGrid - Filtering actions", () => {
             expect(close.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
             expect(reset.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
             expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
-            const emptyTemplate = fix.debugElement.query(By.css("p.igx-grid__empty"));
+            const emptyTemplate = fix.debugElement.query(By.css("p.igx-grid--empty"));
             expect(emptyTemplate.nativeElement.offsetHeight).toBeGreaterThan(0);
 
             // does not equal
