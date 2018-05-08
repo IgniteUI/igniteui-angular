@@ -2,10 +2,12 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    DoCheck,
     ElementRef,
     HostBinding,
     HostListener,
     Input,
+    NgZone,
     OnDestroy,
     OnInit,
     TemplateRef,
@@ -32,7 +34,7 @@ import { autoWire, IGridBus } from "./grid.common";
     selector: "igx-grid-filter",
     templateUrl: "./grid-filtering.component.html"
 })
-export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
+export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCheck {
 
     @Input()
     public column;
@@ -130,7 +132,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
     @ViewChild(IgxToggleDirective, { read: IgxToggleDirective})
     protected toggleDirective: IgxToggleDirective;
 
-    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
+    constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
         this.filterChanged.pipe(
             debounceTime(250)
         ).subscribe((value) => this.value = value);
@@ -147,6 +149,10 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
                 this.refresh();
             }
         });
+    }
+
+    public ngDoCheck() {
+        this.cdr.markForCheck();
     }
 
     public ngOnDestroy() {
@@ -193,6 +199,10 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
         this._value = null;
         this.gridAPI.clear_filter(this.gridID, this.column.field);
         this.gridAPI.get(this.gridID).clearSummaryCache();
+        // XXX - Temp fix for (#1183, #1177) (Should be deleted)
+        if (this.dataType === DataType.Date) {
+            this.cdr.detectChanges();
+        }
     }
 
     public selectionChanged(value): void {
@@ -218,7 +228,6 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
         return true;
     }
 
-    @HostListener("mousedown")
     public onMouseDown() {
         requestAnimationFrame(() => {
             const grid = this.gridAPI.get(this.gridID);
@@ -233,6 +242,11 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy {
                 this.dialogPosition = "igx-filtering__options--to-left";
             }
         });
+    }
+
+    // XXX - Temp fix for (#1183, #1177) (Should be deleted)
+    onDatePickerClick() {
+        this.zone.run(() => {});
     }
 
     @HostListener("click", ["$event"])

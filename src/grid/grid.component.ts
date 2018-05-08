@@ -836,6 +836,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         if (!this._height) {
             this.calcHeight = null;
+            if (this.hasSummarizedColumns && !this.tfootHeight) {
+                this.tfootHeight = this.tfoot.nativeElement.firstElementChild ?
+                    this.calcMaxSummaryHeight() : 0;
+            }
             return;
         }
 
@@ -919,6 +923,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     protected calculateGridSizes() {
         this.calculateGridWidth();
+        this.cdr.detectChanges();
         this.calculateGridHeight();
         if (this.rowSelectable) {
             this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.clientWidth;
