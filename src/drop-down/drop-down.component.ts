@@ -5,6 +5,7 @@ import {
     Component,
     ContentChildren,
     EventEmitter,
+    forwardRef,
     HostListener,
     Input,
     NgModule,
@@ -33,8 +34,11 @@ export class IgxDropDownComponent implements AfterViewInit, OnInit {
     private _defaultHeight = "200px";
     private _id = "DropDown_0";
 
-    @ViewChild(IgxToggleDirective) public toggleDirective: IgxToggleDirective;
-    @ContentChildren(IgxDropDownItemComponent, { read: IgxDropDownItemComponent }) public items: QueryList<IgxDropDownItemComponent>;
+    @ViewChild(IgxToggleDirective)
+    public toggleDirective: IgxToggleDirective;
+
+    @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
+    public children: QueryList<IgxDropDownItemComponent>;
 
     @Output() public onSelection = new EventEmitter<ISelectionEventArgs>();
     @Output() public onOpen = new EventEmitter();
@@ -62,12 +66,39 @@ export class IgxDropDownComponent implements AfterViewInit, OnInit {
         return selection && selection.length > 0 ? selection[0] as IgxDropDownItemComponent : null;
     }
 
+
+    public get items(): IgxDropDownItemComponent[] {
+        const items: IgxDropDownItemComponent[] = [];
+        if (this.children !== undefined) {
+            for (const child of this.children.toArray()) {
+                if (!child.isHeader) {
+                    items.push(child);
+                }
+            }
+        }
+
+        return items;
+    }
+
+    public get headers(): IgxDropDownItemComponent[] {
+        const headers: IgxDropDownItemComponent[] = [];
+        if (this.children !== undefined) {
+            for (const child of this.children.toArray()) {
+                if (child.isHeader) {
+                    headers.push(child);
+                }
+            }
+        }
+
+        return headers;
+    }
+
     setSelectedItem(index: number) {
         if (index < 0 || index >= this.items.length) {
             return;
         }
 
-        const newSelection = this.items.toArray().find((item) => item.index === index);
+        const newSelection = this.items.find((item) => item.index === index);
         if (newSelection.isDisabled || newSelection.isHeader) {
             return;
         }
@@ -77,15 +108,14 @@ export class IgxDropDownComponent implements AfterViewInit, OnInit {
 
     focusFirst() {
         let focusedItemIndex = 0;
-        while ((this.items.toArray()[focusedItemIndex]) && ((this.items.toArray()[focusedItemIndex]).isDisabled
-            || (this.items.toArray()[focusedItemIndex]).isHeader)) {
+        while (this.items[focusedItemIndex] && this.items[focusedItemIndex].isDisabled) {
             focusedItemIndex++;
         }
         if (focusedItemIndex < this.items.length - 1) {
             if (this._focusedItem) {
                 this._focusedItem.isFocused = false;
             }
-            this._focusedItem = this.items.toArray()[focusedItemIndex];
+            this._focusedItem = this.items[focusedItemIndex];
             this._focusedItem.isFocused = true;
         }
 
@@ -98,15 +128,14 @@ export class IgxDropDownComponent implements AfterViewInit, OnInit {
 
     focusLast() {
         let focusedItemIndex = (this.items.length - 1);
-        while ((this.items.toArray()[focusedItemIndex]) && ((this.items.toArray()[focusedItemIndex]).isDisabled
-            || (this.items.toArray()[focusedItemIndex]).isHeader)) {
+        while (this.items[focusedItemIndex] && this.items[focusedItemIndex].isDisabled) {
             focusedItemIndex--;
         }
         if (focusedItemIndex < this.items.length) {
             if (this._focusedItem) {
                 this._focusedItem.isFocused = false;
             }
-            this._focusedItem = this.items.toArray()[focusedItemIndex];
+            this._focusedItem = this.items[focusedItemIndex];
             this._focusedItem.isFocused = true;
         }
 
@@ -122,15 +151,14 @@ export class IgxDropDownComponent implements AfterViewInit, OnInit {
         if (this._focusedItem) {
             focusedItemIndex = this._focusedItem.index;
         }
-        while (this.items.toArray()[focusedItemIndex + 1] &&
-            (this.items.toArray()[focusedItemIndex + 1].isDisabled || this.items.toArray()[focusedItemIndex + 1].isHeader)) {
+        while (this.items[focusedItemIndex + 1] && this.items[focusedItemIndex + 1].isDisabled) {
             focusedItemIndex++;
         }
         if (focusedItemIndex < this.items.length - 1) {
             if (this._focusedItem) {
                 this._focusedItem.isFocused = false;
             }
-            this._focusedItem = this.items.toArray()[focusedItemIndex + 1];
+            this._focusedItem = this.items[focusedItemIndex + 1];
 
             const elementRect = this._focusedItem.element.nativeElement.getBoundingClientRect();
             const parentRect = this.toggleDirective.element.getBoundingClientRect();
@@ -151,13 +179,12 @@ export class IgxDropDownComponent implements AfterViewInit, OnInit {
     focusPrev() {
         if (this._focusedItem) {
             let focusedItemIndex = this._focusedItem.index;
-            while ((this.items.toArray()[focusedItemIndex - 1]) &&
-                (this.items.toArray()[focusedItemIndex - 1].isDisabled || this.items.toArray()[focusedItemIndex - 1].isHeader)) {
+            while ((this.items[focusedItemIndex - 1]) && this.items[focusedItemIndex - 1].isDisabled) {
                 focusedItemIndex--;
             }
             if (focusedItemIndex > 0) {
                 this._focusedItem.isFocused = false;
-                this._focusedItem = this.items.toArray()[focusedItemIndex - 1];
+                this._focusedItem = this.items[focusedItemIndex - 1];
 
                 const elementRect = this._focusedItem.element.nativeElement.getBoundingClientRect();
                 const parentRect = this.toggleDirective.element.getBoundingClientRect();
