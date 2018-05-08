@@ -21,7 +21,7 @@ import { fadeIn, fadeOut, slideInBottom } from "../animations/main";
 import { IgxNavigationService, IToggleView } from "../core/navigation";
 import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
-import { IgxDialogButtonsDirective, IgxDialogTitleDirective } from "./dialog.directives";
+import { IgxDialogActionsDirective, IgxDialogTitleDirective } from "./dialog.directives";
 
 /**
  * **Ignite UI for Angular Dialog Window** -
@@ -177,8 +177,8 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     @ContentChild(forwardRef(() => IgxDialogTitleDirective), { read: IgxDialogTitleDirective })
     private titleTemplateDirective: IgxDialogTitleDirective;
 
-    @ContentChild(forwardRef(() => IgxDialogButtonsDirective), { read: IgxDialogButtonsDirective })
-    private buttonsTemplateDirective: IgxDialogButtonsDirective;
+    @ContentChild(forwardRef(() => IgxDialogActionsDirective), { read: IgxDialogActionsDirective })
+    private buttonsTemplateDirective: IgxDialogActionsDirective;
 
     constructor(
         private elementRef: ElementRef,
@@ -252,8 +252,8 @@ export interface IDialogEventArgs {
 }
 
 @NgModule({
-    declarations: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogButtonsDirective],
-    exports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogButtonsDirective],
+    declarations: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
+    exports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
     imports: [CommonModule, IgxButtonModule, IgxRippleModule]
 })
 export class IgxDialogModule { }

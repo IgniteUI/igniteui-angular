@@ -9,8 +9,8 @@ export class IgxDialogTitleDirective {
 }
 
 @Directive({
-    selector: "[igxDialogButtons]"
+    selector: "[igxDialogActions]"
 })
-export class IgxDialogButtonsDirective {
+export class IgxDialogActionsDirective {
     constructor(public template: TemplateRef<any>) { }
 }

@@ -307,7 +307,7 @@ class NestedDialogsComponent {
                 <ng-template igxDialogTitle>
                     <div>TITLE</div>
                 </ng-template>
-                <ng-template igxDialogButtons>
+                <ng-template igxDialogActions>
                     <div>BUTTONS</div>
                 </ng-template>
             </igx-dialog>` })
