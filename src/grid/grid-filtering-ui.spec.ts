@@ -376,7 +376,7 @@ describe("IgxGrid - Filtering actions", () => {
             input = filterUIContainer.query(By.directive(IgxInputDirective));
             expect(grid.rowList.length).toEqual(7);
             expect(close.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
-            expect(reset.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
+            expect(reset.nativeElement.classList.contains("igx-button--disabled")).toBeTruthy();
             expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
             // iterate over not unary conditions and fill the input
