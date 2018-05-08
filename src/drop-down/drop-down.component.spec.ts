@@ -528,13 +528,13 @@ fdescribe("IgxDropDown ", () => {
         expect(list.items.length).toEqual(13);
         fixture.componentInstance.dropdownDisabled.width = "80%";
         fixture.componentInstance.dropdownDisabled.height = "400px";
+        fixture.componentInstance.dropdownDisabled.id = "newDD";
         button.click();
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            // tslint:disable-next-line:no-debugger
-            debugger;
             expect(fixture.componentInstance.dropdownDisabled.height).toEqual("400px");
             expect(fixture.componentInstance.dropdownDisabled.width).toEqual("80%");
+            expect(fixture.componentInstance.dropdownDisabled.id).toEqual("newDD");
         });
     });
 });
