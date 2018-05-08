@@ -3,89 +3,90 @@
 /// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
-/// @param {Color} $background-color [null] - The drop-down background color.
+///
+/// @param {Color} $drop-down-background-color [null] - The drop-down background color.
+/// @param {Color} $header-text-color [null] - The drop-down header text color.
+///
 /// @param {Color} $item-text-color [null] - The drop-down text color.
 ///
-/// @param {Color} $item-background [null] - The drop-down item background color.
-/// @param {Color} $item-hover-background [null] - The drop-down item hover background color.
-/// @param {Color} $item-hover-text-color [null] - The drop-down item hover text color.
-/// @param {Color} $separator-color [null] - The drop-down separator line color.
+/// @param {Color} $hover-item-background [null] - The drop-down hover item background color.
+///
+/// @param {Color} $focused-item-background [null] - The drop-down focused item background color.
+/// @param {Color} $focus-item-text-color [null] - The drop-down focused item text color.
 ///
 /// @param {Color} $selected-item-background [null] - The drop-down selected item background color.
-/// @param {Color} $focused-item-background [null] - The drop-down focused item background color.
-/// @param {Color} $disabled-item-background [null] - The drop-down disabled item background color.
-///
 /// @param {Color} $selected-item-text-color [null] - The drop-down selected item text color.
-/// @param {Color} $focus-item-text-color [null] - The drop-down focused item text color.
+///
+/// @param {Color} $disabled-item-background [null] - The drop-down disabled item background color.
 /// @param {Color} $disabled-item-text-color [null] - The drop-down disabled item text color.
 
 /// @requires text-contrast
 @function igx-drop-down-theme(
-    $background-color: null,
-    $item-text-color: null,
+    $drop-down-background-color: null,
     $header-text-color: null,
-    $separator-color: null,
 
-    $item-background:null,
-    $item-hover-background:null,
+    $item-text-color: null,
+
+    $hover-item-background:null,
+
+    $focused-item-background:null,
+    $focus-item-text-color:null,
 
     $selected-item-background:null,
-    $focused-item-background:null,
-    $disabled-item-background:null,
-
     $selected-item-text-color:null,
-    $focus-item-text-color:null,
+
+    $disabled-item-background:null,
     $disabled-item-text-color:null
 ) {
 
-    // ITEM BACKGROUND
-    @if not($background-color) and $item-background {
-        $background-color: $item-background;
-    }
-
-    @if not($item-background) and $background-color {
-        $item-background: $background-color;
-    }
-
-    // ITEM TEXT
-    @if not($item-text-color) and $item-background {
-        $item-text-color: text-contrast($item-background);
-    }
-
-    @if not($item-text-color) and $background-color and $item-background {
-        $item-text-color: text-contrast($item-background);
-    }
-
-    // DISABLED ITEM
-    //@if not($disabled-item-text-color) and $item-background {
-    //    $item-text-color: rgba(text-contrast($item-background), .4);
+    //// ITEM BACKGROUND
+    //@if not($background-color) and $item-background {
+    //    $background-color: $item-background;
     //}
-    //@if not($disabled-item-text-color) and $background-color and $item-background {
-    //    $item-text-color: rgba(text-contrast($item-background), .4);
+    //@if not($item-background) and $background-color {
+    //    $item-background: $background-color;
     //}
-
-    // FOCUSED & SELECTED ITEMS
-    @if not($focus-item-text-color) and $focused-item-background {
-        $focus-item-text-color: text-contrast($focused-item-background);
-    }
-
-    @if not($selected-item-text-color) and $selected-item-background {
-        $selected-item-text-color: text-contrast($selected-item-background);
-    }
+    //@if $item-background and $background-color {
+    //    $item-background: $item-background;
+    //}
+    //// ITEM TEXT
+    //@if not($item-text-color) and $item-background {
+    //    $item-text-color: text-contrast($item-background);
+    //}
+    //@if not($item-text-color) and $background-color {
+    //    $item-text-color: text-contrast($background-color);
+    //}
+    //@if not($item-text-color) and $background-color and $item-background {
+    //    $item-text-color: text-contrast($item-background);
+    //}
+    //// DISABLED ITEM
+    //@if not($disabled-item-text-color) and $disabled-item-background {
+    //    $disabled-item-text-color: rgba(text-contrast($disabled-item-background), .4);
+    //}
+    //// FOCUSED & SELECTED ITEMS
+    //@if not($focus-item-text-color) and $focused-item-background {
+    //    $focus-item-text-color: text-contrast($focused-item-background);
+    //}
+    //@if not($selected-item-text-color) and $selected-item-background {
+    //    $selected-item-text-color: text-contrast($selected-item-background);
+    //}
 
     @return (
-        background-color: $background-color,
-        item-text-color: $item-text-color,
+        drop-down-background-color: $drop-down-background-color,
         header-text-color: $header-text-color,
-        separator-color:$separator-color,
-        item-background:$item-background,
-        item-hover-background:$item-hover-background,
-        selected-item-background:$selected-item-background,
+
+        item-text-color: $item-text-color,
+
+        hover-item-background:$hover-item-background,
+
         focused-item-background:$focused-item-background,
-        disabled-item-background:$disabled-item-background,
-        selected-item-text-color:$selected-item-text-color,
         focus-item-text-color:$focus-item-text-color,
-        disabled-item-text-color:$disabled-item-text-color
+
+        selected-item-background:$selected-item-background,
+        selected-item-text-color:$selected-item-text-color,
+
+        disabled-item-background:$disabled-item-background,
+        disabled-item-text-color:$disabled-item-text-color,
     );
 }
 
@@ -98,17 +99,21 @@
 /// @requires rem
 @mixin igx-drop-down($theme, $palette: $default-palette) {
     $default-theme: igx-drop-down-theme(
-        $background-color: #fff,
+        $drop-down-background-color: #fff,
+
+        $header-text-color: igx-color($palette, 'secondary', 500),
+
         $item-text-color: igx-color($palette, 'grays', 800),
-        $header-text-color: igx-color($palette, 'primary', 500),
-        $separator-color: igx-color($palette, 'grays', 300),
-        $item-background: #fff,
-        $item-hover-background: igx-color($palette, 'grays', 100),
-        $selected-item-background: igx-color($palette, 'primary', 500),
-        $focused-item-background: igx-color($palette, 'primary', 500),
-        $disabled-item-background: transparent,
+
+        $hover-item-background: igx-color($palette, 'grays', 100),
+
+        $focused-item-background: igx-color($palette, 'grays', 100),
+        $focus-item-text-color: igx-color($palette, 'grays', 800),
+
+        $selected-item-background: igx-color($palette, 'secondary', 500),
         $selected-item-text-color: #fff,
-        $focus-item-text-color: #fff,
+
+        $disabled-item-background: transparent,
         $disabled-item-text-color: igx-color($palette, 'grays', 400)
     );
 
@@ -117,43 +122,52 @@
     $dd-shadow: igx-elevation($elevations, 3);
 
     %igx-drop-down {
-        display: flex;
         flex-direction: column;
         box-shadow: $dd-shadow;
-        padding: rem(8px) 0;
         min-width: rem(128px);
-        max-width: rem(192px);
-        min-height: rem(200px);
-        background: map-get($this, 'background-color');
-    }
-
-    %igx-drop-down__item {
-        justify-content: flex-start;
-        align-items: center;
-        background: map-get($this, 'item-background');
-        color: map-get($this, 'item-text-color');
-        cursor: pointer;
-        user-select: none;
-
-        &:hover {
-            background: map-get($this, 'item-hover-background');
-        }
+        max-width: rem(448px);
+        background: map-get($this, 'drop-down-background-color');
     }
 
     %igx-drop-down__header,
     %igx-drop-down__item {
-        display: block;
-        line-height: rem(20px);
+        display: flex;
         padding: rem(8px) rem(24px);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 
-    %igx-drop-down__item--selected {
-        background: map-get($this, 'selected-item-background');
-        color: map-get($this, 'selected-item-text-color');
+    %igx-drop-down__item {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        color: map-get($this, 'item-text-color');
+        cursor: pointer;
+        user-select: none;
+
+
+        &:focus {
+            outline: 0;
+            outline-color: transparent;
+        }
 
         &:hover {
-            background: map-get($this, 'selected-item-background');
+            background: map-get($this, 'hover-item-background');
         }
+    }
+
+    [dir='rtl']{
+        %igx-drop-down__item {
+            justify-content: flex-end;
+            text-align: right;
+        }
+    }
+
+    %igx-drop-down__header {
+        font-weight: 700;
+        font-size: rem(14px);
+        color: map-get($this, 'header-text-color');
     }
 
     %igx-drop-down__item--focused {
@@ -165,30 +179,27 @@
         }
     }
 
+    %igx-drop-down__item--selected {
+        background: map-get($this, 'selected-item-background');
+        color: map-get($this, 'selected-item-text-color');
+
+        &:hover {
+            background: map-get($this, 'selected-item-background');
+        }
+    }
+
+
     %igx-drop-down__item--disabled {
-        background: map-get($this, 'disabled-item-background') !important;
-        color: map-get($this, 'disabled-item-text-color') !important;
+        background: map-get($this, 'disabled-item-background');
+        color: map-get($this, 'disabled-item-text-color');
         cursor: default;
 
         &:hover {
             background: map-get($this, 'disabled-item-background');
         }
     }
-
-    %igx-drop-down__header {
-        font-weight: 800;
-        font-size: rem(14px);
-        color: map-get($this, 'header-text-color');
-        padding: rem(8px) rem(24px);
-    }
-
-    %igx-drop-down__separator {
-        position: relative;
-        padding-bottom: 7px;
-        border-top: 1px solid map-get($this, 'separator-color');
-        margin-top: 8px;
-    }
 }
+
 
 
 
