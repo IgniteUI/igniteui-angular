@@ -7,23 +7,37 @@
 
 /// If only background color is specified, text/icon color
 /// will be assigned automatically to a contrasting color.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $icon-background [null]- The background color used for avatars of type icon.
 /// @param {Color} $icon-color [null] - The icon color used for avatars of type icon.
 /// @param {Color} $initials-background [null] - The background color used for avatars of type initials.
 /// @param {Color} $initials-color [null] - The text color used for avatars of type initials.
 /// @param {Color} $image-background [null] - The background color used for avatars of type image.
 /// @requires text-contrast
+/// @requires igx-color
+/// @requires extend
+///
 /// @example scss Change the background and icon colors in icon avatars
 ///   $my-avatar-theme: igx-avatar-theme($icon-background: black, $icon-color: white);
 ///   // Pass the theme to the igx-avatar component mixin
 ///   @include igx-avatar($my-avatar-theme);
 @function igx-avatar-theme(
+    $palette: $default-palette,
     $icon-background: null,
     $icon-color: null,
     $initials-background: null,
     $initials-color: null,
     $image-background: null
 ) {
+    $default-theme: (
+        name: 'igx-avatar',
+        icon-background: igx-color($palette, 'grays', 400),
+        icon-color: igx-color($palette, 'grays', 800),
+        initials-background: igx-color($palette, 'grays', 400),
+        initials-color: igx-color($palette, 'grays', 800),
+        image-background: transparent
+    );
+
     @if not($icon-color) and $icon-background {
         $icon-color: text-contrast($icon-background);
     }
@@ -32,31 +46,23 @@
         $initials-color: text-contrast($initials-background);
     }
 
-    @return (
+    @return extend($default-theme, (
+        palette: $palette,
         icon-background: $icon-background,
         icon-color: $icon-color,
         initials-background: $initials-background,
         initials-color: $initials-color,
-        image-background: $image-background
-    );
+        image-background: $image-background,
+    ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @requires igx-avatar-theme
-/// @requires igx-color
-/// @requires extend
+/// @requires {mixin} igx-root-css-vars
 /// @requires rem
-@mixin igx-avatar($theme, $palette: $default-palette) {
-    $default-theme: igx-avatar-theme(
-        $icon-background: igx-color($palette, 'grays', 400),
-        $icon-color: igx-color($palette, 'grays', 800),
-        $initials-background: igx-color($palette, 'grays', 400),
-        $initials-color: igx-color($palette, 'grays', 800),
-        $image-background: transparent
-    );
+/// @requires var
+@mixin igx-avatar($theme) {
+    @include igx-root-css-vars($theme);
 
-    $this: extend($default-theme, $theme);
     $small-size: 40px;
     $medium-size: 64px;
     $large-size: 88px;
@@ -98,12 +104,12 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        color: map-get($this, 'icon-color');
-        background-color: map-get($this, 'icon-background');
+        color: var($theme, 'icon-color');
+        background: var($theme, 'icon-background');
     }
 
     %igx-avatar-image {
-        background-color: map-get($this, 'image-background');
+        background-color: var($theme, 'image-background');
     }
 
     %igx-avatar-initials {
@@ -111,8 +117,8 @@
         justify-content: center;
         align-items: center;
         text-transform: uppercase;
-        color: map-get($this, 'initials-color');
-        background-color: map-get($this, 'initials-background');
+        color: var($theme, 'initials-color');
+        background-color: var($theme, 'initials-background');
     }
 
     %igx-avatar-initials--small {

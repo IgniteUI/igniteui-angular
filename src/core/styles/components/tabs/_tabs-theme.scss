@@ -6,6 +6,7 @@
 
 /// If only background color is specified,
 /// the idle item color will be assigned automatically to a contrasting color.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $item-background [null] - The background color used for the tabs header.
 /// @param {Color} $item-hover-background [null] - The text-color used for the tabs.
 /// @param {Color} $item-text-color [null] - The color used for the tab text color.
@@ -22,42 +23,64 @@
 /// @param {Color} $button-background [null] - The color used for the button background.
 /// @param {Color} $button-hover-background [null] - The color used for the button background when is on :hover.
 ///
-/// @param {Color} $tabs-ripple-color [null] - The color used for the button background.
-/// @param {Color} $buttons-ripple-color [null] - The color used for the button background when is on :hover.
+/// @param {Color} $tab-ripple-color [null] - The color used for the button background.
+/// @param {Color} $button-ripple-color [null] - The color used for the button background when is on :hover.
 ///
+/// @requires extend
+/// @requires igx-color
 /// @requires text-contrast
+///
 /// @example scss Set a custom background color
 ///   $my-tabs-theme: igx-tabs-theme(
-//      $item-background: orange
-//    );
+///      $item-background: orange
+///    );
 ///   // Pass the theme to the igx-tabs component mixin
 ///   @include igx-tabs($my-tabs-theme);
 
 @function igx-tabs-theme(
-    // Normal
+    $palette: $default-palette,
+
     $item-background: null,
     $item-text-color: null,
 
-    //Hover
     $item-hover-background: null,
     $item-hover-color: null,
 
-    // Active/Focus
     $item-active-color: null,
     $item-active-icon-color: null,
     $item-active-background: null,
     $indicator-color: null,
 
-    // Buttons
     $button-color: null,
     $button-background: null,
     $button-hover-background: null,
     $button-hover-color: null,
 
-    // Ripple
-    $tabs-ripple-color: null,
-    $buttons-ripple-color: null
+    $tab-ripple-color: null,
+    $button-ripple-color: null
 ) {
+    $default-theme: (
+        name: 'igx-tabs',
+
+        item-text-color: igx-color($palette, 'grays', 600),
+        item-background: white,
+        item-hover-color: igx-color($palette, 'grays', 600),
+        item-hover-background: igx-color($palette, 'grays', 200),
+
+        item-active-color: igx-color($palette, 'grays', 800),
+        item-active-icon-color: igx-color($palette, 'primary', 500),
+        item-active-background: igx-color($palette, 'grays', 200),
+
+        indicator-color: igx-color($palette, 'primary', 500),
+
+        button-color: igx-color($palette, 'grays', 500),
+        button-background: white,
+        button-hover-background: igx-color($palette, 'grays', 100),
+        button-hover-color: igx-color($palette, 'grays', 600),
+
+        tab-ripple-color: igx-color($palette, 'grays', 100),
+        button-ripple-color: igx-color($palette, 'grays', 100)
+    );
 
     @if not($item-text-color) and $item-background {
         $item-text-color: text-contrast($item-background);
@@ -83,19 +106,20 @@
         $button-hover-color: text-contrast($button-hover-background);
     }
 
-    @if not($tabs-ripple-color) and $item-active-background {
-        $tabs-ripple-color: text-contrast($item-active-background);
+    @if not($tab-ripple-color) and $item-active-background {
+        $tab-ripple-color: text-contrast($item-active-background);
     }
 
-    @if not($tabs-ripple-color) and $item-background {
-        $tabs-ripple-color: text-contrast($item-background);
+    @if not($tab-ripple-color) and $item-background {
+        $tab-ripple-color: text-contrast($item-background);
     }
 
-    @if not($buttons-ripple-color) and $button-background {
-        $buttons-ripple-color: text-contrast($button-background);
+    @if not($button-ripple-color) and $button-background {
+        $button-ripple-color: text-contrast($button-background);
     }
 
-    @return (
+    @return extend($default-theme, (
+        palette: $palette,
         item-text-color: $item-text-color,
         item-background: $item-background,
         item-hover-color: $item-hover-color,
@@ -108,38 +132,24 @@
         button-background: $button-background,
         button-hover-background:$button-hover-background,
         button-hover-color:$button-hover-color,
-        tabs-ripple-color: $tabs-ripple-color,
-        buttons-ripple-color: $buttons-ripple-color,
-    );
+        tab-ripple-color: $tab-ripple-color,
+        button-ripple-color: $button-ripple-color,
+    ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @requires igx-tabs-theme
+/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
+/// @requires igx-ripple-theme
+/// @requires {mixin} igx-ripple
 /// @requires igx-color
 /// @requires igx-elevation
-/// @requires extend
+/// @requires $elevations
 /// @requires {mixin} ellipsis
 /// @requires rem
-@mixin igx-tabs($theme, $palette: $default-palette) {
-    $default-theme: igx-tabs-theme(
-        $item-text-color: igx-color($palette, 'grays', 600),
-        $item-background: white,
-        $item-hover-color: igx-color($palette, 'grays', 600),
-        $item-hover-background: igx-color($palette, 'grays', 200),
-        $item-active-color: igx-color($palette, 'grays', 800),
-        $item-active-icon-color: igx-color($palette, 'primary', 500),
-        $item-active-background: igx-color($palette, 'grays', 200),
-        $indicator-color: igx-color($palette, 'primary', 500),
-        $button-color: igx-color($palette, 'grays', 500),
-        $button-background: white,
-        $button-hover-background: igx-color($palette, 'grays', 100),
-        $button-hover-color: igx-color($palette, 'grays', 600),
-        $tabs-ripple-color: igx-color($palette, 'grays', 100),
-        $buttons-ripple-color: igx-color($palette, 'grays', 100)
-    );
-
-    $this: extend($default-theme, $theme);
+/// @requires var
+@mixin igx-tabs($theme) {
+    @include igx-root-css-vars($theme);
 
     $item-min-width-small-res: 74px;
     $item-min-width: 160px;
@@ -151,20 +161,21 @@
     $label-font-size: rem(14px, 16px);
     $label-line-height: rem(16px, 16px);
     $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
-    $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
     $icon-label-space: rem(10px);
+
+    $tabs-ripple-theme: igx-ripple-theme($color: var($theme, 'tab-ripple-color'));
+    $button-ripple-theme: igx-ripple-theme($color: var($theme, 'button-ripple-color'));
 
     %igx-tabs {
         display: flex;
         flex-direction: column;
     }
 
-    // HEADER
     %igx-tabs__header {
         display: flex;
         align-items: center;
         overflow: hidden;
-        background: map-get($this, 'item-background');
+        background: var($theme, 'item-background');
     }
 
     // ITEM WRAPPER
@@ -179,7 +190,6 @@
     }
 
     // ITEM HOLDER (The element that scrolls)
-
     %igx-tabs__content-fluid,
     %igx-tabs__header-wrapper-fluid {
         position: relative;
@@ -218,8 +228,8 @@
         position: relative;
         transition: background .3s $tabs-animation-function;
         user-select: none;
-        background: map-get($this, 'item-background');
-        color: map-get($this, 'item-text-color');
+        background: var($theme, 'item-background');
+        color: var($theme, 'item-text-color');
         outline: 0;
 
         &::-moz-focus-inner {
@@ -227,36 +237,34 @@
         }
 
         &:focus {
-            background: map-get($this, 'item-active-background');
-            color: map-get($this, 'item-active-hover-color');
+            background: var($theme, 'item-active-background');
         }
 
         &:hover {
-            background: map-get($this, 'item-hover-background');
-            color: map-get($this, 'item-hover-color');
+            background: var($theme, 'item-hover-background');
+            color: var($theme, 'item-hover-color');
         }
 
-        @include igx-ripple((
-            color: map-get($this, 'tabs-ripple-color')
-        ));
+        @include igx-ripple($tabs-ripple-theme);
+        @include igx-css-vars($tabs-ripple-theme);
     }
 
     %igx-tabs__header-menu-item--selected {
         outline: 0;
-        color: map-get($this, 'item-active-color');
+        color: var($theme, 'item-active-color');
 
         &:focus {
-            background: map-get($this, 'item-active-background');
-            color: map-get($this, 'item-active-color');
+            background: var($theme, 'item-active-background');
+            color: var($theme, 'item-active-color');
         }
 
         &:hover {
-            background: map-get($this, 'item-active-background');
-            color: map-get($this, 'item-active-color');
+            background: var($theme, 'item-active-background');
+            color: var($theme, 'item-active-color');
         }
 
         %igx-tabs__header-menu-item-icon {
-            color: map-get($this, 'item-active-icon-color');
+            color: var($theme, 'item-active-icon-color');
         }
     }
 
@@ -288,7 +296,7 @@
         @media only screen and (max-width: 600px) {
             min-width: $item-min-width-small-res;
         }
-        background: map-get($this, 'indicator-color');
+        background: var($theme, 'indicator-color');
         transition: transform .3s $tabs-animation-function, width .2s $tabs-animation-function;
     }
 
@@ -306,19 +314,19 @@
         height: $tabs-height;
         cursor: pointer;
         position: relative;
-        background: map-get($this, 'button-background');
-        color: map-get($this, 'button-color');
+        background: var($theme, 'button-background');
+        color: var($theme, 'button-color');
         outline: 0;
         box-shadow: igx-elevation($elevations, 4);
 
         &:hover {
-            background: map-get($this, 'button-hover-background');
-            color: map-get($this, 'button-hover-color');
+            background: var($theme, 'button-hover-background');
+            color: var($theme, 'button-hover-color');
         }
 
         &:focus {
             outline: 0;
-            background: map-get($this, 'button-hover-background');
+            background: var($theme, 'button-hover-background');
         }
 
         &::-moz-focus-inner {
@@ -326,9 +334,8 @@
             border: 0;
         }
 
-        @include igx-ripple((
-            color: map-get($this, 'buttons-ripple-color')
-        ));
+        @include igx-ripple($button-ripple-theme);
+        @include igx-css-vars($button-ripple-theme);
     }
 
     %igx-tabs__header-button--hidden {
@@ -339,7 +346,6 @@
         display: none;
     }
 
-    // LABELS
     %igx-tabs__item-label {
         @include ellipsis();
         font-size: $label-font-size;
@@ -372,4 +378,3 @@
         }
     }
 }
-

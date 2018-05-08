@@ -130,7 +130,7 @@
 ///     $prop: 'background-color',
 ///     $prefix: 'my', $suffix: 'bg'
 ///   );
-/// @requires gen-color-class
+/// @requires {mixin} gen-color-class
 @mixin gen-color-classes($prop, $prefix, $suffix) {
     @each $palette-name, $sub-palette in $default-palette {
         @each $variant, $color in $sub-palette {
@@ -157,7 +157,54 @@
 ///     $prop: 'background-color',
 ///     $suffix: 'bg'
 ///   );
-/// @requires gen-color-classes
+/// @requires {mixin} gen-color-classes
 @mixin igx-color-classes($prop, $suffix: null, $prefix: 'igx') {
     @include gen-color-classes($prop, $prefix, $suffix);
+}
+
+/// Parses a map of key value pairs
+/// from component themes to css variables.
+/// @access private
+/// @param {map} $theme - The component theme to be used to generate css variables.
+/// @example scss Convert theme colors to css variables.
+///   $my-theme: igx-avatar-theme($icon-color: red);
+///   :root {
+///     @include css-vars-from-theme($my-theme);
+///   }
+@mixin css-vars-from-theme($theme) {
+    $prefix: map-get($theme, 'name');
+
+    @each $key, $value in $theme {
+        @if $key != 'name' and $key != 'palette' {
+            --#{$prefix}-#{$key}: #{$value};
+        }
+    }
+}
+
+/// Add theme colors to the global root scope
+/// Ensures the operation is done only once.
+/// @access private
+/// @param {map} $theme - The component theme to get the
+/// @example scss Convert theme colors to css variables.
+/// @requires {mixin} css-vars-from-theme
+@mixin igx-root-css-vars($theme) {
+    $name: map-get($theme, 'name');
+
+    @if map-get($themes, $name) == null {
+        $id: unique-id();
+        $themes: map-merge($themes, (#{$name}: $id)) !global;
+
+        :root {
+            @include css-vars-from-theme($theme);
+        }
+    }
+}
+
+/// Add theme colors scoped to a specific element
+/// @access public
+/// @param {map} $theme - The component theme to get the
+/// @example scss Convert theme colors to css variables.
+/// @requires {mixin} css-vars-from-theme
+@mixin igx-css-vars($theme) {
+    @include css-vars-from-theme($theme);
 }

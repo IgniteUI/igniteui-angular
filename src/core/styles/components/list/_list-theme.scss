@@ -5,6 +5,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $background [null] - The list background color.
 /// @param {Color} $header-background [null] - The list header background color.
 /// @param {Color} $header-text-color [null] - The list header text color.
@@ -19,6 +20,7 @@
 ///   // Pass the theme to the igx-list component mixin
 ///   @include igx-avatar($my-list-theme);
 @function igx-list-theme(
+    $palette: $default-palette,
     $background: null,
     $header-background: null,
     $header-text-color: null,
@@ -27,6 +29,15 @@
     $item-background-active: null,
     $item-text-color-active: null
 ) {
+    $default-theme: (
+        name: 'igx-list',
+        background: #fff,
+        header-text-color: igx-color($palette, 'secondary'),
+        item-text-color: igx-color($palette, 'grays', 800),
+        item-background-active: igx-color($palette, 'grays', 100),
+        item-text-color-active: igx-color($palette, 'grays', 800)
+    );
+
     @if not($header-background) and $background {
         $header-background: $background;
     }
@@ -55,7 +66,8 @@
         $item-text-color-active: $item-text-color;
     }
 
-    @return (
+    @return extend($default-theme, (
+        palette: $palette,
         background: $background,
         header-background: $header-background,
         header-text-color: $header-text-color,
@@ -63,27 +75,16 @@
         item-text-color: $item-text-color,
         item-background-active: $item-background-active,
         item-text-color-active: $item-text-color-active
-    );
+    ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @requires igx-list-theme
 /// @requires igx-color
-/// @requires extend
 /// @requires em
-@mixin igx-list($theme, $palette: $default-palette) {
-    $default-theme: igx-list-theme(
-        $background: #fff,
-        $header-text-color: igx-color($palette, 'secondary'),
-        $item-text-color: igx-color($palette, 'grays', 800),
-        $item-background-active: igx-color($palette, 'grays', 100),
-        $item-text-color-active: igx-color($palette, 'grays', 800)
-    );
+@mixin igx-list($theme) {
+    @include igx-root-css-vars($theme);
 
-    $this: extend($default-theme, $theme);
-
-    // @debug $this;
+    // @debug $theme;
 
     $list-header-font-size: em(13px);
     $list-header-font-weight: normal;
@@ -97,7 +98,7 @@
     %igx-list {
         display: flex;
         flex-flow: column nowrap;
-        background-color: map-get($this, 'background');
+        background-color: var($theme, 'background');
         height: 100%;
         overflow: hidden;
     }
@@ -114,7 +115,7 @@
 
     %igx-list-empty-message {
         text-align: center;
-        color: map-get($this, 'item-text-color');
+        color: var($theme, 'item-text-color');
         padding: $list-empty-padding;
         z-index: 1;
     }
@@ -122,8 +123,8 @@
     %igx-list-header {
         display: flex;
         align-items: center;
-        color: map-get($this, 'header-text-color');
-        background-color: map-get($this, 'header-background');
+        color: var($theme, 'header-text-color');
+        background-color: var($theme, 'header-background');
         font-size: $list-header-font-size;
         font-weight: $list-header-font-weight;
         height: $list-header-height;
@@ -140,14 +141,14 @@
         padding: $list-item-padding;
         min-height: $list-item-height;
         font-size: $list-item-font-size;
-        color: map-get($this, 'item-text-color');
-        background-color: map-get($this, 'item-background');
+        color: var($theme, 'item-text-color');
+        background-color: var($theme, 'item-background');
         z-index: 2;
     }
 
     %igx-list-item--active {
-        color: map-get($this, 'item-text-color-active');
-        background-color: map-get($this, 'item-background-active');
+        color: var($theme, 'item-text-color-active');
+        background-color: var($theme, 'item-background-active');
         z-index: 3;
     }
 

@@ -5,12 +5,15 @@
 ////
 
 /// Card Theme
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $background [null]- The card background color.
 /// @param {Color} $header-text-color [null] - The text color of the card title.
 /// @param {Color} $subtitle-text-color [null] - The text color of the card subtitle.
 /// @param {Color} $content-text-color [null] - The text color of the card content.
 /// @param {Color} $actions-text-color [null] - The text color of the card buttons.
 ///
+/// @requires extend
+/// @requires igx-color
 /// @requires text-contrast
 ///
 /// @example scss Change the background and content text colors in card
@@ -21,12 +24,21 @@
 ///   // Pass the theme to the igx-card component mixin
 ///   @include igx-calendar($my-card-theme);
 @function igx-card-theme(
+    $palette: $default-palette,
     $background: null,
     $header-text-color: null,
     $subtitle-text-color: null,
     $content-text-color: null,
     $actions-text-color: null
 ) {
+    $default-theme: (
+        name: 'igx-card',
+        background: #fff,
+        header-text-color: igx-color($palette, grays, 800),
+        subtitle-text-color: igx-color($palette, grays, 600),
+        content-text-color: igx-color($palette, grays, 600),
+        actions-text-color: igx-color($palette, grays, 600)
+    );
 
     @if not($header-text-color) and $background {
         $header-text-color: text-contrast($background);
@@ -44,34 +56,24 @@
         $subtitle-text-color: rgba(text-contrast($background), .7);
     }
 
-    @return (
+    @return extend($default-theme, (
+        palette: $palette,
         background: $background,
         header-text-color: $header-text-color,
         subtitle-text-color:$subtitle-text-color,
         content-text-color:$content-text-color,
         actions-text-color:$actions-text-color
-    );
+    ));
 }
 
 /// Card Component
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @requires igx-card-theme
-/// @requires igx-color
-/// @requires extend
+/// @requires {mixin} igx-root-css-vars
 /// @requires em
 /// @requires igx-elevation
-@mixin igx-card($theme, $palette: $default-palette) {
-
-    $default-theme: igx-card-theme(
-        $background: #fff,
-        $header-text-color: igx-color($palette, grays, 800),
-        $subtitle-text-color: igx-color($palette, grays, 600),
-        $content-text-color: igx-color($palette, grays, 600),
-        $actions-text-color: igx-color($palette, grays, 600)
-    );
-
-    $this: extend($default-theme, $theme);
+/// @requires $elevations
+@mixin igx-card($theme) {
+    @include igx-root-css-vars($theme);
 
     $card-border-radius: 2px;
     $card-shadow: igx-elevation($elevations, 2);
@@ -100,7 +102,7 @@
         box-shadow: $card-shadow;
         overflow: hidden;
         border-radius: $card-border-radius;
-        background: map-get($this, background);
+        background: var($theme, 'background');
         transition: $card-transitions;
         backface-visibility: hidden;
 
@@ -116,7 +118,7 @@
         // flex: 1 0 100%;
         flex-basis: 100%;
         padding: $card-heading-padding;
-        color: map-get($this, header-text-color);
+        color: var($theme, 'header-text-color');
     }
 
     %igx-card-header--compact {
@@ -125,7 +127,6 @@
 
     %igx-card-header-title {
         margin: $card-heading-margin;
-        // flex: 1 0 100%;
         flex-basis: 100%;
         font-size: $card-title-fz;
         line-height: $card-title-line-height;
@@ -137,7 +138,7 @@
 
     %igx-card-header-subtitle {
         margin: $card-subtitle-margin;
-        color: map-get($this, subtitle-text-color);
+        color: var($theme, 'subtitle-text-color');
         font-size: $card-subtitle-fz;
         line-height: $card-subtitle-line-height;
     }
@@ -147,14 +148,13 @@
     }
 
     %igx-card-content {
-        // flex: 1 0 100%;
         flex-basis: 100%;
         padding: $card-content-padding;
     }
 
     %igx-card-content-text {
         margin: $card-content-margin;
-        color: map-get($this, content-text-color);
+        color: var($theme, 'content-text-color');
         font-size: $card-content-fz;
         line-height: $card-content-lh;
     }
@@ -194,7 +194,7 @@
         flex-flow: row nowrap;
 
         .igx-button--icon {
-            color: map-get($this, actions-text-color);
+            color: var($theme, 'actions-text-color');
         }
     }
 

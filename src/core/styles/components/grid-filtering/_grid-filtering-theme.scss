@@ -5,6 +5,8 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
+/// Grid Filtering Theme
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $toggle-icon-color [null] - The idle toggle icon color.
 /// @param {Color} $toggle-icon-hover-color [null] - The hover toggle icon color.
 /// @param {Color} $toggle-icon-active-color [null] - The active toggle icon color.
@@ -13,11 +15,14 @@
 /// @param {Color} $toggle-hover-background [null] - The hover toggle background color.
 /// @param {Color} $toggle-active-background [null] - The active toggle background color.
 /// @param {Color} $toggle-filtered-background [null] - The filtered toggle background color.
-///
 /// @param {Color} $menu-background [null] - The idle menu background color.
 /// @param {Color} $menu-text-color [null] - The idle menu text color.
 /// @param {Color} $menu-button-text-color [null] - The menu button text color.
 /// @param {Color} $menu-button-disabled-text-color [null] - The menu disabled button text color.
+///
+/// @requires extend
+/// @requires igx-color
+/// @requires igx-contrast-color
 /// @requires text-contrast
 ///
 /// @example scss Change the menu background color
@@ -28,6 +33,8 @@
 ///   // Pass the theme to the igx-grid-filtering component mixin
 ///   @include igx-grid-filtering($my-filtering-theme);
 @function igx-grid-filtering-theme(
+    $palette: $default-palette,
+
     $toggle-icon-color: null,
     $toggle-icon-hover-color: null,
     $toggle-icon-active-color: null,
@@ -42,6 +49,20 @@
     $menu-button-text-color: null,
     $menu-button-disabled-text-color: null
 ) {
+    $default-theme: (
+        name: 'igx-grid-filtering',
+        toggle-icon-color: inherit,
+        toggle-icon-hover-color: #fff,
+        toggle-icon-active-color: igx-contrast-color($palette, 'secondary'),
+        toggle-icon-filtered-color: igx-color($palette, 'secondary'),
+        toggle-hover-background: igx-color($palette, 'grays', 300),
+        toggle-active-background: igx-color($palette, 'secondary'),
+        toggle-filtered-background: transparent,
+        menu-background: #fff,
+        menu-text-color: igx-color($palette, 'grays', 900),
+        menu-button-text-color: igx-color($palette, 'secondary')
+    );
+
     @if not($menu-text-color) and $menu-background {
         $menu-text-color: text-contrast($menu-background);
     }
@@ -58,7 +79,9 @@
         $toggle-icon-active-color: text-contrast($toggle-active-background)
     }
 
-    @return (
+    @return extend($default-theme, (
+        palette: $palette,
+
         toggle-icon-color: $toggle-icon-color,
         toggle-icon-hover-color: $toggle-icon-hover-color,
         toggle-icon-active-color: $toggle-icon-active-color,
@@ -72,36 +95,23 @@
         menu-text-color: $menu-text-color,
         menu-button-text-color: $menu-button-text-color,
         menu-button-disabled-text-color: $menu-button-disabled-text-color
-    );
+    ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @requires igx-grid-filtering-theme
+/// @requires {mixin} igx-root-css-vars
 /// @requires igx-button-theme
 /// @requires {mixin} igx-button
 /// @requires igx-color
 /// @requires igx-contrast-color
 /// @requires igx-elevation
 /// @requires $elevations
-/// @requires extend
 /// @requires rem
-@mixin igx-grid-filtering($theme, $palette: $default-palette) {
-    $default-theme: igx-grid-filtering-theme(
-        $toggle-icon-color: inherit,
-        $toggle-icon-hover-color: #fff,
-        $toggle-icon-active-color: igx-contrast-color($palette, 'secondary'),
-        $toggle-icon-filtered-color: igx-color($palette, 'secondary'),
-        $toggle-hover-background: igx-color($palette, 'grays', 300),
-        $toggle-active-background: igx-color($palette, 'secondary'),
-        $toggle-filtered-background: transparent,
+/// @requires var
+@mixin igx-grid-filtering($theme) {
+    @include igx-root-css-vars($theme);
 
-        $menu-background: #fff,
-        $menu-text-color: igx-color($palette, 'grays', 900),
-        $menu-button-text-color: igx-color($palette, 'secondary')
-    );
-
-    $this: extend($default-theme, $theme);
+    $palette: map-get($theme, 'palette');
 
     $grid-filtering-options-padding: rem(8px, 16px);
     $grid-head-icon-size: rem(15px);
@@ -119,7 +129,7 @@
 
     %igx-filtering-icon {
         cursor: pointer;
-        color: map-get($this, 'toggle-icon-color');
+        color: var($theme, 'toggle-icon-color');
 
         igx-icon {
             font-size: $grid-head-icon-size !important;
@@ -130,37 +140,37 @@
     }
 
     %igx-filtering-icon--active {
-        color: map-get($this, 'toggle-icon-active-color');
+        color: var($theme, 'toggle-icon-active-color');
     }
 
     %igx-filtering-icon--filtered {
-        color: map-get($this, 'toggle-icon-filtered-color');
+        color: var($theme, 'toggle-icon-filtered-color');
     }
 
     %igx-filtering-toggle {
         @extend %igx-filtering-icon;
 
         user-select: none;
-        background: map-get($this, 'toggle-background');
+        background: var($theme, 'toggle-background');
         border-radius: 50%;
     }
 
     %igx-filtering-toggle--hover {
-        background: map-get($this, 'toggle-hover-background');
+        background: var($theme, 'toggle-hover-background');
     }
 
     %igx-filtering-toggle--active {
         @extend %igx-filtering-icon;
         @extend %igx-filtering-icon--active;
 
-        background: map-get($this, 'toggle-active-background');
+        background: var($theme, 'toggle-active-background');
     }
 
     %igx-filtering-toggle--filtered {
         @extend %igx-filtering-icon;
         @extend %igx-filtering-icon--filtered;
 
-        background: map-get($this, 'toggle-filtered-background');
+        background: var($theme, 'toggle-filtered-background');
     }
 
     %igx-filtering-menu {
@@ -171,23 +181,23 @@
 
         min-width: $filtering-menu-min-width;
         user-select: none;
-        background: map-get($this, 'menu-background');
-        color: map-get($this, 'menu-text-color');
+        background: var($theme, 'menu-background');
+        color: var($theme, 'menu-text-color');
         margin-top: $filtering-menu-distance-to-toggle;
 
         box-shadow: $filtering-menu-shadow;
-        border: 1px solid lighten(map-get($this, 'menu-background'), 5%);
+        border: 1px solid var($theme, 'menu-background');
         border-radius: $filtering-menu-radius;
         padding: $grid-filtering-options-padding;
         z-index: 10;
 
         @include igx-button(igx-button-theme(
-            $flat-text-color: map-get($this, 'menu-button-text-color'),
-            $flat-hover-text-color: map-get($this, 'menu-button-text-color'),
-            $flat-hover-background: rgba(map-get($this, 'menu-button-text-color'), .12),
-            $flat-focus-text-color: map-get($this, 'menu-button-text-color'),
-            $flat-focus-background: rgba(map-get($this, 'menu-button-text-color'), .08),
-            $disabled-color: map-get($this, 'menu-button-disabled-text-color'),
+            $flat-text-color: var($theme, 'menu-button-text-color'),
+            $flat-hover-text-color: var($theme, 'menu-button-text-color'),
+            $flat-hover-background: var($theme, 'menu-button-text-color'),
+            $flat-focus-text-color: var($theme, 'menu-button-text-color'),
+            $flat-focus-background: var($theme, 'menu-button-text-color'),
+            $disabled-color: var($theme, 'menu-button-disabled-text-color'),
             $disabled-background: transparent
         ));
 

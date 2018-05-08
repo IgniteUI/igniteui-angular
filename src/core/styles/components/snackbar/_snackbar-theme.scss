@@ -7,20 +7,34 @@
 
 /// If you specify a background color, but do not specify colors for either the
 /// button or the text, their colors will be set automatically to a contrasting color.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $background [null] - The background color used in the snackbar.
 /// @param {Color} $text-color [null] - The text color used in the snackbar.
 /// @param {Color} $button-color [null] - The button color used in the snackbar.
+///
+/// @requires extend
 /// @requires text-contrast
+/// @requires igx-color
+///
 /// @todo Add light option
+///
 /// @example scss Set a custom background color
 ///   $my-snackbar-theme: igx-snackbar-theme($background: white);
 ///   // Pass the theme to the igx-bottom-nav component mixin
 ///   @include igx-snackbar($my-snackbar-theme);
 @function igx-snackbar-theme(
+    $palette: $default-palette,
     $background: null,
     $text-color: null,
     $button-color: null
 ) {
+    $default-theme: (
+        name: 'igx-snackbar',
+        background: #323232,
+        text-color: #fff,
+        button-color: igx-color($palette, 'secondary')
+    );
+
     @if not($button-color) and $background {
         $button-color: text-contrast($background);
     }
@@ -29,29 +43,22 @@
         $text-color: text-contrast($background);
     }
 
-    @return (
+    @return extend($default-theme, (
+        palette: $palette,
         background: $background,
         text-color: $text-color,
         button-color: $button-color
-    );
+    ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @requires igx-snackbar-theme
-/// @requires igx-color
-/// @requires extend
+/// @requires {mixin} igx-root-css-vars
 /// @requires rem
-@mixin igx-snackbar($theme, $palette: $default-palette) {
-    $default-theme: igx-snackbar-theme(
-        $background: #323232,
-        $text-color: #fff,
-        $button-color: igx-color($palette, 'secondary')
-    );
+/// @requires var
+@mixin igx-snackbar($theme) {
+    @include igx-root-css-vars($theme);
 
-    $this: extend($default-theme, $theme);
-
-    // @debug $this;
+    // @debug $theme;
 
     $snackbar-min-height: rem(48px);
     $snackbar-padding: rem(7px) rem(24px);
@@ -68,8 +75,8 @@
         justify-content: space-between;
         min-height: $snackbar-min-height;
         padding: $snackbar-padding;
-        color: map-get($this, 'text-color');
-        background: map-get($this, 'background');
+        color: var($theme, 'text-color');
+        background: var($theme, 'background');
         backface-visibility: hidden;
     }
 
@@ -79,7 +86,7 @@
 
     %igx-snackbar-button {
         background: transparent;
-        color: map-get($this, 'button-color');
+        color: var($theme, 'button-color');
         border: 0;
         line-height: $snackbar-button-line-height;
         margin-left: $snackbar-button-left-margin;
@@ -91,7 +98,7 @@
         transition: color .2s ease;
 
         &:hover {
-            color: map-get($this, 'button-color');
+            color: var($theme, 'button-color');
         }
     }
 }

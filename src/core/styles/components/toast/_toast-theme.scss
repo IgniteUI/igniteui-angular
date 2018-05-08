@@ -7,44 +7,47 @@
 
 /// If only background color is specified,
 /// the text-color will be assigned automatically to a contrasting color.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $background [null] - The background color used for the toast.
 /// @param {Color} $text-color [null] - The text-color used for the toast.
+///
+/// @requires extend
+/// @requires igx-color
 /// @requires text-contrast
+///
 /// @example scss Set a custom background color
 ///   $my-toast-theme: igx-toast-theme($background: green);
 ///   // Pass the theme to the igx-toast component mixin
 ///   @include igx-toast($my-toast-theme);
-@function igx-toast-theme($background: null, $text-color: null) {
+@function igx-toast-theme(
+    $palette: $default-palette,
+    $background: null,
+    $text-color: null
+) {
+    $default-theme: (
+        name: 'igx-toast',
+        background: igx-color($palette, 'grays', 600),
+        text-color: #fff
+    );
+
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
     }
 
-    @if $background and lightness($background) > 50 {
-        $background: rgba($background, .7)
-    } @else {
-        $background: rgba($background, .54)
-    }
-
-    @return (
+    @return extend($default-theme, (
+        palette: $palette,
         background: $background,
-        text-color: $text-color,
-    );
+        text-color: $text-color
+    ));
 }
 
 /// Toast Component
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @requires igx-toast-theme
-/// @requires igx-color
-/// @requires extend
+/// @requires {mixin} igx-root-css-vars
 /// @requires rem
-@mixin igx-toast($theme, $palette: $default-palette) {
-    $default-theme: igx-toast-theme(
-        $background: igx-color($palette, 'grays', 600),
-        $text-color: #fff
-    );
-
-    $this: extend($default-theme, $theme);
+/// @requires var
+@mixin igx-toast($theme) {
+    @include igx-root-css-vars($theme);
 
     $toast-width: 52px;
     $toast-padding: rem(16px) rem(24px);
@@ -53,7 +56,7 @@
     $toast-font-size: rem(14px);
     $toast-line-height: rem(24px);
 
-    // @debug $this;
+    // @debug $theme;
 
     %igx-toast-display {
         position: fixed;
@@ -67,8 +70,8 @@
         min-width: $toast-width;
         font-size: $toast-font-size;
         line-height: $toast-line-height;
-        color: map-get($this, 'text-color');
-        background-color: map-get($this, 'background');
+        color: var($theme, 'text-color');
+        background-color: var($theme, 'background');
         border-radius: $toast-border-radius;
         opacity: 0;
         z-index: 999999;

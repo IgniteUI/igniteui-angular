@@ -12,7 +12,7 @@
     @extend %switch-display !optional;
 
     @include e(input) {
-        @include hide-default();
+        @extend %switch-input !optional;
     }
 
     @include e(composite) {

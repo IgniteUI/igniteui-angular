@@ -5,66 +5,74 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $label-color [null]- The text color used for the label text.
 /// @param {Color} $empty-color [null] - The unchecked border color.
 /// @param {Color} $fill-color [null] - The checked border and dot colors.
 /// @param {Color} $disabled-color [null] - The disabled border and dot colors.
 /// @param {Bool} $light [null] - Determines the default color scheme - light or not.
+/// @param {String} $variant ['dark'] - Determines the default color scheme - could be 'light' or 'dark'.
+///
+/// @requires extend
+/// @requires igx-color
+///
 /// Set light to true when the surrounding area is dark.
 /// @example scss Change the checked dot and border colors
 ///   $my-radio-theme: igx-radio-theme($fill-color: magenta);
 ///   // Pass the theme to the igx-radio component mixin
 ///   @include igx-radio($my-radio-theme);
 @function igx-radio-theme(
+    $palette: $default-palette,
     $label-color: null,
     $empty-color: null,
     $fill-color: null,
     $disabled-color: null,
 
-    $light: false
+    $light: false,
+    $variant: 'dark'
 ) {
-    @return (
+    $name: 'igx-radio';
+
+    $dark-theme: (
+        name: $name,
+        label-color: igx-color($palette, 'grays', 900),
+        empty-color: igx-color($palette, 'grays', 600),
+        fill-color: igx-color($palette, 'secondary', 500),
+        disabled-color: igx-color($palette, 'grays', 400)
+    );
+
+    $light-theme: (
+        name: $name,
+        label-color: igx-color($palette, 'grays', 600),
+        empty-color: rgba(255, 255, 255, .7),
+        fill-color: igx-color($palette, 'secondary', 500),
+        disabled-color: rgba(255, 255, 255, .3)
+    );
+
+    $default-theme: if($light == false or $variant == 'dark', $dark-theme, $light-theme);
+
+    @return extend($default-theme, (
+        palette: $palette,
         label-color: $label-color,
         empty-color: $empty-color,
         fill-color: $fill-color,
         disabled-color: $disabled-color,
-
-        light: $light,
-    );
+    ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @requires igx-radio-theme
-/// @requires igx-color
-/// @requires extend
+/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
+/// @requires {mixin} scale-in-out
+/// @requires {mixin} animation
+/// @requires {mixin} igx-ripple
+/// @requires {mixin} hide-default
+/// @requires igx-ripple-theme
 /// @requires em
-/// @requires animation
-/// @requires scale-in-out
-@mixin igx-radio($theme, $palette: $default-palette) {
+/// @requires var
+@mixin igx-radio($theme) {
+    @include igx-root-css-vars($theme);
     @include scale-in-out($start-scale: .9);
-
-    $dark-theme: igx-radio-theme(
-        $label-color: igx-color($palette, 'grays', 900),
-        $empty-color: igx-color($palette, 'grays', 600),
-        $fill-color: igx-color($palette, 'secondary', 500),
-        $disabled-color: igx-color($palette, 'grays', 400)
-    );
-
-    $light-theme: igx-radio-theme(
-        $label-color: igx-color($palette, 'grays', 600),
-        $empty-color: rgba(255, 255, 255, .7),
-        $fill-color: igx-color($palette, 'secondary', 500),
-        $disabled-color: rgba(255, 255, 255, .3)
-    );
-
-    $this: ();
-
-    @if map-get($theme, 'light') {
-        $this: extend($light-theme, $theme);
-    } @else {
-        $this: extend($dark-theme, $theme);
-    }
 
     $font-size: 16px;
     $label-margin: em(8px);
@@ -79,17 +87,25 @@
     $ripple-size: em(48px);
     $ripple-radius: $ripple-size / 2;
 
+    $ripple-theme: igx-ripple-theme(
+        $color: var($theme, 'fill-color')
+    );
+
     %radio-display {
         display: inline-flex;
         flex-flow: row nowrap;
         align-items: center;
         font-size: $font-size;
-        color: map-get($this, 'label-color');
+        color: var($theme, 'label-color');
+    }
+
+    %radio-input {
+        @include hide-default();
     }
 
     %radio-display--disabled {
         pointer-events: none;
-        color: map-get($this, 'disabled-color');
+        color: var($theme, 'disabled-color');
         user-select: none;
     }
 
@@ -101,7 +117,7 @@
         min-width: $size;
         line-height: $size;
         cursor: pointer;
-        color: map-get($this, 'label-color');
+        color: var($theme, 'label-color');
         user-select: none;
 
         &::before,
@@ -122,35 +138,35 @@
         }
 
         &::after {
-            border: $border-style map-get($this, 'empty-color');
+            border: $border-style var($theme, 'empty-color');
         }
     }
 
     %radio-composite--x {
         &::before {
-            border: $border-style map-get($this, 'fill-color');
-            background-color: map-get($this, 'fill-color');
+            border: $border-style var($theme, 'fill-color');
+            background-color: var($theme, 'fill-color');
             transform: scale3d(.5, .5, .5);
         }
 
         &::after {
-            border: $border-style map-get($this, 'fill-color');
+            border: $border-style var($theme, 'fill-color');
         }
     }
 
     %radio-composite--disabled {
         &::after {
-            border: $border-style map-get($this, 'disabled-color');
+            border: $border-style var($theme, 'disabled-color');
         }
     }
 
     %radio-composite--x--disabled {
         &::after {
-            border: $border-style map-get($this, 'disabled-color');
+            border: $border-style var($theme, 'disabled-color');
         }
 
         &::before {
-            background-color: map-get($this, 'disabled-color');
+            background-color: var($theme, 'disabled-color');
             border: $border-style transparent;
         }
     }
@@ -192,9 +208,8 @@
     }
 
     %radio-ripple {
-        @include igx-ripple((
-            color: map-get($this, 'fill-color')
-        ));
+        @include igx-ripple($ripple-theme);
+        @include igx-css-vars($ripple-theme);
         position: absolute;
         top: calc(50% - #{$ripple-radius});
         left: calc(50% - #{$ripple-radius});
@@ -208,7 +223,8 @@
 
     %radio-ripple--focused {
         @include animation('scale-in-out' 1s $ease-out-quad infinite);
-        background-color: rgba(map-get($this, 'fill-color'), .12);
+        background-color: var($theme, 'fill-color');
         transition: background-color .2s $ease-out-quad;
+        opacity: .12;
     }
 }

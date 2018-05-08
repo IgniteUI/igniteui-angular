@@ -13,6 +13,7 @@
 /// - year/month hover/selected colors
 /// If only background colors are specified, text/icon colors
 /// will be assigned automatically to a contrasting color.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $content-background [null] - The main content background color.
 /// @param {Color} $content-text-color [null] - The main content text color.
 ///
@@ -40,7 +41,10 @@
 /// @param {Color} $date-current-text-color [null] - The text color for the current date.
 /// @param {Color} $date-hover-background [null] - The hover date background color.
 ///
+/// @requires igx-color
+/// @requires igx-contrast-color
 /// @requires text-contrast
+/// @requires extend
 ///
 /// @example scss Change the header and content background colors
 ///   $my-calendar-theme: igx-calendar-theme(
@@ -50,6 +54,8 @@
 ///   // Pass the theme to the igx-calendar component mixin
 ///   @include igx-calendar($my-calendar-theme);
 @function igx-calendar-theme(
+    $palette: $default-palette,
+
     $content-background: null,
     $content-text-color: null,
 
@@ -77,6 +83,37 @@
     $date-current-text-color: null,
     $date-hover-background: null
 ) {
+    $default-theme: (
+        name: 'igx-calendar',
+
+        content-background: #fff,
+        content-text-color: igx-color($palette, 'grays', 900),
+
+        header-background: igx-color($palette, 'secondary', 500),
+        header-text-color: igx-contrast-color($palette, 'secondary', 500),
+
+        picker-arrow-color: igx-color($palette, 'grays', 800),
+        picker-arrow-hover-color: igx-color($palette, 'secondary', 500),
+
+        picker-text-color: igx-color($palette, 'grays', 800),
+        picker-text-hover-color: igx-color($palette, 'secondary', 500),
+
+        inactive-text-color: igx-color($palette, 'grays', 400),
+        weekend-text-color: igx-color($palette, 'grays', 400),
+
+        year-current-text-color: igx-color($palette, 'secondary', 500),
+        month-current-text-color: igx-color($palette, 'secondary', 500),
+
+        year-hover-text-color: igx-color($palette, 'secondary', 500),
+        month-hover-text-color: igx-color($palette, 'secondary', 500),
+
+        date-selected-background: igx-color($palette, 'secondary', 500),
+        date-selected-text-color: igx-contrast-color($palette, 'secondary', 500),
+
+        date-current-text-color: igx-color($palette, 'secondary', 500),
+        date-hover-background: igx-color($palette, 'grays', 100)
+    );
+
 
     @if not($content-text-color) and $content-background {
         $content-text-color: text-contrast($content-background);
@@ -142,7 +179,8 @@
         $month-current-text-color: $header-background;
     }
 
-    @return (
+    @return extend($default-theme, (
+        palette: $palette,
         content-background: $content-background,
         content-text-color: $content-text-color,
 
@@ -170,51 +208,18 @@
 
         date-current-text-color: $date-current-text-color,
         date-hover-background: $date-hover-background
-    );
+    ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @requires igx-calendar-theme
-/// @requires igx-color
-/// @requires igx-contrast-color
+/// @requires {mixin} igx-root-css-vars
 /// @requires em
 /// @requires rem
-/// @requires extend
-@mixin igx-calendar($theme, $palette: $default-palette) {
+/// @requires var
+/// @requires {mixin} ellipsis
+@mixin igx-calendar($theme) {
+    @include igx-root-css-vars($theme);
 
-    $default-theme: igx-calendar-theme(
-        $content-background: #fff,
-        $content-text-color: igx-color($palette, 'grays', 900),
-
-        $header-background: igx-color($palette, 'secondary', 500),
-        $header-text-color: igx-contrast-color($palette, 'secondary', 500),
-
-        $picker-arrow-color: igx-color($palette, 'grays', 800),
-        $picker-arrow-hover-color: igx-color($palette, 'secondary', 500),
-
-        $picker-text-color: igx-color($palette, 'grays', 800),
-        $picker-text-hover-color: igx-color($palette, 'secondary', 500),
-
-        $inactive-text-color: igx-color($palette, 'grays', 400),
-        $weekend-text-color: igx-color($palette, 'grays', 400),
-
-        $year-current-text-color: igx-color($palette, 'secondary', 500),
-        $month-current-text-color: igx-color($palette, 'secondary', 500),
-
-        $year-hover-text-color: igx-color($palette, 'secondary', 500),
-        $month-hover-text-color: igx-color($palette, 'secondary', 500),
-
-        $date-selected-background: igx-color($palette, 'secondary', 500),
-        $date-selected-text-color: igx-contrast-color($palette, 'secondary', 500),
-
-        $date-current-text-color: igx-color($palette, 'secondary', 500),
-        $date-hover-background: igx-color($palette, 'grays', 100)
-    );
-
-    $this: extend($default-theme, $theme);
-
-    // Calendar Header
     $cal-header-year-fs: em(18px);
     $cal-header-year-lh: em(16px);
     $cal-header-year-margin: 0;
@@ -222,15 +227,12 @@
     $cal-header-date-lh: em(22px);
     $cal-header-date-margin: 0;
     $cal-header-padding: em(16px);
-    $cal-header-year-color: rgba(map-get($this, 'header-text-color'), .8);
 
-    // Calendar Picker
     $cal-picker-date-fs: em(18px);
     $cal-picker-date-lh: em(22px);
     $cal-picker-date-fw: 600;
     $cal-picker-padding: em(16px);
 
-    // Calendar Values
     $cal-value-w: em(40px);
     $cal-value-h: $cal-value-w;
     $cal-value-br: $cal-value-w / 2;
@@ -245,14 +247,13 @@
     $cal-value-month-margin: 0 em(12px);
     $cal-value-month-height: em(91px);
 
-    // Calendar Body
     $cal-row-padding: 0 em(16px);
 
     %cal-display {
         display: flex;
         flex-flow: column nowrap;
         width: 100%;
-        background: map-get($this, 'content-background');
+        background: var($theme, 'content-background');
         overflow: hidden;
         outline: none;
 
@@ -273,15 +274,16 @@
     }
 
     %cal-header-display {
-        background-color: map-get($this, 'header-background');
-        color: map-get($this, 'header-text-color');
+        background-color: var($theme, 'header-background');
+        color: var($theme, 'header-text-color');
         padding: $cal-header-padding;
     }
 
     %cal-header-year {
         margin: $cal-header-year-margin;
-        color: $cal-header-year-color;
+        color: currentColor;
         font-size: $cal-header-year-fs;
+        opacity: .8;
     }
 
     %cal-header-date {
@@ -302,7 +304,7 @@
     %cal-header-date-el--hover {
         &:hover,
         &:focus {
-            color: map-get($this, 'picker-text-hover-color');
+            color: var($theme, 'picker-text-hover-color');
             cursor: pointer;
         }
     }
@@ -319,12 +321,12 @@
 
     %cal-picker-arrow {
         display: inline-flex;
-        color: map-get($this, 'picker-arrow-color');
+        color: var($theme, 'picker-arrow-color');
         user-select: none;
         cursor: pointer;
 
         &:hover {
-            color: map-get($this, 'picker-arrow-hover-color');
+            color: var($theme, 'picker-arrow-hover-color');
         }
     }
 
@@ -336,7 +338,7 @@
         font-size: $cal-picker-date-fs;
         line-height: $cal-picker-date-lh;
         font-weight: $cal-picker-date-fw;
-        color: map-get($this, 'picker-text-color');
+        color: var($theme, 'picker-text-color');
         text-align: center;
     }
 
@@ -374,20 +376,20 @@
         line-height: $cal-value-lh;
         text-align: center;
         border-radius: $cal-value-br;
-        color: map-get($this, 'content-text-color');
+        color: var($theme, 'content-text-color');
         cursor: pointer;
         outline: none;
         transition: background .15s ease-out;
     }
 
     %cal-value--label {
-        color: map-get($this, 'inactive-text-color');
+        color: var($theme, 'inactive-text-color');
         cursor: default;
         border-radius: 0;
     }
 
     %cal-value--weekend {
-        color: map-get($this, 'weekend-text-color');
+        color: var($theme, 'weekend-text-color');
     }
 
     %cal-value--year {
@@ -402,15 +404,15 @@
 
     %cal-value--year-current {
         font-size: $cal-value-year-current-fs;
-        color: map-get($this, 'year-current-text-color');
+        color: var($theme, 'year-current-text-color');
     }
 
     %cal-value--year-hover {
-        color: map-get($this, 'year-hover-text-color');
+        color: var($theme, 'year-hover-text-color');
     }
 
     %cal-value--month-hover {
-        color: map-get($this, 'month-hover-text-color');
+        color: var($theme, 'month-hover-text-color');
     }
 
     %cal-value--month {
@@ -423,27 +425,27 @@
     }
 
     %cal-value--month-current {
-        color: map-get($this, 'month-current-text-color');
+        color: var($theme, 'month-current-text-color');
     }
 
     %cal-value--inactive {
         cursor: pointer;
-        color: map-get($this, 'inactive-text-color');
+        color: var($theme, 'inactive-text-color');
     }
 
     %cal-value--selected {
         position: relative;
-        color: map-get($this, 'date-selected-text-color');
-        background-color: map-get($this, 'date-selected-background') !important;
+        color: var($theme, 'date-selected-text-color');
+        background-color: var($theme, 'date-selected-background') !important;
         font-weight: $cal-value-fw;
     }
 
     %cal-value--current {
-        color: map-get($this, 'date-current-text-color');
+        color: var($theme, 'date-current-text-color');
         font-weight: $cal-value-fw;
     }
 
     %cal-value--hover {
-        background-color: map-get($this, 'date-hover-background');
+        background-color: var($theme, 'date-hover-background');
     }
 }

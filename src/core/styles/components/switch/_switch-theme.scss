@@ -5,6 +5,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $thumb-on-color [null] - The color of the thumb when the switch is on.
 /// @param {Color} $track-on-color [null] - The color of the track when the switch is on.
 /// @param {Color} $thumb-off-color [null] - The color of the thumb when the switch is off.
@@ -12,12 +13,20 @@
 /// @param {Color} $thumb-disabled-color [null] - The color of the thumb when the switch is disabled.
 /// @param {Color} $track-disabled-color [null] - The color of the track when the switch is disabled.
 /// @param {Bool} $light [false] - Determines the default color scheme - light or not.
+/// @param {String} $variant ['dark'] - Determines the default color scheme - could be 'light' or 'dark'.
+///
+/// @requires extend
+/// @requires igx-color
+/// @requires hexrgba
+///
 /// Set light to true when the surrounding area is dark.
 /// @example scss Set custom track and thumb on colors
 ///   $my-switch-theme: igx-toast-theme($thumb-on-color: black, $track-on-color: yellow);
 ///   // Pass the theme to the igx-bottom-nav component mixin
 ///   @include igx-switch($my-switch-theme);
 @function igx-switch-theme(
+    $palette: $default-palette,
+
     $thumb-on-color: null,
     $track-on-color: null,
 
@@ -30,9 +39,48 @@
     $label-color: null,
     $label-disabled-color: null,
 
-    $light: false
+    $light: false,
+    $variant: 'dark'
 ) {
-    @return (
+    $name: 'igx-switch';
+
+    $dark-theme: (
+        name: $name,
+
+        thumb-on-color: igx-color($palette, 'secondary', 500),
+        track-on-color: rgba(igx-color($palette, 'secondary', 500), .5),
+
+        thumb-off-color: #fafafa,
+        track-off-color: rgba(0, 0, 0, .5),
+
+        label-color: igx-color($palette, grays, 900),
+        label-disabled-color: igx-color($palette, grays, 400),
+
+        track-disabled-color: rgba(0, 0, 0, .12),
+        thumb-disabled-color: hexrgba(igx-color($palette, 'grays', 400))
+    );
+
+    $light-theme: (
+        name: $name,
+
+        thumb-on-color: igx-color($palette, 'secondary', 200),
+        track-on-color: rgba(igx-color($palette, 'secondary', 200), .5),
+
+        thumb-off-color: #bdbdbd,
+        track-off-color: rgba(255, 255, 255, .3),
+
+        label-color: igx-color($palette, grays, 600),
+        label-disabled-color: rgba(255, 255, 255, .3),
+
+        track-disabled-color: #424242,
+        thumb-disabled-color: #6c6c6c
+    );
+
+    $default-theme: if($light == false or $variant == 'dark', $dark-theme, $light-theme);
+
+    @return extend($default-theme, (
+        palette: $palette,
+
         thumb-on-color: $thumb-on-color,
         track-on-color: $track-on-color,
 
@@ -46,60 +94,28 @@
         label-disabled-color: $label-disabled-color,
 
         light: $light
-    );
+    ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @requires igx-switch-theme
-/// @requires igx-color
+/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
+/// @requires {mixin} scale-in-out
+/// @requires {mixin} igx-ripple
+/// @requires {mixin} hide-default
+/// @requires igx-ripple-theme
 /// @requires igx-elevation
-/// @requires extend
-/// @requires hexrgba
-/// @requires em
 /// @requires $elevations
-/// @requires animation
-/// @requires scale-in-out
-@mixin igx-switch($theme, $palette: $default-palette) {
+/// @requires em
+/// @requires {mixin} scale-in-out
+/// @requires {mixin} animation
+/// @requires var
+@mixin igx-switch($theme) {
+    @include igx-root-css-vars($theme);
+
     @include scale-in-out($start-scale: .9);
 
-    $dark-theme: igx-switch-theme(
-        $thumb-on-color: igx-color($palette, 'secondary', 500),
-        $track-on-color: rgba(igx-color($palette, 'secondary', 500), .5),
-
-        $thumb-off-color: #fafafa,
-        $track-off-color: rgba(0, 0, 0, .5),
-
-        $label-color: igx-color($palette, grays, 900),
-        $label-disabled-color: igx-color($palette, grays, 400),
-
-        $track-disabled-color: rgba(0, 0, 0, .12),
-        $thumb-disabled-color: hexrgba(igx-color($palette, 'grays', 400))
-    );
-
-    $light-theme: igx-switch-theme(
-        $thumb-on-color: igx-color($palette, 'secondary', 200),
-        $track-on-color: rgba(igx-color($palette, 'secondary', 200), .5),
-
-        $thumb-off-color: #bdbdbd,
-        $track-off-color: rgba(255, 255, 255, .3),
-
-        $label-color: igx-color($palette, grays, 600),
-        $label-disabled-color: rgba(255, 255, 255, .3),
-
-        $track-disabled-color: #424242,
-        $thumb-disabled-color: #6c6c6c
-    );
-
-    $this: ();
-
-    @if map-get($theme, 'light') {
-        $this: extend($light-theme, $theme);
-    } @else {
-        $this: extend($dark-theme, $theme);
-    }
-
-    // @debug $this;
+    // @debug $theme;
 
     $switch-width: 36px ;
     $switch-height: 14px ;
@@ -120,11 +136,19 @@
 
     $input-transition: all .2s $ease-in-out-quad;
 
+    $ripple-theme: igx-ripple-theme(
+        $color: var($theme, 'thumb-on-color')
+    );
+
     %switch-display {
         display: inline-flex;
         flex-flow: row nowrap;
         align-items: center;
         font-size: 16px;
+    }
+
+    %switch-input {
+        @include hide-default();
     }
 
     %switch-display--disabled {
@@ -139,18 +163,18 @@
         width: $switch-width;
         height: $switch-height;
         border-radius: $switch-radius;
-        background-color: map-get($this, 'track-off-color');
+        background-color: var($theme, 'track-off-color');
         cursor: pointer;
         user-select: none;
         transition: $input-transition;
     }
 
     %switch-composite--x {
-        background-color: map-get($this, 'track-on-color');
+        background-color: var($theme, 'track-on-color');
     }
 
     %switch-composite--disabled {
-        background: map-get($this, 'track-disabled-color');
+        background: var($theme, 'track-disabled-color');
     }
 
     %switch-composite-thumb {
@@ -160,7 +184,7 @@
         height: $switch-thumb-height;
         min-width: $switch-thumb-width;
         border-radius: 50%;
-        background: map-get($this, 'thumb-off-color');
+        background: var($theme, 'thumb-off-color');
         box-shadow: $switch-shadow;
         transition: $input-transition;
 
@@ -171,7 +195,7 @@
 
     %switch-composite-thumb--x {
         transform: translateX(#{$switch-width - $switch-thumb-width});
-        background: map-get($this, 'thumb-on-color');
+        background: var($theme, 'thumb-on-color');
 
         [dir='rtl'] & {
             transform: translateX(-#{$switch-width - $switch-thumb-width});
@@ -179,14 +203,13 @@
     }
 
     %switch-composite-thumb--disabled {
-        background: map-get($this, 'thumb-disabled-color');
+        background: var($theme, 'thumb-disabled-color');
         box-shadow: $switch-disabled-shadow;
     }
 
     %switch-ripple {
-        @include igx-ripple((
-            color: map-get($this, 'thumb-on-color')
-        ));
+        @include igx-ripple($ripple-theme);
+        @include igx-css-vars($ripple-theme);
         position: absolute;
         top: calc(50% - #{$ripple-radius});
         left: calc(50% - #{$ripple-radius});
@@ -200,13 +223,14 @@
 
     %switch-ripple--focused {
         @include animation('scale-in-out' 1s $ease-out-quad infinite);
-        background-color: rgba(map-get($this, 'thumb-on-color'), .12);
+        background-color: var($theme, 'thumb-on-color');
         transition: background-color .2s $ease-out-quad;
+        opacity: .12;
     }
 
     %switch-label {
         display: inline-block;
-        color: map-get($this, 'label-color');
+        color: var($theme, 'label-color');
         font-size: $label-font-size;
         line-height: 1;
         cursor: pointer;
@@ -246,6 +270,6 @@
     }
 
     %switch-label--disabled {
-        color: map-get($this, 'label-disabled-color');
+        color: var($theme, 'label-disabled-color');
     }
 }

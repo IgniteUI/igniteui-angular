@@ -5,17 +5,21 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $button-background [null] - The previous/next buttons idle background color.
 /// @param {Color} $button-hover-background [null] - The previous/next buttons hover background color.
 /// @param {Color} $button-arrow-color [null] - The previous/next buttons idle arrow color.
 /// @param {Color} $button-hover-arrow-color [null] - The previous/next buttons hover arrow color.
-///
 /// @param {Color} $indicator-dot-color [null] - The active indicator dot color.
 /// @param {Color} $indicator-border-color [null] - The idle indicator border color.
 /// @param {Color} $indicator-active-border-color [null] - The active indicator border color.
-///
 /// @param {Bool} $disable-button-shadow [true] - Show shadow underneath the previous/next buttons.
+///
+/// @requires extend
+/// @requires igx-color
+/// @requires igx-elevation
 /// @requires text-contrast
+/// @requires $elevations
 ///
 /// @example scss Change the previous/next button colors
 ///   $my-carousel-theme: igx-carousel-theme(
@@ -25,6 +29,7 @@
 ///   // Pass the carousel theme to the igx-carousel component mixin
 ///   @include igx-carousel($my-carousel-theme);
 @function igx-carousel-theme(
+    $palette: $default-palette,
     $button-background: null,
     $button-hover-background: null,
     $button-arrow-color: null,
@@ -36,6 +41,19 @@
 
     $disable-button-shadow: true
 ){
+    $default-theme: (
+        name: 'igx-carousel',
+        button-background: #fff,
+        button-hover-background: #fff,
+        button-arrow-color: igx-color($palette, 'grays', 600),
+        button-hover-arrow-color: igx-color($palette, 'grays', 900),
+        button-shadow: if($disable-button-shadow == true, none, igx-elevation($elevations, 1)),
+
+        indicator-dot-color: #fff,
+        indicator-border-color: #fff,
+        indicator-active-border-color: #fff
+    );
+
     @if not($button-arrow-color) and $button-background {
         $button-arrow-color: text-contrast($button-background);
     }
@@ -44,7 +62,8 @@
         $button-hover-arrow-color: text-contrast($button-hover-background);
     }
 
-    @return(
+    @return extend($default-theme, (
+        palette: $palette,
         button-background: $button-background,
         button-hover-background: $button-hover-background,
         button-arrow-color: $button-arrow-color,
@@ -55,43 +74,29 @@
         indicator-active-border-color: $indicator-active-border-color,
 
         disable-button-shadow: $disable-button-shadow
-    );
+    ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @requires igx-carousel-theme
+/// @requires {mixin} igx-root-css-vars
 /// @requires igx-color
 /// @requires igx-elevation
 /// @requires $elevations
-/// @requires extend
-@mixin igx-carousel($theme, $palette: $default-palette) {
+/// @requires var
+/// @requires {mixin} animation
+/// @requires {mixin} scale-in-center
+/// @requires {mixin} scale-out-center
+@mixin igx-carousel($theme) {
+    @include igx-root-css-vars($theme);
+
     @include scale-in-center();
     @include scale-out-center();
-
-    $default-theme: igx-carousel-theme(
-        $button-background: #fff,
-        $button-hover-background: #fff,
-        $button-arrow-color: igx-color($palette, 'grays', 600),
-        $button-hover-arrow-color: igx-color($palette, 'grays', 900),
-
-        $indicator-dot-color: #fff,
-        $indicator-border-color: #fff,
-        $indicator-active-border-color: #fff
-    );
-
-    $this: extend($default-theme, $theme);
 
     $carousel-arrow-margin: 0 16px;
     $carousel-indicators-margin: 16px 0;
     $carousel-indicators-padding: 0;
     $carousel-indicator-margin: 0 5px;
     $indicator-border-style: 2px solid;
-    $button-shadow: igx-elevation($elevations, 1);
-
-    @if map-get($this, 'disable-button-shadow') {
-        $button-shadow: none;
-    }
 
     %igx-carousel-display {
         display: flex;
@@ -126,13 +131,13 @@
         height: 46px;
         top: 50%;
         transform: translateY(-50%);
-        color: map-get($this, 'button-arrow-color');
         cursor: pointer;
-        background-color: map-get($this, 'button-background');
         border-radius: 50%;
-        box-shadow: $button-shadow;
         outline-style: none;
         transition: all .15s ease-in-out;
+        color: var($theme, 'button-arrow-color');
+        background-color: var($theme, 'button-background');
+        box-shadow: var($theme, 'button-shadow');
 
         span {
             display: flex;
@@ -141,8 +146,8 @@
     }
 
     %igx-carousel-arrow--hover {
-        color: map-get($this, 'button-hover-arrow-color');
-        background-color: map-get($this, 'button-hover-background');
+        color: var($theme, 'button-hover-arrow-color');
+        background: var($theme, 'button-hover-background');
     }
 
     %igx-carousel-arrow--next {
@@ -173,7 +178,8 @@
             height: 12px;
             text-indent: -9999px;
             cursor: pointer;
-            border: $indicator-border-style map-get($this, 'indicator-border-color');
+            border: $indicator-border-style;
+            border-color: var($theme, 'indicator-border-color');
             border-radius: 50%;
             transition: all .15s $ease-out-quad;
             box-shadow: igx-elevation($elevations, 1);
@@ -187,13 +193,14 @@
                 left: 1px;
                 right: 1px;
                 border-radius: inherit;
-                background-color: map-get($this, 'indicator-dot-color');
-                opacity: 0;
+                background: var($theme, 'indicator-dot-color');
                 @include animation('scale-out-center' .15s $ease-out-quad forwards);
+                opacity: 0;
             }
 
             &.active {
-                border: $indicator-border-style map-get($this, 'indicator-active-border-color');
+                border: $indicator-border-style;
+                border-color: var($theme, 'indicator-active-border-color');
                 opacity: 1;
             }
 

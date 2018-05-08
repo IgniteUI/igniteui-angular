@@ -7,48 +7,62 @@
 
 /// If only background color is specified,
 /// the idle item color will be assigned automatically to a contrasting color.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $background [null] - The background color used for the toast.
 /// @param {Color} $idle-item-color [null] - The text-color used for the idle color.
 /// @param {Color} $active-item-color [null] - The text-color used for the active color.
+///
+/// @requires extend
+/// @requires igx-color
 /// @requires text-contrast
+///
 /// @example scss Set a custom background color
 ///   $my-tabbar-theme: igx-toast-theme($background: black);
 ///   // Pass the theme to the igx-bottom-nav component mixin
 ///   @include igx-bottom-nav($my-tabbar-theme);
 @function igx-bottom-nav-theme(
+    $palette: $default-palette,
+
     $background: null,
     $idle-item-color: null,
     $active-item-color: null
 ) {
+    $default-theme: (
+        name: 'igx-bottom-nav',
+        background: #fff,
+        idle-item-color: igx-color($palette, 'grays', 600),
+        active-item-color: igx-color($palette, 'primary')
+    );
+
     @if not($idle-item-color) and $background {
         $idle-item-color: rgba(text-contrast($background), .7);
     }
 
-    @return (
+    @return extend($default-theme, (
+        palette: $palette,
         background: $background,
         idle-item-color: $idle-item-color,
         active-item-color: $active-item-color
-    );
+    ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @requires igx-bottom-nav-theme
+/// @requires {mixin} igx-root-css-vars
 /// @requires igx-color
 /// @requires igx-elevation
 /// @requires extend
 /// @requires {mixin} ellipsis
 /// @requires rem
-@mixin igx-bottom-nav($theme, $palette: $default-palette) {
-    $default-theme: igx-bottom-nav-theme(
-        $background: #fff,
-        $idle-item-color: igx-color($palette, 'grays', 600),
-        $active-item-color: igx-color($palette, 'primary')
-    );
+/// @requires var
+/// @requires $ease-in-out-quad
+/// @requires $elevations
+@mixin igx-bottom-nav($theme) {
+    @include igx-root-css-vars($theme);
 
-    $this: extend($default-theme, $theme);
+    $palette: map-get($theme, 'palette');
 
-    // @debug $this;
+    // @debug $theme;
 
     $menu-height: 56px;
     $top-menu-shadow: igx-elevation($elevations, 8);
@@ -80,7 +94,7 @@
         left: 0;
         right: 0;
         height: $menu-height;
-        background: map-get($this, 'background');
+        background: var($theme, 'background');
         overflow: hidden;
         z-index: 8;
     }
@@ -107,7 +121,7 @@
         min-width: $item-min-width;
         max-width: $item-max-width;
         height: 100%;
-        color: map-get($this, 'idle-item-color');
+        color: var($theme, 'idle-item-color');
         cursor: pointer;
         user-select: none;
         overflow: hidden;
@@ -121,7 +135,7 @@
     }
 
     %igx-active-tab {
-        color: map-get($this, 'active-item-color');
+        color: var($theme, 'active-item-color');
         transition: color .15s $ease-in-out-quad, opacity .25s $ease-in-out-quad;
     }
 

@@ -5,40 +5,50 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $color [null] - The color of the ripple.
+///
+/// @requires extend
+/// @requires igx-color
+///
 /// @example scss Change the color
 ///   $my-ripple-theme: igx-ripple-theme($color: yellow);
 ///   // Pass the theme to the igx-ripple component mixin
 ///   igx-ripple($my-ripple-theme);
-@function igx-ripple-theme($color: null) {
-    @return (
-        color: $color
+@function igx-ripple-theme(
+    $palette: $default-palette,
+    $color: null
+) {
+    $default-theme: (
+        name: 'igx-ripple',
+        color: igx-color($palette, 'grays', 800)
     );
+
+    @return extend($default-theme, (
+        palette: $palette,
+        color: $color,
+        test: 'test'
+    ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @requires igx-ripple-theme
-/// @requires igx-color
-/// @requires extend
+/// @requires {mixin} igx-root-css-vars
+/// @requires var
 @mixin igx-ripple($theme, $palette: $default-palette) {
-    $default-theme: igx-ripple-theme(
-        $color: igx-color($palette, 'grays', 800)
-    );
+    @include igx-root-css-vars($theme);
 
-    $this: extend($default-theme, $theme);
-
-    // @debug $this;
+    // @debug $theme;
 
     %igx-ripple-display {
         display: block;
         position: absolute;
         border-radius: 50%;
-        background: rgba(map-get($this, 'color'), .5);
+        background: var($theme, 'color');
         pointer-events: none;
         transform-origin: center;
         transform: translate3d(0, 0, 0) scale(0);
         will-change: opacity, transform;
+        opacity: .5;
     }
 
     %igx-ripple-wrapper {

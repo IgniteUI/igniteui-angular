@@ -5,18 +5,26 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
+/// Checkbox Theme
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $label-color [null]- The text color used for the label text.
 /// @param {Color} $empty-color [null] - The unchecked border color.
 /// @param {Color} $fill-color [null] - The checked border and fill colors.
 /// @param {Color} $tick-color [null] - The checked mark color.
 /// @param {Color} $disabled-color [null] - The disabled border and fill colors.
 /// @param {Bool} $light [null] - Determines the default color scheme - light or not.
-/// Set light to true when the surrounding area is dark.
+/// @param {String} $variant ['dark'] - Determines the default color scheme - could be either 'dark' or 'light'.
+/// Set to light when the surrounding area is dark.
+///
+/// @requires extend
+/// @requires igx-color
+///
 /// @example scss Change the checked fill color
 ///   $my-checkbox-theme: igx-checkbox-theme($fill-color: magenta);
 ///   // Pass the theme to the igx-checkbox component mixin
 ///   @include igx-checkbox($my-checkbox-theme);
 @function igx-checkbox-theme(
+    $palette: $default-palette,
     $label-color: null,
     $empty-color: null,
     $fill-color: null,
@@ -24,51 +32,54 @@
     $disabled-color: null,
     $light: false
 ) {
-    @return (
+    $name: 'igx-checkbox';
+
+    $dark-theme: (
+        name: $name,
+        label-color: igx-color($palette, grays, 900),
+        empty-color: igx-color($palette, 'grays', 600),
+        fill-color: igx-color($palette, 'secondary', 500),
+        tick-color: #fff,
+        disabled-color: igx-color($palette, grays, 400)
+    );
+
+    $light-theme: (
+        name: $name,
+        label-color: igx-color($palette, 'grays', 600),
+        empty-color: rgba(255, 255, 255, .7),
+        fill-color: igx-color($palette, 'secondary', 500),
+        tick-color: #000,
+        disabled-color: rgba(255, 255, 255, .3)
+    );
+
+    $default-theme: if($light == false or $variant == 'dark', $dark-theme, $light-theme);
+
+    @return extend($default-theme, (
+        palette: $palette,
         label-color: $label-color,
         empty-color: $empty-color,
         fill-color: $fill-color,
         tick-color: $tick-color,
         disabled-color: $disabled-color,
         light: $light
-    );
+    ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @requires igx-checkbox-theme
-/// @requires igx-color
-/// @requires extend
+/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} hide-default
+/// @requires {mixin} igx-css-vars
+/// @requires {mixin} scale-in-out
+/// @requires {mixin} animation
+/// @requires {mixin} igx-ripple
+/// @requires igx-ripple-theme
 /// @requires rem
 /// @requires em
-/// @requires animation
-/// @requires scale-in-out
-@mixin igx-checkbox($theme, $palette: $default-palette) {
+/// @requires var
+@mixin igx-checkbox($theme) {
+    @include igx-root-css-vars($theme);
+
     @include scale-in-out($start-scale: .9);
-
-    $dark-theme: igx-checkbox-theme(
-        $label-color: igx-color($palette, grays, 900),
-        $empty-color: igx-color($palette, 'grays', 600),
-        $fill-color: igx-color($palette, 'secondary', 500),
-        $tick-color: #fff,
-        $disabled-color: igx-color($palette, grays, 400)
-    );
-
-    $light-theme: igx-checkbox-theme(
-        $label-color: igx-color($palette, 'grays', 600),
-        $empty-color: rgba(255, 255, 255, .7),
-        $fill-color: igx-color($palette, 'secondary', 500),
-        $tick-color: #000,
-        $disabled-color: rgba(255, 255, 255, .3)
-    );
-
-    $this: ();
-
-    @if map-get($theme, 'light') {
-        $this: extend($light-theme, $theme);
-    } @else {
-        $this: extend($dark-theme, $theme);
-    }
 
     $label-font-size: em(16px);
     $size: em(20px);
@@ -82,6 +93,10 @@
 
     $ripple-size: em(48px);
     $ripple-radius: $ripple-size / 2;
+
+    $ripple-theme: igx-ripple-theme(
+        $color: var($theme, 'fill-color')
+    );
 
     @include scale-in-center();
 
@@ -111,7 +126,7 @@
         min-width: $size;
         border-width: $border-width;
         border-style: solid;
-        border-color: map-get($this, 'empty-color');
+        border-color: var($theme, 'empty-color');
         border-radius: $radius;
         -webkit-tap-highlight-color: transparent;
         transition: border-color .2s $ease-out-quad;
@@ -128,20 +143,20 @@
     }
 
     %cbx-composite--x {
-        border-color: map-get($this, 'fill-color');
+        border-color: var($theme, 'fill-color');
 
         &::after {
-            background: map-get($this, 'fill-color');
+            background: var($theme, 'fill-color');
         }
     }
 
     %cbx-composite--disabled {
-        border-color: map-get($this, 'disabled-color');
+        border-color: var($theme, 'disabled-color');
     }
 
     %cbx-composite--x--disabled {
         &::after {
-            background: map-get($this, 'disabled-color');
+            background: var($theme, 'disabled-color');
         }
     }
 
@@ -151,7 +166,7 @@
         right: 0;
         bottom: 0;
         left: 0;
-        stroke: map-get($this, 'tick-color');
+        stroke: var($theme, 'tick-color');
         stroke-linecap: square;
         stroke-width: $mark-stroke;
         stroke-dasharray: $mark-length;
@@ -176,7 +191,7 @@
 
     %cbx-label {
         display: inline-block;
-        color: map-get($this, 'label-color');
+        color: var($theme, 'label-color');
         font-size: $label-font-size;
         line-height: 1;
         cursor: pointer;
@@ -216,13 +231,12 @@
     }
 
     %cbx-label--disabled {
-        color: map-get($this, 'disabled-color');
+        color: var($theme, 'disabled-color');
     }
 
     %cbx-ripple {
-        @include igx-ripple((
-            color: map-get($this, 'fill-color')
-        ));
+        @include igx-ripple($ripple-theme);
+        @include igx-css-vars($ripple-theme);
         position: absolute;
         top: calc(50% - #{$ripple-radius});
         left: calc(50% - #{$ripple-radius});
@@ -236,7 +250,8 @@
 
     %cbx-ripple--focused {
         @include animation('scale-in-out' 1s $ease-out-quad infinite);
+        background-color: var($theme, 'fill-color');
         transition: background-color .2s $ease-out-quad;
-        background-color: rgba(map-get($this, 'fill-color'), .12);
+        opacity: .12;
     }
 }

@@ -315,3 +315,29 @@
     }
     @return $result;
 }
+
+/// Returns a CSS property value. It could return either css '--var' or
+/// a plain string value based on theme configuration.
+/// @access public
+/// @param {map} $map - The source theme to be used to read values from.
+/// @param {string} $key - A key from the theme map to assign as value to the property.
+/// @example scss Assign the color property in a rule-set to a value from the default avatar theme.
+///   %igx-avatar-icon {
+///     color: var($avatar-theme, 'icon-color');
+///   }
+///   // If legacy-support is off, it will produce the following:
+///   // %igx-avatar-icon {
+///   //   color: var(--igx-avatar-icon-color);
+///   // }
+///   // otherwise, it will return the value for key 'icon-color' in the '$avatar-theme':
+@function var($map, $key) {
+    @if map-has-key($map, $key) {
+        @if $igx-legacy-support == false {
+            @return unquote('var(--#{map-get($map, 'name')}-#{$key})');
+        } @else {
+            @return map-get($map, $key);
+        }
+    } @else {
+        @error unquote('The map you passed doesn`t contain a key #{$key}');
+    }
+}

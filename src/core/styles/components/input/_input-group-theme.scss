@@ -4,6 +4,7 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $idle-text-color [null] - The input text color in the idle state.
 /// @param {Color} $filled-text-color [null] - The input text color in the filled state.
 /// @param {Color} $focused-text-color [null] - The input text color in the focused state.
@@ -16,7 +17,9 @@
 /// @param {Color} $idle-bottom-line-color [null] - The bottom line and border colors in the idle state.
 /// @param {Color} $hover-bottom-line-color [null] - The bottom line and border colors in the hover state.
 /// @param {Color} $focused-bottom-line-color [null] - The bottom line and border colors in the focused state.
+/// @param {Color} $interim-bottom-line-color [null] - The bottom line and border colors during the to-focused transition.
 /// @param {Color} $disabled-bottom-line-color [null] - The bottom line and border colors in the disabled state.
+/// @param {Color} $disabled-border-color [null] - The disabled border color for input groups of type border.
 ///
 /// @param {Color} $box-background [null] - The background color of an input group of type box.
 /// @param {Color} $box-disabled-background [null] - The background color of an input group of type box in the disabled state.
@@ -35,11 +38,16 @@
 ///
 /// @param {String} $variant ['dark'] - Can be either 'dark' or 'light'. Use 'light' when the input is used on dark backgrounds.
 ///
+/// @requires extend
+/// @requires igx-color
+///
 /// @example scss Change the focused border and label colors
 ///   $my-input-group-theme: igx-input-group-theme($focused-secondary-color: pink, $focused-bottom-line-color: pink);
 ///   // Pass the theme to the igx-input-group component mixin
 ///   @include igx-input-group($my-input-group-theme);
 @function igx-input-group-theme(
+    $palette: $default-palette,
+
     $idle-text-color: null,
     $filled-text-color: null,
     $focused-text-color: null,
@@ -53,7 +61,9 @@
     $hover-bottom-line-color: null,
     $filled-bottom-line-color: null,
     $focused-bottom-line-color: null,
+    $interim-bottom-line-color: null,
     $disabled-bottom-line-color: null,
+    $disabled-border-color: null,
 
     $box-background: null,
     $box-disabled-background: null,
@@ -71,7 +81,85 @@
 
     $variant: 'dark'
 ) {
-    @return (
+    $name: 'igx-input-group';
+
+    $dark-theme: (
+        name: $name,
+
+        idle-text-color: igx-color($palette, 'grays', 600),
+        filled-text-color: igx-color($palette, 'grays', 900),
+        focused-text-color: igx-color($palette, 'grays', 900),
+        disabled-text-color: igx-color($palette, 'grays', 500),
+
+        idle-secondary-color: igx-color($palette, 'grays', 600),
+        filled-secondary-color: igx-color($palette, 'grays', 600),
+        focused-secondary-color: igx-color($palette, 'primary'),
+
+        idle-bottom-line-color: igx-color($palette, 'grays', 600),
+        hover-bottom-line-color: igx-color($palette, 'grays', 900),
+        filled-bottom-line-color: igx-color($palette, 'grays', 600),
+        focused-bottom-line-color: igx-color($palette, 'primary'),
+        interim-bottom-line-color: rgba(igx-color($palette, 'primary'), .12),
+        disabled-bottom-line-color: rgba(0, 0, 0, .42),
+        disabled-border-color: rgba(igx-color($palette, 'grays', 500), .06),
+
+        box-background: rgba(0, 0, 0, .06),
+        box-disabled-background: rgba(0, 0, 0, .03),
+
+        border-background: transparent,
+        border-disabled-background: rgba(0, 0, 0, .03),
+
+        search-background: white,
+        search-disabled-background: white,
+        search-shadow-color: igx-color($palette, 'grays', 600),
+        search-disabled-shadow-color: igx-color($palette, 'grays', 300),
+
+        success-secondary-color: igx-color($palette, 'success'),
+        warning-secondary-color: igx-color($palette, 'warn'),
+        error-secondary-color: igx-color($palette, 'error')
+    );
+
+    $light-theme: (
+        name: $name,
+
+        idle-text-color: white,
+        filled-text-color: white,
+        focused-text-color: white,
+        disabled-text-color: rgba(255, 255, 255, .5),
+
+        idle-secondary-color: rgba(255, 255, 255, .7),
+        filled-secondary-color: rgba(255, 255, 255, .7),
+        focused-secondary-color: igx-color($palette, 'primary'),
+
+        idle-bottom-line-color: rgba(255, 255, 255, .7),
+        hover-bottom-line-color: white,
+        filled-bottom-line-color: rgba(255, 255, 255, .7),
+        focused-bottom-line-color: igx-color($palette, 'primary'),
+        interim-bottom-line-color: rgba(igx-color($palette, 'primary'), .12),
+        disabled-bottom-line-color: rgba(255, 255, 255, .7),
+        disabled-border-color: rgba(rgba(255, 255, 255, .5), .06),
+
+        box-background: rgba(255, 255, 255, .1),
+        box-disabled-background: rgba(255, 255, 255, .06),
+
+        border-background: transparent,
+        border-disabled-background: rgba(255, 255, 255, .06),
+
+        search-background: rgba(255, 255, 255, .1),
+        search-disabled-background: rgba(255, 255, 255, .06),
+        search-shadow-color: igx-color($palette, 'grays', 600),
+        search-disabled-shadow-color: igx-color($palette, 'grays', 300),
+
+        success-secondary-color: igx-color($palette, 'success'),
+        warning-secondary-color: igx-color($palette, 'warn'),
+        error-secondary-color: igx-color($palette, 'error')
+    );
+
+    $default-theme: if($variant == 'dark', $dark-theme, $light-theme);
+
+    @return extend($default-theme, (
+        palette: $palette,
+
         idle-text-color: $idle-text-color,
         filled-text-color: $filled-text-color,
         focused-text-color: $focused-text-color,
@@ -85,7 +173,9 @@
         hover-bottom-line-color: $hover-bottom-line-color,
         filled-bottom-line-color: $filled-bottom-line-color,
         focused-bottom-line-color: $focused-bottom-line-color,
+        interim-bottom-line-color: $interim-bottom-line-color,
         disabled-bottom-line-color: $disabled-bottom-line-color,
+        disabled-border-color: $disabled-border-color,
 
         box-background: $box-background,
         box-disabled-background: $box-disabled-background,
@@ -100,92 +190,21 @@
 
         success-secondary-color: $success-secondary-color,
         warning-secondary-color: $warning-secondary-color,
-        error-secondary-color: $error-secondary-color,
-
-        variant: $variant
-    );
+        error-secondary-color: $error-secondary-color
+    ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @requires igx-input-group-theme
+/// @requires {mixin} igx-root-css-vars
 /// @requires igx-color
 /// @requires igx-elevation
 /// @requires $elevations
-/// @requires extend
 /// @requires em
-@mixin igx-input-group($theme, $palette: $default-palette) {
-    $dark-theme: igx-input-group-theme(
-        $idle-text-color: igx-color($palette, 'grays', 600),
-        $filled-text-color: igx-color($palette, 'grays', 900),
-        $focused-text-color: igx-color($palette, 'grays', 900),
-        $disabled-text-color: igx-color($palette, 'grays', 500),
+/// @requires {mixin} ellipsis
+@mixin igx-input-group($theme) {
+    @include igx-root-css-vars($theme);
 
-        $idle-secondary-color: igx-color($palette, 'grays', 600),
-        $filled-secondary-color: igx-color($palette, 'grays', 600),
-        $focused-secondary-color: igx-color($palette, 'primary'),
-
-        $idle-bottom-line-color: igx-color($palette, 'grays', 600),
-        $hover-bottom-line-color: igx-color($palette, 'grays', 900),
-        $filled-bottom-line-color: igx-color($palette, 'grays', 600),
-        $focused-bottom-line-color: igx-color($palette, 'primary'),
-        $disabled-bottom-line-color: rgba(0, 0, 0, .42),
-
-        $box-background: rgba(0, 0, 0, .06),
-        $box-disabled-background: rgba(0, 0, 0, .03),
-
-        $border-background: transparent,
-        $border-disabled-background: rgba(0, 0, 0, .03),
-
-        $search-background: white,
-        $search-disabled-background: white,
-        $search-shadow-color: igx-color($palette, 'grays', 600),
-        $search-disabled-shadow-color: igx-color($palette, 'grays', 300),
-
-        $success-secondary-color: igx-color($palette, 'success'),
-        $warning-secondary-color: igx-color($palette, 'warn'),
-        $error-secondary-color: igx-color($palette, 'error')
-    );
-
-    $light-theme: igx-input-group-theme(
-        $idle-text-color: white,
-        $filled-text-color: white,
-        $focused-text-color: white,
-        $disabled-text-color: rgba(255, 255, 255, .5),
-
-        $idle-secondary-color: rgba(255, 255, 255, .7),
-        $filled-secondary-color: rgba(255, 255, 255, .7),
-        $focused-secondary-color: igx-color($palette, 'primary'),
-
-        $idle-bottom-line-color: rgba(255, 255, 255, .7),
-        $hover-bottom-line-color: white,
-        $filled-bottom-line-color: rgba(255, 255, 255, .7),
-        $focused-bottom-line-color: igx-color($palette, 'primary'),
-        $disabled-bottom-line-color: rgba(255, 255, 255, .7),
-
-        $box-background: rgba(255, 255, 255, .1),
-        $box-disabled-background: rgba(255, 255, 255, .06),
-
-        $border-background: transparent,
-        $border-disabled-background: rgba(255, 255, 255, .06),
-
-        $search-background: rgba(255, 255, 255, .1),
-        $search-disabled-background: rgba(255, 255, 255, .06),
-        $search-shadow-color: igx-color($palette, 'grays', 600),
-        $search-disabled-shadow-color: igx-color($palette, 'grays', 300),
-
-        $success-secondary-color: igx-color($palette, 'success'),
-        $warning-secondary-color: igx-color($palette, 'warn'),
-        $error-secondary-color: igx-color($palette, 'error')
-    );
-
-    $this: ();
-
-    @if map-get($theme, 'variant') == 'light' {
-        $this: extend($theme, $light-theme);
-    } @else {
-        $this: extend($theme, $dark-theme);
-    }
+    $palette: map-get($theme, 'palette');
 
     $transition-timing: .25s $ease-out-cubic;
     $search-shadow: igx-elevation($elevations, 1);
@@ -226,7 +245,7 @@
         display: block;
         font-size: $group-font-size; /* 16px, when base is 16px(html) */
         margin-top: $group-top-margin; /* 12px when base is 16px (self) */
-        color: map-get($this, 'idle-text-color');
+        color: var($theme, 'idle-text-color');
     }
 
     %form-group-display--no-margin {
@@ -245,7 +264,7 @@
     %form-group-display--disabled {
         pointer-events: none;
         user-select: none;
-        color: map-get($this, 'disabled-text-color');
+        color: var($theme, 'disabled-text-color');
     }
 
     %form-group-bundle {
@@ -253,14 +272,14 @@
         display: flex;
         align-items: center;
         flex-flow: row nowrap;
-        box-shadow: inset 0 -1px 0 0 map-get($this, 'idle-bottom-line-color');
+        box-shadow: inset 0 -1px 0 0 var($theme, 'idle-bottom-line-color');
         transition: box-shadow $transition-timing, color $transition-timing;
     }
 
     %form-group-bundle--box {
         padding: $group-bundle--box-padding;
-        background: map-get($this, 'box-background');
-        box-shadow: inset 0 -2px 0 0 map-get($this, 'idle-bottom-line-color');
+        background: var($theme, 'box-background');
+        box-shadow: inset 0 -2px 0 0 var($theme, 'idle-bottom-line-color');
 
         %form-group-label--box + %form-group-input--box {
             transform: translateY(0);
@@ -269,41 +288,41 @@
 
     %form-group-bundle--hover {
         cursor: pointer;
-        box-shadow: inset 0 -2px 0 0 map-get($this, 'hover-bottom-line-color');
+        box-shadow: inset 0 -2px 0 0 var($theme, 'hover-bottom-line-color');
     }
 
     %form-group-bundle--focus {
-        caret-color: map-get($this, 'focused-secondary-color');
-        box-shadow: inset 0 -2px 0 0 rgba(map-get($this, 'focused-bottom-line-color'), .12);
+        caret-color: var($theme, 'focused-secondary-color');
+        box-shadow: inset 0 -2px 0 0 var($theme, 'interim-bottom-line-color');
     }
 
     %form-group-bundle--success {
-        caret-color: map-get($this, 'success-secondary-color');
-        box-shadow: inset 0 -1px 0 0 map-get($this, 'success-secondary-color');
+        caret-color: var($theme, 'success-secondary-color');
+        box-shadow: inset 0 -1px 0 0 var($theme, 'success-secondary-color');
     }
 
     %form-group-bundle--error {
-        caret-color: map-get($this, 'error-secondary-color');
-        box-shadow: inset 0 -1px 0 0 map-get($this, 'error-secondary-color');
+        caret-color: var($theme, 'error-secondary-color');
+        box-shadow: inset 0 -1px 0 0 var($theme, 'error-secondary-color');
     }
 
     %form-group-bundle--disabled {
         box-shadow: none;
-        background-image: linear-gradient(to right, map-get($this, 'disabled-bottom-line-color') 40%, transparent 10%);
+        background-image: linear-gradient(to right, var($theme, 'disabled-bottom-line-color') 40%, transparent 10%);
         background-position: bottom;
         background-size: 4px 1px;
         background-repeat: repeat-x;
     }
 
     %form-group-bundle--box-disabled {
-        background: map-get($this, 'box-disabled-background');
+        background: var($theme, 'box-disabled-background');
     }
 
     %form-group-bundle--border {
         padding: $group-bundle--box-padding;
-        box-shadow: inset 0 0 0 1px map-get($this, 'idle-bottom-line-color');
+        box-shadow: inset 0 0 0 1px var($theme, 'idle-bottom-line-color');
         border-radius: $group-bundle-border-radius;
-        background: map-get($this, 'border-background');
+        background: var($theme, 'border-background');
 
         %form-group-label--box + %form-group-input--box {
             transform: translateY(0);
@@ -311,31 +330,31 @@
     }
 
     %form-group-bundle-border--hover {
-        box-shadow: inset 0 0 0 2px map-get($this, 'idle-text-color');
+        box-shadow: inset 0 0 0 2px var($theme, 'idle-text-color');
     }
 
     %form-group-bundle-border--focus {
-        box-shadow: inset 0 0 0 2px map-get($this, 'focused-bottom-line-color');
+        box-shadow: inset 0 0 0 2px var($theme, 'focused-bottom-line-color');
     }
 
     %form-group-bundle-border--error {
-        box-shadow: inset 0 0 0 2px map-get($this, 'error-secondary-color');
+        box-shadow: inset 0 0 0 2px var($theme, 'error-secondary-color');
     }
 
     %form-group-bundle-border--success {
-        box-shadow: inset 0 0 0 2px map-get($this, 'success-secondary-color');
+        box-shadow: inset 0 0 0 2px var($theme, 'success-secondary-color');
     }
 
     %form-group-bundle-border--disabled {
-        background: map-get($this, 'border-disabled-background');
-        box-shadow: inset 0 0 0 1px rgba(map-get($this, 'disabled-text-color'), .06);
+        background: var($theme, 'border-disabled-background');
+        box-shadow: inset 0 0 0 1px var($theme, 'disabled-border-color');
     }
 
     %form-group-bundle--search {
         padding: $group-bundle--box-padding;
         border-radius: $group-bundle-border-radius;
         border-bottom: none;
-        background: map-get($this, 'search-background');
+        background: var($theme, 'search-background');
         box-shadow: $search-shadow;
 
         %form-group-label--box + %form-group-input--box {
@@ -360,7 +379,7 @@
     }
 
     %form-group-bundle-search--disabled {
-        background: map-get($this, 'search-disabled-background');
+        background: var($theme, 'search-disabled-background');
         box-shadow: $search-shadow-disabled;
     }
 
@@ -404,15 +423,15 @@
     }
 
     %form-group-label--focus {
-        color: map-get($this, 'focused-secondary-color');
+        color: var($theme, 'focused-secondary-color');
     }
 
     %form-group-label--success {
-        color: map-get($this, 'success-secondary-color');
+        color: var($theme, 'focused-secondary-color');
     }
 
     %form-group-label--error {
-        color: map-get($this, 'error-secondary-color');
+        color: var($theme, 'error-secondary-color');
     }
 
     %form-group-label--required {
@@ -439,7 +458,7 @@
         overflow: visible;
         font-family: inherit;
         background: transparent;
-        color: map-get($this, 'filled-text-color');
+        color: var($theme, 'filled-text-color');
         outline-style: none;
         box-shadow: none;
 
@@ -470,11 +489,11 @@
 
     %form-group-input--focus {
         cursor: text;
-        color: map-get($this, 'focused-text-color');
+        color: var($theme, 'focused-text-color');
     }
 
     %form-group-input--disabled {
-        color: map-get($this, 'disabled-text-color');
+        color: var($theme, 'disabled-text-color');
 
         &::placeholder {
             color: igx-color($palette, 'grays', 400);
@@ -542,7 +561,7 @@
 
     %form-group-prefix--error,
     %form-group-suffix--error {
-        color: map-get($this, 'error-secondary-color');
+        color: var($theme, 'error-secondary-color');
     }
 
     %form-group-border {
@@ -550,7 +569,7 @@
         margin-top: -2px; /* 2px, when base is 16px */
         transform: scaleX(0);
         transform-origin: center;
-        background: map-get($this, 'focused-secondary-color');
+        background: var($theme, 'focused-secondary-color');
     }
 
     %form-group-border--focus {
@@ -559,15 +578,15 @@
     }
 
     %form-group-border--success {
-        background: map-get($this, 'success-secondary-color');
+        background: var($theme, 'success-secondary-color');
     }
 
     %form-group-border--warning {
-        background: map-get($this, 'warning-secondary-color');
+        background: var($theme, 'warning-secondary-color');
     }
 
     %form-group-border--error {
-        background: map-get($this, 'error-secondary-color');
+        background: var($theme, 'error-secondary-color');
     }
 
     %form-group-border--hidden {
@@ -589,11 +608,11 @@
     }
 
     %form-group-helper--success {
-        color: map-get($this, 'success-secondary-color');
+        color: var($theme, 'success-secondary-color');
     }
 
     %form-group-helper--error {
-        color: map-get($this, 'error-secondary-color');
+        color: var($theme, 'error-secondary-color');
     }
 
     %form-group-helper-item {

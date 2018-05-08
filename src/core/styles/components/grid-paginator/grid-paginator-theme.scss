@@ -3,7 +3,15 @@
 /// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
-/// @param {Color} $color [null] - The color for paginator text items
+
+/// Grid Paging Theme
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Color} $text-color [null] - The text color.
+/// @param {Color} $background-color [null] - The background color of the paging panel.
+/// @param {Color} $border-color [null] - The border color of the paging panel.
+///
+/// @requires extend
+/// @requires igx-color
 ///
 /// @example scss Change the stripes color
 ///   $my-grid-paginator-theme: igx-grid-paginator-theme(
@@ -11,42 +19,41 @@
 ///   );
 ///   // Pass the theme to the igx-grid-paginator component mixin
 ///   @include igx-grid-paginator($my-grid-paginator-theme);
-
 @function igx-grid-paginator-theme(
+    $palette: $default-palette,
     $text-color: null,
     $background-color: null,
     $border-color: null
 ) {
-    @return (
+    $default-theme: (
+        name: 'igx-grid-paginator',
+        text-color: currentColor,
+        background-color: rgb(245, 245, 245),
+        border-color: igx-color($palette, 'grays', 400)
+    );
+
+    @return extend($default-theme, (
+        palette: $palette,
         text-color: $text-color,
         background-color: $background-color,
         border-color: $border-color
-    );
+    ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @requires igx-grid-paginator
-/// @requires igx-color
-/// @requires extend
-
-@mixin igx-grid-paginator($theme, $palette: $default-palette) {
-
-    $default-theme: igx-grid-paginator-theme(
-        $text-color: currentColor,
-        $background-color: rgb(245, 245, 245),
-        $border-color: igx-color($palette, 'grays', 400)
-    );
-
-    $this: extend($default-theme, $theme);
+/// @requires {mixin} igx-root-css-vars
+/// @requires rem
+/// @requires var
+@mixin igx-grid-paginator($theme) {
+    @include igx-root-css-vars($theme);
 
     %igx-grid-paginator {
-        color: map-get($this, 'text-color');
-        background: map-get($this, 'background-color');
+        color: var($theme, 'text-color');
+        background: var($theme, 'background-color');
         grid-row: 6;
         padding: rem(5px) 0;
         font-size: 12px;
-        border-top: 1px dotted map-get($this, 'border-color');
+        border-top: 1px dotted var($theme, 'border-color');
 
         &:empty {
             padding: 0;

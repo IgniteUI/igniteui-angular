@@ -5,6 +5,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $track-color [null] - The main track color.
 /// @param {Color} $fill-color-default [null] - The track default fill color.
 /// @param {Color} $fill-color-danger [null] - The track danger fill color.
@@ -14,6 +15,9 @@
 /// @param {Color} $stripes-color [null] - The track stripes color.
 /// @param {Color} $text-color [null] - The track value text color.
 ///
+/// @requires extend
+/// @requires igx-color
+///
 /// @example scss Change the stripes color
 ///   $my-progress-linear-theme: igx-progress-linear-theme(
 ///     $stripes-color: orange
@@ -21,6 +25,7 @@
 ///   // Pass the theme to the igx-progress-linear component mixin
 ///   @include igx-progress-linear($my-progress-linear-theme);
 @function igx-progress-linear-theme(
+    $palette: $default-palette,
     $track-color: null,
     $fill-color-default: null,
     $fill-color-danger: null,
@@ -30,7 +35,20 @@
     $stripes-color: null,
     $text-color: null
 ) {
-    @return (
+    $default-theme: (
+        name: 'igx-progress-linear',
+        track-color: igx-color($palette, 'grays', 300),
+        fill-color-default: igx-color($palette, 'primary'),
+        fill-color-danger: igx-color($palette, 'error'),
+        fill-color-warning: igx-color($palette, 'warn'),
+        fill-color-info: igx-color($palette, 'info'),
+        fill-color-success: igx-color($palette, 'success'),
+        stripes-color: rgba(#fff, .7),
+        text-color: igx-color($palette, 'grays', 700)
+    );
+
+    @return extend($default-theme, (
+        palette: $palette,
         track-color: $track-color,
         fill-color-default: $fill-color-default,
         fill-color-danger: $fill-color-danger,
@@ -39,33 +57,20 @@
         fill-color-success: $fill-color-success,
         stripes-color: $stripes-color,
         text-color: $text-color
-    );
+    ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @requires igx-progress-linear-theme
-/// @requires igx-color
-/// @requires extend
+/// @requires {mixin} igx-root-css-vars
 /// @requires em
-@mixin igx-progress-linear($theme, $palette: $default-palette) {
-    $default-theme: igx-progress-linear-theme(
-        $track-color: igx-color($palette, 'grays', 300),
-        $fill-color-default: igx-color($palette, 'primary'),
-        $fill-color-danger: igx-color($palette, 'error'),
-        $fill-color-warning: igx-color($palette, 'warn'),
-        $fill-color-info: igx-color($palette, 'info'),
-        $fill-color-success: igx-color($palette, 'success'),
-        $stripes-color: rgba(#fff, .7),
-        $text-color: igx-color($palette, 'grays', 700)
-    );
+/// @requires var
+@mixin igx-progress-linear($theme) {
+    @include igx-root-css-vars($theme);
 
-    $this: extend($default-theme, $theme);
-
-    // @debug $this;
+    // @debug $theme;
 
     $bar-height: 4px;
-    $stripe-color: map-get($this, 'stripes-color');
+    $stripe-color: var($theme, 'stripes-color');
     $value-fs: em(14px, 16px);
     $value-fw: 600;
     $value-margin: 0;
@@ -88,7 +93,7 @@
         position: absolute;
         width: inherit;
         height: inherit;
-        background: map-get($this, 'track-color');
+        background: var($theme, 'track-color');
         z-index: 0;
     }
 
@@ -114,29 +119,29 @@
     }
 
     %linear-bar-progress--default {
-        background: map-get($this, 'fill-color-default')
+        background: var($theme, 'fill-color-default')
     }
 
     %linear-bar-progress--danger {
-        background-color: map-get($this, 'fill-color-danger');
+        background-color: var($theme, 'fill-color-danger');
     }
 
     %linear-bar-progress--warning {
-        background-color: map-get($this, 'fill-color-warning');
+        background-color: var($theme, 'fill-color-warning');
     }
 
     %linear-bar-progress--info {
-        background-color: map-get($this, 'fill-color-info');
+        background-color: var($theme, 'fill-color-info');
     }
 
     %linear-bar-progress--success {
-        background-color: map-get($this, 'fill-color-success');
+        background-color: var($theme, 'fill-color-success');
     }
 
 
     %linear-value {
         margin: $value-margin;
-        color: map-get($this, 'text-color');
+        color: var($theme, 'text-color');
         font-size: $value-fs;
         font-weight: $value-fw;
     }
@@ -162,9 +167,13 @@
     }
 }
 
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $base-circle-color [null] - The base circle fill color.
 /// @param {Color} $progress-circle-color [null] - The progress circle fill color.
 /// @param {Color} $text-color [null] - The value text color.
+///
+/// @requires extend
+/// @requires igx-color
 ///
 /// @example scss Change the circle progress color
 ///   $my-progress-circular-theme: igx-progress-circular-theme(
@@ -173,33 +182,35 @@
 ///   // Pass the theme to the igx-progress-circular component mixin
 ///   @include igx-progress-circular($my-progress-circle-theme);
 @function igx-progress-circular-theme(
+    $palette: $default-palette,
+
     $base-circle-color: null,
     $progress-circle-color: null,
     $text-color: null
 ) {
-    @return (
+    $default-theme: (
+        name: 'igx-progress-circular',
+        base-circle-color: igx-color($palette, 'grays', 300),
+        progress-circle-color: igx-color($palette, 'primary'),
+        text-color: igx-color($palette, 'grays', 700)
+    );
+
+    @return extend($default-theme, (
+        palette: $palette,
         base-circle-color: $base-circle-color,
         progress-circle-color: $progress-circle-color,
         text-color: $text-color
-    );
+    ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @requires igx-progress-circular-theme
-/// @requires igx-color
-/// @requires extend
+/// @requires {mixin} igx-root-css-vars
 /// @requires rem
-@mixin igx-progress-circular($theme, $palette: $default-palette) {
-    $default-theme: igx-progress-circular-theme(
-        $base-circle-color: igx-color($palette, 'grays', 300),
-        $progress-circle-color: igx-color($palette, 'primary'),
-        $text-color: igx-color($palette, 'grays', 700)
-    );
+/// @requires var
+@mixin igx-progress-circular($theme) {
+    @include igx-root-css-vars($theme);
 
-    $this: extend($default-theme, $theme);
-
-    // @debug $this;
+    // @debug $theme;
 
     $circular-value-fs: rem(32px, 16px);
     $circular-value-fw: 600;
@@ -212,12 +223,12 @@
     %circular-innercircle {
         stroke-width: 4;
         fill: transparent;
-        stroke: map-get($this, 'base-circle-color');
+        stroke: var($theme, 'base-circle-color');
     }
 
     %circular-circle {
         fill: transparent;
-        stroke: map-get($this, 'progress-circle-color');
+        stroke: var($theme, 'progress-circle-color');
         stroke-width: 6;
         stroke-linecap: round;
         stroke-dashoffset: 289;
@@ -229,7 +240,7 @@
     %circular-text {
         font-size: $circular-value-fs;
         font-weight: $circular-value-fw;
-        fill: map-get($this, 'text-color');
+        fill: var($theme, 'text-color');
     }
 
     %circular-text--hidden {
