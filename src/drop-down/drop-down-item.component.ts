@@ -68,6 +68,8 @@ export class IgxDropDownItemComponent {
 
     @HostListener("click", ["$event"]) clicked(event) {
         if (this.isDisabled || this.isHeader) {
+            const focusedItem = this.dropDown.items.find((item) => item.isFocused);
+            focusedItem.elementRef.nativeElement.focus({ preventScroll: true });
             return;
         }
 
@@ -121,7 +123,7 @@ export class IgxDropDownItemComponent {
     }
 
     public get index(): number {
-        return this.dropDown.items.toArray().indexOf(this);
+        return this.dropDown.items.indexOf(this);
     }
 
     public get elementHeight(): number {
