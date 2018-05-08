@@ -13,7 +13,7 @@ describe("IgxGrid - Summaries", () => {
     const SUMMARY_VALUE_CLASS = ".igx-grid-summary__result";
     const ITEM_CLASS = "igx-grid-summary__item";
     const HIDDEN_ITEM_CLASS = "igx-grid-summary__item--inactive";
-
+    const INITIAL_SUMMARY_SIZE = 36.36;
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -36,17 +36,26 @@ describe("IgxGrid - Summaries", () => {
 
         const grid = fixture.componentInstance.grid1;
         expect(grid.hasSummarizedColumns).toBe(false);
+        let tFoot = fixture.debugElement.query(By.css(".igx-grid__tfoot")).nativeElement.getBoundingClientRect().height;
+        expect(tFoot < INITIAL_SUMMARY_SIZE).toBe(true);
 
         grid.enableSummaries([{fieldName: "ProductName"}, {fieldName: "ProductID"}]);
         fixture.detectChanges();
 
-        const summaries = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS)).length;
+        const summaryLength = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS)).length;
+        const summaries = fixture.debugElement.queryAll(By.css("igx-grid-summary"));
 
         expect(grid.hasSummarizedColumns).toBe(true);
-        expect(summaries).toBe(2);
+
+        tFoot = fixture.debugElement.query(By.css(".igx-grid__tfoot")).nativeElement.getBoundingClientRect().height;
+
+        expect(summaryLength).toBe(2);
         expect(grid.getColumnByName("ProductID").hasSummary).toBe(true);
         expect(grid.getColumnByName("ProductName").hasSummary).toBe(true);
         expect(grid.getColumnByName("OrderDate").hasSummary).toBe(false);
+
+        const expectedLength = calcMaxSummaryHeight(grid.columnList, summaries);
+        expect(tFoot >= expectedLength).toBe(true);
     });
     it("should disableSummaries through grid API ", () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
@@ -289,23 +298,14 @@ describe("IgxGrid - Summaries", () => {
     it("should calc tfoot height according number of summary functions", () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
         fixture.detectChanges();
-        const initialSummarySize = 36.36;
         const grid = fixture.componentInstance.grid1;
         const summaries = fixture.debugElement.queryAll(By.css("igx-grid-summary"));
         const footerRow = fixture.debugElement.query(By.css(".igx-grid__tfoot")).query(By.css(".igx-grid__tr"))
         .nativeElement.style["height"].match(/\d+\.+\d/);
         const tfootSize = +footerRow;
 
-        let maxSummaryLength = 0;
-        let index = 0;
-        grid.columnList.filter((col) => col.hasSummary).forEach((column) => {
-            const currentLength = summaries[index].queryAll(By.css(SUMMARY_LABEL_CLASS)).length;
-            if (maxSummaryLength < currentLength) {
-                maxSummaryLength = currentLength;
-            }
-            index++;
-        });
-        const expectedHeight = maxSummaryLength * initialSummarySize;
+        const expectedHeight = calcMaxSummaryHeight(grid.columnList, summaries);
+
         expect(tfootSize).toBe(expectedHeight);
     });
     it("should calculate summaries for 'number' dataType or return if no data is provided", () => {
@@ -469,6 +469,20 @@ describe("IgxGrid - Summaries", () => {
         fix.detectChanges();
         return fix.whenStable();
     }
+    function calcMaxSummaryHeight(columnList, summaries: DebugElement[]) {
+        let maxSummaryLength = 0;
+        let index = 0;
+        columnList.filter((col) => col.hasSummary).forEach((column) => {
+            const currentLength = summaries[index].queryAll(By.css(SUMMARY_LABEL_CLASS)).length;
+            if (maxSummaryLength < currentLength) {
+                maxSummaryLength = currentLength;
+            }
+            index++;
+        });
+        const expectedLength = maxSummaryLength * INITIAL_SUMMARY_SIZE;
+        return expectedLength;
+    }
+
 });
 
 @Component({
