@@ -166,6 +166,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
 
     public refresh() {
         this.dialogShowing = !this.dialogShowing;
+        if (this.dialogShowing) {
+            this.column.filteringCondition = this.getCondition(this.select.nativeElement.value);
+        }
         this.cdr.detectChanges();
     }
 
