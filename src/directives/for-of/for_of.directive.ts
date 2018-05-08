@@ -288,7 +288,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.applyChunkSizeChange();
         } else if (this._isScrolledToBottom && bUpdatedStart) {
             // add one more non-visible view in the chunk to ensure smooth scrolling when we scroll up from the bottom.
-            this._isScrolledToBottom = false;
+            if (endingIndex < this.igxForOf.length) {
+                // Update _isScrolledToBottom only if the new endingIndex becomes less than the rows rendered.
+                // We can have updated startIndex, but the endIndex to still be the end
+                this._isScrolledToBottom = false;
+            }
             this.applyChunkSizeChange();
         }
 
