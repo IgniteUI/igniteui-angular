@@ -292,6 +292,7 @@ export class IgxDropDownComponent implements AfterViewInit, OnInit {
 @NgModule({
     declarations: [IgxDropDownComponent, IgxDropDownItemComponent],
     exports: [IgxDropDownComponent, IgxDropDownItemComponent],
-    imports: [CommonModule, IgxToggleModule]
+    imports: [CommonModule, IgxToggleModule],
+    providers: [IgxSelectionAPIService]
 })
 export class IgxDropDownModule { }

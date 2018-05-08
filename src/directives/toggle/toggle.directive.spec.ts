@@ -56,12 +56,12 @@ describe("IgxToggler", () => {
         fixture.detectChanges();
 
         const toggle = fixture.componentInstance.toggle;
-        spyOn(toggle.onOpen, "emit");
+        spyOn(toggle.onOpened, "emit");
         toggle.open(true);
         tick();
         fixture.detectChanges();
 
-        expect(toggle.onOpen.emit).toHaveBeenCalled();
+        expect(toggle.onOpened.emit).toHaveBeenCalled();
     }));
 
     it("should emit 'onClose' event", fakeAsync(() => {
@@ -72,12 +72,12 @@ describe("IgxToggler", () => {
         fixture.componentInstance.isClosed = false;
         fixture.detectChanges();
 
-        spyOn(toggle.onClose, "emit");
+        spyOn(toggle.onClosed, "emit");
         toggle.close(true);
         tick();
         fixture.detectChanges();
 
-        expect(toggle.onClose.emit).toHaveBeenCalled();
+        expect(toggle.onClosed.emit).toHaveBeenCalled();
     }));
 
     it("should open toggle when IgxToggleActionDiretive is clicked and toggle is closed", fakeAsync(() => {
@@ -125,12 +125,12 @@ describe("IgxToggler", () => {
 
         expect(fixture.debugElement.componentInstance.isClosed).toBeFalsy();
         expect(divEl.classList.contains(TOGGLER_CLASS)).toBeTruthy();
-        spyOn(toggle.onClose, "emit");
+        spyOn(toggle.onClosed, "emit");
         p.nativeElement.click();
         tick();
         fixture.detectChanges();
 
-        expect(toggle.onClose.emit).toHaveBeenCalled();
+        expect(toggle.onClosed.emit).toHaveBeenCalled();
     }));
 
     it("Toggle should be registered into navigaitonService if it is passed through identifier", fakeAsync(() => {
@@ -152,15 +152,15 @@ describe("IgxToggler", () => {
         const toggleElm = fix.debugElement.query(By.directive(IgxToggleDirective)).nativeElement;
         const button: DebugElement = fix.debugElement.query(By.css("button"));
 
-        spyOn(toggle.onOpen, "emit");
-        spyOn(toggle.onClose, "emit");
+        spyOn(toggle.onOpened, "emit");
+        spyOn(toggle.onClosed, "emit");
         button.triggerEventHandler("click", null);
 
         fix.whenStable().then(() => {
             tick();
             fix.detectChanges();
 
-            expect(toggle.onOpen.emit).toHaveBeenCalled();
+            expect(toggle.onOpened.emit).toHaveBeenCalled();
             expect(toggleElm.classList.contains(TOGGLER_CLASS)).toBe(true);
         }).then(() => {
             button.triggerEventHandler("click", null);
@@ -168,7 +168,7 @@ describe("IgxToggler", () => {
             tick();
             fix.detectChanges();
 
-            expect(toggle.onClose.emit).toHaveBeenCalled();
+            expect(toggle.onClosed.emit).toHaveBeenCalled();
             expect(toggleElm.classList.contains(HIDDEN_TOGGLER_CLASS)).toBe(true);
         });
     }));
