@@ -101,7 +101,7 @@
     $default-theme: igx-drop-down-theme(
         $drop-down-background-color: #fff,
 
-        $header-text-color: igx-color($palette, 'secondary', 500),
+        $header-text-color: igx-color($palette, 'secondary', 300),
 
         $item-text-color: igx-color($palette, 'grays', 800),
 
@@ -177,6 +177,8 @@
         &:focus {
             outline: 0;
             outline-color: transparent;
+            background: map-get($this, 'focused-item-background');
+            color: map-get($this, 'focus-item-text-color');
         }
 
         &:hover {
@@ -195,6 +197,7 @@
         font-weight: 700;
         font-size: rem(14px);
         color: map-get($this, 'header-text-color');
+        pointer-events: none;
     }
 
     %igx-drop-down__item--focused {
@@ -213,6 +216,11 @@
         &:hover {
             background: map-get($this, 'selected-item-background');
         }
+
+        &:focus {
+            background: map-get($this, 'selected-item-background');
+            color: map-get($this, 'selected-item-text-color');
+        }
     }
 
 
@@ -220,16 +228,11 @@
         background: map-get($this, 'disabled-item-background');
         color: map-get($this, 'disabled-item-text-color');
         cursor: default;
+        pointer-events: none;
 
         &:hover {
             background: map-get($this, 'disabled-item-background');
         }
     }
 }
-
-
-
-
-
-
 
