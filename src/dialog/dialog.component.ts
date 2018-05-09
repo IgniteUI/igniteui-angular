@@ -152,26 +152,6 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
         return this._titleId;
     }
 
-    // get titleTemplate(): any {
-    //     if (this.titleTemplateDirective) {
-    //         return this.titleTemplateDirective.template;
-    //     }
-    //     return null;
-    // }
-
-    // get buttonsTemplate(): any {
-    //     if (this.buttonsTemplateDirective) {
-    //         return this.buttonsTemplateDirective.template;
-    //     }
-    //     return null;
-    // }
-
-    // @ContentChild(forwardRef(() => IgxDialogTitleDirective), { read: IgxDialogTitleDirective })
-    // private titleTemplateDirective: IgxDialogTitleDirective;
-
-    // @ContentChild(forwardRef(() => IgxDialogActionsDirective), { read: IgxDialogActionsDirective })
-    // private buttonsTemplateDirective: IgxDialogActionsDirective;
-
     constructor(
         private elementRef: ElementRef,
         @Optional() private navService: IgxNavigationService

@@ -8,7 +8,14 @@ import { IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from "./dialog.
 describe("Dialog", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [AlertComponent, DialogComponent, CustomDialogComponent, NestedDialogsComponent, CustomTemplatesDialogComponent],
+            declarations: [
+                AlertComponent,
+                DialogComponent,
+                CustomDialogComponent,
+                NestedDialogsComponent,
+                CustomTemplates1DialogComponent,
+                CustomTemplates2DialogComponent
+            ],
             imports: [BrowserAnimationsModule, IgxDialogModule]
         }).compileComponents();
     }));
@@ -214,19 +221,28 @@ describe("Dialog", () => {
     });
 
     it("Should initialize igx-dialog custom title and actions", () => {
-        const fixture = TestBed.createComponent(CustomTemplatesDialogComponent);
-        const dialog = fixture.componentInstance.dialog;
+        const data = [{
+                component: CustomTemplates1DialogComponent
+            }, {
+                component: CustomTemplates2DialogComponent
+            }];
 
-        dialog.open();
-        fixture.detectChanges();
+        data.forEach((item) => {
+            const fixture = TestBed.createComponent(item.component);
+            const dialog = fixture.componentInstance.dialog;
 
-        const dialogWindow = fixture.debugElement.query(By.css(".igx-dialog__window"));
-        expect(dialogWindow.children.length).toEqual(2);
+            dialog.open();
+            fixture.detectChanges();
 
-        expect(dialogWindow.children[0].nativeElement.innerText.toString()).toContain("TITLE");
-        expect(dialogWindow.children[1].nativeElement.innerText.toString()).toContain("BUTTONS");
+            const dialogWindow = fixture.debugElement.query(By.css(".igx-dialog__window"));
+            expect(dialogWindow.children.length).toEqual(2);
 
-        dialog.close();
+            expect(dialogWindow.children[0].nativeElement.innerText.toString()).toContain("TITLE");
+            expect(dialogWindow.children[1].nativeElement.innerText.toString()).toContain("BUTTONS");
+
+            dialog.close();
+        });
+
     });
 
     function dispatchEvent(element: HTMLElement, eventType: string) {
@@ -302,12 +318,21 @@ class NestedDialogsComponent {
 @Component({
     template: `<igx-dialog #dialog>
                 <igx-dialog-title>
-                    <div>TITLE</div>
+                    <div>TITLE 1</div>
                 </igx-dialog-title>
                 <igx-dialog-actions>
-                    <div>BUTTONS</div>
+                    <div>BUTTONS 1</div>
                 </igx-dialog-actions>
             </igx-dialog>` })
-class CustomTemplatesDialogComponent {
+class CustomTemplates1DialogComponent {
+    @ViewChild("dialog") public dialog: IgxDialogComponent;
+}
+
+@Component({
+    template: `<igx-dialog #dialog>
+                    <div igxDialogTitle>TITLE 2</div>
+                    <div igxDialogActions>BUTTONS 2</div>
+            </igx-dialog>` })
+class CustomTemplates2DialogComponent {
     @ViewChild("dialog") public dialog: IgxDialogComponent;
 }
