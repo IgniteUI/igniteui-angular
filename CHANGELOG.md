@@ -1,6 +1,8 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 5.3.1
+- Filtering a boolean column by `false` condition will return only the real `false` values,excluding `null` and `undefined` values. Filtering by `Null` will return the `null` values and filtering by `Empty` will return the `undefined`.
 ## 5.3.0
 - Added `rowSelectable` property to `igxGrid`
     - Setting `rowSelectable` to `true` enables multiple row selection for the `igx-grid` component. Adds a checkbox column that allows (de)selection of one, multiple or all (via header checkbox) rows.
