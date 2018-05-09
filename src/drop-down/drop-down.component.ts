@@ -23,6 +23,21 @@ export interface ISelectionEventArgs {
     newSelection: IgxDropDownItemComponent;
 }
 
+/**
+ * **Ignite UI for Angular DropDown** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop-down.html)
+ *
+ * TODO: ADD DESCRIPTION HERE, SAME AS IN THE DOCS
+ *
+ * Example:
+ * ```html
+ * <igx-drop-down>
+ *   <igx-drop-down-item *ngFor="let item of items" isDisabled={{item.disabled}} isHeader={{item.header}}>
+ *     {{ item.value }}
+ *   </igx-drop-down-item>
+ * </igx-drop-down>
+ * ```
+ */
 @Component({
     selector: "igx-drop-down",
     templateUrl: "./drop-down.component.html"
@@ -34,13 +49,22 @@ export class IgxDropDownComponent implements OnInit, AfterViewChecked {
     private _height;
     private _id = "DropDown_0";
 
+    @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
+    private children: QueryList<IgxDropDownItemComponent>;
+
+    /**
+     * The toggle directive of IgxDropDown
+     */
     @ViewChild(IgxToggleDirective)
     public toggleDirective: IgxToggleDirective;
 
-    @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
-    public children: QueryList<IgxDropDownItemComponent>;
-
-    @Output() public onSelection = new EventEmitter<ISelectionEventArgs>();
+    /**
+     * The event that will be thrown when item is selected,
+     * provides reference to the `<IgxDropDownItem>` component as argument
+     * @type {EventEmitter}
+     */
+    @Output()
+    public onSelection = new EventEmitter<ISelectionEventArgs>();
     @Output() public onOpening = new EventEmitter();
     @Output() public onOpened = new EventEmitter();
     @Output() public onClosed = new EventEmitter();

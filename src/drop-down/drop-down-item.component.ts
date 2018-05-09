@@ -1,6 +1,10 @@
 import { Component, ElementRef, forwardRef, HostBinding, HostListener, Inject, Input } from "@angular/core";
 import { IgxDropDownComponent, ISelectionEventArgs } from "./drop-down.component";
 
+/**
+ * The `<igx-drop-down-item> is a container intended for row items in
+ * a `<igx-drop-down>` container.
+ */
 @Component({
     selector: "igx-drop-down-item",
     templateUrl: "drop-down-item.component.html"
