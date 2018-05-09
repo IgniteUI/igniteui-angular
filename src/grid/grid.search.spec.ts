@@ -8,7 +8,7 @@ import { async, TestBed } from "@angular/core/testing";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-describe("IgxGrid - search API", () => {
+fdescribe("IgxGrid - search API", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -29,7 +29,7 @@ describe("IgxGrid - search API", () => {
         expect(spans.length).toBe(5);
         expect(count).toBe(5);
 
-        component.gridSearch.clearHighlights();
+        component.gridSearch.clearSearch();
         fix.detectChanges();
         spans = fix.debugElement.nativeElement.querySelectorAll("." + component.highlightClass);
         expect(spans.length).toBe(0);
@@ -169,6 +169,57 @@ describe("IgxGrid - search API", () => {
 })
 export class SimpleGridComponent {
     public data = [
+        { ID: 1, Name: "Casey Houston", JobTitle: "Vice President", HireDate: "2017-06-19T11:43:07.714Z" },
+        { ID: 2, Name: "Gilberto Todd", JobTitle: "Director", HireDate: "2015-12-18T11:23:17.714Z" },
+        { ID: 3, Name: "Tanya Bennett", JobTitle: "Director", HireDate: "2005-11-18T11:23:17.714Z" },
+        { ID: 4, Name: "Jack Simon", JobTitle: "Software Developer", HireDate: "2008-12-18T11:23:17.714Z" },
+        { ID: 5, Name: "Celia Martinez", JobTitle: "Senior Software DEVELOPER", HireDate: "2007-12-19T11:23:17.714Z" },
+        { ID: 6, Name: "Erma Walsh", JobTitle: "CEO", HireDate: "2016-12-18T11:23:17.714Z" },
+        { ID: 7, Name: "Debra Morton", JobTitle: "Associate Software Developer", HireDate: "2005-11-19T11:23:17.714Z" },
+        { ID: 8, Name: "Erika Wells", JobTitle: "Software Development Team Lead", HireDate: "2005-10-14T11:23:17.714Z" },
+        { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer", HireDate: "2013-10-10T11:23:17.714Z" },
+        { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" }
+    ];
+
+    @ViewChild("gridSearch", { read: IgxGridComponent })
+    public gridSearch: IgxGridComponent;
+
+    public highlightClass = "igx-highlight";
+    public activeClass = "igx-highlight__active";
+}
+
+@Component({
+    template: `
+        <igx-grid #gridSearch [data]="data" width="500px" columnWidth="200">
+            <igx-column field="ID" sortable="true"></igx-column>
+            <igx-column field="Name" sortable="true"></igx-column>
+            <igx-column field="JobTitle" sortable="true"></igx-column>
+            <igx-column field="HireDate" sortable="true"></igx-column>
+        </igx-grid>
+    `
+})
+export class ScrollableGridComponent {
+    public data = [
+        { ID: 1, Name: "Casey Houston", JobTitle: "Vice President", HireDate: "2017-06-19T11:43:07.714Z" },
+        { ID: 2, Name: "Gilberto Todd", JobTitle: "Director", HireDate: "2015-12-18T11:23:17.714Z" },
+        { ID: 3, Name: "Tanya Bennett", JobTitle: "Director", HireDate: "2005-11-18T11:23:17.714Z" },
+        { ID: 4, Name: "Jack Simon", JobTitle: "Software Developer", HireDate: "2008-12-18T11:23:17.714Z" },
+        { ID: 5, Name: "Celia Martinez", JobTitle: "Senior Software DEVELOPER", HireDate: "2007-12-19T11:23:17.714Z" },
+        { ID: 6, Name: "Erma Walsh", JobTitle: "CEO", HireDate: "2016-12-18T11:23:17.714Z" },
+        { ID: 7, Name: "Debra Morton", JobTitle: "Associate Software Developer", HireDate: "2005-11-19T11:23:17.714Z" },
+        { ID: 8, Name: "Erika Wells", JobTitle: "Software Development Team Lead", HireDate: "2005-10-14T11:23:17.714Z" },
+        { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer", HireDate: "2013-10-10T11:23:17.714Z" },
+        { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" },
+        { ID: 1, Name: "Casey Houston", JobTitle: "Vice President", HireDate: "2017-06-19T11:43:07.714Z" },
+        { ID: 2, Name: "Gilberto Todd", JobTitle: "Director", HireDate: "2015-12-18T11:23:17.714Z" },
+        { ID: 3, Name: "Tanya Bennett", JobTitle: "Director", HireDate: "2005-11-18T11:23:17.714Z" },
+        { ID: 4, Name: "Jack Simon", JobTitle: "Software Developer", HireDate: "2008-12-18T11:23:17.714Z" },
+        { ID: 5, Name: "Celia Martinez", JobTitle: "Senior Software DEVELOPER", HireDate: "2007-12-19T11:23:17.714Z" },
+        { ID: 6, Name: "Erma Walsh", JobTitle: "CEO", HireDate: "2016-12-18T11:23:17.714Z" },
+        { ID: 7, Name: "Debra Morton", JobTitle: "Associate Software Developer", HireDate: "2005-11-19T11:23:17.714Z" },
+        { ID: 8, Name: "Erika Wells", JobTitle: "Software Development Team Lead", HireDate: "2005-10-14T11:23:17.714Z" },
+        { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer", HireDate: "2013-10-10T11:23:17.714Z" },
+        { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" },
         { ID: 1, Name: "Casey Houston", JobTitle: "Vice President", HireDate: "2017-06-19T11:43:07.714Z" },
         { ID: 2, Name: "Gilberto Todd", JobTitle: "Director", HireDate: "2015-12-18T11:23:17.714Z" },
         { ID: 3, Name: "Tanya Bennett", JobTitle: "Director", HireDate: "2005-11-18T11:23:17.714Z" },

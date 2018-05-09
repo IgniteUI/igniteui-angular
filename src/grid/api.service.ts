@@ -108,14 +108,14 @@ export class IgxGridAPIService {
     }
 
     public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
-        const sortingState = this.get(id).sortingExpressions;
+        const sortingState = cloneArray(this.get(id).sortingExpressions, true);
 
         this.prepare_sorting_expression(sortingState, fieldName, dir, ignoreCase);
         this.get(id).sortingExpressions = sortingState;
     }
 
     public sort_multiple(id: string, expressions: ISortingExpression[]): void {
-        const sortingState = this.get(id).sortingExpressions;
+        const sortingState = cloneArray(this.get(id).sortingExpressions, true);
 
         for (const each of expressions) {
             this.prepare_sorting_expression(sortingState, each.fieldName, each.dir, each.ignoreCase);

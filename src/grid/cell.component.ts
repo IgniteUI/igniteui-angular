@@ -1,4 +1,5 @@
 ﻿import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -31,7 +32,7 @@ import { IGridCellEventArgs, IGridEditEventArgs } from "./grid.component";
     selector: "igx-grid-cell",
     templateUrl: "./cell.component.html"
 })
-export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
+export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterViewInit {
     @Input()
     public column: IgxColumnComponent;
 
@@ -268,10 +269,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
                 }
                 this.cdr.markForCheck();
             });
-
-        if (this.highlight && this.grid.lastSearchInfo.searchText) {
-            this.highlight.highlight(this.grid.lastSearchInfo.searchText, this.grid.lastSearchInfo.caseSensitive);
-        }
     }
 
     public ngOnDestroy() {
@@ -280,6 +277,13 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         }
         if (this.chunkLoadedVer) {
             this.chunkLoadedVer.unsubscribe();
+        }
+    }
+
+    public ngAfterViewInit() {
+        if (this.highlight && this.grid.lastSearchInfo.searchText) {
+            this.highlight.highlight(this.grid.lastSearchInfo.searchText, this.grid.lastSearchInfo.caseSensitive);
+            this.highlight.activateIfNecessary();
         }
     }
 

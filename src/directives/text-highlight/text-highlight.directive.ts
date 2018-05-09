@@ -20,7 +20,7 @@ interface ISearchInfo {
     caseSensitive: boolean;
 }
 
-interface IActiveHighlightInfo {
+export interface IActiveHighlightInfo {
     rowIndex: number;
     columnIndex: number;
     index: number;
@@ -37,7 +37,7 @@ export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
     private _forceEvaluation = false;
     private _activeElementIndex = -1;
 
-    private static _highlightGroupsMap = new Map<string, IActiveHighlightInfo>();
+    public static highlightGroupsMap = new Map<string, IActiveHighlightInfo>();
 
     @Input("cssClass")
     public cssClass: string;
@@ -107,8 +107,8 @@ export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
     }
 
     ngOnInit() {
-        if (IgxTextHighlightDirective._highlightGroupsMap.has(this.groupName) === false) {
-            IgxTextHighlightDirective._highlightGroupsMap.set(this.groupName, {
+        if (IgxTextHighlightDirective.highlightGroupsMap.has(this.groupName) === false) {
+            IgxTextHighlightDirective.highlightGroupsMap.set(this.groupName, {
                 rowIndex: -1,
                 columnIndex: -1,
                 index: -1
@@ -121,8 +121,6 @@ export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
             matchCount: 0,
             caseSensitive: false
         };
-
-        console.log(this.value);
     }
 
     ngOnDestroy() {
@@ -139,19 +137,12 @@ export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
                 this.deactivate();
             }
 
-            const group = IgxTextHighlightDirective._highlightGroupsMap.get(this.groupName);
-            if (group.columnIndex === this.column && group.rowIndex === this.row) {
-                if (this._activeElementIndex !== -1) {
-                    this.deactivate();
-                }
-                this.activate(group.index);
-            }
+            this.activateIfNecessary();
         }
-
     }
 
     public static setActiveHighlight(groupName: string, column: number, row: number, index: number) {
-        const group = IgxTextHighlightDirective._highlightGroupsMap.get(groupName);
+        const group = IgxTextHighlightDirective.highlightGroupsMap.get(groupName);
 
         group.columnIndex = column;
         group.rowIndex = row;
@@ -166,10 +157,13 @@ export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
     }
 
     public highlight(text: string, caseSensitive?: boolean): number {
-        if (!this.value) {
+        const caseSensitiveResolved = caseSensitive ? true : false;
+
+        if (this.value === "") {
+            this._lastSearchInfo.searchedText = text;
+            this._lastSearchInfo.caseSensitive = caseSensitiveResolved;
             return 0;
         }
-        const caseSensitiveResolved = caseSensitive ? true : false;
 
         if (this.searchNeedsEvaluation(text, caseSensitiveResolved)) {
             this._lastSearchInfo.searchedText = text;
@@ -195,20 +189,29 @@ export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
         this._lastSearchInfo.matchCount = 0;
     }
 
-    public activate(index: number) {
+    public activateIfNecessary() {
+        const group = IgxTextHighlightDirective.highlightGroupsMap.get(this.groupName);
+        if (group.columnIndex === this.column && group.rowIndex === this.row) {
+            this.activate(group.index);
+        }
+    }
+
+    private activate(index: number) {
+        this.deactivate();
+
         const spans = this._addedElements.filter(el => el.nodeName === "SPAN");
+        this._activeElementIndex = index;
 
         if (spans.length <= index) {
             return;
         }
 
-        this._activeElementIndex = index;
         const elementToActivate = spans[index];
         this.renderer.addClass(elementToActivate, this.activeCssClass);
         this.renderer.setAttribute(elementToActivate, "style", "background:orange;font-weight:bold");
     }
 
-    public deactivate() {
+    private deactivate() {
         if (this._activeElementIndex === -1) {
             return;
         }

@@ -93,7 +93,7 @@ export interface IRowSelectionEventArgs {
 export interface ISearchInfo {
     searchText: string;
     caseSensitive: boolean;
-    matchCount: number;
+    activeMatchIndex: number;
 }
 
 /**
@@ -120,7 +120,7 @@ export interface ISearchInfo {
 })
 export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
 
-    private _matchOccurrenceToActivate: number;
+    private _matchInfoChache = [];
 
     @Input()
     public data = [];
@@ -366,8 +366,31 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     set sortingExpressions(value) {
+        let highlightedItem = null;
+        const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
+
+        if (this.lastSearchInfo.searchText !== "") {
+            const activeIndex = activeInfo.rowIndex;
+            const data = this.getFilteredSortedData();
+            highlightedItem = data[activeIndex];
+        }
+
         this._sortingExpressions = cloneArray(value);
         this.cdr.markForCheck();
+
+        if (highlightedItem !== null) {
+            const data = this.getFilteredSortedData();
+            const rowIndex = data.indexOf(highlightedItem);
+            IgxTextHighlightDirective.setActiveHighlight(this.id, activeInfo.columnIndex, rowIndex, activeInfo.index);
+            this.rebuildMatchCache(data, this.lastSearchInfo.searchText, this.lastSearchInfo.caseSensitive);
+            this._matchInfoChache.forEach((match, i) => {
+                if (match.column === activeInfo.columnIndex &&
+                    match.row === rowIndex &&
+                    match.index === activeInfo.index) {
+                        this.lastSearchInfo.activeMatchIndex = i;
+                    }
+            });
+        }
     }
 
     get virtualizationState() {
@@ -399,8 +422,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public lastSearchInfo: ISearchInfo = {
         searchText: "",
-        matchCount: 0,
-        caseSensitive: false
+        caseSensitive: false,
+        activeMatchIndex: 0
     }
 
     protected destroy$ = new Subject<boolean>();
@@ -802,94 +825,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.find(text, -1, caseSensitive);
     }
 
-    private find(text: string, increment: number, caseSensitive?: boolean) {
-        if (this.cellInEditMode) {
-            this.cellInEditMode.inEditMode = false;
-        }
-
-        if (!text) {
-            this.clearSearch();
-            return 0;
-        }
-
-        const caseSensitiveResolved = caseSensitive ? true : false;
-
-        if (this.lastSearchInfo.searchText !== text || this.lastSearchInfo.caseSensitive !== caseSensitiveResolved) {
-            this._matchOccurrenceToActivate = 0;
-            this.lastSearchInfo.searchText = text;
-            this.lastSearchInfo.caseSensitive = caseSensitiveResolved;
-        } else {
-            this._matchOccurrenceToActivate += increment;
-        }
-
-        this.rowList.forEach((row) => {
-            row.cells.forEach((c) => {
-                c.highlightText(text, caseSensitiveResolved);
-            });
-        });
-
-        const matchesInfo = [];
-        const data = this.getFilteredSortedData();
-        let searchText = caseSensitiveResolved ? text : text.toLowerCase();
-
-        data.forEach((dataRow, i) => {
-            Object.keys(dataRow).forEach((key, j) => {
-                const value = dataRow[key];
-                if(value !== undefined && value !== null) {
-
-                    let searchValue = caseSensitiveResolved ? String(value) : String(value).toLowerCase();
-                    let occurenceIndex = 0;
-                    let searchIndex = searchValue.indexOf(searchText);
-
-                    while(searchIndex !== -1) {
-                        matchesInfo.push({
-                            row: i,
-                            column: j,
-                            index: occurenceIndex++
-                        });
-
-                        searchValue = searchValue.substring(searchIndex + searchText.length);
-                        searchIndex = searchValue.indexOf(searchText);
-                    }
-                }
-            });
-        });
-
-        if (this._matchOccurrenceToActivate >= matchesInfo.length) {
-            this._matchOccurrenceToActivate = 0;
-        } else if (this._matchOccurrenceToActivate < 0) {
-            this._matchOccurrenceToActivate = matchesInfo.length - 1;
-        }
-
-        if (matchesInfo.length) {
-            const matchInfo = matchesInfo[this._matchOccurrenceToActivate];
-
-            IgxTextHighlightDirective.setActiveHighlight(this.id, matchInfo.column, matchInfo.row, matchInfo.index);
-
-            const verticalState = this.verticalScrollContainer.state;
-            const verticalSize = verticalState.chunkSize - 2;
-            if (verticalState.startIndex > matchInfo.row) {
-                this.verticalScrollContainer.scrollTo(matchInfo.row);
-            } else if (verticalState.startIndex + verticalSize <= matchInfo.row) {
-                this.verticalScrollContainer.scrollTo(matchInfo.row - verticalSize);
-            }
-
-            // const horizontalState = this.parentVirtDir.state;
-            // const horizontalSize = horizontalState.chunkSize - 2;
-            // if (horizontalState.startIndex > matchInfo.column) {
-            //     this.parentVirtDir.scrollTo(matchInfo.column);
-            // } else if (horizontalState.startIndex + horizontalSize <= matchInfo.column) {
-            //     this.parentVirtDir.scrollTo(matchInfo.column - horizontalSize);
-            // }
-        }
-        return matchesInfo.length;
-    }
-
     public clearSearch() {
         this.lastSearchInfo = {
             searchText: "",
-            matchCount: 0,
-            caseSensitive: false
+            caseSensitive: false,
+            activeMatchIndex: 0
         }
 
         this.rowList.forEach((row) => {
@@ -1312,6 +1252,63 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
 
+    private find(text: string, increment: number, caseSensitive?: boolean) {
+        if (!this.rowList) {
+            return 0;
+        }
+
+        if (this.cellInEditMode) {
+            this.cellInEditMode.inEditMode = false;
+        }
+
+        if (!text) {
+            this.clearSearch();
+            return 0;
+        }
+
+        const caseSensitiveResolved = caseSensitive ? true : false;
+        let rebuildCache = false;
+
+        if (this.lastSearchInfo.searchText !== text || this.lastSearchInfo.caseSensitive !== caseSensitiveResolved) {
+            this.lastSearchInfo = {
+                searchText: text,
+                activeMatchIndex: 0,
+                caseSensitive: caseSensitiveResolved
+            };
+
+            rebuildCache = true;
+        } else {
+            this.lastSearchInfo.activeMatchIndex += increment;
+        }
+
+        if (rebuildCache) {
+            this.rowList.forEach((row) => {
+                row.cells.forEach((c) => {
+                    c.highlightText(text, caseSensitiveResolved);
+                });
+            });
+
+            const data = this.getFilteredSortedData();
+            this.rebuildMatchCache(data, text, caseSensitiveResolved);
+        }
+
+        if (this.lastSearchInfo.activeMatchIndex >= this._matchInfoChache.length) {
+            this.lastSearchInfo.activeMatchIndex = 0;
+        } else if (this.lastSearchInfo.activeMatchIndex < 0) {
+            this.lastSearchInfo.activeMatchIndex = this._matchInfoChache.length - 1;
+        }
+
+        if (this._matchInfoChache.length) {
+            const matchInfo = this._matchInfoChache[this.lastSearchInfo.activeMatchIndex];
+
+            IgxTextHighlightDirective.setActiveHighlight(this.id, matchInfo.column, matchInfo.row, matchInfo.index);
+
+            this.scrollTo(matchInfo.row, matchInfo.column);
+        }
+
+        return this._matchInfoChache.length;
+    }
+
     private getFilteredSortedData(): any[] {
         let data = this.filteredData ? this.filteredData : this.data;
 
@@ -1323,5 +1320,49 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         return data;
+    }
+
+    private scrollTo(row: number, column: number): void {
+        this.scrollDirective(this.verticalScrollContainer, row);
+        this.scrollDirective(this.rowList.first.virtDirRow, column);
+    }
+
+    private scrollDirective(directive: IgxForOfDirective<any>, goal: number): void {
+        const state = directive.state;
+        const start = state.startIndex;
+        const size = state.chunkSize - 1;
+
+        if (start > goal) {
+            directive.scrollTo(goal);
+        } else if (start + size <= goal) {
+            directive.scrollTo(goal - size + 1);
+        }
+    }
+
+    private rebuildMatchCache(data: any[], text: string, caseSensitive: boolean) {
+        this._matchInfoChache = [];
+        let searchText = caseSensitive ? text : text.toLowerCase();
+
+        data.forEach((dataRow, i) => {
+            Object.keys(dataRow).forEach((key, j) => {
+                const value = dataRow[key];
+                if(value !== undefined && value !== null) {
+                    let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
+                    let occurenceIndex = 0;
+                    let searchIndex = searchValue.indexOf(searchText);
+
+                    while(searchIndex !== -1) {
+                        this._matchInfoChache.push({
+                            row: i,
+                            column: j,
+                            index: occurenceIndex++
+                        });
+
+                        searchValue = searchValue.substring(searchIndex + searchText.length);
+                        searchIndex = searchValue.indexOf(searchText);
+                    }
+                }
+            });
+        });
     }
 }

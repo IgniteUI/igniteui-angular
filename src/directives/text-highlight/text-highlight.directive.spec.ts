@@ -7,7 +7,6 @@ import {
 
 import { By } from "@angular/platform-browser";
 
-import { ActiveHighlightManager } from "./active-higlight-manager";
 import { IgxTextHighlightDirective} from "./text-highlight.directive";
 
 fdescribe("IgxHighlight", () => {
@@ -29,6 +28,9 @@ fdescribe("IgxHighlight", () => {
         expect(component.highlight.cssClass).toBe("igx-highlight");
         expect(component.highlight.activeCssClass).toBe("igx-highlight__active");
         expect(component.highlight.groupName).toBe("test");
+        expect(component.highlight.value).toBe(component.html);
+        expect(component.highlight.row).toBe(0);
+        expect(component.highlight.column).toBe(0);
     });
 
     it("Should highlight all instances of text", () => {
@@ -114,7 +116,7 @@ fdescribe("IgxHighlight", () => {
 
         const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
         component.highlightText("a");
-        component.activateNext();
+        component.activate(0);
         fix.detectChanges();
 
         let spans = fix.debugElement.nativeElement.querySelectorAll("." + component.highlightClass);
@@ -122,13 +124,16 @@ fdescribe("IgxHighlight", () => {
 
         expect(activeSpan).toBe(spans[0]);
 
-        component.activateNext();
+        component.activate(1);
         fix.detectChanges();
 
         spans = fix.debugElement.nativeElement.querySelectorAll("." + component.highlightClass);
         activeSpan = fix.debugElement.nativeElement.querySelector("." + component.activeHighlightClass);
 
         expect(activeSpan).toBe(spans[1]);
+
+        const allActiveSpans = fix.debugElement.nativeElement.querySelectorAll("." + component.activeHighlightClass);
+        expect(allActiveSpans.length).toBe(1);
 
         spans = fix.debugElement.nativeElement.querySelectorAll("." + component.highlightClass);
         activeSpan = fix.debugElement.nativeElement.querySelector("." + component.activeHighlightClass);
@@ -205,7 +210,7 @@ fdescribe("IgxHighlight", () => {
 @Component({
     template:
         // tslint:disable-next-line:max-line-length
-        `<div igxTextHighlight id="content" [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName" [value]="html">
+        `<div igxTextHighlight id="content" [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName" [value]="html" [column]="0" [row]="0">
             {{html}}
         </div>`
 })
@@ -230,11 +235,11 @@ class HighlightLoremIpsumComponent {
         this.highlight.clearHighlight();
     }
 
-    public activateNext() {
-        ActiveHighlightManager.moveNext(this.groupName);
-    }
-
     public get textContent(): string {
         return this.highlight.parentElement.innerText;
+    }
+
+    public activate(index: number) {
+        IgxTextHighlightDirective.setActiveHighlight(this.groupName, 0, 0, index);
     }
 }
