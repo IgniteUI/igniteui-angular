@@ -2,7 +2,7 @@
 
 **igx-dialog** supports dialog component that opens centered on top of the app content.
 
-With the igx-dialog you can create **alerts**, **dialogs** and **custom dialogs**.  
+With the igx-dialog you can create **alerts**, **dialogs** and **custom dialogs**.
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog.html)
 
 # Usage
@@ -73,3 +73,23 @@ When you are using Custom Dialogs you don't have a message property set.
 ```
 
 You can make the dialog dismissible `closeOnOutsideSelect="true"``
+
+##Dialog Title area and dialog actions area are customizable throught igxDialogTitle and igxDialogActions directives.
+Both directives can contain html elements, strings, icons or even other components.
+```HTML
+    <igx-dialog>
+        <igx-dialog-title>
+            <div>TITLE</div>
+        </igx-dialog-title>
+        <igx-dialog-actions>
+            <div>BUTTONS</div>
+        </igx-dialog-actions>
+    </igx-dialog>
+```
+or
+```HTML
+    <igx-dialog>
+        <div igxDialogTitle>TITLE</div>
+        <div igxDialogActions>BUTTONS</div>
+    </igx-dialog>
+```

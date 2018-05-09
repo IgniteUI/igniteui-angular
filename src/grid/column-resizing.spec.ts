@@ -43,10 +43,10 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         simulateMouseEvent("mouseover", headerResArea, 100, 5);
         simulateMouseEvent("mousedown", headerResArea, 100, 5);
         simulateMouseEvent("mousedup", headerResArea, 100, 5);
-        tick();
+        tick(100);
         fixture.detectChanges();
         simulateMouseEvent("mousedown", headerResArea, 100, 5);
-        tick();
+        tick(100);
         fixture.detectChanges();
 
         let resizer = headers[0].nativeElement.children[2].children[0];
@@ -382,7 +382,7 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[3].width).toEqual("76px");
+        expect(grid.columns[3].width).toEqual("88px");
 
         headers[5].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
         tick();
@@ -615,7 +615,7 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         // We call this again becuase for some reason in test it is not called the same amount of time as in real use.
         // To be investigated.
         grid.markForCheck();
-        tick();
+        tick(500);
         fixture.detectChanges();
 
         expect(grid.columns[0].width).toEqual("250px");

@@ -21,7 +21,7 @@ Static symbols (literals) in the mask pattern are also supported.
 import { IgxMaskModule } from "igniteui-angular";
 ```
 
-Use the `igxMask` input property on an input element to apply a mask.
+Use the `igxMask` input property on an input element to apply a mask. The **igxMask** directive is fully supported only on an input element of type **text**.
 ```html
 <input type="text" igxInput [(ngModel)]="1234567890" [igxMask]="'(000) 0000-000'"/>
 ```
