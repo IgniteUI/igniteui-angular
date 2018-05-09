@@ -135,8 +135,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
     @HostBinding("class.igx-grid__td--fw")
     get width() {
         const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
+        const scrollbarWidth = this.grid.verticalScrollContainer.getVerticalScroll().offsetWidth;
         return this.isLastUnpinned && hasVerticalScroll && !!this.column.width ?
-            (parseInt(this.column.width, 10) - 18) + "px" : this.column.width;
+            (parseInt(this.column.width, 10) - scrollbarWidth) + "px" : this.column.width;
     }
 
     @HostBinding("class.igx-grid__td--editing")

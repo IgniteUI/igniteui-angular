@@ -373,7 +373,7 @@ describe("IgxGrid - Cell component", () => {
         fix.detectChanges();
         const rows = fix.componentInstance.instance.rowList;
         rows.forEach((item) => {
-            expect(item.cells.last.width).toEqual("182px");
+            expect(item.cells.last.width).toEqual("181px");
         });
     });
 
@@ -454,7 +454,7 @@ describe("IgxGrid - Cell component", () => {
         });
         const rows = fix.componentInstance.instance.rowList;
         rows.forEach((item) => {
-            expect(item.cells.last.width).toEqual("182px");
+            expect(item.cells.last.width).toEqual("181px");
         });
     });
 
@@ -692,7 +692,7 @@ describe("IgxGrid - Cell component", () => {
 
         // We use setTimout to execute scroll events in the event queue
         setTimeout(() => {
-            expect(rowDisplayContainer.style.left).toEqual("-43px");
+            expect(rowDisplayContainer.style.left).toEqual("-44px");
             expect(fix.componentInstance.selectedCell.value).toEqual(30);
             expect(fix.componentInstance.selectedCell.column.field).toMatch("3");
             done();
