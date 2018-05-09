@@ -537,6 +537,22 @@ fdescribe("IgxDropDown ", () => {
             expect(fixture.componentInstance.dropdownDisabled.id).toEqual("newDD");
         });
     });
+
+    it("Disabled items cannot be focused", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestDisabledComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        const list = fixture.componentInstance.dropdownDisabled;
+        const listItems = list.items;
+        expect(list).toBeDefined();
+        expect(list.items.length).toEqual(13);
+        list.items[0].isFocused = true;
+        button.click();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(list.items[0].isFocused).toEqual(false);
+        });
+    });
 });
 
 @Component({
