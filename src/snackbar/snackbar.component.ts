@@ -1,5 +1,6 @@
 import {
     animate,
+    AnimationEvent,
     state,
     style,
     transition,
@@ -129,15 +130,15 @@ export class IgxSnackbarComponent {
 
     /**
      * The event that will be thrown when the snackbar animation starts
-     * @type {EventEmitter<any>}
+     * @type {EventEmitter<AnimationEvent>}
      */
-    @Output() public animationStarted = new EventEmitter<any>();
+    @Output() public animationStarted = new EventEmitter<AnimationEvent>();
 
     /**
      * The event that will be thrown when the snackbar animation ends
-     * @type {EventEmitter<any>}
+     * @type {EventEmitter<AnimationEvent>}
      */
-    @Output() public animationDone = new EventEmitter<any>();
+    @Output() public animationDone = new EventEmitter<AnimationEvent>();
 
     private timeoutId;
 
