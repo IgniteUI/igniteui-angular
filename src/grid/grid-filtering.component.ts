@@ -40,13 +40,13 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     public column;
 
     get value() {
-        return this._value || "";
+        return this._value;
     }
 
     set value(val) {
         // filtering needs to be cleared if value is null, undefined or empty string
         if (!val && val !== 0) {
-            this.clearFiltering();
+            this.clearFiltering(false);
             return;
         }
         this._value = this.transformValue(val);
@@ -132,6 +132,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     @ViewChild(IgxToggleDirective, { read: IgxToggleDirective})
     protected toggleDirective: IgxToggleDirective;
 
+    @ViewChild("select", { read: ElementRef})
+    protected select: ElementRef;
+
     constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
         this.filterChanged.pipe(
             debounceTime(250)
@@ -164,6 +167,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
 
     public refresh() {
         this.dialogShowing = !this.dialogShowing;
+        if (this.dialogShowing) {
+            this.column.filteringCondition = this.getCondition(this.select.nativeElement.value);
+        }
         this.cdr.detectChanges();
     }
 
@@ -183,6 +189,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     @autoWire(true)
     public filter(): void {
         const grid = this.gridAPI.get(this.gridID);
+        this.column.filteringCondition = this.getCondition(this.select.nativeElement.value);
         this.gridAPI.filter(
             this.column.gridID, this.column.field,
             this._value, this.column.filteringCondition, this.column.filteringIgnoreCase);
@@ -195,8 +202,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     }
 
     @autoWire(true)
-    public clearFiltering(): void {
+    public clearFiltering(resetCondition: boolean): void {
         this._value = null;
+        this._filterCondition = resetCondition ? undefined : this._filterCondition;
         this.gridAPI.clear_filter(this.gridID, this.column.field);
         this.gridAPI.get(this.gridID).clearSummaryCache();
         // XXX - Temp fix for (#1183, #1177) (Should be deleted)
@@ -219,8 +227,12 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         this.filterChanged.next(val);
     }
 
+    public clearInput(): void {
+        this.clearFiltering(false);
+    }
+
     public get disabled() {
-        if (this.value && !this.unaryCondition) {
+        if ((!!this.value || this.value === 0) && !this.unaryCondition) {
             return false;
         } else if (this.unaryCondition) {
             return false;
