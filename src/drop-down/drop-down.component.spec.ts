@@ -11,7 +11,7 @@ const CSS_CLASS_SELECTED = "igx-drop-down__item--selected";
 const CSS_CLASS_DISABLED = "igx-drop-down__item--disabled";
 const CSS_CLASS_HEADER = "igx-drop-down__header";
 
-fdescribe("IgxDropDown ", () => {
+describe("IgxDropDown ", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -56,8 +56,6 @@ fdescribe("IgxDropDown ", () => {
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
-            // tslint:disable-next-line:no-debugger
-            debugger;
             const currentItem = fixture.debugElement.queryAll(By.css("." + CSS_CLASS_SELECTED))[0];
             currentItem.triggerEventHandler("keydown.ArrowDown", mockObj);
             return fixture.whenStable();
@@ -198,8 +196,6 @@ fdescribe("IgxDropDown ", () => {
         fixture.whenStable().then(() => {
             fixture.detectChanges();
             expect(list.selectedItem).toEqual(list.items[0]);
-            // tslint:disable-next-line:no-debugger
-            debugger;
             const currentItem = fixture.debugElement.queryAll(By.css("." + CSS_CLASS_DISABLED))[0];
             expect(currentItem.componentInstance.index).toEqual(2);
             currentItem.triggerEventHandler("click", mockObj);
@@ -232,8 +228,6 @@ fdescribe("IgxDropDown ", () => {
             console.log("Running test");
             fixture.detectChanges();
             expect(list.selectedItem).toEqual(list.items[0]);
-            // tslint:disable-next-line:no-debugger
-            debugger;
             const currentItem = fixture.debugElement.queryAll(By.css("." + CSS_CLASS_HEADER))[0];
             expect(currentItem).toBeDefined();
             expect(currentItem.componentInstance).toEqual(headerItems[0]);
@@ -293,8 +287,6 @@ fdescribe("IgxDropDown ", () => {
         fixture.whenStable().then(() => {
             fixture.detectChanges();
             expect(list.selectedItem).toEqual(list.items[0]);
-            // tslint:disable-next-line:no-debugger
-            debugger;
             let currentItem = document.getElementsByClassName(CSS_CLASS_SELECTED)[0] as HTMLElement;
             currentItem.focus();
             expect(currentItem.innerHTML.trim()).toEqual("Item 1");
