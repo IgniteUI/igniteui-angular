@@ -1,5 +1,6 @@
 import { CommonModule } from "@angular/common";
 import {
+    AfterViewChecked,
     ChangeDetectorRef,
     Component,
     ContentChildren,
@@ -22,26 +23,51 @@ export interface ISelectionEventArgs {
     newSelection: IgxDropDownItemComponent;
 }
 
+/**
+ * **Ignite UI for Angular DropDown** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop-down.html)
+ *
+ * TODO: ADD DESCRIPTION HERE, SAME AS IN THE DOCS
+ *
+ * Example:
+ * ```html
+ * <igx-drop-down>
+ *   <igx-drop-down-item *ngFor="let item of items" isDisabled={{item.disabled}} isHeader={{item.header}}>
+ *     {{ item.value }}
+ *   </igx-drop-down-item>
+ * </igx-drop-down>
+ * ```
+ */
 @Component({
     selector: "igx-drop-down",
     templateUrl: "./drop-down.component.html"
 })
-export class IgxDropDownComponent implements OnInit {
+export class IgxDropDownComponent implements OnInit, AfterViewChecked {
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
     private _focusedItem: IgxDropDownItemComponent = null;
     private _width;
     private _height;
     private _id = "DropDown_0";
 
+    @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
+    private children: QueryList<IgxDropDownItemComponent>;
+
+    /**
+     * The toggle directive of IgxDropDown
+     */
     @ViewChild(IgxToggleDirective)
     public toggleDirective: IgxToggleDirective;
 
-    @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
-    public children: QueryList<IgxDropDownItemComponent>;
-
-    @Output() public onSelection = new EventEmitter<ISelectionEventArgs>();
-    @Output() public onOpen = new EventEmitter();
-    @Output() public onClose = new EventEmitter();
+    /**
+     * The event that will be thrown when item is selected,
+     * provides reference to the `<IgxDropDownItem>` component as argument
+     * @type {EventEmitter}
+     */
+    @Output()
+    public onSelection = new EventEmitter<ISelectionEventArgs>();
+    @Output() public onOpening = new EventEmitter();
+    @Output() public onOpened = new EventEmitter();
+    @Output() public onClosed = new EventEmitter();
 
     @Input()
     get width() {
@@ -61,16 +87,17 @@ export class IgxDropDownComponent implements OnInit {
         this.toggleDirective.element.style.height = value;
     }
 
-    @Input() public allowItemsFocus = true;
+    @Input()
+    public allowItemsFocus = true;
 
     constructor(
         private cdr: ChangeDetectorRef,
         private selectionAPI: IgxSelectionAPIService) { }
 
+    @Input()
     get id(): string {
         return this._id;
     }
-    @Input()
     set id(value: string) {
         this._id = value;
         this.toggleDirective.id = value;
@@ -113,7 +140,7 @@ export class IgxDropDownComponent implements OnInit {
         }
 
         const newSelection = this.items.find((item) => item.index === index);
-        if (newSelection.isDisabled || newSelection.isHeader) {
+        if (newSelection.isDisabled) {
             return;
         }
 
@@ -197,29 +224,32 @@ export class IgxDropDownComponent implements OnInit {
         this.toggleDirective.id = this.id;
     }
 
-    onToggleClose() {
-        if (this._focusedItem) {
-            this._focusedItem.isFocused = false;
-        }
-
-        this.onClose.emit();
-    }
-
-    onToggleOpen() {
-        this._focusedItem = this.selectedItem;
-        if (this._focusedItem) {
-            this._focusedItem.isFocused = true;
-        }
-        this.onOpen.emit();
+    ngAfterViewChecked() {
     }
 
     onToggleOpening() {
         this.cdr.detectChanges();
-        if (!this.selectedItem && this.items.length > 0) {
-            this.setSelectedItem(0);
-        }
-        this._initiallySelectedItem = this.selectedItem;
         this.scrollToItem(this.selectedItem);
+        this.onOpening.emit();
+    }
+
+    onToggleOpened() {
+        this._initiallySelectedItem = this.selectedItem;
+        this._focusedItem = this.selectedItem;
+        if (this._focusedItem) {
+            this._focusedItem.isFocused = true;
+        } else if (this.allowItemsFocus) {
+            this.focusFirst();
+        }
+        this.onOpened.emit();
+    }
+
+    onToggleClosed() {
+        if (this._focusedItem) {
+            this._focusedItem.isFocused = false;
+        }
+
+        this.onClosed.emit();
     }
 
     open() {
@@ -255,18 +285,20 @@ export class IgxDropDownComponent implements OnInit {
     }
 
     private calculateScrollPosition(item: IgxDropDownItemComponent): number {
-        const totalHeight: number = this.items.reduce((sum, currentItem) => sum + currentItem.elementHeight, 0);
-        let itemPosition = 0;
-        itemPosition = this.items
-            .filter((itemToFilter) => itemToFilter.index < item.index)
-            .reduce((sum, currentItem) => sum + currentItem.elementHeight, 0);
+        if (!item) {
+            return 0;
+        }
 
-        // TODO: find how to calculate height without padding. We are remove padding now by -16
-        const dropDownHeight = this.toggleDirective.element.clientHeight - 16;
-        itemPosition -= dropDownHeight / 2;
-        itemPosition += item.elementHeight + item.elementHeight / 2;
+        const elementRect = item.element.nativeElement.getBoundingClientRect();
+        const parentRect = this.toggleDirective.element.getBoundingClientRect();
+        const scrollDelta = parentRect.top - elementRect.top;
+        let scrollPosition = this.toggleDirective.element.scrollTop - scrollDelta;
 
-        return Math.floor(itemPosition);
+        const dropDownHeight = this.toggleDirective.element.clientHeight;
+        scrollPosition -= dropDownHeight / 2;
+        scrollPosition += item.elementHeight / 2;
+
+        return Math.floor(scrollPosition);
     }
 }
 

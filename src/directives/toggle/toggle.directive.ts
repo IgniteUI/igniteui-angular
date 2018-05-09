@@ -72,10 +72,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
         const player = this.animationActivation();
         player.onStart(() => {
-            this.collapsed = !this.collapsed;
-            if (fireEvents) {
-                this.onOpening.emit();
-            }
+            // this.collapsed = !this.collapsed;
         });
         player.onDone(() =>  {
             player.destroy();
@@ -84,6 +81,10 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             }
         });
 
+        this.collapsed = !this.collapsed;
+        if (fireEvents) {
+            this.onOpening.emit();
+        }
         player.play();
     }
 
@@ -92,9 +93,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
         const player = this.animationActivation();
         player.onStart(() => {
-            if (fireEvents) {
-                this.onClosing.emit();
-            }
         });
         player.onDone(() => {
             this.collapsed = !this.collapsed;
@@ -108,8 +106,10 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             }
         });
 
+        if (fireEvents) {
+            this.onClosing.emit();
+        }
         player.play();
-
     }
 
     public toggle(fireEvents?: boolean) {

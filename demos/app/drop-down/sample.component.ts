@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { IgxDropDownComponent } from "../../lib/main";
+import { IgxDropDownComponent, IgxForOfModule } from "../../lib/main";
 @Component({
     // tslint:disable-next-line:component-selector
     selector: "drop-down-sample",
@@ -13,10 +13,9 @@ export class DropDownSampleComponent implements OnInit {
     items: any[] = [];
 
     ngOnInit() {
-        this.igxDropDown.height = "250px";
-    }
+        this.igxDropDown.height = "400px";
+        // this.igxDropDown.allowItemsFocus = false;
 
-    constructor() {
         const states = [
             "New England",
             "Connecticut",
@@ -100,6 +99,9 @@ export class DropDownSampleComponent implements OnInit {
             }
             this.items.push(item);
         }
+    }
+
+    constructor() {
     }
 
     public toggleDropDown() {
