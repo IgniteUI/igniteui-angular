@@ -356,7 +356,13 @@ export class IgxCarouselComponent implements OnDestroy {
             case "ArrowLeft":
                 this.prev();
                 break;
+            case "Left":
+                this.prev();
+                break;
             case "ArrowRight":
+                this.next();
+                break;
+            case "Right":
                 this.next();
                 break;
             default:
