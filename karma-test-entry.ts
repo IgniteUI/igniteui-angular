@@ -20,5 +20,5 @@ TestBed.initTestEnvironment(
   platformBrowserDynamicTesting()
 );
 
-const testsContext: any = require.context("./src/drop-down", true, /\.spec\.ts$/);
+const testsContext: any = require.context("./src", true, /\.spec\.ts$/);
 testsContext.keys().forEach(testsContext);
