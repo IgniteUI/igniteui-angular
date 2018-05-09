@@ -306,6 +306,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
     public rowList: QueryList<IgxGridRowComponent>;
 
+    @ViewChild("emptyGrid", { read: TemplateRef })
+    public emptyGridTemplate: TemplateRef<any>;
+
     @ViewChild("scrollContainer", { read: IgxForOfDirective })
     public parentVirtDir: IgxForOfDirective<any>;
 
@@ -1090,6 +1093,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this._filteringExpressions.length > 0 ?
             this.headerCheckbox && this.headerCheckbox.checked ? "Deselect all filtered" : "Select all filtered" :
             this.headerCheckbox && this.headerCheckbox.checked ? "Deselect all" : "Select all";
+    }
+
+    public get template(): TemplateRef<any> {
+        return this.emptyGridTemplate;
     }
 
     public checkHeaderChecboxStatus(headerStatus?: boolean) {
