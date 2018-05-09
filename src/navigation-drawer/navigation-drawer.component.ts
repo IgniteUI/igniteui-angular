@@ -17,11 +17,8 @@ import {
     TemplateRef,
     ViewChild
 } from "@angular/core";
-import "rxjs/add/observable/fromEvent";
-import "rxjs/add/observable/interval";
-import "rxjs/add/operator/debounce";
-import { Observable } from "rxjs/Observable";
-import { Subscription } from "rxjs/Subscription";
+import { fromEvent, interval, Observable, Subscription } from "rxjs";
+import { debounce } from "rxjs/operators";
 import { BaseComponent } from "../core/base";
 import { IgxNavigationService, IToggleView } from "../core/navigation";
 import { HammerGesturesManager } from "../core/touch";
@@ -460,7 +457,7 @@ export class IgxNavigationDrawerComponent implements
             this._touchManager.addGlobalEventListener("document", "panend", this.panEnd);
         }
         if (this.pinThreshold && !this._resizeObserver) {
-            this._resizeObserver = Observable.fromEvent(window, "resize").debounce(() => Observable.interval(150))
+            this._resizeObserver = fromEvent(window, "resize").pipe(debounce(() => interval(150)))
                 .subscribe((value) => { this.checkPinThreshold(); });
         }
     }

@@ -1,6 +1,5 @@
 import { Component, Injectable, ViewChild } from "@angular/core";
 import { Http } from "@angular/http";
-import { BehaviorSubject, Observable } from "rxjs/Rx";
 import { DataType } from "../../lib/data-operations/data-util";
 import { IgxButtonDirective } from "../../lib/directives/button/button.directive";
 import { IgxColumnComponent } from "../../lib/grid/column.component";

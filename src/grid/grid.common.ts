@@ -12,11 +12,8 @@ import {
     Output,
     TemplateRef
 } from "@angular/core";
-import "rxjs/add/operator/map";
-import { Observable } from "rxjs/Observable";
-import { switchMap, takeUntil, throttle } from "rxjs/operators";
-import { animationFrame } from "rxjs/scheduler/animationFrame";
-import { Subject } from "rxjs/Subject";
+import { animationFrameScheduler, fromEvent, interval, Observable, Subject } from "rxjs";
+import { map, switchMap, takeUntil, throttle } from "rxjs/operators";
 import { IgxGridAPIService } from "./api.service";
 
 @Directive({
@@ -47,9 +44,13 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     constructor(public element: ElementRef, @Inject(DOCUMENT) public document, public zone: NgZone) {
 
-        this.resizeStart.map((event) => event.clientX).pipe(
+        this.resizeStart.pipe(
+            map((event) => event.clientX),
             takeUntil(this._destroy),
-            switchMap((offset) => this.resize.map((event) => event.clientX - offset).takeUntil(this.resizeEnd))
+            switchMap((offset) => this.resize.pipe(
+                map((event) => event.clientX - offset),
+                takeUntil(this.resizeEnd)
+            ))
         ).subscribe((pos) => {
             const left = this._left + pos;
 
@@ -66,15 +67,15 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.zone.runOutsideAngular(() => {
-            Observable.fromEvent(this.document.defaultView, "mousedown").pipe(takeUntil(this._destroy))
+            fromEvent(this.document.defaultView, "mousedown").pipe(takeUntil(this._destroy))
                 .subscribe((res) => this.onMousedown(res));
 
-            Observable.fromEvent(this.document.defaultView, "mousemove").pipe(
+            fromEvent(this.document.defaultView, "mousemove").pipe(
                 takeUntil(this._destroy),
-                throttle(() => Observable.interval(0, animationFrame))
+                throttle(() => interval(0, animationFrameScheduler))
             ).subscribe((res) => this.onMousemove(res));
 
-            Observable.fromEvent(this.document.defaultView, "mouseup").pipe(takeUntil(this._destroy))
+            fromEvent(this.document.defaultView, "mouseup").pipe(takeUntil(this._destroy))
                 .subscribe((res) => this.onMouseup(res));
         });
     }
