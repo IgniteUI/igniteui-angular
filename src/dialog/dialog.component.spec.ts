@@ -213,21 +213,18 @@ describe("Dialog", () => {
         expect(childDialog.isOpen).toEqual(false);
     });
 
-    it("Should initialize igx-dialog custom templates", () => {
+    it("Should initialize igx-dialog custom title and actions", () => {
         const fixture = TestBed.createComponent(CustomTemplatesDialogComponent);
         const dialog = fixture.componentInstance.dialog;
 
         dialog.open();
         fixture.detectChanges();
 
-        expect(dialog.titleTemplate).toBeDefined();
-        expect(dialog.buttonsTemplate).toBeDefined();
-
         const dialogWindow = fixture.debugElement.query(By.css(".igx-dialog__window"));
         expect(dialogWindow.children.length).toEqual(2);
 
-        expect(dialogWindow.children[0].nativeElement.innerText).toEqual("TITLE");
-        expect(dialogWindow.children[1].nativeElement.innerText).toEqual("BUTTONS");
+        expect(dialogWindow.children[0].nativeElement.innerText.toString()).toContain("TITLE");
+        expect(dialogWindow.children[1].nativeElement.innerText.toString()).toContain("BUTTONS");
 
         dialog.close();
     });
@@ -304,12 +301,12 @@ class NestedDialogsComponent {
 
 @Component({
     template: `<igx-dialog #dialog>
-                <ng-template igxDialogTitle>
+                <igx-dialog-title>
                     <div>TITLE</div>
-                </ng-template>
-                <ng-template igxDialogActions>
+                </igx-dialog-title>
+                <igx-dialog-actions>
                     <div>BUTTONS</div>
-                </ng-template>
+                </igx-dialog-actions>
             </igx-dialog>` })
 class CustomTemplatesDialogComponent {
     @ViewChild("dialog") public dialog: IgxDialogComponent;

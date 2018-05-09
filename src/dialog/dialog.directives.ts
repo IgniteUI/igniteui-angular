@@ -1,16 +1,12 @@
 import { DOCUMENT } from "@angular/common";
-import { Directive, TemplateRef } from "@angular/core";
+import { Directive } from "@angular/core";
 
 @Directive({
-    selector: "[igxDialogTitle]"
+    selector: "igx-dialog-title,[igxDialogTitle]"
 })
-export class IgxDialogTitleDirective {
-    constructor(public template: TemplateRef<any>) { }
-}
+export class IgxDialogTitleDirective { }
 
 @Directive({
-    selector: "[igxDialogActions]"
+    selector: "igx-dialog-actions,[igxDialogActions]"
 })
-export class IgxDialogActionsDirective {
-    constructor(public template: TemplateRef<any>) { }
-}
+export class IgxDialogActionsDirective { }
