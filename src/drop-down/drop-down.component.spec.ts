@@ -553,6 +553,39 @@ fdescribe("IgxDropDown ", () => {
             expect(list.items[0].isFocused).toEqual(false);
         });
     });
+
+    it("Clicking a disabled item is not moving the focus", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestDisabledComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        const list = fixture.componentInstance.dropdownDisabled;
+        const listItems = list.items;
+        expect(list).toBeDefined();
+        expect(list.items.length).toEqual(13);
+        button.click();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(list.items[1].isFocused).toEqual(false);
+            const currentItem = fixture.debugElement.queryAll(By.css(".igx-drop-down__item"))[0];
+            currentItem.triggerEventHandler("keydown.ArrowDown", jasmine.createSpyObj("mockEvt", ["stopPropagation", "preventDefault"]));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(list.items[1].isFocused).toEqual(true);
+            const firstItem = list.items[0].element.nativeElement;
+            firstItem.click({});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(list.items[1].isFocused).toEqual(true);
+            const currentItem = fixture.debugElement.queryAll(By.css(".igx-drop-down__item"))[1];
+            currentItem.triggerEventHandler("keydown.ArrowDown", jasmine.createSpyObj("mockEvt", ["stopPropagation", "preventDefault"]));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(list.items[3].isFocused).toEqual(true);
+        });
+    });
 });
 
 @Component({
