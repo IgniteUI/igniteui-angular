@@ -119,33 +119,60 @@
 
     $this: extend($default-theme, $theme);
 
+    $desktop-item-height: 32px;
+    $mobile-item-height: 48px;
+
+    $desktop-item-min-width: 128px;
+    $mobile-item-min-width: 112px;
+
+    $desktop-item-padding: 24px;
+    $mobile-item-padding: 16px;
+
     $dd-shadow: igx-elevation($elevations, 3);
 
     %igx-drop-down {
-        flex-direction: column;
+        // We need that calc to fix a bug with ellipsis which makes the ellipsis to appear even when there is no need
+        max-width: calc(100% - 32px);
+        min-width: rem($desktop-item-min-width);
+        max-height: 100%;
+        position: absolute;
+        @media only screen and (max-width: 600px) {
+            min-width: rem($mobile-item-min-width);
+        }
+    }
+
+    %igx-drop-down__list {
+        overflow-y: auto;
+        z-index: 1;
+        // We need that calc to fix a bug with ellipsis which makes the ellipsis to appear even when there is no need
+        min-width: calc(100% + 32px);
         box-shadow: $dd-shadow;
-        min-width: rem(128px);
-        max-width: rem(448px);
         background: map-get($this, 'drop-down-background-color');
     }
 
     %igx-drop-down__header,
     %igx-drop-down__item {
         display: flex;
-        padding: rem(8px) rem(24px);
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        padding: 0 rem($desktop-item-padding);
+        height: rem($desktop-item-height);
+        line-height: rem($desktop-item-height);
+        min-height: rem($desktop-item-height);
         white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
+
+        @media only screen and (max-width: 600px) {
+            padding: 0 rem($mobile-item-padding);
+            height: rem($mobile-item-height);
+            line-height: rem($mobile-item-height);
+            min-height: rem($mobile-item-height);
+        }
     }
 
     %igx-drop-down__item {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
         color: map-get($this, 'item-text-color');
         cursor: pointer;
-        user-select: none;
-
 
         &:focus {
             outline: 0;

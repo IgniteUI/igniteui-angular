@@ -5,7 +5,9 @@
         <button igxButton="raised" igxRipple (click)="toggleDropDown()">Toggle</button>
         <igx-drop-down (onSelection)="onSelection($event)">
             <igx-drop-down-item *ngFor="let item of items" isDisabled={{item.disabled}} isHeader={{item.header}}>
-                {{ item.field }}
+                <div  class="igx-drop-down__item-template">
+                    {{ item.field }}
+                </div>
             </igx-drop-down-item>
         </igx-drop-down>
         <div class=""></div>
