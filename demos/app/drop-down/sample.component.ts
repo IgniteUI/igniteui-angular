@@ -13,7 +13,8 @@ export class DropDownSampleComponent implements OnInit {
     items: any[] = [];
 
     ngOnInit() {
-        this.igxDropDown.height = "250px";
+        this.igxDropDown.height = "400px";
+        // this.igxDropDown.allowItemsFocus = false;
     }
 
     constructor() {
