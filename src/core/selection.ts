@@ -22,6 +22,7 @@ export class IgxSelectionAPIService {
         if (currSelection === undefined) {
             currSelection = [];
         }
+        currSelection = [...currSelection];
         if (currSelection.indexOf(itemID) === -1) {
             currSelection.push(itemID);
         }

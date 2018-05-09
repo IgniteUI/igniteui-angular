@@ -15,7 +15,7 @@ describe("IgxGrid - input properties", () => {
                 IgxGridTestComponent, IgGridTest5x5Component, IgGridTest10x30Component,
                 IgGridTest30x1000Component, IgGridTest150x20000Component,
                 IgxGridTestDefaultWidthHeightComponent,
-                IgGridNullHeightComponent
+                IgGridNullHeightComponent, IgxGridTestPercentWidthHeightComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule.forRoot()]
@@ -353,6 +353,16 @@ describe("IgxGrid - input properties", () => {
         // tbody should have height equal to all items * item height
         expect(grid.tbody.nativeElement.clientHeight).toEqual(recsCount * 50);
     });
+
+    it("Test rendering when width and height are set in %", () => {
+        const fix = TestBed.createComponent(IgxGridTestPercentWidthHeightComponent);
+        const grid = fix.componentInstance.grid;
+
+        fix.detectChanges();
+
+        expect(window.getComputedStyle(grid.nativeElement).height).toMatch("300px");
+        expect(window.getComputedStyle(grid.nativeElement).width).toMatch("400px");
+    });
 });
 
 @Component({
@@ -628,6 +638,37 @@ export class IgGridNullHeightComponent {
 
     constructor(private _cdr: ChangeDetectorRef) {
         this.data = this.generateData(5, 20);
+    }
+    public generateData(columns, rows) {
+        const data = [];
+
+        for (let r = 0; r < rows; r++) {
+            const record = {};
+            for (let c = 0; c < columns; c++) {
+                record["col" + c] = c * r;
+            }
+            data.push(record);
+        }
+        return data;
+    }
+}
+
+@Component({
+    template:
+    `<div style="width: 800px; height: 600px;">
+        <igx-grid #grid [data]="data" [autoGenerate]="true" height="50%" width="50%">
+        </igx-grid>
+    </div>`
+})
+export class IgxGridTestPercentWidthHeightComponent {
+    public cols;
+    public data;
+
+    @ViewChild("grid", { read: IgxGridComponent })
+    public grid: IgxGridComponent;
+
+    constructor(private _cdr: ChangeDetectorRef) {
+        this.data = this.generateData(3, 30);
     }
     public generateData(columns, rows) {
         const data = [];

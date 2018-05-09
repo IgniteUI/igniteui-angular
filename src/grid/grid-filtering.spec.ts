@@ -1,5 +1,6 @@
 import { Component, DebugElement, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BOOLEAN_FILTERS, DATE_FILTERS, FilteringCondition,
     NUMBER_FILTERS, STRING_FILTERS } from "../../src/data-operations/filtering-condition";
@@ -7,6 +8,9 @@ import { Calendar, ICalendarDate } from "../calendar/calendar";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
+
+const FILTERING_TOGGLE_CLASS = "igx-filtering__toggle";
+const FILTERING_TOGGLE_FILTERED_CLASS = "igx-filtering__toggle--filtered";
 
 describe("IgxGrid - Filtering actions", () => {
     beforeEach(async(() => {
@@ -194,7 +198,7 @@ describe("IgxGrid - Filtering actions", () => {
         // Empty filter
         grid.filter("Released", null, BOOLEAN_FILTERS.empty);
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(2);
+        expect(grid.rowList.length).toEqual(3);
 
         // False filter
         grid.clearFilter("Released");
@@ -202,7 +206,7 @@ describe("IgxGrid - Filtering actions", () => {
         expect(grid.rowList.length).toEqual(8);
         grid.filter("Released", null, BOOLEAN_FILTERS.false);
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(5);
+        expect(grid.rowList.length).toEqual(2);
 
         // True filter
         grid.clearFilter("Released");
@@ -216,7 +220,7 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
         grid.filter("Released", null, BOOLEAN_FILTERS.notEmpty);
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(6);
+        expect(grid.rowList.length).toEqual(5);
 
         // NotNull filter
         grid.clearFilter("Released");
@@ -389,6 +393,25 @@ describe("IgxGrid - Filtering actions", () => {
         expect(grid.filteringExpressions.length).toEqual(grid.columns.length);
         expect(grid.rowList.length).toEqual(1);
     });
+
+    it("Should highlight the filtering icon when filtering using the API.", () => {
+        const fixture = TestBed.createComponent(IgxGridFilteringComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+
+        const firstHeaderCell = fixture.debugElement.query(By.css(".header-release-date"));
+        const filteringIconWrapper = firstHeaderCell.query(By.css("." + FILTERING_TOGGLE_CLASS));
+
+        grid.filter("ReleaseDate", null, DATE_FILTERS.today);
+        console.log("filtered");
+        fixture.detectChanges();
+        expect(filteringIconWrapper.nativeElement.classList.contains(FILTERING_TOGGLE_FILTERED_CLASS)).toBe(true);
+
+        grid.clearFilter("ReleaseDate");
+        fixture.detectChanges();
+        expect(filteringIconWrapper.nativeElement.classList.contains(FILTERING_TOGGLE_CLASS)).toBe(true);
+    });
 });
 
 @Component({
@@ -397,7 +420,7 @@ describe("IgxGrid - Filtering actions", () => {
         <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
         <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
         <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
-        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'"
+        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
             [filterable]="true" dataType="date">
         </igx-column>
     </igx-grid>`
@@ -441,7 +464,7 @@ export class IgxGridFilteringComponent {
             ID: 5,
             ProductName: "",
             ReleaseDate: undefined,
-            Released: ""
+            Released: false
         },
         {
             Downloads: 702,
@@ -462,7 +485,7 @@ export class IgxGridFilteringComponent {
             ID: 8,
             ProductName: null,
             ReleaseDate: this.today,
-            Released: false
+            Released: undefined
         }
     ];
 
