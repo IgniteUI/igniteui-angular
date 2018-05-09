@@ -584,6 +584,24 @@ describe("IgxGrid - Column Pinning ", () => {
         expect(grid.unpinnedColumns.length).toEqual(unpinnedColumnsLength);
         expect(result).toBe(false);
     });
+
+    it("should reject pinning a column if unpinned area width is less than 20% of the grid width", () => {
+        const fix = TestBed.createComponent(GridPinningComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.columns.forEach((column) => {
+            if (column.index === 0 || column.index === 1 || column.index === 4 ||
+                    column.index === 6) {
+                column.pin();
+            }
+        });
+        fix.detectChanges();
+        expect(grid.columns[0].pinned).toBe(true);
+        expect(grid.columns[1].pinned).toBe(true);
+        expect(grid.columns[4].pinned).toBe(false);
+        expect(grid.columns[6].pinned).toBe(true);
+        expect(grid.unpinnedWidth).toBeGreaterThanOrEqual(grid.unpinnedAreaMinWidth);
+    });
 });
 @Component({
     template: `
