@@ -56,7 +56,7 @@ export let FilteringCondition = {
             return target;
         },
         false(target: boolean): boolean {
-            return !target;
+            return !target && target !== null && target !== undefined;
         },
         null(target: boolean): boolean {
             return target === null;
@@ -322,7 +322,7 @@ export const BOOLEAN_FILTERS = {
         return target;
     },
     false(target: boolean): boolean {
-        return !target;
+        return !target && target !== null && target !== undefined;
     },
     null(target: boolean): boolean {
         return target === null;

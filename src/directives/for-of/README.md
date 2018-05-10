@@ -96,7 +96,6 @@ List of exported values by the `igxForOf` that can be aliased to local variables
 | :--------- |:------- | :---------------------------------------------------- |
 | $implicit  | T       | The value of the individual items in the iterable     |
 | index      | number  | The index of the current item in the iterable.        |
-| dirty      | boolean | True when the current item needs to reset their state |
 
 <div class="divider--half"></div>
 

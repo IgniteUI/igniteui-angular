@@ -27,9 +27,8 @@ import {
     ViewChildren,
     ViewContainerRef
 } from "@angular/core";
-import { of } from "rxjs/observable/of";
+import { of, Subject } from "rxjs";
 import { debounceTime, delay, merge, repeat, take, takeUntil } from "rxjs/operators";
-import { Subject } from "rxjs/Subject";
 import { IgxSelectionAPIService } from "../core/selection";
 import { cloneArray } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
@@ -307,6 +306,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
     public rowList: QueryList<IgxGridRowComponent>;
 
+    @ViewChild("emptyGrid", { read: TemplateRef })
+    public emptyGridTemplate: TemplateRef<any>;
+
     @ViewChild("scrollContainer", { read: IgxForOfDirective })
     public parentVirtDir: IgxForOfDirective<any>;
 
@@ -510,6 +512,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return (this.calcWidth * 80) / 100;
     }
 
+    get unpinnedAreaMinWidth(): number {
+        return (this.calcWidth * 20) / 100;
+    }
     get pinnedWidth() {
         return this.getPinnedWidth();
     }
@@ -636,6 +641,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const cell = this.gridAPI.get_cell_by_field(this.id, rowSelector, column);
         if (cell) {
             cell.update(value);
+            this.cdr.detectChanges();
             this._pipeTrigger++;
         }
     }
@@ -726,6 +732,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public pinColumn(columnName: string): boolean {
         const col = this.getColumnByName(columnName);
+        const colWidth = parseInt(col.width, 10);
 
         if (col.pinned) {
             return false;
@@ -734,7 +741,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
          * If the column that we want to pin is bigger or equal than the unpinned area we should not pin it.
          * It should be also unpinned before pinning, since changing left/right pin area doesn't affect unpinned area.
          */
-        if (parseInt(col.width, 10) >= this.getUnpinnedWidth(true) && !col.pinned) {
+        if (this.getUnpinnedWidth(true) - colWidth < this.unpinnedAreaMinWidth) {
             return false;
         }
 
@@ -817,7 +824,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._height = this.rowBasedHeight <= viewPortHeight ? null : viewPortHeight.toString();
         } else {
             const parentHeight = this.nativeElement.parentNode.getBoundingClientRect().height;
-            this._height = this.rowBasedHeight <= parentHeight ? null : "100%";
+            this._height = this.rowBasedHeight <= parentHeight ? null : this._height;
         }
         this.calculateGridHeight();
         this.cdr.detectChanges();
@@ -836,6 +843,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         if (!this._height) {
             this.calcHeight = null;
+            if (this.hasSummarizedColumns && !this.tfootHeight) {
+                this.tfootHeight = this.tfoot.nativeElement.firstElementChild ?
+                    this.calcMaxSummaryHeight() : 0;
+            }
             return;
         }
 
@@ -919,6 +930,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     protected calculateGridSizes() {
         this.calculateGridWidth();
+        this.cdr.detectChanges();
         this.calculateGridHeight();
         if (this.rowSelectable) {
             this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.clientWidth;
@@ -1082,6 +1094,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this._filteringExpressions.length > 0 ?
             this.headerCheckbox && this.headerCheckbox.checked ? "Deselect all filtered" : "Select all filtered" :
             this.headerCheckbox && this.headerCheckbox.checked ? "Deselect all" : "Select all";
+    }
+
+    public get template(): TemplateRef<any> {
+        return this.emptyGridTemplate;
     }
 
     public checkHeaderChecboxStatus(headerStatus?: boolean) {

@@ -1,8 +1,10 @@
 <div #dialog class="igx-dialog" *ngIf="isOpen" [@fadeInOut]="state" (click)="onDialogSelected($event)">
     <div #dialogWindow class="igx-dialog__window" [@slideIn]="state" [attr.role]="role" [attr.aria-labelledby]="titleId">
+
         <div *ngIf="title" [attr.id]="titleId" class="igx-dialog__window-title">
             {{ title }}
         </div>
+        <ng-content *ngIf="!title" select="igx-dialog-title,[igxDialogTitle]"></ng-content>
 
         <div class="igx-dialog__window-content" *ngIf="message">{{ message }}</div>
         <ng-content *ngIf="!message"></ng-content>
@@ -17,6 +19,7 @@
                 {{ rightButtonLabel }}
             </button>
         </div>
+        <ng-content *ngIf="!leftButtonLabel && !rightButtonLabel" select="igx-dialog-actions,[igxDialogActions]"></ng-content>
 
     </div>
 </div>
