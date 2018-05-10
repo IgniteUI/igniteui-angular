@@ -916,6 +916,28 @@ describe("IgxGrid - Row Selection", () => {
             expect(thirdRow.isSelected).toBeFalsy();
         });
     }));
+
+    fit("Should be able to correctly select all rows programatically", async(() => {
+        const fixture = TestBed.createComponent(GridWithSelectionComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.gridSelection3;
+        const gridElement: HTMLElement = fixture.nativeElement.querySelector(".igx-grid");
+        const firstRow = grid.getRowByIndex(0);
+        const secondRow = grid.getRowByIndex(1);
+        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector(".igx-checkbox__input");
+        expect(firstRow.isSelected).toBeFalsy();
+        grid.selectAllRows();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(secondRow.isSelected).toBeTruthy();
+            firstRowCheckbox.dispatchEvent(new Event("click", {}));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+        });
+    }));
 });
 
 @Component({
