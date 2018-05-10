@@ -917,7 +917,7 @@ describe("IgxGrid - Row Selection", () => {
         });
     }));
 
-    fit("Should be able to correctly select all rows programatically", async(() => {
+    it("Should be able to correctly select all rows programatically", async(() => {
         const fixture = TestBed.createComponent(GridWithSelectionComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.gridSelection3;
