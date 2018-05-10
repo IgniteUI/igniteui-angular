@@ -37,7 +37,7 @@ describe("IgxDropDown ", () => {
         button.click(mockObj);
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            const currentItem = fixture.debugElement.queryAll(By.css("." + CSS_CLASS_SELECTED))[0];
+            const currentItem = fixture.debugElement.queryAll(By.css("." + CSS_CLASS_FOCUSED))[0];
             expect(currentItem.componentInstance.index).toEqual(0);
             currentItem.triggerEventHandler("keydown.ArrowDown", mockObj);
             return fixture.whenStable();
