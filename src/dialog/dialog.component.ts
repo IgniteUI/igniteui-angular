@@ -2,8 +2,10 @@ import { transition, trigger, useAnimation } from "@angular/animations";
 import { CommonModule } from "@angular/common";
 import {
     Component,
+    ContentChild,
     ElementRef,
     EventEmitter,
+    forwardRef,
     HostBinding,
     Input,
     NgModule,
@@ -19,6 +21,8 @@ import { fadeIn, fadeOut, slideInBottom } from "../animations/main";
 import { IgxNavigationService, IToggleView } from "../core/navigation";
 import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
+import { IgxDialogActionsDirective, IgxDialogTitleDirective } from "./dialog.directives";
+
 /**
  * **Ignite UI for Angular Dialog Window** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog.html)
@@ -220,8 +224,8 @@ export interface IDialogEventArgs {
 }
 
 @NgModule({
-    declarations: [IgxDialogComponent],
-    exports: [IgxDialogComponent],
+    declarations: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
+    exports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
     imports: [CommonModule, IgxButtonModule, IgxRippleModule]
 })
 export class IgxDialogModule { }

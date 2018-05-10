@@ -1,6 +1,7 @@
 import { Component, Injectable, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { Http } from "@angular/http";
-import { BehaviorSubject, Observable } from "rxjs/Rx";
+import { BehaviorSubject, Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { IgxColumnComponent } from "../../lib/grid/column.component";
 import { IgxGridComponent } from "../../lib/grid/grid.component";
 import {
@@ -21,12 +22,11 @@ export class RemoteService {
 
     public getData(data?: IForOfState, cb?: (any) => void): any {
         var dataState = data;
-        return this.http
-            .get(this.buildUrl(dataState))
-            .map((response) => response.json())
-            .map((response) => {
+        return this.http.get(this.buildUrl(dataState)).pipe(
+            map((response) => response.json()),
+            map((response) => {
                 return response;
-            })
+            }))
             .subscribe((data) => {
                 this._remoteData.next(data.value);
                 if (cb) {
@@ -39,7 +39,7 @@ export class RemoteService {
         let qS: string = "?", requiredChunkSize: number;
         if (dataState) {
             const skip = dataState.startIndex;
-                
+
                 requiredChunkSize =  dataState.chunkSize === 0 ?
                     // Set initial chunk size, the best value is igxForContainerSize divided on igxForItemSize
                     10 : dataState.chunkSize;

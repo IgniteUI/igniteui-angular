@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Subject } from "rxjs/Subject";
+import { Subject } from "rxjs";
 import { cloneArray } from "../core/utils";
 import { DataUtil } from "../data-operations/data-util";
 import { IFilteringExpression } from "../data-operations/filtering-expression.interface";
