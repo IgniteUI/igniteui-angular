@@ -105,8 +105,7 @@ export class IgxColumnComponent implements AfterContentInit {
     public formatter: (value: any) => any;
 
     @Input()
-    public filteringCondition: (target: any, searchVal: any, ignoreCase?: boolean) =>
-        boolean = STRING_FILTERS.contains;
+    public filteringCondition: (target: any, searchVal: any, ignoreCase?: boolean) => any;
 
     @Input()
     public filteringIgnoreCase = true;
