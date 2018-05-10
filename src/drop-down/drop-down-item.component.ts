@@ -1,4 +1,11 @@
-import { Component, ElementRef, forwardRef, HostBinding, HostListener, Inject, Input } from "@angular/core";
+import {
+    Component,
+    ElementRef,
+    forwardRef,
+    HostBinding,
+    HostListener,
+    Inject,
+    Input } from "@angular/core";
 import { IgxDropDownComponent, ISelectionEventArgs } from "./drop-down.component";
 
 /**
@@ -11,13 +18,16 @@ import { IgxDropDownComponent, ISelectionEventArgs } from "./drop-down.component
 })
 
 export class IgxDropDownItemComponent {
+    private _isFocused = false;
+
     @HostBinding("class.igx-drop-down__item")
     get itemStyle(): boolean {
         return !this.isHeader;
     }
 
-    private _isFocused = false;
-
+    /**
+     * Gets if the given item is selected
+     */
     get isSelected() {
         return this.dropDown.selectedItem === this;
     }
@@ -28,6 +38,9 @@ export class IgxDropDownItemComponent {
         return this.isSelected;
     }
 
+    /**
+     * Sets/gets if the given item is focused
+     */
     @HostBinding("class.igx-drop-down__item--focused")
     get isFocused() {
         return this._isFocused;
@@ -44,17 +57,25 @@ export class IgxDropDownItemComponent {
         this._isFocused = value;
     }
 
+    /**
+     * Sets/gets if the given item is header
+     */
     @Input()
     @HostBinding("class.igx-drop-down__header")
     public isHeader = false;
 
+
+    /**
+     * Sets/gets if the given item is disabled
+     */
     @Input()
     @HostBinding("class.igx-drop-down__item--disabled")
     public isDisabled = false;
 
     @HostBinding("attr.tabindex")
-     setTabIndex() {
+    get setTabIndex() {
         const shouldSetTabIndex = this.dropDown.allowItemsFocus && !(this.isDisabled || this.isHeader);
+        console.log(shouldSetTabIndex);
         if (shouldSetTabIndex) {
             return 0;
         } else {
@@ -62,12 +83,34 @@ export class IgxDropDownItemComponent {
         }
     }
 
+    /**
+     * Gets item index
+     */
+    public get index(): number {
+        return this.dropDown.items.indexOf(this);
+    }
+
+    /**
+     * Gets item element height
+     */
+    public get elementHeight(): number {
+        return this.elementRef.nativeElement.clientHeight;
+    }
+
+    /**
+     * Get item html element
+     */
+    public get element() {
+        return this.elementRef;
+    }
+
     constructor(
         @Inject(forwardRef(() => IgxDropDownComponent)) public dropDown: IgxDropDownComponent,
         private elementRef: ElementRef
     ) { }
 
-    @HostListener("click", ["$event"]) clicked(event) {
+    @HostListener("click", ["$event"])
+    clicked(event) {
         if (this.isDisabled || this.isHeader) {
             const focusedItem = this.dropDown.items.find((item) => item.isFocused);
             focusedItem.elementRef.nativeElement.focus({ preventScroll: true });
@@ -121,17 +164,5 @@ export class IgxDropDownItemComponent {
         this.dropDown.focusFirst();
         event.stopPropagation();
         event.preventDefault();
-    }
-
-    public get index(): number {
-        return this.dropDown.items.indexOf(this);
-    }
-
-    public get elementHeight(): number {
-        return this.elementRef.nativeElement.clientHeight;
-    }
-
-    public get element() {
-        return this.elementRef;
     }
 }

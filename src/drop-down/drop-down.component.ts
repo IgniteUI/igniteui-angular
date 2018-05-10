@@ -1,12 +1,11 @@
 import { CommonModule } from "@angular/common";
 import {
-    AfterViewChecked,
     ChangeDetectorRef,
     Component,
     ContentChildren,
+    ElementRef,
     EventEmitter,
     forwardRef,
-    HostBinding,
     Input,
     NgModule,
     OnInit,
@@ -14,6 +13,7 @@ import {
     QueryList,
     ViewChild
 } from "@angular/core";
+import { IToggleView } from "../core/navigation";
 import { IgxSelectionAPIService } from "../core/selection";
 import { IgxToggleDirective, IgxToggleModule } from "../directives/toggle/toggle.directive";
 import { IgxDropDownItemComponent } from "./drop-down-item.component";
@@ -42,7 +42,7 @@ export interface ISelectionEventArgs {
     selector: "igx-drop-down",
     templateUrl: "./drop-down.component.html"
 })
-export class IgxDropDownComponent implements OnInit, AfterViewChecked {
+export class IgxDropDownComponent implements IToggleView, OnInit {
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
     private _focusedItem: IgxDropDownItemComponent = null;
     private _width;
@@ -59,16 +59,43 @@ export class IgxDropDownComponent implements OnInit, AfterViewChecked {
     public toggleDirective: IgxToggleDirective;
 
     /**
-     * The event that will be thrown when item is selected,
-     * provides reference to the `<IgxDropDownItem>` component as argument
-     * @type {EventEmitter}
+     * Emitted when item selection is changing, before the selection completes
+     * @type {EventEmitter<ISelectionEventArgs>}
      */
     @Output()
     public onSelection = new EventEmitter<ISelectionEventArgs>();
-    @Output() public onOpening = new EventEmitter();
-    @Output() public onOpened = new EventEmitter();
-    @Output() public onClosed = new EventEmitter();
 
+    /**
+     * Emitted before the dropdown is opened
+     * @type {EventEmitter}
+     */
+    @Output()
+    public onOpening = new EventEmitter();
+
+    /**
+     * Emitted after the dropdown is opened
+     * @type {EventEmitter}
+     */
+    @Output()
+    public onOpened = new EventEmitter();
+
+    /**
+     * Emitted before the dropdown is closed
+     * @type {EventEmitter}
+     */
+    @Output()
+    public onClosing = new EventEmitter();
+
+    /**
+     * Emitted after the dropdown is closed
+     * @type {EventEmitter}
+     */
+    @Output()
+    public onClosed = new EventEmitter();
+
+    /**
+     * Gets/sets the width of the drop down
+     */
     @Input()
     get width() {
         return this._width;
@@ -78,6 +105,9 @@ export class IgxDropDownComponent implements OnInit, AfterViewChecked {
         this.toggleDirective.element.style.width = value;
     }
 
+    /**
+     * Gets/sets the height of the drop down
+     */
     @Input()
     get height() {
         return this._height;
@@ -87,13 +117,16 @@ export class IgxDropDownComponent implements OnInit, AfterViewChecked {
         this.toggleDirective.element.style.height = value;
     }
 
+    /**
+     * Gets/sets whether items will be able to take focus. If set to true, default value,
+     * user will be able to use keyboard navigation.
+     */
     @Input()
     public allowItemsFocus = true;
 
-    constructor(
-        private cdr: ChangeDetectorRef,
-        private selectionAPI: IgxSelectionAPIService) { }
-
+    /**
+     * Gets/sets the drop down's id
+     */
     @Input()
     get id(): string {
         return this._id;
@@ -103,11 +136,17 @@ export class IgxDropDownComponent implements OnInit, AfterViewChecked {
         this.toggleDirective.id = value;
     }
 
-    get selectedItem(): IgxDropDownItemComponent {
+    /**
+     * Get currently selected item
+     */
+    public get selectedItem(): IgxDropDownItemComponent {
         const selection = this.selectionAPI.get_selection(this.id);
         return selection && selection.length > 0 ? selection[0] as IgxDropDownItemComponent : null;
     }
 
+    /**
+     * Get all non-header items
+     */
     public get items(): IgxDropDownItemComponent[] {
         const items: IgxDropDownItemComponent[] = [];
         if (this.children !== undefined) {
@@ -121,6 +160,9 @@ export class IgxDropDownComponent implements OnInit, AfterViewChecked {
         return items;
     }
 
+    /**
+     * Get all header items
+     */
     public get headers(): IgxDropDownItemComponent[] {
         const headers: IgxDropDownItemComponent[] = [];
         if (this.children !== undefined) {
@@ -134,6 +176,22 @@ export class IgxDropDownComponent implements OnInit, AfterViewChecked {
         return headers;
     }
 
+    /**
+     * Get dropdown html element
+     */
+    public get element() {
+        return this.elementRef.nativeElement;
+    }
+
+    constructor(
+        private elementRef: ElementRef,
+        private cdr: ChangeDetectorRef,
+        private selectionAPI: IgxSelectionAPIService) { }
+
+    /**
+     * Select an item by index
+     * @param index of the item to select
+     */
     setSelectedItem(index: number) {
         if (index < 0 || index >= this.items.length) {
             return;
@@ -145,6 +203,31 @@ export class IgxDropDownComponent implements OnInit, AfterViewChecked {
         }
 
         this.changeSelectedItem(newSelection);
+    }
+
+    /**
+     * Opens the dropdown
+     */
+    open(fireEvents?: boolean) {
+        this.toggleDirective.open(true);
+    }
+
+    /**
+     * Closes the dropdown
+     */
+    close(fireEvents?: boolean) {
+        this.toggleDirective.close(true);
+    }
+
+    /**
+     * Toggles the dropdown
+     */
+    toggle(fireEvents?: boolean) {
+        if (this.toggleDirective.collapsed) {
+            this.open();
+        } else {
+            this.close();
+        }
     }
 
     focusFirst() {
@@ -224,9 +307,6 @@ export class IgxDropDownComponent implements OnInit, AfterViewChecked {
         this.toggleDirective.id = this.id;
     }
 
-    ngAfterViewChecked() {
-    }
-
     onToggleOpening() {
         this.cdr.detectChanges();
         this.scrollToItem(this.selectedItem);
@@ -250,22 +330,6 @@ export class IgxDropDownComponent implements OnInit, AfterViewChecked {
         }
 
         this.onClosed.emit();
-    }
-
-    open() {
-        this.toggleDirective.open(true);
-    }
-
-    close() {
-        this.toggleDirective.close(true);
-    }
-
-    toggle() {
-        if (this.toggleDirective.collapsed) {
-            this.open();
-        } else {
-            this.close();
-        }
     }
 
     private scrollToItem(item: IgxDropDownItemComponent) {

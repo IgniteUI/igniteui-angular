@@ -110,4 +110,7 @@ export class DropDownSampleComponent implements OnInit {
 
     onSelection(ev) {
     }
+
+    onOpening(ev) {
+    }
 }
