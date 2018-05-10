@@ -11,7 +11,7 @@ const CSS_CLASS_SELECTED = "igx-drop-down__item--selected";
 const CSS_CLASS_DISABLED = "igx-drop-down__item--disabled";
 const CSS_CLASS_HEADER = "igx-drop-down__header";
 
-fdescribe("IgxDropDown ", () => {
+describe("IgxDropDown ", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -526,6 +526,23 @@ fdescribe("IgxDropDown ", () => {
         fixture.whenStable().then(() => {
             fixture.detectChanges();
             expect(list.items[0].isFocused).toEqual(false);
+        });
+    });
+
+    it("Disabled items cannot be selected", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestDisabledComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        const list = fixture.componentInstance.dropdownDisabled;
+        const listItems = list.items;
+        expect(list).toBeDefined();
+        expect(list.items.length).toEqual(13);
+        list.setSelectedItem(0);
+        button.click();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(list.items[0].isSelected).toEqual(false);
+            button.click();
         });
     });
 
