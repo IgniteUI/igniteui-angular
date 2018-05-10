@@ -643,6 +643,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const cell = this.gridAPI.get_cell_by_field(this.id, rowSelector, column);
         if (cell) {
             cell.update(value);
+            this.cdr.detectChanges();
             this._pipeTrigger++;
         }
     }
