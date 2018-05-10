@@ -375,7 +375,6 @@ describe("IgxGrid - input properties", () => {
         const gridApi = fix.componentInstance.gridApi;
         const editValue = 777;
 
-        // debugger;
         fix.whenStable().then(() => {
             grid.filter(cols[0].key, 1);
             return fix.whenStable();
@@ -494,11 +493,7 @@ export class IgGridTest5x5Component {
         for (let r = 0; r < rows; r++) {
             const record = {};
             for (let c = 0; c < columns; c++) {
-                if (c === 0) {
-                    record[this.cols[c].key] = 1;
-                } else {
-                    record[this.cols[c].key] = c * r;
-                }
+                c === 0 ? record[this.cols[c].key] = 1 : record[this.cols[c].key] = c * r;
             }
             this.data.push(record);
         }
