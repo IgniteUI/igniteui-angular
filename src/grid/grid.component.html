@@ -36,12 +36,16 @@
 
 <div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody>
     <ng-template igxFor let-rowData [igxForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
-                            | gridSort:sortingExpressions:id:pipeTrigger
-                            | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
+        | gridSort:sortingExpressions:id:pipeTrigger
+        | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
         [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
         <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
         </igx-grid-row>
     </ng-template>
+    <ng-container *ngIf="!!filteredData && filteredData.length === 0">
+        <ng-container *ngTemplateOutlet="template">
+        </ng-container>
+    </ng-container>
 </div>
 
 
@@ -68,3 +72,7 @@
     <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
     </ng-container>
 </div>
+
+<ng-template #emptyGrid>
+    <p class="igx-grid--empty">No records found.</p>
+</ng-template>

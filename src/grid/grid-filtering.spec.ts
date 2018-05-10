@@ -198,7 +198,7 @@ describe("IgxGrid - Filtering actions", () => {
         // Empty filter
         grid.filter("Released", null, BOOLEAN_FILTERS.empty);
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(2);
+        expect(grid.rowList.length).toEqual(3);
 
         // False filter
         grid.clearFilter("Released");
@@ -206,7 +206,7 @@ describe("IgxGrid - Filtering actions", () => {
         expect(grid.rowList.length).toEqual(8);
         grid.filter("Released", null, BOOLEAN_FILTERS.false);
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(3);
+        expect(grid.rowList.length).toEqual(2);
 
         // True filter
         grid.clearFilter("Released");
@@ -220,7 +220,7 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
         grid.filter("Released", null, BOOLEAN_FILTERS.notEmpty);
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(6);
+        expect(grid.rowList.length).toEqual(5);
 
         // NotNull filter
         grid.clearFilter("Released");
@@ -484,7 +484,7 @@ export class IgxGridFilteringComponent {
             ID: 8,
             ProductName: null,
             ReleaseDate: this.today,
-            Released: false
+            Released: undefined
         }
     ];
 
