@@ -366,7 +366,7 @@ describe("IgxGrid - input properties", () => {
         expect(window.getComputedStyle(grid.nativeElement).width).toMatch("400px");
     });
 
-    fit(`When edit a cell onto filtered data through grid method, the row should
+    it(`When edit a cell onto filtered data through grid method, the row should
             disapear and the new value should not persist onto the next row`, async(() => {
         const fix = TestBed.createComponent(IgGridTest5x5Component);
         fix.detectChanges();
