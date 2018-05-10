@@ -53,7 +53,7 @@ export class IgxDropDownItemComponent {
     public isDisabled = false;
 
     @HostBinding("attr.tabindex")
-    get setTabIndex() {
+     setTabIndex() {
         const shouldSetTabIndex = this.dropDown.allowItemsFocus && !(this.isDisabled || this.isHeader);
         if (shouldSetTabIndex) {
             return 0;
