@@ -27,9 +27,8 @@ import {
     ViewChildren,
     ViewContainerRef
 } from "@angular/core";
-import { of } from "rxjs/observable/of";
+import { of, Subject } from "rxjs";
 import { debounceTime, delay, merge, repeat, take, takeUntil } from "rxjs/operators";
-import { Subject } from "rxjs/Subject";
 import { IgxSelectionAPIService } from "../core/selection";
 import { cloneArray } from "../core/utils";
 import { DataType } from "../data-operations/data-util";

@@ -13,9 +13,8 @@ import {
     TemplateRef,
     ViewChild
 } from "@angular/core";
+import { Subject, Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
-import { Subject } from "rxjs/Subject";
-import { Subscription } from "rxjs/Subscription";
 import { DataType } from "../data-operations/data-util";
 import {
     BOOLEAN_FILTERS,

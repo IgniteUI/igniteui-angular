@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild, Injectable  } from "@angular/core";
-import { BehaviorSubject, Observable } from "rxjs/Rx";
+import { BehaviorSubject, Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { Http } from "@angular/http";
 import {
     IgxDialogModule,
@@ -26,16 +27,15 @@ export class RemoteService {
 
     public getData(data?: IForOfState, cb?: (any) => void): any {
         var dataState = data;
-        return this.http
-            .get(this.buildUrl(dataState))
-            .map((response) => response.json())
-            .map((response) => {
+        return this.http.get(this.buildUrl(dataState)).pipe(
+            map((response) => response.json()),
+            map((response) => {
                 return response;
-            })
-            .subscribe((data) => {
-                this._remoteData.next(data.value);
+            }))
+            .subscribe((d) => {
+                this._remoteData.next(d.value);
                 if (cb) {
-                    cb(data);
+                    cb(d);
                 }
             });
     }
@@ -44,7 +44,7 @@ export class RemoteService {
         let qS: string = "?", requiredChunkSize: number;
         if (dataState) {
             const skip = dataState.startIndex;
-                
+
                 requiredChunkSize =  dataState.chunkSize === 0 ?
                     // Set initial chunk size, the best value is igxForContainerSize divided on igxForItemSize
                     10 : dataState.chunkSize;
@@ -67,10 +67,10 @@ export class VirtualForSampleComponent {
     public remoteData:any;
 	public options: any = {};
     public prevRequest:any;
-    
+
     @ViewChild("virtDirVertical", { read: IgxForOfDirective })
     public virtDirVertical: IgxForOfDirective<any>;
-        
+
     @ViewChild("virtDirHorizontal", { read: IgxForOfDirective })
     public virtDirHorizontal: IgxForOfDirective<any>;
 
@@ -84,7 +84,7 @@ export class VirtualForSampleComponent {
         let data = [{
             key: 1,
             avatar: "images/avatar/1.jpg",
-            favorite: true, 
+            favorite: true,
             link: "#",
             phone: "770-504-2217",
             text: "Terrance Orta",
@@ -92,7 +92,7 @@ export class VirtualForSampleComponent {
             }, {
             key: 2,
             avatar: "images/avatar/2.jpg",
-            favorite: false,           
+            favorite: false,
             link: "#",
             phone: "423-676-2869",
             text: "Richard Mahoney",
@@ -100,7 +100,7 @@ export class VirtualForSampleComponent {
         }, {
              key: 3,
             avatar: "images/avatar/3.jpg",
-            favorite: false,           
+            favorite: false,
             link: "#",
             phone: "859-496-2817",
             text: "Donna Price",
@@ -108,7 +108,7 @@ export class VirtualForSampleComponent {
         }, {
             key: 4,
             avatar: "images/avatar/4.jpg",
-            favorite: false,            
+            favorite: false,
             link: "#",
             phone: "901-747-3428",
             text: "Lisa Landers",
@@ -116,7 +116,7 @@ export class VirtualForSampleComponent {
         }, {
              key: 5,
             avatar: "images/avatar/12.jpg",
-            favorite: true,           
+            favorite: true,
             link: "#",
             phone: "573-394-9254",
             text: "Dorothy H. Spencer",
@@ -124,7 +124,7 @@ export class VirtualForSampleComponent {
         }, {
              key: 6,
             avatar: "images/avatar/13.jpg",
-            favorite: false,           
+            favorite: false,
             link: "#",
             phone: "323-668-1482",
             text: "Stephanie May",
@@ -132,7 +132,7 @@ export class VirtualForSampleComponent {
         }, {
             key: 7,
             avatar: "images/avatar/14.jpg",
-            favorite: false,            
+            favorite: false,
             link: "#",
             phone: "401-661-3742",
             text: "Marianne Taylor",
@@ -140,7 +140,7 @@ export class VirtualForSampleComponent {
         }, {
             key: 8,
             avatar: "images/avatar/15.jpg",
-            favorite: true,           
+            favorite: true,
             link: "#",
             phone: "662-374-2920",
             text: "Tammie Alvarez",
@@ -148,7 +148,7 @@ export class VirtualForSampleComponent {
         }, {
             key: 9,
             avatar: "images/avatar/16.jpg",
-            favorite: true,           
+            favorite: true,
             link: "#",
             phone: "240-455-2267",
             text: "Charlotte Flores",
@@ -156,7 +156,7 @@ export class VirtualForSampleComponent {
         }, {
             key: 10,
             avatar: "images/avatar/17.jpg",
-            favorite: false,            
+            favorite: false,
             link: "#",
             phone: "724-742-0979",
             text: "Ward Riley",

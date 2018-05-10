@@ -1,5 +1,6 @@
 import {
     animate,
+    AnimationEvent,
     state,
     style,
     transition,
@@ -8,7 +9,6 @@ import {
 } from "@angular/animations";
 import { CommonModule } from "@angular/common";
 import {
-    AnimationTransitionEvent,
     Component,
     EventEmitter,
     HostBinding,
@@ -130,15 +130,15 @@ export class IgxSnackbarComponent {
 
     /**
      * The event that will be thrown when the snackbar animation starts
-     * @type {EventEmitter<AnimationTransitionEvent>}
+     * @type {EventEmitter<AnimationEvent>}
      */
-    @Output() public animationStarted = new EventEmitter<AnimationTransitionEvent>();
+    @Output() public animationStarted = new EventEmitter<AnimationEvent>();
 
     /**
      * The event that will be thrown when the snackbar animation ends
-     * @type {EventEmitter<AnimationTransitionEvent>}
+     * @type {EventEmitter<AnimationEvent>}
      */
-    @Output() public animationDone = new EventEmitter<AnimationTransitionEvent>();
+    @Output() public animationDone = new EventEmitter<AnimationEvent>();
 
     private timeoutId;
 
@@ -172,13 +172,13 @@ export class IgxSnackbarComponent {
         this.onAction.emit(this);
     }
 
-    public snackbarAnimationStarted(evt: AnimationTransitionEvent): void {
+    public snackbarAnimationStarted(evt: AnimationEvent): void {
         if (evt.fromState === "void") {
             this.animationStarted.emit(evt);
         }
     }
 
-    public snackbarAnimationDone(evt: AnimationTransitionEvent): void {
+    public snackbarAnimationDone(evt: AnimationEvent): void {
         if (evt.fromState === "show") {
             this.animationDone.emit(evt);
         }

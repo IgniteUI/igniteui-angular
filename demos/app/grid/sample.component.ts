@@ -1,6 +1,7 @@
 import { Component, Injectable, ViewChild } from "@angular/core";
 import { Http } from "@angular/http";
-import { BehaviorSubject, Observable } from "rxjs/Rx";
+import { BehaviorSubject, Observable } from "rxjs";
+import { map  } from "rxjs/operators";
 import { IgxColumnComponent } from "../../lib/grid/column.component";
 import { IgxGridComponent } from "../../lib/grid/grid.component";
 import {
@@ -40,8 +41,8 @@ export class LocalService {
     }
 
     public getData() {
-        return this.http.get(this.url)
-            .map((response) => response.json())
+        return this.http.get(this.url).pipe(
+            map((response) => response.json()))
             .subscribe((data) => {
                 this.dataStore = data.value;
                 this._records.next(this.dataStore);
@@ -62,26 +63,14 @@ export class RemoteService {
     }
 
     public getData(data?: Array<any>, cb?: () => void): any {
-        return this.http
-            .get(this.buildUrl(null))
-            .map((response) => response.json())
-            .map((response) => {
-                if (data) {
-                    // const p: IPagingState = data.paging;
-                    //  if (p) {
-                    //      const countRecs: number = response["@odata.count"];
-                    //      p.metadata = {
-                    //          countPages: Math.ceil(countRecs / p.recordsPerPage),
-                    //         countRecords: countRecs,
-                    //         error: PagingError.None
-                    //      };
-                    //  }
-                }
+        return this.http.get(this.buildUrl(null)).pipe(
+            map((response) => response.json()),
+            map((response) => {
                 if (cb) {
                     cb();
                 }
                 return response;
-            })
+            }))
             .subscribe((data) => {
                 this._remoteData.next(data.value);
             });
