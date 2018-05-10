@@ -294,6 +294,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         this.grid.onEditDone.emit(args);
         this.value = args.newValue;
         this.gridAPI.update(this.gridID, this);
+
+        this.grid.refreshSearch();
     }
 
     private subscribeNext(virtualContainer: any, callback: (elem?) => void) {
