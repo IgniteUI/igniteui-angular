@@ -222,9 +222,6 @@ export class IgxDropDownComponent implements OnInit, AfterViewChecked {
 
     ngOnInit() {
         this.toggleDirective.id = this.id;
-        this.toggleDirective.element.style.zIndex = 1;
-        this.toggleDirective.element.style.position = "absolute";
-        this.toggleDirective.element.style.overflowY = "auto";
     }
 
     ngAfterViewChecked() {

@@ -11,6 +11,11 @@
 
     @extend %igx-drop-down !optional;
 
+    @include e(list) {
+        @extend %igx-drop-down__list !optional;
+    }
+
+
     @include e(item) {
         @extend %igx-drop-down__item !optional;
     }

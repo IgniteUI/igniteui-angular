@@ -1,5 +1,7 @@
-<div class="igx-drop-down" igxToggle (onOpening)="onToggleOpening()" (onOpened)="onToggleOpened()" (onClosed)="onToggleClosed()">
-    <ng-container *ngIf="!toggleDirective.collapsed">
-        <ng-content></ng-content>
-    </ng-container>
+<div class="igx-drop-down">
+    <div class="igx-drop-down__list" igxToggle (onOpening)="onToggleOpening()" (onOpened)="onToggleOpened()" (onClosed)="onToggleClosed()">
+        <ng-container *ngIf="!toggleDirective.collapsed">
+            <ng-content></ng-content>
+        </ng-container>
+    </div>
 </div>
