@@ -172,13 +172,13 @@ export class IgxSnackbarComponent {
         this.onAction.emit(this);
     }
 
-    public snackbarAnimationStarted(evt: any): void {
+    public snackbarAnimationStarted(evt: AnimationEvent): void {
         if (evt.fromState === "void") {
             this.animationStarted.emit(evt);
         }
     }
 
-    public snackbarAnimationDone(evt: any): void {
+    public snackbarAnimationDone(evt: AnimationEvent): void {
         if (evt.fromState === "show") {
             this.animationDone.emit(evt);
         }
