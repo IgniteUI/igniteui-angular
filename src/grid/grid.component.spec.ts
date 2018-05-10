@@ -2,6 +2,7 @@ import { asNativeElements, ChangeDetectorRef, Component, DebugElement, OnInit, V
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { NUMBER_FILTERS } from "../data-operations/filtering-condition";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridComponent } from "./grid.component";
@@ -376,7 +377,7 @@ describe("IgxGrid - input properties", () => {
         const editValue = 777;
 
         fix.whenStable().then(() => {
-            grid.filter(cols[0].key, 1);
+            grid.filter(cols[0].key, 1, NUMBER_FILTERS.equals);
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
