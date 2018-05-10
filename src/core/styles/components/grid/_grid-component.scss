@@ -59,6 +59,10 @@
         @extend %grid-row--selected !optional;
     }
 
+    @include e(tr, $m: group) {
+        @extend %grid-row--group !optional;
+    }
+
     @include e(th) {
         @extend %grid-cell-display !optional;
         @extend %grid-cell-header !optional;

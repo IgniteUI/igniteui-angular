@@ -1,3 +1,7 @@
+<ng-container *ngIf="grid.groupingExpressions.length > 0">
+        <div class="igx-grid__cbx-grouping" [style.min-width.px]="grid.calcGroupByWidth">               
+        </div>
+</ng-container>
 <ng-container *ngIf="rowSelectable">
     <div class="igx-grid__cbx-selection">
         <igx-checkbox [checked]="isSelected" (change)="onCheckboxClick($event)" disableRipple="true" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>

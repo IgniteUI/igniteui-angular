@@ -133,6 +133,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this._filteringExpressions;
     }
 
+    @Input()
+    public groupByIndentation = 30;
+
     set filteringExpressions(value) {
         this._filteringExpressions = cloneArray(value);
         this.cdr.markForCheck();
@@ -349,6 +352,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
     public rowList: QueryList<IgxGridRowComponent>;
 
+    @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
+    public groupedRowList: QueryList<IgxGridGroupByRowComponent>;
+
     @ViewChild("emptyGrid", { read: TemplateRef })
     public emptyGridTemplate: TemplateRef<any>;
 
@@ -411,6 +417,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.cdr.detectChanges();
     }
 
+    get calcGroupByWidth() {
+        return this.groupingExpressions.length * this.groupByIndentation;
+    }
+
     public pagingState;
     public calcWidth: number;
     public calcRowCheckboxWidth: number;
@@ -440,6 +450,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _groupingExpandState: IGroupByExpandState[] = [];
     private _filteredData = null;
     private resizeHandler;
+    private scrollHandler;
     private columnListDiffer;
     private _height = "100%";
     private _width = "100%";
@@ -458,6 +469,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.resizeHandler = () => {
             this.calculateGridSizes();
             this.zone.run(() => this.markForCheck());
+        };
+
+        this.scrollHandler = (evt) => {
+            const target = evt.target;
+            if (this.groupedRowList.length > 0) {
+                const groupRows = this.groupedRowList.toArray();
+                const left = target.scrollLeft;
+                for(const row of groupRows) {
+                    row.element.nativeElement.style.left = - left + "px";
+                }
+            }
         };
     }
 
@@ -516,7 +538,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public ngAfterViewInit() {
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.addEventListener("resize", this.resizeHandler);
-        });
+            this.parentVirtDir.getHorizontalScroll().addEventListener("scroll", this.scrollHandler);
+        });        
         this._derivePossibleWidth();
         this.calculateGridSizes();
 
@@ -1002,6 +1025,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
         if (this.rowSelectable) {
             sum += this.calcRowCheckboxWidth;
+        }
+
+        if (this.groupingExpressions.length > 0) {
+            sum += this.calcGroupByWidth;
         }
         return sum;
     }

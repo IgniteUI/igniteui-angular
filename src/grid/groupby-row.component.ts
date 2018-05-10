@@ -39,7 +39,7 @@ import { IGroupByRecord } from "../data-operations/groupby-record.interface";
 export class IgxGridGroupByRowComponent {
 
     constructor(public gridAPI: IgxGridAPIService,
-        private element: ElementRef,
+        public element: ElementRef,
         public cdr: ChangeDetectorRef) {}
 
     @Input()
@@ -57,7 +57,11 @@ export class IgxGridGroupByRowComponent {
 
     @HostBinding("style.padding-left")
     get padding(): string {
-        return this.groupRow.level * 100 + "px";
+        return this.groupRow.level * this.grid.groupByIndentation + "px";
+    }
+    @HostBinding("class")
+    get styleClasses(): string {
+        return `${this.defaultCssClass}`;
     }
 
     @autoWire(true)
@@ -68,4 +72,6 @@ export class IgxGridGroupByRowComponent {
     get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
     }
+
+    protected defaultCssClass = "igx-grid__tr--group";
 };

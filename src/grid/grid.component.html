@@ -24,6 +24,10 @@
                 <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event)" disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
             </div>
         </ng-container>
+        <ng-container *ngIf="groupingExpressions.length > 0">
+            <div class="igx-grid__cbx-grouping" [style.min-width.px]="calcGroupByWidth">               
+            </div>
+        </ng-container>
         <ng-container *ngIf="pinnedColumns.length > 0">
             <igx-grid-header [gridID]="id" *ngFor="let col of pinnedColumns" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header>
         </ng-container>
