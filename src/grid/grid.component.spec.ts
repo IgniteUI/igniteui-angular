@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Component, DebugElement, OnInit, ViewChild } from "@angular/core";
+import { asNativeElements, ChangeDetectorRef, Component, DebugElement, OnInit, ViewChild } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxRippleModule } from "../directives/ripple/ripple.directive";
+import { IgxGridAPIService } from "./api.service";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
@@ -363,6 +364,34 @@ describe("IgxGrid - input properties", () => {
         expect(window.getComputedStyle(grid.nativeElement).height).toMatch("300px");
         expect(window.getComputedStyle(grid.nativeElement).width).toMatch("400px");
     });
+
+    it(`When edit a cell onto filtered data through grid method, the row should
+            disapear and the new value should not persist onto the next row`, async(() => {
+        const fix = TestBed.createComponent(IgGridTest5x5Component);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.gridMinDefaultColWidth;
+        const cols = fix.componentInstance.cols;
+        const gridApi = fix.componentInstance.gridApi;
+        const editValue = 777;
+
+        // debugger;
+        fix.whenStable().then(() => {
+            grid.filter(cols[0].key, 1);
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            grid.updateCell(editValue, 0, cols[0].key);
+            grid.markForCheck();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            const gridRows = fix.debugElement.queryAll(By.css("igx-grid-row"));
+            const firstRowCells = gridRows[0].queryAll(By.css("igx-grid-cell"));
+            const firstCellInputValue = firstRowCells[0].nativeElement.textContent.trim();
+            expect(firstCellInputValue).toEqual("1");
+        });
+    }));
 });
 
 @Component({
@@ -436,7 +465,11 @@ export class IgxGridTestDefaultWidthHeightComponent {
 @Component({
     template: `
     <igx-grid #gridMinDefaultColWidth [data]="data" (onColumnInit)="init($event)" >
-        <igx-column *ngFor="let col of cols" [field]="col.key" [header]="col.key" [dataType]="col.dataType"></igx-column>
+        <igx-column *ngFor="let col of cols"
+            [field]="col.key"
+            [header]="col.key"
+            [dataType]="col.dataType"
+            [editable]="col.editable"></igx-column>
     </igx-grid>
     `
 })
@@ -447,7 +480,7 @@ export class IgGridTest5x5Component {
     @ViewChild("gridMinDefaultColWidth", { read: IgxGridComponent })
     public gridMinDefaultColWidth: IgxGridComponent;
 
-    constructor(private _cdr: ChangeDetectorRef) {
+    constructor(public gridApi: IgxGridAPIService, private _cdr: ChangeDetectorRef) {
         this.generateColumns(5);
         this.generateData(this.cols.length, 5);
     }
@@ -461,7 +494,11 @@ export class IgGridTest5x5Component {
         for (let r = 0; r < rows; r++) {
             const record = {};
             for (let c = 0; c < columns; c++) {
-                record[this.cols[c].key] = c * r;
+                if (c === 0) {
+                    record[this.cols[c].key] = 1;
+                } else {
+                    record[this.cols[c].key] = c * r;
+                }
             }
             this.data.push(record);
         }
@@ -469,10 +506,18 @@ export class IgGridTest5x5Component {
     public generateColumns(count) {
         this.cols = [];
         for (let i = 0; i < count; i++) {
-            this.cols.push({
-                key: "col" +  i,
-                dataType: "number"
-            });
+            if (i % 2 === 0) {
+                this.cols.push({
+                    key: "col" + i,
+                    dataType: "number",
+                    editable: true
+                });
+            } else {
+                this.cols.push({
+                    key: "col" + i,
+                    dataType: "number"
+                });
+            }
         }
         return this.cols;
     }
