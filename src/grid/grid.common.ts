@@ -127,6 +127,15 @@ export class IgxCellHeaderTemplateDirective {
 }
 
 @Directive({
+    selector: "[igxGroupByRow]"
+})
+export class IgxGroupByRowTemplateDirective {
+
+    constructor(public template: TemplateRef<any>) { }
+
+}
+
+@Directive({
     selector: "[igxFooter]"
 })
 export class IgxCellFooterTemplateDirective {

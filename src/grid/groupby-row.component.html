@@ -5,5 +5,10 @@
             <igx-icon *ngIf="expanded" fontSet="material" name="remove"></igx-icon>
         </span>
     </div>
+
+<ng-container *ngTemplateOutlet="grid.groupRowTemplate ? grid.groupRowTemplate : defaultGroupByTemplate; context: { $implicit: groupRow }">
+</ng-container>
+<ng-template #defaultGroupByTemplate>
     <span>{{ groupRow.expression.fieldName }}: {{ groupRow.value }} ({{ groupRow.records.length }})</span>
+</ng-template>    
 </ng-container>

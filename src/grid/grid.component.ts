@@ -46,6 +46,7 @@ import { IgxColumnComponent } from "./column.component";
 import { IgxGridRowComponent } from "./row.component";
 import { IgxGridGroupByRowComponent } from "./groupby-row.component";
 import { ISummaryExpression } from "./grid-summary";
+import { IgxGroupByRowTemplateDirective } from "./grid.common";
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -349,6 +350,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
 
+    @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective })
+    protected groupTemplate: IgxGroupByRowTemplateDirective;
+
     @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
     public rowList: QueryList<IgxGridRowComponent>;
 
@@ -448,6 +452,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _sortingExpressions = [];
     protected _groupingExpressions = [];
     protected _groupingExpandState: IGroupByExpandState[] = [];
+    protected _groupRowTemplate: TemplateRef<any>;
     private _filteredData = null;
     private resizeHandler;
     private scrollHandler;
@@ -496,6 +501,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public ngAfterContentInit() {
         if (this.autoGenerate) {
             this.autogenerateColumns();
+        }
+        if (this.groupTemplate) {
+            this._groupRowTemplate = this.groupTemplate.template;
         }
 
         this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
@@ -557,6 +565,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     get nativeElement() {
         return this.elementRef.nativeElement;
+    }
+
+    get groupRowTemplate(): TemplateRef<any> {
+        return this._groupRowTemplate;
+    }
+    set groupRowTemplate(template: TemplateRef<any>) {
+        this._groupRowTemplate = template;
+        this.markForCheck();
     }
 
     get calcResizerHeight(): number {
