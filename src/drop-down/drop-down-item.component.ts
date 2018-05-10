@@ -64,7 +64,6 @@ export class IgxDropDownItemComponent {
     @HostBinding("class.igx-drop-down__header")
     public isHeader = false;
 
-
     /**
      * Sets/gets if the given item is disabled
      */
