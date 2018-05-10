@@ -88,7 +88,7 @@
     $ripple-radius: $ripple-size / 2;
 
     $ripple-theme: igx-ripple-theme(
-        $color: var($theme, 'fill-color')
+        $color: --var($theme, 'fill-color')
     );
 
     %radio-display {
@@ -96,7 +96,7 @@
         flex-flow: row nowrap;
         align-items: center;
         font-size: $font-size;
-        color: var($theme, 'label-color');
+        color: --var($theme, 'label-color');
     }
 
     %radio-input {
@@ -105,7 +105,7 @@
 
     %radio-display--disabled {
         pointer-events: none;
-        color: var($theme, 'disabled-color');
+        color: --var($theme, 'disabled-color');
         user-select: none;
     }
 
@@ -117,7 +117,7 @@
         min-width: $size;
         line-height: $size;
         cursor: pointer;
-        color: var($theme, 'label-color');
+        color: --var($theme, 'label-color');
         user-select: none;
 
         &::before,
@@ -138,35 +138,35 @@
         }
 
         &::after {
-            border: $border-style var($theme, 'empty-color');
+            border: $border-style --var($theme, 'empty-color');
         }
     }
 
     %radio-composite--x {
         &::before {
-            border: $border-style var($theme, 'fill-color');
-            background-color: var($theme, 'fill-color');
+            border: $border-style --var($theme, 'fill-color');
+            background-color: --var($theme, 'fill-color');
             transform: scale3d(.5, .5, .5);
         }
 
         &::after {
-            border: $border-style var($theme, 'fill-color');
+            border: $border-style --var($theme, 'fill-color');
         }
     }
 
     %radio-composite--disabled {
         &::after {
-            border: $border-style var($theme, 'disabled-color');
+            border: $border-style --var($theme, 'disabled-color');
         }
     }
 
     %radio-composite--x--disabled {
         &::after {
-            border: $border-style var($theme, 'disabled-color');
+            border: $border-style --var($theme, 'disabled-color');
         }
 
         &::before {
-            background-color: var($theme, 'disabled-color');
+            background-color: --var($theme, 'disabled-color');
             border: $border-style transparent;
         }
     }
@@ -223,7 +223,7 @@
 
     %radio-ripple--focused {
         @include animation('scale-in-out' 1s $ease-out-quad infinite);
-        background-color: var($theme, 'fill-color');
+        background-color: --var($theme, 'fill-color');
         transition: background-color .2s $ease-out-quad;
         opacity: .12;
     }

@@ -137,7 +137,7 @@
     $input-transition: all .2s $ease-in-out-quad;
 
     $ripple-theme: igx-ripple-theme(
-        $color: var($theme, 'thumb-on-color')
+        $color: --var($theme, 'thumb-on-color')
     );
 
     %switch-display {
@@ -163,18 +163,18 @@
         width: $switch-width;
         height: $switch-height;
         border-radius: $switch-radius;
-        background-color: var($theme, 'track-off-color');
+        background-color: --var($theme, 'track-off-color');
         cursor: pointer;
         user-select: none;
         transition: $input-transition;
     }
 
     %switch-composite--x {
-        background-color: var($theme, 'track-on-color');
+        background-color: --var($theme, 'track-on-color');
     }
 
     %switch-composite--disabled {
-        background: var($theme, 'track-disabled-color');
+        background: --var($theme, 'track-disabled-color');
     }
 
     %switch-composite-thumb {
@@ -184,7 +184,7 @@
         height: $switch-thumb-height;
         min-width: $switch-thumb-width;
         border-radius: 50%;
-        background: var($theme, 'thumb-off-color');
+        background: --var($theme, 'thumb-off-color');
         box-shadow: $switch-shadow;
         transition: $input-transition;
 
@@ -195,7 +195,7 @@
 
     %switch-composite-thumb--x {
         transform: translateX(#{$switch-width - $switch-thumb-width});
-        background: var($theme, 'thumb-on-color');
+        background: --var($theme, 'thumb-on-color');
 
         [dir='rtl'] & {
             transform: translateX(-#{$switch-width - $switch-thumb-width});
@@ -203,7 +203,7 @@
     }
 
     %switch-composite-thumb--disabled {
-        background: var($theme, 'thumb-disabled-color');
+        background: --var($theme, 'thumb-disabled-color');
         box-shadow: $switch-disabled-shadow;
     }
 
@@ -223,14 +223,14 @@
 
     %switch-ripple--focused {
         @include animation('scale-in-out' 1s $ease-out-quad infinite);
-        background-color: var($theme, 'thumb-on-color');
+        background-color: --var($theme, 'thumb-on-color');
         transition: background-color .2s $ease-out-quad;
         opacity: .12;
     }
 
     %switch-label {
         display: inline-block;
-        color: var($theme, 'label-color');
+        color: --var($theme, 'label-color');
         font-size: $label-font-size;
         line-height: 1;
         cursor: pointer;
@@ -270,6 +270,6 @@
     }
 
     %switch-label--disabled {
-        color: var($theme, 'label-disabled-color');
+        color: --var($theme, 'label-disabled-color');
     }
 }

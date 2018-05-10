@@ -89,7 +89,7 @@
         "karma-mocha-reporter": "^2.2.5",
         "karma-sourcemap-loader": "^0.3.7",
         "karma-webpack": "^2.0.9",
-        "node-sass": "^4.7.2",
+        "node-sass": "4.9.0",
         "raw-loader": "^0.5.1",
         "rimraf": "^2.6.2",
         "sass-loader": "^6.0.6",

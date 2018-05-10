@@ -93,13 +93,13 @@
         position: relative;
         min-width: $dialog-min-width;
         border-radius: 2px;
-        background: var($theme, 'background');
+        background: --var($theme, 'background');
         box-shadow: igx-elevation($elevations, 24);
         overflow: hidden;
     }
 
     %igx-dialog-title {
-        color: var($theme, 'title-color');
+        color: --var($theme, 'title-color');
         font-size: $dialog-title-font-size;
         line-height: $dialog-title-line-height;
         padding: $dialog-title-padding;
@@ -107,7 +107,7 @@
     }
 
     %igx-dialog-content {
-        color: var($theme, 'message-color');
+        color: --var($theme, 'message-color');
         max-width: 40ch;
         font-size: $dialog-message-font-size;
         line-height: $dialog-message-line-height;

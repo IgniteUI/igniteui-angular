@@ -94,7 +94,7 @@
         left: 0;
         right: 0;
         height: $menu-height;
-        background: var($theme, 'background');
+        background: --var($theme, 'background');
         overflow: hidden;
         z-index: 8;
     }
@@ -121,7 +121,7 @@
         min-width: $item-min-width;
         max-width: $item-max-width;
         height: 100%;
-        color: var($theme, 'idle-item-color');
+        color: --var($theme, 'idle-item-color');
         cursor: pointer;
         user-select: none;
         overflow: hidden;
@@ -135,7 +135,7 @@
     }
 
     %igx-active-tab {
-        color: var($theme, 'active-item-color');
+        color: --var($theme, 'active-item-color');
         transition: color .15s $ease-in-out-quad, opacity .25s $ease-in-out-quad;
     }
 

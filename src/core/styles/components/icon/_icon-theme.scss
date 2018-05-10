@@ -48,16 +48,16 @@
 
     // @debug $theme;
 
-    $igx-icon-font-size: var($theme, 'size');
+    $igx-icon-font-size: --var($theme, 'size');
 
     %igx-icon-display {
         width: $igx-icon-font-size;
         height: $igx-icon-font-size;
         font-size: $igx-icon-font-size;
-        color: var($theme, 'color');
+        color: --var($theme, 'color');
     }
 
     %igx-icon--inactive {
-        color: var($theme, 'disabled-color') !important;
+        color: --var($theme, 'disabled-color') !important;
     }
 }

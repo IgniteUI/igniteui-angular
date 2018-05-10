@@ -146,11 +146,11 @@
         box-shadow: $group-shadow;
         transition: box-shadow .2s ease;
         overflow: hidden;
-        background-color: var($theme, 'item-background');
+        background-color: --var($theme, 'item-background');
 
         %igx-button--disabled {
-            color: var($theme, 'disabled-text-color') !important;
-            background-color: var($theme, 'disabled-background-color') !important;
+            color: --var($theme, 'disabled-text-color') !important;
+            background-color: --var($theme, 'disabled-background-color') !important;
         }
     }
 
@@ -166,9 +166,9 @@
         border-radius: 0;
         border-left: $group-item-border-thickness solid;
         border-right: $group-item-border-thickness solid;
-        border-color: var($theme, 'item-border-color');
-        color: var($theme, 'item-text-color');
-        background-color: var($theme, 'item-background');
+        border-color: --var($theme, 'item-border-color');
+        color: --var($theme, 'item-text-color');
+        background-color: --var($theme, 'item-background');
         min-width: $group-item-min-width;
         min-height: $group-item-min-height;
         font-weight: $group-item-font-weight;
@@ -183,8 +183,8 @@
 
         &:hover,
         &:focus{
-            color: var($theme, 'item-hover-text-color');
-            background-color: var($theme, 'item-hover-background');
+            color: --var($theme, 'item-hover-text-color');
+            background-color: --var($theme, 'item-hover-background');
         }
     }
 
@@ -192,7 +192,7 @@
         border-left: 0;
         border-right: 0;
         border-bottom: $group-item-border-thickness solid;
-        border-color: var($theme, 'item-border-color');
+        border-color: --var($theme, 'item-border-color');
 
         &:first-child {
             border-top: 0;
@@ -200,15 +200,15 @@
     }
 
     %igx-group-item-selected {
-        color: var($theme, 'item-selected-text-color');
-        background-color: var($theme, 'item-selected-background');
-        border-color: var($theme, 'item-selected-border-color');
+        color: --var($theme, 'item-selected-text-color');
+        background-color: --var($theme, 'item-selected-background');
+        border-color: --var($theme, 'item-selected-border-color');
 
         &:hover,
         &:focus{
-            color: var($theme, 'item-selected-text-color');
-            background-color: var($theme, 'item-selected-background');
-            border-color: var($theme, 'item-selected-border-color');
+            color: --var($theme, 'item-selected-text-color');
+            background-color: --var($theme, 'item-selected-background');
+            border-color: --var($theme, 'item-selected-border-color');
         }
     }
 

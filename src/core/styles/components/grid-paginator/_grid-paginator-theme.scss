@@ -48,12 +48,12 @@
     @include igx-root-css-vars($theme);
 
     %igx-grid-paginator {
-        color: var($theme, 'text-color');
-        background: var($theme, 'background-color');
+        color: --var($theme, 'text-color');
+        background: --var($theme, 'background-color');
         grid-row: 6;
         padding: rem(5px) 0;
         font-size: 12px;
-        border-top: 1px dotted var($theme, 'border-color');
+        border-top: 1px dotted --var($theme, 'border-color');
 
         &:empty {
             padding: 0;

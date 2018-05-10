@@ -253,7 +253,7 @@
         display: flex;
         flex-flow: column nowrap;
         width: 100%;
-        background: var($theme, 'content-background');
+        background: --var($theme, 'content-background');
         overflow: hidden;
         outline: none;
 
@@ -274,8 +274,8 @@
     }
 
     %cal-header-display {
-        background-color: var($theme, 'header-background');
-        color: var($theme, 'header-text-color');
+        background-color: --var($theme, 'header-background');
+        color: --var($theme, 'header-text-color');
         padding: $cal-header-padding;
     }
 
@@ -304,7 +304,7 @@
     %cal-header-date-el--hover {
         &:hover,
         &:focus {
-            color: var($theme, 'picker-text-hover-color');
+            color: --var($theme, 'picker-text-hover-color');
             cursor: pointer;
         }
     }
@@ -321,12 +321,12 @@
 
     %cal-picker-arrow {
         display: inline-flex;
-        color: var($theme, 'picker-arrow-color');
+        color: --var($theme, 'picker-arrow-color');
         user-select: none;
         cursor: pointer;
 
         &:hover {
-            color: var($theme, 'picker-arrow-hover-color');
+            color: --var($theme, 'picker-arrow-hover-color');
         }
     }
 
@@ -338,7 +338,7 @@
         font-size: $cal-picker-date-fs;
         line-height: $cal-picker-date-lh;
         font-weight: $cal-picker-date-fw;
-        color: var($theme, 'picker-text-color');
+        color: --var($theme, 'picker-text-color');
         text-align: center;
     }
 
@@ -376,20 +376,20 @@
         line-height: $cal-value-lh;
         text-align: center;
         border-radius: $cal-value-br;
-        color: var($theme, 'content-text-color');
+        color: --var($theme, 'content-text-color');
         cursor: pointer;
         outline: none;
         transition: background .15s ease-out;
     }
 
     %cal-value--label {
-        color: var($theme, 'inactive-text-color');
+        color: --var($theme, 'inactive-text-color');
         cursor: default;
         border-radius: 0;
     }
 
     %cal-value--weekend {
-        color: var($theme, 'weekend-text-color');
+        color: --var($theme, 'weekend-text-color');
     }
 
     %cal-value--year {
@@ -404,15 +404,15 @@
 
     %cal-value--year-current {
         font-size: $cal-value-year-current-fs;
-        color: var($theme, 'year-current-text-color');
+        color: --var($theme, 'year-current-text-color');
     }
 
     %cal-value--year-hover {
-        color: var($theme, 'year-hover-text-color');
+        color: --var($theme, 'year-hover-text-color');
     }
 
     %cal-value--month-hover {
-        color: var($theme, 'month-hover-text-color');
+        color: --var($theme, 'month-hover-text-color');
     }
 
     %cal-value--month {
@@ -425,27 +425,27 @@
     }
 
     %cal-value--month-current {
-        color: var($theme, 'month-current-text-color');
+        color: --var($theme, 'month-current-text-color');
     }
 
     %cal-value--inactive {
         cursor: pointer;
-        color: var($theme, 'inactive-text-color');
+        color: --var($theme, 'inactive-text-color');
     }
 
     %cal-value--selected {
         position: relative;
-        color: var($theme, 'date-selected-text-color');
-        background-color: var($theme, 'date-selected-background') !important;
+        color: --var($theme, 'date-selected-text-color');
+        background-color: --var($theme, 'date-selected-background') !important;
         font-weight: $cal-value-fw;
     }
 
     %cal-value--current {
-        color: var($theme, 'date-current-text-color');
+        color: --var($theme, 'date-current-text-color');
         font-weight: $cal-value-fw;
     }
 
     %cal-value--hover {
-        background-color: var($theme, 'date-hover-background');
+        background-color: --var($theme, 'date-hover-background');
     }
 }

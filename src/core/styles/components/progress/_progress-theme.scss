@@ -70,7 +70,7 @@
     // @debug $theme;
 
     $bar-height: 4px;
-    $stripe-color: var($theme, 'stripes-color');
+    $stripe-color: --var($theme, 'stripes-color');
     $value-fs: em(14px, 16px);
     $value-fw: 600;
     $value-margin: 0;
@@ -93,7 +93,7 @@
         position: absolute;
         width: inherit;
         height: inherit;
-        background: var($theme, 'track-color');
+        background: --var($theme, 'track-color');
         z-index: 0;
     }
 
@@ -119,29 +119,29 @@
     }
 
     %linear-bar-progress--default {
-        background: var($theme, 'fill-color-default')
+        background: --var($theme, 'fill-color-default')
     }
 
     %linear-bar-progress--danger {
-        background-color: var($theme, 'fill-color-danger');
+        background-color: --var($theme, 'fill-color-danger');
     }
 
     %linear-bar-progress--warning {
-        background-color: var($theme, 'fill-color-warning');
+        background-color: --var($theme, 'fill-color-warning');
     }
 
     %linear-bar-progress--info {
-        background-color: var($theme, 'fill-color-info');
+        background-color: --var($theme, 'fill-color-info');
     }
 
     %linear-bar-progress--success {
-        background-color: var($theme, 'fill-color-success');
+        background-color: --var($theme, 'fill-color-success');
     }
 
 
     %linear-value {
         margin: $value-margin;
-        color: var($theme, 'text-color');
+        color: --var($theme, 'text-color');
         font-size: $value-fs;
         font-weight: $value-fw;
     }
@@ -223,12 +223,12 @@
     %circular-innercircle {
         stroke-width: 4;
         fill: transparent;
-        stroke: var($theme, 'base-circle-color');
+        stroke: --var($theme, 'base-circle-color');
     }
 
     %circular-circle {
         fill: transparent;
-        stroke: var($theme, 'progress-circle-color');
+        stroke: --var($theme, 'progress-circle-color');
         stroke-width: 6;
         stroke-linecap: round;
         stroke-dashoffset: 289;
@@ -240,7 +240,7 @@
     %circular-text {
         font-size: $circular-value-fs;
         font-weight: $circular-value-fw;
-        fill: var($theme, 'text-color');
+        fill: --var($theme, 'text-color');
     }
 
     %circular-text--hidden {

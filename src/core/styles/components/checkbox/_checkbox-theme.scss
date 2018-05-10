@@ -95,7 +95,7 @@
     $ripple-radius: $ripple-size / 2;
 
     $ripple-theme: igx-ripple-theme(
-        $color: var($theme, 'fill-color')
+        $color: --var($theme, 'fill-color')
     );
 
     @include scale-in-center();
@@ -126,7 +126,7 @@
         min-width: $size;
         border-width: $border-width;
         border-style: solid;
-        border-color: var($theme, 'empty-color');
+        border-color: --var($theme, 'empty-color');
         border-radius: $radius;
         -webkit-tap-highlight-color: transparent;
         transition: border-color .2s $ease-out-quad;
@@ -143,20 +143,20 @@
     }
 
     %cbx-composite--x {
-        border-color: var($theme, 'fill-color');
+        border-color: --var($theme, 'fill-color');
 
         &::after {
-            background: var($theme, 'fill-color');
+            background: --var($theme, 'fill-color');
         }
     }
 
     %cbx-composite--disabled {
-        border-color: var($theme, 'disabled-color');
+        border-color: --var($theme, 'disabled-color');
     }
 
     %cbx-composite--x--disabled {
         &::after {
-            background: var($theme, 'disabled-color');
+            background: --var($theme, 'disabled-color');
         }
     }
 
@@ -166,7 +166,7 @@
         right: 0;
         bottom: 0;
         left: 0;
-        stroke: var($theme, 'tick-color');
+        stroke: --var($theme, 'tick-color');
         stroke-linecap: square;
         stroke-width: $mark-stroke;
         stroke-dasharray: $mark-length;
@@ -191,7 +191,7 @@
 
     %cbx-label {
         display: inline-block;
-        color: var($theme, 'label-color');
+        color: --var($theme, 'label-color');
         font-size: $label-font-size;
         line-height: 1;
         cursor: pointer;
@@ -231,7 +231,7 @@
     }
 
     %cbx-label--disabled {
-        color: var($theme, 'disabled-color');
+        color: --var($theme, 'disabled-color');
     }
 
     %cbx-ripple {
@@ -250,7 +250,7 @@
 
     %cbx-ripple--focused {
         @include animation('scale-in-out' 1s $ease-out-quad infinite);
-        background-color: var($theme, 'fill-color');
+        background-color: --var($theme, 'fill-color');
         transition: background-color .2s $ease-out-quad;
         opacity: .12;
     }

@@ -99,7 +99,7 @@
         height: $badge-height;
         font-size: $badge-font-size;
         font-weight: $badge-font-weight;
-        color: var($theme, 'text-color');
+        color: --var($theme, 'text-color');
         line-height: 1;
 
         igx-icon {
@@ -110,7 +110,7 @@
             height: $badge-width - 2px;
             font-size: $badge-icon-font-size;
             font-weight: $badge-font-weight;
-            color: var($theme, 'icon-color');
+            color: --var($theme, 'icon-color');
         }
     }
 
@@ -121,15 +121,15 @@
 
     %igx-badge--circle {
         border-radius: $badge-border-radius-circle;
-        box-shadow: var($theme, 'badge-shadow');
-        border-width: var($theme, 'border-width');
-        border-color: var($theme, 'border-color');
+        box-shadow: --var($theme, 'badge-shadow');
+        border-width: --var($theme, 'border-width');
+        border-color: --var($theme, 'border-color');
         border-style: $border-type;
         overflow: hidden;
     }
 
     %igx-badge--default {
-        background-color: var($theme, 'background-color');
+        background-color: --var($theme, 'background-color');
     }
 
     %igx-circle--success {

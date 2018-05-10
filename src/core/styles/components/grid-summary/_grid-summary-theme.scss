@@ -76,14 +76,14 @@
     @include igx-root-css-vars($theme);
 
     $cell-pin: (
-        style: var($theme, 'pinned-border-width') var($theme, 'pinned-border-style'),
-        color: var($theme, 'pinned-border-color')
+        style: --var($theme, 'pinned-border-width') --var($theme, 'pinned-border-style'),
+        color: --var($theme, 'pinned-border-color')
     );
 
     %igx-grid-summary {
         display: flex;
         flex-direction: column;
-        border-left: 1px dotted var($theme, 'border-color');
+        border-left: 1px dotted --var($theme, 'border-color');
         flex: 1 1 0%;
         padding: 0 rem(24px);
         overflow: hidden;
@@ -104,11 +104,11 @@
     }
 
     %igx-grid-summary--pinned-last {
-        border-right: var($cell-pin, 'style') var($cell-pin, 'color');
+        border-right: --var($cell-pin, 'style') --var($cell-pin, 'color');
     }
 
     %igx-grid-summary--empty {
-        border-left: 1px dotted var($theme, 'border-color');
+        border-left: 1px dotted --var($theme, 'border-color');
     }
 
     %igx-grid-summary__item {
@@ -120,17 +120,17 @@
     }
 
     %igx-grid-summary__label {
-        color: var($theme, 'label-color');
+        color: --var($theme, 'label-color');
         min-width: rem(30px);
         margin-right: rem(3px);
 
         &:hover {
-            color: var($theme, 'label-hover-color');
+            color: --var($theme, 'label-hover-color');
         }
     }
 
     %igx-grid-summary__result {
-        color: var($theme, 'result-color');
+        color: --var($theme, 'result-color');
         font-weight: 800;
         flex: 1 1 auto;
         text-align: right;
@@ -138,7 +138,7 @@
 
     %igx-grid-summary__item--inactive {
         %igx-grid-summary__label {
-            color: var($theme, 'inactive-color');
+            color: --var($theme, 'inactive-color');
         }
 
         %igx-grid-summary__result {

@@ -159,8 +159,8 @@
     $grid-cell-pinned-border-color: igx-color($palette, 'grays', 300);
 
     $cell-pin: (
-        style: var($theme, 'pinned-border-width') var($theme, 'pinned-border-style'),
-        color: var($theme, 'pinned-border-color')
+        style: --var($theme, 'pinned-border-width') --var($theme, 'pinned-border-style'),
+        color: --var($theme, 'pinned-border-color')
     );
 
     %grid-display {
@@ -185,8 +185,8 @@
     %grid-tfoot {
         position: relative;
         display: block;
-        background: var($theme, 'header-background');
-        color: var($theme, 'header-text-color');
+        background: --var($theme, 'header-background');
+        color: --var($theme, 'header-text-color');
 
         %grid-row {
             background: inherit;
@@ -221,8 +221,8 @@
     %grid-tbody {
         position: relative;
         grid-row: 2;
-        background: var($theme, 'content-background');
-        color: var($theme, 'content-text-color');
+        background: --var($theme, 'content-background');
+        color: --var($theme, 'content-text-color');
         overflow: hidden;
         z-index: 1;
     }
@@ -238,7 +238,7 @@
         flex-flow: row nowrap;
         grid-row: 5;
         width: 100%;
-        background: var($theme, 'header-background');
+        background: --var($theme, 'header-background');
     }
 
     %grid-scroll-start {
@@ -253,8 +253,8 @@
 
     %grid-row {
         display: flex;
-        background-color: var($theme, 'content-background');
-        border-bottom: 1px solid var($theme, 'row-border-color');
+        background-color: --var($theme, 'content-background');
+        border-bottom: 1px solid --var($theme, 'row-border-color');
         outline-style: none;
 
         &:last-of-type {
@@ -262,16 +262,16 @@
         }
 
         &:hover {
-            background-color: var($theme, 'row-hover-background');
+            background-color: --var($theme, 'row-hover-background');
         }
     }
 
     %grid-row--selected {
-        color: var($theme, 'row-selected-text-color');
-        background-color: var($theme, 'row-selected-background');
+        color: --var($theme, 'row-selected-text-color');
+        background-color: --var($theme, 'row-selected-background');
 
         &:hover {
-            background-color: var($theme, 'row-selected-background');
+            background-color: --var($theme, 'row-selected-background');
         }
     }
 
@@ -293,8 +293,8 @@
     }
 
     %grid-cell--selected {
-        color: var($theme, 'cell-selected-text-color');
-        background-color: var($theme, 'cell-selected-background') !important;
+        color: --var($theme, 'cell-selected-text-color');
+        background-color: --var($theme, 'cell-selected-background') !important;
         border-bottom: 0;
     }
 
@@ -305,7 +305,7 @@
     }
 
     %grid-cell--pinned-last {
-        border-right: var($cell-pin, 'style') var($cell-pin, 'color') !important;
+        border-right: --var($cell-pin, 'style') --var($cell-pin, 'color') !important;
     }
 
     %grid-cell-header {
@@ -388,7 +388,7 @@
         position: absolute;
         cursor: col-resize;
         width: 4px;
-        background-color: var($theme, 'resize-line-color');
+        background-color: --var($theme, 'resize-line-color');
         z-index: 2;
 
         &::before,

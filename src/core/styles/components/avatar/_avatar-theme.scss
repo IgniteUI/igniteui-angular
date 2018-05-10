@@ -104,12 +104,12 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        color: var($theme, 'icon-color');
-        background: var($theme, 'icon-background');
+        color: --var($theme, 'icon-color');
+        background: --var($theme, 'icon-background');
     }
 
     %igx-avatar-image {
-        background-color: var($theme, 'image-background');
+        background-color: --var($theme, 'image-background');
     }
 
     %igx-avatar-initials {
@@ -117,8 +117,8 @@
         justify-content: center;
         align-items: center;
         text-transform: uppercase;
-        color: var($theme, 'initials-color');
-        background-color: var($theme, 'initials-background');
+        color: --var($theme, 'initials-color');
+        background-color: --var($theme, 'initials-background');
     }
 
     %igx-avatar-initials--small {

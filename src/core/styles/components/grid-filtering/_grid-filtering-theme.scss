@@ -129,7 +129,7 @@
 
     %igx-filtering-icon {
         cursor: pointer;
-        color: var($theme, 'toggle-icon-color');
+        color: --var($theme, 'toggle-icon-color');
 
         igx-icon {
             font-size: $grid-head-icon-size !important;
@@ -140,37 +140,37 @@
     }
 
     %igx-filtering-icon--active {
-        color: var($theme, 'toggle-icon-active-color');
+        color: --var($theme, 'toggle-icon-active-color');
     }
 
     %igx-filtering-icon--filtered {
-        color: var($theme, 'toggle-icon-filtered-color');
+        color: --var($theme, 'toggle-icon-filtered-color');
     }
 
     %igx-filtering-toggle {
         @extend %igx-filtering-icon;
 
         user-select: none;
-        background: var($theme, 'toggle-background');
+        background: --var($theme, 'toggle-background');
         border-radius: 50%;
     }
 
     %igx-filtering-toggle--hover {
-        background: var($theme, 'toggle-hover-background');
+        background: --var($theme, 'toggle-hover-background');
     }
 
     %igx-filtering-toggle--active {
         @extend %igx-filtering-icon;
         @extend %igx-filtering-icon--active;
 
-        background: var($theme, 'toggle-active-background');
+        background: --var($theme, 'toggle-active-background');
     }
 
     %igx-filtering-toggle--filtered {
         @extend %igx-filtering-icon;
         @extend %igx-filtering-icon--filtered;
 
-        background: var($theme, 'toggle-filtered-background');
+        background: --var($theme, 'toggle-filtered-background');
     }
 
     %igx-filtering-menu {
@@ -181,23 +181,23 @@
 
         min-width: $filtering-menu-min-width;
         user-select: none;
-        background: var($theme, 'menu-background');
-        color: var($theme, 'menu-text-color');
+        background: --var($theme, 'menu-background');
+        color: --var($theme, 'menu-text-color');
         margin-top: $filtering-menu-distance-to-toggle;
 
         box-shadow: $filtering-menu-shadow;
-        border: 1px solid var($theme, 'menu-background');
+        border: 1px solid --var($theme, 'menu-background');
         border-radius: $filtering-menu-radius;
         padding: $grid-filtering-options-padding;
         z-index: 10;
 
         @include igx-button(igx-button-theme(
-            $flat-text-color: var($theme, 'menu-button-text-color'),
-            $flat-hover-text-color: var($theme, 'menu-button-text-color'),
-            $flat-hover-background: var($theme, 'menu-button-text-color'),
-            $flat-focus-text-color: var($theme, 'menu-button-text-color'),
-            $flat-focus-background: var($theme, 'menu-button-text-color'),
-            $disabled-color: var($theme, 'menu-button-disabled-text-color'),
+            $flat-text-color: --var($theme, 'menu-button-text-color'),
+            $flat-hover-text-color: --var($theme, 'menu-button-text-color'),
+            $flat-hover-background: --var($theme, 'menu-button-text-color'),
+            $flat-focus-text-color: --var($theme, 'menu-button-text-color'),
+            $flat-focus-background: --var($theme, 'menu-button-text-color'),
+            $disabled-color: --var($theme, 'menu-button-disabled-text-color'),
             $disabled-background: transparent
         ));
 

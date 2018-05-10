@@ -43,7 +43,7 @@
         display: block;
         position: absolute;
         border-radius: 50%;
-        background: var($theme, 'color');
+        background: --var($theme, 'color');
         pointer-events: none;
         transform-origin: center;
         transform: translate3d(0, 0, 0) scale(0);

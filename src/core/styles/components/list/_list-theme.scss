@@ -98,7 +98,7 @@
     %igx-list {
         display: flex;
         flex-flow: column nowrap;
-        background-color: var($theme, 'background');
+        background-color: --var($theme, 'background');
         height: 100%;
         overflow: hidden;
     }
@@ -115,7 +115,7 @@
 
     %igx-list-empty-message {
         text-align: center;
-        color: var($theme, 'item-text-color');
+        color: --var($theme, 'item-text-color');
         padding: $list-empty-padding;
         z-index: 1;
     }
@@ -123,8 +123,8 @@
     %igx-list-header {
         display: flex;
         align-items: center;
-        color: var($theme, 'header-text-color');
-        background-color: var($theme, 'header-background');
+        color: --var($theme, 'header-text-color');
+        background-color: --var($theme, 'header-background');
         font-size: $list-header-font-size;
         font-weight: $list-header-font-weight;
         height: $list-header-height;
@@ -141,14 +141,14 @@
         padding: $list-item-padding;
         min-height: $list-item-height;
         font-size: $list-item-font-size;
-        color: var($theme, 'item-text-color');
-        background-color: var($theme, 'item-background');
+        color: --var($theme, 'item-text-color');
+        background-color: --var($theme, 'item-background');
         z-index: 2;
     }
 
     %igx-list-item--active {
-        color: var($theme, 'item-text-color-active');
-        background-color: var($theme, 'item-background-active');
+        color: --var($theme, 'item-text-color-active');
+        background-color: --var($theme, 'item-background-active');
         z-index: 3;
     }
 

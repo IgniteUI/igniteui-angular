@@ -135,9 +135,9 @@
         border-radius: 50%;
         outline-style: none;
         transition: all .15s ease-in-out;
-        color: var($theme, 'button-arrow-color');
-        background-color: var($theme, 'button-background');
-        box-shadow: var($theme, 'button-shadow');
+        color: --var($theme, 'button-arrow-color');
+        background-color: --var($theme, 'button-background');
+        box-shadow: --var($theme, 'button-shadow');
 
         span {
             display: flex;
@@ -146,8 +146,8 @@
     }
 
     %igx-carousel-arrow--hover {
-        color: var($theme, 'button-hover-arrow-color');
-        background: var($theme, 'button-hover-background');
+        color: --var($theme, 'button-hover-arrow-color');
+        background: --var($theme, 'button-hover-background');
     }
 
     %igx-carousel-arrow--next {
@@ -179,7 +179,7 @@
             text-indent: -9999px;
             cursor: pointer;
             border: $indicator-border-style;
-            border-color: var($theme, 'indicator-border-color');
+            border-color: --var($theme, 'indicator-border-color');
             border-radius: 50%;
             transition: all .15s $ease-out-quad;
             box-shadow: igx-elevation($elevations, 1);
@@ -193,14 +193,14 @@
                 left: 1px;
                 right: 1px;
                 border-radius: inherit;
-                background: var($theme, 'indicator-dot-color');
+                background: --var($theme, 'indicator-dot-color');
                 @include animation('scale-out-center' .15s $ease-out-quad forwards);
                 opacity: 0;
             }
 
             &.active {
                 border: $indicator-border-style;
-                border-color: var($theme, 'indicator-active-border-color');
+                border-color: --var($theme, 'indicator-active-border-color');
                 opacity: 1;
             }
 

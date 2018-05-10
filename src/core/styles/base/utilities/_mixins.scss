@@ -143,6 +143,42 @@
     }
 }
 
+/// Generates CSS variables for a given palette.
+/// @access private
+/// @param {Map} $palette - The igx palette to use to generate css variables for.
+///
+/// @example scss Generate css variables for the `$default-palette`.
+///   @include css-vars-from-palette($default-palette);
+///
+@mixin css-vars-from-palette($palette) {
+    @each $palette-name, $sub-palette in $palette {
+        @each $variant, $color in $sub-palette {
+            @if type-of($color) != 'map' {
+                --igx-#{$palette-name}-#{$variant}: #{$color};
+            }
+        }
+    }
+}
+
+/// Generates CSS variables for a given palette.
+/// @access public
+/// @param {Map} $palette - The igx palette to use to generate css variables for.
+/// @param {string} $scope [null] - The scope of the generated css variables.
+///
+/// @example scss Generate css variables for the `$default-palette`.
+///   @include css-vars-from-palette($default-palette, ':root');
+///
+/// @requires css-vars-from-palette
+@mixin igx-palette-vars($palette, $scope: null) {
+    @if $scope == null {
+        @include css-vars-from-palette($palette);
+    } @else {
+        #{$scope} {
+            @include css-vars-from-palette($palette);
+        }
+    }
+}
+
 /// Generates CSS class names for all colors from
 /// the color palette for a given property, with
 /// optional prefix and suffix attached to the class name.

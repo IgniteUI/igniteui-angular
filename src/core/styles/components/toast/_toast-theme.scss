@@ -70,8 +70,8 @@
         min-width: $toast-width;
         font-size: $toast-font-size;
         line-height: $toast-line-height;
-        color: var($theme, 'text-color');
-        background-color: var($theme, 'background');
+        color: --var($theme, 'text-color');
+        background-color: --var($theme, 'background');
         border-radius: $toast-border-radius;
         opacity: 0;
         z-index: 999999;

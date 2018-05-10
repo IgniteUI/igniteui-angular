@@ -94,7 +94,7 @@
         display: flex;
         padding: 10px 0;
         justify-content: center;
-        background: var($theme, 'background-color');
+        background: --var($theme, 'background-color');
     }
 
     %igx-time-picker__body--vertical {
@@ -157,7 +157,7 @@
         flex-flow: column nowrap;
         justify-content: space-between;
         align-items: center;
-        color: var($theme, 'text-color');
+        color: --var($theme, 'text-color');
         overflow: hidden;
 
         &:focus,
@@ -181,26 +181,26 @@
         }
 
         &:hover {
-            color: var($theme, 'hover-text-color');
+            color: --var($theme, 'hover-text-color');
         }
     }
 
     %igx-time-picker__item--selected {
         font-size: 24px;
-        color: var($theme, 'selected-text-color');
+        color: --var($theme, 'selected-text-color');
     }
 
     %igx-time-picker__item--active {
-        background: var($theme, 'active-item-background');
+        background: --var($theme, 'active-item-background');
     }
 
     %igx-time-picker__header {
-        background: var($theme, 'header-background');
+        background: --var($theme, 'header-background');
         padding: rem(24px) rem(16px);
     }
 
     %igx-time-picker__header-ampm {
-        color: var($theme, 'header-time-period-color');
+        color: --var($theme, 'header-time-period-color');
         font-size: rem(16px);
     }
 
@@ -216,11 +216,11 @@
         right: 0;
         top: 100%;
         height: 100%;
-        background: var($theme, 'header-background');
+        background: --var($theme, 'header-background');
     }
 
     %igx-time-picker__header-hour {
-        color: var($theme, 'header-hour-text-color');
+        color: --var($theme, 'header-hour-text-color');
         font-size: rem(40px);
         display: flex;
     }

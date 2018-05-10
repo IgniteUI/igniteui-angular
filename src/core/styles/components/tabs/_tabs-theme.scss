@@ -163,8 +163,8 @@
     $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
     $icon-label-space: rem(10px);
 
-    $tabs-ripple-theme: igx-ripple-theme($color: var($theme, 'tab-ripple-color'));
-    $button-ripple-theme: igx-ripple-theme($color: var($theme, 'button-ripple-color'));
+    $tabs-ripple-theme: igx-ripple-theme($color: --var($theme, 'tab-ripple-color'));
+    $button-ripple-theme: igx-ripple-theme($color: --var($theme, 'button-ripple-color'));
 
     %igx-tabs {
         display: flex;
@@ -175,7 +175,7 @@
         display: flex;
         align-items: center;
         overflow: hidden;
-        background: var($theme, 'item-background');
+        background: --var($theme, 'item-background');
     }
 
     // ITEM WRAPPER
@@ -228,8 +228,8 @@
         position: relative;
         transition: background .3s $tabs-animation-function;
         user-select: none;
-        background: var($theme, 'item-background');
-        color: var($theme, 'item-text-color');
+        background: --var($theme, 'item-background');
+        color: --var($theme, 'item-text-color');
         outline: 0;
 
         &::-moz-focus-inner {
@@ -237,12 +237,12 @@
         }
 
         &:focus {
-            background: var($theme, 'item-active-background');
+            background: --var($theme, 'item-active-background');
         }
 
         &:hover {
-            background: var($theme, 'item-hover-background');
-            color: var($theme, 'item-hover-color');
+            background: --var($theme, 'item-hover-background');
+            color: --var($theme, 'item-hover-color');
         }
 
         @include igx-ripple($tabs-ripple-theme);
@@ -251,20 +251,20 @@
 
     %igx-tabs__header-menu-item--selected {
         outline: 0;
-        color: var($theme, 'item-active-color');
+        color: --var($theme, 'item-active-color');
 
         &:focus {
-            background: var($theme, 'item-active-background');
-            color: var($theme, 'item-active-color');
+            background: --var($theme, 'item-active-background');
+            color: --var($theme, 'item-active-color');
         }
 
         &:hover {
-            background: var($theme, 'item-active-background');
-            color: var($theme, 'item-active-color');
+            background: --var($theme, 'item-active-background');
+            color: --var($theme, 'item-active-color');
         }
 
         %igx-tabs__header-menu-item-icon {
-            color: var($theme, 'item-active-icon-color');
+            color: --var($theme, 'item-active-icon-color');
         }
     }
 
@@ -296,7 +296,7 @@
         @media only screen and (max-width: 600px) {
             min-width: $item-min-width-small-res;
         }
-        background: var($theme, 'indicator-color');
+        background: --var($theme, 'indicator-color');
         transition: transform .3s $tabs-animation-function, width .2s $tabs-animation-function;
     }
 
@@ -314,19 +314,19 @@
         height: $tabs-height;
         cursor: pointer;
         position: relative;
-        background: var($theme, 'button-background');
-        color: var($theme, 'button-color');
+        background: --var($theme, 'button-background');
+        color: --var($theme, 'button-color');
         outline: 0;
         box-shadow: igx-elevation($elevations, 4);
 
         &:hover {
-            background: var($theme, 'button-hover-background');
-            color: var($theme, 'button-hover-color');
+            background: --var($theme, 'button-hover-background');
+            color: --var($theme, 'button-hover-color');
         }
 
         &:focus {
             outline: 0;
-            background: var($theme, 'button-hover-background');
+            background: --var($theme, 'button-hover-background');
         }
 
         &::-moz-focus-inner {

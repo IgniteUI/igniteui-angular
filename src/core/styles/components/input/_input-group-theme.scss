@@ -245,7 +245,7 @@
         display: block;
         font-size: $group-font-size; /* 16px, when base is 16px(html) */
         margin-top: $group-top-margin; /* 12px when base is 16px (self) */
-        color: var($theme, 'idle-text-color');
+        color: --var($theme, 'idle-text-color');
     }
 
     %form-group-display--no-margin {
@@ -264,7 +264,7 @@
     %form-group-display--disabled {
         pointer-events: none;
         user-select: none;
-        color: var($theme, 'disabled-text-color');
+        color: --var($theme, 'disabled-text-color');
     }
 
     %form-group-bundle {
@@ -272,14 +272,14 @@
         display: flex;
         align-items: center;
         flex-flow: row nowrap;
-        box-shadow: inset 0 -1px 0 0 var($theme, 'idle-bottom-line-color');
+        box-shadow: inset 0 -1px 0 0 --var($theme, 'idle-bottom-line-color');
         transition: box-shadow $transition-timing, color $transition-timing;
     }
 
     %form-group-bundle--box {
         padding: $group-bundle--box-padding;
-        background: var($theme, 'box-background');
-        box-shadow: inset 0 -2px 0 0 var($theme, 'idle-bottom-line-color');
+        background: --var($theme, 'box-background');
+        box-shadow: inset 0 -2px 0 0 --var($theme, 'idle-bottom-line-color');
 
         %form-group-label--box + %form-group-input--box {
             transform: translateY(0);
@@ -288,41 +288,41 @@
 
     %form-group-bundle--hover {
         cursor: pointer;
-        box-shadow: inset 0 -2px 0 0 var($theme, 'hover-bottom-line-color');
+        box-shadow: inset 0 -2px 0 0 --var($theme, 'hover-bottom-line-color');
     }
 
     %form-group-bundle--focus {
-        caret-color: var($theme, 'focused-secondary-color');
-        box-shadow: inset 0 -2px 0 0 var($theme, 'interim-bottom-line-color');
+        caret-color: --var($theme, 'focused-secondary-color');
+        box-shadow: inset 0 -2px 0 0 --var($theme, 'interim-bottom-line-color');
     }
 
     %form-group-bundle--success {
-        caret-color: var($theme, 'success-secondary-color');
-        box-shadow: inset 0 -1px 0 0 var($theme, 'success-secondary-color');
+        caret-color: --var($theme, 'success-secondary-color');
+        box-shadow: inset 0 -1px 0 0 --var($theme, 'success-secondary-color');
     }
 
     %form-group-bundle--error {
-        caret-color: var($theme, 'error-secondary-color');
-        box-shadow: inset 0 -1px 0 0 var($theme, 'error-secondary-color');
+        caret-color: --var($theme, 'error-secondary-color');
+        box-shadow: inset 0 -1px 0 0 --var($theme, 'error-secondary-color');
     }
 
     %form-group-bundle--disabled {
         box-shadow: none;
-        background-image: linear-gradient(to right, var($theme, 'disabled-bottom-line-color') 40%, transparent 10%);
+        background-image: linear-gradient(to right, --var($theme, 'disabled-bottom-line-color') 40%, transparent 10%);
         background-position: bottom;
         background-size: 4px 1px;
         background-repeat: repeat-x;
     }
 
     %form-group-bundle--box-disabled {
-        background: var($theme, 'box-disabled-background');
+        background: --var($theme, 'box-disabled-background');
     }
 
     %form-group-bundle--border {
         padding: $group-bundle--box-padding;
-        box-shadow: inset 0 0 0 1px var($theme, 'idle-bottom-line-color');
+        box-shadow: inset 0 0 0 1px --var($theme, 'idle-bottom-line-color');
         border-radius: $group-bundle-border-radius;
-        background: var($theme, 'border-background');
+        background: --var($theme, 'border-background');
 
         %form-group-label--box + %form-group-input--box {
             transform: translateY(0);
@@ -330,31 +330,31 @@
     }
 
     %form-group-bundle-border--hover {
-        box-shadow: inset 0 0 0 2px var($theme, 'idle-text-color');
+        box-shadow: inset 0 0 0 2px --var($theme, 'idle-text-color');
     }
 
     %form-group-bundle-border--focus {
-        box-shadow: inset 0 0 0 2px var($theme, 'focused-bottom-line-color');
+        box-shadow: inset 0 0 0 2px --var($theme, 'focused-bottom-line-color');
     }
 
     %form-group-bundle-border--error {
-        box-shadow: inset 0 0 0 2px var($theme, 'error-secondary-color');
+        box-shadow: inset 0 0 0 2px --var($theme, 'error-secondary-color');
     }
 
     %form-group-bundle-border--success {
-        box-shadow: inset 0 0 0 2px var($theme, 'success-secondary-color');
+        box-shadow: inset 0 0 0 2px --var($theme, 'success-secondary-color');
     }
 
     %form-group-bundle-border--disabled {
-        background: var($theme, 'border-disabled-background');
-        box-shadow: inset 0 0 0 1px var($theme, 'disabled-border-color');
+        background: --var($theme, 'border-disabled-background');
+        box-shadow: inset 0 0 0 1px --var($theme, 'disabled-border-color');
     }
 
     %form-group-bundle--search {
         padding: $group-bundle--box-padding;
         border-radius: $group-bundle-border-radius;
         border-bottom: none;
-        background: var($theme, 'search-background');
+        background: --var($theme, 'search-background');
         box-shadow: $search-shadow;
 
         %form-group-label--box + %form-group-input--box {
@@ -379,7 +379,7 @@
     }
 
     %form-group-bundle-search--disabled {
-        background: var($theme, 'search-disabled-background');
+        background: --var($theme, 'search-disabled-background');
         box-shadow: $search-shadow-disabled;
     }
 
@@ -423,15 +423,15 @@
     }
 
     %form-group-label--focus {
-        color: var($theme, 'focused-secondary-color');
+        color: --var($theme, 'focused-secondary-color');
     }
 
     %form-group-label--success {
-        color: var($theme, 'focused-secondary-color');
+        color: --var($theme, 'focused-secondary-color');
     }
 
     %form-group-label--error {
-        color: var($theme, 'error-secondary-color');
+        color: --var($theme, 'error-secondary-color');
     }
 
     %form-group-label--required {
@@ -458,7 +458,7 @@
         overflow: visible;
         font-family: inherit;
         background: transparent;
-        color: var($theme, 'filled-text-color');
+        color: --var($theme, 'filled-text-color');
         outline-style: none;
         box-shadow: none;
 
@@ -489,11 +489,11 @@
 
     %form-group-input--focus {
         cursor: text;
-        color: var($theme, 'focused-text-color');
+        color: --var($theme, 'focused-text-color');
     }
 
     %form-group-input--disabled {
-        color: var($theme, 'disabled-text-color');
+        color: --var($theme, 'disabled-text-color');
 
         &::placeholder {
             color: igx-color($palette, 'grays', 400);
@@ -561,7 +561,7 @@
 
     %form-group-prefix--error,
     %form-group-suffix--error {
-        color: var($theme, 'error-secondary-color');
+        color: --var($theme, 'error-secondary-color');
     }
 
     %form-group-border {
@@ -569,7 +569,7 @@
         margin-top: -2px; /* 2px, when base is 16px */
         transform: scaleX(0);
         transform-origin: center;
-        background: var($theme, 'focused-secondary-color');
+        background: --var($theme, 'focused-secondary-color');
     }
 
     %form-group-border--focus {
@@ -578,15 +578,15 @@
     }
 
     %form-group-border--success {
-        background: var($theme, 'success-secondary-color');
+        background: --var($theme, 'success-secondary-color');
     }
 
     %form-group-border--warning {
-        background: var($theme, 'warning-secondary-color');
+        background: --var($theme, 'warning-secondary-color');
     }
 
     %form-group-border--error {
-        background: var($theme, 'error-secondary-color');
+        background: --var($theme, 'error-secondary-color');
     }
 
     %form-group-border--hidden {
@@ -608,11 +608,11 @@
     }
 
     %form-group-helper--success {
-        color: var($theme, 'success-secondary-color');
+        color: --var($theme, 'success-secondary-color');
     }
 
     %form-group-helper--error {
-        color: var($theme, 'error-secondary-color');
+        color: --var($theme, 'error-secondary-color');
     }
 
     %form-group-helper-item {
