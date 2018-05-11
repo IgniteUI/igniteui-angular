@@ -392,7 +392,7 @@ describe("IgxGrid - Summaries", () => {
         fixture.detectChanges();
 
         let rowsRendered = fixture.nativeElement.querySelectorAll("igx-grid-row");
-        expect(rowsRendered.length).toEqual(9);
+        expect(rowsRendered.length).toEqual(8);
 
         setTimeout(() => {
             grid.disableSummaries(summariedColumns);
@@ -424,7 +424,7 @@ describe("IgxGrid - Summaries", () => {
         fixture.detectChanges();
 
         let rowsRendered = fixture.nativeElement.querySelectorAll("igx-grid-row");
-        expect(rowsRendered.length).toEqual(9);
+        expect(rowsRendered.length).toEqual(8);
 
         setTimeout(() => {
             fixture.detectChanges();
@@ -438,7 +438,7 @@ describe("IgxGrid - Summaries", () => {
                 let firstCellsText = rowsRendered.map((item) => {
                     return item.querySelectorAll("igx-grid-cell")[0].textContent.trim();
                 });
-                expect(rowsRendered.length).toEqual(9);
+                expect(rowsRendered.length).toEqual(10);
 
                 for (let i = 0; i < rowsRendered.length - 1; i++) {
                     expect(firstCellsText[i]).toEqual((i + 11).toString());
@@ -452,10 +452,10 @@ describe("IgxGrid - Summaries", () => {
                     firstCellsText = rowsRendered.map((item) => {
                         return item.querySelectorAll("igx-grid-cell")[0].textContent.trim();
                     });
-                    expect(rowsRendered.length).toEqual(12);
+                    expect(rowsRendered.length).toEqual(10);
 
                     for (let i = 0; i < rowsRendered.length - 1; i++) {
-                        expect(firstCellsText[i]).toEqual((i + 9).toString());
+                        expect(firstCellsText[i]).toEqual((i + 11).toString());
                     }
                     done();
                 });

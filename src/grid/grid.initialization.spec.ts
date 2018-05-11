@@ -93,7 +93,7 @@ describe("IgxGrid - Grid initialization", () => {
         const grid = fix.componentInstance.instance;
         const hScrollContainer = fix.debugElement.query(By.css(".igx-grid__scroll"));
 
-        expect(hScrollContainer.nativeElement.hidden).toBeTruthy();
+        expect(hScrollContainer.nativeElement.hidden).toBeFalsy();
 
         grid.columns[2].hidden = false;
         grid.columns[3].hidden = false;
