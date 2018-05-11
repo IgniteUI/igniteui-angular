@@ -585,7 +585,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 if (this.hScroll.scrollLeft !== 0) {
                     this.scrollTo(0);
                 } else {
-                    this.fixUpdateAllCols(0);
+                    this.fixedUpdateAllCols(0);
                 }
                 this.cdr.detectChanges();
             });
