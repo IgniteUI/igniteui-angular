@@ -639,6 +639,47 @@ describe("IgxSlider", () => {
         expect(rangeSlider.lowerBound).toBe(0);
         expect(rangeSlider.upperBound).toBe(100);
     });
+
+    it("should track min/maxValue if lower/upperBound are undefined - edge case", () => {
+        const fixture = TestBed.createComponent(SliderTestComponent);
+        fixture.detectChanges();
+
+        const slider = fixture.componentInstance.slider1;
+        const rangeSlider = fixture.componentInstance.slider2;
+
+        expect(slider.minValue).toBe(5);
+        expect(slider.maxValue).toBe(10);
+        expect(slider.lowerBound).toBe(5);
+        expect(slider.upperBound).toBe(10);
+        expect(rangeSlider.minValue).toBe(5);
+        expect(rangeSlider.maxValue).toBe(10);
+        expect(rangeSlider.lowerBound).toBe(5);
+        expect(rangeSlider.upperBound).toBe(10);
+
+        fixture.componentInstance.minValue = 11;
+        fixture.detectChanges();
+
+        expect(slider.minValue).toBe(9);
+        expect(slider.maxValue).toBe(10);
+        expect(slider.lowerBound).toBe(9);
+        expect(slider.upperBound).toBe(10);
+        expect(rangeSlider.minValue).toBe(9);
+        expect(rangeSlider.maxValue).toBe(10);
+        expect(rangeSlider.lowerBound).toBe(9);
+        expect(rangeSlider.upperBound).toBe(10);
+
+        fixture.componentInstance.maxValue = 10;
+        fixture.detectChanges();
+
+        expect(slider.minValue).toBe(9);
+        expect(slider.maxValue).toBe(10);
+        expect(slider.lowerBound).toBe(9);
+        expect(slider.upperBound).toBe(10);
+        expect(rangeSlider.minValue).toBe(9);
+        expect(rangeSlider.maxValue).toBe(10);
+        expect(rangeSlider.lowerBound).toBe(9);
+        expect(rangeSlider.upperBound).toBe(10);
+    });
 });
 @Component({
     selector: "igx-slider-test-component",
