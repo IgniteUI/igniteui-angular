@@ -6,7 +6,7 @@ import {IgxSliderComponent, IgxSliderModule, IRangeSliderValue, SliderType} from
 
 declare var Simulator: any;
 
-fdescribe("IgxSlider", () => {
+describe("IgxSlider", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
