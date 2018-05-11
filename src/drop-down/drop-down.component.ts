@@ -237,68 +237,26 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     }
 
     focusFirst() {
-        // let focusedItemIndex = -1;
-        // while (this.items[focusedItemIndex] && this.items[focusedItemIndex].isDisabled) {
-        //     focusedItemIndex++;
-        // }
-        // if (focusedItemIndex < this.items.length - 1) {
-        //     if (this._focusedItem) {
-        //         this._focusedItem.isFocused = false;
-        //     }
-        //     this._focusedItem = this.items[focusedItemIndex];
-        //     this._focusedItem.isFocused = true;
-        // }
-
-        const focusedItemIndex = - 1;
-        const firstItemIndex = this.getNearestSiblingFocusableItemIndex(focusedItemIndex, Direction.Down);
-        if (firstItemIndex !== -1) {
-            this.changeFocusedItem(this.items[firstItemIndex], this._focusedItem);
+        if (this._focusedItem) {
+            const focusedItemIndex = - 1;
+            const firstItemIndex = this.getNearestSiblingFocusableItemIndex(focusedItemIndex, Direction.Down);
+            if (firstItemIndex !== -1) {
+                this.changeFocusedItem(this.items[firstItemIndex], this._focusedItem);
+            }
         }
     }
 
     focusLast() {
-        // let focusedItemIndex = (this.items.length - 1);
-        // while (this.items[focusedItemIndex] && this.items[focusedItemIndex].isDisabled) {
-        //     focusedItemIndex--;
-        // }
-        // if (focusedItemIndex < this.items.length) {
-        //     if (this._focusedItem) {
-        //         this._focusedItem.isFocused = false;
-        //     }
-        //     this._focusedItem = this.items[focusedItemIndex];
-        //     this._focusedItem.isFocused = true;
-        // }
-
-        const focusedItemIndex = (this.items.length - 1);
-        const lastItemIndex = this.getNearestSiblingFocusableItemIndex(focusedItemIndex, Direction.Up);
-        if (lastItemIndex !== -1) {
-            this.changeFocusedItem(this.items[lastItemIndex], this._focusedItem);
+        if (this._focusedItem) {
+            const focusedItemIndex = (this.items.length - 1);
+            const lastItemIndex = this.getNearestSiblingFocusableItemIndex(focusedItemIndex, Direction.Up);
+            if (lastItemIndex !== -1) {
+                this.changeFocusedItem(this.items[lastItemIndex], this._focusedItem);
+            }
         }
     }
 
     focusNext() {
-        // let focusedItemIndex = -1;
-        // if (this._focusedItem) {
-        //     focusedItemIndex = this._focusedItem.index;
-        // }
-        // while (this.items[focusedItemIndex + 1] && this.items[focusedItemIndex + 1].isDisabled) {
-        //     focusedItemIndex++;
-        // }
-        // if (focusedItemIndex < this.items.length - 1) {
-        //     if (this._focusedItem) {
-        //         this._focusedItem.isFocused = false;
-        //     }
-        //     this._focusedItem = this.items[focusedItemIndex + 1];
-
-        //     const elementRect = this._focusedItem.element.nativeElement.getBoundingClientRect();
-        //     const parentRect = this.toggleDirective.element.getBoundingClientRect();
-        //     if (parentRect.bottom < elementRect.bottom) {
-        //         this.toggleDirective.element.scrollTop += (elementRect.bottom - parentRect.bottom);
-        //     }
-
-        //     this._focusedItem.isFocused = true;
-        // }
-
         let focusedItemIndex = -1;
         if (this._focusedItem) {
             focusedItemIndex = this._focusedItem.index;
@@ -311,22 +269,6 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
 
     focusPrev() {
         if (this._focusedItem) {
-            // let focusedItemIndex = this._focusedItem.index;
-            // while ((this.items[focusedItemIndex - 1]) && this.items[focusedItemIndex - 1].isDisabled) {
-            //     focusedItemIndex--;
-            // }
-            // if (focusedItemIndex > 0) {
-            //     this._focusedItem.isFocused = false;
-            //     this._focusedItem = this.items[focusedItemIndex - 1];
-
-            //     const elementRect = this._focusedItem.element.nativeElement.getBoundingClientRect();
-            //     const parentRect = this.toggleDirective.element.getBoundingClientRect();
-            //     if (parentRect.top > elementRect.top) {
-            //         this.toggleDirective.element.scrollTop -= (parentRect.top - elementRect.top);
-            //     }
-
-            //     this._focusedItem.isFocused = true;
-            // }
             const focusedItemIndex = this._focusedItem.index;
             const prevItemIndex = this.getNearestSiblingFocusableItemIndex(focusedItemIndex, Direction.Up);
             if (prevItemIndex !== -1) {
