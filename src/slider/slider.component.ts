@@ -142,6 +142,8 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
     private _upperBound?: number;
     private _lowerValue: number;
     private _upperValue: number;
+    private _trackMinValue: boolean;
+    private _trackMaxValue: boolean;
 
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
@@ -172,10 +174,32 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
     public set minValue(value: number) {
         if (value >= this.maxValue) {
             this._minValue = this.maxValue - 1;
+            if (this._trackMinValue) {
+                this._lowerBound = this._minValue;
+                if (this.isRange) {
+                    this.value = {
+                        lower: this._minValue,
+                        upper: (this.value as IRangeSliderValue).upper
+                    };
+                } else {
+                    this.value = this._minValue;
+                }
+            }
             return;
         }
 
         this._minValue = value;
+        if (this._trackMinValue) {
+            this._lowerBound = this._minValue;
+            if (this.isRange) {
+                this.value = {
+                    lower: this._minValue,
+                    upper: (this.value as IRangeSliderValue).upper
+                };
+            } else {
+                this.value = this._minValue;
+            }
+        }
     }
 
     /**
@@ -194,11 +218,32 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
     public set maxValue(value: number) {
         if (value <= this._minValue) {
             this._maxValue = this._minValue + 1;
-
+            if (this._trackMaxValue) {
+                this._upperBound = this._maxValue;
+                if (this.isRange) {
+                    this.value = {
+                        lower: this.minValue,
+                        upper: (this.value as IRangeSliderValue).upper
+                    };
+                } else {
+                    this.value = this.minValue;
+                }
+            }
             return;
         }
 
         this._maxValue = value;
+        if (this._trackMaxValue) {
+            this._upperBound = this._maxValue;
+            if (this.isRange) {
+                this.value = {
+                    lower: this.minValue,
+                    upper: (this.value as IRangeSliderValue).upper
+                };
+            } else {
+                this.value = this.minValue;
+            }
+        }
     }
 
     /**
@@ -327,10 +372,12 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
     public ngOnInit() {
         if (this.lowerBound === undefined) {
             this.lowerBound = this.minValue;
+            this._trackMinValue = true;
         }
 
         if (this.upperBound === undefined) {
             this.upperBound = this.maxValue;
+            this._trackMaxValue = true;
         }
 
         if (this.isRange) {
