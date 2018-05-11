@@ -24,7 +24,8 @@
         "@angular/platform-browser-dynamic": "^6.0.0",
         "@angular/router": "^6.0.0",
         "@fortawesome/fontawesome-free-webfonts": "^1.0.4",
-        "jszip": "^3.1.5"
+        "jszip": "^3.1.5",
+        "rxjs-compat": "^6.1.0"
     },
     "devDependencies": {
         "@angular/compiler": "^6.0.0",
