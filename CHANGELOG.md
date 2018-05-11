@@ -1,6 +1,8 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 6.0.0
+- Theming - You can now use css variables to style the component instances you include in your project.
 ## 5.3.1
 - igx-dialog changes
     - Dialog title as well as dialog actions (buttons) can be customized. For more information navigate to the [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/dialog/README.md).
