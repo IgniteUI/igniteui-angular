@@ -473,14 +473,10 @@ describe("IgxDropDown ", () => {
         fixture.whenStable().then(() => {
             fixture.detectChanges();
             const currentItem = fixture.debugElement.queryAll(By.css(".igx-drop-down__item"))[0];
-            // tslint:disable-next-line:no-debugger
-            debugger;
             currentItem.triggerEventHandler("keydown.ArrowDown", jasmine.createSpyObj("mockEvt", ["stopPropagation", "preventDefault"]));
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
-            // tslint:disable-next-line:no-debugger
-            debugger;
             expect(list.items[3].isFocused).toBeTruthy();
             const currentItem = fixture.debugElement.queryAll(By.css(".igx-drop-down__item"))[0];
             currentItem.triggerEventHandler("keydown.ArrowUp", jasmine.createSpyObj("mockEvt", ["stopPropagation", "preventDefault"]));

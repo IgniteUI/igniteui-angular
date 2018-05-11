@@ -248,7 +248,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
 
     focusLast() {
         if (this._focusedItem) {
-            const focusedItemIndex = (this.items.length - 1);
+            const focusedItemIndex = (this.items.length);
             const lastItemIndex = this.getNearestSiblingFocusableItemIndex(focusedItemIndex, Direction.Up);
             if (lastItemIndex !== -1) {
                 this.changeFocusedItem(this.items[lastItemIndex], this._focusedItem);
@@ -293,7 +293,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         if (this._focusedItem) {
             this._focusedItem.isFocused = true;
         } else if (this.allowItemsFocus) {
-            const firstItemIndex = this.getNearestSiblingFocusableItemIndex(0, Direction.Down);
+            const firstItemIndex = this.getNearestSiblingFocusableItemIndex(-1, Direction.Down);
             if (firstItemIndex !== -1) {
                 this.changeFocusedItem(this.items[firstItemIndex]);
             }
@@ -349,7 +349,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         }
 
         index += direction;
-        if (index >= 0 && index < this.items.length - 1) {
+        if (index >= 0 && index < this.items.length) {
             return index;
         } else {
             return -1;
