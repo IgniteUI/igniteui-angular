@@ -100,12 +100,12 @@ export class DropDownSampleComponent implements OnInit {
             this.items.push(item);
         }
 
-        this.items = [
-            { field: "Nav1" },
-            { field: "Nav2" },
-            { field: "Nav3" },
-            { field: "Nav4" }
-        ];
+        // this.items = [
+        //     { field: "Nav1" },
+        //     { field: "Nav2" },
+        //     { field: "Nav3" },
+        //     { field: "Nav4" }
+        // ];
     }
 
     constructor() {
