@@ -26,7 +26,7 @@ export class IgxDropDownItemComponent {
     }
 
     /**
-     * Gets if the given item is selected
+     * Gets if the item is the currently selected one in the dropdown
      */
     get isSelected() {
         return this.dropDown.selectedItem === this;
