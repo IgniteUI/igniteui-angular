@@ -1,36 +1,36 @@
 <ng-template #defaultFilterUI>
     <div *ngIf="!unaryCondition" class="igx-filtering__op">
         <igx-input-group>
-            <igx-prefix>
-                <igx-icon>filter_list</igx-icon>
-            </igx-prefix>
-            <input type="text" igxInput placeholder="Value" autocomplete="off" [value]="value" (input)="onInputChanged($event.target.value)" />
+            <input type="text" igxInput placeholder="Value" autocomplete="off" [value]="value" (input)="onInputChanged($event.target.value)" #input/>
+            <igx-suffix *ngIf="input.value.length > 0" (click)="clearInput()">
+                <igx-icon>clear</igx-icon>
+            </igx-suffix>
         </igx-input-group>
     </div>
     <br>
 </ng-template>
 
 <ng-template #defaultDateUI>
-    <igx-datePicker *ngIf="!unaryCondition" [(ngModel)]="value"></igx-datePicker>
+    <igx-datePicker (click)="onDatePickerClick()" *ngIf="!unaryCondition" [(ngModel)]="value"></igx-datePicker>
 </ng-template>
 
 <div class="igx-filtering">
     <div [attr.class]="filterCSS">
         <span class="toggle-icon" [igxToggleAction]="directive">
-            <igx-icon>more_vert</igx-icon>
+            <igx-icon (mousedown)="onMouseDown()">filter_list</igx-icon>
         </span>
     </div>
 </div>
 
 <span igxToggle (onOpen)="refresh()" (onClose)="refresh()" #directive="toggle" [attr.class]="dialogPosition">
     <div>
-        <select (change)="selectionChanged($event.target.value)">
+        <select (change)="selectionChanged($event.target.value)" #select>
             <option [selected]="isActive(each)" *ngFor="let each of conditions" [value]="each">{{ each | filterCondition | titlecase }}</option>
         </select>
     </div>
     <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
     <div class="igx-filtering__options-bgroup">
-        <button igxButton igxRipple (click)="clearFiltering()">Reset</button>
-        <button igxButton igxRipple (click)="filter()" [disabled]="disabled">Filter</button>
+        <button igxButton igxRipple (click)="clearFiltering(true)" [disabled]="disabled">Reset</button>
+        <button igxButton igxRipple (click)="directive.close(true)">Close</button>
     </div>
 </span>
