@@ -78,6 +78,10 @@
         &:first-of-type {
             border-left: 0;
         }
+
+        &:last-of-type {
+            border-right: 1px dotted map-get($this, 'border-color');
+        }
     }
 
     %igx-grid-summary--pinned {
