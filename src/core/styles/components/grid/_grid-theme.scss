@@ -305,7 +305,7 @@
     }
 
     %grid-cell--pinned-last {
-        border-right: --var($cell-pin, 'style') --var($cell-pin, 'color') !important;
+        border-right: map-get($cell-pin, 'style') map-get($cell-pin, 'color') !important;
     }
 
     %grid-cell-header {

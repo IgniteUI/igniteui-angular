@@ -104,7 +104,7 @@
     }
 
     %igx-grid-summary--pinned-last {
-        border-right: --var($cell-pin, 'style') --var($cell-pin, 'color');
+        border-right: map-get($cell-pin, 'style') map-get($cell-pin, 'color');
     }
 
     %igx-grid-summary--empty {
