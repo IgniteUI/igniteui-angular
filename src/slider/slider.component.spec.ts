@@ -1,15 +1,17 @@
 import { Component, ViewChild } from "@angular/core";
 import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from "constants";
 import {IgxSliderComponent, IgxSliderModule, IRangeSliderValue, SliderType} from "./slider.component";
 
 declare var Simulator: any;
 
-describe("IgxSlider", () => {
+fdescribe("IgxSlider", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                SliderInitializeTestComponent
+                SliderInitializeTestComponent,
+                SliderTestComponent
             ],
             imports: [
                 IgxSliderModule
@@ -606,6 +608,37 @@ describe("IgxSlider", () => {
 
         expect(ticks.style.background).toBeTruthy();
     });
+
+    it("should track min/maxValue if lower/upperBound are undefined", () => {
+        const fixture = TestBed.createComponent(SliderTestComponent);
+        fixture.detectChanges();
+
+        const slider = fixture.componentInstance.slider1;
+        const rangeSlider = fixture.componentInstance.slider2;
+
+        expect(slider.value).toBe(10);
+        expect(slider.minValue).toBe(5);
+        expect(slider.maxValue).toBe(10);
+        expect(slider.lowerBound).toBe(5);
+        expect(slider.upperBound).toBe(10);
+        expect(rangeSlider.minValue).toBe(5);
+        expect(rangeSlider.maxValue).toBe(10);
+        expect(rangeSlider.lowerBound).toBe(5);
+        expect(rangeSlider.upperBound).toBe(10);
+
+        fixture.componentInstance.changeMaxValue();
+        fixture.detectChanges();
+
+        expect(slider.value).toBe(0);
+        expect(slider.minValue).toBe(0);
+        expect(slider.maxValue).toBe(100);
+        expect(slider.lowerBound).toBe(0);
+        expect(slider.upperBound).toBe(100);
+        expect(rangeSlider.minValue).toBe(0);
+        expect(rangeSlider.maxValue).toBe(100);
+        expect(rangeSlider.lowerBound).toBe(0);
+        expect(rangeSlider.upperBound).toBe(100);
+    });
 });
 @Component({
     selector: "igx-slider-test-component",
@@ -614,4 +647,33 @@ describe("IgxSlider", () => {
 })
 class SliderInitializeTestComponent {
     @ViewChild(IgxSliderComponent) public slider: IgxSliderComponent;
+}
+@Component({
+    selector: "igx-slider-test-component",
+    template: `<div>
+                    <igx-slider #slider1 [minValue]="minValue" [maxValue]="maxValue" [value]="value"></igx-slider>
+                    <igx-slider #slider2 [minValue]="minValue" [maxValue]="maxValue"
+                                        [type]="sliderType.RANGE"
+                                        [value]="priceRange">
+                    </igx-slider>
+                </div>`
+})
+class SliderTestComponent {
+    @ViewChild(IgxSliderComponent) public slider1: IgxSliderComponent;
+    @ViewChild(IgxSliderComponent) public slider2: IgxSliderComponent;
+    minValue = 5;
+    maxValue = 10;
+
+    value = 10;
+
+    public sliderType = SliderType;
+    public priceRange = {
+        lower: 6,
+        upper: 9
+    };
+
+    changeMaxValue() {
+        this.minValue = 0;
+        this.maxValue = 100;
+    }
 }
