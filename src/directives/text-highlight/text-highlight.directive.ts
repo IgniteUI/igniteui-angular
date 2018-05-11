@@ -7,7 +7,6 @@ import {
     NgModule,
     OnChanges,
     OnDestroy,
-    OnInit,
     Output,
     Renderer2,
     SimpleChanges
@@ -30,7 +29,7 @@ export interface IActiveHighlightInfo {
 @Directive({
     selector: "[igxTextHighlight]"
 })
-export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
+export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnChanges {
     private _lastSearchInfo: ISearchInfo;
     private _addedElements = [];
     private _observer: MutationObserver;
@@ -65,20 +64,23 @@ export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
 
     public parentElement: any;
 
+    private container: any;
+
     constructor(element: ElementRef, public renderer: Renderer2) {
         this.parentElement = this.renderer.parentNode(element.nativeElement);
 
         const callback = (mutationList) => {
             mutationList.forEach(mutation => {
                 mutation.removedNodes.forEach(n => {
-                    if (n.id === "content") {
+                    if (n === this.container) {
                         this._nodeWasRemoved = true;
                         this.clearChildElements(false);
                     }
                 });
 
                 mutation.addedNodes.forEach(n => {
-                    if (n.id === "content" && this._nodeWasRemoved) {
+                    if (n === this.parentElement.firstElementChild && this._nodeWasRemoved) {
+                        this.container = this.parentElement.firstElementChild;
                         this._nodeWasRemoved = false;
 
                         this._forceEvaluation = true;
@@ -86,7 +88,7 @@ export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
                         this._forceEvaluation = false;
 
                         this.activateIfNecessary();
-                        }
+                    }
                 });
             });
         }
@@ -102,24 +104,6 @@ export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
                 this.activateIfNecessary();
             }
         });
-    }
-
-    ngOnInit() {
-        if (IgxTextHighlightDirective.highlightGroupsMap.has(this.groupName) === false) {
-            IgxTextHighlightDirective.highlightGroupsMap.set(this.groupName, {
-                rowIndex: -1,
-                columnIndex: -1,
-                page: -1,
-                index: -1
-            });
-        }
-
-        this._lastSearchInfo = {
-            searchedText: "",
-            content: this.value,
-            matchCount: 0,
-            caseSensitive: false
-        };
     }
 
     ngOnDestroy() {
@@ -141,6 +125,26 @@ export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
 
             this.activateIfNecessary();
         }
+    }
+
+    ngAfterViewInit() {
+        if (IgxTextHighlightDirective.highlightGroupsMap.has(this.groupName) === false) {
+            IgxTextHighlightDirective.highlightGroupsMap.set(this.groupName, {
+                rowIndex: -1,
+                columnIndex: -1,
+                page: -1,
+                index: -1
+            });
+        }
+
+        this._lastSearchInfo = {
+            searchedText: "",
+            content: this.value,
+            matchCount: 0,
+            caseSensitive: false
+        };
+
+        this.container = this.parentElement.firstElementChild;
     }
 
     public static setActiveHighlight(groupName: string, column: number, row: number, index: number, page: number) {
@@ -221,9 +225,8 @@ export class IgxTextHighlightDirective implements OnDestroy, OnInit, OnChanges {
     }
 
     private clearChildElements(originalContentHidden: boolean): void {
-        const content = this.parentElement.querySelector("#content");
-        if (content) {
-            this.renderer.setProperty(content, "hidden", originalContentHidden);
+        if (this.parentElement.firstElementChild) {
+            this.renderer.setProperty(this.parentElement.firstElementChild, "hidden", originalContentHidden);
         }
 
         while (this._addedElements.length) {

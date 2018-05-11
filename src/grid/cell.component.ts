@@ -13,7 +13,6 @@
     OnInit,
     TemplateRef,
     ViewChild,
-    ViewChildren,
     ViewContainerRef
 } from "@angular/core";
 import { take } from "rxjs/operators";
@@ -658,10 +657,4 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
             this.highlight.clearHighlight();
         }
     }
-
-    // public activate(highlightIndex: number) {
-    //     if (this.highlight) {
-    //         this.highlight.activate(highlightIndex);
-    //     }
-    // }
 }

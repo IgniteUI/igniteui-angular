@@ -149,33 +149,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     set filteredData(value) {
-        // let highlightedItem = null;
-        // const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
-
-        // if (this.lastSearchInfo.searchText !== "") {
-        //     const activeIndex = activeInfo.rowIndex;
-        //     const data = this.filteredSortedData;
-        //     highlightedItem = data[activeIndex];
-        // }
+        const highlightedItem = this.findHiglightedItem();
 
         this._filteredData = value;
         if (this.rowSelectable) {
             this.updateHeaderChecboxStatusOnFilter(this._filteredData);
         }
 
-        // if (highlightedItem !== null) {
-        //     const data = this.filteredSortedData;
-        //     const rowIndex = data.indexOf(highlightedItem);
-        //     IgxTextHighlightDirective.setActiveHighlight(this.id, activeInfo.columnIndex, rowIndex, activeInfo.index);
-        //     this.rebuildMatchCache(data, this.lastSearchInfo.searchText, this.lastSearchInfo.caseSensitive);
-        //     this._matchInfoChache.forEach((match, i) => {
-        //         if (match.column === activeInfo.columnIndex &&
-        //             match.row === rowIndex &&
-        //             match.index === activeInfo.index) {
-        //                 this.lastSearchInfo.activeMatchIndex = i;
-        //             }
-        //     });
-        // }
+        if (highlightedItem !== null) {
+            this.restoreHighlight(highlightedItem, true);
+        }
     }
 
     @Input()
@@ -412,7 +395,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.cdr.markForCheck();
 
         if (highlightedItem !== null) {
-            this.restoreHighlight(highlightedItem);
+            this.restoreHighlight(highlightedItem, false);
         }
     }
 
@@ -1434,7 +1417,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    private restoreHighlight(highlightedItem: any): void {
+    private restoreHighlight(highlightedItem: any, resetActiveIndex: boolean): void {
         const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
 
         const data = this.filteredSortedData;
@@ -1442,16 +1425,22 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const page = this.paging ? Math.floor(rowIndex / this.perPage) : 0;
         const row = this.paging ? rowIndex % this.perPage : rowIndex;
 
-        IgxTextHighlightDirective.setActiveHighlight(this.id, activeInfo.columnIndex, row, activeInfo.index, page);
-
         this.rebuildMatchCache();
-        this._matchInfoChache.forEach((match, i) => {
-            if (match.column === activeInfo.columnIndex &&
-                match.row === rowIndex &&
-                match.index === activeInfo.index &&
-                match.page === page) {
-                    this.lastSearchInfo.activeMatchIndex = i;
+
+        if (resetActiveIndex === false) {
+            IgxTextHighlightDirective.setActiveHighlight(this.id, activeInfo.columnIndex, row, activeInfo.index, page);
+
+            this._matchInfoChache.forEach((match, i) => {
+                if (match.column === activeInfo.columnIndex &&
+                    match.row === rowIndex &&
+                    match.index === activeInfo.index &&
+                    match.page === page) {
+                        this.lastSearchInfo.activeMatchIndex = i;
                 }
-        });
+            });
+        } else {
+            this.lastSearchInfo.activeMatchIndex = 0;
+            this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, false);
+        }
     }
 }
