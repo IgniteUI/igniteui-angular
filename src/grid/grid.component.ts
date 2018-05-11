@@ -1338,16 +1338,30 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     private get filteredSortedData(): any[] {
-        let data = this.filteredData ? this.filteredData : this.data;
+        let data: any[] = this.filteredData ? this.filteredData : this.data;
+
+        const columnNames = new Array<string>(this.visibleColumns.length);
+        this.visibleColumns.forEach((c) => {
+            columnNames[c.visibleIndex] = c.field;
+        });
+
+        let visibleData = [];
+        data.forEach((d, i) => {
+            const newData = {};
+            columnNames.forEach((c, j) => {
+                newData[c] = d[c];
+            });
+            visibleData.push(newData);
+        });
 
         if (this.sortingExpressions &&
             this.sortingExpressions.length > 0) {
 
             const sortingPipe = new IgxGridSortingPipe(this.gridAPI);
-            data = sortingPipe.transform(data, this.sortingExpressions, this.id, -1);
+            visibleData = sortingPipe.transform(visibleData, this.sortingExpressions, this.id, -1);
         }
 
-        return data;
+        return visibleData;
     }
 
     private scrollTo(row: number, column: number, page: number): void {

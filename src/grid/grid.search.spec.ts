@@ -4,15 +4,19 @@ import {
 } from "@angular/core";
 
 import { async, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
 fdescribe("IgxGrid - search API", () => {
+    const CELL_CSS_CLASS = ".igx-grid__td";
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                SimpleGridComponent
+                SimpleGridComponent,
+                ScrollableGridComponent
             ],
             imports: [IgxGridModule.forRoot()]
         }).compileComponents();
@@ -155,6 +159,154 @@ fdescribe("IgxGrid - search API", () => {
         expect(spans.length).toBe(0);
     });
 
+    it("findNext scrolls to cells out of view", async(() => {
+        const fix = TestBed.createComponent(ScrollableGridComponent);
+        fix.detectChanges();
+
+        const component: ScrollableGridComponent = fix.debugElement.componentInstance;
+        fix.detectChanges();
+
+        findNext(component.gridSearch, "30").then(() => {
+            expect(isInView(29, component.gridSearch.virtualizationState)).toBeTruthy();
+
+            findNext(component.gridSearch, "1887").then(() => {
+                expect(isInView(3, component.gridSearch.rowList.first.virtDirRow.state)).toBeTruthy();
+            });
+        });
+    }));
+
+    it("findPrev scrolls to cells out of view", async(() => {
+        const fix = TestBed.createComponent(ScrollableGridComponent);
+        fix.detectChanges();
+
+        const component: ScrollableGridComponent = fix.debugElement.componentInstance;
+        fix.detectChanges();
+
+        findPrev(component.gridSearch, "30").then(() => {
+            expect(isInView(29, component.gridSearch.virtualizationState)).toBeTruthy();
+
+            findPrev(component.gridSearch, "1887").then(() => {
+                expect(isInView(3, component.gridSearch.rowList.first.virtDirRow.state)).toBeTruthy();
+            });
+        });
+    }));
+
+    fit("should keep the active highlight when active cell enters and exits edit mode", async(() => {
+        const fix = TestBed.createComponent(ScrollableGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.gridSearch;
+        const rv = fix.debugElement.query(By.css(CELL_CSS_CLASS));
+        const cell = grid.getCellByColumn(0, "ID");
+
+        let activeHighlight = rv.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+        expect(activeHighlight !== null).toBeFalsy();
+
+        cell.column.editable = true;
+
+        grid.findNext("1");
+        fix.detectChanges();
+
+        fix.whenStable().then(() =>{
+            activeHighlight = rv.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            expect(activeHighlight !== null).toBeTruthy();
+
+            rv.nativeElement.dispatchEvent(new Event("focus"));
+        }).then(() => {
+            rv.triggerEventHandler("dblclick", {});
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(cell.inEditMode).toBe(true);
+            rv.triggerEventHandler("keydown.escape", null);
+        }).then(() => {
+            activeHighlight = rv.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            expect(activeHighlight !== null).toBeTruthy();
+        });
+    }));
+
+    fit("should update highlights when a new value is entered", async(() => {
+        const fix = TestBed.createComponent(ScrollableGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.gridSearch;
+        const rv = fix.debugElement.query(By.css(CELL_CSS_CLASS));
+        const cell = grid.getCellByColumn(0, "ID");
+
+        let activeHighlight = rv.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+        expect(activeHighlight !== null).toBeFalsy();
+
+        cell.column.editable = true;
+
+        grid.findNext("1");
+        fix.detectChanges();
+
+        fix.whenStable().then(() =>{
+            activeHighlight = rv.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            expect(activeHighlight !== null).toBeTruthy();
+
+            rv.nativeElement.dispatchEvent(new Event("focus"));
+        }).then(() => {
+            rv.triggerEventHandler("dblclick", {});
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(cell.inEditMode).toBe(true);
+
+            const inputElem: HTMLInputElement = rv.nativeElement.querySelector("input") as HTMLInputElement;
+            inputElem.value = "11";
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            const inputElem: HTMLInputElement = rv.nativeElement.querySelector("input") as HTMLInputElement;
+
+            cell.update(inputElem.value);
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            activeHighlight = rv.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            const highlights = rv.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(2);
+            expect(activeHighlight).toBe(highlights[0]);
+        });
+    }));
+
+    function triggerKeyDownEvtUponElem(evtName, elem, fix) {
+        const evtArgs: KeyboardEventInit = { key: evtName, bubbles: true};
+        elem.dispatchEvent(new KeyboardEvent("keydown", evtArgs));
+        fix.detectChanges();
+    }
+
+    function findNext(grid: IgxGridComponent, text: string) {
+        const promise = new Promise((resolve) => {
+            grid.verticalScrollContainer.onChunkLoad.subscribe((state) =>{
+                resolve(state);
+            });
+
+            grid.findNext(text);
+        });
+
+        return promise;
+    }
+
+    function findPrev(grid: IgxGridComponent, text: string) {
+        const promise = new Promise((resolve) => {
+            grid.verticalScrollContainer.onChunkLoad.subscribe((state) =>{
+                resolve(state);
+            });
+
+            grid.findPrev(text);
+        });
+
+        return promise;
+    }
+
+    function isInView(index, state): boolean {
+        return index > state.startIndex && index <= state.startIndex + state.chunkSize;
+    }
+
 });
 
 @Component({
@@ -190,7 +342,7 @@ export class SimpleGridComponent {
 
 @Component({
     template: `
-        <igx-grid #gridSearch [data]="data" width="500px" columnWidth="200">
+        <igx-grid #gridSearch [data]="data" height="500px" width="500px" columnWidth="200">
             <igx-column field="ID" sortable="true"></igx-column>
             <igx-column field="Name" sortable="true"></igx-column>
             <igx-column field="JobTitle" sortable="true"></igx-column>
@@ -210,26 +362,26 @@ export class ScrollableGridComponent {
         { ID: 8, Name: "Erika Wells", JobTitle: "Software Development Team Lead", HireDate: "2005-10-14T11:23:17.714Z" },
         { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer", HireDate: "2013-10-10T11:23:17.714Z" },
         { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" },
-        { ID: 1, Name: "Casey Houston", JobTitle: "Vice President", HireDate: "2017-06-19T11:43:07.714Z" },
-        { ID: 2, Name: "Gilberto Todd", JobTitle: "Director", HireDate: "2015-12-18T11:23:17.714Z" },
-        { ID: 3, Name: "Tanya Bennett", JobTitle: "Director", HireDate: "2005-11-18T11:23:17.714Z" },
-        { ID: 4, Name: "Jack Simon", JobTitle: "Software Developer", HireDate: "2008-12-18T11:23:17.714Z" },
-        { ID: 5, Name: "Celia Martinez", JobTitle: "Senior Software DEVELOPER", HireDate: "2007-12-19T11:23:17.714Z" },
-        { ID: 6, Name: "Erma Walsh", JobTitle: "CEO", HireDate: "2016-12-18T11:23:17.714Z" },
-        { ID: 7, Name: "Debra Morton", JobTitle: "Associate Software Developer", HireDate: "2005-11-19T11:23:17.714Z" },
-        { ID: 8, Name: "Erika Wells", JobTitle: "Software Development Team Lead", HireDate: "2005-10-14T11:23:17.714Z" },
-        { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer", HireDate: "2013-10-10T11:23:17.714Z" },
-        { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" },
-        { ID: 1, Name: "Casey Houston", JobTitle: "Vice President", HireDate: "2017-06-19T11:43:07.714Z" },
-        { ID: 2, Name: "Gilberto Todd", JobTitle: "Director", HireDate: "2015-12-18T11:23:17.714Z" },
-        { ID: 3, Name: "Tanya Bennett", JobTitle: "Director", HireDate: "2005-11-18T11:23:17.714Z" },
-        { ID: 4, Name: "Jack Simon", JobTitle: "Software Developer", HireDate: "2008-12-18T11:23:17.714Z" },
-        { ID: 5, Name: "Celia Martinez", JobTitle: "Senior Software DEVELOPER", HireDate: "2007-12-19T11:23:17.714Z" },
-        { ID: 6, Name: "Erma Walsh", JobTitle: "CEO", HireDate: "2016-12-18T11:23:17.714Z" },
-        { ID: 7, Name: "Debra Morton", JobTitle: "Associate Software Developer", HireDate: "2005-11-19T11:23:17.714Z" },
-        { ID: 8, Name: "Erika Wells", JobTitle: "Software Development Team Lead", HireDate: "2005-10-14T11:23:17.714Z" },
-        { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer", HireDate: "2013-10-10T11:23:17.714Z" },
-        { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" }
+        { ID: 11, Name: "Casey Houston", JobTitle: "Vice President", HireDate: "2017-06-19T11:43:07.714Z" },
+        { ID: 12, Name: "Gilberto Todd", JobTitle: "Director", HireDate: "2015-12-18T11:23:17.714Z" },
+        { ID: 13, Name: "Tanya Bennett", JobTitle: "Director", HireDate: "2005-11-18T11:23:17.714Z" },
+        { ID: 14, Name: "Jack Simon", JobTitle: "Software Developer", HireDate: "2008-12-18T11:23:17.714Z" },
+        { ID: 15, Name: "Celia Martinez", JobTitle: "Senior Software DEVELOPER", HireDate: "2007-12-19T11:23:17.714Z" },
+        { ID: 16, Name: "Erma Walsh", JobTitle: "CEO", HireDate: "2016-12-18T11:23:17.714Z" },
+        { ID: 17, Name: "Debra Morton", JobTitle: "Associate Software Developer", HireDate: "2005-11-19T11:23:17.714Z" },
+        { ID: 18, Name: "Erika Wells", JobTitle: "Software Development Team Lead", HireDate: "2005-10-14T11:23:17.714Z" },
+        { ID: 19, Name: "Leslie Hansen", JobTitle: "Associate Software Developer", HireDate: "2013-10-10T11:23:17.714Z" },
+        { ID: 20, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" },
+        { ID: 21, Name: "Casey Houston", JobTitle: "Vice President", HireDate: "2017-06-19T11:43:07.714Z" },
+        { ID: 22, Name: "Gilberto Todd", JobTitle: "Director", HireDate: "2015-12-18T11:23:17.714Z" },
+        { ID: 23, Name: "Tanya Bennett", JobTitle: "Director", HireDate: "2005-11-18T11:23:17.714Z" },
+        { ID: 24, Name: "Jack Simon", JobTitle: "Software Developer", HireDate: "2008-12-18T11:23:17.714Z" },
+        { ID: 25, Name: "Celia Martinez", JobTitle: "Senior Software DEVELOPER", HireDate: "2007-12-19T11:23:17.714Z" },
+        { ID: 26, Name: "Erma Walsh", JobTitle: "CEO", HireDate: "2016-12-18T11:23:17.714Z" },
+        { ID: 27, Name: "Debra Morton", JobTitle: "Associate Software Developer", HireDate: "2005-11-19T11:23:17.714Z" },
+        { ID: 28, Name: "Erika Wells", JobTitle: "Software Development Team Lead", HireDate: "2005-10-14T11:23:17.714Z" },
+        { ID: 29, Name: "Leslie Hansen", JobTitle: "Associate Software Developer", HireDate: "2013-10-10T11:23:17.714Z" },
+        { ID: 30, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "1887-11-28T11:23:17.714Z" }
     ];
 
     @ViewChild("gridSearch", { read: IgxGridComponent })

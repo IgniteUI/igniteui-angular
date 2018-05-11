@@ -9,7 +9,7 @@ import { By } from "@angular/platform-browser";
 
 import { IgxTextHighlightDirective} from "./text-highlight.directive";
 
-fdescribe("IgxHighlight", () => {
+describe("IgxHighlight", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -31,6 +31,7 @@ fdescribe("IgxHighlight", () => {
         expect(component.highlight.value).toBe(component.html);
         expect(component.highlight.row).toBe(0);
         expect(component.highlight.column).toBe(0);
+        expect(component.highlight.page).toBe(0);
     });
 
     it("Should highlight all instances of text", () => {
@@ -210,7 +211,7 @@ fdescribe("IgxHighlight", () => {
 @Component({
     template:
         // tslint:disable-next-line:max-line-length
-        `<div igxTextHighlight id="content" [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName" [value]="html" [column]="0" [row]="0">
+        `<div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName" [value]="html" [column]="0" [row]="0" [page]="0">
             {{html}}
         </div>`
 })
@@ -240,6 +241,6 @@ class HighlightLoremIpsumComponent {
     }
 
     public activate(index: number) {
-        IgxTextHighlightDirective.setActiveHighlight(this.groupName, 0, 0, index);
+        IgxTextHighlightDirective.setActiveHighlight(this.groupName, 0, 0, index, 0);
     }
 }
