@@ -9,8 +9,9 @@
 4. Column Hiding UI
 5. Operations UI - column chooser
 6. Advanced Filtering
-7. Design: Release Updated Design System (Sketch UI kits, UI patterns, screens, documentation)
-8. Design: Data dense theme for data grid 
+7. Column Moving
+8. Design: Release Updated Design System (Sketch UI kits, UI patterns, screens, documentation)
+9. Design: Data dense theme for data grid 
 
 
 # Previous Milestones

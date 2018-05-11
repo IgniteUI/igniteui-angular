@@ -2,9 +2,8 @@ import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewCh
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { BehaviorSubject, Observable } from "rxjs";
 
-import { Observable } from "rxjs/Observable";
 import { DataType } from "../data-operations/data-util";
 import { IForOfState} from "../directives/for-of/IForOfState";
 import { IgxColumnComponent } from "./column.component";

@@ -14,10 +14,8 @@ import {
     Output,
     Renderer2
 } from "@angular/core";
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/switchMap";
-import "rxjs/add/operator/takeUntil";
-import { Subject } from "rxjs/Subject";
+import { Subject } from "rxjs";
+import { map, switchMap, takeUntil} from "rxjs/operators";
 
 export interface IgxDropEvent {
     dragData: any;
@@ -64,17 +62,13 @@ export class IgxDragDirective {
 
     constructor(public element: ElementRef, public cdr: ChangeDetectorRef, @Inject(DOCUMENT) public document) {
 
-        this.dragStart.map((event) => {
-            return {
-                left: event.clientX,
-                top: event.clientY
-            };
-        }).switchMap((offset) =>
-            this.drag.map((event) => ({
-                left: event.clientX - offset.left,
-                top: event.clientY - offset.top
-            })).takeUntil(this.dragEnd))
-        .subscribe((pos) => {
+        this.dragStart.pipe(
+            map((event) => ({ left: event.clientX, top: event.clientY })),
+            switchMap((offset) => this.drag.pipe(
+                map((event) => ({ left: event.clientX - offset.left, top: event.clientY - offset.top })),
+                takeUntil(this.dragEnd)
+            ))
+        ).subscribe((pos) => {
             const left = this._left + pos.left;
             const top = this._top + pos.top;
 
