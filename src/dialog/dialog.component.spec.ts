@@ -8,7 +8,14 @@ import { IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from "./dialog.
 describe("Dialog", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [AlertComponent, DialogComponent, CustomDialogComponent, NestedDialogsComponent],
+            declarations: [
+                AlertComponent,
+                DialogComponent,
+                CustomDialogComponent,
+                NestedDialogsComponent,
+                CustomTemplates1DialogComponent,
+                CustomTemplates2DialogComponent
+            ],
             imports: [BrowserAnimationsModule, IgxDialogModule]
         }).compileComponents();
     }));
@@ -213,6 +220,31 @@ describe("Dialog", () => {
         expect(childDialog.isOpen).toEqual(false);
     });
 
+    it("Should initialize igx-dialog custom title and actions", () => {
+        const data = [{
+                component: CustomTemplates1DialogComponent
+            }, {
+                component: CustomTemplates2DialogComponent
+            }];
+
+        data.forEach((item) => {
+            const fixture = TestBed.createComponent(item.component);
+            const dialog = fixture.componentInstance.dialog;
+
+            dialog.open();
+            fixture.detectChanges();
+
+            const dialogWindow = fixture.debugElement.query(By.css(".igx-dialog__window"));
+            expect(dialogWindow.children.length).toEqual(2);
+
+            expect(dialogWindow.children[0].nativeElement.innerText.toString()).toContain("TITLE");
+            expect(dialogWindow.children[1].nativeElement.innerText.toString()).toContain("BUTTONS");
+
+            dialog.close();
+        });
+
+    });
+
     function dispatchEvent(element: HTMLElement, eventType: string) {
         const event = new Event(eventType);
         element.dispatchEvent(event);
@@ -281,4 +313,26 @@ class CustomDialogComponent {
 class NestedDialogsComponent {
     @ViewChild("child") public child: IgxDialogComponent;
     @ViewChild("main") public main: IgxDialogComponent;
+}
+
+@Component({
+    template: `<igx-dialog #dialog>
+                <igx-dialog-title>
+                    <div>TITLE 1</div>
+                </igx-dialog-title>
+                <igx-dialog-actions>
+                    <div>BUTTONS 1</div>
+                </igx-dialog-actions>
+            </igx-dialog>` })
+class CustomTemplates1DialogComponent {
+    @ViewChild("dialog") public dialog: IgxDialogComponent;
+}
+
+@Component({
+    template: `<igx-dialog #dialog>
+                    <div igxDialogTitle>TITLE 2</div>
+                    <div igxDialogActions>BUTTONS 2</div>
+            </igx-dialog>` })
+class CustomTemplates2DialogComponent {
+    @ViewChild("dialog") public dialog: IgxDialogComponent;
 }

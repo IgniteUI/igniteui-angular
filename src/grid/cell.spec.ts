@@ -98,7 +98,7 @@ describe("IgxGrid - Cell component", () => {
             declarations: [
                 DefaultGridComponent,
                 CtrlKeyKeyboardNagivationComponent,
-                VirtualtGridComponent,
+                VirtualGridComponent,
                 GridWithEditableColumnComponent,
                 NoColumnWidthGridComponent
             ],
@@ -369,7 +369,7 @@ describe("IgxGrid - Cell component", () => {
     }));
 
     it("should fit last cell in the available display container when there is vertical scroll.", () => {
-        const fix = TestBed.createComponent(VirtualtGridComponent);
+        const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
         const rows = fix.componentInstance.instance.rowList;
         rows.forEach((item) => {
@@ -377,8 +377,18 @@ describe("IgxGrid - Cell component", () => {
         });
     });
 
+    it("should use default column width for cells with width in %.", () => {
+        const fix = TestBed.createComponent(VirtualGridComponent);
+        fix.componentInstance.defaultWidth = "25%";
+        fix.detectChanges();
+        const rows = fix.componentInstance.instance.rowList;
+        rows.forEach((item) => {
+            expect(item.cells.last.width).toEqual("25%");
+        });
+    });
+
     it("should scroll first row into view when pressing arrow up", async(() => {
-        const fix = TestBed.createComponent(VirtualtGridComponent);
+        const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
 
         // the 2nd sell on the row with index 1
@@ -415,7 +425,7 @@ describe("IgxGrid - Cell component", () => {
     }));
 
     it("should not reduce the width of last pinned cell when there is vertical scroll.", () => {
-        const fix = TestBed.createComponent(VirtualtGridComponent);
+        const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
         const columns = fix.componentInstance.instance.columnList;
         const lastCol: IgxColumnComponent = columns.last;
@@ -441,7 +451,7 @@ describe("IgxGrid - Cell component", () => {
     });
 
     it("keyboard navigation - should allow vertical navigation in virtualized grid.", (done) => {
-        const fix = TestBed.createComponent(VirtualtGridComponent);
+        const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
         const cell = grid.getCellByColumn(4, "index");
@@ -462,7 +472,7 @@ describe("IgxGrid - Cell component", () => {
         navigateVerticallyToIndex(grid, cell, 100, cbFunc);
     });
     it("keyboard navigation - should allow horizontal navigation in virtualized grid.", (done) => {
-        const fix = TestBed.createComponent(VirtualtGridComponent);
+        const fix = TestBed.createComponent(VirtualGridComponent);
         const cols = [];
         for (let i = 0; i < 10; i++) {
             cols.push({field: "col" + i});
@@ -485,7 +495,7 @@ describe("IgxGrid - Cell component", () => {
         navigateHorizontallyToIndex(grid, cell, 9, cbFunc);
     });
     it("keyboard navigation - should allow horizontal navigation in virtualized grid with pinned cols.", (done) => {
-        const fix = TestBed.createComponent(VirtualtGridComponent);
+        const fix = TestBed.createComponent(VirtualGridComponent);
         const cols = [];
         for (let i = 0; i < 10; i++) {
             cols.push({field: "col" + i});
@@ -511,7 +521,7 @@ describe("IgxGrid - Cell component", () => {
     });
 
     it("keyboard navigation - should allow vertical navigation in virtualized grid with pinned cols.", (done) => {
-        const fix = TestBed.createComponent(VirtualtGridComponent);
+        const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
         grid.pinColumn("index");
@@ -532,17 +542,21 @@ describe("IgxGrid - Cell component", () => {
         // navigate down to 100th row.
         navigateVerticallyToIndex(grid, cell, 100, cbFunc);
     });
+
     it("When cell in edit mode and try to navigate the caret around the cell text the focus should remain.", async(() => {
         const fix = TestBed.createComponent(GridWithEditableColumnComponent);
         fix.detectChanges();
 
         // const firstCellOfColumn: DebugElement = fix.componentInstance.grid.columnList.first.cells[0];
+        const CELL_CLASS_IN_EDIT_MODE = "igx_grid__cell--edit";
         const firstCell: DebugElement = fix.debugElement.query(By.css(CELL_CSS_CLASS));
         const cellElem = firstCell.nativeElement;
         const component = fix.debugElement.query(By.css("igx-grid"));
 
         component.triggerEventHandler("keydown.home" , null);
         fix.detectChanges();
+
+        expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(false);
 
         fix.whenStable().then(() => {
             fix.detectChanges();
@@ -553,6 +567,7 @@ describe("IgxGrid - Cell component", () => {
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem("ArrowRight", inputElem);
@@ -563,6 +578,7 @@ describe("IgxGrid - Cell component", () => {
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem("ArrowLeft", inputElem);
@@ -573,11 +589,13 @@ describe("IgxGrid - Cell component", () => {
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
         }).then(() => {
             fix.detectChanges();
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem("control.ArrowLeft", inputElem);
@@ -588,6 +606,7 @@ describe("IgxGrid - Cell component", () => {
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem("control.ArrowRight", inputElem);
@@ -598,6 +617,7 @@ describe("IgxGrid - Cell component", () => {
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem("ArrowUp", inputElem);
@@ -608,6 +628,7 @@ describe("IgxGrid - Cell component", () => {
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem("ArrowDown", inputElem);
@@ -696,18 +717,19 @@ export class CtrlKeyKeyboardNagivationComponent {
 
 @Component({
     template: `
-        <igx-grid [height]="'300px'" [width]="'800px'" [columnWidth]="'200px'" [data]="data" [autoGenerate]="true"
+        <igx-grid [height]="'300px'" [width]="'800px'" [columnWidth]="defaultWidth" [data]="data" [autoGenerate]="true"
          (onSelection)="cellSelected($event)">
         </igx-grid>
     `
 })
-export class VirtualtGridComponent {
+export class VirtualGridComponent {
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
 
     public data = [];
     public cols = [{ field: "index" }, { field: "value" }, { field: "other" }, { field: "another"}];
+    public defaultWidth = "200px";
     public selectedCell: IgxGridCellComponent;
 
     constructor() {
