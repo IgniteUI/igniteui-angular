@@ -300,6 +300,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Output()
     public onContextMenu = new EventEmitter<IGridCellEventArgs>();
 
+    @Output()
+    public onDoubleClick = new EventEmitter<IGridCellEventArgs>();
+
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
 
