@@ -1,6 +1,8 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 6.0.0
+- Added `onDoubleClick` output to `igxGrid` to emit the double clicked cell.
 ## 5.3.1
 - igx-dialog changes
     - Dialog title as well as dialog actions (buttons) can be customized. For more information navigate to the [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/dialog/README.md).
