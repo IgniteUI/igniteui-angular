@@ -231,9 +231,8 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     }
 
     public get disabled() {
-        if ((!!this.value || this.value === 0) && !this.unaryCondition) {
-            return false;
-        } else if (this.unaryCondition) {
+        // if filtering is applied, reset button should be active
+        if (this.gridAPI.get(this.gridID).filteringExpressions.length > 0) {
             return false;
         }
         return true;
