@@ -1100,7 +1100,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public get template(): TemplateRef<any> {
-        if (!!this.filteredData && this.filteredData.length === 0) {
+        if (this.filteredData && this.filteredData.length === 0) {
             return this.emptyGridTemplate;
         }
     }
