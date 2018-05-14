@@ -717,12 +717,15 @@ describe("IgxGrid - Cell component", () => {
         fix.detectChanges();
 
         // const firstCellOfColumn: DebugElement = fix.componentInstance.grid.columnList.first.cells[0];
+        const CELL_CLASS_IN_EDIT_MODE = "igx_grid__cell--edit";
         const firstCell: DebugElement = fix.debugElement.query(By.css(CELL_CSS_CLASS));
         const cellElem = firstCell.nativeElement;
         const component = fix.debugElement.query(By.css("igx-grid"));
 
         component.triggerEventHandler("keydown.home" , null);
         fix.detectChanges();
+
+        expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(false);
 
         fix.whenStable().then(() => {
             fix.detectChanges();
@@ -733,6 +736,7 @@ describe("IgxGrid - Cell component", () => {
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem("ArrowRight", inputElem);
@@ -743,6 +747,7 @@ describe("IgxGrid - Cell component", () => {
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem("ArrowLeft", inputElem);
@@ -753,11 +758,13 @@ describe("IgxGrid - Cell component", () => {
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
         }).then(() => {
             fix.detectChanges();
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem("control.ArrowLeft", inputElem);
@@ -768,6 +775,7 @@ describe("IgxGrid - Cell component", () => {
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem("control.ArrowRight", inputElem);
@@ -778,6 +786,7 @@ describe("IgxGrid - Cell component", () => {
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem("ArrowUp", inputElem);
@@ -788,6 +797,7 @@ describe("IgxGrid - Cell component", () => {
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem("ArrowDown", inputElem);
