@@ -28,11 +28,11 @@
     }
 
     @include e(tbody-message) {
-        @extend %grid-tbody--empty !optional;
+        @extend %grid-tbody-message !optional;
     }
 
     @include e(scroll) {
-        @extend %grid-tbody-message !optional;
+        @extend %grid-scroll !optional;
     }
 
     @include e(scroll-start) {
