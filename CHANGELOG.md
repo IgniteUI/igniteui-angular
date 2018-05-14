@@ -7,6 +7,13 @@ All notable changes for each version of this project will be documented in this 
 - Filtering a boolean column by `false` condition will return only the real `false` values, excluding `null` and `undefined`. Filtering by `Null` will return the `null` values and filtering by `Empty` will return the `undefined`.
 - The `Filter` button in the filtering UI is replaced with a `Close` button that is always active and closes the UI.
 - Filtering UI input displays a `X` icon that clears the input.
+- [#1136](https://github.com/IgniteUI/igniteui-angular/issues/1136) Exception is thrown when trying to pin column in certain scenarios
+- [#1124](https://github.com/IgniteUI/igniteui-angular/issues/1124) Resizing a column to where horizontal scrollbar should be shown doesn't show the scrollbar
+- [#1169](https://github.com/IgniteUI/igniteui-angular/issues/1169) Misalignment when resize a column and then scroll horizontally
+- [#1178](https://github.com/IgniteUI/igniteui-angular/issues/1178) Cells are misaligned when resetting the filter in certain situations
+- [#1246](https://github.com/IgniteUI/igniteui-angular/issues/1246) Setting all columns to have width in percentage results in wrong width for the last cells in igxGrid
+- [#1143](https://github.com/IgniteUI/igniteui-angular/issues/1143) Columns are not sized correctly when some of them are left without width
+- [#1154](https://github.com/IgniteUI/igniteui-angular/issues/1154) Keyboard navigation does not work in grid with remote virtualization
 
 ## 5.3.0
 - Added `rowSelectable` property to `igxGrid`
