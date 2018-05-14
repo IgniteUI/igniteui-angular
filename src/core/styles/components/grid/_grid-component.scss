@@ -27,12 +27,12 @@
         @extend %grid-tbody !optional;
     }
 
-    @include e(tbody, $m: empty) {
+    @include e(tbody-message) {
         @extend %grid-tbody--empty !optional;
     }
 
     @include e(scroll) {
-        @extend %grid-scroll !optional;
+        @extend %grid-tbody-message !optional;
     }
 
     @include e(scroll-start) {
