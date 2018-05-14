@@ -27,8 +27,8 @@
         @extend %grid-tbody !optional;
     }
 
-    @include e(tbody, $m: empty) {
-        @extend %grid-tbody--empty !optional;
+    @include e(tbody-message) {
+        @extend %grid-tbody-message !optional;
     }
 
     @include e(scroll) {
