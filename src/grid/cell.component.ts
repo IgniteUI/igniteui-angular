@@ -120,6 +120,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         return !this.column.editable;
     }
 
+    @HostBinding("class.igx_grid__cell--edit")
+    get cellInEditMode() {
+        return this.inEditMode;
+    }
+
     @HostBinding("attr.aria-describedby")
     get describedby(): string {
         return `${this.row.gridID}_${this.column.field}`;

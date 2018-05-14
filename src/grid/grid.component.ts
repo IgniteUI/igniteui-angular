@@ -252,6 +252,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public primaryKey;
 
+    @Input()
+    public emptyGridMessage = "No records found.";
+
     @Output()
     public onCellClick = new EventEmitter<IGridCellEventArgs>();
 
@@ -306,6 +309,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
     public rowList: QueryList<IgxGridRowComponent>;
+
+    @ViewChild("emptyGrid", { read: TemplateRef })
+    public emptyGridTemplate: TemplateRef<any>;
 
     @ViewChild("scrollContainer", { read: IgxForOfDirective })
     public parentVirtDir: IgxForOfDirective<any>;
@@ -642,6 +648,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const cell = this.gridAPI.get_cell_by_field(this.id, rowSelector, column);
         if (cell) {
             cell.update(value);
+            this.cdr.detectChanges();
             this._pipeTrigger++;
         }
     }
@@ -905,8 +912,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 .filter((width) => !isNaN(width))
         );
         const sumExistingWidths = this.visibleColumns
-        .filter((col) =>  col.width !== null)
-        .reduce((prev, curr) => prev + parseInt(curr.width, 10), 0);
+            .filter((col) =>  col.width !== null)
+            .reduce((prev, curr) => prev + parseInt(curr.width, 10), 0);
 
         if (this.rowSelectable) {
             computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
@@ -1108,6 +1115,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this._filteringExpressions.length > 0 ?
             this.headerCheckbox && this.headerCheckbox.checked ? "Deselect all filtered" : "Select all filtered" :
             this.headerCheckbox && this.headerCheckbox.checked ? "Deselect all" : "Select all";
+    }
+
+    public get template(): TemplateRef<any> {
+        if (this.filteredData && this.filteredData.length === 0) {
+            return this.emptyGridTemplate;
+        }
     }
 
     public checkHeaderChecboxStatus(headerStatus?: boolean) {
