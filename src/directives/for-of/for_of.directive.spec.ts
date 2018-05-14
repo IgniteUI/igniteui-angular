@@ -19,8 +19,7 @@ import {
 } from "@angular/core";
 import { async, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { Observable } from "rxjs/Observable";
+import { BehaviorSubject, Observable } from "rxjs";
 import { IgxForOfDirective, IgxForOfModule} from "./for_of.directive";
 import { IForOfState} from "./IForOfState";
 

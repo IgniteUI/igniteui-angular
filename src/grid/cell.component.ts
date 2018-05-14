@@ -120,6 +120,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         return !this.column.editable;
     }
 
+    @HostBinding("class.igx_grid__cell--edit")
+    get cellInEditMode() {
+        return this.inEditMode;
+    }
+
     @HostBinding("attr.aria-describedby")
     get describedby(): string {
         return `${this.row.gridID}_${this.column.field}`;
@@ -135,7 +140,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
     @HostBinding("class.igx-grid__td--fw")
     get width() {
         const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
-        return this.isLastUnpinned && hasVerticalScroll && !!this.column.width ?
+        const isPercentageWidth = this.column.width && typeof this.column.width === "string" && this.column.width.indexOf("%") !== -1;
+        return this.isLastUnpinned && hasVerticalScroll && !!this.column.width && !isPercentageWidth ?
             (parseInt(this.column.width, 10) - 18) + "px" : this.column.width;
     }
 

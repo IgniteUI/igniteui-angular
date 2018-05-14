@@ -32,7 +32,6 @@ export default {
         angularExternals(),
         rxjsExternals()
     ],
-    devtool: "source-map",
     module: {
         rules: [
             {
