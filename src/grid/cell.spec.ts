@@ -371,9 +371,15 @@ describe("IgxGrid - Cell component", () => {
     it("should fit last cell in the available display container when there is vertical scroll.", () => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
+        const platform = window.navigator.platform;
         const rows = fix.componentInstance.instance.rowList;
         rows.forEach((item) => {
-            expect(item.cells.last.width).toEqual("181px");
+            // On linux the scrollbars are different sizes, that's why the checks are different there
+            if (/Linux/.test(platform)) {
+                expect(item.cells.last.width).toEqual("183px");
+            } else {
+                expect(item.cells.last.width).toEqual("181px");
+            }
         });
     });
 
@@ -427,6 +433,7 @@ describe("IgxGrid - Cell component", () => {
     it("should not reduce the width of last pinned cell when there is vertical scroll.", () => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
+        const platform = window.navigator.platform;
         const columns = fix.componentInstance.instance.columnList;
         const lastCol: IgxColumnComponent = columns.last;
         lastCol.pin();
@@ -436,7 +443,12 @@ describe("IgxGrid - Cell component", () => {
         });
         const rows = fix.componentInstance.instance.rowList;
         rows.forEach((item) => {
-            expect(item.cells.last.width).toEqual("181px");
+            // On linux the scrollbars are different sizes, that's why the checks are different there
+            if (/Linux/.test(platform)) {
+                expect(item.cells.last.width).toEqual("183px");
+            } else {
+                expect(item.cells.last.width).toEqual("181px");
+            }
         });
     });
 
