@@ -104,6 +104,10 @@
         @extend %grid-cell--selected !optional;
     }
 
+    @include e(td, $m: editing) {
+        @extend %grid-cell--editing !optional;
+    }
+
     @include e(td, $m: number) {
         @extend %grid-cell-number !optional;
     }
