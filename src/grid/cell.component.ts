@@ -131,6 +131,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         return !this.column.editable;
     }
 
+    @HostBinding("class.igx_grid__cell--edit")
+    get cellInEditMode() {
+        return this.inEditMode;
+    }
+
     @HostBinding("attr.aria-describedby")
     get describedby(): string {
         return `${this.row.gridID}_${this.column.field}`;
@@ -333,6 +338,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         if (this.column.editable) {
             this.inEditMode = true;
         }
+
+        this.grid.onDoubleClick.emit({
+            cell: this,
+            event
+        });
     }
 
     @HostListener("click", ["$event"])

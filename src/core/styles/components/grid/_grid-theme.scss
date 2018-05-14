@@ -35,6 +35,7 @@
 
     $cell-selected-background: null,
     $cell-selected-text-color: null,
+    $cell-editing-background: null,
 
     $resize-line-color: null
 ) {
@@ -83,6 +84,7 @@
         pinned-border-color: $pinned-border-color,
 
         cell-selected-background: $cell-selected-background,
+        cell-editing-background: $cell-editing-background,
         cell-selected-text-color: $cell-selected-text-color,
 
         resize-line-color: $resize-line-color
@@ -116,6 +118,7 @@
         $pinned-border-color: igx-color($palette, 'grays', 400),
 
         $cell-selected-background: igx-color($palette, 'primary'),
+        $cell-editing-background: #fff,
         $cell-selected-text-color: igx-contrast-color($palette, 'primary'),
 
         $resize-line-color: igx-color($palette, 'secondary')
@@ -140,6 +143,7 @@
 
     // Cell
     $grid-cell-padding: rem(16px) rem(24px);
+    $grid-cell-padding--e: 0 rem(24px);
     $grid-cell-align-num: right;
     $grid-cell-fs: rem(13px);
     $grid-cell-lh: rem(16px);
@@ -285,6 +289,13 @@
         color: map-get($this, 'cell-selected-text-color');
         background-color: map-get($this, 'cell-selected-background') !important;
         border-bottom: 0;
+    }
+
+    %grid-cell--editing {
+        padding: $grid-cell-padding--e;
+        background-color: map-get($this, 'cell-editing-background') !important;
+        border: 1px solid map-get($this, 'cell-selected-background');
+        box-shadow: igx-elevation($elevations, 2);
     }
 
     %grid-cell--pinned {
