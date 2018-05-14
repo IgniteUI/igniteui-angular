@@ -136,7 +136,8 @@ describe("IgxGrid - Filtering actions", () => {
             input = filterUIContainer.query(By.directive(IgxInputDirective));
             expect(grid.rowList.length).toEqual(4);
             expect(close.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
-            expect(reset.nativeElement.classList.contains("igx-button--disabled")).toBeTruthy();
+            // input is empty but there is filtering applied, so reset button should be active !
+            expect(reset.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
             expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
         });
     }));
@@ -376,7 +377,8 @@ describe("IgxGrid - Filtering actions", () => {
             input = filterUIContainer.query(By.directive(IgxInputDirective));
             expect(grid.rowList.length).toEqual(7);
             expect(close.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
-            expect(reset.nativeElement.classList.contains("igx-button--disabled")).toBeTruthy();
+            // input is empty but there is filtering applied, so reset button should be active !
+            expect(reset.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
             expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
             // iterate over not unary conditions and fill the input
