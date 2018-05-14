@@ -240,11 +240,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     this.initHCache(this.igxForOf);
                 }
                 this._applyChanges(changes);
+            }
 
-                if (this.igxForScrollOrientation === "vertical") {
-                    this.vScroll.needsVerticalScroll =
-                        this.igxForOf && this.igxForOf.length * parseInt(this.igxForItemSize, 10) > parseInt(this.igxForContainerSize, 10);
-                }
+            if (this.igxForScrollOrientation === "vertical") {
+                this.vScroll.needsVerticalScroll =
+                    this.igxForOf && this.igxForOf.length * parseInt(this.igxForItemSize, 10) > parseInt(this.igxForContainerSize, 10);
             }
         }
     }

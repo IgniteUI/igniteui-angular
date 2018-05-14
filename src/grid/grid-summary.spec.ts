@@ -438,10 +438,10 @@ describe("IgxGrid - Summaries", () => {
                 let firstCellsText = rowsRendered.map((item) => {
                     return item.querySelectorAll("igx-grid-cell")[0].textContent.trim();
                 });
-                expect(rowsRendered.length).toEqual(10);
+                expect(rowsRendered.length).toEqual(9);
 
                 for (let i = 0; i < rowsRendered.length - 1; i++) {
-                    expect(firstCellsText[i]).toEqual((i + 11).toString());
+                    expect(firstCellsText[i]).toEqual((i + 12).toString());
                 }
 
                 grid.disableSummaries(["OrderDate"]);
@@ -452,15 +452,15 @@ describe("IgxGrid - Summaries", () => {
                     firstCellsText = rowsRendered.map((item) => {
                         return item.querySelectorAll("igx-grid-cell")[0].textContent.trim();
                     });
-                    expect(rowsRendered.length).toEqual(10);
+                    expect(rowsRendered.length).toEqual(12);
 
                     for (let i = 0; i < rowsRendered.length - 1; i++) {
-                        expect(firstCellsText[i]).toEqual((i + 11).toString());
+                        expect(firstCellsText[i]).toEqual((i + 9).toString());
                     }
                     done();
-                });
+                }, 150);
             });
-        }, 100);
+        }, 150);
     });
 
     function sendInput(element, text: string, fix) {

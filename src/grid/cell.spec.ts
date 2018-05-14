@@ -640,8 +640,8 @@ describe("IgxGrid - Cell component", () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch("1");
 
                 done();
-            }, 0);
-        }, 0);
+            }, 1000);
+        }, 100);
     });
 
     it("keyboard navigation - should scroll into view the not fully visible cells when navigating left", (done) => {
@@ -677,8 +677,8 @@ describe("IgxGrid - Cell component", () => {
                 expect(fix.componentInstance.selectedCell.value).toEqual(0);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch("0");
                 done();
-            }, 0);
-        }, 0);
+            }, 100);
+        }, 100);
     });
 
     it("keyboard navigation - should scroll into view the not fully visible cells when navigating right", (done) => {
