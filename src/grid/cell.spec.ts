@@ -1,5 +1,5 @@
 ﻿import { Component, DebugElement, ViewChild } from "@angular/core";
-import { async, TestBed } from "@angular/core/testing";
+import { async, fakeAsync, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { take } from "rxjs/operators";
 import { DataType } from "../data-operations/data-util";
@@ -198,6 +198,30 @@ describe("IgxGrid - Cell component", () => {
             fix.detectChanges();
 
             expect(grid.onContextMenu.emit).toHaveBeenCalledWith(args);
+            expect(firstCell).toBe(fix.componentInstance.clickedCell);
+        });
+    }));
+
+    it("Should trigger onDoubleClick event when double click into cell", async(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
+        const firstCell = grid.getCellByColumn(0, "index");
+
+        spyOn(grid.onDoubleClick, "emit").and.callThrough();
+        const event = new Event("dblclick");
+        cellElem.nativeElement.dispatchEvent(event);
+        const args: IGridCellEventArgs = {
+            cell: firstCell,
+            event
+        };
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+
+            expect(grid.onDoubleClick.emit).toHaveBeenCalledWith(args);
             expect(firstCell).toBe(fix.componentInstance.clickedCell);
         });
     }));
@@ -821,6 +845,7 @@ describe("IgxGrid - Cell component", () => {
             (onSelection)="cellSelected($event)"
             (onCellClick)="cellClick($event)"
             (onContextMenu)="cellRightClick($event)"
+            (onDoubleClick)="doubleClick($event)"
             [data]="data"
             [autoGenerate]="true">
         </igx-grid>
@@ -848,6 +873,10 @@ export class DefaultGridComponent {
     }
 
     public cellRightClick(evt) {
+        this.clickedCell = evt.cell;
+    }
+
+    public doubleClick(evt) {
         this.clickedCell = evt.cell;
     }
 }
