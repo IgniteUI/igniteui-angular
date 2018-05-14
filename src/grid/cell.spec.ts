@@ -371,9 +371,15 @@ describe("IgxGrid - Cell component", () => {
     it("should fit last cell in the available display container when there is vertical scroll.", () => {
         const fix = TestBed.createComponent(VirtualtGridComponent);
         fix.detectChanges();
+        const platform = window.navigator.platform;
         const rows = fix.componentInstance.instance.rowList;
         rows.forEach((item) => {
-            expect(item.cells.last.width).toEqual("181px");
+            // On linux the scrollbars are different sizes, that's why the checks are different there
+            if (/Linux/.test(platform)) {
+                expect(item.cells.last.width).toEqual("183px");
+            } else {
+                expect(item.cells.last.width).toEqual("181px");
+            }
         });
     });
 
@@ -445,6 +451,7 @@ describe("IgxGrid - Cell component", () => {
     it("should not reduce the width of last pinned cell when there is vertical scroll.", () => {
         const fix = TestBed.createComponent(VirtualtGridComponent);
         fix.detectChanges();
+        const platform = window.navigator.platform;
         const columns = fix.componentInstance.instance.columnList;
         const lastCol: IgxColumnComponent = columns.last;
         lastCol.pin();
@@ -454,7 +461,12 @@ describe("IgxGrid - Cell component", () => {
         });
         const rows = fix.componentInstance.instance.rowList;
         rows.forEach((item) => {
-            expect(item.cells.last.width).toEqual("181px");
+            // On linux the scrollbars are different sizes, that's why the checks are different there
+            if (/Linux/.test(platform)) {
+                expect(item.cells.last.width).toEqual("183px");
+            } else {
+                expect(item.cells.last.width).toEqual("181px");
+            }
         });
     });
 
@@ -692,7 +704,13 @@ describe("IgxGrid - Cell component", () => {
 
         // We use setTimout to execute scroll events in the event queue
         setTimeout(() => {
-            expect(rowDisplayContainer.style.left).toEqual("-44px");
+            // On linux the scrollbars are different sizes, that's why the checks are different there
+            const platform = window.navigator.platform;
+            if (/Linux/.test(platform)) {
+                expect(rowDisplayContainer.style.left).toEqual("-42px");
+            } else {
+                expect(rowDisplayContainer.style.left).toEqual("-44px");
+            }
             expect(fix.componentInstance.selectedCell.value).toEqual(30);
             expect(fix.componentInstance.selectedCell.column.field).toMatch("3");
             done();
