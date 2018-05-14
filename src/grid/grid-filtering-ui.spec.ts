@@ -250,7 +250,7 @@ describe("IgxGrid - Filtering actions", () => {
             expect(close.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
             expect(reset.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
             expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
-            const emptyTemplate = fix.debugElement.query(By.css("p.igx-grid--empty"));
+            const emptyTemplate = fix.debugElement.query(By.css("span.igx-grid__tbody-message"));
             expect(emptyTemplate.nativeElement.offsetHeight).toBeGreaterThan(0);
 
             // does not equal
