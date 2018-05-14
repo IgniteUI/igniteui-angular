@@ -251,6 +251,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public primaryKey;
 
+    @Input()
+    public emptyGridMessage = "No records found.";
+
     @Output()
     public onCellClick = new EventEmitter<IGridCellEventArgs>();
 
@@ -475,7 +478,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
                 this.markForCheck();
             });
-}
+    }
 
     public ngAfterViewInit() {
         this.zone.runOutsideAngular(() => {
@@ -891,8 +894,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 .filter((width) => !isNaN(width))
         );
         const sumExistingWidths = this.visibleColumns
-        .filter((col) =>  col.width !== null)
-        .reduce((prev, curr) => prev + parseInt(curr.width, 10), 0);
+            .filter((col) => col.width !== null)
+            .reduce((prev, curr) => prev + parseInt(curr.width, 10), 0);
 
         if (this.rowSelectable) {
             computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
@@ -1097,7 +1100,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public get template(): TemplateRef<any> {
-        return this.emptyGridTemplate;
+        if (!!this.filteredData && this.filteredData.length === 0) {
+            return this.emptyGridTemplate;
+        }
     }
 
     public checkHeaderChecboxStatus(headerStatus?: boolean) {
