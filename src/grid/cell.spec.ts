@@ -1,5 +1,5 @@
 ﻿import { Component, DebugElement, ViewChild } from "@angular/core";
-import { async, TestBed } from "@angular/core/testing";
+import { async, fakeAsync, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { take } from "rxjs/operators";
 import { DataType } from "../data-operations/data-util";
@@ -198,6 +198,30 @@ describe("IgxGrid - Cell component", () => {
             fix.detectChanges();
 
             expect(grid.onContextMenu.emit).toHaveBeenCalledWith(args);
+            expect(firstCell).toBe(fix.componentInstance.clickedCell);
+        });
+    }));
+
+    it("Should trigger onDoubleClick event when double click into cell", async(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
+        const firstCell = grid.getCellByColumn(0, "index");
+
+        spyOn(grid.onDoubleClick, "emit").and.callThrough();
+        const event = new Event("dblclick");
+        cellElem.nativeElement.dispatchEvent(event);
+        const args: IGridCellEventArgs = {
+            cell: firstCell,
+            event
+        };
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+
+            expect(grid.onDoubleClick.emit).toHaveBeenCalledWith(args);
             expect(firstCell).toBe(fix.componentInstance.clickedCell);
         });
     }));
@@ -717,12 +741,15 @@ describe("IgxGrid - Cell component", () => {
         fix.detectChanges();
 
         // const firstCellOfColumn: DebugElement = fix.componentInstance.grid.columnList.first.cells[0];
+        const CELL_CLASS_IN_EDIT_MODE = "igx_grid__cell--edit";
         const firstCell: DebugElement = fix.debugElement.query(By.css(CELL_CSS_CLASS));
         const cellElem = firstCell.nativeElement;
         const component = fix.debugElement.query(By.css("igx-grid"));
 
         component.triggerEventHandler("keydown.home" , null);
         fix.detectChanges();
+
+        expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(false);
 
         fix.whenStable().then(() => {
             fix.detectChanges();
@@ -733,6 +760,7 @@ describe("IgxGrid - Cell component", () => {
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem("ArrowRight", inputElem);
@@ -743,6 +771,7 @@ describe("IgxGrid - Cell component", () => {
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem("ArrowLeft", inputElem);
@@ -753,11 +782,13 @@ describe("IgxGrid - Cell component", () => {
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
         }).then(() => {
             fix.detectChanges();
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem("control.ArrowLeft", inputElem);
@@ -768,6 +799,7 @@ describe("IgxGrid - Cell component", () => {
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem("control.ArrowRight", inputElem);
@@ -778,6 +810,7 @@ describe("IgxGrid - Cell component", () => {
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem("ArrowUp", inputElem);
@@ -788,6 +821,7 @@ describe("IgxGrid - Cell component", () => {
 
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem("ArrowDown", inputElem);
@@ -821,6 +855,7 @@ describe("IgxGrid - Cell component", () => {
             (onSelection)="cellSelected($event)"
             (onCellClick)="cellClick($event)"
             (onContextMenu)="cellRightClick($event)"
+            (onDoubleClick)="doubleClick($event)"
             [data]="data"
             [autoGenerate]="true">
         </igx-grid>
@@ -848,6 +883,10 @@ export class DefaultGridComponent {
     }
 
     public cellRightClick(evt) {
+        this.clickedCell = evt.cell;
+    }
+
+    public doubleClick(evt) {
         this.clickedCell = evt.cell;
     }
 }
