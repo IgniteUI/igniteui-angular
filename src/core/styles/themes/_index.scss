@@ -73,7 +73,7 @@
 /// @requires {mixin} igx-tabs
 /// @requires {mixin} igx-bottom-nav
 /// @requires {mixin} igx-toast
-@mixin igx-theme($palette, $exclude: (), $legacy-support: false) {
+@mixin igx-theme($palette, $exclude: (), $legacy-support: true) {
     // Stores all excluded component styles
     $excluded: ();
 

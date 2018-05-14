@@ -337,6 +337,8 @@
 ///   // }
 ///   // otherwise, it will return the value for key 'icon-color' in the '$avatar-theme':
 @function --var($map, $key) {
+    $igx-legacy-support: if(global-variable-exists('igx-legacy-support'), $igx-legacy-support, true);
+
     @if map-has-key($map, $key) {
         @if $igx-legacy-support == false {
             @return unquote('var(--#{map-get($map, 'name')}-#{$key})');
@@ -344,7 +346,7 @@
             @return map-get($map, $key);
         }
     } @else {
-        @error unquote('The map you passed doesn`t contain a key #{$key}');
+        @error unquote('The map you passed does not contain a key #{$key}');
     }
 }
 
