@@ -30,16 +30,15 @@ export interface IActiveHighlightInfo {
     selector: "[igxTextHighlight]"
 })
 export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnChanges {
+    private static onActiveElementChanged = new EventEmitter<string>();
+    public static highlightGroupsMap = new Map<string, IActiveHighlightInfo>();
+
     private _lastSearchInfo: ISearchInfo;
     private _addedElements = [];
     private _observer: MutationObserver;
     private _nodeWasRemoved = false;
     private _forceEvaluation = false;
     private _activeElementIndex = -1;
-
-    private static onActiveElementChanged = new EventEmitter<string>();
-
-    public static highlightGroupsMap = new Map<string, IActiveHighlightInfo>();
 
     @Input("cssClass")
     public cssClass: string;
@@ -66,19 +65,30 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
     private container: any;
 
+    public static setActiveHighlight(groupName: string, column: number, row: number, index: number, page: number) {
+        const group = IgxTextHighlightDirective.highlightGroupsMap.get(groupName);
+
+        group.columnIndex = column;
+        group.rowIndex = row;
+        group.index = index;
+        group.page = page;
+
+        IgxTextHighlightDirective.onActiveElementChanged.emit(groupName);
+    }
+
     constructor(element: ElementRef, public renderer: Renderer2) {
         this.parentElement = this.renderer.parentNode(element.nativeElement);
 
         const callback = (mutationList) => {
-            mutationList.forEach(mutation => {
-                mutation.removedNodes.forEach(n => {
+            mutationList.forEach((mutation) => {
+                mutation.removedNodes.forEach((n) => {
                     if (n === this.container) {
                         this._nodeWasRemoved = true;
                         this.clearChildElements(false);
                     }
                 });
 
-                mutation.addedNodes.forEach(n => {
+                mutation.addedNodes.forEach((n) => {
                     if (n === this.parentElement.firstElementChild && this._nodeWasRemoved) {
                         this.container = this.parentElement.firstElementChild;
                         this._nodeWasRemoved = false;
@@ -91,7 +101,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
                     }
                 });
             });
-        }
+        };
 
         this._observer = new MutationObserver(callback);
         this._observer.observe(this.parentElement, {childList: true});
@@ -147,17 +157,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
         this.container = this.parentElement.firstElementChild;
     }
 
-    public static setActiveHighlight(groupName: string, column: number, row: number, index: number, page: number) {
-        const group = IgxTextHighlightDirective.highlightGroupsMap.get(groupName);
-
-        group.columnIndex = column;
-        group.rowIndex = row;
-        group.index = index;
-        group.page = page;
-
-        IgxTextHighlightDirective.onActiveElementChanged.emit(groupName);
-    }
-
     public highlight(text: string, caseSensitive?: boolean): number {
         const caseSensitiveResolved = caseSensitive ? true : false;
 
@@ -194,7 +193,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     private activate(index: number) {
         this.deactivate();
 
-        const spans = this._addedElements.filter(el => el.nodeName === "SPAN");
+        const spans = this._addedElements.filter((el) => el.nodeName === "SPAN");
         this._activeElementIndex = index;
 
         if (spans.length <= index) {
@@ -211,7 +210,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
             return;
         }
 
-        const spans = this._addedElements.filter(el => el.nodeName === "SPAN");
+        const spans = this._addedElements.filter((el) => el.nodeName === "SPAN");
 
         if (spans.length <= this._activeElementIndex) {
             this._activeElementIndex = -1;

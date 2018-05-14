@@ -42,8 +42,8 @@ import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { ISummaryExpression } from "./grid-summary";
-import { IgxGridRowComponent } from "./row.component";
 import { IgxGridSortingPipe } from "./grid.pipes";
+import { IgxGridRowComponent } from "./row.component";
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -157,7 +157,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         if (highlightedItem !== null) {
-            this.restoreHighlight(highlightedItem, true);
+            this.restoreHighlight(highlightedItem);
         }
     }
 
@@ -395,7 +395,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.cdr.markForCheck();
 
         if (highlightedItem !== null) {
-            this.restoreHighlight(highlightedItem, false);
+            this.restoreHighlight(highlightedItem);
         }
     }
 
@@ -430,7 +430,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         searchText: "",
         caseSensitive: false,
         activeMatchIndex: 0
-    }
+    };
 
     protected destroy$ = new Subject<boolean>();
 
@@ -832,7 +832,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.find(text, 1, caseSensitive);
     }
 
-    public findPrev(text: string, caseSensitive?: boolean): number{
+    public findPrev(text: string, caseSensitive?: boolean): number {
         return this.find(text, -1, caseSensitive);
     }
 
@@ -850,7 +850,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             searchText: "",
             caseSensitive: false,
             activeMatchIndex: 0
-        }
+        };
 
         this.rowList.forEach((row) => {
             row.cells.forEach((c) => {
@@ -874,6 +874,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     get hasSummarizedColumns(): boolean {
         return this.columnList.some((col) => col.hasSummary);
     }
+
     get selectedCells(): IgxGridCellComponent[] | any[] {
         if (this.rowList) {
             return this.rowList.map((row) => row.cells.filter((cell) => cell.selected))
@@ -1275,7 +1276,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.checkHeaderChecboxStatus(headerStatus);
     }
 
-
     private find(text: string, increment: number, caseSensitive?: boolean, scroll?: boolean) {
         if (!this.rowList) {
             return 0;
@@ -1327,7 +1327,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
             IgxTextHighlightDirective.setActiveHighlight(this.id, matchInfo.column, row, matchInfo.index, matchInfo.page);
 
-            if(scroll !== false) {
+            if (scroll !== false) {
                 this.scrollTo(matchInfo.row, matchInfo.column, matchInfo.page);
             }
         } else {
@@ -1340,28 +1340,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private get filteredSortedData(): any[] {
         let data: any[] = this.filteredData ? this.filteredData : this.data;
 
-        const columnNames = new Array<string>(this.visibleColumns.length);
-        this.visibleColumns.forEach((c) => {
-            columnNames[c.visibleIndex] = c.field;
-        });
-
-        let visibleData = [];
-        data.forEach((d, i) => {
-            const newData = {};
-            columnNames.forEach((c, j) => {
-                newData[c] = d[c];
-            });
-            visibleData.push(newData);
-        });
-
         if (this.sortingExpressions &&
             this.sortingExpressions.length > 0) {
 
             const sortingPipe = new IgxGridSortingPipe(this.gridAPI);
-            visibleData = sortingPipe.transform(visibleData, this.sortingExpressions, this.id, -1);
+            data = sortingPipe.transform(data, this.sortingExpressions, this.id, -1);
         }
 
-        return visibleData;
+        return data;
     }
 
     private scrollTo(row: number, column: number, page: number): void {
@@ -1370,7 +1356,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         this.scrollDirective(this.verticalScrollContainer, row);
-        this.scrollDirective(this.rowList.first.virtDirRow, column);
+
+        if (this.pinnedColumns.length) {
+            if (column >= this.pinnedColumns.length) {
+                column -= this.pinnedColumns.length;
+                this.scrollDirective(this.rowList.first.virtDirRow, column);
+            }
+        } else {
+            this.scrollDirective(this.rowList.first.virtDirRow, column);
+        }
     }
 
     private scrollDirective(directive: IgxForOfDirective<any>, goal: number): void {
@@ -1378,7 +1372,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const start = state.startIndex;
         const size = state.chunkSize - 1;
 
-        if (start > goal) {
+        if (start >= goal) {
             directive.scrollTo(goal);
         } else if (start + size <= goal) {
             directive.scrollTo(goal - size + 1);
@@ -1391,23 +1385,24 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const caseSensitive = this.lastSearchInfo.caseSensitive;
         const searchText = caseSensitive ? this.lastSearchInfo.searchText : this.lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
+        const keys = this.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).map((c) => c.field);
 
         data.forEach((dataRow, i) => {
             const rowIndex = this.paging ? i % this.perPage : i;
 
-            Object.keys(dataRow).forEach((key, j) => {
+            keys.forEach((key, j) => {
                 const value = dataRow[key];
-                if(value !== undefined && value !== null) {
+                if (value !== undefined && value !== null) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
                     let occurenceIndex = 0;
                     let searchIndex = searchValue.indexOf(searchText);
-                    const page = this.paging ? Math.floor(i / this.perPage) : 0;
+                    const pageIndex = this.paging ? Math.floor(i / this.perPage) : 0;
 
-                    while(searchIndex !== -1) {
+                    while (searchIndex !== -1) {
                         this._matchInfoChache.push({
                             row: rowIndex,
                             column: j,
-                            page: page,
+                            page: pageIndex,
                             index: occurenceIndex++
                         });
 
@@ -1431,7 +1426,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    private restoreHighlight(highlightedItem: any, resetActiveIndex: boolean): void {
+    private restoreHighlight(highlightedItem: any): void {
         const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
 
         const data = this.filteredSortedData;
@@ -1441,7 +1436,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         this.rebuildMatchCache();
 
-        if (resetActiveIndex === false) {
+        if (rowIndex !== -1) {
             IgxTextHighlightDirective.setActiveHighlight(this.id, activeInfo.columnIndex, row, activeInfo.index, page);
 
             this._matchInfoChache.forEach((match, i) => {

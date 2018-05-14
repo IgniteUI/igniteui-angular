@@ -115,7 +115,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
 
         if (this._inEditMode) {
             this.grid.cellInEditMode = this;
-        } else if (!originalValue){
+        } else if (!originalValue) {
             this.grid.cellInEditMode = null;
         }
     }

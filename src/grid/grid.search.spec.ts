@@ -6,17 +6,20 @@ import {
 import { async, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
+import { STRING_FILTERS } from "../data-operations/filtering-condition";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-fdescribe("IgxGrid - search API", () => {
+describe("IgxGrid - search API", () => {
     const CELL_CSS_CLASS = ".igx-grid__td";
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 SimpleGridComponent,
-                ScrollableGridComponent
+                ScrollableGridComponent,
+                PagingGridComponent,
+                HiddenColumnsGridComponent
             ],
             imports: [IgxGridModule.forRoot()]
         }).compileComponents();
@@ -191,7 +194,7 @@ fdescribe("IgxGrid - search API", () => {
         });
     }));
 
-    fit("should keep the active highlight when active cell enters and exits edit mode", async(() => {
+    it("should keep the active highlight when active cell enters and exits edit mode", async(() => {
         const fix = TestBed.createComponent(ScrollableGridComponent);
         fix.detectChanges();
 
@@ -207,7 +210,7 @@ fdescribe("IgxGrid - search API", () => {
         grid.findNext("1");
         fix.detectChanges();
 
-        fix.whenStable().then(() =>{
+        fix.whenStable().then(() => {
             activeHighlight = rv.nativeElement.querySelector("." + fix.componentInstance.activeClass);
             expect(activeHighlight !== null).toBeTruthy();
 
@@ -225,7 +228,7 @@ fdescribe("IgxGrid - search API", () => {
         });
     }));
 
-    fit("should update highlights when a new value is entered", async(() => {
+    it("should update highlights when a new value is entered", async(() => {
         const fix = TestBed.createComponent(ScrollableGridComponent);
         fix.detectChanges();
 
@@ -241,7 +244,7 @@ fdescribe("IgxGrid - search API", () => {
         grid.findNext("1");
         fix.detectChanges();
 
-        fix.whenStable().then(() =>{
+        fix.whenStable().then(() => {
             activeHighlight = rv.nativeElement.querySelector("." + fix.componentInstance.activeClass);
             expect(activeHighlight !== null).toBeTruthy();
 
@@ -273,6 +276,216 @@ fdescribe("IgxGrid - search API", () => {
         });
     }));
 
+    it("should update highlights when the cell value is cleared", async(() => {
+        const fix = TestBed.createComponent(ScrollableGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.gridSearch;
+        const rv = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+        const rv2 = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[2];
+        const cell = grid.getCellByColumn(0, "Name");
+
+        let activeHighlight = rv.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+        expect(activeHighlight !== null).toBeFalsy();
+
+        cell.column.editable = true;
+
+        grid.findNext("c");
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            activeHighlight = rv.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            expect(activeHighlight !== null).toBeTruthy();
+
+            rv.nativeElement.dispatchEvent(new Event("focus"));
+        }).then(() => {
+            rv.triggerEventHandler("dblclick", {});
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(cell.inEditMode).toBe(true);
+
+            const inputElem: HTMLInputElement = rv.nativeElement.querySelector("input") as HTMLInputElement;
+            inputElem.value = "";
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            const inputElem: HTMLInputElement = rv.nativeElement.querySelector("input") as HTMLInputElement;
+
+            cell.update(inputElem.value);
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            activeHighlight = rv.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            let highlights = rv.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(0);
+            expect(activeHighlight).toBe(null);
+
+            activeHighlight = rv2.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            highlights = rv2.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+        });
+    }));
+
+    it("Should update the active highlight when sorting", async(() => {
+        const fix = TestBed.createComponent(ScrollableGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.gridSearch;
+        const rv = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+        const cell = grid.getCellByColumn(0, "Name");
+
+        let activeHighlight = rv.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+        expect(activeHighlight !== null).toBeFalsy();
+
+        cell.column.sortable = true;
+
+        grid.findNext("casey");
+        grid.findNext("casey");
+
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            grid.sort("Name");
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            activeHighlight = rv.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            const highlights = rv.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+
+        });
+    }));
+
+    it("Should scroll properly when using paging", async(() => {
+        const fix = TestBed.createComponent(PagingGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.gridSearch;
+
+        grid.findNext("casey");
+        grid.findNext("casey");
+        grid.findNext("casey");
+
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            const highlight = grid.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            expect(highlight != null).toBeTruthy();
+            expect(grid.page).toBe(1);
+
+            grid.findPrev("casey");
+        }).then(() => {
+            fix.detectChanges();
+
+            const highlight = grid.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            expect(highlight != null).toBeTruthy();
+            expect(grid.page).toBe(0);
+        });
+    }));
+
+    it("Should update highlight when setting perPage option", async(() => {
+        const fix = TestBed.createComponent(PagingGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.gridSearch;
+
+        grid.findNext("casey");
+        grid.findNext("casey");
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            const highlight = grid.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            expect(highlight != null).toBeTruthy();
+            expect(grid.page).toBe(0);
+
+            grid.perPage = 10;
+        }).then(() => {
+            fix.detectChanges();
+
+            const highlight = grid.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            expect(highlight).toBeNull();
+            expect(grid.page).toBe(0);
+
+            grid.page = 1;
+            grid.verticalScrollContainer.scrollTo(0);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            const highlight = grid.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            expect(highlight != null).toBeTruthy();
+        });
+    }));
+
+    it("Active highlight should be updated when filtering is applied", async(() => {
+        const fix = TestBed.createComponent(ScrollableGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.gridSearch;
+
+        grid.findNext("casey");
+        grid.findNext("casey");
+
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            grid.filter("JobTitle", "Vice", STRING_FILTERS.contains);
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            const activeHighlight = grid.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            const highlights = grid.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(3);
+            expect(activeHighlight).toBe(highlights[1]);
+        });
+    }));
+
+    it("Hidden columns shouldn't be part of the search", async(() => {
+        const fix = TestBed.createComponent(HiddenColumnsGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.gridSearch;
+
+        grid.findNext("casey");
+
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            const activeHighlight = grid.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            const highlights = grid.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(0);
+            expect(activeHighlight).toBe(null);
+        });
+    }));
+
+    it("Search should honor the visible columns order", async(() => {
+        const fix = TestBed.createComponent(HiddenColumnsGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.gridSearch;
+        const cell = grid.getCellByColumn(0, "HireDate");
+
+        grid.findNext("1");
+
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            const activeHighlight = cell.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            const highlights = cell.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(5);
+            expect(activeHighlight).toBe(highlights[0]);
+        });
+    }));
+
     function triggerKeyDownEvtUponElem(evtName, elem, fix) {
         const evtArgs: KeyboardEventInit = { key: evtName, bubbles: true};
         elem.dispatchEvent(new KeyboardEvent("keydown", evtArgs));
@@ -281,7 +494,7 @@ fdescribe("IgxGrid - search API", () => {
 
     function findNext(grid: IgxGridComponent, text: string) {
         const promise = new Promise((resolve) => {
-            grid.verticalScrollContainer.onChunkLoad.subscribe((state) =>{
+            grid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
                 resolve(state);
             });
 
@@ -293,7 +506,7 @@ fdescribe("IgxGrid - search API", () => {
 
     function findPrev(grid: IgxGridComponent, text: string) {
         const promise = new Promise((resolve) => {
-            grid.verticalScrollContainer.onChunkLoad.subscribe((state) =>{
+            grid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
                 resolve(state);
             });
 
@@ -382,6 +595,88 @@ export class ScrollableGridComponent {
         { ID: 28, Name: "Erika Wells", JobTitle: "Software Development Team Lead", HireDate: "2005-10-14T11:23:17.714Z" },
         { ID: 29, Name: "Leslie Hansen", JobTitle: "Associate Software Developer", HireDate: "2013-10-10T11:23:17.714Z" },
         { ID: 30, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "1887-11-28T11:23:17.714Z" }
+    ];
+
+    @ViewChild("gridSearch", { read: IgxGridComponent })
+    public gridSearch: IgxGridComponent;
+
+    public highlightClass = "igx-highlight";
+    public activeClass = "igx-highlight__active";
+}
+
+@Component({
+    template: `
+        <igx-grid #gridSearch [data]="data" height="500px" width="500px" columnWidth="200" paging="true">
+            <igx-column field="ID" sortable="true"></igx-column>
+            <igx-column field="Name" sortable="true"></igx-column>
+            <igx-column field="JobTitle" sortable="true"></igx-column>
+            <igx-column field="HireDate" sortable="true"></igx-column>
+        </igx-grid>
+    `
+})
+export class PagingGridComponent {
+    public data = [
+        { ID: 1, Name: "Casey Houston", JobTitle: "Vice President", HireDate: "2017-06-19T11:43:07.714Z" },
+        { ID: 2, Name: "Gilberto Todd", JobTitle: "Director", HireDate: "2015-12-18T11:23:17.714Z" },
+        { ID: 3, Name: "Tanya Bennett", JobTitle: "Director", HireDate: "2005-11-18T11:23:17.714Z" },
+        { ID: 4, Name: "Jack Simon", JobTitle: "Software Developer", HireDate: "2008-12-18T11:23:17.714Z" },
+        { ID: 5, Name: "Celia Martinez", JobTitle: "Senior Software DEVELOPER", HireDate: "2007-12-19T11:23:17.714Z" },
+        { ID: 6, Name: "Erma Walsh", JobTitle: "CEO", HireDate: "2016-12-18T11:23:17.714Z" },
+        { ID: 7, Name: "Debra Morton", JobTitle: "Associate Software Developer", HireDate: "2005-11-19T11:23:17.714Z" },
+        { ID: 8, Name: "Erika Wells", JobTitle: "Software Development Team Lead", HireDate: "2005-10-14T11:23:17.714Z" },
+        { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer", HireDate: "2013-10-10T11:23:17.714Z" },
+        { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" },
+        { ID: 11, Name: "Casey Houston", JobTitle: "Vice President", HireDate: "2017-06-19T11:43:07.714Z" },
+        { ID: 12, Name: "Gilberto Todd", JobTitle: "Director", HireDate: "2015-12-18T11:23:17.714Z" },
+        { ID: 13, Name: "Tanya Bennett", JobTitle: "Director", HireDate: "2005-11-18T11:23:17.714Z" },
+        { ID: 14, Name: "Jack Simon", JobTitle: "Software Developer", HireDate: "2008-12-18T11:23:17.714Z" },
+        { ID: 15, Name: "Celia Martinez", JobTitle: "Senior Software DEVELOPER", HireDate: "2007-12-19T11:23:17.714Z" },
+        { ID: 16, Name: "Erma Walsh", JobTitle: "CEO", HireDate: "2016-12-18T11:23:17.714Z" },
+        { ID: 17, Name: "Debra Morton", JobTitle: "Associate Software Developer", HireDate: "2005-11-19T11:23:17.714Z" },
+        { ID: 18, Name: "Erika Wells", JobTitle: "Software Development Team Lead", HireDate: "2005-10-14T11:23:17.714Z" },
+        { ID: 19, Name: "Leslie Hansen", JobTitle: "Associate Software Developer", HireDate: "2013-10-10T11:23:17.714Z" },
+        { ID: 20, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" },
+        { ID: 21, Name: "Casey Houston", JobTitle: "Vice President", HireDate: "2017-06-19T11:43:07.714Z" },
+        { ID: 22, Name: "Gilberto Todd", JobTitle: "Director", HireDate: "2015-12-18T11:23:17.714Z" },
+        { ID: 23, Name: "Tanya Bennett", JobTitle: "Director", HireDate: "2005-11-18T11:23:17.714Z" },
+        { ID: 24, Name: "Jack Simon", JobTitle: "Software Developer", HireDate: "2008-12-18T11:23:17.714Z" },
+        { ID: 25, Name: "Celia Martinez", JobTitle: "Senior Software DEVELOPER", HireDate: "2007-12-19T11:23:17.714Z" },
+        { ID: 26, Name: "Erma Walsh", JobTitle: "CEO", HireDate: "2016-12-18T11:23:17.714Z" },
+        { ID: 27, Name: "Debra Morton", JobTitle: "Associate Software Developer", HireDate: "2005-11-19T11:23:17.714Z" },
+        { ID: 28, Name: "Erika Wells", JobTitle: "Software Development Team Lead", HireDate: "2005-10-14T11:23:17.714Z" },
+        { ID: 29, Name: "Leslie Hansen", JobTitle: "Associate Software Developer", HireDate: "2013-10-10T11:23:17.714Z" },
+        { ID: 30, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "1887-11-28T11:23:17.714Z" }
+    ];
+
+    @ViewChild("gridSearch", { read: IgxGridComponent })
+    public gridSearch: IgxGridComponent;
+
+    public highlightClass = "igx-highlight";
+    public activeClass = "igx-highlight__active";
+}
+
+@Component({
+    template: `
+        <igx-grid #gridSearch [data]="data">
+            <igx-column field="ID"></igx-column>
+            <igx-column field="Name" hidden="true"></igx-column>
+            <igx-column field="JobTitle"></igx-column>
+            <igx-column field="HireDate" pinned="true"></igx-column>
+        </igx-grid>
+    `
+})
+export class HiddenColumnsGridComponent {
+    public data = [
+        { ID: 1, Name: "Casey Houston", JobTitle: "Vice President", HireDate: "2017-06-19T11:43:07.714Z" },
+        { ID: 2, Name: "Gilberto Todd", JobTitle: "Director", HireDate: "2015-12-18T11:23:17.714Z" },
+        { ID: 3, Name: "Tanya Bennett", JobTitle: "Director", HireDate: "2005-11-18T11:23:17.714Z" },
+        { ID: 4, Name: "Jack Simon", JobTitle: "Software Developer", HireDate: "2008-12-18T11:23:17.714Z" },
+        { ID: 5, Name: "Celia Martinez", JobTitle: "Senior Software DEVELOPER", HireDate: "2007-12-19T11:23:17.714Z" },
+        { ID: 6, Name: "Erma Walsh", JobTitle: "CEO", HireDate: "2016-12-18T11:23:17.714Z" },
+        { ID: 7, Name: "Debra Morton", JobTitle: "Associate Software Developer", HireDate: "2005-11-19T11:23:17.714Z" },
+        { ID: 8, Name: "Erika Wells", JobTitle: "Software Development Team Lead", HireDate: "2005-10-14T11:23:17.714Z" },
+        { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer", HireDate: "2013-10-10T11:23:17.714Z" },
+        { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" }
     ];
 
     @ViewChild("gridSearch", { read: IgxGridComponent })

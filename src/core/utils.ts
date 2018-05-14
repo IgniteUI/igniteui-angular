@@ -6,11 +6,7 @@ export function cloneArray(array, deep?: boolean) {
     }
     let i = array.length;
     while (i--) {
-        if (deep) {
-            arr[i] = JSON.parse(JSON.stringify(array[i]));
-        } else {
-            arr[i] = array[i];
-        }
+        arr[i] = deep ? JSON.parse(JSON.stringify(array[i])) : array[i];
     }
     return arr;
 }

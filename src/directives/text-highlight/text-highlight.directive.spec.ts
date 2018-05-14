@@ -181,7 +181,7 @@ describe("IgxHighlight", () => {
         expect(count).toBe(0);
     });
 
-    it("Should properly handle value changes",() => {
+    it("Should properly handle value changes", () => {
         const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
         fix.detectChanges();
 
@@ -194,7 +194,7 @@ describe("IgxHighlight", () => {
         expect(spans.length).toBe(0);
     });
 
-    it("Should properly handle value changes - case sensitive",() => {
+    it("Should properly handle value changes - case sensitive", () => {
         const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
         fix.detectChanges();
 
@@ -226,7 +226,7 @@ class HighlightLoremIpsumComponent {
     @ViewChild(forwardRef(() => IgxTextHighlightDirective), { read: IgxTextHighlightDirective })
     public highlight: IgxTextHighlightDirective;
 
-    constructor(private element: ElementRef){}
+    constructor(private element: ElementRef) {}
 
     public highlightText(text: string, caseSensitive?: boolean) {
         return this.highlight.highlight(text, caseSensitive);
