@@ -315,6 +315,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         if (this.column.editable) {
             this.inEditMode = true;
         }
+
+        this.grid.onDoubleClick.emit({
+            cell: this,
+            event
+        });
     }
 
     @HostListener("click", ["$event"])
