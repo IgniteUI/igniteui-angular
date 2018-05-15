@@ -176,7 +176,7 @@
         $r: floor($a * $red + (1 - $a) * 255);
         $g: floor($a * $green + (1 - $a) * 255);
         $b: floor($a * $blue + (1 - $a) * 255);
-        @return unquote('##{str-slice('0#{to-string($r)}',-2)}#{str-slice('0#{to-string($g)}',-2)}#{str-slice('0#{to-string($b)}',-2)}');
+        @return rgb($r, $g, $b);
     }
     @return $rgba;
 }
