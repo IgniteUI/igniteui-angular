@@ -58,11 +58,8 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
     private children: QueryList<IgxDropDownItemComponent>;
 
-    /**
-     * The toggle directive of IgxDropDown
-     */
     @ViewChild(IgxToggleDirective)
-    public toggleDirective: IgxToggleDirective;
+    private toggleDirective: IgxToggleDirective;
 
     /**
      * Emitted when item selection is changing, before the selection completes
@@ -140,6 +137,13 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     set id(value: string) {
         this._id = value;
         this.toggleDirective.id = value;
+    }
+
+    /**
+     * Gets if the dropdown is collapsed
+     */
+    public get collapsed(): boolean {
+        return this.toggleDirective.collapsed;
     }
 
     /**

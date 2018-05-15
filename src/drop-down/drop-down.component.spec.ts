@@ -285,7 +285,7 @@ describe("IgxDropDown ", () => {
             let currentItem = document.getElementsByClassName(CSS_CLASS_FOCUSED)[0] as HTMLElement;
             currentItem.focus();
             expect(currentItem.innerHTML.trim()).toEqual("Item 1");
-            const scrollElement = list.toggleDirective.element as HTMLElement;
+            const scrollElement = document.getElementsByClassName(CSS_CLASS_TOGGLE)[0] as HTMLElement;
             scrollElement.scrollTop += 150;
             currentItem = document.getElementsByClassName(CSS_CLASS_FOCUSED)[0] as HTMLElement;
             expect(currentItem.innerHTML.trim()).toEqual("Item 1");
@@ -332,10 +332,10 @@ describe("IgxDropDown ", () => {
         const list = fixture.componentInstance.dropdown;
         const mockObj = jasmine.createSpyObj("mockEvt", ["stopPropagation", "preventDefault"]);
         spyOn(list.onSelection, "emit").and.callThrough();
-        spyOn(list.onClosed, "emit").and.callThrough();
+        spyOn(list.onOpening, "emit").and.callThrough();
         spyOn(list.onOpened, "emit").and.callThrough();
-        spyOn(list.toggleDirective.onClosing, "emit").and.callThrough();
-        spyOn(list.toggleDirective.onClosed, "emit").and.callThrough();
+        spyOn(list.onClosing, "emit").and.callThrough();
+        spyOn(list.onClosed, "emit").and.callThrough();
         spyOn(fixture.componentInstance, "onSelection");
         expect(list).toBeDefined();
         expect(list.items.length).toEqual(4);
@@ -357,10 +357,10 @@ describe("IgxDropDown ", () => {
         }).then(() => {
             fixture.detectChanges();
             // expect(list.selectedItem).toEqual(list.items[0]);
+            expect(list.onOpening.emit).toHaveBeenCalledTimes(1);
             expect(list.onOpened.emit).toHaveBeenCalledTimes(1);
             expect(list.onSelection.emit).toHaveBeenCalledTimes(0);
             // should be list.onClose.emit
-            expect(list.toggleDirective.onClosing.emit).toHaveBeenCalledTimes(1);
         });
     });
 
@@ -737,12 +737,12 @@ describe("IgxDropDown ", () => {
         const componentInstance = fixture.componentInstance;
         const igxDropDown = componentInstance.dropdown;
         fixture.detectChanges();
-        expect(igxDropDown.toggleDirective.collapsed).toEqual(true);
+        expect(igxDropDown.collapsed).toEqual(true);
         igxDropDown.open();
 
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            expect(igxDropDown.toggleDirective.collapsed).toEqual(false);
+            expect(igxDropDown.collapsed).toEqual(false);
         });
     });
 
@@ -751,17 +751,17 @@ describe("IgxDropDown ", () => {
         const componentInstance = fixture.componentInstance;
         const igxDropDown = componentInstance.dropdown;
         fixture.detectChanges();
-        expect(igxDropDown.toggleDirective.collapsed).toEqual(true);
+        expect(igxDropDown.collapsed).toEqual(true);
         igxDropDown.toggle();
 
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            expect(igxDropDown.toggleDirective.collapsed).toEqual(false);
+            expect(igxDropDown.collapsed).toEqual(false);
             igxDropDown.toggle();
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
-            expect(igxDropDown.toggleDirective.collapsed).toEqual(true);
+            expect(igxDropDown.collapsed).toEqual(true);
         });
     });
 });

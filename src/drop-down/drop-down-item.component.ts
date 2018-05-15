@@ -51,7 +51,7 @@ export class IgxDropDownItemComponent {
             return;
         }
 
-        if (value && !this.dropDown.toggleDirective.collapsed) {
+        if (value && !this.dropDown.collapsed) {
             this.elementRef.nativeElement.focus();
         }
         this._isFocused = value;
@@ -116,24 +116,24 @@ export class IgxDropDownItemComponent {
         }
 
         this.dropDown.setSelectedItem(this.index);
-        this.dropDown.toggleDirective.close(true);
+        this.dropDown.close();
     }
 
     @HostListener("keydown.Escape", ["$event"])
     onEscapeKeyDown(event) {
-        this.dropDown.toggleDirective.close(true);
+        this.dropDown.close();
     }
 
     @HostListener("keydown.Space", ["$event"])
     onSpaceKeyDown(event) {
         this.dropDown.setSelectedItem(this.index);
-        this.dropDown.toggleDirective.close(true);
+        this.dropDown.close();
     }
 
     @HostListener("keydown.Enter", ["$event"])
     onEnterKeyDown(event) {
         this.dropDown.setSelectedItem(this.index);
-        this.dropDown.toggleDirective.close(true);
+        this.dropDown.close();
     }
 
     @HostListener("keydown.ArrowDown", ["$event"])
