@@ -231,10 +231,12 @@
         z-index: 1;
     }
 
-    %grid-tbody--empty {
+    %grid-tbody-message {
         display: flex;
         justify-content: center;
-        text-align: center;
+        align-items: center;
+        height: 100%;
+        color: map-get($this, 'content-text-color');
     }
 
     %grid-scroll {
