@@ -916,6 +916,78 @@ describe("IgxGrid - Row Selection", () => {
             expect(thirdRow.isSelected).toBeFalsy();
         });
     }));
+
+    it("Should be able to programatically select all rows with a correct reference, #1297", async(() => {
+        const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection1;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        grid.selectAllRows();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(grid.selectedRows()).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            grid.selectAllRows();
+        });
+    }));
+
+    it("Should be able to programatically select all rows and keep the header checkbox intact,  #1298", async(() => {
+        const fixture = TestBed.createComponent(GridWithPagingAndSelectionComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.gridSelection2;
+        const gridElement: HTMLElement = fixture.nativeElement.querySelector(".igx-grid");
+        const headerRow: HTMLElement = fixture.nativeElement.querySelector(".igx-grid__thead");
+        const headerCheckboxElement: HTMLElement = headerRow.querySelector(".igx-checkbox");
+        const firstRow = grid.getRowByIndex(0);
+        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector(".igx-checkbox__input");
+        const thirdRow = grid.getRowByIndex(2);
+        const thirdRowCheckbox: HTMLElement = thirdRow.nativeElement.querySelector(".igx-checkbox__input");
+        expect(firstRow.isSelected).toBeFalsy();
+        expect(thirdRow.isSelected).toBeFalsy();
+        grid.selectAllRows();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(thirdRow.isSelected).toBeTruthy();
+            expect(headerCheckboxElement.classList.contains("igx-checkbox--checked")).toBeTruthy();
+            grid.selectAllRows();
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(thirdRow.isSelected).toBeTruthy();
+            expect(headerCheckboxElement.classList.contains("igx-checkbox--checked")).toBeTruthy();
+        });
+    }));
+
+    it("Should be able to programatically get a collection of all selected rows", async(() => {
+        const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection2;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        const headerRow: HTMLElement = fix.nativeElement.querySelector(".igx-grid__thead");
+        const headerCheckboxElement: HTMLElement = headerRow.querySelector(".igx-checkbox");
+        const firstRow = grid.getRowByIndex(0);
+        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector(".igx-checkbox__input");
+        const thirdRow = grid.getRowByIndex(2);
+        const thirdRowCheckbox: HTMLElement = thirdRow.nativeElement.querySelector(".igx-checkbox__input");
+        expect(firstRow.isSelected).toBeFalsy();
+        expect(thirdRow.isSelected).toBeFalsy();
+        expect(grid.selectedRows()).toEqual([]);
+        thirdRowCheckbox.click();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+            expect(thirdRow.isSelected).toBeTruthy();
+            expect(grid.selectedRows()).toEqual(["0_2"]);
+            thirdRowCheckbox.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+            expect(thirdRow.isSelected).toBeFalsy();
+            expect(grid.selectedRows()).toEqual([]);
+        });
+    }));
 });
 
 @Component({
