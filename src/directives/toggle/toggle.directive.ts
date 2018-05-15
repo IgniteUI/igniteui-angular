@@ -71,6 +71,9 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         if (!this.collapsed) { return; }
 
         const player = this.animationActivation();
+        player.onStart(() => {
+            this.collapsed = false;
+        });
         player.onDone(() =>  {
             player.destroy();
             if (fireEvents) {
@@ -78,7 +81,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             }
         });
 
-        this.collapsed = !this.collapsed;
         if (fireEvents) {
             this.onOpening.emit();
         }
@@ -89,10 +91,8 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         if (this.collapsed) { return; }
 
         const player = this.animationActivation();
-        player.onStart(() => {
-        });
         player.onDone(() => {
-            this.collapsed = !this.collapsed;
+            this.collapsed = true;
             // When using directive into component with OnPush it is necessary to
             // trigger change detection again when close animation ends
             // due to late updated @collapsed property.

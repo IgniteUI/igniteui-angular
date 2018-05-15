@@ -282,6 +282,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     }
 
     onToggleOpening() {
+        this.toggleDirective.collapsed = false;
         this.cdr.detectChanges();
         this.scrollToItem(this.selectedItem);
         this.onOpening.emit();
@@ -299,6 +300,10 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
             }
         }
         this.onOpened.emit();
+    }
+
+    onToggleClosing() {
+        this.onClosing.emit();
     }
 
     onToggleClosed() {
