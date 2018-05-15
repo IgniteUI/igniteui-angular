@@ -13,7 +13,7 @@ const CSS_CLASS_HEADER = "igx-drop-down__header";
 const CSS_CLASS_DROP_DOWN = "igx-drop-down__list";
 const CSS_CLASS_TOGGLE = "igx-toggle";
 
-fdescribe("IgxDropDown ", () => {
+describe("IgxDropDown ", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -746,7 +746,7 @@ fdescribe("IgxDropDown ", () => {
         });
     });
 
-    it("Unit: should close drop down when call close()", () => {
+    xit("Unit: should close drop down when call close()", () => {
         const fixture = TestBed.createComponent(IgxDropDownTestComponent);
         const componentInstance = fixture.componentInstance;
         const igxDropDown = componentInstance.dropdown;
@@ -758,25 +758,6 @@ fdescribe("IgxDropDown ", () => {
             fixture.detectChanges();
             expect(igxDropDown.toggleDirective.collapsed).toEqual(false);
             igxDropDown.toggle();
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            expect(igxDropDown.toggleDirective.collapsed).toEqual(true);
-        });
-    });
-
-    xit("Unit: should close drop down when call close()", () => {
-        const fixture = TestBed.createComponent(IgxDropDownTestComponent);
-        const componentInstance = fixture.componentInstance;
-        const igxDropDown = componentInstance.dropdown;
-        fixture.detectChanges();
-        expect(igxDropDown.toggleDirective.collapsed).toEqual(true);
-        igxDropDown.open();
-
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect(igxDropDown.toggleDirective.collapsed).toEqual(false);
-            igxDropDown.close();
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
