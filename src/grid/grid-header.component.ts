@@ -234,13 +234,11 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
 
             const largest = new Map<number, number>();
 
-            let cellsContentWidths = [];
-            if (this.column.bodyTemplate && this.column.cells[0].nativeElement.children.length > 0) {
+            const cellsContentWidths = [];
+            if (this.column.cells[0].nativeElement.children.length > 0) {
                 this.column.cells.forEach((cell) => {
                     cellsContentWidths.push(Math.max(...Array.from(cell.nativeElement.children).map((child) => valToPxls(child))));
                 });
-            } else {
-                cellsContentWidths = this.column.cells.map((cell) => valToPxls(cell.nativeElement));
             }
 
             const ind = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
