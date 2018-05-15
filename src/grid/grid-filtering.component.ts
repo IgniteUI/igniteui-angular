@@ -134,6 +134,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     @ViewChild("select", { read: ElementRef})
     protected select: ElementRef;
 
+    @ViewChild("input", { read: ElementRef})
+    protected input: ElementRef;
+
     constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
         this.filterChanged.pipe(
             debounceTime(250)
@@ -167,6 +170,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     public refresh() {
         this.dialogShowing = !this.dialogShowing;
         if (this.dialogShowing) {
+            if(this.input) {
+                this.input.nativeElement.focus();
+            }
             this.column.filteringCondition = this.getCondition(this.select.nativeElement.value);
         }
         this.cdr.detectChanges();
