@@ -3,6 +3,8 @@
 All notable changes for each version of this project will be documented in this file.
 ## 6.0.0
 - Added `onDoubleClick` output to `igxGrid` to emit the double clicked cell.
+- Added `All` option in the filtering UI for a boolean column
+
 ## 5.3.1
 - igx-dialog changes
     - Dialog title as well as dialog actions (buttons) can be customized. For more information navigate to the [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/dialog/README.md).
@@ -10,7 +12,7 @@ All notable changes for each version of this project will be documented in this 
     - Filtering a boolean column by `false` condition will return only the real `false` values, excluding `null` and `undefined`. Filtering by `Null` will return the `null` values and filtering by `Empty` will return the `undefined`.
     - The `Filter` button in the filtering UI is replaced with a `Close` button that is always active and closes the UI.
     - Filtering UI input displays a `X` icon that clears the input.
-    - Added "(All)" option in the filtering UI for a boolean column
+=
 
 ## 5.3.0
 - Added `rowSelectable` property to `igxGrid`
