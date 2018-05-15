@@ -48,6 +48,9 @@
     @include igx-root-css-vars($theme);
 
     %igx-grid-paginator {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         color: --var($theme, 'text-color');
         background: --var($theme, 'background-color');
         grid-row: 6;
