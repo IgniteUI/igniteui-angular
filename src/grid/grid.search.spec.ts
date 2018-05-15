@@ -486,6 +486,242 @@ describe("IgxGrid - search API", () => {
         });
     }));
 
+    it("Active highlight should be updated when a column is pinned/unpinned", () => {
+        const fix = TestBed.createComponent(SimpleGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.gridSearch;
+        const cellName = grid.getCellByColumn(0, "Name");
+        let activeHighlight: any;
+        let highlights: any[];
+
+        grid.findNext("casey");
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+
+            activeHighlight = cellName.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            highlights = cellName.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+            grid.columns[1].pin();
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            activeHighlight = cellName.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            highlights = cellName.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+
+            grid.columns[1].unpin();
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            activeHighlight = cellName.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            highlights = cellName.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+        });
+    });
+
+    it("Active highlight should be updated when a column is hidden/shown", () => {
+        const fix = TestBed.createComponent(SimpleGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.gridSearch;
+        const cellName = grid.getCellByColumn(0, "Name");
+        let activeHighlight: any;
+        let highlights: any[];
+
+        grid.findNext("casey");
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+
+            activeHighlight = cellName.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            highlights = cellName.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+            grid.columns[0].hidden = true;
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            activeHighlight = cellName.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            highlights = cellName.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+
+            grid.columns[0].hidden = false;
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            activeHighlight = cellName.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            highlights = cellName.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+        });
+    });
+
+    it("Clear filter properly updates the highlights", () => {
+        const fix = TestBed.createComponent(SimpleGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.gridSearch;
+        const gilbertoDirectorCell = grid.getCellByColumn(1, "JobTitle");
+        const tanyaDirectorCell = grid.getCellByColumn(2, "JobTitle");
+        let activeHighlight: any;
+        let highlights: any[];
+
+        grid.findNext("director");
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+
+            activeHighlight = gilbertoDirectorCell.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            highlights = gilbertoDirectorCell.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+
+            grid.filter("Name", "Tanya", STRING_FILTERS.contains);
+            fix.detectChanges();
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            activeHighlight = tanyaDirectorCell.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            highlights = tanyaDirectorCell.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+
+            grid.clearFilter();
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            activeHighlight = tanyaDirectorCell.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            highlights = tanyaDirectorCell.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+
+            grid.findNext("Director");
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            activeHighlight = gilbertoDirectorCell.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            highlights = gilbertoDirectorCell.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+        });
+    });
+
+    it("Highlights should be properly updated when a row is deleted", () => {
+        const fix = TestBed.createComponent(SimpleGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.gridSearch;
+        const jackSoftwareCell = grid.getCellByColumn(3, "JobTitle");
+        const celiaSoftwareCell = grid.getCellByColumn(4, "JobTitle");
+        const leslieSoftwareCell = grid.getCellByColumn(8, "JobTitle");
+
+        let activeHighlight: any;
+        let highlights: any[];
+
+        grid.findNext("software");
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+
+            activeHighlight = jackSoftwareCell.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            highlights = jackSoftwareCell.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+
+            grid.deleteRow(3);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            activeHighlight = celiaSoftwareCell.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            highlights = celiaSoftwareCell.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+
+            grid.findPrev("software");
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            activeHighlight = leslieSoftwareCell.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            highlights = leslieSoftwareCell.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+        });
+    });
+
+    it("Highlights should be properly updated when a row is deleted", () => {
+        const fix = TestBed.createComponent(SimpleGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.gridSearch;
+        const gilbertoDirectorCell = grid.getCellByColumn(1, "JobTitle");
+        const tanyaDirectorCell = grid.getCellByColumn(2, "JobTitle");
+        let activeHighlight: any;
+        let highlights: any[];
+
+        grid.findNext("director");
+        grid.findNext("director");
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+
+            activeHighlight = tanyaDirectorCell.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            highlights = tanyaDirectorCell.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+
+            grid.addRow({
+                ID: 11,
+                Name: "John Doe",
+                JobTitle: "Director",
+                HireDate: new Date()
+            });
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            activeHighlight = tanyaDirectorCell.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            highlights = tanyaDirectorCell.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+
+            grid.findNext("director");
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            const johnDirectorCell = grid.getCellByColumn(10, "JobTitle");
+
+            activeHighlight = johnDirectorCell.nativeElement.querySelector("." + fix.componentInstance.activeClass);
+            highlights = johnDirectorCell.nativeElement.querySelectorAll("." + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+        });
+    });
+
     function triggerKeyDownEvtUponElem(evtName, elem, fix) {
         const evtArgs: KeyboardEventInit = { key: evtName, bubbles: true};
         elem.dispatchEvent(new KeyboardEvent("keydown", evtArgs));

@@ -11,6 +11,7 @@ import {
 } from "@angular/core";
 import { DataType } from "../data-operations/data-util";
 import { STRING_FILTERS } from "../data-operations/filtering-condition";
+import { IgxTextHighlightDirective } from "../directives/text-highlight/text-highlight.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from "./grid-summary";
@@ -68,6 +69,20 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this._hidden !== value) {
             this._hidden = value;
             this.check();
+
+            if (this.grid) {
+                const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.grid.id);
+                const oldIndex = activeInfo.columnIndex;
+
+                if (this.grid.lastSearchInfo.searchText) {
+                    if (this.index <= oldIndex) {
+                        const newIndex = this.hidden ? oldIndex - 1 : oldIndex + 1;
+                        this.updateHighlights(oldIndex, newIndex);
+                    } else if (oldIndex === -1 && !this.hidden) {
+                        this.grid.refreshSearch();
+                    }
+                }
+            }
         }
     }
 
@@ -245,16 +260,46 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     public pin(): boolean {
-        return this.gridAPI.get(this.gridID).pinColumn(this.field);
+        const oldIndex = this.visibleIndex;
+        const retVal = this.gridAPI.get(this.gridID).pinColumn(this.field);
+
+        if (this.grid.lastSearchInfo.searchText) {
+            const newIndex = this.visibleIndex;
+            this.updateHighlights(oldIndex, newIndex);
+        }
+
+        return retVal;
     }
 
     public unpin(): boolean {
-        return this.gridAPI.get(this.gridID).unpinColumn(this.field);
+        const oldIndex = this.visibleIndex;
+        const retVal =  this.gridAPI.get(this.gridID).unpinColumn(this.field);
+
+        if (this.grid.lastSearchInfo.searchText) {
+            const newIndex = this.visibleIndex;
+            this.updateHighlights(oldIndex, newIndex);
+        }
+
+        return retVal;
     }
 
     protected check() {
         if (this.grid) {
             this.grid.markForCheck();
+        }
+    }
+
+    private updateHighlights(oldIndex: number, newIndex: number) {
+        const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.grid.id);
+
+        if (activeInfo.columnIndex === oldIndex) {
+            IgxTextHighlightDirective.setActiveHighlight(this.grid.id,
+                newIndex,
+                activeInfo.rowIndex,
+                activeInfo.index,
+                activeInfo.page);
+
+            this.grid.refreshSearch(true);
         }
     }
 }
