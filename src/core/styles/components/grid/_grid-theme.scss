@@ -142,7 +142,7 @@
     $grid-head-fw: 600;
 
     // Cell
-    $grid-cell-padding: rem(16px) rem(24px);
+    $grid-cell-padding: 0 rem(24px);
     $grid-cell-padding--e: 0 rem(24px);
     $grid-cell-align-num: right;
     $grid-cell-fs: rem(13px);
@@ -271,7 +271,9 @@
     }
 
     %grid-cell-display {
+        display: flex;
         flex: 1 1 0%;
+        align-items: center;
         outline-style: none;
         padding: $grid-cell-padding;
         font-size: $grid-cell-fs;
