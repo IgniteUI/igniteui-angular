@@ -132,6 +132,7 @@ export class IgxGridAPIService {
         this.prepare_sorting_expression(groupingState, fieldName, dir, ignoreCase);
         this.get(id).groupingExpressions = groupingState;
         this.sort(id, fieldName, dir, ignoreCase);
+        this.arrange_sorting_expressions(id);
     }
 
     public groupBy_multiple(id: string, expressions: ISortingExpression[]): void {
@@ -143,6 +144,7 @@ export class IgxGridAPIService {
 
         this.get(id).groupingExpressions = groupingState;
         this.sort_multiple(id, expressions);
+        this.arrange_sorting_expressions(id);
     }
 
     public groupBy_get_expanded_for_group(id: string, groupRow: IGroupByRecord): IGroupByExpandState {
@@ -254,5 +256,21 @@ export class IgxGridAPIService {
         } else {
             Object.assign(expression, { fieldName, dir, ignoreCase });
         }
+    }
+    protected arrange_sorting_expressions(id) {
+        const groupingState = this.get(id).groupingExpressions;
+        this.get(id).sortingExpressions.sort((a, b) => {
+            const groupExprA = groupingState.find((expr) => expr.fieldName === a.fieldName);
+            const groupExprB = groupingState.find((expr) => expr.fieldName === b.fieldName);
+            if (groupExprA && groupExprB) {
+                return groupingState.indexOf(groupExprA) > groupingState.indexOf(groupExprB) ? 1 : -1;
+            } else if (groupExprA) {
+                return -1;
+            } else if (groupExprB) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
     }
 }
