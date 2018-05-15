@@ -1,5 +1,5 @@
 export interface IGroupByExpandState {
-    fieldName: string,
-    value: any,
-    expanded: boolean
+    fieldName: string;
+    value: any;
+    expanded: boolean;
  }

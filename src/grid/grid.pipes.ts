@@ -2,9 +2,9 @@ import { Pipe, PipeTransform } from "@angular/core";
 import { cloneArray } from "../core/utils";
 import { DataUtil } from "../data-operations/data-util";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
+import { IGroupByExpandState } from "../data-operations/groupby-expand-state.interface";
 import { ISortingExpression } from "../data-operations/sorting-expression.interface";
 import { IgxGridAPIService } from "./api.service";
-import { IGroupByExpandState } from "../data-operations/groupby-expand-state.interface";
 import { IgxGridComponent } from "./grid.component";
 
 @Pipe({
@@ -33,13 +33,13 @@ export class IgxGridSortingPipe implements PipeTransform {
     name: "gridGroupBy",
     pure: true
 })
-export class igxGridGroupingPipe implements PipeTransform {
+export class IgxGridGroupingPipe implements PipeTransform {
 
     constructor(private gridAPI: IgxGridAPIService) {}
 
     public transform(collection: any[], expression: ISortingExpression | ISortingExpression[],
-        expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
-        id: string, pipeTrigger: number): any[] {
+                     expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
+                     id: string, pipeTrigger: number): any[] {
 
         const state = { expressions: [], expansion: [], defaultExpanded };
         const grid: IgxGridComponent = this.gridAPI.get(id);

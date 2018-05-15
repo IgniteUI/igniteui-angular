@@ -34,19 +34,19 @@ import { IgxSelectionAPIService } from "../core/selection";
 import { cloneArray } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
-import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
-import { IGroupByRecord } from "../data-operations/groupby-record.interface";
 import { IGroupByExpandState } from "../data-operations/groupby-expand-state.interface";
+import { IGroupByRecord } from "../data-operations/groupby-record.interface";
+import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
 import { IForOfState } from "../directives/for-of/IForOfState";
 import { IgxCheckboxComponent } from "./../checkbox/checkbox.component";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
-import { IgxGridRowComponent } from "./row.component";
-import { IgxGridGroupByRowComponent } from "./groupby-row.component";
 import { ISummaryExpression } from "./grid-summary";
 import { IgxGroupByRowTemplateDirective } from "./grid.common";
+import { IgxGridGroupByRowComponent } from "./groupby-row.component";
+import { IgxGridRowComponent } from "./row.component";
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -133,14 +133,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     get filteringExpressions() {
         return this._filteringExpressions;
     }
-
-    @Input()
-    public groupByIndentation = 30;
-
     set filteringExpressions(value) {
         this._filteringExpressions = cloneArray(value);
         this.cdr.markForCheck();
     }
+
+    @Input()
+    public groupByIndentation = 30;
 
     get filteredData() {
         return this._filteredData;
@@ -187,7 +186,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     @Input()
-    public groupByDefaultExpanded: boolean = true;
+    public groupByDefaultExpanded = true;
 
     @Input()
     get paging(): boolean {
@@ -481,7 +480,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if (this.groupedRowList.length > 0) {
                 const groupRows = this.groupedRowList.toArray();
                 const left = target.scrollLeft;
-                for(const row of groupRows) {
+                for (const row of groupRows) {
                     row.element.nativeElement.style.left = - left + "px";
                 }
             }
@@ -547,7 +546,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.addEventListener("resize", this.resizeHandler);
             this.parentVirtDir.getHorizontalScroll().addEventListener("scroll", this.scrollHandler);
-        });        
+        });
         this._derivePossibleWidth();
         this.calculateGridSizes();
 

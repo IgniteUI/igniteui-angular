@@ -27,9 +27,9 @@ import {
     IgxGroupByRowTemplateDirective
 } from "./grid.common";
 import { IgxGridComponent } from "./grid.component";
-import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridPagingPipe, IgxGridSortingPipe, igxGridGroupingPipe } from "./grid.pipes";
-import { IgxGridRowComponent } from "./row.component";
+import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridGroupingPipe, IgxGridPagingPipe, IgxGridSortingPipe } from "./grid.pipes";
 import { IgxGridGroupByRowComponent } from "./groupby-row.component";
+import { IgxGridRowComponent } from "./row.component";
 
 @NgModule({
   declarations: [
@@ -47,7 +47,7 @@ import { IgxGridGroupByRowComponent } from "./groupby-row.component";
     IgxCellTemplateDirective,
     IgxColumnResizerDirective,
     IgxGridFilterComponent,
-    igxGridGroupingPipe,
+    IgxGridGroupingPipe,
     IgxGridSortingPipe,
     IgxGridPagingPipe,
     IgxGridFilteringPipe,

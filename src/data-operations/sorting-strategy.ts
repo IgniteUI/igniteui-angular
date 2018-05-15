@@ -1,13 +1,13 @@
-import { ISortingExpression, SortingDirection } from "./sorting-expression.interface";
-import { IGroupByRecord } from "./groupby-record.interface";
+import { expand } from "rxjs/operators";
 import { cloneArray } from "../core/utils";
 import { IGroupByExpandState } from "./groupby-expand-state.interface";
-import { expand } from "rxjs/operators";
+import { IGroupByRecord } from "./groupby-record.interface";
+import { ISortingExpression, SortingDirection } from "./sorting-expression.interface";
 
 export interface ISortingStrategy {
     sort: (data: any[], expressions: ISortingExpression[]) => any[];
     groupBy: (data: any[], expressions: ISortingExpression[],
-        expansion: IGroupByExpandState[], defaultExpanded: boolean) => any[];
+              expansion: IGroupByExpandState[], defaultExpanded: boolean) => any[];
     compareValues: (a: any, b: any) => number;
 }
 
@@ -16,7 +16,7 @@ export class SortingStrategy implements ISortingStrategy {
         return this.sortDataRecursive(data, expressions);
     }
     public groupBy(data: any[], expressions: ISortingExpression[],
-        expansion: IGroupByExpandState[], defaultExpanded: boolean): any[] {
+                   expansion: IGroupByExpandState[], defaultExpanded: boolean): any[] {
         return this.groupDataRecursive(data, expressions, expansion, defaultExpanded, 0);
     }
     public compareValues(a: any, b: any) {
@@ -80,8 +80,8 @@ export class SortingStrategy implements ISortingStrategy {
         return this.arraySort(data, cmpFunc);
     }
     private sortDataRecursive<T>(data: T[],
-        expressions: ISortingExpression[],
-        expressionIndex: number = 0): T[] {
+                                 expressions: ISortingExpression[],
+                                 expressionIndex: number = 0): T[] {
         let i;
         let j;
         let expr;
@@ -113,13 +113,14 @@ export class SortingStrategy implements ISortingStrategy {
         return data;
     }
     private groupDataRecursive<T>(data: T[], expressions: ISortingExpression[],
-        expansion: IGroupByExpandState[], defaultExpanded: boolean, level: number): T[] {
-        let i = 0, result = [];
+                                  expansion: IGroupByExpandState[], defaultExpanded: boolean, level: number): T[] {
+        let i = 0;
+        let result = [];
         while (i < data.length) {
             const group = this.groupedRecordsByExpression(data, i, expressions[level]);
             const groupRow: IGroupByRecord = {
                 expression: expressions[level],
-                level: level,
+                level,
                 records: cloneArray(group),
                 value: group[0][expressions[level].fieldName]
             };

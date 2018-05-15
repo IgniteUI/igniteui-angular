@@ -15,6 +15,7 @@ import {
     ViewChild,
     ViewChildren
 } from "@angular/core";
+import { IGroupByRecord } from "../data-operations/groupby-record.interface";
 import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
@@ -22,14 +23,13 @@ import { IgxColumnComponent } from "./column.component";
 import { autoWire, IGridBus } from "./grid.common";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridRowComponent } from "./row.component";
-import { IGroupByRecord } from "../data-operations/groupby-record.interface";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: "igx-grid-groupby-row",
     templateUrl: "./groupby-row.component.html",
-    styles: [ `:host { 
+    styles: [ `:host {
         display: flex;
         background: inherit;
         outline-style: none;
@@ -39,8 +39,10 @@ import { IGroupByRecord } from "../data-operations/groupby-record.interface";
 export class IgxGridGroupByRowComponent {
 
     constructor(public gridAPI: IgxGridAPIService,
-        public element: ElementRef,
-        public cdr: ChangeDetectorRef) {}
+                public element: ElementRef,
+                public cdr: ChangeDetectorRef) {}
+
+    protected defaultCssClass = "igx-grid__tr--group";
 
     @Input()
     public index: number;
@@ -72,6 +74,4 @@ export class IgxGridGroupByRowComponent {
     get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
     }
-
-    protected defaultCssClass = "igx-grid__tr--group";
-};
+}

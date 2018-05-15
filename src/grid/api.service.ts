@@ -3,13 +3,13 @@ import { Subject } from "rxjs/Subject";
 import { cloneArray } from "../core/utils";
 import { DataUtil } from "../data-operations/data-util";
 import { IFilteringExpression } from "../data-operations/filtering-expression.interface";
+import { IGroupByExpandState } from "../data-operations/groupby-expand-state.interface";
+import { IGroupByRecord } from "../data-operations/groupby-record.interface";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { IGridEditEventArgs, IgxGridComponent } from "./grid.component";
 import { IgxGridRowComponent } from "./row.component";
-import { IGroupByRecord } from "../data-operations/groupby-record.interface";
-import { IGroupByExpandState } from "../data-operations/groupby-expand-state.interface";
 
 @Injectable()
 export class IgxGridAPIService {
@@ -148,8 +148,8 @@ export class IgxGridAPIService {
     }
 
     public groupBy_get_expanded_for_group(id: string, groupRow: IGroupByRecord): IGroupByExpandState {
-        const state = this.get(id).groupingExpansionState;
-        return state.find((state) =>
+        const grState = this.get(id).groupingExpansionState;
+        return grState.find((state) =>
             state.fieldName === groupRow.expression.fieldName && state.value === groupRow.value);
     }
 
