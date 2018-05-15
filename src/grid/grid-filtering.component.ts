@@ -106,6 +106,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         return `igx-filtering`;
     }
 
+    public booleanFilterAll = "All";
     public dialogShowing = false;
     public dialogPosition = "igx-filtering__options--to-right";
 
@@ -213,6 +214,10 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     }
 
     public selectionChanged(value): void {
+        if (value === this.booleanFilterAll) {
+            this.clearFiltering(true);
+            return;
+        }
         this._filterCondition = value;
         this.column.filteringCondition = this.getCondition(value);
         if (this.unaryCondition) {
