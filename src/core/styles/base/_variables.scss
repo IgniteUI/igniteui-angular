@@ -12,13 +12,10 @@ $browser-context: 16px !default;
 /// @type String
 $browser-line-height: 27px !default;
 
-/// The global keyframes registry map.
+/// The global keyframes registry list.
 /// @type List
 $keyframes: () !default;
 
-/// The global component registry map.
+/// The global component registry list.
 /// @type List
 $components: () !default;
-
-/// The global themes registry map.
-$themes: () !default;

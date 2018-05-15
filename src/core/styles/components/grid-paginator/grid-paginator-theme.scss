@@ -1,0 +1,59 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+/// @param {Color} $color [null] - The color for paginator text items
+///
+/// @example scss Change the stripes color
+///   $my-grid-paginator-theme: igx-grid-paginator-theme(
+///     $stripes-color: orange
+///   );
+///   // Pass the theme to the igx-grid-paginator component mixin
+///   @include igx-grid-paginator($my-grid-paginator-theme);
+
+@function igx-grid-paginator-theme(
+    $text-color: null,
+    $background-color: null,
+    $border-color: null
+) {
+    @return (
+        text-color: $text-color,
+        background-color: $background-color,
+        border-color: $border-color
+    );
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-grid-paginator
+/// @requires igx-color
+/// @requires extend
+
+@mixin igx-grid-paginator($theme, $palette: $default-palette) {
+
+    $default-theme: igx-grid-paginator-theme(
+        $text-color: currentColor,
+        $background-color: rgb(245, 245, 245),
+        $border-color: igx-color($palette, 'grays', 400)
+    );
+
+    $this: extend($default-theme, $theme);
+
+    %igx-grid-paginator {
+        color: map-get($this, 'text-color');
+        background: map-get($this, 'background-color');
+        grid-row: 6;
+        padding: rem(5px) 0;
+        font-size: 12px;
+        border-top: 1px dotted map-get($this, 'border-color');
+
+        &:empty {
+            padding: 0;
+        }
+
+        > * {
+            margin: 0 rem(5px);
+        }
+    }
+}

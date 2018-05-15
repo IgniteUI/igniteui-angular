@@ -6,16 +6,20 @@
 ////
 
 /// Date Picker
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-///
-/// @requires extend
-@function igx-date-picker-theme($palette: $default-palette) {
-    $default-theme: (name: 'igx-date-picker');
-    @return extend($default-theme, ($palette: $palette));
+@function igx-date-picker-theme() {
+    @return ();
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-@mixin igx-date-picker($theme) {
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-date-picker-theme
+/// @requires extend
+@mixin igx-date-picker($theme, $palette: $default-palette) {
+
+    $default-theme: igx-date-picker-theme();
+
+    $this: extend($default-theme, $theme);
+
     %date-picker-display {
         width: 340px;
     }

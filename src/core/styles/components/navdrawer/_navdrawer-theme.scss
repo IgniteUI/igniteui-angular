@@ -5,7 +5,6 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $background [null] - The navigation drawer background color.
 /// @param {Color} $border-color [null] - The navigation drawer right border color.
 /// @param {Color} $item-header-text-color [null] - The header's idle text color.
@@ -18,8 +17,6 @@
 /// @param {Color} $item-hover-text-color [null] - The item's hover text color.
 /// @param {Color} $item-hover-icon-color [null] - The item's hover icon color.
 ///
-/// @requires extend
-/// @requires igx-color
 /// @requires text-contrast
 ///
 /// @example scss Change the background and item colors
@@ -31,8 +28,6 @@
 ///   // Pass the theme to the igx-navdrawer component mixin
 ///   @include igx-navdrawer($navdrawer-theme);
 @function igx-navdrawer-theme(
-    $palette: $default-palette,
-
     $background: null,
     $border-color: null,
 
@@ -48,21 +43,6 @@
     $item-hover-text-color: null,
     $item-hover-icon-color: null
 ) {
-    $default-theme: (
-        name: 'igx-navdrawer',
-        background: #fff,
-        border-color: rgba(0, 0, 0, .14),
-        item-text-color: igx-color($palette, grays, 800),
-        item-active-text-color: igx-color($palette, primary, 500),
-        item-active-background: igx-color($palette, grays, 100),
-        item-hover-background: igx-color($palette, grays, 200),
-        item-hover-text-color: igx-color($palette, grays, 800),
-        item-header-text-color: igx-color($palette, grays, 600),
-        item-icon-color: igx-color($palette, grays, 600),
-        item-active-icon-color: igx-color($palette, primary, 500),
-        item-hover-icon-color: igx-color($palette, grays, 800)
-    );
-
     @if not($item-header-text-color) and $background {
         $item-header-text-color: text-contrast($background);
     }
@@ -95,8 +75,7 @@
         $item-hover-text-color: text-contrast($background);
     }
 
-    @return extend($default-theme, (
-        palette: $palette,
+    @return (
         background: $background,
         border-color: $border-color,
         item-text-color:$item-text-color,
@@ -108,18 +87,34 @@
         item-icon-color:$item-icon-color,
         item-active-icon-color:$item-active-icon-color,
         item-hover-icon-color: $item-hover-icon-color
-    ));
+    );
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @requires igx-navdrawer-theme
 /// @requires igx-color
 /// @requires igx-elevation
 /// @requires $elevations
 /// @requires $overlay-color
+/// @requires extend
 /// @requires rem
-@mixin igx-navdrawer($theme) {
-    @include igx-root-css-vars($theme);
+@mixin igx-navdrawer($theme, $palette: $default-palette) {
+    $default-theme: igx-navdrawer-theme(
+        $background: #fff,
+        $border-color: rgba(0, 0, 0, .14),
+        $item-text-color: igx-color($palette, grays, 800),
+        $item-active-text-color: igx-color($palette, primary, 500),
+        $item-active-background: igx-color($palette, grays, 100),
+        $item-hover-background: igx-color($palette, grays, 200),
+        $item-hover-text-color: igx-color($palette, grays, 800),
+        $item-header-text-color: igx-color($palette, grays, 600),
+        $item-icon-color: igx-color($palette, grays, 600),
+        $item-active-icon-color: igx-color($palette, primary, 500),
+        $item-hover-icon-color: igx-color($palette, grays, 800)
+    );
+
+    $this: extend($default-theme, $theme);
 
     %animation {
         transition: flex-basis;
@@ -134,7 +129,7 @@
         max-width: 90%;
         min-height: 100%;
         overflow-x: hidden;
-        background-color: --var($theme, 'background');
+        background-color: map-get($this, 'background');
         top: 0;
         bottom: 0;
         left: 0;
@@ -143,7 +138,7 @@
         transition-duration: .3s, .3s;
         transition-timing-function: $ease-out-quad, $ease-out-quad;
         box-shadow: igx-elevation($elevations, 5);
-        border-right: 1px solid --var($theme, 'border-color');
+        border-right: 1px solid map-get($this, 'border-color');
     }
 
     %aside-panning {
@@ -173,7 +168,7 @@
         left: auto;
         right: 0;
         border-right: none;
-        border-left: 1px solid --var($theme, 'border-color');
+        border-left: 1px solid map-get($this, 'border-color');
     }
 
     %aside--collapsed--right {
@@ -221,8 +216,9 @@
     %item {
         position: relative;
         display: flex;
+        // flex: 1 0 100%;
         flex-flow: row nowrap;
-        color: --var($theme, 'item-text-color');
+        color: map-get($this, 'item-text-color');
         max-height: 48px;
         padding: 12px 16px;
         cursor: pointer;
@@ -235,8 +231,8 @@
 
         &:hover,
         &:focus {
-            background-color: --var($theme, 'item-hover-background');
-            color: --var($theme, 'item-hover-text-color');
+            background-color: map-get($this, 'item-hover-background');
+            color: map-get($this, 'item-hover-text-color');
         }
 
         > igx-icon + span {
@@ -250,23 +246,23 @@
         }
 
         .igx-icon {
-            color: --var($theme, 'item-icon-color');
+            color: map-get($this, 'item-icon-color');
         }
     }
 
     %item--active {
         // should be app primary color
-        color: --var($theme, 'item-active-text-color');
-        background-color: --var($theme, 'item-active-background');
+        color: map-get($this, 'item-active-text-color');
+        background-color: map-get($this, 'item-active-background');
 
         &:focus,
         &:hover {
-            color: --var($theme, 'item-active-text-color');
-            background-color: --var($theme, 'item-active-background');
+            color: map-get($this, 'item-active-text-color');
+            background-color: map-get($this, 'item-active-background');
         }
 
         .igx-icon {
-            color: --var($theme, 'item-active-icon-color');
+            color: map-get($this, 'item-active-icon-color');
         }
     }
 
@@ -274,7 +270,7 @@
         display: block;
         padding: 12px 16px;
         white-space: nowrap;
-        color: --var($theme, 'item-header-text-color');
+        color: map-get($this, 'item-header-text-color');
     }
 
     %style-dummy {

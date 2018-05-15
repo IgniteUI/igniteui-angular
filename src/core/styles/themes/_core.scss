@@ -16,13 +16,9 @@
 @import '../components/_common/igx-vhelper';
 @import '../components/_common/igx-toggle';
 
-// Ensure the ripple is loaded before other component themes
-@import '../components/ripple/ripple-component';
-
 // Component composition styles
 @import '../components/avatar/avatar-component';
 @import '../components/badge/badge-component';
-@import '../components/bottom-nav/bottom-nav-component';
 @import '../components/button/button-component';
 @import '../components/button-group/button-group-component';
 @import '../components/calendar/calendar-component';
@@ -40,11 +36,14 @@
 @import '../components/list/list-component';
 @import '../components/navbar/navbar-component';
 @import '../components/navdrawer/navdrawer-component';
+@import '../components/paginator/paginator-component';
 @import '../components/progress/progress-component';
 @import '../components/radio/radio-component';
+@import '../components/ripple/ripple-component';
 @import '../components/slider/slider-component';
 @import '../components/snackbar/snackbar-component';
 @import '../components/switch/switch-component';
+@import '../components/tabbar/tabbar-component';
 @import '../components/tabs/tabs-component';
 @import '../components/toast/toast-component';
 @import '../components/time-picker/time-picker-component';

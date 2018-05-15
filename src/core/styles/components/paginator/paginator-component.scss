@@ -1,0 +1,17 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+%paginator-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: currentColor;
+}
+
+@include b(igx-paginator) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %paginator-display !optional;
+}
