@@ -10,17 +10,25 @@ const CSS_CLASS_FOCUSED = "igx-drop-down__item--focused";
 const CSS_CLASS_SELECTED = "igx-drop-down__item--selected";
 const CSS_CLASS_DISABLED = "igx-drop-down__item--disabled";
 const CSS_CLASS_HEADER = "igx-drop-down__header";
+const CSS_CLASS_DROP_DOWN = "igx-drop-down__list";
+const CSS_CLASS_TOGGLE = "igx-toggle";
 
-describe("IgxDropDown ", () => {
+fdescribe("IgxDropDown ", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxDropDownTestComponent,
                 IgxDropDownTestScrollComponent,
                 IgxDropDownTestDisabledComponent,
-                IgxDropDownTestDisabledAnyComponent
+                IgxDropDownTestDisabledAnyComponent,
+                IgxDropDownTestEmptyList
             ],
-            imports: [IgxDropDownModule, BrowserAnimationsModule, NoopAnimationsModule, IgxToggleModule]
+            imports: [
+                IgxDropDownModule,
+                BrowserAnimationsModule,
+                NoopAnimationsModule,
+                IgxToggleModule
+            ]
         })
             .compileComponents();
     }));
@@ -93,7 +101,7 @@ describe("IgxDropDown ", () => {
         spyOn(list.items[4], "onEscapeKeyDown").and.callThrough();
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            const currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_SELECTED));
+            const currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_FOCUSED));
             expect(currentItem.componentInstance.index).toEqual(0);
             currentItem.triggerEventHandler("keydown.ArrowDown", mockObj);
             return fixture.whenStable();
@@ -362,14 +370,12 @@ describe("IgxDropDown ", () => {
         const button = fixture.debugElement.query(By.css("button")).nativeElement;
         const list = fixture.componentInstance.dropdownScroll;
         const listItems = list.items;
-        const mockObj = jasmine.createSpyObj("mockEvt", ["stopPropagation", "preventDefault"]);
         expect(list).toBeDefined();
         expect(list.items.length).toEqual(15);
         list.setSelectedItem(0);
         button.click();
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            // expect(listItems[0].isSelected).toBeTruthy();
             const currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_SELECTED));
             expect(currentItem.componentInstance.index).toEqual(0);
             list.setSelectedItem(-4);
@@ -503,8 +509,9 @@ describe("IgxDropDown ", () => {
         button.click();
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            expect(fixture.componentInstance.dropdownDisabled.height).toEqual("400px");
-            expect(fixture.componentInstance.dropdownDisabled.width).toEqual("80%");
+            const toggleElement = fixture.debugElement.query(By.css(this.CSS_CLASS_TOGGLE)).nativeElement;
+            expect(toggleElement.style.width).toEqual("80%");
+            expect(toggleElement.style.height).toEqual("400px");
             expect(fixture.componentInstance.dropdownDisabled.id).toEqual("newDD");
         });
     });
@@ -574,17 +581,220 @@ describe("IgxDropDown ", () => {
             expect(list.items[4].isFocused).toEqual(true);
         });
     });
+
+    it("Unit: should fire events", (() => {
+        const fixture = TestBed.createComponent(IgxDropDownTestComponent);
+        const componentInstance = fixture.componentInstance;
+        fixture.detectChanges();
+
+        spyOn(componentInstance, "onToggleOpening");
+        spyOn(componentInstance, "onToggleOpened");
+        spyOn(componentInstance, "onToggleClosing");
+        spyOn(componentInstance, "onToggleClosed");
+
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        const mockObj = jasmine.createSpyObj("mockEvt", ["stopPropagation", "preventDefault"]);
+        button.click(mockObj);
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(componentInstance.onToggleOpening).toHaveBeenCalledTimes(1);
+            expect(componentInstance.onToggleOpened).toHaveBeenCalledTimes(1);
+            button.click({ stopPropagation: () => null });
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(componentInstance.onToggleClosing).toHaveBeenCalledTimes(1);
+            expect(componentInstance.onToggleClosing).toHaveBeenCalledTimes(1);
+        });
+    }));
+
+    it("Unit: test width/height properties", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestDisabledComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        fixture.componentInstance.dropdownDisabled.width = "80%";
+        fixture.componentInstance.dropdownDisabled.height = "400px";
+        button.click();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(fixture.componentInstance.dropdownDisabled.height).toEqual("400px");
+            expect(fixture.componentInstance.dropdownDisabled.width).toEqual("80%");
+        });
+    });
+
+    it("Unit: items should take focus when allowItemsFocus is set to true", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        fixture.componentInstance.dropdown.allowItemsFocus = true;
+        button.focus();
+        button.click();
+        fixture.whenStable().then(() => {
+            const focusedItem = fixture.debugElement.queryAll(By.css(".igx-drop-down__item"))[0].nativeElement;
+            expect(document.activeElement).toEqual(focusedItem);
+            fixture.detectChanges();
+        });
+    });
+
+    it("Unit: items should not take focus when allowItemsFocus is set to false", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        fixture.componentInstance.dropdown.allowItemsFocus = false;
+        button.focus();
+        button.click();
+        fixture.whenStable().then(() => {
+            expect(document.activeElement).toEqual(button);
+            fixture.detectChanges();
+        });
+    });
+
+    it("Unit: selectedItem should return and item when there is selected item", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestScrollComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        const igxDropDown = fixture.componentInstance.dropdownScroll;
+        igxDropDown.setSelectedItem(3);
+        button.click();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const selectedItem = igxDropDown.selectedItem;
+            expect(selectedItem).toBeTruthy();
+            expect(selectedItem.index).toEqual(3);
+        });
+    });
+
+    it("Unit: selectedItem should return null when there is no selected item", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestScrollComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        const igxDropDown = fixture.componentInstance.dropdownScroll;
+        button.click();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const selectedItem = igxDropDown.selectedItem;
+            expect(selectedItem).toBeNull();
+        });
+    });
+
+    it("Unit: should return empty array for items when there are no items", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestEmptyList);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        const igxDropDown = fixture.componentInstance.dropdownEmpty;
+        button.click();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const items = igxDropDown.items;
+            expect(items).toEqual([]);
+        });
+    });
+
+    it("Unit: should return all items for items when there are some items", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        const igxDropDown = fixture.componentInstance.dropdown;
+        button.click();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const items = igxDropDown.items;
+            expect(items).toBeTruthy();
+            expect(items.length).toEqual(4);
+        });
+    });
+
+    it("Unit: should return empty array for headers when there are no header items", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        const igxDropDown = fixture.componentInstance.dropdown;
+        button.click();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const headerItems = igxDropDown.headers;
+            expect(headerItems).toEqual([]);
+        });
+    });
+
+    it("Unit: should return all header items for headers when there are some header items", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestDisabledComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css("button")).nativeElement;
+        const igxDropDown = fixture.componentInstance.dropdownDisabled;
+        button.click();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const headerItems = igxDropDown.headers;
+            expect(headerItems).toBeTruthy();
+            expect(headerItems.length).toEqual(2);
+        });
+    });
+
+    it("Unit: should open drop down when call open()", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestComponent);
+        const componentInstance = fixture.componentInstance;
+        const igxDropDown = componentInstance.dropdown;
+        fixture.detectChanges();
+        expect(igxDropDown.toggleDirective.collapsed).toEqual(true);
+        igxDropDown.open();
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(igxDropDown.toggleDirective.collapsed).toEqual(false);
+        });
+    });
+
+    it("Unit: should close drop down when call close()", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestComponent);
+        const componentInstance = fixture.componentInstance;
+        const igxDropDown = componentInstance.dropdown;
+        fixture.detectChanges();
+        expect(igxDropDown.toggleDirective.collapsed).toEqual(true);
+        igxDropDown.toggle();
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(igxDropDown.toggleDirective.collapsed).toEqual(false);
+            igxDropDown.toggle();
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(igxDropDown.toggleDirective.collapsed).toEqual(true);
+        });
+    });
+
+    xit("Unit: should close drop down when call close()", () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestComponent);
+        const componentInstance = fixture.componentInstance;
+        const igxDropDown = componentInstance.dropdown;
+        fixture.detectChanges();
+        expect(igxDropDown.toggleDirective.collapsed).toEqual(true);
+        igxDropDown.open();
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(igxDropDown.toggleDirective.collapsed).toEqual(false);
+            igxDropDown.close();
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(igxDropDown.toggleDirective.collapsed).toEqual(true);
+        });
+    });
 });
 
 @Component({
     template: `
     <button (click)="toggleDropDown()">Toggle</button>
-    <igx-drop-down (onSelection)="onSelection($event)">
+    <igx-drop-down (onSelection)="onSelection($event)"
+    (onOpening)="onToggleOpening()" (onOpened)="onToggleOpened()"
+    (onClosing)="onToggleClosing()" (onClosed)="onToggleClosed()">
         <igx-drop-down-item *ngFor="let item of items">
             {{ item.field }}
         </igx-drop-down-item>
-    </igx-drop-down>
-    <div style="position: fixed; width: 100px; height: 100px; background-color: red; top: 50px; left: 300px; z-index: 9000;"></div>`
+    </igx-drop-down>`
 })
 class IgxDropDownTestComponent {
 
@@ -602,9 +812,15 @@ class IgxDropDownTestComponent {
         this.dropdown.toggle();
     }
 
-    public onSelection(ev) {
-        // console.log(ev);
-    }
+    public onSelection(ev) { }
+
+    public onToggleOpening() { }
+
+    public onToggleOpened() { }
+
+    public onToggleClosing() { }
+
+    public onToggleClosed() { }
 }
 
 @Component({
@@ -667,7 +883,7 @@ class IgxDropDownTestDisabledAnyComponent {
     public dropdownDisabledAny: IgxDropDownComponent;
 
     public items: any[] = [
-        { field: "Item 111"},
+        { field: "Item 111" },
         { field: "Item 2", header: true },
         { field: "Item 3" },
         { field: "Item 4", disabled: true },
@@ -681,7 +897,7 @@ class IgxDropDownTestDisabledAnyComponent {
         { field: "Item 12", disabled: true },
         { field: "Item 13" },
         { field: "Item 14" },
-        { field: "Item 15"}
+        { field: "Item 15" }
     ];
 
     public toggleDropDown() {
@@ -692,6 +908,7 @@ class IgxDropDownTestDisabledAnyComponent {
         this.dropdownDisabledAny.setSelectedItem(4);
     }
 }
+
 @Component({
     template: `
     <button (click)="toggleDropDown()">Show</button>
@@ -732,5 +949,27 @@ class IgxDropDownTestDisabledComponent {
 
     public selectItem5() {
         this.dropdownDisabled.setSelectedItem(4);
+    }
+}
+
+@Component({
+    template: `
+    <button (click)="toggleDropDown()">Show</button>
+    <igx-drop-down #dropdownDisabled>
+        <igx-drop-down-item *ngFor="let item of items" isDisabled={{item.disabled}} isHeader={{item.header}}>
+            {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>
+    `
+})
+class IgxDropDownTestEmptyList {
+
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    public dropdownEmpty: IgxDropDownComponent;
+
+    public items: any[] = [];
+
+    public toggleDropDown() {
+        this.dropdownEmpty.toggle();
     }
 }

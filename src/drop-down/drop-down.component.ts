@@ -214,21 +214,21 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     /**
      * Opens the dropdown
      */
-    open(fireEvents?: boolean) {
+    open() {
         this.toggleDirective.open(true);
     }
 
     /**
      * Closes the dropdown
      */
-    close(fireEvents?: boolean) {
+    close() {
         this.toggleDirective.close(true);
     }
 
     /**
      * Toggles the dropdown
      */
-    toggle(fireEvents?: boolean) {
+    toggle() {
         if (this.toggleDirective.collapsed) {
             this.open();
         } else {
