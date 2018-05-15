@@ -392,7 +392,7 @@ describe("IgxGrid - Summaries", () => {
         fixture.detectChanges();
 
         let rowsRendered = fixture.nativeElement.querySelectorAll("igx-grid-row");
-        expect(rowsRendered.length).toEqual(8);
+        expect(rowsRendered.length).toEqual(9);
 
         setTimeout(() => {
             grid.disableSummaries(summariedColumns);
@@ -424,7 +424,7 @@ describe("IgxGrid - Summaries", () => {
         fixture.detectChanges();
 
         let rowsRendered = fixture.nativeElement.querySelectorAll("igx-grid-row");
-        expect(rowsRendered.length).toEqual(8);
+        expect(rowsRendered.length).toEqual(9);
 
         setTimeout(() => {
             fixture.detectChanges();
@@ -441,7 +441,7 @@ describe("IgxGrid - Summaries", () => {
                 expect(rowsRendered.length).toEqual(9);
 
                 for (let i = 0; i < rowsRendered.length - 1; i++) {
-                    expect(firstCellsText[i]).toEqual((i + 12).toString());
+                    expect(firstCellsText[i]).toEqual((i + 11).toString());
                 }
 
                 grid.disableSummaries(["OrderDate"]);
@@ -458,9 +458,9 @@ describe("IgxGrid - Summaries", () => {
                         expect(firstCellsText[i]).toEqual((i + 9).toString());
                     }
                     done();
-                }, 150);
+                });
             });
-        }, 150);
+        }, 100);
     });
 
     function sendInput(element, text: string, fix) {
@@ -600,7 +600,7 @@ export class  VirtualSummaryColumnComponent {
     @ViewChild("grid1", { read: IgxGridComponent })
     public grid1: IgxGridComponent;
 
-    public width = "800px";
+    public width = "830px";
     public height = "600px";
 
     public numberSummary = new IgxNumberSummaryOperand();
