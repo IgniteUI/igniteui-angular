@@ -6,6 +6,7 @@ All notable changes for each version of this project will be documented in this 
 - Added `onDoubleClick` output to `igxGrid` to emit the double clicked cell.
 - Added `All` option to the filter UI for boolean columns
 
+
 ## 5.3.1
 - igx-dialog changes
     - Dialog title as well as dialog actions (buttons) can be customized. For more information navigate to the [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/dialog/README.md).
