@@ -404,7 +404,6 @@ describe("IgxGrid - Filtering actions", () => {
         const filteringIconWrapper = firstHeaderCell.query(By.css("." + FILTERING_TOGGLE_CLASS));
 
         grid.filter("ReleaseDate", null, DATE_FILTERS.today);
-        console.log("filtered");
         fixture.detectChanges();
         expect(filteringIconWrapper.nativeElement.classList.contains(FILTERING_TOGGLE_FILTERED_CLASS)).toBe(true);
 

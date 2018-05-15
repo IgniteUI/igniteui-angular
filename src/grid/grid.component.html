@@ -53,10 +53,7 @@
             </igx-grid-row>
         </ng-container>
     </ng-template>
-    <ng-container *ngIf="!!filteredData && filteredData.length === 0">
-        <ng-container *ngTemplateOutlet="template">
-        </ng-container>
-    </ng-container>
+    <ng-container *ngTemplateOutlet="template"></ng-container>
 </div>
 
 
@@ -85,5 +82,5 @@
 </div>
 
 <ng-template #emptyGrid>
-    <p class="igx-grid--empty">No records found.</p>
+    <span class="igx-grid__tbody-message">{{emptyGridMessage}}</span>
 </ng-template>

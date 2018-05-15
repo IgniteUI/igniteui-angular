@@ -13,9 +13,8 @@ import {
     TemplateRef,
     ViewChild
 } from "@angular/core";
+import { Subject, Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
-import { Subject } from "rxjs/Subject";
-import { Subscription } from "rxjs/Subscription";
 import { DataType } from "../data-operations/data-util";
 import {
     BOOLEAN_FILTERS,
@@ -232,9 +231,8 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     }
 
     public get disabled() {
-        if ((!!this.value || this.value === 0) && !this.unaryCondition) {
-            return false;
-        } else if (this.unaryCondition) {
+        // if filtering is applied, reset button should be active
+        if (this.gridAPI.get(this.gridID).filteringExpressions.length > 0) {
             return false;
         }
         return true;
