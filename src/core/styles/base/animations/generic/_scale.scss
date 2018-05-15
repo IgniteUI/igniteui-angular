@@ -442,9 +442,9 @@
     }
 }
 
+/// @param {number} $start-scale [.5] - The scale to start the animation from.
+/// @param {number} $end-scale [1] - The scale to end the animation at.
 /// @requires {mixin} keyframes
-/// @prop {number} $start-scale [.5] - The scale to start the animation from.
-/// @prop {number} $end-scale [1] - The scale to end the animation at.
 @mixin scale-in-out($start-scale: .5, $end-scale: 1) {
     @include keyframes(scale-in-out) {
         50% {

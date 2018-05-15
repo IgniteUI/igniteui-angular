@@ -100,13 +100,16 @@
 /// @param {Color} $color - The color used to return a contrast color for.
 /// @returns {Color} - Returns either white or black depending on the brightness of the input color.
 @function text-contrast($color) {
-    $color-brightness: round((red($color) * 299) + (green($color) * 587) + (blue($color) * 114) / 1000);
-    $light-color: round((red(#fff) * 299) + (green(#fff) * 587) + (blue(#fff) * 114) / 1000);
-    @if abs($color-brightness) < ($light-color / 2) {
-        @return #fff;
-    } @else {
-        @return #000;
+    @if type-of($color) == color {
+        $color-brightness: round((red($color) * 299) + (green($color) * 587) + (blue($color) * 114) / 1000);
+        $light-color: round((red(#fff) * 299) + (green(#fff) * 587) + (blue(#fff) * 114) / 1000);
+        @if abs($color-brightness) < ($light-color / 2) {
+            @return #fff;
+        } @else {
+            @return #000;
+        }
     }
+    @return $color;
 }
 
 /// Test if `$value` is a valid direction.
@@ -165,14 +168,17 @@
 /// @param {Color} $rgba - The rgba color to convert.
 /// @return {Color}
 @function hexrgba($rgba) {
-    $red: red($rgba);
-    $green: green($rgba);
-    $blue: blue($rgba);
-    $a: alpha($rgba);
-    $r: floor($a * $red + (1 - $a) * 255);
-    $g: floor($a * $green + (1 - $a) * 255);
-    $b: floor($a * $blue + (1 - $a) * 255);
-    @return unquote('##{str-slice('0#{to-string($r)}',-2)}#{str-slice('0#{to-string($g)}',-2)}#{str-slice('0#{to-string($b)}',-2)}');
+    @if type-of($rgba) == color {
+        $red: red($rgba);
+        $green: green($rgba);
+        $blue: blue($rgba);
+        $a: alpha($rgba);
+        $r: floor($a * $red + (1 - $a) * 255);
+        $g: floor($a * $green + (1 - $a) * 255);
+        $b: floor($a * $blue + (1 - $a) * 255);
+        @return rgb($r, $g, $b);
+    }
+    @return $rgba;
 }
 
 /// Extends a Map object with the properties of another Map object.
@@ -314,4 +320,49 @@
         }
     }
     @return $result;
+}
+
+/// Returns a CSS property value. It could return either css '--var' or
+/// a plain string value based on theme configuration.
+/// @access public
+/// @param {map} $map - The source theme to be used to read values from.
+/// @param {string} $key - A key from the theme map to assign as value to the property.
+/// @example scss Assign the color property in a rule-set to a value from the default avatar theme.
+///   %igx-avatar-icon {
+///     color: --var($avatar-theme, 'icon-color');
+///   }
+///   // If legacy-support is off, it will produce the following:
+///   // %igx-avatar-icon {
+///   //   color: var(--igx-avatar-icon-color);
+///   // }
+///   // otherwise, it will return the value for key 'icon-color' in the '$avatar-theme':
+@function --var($map, $key) {
+    $igx-legacy-support: if(global-variable-exists('igx-legacy-support'), $igx-legacy-support, true);
+
+    @if map-has-key($map, $key) {
+        @if $igx-legacy-support == false {
+            @return unquote('var(--#{map-get($map, 'name')}-#{$key})');
+        } @else {
+            @return map-get($map, $key);
+        }
+    } @else {
+        @error unquote('The map you passed does not contain a key #{$key}');
+    }
+}
+
+/// Splits a string into a list by a given separator.
+/// @param {string} $string - The string to split.
+/// @param {string} $separator - The string separator to split the string by.
+///
+@function str-split($string, $separator) {
+    $split-arr: ();
+    $index : str-index($string, $separator);
+    @while $index != null {
+        $item: str-slice($string, 1, $index - 1);
+        $split-arr: append($split-arr, $item);
+        $string: str-slice($string, $index + 1);
+        $index : str-index($string, $separator);
+    }
+    $split-arr: append($split-arr, $string);
+    @return $split-arr;
 }
