@@ -1,13 +1,14 @@
 <ng-container [style.padding-left]="padding" #defaultGroupRow >
-    <div class="igx-grid__indicator-grouping" [style.min-width.px]="grid.calcGroupByWidth">    
+    <div class="igx-grid__indicator-grouping" [style.min-width.px]="grid.calcGroupByWidth" [tabIndex]="tabindex" (keydown.enter)="toggle()" (keydown.space)="toggle()">    
         <span (click)="toggle()">
             <igx-icon *ngIf="!expanded" fontSet="material" name="add"></igx-icon>
             <igx-icon *ngIf="expanded" fontSet="material" name="remove"></igx-icon>
         </span>
     </div>
-
-<ng-container *ngTemplateOutlet="grid.groupRowTemplate ? grid.groupRowTemplate : defaultGroupByTemplate; context: { $implicit: groupRow }">
-</ng-container>
+<div [tabIndex]="tabindex">
+    <ng-container *ngTemplateOutlet="grid.groupRowTemplate ? grid.groupRowTemplate : defaultGroupByTemplate; context: { $implicit: groupRow }">
+    </ng-container>
+</div>
 <ng-template #defaultGroupByTemplate>
     <span>{{ groupRow.expression.fieldName }}: {{ groupRow.value }} ({{ groupRow.records.length }})</span>
 </ng-template>    

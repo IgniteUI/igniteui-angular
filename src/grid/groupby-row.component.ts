@@ -53,8 +53,17 @@ export class IgxGridGroupByRowComponent {
     @Input()
     public groupRow: IGroupByRecord;
 
+    @HostBinding("attr.aria-expanded")
     get expanded(): boolean {
         return this.grid.isExpandedGroup(this.groupRow);
+    }
+
+    @HostBinding("attr.tabindex")
+    public tabindex = 0;
+
+    @HostBinding("attr.aria-describedby")
+    get describedBy(): string {
+        return this.gridID + "_" + this.groupRow.expression.fieldName;
     }
 
     @HostBinding("style.padding-left")
