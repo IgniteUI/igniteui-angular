@@ -581,14 +581,14 @@ describe("IgxGrid - Row Selection", () => {
         spyOn(grid, "triggerRowSelectionChange").and.callThrough();
         spyOn(grid.onRowSelectionChange, "emit").and.callThrough();
         rowsCollection = grid.selectedRows();
-        expect(rowsCollection).toBeUndefined();
+        expect(rowsCollection).toEqual([]);
         expect(firstRow.isSelected).toBeFalsy();
         expect(secondRow.isSelected).toBeFalsy();
         expect(thirdRow.isSelected).toBeFalsy();
         grid.deselectRows(["0_0", "0_1", "0_2"]);
         fix.whenStable().then(() => {
             fix.detectChanges();
-            expect(rowsCollection).toBeUndefined();
+            expect(rowsCollection).toEqual([]);
         });
         grid.selectRows(["0_0", "0_1", "0_2"], false);
         fix.whenStable().then(() => {
@@ -619,7 +619,7 @@ describe("IgxGrid - Row Selection", () => {
         let rowsCollection = [];
         const firstRow = grid.getRowByKey("0_0");
         rowsCollection = grid.selectedRows();
-        expect(rowsCollection).toBeUndefined();
+        expect(rowsCollection).toEqual([]);
         expect(firstRow.isSelected).toBeFalsy();
         spyOn(grid, "triggerRowSelectionChange").and.callThrough();
         spyOn(grid.onRowSelectionChange, "emit").and.callThrough();
@@ -657,7 +657,7 @@ describe("IgxGrid - Row Selection", () => {
         let rowsCollection = [];
 
         rowsCollection = grid.selectedRows();
-        expect(rowsCollection).toBeUndefined();
+        expect(rowsCollection).toEqual([]);
 
         grid.filter("ProductName", "Ignite", STRING_FILTERS.contains, true);
         fix.detectChanges();
@@ -665,7 +665,7 @@ describe("IgxGrid - Row Selection", () => {
         expect(headerCheckbox.indeterminate).toBeFalsy();
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
         rowsCollection = grid.selectedRows();
-        expect(rowsCollection).toBeUndefined();
+        expect(rowsCollection).toEqual([]);
         expect(headerCheckbox.getAttribute("aria-checked")).toMatch("false");
         expect(headerCheckbox.getAttribute("aria-label")).toMatch("Select all filtered");
         grid.clearFilter("ProductName");
@@ -763,7 +763,7 @@ describe("IgxGrid - Row Selection", () => {
         expect(secondRow.isSelected).toBeFalsy();
         let rowsCollection = [];
         rowsCollection = grid.selectedRows();
-        expect(rowsCollection).toBeUndefined();
+        expect(rowsCollection).toEqual([]);
 
         grid.selectRows(["0_0", "0_1"], false);
         fix.detectChanges();
