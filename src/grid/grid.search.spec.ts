@@ -671,7 +671,7 @@ describe("IgxGrid - search API", () => {
         });
     });
 
-    it("Highlights should be properly updated when a row is deleted", () => {
+    it("Highlights should be properly updated when a row is added", () => {
         const fix = TestBed.createComponent(SimpleGridComponent);
         fix.detectChanges();
 
