@@ -106,7 +106,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         return `igx-filtering`;
     }
 
-    public booleanFilterAll = "(All)";
+    public booleanFilterAll = "All";
     public dialogShowing = false;
     public dialogPosition = "igx-filtering__options--to-right";
 
