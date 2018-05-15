@@ -176,10 +176,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         return pinnedCols[pinnedCols.length - 1] === this.column;
     }
 
-    get isLastUnpinned() {
-        const unpinnedColumns = this.grid.unpinnedColumns;
-        return unpinnedColumns[unpinnedColumns.length - 1] === this.column;
-    }
+    // get isLastUnpinned() {
+    //     const unpinnedColumns = this.grid.unpinnedColumns;
+    //     return unpinnedColumns[unpinnedColumns.length - 1] === this.column;
+    // }
 
     get selected() {
         return this.isSelected = this.isCellSelected();
