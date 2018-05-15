@@ -1190,7 +1190,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public selectAllRows() {
-        this.triggerRowSelectionChange(this.selectionAPI.get_all_ids(this.data, this.id));
+        this.triggerRowSelectionChange(this.selectionAPI.get_all_ids(this.data, this.primaryKey));
     }
 
     public deselectAllRows() {
