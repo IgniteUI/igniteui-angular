@@ -12,8 +12,7 @@
     @extend %radio-display !optional;
 
     @include e(input) {
-        //hide the default radio control
-        @include hide-default();
+        @extend %radio-input !optional;
     }
 
     @include e(composite) {
