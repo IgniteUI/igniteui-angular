@@ -7,6 +7,7 @@ All notable changes for each version of this project will be documented in this 
 - Added `findNext`, `findPrev` and `clearSearch` methods to the IgxGridComponent which allow easy search of the grid data, even when the grid is virtualized.
 - Added `IgxTextHighlightDirective` which highlights parts of a DOM element and keeps and updates "active" highlight.
 - Added `All` option to the filter UI select for boolean columns
+- Update to Angular 6
 
 ## 5.3.1
 - igx-dialog changes
