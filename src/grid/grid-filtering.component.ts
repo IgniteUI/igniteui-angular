@@ -241,7 +241,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         this.clearFiltering(false);
     }
 
-    public focusInput(): void{
+    public focusInput(): void {
         if (this.input) {
             this.input.nativeElement.focus();
         }
