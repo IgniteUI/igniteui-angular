@@ -10,7 +10,7 @@ import { IgxInputDirective } from "../directives/input/input.directive";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-describe("IgxGrid - Filtering actions", () => {
+fdescribe("IgxGrid - Filtering actions", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
