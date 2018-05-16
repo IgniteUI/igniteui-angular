@@ -136,6 +136,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     @ViewChild("select", { read: ElementRef})
     protected select: ElementRef;
 
+    @ViewChild("input", { read: ElementRef})
+    protected input: ElementRef;
+
     constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
         this.filterChanged.pipe(
             debounceTime(250)
@@ -169,6 +172,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     public refresh() {
         this.dialogShowing = !this.dialogShowing;
         if (this.dialogShowing) {
+        this.focusInput();
             this.column.filteringCondition = this.getCondition(this.select.nativeElement.value);
         }
         this.cdr.detectChanges();
@@ -212,6 +216,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         if (this.dataType === DataType.Date) {
             this.cdr.detectChanges();
         }
+        this.focusInput();
     }
 
     public selectionChanged(value): void {
@@ -219,6 +224,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
             this.clearFiltering(true);
             return;
         }
+        this.focusInput();
         this._filterCondition = value;
         if (this.unaryCondition) {
             this.unaryConditionChanged.next(value);
@@ -233,6 +239,12 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
 
     public clearInput(): void {
         this.clearFiltering(false);
+    }
+
+    public focusInput(): void{
+        if (this.input) {
+            requestAnimationFrame(() => this.input.nativeElement.focus());
+        }
     }
 
     public get disabled() {
