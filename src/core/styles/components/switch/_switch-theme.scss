@@ -69,7 +69,7 @@
         thumb-off-color: #bdbdbd,
         track-off-color: rgba(255, 255, 255, .3),
 
-        label-color: igx-color($palette, grays, 600),
+        label-color: #fff,
         label-disabled-color: rgba(255, 255, 255, .3),
 
         track-disabled-color: #424242,
@@ -93,7 +93,8 @@
         label-color: $label-color,
         label-disabled-color: $label-disabled-color,
 
-        light: $light
+        light: $light,
+        variant: $variant
     ));
 }
 

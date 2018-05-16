@@ -43,7 +43,7 @@
 
     $light-theme: (
         name: $name,
-        label-color: igx-color($palette, 'grays', 600),
+        label-color: #fff,
         empty-color: rgba(255, 255, 255, .7),
         fill-color: igx-color($palette, 'secondary', 500),
         disabled-color: rgba(255, 255, 255, .3)
@@ -57,6 +57,7 @@
         empty-color: $empty-color,
         fill-color: $fill-color,
         disabled-color: $disabled-color,
+        variant: $variant
     ));
 }
 

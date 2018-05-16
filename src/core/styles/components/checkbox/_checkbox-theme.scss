@@ -30,7 +30,8 @@
     $fill-color: null,
     $tick-color: null,
     $disabled-color: null,
-    $light: false
+    $light: false,
+    $variant: 'dark'
 ) {
     $name: 'igx-checkbox';
 
@@ -45,7 +46,7 @@
 
     $light-theme: (
         name: $name,
-        label-color: igx-color($palette, 'grays', 600),
+        label-color: #fff,
         empty-color: rgba(255, 255, 255, .7),
         fill-color: igx-color($palette, 'secondary', 500),
         tick-color: #000,
@@ -61,7 +62,8 @@
         fill-color: $fill-color,
         tick-color: $tick-color,
         disabled-color: $disabled-color,
-        light: $light
+        light: $light,
+        variant: $variant
     ));
 }
 
