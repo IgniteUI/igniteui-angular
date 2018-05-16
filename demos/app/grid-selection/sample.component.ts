@@ -80,4 +80,8 @@ export class GridSelectionComponent implements OnInit, AfterViewInit {
             this.grid1.deselectAllRows();
         }
     }
+
+    public callSelectAll() {
+        this.grid1.selectAllRows();
+    }
 }
