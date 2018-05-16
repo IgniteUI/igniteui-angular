@@ -10,7 +10,7 @@ import { IgxGridModule } from "./index";
 
 describe("IgxGrid - input properties", () => {
     const MIN_COL_WIDTH = "136px";
-
+    const COLUMN_HEADER_CLASS = ".igx-grid__th";
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -392,6 +392,37 @@ describe("IgxGrid - input properties", () => {
             expect(firstCellInputValue).toEqual("1");
         });
     }));
+    it("should render correct columns if after scrolling right container size changes so that all columns become visible.", (done) => {
+        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
+        const grid = fix.componentInstance.grid2;
+        grid.width = "500px";
+        fix.componentInstance.generateColumns(5);
+        fix.componentInstance.generateData(5);
+        fix.detectChanges();
+        // scrollbar should be visible
+        expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+        const scrollbar = fix.componentInstance.grid2.parentVirtDir.getHorizontalScroll();
+
+        // scroll to the right
+        scrollbar.scrollLeft = 10000;
+        fix.detectChanges();
+        setTimeout(() => {
+            // change width so that all columns are visible
+            grid.width = "1500px";
+            fix.detectChanges();
+            setTimeout(() => {
+                expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
+
+                // verify correct columns are rendered.
+                const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+                expect(headers.length).toEqual(5);
+                for (let i = 0; i < headers.length; i ++) {
+                    expect(headers[i].context.column.field).toEqual(fix.componentInstance.grid2.columns[i].field);
+                }
+                done();
+             });
+        });
+    });
 });
 
 @Component({
