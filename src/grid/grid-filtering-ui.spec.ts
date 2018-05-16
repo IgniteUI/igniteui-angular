@@ -162,6 +162,7 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
 
         fix.whenStable().then(() => {
+            expect(document.activeElement.nodeName).toMatch("INPUT");
             // iterate over not unary conditions and fill the input
             // contains
             sendInput(input, "Ignite", fix);
@@ -177,6 +178,7 @@ describe("IgxGrid - Filtering actions", () => {
             options[1].selected = true;
             select.nativeElement.dispatchEvent(new Event("change"));
             fix.detectChanges();
+            expect(document.activeElement.nodeName).toMatch("INPUT");
             sendInput(input, "Net", fix);
             return fix.whenStable();
         }).then(() => {
@@ -193,6 +195,7 @@ describe("IgxGrid - Filtering actions", () => {
             options[2].selected = true;
             select.nativeElement.dispatchEvent(new Event("change"));
             fix.detectChanges();
+            expect(document.activeElement.nodeName).toMatch("INPUT");
             sendInput(input, "script", fix);
             return fix.whenStable();
         }).then(() => {
@@ -206,6 +209,7 @@ describe("IgxGrid - Filtering actions", () => {
             options[3].selected = true;
             select.nativeElement.dispatchEvent(new Event("change"));
             fix.detectChanges();
+            expect(document.activeElement.nodeName).toMatch("INPUT");
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
@@ -220,6 +224,7 @@ describe("IgxGrid - Filtering actions", () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
+            expect(document.activeElement.nodeName).toMatch("INPUT");
             expect(grid.rowList.length).toEqual(8);
             expect(close.nativeElement.classList.contains("igx-button--disabled")).toBeFalsy();
             expect(reset.nativeElement.classList.contains("igx-button--disabled")).toBeTruthy();
@@ -229,6 +234,7 @@ describe("IgxGrid - Filtering actions", () => {
             options[4].selected = true;
             select.nativeElement.dispatchEvent(new Event("change"));
             fix.detectChanges();
+            expect(document.activeElement.nodeName).toMatch("INPUT");
             sendInput(input, "NetAdvantage", fix);
             return fix.whenStable();
         }).then(() => {
@@ -242,6 +248,7 @@ describe("IgxGrid - Filtering actions", () => {
             options[4].selected = true;
             select.nativeElement.dispatchEvent(new Event("change"));
             fix.detectChanges();
+            expect(document.activeElement.nodeName).toMatch("INPUT");
             sendInput(input, " ", fix);
             return fix.whenStable();
         }).then(() => {
@@ -257,6 +264,7 @@ describe("IgxGrid - Filtering actions", () => {
             options[5].selected = true;
             select.nativeElement.dispatchEvent(new Event("change"));
             fix.detectChanges();
+            expect(document.activeElement.nodeName).toMatch("INPUT");
             sendInput(input, "NetAdvantage", fix);
             return fix.whenStable();
         }).then(() => {
