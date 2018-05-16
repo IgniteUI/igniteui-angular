@@ -253,6 +253,16 @@ describe("Carousel", () => {
         carouselNative.nativeElement.dispatchEvent(new KeyboardEvent("keydown", {key: "ArrowRight"}));
         fixture.detectChanges();
         expect(carousel.next).toHaveBeenCalled();
+
+        spyOn(carousel, "prev");
+        carouselNative.nativeElement.dispatchEvent(new KeyboardEvent("keydown", {key: "Left"}));
+        fixture.detectChanges();
+        expect(carousel.prev).toHaveBeenCalled();
+
+        spyOn(carousel, "next");
+        carouselNative.nativeElement.dispatchEvent(new KeyboardEvent("keydown", {key: "Right"}));
+        fixture.detectChanges();
+        expect(carousel.next).toHaveBeenCalled();
     });
 
     it("Carousel navigation changes visibility of arrows", () => {
