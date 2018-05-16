@@ -93,7 +93,7 @@
         }
 
         &:last-of-type {
-            border-right: 1px dotted map-get($this, 'border-color');
+            border-right: 1px dotted --var($theme, 'border-color');
         }
     }
 

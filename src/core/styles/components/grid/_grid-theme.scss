@@ -332,10 +332,6 @@
         overflow: visible;
         min-width: 0;
         border-right: 1px dotted igx-color($palette, 'grays', 400);
-
-        // &:last-of-type {
-        //     border-right: transparent;
-        // }
     }
 
     %grid-cell-header-title {
