@@ -132,4 +132,12 @@
     @include e(cbx-selection) {
         @extend %grid__cbx-selection !optional;
     }
+
+    @include m(compact) {
+        @extend %grid-display !optional;
+    }
+
+    @include m(cosy) {
+        @extend %grid-display !optional;
+    }
 }
