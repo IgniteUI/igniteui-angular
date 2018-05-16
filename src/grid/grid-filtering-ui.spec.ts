@@ -290,7 +290,6 @@ describe("IgxGrid - Filtering actions", () => {
         fix.detectChanges();
 
         fix.whenStable().then(() => {
-
             verifyFilterUIPosition(filterUIContainer, grid);
 
             // iterate over not unary conditions and fill the input
