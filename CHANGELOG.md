@@ -5,6 +5,7 @@ All notable changes for each version of this project will be documented in this 
 - Theming - You can now use css variables to style the component instances you include in your project.
 - Added `onDoubleClick` output to `igxGrid` to emit the double clicked cell.
 - Added `All` option to the filter UI select for boolean columns
+- Update to Angular 6
 
 ## 5.3.1
 - igx-dialog changes
