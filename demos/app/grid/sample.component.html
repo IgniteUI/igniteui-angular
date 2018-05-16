@@ -51,6 +51,10 @@
                         </div>
                     </igx-card-actions>
                 </igx-card>
+
+                <igx-card>
+                    <igx-column-hiding [columns]="grid1.columnList" [togglable]="false"></igx-column-hiding>
+                </igx-card>
             </div>
 
             <div class="toggles-container">
@@ -141,7 +145,7 @@
                     </ng-template>
                 </igx-column>
             </igx-grid>
-            
+
         </article>
 
         <article class="grid-sample">
@@ -175,7 +179,7 @@
             </igx-grid>
             <button (click)="updateRow11()">Update Row With primaryKey</button>
         </article>
-        
+
     </section>
 
     <igx-toast #toast></igx-toast>

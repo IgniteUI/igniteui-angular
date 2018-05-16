@@ -39,6 +39,8 @@ import { IForOfState } from "../directives/for-of/IForOfState";
 import { IgxCheckboxComponent } from "./../checkbox/checkbox.component";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
+import { IColumnVisibilityChangedEventArgs } from "./column-hiding-item.component";
+import { IgxColumnHidingComponent } from "./column-hiding.component";
 import { IgxColumnComponent } from "./column.component";
 import { ISummaryExpression } from "./grid-summary";
 import { IgxGridRowComponent } from "./row.component";
@@ -187,6 +189,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public paginationTemplate: TemplateRef<any>;
 
     @Input()
+    get columnHiding() {
+        return this._columnHiding;
+    }
+
+    set columnHiding(value) {
+        this._columnHiding = value;
+        if (this.gridAPI.get(this.id)) {
+            this.markForCheck();
+        }
+    }
+
+    @Input()
     get rowSelectable(): boolean {
         return this._rowSelection;
     }
@@ -306,6 +320,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Output()
     public onDoubleClick = new EventEmitter<IGridCellEventArgs>();
 
+    @Output()
+    public onColumnVisibilityChanged = new EventEmitter<IColumnVisibilityChangedEventArgs>();
+
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
 
@@ -344,6 +361,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @ViewChild("tfoot")
     public tfoot: ElementRef;
+
+    @ViewChild("toolbarHidingUI")
+    public toolbarHidingUI: IgxColumnHidingComponent;
 
     @HostBinding("attr.tabindex")
     public tabindex = 0;
@@ -394,6 +414,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public eventBus = new Subject<boolean>();
 
     public allRowsSelected = false;
+    public columnHidingTitle = "";
 
     protected destroy$ = new Subject<boolean>();
 
@@ -408,6 +429,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _filteringLogic = FilteringLogic.And;
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
+    protected _columnHiding = false;
     private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;
@@ -500,6 +522,28 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public dataLoading(event) {
         this.onDataPreLoad.emit(event);
+    }
+
+    public toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs) {
+        const col = this.getColumnByName(args.column.field);
+        col.hidden = args.newValue;
+        this.onColumnVisibilityChanged.emit(args);
+
+        this.markForCheck();
+    }
+
+    public showColumnHidingUI() {
+        if (this.toolbarHidingUI) {
+            this.toolbarHidingUI.toggle.open(true);
+            this.toolbarHidingUI.dialogShowing = true;
+        }
+    }
+
+    public hideColumnHidingUI() {
+        if (this.toolbarHidingUI) {
+            this.toolbarHidingUI.toggle.close(true);
+            this.toolbarHidingUI.dialogShowing = false;
+        }
     }
 
     get nativeElement() {

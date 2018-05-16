@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { IgxColumnHidingModule } from "../../lib/grid/column-hiding.component";
 import {
     IgxButtonModule,
     IgxCardModule,
@@ -12,9 +13,9 @@ import {
     IgxSwitchModule,
     IgxToastModule
 } from "../../lib/main";
+import { IgxCsvExporterService, IgxExcelExporterService } from "../../lib/services/index";
 import { PageHeaderModule } from "../pageHeading/pageHeading.module";
 import { GridSampleComponent } from "./sample.component";
-import { IgxCsvExporterService, IgxExcelExporterService } from "../../lib/services/index";
 
 @NgModule({
     declarations: [
@@ -32,8 +33,10 @@ import { IgxCsvExporterService, IgxExcelExporterService } from "../../lib/servic
         IgxCheckboxModule,
         IgxButtonModule,
         IgxRippleModule,
-        IgxInputGroupModule
-    ], providers: [
+        IgxInputGroupModule,
+        IgxColumnHidingModule
+    ],
+    providers: [
         IgxExcelExporterService,
         IgxCsvExporterService
     ]

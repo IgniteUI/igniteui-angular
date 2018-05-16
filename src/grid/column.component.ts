@@ -72,6 +72,18 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     @Input()
+    get disableHiding(): boolean {
+        return this._disableHiding;
+    }
+
+    set disableHiding(value: boolean) {
+        if (this._disableHiding !== value) {
+            this._disableHiding = value;
+            this.check();
+        }
+    }
+
+    @Input()
     public movable = false;
 
     @Input()
@@ -198,6 +210,7 @@ export class IgxColumnComponent implements AfterContentInit {
     protected _summaries = null;
     protected _hidden = false;
     protected _index: number;
+    protected _disableHiding = false;
 
     private _defaultMinWidth = "88";
 

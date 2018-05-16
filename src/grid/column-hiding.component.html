@@ -1,0 +1,34 @@
+
+<ng-container *ngTemplateOutlet="template" ></ng-container>
+
+<ng-template #columnHidingUI>
+    <h4 *ngIf="title.length > 0">{{ title }}</h4><br/>
+    <div>
+        <input type="text" [(ngModel)]="filterCriteria" [placeholder]="filterColumnsPrompt" autocomplete="off" />
+    </div>
+    <div *ngFor="let columnItem of columnItems">
+        <!-- <igx-column-hiding-item> -->
+            <igx-checkbox igxColumnHidingItem [checked]="columnItem.value" (change)="columnItem.value = !columnItem.value"
+                [disabled]="columnItem.disableHiding">{{ columnItem.name }}</igx-checkbox>
+        <!-- </igx-column-hiding-item> -->
+    </div>
+    <div>
+        <button igxButton igxRipple (click)="showAllColumns()" [disabled]="disableShowAll" #buttonShowAll>{{ showAllText }}</button>
+        <button igxButton igxRipple (click)="hideAllColumns()" [disabled]="disableHideAll" #buttonHideAll>{{ hideAllText }}</button>
+    </div>
+</ng-template>
+
+<ng-template #columnChooserToggle>
+    <span igxToggle (onOpen)="refresh()" (onClose)="refresh()" #toggle [attr.class]="dialogPosition"
+        (onColumnVisibilityChanged)="onVisibilityChanged($event)"
+        style="max-height: 500px; overflow-y: auto;">
+        <ng-container *ngTemplateOutlet="columnHidingUI" ></ng-container>
+    </span>
+</ng-template>
+
+<ng-template #columnChooserInline>
+    <div (onColumnVisibilityChanged)="onVisibilityChanged($event)"
+        style="max-height: 500px; overflow-y: auto;">
+        <ng-container *ngTemplateOutlet="columnHidingUI" ></ng-container>
+    </div>
+</ng-template>
