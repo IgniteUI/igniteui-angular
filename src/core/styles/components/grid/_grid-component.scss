@@ -133,11 +133,27 @@
         @extend %grid__cbx-selection !optional;
     }
 
-    @include m(compact) {
-        @extend %grid-display !optional;
-    }
-
     @include m(cosy) {
         @extend %grid-display !optional;
+
+        @include e(th) {
+            @extend %grid-cell-header--cosy !optional;
+        }
+
+        @include e(td) {
+            @extend %grid-cell-display--cosy !optional;
+        }
+    }
+
+    @include m(compact) {
+        @extend %grid-display !optional;
+
+        @include e(th) {
+            @extend %grid-cell-header--compact !optional;
+        }
+
+        @include e(td) {
+            @extend %grid-cell-display--compact !optional;
+        }
     }
 }

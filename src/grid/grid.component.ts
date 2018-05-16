@@ -201,7 +201,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 break;
             case "comfortable":
             default:
-                this.displayDensity = DisplayDensity.comfortable;
+                this._displayDensity = DisplayDensity.comfortable;
         }
     }
 

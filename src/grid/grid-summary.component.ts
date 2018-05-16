@@ -1,5 +1,8 @@
-import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, DoCheck, HostBinding, HostListener, Input, OnDestroy, OnInit } from "@angular/core";
+import {
+    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
+    Component, DoCheck, HostBinding, HostListener, Input, OnDestroy, OnInit
+} from "@angular/core";
+import { DisplayDensity } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
@@ -46,9 +49,17 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
         return !this.column.hasSummary;
     }
 
-    @HostBinding("class.igx-grid-summary")
-    get defaultClass(): boolean {
-        return this.column.hasSummary;
+    @HostBinding("attr.class")
+    get defaultClass(): string {
+        switch (this.displayDensity) {
+            case DisplayDensity.compact:
+                return "igx-grid-summary--compact";
+            case DisplayDensity.cosy:
+                return "igx-grid-summary--cosy";
+            case DisplayDensity.comfortable:
+            default:
+                return "igx-grid-summary";
+        }
     }
 
     @HostBinding("class.igx-grid-summary--fw")
@@ -70,6 +81,7 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
     private hiddenItemClass = "igx-grid-summary__item--inactive";
     private summaryResultClass = "igx-grid-summary-item__result--left-align";
     private numberSummaryResultClass = "igx-grid-summary-item__result";
+    private displayDensity: DisplayDensity | string;
 
     constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
 
@@ -113,6 +125,7 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
             this.subscriptionOnAdd$ = this.gridAPI.get(this.gridID).onRowAdded.subscribe(() => this.clearAll());
             this.subscriptionOnDelete$ = this.gridAPI.get(this.gridID).onRowDeleted.subscribe(() => this.clearAll());
         }
+        this.displayDensity = this.gridAPI.get(this.gridID).displayDensity;
     }
 
     @autoWire(true)

@@ -80,6 +80,12 @@
         color: --var($theme, 'pinned-border-color')
     );
 
+    $item-padding: (
+        comfortable: rem(6px) 0,
+        cosy: rem(2px) 0,
+        compact: 0
+    );
+
     %igx-grid-summary {
         display: flex;
         flex-direction: column;
@@ -114,9 +120,17 @@
     %igx-grid-summary__item {
         display: flex;
         align-items: center;
-        padding: rem(5px) 0;
+        padding: map-get($item-padding, 'comfortable');
         font-size: rem(12px);
         position: relative;
+    }
+
+    %igx-grid-summary__item--cosy {
+        padding: map-get($item-padding, 'cosy');
+    }
+
+    %igx-grid-summary__item--compact {
+        padding: map-get($item-padding, 'compact');
     }
 
     %igx-grid-summary__label {
