@@ -799,6 +799,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             return false;
         }
 
+        const oldIndex = col.visibleIndex;
+
         col.pinned = true;
         const index = this._pinnedColumns.length;
 
@@ -814,6 +816,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             }
         }
         this.markForCheck();
+
+        const newIndex = col.visibleIndex;
+        col.updateHighlights(oldIndex, newIndex);
         return true;
     }
 
@@ -823,12 +828,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!col.pinned) {
             return false;
         }
+        const oldIndex = col.visibleIndex;
         col.pinned = false;
         this._unpinnedColumns.splice(col.index, 0, col);
         if (this._pinnedColumns.indexOf(col) !== -1) {
             this._pinnedColumns.splice(this._pinnedColumns.indexOf(col), 1);
         }
         this.markForCheck();
+
+        const newIndex = col.visibleIndex;
+        col.updateHighlights(oldIndex, newIndex);
         return true;
     }
 

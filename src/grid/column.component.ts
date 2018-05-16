@@ -260,36 +260,14 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     public pin(): boolean {
-        const oldIndex = this.visibleIndex;
-        const retVal = this.gridAPI.get(this.gridID).pinColumn(this.field);
-
-        if (this.grid.lastSearchInfo.searchText) {
-            const newIndex = this.visibleIndex;
-            this.updateHighlights(oldIndex, newIndex);
-        }
-
-        return retVal;
+        return this.gridAPI.get(this.gridID).pinColumn(this.field);
     }
 
     public unpin(): boolean {
-        const oldIndex = this.visibleIndex;
-        const retVal =  this.gridAPI.get(this.gridID).unpinColumn(this.field);
-
-        if (this.grid.lastSearchInfo.searchText) {
-            const newIndex = this.visibleIndex;
-            this.updateHighlights(oldIndex, newIndex);
-        }
-
-        return retVal;
+        return this.gridAPI.get(this.gridID).unpinColumn(this.field);
     }
 
-    protected check() {
-        if (this.grid) {
-            this.grid.markForCheck();
-        }
-    }
-
-    private updateHighlights(oldIndex: number, newIndex: number) {
+    public updateHighlights(oldIndex: number, newIndex: number) {
         const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.grid.id);
 
         if (activeInfo.columnIndex === oldIndex) {
@@ -300,6 +278,12 @@ export class IgxColumnComponent implements AfterContentInit {
                 activeInfo.page);
 
             this.grid.refreshSearch(true);
+        }
+    }
+
+    protected check() {
+        if (this.grid) {
+            this.grid.markForCheck();
         }
     }
 }
