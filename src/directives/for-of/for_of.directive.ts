@@ -677,11 +677,15 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     private _recalcOnContainerChange(changes: SimpleChanges) {
         this.dc.instance._viewContainer.element.nativeElement.style.top = "0px";
         this.dc.instance._viewContainer.element.nativeElement.style.left = "0px";
-        if (this.hCache && this.state.startIndex !== 0) {
-            requestAnimationFrame(() => {
-                this.state.startIndex = 0;
+
+        if (this.hCache) {
+            this.state.startIndex = 0;
+            if (this.hScroll.scrollLeft !== 0) {
                 this.scrollTo(0);
-            });
+            } else {
+                this.fixedUpdateAllCols(0);
+            }
+            this.cdr.detectChanges();
             return;
         }
         this.applyChunkSizeChange();
