@@ -1314,6 +1314,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.checkHeaderChecboxStatus(headerStatus);
     }
 
+    public trackColumnChanges(index, col) {
+        if (col.resizable) {
+            return col.field + col.width;
+        } else {
+            return col;
+        }
+    }
+
     private find(text: string, increment: number, caseSensitive?: boolean, scroll?: boolean) {
         if (!this.rowList) {
             return 0;
