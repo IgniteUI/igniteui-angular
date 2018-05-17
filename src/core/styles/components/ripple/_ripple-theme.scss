@@ -33,7 +33,7 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
-/// @requires var
+/// @requires --var
 @mixin igx-ripple($theme, $palette: $default-palette) {
     @include igx-root-css-vars($theme);
 
