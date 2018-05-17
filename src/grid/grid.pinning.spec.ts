@@ -519,6 +519,7 @@ describe("IgxGrid - Column Pinning ", () => {
         expect(grid.pinnedColumns.length).toEqual(1);
         expect(grid.unpinnedColumns.length).toEqual(9);
     });
+
     it("should allow hiding columns in the unpinned area.", () => {
 
         const fix = TestBed.createComponent(GridPinningComponent);
@@ -602,7 +603,19 @@ describe("IgxGrid - Column Pinning ", () => {
         expect(grid.columns[6].pinned).toBe(true);
         expect(grid.unpinnedWidth).toBeGreaterThanOrEqual(grid.unpinnedAreaMinWidth);
     });
+
+    it("should not misalign the scrollbar when columns are narrower than possible", () => {
+        const fix = TestBed.createComponent(GridPinningComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.columns[1].width = 15;
+        fix.detectChanges();
+        grid.columns[1].pin();
+        fix.detectChanges();
+        const cell = grid.getCellByColumn(0, "CompanyName");
+        expect(grid.pinnedWidth).toEqual(cell.nativeElement.getBoundingClientRect().width);
+    });
 });
+
 @Component({
     template: `
         <igx-grid
