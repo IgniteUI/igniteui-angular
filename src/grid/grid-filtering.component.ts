@@ -107,6 +107,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         return `igx-filtering`;
     }
 
+    public booleanFilterAll = "All";
     public dialogShowing = false;
     public dialogPosition = "igx-filtering__options--to-right";
 
@@ -134,6 +135,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
 
     @ViewChild("select", { read: ElementRef})
     protected select: ElementRef;
+
+    @ViewChild("input", { read: ElementRef})
+    protected input: ElementRef;
 
     constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
         this.filterChanged.pipe(
@@ -168,6 +172,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     public refresh() {
         this.dialogShowing = !this.dialogShowing;
         if (this.dialogShowing) {
+            this.focusInput();
             this.column.filteringCondition = this.getCondition(this.select.nativeElement.value);
         }
         this.cdr.detectChanges();
@@ -211,9 +216,15 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         if (this.dataType === DataType.Date) {
             this.cdr.detectChanges();
         }
+        this.focusInput();
     }
 
     public selectionChanged(value): void {
+        if (value === this.booleanFilterAll) {
+            this.clearFiltering(true);
+            return;
+        }
+        this.focusInput();
         this._filterCondition = value;
         if (this.unaryCondition) {
             this.unaryConditionChanged.next(value);
@@ -230,10 +241,15 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         this.clearFiltering(false);
     }
 
+    public focusInput(): void {
+        if (this.input) {
+            this.input.nativeElement.focus();
+        }
+    }
+
     public get disabled() {
-        if ((!!this.value || this.value === 0) && !this.unaryCondition) {
-            return false;
-        } else if (this.unaryCondition) {
+        // if filtering is applied, reset button should be active
+        if (this.gridAPI.get(this.gridID).filteringExpressions.length > 0) {
             return false;
         }
         return true;
