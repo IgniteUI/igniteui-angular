@@ -215,7 +215,7 @@
 /// @requires {mixin} igx-root-css-vars
 /// @requires igx-elevation
 /// @requires rem
-/// @requires var
+/// @requires --var
 /// @requires $elevations
 @mixin igx-button($theme) {
     @include igx-root-css-vars($theme);

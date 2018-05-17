@@ -43,7 +43,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires rem
-/// @requires var
+/// @requires --var
 @mixin igx-grid-paginator($theme) {
     @include igx-root-css-vars($theme);
 

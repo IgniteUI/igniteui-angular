@@ -109,7 +109,7 @@
 /// @requires em
 /// @requires {mixin} scale-in-out
 /// @requires {mixin} animation
-/// @requires var
+/// @requires --var
 @mixin igx-switch($theme) {
     @include igx-root-css-vars($theme);
 

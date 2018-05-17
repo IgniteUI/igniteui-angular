@@ -147,7 +147,7 @@
 /// @requires $elevations
 /// @requires {mixin} ellipsis
 /// @requires rem
-/// @requires var
+/// @requires --var
 @mixin igx-tabs($theme) {
     @include igx-root-css-vars($theme);
 
