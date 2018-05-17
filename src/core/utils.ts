@@ -1,12 +1,12 @@
 
-export function cloneArray(array) {
+export function cloneArray(array, deep?: boolean) {
     const arr = [];
     if (!array) {
         return arr;
     }
     let i = array.length;
     while (i--) {
-        arr[i] = array[i];
+        arr[i] = deep ? JSON.parse(JSON.stringify(array[i])) : array[i];
     }
     return arr;
 }

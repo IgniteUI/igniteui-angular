@@ -1,5 +1,4 @@
 import { EventEmitter, Injectable, Output } from "@angular/core";
-import { IgxGridComponent } from "../../grid/grid.component";
 import { IgxBaseExporter } from "../exporter-common/base-export-service";
 import { ExportUtilities } from "../exporter-common/export-utilities";
 import { CharSeparatedValueData } from "./char-separated-value-data";
