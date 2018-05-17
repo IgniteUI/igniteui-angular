@@ -79,13 +79,18 @@ describe("IgxDropDown ", () => {
         }).then(() => {
             fixture.detectChanges();
             list.items[1].element.nativeElement.click();
-            return fixture.whenStable();
         }).then(() => {
-            expect(list.selectedItem).toEqual(list.items[1]);
+            setTimeout(() => {
+                fixture.whenStable().then(() => {
+                    fixture.detectChanges();
+                    expect(list.selectedItem).toEqual(list.items[1]);
+                    expect(list.collapsed).toEqual(true);
+                });
+            }, 200);
         });
     });
 
-    it("should change the selected values indefinitely", () => {
+    it("should change the selected values indefinitely", async(() => {
         // To DO
         const fixture = TestBed.createComponent(IgxDropDownTestScrollComponent);
         fixture.detectChanges();
@@ -137,8 +142,15 @@ describe("IgxDropDown ", () => {
             expect(list.items[0].onArrowDownKeyDown).toHaveBeenCalledTimes(1);
             expect(list.items[1].onSpaceKeyDown).toHaveBeenCalledTimes(1);
             expect(list.items[4].onEscapeKeyDown).toHaveBeenCalledTimes(1);
+        }).then(() => {
+            setTimeout(() => {
+                fixture.whenStable().then(() => {
+                    fixture.detectChanges();
+                    expect(list.collapsed).toEqual(true);
+                });
+            }, 200);
         });
-    });
+    }));
 
     it("Should navigate through the items using Up/Down/Home/End keys", () => {
         const fixture = TestBed.createComponent(IgxDropDownTestComponent);
@@ -212,7 +224,7 @@ describe("IgxDropDown ", () => {
         });
     });
 
-    it("Should support header items", () => {
+    it("Should support header items", async(() => {
         const fixture = TestBed.createComponent(IgxDropDownTestDisabledAnyComponent);
         fixture.detectChanges();
         const button = fixture.debugElement.query(By.css("button")).nativeElement;
@@ -240,8 +252,15 @@ describe("IgxDropDown ", () => {
         }).then(() => {
             fixture.detectChanges();
             expect(list.selectedItem).toEqual(list.items[1]);
+        }).then(() => {
+            setTimeout(() => {
+                fixture.whenStable().then(() => {
+                    fixture.detectChanges();
+                    expect(list.collapsed).toEqual(true);
+                });
+            }, 200);
         });
-    });
+    }));
 
     it("Should notify when selection has changed", async(() => {
         const fixture = TestBed.createComponent(IgxDropDownTestComponent);
@@ -325,7 +344,7 @@ describe("IgxDropDown ", () => {
         });
     });
 
-    it("Esc key closes the dropdown and does not change selection", () => {
+    it("Esc key closes the dropdown and does not change selection", async(() => {
         const fixture = TestBed.createComponent(IgxDropDownTestComponent);
         fixture.detectChanges();
         const button = fixture.debugElement.query(By.css("button")).nativeElement;
@@ -361,8 +380,15 @@ describe("IgxDropDown ", () => {
             expect(list.onOpened.emit).toHaveBeenCalledTimes(1);
             expect(list.onSelection.emit).toHaveBeenCalledTimes(0);
             // should be list.onClose.emit
+        }).then(() => {
+            setTimeout(() => {
+                fixture.whenStable().then(() => {
+                    fixture.detectChanges();
+                    expect(list.collapsed).toEqual(true);
+                });
+            }, 200);
         });
-    });
+    }));
 
     it("Should not change selection when setting it to non-existing item", () => {
         const fixture = TestBed.createComponent(IgxDropDownTestScrollComponent);
@@ -746,7 +772,7 @@ describe("IgxDropDown ", () => {
         });
     });
 
-    xit("Unit: should close drop down when call close()", () => {
+    it("Unit: should close drop down when call close()", async(() => {
         const fixture = TestBed.createComponent(IgxDropDownTestComponent);
         const componentInstance = fixture.componentInstance;
         const igxDropDown = componentInstance.dropdown;
@@ -760,10 +786,14 @@ describe("IgxDropDown ", () => {
             igxDropDown.toggle();
             return fixture.whenStable();
         }).then(() => {
-            fixture.detectChanges();
-            expect(igxDropDown.collapsed).toEqual(true);
+            setTimeout(() => {
+                fixture.whenStable().then(() => {
+                    fixture.detectChanges();
+                    expect(igxDropDown.collapsed).toEqual(true);
+                });
+            }, 200);
         });
-    });
+    }));
 });
 
 @Component({
