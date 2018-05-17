@@ -70,7 +70,7 @@
 /// @requires {mixin} hide-default
 /// @requires igx-ripple-theme
 /// @requires em
-/// @requires var
+/// @requires --var
 @mixin igx-radio($theme) {
     @include igx-root-css-vars($theme);
     @include scale-in-out($start-scale: .9);

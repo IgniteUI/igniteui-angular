@@ -77,7 +77,7 @@
 /// @requires igx-ripple-theme
 /// @requires rem
 /// @requires em
-/// @requires var
+/// @requires --var
 @mixin igx-checkbox($theme) {
     @include igx-root-css-vars($theme);
 
