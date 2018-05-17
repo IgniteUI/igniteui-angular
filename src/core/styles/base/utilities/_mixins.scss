@@ -168,7 +168,7 @@
 /// @example scss Generate css variables for the `$default-palette`.
 ///   @include css-vars-from-palette($default-palette, ':root');
 ///
-/// @requires css-vars-from-palette
+/// @requires {mixin} css-vars-from-palette
 @mixin igx-palette-vars($palette, $scope: null) {
     @if $scope == null {
         @include css-vars-from-palette($palette);
