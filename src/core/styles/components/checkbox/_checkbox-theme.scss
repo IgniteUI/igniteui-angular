@@ -30,7 +30,6 @@
     $fill-color: null,
     $tick-color: null,
     $disabled-color: null,
-    $light: false,
     $variant: 'dark'
 ) {
     $name: 'igx-checkbox';
@@ -53,7 +52,10 @@
         disabled-color: rgba(255, 255, 255, .3)
     );
 
-    $default-theme: if($light == false or $variant == 'dark', $dark-theme, $light-theme);
+    $default-theme: map-get((
+        dark: $dark-theme,
+        light: $light-theme
+    ), $variant);
 
     @return extend($default-theme, (
         palette: $palette,
@@ -62,7 +64,6 @@
         fill-color: $fill-color,
         tick-color: $tick-color,
         disabled-color: $disabled-color,
-        light: $light,
         variant: $variant
     ));
 }

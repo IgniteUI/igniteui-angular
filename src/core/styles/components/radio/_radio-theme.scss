@@ -10,7 +10,6 @@
 /// @param {Color} $empty-color [null] - The unchecked border color.
 /// @param {Color} $fill-color [null] - The checked border and dot colors.
 /// @param {Color} $disabled-color [null] - The disabled border and dot colors.
-/// @param {Bool} $light [null] - Determines the default color scheme - light or not.
 /// @param {String} $variant ['dark'] - Determines the default color scheme - could be 'light' or 'dark'.
 ///
 /// @requires extend
@@ -28,7 +27,6 @@
     $fill-color: null,
     $disabled-color: null,
 
-    $light: false,
     $variant: 'dark'
 ) {
     $name: 'igx-radio';
@@ -49,7 +47,10 @@
         disabled-color: rgba(255, 255, 255, .3)
     );
 
-    $default-theme: if($light == false or $variant == 'dark', $dark-theme, $light-theme);
+    $default-theme: map-get((
+        dark: $dark-theme,
+        light: $light-theme
+    ), $variant);
 
     @return extend($default-theme, (
         palette: $palette,
