@@ -55,6 +55,10 @@
         }
     }
 
+    @include e(summaries) {
+        @extend %grid-summaries !optional;
+    }
+
     @include e(tr, $m: selected) {
         @extend %grid-row--selected !optional;
     }
