@@ -215,7 +215,7 @@
 /// @requires {mixin} igx-root-css-vars
 /// @requires em
 /// @requires rem
-/// @requires var
+/// @requires --var
 /// @requires {mixin} ellipsis
 @mixin igx-calendar($theme) {
     @include igx-root-css-vars($theme);

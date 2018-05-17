@@ -12,8 +12,6 @@ import {
     IExcelFolder
 } from "./excel-interfaces";
 
-import { IgxGridComponent } from "../../grid/grid.component";
-
 import { IgxBaseExporter } from "../exporter-common/base-export-service";
 import { ExportUtilities } from "../exporter-common/export-utilities";
 import { WorksheetData } from "./worksheet-data";
