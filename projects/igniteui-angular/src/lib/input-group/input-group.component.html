@@ -1,0 +1,17 @@
+<div class="igx-input-group__wrapper" *ngIf="isTypeBox; else bundle">
+    <ng-container *ngTemplateOutlet="bundle"></ng-container>
+</div>
+<div class="igx-input-group__hint" *ngIf="hasHints">
+    <ng-content select="igx-hint,[igxHint]"></ng-content>
+</div>
+<ng-template #bundle>
+    <div class="igx-input-group__bundle">
+        <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
+        <div class="igx-input-group__bundle-main">
+            <ng-content select="[igxLabel]"></ng-content>
+            <ng-content select="[igxInput]"></ng-content>
+        </div>
+        <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
+    </div>
+    <div class="igx-input-group__border" *ngIf="hasBorder"></div>
+</ng-template>

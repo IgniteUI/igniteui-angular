@@ -1,0 +1,47 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-list) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %igx-list !optional;
+
+    @include e(header) {
+        @extend %igx-list-header !optional;
+    }
+
+    @include e(item) {
+        @extend %igx-list-item !optional;
+
+        &:active {
+            @extend %igx-list-item !optional;
+            @extend %igx-list-item--active !optional;
+        }
+
+        &:not(:active) {
+            @extend %igx-list-item--inactive !optional;
+        }
+    }
+
+    @include e(empty) {
+        @extend %igx-list !optional;
+        @extend %igx-list-empty !optional;
+
+        @include b(image) {
+            @extend %igx-list-empty-image !optional;
+        }
+
+        @include b(message) {
+            @extend %igx-list-empty-message !optional;
+        }
+    }
+
+    @include e(empty, $m: custom) {
+        @extend %igx-list-empty !optional;
+    }
+}

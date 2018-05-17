@@ -1,0 +1,33 @@
+//// Dialog
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-dialog) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %igx-dialog-display !optional;
+
+    @include e(window) {
+        @extend %igx-dialog-window !optional;
+    }
+
+    @include e(window-title) {
+        @extend %igx-dialog-title !optional;
+    }
+
+    @include e(window-content) {
+        @extend %igx-dialog-content !optional;
+    }
+
+    @include e(window-actions) {
+        @extend %igx-dialog-actions !optional;
+    }
+
+    @include m(hidden) {
+        @extend %igx-dialog--hidden !optional;
+    }
+}

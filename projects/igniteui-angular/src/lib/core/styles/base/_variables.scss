@@ -1,0 +1,24 @@
+////
+/// @group base
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// The default font size used globally.
+/// @type String
+$browser-context: 16px !default;
+
+/// The default line height used globally.
+/// @type String
+$browser-line-height: 27px !default;
+
+/// The global keyframes registry map.
+/// @type List
+$keyframes: () !default;
+
+/// The global component registry map.
+/// @type List
+$components: () !default;
+
+/// The global themes registry map.
+$themes: () !default;

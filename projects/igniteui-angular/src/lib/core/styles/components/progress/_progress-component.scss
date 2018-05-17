@@ -1,0 +1,139 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+
+/// Linear Progress
+@include b(progress-linear) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %linear-display !optional;
+
+    @include e(bar) {
+        @extend %linear-bar !optional;
+    }
+
+    @include e(bar-base) {
+        @extend %linear-bar-base !optional;
+    }
+
+    @include e(bar-progress) {
+        @extend %linear-bar-progress !optional;
+    }
+
+    @include e(bar-progress, $m: default) {
+        @extend %linear-bar-progress !optional;
+        @extend %linear-bar-progress--default !optional;
+    }
+
+    @include e(bar-progress, $m: danger) {
+        @extend %linear-bar-progress !optional;
+        @extend %linear-bar-progress--danger !optional;
+    }
+
+    @include e(bar-progress, $m: warning) {
+        @extend %linear-bar-progress !optional;
+        @extend %linear-bar-progress--warning !optional;
+    }
+
+    @include e(bar-progress, $m: info) {
+        @extend %linear-bar-progress !optional;
+        @extend %linear-bar-progress--info !optional;
+    }
+
+    @include e(bar-progress, $m: success) {
+        @extend %linear-bar-progress !optional;
+        @extend %linear-bar-progress--success !optional;
+    }
+
+    @include e(value) {
+        @extend %linear-value !optional;
+        @extend %linear-value--start !optional;
+    }
+
+    @include e(value, $m: start) {
+        @extend %linear-value !optional;
+        @extend %linear-value--start !optional;
+    }
+
+    @include e(value, $m: center) {
+        @extend %linear-value !optional;
+        @extend %linear-value--center !optional;
+    }
+
+    @include e(value, $m: end) {
+        @extend %linear-value !optional;
+        @extend %linear-value--end !optional;
+    }
+
+    @include e(value, $m: top) {
+        @extend %linear-value !optional;
+        @extend %linear-value--top !optional;
+    }
+
+    @include e(value, $m: hidden) {
+        @extend %linear-value !optional;
+        @extend %linear-value--hidden !optional;
+    }
+
+    @include m(striped) {
+        @include e(bar-progress) {
+            @extend %linear-bar-progress !optional;
+            @extend %linear-bar-progress--striped !optional;
+        }
+
+        @include e(bar-progress, $m: default) {
+            @extend %linear-bar-progress !optional;
+            @extend %linear-bar-progress--striped !optional;
+        }
+
+        @include e(bar-progress, $m: danger) {
+            @extend %linear-bar-progress !optional;
+            @extend %linear-bar-progress--striped !optional;
+        }
+
+        @include e(bar-progress, $m: warning) {
+            @extend %linear-bar-progress !optional;
+            @extend %linear-bar-progress--striped !optional;
+        }
+
+        @include e(bar-progress, $m: info) {
+            @extend %linear-bar-progress !optional;
+            @extend %linear-bar-progress--striped !optional;
+        }
+
+        @include e(bar-progress, $m: success) {
+            @extend %linear-bar-progress !optional;
+            @extend %linear-bar-progress--striped !optional;
+        }
+    }
+}
+
+/// Circular Progress
+@include b(progress-circular) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %circular-display !optional;
+
+    @include e(innercircle) {
+        @extend %circular-innercircle !optional;
+    }
+
+    @include e(circle) {
+        @extend %circular-circle !optional;
+    }
+
+    @include e(text) {
+        @extend %circular-text !optional;
+    }
+
+    @include e(text, $m: hidden) {
+        @extend %circular-text !optional;
+        @extend %circular-text--hidden !optional;
+    }
+}

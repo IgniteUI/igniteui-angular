@@ -1,0 +1,5 @@
+// Angular hack for binding to [hidden] property
+// not working 
+[hidden] {
+    display: none !important;
+}

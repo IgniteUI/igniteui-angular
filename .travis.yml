@@ -15,9 +15,10 @@ before_install:
 before_script:
 - npm install -g gulp
 script:
-- npm run lint
-- npm run build
-- npm run test
+- npm run lint:lib
+- ng build igniteui-angular --prod
+- npm run build:style
+- ng test igniteui-angular --code-coverage
 - if [ "${TRAVIS_REPO_SLUG}" == "IgniteUI/igniteui-angular" ]; then cat ./coverage/lcov.info | coveralls; fi
 
 before_deploy:

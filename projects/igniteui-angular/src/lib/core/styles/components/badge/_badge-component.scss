@@ -1,0 +1,50 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-badge) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %igx-badge-display !optional;
+
+    @include e(circle) {
+        @extend %igx-badge-display !optional;
+        @extend %igx-badge--circle !optional;
+    }
+
+    @include e(circle-value) {
+        @extend %igx-badge-value !optional;
+    }
+
+    @include e(circle, $m: default) {
+        @extend %igx-badge--default !optional;
+    }
+
+    @include e(circle, $m: info) {
+        @extend %igx-badge-display !optional;
+        @extend %igx-badge--info !optional;
+    }
+
+    @include e(circle, $m: success) {
+        @extend %igx-badge-display !optional;
+        @extend %igx-circle--success !optional;
+    }
+
+    @include e(circle, $m: warning) {
+        @extend %igx-badge-display !optional;
+        @extend %igx-circle--warn !optional;
+    }
+
+    @include e(circle, $m: error) {
+        @extend %igx-badge-display !optional;
+        @extend %igx-circle--error !optional;
+    }
+
+    @include m(hidden) {
+        @extend %igx-badge--hidden !optional;
+    }
+}
