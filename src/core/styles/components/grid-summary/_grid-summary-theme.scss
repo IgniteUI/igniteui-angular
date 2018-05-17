@@ -70,7 +70,7 @@
 /// @requires {mixin} igx-root-css-vars
 /// @requires igx-color
 /// @requires {mixin} ellipsis
-/// @requires var
+/// @requires --var
 /// @requires rem
 @mixin igx-grid-summary($theme) {
     @include igx-root-css-vars($theme);

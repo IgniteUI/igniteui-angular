@@ -54,7 +54,7 @@
 /// @requires $elevations
 /// @requires $overlay-color
 /// @requires rem
-/// @requires var
+/// @requires --var
 @mixin igx-dialog($theme) {
     @include igx-root-css-vars($theme);
 

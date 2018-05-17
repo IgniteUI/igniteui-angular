@@ -70,7 +70,7 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
-/// @requires var
+/// @requires --var
 /// @requires igx-color
 /// @requires rem
 @mixin igx-badge($theme) {
