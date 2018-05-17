@@ -252,6 +252,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public primaryKey;
 
+    @Input()
+    public emptyGridMessage = "No records found.";
+
     @Output()
     public onCellClick = new EventEmitter<IGridCellEventArgs>();
 
@@ -891,8 +894,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 .filter((width) => !isNaN(width))
         );
         const sumExistingWidths = this.visibleColumns
-        .filter((col) =>  col.width !== null)
-        .reduce((prev, curr) => prev + parseInt(curr.width, 10), 0);
+            .filter((col) =>  col.width !== null)
+            .reduce((prev, curr) => prev + parseInt(curr.width, 10), 0);
 
         if (this.rowSelectable) {
             computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
@@ -1096,7 +1099,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public get template(): TemplateRef<any> {
-        return this.emptyGridTemplate;
+        if (this.filteredData && this.filteredData.length === 0) {
+            return this.emptyGridTemplate;
+        }
     }
 
     public checkHeaderChecboxStatus(headerStatus?: boolean) {
@@ -1104,10 +1109,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.allRowsSelected = this.selectionAPI.are_all_selected(this.id, this.data);
             if (this.headerCheckbox) {
                 this.headerCheckbox.indeterminate = !this.allRowsSelected && !this.selectionAPI.are_none_selected(this.id);
+                if (!this.headerCheckbox.indeterminate) {
+                    this.headerCheckbox.checked = this.selectionAPI.are_all_selected(this.id, this.data);
+                }
             }
             this.cdr.markForCheck();
-        }
-        if (this.headerCheckbox) {
+        } else if (this.headerCheckbox) {
             this.headerCheckbox.checked = headerStatus !== undefined ? headerStatus : false;
         }
     }
@@ -1170,8 +1177,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    public selectedRows() {
-        return this.selectionAPI.get_selection(this.id);
+    public selectedRows(): any[] {
+        return this.selectionAPI.get_selection(this.id) || [];
     }
 
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
@@ -1185,7 +1192,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public selectAllRows() {
-        this.triggerRowSelectionChange(this.selectionAPI.get_all_ids(this.data, this.id));
+        this.triggerRowSelectionChange(this.selectionAPI.get_all_ids(this.data, this.primaryKey));
     }
 
     public deselectAllRows() {
