@@ -13,7 +13,8 @@ describe("IgxDatePicker", () => {
                 IgxDatePickerWithWeekStartComponent,
                 IgxDatePickerWithCustomFormatterComponent,
                 IgxDatePickerWithPassedDateComponent,
-                IgxDatePickerWIthLocaleComponent
+                IgxDatePickerWIthLocaleComponent,
+                IgxDatePickerNgModelComponent
             ],
             imports: [IgxDatePickerModule, FormsModule, NoopAnimationsModule]
         })
@@ -178,6 +179,25 @@ describe("IgxDatePicker", () => {
 
         expect(inputTarget.value).toEqual(todayToEnLocale);
     });
+
+    it("When value is bound through ngModel and selection through selectDate method is made, value should respond.", async(() => {
+        const fix = TestBed.createComponent(IgxDatePickerNgModelComponent);
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            const datePicker = fix.componentInstance.datePicker;
+            const expectedRes = new Date(2011, 11, 11);
+            expect(datePicker.value).toEqual(expectedRes);
+            return datePicker;
+        }).then((datePicker) => {
+            const expectedRes = new Date(Date.now());
+            datePicker.selectDate(expectedRes);
+            expect(datePicker.value).toEqual(expectedRes);
+
+            const boundValue = fix.componentInstance.val;
+            expect(boundValue).toEqual(expectedRes);
+        });
+    }));
 });
 
 @Component({
@@ -237,5 +257,15 @@ export class IgxDatePickerWithPassedDateComponent {
 })
 export class IgxDatePickerWIthLocaleComponent {
     public date: Date = new Date(2017, 7, 7);
+    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+}
+
+@Component({
+    template: `
+        <igx-datePicker [(ngModel)]="val"></igx-datePicker>
+    `
+})
+export class IgxDatePickerNgModelComponent {
+    public val: Date = new Date(2011, 11, 11);
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
 }
