@@ -110,6 +110,9 @@ export class IgxGridAPIService {
     }
 
     public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
+        if (dir === SortingDirection.None) {
+            this.remove_grouping_expression(id, fieldName);
+        }
         const sortingState = this.get(id).sortingExpressions;
 
         this.prepare_sorting_expression(sortingState, fieldName, dir, ignoreCase);
@@ -120,6 +123,9 @@ export class IgxGridAPIService {
         const sortingState = this.get(id).sortingExpressions;
 
         for (const each of expressions) {
+            if (each.dir === SortingDirection.None) {
+                this.remove_grouping_expression(id, each.fieldName);
+            }
             this.prepare_sorting_expression(sortingState, each.fieldName, each.dir, each.ignoreCase);
         }
 
@@ -272,5 +278,12 @@ export class IgxGridAPIService {
                 return 0;
             }
         });
+    }
+    protected remove_grouping_expression(id, fieldName) {
+        const groupingExpressions = this.get(id).groupingExpressions;
+        const index = groupingExpressions.findIndex((expr) => expr.fieldName === fieldName);
+        if (index !== -1) {
+            groupingExpressions.splice(index, 1);
+        }
     }
 }

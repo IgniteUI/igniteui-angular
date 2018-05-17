@@ -162,7 +162,6 @@ describe("IgxGrid - GropBy", () => {
     });
     it("should allows expanding/collapsing groups.", () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
-        fix.componentInstance.height = null;
         const grid = fix.componentInstance.instance;
         grid.primaryKey = "ID";
         fix.detectChanges();
@@ -206,7 +205,6 @@ describe("IgxGrid - GropBy", () => {
     });
     it("should allow changing the order of the groupBy columns.", () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
-        fix.componentInstance.height = null;
         fix.detectChanges();
 
         // set groupingExpressions
@@ -251,6 +249,102 @@ describe("IgxGrid - GropBy", () => {
         grid.groupingExpressions);
 
     });
+
+    // GroupBy + Sorting integration
+    it("should apply sorting on each group's records when non-grouped column is sorted.", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableSorting = true;
+        fix.detectChanges();
+        grid.groupBy("ProductName", SortingDirection.Desc, false);
+        fix.detectChanges();
+        const groupRows = grid.groupedRowList.toArray();
+        const dataRows = grid.rowList.toArray();
+        // verify groups and data rows count
+        expect(groupRows.length).toEqual(5);
+        expect(dataRows.length).toEqual(8);
+
+        grid.sort("Released", SortingDirection.Asc, false);
+        fix.detectChanges();
+
+        // verify groups
+        checkGroups(groupRows, ["NetAdvantage", "Ignite UI for JavaScript", "Ignite UI for Angular", "", null]);
+
+        // verify data records order
+        const expectedDataRecsOrder = [false, true, false, true, null, false, true, true];
+        dataRows.forEach((row, index) => {
+            expect(row.rowData.Released).toEqual(expectedDataRecsOrder[index]);
+        });
+
+    });
+    it("should apply the specified sort order on the group rows when already grouped columnn is sorted in asc/desc order.", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableSorting = true;
+        fix.detectChanges();
+        grid.groupBy("ProductName", SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        let groupRows = grid.groupedRowList.toArray();
+        let dataRows = grid.rowList.toArray();
+
+        // verify groups and data rows count
+        expect(groupRows.length).toEqual(5);
+        expect(dataRows.length).toEqual(8);
+
+        // verify group order
+        checkGroups(groupRows, ["NetAdvantage", "Ignite UI for JavaScript", "Ignite UI for Angular", "", null]);
+        grid.sort("ProductName", SortingDirection.Asc, false);
+        fix.detectChanges();
+
+        groupRows = grid.groupedRowList.toArray();
+        dataRows = grid.rowList.toArray();
+
+        // verify group order
+        checkGroups(groupRows, [null, "", "Ignite UI for Angular", "Ignite UI for JavaScript", "NetAdvantage" ]);
+
+    });
+    it("should remove grouping when already grouped columnn is sorted with order 'None'.", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableSorting = true;
+        fix.detectChanges();
+        grid.groupBy("ProductName", SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        let groupRows = grid.groupedRowList.toArray();
+        let dataRows = grid.rowList.toArray();
+
+        // verify groups and data rows count
+        expect(groupRows.length).toEqual(5);
+        expect(dataRows.length).toEqual(8);
+
+        // verify group order
+        checkGroups(groupRows, ["NetAdvantage", "Ignite UI for JavaScript", "Ignite UI for Angular", "", null]);
+        grid.sort("ProductName", SortingDirection.None, false);
+        fix.detectChanges();
+        groupRows = grid.groupedRowList.toArray();
+        dataRows = grid.rowList.toArray();
+
+         // verify groups and data rows count
+        expect(groupRows.length).toEqual(0);
+        expect(dataRows.length).toEqual(8);
+
+    });
+    it("should group by the specified field when grouping by an already sorted field.", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableSorting = true;
+        fix.detectChanges();
+        grid.sort("ProductName", SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        grid.groupBy("ProductName", SortingDirection.Asc, false);
+        fix.detectChanges();
+        const groupRows = grid.groupedRowList.toArray();
+        // verify group order
+        checkGroups(groupRows, [null, "", "Ignite UI for Angular", "Ignite UI for JavaScript", "NetAdvantage" ]);
+    });
 });
 @Component({
     template: `
@@ -267,10 +361,11 @@ export class DefaultGridComponent {
     public nextDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1, 0, 0, 0);
     public prevDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1, 0, 0, 0);
     public width = "800px";
-    public height = "800px";
+    public height = null;
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
+    public enableSorting = false;
 
     public data = [
         {
@@ -330,4 +425,8 @@ export class DefaultGridComponent {
             Released: false
         }
     ];
+
+    public columnCreated(column: IgxColumnComponent) {
+        column.sortable = this.enableSorting;
+    }
 }
