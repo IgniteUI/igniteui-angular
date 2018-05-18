@@ -2,8 +2,6 @@ import { Component, ViewChild } from "@angular/core";
 import { IgxGridComponent } from "../../grid/grid.component";
 import { ExportTestDataService } from "../excel/test-data.service";
 
-const sampleData = new ExportTestDataService().simpleGridData;
-
 @Component({
     template: `
     <igx-grid #grid1 [data]="data">
