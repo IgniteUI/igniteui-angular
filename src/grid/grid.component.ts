@@ -1315,11 +1315,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public trackColumnChanges(index, col) {
-        if (col.resizable) {
-            return col.field + col.width;
-        } else {
-            return col;
-        }
+        return col.field + col.width;
     }
 
     private find(text: string, increment: number, caseSensitive?: boolean, scroll?: boolean) {
