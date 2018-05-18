@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "test:lib": "ng test igniteui-angular --watch=false --code-coverage",
+    "test:lib": "ng test igniteui-angular --watch=false --no-progress --code-coverage",
     "test:lib:watch": "ng test igniteui-angular",
     "build:style": "gulp build-style",
     "build:docs": "typedoc projects/igniteui-angular/src && sassdoc projects/igniteui-angular/src/lib/core/styles",
