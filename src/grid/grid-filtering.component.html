@@ -1,7 +1,7 @@
 <ng-template #defaultFilterUI>
     <div *ngIf="!unaryCondition" class="igx-filtering__op">
         <igx-input-group>
-            <input type="text" igxInput placeholder="Value" autocomplete="off" [value]="value" (input)="onInputChanged($event.target.value)" #input/>
+            <input type="text" igxInput placeholder="Value" autocomplete="off" [value]="value" (input)="onInputChanged($event.target.value)" #input igxFocus="true"/>
             <igx-suffix *ngIf="input.value.length > 0" (click)="clearInput()">
                 <igx-icon>clear</igx-icon>
             </igx-suffix>

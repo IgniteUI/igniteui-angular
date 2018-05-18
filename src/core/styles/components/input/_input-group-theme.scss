@@ -155,7 +155,10 @@
         error-secondary-color: igx-color($palette, 'error')
     );
 
-    $default-theme: if($variant == 'dark', $dark-theme, $light-theme);
+    $default-theme: map-get((
+        dark: $dark-theme,
+        light: $light-theme
+    ), $variant);
 
     @return extend($default-theme, (
         palette: $palette,
@@ -190,7 +193,9 @@
 
         success-secondary-color: $success-secondary-color,
         warning-secondary-color: $warning-secondary-color,
-        error-secondary-color: $error-secondary-color
+        error-secondary-color: $error-secondary-color,
+
+        variant: $variant
     ));
 }
 
