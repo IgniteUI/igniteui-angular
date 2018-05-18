@@ -15,7 +15,8 @@ describe("IgxInputGroup", () => {
                 InputGroupComponent,
                 InputGroupBoxComponent,
                 InputGroupBorderComponent,
-                InputGroupSearchComponent
+                InputGroupSearchComponent,
+                InputGroupDisabled
             ],
             imports: [
                 IgxInputGroupModule
@@ -94,6 +95,23 @@ describe("IgxInputGroup", () => {
         fixture.detectChanges();
         testInputGroupType("line", igxInputGroup, inputGroupElement);
     });
+
+    it("disabled input should properly detect changes.", () => {
+        const fixture = TestBed.createComponent(InputGroupDisabled);
+        fixture.detectChanges();
+
+        const component = fixture.componentInstance;
+        const igxInputGroup = component.igxInputGroup;
+        expect(igxInputGroup.isDisabled).toBeFalsy();
+
+        component.changeDisableState();
+        fixture.detectChanges();
+        expect(igxInputGroup.isDisabled).toBeTruthy();
+
+        component.changeDisableState();
+        fixture.detectChanges();
+        expect(igxInputGroup.isDisabled).toBeFalsy();
+    });
 });
 
 @Component({
@@ -163,3 +181,19 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
     expect(component.isTypeBox).toBe(isBox);
     expect(component.isTypeSearch).toBe(isSearch);
 }
+
+@Component({
+    template: `<igx-input-group #igxInputGroup [isDisabled]="isDisabled">
+                    <input igxInput />
+                </igx-input-group>`
+})
+class InputGroupDisabled {
+    @ViewChild("igxInputGroup") public igxInputGroup: IgxInputGroupComponent;
+
+    public isDisabled = false;
+
+    public changeDisableState() {
+        this.isDisabled = !this.isDisabled;
+    }
+}
+
