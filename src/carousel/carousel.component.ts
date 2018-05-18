@@ -4,12 +4,12 @@ import {
     ElementRef,
     EventEmitter,
     HostBinding,
+    HostListener,
     Input,
     NgModule,
     OnDestroy,
     OnInit,
-    Output,
-    HostListener
+    Output
 } from "@angular/core";
 import { IgxIconModule } from "../icon";
 
