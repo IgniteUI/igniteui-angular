@@ -86,17 +86,32 @@
         compact: 0
     );
 
+
+    $summary-padding: (
+        comfortable: 0 rem(24px),
+        cosy: 0 rem(16px),
+        compact: 0 rem(12px)
+    );
+
     %igx-grid-summary {
         display: flex;
         flex-direction: column;
         border-left: 1px dotted --var($theme, 'border-color');
         flex: 1 1 0%;
-        padding: 0 rem(24px);
+        padding: map-get($summary-padding, 'comfortable');
         overflow: hidden;
 
         &:first-of-type {
             border-left: 0;
         }
+    }
+
+    %igx-grid-summary--cosy {
+        padding: map-get($summary-padding, 'cosy');
+    }
+
+    %igx-grid-summary--compact {
+        padding: map-get($summary-padding, 'compact');
     }
 
     %igx-grid-summary--pinned {

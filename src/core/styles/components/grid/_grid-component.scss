@@ -57,6 +57,10 @@
 
     @include e(summaries) {
         @extend %grid-summaries !optional;
+
+        igx-display-container {
+            @extend %grid-display-container-tr !optional;
+        }
     }
 
     @include e(tr, $m: selected) {

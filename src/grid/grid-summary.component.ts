@@ -29,6 +29,24 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
         return this.column.dataType;
     }
 
+    @HostBinding("attr.class")
+    get defaultClass(): string {
+        switch (this.displayDensity) {
+            case DisplayDensity.compact:
+                return "igx-grid-summary--compact";
+            case DisplayDensity.cosy:
+                return "igx-grid-summary--cosy";
+            case DisplayDensity.comfortable:
+            default:
+                return "igx-grid-summary";
+        }
+    }
+
+    @HostBinding("class.igx-grid-summary--fw")
+    get widthPersistenceClass(): boolean {
+        return this.column.width !== null;
+    }
+
     @HostBinding("class.igx-grid-summary--pinned")
     get isPinned() {
         return this.column.pinned;
@@ -47,24 +65,6 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
     @HostBinding("class.igx-grid-summary--empty")
     get emptyClass(): boolean {
         return !this.column.hasSummary;
-    }
-
-    @HostBinding("attr.class")
-    get defaultClass(): string {
-        switch (this.displayDensity) {
-            case DisplayDensity.compact:
-                return "igx-grid-summary--compact";
-            case DisplayDensity.cosy:
-                return "igx-grid-summary--cosy";
-            case DisplayDensity.comfortable:
-            default:
-                return "igx-grid-summary";
-        }
-    }
-
-    @HostBinding("class.igx-grid-summary--fw")
-    get widthPersistenceClass(): boolean {
-        return this.column.width !== null;
     }
 
     @HostBinding("style.min-width")

@@ -49,6 +49,7 @@
 
     @include m(cosy) {
         @extend %igx-grid-summary !optional;
+        @extend %igx-gris-summary--cosy !optional;
 
         @include e(item) {
             @extend %igx-grid-summary__item--cosy !optional;
@@ -57,6 +58,7 @@
 
     @include m(compact) {
         @extend %igx-grid-summary !optional;
+        @extend %igx-grid-summary--compact !optional;
 
         @include e(item) {
             @extend %igx-grid-summary__item--compact !optional;
