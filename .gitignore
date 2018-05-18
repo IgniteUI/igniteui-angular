@@ -55,6 +55,12 @@ demos/index.html
 !demos/postcss.config.js
 !demos/gulpfile.js
 
+oldsrc/**/*.js
+oldsrc/**/*.js.map
+oldsrc/**/*.css
+oldsrc/**/*.css.map
+
+
 src/**/*.js
 src/**/*.js.map
 src/**/*.css

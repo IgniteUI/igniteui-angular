@@ -11,8 +11,7 @@ import { IgxGridModule } from 'igniteui-angular';
   ],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,
-    IgxGridModule.forRoot()
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
