@@ -10,7 +10,6 @@
 /// @param {Color} $thumb-color [null] - The color of the thumb.
 /// @param {Color} $label-background-color [null] - The background color of the bubble label.
 /// @param {Color} $label-text-color [null] - The text color of the bubble label.
-/// @param {Bool} $light [false] - Determines the default color scheme - light or dark.
 /// @param {Bool} $variant ['dark'] - Determines the default color scheme - can be 'light' or 'dark'.
 ///
 /// @requires extend
@@ -32,7 +31,6 @@
     $label-background-color: null,
     $label-text-color: null,
 
-    $light: false,
     $variant: 'dark'
 ) {
     $name: 'igx-slider';
@@ -63,7 +61,10 @@
         disabled-base-track-color: rgba(#fff, .3)
     );
 
-    $default-theme: if($light == false or $variant == 'dark', $dark-theme, $light-theme);
+    $default-theme: map-get((
+        dark: $dark-theme,
+        light: $light-theme
+    ), $variant);
 
     @if not($label-text-color) and not($label-background-color) {
         $label-text-color: text-contrast(map-get($default-theme, 'label-background-color'));
@@ -78,14 +79,15 @@
         track-color: $track-color,
         thumb-color: $thumb-color,
         label-background-color: $label-background-color,
-        label-text-color: $label-text-color
+        label-text-color: $label-text-color,
+        variant: $variant
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires rem
-/// @requires var
+/// @requires --var
 @mixin igx-slider($theme) {
     @include igx-root-css-vars($theme);
 

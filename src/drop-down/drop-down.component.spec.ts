@@ -510,6 +510,13 @@ describe("IgxDropDown ", () => {
             expect(listItems[11].isFocused).toBeTruthy();
             const currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_FOCUSED));
             expect(currentItem.componentInstance.index).toEqual(11);
+            currentItem.triggerEventHandler("keydown.ArrowDown", jasmine.createSpyObj("mockEvt", ["stopPropagation", "preventDefault"]));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(listItems[11].isFocused).toBeTruthy();
+            const currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_FOCUSED));
+            expect(currentItem.componentInstance.index).toEqual(11);
         });
     });
 
