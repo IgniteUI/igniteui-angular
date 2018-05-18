@@ -30,7 +30,7 @@
     $fill-color: null,
     $tick-color: null,
     $disabled-color: null,
-    $light: false
+    $variant: 'dark'
 ) {
     $name: 'igx-checkbox';
 
@@ -45,14 +45,17 @@
 
     $light-theme: (
         name: $name,
-        label-color: igx-color($palette, 'grays', 600),
+        label-color: #fff,
         empty-color: rgba(255, 255, 255, .7),
         fill-color: igx-color($palette, 'secondary', 500),
         tick-color: #000,
         disabled-color: rgba(255, 255, 255, .3)
     );
 
-    $default-theme: if($light == false or $variant == 'dark', $dark-theme, $light-theme);
+    $default-theme: map-get((
+        dark: $dark-theme,
+        light: $light-theme
+    ), $variant);
 
     @return extend($default-theme, (
         palette: $palette,
@@ -61,7 +64,7 @@
         fill-color: $fill-color,
         tick-color: $tick-color,
         disabled-color: $disabled-color,
-        light: $light
+        variant: $variant
     ));
 }
 
@@ -75,7 +78,7 @@
 /// @requires igx-ripple-theme
 /// @requires rem
 /// @requires em
-/// @requires var
+/// @requires --var
 @mixin igx-checkbox($theme) {
     @include igx-root-css-vars($theme);
 

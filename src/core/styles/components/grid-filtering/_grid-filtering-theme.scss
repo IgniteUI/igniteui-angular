@@ -107,7 +107,7 @@
 /// @requires igx-elevation
 /// @requires $elevations
 /// @requires rem
-/// @requires var
+/// @requires --var
 @mixin igx-grid-filtering($theme) {
     @include igx-root-css-vars($theme);
 
@@ -193,10 +193,6 @@
 
         @include igx-button(igx-button-theme(
             $flat-text-color: --var($theme, 'menu-button-text-color'),
-            $flat-hover-text-color: --var($theme, 'menu-button-text-color'),
-            $flat-hover-background: --var($theme, 'menu-button-text-color'),
-            $flat-focus-text-color: --var($theme, 'menu-button-text-color'),
-            $flat-focus-background: --var($theme, 'menu-button-text-color'),
             $disabled-color: --var($theme, 'menu-button-disabled-text-color'),
             $disabled-background: transparent
         ));
