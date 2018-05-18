@@ -1,8 +1,8 @@
 import { CommonModule } from "@angular/common";
 import {
     Component,
-    EventEmitter,
     ElementRef,
+    EventEmitter,
     HostBinding,
     Input,
     NgModule,
