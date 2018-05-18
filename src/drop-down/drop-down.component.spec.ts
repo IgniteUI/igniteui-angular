@@ -466,7 +466,7 @@ describe("IgxDropDown ", () => {
         });
     });
 
-    it("End key should select the last enabled item", () => {
+    fit("End key should select the last enabled item", () => {
         const fixture = TestBed.createComponent(IgxDropDownTestDisabledComponent);
         fixture.detectChanges();
         const button = fixture.debugElement.query(By.css("button")).nativeElement;
@@ -484,6 +484,13 @@ describe("IgxDropDown ", () => {
             const currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_SELECTED));
             expect(list.items[4].isSelected).toBeTruthy();
             currentItem.triggerEventHandler("keydown.End", jasmine.createSpyObj("mockEvt", ["stopPropagation", "preventDefault"]));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(listItems[11].isFocused).toBeTruthy();
+            const currentItem = fixture.debugElement.query(By.css("." + CSS_CLASS_FOCUSED));
+            expect(currentItem.componentInstance.index).toEqual(11);
+            currentItem.triggerEventHandler("keydown.ArrowDown", jasmine.createSpyObj("mockEvt", ["stopPropagation", "preventDefault"]));
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
