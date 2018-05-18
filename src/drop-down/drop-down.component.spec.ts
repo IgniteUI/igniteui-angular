@@ -466,7 +466,7 @@ describe("IgxDropDown ", () => {
         });
     });
 
-    fit("End key should select the last enabled item", () => {
+    it("End key should select the last enabled item", () => {
         const fixture = TestBed.createComponent(IgxDropDownTestDisabledComponent);
         fixture.detectChanges();
         const button = fixture.debugElement.query(By.css("button")).nativeElement;
