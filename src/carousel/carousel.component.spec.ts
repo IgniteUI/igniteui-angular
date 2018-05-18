@@ -46,7 +46,7 @@ describe("Carousel", () => {
         expect(carousel.id).toBe("cusrtomCarousel");
         expect(domCarousel.id).toBe("cusrtomCarousel");
     });
-    it("should initialize a carousel with two slides and then destroy it", () => {
+    it("should initialize a carousel with four slides and then destroy it", () => {
         const fixture = TestBed.createComponent(CarouselTestComponent);
         fixture.detectChanges();
 
@@ -63,7 +63,7 @@ describe("Carousel", () => {
         expect(instance.carousel.slides instanceof Array).toBe(true);
         expect(instance.carousel.loop).toBe(true);
         expect(instance.carousel.pause).toBe(true);
-        expect(instance.carousel.slides.length).toEqual(2);
+        expect(instance.carousel.slides.length).toEqual(4);
         expect(instance.carousel.interval).toEqual(2500);
 
         instance.carousel.ngOnDestroy();
@@ -80,16 +80,18 @@ describe("Carousel", () => {
 
         fixture.detectChanges();
 
-        const lastSlide = instance.carousel.get(1);
+        const lastSlide = instance.carousel.get(3);
         const firstSlide = instance.carousel.get(0);
 
         instance.carousel.loop = false;
         fixture.detectChanges();
         instance.carousel.next();
         instance.carousel.next();
+        instance.carousel.next();
         fixture.detectChanges();
         expect(instance.carousel.current).toBe(lastSlide.index);
 
+        instance.carousel.prev();
         instance.carousel.prev();
         instance.carousel.prev();
         fixture.detectChanges();
@@ -130,19 +132,19 @@ describe("Carousel", () => {
         instance.carousel.remove(currentSlide);
 
         fixture.detectChanges();
-        expect(instance.carousel.slides.length).toEqual(1);
+        expect(instance.carousel.slides.length).toEqual(3);
 
         currentSlide = instance.carousel.get(instance.carousel.current);
         instance.carousel.remove(currentSlide);
 
         fixture.detectChanges();
-        expect(instance.carousel.slides.length).toEqual(0);
+        expect(instance.carousel.slides.length).toEqual(2);
 
         instance.carousel.add(currentSlide);
         instance.carousel.add(currentSlide);
 
         fixture.detectChanges();
-        expect(instance.carousel.slides.length).toEqual(2);
+        expect(instance.carousel.slides.length).toEqual(4);
     });
 
     it("Carousel public methods", () => {
@@ -308,10 +310,10 @@ describe("Carousel", () => {
 @Component({
     template: `
         <igx-carousel #carousel [loop]="loop" [pause]="pause" [interval]="interval">
-            <igx-slide><span>1</span></igx-slide>
-            <igx-slide><span>2</span></igx-slide>
-            <igx-slide><span>3</span></igx-slide>
-            <igx-slide><span>4</span></igx-slide>
+            <igx-slide></igx-slide>
+            <igx-slide></igx-slide>
+            <igx-slide></igx-slide>
+            <igx-slide></igx-slide>
         </igx-carousel>
     `
 })
