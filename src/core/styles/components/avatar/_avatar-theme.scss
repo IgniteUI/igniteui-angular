@@ -110,6 +110,9 @@
 
     %igx-avatar-image {
         background-color: --var($theme, 'image-background');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
     }
 
     %igx-avatar-initials {
