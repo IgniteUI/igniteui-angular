@@ -17,7 +17,7 @@ describe("Carousel", () => {
             code: dir,
             key: dir
         });
-        if(!carousel.nativeElement.focused) {
+        if (!carousel.nativeElement.focused) {
             carousel.nativeElement.focus();
         }
         carousel.nativeElement.dispatchEvent(keyboardEvent);
@@ -253,15 +253,15 @@ describe("Carousel", () => {
 
         expect(carousel.current).toEqual(0);
         carousel.pause = true;
-        navigate(carousel, "ArrowRight")
+        navigate(carousel, "ArrowRight");
         fixture.detectChanges();
         expect(carousel.current).toEqual(1);
 
-        navigate(carousel, "ArrowRight")
+        navigate(carousel, "ArrowRight");
         fixture.detectChanges();
         expect(carousel.current).toEqual(2);
 
-        navigate(carousel, "ArrowRight")
+        navigate(carousel, "ArrowRight");
         fixture.detectChanges();
         expect(carousel.current).toEqual(3);
 
@@ -269,11 +269,11 @@ describe("Carousel", () => {
         fixture.detectChanges();
         expect(carousel.current).toEqual(0);
 
-        navigate(carousel, "ArrowLeft")
+        navigate(carousel, "ArrowLeft");
         fixture.detectChanges();
         expect(carousel.current).toEqual(3);
 
-        navigate(carousel, "ArrowLeft")
+        navigate(carousel, "ArrowLeft");
         fixture.detectChanges();
         expect(carousel.current).toEqual(2);
     });
