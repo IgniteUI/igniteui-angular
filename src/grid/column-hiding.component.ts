@@ -1,21 +1,16 @@
 import { CommonModule } from "@angular/common";
 import {
-    AfterContentInit,
-    AfterViewInit,
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ElementRef,
     EventEmitter,
     Input,
     NgModule,
-    OnChanges,
     OnDestroy,
     OnInit,
     Output,
-    QueryList,
     TemplateRef,
-    ViewChild} from "@angular/core";
+    ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { IgxCheckboxModule } from "../checkbox/checkbox.component";
 import { DataUtil } from "../data-operations/data-util";
@@ -36,7 +31,7 @@ export enum ColumnDisplayOrder {
     selector: "igx-column-hiding",
     templateUrl: "./column-hiding.component.html"
 })
-export class IgxColumnHidingComponent implements OnInit, AfterViewInit, OnDestroy {
+export class IgxColumnHidingComponent implements OnInit, OnDestroy {
 
     @Input()
     public showHiddenColumnsCount = true;
@@ -47,8 +42,9 @@ export class IgxColumnHidingComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     set columns(value) {
-        if (value && value !== this._gridColumns) {
+        if (value) {
             this._gridColumns = value;
+            this.createColumnItems();
             this.cdr.markForCheck();
         }
     }
@@ -162,10 +158,10 @@ export class IgxColumnHidingComponent implements OnInit, AfterViewInit, OnDestro
     protected columnChooserInline: TemplateRef<any>;
 
     private _currentColumns = [];
-    private _gridColumns: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
+    private _gridColumns = [];
     private _togglable = true;
     private _filterCriteria = "";
-    private _filterColumnsPrompt = "Filter columns list ..."; // no default value
+    private _filterColumnsPrompt = ""; // "Filter columns list ..."
     private _showHiddenColumnsOnly = false;
     private _hiddenColumnsCount = 0;
     private _title = ""; // no default value
@@ -179,10 +175,6 @@ export class IgxColumnHidingComponent implements OnInit, AfterViewInit, OnDestro
 
     ngOnInit() {
         this.cdr.markForCheck();
-    }
-
-    ngAfterViewInit(): void {
-        this.createColumnItems();
     }
 
     ngOnDestroy() {

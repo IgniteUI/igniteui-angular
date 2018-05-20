@@ -439,6 +439,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.cdr.detectChanges();
     }
 
+    get hiddenColumnsCount() {
+        return this.columnList.filter((col) => col.hidden === true).length;
+    }
+
     public pagingState;
     public calcWidth: number;
     public calcRowCheckboxWidth: number;

@@ -2,15 +2,13 @@
 <ng-container *ngTemplateOutlet="template" ></ng-container>
 
 <ng-template #columnHidingUI>
-    <h4 *ngIf="title.length > 0">{{ title }}</h4><br/>
+    <h4>{{ title }}</h4><br/>
     <div>
         <input type="text" [(ngModel)]="filterCriteria" [placeholder]="filterColumnsPrompt" autocomplete="off" />
     </div>
     <div *ngFor="let columnItem of columnItems">
-        <!-- <igx-column-hiding-item> -->
-            <igx-checkbox igxColumnHidingItem [checked]="columnItem.value" (change)="columnItem.value = !columnItem.value"
-                [disabled]="columnItem.disableHiding">{{ columnItem.name }}</igx-checkbox>
-        <!-- </igx-column-hiding-item> -->
+        <igx-checkbox igxColumnHidingItem [checked]="columnItem.value" (change)="columnItem.value = !columnItem.value"
+            [disabled]="columnItem.disableHiding">{{ columnItem.name }}</igx-checkbox>
     </div>
     <div>
         <button igxButton igxRipple (click)="showAllColumns()" [disabled]="disableShowAll" #buttonShowAll>{{ showAllText }}</button>
