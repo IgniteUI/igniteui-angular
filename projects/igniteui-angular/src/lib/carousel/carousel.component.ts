@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import {
     Component,
+    ElementRef,
     EventEmitter,
     HostBinding,
+    HostListener,
     Input,
     NgModule,
     OnDestroy,
@@ -77,6 +79,11 @@ export class IgxCarouselComponent implements OnDestroy {
         this._restartInterval();
     }
 
+    @HostBinding('attr.tabindex')
+    get tabIndex() {
+        return 0;
+    }
+
     /**
      * Controls whether the carousel should render the left/right navigation buttons.
      *
@@ -139,6 +146,8 @@ export class IgxCarouselComponent implements OnDestroy {
     private _destroyed: boolean;
     private _total = 0;
 
+    constructor(private element: ElementRef) {}
+
     public ngOnDestroy() {
         this._destroyed = true;
         if (this._lastInterval) {
@@ -188,6 +197,10 @@ export class IgxCarouselComponent implements OnDestroy {
      */
     public get isDestroyed(): boolean {
         return this._destroyed;
+    }
+
+    get nativeElement(): any {
+        return this.element.nativeElement;
     }
 
     /**
@@ -338,19 +351,6 @@ export class IgxCarouselComponent implements OnDestroy {
         }
     }
 
-    public onKeydown(event) {
-        switch (event.key) {
-            case 'ArrowLeft':
-                this.prev();
-                break;
-            case 'ArrowRight':
-                this.next();
-                break;
-            default:
-                return;
-        }
-    }
-
     private _moveTo(slide: IgxSlideComponent, direction: Direction) {
         if (this._destroyed) {
             return;
@@ -368,6 +368,7 @@ export class IgxCarouselComponent implements OnDestroy {
 
         this.onSlideChanged.emit({ carousel: this, slide });
         this._restartInterval();
+        requestAnimationFrame(() => this.nativeElement.focus());
     }
 
     private _resetInterval() {
@@ -390,6 +391,16 @@ export class IgxCarouselComponent implements OnDestroy {
                 }
             }, this.interval);
         }
+    }
+
+    @HostListener('keydown.arrowright')
+    public onKeydownArrowRight() {
+        this.next();
+    }
+
+    @HostListener('keydown.arrowleft')
+    public onKeydownArrowLeft() {
+        this.prev();
     }
 }
 
