@@ -593,8 +593,10 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         const displayContainer: HTMLElement = fixture.componentInstance.grid.tbody.nativeElement.querySelector("igx-display-container");
+        const expectedHeight = fixture.debugElement.query(By.css("igx-grid")).nativeElement.getBoundingClientRect().height -
+        grid.nativeElement.querySelector(".igx-grid__thead").getBoundingClientRect().height;
 
-        expect(grid.calcHeight).toEqual(243);
+        expect(grid.calcHeight).toEqual(expectedHeight);
         expect(grid.columns[0].width).toEqual("100px");
 
         // Resize first column
@@ -625,7 +627,7 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         const hScrollVisible = hScroll.offsetWidth < hScroll.children[0].offsetWidth;
 
         // Should 243 - 18, because the horizontal scrollbar has 18px height
-        expect(grid.calcHeight).toEqual(243 - 18);
+        expect(grid.calcHeight).toEqual(expectedHeight - 18);
         expect(hScrollVisible).toBe(true);
 
         discardPeriodicTasks();
