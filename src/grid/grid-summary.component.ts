@@ -77,6 +77,7 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
     protected subscriptionOnAdd$;
     protected subscriptionOnDelete$;
     protected subscriptionOnFilter$;
+    public summaryItemHeight;
     public itemClass = "igx-grid-summary__item";
     private hiddenItemClass = "igx-grid-summary__item--inactive";
     private summaryResultClass = "igx-grid-summary-item__result--left-align";
@@ -126,6 +127,7 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
             this.subscriptionOnDelete$ = this.gridAPI.get(this.gridID).onRowDeleted.subscribe(() => this.clearAll());
         }
         this.displayDensity = this.gridAPI.get(this.gridID).displayDensity;
+        this.summaryItemHeight = this.gridAPI.get(this.gridID).defaultRowHeight;
     }
 
     @autoWire(true)

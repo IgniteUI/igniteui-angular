@@ -1076,7 +1076,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 maxSummaryLength = currentLength;
             }
         });
-        return maxSummaryLength * (this.tfoot.nativeElement.clientHeight ? this.tfoot.nativeElement.clientHeight : DEFAULT_SUMMARY_HEIGHT);
+        return maxSummaryLength * (this.tfoot.nativeElement.clientHeight ? this.tfoot.nativeElement.clientHeight : this.defaultRowHeight);
     }
 
     protected calculateGridSizes() {
