@@ -17,6 +17,9 @@ describe("IgxGrid - GropBy", () => {
     const COLUMN_HEADER_CLASS = ".igx-grid__th";
     const CELL_CSS_CLASS = ".igx-grid__td";
     const FIXED_CELL_CSS = "igx-grid__th--pinned";
+    const SORTING_ICON_NONE_CONTENT = "none";
+    const SORTING_ICON_ASC_CONTENT = "arrow_upward";
+    const SORTING_ICON_DESC_CONTENT = "arrow_downward";
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -304,7 +307,7 @@ describe("IgxGrid - GropBy", () => {
         checkGroups(groupRows, [null, "", "Ignite UI for Angular", "Ignite UI for JavaScript", "NetAdvantage" ]);
 
     });
-    it("should remove grouping when already grouped columnn is sorted with order 'None'.", () => {
+    it("should remove grouping when already grouped columnn is sorted with order 'None' via the API.", () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableSorting = true;
@@ -331,6 +334,34 @@ describe("IgxGrid - GropBy", () => {
         expect(dataRows.length).toEqual(8);
 
     });
+    it("should disallow setting sorting state None to grouped column when sorting via the UI.", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableSorting = true;
+        fix.detectChanges();
+        grid.groupBy("Downloads", SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        // click header
+        headers[0].triggerEventHandler("click", new Event("click"));
+        fix.detectChanges();
+
+        const sortingIcon = fix.debugElement.query(By.css(".sort-icon"));
+        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
+
+        // click header again
+        headers[0].triggerEventHandler("click", new Event("click"));
+        fix.detectChanges();
+
+        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_DESC_CONTENT);
+
+        // click header again
+        headers[0].triggerEventHandler("click", new Event("click"));
+        fix.detectChanges();
+        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
+
+    });
     it("should group by the specified field when grouping by an already sorted field.", () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -352,7 +383,7 @@ describe("IgxGrid - GropBy", () => {
             [width]='width'
             [height]='height'
             [data]="data"
-            [autoGenerate]="true">
+            [autoGenerate]="true" (onColumnInit)="columnsCreated($event)">
         </igx-grid>
     `
 })
@@ -426,7 +457,7 @@ export class DefaultGridComponent {
         }
     ];
 
-    public columnCreated(column: IgxColumnComponent) {
+    public columnsCreated(column: IgxColumnComponent) {
         column.sortable = this.enableSorting;
     }
 }

@@ -45,8 +45,8 @@ import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { ISummaryExpression } from "./grid-summary";
 import { IgxGroupByRowTemplateDirective } from "./grid.common";
-import { IgxGridGroupByRowComponent } from "./groupby-row.component";
 import { IgxGridSortingPipe } from "./grid.pipes";
+import { IgxGridGroupByRowComponent } from "./groupby-row.component";
 import { IgxGridRowComponent } from "./row.component";
 
 let NEXT_ID = 0;
@@ -796,7 +796,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._toggleGroup(groupRow);
     }
 
-    public isGroupByRecord(record: any):boolean {
+    public isGroupByRecord(record: any): boolean {
         // return record.records instance of GroupedRecords fails under Webpack
         return record.records && record.records.length;
     }
