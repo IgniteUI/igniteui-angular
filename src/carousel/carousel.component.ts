@@ -406,13 +406,13 @@ export class IgxCarouselComponent implements OnDestroy {
         }
     }
 
-    @HostListener("keydown.arrowright", ["$event"])
-    public onKeydownArrowRight(event) {
+    @HostListener("keydown.arrowright")
+    public onKeydownArrowRight() {
         this.next();
     }
 
-    @HostListener("keydown.arrowleft", ["$event"])
-    public onKeydownArrowLeft(event) {
+    @HostListener("keydown.arrowleft")
+    public onKeydownArrowLeft() {
         this.prev();
     }
 }
