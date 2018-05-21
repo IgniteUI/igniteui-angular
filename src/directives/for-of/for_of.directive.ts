@@ -209,13 +209,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const value = changes[forOf].currentValue;
             if (!this._differ && value) {
                 try {
-                    if (this.igxForScrollOrientation === "horizontal" && !this.ngForTrackBy) {
-                        this.ngForTrackBy = (index: number, item: any) => {
-                            // track width option change by default if no other trackBy func is defined
-                            return item.width;
-                        };
-                    }
-                    this._differ = this._differs.find(value).create(this.ngForTrackBy);
+                    this._differ = this._differs.find(value).create(this.igxForTrackBy);
                 } catch (e) {
                     throw new Error(
                         `Cannot find a differ supporting object "${value}" of type "${getTypeNameForDebugging(value)}".
@@ -537,8 +531,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return false;
     }
 
-    get ngForTrackBy(): TrackByFunction<T> { return this._trackByFn; }
-    set ngForTrackBy(fn: TrackByFunction<T>) { this._trackByFn = fn; }
+    @Input()
+    get igxForTrackBy(): TrackByFunction<T> { return this._trackByFn; }
+    set igxForTrackBy(fn: TrackByFunction<T>) { this._trackByFn = fn; }
 
     protected _applyChanges(changes: IterableChanges<T>) {
         this.applyChunkSizeChange();
