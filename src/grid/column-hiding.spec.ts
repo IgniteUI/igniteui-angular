@@ -11,7 +11,7 @@ import { IgxColumnComponent } from "./column.component";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-describe("Column Hiding UI", () => {
+fdescribe("Column Hiding UI", () => {
     let fix;
     let grid: IgxGridComponent;
     let columnChooser: IgxColumnHidingComponent;
@@ -604,7 +604,7 @@ describe("Column Hiding UI", () => {
         });
 
         xit("is not shown by default.", () => {
-            columnChooser = grid.toolbarHidingUI;
+            columnChooser = grid.columnHidingUI;
             expect(columnChooser).toBeUndefined();
             expect(columnChooserElement).toBe(null);
         });
@@ -613,26 +613,26 @@ describe("Column Hiding UI", () => {
             grid.columnHiding = true;
             fix.detectChanges();
 
-            expect(grid.toolbarHidingUI).toBeDefined();
+            expect(grid.columnHidingUI).toBeDefined();
             expect(columnChooserElement).toBeDefined();
             expect(getColumnChooserButton()).not.toBe(null);
 
             grid.columnHiding = false;
             fix.detectChanges();
 
-            expect(grid.toolbarHidingUI).toBeUndefined();
+            expect(grid.columnHidingUI).toBeUndefined();
             expect(columnChooserElement).toBe(null);
             expect(getColumnChooserButton()).toBe(null);
 
             grid.columnHiding = undefined;
             fix.detectChanges();
 
-            expect(grid.toolbarHidingUI).toBeUndefined();
+            expect(grid.columnHidingUI).toBeUndefined();
             expect(columnChooserElement).toBe(null);
         });
 
         xit("shows the number of hidden columns.", fakeAsync(() => {
-            grid.toolbarHidingUI.togglable = true;
+            grid.columnHidingUI.togglable = true;
             tick(100);
             fix.detectChanges();
 
@@ -642,7 +642,7 @@ describe("Column Hiding UI", () => {
         }));
 
         xit("shows the proper icon when no columns are hidden.", fakeAsync(() => {
-            grid.toolbarHidingUI.togglable = true;
+            grid.columnHidingUI.togglable = true;
             grid.columns[2].hidden = false;
             tick(100);
             fix.detectChanges();

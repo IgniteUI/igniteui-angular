@@ -298,6 +298,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public emptyGridMessage = "No records found.";
 
+    @Input()
+    public columnHidingTitle = "";
+
     @Output()
     public onCellClick = new EventEmitter<IGridCellEventArgs>();
 
@@ -392,8 +395,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild("tfoot")
     public tfoot: ElementRef;
 
-    @ViewChild("toolbarHidingUI")
-    public toolbarHidingUI: IgxColumnHidingComponent;
+    @ViewChild("columnHidingUI")
+    public columnHidingUI: IgxColumnHidingComponent;
 
     @HostBinding("attr.tabindex")
     public tabindex = 0;
@@ -454,7 +457,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public eventBus = new Subject<boolean>();
 
     public allRowsSelected = false;
-    public columnHidingTitle = "";
 
     public lastSearchInfo: ISearchInfo = {
         searchText: "",
@@ -580,16 +582,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public showColumnHidingUI() {
-        if (this.toolbarHidingUI) {
-            this.toolbarHidingUI.toggle.open(true);
-            this.toolbarHidingUI.dialogShowing = true;
+        if (this.columnHidingUI) {
+            this.columnHidingUI.toggle.open(true);
+            this.columnHidingUI.dialogShowing = true;
         }
     }
 
     public hideColumnHidingUI() {
-        if (this.toolbarHidingUI) {
-            this.toolbarHidingUI.toggle.close(true);
-            this.toolbarHidingUI.dialogShowing = false;
+        if (this.columnHidingUI) {
+            this.columnHidingUI.toggle.close(true);
+            this.columnHidingUI.dialogShowing = false;
         }
     }
 
