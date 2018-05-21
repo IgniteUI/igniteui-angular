@@ -7,7 +7,7 @@ import { IgxDateSummaryOperand, IgxNumberSummaryOperand } from "./grid-summary";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-fdescribe("IgxGrid - Summaries", () => {
+describe("IgxGrid - Summaries", () => {
     const SUMMARY_CLASS = ".igx-grid-summary";
     const SUMMARY_LABEL_CLASS = ".igx-grid-summary__label";
     const SUMMARY_VALUE_CLASS = ".igx-grid-summary__result";
@@ -410,7 +410,6 @@ fdescribe("IgxGrid - Summaries", () => {
 
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            debugger;
             rowsRendered = fixture.nativeElement.querySelectorAll("igx-grid-row");
             tbody = grid.nativeElement.querySelector(".igx-grid__tbody").getBoundingClientRect().height;
             expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight);
@@ -438,7 +437,7 @@ fdescribe("IgxGrid - Summaries", () => {
         });
     }));
 
-    fit("should render correct data after hiding one bigger and then one smaller summary when scrolled to the bottom",  async(() => {
+    it("should render correct data after hiding one bigger and then one smaller summary when scrolled to the bottom",  async(() => {
         const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
         fixture.detectChanges();
 
@@ -455,7 +454,6 @@ fdescribe("IgxGrid - Summaries", () => {
             rowsRendered = fixture.nativeElement.querySelectorAll("igx-grid-row");
             tbody = grid.nativeElement.querySelector(".igx-grid__tbody").getBoundingClientRect().height;
             expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight);
-            debugger;
             expect(rowsRendered.length).toEqual(expectedRowLenght);
 
             grid.disableSummaries(["ProductName", "InStock", "UnitsInStock"]);
