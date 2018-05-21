@@ -18,7 +18,7 @@ import { FilteringCondition } from "../data-operations/filtering-condition";
 import { filteringStateDefaults } from "../data-operations/filtering-state.interface";
 import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxToggleDirective, IgxToggleModule } from "../directives/toggle/toggle.directive";
-import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from "./column-hiding-item.component";
+import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from "./column-hiding-item.directive";
 import { IgxColumnComponent } from "./column.component";
 
 export enum ColumnDisplayOrder {

@@ -40,7 +40,7 @@ import { IActiveHighlightInfo, IgxTextHighlightDirective } from "../directives/t
 import { IgxCheckboxComponent } from "./../checkbox/checkbox.component";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
-import { IColumnVisibilityChangedEventArgs } from "./column-hiding-item.component";
+import { IColumnVisibilityChangedEventArgs } from "./column-hiding-item.directive";
 import { IgxColumnHidingComponent } from "./column-hiding.component";
 import { IgxColumnComponent } from "./column.component";
 import { ISummaryExpression } from "./grid-summary";
@@ -446,6 +446,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.columnList.filter((col) => col.hidden === true).length;
     }
 
+    @Input()
+    get hiddenColumnsText() {
+        return this._hiddenColumnsText;
+    }
+
+    set hiddenColumnsText(value) {
+        this._hiddenColumnsText = value;
+    }
+
     public pagingState;
     public calcWidth: number;
     public calcRowCheckboxWidth: number;
@@ -484,6 +493,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private columnListDiffer;
     private _height = "100%";
     private _width = "100%";
+    private _hiddenColumnsText = "";
 
     constructor(
         private gridAPI: IgxGridAPIService,

@@ -5,7 +5,7 @@ import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { Calendar } from "../calendar";
 import { IgxCheckboxComponent } from "../checkbox/checkbox.component";
-import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from "./column-hiding-item.component";
+import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from "./column-hiding-item.directive";
 import { IgxColumnHidingComponent, IgxColumnHidingModule } from "./column-hiding.component";
 import { IgxColumnComponent } from "./column.component";
 import { IgxGridComponent } from "./grid.component";
