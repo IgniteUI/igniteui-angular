@@ -28,6 +28,8 @@ export interface ISelectTabEventArgs {
     panel: IgxTabPanelComponent;
 }
 
+let NEXT_ID = 0;
+
 @Directive({
     selector: "[igxTab]"
 })
@@ -51,7 +53,6 @@ export class IgxTabTemplateDirective {
  * </igx-bottom-nav>
  * ```
  */
-let NEXT_ID = 0;
 @Component({
     selector: "igx-tab-bar, igx-bottom-nav",
     templateUrl: "tab-bar-content.component.html"

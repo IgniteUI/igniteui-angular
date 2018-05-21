@@ -24,6 +24,7 @@ import { IgxNavigationService, IToggleView } from "../core/navigation";
 import { HammerGesturesManager } from "../core/touch";
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from "./navigation-drawer.directives";
 
+let NEXT_ID = 0;
 /**
  * **Ignite UI for Angular Navigation Drawer** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer.html)
@@ -44,7 +45,6 @@ import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from
  * </igx-nav-drawer>
  * ```
  */
-let NEXT_ID = 0;
 @Component({
     providers: [HammerGesturesManager],
     selector: "igx-nav-drawer",

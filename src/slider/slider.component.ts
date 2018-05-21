@@ -34,6 +34,9 @@ export interface ISliderValueChangeEventArgs {
 
 const noop = () => {
 };
+
+let NEXT_ID = 0;
+
 /**
  * **Ignite UI for Angular Slider** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/slider.html)
@@ -49,7 +52,6 @@ const noop = () => {
  * </igx-slider>
  * ```
  */
-let NEXT_ID = 0;
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSliderComponent, multi: true }],
     selector: "igx-slider",

@@ -1,6 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { IgxIconService } from "./icon.service";
+
+let NEXT_ID = 0;
 /**
  * **Ignite UI for Angular Icon** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon.html)
@@ -15,7 +17,6 @@ import { IgxIconService } from "./icon.service";
  * </igx-icon>
  * ```
  */
-let NEXT_ID = 0;
 @Component({
     selector: "igx-icon",
     templateUrl: "icon.component.html"

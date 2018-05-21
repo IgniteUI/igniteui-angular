@@ -18,6 +18,8 @@ import {
     Output
 } from "@angular/core";
 import { fadeIn, fadeOut, slideInBottom, slideOutBottom } from "../animations/main";
+
+let NEXT_ID = 0;
 /**
  * **Ignite UI for Angular Snackbar** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/snackbar.html)
@@ -34,7 +36,6 @@ import { fadeIn, fadeOut, slideInBottom, slideOutBottom } from "../animations/ma
  * </div>
  * ```
  */
-let NEXT_ID = 0;
 @Component({
     animations: [
         trigger("slideInOut", [

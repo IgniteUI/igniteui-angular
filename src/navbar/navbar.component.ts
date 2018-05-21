@@ -10,6 +10,8 @@ import {
 } from "@angular/core";
 import { IgxButtonModule } from "../directives/button/button.directive";
 import { IgxIconModule } from "../icon";
+
+let NEXT_ID = 0;
 /**
  * **Ignite UI for Angular Navbar** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navbar.html)
@@ -27,7 +29,6 @@ import { IgxIconModule } from "../icon";
  * ```
  */
 
-let NEXT_ID = 0;
 @Component({
     selector: "igx-navbar",
     templateUrl: "navbar.component.html"

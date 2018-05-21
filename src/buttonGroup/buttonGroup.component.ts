@@ -14,6 +14,7 @@ import { IgxRippleModule } from "../directives/ripple/ripple.directive";
 import { IgxIconModule } from "../icon";
 
 export enum ButtonGroupAlignment { horizontal, vertical }
+let NEXT_ID = 0;
 
 /**
  * **Ignite UI for Angular Button Group** -
@@ -35,7 +36,6 @@ export enum ButtonGroupAlignment { horizontal, vertical }
  *   { icon: 'format_underlined', selected: false }];
  * ```
  */
-let NEXT_ID = 0;
 @Component({
     selector: "igx-buttongroup",
     templateUrl: "buttongroup-content.component.html"
