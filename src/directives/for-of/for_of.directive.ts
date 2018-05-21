@@ -596,19 +596,23 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     0
                 ) + 1;
                 chunkSize = endIndex - this.state.startIndex;
-                chunkSize = chunkSize > this.igxForOf.length ? this.igxForOf.length : chunkSize;
+                if (this.igxForOf && chunkSize > this.igxForOf.length) {
+                    chunkSize = this.igxForOf.length;
+                }
             } else {
                 chunkSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
                     parseInt(this.igxForItemSize, 10));
                 if (chunkSize !== 0 && !this._isScrolledToBottom) {
                     chunkSize ++;
                 }
-                if (chunkSize > this.igxForOf.length) {
+                if (this.igxForOf && chunkSize > this.igxForOf.length) {
                     chunkSize = this.igxForOf.length;
                 }
             }
         } else {
-            chunkSize = this.igxForOf.length;
+            if (this.igxForOf) {
+                chunkSize = this.igxForOf.length;
+            }
         }
         return chunkSize;
     }
@@ -646,7 +650,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     private _recalcScrollBarSize() {
-        const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
+        var count = this.isRemote ? this.totalItemCount : (this.igxForOf ? this.igxForOf.length : 0);
         this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
         if (this.igxForScrollOrientation === "horizontal") {
             const totalWidth = this.igxForContainerSize ? this.initHCache(this.igxForOf) : 0;
@@ -659,7 +663,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     private _calcHeight(): number {
-        const count = this.totalItemCount || this.igxForOf.length;
+        const count = this.totalItemCount || (this.igxForOf ? this.igxForOf.length : 0);
         let height = count * parseInt(this.igxForItemSize, 10);
         this._virtHeight = height;
         if (height > this._maxHeight) {
@@ -698,7 +702,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /** If there exists an element that we can create embedded view for creates it, appends it and updates chunkSize */
     protected addLastElem() {
         let elemIndex = this.state.startIndex + this.state.chunkSize;
-        if (elemIndex > this.igxForOf.length) {
+        if (!this.igxForOf || elemIndex > this.igxForOf.length) {
             return;
         }
 
