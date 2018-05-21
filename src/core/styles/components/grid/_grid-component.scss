@@ -63,6 +63,25 @@
         @extend %grid-row--group !optional;
     }
 
+    @include e(groupLabel) {
+        @extend %grid__groupLabel !optional;
+    }
+
+    @include e(groupCount) {
+        @extend %grid__groupCount !optional;
+    }
+
+    @include e(groupContent) {
+        @extend %grid__groupContent !optional;
+    }
+    @include e(groupContent) {
+        @extend %grid__groupContent !optional;
+    }
+    @include e(groupIndentation) {
+        @extend %grid__groupIndentation !optional;
+    }
+
+
     @include e(th) {
         @extend %grid-cell-display !optional;
         @extend %grid-cell-header !optional;

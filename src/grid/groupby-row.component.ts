@@ -23,6 +23,7 @@ import { IgxColumnComponent } from "./column.component";
 import { autoWire, IGridBus } from "./grid.common";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridRowComponent } from "./row.component";
+import { IgxBadgeComponent } from "../badge/badge.component"
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

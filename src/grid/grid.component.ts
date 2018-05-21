@@ -459,7 +459,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _groupRowTemplate: TemplateRef<any>;
     private _filteredData = null;
     private resizeHandler;
-    private scrollHandler;
     private columnListDiffer;
     private _height = "100%";
     private _width = "100%";
@@ -478,17 +477,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.resizeHandler = () => {
             this.calculateGridSizes();
             this.zone.run(() => this.markForCheck());
-        };
-
-        this.scrollHandler = (evt) => {
-            const target = evt.target;
-            if (this.groupedRowList.length > 0) {
-                const groupRows = this.groupedRowList.toArray();
-                const left = target.scrollLeft;
-                for (const row of groupRows) {
-                    row.element.nativeElement.style.left = - left + "px";
-                }
-            }
         };
     }
 
@@ -550,7 +538,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public ngAfterViewInit() {
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.addEventListener("resize", this.resizeHandler);
-            this.parentVirtDir.getHorizontalScroll().addEventListener("scroll", this.scrollHandler);
         });
         this._derivePossibleWidth();
         this.calculateGridSizes();

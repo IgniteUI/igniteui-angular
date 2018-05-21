@@ -30,6 +30,7 @@ import { IgxGridComponent } from "./grid.component";
 import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridGroupingPipe, IgxGridPagingPipe, IgxGridSortingPipe } from "./grid.pipes";
 import { IgxGridGroupByRowComponent } from "./groupby-row.component";
 import { IgxGridRowComponent } from "./row.component";
+import {  IgxBadgeModule } from "../badge/badge.component"
 
 @NgModule({
   declarations: [
@@ -84,7 +85,8 @@ import { IgxGridRowComponent } from "./row.component";
     IgxForOfModule,
     IgxFocusModule,
     IgxTextSelectionModule,
-    IgxCheckboxModule
+    IgxCheckboxModule,
+    IgxBadgeModule
   ],
   providers: [IgxGridAPIService, IgxSelectionAPIService]
 })
