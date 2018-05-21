@@ -34,7 +34,7 @@ import { cloneArray } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
 import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
 import { IGroupByExpandState } from "../data-operations/groupby-expand-state.interface";
-import { IGroupByRecord } from "../data-operations/groupby-record.interface";
+import { GroupedRecords, IGroupByRecord } from "../data-operations/groupby-record.interface";
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
 import { IForOfState } from "../directives/for-of/IForOfState";
@@ -760,6 +760,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public toggleGroup(groupRow: IGroupByRecord) {
         this._toggleGroup(groupRow);
+    }
+
+    public isGroupByRecord(record: any):boolean {
+        // return record.records instance of GroupedRecords fails under Webpack
+        return record.records && record.records.length;
     }
 
     public filter(...rest): void {

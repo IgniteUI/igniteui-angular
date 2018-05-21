@@ -4,7 +4,7 @@ import { DataType } from "../../lib/data-operations/data-util";
 import { IgxButtonDirective } from "../../lib/directives/button/button.directive";
 import { IgxColumnComponent } from "../../lib/grid/column.component";
 import { IgxGridComponent } from "../../lib/grid/grid.component";
-import { SortingDirection } from "../../lib/main";
+import { SortingDirection, ISortingExpression } from "../../lib/main";
 
 @Component({
 	providers: [],
@@ -62,6 +62,15 @@ export class GridGroupBySampleComponent {
 	}
 
 	groupBy(name: string) {
+		let expressions = this.grid1.groupingExpressions;
+		for (let i = 0; i < expressions.length; i++) {
+			let gr:ISortingExpression = expressions[i];
+			if (gr.fieldName === name) {
+				expressions.splice(i, 1);
+				this.grid1.groupBy(expressions);
+				return;
+			}
+		}
 		this.grid1.groupBy(name, SortingDirection.Asc, false);
 	}
 
