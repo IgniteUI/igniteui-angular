@@ -7,13 +7,13 @@ import { IgxDateSummaryOperand, IgxNumberSummaryOperand } from "./grid-summary";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-describe("IgxGrid - Summaries", () => {
+fdescribe("IgxGrid - Summaries", () => {
     const SUMMARY_CLASS = ".igx-grid-summary";
     const SUMMARY_LABEL_CLASS = ".igx-grid-summary__label";
     const SUMMARY_VALUE_CLASS = ".igx-grid-summary__result";
     const ITEM_CLASS = "igx-grid-summary__item";
     const HIDDEN_ITEM_CLASS = "igx-grid-summary__item--inactive";
-    const INITIAL_SUMMARY_SIZE = 36.36;
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -37,14 +37,17 @@ describe("IgxGrid - Summaries", () => {
         const grid = fixture.componentInstance.grid1;
         expect(grid.hasSummarizedColumns).toBe(false);
         let tFoot = fixture.debugElement.query(By.css(".igx-grid__tfoot")).nativeElement.getBoundingClientRect().height;
-        expect(tFoot < INITIAL_SUMMARY_SIZE).toBe(true);
+        expect(tFoot < grid.defaultRowHeight).toBe(true);
 
         grid.enableSummaries([{fieldName: "ProductName"}, {fieldName: "ProductID"}]);
         fixture.detectChanges();
 
-        const summaryLength = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS)).length;
         const summaries = fixture.debugElement.queryAll(By.css("igx-grid-summary"));
-
+        let summaryLength = 0;
+        summaries.forEach((summary) => {
+            if (summary.children.length > 0) {
+                summaryLength++;
+            }});
         expect(grid.hasSummarizedColumns).toBe(true);
 
         tFoot = fixture.debugElement.query(By.css(".igx-grid__tfoot")).nativeElement.getBoundingClientRect().height;
@@ -54,7 +57,7 @@ describe("IgxGrid - Summaries", () => {
         expect(grid.getColumnByName("ProductName").hasSummary).toBe(true);
         expect(grid.getColumnByName("OrderDate").hasSummary).toBe(false);
 
-        const expectedLength = calcMaxSummaryHeight(grid.columnList, summaries);
+        const expectedLength = calcMaxSummaryHeight(grid.columnList, summaries, grid.defaultRowHeight);
         expect(tFoot >= expectedLength).toBe(true);
     });
     it("should disableSummaries through grid API ", () => {
@@ -72,6 +75,7 @@ describe("IgxGrid - Summaries", () => {
         fixture.detectChanges();
 
         expect(fixture.debugElement.query(By.css(SUMMARY_CLASS))).toBeNull();
+        expect(grid.hasSummarizedColumns).toBe(false);
     });
     it("should have summary per each column that 'hasSummary'= true", () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
@@ -81,7 +85,7 @@ describe("IgxGrid - Summaries", () => {
 
         let summaries = 0;
         const summariedColumns = fixture.componentInstance.grid1.columnList.filter((col) => col.hasSummary === true).length;
-        summaries = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS)).length;
+        summaries = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS)).filter((summary) => summary.children.length > 0).length;
         expect(summaries).toBe(summariedColumns);
     });
     it("should have count summary for string and boolean data types", () => {
@@ -168,11 +172,13 @@ describe("IgxGrid - Summaries", () => {
         let countValue;
         summaries.forEach((summary) => {
             const countLabel = summary.query(By.css("[title='Count']"));
-            if (countValue) {
-                const temp = countLabel.nativeElement.nextSibling.innerText;
-                expect(countValue).toBe(temp);
-            } else {
-                countValue = countLabel.nativeElement.nextSibling.innerText;
+            if (countLabel) {
+                if (countValue) {
+                    const temp = countLabel.nativeElement.nextSibling.innerText;
+                    expect(countValue).toBe(temp);
+                } else {
+                    countValue = countLabel.nativeElement.nextSibling.innerText;
+                }
             }
         });
         expect(+countValue).toBe(grid.rowList.length);
@@ -185,11 +191,13 @@ describe("IgxGrid - Summaries", () => {
         let updatedValue;
         summaries.forEach((summary) => {
             const countLabel = summary.query(By.css("[title='Count']"));
-            if (updatedValue) {
-                const temp = countLabel.nativeElement.nextSibling.innerText;
-                expect(updatedValue).toBe(temp);
-            } else {
-                updatedValue = countLabel.nativeElement.nextSibling.innerText;
+            if (countLabel) {
+                if (updatedValue) {
+                    const temp = countLabel.nativeElement.nextSibling.innerText;
+                    expect(updatedValue).toBe(temp);
+                } else {
+                    updatedValue = countLabel.nativeElement.nextSibling.innerText;
+                }
             }
         });
 
@@ -205,11 +213,13 @@ describe("IgxGrid - Summaries", () => {
         let countValue;
         summaries.forEach((summary) => {
             const countLabel = summary.query(By.css("[title='Count']"));
-            if (countValue) {
-                const temp = countLabel.nativeElement.nextSibling.innerText;
-                expect(countValue).toBe(temp);
-            } else {
-                countValue = countLabel.nativeElement.nextSibling.innerText;
+            if (countLabel) {
+                if (countValue) {
+                    const temp = countLabel.nativeElement.nextSibling.innerText;
+                    expect(countValue).toBe(temp);
+                } else {
+                    countValue = countLabel.nativeElement.nextSibling.innerText;
+                }
             }
         });
         expect(+countValue).toBe(grid.rowList.length);
@@ -220,11 +230,13 @@ describe("IgxGrid - Summaries", () => {
         let updatedValue;
         summaries.forEach((summary) => {
             const countLabel = summary.query(By.css("[title='Count']"));
-            if (updatedValue) {
-                const temp = countLabel.nativeElement.nextSibling.innerText;
-                expect(updatedValue).toBe(temp);
-            } else {
-                updatedValue = countLabel.nativeElement.nextSibling.innerText;
+            if (countLabel) {
+                if (updatedValue) {
+                    const temp = countLabel.nativeElement.nextSibling.innerText;
+                    expect(updatedValue).toBe(temp);
+                } else {
+                    updatedValue = countLabel.nativeElement.nextSibling.innerText;
+                }
             }
         });
         expect(+updatedValue).toBe(grid.rowList.length);
@@ -241,11 +253,13 @@ describe("IgxGrid - Summaries", () => {
         let countValue;
         summaries.forEach((summary) => {
             const countLabel = summary.query(By.css("[title='Count']"));
-            if (countValue) {
-                const temp = countLabel.nativeElement.nextSibling.innerText;
-                expect(countValue).toBe(temp);
-            } else {
-                countValue = countLabel.nativeElement.nextSibling.innerText;
+            if (countLabel) {
+                if (countValue) {
+                    const temp = countLabel.nativeElement.nextSibling.innerText;
+                    expect(countValue).toBe(temp);
+                } else {
+                    countValue = countLabel.nativeElement.nextSibling.innerText;
+                }
             }
         });
         expect(+countValue).toBe(grid.rowList.length);
@@ -267,7 +281,7 @@ describe("IgxGrid - Summaries", () => {
         const oldMaxValue = 20000;
         const newMaxValue = 99000;
         const grid = fixture.componentInstance.grid1;
-        const summariesUnitOfStock = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS))[2];
+        const summariesUnitOfStock = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS))[3];
         const unitsInStockCell = grid.getCellByColumn(0, "UnitsInStock");
 
         let maxValue = summariesUnitOfStock.query(By.css("[title='Max']")).nativeElement.nextSibling.innerText;
@@ -284,14 +298,15 @@ describe("IgxGrid - Summaries", () => {
 
         const grid = fixture.componentInstance.grid1;
         const summariedColumns = grid.columnList.filter((col) => col.hasSummary === true).length;
-        let displayedSummaries = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS)).length;
+        let displayedSummaries = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS))
+        .filter((summary) => summary.children.length > 0).length;
         expect(displayedSummaries).toBe(summariedColumns);
 
         grid.pinColumn("UnitsInStock");
         grid.pinColumn("ProductID");
         fixture.detectChanges();
 
-        displayedSummaries = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS)).length;
+        displayedSummaries = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS)).filter((summary) => summary.children.length > 0).length;
         expect(displayedSummaries).toBe(summariedColumns);
 
     });
@@ -300,11 +315,11 @@ describe("IgxGrid - Summaries", () => {
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid1;
         const summaries = fixture.debugElement.queryAll(By.css("igx-grid-summary"));
-        const footerRow = fixture.debugElement.query(By.css(".igx-grid__tfoot")).query(By.css(".igx-grid__tr"))
-        .nativeElement.style["height"].match(/\d+\.+\d/);
+        const footerRow = fixture.debugElement.query(By.css(".igx-grid__tfoot")).query(By.css(".igx-grid__summaries"))
+        .nativeElement.getBoundingClientRect().height;
         const tfootSize = +footerRow;
 
-        const expectedHeight = calcMaxSummaryHeight(grid.columnList, summaries);
+        const expectedHeight = calcMaxSummaryHeight(grid.columnList, summaries, grid.defaultRowHeight);
 
         expect(tfootSize).toBe(expectedHeight);
     });
@@ -381,87 +396,107 @@ describe("IgxGrid - Summaries", () => {
             done();
         });
     });
-    it("should render correct data after hiding all summaries when scrolled to the bottom",  (done) => {
+
+    it("should render correct data after hiding all summaries when scrolled to the bottom",  async(() => {
         const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid1;
         const summariedColumns = ["ProductName", "InStock", "UnitsInStock", "OrderDate"];
-
+        let rowsRendered;
+        let tbody;
+        let expectedRowLenght;
         fixture.componentInstance.scrollTop(10000);
-        fixture.detectChanges();
 
-        let rowsRendered = fixture.nativeElement.querySelectorAll("igx-grid-row");
-        expect(rowsRendered.length).toEqual(9);
-
-        setTimeout(() => {
-            grid.disableSummaries(summariedColumns);
+        fixture.whenStable().then(() => {
             fixture.detectChanges();
+            debugger;
+            rowsRendered = fixture.nativeElement.querySelectorAll("igx-grid-row");
+            tbody = grid.nativeElement.querySelector(".igx-grid__tbody").getBoundingClientRect().height;
+            expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight);
 
+            expect(rowsRendered.length).toEqual(expectedRowLenght);
+            grid.disableSummaries(summariedColumns);
+            return fixture.whenStable();
+        }).then(() => {
             setTimeout(() => {
+                fixture.detectChanges();
                 rowsRendered = Array.from(fixture.nativeElement.querySelectorAll("igx-grid-row"));
+                tbody = grid.nativeElement.querySelector(".igx-grid__tbody").getBoundingClientRect().height;
+                expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight);
+
+                fixture.detectChanges();
                 const firstCells = rowsRendered.map((item) => {
                     return item.querySelectorAll("igx-grid-cell")[0];
                 });
-                expect(rowsRendered.length).toEqual(12);
+                expect(rowsRendered.length).toEqual(expectedRowLenght);
 
                 for (let i = 0; i < rowsRendered.length - 1; i++) {
-                    expect(firstCells[i].textContent.trim()).toEqual((i + 9).toString());
+                    expect(firstCells[i].textContent.trim()).toEqual((grid.rowList.length - expectedRowLenght).toString());
                 }
-
-                done();
-            });
+            }, 100);
         });
-    });
-    it("should render correct data after hiding one bigger and then one smaller summary when scrolled to the bottom",  (done) => {
+    }));
+
+    fit("should render correct data after hiding one bigger and then one smaller summary when scrolled to the bottom",  async(() => {
         const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid1;
         const summariedColumns = ["ProductName", "InStock", "UnitsInStock", "OrderDate"];
-
+        let rowsRendered;
+        let tbody;
+        let expectedRowLenght;
+        let firstCellsText;
         fixture.componentInstance.scrollTop(10000);
-        fixture.detectChanges();
 
-        let rowsRendered = fixture.nativeElement.querySelectorAll("igx-grid-row");
-        expect(rowsRendered.length).toEqual(9);
-
-        setTimeout(() => {
+        fixture.whenStable().then(() => {
             fixture.detectChanges();
+            rowsRendered = fixture.nativeElement.querySelectorAll("igx-grid-row");
+            tbody = grid.nativeElement.querySelector(".igx-grid__tbody").getBoundingClientRect().height;
+            expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight);
+            debugger;
+            expect(rowsRendered.length).toEqual(expectedRowLenght);
 
             grid.disableSummaries(["ProductName", "InStock", "UnitsInStock"]);
-
+            return fixture.whenStable();
+        }).then(() => {
             setTimeout(() => {
                 fixture.detectChanges();
 
                 rowsRendered = Array.from(fixture.nativeElement.querySelectorAll("igx-grid-row"));
-                let firstCellsText = rowsRendered.map((item) => {
+                tbody = grid.nativeElement.querySelector(".igx-grid__tbody").getBoundingClientRect().height;
+                expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight);
+
+                firstCellsText = rowsRendered.map((item) => {
                     return item.querySelectorAll("igx-grid-cell")[0].textContent.trim();
                 });
-                expect(rowsRendered.length).toEqual(9);
+                expect(rowsRendered.length).toEqual(expectedRowLenght);
 
                 for (let i = 0; i < rowsRendered.length - 1; i++) {
                     expect(firstCellsText[i]).toEqual((i + 11).toString());
                 }
-
                 grid.disableSummaries(["OrderDate"]);
+
                 setTimeout(() => {
                     fixture.detectChanges();
 
                     rowsRendered = Array.from(fixture.nativeElement.querySelectorAll("igx-grid-row"));
+                    tbody = grid.nativeElement.querySelector(".igx-grid__tbody").getBoundingClientRect().height;
+                    expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight);
+
                     firstCellsText = rowsRendered.map((item) => {
                         return item.querySelectorAll("igx-grid-cell")[0].textContent.trim();
                     });
-                    expect(rowsRendered.length).toEqual(12);
+                    expect(rowsRendered.length).toEqual(expectedRowLenght);
 
                     for (let i = 0; i < rowsRendered.length - 1; i++) {
                         expect(firstCellsText[i]).toEqual((i + 9).toString());
                     }
-                    done();
-                });
-            });
-        }, 100);
-    });
+                }, 200);
+            }, 100);
+        });
+    }));
 
     function sendInput(element, text: string, fix) {
         element.nativeElement.value = text;
@@ -469,7 +504,7 @@ describe("IgxGrid - Summaries", () => {
         fix.detectChanges();
         return fix.whenStable();
     }
-    function calcMaxSummaryHeight(columnList, summaries: DebugElement[]) {
+    function calcMaxSummaryHeight(columnList, summaries: DebugElement[], defaultRowHeight) {
         let maxSummaryLength = 0;
         let index = 0;
         columnList.filter((col) => col.hasSummary).forEach((column) => {
@@ -479,7 +514,7 @@ describe("IgxGrid - Summaries", () => {
             }
             index++;
         });
-        const expectedLength = maxSummaryLength * INITIAL_SUMMARY_SIZE;
+        const expectedLength = maxSummaryLength * defaultRowHeight;
         return expectedLength;
     }
 
