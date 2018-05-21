@@ -11,7 +11,7 @@ import { IgxColumnComponent } from "./column.component";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
 
-fdescribe("Column Hiding UI", () => {
+describe("Column Hiding UI", () => {
     let fix;
     let grid: IgxGridComponent;
     let columnChooser: IgxColumnHidingComponent;
