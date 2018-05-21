@@ -36,6 +36,11 @@ export class AppComponent implements OnInit {
             name: "Badge"
         },
         {
+            link: "/bottomnav",
+            icon: "call_to_action",
+            name: "Bottom Navigation"
+        },
+        {
             link: "/buttonGroup",
             icon: "group_work",
             name: "Button Group"
@@ -151,11 +156,6 @@ export class AppComponent implements OnInit {
             name: "Snackbar"
         },
         {
-            link: "/tabbar",
-            icon: "tab",
-            name: "Tabbar"
-        },
-        {
             link: "/tabs",
             icon: "tab",
             name: "Tabs"
@@ -227,11 +227,11 @@ export class AppComponent implements OnInit {
         this.router.events.pipe(
             filter((x) => x instanceof NavigationStart)
         )
-        .subscribe((event: NavigationStart) => {
-            if (event.url !== "/" && !this.navdrawer.pin) {
-                // Close drawer when a sample is selected
-                this.navdrawer.close();
-            }
-        });
+            .subscribe((event: NavigationStart) => {
+                if (event.url !== "/" && !this.navdrawer.pin) {
+                    // Close drawer when a sample is selected
+                    this.navdrawer.close();
+                }
+            });
     }
 }

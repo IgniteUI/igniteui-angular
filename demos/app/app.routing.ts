@@ -60,7 +60,7 @@ const appRoutes: Routes = [
     },
     {
         component: TabBarSampleComponent,
-        path: "tabbar"
+        path: "bottomnav"
     },
     {
         component: TabsSampleComponent,
