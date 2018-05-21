@@ -12,7 +12,6 @@
 /// @param {Color} $track-off-color [null] - The color of the track when the switch is off.
 /// @param {Color} $thumb-disabled-color [null] - The color of the thumb when the switch is disabled.
 /// @param {Color} $track-disabled-color [null] - The color of the track when the switch is disabled.
-/// @param {Bool} $light [false] - Determines the default color scheme - light or not.
 /// @param {String} $variant ['dark'] - Determines the default color scheme - could be 'light' or 'dark'.
 ///
 /// @requires extend
@@ -39,7 +38,6 @@
     $label-color: null,
     $label-disabled-color: null,
 
-    $light: false,
     $variant: 'dark'
 ) {
     $name: 'igx-switch';
@@ -69,14 +67,17 @@
         thumb-off-color: #bdbdbd,
         track-off-color: rgba(255, 255, 255, .3),
 
-        label-color: igx-color($palette, grays, 600),
+        label-color: #fff,
         label-disabled-color: rgba(255, 255, 255, .3),
 
         track-disabled-color: #424242,
         thumb-disabled-color: #6c6c6c
     );
 
-    $default-theme: if($light == false or $variant == 'dark', $dark-theme, $light-theme);
+    $default-theme: map-get((
+        dark: $dark-theme,
+        light: $light-theme
+    ), $variant);
 
     @return extend($default-theme, (
         palette: $palette,
@@ -93,7 +94,7 @@
         label-color: $label-color,
         label-disabled-color: $label-disabled-color,
 
-        light: $light
+        variant: $variant
     ));
 }
 
@@ -109,7 +110,7 @@
 /// @requires em
 /// @requires {mixin} scale-in-out
 /// @requires {mixin} animation
-/// @requires var
+/// @requires --var
 @mixin igx-switch($theme) {
     @include igx-root-css-vars($theme);
 

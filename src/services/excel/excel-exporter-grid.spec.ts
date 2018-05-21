@@ -520,6 +520,28 @@ describe("Excel Exporter", () => {
         });
     }));
 
+    it("shouldn't affect grid sort expressions", async(() => {
+        const fix = TestBed.createComponent(GridDeclarationComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid1;
+        grid.columns[1].header = "My header";
+        grid.columns[1].sortable = true;
+        grid.sort("Name");
+        const sortField = grid.sortingExpressions[0].fieldName;
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            getExportedData(grid, options).then((wrapper) => {
+                fix.detectChanges();
+                getExportedData(grid, options).then((wrapper2) => {
+                    const sortFieldAfterExport = grid.sortingExpressions[0].fieldName;
+                    expect(sortField).toBe(sortFieldAfterExport);
+                });
+            });
+        });
+    }));
+
     async function getExportedData(grid: IgxGridComponent, exportOptions: IgxExcelExporterOptions) {
         const exportData = await new Promise<JSZipWrapper>((resolve) => {
             exporter.onExportEnded.subscribe((value) => {
