@@ -21,87 +21,96 @@ describe('Excel Exporter', () => {
         options = new IgxExcelExporterOptions('ExcelExport');
 
         // Spy the saveBlobToFile method so the files are not really created
-        spyOn(ExportUtilities as any, 'saveBlobToFile');
+        spyOn(ExportUtilities, 'saveBlobToFile');
     });
 
     /* ExportData() tests */
-    it('should not fail when data is empty.', async(() => {
+    it('should not fail when data is empty.', (done) => {
         getExportedData([], options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
+            done();
         });
-    }));
+    });
 
-    it('should export empty objects successfully.', async(() => {
+    it('should export empty objects successfully.', (done) => {
         getExportedData(sourceData.emptyObjectData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
+            done();
         });
-    }));
+    });
 
-    it('should export string data without headers successfully.', async(() => {
+    it('should export string data without headers successfully.', (done) => {
         options.columnWidth = 50;
         getExportedData(sourceData.noHeadersStringData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.noHeadersStringDataContent);
+            done();
         });
-    }));
+    });
 
-    it('should export date time data without headers successfully.', async(() => {
+    it('should export date time data without headers successfully.', (done) => {
         options.columnWidth = 50;
         getExportedData(sourceData.noHeadersDateTimeData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.noHeadersDateTimeContent);
+            done();
         });
-    }));
+    });
 
-    it('should export number data without headers successfully.', async(() => {
+    it('should export number data without headers successfully.', (done) => {
         options.columnWidth = 50;
         getExportedData(sourceData.noHeadersNumberData, options).then((wrapper) => {
             wrapper.verifyStructure();
             // wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.noHeadersNumberDataContent);
+            done();
         });
-    }));
+    });
 
-    it('should export object data without headers successfully.', async(() => {
+    it('should export object data without headers successfully.', (done) => {
         getExportedData(sourceData.noHeadersObjectData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.noHeadersObjectDataContent);
+            done();
         });
-    }));
+    });
 
-    it('should export regular data successfully.', async(() => {
+    it('should export regular data successfully.', (done) => {
         options.columnWidth = 50;
         getExportedData(sourceData.contactsData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.contactsDataContent);
+            done();
         });
-    }));
+    });
 
-    it('should export data with missing values successfully.', async(() => {
+    it('should export data with missing values successfully.', (done) => {
         options.columnWidth = 50;
         getExportedData(sourceData.contactsPartialData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.contactsPartialDataContent);
+            done();
         });
-    }));
+    });
 
-    it('should export data with special characters successully.', async(() => {
+    it('should export data with special characters successully.', (done) => {
         options.columnWidth = 50;
         getExportedData(sourceData.contactsFunkyData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.contactsFunkyDataContent);
+            done();
         });
-    }));
+    });
 
-    it('should throw an exception when setting negative width and height.', async(() => {
+    it('should throw an exception when setting negative width and height.', (done) => {
         try {
             options.columnWidth = -1;
         } catch (ex) {
@@ -113,8 +122,8 @@ describe('Excel Exporter', () => {
         } catch (ex) {
             expect((ex as Error).message).toBe('Invalid value for row height!');
         }
-
-    }));
+        done();
+    });
 
     async function getExportedData(data: any[], exportOptions: IgxExcelExporterOptions) {
         const result = await new Promise<JSZipWrapper>((resolve) => {

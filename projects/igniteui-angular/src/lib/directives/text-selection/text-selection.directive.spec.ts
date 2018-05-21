@@ -4,34 +4,34 @@ import {
     TestBed
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxTextSelectionDirective} from './text-selection.directive';
+import { IgxTextSelectionModule} from './text-selection.directive';
 
 describe('IgxSelection', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxTextSelectionDirective,
                 TriggerTextSelectionComponent,
                 TriggerTextSelectionOnClickComponent
-            ]
+            ],
+            imports: [IgxTextSelectionModule]
         });
     }));
 
-    it('Should select the text which is into the input', () => {
+    it('Should select the text which is into the input', async() => {
         const fix = TestBed.createComponent(TriggerTextSelectionComponent);
         fix.detectChanges();
 
         const input = fix.debugElement.query(By.css('input')).nativeElement;
         input.focus();
-        fix.detectChanges();
 
         fix.whenStable().then(() => {
+            fix.detectChanges();
             expect(input.selectionEnd).toEqual(input.value.length);
             expect(input.value.substring(input.selectionStart, input.selectionEnd)).toEqual(input.value);
         });
     });
 
-    it('Should select the text when the input is clicked', () => {
+    it('Should select the text when the input is clicked', async() => {
         const fix = TestBed.createComponent(TriggerTextSelectionOnClickComponent);
         fix.detectChanges();
 
@@ -40,9 +40,9 @@ describe('IgxSelection', () => {
         const inputElem: HTMLElement = input.nativeElement;
 
         inputElem.click();
-        fix.detectChanges();
 
         fix.whenStable().then(() => {
+            fix.detectChanges();
             expect(inputNativeElem.selectionEnd).toEqual(inputNativeElem.value.length);
             expect(inputNativeElem.value.substring(inputNativeElem.selectionStart, inputNativeElem.selectionEnd))
                 .toEqual(inputNativeElem.value);
