@@ -149,7 +149,7 @@ describe('Excel Exporter', () => {
     //     });
     // }));
 
-    it('should honor \'ignoreFiltering\' option.', async(() => {
+    it('should honor \'ignoreFiltering\' option.', (done) => {
         const result = TestMethods.createGridAndFilter();
         const fix = result.fixture;
         const grid = result.grid;
@@ -166,12 +166,13 @@ describe('Excel Exporter', () => {
                 fix.detectChanges();
                 getExportedData(grid, options).then((wrapper2) => {
                     wrapper2.verifyDataFilesContent(actualData.simpleGridData, 'All 10 rows should have been exported!');
+                    done();
                 });
             });
         });
-    }));
+    });
 
-    it('should honor filter criteria changes.', async(() => {
+    it('should honor filter criteria changes.', (done) => {
         const result = TestMethods.createGridAndFilter();
         const fix = result.fixture;
         const grid = result.grid;
@@ -191,13 +192,14 @@ describe('Excel Exporter', () => {
                     expect(grid.rowList.length).toEqual(2, 'Invalid number of rows after filtering!');
                     getExportedData(grid, options).then((wrapper2) => {
                         wrapper2.verifyDataFilesContent(actualData.simpleGridDataDirectors, 'Two rows should have been exported!');
+                        done();
                     });
                 });
             });
         });
-    }));
+    });
 
-    it('should honor \'ignoreColumnsVisibility\' option.', async(() => {
+    it('should honor \'ignoreColumnsVisibility\' option.', (done) => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
 
@@ -216,12 +218,13 @@ describe('Excel Exporter', () => {
                 fix.detectChanges();
                 getExportedData(grid, options).then((wrapper2) => {
                     wrapper2.verifyDataFilesContent(actualData.simpleGridData, 'All three columns should have been exported!');
+                    done();
                 });
             });
         });
-    }));
+    });
 
-    it('should honor columns visibility changes.', async(() => {
+    it('should honor columns visibility changes.', (done) => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
 
@@ -256,6 +259,7 @@ describe('Excel Exporter', () => {
                                         wrapper4.verifyDataFilesContent(actualData.simpleGridData,
                                             'All columns should have been exported!');
 
+                                        done();
                                     });
                                 });
                             });
@@ -264,9 +268,9 @@ describe('Excel Exporter', () => {
                 });
             });
         });
-    }));
+    });
 
-    it('should honor columns declaration order.', async(() => {
+    it('should honor columns declaration order.', (done) => {
         const fix = TestBed.createComponent(GridReorderedColumnsComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
@@ -275,11 +279,12 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitleID);
+                done();
             });
         });
-    }));
+    });
 
-    it('should honor \'ignorePinning\' option.', async(() => {
+    it('should honor \'ignorePinning\' option.', (done) => {
         const result = TestMethods.createGridAndPinColumn([1]);
         const fix = result.fixture;
         const grid = result.grid;
@@ -298,11 +303,12 @@ describe('Excel Exporter', () => {
                 getExportedData(grid, options).then((wrapper2) => {
                     wrapper2.verifyDataFilesContent(actualData.gridNameIDJobTitle, 'No frozen columns should have been exported!');
                 });
+                done();
             });
         });
-    }));
+    });
 
-    it('should honor pinned state changes.', async(() => {
+    it('should honor pinned state changes.', (done) => {
         const result = TestMethods.createGridAndPinColumn([1]);
         const fix = result.fixture;
         const grid = result.grid;
@@ -317,11 +323,12 @@ describe('Excel Exporter', () => {
                 getExportedData(grid, options).then((wrapper2) => {
                     wrapper2.verifyDataFilesContent(actualData.simpleGridData, 'No frozen columns should have been exported!');
                 });
+                done();
             });
         });
-    }));
+    });
 
-    it('should honor applied sorting.', async(() => {
+    it('should honor applied sorting.', (done) => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
@@ -333,11 +340,12 @@ describe('Excel Exporter', () => {
                 wrapper.verifyDataFilesContent(actualData.simpleGridSortByName);
                 grid.clearSort();
                 fix.detectChanges();
+                done();
             });
         });
-    }));
+    });
 
-    it('should honor changes in applied sorting.', async(() => {
+    it('should honor changes in applied sorting.', (done) => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
@@ -365,15 +373,16 @@ describe('Excel Exporter', () => {
                             getExportedData(grid, options).then((wrapper3) => {
                                 // wrapper3.verifyDataFilesContent(actualData.simpleGridSortByNameDesc(false),
                                 // "Unsorted data should have been exported.");
+                                done();
                             });
                         });
                     });
                 });
             });
         });
-    }));
+    });
 
-    it('should export all columns with the width specified in options.', async(() => {
+    it('should export all columns with the width specified in options.', (done) => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
@@ -387,14 +396,15 @@ describe('Excel Exporter', () => {
                     setColWidthAndExport(grid, options, fix, columnWidths[2]).then(() => {
                         setColWidthAndExport(grid, options, fix, columnWidths[3]).then(() => {
                             setColWidthAndExport(grid, options, fix, columnWidths[4]);
+                            done();
                         });
                     });
                 });
             });
         });
-    }));
+    });
 
-    it('should export all rows with the height specified in options.', async(() => {
+    it('should export all rows with the height specified in options.', (done) => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
@@ -407,14 +417,15 @@ describe('Excel Exporter', () => {
                     setRowHeightAndExport(grid, options, fix, rowHeights[2]).then(() => {
                         setRowHeightAndExport(grid, options, fix, rowHeights[3]).then(() => {
                             setRowHeightAndExport(grid, options, fix, rowHeights[4]);
+                            done();
                         });
                     });
                 });
             });
         });
-    }));
+    });
 
-    it('should fire \'onColumnExport\' for each grid column.', async(() => {
+    it('should fire \'onColumnExport\' for each grid column.', (done) => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
@@ -433,11 +444,12 @@ describe('Excel Exporter', () => {
                 expect(cols[1].index).toBe(1);
                 expect(cols[2].header).toBe('JobTitle');
                 expect(cols[2].index).toBe(2);
+                done();
             });
         });
-    }));
+    });
 
-    it('should fire \'onColumnExport\' for each visible grid column.', async(() => {
+    it('should fire \'onColumnExport\' for each visible grid column.', (done) => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
@@ -458,12 +470,13 @@ describe('Excel Exporter', () => {
                 expect(cols[1].header).toBe('JobTitle');
                 expect(cols[1].index).toBe(1);
                 wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle);
+                done();
             });
         });
 
-    }));
+    });
 
-    it('should not export columns when \'onColumnExport\' is canceled.', async(() => {
+    it('should not export columns when \'onColumnExport\' is canceled.', (done) => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
@@ -477,11 +490,12 @@ describe('Excel Exporter', () => {
                 expect(wrapper.hasValues).toBe(false);
                 wrapper.verifyStructure();
                 wrapper.verifyTemplateFilesContent();
+                done();
             });
         });
-    }));
+    });
 
-    it('should fire \'onRowExport\' for each grid row.', async(() => {
+    it('should fire \'onRowExport\' for each grid row.', (done) => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
@@ -498,11 +512,12 @@ describe('Excel Exporter', () => {
                     expect(rows[i].index).toBe(i);
                     expect(JSON.stringify(rows[i].data)).toBe(JSON.stringify(data[i]));
                 }
+                done();
             });
         });
-    }));
+    });
 
-    it('should not export rows when \'onRowExport\' is canceled.', async(() => {
+    it('should not export rows when \'onRowExport\' is canceled.', (done) => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
@@ -516,11 +531,12 @@ describe('Excel Exporter', () => {
                 expect(wrapper.hasValues).toBe(false);
                 wrapper.verifyStructure();
                 wrapper.verifyTemplateFilesContent();
+                done();
             });
         });
-    }));
+    });
 
-    it('shouldn\'t affect grid sort expressions', async(() => {
+    it('shouldn\'t affect grid sort expressions', (done) => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
 
@@ -537,10 +553,11 @@ describe('Excel Exporter', () => {
                 getExportedData(grid, options).then((wrapper2) => {
                     const sortFieldAfterExport = grid.sortingExpressions[0].fieldName;
                     expect(sortField).toBe(sortFieldAfterExport);
+                    done();
                 });
             });
         });
-    }));
+    });
 
     async function getExportedData(grid: IgxGridComponent, exportOptions: IgxExcelExporterOptions) {
         const exportData = await new Promise<JSZipWrapper>((resolve) => {
