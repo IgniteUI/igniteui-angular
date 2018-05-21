@@ -137,6 +137,9 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
         }
 
         const valueInRange = getValueInProperRange(val, this.max);
+        if (isNaN(valueInRange)) {
+            return;
+        }
         const changedValues = {
             currentValue: valueInRange,
             previousValue: this._value
@@ -207,6 +210,10 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
         }
 
         const valueInProperRange = getValueInProperRange(val, this.max);
+        if (isNaN(valueInProperRange)) {
+            return;
+        }
+
         const changedValues = {
             currentValue: valueInProperRange,
             previousValue: this._value
