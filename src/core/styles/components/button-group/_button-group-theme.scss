@@ -53,7 +53,7 @@
 ) {
     $default-theme: (
         name: 'igx-button-group',
-        item-text-color: igx-color($palette, 'grays', 500),
+        item-text-color: igx-color($palette, 'grays', 600),
         item-background: #fff,
         item-border-color: transparent,
 
@@ -62,9 +62,9 @@
 
         item-selected-text-color: igx-color($palette, 'grays', 800),
         item-selected-background: igx-color($palette, 'grays', 400),
-        item-selected-border-color: rgba(igx-color($palette, 'grays', 500), .12),
+        item-selected-border-color: rgba(igx-color($palette, 'grays', 600), .12),
 
-        disabled-text-color: igx-color($palette, 'grays', 300),
+        disabled-text-color: igx-color($palette, 'grays', 400),
         disabled-background-color: igx-color($palette, 'grays', 100)
     );
 
