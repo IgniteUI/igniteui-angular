@@ -3,8 +3,8 @@ import {
     Output
 } from "@angular/core";
 
+import { cloneObject } from "../../core/utils";
 import { DataUtil } from "../../data-operations/data-util";
-import { IgxGridComponent } from "../../grid/grid.component";
 
 import { ExportUtilities } from "./export-utilities";
 import { IgxExporterOptionsBase } from "./exporter-options-base";
@@ -33,7 +33,7 @@ export abstract class IgxBaseExporter {
     @Output()
     public onColumnExport = new EventEmitter<IColumnExportingEventArgs>();
 
-    public export(grid: IgxGridComponent, options: IgxExporterOptionsBase): void {
+    public export(grid: any, options: IgxExporterOptionsBase): void {
         if (options === undefined || options === null) {
             throw Error("No options provided!");
         }
@@ -156,7 +156,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private prepareData(grid: IgxGridComponent, options: IgxExporterOptionsBase): any[] {
+    private prepareData(grid: any, options: IgxExporterOptionsBase): any[] {
         let data = grid.data;
 
         if (grid.filteringExpressions &&
@@ -179,7 +179,7 @@ export abstract class IgxBaseExporter {
                 expressions: grid.sortingExpressions
             };
 
-            this._sort = grid.sortingExpressions[0];
+            this._sort = cloneObject(grid.sortingExpressions[0]);
 
             data =  DataUtil.sort(data, sortingState);
         }

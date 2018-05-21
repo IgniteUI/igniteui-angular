@@ -124,7 +124,7 @@
 /// @requires igx-color
 /// @requires igx-elevation
 /// @requires $elevations
-/// @requires var
+/// @requires --var
 @mixin igx-button-group($theme) {
     @include igx-root-css-vars($theme);
 

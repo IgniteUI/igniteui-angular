@@ -137,7 +137,7 @@
 /// @requires igx-elevation
 /// @requires $elevations
 /// @requires rem
-/// @requires var
+/// @requires --var
 @mixin igx-grid($theme) {
     @include igx-root-css-vars($theme);
 
